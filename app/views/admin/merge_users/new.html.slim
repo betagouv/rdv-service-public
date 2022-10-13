@@ -43,7 +43,9 @@
                 label.d-flex.justify-content-end for="merge_users_form_#{attribute}_1"
                   - value = user1_presenter.send(attribute)
                   - if @merge_users_form.user1.frozen_by_franceconnect?(attribute)
-                    div = value
+                    div
+                      = value
+                    = f.input attribute, as: :hidden, input_html: { value: "1" }
                   - elsif @merge_users_form.user2.present? && @merge_users_form.user2.frozen_by_franceconnect?(attribute)
                     del = value
                   - else
@@ -60,7 +62,9 @@
                 label.d-flex.justify-content-start for="merge_users_form_#{attribute}_2"
                   - value = user2_presenter.send(attribute)
                   - if @merge_users_form.user2.frozen_by_franceconnect?(attribute)
-                    div = value
+                    div
+                      = value
+                    = f.input attribute, as: :hidden, input_html: { value: "2" }
                   - elsif @merge_users_form.user1.present? && @merge_users_form.user1.frozen_by_franceconnect?(attribute)
                     del = value
 

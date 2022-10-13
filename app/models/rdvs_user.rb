@@ -19,15 +19,15 @@ class RdvsUser < ApplicationRecord
   # Hooks
   after_initialize :set_default_notifications_flags
   before_validation :set_default_notifications_flags
-
+  after_commit :update_users_count
+  
   # Scopes
   scope :not_cancelled, -> { where(status: NOT_CANCELLED_STATUSES) }
+  scope :order_by_user_last_name, -> { includes(:user).order("users.last_name ASC") }
 
   # Temporary Hooks for Participation feature
   after_initialize :set_status
   ## -
-
-  after_commit :update_users_count
 
   def update_users_count
     rdv.users_count = rdv.rdvs_users.not_cancelled.count

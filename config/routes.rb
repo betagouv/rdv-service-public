@@ -134,6 +134,7 @@ Rails.application.routes.draw do
           resource :sms_configuration, only: %i[show edit update]
           resources :zone_imports, only: %i[new create]
           resources :zones, only: [:index] # exports only
+          resource :sectorization, only: [:show]
           resources :sectors do
             resources :zones
             resources :sector_attributions, only: %i[new create destroy], as: :attributions
@@ -174,6 +175,7 @@ Rails.application.routes.draw do
         end
         scope module: "organisations" do
           resource :setup_checklist, only: [:show]
+          resource :online_booking, only: [:show]
           resources :stats, only: :index do
             collection do
               get :rdvs
@@ -258,7 +260,11 @@ Rails.application.routes.draw do
 
   # short public link
   get "org/:organisation_id(/:org_slug)" => "search#public_link_with_internal_organisation_id", as: :public_link_to_org
-  get "org/ext/:territory_slug/:organisation_external_id(/:org_slug)" => "search#public_link_with_external_organisation_id", as: :public_link_to_external_org
+  get "org/ext/:territory/:organisation_external_id(/:org_slug)" => "search#public_link_with_external_organisation_id", as: :public_link_to_external_org
+
+  namespace :public_api do
+    resources :public_links, only: [:index]
+  end
 
   ##
 

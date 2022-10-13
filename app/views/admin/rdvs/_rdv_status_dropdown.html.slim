@@ -1,4 +1,4 @@
-.dropdown[id= "rdv-status-#{rdv.id}"]
+.dropdown[id= "rdv-status-#{rdv.id}", class="mt-1 mb-auto"]
   = rdv_status_dropdown_toggle(rdv)
   - remote = local_assigns.fetch(:remote, false)
   .dropdown-menu

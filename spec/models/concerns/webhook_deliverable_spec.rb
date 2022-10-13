@@ -30,42 +30,48 @@ describe WebhookDeliverable, type: :concern do
         let!(:rdv) { build(:rdv, organisation: organisation) }
 
         it "notifies the creation" do
-          expect(WebhookJob).to receive(:perform_later).with(json_payload_with_meta("event", "created"), webhook_endpoint.id)
-          rdv.save
+          expect do
+            rdv.save
+          end.to have_enqueued_job(WebhookJob).with(json_payload_with_meta("event", "created"), webhook_endpoint.id)
         end
       end
 
       it "notifies on update" do
-        expect(WebhookJob).to receive(:perform_later).with(json_payload_with_meta("event", "updated"), webhook_endpoint.id)
-        rdv.update(status: :excused)
+        expect do
+          rdv.update(status: :excused)
+        end.to have_enqueued_job(WebhookJob).with(json_payload_with_meta("event", "updated"), webhook_endpoint.id)
       end
 
       it "notifies on deletion" do
-        expect(WebhookJob).to receive(:perform_later).with(json_payload_with_meta("event", "destroyed"), webhook_endpoint.id)
-        rdv.destroy
+        expect do
+          rdv.destroy
+        end.to have_enqueued_job(WebhookJob).with(json_payload_with_meta("event", "destroyed"), webhook_endpoint.id)
       end
     end
 
-    context "when the webhook endpoint is triggered by the model changes but webhook callbacks are disabled explcitly" do
+    context "when the webhook endpoint is triggered by the model changes but webhook callbacks are disabled explicitly" do
       context "on creation" do
         let!(:rdv) { build(:rdv, organisation: organisation) }
 
-        it "notifies the creation" do
-          expect(WebhookJob).not_to receive(:perform_later)
+        it "does not send webhook" do
           rdv.skip_webhooks = true
-          rdv.save
+          expect do
+            rdv.save
+          end.not_to have_enqueued_job
         end
       end
 
-      it "notifies on update" do
-        expect(WebhookJob).not_to receive(:perform_later)
-        rdv.update(status: :excused, skip_webhooks: true)
+      it "does not send webhook on update" do
+        expect do
+          rdv.update(status: :excused, skip_webhooks: true)
+        end.not_to have_enqueued_job
       end
 
-      it "notifies on deletion" do
-        expect(WebhookJob).not_to receive(:perform_later)
+      it "does not send webhook on deletion" do
         rdv.skip_webhooks = true
-        rdv.destroy
+        expect do
+          rdv.destroy
+        end.not_to have_enqueued_job
       end
     end
 
@@ -82,19 +88,22 @@ describe WebhookDeliverable, type: :concern do
         let!(:rdv) { build(:rdv, organisation: organisation) }
 
         it "does not notify the creation" do
-          expect(WebhookJob).not_to receive(:perform_later)
-          rdv.save
+          expect do
+            rdv.save
+          end.not_to have_enqueued_job
         end
       end
 
       it "does not notify on update" do
-        expect(WebhookJob).not_to receive(:perform_later)
-        rdv.update(status: :excused)
+        expect do
+          rdv.update(status: :excused)
+        end.not_to have_enqueued_job
       end
 
       it "does not notify on deletion" do
-        expect(WebhookJob).not_to receive(:perform_later)
-        rdv.destroy
+        expect do
+          rdv.destroy
+        end.not_to have_enqueued_job
       end
     end
   end

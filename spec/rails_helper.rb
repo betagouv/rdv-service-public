@@ -48,6 +48,7 @@ RSpec.configure do |config|
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include Warden::Test::Helpers, type: :feature
   config.include Sentry::TestHelper
+  config.include DeviseRequestSpecHelpers, type: :request
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
   # instead of true.
@@ -85,6 +86,7 @@ RSpec.configure do |config|
     DatabaseCleaner.clean
     ActionMailer::Base.deliveries.clear
     FactoryBot.rewind_sequences
+    Rails.cache.clear
   end
 
   config.before(:suite) do

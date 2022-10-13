@@ -22,7 +22,7 @@ describe "Admin can configure the organisation" do
   end
 
   it "CRUD on lieux" do
-    click_link "Vos lieux"
+    click_link "Lieux"
     expect_page_title("Vos lieux de consultation")
 
     within("#lieu_#{lieu.id}") do
@@ -63,7 +63,7 @@ describe "Admin can configure the organisation" do
   end
 
   it "CRUD on agents" do
-    click_link "Vos agents"
+    click_link "Agents"
     expect_page_title("Agents de Organisation n°1")
 
     click_link "PATRICK Tony"
@@ -95,7 +95,7 @@ describe "Admin can configure the organisation" do
     let!(:organisation) { create(:organisation, new_domain_beta: true) }
 
     it "allows inviting agents on the correct domain" do
-      click_link "Vos agents"
+      click_link "Agents"
       click_link "Inviter un agent", match: :first
       fill_in "Email", with: "jean@paul.com"
       click_button "Envoyer une invitation"
@@ -107,7 +107,7 @@ describe "Admin can configure the organisation" do
   end
 
   it "Update organisation" do
-    click_link "Votre organisation"
+    click_link "Organisation"
     click_link "Modifier"
     fill_in "Nom", with: la_nouvelle_org.name
     fill_in "Téléphone", with: la_nouvelle_org.phone_number
@@ -119,7 +119,7 @@ describe "Admin can configure the organisation" do
 
   it "CRUD on motifs", js: true do
     click_link "Paramètres"
-    click_link "Vos motifs"
+    click_link "Motifs"
     expect_page_title("Vos motifs")
 
     click_link motif.name
@@ -130,7 +130,7 @@ describe "Admin can configure the organisation" do
     expect(page).to have_content("Être appelé par")
     expect(page).to have_selector("h3", text: "Être appelé par (PMI)")
 
-    click_link "Vos motifs"
+    click_link "Motifs"
     click_link "Être appelé par"
     expect(page).to have_content("Être appelé par")
     click_link("Supprimer")

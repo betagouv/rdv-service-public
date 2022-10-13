@@ -4,6 +4,7 @@
       = f.input :agent_id, collection: [form.agent].compact, \
               label: "Agent", \
               label_method: :reverse_full_name, \
+              prompt: "Tous",
               input_html: { \
                 class: "select2-input", \
                 data: { \
@@ -17,10 +18,10 @@
                 }, \
               }, \
               wrapper: "horizontal_form"
-
       = f.input :user_id, collection: [form.user].compact,
               label: "Usager",
               label_method: :reverse_full_name,
+              prompt: "Tous",
               input_html: { \
                 class: "select2-input", \
                 data: { \
@@ -34,14 +35,26 @@
                 }, \
               },
               wrapper: "horizontal_form"
-
-      = f.input :lieu_id, collection: policy_scope(Lieu).enabled.order(:name), label: "Lieu", label_method: :name, input_html: { class: "select2-input" }, wrapper: "horizontal_form"
+      = f.input :lieu_id, collection: policy_scope(Lieu).enabled.order(:name),
+              label: "Lieu",
+              label_method: :name,
+              prompt: "Tous",
+              input_html: { class: "select2-input" },
+              wrapper: "horizontal_form"
     .col-md-6
-      = f.input :motif_id, collection: policy_scope(Motif), label: "Motifs", label_method: :name, input_html: { class: "select2-input" }, wrapper: "horizontal_form"
+      = f.input :motif_id, collection: policy_scope(Motif),
+            label: "Motifs",
+            label_method: :name,
+            prompt: "Tous",
+            input_html: { class: "select2-input" },
+            wrapper: "horizontal_form"
       - temporal_statuses = Rdv.statuses.keys - ["unknown"] + ["unknown_past", "unknown_future"]
       = f.input :status, collection: temporal_statuses,
               label_method: -> { ::Rdv.human_attribute_value(:status, _1, disable_cast: true) },
-              label: "Statut", wrapper: "horizontal_form", input_html: { class: "select2-input" }
+              prompt: "Tous",
+              label: "Statut",
+              wrapper: "horizontal_form",
+              input_html: { class: "select2-input" }
       = date_input(f, :start, label = "Période - Début", wrapper: "horizontal_form")
       = date_input(f, :end, label = "Période - Fin", wrapper: "horizontal_form")
   .d-flex.justify-content-end

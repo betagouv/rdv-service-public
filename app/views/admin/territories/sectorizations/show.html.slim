@@ -1,0 +1,25 @@
+= territory_navigation(t(".title"))
+
+.row.justify-content-center
+
+  - if policy([:configuration, Sector]).display?
+    .col.col-md-4.p-2.rounded.settings-box
+      = link_to admin_territory_sectors_path(current_territory, current_agent) do
+        h2.fw-bold.mb-0
+          i.fa.fa-table>
+          | Secteurs
+        p Créer vos secteurs géographiques pour organiser votre sectorisation.
+
+    .col.col-md-4.p-2.rounded.settings-box
+      = link_to admin_territory_sectorisation_test_path(current_territory) do
+        h2.fw-bold.mb-0
+          i.fa.fa-check-square>
+          | Test
+        p Effectuer des tests de vérification des adresses et informations de code INSEE.
+
+    .col.col-md-4.p-2.rounded.settings-box
+      = link_to new_admin_territory_zone_import_path(current_territory) do
+        h2.fw-bold.mb-0
+          i.fa.fa-download>
+          | Import
+        p Importer un fichier de sectorisation pour faciliter la création de votre découpage géographique.

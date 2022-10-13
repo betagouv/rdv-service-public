@@ -35,6 +35,7 @@ gem "administrate-field-belongs_to_search"
 gem "paper_trail"
 gem "activerecord-postgres_enum"
 gem "redis"
+gem "redis-session-store"
 gem "hiredis"
 
 # Devise / auth
