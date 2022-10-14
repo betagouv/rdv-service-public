@@ -81,6 +81,8 @@ gem "montrose"
 gem "tod", "~> 2.2"
 gem "icalendar", "~> 2.5"
 
+gem 'rswag'
+
 group :development, :test do
   gem "byebug", platforms: %i[mri mingw x64_mingw] # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem "brakeman", require: false

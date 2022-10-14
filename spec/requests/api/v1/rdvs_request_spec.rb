@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'swagger_helper'
 
 describe "api/v1/rdvs requests", type: :request do
   let!(:organisation) { create(:organisation) }
@@ -6,33 +7,56 @@ describe "api/v1/rdvs requests", type: :request do
   let!(:motif) { create(:motif, service: service) }
   let!(:rdv) { create(:rdv, organisation: organisation, motif: motif) }
 
-  describe "GET api/v1/organisations/:id/rdvs" do
-    context "multiple organisations and motifs" do
-      let!(:organisation2) { create(:organisation) }
-      let!(:rdv2) { create(:rdv, organisation: organisation2, motif: motif) }
-      let!(:service2) { create(:service) }
-      let!(:motif2) { create(:motif, service: service2) }
-      let!(:rdv3) { create(:rdv, organisation: organisation, motif: motif2) }
+  path '/api/v1/organisations/{organisation_id}/rdvs' do
+    get('list rdvs') do
+      produces 'application/json'
+      parameter name: 'organisation_id', in: :path, type: :bigint, description: 'organisation_id'
 
-      context "basic role" do
-        let!(:agent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }
+      response(200, 'successful') do
+        let(:organisation_id) { '123' }
+        schema type: :object,
+          properties: {
+            id: { type: :integer },
+            status: { type: :enum },
+            name: { type: :string }
+          },
+          required: [ 'id', 'status', 'name' ]
 
-        it "returns policy scoped rdvs" do
-          get api_v1_organisation_rdvs_path(organisation), headers: api_auth_headers_for_agent(agent)
-          expect(response.status).to eq(200)
-          response_parsed = JSON.parse(response.body)
-          expect(response_parsed["rdvs"].pluck("id")).to contain_exactly(rdv.id)
-        end
+        example 'application/json', :example, {
+            id: 1,
+            status: "unknown",
+            name: "super nom"
+        }
+        run_test!
       end
 
-      context "admin role" do
-        let!(:agent) { create(:agent, admin_role_in_organisations: [organisation], service: service) }
+      context "multiple organisations and motifs" do
+        let!(:organisation2) { create(:organisation) }
+        let!(:rdv2) { create(:rdv, organisation: organisation2, motif: motif) }
+        let!(:service2) { create(:service) }
+        let!(:motif2) { create(:motif, service: service2) }
+        let!(:rdv3) { create(:rdv, organisation: organisation, motif: motif2) }
 
-        it "returns policy scoped rdvs" do
-          get api_v1_organisation_rdvs_path(organisation), headers: api_auth_headers_for_agent(agent)
-          expect(response.status).to eq(200)
-          response_parsed = JSON.parse(response.body)
-          expect(response_parsed["rdvs"].pluck("id")).to contain_exactly(rdv.id, rdv3.id)
+        context "basic role" do
+          let!(:agent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }
+
+          it "returns policy scoped rdvs" do
+            get api_v1_organisation_rdvs_path(organisation), headers: api_auth_headers_for_agent(agent)
+            expect(response.status).to eq(200)
+            response_parsed = JSON.parse(response.body)
+            expect(response_parsed["rdvs"].pluck("id")).to contain_exactly(rdv.id)
+          end
+        end
+
+        context "admin role" do
+          let!(:agent) { create(:agent, admin_role_in_organisations: [organisation], service: service) }
+
+          it "returns policy scoped rdvs" do
+            get api_v1_organisation_rdvs_path(organisation), headers: api_auth_headers_for_agent(agent)
+            expect(response.status).to eq(200)
+            response_parsed = JSON.parse(response.body)
+            expect(response_parsed["rdvs"].pluck("id")).to contain_exactly(rdv.id, rdv3.id)
+          end
         end
       end
     end

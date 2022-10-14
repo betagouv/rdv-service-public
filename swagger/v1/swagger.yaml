@@ -1,0 +1,45 @@
+---
+openapi: 3.0.1
+info:
+  title: API V1
+  version: v1
+paths:
+  "/api/v1/organisations/{organisation_id}/rdvs":
+    get:
+      summary: list rdvs
+      parameters:
+      - name: organisation_id
+        in: path
+        description: organisation_id
+        required: true
+        schema:
+          type: bigint
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    id: 1
+                    status: unknown
+                    name: super nom
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  status:
+                    type: enum
+                  name:
+                    type: string
+                required:
+                - id
+                - status
+                - name
+servers:
+- url: https://{defaultHost}
+  variables:
+    defaultHost:
+      default: www.example.com
