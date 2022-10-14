@@ -99,6 +99,9 @@ GEM
       rails (>= 4.2, < 7.0)
       selectize-rails (~> 0.6)
     aes_key_wrap (1.1.0)
+    apipie-rails (0.8.2)
+      actionpack (>= 5.0)
+      activesupport (>= 5.0)
     ast (2.4.2)
     attr_required (1.0.1)
     auto_strip_attributes (2.6.0)
@@ -624,6 +627,7 @@ DEPENDENCIES
   activerecord-postgres_enum
   administrate!
   administrate-field-belongs_to_search
+  apipie-rails
   auto_strip_attributes
   axe-core-rspec
   better_errors

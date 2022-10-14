@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  apipie
   ## OAUTH ##
   devise_scope :user do
     get "omniauth/franceconnect/callback" => "omniauth_callbacks#franceconnect"
