@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_09_27_160954) do
+ActiveRecord::Schema.define(version: 2022_10_06_081447) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -422,8 +422,10 @@ ActiveRecord::Schema.define(version: 2022_09_27_160954) do
     t.string "name"
     t.integer "max_participants_count"
     t.integer "users_count", default: 0
+    t.datetime "deleted_at"
     t.index "tsrange(starts_at, ends_at, '[)'::text)", name: "index_rdvs_on_tsrange_starts_at_ends_at", using: :gist
     t.index ["created_by"], name: "index_rdvs_on_created_by"
+    t.index ["deleted_at"], name: "index_rdvs_on_deleted_at"
     t.index ["ends_at"], name: "index_rdvs_on_ends_at"
     t.index ["lieu_id"], name: "index_rdvs_on_lieu_id"
     t.index ["max_participants_count"], name: "index_rdvs_on_max_participants_count"
@@ -538,7 +540,6 @@ ActiveRecord::Schema.define(version: 2022_09_27_160954) do
     t.enum "sms_provider", enum_type: "sms_provider"
     t.json "sms_configuration"
     t.boolean "has_own_sms_provider", default: false
-    t.string "api_options", default: [], null: false, array: true
     t.boolean "enable_notes_field", default: false
     t.boolean "enable_caisse_affiliation_field", default: false
     t.boolean "enable_affiliation_number_field", default: false

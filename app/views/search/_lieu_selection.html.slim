@@ -3,7 +3,8 @@ section.bg-light.p-4
     - if context.invitation?
       .card
         .card-body
-          h2.pb-1.mb-1
+          h2.py-1.my-1
+            i.fa.fa-info-circle>
             = motif_name_with_location_type(context.selected_motif)
     - else
       .card.card-hoverable
@@ -17,9 +18,8 @@ section.bg-light.p-4
                   = motif_name_with_location_type(context.selected_motif)
                 = context.selected_motif.service.name
     h3.font-weight-bold = t(".select_lieu")
-    p = t(".lieu_available", count: context.lieux.size)
-    - context.lieux.each do |lieu|
-      - next_availability = context.next_availability_by_lieux[lieu.id]
+    p = t(".lieu_available", count: context.shown_lieux.count)
+    - context.next_availability_by_lieux.each do |lieu, next_availability|
       .card.mb-3 class=("card-hoverable" if next_availability)
         .card-body
           .row
@@ -28,14 +28,11 @@ section.bg-light.p-4
               .card-subtitle= lieu.address
               .card-subtitle= context.selected_motif.service.name
             .col-md.align-self-center.pt-3.pt-md-0.position-static
-              - if next_availability
-                = link_to root_path(context.query.merge(lieu_id: lieu.id, date: next_availability.starts_at)), class: "d-block stretched-link" do
-                  .row
-                    .col
-                      = t(".next_availability")
-                      br
-                      strong= l(next_availability.starts_at, format: :human)
-                    .col-auto.align-self-center
+              = link_to root_path(context.query.merge(lieu_id: lieu.id, date: next_availability.starts_at)), class: "d-block stretched-link" do
+                .row
+                  .col
+                    = t(".next_availability")
+                    br
+                    strong= l(next_availability.starts_at, format: :human)
+                  .col-auto.align-self-center
                       i.fa.fa-chevron-right
-              - else
-                em = t(".no_availability")

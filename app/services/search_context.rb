@@ -97,12 +97,13 @@ class SearchContext
   end
 
   def next_availability_by_lieux
-    @next_availability_by_lieux ||= lieux.to_h do |lieu|
-      [
-        lieu.id,
-        creneaux_search_for(lieu, date_range).next_availability,
-      ]
-    end
+    @next_availability_by_lieux ||= lieux.index_with do |lieu|
+      creneaux_search_for(lieu, date_range).next_availability
+    end.compact
+  end
+
+  def shown_lieux
+    next_availability_by_lieux.keys
   end
 
   def start_date

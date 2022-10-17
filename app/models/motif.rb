@@ -51,7 +51,6 @@ class Motif < ApplicationRecord
   delegate :name, to: :service, prefix: true
 
   # Hooks
-  after_update -> { rdvs.touch_all }
 
   # Validation
   validates :visibility_type, inclusion: { in: VISIBILITY_TYPES }

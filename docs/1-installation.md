@@ -9,6 +9,7 @@
   - [Yarn](https://yarnpkg.com/en/docs/install)
   - [Foreman](https://github.com/ddollar/foreman)
   - [graphviz](https://voormedia.github.io/rails-erd/install.html) (pour [rails-erd](https://github.com/voormedia/rails-erd)).
+  - [redis](https://redis.io/docs/getting-started/installation/)
   - [Scalingo CLI](https://doc.scalingo.com/cli) (OPTIONAL)
   - [Make](https://fr.wikipedia.org/wiki/Make) (OPTIONAL)
 

@@ -78,7 +78,6 @@ class Agent < ApplicationRecord
   validate :service_cannot_be_changed
 
   # Hooks
-  after_update -> { rdvs.touch_all }
 
   # Scopes
   scope :complete, -> { where.not(first_name: nil).where.not(last_name: nil) }

@@ -7,6 +7,7 @@ describe "public_api/public_links requests", type: :request do
   let!(:organisation_c) { create(:organisation, new_domain_beta: true, external_id: "ext_id_C", territory: territory) }
   let!(:organisation_d) { create(:organisation, new_domain_beta: true, external_id: "ext_id_D", territory: territory) }
   let!(:organisation_e) { create(:organisation, new_domain_beta: true, external_id: "ext_id_E", territory: create(:territory)) }
+  let!(:organisation_f) { create(:organisation, new_domain_beta: true, external_id: nil,        territory: territory) }
 
   context "when plages are defined" do
     let(:params) do
@@ -18,6 +19,7 @@ describe "public_api/public_links requests", type: :request do
       create(:plage_ouverture, organisation: organisation_a)
       create(:plage_ouverture, :no_recurrence, organisation: organisation_b, first_day: Time.zone.today + 5.days)
       create(:plage_ouverture, :expired, organisation: organisation_c)
+      create(:plage_ouverture, organisation: organisation_f)
 
       get "/public_api/public_links", params: params, headers: {}
 
@@ -26,16 +28,17 @@ describe "public_api/public_links requests", type: :request do
       # Organisation C has a plage that expired
       # Organisation D has no plage
       # Organisation E is not in provided territory
-      # Organisation F does not exist
+      # Organisation F does not have an external ID
+      # Organisation G does not exist
       expected_body = {
         "public_links" => [
           {
             "external_id" => "ext_id_A",
-            "public_link" => "http://www.rdv-aide-numerique-test.localhost/org/ext/CN/ext_id_A",
+            "public_link" => "http://www.rdv-aide-numerique-test.localhost/org/#{organisation_a.id}",
           },
           {
             "external_id" => "ext_id_B",
-            "public_link" => "http://www.rdv-aide-numerique-test.localhost/org/ext/CN/ext_id_B",
+            "public_link" => "http://www.rdv-aide-numerique-test.localhost/org/#{organisation_b.id}",
           },
         ],
       }

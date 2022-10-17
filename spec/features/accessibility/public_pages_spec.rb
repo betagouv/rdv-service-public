@@ -136,6 +136,68 @@ describe "public pages", js: true do
 
         expect_page_to_be_axe_clean(path)
       end
+
+      context "when invited" do
+        let!(:user) { create(:user) }
+        let!(:invitation_token) do
+          user.invite! { |u| u.skip_invitation = true }
+          user.raw_invitation_token
+        end
+
+        it "root path with a city_code and a service page is accessible" do
+          path = prendre_rdv_path(
+            departement: 75,
+            city_code: 75_056,
+            street_ban_id: nil,
+            latitude: 48.859,
+            longitude: 2.347,
+            address: "Paris 75001",
+            service_id: motif.service_id,
+            invitation_token: invitation_token
+          )
+          visit path
+          expect(page).to have_content("Sélectionnez le motif de votre RDV")
+
+          expect_page_to_be_axe_clean(path)
+        end
+
+        it "root path with a city_code and motif page is accessible" do
+          path = prendre_rdv_path(
+            motif_name_with_location_type: "Consultation prénatale-public_office",
+            address: "Paris 75001",
+            city_code: 75_056,
+            departement: 75,
+            latitude: 48.859,
+            longitude: 2.347,
+            street_ban_id: nil,
+            invitation_token: invitation_token
+          )
+          visit path
+          expect(page).to have_content("Sélectionnez un lieu de RDV")
+
+          expect_page_to_be_axe_clean(path)
+        end
+
+        it "root path with a city_code, motif and lieu page is accessible" do
+          path = prendre_rdv_path(
+            motif_name_with_location_type: "Consultation prénatale-public_office",
+            address: "Paris 75001",
+            city_code: 75_056,
+            departement: 75,
+            latitude: 48.859,
+            longitude: 2.347,
+            street_ban_id: nil,
+            lieu_id: lieu.id,
+            date: Time.zone.now,
+            invitation_token: invitation_token
+          )
+
+          visit path
+          expect(page).to have_content("dimanche")
+
+          expect_page_to_be_axe_clean(path)
+        end
+      end
     end
   end
 end

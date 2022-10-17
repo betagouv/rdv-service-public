@@ -33,8 +33,7 @@
 
 .card.border-info
   .card-header.border-white
-    h5.mb-0
-      strong> Filtrer les rendez-vous
+    h2.mb-0 Filtrer les rendez-vous
   .card-body
     = render "rdv_search_form", form: @form
   - if @rdvs.any?
@@ -55,11 +54,8 @@
   .row.justify-content-center.pb-3
     .col-md-8
       .d-flex.justify-content-center= paginate @rdvs, theme: "twitter-bootstrap-4"
-      = render(partial: "rdv",
-              collection: @rdvs.includes(:organisation, :lieu, :motif, agents: :service, users: %i[responsible organisations]),
-              locals: { agent: nil },
-              cached: ->(rdv) { [rdv, locale_cache_key] } \
-              )
+      - @rdvs.includes(:organisation, :lieu, :motif, agents: :service, users: %i[responsible organisations]).each do |rdv|
+        = render(partial: "rdv", object: rdv, locals: { agent: nil })
       .d-flex.justify-content-center= paginate @rdvs, theme: "twitter-bootstrap-4"
 - else
   .row.justify-content-center.pb-3
