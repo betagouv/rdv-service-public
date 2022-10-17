@@ -26,6 +26,9 @@ ul.list-group.list-group-flush
   li.list-group-item
     .fa.fa-user>
     = users_to_sentence(rdv.users)
+    span>
+    = link_to t(".change_participant"), users_rdv_participants_path(rdv)
+    .fa.fa-edit<
   - if @can_see_rdv_motif
     li.list-group-item
       i.fa.fa-info-circle>
