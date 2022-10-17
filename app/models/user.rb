@@ -79,7 +79,6 @@ class User < ApplicationRecord
 
   # Hooks
   before_save :set_email_to_null_if_blank
-  after_update :touch_rdvs_for_cache
 
   # Scopes
   scope :active, -> { where(deleted_at: nil) }
@@ -267,15 +266,5 @@ class User < ApplicationRecord
     return save! if organisations.any? # only actually mark deleted when no orgas left
 
     update_columns(deleted_at: Time.zone.now, email_original: email, email: deleted_email)
-  end
-
-  # Les partials des RDVs sont mises en cache (la clé de cache contient `rdv.updated_at`).
-  # Si le profil usager change, le cache doit être invalidé.
-  def touch_rdvs_for_cache
-    # Ce champ est mis à jour à chaque login, mais n'est pas utilisé
-    # dans la partial des RDV, donc pas la peine d'invalider le cache.
-    return if previous_changes.keys.include?("last_sign_in_at")
-
-    rdvs.touch_all
   end
 end
