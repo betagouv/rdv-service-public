@@ -15,7 +15,7 @@ module SlotBuilder
         .merge(motif.plage_ouvertures)
         .in_range(datetime_range)
         .includes(%i[organisation agent])
-        .where(({ agent: agents } if agents&.any?))
+      scope = scope.where(agent: agents) if agents&.any?
       scope = scope.where(lieu: lieu) if lieu.present?
       scope
     end

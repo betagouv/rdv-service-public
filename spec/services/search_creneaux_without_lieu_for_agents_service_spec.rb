@@ -11,7 +11,7 @@ describe SearchCreneauxWithoutLieuForAgentsService, type: :service do
         agent_ids: [],
         team_ids: [],
         lieu_ids: nil,
-        date_range: Time.zone.today..(Time.zone.today + 6.days)
+        date_range: Time.zone.today..15.days.since
       )
     end
     let(:organisation) { create(:organisation) }
