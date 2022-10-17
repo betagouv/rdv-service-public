@@ -175,7 +175,7 @@ class Rdv < ApplicationRecord
   end
 
   def user_for_home_rdv
-    responsibles = users.where.not(responsible_id: [nil])
+    responsibles = users.loaded? ? users.select(&:responsible_id) : users.where.not(responsible_id: [nil])
     [responsibles, users].flatten.select(&:address).first || users.first
   end
 
