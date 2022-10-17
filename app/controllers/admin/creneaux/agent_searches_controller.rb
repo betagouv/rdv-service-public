@@ -55,11 +55,11 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
   end
 
   def creneaux_search_params
-    p = helpers.creneaux_search_params(@form)
+    creneaux_search_params = helpers.creneaux_search_params(@form)
     if only_one_lieu?
-      p.merge(lieu_ids: [@search_results.first.lieu.id])
+      creneaux_search_params.merge(lieu_ids: [@search_results.first.lieu.id])
     else
-      p
+      creneaux_search_params
     end
   end
 end
