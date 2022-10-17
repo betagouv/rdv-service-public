@@ -51,7 +51,7 @@ describe "creating a rdv" do
 end
 ```
 
-Toutefois, lorsque la spec plante, on a plutôt envie de savoir ce qui n'a pas fonctionner. Est-ce la création du RDV qui a échoué ? Est-ce le template qui n'a pas été rendu ? Ou le flash a-t-il changé ? Aussi, il semble plus confortable pour la personne qui constate le crash que celui-ci indique immédiatement l'erreur. Pour cela, on recommande plutôt d'avoir, autant que possible, une assertion par test : 
+Toutefois, lorsque la spec plante, on a plutôt envie de savoir ce qui n'a pas fonctionné. Est-ce la création du RDV qui a échoué ? Est-ce le template qui n'a pas été rendu ? Ou le flash a-t-il changé ? Aussi, il semble plus confortable pour la personne qui constate le crash que celui-ci indique immédiatement l'erreur. Pour cela, on recommande plutôt d'avoir, autant que possible, une assertion par test : 
 
 ```rb
 describe "creating a rdv" do
