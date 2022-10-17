@@ -91,6 +91,19 @@ class Users::RdvsController < UserAuthController
     end
   end
 
+  def register
+    skip_authorization
+    rdv = Rdv.find(params[:id])
+    if rdv.users.include?(current_user)
+      flash[:notice] = "Vous étiez déjà inscrit pour cet atelier."
+    else
+      rdv.users << current_user
+      rdv.save!
+      flash[:notice] = "Inscription confirmée."
+    end
+    redirect_to users_rdv_path(rdv)
+  end
+
   private
 
   def build_creneau

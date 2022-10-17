@@ -134,32 +134,6 @@ class SearchContext
     @next_availability ||= creneaux.empty? ? creneaux_search.next_availability : nil
   end
 
-  private
-
-  def creneaux_search_for(lieu, date_range)
-    motif = lieu.present? ? matching_motifs.where(organisation: lieu.organisation).first : selected_motif
-    Users::CreneauxSearch.new(
-      user: @current_user,
-      motif: motif,
-      lieu: lieu, # lieu can be nil when the selected motif is phone
-      date_range: date_range,
-      geo_search: geo_search
-    )
-  end
-
-  def matching_motifs
-    @matching_motifs ||= \
-      if invitation?
-        # we retrieve the geolocalised matching motifs, if there are none we fallback
-        # on the matching motifs for the organisations passed in the query
-        filter_motifs(geo_search.available_motifs).presence || filter_motifs(
-          Motif.available_with_plages_ouvertures.where(organisation_id: @fallback_organisation_ids)
-        )
-      else
-        filter_motifs(geo_search.available_motifs)
-      end
-  end
-
   def filter_motifs(available_motifs)
     motifs = if @motif_name_with_location_type.present?
                available_motifs.search_by_name_with_location_type(@motif_name_with_location_type)
@@ -169,6 +143,7 @@ class SearchContext
     motifs = motifs.where(service: service) if @service_id.present?
     motifs = motifs.search_by_text(@motif_search_terms) if @motif_search_terms.present?
     motifs = motifs.where(category: @motif_category) if @motif_category.present?
+    motifs = motifs.where(organisations: { id: @organisation_id }) if @organisation_id.present?
 
     if @lieu_id.present?
       # filtrer sur le `lieu_id` dans la table des plages d'ouverture permet de limiter de combiner et construire trop d'objet
@@ -187,16 +162,17 @@ class SearchContext
   private
 
   def creneaux_search_for(lieu, date_range)
+    motif = lieu.present? ? matching_motifs.where(organisation: lieu.organisation).first : selected_motif
     if selected_motif.individuel?
       Users::CreneauxSearch.new(
         user: @current_user,
-        motif: matching_motifs.where(organisation: lieu.organisation).first,
+        motif: motif,
         lieu: lieu,
         date_range: date_range,
         geo_search: geo_search
       )
     else
-      SearchRdvCollectif.next_availability_for_lieu(matching_motifs.where(organisation: lieu.organisation).first, lieu)
+      SearchRdvCollectif.next_availability_for_lieu(motif, lieu)
     end
   end
 
@@ -212,4 +188,5 @@ class SearchContext
         filter_motifs(geo_search.available_motifs)
       end
   end
+
 end
