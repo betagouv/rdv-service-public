@@ -119,7 +119,11 @@ class SearchContext
   end
 
   def creneaux
-    @creneaux ||= creneaux_search.creneaux
+    @creneaux ||= if selected_motif.collectif?
+                    SearchRdvCollectif.creneaux(selected_motif, lieu)
+                  else
+                    creneaux_search.creneaux
+                  end
   end
 
   def creneaux_search
@@ -165,12 +169,47 @@ class SearchContext
     motifs = motifs.where(service: service) if @service_id.present?
     motifs = motifs.search_by_text(@motif_search_terms) if @motif_search_terms.present?
     motifs = motifs.where(category: @motif_category) if @motif_category.present?
-    motifs = motifs.where(organisations: { id: @organisation_id }) if @organisation_id.present?
 
-    # filtrer sur le `lieu_id` dans la table des plages d'ouverture permet de limiter de combiner et construire trop d'objet
-    # voir https://github.com/betagouv/rdv-solidarites.fr/issues/2686
-    motifs = motifs.joins(:plage_ouvertures).where(plage_ouvertures: { lieu_id: @lieu_id }) if @lieu_id.present?
+    if @lieu_id.present?
+      # filtrer sur le `lieu_id` dans la table des plages d'ouverture permet de limiter de combiner et construire trop d'objet
+      # voir https://github.com/betagouv/rdv-solidarites.fr/issues/2686
+      motif_ids = motifs.individuel.joins(:plage_ouvertures).where(plage_ouvertures: { lieu_id: @lieu_id }).pluck(:id)
+
+      # Pour prendre en compte le filtre sur le lieu_id pour les RDV Collectif,
+      # nous ne pouvons pas passer par une requête `or` qui nécessite les mêmes jointures des deux côtés.
+      motif_ids += motifs.collectif.joins(:rdvs).where(rdvs: { lieu_id: @lieu_id }).pluck(:id)
+      motifs = motifs.where(id: motif_ids)
+    end
 
     motifs
+  end
+
+  private
+
+  def creneaux_search_for(lieu, date_range)
+    if selected_motif.individuel?
+      Users::CreneauxSearch.new(
+        user: @current_user,
+        motif: matching_motifs.where(organisation: lieu.organisation).first,
+        lieu: lieu,
+        date_range: date_range,
+        geo_search: geo_search
+      )
+    else
+      SearchRdvCollectif.next_availability_for_lieu(matching_motifs.where(organisation: lieu.organisation).first, lieu)
+    end
+  end
+
+  def matching_motifs
+    @matching_motifs ||= \
+      if invitation?
+        # we retrieve the geolocalised matching motifs, if there are none we fallback
+        # on the matching motifs for the organisations passed in the query
+        filter_motifs(geo_search.available_motifs).presence || filter_motifs(
+          Motif.available_with_plages_ouvertures.where(organisation_id: @fallback_organisation_ids)
+        )
+      else
+        filter_motifs(geo_search.available_motifs)
+      end
   end
 end

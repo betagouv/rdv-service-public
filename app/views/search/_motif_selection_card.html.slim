@@ -4,3 +4,6 @@
       h3.card-title.mb-3.mt-0.text-success.font-weight-bold= motif.name
       .card-subtitle= motif.human_attribute_value(:location_type)
       .card-subtitle= motif.service.name
+      - if motif.collectif?
+        i.fa.fa-users>
+        | Atelier collectif
