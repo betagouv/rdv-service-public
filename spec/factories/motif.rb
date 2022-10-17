@@ -39,7 +39,6 @@ FactoryBot.define do
 
     trait :collectif do
       collectif { true }
-      reservable_online { false }
     end
 
     trait :for_secretariat do
