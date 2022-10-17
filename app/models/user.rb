@@ -140,8 +140,7 @@ class User < ApplicationRecord
   end
 
   def profile_for(organisation)
-    # Hash memoization: the block is called when a profile isn’t found in @profiles
-    @profiles ||= Hash.new { |h, org| h[org] = user_profiles.find_by(organisation: org) }
+    @profiles ||= user_profiles.index_by(&:organisation)
     @profiles[organisation]
   end
 
