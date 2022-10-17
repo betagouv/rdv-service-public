@@ -12,6 +12,7 @@ module UserRdvWizard
 
     delegate :motif, :starts_at, :users, :service, to: :rdv
     delegate :errors, to: :rdv
+    delegate :lieu_full_name, to: :creneau
 
     def initialize(user, attributes)
       @user = user
@@ -48,10 +49,6 @@ module UserRdvWizard
 
     def geo_search
       @geo_search ||= Users::GeoSearch.new(**@attributes.slice(:departement, :city_code, :street_ban_id))
-    end
-
-    def lieu_full_name
-      creneau.lieu&.full_name
     end
 
     def to_query
