@@ -93,7 +93,7 @@ Plus d'infos : https://thoughtbot.com/blog/use-factory-bots-build-stubbed-for-a-
 
 ### Minimiser l'utilisation des stubs
 
-Autant que possible, il est préférable d'éviter de stubber des objects ou des classes, en particulier quand elles sont internes au projet. En effet, cela peut fausser complètement la spec : elle continue dde fonctionner alors qu'une erreur se produit avec un "vrai" code.
+Autant que possible, il est préférable d'éviter de stubber des objects ou des classes, en particulier quand elles sont internes au projet. En effet, cela peut fausser complètement la spec : elle continue de fonctionner alors qu'une erreur se produit avec un "vrai" code.
 
 En revanche, on stub quand on utilise des outils tiers ou externes, pour éviter par exemple de d'envoyer des SMS ou de solliciter une API externe.
 
