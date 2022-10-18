@@ -16,6 +16,8 @@
 # - Rés'In (métropole de Lyon)
 #
 class PublicApi::V1::PublicLinksController < PublicApi::V1::BaseController
+  before_action -> { check_parameters_presence(:territory) }
+
   def index
     departement_number = params.require(:territory).presence
 
