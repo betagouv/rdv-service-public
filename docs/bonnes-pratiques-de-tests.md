@@ -99,7 +99,7 @@ En revanche, on stub quand on utilise des outils tiers ou externes, pour éviter
 
 ### Helpers de rspec : `let` et `subject`
 
-Les `let` et `subject`, etc, doivent rester proches de leur lieu d’utilisation, quitte à être répétés dans un autre `context`. On préfère avoir un peu de duplication mais comprendre rapidement l'objet d'un test, que de DRY à tout prix et de devoir remonter des dizaines de lignes plus haut pour comprendre son contexte.
+Les `let` et `subject`, etc, doivent rester proches de leur lieu d’utilisation, quitte à être répétés dans un autre `context`. On préfère avoir un peu de duplication mais comprendre rapidement l'objet d'un test, que de réduire la duplication à tout prix et de devoir remonter des dizaines de lignes plus haut pour comprendre son contexte.
 
 ### Mise en place du contexte de test
 
