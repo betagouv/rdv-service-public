@@ -17,7 +17,7 @@ describe "public_api/public_links requests", type: :request do
       create(:plage_ouverture, :expired, organisation: organisation_c)
       create(:plage_ouverture, organisation: organisation_f)
 
-      get path, params: { territory: territory.departement_number }, headers: {}
+      get path, params: { territory: territory.departement_number }
 
       # Organisation A has two recurring plages
       # Organisation B has a plage in 5 days
@@ -39,6 +39,12 @@ describe "public_api/public_links requests", type: :request do
         ],
       }
       expect(parsed_response_body).to match_array(expected_body)
+    end
+
+    it "returns a bad request error when the territory param is missing" do
+      get path
+      expect(response).to have_http_status(:bad_request)
+      expect(parsed_response_body).to match(missing: "territory")
     end
   end
 
