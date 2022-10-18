@@ -21,7 +21,7 @@ describe "public_api/public_links requests", type: :request do
       create(:plage_ouverture, :expired, organisation: organisation_c)
       create(:plage_ouverture, organisation: organisation_f)
 
-      get "/public_api/public_links", params: params, headers: {}
+      get public_api_v1_public_links_path, params: params, headers: {}
 
       # Organisation A has two recurring plages
       # Organisation B has a plage in 5 days
@@ -42,7 +42,7 @@ describe "public_api/public_links requests", type: :request do
           },
         ],
       }
-      expect(JSON.parse(response.body)).to match_array(expected_body)
+      expect(parsed_response_body).to match_array(expected_body)
     end
   end
 end

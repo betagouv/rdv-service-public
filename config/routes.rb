@@ -112,6 +112,12 @@ Rails.application.routes.draw do
     end
   end
 
+  namespace :public_api do
+    namespace :v1 do
+      resources :public_links, only: [:index]
+    end
+  end
+
   resources :organisations, only: %i[new create]
 
   authenticate :agent do
@@ -261,10 +267,6 @@ Rails.application.routes.draw do
   # short public link
   get "org/:organisation_id(/:org_slug)" => "search#public_link_with_internal_organisation_id", as: :public_link_to_org
   get "org/ext/:territory/:organisation_external_id(/:org_slug)" => "search#public_link_with_external_organisation_id", as: :public_link_to_external_org
-
-  namespace :public_api do
-    resources :public_links, only: [:index]
-  end
 
   ##
 
