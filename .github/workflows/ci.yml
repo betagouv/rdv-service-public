@@ -76,7 +76,7 @@ jobs:
           POSTGRES_PASSWORD: lapin_test
           POSTGRES_DB: lapin_test
       - name: Run specs
-        run: RAILS_ENV=test bundle exec rake parallel:spec['spec\/(?!features)']
+        run: RAILS_ENV=test bundle exec rake parallel:spec['spec\/(?!(requests|features))']
         env:
           HOST: http://example.com
           POSTGRES_HOST: localhost
@@ -123,6 +123,98 @@ jobs:
           POSTGRES_DB: lapin_test
       - name: Run specs
         run: bundle exec rspec spec/features
+        env:
+          HOST: http://example.com
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+          POSTGRES_USER: lapin_test
+          POSTGRES_PASSWORD: lapin_test
+          POSTGRES_DB: lapin_test
+  test_features:
+    name: Feature Tests
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: lapin_test
+          POSTGRES_PASSWORD: lapin_test
+          POSTGRES_DB: lapin_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports: ["5432:5432"]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.1.1
+          bundler-cache: true
+      - name: Set up Redis
+        uses: zhulik/redis-action@1.1.0
+      - name: Install JS dependencies
+        run: yarn install
+      - name: Precompile assets
+        run: RAILS_ENV=test bundle exec rake assets:precompile
+      - name: Setup tests
+        run: RAILS_ENV=test bundle exec rake db:create db:test:prepare
+        env:
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+          POSTGRES_USER: lapin_test
+          POSTGRES_PASSWORD: lapin_test
+          POSTGRES_DB: lapin_test
+      - name: Run specs
+        run: bundle exec rspec spec/features
+        env:
+          HOST: http://example.com
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+          POSTGRES_USER: lapin_test
+          POSTGRES_PASSWORD: lapin_test
+          POSTGRES_DB: lapin_test
+  test_requests:
+    name: Requests Tests and API doc
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: lapin_test
+          POSTGRES_PASSWORD: lapin_test
+          POSTGRES_DB: lapin_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports: ["5432:5432"]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.1.1
+          bundler-cache: true
+      - name: Set up Redis
+        uses: zhulik/redis-action@1.1.0
+      - name: Install JS dependencies
+        run: yarn install
+      - name: Precompile assets
+        run: RAILS_ENV=test bundle exec rake assets:precompile
+      - name: Setup tests
+        run: RAILS_ENV=test bundle exec rake db:create db:test:prepare
+        env:
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+          POSTGRES_USER: lapin_test
+          POSTGRES_PASSWORD: lapin_test
+          POSTGRES_DB: lapin_test
+      - name: Run specs
+        run: bundle exec rake rswag
         env:
           HOST: http://example.com
           POSTGRES_HOST: localhost

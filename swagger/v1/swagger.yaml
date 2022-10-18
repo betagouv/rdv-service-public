@@ -1,0 +1,43 @@
+---
+openapi: 3.0.1
+info:
+  title: API RDV Solidarités V1
+  version: v1
+  description: |
+    L'API de RDV-Solidarités vous permet de lire, créer et modifier des données dans notre base depuis votre logiciel.
+
+    Toutes les fonctionnalités de RDV-Solidarités ne sont pas encore disponibles via l’API. Contactez-nous si vous avez besoin de fonctionnalités qui ne sont pas encore présentes.
+components:
+  schemas: {}
+tags:
+- name: Terminaisons publique
+  description: Ces points de terminaison sont publics
+  externalDocs: https://github.com/betagouv/rdv-solidarites.fr/blob/production/docs/api/description.md
+- name: Terminaisons agent
+  description: Ces point de terminaison ne sont accessibles qu'aux agents authentifiés
+  externalDocs: https://doc.rdv-solidarites.fr/tech/api-interconnexions-entrantes
+servers:
+- url: https://www.rdv-solidarites.fr
+  description: Serveur de production
+- url: https://demo.rdv-solidarites.fr
+  description: Serveur de démo
+externalDocs:
+  description: Merci de vous rendre sur la documentation générale pour mieux comprendre
+    le fonctionnement général de l'API.
+  url: https://github.com/betagouv/rdv-solidarites.fr/blob/production/docs/api/description.md
+paths:
+  "/api/v1/organisations/{organisation_id}/rdvs":
+    parameters:
+    - name: organisation_id
+      in: path
+      description: organisation_id
+      required: true
+      schema:
+        type: string
+    get:
+      summary: list rdvs
+      tags:
+      - Terminaisons agent
+      responses:
+        '200':
+          description: successful
