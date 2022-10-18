@@ -10,8 +10,7 @@ describe "api/v1/organisations requests", type: :request do
       it "returns empty array" do
         subject
         expect(response.status).to eq(200)
-        result = JSON.parse(response.body)
-        expect(result["organisations"]).to eq([])
+        expect(parsed_response_body["organisations"]).to eq([])
       end
     end
 
@@ -25,9 +24,8 @@ describe "api/v1/organisations requests", type: :request do
       it "returns policy scoped organisations" do
         subject
         expect(response.status).to eq(200)
-        result = JSON.parse(response.body)
-        expect(result["organisations"].count).to eq(2)
-        expect(result["organisations"].pluck("id")).to \
+        expect(parsed_response_body["organisations"].count).to eq(2)
+        expect(parsed_response_body["organisations"].pluck("id")).to \
           contain_exactly(organisation1.id, organisation2.id)
       end
     end
@@ -56,9 +54,8 @@ describe "api/v1/organisations requests", type: :request do
       it "returns the organisations attributed to the sector" do
         subject
         expect(response.status).to eq(200)
-        result = JSON.parse(response.body)
-        expect(result["organisations"].count).to eq(1)
-        expect(result["organisations"].pluck("id")).to \
+        expect(parsed_response_body["organisations"].count).to eq(1)
+        expect(parsed_response_body["organisations"].pluck("id")).to \
           contain_exactly(organisation2.id)
       end
     end

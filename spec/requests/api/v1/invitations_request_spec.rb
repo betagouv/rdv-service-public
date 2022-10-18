@@ -15,8 +15,7 @@ describe "api/v1/agents requests", type: :request do
       it "returns the user" do
         get api_v1_invitation_path(invitation_token), headers: api_auth_headers_for_agent(agent)
         expect(response.status).to eq(200)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["user"]["id"]).to eq(user.id)
+        expect(parsed_response_body["user"]["id"]).to eq(user.id)
       end
 
       context "when not authorized" do
@@ -26,8 +25,7 @@ describe "api/v1/agents requests", type: :request do
         it "returns 403" do
           get api_v1_invitation_path(invitation_token), headers: api_auth_headers_for_agent(agent)
           expect(response.status).to eq(403)
-          response_parsed = JSON.parse(response.body)
-          expect(response_parsed["errors"]).to be_present
+          expect(parsed_response_body["errors"]).to be_present
         end
       end
     end

@@ -13,9 +13,8 @@ describe "paginated requests", type: :request do
 
     it do
       expect(response.status).to eq(200)
-      result = JSON.parse(response.body)
-      expect(result["organisations"].count).to eq(100)
-      expect(result["meta"]).to eq({ "current_page" => 1, "next_page" => 2, "prev_page" => nil, "total_count" => 210, "total_pages" => 3 })
+      expect(parsed_response_body["organisations"].count).to eq(100)
+      expect(parsed_response_body["meta"]).to eq({ "current_page" => 1, "next_page" => 2, "prev_page" => nil, "total_count" => 210, "total_pages" => 3 })
     end
   end
 
@@ -24,9 +23,8 @@ describe "paginated requests", type: :request do
 
     it do
       expect(response.status).to eq(200)
-      result = JSON.parse(response.body)
-      expect(result["organisations"].count).to eq(10)
-      expect(result["meta"]).to eq({ "current_page" => 2, "next_page" => 3, "prev_page" => 1, "total_count" => 210, "total_pages" => 21 })
+      expect(parsed_response_body["organisations"].count).to eq(10)
+      expect(parsed_response_body["meta"]).to eq({ "current_page" => 2, "next_page" => 3, "prev_page" => 1, "total_count" => 210, "total_pages" => 21 })
     end
   end
 end
