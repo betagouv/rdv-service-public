@@ -1,18 +1,14 @@
 # frozen_string_literal: true
 
 describe "public_api/public_links requests", type: :request do
-  let!(:territory) { create(:territory, departement_number: "CN") }
-  let!(:organisation_a) { create(:organisation, new_domain_beta: true, external_id: "ext_id_A", territory: territory) }
-  let!(:organisation_b) { create(:organisation, new_domain_beta: true, external_id: "ext_id_B", territory: territory) }
-  let!(:organisation_c) { create(:organisation, new_domain_beta: true, external_id: "ext_id_C", territory: territory) }
-  let!(:organisation_d) { create(:organisation, new_domain_beta: true, external_id: "ext_id_D", territory: territory) }
-  let!(:organisation_e) { create(:organisation, new_domain_beta: true, external_id: "ext_id_E", territory: create(:territory)) }
-  let!(:organisation_f) { create(:organisation, new_domain_beta: true, external_id: nil,        territory: territory) }
-
-  context "when plages are defined" do
-    let(:params) do
-      { territory: "CN" }
-    end
+  shared_examples "public links deliverer" do |path|
+    let!(:territory) { create(:territory, departement_number: "CN") }
+    let!(:organisation_a) { create(:organisation, new_domain_beta: true, external_id: "ext_id_A", territory: territory) }
+    let!(:organisation_b) { create(:organisation, new_domain_beta: true, external_id: "ext_id_B", territory: territory) }
+    let!(:organisation_c) { create(:organisation, new_domain_beta: true, external_id: "ext_id_C", territory: territory) }
+    let!(:organisation_d) { create(:organisation, new_domain_beta: true, external_id: "ext_id_D", territory: territory) }
+    let!(:organisation_e) { create(:organisation, new_domain_beta: true, external_id: "ext_id_E", territory: create(:territory)) }
+    let!(:organisation_f) { create(:organisation, new_domain_beta: true, external_id: nil,        territory: territory) }
 
     it "returns any organisation that has any open plage ouverture" do
       create(:plage_ouverture, organisation: organisation_a)
@@ -21,7 +17,7 @@ describe "public_api/public_links requests", type: :request do
       create(:plage_ouverture, :expired, organisation: organisation_c)
       create(:plage_ouverture, organisation: organisation_f)
 
-      get public_api_v1_public_links_path, params: params, headers: {}
+      get path, params: { territory: territory.departement_number }, headers: {}
 
       # Organisation A has two recurring plages
       # Organisation B has a plage in 5 days
@@ -45,4 +41,7 @@ describe "public_api/public_links requests", type: :request do
       expect(parsed_response_body).to match_array(expected_body)
     end
   end
+
+  it_behaves_like "public links deliverer", "/public_api/v1/public_links"
+  it_behaves_like "public links deliverer", "/public_api/public_links"
 end

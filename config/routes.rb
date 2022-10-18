@@ -116,6 +116,9 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :public_links, only: [:index]
     end
+
+    # This one has been published before versioning the public API:
+    get :public_links, to: "v1/public_links#index"
   end
 
   resources :organisations, only: %i[new create]
