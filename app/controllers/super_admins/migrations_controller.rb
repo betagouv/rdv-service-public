@@ -42,7 +42,7 @@ module SuperAdmins
         plage_ouvertures_for_organisation.where(organisation: old_organisation).update_all(organisation_id: new_organisation.id)
 
         # creer des duplicatas de motifs, et y associer les plages d'ouvertures, et les rdvs
-        Motif.joins(rdvs: :agents_rdvs).where(agents_rdvs: { agent_id: agent.id }).find_each do |old_motif|
+        Motif.joins(rdvs: :agents_rdvs).where(agents_rdvs: { agent_id: agent.id }).distinct.find_each do |old_motif|
           new_motif = old_motif.dup
           new_motif.organisation = new_organisation
           new_motif.save!

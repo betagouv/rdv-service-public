@@ -79,7 +79,6 @@ class User < ApplicationRecord
 
   # Hooks
   before_save :set_email_to_null_if_blank
-  after_update -> { rdvs.touch_all }
 
   # Scopes
   scope :active, -> { where(deleted_at: nil) }
@@ -140,8 +139,7 @@ class User < ApplicationRecord
   end
 
   def profile_for(organisation)
-    # Hash memoization: the block is called when a profile isn’t found in @profiles
-    @profiles ||= Hash.new { |h, org| h[org] = user_profiles.find_by(organisation: org) }
+    @profiles ||= user_profiles.index_by(&:organisation)
     @profiles[organisation]
   end
 

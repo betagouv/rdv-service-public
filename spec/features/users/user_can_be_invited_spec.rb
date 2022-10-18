@@ -28,28 +28,28 @@ describe "User can be invited" do
   let!(:organisation) { create(:organisation, territory: territory26) }
   let!(:motif) { create(:motif, name: "RSA orientation sur site", reservable_online: true, organisation: organisation, service: agent.service) }
   let!(:lieu) { create(:lieu, organisation: organisation) }
-  let!(:autre_lieu) { create(:lieu, organisation: organisation) }
+  let!(:lieu2) { create(:lieu, organisation: organisation) }
   let!(:plage_ouverture) { create(:plage_ouverture, :daily, first_day: now - 1.month, motifs: [motif], lieu: lieu, organisation: organisation) }
-  let!(:autre_plage_ouverture) { create(:plage_ouverture, :daily, first_day: now - 1.month, motifs: [motif], lieu: autre_lieu, organisation: organisation) }
+  let!(:plage_ouverture2) { create(:plage_ouverture, :daily, first_day: now - 1.month, motifs: [motif], lieu: lieu2, organisation: organisation) }
 
   let!(:organisation2) { create(:organisation) }
 
-  describe "invitation to lieu selection new path" do
+  describe "in lieu selection page" do
     let!(:geo_search) { instance_double(Users::GeoSearch, available_motifs: Motif.where(id: [motif.id])) }
 
     before do
       travel_to(now)
       allow(Users::GeoSearch).to receive(:new).and_return(geo_search)
-
-      visit prendre_rdv_path(
-        departement: departement_number, city_code: city_code, invitation_token: invitation_token,
-        address: "16 rue de la résistance", motif_search_terms: "RSA orientation"
-      )
       allow_any_instance_of(ActionDispatch::Request).to receive(:cookie_jar).and_return(page.cookies)
       allow_any_instance_of(ActionDispatch::Request).to receive(:cookies).and_return(page.cookies)
     end
 
-    it "default", js: true do
+    it "shows the available lieux to take a rdv", js: true do
+      visit prendre_rdv_path(
+        departement: departement_number, city_code: city_code, invitation_token: invitation_token,
+        address: "16 rue de la résistance", motif_search_terms: "RSA orientation"
+      )
+
       # Lieu selection
       expect(page).to have_content(lieu.name)
       find(".card-title", text: /#{lieu.name}/).ancestor(".card").find("a.stretched-link").click
@@ -103,9 +103,32 @@ describe "User can be invited" do
       expect(page).to have_content(lieu.address)
       expect(page).to have_content("11h00")
     end
+
+    context "when lieux do not have availability" do
+      let!(:plage_ouverture) do
+        create(:plage_ouverture, :daily, first_day: now + 8.days, motifs: [motif], lieu: lieu, organisation: organisation)
+      end
+      let!(:plage_ouverture2) do
+        create(:plage_ouverture, :daily, first_day: now + 8.days, motifs: [motif], lieu: lieu2, organisation: organisation)
+      end
+      let!(:motif) do
+        create(:motif, name: "RSA orientation sur site", max_booking_delay: 7.days, reservable_online: true, organisation: organisation, service: agent.service)
+      end
+
+      it "does not show the lieux" do
+        visit prendre_rdv_path(
+          departement: departement_number, city_code: city_code, invitation_token: invitation_token,
+          address: "16 rue de la résistance", motif_search_terms: "RSA orientation"
+        )
+
+        expect(page).not_to have_content(lieu.name)
+        expect(page).not_to have_content(lieu2.name)
+        expect(page).to have_content("Nous n'avons pas trouvé de créneaux pour votre motif.")
+      end
+    end
   end
 
-  describe "invitation to motifs selection" do
+  describe "in motifs selection page" do
     let!(:geo_search) { instance_double(Users::GeoSearch, available_motifs: Motif.where(id: [motif.id, motif2.id])) }
     let!(:motif2) { create(:motif, name: "RSA orientation telephone", reservable_online: true, organisation: organisation2, service: agent.service) }
     let!(:plage_ouverture2) { create(:plage_ouverture, motifs: [motif2], organisation: organisation2) }
@@ -120,7 +143,7 @@ describe "User can be invited" do
       )
     end
 
-    it "default", js: true do
+    it "shows the geo search available motifs to take a rdv", js: true do
       # Motif selection
       expect(page).to have_content(motif.name)
       expect(page).to have_content(motif2.name)
@@ -176,43 +199,10 @@ describe "User can be invited" do
       )
     end
 
-    it "default", js: true do
+    it "shows the organisations available motifs", js: true do
       # Motif selection
       expect(page).to have_content(motif.name)
       expect(page).to have_content(motif2.name)
-      find(".card-title", text: /#{motif.name}/).click
-
-      # Restriction Page
-      expect(page).to have_content("À lire avant de prendre un rendez-vous")
-      expect(page).to have_content(motif.restriction_for_rdv)
-      click_link("Accepter")
-
-      # Lieu selection
-      expect(page).to have_content(lieu.name)
-      find(".card-title", text: /#{lieu.name}/).ancestor(".card").find("a.stretched-link").click
-
-      # Crenenau selection
-      expect(page).to have_content(lieu.name)
-      first(:link, "11:00").click
-
-      # RDV informations
-      expect(page).to have_content("Vos informations")
-      expect(page).not_to have_field("Date de naissance")
-      expect(page).not_to have_field("Adresse")
-      expect(page).to have_field("Email", with: user.email, disabled: true)
-      expect(page).to have_field("Téléphone", with: user.phone_number)
-      click_button("Continuer")
-
-      # Confirmation
-      expect(page).to have_content("Informations de contact")
-      expect(page).to have_content("johndoe@gmail.com")
-      expect(page).to have_content("0682605955")
-      click_link("Confirmer mon RDV")
-
-      # RDV page
-      expect(page).to have_content("Votre RDV")
-      expect(page).to have_content(lieu.address)
-      expect(page).to have_content("11h00")
     end
   end
 end

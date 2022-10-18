@@ -1,8 +1,11 @@
 .card
-  .card-header
-    = link_to admin_organisation_rdv_path(rdv.organisation, rdv) do
-      h5= rdv_title_for_agent(rdv)
-    = I18n.l(rdv.starts_at, format: "%A %d %B à %H:%M").capitalize
+  .card-header.d-flex.justify-content-between.align-items-center
+    div
+      = link_to admin_organisation_rdv_path(rdv.organisation, rdv) do
+        h5= rdv_title_for_agent(rdv)
+      = I18n.l(rdv.starts_at, format: "%A %d %B à %H:%M").capitalize
+    div.mr-3= link_to admin_organisation_rdv_path(rdv.organisation, rdv, agent_id: nil), method: :delete, title: t("helpers.delete"), data: { confirm: "Confirmez-vous la suppression de ce rendez-vous collectif ?"} do
+      i.fa.fa-trash-alt
   .card-body
     .row
       .col-md-6

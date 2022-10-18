@@ -78,7 +78,6 @@ class Agent < ApplicationRecord
   validate :service_cannot_be_changed
 
   # Hooks
-  after_update -> { rdvs.touch_all }
 
   # Scopes
   scope :complete, -> { where.not(first_name: nil).where.not(last_name: nil) }
@@ -184,10 +183,10 @@ class Agent < ApplicationRecord
   delegate :conseiller_numerique?, to: :service
 
   def domain
-    if organisations.where(new_domain_beta: true).any?
-      Domain::RDV_AIDE_NUMERIQUE
-    else
-      Domain::RDV_SOLIDARITES
-    end
+    @domain ||= if organisations.where(new_domain_beta: true).any?
+                  Domain::RDV_AIDE_NUMERIQUE
+                else
+                  Domain::RDV_SOLIDARITES
+                end
   end
 end
