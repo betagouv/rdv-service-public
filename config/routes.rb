@@ -92,35 +92,6 @@ Rails.application.routes.draw do
 
   get "/calendrier/:id", controller: :ics_calendar, action: :show, as: :ics_calendar
 
-  namespace :api do
-    namespace :v1 do
-      mount_devise_token_auth_for "AgentWithTokenAuth", at: "auth"
-      resources :absences, except: %i[new edit]
-      resources :agents, only: %i[index]
-      resources :users, only: %i[create index show update] do
-        get :invite, on: :member
-        post :invite, on: :member
-      end
-      resources :user_profiles, only: [:create]
-      resources :organisations, only: %i[index] do
-        resources :users, only: %i[index show]
-        resources :motifs, only: %i[index]
-        resources :rdvs, only: %i[index]
-      end
-
-      resources :invitations, param: "token", only: [:show]
-    end
-  end
-
-  namespace :public_api do
-    namespace :v1 do
-      resources :public_links, only: [:index]
-    end
-
-    # This one has been published before versioning the public API:
-    get :public_links, to: "v1/public_links#index"
-  end
-
   resources :organisations, only: %i[new create]
 
   authenticate :agent do
@@ -301,4 +272,8 @@ Rails.application.routes.draw do
     # LetterOpener
     mount LetterOpenerWeb::Engine, at: "/letter_opener"
   end
+
+  ## APIs
+  draw :api
+  draw :public_api
 end
