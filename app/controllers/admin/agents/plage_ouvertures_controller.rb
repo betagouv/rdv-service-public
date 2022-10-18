@@ -16,11 +16,9 @@ class Admin::Agents::PlageOuverturesController < ApplicationController
   private
 
   def plage_ouvertures
-    if params[:plages_ids].present?
-      PlageOuverture.where(id: params[:plages_ids])
-    else
-      custom_policy.includes(:lieu, :organisation).where(agent: @agent)
-    end
+    plage = custom_policy.includes(:lieu, :organisation).where(agent: @agent)
+    plage = plage.where(id: params[:plages_ids]) if params[:plages_ids].present?
+    plage
   end
 
   # TODO: custom policy waiting for policies refactoring
