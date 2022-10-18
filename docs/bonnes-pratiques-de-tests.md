@@ -14,7 +14,7 @@ Dit autrement, les tests end-to-end vont avoir tendance à se concentrer sur les
 
 Pour référence : [pyramide des tests](https://martinfowler.com/articles/practical-test-pyramid.html)
 
-## E2E : dans quel cas utiliser des feature specs ?
+## End-to-End (E2E) : dans quel cas utiliser des tests de bout en bout (feature specs) ?
 
 Les feature specs sont à utiliser tout en haut de la pyramide, pour les tests end-to-end. Ils sont (éventuellement) plus lents que les autres types de test (dans le cas où Javascript est nécessaire). On les reserve à la description de scénarios utilisateurs complets.
 
