@@ -109,6 +109,7 @@ group :development do
   gem "binding_of_caller" # Enable the REPL in better_errors
   gem "letter_opener_web" # Saves sent emails and serves them on /letter_opener
   gem "rails-erd" # Keeps docs/domain_model.svg up-to-date. See .erdconfig
+  gem "rack-mini-profiler"
 end
 
 group :test do
