@@ -2,13 +2,17 @@
 
 ## Pyramide des tests
 
-![https://commons.wikimedia.org/wiki/File:Testing_Pyramid.svg](https://upload.wikimedia.org/wikipedia/commons/6/64/Testing_Pyramid.svg)
+![https://martinfowler.com/articles/practical-test-pyramid/testPyramid.png](https://martinfowler.com/articles/practical-test-pyramid/testPyramid.png)
 
 La pyramide se lit selon ses deux dimensions : 
 - verticalement : plus on est haut, plus nombreuses sont les couches traversées par un test
 - horizontalement : plus on est bas, plus nombreux sont les cas testés
 
+Par ailleurs, plus on est haut dans la pyramide, plus c'est couteux à exécuter et à maintenir. Plus c'est bas et moins c'est couteux à exécuter et à maintenir.
+
 Dit autrement, les tests end-to-end vont avoir tendance à se concentrer sur les cas nominaux, pour couvrir une fonctionnalité entière. Les tests unitaires, à l'opposé, couvrent plutôt un bout de code, mais testent exhaustivement toutes ses possibilités.
+
+Pour référence : [pyramide des tests](https://martinfowler.com/articles/practical-test-pyramid.html)
 
 ## E2E : dans quel cas utiliser des feature specs ?
 
