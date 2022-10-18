@@ -13,8 +13,7 @@ describe "api/v1/absences requests", type: :request do
       it "returns empty array" do
         subject
         expect(response.status).to eq(200)
-        result = JSON.parse(response.body)
-        expect(result["absences"]).to eq([])
+        expect(parsed_response_body["absences"]).to eq([])
       end
     end
 
@@ -31,9 +30,8 @@ describe "api/v1/absences requests", type: :request do
       it "returns policy scoped absences" do
         subject
         expect(response.status).to eq(200)
-        result = JSON.parse(response.body)
-        expect(result["absences"].count).to eq(3)
-        expect(result["absences"].pluck("id")).to \
+        expect(parsed_response_body["absences"].count).to eq(3)
+        expect(parsed_response_body["absences"].pluck("id")).to \
           contain_exactly(absence1.id, absence2.id, absence_org2.id)
       end
 
@@ -42,7 +40,7 @@ describe "api/v1/absences requests", type: :request do
 
         it "does not include orga2 absences" do
           subject
-          expect(JSON.parse(response.body)["absences"].pluck("id")).to \
+          expect(parsed_response_body["absences"].pluck("id")).to \
             contain_exactly(absence1.id, absence2.id)
         end
       end
@@ -115,7 +113,7 @@ describe "api/v1/absences requests", type: :request do
       it "returns an error" do
         expect { subject }.not_to(change(Absence, :count))
         expect(response.status).to eq(422)
-        expect(JSON.parse(response.body)["error_messages"]).to include("start_time doit être rempli(e)")
+        expect(parsed_response_body["error_messages"]).to include("start_time doit être rempli(e)")
       end
     end
 
@@ -125,7 +123,7 @@ describe "api/v1/absences requests", type: :request do
       it "returns an error" do
         expect { subject }.not_to(change(Absence, :count))
         expect(response.status).to eq(422)
-        expect(JSON.parse(response.body)["error_messages"]).to include("ends_time doit être après le début.")
+        expect(parsed_response_body["error_messages"]).to include("ends_time doit être après le début.")
       end
     end
 
@@ -141,7 +139,7 @@ describe "api/v1/absences requests", type: :request do
         it "returns an error" do
           expect { subject }.not_to(change(Absence, :count))
           expect(response.status).to eq(403)
-          expect(JSON.parse(response.body)["error_messages"]).to include("Vous ne pouvez pas effectuer cette action.")
+          expect(parsed_response_body["error_messages"]).to include("Vous ne pouvez pas effectuer cette action.")
         end
       end
 
@@ -175,7 +173,7 @@ describe "api/v1/absences requests", type: :request do
       it "works" do
         subject
         expect(response.status).to eq(200)
-        result = JSON.parse(response.body)
+        result = parsed_response_body
         expect(result["absence"]["title"]).to eq(absence.title)
       end
     end
