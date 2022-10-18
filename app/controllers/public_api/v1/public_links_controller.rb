@@ -15,7 +15,7 @@
 # - l'équipe carto ANCT,
 # - Rés'In (métropole de Lyon)
 #
-class PublicApi::PublicLinksController < ActionController::Base # rubocop:disable Rails/ApplicationController
+class PublicApi::V1::PublicLinksController < PublicApi::V1::BaseController
   def index
     departement_number = params.require(:territory).presence
 
