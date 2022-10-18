@@ -17,15 +17,12 @@
 #
 class PublicApi::V1::PublicLinksController < PublicApi::V1::BaseController
   before_action -> { check_parameters_presence(:territory) }
+  before_action :set_territory
 
   def index
-    departement_number = params.require(:territory).presence
-
-    territory = Territory.find_by!(departement_number: departement_number)
-
     # Using cache to prevent overloading db in case of accidentally intensive API calls
-    response_body = Rails.cache.fetch("public_api/public_links/#{territory.id}", expires_in: 1.minute) do
-      { public_links: public_links_for(territory) }.to_json
+    response_body = Rails.cache.fetch("public_api/public_links/#{@territory.id}", expires_in: 1.minute) do
+      { public_links: public_links_for(@territory) }.to_json
     end
 
     render json: response_body
@@ -52,5 +49,10 @@ class PublicApi::V1::PublicLinksController < PublicApi::V1::BaseController
         public_link: public_link_to_org_url(organisation_id: organisation, host: organisation.domain.dns_domain_name),
       }
     end
+  end
+
+  def set_territory
+    @territory = Territory.find_by(departement_number: params[:territory])
+    render_error :not_found, not_found: :territory unless @territory
   end
 end

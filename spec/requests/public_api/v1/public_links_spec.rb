@@ -38,6 +38,7 @@ describe "public_api/public_links requests", type: :request do
           },
         ],
       }
+      expect(response).to have_http_status(:ok)
       expect(parsed_response_body).to match_array(expected_body)
     end
 
@@ -45,6 +46,12 @@ describe "public_api/public_links requests", type: :request do
       get path
       expect(response).to have_http_status(:bad_request)
       expect(parsed_response_body).to match(missing: "territory")
+    end
+
+    it "returns a not found error when the territory can't be found" do
+      get path, params: { territory: "unknown" }
+      expect(response).to have_http_status(:not_found)
+      expect(parsed_response_body).to match(not_found: "territory")
     end
   end
 
