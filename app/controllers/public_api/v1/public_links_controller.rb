@@ -21,7 +21,7 @@ class PublicApi::V1::PublicLinksController < PublicApi::V1::BaseController
 
   def index
     # Using cache to prevent overloading db in case of accidentally intensive API calls
-    response_body = Rails.cache.fetch("public_api/public_links/#{@territory.id}", expires_in: 1.minute) do
+    response_body = Rails.cache.fetch("public_api/v1/public_links/#{@territory.id}", expires_in: 1.minute) do
       { public_links: public_links_for(@territory) }.to_json
     end
 
