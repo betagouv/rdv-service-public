@@ -211,9 +211,9 @@ class Rdv < ApplicationRecord
     ""
   end
 
-  def self.search_for(organisation, options)
-    organisation_ids = [organisation.id] if organisation.is_a?(Organisation)
-    organisation_ids ||= organisation.ids
+  def self.search_for(organisations, options)
+    organisation_ids = [organisations.id] if organisations.is_a?(Organisation)
+    organisation_ids ||= organisations.ids
     rdvs = joins(:organisation).where(organisations: { id: organisation_ids })
     options.each do |key, value|
       next if value.blank?

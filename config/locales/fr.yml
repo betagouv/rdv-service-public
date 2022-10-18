@@ -93,12 +93,16 @@ fr:
   agents:
     export_mailer:
       rdv_export:
-        description: Vous trouverez en pièce jointe l’export des RDV que vous avez demandé.
+        description: Vous trouverez en pièce jointe l’export des RDVs que vous avez demandé.
+      rdvs_users_export:
+        description: Vous trouverez en pièce jointe l’export des RDVs par usager que vous avez demandé.
   mailers:
     agents:
       export_mailer:
         rdv_export:
-          subject: Export RDV du %{date} pour l'organisation %{organisation_name}
+          subject: Export des RDVs du %{date}
+        full_rdvs_user_export:
+          subject: Export des RDVs par usager du %{date}
   date:
     helpers:
       tomorrow: demain
@@ -265,6 +269,7 @@ fr:
   layouts:
     flash:
       confirm_export_send_when_done: Le fichier Excel des RDV sera envoyé à %{agent_email}.
+      confirm_rdvs_users_export_send_when_done: Le fichier Excel de l'ensemble des rdvs par usager du territoire sera envoyé à %{agent_email}.
   number:
     currency:
       format:
