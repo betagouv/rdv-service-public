@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class PublicApi::V1::BaseController < ActionController::Base
+  include ApiResourcesRenderer
+
   respond_to :json
 
   protected

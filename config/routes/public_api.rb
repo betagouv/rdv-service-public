@@ -2,7 +2,8 @@
 
 namespace :public_api do
   namespace :v1 do
-    resources :public_links, only: [:index]
+    resources :public_links, only: :index
+    resources :groups, only: :index
   end
 
   # This one has been published before versioning the public API:
