@@ -3,22 +3,19 @@
 class Admin::ParticipationsController < AgentAuthController
   # Participation is @rdv.rdvs_users
   include ParticipationsHelper
+  respond_to :js
 
+  before_action :set_rdv
   before_action :set_rdvs_user
 
   def update
     authorize(@rdv, :update?)
-    @success = @rdvs_user.change_status(current_agent, rdvs_user_params[:status])
-    respond_to do |format|
-      format.js do
-        if @success
-          flash.now[:notice] = "Status de participation pour #{@rdvs_user.user.full_name} mis à jour"
-        else
-          flash.now[:error] = @rdvs_user.errors.full_messages.to_sentence
-        end
-        render "admin/rdvs_users/update"
-      end
+    if @rdvs_user.change_status(current_agent, rdvs_user_params[:status])
+      flash.now[:notice] = "Status de participation pour #{@rdvs_user.user.full_name} mis à jour"
+    else
+      flash.now[:error] = @rdvs_user.errors.full_messages.to_sentence
     end
+    render "admin/rdvs_users/update"
   end
 
   def destroy
@@ -33,8 +30,11 @@ class Admin::ParticipationsController < AgentAuthController
 
   private
 
-  def set_rdvs_user
+  def set_rdv
     @rdv = policy_scope(Rdv).find(params[:rdv_id])
+  end
+
+  def set_rdvs_user
     @rdvs_user = @rdv.rdvs_users.find(params[:id])
   end
 

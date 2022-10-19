@@ -1,4 +1,4 @@
-<% if @success %>
+<% if @rdv.errors.empty? %>
   <% rdv_html = render "admin/rdvs/rdv", rdv: @rdv, locals: { agent: @agent } %>
   (function() {
     let element = document.getElementById('rdv-<%= @rdv.id %>');

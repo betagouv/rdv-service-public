@@ -217,19 +217,12 @@ RSpec.describe Rdv::Updatable, type: :concern do
   end
 
   describe "#change_participation_statuses on RDV.status change" do
-    let(:motif_collectif) { create(:motif, :collectif) }
-    let(:motif) { create(:motif) }
-    let(:user1) { create(:user) }
-    let(:user2) { create(:user) }
-    let(:user_excused) { create(:user) }
-    let(:user_noshow) { create(:user) }
-    let(:user_seen) { create(:user) }
-    let(:rdv) { create(:rdv, agents: [agent], motif: motif_collectif) }
-    let!(:rdvs_user1) { create(:rdvs_user, user: user1, rdv: rdv) }
-    let!(:rdvs_user2) { create(:rdvs_user, user: user2, rdv: rdv) }
-    let!(:rdvs_user_excused) { create(:rdvs_user, user: user_excused, rdv: rdv) }
-    let!(:rdvs_user_noshow) { create(:rdvs_user, user: user_noshow, rdv: rdv) }
-    let!(:rdvs_user_seen) { create(:rdvs_user, user: user_seen, rdv: rdv) }
+    let(:rdv) { create(:rdv, :collectif, agents: [agent]) }
+    let!(:rdvs_user1) { create(:rdvs_user, rdv: rdv) }
+    let!(:rdvs_user2) { create(:rdvs_user, rdv: rdv) }
+    let!(:rdvs_user_excused) { create(:rdvs_user, rdv: rdv) }
+    let!(:rdvs_user_noshow) { create(:rdvs_user, rdv: rdv) }
+    let!(:rdvs_user_seen) { create(:rdvs_user, rdv: rdv) }
 
     before do
       rdvs_user_excused.update!(status: "excused")
@@ -280,7 +273,7 @@ RSpec.describe Rdv::Updatable, type: :concern do
       end
 
       it "updates participations statuses if not collectif" do
-        rdv.update!(motif: motif)
+        rdv.update!(motif: create(:motif))
         rdv.update_and_notify(agent, status: "excused")
         rdv.reload
         expect(rdvs_user1.reload.status).to eq("excused")

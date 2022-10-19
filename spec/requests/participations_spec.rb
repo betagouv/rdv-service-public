@@ -16,7 +16,7 @@ RSpec.describe "Participations", type: :request do
   end
 
   describe "update" do
-    it "returns http redirect and notif" do
+    it "returns status ok on remote put" do
       put(
         admin_organisation_rdv_participation_path(rdv.organisation, rdv, rdv.rdvs_users.first),
         xhr: true,

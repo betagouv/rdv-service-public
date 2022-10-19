@@ -39,12 +39,8 @@ class RdvsUser < ApplicationRecord
   end
 
   def temporal_status
-    RdvsUser.temporal_status(status, rdv.starts_at)
-  end
-
-  def self.temporal_status(status, starts_at)
     if status == "unknown"
-      rdv_date = starts_at.to_date
+      rdv_date = rdv.starts_at.to_date
       if rdv_date > Time.zone.today # future
         "unknown_future"
       elsif rdv_date == Time.zone.today # today

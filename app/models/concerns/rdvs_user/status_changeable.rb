@@ -7,29 +7,21 @@ module RdvsUser::StatusChangeable
     return if self.status == status
 
     RdvsUser.transaction do
-      if update(status: status)
-        notify!(author)
-        true
-      else
-        false
-      end
+      update(status: status) ? (notify!(author) || true) : false
     end
-    @rdvs_user_token
+    # Notifiers are returning rdvs_user_token when a notif is sent or nil
   end
 
   def notify!(author)
-    if rdv_user_cancelled? && user_valid_for_lifecycle_notifications?
-      @rdvs_user_token = Notifiers::RdvCancelled.perform_with(rdv, author, [user])
-    end
-    if rdv_status_reloaded_from_cancelled? && user_valid_for_lifecycle_notifications?
-      @rdvs_user_token = Notifiers::RdvCreated.perform_with(rdv, author, [user])
-    end
-
+    return nil unless user_valid_for_lifecycle_notifications?
+    return Notifiers::RdvCancelled.perform_with(rdv, author, [user]) if rdv_user_cancelled?
+    return Notifiers::RdvCreated.perform_with(rdv, author, [user]) if rdv_status_reloaded_from_cancelled?
     # Amine Fix on updatable, reminder for opening to public and setting up webhooks for rdv-insertion
     # self.skip_webhooks = false
   end
 
   def rdv_user_cancelled?
+    # Do not notify users for cancel statuses for previously cancelled rdv participation
     (status.in? %w[excused revoked]) && !status_previously_was.in?(%w[excused revoked])
   end
 

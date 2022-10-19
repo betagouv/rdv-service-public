@@ -22,6 +22,13 @@ describe Notifiers::RdvUpcomingReminder, type: :service do
     subject
   end
 
+  it "doesnt send email if user participation is excused" do
+    rdv_user.update(status: "excused")
+    expect(Users::RdvMailer).not_to receive(:with).with({ rdv: rdv, user: user1, token: /^[A-Z0-9]{8}$/ })
+    expect(Users::RdvSms).not_to receive(:rdv_upcoming_reminder).with(rdv, user1, /^[A-Z0-9]{8}$/)
+    subject
+  end
+
   it "outputs the tokens" do
     expect(subject).to match(user1.id => /^[A-Z0-9]{8}$/)
   end

@@ -1,4 +1,4 @@
-<% if @success %>
+<% if @rdvs_user.errors.empty? %>
   <% participation_dropdown_html = render "admin/rdvs_users/participation_status_dropdown", rdvs_user: @rdvs_user, agent: @agent %>
   (function() {
     let element = document.getElementById('participation-dropdown-<%= @rdvs_user.id %>');

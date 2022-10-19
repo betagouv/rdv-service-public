@@ -21,5 +21,5 @@ fr:
       notifications_overrides: "Pour ce RDV :"
       delete:
         title: Supprimer l'inscription du participant
-        details: En tant qu’administrateur, vous pouvez supprimer la participation de l'usager au rdv. Aucune notification ne sera envoyée.
+        details: En tant qu’administrateur, vous pouvez supprimer la participation de l'usager au RDV. Aucune notification ne sera envoyée.
         confirm: Êtes-vous sûr de vouloir supprimer l'inscription de ce participant ?
