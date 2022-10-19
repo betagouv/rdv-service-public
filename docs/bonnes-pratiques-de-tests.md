@@ -14,6 +14,18 @@ Dit autrement, les tests end-to-end vont avoir tendance à se concentrer sur les
 
 Pour référence : [pyramide des tests](https://martinfowler.com/articles/practical-test-pyramid.html)
 
+## Quelles couches sont testées par quels test ?
+
+|                                  | JS  | Capybara | Routage et middlewares Rack | Controllers | Code métier |
+|----------------------------------|-----|----------|-----------------------------|-------------|-------------|
+| Feature spec avec JS             | X   | X        | X                           | X           | X           |
+| Feature spec sans JS             |     | X        | X                           | X           | X           |
+| Request spec                     |     |          | X                           | X           | X           |
+| Controller spec                  |     |          |                             | X           | X           |
+| Test unitaire (mailer, model...) |     |          |                             |             | X           |
+
+Des informations sur les performances des tests peuvent être trouvées dans la section ci dessous intitulée : [Les performances](#les-performances).
+
 ## End-to-End (E2E) : dans quel cas utiliser des tests de bout en bout (feature specs) ?
 
 Les feature specs sont à utiliser tout en haut de la pyramide, pour les tests end-to-end. Ils sont plus lents que les autres types de test, dans le cas où Javascript est nécessaire, mais aussi parce qu'on traverse la pile entière, le rendu de vue et tous les mécanismes (au travers d'un navigateur). On les reserve à la description de scénarios utilisateurs complets.
@@ -132,3 +144,78 @@ Le taux de couverture n'est pas l'alpha et l'omega des tests. Toutefois :
 - plus le taux est haut, plus le nombre d'erreur 500 en production est bas, et c'est un objectif en soi
 
 Proposition de pratique à discuter en équipe : mettre en place une GitHub action qui, pour une PR donnée, empêche le merge si le taux de couverture globale (mesuré par SimpleCov) est en baisse à cause de cette PR.
+
+## Les performances
+
+À l'heure actuelle (octobre 2022), voici à titre indicatif les performances relatives de différents exemples de specs sur ma machine (Framework 11th Gen Core i5). N'hésitez pas à tester vous-même et compléter ces exemples. 
+
+On y constate les chose suivantes : 
+- un test de feature avec JS est 3 fois plus lent qu'un test de feature sans JS
+- un test de request est aussi rapide qu'un test feature sans JS
+- un test de contrôleur est environ 40 % plus rapide qu'un test de request (routage + middleware)
+- un test qui ne fait presque rien prend quand-même 16 à 18 ms à s'exécuter, très probablement à cause de la stratégie de base de données basée sur la troncation des tables plutôt que sur une transaction
+- la création en base de données d'un simple RDV et ses dépendances est 2 fois plus lent que la visite d'une page de feature spec, et donc les différences de perfs entre types de specs sont à mettre en perspective
+
+```ruby
+RSpec.describe "performance of typical specs" do
+  # ~23 seconds
+  describe "feature spec with JS", type: :feature, js: true do
+    100.times do
+      it "visit page without DB hit" do
+        visit "/accessibility"
+        expect(page).to have_content("État de conformité")
+      end
+    end
+  end
+
+  # ~7 seconds
+  describe "feature spec wihtout JS", type: :feature do
+    100.times do
+      it "visit page without DB hit" do
+        visit "/accessibility"
+        expect(page).to have_content("État de conformité")
+      end
+    end
+  end
+
+  # ~7 seconds
+  describe "request spec", type: :request do
+    100.times do
+      it "visit page without DB hit" do
+        get "/accessibility"
+        expect(response.body).to include("État de conformité")
+      end
+    end
+  end
+
+  # ~5 seconds
+  describe StaticPagesController, type: :controller do
+    render_views
+
+    100.times do
+      it "visit page without DB hit" do
+        get :accessibility
+        expect(response.body).to include("État de conformité")
+      end
+    end
+  end
+
+  # 1600~1800 ms
+  describe "unit spec" do
+    100.times do
+      it "does something simple" do
+        expect(2 + 2).to eq(4)
+      end
+    end
+  end
+
+  # 14 seconds
+  describe "persisting data" do
+    100.times do
+      it "creates a RDV and its many associations" do
+        create(:rdv)
+      end
+    end
+  end
+end
+```
