@@ -29,8 +29,9 @@ describe "Allocation For Search Context" do
     # Sur l'ancienne façon de faire le filtre sur les lieux, nous avons
     # 3342 allocations, avec la nouvelle 2166.
     #
-    # Edit du 18 octobre, il semblerais qu'avec l'ajout des RDV Collectifs,
-    # nous augmentons le nombre d'allocation (?)
-    expect(after - before).to be <= 4300
+    # Edit du 18 octobre.
+    # La recherche de RDV collectif lié au lieu ajoute
+    # pas mal d'allocations...
+    expect(after - before).to be <= 5500
   end
 end
