@@ -15,7 +15,7 @@ module SearchRdvCollectif
 
     def rdvs_collectif_at(motif, lieu, user = nil)
       collective_rdvs = Rdv.where(lieu: lieu).where(motif: motif).collectif.future.with_remaining_seats.order("starts_at asc")
-      collective_rdvs = collective_rdvs.reject { |c| c.rdvs_users.map(&:user_id).include?(user.id) } if user.present?
+      collective_rdvs = collective_rdvs.reject { |c| (c.rdvs_users.map(&:user_id) & user.self_and_relatives.map(&:id)).any? } if user.present?
       collective_rdvs
     end
 

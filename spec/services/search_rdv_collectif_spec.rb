@@ -131,6 +131,23 @@ describe SearchRdvCollectif, type: :service do
 
       expect(described_class.rdvs_collectif_at(motif, lieu, user)).to eq([rdv])
     end
+
+    it "returns only RDV where none of my family is registered" do
+      # Pas complétement certain de la façon dont nous voulons gérer
+      # l'inscription familiale à un RDV Collectif.
+      # En attendant, ça me semble plus simple de dire
+      # que l'inscription est pour une personne de la famille
+      #
+      # TODO À revoir, au plus tard au moment ou nous basculerons vers une liste de contact
+      user = create(:user)
+      user_child = create(:user, responsible: user)
+      motif = create(:motif, collectif: true, reservable_online: true)
+
+      rdv = create(:rdv, lieu: lieu, motif: motif, max_participants_count: 2, users: [])
+      create(:rdv, lieu: lieu, motif: motif, max_participants_count: 2, users: [user_child])
+
+      expect(described_class.rdvs_collectif_at(motif, lieu, user)).to eq([rdv])
+    end
   end
 
   describe "#available_slots" do
