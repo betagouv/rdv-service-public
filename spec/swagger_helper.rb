@@ -211,12 +211,16 @@ RSpec.configure do |config|
       ],
       servers: [
         {
-          url: "https://www.rdv-solidarites.fr",
-          description: "Serveur de production",
+          url: "http://localhost:5000/",
+          description: "Serveur de développement",
         },
         {
           url: "https://demo.rdv-solidarites.fr",
           description: "Serveur de démo",
+        },
+        {
+          url: "https://www.rdv-solidarites.fr",
+          description: "Serveur de production",
         },
       ],
     },
