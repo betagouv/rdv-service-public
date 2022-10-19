@@ -11,6 +11,6 @@ module ApiSpecHelper
   end
 
   def parsed_response_body
-    @parsed_response_body ||= JSON.parse(response.body).with_indifferent_access
+    JSON.parse(response.body).with_indifferent_access
   end
 end
