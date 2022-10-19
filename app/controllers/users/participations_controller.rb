@@ -25,7 +25,7 @@ class Users::ParticipationsController < UserAuthController
       rdv.users = [user]
     end
     rdv.save
- 
+
     flash[:notice] = "Inscription confirmée"
     redirect_to users_rdv_path(rdv)
   end
