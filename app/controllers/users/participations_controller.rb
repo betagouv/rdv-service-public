@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Users::ParticipantsController < UserAuthController
+class Users::ParticipationsController < UserAuthController
   def index
     @rdv = policy_scope(Rdv).find(params[:rdv_id])
   end
