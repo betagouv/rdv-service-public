@@ -64,13 +64,11 @@ describe Notifiers::RdvUpdated, type: :service do
       expect(ActionMailer::Base.deliveries.map(&:to).flatten).to match_array([agent2.email, user1.email, user2.email])
     end
 
-    # it "doesnt send email if user participation is excused" do
-    #   rdv_user1.update(status: "excused")
-    #   expect(Users::RdvMailer).not_to receive(:with).with({ rdv: rdv, user: user1, token: /^[A-Z0-9]{8}$/ })
-    #   expect(Users::RdvSms).not_to receive(:rdv_upcoming_reminder).with(rdv, user1, /^[A-Z0-9]{8}$/)
-    #   expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv, user: user2, token: /^[A-Z0-9]{8}$/ })
-    #   expect(Users::RdvSms).to receive(:rdv_upcoming_reminder).with(rdv, user2, /^[A-Z0-9]{8}$/)
-    #   subject
-    # end
+    it "doesnt send email if user participation is excused" do
+      rdv.rdvs_users.where(user: user1).update(status: "excused")
+      subject
+      perform_enqueued_jobs
+      expect(ActionMailer::Base.deliveries.map(&:to).flatten).to match_array([agent2.email, user2.email])
+    end
   end
 end
