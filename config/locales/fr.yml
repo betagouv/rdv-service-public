@@ -88,7 +88,7 @@ fr:
         plage_ouverture:
           attributes:
             lieu:
-              blank: est obligatoire pour les motifs sur place ou à domicile
+              blank: est obligatoire pour les motifs sur place
   agents:
     export_mailer:
       rdv_export:
