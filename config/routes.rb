@@ -275,5 +275,4 @@ Rails.application.routes.draw do
 
   ## APIs
   draw :api
-  draw :public_api
 end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Api::V1::UserProfilesController < Api::V1::BaseController
+class Api::V1::UserProfilesController < Api::V1::AgentAuthBaseController
   def create
     user_profile = UserProfile.new(create_params)
     authorize(user_profile)

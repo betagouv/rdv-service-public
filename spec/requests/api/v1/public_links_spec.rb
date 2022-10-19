@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "public_api/public_links requests", type: :request do
+describe "api/v1/public_links requests", type: :request do
   shared_examples "public links deliverer" do |path|
     let!(:territory) { create(:territory, departement_number: "CN") }
     let!(:organisation_a) { create(:organisation, new_domain_beta: true, external_id: "ext_id_A", territory: territory) }
@@ -55,6 +55,6 @@ describe "public_api/public_links requests", type: :request do
     end
   end
 
-  it_behaves_like "public links deliverer", "/public_api/v1/public_links"
+  it_behaves_like "public links deliverer", "/api/v1/public_links"
   it_behaves_like "public links deliverer", "/public_api/public_links"
 end
