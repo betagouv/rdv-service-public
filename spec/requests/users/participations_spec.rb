@@ -10,7 +10,7 @@ RSpec.describe "Users::Participants", type: :request do
 
   describe "GET /users/rdvs/:rdv_id/participants" do
     it "is successful" do
-      get users_rdv_participants_path(rdv)
+      get users_rdv_participations_path(rdv)
       expect(response).to be_successful
     end
   end
@@ -19,12 +19,12 @@ RSpec.describe "Users::Participants", type: :request do
     let(:rdv) { create(:rdv, users: [user]) }
 
     it "is redirect" do
-      post users_rdv_participants_path(rdv, user_id: user.id)
+      post users_rdv_participations_path(rdv, user_id: user.id)
       expect(response).to redirect_to(users_rdv_path(rdv))
     end
 
     it "set a confirmation notice message" do
-      post users_rdv_participants_path(rdv, user_id: user.id)
+      post users_rdv_participations_path(rdv, user_id: user.id)
       expect(flash[:notice]).to eq("Inscription confirmée")
     end
 
@@ -35,7 +35,7 @@ RSpec.describe "Users::Participants", type: :request do
 
       it "set user" do
         expect do
-          post users_rdv_participants_path(rdv, user_id: other_user.id)
+          post users_rdv_participations_path(rdv, user_id: other_user.id)
         end.to change { rdv.reload.users }.from([user]).to([other_user])
       end
     end
@@ -48,12 +48,12 @@ RSpec.describe "Users::Participants", type: :request do
       let(:rdv) { create(:rdv, users: [other_user, user_child], motif: motif) }
 
       it "change to responsible user" do
-        post users_rdv_participants_path(rdv, user_id: user_child.id)
+        post users_rdv_participations_path(rdv, user_id: user_child.id)
         expect(rdv.reload.users).to match_array([user_child, other_user])
       end
 
       it "change to other relative user" do
-        post users_rdv_participants_path(rdv, user_id: user_other_child.id)
+        post users_rdv_participations_path(rdv, user_id: user_other_child.id)
         expect(rdv.reload.users).to match_array([user_other_child, other_user])
       end
     end
@@ -64,7 +64,7 @@ RSpec.describe "Users::Participants", type: :request do
       let(:rdv) { create(:rdv, users: [], motif: motif) }
 
       it "create user participation with current_user" do
-        post users_rdv_participants_path(rdv)
+        post users_rdv_participations_path(rdv)
         expect(rdv.reload.users).to match_array([user])
       end
     end

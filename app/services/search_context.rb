@@ -152,8 +152,10 @@ class SearchContext
 
       # Pour prendre en compte le filtre sur le lieu_id pour les RDV Collectif,
       # nous ne pouvons pas passer par une requête `or` qui nécessite les mêmes jointures des deux côtés.
-      motif_ids += motifs.collectif.joins(:rdvs).where(rdvs: { lieu_id: @lieu_id }).pluck(:id)
+      motifs.collectif.each { |motif| motif_ids << motif.id if Rdv.exists?(lieu_id: @lieu_id, motif: motif) }
+
       motifs = motifs.where(id: motif_ids)
+      motifs
     end
 
     motifs
@@ -188,5 +190,4 @@ class SearchContext
         filter_motifs(geo_search.available_motifs)
       end
   end
-
 end

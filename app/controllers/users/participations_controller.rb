@@ -5,7 +5,17 @@ class Users::ParticipationsController < UserAuthController
     @rdv = policy_scope(Rdv).find(params[:rdv_id])
   end
 
+  def new
+    add_participation_for(params)
+  end
+
   def create
+    add_participation_for(params)
+  end
+
+  private
+
+  def add_participation_for(params)
     rdv = Rdv.find(params[:rdv_id])
     user = User.find(params[:user_id]) if params[:user_id].present?
     user ||= current_user
