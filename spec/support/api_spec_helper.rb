@@ -11,6 +11,14 @@ module ApiSpecHelper
   end
 
   def parsed_response_body
-    JSON.parse(response.body).with_indifferent_access
+    parsed_response_body = JSON.parse(response.body)
+    case parsed_response_body
+    when Hash
+      parsed_response_body.with_indifferent_access
+    when Array
+      parsed_response_body.map(&:with_indifferent_access)
+    else
+      parsed_response_body
+    end
   end
 end

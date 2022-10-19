@@ -23,6 +23,10 @@ namespace :api do
     resources :groups, only: :index
     resources :organizations, only: :index
   end
+
+  namespace :v2 do
+    resources :groups, only: :index
+  end
 end
 
 # This one has been published before versioning the public API and unification with auth API:
