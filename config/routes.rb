@@ -54,7 +54,7 @@ Rails.application.routes.draw do
   namespace :users do
     resource :rdv_wizard_step, only: %i[new create]
     resources :rdvs, only: %i[index create show edit update] do
-      resources :participants, only: %i[index create]
+      resources :participations, only: %i[index create]
       member do
         get :creneaux
         put :cancel

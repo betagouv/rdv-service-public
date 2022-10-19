@@ -41,7 +41,7 @@
         i.fa.fa-users>
         | Participant
 
-        = form_tag users_rdv_participants_path(@rdv) do
+        = form_tag users_rdv_participations_path(@rdv) do
           .form-group
           - current_user.available_users_for_rdv.each do |possible_participant|
             label
