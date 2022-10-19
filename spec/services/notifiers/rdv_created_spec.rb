@@ -38,7 +38,8 @@ describe Notifiers::RdvCreated, type: :service do
       subject
     end
 
-    it "outputs the tokens" do
+    it "outputs the tokens for matching users" do
+      # keep this stubbing test as its important to check matching token and users
       expect(subject).to eq({ user1.id => token1, user2.id => token2 })
     end
   end
