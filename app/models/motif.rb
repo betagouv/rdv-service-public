@@ -51,7 +51,6 @@ class Motif < ApplicationRecord
   delegate :name, to: :service, prefix: true
 
   # Hooks
-  after_update :touch_rdvs_for_cache
 
   # Validation
   validates :visibility_type, inclusion: { in: VISIBILITY_TYPES }
@@ -198,11 +197,5 @@ class Motif < ApplicationRecord
     return unless collectif? && !public_office?
 
     errors.add(:base, :not_at_home_if_collectif)
-  end
-
-  # Les partials des RDVs sont mises en cache (la clé de cache contient `rdv.updated_at`).
-  # Si le motif change, le cache doit être invalidé.
-  def touch_rdvs_for_cache
-    rdvs.touch_all
   end
 end

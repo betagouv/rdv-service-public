@@ -18,7 +18,7 @@ class Admin::PlageOuverturesController < AgentAuthController
       .order(updated_at: :desc)
     @plage_ouvertures = all_plage_ouvertures
       .where(expired_cached: filter_params[:current_tab] == "expired")
-      .page(filter_params[:page])
+    @plage_ouvertures = @plage_ouvertures.page(filter_params[:page]) unless params[:view_mode] == "calendar"
     @plage_ouvertures = @plage_ouvertures.search_by_text(params[:search]) if params[:search].present?
     @display_tabs = all_plage_ouvertures.where(expired_cached: true).any? || params[:current_tab] == "expired"
   end

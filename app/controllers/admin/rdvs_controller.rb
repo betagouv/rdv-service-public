@@ -14,7 +14,7 @@ class Admin::RdvsController < AgentAuthController
     @rdvs = policy_scope(Rdv).search_for(current_agent, current_organisation, parsed_params)
     @breadcrumb_page = params[:breadcrumb_page]
     @form = Admin::RdvSearchForm.new(parsed_params)
-    @rdvs = @rdvs.order(starts_at: :asc).page(params[:page])
+    @rdvs = @rdvs.order(starts_at: :asc).page(params[:page]).per(10)
   end
 
   def export

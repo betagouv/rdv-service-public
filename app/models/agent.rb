@@ -78,7 +78,6 @@ class Agent < ApplicationRecord
   validate :service_cannot_be_changed
 
   # Hooks
-  after_update :touch_rdvs_for_cache
 
   # Scopes
   scope :complete, -> { where.not(first_name: nil).where.not(last_name: nil) }
@@ -184,23 +183,10 @@ class Agent < ApplicationRecord
   delegate :conseiller_numerique?, to: :service
 
   def domain
-    if organisations.where(new_domain_beta: true).any?
-      Domain::RDV_AIDE_NUMERIQUE
-    else
-      Domain::RDV_SOLIDARITES
-    end
-  end
-
-  private
-
-  # Les partials des RDVs sont mises en cache (la clé de cache contient `rdv.updated_at`).
-  # Si le profil agent change, le cache doit être invalidé.
-  def touch_rdvs_for_cache
-    # Ces champs sont mis à jour à chaque login, mais ne sont pas utilisés
-    # dans la partial des RDV, donc pas la peine d'invalider le cache.
-    sign_in_fields = %w[sign_in_count current_sign_in_at last_sign_in_at current_sign_in_ip last_sign_in_ip]
-    return if previous_changes.keys.intersection(sign_in_fields).any?
-
-    rdvs.touch_all
+    @domain ||= if organisations.where(new_domain_beta: true).any?
+                  Domain::RDV_AIDE_NUMERIQUE
+                else
+                  Domain::RDV_SOLIDARITES
+                end
   end
 end
