@@ -1,9 +1,14 @@
 <% if @rdvs_user.errors.empty? %>
   <% participation_dropdown_html = render "admin/rdvs_users/participation_status_dropdown", rdvs_user: @rdvs_user, agent: @agent %>
+  <% participants_count_html = render "admin/rdvs/participants_count", rdv: @rdv %>
   (function() {
-    let element = document.getElementById('participation-dropdown-<%= @rdvs_user.id %>');
-    if(element) {
-      element.outerHTML = "<%= escape_javascript participation_dropdown_html %>";
+    let participation_dropdown = document.getElementById('participation-dropdown-<%= @rdvs_user.id %>');
+    if(participation_dropdown) {
+      participation_dropdown.outerHTML = "<%= escape_javascript participation_dropdown_html %>";
+    }
+    let participants_count = document.getElementById('participants-count-<%= @rdv.id %>');
+    if(participants_count) {
+      participants_count.outerHTML = "<%= escape_javascript participants_count_html %>";
     }
     $("#participation-flash-message-<%= @rdvs_user.rdv.id %>").html('<%= j render partial: "layouts/flash" %>');
   })();

@@ -304,6 +304,11 @@ class Rdv < ApplicationRecord
     true
   end
 
+  def update_users_count
+    users_count = rdvs_users.not_cancelled.count
+    update_column(:users_count, users_count)
+  end
+
   private
 
   def collective_rdv_cannot_be_excused

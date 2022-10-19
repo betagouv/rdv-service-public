@@ -12,7 +12,7 @@ class RdvsUser < ApplicationRecord
   CANCELLED_STATUSES = %w[excused revoked].freeze
 
   # Relations
-  belongs_to :rdv, touch: true, inverse_of: :rdvs_users, counter_cache: :users_count
+  belongs_to :rdv, touch: true, inverse_of: :rdvs_users
   belongs_to :user
 
   # Validations
@@ -25,12 +25,18 @@ class RdvsUser < ApplicationRecord
   after_initialize :set_default_notifications_flags
   before_validation :set_default_notifications_flags
   before_create :set_status_from_rdv
+  after_save :update_counter_cache
+  after_destroy :update_counter_cache
 
   # Scopes
   scope :order_by_user_last_name, -> { includes(:user).order("users.last_name ASC") }
   scope :not_cancelled, -> { where(status: NOT_CANCELLED_STATUSES) }
   # For scoping notifications exceptions, todo get a better name, this override rails named method....
   scope :not_excused, -> { where.not(status: "excused") }
+
+  def update_counter_cache
+    rdv.update_users_count
+  end
 
   def set_status_from_rdv
     return if rdv&.status.nil?
