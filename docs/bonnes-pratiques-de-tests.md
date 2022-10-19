@@ -20,11 +20,11 @@ Les feature specs sont à utiliser tout en haut de la pyramide, pour les tests e
 
 Par exemple : la personne arrive sur l'application, s'authentifie, navigue sur plusieurs écrans et formulaires, etc., dans le but de d'utiliser une fonctionnalité entière.
 
-Par ailleurs les feature specs assurrent la non régression du système. Puisqu'ils testent une fonctionnalité dans son ensemble, si une brique sous-jacente change et ne permet plus la réalisation de la fonctionnalité, le crash de la feature spec est là pour relever la régression.
+Par ailleurs les feature specs assurent la non régression du système. Puisqu'ils testent une fonctionnalité dans son ensemble, si une brique sous-jacente change et ne permet plus la réalisation de la fonctionnalité, le crash de la feature spec est là pour relever la régression.
 
 ## Intégration : dans quel cas utiliser les request specs ?
 
-Les request specs présentent l'avantage de tester simplement (presque) toutes les couches de l'application, comprennant le routage et le rendu des vues par exemple. Ce sont des tests d'intégration (deuxième étage de la pyramide). Ils valident que les différentes parties du système s'intègrent bien les unes avec les autres.
+Les request specs présentent l'avantage de tester simplement (presque) toutes les couches de l'application, comprenant le routage et le rendu des vues par exemple. Ce sont des tests d'intégration (deuxième étage de la pyramide). Ils valident que les différentes parties du système s'intègrent bien les unes avec les autres.
 
 On y teste au minimum tous les cas nominaux. En particulier, on cherche à s'assurer : 
 - que le routage fonctionne
@@ -113,11 +113,11 @@ Autant que possible, on garde le plus simple possible la mise en place du contex
 
 ### Introduction des fixtures
 
-On propose d'introduire des fixtures et de les faires cohabiter avec les factories.
+On propose d'introduire des fixtures et de les faire cohabiter avec les factories.
 
-Quand on est en haut de la pyramide, on utilisera préférenciellement des fixtures. La mise en place du test est facile à lire et à comprendre, et le chargement des fixtures est presque instantanné, augmentant ainsi la performance de la suite de tests.
+Quand on est en haut de la pyramide, on utilisera préférentiellement des fixtures. La mise en place du test est facile à lire et à comprendre, et le chargement des fixtures est presque instantané, augmentant ainsi la performance de la suite de tests.
 
-En revanche, plus on descend dans la pyramide, plus on a besoin de faire varier les données pour explorer les cas aux limites. On utilisa donc préférenciellement les factories (plutôt que de tweaker les données proposées par les fixtures, car cela crée vite de la complexité).
+En revanche, plus on descend dans la pyramide, plus on a besoin de faire varier les données pour explorer les cas aux limites. On utilisa donc préférentiellement les factories (plutôt que de tweaker les données proposées par les fixtures, car cela crée vite de la complexité).
 
 Il est possible de combiner le sujet des fixtures et des seeds : 
 - on écrit les fixtures à partir des seeds
