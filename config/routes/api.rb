@@ -21,6 +21,7 @@ namespace :api do
     # Doesn't need authentication
     resources :public_links, only: [:index]
     resources :groups, only: :index
+    resources :organizations, only: :index
   end
 end
 
