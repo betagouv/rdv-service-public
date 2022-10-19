@@ -176,6 +176,18 @@ RSpec.configure do |config|
       end
     end
   end
+
+  config.after(:each, operation: true, use_as_request_example: true) do |spec|
+    spec.metadata[:operation][:request_examples] ||= []
+
+    example = {
+      value: JSON.parse(request.body.string, symbolize_names: true),
+      name: 'request_example_1',
+      summary: 'A request example'
+    }
+
+    spec.metadata[:operation][:request_examples] << example
+  end
 end
 
 def expect_page_to_be_axe_clean(path)

@@ -1,35 +1,33 @@
-# Paramètres généraux de l'API
+# Paramètres généraux de l'API Publique
 
-L'API de RDV-Solidarités vous permet de lire, créer et modifier des données dans notre base depuis votre logiciel.
+L'API de RDV-Solidarités vous permet de lire des données dans notre base depuis votre logiciel.
 
 Toutes les fonctionnalités de RDV-Solidarités ne sont pas encore disponibles via l’API. Contactez-nous si vous avez besoin de fonctionnalités qui ne sont pas encore présentes.
 
-## API à destination des agents
+## Authentification
 
-Merci de vous référer à la documentation suivante: [https://doc.rdv-solidarites.fr/tech/api-interconnexions-entrantes](https://doc.rdv-solidarites.fr/tech/api-interconnexions-entrantes)
+Certains points de terminaison sont authentifiés. Pour savoir comment y accéder, merci de vous reférer à la documentation suivante: [authentification de l'API](https://rdv-solidarites.gitbook.io/guides-pour-rdv-solidarites/tech/api-interconnexions-entrantes/authentification-and-permissions)
 
-## API publique
-
-### Verbe HTTP
+## Verbe HTTP
 
 Aucune écriture n'étant possible, toutes les routes de l'API publique s'appellent avec le verbe HTTP `GET`.
 
-### Versionnage
+## Versionnage
 
 L'API est versionnée. La version actuelle est 1.0 (référencée comme v1 dans les points de terminaison)
 
-### Routes
+## Routes
 
-Les points de terminaison de l'API publique sont accessible par une route de la forme : `https://<domain>/public_api/<version>/<endpoint>`
+Les points de terminaison de l'API publique sont accessible par une route de la forme : `https://<domain>/api/<version>/<endpoint>`
 
 Avec :
 
 - `version` est la version de l'API
 - `endpoint` est le nom du point de terminaison
 
-Par exemple, on aura : `https://<domain>/public_api/v1/organizations`
+Par exemple, on aura : `https://<domain>/api/v1/organizations`
 
-### Pagination des réponses par listes
+## Pagination des réponses par listes
 
 Tous les points de terminaison qui retournent des listes sont paginés.
 
@@ -37,15 +35,7 @@ Le paramètre (optionnel) `page` permet d'accéder à une page donnée. Le param
 
 De manière générale, tout point de terminaison qui retourne une liste peut retourner une liste vide.
 
-### Authentification
-
-En phase de prototypage, l'API publique est pour l'instant accessible sans authentification.
-
-### Limites et quotas d'utilisation
-
-L'API publique est soumise à un usage raisonné de la part de ses clients, afin de ne pas dégrader les performances de l'application. Par défaut, et sauf précision contraire dans la documentation d'un point de terminaison donné, l'API peut être appelée 50 fois toutes les 5 minutes.
-
-### Erreurs
+## Erreurs
 
 L'API publique est susceptible de retourner les erreurs suivantes.
 

@@ -1,0 +1,13 @@
+security_schemes:
+  access_token:
+    type: apiKey
+    name: access-token
+    in: header
+  uid:
+    type: apiKey
+    name: uid
+    in: header
+  client:
+    type: apiKey
+    name: client
+    in: header
