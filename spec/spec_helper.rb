@@ -182,8 +182,8 @@ RSpec.configure do |config|
 
     example = {
       value: JSON.parse(request.body.string, symbolize_names: true),
-      name: 'request_example_1',
-      summary: 'A request example'
+      name: "request_example_1",
+      summary: "A request example",
     }
 
     spec.metadata[:operation][:request_examples] << example

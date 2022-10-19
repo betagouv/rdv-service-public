@@ -70,7 +70,7 @@ describe "API auth", type: :request do
         }
       )
       expect(response.status).to eq(200)
-      expect(JSON.parse(response.body)["absences"].count).to eq(1)
+      expect(parsed_response_body["absences"].count).to eq(1)
     end
   end
 
@@ -82,7 +82,7 @@ describe "API auth", type: :request do
     it "returns the agent credentials" do
       subject
       expect(response.status).to eq(200)
-      expect(JSON.parse(response.body)["data"]["email"]).to eq("amine.dhobb@beta.gouv.fr")
+      expect(parsed_response_body["data"]["email"]).to eq("amine.dhobb@beta.gouv.fr")
     end
   end
 end

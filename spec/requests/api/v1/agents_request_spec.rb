@@ -18,8 +18,7 @@ describe "api/v1/agents requests", type: :request do
         it "returns all agents of available organisations" do
           subject
           expect(response.status).to eq(200)
-          result = JSON.parse(response.body)
-          expect(result["agents"].pluck("id")).to match_array([agent.id, agent2.id])
+          expect(parsed_response_body["agents"].pluck("id")).to match_array([agent.id, agent2.id])
         end
       end
 
@@ -29,8 +28,7 @@ describe "api/v1/agents requests", type: :request do
         it "only includes specified organisation" do
           subject
           expect(response.status).to eq(200)
-          result = JSON.parse(response.body)
-          expect(result["agents"].pluck("id")).to match_array([agent.id])
+          expect(parsed_response_body["agents"].pluck("id")).to match_array([agent.id])
         end
       end
     end

@@ -325,8 +325,7 @@
             "enum": [
               "sdf",
               "heberge",
-              "en_accession_propriete:",
-              "2,",
+              "en_accession_propriete",
               "proprietaire",
               "autre",
               "locataire"
@@ -603,14 +602,14 @@
                     "value": {
                       "rdvs": [
                         {
-                          "id": 10,
+                          "id": 14,
                           "address": "1 rue de l'adresse 12345 Ville",
                           "agents": [
                             {
-                              "id": 75,
+                              "id": 89,
                               "email": "agent_1@lapin.fr",
-                              "first_name": "Corentine",
-                              "last_name": "Charpentier"
+                              "first_name": "Séverin",
+                              "last_name": "Paris"
                             }
                           ],
                           "cancelled_at": null,
@@ -619,29 +618,29 @@
                           "created_by": "agent",
                           "deleted_at": null,
                           "duration_in_min": 45,
-                          "ends_at": "2022-10-23 01:01:07 +0200",
+                          "ends_at": "2022-10-23 01:26:20 +0200",
                           "lieu": {
-                            "id": 17,
+                            "id": 31,
                             "address": "1 rue de l'adresse 12345 Ville",
                             "name": "Lieu n°1",
-                            "organisation_id": 494,
+                            "organisation_id": 538,
                             "phone_number": null,
                             "single_use": false
                           },
                           "max_participants_count": null,
                           "motif": {
-                            "id": 29,
+                            "id": 43,
                             "category": "rsa_orientation",
                             "deleted_at": null,
                             "location_type": "public_office",
                             "name": "Motif 1",
-                            "organisation_id": 496,
+                            "organisation_id": 540,
                             "reservable_online": true,
-                            "service_id": 77
+                            "service_id": 105
                           },
                           "name": null,
                           "organisation": {
-                            "id": 494,
+                            "id": 538,
                             "email": null,
                             "name": "Organisation n°1",
                             "phone_number": null
@@ -652,7 +651,7 @@
                               "send_reminder_notification": true,
                               "status": "unknown",
                               "user": {
-                                "id": 13,
+                                "id": 17,
                                 "address": "20 avenue de Ségur, Paris",
                                 "address_details": null,
                                 "affiliation_number": "39012093812038",
@@ -660,29 +659,29 @@
                                 "birth_name": null,
                                 "caisse_affiliation": "caf",
                                 "case_number": null,
-                                "created_at": "2022-10-20 00:16:07 +0200",
+                                "created_at": "2022-10-20 00:41:21 +0200",
                                 "email": "usager_1@lapin.fr",
                                 "family_situation": "divorced",
-                                "first_name": "Chloé",
+                                "first_name": "Laurence",
                                 "invitation_accepted_at": null,
                                 "invitation_created_at": null,
-                                "last_name": "POIRIER",
+                                "last_name": "RICHARD",
                                 "notify_by_email": true,
                                 "notify_by_sms": true,
                                 "number_of_children": 12,
-                                "phone_number": "07 64 15 90 67",
-                                "phone_number_formatted": "+33764159067",
+                                "phone_number": "0617719018",
+                                "phone_number_formatted": "+33617719018",
                                 "responsible": null,
                                 "responsible_id": null,
                                 "user_profiles": null
                               }
                             }
                           ],
-                          "starts_at": "2022-10-23 00:16:07 +0200",
+                          "starts_at": "2022-10-23 00:41:20 +0200",
                           "status": "unknown",
                           "users": [
                             {
-                              "id": 13,
+                              "id": 17,
                               "address": "20 avenue de Ségur, Paris",
                               "address_details": null,
                               "affiliation_number": "39012093812038",
@@ -690,35 +689,35 @@
                               "birth_name": null,
                               "caisse_affiliation": "caf",
                               "case_number": null,
-                              "created_at": "2022-10-20 00:16:07 +0200",
+                              "created_at": "2022-10-20 00:41:21 +0200",
                               "email": "usager_1@lapin.fr",
                               "family_situation": "divorced",
-                              "first_name": "Chloé",
+                              "first_name": "Laurence",
                               "invitation_accepted_at": null,
                               "invitation_created_at": null,
-                              "last_name": "POIRIER",
+                              "last_name": "RICHARD",
                               "notify_by_email": true,
                               "notify_by_sms": true,
                               "number_of_children": 12,
-                              "phone_number": "07 64 15 90 67",
-                              "phone_number_formatted": "+33764159067",
+                              "phone_number": "0617719018",
+                              "phone_number_formatted": "+33617719018",
                               "responsible": null,
                               "responsible_id": null,
                               "user_profiles": null
                             }
                           ],
                           "users_count": 1,
-                          "uuid": "f830bb69-e2d2-4242-a0f7-0875f0767117"
+                          "uuid": "6ae59051-c66b-4fdf-9400-3ba99770684b"
                         },
                         {
-                          "id": 12,
+                          "id": 16,
                           "address": "3 rue de l'adresse 12345 Ville",
                           "agents": [
                             {
-                              "id": 77,
+                              "id": 91,
                               "email": "agent_3@lapin.fr",
-                              "first_name": "Andoche",
-                              "last_name": "Charles"
+                              "first_name": "Hortense",
+                              "last_name": "Lucas"
                             }
                           ],
                           "cancelled_at": null,
@@ -727,29 +726,29 @@
                           "created_by": "agent",
                           "deleted_at": null,
                           "duration_in_min": 45,
-                          "ends_at": "2022-10-23 01:01:07 +0200",
+                          "ends_at": "2022-10-23 01:26:21 +0200",
                           "lieu": {
-                            "id": 19,
+                            "id": 33,
                             "address": "3 rue de l'adresse 12345 Ville",
                             "name": "Lieu n°3",
-                            "organisation_id": 494,
+                            "organisation_id": 538,
                             "phone_number": null,
                             "single_use": false
                           },
                           "max_participants_count": null,
                           "motif": {
-                            "id": 30,
+                            "id": 44,
                             "category": "rsa_orientation",
                             "deleted_at": null,
                             "location_type": "public_office",
                             "name": "Motif 2",
-                            "organisation_id": 497,
+                            "organisation_id": 541,
                             "reservable_online": true,
-                            "service_id": 78
+                            "service_id": 106
                           },
                           "name": null,
                           "organisation": {
-                            "id": 494,
+                            "id": 538,
                             "email": null,
                             "name": "Organisation n°1",
                             "phone_number": null
@@ -760,7 +759,7 @@
                               "send_reminder_notification": true,
                               "status": "unknown",
                               "user": {
-                                "id": 15,
+                                "id": 19,
                                 "address": "20 avenue de Ségur, Paris",
                                 "address_details": null,
                                 "affiliation_number": "39012093812038",
@@ -768,29 +767,29 @@
                                 "birth_name": null,
                                 "caisse_affiliation": "caf",
                                 "case_number": null,
-                                "created_at": "2022-10-20 00:16:08 +0200",
+                                "created_at": "2022-10-20 00:41:21 +0200",
                                 "email": "usager_3@lapin.fr",
                                 "family_situation": "divorced",
-                                "first_name": "Adrastée",
+                                "first_name": "Jacqueline",
                                 "invitation_accepted_at": null,
                                 "invitation_created_at": null,
-                                "last_name": "GAILLARD",
+                                "last_name": "HERVE",
                                 "notify_by_email": true,
                                 "notify_by_sms": true,
                                 "number_of_children": 12,
-                                "phone_number": "06 48 32 69 04",
-                                "phone_number_formatted": "+33648326904",
+                                "phone_number": "0613508285",
+                                "phone_number_formatted": "+33613508285",
                                 "responsible": null,
                                 "responsible_id": null,
                                 "user_profiles": null
                               }
                             }
                           ],
-                          "starts_at": "2022-10-23 00:16:07 +0200",
+                          "starts_at": "2022-10-23 00:41:21 +0200",
                           "status": "unknown",
                           "users": [
                             {
-                              "id": 15,
+                              "id": 19,
                               "address": "20 avenue de Ségur, Paris",
                               "address_details": null,
                               "affiliation_number": "39012093812038",
@@ -798,25 +797,25 @@
                               "birth_name": null,
                               "caisse_affiliation": "caf",
                               "case_number": null,
-                              "created_at": "2022-10-20 00:16:08 +0200",
+                              "created_at": "2022-10-20 00:41:21 +0200",
                               "email": "usager_3@lapin.fr",
                               "family_situation": "divorced",
-                              "first_name": "Adrastée",
+                              "first_name": "Jacqueline",
                               "invitation_accepted_at": null,
                               "invitation_created_at": null,
-                              "last_name": "GAILLARD",
+                              "last_name": "HERVE",
                               "notify_by_email": true,
                               "notify_by_sms": true,
                               "number_of_children": 12,
-                              "phone_number": "06 48 32 69 04",
-                              "phone_number_formatted": "+33648326904",
+                              "phone_number": "0613508285",
+                              "phone_number_formatted": "+33613508285",
                               "responsible": null,
                               "responsible_id": null,
                               "user_profiles": null
                             }
                           ],
                           "users_count": 1,
-                          "uuid": "ba73bdc8-0b4e-4871-9e4d-b9a183a1c1da"
+                          "uuid": "2c4367b1-4e96-4387-95c3-325d9e1c13b6"
                         }
                       ],
                       "meta": {

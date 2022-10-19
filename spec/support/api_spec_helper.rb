@@ -9,4 +9,8 @@ module ApiSpecHelper
     agent_with_token_auth.save!
     agent_with_token_auth.build_auth_header(token.token, token.client)
   end
+
+  def parsed_response_body
+    @parsed_response_body ||= JSON.parse(response.body).with_indifferent_access
+  end
 end

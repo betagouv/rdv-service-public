@@ -94,26 +94,6 @@ Rails.application.routes.draw do
 
   get "/calendrier/:id", controller: :ics_calendar, action: :show, as: :ics_calendar
 
-  namespace :api do
-    namespace :v1 do
-      mount_devise_token_auth_for "AgentWithTokenAuth", at: "auth"
-      resources :absences, except: %i[new edit]
-      resources :agents, only: %i[index]
-      resources :users, only: %i[create index show update] do
-        get :invite, on: :member
-        post :invite, on: :member
-      end
-      resources :user_profiles, only: [:create]
-      resources :organisations, only: %i[index] do
-        resources :users, only: %i[index show]
-        resources :motifs, only: %i[index]
-        resources :rdvs, only: %i[index]
-      end
-
-      resources :invitations, param: "token", only: [:show]
-    end
-  end
-
   resources :organisations, only: %i[new create]
 
   authenticate :agent do
@@ -264,10 +244,6 @@ Rails.application.routes.draw do
   get "org/:organisation_id(/:org_slug)" => "search#public_link_with_internal_organisation_id", as: :public_link_to_org
   get "org/ext/:territory/:organisation_external_id(/:org_slug)" => "search#public_link_with_external_organisation_id", as: :public_link_to_external_org
 
-  namespace :public_api do
-    resources :public_links, only: [:index]
-  end
-
   ##
 
   get "accueil_mds", to: redirect("presentation_agent", status: 307)
@@ -298,4 +274,7 @@ Rails.application.routes.draw do
     # LetterOpener
     mount LetterOpenerWeb::Engine, at: "/letter_opener"
   end
+
+  ## APIs
+  draw :api
 end

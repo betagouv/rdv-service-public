@@ -60,8 +60,8 @@ gem "blueprinter"
 gem "typhoeus"
 
 # API documentation
-gem 'rswag-api'
-gem 'rswag-ui'
+gem "rswag-api"
+gem "rswag-ui"
 
 # Form
 gem "simple_form", "~> 5.0"
@@ -105,8 +105,7 @@ group :development, :test do
   gem "selenium-webdriver"
   gem "spring", require: false
   gem "spring-commands-rspec"
-  gem 'rspec-rails'
-  gem 'rswag-specs'
+  gem "rswag-specs"
 end
 
 group :development do
@@ -115,6 +114,7 @@ group :development do
   gem "binding_of_caller" # Enable the REPL in better_errors
   gem "letter_opener_web" # Saves sent emails and serves them on /letter_opener
   gem "rails-erd" # Keeps docs/domain_model.svg up-to-date. See .erdconfig
+  gem "rack-mini-profiler"
 end
 
 group :test do
