@@ -6,7 +6,7 @@ class PublicApi::V1::BaseController < ActionController::Base
   protected
 
   def check_parameters_presence(*parameters)
-    missing_parameters = parameters.select { |param| params[param].nil? }
+    missing_parameters = parameters.select { |param| params[param].blank? }
     render_error :bad_request, missing: missing_parameters.to_sentence if missing_parameters.any?
   end
 
