@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe FileAttente, type: :model do
-  let(:now) { DateTime.parse("01-01-2019 09:00 +0100") }
+  let(:now) { Time.zone.parse("01-01-2019 09:00 +0100") }
 
   before do
     stub_netsize_ok

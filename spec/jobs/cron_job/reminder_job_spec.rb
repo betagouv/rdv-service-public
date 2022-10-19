@@ -3,7 +3,7 @@
 RSpec.describe CronJob::ReminderJob, type: :job do
   subject { described_class.perform_now }
 
-  let(:now) { DateTime.parse("01-01-2019 09:00") }
+  let(:now) { Time.zone.parse("01-01-2019 09:00") }
 
   before do
     travel_to(now)

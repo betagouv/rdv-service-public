@@ -12,8 +12,8 @@ module Lapin
       end
 
       def ensure_date_range_with_time(date_range)
-        time_begin = date_range.begin.instance_of?(Date) ? date_range.begin.beginning_of_day : date_range.begin.to_time
-        time_end = date_range.end.instance_of?(Date) ? date_range.end.end_of_day : date_range.end.to_time
+        time_begin = date_range.begin.instance_of?(Date) ? date_range.begin.beginning_of_day : date_range.begin
+        time_end = date_range.end.instance_of?(Date) ? date_range.end.end_of_day : date_range.end
 
         time_begin..time_end
       end

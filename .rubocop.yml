@@ -194,6 +194,9 @@ Style/OpenStructUse:
 Style/HashSyntax:
   Enabled: false
 
+Style/DateTime:
+  Enabled: true
+
 Naming/BlockForwarding:
   Enabled: false
 
