@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Api::V1::MotifsController < Api::V1::BaseController
+class Api::V1::MotifsController < Api::V1::AgentAuthBaseController
   def index
     motifs = policy_scope(Motif)
     motifs = motifs.active(params[:active].to_b) unless params[:active].nil?

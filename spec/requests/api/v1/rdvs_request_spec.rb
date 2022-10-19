@@ -20,8 +20,7 @@ describe "api/v1/rdvs requests", type: :request do
         it "returns policy scoped rdvs" do
           get api_v1_organisation_rdvs_path(organisation), headers: api_auth_headers_for_agent(agent)
           expect(response.status).to eq(200)
-          response_parsed = JSON.parse(response.body)
-          expect(response_parsed["rdvs"].pluck("id")).to contain_exactly(rdv.id)
+          expect(parsed_response_body["rdvs"].pluck("id")).to contain_exactly(rdv.id)
         end
       end
 
@@ -31,8 +30,7 @@ describe "api/v1/rdvs requests", type: :request do
         it "returns policy scoped rdvs" do
           get api_v1_organisation_rdvs_path(organisation), headers: api_auth_headers_for_agent(agent)
           expect(response.status).to eq(200)
-          response_parsed = JSON.parse(response.body)
-          expect(response_parsed["rdvs"].pluck("id")).to contain_exactly(rdv.id, rdv3.id)
+          expect(parsed_response_body["rdvs"].pluck("id")).to contain_exactly(rdv.id, rdv3.id)
         end
       end
     end

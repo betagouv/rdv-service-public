@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Api::V1::AbsencesController < Api::V1::BaseController
+class Api::V1::AbsencesController < Api::V1::AgentAuthBaseController
   def index
     absences = policy_scope(Absence)
     absences = absences.where(organisation: current_organisation) if current_organisation.present?
