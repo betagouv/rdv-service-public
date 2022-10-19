@@ -58,12 +58,6 @@ Rails.application.routes.draw do
       member do
         get :creneaux
         put :cancel
-        # Pour ajouter un usager à un RDV collectif
-        # pas vraiment RESTFull de créer une ressource sur un GET
-        # mais c'est un moyen de pouvoir passer par l'authentification
-        # devise et de continuer l'action.
-        # Après une authentification Devise redirige sur GET précédent.
-        get :register
       end
     end
     resource :user_name_initials_verification, only: %i[new create], controller: "user_name_initials_verification"

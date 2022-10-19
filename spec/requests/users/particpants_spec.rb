@@ -25,7 +25,7 @@ RSpec.describe "Users::Participants", type: :request do
 
     it "set a confirmation notice message" do
       post users_rdv_participants_path(rdv, user_id: user.id)
-      expect(flash[:notice]).to eq("L'usager #{user.full_name} a été selectionné pour le RDV")
+      expect(flash[:notice]).to eq("Inscription confirmée")
     end
 
     context "for a individual RDV" do
@@ -55,6 +55,17 @@ RSpec.describe "Users::Participants", type: :request do
       it "change to other relative user" do
         post users_rdv_participants_path(rdv, user_id: user_other_child.id)
         expect(rdv.reload.users).to match_array([user_other_child, other_user])
+      end
+    end
+
+    context "for a collective RDV with a responsible user" do
+      let(:user) { create(:user, responsible: nil) }
+      let(:motif) { create(:motif, collectif: true) }
+      let(:rdv) { create(:rdv, users: [], motif: motif) }
+
+      it "create user participation with current_user" do
+        post users_rdv_participants_path(rdv)
+        expect(rdv.reload.users).to match_array([user])
       end
     end
   end
