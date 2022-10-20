@@ -5,6 +5,8 @@ class Creneau
 
   attr_accessor :starts_at, :lieu_id, :motif, :agent
 
+  delegate :full_name, to: :lieu, prefix: true, allow_nil: true
+
   def ends_at
     starts_at + duration_in_min.minutes
   end
@@ -14,7 +16,7 @@ class Creneau
   end
 
   def lieu
-    Lieu.find(lieu_id)
+    Lieu.find(lieu_id) if lieu_id.present?
   end
 
   def duration_in_min

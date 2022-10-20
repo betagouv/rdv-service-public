@@ -190,7 +190,7 @@ class CalendarRdvSolidarites {
     const start = moment(info.event.start).utc().format('H:mm');
     const end = moment(info.event.end).utc().format('H:mm');
 
-    if(info.isStart && info.isEnd) {
+    if (info.isStart && info.isEnd) {
       title += `${start} - ${end}`;
     } else if(info.isStart) {
       title += `À partir de ${start}`;
@@ -203,10 +203,13 @@ class CalendarRdvSolidarites {
     if (info.event.rendering == 'background') {
       $el.append("<div class=\"fc-title\" style=\"color: white; padding: 2px 4px; font-size: 12px; font-weight: bold;\">" + info.event.title + "</div>");
 
-      if(extendedProps.organisationName) {
+      if (extendedProps.organisationName) {
         title += `<br>${extendedProps.organisationName}`;
       }
-      title += `<br><strong>${info.event.title}</strong><br> <small>Lieu : ${extendedProps.lieu}</small>`;
+      title += `<br><strong>${info.event.title}</strong>`;
+      if (extendedProps.lieu) {
+        title += `<br> <small>Lieu : ${extendedProps.lieu}</small>`;
+      }
     } else {
       if (extendedProps.duration) {
         title += ` <small>(${extendedProps.duration} min)</small>`;
@@ -215,7 +218,7 @@ class CalendarRdvSolidarites {
 
       title += `<br><strong>${info.event.title}</strong>`;
 
-      if(extendedProps.organisationName) {
+      if (extendedProps.organisationName) {
         title += `<br>${extendedProps.organisationName}`;
       }
       if (extendedProps.lieu) {

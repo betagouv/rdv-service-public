@@ -32,7 +32,7 @@ describe CustomDeviseMailer, "#domain" do
     let!(:organisation) { create(:organisation, new_domain_beta: true) }
     let(:user) { create(:user, rdvs: create_list(:rdv, 2, organisation: organisation)) }
 
-    it "uses RDV_SOLIDARITES" do
+    it "uses RDV_AIDE_NUMERIQUE" do
       expect_to_use_domain(Domain::RDV_AIDE_NUMERIQUE)
     end
   end
@@ -48,7 +48,7 @@ describe CustomDeviseMailer, "#domain" do
       create(:user, rdvs: mixed_rdvs)
     end
 
-    it "uses RDV_SOLIDARITES" do
+    it "uses RDV_AIDE_NUMERIQUE" do
       expect_to_use_domain(Domain::RDV_AIDE_NUMERIQUE)
     end
   end

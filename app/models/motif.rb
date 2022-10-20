@@ -173,6 +173,10 @@ class Motif < ApplicationRecord
     !collectif?
   end
 
+  def requires_lieu?
+    public_office?
+  end
+
   private
 
   def booking_delay_validation

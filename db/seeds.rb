@@ -727,6 +727,17 @@ _plage_ouverture_org_paris_nord_martine_classique = PlageOuverture.create!(
   end_time: Tod::TimeOfDay.new(12),
   recurrence: Montrose.every(:week, day: [1, 2, 3, 4, 5], interval: 1, starts: Date.tomorrow, on: %i[monday tuesday thursday friday])
 )
+_plage_ouverture_org_paris_nord_martine_telephonique = PlageOuverture.create!(
+  title: "Permanence téléphonique",
+  organisation_id: org_paris_nord.id,
+  agent_id: agent_org_paris_nord_pmi_martine.id,
+  lieu_id: nil,
+  motif_ids: [motif_org_paris_nord_pmi_rappel.id],
+  first_day: Date.tomorrow,
+  start_time: Tod::TimeOfDay.new(12),
+  end_time: Tod::TimeOfDay.new(14),
+  recurrence: Montrose.every(:week, day: [1, 2, 3, 4, 5], interval: 1, starts: Date.tomorrow, on: %i[monday tuesday thursday friday])
+)
 _plage_ouverture_org_paris_nord_martine_mercredi = PlageOuverture.create!(
   title: "Permanence enfant",
   organisation_id: org_paris_nord.id,

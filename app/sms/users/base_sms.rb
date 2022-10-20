@@ -21,20 +21,10 @@ class Users::BaseSms < ApplicationSms
       sender_name: @rdv.domain.sms_sender_name,
       phone_number: @user.phone_number_formatted,
       content: content,
-      tags: tags,
       provider: provider,
       api_key: api_key,
       receipt_params: @receipt_params
     )
-  end
-
-  def tags
-    [
-      ENV["APP"]&.gsub("-rdv-solidarites", ""), # shorter names
-      "dpt-#{@rdv.organisation&.departement_number}",
-      "org-#{@rdv.organisation&.id}",
-      self.class.name.demodulize.underscore,
-    ].compact
   end
 
   private
