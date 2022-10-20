@@ -1,12 +1,10 @@
 .card
   .card-header
-    .d-flex.justify-content-between.flex-wrap
-      span
-        h3= t(".available_slots_title_html", motif: "#{@form.motif.name.downcase} (#{@form.motif.service.short_name})")
-        = t(".place_informations_html", place_name: @search_result.lieu.name, place_address: @search_result.lieu.address)
-      span
-        = link_to t(".place_index"), admin_organisation_agent_searches_path(current_organisation,
-                creneaux_search_params(@form)), class: "btn btn-outline-primary m-2"
+    h3= t(".available_slots_title_html", motif: "#{@form.motif.name.downcase} (#{@form.motif.service.short_name})")
+    - if @form.motif.requires_lieu?
+      = t(".place_informations_html", place_name: @search_result.lieu.name, place_address: @search_result.lieu.address)
+    - else
+      = t(@form.motif.location_type)
 
   - if @form.motif.individuel?
     .card-body

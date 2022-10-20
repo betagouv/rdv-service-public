@@ -31,7 +31,6 @@ fr:
         select_placeholder_single_use_lieu: Lieu ponctuel
     slots:
       index:
-        place_index: Revenir aux filtres
         available_slots_title_html: Créneaux disponibles pour <strong>%{motif}</strong>
         place_informations_html: <strong>%{place_name}</strong> <small>au %{place_address}</small>
     creneaux:
@@ -43,8 +42,8 @@ fr:
           search_for_slots_subtitle: pour %{users_fullname}
           available_places_with_slots:
             zero: Aucun lieu ne propose de disponibilité
-            one: Un lieu propose des disponibilités
-            other: "%{count} lieux proposent des disponibilités"
+            one: "Un lieu propose des disponibilités :"
+            other: "%{count} lieux proposent des disponibilités :"
     territories:
       agents:
         index:
@@ -86,6 +85,10 @@ fr:
           attributes:
             agents:
               not_from_same_territory: doivent être du même territoire
+        plage_ouverture:
+          attributes:
+            lieu:
+              blank: est obligatoire pour les motifs sur place
   agents:
     export_mailer:
       rdv_export:

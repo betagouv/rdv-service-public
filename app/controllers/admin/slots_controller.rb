@@ -25,10 +25,14 @@ class Admin::SlotsController < AgentAuthController
   private
 
   def search_result
-    if @form.motif.individuel?
-      SearchCreneauxForAgentsService.perform_with(@form).first
+    if @form.motif.requires_lieu?
+      if @form.motif.individuel?
+        SearchCreneauxForAgentsService.perform_with(@form).first
+      else
+        SearchRdvCollectifForAgentsService.new(@form).slot_search
+      end
     else
-      SearchRdvCollectifForAgentsService.new(@form).slot_search
+      SearchCreneauxWithoutLieuForAgentsService.perform_with(@form)
     end
   end
 end

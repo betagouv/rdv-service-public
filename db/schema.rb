@@ -391,7 +391,7 @@ ActiveRecord::Schema.define(version: 2022_10_06_081447) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "recurrence"
-    t.bigint "lieu_id", null: false
+    t.bigint "lieu_id"
     t.boolean "expired_cached", default: false
     t.datetime "recurrence_ends_at"
     t.index "tsrange((first_day)::timestamp without time zone, recurrence_ends_at, '[]'::text)", name: "index_plage_ouvertures_on_tsrange_first_day_recurrence_ends_at", using: :gist

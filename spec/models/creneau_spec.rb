@@ -201,4 +201,14 @@ describe Creneau, type: :model do
       it { is_expected.to be false }
     end
   end
+
+  describe "#lieu" do
+    it "returns the lieu when the lieu_id is present" do
+      expect(build(:creneau, lieu_id: lieu.id).lieu).to eq(lieu)
+    end
+
+    it "returns nil when the lieu_id is blank" do
+      expect(build(:creneau, lieu_id: nil).lieu).to eq(nil)
+    end
+  end
 end
