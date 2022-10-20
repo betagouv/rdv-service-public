@@ -20,7 +20,7 @@ RSpec.configure do |config|
       info: {
         title: "API RDV Solidarités V1",
         version: "v1",
-        description: File.read(Rails.root.join("docs/api/description_api.md")),
+        description: File.read(Rails.root.join("docs/api/v1/description_api.md")),
       },
       components: {
         securitySchemes: {
@@ -200,6 +200,16 @@ RSpec.configure do |config|
               total_count: { type: "integer" },
             },
             required: %w[current_page next_page prev_page total_pages total_count],
+          },
+          errors_object: {
+            type: "object",
+            properties: {
+              errors: {
+                type: "array",
+                items: { type: "string" },
+              },
+            },
+            required: %w[errors],
           },
         },
       },
