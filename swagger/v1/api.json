@@ -1,0 +1,878 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "API RDV Solidarités V1",
+    "version": "v1",
+    "description": "# Paramètres généraux de l'API\n\nL'API de RDV-Solidarités vous permet de lire des données dans notre base depuis votre logiciel.\n\nToutes les fonctionnalités de RDV-Solidarités ne sont pas encore disponibles via l’API. Contactez-nous si vous avez besoin de fonctionnalités qui ne sont pas encore présentes.\n\n## Authentification\n\nCertains points de terminaison sont authentifiés. Pour savoir comment y accéder, merci de vous reférer à la documentation suivante: [authentification de l'API](https://rdv-solidarites.gitbook.io/guides-pour-rdv-solidarites/tech/api-interconnexions-entrantes/authentification-and-permissions).\n\n## Verbe HTTP\n\nOn utilise les verbes HTTP conventionnels pour manipuler les ressources:\n\n- Lecture: HTTP `GET`\n- Création: HTTP `POST`\n- Mise à jour: HTTP `PUT`\n\n## Versionnage\n\nL'API est versionnée. La version actuelle est 1.0 (référencée comme v1 dans les points de terminaison).\n\n## Routes\n\nLes points de terminaison de l'API sont accessible par une route de la forme : `https://<domain>/api/<version>/<endpoint>`.\n\nAvec :\n\n- `version` est la version de l'API\n- `endpoint` est le nom du point de terminaison\n\nPar exemple, on aura : `https://<domain>/api/v1/organizations`\n\n## Pagination des réponses par listes\n\nTous les points de terminaison qui retournent des listes sont paginés.\n\nLe paramètre (optionnel) `page` permet d'accéder à une page donnée. Le paramètre (optionnel) `per` permet d'indiquer combien d'éléments par page sont retournés. Par défaut, et sauf précision contraire dans la documentation d'un point de terminaison donné, on retrouve 20 éléments par page.\n\nDe manière générale, tout point de terminaison qui retourne une liste peut retourner une liste vide.\n\n## Erreurs\n\nL'API est susceptible de retourner les erreurs suivantes.\n\n| Code  | Nom                   | Description                            |\n| ----  | --------              | --------                               |\n| `400` | Bad Request           | La requête est invalide                |\n| `401` | Unauthorized          | L'API KEY est manquante ou non fournie |\n| `403` | Forbidden             | La limite autorisée est atteinte       |\n| `404` | Not Found             | La ressource est introuvable           |\n| `500` | Internal Server Error | Une erreur serveur produite            |\n\n## Ressources\n\n### Sérialisation\n\nLes ressources sont les éléments renvoyés par les points de terminaison. Elles sont sérialisées en JSON.\n\n### Champs DateTime\n\nLes champs de type DateTime sont formatés avec la norme ISO 8601.\n"
+  },
+  "components": {
+    "securitySchemes": {
+      "access_token": {
+        "type": "apiKey",
+        "name": "access-token",
+        "in": "header"
+      },
+      "uid": {
+        "type": "apiKey",
+        "name": "uid",
+        "in": "header"
+      },
+      "client": {
+        "type": "apiKey",
+        "name": "client",
+        "in": "header"
+      }
+    },
+    "schemas": {
+      "get_rdvs": {
+        "type": "object",
+        "properties": {
+          "rdvs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/rdv"
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/meta"
+          }
+        },
+        "required": [
+          "rdvs",
+          "meta"
+        ]
+      },
+      "rdv": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "address": {
+            "type": "string"
+          },
+          "agents": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/agent"
+            }
+          },
+          "cancelled_at": {
+            "type": "string",
+            "nullable": true
+          },
+          "collectif": {
+            "type": "boolean"
+          },
+          "context": {
+            "type": "string",
+            "nullable": true
+          },
+          "created_by": {
+            "type": "string",
+            "enum": [
+              "agent",
+              "user",
+              "file_attente"
+            ]
+          },
+          "deleted_at": {
+            "type": "string",
+            "nullable": true
+          },
+          "duration_in_min": {
+            "type": "integer"
+          },
+          "ends_at": {
+            "type": "string"
+          },
+          "lieu": {
+            "$ref": "#/components/schemas/lieu"
+          },
+          "max_participants_count": {
+            "type": "integer",
+            "nullable": true
+          },
+          "motif": {
+            "$ref": "#/components/schemas/motif"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "organisation": {
+            "$ref": "#/components/schemas/organisation"
+          },
+          "rdvs_users": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/rdvs_user"
+            }
+          },
+          "starts_at": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "unknown",
+              "waiting",
+              "seen",
+              "excused",
+              "revoked",
+              "noshow"
+            ]
+          },
+          "users": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/user"
+            }
+          },
+          "users_count": {
+            "type": "integer"
+          },
+          "uuid": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "address",
+          "agents",
+          "cancelled_at",
+          "collectif",
+          "context",
+          "created_by",
+          "deleted_at",
+          "duration_in_min",
+          "lieu",
+          "max_participants_count",
+          "motif",
+          "name",
+          "organisation",
+          "rdvs_users",
+          "starts_at",
+          "status",
+          "users",
+          "users_count",
+          "uuid"
+        ]
+      },
+      "agent": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "email": {
+            "type": "string"
+          },
+          "first_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "last_name": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "email",
+          "first_name",
+          "last_name"
+        ]
+      },
+      "user": {
+        "type": "object",
+        "nullable": true,
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "address": {
+            "type": "string",
+            "nullable": true
+          },
+          "address_details": {
+            "type": "string",
+            "nullable": true
+          },
+          "affiliation_number": {
+            "type": "string",
+            "nullable": true
+          },
+          "bith_date": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "bith_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "caisse_affiliation": {
+            "type": "string",
+            "enum": [
+              "aucun",
+              "caf",
+              "msa"
+            ]
+          },
+          "case_number": {
+            "type": "string",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "family_situation": {
+            "type": "string",
+            "enum": [
+              "single",
+              "in_a_relationship",
+              "divorced"
+            ]
+          },
+          "first_name": {
+            "type": "string"
+          },
+          "invitation_accepted_at": {
+            "type": "string",
+            "nullable": true
+          },
+          "invitation_created_at": {
+            "type": "string",
+            "nullable": true
+          },
+          "last_name": {
+            "type": "string"
+          },
+          "notify_by_email": {
+            "type": "boolean"
+          },
+          "notify_by_sms": {
+            "type": "boolean"
+          },
+          "number_of_children": {
+            "type": "integer"
+          },
+          "phone_number": {
+            "type": "string",
+            "nullable": true
+          },
+          "phone_number_formatted": {
+            "type": "string",
+            "nullable": true
+          },
+          "responsible": {
+            "type": "object",
+            "nullable": true
+          },
+          "responsible_id": {
+            "type": "integer",
+            "nullable": true
+          },
+          "user_profiles": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/user_profiles"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "address",
+          "address_details",
+          "affiliation_number",
+          "birth_date",
+          "birth_name",
+          "caisse_affiliation",
+          "case_number",
+          "created_at",
+          "email",
+          "family_situation",
+          "first_name",
+          "invitation_accepted_at",
+          "invitation_created_at",
+          "last_name",
+          "notify_by_email",
+          "notify_by_sms",
+          "number_of_children",
+          "phone_number",
+          "phone_number_formatted",
+          "responsible",
+          "responsible_id",
+          "user_profiles"
+        ]
+      },
+      "user_profiles": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "$ref": "#/components/schemas/user"
+          },
+          "organisation": {
+            "$ref": "#/components/schemas/organisation"
+          },
+          "logement": {
+            "type": "string",
+            "enum": [
+              "sdf",
+              "heberge",
+              "en_accession_propriete",
+              "proprietaire",
+              "autre",
+              "locataire"
+            ]
+          },
+          "note": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "user",
+          "organisation",
+          "logement",
+          "note"
+        ]
+      },
+      "organisation": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "phone_number": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "email",
+          "name",
+          "phone_number"
+        ]
+      },
+      "lieu": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "address": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "organisation_id": {
+            "type": "integer"
+          },
+          "phone_number": {
+            "type": "string",
+            "nullable": true
+          },
+          "single_use": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "address",
+          "name",
+          "organisation_id",
+          "phone_number",
+          "single_use"
+        ]
+      },
+      "motif": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "rsa_orientation",
+              "rsa_accompagnement",
+              "rsa_orientation_on_phone_platform",
+              "rsa_cer_signature",
+              "rsa_insertion_offer",
+              "rsa_follow_up"
+            ]
+          },
+          "deleted_at": {
+            "type": "string",
+            "nullable": true
+          },
+          "location_type": {
+            "type": "string",
+            "enum": [
+              "public_office",
+              "phone",
+              "home"
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "organisation_id": {
+            "type": "integer"
+          },
+          "reservable_online": {
+            "type": "boolean"
+          },
+          "service_id": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "category",
+          "deleted_at",
+          "location_type",
+          "name",
+          "organisation_id",
+          "reservable_online",
+          "service_id"
+        ]
+      },
+      "rdvs_user": {
+        "type": "object",
+        "properties": {
+          "send_lifecycle_notifications": {
+            "type": "boolean"
+          },
+          "send_reminder_notification": {
+            "type": "boolean"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "unknown",
+              "waiting",
+              "seen",
+              "excused",
+              "revoked",
+              "noshow"
+            ]
+          },
+          "user": {
+            "$ref": "#/components/schemas/user"
+          }
+        },
+        "required": [
+          "send_lifecycle_notifications",
+          "send_reminder_notification",
+          "status",
+          "user"
+        ]
+      },
+      "meta": {
+        "type": "object",
+        "properties": {
+          "current_page": {
+            "type": "integer"
+          },
+          "next_page": {
+            "type": "integer",
+            "nullable": true
+          },
+          "prev_page": {
+            "type": "integer",
+            "nullable": true
+          },
+          "total_pages": {
+            "type": "integer"
+          },
+          "total_count": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "current_page",
+          "next_page",
+          "prev_page",
+          "total_pages",
+          "total_count"
+        ]
+      },
+      "errors_object": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "errors"
+        ]
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "RDV",
+      "description": "Pour manipuler des rendez-vous"
+    }
+  ],
+  "servers": [
+    {
+      "url": "http://localhost:5000/",
+      "description": "Serveur de développement"
+    },
+    {
+      "url": "https://demo.rdv-solidarites.fr",
+      "description": "Serveur de démo"
+    },
+    {
+      "url": "https://www.rdv-solidarites.fr",
+      "description": "Serveur de production"
+    }
+  ],
+  "paths": {
+    "/api/v1/organisations/{organisation_id}/rdvs": {
+      "get": {
+        "summary": "Lister les rendez-vous d'une organisation",
+        "tags": [
+          "RDV"
+        ],
+        "operationId": "getRdvs",
+        "description": "Renvoie les RDVs du service dont l'agent fait partie dans cette organisation. Si l'agent est administrateurice ou secrétaire, renvoie tous les RDVs de l'organisation en question.",
+        "security": [
+          {
+            "access_token": [
+
+            ],
+            "uid": [
+
+            ],
+            "client": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "organisation_id",
+            "in": "path",
+            "description": "Identifiant de l'organisation",
+            "example": "20",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "access-token",
+            "in": "header",
+            "description": "Token d'accès (authentification)",
+            "example": "SFYBngO55ImjD1HOcv-ivQ",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "client",
+            "in": "header",
+            "description": "Clé client d'accès (authentification)",
+            "example": "Z6EihQAY9NWsZByfZ47i_Q",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "uid",
+            "in": "header",
+            "description": "Identifiant d'accès (authentification)",
+            "example": "martine@demo.rdv-solidarites.fr",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Appel API réussi",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "rdvs": [
+                        {
+                          "id": 14,
+                          "address": "1 rue de l'adresse 12345 Ville",
+                          "agents": [
+                            {
+                              "id": 89,
+                              "email": "agent_1@lapin.fr",
+                              "first_name": "Évangéline",
+                              "last_name": "Bourgeois"
+                            }
+                          ],
+                          "cancelled_at": null,
+                          "collectif": false,
+                          "context": null,
+                          "created_by": "agent",
+                          "deleted_at": null,
+                          "duration_in_min": 45,
+                          "ends_at": "2022-10-23 17:12:40 +0200",
+                          "lieu": {
+                            "id": 31,
+                            "address": "1 rue de l'adresse 12345 Ville",
+                            "name": "Lieu n°1",
+                            "organisation_id": 538,
+                            "phone_number": null,
+                            "single_use": false
+                          },
+                          "max_participants_count": null,
+                          "motif": {
+                            "id": 43,
+                            "category": "rsa_orientation",
+                            "deleted_at": null,
+                            "location_type": "public_office",
+                            "name": "Motif 1",
+                            "organisation_id": 540,
+                            "reservable_online": true,
+                            "service_id": 105
+                          },
+                          "name": null,
+                          "organisation": {
+                            "id": 538,
+                            "email": null,
+                            "name": "Organisation n°1",
+                            "phone_number": null
+                          },
+                          "rdvs_users": [
+                            {
+                              "send_lifecycle_notifications": true,
+                              "send_reminder_notification": true,
+                              "status": "unknown",
+                              "user": {
+                                "id": 17,
+                                "address": "20 avenue de Ségur, Paris",
+                                "address_details": null,
+                                "affiliation_number": "39012093812038",
+                                "birth_date": "1985-07-20",
+                                "birth_name": null,
+                                "caisse_affiliation": "caf",
+                                "case_number": null,
+                                "created_at": "2022-10-20 16:27:40 +0200",
+                                "email": "usager_1@lapin.fr",
+                                "family_situation": "divorced",
+                                "first_name": "Benjamin",
+                                "invitation_accepted_at": null,
+                                "invitation_created_at": null,
+                                "last_name": "PAYET",
+                                "notify_by_email": true,
+                                "notify_by_sms": true,
+                                "number_of_children": 12,
+                                "phone_number": "06 22 50 36 89",
+                                "phone_number_formatted": "+33622503689",
+                                "responsible": null,
+                                "responsible_id": null,
+                                "user_profiles": null
+                              }
+                            }
+                          ],
+                          "starts_at": "2022-10-23 16:27:40 +0200",
+                          "status": "unknown",
+                          "users": [
+                            {
+                              "id": 17,
+                              "address": "20 avenue de Ségur, Paris",
+                              "address_details": null,
+                              "affiliation_number": "39012093812038",
+                              "birth_date": "1985-07-20",
+                              "birth_name": null,
+                              "caisse_affiliation": "caf",
+                              "case_number": null,
+                              "created_at": "2022-10-20 16:27:40 +0200",
+                              "email": "usager_1@lapin.fr",
+                              "family_situation": "divorced",
+                              "first_name": "Benjamin",
+                              "invitation_accepted_at": null,
+                              "invitation_created_at": null,
+                              "last_name": "PAYET",
+                              "notify_by_email": true,
+                              "notify_by_sms": true,
+                              "number_of_children": 12,
+                              "phone_number": "06 22 50 36 89",
+                              "phone_number_formatted": "+33622503689",
+                              "responsible": null,
+                              "responsible_id": null,
+                              "user_profiles": null
+                            }
+                          ],
+                          "users_count": 1,
+                          "uuid": "75104d05-492e-48bc-b6d0-2167e8f6629c"
+                        },
+                        {
+                          "id": 16,
+                          "address": "3 rue de l'adresse 12345 Ville",
+                          "agents": [
+                            {
+                              "id": 91,
+                              "email": "agent_3@lapin.fr",
+                              "first_name": "Léon",
+                              "last_name": "Lejeune"
+                            }
+                          ],
+                          "cancelled_at": null,
+                          "collectif": false,
+                          "context": null,
+                          "created_by": "agent",
+                          "deleted_at": null,
+                          "duration_in_min": 45,
+                          "ends_at": "2022-10-23 17:12:40 +0200",
+                          "lieu": {
+                            "id": 33,
+                            "address": "3 rue de l'adresse 12345 Ville",
+                            "name": "Lieu n°3",
+                            "organisation_id": 538,
+                            "phone_number": null,
+                            "single_use": false
+                          },
+                          "max_participants_count": null,
+                          "motif": {
+                            "id": 44,
+                            "category": "rsa_orientation",
+                            "deleted_at": null,
+                            "location_type": "public_office",
+                            "name": "Motif 2",
+                            "organisation_id": 541,
+                            "reservable_online": true,
+                            "service_id": 106
+                          },
+                          "name": null,
+                          "organisation": {
+                            "id": 538,
+                            "email": null,
+                            "name": "Organisation n°1",
+                            "phone_number": null
+                          },
+                          "rdvs_users": [
+                            {
+                              "send_lifecycle_notifications": true,
+                              "send_reminder_notification": true,
+                              "status": "unknown",
+                              "user": {
+                                "id": 19,
+                                "address": "20 avenue de Ségur, Paris",
+                                "address_details": null,
+                                "affiliation_number": "39012093812038",
+                                "birth_date": "1985-07-20",
+                                "birth_name": null,
+                                "caisse_affiliation": "caf",
+                                "case_number": null,
+                                "created_at": "2022-10-20 16:27:40 +0200",
+                                "email": "usager_3@lapin.fr",
+                                "family_situation": "divorced",
+                                "first_name": "Stéphanie",
+                                "invitation_accepted_at": null,
+                                "invitation_created_at": null,
+                                "last_name": "POULAIN",
+                                "notify_by_email": true,
+                                "notify_by_sms": true,
+                                "number_of_children": 12,
+                                "phone_number": "648041600",
+                                "phone_number_formatted": "+33648041600",
+                                "responsible": null,
+                                "responsible_id": null,
+                                "user_profiles": null
+                              }
+                            }
+                          ],
+                          "starts_at": "2022-10-23 16:27:40 +0200",
+                          "status": "unknown",
+                          "users": [
+                            {
+                              "id": 19,
+                              "address": "20 avenue de Ségur, Paris",
+                              "address_details": null,
+                              "affiliation_number": "39012093812038",
+                              "birth_date": "1985-07-20",
+                              "birth_name": null,
+                              "caisse_affiliation": "caf",
+                              "case_number": null,
+                              "created_at": "2022-10-20 16:27:40 +0200",
+                              "email": "usager_3@lapin.fr",
+                              "family_situation": "divorced",
+                              "first_name": "Stéphanie",
+                              "invitation_accepted_at": null,
+                              "invitation_created_at": null,
+                              "last_name": "POULAIN",
+                              "notify_by_email": true,
+                              "notify_by_sms": true,
+                              "number_of_children": 12,
+                              "phone_number": "648041600",
+                              "phone_number_formatted": "+33648041600",
+                              "responsible": null,
+                              "responsible_id": null,
+                              "user_profiles": null
+                            }
+                          ],
+                          "users_count": 1,
+                          "uuid": "8097d6a6-064b-46c4-b170-fcc98351d777"
+                        }
+                      ],
+                      "meta": {
+                        "current_page": 1,
+                        "next_page": null,
+                        "prev_page": null,
+                        "total_pages": 1,
+                        "total_count": 2
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/get_rdvs"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Problème d'authentification",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "errors": [
+                        "Vous devez vous connecter ou vous inscrire pour continuer."
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/errors_object"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
