@@ -24,6 +24,7 @@ class Absence < ApplicationRecord
   validates :first_day, :title, presence: true
   validate :ends_at_should_be_after_starts_at
   validate :no_recurrence_for_absence_for_several_days
+  validate :date_is_realistic
 
   # Hooks
   before_validation :set_end_day
@@ -64,5 +65,20 @@ class Absence < ApplicationRecord
     return if recurrence.blank? || end_day.blank? || first_day == end_day
 
     errors.add(:recurrence, "pas possible avec une indisponibilité de plusieurs jours")
+  end
+
+  # Ce check a été ajouté pour éviter d'inexplicables saisies
+  # accidentelles, par exemple 1922 au lieu de 2022.
+  # Voir : https://github.com/betagouv/rdv-solidarites.fr/issues/2914
+  def date_is_realistic
+    return unless first_day
+
+    if first_day > 5.years.from_now
+      errors.add(:first_day, "est plus de 5 and dans le futur, est-ce une erreur ?")
+    end
+
+    if first_day.year < 2018
+      errors.add(:first_day, "est loin dans le passé, est-ce une erreur ?")
+    end
   end
 end

@@ -36,6 +36,7 @@ class PlageOuverture < ApplicationRecord
   validates :motifs, :title, presence: true
   validate :warn_overlapping_plage_ouvertures
   validate :warn_overflow_motifs_duration
+  validate :date_is_realistic
 
   # Scopes
   scope :in_range, lambda { |range|
@@ -152,6 +153,21 @@ class PlageOuverture < ApplicationRecord
     return unless overflow_motifs_duration?
 
     add_benign_error("Certains motifs ont une durée supérieure à la plage d'ouverture prévue")
+  end
+
+  # Ce check a été ajouté pour éviter d'inexplicables saisies
+  # accidentelles, par exemple 1922 au lieu de 2022.
+  # Voir : https://github.com/betagouv/rdv-solidarites.fr/issues/2914
+  def date_is_realistic
+    return unless first_day
+
+    if first_day > 5.years.from_now
+      errors.add(:first_day, "est plus de 5 and dans le futur, est-ce une erreur ?")
+    end
+
+    if first_day.year < 2018
+      errors.add(:first_day, "est loin dans le passé, est-ce une erreur ?")
+    end
   end
 
   def requires_lieu?
