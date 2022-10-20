@@ -164,7 +164,7 @@ RSpec.configure do |config|
 
     FileUtils.mkdir_p "tmp/capybara"
     %i[browser driver].each do |source|
-      errors = Capybara.page.driver.browser.manage.logs.get(source)
+      errors = Capybara.page.driver.browser.logs.get(source)
       fp = "tmp/capybara/chrome.#{example.full_description.parameterize}.#{source}.log"
       File.open(fp, "w") do |f|
         f << "// empty logs" if errors.empty?
