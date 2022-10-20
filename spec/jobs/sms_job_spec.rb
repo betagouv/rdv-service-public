@@ -6,7 +6,6 @@ describe SmsJob do
       sender_name: "RdvSoli",
       phone_number: phone_number,
       content: "test",
-      tags: [],
       provider: "netsize",
       api_key: "fake_key",
       receipt_params: {}
