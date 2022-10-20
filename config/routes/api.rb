@@ -28,6 +28,7 @@ namespace :api do
     # Need agent authentication to
     mount_devise_token_auth_for "AgentWithTokenAuth", at: "auth"
     resources :absences, except: %i[new edit]
+    resources :agents, only: %i[index]
 
     # Doesn't need authentication
     resources :groups, only: :index
