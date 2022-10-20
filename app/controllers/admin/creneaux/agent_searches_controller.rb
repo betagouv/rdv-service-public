@@ -9,7 +9,7 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
   helper_method :motif_selected?
 
   def index
-    if motif_selected? && (!requires_lieu? || only_one_lieu?)
+    if motif_selected? && (results_without_lieu? || only_one_lieu?)
       skip_policy_scope # TODO: improve pundit checks for creneaux
       redirect_to admin_organisation_slots_path(current_organisation, creneaux_search_params), class: "d-block stretched-link"
     else
@@ -38,6 +38,12 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
 
   def requires_lieu?
     @form.motif&.requires_lieu?
+  end
+
+  def results_without_lieu?
+    return false if requires_lieu?
+
+    SearchCreneauxWithoutLieuForAgentsService.perform_with(@form)&.creneaux&.any?
   end
 
   def set_form
