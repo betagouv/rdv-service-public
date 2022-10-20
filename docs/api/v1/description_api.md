@@ -1,4 +1,4 @@
-# Paramètres généraux de l'API Publique
+# Paramètres généraux de l'API
 
 L'API de RDV-Solidarités vous permet de lire des données dans notre base depuis votre logiciel.
 
@@ -6,19 +6,23 @@ Toutes les fonctionnalités de RDV-Solidarités ne sont pas encore disponibles v
 
 ## Authentification
 
-Certains points de terminaison sont authentifiés. Pour savoir comment y accéder, merci de vous reférer à la documentation suivante: [authentification de l'API](https://rdv-solidarites.gitbook.io/guides-pour-rdv-solidarites/tech/api-interconnexions-entrantes/authentification-and-permissions)
+Certains points de terminaison sont authentifiés. Pour savoir comment y accéder, merci de vous reférer à la documentation suivante: [authentification de l'API](https://rdv-solidarites.gitbook.io/guides-pour-rdv-solidarites/tech/api-interconnexions-entrantes/authentification-and-permissions).
 
 ## Verbe HTTP
 
-Aucune écriture n'étant possible, toutes les routes de l'API publique s'appellent avec le verbe HTTP `GET`.
+On utilise les verbes HTTP conventionnels pour manipuler les ressources:
+
+- Lecture: HTTP `GET`
+- Création: HTTP `POST`
+- Mise à jour: HTTP `PUT`
 
 ## Versionnage
 
-L'API est versionnée. La version actuelle est 1.0 (référencée comme v1 dans les points de terminaison)
+L'API est versionnée. La version actuelle est 1.0 (référencée comme v1 dans les points de terminaison).
 
 ## Routes
 
-Les points de terminaison de l'API publique sont accessible par une route de la forme : `https://<domain>/api/<version>/<endpoint>`
+Les points de terminaison de l'API sont accessible par une route de la forme : `https://<domain>/api/<version>/<endpoint>`.
 
 Avec :
 
@@ -37,7 +41,7 @@ De manière générale, tout point de terminaison qui retourne une liste peut re
 
 ## Erreurs
 
-L'API publique est susceptible de retourner les erreurs suivantes.
+L'API est susceptible de retourner les erreurs suivantes.
 
 | Code  | Nom                   | Description                            |
 | ----  | --------              | --------                               |
@@ -46,8 +50,6 @@ L'API publique est susceptible de retourner les erreurs suivantes.
 | `403` | Forbidden             | La limite autorisée est atteinte       |
 | `404` | Not Found             | La ressource est introuvable           |
 | `500` | Internal Server Error | Une erreur serveur produite            |
-
-L'erreur `401` n'est pertinente que lorsque l'API publique proposera un mécanisme d'authentification.
 
 ## Ressources
 
