@@ -31,7 +31,7 @@ RSpec.describe "Participations", type: :request do
       delete(
         admin_organisation_rdv_participation_path(rdv.organisation, rdv, rdv.rdvs_users.first)
       )
-      expect(response).to have_http_status(:redirect)
+      expect(response).to redirect_to(admin_organisation_rdv_path(organisation, rdv))
       expect(flash[:notice]).to eq("La participation de l'usager au rdv a été supprimée.")
     end
   end
