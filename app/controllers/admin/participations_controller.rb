@@ -10,7 +10,7 @@ class Admin::ParticipationsController < AgentAuthController
 
   def update
     authorize(@rdv, :update?)
-    if @rdvs_user.change_status(current_agent, rdvs_user_params[:status])
+    if @rdvs_user.change_status_and_notify(current_agent, rdvs_user_params[:status])
       flash.now[:notice] = "Status de participation pour #{@rdvs_user.user.full_name} mis à jour"
     else
       flash.now[:error] = @rdvs_user.errors.full_messages.to_sentence

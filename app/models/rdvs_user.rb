@@ -31,8 +31,6 @@ class RdvsUser < ApplicationRecord
   # Scopes
   scope :order_by_user_last_name, -> { includes(:user).order("users.last_name ASC") }
   scope :not_cancelled, -> { where(status: NOT_CANCELLED_STATUSES) }
-  # For scoping notifications exceptions, todo get a better name, this override rails named method....
-  scope :not_excused, -> { where.not(status: "excused") }
 
   def update_counter_cache
     rdv.update_users_count
