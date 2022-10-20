@@ -13,7 +13,7 @@ class Api::V1::PublicLinksController < Api::V1::BaseController
     render json: response_body
   end
 
-  private
+  protected
 
   def public_links_for(territory)
     plage_ouvertures_scope = PlageOuverture

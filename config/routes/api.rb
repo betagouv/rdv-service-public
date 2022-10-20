@@ -40,6 +40,7 @@ namespace :api do
     resources :invitations, param: "token", only: [:show]
 
     # Doesn't need authentication
+    resources :public_links, only: [:index]
     resources :groups, only: :index
     resources :organizations, only: :index
   end
