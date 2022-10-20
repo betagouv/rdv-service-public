@@ -31,6 +31,8 @@ class Motif < ApplicationRecord
   enum location_type: { public_office: "public_office", phone: "phone", home: "home" }
   enum category: { rsa_orientation: "rsa_orientation",
                    rsa_accompagnement: "rsa_accompagnement",
+                   rsa_accompagnement_social: "rsa_accompagnement_social",
+                   rsa_accompagnement_sociopro: "rsa_accompagnement_sociopro",
                    rsa_orientation_on_phone_platform: "rsa_orientation_on_phone_platform",
                    rsa_cer_signature: "rsa_cer_signature",
                    rsa_insertion_offer: "rsa_insertion_offer",
