@@ -33,8 +33,10 @@ namespace :api do
       get :invite, on: :member
       post :invite, on: :member
     end
-    resources :organisations, only: [] do
+    resources :organisations, only: %i[index] do
       resources :users, only: %i[index show]
+      resources :motifs, only: %i[index]
+      resources :rdvs, only: %i[index]
     end
 
     # Doesn't need authentication
