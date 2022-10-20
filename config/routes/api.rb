@@ -39,6 +39,7 @@ namespace :api do
       resources :motifs, only: %i[index]
       resources :rdvs, only: %i[index]
     end
+    resources :invitations, param: "token", only: [:show]
 
     # Doesn't need authentication
     resources :groups, only: :index
