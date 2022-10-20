@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-class Api::V1::OrganizationsController < Api::V1::BaseController
+class Api::V2::OrganizationsController < Api::V2::BaseController
   def index
-    render_collection(scope, root: :organizations, blueprint_klass: OrganizationBlueprint)
+    render_collection(scope, blueprint_klass: OrganizationBlueprint)
   end
 
   private
