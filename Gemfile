@@ -121,7 +121,7 @@ group :test do
   gem "capybara"
   gem "capybara-email"
   gem "capybara-screenshot"
-  gem "webdrivers", "~> 4.6.0"
+  gem "webdrivers"
   gem "database_cleaner"
   gem "webmock"
 end

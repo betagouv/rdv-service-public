@@ -50,18 +50,17 @@ Capybara.javascript_driver = :chrome_headless
 
 Capybara.register_driver :selenium do |app|
   # these args seem to reduce test flakyness
-  # w3c false required for logs cf https://github.com/SeleniumHQ/selenium/issues/7270
-  chrome_options = { args: %w[headless no-sandbox disable-gpu window-size=1500,1000], w3c: false }
+  args = %w[headless no-sandbox disable-gpu window-size=1500,1000]
   chrome_bin = ENV.fetch("GOOGLE_CHROME_SHIM", nil)
-  chrome_options[:binary] = chrome_bin if chrome_bin
-  capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-    chromeOptions: chrome_options,
-    "goog:loggingPrefs" => { browser: "ALL" }
-  )
+  binary = chrome_bin if chrome_bin
   Capybara::Selenium::Driver.new(
     app,
     browser: :chrome,
-    desired_capabilities: capabilities
+    capabilities: [Selenium::WebDriver::Chrome::Options.new(
+      args: args,
+      binary: binary,
+      "goog:loggingPrefs": { browser: "ALL" }
+    )]
   )
 end
 
@@ -165,7 +164,7 @@ RSpec.configure do |config|
 
     FileUtils.mkdir_p "tmp/capybara"
     %i[browser driver].each do |source|
-      errors = Capybara.page.driver.browser.manage.logs.get(source)
+      errors = Capybara.page.driver.browser.logs.get(source)
       fp = "tmp/capybara/chrome.#{example.full_description.parameterize}.#{source}.log"
       File.open(fp, "w") do |f|
         f << "// empty logs" if errors.empty?
