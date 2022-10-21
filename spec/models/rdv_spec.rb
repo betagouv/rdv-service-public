@@ -414,7 +414,7 @@ describe Rdv, type: :model do
       create(:rdv, organisation: other_organisation, agents: [admin])
 
       options = { lieu_id: "" }
-      expect(described_class.search_for(admin, organisation, options)).to eq([rdv])
+      expect(described_class.search_for(organisation, options)).to eq([rdv])
     end
 
     it "returns allowed rdvs" do
@@ -425,7 +425,7 @@ describe Rdv, type: :model do
       create(:rdv, organisation: other_organisation, agents: [admin])
 
       options = {}
-      expect(described_class.search_for(admin, organisation, options)).to eq([rdv])
+      expect(described_class.search_for(organisation, options)).to eq([rdv])
     end
 
     it "returns rdv for lieu when given" do
@@ -436,7 +436,7 @@ describe Rdv, type: :model do
       create(:rdv, lieu: create(:lieu), organisation: organisation, agents: [admin])
 
       options = { "lieu_id" => lieu.id }
-      expect(described_class.search_for(admin, organisation, options)).to eq([rdv])
+      expect(described_class.search_for(organisation, options)).to eq([rdv])
     end
 
     it "returns rdv for motif when given" do
@@ -448,7 +448,7 @@ describe Rdv, type: :model do
       create(:rdv, motif: autre_motif, organisation: organisation, agents: [admin])
 
       options = { "motif_id" => motif.id }
-      expect(described_class.search_for(admin, organisation, options)).to eq([rdv])
+      expect(described_class.search_for(organisation, options)).to eq([rdv])
     end
 
     it "returns rdv for given agent" do
@@ -459,7 +459,7 @@ describe Rdv, type: :model do
       create(:rdv, organisation: organisation, agents: [other_admin])
 
       options = { "agent_id" => admin.id }
-      expect(described_class.search_for(admin, organisation, options)).to eq([rdv])
+      expect(described_class.search_for(organisation, options)).to eq([rdv])
     end
 
     it "returns rdv for given user" do
@@ -471,7 +471,23 @@ describe Rdv, type: :model do
       create(:rdv, organisation: organisation, agents: [admin], users: [other_user])
 
       options = { "user_id" => user.id }
-      expect(described_class.search_for(admin, organisation, options)).to eq([rdv])
+      expect(described_class.search_for(organisation, options)).to eq([rdv])
+    end
+
+    it "return rdvs for agent in same organisation and service" do
+      organisation = create(:organisation)
+      organisation2 = create(:organisation)
+      user = create(:user, organisations: [organisation])
+      agent1 = create(:agent, basic_role_in_organisations: [organisation])
+      agent2 = create(:agent, basic_role_in_organisations: [organisation])
+      rdv1 = create(:rdv, organisation: organisation, agents: [agent1], users: [user])
+      rdv2 = create(:rdv, organisation: organisation, agents: [agent2], users: [user])
+      rdv3 = create(:rdv, organisation: organisation2, agents: [agent2], users: [user])
+
+      options = {}
+      expect(described_class.search_for(organisation, options)).to eq([rdv1, rdv2])
+      expect(described_class.search_for(organisation2, options)).to eq([rdv3])
+      expect(described_class.search_for(Organisation.all, options)).to eq([rdv1, rdv2, rdv3])
     end
 
     it "returns rdv with given status" do
@@ -481,7 +497,7 @@ describe Rdv, type: :model do
       create(:rdv, :past, organisation: organisation, agents: [admin], status: :excused)
 
       options = { "status" => "seen" }
-      expect(described_class.search_for(admin, organisation, options)).to eq([rdv])
+      expect(described_class.search_for(organisation, options)).to eq([rdv])
     end
 
     it "returns rdv starting after that date" do
@@ -493,7 +509,7 @@ describe Rdv, type: :model do
       create(:rdv, starts_at: now + 1.day, organisation: organisation, agents: [admin])
 
       options = { "start" => (now + 2.days) }
-      expect(described_class.search_for(admin, organisation, options)).to eq([rdv])
+      expect(described_class.search_for(organisation, options)).to eq([rdv])
     end
 
     it "returns rdv starting before that date" do
@@ -505,7 +521,7 @@ describe Rdv, type: :model do
       create(:rdv, starts_at: now + 3.days, organisation: organisation, agents: [admin])
 
       options = { "end" => (now + 2.days) }
-      expect(described_class.search_for(admin, organisation, options)).to eq([rdv])
+      expect(described_class.search_for(organisation, options)).to eq([rdv])
     end
   end
 
