@@ -143,6 +143,10 @@ RSpec/MultipleDescribes:
   Exclude:
     - 'spec/policies/agent/*_policy_spec.rb'
 
+RSpec/VariableName:
+  Exclude:
+    - 'spec/requests/api/v1/rdvs_request_spec.rb'
+
 RSpec/MultipleExpectations:
   Enabled: false
 
