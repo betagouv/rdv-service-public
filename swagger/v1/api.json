@@ -594,7 +594,7 @@
       "get": {
         "summary": "Lister les groupes (représentation des territoires)",
         "tags": [
-          "Groups"
+          "Group"
         ],
         "operationId": "getGroups",
         "description": "Renvoie tous les groupes, qui représentent les territoires, de manière paginée.",

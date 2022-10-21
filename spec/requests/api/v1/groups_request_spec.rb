@@ -5,7 +5,7 @@ require "swagger_helper"
 describe "Groups API", swagger_doc: "v1/api.json" do
   path "/api/v1/groups" do
     get "Lister les groupes (représentation des territoires)" do
-      tags "Groups"
+      tags "Group"
       produces "application/json"
       operationId "getGroups"
       description "Renvoie tous les groupes, qui représentent les territoires, de manière paginée."
