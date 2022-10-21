@@ -1,4 +1,17 @@
 = simple_form_for(form, method: "GET", url: url_for({}), as: "") do |f|
+  - if current_agent.multiple_organisations_access?
+    .row
+      .col-md-6
+        - selected = @scoped_organisations.one? ? @scoped_organisations.first.id : 0
+        = f.input :scoped_organisation_id, collection: current_agent.organisations.map {[_1.name, _1.id]}.unshift(["Toutes", 0]), \
+                label: "Organisation", \
+                selected: selected,\
+                input_html: { \
+                  class: "select2-input", \
+                  onchange: "this.form.submit()", \
+                }, \
+                wrapper: "horizontal_form"
+    hr
   .row
     .col-md-6
       = f.input :agent_id, collection: [form.agent].compact, \
@@ -10,7 +23,7 @@
                 data: { \
                   "select-options": { \
                     ajax: { \
-                      url: admin_organisation_agents_path(current_organisation),
+                      url: admin_organisation_agents_path(@scoped_organisations&.map(&:id)),
                       dataType: "json",
                       delay: 250, \
                     }, \
@@ -27,7 +40,7 @@
                 data: { \
                   "select-options": { \
                     ajax: { \
-                      url: search_admin_organisation_users_path(current_organisation),
+                      url: search_admin_organisation_users_path(@scoped_organisations&.map(&:id)),
                       dataType: "json",
                       delay: 250, \
                     }, \
@@ -35,14 +48,14 @@
                 }, \
               },
               wrapper: "horizontal_form"
-      = f.input :lieu_id, collection: policy_scope(Lieu).enabled.order(:name),
+      = f.input :lieu_id, collection: @lieux,
               label: "Lieu",
               label_method: :name,
               prompt: "Tous",
               input_html: { class: "select2-input" },
               wrapper: "horizontal_form"
     .col-md-6
-      = f.input :motif_id, collection: policy_scope(Motif),
+      = f.input :motif_id, collection: @motifs,
             label: "Motifs",
             label_method: :name,
             prompt: "Tous",
@@ -58,6 +71,5 @@
       = date_input(f, :start, label = "Période - Début", wrapper: "horizontal_form")
       = date_input(f, :end, label = "Période - Fin", wrapper: "horizontal_form")
   .d-flex.justify-content-end
-    - search = params[:search].blank? ? "d-none" : ""
-    = link_to "Réinitialiser", admin_organisation_rdvs_path(current_organisation), class: "btn btn-link #{search}"
-    input.btn.btn-primary.d-print-none type="submit" value="Rafraîchir la liste" name="search"
+    = link_to "Réinitialiser", admin_organisation_rdvs_path(current_organisation), class: "btn btn-link"
+    input.btn.btn-primary.d-print-none type="submit" value="Rafraîchir la liste"

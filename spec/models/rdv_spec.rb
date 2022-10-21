@@ -410,8 +410,8 @@ describe Rdv, type: :model do
       organisation = create(:organisation)
       other_organisation = create(:organisation)
       admin = create(:agent, admin_role_in_organisations: [organisation, other_organisation])
-      rdv = create(:rdv, organisation: organisation)
-      create(:rdv, organisation: other_organisation)
+      rdv = create(:rdv, organisation: organisation, agents: [admin])
+      create(:rdv, organisation: other_organisation, agents: [admin])
 
       options = { lieu_id: "" }
       expect(described_class.search_for(admin, organisation, options)).to eq([rdv])
@@ -421,8 +421,8 @@ describe Rdv, type: :model do
       organisation = create(:organisation)
       other_organisation = create(:organisation)
       admin = create(:agent, admin_role_in_organisations: [organisation, other_organisation])
-      rdv = create(:rdv, organisation: organisation)
-      create(:rdv, organisation: other_organisation)
+      rdv = create(:rdv, organisation: organisation, agents: [admin])
+      create(:rdv, organisation: other_organisation, agents: [admin])
 
       options = {}
       expect(described_class.search_for(admin, organisation, options)).to eq([rdv])
@@ -432,8 +432,8 @@ describe Rdv, type: :model do
       organisation = create(:organisation)
       admin = create(:agent, admin_role_in_organisations: [organisation])
       lieu = create(:lieu, organisation: organisation)
-      rdv = create(:rdv, lieu: lieu, organisation: organisation)
-      create(:rdv, lieu: create(:lieu), organisation: organisation)
+      rdv = create(:rdv, lieu: lieu, organisation: organisation, agents: [admin])
+      create(:rdv, lieu: create(:lieu), organisation: organisation, agents: [admin])
 
       options = { "lieu_id" => lieu.id }
       expect(described_class.search_for(admin, organisation, options)).to eq([rdv])
@@ -444,8 +444,8 @@ describe Rdv, type: :model do
       admin = create(:agent, admin_role_in_organisations: [organisation])
       motif = create(:motif, organisation: organisation, service: admin.service)
       autre_motif = create(:motif, organisation: organisation, service: admin.service)
-      rdv = create(:rdv, motif: motif, organisation: organisation)
-      create(:rdv, motif: autre_motif, organisation: organisation)
+      rdv = create(:rdv, motif: motif, organisation: organisation, agents: [admin])
+      create(:rdv, motif: autre_motif, organisation: organisation, agents: [admin])
 
       options = { "motif_id" => motif.id }
       expect(described_class.search_for(admin, organisation, options)).to eq([rdv])
