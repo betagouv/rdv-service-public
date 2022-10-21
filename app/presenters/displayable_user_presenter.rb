@@ -70,4 +70,12 @@ class DisplayableUserPresenter
   def clickable_phone_number
     clickable_user_phone_number(@user)
   end
+
+  def responsible_id
+    if @user.responsible.present?
+      @user.responsible.full_name
+    else
+      ""
+    end
+  end
 end

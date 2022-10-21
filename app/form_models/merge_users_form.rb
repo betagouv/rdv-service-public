@@ -5,7 +5,7 @@ class MergeUsersForm
 
   ATTRIBUTES = %i[
     email
-    first_name last_name birth_name birth_date phone_number
+    first_name last_name birth_name birth_date phone_number responsible_id
     address
   ].freeze
 
@@ -35,7 +35,7 @@ class MergeUsersForm
   end
 
   def available_attributes
-    return %i[first_name last_name birth_date] if user1&.relative? || user2&.relative?
+    return %i[first_name last_name birth_date responsible_id] if user1&.relative? || user2&.relative?
 
     ATTRIBUTES + optional_attributes
   end
