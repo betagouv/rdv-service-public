@@ -49,6 +49,18 @@ describe Users::CreneauxSearch, type: :service do
         expect(SlotBuilder).to receive(:available_slots).with(motif, lieu, date_range, [], [])
         described_class.new(user: user, motif: motif, lieu: lieu, date_range: date_range, geo_search: mock_geo_search).creneaux
       end
+
+      context "when the lieu is nil" do
+        let(:lieu) { nil }
+        let(:motif) { create(:motif, :sectorisation_level_agent, organisation: organisation) }
+
+        it "doesn't crash" do
+          expect do
+            mock_geo_search = instance_double(Users::GeoSearch, attributed_agents_by_organisation: { organisation => Agent.none })
+            described_class.new(user: user, motif: motif, lieu: lieu, date_range: date_range, geo_search: mock_geo_search).creneaux
+          end.not_to raise_error
+        end
+      end
     end
 
     it "some attributed agents" do
