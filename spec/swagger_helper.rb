@@ -190,6 +190,26 @@ RSpec.configure do |config|
             },
             required: %w[send_lifecycle_notifications send_reminder_notification status user],
           },
+          get_groups: {
+            type: "object",
+            properties: {
+              groups: {
+                type: "array",
+                items: { "$ref" => "#/components/schemas/group" },
+              },
+              meta: { "$ref" => "#/components/schemas/meta" },
+            },
+            required: %w[groups meta],
+          },
+          group: {
+            type: "object",
+            properties: {
+              id: { type: "integer" },
+              name: { type: "string" },
+              label: { type: "string" },
+            },
+            required: %w[id label],
+          },
           meta: {
             type: "object",
             properties: {
@@ -218,10 +238,14 @@ RSpec.configure do |config|
           name: "RDV",
           description: "Pour manipuler des rendez-vous",
         },
+        {
+          name: "Group",
+          description: "Pour manipuler des groupes (représentation des territoires)",
+        },
       ],
       servers: [
         {
-          url: "http://localhost:5000/",
+          url: "http://localhost:3000/",
           description: "Serveur de développement",
         },
         {
