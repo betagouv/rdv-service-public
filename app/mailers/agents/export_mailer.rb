@@ -4,7 +4,7 @@ class Agents::ExportMailer < ApplicationMailer
   def rdv_export(agent, organisation, options)
     @agent = agent
     now = Time.zone.now
-    rdvs = Rdv.search_for(agent, organisation, options)
+    rdvs = Rdv.search_for(organisation, options)
 
     # Le département du Var se base sur la position de chaque caractère du nom
     # de fichier pour extraire la date et l'ID d'organisation, donc

@@ -12,7 +12,7 @@ class Admin::RdvsController < AgentAuthController
 
   def index
     set_scoped_organisations
-    @rdvs = policy_scope(Rdv).search_for(current_agent, @scoped_organisations, parsed_params)
+    @rdvs = policy_scope(Rdv).search_for(@scoped_organisations, parsed_params)
       .includes([:rdvs_users, :agents_rdvs, :organisation, :lieu, :motif, { agents: :service, users: %i[responsible organisations] }])
     @breadcrumb_page = params[:breadcrumb_page]
     @form = Admin::RdvSearchForm.new(parsed_params)
