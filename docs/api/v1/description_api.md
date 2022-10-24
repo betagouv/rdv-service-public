@@ -6,11 +6,11 @@ Toutes les fonctionnalités de RDV-Solidarités ne sont pas encore disponibles v
 
 ## Authentification
 
-Certains points de terminaison sont authentifiés. Pour savoir comment y accéder, merci de vous reférer à la documentation suivante: [authentification de l'API](https://rdv-solidarites.gitbook.io/guides-pour-rdv-solidarites/tech/api-interconnexions-entrantes/authentification-and-permissions).
+Certains points de terminaison sont authentifiés. Pour savoir comment y accéder, merci de vous référer à la documentation suivante : [authentification de l'API](https://rdv-solidarites.gitbook.io/guides-pour-rdv-solidarites/tech/api-interconnexions-entrantes/authentification-and-permissions).
 
 ## Verbe HTTP
 
-On utilise les verbes HTTP conventionnels pour manipuler les ressources:
+On utilise les verbes HTTP conventionnels pour manipuler les ressources :
 
 - Lecture: HTTP `GET`
 - Création: HTTP `POST`
@@ -46,7 +46,7 @@ L'API est susceptible de retourner les erreurs suivantes.
 | Code  | Nom                   | Description                            |
 | ----  | --------              | --------                               |
 | `400` | Bad Request           | La requête est invalide                |
-| `401` | Unauthorized          | L'API KEY est manquante ou non fournie |
+| `401` | Unauthorized          | L'authentification a échoué            |
 | `403` | Forbidden             | La limite autorisée est atteinte       |
 | `404` | Not Found             | La ressource est introuvable           |
 | `500` | Internal Server Error | Une erreur serveur produite            |

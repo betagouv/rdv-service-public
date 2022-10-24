@@ -1,43 +1,66 @@
 # frozen_string_literal: true
 
-describe "api/v1/groups requests", type: :request do
-  it "returns the territories as groups" do
-    create(:territory)
+require "swagger_helper"
 
-    get api_v1_groups_path
-    expect(response).to have_http_status(:ok)
-    expect(parsed_response_body[:groups]).to match(GroupBlueprint.render_as_hash(Territory.all))
-  end
+describe "Groups API", swagger_doc: "v1/api.json" do
+  path "/api/v1/groups" do
+    get "Lister les groupes (représentation des territoires)" do
+      tags "Group"
+      produces "application/json"
+      operationId "getGroups"
+      description "Renvoie tous les groupes, qui représentent les territoires, de manière paginée."
 
-  context "when there is no territory" do
-    it "returns an empty list" do
-      get api_v1_groups_path
-      expect(response).to have_http_status(:ok)
-      expect(parsed_response_body[:groups]).to match([])
-    end
-  end
+      parameter name: "page", in: :query, type: :integer, description: "La page souhaitée", example: "1", required: false
+      parameter name: "per", in: :query, type: :integer, description: "Le nombre d'éléments souhaités par page", example: "10", required: false
 
-  context "when there is a lot of territories" do
-    it "returns a paginated list" do
-      page1 = create_list(:territory, 2)
-      page2 = create_list(:territory, 2)
-      page3 = create_list(:territory, 1)
+      after do |example|
+        content = example.metadata[:response][:content] || {}
+        example_spec = {
+          "application/json" => {
+            examples: {
+              example: {
+                value: JSON.parse(response.body, symbolize_names: true),
+              },
+            },
+          },
+        }
+        example.metadata[:response][:content] = content.deep_merge(example_spec)
+      end
 
-      get api_v1_groups_path, params: { page: 0, per: 2 }
-      expect(parsed_response_body[:meta]).to match(current_page: 1, next_page: 2, prev_page: nil, total_count: 5, total_pages: 3)
-      expect(parsed_response_body[:groups]).to match(GroupBlueprint.render_as_hash(page1))
+      response 200, "Retourne des Groups" do
+        let!(:page1) { create_list(:territory, 2) }
+        let!(:page2) { create_list(:territory, 2) }
+        let!(:page3) { create_list(:territory, 1) }
 
-      get api_v1_groups_path, params: { page: 1, per: 2 }
-      expect(parsed_response_body[:meta]).to match(current_page: 1, next_page: 2, prev_page: nil, total_count: 5, total_pages: 3)
-      expect(parsed_response_body[:groups]).to match(GroupBlueprint.render_as_hash(page1))
+        let(:page) { 2 }
+        let(:per) { 2 }
 
-      get api_v1_groups_path, params: { page: 2, per: 2 }
-      expect(parsed_response_body[:meta]).to match(current_page: 2, next_page: 3, prev_page: 1, total_count: 5, total_pages: 3)
-      expect(parsed_response_body[:groups]).to match(GroupBlueprint.render_as_hash(page2))
+        run_test!
 
-      get api_v1_groups_path, params: { page: 3, per: 2 }
-      expect(parsed_response_body[:meta]).to match(current_page: 3, next_page: nil, prev_page: 2, total_count: 5, total_pages: 3)
-      expect(parsed_response_body[:groups]).to match(GroupBlueprint.render_as_hash(page3))
+        it { expect(response).to have_http_status(:ok) }
+
+        it { expect(parsed_response_body[:meta]).to match(current_page: 2, next_page: 3, prev_page: 1, total_count: 5, total_pages: 3) }
+
+        it { expect(parsed_response_body[:groups]).to match(GroupBlueprint.render_as_hash(page2)) }
+      end
+
+      response 200, "when there is at least one territory", document: false do
+        before { create(:territory) }
+
+        run_test!
+
+        it { expect(response).to have_http_status(:ok) }
+
+        it { expect(parsed_response_body[:groups]).to match(GroupBlueprint.render_as_hash(Territory.all)) }
+      end
+
+      response 200, "when there is no territory", document: false do
+        run_test!
+
+        it { expect(response).to have_http_status(:ok) }
+
+        it { expect(parsed_response_body[:groups]).to match([]) }
+      end
     end
   end
 end
