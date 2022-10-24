@@ -165,6 +165,10 @@ RSpec/DescribeClass:
     - "spec/requests/**/*"
     - "spec/sms/**/*"
 
+RSpec/RepeatedExample:
+  Exclude:
+    - "spec/requests/api/**/*"
+
 Style/AsciiComments:
   Enabled: false
 

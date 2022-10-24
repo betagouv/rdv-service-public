@@ -27,41 +27,39 @@ describe "Groups API", swagger_doc: "v1/api.json" do
         example.metadata[:response][:content] = content.deep_merge(example_spec)
       end
 
-      response(200, "Appel API réussi") do
-        schema "$ref" => "#/components/schemas/get_groups"
+      response 200, "Retourne des Groups" do
+        let!(:page1) { create_list(:territory, 2) }
+        let!(:page2) { create_list(:territory, 2) }
+        let!(:page3) { create_list(:territory, 1) }
 
-        context "when there is at least one territory" do
-          before { create(:territory) }
+        let(:page) { 2 }
+        let(:per) { 2 }
 
-          run_test!
+        run_test!
 
-          it { expect(response).to have_http_status(:ok) }
+        it { expect(response).to have_http_status(:ok) }
 
-          it { expect(parsed_response_body[:groups]).to match(GroupBlueprint.render_as_hash(Territory.all)) }
-        end
+        it { expect(parsed_response_body[:meta]).to match(current_page: 2, next_page: 3, prev_page: 1, total_count: 5, total_pages: 3) }
 
-        context "when there is no territory" do
-          run_test!
+        it { expect(parsed_response_body[:groups]).to match(GroupBlueprint.render_as_hash(page2)) }
+      end
 
-          it { expect(response).to have_http_status(:ok) }
+      response 200, "when there is at least one territory", document: false do
+        before { create(:territory) }
 
-          it { expect(parsed_response_body[:groups]).to match([]) }
-        end
+        run_test!
 
-        context "when there is a lot of territories" do
-          let!(:page1) { create_list(:territory, 2) }
-          let!(:page2) { create_list(:territory, 2) }
-          let!(:page3) { create_list(:territory, 1) }
+        it { expect(response).to have_http_status(:ok) }
 
-          let(:page) { 2 }
-          let(:per) { 2 }
+        it { expect(parsed_response_body[:groups]).to match(GroupBlueprint.render_as_hash(Territory.all)) }
+      end
 
-          run_test!
+      response 200, "when there is no territory", document: false do
+        run_test!
 
-          it { expect(parsed_response_body[:meta]).to match(current_page: 2, next_page: 3, prev_page: 1, total_count: 5, total_pages: 3) }
+        it { expect(response).to have_http_status(:ok) }
 
-          it { expect(parsed_response_body[:groups]).to match(GroupBlueprint.render_as_hash(page2)) }
-        end
+        it { expect(parsed_response_body[:groups]).to match([]) }
       end
     end
   end

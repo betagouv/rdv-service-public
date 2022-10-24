@@ -622,7 +622,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Appel API réussi",
+            "description": "Retourne des Groups",
             "content": {
               "application/json": {
                 "examples": {
@@ -630,12 +630,12 @@
                     "value": {
                       "groups": [
                         {
-                          "id": 67,
+                          "id": 69,
                           "label": "Territoire n°3",
                           "name": "3"
                         },
                         {
-                          "id": 68,
+                          "id": 70,
                           "label": "Territoire n°4",
                           "name": "4"
                         }
@@ -649,9 +649,6 @@
                       }
                     }
                   }
-                },
-                "schema": {
-                  "$ref": "#/components/schemas/get_groups"
                 }
               }
             }
@@ -735,8 +732,8 @@
                             {
                               "id": 89,
                               "email": "agent_1@lapin.fr",
-                              "first_name": "Scholastique",
-                              "last_name": "Marechal"
+                              "first_name": "Vincent",
+                              "last_name": "Masson"
                             }
                           ],
                           "cancelled_at": null,
@@ -745,7 +742,7 @@
                           "created_by": "agent",
                           "deleted_at": null,
                           "duration_in_min": 45,
-                          "ends_at": "2022-10-27 11:52:30 +0200",
+                          "ends_at": "2022-10-27 12:04:48 +0200",
                           "lieu": {
                             "id": 31,
                             "address": "1 rue de l'adresse 12345 Ville",
@@ -786,25 +783,25 @@
                                 "birth_name": null,
                                 "caisse_affiliation": "caf",
                                 "case_number": null,
-                                "created_at": "2022-10-24 11:07:30 +0200",
+                                "created_at": "2022-10-24 11:19:48 +0200",
                                 "email": "usager_1@lapin.fr",
                                 "family_situation": "divorced",
-                                "first_name": "Martial",
+                                "first_name": "Régine",
                                 "invitation_accepted_at": null,
                                 "invitation_created_at": null,
-                                "last_name": "LE GALL",
+                                "last_name": "ANDRÉ",
                                 "notify_by_email": true,
                                 "notify_by_sms": true,
                                 "number_of_children": 12,
-                                "phone_number": "0792985530",
-                                "phone_number_formatted": "+33792985530",
+                                "phone_number": "07 99 59 99 71",
+                                "phone_number_formatted": "+33799599971",
                                 "responsible": null,
                                 "responsible_id": null,
                                 "user_profiles": null
                               }
                             }
                           ],
-                          "starts_at": "2022-10-27 11:07:30 +0200",
+                          "starts_at": "2022-10-27 11:19:48 +0200",
                           "status": "unknown",
                           "users": [
                             {
@@ -816,25 +813,25 @@
                               "birth_name": null,
                               "caisse_affiliation": "caf",
                               "case_number": null,
-                              "created_at": "2022-10-24 11:07:30 +0200",
+                              "created_at": "2022-10-24 11:19:48 +0200",
                               "email": "usager_1@lapin.fr",
                               "family_situation": "divorced",
-                              "first_name": "Martial",
+                              "first_name": "Régine",
                               "invitation_accepted_at": null,
                               "invitation_created_at": null,
-                              "last_name": "LE GALL",
+                              "last_name": "ANDRÉ",
                               "notify_by_email": true,
                               "notify_by_sms": true,
                               "number_of_children": 12,
-                              "phone_number": "0792985530",
-                              "phone_number_formatted": "+33792985530",
+                              "phone_number": "07 99 59 99 71",
+                              "phone_number_formatted": "+33799599971",
                               "responsible": null,
                               "responsible_id": null,
                               "user_profiles": null
                             }
                           ],
                           "users_count": 1,
-                          "uuid": "f59d5658-acee-4b7d-b834-f956e6399657"
+                          "uuid": "7801817c-3dc7-4434-b478-2d7d1a12197d"
                         },
                         {
                           "id": 16,
@@ -843,8 +840,8 @@
                             {
                               "id": 91,
                               "email": "agent_3@lapin.fr",
-                              "first_name": "Hincmar",
-                              "last_name": "Gay"
+                              "first_name": "Normand",
+                              "last_name": "Dupuy"
                             }
                           ],
                           "cancelled_at": null,
@@ -853,7 +850,7 @@
                           "created_by": "agent",
                           "deleted_at": null,
                           "duration_in_min": 45,
-                          "ends_at": "2022-10-27 11:52:31 +0200",
+                          "ends_at": "2022-10-27 12:04:48 +0200",
                           "lieu": {
                             "id": 33,
                             "address": "3 rue de l'adresse 12345 Ville",
@@ -894,25 +891,25 @@
                                 "birth_name": null,
                                 "caisse_affiliation": "caf",
                                 "case_number": null,
-                                "created_at": "2022-10-24 11:07:31 +0200",
+                                "created_at": "2022-10-24 11:19:48 +0200",
                                 "email": "usager_3@lapin.fr",
                                 "family_situation": "divorced",
-                                "first_name": "Iseult",
+                                "first_name": "Arthème",
                                 "invitation_accepted_at": null,
                                 "invitation_created_at": null,
-                                "last_name": "LEGRAND",
+                                "last_name": "POULAIN",
                                 "notify_by_email": true,
                                 "notify_by_sms": true,
                                 "number_of_children": 12,
-                                "phone_number": "760885856",
-                                "phone_number_formatted": "+33760885856",
+                                "phone_number": "07 45 81 16 19",
+                                "phone_number_formatted": "+33745811619",
                                 "responsible": null,
                                 "responsible_id": null,
                                 "user_profiles": null
                               }
                             }
                           ],
-                          "starts_at": "2022-10-27 11:07:31 +0200",
+                          "starts_at": "2022-10-27 11:19:48 +0200",
                           "status": "unknown",
                           "users": [
                             {
@@ -924,25 +921,25 @@
                               "birth_name": null,
                               "caisse_affiliation": "caf",
                               "case_number": null,
-                              "created_at": "2022-10-24 11:07:31 +0200",
+                              "created_at": "2022-10-24 11:19:48 +0200",
                               "email": "usager_3@lapin.fr",
                               "family_situation": "divorced",
-                              "first_name": "Iseult",
+                              "first_name": "Arthème",
                               "invitation_accepted_at": null,
                               "invitation_created_at": null,
-                              "last_name": "LEGRAND",
+                              "last_name": "POULAIN",
                               "notify_by_email": true,
                               "notify_by_sms": true,
                               "number_of_children": 12,
-                              "phone_number": "760885856",
-                              "phone_number_formatted": "+33760885856",
+                              "phone_number": "07 45 81 16 19",
+                              "phone_number_formatted": "+33745811619",
                               "responsible": null,
                               "responsible_id": null,
                               "user_profiles": null
                             }
                           ],
                           "users_count": 1,
-                          "uuid": "da73e761-69cc-4563-8d7d-edf5b7295f72"
+                          "uuid": "c7bd530d-1949-47e3-aebf-e5cba89afdaa"
                         }
                       ],
                       "meta": {
