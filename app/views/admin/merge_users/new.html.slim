@@ -27,15 +27,8 @@
         td= render "user_selection", user: @merge_users_form.user2, attribute: "user2_id", f: f, other_user_id: @merge_users_form.user1&.id
 
       - @merge_users_form.available_attributes.each do |attribute|
-        - if attribute == :birth_date
-          - value_1 = birth_date_and_age(@merge_users_form.user1) if @merge_users_form.user1
-          - value_2 = birth_date_and_age(@merge_users_form.user2) if @merge_users_form.user2
-        - elsif attribute == :responsible_id
-          - value_1 = @merge_users_form.user1&.responsible&.full_name
-          - value_2 = @merge_users_form.user2&.responsible&.full_name
-        - else
-          - value_1 = @merge_users_form.user1&.send(attribute)
-          - value_2 = @merge_users_form.user2&.send(attribute)
+        - value1 = user_merge_attribute_value(@merge_users_form.user1, attribute) if @merge_users_form.user1
+        - value2 = user_merge_attribute_value(@merge_users_form.user2, attribute) if @merge_users_form.user2
         tr class=@merge_users_form.attribute_comparison(attribute)
           - if %i[logement notes].include?(attribute)
             td= UserProfile.human_attribute_name(attribute)
@@ -48,13 +41,13 @@
                 label.d-flex.justify-content-end for="merge_users_form_#{attribute}_1"
                   - if @merge_users_form.user1.frozen_by_franceconnect?(attribute)
                     div
-                      = value_1
+                      = value1
                     = f.input attribute, as: :hidden, input_html: { value: "1" }
                   - elsif @merge_users_form.user2.present? && @merge_users_form.user2.frozen_by_franceconnect?(attribute)
-                    del = value_1
+                    del = value1
                   - else
-                    - if value_1&.present?
-                      div= value_1
+                    - if value1&.present?
+                      div= value1
                     - else
                       i.text-muted N/A
                     - if @merge_users_form.attribute_comparison(attribute) == :different
@@ -66,16 +59,16 @@
                 label.d-flex.justify-content-start for="merge_users_form_#{attribute}_2"
                   - if @merge_users_form.user2.frozen_by_franceconnect?(attribute)
                     div
-                      = value_2
+                      = value2
                     = f.input attribute, as: :hidden, input_html: { value: "2" }
                   - elsif @merge_users_form.user1.present? && @merge_users_form.user1.frozen_by_franceconnect?(attribute)
-                    del = value_2
+                    del = value2
 
                   - else
                     - if @merge_users_form.attribute_comparison(attribute) == :different
                       span.mr-2= f.radio_button attribute, "2", required: true
-                    - if value_2&.present?
-                      div= value_2
+                    - if value2&.present?
+                      div= value2
                     - else
                       i.text-muted N/A
       tr
