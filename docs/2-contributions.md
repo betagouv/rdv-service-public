@@ -31,6 +31,7 @@ Au delà du style de syntaxe, nous essayons de suivre quelques principes. RDVS-S
   - utiliser les relation through autant que possible pour construire les queries
 6. Pour les tests, utiliser les helpers et rspec avec parcimonie
   - Par exemple, les `let`, `subject`, etc, doivent rester proches de leur lieu d’utilisation, quitte à être répétés dans un autre `context`.
+7. Pour manipuler des dates et heures, il est recommandé d'utiliser `ActiveSupport::TimeWithZone` plutôt que des Time ou des DateTime. Plus d'explications dans [cette PR](https://github.com/betagouv/rdv-solidarites.fr/pull/2955).
 
 ## Linters
 
