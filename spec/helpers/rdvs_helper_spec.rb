@@ -72,24 +72,24 @@ describe RdvsHelper do
   describe "#rdv_starts_at_and_duration" do
     context "with :human format" do
       it "return starts_at hour, minutes and duration" do
-        rdv = build(:rdv, starts_at: DateTime.new(2020, 3, 23, 12, 46), duration_in_min: 4)
+        rdv = build(:rdv, starts_at: Time.zone.parse("2020-03-23 13:46"), duration_in_min: 4)
         expect(rdv_starts_at_and_duration(rdv, :human)).to eq("lundi 23 mars 2020 à 13h46 (4 minutes)")
       end
 
       it "return only starts_at hour, minutes when no duration_in_min" do
-        rdv = build(:rdv, starts_at: DateTime.new(2020, 3, 23, 12, 46), duration_in_min: nil)
+        rdv = build(:rdv, starts_at: Time.zone.parse("2020-03-23 13:46"), duration_in_min: nil)
         expect(rdv_starts_at_and_duration(rdv, :human)).to eq("lundi 23 mars 2020 à 13h46")
       end
     end
 
     context "with :time_only format" do
       it "return starts_at hour, minutes and duration" do
-        rdv = build(:rdv, starts_at: DateTime.new(2020, 3, 23, 12, 46), duration_in_min: 4)
+        rdv = build(:rdv, starts_at: Time.zone.parse("2020-03-23 13:46"), duration_in_min: 4)
         expect(rdv_starts_at_and_duration(rdv, :time_only)).to eq("13h46 (4 minutes)")
       end
 
       it "return only starts_at hour, minutes when no duration_in_min" do
-        rdv = build(:rdv, starts_at: DateTime.new(2020, 3, 23, 12, 46), duration_in_min: nil)
+        rdv = build(:rdv, starts_at: Time.zone.parse("2020-03-23 13:46"), duration_in_min: nil)
         expect(rdv_starts_at_and_duration(rdv, :time_only)).to eq("13h46")
       end
     end

@@ -10,7 +10,7 @@ RSpec.describe Users::RdvsController, type: :controller do
     let(:user) { create(:user) }
     let(:motif) { create(:motif, organisation: organisation) }
     let(:lieu) { create(:lieu, organisation: organisation) }
-    let(:starts_at) { DateTime.parse("2020-10-20 10h30") }
+    let(:starts_at) { Time.zone.parse("2020-10-20 10h30") }
     let(:mock_geo_search) { instance_double(Users::GeoSearch) }
     let(:token) { "12345" }
     let(:params) do
@@ -147,11 +147,11 @@ RSpec.describe Users::RdvsController, type: :controller do
   describe "GET #show" do
     let(:user) { create(:user) }
     let(:rdv) { create(:rdv, users: [user], motif: motif, starts_at: starts_at, created_by: "user") }
-    let(:starts_at) { DateTime.parse("2020-10-20 10h30") }
+    let(:starts_at) { Time.zone.parse("2020-10-20 10h30") }
     let(:motif) { build(:motif, reservable_online: true, rdvs_editable_by_user: true, rdvs_cancellable_by_user: true) }
 
     before do
-      travel_to("01/01/2019".to_datetime)
+      travel_to(Time.zone.parse("01/01/2019"))
       sign_in user
     end
 
@@ -180,7 +180,7 @@ RSpec.describe Users::RdvsController, type: :controller do
     end
 
     context "when the rdv is past" do
-      let!(:starts_at) { DateTime.parse("2018-12-31 10h30") }
+      let!(:starts_at) { Time.zone.parse("2018-12-31 10h30") }
 
       it "does show links to edit and cancel" do
         get :show, params: { id: rdv.id }
@@ -336,7 +336,7 @@ RSpec.describe Users::RdvsController, type: :controller do
     end
 
     let(:organisation) { create(:organisation) }
-    let(:now) { "01/01/2019 10:00".to_datetime }
+    let(:now) { Time.zone.parse("01/01/2019 10:00") }
     let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
     let!(:lieu) { create(:lieu, address: "10 rue de la Ferronerie 44100 Nantes", organisation: organisation) }
     let!(:motif) { create(:motif, organisation: organisation, max_booking_delay: 2.weeks.to_i) }
@@ -386,7 +386,7 @@ RSpec.describe Users::RdvsController, type: :controller do
 
     let(:organisation) { create(:organisation) }
     let(:starts_at) { 3.days.from_now }
-    let(:now) { "01/01/2019 10:00".to_datetime }
+    let(:now) { Time.zone.parse("01/01/2019 10:00") }
     let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
     let!(:lieu) { create(:lieu, address: "10 rue de la Ferronerie 44100 Nantes", organisation: organisation) }
     let!(:motif) { create(:motif, organisation: organisation) }

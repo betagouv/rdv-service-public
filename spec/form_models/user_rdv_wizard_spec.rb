@@ -6,7 +6,7 @@ describe UserRdvWizard do
   let!(:user_for_rdv) { create(:user) }
   let!(:motif) { create(:motif, organisation: organisation) }
   let!(:lieu) { create(:lieu, organisation: organisation) }
-  let!(:creneau) { build(:creneau, :respects_booking_delays, motif: motif, starts_at: DateTime.parse("2020-10-20 09h30")) }
+  let!(:creneau) { build(:creneau, :respects_booking_delays, motif: motif, starts_at: Time.zone.parse("2020-10-20 09h30")) }
   let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, organisation: organisation) }
 
   describe "#new" do
@@ -32,7 +32,7 @@ describe UserRdvWizard do
         user: user,
         motif: motif,
         lieu: lieu,
-        starts_at: DateTime.parse("2020-10-20 09h30"),
+        starts_at: Time.zone.parse("2020-10-20 09h30"),
         geo_search: mock_geo_search
       ).and_return(returned_creneau)
       rdv_wizard = UserRdvWizard::Step1.new(user, attributes)
