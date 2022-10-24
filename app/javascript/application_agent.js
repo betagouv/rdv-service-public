@@ -28,7 +28,6 @@ import { RdvUserSelect } from './components/rdv-user-select';
 import { DestroyButton } from './components/destroy-button';
 import './components/calendar';
 import './components/tooltip';
-import './components/sentry';
 import './components/browser-detection';
 
 import './stylesheets/print';
