@@ -644,6 +644,14 @@ describe Rdv, type: :model do
       rdv = build(:rdv, :at_home, starts_at: now + 9.days, motif: motif)
       expect(rdv.available_to_file_attente?).to eq(false)
     end
+
+    it "returns false with a collective motif" do
+      now = Time.zone.parse("20220221 10:34")
+      travel_to(now)
+      motif = build(:motif, collectif: true, reservable_online: true)
+      rdv = build(:rdv, :at_home, starts_at: now + 9.days, motif: motif)
+      expect(rdv.available_to_file_attente?).to eq(false)
+    end
   end
 
   describe "#synthesized_receipts_result" do

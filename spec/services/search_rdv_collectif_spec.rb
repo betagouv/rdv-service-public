@@ -82,16 +82,6 @@ describe SearchRdvCollectif, type: :service do
       expect(described_class.rdvs_collectif_at(motif, lieu)).to eq([rdv])
     end
 
-    it "returns only open to public RDV" do
-      open_to_public_motif = create(:motif, collectif: true, reservable_online: true)
-      rdv = create(:rdv, lieu: lieu, motif: open_to_public_motif)
-      motif = rdv.motif
-      close_to_public_motif = create(:motif, collectif: true, reservable_online: false)
-      create(:rdv, lieu: lieu, motif: close_to_public_motif)
-
-      expect(described_class.rdvs_collectif_at(motif, lieu)).to eq([rdv])
-    end
-
     it "returns RDV sorted by starts at desc" do
       now = Time.zone.parse("2022-08-09 11h00")
       travel_to(now)
