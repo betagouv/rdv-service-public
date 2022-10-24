@@ -4,7 +4,7 @@ FactoryBot.define do
   factory :rdv do
     created_at { Time.zone.parse("2020-06-5 13:51").in_time_zone }
     updated_at { Time.zone.parse("2020-06-5 13:51").in_time_zone }
-    organisation { create(:organisation) }
+    organisation { association(:organisation) }
     lieu { build(:lieu, organisation: organisation) }
     motif { build(:motif, organisation: organisation) }
     users { [build(:user, organisations: [organisation])] }
