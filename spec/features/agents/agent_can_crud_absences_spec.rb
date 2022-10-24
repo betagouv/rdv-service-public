@@ -78,7 +78,7 @@ describe "Agent can CRUD absences" do
 
   context "view past absences" do
     let!(:future_absence) { create(:absence, agent: agent, organisation: organisation) }
-    let!(:past_absence) { create(:absence, :past, agent: agent, organisation: organisation) }
+    let!(:past_absence) { create(:absence, first_day: Date.new(2019, 7, 4), agent: agent, organisation: organisation) }
 
     it do
       click_link "Indisponibilités"

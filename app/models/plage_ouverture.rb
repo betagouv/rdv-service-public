@@ -9,6 +9,8 @@ class PlageOuverture < ApplicationRecord
   include IcalHelpers::Rrule
   include Payloads::PlageOuverture
   include Expiration
+  include EnsuresRealisticDate
+
   include TextSearch
   def self.search_against
     {
