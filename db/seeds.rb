@@ -535,6 +535,7 @@ agent_org_paris_nord_pmi_martine = Agent.new(
     allow_to_manage_teams: true,
     allow_to_manage_access_rights: true,
     allow_to_invite_agents: true,
+    allow_to_download_metrics: true,
   }]
 )
 agent_org_paris_nord_pmi_martine.skip_confirmation!
@@ -555,6 +556,7 @@ agent_org_paris_nord_pmi_marco = Agent.new(
     allow_to_manage_teams: false,
     allow_to_manage_access_rights: false,
     allow_to_invite_agents: false,
+    allow_to_download_metrics: false,
   }]
 )
 agent_org_paris_nord_pmi_marco.skip_confirmation!
@@ -574,6 +576,7 @@ agent_org_paris_nord_social_polo = Agent.new(
     allow_to_manage_teams: false,
     allow_to_manage_access_rights: false,
     allow_to_invite_agents: false,
+    allow_to_download_metrics: false,
   }]
 )
 agent_org_paris_nord_social_polo.skip_confirmation!
@@ -593,6 +596,7 @@ org_arques_pmi_maya = Agent.new(
     allow_to_manage_teams: true,
     allow_to_manage_access_rights: true,
     allow_to_invite_agents: true,
+    allow_to_download_metrics: true,
   }]
 )
 org_arques_pmi_maya.skip_confirmation!
@@ -612,6 +616,7 @@ agent_org_bapaume_pmi_bruno = Agent.new(
     allow_to_manage_teams: false,
     allow_to_manage_access_rights: false,
     allow_to_invite_agents: false,
+    allow_to_download_metrics: false,
   }]
 )
 agent_org_bapaume_pmi_bruno.skip_confirmation!
@@ -632,6 +637,7 @@ agent_org_bapaume_pmi_gina = Agent.new(
     allow_to_manage_teams: false,
     allow_to_manage_access_rights: false,
     allow_to_invite_agents: false,
+    allow_to_download_metrics: false,
   }]
 )
 agent_org_bapaume_pmi_gina.skip_confirmation!
@@ -651,6 +657,7 @@ agent_cnfs = Agent.new(
     allow_to_manage_teams: false,
     allow_to_manage_access_rights: false,
     allow_to_invite_agents: false,
+    allow_to_download_metrics: false,
   }]
 )
 agent_cnfs.skip_confirmation!
@@ -669,7 +676,10 @@ agent_orgs_rdv_insertion = Agent.new(
     { organisation: org_drome2, level: AgentRole::LEVEL_ADMIN },
     { organisation: org_yonne, level: AgentRole::LEVEL_ADMIN },
   ],
-  agent_territorial_access_rights_attributes: [{ territory: territory_drome, allow_to_manage_teams: true }, { territory: territory_yonne, allow_to_manage_teams: true }]
+  agent_territorial_access_rights_attributes: [
+    { territory: territory_drome, allow_to_manage_teams: true },
+    { territory: territory_yonne, allow_to_manage_teams: true },
+  ]
 )
 agent_orgs_rdv_insertion.skip_confirmation!
 agent_orgs_rdv_insertion.save!

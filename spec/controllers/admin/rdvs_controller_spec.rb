@@ -3,8 +3,9 @@
 describe Admin::RdvsController, type: :controller do
   let(:now) { Time.zone.parse("19/07/2019 15:00") }
   let!(:organisation) { create(:organisation) }
+  let!(:territory) { organisation.territory }
   let!(:service) { create(:service) }
-  let(:agent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }
+  let!(:agent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }
   let!(:user) { create(:user, first_name: "Marie", last_name: "Denis") }
   let!(:motif) { create(:motif, name: "Suivi", organisation: organisation, service: service, color: "#1010FF") }
 
@@ -162,7 +163,7 @@ describe Admin::RdvsController, type: :controller do
     end
   end
 
-  describe "#export" do
+  describe "POST #export" do
     it "redirect to index" do
       post :export, params: { organisation_id: organisation.id }
       expect(response).to redirect_to(admin_organisation_rdvs_path)
@@ -182,10 +183,10 @@ describe Admin::RdvsController, type: :controller do
       # rubocop:disable RSpec/StubbedMock
       expect(Agents::ExportMailer).to receive(:rdv_export).with(
         agent,
-        organisation,
+        [organisation.id],
         "start" => params[:start],
         "end" => params[:end],
-        "organisation_id" => organisation.id.to_s,
+        "organisation_id" => params[:organisation_id],
         "agent_id" => params[:agent_id],
         "user_id" => params[:user_id],
         "lieu_id" => params[:lieu_id],
@@ -194,6 +195,45 @@ describe Admin::RdvsController, type: :controller do
       # rubocop:enable RSpec/StubbedMock
 
       post :export, params: { organisation_id: organisation.id }.merge(params)
+    end
+  end
+
+  describe "POST #rdvs_users_export" do
+    context "agent with rights" do
+      let!(:access_rights) { create(:agent_territorial_access_right, agent: agent, territory: territory, allow_to_download_metrics: true) }
+
+      it "redirect to index" do
+        post :rdvs_users_export, params: { organisation_id: organisation.id }
+        expect(response).to redirect_to(admin_organisation_rdvs_path)
+      end
+
+      it "call Agents::ExportMailer" do
+        params = {
+          start: nil,
+          end: nil,
+          organisation_id: organisation.id.to_s,
+          agent_id: "",
+          user_id: "",
+          lieu_id: "",
+          status: "",
+        }
+
+        # rubocop:disable RSpec/StubbedMock
+        expect(Agents::ExportMailer).to receive(:rdvs_users_export).with(
+          agent,
+          [organisation.id],
+          "start" => params[:start],
+          "end" => params[:end],
+          "organisation_id" => params[:organisation_id],
+          "agent_id" => params[:agent_id],
+          "user_id" => params[:user_id],
+          "lieu_id" => params[:lieu_id],
+          "status" => params[:status]
+        ).and_return(instance_double(ActionMailer::MessageDelivery, deliver_later: nil))
+        # rubocop:enable RSpec/StubbedMock
+
+        post :rdvs_users_export, params: { organisation_id: organisation.id }.merge(params)
+      end
     end
   end
 end

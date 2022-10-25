@@ -26,6 +26,7 @@ describe Admin::RdvSearchForm do
         motif_id: motif.id,
         status: nil,
         user_id: nil,
+        scoped_organisation_id: nil,
       }
       expect(agent_rdv_search_form.to_query).to eq(expected_query)
     end

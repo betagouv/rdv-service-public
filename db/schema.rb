@@ -180,6 +180,7 @@ ActiveRecord::Schema.define(version: 2022_10_20_152222) do
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "allow_to_manage_access_rights", default: false, null: false
     t.boolean "allow_to_invite_agents", default: false, null: false
+    t.boolean "allow_to_download_metrics", default: false, null: false
     t.index ["agent_id"], name: "index_agent_territorial_access_rights_on_agent_id"
     t.index ["territory_id"], name: "index_agent_territorial_access_rights_on_territory_id"
   end
