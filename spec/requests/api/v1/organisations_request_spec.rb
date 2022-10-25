@@ -85,7 +85,7 @@ describe "Organisations API", swagger_doc: "v1/api.json" do
         let(:uid) { auth_headers["uid"].to_s }
         let(:client) { auth_headers["client"].to_s }
 
-        schema "$ref" => "#/components/schemas/errors_object"
+        schema "$ref" => "#/components/schemas/error_authentication"
 
         run_test!
       end

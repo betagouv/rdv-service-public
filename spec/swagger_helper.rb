@@ -117,6 +117,17 @@ RSpec.configure do |config|
             },
             required: %w[user],
           },
+          users: {
+            type: "object",
+            properties: {
+              users: {
+                type: "array",
+                items: { "$ref" => "#/components/schemas/user" },
+              },
+              meta: { "$ref" => "#/components/schemas/meta" },
+            },
+            required: %w[users meta],
+          },
           user: {
             type: "object",
             nullable: true,
@@ -127,18 +138,18 @@ RSpec.configure do |config|
               affiliation_number: { type: "string", nullable: true },
               bith_date: { type: "string", format: "date", nullable: true },
               bith_name: { type: "string", nullable: true },
-              caisse_affiliation: { type: "string", enum: %w[aucun caf msa] },
+              caisse_affiliation: { type: "string", enum: %w[aucun caf msa], nullable: true },
               case_number: { type: "string", nullable: true },
               created_at: { type: "string" },
-              email: { type: "string" },
-              family_situation: { type: "string", enum: %w[single in_a_relationship divorced] },
+              email: { type: "string", nullable: true },
+              family_situation: { type: "string", enum: %w[single in_a_relationship divorced], nullable: true },
               first_name: { type: "string" },
               invitation_accepted_at: { type: "string", nullable: true },
               invitation_created_at: { type: "string", nullable: true },
               last_name: { type: "string" },
               notify_by_email: { type: "boolean" },
               notify_by_sms: { type: "boolean" },
-              number_of_children: { type: "integer" },
+              number_of_children: { type: "integer", nullable: true },
               phone_number: { type: "string", nullable: true },
               phone_number_formatted: { type: "string", nullable: true },
               responsible: { type: "object", nullable: true },
@@ -149,18 +160,18 @@ RSpec.configure do |config|
                 items: { "$ref" => "#/components/schemas/user_profiles" },
               },
             },
-            required: %w[id address address_details affiliation_number birth_date birth_name caisse_affiliation case_number created_at email family_situation first_name invitation_accepted_at
-                         invitation_created_at last_name notify_by_email notify_by_sms number_of_children phone_number phone_number_formatted responsible responsible_id user_profiles],
+            required: %w[id address address_details affiliation_number birth_date birth_name case_number created_at first_name invitation_accepted_at
+                         invitation_created_at last_name notify_by_email notify_by_sms phone_number phone_number_formatted responsible responsible_id user_profiles],
           },
           user_profiles: {
             type: "object",
             properties: {
-              user: { "$ref" => "#/components/schemas/user" },
+              user: { "$ref" => "#/components/schemas/user", nullable: true },
               organisation: { "$ref" => "#/components/schemas/organisation" },
-              logement: { type: "string", enum: %w[sdf heberge en_accession_propriete proprietaire autre locataire] },
-              note: { type: "string", nullable: true },
+              logement: { type: "string", enum: %w[sdf heberge en_accession_propriete proprietaire autre locataire], nullable: true },
+              notes: { type: "string", nullable: true },
             },
-            required: %w[user organisation logement note],
+            required: %w[organisation],
           },
           organisations: {
             type: "object",
@@ -206,6 +217,14 @@ RSpec.configure do |config|
               public_link: { type: "string" },
             },
             required: %w[id label group_id public_link],
+          },
+          invitation: {
+            type: "object",
+            properties: {
+              invitation_url: { type: "string" },
+              invitation_token: { type: "string" },
+            },
+            required: %w[invitation_url invitation_token],
           },
           lieu: {
             type: "object",
@@ -274,12 +293,31 @@ RSpec.configure do |config|
             },
             required: %w[current_page next_page prev_page total_pages total_count],
           },
-          errors_object: {
+          errors_generic: {
+            type: "object",
+          },
+          error_authentication: {
             type: "object",
             properties: {
               errors: {
                 type: "array",
                 items: { type: "string" },
+              },
+            },
+            required: %w[errors],
+          },
+          error_unauthorized: {
+            type: "object",
+            properties: {
+              errors: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    base: { type: "string" },
+                  },
+                  required: %w[base],
+                },
               },
             },
             required: %w[errors],

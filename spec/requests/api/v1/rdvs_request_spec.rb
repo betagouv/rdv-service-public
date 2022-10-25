@@ -85,7 +85,7 @@ describe "RDV authentified API", swagger_doc: "v1/api.json" do
         let(:client) { access_admin_agent["client"].to_s }
         let(:organisation_id) { organisation.id }
 
-        schema "$ref" => "#/components/schemas/errors_object"
+        schema "$ref" => "#/components/schemas/error_authentication"
 
         run_test!
       end
