@@ -138,6 +138,20 @@ describe SearchRdvCollectif, type: :service do
 
       expect(described_class.rdvs_collectif_at(motif, lieu, user)).to eq([rdv])
     end
+
+    it "returns RDV in open period" do
+      now = Time.zone.parse("2022-10-24 10h34")
+      travel_to(now)
+
+      motif = create(:motif, collectif: true, reservable_online: true, min_booking_delay: 1.week.seconds, max_booking_delay: 2.weeks.seconds)
+
+      rdv = create(:rdv, lieu: lieu, motif: motif, users: [], starts_at: now + 1.week + 2.days)
+      create(:rdv, lieu: lieu, motif: motif, users: [], starts_at: now + 3.days)
+      create(:rdv, lieu: lieu, motif: motif, users: [], starts_at: now + 4.weeks)
+      user = create(:user)
+
+      expect(described_class.rdvs_collectif_at(motif, lieu, user)).to eq([rdv])
+    end
   end
 
   describe "#available_slots" do
