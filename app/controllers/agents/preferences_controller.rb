@@ -5,6 +5,12 @@ class Agents::PreferencesController < AgentAuthController
 
   layout "registration"
 
+  def disable_cnfs_bandeau_resa_en_ligne
+    skip_authorization
+    cookies.permanent[:disable_cnfs_bandeau_resa_en_ligne] = true
+    redirect_back(fallback_location: root_path)
+  end
+
   def show
     @agent = current_agent
     authorize @agent

@@ -1,0 +1,13 @@
+-if current_domain == Domain::RDV_AIDE_NUMERIQUE && !cookies[:disable_cnfs_bandeau_resa_en_ligne].present?
+  - online_booking_path = admin_organisation_online_booking_path(current_organisation)
+  .navbar.alert-info.p-2.flex-gap-1em
+    div.flex-grow-1
+      .fa.fa-exclamation-triangle.alert-link>
+      = link_to online_booking_path do
+        span.ml-1.alert-link Les usagers peuvent désormais prendre RDV avec vous !
+
+    = link_to online_booking_path do
+      button.btn.rdv-status-unknown_past En savoir plus
+
+    = form_tag(disable_cnfs_bandeau_resa_en_ligne_agents_preferences_path, { remote: true })
+      button.fa.fa-circle-xmark

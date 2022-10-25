@@ -88,7 +88,9 @@ Rails.application.routes.draw do
     put "agents" => "agents/registrations#update", as: "agent_registration"
     delete "agents" => "agents/registrations#destroy", as: "delete_agent_registration"
     namespace :agents do
-      resource :preferences, only: %i[show update]
+      resource :preferences, only: %i[show update] do
+        post :disable_cnfs_bandeau_resa_en_ligne
+      end
       resource :calendar_sync, only: %i[show update], controller: :calendar_sync
     end
   end
