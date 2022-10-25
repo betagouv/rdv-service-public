@@ -1,53 +1,63 @@
 # frozen_string_literal: true
 
-describe "api/v1/organizations requests", type: :request do
-  it "returns the organisations as organizations" do
-    create(:organisation)
+require "swagger_helper"
 
-    get api_v1_organizations_path
-    expect(response).to have_http_status(:ok)
-    expect(parsed_response_body[:organizations]).to match(OrganizationBlueprint.render_as_hash(Organisation.all))
-  end
+describe "Organization API", swagger_doc: "v1/api.json" do
+  path "/api/v1/organizations" do
+    get "Lister les organisations" do
+      tags "Organization"
+      produces "application/json"
+      operationId "getOrganizations"
+      description "Renvoie toutes les organisations de manière paginée"
 
-  it "filters on a given territory when the group id is provided" do
-    matching = create(:organisation)
-    unmatching = create(:organisation)
+      parameter name: "page", in: :query, type: :integer, description: "La page souhaitée", example: "1", required: false
+      parameter name: "per", in: :query, type: :integer, description: "Le nombre d'éléments souhaités par page", example: "10", required: false
+      parameter name: :group_id, in: :query, type: :integer, description: "ID du Group sur lequel filtrer les organisations", example: "1", required: false
 
-    get api_v1_organizations_path, params: { group_id: matching.territory_id }
-    expect(response).to have_http_status(:ok)
-    expect(parsed_response_body[:organizations]).to include(OrganizationBlueprint.render_as_hash(matching))
-    expect(parsed_response_body[:organizations]).not_to include(OrganizationBlueprint.render_as_hash(unmatching))
-  end
+      after do |example|
+        content = example.metadata[:response][:content] || {}
+        example_spec = {
+          "application/json" => {
+            examples: {
+              example: {
+                value: JSON.parse(response.body, symbolize_names: true),
+              },
+            },
+          },
+        }
+        example.metadata[:response][:content] = content.deep_merge(example_spec)
+      end
 
-  context "when there is no organization" do
-    it "returns an empty list" do
-      get api_v1_organizations_path
-      expect(response).to have_http_status(:ok)
-      expect(parsed_response_body[:organizations]).to match([])
-    end
-  end
+      response 200, "Retourne les Organisations sous la forme Organizations" do
+        let!(:page1) { create_list(:organisation, 2) }
+        let!(:page2) { create_list(:organisation, 2) }
+        let!(:page3) { create_list(:organisation, 1) }
 
-  context "when there is a lot of organizations" do
-    it "returns a paginated list" do
-      page1 = create_list(:organisation, 2)
-      page2 = create_list(:organisation, 2)
-      page3 = create_list(:organisation, 1)
+        let(:page) { 2 }
+        let(:per) { 2 }
 
-      get api_v1_organizations_path, params: { page: 0, per: 2 }
-      expect(parsed_response_body[:meta]).to match(current_page: 1, next_page: 2, prev_page: nil, total_count: 5, total_pages: 3)
-      expect(parsed_response_body[:organizations]).to match(OrganizationBlueprint.render_as_hash(page1))
+        run_test!
 
-      get api_v1_organizations_path, params: { page: 1, per: 2 }
-      expect(parsed_response_body[:meta]).to match(current_page: 1, next_page: 2, prev_page: nil, total_count: 5, total_pages: 3)
-      expect(parsed_response_body[:organizations]).to match(OrganizationBlueprint.render_as_hash(page1))
+        it { expect(parsed_response_body[:meta]).to match(current_page: 2, next_page: 3, prev_page: 1, total_count: 5, total_pages: 3) }
+        it { expect(parsed_response_body[:organizations]).to match(OrganizationBlueprint.render_as_hash(page2)) }
+      end
 
-      get api_v1_organizations_path, params: { page: 2, per: 2 }
-      expect(parsed_response_body[:meta]).to match(current_page: 2, next_page: 3, prev_page: 1, total_count: 5, total_pages: 3)
-      expect(parsed_response_body[:organizations]).to match(OrganizationBlueprint.render_as_hash(page2))
+      response 200, "Filtre par rapport à un territoire", document: false do
+        let!(:matching) { create(:organisation) }
+        let!(:unmatching) { create(:organisation) }
+        let!(:group_id) { matching.territory_id }
 
-      get api_v1_organizations_path, params: { page: 3, per: 2 }
-      expect(parsed_response_body[:meta]).to match(current_page: 3, next_page: nil, prev_page: 2, total_count: 5, total_pages: 3)
-      expect(parsed_response_body[:organizations]).to match(OrganizationBlueprint.render_as_hash(page3))
+        run_test!
+
+        it { expect(parsed_response_body[:organizations]).to include(OrganizationBlueprint.render_as_hash(matching)) }
+        it { expect(parsed_response_body[:organizations]).not_to include(OrganizationBlueprint.render_as_hash(unmatching)) }
+      end
+
+      response 200, "Renvoie une liste vide s'il n'y a pas d'organisations", document: false do
+        run_test!
+
+        it { expect(parsed_response_body[:organizations]).to match([]) }
+      end
     end
   end
 end
