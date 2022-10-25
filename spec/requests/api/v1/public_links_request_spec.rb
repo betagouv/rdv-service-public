@@ -70,8 +70,6 @@ describe "Public links API", swagger_doc: "v1/api.json" do
 
         run_test!
 
-        it { expect(response).to have_http_status(:ok) }
-
         it { expect(parsed_response_body).to match_array(expected_body) }
       end
 
@@ -80,7 +78,6 @@ describe "Public links API", swagger_doc: "v1/api.json" do
 
         run_test!
 
-        it { expect(response).to have_http_status(:bad_request) }
         it { expect(parsed_response_body).to match(missing: "territory") }
       end
 
@@ -88,8 +85,6 @@ describe "Public links API", swagger_doc: "v1/api.json" do
         let(:territory) { "unknown" }
 
         run_test!
-
-        it { expect(response).to have_http_status(:not_found) }
 
         it { expect(parsed_response_body).to match(not_found: "territory") }
       end
