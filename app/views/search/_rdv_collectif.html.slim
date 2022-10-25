@@ -13,6 +13,9 @@
     .card-text
       i.fa.fa-fw.fa-clock>
       = "#{rdv.duration_in_min} minutes"
+    .card-text
+      i.fa.fa-fw.fa-users>
+      = show_participants_count(rdv)
 
   .card-footer
     - if current_user&.rdvs&.include?(rdv)
