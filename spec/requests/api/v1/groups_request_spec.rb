@@ -37,8 +37,6 @@ describe "Groups API", swagger_doc: "v1/api.json" do
 
         run_test!
 
-        it { expect(response).to have_http_status(:ok) }
-
         it { expect(parsed_response_body[:meta]).to match(current_page: 2, next_page: 3, prev_page: 1, total_count: 5, total_pages: 3) }
 
         it { expect(parsed_response_body[:groups]).to match(GroupBlueprint.render_as_hash(page2)) }
@@ -49,15 +47,11 @@ describe "Groups API", swagger_doc: "v1/api.json" do
 
         run_test!
 
-        it { expect(response).to have_http_status(:ok) }
-
         it { expect(parsed_response_body[:groups]).to match(GroupBlueprint.render_as_hash(Territory.all)) }
       end
 
       response 200, "when there is no territory", document: false do
         run_test!
-
-        it { expect(response).to have_http_status(:ok) }
 
         it { expect(parsed_response_body[:groups]).to match([]) }
       end

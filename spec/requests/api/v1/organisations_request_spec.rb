@@ -54,8 +54,6 @@ describe "Organisations API", swagger_doc: "v1/api.json" do
 
         run_test!
 
-        it { expect(response).to have_http_status(:ok) }
-
         it { expect(parsed_response_body[:meta]).to match(current_page: 2, next_page: 3, prev_page: 1, total_count: 5, total_pages: 3) }
 
         it { expect(parsed_response_body[:organisations]).to match(OrganisationBlueprint.render_as_hash(page2)) }
@@ -81,8 +79,6 @@ describe "Organisations API", swagger_doc: "v1/api.json" do
 
         run_test!
 
-        it { expect(response).to have_http_status(:ok) }
-
         it { expect(parsed_response_body[:organisations]).to match([OrganisationBlueprint.render_as_hash(matching)]) }
       end
 
@@ -94,8 +90,6 @@ describe "Organisations API", swagger_doc: "v1/api.json" do
         let(:client) { auth_headers["client"].to_s }
 
         run_test!
-
-        it { expect(response).to have_http_status(:ok) }
 
         it { expect(parsed_response_body[:organisations]).to eq([]) }
       end
