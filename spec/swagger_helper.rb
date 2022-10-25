@@ -235,6 +235,14 @@ RSpec.configure do |config|
       },
       tags: [
         {
+          name: "Invitation",
+          description: "Pour manipuler usager·ères via leur jeton d'invitation",
+        },
+        {
+          name: "User",
+          description: "Pour manipuler usager·ères",
+        },
+        {
           name: "RDV",
           description: "Pour manipuler des rendez-vous",
         },
