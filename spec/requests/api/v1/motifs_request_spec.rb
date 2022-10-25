@@ -1,112 +1,166 @@
 # frozen_string_literal: true
 
-describe "api/v1/motifs requests", type: :request do
-  let!(:organisation) { create(:organisation) }
-  let!(:service) { create(:service) }
+require "swagger_helper"
 
-  describe "GET api/v1/:organisation_id/motifs" do
-    let!(:agent) { create(:agent, service: service, basic_role_in_organisations: [organisation]) }
+describe "RDV authentified API", swagger_doc: "v1/api.json" do
+  path "/api/v1/organisations/{organisation_id}/motifs" do
+    get "Lister les motifs" do
+      tags "Motif"
+      produces "application/json"
+      operationId "getMotifs"
+      description "Renvoie tous les motifs à partir d'une organisation"
 
-    context "when the agent does not belong to the organisation" do
-      let!(:other_orga) { create(:organisation) }
-      let!(:motif) { create(:motif, organisation: other_orga, service: service) }
+      security [{ access_token: [], uid: [], client: [] }]
 
-      it "does not return the motifs list" do
-        get api_v1_organisation_motifs_path(other_orga), headers: api_auth_headers_for_agent(agent)
-        expect(response.status).to eq(200)
-        expect(parsed_response_body["motifs"]).to eq([])
+      parameter name: :organisation_id, in: :path, type: :integer, description: "Identifiant de l'organisation", example: "1"
+
+      parameter name: "access-token", in: :header, type: :string, description: "Token d'accès (authentification)", example: "SFYBngO55ImjD1HOcv-ivQ"
+      parameter name: "client", in: :header, type: :string, description: "Clé client d'accès (authentification)", example: "Z6EihQAY9NWsZByfZ47i_Q"
+      parameter name: "uid", in: :header, type: :string, description: "Identifiant d'accès (authentification)", example: "martine@demo.rdv-solidarites.fr"
+
+      parameter name: :active, in: :query, type: :boolean, description: "filtre sur les motifs actifs", required: false
+      parameter name: :reservable_online, in: :query, type: :boolean, description: "filtre sur les motifs réservables en ligne", required: false
+      parameter name: :service_id, in: :query, type: :integer, description: "filtre sur les services", example: "1", required: false
+
+      after do |example|
+        content = example.metadata[:response][:content] || {}
+        example_spec = {
+          "application/json" => {
+            examples: {
+              example: {
+                value: JSON.parse(response.body, symbolize_names: true),
+              },
+            },
+          },
+        }
+        example.metadata[:response][:content] = content.deep_merge(example_spec)
       end
-    end
 
-    context "when the agent belongs to multiple organisations" do
-      let!(:motif1) { create(:motif, organisation: organisation, service: service) }
-      let!(:organisation2) { create(:organisation) }
-      let!(:motif2) { create(:motif, organisation: organisation2, service: service) }
-      let!(:agent) { create(:agent, service: service, basic_role_in_organisations: [organisation, organisation2]) }
+      context "sans filtres" do
+        response 200, "Renvoie les motifs", document: false do
+          let!(:service) { create(:service) }
+          let!(:organisation) { create(:organisation) }
 
-      it "returns the organisation motifs only" do
-        get api_v1_organisation_motifs_path(organisation), headers: api_auth_headers_for_agent(agent)
-        expect(response.status).to eq(200)
-        expect(parsed_response_body["motifs"].pluck("id")).to contain_exactly(motif1.id)
-      end
-    end
+          let!(:agent) { create(:agent, service: service, basic_role_in_organisations: [organisation]) }
+          let!(:access_agent) { api_auth_headers_for_agent(agent) }
+          let(:"access-token") { access_agent["access-token"].to_s }
+          let(:uid) { access_agent["uid"].to_s }
+          let(:client) { access_agent["client"].to_s }
 
-    context "filtered on active" do
-      let!(:deleted_at) { Time.zone.yesterday.noon }
-      let!(:motif1) { create(:motif, organisation: organisation, service: service) }
-      let!(:motif2) { create(:motif, organisation: organisation, service: service, deleted_at: deleted_at) }
+          let!(:motif) { create(:motif, organisation: organisation, service: service) }
 
-      context "when retrieving active motifs only" do
-        it "returns the active motifs" do
-          get(
-            api_v1_organisation_motifs_path(organisation),
-            headers: api_auth_headers_for_agent(agent),
-            params: { active: true }
-          )
-          expect(response.status).to eq(200)
-          expect(parsed_response_body["motifs"].pluck("id")).to contain_exactly(motif1.id)
+          let(:organisation_id) { organisation.id }
+
+          run_test!
+
+          it { expect(parsed_response_body[:motifs]).to eq(MotifBlueprint.render_as_json([motif])) }
+        end
+
+        response 200, "Renvoie les motifs liés à la bonne organisation" do
+          let!(:service) { create(:service) }
+          let!(:organisation1) { create(:organisation) }
+          let!(:organisation2) { create(:organisation) }
+
+          let!(:agent) { create(:agent, service: service, basic_role_in_organisations: [organisation1]) }
+          let!(:access_agent) { api_auth_headers_for_agent(agent) }
+          let(:"access-token") { access_agent["access-token"].to_s }
+          let(:uid) { access_agent["uid"].to_s }
+          let(:client) { access_agent["client"].to_s }
+
+          let!(:motif1) { create(:motif, organisation: organisation1, service: service) }
+          let!(:motif2) { create(:motif, organisation: organisation1, service: service) }
+          let!(:motif3) { create(:motif, organisation: organisation2, service: service) }
+
+          let(:organisation_id) { organisation1.id }
+
+          run_test!
+
+          it { expect(parsed_response_body[:motifs]).to eq(MotifBlueprint.render_as_json([motif1, motif2])) }
+        end
+
+        response 401, "Renvoie un problème d'authentification" do
+          let!(:service) { create(:service) }
+          let!(:organisation) { create(:organisation) }
+
+          let!(:agent) { create(:agent, service: service, basic_role_in_organisations: [organisation]) }
+          let!(:access_agent) { api_auth_headers_for_agent(agent) }
+          let(:"access-token") { "false" }
+          let(:uid) { access_agent["uid"].to_s }
+          let(:client) { access_agent["client"].to_s }
+
+          let!(:motif) { create(:motif, organisation: organisation, service: service) }
+
+          let(:organisation_id) { organisation.id }
+
+          run_test!
         end
       end
 
-      context "when retrieving inactive motifs" do
-        it "returns the inactive motifs" do
-          get(
-            api_v1_organisation_motifs_path(organisation),
-            headers: api_auth_headers_for_agent(agent),
-            params: { active: false }
-          )
-          expect(response.status).to eq(200)
-          expect(parsed_response_body["motifs"].pluck("id")).to contain_exactly(motif2.id)
-          expect(parsed_response_body["motifs"].pluck("deleted_at")).to contain_exactly(deleted_at.to_s)
+      context "avec filtres" do
+        let!(:service) { create(:service) }
+        let!(:organisation) { create(:organisation) }
+
+        let!(:agent) { create(:agent, service: service, basic_role_in_organisations: [organisation]) }
+        let!(:access_agent) { api_auth_headers_for_agent(agent) }
+        let(:"access-token") { access_agent["access-token"].to_s }
+        let(:uid) { access_agent["uid"].to_s }
+        let(:client) { access_agent["client"].to_s }
+        let(:organisation_id) { organisation.id }
+
+        response 200, "Renvoie les motifs filtrés sur active true", document: false do
+          let!(:deleted_at) { Time.zone.yesterday.noon }
+          let!(:motif1) { create(:motif, organisation: organisation, service: service) }
+          let!(:motif2) { create(:motif, organisation: organisation, service: service, deleted_at: deleted_at) }
+          let(:active) { true }
+
+          run_test!
+
+          it { expect(parsed_response_body["motifs"].pluck("id")).to contain_exactly(motif1.id) }
         end
-      end
-    end
 
-    context "filtered on reservable online" do
-      let!(:motif1) { create(:motif, organisation: organisation, service: service, reservable_online: true) }
-      let!(:motif2) { create(:motif, organisation: organisation, service: service, reservable_online: false) }
+        response 200, "Renvoie les motifs filtrés sur active false", document: false do
+          let!(:deleted_at) { Time.zone.yesterday.noon }
+          let!(:motif1) { create(:motif, organisation: organisation, service: service) }
+          let!(:motif2) { create(:motif, organisation: organisation, service: service, deleted_at: deleted_at) }
+          let(:active) { false }
 
-      context "when retrieving reservable online motifs only" do
-        it "returns the reservable online motifs" do
-          get(
-            api_v1_organisation_motifs_path(organisation),
-            headers: api_auth_headers_for_agent(agent),
-            params: { reservable_online: true }
-          )
-          expect(response.status).to eq(200)
-          expect(parsed_response_body["motifs"].pluck("id")).to contain_exactly(motif1.id)
+          run_test!
+
+          it { expect(parsed_response_body["motifs"].pluck("id")).to contain_exactly(motif2.id) }
+          it { expect(parsed_response_body["motifs"].pluck("deleted_at")).to contain_exactly(deleted_at.to_s) }
         end
-      end
 
-      context "when retrieving non reservable online motifs" do
-        it "returns the non reservable online motifs" do
-          get(
-            api_v1_organisation_motifs_path(organisation),
-            headers: api_auth_headers_for_agent(agent),
-            params: { reservable_online: false }
-          )
-          expect(response.status).to eq(200)
-          expect(parsed_response_body["motifs"].pluck("id")).to contain_exactly(motif2.id)
-          expect(parsed_response_body["motifs"].pluck("reservable_online")).to contain_exactly(false)
+        response 200, "Renvoie les motifs filtrés sur reservable_online true", document: false do
+          let!(:motif1) { create(:motif, organisation: organisation, service: service, reservable_online: true) }
+          let!(:motif2) { create(:motif, organisation: organisation, service: service, reservable_online: false) }
+          let(:reservable_online) { true }
+
+          run_test!
+
+          it { expect(parsed_response_body["motifs"].pluck("id")).to contain_exactly(motif1.id) }
         end
-      end
-    end
 
-    context "filtered on service" do
-      let!(:agent) { create(:agent, service: service, admin_role_in_organisations: [organisation]) }
-      let!(:another_service) { create(:service) }
+        response 200, "Renvoie les motifs filtrés sur reservable_online false", document: false do
+          let!(:motif1) { create(:motif, organisation: organisation, service: service, reservable_online: true) }
+          let!(:motif2) { create(:motif, organisation: organisation, service: service, reservable_online: false) }
+          let(:reservable_online) { false }
 
-      let!(:motif1) { create(:motif, organisation: organisation, service: service) }
-      let!(:motif2) { create(:motif, organisation: organisation, service: another_service) }
+          run_test!
 
-      it "returns the service specific motifs" do
-        get(
-          api_v1_organisation_motifs_path(organisation),
-          headers: api_auth_headers_for_agent(agent),
-          params: { service_id: service.id }
-        )
-        expect(response.status).to eq(200)
-        expect(parsed_response_body["motifs"].pluck("id")).to contain_exactly(motif1.id)
+          it { expect(parsed_response_body["motifs"].pluck("id")).to contain_exactly(motif2.id) }
+          it { expect(parsed_response_body["motifs"].pluck("reservable_online")).to contain_exactly(false) }
+        end
+
+        response 200, "Renvoie les motifs filtrés sur service_id", document: false do
+          let!(:another_service) { create(:service) }
+          let!(:motif1) { create(:motif, organisation: organisation, service: service) }
+          let!(:motif2) { create(:motif, organisation: organisation, service: another_service) }
+          let(:service_id) { service.id }
+
+          run_test!
+
+          it { expect(parsed_response_body["motifs"].pluck("id")).to contain_exactly(motif1.id) }
+        end
       end
     end
   end
