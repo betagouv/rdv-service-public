@@ -242,6 +242,10 @@ RSpec.configure do |config|
           name: "Group",
           description: "Pour manipuler des groupes (représentation des territoires)",
         },
+        {
+          name: "Organisation",
+          description: "Pour manipuler des organisations",
+        },
       ],
       servers: [
         {

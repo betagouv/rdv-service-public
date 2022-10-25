@@ -145,7 +145,7 @@ RSpec/MultipleDescribes:
 
 RSpec/VariableName:
   Exclude:
-    - 'spec/requests/api/v1/rdvs_request_spec.rb'
+    - "spec/requests/api/v1/**/*"
 
 RSpec/MultipleExpectations:
   Enabled: false
