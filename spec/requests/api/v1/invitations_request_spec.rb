@@ -7,7 +7,7 @@ describe "Invitations API", swagger_doc: "v1/api.json" do
     get "Récupérer un·e unsager·ère" do
       tags "Invitation", "User"
       produces "application/json"
-      operationId "getInvitations"
+      operationId "getUserByInvitationToken"
       description "Renvoie un·e usager·ère grâce à son jeton d'invitation"
 
       security [{ access_token: [], uid: [], client: [] }]
