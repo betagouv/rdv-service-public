@@ -14,14 +14,21 @@ module SearchRdvCollectif
     end
 
     def rdvs_collectif_at(motif, lieu, user = nil)
-      collective_rdvs = Rdv.where(lieu: lieu).where(motif: motif).collectif.future.with_remaining_seats.order("starts_at asc")
+      collective_rdvs = available_slots(motif, lieu)
       collective_rdvs = collective_rdvs.reject { |c| (c.rdvs_users.map(&:user_id) & user.self_and_relatives.map(&:id)).any? } if user.present?
       collective_rdvs
     end
 
     def available_slots(motif, lieu)
-      Rdv.collectif.future.with_remaining_seats.where(motif_id: motif.id).where(lieu_id: lieu.id)
+      Rdv.collectif.future
+        .with_remaining_seats
+        .where(motif_id: motif.id)
+        .where(lieu_id: lieu.id)
+        .where("starts_at > ?", Time.zone.now + motif.min_booking_delay.seconds)
+        .where("starts_at < ?", Time.zone.now + motif.max_booking_delay.seconds)
+        .order(:starts_at)
     end
+
     alias creneaux available_slots
   end
 end
