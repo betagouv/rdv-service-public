@@ -50,7 +50,6 @@ class Rdv < ApplicationRecord
   # Validations
   validates :starts_at, :ends_at, :agents, presence: true
   validates :rdvs_users, presence: true, unless: :collectif?
-  validate :collective_rdv_cannot_be_excused, if: :collectif?
   validate :lieu_is_not_disabled_if_needed
   validate :starts_at_is_plausible
   validate :duration_is_plausible
@@ -309,11 +308,27 @@ class Rdv < ApplicationRecord
     update_column(:users_count, users_count)
   end
 
-  private
+  def update_rdv_status_from_participation
+    # Priority Order. One participation will change rdv status
+    %w[unknown seen noshow].each do |status|
+      symbol_method = "#{status}?".to_sym
+      next unless rdvs_users.any?(&symbol_method)
 
-  def collective_rdv_cannot_be_excused
-    errors.add(:status, :collective_rdv_cannot_be_excused) if status == "excused"
+      self.status = status
+      save
+      break
+    end
+
+    # If all participations are similar the rdv status will change
+    %w[seen noshow excused].each do |status|
+      if rdvs_users.map(&:status).all? { |participation_status| participation_status.in? [status] }
+        self.status = status
+        save
+      end
+    end
   end
+
+  private
 
   def starts_at_is_plausible
     return unless will_save_change_to_attribute?("starts_at")

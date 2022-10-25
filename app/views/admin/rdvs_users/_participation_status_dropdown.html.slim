@@ -1,4 +1,4 @@
-.dropdown[id= "participation-dropdown-#{rdvs_user.id}", class="text-right"]
+.dropdown.text-right
   - if rdvs_user.rdv.temporal_status == "revoked"
     / Avoid users participations change as long as rdv is revoked TODORDV-C rspec on this
     button.btn.btn-outline-primary[disabled]

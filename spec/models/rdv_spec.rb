@@ -359,11 +359,6 @@ describe Rdv, type: :model do
     it "valid with a user without email" do
       expect(build(:rdv, users: [create(:user, email: nil)])).to be_valid
     end
-
-    it "invalid if collectif and excused" do
-      expect(build(:rdv, :collectif, status: "excused")).to be_invalid
-      expect(build(:rdv, :collectif, status: "noshow")).to be_valid
-    end
   end
 
   describe "lieu_is_not_disabled_if_needed" do

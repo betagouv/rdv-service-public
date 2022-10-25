@@ -15,7 +15,7 @@ class Admin::ParticipationsController < AgentAuthController
     else
       flash.now[:error] = @rdvs_user.errors.full_messages.to_sentence
     end
-    render "admin/rdvs_users/update"
+    render "admin/rdvs/update"
   end
 
   def destroy
