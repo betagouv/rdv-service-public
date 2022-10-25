@@ -19,8 +19,8 @@ describe "Organisations API", swagger_doc: "v1/api.json" do
       parameter name: "page", in: :query, type: :integer, description: "La page souhaitée", example: "1", required: false
       parameter name: "per", in: :query, type: :integer, description: "Le nombre d'éléments souhaités par page", example: "10", required: false
 
-      parameter name: "departement_number", in: :query, type: :integer, description: "Le numéro de département", example: "26", required: false
-      parameter name: "city_code", in: :query, type: :integer, description: "Le code INSEE de la localité", example: "26323", required: false
+      parameter name: "departement_number", in: :query, type: :string, description: "Le numéro ou code de département du territoire concerné", example: "26", required: false
+      parameter name: "city_code", in: :query, type: :string, description: "Le code INSEE de la localité", example: "26323", required: false
 
       after do |example|
         content = example.metadata[:response][:content] || {}
