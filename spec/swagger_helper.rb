@@ -246,6 +246,10 @@ RSpec.configure do |config|
           name: "Organisation",
           description: "Pour manipuler des organisations",
         },
+        {
+          name: "PublicLink",
+          description: "Pour manipuler des liens publics de recherche",
+        },
       ],
       servers: [
         {
