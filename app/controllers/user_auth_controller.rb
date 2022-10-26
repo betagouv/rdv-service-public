@@ -15,8 +15,8 @@ class UserAuthController < ApplicationController
     current_user.name_for_paper_trail
   end
 
-  def authorize(record, *args)
-    super([:user, record], *args)
+  def authorize(record)
+    super([:user, record])
   end
 
   def policy_scope(clasz)

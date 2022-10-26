@@ -165,11 +165,7 @@ class Rdv < ApplicationRecord
   end
 
   def available_to_file_attente?
-    motif.reservable_online? &&
-      motif.individuel? &&
-      !cancelled? &&
-      starts_at > 7.days.from_now &&
-      !home?
+    motif.reservable_online? && !cancelled? && starts_at > 7.days.from_now && !home?
   end
 
   def creneaux_available(date_range)

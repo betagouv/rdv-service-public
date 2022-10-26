@@ -26,9 +26,6 @@ ul.list-group.list-group-flush
   li.list-group-item
     .fa.fa-user>
     = users_to_sentence(rdv.users)
-    span>
-    = link_to t(".change_participant"), users_rdv_participations_path(rdv)
-    .fa.fa-edit<
   - if @can_see_rdv_motif
     li.list-group-item
       i.fa.fa-info-circle>
@@ -38,7 +35,8 @@ ul.list-group.list-group-flush
       i.fa.fa-exclamation-triangle>
       strong Informations supplémentaires :
       = auto_link(simple_format(rdv.motif.instruction_for_rdv, class:"pl-3 pt-1"), html: { target: "_blank" })
-  = render "/users/rdvs/file_attente", rdv: rdv
+  - unless defined?(hide_file_attente_infos) && hide_file_attente_infos
+    = render "/users/rdvs/file_attente", rdv: rdv
 
   - if !policy([:user, rdv]).cancel? && !rdv.cancelled? && !rdv.in_the_past?
     li.list-group-item.font-italic
