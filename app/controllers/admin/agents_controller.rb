@@ -5,9 +5,10 @@ class Admin::AgentsController < AgentAuthController
 
   def index
     @agents = policy_scope(Agent)
-      .joins(:organisations).where(organisations: { id: current_organisation.id })
       .includes(:service, :roles, :organisations)
       .active
+
+    @agents = @agents.joins(:organisations).where(organisations: { id: current_organisation.id }) if current_organisation
     @invited_agents_count = @agents.invitation_not_accepted.created_by_invite.count
     @agents = index_params[:term].present? ? @agents.search_by_text(index_params[:term]) : @agents.order_by_last_name
     @agents = @agents.complete.page(params[:page])

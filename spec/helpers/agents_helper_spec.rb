@@ -55,5 +55,27 @@ describe AgentsHelper do
       form = AgentCreneauxSearchForm.new(context: "un super context")
       expect(build_link_to_rdv_wizard_params(creneau, form)["context"]).to eq("un super context")
     end
+
+    it "works without a lieu" do
+      creneau = Creneau.new
+      creneau.lieu_id = nil
+      motif = create(:motif)
+      creneau.motif = motif
+      agent = create(:agent)
+      creneau.agent = agent
+
+      form = AgentCreneauxSearchForm.new(user_ids: [])
+      expect(build_link_to_rdv_wizard_params(creneau, form).with_indifferent_access).to match(
+        {
+          agent_ids: [agent.id],
+          duration_in_min: creneau.motif.default_duration_in_min,
+          lieu_id: nil,
+          motif_id: creneau.motif.id,
+          organisation_id: creneau.motif.organisation.id,
+          starts_at: nil,
+          step: 2,
+        }
+      )
+    end
   end
 end

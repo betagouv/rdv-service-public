@@ -3,7 +3,7 @@
 RSpec.describe Agents::RdvMailer, type: :mailer do
   describe "#rdv_created" do
     let(:agent) { build(:agent) }
-    let(:t) { DateTime.parse("2020-03-01 10:20") }
+    let(:t) { Time.zone.parse("2020-03-01 10:20") }
     let(:mail) { described_class.with(rdv: rdv, agent: agent).rdv_created }
     let(:rdv) { create(:rdv, starts_at: t + 2.hours, agents: [agent]) }
 

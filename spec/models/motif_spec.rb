@@ -209,4 +209,15 @@ describe Motif, type: :model do
       expect(motif.booking_delay_range).to eq((now + 30.minutes.in_seconds.seconds)..(now + 3.months.in_seconds.seconds))
     end
   end
+
+  describe "#requires_lieu?" do
+    it "returns false if the location_type doesn't require a lieu" do
+      expect(build(:motif, :by_phone).requires_lieu?).to eq(false)
+      expect(build(:motif, :at_home).requires_lieu?).to eq(false)
+    end
+
+    it "returns true if the location_type requires a lieu" do
+      expect(build(:motif, :at_public_office).requires_lieu?).to eq(true)
+    end
+  end
 end

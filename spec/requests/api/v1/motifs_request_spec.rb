@@ -14,8 +14,7 @@ describe "api/v1/motifs requests", type: :request do
       it "does not return the motifs list" do
         get api_v1_organisation_motifs_path(other_orga), headers: api_auth_headers_for_agent(agent)
         expect(response.status).to eq(200)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["motifs"]).to eq([])
+        expect(parsed_response_body["motifs"]).to eq([])
       end
     end
 
@@ -28,8 +27,7 @@ describe "api/v1/motifs requests", type: :request do
       it "returns the organisation motifs only" do
         get api_v1_organisation_motifs_path(organisation), headers: api_auth_headers_for_agent(agent)
         expect(response.status).to eq(200)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["motifs"].pluck("id")).to contain_exactly(motif1.id)
+        expect(parsed_response_body["motifs"].pluck("id")).to contain_exactly(motif1.id)
       end
     end
 
@@ -46,8 +44,7 @@ describe "api/v1/motifs requests", type: :request do
             params: { active: true }
           )
           expect(response.status).to eq(200)
-          response_parsed = JSON.parse(response.body)
-          expect(response_parsed["motifs"].pluck("id")).to contain_exactly(motif1.id)
+          expect(parsed_response_body["motifs"].pluck("id")).to contain_exactly(motif1.id)
         end
       end
 
@@ -59,9 +56,8 @@ describe "api/v1/motifs requests", type: :request do
             params: { active: false }
           )
           expect(response.status).to eq(200)
-          response_parsed = JSON.parse(response.body)
-          expect(response_parsed["motifs"].pluck("id")).to contain_exactly(motif2.id)
-          expect(response_parsed["motifs"].pluck("deleted_at")).to contain_exactly(deleted_at.to_s)
+          expect(parsed_response_body["motifs"].pluck("id")).to contain_exactly(motif2.id)
+          expect(parsed_response_body["motifs"].pluck("deleted_at")).to contain_exactly(deleted_at.to_s)
         end
       end
     end
@@ -78,8 +74,7 @@ describe "api/v1/motifs requests", type: :request do
             params: { reservable_online: true }
           )
           expect(response.status).to eq(200)
-          response_parsed = JSON.parse(response.body)
-          expect(response_parsed["motifs"].pluck("id")).to contain_exactly(motif1.id)
+          expect(parsed_response_body["motifs"].pluck("id")).to contain_exactly(motif1.id)
         end
       end
 
@@ -91,9 +86,8 @@ describe "api/v1/motifs requests", type: :request do
             params: { reservable_online: false }
           )
           expect(response.status).to eq(200)
-          response_parsed = JSON.parse(response.body)
-          expect(response_parsed["motifs"].pluck("id")).to contain_exactly(motif2.id)
-          expect(response_parsed["motifs"].pluck("reservable_online")).to contain_exactly(false)
+          expect(parsed_response_body["motifs"].pluck("id")).to contain_exactly(motif2.id)
+          expect(parsed_response_body["motifs"].pluck("reservable_online")).to contain_exactly(false)
         end
       end
     end
@@ -112,8 +106,7 @@ describe "api/v1/motifs requests", type: :request do
           params: { service_id: service.id }
         )
         expect(response.status).to eq(200)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["motifs"].pluck("id")).to contain_exactly(motif1.id)
+        expect(parsed_response_body["motifs"].pluck("id")).to contain_exactly(motif1.id)
       end
     end
   end

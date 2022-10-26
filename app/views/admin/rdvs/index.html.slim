@@ -36,9 +36,14 @@
     h2.mb-0 Filtrer les rendez-vous
   .card-body
     = render "rdv_search_form", form: @form
+
   - if @rdvs.any?
     .card-footer
       div.d-flex.justify-content-end
+        - if policy([:configuration, current_territory]).allow_to_download_metrics?
+          = link_to rdvs_users_export_admin_organisation_rdvs_path(**@form.to_query), method: :post, class: "btn btn-small btn-link d-print-none" do
+            span> Exporter les #{@rdvs_users_count} RDVs par usager en XLS
+            i.fa.fa-download>
         = link_to export_admin_organisation_rdvs_path(**@form.to_query), method: :post, class: "btn btn-small btn-link d-print-none" do
           span> Exporter les #{@rdvs.total_count} RDVs en XLS
           i.fa.fa-download>
@@ -54,8 +59,11 @@
   .row.justify-content-center.pb-3
     .col-md-8
       .d-flex.justify-content-center= paginate @rdvs, theme: "twitter-bootstrap-4"
-      - @rdvs.includes(:organisation, :lieu, :motif, agents: :service, users: %i[responsible organisations]).each do |rdv|
-        = render(partial: "rdv", object: rdv, locals: { agent: nil })
+      = render(partial: "rdv",
+              collection: @rdvs,
+              locals: { agent: nil },
+              cached: ->(rdv) { [rdv, locale_cache_key] } \
+              )
       .d-flex.justify-content-center= paginate @rdvs, theme: "twitter-bootstrap-4"
 - else
   .row.justify-content-center.pb-3

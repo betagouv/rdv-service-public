@@ -12,6 +12,10 @@ ul.list-group.list-group-flush
     li.list-group-item
       i.fa.fa-check.fa-fw.mr-1.text-success
       | RDV téléphonique
+  - elsif rdv_wizard.motif.home?
+    li.list-group-item
+      i.fa.fa-check.fa-fw.mr-1.text-success
+      | RDV à domicile
   - else
     li.list-group-item
       .row

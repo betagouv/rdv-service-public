@@ -11,14 +11,13 @@ describe "api/v1/users requests", type: :request do
       it "works" do
         get api_v1_user_path(user), headers: api_auth_headers_for_agent(agent)
         expect(response.status).to eq(200)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["user"]).to be_present
-        expect(response_parsed["user"]["id"]).to eq(user.id)
-        expect(response_parsed["user"]["first_name"]).to eq("Jean")
-        expect(response_parsed["user"]["last_name"]).to eq("JACQUES")
-        expect(response_parsed["user"]["user_profiles"]).to be_present
-        expect(response_parsed["user"]["user_profiles"].size).to eq 1
-        expect(response_parsed["user"]["user_profiles"][0]["organisation"]["id"]).to eq(organisation.id)
+        expect(parsed_response_body["user"]).to be_present
+        expect(parsed_response_body["user"]["id"]).to eq(user.id)
+        expect(parsed_response_body["user"]["first_name"]).to eq("Jean")
+        expect(parsed_response_body["user"]["last_name"]).to eq("JACQUES")
+        expect(parsed_response_body["user"]["user_profiles"]).to be_present
+        expect(parsed_response_body["user"]["user_profiles"].size).to eq 1
+        expect(parsed_response_body["user"]["user_profiles"][0]["organisation"]["id"]).to eq(organisation.id)
       end
     end
 
@@ -29,14 +28,13 @@ describe "api/v1/users requests", type: :request do
       it "works" do
         get api_v1_user_path(user), headers: api_auth_headers_for_agent(agent)
         expect(response.status).to eq(200)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["user"]).to be_present
-        expect(response_parsed["user"]["id"]).to eq(user.id)
-        expect(response_parsed["user"]["first_name"]).to eq("Jean")
-        expect(response_parsed["user"]["last_name"]).to eq("JACQUES")
-        expect(response_parsed["user"]["user_profiles"]).to be_present
-        expect(response_parsed["user"]["user_profiles"].size).to eq 1
-        expect(response_parsed["user"]["user_profiles"][0]["organisation"]["id"]).to eq(organisation.id)
+        expect(parsed_response_body["user"]).to be_present
+        expect(parsed_response_body["user"]["id"]).to eq(user.id)
+        expect(parsed_response_body["user"]["first_name"]).to eq("Jean")
+        expect(parsed_response_body["user"]["last_name"]).to eq("JACQUES")
+        expect(parsed_response_body["user"]["user_profiles"]).to be_present
+        expect(parsed_response_body["user"]["user_profiles"].size).to eq 1
+        expect(parsed_response_body["user"]["user_profiles"][0]["organisation"]["id"]).to eq(organisation.id)
       end
     end
 
@@ -46,8 +44,7 @@ describe "api/v1/users requests", type: :request do
       it "works" do
         get api_v1_user_path(user), headers: api_auth_headers_for_agent(agent)
         expect(response.status).to eq(403)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["errors"]).to be_present
+        expect(parsed_response_body["errors"]).to be_present
       end
     end
   end
@@ -67,10 +64,9 @@ describe "api/v1/users requests", type: :request do
         )
         expect(response.status).to eq(200)
         expect(User.count).to eq(user_count_before + 1)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["user"]).to be_present
-        expect(response_parsed["user"]["id"]).to be_present
-        user = User.find(response_parsed["user"]["id"])
+        expect(parsed_response_body["user"]).to be_present
+        expect(parsed_response_body["user"]["id"]).to be_present
+        user = User.find(parsed_response_body["user"]["id"])
         expect(user.organisations).to match_array([organisation])
         expect(user.first_name).to eq("Jean")
         expect(user.last_name).to eq("Jacques")
@@ -101,10 +97,9 @@ describe "api/v1/users requests", type: :request do
         )
         expect(response.status).to eq(200)
         expect(User.count).to eq(user_count_before + 1)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["user"]).to be_present
-        expect(response_parsed["user"]["id"]).to be_present
-        user = User.find(response_parsed["user"]["id"])
+        expect(parsed_response_body["user"]).to be_present
+        expect(parsed_response_body["user"]["id"]).to be_present
+        user = User.find(parsed_response_body["user"]["id"])
         expect(user.organisations).to match_array([organisation])
         expect(user.first_name).to eq("Jean")
         expect(user.last_name).to eq("Jacques")
@@ -138,10 +133,9 @@ describe "api/v1/users requests", type: :request do
         )
         expect(response.status).to eq(200)
         expect(User.count).to eq(user_count_before + 1)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["user"]).to be_present
-        expect(response_parsed["user"]["id"]).to be_present
-        user = User.find(response_parsed["user"]["id"])
+        expect(parsed_response_body["user"]).to be_present
+        expect(parsed_response_body["user"]["id"]).to be_present
+        user = User.find(parsed_response_body["user"]["id"])
         expect(user.organisations).to match_array([organisation])
         expect(user.first_name).to eq("Jean")
         expect(user.last_name).to eq("Jacques")
@@ -161,8 +155,7 @@ describe "api/v1/users requests", type: :request do
         )
         expect(response.status).to eq(422)
         expect(User.count).to eq(user_count_before)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["errors"]).not_to be_empty
+        expect(parsed_response_body["errors"]).not_to be_empty
       end
     end
 
@@ -181,8 +174,7 @@ describe "api/v1/users requests", type: :request do
         )
         expect(response.status).to eq(422)
         expect(User.count).to eq(user_count_before)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["errors"]).not_to be_empty
+        expect(parsed_response_body["errors"]).not_to be_empty
       end
     end
 
@@ -203,8 +195,7 @@ describe "api/v1/users requests", type: :request do
         )
         expect(response.status).to eq(422)
         expect(User.count).to eq(user_count_before)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["errors"]).not_to be_empty
+        expect(parsed_response_body["errors"]).not_to be_empty
       end
     end
 
@@ -226,9 +217,8 @@ describe "api/v1/users requests", type: :request do
         )
         expect(response.status).to eq(422)
         expect(User.count).to eq(user_count_before)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["errors"]).not_to be_empty
-        expect(response_parsed["errors"]["email"].first).to \
+        expect(parsed_response_body["errors"]).not_to be_empty
+        expect(parsed_response_body["errors"]["email"].first).to \
           eq({ "error" => "taken", "value" => "jean@jacques.fr", "id" => existing_user.id })
       end
     end
@@ -246,8 +236,7 @@ describe "api/v1/users requests", type: :request do
       it "returns policy scoped users" do
         get api_v1_users_path, headers: api_auth_headers_for_agent(agent)
         expect(response.status).to eq(200)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["users"].pluck("id")).to contain_exactly(user.id, user2.id)
+        expect(parsed_response_body["users"].pluck("id")).to contain_exactly(user.id, user2.id)
       end
     end
 
@@ -262,8 +251,7 @@ describe "api/v1/users requests", type: :request do
           headers: api_auth_headers_for_agent(agent)
         )
         expect(response.status).to eq(200)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["users"].pluck("id")).to contain_exactly(user1.id)
+        expect(parsed_response_body["users"].pluck("id")).to contain_exactly(user1.id)
       end
     end
   end
@@ -276,8 +264,7 @@ describe "api/v1/users requests", type: :request do
       it "does not return the users list" do
         get api_v1_organisation_users_path(other_orga), headers: api_auth_headers_for_agent(agent)
         expect(response.status).to eq(200)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["users"]).to eq([])
+        expect(parsed_response_body["users"]).to eq([])
       end
     end
 
@@ -290,8 +277,7 @@ describe "api/v1/users requests", type: :request do
       it "returns the organisation users only" do
         get api_v1_organisation_users_path(organisation), headers: api_auth_headers_for_agent(agent)
         expect(response.status).to eq(200)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["users"].pluck("id")).to contain_exactly(user1.id)
+        expect(parsed_response_body["users"].pluck("id")).to contain_exactly(user1.id)
       end
     end
   end
@@ -303,9 +289,8 @@ describe "api/v1/users requests", type: :request do
       it "works" do
         get invite_api_v1_user_path(user), headers: api_auth_headers_for_agent(agent), as: :json
         expect(response.status).to eq(200)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["invitation_url"]).to be_present
-        expect(response_parsed["invitation_url"]).to start_with("http://www.example.com/users/invitation/accept?invitation_token=")
+        expect(parsed_response_body["invitation_url"]).to be_present
+        expect(parsed_response_body["invitation_url"]).to start_with("http://www.example.com/users/invitation/accept?invitation_token=")
         user.reload
         expect(user.invitation_due_at).to eq(user.invitation_created_at + User.invite_for)
         expect(user.invited_through).to eq("external")
@@ -318,8 +303,7 @@ describe "api/v1/users requests", type: :request do
       it "works" do
         get invite_api_v1_user_path(user), headers: api_auth_headers_for_agent(agent), as: :json
         expect(response.status).to eq(200)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["invitation_token"]).to be_present
+        expect(parsed_response_body["invitation_token"]).to be_present
         user.reload
         expect(user.invitation_due_at).to eq(user.invitation_created_at + User.invite_for)
       end
@@ -331,8 +315,7 @@ describe "api/v1/users requests", type: :request do
       it "works" do
         get invite_api_v1_user_path(user), headers: api_auth_headers_for_agent(agent)
         expect(response.status).to eq(403)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["errors"]).to be_present
+        expect(parsed_response_body["errors"]).to be_present
       end
     end
   end
@@ -344,10 +327,9 @@ describe "api/v1/users requests", type: :request do
       it "works" do
         post invite_api_v1_user_path(user), headers: api_auth_headers_for_agent(agent), as: :json
         expect(response.status).to eq(200)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["invitation_url"]).to be_present
-        expect(response_parsed["invitation_token"]).to be_present
-        expect(response_parsed["invitation_url"]).to start_with("http://www.example.com/users/invitation/accept?invitation_token=")
+        expect(parsed_response_body["invitation_url"]).to be_present
+        expect(parsed_response_body["invitation_token"]).to be_present
+        expect(parsed_response_body["invitation_url"]).to start_with("http://www.example.com/users/invitation/accept?invitation_token=")
         user.reload
         expect(user.invitation_due_at).to eq(user.invitation_created_at + User.invite_for)
         expect(user.invited_through).to eq("external")
@@ -360,9 +342,8 @@ describe "api/v1/users requests", type: :request do
       it "works" do
         post invite_api_v1_user_path(user), headers: api_auth_headers_for_agent(agent), as: :json
         expect(response.status).to eq(200)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["invitation_token"]).to be_present
-        expect(response_parsed["invitation_url"]).to be_present
+        expect(parsed_response_body["invitation_token"]).to be_present
+        expect(parsed_response_body["invitation_url"]).to be_present
         user.reload
         expect(user.invitation_due_at).to eq(user.invitation_created_at + User.invite_for)
       end
@@ -381,9 +362,8 @@ describe "api/v1/users requests", type: :request do
           as: :json
         )
         expect(response.status).to eq(200)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["invitation_url"]).to be_present
-        expect(response_parsed["invitation_url"]).to start_with("http://www.example.com/users/invitation/accept?invitation_token=")
+        expect(parsed_response_body["invitation_url"]).to be_present
+        expect(parsed_response_body["invitation_url"]).to start_with("http://www.example.com/users/invitation/accept?invitation_token=")
         user.reload
         expect(user.invitation_due_at).to eq(user.invitation_created_at + 1.day)
       end
@@ -395,8 +375,7 @@ describe "api/v1/users requests", type: :request do
       it "works" do
         get invite_api_v1_user_path(user), headers: api_auth_headers_for_agent(agent)
         expect(response.status).to eq(403)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["errors"]).to be_present
+        expect(parsed_response_body["errors"]).to be_present
       end
     end
   end
@@ -408,8 +387,7 @@ describe "api/v1/users requests", type: :request do
       it "works" do
         get api_v1_organisation_user_path(organisation, user), headers: api_auth_headers_for_agent(agent)
         expect(response.status).to eq(200)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["user"]["id"]).to eq(user.id)
+        expect(parsed_response_body["user"]["id"]).to eq(user.id)
       end
     end
 
@@ -453,9 +431,8 @@ describe "api/v1/users requests", type: :request do
         user.reload
         expect(user.first_name).to eq("Alain")
         expect(user.last_name).to eq("Deloin")
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["user"]).to be_present
-        expect(response_parsed["user"]["id"]).to be_present
+        expect(parsed_response_body["user"]).to be_present
+        expect(parsed_response_body["user"]["id"]).to be_present
       end
     end
 
@@ -494,9 +471,8 @@ describe "api/v1/users requests", type: :request do
         expect(user.number_of_children).to eq(3)
         expect(user.notify_by_sms).to eq(false)
         expect(user.notify_by_email).to eq(false)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["user"]).to be_present
-        expect(response_parsed["user"]["id"]).to be_present
+        expect(parsed_response_body["user"]).to be_present
+        expect(parsed_response_body["user"]["id"]).to be_present
       end
     end
 
@@ -515,8 +491,7 @@ describe "api/v1/users requests", type: :request do
         )
         expect(response.status).to eq(200)
         user.reload
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["user"]).to be_present
+        expect(parsed_response_body["user"]).to be_present
         expect(user.first_name).to eq("Alain")
         expect(user.last_name).to eq("Deloin")
         expect(user.responsible).to eq(user_responsible)
@@ -535,8 +510,7 @@ describe "api/v1/users requests", type: :request do
           headers: api_auth_headers_for_agent(agent)
         )
         expect(response.status).to eq(422)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["errors"]).not_to be_empty
+        expect(parsed_response_body["errors"]).not_to be_empty
       end
     end
 
@@ -554,9 +528,8 @@ describe "api/v1/users requests", type: :request do
           headers: api_auth_headers_for_agent(agent)
         )
         expect(response.status).to eq(422)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["errors"]).not_to be_empty
-        expect(response_parsed["errors"]["email"].first).to \
+        expect(parsed_response_body["errors"]).not_to be_empty
+        expect(parsed_response_body["errors"]["email"].first).to \
           eq({ "error" => "taken", "value" => "jean@jacques.fr", "id" => existing_user.id })
       end
     end

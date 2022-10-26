@@ -94,7 +94,6 @@ class Rdv < ApplicationRecord
       all
     end
   }
-
   ## -
 
   def self.ongoing(time_margin: 0.minutes)
@@ -175,7 +174,7 @@ class Rdv < ApplicationRecord
 
   def creneaux_available(date_range)
     date_range = Lapin::Range.reduce_range_to_delay(motif, date_range) # réduit le range en fonction du délay
-    lieu.present? ? SlotBuilder.available_slots(motif, lieu, date_range, OffDays.all_in_date_range(date_range)) : []
+    SlotBuilder.available_slots(motif, lieu, date_range, OffDays.all_in_date_range(date_range))
   end
 
   def user_for_home_rdv
@@ -216,11 +215,10 @@ class Rdv < ApplicationRecord
     ""
   end
 
-  def self.search_for(agent, organisation, options)
-    rdvs = Rdv.where(organisation: organisation)
-    unless agent.role_in_organisation(organisation).can_access_others_planning?
-      rdvs = rdvs.joins(:motif).where(motifs: { service: agent.service })
-    end
+  def self.search_for(organisations, options)
+    organisation_ids = [organisations.id] if organisations.is_a?(Organisation)
+    organisation_ids ||= organisations.ids
+    rdvs = joins(:organisation).where(organisations: { id: organisation_ids })
     options.each do |key, value|
       next if value.blank?
 

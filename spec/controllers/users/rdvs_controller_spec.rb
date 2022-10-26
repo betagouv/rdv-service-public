@@ -4,20 +4,28 @@ RSpec.describe Users::RdvsController, type: :controller do
   render_views
 
   describe "POST create" do
-    subject do
-      post :create, params: {
-        organisation_id: organisation.id, lieu_id: lieu.id, departement: "12", city_code: "12100", where: "1 rue de la, ville 12345",
-        motif_id: motif.id, starts_at: starts_at, organisation_ids: [organisation.id], invitation_token: "44444",
-      }
-    end
+    subject { post :create, params: params }
 
-    let!(:organisation) { create(:organisation) }
+    let(:organisation) { create(:organisation) }
     let(:user) { create(:user) }
     let(:motif) { create(:motif, organisation: organisation) }
     let(:lieu) { create(:lieu, organisation: organisation) }
-    let(:starts_at) { DateTime.parse("2020-10-20 10h30") }
+    let(:starts_at) { Time.zone.parse("2020-10-20 10h30") }
     let(:mock_geo_search) { instance_double(Users::GeoSearch) }
     let(:token) { "12345" }
+    let(:params) do
+      {
+        organisation_id: organisation.id,
+        lieu_id: lieu&.id,
+        departement: "12",
+        city_code: "12100",
+        where: "1 rue de la, ville 12345",
+        motif_id: motif.id,
+        starts_at: starts_at,
+        organisation_ids: [organisation.id],
+        invitation_token: "44444",
+      }
+    end
 
     before do
       travel_to(Time.zone.local(2019, 7, 20))
@@ -44,6 +52,17 @@ RSpec.describe Users::RdvsController, type: :controller do
         expect(Rdv.count).to eq(1)
         expect(response).to redirect_to users_rdv_path(Rdv.last, invitation_token: token)
         expect(user.rdvs.last.created_by_user?).to be(true)
+      end
+
+      context "when the motif is by phone and lieu is missing" do
+        let(:motif) { create(:motif, :by_phone, organisation: organisation) }
+        let(:lieu) { nil }
+
+        it "creates the rdv" do
+          expect(Rdv.count).to eq(1)
+          expect(response).to redirect_to users_rdv_path(Rdv.last, invitation_token: token)
+          expect(user.rdvs.last.created_by_user?).to be(true)
+        end
       end
     end
 
@@ -81,6 +100,22 @@ RSpec.describe Users::RdvsController, type: :controller do
         expect(response).to redirect_to users_rdv_path(rdv, invitation_token: token)
       end
 
+      context "when the motif is by phone and lieu is missing" do
+        let(:rdv) { create(:rdv, motif: create(:motif, :by_phone), lieu: nil, starts_at: 5.hours.from_now) }
+
+        before { sign_in rdv.users.first }
+
+        it "calls update_and_notify function" do
+          expect_any_instance_of(Rdv).to receive(:update_and_notify).with(rdv.users.first, status: "excused").and_call_original
+          put :cancel, params: { id: rdv.id }
+        end
+
+        it "redirects to the rdv" do
+          put :cancel, params: { id: rdv.id }
+          expect(response).to redirect_to users_rdv_path(rdv, invitation_token: token)
+        end
+      end
+
       context "when rdv is not cancellable" do
         let(:rdv) { create(:rdv, starts_at: 3.hours.from_now) }
 
@@ -112,11 +147,11 @@ RSpec.describe Users::RdvsController, type: :controller do
   describe "GET #show" do
     let(:user) { create(:user) }
     let(:rdv) { create(:rdv, users: [user], motif: motif, starts_at: starts_at, created_by: "user") }
-    let(:starts_at) { DateTime.parse("2020-10-20 10h30") }
+    let(:starts_at) { Time.zone.parse("2020-10-20 10h30") }
     let(:motif) { build(:motif, reservable_online: true, rdvs_editable_by_user: true, rdvs_cancellable_by_user: true) }
 
     before do
-      travel_to("01/01/2019".to_datetime)
+      travel_to(Time.zone.parse("01/01/2019"))
       sign_in user
     end
 
@@ -130,8 +165,22 @@ RSpec.describe Users::RdvsController, type: :controller do
       expect(response.body).to match(/Annuler le RDV/)
     end
 
+    context "when the motif is by phone and lieu is missing" do
+      let(:rdv) { create(:rdv, users: [user], motif: create(:motif, :by_phone), lieu: nil, starts_at: starts_at, created_by: "user") }
+
+      it "shows the rdv" do
+        get :show, params: { id: rdv.id }
+
+        expect(response).to be_successful
+        expect(response.body).to match(/Votre RDV/)
+        expect(response.body).to match(/Le mardi 20 octobre 2020/)
+        expect(response.body).to match(/Déplacer le RDV/)
+        expect(response.body).to match(/Annuler le RDV/)
+      end
+    end
+
     context "when the rdv is past" do
-      let!(:starts_at) { DateTime.parse("2018-12-31 10h30") }
+      let!(:starts_at) { Time.zone.parse("2018-12-31 10h30") }
 
       it "does show links to edit and cancel" do
         get :show, params: { id: rdv.id }
@@ -226,8 +275,9 @@ RSpec.describe Users::RdvsController, type: :controller do
     subject { get :index }
 
     let!(:user) { create(:user) }
-    let!(:rdv1) { create(:rdv, users: [user], starts_at:  5.days.from_now) }
-    let!(:rdv2) { create(:rdv, users: [user], starts_at:  4.days.from_now) }
+    let!(:rdv1) { create(:rdv, users: [user], starts_at: 5.days.from_now) }
+    let!(:rdv2) { create(:rdv, users: [user], starts_at: 4.days.from_now) }
+    let!(:rdv3) { create(:rdv, motif: create(:motif, :by_phone), lieu: nil, users: [user], starts_at: 3.days.from_now) }
 
     context "when signed in" do
       before { sign_in user }
@@ -238,6 +288,7 @@ RSpec.describe Users::RdvsController, type: :controller do
         expect(response).to be_successful
         expect(response.body).to include(I18n.l(rdv1.starts_at, format: :human).to_s)
         expect(response.body).to include(I18n.l(rdv2.starts_at, format: :human).to_s)
+        expect(response.body).to include(I18n.l(rdv3.starts_at, format: :human).to_s)
       end
 
       context "when looking at rdvs on a different domain name" do
@@ -285,7 +336,7 @@ RSpec.describe Users::RdvsController, type: :controller do
     end
 
     let(:organisation) { create(:organisation) }
-    let(:now) { "01/01/2019 10:00".to_datetime }
+    let(:now) { Time.zone.parse("01/01/2019 10:00") }
     let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
     let!(:lieu) { create(:lieu, address: "10 rue de la Ferronerie 44100 Nantes", organisation: organisation) }
     let!(:motif) { create(:motif, organisation: organisation, max_booking_delay: 2.weeks.to_i) }
@@ -335,7 +386,7 @@ RSpec.describe Users::RdvsController, type: :controller do
 
     let(:organisation) { create(:organisation) }
     let(:starts_at) { 3.days.from_now }
-    let(:now) { "01/01/2019 10:00".to_datetime }
+    let(:now) { Time.zone.parse("01/01/2019 10:00") }
     let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
     let!(:lieu) { create(:lieu, address: "10 rue de la Ferronerie 44100 Nantes", organisation: organisation) }
     let!(:motif) { create(:motif, organisation: organisation) }
@@ -357,6 +408,14 @@ RSpec.describe Users::RdvsController, type: :controller do
 
       it { expect(response.body).to include("Modification du Rendez-vous") }
       it { expect(response.body).to include("Confirmer le nouveau créneau") }
+
+      context "when the motif is by phone and lieu is missing" do
+        let(:motif) { create(:motif, :by_phone, organisation: organisation) }
+        let(:lieu) { nil }
+
+        it { expect(response.body).to include("Modification du Rendez-vous") }
+        it { expect(response.body).to include("Confirmer le nouveau créneau") }
+      end
     end
 
     context "creneau isn't available" do
@@ -408,6 +467,19 @@ RSpec.describe Users::RdvsController, type: :controller do
         expect(flash[:success]).to eq("Votre RDV a bien été modifié")
         expect(rdv.reload.starts_at).to eq(starts_at)
         expect(rdv.reload.agent_ids).to eq([agent.id])
+      end
+
+      context "when the motif is by phone and lieu is missing" do
+        let(:motif) { create(:motif, :by_phone, organisation: organisation) }
+        let(:lieu) { nil }
+
+        it "respond success and update RDV" do
+          put :update, params: { id: rdv.id, starts_at: starts_at, agent_id: agent.id }
+          expect(response).to redirect_to(users_rdv_path(rdv, invitation_token: token))
+          expect(flash[:success]).to eq("Votre RDV a bien été modifié")
+          expect(rdv.reload.starts_at).to eq(starts_at)
+          expect(rdv.reload.agent_ids).to eq([agent.id])
+        end
       end
 
       context "when it cannot be updated" do
