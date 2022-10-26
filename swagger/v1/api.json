@@ -3,7 +3,7 @@
   "info": {
     "title": "API RDV Solidarités V1",
     "version": "v1",
-    "description": "# Paramètres généraux de l'API\n\nL'API de RDV-Solidarités vous permet de lire des données dans notre base depuis votre logiciel.\n\nToutes les fonctionnalités de RDV-Solidarités ne sont pas encore disponibles via l’API. Contactez-nous si vous avez besoin de fonctionnalités qui ne sont pas encore présentes.\n\n## Authentification\n\nCertains points de terminaison sont authentifiés. Pour savoir comment y accéder, merci de vous reférer à la documentation suivante: [authentification de l'API](https://rdv-solidarites.gitbook.io/guides-pour-rdv-solidarites/tech/api-interconnexions-entrantes/authentification-and-permissions).\n\n## Verbe HTTP\n\nOn utilise les verbes HTTP conventionnels pour manipuler les ressources:\n\n- Lecture: HTTP `GET`\n- Création: HTTP `POST`\n- Mise à jour: HTTP `PUT`\n\n## Versionnage\n\nL'API est versionnée. La version actuelle est 1.0 (référencée comme v1 dans les points de terminaison).\n\n## Routes\n\nLes points de terminaison de l'API sont accessible par une route de la forme : `https://<domain>/api/<version>/<endpoint>`.\n\nAvec :\n\n- `version` est la version de l'API\n- `endpoint` est le nom du point de terminaison\n\nPar exemple, on aura : `https://<domain>/api/v1/organizations`\n\n## Pagination des réponses par listes\n\nTous les points de terminaison qui retournent des listes sont paginés.\n\nLe paramètre (optionnel) `page` permet d'accéder à une page donnée. Le paramètre (optionnel) `per` permet d'indiquer combien d'éléments par page sont retournés. Par défaut, et sauf précision contraire dans la documentation d'un point de terminaison donné, on retrouve 20 éléments par page.\n\nDe manière générale, tout point de terminaison qui retourne une liste peut retourner une liste vide.\n\n## Erreurs\n\nL'API est susceptible de retourner les erreurs suivantes.\n\n| Code  | Nom                   | Description                            |\n| ----  | --------              | --------                               |\n| `400` | Bad Request           | La requête est invalide                |\n| `401` | Unauthorized          | L'API KEY est manquante ou non fournie |\n| `403` | Forbidden             | La limite autorisée est atteinte       |\n| `404` | Not Found             | La ressource est introuvable           |\n| `500` | Internal Server Error | Une erreur serveur produite            |\n\n## Ressources\n\n### Sérialisation\n\nLes ressources sont les éléments renvoyés par les points de terminaison. Elles sont sérialisées en JSON.\n\n### Champs DateTime\n\nLes champs de type DateTime sont formatés avec la norme ISO 8601.\n"
+    "description": "# Paramètres généraux de l'API\n\nL'API de RDV-Solidarités vous permet de lire des données dans notre base depuis votre logiciel.\n\nToutes les fonctionnalités de RDV-Solidarités ne sont pas encore disponibles via l’API. Contactez-nous si vous avez besoin de fonctionnalités qui ne sont pas encore présentes.\n\n## Authentification\n\nCertains points de terminaison sont authentifiés. Pour savoir comment y accéder, merci de vous reférer à la documentation suivante: [authentification de l'API](https://rdv-solidarites.gitbook.io/guides-pour-rdv-solidarites/tech/api-interconnexions-entrantes/authentification-and-permissions).\n\n## Verbe HTTP\n\nOn utilise les verbes HTTP conventionnels pour manipuler les ressources:\n\n- Lecture: HTTP `GET`\n- Création: HTTP `POST`\n- Mise à jour: HTTP `PUT`\n\n## Versionnage\n\nL'API est versionnée. La version actuelle est 1.0 (référencée comme v1 dans les points de terminaison).\n\n## Routes\n\nLes points de terminaison de l'API sont accessible par une route de la forme : `https://<domain>/api/<version>/<endpoint>`.\n\nAvec :\n\n- `version` est la version de l'API\n- `endpoint` est le nom du point de terminaison\n\nPar exemple, on aura : `https://<domain>/api/v1/organizations`\n\n## Pagination des réponses par listes\n\nTous les points de terminaison qui retournent des listes sont paginés.\n\nLe paramètre (optionnel) `page` permet d'accéder à une page donnée. Le paramètre (optionnel) `per` permet d'indiquer combien d'éléments par page sont retournés. Par défaut, et sauf précision contraire dans la documentation d'un point de terminaison donné, on retrouve 20 éléments par page.\n\nDe manière générale, tout point de terminaison qui retourne une liste peut retourner une liste vide.\n\n## Rate limiting\n\nL'utilisation de la V2 de l'API est limitée. Vous pouvez effectuer au maximum 20 appels par minutes. Si vous dépassez cette limite, une erreur 429 vous sera renvoyée et vous trouverez le temps que vous devez attendre avant de relancer une requête dans le header (`Retry-After`).\n\n## Erreurs\n\nL'API est susceptible de retourner les erreurs suivantes.\n\n| Code  | Nom                   | Description                            |\n| ----  | --------              | --------                               |\n| `400` | Bad Request           | La requête est invalide                |\n| `401` | Unauthorized          | L'API KEY est manquante ou non fournie |\n| `403` | Forbidden             | La limite autorisée est atteinte       |\n| `404` | Not Found             | La ressource est introuvable           |\n| `429` | Too Many Requests     | Trop de requêtes ont été effectuées    |\n| `500` | Internal Server Error | Une erreur serveur produite            |\n\n## Ressources\n\n### Sérialisation\n\nLes ressources sont les éléments renvoyés par les points de terminaison. Elles sont sérialisées en JSON.\n\n### Champs DateTime\n\nLes champs de type DateTime sont formatés avec la norme ISO 8601.\n"
   },
   "components": {
     "securitySchemes": {
@@ -626,8 +626,8 @@
                             {
                               "id": 89,
                               "email": "agent_1@lapin.fr",
-                              "first_name": "Évangéline",
-                              "last_name": "Bourgeois"
+                              "first_name": "Anastase",
+                              "last_name": "Dvnis"
                             }
                           ],
                           "cancelled_at": null,
@@ -636,7 +636,7 @@
                           "created_by": "agent",
                           "deleted_at": null,
                           "duration_in_min": 45,
-                          "ends_at": "2022-10-23 17:12:40 +0200",
+                          "ends_at": "2022-10-29 20:38:44 +0200",
                           "lieu": {
                             "id": 31,
                             "address": "1 rue de l'adresse 12345 Ville",
@@ -677,25 +677,25 @@
                                 "birth_name": null,
                                 "caisse_affiliation": "caf",
                                 "case_number": null,
-                                "created_at": "2022-10-20 16:27:40 +0200",
+                                "created_at": "2022-10-26 19:53:44 +0200",
                                 "email": "usager_1@lapin.fr",
                                 "family_situation": "divorced",
-                                "first_name": "Benjamin",
+                                "first_name": "Léopold",
                                 "invitation_accepted_at": null,
                                 "invitation_created_at": null,
-                                "last_name": "PAYET",
+                                "last_name": "LEFEVRE",
                                 "notify_by_email": true,
                                 "notify_by_sms": true,
                                 "number_of_children": 12,
-                                "phone_number": "06 22 50 36 89",
-                                "phone_number_formatted": "+33622503689",
+                                "phone_number": "06 27 43 23 70",
+                                "phone_number_formatted": "+33627432370",
                                 "responsible": null,
                                 "responsible_id": null,
                                 "user_profiles": null
                               }
                             }
                           ],
-                          "starts_at": "2022-10-23 16:27:40 +0200",
+                          "starts_at": "2022-10-29 19:53:44 +0200",
                           "status": "unknown",
                           "users": [
                             {
@@ -707,25 +707,25 @@
                               "birth_name": null,
                               "caisse_affiliation": "caf",
                               "case_number": null,
-                              "created_at": "2022-10-20 16:27:40 +0200",
+                              "created_at": "2022-10-26 19:53:44 +0200",
                               "email": "usager_1@lapin.fr",
                               "family_situation": "divorced",
-                              "first_name": "Benjamin",
+                              "first_name": "Léopold",
                               "invitation_accepted_at": null,
                               "invitation_created_at": null,
-                              "last_name": "PAYET",
+                              "last_name": "LEFEVRE",
                               "notify_by_email": true,
                               "notify_by_sms": true,
                               "number_of_children": 12,
-                              "phone_number": "06 22 50 36 89",
-                              "phone_number_formatted": "+33622503689",
+                              "phone_number": "06 27 43 23 70",
+                              "phone_number_formatted": "+33627432370",
                               "responsible": null,
                               "responsible_id": null,
                               "user_profiles": null
                             }
                           ],
                           "users_count": 1,
-                          "uuid": "75104d05-492e-48bc-b6d0-2167e8f6629c"
+                          "uuid": "767999c7-b270-481b-9d99-c402030aaf17"
                         },
                         {
                           "id": 16,
@@ -734,8 +734,8 @@
                             {
                               "id": 91,
                               "email": "agent_3@lapin.fr",
-                              "first_name": "Léon",
-                              "last_name": "Lejeune"
+                              "first_name": "Angilberte",
+                              "last_name": "Da Silva"
                             }
                           ],
                           "cancelled_at": null,
@@ -744,7 +744,7 @@
                           "created_by": "agent",
                           "deleted_at": null,
                           "duration_in_min": 45,
-                          "ends_at": "2022-10-23 17:12:40 +0200",
+                          "ends_at": "2022-10-29 20:38:44 +0200",
                           "lieu": {
                             "id": 33,
                             "address": "3 rue de l'adresse 12345 Ville",
@@ -785,25 +785,25 @@
                                 "birth_name": null,
                                 "caisse_affiliation": "caf",
                                 "case_number": null,
-                                "created_at": "2022-10-20 16:27:40 +0200",
+                                "created_at": "2022-10-26 19:53:44 +0200",
                                 "email": "usager_3@lapin.fr",
                                 "family_situation": "divorced",
-                                "first_name": "Stéphanie",
+                                "first_name": "Théodore",
                                 "invitation_accepted_at": null,
                                 "invitation_created_at": null,
-                                "last_name": "POULAIN",
+                                "last_name": "GUILLAUME",
                                 "notify_by_email": true,
                                 "notify_by_sms": true,
                                 "number_of_children": 12,
-                                "phone_number": "648041600",
-                                "phone_number_formatted": "+33648041600",
+                                "phone_number": "0648397603",
+                                "phone_number_formatted": "+33648397603",
                                 "responsible": null,
                                 "responsible_id": null,
                                 "user_profiles": null
                               }
                             }
                           ],
-                          "starts_at": "2022-10-23 16:27:40 +0200",
+                          "starts_at": "2022-10-29 19:53:44 +0200",
                           "status": "unknown",
                           "users": [
                             {
@@ -815,25 +815,25 @@
                               "birth_name": null,
                               "caisse_affiliation": "caf",
                               "case_number": null,
-                              "created_at": "2022-10-20 16:27:40 +0200",
+                              "created_at": "2022-10-26 19:53:44 +0200",
                               "email": "usager_3@lapin.fr",
                               "family_situation": "divorced",
-                              "first_name": "Stéphanie",
+                              "first_name": "Théodore",
                               "invitation_accepted_at": null,
                               "invitation_created_at": null,
-                              "last_name": "POULAIN",
+                              "last_name": "GUILLAUME",
                               "notify_by_email": true,
                               "notify_by_sms": true,
                               "number_of_children": 12,
-                              "phone_number": "648041600",
-                              "phone_number_formatted": "+33648041600",
+                              "phone_number": "0648397603",
+                              "phone_number_formatted": "+33648397603",
                               "responsible": null,
                               "responsible_id": null,
                               "user_profiles": null
                             }
                           ],
                           "users_count": 1,
-                          "uuid": "8097d6a6-064b-46c4-b170-fcc98351d777"
+                          "uuid": "af85ba1f-faed-49c9-bd2b-8b99262aaaa4"
                         }
                       ],
                       "meta": {
@@ -861,6 +861,25 @@
                     "value": {
                       "errors": [
                         "Vous devez vous connecter ou vous inscrire pour continuer."
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/errors_object"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Limite d'appels atteinte",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "errors": [
+                        "Limite d'appels API atteinte. Merci de patienter.\n"
                       ]
                     }
                   }

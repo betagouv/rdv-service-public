@@ -212,3 +212,6 @@ Style/TrailingCommaInArrayLiteral:
 
 Style/TrailingCommaInHashLiteral:
   EnforcedStyleForMultiline: consistent_comma
+
+RSpec/ScatteredSetup:
+  Enabled: false

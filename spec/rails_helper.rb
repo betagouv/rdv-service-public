@@ -92,5 +92,6 @@ RSpec.configure do |config|
   config.before(:suite) do
     DatabaseCleaner.strategy = :deletion
     DatabaseCleaner.clean_with(:truncation)
+    Rack::Attack.enabled = false
   end
 end

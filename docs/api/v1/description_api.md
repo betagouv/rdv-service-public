@@ -39,6 +39,10 @@ Le paramètre (optionnel) `page` permet d'accéder à une page donnée. Le param
 
 De manière générale, tout point de terminaison qui retourne une liste peut retourner une liste vide.
 
+## Rate limiting
+
+L'utilisation de la V2 de l'API est limitée. Vous pouvez effectuer au maximum 20 appels par minutes. Si vous dépassez cette limite, une erreur 429 vous sera renvoyée et vous trouverez le temps que vous devez attendre avant de relancer une requête dans le header (`Retry-After`).
+
 ## Erreurs
 
 L'API est susceptible de retourner les erreurs suivantes.
@@ -49,6 +53,7 @@ L'API est susceptible de retourner les erreurs suivantes.
 | `401` | Unauthorized          | L'API KEY est manquante ou non fournie |
 | `403` | Forbidden             | La limite autorisée est atteinte       |
 | `404` | Not Found             | La ressource est introuvable           |
+| `429` | Too Many Requests     | Trop de requêtes ont été effectuées    |
 | `500` | Internal Server Error | Une erreur serveur produite            |
 
 ## Ressources

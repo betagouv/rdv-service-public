@@ -49,6 +49,8 @@ describe "RDV authentified API", swagger_doc: "v1/api.json" do
           },
         }
         example.metadata[:response][:content] = content.deep_merge(example_spec)
+
+        Rack::Attack.enabled = false
       end
 
       response(200, "Appel API réussi") do
@@ -101,6 +103,26 @@ describe "RDV authentified API", swagger_doc: "v1/api.json" do
         let(:organisation_id) { organisation.id }
 
         schema "$ref" => "#/components/schemas/errors_object"
+
+        run_test!
+      end
+
+      response(429, "Limite d'appels atteinte") do
+        let(:access_basic_agent) { api_auth_headers_for_agent(basic_agent) }
+        let(:"access-token") { access_basic_agent["access-token"].to_s }
+        let(:uid) { access_basic_agent["uid"].to_s }
+        let(:client) { access_basic_agent["client"].to_s }
+        let(:organisation_id) { organisation.id }
+
+        schema "$ref" => "#/components/schemas/errors_object"
+
+        before do
+          Rack::Attack.enabled = true
+          Rack::Attack.reset!
+          20.times do
+            get api_v1_organisation_rdvs_path(organisation_id)
+          end
+        end
 
         run_test!
       end
