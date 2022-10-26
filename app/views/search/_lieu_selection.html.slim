@@ -36,3 +36,4 @@ section.bg-light.p-4
                     strong= l(next_availability.starts_at, format: :human)
                   .col-auto.align-self-center
                       i.fa.fa-chevron-right
+    = paginate context.lieux, theme: "twitter-bootstrap-4"

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class SearchContext
-  attr_reader :errors, :query, :departement, :address, :city_code, :street_ban_id, :latitude, :longitude,
+  attr_reader :errors, :query, :departement, :address, :city_code, :street_ban_id, :latitude, :longitude, :page,
               :motif_name_with_location_type
 
   def initialize(current_user, query = {})
@@ -22,6 +22,7 @@ class SearchContext
     @service_id = query[:service_id]
     @lieu_id = query[:lieu_id]
     @start_date = query[:date]
+    @page = query[:page] || 1
   end
 
   # *** Method that outputs the next step for the user to complete its rdv journey ***
@@ -67,7 +68,7 @@ class SearchContext
   end
 
   def unique_motifs_by_name_and_location_type
-    @unique_motifs_by_name_and_location_type ||= matching_motifs.uniq { [_1.name, _1.location_type] }
+    @unique_motifs_by_name_and_location_type ||= matching_motifs.includes([:service]).uniq { [_1.name, _1.location_type] }
   end
 
   def selected_motif
@@ -90,10 +91,11 @@ class SearchContext
 
   def lieux
     @lieux ||= \
-      Lieu
+      Kaminari.paginate_array(Lieu
         .with_open_slots_for_motifs(@matching_motifs)
         .includes(:organisation)
-        .sort_by { |lieu| lieu.distance(@latitude.to_f, @longitude.to_f) }
+        .sort_by { |lieu| lieu.distance(@latitude.to_f, @longitude.to_f) })
+        .page(page).per(5)
   end
 
   def next_availability_by_lieux
