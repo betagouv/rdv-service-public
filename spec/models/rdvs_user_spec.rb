@@ -18,4 +18,29 @@ describe RdvsUser, type: :model do
       end
     end
   end
+
+  describe "Change in Rdvs_Users update rdv.users_count" do
+    let(:agent) { create :agent }
+    let!(:user1) { create(:user) }
+    let!(:user2) { create(:user) }
+    let!(:user3) { create(:user) }
+    let(:rdv) { create :rdv, :collectif, starts_at: Time.zone.tomorrow, agents: [agent], users: [user1, user2, user3] }
+
+    it "correctly add in users_count" do
+      expect(rdv.users_count).to eq(3)
+    end
+
+    it "correctly remove in users_count" do
+      rdv.rdvs_users.last.destroy
+      expect(rdv.reload.users_count).to eq(2)
+    end
+
+    it "dont count canceled" do
+      new_rdvs_user = create(:rdvs_user, rdv: rdv)
+      new_rdvs_user.status = "excused"
+      new_rdvs_user.save
+      expect(rdv.users.count).to eq(4)
+      expect(rdv.users_count).to eq(3)
+    end
+  end
 end
