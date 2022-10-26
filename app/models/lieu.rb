@@ -40,16 +40,15 @@ class Lieu < ApplicationRecord
   }
 
   # TODO: remove this method in favor of CreneauBuilderService usage
-  # CreneauBuilderService was replace by SlotBuilder, with lieu given.
-  # Perhaps need to move this to an other function that allow to list lieux from
-  # given parameters
   scope :with_open_slots_for_motifs, lambda { |motifs|
-    enabled
-      .where(id: PlageOuverture.where.not("recurrence IS ? AND first_day < ?", nil, Time.zone.today)
-      .joins(:motifs)
-      .where(motifs: { id: motifs.pluck(:id) })
-      .map(&:lieu_id)
-      .uniq + Rdv.select(:lieu_id).collectif.with_remaining_seats.future.where(motif_id: motifs.pluck(:id)).uniq.map(&:lieu_id))
+    enabled.where(
+      id: PlageOuverture
+        .where.not("recurrence IS ? AND first_day < ?", nil, Time.zone.today)
+        .joins(:motifs)
+        .where(motifs: { id: motifs.pluck(:id) })
+        .map(&:lieu_id)
+        .uniq
+    )
   }
 
   scope :ordered_by_name, -> { order(Arel.sql("unaccent(LOWER(name))")) }

@@ -175,39 +175,4 @@ describe SearchContext, type: :service do
       end
     end
   end
-
-  describe "#filter_motifs" do
-    it "returns empty without motifs" do
-      search_context = described_class.new(nil)
-      expect(search_context.filter_motifs([])).to be_empty
-    end
-
-    it "returns given motif without specific params" do
-      search_context = described_class.new(nil)
-      motif = create(:motif)
-      expect(search_context.filter_motifs(Motif.where(id: motif.id))).to eq([motif])
-    end
-
-    it "returns collective motif" do
-      search_context = described_class.new(nil)
-      motif = create(:motif, collectif: true)
-      expect(search_context.filter_motifs(Motif.where(id: motif.id))).to eq([motif])
-    end
-
-    it "returns collective motif with lieu_id" do
-      lieu = create(:lieu)
-      search_context = described_class.new(nil, lieu_id: lieu.id)
-      motif = create(:motif, collectif: true)
-      create(:rdv, motif: motif, lieu: lieu)
-      expect(search_context.filter_motifs(Motif.where(id: motif.id))).to eq([motif])
-    end
-
-    it "returns individual motif with lieu_id" do
-      lieu = create(:lieu)
-      search_context = described_class.new(nil, lieu_id: lieu.id)
-      motif = create(:motif, collectif: false)
-      create(:plage_ouverture, motifs: [motif], lieu: lieu)
-      expect(search_context.filter_motifs(Motif.where(id: motif.id))).to eq([motif])
-    end
-  end
 end

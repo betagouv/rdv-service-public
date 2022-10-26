@@ -66,6 +66,7 @@ class Motif < ApplicationRecord
   validate :booking_delay_validation
   validate :not_associated_with_secretariat
   validates :color, css_hex_color: true
+  validate :not_reservable_online_if_collectif
   validate :not_at_home_if_collectif
 
   # Scopes
@@ -190,6 +191,12 @@ class Motif < ApplicationRecord
     return if service_id.nil?
 
     errors.add(:service_id, "ne peut être le secrétariat") if service.secretariat?
+  end
+
+  def not_reservable_online_if_collectif
+    return unless collectif? && reservable_online
+
+    errors.add(:base, :not_reservable_online_if_collectif)
   end
 
   def not_at_home_if_collectif

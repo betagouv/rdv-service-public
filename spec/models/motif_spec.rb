@@ -167,9 +167,10 @@ describe Motif, type: :model do
   describe "motif de rdv collectif" do
     subject(:motif) { build(:motif, collectif: true, reservable_online: true, location_type: :home) }
 
-    it "validates that a rdv collectif can't be at the user's home" do
+    it "validates that a rdv collectif can't be reserved online and can't be at the user's home" do
       expect(motif).not_to be_valid
       expect(subject.errors.full_messages).to eq [
+        "La réservation en ligne n'est pas possible pour les RDV collectifs.",
         "Les RDV collectifs doivent avoir lieu sur place.",
       ]
     end
