@@ -52,6 +52,8 @@ describe "Organisations API", swagger_doc: "v1/api.json" do
         let(:page) { 2 }
         let(:per) { 2 }
 
+        schema "$ref" => "#/components/schemas/organisations"
+
         run_test!
 
         it { expect(parsed_response_body[:meta]).to match(current_page: 2, next_page: 3, prev_page: 1, total_count: 5, total_pages: 3) }

@@ -45,6 +45,8 @@ describe "Invitations API", swagger_doc: "v1/api.json" do
         let(:uid) { auth_headers["uid"].to_s }
         let(:client) { auth_headers["client"].to_s }
 
+        schema "$ref" => "#/components/schemas/user_with_root"
+
         run_test!
 
         it { expect(parsed_response_body[:user][:id]).to eq(user.id) }
@@ -73,9 +75,9 @@ describe "Invitations API", swagger_doc: "v1/api.json" do
         let(:uid) { auth_headers["uid"].to_s }
         let(:client) { auth_headers["client"].to_s }
 
-        run_test!
+        schema "$ref" => "#/components/schemas/error_not_found"
 
-        it { expect(parsed_response_body).to match(not_found: "user") }
+        run_test!
       end
     end
   end
