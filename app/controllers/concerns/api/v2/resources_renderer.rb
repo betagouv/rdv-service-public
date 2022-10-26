@@ -3,6 +3,9 @@
 module Api::V2::ResourcesRenderer
   extend ActiveSupport::Concern
 
+  DEFAULT_PAGINATE_PER = 25
+  MAX_PAGINATE_PER = 50
+
   included do
     after_action :set_pagination_response_headers, if: -> { @pagination.present? }
   end
@@ -16,7 +19,7 @@ module Api::V2::ResourcesRenderer
   end
 
   def render_collection(objects, blueprint_klass: nil)
-    objects = objects.page(page).per(per)
+    objects = objects.page(page).per(per).max_paginates_per(MAX_PAGINATE_PER)
 
     @pagination = {
       "X-RDV-Solidarites-Current-Page" => objects.current_page,
@@ -37,7 +40,7 @@ module Api::V2::ResourcesRenderer
   end
 
   def per
-    @per ||= params[:per]&.to_i || 100
+    @per ||= params[:per]&.to_i || DEFAULT_PAGINATE_PER
   end
 
   def set_pagination_response_headers
