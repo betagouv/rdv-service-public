@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_10_06_081447) do
+ActiveRecord::Schema.define(version: 2022_10_20_152222) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -53,6 +53,8 @@ ActiveRecord::Schema.define(version: 2022_10_06_081447) do
     "rsa_cer_signature",
     "rsa_insertion_offer",
     "rsa_follow_up",
+    "rsa_accompagnement_social",
+    "rsa_accompagnement_sociopro",
   ], force: :cascade
 
   create_enum :rdv_status, [
@@ -178,6 +180,7 @@ ActiveRecord::Schema.define(version: 2022_10_06_081447) do
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "allow_to_manage_access_rights", default: false, null: false
     t.boolean "allow_to_invite_agents", default: false, null: false
+    t.boolean "allow_to_download_metrics", default: false, null: false
     t.index ["agent_id"], name: "index_agent_territorial_access_rights_on_agent_id"
     t.index ["territory_id"], name: "index_agent_territorial_access_rights_on_territory_id"
   end
@@ -391,7 +394,7 @@ ActiveRecord::Schema.define(version: 2022_10_06_081447) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "recurrence"
-    t.bigint "lieu_id", null: false
+    t.bigint "lieu_id"
     t.boolean "expired_cached", default: false
     t.datetime "recurrence_ends_at"
     t.index "tsrange((first_day)::timestamp without time zone, recurrence_ends_at, '[]'::text)", name: "index_plage_ouvertures_on_tsrange_first_day_recurrence_ends_at", using: :gist

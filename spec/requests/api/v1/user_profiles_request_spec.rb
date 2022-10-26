@@ -20,10 +20,9 @@ describe "api/v1/user_profiles requests", type: :request do
         )
         expect(response.status).to eq(200)
         expect(UserProfile.count).to eq(count_before + 1)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["user_profile"]).to be_present
-        expect(response_parsed["user_profile"]["user"]["id"]).to eq(user.id)
-        expect(response_parsed["user_profile"]["organisation"]["id"]).to eq(organisation.id)
+        expect(parsed_response_body["user_profile"]).to be_present
+        expect(parsed_response_body["user_profile"]["user"]["id"]).to eq(user.id)
+        expect(parsed_response_body["user_profile"]["organisation"]["id"]).to eq(organisation.id)
         expect(user.reload.organisations).to include(organisation)
       end
     end
@@ -43,12 +42,11 @@ describe "api/v1/user_profiles requests", type: :request do
         )
         expect(response.status).to eq(200)
         expect(UserProfile.count).to eq(count_before + 1)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["user_profile"]).to be_present
-        expect(response_parsed["user_profile"]["user"]["id"]).to eq(user.id)
-        expect(response_parsed["user_profile"]["organisation"]["id"]).to eq(organisation.id)
-        expect(response_parsed["user_profile"]["logement"]).to eq("heberge")
-        expect(response_parsed["user_profile"]["notes"]).to eq("Très pressé, vite vite")
+        expect(parsed_response_body["user_profile"]).to be_present
+        expect(parsed_response_body["user_profile"]["user"]["id"]).to eq(user.id)
+        expect(parsed_response_body["user_profile"]["organisation"]["id"]).to eq(organisation.id)
+        expect(parsed_response_body["user_profile"]["logement"]).to eq("heberge")
+        expect(parsed_response_body["user_profile"]["notes"]).to eq("Très pressé, vite vite")
         expect(user.reload.organisations).to include(organisation)
       end
     end
@@ -63,8 +61,7 @@ describe "api/v1/user_profiles requests", type: :request do
         )
         expect(response.status).to eq(403)
         expect(UserProfile.count).to eq(count_before)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["errors"]).to be_present
+        expect(parsed_response_body["errors"]).to be_present
       end
     end
 
@@ -78,8 +75,7 @@ describe "api/v1/user_profiles requests", type: :request do
         )
         expect(response.status).to eq(422)
         expect(UserProfile.count).to eq(count_before)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["errors"]).to be_present
+        expect(parsed_response_body["errors"]).to be_present
       end
     end
 
@@ -99,8 +95,7 @@ describe "api/v1/user_profiles requests", type: :request do
         )
         expect(response.status).to eq(403)
         expect(UserProfile.count).to eq(count_before)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["errors"]).to be_present
+        expect(parsed_response_body["errors"]).to be_present
       end
     end
 
@@ -119,8 +114,7 @@ describe "api/v1/user_profiles requests", type: :request do
         )
         expect(response.status).to eq(422)
         expect(UserProfile.count).to eq(count_before)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["errors"]).to be_present
+        expect(parsed_response_body["errors"]).to be_present
       end
     end
   end

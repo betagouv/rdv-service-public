@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Api::V1::OrganisationsController < Api::V1::BaseController
+class Api::V1::OrganisationsController < Api::V1::AgentAuthBaseController
   def index
     organisations = policy_scope(Organisation)
     organisations = organisations.where(id: organisations_relevant_to_sector.pluck(:id)) if geo_params?

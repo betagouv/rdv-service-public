@@ -6,9 +6,10 @@ section.bg-light.p-4
           h2.py-1.my-1
             i.fa.fa-info-circle>
             = motif_name_with_location_type(context.selected_motif)
-            .card-subtitle.my-2.
-              i.fa.fa-map-marker-alt>
-              = context.lieu.address
+            - if context.lieu.present?
+              .card-subtitle.my-2.
+                i.fa.fa-map-marker-alt>
+                = context.lieu.address
 
     - else
       .card.card-hoverable
@@ -21,15 +22,16 @@ section.bg-light.p-4
                 h2.pb-1.mb-1
                   = motif_name_with_location_type(context.selected_motif)
                 = context.selected_motif.service.name
-      .card.card-hoverable
-        .card-body
-          = link_to path_to_lieu_selection(params), class: "d-block stretched-link" do
-            .row
-              .col-auto.align-self-center
-                i.fa.fa-chevron-left
-              .col
-                h2.pb-1.mb-1.card-title= context.lieu.name
-                .card-subtitle= context.lieu.address
+      - if context.lieu.present?
+        .card.card-hoverable
+          .card-body
+            = link_to path_to_lieu_selection(params), class: "d-block stretched-link" do
+              .row
+                .col-auto.align-self-center
+                  i.fa.fa-chevron-left
+                .col
+                  h2.pb-1.mb-1.card-title= context.lieu.name
+                  .card-subtitle= context.lieu.address
     h3.font-weight-bold = "Sélectionnez un créneau :"
     .card.mb-3
       .card-body

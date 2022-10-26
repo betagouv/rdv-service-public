@@ -5,26 +5,46 @@ class Admin::RdvsController < AgentAuthController
 
   respond_to :html, :json
 
-  before_action :set_rdv, :set_optional_agent, except: %i[index create export]
+  before_action :set_rdv, :set_optional_agent, except: %i[index create export rdvs_users_export]
 
   # TODO: remove when this is fixed: https://sentry.io/organizations/rdv-solidarites/issues/3268196907
-  before_action :log_params_to_sentry, only: %i[index export]
+  before_action :log_params_to_sentry, only: %i[index export rdvs_users_export]
 
   def index
-    @rdvs = policy_scope(Rdv).search_for(current_agent, current_organisation, parsed_params)
+    set_scoped_organisations
+    @rdvs = policy_scope(Rdv).search_for(@scoped_organisations, parsed_params)
+      .includes([:rdvs_users, :agents_rdvs, :organisation, :lieu, :motif, { agents: :service, users: %i[responsible organisations] }])
     @breadcrumb_page = params[:breadcrumb_page]
     @form = Admin::RdvSearchForm.new(parsed_params)
+    @lieux = Lieu.joins(:organisation).where(organisations: { id: @scoped_organisations.ids }).enabled.order(:name)
+    @motifs = Motif.joins(:organisation).where(organisations: { id: @scoped_organisations.ids })
+    @rdvs_users_count = RdvsUser.where(rdv_id: @rdvs.ids).count
     @rdvs = @rdvs.order(starts_at: :asc).page(params[:page]).per(10)
   end
 
   def export
     skip_authorization # RDV will be scoped in SendExportJob
+    set_scoped_organisations
+
     Agents::ExportMailer.rdv_export(
       current_agent,
-      current_organisation,
+      @scoped_organisations.ids,
       parsed_params
     ).deliver_later
     flash[:notice] = I18n.t("layouts.flash.confirm_export_send_when_done", agent_email: current_agent.email)
+    redirect_to admin_organisation_rdvs_path(organisation_id: current_organisation.id)
+  end
+
+  def rdvs_users_export
+    authorize(current_agent)
+    set_scoped_organisations
+
+    Agents::ExportMailer.rdvs_users_export(
+      current_agent,
+      @scoped_organisations.ids,
+      parsed_params
+    ).deliver_later
+    flash[:notice] = I18n.t("layouts.flash.confirm_rdvs_users_export_send_when_done", agent_email: current_agent.email)
     redirect_to admin_organisation_rdvs_path(organisation_id: current_organisation.id)
   end
 
@@ -86,6 +106,19 @@ class Admin::RdvsController < AgentAuthController
 
   private
 
+  def set_scoped_organisations
+    @scoped_organisations = if params[:scoped_organisation_id].blank?
+                              # l'agent n'a pas accès au filtre d'organisations ou a rénitialisé la page
+                              Organisation.where(id: current_organisation.id)
+                            elsif params[:scoped_organisation_id] == "0"
+                              # l'agent a sélectionné 'Toutes'
+                              current_agent.organisations
+                            else
+                              # l'agent a sélectionné une organisation spécifique
+                              Organisation.where(id: parsed_params["scoped_organisation_id"])
+                            end
+  end
+
   def set_optional_agent
     @agent = policy_scope(Agent).find(params[:agent_id]) if params[:agent_id].present?
   end
@@ -118,7 +151,7 @@ class Admin::RdvsController < AgentAuthController
   end
 
   def parsed_params
-    params.permit(:organisation_id, :agent_id, :user_id, :lieu_id, :motif_id, :status, :start, :end,
+    params.permit(:organisation_id, :agent_id, :user_id, :lieu_id, :motif_id, :status, :start, :end, :scoped_organisation_id,
                   lieu_attributes: %i[name address latitude longitude]).to_hash.to_h do |param_name, param_value|
       case param_name
       when "start", "end"

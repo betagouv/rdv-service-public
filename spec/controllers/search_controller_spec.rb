@@ -37,7 +37,7 @@ RSpec.describe SearchController, type: :controller do
     instance_double(
       Users::CreneauxSearch,
       creneaux: [],
-      next_availability: build(:creneau, starts_at: DateTime.parse("2019-08-05 08h00"))
+      next_availability: build(:creneau, starts_at: Time.zone.parse("2019-08-05 08h00"))
     )
   end
   let!(:geo_search) { instance_double(Users::GeoSearch, available_motifs: Motif.where(id: [motif.id])) }
@@ -212,7 +212,7 @@ RSpec.describe SearchController, type: :controller do
         let!(:creneaux_search) do
           instance_double(
             Users::CreneauxSearch,
-            creneaux: [build(:creneau, starts_at: DateTime.parse("2019-07-22 08h00"))]
+            creneaux: [build(:creneau, starts_at: Time.zone.parse("2019-07-22 08h00"))]
           )
         end
 
@@ -229,7 +229,7 @@ RSpec.describe SearchController, type: :controller do
           instance_double(
             Users::CreneauxSearch,
             creneaux: [],
-            next_availability: build(:creneau, starts_at: DateTime.parse("2019-08-05 08h00"))
+            next_availability: build(:creneau, starts_at: Time.zone.parse("2019-08-05 08h00"))
           )
         end
 

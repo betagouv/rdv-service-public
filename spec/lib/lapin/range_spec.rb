@@ -5,13 +5,13 @@ describe Lapin::Range do
     subject { described_class.ensure_date_range_with_time(date_range) }
 
     let!(:date_range) { lower_bound..higher_bound }
-    let!(:now) { "2021-12-10 10:00".to_time }
+    let!(:now) { Time.zone.parse("2021-12-10 10:00") }
 
     before { travel_to(now) }
 
     context "when given datetime bounds" do
-      let!(:lower_bound) { "2021-12-20 11:00".to_datetime }
-      let!(:higher_bound) { "2021-12-21 18:00".to_datetime }
+      let!(:lower_bound) { Time.zone.parse("2021-12-20 11:00") }
+      let!(:higher_bound) { Time.zone.parse("2021-12-21 18:00") }
 
       it "returns range with same datetime bounds" do
         expect(subject).to eq(date_range)
@@ -19,8 +19,8 @@ describe Lapin::Range do
     end
 
     context "when given time bounds" do
-      let!(:lower_bound) { "2021-12-20 11:00".to_time }
-      let!(:higher_bound) { "2021-12-21 18:00".to_time }
+      let!(:lower_bound) { Time.zone.parse("2021-12-20 11:00") }
+      let!(:higher_bound) { Time.zone.parse("2021-12-21 18:00") }
 
       it "returns range with same time bounds" do
         expect(subject).to eq(date_range)

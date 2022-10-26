@@ -1,38 +1,17 @@
 # frozen_string_literal: true
 
 class Api::V1::BaseController < ActionController::Base
-  skip_before_action :verify_authenticity_token
-  include Pundit
-  include DeviseTokenAuth::Concerns::SetUserByToken
   respond_to :json
-  before_action :authenticate_api_v1_agent_with_token_auth!
 
-  def pundit_user
-    AgentOrganisationContext.new(current_agent, current_organisation)
+  protected
+
+  def check_parameters_presence(*parameters)
+    missing_parameters = parameters.select { |param| params[param].blank? }
+    render_error :bad_request, missing: missing_parameters.to_sentence if missing_parameters.any?
   end
 
-  def current_organisation
-    @current_organisation ||=
-      if params[:organisation_id].blank?
-        nil
-      else
-        current_agent.organisations.find_by(id: params[:organisation_id])
-      end
-  end
-
-  def policy_scope(clasz)
-    super([:agent, clasz])
-  end
-
-  def authorize(record, *args)
-    super([:agent, record], *args)
-  end
-
-  def params
-    params = super
-    @page ||= params.delete(:page)&.to_i || 1
-    @per ||= params.delete(:per)&.to_i || 100
-    params
+  def render_error(status, error = { error: :unknown })
+    render json: error, status: status
   end
 
   def render_record(record, **options)
@@ -42,8 +21,8 @@ class Api::V1::BaseController < ActionController::Base
     render json: blueprint_klass.render(record, root: root, **options)
   end
 
-  def render_collection(objects)
-    objects = objects.page(@page).per(@per)
+  def render_collection(objects, root: nil, blueprint_klass: nil)
+    objects = objects.page(page).per(per)
     meta = {
       current_page: objects.current_page,
       next_page: objects.next_page,
@@ -53,48 +32,16 @@ class Api::V1::BaseController < ActionController::Base
     }
 
     objects_klass = objects.klass
-    blueprint_klass = "#{objects_klass.name}Blueprint".constantize
-    root = objects_klass.model_name.collection
+    blueprint_klass = "#{objects_klass.name}Blueprint".constantize if blueprint_klass.blank?
+    root = objects_klass.model_name.collection if root.blank?
     render json: blueprint_klass.render(objects, root: root, meta: meta)
   end
 
-  # Rescuable exceptions
-
-  rescue_from Pundit::NotAuthorizedError, with: :not_authorized
-  rescue_from ActionController::ParameterMissing, with: :parameter_missing
-  rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
-  rescue_from ActiveRecord::RecordInvalid, with: :record_invalid
-
-  def not_authorized(exception)
-    policy_name = exception.policy.class.to_s.underscore
-    render(
-      status: :forbidden,
-      json: {
-        errors: [{ base: :forbidden }],
-        error_messages: [t("#{policy_name}.#{exception.query}", scope: "pundit", default: :default)],
-      }
-    )
+  def page
+    @page ||= params[:page]&.to_i || 1
   end
 
-  def parameter_missing(exception)
-    render(
-      status: :unprocessable_entity,
-      json: { success: false, errors: [exception.to_s] }
-    )
-  end
-
-  def record_not_found(_)
-    head :not_found
-  end
-
-  def record_invalid(exception)
-    render(
-      status: :unprocessable_entity,
-      json: {
-        success: false,
-        errors: exception.record.errors.details,
-        error_messages: exception.record.errors.map { "#{_1.attribute} #{_1.message}" },
-      }
-    )
+  def per
+    @per ||= params[:per]&.to_i || 100
   end
 end

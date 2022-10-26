@@ -64,6 +64,7 @@ Metrics/MethodLength:
 Rails/ApplicationController:
   Exclude:
     - 'app/controllers/api/v1/base_controller.rb'
+    - 'app/controllers/api/v1/agent_auth_base_controller.rb'
 
 Rails/CreateTableWithTimestamps:
   Exclude:
@@ -143,6 +144,10 @@ RSpec/MultipleDescribes:
   Exclude:
     - 'spec/policies/agent/*_policy_spec.rb'
 
+RSpec/VariableName:
+  Exclude:
+    - "spec/requests/api/v1/**/*"
+
 RSpec/MultipleExpectations:
   Enabled: false
 
@@ -160,6 +165,10 @@ RSpec/DescribeClass:
     - "spec/features/**/*"
     - "spec/requests/**/*"
     - "spec/sms/**/*"
+
+RSpec/RepeatedExample:
+  Exclude:
+    - "spec/requests/api/**/*"
 
 Style/AsciiComments:
   Enabled: false
@@ -189,6 +198,9 @@ Style/OpenStructUse:
 
 Style/HashSyntax:
   Enabled: false
+
+Style/DateTime:
+  Enabled: true
 
 Naming/BlockForwarding:
   Enabled: false

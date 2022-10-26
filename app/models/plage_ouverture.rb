@@ -9,6 +9,8 @@ class PlageOuverture < ApplicationRecord
   include IcalHelpers::Rrule
   include Payloads::PlageOuverture
   include Expiration
+  include EnsuresRealisticDate
+
   include TextSearch
   def self.search_against
     {
@@ -23,7 +25,7 @@ class PlageOuverture < ApplicationRecord
   # Relations
   belongs_to :organisation
   belongs_to :agent
-  belongs_to :lieu
+  belongs_to :lieu, optional: true
   has_and_belongs_to_many :motifs, -> { distinct }
 
   # Through relations
@@ -31,6 +33,7 @@ class PlageOuverture < ApplicationRecord
 
   # Validations
   validate :end_after_start
+  validates :lieu, presence: true, if: -> { requires_lieu? }
   validate :lieu_is_enabled
   validates :motifs, :title, presence: true
   validate :warn_overlapping_plage_ouvertures
@@ -52,6 +55,9 @@ class PlageOuverture < ApplicationRecord
     end
   }
   scope :reservable_online, -> { joins(:motifs).where(motifs: { reservable_online: true }) }
+
+  # Delegations
+  delegate :name, :address, :enabled?, to: :lieu, prefix: true, allow_nil: true
 
   ## -
 
@@ -127,7 +133,9 @@ class PlageOuverture < ApplicationRecord
   end
 
   def lieu_is_enabled
-    errors.add(:lieu, :must_be_enabled) unless lieu&.enabled?
+    return if lieu.blank? || lieu.enabled?
+
+    errors.add(:lieu, :must_be_enabled)
   end
 
   def warn_overlapping_plage_ouvertures
@@ -146,5 +154,9 @@ class PlageOuverture < ApplicationRecord
     return unless overflow_motifs_duration?
 
     add_benign_error("Certains motifs ont une durée supérieure à la plage d'ouverture prévue")
+  end
+
+  def requires_lieu?
+    motifs.any?(&:requires_lieu?)
   end
 end

@@ -18,7 +18,6 @@ describe "using netsize to send an SMS" do
     valid_request = lambda do |req|
       body = URI.decode_www_form(req.body).to_h
       expected_body = {
-        "campaignName" => "dpt-#{organisation.departement_number} org-#{organisation.id} rdv_sms",
         "destinationAddress" => "+33601020304",
         "maxConcatenatedMessages" => "10",
         "originatingAddress" => "RdvSoli",

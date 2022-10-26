@@ -22,12 +22,13 @@ class Users::RdvsController < UserAuthController
 
   def create
     motif = Motif.find(rdv_params[:motif_id])
+    lieu = new_rdv_extra_params[:lieu_id].present? ? Lieu.find(new_rdv_extra_params[:lieu_id]) : nil
     ActiveRecord::Base.transaction do
       @creneau = Users::CreneauSearch.creneau_for(
         user: current_user,
-        starts_at: DateTime.parse(rdv_params[:starts_at]),
+        starts_at: Time.zone.parse(rdv_params[:starts_at]),
         motif: motif,
-        lieu: Lieu.find(new_rdv_extra_params[:lieu_id]),
+        lieu: lieu,
         geo_search: @geo_search
       )
       if @creneau.present?
@@ -98,7 +99,7 @@ class Users::RdvsController < UserAuthController
       user: current_user,
       starts_at: @starts_at,
       motif: @rdv.motif,
-      lieu: Lieu.find(@lieu.id)
+      lieu: @lieu
     )
   end
 
@@ -137,7 +138,7 @@ class Users::RdvsController < UserAuthController
       starts_at: creneau.starts_at,
       organisation: creneau.motif.organisation,
       motif: creneau.motif,
-      lieu_id: creneau.lieu.id,
+      lieu_id: creneau.lieu&.id,
       users: [user_for_rdv],
       created_by: :user
     )

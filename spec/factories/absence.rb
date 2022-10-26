@@ -13,10 +13,6 @@ FactoryBot.define do
     end_time { Tod::TimeOfDay.new(15, 30) }
     no_recurrence
 
-    trait :past do
-      first_day { Date.new(2019, 7, 4) }
-    end
-
     trait :no_recurrence do
       recurrence { nil }
     end

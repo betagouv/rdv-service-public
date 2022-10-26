@@ -11,9 +11,10 @@
   div.row-result
     span.title Lieu :
     span.float-right
-      = plage_ouverture.lieu.name
-      = tag.span("Fermé", class: "badge badge-danger") unless plage_ouverture.lieu.enabled?
-      = " (#{plage_ouverture.lieu.address})"
+      -if plage_ouverture.lieu.present?
+        = plage_ouverture.lieu_name
+        = tag.span("Fermé", class: "badge badge-danger") unless plage_ouverture.lieu_enabled?
+        = " (#{plage_ouverture.lieu_address})"
     .clear
   div.row-result
     span.title Motifs :

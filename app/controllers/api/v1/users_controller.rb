@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Api::V1::UsersController < Api::V1::BaseController
+class Api::V1::UsersController < Api::V1::AgentAuthBaseController
   before_action :retrieve_user, only: %i[show update invite]
 
   def index
