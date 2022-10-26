@@ -743,6 +743,5 @@ describe Rdv, type: :model do
         expect(rdv.status).to eq(status)
       end
     end
-
   end
 end
