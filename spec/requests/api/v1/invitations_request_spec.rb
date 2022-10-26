@@ -4,7 +4,7 @@ require "swagger_helper"
 
 describe "Invitations API", swagger_doc: "v1/api.json" do
   path "/api/v1/invitations/{invitation_token}" do
-    get "Récupérer un·e unsager·ère" do
+    get "Récupérer un·e usager·ère" do
       tags "Invitation", "User"
       produces "application/json"
       operationId "getUserByInvitationToken"
