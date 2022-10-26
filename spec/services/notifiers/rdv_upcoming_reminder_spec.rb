@@ -7,7 +7,6 @@ describe Notifiers::RdvUpcomingReminder, type: :service do
   let(:rdv) { create(:rdv, starts_at: 2.days.from_now) }
   let(:rdv_user) { create(:rdvs_user, user: user1, rdv: rdv) }
   let(:rdvs_users) { RdvsUser.where(id: rdv_user.id) }
-  let(:token) { "123456" }
 
   before do
     stub_netsize_ok
@@ -15,17 +14,22 @@ describe Notifiers::RdvUpcomingReminder, type: :service do
     allow(Users::RdvMailer).to receive(:with).and_call_original
     allow(Users::RdvSms).to receive(:rdv_upcoming_reminder).and_call_original
     allow(rdv).to receive(:rdvs_users).and_return(rdvs_users)
-    allow(rdvs_users).to receive(:where).and_return([rdv_user])
-    allow(rdv_user).to receive(:new_raw_invitation_token).and_return(token)
   end
 
   it "sends an sms and an email" do
-    expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv, user: user1, token: token })
-    expect(Users::RdvSms).to receive(:rdv_upcoming_reminder).with(rdv, user1, token)
+    expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv, user: user1, token: /^[A-Z0-9]{8}$/ })
+    expect(Users::RdvSms).to receive(:rdv_upcoming_reminder).with(rdv, user1, /^[A-Z0-9]{8}$/)
+    subject
+  end
+
+  it "doesnt send email if user participation is excused" do
+    rdv_user.update(status: "excused")
+    expect(Users::RdvMailer).not_to receive(:with).with({ rdv: rdv, user: user1, token: /^[A-Z0-9]{8}$/ })
+    expect(Users::RdvSms).not_to receive(:rdv_upcoming_reminder).with(rdv, user1, /^[A-Z0-9]{8}$/)
     subject
   end
 
   it "outputs the tokens" do
-    expect(subject).to eq({ user1.id => token })
+    expect(subject).to match(user1.id => /^[A-Z0-9]{8}$/)
   end
 end

@@ -65,11 +65,18 @@ class Admin::RdvsController < AgentAuthController
   def update
     authorize(@rdv)
     @rdv_form = Admin::EditRdvForm.new(@rdv, pundit_user)
-    success = @rdv_form.update(**rdv_params.to_h.symbolize_keys)
+    @success = @rdv_form.update(**rdv_params.to_h.symbolize_keys)
     respond_to do |format|
-      format.js
+      format.js do
+        if @success
+          flash.now[:notice] = "Rendez vous mis à jour"
+        else
+          flash.now[:error] = @rdv.errors.full_messages.to_sentence
+        end
+        render "admin/rdvs/update"
+      end
       format.html do
-        if success
+        if @success
           redirect_to admin_organisation_rdv_path(current_organisation, @rdv, agent_id: params[:agent_id]), rdv_success_flash
         else
           render :edit
@@ -141,10 +148,6 @@ class Admin::RdvsController < AgentAuthController
     end
 
     allowed_params
-  end
-
-  def status_params
-    params.require(:rdv).permit(:status)
   end
 
   def parsed_params

@@ -155,6 +155,10 @@ class Rdv < ApplicationRecord
     status.in? CANCELLED_STATUSES
   end
 
+  def not_cancelled?
+    status.in? NOT_CANCELLED_STATUSES
+  end
+
   def cancellable_by_user?
     !cancelled? && !collectif? && motif.rdvs_cancellable_by_user? && starts_at > 4.hours.from_now
   end
@@ -295,6 +299,31 @@ class Rdv < ApplicationRecord
 
     generate_payload_and_send_webhook_for_destroy
     true
+  end
+
+  def update_users_count
+    users_count = rdvs_users.not_cancelled.count
+    update_column(:users_count, users_count)
+  end
+
+  def update_rdv_status_from_participation
+    # Priority Order. One participation will change rdv status
+    %w[unknown seen noshow].each do |status|
+      symbol_method = "#{status}?".to_sym
+      next unless rdvs_users.any?(&symbol_method)
+
+      self.status = status
+      save
+      break
+    end
+
+    # If all participations are similar the rdv status will change
+    %w[seen noshow excused].each do |status|
+      if rdvs_users.map(&:status).all? { |participation_status| participation_status.in? [status] }
+        self.status = status
+        save
+      end
+    end
   end
 
   private

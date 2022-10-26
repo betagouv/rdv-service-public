@@ -15,6 +15,9 @@ FactoryBot.define do
 
     status { "unknown" }
 
+    trait :collectif do
+      motif { build(:motif, :collectif, organisation: organisation) }
+    end
     trait :at_public_office do
       motif { build(:motif, :at_public_office, organisation: organisation) }
     end

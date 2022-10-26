@@ -215,4 +215,80 @@ RSpec.describe Rdv::Updatable, type: :concern do
       expect(rdv.lieu_changed?).to be(false)
     end
   end
+
+  describe "#change_participation_statuses on RDV.status change" do
+    let(:rdv) { create(:rdv, :collectif, agents: [agent]) }
+    let!(:rdvs_user1) { create(:rdvs_user, rdv: rdv) }
+    let!(:rdvs_user2) { create(:rdvs_user, rdv: rdv) }
+    let!(:rdvs_user_excused) { create(:rdvs_user, rdv: rdv) }
+    let!(:rdvs_user_noshow) { create(:rdvs_user, rdv: rdv) }
+    let!(:rdvs_user_seen) { create(:rdvs_user, rdv: rdv) }
+
+    before do
+      rdvs_user_excused.update!(status: "excused")
+      rdvs_user_noshow.update!(status: "noshow")
+      rdvs_user_seen.update!(status: "seen")
+    end
+
+    context "when the status changed and is now seen" do
+      it "updates participations statuses" do
+        rdv.update_and_notify(agent, status: "seen")
+        rdv.reload
+        expect(rdvs_user1.reload.status).to eq("seen")
+        expect(rdvs_user2.reload.status).to eq("seen")
+        expect(rdvs_user_excused.reload.status).to eq("excused")
+        expect(rdvs_user_noshow.reload.status).to eq("noshow")
+      end
+    end
+
+    context "when the status changed and is now noshow" do
+      it "updates participations statuses" do
+        rdv.update_and_notify(agent, status: "noshow")
+        rdv.reload
+        expect(rdvs_user1.reload.status).to eq("noshow")
+        expect(rdvs_user2.reload.status).to eq("noshow")
+        expect(rdvs_user_excused.reload.status).to eq("excused")
+        expect(rdvs_user_seen.reload.status).to eq("seen")
+      end
+    end
+
+    context "when the status changed and is now revoked" do
+      it "updates participations statuses" do
+        rdv.update_and_notify(agent, status: "revoked")
+        rdv.reload
+        expect(rdvs_user1.reload.status).to eq("revoked")
+        expect(rdvs_user2.reload.status).to eq("revoked")
+        expect(rdvs_user_excused.reload.status).to eq("excused")
+      end
+    end
+
+    context "when the status changed and is now excused" do
+      it "do not updates participations statuses if collectif" do
+        rdv.update_and_notify(agent, status: "excused")
+        rdv.reload
+        expect(rdvs_user1.reload.status).not_to eq("excused")
+        expect(rdvs_user2.reload.status).not_to eq("excused")
+        expect(rdvs_user_seen.reload.status).not_to eq("excused")
+        expect(rdvs_user_excused.reload.status).to eq("excused")
+      end
+
+      it "updates participations statuses if not collectif" do
+        rdv.update!(motif: create(:motif))
+        rdv.update_and_notify(agent, status: "excused")
+        rdv.reload
+        expect(rdvs_user1.reload.status).to eq("excused")
+        expect(rdvs_user2.reload.status).to eq("excused")
+        expect(rdvs_user_seen.reload.status).to eq("excused")
+        expect(rdvs_user_excused.reload.status).to eq("excused")
+      end
+    end
+
+    context "when the status changed and is now unknown (reset)" do
+      it "updates (reset to unknown) all participations statuses" do
+        rdv.update!(status: "revoked")
+        rdv.update_and_notify(agent, status: "unknown")
+        expect(rdv.rdvs_users.reload.map(&:status)).to all(include("unknown"))
+      end
+    end
+  end
 end

@@ -14,6 +14,7 @@ module Rdv::Updatable
 
       if status_changed?
         self.cancelled_at = status.in?(%w[excused revoked noshow]) ? Time.zone.now : nil
+        change_participation_statuses(status)
       end
 
       previous_participations = rdvs_users.select(&:persisted?)
@@ -24,6 +25,27 @@ module Rdv::Updatable
       else
         false
       end
+    end
+  end
+
+  def change_participation_statuses(status)
+    # Consequences on participations with RDV.status changes :
+    case status
+    when "unknown"
+      # Setting to unknown means resetting the rdv status by agents and reset ALL participants statuses
+      rdvs_users.update(status: status)
+    when "excused"
+      # Collective rdv cannot be globally excused
+      unless collectif?
+        # On non collectives rdv all participants are excused
+        rdvs_users.not_cancelled.update(status: status)
+      end
+    when "revoked"
+      # When rdv status is revoked, all participants are revoked
+      rdvs_users.not_cancelled.update(status: status)
+    when "seen", "noshow"
+      # When rdv status is seen or noshow, all unknown statuses are changed
+      rdvs_users.not_cancelled.where(status: "unknown").update(status: status)
     end
   end
 
@@ -68,7 +90,7 @@ module Rdv::Updatable
   end
 
   def rdv_cancelled?
-    previous_changes["status"]&.last.in? %w[excused revoked noshow]
+    previous_changes["status"]&.last.in? %w[excused revoked]
   end
 
   def starts_at_changed?

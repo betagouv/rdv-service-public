@@ -700,4 +700,48 @@ describe Rdv, type: :model do
       rdv.soft_delete
     end
   end
+
+  describe "#update_rdv_status_from_participation" do
+    let(:agent) { create :agent }
+    let!(:user1) { create(:user) }
+    let!(:user2) { create(:user) }
+    let!(:user3) { create(:user) }
+    let!(:user4) { create(:user) }
+    let(:rdv) { create :rdv, :collectif, starts_at: Time.zone.tomorrow, agents: [agent], users: [user1, user2, user3, user4] }
+
+    it "update as unknown (first priority)" do
+      rdv.rdvs_users.first.update(status: "seen")
+      rdv.rdvs_users.second.update(status: "noshow")
+      rdv.rdvs_users.third.update(status: "excused")
+      rdv.rdvs_users.last.update(status: "unknown")
+      rdv.update_rdv_status_from_participation
+      expect(rdv.status).to eq("unknown")
+    end
+
+    it "updated as seen (second priority)" do
+      rdv.rdvs_users.first.update(status: "seen")
+      rdv.rdvs_users.second.update(status: "noshow")
+      rdv.rdvs_users.third.update(status: "excused")
+      rdv.rdvs_users.last.update(status: "noshow")
+      rdv.update_rdv_status_from_participation
+      expect(rdv.status).to eq("seen")
+    end
+
+    it "updated as noshow (last priority)" do
+      rdv.rdvs_users.first.update(status: "noshow")
+      rdv.rdvs_users.second.update(status: "excused")
+      rdv.rdvs_users.third.update(status: "excused")
+      rdv.rdvs_users.last.update(status: "excused")
+      rdv.update_rdv_status_from_participation
+      expect(rdv.status).to eq("noshow")
+    end
+
+    %w[seen noshow excused].each do |status|
+      it "updated as #{status} if all participations statuses are #{status}" do
+        rdv.rdvs_users.update(status: status)
+        rdv.update_rdv_status_from_participation
+        expect(rdv.status).to eq(status)
+      end
+    end
+  end
 end
