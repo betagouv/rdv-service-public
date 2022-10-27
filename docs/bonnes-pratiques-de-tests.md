@@ -210,10 +210,19 @@ RSpec.describe "performance of typical specs" do
   end
 
   # 14 seconds
-  describe "persisting data" do
+  describe "creating records in db" do
     100.times do
       it "creates a RDV and its many associations" do
         create(:rdv)
+      end
+    end
+  end
+
+  # 6 seconds
+  describe "building records" do
+    100.times do
+      it "creates a RDV and its many associations" do
+        build(:rdv)
       end
     end
   end
