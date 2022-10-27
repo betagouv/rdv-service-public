@@ -7,13 +7,12 @@ describe "Groups API", swagger_doc: "v1/api.json" do
 
   path "/api/v1/groups" do
     get "Lister les groupes (représentation des territoires)" do
+      with_pagination
+
       tags "Group"
       produces "application/json"
       operationId "getGroups"
       description "Renvoie tous les groupes, qui représentent les territoires, de manière paginée."
-
-      parameter name: "page", in: :query, type: :integer, description: "La page souhaitée", example: "1", required: false
-      parameter name: "per", in: :query, type: :integer, description: "Le nombre d'éléments souhaités par page", example: "10", required: false
 
       response 200, "Retourne des Groups" do
         let!(:page1) { create_list(:territory, 2) }

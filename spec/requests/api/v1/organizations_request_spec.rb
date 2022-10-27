@@ -7,13 +7,13 @@ describe "Organization API", swagger_doc: "v1/api.json" do
 
   path "/api/v1/organizations" do
     get "Lister les organisations" do
+      with_pagination
+
       tags "Organization"
       produces "application/json"
       operationId "getOrganizations"
       description "Renvoie toutes les organisations de manière paginée"
 
-      parameter name: "page", in: :query, type: :integer, description: "La page souhaitée", example: "1", required: false
-      parameter name: "per", in: :query, type: :integer, description: "Le nombre d'éléments souhaités par page", example: "10", required: false
       parameter name: :group_id, in: :query, type: :integer, description: "ID du Group sur lequel filtrer les organisations", example: "1", required: false
 
       response 200, "Retourne les Organisations sous la forme Organizations" do

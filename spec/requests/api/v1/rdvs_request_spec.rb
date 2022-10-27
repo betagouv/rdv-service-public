@@ -27,17 +27,14 @@ describe "RDV authentified API", swagger_doc: "v1/api.json" do
 
   path "/api/v1/organisations/{organisation_id}/rdvs" do
     get "Lister les rendez-vous d'une organisation" do
+      with_authentication
+
       tags "RDV"
       produces "application/json"
       operationId "getRdvs"
       description "Renvoie les RDVs du service dont l'agent fait partie dans cette organisation. Si l'agent est administrateurice ou secrétaire, renvoie tous les RDVs de l'organisation en question."
 
-      security [{ access_token: [], uid: [], client: [] }]
       parameter name: :organisation_id, in: :path, type: :string, description: "Identifiant de l'organisation", example: "20"
-
-      parameter name: "access-token", in: :header, type: :string, description: "Token d'accès (authentification)", example: "SFYBngO55ImjD1HOcv-ivQ"
-      parameter name: "client", in: :header, type: :string, description: "Clé client d'accès (authentification)", example: "Z6EihQAY9NWsZByfZ47i_Q"
-      parameter name: "uid", in: :header, type: :string, description: "Identifiant d'accès (authentification)", example: "martine@demo.rdv-solidarites.fr"
 
       response 200, "Appel API réussi" do
         let(:organisation_id) { organisation.id }

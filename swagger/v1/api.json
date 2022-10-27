@@ -702,11 +702,6 @@
     "/api/v1/groups": {
       "get": {
         "summary": "Lister les groupes (représentation des territoires)",
-        "tags": [
-          "Group"
-        ],
-        "operationId": "getGroups",
-        "description": "Renvoie tous les groupes, qui représentent les territoires, de manière paginée.",
         "parameters": [
           {
             "name": "page",
@@ -729,6 +724,11 @@
             }
           }
         ],
+        "tags": [
+          "Group"
+        ],
+        "operationId": "getGroups",
+        "description": "Renvoie tous les groupes, qui représentent les territoires, de manière paginée.",
         "responses": {
           "200": {
             "description": "Retourne des Groups",
@@ -771,12 +771,6 @@
     "/api/v1/invitations/{invitation_token}": {
       "get": {
         "summary": "Récupérer un·e usager·ère",
-        "tags": [
-          "Invitation",
-          "User"
-        ],
-        "operationId": "getUserByInvitationToken",
-        "description": "Renvoie un·e usager·ère grâce à son jeton d'invitation",
         "security": [
           {
             "access_token": [
@@ -791,16 +785,6 @@
           }
         ],
         "parameters": [
-          {
-            "name": "invitation_token",
-            "in": "path",
-            "description": "Jeton d'invitation",
-            "example": "abcdef123456",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
           {
             "name": "access-token",
             "in": "header",
@@ -827,8 +811,24 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "invitation_token",
+            "in": "path",
+            "description": "Jeton d'invitation",
+            "example": "abcdef123456",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
+        "tags": [
+          "Invitation",
+          "User"
+        ],
+        "operationId": "getUserByInvitationToken",
+        "description": "Renvoie un·e usager·ère grâce à son jeton d'invitation",
         "responses": {
           "200": {
             "description": "Renvoie l'usager·ère",
@@ -846,18 +846,18 @@
                         "birth_name": null,
                         "caisse_affiliation": "caf",
                         "case_number": null,
-                        "created_at": "2022-10-27 14:15:53 +0200",
+                        "created_at": "2022-10-27 14:34:32 +0200",
                         "email": "jean@jacques.fr",
                         "family_situation": "divorced",
                         "first_name": "Jean",
                         "invitation_accepted_at": null,
-                        "invitation_created_at": "2022-10-27 14:15:53 +0200",
+                        "invitation_created_at": "2022-10-27 14:34:32 +0200",
                         "last_name": "JACQUES",
                         "notify_by_email": true,
                         "notify_by_sms": true,
                         "number_of_children": 12,
-                        "phone_number": "06 46 67 14 76",
-                        "phone_number_formatted": "+33646671476",
+                        "phone_number": "07 96 01 23 44",
+                        "phone_number_formatted": "+33796012344",
                         "responsible": null,
                         "responsible_id": null,
                         "user_profiles": null
@@ -913,11 +913,6 @@
     "/api/v1/organisations": {
       "get": {
         "summary": "Lister les organisations",
-        "tags": [
-          "Organisation"
-        ],
-        "operationId": "getOrganisations",
-        "description": "Renvoie toutes les organisations accessibles à l'agent·e authentifié·e, de manière paginée.",
         "security": [
           {
             "access_token": [
@@ -1000,6 +995,11 @@
             }
           }
         ],
+        "tags": [
+          "Organisation"
+        ],
+        "operationId": "getOrganisations",
+        "description": "Renvoie toutes les organisations accessibles à l'agent·e authentifié·e, de manière paginée.",
         "responses": {
           "200": {
             "description": "Retourne des Organisations",
@@ -1063,11 +1063,6 @@
     "/api/v1/organizations": {
       "get": {
         "summary": "Lister les organisations",
-        "tags": [
-          "Organization"
-        ],
-        "operationId": "getOrganizations",
-        "description": "Renvoie toutes les organisations de manière paginée",
         "parameters": [
           {
             "name": "page",
@@ -1100,6 +1095,11 @@
             }
           }
         ],
+        "tags": [
+          "Organization"
+        ],
+        "operationId": "getOrganizations",
+        "description": "Renvoie toutes les organisations de manière paginée",
         "responses": {
           "200": {
             "description": "Retourne les Organisations sous la forme Organizations",
@@ -1224,11 +1224,6 @@
     "/api/v1/organisations/{organisation_id}/rdvs": {
       "get": {
         "summary": "Lister les rendez-vous d'une organisation",
-        "tags": [
-          "RDV"
-        ],
-        "operationId": "getRdvs",
-        "description": "Renvoie les RDVs du service dont l'agent fait partie dans cette organisation. Si l'agent est administrateurice ou secrétaire, renvoie tous les RDVs de l'organisation en question.",
         "security": [
           {
             "access_token": [
@@ -1243,16 +1238,6 @@
           }
         ],
         "parameters": [
-          {
-            "name": "organisation_id",
-            "in": "path",
-            "description": "Identifiant de l'organisation",
-            "example": "20",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
           {
             "name": "access-token",
             "in": "header",
@@ -1279,8 +1264,23 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "organisation_id",
+            "in": "path",
+            "description": "Identifiant de l'organisation",
+            "example": "20",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
+        "tags": [
+          "RDV"
+        ],
+        "operationId": "getRdvs",
+        "description": "Renvoie les RDVs du service dont l'agent fait partie dans cette organisation. Si l'agent est administrateurice ou secrétaire, renvoie tous les RDVs de l'organisation en question.",
         "responses": {
           "200": {
             "description": "Appel API réussi",
@@ -1297,8 +1297,8 @@
                             {
                               "id": 97,
                               "email": "agent_1@lapin.fr",
-                              "first_name": "Fleur",
-                              "last_name": "Renault"
+                              "first_name": "Albérade",
+                              "last_name": "Reynaud"
                             }
                           ],
                           "cancelled_at": null,
@@ -1307,7 +1307,7 @@
                           "created_by": "agent",
                           "deleted_at": null,
                           "duration_in_min": 45,
-                          "ends_at": "2022-10-30 15:01:09 +0100",
+                          "ends_at": "2022-10-30 15:19:46 +0100",
                           "lieu": {
                             "id": 31,
                             "address": "1 rue de l'adresse 12345 Ville",
@@ -1348,25 +1348,25 @@
                                 "birth_name": null,
                                 "caisse_affiliation": "caf",
                                 "case_number": null,
-                                "created_at": "2022-10-27 14:16:09 +0200",
+                                "created_at": "2022-10-27 14:34:46 +0200",
                                 "email": "usager_1@lapin.fr",
                                 "family_situation": "divorced",
-                                "first_name": "Foulques",
+                                "first_name": "Claudine",
                                 "invitation_accepted_at": null,
                                 "invitation_created_at": null,
-                                "last_name": "LOPÉZ",
+                                "last_name": "LEBLANC",
                                 "notify_by_email": true,
                                 "notify_by_sms": true,
                                 "number_of_children": 12,
-                                "phone_number": "07 32 57 32 51",
-                                "phone_number_formatted": "+33732573251",
+                                "phone_number": "6 82 95 48 90",
+                                "phone_number_formatted": "+33682954890",
                                 "responsible": null,
                                 "responsible_id": null,
                                 "user_profiles": null
                               }
                             }
                           ],
-                          "starts_at": "2022-10-30 14:16:09 +0100",
+                          "starts_at": "2022-10-30 14:34:46 +0100",
                           "status": "unknown",
                           "users": [
                             {
@@ -1378,25 +1378,25 @@
                               "birth_name": null,
                               "caisse_affiliation": "caf",
                               "case_number": null,
-                              "created_at": "2022-10-27 14:16:09 +0200",
+                              "created_at": "2022-10-27 14:34:46 +0200",
                               "email": "usager_1@lapin.fr",
                               "family_situation": "divorced",
-                              "first_name": "Foulques",
+                              "first_name": "Claudine",
                               "invitation_accepted_at": null,
                               "invitation_created_at": null,
-                              "last_name": "LOPÉZ",
+                              "last_name": "LEBLANC",
                               "notify_by_email": true,
                               "notify_by_sms": true,
                               "number_of_children": 12,
-                              "phone_number": "07 32 57 32 51",
-                              "phone_number_formatted": "+33732573251",
+                              "phone_number": "6 82 95 48 90",
+                              "phone_number_formatted": "+33682954890",
                               "responsible": null,
                               "responsible_id": null,
                               "user_profiles": null
                             }
                           ],
                           "users_count": 1,
-                          "uuid": "34020f0b-6fb6-4f84-be8c-f55d4343dcdb"
+                          "uuid": "44f0f6ef-b376-4f3f-9327-60c7132d6d50"
                         },
                         {
                           "id": 16,
@@ -1405,8 +1405,8 @@
                             {
                               "id": 99,
                               "email": "agent_3@lapin.fr",
-                              "first_name": "Alice",
-                              "last_name": "Carlier"
+                              "first_name": "Ariel",
+                              "last_name": "Durand"
                             }
                           ],
                           "cancelled_at": null,
@@ -1415,7 +1415,7 @@
                           "created_by": "agent",
                           "deleted_at": null,
                           "duration_in_min": 45,
-                          "ends_at": "2022-10-30 15:01:09 +0100",
+                          "ends_at": "2022-10-30 15:19:46 +0100",
                           "lieu": {
                             "id": 33,
                             "address": "3 rue de l'adresse 12345 Ville",
@@ -1456,25 +1456,25 @@
                                 "birth_name": null,
                                 "caisse_affiliation": "caf",
                                 "case_number": null,
-                                "created_at": "2022-10-27 14:16:09 +0200",
+                                "created_at": "2022-10-27 14:34:46 +0200",
                                 "email": "usager_3@lapin.fr",
                                 "family_situation": "divorced",
-                                "first_name": "Alcibiade",
+                                "first_name": "Christine",
                                 "invitation_accepted_at": null,
                                 "invitation_created_at": null,
-                                "last_name": "KLEIN",
+                                "last_name": "PASQUIER",
                                 "notify_by_email": true,
                                 "notify_by_sms": true,
                                 "number_of_children": 12,
-                                "phone_number": "6 86 10 89 21",
-                                "phone_number_formatted": "+33686108921",
+                                "phone_number": "7 82 97 36 98",
+                                "phone_number_formatted": "+33782973698",
                                 "responsible": null,
                                 "responsible_id": null,
                                 "user_profiles": null
                               }
                             }
                           ],
-                          "starts_at": "2022-10-30 14:16:09 +0100",
+                          "starts_at": "2022-10-30 14:34:46 +0100",
                           "status": "unknown",
                           "users": [
                             {
@@ -1486,25 +1486,25 @@
                               "birth_name": null,
                               "caisse_affiliation": "caf",
                               "case_number": null,
-                              "created_at": "2022-10-27 14:16:09 +0200",
+                              "created_at": "2022-10-27 14:34:46 +0200",
                               "email": "usager_3@lapin.fr",
                               "family_situation": "divorced",
-                              "first_name": "Alcibiade",
+                              "first_name": "Christine",
                               "invitation_accepted_at": null,
                               "invitation_created_at": null,
-                              "last_name": "KLEIN",
+                              "last_name": "PASQUIER",
                               "notify_by_email": true,
                               "notify_by_sms": true,
                               "number_of_children": 12,
-                              "phone_number": "6 86 10 89 21",
-                              "phone_number_formatted": "+33686108921",
+                              "phone_number": "7 82 97 36 98",
+                              "phone_number_formatted": "+33782973698",
                               "responsible": null,
                               "responsible_id": null,
                               "user_profiles": null
                             }
                           ],
                           "users_count": 1,
-                          "uuid": "15d74cc7-46d4-48a2-a82f-280dfd158711"
+                          "uuid": "f8309fd9-768d-415c-be42-c9850fd7107c"
                         }
                       ],
                       "meta": {
