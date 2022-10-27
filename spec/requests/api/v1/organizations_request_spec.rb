@@ -3,6 +3,8 @@
 require "swagger_helper"
 
 describe "Organization API", swagger_doc: "v1/api.json" do
+  with_examples
+
   path "/api/v1/organizations" do
     get "Lister les organisations" do
       tags "Organization"
@@ -13,20 +15,6 @@ describe "Organization API", swagger_doc: "v1/api.json" do
       parameter name: "page", in: :query, type: :integer, description: "La page souhaitée", example: "1", required: false
       parameter name: "per", in: :query, type: :integer, description: "Le nombre d'éléments souhaités par page", example: "10", required: false
       parameter name: :group_id, in: :query, type: :integer, description: "ID du Group sur lequel filtrer les organisations", example: "1", required: false
-
-      after do |example|
-        content = example.metadata[:response][:content] || {}
-        example_spec = {
-          "application/json" => {
-            examples: {
-              example: {
-                value: JSON.parse(response.body, symbolize_names: true),
-              },
-            },
-          },
-        }
-        example.metadata[:response][:content] = content.deep_merge(example_spec)
-      end
 
       response 200, "Retourne les Organisations sous la forme Organizations" do
         let!(:page1) { create_list(:organisation, 2) }

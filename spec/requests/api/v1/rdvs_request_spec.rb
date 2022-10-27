@@ -3,6 +3,8 @@
 require "swagger_helper"
 
 describe "RDV authentified API", swagger_doc: "v1/api.json" do
+  with_examples
+
   let!(:organisation) { create(:organisation) }
   let!(:organisation2) { create(:organisation) }
 
@@ -37,21 +39,7 @@ describe "RDV authentified API", swagger_doc: "v1/api.json" do
       parameter name: "client", in: :header, type: :string, description: "Clé client d'accès (authentification)", example: "Z6EihQAY9NWsZByfZ47i_Q"
       parameter name: "uid", in: :header, type: :string, description: "Identifiant d'accès (authentification)", example: "martine@demo.rdv-solidarites.fr"
 
-      after do |example|
-        content = example.metadata[:response][:content] || {}
-        example_spec = {
-          "application/json" => {
-            examples: {
-              example: {
-                value: JSON.parse(response.body, symbolize_names: true),
-              },
-            },
-          },
-        }
-        example.metadata[:response][:content] = content.deep_merge(example_spec)
-      end
-
-      response(200, "Appel API réussi") do
+      response 200, "Appel API réussi" do
         let(:organisation_id) { organisation.id }
 
         context "basic role" do
@@ -93,7 +81,7 @@ describe "RDV authentified API", swagger_doc: "v1/api.json" do
         end
       end
 
-      response(401, "Problème d'authentification") do
+      response 401, "Problème d'authentification" do
         let(:access_admin_agent) { api_auth_headers_for_agent(admin_agent) }
         let(:"access-token") { "false" }
         let(:uid) { access_admin_agent["uid"].to_s }
