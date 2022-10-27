@@ -99,6 +99,19 @@ class Users::GeoSearch
       .where(organisations: { id: attributed_organisations.pluck(:id) })
   end
 
+  def available_motifs_base
+    collective_motif_ids = Motif.reservable_online.active.collectif.joins(:rdvs).merge(Rdv.future.with_remaining_seats).distinct.pluck(:id)
+    Motif.where(id: individual_motif_ids + collective_motif_ids).joins(:organisation)
+  end
+
+  def individual_motif_ids
+    @individual_motif_ids ||= Motif.reservable_online.active.individuel.joins(:plage_ouvertures).distinct
+  end
+
+  def collective_motif_ids
+    @collective_motif_ids ||= Motif.reservable_online.active.collectif.joins(:rdvs).merge(Rdv.future.with_remaining_seats).distinct
+  end
+
   def available_motifs_from_attributed_agents_arels
     @available_motifs_from_attributed_agents_arels ||= attributed_agents_by_organisation
       .map do |organisation, agents|
@@ -107,14 +120,15 @@ class Users::GeoSearch
   end
 
   def available_individual_motifs_from_attributed_agent_arel(agent, organisation)
-    agent_sectorisation_level_individual_motif_ids = available_motifs_base
-      .sectorisation_level_agent
+    motif_ids = individual_motif_ids.sectorisation_level_agent
       .joins(:plage_ouvertures)
       .where(
-        organisations: { id: organisation.id },
+        organisation_id: organisation.id,
         plage_ouvertures: { agent_id: agent.id }
       ).pluck(:id)
-    Motif.where(id: agent_sectorisation_level_individual_motif_ids)
+    # Pour pouvoir faire le `or` de la méthode `available_motifs` il faut avoir des
+    # requête avec les mêmes jointures (pour l'individuel et le collectif)...
+    Motif.where(id: motif_ids)
   end
 
   def available_collective_motifs_from_attributed_agents_arels
@@ -124,19 +138,12 @@ class Users::GeoSearch
       end.flatten(1)
   end
 
-  def available_collective_motifs_from_attributed_agent_arel(agent, organisation)
-    agent_sectorisation_level_collective_motif_ids = available_motifs_base
-      .sectorisation_level_agent
-      .where(organisations: { id: organisation.id })
-      .joins(rdvs: { agents: :agents_rdvs })
-      .where(rdvs: { agents_rdvs: { agent_id: agent.id } })
+  def available_collective_motifs_from_attributed_agent_arel(_agent, organisation)
+    motif_ids = collective_motif_ids.sectorisation_level_agent
+      .where(organisation_id: organisation.id)
       .pluck(:id)
-    Motif.where(id: agent_sectorisation_level_collective_motif_ids)
-  end
-
-  def available_motifs_base
-    individuel_motif_ids = Motif.reservable_online.active.individuel.joins(:plage_ouvertures).distinct.pluck(:id)
-    collective_motif_ids = Motif.reservable_online.active.collectif.joins(:rdvs).merge(Rdv.future.with_remaining_seats).distinct.pluck(:id)
-    Motif.where(id: individuel_motif_ids + collective_motif_ids).joins(:organisation)
+    # Pour pouvoir faire le `or` de la méthode `available_motifs` il faut avoir des
+    # requête avec les mêmes jointures (pour l'individuel et le collectif)...
+    Motif.where(id: motif_ids)
   end
 end
