@@ -41,7 +41,7 @@ RSpec.configure do |config|
           },
         },
         schemas: {
-          get_rdvs: {
+          rdvs: {
             type: "object",
             properties: {
               rdvs: {
@@ -99,6 +99,13 @@ RSpec.configure do |config|
             },
             required: %w[id email first_name last_name],
           },
+          user_with_root: {
+            type: "object",
+            properties: {
+              user: { "$ref" => "#/components/schemas/user" },
+            },
+            required: %w[user],
+          },
           user: {
             type: "object",
             nullable: true,
@@ -144,6 +151,17 @@ RSpec.configure do |config|
             },
             required: %w[user organisation logement note],
           },
+          organisations: {
+            type: "object",
+            properties: {
+              organisations: {
+                type: "array",
+                items: { "$ref" => "#/components/schemas/organisation" },
+              },
+              meta: { "$ref" => "#/components/schemas/meta" },
+            },
+            required: %w[organisations meta],
+          },
           organisation: {
             type: "object",
             properties: {
@@ -153,6 +171,30 @@ RSpec.configure do |config|
               phone_number: { type: "string", nullable: true },
             },
             required: %w[id email name phone_number],
+          },
+          organizations: {
+            type: "object",
+            properties: {
+              organizations: {
+                type: "array",
+                items: { "$ref" => "#/components/schemas/organization" },
+              },
+              meta: { "$ref" => "#/components/schemas/meta" },
+            },
+            required: %w[organizations meta],
+          },
+          organization: {
+            type: "object",
+            properties: {
+              id: { type: "integer" },
+              label: { type: "string" },
+              group_id: { type: "integer" },
+              phone_number: { type: "string", nullable: true },
+              email: { type: "string", nullable: true },
+              website: { type: "string", nullable: true },
+              public_link: { type: "string" },
+            },
+            required: %w[id label group_id public_link],
           },
           lieu: {
             type: "object",
@@ -190,7 +232,7 @@ RSpec.configure do |config|
             },
             required: %w[send_lifecycle_notifications send_reminder_notification status user],
           },
-          get_groups: {
+          groups: {
             type: "object",
             properties: {
               groups: {
@@ -231,9 +273,24 @@ RSpec.configure do |config|
             },
             required: %w[errors],
           },
+          error_not_found: {
+            type: "object",
+            properties: {
+              not_found: { type: "string" },
+            },
+            required: %w[not_found],
+          },
         },
       },
       tags: [
+        {
+          name: "Invitation",
+          description: "Pour manipuler usager·ères via leur jeton d'invitation",
+        },
+        {
+          name: "User",
+          description: "Pour manipuler usager·ères",
+        },
         {
           name: "RDV",
           description: "Pour manipuler des rendez-vous",

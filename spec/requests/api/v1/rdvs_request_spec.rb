@@ -60,7 +60,7 @@ describe "RDV authentified API", swagger_doc: "v1/api.json" do
           let(:uid) { access_basic_agent["uid"].to_s }
           let(:client) { access_basic_agent["client"].to_s }
 
-          schema "$ref" => "#/components/schemas/get_rdvs"
+          schema "$ref" => "#/components/schemas/rdvs"
 
           run_test!
 
