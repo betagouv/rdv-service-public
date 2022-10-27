@@ -113,7 +113,23 @@ class Users::GeoSearch
       .where(
         organisations: { id: organisation.id },
         plage_ouvertures: { agent_id: agent.id }
-      )
+      ).pluck(:id)
+    Motif.where(id: agent_sectorisation_level_individual_motif_ids)
+  end
+
+  def available_collective_motifs_from_attributed_agents_arels
+    @available_collective_motifs_from_attributed_agents_arels ||= attributed_agents_by_organisation
+      .map do |organisation, agents|
+        agents.map { available_collective_motifs_from_attributed_agent_arel(_1, organisation) }
+      end.flatten(1)
+  end
+
+  def available_collective_motifs_from_attributed_agent_arel(_agent, organisation)
+    agent_sectorisation_level_collective_motif_ids = available_motifs_base
+      .sectorisation_level_agent
+      .where(organisations: { id: organisation.id })
+      .pluck(:id)
+    Motif.where(id: agent_sectorisation_level_collective_motif_ids)
   end
 
   def available_motifs_base

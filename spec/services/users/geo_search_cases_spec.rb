@@ -76,7 +76,7 @@ describe Users::GeoSearch, type: :service_model do
       expect(subject.attributed_agents_by_organisation[organisation2]).to include(agent_ville2)
       expect(subject.available_motifs).to include(motifs_orga1[0])
       expect(subject.available_motifs).to include(motifs_orga1[1])
-      expect(subject.available_motifs).not_to include(motifs_orga1[2])
+      expect(subject.available_motifs).to include(motifs_orga1[2])
       expect(subject.available_motifs).not_to include(motifs_orga1[3])
       expect(subject.available_motifs).to include(motifs_orga1[4])
       expect(subject.available_motifs).to include(motifs_orga2[0])
