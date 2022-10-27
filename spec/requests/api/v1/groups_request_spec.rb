@@ -3,6 +3,8 @@
 require "swagger_helper"
 
 describe "Groups API", swagger_doc: "v1/api.json" do
+  with_examples
+
   path "/api/v1/groups" do
     get "Lister les groupes (représentation des territoires)" do
       tags "Group"
@@ -12,20 +14,6 @@ describe "Groups API", swagger_doc: "v1/api.json" do
 
       parameter name: "page", in: :query, type: :integer, description: "La page souhaitée", example: "1", required: false
       parameter name: "per", in: :query, type: :integer, description: "Le nombre d'éléments souhaités par page", example: "10", required: false
-
-      after do |example|
-        content = example.metadata[:response][:content] || {}
-        example_spec = {
-          "application/json" => {
-            examples: {
-              example: {
-                value: JSON.parse(response.body, symbolize_names: true),
-              },
-            },
-          },
-        }
-        example.metadata[:response][:content] = content.deep_merge(example_spec)
-      end
 
       response 200, "Retourne des Groups" do
         let!(:page1) { create_list(:territory, 2) }

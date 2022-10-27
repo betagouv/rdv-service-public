@@ -3,6 +3,8 @@
 require "swagger_helper"
 
 describe "Invitations API", swagger_doc: "v1/api.json" do
+  with_examples
+
   path "/api/v1/invitations/{invitation_token}" do
     get "Récupérer un·e usager·ère" do
       tags "Invitation", "User"
@@ -16,20 +18,6 @@ describe "Invitations API", swagger_doc: "v1/api.json" do
       parameter name: "access-token", in: :header, type: :string, description: "Token d'accès (authentification)", example: "SFYBngO55ImjD1HOcv-ivQ"
       parameter name: "client", in: :header, type: :string, description: "Clé client d'accès (authentification)", example: "Z6EihQAY9NWsZByfZ47i_Q"
       parameter name: "uid", in: :header, type: :string, description: "Identifiant d'accès (authentification)", example: "martine@demo.rdv-solidarites.fr"
-
-      after do |example|
-        content = example.metadata[:response][:content] || {}
-        example_spec = {
-          "application/json" => {
-            examples: {
-              example: {
-                value: JSON.parse(response.body, symbolize_names: true),
-              },
-            },
-          },
-        }
-        example.metadata[:response][:content] = content.deep_merge(example_spec)
-      end
 
       response 200, "Renvoie l'usager·ère" do
         let!(:organisation) { create(:organisation) }

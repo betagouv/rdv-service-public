@@ -3,6 +3,8 @@
 require "swagger_helper"
 
 describe "Organisations API", swagger_doc: "v1/api.json" do
+  with_examples
+
   path "/api/v1/organisations" do
     get "Lister les organisations" do
       tags "Organisation"
@@ -21,20 +23,6 @@ describe "Organisations API", swagger_doc: "v1/api.json" do
 
       parameter name: "departement_number", in: :query, type: :string, description: "Le numéro ou code de département du territoire concerné", example: "26", required: false
       parameter name: "city_code", in: :query, type: :string, description: "Le code INSEE de la localité", example: "26323", required: false
-
-      after do |example|
-        content = example.metadata[:response][:content] || {}
-        example_spec = {
-          "application/json" => {
-            examples: {
-              example: {
-                value: JSON.parse(response.body, symbolize_names: true),
-              },
-            },
-          },
-        }
-        example.metadata[:response][:content] = content.deep_merge(example_spec)
-      end
 
       response 200, "Retourne des Organisations" do
         let!(:page1) { create_list(:organisation, 2) }

@@ -3,6 +3,8 @@
 require "swagger_helper"
 
 describe "Public links API", swagger_doc: "v1/api.json" do
+  with_examples
+
   path "/api/v1/public_links" do
     get "Lister les liens publics de recherche" do
       tags "PublicLink"
@@ -11,20 +13,6 @@ describe "Public links API", swagger_doc: "v1/api.json" do
       description "Renvoie les liens publics de recherche d'un territoire donné"
 
       parameter name: "territory", in: :query, type: :string, description: "Le numéro ou code de département du territoire concerné", example: "26"
-
-      after do |example|
-        content = example.metadata[:response][:content] || {}
-        example_spec = {
-          "application/json" => {
-            examples: {
-              example: {
-                value: JSON.parse(response.body, symbolize_names: true),
-              },
-            },
-          },
-        }
-        example.metadata[:response][:content] = content.deep_merge(example_spec)
-      end
 
       response 200, "Retourne les liens publics de recherche" do
         let!(:terr) { create(:territory, departement_number: "CN") }
