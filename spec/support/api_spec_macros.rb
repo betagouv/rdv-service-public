@@ -24,4 +24,9 @@ module ApiSpecMacros
     parameter name: "client", in: :header, type: :string, description: "Clé client d'accès (authentification)", example: "Z6EihQAY9NWsZByfZ47i_Q"
     parameter name: "uid", in: :header, type: :string, description: "Identifiant d'accès (authentification)", example: "martine@demo.rdv-solidarites.fr"
   end
+
+  def with_pagination
+    parameter name: "page", in: :query, type: :integer, description: "La page souhaitée", example: "1", required: false
+    parameter name: "per", in: :query, type: :integer, description: "Le nombre d'éléments souhaités par page", example: "10", required: false
+  end
 end

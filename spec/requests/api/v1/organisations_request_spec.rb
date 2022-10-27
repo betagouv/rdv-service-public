@@ -8,14 +8,12 @@ describe "Organisations API", swagger_doc: "v1/api.json" do
   path "/api/v1/organisations" do
     get "Lister les organisations" do
       with_authentication
+      with_pagination
 
       tags "Organisation"
       produces "application/json"
       operationId "getOrganisations"
       description "Renvoie toutes les organisations accessibles à l'agent·e authentifié·e, de manière paginée."
-
-      parameter name: "page", in: :query, type: :integer, description: "La page souhaitée", example: "1", required: false
-      parameter name: "per", in: :query, type: :integer, description: "Le nombre d'éléments souhaités par page", example: "10", required: false
 
       parameter name: "departement_number", in: :query, type: :string, description: "Le numéro ou code de département du territoire concerné", example: "26", required: false
       parameter name: "city_code", in: :query, type: :string, description: "Le code INSEE de la localité", example: "26323", required: false
