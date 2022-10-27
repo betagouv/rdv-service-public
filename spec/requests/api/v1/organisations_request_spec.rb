@@ -7,16 +7,12 @@ describe "Organisations API", swagger_doc: "v1/api.json" do
 
   path "/api/v1/organisations" do
     get "Lister les organisations" do
+      with_authentication
+
       tags "Organisation"
       produces "application/json"
       operationId "getOrganisations"
       description "Renvoie toutes les organisations accessibles à l'agent·e authentifié·e, de manière paginée."
-
-      security [{ access_token: [], uid: [], client: [] }]
-
-      parameter name: "access-token", in: :header, type: :string, description: "Token d'accès (authentification)", example: "SFYBngO55ImjD1HOcv-ivQ"
-      parameter name: "client", in: :header, type: :string, description: "Clé client d'accès (authentification)", example: "Z6EihQAY9NWsZByfZ47i_Q"
-      parameter name: "uid", in: :header, type: :string, description: "Identifiant d'accès (authentification)", example: "martine@demo.rdv-solidarites.fr"
 
       parameter name: "page", in: :query, type: :integer, description: "La page souhaitée", example: "1", required: false
       parameter name: "per", in: :query, type: :integer, description: "Le nombre d'éléments souhaités par page", example: "10", required: false

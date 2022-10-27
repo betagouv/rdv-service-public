@@ -7,17 +7,14 @@ describe "Invitations API", swagger_doc: "v1/api.json" do
 
   path "/api/v1/invitations/{invitation_token}" do
     get "Récupérer un·e usager·ère" do
+      with_authentication
+
       tags "Invitation", "User"
       produces "application/json"
       operationId "getUserByInvitationToken"
       description "Renvoie un·e usager·ère grâce à son jeton d'invitation"
 
-      security [{ access_token: [], uid: [], client: [] }]
       parameter name: :invitation_token, in: :path, type: :string, description: "Jeton d'invitation", example: "abcdef123456"
-
-      parameter name: "access-token", in: :header, type: :string, description: "Token d'accès (authentification)", example: "SFYBngO55ImjD1HOcv-ivQ"
-      parameter name: "client", in: :header, type: :string, description: "Clé client d'accès (authentification)", example: "Z6EihQAY9NWsZByfZ47i_Q"
-      parameter name: "uid", in: :header, type: :string, description: "Identifiant d'accès (authentification)", example: "martine@demo.rdv-solidarites.fr"
 
       response 200, "Renvoie l'usager·ère" do
         let!(:organisation) { create(:organisation) }
