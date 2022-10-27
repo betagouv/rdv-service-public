@@ -12,7 +12,7 @@ describe "Groups API", swagger_doc: "v1/api.json" do
       tags "Group"
       produces "application/json"
       operationId "getGroups"
-      description "Renvoie tous les groupes, qui représentent les territoires, de manière paginée."
+      description "Renvoie tous les groupes, qui représentent les territoires, de manière paginée"
 
       response 200, "Retourne des Groups" do
         let!(:page1) { create_list(:territory, 2) }

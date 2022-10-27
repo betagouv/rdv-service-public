@@ -12,7 +12,7 @@ describe "Organization API", swagger_doc: "v1/api.json" do
       tags "Organization"
       produces "application/json"
       operationId "getOrganizations"
-      description "Renvoie toutes les organisations de manière paginée"
+      description "Renvoie toutes les organisations, de manière paginée"
 
       parameter name: :group_id, in: :query, type: :integer, description: "ID du Group sur lequel filtrer les organisations", example: "1", required: false
 
