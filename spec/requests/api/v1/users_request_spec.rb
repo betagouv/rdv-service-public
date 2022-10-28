@@ -98,7 +98,7 @@ describe "Users API", swagger_doc: "v1/api.json" do
 
       let(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [organisation]) }
       let(:user_id) { user.id }
-      
+
       response 200, "Met à jour et renvoie un·e usager·ère" do
         let(:first_name) { "Alain" }
         let(:last_name) { "Verse" }
