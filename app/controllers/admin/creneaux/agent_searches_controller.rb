@@ -4,11 +4,15 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
   respond_to :html, :js
 
   before_action :set_form
-  before_action :set_search_results
 
   helper_method :motif_selected?
 
   def index
+    # nécessaire pour le `else`
+    # et pour le cas où nous sommes sur un 
+    # motif public_office pour vérifier qu'il n'y
+    # qu'un lieu
+    set_search_results
     if (params[:commit].present? || request.format.js?) && motif_selected? && (results_without_lieu? || only_one_lieu?)
       skip_policy_scope # TODO: improve pundit checks for creneaux
       redirect_to admin_organisation_slots_path(current_organisation, creneaux_search_params), class: "d-block stretched-link"
@@ -53,8 +57,11 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
   def set_search_results
     return unless (params[:commit].present? || request.format.js?) && @form.valid?
 
-    @search_results = if @form.motif.individuel?
+    # Un RDV collectif peut-il avoir lieu à domicile ou au téléphone ?
+    @search_results = if @form.motif.individuel? && requires_lieu?
                         SearchCreneauxForAgentsService.perform_with(@form)
+                      elsif @form.motif.individuel? && !requires_lieu?
+                        SearchCreneauxWithoutLieuForAgentsService.perform_with(@form)
                       else
                         SearchRdvCollectifForAgentsService.new(@form).lieu_search
                       end
