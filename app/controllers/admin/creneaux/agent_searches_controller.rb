@@ -9,7 +9,7 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
 
   def index
     # nécessaire pour le `else`
-    # et pour le cas où nous sommes sur un 
+    # et pour le cas où nous sommes sur un
     # motif public_office pour vérifier qu'il n'y
     # qu'un lieu
     set_search_results
@@ -58,13 +58,19 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
     return unless (params[:commit].present? || request.format.js?) && @form.valid?
 
     # Un RDV collectif peut-il avoir lieu à domicile ou au téléphone ?
-    @search_results = if @form.motif.individuel? && requires_lieu?
-                        SearchCreneauxForAgentsService.perform_with(@form)
-                      elsif @form.motif.individuel? && !requires_lieu?
-                        SearchCreneauxWithoutLieuForAgentsService.perform_with(@form)
+    @search_results = if @form.motif.individuel?
+                        search_creneaux_service.perform_with(@form)
                       else
                         SearchRdvCollectifForAgentsService.new(@form).lieu_search
                       end
+  end
+
+  def search_creneaux_service
+    if requires_lieu?
+      SearchCreneauxForAgentsService
+    else
+      SearchCreneauxWithoutLieuForAgentsService
+    end
   end
 
   def creneaux_search_params
