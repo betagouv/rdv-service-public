@@ -98,10 +98,10 @@ describe "Users API", swagger_doc: "v1/api.json" do
 
       let(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [organisation]) }
       let(:user_id) { user.id }
-      let(:first_name) { "Alain" }
-      let(:last_name) { "Verse" }
-
+      
       response 200, "Met à jour et renvoie un·e usager·ère" do
+        let(:first_name) { "Alain" }
+        let(:last_name) { "Verse" }
         let(:birth_name) { "Fripouille" }
         let(:birth_date) { "1976-10-01" }
         let(:email) { "jean@jacques.fr" }
@@ -152,6 +152,9 @@ describe "Users API", swagger_doc: "v1/api.json" do
       end
 
       response 200, "updates a user with a minimal set of params", document: false do
+        let(:first_name) { "Alain" }
+        let(:last_name) { "Verse" }
+
         schema "$ref" => "#/components/schemas/user_with_root"
 
         run_test!
@@ -400,11 +403,10 @@ describe "Users API", swagger_doc: "v1/api.json" do
       let(:uid) { auth_headers["uid"].to_s }
       let(:client) { auth_headers["client"].to_s }
 
-      let(:"organisation_ids[]") { [organisation.id] }
-      let(:first_name) { "Johnny" }
-      let(:last_name) { "Silverhand" }
-
       response 200, "Crée et renvoie un·e usager·ère" do
+        let(:"organisation_ids[]") { [organisation.id] }
+        let(:first_name) { "Johnny" }
+        let(:last_name) { "Silverhand" }
         let(:birth_name) { "Fripouille" }
         let(:birth_date) { "1976-10-01" }
         let(:email) { "jean@jacques.fr" }
@@ -460,6 +462,10 @@ describe "Users API", swagger_doc: "v1/api.json" do
       end
 
       response 200, "creates a user with a minimal set of params", document: false do
+        let(:"organisation_ids[]") { [organisation.id] }
+        let(:first_name) { "Johnny" }
+        let(:last_name) { "Silverhand" }
+
         let!(:user_count_before) { User.count }
         let(:created_user) { User.find(parsed_response_body["user"]["id"]) }
 
@@ -477,6 +483,9 @@ describe "Users API", swagger_doc: "v1/api.json" do
       end
 
       response 401, "Problème d'authentification" do
+        let(:"organisation_ids[]") { [organisation.id] }
+        let(:first_name) { "Johnny" }
+        let(:last_name) { "Silverhand" }
         let(:"access-token") { "false" }
 
         schema "$ref" => "#/components/schemas/error_authentication"
@@ -495,6 +504,9 @@ describe "Users API", swagger_doc: "v1/api.json" do
       end
 
       response 422, "phone number is misformatted", document: false do
+        let(:"organisation_ids[]") { [organisation.id] }
+        let(:first_name) { "Johnny" }
+        let(:last_name) { "Silverhand" }
         let(:phone_number) { "misformatted phone number" }
 
         schema "$ref" => "#/components/schemas/errors_generic"
@@ -505,6 +517,10 @@ describe "Users API", swagger_doc: "v1/api.json" do
       end
 
       response 422, "email is taken", document: false do
+        let(:"organisation_ids[]") { [organisation.id] }
+        let(:first_name) { "Johnny" }
+        let(:last_name) { "Silverhand" }
+
         let!(:existing_user) { create(:user, email: "jean@jacques.fr") }
         let(:email) { existing_user.email }
 
