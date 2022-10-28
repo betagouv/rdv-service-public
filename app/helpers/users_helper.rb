@@ -156,10 +156,11 @@ module UsersHelper
     :responsible
   end
 
-  def user_merge_attribute_value(user, attribute)
-    return nil unless user
+  def user_merge_attribute_value(user, user_profile, attribute)
     return birth_date_and_age(user) if attribute == :birth_date
     return user.responsible&.full_name if attribute == :responsible_id
+    return formatted_user_notes(user_profile) if attribute == :notes
+    return user_profile&.human_attribute_value(:logement) if attribute == :logement
 
     user.send(attribute)
   end

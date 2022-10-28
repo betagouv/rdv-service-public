@@ -88,7 +88,7 @@ class MergeUsersForm
   end
 
   def attributes_to_merge
-    ATTRIBUTES
+    (ATTRIBUTES + Territory::OPTIONAL_FIELD_TOGGLES.values)
       .select { send(_1) == user_to_merge_number }
       .without(:email) # email cannot be in this list, only to be explicit
   end
