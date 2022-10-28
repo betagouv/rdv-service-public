@@ -10,9 +10,15 @@ class Admin::RdvsController < AgentAuthController
   # TODO: remove when this is fixed: https://sentry.io/organizations/rdv-solidarites/issues/3268196907
   before_action :log_params_to_sentry, only: %i[index export rdvs_users_export]
 
+  # Pour pouvoir agir sur le scope des organisations
+  # et voir plus large que l'orgasation courante
+  # en attendant de remanier les policies
+  skip_after_action :verify_policy_scoped, only: :index
+
   def index
     set_scoped_organisations
-    @rdvs = policy_scope(Rdv).search_for(@scoped_organisations, parsed_params)
+
+    @rdvs = Rdv.search_for(@scoped_organisations, parsed_params)
       .includes([:rdvs_users, :agents_rdvs, :organisation, :lieu, :motif, { agents: :service, users: %i[responsible organisations] }])
     @breadcrumb_page = params[:breadcrumb_page]
     @form = Admin::RdvSearchForm.new(parsed_params)
