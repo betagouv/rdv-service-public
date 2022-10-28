@@ -89,6 +89,17 @@ RSpec.configure do |config|
             required: %w[id address agents cancelled_at collectif context created_by deleted_at duration_in_min lieu max_participants_count motif name organisation rdvs_users starts_at status users
                          users_count uuid],
           },
+          agents: {
+            type: "object",
+            properties: {
+              agents: {
+                type: "array",
+                items: { "$ref" => "#/components/schemas/agent" },
+              },
+              meta: { "$ref" => "#/components/schemas/meta" },
+            },
+            required: %w[agents meta],
+          },
           agent: {
             type: "object",
             properties: {
@@ -285,11 +296,15 @@ RSpec.configure do |config|
       tags: [
         {
           name: "Invitation",
-          description: "Pour manipuler usager·ères via leur jeton d'invitation",
+          description: "Pour manipuler des usager·ères via leur jeton d'invitation",
         },
         {
           name: "User",
-          description: "Pour manipuler usager·ères",
+          description: "Pour manipuler des usager·ères",
+        },
+        {
+          name: "Agent",
+          description: "Pour manipuler des agent·es",
         },
         {
           name: "RDV",

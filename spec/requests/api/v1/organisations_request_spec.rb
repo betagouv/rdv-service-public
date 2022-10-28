@@ -13,7 +13,7 @@ describe "Organisations API", swagger_doc: "v1/api.json" do
       tags "Organisation"
       produces "application/json"
       operationId "getOrganisations"
-      description "Renvoie toutes les organisations accessibles à l'agent·e authentifié·e, de manière paginée."
+      description "Renvoie toutes les organisations accessibles à l'agent·e authentifié·e, de manière paginée"
 
       parameter name: "departement_number", in: :query, type: :string, description: "Le numéro ou code de département du territoire concerné", example: "26", required: false
       parameter name: "city_code", in: :query, type: :string, description: "Le code INSEE de la localité", example: "26323", required: false

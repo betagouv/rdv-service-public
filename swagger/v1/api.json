@@ -159,6 +159,24 @@
           "uuid"
         ]
       },
+      "agents": {
+        "type": "object",
+        "properties": {
+          "agents": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/agent"
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/meta"
+          }
+        },
+        "required": [
+          "agents",
+          "meta"
+        ]
+      },
       "agent": {
         "type": "object",
         "properties": {
@@ -661,11 +679,15 @@
   "tags": [
     {
       "name": "Invitation",
-      "description": "Pour manipuler usager·ères via leur jeton d'invitation"
+      "description": "Pour manipuler des usager·ères via leur jeton d'invitation"
     },
     {
       "name": "User",
-      "description": "Pour manipuler usager·ères"
+      "description": "Pour manipuler des usager·ères"
+    },
+    {
+      "name": "Agent",
+      "description": "Pour manipuler des agent·es"
     },
     {
       "name": "RDV",
@@ -699,6 +721,140 @@
     }
   ],
   "paths": {
+    "/api/v1/agents": {
+      "get": {
+        "summary": "Lister les agent·es",
+        "security": [
+          {
+            "access_token": [
+
+            ],
+            "uid": [
+
+            ],
+            "client": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access-token",
+            "in": "header",
+            "description": "Token d'accès (authentification)",
+            "example": "SFYBngO55ImjD1HOcv-ivQ",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "client",
+            "in": "header",
+            "description": "Clé client d'accès (authentification)",
+            "example": "Z6EihQAY9NWsZByfZ47i_Q",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "uid",
+            "in": "header",
+            "description": "Identifiant d'accès (authentification)",
+            "example": "martine@demo.rdv-solidarites.fr",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "La page souhaitée",
+            "example": "1",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "per",
+            "in": "query",
+            "description": "Le nombre d'éléments souhaités par page",
+            "example": "10",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "organisation_id",
+            "in": "query",
+            "description": "L'ID d'une organisation donnée",
+            "example": "123",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "tags": [
+          "Agent"
+        ],
+        "operationId": "getAgents",
+        "description": "Renvoie les agent·es des organisations accessibles, de manière paginée.",
+        "responses": {
+          "200": {
+            "description": "Renvoie les agent·es",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "agents": [
+                        {
+                          "id": 45,
+                          "email": "agent_1@lapin.fr",
+                          "first_name": "Vital",
+                          "last_name": "Guerin"
+                        }
+                      ],
+                      "meta": {
+                        "current_page": 1,
+                        "next_page": null,
+                        "prev_page": null,
+                        "total_pages": 1,
+                        "total_count": 1
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/agents"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Problème d'authentification",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "errors": [
+                        "Vous devez vous connecter ou vous inscrire pour continuer."
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/errors_object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/groups": {
       "get": {
         "summary": "Lister les groupes (représentation des territoires)",
@@ -739,12 +895,12 @@
                     "value": {
                       "groups": [
                         {
-                          "id": 64,
+                          "id": 73,
                           "label": "Territoire n°3",
                           "name": "3"
                         },
                         {
-                          "id": 65,
+                          "id": 74,
                           "label": "Territoire n°4",
                           "name": "4"
                         }
@@ -846,18 +1002,18 @@
                         "birth_name": null,
                         "caisse_affiliation": "caf",
                         "case_number": null,
-                        "created_at": "2022-10-27 14:34:32 +0200",
+                        "created_at": "2022-10-27 15:47:45 +0200",
                         "email": "jean@jacques.fr",
                         "family_situation": "divorced",
                         "first_name": "Jean",
                         "invitation_accepted_at": null,
-                        "invitation_created_at": "2022-10-27 14:34:32 +0200",
+                        "invitation_created_at": "2022-10-27 15:47:45 +0200",
                         "last_name": "JACQUES",
                         "notify_by_email": true,
                         "notify_by_sms": true,
                         "number_of_children": 12,
-                        "phone_number": "07 96 01 23 44",
-                        "phone_number_formatted": "+33796012344",
+                        "phone_number": "0752529478",
+                        "phone_number_formatted": "+33752529478",
                         "responsible": null,
                         "responsible_id": null,
                         "user_profiles": null
@@ -1010,13 +1166,13 @@
                     "value": {
                       "organisations": [
                         {
-                          "id": 77,
+                          "id": 86,
                           "email": null,
                           "name": "Organisation n°3",
                           "phone_number": null
                         },
                         {
-                          "id": 78,
+                          "id": 87,
                           "email": null,
                           "name": "Organisation n°4",
                           "phone_number": null
@@ -1110,21 +1266,21 @@
                     "value": {
                       "organizations": [
                         {
-                          "id": 97,
+                          "id": 106,
                           "email": null,
-                          "group_id": 114,
+                          "group_id": 123,
                           "label": "Organisation n°3",
                           "phone_number": null,
-                          "public_link": "http://www.rdv-solidarites-test.localhost/org/97",
+                          "public_link": "http://www.rdv-solidarites-test.localhost/org/106",
                           "website": null
                         },
                         {
-                          "id": 98,
+                          "id": 107,
                           "email": null,
-                          "group_id": 115,
+                          "group_id": 124,
                           "label": "Organisation n°4",
                           "phone_number": null,
-                          "public_link": "http://www.rdv-solidarites-test.localhost/org/98",
+                          "public_link": "http://www.rdv-solidarites-test.localhost/org/107",
                           "website": null
                         }
                       ],
@@ -1177,11 +1333,11 @@
                       "public_links": [
                         {
                           "external_id": "ext_id_A",
-                          "public_link": "http://www.rdv-aide-numerique-test.localhost/org/532"
+                          "public_link": "http://www.rdv-aide-numerique-test.localhost/org/541"
                         },
                         {
                           "external_id": "ext_id_B",
-                          "public_link": "http://www.rdv-aide-numerique-test.localhost/org/533"
+                          "public_link": "http://www.rdv-aide-numerique-test.localhost/org/542"
                         }
                       ]
                     }
@@ -1295,10 +1451,10 @@
                           "address": "1 rue de l'adresse 12345 Ville",
                           "agents": [
                             {
-                              "id": 97,
+                              "id": 106,
                               "email": "agent_1@lapin.fr",
-                              "first_name": "Albérade",
-                              "last_name": "Reynaud"
+                              "first_name": "Romane",
+                              "last_name": "Bertin"
                             }
                           ],
                           "cancelled_at": null,
@@ -1307,12 +1463,12 @@
                           "created_by": "agent",
                           "deleted_at": null,
                           "duration_in_min": 45,
-                          "ends_at": "2022-10-30 15:19:46 +0100",
+                          "ends_at": "2022-10-30 16:33:00 +0100",
                           "lieu": {
                             "id": 31,
                             "address": "1 rue de l'adresse 12345 Ville",
                             "name": "Lieu n°1",
-                            "organisation_id": 550,
+                            "organisation_id": 559,
                             "phone_number": null,
                             "single_use": false
                           },
@@ -1323,13 +1479,13 @@
                             "deleted_at": null,
                             "location_type": "public_office",
                             "name": "Motif 1",
-                            "organisation_id": 552,
+                            "organisation_id": 561,
                             "reservable_online": true,
-                            "service_id": 113
+                            "service_id": 122
                           },
                           "name": null,
                           "organisation": {
-                            "id": 550,
+                            "id": 559,
                             "email": null,
                             "name": "Organisation n°1",
                             "phone_number": null
@@ -1348,25 +1504,25 @@
                                 "birth_name": null,
                                 "caisse_affiliation": "caf",
                                 "case_number": null,
-                                "created_at": "2022-10-27 14:34:46 +0200",
+                                "created_at": "2022-10-27 15:48:00 +0200",
                                 "email": "usager_1@lapin.fr",
                                 "family_situation": "divorced",
-                                "first_name": "Claudine",
+                                "first_name": "Marlène",
                                 "invitation_accepted_at": null,
                                 "invitation_created_at": null,
-                                "last_name": "LEBLANC",
+                                "last_name": "BARTHELEMY",
                                 "notify_by_email": true,
                                 "notify_by_sms": true,
                                 "number_of_children": 12,
-                                "phone_number": "6 82 95 48 90",
-                                "phone_number_formatted": "+33682954890",
+                                "phone_number": "0782401447",
+                                "phone_number_formatted": "+33782401447",
                                 "responsible": null,
                                 "responsible_id": null,
                                 "user_profiles": null
                               }
                             }
                           ],
-                          "starts_at": "2022-10-30 14:34:46 +0100",
+                          "starts_at": "2022-10-30 15:48:00 +0100",
                           "status": "unknown",
                           "users": [
                             {
@@ -1378,35 +1534,35 @@
                               "birth_name": null,
                               "caisse_affiliation": "caf",
                               "case_number": null,
-                              "created_at": "2022-10-27 14:34:46 +0200",
+                              "created_at": "2022-10-27 15:48:00 +0200",
                               "email": "usager_1@lapin.fr",
                               "family_situation": "divorced",
-                              "first_name": "Claudine",
+                              "first_name": "Marlène",
                               "invitation_accepted_at": null,
                               "invitation_created_at": null,
-                              "last_name": "LEBLANC",
+                              "last_name": "BARTHELEMY",
                               "notify_by_email": true,
                               "notify_by_sms": true,
                               "number_of_children": 12,
-                              "phone_number": "6 82 95 48 90",
-                              "phone_number_formatted": "+33682954890",
+                              "phone_number": "0782401447",
+                              "phone_number_formatted": "+33782401447",
                               "responsible": null,
                               "responsible_id": null,
                               "user_profiles": null
                             }
                           ],
                           "users_count": 1,
-                          "uuid": "44f0f6ef-b376-4f3f-9327-60c7132d6d50"
+                          "uuid": "99e83c8a-bd4d-455e-aba3-461969437ba9"
                         },
                         {
                           "id": 16,
                           "address": "3 rue de l'adresse 12345 Ville",
                           "agents": [
                             {
-                              "id": 99,
+                              "id": 108,
                               "email": "agent_3@lapin.fr",
-                              "first_name": "Ariel",
-                              "last_name": "Durand"
+                              "first_name": "Galeran",
+                              "last_name": "Pichon"
                             }
                           ],
                           "cancelled_at": null,
@@ -1415,12 +1571,12 @@
                           "created_by": "agent",
                           "deleted_at": null,
                           "duration_in_min": 45,
-                          "ends_at": "2022-10-30 15:19:46 +0100",
+                          "ends_at": "2022-10-30 16:33:00 +0100",
                           "lieu": {
                             "id": 33,
                             "address": "3 rue de l'adresse 12345 Ville",
                             "name": "Lieu n°3",
-                            "organisation_id": 550,
+                            "organisation_id": 559,
                             "phone_number": null,
                             "single_use": false
                           },
@@ -1431,13 +1587,13 @@
                             "deleted_at": null,
                             "location_type": "public_office",
                             "name": "Motif 2",
-                            "organisation_id": 553,
+                            "organisation_id": 562,
                             "reservable_online": true,
-                            "service_id": 114
+                            "service_id": 123
                           },
                           "name": null,
                           "organisation": {
-                            "id": 550,
+                            "id": 559,
                             "email": null,
                             "name": "Organisation n°1",
                             "phone_number": null
@@ -1456,25 +1612,25 @@
                                 "birth_name": null,
                                 "caisse_affiliation": "caf",
                                 "case_number": null,
-                                "created_at": "2022-10-27 14:34:46 +0200",
+                                "created_at": "2022-10-27 15:48:00 +0200",
                                 "email": "usager_3@lapin.fr",
                                 "family_situation": "divorced",
-                                "first_name": "Christine",
+                                "first_name": "Angadrême",
                                 "invitation_accepted_at": null,
                                 "invitation_created_at": null,
-                                "last_name": "PASQUIER",
+                                "last_name": "NOEL",
                                 "notify_by_email": true,
                                 "notify_by_sms": true,
                                 "number_of_children": 12,
-                                "phone_number": "7 82 97 36 98",
-                                "phone_number_formatted": "+33782973698",
+                                "phone_number": "07 97 85 11 14",
+                                "phone_number_formatted": "+33797851114",
                                 "responsible": null,
                                 "responsible_id": null,
                                 "user_profiles": null
                               }
                             }
                           ],
-                          "starts_at": "2022-10-30 14:34:46 +0100",
+                          "starts_at": "2022-10-30 15:48:00 +0100",
                           "status": "unknown",
                           "users": [
                             {
@@ -1486,25 +1642,25 @@
                               "birth_name": null,
                               "caisse_affiliation": "caf",
                               "case_number": null,
-                              "created_at": "2022-10-27 14:34:46 +0200",
+                              "created_at": "2022-10-27 15:48:00 +0200",
                               "email": "usager_3@lapin.fr",
                               "family_situation": "divorced",
-                              "first_name": "Christine",
+                              "first_name": "Angadrême",
                               "invitation_accepted_at": null,
                               "invitation_created_at": null,
-                              "last_name": "PASQUIER",
+                              "last_name": "NOEL",
                               "notify_by_email": true,
                               "notify_by_sms": true,
                               "number_of_children": 12,
-                              "phone_number": "7 82 97 36 98",
-                              "phone_number_formatted": "+33782973698",
+                              "phone_number": "07 97 85 11 14",
+                              "phone_number_formatted": "+33797851114",
                               "responsible": null,
                               "responsible_id": null,
                               "user_profiles": null
                             }
                           ],
                           "users_count": 1,
-                          "uuid": "f8309fd9-768d-415c-be42-c9850fd7107c"
+                          "uuid": "826dad80-c465-4a6a-b4c4-b545641f4357"
                         }
                       ],
                       "meta": {
