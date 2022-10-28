@@ -39,43 +39,44 @@ describe "RDV authentified API", swagger_doc: "v1/api.json" do
       response 200, "Appel API réussi" do
         let(:organisation_id) { organisation.id }
 
-        context "basic role" do
-          let(:access_basic_agent) { api_auth_headers_for_agent(basic_agent) }
-          let(:"access-token") { access_basic_agent["access-token"].to_s }
-          let(:uid) { access_basic_agent["uid"].to_s }
-          let(:client) { access_basic_agent["client"].to_s }
+        let(:access_basic_agent) { api_auth_headers_for_agent(basic_agent) }
+        let(:"access-token") { access_basic_agent["access-token"].to_s }
+        let(:uid) { access_basic_agent["uid"].to_s }
+        let(:client) { access_basic_agent["client"].to_s }
 
-          schema "$ref" => "#/components/schemas/rdvs"
+        schema "$ref" => "#/components/schemas/rdvs"
 
-          run_test!
+        run_test!
 
-          it "returns policy scoped RDVs" do
-            expect(JSON.parse(response.body)["rdvs"].pluck("id")).to contain_exactly(rdv.id)
-          end
-
-          context "organisation introuvable" do
-            let(:organisation_id) { "false" }
-
-            it "returns empty results" do
-              expect(JSON.parse(response.body)["rdvs"]).to eq([])
-            end
-          end
+        it "returns policy scoped RDVs" do
+          expect(JSON.parse(response.body)["rdvs"].pluck("id")).to contain_exactly(rdv.id)
         end
+      end
 
-        context "admin role" do
-          let(:access_admin_agent) { api_auth_headers_for_agent(admin_agent) }
-          let(:"access-token") { access_admin_agent["access-token"].to_s }
-          let(:uid) { access_admin_agent["uid"].to_s }
-          let(:client) { access_admin_agent["client"].to_s }
+      response 200, "returns empty results when organisation is not found", document: false do
+        let(:organisation_id) { "false" }
 
-          before do |example|
-            submit_request(example.metadata)
-          end
+        let(:access_admin_agent) { api_auth_headers_for_agent(admin_agent) }
+        let(:"access-token") { access_admin_agent["access-token"].to_s }
+        let(:uid) { access_admin_agent["uid"].to_s }
+        let(:client) { access_admin_agent["client"].to_s }
 
-          it "returns policy scoped RDVs" do
-            expect(JSON.parse(response.body)["rdvs"].pluck("id")).to contain_exactly(rdv.id, rdv3.id)
-          end
-        end
+        run_test!
+
+        it { expect(JSON.parse(response.body)["rdvs"]).to eq([]) }
+      end
+
+      response 200, "returns policy scoped RDVs when agent is admin", document: false do
+        let(:organisation_id) { organisation.id }
+
+        let(:access_admin_agent) { api_auth_headers_for_agent(admin_agent) }
+        let(:"access-token") { access_admin_agent["access-token"].to_s }
+        let(:uid) { access_admin_agent["uid"].to_s }
+        let(:client) { access_admin_agent["client"].to_s }
+
+        run_test!
+
+        it { expect(JSON.parse(response.body)["rdvs"].pluck("id")).to contain_exactly(rdv.id, rdv3.id) }
       end
 
       response 401, "Problème d'authentification" do
