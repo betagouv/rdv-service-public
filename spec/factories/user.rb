@@ -28,9 +28,6 @@ FactoryBot.define do
     trait :unconfirmed do
       confirmed_at { nil }
     end
-    trait :with_multiple_organisations do
-      organisations { create_list(:organisation, 3) }
-    end
     trait :with_no_email do
       email { nil }
     end
@@ -43,7 +40,7 @@ FactoryBot.define do
       password_confirmation { nil }
     end
     trait :relative do
-      responsible { create(:user) }
+      responsible { association(:user) }
       phone_number { nil }
       address { nil }
       password { nil }
