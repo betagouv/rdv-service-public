@@ -44,9 +44,20 @@ module RdvsUserExporter
     sheet = book.create_worksheet
     sheet.row(0).concat(HEADER)
 
-    rdv_users = rdv_users.includes(:user, rdv: %i[motif agents receipts])
+    rdv_users = rdv_users.includes(
+      user: :responsible,
+      rdv: [
+        :organisation,
+        :agents,
+        :lieu,
+        :receipts,
+        :versions_where_event_eq_create,
+        :users,
+        { motif: :service },
+      ]
+    )
 
-    rdv_users.each_with_index do |rdv_user, index|
+    rdv_users.find_each.with_index do |rdv_user, index|
       row = sheet.row(index + 1)
       row.set_format 3, DateFormat
       row.set_format 4, HourFormat

@@ -13,15 +13,13 @@ describe "Organisations API", swagger_doc: "v1/api.json" do
       tags "Organisation"
       produces "application/json"
       operationId "getOrganisations"
-      description "Renvoie toutes les organisations accessibles à l'agent·e authentifié·e, de manière paginée."
+      description "Renvoie toutes les organisations accessibles à l'agent·e authentifié·e, de manière paginée"
 
       parameter name: "departement_number", in: :query, type: :string, description: "Le numéro ou code de département du territoire concerné", example: "26", required: false
       parameter name: "city_code", in: :query, type: :string, description: "Le code INSEE de la localité", example: "26323", required: false
 
       response 200, "Retourne des Organisations" do
-        let!(:page1) { create_list(:organisation, 2) }
-        let!(:page2) { create_list(:organisation, 2) }
-        let!(:page3) { create_list(:organisation, 1) }
+        let!(:organisations) { create_list(:organisation, 5) }
         let!(:agent) { create(:agent, basic_role_in_organisations: Organisation.all) }
         let!(:other_organisation) { create(:organisation) }
         let!(:other_agent) { create(:agent, basic_role_in_organisations: [other_organisation]) }
@@ -31,16 +29,13 @@ describe "Organisations API", swagger_doc: "v1/api.json" do
         let(:uid) { auth_headers["uid"].to_s }
         let(:client) { auth_headers["client"].to_s }
 
-        let(:page) { 2 }
-        let(:per) { 2 }
-
         schema "$ref" => "#/components/schemas/organisations"
 
         run_test!
 
-        it { expect(parsed_response_body[:meta]).to match(current_page: 2, next_page: 3, prev_page: 1, total_count: 5, total_pages: 3) }
+        it { expect(parsed_response_body[:meta]).to match(current_page: 1, next_page: nil, prev_page: nil, total_count: 5, total_pages: 1) }
 
-        it { expect(parsed_response_body[:organisations]).to match(OrganisationBlueprint.render_as_hash(page2)) }
+        it { expect(parsed_response_body[:organisations]).to match(OrganisationBlueprint.render_as_hash(organisations)) }
       end
 
       response 200, "Retourne des Organisations, filtrées par secteur géographique", document: false do
@@ -85,7 +80,7 @@ describe "Organisations API", swagger_doc: "v1/api.json" do
         let(:uid) { auth_headers["uid"].to_s }
         let(:client) { auth_headers["client"].to_s }
 
-        schema "$ref" => "#/components/schemas/errors_object"
+        schema "$ref" => "#/components/schemas/error_authentication"
 
         run_test!
       end

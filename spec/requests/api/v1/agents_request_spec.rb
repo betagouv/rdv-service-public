@@ -1,10 +1,22 @@
 # frozen_string_literal: true
 
-describe "api/v1/agents requests", type: :request do
-  describe "GET api/v1/agents" do
-    subject { get api_v1_agents_path(params), headers: api_auth_headers_for_agent(agent) }
+require "swagger_helper"
 
-    context "some agents" do
+describe "Agents API", swagger_doc: "v1/api.json" do
+  with_examples
+
+  path "/api/v1/agents" do
+    get "Lister les agent·es" do
+      with_authentication
+      with_pagination
+
+      tags "Agent"
+      produces "application/json"
+      operationId "getAgents"
+      description "Renvoie les agent·es des organisations accessibles, de manière paginée"
+
+      parameter name: "organisation_id", in: :query, type: :integer, description: "L'ID d'une organisation donnée", example: "123", required: false
+
       let!(:organisation) { create(:organisation) }
       let!(:organisation2) { create(:organisation) }
       let!(:organisation3) { create(:organisation) }
@@ -12,24 +24,39 @@ describe "api/v1/agents requests", type: :request do
       let!(:agent2) { create(:agent, basic_role_in_organisations: [organisation2]) }
       let!(:agent3) { create(:agent, basic_role_in_organisations: [organisation3]) }
 
-      context "policy scoped agents" do
-        let(:params) { {} }
+      let(:auth_headers) { api_auth_headers_for_agent(agent) }
+      let(:"access-token") { auth_headers["access-token"].to_s }
+      let(:uid) { auth_headers["uid"].to_s }
+      let(:client) { auth_headers["client"].to_s }
 
-        it "returns all agents of available organisations" do
-          subject
-          expect(response.status).to eq(200)
-          expect(parsed_response_body["agents"].pluck("id")).to match_array([agent.id, agent2.id])
-        end
+      response 200, "Renvoie les agent·es" do
+        let(:organisation_id) { organisation.id }
+
+        schema "$ref" => "#/components/schemas/agents"
+
+        run_test!
+
+        it { expect(parsed_response_body["agents"].pluck("id")).to match_array([agent.id]) }
       end
 
-      context "filtered on organisation" do
-        let(:params) { { organisation_id: organisation.id } }
+      response 200, "policy scoped agents", document: false do
+        schema "$ref" => "#/components/schemas/agents"
 
-        it "only includes specified organisation" do
-          subject
-          expect(response.status).to eq(200)
-          expect(parsed_response_body["agents"].pluck("id")).to match_array([agent.id])
-        end
+        run_test!
+
+        it { expect(parsed_response_body["agents"].pluck("id")).to match_array([agent.id, agent2.id]) }
+      end
+
+      response 401, "Problème d'authentification" do
+        let(:agent) { create(:agent) }
+        let(:auth_headers) { api_auth_headers_for_agent(agent) }
+        let(:"access-token") { "false" }
+        let(:uid) { auth_headers["uid"].to_s }
+        let(:client) { auth_headers["client"].to_s }
+
+        schema "$ref" => "#/components/schemas/error_authentication"
+
+        run_test!
       end
     end
   end

@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :team do
-    territory { create(:territory) }
+    territory { association(:territory) }
     name { Faker::Name.name }
   end
 end

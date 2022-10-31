@@ -3,8 +3,7 @@
 class Api::V1::BaseController < ActionController::Base
   respond_to :json
 
-  DEFAULT_PAGINATE_PER = 100
-  MAX_PAGINATE_PER = 100
+  PAGINATE_PER = 100
 
   protected
 
@@ -25,7 +24,7 @@ class Api::V1::BaseController < ActionController::Base
   end
 
   def render_collection(objects, root: nil, blueprint_klass: nil)
-    objects = objects.page(page).per(per).max_paginates_per(MAX_PAGINATE_PER)
+    objects = objects.page(page).per(PAGINATE_PER)
     meta = {
       current_page: objects.current_page,
       next_page: objects.next_page,
@@ -42,9 +41,5 @@ class Api::V1::BaseController < ActionController::Base
 
   def page
     @page ||= params[:page]&.to_i || 1
-  end
-
-  def per
-    @per ||= params[:per]&.to_i || DEFAULT_PAGINATE_PER
   end
 end

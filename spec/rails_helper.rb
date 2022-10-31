@@ -76,23 +76,25 @@ RSpec.configure do |config|
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
 
-  config.before do
-    DatabaseCleaner.start
+  config.before(:suite) do
+    DatabaseCleaner.clean_with(:truncation)
   end
 
-  config.before(:each, js: true) do
-    DatabaseCleaner.strategy = :truncation
+  config.around do |example|
+    DatabaseCleaner.strategy = if example.metadata[:js]
+                                 :truncation
+                               else
+                                 :transaction
+                               end
+
+    DatabaseCleaner.cleaning do
+      example.run
+    end
   end
 
   config.after do
-    DatabaseCleaner.clean
     ActionMailer::Base.deliveries.clear
     FactoryBot.rewind_sequences
     Rails.cache.clear
-  end
-
-  config.before(:suite) do
-    DatabaseCleaner.strategy = :deletion
-    DatabaseCleaner.clean_with(:truncation)
   end
 end
