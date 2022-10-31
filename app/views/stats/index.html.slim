@@ -6,134 +6,135 @@
     | Statistiques
     = " pour le #{@territory}" if @territory.present?
 
-.container.mt-3
-  - if @territory.present? && Organisation.joins(:territory).where(territories: [@territory]).empty?
-    h3 Cette structure n'utilise pas #{current_domain.name}.
-  - else
-    .card.mb-5
-      .card-body
-        h2.card-title Nombre de RDV par statut
-        .row
-          .col-lg-4
-            .px-1
-              - %i[seen excused revoked noshow].each do |temporal_status|
-                = render "stats/rdv_counter_without_link", \
-                  temporal_status: temporal_status, \
-                  count: @stats.rdvs.status(temporal_status).count
-          .col-lg-4
-            .px-1
-              = render "stats/rdv_counter_without_link", \
-                temporal_status: :unknown_past, \
-                count: @stats.rdvs.status(:unknown_past).count
-          .col-lg-4
-            .px-1
-              = render "stats/rdv_counter_without_link", \
-                temporal_status: :unknown_future, \
-                count: @stats.rdvs.status(:unknown_future).count
-        hr
-        .row
-          .col-lg-4
-            .px-1
-              = render "stats/rdv_counter_without_link", \
-                label: "Tous", \
-                count: @stats.rdvs.count
-
-    .card.mb-5
-      .card-body
-        = self_anchor "rdvs"
-         h2.card-title RDV créés (#{@stats.rdvs.count})
-        = column_chart rdvs_stats_path(territory: @territory), stacked: true
-
-    - unless @territory.present?
+- cache([@territory, Time.zone.today], expires_in: 24.hours) do
+  .container.mt-3
+    - if @territory.present? && Organisation.joins(:territory).where(territories: [@territory]).empty?
+      h3 Cette structure n'utilise pas #{current_domain.name}.
+    - else
       .card.mb-5
         .card-body
-          = self_anchor "rdvs-territory"
-            h2.card-title RDV créés par structure (#{@stats.rdvs.count})
-          = column_chart rdvs_stats_path(by_territory: true), stacked: true
+          h2.card-title Nombre de RDV par statut
+          .row
+            .col-lg-4
+              .px-1
+                - %i[seen excused revoked noshow].each do |temporal_status|
+                  = render "stats/rdv_counter_without_link", \
+                    temporal_status: temporal_status, \
+                    count: @stats.rdvs.status(temporal_status).count
+            .col-lg-4
+              .px-1
+                = render "stats/rdv_counter_without_link", \
+                  temporal_status: :unknown_past, \
+                  count: @stats.rdvs.status(:unknown_past).count
+            .col-lg-4
+              .px-1
+                = render "stats/rdv_counter_without_link", \
+                  temporal_status: :unknown_future, \
+                  count: @stats.rdvs.status(:unknown_future).count
+          hr
+          .row
+            .col-lg-4
+              .px-1
+                = render "stats/rdv_counter_without_link", \
+                  label: "Tous", \
+                  count: @stats.rdvs.count
 
-    .card.mb-5
-      .card-body
-        = self_anchor "rdvs-service"
-          h2.card-title RDV créés par service (#{@stats.rdvs.count})
-        = column_chart rdvs_stats_path(by_service: true, territory: @territory), stacked: true
+      .card.mb-5
+        .card-body
+          = self_anchor "rdvs"
+            h2.card-title RDV créés (#{@stats.rdvs.count})
+          = column_chart rdvs_stats_path(territory: @territory), stacked: true
 
-    .card.mb-5
-      .card-body
-        = self_anchor "rdvs-type"
-          h2.card-title RDV par type (#{@stats.rdvs.count})
-        = column_chart rdvs_stats_path(by_location_type: true, territory: @territory), stacked: true
+      - unless @territory.present?
+        .card.mb-5
+          .card-body
+            = self_anchor "rdvs-territory"
+              h2.card-title RDV créés par structure (#{@stats.rdvs.count})
+            = column_chart rdvs_stats_path(by_territory: true), stacked: true
 
-    .card.mb-5
-      .card-body
-        = self_anchor "rdvs-status"
-          h2.card-title RDV par statut
-        /
-          Note: colors are synced manually with the status css and the order of the stats.
-          From stat.rb, Stat#rdvs_group_by_status:
-            * stats are in this order: unknown seen excused revoked noshow
-          From _rdv_status.scss, the colors are:
-            "unknown": $info, #ffbc00
-            "seen": $success, #0acf97
-            "excused": $info, #39afd1
-            "revoked": $teal, #02a8b5
-            "noshow": $danger, #fa5c7c
-        - colors = %w[#fa5c7c #02a8b5 #39afd1 #0acf97 #ffbc00]
-        = column_chart rdvs_stats_path(by_status: true, territory: @territory), stacked: :percent, max: 100, suffix: "%", colors: colors
+      .card.mb-5
+        .card-body
+          = self_anchor "rdvs-service"
+            h2.card-title RDV créés par service (#{@stats.rdvs.count})
+          = column_chart rdvs_stats_path(by_service: true, territory: @territory), stacked: true
 
-    .card.mb-5
-      .card-body
-        = self_anchor "notifications"
-          h2.card-title #{Receipt.model_name.human(count: 2)} (#{@stats.receipts.count})
-        - %i[event channel result].each do |attribute|
-          h3.card-subtitle Par #{Receipt.human_attribute_name(attribute).downcase}
-          = column_chart receipts_stats_path(group_by: attribute, departement: @departement, territory: @territory), stacked: true
+      .card.mb-5
+        .card-body
+          = self_anchor "rdvs-type"
+            h2.card-title RDV par type (#{@stats.rdvs.count})
+          = column_chart rdvs_stats_path(by_location_type: true, territory: @territory), stacked: true
 
-    .card.mb-5
-      .card-body
-        = self_anchor "activations"
-          h2.card-title Activité des agents
-        - active_agents = @agents.active
+      .card.mb-5
+        .card-body
+          = self_anchor "rdvs-status"
+            h2.card-title RDV par statut
+          /
+            Note: colors are synced manually with the status css and the order of the stats.
+            From stat.rb, Stat#rdvs_group_by_status:
+              * stats are in this order: unknown seen excused revoked noshow
+            From _rdv_status.scss, the colors are:
+              "unknown": $info, #ffbc00
+              "seen": $success, #0acf97
+              "excused": $info, #39afd1
+              "revoked": $teal, #02a8b5
+              "noshow": $danger, #fa5c7c
+          - colors = %w[#fa5c7c #02a8b5 #39afd1 #0acf97 #ffbc00]
+          = column_chart rdvs_stats_path(by_status: true, territory: @territory), stacked: :percent, max: 100, suffix: "%", colors: colors
 
-        h5 Aujourd'hui
+      .card.mb-5
+        .card-body
+          = self_anchor "notifications"
+            h2.card-title #{Receipt.model_name.human(count: 2)} (#{@stats.receipts.count})
+          - %i[event channel result].each do |attribute|
+            h3.card-subtitle Par #{Receipt.human_attribute_name(attribute).downcase}
+            = column_chart receipts_stats_path(group_by: attribute, departement: @departement, territory: @territory), stacked: true
 
-        p #{active_agents.count} agents ont été invités
+      .card.mb-5
+        .card-body
+          = self_anchor "activations"
+            h2.card-title Activité des agents
+          - active_agents = @agents.active
 
-        - accepted_count = active_agents.where.not(invitation_accepted_at: nil).count
-        p #{percent(accepted_count, active_agents.count)} ont accepté l'invitation (#{accepted_count})
+          h5 Aujourd'hui
 
-        - first_rdv_count = active_agents.joins(:rdvs).distinct.count
-        p #{percent(first_rdv_count, active_agents.count)} ont participé à au moins un rdv (#{first_rdv_count})
+          p #{active_agents.count} agents ont été invités
 
-        - active_count = active_agents.joins(:rdvs).where("rdvs.created_at > ?", 30.days.ago).distinct.count
-        p #{percent(active_count, active_agents.count)} ont participé à un rdv créé dans les 30 derniers jours (#{active_count})
+          - accepted_count = active_agents.where.not(invitation_accepted_at: nil).count
+          p #{percent(accepted_count, active_agents.count)} ont accepté l'invitation (#{accepted_count})
 
-        h5 Il y a 30 jours
+          - first_rdv_count = active_agents.joins(:rdvs).distinct.count
+          p #{percent(first_rdv_count, active_agents.count)} ont participé à au moins un rdv (#{first_rdv_count})
 
-        - active_agents = active_agents.where("agents.created_at < ?", 30.days.ago)
-        p #{active_agents.count} agents avaient été invités
+          - active_count = active_agents.joins(:rdvs).where("rdvs.created_at > ?", 30.days.ago).distinct.count
+          p #{percent(active_count, active_agents.count)} ont participé à un rdv créé dans les 30 derniers jours (#{active_count})
 
-        - accepted_count = active_agents.where.not(invitation_accepted_at: nil).where("agents.created_at < ?", 30.days.ago).count
-        p #{percent(accepted_count, active_agents.count)} avaient accepté l'invitation (#{accepted_count})
+          h5 Il y a 30 jours
 
-        - first_rdv_count = active_agents.joins(:rdvs).where("rdvs.created_at < ?", 30.days.ago).distinct.count
-        p #{percent(first_rdv_count, active_agents.count)} avaient participé à au moins un rdv (#{first_rdv_count})
+          - active_agents = active_agents.where("agents.created_at < ?", 30.days.ago)
+          p #{active_agents.count} agents avaient été invités
 
-        - active_count = active_agents.joins(:rdvs).where(rdvs: {created_at: 60.days.ago..30.days.ago}).distinct.count
-        p #{percent(active_count, active_agents.count)} avaient participé à un rdv créé un rdv les 30 derniers jours précédents (#{active_count})
+          - accepted_count = active_agents.where.not(invitation_accepted_at: nil).where("agents.created_at < ?", 30.days.ago).count
+          p #{percent(accepted_count, active_agents.count)} avaient accepté l'invitation (#{accepted_count})
 
-        = self_anchor "active_agents"
-          h2.card-title Agents actifs par mois
-        p Nombre d'agents ayant participé à au moins un rdv chaque mois
-        = column_chart active_agents_stats_path(territory: @territory)
-    .card.mb-5
-      .card-header
-        = "#{@territories.count} structures utilisent RDV-Solidarités"
-      .card-body
-        ul
-          - @territories.order(:name).each do |territory|
-            li = link_to territory, stats_path(territory: territory)
-        .m-3 = link_to "Retour aux statistiques de la plateforme", stats_path
-        .alert.alert-info.d-flex.align-items-center
-          .mr-3
-            i.fa.fa-info
-          = "Les chiffres donnés sur cette page englobent les plateformes #{Domain::ALL.map(&:name).join(' et ')} indifféremment."
+          - first_rdv_count = active_agents.joins(:rdvs).where("rdvs.created_at < ?", 30.days.ago).distinct.count
+          p #{percent(first_rdv_count, active_agents.count)} avaient participé à au moins un rdv (#{first_rdv_count})
+
+          - active_count = active_agents.joins(:rdvs).where(rdvs: {created_at: 60.days.ago..30.days.ago}).distinct.count
+          p #{percent(active_count, active_agents.count)} avaient participé à un rdv créé un rdv les 30 derniers jours précédents (#{active_count})
+
+          = self_anchor "active_agents"
+            h2.card-title Agents actifs par mois
+          p Nombre d'agents ayant participé à au moins un rdv chaque mois
+          = column_chart active_agents_stats_path(territory: @territory)
+      .card.mb-5
+        .card-header
+          = "#{@territories.count} structures utilisent RDV-Solidarités"
+        .card-body
+          ul
+            - @territories.order(:name).each do |territory|
+              li = link_to territory, stats_path(territory: territory)
+          .m-3 = link_to "Retour aux statistiques de la plateforme", stats_path
+          .alert.alert-info.d-flex.align-items-center
+            .mr-3
+              i.fa.fa-info
+            = "Les chiffres donnés sur cette page englobent les plateformes #{Domain::ALL.map(&:name).join(' et ')} indifféremment."
