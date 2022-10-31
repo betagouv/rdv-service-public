@@ -3,6 +3,8 @@
 class Api::V1::BaseController < ActionController::Base
   respond_to :json
 
+  PAGINATE_PER = 100
+
   protected
 
   def check_parameters_presence(*parameters)
@@ -22,7 +24,7 @@ class Api::V1::BaseController < ActionController::Base
   end
 
   def render_collection(objects, root: nil, blueprint_klass: nil)
-    objects = objects.page(page).per(per)
+    objects = objects.page(page).per(PAGINATE_PER)
     meta = {
       current_page: objects.current_page,
       next_page: objects.next_page,
@@ -39,9 +41,5 @@ class Api::V1::BaseController < ActionController::Base
 
   def page
     @page ||= params[:page]&.to_i || 1
-  end
-
-  def per
-    @per ||= params[:per]&.to_i || 100
   end
 end
