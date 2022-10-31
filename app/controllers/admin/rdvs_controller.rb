@@ -18,7 +18,7 @@ class Admin::RdvsController < AgentAuthController
     @form = Admin::RdvSearchForm.new(parsed_params)
     @lieux = Lieu.joins(:organisation).where(organisations: { id: @scoped_organisations.ids }).enabled.order(:name)
     @motifs = Motif.joins(:organisation).where(organisations: { id: @scoped_organisations.ids })
-    @rdvs_users_count = RdvsUser.where(rdv_id: @rdvs.ids).count
+    @rdvs_users_count = RdvsUser.where(rdv: @rdvs).count
     @rdvs = @rdvs.order(starts_at: :asc).page(params[:page]).per(10)
   end
 
