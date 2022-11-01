@@ -14,7 +14,7 @@ module AgentsHelper
     params[:step] = 2
     params[:starts_at] = creneau.starts_at
     params[:motif_id] = creneau.motif.id
-    params[:lieu_id] = creneau.lieu.id
+    params[:lieu_id] = creneau.lieu&.id
     params[:organisation_id] = creneau.motif.organisation_id
     params[:duration_in_min] = creneau.motif.default_duration_in_min
     # Pour filtrer les agents depuis la recherche de créneaux coté agent
@@ -39,6 +39,7 @@ module AgentsHelper
       "menu-motifs" => "settings",
       "menu-organisation" => "settings",
       "menu-organisation-stats" => "settings",
+      "menu-online-booking" => "settings",
       "menu-stats" => "account",
       "men-department-sectors" => "",
       "men-department-zones" => "",

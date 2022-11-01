@@ -34,7 +34,10 @@ class IcsCalendarController < ActionController::Base
   end
 
   def rdvs
-    @agent.rdvs.order("starts_at desc").limit(500)
+    @agent.rdvs
+      .includes(:organisation, :lieu, :motif)
+      .order("starts_at desc")
+      .where("starts_at > ?", 1.month.ago)
   end
 
   def add_events(cal)

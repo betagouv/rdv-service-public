@@ -410,33 +410,33 @@ describe Rdv, type: :model do
       organisation = create(:organisation)
       other_organisation = create(:organisation)
       admin = create(:agent, admin_role_in_organisations: [organisation, other_organisation])
-      rdv = create(:rdv, organisation: organisation)
-      create(:rdv, organisation: other_organisation)
+      rdv = create(:rdv, organisation: organisation, agents: [admin])
+      create(:rdv, organisation: other_organisation, agents: [admin])
 
       options = { lieu_id: "" }
-      expect(described_class.search_for(admin, organisation, options)).to eq([rdv])
+      expect(described_class.search_for(organisation, options)).to eq([rdv])
     end
 
     it "returns allowed rdvs" do
       organisation = create(:organisation)
       other_organisation = create(:organisation)
       admin = create(:agent, admin_role_in_organisations: [organisation, other_organisation])
-      rdv = create(:rdv, organisation: organisation)
-      create(:rdv, organisation: other_organisation)
+      rdv = create(:rdv, organisation: organisation, agents: [admin])
+      create(:rdv, organisation: other_organisation, agents: [admin])
 
       options = {}
-      expect(described_class.search_for(admin, organisation, options)).to eq([rdv])
+      expect(described_class.search_for(organisation, options)).to eq([rdv])
     end
 
     it "returns rdv for lieu when given" do
       organisation = create(:organisation)
       admin = create(:agent, admin_role_in_organisations: [organisation])
       lieu = create(:lieu, organisation: organisation)
-      rdv = create(:rdv, lieu: lieu, organisation: organisation)
-      create(:rdv, lieu: create(:lieu), organisation: organisation)
+      rdv = create(:rdv, lieu: lieu, organisation: organisation, agents: [admin])
+      create(:rdv, lieu: create(:lieu), organisation: organisation, agents: [admin])
 
       options = { "lieu_id" => lieu.id }
-      expect(described_class.search_for(admin, organisation, options)).to eq([rdv])
+      expect(described_class.search_for(organisation, options)).to eq([rdv])
     end
 
     it "returns rdv for motif when given" do
@@ -444,11 +444,11 @@ describe Rdv, type: :model do
       admin = create(:agent, admin_role_in_organisations: [organisation])
       motif = create(:motif, organisation: organisation, service: admin.service)
       autre_motif = create(:motif, organisation: organisation, service: admin.service)
-      rdv = create(:rdv, motif: motif, organisation: organisation)
-      create(:rdv, motif: autre_motif, organisation: organisation)
+      rdv = create(:rdv, motif: motif, organisation: organisation, agents: [admin])
+      create(:rdv, motif: autre_motif, organisation: organisation, agents: [admin])
 
       options = { "motif_id" => motif.id }
-      expect(described_class.search_for(admin, organisation, options)).to eq([rdv])
+      expect(described_class.search_for(organisation, options)).to eq([rdv])
     end
 
     it "returns rdv for given agent" do
@@ -459,7 +459,7 @@ describe Rdv, type: :model do
       create(:rdv, organisation: organisation, agents: [other_admin])
 
       options = { "agent_id" => admin.id }
-      expect(described_class.search_for(admin, organisation, options)).to eq([rdv])
+      expect(described_class.search_for(organisation, options)).to eq([rdv])
     end
 
     it "returns rdv for given user" do
@@ -471,7 +471,23 @@ describe Rdv, type: :model do
       create(:rdv, organisation: organisation, agents: [admin], users: [other_user])
 
       options = { "user_id" => user.id }
-      expect(described_class.search_for(admin, organisation, options)).to eq([rdv])
+      expect(described_class.search_for(organisation, options)).to eq([rdv])
+    end
+
+    it "return rdvs for agent in same organisation and service" do
+      organisation = create(:organisation)
+      organisation2 = create(:organisation)
+      user = create(:user, organisations: [organisation])
+      agent1 = create(:agent, basic_role_in_organisations: [organisation])
+      agent2 = create(:agent, basic_role_in_organisations: [organisation])
+      rdv1 = create(:rdv, organisation: organisation, agents: [agent1], users: [user])
+      rdv2 = create(:rdv, organisation: organisation, agents: [agent2], users: [user])
+      rdv3 = create(:rdv, organisation: organisation2, agents: [agent2], users: [user])
+
+      options = {}
+      expect(described_class.search_for(organisation, options)).to eq([rdv1, rdv2])
+      expect(described_class.search_for(organisation2, options)).to eq([rdv3])
+      expect(described_class.search_for(Organisation.all, options)).to eq([rdv1, rdv2, rdv3])
     end
 
     it "returns rdv with given status" do
@@ -481,7 +497,7 @@ describe Rdv, type: :model do
       create(:rdv, :past, organisation: organisation, agents: [admin], status: :excused)
 
       options = { "status" => "seen" }
-      expect(described_class.search_for(admin, organisation, options)).to eq([rdv])
+      expect(described_class.search_for(organisation, options)).to eq([rdv])
     end
 
     it "returns rdv starting after that date" do
@@ -493,7 +509,7 @@ describe Rdv, type: :model do
       create(:rdv, starts_at: now + 1.day, organisation: organisation, agents: [admin])
 
       options = { "start" => (now + 2.days) }
-      expect(described_class.search_for(admin, organisation, options)).to eq([rdv])
+      expect(described_class.search_for(organisation, options)).to eq([rdv])
     end
 
     it "returns rdv starting before that date" do
@@ -505,7 +521,7 @@ describe Rdv, type: :model do
       create(:rdv, starts_at: now + 3.days, organisation: organisation, agents: [admin])
 
       options = { "end" => (now + 2.days) }
-      expect(described_class.search_for(admin, organisation, options)).to eq([rdv])
+      expect(described_class.search_for(organisation, options)).to eq([rdv])
     end
   end
 
@@ -647,6 +663,85 @@ describe Rdv, type: :model do
       rdv = create(:rdv, receipts: build_list(:receipt, 2, result: :sent))
 
       expect(rdv.synthesized_receipts_result).to eq("processed")
+    end
+  end
+
+  describe "#soft_delete" do
+    it "set deleted_at with current time" do
+      now = Time.zone.parse("2022-08-30 11:45:00")
+      rdv = create(:rdv)
+      travel_to(now)
+      expect do
+        rdv.soft_delete
+      end.to change(rdv, :deleted_at).from(nil).to(now)
+    end
+
+    it "hide soft_deleted rdv" do
+      rdv = create(:rdv)
+      rdv.soft_delete
+      expect(described_class.all).to be_empty
+    end
+
+    it "allows finding soft_deleted rdv using `unscoped`" do
+      rdv = create(:rdv)
+      rdv.soft_delete
+      expect(described_class.unscoped.all).to eq([rdv])
+    end
+
+    it "dont call update webhook" do
+      rdv = create(:rdv)
+      expect(rdv).not_to receive(:generate_payload_and_send_webhook)
+      expect(rdv.soft_delete).to eq(true)
+    end
+
+    it "calls destroy webhook" do
+      rdv = create(:rdv)
+      expect(rdv).to receive(:generate_payload_and_send_webhook_for_destroy)
+      rdv.soft_delete
+    end
+  end
+
+  describe "#update_rdv_status_from_participation" do
+    let(:agent) { create :agent }
+    let!(:user1) { create(:user) }
+    let!(:user2) { create(:user) }
+    let!(:user3) { create(:user) }
+    let!(:user4) { create(:user) }
+    let(:rdv) { create :rdv, :collectif, starts_at: Time.zone.tomorrow, agents: [agent], users: [user1, user2, user3, user4] }
+
+    it "update as unknown (first priority)" do
+      rdv.rdvs_users.first.update(status: "seen")
+      rdv.rdvs_users.second.update(status: "noshow")
+      rdv.rdvs_users.third.update(status: "excused")
+      rdv.rdvs_users.last.update(status: "unknown")
+      rdv.update_rdv_status_from_participation
+      expect(rdv.status).to eq("unknown")
+    end
+
+    it "updated as seen (second priority)" do
+      rdv.rdvs_users.first.update(status: "seen")
+      rdv.rdvs_users.second.update(status: "noshow")
+      rdv.rdvs_users.third.update(status: "excused")
+      rdv.rdvs_users.last.update(status: "noshow")
+      rdv.update_rdv_status_from_participation
+      expect(rdv.status).to eq("seen")
+    end
+
+    it "updated as noshow (last priority)" do
+      rdv.rdvs_users.first.update(status: "noshow")
+      rdv.rdvs_users.second.update(status: "excused")
+      rdv.rdvs_users.third.update(status: "excused")
+      rdv.rdvs_users.last.update(status: "excused")
+      rdv.update_rdv_status_from_participation
+      expect(rdv.status).to eq("noshow")
+    end
+
+    %w[seen noshow excused].each do |status|
+      it "updated as #{status} if all participations statuses are #{status}" do
+        rdv.rdvs_users.update(status: status)
+        rdv.update_rdv_status_from_participation
+        expect(rdv.status).to eq(status)
+      end
     end
   end
 end

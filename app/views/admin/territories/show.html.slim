@@ -43,35 +43,11 @@
 
   - if policy([:configuration, Sector]).display?
     .col.col-md-4.p-2.rounded.settings-box
-      = link_to admin_territory_sectors_path(current_territory, current_agent) do
+      = link_to admin_territory_sectorization_path(current_territory) do
         h2.fw-bold.mb-0
           i.fa.fa-table>
-          | Secteurs
-        p Créer vos secteurs géographiques pour organiser votre sectorisation.
-
-  - if policy([:configuration, Sector]).display?
-    .col.col-md-4.p-2.rounded.settings-box
-      = link_to admin_territory_sectors_path(current_territory, view: "map") do
-        h2.fw-bold.mb-0
-          i.fa.fa-map>
-          | Carte
-        p Visualiser les secteurs du territoire.
-
-  - if policy([:configuration, Sector]).display?
-    .col.col-md-4.p-2.rounded.settings-box
-      = link_to admin_territory_sectorisation_test_path(current_territory) do
-        h2.fw-bold.mb-0
-          i.fa.fa-check-square>
-          | Test
-        p Effectuer des tests de vérification des adresses et informations de code INSEE.
-
-  - if policy([:configuration, Sector]).display?
-    .col.col-md-4.p-2.rounded.settings-box
-      = link_to new_admin_territory_zone_import_path(current_territory) do
-        h2.fw-bold.mb-0
-          i.fa.fa-download>
-          | Import
-        p Importer un fichier de sectorisation pour faciliter la création de votre découpage géographique.
+          | Sectorisation
+        p Créer, importer, affecter vos secteurs géographiques.
 
   - if policy([:configuration, current_territory]).display_user_fields_configuration?
     .col.col-md-4.p-2.rounded.settings-box

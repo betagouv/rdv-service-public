@@ -3,8 +3,8 @@ fr:
     title: "Le %{starts_at} (durée : %{duration} minutes)"
     title_time_only: "Aujourd’hui à %{starts_at} (durée : %{duration} minutes)"
     available_seats:
-      one: 1 place disponible
-      other: "%{count} places disponibles"
+      one: 1 place restante
+      other: "%{count} places restantes"
     seats:
       one: 1 place
       other: "%{count} places"

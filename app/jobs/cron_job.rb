@@ -79,7 +79,7 @@ class CronJob < ApplicationJob
     self.cron_expression = "0 2 * * *"
 
     def perform
-      Rdv.where(starts_at: ..2.years.ago).each do |rdv|
+      Rdv.unscoped.where(starts_at: ..2.years.ago).each do |rdv|
         rdv.skip_webhooks = true
         rdv.destroy
       end

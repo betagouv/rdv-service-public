@@ -2,9 +2,9 @@
 
 FactoryBot.define do
   factory :rdv do
-    created_at { DateTime.parse("2020-06-5 13:51").in_time_zone }
-    updated_at { DateTime.parse("2020-06-5 13:51").in_time_zone }
-    organisation { create(:organisation) }
+    created_at { Time.zone.parse("2020-06-5 13:51").in_time_zone }
+    updated_at { Time.zone.parse("2020-06-5 13:51").in_time_zone }
+    organisation { association(:organisation) }
     lieu { build(:lieu, organisation: organisation) }
     motif { build(:motif, organisation: organisation) }
     users { [build(:user, organisations: [organisation])] }
@@ -15,6 +15,9 @@ FactoryBot.define do
 
     status { "unknown" }
 
+    trait :collectif do
+      motif { build(:motif, :collectif, organisation: organisation) }
+    end
     trait :at_public_office do
       motif { build(:motif, :at_public_office, organisation: organisation) }
     end
@@ -33,7 +36,7 @@ FactoryBot.define do
       lieu { nil }
     end
     trait :excused do
-      cancelled_at { DateTime.parse("2020-01-15 10:30").in_time_zone }
+      cancelled_at { Time.zone.parse("2020-01-15 10:30").in_time_zone }
       status { "excused" }
     end
   end

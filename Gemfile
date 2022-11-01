@@ -35,6 +35,7 @@ gem "administrate-field-belongs_to_search"
 gem "paper_trail"
 gem "activerecord-postgres_enum"
 gem "redis"
+gem "redis-session-store"
 gem "hiredis"
 
 # Devise / auth
@@ -57,6 +58,10 @@ gem "daemons"
 gem "jbuilder"
 gem "blueprinter"
 gem "typhoeus"
+
+# API documentation
+gem "rswag-api"
+gem "rswag-ui"
 
 # Form
 gem "simple_form", "~> 5.0"
@@ -100,6 +105,7 @@ group :development, :test do
   gem "selenium-webdriver"
   gem "spring", require: false
   gem "spring-commands-rspec"
+  gem "rswag-specs"
 end
 
 group :development do
@@ -108,13 +114,14 @@ group :development do
   gem "binding_of_caller" # Enable the REPL in better_errors
   gem "letter_opener_web" # Saves sent emails and serves them on /letter_opener
   gem "rails-erd" # Keeps docs/domain_model.svg up-to-date. See .erdconfig
+  gem "rack-mini-profiler"
 end
 
 group :test do
   gem "capybara"
   gem "capybara-email"
   gem "capybara-screenshot"
-  gem "webdrivers", "~> 4.6.0"
+  gem "webdrivers"
   gem "database_cleaner"
   gem "webmock"
 end

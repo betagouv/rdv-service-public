@@ -4,8 +4,8 @@ FactoryBot.define do
   sequence(:motif_name) { |n| "Motif #{n}" }
 
   factory :motif do
-    organisation { create(:organisation) }
-    service { create(:service) }
+    organisation { association(:organisation) }
+    service { association(:service) }
 
     name { generate(:motif_name) }
     default_duration_in_min { 45 }

@@ -24,7 +24,19 @@ Rails.application.configure do
   # Show full error reports and disable caching.
   config.consider_all_requests_local       = true
   config.action_controller.perform_caching = false
-  config.cache_store = :null_store
+
+  # Test env has the same config as the global one (defined in application.rb)
+  # except we separate Redis keys in each parallel test using TEST_ENV_NUMBER.
+  config.cache_store = :redis_cache_store, {
+    url: "redis://localhost:6379",
+    namespace: "test:cache#{ENV['TEST_ENV_NUMBER']}",
+  }
+  config.session_store :redis_session_store,
+                       key: "_lapin_session_id", # cookie name
+                       redis: {
+                         key_prefix: "test:session#{ENV['TEST_ENV_NUMBER']}:",
+                         url: "redis://localhost:6379",
+                       }
 
   # Raise exceptions instead of rendering exception templates.
   config.action_dispatch.show_exceptions = false
@@ -58,8 +70,10 @@ Rails.application.configure do
   # https://github.com/JackC/tod/#activemodel-serializable-attribute-support
   config.active_record.time_zone_aware_types = [:datetime]
 
-  # Raises error for missing translations.
+  # Actually raise a I18n::MissingTranslationData exception on missing translations.
+  # This way, we can use I18n.t(...) in tests and be sure that the key exists.
   config.i18n.raise_on_missing_translations = true
+  config.i18n.exception_handler = proc { |exception| raise exception.to_exception }
 
   # Faker fails for certains attributes if :en isn't available
   config.i18n.available_locales = %i[fr en]

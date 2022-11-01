@@ -51,7 +51,7 @@ RSpec.describe Admin::MotifsController, type: :controller do
   describe "POST #create" do
     context "with valid params" do
       let(:valid_attributes) do
-        build(:motif).attributes
+        build(:motif, service: create(:service)).attributes
       end
 
       it "creates a new Motif" do
@@ -92,7 +92,7 @@ RSpec.describe Admin::MotifsController, type: :controller do
 
       let!(:old_motif) { create(:motif, deleted_at: Time.zone.now) }
       let(:valid_attributes) do
-        build(:motif, name: old_motif.name).attributes
+        build(:motif, name: old_motif.name, service: create(:service)).attributes
       end
 
       it "creates a new Motif" do

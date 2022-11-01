@@ -16,7 +16,7 @@ describe Admin::RdvWizardStepsController, type: :controller do
         duration_in_min: 30,
         motif_id: motif.id,
         lieu_id: 1,
-        starts_at: DateTime.new(2020, 4, 20, 8, 0, 0),
+        starts_at: Time.zone.parse("2020-04-20 08:00"),
       }
     end
 

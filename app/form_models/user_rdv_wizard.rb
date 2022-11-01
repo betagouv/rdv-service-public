@@ -12,6 +12,7 @@ module UserRdvWizard
 
     delegate :motif, :starts_at, :users, :service, to: :rdv
     delegate :errors, to: :rdv
+    delegate :lieu_full_name, to: :creneau
 
     def initialize(user, attributes)
       @user = user
@@ -40,7 +41,7 @@ module UserRdvWizard
       @creneau ||= Users::CreneauSearch.creneau_for(
         user: @user,
         motif: @rdv.motif,
-        lieu: Lieu.find(@attributes[:lieu_id]),
+        lieu: lieu,
         starts_at: @rdv.starts_at,
         geo_search: geo_search
       )
@@ -48,10 +49,6 @@ module UserRdvWizard
 
     def geo_search
       @geo_search ||= Users::GeoSearch.new(**@attributes.slice(:departement, :city_code, :street_ban_id))
-    end
-
-    def lieu_full_name
-      creneau.lieu.full_name
     end
 
     def to_query
@@ -67,6 +64,12 @@ module UserRdvWizard
 
     def save
       true
+    end
+
+    private
+
+    def lieu
+      @lieu ||= @attributes[:lieu_id].present? ? Lieu.find(@attributes[:lieu_id]) : nil
     end
   end
 

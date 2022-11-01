@@ -22,7 +22,7 @@ class Admin::RdvCollectifSearchForm
   end
 
   def from_date=(date)
-    @from_date = date.is_a?(String) ? DateTime.parse(date) : date
+    @from_date = date.is_a?(String) ? Time.zone.parse(date) : date
   rescue Date::Error
     Time.zone.today
   end

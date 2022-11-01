@@ -14,6 +14,12 @@ fr:
       notifications_summary:
         all: "Notif. activées"
         lifecycle_only: "Notif. de changements seulement"
+        lifecycle_off: "Notif. de changements désactivées"
         reminder_only: "Notif. de rappel seulement"
+        reminder_off: "Notif. de rappel désactivées"
         none: "Notifs. désactivées"
       notifications_overrides: "Pour ce RDV :"
+      delete:
+        title: Supprimer l'inscription du participant
+        details: En tant qu’administrateur, vous pouvez supprimer la participation de l'usager au RDV. Aucune notification ne sera envoyée.
+        confirm: Êtes-vous sûr de vouloir supprimer l'inscription de ce participant ?

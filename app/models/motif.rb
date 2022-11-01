@@ -31,6 +31,8 @@ class Motif < ApplicationRecord
   enum location_type: { public_office: "public_office", phone: "phone", home: "home" }
   enum category: { rsa_orientation: "rsa_orientation",
                    rsa_accompagnement: "rsa_accompagnement",
+                   rsa_accompagnement_social: "rsa_accompagnement_social",
+                   rsa_accompagnement_sociopro: "rsa_accompagnement_sociopro",
                    rsa_orientation_on_phone_platform: "rsa_orientation_on_phone_platform",
                    rsa_cer_signature: "rsa_cer_signature",
                    rsa_insertion_offer: "rsa_insertion_offer",
@@ -51,7 +53,6 @@ class Motif < ApplicationRecord
   delegate :name, to: :service, prefix: true
 
   # Hooks
-  after_update -> { rdvs.touch_all }
 
   # Validation
   validates :visibility_type, inclusion: { in: VISIBILITY_TYPES }
@@ -172,6 +173,10 @@ class Motif < ApplicationRecord
 
   def individuel?
     !collectif?
+  end
+
+  def requires_lieu?
+    public_office?
   end
 
   private

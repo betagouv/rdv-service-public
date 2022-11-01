@@ -22,12 +22,13 @@ class Users::RdvsController < UserAuthController
 
   def create
     motif = Motif.find(rdv_params[:motif_id])
+    lieu = new_rdv_extra_params[:lieu_id].present? ? Lieu.find(new_rdv_extra_params[:lieu_id]) : nil
     ActiveRecord::Base.transaction do
       @creneau = Users::CreneauSearch.creneau_for(
         user: current_user,
-        starts_at: DateTime.parse(rdv_params[:starts_at]),
+        starts_at: Time.zone.parse(rdv_params[:starts_at]),
         motif: motif,
-        lieu: Lieu.find(new_rdv_extra_params[:lieu_id]),
+        lieu: lieu,
         geo_search: @geo_search
       )
       if @creneau.present?
@@ -68,14 +69,12 @@ class Users::RdvsController < UserAuthController
   end
 
   def cancel
-    @rdv.status = "excused"
-    rdv_update = RdvUpdater.perform!(current_user, @rdv)
-    if rdv_update.success?
+    if @rdv.update_and_notify(current_user, status: "excused")
       flash[:notice] = "Le RDV a bien été annulé."
     else
       flash[:error] = "Impossible d'annuler le RDV."
     end
-    redirect_to users_rdv_path(@rdv, invitation_token: rdv_update.rdv_users_tokens_by_user_id&.fetch(current_user.id, nil))
+    redirect_to users_rdv_path(@rdv, invitation_token: @rdv.rdv_user_token(current_user.id))
   end
 
   def creneaux
@@ -100,7 +99,7 @@ class Users::RdvsController < UserAuthController
       user: current_user,
       starts_at: @starts_at,
       motif: @rdv.motif,
-      lieu: Lieu.find(@lieu.id)
+      lieu: @lieu
     )
   end
 
@@ -139,7 +138,7 @@ class Users::RdvsController < UserAuthController
       starts_at: creneau.starts_at,
       organisation: creneau.motif.organisation,
       motif: creneau.motif,
-      lieu_id: creneau.lieu.id,
+      lieu_id: creneau.lieu&.id,
       users: [user_for_rdv],
       created_by: :user
     )

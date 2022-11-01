@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
-class SearchCreneauxForAgentsService < BaseService
-  def initialize(agent_creneaux_search_form)
-    @form = agent_creneaux_search_form
-  end
-
+class SearchCreneauxForAgentsService < SearchCreneauxForAgentsBase
   def perform
     lieux.map { build_result(_1) }.compact # NOTE: LOOP 1 over lieux.
   end
@@ -17,11 +13,6 @@ class SearchCreneauxForAgentsService < BaseService
     return nil if creneaux.empty? && next_availability.nil?
 
     OpenStruct.new(lieu: lieu, next_availability: next_availability, creneaux: creneaux)
-  end
-
-  def all_agents
-    Agent.where(id: @form.agent_ids)
-      .or(Agent.where(id: Agent.joins(:teams).where(teams: @form.team_ids)))
   end
 
   def lieux

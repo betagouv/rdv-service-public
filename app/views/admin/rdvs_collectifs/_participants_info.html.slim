@@ -4,7 +4,7 @@
     = I18n.t("rdvs.participants", count: rdv.users_count)
 
 .d-flex.card-text.mb-3
-  - if rdv.remaining_seats?
+  - if rdv.remaining_seats? && rdv.not_cancelled?
       div.mr-3
       div
         - if rdv.max_participants_count

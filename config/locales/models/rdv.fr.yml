@@ -5,7 +5,6 @@ fr:
         rdv:
           attributes:
             base:
-              cant_destroy_if_receipts_exist: Il n’est pas possible de supprimer un rendez-vous une fois que des notifications ont été envoyées à des usagers.
               duplicate: Il existe déjà un RDV au même moment, au même lieu, pour le même motif, avec les mêmes participant⋅es
             starts_at:
               must_be_within_two_years: "doit être dans moins de deux ans."
@@ -16,6 +15,10 @@ fr:
               must_be_positive: doit être supérieur à 0
             lieu:
               must_not_be_disabled: "doit être un lieu ouvert de l’organisation, ou un lieu ponctuel."
+        rdvs_user:
+          attributes:
+            status:
+              status_cannot_be_changed_if_rdv_status_is_revoked: "ne peut être modifié si le rendez vous est annulé par le service"
     models:
       rdv: Rendez-vous
     attributes:

@@ -30,18 +30,28 @@ describe PlageOuverture, type: :model do
     end
   end
 
+  describe "lieu presence" do
+    context "when no motif requires a lieu" do
+      it "is valid without a lieu" do
+        plage_ouverture = build(:plage_ouverture, lieu: nil, motifs: [create(:motif, :by_phone), create(:motif, :at_home)])
+        expect(plage_ouverture).to be_valid
+      end
+    end
+
+    context "when at least one motif requires a lieu" do
+      it "is invalid without a lieu" do
+        plage_ouverture = build(:plage_ouverture, lieu: nil, motifs: [create(:motif, :by_phone), create(:motif, :at_public_office)])
+        expect(plage_ouverture).not_to be_valid
+      end
+    end
+  end
+
   describe "lieu_is_enabled" do
     subject { plage_ouverture.errors }
 
     let(:plage_ouverture) { build :plage_ouverture, lieu: lieu }
 
     before { plage_ouverture.validate }
-
-    context "invalid if lieu is nil" do
-      let(:lieu) { nil }
-
-      it { is_expected.to be_of_kind(:lieu, :blank) }
-    end
 
     context "invalid if lieu is disabled" do
       let(:lieu) { build :lieu, availability: :disabled }

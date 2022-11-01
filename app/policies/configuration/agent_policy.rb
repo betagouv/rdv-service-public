@@ -21,6 +21,7 @@ class Configuration::AgentPolicy
 
   alias display? territorial_admin_or_allowed_to_manage_agent_part?
   alias edit? territorial_admin_or_allowed_to_manage_agent_part?
+  alias update? territorial_admin_or_allowed_to_manage_agent_part?
 
   def create?
     territorial_admin? || @access_rights&.allow_to_invite_agents?

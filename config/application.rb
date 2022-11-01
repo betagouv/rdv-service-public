@@ -31,6 +31,22 @@ module Lapin
     config.action_mailer.preview_path = Rails.root.join("spec/mailers/previews")
     config.active_model.i18n_customize_full_message = true
 
+    redis_url = ENV.fetch("REDIS_URL") { "redis://localhost:6379" }
+
+    # Both cache and sessions are stored in the same Redis database:
+    # - cache keys are prefixed with "cache:"
+    # - session keys are prefixed with "session:"
+    config.cache_store = :redis_cache_store, {
+      url: redis_url,
+      namespace: "cache",
+    }
+    config.session_store :redis_session_store,
+                         key: "_lapin_session_id", # cookie name
+                         redis: {
+                           key_prefix: "session:",
+                           url: redis_url,
+                         }
+
     # Devise layout
     config.to_prepare do
       [Devise::RegistrationsController, Devise::SessionsController, Devise::ConfirmationsController, Devise::PasswordsController, Devise::InvitationsController].each do |controller|

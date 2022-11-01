@@ -88,6 +88,10 @@ module PlageOuverturesHelper
     weekdays[weekday]
   end
 
+  def overflow_motif_duration(plage_ouverture, motif)
+    (motif.default_duration_in_min - plage_ouverture.daily_max_duration.in_minutes).to_i
+  end
+
   def po_exceptionnelle_tag(plage_ouverture)
     tag.span("Exceptionnelle", class: "badge badge-info") if plage_ouverture.exceptionnelle?
   end

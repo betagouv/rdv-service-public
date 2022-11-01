@@ -1,4 +1,4 @@
-= territory_navigation(t(".title", territoire: @current_territory))
+= territory_navigation(t(".title", territoire: @current_territory), [link_to("Sectorisation", admin_territory_sectorization_path(current_territory))])
 
 .row.justify-content-center
   .col-md-6
@@ -51,7 +51,7 @@
             - @res[:counts][:errors].each do |case_name, count|
               li
                 span>= count
-                span.text-monospace.text-small= case_name
+                span.text-monospace= case_name
           p
             | Détail ligne par ligne
             ul.list-unstyled

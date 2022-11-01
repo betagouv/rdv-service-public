@@ -1,0 +1,16 @@
+tr
+  td
+    = render "admin/users/identity", user: rdvs_user.user
+    - if rdvs_user.user.birth_date
+        .rdv_user_birthdate.small
+          i.fas.fa-calendar-day.mr-1
+          = "Né(e) le #{I18n.l(rdvs_user.user.birth_date)}"
+  td
+    = render "admin/rdvs_users/notifications_email", rdvs_user: rdvs_user
+  td
+    = render "admin/rdvs_users/notifications_sms", rdvs_user: rdvs_user
+  td
+    = render "admin/rdvs_users/notifications_lifecycle", rdvs_user: rdvs_user
+  - if rdvs_user.rdv.collectif?
+    td
+      = render "admin/rdvs_users/participation_status_dropdown", rdvs_user: rdvs_user, agent: agent

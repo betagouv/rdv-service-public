@@ -9,7 +9,7 @@ fr:
       message:
         confirm:
           simple_cancel: Annuler le rendez-vous ?
-          cancel_with_notification: Annuler le rendez-vous ? Les usagers seront informés de cette annulation.
+          cancel_with_notification: Annuler le rendez-vous ? Les usagers concernés seront informés de cette annulation.
           reinit_status: Réinitialiser l’état du rendez-vous ?
         success:
           create: Le rendez-vous a été créé.
@@ -34,6 +34,7 @@ fr:
         place_index: Revenir aux filtres
         available_slots_title_html: Créneaux disponibles pour <strong>%{motif}</strong>
         place_informations_html: <strong>%{place_name}</strong> <small>au %{place_address}</small>
+        no_slot_available: Aucun créneau n’est disponible pour le motif « %{motif_name} » selon les critères sélectionnés.
     creneaux:
       agent_searches:
         index:
@@ -43,8 +44,8 @@ fr:
           search_for_slots_subtitle: pour %{users_fullname}
           available_places_with_slots:
             zero: Aucun lieu ne propose de disponibilité
-            one: Un lieu propose des disponibilités
-            other: "%{count} lieux proposent des disponibilités"
+            one: "Un lieu propose des disponibilités :"
+            other: "%{count} lieux proposent des disponibilités :"
     territories:
       agents:
         index:
@@ -86,15 +87,23 @@ fr:
           attributes:
             agents:
               not_from_same_territory: doivent être du même territoire
+        plage_ouverture:
+          attributes:
+            lieu:
+              blank: est obligatoire pour les motifs sur place
   agents:
     export_mailer:
       rdv_export:
-        description: Vous trouverez en pièce jointe l’export des RDV que vous avez demandé.
+        description: Vous trouverez en pièce jointe l’export des RDVs que vous avez demandé.
+      rdvs_users_export:
+        description: Vous trouverez en pièce jointe l’export des RDVs par usager que vous avez demandé.
   mailers:
     agents:
       export_mailer:
         rdv_export:
-          subject: Export RDV du %{date} pour l'organisation %{organisation_name}
+          subject: Export des RDVs du %{date}
+        full_rdvs_user_export:
+          subject: Export des RDVs par usager du %{date}
   date:
     helpers:
       tomorrow: demain
@@ -261,6 +270,7 @@ fr:
   layouts:
     flash:
       confirm_export_send_when_done: Le fichier Excel des RDV sera envoyé à %{agent_email}.
+      confirm_rdvs_users_export_send_when_done: Le fichier Excel de l'ensemble des rdvs par usager du territoire sera envoyé à %{agent_email}.
   number:
     currency:
       format:

@@ -1,6 +1,9 @@
 fr:
   admin:
     territories:
+      sectorizations:
+        show:
+          title: Sectorisation
       sector_attributions:
         new:
           title: Nouvelle attribution pour le secteur %{name}

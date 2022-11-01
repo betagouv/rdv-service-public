@@ -28,6 +28,6 @@ class Admin::MergeUsersController < AgentAuthController
   protected
 
   def merge_users_params
-    params.require(:merge_users_form).permit(MergeUsersForm::ATTRIBUTES)
+    params.require(:merge_users_form).permit(MergeUsersForm::ATTRIBUTES + Territory::OPTIONAL_FIELD_TOGGLES.values)
   end
 end

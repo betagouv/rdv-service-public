@@ -4,9 +4,9 @@ FactoryBot.define do
   sequence(:plage_title) { |n| "Plage #{n}" }
 
   factory :plage_ouverture do
-    organisation { create(:organisation) }
-    agent { create(:agent, basic_role_in_organisations: [organisation]) }
-    lieu { create(:lieu, organisation: organisation) }
+    organisation { association(:organisation) }
+    agent { association(:agent, basic_role_in_organisations: [organisation]) }
+    lieu { association(:lieu, organisation: organisation) }
 
     title { generate(:plage_title) }
     sequence(:first_day) { |n| Time.zone.today.next_week(:monday) + n.days }
@@ -35,7 +35,15 @@ FactoryBot.define do
     end
 
     after(:build) do |plage_ouverture|
-      plage_ouverture.motifs << create(:motif, organisation: plage_ouverture.organisation) if plage_ouverture.motifs.empty?
+      if plage_ouverture.motifs.empty?
+        plage_ouverture.motifs << (
+          if plage_ouverture.lieu
+            build(:motif, organisation: plage_ouverture.organisation)
+          else
+            build(:motif, :by_phone, organisation: plage_ouverture.organisation)
+          end
+        )
+      end
     end
 
     trait :expired do

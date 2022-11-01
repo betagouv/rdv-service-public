@@ -9,6 +9,8 @@ class PlageOuverture < ApplicationRecord
   include IcalHelpers::Rrule
   include Payloads::PlageOuverture
   include Expiration
+  include EnsuresRealisticDate
+
   include TextSearch
   def self.search_against
     {
@@ -23,7 +25,7 @@ class PlageOuverture < ApplicationRecord
   # Relations
   belongs_to :organisation
   belongs_to :agent
-  belongs_to :lieu
+  belongs_to :lieu, optional: true
   has_and_belongs_to_many :motifs, -> { distinct }
 
   # Through relations
@@ -31,9 +33,11 @@ class PlageOuverture < ApplicationRecord
 
   # Validations
   validate :end_after_start
+  validates :lieu, presence: true, if: -> { requires_lieu? }
   validate :lieu_is_enabled
   validates :motifs, :title, presence: true
   validate :warn_overlapping_plage_ouvertures
+  validate :warn_overflow_motifs_duration
 
   # Scopes
   scope :in_range, lambda { |range|
@@ -50,6 +54,10 @@ class PlageOuverture < ApplicationRecord
       plage_ouverture.occurrences_for(range).any? { range.overlaps?(_1.starts_at.._1.ends_at) }
     end
   }
+  scope :reservable_online, -> { joins(:motifs).where(motifs: { reservable_online: true }) }
+
+  # Delegations
+  delegate :name, :address, :enabled?, to: :lieu, prefix: true, allow_nil: true
 
   ## -
 
@@ -82,6 +90,20 @@ class PlageOuverture < ApplicationRecord
     end
   end
 
+  def daily_max_duration
+    Tod::Shift.new(start_time, end_time).duration.seconds
+  end
+
+  def overflow_motifs_duration?
+    overflow_motifs_duration.any?
+  end
+
+  def overflow_motifs_duration
+    return Motif.none unless valid_date_and_times?
+
+    motifs.where("default_duration_in_min > ?", daily_max_duration.in_minutes)
+  end
+
   private
 
   def overlapping_plages_ouvertures_candidates
@@ -111,7 +133,9 @@ class PlageOuverture < ApplicationRecord
   end
 
   def lieu_is_enabled
-    errors.add(:lieu, :must_be_enabled) unless lieu&.enabled?
+    return if lieu.blank? || lieu.enabled?
+
+    errors.add(:lieu, :must_be_enabled)
   end
 
   def warn_overlapping_plage_ouvertures
@@ -122,5 +146,17 @@ class PlageOuverture < ApplicationRecord
     add_benign_error("Conflit de dates et d'horaires avec d'autres plages d'ouvertures")
     # TODO: display richer warning messages by rendering the partial
     # overlapping_plage_ouvertures (implies passing view locals which may be tricky)
+  end
+
+  def warn_overflow_motifs_duration
+    return if ignore_benign_errors
+
+    return unless overflow_motifs_duration?
+
+    add_benign_error("Certains motifs ont une durée supérieure à la plage d'ouverture prévue")
+  end
+
+  def requires_lieu?
+    motifs.any?(&:requires_lieu?)
   end
 end

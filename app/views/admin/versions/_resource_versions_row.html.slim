@@ -1,14 +1,12 @@
 - if policy([policy_scope, resource]).versions?
-  .row.justify-content-center
-    .col-md-8
-      .card
-        .card-header
-          button.btn.btn-link data-toggle="collapse" data-target="#history-collapse"
-            h5.header
-              i.fa.fa-history.mr-1
-              = t("admin.versions.title")
-        .collapse.hide#history-collapse
-          .card-body
-            = cache [resource, resource.class.paper_trail_options[:only]] do
-              - versions = PaperTrailAugmentedVersion.for_resource(resource)
-              = render "admin/versions/versions", versions: versions.reverse
+  .card
+    .card-header
+      button.btn.btn-link data-toggle="collapse" data-target="#history-collapse"
+        h5.header
+          i.fa.fa-history.mr-1
+          = t("admin.versions.title")
+    .collapse.hide#history-collapse
+      .card-body
+        = cache [resource, resource.class.paper_trail_options[:only]] do
+          - versions = PaperTrailAugmentedVersion.for_resource(resource)
+          = render "admin/versions/versions", versions: versions.reverse

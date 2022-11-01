@@ -133,10 +133,6 @@ module UsersHelper
     end
   end
 
-  def users_to_links(users)
-    safe_join(users.order_by_last_name.map { user_to_link(_1) }, ", ")
-  end
-
   def email_tld_infos(email_tld)
     {
       "gmail.com" => { url: "https://mail.google.com", name: "GMail" },
@@ -158,5 +154,14 @@ module UsersHelper
     return :relative if source.respond_to?(:relative?) && source.relative?
 
     :responsible
+  end
+
+  def user_merge_attribute_value(user, user_profile, attribute)
+    return birth_date_and_age(user) if attribute == :birth_date
+    return user.responsible&.full_name if attribute == :responsible_id
+    return formatted_user_notes(user_profile) if attribute == :notes
+    return user_profile&.human_attribute_value(:logement) if attribute == :logement
+
+    user.send(attribute)
   end
 end

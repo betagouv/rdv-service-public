@@ -1,563 +1,648 @@
 # frozen_string_literal: true
 
-describe "api/v1/users requests", type: :request do
-  let!(:organisation) { create(:organisation) }
+require "swagger_helper"
+
+describe "Users API", swagger_doc: "v1/api.json" do
+  with_examples
+
+  let(:organisation) { create(:organisation) }
   let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
 
-  describe "GET api/v1/users/:id" do
-    context "authorized user ID" do
-      let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [organisation]) }
+  path "/api/v1/users/{user_id}" do
+    get "Récupérer un·e usager·ère" do
+      with_authentication
 
-      it "works" do
-        get api_v1_user_path(user), headers: api_auth_headers_for_agent(agent)
-        expect(response.status).to eq(200)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["user"]).to be_present
-        expect(response_parsed["user"]["id"]).to eq(user.id)
-        expect(response_parsed["user"]["first_name"]).to eq("Jean")
-        expect(response_parsed["user"]["last_name"]).to eq("JACQUES")
-        expect(response_parsed["user"]["user_profiles"]).to be_present
-        expect(response_parsed["user"]["user_profiles"].size).to eq 1
-        expect(response_parsed["user"]["user_profiles"][0]["organisation"]["id"]).to eq(organisation.id)
+      tags "User"
+      produces "application/json"
+      operationId "getUser"
+      description "Renvoie un·e usager·ère"
+
+      parameter name: :user_id, in: :path, type: :integer, description: "ID de l'usager·ère", example: 123
+
+      let(:auth_headers) { api_auth_headers_for_agent(agent) }
+      let(:"access-token") { auth_headers["access-token"].to_s }
+      let(:uid) { auth_headers["uid"].to_s }
+      let(:client) { auth_headers["client"].to_s }
+
+      let!(:user_id) { user.id }
+
+      response 200, "Renvoie l'usager·ère" do
+        let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [organisation], email: "jean@jacques.fr") }
+
+        schema "$ref" => "#/components/schemas/user_with_root"
+
+        run_test!
+
+        it { expect(parsed_response_body[:user][:id]).to eq(user.id) }
+      end
+
+      response 200, "authorized user ID also belongs to other organisation", document: false do
+        let!(:unauthorized_orga) { create(:organisation) }
+        let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [organisation, unauthorized_orga]) }
+
+        schema "$ref" => "#/components/schemas/user_with_root"
+
+        run_test!
+
+        it { expect(parsed_response_body["user"]["id"]).to eq(user.id) }
+      end
+
+      response 401, "Problème d'authentification" do
+        let!(:user) { instance_double(User, id: "123") }
+
+        let(:"access-token") { "false" }
+
+        schema "$ref" => "#/components/schemas/error_authentication"
+
+        run_test!
+      end
+
+      response 403, "Renvoie 'unauthorized' quand l'usager·ère est lié·e à une autre organisation" do
+        let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [create(:organisation)]) }
+
+        schema "$ref" => "#/components/schemas/error_unauthorized"
+
+        run_test!
       end
     end
 
-    context "authorized user ID also belongs to other organisation" do
-      let!(:unauthorized_orga) { create(:organisation) }
-      let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [organisation, unauthorized_orga]) }
+    patch "Mettre à jour un·e usager·ère" do
+      with_authentication
 
-      it "works" do
-        get api_v1_user_path(user), headers: api_auth_headers_for_agent(agent)
-        expect(response.status).to eq(200)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["user"]).to be_present
-        expect(response_parsed["user"]["id"]).to eq(user.id)
-        expect(response_parsed["user"]["first_name"]).to eq("Jean")
-        expect(response_parsed["user"]["last_name"]).to eq("JACQUES")
-        expect(response_parsed["user"]["user_profiles"]).to be_present
-        expect(response_parsed["user"]["user_profiles"].size).to eq 1
-        expect(response_parsed["user"]["user_profiles"][0]["organisation"]["id"]).to eq(organisation.id)
+      tags "User"
+      produces "application/json"
+      operationId "updateUser"
+      description "Met à jour un·e usager·ère"
+
+      parameter name: :user_id, in: :path, type: :integer, description: "ID de l'usager·ère", example: 123
+      parameter name: "organisation_ids[]", in: :query, schema: { type: :array, items: { type: :string } }, description: "ID des organisations", example: "[123]", required: false
+      parameter name: "first_name", in: :query, type: :string, description: "Prénom", example: "Johnny", required: false
+      parameter name: "last_name", in: :query, type: :string, description: "Nom", example: "Silverhand", required: false
+      parameter name: "birth_name", in: :query, type: :string, description: "Nom de naissance", example: "Fripouille", required: false
+      parameter name: "birth_date", in: :query, type: :string, description: "Date de naissance", example: "1976-10-01", required: false
+      parameter name: "email", in: :query, type: :string, description: "Email", example: "johnny@77.com", required: false
+      parameter name: "phone_number", in: :query, type: :string, description: "Numéro de téléphone", example: "33600008012", required: false
+      parameter name: "address", in: :query, type: :string, description: "Adresse", example: "10 rue du Havre, Paris", required: false
+      parameter name: "caisse_affiliation", in: :query, type: :string, description: "Caisse d'affiliation", example: "caf", required: false
+      parameter name: "affiliation_number", in: :query, type: :string, description: "Numéro d'affiliation", example: "101010", required: false
+      parameter name: "family_situation", in: :query, type: :string, description: "Situation familiale", example: "single", required: false
+      parameter name: "number_of_children", in: :query, type: :integer, description: "Nombre d'enfants", example: "3", required: false
+      parameter name: "notify_by_sms", in: :query, type: :boolean, description: "Accepte les notifications par SMS", example: "true", required: false
+      parameter name: "notify_by_email", in: :query, type: :boolean, description: "Accepte les notifications par email", example: "true", required: false
+      parameter name: "responsible_id", in: :query, type: :integer, description: "ID de l'usager·ère responsable", example: 123, required: false
+
+      let(:auth_headers) { api_auth_headers_for_agent(agent) }
+      let(:"access-token") { auth_headers["access-token"].to_s }
+      let(:uid) { auth_headers["uid"].to_s }
+      let(:client) { auth_headers["client"].to_s }
+
+      let(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [organisation]) }
+      let(:user_id) { user.id }
+
+      response 200, "Met à jour et renvoie un·e usager·ère" do
+        let(:first_name) { "Alain" }
+        let(:last_name) { "Verse" }
+        let(:birth_name) { "Fripouille" }
+        let(:birth_date) { "1976-10-01" }
+        let(:email) { "jean@jacques.fr" }
+        let(:phone_number) { "33600008012" }
+        let(:address) { "10 rue du Havre, Paris" }
+        let(:caisse_affiliation) { "caf" }
+        let(:affiliation_number) { "101010" }
+        let(:family_situation) { "single" }
+        let(:number_of_children) { 3 }
+        let(:notify_by_sms) { false }
+        let(:notify_by_email) { false }
+        let!(:user_responsible) { create(:user) }
+        let(:responsible_id) { user_responsible.id }
+
+        schema "$ref" => "#/components/schemas/user_with_root"
+
+        run_test!
+
+        it { expect(user.reload.organisations).to match_array([organisation]) }
+
+        it { expect(user.reload.first_name).to eq(first_name) }
+
+        it { expect(user.reload.last_name).to eq(last_name) }
+
+        it { expect(user.reload.birth_name).to eq(birth_name) }
+
+        it { expect(user.reload.birth_date).to eq(Date.new(1976, 10, 1)) }
+
+        it { expect(user.reload.email).to eq(email) }
+
+        it { expect(user.reload.phone_number).to eq(phone_number) }
+
+        it { expect(user.reload.address).to eq(address) }
+
+        it { expect(user.reload.caisse_affiliation).to eq(caisse_affiliation) }
+
+        it { expect(user.reload.affiliation_number).to eq(affiliation_number) }
+
+        it { expect(user.reload.family_situation).to eq(family_situation) }
+
+        it { expect(user.reload.number_of_children).to eq(number_of_children) }
+
+        it { expect(user.reload.notify_by_sms).to eq(notify_by_sms) }
+
+        it { expect(user.reload.notify_by_email).to eq(notify_by_email) }
+
+        it { expect(user.reload.responsible).to eq(user_responsible) }
       end
-    end
 
-    context "unauthorized user ID" do
-      let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [create(:organisation)]) }
+      response 200, "updates a user with a minimal set of params", document: false do
+        let(:first_name) { "Alain" }
+        let(:last_name) { "Verse" }
 
-      it "works" do
-        get api_v1_user_path(user), headers: api_auth_headers_for_agent(agent)
-        expect(response.status).to eq(403)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["errors"]).to be_present
+        schema "$ref" => "#/components/schemas/user_with_root"
+
+        run_test!
+
+        it { expect(user.reload.first_name).to eq(first_name) }
+
+        it { expect(user.reload.last_name).to eq(last_name) }
       end
-    end
-  end
 
-  describe "POST api/v1/users" do
-    context "valid & minimal params" do
-      it "works" do
-        user_count_before = User.count
-        post(
-          api_v1_users_path,
-          params: {
-            organisation_ids: [organisation.id],
-            first_name: "Jean",
-            last_name: "Jacques",
-          },
-          headers: api_auth_headers_for_agent(agent)
-        )
-        expect(response.status).to eq(200)
-        expect(User.count).to eq(user_count_before + 1)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["user"]).to be_present
-        expect(response_parsed["user"]["id"]).to be_present
-        user = User.find(response_parsed["user"]["id"])
-        expect(user.organisations).to match_array([organisation])
-        expect(user.first_name).to eq("Jean")
-        expect(user.last_name).to eq("Jacques")
+      response 401, "Problème d'authentification" do
+        let(:"access-token") { "false" }
+
+        schema "$ref" => "#/components/schemas/error_authentication"
+
+        run_test!
       end
-    end
 
-    context "valid & complete params" do
-      it "works" do
-        user_count_before = User.count
-        post(
-          api_v1_users_path,
-          params: {
-            organisation_ids: [organisation.id],
-            first_name: "Jean",
-            last_name: "Jacques",
-            birth_name: "Fripouille",
-            birth_date: "1976-10-01",
-            email: "jean@jacques.fr",
-            address: "10 rue du Havre, Paris",
-            caisse_affiliation: "caf",
-            affiliation_number: "101010",
-            family_situation: "single",
-            number_of_children: 3,
-            notify_by_sms: false,
-            notify_by_email: false,
-          },
-          headers: api_auth_headers_for_agent(agent)
-        )
-        expect(response.status).to eq(200)
-        expect(User.count).to eq(user_count_before + 1)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["user"]).to be_present
-        expect(response_parsed["user"]["id"]).to be_present
-        user = User.find(response_parsed["user"]["id"])
-        expect(user.organisations).to match_array([organisation])
-        expect(user.first_name).to eq("Jean")
-        expect(user.last_name).to eq("Jacques")
-        expect(user.birth_name).to eq("Fripouille")
-        expect(user.birth_date).to eq(Date.new(1976, 10, 1))
-        expect(user.email).to eq("jean@jacques.fr")
-        expect(user.address).to eq("10 rue du Havre, Paris")
-        expect(user.caisse_affiliation).to eq("caf")
-        expect(user.affiliation_number).to eq("101010")
-        expect(user.family_situation).to eq("single")
-        expect(user.number_of_children).to eq(3)
-        expect(user.notify_by_sms).to eq(false)
-        expect(user.notify_by_email).to eq(false)
+      response 422, "Des paramètres sont manquants ou mal formés ou impossibles" do
+        let(:"organisation_ids[]") { nil }
+        let(:first_name) { nil }
+        let(:last_name) { nil }
+
+        schema "$ref" => "#/components/schemas/errors_generic"
+
+        run_test!
       end
-    end
 
-    context "valid & relative" do
-      let!(:user_responsible) { create(:user) }
+      response 422, "phone number is misformatted", document: false do
+        let(:phone_number) { "misformatted phone number" }
 
-      it "works" do
-        user_count_before = User.count
-        post(
-          api_v1_users_path,
-          params: {
-            organisation_ids: [organisation.id],
-            first_name: "Jean",
-            last_name: "Jacques",
-            responsible_id: user_responsible.id,
-          },
-          headers: api_auth_headers_for_agent(agent)
-        )
-        expect(response.status).to eq(200)
-        expect(User.count).to eq(user_count_before + 1)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["user"]).to be_present
-        expect(response_parsed["user"]["id"]).to be_present
-        user = User.find(response_parsed["user"]["id"])
-        expect(user.organisations).to match_array([organisation])
-        expect(user.first_name).to eq("Jean")
-        expect(user.last_name).to eq("Jacques")
-        expect(user.responsible).to eq(user_responsible)
+        schema "$ref" => "#/components/schemas/errors_generic"
+
+        run_test!
+
+        it { expect(parsed_response_body["errors"]).to match({ phone_number: [{ error: "invalid" }] }.with_indifferent_access) }
       end
-    end
 
-    context "invalid: missing orgas" do
-      let!(:other_orga) { create(:organisation) }
+      response 422, "email is taken", document: false do
+        let!(:existing_user) { create(:user, email: "jean@jacques.fr") }
+        let(:email) { existing_user.email }
 
-      it "does not work" do
-        user_count_before = User.count
-        post(
-          api_v1_users_path,
-          params: { first_name: "Jean", last_name: "Jacques" },
-          headers: api_auth_headers_for_agent(agent)
-        )
-        expect(response.status).to eq(422)
-        expect(User.count).to eq(user_count_before)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["errors"]).not_to be_empty
-      end
-    end
+        schema "$ref" => "#/components/schemas/errors_generic"
 
-    context "invalid: missing required attribute" do
-      let!(:other_orga) { create(:organisation) }
+        run_test!
 
-      it "does not work" do
-        user_count_before = User.count
-        post(
-          api_v1_users_path,
-          params: {
-            organisation_ids: [organisation.id],
-            first_name: "Jean", # missing last_name
-          },
-          headers: api_auth_headers_for_agent(agent)
-        )
-        expect(response.status).to eq(422)
-        expect(User.count).to eq(user_count_before)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["errors"]).not_to be_empty
-      end
-    end
-
-    context "invalid: misformatted attribute" do
-      let!(:other_orga) { create(:organisation) }
-
-      it "does not work" do
-        user_count_before = User.count
-        post(
-          api_v1_users_path,
-          params: {
-            organisation_ids: [organisation.id],
-            first_name: "Jean",
-            last_name: "Jacques",
-            phone_number: "blah blah",
-          },
-          headers: api_auth_headers_for_agent(agent)
-        )
-        expect(response.status).to eq(422)
-        expect(User.count).to eq(user_count_before)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["errors"]).not_to be_empty
-      end
-    end
-
-    context "invalid: existing email" do
-      let!(:other_orga) { create(:organisation) }
-      let!(:existing_user) { create(:user, email: "jean@jacques.fr") }
-
-      it "does not work" do
-        user_count_before = User.count
-        post(
-          api_v1_users_path,
-          params: {
-            organisation_ids: [organisation.id],
-            first_name: "Jean",
-            last_name: "Jacques",
-            email: "jean@jacques.fr",
-          },
-          headers: api_auth_headers_for_agent(agent)
-        )
-        expect(response.status).to eq(422)
-        expect(User.count).to eq(user_count_before)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["errors"]).not_to be_empty
-        expect(response_parsed["errors"]["email"].first).to \
-          eq({ "error" => "taken", "value" => "jean@jacques.fr", "id" => existing_user.id })
+        it { expect(parsed_response_body["errors"]["email"].first).to match({ error: "taken", value: email, id: existing_user.id }.with_indifferent_access) }
       end
     end
   end
 
-  describe "GET api/v1/users" do
-    context "multiple organisations" do
-      let!(:user) { create(:user, organisations: [organisation]) }
-      let!(:organisation2) { create(:organisation) }
-      let!(:user2) { create(:user, organisations: [organisation2]) }
-      let!(:organisation3) { create(:organisation) }
-      let!(:user3) { create(:user, organisations: [organisation3]) }
-      let!(:agent) { create(:agent, basic_role_in_organisations: [organisation, organisation2]) }
+  path "/api/v1/users/{user_id}/invite" do
+    get "Récupérer l'invitation d'un usager·ère" do
+      with_authentication
 
-      it "returns policy scoped users" do
-        get api_v1_users_path, headers: api_auth_headers_for_agent(agent)
-        expect(response.status).to eq(200)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["users"].pluck("id")).to contain_exactly(user.id, user2.id)
+      tags "User", "Invitation"
+      produces "application/json"
+      operationId "getUserInvitation"
+      description "Renvoie l'URL d'invitation d'un·e usager·ère"
+
+      parameter name: :user_id, in: :path, type: :integer, description: "ID de l'usager·ère", example: 123
+
+      let(:auth_headers) { api_auth_headers_for_agent(agent) }
+      let(:"access-token") { auth_headers["access-token"].to_s }
+      let(:uid) { auth_headers["uid"].to_s }
+      let(:client) { auth_headers["client"].to_s }
+
+      let!(:user_id) { user.id }
+
+      response 200, "Renvoie l'URL d'invitation de l'usager·ère" do
+        let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [organisation], email: "jean@jacques.fr") }
+
+        run_test!
+
+        schema "$ref" => "#/components/schemas/invitation"
+
+        it { expect(parsed_response_body["invitation_url"]).to start_with("http://www.example.com/users/invitation/accept?invitation_token=") }
+
+        it { expect(user.reload.invitation_due_at).to eq(user.invitation_created_at + User.invite_for) }
+
+        it { expect(user.reload.invited_through).to eq("external") }
+      end
+
+      response 200, "when the user doesn't have an email", document: false do
+        let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", email: nil, organisations: [organisation]) }
+
+        schema "$ref" => "#/components/schemas/invitation"
+
+        run_test!
+
+        it { expect(user.reload.invitation_due_at).to eq(user.invitation_created_at + User.invite_for) }
+      end
+
+      response 401, "Problème d'authentification" do
+        let!(:user) { instance_double(User, id: "123") }
+
+        let(:"access-token") { "false" }
+
+        schema "$ref" => "#/components/schemas/error_authentication"
+
+        run_test!
+      end
+
+      response 403, "Renvoie 'unauthorized' quand l'usager·ère est lié·e à une autre organisation" do
+        let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [create(:organisation)]) }
+
+        schema "$ref" => "#/components/schemas/error_unauthorized"
+
+        run_test!
       end
     end
 
-    context "when a list of ids is passed" do
-      let!(:user1) { create(:user, organisations: [organisation]) }
-      let!(:user2) { create(:user, organisations: [organisation]) }
+    post "Récupérer l'invitation d'un usager·ère" do
+      with_authentication
 
-      it "returns the specified user list" do
-        get(
-          api_v1_users_path,
-          params: { ids: [user1.id] },
-          headers: api_auth_headers_for_agent(agent)
-        )
-        expect(response.status).to eq(200)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["users"].pluck("id")).to contain_exactly(user1.id)
+      tags "User", "Invitation"
+      produces "application/json"
+      operationId "createUserInvitation"
+      description "Renvoie l'URL d'invitation d'un·e usager·ère"
+
+      parameter name: :user_id, in: :path, type: :integer, description: "ID de l'usager·ère", example: 123
+      parameter name: :invite_for, in: :query, type: :integer, description: "Durée souhaitée de l'invitation (en secondes)", example: 86_400, required: false
+
+      let(:auth_headers) { api_auth_headers_for_agent(agent) }
+      let(:"access-token") { auth_headers["access-token"].to_s }
+      let(:uid) { auth_headers["uid"].to_s }
+      let(:client) { auth_headers["client"].to_s }
+
+      let!(:user_id) { user.id }
+
+      response 200, "Renvoie l'URL d'invitation de l'usager·ère" do
+        let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [organisation], email: "jean@jacques.fr") }
+        let!(:invite_for) { 86_400 }
+
+        run_test!
+
+        schema "$ref" => "#/components/schemas/invitation"
+
+        it { expect(parsed_response_body["invitation_url"]).to start_with("http://www.example.com/users/invitation/accept?invitation_token=") }
+
+        it { expect(user.reload.invitation_due_at).to eq(user.invitation_created_at + 1.day) }
+
+        it { expect(user.reload.invited_through).to eq("external") }
       end
-    end
-  end
 
-  describe "GET api/v1/organisations/:id/users" do
-    context "when the agent does not belong to the organisation" do
-      let!(:other_orga) { create(:organisation) }
-      let!(:user) { create(:user, organisations: [other_orga]) }
+      response 200, "when the user doesn't have an email", document: false do
+        let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", email: nil, organisations: [organisation]) }
 
-      it "does not return the users list" do
-        get api_v1_organisation_users_path(other_orga), headers: api_auth_headers_for_agent(agent)
-        expect(response.status).to eq(200)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["users"]).to eq([])
+        schema "$ref" => "#/components/schemas/invitation"
+
+        run_test!
+
+        it { expect(user.reload.invitation_due_at).to eq(user.invitation_created_at + User.invite_for) }
       end
-    end
 
-    context "when the agent belongs to multiple organisations" do
-      let!(:user1) { create(:user, organisations: [organisation]) }
-      let!(:organisation2) { create(:organisation) }
-      let!(:user2) { create(:user, organisations: [organisation2]) }
-      let!(:agent) { create(:agent, basic_role_in_organisations: [organisation, organisation2]) }
+      response 401, "Problème d'authentification" do
+        let!(:user) { instance_double(User, id: "123") }
 
-      it "returns the organisation users only" do
-        get api_v1_organisation_users_path(organisation), headers: api_auth_headers_for_agent(agent)
-        expect(response.status).to eq(200)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["users"].pluck("id")).to contain_exactly(user1.id)
+        let(:"access-token") { "false" }
+
+        schema "$ref" => "#/components/schemas/error_authentication"
+
+        run_test!
       end
-    end
-  end
 
-  describe "GET api/v1/users/:id/invite" do
-    context "Existing user with email" do
-      let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [organisation], email: "jean@jacques.fr") }
+      response 403, "Renvoie 'unauthorized' quand l'usager·ère est lié·e à une autre organisation" do
+        let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [create(:organisation)]) }
 
-      it "works" do
-        get invite_api_v1_user_path(user), headers: api_auth_headers_for_agent(agent), as: :json
-        expect(response.status).to eq(200)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["invitation_url"]).to be_present
-        expect(response_parsed["invitation_url"]).to start_with("http://www.example.com/users/invitation/accept?invitation_token=")
-        user.reload
-        expect(user.invitation_due_at).to eq(user.invitation_created_at + User.invite_for)
-        expect(user.invited_through).to eq("external")
-      end
-    end
+        schema "$ref" => "#/components/schemas/error_unauthorized"
 
-    context "Existing user without email" do
-      let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", email: nil, organisations: [organisation]) }
-
-      it "works" do
-        get invite_api_v1_user_path(user), headers: api_auth_headers_for_agent(agent), as: :json
-        expect(response.status).to eq(200)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["invitation_token"]).to be_present
-        user.reload
-        expect(user.invitation_due_at).to eq(user.invitation_created_at + User.invite_for)
-      end
-    end
-
-    context "unauthorized user ID" do
-      let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [create(:organisation)]) }
-
-      it "works" do
-        get invite_api_v1_user_path(user), headers: api_auth_headers_for_agent(agent)
-        expect(response.status).to eq(403)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["errors"]).to be_present
-      end
-    end
-  end
-
-  describe "POST api/v1/users/:id/invite" do
-    context "Existing user with email" do
-      let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [organisation], email: "jean@jacques.fr") }
-
-      it "works" do
-        post invite_api_v1_user_path(user), headers: api_auth_headers_for_agent(agent), as: :json
-        expect(response.status).to eq(200)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["invitation_url"]).to be_present
-        expect(response_parsed["invitation_token"]).to be_present
-        expect(response_parsed["invitation_url"]).to start_with("http://www.example.com/users/invitation/accept?invitation_token=")
-        user.reload
-        expect(user.invitation_due_at).to eq(user.invitation_created_at + User.invite_for)
-        expect(user.invited_through).to eq("external")
-      end
-    end
-
-    context "Existing user without email" do
-      let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", email: nil, organisations: [organisation]) }
-
-      it "works" do
-        post invite_api_v1_user_path(user), headers: api_auth_headers_for_agent(agent), as: :json
-        expect(response.status).to eq(200)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["invitation_token"]).to be_present
-        expect(response_parsed["invitation_url"]).to be_present
-        user.reload
-        expect(user.invitation_due_at).to eq(user.invitation_created_at + User.invite_for)
-      end
-    end
-
-    context "with custom invite_for" do
-      let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [organisation], email: "jean@jacques.fr") }
-
-      it "works" do
-        post(
-          invite_api_v1_user_path(user),
-          headers: api_auth_headers_for_agent(agent),
-          params: {
-            invite_for: 86_400, # invite_for en secondes (86400 = 1 jour),
-          },
-          as: :json
-        )
-        expect(response.status).to eq(200)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["invitation_url"]).to be_present
-        expect(response_parsed["invitation_url"]).to start_with("http://www.example.com/users/invitation/accept?invitation_token=")
-        user.reload
-        expect(user.invitation_due_at).to eq(user.invitation_created_at + 1.day)
-      end
-    end
-
-    context "unauthorized user ID" do
-      let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [create(:organisation)]) }
-
-      it "works" do
-        get invite_api_v1_user_path(user), headers: api_auth_headers_for_agent(agent)
-        expect(response.status).to eq(403)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["errors"]).to be_present
+        run_test!
       end
     end
   end
 
-  describe "GET api/v1/:organisation_id/users/:user_id" do
-    let!(:user) { create(:user, organisations: [organisation]) }
+  path "/api/v1/users" do
+    get "Récupérer une liste d'usager·rès" do
+      with_authentication
+      with_pagination
 
-    context "when the user belongs to the org" do
-      it "works" do
-        get api_v1_organisation_user_path(organisation, user), headers: api_auth_headers_for_agent(agent)
-        expect(response.status).to eq(200)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["user"]["id"]).to eq(user.id)
+      tags "User"
+      produces "application/json"
+      operationId "getUsers"
+      description "Renvoie une liste paginée d'usager·ères"
+
+      parameter name: "ids[]", in: :query, schema: { type: :array, items: { type: :string } }, description: "ID des usager·ères", example: "[123]", required: false
+
+      let(:auth_headers) { api_auth_headers_for_agent(agent) }
+      let(:"access-token") { auth_headers["access-token"].to_s }
+      let(:uid) { auth_headers["uid"].to_s }
+      let(:client) { auth_headers["client"].to_s }
+
+      response 200, "Renvoie une liste paginée d'usager·ères" do
+        let!(:user1) { create(:user, organisations: [organisation]) }
+        let!(:user2) { create(:user, organisations: [organisation]) }
+        let(:"ids[]") { [user1.id] }
+
+        schema "$ref" => "#/components/schemas/users"
+
+        run_test!
+
+        it { expect(parsed_response_body["users"].pluck("id")).to contain_exactly(user1.id) }
+      end
+
+      response 200, "returns policy scoped users", document: false do
+        let!(:user) { create(:user, organisations: [organisation]) }
+        let!(:organisation2) { create(:organisation) }
+        let!(:user2) { create(:user, organisations: [organisation2]) }
+        let!(:organisation3) { create(:organisation) }
+        let!(:user3) { create(:user, organisations: [organisation3]) }
+        let!(:agent) { create(:agent, basic_role_in_organisations: [organisation, organisation2]) }
+
+        schema "$ref" => "#/components/schemas/users"
+
+        run_test!
+
+        it { expect(parsed_response_body["users"].pluck("id")).to contain_exactly(user.id, user2.id) }
       end
     end
 
-    context "when the user does not belong to the org" do
-      let!(:another_org) { create(:organisation) }
-      let!(:agent) { create(:agent, basic_role_in_organisations: [organisation, another_org]) }
-      let!(:user) { create(:user, organisations: [another_org]) }
+    post "Créer un·e usager·ère" do
+      with_authentication
 
-      it "is not found" do
-        get api_v1_organisation_user_path(organisation, user), headers: api_auth_headers_for_agent(agent)
-        expect(response.status).to eq(404)
+      tags "User"
+      produces "application/json"
+      operationId "createUser"
+      description "Crée un·e usager·ère"
+
+      parameter name: "organisation_ids[]", in: :query, schema: { type: :array, items: { type: :string } }, description: "ID des organisations", example: "[123]"
+      parameter name: "first_name", in: :query, type: :string, description: "Prénom", example: "Johnny"
+      parameter name: "last_name", in: :query, type: :string, description: "Nom", example: "Silverhand"
+      parameter name: "birth_name", in: :query, type: :string, description: "Nom de naissance", example: "Fripouille", required: false
+      parameter name: "birth_date", in: :query, type: :string, description: "Date de naissance", example: "1976-10-01", required: false
+      parameter name: "email", in: :query, type: :string, description: "Email", example: "johnny@77.com", required: false
+      parameter name: "phone_number", in: :query, type: :string, description: "Numéro de téléphone", example: "33600008012", required: false
+      parameter name: "address", in: :query, type: :string, description: "Adresse", example: "10 rue du Havre, Paris", required: false
+      parameter name: "caisse_affiliation", in: :query, type: :string, description: "Caisse d'affiliation", example: "caf", required: false
+      parameter name: "affiliation_number", in: :query, type: :string, description: "Numéro d'affiliation", example: "101010", required: false
+      parameter name: "family_situation", in: :query, type: :string, description: "Situation familiale", example: "single", required: false
+      parameter name: "number_of_children", in: :query, type: :integer, description: "Nombre d'enfants", example: "3", required: false
+      parameter name: "notify_by_sms", in: :query, type: :boolean, description: "Accepte les notifications par SMS", example: "true", required: false
+      parameter name: "notify_by_email", in: :query, type: :boolean, description: "Accepte les notifications par email", example: "true", required: false
+      parameter name: "responsible_id", in: :query, type: :integer, description: "ID de l'usager·ère responsable", example: 123, required: false
+
+      let(:auth_headers) { api_auth_headers_for_agent(agent) }
+      let(:"access-token") { auth_headers["access-token"].to_s }
+      let(:uid) { auth_headers["uid"].to_s }
+      let(:client) { auth_headers["client"].to_s }
+
+      response 200, "Crée et renvoie un·e usager·ère" do
+        let(:"organisation_ids[]") { [organisation.id] }
+        let(:first_name) { "Johnny" }
+        let(:last_name) { "Silverhand" }
+        let(:birth_name) { "Fripouille" }
+        let(:birth_date) { "1976-10-01" }
+        let(:email) { "jean@jacques.fr" }
+        let(:phone_number) { "33600008012" }
+        let(:address) { "10 rue du Havre, Paris" }
+        let(:caisse_affiliation) { "caf" }
+        let(:affiliation_number) { "101010" }
+        let(:family_situation) { "single" }
+        let(:number_of_children) { 3 }
+        let(:notify_by_sms) { false }
+        let(:notify_by_email) { false }
+        let!(:user_responsible) { create(:user) }
+        let(:responsible_id) { user_responsible.id }
+
+        let!(:user_count_before) { User.count }
+        let(:created_user) { User.find(parsed_response_body["user"]["id"]) }
+
+        schema "$ref" => "#/components/schemas/user_with_root"
+
+        run_test!
+
+        it { expect(User.count).to eq(user_count_before + 1) }
+
+        it { expect(created_user.organisations).to match_array([organisation]) }
+
+        it { expect(created_user.first_name).to eq(first_name) }
+
+        it { expect(created_user.last_name).to eq(last_name) }
+
+        it { expect(created_user.birth_name).to eq(birth_name) }
+
+        it { expect(created_user.birth_date).to eq(Date.new(1976, 10, 1)) }
+
+        it { expect(created_user.email).to eq(email) }
+
+        it { expect(created_user.phone_number).to eq(phone_number) }
+
+        it { expect(created_user.address).to eq(address) }
+
+        it { expect(created_user.caisse_affiliation).to eq(caisse_affiliation) }
+
+        it { expect(created_user.affiliation_number).to eq(affiliation_number) }
+
+        it { expect(created_user.family_situation).to eq(family_situation) }
+
+        it { expect(created_user.number_of_children).to eq(number_of_children) }
+
+        it { expect(created_user.notify_by_sms).to eq(notify_by_sms) }
+
+        it { expect(created_user.notify_by_email).to eq(notify_by_email) }
+
+        it { expect(created_user.responsible).to eq(user_responsible) }
       end
-    end
 
-    context "when the agent does not belong to the org" do
-      let!(:another_org) { create(:organisation) }
-      let!(:agent) { create(:agent, basic_role_in_organisations: [another_org]) }
-      let!(:user) { create(:user, organisations: [organisation]) }
+      response 200, "creates a user with a minimal set of params", document: false do
+        let(:"organisation_ids[]") { [organisation.id] }
+        let(:first_name) { "Johnny" }
+        let(:last_name) { "Silverhand" }
 
-      it "is not authorized" do
-        get api_v1_organisation_user_path(organisation, user), headers: api_auth_headers_for_agent(agent)
-        expect(response.status).to eq(403)
+        let!(:user_count_before) { User.count }
+        let(:created_user) { User.find(parsed_response_body["user"]["id"]) }
+
+        schema "$ref" => "#/components/schemas/user_with_root"
+
+        run_test!
+
+        it { expect(User.count).to eq(user_count_before + 1) }
+
+        it { expect(created_user.organisations).to match_array([organisation]) }
+
+        it { expect(created_user.first_name).to eq(first_name) }
+
+        it { expect(created_user.last_name).to eq(last_name) }
+      end
+
+      response 401, "Problème d'authentification" do
+        let(:"organisation_ids[]") { [organisation.id] }
+        let(:first_name) { "Johnny" }
+        let(:last_name) { "Silverhand" }
+        let(:"access-token") { "false" }
+
+        schema "$ref" => "#/components/schemas/error_authentication"
+
+        run_test!
+      end
+
+      response 422, "Des paramètres sont manquants ou mal formés ou impossibles" do
+        let(:"organisation_ids[]") { nil }
+        let(:first_name) { nil }
+        let(:last_name) { nil }
+
+        schema "$ref" => "#/components/schemas/errors_generic"
+
+        run_test!
+      end
+
+      response 422, "phone number is misformatted", document: false do
+        let(:"organisation_ids[]") { [organisation.id] }
+        let(:first_name) { "Johnny" }
+        let(:last_name) { "Silverhand" }
+        let(:phone_number) { "misformatted phone number" }
+
+        schema "$ref" => "#/components/schemas/errors_generic"
+
+        run_test!
+
+        it { expect(parsed_response_body["errors"]).to match({ phone_number: [{ error: "invalid" }] }.with_indifferent_access) }
+      end
+
+      response 422, "email is taken", document: false do
+        let(:"organisation_ids[]") { [organisation.id] }
+        let(:first_name) { "Johnny" }
+        let(:last_name) { "Silverhand" }
+
+        let!(:existing_user) { create(:user, email: "jean@jacques.fr") }
+        let(:email) { existing_user.email }
+
+        schema "$ref" => "#/components/schemas/errors_generic"
+
+        run_test!
+
+        it { expect(parsed_response_body["errors"]["email"].first).to match({ error: "taken", value: email, id: existing_user.id }.with_indifferent_access) }
       end
     end
   end
 
-  describe "PATCH api/v1/users" do
-    let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [organisation]) }
+  path "/api/v1/organisations/{organisation_id}/users" do
+    get "Récupérer une liste d'usager·rès d'une organisation" do
+      with_authentication
+      with_pagination
 
-    context "valid & minimal params" do
-      it "works" do
-        patch(
-          api_v1_user_path(user),
-          params: {
-            first_name: "Alain",
-            last_name: "Deloin",
-          },
-          headers: api_auth_headers_for_agent(agent)
-        )
-        expect(response.status).to eq(200)
-        user.reload
-        expect(user.first_name).to eq("Alain")
-        expect(user.last_name).to eq("Deloin")
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["user"]).to be_present
-        expect(response_parsed["user"]["id"]).to be_present
+      tags "User"
+      produces "application/json"
+      operationId "getUsersFromOrganisation"
+      description "Renvoie une liste paginée d'usager·ères d'une organisation"
+
+      parameter name: :organisation_id, in: :path, type: :integer, description: "ID de l'organisation", example: 123
+
+      let(:auth_headers) { api_auth_headers_for_agent(agent) }
+      let(:"access-token") { auth_headers["access-token"].to_s }
+      let(:uid) { auth_headers["uid"].to_s }
+      let(:client) { auth_headers["client"].to_s }
+
+      let(:organisation_id) { organisation.id }
+
+      response 200, "Renvoie une liste paginée d'usager·ères d'une organisation" do
+        let!(:user1) { create(:user, organisations: [organisation]) }
+        let!(:organisation2) { create(:organisation) }
+        let!(:user2) { create(:user, organisations: [organisation2]) }
+        let!(:agent) { create(:agent, basic_role_in_organisations: [organisation, organisation2]) }
+
+        schema "$ref" => "#/components/schemas/users"
+
+        run_test!
+
+        it { expect(parsed_response_body["users"].pluck("id")).to contain_exactly(user1.id) }
+      end
+
+      response 200, "does not return the users list when the agent does not belong to the organisation", document: false do
+        let!(:other_orga) { create(:organisation) }
+        let!(:user) { create(:user, organisations: [other_orga]) }
+
+        schema "$ref" => "#/components/schemas/users"
+
+        run_test!
+
+        it { expect(parsed_response_body["users"]).to eq([]) }
       end
     end
+  end
 
-    context "valid & complete params" do
-      it "works" do
-        patch(
-          api_v1_user_path(user),
-          params: {
-            first_name: "Alain",
-            last_name: "Deloin",
-            birth_name: "Bourdon",
-            birth_date: "1976-10-01",
-            email: "alain@deloin.fr",
-            address: "10 rue du Havre, Paris",
-            caisse_affiliation: "caf",
-            affiliation_number: "101010",
-            family_situation: "single",
-            number_of_children: 3,
-            notify_by_sms: false,
-            notify_by_email: false,
-          },
-          headers: api_auth_headers_for_agent(agent)
-        )
-        expect(response.status).to eq(200)
-        user.reload
-        expect(user.first_name).to eq("Alain")
-        expect(user.last_name).to eq("Deloin")
-        expect(user.birth_name).to eq("Bourdon")
-        expect(user.birth_date).to eq(Date.new(1976, 10, 1))
-        user.reload
-        expect(user.email).to eq("alain@deloin.fr")
-        expect(user.address).to eq("10 rue du Havre, Paris")
-        expect(user.caisse_affiliation).to eq("caf")
-        expect(user.affiliation_number).to eq("101010")
-        expect(user.family_situation).to eq("single")
-        expect(user.number_of_children).to eq(3)
-        expect(user.notify_by_sms).to eq(false)
-        expect(user.notify_by_email).to eq(false)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["user"]).to be_present
-        expect(response_parsed["user"]["id"]).to be_present
+  path "/api/v1/organisations/{organisation_id}/users/{user_id}" do
+    get "Récupérer un·e usager·ère d'une organisation" do
+      with_authentication
+
+      tags "User"
+      produces "application/json"
+      operationId "getUserFromOrganisation"
+      description "Renvoie un·e usager·ère"
+
+      parameter name: :user_id, in: :path, type: :integer, description: "ID de l'usager·ère", example: 123
+      parameter name: :organisation_id, in: :path, type: :integer, description: "ID de l'organisation", example: 456
+
+      let(:auth_headers) { api_auth_headers_for_agent(agent) }
+      let(:"access-token") { auth_headers["access-token"].to_s }
+      let(:uid) { auth_headers["uid"].to_s }
+      let(:client) { auth_headers["client"].to_s }
+
+      let(:organisation_id) { organisation.id }
+      let(:user_id) { user.id }
+
+      response 200, "Renvoie l'usager·ère d'une organisation" do
+        let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [organisation], email: "jean@jacques.fr") }
+
+        schema "$ref" => "#/components/schemas/user_with_root"
+
+        run_test!
+
+        it { expect(parsed_response_body[:user][:id]).to eq(user.id) }
       end
-    end
 
-    context "valid & relative" do
-      let!(:user_responsible) { create(:user) }
+      response 200, "authorized user ID also belongs to other organisation", document: false do
+        let!(:unauthorized_orga) { create(:organisation) }
+        let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [organisation, unauthorized_orga]) }
 
-      it "works" do
-        patch(
-          api_v1_user_path(user),
-          params: {
-            first_name: "Alain",
-            last_name: "Deloin",
-            responsible_id: user_responsible.id,
-          },
-          headers: api_auth_headers_for_agent(agent)
-        )
-        expect(response.status).to eq(200)
-        user.reload
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["user"]).to be_present
-        expect(user.first_name).to eq("Alain")
-        expect(user.last_name).to eq("Deloin")
-        expect(user.responsible).to eq(user_responsible)
+        schema "$ref" => "#/components/schemas/user_with_root"
+
+        run_test!
+
+        it { expect(parsed_response_body["user"]["id"]).to eq(user.id) }
       end
-    end
 
-    context "invalid: misformatted attribute" do
-      it "does not work" do
-        patch(
-          api_v1_user_path(user),
-          params: {
-            first_name: "Jean",
-            last_name: "Jacques",
-            phone_number: "blah blah",
-          },
-          headers: api_auth_headers_for_agent(agent)
-        )
-        expect(response.status).to eq(422)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["errors"]).not_to be_empty
+      response 401, "Problème d'authentification" do
+        let!(:user) { instance_double(User, id: "123") }
+        let(:"access-token") { "false" }
+
+        schema "$ref" => "#/components/schemas/error_authentication"
+
+        run_test!
       end
-    end
 
-    context "invalid: existing email" do
-      let!(:existing_user) { create(:user, email: "jean@jacques.fr") }
+      response 403, "Renvoie 'unauthorized' quand l'agent ne fait pas partie de l'organisation" do
+        let!(:agent) { create(:agent, basic_role_in_organisations: [create(:organisation)]) }
+        let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [organisation], email: "jean@jacques.fr") }
 
-      it "does not work" do
-        patch(
-          api_v1_user_path(user),
-          params: {
-            first_name: "Jean",
-            last_name: "Jacques",
-            email: "jean@jacques.fr",
-          },
-          headers: api_auth_headers_for_agent(agent)
-        )
-        expect(response.status).to eq(422)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["errors"]).not_to be_empty
-        expect(response_parsed["errors"]["email"].first).to \
-          eq({ "error" => "taken", "value" => "jean@jacques.fr", "id" => existing_user.id })
+        schema "$ref" => "#/components/schemas/error_unauthorized"
+
+        run_test!
+      end
+
+      response 404, "Renvoie 'not_found' quand l'usager·ère est lié·e à une autre organisation" do
+        let!(:another_org) { create(:organisation) }
+        let!(:agent) { create(:agent, basic_role_in_organisations: [organisation, another_org]) }
+        let!(:user) { create(:user, organisations: [another_org]) }
+
+        run_test!
       end
     end
   end

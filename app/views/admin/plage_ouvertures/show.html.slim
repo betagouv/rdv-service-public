@@ -28,10 +28,7 @@
           span= @plage_ouverture.agent.full_name
         div.mt-2.d-flex
           .flex-shrink-0.mr-1.font-weight-bold Lieu :
-          span
-            = @plage_ouverture.lieu.name
-            = unavailability_tag(@plage_ouverture.lieu)
-            = " (#{@plage_ouverture.lieu.address})"
+          = lieu_tag(@plage_ouverture.lieu)
         div.mt-2.d-flex
           .flex-shrink-0.mr-1.font-weight-bold Motifs :
           ul.pl-3.mb-0
@@ -51,10 +48,17 @@
         - if @plage_ouverture.overlapping_plages_ouvertures?
           div.mt-3
             .alert.alert-warning.mt-1.mb-0
-              | Conflit de dates et d'horaires avec d'autres plages d'ouvertures
+              = @plage_ouverture.send(:warn_overlapping_plage_ouvertures).type
             .border-left.border-right.border-bottom.rounded.border-warning
               ul.pl-3.py-2.mb-0
                 = render "overlapping_plage_ouvertures", model: @plage_ouverture
+        - if @plage_ouverture.overflow_motifs_duration?
+          div.mt-3
+            .alert.alert-warning.mt-1.mb-0
+              = @plage_ouverture.send(:warn_overflow_motifs_duration).type
+            .border-left.border-right.border-bottom.rounded.border-warning
+              ul.pl-3.py-2.mb-0
+                = render "motifs_duration_exceed", model: @plage_ouverture
 
       .card-footer.d-flex.justify-content-between
         div
@@ -81,4 +85,6 @@
             class: "btn btn-primary" \
           )
 
-= render "admin/versions/resource_versions_row", policy_scope: :agent, resource: @plage_ouverture
+.row.justify-content-center
+  .col-md-8
+    = render "admin/versions/resource_versions_row", policy_scope: :agent, resource: @plage_ouverture

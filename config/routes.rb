@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  mount Rswag::Ui::Engine => '/api-docs'
+  mount Rswag::Api::Engine => '/api-docs'
   ## OAUTH ##
   devise_scope :user do
     get "omniauth/franceconnect/callback" => "omniauth_callbacks#franceconnect"
@@ -92,26 +94,6 @@ Rails.application.routes.draw do
 
   get "/calendrier/:id", controller: :ics_calendar, action: :show, as: :ics_calendar
 
-  namespace :api do
-    namespace :v1 do
-      mount_devise_token_auth_for "AgentWithTokenAuth", at: "auth"
-      resources :absences, except: %i[new edit]
-      resources :agents, only: %i[index]
-      resources :users, only: %i[create index show update] do
-        get :invite, on: :member
-        post :invite, on: :member
-      end
-      resources :user_profiles, only: [:create]
-      resources :organisations, only: %i[index] do
-        resources :users, only: %i[index show]
-        resources :motifs, only: %i[index]
-        resources :rdvs, only: %i[index]
-      end
-
-      resources :invitations, param: "token", only: [:show]
-    end
-  end
-
   resources :organisations, only: %i[new create]
 
   authenticate :agent do
@@ -134,6 +116,7 @@ Rails.application.routes.draw do
           resource :sms_configuration, only: %i[show edit update]
           resources :zone_imports, only: %i[new create]
           resources :zones, only: [:index] # exports only
+          resource :sectorization, only: [:show]
           resources :sectors do
             resources :zones
             resources :sector_attributions, only: %i[new create destroy], as: :attributions
@@ -165,15 +148,18 @@ Rails.application.routes.draw do
           end
         end
         resources :rdvs, except: [:new] do
+          resources :participations, only: %i[update destroy]
           member do
             post :send_reminder_manually
           end
           collection do
+            post :rdvs_users_export
             post :export
           end
         end
         scope module: "organisations" do
           resource :setup_checklist, only: [:show]
+          resource :online_booking, only: [:show]
           resources :stats, only: :index do
             collection do
               get :rdvs
@@ -258,7 +244,7 @@ Rails.application.routes.draw do
 
   # short public link
   get "org/:organisation_id(/:org_slug)" => "search#public_link_with_internal_organisation_id", as: :public_link_to_org
-  get "org/ext/:territory_slug/:organisation_external_id(/:org_slug)" => "search#public_link_with_external_organisation_id", as: :public_link_to_external_org
+  get "org/ext/:territory/:organisation_external_id(/:org_slug)" => "search#public_link_with_external_organisation_id", as: :public_link_to_external_org
 
   ##
 
@@ -290,4 +276,7 @@ Rails.application.routes.draw do
     # LetterOpener
     mount LetterOpenerWeb::Engine, at: "/letter_opener"
   end
+
+  ## APIs
+  draw :api
 end

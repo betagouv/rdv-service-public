@@ -33,7 +33,7 @@ class SearchContext
       :service_selection
     elsif !motif_selected?
       :motif_selection
-    elsif lieu.nil?
+    elsif selected_motif.requires_lieu? && lieu.nil?
       :lieu_selection
     else
       :creneau_selection
@@ -97,12 +97,13 @@ class SearchContext
   end
 
   def next_availability_by_lieux
-    @next_availability_by_lieux ||= lieux.to_h do |lieu|
-      [
-        lieu.id,
-        creneaux_search_for(lieu, date_range).next_availability,
-      ]
-    end
+    @next_availability_by_lieux ||= lieux.index_with do |lieu|
+      creneaux_search_for(lieu, date_range).next_availability
+    end.compact
+  end
+
+  def shown_lieux
+    next_availability_by_lieux.keys
   end
 
   def start_date
@@ -132,10 +133,11 @@ class SearchContext
   private
 
   def creneaux_search_for(lieu, date_range)
+    motif = lieu.present? ? matching_motifs.where(organisation: lieu.organisation).first : selected_motif
     Users::CreneauxSearch.new(
       user: @current_user,
-      motif: matching_motifs.where(organisation: lieu.organisation).first,
-      lieu: lieu,
+      motif: motif,
+      lieu: lieu, # lieu can be nil when the selected motif is phone
       date_range: date_range,
       geo_search: geo_search
     )

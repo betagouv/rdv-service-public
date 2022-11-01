@@ -18,7 +18,6 @@ describe "using netsize to send an SMS" do
     valid_request = lambda do |req|
       body = URI.decode_www_form(req.body).to_h
       expected_body = {
-        "campaignName" => "dpt-#{organisation.departement_number} org-#{organisation.id} rdv_sms",
         "destinationAddress" => "+33601020304",
         "maxConcatenatedMessages" => "10",
         "originatingAddress" => "RdvSoli",
@@ -44,8 +43,8 @@ describe "using netsize to send an SMS" do
     expect_error_to_be_logged
 
     breadcrumbs = sentry_events.last.breadcrumbs.compact
-    expect(breadcrumbs[0]).to have_attributes(message: 'Calling SMS provider "netsize"')
-    expect(breadcrumbs[1]).to have_attributes(message: "netsize HTTP response", data: { body: "", code: 0, headers: {} })
+    expect(breadcrumbs[0]).to have_attributes(message: "HTTP request")
+    expect(breadcrumbs[1]).to have_attributes(message: "HTTP response", data: { body: "", code: 0, headers: {} })
   end
 
   it "warns Sentry when netsize responds with an HTTP error" do
@@ -55,8 +54,8 @@ describe "using netsize to send an SMS" do
     expect_error_to_be_logged
 
     breadcrumbs = sentry_events.last.breadcrumbs.compact
-    expect(breadcrumbs[0]).to have_attributes(message: 'Calling SMS provider "netsize"')
-    expect(breadcrumbs[1]).to have_attributes(message: "netsize HTTP response", data: { body: "", code: 500, headers: {} })
+    expect(breadcrumbs[0]).to have_attributes(message: "HTTP request")
+    expect(breadcrumbs[1]).to have_attributes(message: "HTTP response", data: { body: "", code: 500, headers: {} })
   end
 
   it "warns Sentry when netsize responds with a business error" do
@@ -71,7 +70,7 @@ describe "using netsize to send an SMS" do
     expect_error_to_be_logged
 
     breadcrumbs = sentry_events.last.breadcrumbs.compact
-    expect(breadcrumbs[0]).to have_attributes(message: 'Calling SMS provider "netsize"')
-    expect(breadcrumbs[1]).to have_attributes(message: "netsize HTTP response", data: { body: stubbed_body, code: 200, headers: {} })
+    expect(breadcrumbs[0]).to have_attributes(message: "HTTP request")
+    expect(breadcrumbs[1]).to have_attributes(message: "HTTP response", data: { body: stubbed_body, code: 200, headers: {} })
   end
 end

@@ -10,6 +10,7 @@ class Rdv < ApplicationRecord
   include WebhookDeliverable
   include Rdv::AddressConcern
   include Rdv::AuthoredConcern
+  include Rdv::Updatable
   include IcalHelpers::Ics
   include Payloads::Rdv
 
@@ -28,7 +29,6 @@ class Rdv < ApplicationRecord
   # https://stackoverflow.com/questions/30629680/rails-isnt-running-destroy-callbacks-for-has-many-through-join-model/30629704
   # https://github.com/rails/rails/issues/7618
   has_many :rdvs_users, validate: false, inverse_of: :rdv, dependent: :destroy
-  before_destroy :cant_destroy_if_receipts_exist # must be declared before has_many :receipts
   has_many :receipts, dependent: :destroy
 
   accepts_nested_attributes_for :rdvs_users, allow_destroy: true
@@ -61,6 +61,7 @@ class Rdv < ApplicationRecord
   before_validation { self.uuid ||= SecureRandom.uuid }
 
   # Scopes
+  default_scope { where(deleted_at: nil) }
   scope :not_cancelled, -> { where(status: NOT_CANCELLED_STATUSES) }
   scope :past, -> { where("starts_at < ?", Time.zone.now) }
   scope :future, -> { where("starts_at > ?", Time.zone.now) }
@@ -93,7 +94,6 @@ class Rdv < ApplicationRecord
       all
     end
   }
-
   ## -
 
   def self.ongoing(time_margin: 0.minutes)
@@ -155,6 +155,10 @@ class Rdv < ApplicationRecord
     status.in? CANCELLED_STATUSES
   end
 
+  def not_cancelled?
+    status.in? NOT_CANCELLED_STATUSES
+  end
+
   def cancellable_by_user?
     !cancelled? && !collectif? && motif.rdvs_cancellable_by_user? && starts_at > 4.hours.from_now
   end
@@ -170,11 +174,11 @@ class Rdv < ApplicationRecord
 
   def creneaux_available(date_range)
     date_range = Lapin::Range.reduce_range_to_delay(motif, date_range) # réduit le range en fonction du délay
-    lieu.present? ? SlotBuilder.available_slots(motif, lieu, date_range, OffDays.all_in_date_range(date_range)) : []
+    SlotBuilder.available_slots(motif, lieu, date_range, OffDays.all_in_date_range(date_range))
   end
 
   def user_for_home_rdv
-    responsibles = users.where.not(responsible_id: [nil])
+    responsibles = users.loaded? ? users.select(&:responsible_id) : users.where.not(responsible_id: [nil])
     [responsibles, users].flatten.select(&:address).first || users.first
   end
 
@@ -211,11 +215,10 @@ class Rdv < ApplicationRecord
     ""
   end
 
-  def self.search_for(agent, organisation, options)
-    rdvs = Rdv.where(organisation: organisation)
-    unless agent.role_in_organisation(organisation).can_access_others_planning?
-      rdvs = rdvs.joins(:motif).where(motifs: { service: agent.service })
-    end
+  def self.search_for(organisations, options)
+    organisation_ids = [organisations.id] if organisations.is_a?(Organisation)
+    organisation_ids ||= organisations.ids
+    rdvs = joins(:organisation).where(organisations: { id: organisation_ids })
     options.each do |key, value|
       next if value.blank?
 
@@ -289,6 +292,40 @@ class Rdv < ApplicationRecord
 
   delegate :domain, to: :organisation
 
+  def soft_delete
+    # disable the :updated webhook because we want to manually trigger a :destroyed webhook
+    self.skip_webhooks = true
+    return false unless update(deleted_at: Time.zone.now)
+
+    generate_payload_and_send_webhook_for_destroy
+    true
+  end
+
+  def update_users_count
+    users_count = rdvs_users.not_cancelled.count
+    update_column(:users_count, users_count)
+  end
+
+  def update_rdv_status_from_participation
+    # Priority Order. One participation will change rdv status
+    %w[unknown seen noshow].each do |status|
+      symbol_method = "#{status}?".to_sym
+      next unless rdvs_users.any?(&symbol_method)
+
+      self.status = status
+      save
+      break
+    end
+
+    # If all participations are similar the rdv status will change
+    %w[seen noshow excused].each do |status|
+      if rdvs_users.map(&:status).all? { |participation_status| participation_status.in? [status] }
+        self.status = status
+        save
+      end
+    end
+  end
+
   private
 
   def starts_at_is_plausible
@@ -329,13 +366,5 @@ class Rdv < ApplicationRecord
 
   def update_agents_unknown_past_rdv_count
     agents.each(&:update_unknown_past_rdv_count!)
-  end
-
-  def cant_destroy_if_receipts_exist
-    # This is similar to using :restrict_with_errors on the has_many :receipts relation, but we want a custom error
-    return if receipts.empty?
-
-    errors.add(:base, :cant_destroy_if_receipts_exist)
-    throw :abort
   end
 end

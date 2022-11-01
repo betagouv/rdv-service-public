@@ -28,5 +28,26 @@ describe Admin::SlotsController, type: :controller do
 
       expect(assigns(:search_result)).not_to be_nil
     end
+
+    describe "edge cases" do
+      render_views
+
+      context "when there is no search results" do
+        it "doesn't crash" do
+          agent = create(:agent, :secretaire, basic_role_in_organisations: [organisation])
+          motif = create(:motif, organisation: organisation)
+
+          sign_in agent
+
+          expect do
+            get :index, params: {
+              organisation_id: organisation.id,
+              motif_id: motif.id,
+            }
+          end.not_to raise_error
+          expect(response.body).to include(I18n.t("admin.slots.index.no_slot_available", motif_name: motif.name))
+        end
+      end
+    end
   end
 end

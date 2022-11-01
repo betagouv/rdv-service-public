@@ -5,13 +5,12 @@ class SmsSender < BaseService
 
   class SmsSenderFailure < StandardError; end
 
-  attr_reader :phone_number, :content, :tags, :provider, :api_key
+  attr_reader :phone_number, :content, :provider, :api_key
 
-  def initialize(sender_name, phone_number, content, tags, provider, api_key, receipt_params) # rubocop:disable Metrics/ParameterLists
+  def initialize(sender_name, phone_number, content, provider, api_key, receipt_params) # rubocop:disable Metrics/ParameterLists
     @sender_name = sender_name
     @phone_number = phone_number
     @content = formatted_content(content)
-    @tags = tags
     @provider = provider
     @api_key = api_key
     @receipt_params = receipt_params
@@ -28,7 +27,6 @@ class SmsSender < BaseService
   end
 
   def perform
-    Sentry.add_breadcrumb(Sentry::Breadcrumb.new(message: "Calling SMS provider #{@provider.inspect}"))
     send("send_with_#{@provider}")
   end
 
@@ -36,7 +34,7 @@ class SmsSender < BaseService
 
   def to_s
     conf = "provider : #{@provider}\napi_key : #{@api_key}"
-    message = "content: #{@content}\nphone_number: #{@phone_number}\ntags: #{@tags.join(',')}"
+    message = "content: #{@content}\nphone_number: #{@phone_number}"
     "#{conf}\n#{message}"
   end
 
@@ -68,8 +66,7 @@ class SmsSender < BaseService
         SibApiV3Sdk::SendTransacSms.new(
           sender: @sender_name,
           recipient: @phone_number,
-          content: @content,
-          tag: @tags.join(" ")
+          content: @content
         )
       )
       # response is a SibApiV3Sdk.SendSms
@@ -78,7 +75,6 @@ class SmsSender < BaseService
     rescue SibApiV3Sdk::ApiError => e
       # 401 Unauthorized
       # 400 Invalid telephone number
-      add_sib_error_to_breadcrumbs(e)
       handle_failure(error_message: "SendInBlue error: #{e.message} (#{e.code})")
     end
   end
@@ -86,7 +82,6 @@ class SmsSender < BaseService
   # These errors should not trigger a retry, because it would only fail again
   NETSIZE_PERMANENT_ERRORS = [
     15, # Message concatenation limit exceeded
-    16, # Unable to route message.
     103, # Invalid account name
     117, # Invalid campaign name
   ].freeze
@@ -107,12 +102,9 @@ class SmsSender < BaseService
         messageText: @content,
         originatingAddress: @sender_name,
         originatorTON: 1,
-        campaignName: @tags.join(" ").truncate(49),
         maxConcatenatedMessages: 10,
       }
     ).run
-
-    add_response_to_breadcrumbs(response)
 
     if response.timed_out?
       handle_failure(error_message: "NetSize timeout")
@@ -150,8 +142,6 @@ class SmsSender < BaseService
         emetteur: replies_email, # The parameter is called “emetteur” but it is actually an email where we can receive replies to the sms.
       }
     ).run
-
-    add_response_to_breadcrumbs(response)
 
     if response.timed_out?
       handle_failure(error_message: "Contact Experience error: Timeout")
@@ -202,8 +192,6 @@ class SmsSender < BaseService
         },
       }.to_json
     ).run
-
-    add_response_to_breadcrumbs(response)
 
     if response.timed_out?
       handle_failure(error_message: "Clever Technologies error: Timeout")
@@ -256,29 +244,11 @@ class SmsSender < BaseService
   # DebugLogger
   #
   def send_with_debug_logger
-    message = "content: #{@content} | recipient: #{@phone_number} | tags: #{@tags.join(',')}"
+    message = "content: #{@content} | recipient: #{@phone_number}"
     Rails.logger.info("following SMS would have been sent in production environment: #{message}")
     Rails.logger.info("provider : #{@provider} configuration : #{@configuration}")
 
     save_receipt(result: :processed)
-  end
-
-  # @param [Typhoeus::Response] response
-  def add_response_to_breadcrumbs(response)
-    crumb = Sentry::Breadcrumb.new(
-      message: "#{@provider} HTTP response",
-      data: { code: response.code, headers: response.headers, body: response.body }
-    )
-    Sentry.add_breadcrumb(crumb)
-  end
-
-  # @param [SibApiV3Sdk::ApiError] sib_error
-  def add_sib_error_to_breadcrumbs(sib_error)
-    crumb = Sentry::Breadcrumb.new(
-      message: "SendInBlue returned HTTP error",
-      data: { code: sib_error.code, headers: sib_error.response_headers, body: sib_error.response_body }
-    )
-    Sentry.add_breadcrumb(crumb)
   end
 
   # rubocop:enable Metrics/PerceivedComplexity

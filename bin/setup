@@ -25,8 +25,10 @@ FileUtils.chdir APP_ROOT do
   unless File.exist?('config/database.yml')
     FileUtils.cp 'config/database.yml.sample', 'config/database.yml'
   end
-  unless File.exist?('.env')
-    FileUtils.cp '.env.sample', '.env'
+
+  # See https://github.com/bkeepers/dotenv/tree/45b712a#what-other-env-files-can-i-use
+  unless File.exist?('.env.development')
+    FileUtils.cp '.env.sample', '.env.development'
   end
 
   puts "\n== Preparing database =="

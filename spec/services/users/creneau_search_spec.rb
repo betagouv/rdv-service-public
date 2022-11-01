@@ -5,7 +5,7 @@ describe Users::CreneauSearch do
   let(:user) { create(:user) }
   let(:motif) { create(:motif, name: "Coucou", location_type: :home, organisation: organisation) }
   let(:lieu) { create(:lieu, organisation: organisation) }
-  let(:starts_at) { DateTime.parse("2020-10-20 09h30") }
+  let(:starts_at) { Time.zone.parse("2020-10-20 09:30") }
   let(:now) { Time.zone.parse("2020-10-19 14:30") }
 
   describe ".creneau_for" do
@@ -26,9 +26,9 @@ describe Users::CreneauSearch do
     context "some matching creneaux" do
       let(:mock_creneaux) do
         [
-          build(:creneau, starts_at: DateTime.parse("2020-10-20 09h30")),
-          build(:creneau, starts_at: DateTime.parse("2020-10-20 10h00")),
-          build(:creneau, starts_at: DateTime.parse("2020-10-20 10h30")),
+          build(:creneau, starts_at: Time.zone.parse("2020-10-20 09:30")),
+          build(:creneau, starts_at: Time.zone.parse("2020-10-20 10:00")),
+          build(:creneau, starts_at: Time.zone.parse("2020-10-20 10:30")),
         ]
       end
 
@@ -38,9 +38,9 @@ describe Users::CreneauSearch do
     context "no matching creneaux" do
       let(:mock_creneaux) do
         [
-          build(:creneau, starts_at: DateTime.parse("2020-10-20 10h00")),
-          build(:creneau, starts_at: DateTime.parse("2020-10-20 10h30")),
-          build(:creneau, starts_at: DateTime.parse("2020-10-20 11h30")),
+          build(:creneau, starts_at: Time.zone.parse("2020-10-20 10:00")),
+          build(:creneau, starts_at: Time.zone.parse("2020-10-20 10:30")),
+          build(:creneau, starts_at: Time.zone.parse("2020-10-20 11:30")),
         ]
       end
 

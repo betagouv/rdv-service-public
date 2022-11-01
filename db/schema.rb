@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_09_27_160954) do
+ActiveRecord::Schema.define(version: 2022_10_20_152222) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -53,6 +53,8 @@ ActiveRecord::Schema.define(version: 2022_09_27_160954) do
     "rsa_cer_signature",
     "rsa_insertion_offer",
     "rsa_follow_up",
+    "rsa_accompagnement_social",
+    "rsa_accompagnement_sociopro",
   ], force: :cascade
 
   create_enum :rdv_status, [
@@ -178,6 +180,7 @@ ActiveRecord::Schema.define(version: 2022_09_27_160954) do
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "allow_to_manage_access_rights", default: false, null: false
     t.boolean "allow_to_invite_agents", default: false, null: false
+    t.boolean "allow_to_download_metrics", default: false, null: false
     t.index ["agent_id"], name: "index_agent_territorial_access_rights_on_agent_id"
     t.index ["territory_id"], name: "index_agent_territorial_access_rights_on_territory_id"
   end
@@ -226,6 +229,11 @@ ActiveRecord::Schema.define(version: 2022_09_27_160954) do
     t.enum "absence_notification_level", default: "all", enum_type: "agents_absence_notification_level"
     t.string "external_id", comment: "The agent's unique and immutable id in the system managing them and adding them to our application"
     t.string "calendar_uid", comment: "the uid used for the url of the agent's ics calendar"
+    t.integer "sign_in_count", default: 0, null: false
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.string "current_sign_in_ip"
+    t.string "last_sign_in_ip"
     t.index ["calendar_uid"], name: "index_agents_on_calendar_uid", unique: true
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true
     t.index ["email"], name: "index_agents_on_email", unique: true
@@ -386,7 +394,7 @@ ActiveRecord::Schema.define(version: 2022_09_27_160954) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "recurrence"
-    t.bigint "lieu_id", null: false
+    t.bigint "lieu_id"
     t.boolean "expired_cached", default: false
     t.datetime "recurrence_ends_at"
     t.index "tsrange((first_day)::timestamp without time zone, recurrence_ends_at, '[]'::text)", name: "index_plage_ouvertures_on_tsrange_first_day_recurrence_ends_at", using: :gist
@@ -417,8 +425,10 @@ ActiveRecord::Schema.define(version: 2022_09_27_160954) do
     t.string "name"
     t.integer "max_participants_count"
     t.integer "users_count", default: 0
+    t.datetime "deleted_at"
     t.index "tsrange(starts_at, ends_at, '[)'::text)", name: "index_rdvs_on_tsrange_starts_at_ends_at", using: :gist
     t.index ["created_by"], name: "index_rdvs_on_created_by"
+    t.index ["deleted_at"], name: "index_rdvs_on_deleted_at"
     t.index ["ends_at"], name: "index_rdvs_on_ends_at"
     t.index ["lieu_id"], name: "index_rdvs_on_lieu_id"
     t.index ["max_participants_count"], name: "index_rdvs_on_max_participants_count"
@@ -533,7 +543,6 @@ ActiveRecord::Schema.define(version: 2022_09_27_160954) do
     t.enum "sms_provider", enum_type: "sms_provider"
     t.json "sms_configuration"
     t.boolean "has_own_sms_provider", default: false
-    t.string "api_options", default: [], null: false, array: true
     t.boolean "enable_notes_field", default: false
     t.boolean "enable_caisse_affiliation_field", default: false
     t.boolean "enable_affiliation_number_field", default: false

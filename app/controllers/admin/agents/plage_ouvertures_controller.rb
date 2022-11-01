@@ -5,10 +5,8 @@ class Admin::Agents::PlageOuverturesController < ApplicationController
   respond_to :json
 
   def index
-    agent = Agent.find(params[:agent_id])
+    @agent = Agent.find(params[:agent_id])
     @organisation = Organisation.find(params[:organisation_id])
-
-    plage_ouvertures = custom_policy.includes(:lieu, :organisation).where(agent: agent)
     # Cache occurrences for this relation
     @plage_ouverture_occurrences = cache([plage_ouvertures, :all_occurrences_for, date_range_params]) do
       plage_ouvertures.all_occurrences_for(date_range_params)
@@ -16,6 +14,12 @@ class Admin::Agents::PlageOuverturesController < ApplicationController
   end
 
   private
+
+  def plage_ouvertures
+    plage = custom_policy.includes(:lieu, :organisation).where(agent: @agent)
+    plage = plage.where(id: params[:plages_ids]) if params[:plages_ids].present?
+    plage
+  end
 
   # TODO: custom policy waiting for policies refactoring
   def custom_policy

@@ -1,0 +1,14 @@
+.table-responsive.users-table[style="overflow: inherit"]
+  table.table.light-gray-table
+    thead
+      tr
+        / Fixed width because of user profile notes field that could messed up the table.
+        th style="max-width: 30%" Participant
+        th Notifications
+        th
+        th
+        - if rdv.collectif?
+          th.text-right Participation
+    tbody id="rdv-users-list"
+      - rdv.rdvs_users.sort_by { _1.user.last_name.downcase }.each do |rdvs_user|
+        = render "admin/rdvs_users/user_row", rdvs_user: rdvs_user, agent: agent

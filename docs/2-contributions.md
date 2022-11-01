@@ -31,6 +31,7 @@ Au delà du style de syntaxe, nous essayons de suivre quelques principes. RDVS-S
   - utiliser les relation through autant que possible pour construire les queries
 6. Pour les tests, utiliser les helpers et rspec avec parcimonie
   - Par exemple, les `let`, `subject`, etc, doivent rester proches de leur lieu d’utilisation, quitte à être répétés dans un autre `context`.
+7. Pour manipuler des dates et heures, il est recommandé d'utiliser `ActiveSupport::TimeWithZone` plutôt que des Time ou des DateTime. Plus d'explications dans [cette PR](https://github.com/betagouv/rdv-solidarites.fr/pull/2955).
 
 ## Linters
 
@@ -51,9 +52,13 @@ make autocorrect          Fix autocorrectable lint issues
 
 ## Tests
 
-Nous utilisons [RSpec](https://rspec.info/) pour écrire nos tests. En principe, la base de données de tests est créée automatiquement. Les feature tests utilisent Capybara et ont besoin de Chrome (et de chromedriver) pour s’exécuter.
-Il faut modifier son fichier host pour pouvoir faire tourner les tests en local :
-`127.0.0.1 www.rdv-solidarites-test.localhost`
+Note : nos bonnes pratiques sur les tests sont à lire ici : [Bonnes pratiques de test](docs/bonnes-pratiques-de-tests.md)
+
+Nous utilisons [RSpec](https://rspec.info/) pour écrire nos tests. En principe, la base de données de tests est créée automatiquement. 
+
+Les feature tests utilisent Capybara et ont besoin de Chrome (et de chromedriver) pour s’exécuter. Pour plusieurs devs sous MacOS dans l'équipe, il a fallu ajouter cette ligne à son fichier `/etc/hosts` pour pouvoir faire tourner les tests en local :
+
+    127.0.0.1 www.rdv-solidarites-test.localhost
 
 - Lancer tous les tests
 

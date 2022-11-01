@@ -9,6 +9,7 @@ class Absence < ApplicationRecord
   include IcalHelpers::Rrule
   include Payloads::Absence
   include Expiration
+  include EnsuresRealisticDate
 
   # Attributes
   auto_strip_attributes :title

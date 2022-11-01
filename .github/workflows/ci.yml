@@ -8,7 +8,7 @@ jobs:
     name: Ruby linter
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -19,7 +19,7 @@ jobs:
     name: Slim Linter
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -30,7 +30,7 @@ jobs:
     name: Security Checker
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -54,12 +54,14 @@ jobs:
           --health-retries 5
         ports: ["5432:5432"]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.1.1
           bundler-cache: true
+      - name: Set up Redis
+        uses: zhulik/redis-action@1.1.0
       - name: Install JS dependencies
         run: yarn install
       - name: Precompile assets
@@ -99,12 +101,14 @@ jobs:
           --health-retries 5
         ports: ["5432:5432"]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.1.1
           bundler-cache: true
+      - name: Set up Redis
+        uses: zhulik/redis-action@1.1.0
       - name: Install JS dependencies
         run: yarn install
       - name: Precompile assets

@@ -5,7 +5,6 @@ import listPlugin from '@fullcalendar/list';
 import frLocale from '@fullcalendar/core/locales/fr';
 import interactionPlugin from '@fullcalendar/interaction';
 import moment from 'moment-timezone';
-import * as Sentry from '@sentry/browser';
 
 import Bowser from "bowser";
 const browser = Bowser.getParser(window.navigator.userAgent);
@@ -152,15 +151,18 @@ class CalendarRdvSolidarites {
 
     sessionStorage.setItem("calendarStartDate", JSON.stringify(info.view.currentStart))
     const printLinkElt = document.querySelector(".js-link-print-rdvs")
-    printLinkElt.classList.toggle("d-none", info.view.type != "timeGridOneDay")
-    if (info.view.type != "timeGridOneDay") return
 
-    const url = new URL(printLinkElt.href)
-    const date = moment(info.view.currentStart).utc()
-    printLinkElt.querySelector(".js-date").innerHTML = date.format("DD/MM/YYYY")
-    url.searchParams.set("start", date.format("YYYY-MM-DD"))
-    url.searchParams.set("end", date.format("YYYY-MM-DD"))
-    printLinkElt.href = url.toString()
+    if (printLinkElt) {
+      printLinkElt.classList.toggle("d-none", info.view.type != "timeGridOneDay")
+      if (info.view.type != "timeGridOneDay") return
+
+      const url = new URL(printLinkElt.href)
+      const date = moment(info.view.currentStart).utc()
+      printLinkElt.querySelector(".js-date").innerHTML = date.format("DD/MM/YYYY")
+      url.searchParams.set("start", date.format("YYYY-MM-DD"))
+      url.searchParams.set("end", date.format("YYYY-MM-DD"))
+      printLinkElt.href = url.toString()
+    }
   }
 
   eventRender = (info) => {
@@ -187,7 +189,7 @@ class CalendarRdvSolidarites {
     const start = moment(info.event.start).utc().format('H:mm');
     const end = moment(info.event.end).utc().format('H:mm');
 
-    if(info.isStart && info.isEnd) {
+    if (info.isStart && info.isEnd) {
       title += `${start} - ${end}`;
     } else if(info.isStart) {
       title += `À partir de ${start}`;
@@ -200,10 +202,13 @@ class CalendarRdvSolidarites {
     if (info.event.rendering == 'background') {
       $el.append("<div class=\"fc-title\" style=\"color: white; padding: 2px 4px; font-size: 12px; font-weight: bold;\">" + info.event.title + "</div>");
 
-      if(extendedProps.organisationName) {
+      if (extendedProps.organisationName) {
         title += `<br>${extendedProps.organisationName}`;
       }
-      title += `<br><strong>${info.event.title}</strong><br> <small>Lieu : ${extendedProps.lieu}</small>`;
+      title += `<br><strong>${info.event.title}</strong>`;
+      if (extendedProps.lieu) {
+        title += `<br> <small>Lieu : ${extendedProps.lieu}</small>`;
+      }
     } else {
       if (extendedProps.duration) {
         title += ` <small>(${extendedProps.duration} min)</small>`;
@@ -212,7 +217,7 @@ class CalendarRdvSolidarites {
 
       title += `<br><strong>${info.event.title}</strong>`;
 
-      if(extendedProps.organisationName) {
+      if (extendedProps.organisationName) {
         title += `<br>${extendedProps.organisationName}`;
       }
       if (extendedProps.lieu) {
@@ -234,19 +239,7 @@ class CalendarRdvSolidarites {
     return now >= activeStart && now <= activeEnd;
   }
 
-  handleAjaxError = (errorObj) => {
-    Sentry.captureMessage(
-      'FullCalendar AJAX call failed',
-      {
-        extra: {
-          xhr: errorObj.xhr,
-          responseHeaders: errorObj.xhr.getAllResponseHeaders(),
-          responseBody: errorObj.xhr.response,
-        },
-        fingerprint: ["fullcalendar_xhr_error"], // group all FullCalendar errors under the same Sentry issue
-        level: "error",
-      }
-    )
+  handleAjaxError = () => {
     alert("Le chargement du calendrier a échoué; un rapport d’erreur a été transmis à l’équipe.\nRechargez la page, et si ce problème persiste, contactez-nous à support@rdv-solidarites.fr.");
   }
 }
