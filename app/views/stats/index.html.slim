@@ -20,26 +20,26 @@
                 - %i[seen excused revoked noshow].each do |temporal_status|
                   = render "stats/rdv_counter_without_link", \
                     temporal_status: temporal_status, \
-                    element: 'RDV', \
+                    element: "RDV", \
                     count: @stats.rdvs.status(temporal_status).count
             .col-lg-4
               .px-1
                 = render "stats/rdv_counter_without_link", \
                   temporal_status: :unknown_past, \
-                  element: 'RDV', \
+                  element: "RDV", \
                   count: @stats.rdvs.status(:unknown_past).count
             .col-lg-4
               .px-1
                 = render "stats/rdv_counter_without_link", \
                   temporal_status: :unknown_future, \
-                  element: 'RDV', \
+                  element: "RDV", \
                   count: @stats.rdvs.status(:unknown_future).count
           hr
           .row
             .col-lg-4
               .px-1
                 = render "stats/rdv_counter_without_link", \
-                  element: 'RDV', \
+                  element: "RDV", \
                   label: "Tous", \
                   count: @stats.rdvs.count
 
@@ -52,18 +52,18 @@
                 - %i[seen excused revoked noshow].each do |temporal_status|
                   = render "stats/rdv_counter_without_link", \
                     temporal_status: temporal_status, \
-                    element: 'Usager(s)', \
+                    element: "Usager(s)", \
                     count: RdvsUser.where(rdv: @stats.rdvs).status(temporal_status).count
             .col-lg-4
               .px-1
                 = render "stats/rdv_counter_without_link", \
                   temporal_status: :unknown_past, \
-                  element: 'Usager(s)', \
+                  element: "Usager(s)", \
                   count: RdvsUser.where(rdv: @stats.rdvs).joins(:rdv).status(:unknown_past).count
             .col-lg-4
               .px-1
                 = render "stats/rdv_counter_without_link", \
-                  element: 'Usager(s)', \
+                  element: "Usager(s)", \
                   temporal_status: :unknown_future, \
                   count: RdvsUser.where(rdv: @stats.rdvs).joins(:rdv).status(:unknown_future).count
           hr
@@ -71,7 +71,7 @@
             .col-lg-4
               .px-1
                 = render "stats/rdv_counter_without_link", \
-                  element: 'Usager(s)', \
+                  element: "Usager(s)", \
                   label: "Tous", \
                   count: RdvsUser.where(rdv: @stats.rdvs).count
 
