@@ -27,6 +27,5 @@ module ApiSpecMacros
 
   def with_pagination
     parameter name: "page", in: :query, type: :integer, description: "La page souhaitée", example: "1", required: false
-    parameter name: "per", in: :query, type: :integer, description: "Le nombre d'éléments souhaités par page", example: "10", required: false
   end
 end
