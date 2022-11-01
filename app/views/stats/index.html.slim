@@ -117,12 +117,12 @@
           - colors = %w[#fa5c7c #02a8b5 #39afd1 #0acf97 #ffbc00]
           = column_chart rdvs_stats_path(by_status: true, territory: @territory), stacked: :percent, max: 100, suffix: "%", colors: colors
 
-    .card.mb-5
-      .card-body
-        = self_anchor "rdvs-status"
-          h2.card-title RDV par statut de participation
-        - colors = %w[#fa5c7c #02a8b5 #39afd1 #0acf97 #ffbc00]
-        = column_chart rdvs_stats_path(by_rdv_users_status: true, territory: @territory), stacked: :percent, max: 100, suffix: "%", colors: colors
+      .card.mb-5
+        .card-body
+          = self_anchor "rdvs-status"
+            h2.card-title RDV par statut de participation
+          - colors = %w[#fa5c7c #02a8b5 #39afd1 #0acf97 #ffbc00]
+          = column_chart rdvs_stats_path(by_rdv_users_status: true, territory: @territory), stacked: :percent, max: 100, suffix: "%", colors: colors
 
       .card.mb-5
         .card-body
