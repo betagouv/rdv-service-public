@@ -35,7 +35,7 @@ Par exemple, on aura : `https://<domain>/api/v1/organizations`
 
 Tous les points de terminaison qui retournent des listes sont paginés.
 
-Le paramètre (optionnel) `page` permet d'accéder à une page donnée. Le paramètre (optionnel) `per` permet d'indiquer combien d'éléments par page sont retournés. Par défaut, et sauf précision contraire dans la documentation d'un point de terminaison donné, on retrouve 20 éléments par page.
+Le paramètre (optionnel) `page` permet d'accéder à une page donnée. Sauf précision contraire dans la documentation d'un point de terminaison donné, on retrouve 100 éléments par page.
 
 De manière générale, tout point de terminaison qui retourne une liste peut retourner une liste vide.
 

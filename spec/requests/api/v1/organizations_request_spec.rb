@@ -17,19 +17,14 @@ describe "Organization API", swagger_doc: "v1/api.json" do
       parameter name: :group_id, in: :query, type: :integer, description: "ID du Group sur lequel filtrer les organisations", example: "1", required: false
 
       response 200, "Retourne les Organisations sous la forme Organizations" do
-        let!(:page1) { create_list(:organisation, 2) }
-        let!(:page2) { create_list(:organisation, 2) }
-        let!(:page3) { create_list(:organisation, 1) }
-
-        let(:page) { 2 }
-        let(:per) { 2 }
+        let!(:organizations) { create_list(:organisation, 5) }
 
         schema "$ref" => "#/components/schemas/organizations"
 
         run_test!
 
-        it { expect(parsed_response_body[:meta]).to match(current_page: 2, next_page: 3, prev_page: 1, total_count: 5, total_pages: 3) }
-        it { expect(parsed_response_body[:organizations]).to match(OrganizationBlueprint.render_as_hash(page2)) }
+        it { expect(parsed_response_body[:meta]).to match(current_page: 1, next_page: nil, prev_page: nil, total_count: 5, total_pages: 1) }
+        it { expect(parsed_response_body[:organizations]).to match(OrganizationBlueprint.render_as_hash(organizations)) }
       end
 
       response 200, "Filtre par rapport à un territoire", document: false do
