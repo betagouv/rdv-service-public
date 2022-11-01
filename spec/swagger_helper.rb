@@ -238,6 +238,17 @@ RSpec.configure do |config|
             },
             required: %w[id address name organisation_id phone_number single_use],
           },
+          motifs: {
+            type: "object",
+            properties: {
+              motifs: {
+                type: "array",
+                items: { "$ref" => "#/components/schemas/motif" },
+              },
+              meta: { "$ref" => "#/components/schemas/meta" },
+            },
+            required: %w[motifs meta],
+          },
           motif: {
             type: "object",
             properties: {
