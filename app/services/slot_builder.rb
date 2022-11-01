@@ -3,6 +3,12 @@
 module SlotBuilder
   class << self
     # méthode publique
+    # Fonctionnement au 01/11/2022 documenté ci-dessous
+    # 1. Convertir le range de dates passé en argument en range de datetimes.
+    # 2. Déterminer les plages d’ouvertures existantes dans cette range (récurrentes y compris)
+    # 3. Convertir chacune de ces plages d’ouverture en range de datetime compatibles avec le range passé en arguments
+    # 4. Soustraire à ces ranges les temps occupés par des absences, des jours off ou des rdv déjà pris. A cette étape, on a hash qui associe pour chaque plage d’ouverture un array de ranges
+    # 5. Itérer sur l’array de range de chaque plage d’ouverture. Pour chaque range, construire les créneaux accessibles grâce à la durée du motif de rendez-vous. Regrouper tous ces créneaux dans un array et le retourner.
     def available_slots(motif, lieu, date_range, off_days, agents = [])
       datetime_range = Lapin::Range.ensure_date_range_with_time(date_range)
       plage_ouvertures = plage_ouvertures_for(motif, lieu, datetime_range, agents)
