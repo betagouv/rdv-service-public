@@ -17,14 +17,4 @@ describe "paginated requests", type: :request do
       expect(parsed_response_body["meta"]).to eq({ "current_page" => 1, "next_page" => 2, "prev_page" => nil, "total_count" => 210, "total_pages" => 3 })
     end
   end
-
-  describe "specified pagination params" do
-    subject { get api_v1_organisations_path(page: 2, per: 10), headers: api_auth_headers_for_agent(agent) }
-
-    it do
-      expect(response.status).to eq(200)
-      expect(parsed_response_body["organisations"].count).to eq(10)
-      expect(parsed_response_body["meta"]).to eq({ "current_page" => 2, "next_page" => 3, "prev_page" => 1, "total_count" => 210, "total_pages" => 21 })
-    end
-  end
 end

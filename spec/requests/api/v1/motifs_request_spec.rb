@@ -10,31 +10,16 @@ describe "RDV authentified API", swagger_doc: "v1/api.json" do
       operationId "getMotifs"
       description "Renvoie tous les motifs à partir d'une organisation"
 
-      security [{ access_token: [], uid: [], client: [] }]
+      with_authentication
+      with_pagination
 
       parameter name: :organisation_id, in: :path, type: :integer, description: "Identifiant de l'organisation", example: "1"
-
-      parameter name: "access-token", in: :header, type: :string, description: "Token d'accès (authentification)", example: "SFYBngO55ImjD1HOcv-ivQ"
-      parameter name: "client", in: :header, type: :string, description: "Clé client d'accès (authentification)", example: "Z6EihQAY9NWsZByfZ47i_Q"
-      parameter name: "uid", in: :header, type: :string, description: "Identifiant d'accès (authentification)", example: "martine@demo.rdv-solidarites.fr"
 
       parameter name: :active, in: :query, type: :boolean, description: "filtre sur les motifs actifs", required: false
       parameter name: :reservable_online, in: :query, type: :boolean, description: "filtre sur les motifs réservables en ligne", required: false
       parameter name: :service_id, in: :query, type: :integer, description: "filtre sur les services", example: "1", required: false
 
-      after do |example|
-        content = example.metadata[:response][:content] || {}
-        example_spec = {
-          "application/json" => {
-            examples: {
-              example: {
-                value: JSON.parse(response.body, symbolize_names: true),
-              },
-            },
-          },
-        }
-        example.metadata[:response][:content] = content.deep_merge(example_spec)
-      end
+      with_examples
 
       context "sans filtres" do
         response 200, "Renvoie les motifs", document: false do
@@ -73,6 +58,8 @@ describe "RDV authentified API", swagger_doc: "v1/api.json" do
 
           let(:organisation_id) { organisation1.id }
 
+          schema "$ref" => "#/components/schemas/motifs"
+
           run_test!
 
           it { expect(parsed_response_body[:motifs]).to eq(MotifBlueprint.render_as_json([motif1, motif2])) }
@@ -91,6 +78,8 @@ describe "RDV authentified API", swagger_doc: "v1/api.json" do
           let!(:motif) { create(:motif, organisation: organisation, service: service) }
 
           let(:organisation_id) { organisation.id }
+
+          schema "$ref" => "#/components/schemas/error_authentication"
 
           run_test!
         end

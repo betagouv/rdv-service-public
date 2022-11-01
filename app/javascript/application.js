@@ -10,7 +10,6 @@ import './components/browser-detection';
 import 'select2/dist/js/select2.min.js';
 import 'select2/dist/js/i18n/fr.js';
 import { Select2Inputs } from './components/select2-inputs';
-import './components/sentry';
 import 'bootstrap';
 
 import './stylesheets/application';

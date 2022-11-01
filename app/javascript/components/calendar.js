@@ -5,7 +5,6 @@ import listPlugin from '@fullcalendar/list';
 import frLocale from '@fullcalendar/core/locales/fr';
 import interactionPlugin from '@fullcalendar/interaction';
 import moment from 'moment-timezone';
-import * as Sentry from '@sentry/browser';
 
 import Bowser from "bowser";
 const browser = Bowser.getParser(window.navigator.userAgent);
@@ -240,19 +239,7 @@ class CalendarRdvSolidarites {
     return now >= activeStart && now <= activeEnd;
   }
 
-  handleAjaxError = (errorObj) => {
-    Sentry.captureMessage(
-      'FullCalendar AJAX call failed',
-      {
-        extra: {
-          xhr: errorObj.xhr,
-          responseHeaders: errorObj.xhr.getAllResponseHeaders(),
-          responseBody: errorObj.xhr.response,
-        },
-        fingerprint: ["fullcalendar_xhr_error"], // group all FullCalendar errors under the same Sentry issue
-        level: "error",
-      }
-    )
+  handleAjaxError = () => {
     alert("Le chargement du calendrier a échoué; un rapport d’erreur a été transmis à l’équipe.\nRechargez la page, et si ce problème persiste, contactez-nous à support@rdv-solidarites.fr.");
   }
 }
