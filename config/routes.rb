@@ -89,7 +89,7 @@ Rails.application.routes.draw do
     delete "agents" => "agents/registrations#destroy", as: "delete_agent_registration"
     namespace :agents do
       resource :preferences, only: %i[show update] do
-        post :disable_cnfs_bandeau_resa_en_ligne
+        post :disable_cnfs_online_booking_banner
       end
       resource :calendar_sync, only: %i[show update], controller: :calendar_sync
     end

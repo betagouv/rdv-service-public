@@ -1,7 +1,7 @@
 - content_for(:menu_item) { "menu-agendas" }
 - content_for(:menu_agent_select_path_helper_name) { "admin_organisation_agent_agenda_path" }
 
-- content_for(:announcement) { render "layouts/cnfs_bandeau_resa_en_ligne" }
+- content_for(:cnfs_online_booking_banner) { render "layouts/cnfs_online_booking_banner" }
 
 - content_for :title do
   - if current_agent == @agent

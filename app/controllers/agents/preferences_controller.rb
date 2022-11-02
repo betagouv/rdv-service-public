@@ -5,9 +5,9 @@ class Agents::PreferencesController < AgentAuthController
 
   layout "registration"
 
-  def disable_cnfs_bandeau_resa_en_ligne
+  def disable_cnfs_online_booking_banner
     skip_authorization
-    cookies.permanent[:disable_cnfs_bandeau_resa_en_ligne] = true
+    cookies.permanent[:disable_cnfs_online_booking_banner] = true
     redirect_back(fallback_location: root_path)
   end
 
