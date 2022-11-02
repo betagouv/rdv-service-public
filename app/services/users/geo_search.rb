@@ -84,7 +84,7 @@ class Users::GeoSearch
   def available_motifs_arels
     [available_motifs_from_departement_organisations_arel] +
       [available_motifs_from_attributed_organisations_arel] +
-      (available_collective_motifs_from_attributed_agents_arels + available_motifs_from_attributed_agents_arels)
+      (available_collective_motifs_from_attributed_agents_arels + available_individual_motifs_from_attributed_agents_arels)
   end
 
   def available_motifs_from_departement_organisations_arel
@@ -111,8 +111,8 @@ class Users::GeoSearch
     @collective_motif ||= Motif.reservable_online.active.collectif.joins(:rdvs).merge(Rdv.future.with_remaining_seats).distinct
   end
 
-  def available_motifs_from_attributed_agents_arels
-    @available_motifs_from_attributed_agents_arels ||= attributed_agents_by_organisation
+  def available_individual_motifs_from_attributed_agents_arels
+    @available_individual_motifs_from_attributed_agents_arels ||= attributed_agents_by_organisation
       .map do |organisation, agents|
         agents.map { available_individual_motifs_from_attributed_agent_arel(_1, organisation) }
       end.flatten(1)
