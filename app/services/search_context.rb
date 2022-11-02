@@ -154,7 +154,7 @@ class SearchContext
   def lieu_filtered_motif_ids(motifs)
     # filtrer sur le `lieu_id` dans la table des plages d'ouverture permet de limiter de combiner et construire trop d'objet
     # voir https://github.com/betagouv/rdv-solidarites.fr/issues/2686
-    motif_ids = motifs.individuel.joins(:plage_ouvertures).where(plage_ouvertures: { lieu_id: @lieu_id }).pluck(:id)
+    motif_ids = motifs.individuel.joins(:plage_ouvertures).where(plage_ouvertures: { lieu_id: @lieu_id }).uniq.pluck(:id)
 
     # Pour prendre en compte le filtre sur le lieu_id pour les RDV Collectif,
     # nous ne pouvons pas passer par une requête `or` qui nécessite les mêmes jointures des deux côtés.

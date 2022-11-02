@@ -100,16 +100,15 @@ class Users::GeoSearch
   end
 
   def available_motifs_base
-    collective_motif_ids = Motif.reservable_online.active.collectif.joins(:rdvs).merge(Rdv.future.with_remaining_seats).distinct.pluck(:id)
-    Motif.where(id: individual_motif_ids + collective_motif_ids).joins(:organisation)
+    Motif.where(id: individual_motif + collective_motif).joins(:organisation)
   end
 
-  def individual_motif_ids
-    @individual_motif_ids ||= Motif.reservable_online.active.individuel.joins(:plage_ouvertures).distinct
+  def individual_motif
+    @individual_motif ||= Motif.reservable_online.active.individuel.joins(:plage_ouvertures).distinct
   end
 
-  def collective_motif_ids
-    @collective_motif_ids ||= Motif.reservable_online.active.collectif.joins(:rdvs).merge(Rdv.future.with_remaining_seats).distinct
+  def collective_motif
+    @collective_motif ||= Motif.reservable_online.active.collectif.joins(:rdvs).merge(Rdv.future.with_remaining_seats).distinct
   end
 
   def available_motifs_from_attributed_agents_arels
@@ -120,7 +119,7 @@ class Users::GeoSearch
   end
 
   def available_individual_motifs_from_attributed_agent_arel(agent, organisation)
-    motif_ids = individual_motif_ids.sectorisation_level_agent
+    motif_ids = individual_motif.sectorisation_level_agent
       .joins(:plage_ouvertures)
       .where(
         organisation_id: organisation.id,
@@ -139,7 +138,7 @@ class Users::GeoSearch
   end
 
   def available_collective_motifs_from_attributed_agent_arel(_agent, organisation)
-    motif_ids = collective_motif_ids.sectorisation_level_agent
+    motif_ids = collective_motif.sectorisation_level_agent
       .where(organisation_id: organisation.id)
       .pluck(:id)
     # Pour pouvoir faire le `or` de la méthode `available_motifs` il faut avoir des
