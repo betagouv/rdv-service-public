@@ -78,7 +78,7 @@
       .card.mb-5
         .card-body
           = self_anchor "rdvs"
-          h2.card-title RDV créés (#{@stats.rdvs.count})
+            h2.card-title RDV créés (#{@stats.rdvs.count})
           = column_chart rdvs_stats_path(territory: @territory), stacked: true
 
       - unless @territory.present?
