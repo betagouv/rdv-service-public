@@ -166,12 +166,12 @@ RSpec.configure do |config|
           user_profiles: {
             type: "object",
             properties: {
-              user: { "$ref" => "#/components/schemas/user", nullable: true },
+              user: { "$ref" => "#/components/schemas/user" },
               organisation: { "$ref" => "#/components/schemas/organisation" },
               logement: { type: "string", enum: %w[sdf heberge en_accession_propriete proprietaire autre locataire], nullable: true },
               notes: { type: "string", nullable: true },
             },
-            required: %w[organisation],
+            required: %w[organisation logement notes],
           },
           organisations: {
             type: "object",
@@ -193,6 +193,39 @@ RSpec.configure do |config|
               phone_number: { type: "string", nullable: true },
             },
             required: %w[id email name phone_number],
+          },
+          absence_with_root: {
+            type: "object",
+            properties: {
+              absence: { "$ref" => "#/components/schemas/absence" },
+            },
+            required: %w[absence],
+          },
+          absences: {
+            type: "object",
+            properties: {
+              absences: {
+                type: "array",
+                items: { "$ref" => "#/components/schemas/absence" },
+              },
+              meta: { "$ref" => "#/components/schemas/meta" },
+            },
+            required: %w[absences meta],
+          },
+          absence: {
+            type: "object",
+            properties: {
+              id: { type: "integer" },
+              ical_uid: { type: "string" },
+              title: { type: "string" },
+              first_day: { type: "string", format: "date" },
+              end_day: { type: "string", format: "date" },
+              start_time: { type: "string" },
+              end_time: { type: "string" },
+              agent: { "$ref" => "#/components/schemas/agent", nullable: true },
+              organisation: { "$ref" => "#/components/schemas/organisation" },
+            },
+            required: %w[id ical_uid title first_day end_day start_time end_time agent organisation],
           },
           organizations: {
             type: "object",
@@ -339,6 +372,20 @@ RSpec.configure do |config|
               not_found: { type: "string" },
             },
             required: %w[not_found],
+          },
+          error_unprocessable_entity: {
+            type: "object",
+            properties: {
+              success: { type: "boolean" },
+              errors: {
+                type: "object",
+              },
+              error_messages: {
+                type: "array",
+                items: { type: "string" },
+              },
+            },
+            required: %w[success errors error_messages],
           },
         },
       },

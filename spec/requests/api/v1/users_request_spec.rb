@@ -642,6 +642,8 @@ describe "Users API", swagger_doc: "v1/api.json" do
         let!(:agent) { create(:agent, basic_role_in_organisations: [organisation, another_org]) }
         let!(:user) { create(:user, organisations: [another_org]) }
 
+        schema "$ref" => "#/components/schemas/error_not_found"
+
         run_test!
       end
     end

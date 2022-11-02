@@ -49,6 +49,7 @@ L'API est susceptible de retourner les erreurs suivantes.
 | `401` | Unauthorized          | L'authentification a échoué            |
 | `403` | Forbidden             | La limite autorisée est atteinte       |
 | `404` | Not Found             | La ressource est introuvable           |
+| `422` | unprocessable_entity  | La donnée transmise est mal formattée  |
 | `500` | Internal Server Error | Une erreur serveur produite            |
 
 ## Ressources
