@@ -27,6 +27,7 @@ class RdvsUser < ApplicationRecord
   before_create :set_status_from_rdv
   after_save :update_counter_cache
   after_destroy :update_counter_cache
+  # TODO : Refreshing rdv webhook is sending multiple rdvs webhook on rdv status change (because it change participation status too)
   after_commit :refresh_rdv_webhook, on: %i[update destroy]
 
   # Scopes
@@ -38,7 +39,9 @@ class RdvsUser < ApplicationRecord
   end
 
   def refresh_rdv_webhook
-    rdv.generate_payload_and_send_webhook(:updated) unless rdv.skip_webhooks
+    return if rdv.skip_webhooks
+
+    rdv.generate_payload_and_send_webhook(:updated)
   end
 
   def set_status_from_rdv

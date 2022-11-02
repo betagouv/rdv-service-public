@@ -91,7 +91,7 @@ RSpec.describe Rdv::Updatable, type: :concern do
 
       it "sends a webhook" do
         rdv.reload
-        expect(WebhookJob).to receive(:perform_later)
+        expect(WebhookJob).to receive(:perform_later).at_least(:once)
         rdv.update_and_notify(agent, status: "noshow")
       end
     end

@@ -313,7 +313,6 @@ class Rdv < ApplicationRecord
       next unless rdvs_users.any?(&symbol_method)
 
       self.status = status
-      save
       break
     end
 
@@ -321,9 +320,10 @@ class Rdv < ApplicationRecord
     %w[seen noshow excused].each do |status|
       if rdvs_users.map(&:status).all? { |participation_status| participation_status.in? [status] }
         self.status = status
-        save
       end
     end
+
+    save
   end
 
   private

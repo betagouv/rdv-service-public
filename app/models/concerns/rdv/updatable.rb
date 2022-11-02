@@ -33,19 +33,19 @@ module Rdv::Updatable
     case status
     when "unknown"
       # Setting to unknown means resetting the rdv status by agents and reset ALL participants statuses
-      rdvs_users.update(status: status)
+      rdvs_users.each { _1.update!(status: status) }
     when "excused"
       # Collective rdv cannot be globally excused
       unless collectif?
         # On non collectives rdv all participants are excused
-        rdvs_users.not_cancelled.update(status: status)
+        rdvs_users.not_cancelled.each { _1.update!(status: status) }
       end
     when "revoked"
       # When rdv status is revoked, all participants are revoked
-      rdvs_users.not_cancelled.update(status: status)
+      rdvs_users.not_cancelled.each { _1.update!(status: status) }
     when "seen", "noshow"
       # When rdv status is seen or noshow, all unknown statuses are changed
-      rdvs_users.not_cancelled.where(status: "unknown").update(status: status)
+      rdvs_users.unknown.each { _1.update!(status: status) }
     end
   end
 
