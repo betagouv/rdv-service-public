@@ -4,15 +4,14 @@ div
   div= "proche de #{user_to_link(user.responsible)}".html_safe
 div
   ul.list-unstyled
-    - user_profile = user.profile_for(current_organisation)
     li= object_attribute_tag(user, :birth_date, birth_date_and_age(user))
     li= object_attribute_tag(user, :phone_number, clickable_user_phone_number(user))
     li= object_attribute_tag(user, :address)
     li= object_attribute_tag(user, :email, clickable_user_email(user))
-    - if current_territory.enable_notes_field && user_profile
-      li= object_attribute_tag(user_profile, :notes, formatted_user_notes(user_profile))
-    - if current_territory.enable_logement_field && user_profile
-      li= object_attribute_tag(user_profile, :logement)
+    - if current_territory.enable_notes_field
+      li= object_attribute_tag(user, :notes, formatted_user_notes(user))
+    - if current_territory.enable_logement_field
+      li= object_attribute_tag(user, :logement)
     - Territory::SOCIAL_FIELD_TOGGLES.each do |toggle, field_name|
       - if current_territory.attributes.with_indifferent_access[toggle]
         li= object_attribute_tag(user, field_name)

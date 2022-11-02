@@ -5,8 +5,6 @@ class UserProfileBlueprint < Blueprinter::Base
   # * in the API: See Api::V1::BaseController#render_record and #render_collection
   # * in the webhooks: See WebhookDeliverable#generate_webhook_payload
 
-  fields :logement, :notes
-
   association :user, blueprint: UserBlueprint
   association :organisation, blueprint: OrganisationBlueprint
 
