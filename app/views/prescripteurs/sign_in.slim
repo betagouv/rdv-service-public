@@ -1,0 +1,34 @@
+
+main.container
+.row
+  .col-md-8.m-auto.pt-3
+
+    main.container
+      .row
+        .col-md-8.m-auto.pt-3
+          h2 Prescription de RDV
+          .card
+            = render "users/rdv_wizard_steps/rdv_wizard_summary", rdv_wizard: @rdv_wizard if @rdv_wizard.present?
+            .card-body
+              h3 Infos de prescripteur
+
+              = simple_form_for User.new, url: session_path(:user) do |f|
+                .form-group
+                  .row
+                    .col-6
+                      = f.label :first_name, "Prénom"
+                      = f.text_field :first_name, required: true, class: "form-control"
+                    .col-6
+                      = f.label :last_name, "Nom"
+                      = f.text_field :last_name, required: true, class: "form-control"
+
+
+                .form-group
+                  = f.label :email, "Votre email"
+                  = f.email_field :email, autofocus: true, class: "form-control", placeholder: "nom.prenom@email.com"
+                .form-group
+                  = f.label :phone_number, "Téléphone"
+                  = f.phone_field :phone_number, autofocus: true, class: "form-control", placeholder: "06......"
+
+                .form-group.mb-0.text-center
+                  = f.submit "Continuer", class: "btn btn-primary"
