@@ -485,9 +485,9 @@ describe Rdv, type: :model do
       rdv3 = create(:rdv, organisation: organisation2, agents: [agent2], users: [user])
 
       options = {}
-      expect(described_class.search_for(organisation, options)).to eq([rdv1, rdv2])
-      expect(described_class.search_for(organisation2, options)).to eq([rdv3])
-      expect(described_class.search_for(Organisation.all, options)).to eq([rdv1, rdv2, rdv3])
+      expect(described_class.search_for(organisation, options)).to match_array([rdv1, rdv2])
+      expect(described_class.search_for(organisation2, options)).to match_array([rdv3])
+      expect(described_class.search_for(Organisation.all, options)).to match_array([rdv1, rdv2, rdv3])
     end
 
     it "returns rdv with given status" do
