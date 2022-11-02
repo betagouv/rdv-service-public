@@ -47,7 +47,7 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
   def results_without_lieu?
     return false if requires_lieu?
 
-    SearchCreneauxWithoutLieuForAgentsService.perform_with(@form)&.creneaux&.any?
+    search_creneaux_service.present?
   end
 
   def set_form
@@ -59,18 +59,18 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
 
     # Un RDV collectif peut-il avoir lieu à domicile ou au téléphone ?
     @search_results = if @form.motif.individuel?
-                        search_creneaux_service.perform_with(@form)
+                        search_creneaux_service
                       else
                         SearchRdvCollectifForAgentsService.new(@form).lieu_search
                       end
   end
 
   def search_creneaux_service
-    if requires_lieu?
-      SearchCreneauxForAgentsService
-    else
-      SearchCreneauxWithoutLieuForAgentsService
-    end
+    @search_creneaux_service ||= if requires_lieu?
+                                   SearchCreneauxForAgentsService.perform_with(@form)
+                                 else
+                                   SearchCreneauxWithoutLieuForAgentsService.perform_with(@form)
+                                 end
   end
 
   def creneaux_search_params
