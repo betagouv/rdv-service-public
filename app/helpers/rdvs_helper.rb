@@ -107,6 +107,13 @@ module RdvsHelper
     end
   end
 
+  def show_participants_count(rdv)
+    return "" if rdv.motif.individuel?
+    return rdv.users_count.to_s if rdv.max_participants_count.blank?
+
+    "#{rdv.users_count} / #{rdv.max_participants_count}"
+  end
+
   private
 
   def rdv_individuel_title_for_agent(rdv)
