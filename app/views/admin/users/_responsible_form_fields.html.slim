@@ -57,7 +57,7 @@
   = f.input :case_number, **input_opts
 
 - if current_territory.enable_notes_field
-  = f_user_profile.input :notes, **input_opts.deep_merge(input_html: { rows: 6 })
+  = f.input :notes, **input_opts.deep_merge(input_html: { rows: 6 })
 
 - if current_territory.enable_caisse_affiliation_field || current_territory.enable_affiliation_number_field
   .form-row
@@ -74,4 +74,4 @@
       .col-md-6= f.input :number_of_children, **{ input_html: { min: "0", max: "15", step: "any" } }.deep_merge(input_opts)
 
 - if current_territory.enable_logement_field
-  = f_user_profile.input :logement, collection: UserProfile.human_attribute_values(:logement), **input_opts
+  = f.input :logement, collection: User.human_attribute_values(:logement), **input_opts

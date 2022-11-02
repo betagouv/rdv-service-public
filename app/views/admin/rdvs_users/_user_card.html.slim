@@ -3,7 +3,7 @@
     .card-body.p-2
       .mb-1
         = render "admin/users/identity", user: rdvs_user.user
-      - notes = rdvs_user.user.notes_for(current_organisation)
+      - notes = rdvs_user.user.notes
       - if notes.present?
         .rdv_user_notes
           i.fa.fa-info-circle.text-primary-blue.mr-2

@@ -14,11 +14,11 @@ class Admin::UsersController < AgentAuthController
     family_situation number_of_children
     notify_by_sms notify_by_email
     case_number address_details
+    notes logement
   ].freeze
 
   PERMITTED_NESTED_ATTRIBUTES = {
     agent_ids: [],
-    user_profiles_attributes: %i[notes logement id organisation_id],
   }.freeze
 
   def index

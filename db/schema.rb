@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_11_09_101323) do
+ActiveRecord::Schema.define(version: 2022_11_02_183810) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -561,8 +561,6 @@ ActiveRecord::Schema.define(version: 2022_11_09_101323) do
   create_table "user_profiles", force: :cascade do |t|
     t.bigint "organisation_id", null: false
     t.bigint "user_id", null: false
-    t.integer "logement"
-    t.text "notes"
     t.index ["organisation_id", "user_id"], name: "index_user_profiles_on_organisation_id_and_user_id", unique: true
     t.index ["organisation_id"], name: "index_user_profiles_on_organisation_id"
     t.index ["user_id"], name: "index_user_profiles_on_user_id"
@@ -615,6 +613,8 @@ ActiveRecord::Schema.define(version: 2022_11_09_101323) do
     t.enum "created_through", default: "unknown", enum_type: "user_created_through"
     t.string "case_number"
     t.string "address_details"
+    t.integer "logement"
+    t.text "notes"
     t.index ["birth_date"], name: "index_users_on_birth_date"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["created_through"], name: "index_users_on_created_through"
