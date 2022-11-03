@@ -177,10 +177,10 @@ class Agent < ApplicationRecord
     nil
   end
 
-  def self.with_online_reservations
+  def self.with_online_reservations_at(date)
     plage_ouvertures_scope = PlageOuverture
-      .not_expired
-      .in_range((Time.zone.now..))
+      .where(created_at: ..date)
+      .in_range(date..)
       .reservable_online
 
     joins(:plage_ouvertures).merge(plage_ouvertures_scope).distinct
