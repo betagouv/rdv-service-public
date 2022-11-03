@@ -9,7 +9,7 @@ main.container
             = render "users/rdv_wizard_steps/rdv_wizard_summary", rdv_wizard: @rdv_wizard if @rdv_wizard.present?
             .card-body
               h3 Les coordonnées de l'usager
-              p Indiquez les coordonnées de la personne qui prend le rendez-vous
+              p Indiquez les coordonnées de la personne qui viendra au rendez-vous
 
               = render "admin/users/form", user: @user, user_form: @user_form
 

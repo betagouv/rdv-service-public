@@ -9,11 +9,7 @@
 
 .form-row
   .col-md-6= f.input :first_name, **input_opts.deep_merge(frozen_fields_opts)
-  .col-md-6= f.input :last_name, **input_opts
-
-.form-row
-  .col-md-6= f.input :birth_name, **input_opts.deep_merge(frozen_fields_opts)
-  .col-md-6= date_input(f, :birth_date, **input_opts.deep_merge(frozen_fields_opts))
+  .col-md-6= f.input :last_name, **input_opts.merge({ label: "Nom"})
 
 = f.input :phone_number, as: :tel, **input_opts
 
@@ -26,25 +22,9 @@
       class:"align-items-baseline ml-0"
     |&nbsp; Inviter l'utilisateur à se créer un compte sur #{current_domain.name}.
 
-.label Préférences de notifications
-.mb-2
-  div= f.input( \
-    :notify_by_email,  \
-    include_hidden: false, \
-    wrapper: false, \
-    **input_opts.deep_merge(user.confirmed? ? { disabled: true, input_html: { class: "js-force-disabled" } } : {}) \
-  )
-  div= f.input( \
-    :notify_by_sms,  \
-    include_hidden: false, \
-    wrapper: false, \
-    **input_opts.deep_merge(user.confirmed? ? { disabled: true, input_html: { class: "js-force-disabled" } } : {}) \
-  )
 - if user.confirmed?
   .mt-1.text-muted
     | L'usager ayant validé son compte, vous ne pouvez plus modifier ses préférences
-
-= f.input :address, **(input_opts.deep_merge(input_html: { class: "places-js-container" }))
 
 = f.input :city_code, as: :hidden, **input_opts
 = f.input :post_code, as: :hidden, **input_opts

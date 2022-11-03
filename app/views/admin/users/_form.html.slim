@@ -16,28 +16,13 @@
     = render "model_errors", model: user_form, f: f
 
     = collapsible_form_fields_for_warnings(user_form) do
-      = f.input( \
-        :responsability_type, \
-        as: :radio_buttons, \
-        collection: %i[responsible relative], \
-        checked: @role, \
-        label_method: -> { User.human_attribute_value(:responsability_type, _1) }, \
-        disabled: user.persisted?, \
-        wrapper: :vertical_collection_inline, \
-        input_html: { \
-          autocomplete: "off", \
-          class: "js-responsability-type", \
-        }, \
-        label_html: { class: "mb-0" } \
-      )
-
       div *div_opts[:responsible]
         = render "admin/users/responsible_form_fields", f: f, f_user_profile: f_user_profile, input_opts: input_opts[:responsible]
 
       div *div_opts[:relative]
         .form-row
           .col-md-6= f.input :first_name, **input_opts[:relative]
-          .col-md-6= f.input :last_name, **input_opts[:relative]
+          .col-md-6= f.input :last_name, **input_opts[:relative], label: "Nom"
         = date_input(f, :birth_date, **input_opts[:relative])
         - if current_territory.enable_notes_field?
           = f_user_profile.input :notes, **input_opts[:relative].deep_merge(input_html: { rows: 6 })
@@ -112,4 +97,4 @@
         - if user.persisted?
           = f.button :submit
         - else
-          = f.button :submit, "Créer usager"
+          = f.button :submit, "Confirmer le rendez-vous"
