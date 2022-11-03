@@ -7,8 +7,9 @@ Pour chaque endpoint, utiliser [le DSL rswag](https://github.com/rswag/rswag) po
 - Paramètres de la requête
 - Exemple de requête
 - Exemple de réponse (header et body)
+- Même processus pour chacune des erreurs qui peuvent être générées
 
-Pour générer la documentation de l'API, utilisez la commande : 
+Pour générer la documentation de l'API, utilisez la commande :
 
 ```sh
 SWAGGER_DRY_RUN=0 RAILS_ENV=test rails rswag
