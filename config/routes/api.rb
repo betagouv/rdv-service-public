@@ -22,6 +22,7 @@ namespace :api do
     resources :public_links, only: [:index]
     resources :groups, only: :index
     resources :organizations, only: :index
+    resources :places, only: :index
   end
 end
 

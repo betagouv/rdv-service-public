@@ -216,7 +216,7 @@ RSpec.configure do |config|
               website: { type: "string", nullable: true },
               public_link: { type: "string" },
             },
-            required: %w[id label group_id public_link],
+            required: %w[id label group_id phone_number email website public_link],
           },
           invitation: {
             type: "object",
@@ -225,6 +225,29 @@ RSpec.configure do |config|
               invitation_token: { type: "string" },
             },
             required: %w[invitation_url invitation_token],
+          },
+          places: {
+            type: "object",
+            properties: {
+              places: {
+                type: "array",
+                items: { "$ref" => "#/components/schemas/place" },
+              },
+              meta: { "$ref" => "#/components/schemas/meta" },
+            },
+            required: %w[places meta],
+          },
+          place: {
+            type: "object",
+            properties: {
+              id: { type: "integer" },
+              label: { type: "string" },
+              organization_id: { type: "integer" },
+              phone_number: { type: "string", nullable: true },
+              latitude: { type: "number", nullable: true },
+              longitude: { type: "number", nullable: true },
+            },
+            required: %w[id label organization_id phone_number latitude longitude],
           },
           lieu: {
             type: "object",
