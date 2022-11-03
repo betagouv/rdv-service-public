@@ -3,7 +3,7 @@
 class Rack::Attack
   throttle("requests by ip", limit: 50, period: 60) do |request|
     public_api_controllers = %w[group organization public_link]
-    request.ip if request.path.match("api/v1/(#{public_api_controllers.join("|")})|public_api/public_link")
+    request.ip if request.path.match("api/v1/(#{public_api_controllers.join('|')})|public_api/public_link")
   end
 
   self.throttled_responder = lambda do |request|
