@@ -8,8 +8,8 @@ main.container
           .card
             = render "users/rdv_wizard_steps/rdv_wizard_summary", rdv_wizard: @rdv_wizard if @rdv_wizard.present?
             .card-body
-              h3 Vos coordonnées de prescripteur
-              p Ces informations permettront à l'agent qui assure le rendez-vous de savoir qui l'a planifié.
+              h3 Les coordonnées de l'usager
+              p Indiquez les coordonnées de la personne qui prend le rendez-vous
 
               = simple_form_for User.new, url: session_path(:user) do |f|
                 .form-group
