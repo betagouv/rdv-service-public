@@ -11,18 +11,5 @@ main.container
               h3 Les coordonnées de l'usager
               p Indiquez les coordonnées de la personne qui prend le rendez-vous
 
-              = simple_form_for User.new, url: session_path(:user) do |f|
-                .form-group
-                  .row
-                    .col-6
-                      = f.input :first_name, required: true, label: "Votre prénom"
-                    .col-6
-                      = f.input :last_name, required: true, label: "Votre nom"
+              = render "admin/users/form", user: @user, user_form: @user_form
 
-                .form-group
-                  = f.input :email, as: :email, placeholder: "nom.prenom@email.com", required: true, label: "Votre email"
-                .form-group
-                  = f.input :phone_number, as: :tel, placeholder: "06 39 98 12 34"
-
-                .form-group.mb-0.text-center
-                  = link_to "Continuer", prescripteurs_new_user_path, class: "btn btn-primary"

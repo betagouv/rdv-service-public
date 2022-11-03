@@ -216,6 +216,8 @@ Rails.application.routes.draw do
   namespace :prescripteurs do
     get "sign_in"
     get "new_user"
+    post "confirmation"
+    get "done"
   end
 
   %w[contact mds accessibility mentions_legales cgu politique_de_confidentialite domaines health_check].each do |page_name|

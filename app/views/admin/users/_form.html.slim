@@ -32,7 +32,7 @@
       )
 
       div *div_opts[:responsible]
-        = render "responsible_form_fields", f: f, f_user_profile: f_user_profile, input_opts: input_opts[:responsible]
+        = render "admin/users/responsible_form_fields", f: f, f_user_profile: f_user_profile, input_opts: input_opts[:responsible]
 
       div *div_opts[:relative]
         .form-row
@@ -91,7 +91,7 @@
                   data-relative-type="new"
                   class=("active" if initial_relative_type_tab == :new)
                 ]
-                  = render "responsible_form_wrapper", f: f, input_opts: input_opts[:relative_new], user_type_key: :relative_new
+                  = render "admin/users/responsible_form_wrapper", f: f, input_opts: input_opts[:relative_new], user_type_key: :relative_new
 
       - elsif user.persisted? && user.relative?
         .form-row.mb-2
