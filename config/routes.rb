@@ -214,10 +214,10 @@ Rails.application.routes.draw do
   end
 
   namespace :prescripteurs do
-    get "sign_in"
-    get "new_user"
-    post "confirmation"
-    get "done"
+    get "prescripteur_info"
+    get "user_info"
+    post "create_rdv"
+    get "confirmation"
   end
 
   %w[contact mds accessibility mentions_legales cgu politique_de_confidentialite domaines health_check].each do |page_name|

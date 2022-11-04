@@ -88,12 +88,7 @@
               b= link_to full_name_and_birthdate(user.responsible), admin_organisation_user_path(current_organisation, user.responsible)
             = render "responsible_form_wrapper", f: f, input_opts: input_opts[:relative_existing], user_type_key: :relative_existing
 
-      .text-right
-        - if from_modal?
-          = link_to "Annuler", "#", class: "btn btn-link", data: { dismiss: "modal" }
-        - else
-          = link_to "Annuler", agent_user_form_cancel_path(user), class: "btn btn-link"
-
+      .text-center
         - if user.persisted?
           = f.button :submit
         - else

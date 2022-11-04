@@ -41,4 +41,5 @@ fr:
   simple_form:
     hints:
       user:
-        phone_number: Saisissez un numéro à 10 chiffres de France métropole ou d’outre-mer, ou bien un numéro international avec le préfixe du pays.
+        phone_number: Un sms de confirmation et un sms de rappel seront envoyés à ce numéro
+        email: Un mail de confirmation et un mail de rappel seront envoyés à cette adresse
