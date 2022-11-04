@@ -25,11 +25,11 @@ main.container
                 .form-group
                   .row
                     .col-12
-                      = f.input :email, as: :email, placeholder: "nom.prenom@email.com", required: true, label: "Votre email professionnel"
+                      = f.input :email, as: :email, placeholder: "nom.prenom@email.com", required: true, label: "Votre email professionnel", hint: ''
                 .form-group
                   .row
                     .col-12
-                      = f.input :phone_number, as: :tel, placeholder: "06...", label: "Votre numéro de téléphone (facultatif)"
+                      = f.input :phone_number, as: :tel, placeholder: "06...", label: "Votre numéro de téléphone (facultatif)", hint: ''
 
                 .form-group.mb-0.text-center
                   = link_to "Continuer", prescripteurs_user_info_path, class: "btn btn-primary"
