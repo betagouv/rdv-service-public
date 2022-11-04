@@ -8,12 +8,17 @@ main.container
         .col-md-8.m-auto.pt-3
           .card
             .card-body
-              h2 RDV Confirmé
-              p Le rendez-vous est confirmé.
-              p = "[Récap du rdv similaireà un rdv#show]"
+              h2
+                i.fa.fa-check-circle
+                = " Rendez-vous confirmé"
+              p = "[Récap du rdv similaire à un rdv#show]"
 
-
-              p = "Besoin de déplacer le rendez-vous ou de corriger un détail ? Contactez nous"
-              p = "Vous pouvez aussi nous écrire pour nous donner votre avis sur la prise de rendez-vous."
-              = link_to "Retour à l'accueil", root_path
+              p
+                = "Besoin de déplacer le rendez-vous ou de corriger un détail ? "
+                = link_to "Contactez-nous", "#"
+              p
+                = "Vous pouvez aussi "
+                = link_to "nous écrire", "#"
+                = " pour nous donner votre avis sur la prise de rendez-vous."
+              .text-center= link_to "Retour à l'accueil", root_path
 
