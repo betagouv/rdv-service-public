@@ -1,10 +1,11 @@
+= render "users/rdv_wizard_steps/stepper", step_title: "Bénéficiaire"
+
 main.container
 .row
   .col-md-8.m-auto.pt-3
     main.container
       .row
         .col-md-8.m-auto.pt-3
-          h3.text-center.mb-3 Prise de rendez-vous pour un bénéficiaire
           .card
             = render "users/rdv_wizard_steps/rdv_wizard_summary", rdv_wizard: @rdv_wizard if @rdv_wizard.present?
             .card-body

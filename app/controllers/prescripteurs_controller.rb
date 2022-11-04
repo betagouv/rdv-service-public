@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class PrescripteursController < ApplicationController
+  before_action lambda {
+    @step_titles = ["Choix du rendez-vous", "Prescripteur", "Bénéficiaire", "Confirmation"]
+  }
+
   def sign_in
     parsed_uri = URI.parse(session[:user_return_to])
     parsed_params = Rack::Utils.parse_nested_query(parsed_uri.query).to_h.symbolize_keys
