@@ -31,6 +31,18 @@ class RdvsUser < ApplicationRecord
   # Scopes
   scope :order_by_user_last_name, -> { includes(:user).order("users.last_name ASC") }
   scope :not_cancelled, -> { where(status: NOT_CANCELLED_STATUSES) }
+  scope :past, -> { where("rdvs.starts_at < ?", Time.zone.now) }
+  scope :future, -> { where("rdvs.starts_at > ?", Time.zone.now) }
+  scope :status, lambda { |status|
+    case status.to_s
+    when "unknown_past"
+      past.where(status: %w[unknown waiting])
+    when "unknown_future"
+      future.where(status: %w[unknown waiting])
+    else
+      where(status: status)
+    end
+  }
 
   def update_counter_cache
     rdv.update_users_count
