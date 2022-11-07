@@ -3,7 +3,6 @@
 require "swagger_helper"
 
 describe "paginated requests", type: :request do
-
   let(:agent) { create(:agent) }
   let(:auth_headers) { api_auth_headers_for_agent(agent) }
   let(:"access-token") { auth_headers["access-token"].to_s }
@@ -12,7 +11,7 @@ describe "paginated requests", type: :request do
 
   before do
     stub_const("Api::V1::BaseController::PAGINATE_PER", 3)
-    create_list(:agent_role, 7, agent: agent) # This also creates 210 new organisations
+    create_list(:agent_role, 7, agent: agent)
   end
 
   describe "default pagination" do
