@@ -9,7 +9,7 @@ AllCops:
     - "node_modules/**/*"
     - 'db/schema.rb'
   NewCops: enable
-  TargetRubyVersion: 3.1.1
+  TargetRubyVersion: 3.1.2
 
 Bundler/OrderedGems:
   Exclude:
