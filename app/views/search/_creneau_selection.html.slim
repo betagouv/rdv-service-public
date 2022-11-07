@@ -32,10 +32,16 @@ section.bg-light.p-4
                 .col
                   h2.pb-1.mb-1.card-title= context.lieu.name
                   .card-subtitle= context.lieu.address
-    h3.font-weight-bold = "Sélectionnez un créneau :"
+    - if context.selected_motif.collectif?
+      h3.font-weight-bold = "Inscrivez-vous à l'atelier de votre choix :"
+    - else
+      h3.font-weight-bold = "Sélectionnez un créneau :"
     .card.mb-3
       .card-body
-        - if context.unique_motifs_by_name_and_location_type.present?
-          = render "creneaux", lieu: context.lieu, creneaux: context.creneaux, date_range: context.date_range, departement: context.departement, address: context.address, max_booking_delay: context.max_booking_delay, city_code: context.city_code, next_availability: context.next_availability, query: context.query
+        - if context.selected_motif.collectif?
+          - context.creneaux.order(:starts_at).each do |search_result|
+            = render "rdv_collectif", rdv: search_result
+        - elsif context.unique_motifs_by_name_and_location_type.present?
+            = render "creneaux", lieu: context.lieu, creneaux: context.creneaux, date_range: context.date_range, departement: context.departement, address: context.address, max_booking_delay: context.max_booking_delay, city_code: context.city_code, next_availability: context.next_availability, query: context.query
         - else
           .alert.alert-warning= "Le motif <b>#{context.selected_motif.name}</b> n'est plus disponible à la réservation à <b>#{context.lieu.name}</b>".html_safe
