@@ -36,6 +36,10 @@ describe "RDV authentified API", swagger_doc: "v1/api.json" do
 
       parameter name: :organisation_id, in: :path, type: :string, description: "Identifiant de l'organisation", example: "20"
 
+      after do
+        Rack::Attack.enabled = false
+      end
+
       response 200, "Appel API réussi" do
         let(:organisation_id) { organisation.id }
 
