@@ -23,7 +23,7 @@ describe "Organization API", swagger_doc: "v1/api.json" do
 
         run_test!
 
-        it { expect(parsed_response_body[:meta]).to match(current_page: 1, next_page: nil, prev_page: nil, total_count: 5, total_pages: 1) }
+        it { expect(response).to be_paginated(current_page: 1, next_page: nil, prev_page: nil, total_count: 5, total_pages: 1) }
         it { expect(parsed_response_body[:organizations]).to match(OrganizationBlueprint.render_as_hash(organizations)) }
       end
 
@@ -50,7 +50,7 @@ describe "Organization API", swagger_doc: "v1/api.json" do
         before do
           Rack::Attack.enabled = true
           Rack::Attack.reset!
-          50.times do
+          3.times do
             get api_v1_organizations_path
           end
         end

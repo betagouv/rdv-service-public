@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class Rack::Attack
-  throttle("requests by ip", limit: 50, period: 60) do |request|
-    public_api_controllers = %w[group organization public_link]
+  throttle("requests by ip", limit: Rails.configuration.x.rack_attack.limit, period: 60) do |request|
+    public_api_controllers = %w[group organization place public_link]
     request.ip if request.path.match("api/v1/(#{public_api_controllers.join('|')})|public_api/public_link")
   end
 

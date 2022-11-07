@@ -21,7 +21,7 @@ describe "Groups API", swagger_doc: "v1/api.json" do
 
         run_test!
 
-        it { expect(parsed_response_body[:meta]).to match(current_page: 1, next_page: nil, prev_page: nil, total_count: 5, total_pages: 1) }
+        it { expect(response).to be_paginated(current_page: 1, next_page: nil, prev_page: nil, total_count: 5, total_pages: 1) }
 
         it { expect(parsed_response_body[:groups]).to match(GroupBlueprint.render_as_hash(groups)) }
       end
@@ -38,6 +38,20 @@ describe "Groups API", swagger_doc: "v1/api.json" do
         run_test!
 
         it { expect(parsed_response_body[:groups]).to match([]) }
+      end
+
+      response 429, "Limite d'appels atteinte" do
+        schema "$ref" => "#/components/schemas/error_too_many_request"
+
+        before do
+          Rack::Attack.enabled = true
+          Rack::Attack.reset!
+          3.times do
+            get api_v1_groups_path
+          end
+        end
+
+        run_test!
       end
     end
   end
