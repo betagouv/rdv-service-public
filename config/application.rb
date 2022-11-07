@@ -42,6 +42,8 @@ module Lapin
 
     redis_url = ENV.fetch("REDIS_URL") { "redis://localhost:6379" }
 
+    config.active_support.cache_format_version = 7.0
+
     # Both cache and sessions are stored in the same Redis database:
     # - cache keys are prefixed with "cache:"
     # - session keys are prefixed with "session:"
