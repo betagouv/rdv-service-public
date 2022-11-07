@@ -3,7 +3,7 @@
   "info": {
     "title": "API RDV Solidarités V1",
     "version": "v1",
-    "description": "# Paramètres généraux de l'API\n\nL'API de RDV-Solidarités vous permet de lire des données dans notre base depuis votre logiciel.\n\nToutes les fonctionnalités de RDV-Solidarités ne sont pas encore disponibles via l’API. Contactez-nous si vous avez besoin de fonctionnalités qui ne sont pas encore présentes.\n\n## Authentification\n\nCertains points de terminaison sont authentifiés. Pour savoir comment y accéder, merci de vous référer à la documentation suivante : [authentification de l'API](https://rdv-solidarites.gitbook.io/guides-pour-rdv-solidarites/tech/api-interconnexions-entrantes/authentification-and-permissions).\n\n## Verbe HTTP\n\nOn utilise les verbes HTTP conventionnels pour manipuler les ressources :\n\n- Lecture: HTTP `GET`\n- Création: HTTP `POST`\n- Mise à jour: HTTP `PUT`\n\n## Versionnage\n\nL'API est versionnée. La version actuelle est 1.0 (référencée comme v1 dans les points de terminaison).\n\n## Routes\n\nLes points de terminaison de l'API sont accessible par une route de la forme : `https://<domain>/api/<version>/<endpoint>`.\n\nAvec :\n\n- `version` est la version de l'API\n- `endpoint` est le nom du point de terminaison\n\nPar exemple, on aura : `https://<domain>/api/v1/organizations`\n\n## Pagination des réponses par listes\n\nTous les points de terminaison qui retournent des listes sont paginés.\n\nLe paramètre (optionnel) `page` permet d'accéder à une page donnée. Sauf précision contraire dans la documentation d'un point de terminaison donné, on retrouve 100 éléments par page.\n\nDe manière générale, tout point de terminaison qui retourne une liste peut retourner une liste vide.\n\n## Erreurs\n\nL'API est susceptible de retourner les erreurs suivantes.\n\n| Code  | Nom                   | Description                            |\n| ----  | --------              | --------                               |\n| `400` | Bad Request           | La requête est invalide                |\n| `401` | Unauthorized          | L'authentification a échoué            |\n| `403` | Forbidden             | La limite autorisée est atteinte       |\n| `404` | Not Found             | La ressource est introuvable           |\n| `500` | Internal Server Error | Une erreur serveur produite            |\n\n## Ressources\n\n### Sérialisation\n\nLes ressources sont les éléments renvoyés par les points de terminaison. Elles sont sérialisées en JSON.\n\n### Champs DateTime\n\nLes champs de type DateTime sont formatés avec la norme ISO 8601.\n"
+    "description": "# Paramètres généraux de l'API\n\nL'API de RDV-Solidarités vous permet de lire des données dans notre base depuis votre logiciel.\n\nToutes les fonctionnalités de RDV-Solidarités ne sont pas encore disponibles via l’API. Contactez-nous si vous avez besoin de fonctionnalités qui ne sont pas encore présentes.\n\n## Authentification\n\nCertains points de terminaison sont authentifiés. Pour savoir comment y accéder, merci de vous référer à la documentation suivante : [authentification de l'API](https://rdv-solidarites.gitbook.io/guides-pour-rdv-solidarites/tech/api-interconnexions-entrantes/authentification-and-permissions).\n\n## Verbe HTTP\n\nOn utilise les verbes HTTP conventionnels pour manipuler les ressources :\n\n- Lecture: HTTP `GET`\n- Création: HTTP `POST`\n- Mise à jour: HTTP `PUT`\n\n## Versionnage\n\nL'API est versionnée. La version actuelle est 1.0 (référencée comme v1 dans les points de terminaison).\n\n## Routes\n\nLes points de terminaison de l'API sont accessible par une route de la forme : `https://<domain>/api/<version>/<endpoint>`.\n\nAvec :\n\n- `version` est la version de l'API\n- `endpoint` est le nom du point de terminaison\n\nPar exemple, on aura : `https://<domain>/api/v1/organizations`\n\n## Pagination des réponses par listes\n\nTous les points de terminaison qui retournent des listes sont paginés.\n\nLe paramètre (optionnel) `page` permet d'accéder à une page donnée. Sauf précision contraire dans la documentation d'un point de terminaison donné, on retrouve 100 éléments par page.\n\nDe manière générale, tout point de terminaison qui retourne une liste peut retourner une liste vide.\n\n## Rate limiting\n\nL'utilisation de l'API est limitée pour les points de terminaison sans authentification. Vous pouvez effectuer au maximum 50 appels par minutes. Si vous dépassez cette limite, une erreur 429 vous sera renvoyée et vous trouverez le temps que vous devez attendre avant de relancer une requête dans le header (`Retry-After`).\n\n## Erreurs\n\nL'API est susceptible de retourner les erreurs suivantes.\n\n| Code  | Nom                   | Description                            |\n| ----  | --------              | --------                               |\n| `400` | Bad Request           | La requête est invalide                |\n| `401` | Unauthorized          | L'authentification a échoué            |\n| `403` | Forbidden             | La limite autorisée est atteinte       |\n| `404` | Not Found             | La ressource est introuvable           |\n| `429` | Too Many Requests     | Trop de requêtes ont été effectuées    |\n| `500` | Internal Server Error | Une erreur serveur produite            |\n\n## Ressources\n\n### Sérialisation\n\nLes ressources sont les éléments renvoyés par les points de terminaison. Elles sont sérialisées en JSON.\n\n### Champs DateTime\n\nLes champs de type DateTime sont formatés avec la norme ISO 8601.\n"
   },
   "components": {
     "securitySchemes": {
@@ -757,6 +757,20 @@
       "errors_generic": {
         "type": "object"
       },
+      "error_too_many_request": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "errors"
+        ]
+      },
       "error_authentication": {
         "type": "object",
         "properties": {
@@ -933,8 +947,8 @@
                         {
                           "id": 47,
                           "email": "agent_1@lapin.fr",
-                          "first_name": "Maxellende",
-                          "last_name": "Nicolas"
+                          "first_name": "Parfait",
+                          "last_name": "Rousseau"
                         }
                       ],
                       "meta": {
@@ -1127,18 +1141,18 @@
                         "birth_name": null,
                         "caisse_affiliation": "caf",
                         "case_number": null,
-                        "created_at": "2022-11-03 23:11:43 +0100",
+                        "created_at": "2022-11-07 11:53:17 +0100",
                         "email": "jean@jacques.fr",
                         "family_situation": "divorced",
                         "first_name": "Jean",
                         "invitation_accepted_at": null,
-                        "invitation_created_at": "2022-11-03 23:11:43 +0100",
+                        "invitation_created_at": "2022-11-07 11:53:17 +0100",
                         "last_name": "JACQUES",
                         "notify_by_email": true,
                         "notify_by_sms": true,
                         "number_of_children": 12,
-                        "phone_number": "747446819",
-                        "phone_number_formatted": "+33747446819",
+                        "phone_number": "7 59 58 84 16",
+                        "phone_number_formatted": "+33759588416",
                         "responsible": null,
                         "responsible_id": null,
                         "user_profiles": null
@@ -1615,6 +1629,25 @@
                 }
               }
             }
+          },
+          "429": {
+            "description": "Limite d'appels atteinte",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "errors": [
+                        "Limite d'appels API atteinte. Merci de patienter.\n"
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_too_many_request"
+                }
+              }
+            }
           }
         }
       }
@@ -1664,7 +1697,7 @@
                           "label": "Lieu n°1",
                           "latitude": 38.8951,
                           "longitude": -77.0364,
-                          "organization_id": 347,
+                          "organization_id": 767,
                           "phone_number": null
                         },
                         {
@@ -1673,7 +1706,7 @@
                           "label": "Lieu n°2",
                           "latitude": 38.8951,
                           "longitude": -77.0364,
-                          "organization_id": 348,
+                          "organization_id": 768,
                           "phone_number": null
                         },
                         {
@@ -1682,7 +1715,7 @@
                           "label": "Lieu n°3",
                           "latitude": 38.8951,
                           "longitude": -77.0364,
-                          "organization_id": 349,
+                          "organization_id": 769,
                           "phone_number": null
                         },
                         {
@@ -1691,7 +1724,7 @@
                           "label": "Lieu n°4",
                           "latitude": 38.8951,
                           "longitude": -77.0364,
-                          "organization_id": 350,
+                          "organization_id": 770,
                           "phone_number": null
                         },
                         {
@@ -1700,7 +1733,7 @@
                           "label": "Lieu n°5",
                           "latitude": 38.8951,
                           "longitude": -77.0364,
-                          "organization_id": 351,
+                          "organization_id": 771,
                           "phone_number": null
                         }
                       ],
@@ -1753,11 +1786,11 @@
                       "public_links": [
                         {
                           "external_id": "ext_id_A",
-                          "public_link": "http://www.rdv-aide-numerique-test.localhost/org/364"
+                          "public_link": "http://www.rdv-aide-numerique-test.localhost/org/784"
                         },
                         {
                           "external_id": "ext_id_B",
-                          "public_link": "http://www.rdv-aide-numerique-test.localhost/org/365"
+                          "public_link": "http://www.rdv-aide-numerique-test.localhost/org/785"
                         }
                       ]
                     }
@@ -1871,10 +1904,10 @@
                           "address": "1 rue de l'adresse 12345 Ville",
                           "agents": [
                             {
-                              "id": 107,
+                              "id": 109,
                               "email": "agent_1@lapin.fr",
-                              "first_name": "Cédric",
-                              "last_name": "Roussel"
+                              "first_name": "Médéric",
+                              "last_name": "Chevalier"
                             }
                           ],
                           "cancelled_at": null,
@@ -1883,12 +1916,12 @@
                           "created_by": "agent",
                           "deleted_at": null,
                           "duration_in_min": 45,
-                          "ends_at": "2022-11-06 23:57:03 +0100",
+                          "ends_at": "2022-11-10 12:38:59 +0100",
                           "lieu": {
                             "id": 46,
                             "address": "1 rue de l'adresse 12345 Ville",
                             "name": "Lieu n°1",
-                            "organisation_id": 374,
+                            "organisation_id": 794,
                             "phone_number": null,
                             "single_use": false
                           },
@@ -1899,13 +1932,13 @@
                             "deleted_at": null,
                             "location_type": "public_office",
                             "name": "Motif 1",
-                            "organisation_id": 376,
+                            "organisation_id": 796,
                             "reservable_online": true,
-                            "service_id": 125
+                            "service_id": 127
                           },
                           "name": null,
                           "organisation": {
-                            "id": 374,
+                            "id": 794,
                             "email": null,
                             "name": "Organisation n°1",
                             "phone_number": null
@@ -1924,25 +1957,25 @@
                                 "birth_name": null,
                                 "caisse_affiliation": "caf",
                                 "case_number": null,
-                                "created_at": "2022-11-03 23:12:03 +0100",
+                                "created_at": "2022-11-07 11:53:59 +0100",
                                 "email": "usager_1@lapin.fr",
                                 "family_situation": "divorced",
-                                "first_name": "Jeannel",
+                                "first_name": "Eubert",
                                 "invitation_accepted_at": null,
                                 "invitation_created_at": null,
-                                "last_name": "PASQUIER",
+                                "last_name": "ANDRE",
                                 "notify_by_email": true,
                                 "notify_by_sms": true,
                                 "number_of_children": 12,
-                                "phone_number": "759798811",
-                                "phone_number_formatted": "+33759798811",
+                                "phone_number": "756207051",
+                                "phone_number_formatted": "+33756207051",
                                 "responsible": null,
                                 "responsible_id": null,
                                 "user_profiles": null
                               }
                             }
                           ],
-                          "starts_at": "2022-11-06 23:12:03 +0100",
+                          "starts_at": "2022-11-10 11:53:59 +0100",
                           "status": "unknown",
                           "users": [
                             {
@@ -1954,25 +1987,25 @@
                               "birth_name": null,
                               "caisse_affiliation": "caf",
                               "case_number": null,
-                              "created_at": "2022-11-03 23:12:03 +0100",
+                              "created_at": "2022-11-07 11:53:59 +0100",
                               "email": "usager_1@lapin.fr",
                               "family_situation": "divorced",
-                              "first_name": "Jeannel",
+                              "first_name": "Eubert",
                               "invitation_accepted_at": null,
                               "invitation_created_at": null,
-                              "last_name": "PASQUIER",
+                              "last_name": "ANDRE",
                               "notify_by_email": true,
                               "notify_by_sms": true,
                               "number_of_children": 12,
-                              "phone_number": "759798811",
-                              "phone_number_formatted": "+33759798811",
+                              "phone_number": "756207051",
+                              "phone_number_formatted": "+33756207051",
                               "responsible": null,
                               "responsible_id": null,
                               "user_profiles": null
                             }
                           ],
                           "users_count": 1,
-                          "uuid": "91dedf8c-ee5b-40f6-bf9e-8755a6edcfbe"
+                          "uuid": "eb3d2197-cc03-40b5-bb41-d0c92a408d59"
                         }
                       ],
                       "meta": {
@@ -2090,7 +2123,7 @@
                         "birth_name": null,
                         "caisse_affiliation": "caf",
                         "case_number": null,
-                        "created_at": "2022-11-03 23:12:09 +0100",
+                        "created_at": "2022-11-07 11:54:06 +0100",
                         "email": "jean@jacques.fr",
                         "family_situation": "divorced",
                         "first_name": "Jean",
@@ -2100,8 +2133,8 @@
                         "notify_by_email": true,
                         "notify_by_sms": true,
                         "number_of_children": 12,
-                        "phone_number": "7 77 45 13 81",
-                        "phone_number_formatted": "+33777451381",
+                        "phone_number": "06 17 03 42 89",
+                        "phone_number_formatted": "+33617034289",
                         "responsible": null,
                         "responsible_id": null,
                         "user_profiles": [
@@ -2109,7 +2142,7 @@
                             "logement": null,
                             "notes": null,
                             "organisation": {
-                              "id": 406,
+                              "id": 826,
                               "email": null,
                               "name": "Organisation n°1",
                               "phone_number": null
@@ -2400,7 +2433,7 @@
                         "birth_name": "Fripouille",
                         "caisse_affiliation": "caf",
                         "case_number": null,
-                        "created_at": "2022-11-03 23:12:14 +0100",
+                        "created_at": "2022-11-07 11:54:12 +0100",
                         "email": "jean@jacques.fr",
                         "family_situation": "single",
                         "first_name": "Alain",
@@ -2421,18 +2454,18 @@
                           "birth_name": null,
                           "caisse_affiliation": "caf",
                           "case_number": null,
-                          "created_at": "2022-11-03 23:12:14 +0100",
+                          "created_at": "2022-11-07 11:54:12 +0100",
                           "email": "usager_1@lapin.fr",
                           "family_situation": "divorced",
-                          "first_name": "Marie",
+                          "first_name": "Armelle",
                           "invitation_accepted_at": null,
                           "invitation_created_at": null,
-                          "last_name": "FABRE",
+                          "last_name": "BERTIN",
                           "notify_by_email": true,
                           "notify_by_sms": true,
                           "number_of_children": 12,
-                          "phone_number": "671813578",
-                          "phone_number_formatted": "+33671813578",
+                          "phone_number": "0651498491",
+                          "phone_number_formatted": "+33651498491",
                           "responsible": null,
                           "responsible_id": null,
                           "user_profiles": null
@@ -2573,8 +2606,8 @@
                 "examples": {
                   "example": {
                     "value": {
-                      "invitation_url": "http://www.example.com/users/invitation/accept?invitation_token=L1A3KWCC",
-                      "invitation_token": "L1A3KWCC"
+                      "invitation_url": "http://www.example.com/users/invitation/accept?invitation_token=L1M1JJIE",
+                      "invitation_token": "L1M1JJIE"
                     }
                   }
                 },
@@ -2707,8 +2740,8 @@
                 "examples": {
                   "example": {
                     "value": {
-                      "invitation_url": "http://www.example.com/users/invitation/accept?invitation_token=8ZNNLG9F",
-                      "invitation_token": "8ZNNLG9F"
+                      "invitation_url": "http://www.example.com/users/invitation/accept?invitation_token=4QTLEYKC",
+                      "invitation_token": "4QTLEYKC"
                     }
                   }
                 },
@@ -2855,18 +2888,18 @@
                           "birth_name": null,
                           "caisse_affiliation": "caf",
                           "case_number": null,
-                          "created_at": "2022-11-03 23:12:20 +0100",
+                          "created_at": "2022-11-07 11:54:19 +0100",
                           "email": "usager_1@lapin.fr",
                           "family_situation": "divorced",
-                          "first_name": "Christian",
+                          "first_name": "Maugis",
                           "invitation_accepted_at": null,
                           "invitation_created_at": null,
-                          "last_name": "BOURGEOIS",
+                          "last_name": "RENARD",
                           "notify_by_email": true,
                           "notify_by_sms": true,
                           "number_of_children": 12,
-                          "phone_number": "7 50 55 82 53",
-                          "phone_number_formatted": "+33750558253",
+                          "phone_number": "686736447",
+                          "phone_number_formatted": "+33686736447",
                           "responsible": null,
                           "responsible_id": null,
                           "user_profiles": null
@@ -3106,7 +3139,7 @@
                         "birth_name": "Fripouille",
                         "caisse_affiliation": "caf",
                         "case_number": null,
-                        "created_at": "2022-11-03 23:12:25 +0100",
+                        "created_at": "2022-11-07 11:54:24 +0100",
                         "email": "jean@jacques.fr",
                         "family_situation": "single",
                         "first_name": "Johnny",
@@ -3127,18 +3160,18 @@
                           "birth_name": null,
                           "caisse_affiliation": "caf",
                           "case_number": null,
-                          "created_at": "2022-11-03 23:12:25 +0100",
+                          "created_at": "2022-11-07 11:54:24 +0100",
                           "email": "usager_1@lapin.fr",
                           "family_situation": "divorced",
-                          "first_name": "Barbe",
+                          "first_name": "Titien",
                           "invitation_accepted_at": null,
                           "invitation_created_at": null,
                           "last_name": "BOUCHET",
                           "notify_by_email": true,
                           "notify_by_sms": true,
                           "number_of_children": 12,
-                          "phone_number": "0768355450",
-                          "phone_number_formatted": "+33768355450",
+                          "phone_number": "06 77 97 19 15",
+                          "phone_number_formatted": "+33677971915",
                           "responsible": null,
                           "responsible_id": null,
                           "user_profiles": null
@@ -3285,18 +3318,18 @@
                           "birth_name": null,
                           "caisse_affiliation": "caf",
                           "case_number": null,
-                          "created_at": "2022-11-03 23:12:27 +0100",
+                          "created_at": "2022-11-07 11:54:28 +0100",
                           "email": "usager_1@lapin.fr",
                           "family_situation": "divorced",
-                          "first_name": "Euphrasie",
+                          "first_name": "Blandine",
                           "invitation_accepted_at": null,
                           "invitation_created_at": null,
-                          "last_name": "MARIE",
+                          "last_name": "PONS",
                           "notify_by_email": true,
                           "notify_by_sms": true,
                           "number_of_children": 12,
-                          "phone_number": "6 54 91 48 07",
-                          "phone_number_formatted": "+33654914807",
+                          "phone_number": "7 36 94 67 20",
+                          "phone_number_formatted": "+33736946720",
                           "responsible": null,
                           "responsible_id": null,
                           "user_profiles": null
@@ -3408,7 +3441,7 @@
                         "birth_name": null,
                         "caisse_affiliation": "caf",
                         "case_number": null,
-                        "created_at": "2022-11-03 23:12:28 +0100",
+                        "created_at": "2022-11-07 11:54:29 +0100",
                         "email": "jean@jacques.fr",
                         "family_situation": "divorced",
                         "first_name": "Jean",
@@ -3418,8 +3451,8 @@
                         "notify_by_email": true,
                         "notify_by_sms": true,
                         "number_of_children": 12,
-                        "phone_number": "6 45 75 38 23",
-                        "phone_number_formatted": "+33645753823",
+                        "phone_number": "0766296128",
+                        "phone_number_formatted": "+33766296128",
                         "responsible": null,
                         "responsible_id": null,
                         "user_profiles": [
@@ -3427,7 +3460,7 @@
                             "logement": null,
                             "notes": null,
                             "organisation": {
-                              "id": 502,
+                              "id": 922,
                               "email": null,
                               "name": "Organisation n°1",
                               "phone_number": null
