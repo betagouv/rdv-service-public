@@ -23,7 +23,7 @@ describe "Organization API", swagger_doc: "v1/api.json" do
 
         run_test!
 
-        it { expect(parsed_response_body[:meta]).to match(current_page: 1, next_page: nil, prev_page: nil, total_count: 5, total_pages: 1) }
+        it { expect(response).to be_paginated(current_page: 1, next_page: nil, prev_page: nil, total_count: 5, total_pages: 1) }
         it { expect(parsed_response_body[:organizations]).to match(OrganizationBlueprint.render_as_hash(organizations)) }
       end
 

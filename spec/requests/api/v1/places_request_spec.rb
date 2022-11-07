@@ -6,15 +6,15 @@ describe "Place API", swagger_doc: "v1/api.json" do
   with_examples
 
   path "/api/v1/places" do
-    get "Lister les places" do
+    get "Lister les lieux" do
       with_pagination
 
       tags "Place"
       produces "application/json"
       operationId "getPlaces"
-      description "Renvoie toutes les places, de manière paginée"
+      description "Renvoie tous les lieux, de manière paginée"
 
-      parameter name: :organization_id, in: :query, type: :integer, description: "ID de l'organisation sur lequel filtrer les places", example: 1, required: false
+      parameter name: :organization_id, in: :query, type: :integer, description: "ID de l'organisation sur lequel filtrer les lieux", example: 1, required: false
 
       response 200, "Retourne les Lieux sous la forme Places" do
         let!(:places) { create_list(:lieu, 5) }
@@ -23,7 +23,7 @@ describe "Place API", swagger_doc: "v1/api.json" do
 
         run_test!
 
-        it { expect(parsed_response_body[:meta]).to match(current_page: 1, next_page: nil, prev_page: nil, total_count: 5, total_pages: 1) }
+        it { expect(response).to be_paginated(current_page: 1, next_page: nil, prev_page: nil, total_count: 5, total_pages: 1) }
         it { expect(parsed_response_body[:places]).to match(PlaceBlueprint.render_as_hash(places)) }
       end
 
@@ -42,6 +42,20 @@ describe "Place API", swagger_doc: "v1/api.json" do
         run_test!
 
         it { expect(parsed_response_body[:places]).to match([]) }
+      end
+
+      response 429, "Limite d'appels atteinte" do
+        schema "$ref" => "#/components/schemas/error_too_many_request"
+
+        before do
+          Rack::Attack.enabled = true
+          Rack::Attack.reset!
+          50.times do
+            get api_v1_places_path
+          end
+        end
+
+        run_test!
       end
     end
   end
