@@ -10,7 +10,8 @@ describe "paginated requests", type: :request do
   let(:client) { auth_headers["client"].to_s }
 
   before do
-    create_list(:agent_role, 210, agent: agent) # This also creates 210 new organisations
+    stub_const("Api::V1::BaseController::PAGINATE_PER", 3)
+    create_list(:agent_role, 7, agent: agent)
   end
 
   describe "default pagination" do
@@ -26,8 +27,11 @@ describe "paginated requests", type: :request do
 
           run_test!
 
-          it { expect(parsed_response_body["organisations"].count).to eq(100) }
-          it { expect(parsed_response_body["meta"]).to eq({ "current_page" => 1, "next_page" => 2, "prev_page" => nil, "total_count" => 210, "total_pages" => 3 }) }
+          it { expect(parsed_response_body["organisations"].count).to eq(3) }
+
+          it "is correctly paginated" do
+            expect(response).to be_paginated(current_page: 1, next_page: 2, prev_page: nil, total_count: 7, total_pages: 3)
+          end
         end
       end
     end

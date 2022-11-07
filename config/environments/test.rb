@@ -79,4 +79,6 @@ Rails.application.configure do
   config.i18n.available_locales = %i[fr en]
   # Annotate rendered view with file names.
   # config.action_view.annotate_rendered_view_with_filenames = true
+
+  config.x.rack_attack.limit = 2
 end
