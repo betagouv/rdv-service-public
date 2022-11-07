@@ -307,6 +307,16 @@ RSpec.configure do |config|
           errors_generic: {
             type: "object",
           },
+          error_too_many_request: {
+            type: "object",
+            properties: {
+              errors: {
+                type: "array",
+                items: { type: "string" },
+              },
+            },
+            required: %w[errors],
+          },
           error_authentication: {
             type: "object",
             properties: {
