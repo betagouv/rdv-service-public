@@ -213,6 +213,15 @@ Rails.application.routes.draw do
     root to: "admin/organisations#index", as: :authenticated_agent_root, defaults: { follow_unique: "1" }
   end
 
+  scope "prescripteur" do
+    get "start", to: "prescripteur_rdv_wizard#start", as: "prescripteur_start"
+    get "new_prescripteur", to: "prescripteur_rdv_wizard#new_prescripteur", as: "prescripteur_new_prescripteur"
+    post "save_prescripteur", to: "prescripteur_rdv_wizard#save_prescripteur", as: "prescripteur_save_prescripteur"
+    get "new_beneficiaire", to: "prescripteur_rdv_wizard#new_beneficiaire", as: "prescripteur_new_beneficiaire"
+    post "create_rdv", to: "prescripteur_rdv_wizard#create_rdv", as: "prescripteur_create_rdv"
+    get "confirmation", to: "prescripteur_rdv_wizard#confirmation", as: "prescripteur_confirmation"
+  end
+
   %w[contact mds accessibility mentions_legales cgu politique_de_confidentialite domaines health_check].each do |page_name|
     get page_name => "static_pages##{page_name}"
   end

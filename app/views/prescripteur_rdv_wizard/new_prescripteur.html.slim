@@ -1,0 +1,32 @@
+= render "users/rdv_wizard_steps/stepper", step_title: @step_title
+
+main.container
+  .row
+    .col-lg-7.col-md-10.col-sm-11
+      .card
+        = render "users/rdv_wizard_steps/rdv_wizard_summary", rdv_wizard: @rdv_wizard if @rdv_wizard.present?
+        .card-body
+          h3 Vos coordonnées de prescripteur
+          p
+            = "Ces informations permettront à l'agent qui assure le rendez-vous de savoir qui l'a planifié, "
+            = "et de vous contacter s'il y a une erreur sur le type de rendez-vous."
+
+          = simple_form_for @prescripteur, url: prescripteur_save_prescripteur_path do |f|
+            .form-group
+              .row
+                .col-6
+                  = f.input :first_name, required: true, label: "Votre prénom"
+                .col-6
+                  = f.input :last_name, required: true, label: "Votre nom"
+
+            .form-group
+              .row
+                .col-12
+                  = f.input :email, as: :email, placeholder: "prenom.prescripteur@departement.fr", required: true, label: "Votre email professionnel", hint: ""
+            .form-group
+              .row
+                .col-12
+                  = f.input :phone_number, as: :tel, placeholder: "0122334455", label: "Votre numéro de téléphone professionnel", hint: ""
+
+            .form-group.mb-0.text-center
+              = f.submit "Continuer", class: "btn btn-primary"

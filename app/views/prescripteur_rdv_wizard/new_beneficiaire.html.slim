@@ -1,0 +1,31 @@
+= render "users/rdv_wizard_steps/stepper", step_title: @step_title
+
+main.container
+  .row
+    .col-lg-7.col-md-10.col-sm-11
+      .card
+        = render "users/rdv_wizard_steps/rdv_wizard_summary", rdv_wizard: @rdv_wizard if @rdv_wizard.present?
+        .card-body
+          h3 Bénéficiaire
+          p Indiquez les coordonnées de la personne qui viendra au rendez-vous
+
+          = simple_form_for @beneficiaire, url: prescripteur_create_rdv_path do |f|
+            .form-group
+              .row
+                .col-6
+                  = f.input :first_name, required: true
+                .col-6
+                  = f.input :last_name, required: true
+
+            = render("model_errors", model: @beneficiaire, f: f)
+            .form-group
+              .row
+                .col-12
+                  = f.input :email, as: :email, placeholder: "prenom.beneficiaire@email.fr", hint: "Un email de confirmation et un email de rappel seront envoyés à cette adresse"
+            .form-group
+              .row
+                .col-12
+                  = f.input :phone_number, as: :tel, placeholder: "06134567890", hint: "Un SMS de confirmation et un SMS de rappel seront envoyés à ce numéro"
+
+            .form-group.mb-0.text-center
+              = f.submit "Confirmer le rendez-vous", class: "btn btn-primary"

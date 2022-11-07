@@ -69,3 +69,6 @@ fr:
         reschedule_by_phone: Vous pouvez reprendre un rendez-vous en appelant au %{telephone_link}.
         reschedule_online: 'Vous pouvez reprendre un rendez-vous en cliquant sur le lien ci-dessous :'
         reschedule_button: Reprendre RDV
+  prescripteurs_mailer:
+    rdv_created:
+      title: RDV confirmé le %{date}

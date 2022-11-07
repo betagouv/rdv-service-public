@@ -61,3 +61,12 @@ ul.list-group.list-group-flush
           = user_notifiable_by_sms_text(current_user)
         .col-auto
           = link_to "modifier", new_users_rdv_wizard_step_path(step: 1, **@rdv_wizard.to_query)
+  - if @rdv_wizard.respond_to?(:prescripteur) && @rdv_wizard.prescripteur.present?
+    li.list-group-item
+      .row
+        .col
+          i.fa.fa-check.fa-fw.mr-1.text-success
+          | Prescripteur :&nbsp;
+          = @rdv_wizard.prescripteur.full_name
+        .col-auto
+          = link_to "modifier", prescripteur_new_prescripteur_path
