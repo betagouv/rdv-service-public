@@ -90,7 +90,7 @@ RSpec.describe "user can use a link that points to RDV search scoped to an organ
       expect(page).to have_content("Sélectionnez le motif de votre RDV")
     end
 
-    it "allows navigating back from sign in to motif selection", js: true do
+    it "allows navigating back from sign in to motif selection" do
       visit public_link_to_org_url(organisation_id: organisation_a.id, host: Domain::RDV_AIDE_NUMERIQUE.dns_domain_name)
       expect(page).to have_content("1 lieu est disponible")
       expect(page).to have_content(lieu_a.name)
@@ -103,7 +103,7 @@ RSpec.describe "user can use a link that points to RDV search scoped to an organ
       expect(page).to have_content("Vous devez vous connecter ou vous inscrire pour continuer")
       click_on "modifier", match: :first
 
-      expect(page).to have_content("Sélectionnez le motif de votre RDV")
+      expect(page).to have_content("Sélectionnez un lieu de RDV")
     end
   end
 end
