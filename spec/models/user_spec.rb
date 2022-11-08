@@ -104,7 +104,7 @@ describe User, type: :model do
         organisation = create(:organisation)
         user = create(:user, organisations: [organisation])
         user.soft_delete(organisation)
-        expect(user.organisations).to be_empty
+        expect(user.reload.organisations).to be_empty
       end
     end
 
