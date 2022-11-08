@@ -74,4 +74,20 @@ RSpec.describe "user can use a link that points to RDV search scoped to an organ
       expect { click_on("Confirmer mon RDV") }.to change(Rdv, :count).by(1)
     end
   end
+
+  context "when using the RDV Aide Numérique domain" do
+    it "allows navigating back to motif selection", js: true do
+      motif_c = create(:motif, :sectorisation_level_departement,
+                       organisation: organisation_a, name: "Motif C", service: motif_a.service, restriction_for_rdv: nil)
+      create(:plage_ouverture, motifs: [motif_c], lieu: lieu_a)
+
+      visit public_link_to_org_url(organisation_id: organisation_a.id, host: Domain::RDV_AIDE_NUMERIQUE.dns_domain_name)
+      click_on("Motif C")
+      expect(page).to have_content("Motif C (Sur place)")
+
+      # retour au choix de motif
+      click_on("Motif C")
+      expect(page).to have_content("Sélectionnez le motif de votre RDV")
+    end
+  end
 end
