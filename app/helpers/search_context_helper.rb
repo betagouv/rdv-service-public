@@ -2,12 +2,12 @@
 
 module SearchContextHelper
   def path_to_motif_selection(params)
-    root_path(common_params(params))
+    root_path(motif_selection(params))
   end
 
   def path_to_lieu_selection(params)
     root_path(
-      common_params(params).merge(
+      motif_selection(params).merge(
         motif_name_with_location_type: params[:motif_name_with_location_type]
       )
     )
@@ -15,7 +15,7 @@ module SearchContextHelper
 
   def path_to_creneau_selection(params)
     root_path(
-      common_params(params).merge(
+      motif_selection(params).merge(
         motif_name_with_location_type: params[:motif_name_with_location_type],
         lieu_id: params[:lieu_id]
       )
@@ -24,7 +24,7 @@ module SearchContextHelper
 
   private
 
-  def common_params(params)
+  def motif_selection(params)
     {
       departement: params[:departement],
       city_code: params[:city_code],
