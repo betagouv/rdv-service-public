@@ -62,7 +62,7 @@ class Users::GeoSearch
   end
 
   def available_motifs_from_attributed_agent(agent, organisation)
-    available_motifs_from_attributed_agent_arel(agent, organisation).distinct
+    available_individual_motifs_from_attributed_agent_arel(agent, organisation).distinct
   end
 
   def available_motifs_from_departement_organisations
