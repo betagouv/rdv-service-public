@@ -90,10 +90,10 @@ GEM
     attr_required (1.0.1)
     auto_strip_attributes (2.6.0)
       activerecord (>= 4.0)
-    axe-core-api (4.5.0)
+    axe-core-api (4.3.2)
       dumb_delegator
       virtus
-    axe-core-rspec (4.5.0)
+    axe-core-rspec (4.3.2)
       axe-core-api
       dumb_delegator
       virtus
@@ -603,7 +603,8 @@ DEPENDENCIES
   activerecord-postgres_enum
   administrate
   auto_strip_attributes
-  axe-core-rspec
+  axe-core-api (= 4.3.2)
+  axe-core-rspec (= 4.3.2)
   better_errors
   binding_of_caller
   blueprinter
