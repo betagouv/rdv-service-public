@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
 class SearchContext
-  ATTRIBUTES_FOR_MOTIF_SELECTION = %i[latitude longitude departement address city_code].freeze
+  ATTRIBUTES_FOR_MOTIF_SELECTION = %i[
+    latitude longitude departement address city_code street_ban_id
+  ].freeze
 
-  attr_reader :errors, :query, :street_ban_id, :motif_name_with_location_type, ATTRIBUTES_FOR_MOTIF_SELECTION
+  attr_reader :errors, :query, :motif_name_with_location_type, ATTRIBUTES_FOR_MOTIF_SELECTION
 
   def initialize(current_user, query = {})
     @current_user = current_user

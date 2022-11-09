@@ -34,7 +34,6 @@ class SearchController < ApplicationController
 
   def search_params
     simple_params = %i[
-      street_ban_id
       service_id lieu_id date motif_search_terms motif_name_with_location_type motif_category
       invitation_token organisation_id
     ]
