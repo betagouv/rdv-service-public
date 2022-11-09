@@ -4,7 +4,6 @@ module SearchContextHelper
   PARAMS_FOR_MOTIF_SELECTION = %i[
     city_code
     street_ban_id
-    address
     service_id
     organisation_id
   ] + SearchContext::ATTRIBUTES_FOR_MOTIF_SELECTION
