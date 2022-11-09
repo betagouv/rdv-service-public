@@ -101,7 +101,9 @@ group :development, :test do
   gem "parallel_tests"
   gem "simplecov", require: false
   gem "slim_lint", require: false
-  gem "axe-core-rspec"
+  # New versions of axe are more strict
+  gem "axe-core-api", "4.3.2"
+  gem "axe-core-rspec", "4.3.2"
   gem "selenium-webdriver"
   gem "spring", require: false
   gem "spring-commands-rspec"
