@@ -39,8 +39,6 @@ class RdvsUser < ApplicationRecord
   end
 
   def refresh_rdv_webhook
-    return if rdv.skip_webhooks
-
     rdv.generate_payload_and_send_webhook(:updated)
   end
 
