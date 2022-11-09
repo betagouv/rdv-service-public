@@ -7,6 +7,7 @@ class Motif < ApplicationRecord
   include WebhookDeliverable
 
   include PgSearch::Model
+  include Motif::Category
 
   pg_search_scope(:search_by_text,
                   against: :name,
@@ -29,14 +30,6 @@ class Motif < ApplicationRecord
   SECTORISATION_TYPES = [SECTORISATION_LEVEL_AGENT, SECTORISATION_LEVEL_ORGANISATION, SECTORISATION_LEVEL_DEPARTEMENT].freeze
 
   enum location_type: { public_office: "public_office", phone: "phone", home: "home" }
-  enum category: { rsa_orientation: "rsa_orientation",
-                   rsa_accompagnement: "rsa_accompagnement",
-                   rsa_accompagnement_social: "rsa_accompagnement_social",
-                   rsa_accompagnement_sociopro: "rsa_accompagnement_sociopro",
-                   rsa_orientation_on_phone_platform: "rsa_orientation_on_phone_platform",
-                   rsa_cer_signature: "rsa_cer_signature",
-                   rsa_insertion_offer: "rsa_insertion_offer",
-                   rsa_follow_up: "rsa_follow_up", }
 
   # Relations
   belongs_to :organisation

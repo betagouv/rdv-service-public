@@ -54,6 +54,7 @@ fr:
         rsa_cer_signature: RSA - Signature de CER
         rsa_insertion_offer: RSA - Offre d'insertion professionnelle
         rsa_follow_up: RSA - Suivi
+        rsa_main_tendue: RSA - Main tendue
       motif/collectifs:
         true: RDV collectif
         false: RDV individuel
