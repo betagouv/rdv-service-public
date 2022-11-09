@@ -14,6 +14,7 @@ module Motif::Category
       rsa_insertion_offer: "rsa_insertion_offer",
       rsa_follow_up: "rsa_follow_up",
       rsa_main_tendue: "rsa_main_tendue",
+      rsa_atelier_collectif_mandatory: "rsa_atelier_collectif_mandatory",
     }
   end
 end
