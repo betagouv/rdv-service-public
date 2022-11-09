@@ -1,6 +1,18 @@
 require_relative "boot"
 
-require "rails/all"
+# frozen_string_literal: true
+
+require "rails"
+
+%w[
+  active_record/railtie
+  action_controller/railtie
+  action_view/railtie
+  action_mailer/railtie
+  active_job/railtie
+].each do |railtie|
+  require railtie
+end
 
 require "tod/core_extensions"
 

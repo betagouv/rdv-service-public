@@ -46,7 +46,7 @@ Rails.application.configure do
   config.action_controller.allow_forgery_protection = false
 
   # Store uploaded files on the local file system in a temporary directory.
-  config.active_storage.service = :test
+  # config.active_storage.service = :test
 
   port = 9887 + ENV["TEST_ENV_NUMBER"].to_i
   config.action_mailer.default_url_options = { host: "localhost:#{port}", utm_source: "test", utm_medium: "email", utm_campaign: "default" }
