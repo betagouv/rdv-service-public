@@ -52,13 +52,15 @@ module UserRdvWizard
     end
 
     def to_query
+      params = %i[where departement lieu_id city_code street_ban_id invitation_token address organisation_ids motif_search_terms]
       { motif_id: rdv.motif.id, starts_at: rdv.starts_at.to_s, user_ids: rdv.users&.map(&:id) }
-        .merge(@attributes.slice(:where, :departement, :lieu_id, :latitude, :longitude, :city_code, :street_ban_id, :invitation_token, :address, :organisation_ids, :motif_search_terms))
+        .merge(@attributes.slice(*(params + SearchContext::ATTRIBUTES_FOR_MOTIF_SELECTION)))
     end
 
     def to_search_query
+      params = %i[departement motif_name_with_location_type where city_code street_ban_id]
       @attributes
-        .slice(:departement, :latitude, :longitude, :motif_name_with_location_type, :where, :city_code, :street_ban_id)
+        .slice(*(params + SearchContext::ATTRIBUTES_FOR_MOTIF_SELECTION))
         .merge(service: @rdv.motif.service_id, motif_name_with_location_type: @rdv.motif.name_with_location_type)
     end
 

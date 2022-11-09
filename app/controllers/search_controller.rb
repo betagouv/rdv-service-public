@@ -33,10 +33,13 @@ class SearchController < ApplicationController
   end
 
   def search_params
+    simple_params = %i[
+      address city_code departement street_ban_id
+      service_id lieu_id date motif_search_terms motif_name_with_location_type motif_category
+      invitation_token organisation_id
+    ]
     params.permit(
-      :latitude, :longitude, :address, :city_code, :departement, :street_ban_id,
-      :service_id, :lieu_id, :date, :motif_search_terms, :motif_name_with_location_type, :motif_category,
-      :invitation_token, :organisation_id, organisation_ids: []
+      *(simple_params + SearchContext::ATTRIBUTES_FOR_MOTIF_SELECTION), organisation_ids: []
     )
   end
 end
