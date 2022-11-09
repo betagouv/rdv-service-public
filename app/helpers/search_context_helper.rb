@@ -2,22 +2,22 @@
 
 module SearchContextHelper
   def path_to_motif_selection(params)
-    root_path(params.slice(motif_selection_params))
+    root_path(params.slice(motif_selection_attributes))
   end
 
   def path_to_lieu_selection(params)
-    attributes = motif_selection_params + [:motif_name_with_location_type]
+    attributes = motif_selection_attributes + [:motif_name_with_location_type]
     root_path(params.slice(*attributes))
   end
 
   def path_to_creneau_selection(params)
-    attributes = motif_selection_params + %i[motif_name_with_location_type lieu_id]
+    attributes = motif_selection_attributes + %i[motif_name_with_location_type lieu_id]
     root_path(params.slice(*attributes))
   end
 
   private
 
-  def motif_selection_params
+  def motif_selection_attributes
     %i[
       departement
       city_code
