@@ -322,6 +322,7 @@ class Rdv < ApplicationRecord
         update!(status: status)
       end
     end
+    generate_payload_and_send_webhook(:updated)
   end
 
   private
