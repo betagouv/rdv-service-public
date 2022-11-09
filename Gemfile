@@ -32,7 +32,6 @@ gem "pg_search"
 gem "kaminari"
 gem "bootstrap4-kaminari-views"
 gem "administrate"
-gem "administrate-field-belongs_to_search", github: "fishbrain/administrate-field-belongs_to_search"
 # TODO: migrate columns to json before upgrading to v13 (https://github.com/paper-trail-gem/paper_trail/blob/master/doc/pt_13_yaml_safe_load.md)
 gem "paper_trail", "< 13.0"
 gem "activerecord-postgres_enum"

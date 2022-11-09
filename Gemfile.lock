@@ -1,14 +1,4 @@
 GIT
-  remote: https://github.com/fishbrain/administrate-field-belongs_to_search.git
-  revision: ed3115c85f36bb2b572debb4ee3233cb4a6a14eb
-  specs:
-    administrate-field-belongs_to_search (0.7.0)
-      administrate (>= 0.3, < 1.0)
-      jbuilder (~> 2)
-      rails (>= 4.2, < 7.1)
-      selectize-rails (~> 0.6)
-
-GIT
   remote: https://github.com/lynndylanhurley/devise_token_auth.git
   revision: ec68e47f2a3e743bd51293369d059508974aed14
   specs:
@@ -612,7 +602,6 @@ DEPENDENCIES
   active_link_to
   activerecord-postgres_enum
   administrate
-  administrate-field-belongs_to_search!
   auto_strip_attributes
   axe-core-rspec
   better_errors
