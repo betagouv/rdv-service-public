@@ -52,7 +52,7 @@ module UserRdvWizard
     end
 
     def to_query
-      params = %i[where lieu_id city_code street_ban_id invitation_token organisation_ids motif_search_terms]
+      params = %i[where lieu_id street_ban_id invitation_token organisation_ids motif_search_terms]
       { motif_id: rdv.motif.id, starts_at: rdv.starts_at.to_s, user_ids: rdv.users&.map(&:id) }
         .merge(@attributes.slice(*(params + SearchContext::ATTRIBUTES_FOR_MOTIF_SELECTION)))
     end
