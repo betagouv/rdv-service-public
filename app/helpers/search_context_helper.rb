@@ -2,7 +2,6 @@
 
 module SearchContextHelper
   PARAMS_FOR_MOTIF_SELECTION = %i[
-    departement
     city_code
     street_ban_id
     address

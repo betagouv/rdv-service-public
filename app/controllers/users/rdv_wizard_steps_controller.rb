@@ -3,7 +3,7 @@
 class Users::RdvWizardStepsController < UserAuthController
   RDV_PERMITTED_PARAMS = [:starts_at, :motif_id, :context, { user_ids: [] }].freeze
   EXTRA_PERMITTED_PARAMS = ([
-    :lieu_id, :departement, :where, :created_user_id, :city_code,
+    :lieu_id, :where, :created_user_id, :city_code,
     :street_ban_id, :invitation_token, :address, :motif_search_terms, :organisation_id, { organisation_ids: [] },
   ] + SearchContext::ATTRIBUTES_FOR_MOTIF_SELECTION).freeze
   after_action :allow_iframe

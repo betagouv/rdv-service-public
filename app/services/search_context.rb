@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 class SearchContext
-  attr_reader :errors, :query, :departement, :address, :city_code, :street_ban_id, :motif_name_with_location_type, ATTRIBUTES_FOR_MOTIF_SELECTION
+  attr_reader :errors, :query, :address, :city_code, :street_ban_id, :motif_name_with_location_type, ATTRIBUTES_FOR_MOTIF_SELECTION
 
-  ATTRIBUTES_FOR_MOTIF_SELECTION = %i[latitude longitude].freeze
+  ATTRIBUTES_FOR_MOTIF_SELECTION = %i[latitude longitude departement].freeze
 
   def initialize(current_user, query = {})
     @current_user = current_user
