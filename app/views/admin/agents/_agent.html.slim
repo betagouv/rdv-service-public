@@ -4,6 +4,7 @@ tr id="agent_#{agent.id}"
   td
     - if agent.complete?
       - if policy([:agent, agent_role]).edit?
+        | ici !
         = link_to agent.reverse_full_name, edit_admin_organisation_agent_role_path(current_organisation, agent_role), class: "mr-2"
       - else
         span.mr-2= agent.reverse_full_name
