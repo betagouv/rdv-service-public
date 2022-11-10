@@ -9,10 +9,7 @@ class Admin::Agents::AbsencesController < ApplicationController
     @organisation = Organisation.find(params[:organisation_id])
 
     absences = policy_scope_admin(Absence).includes(:organisation).where(agent: agent)
-    # Cache occurrences for this relation
-    @absence_occurrences = cache([absences, :all_occurrences_for, date_range_params]) do
-      absences.all_occurrences_for(date_range_params)
-    end
+    @absence_occurrences = absences.all_occurrences_for(date_range_params)
   end
 
   private
@@ -22,6 +19,7 @@ class Admin::Agents::AbsencesController < ApplicationController
     end_param = Date.parse(params[:end])
     start_param..end_param
   end
+  helper_method :date_range_params
 
   def pundit_user
     AgentContext.new(current_agent)

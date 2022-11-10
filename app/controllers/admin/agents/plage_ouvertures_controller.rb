@@ -7,10 +7,7 @@ class Admin::Agents::PlageOuverturesController < ApplicationController
   def index
     @agent = Agent.find(params[:agent_id])
     @organisation = Organisation.find(params[:organisation_id])
-    # Cache occurrences for this relation
-    @plage_ouverture_occurrences = cache([plage_ouvertures, :all_occurrences_for, date_range_params]) do
-      plage_ouvertures.all_occurrences_for(date_range_params)
-    end
+    @plage_ouverture_occurrences = plage_ouvertures.all_occurrences_for(date_range_params)
   end
 
   private
@@ -33,6 +30,7 @@ class Admin::Agents::PlageOuverturesController < ApplicationController
     end_param = Date.parse(params[:end])
     start_param..end_param
   end
+  helper_method :date_range_params
 
   def pundit_user
     AgentContext.new(current_agent)
