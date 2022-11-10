@@ -19,10 +19,16 @@ RSpec.describe Admin::UsersController, type: :controller do
       end.to change(user, :organisation_ids).from([organisation.id]).to([])
     end
 
-    it "does not destroy user" do
+    it "appaers to destroy user" do
       expect do
         delete :destroy, params: { organisation_id: organisation.id, id: user.id }
-      end.not_to change(User, :count)
+      end.to change(User, :count)
+    end
+
+    it "not really destroy user" do
+      expect do
+        delete :destroy, params: { organisation_id: organisation.id, id: user.id }
+      end.not_to change { User.unscoped.count }
     end
   end
 

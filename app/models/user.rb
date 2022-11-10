@@ -81,7 +81,8 @@ class User < ApplicationRecord
   before_save :set_email_to_null_if_blank
 
   # Scopes
-  scope :active, -> { where(deleted_at: nil) }
+  default_scope { where(deleted_at: nil) }
+
   scope :order_by_last_name, -> { order(Arel.sql("LOWER(last_name)")) }
   scope :responsible, -> { where(responsible_id: nil) }
   scope :relative, -> { where.not(responsible_id: nil) }
@@ -107,7 +108,7 @@ class User < ApplicationRecord
   end
 
   def available_users_for_rdv
-    User.where(responsible_id: id).or(User.where(id: id)).order("responsible_id DESC NULLS FIRST", first_name: :asc).active
+    User.where(responsible_id: id).or(User.where(id: id)).order("responsible_id DESC NULLS FIRST", first_name: :asc)
   end
 
   def self_and_relatives
