@@ -159,4 +159,25 @@ describe RdvsHelper do
       expect(change_status_confirmation_message(rdv, "revoked")).to eq(expected)
     end
   end
+
+  describe "show participants count" do
+    context "for an individual rdv" do
+      it "returns empty string" do
+        rdv = build(:rdv, motif: build(:motif, collectif: false), users: [build(:user)])
+        expect(show_participants_count(rdv)).to eq("")
+      end
+    end
+
+    context "for a collectif rdv" do
+      it "returns only users count without limitation" do
+        rdv = build(:rdv, motif: build(:motif, collectif: true), users: [build(:user)], users_count: 1, max_participants_count: nil)
+        expect(show_participants_count(rdv)).to eq("1")
+      end
+
+      it "returns users count and max participants" do
+        rdv = build(:rdv, motif: build(:motif, collectif: true), users: [build(:user)], users_count: 1, max_participants_count: 3)
+        expect(show_participants_count(rdv)).to eq("1 / 3")
+      end
+    end
+  end
 end

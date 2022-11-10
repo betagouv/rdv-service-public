@@ -53,5 +53,7 @@ module Lapin
         controller.layout "registration"
       end
     end
+
+    config.x.rack_attack.limit = 50
   end
 end

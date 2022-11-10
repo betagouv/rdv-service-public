@@ -6,6 +6,8 @@ class Api::V1::UserProfilesController < Api::V1::AgentAuthBaseController
     authorize(user_profile)
     user_profile.save!
     render_record user_profile
+  rescue ArgumentError => e
+    render_error :unprocessable_entity, { success: false, errors: {}, error_messages: [e] }
   end
 
   private

@@ -133,3 +133,11 @@ select.form-control-sm {
     }
   }
 }
+
+// allow using FontAwesome icons as buttons, without
+// having an ugly grey rectangle around the icon
+button.fa {
+  background: none;
+  border: none;
+  color: inherit;
+}

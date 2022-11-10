@@ -34,7 +34,7 @@ ul.list-group.list-group-flush
         = rdv_starts_at_and_duration(rdv_wizard.rdv, :human)
       - unless rdv_wizard.invitation?
         .col-auto
-        = link_to "modifier", path_to_creneau_selection(rdv_wizard.params_to_selections)
+          = link_to "modifier", path_to_creneau_selection(rdv_wizard.params_to_selections)
   - if rdv_wizard.is_a?(UserRdvWizard::Step3)
     li.list-group-item
       .row

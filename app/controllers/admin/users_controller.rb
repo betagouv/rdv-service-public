@@ -23,11 +23,11 @@ class Admin::UsersController < AgentAuthController
 
   def index
     @form = Admin::UserSearchForm.new(**index_params)
-    @users = policy_scope(User).merge(@form.users).active.order_by_last_name.page(params[:page])
+    @users = policy_scope(User).merge(@form.users).order_by_last_name.page(params[:page])
   end
 
   def search
-    users = policy_scope(User).where.not(id: params[:exclude_ids]).active.limit(20)
+    users = policy_scope(User).where.not(id: params[:exclude_ids]).limit(20)
     @users = search_params[:term].present? ? users.search_by_text(search_params[:term]) : users.none
     skip_authorization
   end
