@@ -21,16 +21,17 @@ describe "RDV authentified API", swagger_doc: "v1/api.json" do
 
       with_examples
 
+      let!(:access_agent) { api_auth_headers_for_agent(agent) }
+      let(:"access-token") { access_agent["access-token"].to_s }
+      let(:uid) { access_agent["uid"].to_s }
+      let(:client) { access_agent["client"].to_s }
+
       context "sans filtres" do
         response 200, "Renvoie les motifs", document: false do
           let!(:service) { create(:service) }
           let!(:organisation) { create(:organisation) }
 
           let!(:agent) { create(:agent, service: service, basic_role_in_organisations: [organisation]) }
-          let!(:access_agent) { api_auth_headers_for_agent(agent) }
-          let(:"access-token") { access_agent["access-token"].to_s }
-          let(:uid) { access_agent["uid"].to_s }
-          let(:client) { access_agent["client"].to_s }
 
           let!(:motif) { create(:motif, organisation: organisation, service: service) }
 
@@ -47,10 +48,6 @@ describe "RDV authentified API", swagger_doc: "v1/api.json" do
           let!(:organisation2) { create(:organisation) }
 
           let!(:agent) { create(:agent, service: service, basic_role_in_organisations: [organisation1]) }
-          let!(:access_agent) { api_auth_headers_for_agent(agent) }
-          let(:"access-token") { access_agent["access-token"].to_s }
-          let(:uid) { access_agent["uid"].to_s }
-          let(:client) { access_agent["client"].to_s }
 
           let!(:motif1) { create(:motif, organisation: organisation1, service: service) }
           let!(:motif2) { create(:motif, organisation: organisation1, service: service) }
@@ -68,12 +65,9 @@ describe "RDV authentified API", swagger_doc: "v1/api.json" do
         response 401, "Renvoie un problème d'authentification" do
           let!(:service) { create(:service) }
           let!(:organisation) { create(:organisation) }
+          let(:"access-token") { "false" }
 
           let!(:agent) { create(:agent, service: service, basic_role_in_organisations: [organisation]) }
-          let!(:access_agent) { api_auth_headers_for_agent(agent) }
-          let(:"access-token") { "false" }
-          let(:uid) { access_agent["uid"].to_s }
-          let(:client) { access_agent["client"].to_s }
 
           let!(:motif) { create(:motif, organisation: organisation, service: service) }
 
@@ -90,10 +84,7 @@ describe "RDV authentified API", swagger_doc: "v1/api.json" do
         let!(:organisation) { create(:organisation) }
 
         let!(:agent) { create(:agent, service: service, basic_role_in_organisations: [organisation]) }
-        let!(:access_agent) { api_auth_headers_for_agent(agent) }
-        let(:"access-token") { access_agent["access-token"].to_s }
-        let(:uid) { access_agent["uid"].to_s }
-        let(:client) { access_agent["client"].to_s }
+
         let(:organisation_id) { organisation.id }
 
         response 200, "Renvoie les motifs filtrés sur active true", document: false do
