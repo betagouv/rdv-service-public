@@ -8,23 +8,22 @@ module RdvsUser::StatusChangeable
 
     RdvsUser.transaction do
       if update(status: status)
-        notify!(author)
         rdv.update_rdv_status_from_participation
+        notify!(author)
         true
       else
         false
       end
     end
-    # Notifiers are returning rdvs_user_token when a notif is sent or nil
+
+    rdv.generate_payload_and_send_webhook(:updated)
   end
 
   def notify!(author)
     return nil unless user_valid_for_lifecycle_notifications?
     return Notifiers::RdvCancelled.perform_with(rdv, author, [user]) if rdv_user_cancelled?
     return Notifiers::RdvCreated.perform_with(rdv, author, [user]) if rdv_status_reloaded_from_cancelled?
-
-    # Amine Fix on updatable, reminder for opening to public and setting up webhooks for rdv-insertion
-    rdv.skip_webhooks = false
+    # Notifiers are returning rdvs_user_token when a notif is sent or nil
   end
 
   def rdv_user_cancelled?

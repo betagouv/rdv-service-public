@@ -316,16 +316,14 @@ class Rdv < ApplicationRecord
       symbol_method = "#{status}?".to_sym
       next unless rdvs_users.any?(&symbol_method)
 
-      self.status = status
-      save
+      update!(status: status)
       break
     end
 
     # If all participations are similar the rdv status will change
     %w[seen noshow excused].each do |status|
       if rdvs_users.map(&:status).all? { |participation_status| participation_status.in? [status] }
-        self.status = status
-        save
+        update!(status: status)
       end
     end
   end
