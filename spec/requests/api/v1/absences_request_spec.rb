@@ -30,7 +30,7 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
       let(:uid) { auth_headers["uid"].to_s }
       let(:client) { auth_headers["client"].to_s }
 
-      response 200, "Renvoie les absences des organisation filtrées" do
+      response 200, "Renvoie les absences d'une organisation donnée" do
         let(:organisation_id) { organisation.id }
 
         schema "$ref" => "#/components/schemas/absences"
@@ -40,7 +40,7 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
         it { expect(parsed_response_body["absences"].pluck("id")).to match_array([absence1.id]) }
       end
 
-      response 200, "Renvoie les absences des organisations auxquelles l'agent a accès", document: false do
+      response 200, "Renvoie les absences des organisations auxquelles l'agent.e a accès", document: false do
         schema "$ref" => "#/components/schemas/absences"
 
         run_test!
@@ -67,7 +67,7 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
 
       parameter name: "organisation_id", in: :query, type: :integer, description: "ID de l'organisation", example: 12
       parameter name: "agent_id", in: :query, type: :integer, description: "ID de l'agent", example: 23, required: false
-      parameter name: "agent_email", in: :query, type: :string, description: "ID de l'agent", example: 23, required: false
+      parameter name: "agent_email", in: :query, type: :string, description: "Email de l'agent", example: "agent@example.com", required: false
       parameter name: "title", in: :query, type: :string, description: "Titre de l'absence", example: "Super absence"
       parameter name: "first_day", in: :query, type: :string, description: "Premier jour de l'absence", example: "2023-11-20"
       parameter name: "start_time", in: :query, type: :string, description: "Heure de début de l'absence", example: "08:00"
@@ -134,7 +134,7 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
         it { expect(created_absence.agent).to eq(agent) }
       end
 
-      response 404, "Renvoie 'not_found' quand l'agent n'est pas connu" do
+      response 404, "Renvoie 'not_found' quand l'agent.e est introuvable" do
         let(:organisation_id) { organisation.id }
         let(:agent_email) { "test@example.com" }
         let(:title) { "Super absence" }
@@ -188,7 +188,7 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
         it { expect(Absence.count).to eq(absence_count_before) }
       end
 
-      context "Créer une absence pour un agent dans un service différent" do
+      context "Crée une absence pour un.e agent.e dans un service différent" do
         let!(:agent2) { create(:agent, basic_role_in_organisations: [organisation], service: create(:service), email: "another@example.com") }
         let(:organisation_id) { organisation.id }
         let(:agent_email) { "another@example.com" }
@@ -200,7 +200,7 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
 
         let!(:absence_count_before) { Absence.count }
 
-        response 403, "Impossible de créer une absence pour un agent dans un service différent" do
+        response 403, "Impossible de créer une absence pour un.e agent.e dans un service différent" do
           let!(:agent) { create(:agent, service: create(:service)) }
           let!(:agent_role) { create(:agent_role, agent: agent, level: AgentRole::LEVEL_BASIC, organisation: organisation) }
 
@@ -237,7 +237,7 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
       operationId "getAbsence"
       description "Renvoie une absence"
 
-      parameter name: "absence_id", in: :path, type: :string, description: "L'ID d'une organisation donnée", example: "12"
+      parameter name: "absence_id", in: :path, type: :string, description: "L'ID d'une absence donnée", example: "12"
 
       let!(:organisation) { create(:organisation) }
       let!(:organisation2) { create(:organisation) }
@@ -292,7 +292,7 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
       operationId "updateAbsence"
       description "Modifie une absence"
 
-      parameter name: "absence_id", in: :path, type: :string, description: "L'ID d'une organisation donnée", example: "12"
+      parameter name: "absence_id", in: :path, type: :string, description: "L'ID d'une absence donnée", example: "12"
 
       parameter name: "title", in: :query, type: :string, description: "Titre de l'absence", example: "Super absence", required: false
       parameter name: "first_day", in: :query, type: :string, description: "Premier jour de l'absence", example: "2023-11-20", required: false
@@ -356,7 +356,7 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
       operationId "deleteAbsence"
       description "Détruit une absence"
 
-      parameter name: "absence_id", in: :path, type: :string, description: "L'ID d'une organisation donnée", example: "12"
+      parameter name: "absence_id", in: :path, type: :string, description: "L'ID d'une absence donnée", example: "12"
 
       let!(:organisation) { create(:organisation) }
       let!(:organisation2) { create(:organisation) }
@@ -370,9 +370,9 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
       let(:uid) { auth_headers["uid"].to_s }
       let(:client) { auth_headers["client"].to_s }
 
-      let!(:absence_count_before) { Absence.count }
-
       response 204, "Détruit l'absence" do
+        let!(:absence_count_before) { Absence.count }
+
         run_test!
 
         it { expect(Absence.count).to eq(absence_count_before - 1) }

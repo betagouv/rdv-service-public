@@ -49,8 +49,7 @@ class Api::V1::AbsencesController < Api::V1::AgentAuthBaseController
   private
 
   def retrieve_absence
-    @absence = Absence.find(params[:id])
-  rescue ActiveRecord::RecordNotFound # rubocop:disable Lint/SuppressedException
+    @absence = Absence.find_by(id: params[:id])
   end
 
   def create_params
