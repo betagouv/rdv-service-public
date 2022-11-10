@@ -27,7 +27,6 @@ class RdvsUser < ApplicationRecord
   before_create :set_status_from_rdv
   after_save :update_counter_cache
   after_destroy :update_counter_cache
-  after_commit :refresh_rdv_webhook, on: %i[destroy]
 
   # Scopes
   scope :order_by_user_last_name, -> { includes(:user).order("users.last_name ASC") }
@@ -35,12 +34,6 @@ class RdvsUser < ApplicationRecord
 
   def update_counter_cache
     rdv.update_users_count
-  end
-
-  def refresh_rdv_webhook
-    return unless Rdv.exists?(rdv.id)
-
-    rdv.generate_payload_and_send_webhook(:updated)
   end
 
   def set_status_from_rdv
