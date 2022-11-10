@@ -20,24 +20,60 @@
                 - %i[seen excused revoked noshow].each do |temporal_status|
                   = render "stats/rdv_counter_without_link", \
                     temporal_status: temporal_status, \
+                    element: "RDV", \
                     count: @stats.rdvs.status(temporal_status).count
             .col-lg-4
               .px-1
                 = render "stats/rdv_counter_without_link", \
                   temporal_status: :unknown_past, \
+                  element: "RDV", \
                   count: @stats.rdvs.status(:unknown_past).count
             .col-lg-4
               .px-1
                 = render "stats/rdv_counter_without_link", \
                   temporal_status: :unknown_future, \
+                  element: "RDV", \
                   count: @stats.rdvs.status(:unknown_future).count
           hr
           .row
             .col-lg-4
               .px-1
                 = render "stats/rdv_counter_without_link", \
+                  element: "RDV", \
                   label: "Tous", \
                   count: @stats.rdvs.count
+
+      .card.mb-5
+        .card-body
+          h2.card-title Nombre de RDV par statut de participation
+          .row
+            .col-lg-4
+              .px-1
+                - %i[seen excused revoked noshow].each do |temporal_status|
+                  = render "stats/rdv_counter_without_link", \
+                    temporal_status: temporal_status, \
+                    element: "Usager(s)", \
+                    count: RdvsUser.where(rdv: @stats.rdvs).status(temporal_status).count
+            .col-lg-4
+              .px-1
+                = render "stats/rdv_counter_without_link", \
+                  temporal_status: :unknown_past, \
+                  element: "Usager(s)", \
+                  count: RdvsUser.where(rdv: @stats.rdvs).joins(:rdv).status(:unknown_past).count
+            .col-lg-4
+              .px-1
+                = render "stats/rdv_counter_without_link", \
+                  element: "Usager(s)", \
+                  temporal_status: :unknown_future, \
+                  count: RdvsUser.where(rdv: @stats.rdvs).joins(:rdv).status(:unknown_future).count
+          hr
+          .row
+            .col-lg-4
+              .px-1
+                = render "stats/rdv_counter_without_link", \
+                  element: "Usager(s)", \
+                  label: "Tous", \
+                  count: RdvsUser.where(rdv: @stats.rdvs).count
 
       .card.mb-5
         .card-body
@@ -83,6 +119,13 @@
 
       .card.mb-5
         .card-body
+          = self_anchor "rdvs-status"
+            h2.card-title RDV par statut de participation
+          - colors = %w[#fa5c7c #02a8b5 #39afd1 #0acf97 #ffbc00]
+          = column_chart rdvs_stats_path(by_rdv_users_status: true, territory: @territory), stacked: :percent, max: 100, suffix: "%", colors: colors
+
+      .card.mb-5
+        .card-body
           = self_anchor "notifications"
             h2.card-title #{Receipt.model_name.human(count: 2)} (#{@stats.receipts.count})
           - %i[event channel result].each do |attribute|
@@ -108,6 +151,9 @@
           - active_count = active_agents.joins(:rdvs).where("rdvs.created_at > ?", 30.days.ago).distinct.count
           p #{percent(active_count, active_agents.count)} ont participé à un rdv créé dans les 30 derniers jours (#{active_count})
 
+          - agents_with_online_reservation = active_agents.with_online_reservations_at(Time.zone.now)
+          p #{agents_with_online_reservation.count} ont des créneaux ouverts au public
+
           h5 Il y a 30 jours
 
           - active_agents = active_agents.where("agents.created_at < ?", 30.days.ago)
@@ -121,6 +167,9 @@
 
           - active_count = active_agents.joins(:rdvs).where(rdvs: {created_at: 60.days.ago..30.days.ago}).distinct.count
           p #{percent(active_count, active_agents.count)} avaient participé à un rdv créé un rdv les 30 derniers jours précédents (#{active_count})
+
+          - agents_with_online_reservation = active_agents.with_online_reservations_at(30.days.ago)
+          p #{agents_with_online_reservation.count} avaient des créneaux ouverts au public
 
           = self_anchor "active_agents"
             h2.card-title Agents actifs par mois

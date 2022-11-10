@@ -3,6 +3,7 @@
     div
       = link_to admin_organisation_rdv_path(rdv.organisation, rdv) do
         h5= rdv_title_for_agent(rdv)
+      |&nbsp;
       = I18n.l(rdv.starts_at, format: "%A %d %B à %H:%M").capitalize
     - if current_agent.admin_in_organisation?(current_organisation)
       div.mr-3= link_to admin_organisation_rdv_path(rdv.organisation, rdv, agent_id: nil), method: :delete, title: t("helpers.delete"), data: { confirm: "Confirmez-vous la suppression de ce rendez-vous collectif ?"} do

@@ -62,7 +62,7 @@ class Users::GeoSearch
   end
 
   def available_motifs_from_attributed_agent(agent, organisation)
-    available_motifs_from_attributed_agent_arel(agent, organisation).distinct
+    available_individual_motifs_from_attributed_agent_arel(agent, organisation).distinct
   end
 
   def available_motifs_from_departement_organisations
@@ -84,7 +84,7 @@ class Users::GeoSearch
   def available_motifs_arels
     [available_motifs_from_departement_organisations_arel] +
       [available_motifs_from_attributed_organisations_arel] +
-      available_motifs_from_attributed_agents_arels
+      (available_collective_motifs_from_attributed_agents_arels + available_individual_motifs_from_attributed_agents_arels)
   end
 
   def available_motifs_from_departement_organisations_arel
@@ -99,24 +99,50 @@ class Users::GeoSearch
       .where(organisations: { id: attributed_organisations.pluck(:id) })
   end
 
-  def available_motifs_from_attributed_agents_arels
-    @available_motifs_from_attributed_agents_arels ||= attributed_agents_by_organisation
-      .map do |organisation, agents|
-        agents.map { available_motifs_from_attributed_agent_arel(_1, organisation) }
-      end
-      .flatten(1)
-  end
-
-  def available_motifs_from_attributed_agent_arel(agent, organisation)
-    available_motifs_base
-      .sectorisation_level_agent
-      .where(
-        organisations: { id: organisation.id },
-        plage_ouvertures: { agent_id: agent.id }
-      )
-  end
-
   def available_motifs_base
-    Motif.reservable_online.active.joins(:organisation, :plage_ouvertures)
+    Motif.where(id: individual_motif + collective_motif).joins(:organisation)
+  end
+
+  def individual_motif
+    @individual_motif ||= Motif.reservable_online.active.individuel.joins(:plage_ouvertures).distinct
+  end
+
+  def collective_motif
+    @collective_motif ||= Motif.reservable_online.active.collectif.joins(:rdvs).merge(Rdv.future.with_remaining_seats).distinct
+  end
+
+  def available_individual_motifs_from_attributed_agents_arels
+    @available_individual_motifs_from_attributed_agents_arels ||= attributed_agents_by_organisation
+      .map do |organisation, agents|
+        agents.map { available_individual_motifs_from_attributed_agent_arel(_1, organisation) }
+      end.flatten(1)
+  end
+
+  def available_individual_motifs_from_attributed_agent_arel(agent, organisation)
+    motif_ids = individual_motif.sectorisation_level_agent
+      .joins(:plage_ouvertures)
+      .where(
+        organisation_id: organisation.id,
+        plage_ouvertures: { agent_id: agent.id }
+      ).pluck(:id)
+    # Pour pouvoir faire le `or` de la méthode `available_motifs` il faut avoir des
+    # requête avec les mêmes jointures (pour l'individuel et le collectif)...
+    Motif.where(id: motif_ids)
+  end
+
+  def available_collective_motifs_from_attributed_agents_arels
+    @available_collective_motifs_from_attributed_agents_arels ||= attributed_agents_by_organisation
+      .map do |organisation, agents|
+        agents.map { available_collective_motifs_from_attributed_agent_arel(_1, organisation) }
+      end.flatten(1)
+  end
+
+  def available_collective_motifs_from_attributed_agent_arel(_agent, organisation)
+    motif_ids = collective_motif.sectorisation_level_agent
+      .where(organisation_id: organisation.id)
+      .pluck(:id)
+    # Pour pouvoir faire le `or` de la méthode `available_motifs` il faut avoir des
+    # requête avec les mêmes jointures (pour l'individuel et le collectif)...
+    Motif.where(id: motif_ids)
   end
 end

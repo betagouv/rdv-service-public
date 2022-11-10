@@ -61,6 +61,32 @@ class Stat
     end
   end
 
+  def rdvs_group_by_rdv_users_status
+    res = RdvsUser
+      .joins(:rdv)
+      .where(rdv: rdvs)
+      .where("rdvs.starts_at < ?", Time.zone.today)
+      .where.not(status: :waiting)
+      .group("status")
+      .group_by_week("rdvs.starts_at", format: DEFAULT_FORMAT)
+      .count
+    rdvs_count_per_date = Hash.new(0)
+    res.each { |key, rdvs_count| rdvs_count_per_date[key[1]] += rdvs_count }
+    # ruby hashes are ordered and we care about the order here
+    res_ordered = %i[unknown seen excused revoked noshow]
+      .reverse
+      .map { |status| res.select { |key, _rdvs_count| key[0] == status.to_s } }
+      .reduce(:merge)
+    # normalize over 100 because chart.js does not support stacked: relative
+    res_ordered.to_h do |key, rdvs_count|
+      date_rdvs_count = rdvs_count_per_date[key[1]]
+      [
+        [::Rdv.human_attribute_value(:status, key[0]), key[1]],
+        date_rdvs_count.zero? ? 0 : (rdvs_count.to_f * 100 / date_rdvs_count).round,
+      ]
+    end
+  end
+
   def receipts_group_by(attribute)
     receipts
       .group(attribute)

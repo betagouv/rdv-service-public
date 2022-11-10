@@ -485,9 +485,9 @@ describe Rdv, type: :model do
       rdv3 = create(:rdv, organisation: organisation2, agents: [agent2], users: [user])
 
       options = {}
-      expect(described_class.search_for(organisation, options)).to eq([rdv1, rdv2])
-      expect(described_class.search_for(organisation2, options)).to eq([rdv3])
-      expect(described_class.search_for(Organisation.all, options)).to eq([rdv1, rdv2, rdv3])
+      expect(described_class.search_for(organisation, options)).to match_array([rdv1, rdv2])
+      expect(described_class.search_for(organisation2, options)).to match_array([rdv3])
+      expect(described_class.search_for(Organisation.all, options)).to match_array([rdv1, rdv2, rdv3])
     end
 
     it "returns rdv with given status" do
@@ -641,6 +641,14 @@ describe Rdv, type: :model do
       now = Time.zone.parse("20220221 10:34")
       travel_to(now)
       motif = build(:motif, reservable_online: false)
+      rdv = build(:rdv, :at_home, starts_at: now + 9.days, motif: motif)
+      expect(rdv.available_to_file_attente?).to eq(false)
+    end
+
+    it "returns false with a collective motif" do
+      now = Time.zone.parse("20220221 10:34")
+      travel_to(now)
+      motif = build(:motif, collectif: true, reservable_online: true)
       rdv = build(:rdv, :at_home, starts_at: now + 9.days, motif: motif)
       expect(rdv.available_to_file_attente?).to eq(false)
     end

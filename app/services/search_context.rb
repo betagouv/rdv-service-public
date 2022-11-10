@@ -119,7 +119,11 @@ class SearchContext
   end
 
   def creneaux
-    @creneaux ||= creneaux_search.creneaux
+    @creneaux ||= if selected_motif.collectif?
+                    SearchRdvCollectif.creneaux(selected_motif, lieu)
+                  else
+                    creneaux_search.creneaux
+                  end
   end
 
   def creneaux_search
@@ -130,17 +134,48 @@ class SearchContext
     @next_availability ||= creneaux.empty? ? creneaux_search.next_availability : nil
   end
 
+  def filter_motifs(available_motifs)
+    motifs = if @motif_name_with_location_type.present?
+               available_motifs.search_by_name_with_location_type(@motif_name_with_location_type)
+             else
+               available_motifs
+             end
+    motifs = motifs.where(service: service) if @service_id.present?
+    motifs = motifs.search_by_text(@motif_search_terms) if @motif_search_terms.present?
+    motifs = motifs.where(category: @motif_category) if @motif_category.present?
+    motifs = motifs.where(organisations: { id: @organisation_id }) if @organisation_id.present?
+    motifs = motifs.where(id: lieu_filtered_motif_ids(motifs)) if @lieu_id.present?
+
+    motifs
+  end
+
   private
+
+  def lieu_filtered_motif_ids(motifs)
+    # filtrer sur le `lieu_id` dans la table des plages d'ouverture permet de limiter de combiner et construire trop d'objet
+    # voir https://github.com/betagouv/rdv-solidarites.fr/issues/2686
+    motif_ids = motifs.individuel.joins(:plage_ouvertures).where(plage_ouvertures: { lieu_id: @lieu_id }).uniq.pluck(:id)
+
+    # Pour prendre en compte le filtre sur le lieu_id pour les RDV Collectif,
+    # nous ne pouvons pas passer par une requête `or` qui nécessite les mêmes jointures des deux côtés.
+    motifs.collectif.each { |motif| motif_ids << motif.id if Rdv.exists?(lieu_id: @lieu_id, motif: motif) }
+
+    motif_ids
+  end
 
   def creneaux_search_for(lieu, date_range)
     motif = lieu.present? ? matching_motifs.where(organisation: lieu.organisation).first : selected_motif
-    Users::CreneauxSearch.new(
-      user: @current_user,
-      motif: motif,
-      lieu: lieu, # lieu can be nil when the selected motif is phone
-      date_range: date_range,
-      geo_search: geo_search
-    )
+    if selected_motif.individuel?
+      Users::CreneauxSearch.new(
+        user: @current_user,
+        motif: motif,
+        lieu: lieu,
+        date_range: date_range,
+        geo_search: geo_search
+      )
+    else
+      SearchRdvCollectif.next_availability_for_lieu(motif, lieu)
+    end
   end
 
   def matching_motifs
@@ -154,23 +189,5 @@ class SearchContext
       else
         filter_motifs(geo_search.available_motifs)
       end
-  end
-
-  def filter_motifs(available_motifs)
-    motifs = if @motif_name_with_location_type.present?
-               available_motifs.search_by_name_with_location_type(@motif_name_with_location_type)
-             else
-               available_motifs
-             end
-    motifs = motifs.where(service: service) if @service_id.present?
-    motifs = motifs.search_by_text(@motif_search_terms) if @motif_search_terms.present?
-    motifs = motifs.where(category: @motif_category) if @motif_category.present?
-    motifs = motifs.where(organisations: { id: @organisation_id }) if @organisation_id.present?
-
-    # filtrer sur le `lieu_id` dans la table des plages d'ouverture permet de limiter de combiner et construire trop d'objet
-    # voir https://github.com/betagouv/rdv-solidarites.fr/issues/2686
-    motifs = motifs.joins(:plage_ouvertures).where(plage_ouvertures: { lieu_id: @lieu_id }) if @lieu_id.present?
-
-    motifs
   end
 end

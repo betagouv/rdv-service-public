@@ -157,13 +157,20 @@ RSpec.configure do |config|
               user_profiles: {
                 type: "array",
                 nullable: true,
-                items: { "$ref" => "#/components/schemas/user_profiles" },
+                items: { "$ref" => "#/components/schemas/user_profile" },
               },
             },
             required: %w[id address address_details affiliation_number birth_date birth_name case_number created_at first_name invitation_accepted_at
                          invitation_created_at last_name notify_by_email notify_by_sms phone_number phone_number_formatted responsible responsible_id user_profiles],
           },
-          user_profiles: {
+          user_profile_with_root: {
+            type: "object",
+            properties: {
+              user_profile: { "$ref" => "#/components/schemas/user_profile" },
+            },
+            required: %w[user_profile],
+          },
+          user_profile: {
             type: "object",
             properties: {
               user: { "$ref" => "#/components/schemas/user", nullable: true },
@@ -238,6 +245,17 @@ RSpec.configure do |config|
             },
             required: %w[id address name organisation_id phone_number single_use],
           },
+          motifs: {
+            type: "object",
+            properties: {
+              motifs: {
+                type: "array",
+                items: { "$ref" => "#/components/schemas/motif" },
+              },
+              meta: { "$ref" => "#/components/schemas/meta" },
+            },
+            required: %w[motifs meta],
+          },
           motif: {
             type: "object",
             properties: {
@@ -296,6 +314,16 @@ RSpec.configure do |config|
           errors_generic: {
             type: "object",
           },
+          error_too_many_request: {
+            type: "object",
+            properties: {
+              errors: {
+                type: "array",
+                items: { type: "string" },
+              },
+            },
+            required: %w[errors],
+          },
           error_authentication: {
             type: "object",
             properties: {
@@ -328,6 +356,20 @@ RSpec.configure do |config|
               not_found: { type: "string" },
             },
             required: %w[not_found],
+          },
+          error_unprocessable_entity: {
+            type: "object",
+            properties: {
+              success: { type: "boolean" },
+              errors: {
+                type: "object",
+              },
+              error_messages: {
+                type: "array",
+                items: { type: "string" },
+              },
+            },
+            required: %w[success errors error_messages],
           },
         },
       },

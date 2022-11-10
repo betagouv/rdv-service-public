@@ -24,6 +24,7 @@ gem "mail", "2.8.0.rc1"
 gem "sentry-ruby"
 gem "sentry-rails"
 gem "skylight"
+gem "rack-attack"
 
 # Database
 gem "pg"
