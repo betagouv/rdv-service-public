@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Api::V1::AgentAuthBaseController < Api::V1::BaseController
-  include Pundit::Authorization
+  include Pundit
   include DeviseTokenAuth::Concerns::SetUserByToken
 
   skip_before_action :verify_authenticity_token

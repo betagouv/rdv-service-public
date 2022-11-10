@@ -513,7 +513,7 @@ users_attributes = 10_000.times.map do |i|
     created_through: "user_sign_up",
   }
 end
-results = User.insert_all!(users_attributes, returning: Arel.sql("id")) # [{"id"=>1}, {"id"=>2}, ...]
+results = User.insert_all!(users_attributes, returning: "id") # [{"id"=>1}, {"id"=>2}, ...]
 user_ids = results.flat_map(&:values) # [1, 2, ...]
 user_organisation_attributes = user_ids.map { |id| { user_id: id, organisation_id: org_paris_nord.id } }
 UserProfile.insert_all!(user_organisation_attributes)
@@ -699,7 +699,7 @@ agents_attributes = 1_000.times.map do |i|
     service_id: service_social.id,
   }
 end
-results = Agent.insert_all!(agents_attributes, returning: Arel.sql("id")) # [{"id"=>1}, {"id"=>2}, ...]
+results = Agent.insert_all!(agents_attributes, returning: "id") # [{"id"=>1}, {"id"=>2}, ...]
 agent_ids = results.flat_map(&:values) # [1, 2, ...]
 agent_role_attributes = agent_ids.map { |id| { agent_id: id, organisation_id: org_paris_nord.id } }
 AgentRole.insert_all!(agent_role_attributes)
@@ -936,7 +936,7 @@ rdv_attributes = 1000.times.flat_map do |i|
     }
   end
 end
-results = Rdv.insert_all!(rdv_attributes, returning: Arel.sql("id")) # [{"id"=>1}, {"id"=>2}, ...]
+results = Rdv.insert_all!(rdv_attributes, returning: "id") # [{"id"=>1}, {"id"=>2}, ...]
 rdv_ids = results.flat_map(&:values) # [1, 2, ...]
 agent_rdv_attributes = rdv_ids.map { |id| { agent_id: agent_org_paris_nord_pmi_martine.id, rdv_id: id } }
 AgentsRdv.insert_all!(agent_rdv_attributes)

@@ -1,15 +1,6 @@
 require_relative "boot"
 
-# frozen_string_literal: true
-
-# Selectively load modules instead of requiring rails/all
-# require "rails/all"
-require "rails"
-require "active_record/railtie"
-require "action_controller/railtie"
-require "action_view/railtie"
-require "action_mailer/railtie"
-require "active_job/railtie"
+require "rails/all"
 
 require "tod/core_extensions"
 
