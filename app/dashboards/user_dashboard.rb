@@ -18,7 +18,7 @@ class UserDashboard < Administrate::BaseDashboard
     email: Field::String,
     address: Field::String,
     phone_number: Field::String,
-    responsible: Field::BelongsTo,
+    responsible: Field::BelongsToSearch,
     relatives: Field::HasMany,
     caisse_affiliation: EnumField,
     family_situation: EnumField,
@@ -69,6 +69,7 @@ class UserDashboard < Administrate::BaseDashboard
   # on the model's form (`new` and `edit`) pages.
   FORM_ATTRIBUTES = %i[
     organisations
+    responsible
     first_name
     last_name
     birth_name

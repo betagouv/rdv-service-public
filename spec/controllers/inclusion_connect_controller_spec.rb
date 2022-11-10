@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe InclusionConnectController, type: :controller do
-  let(:base_url) { "https://test.inclusion.connect.fr" }
+  let(:base_url) { "https://test.inclusion.connect.fr/" }
 
   describe "#callback" do
     it "update first_name and last_name of agent" do
@@ -9,9 +9,9 @@ describe InclusionConnectController, type: :controller do
       travel_to(now)
       agent = create(:agent, :invitation_not_accepted, first_name: nil, last_name: nil, email: "bob@demo.rdv-solidarites.fr")
 
-      stub_const("InclusionConnect::IC_CLIENT_ID", "truc")
-      stub_const("InclusionConnect::IC_CLIENT_SECRET", "truc secret")
-      stub_const("InclusionConnect::IC_BASE_URL", base_url)
+      ENV["INCLUSION_CONNECT_CLIENT_ID"] = "truc"
+      ENV["INCLUSION_CONNECT_CLIENT_SECRET"] = "truc secret"
+      ENV["INCLUSION_CONNECT_BASE_URL"] = base_url
 
       stub_token_request.to_return(status: 200, body: { access_token: "zekfjzeklfjl", expires_in: now + 1.week, scopes: "openid" }.to_json, headers: {})
 
@@ -44,9 +44,9 @@ describe InclusionConnectController, type: :controller do
     end
 
     it "returns an error if token request error" do
-      stub_const("InclusionConnect::IC_CLIENT_ID", "truc")
-      stub_const("InclusionConnect::IC_CLIENT_SECRET", "truc secret")
-      stub_const("InclusionConnect::IC_BASE_URL", base_url)
+      ENV["INCLUSION_CONNECT_CLIENT_ID"] = "truc"
+      ENV["INCLUSION_CONNECT_CLIENT_SECRET"] = "truc secret"
+      ENV["INCLUSION_CONNECT_BASE_URL"] = base_url
 
       stub_token_request.to_return(status: 500, body: { error: "an error occurs" }.to_json, headers: {})
 
@@ -57,9 +57,9 @@ describe InclusionConnectController, type: :controller do
     end
 
     it "returns an error if token request doesn't contains token" do
-      stub_const("InclusionConnect::IC_CLIENT_ID", "truc")
-      stub_const("InclusionConnect::IC_CLIENT_SECRET", "truc secret")
-      stub_const("InclusionConnect::IC_BASE_URL", base_url)
+      ENV["INCLUSION_CONNECT_CLIENT_ID"] = "truc"
+      ENV["INCLUSION_CONNECT_CLIENT_SECRET"] = "truc secret"
+      ENV["INCLUSION_CONNECT_BASE_URL"] = base_url
 
       stub_token_request.to_return(status: 200, body: {}.to_json, headers: {})
 
@@ -71,9 +71,9 @@ describe InclusionConnectController, type: :controller do
     end
 
     it "returns an error if userinfo request doesnt work" do
-      stub_const("InclusionConnect::IC_CLIENT_ID", "truc")
-      stub_const("InclusionConnect::IC_CLIENT_SECRET", "truc secret")
-      stub_const("InclusionConnect::IC_BASE_URL", base_url)
+      ENV["INCLUSION_CONNECT_CLIENT_ID"] = "truc"
+      ENV["INCLUSION_CONNECT_CLIENT_SECRET"] = "truc secret"
+      ENV["INCLUSION_CONNECT_BASE_URL"] = base_url
 
       stub_token_request.to_return(status: 200, body: { access_token: "zekfjzeklfjl", expires_in: "", scopes: "openid" }.to_json, headers: {})
 
@@ -95,9 +95,9 @@ describe InclusionConnectController, type: :controller do
     end
 
     it "returns an error if userinfo's email checked is false" do
-      stub_const("InclusionConnect::IC_CLIENT_ID", "truc")
-      stub_const("InclusionConnect::IC_CLIENT_SECRET", "truc secret")
-      stub_const("InclusionConnect::IC_BASE_URL", base_url)
+      ENV["INCLUSION_CONNECT_CLIENT_ID"] = "truc"
+      ENV["INCLUSION_CONNECT_CLIENT_SECRET"] = "truc secret"
+      ENV["INCLUSION_CONNECT_BASE_URL"] = base_url
 
       stub_token_request.to_return(status: 200, body: { access_token: "zekfjzeklfjl", expires_in: "", scopes: "openid" }.to_json, headers: {})
 
@@ -119,9 +119,9 @@ describe InclusionConnectController, type: :controller do
     end
 
     it "call sentry about authentification failure" do
-      stub_const("InclusionConnect::IC_CLIENT_ID", "truc")
-      stub_const("InclusionConnect::IC_CLIENT_SECRET", "truc secret")
-      stub_const("InclusionConnect::IC_BASE_URL", base_url)
+      ENV["INCLUSION_CONNECT_CLIENT_ID"] = "truc"
+      ENV["INCLUSION_CONNECT_CLIENT_SECRET"] = "truc secret"
+      ENV["INCLUSION_CONNECT_BASE_URL"] = base_url
 
       stub_token_request.to_return(status: 500, body: { error: "an error occurs" }.to_json, headers: {})
 
