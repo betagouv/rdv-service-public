@@ -33,6 +33,33 @@ describe Admin::Agents::AbsencesController, type: :controller do
 
         expect(assigns(:absence_occurrences)).not_to be_nil
       end
+
+      describe "JSON response" do
+        render_views
+
+        let!(:absence) { create(:absence, agent: agent, first_day: Time.zone.today, organisation: organisation) }
+
+        it "is serialized for FullCalendar" do
+          start_date = Time.zone.today.monday
+          end_date = start_date.end_of_week
+
+          get :index, params: { agent_id: agent.id, organisation_id: organisation.id, start: start_date, end: end_date, format: :json }
+
+          expected_response = [
+            {
+              "title" => absence.title,
+              "start" => absence.starts_at.as_json,
+              "end" => absence.ends_at.as_json,
+              "backgroundColor" => "rgba(127, 140, 141, 0.7)",
+              "url" => "/admin/organisations/#{organisation.id}/absences/#{absence.id}/edit",
+              "extendedProps" => {
+                "organisationName" => organisation.name,
+              },
+            },
+          ]
+          expect(JSON.parse(response.body)).to eq(expected_response)
+        end
+      end
     end
   end
 end
