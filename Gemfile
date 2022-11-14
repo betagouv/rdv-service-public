@@ -3,21 +3,21 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.1.1"
+ruby "3.1.2"
 
 gem "dotenv-rails" # dotenv should always be loaded before rails
 
 # Standard Rails stuff
-gem "rails", "~> 6.0"
+gem "rails", "6.1.6.1"
 gem "sprockets-rails"
-gem "puma"
+gem "puma", "< 6.0" # Until Capybara is compatible with puma 6.0 (https://github.com/teamcapybara/capybara/pull/2530)
 gem "jsbundling-rails"
 gem "turbolinks", "~> 5"
 gem "bootsnap", require: false # Reduces boot times through caching; required in config/boot.rb
 gem "rack-cors" # CORS management
 
 # Temporarily fixed versions
-# This RC version supports Ruby 3.1 ()https://github.com/mikel/mail/commit/d9d8dcc)
+# This RC version supports Ruby 3.1 (https://github.com/mikel/mail/commit/d9d8dcc)
 gem "mail", "2.8.0.rc1"
 
 # Ops
@@ -31,12 +31,12 @@ gem "pg"
 gem "pg_search"
 gem "kaminari"
 gem "bootstrap4-kaminari-views"
-gem "administrate", git: "https://github.com/thoughtbot/administrate.git", ref: "refs/pull/1972/head" # Provides an administration UI (pull request #1972 has fixes for Rails 6.1.3.2)
-gem "administrate-field-belongs_to_search"
-gem "paper_trail"
+gem "administrate"
+# TODO: migrate columns to json before upgrading to v13 (https://github.com/paper-trail-gem/paper_trail/blob/master/doc/pt_13_yaml_safe_load.md)
+gem "paper_trail", "< 13.0"
 gem "activerecord-postgres_enum"
-gem "redis"
-gem "redis-session-store"
+gem "redis", "< 5.0"
+gem "redis-session-store", "0.11.4"
 gem "hiredis"
 
 # Devise / auth
@@ -89,20 +89,21 @@ gem "icalendar", "~> 2.5"
 group :development, :test do
   gem "byebug", platforms: %i[mri mingw x64_mingw] # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem "brakeman", require: false
-  gem "rubocop", require: false
-  gem "rubocop-rspec"
-  gem "rubocop-rails"
+  gem "rubocop", "1.24.1", require: false
+  gem "rubocop-rspec", "2.7.0"
+  gem "rubocop-rails", "2.13.1"
   gem "rspec-rails"
   gem "rspec_junit_formatter", require: false
   gem "rails-controller-testing"
   gem "factory_bot"
-  gem "meta_request"
   gem "bullet"
   gem "faker"
   gem "parallel_tests"
   gem "simplecov", require: false
   gem "slim_lint", require: false
-  gem "axe-core-rspec"
+  # New versions of axe are more strict
+  gem "axe-core-api", "4.3.2"
+  gem "axe-core-rspec", "4.3.2"
   gem "selenium-webdriver"
   gem "spring", require: false
   gem "spring-commands-rspec"

@@ -184,13 +184,15 @@ describe Admin::RdvsController, type: :controller do
       expect(Agents::ExportMailer).to receive(:rdv_export).with(
         agent,
         [organisation.id],
-        "start" => params[:start],
-        "end" => params[:end],
-        "organisation_id" => params[:organisation_id],
-        "agent_id" => params[:agent_id],
-        "user_id" => params[:user_id],
-        "lieu_id" => params[:lieu_id],
-        "status" => params[:status]
+        {
+          "start" => params[:start],
+          "end" => params[:end],
+          "organisation_id" => params[:organisation_id],
+          "agent_id" => params[:agent_id],
+          "user_id" => params[:user_id],
+          "lieu_id" => params[:lieu_id],
+          "status" => params[:status],
+        }
       ).and_return(instance_double(ActionMailer::MessageDelivery, deliver_later: nil))
       # rubocop:enable RSpec/StubbedMock
 
@@ -222,13 +224,15 @@ describe Admin::RdvsController, type: :controller do
         expect(Agents::ExportMailer).to receive(:rdvs_users_export).with(
           agent,
           [organisation.id],
-          "start" => params[:start],
-          "end" => params[:end],
-          "organisation_id" => params[:organisation_id],
-          "agent_id" => params[:agent_id],
-          "user_id" => params[:user_id],
-          "lieu_id" => params[:lieu_id],
-          "status" => params[:status]
+          {
+            "start" => params[:start],
+            "end" => params[:end],
+            "organisation_id" => params[:organisation_id],
+            "agent_id" => params[:agent_id],
+            "user_id" => params[:user_id],
+            "lieu_id" => params[:lieu_id],
+            "status" => params[:status],
+          }
         ).and_return(instance_double(ActionMailer::MessageDelivery, deliver_later: nil))
         # rubocop:enable RSpec/StubbedMock
 
