@@ -135,21 +135,13 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
         let(:end_time) { "15:00" }
       end
 
-      response 404, "Renvoie 'not_found' quand l'agent.e est introuvable" do
+      it_behaves_like "an endpoint that looks for a resource", "l'agent.e est introuvable" do
         let(:agent_email) { "test@example.com" }
         let(:title) { "Super absence" }
         let(:first_day) { "2023-11-20" }
         let(:start_time) { "08:00" }
         let(:end_day) { "2023-11-20" }
         let(:end_time) { "15:00" }
-
-        let!(:absence_count_before) { Absence.count }
-
-        schema "$ref" => "#/components/schemas/error_not_found"
-
-        run_test!
-
-        it { expect(Absence.count).to eq(absence_count_before) }
       end
 
       response 422, "Renvoie 'unprocessable_entity' quand end_time est avant start_time ou que les formats ne sont pas corrects" do
@@ -266,12 +258,8 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
         run_test!
       end
 
-      response 404, "L'absence n'existe pas" do
+      it_behaves_like "an endpoint that looks for a resource", "l'absence n'existe pas" do
         let(:absence_id) { "inconnue" }
-
-        schema "$ref" => "#/components/schemas/error_not_found"
-
-        run_test!
       end
     end
 
@@ -324,12 +312,8 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
         run_test!
       end
 
-      response 404, "L'absence n'existe pas" do
+      it_behaves_like "an endpoint that looks for a resource", "l'absence n'existe pas" do
         let(:absence_id) { "inconnue" }
-
-        schema "$ref" => "#/components/schemas/error_not_found"
-
-        run_test!
       end
     end
 
@@ -373,12 +357,8 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
         run_test!
       end
 
-      response 404, "L'absence n'existe pas" do
+      it_behaves_like "an endpoint that looks for a resource", "l'absence n'existe pas" do
         let(:absence_id) { "inconnue" }
-
-        schema "$ref" => "#/components/schemas/error_not_found"
-
-        run_test!
       end
     end
   end

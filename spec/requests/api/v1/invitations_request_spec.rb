@@ -41,12 +41,8 @@ describe "Invitations API", swagger_doc: "v1/api.json" do
         let(:invitation_token) { "abcd" }
       end
 
-      response 404, "Renvoie 'not_found' quand l'usager·ère n'est pas trouvé·e" do
+      it_behaves_like "an endpoint that looks for a resource", "l'usager·ère n'est pas trouvé·e" do
         let(:invitation_token) { "abcd" }
-
-        schema "$ref" => "#/components/schemas/error_not_found"
-
-        run_test!
       end
     end
   end

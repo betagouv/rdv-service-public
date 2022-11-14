@@ -11,6 +11,14 @@ module ApiSpecSharedExamples
     end
   end
 
+  shared_context "an endpoint that looks for a resource" do |details|
+    response 404, "Renvoie 'not_found' quand #{details}" do
+      schema "$ref" => "#/components/schemas/error_not_found"
+
+      run_test!
+    end
+  end
+
   shared_context "a rate limited endpoint" do |method, path|
     response 429, "Renvoie 'too_many_requests' quand la limite d'appels est atteinte" do
       schema "$ref" => "#/components/schemas/error_too_many_request"

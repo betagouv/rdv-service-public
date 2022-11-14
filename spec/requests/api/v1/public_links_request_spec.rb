@@ -73,14 +73,8 @@ describe "Public links API", swagger_doc: "v1/api.json" do
         it { expect(parsed_response_body).to match(missing: "territory") }
       end
 
-      response 404, "Retourne 'not_found' quand le territory ne peut pas être trouvé" do
+      it_behaves_like "an endpoint that looks for a resource", "le territory ne peut pas être trouvé" do
         let(:territory) { "unknown" }
-
-        schema "$ref" => "#/components/schemas/error_not_found"
-
-        run_test!
-
-        it { expect(parsed_response_body).to match(not_found: "territory") }
       end
 
       it_behaves_like "a rate limited endpoint", :get, Rails.application.routes.url_helpers.api_v1_public_links_path do

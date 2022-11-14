@@ -290,7 +290,7 @@ describe "Users API", swagger_doc: "v1/api.json" do
 
         it { expect(user.reload.invitation_due_at).to eq(user.invitation_created_at + User.invite_for) }
       end
-      
+
       it_behaves_like "an authenticated endpoint" do
         let!(:user) { instance_double(User, id: "123") }
       end
@@ -604,14 +604,10 @@ describe "Users API", swagger_doc: "v1/api.json" do
         run_test!
       end
 
-      response 404, "Renvoie 'not_found' quand l'usager·ère est lié·e à une autre organisation" do
+      it_behaves_like "an endpoint that looks for a resource", "l'usager·ère est lié·e à une autre organisation" do
         let!(:another_org) { create(:organisation) }
         let!(:agent) { create(:agent, basic_role_in_organisations: [organisation, another_org]) }
         let!(:user) { create(:user, organisations: [another_org]) }
-
-        schema "$ref" => "#/components/schemas/error_not_found"
-
-        run_test!
       end
     end
   end
