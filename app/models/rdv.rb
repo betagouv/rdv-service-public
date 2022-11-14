@@ -160,7 +160,7 @@ class Rdv < ApplicationRecord
   end
 
   def cancellable_by_user?
-    !cancelled? && !collectif? && motif.rdvs_cancellable_by_user? && starts_at > 4.hours.from_now
+    !cancelled? && motif.rdvs_cancellable_by_user? && starts_at > 4.hours.from_now
   end
 
   def editable_by_user?

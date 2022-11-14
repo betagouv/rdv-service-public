@@ -26,9 +26,10 @@ ul.list-group.list-group-flush
   li.list-group-item
     .fa.fa-user>
     = users_to_sentence(rdv.users)
-    span>
-    = link_to t(".change_participant"), users_rdv_participations_path(rdv)
-    .fa.fa-edit<
+    - if current_user.present? && !current_user.only_invited?
+      span>
+      = link_to t(".change_participant"), users_rdv_participations_path(rdv)
+      .fa.fa-edit<
   - if @can_see_rdv_motif
     li.list-group-item
       i.fa.fa-info-circle>
@@ -50,8 +51,10 @@ ul.list-group.list-group-flush
     - if policy([:user, rdv]).edit?
        = link_to "Déplacer le RDV", creneaux_users_rdv_path(rdv), class: "btn btn-outline-primary"
   .text-right.mt-2
-    - if policy([:user, rdv]).cancel?
+    - if policy([:user, rdv]).cancel? && !rdv.collectif?
         = link_to "Annuler le RDV", "#", data: { toggle: "modal", target: "#js-cancel-rdv-modal-#{rdv.id}" }, class: "btn btn-outline-danger"
+    - if policy([:user, rdv]).cancel_participation? && rdv.collectif?
+        = link_to "Annuler votre participation au RDV", "#", data: { toggle: "modal", target: "#js-cancel-participation-modal-#{rdv.id}" }, class: "btn btn-outline-danger"
 
 = render( \
   "common/modal_confirmation", \
@@ -60,5 +63,15 @@ ul.list-group.list-group-flush
   cancel_message: "Non", \
   confirm_path: cancel_users_rdv_path(rdv), \
   confirm_message: "Oui, annuler le RDV", \
+  confirm_link_options: { class: "btn btn-danger", method: :put } \
+)
+
+= render( \
+  "common/modal_confirmation", \
+  id: "js-cancel-participation-modal-#{rdv.id}", \
+  body_message: rdv.motif.cancellation_warning, \
+  cancel_message: "Non", \
+  confirm_path: users_rdv_participations_cancel_path(rdv), \
+  confirm_message: "Oui, annuler votre participation RDV", \
   confirm_link_options: { class: "btn btn-danger", method: :put } \
 )

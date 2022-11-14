@@ -22,6 +22,11 @@ class User::RdvPolicy < ApplicationPolicy
     show? && record.cancellable_by_user?
   end
 
+  def cancel_participation?
+    existing_participation = record.rdvs_users.find_by(user: current_user)
+    cancel? && existing_participation.present? && existing_participation.not_cancelled?
+  end
+
   def edit?
     show? && record.editable_by_user?
   end
