@@ -28,7 +28,6 @@ CSS_COLOR_NAMES = {
   "darkgray" => "#a9a9a9",
   "darkgreen" => "#006400",
   "darkgrey" => "#a9a9a9",
-  "darkergrey" => "#898989",
   "darkkhaki" => "#bdb76b",
   "darkmagenta" => "#8b008b",
   "darkolivegreen" => "#556b2f",
