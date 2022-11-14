@@ -289,6 +289,24 @@ RSpec.configure do |config|
             },
             required: %w[send_lifecycle_notifications send_reminder_notification status user],
           },
+          public_links: {
+            type: "object",
+            properties: {
+              public_links: {
+                type: "array",
+                items: { "$ref" => "#/components/schemas/public_link" },
+              },
+            },
+            required: %w[public_links],
+          },
+          public_link: {
+            type: "object",
+            properties: {
+              external_id: { type: "string" },
+              public_link: { type: "string" },
+            },
+            required: %w[external_id public_link],
+          },
           meta: {
             type: "object",
             properties: {
@@ -338,6 +356,13 @@ RSpec.configure do |config|
               },
             },
             required: %w[errors],
+          },
+          error_missing: {
+            type: "object",
+            properties: {
+              missing: { type: "string" },
+            },
+            required: %w[missing],
           },
           error_not_found: {
             type: "object",

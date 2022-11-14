@@ -56,6 +56,8 @@ describe "Public links API", swagger_doc: "v1/api.json" do
           # Organisation G does not exist
         end
 
+        schema "$ref" => "#/components/schemas/public_links"
+
         run_test!
 
         it { expect(parsed_response_body).to match_array(expected_body) }
@@ -64,6 +66,8 @@ describe "Public links API", swagger_doc: "v1/api.json" do
       response 400, "Retourne 'bad_request' quand le territory est manquant" do
         let(:territory) { nil }
 
+        schema "$ref" => "#/components/schemas/error_missing"
+
         run_test!
 
         it { expect(parsed_response_body).to match(missing: "territory") }
@@ -71,6 +75,8 @@ describe "Public links API", swagger_doc: "v1/api.json" do
 
       response 404, "Retourne 'not_found' quand le territory ne peut pas être trouvé" do
         let(:territory) { "unknown" }
+
+        schema "$ref" => "#/components/schemas/error_not_found"
 
         run_test!
 
