@@ -23,6 +23,6 @@ json.array! @rdvs do |rdv|
     json.backgroundColor rdv.motif&.color
   else
     json.textColor "white"
-    json.backgroundColor "darkergrey"
+    json.backgroundColor "#757575" # Use a dark enough gray to be accessible
   end
 end
