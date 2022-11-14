@@ -18,7 +18,7 @@ RSpec.configure do |config|
     "v1/api.json" => {
       openapi: "3.0.1",
       info: {
-        title: "API RDV Solidarités V1",
+        title: "API RDV Solidarités",
         version: "v1",
         description: File.read(Rails.root.join("docs/api/v1/description_api.md")),
       },
