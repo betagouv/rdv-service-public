@@ -24,7 +24,11 @@ describe "agents page", js: true do
     login_as agent
 
     path = admin_organisation_agent_agenda_path(organisation, agent)
-    expect_page_to_be_axe_clean(path)
+
+    visit path
+    expect(page).to have_current_path(path)
+    expect(page).to have_content(Rdv.last.users.last.full_name)
+    expect(page).to be_axe_clean
   end
 
   it "admin organisation plage_ouvertures path is accessible" do
