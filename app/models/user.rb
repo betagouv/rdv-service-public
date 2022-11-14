@@ -144,6 +144,10 @@ class User < ApplicationRecord
     @profiles[organisation]
   end
 
+  def participation_for(rdv)
+    rdv.rdvs_users.to_a.find { |participation| participation.user_id == id }
+  end
+
   def deleted_email
     "user_#{id}@deleted.rdv-solidarites.fr"
   end

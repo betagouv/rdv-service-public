@@ -18,7 +18,7 @@
       = show_participants_count(rdv)
 
   .card-footer
-    - if current_user&.rdvs&.include?(rdv)
+    - if current_user.participation_for(rdv) && current_user.participation_for(rdv).not_cancelled?
       .text-muted Vous êtes déjà inscrit pour cet atelier.
     - else
       = link_to new_users_rdv_participation_path(rdv), class: "d-flex card-text mb-2" do
