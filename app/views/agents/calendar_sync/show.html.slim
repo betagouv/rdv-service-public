@@ -1,17 +1,36 @@
 - content_for :title, t(".title")
 
-p Vous pouvez synchroniser votre agenda de #{current_domain.name} avec un agenda externe, comme Outlook ou Google Calendar.
+- if @agent.microsoft_graph_token?
 
-p
-  | Pour cela, allez dans votre agenda externe et ajoutez un nouveau calendrier avec cette URL :
+  p Votre compte Outlook est bien connecté à votre compte RDV Solidarités.
+
+  p Vos rendez-vous pris sur RDV Solidarités y apparaitront en temps réel.
+
+- else
+
+  p Vous pouvez synchroniser votre agenda de #{current_domain.name} avec un agenda externe, comme Outlook ou Google Calendar.
+
+  p
+    | Pour cela, 2 méthodes :
+
+  h4.mt-3.mb-2 Connexion à Outlook
+
+  p Vous pouvez envoyer automatiquement vos rdv dans Outlook en vous connectant à votre compte grâce au bouton ci-dessous.
+
+  = link_to "Se connecter avec Outlook", "/omniauth/microsoft_graph", class: "btn btn-primary mb-4", method: :post
+
+
+  h4.mb-2 Lien de synchronisation
+
+  p.mb-1 Allez dans votre agenda externe et ajoutez un nouveau calendrier avec cette URL :
 
   - calendar_url = ics_calendar_url(@agent.calendar_uid, protocol: :webcal, format: :ics)
   =  link_to(calendar_url, calendar_url, class: "mb-1")
 
-p Tous vos rendez-vous de #{current_domain.name} seront copiés automatiquement au fur et à mesure de leur création (ou modification).
-p Pour plus d'informations sur cette fonctionnalité, #{link_to("consultez la FAQ", faq_url, target: :blank)}.
+  p Tous vos rendez-vous de #{current_domain.name} seront copiés automatiquement au fur et à mesure de leur création (ou modification).
+  p Pour plus d'informations sur cette fonctionnalité, #{link_to("consultez la FAQ", faq_url, target: :blank)}.
 
-p Si jamais votre lien de synchronisation a été partagé par erreur et qu’il y a un risque que quelqu’un d’autre accède à votre liste de rendez-vous, vous pouvez le réinitialiser immédiatement.
+  p Si jamais votre lien de synchronisation a été partagé par erreur et qu’il y a un risque que quelqu’un d’autre accède à votre liste de rendez-vous, vous pouvez le réinitialiser immédiatement.
 
-= simple_form_for(@agent, url: agents_calendar_sync_path) do |f|
-  = f.submit "Réinitialiser mon lien de synchronisation", class: "btn btn-secondary", data: { confirm: "Attention, si vous réinitialisez votre lien de synchronisation, vous devrez entrer le nouveau lien dans votre agenda externe" }
+  = simple_form_for(@agent, url: agents_calendar_sync_path) do |f|
+    = f.submit "Réinitialiser mon lien de synchronisation", class: "btn btn-secondary", data: { confirm: "Attention, si vous réinitialisez votre lien de synchronisation, vous devrez entrer le nouveau lien dans votre agenda externe" }

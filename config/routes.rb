@@ -93,6 +93,7 @@ Rails.application.routes.draw do
       end
       resource :calendar_sync, only: %i[show update], controller: :calendar_sync
     end
+    get "omniauth/microsoft_graph/callback" => "omniauth_callbacks#microsoft_graph"
   end
 
   get "/calendrier/:id", controller: :ics_calendar, action: :show, as: :ics_calendar

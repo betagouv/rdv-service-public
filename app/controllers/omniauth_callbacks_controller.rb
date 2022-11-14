@@ -27,4 +27,26 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
       redirect_to root_path
     end
   end
+
+  def microsoft_graph
+    @agent = Agent.find_by(email: microsoft_graph_email)
+    if @agent.present? && @agent.update(microsoft_graph_token: microsoft_graph_token)
+      flash[:notice] = "Votre compte Outlook a bien été connecté"
+    else
+      flash[:alert] = "Votre compte Outlook n'a pas pu être connecté"
+      Rails.logger.error("Outlook OmniAuth failed for #{microsoft_graph_email}")
+    end
+    redirect_to agents_calendar_sync_path
+  end
+
+  private
+
+  def microsoft_graph_email
+    @microsoft_graph_email ||=
+      request.env.dig("omniauth.auth", "extra", "raw_info", "user_principal_name")
+  end
+
+  def microsoft_graph_token
+    request.env.dig("omniauth.auth", "credentials", "token")
+  end
 end
