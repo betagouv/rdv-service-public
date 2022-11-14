@@ -318,8 +318,18 @@ RSpec.configure do |config|
             },
             required: %w[current_page next_page prev_page total_pages total_count],
           },
-          errors_generic: {
+          errors_unprocessable_entity: {
             type: "object",
+            properties: {
+              errors: {
+                type: "object",
+              },
+              error_messages: {
+                type: "array",
+                items: { type: "string" },
+              },
+            },
+            required: %w[errors],
           },
           error_too_many_request: {
             type: "object",
