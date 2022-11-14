@@ -83,21 +83,8 @@ describe "Public links API", swagger_doc: "v1/api.json" do
         it { expect(parsed_response_body).to match(not_found: "territory") }
       end
 
-      response 429, "Limite d'appels atteinte" do
-        let!(:terr) { create(:territory, departement_number: "CN") }
-        let(:territory) { terr.departement_number }
-
-        schema "$ref" => "#/components/schemas/error_too_many_request"
-
-        before do
-          Rack::Attack.enabled = true
-          Rack::Attack.reset!
-          3.times do
-            get api_v1_public_links_path
-          end
-        end
-
-        run_test!
+      it_behaves_like "a rate limited endpoint", :get, Rails.application.routes.url_helpers.api_v1_public_links_path do
+        let(:territory) { "CN" }
       end
     end
   end
