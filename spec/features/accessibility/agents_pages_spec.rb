@@ -16,7 +16,8 @@ describe "agents page", js: true do
     expect_page_to_be_axe_clean(path)
   end
 
-  it "agenda with 3 rdvs is accessible" do
+  # TODO: fix this spec (https://github.com/betagouv/rdv-solidarites.fr/issues/2952)
+  xit "agenda with 3 rdvs is accessible" do
     territory = create(:territory, departement_number: "75")
     organisation = create(:organisation, territory: territory)
     agent = create(:agent, email: "totoagent@example.com", basic_role_in_organisations: [organisation])
