@@ -47,17 +47,7 @@ describe "Agents API", swagger_doc: "v1/api.json" do
         it { expect(parsed_response_body["agents"].pluck("id")).to match_array([agent.id, agent2.id]) }
       end
 
-      response 401, "Problème d'authentification" do
-        let(:agent) { create(:agent) }
-        let(:auth_headers) { api_auth_headers_for_agent(agent) }
-        let(:"access-token") { "false" }
-        let(:uid) { auth_headers["uid"].to_s }
-        let(:client) { auth_headers["client"].to_s }
-
-        schema "$ref" => "#/components/schemas/error_authentication"
-
-        run_test!
-      end
+      it_behaves_like "an authenticated endpoint"
     end
   end
 end

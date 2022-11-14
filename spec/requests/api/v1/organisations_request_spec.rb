@@ -18,16 +18,16 @@ describe "Organisations API", swagger_doc: "v1/api.json" do
       parameter name: "departement_number", in: :query, type: :string, description: "Le numéro ou code de département du territoire concerné", example: "26", required: false
       parameter name: "city_code", in: :query, type: :string, description: "Le code INSEE de la localité", example: "26323", required: false
 
+      let(:auth_headers) { api_auth_headers_for_agent(agent) }
+      let(:"access-token") { auth_headers["access-token"].to_s }
+      let(:uid) { auth_headers["uid"].to_s }
+      let(:client) { auth_headers["client"].to_s }
+
       response 200, "Retourne des Organisations" do
         let!(:organisations) { create_list(:organisation, 5) }
         let!(:agent) { create(:agent, basic_role_in_organisations: Organisation.all) }
         let!(:other_organisation) { create(:organisation) }
         let!(:other_agent) { create(:agent, basic_role_in_organisations: [other_organisation]) }
-
-        let(:auth_headers) { api_auth_headers_for_agent(agent) }
-        let(:"access-token") { auth_headers["access-token"].to_s }
-        let(:uid) { auth_headers["uid"].to_s }
-        let(:client) { auth_headers["client"].to_s }
 
         schema "$ref" => "#/components/schemas/organisations"
 
@@ -45,11 +45,6 @@ describe "Organisations API", swagger_doc: "v1/api.json" do
         let(:departement_number) { "26" }
         let(:city_code) { "26323" }
 
-        let(:auth_headers) { api_auth_headers_for_agent(agent) }
-        let(:"access-token") { auth_headers["access-token"].to_s }
-        let(:uid) { auth_headers["uid"].to_s }
-        let(:client) { auth_headers["client"].to_s }
-
         before do
           allow(Users::GeoSearch).to receive(:new)
             .with(departement: departement_number, city_code: city_code, street_ban_id: nil)
@@ -63,26 +58,14 @@ describe "Organisations API", swagger_doc: "v1/api.json" do
 
       response 200, "when there is no organisation", document: false do
         let(:agent) { create(:agent) }
-        let(:auth_headers) { api_auth_headers_for_agent(agent) }
-        let(:"access-token") { auth_headers["access-token"].to_s }
-        let(:uid) { auth_headers["uid"].to_s }
-        let(:client) { auth_headers["client"].to_s }
 
         run_test!
 
         it { expect(parsed_response_body[:organisations]).to eq([]) }
       end
 
-      response 401, "Problème d'authentification" do
+      it_behaves_like "an authenticated endpoint" do
         let(:agent) { create(:agent) }
-        let(:auth_headers) { api_auth_headers_for_agent(agent) }
-        let(:"access-token") { "false" }
-        let(:uid) { auth_headers["uid"].to_s }
-        let(:client) { auth_headers["client"].to_s }
-
-        schema "$ref" => "#/components/schemas/error_authentication"
-
-        run_test!
       end
     end
   end

@@ -48,13 +48,7 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
         it { expect(parsed_response_body["absences"].pluck("id")).to match_array([absence1.id, absence2.id]) }
       end
 
-      response 401, "Problème d'authentification" do
-        let(:"access-token") { "false" }
-
-        schema "$ref" => "#/components/schemas/error_authentication"
-
-        run_test!
-      end
+      it_behaves_like "an authenticated endpoint"
     end
 
     post "Créer une absence" do
@@ -75,6 +69,7 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
       parameter name: "end_time", in: :query, type: :string, description: "Heure de fin de l'absence", example: "15:00"
 
       let(:organisation) { create(:organisation) }
+      let(:organisation_id) { organisation.id }
       let!(:agent) { create(:agent, id: 12, email: "agent@example.com", basic_role_in_organisations: [organisation]) }
       let(:auth_headers) { api_auth_headers_for_agent(agent) }
       let(:"access-token") { auth_headers["access-token"].to_s }
@@ -82,7 +77,6 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
       let(:client) { auth_headers["client"].to_s }
 
       response 200, "Crée et renvoie une absence" do
-        let(:organisation_id) { organisation.id }
         let(:agent_id) { 12 }
         let(:title) { "Super absence" }
         let(:first_day) { "2023-11-20" }
@@ -115,7 +109,6 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
       end
 
       response 200, "Crée et renvoie une absence quand c'est l'email de l'agent qu'on utilise", document: false do
-        let(:organisation_id) { organisation.id }
         let(:agent_email) { "agent@example.com" }
         let(:title) { "Super absence" }
         let(:first_day) { "2023-11-20" }
@@ -134,8 +127,15 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
         it { expect(created_absence.agent).to eq(agent) }
       end
 
+      it_behaves_like "an authenticated endpoint" do
+        let(:title) { "Super absence" }
+        let(:first_day) { "2023-11-20" }
+        let(:start_time) { "08:00" }
+        let(:end_day) { "2023-11-20" }
+        let(:end_time) { "15:00" }
+      end
+
       response 404, "Renvoie 'not_found' quand l'agent.e est introuvable" do
-        let(:organisation_id) { organisation.id }
         let(:agent_email) { "test@example.com" }
         let(:title) { "Super absence" }
         let(:first_day) { "2023-11-20" }
@@ -153,7 +153,6 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
       end
 
       response 422, "Renvoie 'unprocessable_entity' quand end_time est avant start_time ou que les formats ne sont pas corrects" do
-        let(:organisation_id) { organisation.id }
         let(:agent_email) { "agent@example.com" }
         let(:title) { "Super absence" }
         let(:first_day) { "2023-11-20" }
@@ -171,7 +170,6 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
       end
 
       response 422, "Renvoie 'unprocessable_entity' quand le format du start_time ou end_time n'est pas correct", document: false do
-        let(:organisation_id) { organisation.id }
         let(:agent_email) { "agent@example.com" }
         let(:title) { "Super absence" }
         let(:first_day) { "2023-11-20" }
@@ -190,7 +188,6 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
 
       context "Crée une absence pour un.e agent.e dans un service différent" do
         let!(:agent2) { create(:agent, basic_role_in_organisations: [organisation], service: create(:service), email: "another@example.com") }
-        let(:organisation_id) { organisation.id }
         let(:agent_email) { "another@example.com" }
         let(:title) { "Super absence" }
         let(:first_day) { "2023-11-20" }
@@ -259,13 +256,7 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
         it { expect(parsed_response_body[:absence][:id]).to eq(absence1.id) }
       end
 
-      response 401, "Problème d'authentification" do
-        let(:"access-token") { "false" }
-
-        schema "$ref" => "#/components/schemas/error_authentication"
-
-        run_test!
-      end
+      it_behaves_like "an authenticated endpoint"
 
       response 403, "Pas autorisé à accéder à cette absence" do
         let(:absence_id) { absence2.id }
@@ -323,13 +314,7 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
         it { expect(absence1.reload.title).to eq("Nouveau titre") }
       end
 
-      response 401, "Problème d'authentification" do
-        let(:"access-token") { "false" }
-
-        schema "$ref" => "#/components/schemas/error_authentication"
-
-        run_test!
-      end
+      it_behaves_like "an authenticated endpoint"
 
       response 403, "Pas autorisé à accéder à cette absence" do
         let(:absence_id) { absence2.id }
@@ -378,13 +363,7 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
         it { expect(Absence.count).to eq(absence_count_before - 1) }
       end
 
-      response 401, "Problème d'authentification" do
-        let(:"access-token") { "false" }
-
-        schema "$ref" => "#/components/schemas/error_authentication"
-
-        run_test!
-      end
+      it_behaves_like "an authenticated endpoint"
 
       response 403, "Pas autorisé à accéder à cette absence" do
         let(:absence_id) { absence2.id }

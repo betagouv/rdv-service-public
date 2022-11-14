@@ -47,14 +47,8 @@ describe "Users API", swagger_doc: "v1/api.json" do
         it { expect(parsed_response_body["user"]["id"]).to eq(user.id) }
       end
 
-      response 401, "Problème d'authentification" do
+      it_behaves_like "an authenticated endpoint" do
         let!(:user) { instance_double(User, id: "123") }
-
-        let(:"access-token") { "false" }
-
-        schema "$ref" => "#/components/schemas/error_authentication"
-
-        run_test!
       end
 
       response 403, "Renvoie 'unauthorized' quand l'usager·ère est lié·e à une autre organisation" do
@@ -164,13 +158,7 @@ describe "Users API", swagger_doc: "v1/api.json" do
         it { expect(user.reload.last_name).to eq(last_name) }
       end
 
-      response 401, "Problème d'authentification" do
-        let(:"access-token") { "false" }
-
-        schema "$ref" => "#/components/schemas/error_authentication"
-
-        run_test!
-      end
+      it_behaves_like "an authenticated endpoint"
 
       response 422, "Des paramètres sont manquants ou mal formés ou impossibles" do
         let(:"organisation_ids[]") { nil }
@@ -247,14 +235,8 @@ describe "Users API", swagger_doc: "v1/api.json" do
         it { expect(user.reload.invitation_due_at).to eq(user.invitation_created_at + User.invite_for) }
       end
 
-      response 401, "Problème d'authentification" do
+      it_behaves_like "an authenticated endpoint" do
         let!(:user) { instance_double(User, id: "123") }
-
-        let(:"access-token") { "false" }
-
-        schema "$ref" => "#/components/schemas/error_authentication"
-
-        run_test!
       end
 
       response 403, "Renvoie 'unauthorized' quand l'usager·ère est lié·e à une autre organisation" do
@@ -308,15 +290,9 @@ describe "Users API", swagger_doc: "v1/api.json" do
 
         it { expect(user.reload.invitation_due_at).to eq(user.invitation_created_at + User.invite_for) }
       end
-
-      response 401, "Problème d'authentification" do
+      
+      it_behaves_like "an authenticated endpoint" do
         let!(:user) { instance_double(User, id: "123") }
-
-        let(:"access-token") { "false" }
-
-        schema "$ref" => "#/components/schemas/error_authentication"
-
-        run_test!
       end
 
       response 403, "Renvoie 'unauthorized' quand l'usager·ère est lié·e à une autre organisation" do
@@ -372,6 +348,8 @@ describe "Users API", swagger_doc: "v1/api.json" do
 
         it { expect(parsed_response_body["users"].pluck("id")).to contain_exactly(user.id, user2.id) }
       end
+
+      it_behaves_like "an authenticated endpoint"
     end
 
     post "Créer un·e usager·ère" do
@@ -482,15 +460,10 @@ describe "Users API", swagger_doc: "v1/api.json" do
         it { expect(created_user.last_name).to eq(last_name) }
       end
 
-      response 401, "Problème d'authentification" do
+      it_behaves_like "an authenticated endpoint" do
         let(:"organisation_ids[]") { [organisation.id] }
         let(:first_name) { "Johnny" }
         let(:last_name) { "Silverhand" }
-        let(:"access-token") { "false" }
-
-        schema "$ref" => "#/components/schemas/error_authentication"
-
-        run_test!
       end
 
       response 422, "Des paramètres sont manquants ou mal formés ou impossibles" do
@@ -572,6 +545,8 @@ describe "Users API", swagger_doc: "v1/api.json" do
 
         it { expect(parsed_response_body["users"]).to eq([]) }
       end
+
+      it_behaves_like "an authenticated endpoint"
     end
   end
 
@@ -616,13 +591,8 @@ describe "Users API", swagger_doc: "v1/api.json" do
         it { expect(parsed_response_body["user"]["id"]).to eq(user.id) }
       end
 
-      response 401, "Problème d'authentification" do
+      it_behaves_like "an authenticated endpoint" do
         let!(:user) { instance_double(User, id: "123") }
-        let(:"access-token") { "false" }
-
-        schema "$ref" => "#/components/schemas/error_authentication"
-
-        run_test!
       end
 
       response 403, "Renvoie 'unauthorized' quand l'agent ne fait pas partie de l'organisation" do

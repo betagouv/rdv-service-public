@@ -71,17 +71,11 @@ describe "User Profile authentified API", swagger_doc: "v1/api.json" do
         it { expect(UserProfile.count).to eq(user_profile_count_before) }
       end
 
-      response 401, "Problème d'authentification" do
+      it_behaves_like "an authenticated endpoint" do
         let(:organisation_id) { organisation.id }
         let(:user_id) { user.id }
         let(:logement) { "sdf" }
         let(:notes) { "Super Note" }
-
-        let(:"access-token") { "false" }
-
-        schema "$ref" => "#/components/schemas/error_authentication"
-
-        run_test!
       end
 
       response 403, "Impossible de créer un profil utilisateur quand l'organisation n'est pas connue", document: false do

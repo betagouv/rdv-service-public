@@ -62,20 +62,11 @@ describe "RDV authentified API", swagger_doc: "v1/api.json" do
           it { expect(parsed_response_body[:motifs]).to eq(MotifBlueprint.render_as_json([motif1, motif2])) }
         end
 
-        response 401, "Renvoie un problème d'authentification" do
+        it_behaves_like "an authenticated endpoint" do
+          let!(:agent) { create(:agent, service: service, basic_role_in_organisations: [organisation]) }
           let!(:service) { create(:service) }
           let!(:organisation) { create(:organisation) }
-          let(:"access-token") { "false" }
-
-          let!(:agent) { create(:agent, service: service, basic_role_in_organisations: [organisation]) }
-
-          let!(:motif) { create(:motif, organisation: organisation, service: service) }
-
           let(:organisation_id) { organisation.id }
-
-          schema "$ref" => "#/components/schemas/error_authentication"
-
-          run_test!
         end
       end
 
