@@ -40,6 +40,7 @@ yarn-debug.log*
 .env.development
 .ruby-gemset
 lapins.kdbx
+.vscode/settings.json
 
 config/database.yml.backup
 coverage/
