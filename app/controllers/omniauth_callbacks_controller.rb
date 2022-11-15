@@ -30,7 +30,7 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   def microsoft_graph
     @agent = Agent.find_by(email: microsoft_graph_email)
-    if @agent.present? && @agent.update(microsoft_graph_token: microsoft_graph_token)
+    if @agent.present? && @agent.update(microsoft_graph_token: microsoft_graph_token, refresh_microsoft_graph_token: refresh_microsoft_graph_token)
       flash[:notice] = "Votre compte Outlook a bien été connecté"
     else
       flash[:alert] = "Votre compte Outlook n'a pas pu être connecté"
@@ -44,6 +44,10 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
   def microsoft_graph_email
     @microsoft_graph_email ||=
       request.env.dig("omniauth.auth", "extra", "raw_info", "user_principal_name")
+  end
+
+  def refresh_microsoft_graph_token
+    request.env.dig("omniauth.auth", "credentials", "refresh_token")
   end
 
   def microsoft_graph_token

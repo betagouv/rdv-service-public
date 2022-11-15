@@ -237,6 +237,7 @@ ActiveRecord::Schema.define(version: 2022_11_14_212645) do
     t.string "current_sign_in_ip"
     t.string "last_sign_in_ip"
     t.text "microsoft_graph_token"
+    t.text "refresh_microsoft_graph_token"
     t.index ["calendar_uid"], name: "index_agents_on_calendar_uid", unique: true
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true
     t.index ["email"], name: "index_agents_on_email", unique: true

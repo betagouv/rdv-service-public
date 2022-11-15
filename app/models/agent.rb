@@ -3,6 +3,8 @@
 class SoftDeleteError < StandardError; end
 
 class Agent < ApplicationRecord
+  include OutlookSynchronizable
+
   # Mixins
   has_paper_trail(
     only: %w[email first_name last_name starts_at service_id invitation_sent_at invitation_accepted_at]
