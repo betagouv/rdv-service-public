@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# TODO: Supprimer ce fichier un mois après la migration.
+#   Le seul cookie chiffré que nous utilisons semble être `user_name_initials_verified_`
+
 Rails.application.config.after_initialize do
   Rails.application.config.action_dispatch.cookies_rotations.tap do |cookies|
     salt = Rails.application.config.action_dispatch.authenticated_encrypted_cookie_salt
