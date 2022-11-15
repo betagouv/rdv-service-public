@@ -86,61 +86,6 @@ module OutlookSynchronizable
     make_api_call("POST", request_url, nil, payload)
   end
 
-  # view_size (int): maximum number of results
-  # page (int): What page to fetch (multiple of view size)
-  # fields (array): An array of field names to include in results
-  # sort (hash): { sort_on => field_to_sort_on, sort_order => 'ASC' | 'DESC' }
-  def get_events(view_size = 20, page = 1, fields = nil, sort = nil)
-    refresh_outlook_token
-
-    request_params = {
-      "$top" => view_size,
-      "$skip" => (page - 1) * view_size,
-    }
-    request_params["$select"] = fields.join(",") unless fields.nil?
-    request_params["$orderby"] = "#{sort[:sort_field]} #{sort[:sort_order]}" unless sort.nil?
-
-    make_api_call "GET", "me/Events", request_params
-  end
-
-  # id (string): The Id of the event to retrieve
-  # fields (array): An array of field names to include in results
-  def get_event_by_id(id, fields = nil)
-    refresh_outlook_token
-
-    request_params = if field.present?
-                       { "$select" => fields.join(",") }
-                     end
-
-    make_api_call("GET", "me/Events/#{id}", request_params)
-  end
-
-  # window_start (DateTime): The earliest time (UTC) to include in the view
-  # window_end (DateTime): The latest time (UTC) to include in the view
-  # id (string): The Id of the calendar to view
-  #              If nil, the default calendar is used
-  # fields (array): An array of field names to include in results
-  # limit (int): The number of items to return. Default is 10.
-  def get_calendar_view(window_start, window_end, id = nil, fields = nil, limit = 10)
-    refresh_outlook_token
-
-    request_url = if id.present?
-                    "me/Calendars/#{id}"
-                  else
-                    "me/CalendarView"
-                  end
-
-    request_params = {
-      "startDateTime" => window_start.strftime("%Y-%m-%dT%H:%M:%SZ"),
-      "endDateTime" => window_end.strftime("%Y-%m-%dT%H:%M:%SZ"),
-      "$top" => limit,
-    }
-
-    request_params["$select"] = fields.join(",") unless fields.nil?
-
-    make_api_call("GET", request_url, request_params)
-  end
-
   # payload (hash): a JSON hash representing the event entity
   # folder_id (string): The Id of the calendar folder to create the event in.
   #                     If nil, event is created in the default calendar folder.
