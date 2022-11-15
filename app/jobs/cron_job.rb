@@ -45,7 +45,10 @@ class CronJob < ApplicationJob
 
     def perform
       Rdv.not_cancelled.day_after_tomorrow.each do |rdv|
-        SendRemindersJob.perform_later(rdv)
+        Notifiers::RdvUpcomingReminder.perform_with(rdv, nil)
+      rescue StandardError => e # don't interrupt the whole loop when one RDV crashes
+        Sentry.add_breadcrumb(Sentry::Breadcrumb.new(message: "Could not send reminder", data: { rdv_id: rdv.id }))
+        Sentry.capture_exception(e)
       end
     end
   end
