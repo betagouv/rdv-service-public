@@ -2,14 +2,41 @@ L'API de RDV-Solidarités vous permet de lire des données dans notre base depui
 
 Toutes les fonctionnalités de RDV-Solidarités ne sont pas encore disponibles via l’API. Contactez-nous si vous avez besoin de fonctionnalités qui ne sont pas encore présentes.
 
-# Verbe HTTP
+# Requêtes
 
-On utilise les verbes HTTP conventionnels pour manipuler les ressources :
+L'API adhère aux principes REST :
 
-- Lecture : `GET`
-- Création : `POST`
-- Mise à jour : `PATCH`
-- Suppression : `DELETE`
+- requêtes `GET` : lecture sans modification
+- requêtes `POST` : création de nouvelle ressource
+- requêtes `PATCH` : mise à jour d'une ressource existante
+- requêtes `DELETE` : suppression d'une ressource
+
+Les paramètres des requêtes `GET` doivent être envoyés via les query string de la requête.
+
+Les paramètres des requêtes `POST` doivent être transmis dans le corps de la requête sous un format JSON valide, et doivent contenir le header `Content-Type: application/json`.
+
+Les paramètres doivent respecter les formats suivants :
+- `DATE` : "YYYY-MM-DD" par exemple : "2021-10-21"
+- `TIME` : H:m[:s], par exemple : "10:30"
+
+# Versionnage
+
+L'API est versionnée. La version actuelle est 1.0 (référencée comme v1 dans les points de terminaison).
+
+# Routes
+
+Les points de terminaison de l'API sont accessible par une route de la forme : `https://<domain>/api/<version>/<endpoint>`.
+
+Avec :
+
+- `version` est la version de l'API
+- `endpoint` est le nom du point de terminaison
+
+Par exemple, on aura : `https://<domain>/api/v1/absences`
+
+Pour la version production, les requêtes doivent être adressées à https://www.rdv-solidarites.fr et non à https://rdv-solidarites.fr.
+
+Pour la version démo, les requêtes doivent être adressées à https://demo.rdv-solidarites.fr.
 
 # Authentification
 
@@ -86,47 +113,58 @@ C'est à dire que les agents classiques ont accès à leur service uniquement, l
 
 Par défaut, les requêtes en lecture n'appliquent aucun filtre et retourneront toutes les ressources auxquelles a accès l'agent connecté. Par exemple si un agent admin fait une requête pour accéder à la liste des absences sans filtre, l'API retournera toutes les absences de tous les agents appartenant aux organisations dont fait partie cet agent admin, ce qui peut faire beaucoup.
 
-# Versionnage
 
-L'API est versionnée. La version actuelle est 1.0 (référencée comme v1 dans les points de terminaison).
-
-# Routes
-
-Les points de terminaison de l'API sont accessible par une route de la forme : `https://<domain>/api/<version>/<endpoint>`.
-
-Avec :
-
-- `version` est la version de l'API
-- `endpoint` est le nom du point de terminaison
-
-Par exemple, on aura : `https://<domain>/api/v1/absences`
 
 # Sérialisation
 
-Les ressources sont les éléments renvoyés par les points de terminaison. Elles sont sérialisées en JSON.
+L'API supporte uniquement le format JSON. Toutes les réponses envoyées par l'API contiendront le header `Content-Type: application/json` et leur contenu est présent dans le body dans un format JSON à désérialiser.
 
 # Pagination des réponses par listes
 
-Tous les points de terminaison qui retournent des listes sont paginés.
+Tous les points de terminaison qui retournent des listes sont paginés. De manière générale, tout point de terminaison qui retourne une liste peut retourner une liste vide.
+
+## Paramètres
 
 Le paramètre (optionnel) `page` permet d'accéder à une page donnée. Sauf précision contraire dans la documentation d'un point de terminaison donné, on retrouve 100 éléments par page.
 
-De manière générale, tout point de terminaison qui retourne une liste peut retourner une liste vide.
+## Résultats
+
+La réponse contient en outre un objet meta qui indique le nombre total de pages et d’items, par exemple :
+
+```rb
+{
+  […],
+  "meta": {
+      "current_page": 1,
+      "total_count": 112,
+      "total_pages": 2
+  }
+}
+```
 
 # Rate limiting
 
 L'utilisation de l'API est limitée pour les points de terminaison sans authentification. Vous pouvez effectuer au maximum 50 appels par minutes. Si vous dépassez cette limite, une erreur 429 vous sera renvoyée et vous trouverez le temps que vous devez attendre avant de relancer une requête dans le header (`Retry-After`).
 
+# Codes de retour
+
+L'API est susceptible de retourner les codes suivants :
+
+| Code  | Nom                   | Description                                                                   |
+| ----  | --------              | --------                                                                      |
+| `200` | Success               | Succès                                                                        |
+| `204` | No Content            | Succès mais la réponse ne contient pas de données (exemple : suppression)     |
+| `400` | Bad Request           | La requête est invalide                                                       |
+| `401` | Unauthorized          | L'authentification a échoué                                                   |
+| `403` | Forbidden             | Droits insuffisants pour réaliser l'action demandée                           |
+| `404` | Not Found             | La ressource est introuvable                                                  |
+| `422` | Unprocessable Entity  | La donnée transmise est mal formattée                                         |
+| `429` | Too Many Requests     | Trop de requêtes ont été effectuées                                           |
+| `500` | Internal Server Error | Une erreur serveur produite (l'équipe technique est notifiée automatiquement) |
+
 # Erreurs
 
-L'API est susceptible de retourner les erreurs suivantes :
+En cas d'erreur reconnue par le système (par exemple erreur 422), les champs suivants seront présents dans la réponse pour vous informer sur les problèmes :
 
-| Code  | Nom                   | Description                            |
-| ----  | --------              | --------                               |
-| `400` | Bad Request           | La requête est invalide                |
-| `401` | Unauthorized          | L'authentification a échoué            |
-| `403` | Forbidden             | La limite autorisée est atteinte       |
-| `404` | Not Found             | La ressource est introuvable           |
-| `422` | Unprocessable Entity  | La donnée transmise est mal formattée  |
-| `429` | Too Many Requests     | Trop de requêtes ont été effectuées    |
-| `500` | Internal Server Error | Une erreur serveur produite            |
+- `errors` : [ERREUR] : liste d'erreurs groupées par attribut problèmatique au format machine
+- `error_messages` : [ERREUR] : idem mais dans un format plus facilement lisible.
