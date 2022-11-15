@@ -394,7 +394,12 @@ RSpec.configure do |config|
         },
         {
           name: "User",
-          description: "Pour manipuler des usager·ères",
+          description:
+            "Désigne le compte unique d'un·e usager·ère.
+            Il contient les informations de l'état civil ainsi que des informations communes comme les préférences de notifications.
+            Un profil lie un·e usager·ère à une organisation.
+            La plupart n'ont un lien qu'avec une seule organisation, mais une partie interagit avec plusieurs.
+            Ce profil contient aussi quelques informations sur l'usager·ère, indépendantes et non-partagées entre organisations.",
         },
         {
           name: "Agent",
