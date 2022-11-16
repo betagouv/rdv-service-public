@@ -39,6 +39,16 @@
     strong> Professionnel(s) :
     = agents_to_sentence(rdv.agents)
 
+- if rdv.prescripteur
+  .d-flex.card-text.mt-1
+    div.mr-1
+      i.fa.fa-fw.fa-people-carry-box>
+    div
+      strong> Prescripteur&nbsp;:
+      = rdv.prescripteur.full_name
+      = " - #{rdv.prescripteur.email}"
+      = " - #{rdv.prescripteur.phone_number}" if rdv.prescripteur.phone_number.present?
+
 - if rdv.public_office? && rdv.overlapping_plages_ouvertures?
   div.my-3
     .alert.alert-warning.mt-1.mb-0
