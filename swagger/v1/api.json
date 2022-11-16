@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "API RDV Solidarités V1",
+    "title": "API RDV Solidarités",
     "version": "v1",
-    "description": "# Paramètres généraux de l'API\n\nL'API de RDV-Solidarités vous permet de lire des données dans notre base depuis votre logiciel.\n\nToutes les fonctionnalités de RDV-Solidarités ne sont pas encore disponibles via l’API. Contactez-nous si vous avez besoin de fonctionnalités qui ne sont pas encore présentes.\n\n## Authentification\n\nCertains points de terminaison sont authentifiés. Pour savoir comment y accéder, merci de vous référer à la documentation suivante : [authentification de l'API](https://rdv-solidarites.gitbook.io/guides-pour-rdv-solidarites/tech/api-interconnexions-entrantes/authentification-and-permissions).\n\n## Verbe HTTP\n\nOn utilise les verbes HTTP conventionnels pour manipuler les ressources :\n\n- Lecture: HTTP `GET`\n- Création: HTTP `POST`\n- Mise à jour: HTTP `PUT`\n\n## Versionnage\n\nL'API est versionnée. La version actuelle est 1.0 (référencée comme v1 dans les points de terminaison).\n\n## Routes\n\nLes points de terminaison de l'API sont accessible par une route de la forme : `https://<domain>/api/<version>/<endpoint>`.\n\nAvec :\n\n- `version` est la version de l'API\n- `endpoint` est le nom du point de terminaison\n\nPar exemple, on aura : `https://<domain>/api/v1/organizations`\n\n## Pagination des réponses par listes\n\nTous les points de terminaison qui retournent des listes sont paginés.\n\nLe paramètre (optionnel) `page` permet d'accéder à une page donnée. Sauf précision contraire dans la documentation d'un point de terminaison donné, on retrouve 100 éléments par page.\n\nDe manière générale, tout point de terminaison qui retourne une liste peut retourner une liste vide.\n\n## Rate limiting\n\nL'utilisation de l'API est limitée pour les points de terminaison sans authentification. Vous pouvez effectuer au maximum 50 appels par minutes. Si vous dépassez cette limite, une erreur 429 vous sera renvoyée et vous trouverez le temps que vous devez attendre avant de relancer une requête dans le header (`Retry-After`).\n\n## Erreurs\n\nL'API est susceptible de retourner les erreurs suivantes.\n\n| Code  | Nom                   | Description                            |\n| ----  | --------              | --------                               |\n| `400` | Bad Request           | La requête est invalide                |\n| `401` | Unauthorized          | L'authentification a échoué            |\n| `403` | Forbidden             | La limite autorisée est atteinte       |\n| `404` | Not Found             | La ressource est introuvable           |\n| `422` | unprocessable_entity  | La donnée transmise est mal formattée  |\n| `429` | Too Many Requests     | Trop de requêtes ont été effectuées    |\n| `500` | Internal Server Error | Une erreur serveur produite            |\n\n## Ressources\n\n### Sérialisation\n\nLes ressources sont les éléments renvoyés par les points de terminaison. Elles sont sérialisées en JSON.\n\n### Champs DateTime\n\nLes champs de type DateTime sont formatés avec la norme ISO 8601.\n"
+    "description": "L'API de RDV-Solidarités vous permet de lire des données dans notre base depuis votre logiciel.\n\nToutes les fonctionnalités de RDV-Solidarités ne sont pas encore disponibles via l’API. Contactez-nous si vous avez besoin de fonctionnalités qui ne sont pas encore présentes.\n\n# Requêtes\n\nL'API adhère aux principes REST :\n\n- requêtes `GET` : lecture sans modification\n- requêtes `POST` : création de nouvelle ressource\n- requêtes `PATCH` : mise à jour d'une ressource existante\n- requêtes `DELETE` : suppression d'une ressource\n\nLes paramètres des requêtes `GET` doivent être envoyés via les query string de la requête.\n\nLes paramètres des requêtes `POST` doivent être transmis dans le corps de la requête sous un format JSON valide, et doivent contenir le header `Content-Type: application/json`.\n\nLes paramètres doivent respecter les formats suivants :\n- `DATE` : \"YYYY-MM-DD\" par exemple : \"2021-10-21\"\n- `TIME` : H:m[:s], par exemple : \"10:30\"\n\n# Versionnage\n\nL'API est versionnée. La version actuelle est 1.0 (référencée comme v1 dans les points de terminaison).\n\n# Routes\n\nLes points de terminaison de l'API sont accessible par une route de la forme : `https://<domain>/api/<version>/<endpoint>`.\n\nAvec :\n\n- `version` est la version de l'API\n- `endpoint` est le nom du point de terminaison\n\nPar exemple, on aura : `https://<domain>/api/v1/absences`\n\nPour la version production, les requêtes doivent être adressées à https://www.rdv-solidarites.fr et non à https://rdv-solidarites.fr.\n\nPour la version démo, les requêtes doivent être adressées à https://demo.rdv-solidarites.fr.\n\n# Authentification\n\nCertains points de terminaison sont réservés aux agents authentifiés, dans la limite de leur rôle au sein de l'application.\n\n## Headers d'authentification\n\nTous les agents peuvent utiliser l'API. Les requêtes faites sur l'API sont authentifiées grace à des tokens d'accès associés à chaque agent. Chaque action faite via l'API est donc attribuable à un agent.\n\nPour récupérer le token d'accès d'un agent il faut faire une première requête `POST` à l'url `https://www.rdv-solidarites.fr/api/v1/auth/sign_in` en passant en paramètres JSON l'email et le mot de passe de l'agent. Par exemple (avec HTTPie) :\n\n```httpie\nhttp --json POST 'https://www.rdv-solidarites.fr/api/v1/auth/sign_in' \\\n  email='martine@demo.rdv-solidarites.fr' password='123456'\n```\n\nEn cas de succès d'authentification, la réponse à cette requête contiendra dans le corps le détail de l'agent, et dans les headers les token d'accès à l'API. Par exemple :\n\n```http\nHTTP/1.1 200 OK\nX-Frame-Options: SAMEORIGIN\nX-XSS-Protection: 1; mode=block\nX-Content-Type-Options: nosniff\nX-Download-Options: noopen\nX-Permitted-Cross-Domain-Policies: none\nReferrer-Policy: strict-origin-when-cross-origin\nContent-Type: application/json; charset=utf-8\naccess-token: SFYBngO55ImjD1HOcv-ivQ< token-type: Bearer\nclient: Z6EihQAY9NWsZByfZ47i_Q< expiry: 1605600758\nuid: martine@demo.rdv-solidarites.fr\nETag: W/\"0fe52663d6745c922160384e13afe1e1\"\nCache-Control: max-age=0, private, must-revalidate\nX-Meta-Request-Version: 0.7.2\nX-Request-Id: 291fab6a-043b-4b9c-b4b9-3c7fc9c9453a\nX-Runtime: 0.194743< Transfer-Encoding: chunked\n* Connection #0 to host rdv-solidarites.fr left intact\n{\n  \"data\": {\n    \"id\":1,\n    \"deleted_at\":null,\n    \"email\":\"martine@demo.rdv-solidarites.fr\",\n    \"provider\":\"email\",\n    \"service_id\":1,\n    \"role\":\"admin\",\n    \"last_name\":\"VALIDAY\",\n    \"first_name\":\"Martine\",\n    \"uid\":\"martine@demo.rdv-solidarites.fr\",\n    \"email_original\":null,\n    \"allow_password_change\":false\n  }\n}\n* Closing connection 0\n```\n\nLes 3 headers essentiels pour l'authentification sont les suivants :\n\n```http\naccess-token: SFYBngO55ImjD1HOcv-ivQ\nclient: Z6EihQAY9NWsZByfZ47i_Q\nuid: martine@demo.rdv-solidarites.fr\n```\n\n- `access-token` : c'est le jeton d'accès qui vous a été attribué. Il a une durée de vie de 24h, après ça il vous faudra reproduire cette procédure pour en récupérer un nouveau.\n- `client` : un identifiant unique associé à l'appareil depuis lequel vous avez effectué la requête\n- `uid` : l'identifiant de l'agent dans l'API, égal à l'email de l'agent.\n\n**Ces 3 headers doivent être transmis avec chacune de vos requêtes successives à l'API**, peu importe la méthode HTTP.\n\n## Permissions\n\nLes rôles et permissions des agents sont les mêmes via l'API que depuis l'interface web.\n\nC'est à dire que les agents classiques ont accès à leur service uniquement, les agents du service secrétariat peuvent accéder aux agendas des agents des autres services, les agents admin ont accès à toute l'organisation, etc.\n\nPar défaut, les requêtes en lecture n'appliquent aucun filtre et retourneront toutes les ressources auxquelles a accès l'agent connecté. Par exemple si un agent admin fait une requête pour accéder à la liste des absences sans filtre, l'API retournera toutes les absences de tous les agents appartenant aux organisations dont fait partie cet agent admin, ce qui peut faire beaucoup.\n\n\n\n# Sérialisation\n\nL'API supporte uniquement le format JSON. Toutes les réponses envoyées par l'API contiendront le header `Content-Type: application/json` et leur contenu est présent dans le body dans un format JSON à désérialiser.\n\n# Pagination des réponses par listes\n\nTous les points de terminaison qui retournent des listes sont paginés. De manière générale, tout point de terminaison qui retourne une liste peut retourner une liste vide.\n\n## Paramètres\n\nLe paramètre (optionnel) `page` permet d'accéder à une page donnée. Sauf précision contraire dans la documentation d'un point de terminaison donné, on retrouve 100 éléments par page.\n\n## Résultats\n\nLa réponse contient en outre un objet meta qui indique le nombre total de pages et d’items, par exemple :\n\n```rb\n{\n  […],\n  \"meta\": {\n      \"current_page\": 1,\n      \"total_count\": 112,\n      \"total_pages\": 2\n  }\n}\n```\n\n# Rate limiting\n\nL'utilisation de l'API est limitée pour les points de terminaison sans authentification. Vous pouvez effectuer au maximum 50 appels par minutes. Si vous dépassez cette limite, une erreur 429 vous sera renvoyée et vous trouverez le temps que vous devez attendre avant de relancer une requête dans le header (`Retry-After`).\n\n# Codes de retour\n\nL'API est susceptible de retourner les codes suivants :\n\n| Code  | Nom                   | Description                                                                   |\n| ----  | --------              | --------                                                                      |\n| `200` | Success               | Succès                                                                        |\n| `204` | No Content            | Succès mais la réponse ne contient pas de données (exemple : suppression)     |\n| `400` | Bad Request           | La requête est invalide                                                       |\n| `401` | Unauthorized          | L'authentification a échoué                                                   |\n| `403` | Forbidden             | Droits insuffisants pour réaliser l'action demandée                           |\n| `404` | Not Found             | La ressource est introuvable                                                  |\n| `422` | Unprocessable Entity  | La donnée transmise est mal formattée                                         |\n| `429` | Too Many Requests     | Trop de requêtes ont été effectuées                                           |\n| `500` | Internal Server Error | Une erreur serveur produite (l'équipe technique est notifiée automatiquement) |\n\n# Erreurs\n\nEn cas d'erreur reconnue par le système (par exemple erreur 422), les champs suivants seront présents dans la réponse pour vous informer sur les problèmes :\n\n- `errors` : [ERREUR] : liste d'erreurs groupées par attribut problèmatique au format machine\n- `error_messages` : [ERREUR] : idem mais dans un format plus facilement lisible.\n"
   },
   "components": {
     "securitySchemes": {
@@ -519,59 +519,6 @@
           "organisation"
         ]
       },
-      "organizations": {
-        "type": "object",
-        "properties": {
-          "organizations": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/organization"
-            }
-          },
-          "meta": {
-            "$ref": "#/components/schemas/meta"
-          }
-        },
-        "required": [
-          "organizations",
-          "meta"
-        ]
-      },
-      "organization": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer"
-          },
-          "label": {
-            "type": "string"
-          },
-          "group_id": {
-            "type": "integer"
-          },
-          "phone_number": {
-            "type": "string",
-            "nullable": true
-          },
-          "email": {
-            "type": "string",
-            "nullable": true
-          },
-          "website": {
-            "type": "string",
-            "nullable": true
-          },
-          "public_link": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "id",
-          "label",
-          "group_id",
-          "public_link"
-        ]
-      },
       "invitation": {
         "type": "object",
         "properties": {
@@ -721,40 +668,33 @@
           "user"
         ]
       },
-      "groups": {
+      "public_links": {
         "type": "object",
         "properties": {
-          "groups": {
+          "public_links": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/group"
+              "$ref": "#/components/schemas/public_link"
             }
-          },
-          "meta": {
-            "$ref": "#/components/schemas/meta"
           }
         },
         "required": [
-          "groups",
-          "meta"
+          "public_links"
         ]
       },
-      "group": {
+      "public_link": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "integer"
-          },
-          "name": {
+          "external_id": {
             "type": "string"
           },
-          "label": {
+          "public_link": {
             "type": "string"
           }
         },
         "required": [
-          "id",
-          "label"
+          "external_id",
+          "public_link"
         ]
       },
       "meta": {
@@ -786,8 +726,22 @@
           "total_count"
         ]
       },
-      "errors_generic": {
-        "type": "object"
+      "errors_unprocessable_entity": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "type": "object"
+          },
+          "error_messages": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "errors"
+        ]
       },
       "error_too_many_request": {
         "type": "object",
@@ -817,7 +771,7 @@
           "errors"
         ]
       },
-      "error_unauthorized": {
+      "error_forbidden": {
         "type": "object",
         "properties": {
           "errors": {
@@ -837,6 +791,17 @@
         },
         "required": [
           "errors"
+        ]
+      },
+      "error_missing": {
+        "type": "object",
+        "properties": {
+          "missing": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "missing"
         ]
       },
       "error_not_found": {
@@ -881,7 +846,7 @@
     },
     {
       "name": "User",
-      "description": "Pour manipuler des usager·ères"
+      "description": "Désigne le compte unique d'un·e usager·ère.\n            Il contient les informations de l'état civil ainsi que des informations communes comme les préférences de notifications.\n            Un profil lie un·e usager·ère à une organisation.\n            La plupart n'ont un lien qu'avec une seule organisation, mais une partie interagit avec plusieurs.\n            Ce profil contient aussi quelques informations sur l'usager·ère, indépendantes et non-partagées entre organisations."
     },
     {
       "name": "Agent",
@@ -890,10 +855,6 @@
     {
       "name": "RDV",
       "description": "Pour manipuler des rendez-vous"
-    },
-    {
-      "name": "Group",
-      "description": "Pour manipuler des groupes (représentation des territoires)"
     },
     {
       "name": "Organisation",
@@ -1003,13 +964,13 @@
                           "agent": {
                             "id": 21,
                             "email": "agent_1@lapin.fr",
-                            "first_name": "Évelyne",
-                            "last_name": "Gérard"
+                            "first_name": "Francisque",
+                            "last_name": "Gauthier"
                           },
-                          "end_day": "2022-11-15",
+                          "end_day": "2022-11-17",
                           "end_time": "15:30:00",
-                          "first_day": "2022-11-15",
-                          "ical": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:RDV Solidarités\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\nBEGIN:VTIMEZONE\r\nTZID:Europe/Paris\r\nBEGIN:DAYLIGHT\r\nDTSTART:20230326T030000\r\nTZOFFSETFROM:+0100\r\nTZOFFSETTO:+0200\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=3\r\nTZNAME:CEST\r\nEND:DAYLIGHT\r\nBEGIN:STANDARD\r\nDTSTART:20221030T020000\r\nTZOFFSETFROM:+0200\r\nTZOFFSETTO:+0100\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10\r\nTZNAME:CET\r\nEND:STANDARD\r\nEND:VTIMEZONE\r\nBEGIN:VEVENT\r\nDTSTAMP:20221114T105831Z\r\nUID:absence_4@RDV Solidarités\r\nDTSTART;TZID=Europe/Paris:20221115T100000\r\nDTEND;TZID=Europe/Paris:20221115T153000\r\nORGANIZER:mailto:secretariat-auto@rdv-solidarites.fr\r\nSUMMARY:RDV Solidarités Indisponibilité 1\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
+                          "first_day": "2022-11-17",
+                          "ical": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:RDV Solidarités\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\nBEGIN:VTIMEZONE\r\nTZID:Europe/Paris\r\nBEGIN:DAYLIGHT\r\nDTSTART:20230326T030000\r\nTZOFFSETFROM:+0100\r\nTZOFFSETTO:+0200\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=3\r\nTZNAME:CEST\r\nEND:DAYLIGHT\r\nBEGIN:STANDARD\r\nDTSTART:20221030T020000\r\nTZOFFSETFROM:+0200\r\nTZOFFSETTO:+0100\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10\r\nTZNAME:CET\r\nEND:STANDARD\r\nEND:VTIMEZONE\r\nBEGIN:VEVENT\r\nDTSTAMP:20221116T104908Z\r\nUID:absence_4@RDV Solidarités\r\nDTSTART;TZID=Europe/Paris:20221117T100000\r\nDTEND;TZID=Europe/Paris:20221117T153000\r\nORGANIZER:mailto:secretariat-auto@rdv-solidarites.fr\r\nSUMMARY:RDV Solidarités Indisponibilité 1\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
                           "ical_uid": "absence_4@RDV Solidarités",
                           "organisation": {
                             "id": 27,
@@ -1039,7 +1000,7 @@
             }
           },
           "401": {
-            "description": "Problème d'authentification",
+            "description": "Renvoie 'unauthorized' quand l'authentification est impossible",
             "content": {
               "application/json": {
                 "examples": {
@@ -1195,13 +1156,13 @@
                         "agent": {
                           "id": 12,
                           "email": "agent@example.com",
-                          "first_name": "Laurence",
-                          "last_name": "Paris"
+                          "first_name": "Marjorie",
+                          "last_name": "Cordier"
                         },
                         "end_day": "2023-11-20",
                         "end_time": "15:00:00",
                         "first_day": "2023-11-20",
-                        "ical": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:RDV Solidarités\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\nBEGIN:VTIMEZONE\r\nTZID:Europe/Paris\r\nBEGIN:DAYLIGHT\r\nDTSTART:20240331T030000\r\nTZOFFSETFROM:+0100\r\nTZOFFSETTO:+0200\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=3\r\nTZNAME:CEST\r\nEND:DAYLIGHT\r\nBEGIN:STANDARD\r\nDTSTART:20231029T020000\r\nTZOFFSETFROM:+0200\r\nTZOFFSETTO:+0100\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10\r\nTZNAME:CET\r\nEND:STANDARD\r\nEND:VTIMEZONE\r\nBEGIN:VEVENT\r\nDTSTAMP:20221114T105833Z\r\nUID:absence_24@RDV Solidarités\r\nDTSTART;TZID=Europe/Paris:20231120T080000\r\nDTEND;TZID=Europe/Paris:20231120T150000\r\nORGANIZER:mailto:secretariat-auto@rdv-solidarites.fr\r\nSUMMARY:RDV Solidarités Super absence\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
+                        "ical": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:RDV Solidarités\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\nBEGIN:VTIMEZONE\r\nTZID:Europe/Paris\r\nBEGIN:DAYLIGHT\r\nDTSTART:20240331T030000\r\nTZOFFSETFROM:+0100\r\nTZOFFSETTO:+0200\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=3\r\nTZNAME:CEST\r\nEND:DAYLIGHT\r\nBEGIN:STANDARD\r\nDTSTART:20231029T020000\r\nTZOFFSETFROM:+0200\r\nTZOFFSETTO:+0100\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10\r\nTZNAME:CET\r\nEND:STANDARD\r\nEND:VTIMEZONE\r\nBEGIN:VEVENT\r\nDTSTAMP:20221116T104909Z\r\nUID:absence_24@RDV Solidarités\r\nDTSTART;TZID=Europe/Paris:20231120T080000\r\nDTEND;TZID=Europe/Paris:20231120T150000\r\nORGANIZER:mailto:secretariat-auto@rdv-solidarites.fr\r\nSUMMARY:RDV Solidarités Super absence\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
                         "ical_uid": "absence_24@RDV Solidarités",
                         "organisation": {
                           "id": 47,
@@ -1223,7 +1184,7 @@
             }
           },
           "401": {
-            "description": "Problème d'authentification",
+            "description": "Renvoie 'unauthorized' quand l'authentification est impossible",
             "content": {
               "application/json": {
                 "examples": {
@@ -1259,7 +1220,7 @@
             }
           },
           "422": {
-            "description": "Renvoie 'unprocessable_entity' quand end_time est avant start_time ou que les formats ne sont pas corrects",
+            "description": "Renvoie 'unprocessable_entity' quand quand end_time est avant start_time ou que les formats ne sont pas corrects",
             "content": {
               "application/json": {
                 "examples": {
@@ -1286,7 +1247,7 @@
             }
           },
           "403": {
-            "description": "Impossible de créer une absence pour un.e agent.e dans un service différent",
+            "description": "Renvoie 'forbidden' quand l'agent·e est dans un service différent",
             "content": {
               "application/json": {
                 "examples": {
@@ -1304,7 +1265,7 @@
                   }
                 },
                 "schema": {
-                  "$ref": "#/components/schemas/error_unauthorized"
+                  "$ref": "#/components/schemas/error_forbidden"
                 }
               }
             }
@@ -1383,18 +1344,18 @@
                       "absence": {
                         "id": 33,
                         "agent": {
-                          "id": 36,
+                          "id": 34,
                           "email": "agent_1@lapin.fr",
-                          "first_name": "Josselin",
-                          "last_name": "Colin"
+                          "first_name": "Angadrême",
+                          "last_name": "Aubry"
                         },
-                        "end_day": "2022-11-15",
+                        "end_day": "2022-11-17",
                         "end_time": "15:30:00",
-                        "first_day": "2022-11-15",
-                        "ical": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:RDV Solidarités\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\nBEGIN:VTIMEZONE\r\nTZID:Europe/Paris\r\nBEGIN:DAYLIGHT\r\nDTSTART:20230326T030000\r\nTZOFFSETFROM:+0100\r\nTZOFFSETTO:+0200\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=3\r\nTZNAME:CEST\r\nEND:DAYLIGHT\r\nBEGIN:STANDARD\r\nDTSTART:20221030T020000\r\nTZOFFSETFROM:+0200\r\nTZOFFSETTO:+0100\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10\r\nTZNAME:CET\r\nEND:STANDARD\r\nEND:VTIMEZONE\r\nBEGIN:VEVENT\r\nDTSTAMP:20221114T105835Z\r\nUID:absence_33@RDV Solidarités\r\nDTSTART;TZID=Europe/Paris:20221115T100000\r\nDTEND;TZID=Europe/Paris:20221115T153000\r\nORGANIZER:mailto:secretariat-auto@rdv-solidarites.fr\r\nSUMMARY:RDV Solidarités Indisponibilité 1\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
+                        "first_day": "2022-11-17",
+                        "ical": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:RDV Solidarités\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\nBEGIN:VTIMEZONE\r\nTZID:Europe/Paris\r\nBEGIN:DAYLIGHT\r\nDTSTART:20230326T030000\r\nTZOFFSETFROM:+0100\r\nTZOFFSETTO:+0200\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=3\r\nTZNAME:CEST\r\nEND:DAYLIGHT\r\nBEGIN:STANDARD\r\nDTSTART:20221030T020000\r\nTZOFFSETFROM:+0200\r\nTZOFFSETTO:+0100\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10\r\nTZNAME:CET\r\nEND:STANDARD\r\nEND:VTIMEZONE\r\nBEGIN:VEVENT\r\nDTSTAMP:20221116T104910Z\r\nUID:absence_33@RDV Solidarités\r\nDTSTART;TZID=Europe/Paris:20221117T100000\r\nDTEND;TZID=Europe/Paris:20221117T153000\r\nORGANIZER:mailto:secretariat-auto@rdv-solidarites.fr\r\nSUMMARY:RDV Solidarités Indisponibilité 1\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
                         "ical_uid": "absence_33@RDV Solidarités",
                         "organisation": {
-                          "id": 65,
+                          "id": 61,
                           "email": null,
                           "name": "Organisation n°1",
                           "phone_number": null
@@ -1413,7 +1374,7 @@
             }
           },
           "401": {
-            "description": "Problème d'authentification",
+            "description": "Renvoie 'unauthorized' quand l'authentification est impossible",
             "content": {
               "application/json": {
                 "examples": {
@@ -1432,7 +1393,7 @@
             }
           },
           "403": {
-            "description": "Pas autorisé à accéder à cette absence",
+            "description": "Renvoie 'forbidden' quand l'agent·e n'est pas autorisé·e à accéder à cette absence",
             "content": {
               "application/json": {
                 "examples": {
@@ -1450,13 +1411,13 @@
                   }
                 },
                 "schema": {
-                  "$ref": "#/components/schemas/error_unauthorized"
+                  "$ref": "#/components/schemas/error_forbidden"
                 }
               }
             }
           },
           "404": {
-            "description": "L'absence n'existe pas",
+            "description": "Renvoie 'not_found' quand l'absence n'existe pas",
             "content": {
               "application/json": {
                 "examples": {
@@ -1594,18 +1555,18 @@
                       "absence": {
                         "id": 45,
                         "agent": {
-                          "id": 42,
+                          "id": 40,
                           "email": "agent_1@lapin.fr",
-                          "first_name": "Sylviane",
-                          "last_name": "André"
+                          "first_name": "Fleur",
+                          "last_name": "Weber"
                         },
-                        "end_day": "2022-11-15",
+                        "end_day": "2022-11-17",
                         "end_time": "15:30:00",
-                        "first_day": "2022-11-15",
-                        "ical": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:RDV Solidarités\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\nBEGIN:VTIMEZONE\r\nTZID:Europe/Paris\r\nBEGIN:DAYLIGHT\r\nDTSTART:20230326T030000\r\nTZOFFSETFROM:+0100\r\nTZOFFSETTO:+0200\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=3\r\nTZNAME:CEST\r\nEND:DAYLIGHT\r\nBEGIN:STANDARD\r\nDTSTART:20221030T020000\r\nTZOFFSETFROM:+0200\r\nTZOFFSETTO:+0100\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10\r\nTZNAME:CET\r\nEND:STANDARD\r\nEND:VTIMEZONE\r\nBEGIN:VEVENT\r\nDTSTAMP:20221114T105836Z\r\nUID:absence_45@RDV Solidarités\r\nDTSTART;TZID=Europe/Paris:20221115T100000\r\nDTEND;TZID=Europe/Paris:20221115T153000\r\nORGANIZER:mailto:secretariat-auto@rdv-solidarites.fr\r\nSUMMARY:RDV Solidarités Nouveau titre\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
+                        "first_day": "2022-11-17",
+                        "ical": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:RDV Solidarités\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\nBEGIN:VTIMEZONE\r\nTZID:Europe/Paris\r\nBEGIN:DAYLIGHT\r\nDTSTART:20230326T030000\r\nTZOFFSETFROM:+0100\r\nTZOFFSETTO:+0200\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=3\r\nTZNAME:CEST\r\nEND:DAYLIGHT\r\nBEGIN:STANDARD\r\nDTSTART:20221030T020000\r\nTZOFFSETFROM:+0200\r\nTZOFFSETTO:+0100\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10\r\nTZNAME:CET\r\nEND:STANDARD\r\nEND:VTIMEZONE\r\nBEGIN:VEVENT\r\nDTSTAMP:20221116T104910Z\r\nUID:absence_45@RDV Solidarités\r\nDTSTART;TZID=Europe/Paris:20221117T100000\r\nDTEND;TZID=Europe/Paris:20221117T153000\r\nORGANIZER:mailto:secretariat-auto@rdv-solidarites.fr\r\nSUMMARY:RDV Solidarités Nouveau titre\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
                         "ical_uid": "absence_45@RDV Solidarités",
                         "organisation": {
-                          "id": 77,
+                          "id": 73,
                           "email": null,
                           "name": "Organisation n°1",
                           "phone_number": null
@@ -1624,7 +1585,7 @@
             }
           },
           "401": {
-            "description": "Problème d'authentification",
+            "description": "Renvoie 'unauthorized' quand l'authentification est impossible",
             "content": {
               "application/json": {
                 "examples": {
@@ -1643,7 +1604,7 @@
             }
           },
           "403": {
-            "description": "Pas autorisé à accéder à cette absence",
+            "description": "Renvoie 'forbidden' quand l'agent·e n'est pas autorisé·e à accéder à cette absence",
             "content": {
               "application/json": {
                 "examples": {
@@ -1661,13 +1622,13 @@
                   }
                 },
                 "schema": {
-                  "$ref": "#/components/schemas/error_unauthorized"
+                  "$ref": "#/components/schemas/error_forbidden"
                 }
               }
             }
           },
           "404": {
-            "description": "L'absence n'existe pas",
+            "description": "Renvoie 'not_found' quand l'absence n'existe pas",
             "content": {
               "application/json": {
                 "examples": {
@@ -1758,7 +1719,7 @@
             }
           },
           "401": {
-            "description": "Problème d'authentification",
+            "description": "Renvoie 'unauthorized' quand l'authentification est impossible",
             "content": {
               "application/json": {
                 "examples": {
@@ -1777,7 +1738,7 @@
             }
           },
           "403": {
-            "description": "Pas autorisé à accéder à cette absence",
+            "description": "Renvoie 'forbidden' quand l'agent·e n'est pas autorisé·e à accéder à cette absence",
             "content": {
               "application/json": {
                 "examples": {
@@ -1795,13 +1756,13 @@
                   }
                 },
                 "schema": {
-                  "$ref": "#/components/schemas/error_unauthorized"
+                  "$ref": "#/components/schemas/error_forbidden"
                 }
               }
             }
           },
           "404": {
-            "description": "L'absence n'existe pas",
+            "description": "Renvoie 'not_found' quand l'absence n'existe pas",
             "content": {
               "application/json": {
                 "examples": {
@@ -1900,10 +1861,10 @@
                     "value": {
                       "agents": [
                         {
-                          "id": 54,
+                          "id": 52,
                           "email": "agent_1@lapin.fr",
-                          "first_name": "Gui",
-                          "last_name": "Dupuis"
+                          "first_name": "Zaché",
+                          "last_name": "Roy"
                         }
                       ],
                       "meta": {
@@ -1923,7 +1884,7 @@
             }
           },
           "401": {
-            "description": "Problème d'authentification",
+            "description": "Renvoie 'unauthorized' quand l'authentification est impossible",
             "content": {
               "application/json": {
                 "examples": {
@@ -1937,99 +1898,6 @@
                 },
                 "schema": {
                   "$ref": "#/components/schemas/error_authentication"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/groups": {
-      "get": {
-        "summary": "Lister les groupes (représentation des territoires)",
-        "parameters": [
-          {
-            "name": "page",
-            "in": "query",
-            "description": "La page souhaitée",
-            "example": "1",
-            "required": false,
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
-        "tags": [
-          "Group"
-        ],
-        "operationId": "getGroups",
-        "description": "Renvoie tous les groupes, qui représentent les territoires, de manière paginée",
-        "responses": {
-          "200": {
-            "description": "Retourne des Groups",
-            "content": {
-              "application/json": {
-                "examples": {
-                  "example": {
-                    "value": {
-                      "groups": [
-                        {
-                          "id": 120,
-                          "label": "Territoire n°1",
-                          "name": "01"
-                        },
-                        {
-                          "id": 121,
-                          "label": "Territoire n°2",
-                          "name": "02"
-                        },
-                        {
-                          "id": 122,
-                          "label": "Territoire n°3",
-                          "name": "03"
-                        },
-                        {
-                          "id": 123,
-                          "label": "Territoire n°4",
-                          "name": "04"
-                        },
-                        {
-                          "id": 124,
-                          "label": "Territoire n°5",
-                          "name": "05"
-                        }
-                      ],
-                      "meta": {
-                        "current_page": 1,
-                        "next_page": null,
-                        "prev_page": null,
-                        "total_pages": 1,
-                        "total_count": 5
-                      }
-                    }
-                  }
-                },
-                "schema": {
-                  "$ref": "#/components/schemas/groups"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "Limite d'appels atteinte",
-            "content": {
-              "application/json": {
-                "examples": {
-                  "example": {
-                    "value": {
-                      "errors": [
-                        "Limite d'appels API atteinte. Merci de patienter.\n"
-                      ]
-                    }
-                  }
-                },
-                "schema": {
-                  "$ref": "#/components/schemas/error_too_many_request"
                 }
               }
             }
@@ -2115,18 +1983,18 @@
                         "birth_name": null,
                         "caisse_affiliation": "caf",
                         "case_number": null,
-                        "created_at": "2022-11-14 11:58:39 +0100",
+                        "created_at": "2022-11-16 11:49:12 +0100",
                         "email": "jean@jacques.fr",
                         "family_situation": "divorced",
                         "first_name": "Jean",
                         "invitation_accepted_at": null,
-                        "invitation_created_at": "2022-11-14 11:58:39 +0100",
+                        "invitation_created_at": "2022-11-16 11:49:12 +0100",
                         "last_name": "JACQUES",
                         "notify_by_email": true,
                         "notify_by_sms": true,
                         "number_of_children": 12,
-                        "phone_number": "07 41 71 31 15",
-                        "phone_number_formatted": "+33741713115",
+                        "phone_number": "0638653400",
+                        "phone_number_formatted": "+33638653400",
                         "responsible": null,
                         "responsible_id": null,
                         "user_profiles": null
@@ -2141,7 +2009,7 @@
             }
           },
           "401": {
-            "description": "Problème d'authentification",
+            "description": "Renvoie 'unauthorized' quand l'authentification est impossible",
             "content": {
               "application/json": {
                 "examples": {
@@ -2293,9 +2161,9 @@
                           "deleted_at": null,
                           "location_type": "public_office",
                           "name": "Motif 1",
-                          "organisation_id": 118,
+                          "organisation_id": 114,
                           "reservable_online": true,
-                          "service_id": 98
+                          "service_id": 93
                         },
                         {
                           "id": 21,
@@ -2304,9 +2172,9 @@
                           "deleted_at": null,
                           "location_type": "public_office",
                           "name": "Motif 2",
-                          "organisation_id": 118,
+                          "organisation_id": 114,
                           "reservable_online": true,
-                          "service_id": 98
+                          "service_id": 93
                         }
                       ],
                       "meta": {
@@ -2326,7 +2194,7 @@
             }
           },
           "401": {
-            "description": "Problème d'authentification",
+            "description": "Renvoie 'unauthorized' quand l'authentification est impossible",
             "content": {
               "application/json": {
                 "examples": {
@@ -2437,31 +2305,31 @@
                     "value": {
                       "organisations": [
                         {
-                          "id": 145,
+                          "id": 141,
                           "email": null,
                           "name": "Organisation n°1",
                           "phone_number": null
                         },
                         {
-                          "id": 146,
+                          "id": 142,
                           "email": null,
                           "name": "Organisation n°2",
                           "phone_number": null
                         },
                         {
-                          "id": 147,
+                          "id": 143,
                           "email": null,
                           "name": "Organisation n°3",
                           "phone_number": null
                         },
                         {
-                          "id": 148,
+                          "id": 144,
                           "email": null,
                           "name": "Organisation n°4",
                           "phone_number": null
                         },
                         {
-                          "id": 149,
+                          "id": 145,
                           "email": null,
                           "name": "Organisation n°5",
                           "phone_number": null
@@ -2484,7 +2352,7 @@
             }
           },
           "401": {
-            "description": "Problème d'authentification",
+            "description": "Renvoie 'unauthorized' quand l'authentification est impossible",
             "content": {
               "application/json": {
                 "examples": {
@@ -2498,129 +2366,6 @@
                 },
                 "schema": {
                   "$ref": "#/components/schemas/error_authentication"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/organizations": {
-      "get": {
-        "summary": "Lister les organisations",
-        "parameters": [
-          {
-            "name": "page",
-            "in": "query",
-            "description": "La page souhaitée",
-            "example": "1",
-            "required": false,
-            "schema": {
-              "type": "integer"
-            }
-          },
-          {
-            "name": "group_id",
-            "in": "query",
-            "description": "ID du Group sur lequel filtrer les organisations",
-            "example": "1",
-            "required": false,
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
-        "tags": [
-          "Organization"
-        ],
-        "operationId": "getOrganizations",
-        "description": "Renvoie toutes les organisations, de manière paginée",
-        "responses": {
-          "200": {
-            "description": "Retourne les Organisations sous la forme Organizations",
-            "content": {
-              "application/json": {
-                "examples": {
-                  "example": {
-                    "value": {
-                      "organizations": [
-                        {
-                          "id": 165,
-                          "email": null,
-                          "group_id": 182,
-                          "label": "Organisation n°1",
-                          "phone_number": null,
-                          "public_link": "http://www.rdv-solidarites-test.localhost/org/165",
-                          "website": null
-                        },
-                        {
-                          "id": 166,
-                          "email": null,
-                          "group_id": 183,
-                          "label": "Organisation n°2",
-                          "phone_number": null,
-                          "public_link": "http://www.rdv-solidarites-test.localhost/org/166",
-                          "website": null
-                        },
-                        {
-                          "id": 167,
-                          "email": null,
-                          "group_id": 184,
-                          "label": "Organisation n°3",
-                          "phone_number": null,
-                          "public_link": "http://www.rdv-solidarites-test.localhost/org/167",
-                          "website": null
-                        },
-                        {
-                          "id": 168,
-                          "email": null,
-                          "group_id": 185,
-                          "label": "Organisation n°4",
-                          "phone_number": null,
-                          "public_link": "http://www.rdv-solidarites-test.localhost/org/168",
-                          "website": null
-                        },
-                        {
-                          "id": 169,
-                          "email": null,
-                          "group_id": 186,
-                          "label": "Organisation n°5",
-                          "phone_number": null,
-                          "public_link": "http://www.rdv-solidarites-test.localhost/org/169",
-                          "website": null
-                        }
-                      ],
-                      "meta": {
-                        "current_page": 1,
-                        "next_page": null,
-                        "prev_page": null,
-                        "total_pages": 1,
-                        "total_count": 5
-                      }
-                    }
-                  }
-                },
-                "schema": {
-                  "$ref": "#/components/schemas/organizations"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "Limite d'appels atteinte",
-            "content": {
-              "application/json": {
-                "examples": {
-                  "example": {
-                    "value": {
-                      "errors": [
-                        "Limite d'appels API atteinte. Merci de patienter.\n"
-                      ]
-                    }
-                  }
-                },
-                "schema": {
-                  "$ref": "#/components/schemas/error_too_many_request"
                 }
               }
             }
@@ -2658,15 +2403,18 @@
                       "public_links": [
                         {
                           "external_id": "ext_id_A",
-                          "public_link": "http://www.rdv-aide-numerique-test.localhost/org/203"
+                          "public_link": "http://www.rdv-aide-numerique-test.localhost/org/178"
                         },
                         {
                           "external_id": "ext_id_B",
-                          "public_link": "http://www.rdv-aide-numerique-test.localhost/org/204"
+                          "public_link": "http://www.rdv-aide-numerique-test.localhost/org/179"
                         }
                       ]
                     }
                   }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/public_links"
                 }
               }
             }
@@ -2681,12 +2429,15 @@
                       "missing": "territory"
                     }
                   }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_missing"
                 }
               }
             }
           },
           "404": {
-            "description": "Retourne 'not_found' quand le territory ne peut pas être trouvé",
+            "description": "Renvoie 'not_found' quand le territory ne peut pas être trouvé",
             "content": {
               "application/json": {
                 "examples": {
@@ -2695,12 +2446,15 @@
                       "not_found": "territory"
                     }
                   }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_not_found"
                 }
               }
             }
           },
           "429": {
-            "description": "Limite d'appels atteinte",
+            "description": "Renvoie 'too_many_requests' quand la limite d'appels est atteinte",
             "content": {
               "application/json": {
                 "examples": {
@@ -2795,10 +2549,10 @@
                           "address": "1 rue de l'adresse 12345 Ville",
                           "agents": [
                             {
-                              "id": 115,
+                              "id": 113,
                               "email": "agent_1@lapin.fr",
-                              "first_name": "Thérèse",
-                              "last_name": "Bertin"
+                              "first_name": "Valéry",
+                              "last_name": "Huet"
                             }
                           ],
                           "cancelled_at": null,
@@ -2807,12 +2561,12 @@
                           "created_by": "agent",
                           "deleted_at": null,
                           "duration_in_min": 45,
-                          "ends_at": "2022-11-17 12:43:45 +0100",
+                          "ends_at": "2022-11-19 12:34:14 +0100",
                           "lieu": {
                             "id": 25,
                             "address": "1 rue de l'adresse 12345 Ville",
                             "name": "Lieu n°1",
-                            "organisation_id": 213,
+                            "organisation_id": 188,
                             "phone_number": null,
                             "single_use": false
                           },
@@ -2824,13 +2578,13 @@
                             "deleted_at": null,
                             "location_type": "public_office",
                             "name": "Motif 1",
-                            "organisation_id": 215,
+                            "organisation_id": 190,
                             "reservable_online": true,
-                            "service_id": 153
+                            "service_id": 148
                           },
                           "name": null,
                           "organisation": {
-                            "id": 213,
+                            "id": 188,
                             "email": null,
                             "name": "Organisation n°1",
                             "phone_number": null
@@ -2850,25 +2604,25 @@
                                 "birth_name": null,
                                 "caisse_affiliation": "caf",
                                 "case_number": null,
-                                "created_at": "2022-11-14 11:58:45 +0100",
+                                "created_at": "2022-11-16 11:49:14 +0100",
                                 "email": "usager_1@lapin.fr",
                                 "family_situation": "divorced",
-                                "first_name": "Gwenael",
+                                "first_name": "Ulysse",
                                 "invitation_accepted_at": null,
                                 "invitation_created_at": null,
-                                "last_name": "ROUSSEAU",
+                                "last_name": "REYNAUD",
                                 "notify_by_email": true,
                                 "notify_by_sms": true,
                                 "number_of_children": 12,
-                                "phone_number": "6 62 78 04 52",
-                                "phone_number_formatted": "+33662780452",
+                                "phone_number": "775241268",
+                                "phone_number_formatted": "+33775241268",
                                 "responsible": null,
                                 "responsible_id": null,
                                 "user_profiles": null
                               }
                             }
                           ],
-                          "starts_at": "2022-11-17 11:58:45 +0100",
+                          "starts_at": "2022-11-19 11:49:14 +0100",
                           "status": "unknown",
                           "users": [
                             {
@@ -2880,25 +2634,25 @@
                               "birth_name": null,
                               "caisse_affiliation": "caf",
                               "case_number": null,
-                              "created_at": "2022-11-14 11:58:45 +0100",
+                              "created_at": "2022-11-16 11:49:14 +0100",
                               "email": "usager_1@lapin.fr",
                               "family_situation": "divorced",
-                              "first_name": "Gwenael",
+                              "first_name": "Ulysse",
                               "invitation_accepted_at": null,
                               "invitation_created_at": null,
-                              "last_name": "ROUSSEAU",
+                              "last_name": "REYNAUD",
                               "notify_by_email": true,
                               "notify_by_sms": true,
                               "number_of_children": 12,
-                              "phone_number": "6 62 78 04 52",
-                              "phone_number_formatted": "+33662780452",
+                              "phone_number": "775241268",
+                              "phone_number_formatted": "+33775241268",
                               "responsible": null,
                               "responsible_id": null,
                               "user_profiles": null
                             }
                           ],
                           "users_count": 1,
-                          "uuid": "52274895-fa1b-475e-a4c1-f6bfe9ec47d6"
+                          "uuid": "95b5ec7d-f2be-4821-9a3e-0883e0429cff"
                         }
                       ],
                       "meta": {
@@ -2918,7 +2672,7 @@
             }
           },
           "401": {
-            "description": "Problème d'authentification",
+            "description": "Renvoie 'unauthorized' quand l'authentification est impossible",
             "content": {
               "application/json": {
                 "examples": {
@@ -3047,7 +2801,7 @@
                         "logement": "sdf",
                         "notes": "Super Note",
                         "organisation": {
-                          "id": 242,
+                          "id": 217,
                           "email": null,
                           "name": "Organisation n°1",
                           "phone_number": null
@@ -3061,18 +2815,18 @@
                           "birth_name": null,
                           "caisse_affiliation": "caf",
                           "case_number": null,
-                          "created_at": "2022-11-14 11:58:47 +0100",
+                          "created_at": "2022-11-16 11:49:16 +0100",
                           "email": "usager_1@lapin.fr",
                           "family_situation": "divorced",
-                          "first_name": "Hortense",
+                          "first_name": "Marcel",
                           "invitation_accepted_at": null,
                           "invitation_created_at": null,
-                          "last_name": "BARON",
+                          "last_name": "JEAN",
                           "notify_by_email": true,
                           "notify_by_sms": true,
                           "number_of_children": 12,
-                          "phone_number": "06 42 75 14 18",
-                          "phone_number_formatted": "+33642751418",
+                          "phone_number": "773753942",
+                          "phone_number_formatted": "+33773753942",
                           "responsible": null,
                           "responsible_id": null,
                           "user_profiles": null
@@ -3088,7 +2842,7 @@
             }
           },
           "403": {
-            "description": "Impossible de créer un profil utilisateur quand on a pas accès à l'organisation",
+            "description": "Renvoie 'forbidden' quand l'agent·e n'a pas accès à l'organisation",
             "content": {
               "application/json": {
                 "examples": {
@@ -3106,13 +2860,13 @@
                   }
                 },
                 "schema": {
-                  "$ref": "#/components/schemas/error_unauthorized"
+                  "$ref": "#/components/schemas/error_forbidden"
                 }
               }
             }
           },
           "401": {
-            "description": "Problème d'authentification",
+            "description": "Renvoie 'unauthorized' quand l'authentification est impossible",
             "content": {
               "application/json": {
                 "examples": {
@@ -3131,7 +2885,7 @@
             }
           },
           "422": {
-            "description": "Renvoie 'unprocessable_entity' quand l'utilisateur ou l'organisation n'est pas connue ou quand le logement n'est pas parmi les choix possibles ou que ce profil existe déjà",
+            "description": "Renvoie 'unprocessable_entity' quand l'utilisateur est inconnu, ou l'organisation est inconnue, ou le logement est incorrect, ou ce profil existe déjà",
             "content": {
               "application/json": {
                 "examples": {
@@ -3229,7 +2983,7 @@
                   "example": {
                     "value": {
                       "user": {
-                        "id": 46,
+                        "id": 40,
                         "address": "20 avenue de Ségur, Paris",
                         "address_details": null,
                         "affiliation_number": "39012093812038",
@@ -3237,7 +2991,7 @@
                         "birth_name": null,
                         "caisse_affiliation": "caf",
                         "case_number": null,
-                        "created_at": "2022-11-14 11:58:49 +0100",
+                        "created_at": "2022-11-16 11:49:16 +0100",
                         "email": "jean@jacques.fr",
                         "family_situation": "divorced",
                         "first_name": "Jean",
@@ -3247,8 +3001,8 @@
                         "notify_by_email": true,
                         "notify_by_sms": true,
                         "number_of_children": 12,
-                        "phone_number": "0628197570",
-                        "phone_number_formatted": "+33628197570",
+                        "phone_number": "6 98 77 48 74",
+                        "phone_number_formatted": "+33698774874",
                         "responsible": null,
                         "responsible_id": null,
                         "user_profiles": [
@@ -3256,7 +3010,7 @@
                             "logement": null,
                             "notes": null,
                             "organisation": {
-                              "id": 257,
+                              "id": 225,
                               "email": null,
                               "name": "Organisation n°1",
                               "phone_number": null
@@ -3274,7 +3028,7 @@
             }
           },
           "401": {
-            "description": "Problème d'authentification",
+            "description": "Renvoie 'unauthorized' quand l'authentification est impossible",
             "content": {
               "application/json": {
                 "examples": {
@@ -3293,7 +3047,7 @@
             }
           },
           "403": {
-            "description": "Renvoie 'unauthorized' quand l'usager·ère est lié·e à une autre organisation",
+            "description": "Renvoie 'forbidden' quand l'usager·ère est lié·e à une autre organisation",
             "content": {
               "application/json": {
                 "examples": {
@@ -3311,7 +3065,7 @@
                   }
                 },
                 "schema": {
-                  "$ref": "#/components/schemas/error_unauthorized"
+                  "$ref": "#/components/schemas/error_forbidden"
                 }
               }
             }
@@ -3539,7 +3293,7 @@
                   "example": {
                     "value": {
                       "user": {
-                        "id": 81,
+                        "id": 75,
                         "address": "10 rue du Havre, Paris",
                         "address_details": null,
                         "affiliation_number": "101010",
@@ -3547,7 +3301,7 @@
                         "birth_name": "Fripouille",
                         "caisse_affiliation": "caf",
                         "case_number": null,
-                        "created_at": "2022-11-14 11:58:52 +0100",
+                        "created_at": "2022-11-16 11:49:18 +0100",
                         "email": "jean@jacques.fr",
                         "family_situation": "single",
                         "first_name": "Alain",
@@ -3560,7 +3314,7 @@
                         "phone_number": "33600008012",
                         "phone_number_formatted": "+33600008012",
                         "responsible": {
-                          "id": 80,
+                          "id": 74,
                           "address": "20 avenue de Ségur, Paris",
                           "address_details": null,
                           "affiliation_number": "39012093812038",
@@ -3568,23 +3322,23 @@
                           "birth_name": null,
                           "caisse_affiliation": "caf",
                           "case_number": null,
-                          "created_at": "2022-11-14 11:58:52 +0100",
+                          "created_at": "2022-11-16 11:49:18 +0100",
                           "email": "usager_1@lapin.fr",
                           "family_situation": "divorced",
-                          "first_name": "Adegrine",
+                          "first_name": "Amédée",
                           "invitation_accepted_at": null,
                           "invitation_created_at": null,
-                          "last_name": "DUPONT",
+                          "last_name": "GRONDIN",
                           "notify_by_email": true,
                           "notify_by_sms": true,
                           "number_of_children": 12,
-                          "phone_number": "0774181141",
-                          "phone_number_formatted": "+33774181141",
+                          "phone_number": "6 83 48 96 00",
+                          "phone_number_formatted": "+33683489600",
                           "responsible": null,
                           "responsible_id": null,
                           "user_profiles": null
                         },
-                        "responsible_id": 80,
+                        "responsible_id": 74,
                         "user_profiles": null
                       }
                     }
@@ -3597,7 +3351,7 @@
             }
           },
           "401": {
-            "description": "Problème d'authentification",
+            "description": "Renvoie 'unauthorized' quand l'authentification est impossible",
             "content": {
               "application/json": {
                 "examples": {
@@ -3616,7 +3370,7 @@
             }
           },
           "422": {
-            "description": "Des paramètres sont manquants ou mal formés ou impossibles",
+            "description": "Renvoie 'unprocessable_entity' quand des paramètres sont manquants ou mal formés ou impossibles",
             "content": {
               "application/json": {
                 "examples": {
@@ -3643,7 +3397,7 @@
                   }
                 },
                 "schema": {
-                  "$ref": "#/components/schemas/errors_generic"
+                  "$ref": "#/components/schemas/error_unprocessable_entity"
                 }
               }
             }
@@ -3720,8 +3474,8 @@
                 "examples": {
                   "example": {
                     "value": {
-                      "invitation_url": "http://www.example.com/users/invitation/accept?invitation_token=C0DVMLHP",
-                      "invitation_token": "C0DVMLHP"
+                      "invitation_url": "http://www.example.com/users/invitation/accept?invitation_token=5MZ8SHVJ",
+                      "invitation_token": "5MZ8SHVJ"
                     }
                   }
                 },
@@ -3732,7 +3486,7 @@
             }
           },
           "401": {
-            "description": "Problème d'authentification",
+            "description": "Renvoie 'unauthorized' quand l'authentification est impossible",
             "content": {
               "application/json": {
                 "examples": {
@@ -3751,7 +3505,7 @@
             }
           },
           "403": {
-            "description": "Renvoie 'unauthorized' quand l'usager·ère est lié·e à une autre organisation",
+            "description": "Renvoie 'forbidden' quand l'usager·ère est lié·e à une autre organisation",
             "content": {
               "application/json": {
                 "examples": {
@@ -3769,7 +3523,7 @@
                   }
                 },
                 "schema": {
-                  "$ref": "#/components/schemas/error_unauthorized"
+                  "$ref": "#/components/schemas/error_forbidden"
                 }
               }
             }
@@ -3854,8 +3608,8 @@
                 "examples": {
                   "example": {
                     "value": {
-                      "invitation_url": "http://www.example.com/users/invitation/accept?invitation_token=EEBNAGP9",
-                      "invitation_token": "EEBNAGP9"
+                      "invitation_url": "http://www.example.com/users/invitation/accept?invitation_token=YUNUT9UC",
+                      "invitation_token": "YUNUT9UC"
                     }
                   }
                 },
@@ -3866,7 +3620,7 @@
             }
           },
           "401": {
-            "description": "Problème d'authentification",
+            "description": "Renvoie 'unauthorized' quand l'authentification est impossible",
             "content": {
               "application/json": {
                 "examples": {
@@ -3885,7 +3639,7 @@
             }
           },
           "403": {
-            "description": "Renvoie 'unauthorized' quand l'usager·ère est lié·e à une autre organisation",
+            "description": "Renvoie 'forbidden' quand l'usager·ère est lié·e à une autre organisation",
             "content": {
               "application/json": {
                 "examples": {
@@ -3903,7 +3657,7 @@
                   }
                 },
                 "schema": {
-                  "$ref": "#/components/schemas/error_unauthorized"
+                  "$ref": "#/components/schemas/error_forbidden"
                 }
               }
             }
@@ -3994,7 +3748,7 @@
                     "value": {
                       "users": [
                         {
-                          "id": 109,
+                          "id": 100,
                           "address": "20 avenue de Ségur, Paris",
                           "address_details": null,
                           "affiliation_number": "39012093812038",
@@ -4002,18 +3756,18 @@
                           "birth_name": null,
                           "caisse_affiliation": "caf",
                           "case_number": null,
-                          "created_at": "2022-11-14 11:58:56 +0100",
+                          "created_at": "2022-11-16 11:49:19 +0100",
                           "email": "usager_1@lapin.fr",
                           "family_situation": "divorced",
-                          "first_name": "Adonise",
+                          "first_name": "Ruth",
                           "invitation_accepted_at": null,
                           "invitation_created_at": null,
-                          "last_name": "OLIVIER",
+                          "last_name": "LEMAITRE",
                           "notify_by_email": true,
                           "notify_by_sms": true,
                           "number_of_children": 12,
-                          "phone_number": "07 84 69 75 40",
-                          "phone_number_formatted": "+33784697540",
+                          "phone_number": "799736456",
+                          "phone_number_formatted": "+33799736456",
                           "responsible": null,
                           "responsible_id": null,
                           "user_profiles": null
@@ -4036,7 +3790,7 @@
             }
           },
           "401": {
-            "description": "Problème d'authentification",
+            "description": "Renvoie 'unauthorized' quand l'authentification est impossible",
             "content": {
               "application/json": {
                 "examples": {
@@ -4264,7 +4018,7 @@
                   "example": {
                     "value": {
                       "user": {
-                        "id": 150,
+                        "id": 141,
                         "address": "10 rue du Havre, Paris",
                         "address_details": null,
                         "affiliation_number": "101010",
@@ -4272,7 +4026,7 @@
                         "birth_name": "Fripouille",
                         "caisse_affiliation": "caf",
                         "case_number": null,
-                        "created_at": "2022-11-14 11:58:58 +0100",
+                        "created_at": "2022-11-16 11:49:21 +0100",
                         "email": "jean@jacques.fr",
                         "family_situation": "single",
                         "first_name": "Johnny",
@@ -4285,7 +4039,7 @@
                         "phone_number": "33600008012",
                         "phone_number_formatted": "+33600008012",
                         "responsible": {
-                          "id": 149,
+                          "id": 140,
                           "address": "20 avenue de Ségur, Paris",
                           "address_details": null,
                           "affiliation_number": "39012093812038",
@@ -4293,23 +4047,23 @@
                           "birth_name": null,
                           "caisse_affiliation": "caf",
                           "case_number": null,
-                          "created_at": "2022-11-14 11:58:58 +0100",
+                          "created_at": "2022-11-16 11:49:21 +0100",
                           "email": "usager_1@lapin.fr",
                           "family_situation": "divorced",
-                          "first_name": "Charline",
+                          "first_name": "Esther",
                           "invitation_accepted_at": null,
                           "invitation_created_at": null,
-                          "last_name": "MOREAU",
+                          "last_name": "JOLY",
                           "notify_by_email": true,
                           "notify_by_sms": true,
                           "number_of_children": 12,
-                          "phone_number": "0665371360",
-                          "phone_number_formatted": "+33665371360",
+                          "phone_number": "07 77 00 12 24",
+                          "phone_number_formatted": "+33777001224",
                           "responsible": null,
                           "responsible_id": null,
                           "user_profiles": null
                         },
-                        "responsible_id": 149,
+                        "responsible_id": 140,
                         "user_profiles": null
                       }
                     }
@@ -4322,7 +4076,7 @@
             }
           },
           "401": {
-            "description": "Problème d'authentification",
+            "description": "Renvoie 'unauthorized' quand l'authentification est impossible",
             "content": {
               "application/json": {
                 "examples": {
@@ -4341,21 +4095,34 @@
             }
           },
           "422": {
-            "description": "Des paramètres sont manquants ou mal formés ou impossibles",
+            "description": "Renvoie 'unprocessable_entity' quand des paramètres sont manquants, mal formés ou impossibles",
             "content": {
               "application/json": {
                 "examples": {
                   "example": {
                     "value": {
                       "success": false,
-                      "errors": [
-                        "param is missing or the value is empty: organisation_ids\nDid you mean?  action\n               first_name\n               controller\n               last_name"
+                      "errors": {
+                        "last_name": [
+                          {
+                            "error": "blank"
+                          }
+                        ],
+                        "first_name": [
+                          {
+                            "error": "blank"
+                          }
+                        ]
+                      },
+                      "error_messages": [
+                        "last_name doit être rempli(e)",
+                        "first_name doit être rempli(e)"
                       ]
                     }
                   }
                 },
                 "schema": {
-                  "$ref": "#/components/schemas/errors_generic"
+                  "$ref": "#/components/schemas/error_unprocessable_entity"
                 }
               }
             }
@@ -4443,7 +4210,7 @@
                     "value": {
                       "users": [
                         {
-                          "id": 160,
+                          "id": 150,
                           "address": "20 avenue de Ségur, Paris",
                           "address_details": null,
                           "affiliation_number": "39012093812038",
@@ -4451,18 +4218,18 @@
                           "birth_name": null,
                           "caisse_affiliation": "caf",
                           "case_number": null,
-                          "created_at": "2022-11-14 11:59:00 +0100",
+                          "created_at": "2022-11-16 11:49:22 +0100",
                           "email": "usager_1@lapin.fr",
                           "family_situation": "divorced",
-                          "first_name": "Amaury",
+                          "first_name": "Hubert",
                           "invitation_accepted_at": null,
                           "invitation_created_at": null,
-                          "last_name": "GERARD",
+                          "last_name": "FERNANDEZ",
                           "notify_by_email": true,
                           "notify_by_sms": true,
                           "number_of_children": 12,
-                          "phone_number": "06 98 94 51 08",
-                          "phone_number_formatted": "+33698945108",
+                          "phone_number": "7 70 95 57 69",
+                          "phone_number_formatted": "+33770955769",
                           "responsible": null,
                           "responsible_id": null,
                           "user_profiles": null
@@ -4485,7 +4252,7 @@
             }
           },
           "401": {
-            "description": "Problème d'authentification",
+            "description": "Renvoie 'unauthorized' quand l'authentification est impossible",
             "content": {
               "application/json": {
                 "examples": {
@@ -4585,7 +4352,7 @@
                   "example": {
                     "value": {
                       "user": {
-                        "id": 165,
+                        "id": 155,
                         "address": "20 avenue de Ségur, Paris",
                         "address_details": null,
                         "affiliation_number": "39012093812038",
@@ -4593,7 +4360,7 @@
                         "birth_name": null,
                         "caisse_affiliation": "caf",
                         "case_number": null,
-                        "created_at": "2022-11-14 11:59:00 +0100",
+                        "created_at": "2022-11-16 11:49:22 +0100",
                         "email": "jean@jacques.fr",
                         "family_situation": "divorced",
                         "first_name": "Jean",
@@ -4603,8 +4370,8 @@
                         "notify_by_email": true,
                         "notify_by_sms": true,
                         "number_of_children": 12,
-                        "phone_number": "633511324",
-                        "phone_number_formatted": "+33633511324",
+                        "phone_number": "0772848991",
+                        "phone_number_formatted": "+33772848991",
                         "responsible": null,
                         "responsible_id": null,
                         "user_profiles": [
@@ -4612,7 +4379,7 @@
                             "logement": null,
                             "notes": null,
                             "organisation": {
-                              "id": 355,
+                              "id": 319,
                               "email": null,
                               "name": "Organisation n°1",
                               "phone_number": null
@@ -4630,7 +4397,7 @@
             }
           },
           "401": {
-            "description": "Problème d'authentification",
+            "description": "Renvoie 'unauthorized' quand l'authentification est impossible",
             "content": {
               "application/json": {
                 "examples": {
@@ -4649,7 +4416,7 @@
             }
           },
           "403": {
-            "description": "Renvoie 'unauthorized' quand l'agent ne fait pas partie de l'organisation",
+            "description": "Renvoie 'forbidden' quand quand l'agent ne fait pas partie de l'organisation",
             "content": {
               "application/json": {
                 "examples": {
@@ -4667,7 +4434,7 @@
                   }
                 },
                 "schema": {
-                  "$ref": "#/components/schemas/error_unauthorized"
+                  "$ref": "#/components/schemas/error_forbidden"
                 }
               }
             }
