@@ -5,17 +5,26 @@ class LieuImporter
     @permanence = OpenStruct.new(permanence)
   end
 
-  def import_not_needed
+  def import_not_needed?
     no_organisation? || organisation_already_configured ||
       found_matching_lieu || found_matching_coordinates
   end
 
   def no_organisation?
-    @organisation.blank?
+    organisation.blank?
   end
 
   def organisation_already_configured
-    organisation.lieux.count >= 2
+    # organisation.lieux.count >= 2
+    false
+  end
+
+  def found_matching_lieu
+    organisation.lieux.find do |lieu|
+      lieu.address.downcase.gsub(/[^0-9a-z]/, "").start_with?(
+        @permanence.adresse.downcase.gsub(/[^0-9a-z]/, "")
+      )
+    end
   end
 
   def found_matching_coordinates
@@ -23,18 +32,18 @@ class LieuImporter
 
     organisation.lieux.find do |l|
       l.latitude == latitude && l.longitude == longitude
-    end.any?
+    end
   end
 
   def create!
     longitude, latitude = coordinates
 
     Lieu.create(
-      name: organisation.name,
+      name: @permanence.nom,
       organisation: organisation,
       latitude: latitude,
       longitude: longitude,
-      address: @structure.address,
+      address: full_address,
       availability: :enabled
     )
   end
@@ -43,46 +52,25 @@ class LieuImporter
     adresse_api_response.dig("features", 0, "geometry", "coordinates")
   end
 
-  def city_name
-    adresse_api_response.dig("features", 0, "properties", "city")
-  end
+  private
 
   def adresse_api_response
-    zipcode_regex = /\d{5}/
-    zipcode = @structure.address[zipcode_regex]
-
-    @adresse_api_response ||= Faraday.get(
-      "https://api-adresse.data.gouv.fr/search/",
-      q: @structure.address,
-      postcode: zipcode
-    )
+    @adresse_api_response ||= Rails.cache.fetch("api-adresse:#{full_address}:#{@permanence.code_postal}") do
+      Faraday.get(
+        "https://api-adresse.data.gouv.fr/search/",
+        q: full_address,
+        postcode: @permanence.code_postal
+      )
+    end
     JSON.parse(@adresse_api_response.body)
   end
 
-  private
-
   def full_address
-    "#{permanence.address}, #{}"
-  end
-
-  def coordinates
-    adresse_api_response.dig("features", 0, "geometry", "coordinates")
+    "#{@permanence.adresse}, #{@permanence.commune} #{@permanence.code_postal}"
   end
 
   def organisation
     @organisation ||= Organisation.find_by(external_id: @permanence.structureId)
-  end
-
-  def adresse_api_response
-    zipcode_regex = /\d{5}/
-    zipcode = @permanence.address[zipcode_regex]
-
-    @adresse_api_response ||= Faraday.get(
-      "https://api-adresse.data.gouv.fr/search/",
-      q: @permanence.address,
-      postcode: zipcode
-    )
-    JSON.parse(@adresse_api_response.body)
   end
 end
 
@@ -91,22 +79,18 @@ ActiveRecord::Base.logger = nil
 permanences = JSON.load_file("tmp/permanences.json")
 
 ActiveRecord::Base.transaction do
+  puts "#{Lieu.count} lieux"
   permanences.each do |permanence|
-    next unless organisation
+    importer = LieuImporter.new(permanence)
 
-    # Ne pas importer des nouveaux lieux si ils ont déjà été configurés manuellement
-    next if
-
-    matching_lieu = organisation.lieux.find do |lieu|
-      lieu.address.downcase.gsub(/[^0-9a-z]/, "").start_with?(permanence["adresse"].downcase.gsub(/[^0-9a-z]/, ""))
+    if importer.import_not_needed?
+      puts "noop for #{permanence}"
+    else
+      puts "creating for #{permanence}"
+      importer.create!
     end
-
-    # Ne pas importer le lieu de permanence s'il existe déjà
-    next if matching_lieu
-
-    addresse =
-      puts "Nouveau lieu potentiel pour #{organisation.name} :"
-    puts "adresse de permanence #{permanence['adresse']}"
-    puts "adresses de lieux #{organisation.lieux.map(&:address)}"
   end
+  puts "done !"
+  puts "#{Lieu.count} lieux"
+  raise "rollback!"
 end
