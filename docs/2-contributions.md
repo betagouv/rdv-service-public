@@ -92,3 +92,7 @@ Au sein de notre projet, il est assumé que la majorité du contexte autour du c
 Par exemple, si au sein d'une même PR on effectue un (petit 🤞) refactor puis une évolution fonctionnelle, il est apprécié que le refactor fasse l'objet d'un commit séparé.
 
 Note : il est possible de réécrire son historique de commits juste avant de merger, si des commits correctifs ont été ajoutés durant la revue.
+
+Un point d'attention : si vous avez mergé la branche `production` dans votre branche de feature pendant la vie de votre PR, veillez à ce que ces commits de merge ne finissent pas dans `production`. Pour ce faire :
+- si vous utilisez un squash merge, ces commits vont disparaître
+- si vous mergez dans `production` le plus pratique est de rebase votre branche sur `prodcution` avant de merger.
