@@ -82,7 +82,7 @@ permanences.each do |permanence|
     puts "noop for #{permanence}"
   else
     puts "creating for #{permanence}"
-    importer.create!
+    importer.create
   end
 end
 puts "done !"
