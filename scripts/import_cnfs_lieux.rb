@@ -6,17 +6,11 @@ class LieuImporter
   end
 
   def import_not_needed?
-    no_organisation? || organisation_already_configured ||
-      found_matching_lieu || found_matching_coordinates
+    no_organisation? || found_matching_lieu || found_matching_coordinates
   end
 
   def no_organisation?
     organisation.blank?
-  end
-
-  def organisation_already_configured
-    # organisation.lieux.count >= 2
-    false
   end
 
   def found_matching_lieu
@@ -35,7 +29,7 @@ class LieuImporter
     end
   end
 
-  def create!
+  def create
     longitude, latitude = coordinates
 
     Lieu.create(
@@ -74,23 +68,19 @@ class LieuImporter
   end
 end
 
-ActiveRecord::Base.logger = nil
-# permanences = JSON.load_file("/tmp/uploads/permanences.json")
-permanences = JSON.load_file("tmp/permanences.json")
+permanences = JSON.load_file("/tmp/uploads/permanences.json")
 
-ActiveRecord::Base.transaction do
-  puts "#{Lieu.count} lieux"
-  permanences.each do |permanence|
-    importer = LieuImporter.new(permanence)
+lieux_count = Lieu.count
 
-    if importer.import_not_needed?
-      puts "noop for #{permanence}"
-    else
-      puts "creating for #{permanence}"
-      importer.create!
-    end
+permanences.each do |permanence|
+  importer = LieuImporter.new(permanence)
+
+  if importer.import_not_needed?
+    puts "noop for #{permanence}"
+  else
+    puts "creating for #{permanence}"
+    importer.create!
   end
-  puts "done !"
-  puts "#{Lieu.count} lieux"
-  raise "rollback!"
 end
+puts "done !"
+puts "#{Lieu.count - lieux_count} lieux created"
