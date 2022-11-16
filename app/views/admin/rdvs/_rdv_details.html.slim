@@ -42,11 +42,9 @@
 - if rdv.prescripteur
   .d-flex.card-text.mt-1
     div.mr-1
-      i.fa.fa-fw.fa-user-pen>
+      i.fa.fa-fw.fa-people-carry-box>
     div
-      / = "Rendez-vous pris par #{rdv.prescripteur.full_name} (#{[rdv.prescripteur.phone_number, rdv.prescripteur.email].compact_blank.join(' - ')})"
-      | Rendez-vous pris par
-      =< link_to(rdv.prescripteur.full_name, prescripteur_admin_organisation_rdv_path(current_organisation, rdv))
+      = "Rendez-vous pris par #{rdv.prescripteur.full_name} (#{[rdv.prescripteur.phone_number, rdv.prescripteur.email].compact_blank.join(' - ')})"
 
 - if rdv.public_office? && rdv.overlapping_plages_ouvertures?
   div.my-3

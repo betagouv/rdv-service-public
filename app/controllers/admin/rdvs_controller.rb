@@ -49,10 +49,7 @@ class Admin::RdvsController < AgentAuthController
   end
 
   def show
-    authorize(@rdv)
-  end
-
-  def prescripteur
+    @uncollapsed_section = params[:uncollapsed_section]
     authorize(@rdv)
   end
 
