@@ -9,6 +9,21 @@ class LieuImporter
     no_organisation? || found_matching_lieu || found_matching_coordinates
   end
 
+  def create
+    longitude, latitude = coordinates
+
+    Lieu.create(
+      name: @permanence.nom,
+      organisation: organisation,
+      latitude: latitude,
+      longitude: longitude,
+      address: full_address,
+      availability: :enabled
+    )
+  end
+
+  private
+
   def no_organisation?
     organisation.blank?
   end
@@ -29,24 +44,9 @@ class LieuImporter
     end
   end
 
-  def create
-    longitude, latitude = coordinates
-
-    Lieu.create(
-      name: @permanence.nom,
-      organisation: organisation,
-      latitude: latitude,
-      longitude: longitude,
-      address: full_address,
-      availability: :enabled
-    )
-  end
-
   def coordinates
     adresse_api_response.dig("features", 0, "geometry", "coordinates")
   end
-
-  private
 
   def adresse_api_response
     @adresse_api_response ||= Rails.cache.fetch("api-adresse:#{full_address}:#{@permanence.code_postal}") do
