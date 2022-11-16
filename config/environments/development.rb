@@ -32,7 +32,7 @@ Rails.application.configure do
   config.hosts << ".ngrok.io"
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
-  config.active_storage.service = :local
+  # config.active_storage.service = :local
 
   config.action_mailer.perform_caching = false
   config.action_mailer.default_url_options = { host: ENV["HOST"].sub(%r{^https?://}, ""), utm_source: "dev", utm_medium: "email", utm_campaign: "default" }

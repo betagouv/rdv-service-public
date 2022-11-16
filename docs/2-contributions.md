@@ -52,7 +52,7 @@ make autocorrect          Fix autocorrectable lint issues
 
 ## Tests
 
-Note : nos bonnes pratiques sur les tests sont à lire ici : [Bonnes pratiques de test](docs/bonnes-pratiques-de-tests.md)
+Note : nos bonnes pratiques sur les tests sont à lire ici : [Bonnes pratiques de test](bonnes-pratiques-de-tests.md)
 
 Nous utilisons [RSpec](https://rspec.info/) pour écrire nos tests. En principe, la base de données de tests est créée automatiquement. 
 
