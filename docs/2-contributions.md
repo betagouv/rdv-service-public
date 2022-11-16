@@ -79,3 +79,16 @@ bin/rspec file_path/file_name_spec.rb
 ```bash
 bin/rspec file_path/file_name_spec.rb:line_number
 ```
+
+## Workflow de merge des pull requests
+
+Afin de garder un historique git lisible et navigable par `git blame`, nous recommandons l'une de ces deux façons de merger une PR :
+
+- Utiliser _"Squash and merge"_ si les commits de la PR n'apportent pas individuellement de valeur explicative sur le contexte.
+- Utiliser _"Create a merge commit"_ si la PR contient des commits qui permettent de mieux comprendre les différents changements indépendants introduits dans la PR.
+
+Au sein de notre projet, il est assumé que la majorité du contexte autour du changement est trouvable dans la PR et non dans les commits. Cependant, il est tout à fait possible de conserver ses commits si on les a bien créés pour qu'ils permettent d'obtenir rapidement une synthèse du contexte via `git blame`.
+
+Par exemple, si au sein d'une même PR on effectue un (petit 🤞) refactor puis une évolution fonctionnelle, il est apprécié que le refactor fasse l'objet d'un commit séparé.
+
+Note : il est possible de réécrire son historique de commits juste avant de merger, si des commits correctifs ont été ajoutés durant la revue.
