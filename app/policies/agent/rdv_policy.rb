@@ -13,6 +13,8 @@ class Agent::RdvPolicy < DefaultAgentPolicy
     admin_and_same_org?
   end
 
+  alias prescripteur? show?
+
   class Scope < Scope
     def resolve
       organisation_scope = scope.where(organisation: current_agent.organisations)

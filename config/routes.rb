@@ -154,6 +154,7 @@ Rails.application.routes.draw do
           resources :participations, only: %i[update destroy]
           member do
             post :send_reminder_manually
+            get :prescripteur
           end
           collection do
             post :rdvs_users_export
