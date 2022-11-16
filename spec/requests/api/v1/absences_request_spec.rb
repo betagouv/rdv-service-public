@@ -189,15 +189,9 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
 
         let!(:absence_count_before) { Absence.count }
 
-        response 403, "Impossible de créer une absence pour un.e agent.e dans un service différent" do
+        it_behaves_like "an endpoint with access control", "l'agent·e est dans un service différent" do
           let!(:agent) { create(:agent, service: create(:service)) }
           let!(:agent_role) { create(:agent_role, agent: agent, level: AgentRole::LEVEL_BASIC, organisation: organisation) }
-
-          schema "$ref" => "#/components/schemas/error_unauthorized"
-
-          run_test!
-
-          it { expect(Absence.count).to eq(absence_count_before) }
         end
 
         response 200, "Possible si l'agent est admin", document: false do
@@ -250,12 +244,8 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
 
       it_behaves_like "an authenticated endpoint"
 
-      response 403, "Pas autorisé à accéder à cette absence" do
+      it_behaves_like "an endpoint with access control", "l'agent·e n'est pas autorisé·e à accéder à cette absence" do
         let(:absence_id) { absence2.id }
-
-        schema "$ref" => "#/components/schemas/error_unauthorized"
-
-        run_test!
       end
 
       it_behaves_like "an endpoint that looks for a resource", "l'absence n'existe pas" do
@@ -304,12 +294,8 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
 
       it_behaves_like "an authenticated endpoint"
 
-      response 403, "Pas autorisé à accéder à cette absence" do
+      it_behaves_like "an endpoint with access control", "l'agent·e n'est pas autorisé·e à accéder à cette absence" do
         let(:absence_id) { absence2.id }
-
-        schema "$ref" => "#/components/schemas/error_unauthorized"
-
-        run_test!
       end
 
       it_behaves_like "an endpoint that looks for a resource", "l'absence n'existe pas" do
@@ -349,12 +335,8 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
 
       it_behaves_like "an authenticated endpoint"
 
-      response 403, "Pas autorisé à accéder à cette absence" do
+      it_behaves_like "an endpoint with access control", "l'agent·e n'est pas autorisé·e à accéder à cette absence" do
         let(:absence_id) { absence2.id }
-
-        schema "$ref" => "#/components/schemas/error_unauthorized"
-
-        run_test!
       end
 
       it_behaves_like "an endpoint that looks for a resource", "l'absence n'existe pas" do

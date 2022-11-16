@@ -55,20 +55,12 @@ describe "User Profile authentified API", swagger_doc: "v1/api.json" do
         it { expect(created_user_profile.notes).to eq("Super Note") }
       end
 
-      response 403, "Impossible de créer un profil utilisateur quand on a pas accès à l'organisation" do
+      it_behaves_like "an endpoint with access control", "l'agent·e n'a pas accès à l'organisation" do
         let!(:unauthorized_orga) { create(:organisation) }
         let(:organisation_id) { unauthorized_orga.id }
         let(:user_id) { user.id }
         let(:logement) { "sdf" }
         let(:notes) { "Super Note" }
-
-        let!(:user_profile_count_before) { UserProfile.count }
-
-        schema "$ref" => "#/components/schemas/error_unauthorized"
-
-        run_test!
-
-        it { expect(UserProfile.count).to eq(user_profile_count_before) }
       end
 
       it_behaves_like "an authenticated endpoint" do
@@ -76,21 +68,6 @@ describe "User Profile authentified API", swagger_doc: "v1/api.json" do
         let(:user_id) { user.id }
         let(:logement) { "sdf" }
         let(:notes) { "Super Note" }
-      end
-
-      response 403, "Impossible de créer un profil utilisateur quand l'organisation n'est pas connue", document: false do
-        let(:organisation_id) { "inconnu" }
-        let(:user_id) { user.id }
-        let(:logement) { "sdf" }
-        let(:notes) { "Super Note" }
-
-        let!(:user_profile_count_before) { UserProfile.count }
-
-        schema "$ref" => "#/components/schemas/error_unauthorized"
-
-        run_test!
-
-        it { expect(UserProfile.count).to eq(user_profile_count_before) }
       end
 
       response 422, "Renvoie 'unprocessable_entity' quand l'utilisateur ou l'organisation n'est pas connue ou quand le logement n'est pas parmi les choix possibles ou que ce profil existe déjà" do

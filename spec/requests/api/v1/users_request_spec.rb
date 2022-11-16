@@ -51,12 +51,8 @@ describe "Users API", swagger_doc: "v1/api.json" do
         let!(:user) { instance_double(User, id: "123") }
       end
 
-      response 403, "Renvoie 'unauthorized' quand l'usager·ère est lié·e à une autre organisation" do
+      it_behaves_like "an endpoint with access control", "l'usager·ère est lié·e à une autre organisation" do
         let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [create(:organisation)]) }
-
-        schema "$ref" => "#/components/schemas/error_unauthorized"
-
-        run_test!
       end
     end
 
@@ -239,12 +235,8 @@ describe "Users API", swagger_doc: "v1/api.json" do
         let!(:user) { instance_double(User, id: "123") }
       end
 
-      response 403, "Renvoie 'unauthorized' quand l'usager·ère est lié·e à une autre organisation" do
+      it_behaves_like "an endpoint with access control", "l'usager·ère est lié·e à une autre organisation" do
         let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [create(:organisation)]) }
-
-        schema "$ref" => "#/components/schemas/error_unauthorized"
-
-        run_test!
       end
     end
 
@@ -295,12 +287,8 @@ describe "Users API", swagger_doc: "v1/api.json" do
         let!(:user) { instance_double(User, id: "123") }
       end
 
-      response 403, "Renvoie 'unauthorized' quand l'usager·ère est lié·e à une autre organisation" do
+      it_behaves_like "an endpoint with access control", "l'usager·ère est lié·e à une autre organisation" do
         let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [create(:organisation)]) }
-
-        schema "$ref" => "#/components/schemas/error_unauthorized"
-
-        run_test!
       end
     end
   end
@@ -595,13 +583,9 @@ describe "Users API", swagger_doc: "v1/api.json" do
         let!(:user) { instance_double(User, id: "123") }
       end
 
-      response 403, "Renvoie 'unauthorized' quand l'agent ne fait pas partie de l'organisation" do
+      it_behaves_like "an endpoint with access control", "quand l'agent ne fait pas partie de l'organisation" do
         let!(:agent) { create(:agent, basic_role_in_organisations: [create(:organisation)]) }
         let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [organisation], email: "jean@jacques.fr") }
-
-        schema "$ref" => "#/components/schemas/error_unauthorized"
-
-        run_test!
       end
 
       it_behaves_like "an endpoint that looks for a resource", "l'usager·ère est lié·e à une autre organisation" do

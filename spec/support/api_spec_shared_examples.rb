@@ -11,6 +11,14 @@ module ApiSpecSharedExamples
     end
   end
 
+  shared_context "an endpoint with access control" do |details|
+    response 403, "Renvoie 'forbidden' quand #{details}" do
+      schema "$ref" => "#/components/schemas/error_forbidden"
+
+      run_test!
+    end
+  end
+
   shared_context "an endpoint that looks for a resource" do |details|
     response 404, "Renvoie 'not_found' quand #{details}" do
       schema "$ref" => "#/components/schemas/error_not_found"

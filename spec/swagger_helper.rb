@@ -351,7 +351,7 @@ RSpec.configure do |config|
             },
             required: %w[errors],
           },
-          error_unauthorized: {
+          error_forbidden: {
             type: "object",
             properties: {
               errors: {
