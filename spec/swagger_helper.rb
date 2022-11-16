@@ -234,30 +234,6 @@ RSpec.configure do |config|
             },
             required: %w[id ical_uid title first_day end_day start_time end_time agent organisation],
           },
-          organizations: {
-            type: "object",
-            properties: {
-              organizations: {
-                type: "array",
-                items: { "$ref" => "#/components/schemas/organization" },
-              },
-              meta: { "$ref" => "#/components/schemas/meta" },
-            },
-            required: %w[organizations meta],
-          },
-          organization: {
-            type: "object",
-            properties: {
-              id: { type: "integer" },
-              label: { type: "string" },
-              group_id: { type: "integer" },
-              phone_number: { type: "string", nullable: true },
-              email: { type: "string", nullable: true },
-              website: { type: "string", nullable: true },
-              public_link: { type: "string" },
-            },
-            required: %w[id label group_id public_link],
-          },
           invitation: {
             type: "object",
             properties: {
@@ -312,26 +288,6 @@ RSpec.configure do |config|
               user: { "$ref" => "#/components/schemas/user" },
             },
             required: %w[send_lifecycle_notifications send_reminder_notification status user],
-          },
-          groups: {
-            type: "object",
-            properties: {
-              groups: {
-                type: "array",
-                items: { "$ref" => "#/components/schemas/group" },
-              },
-              meta: { "$ref" => "#/components/schemas/meta" },
-            },
-            required: %w[groups meta],
-          },
-          group: {
-            type: "object",
-            properties: {
-              id: { type: "integer" },
-              name: { type: "string" },
-              label: { type: "string" },
-            },
-            required: %w[id label],
           },
           meta: {
             type: "object",
@@ -422,10 +378,6 @@ RSpec.configure do |config|
         {
           name: "RDV",
           description: "Pour manipuler des rendez-vous",
-        },
-        {
-          name: "Group",
-          description: "Pour manipuler des groupes (représentation des territoires)",
         },
         {
           name: "Organisation",
