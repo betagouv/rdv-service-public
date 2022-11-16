@@ -96,3 +96,5 @@ Note : il est possible de réécrire son historique de commits juste avant de me
 Un point d'attention : si vous avez mergé la branche `production` dans votre branche de feature pendant la vie de votre PR, veillez à ce que ces commits de merge ne finissent pas dans `production`. Pour ce faire :
 - si vous utilisez un squash merge, ces commits vont disparaître
 - si vous mergez dans `production` le plus pratique est de rebase votre branche sur `prodcution` avant de merger.
+
+Note : lorsque votre feature branch n'est plus à jour par rapport à `production`, GitHub affiche un avertissement "This branch is out-of-date with the base branch" et vous propose de remédier à la situation. Ce faisant, on déclenche une CI qui teste le code tel qu'il serait s'il était mergé. Si cette CI passe, on peut alors merger.
