@@ -12,7 +12,7 @@ class Notifiers::RdvCollectifParticipations < ::BaseService
 
     # FIXME: this is not ideal but it's the simplest workaround to avoid notifying the agent
     rdv_created = Notifiers::RdvCreated.new(@rdv, @author, new_participants_to_notify)
-    rdv_created_invitation_tokens = rdv_created.generate_invitation_tokens
+    rdv_created.generate_invitation_tokens
     rdv_created.notify_users_by_mail
     rdv_created.notify_users_by_sms
 
@@ -21,7 +21,7 @@ class Notifiers::RdvCollectifParticipations < ::BaseService
     rdv_cancelled.notify_users_by_mail
     rdv_cancelled.notify_users_by_sms
 
-    rdv_created_invitation_tokens
+    rdv_created.rdv_users_tokens_by_user_id
   end
 
   private
