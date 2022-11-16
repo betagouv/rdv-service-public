@@ -234,30 +234,6 @@ RSpec.configure do |config|
             },
             required: %w[id ical_uid title first_day end_day start_time end_time agent organisation],
           },
-          organizations: {
-            type: "object",
-            properties: {
-              organizations: {
-                type: "array",
-                items: { "$ref" => "#/components/schemas/organization" },
-              },
-              meta: { "$ref" => "#/components/schemas/meta" },
-            },
-            required: %w[organizations meta],
-          },
-          organization: {
-            type: "object",
-            properties: {
-              id: { type: "integer" },
-              label: { type: "string" },
-              group_id: { type: "integer" },
-              phone_number: { type: "string", nullable: true },
-              email: { type: "string", nullable: true },
-              website: { type: "string", nullable: true },
-              public_link: { type: "string" },
-            },
-            required: %w[id label group_id public_link],
-          },
           invitation: {
             type: "object",
             properties: {
