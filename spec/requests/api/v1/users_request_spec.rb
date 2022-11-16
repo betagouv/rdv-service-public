@@ -156,35 +156,19 @@ describe "Users API", swagger_doc: "v1/api.json" do
 
       it_behaves_like "an authenticated endpoint"
 
-      response 422, "Des paramètres sont manquants ou mal formés ou impossibles" do
+      it_behaves_like "an endpoint that checks parameters", "des paramètres sont manquants ou mal formés ou impossibles", true do
         let(:"organisation_ids[]") { nil }
         let(:first_name) { nil }
         let(:last_name) { nil }
-
-        schema "$ref" => "#/components/schemas/errors_unprocessable_entity"
-
-        run_test!
       end
 
-      response 422, "phone number is misformatted", document: false do
+      it_behaves_like "an endpoint that checks parameters", "phone number is misformatted", false do
         let(:phone_number) { "misformatted phone number" }
-
-        schema "$ref" => "#/components/schemas/errors_unprocessable_entity"
-
-        run_test!
-
-        it { expect(parsed_response_body["errors"]).to match({ phone_number: [{ error: "invalid" }] }.with_indifferent_access) }
       end
 
-      response 422, "email is taken", document: false do
+      it_behaves_like "an endpoint that checks parameters", "email is taken", false do
         let!(:existing_user) { create(:user, email: "jean@jacques.fr") }
         let(:email) { existing_user.email }
-
-        schema "$ref" => "#/components/schemas/errors_unprocessable_entity"
-
-        run_test!
-
-        it { expect(parsed_response_body["errors"]["email"].first).to match({ error: "taken", value: email, id: existing_user.id }.with_indifferent_access) }
       end
     end
   end
@@ -454,39 +438,23 @@ describe "Users API", swagger_doc: "v1/api.json" do
         let(:last_name) { "Silverhand" }
       end
 
-      response 422, "Des paramètres sont manquants ou mal formés ou impossibles" do
+      it_behaves_like "an endpoint that checks parameters", "des paramètres sont manquants, mal formés ou impossibles", true do
         let(:first_name) { nil }
         let(:last_name) { nil }
-
-        schema "$ref" => "#/components/schemas/errors_unprocessable_entity"
-
-        run_test!
       end
 
-      response 422, "phone number is misformatted", document: false do
+      it_behaves_like "an endpoint that checks parameters", "phone number is misformatted", false do
         let(:first_name) { "Johnny" }
         let(:last_name) { "Silverhand" }
         let(:phone_number) { "misformatted phone number" }
-
-        schema "$ref" => "#/components/schemas/errors_unprocessable_entity"
-
-        run_test!
-
-        it { expect(parsed_response_body["errors"]).to match({ phone_number: [{ error: "invalid" }] }.with_indifferent_access) }
       end
 
-      response 422, "email is taken", document: false do
+      it_behaves_like "an endpoint that checks parameters", "email is taken", false do
         let(:first_name) { "Johnny" }
         let(:last_name) { "Silverhand" }
 
         let!(:existing_user) { create(:user, email: "jean@jacques.fr") }
         let(:email) { existing_user.email }
-
-        schema "$ref" => "#/components/schemas/errors_unprocessable_entity"
-
-        run_test!
-
-        it { expect(parsed_response_body["errors"]["email"].first).to match({ error: "taken", value: email, id: existing_user.id }.with_indifferent_access) }
       end
     end
   end

@@ -70,50 +70,26 @@ describe "User Profile authentified API", swagger_doc: "v1/api.json" do
         let(:notes) { "Super Note" }
       end
 
-      response 422, "Renvoie 'unprocessable_entity' quand l'utilisateur ou l'organisation n'est pas connue ou quand le logement n'est pas parmi les choix possibles ou que ce profil existe déjà" do
+      it_behaves_like "an endpoint that checks parameters", "l'utilisateur est inconnu, ou l'organisation est inconnue, ou le logement est incorrect, ou ce profil existe déjà", true do
         let(:organisation_id) { organisation.id }
         let(:user_id) { "inconnu" }
         let(:logement) { "sdf" }
         let(:notes) { "Super Note" }
-
-        let!(:user_profile_count_before) { UserProfile.count }
-
-        schema "$ref" => "#/components/schemas/error_unprocessable_entity"
-
-        run_test!
-
-        it { expect(UserProfile.count).to eq(user_profile_count_before) }
       end
 
-      response 422, "Renvoie 'unprocessable_entity' quand le logement n'est pas parmi les choix possibles", document: false do
+      it_behaves_like "an endpoint that checks parameters", "le logement n'est pas parmi les choix possibles", false do
         let(:organisation_id) { organisation.id }
         let(:user_id) { user.id }
         let(:logement) { "inconnu" }
         let(:notes) { "Super Note" }
-
-        let!(:user_profile_count_before) { UserProfile.count }
-
-        schema "$ref" => "#/components/schemas/error_unprocessable_entity"
-
-        run_test!
-
-        it { expect(UserProfile.count).to eq(user_profile_count_before) }
       end
 
-      response 422, "Renvoie 'unprocessable_entity' quand le user_profil existe déjà", document: false do
+      it_behaves_like "an endpoint that checks parameters", "le user_profil existe déjà", false do
         let!(:existing_profile) { create(:user_profile, user: user, organisation: organisation) }
         let(:organisation_id) { organisation.id }
         let(:user_id) { user.id }
         let(:logement) { "sdf" }
         let(:notes) { "Super Note" }
-
-        let!(:user_profile_count_before) { UserProfile.count }
-
-        schema "$ref" => "#/components/schemas/error_unprocessable_entity"
-
-        run_test!
-
-        it { expect(UserProfile.count).to eq(user_profile_count_before) }
       end
     end
   end

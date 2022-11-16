@@ -144,38 +144,22 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
         let(:end_time) { "15:00" }
       end
 
-      response 422, "Renvoie 'unprocessable_entity' quand end_time est avant start_time ou que les formats ne sont pas corrects" do
+      it_behaves_like "an endpoint that checks parameters", "quand end_time est avant start_time ou que les formats ne sont pas corrects", true do
         let(:agent_email) { "agent@example.com" }
         let(:title) { "Super absence" }
         let(:first_day) { "2023-11-20" }
         let(:start_time) { "08:00" }
         let(:end_day) { "2023-11-20" }
         let(:end_time) { "06:00" }
-
-        let!(:absence_count_before) { Absence.count }
-
-        schema "$ref" => "#/components/schemas/error_unprocessable_entity"
-
-        run_test!
-
-        it { expect(Absence.count).to eq(absence_count_before) }
       end
 
-      response 422, "Renvoie 'unprocessable_entity' quand le format du start_time ou end_time n'est pas correct", document: false do
+      it_behaves_like "an endpoint that checks parameters", "le format du start_time ou end_time n'est pas correct", false do
         let(:agent_email) { "agent@example.com" }
         let(:title) { "Super absence" }
         let(:first_day) { "2023-11-20" }
         let(:start_time) { "8h" }
         let(:end_day) { "2023-11-20" }
         let(:end_time) { "15:00" }
-
-        let!(:absence_count_before) { Absence.count }
-
-        schema "$ref" => "#/components/schemas/error_unprocessable_entity"
-
-        run_test!
-
-        it { expect(Absence.count).to eq(absence_count_before) }
       end
 
       context "Crée une absence pour un.e agent.e dans un service différent" do

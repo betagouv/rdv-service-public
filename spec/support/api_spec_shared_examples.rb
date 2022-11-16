@@ -27,6 +27,14 @@ module ApiSpecSharedExamples
     end
   end
 
+  shared_context "an endpoint that checks parameters" do |details, document|
+    response 422, "Renvoie 'unprocessable_entity' quand #{details}", document: document do
+      schema "$ref" => "#/components/schemas/error_unprocessable_entity"
+
+      run_test!
+    end
+  end
+
   shared_context "a rate limited endpoint" do |method, path|
     response 429, "Renvoie 'too_many_requests' quand la limite d'appels est atteinte" do
       schema "$ref" => "#/components/schemas/error_too_many_request"
