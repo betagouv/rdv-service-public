@@ -44,10 +44,7 @@
     div.mr-1
       i.fa.fa-fw.fa-people-carry-box>
     div
-      strong> Prescripteur&nbsp;:
-      = rdv.prescripteur.full_name
-      = " - #{rdv.prescripteur.email}"
-      = " - #{rdv.prescripteur.phone_number}" if rdv.prescripteur.phone_number.present?
+      = "Rendez-vous pris par #{rdv.prescripteur.full_name} (#{[rdv.prescripteur.phone_number, rdv.prescripteur.email].compact_blank.join(' - ')})"
 
 - if rdv.public_office? && rdv.overlapping_plages_ouvertures?
   div.my-3
