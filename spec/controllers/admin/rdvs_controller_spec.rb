@@ -169,7 +169,7 @@ describe Admin::RdvsController, type: :controller do
       expect(response).to redirect_to(admin_organisation_rdvs_path)
     end
 
-    it "call Agents::ExportMailer" do
+    it "sends export email" do
       params = {
         start: nil,
         end: nil,
@@ -180,23 +180,9 @@ describe Admin::RdvsController, type: :controller do
         status: "",
       }
 
-      # rubocop:disable RSpec/StubbedMock
-      expect(Agents::ExportMailer).to receive(:rdv_export).with(
-        agent,
-        [organisation.id],
-        {
-          "start" => params[:start],
-          "end" => params[:end],
-          "organisation_id" => params[:organisation_id],
-          "agent_id" => params[:agent_id],
-          "user_id" => params[:user_id],
-          "lieu_id" => params[:lieu_id],
-          "status" => params[:status],
-        }
-      ).and_return(instance_double(ActionMailer::MessageDelivery, deliver_later: nil))
-      # rubocop:enable RSpec/StubbedMock
-
-      post :export, params: { organisation_id: organisation.id }.merge(params)
+      expect do
+        post :export, params: { organisation_id: organisation.id }.merge(params)
+      end.to have_enqueued_mail(Agents::ExportMailer, :rdv_export).with(agent, [organisation.id], params.stringify_keys)
     end
   end
 
@@ -209,7 +195,7 @@ describe Admin::RdvsController, type: :controller do
         expect(response).to redirect_to(admin_organisation_rdvs_path)
       end
 
-      it "call Agents::ExportMailer" do
+      it "sends export email" do
         params = {
           start: nil,
           end: nil,
@@ -220,23 +206,9 @@ describe Admin::RdvsController, type: :controller do
           status: "",
         }
 
-        # rubocop:disable RSpec/StubbedMock
-        expect(Agents::ExportMailer).to receive(:rdvs_users_export).with(
-          agent,
-          [organisation.id],
-          {
-            "start" => params[:start],
-            "end" => params[:end],
-            "organisation_id" => params[:organisation_id],
-            "agent_id" => params[:agent_id],
-            "user_id" => params[:user_id],
-            "lieu_id" => params[:lieu_id],
-            "status" => params[:status],
-          }
-        ).and_return(instance_double(ActionMailer::MessageDelivery, deliver_later: nil))
-        # rubocop:enable RSpec/StubbedMock
-
-        post :rdvs_users_export, params: { organisation_id: organisation.id }.merge(params)
+        expect do
+          post :rdvs_users_export, params: { organisation_id: organisation.id }.merge(params)
+        end.to have_enqueued_mail(Agents::ExportMailer, :rdvs_users_export).with(agent, [organisation.id], params.stringify_keys)
       end
     end
   end
