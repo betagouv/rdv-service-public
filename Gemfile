@@ -63,6 +63,7 @@ gem "typhoeus"
 # API documentation
 gem "rswag-api"
 gem "rswag-ui"
+gem "rswag-specs"
 
 # Form
 gem "simple_form", "~> 5.0"
@@ -107,7 +108,6 @@ group :development, :test do
   gem "selenium-webdriver"
   gem "spring", require: false
   gem "spring-commands-rspec"
-  gem "rswag-specs"
 end
 
 group :development do
