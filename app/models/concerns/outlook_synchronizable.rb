@@ -87,13 +87,13 @@ module OutlookSynchronizable
   end
 
   # payload (hash): a JSON hash representing the event entity
-  # folder_id (string): The Id of the calendar folder to create the event in.
-  #                     If nil, event is created in the default calendar folder.
-  def create_event(payload, folder_id = nil)
+  # calendar_id (string): The Id of the calendar to create the event in.
+  #                     If nil, event is created in the default calendar.
+  def create_event(payload, calendar_id = nil)
     refresh_outlook_token
 
-    request_url = if folder_id.present?
-                    "me/Calendars/#{folder_id}"
+    request_url = if calendar_id.present?
+                    "me/Calendars/#{calendar_id}/Events"
                   else
                     "me/Events"
                   end
