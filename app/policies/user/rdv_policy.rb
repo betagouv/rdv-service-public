@@ -4,6 +4,8 @@ class User::RdvPolicy < ApplicationPolicy
   alias current_user pundit_user
 
   def rdv_belongs_to_user_or_relatives?
+    return true if record.collectif?
+
     (record.user_ids & current_user.available_users_for_rdv.pluck(:id)).any?
   end
 
@@ -23,7 +25,7 @@ class User::RdvPolicy < ApplicationPolicy
   end
 
   def cancel_participation?
-    existing_participation = record.rdvs_users.find_by(user: current_user)
+    existing_participation = current_user.participation_for(record)
     cancel? && existing_participation.present? && existing_participation.not_cancelled?
   end
 

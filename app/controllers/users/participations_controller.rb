@@ -41,6 +41,7 @@ class Users::ParticipationsController < UserAuthController
       redirect_to users_rdv_path(@rdv, invitation_token: @rdv.rdv_user_token(current_user.id))
     elsif existing_participation.present? && existing_participation.excused?
       existing_participation.change_status_and_notify(current_user, "unknown")
+      set_user_name_initials_verified
       flash[:notice] = "Ré-Inscription confirmée"
       redirect_to users_rdv_path(@rdv, invitation_token: existing_participation.rdv_user_token)
     else
@@ -48,6 +49,7 @@ class Users::ParticipationsController < UserAuthController
       rdvs_users.reject! { |rdv_user| rdv_user.user_id.in? current_user.self_and_relatives.map(&:id) }
       rdvs_users << RdvsUser.new(rdv: @rdv, user: @user)
       @rdv.update_and_notify(current_user, rdvs_users: rdvs_users)
+      set_user_name_initials_verified
       flash[:notice] = "Inscription confirmée"
       redirect_to users_rdv_path(@rdv, invitation_token: @rdv.rdv_user_token(current_user.id))
     end
@@ -59,6 +61,7 @@ class Users::ParticipationsController < UserAuthController
       redirect_to users_rdv_path(@rdv, invitation_token: @rdv.rdv_user_token(current_user.id))
     else
       existing_participation.change_status_and_notify(current_user, "excused")
+      set_user_name_initials_verified
       flash[:notice] = "Désinscription de l'atelier confirmée"
       redirect_to users_rdv_path(@rdv, invitation_token: existing_participation.rdv_user_token)
     end

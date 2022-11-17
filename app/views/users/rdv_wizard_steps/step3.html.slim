@@ -7,4 +7,7 @@
       = render "rdv_wizard_summary", rdv_wizard: @rdv_wizard
       .card-body
         .col.text-center
-            = link_to "Confirmer mon RDV", users_rdvs_path(@rdv_wizard.to_query), method: :post, class: "btn btn-primary"
+        - if @rdv_wizard.rdv.persisted?
+          = link_to "Confirmer ma participation", new_users_rdv_participation_path(@rdv_wizard.rdv), method: :get, class: "btn btn-primary"
+        - else
+          = link_to "Confirmer mon RDV", users_rdvs_path(@rdv_wizard.to_query), method: :post, class: "btn btn-primary"

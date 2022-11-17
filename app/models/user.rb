@@ -145,7 +145,7 @@ class User < ApplicationRecord
   end
 
   def participation_for(rdv)
-    rdv.rdvs_users.to_a.find { |participation| participation.user_id == id }
+    rdv.rdvs_users.to_a.find { |participation| participation.user_id.in?(self_and_relatives_and_responsible.map(&:id)) }
   end
 
   def deleted_email

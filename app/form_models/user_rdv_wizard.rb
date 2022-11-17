@@ -12,17 +12,20 @@ module UserRdvWizard
 
     delegate :motif, :starts_at, :users, :service, to: :rdv
     delegate :errors, to: :rdv
-    delegate :lieu_full_name, to: :creneau
 
     def initialize(user, attributes)
       @user = user
       @attributes = attributes.to_h.symbolize_keys
       rdv_defaults = { user_ids: [user&.id] }
-      @rdv = Rdv.new(
-        rdv_defaults
-          .merge(@attributes.slice(:starts_at, :user_ids, :motif_id))
-      )
-      @rdv.duration_in_min ||= @rdv.motif.default_duration_in_min if @rdv.motif.present?
+      if attributes[:rdv_id].present?
+        @rdv = Rdv.find(attributes[:rdv_id])
+      else
+        @rdv = Rdv.new(
+          rdv_defaults
+            .merge(@attributes.slice(:starts_at, :user_ids, :motif_id))
+        )
+        @rdv.duration_in_min ||= @rdv.motif.default_duration_in_min if @rdv.motif.present?
+      end
     end
 
     def invitation?
@@ -53,7 +56,7 @@ module UserRdvWizard
 
     def to_query
       { motif_id: rdv.motif.id, starts_at: rdv.starts_at.to_s, user_ids: rdv.users&.map(&:id) }
-        .merge(@attributes.slice(:where, :departement, :lieu_id, :latitude, :longitude, :city_code, :street_ban_id, :invitation_token, :address, :organisation_ids, :motif_search_terms))
+        .merge(@attributes.slice(:where, :rdv_id, :departement, :lieu_id, :latitude, :longitude, :city_code, :street_ban_id, :invitation_token, :address, :organisation_ids, :motif_search_terms))
     end
 
     def to_search_query

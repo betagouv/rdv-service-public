@@ -3,7 +3,7 @@
 class Users::RdvWizardStepsController < UserAuthController
   RDV_PERMITTED_PARAMS = [:starts_at, :motif_id, :context, { user_ids: [] }].freeze
   EXTRA_PERMITTED_PARAMS = [
-    :lieu_id, :departement, :where, :created_user_id, :latitude, :longitude, :city_code,
+    :lieu_id, :departement, :where, :created_user_id, :latitude, :longitude, :city_code, :rdv_id,
     :street_ban_id, :invitation_token, :address, :motif_search_terms, :organisation_id, { organisation_ids: [] },
   ].freeze
   after_action :allow_iframe
@@ -15,7 +15,7 @@ class Users::RdvWizardStepsController < UserAuthController
     @rdv_wizard = rdv_wizard_for(current_user, query_params)
     @rdv = @rdv_wizard.rdv
     authorize(@rdv)
-    if @rdv_wizard.creneau.present?
+    if @rdv_wizard.creneau.present? || params[:rdv_id].present? || @rdv_wizard.rdv.persisted?
       render current_step
     else
       flash[:error] = "Ce créneau n'est plus disponible. Veuillez en sélectionner un autre."

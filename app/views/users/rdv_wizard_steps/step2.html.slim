@@ -6,7 +6,7 @@
     .card
       = render "rdv_wizard_summary", rdv_wizard: @rdv_wizard
       .card-body
-        = simple_form_for(@rdv, url: users_rdv_wizard_step_path(step: 2, **@rdv_wizard.to_query.except(:rdv))) do |f|
+        = simple_form_for(@rdv, url: users_rdv_wizard_step_path(step: 2, **@rdv_wizard.to_query.except(:rdv)), method: :post) do |f|
 
           = f.association :motif, as: :hidden, wrapper_html: { class: "mb-0" }
           = f.input :starts_at, as: :hidden, wrapper_html: { class: "mb-0" }

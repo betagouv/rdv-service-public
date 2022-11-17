@@ -26,7 +26,7 @@ ul.list-group.list-group-flush
   li.list-group-item
     .fa.fa-user>
     = users_to_sentence(rdv.users)
-    - if current_user.present? && !current_user.only_invited?
+    - if current_user.present? && !current_user.only_invited? && current_user.participation_for(rdv).not_cancelled? && !rdv.in_the_past?
       span>
       = link_to t(".change_participant"), users_rdv_participations_path(rdv)
       .fa.fa-edit<
@@ -45,6 +45,11 @@ ul.list-group.list-group-flush
     li.list-group-item.font-italic
       i.fa.fa-ban>
       | Ce rendez-vous n'est pas annulable en ligne. Prenez contact avec le secrétariat.
+
+- if rdv.collectif? && current_user.participation_for(rdv).cancelled?
+  li.list-group-item.font-italic
+    i.fa.fa-ban>
+    | Votre participation à ce rdv a été annulé.
 
 .py-2.d-flex.justify-content-between.align-items-center
   .text-left.mt-2
