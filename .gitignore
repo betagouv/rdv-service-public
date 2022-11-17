@@ -51,3 +51,6 @@ coverage/
 # Postgres dumps
 **/20*.tar.gz
 **/20*.pgsql
+
+# DB Diagram changes too often to be commited
+docs/domain_model.svg
