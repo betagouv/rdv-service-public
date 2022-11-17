@@ -109,7 +109,7 @@ class Admin::RdvsController < AgentAuthController
   def set_scoped_organisations
     @scoped_organisations = if params[:scoped_organisation_id].blank?
                               # l'agent n'a pas accès au filtre d'organisations ou a rénitialisé la page
-                              current_agent.organisations.where(id: current_organisation.id)
+                              Organisation.where(id: current_organisation.id)
                             elsif params[:scoped_organisation_id] == "0"
                               # l'agent a sélectionné 'Toutes'
                               current_agent.organisations
