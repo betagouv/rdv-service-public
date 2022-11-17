@@ -4,7 +4,7 @@ class Agents::ExportMailer < ApplicationMailer
   def rdv_export(agent, organisation_ids, options)
     @agent = agent
     now = Time.zone.now
-    organisations = Organisation.where(id: organisation_ids)
+    organisations = agent.organisations.where(id: organisation_ids)
     rdvs = Rdv.search_for(organisations, options)
 
     # Le département du Var se base sur la position de chaque caractère du nom
@@ -29,7 +29,7 @@ class Agents::ExportMailer < ApplicationMailer
   def rdvs_users_export(agent, organisation_ids, options)
     @agent = agent
     now = Time.zone.now
-    organisations = Organisation.where(id: organisation_ids)
+    organisations = agent.organisations.where(id: organisation_ids)
 
     rdvs = Rdv.search_for(organisations, options)
     rdvs_users = RdvsUser.where(rdv_id: rdvs.ids)
