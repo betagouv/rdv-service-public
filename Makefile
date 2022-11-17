@@ -29,8 +29,11 @@ autocorrect: ## Fix autocorrectable lint issues
 clean: ## Clean temporary files (including weppacks) and logs
 	bundle exec rails log:clear tmp:clear
 
+generate_db_diagram: ## Generate docs/domain_model.svg from Rails models
+	bundle exec erd
+
 help: ## Display available commands
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-.PHONY: install run lint lint_rubocop lint_brakeman test test_unit test_features autocorrect clean help
+.PHONY: install run lint lint_rubocop lint_brakeman test test_unit test_features autocorrect clean generate_db_diagram help
 .DEFAULT_GOAL := help
