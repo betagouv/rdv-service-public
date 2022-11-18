@@ -41,8 +41,4 @@ class Creneau
       (starts_at...ends_at).overlaps?(event.starts_at...event.ends_at) # `a...b` is the “[a, b) range” (a included, b excluded)
     end.map(&:ends_at).max
   end
-
-  def overlaps_jour_ferie?
-    OffDays.all_in_date_range(starts_at.to_date..ends_at.to_date).any?
-  end
 end
