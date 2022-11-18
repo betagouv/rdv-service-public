@@ -25,6 +25,12 @@ describe "Agent can see RDV details correctly" do
       expect(page).to have_text("Bruce WAYNE")
     end
 
+    it "displays the prescripteur when present" do
+      create(:prescripteur, rdv: rdv, first_name: "Jean", last_name: "Valjean")
+      visit admin_organisation_rdvs_path(organisation)
+      expect(page).to have_text("Rendez-vous pris par Jean VALJEAN")
+    end
+
     it "Allows showing RDVs data and correctly displays user notifications and notif info" do
       visit admin_organisation_rdv_path(organisation, rdv)
       expect(page).to have_text("Contenu")
