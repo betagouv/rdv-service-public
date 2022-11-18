@@ -3,10 +3,10 @@
 module SlotBuilder
   class << self
     # méthode publique
-    def available_slots(motif, lieu, date_range, off_days, agents = [])
+    def available_slots(motif, lieu, date_range, agents = [])
       datetime_range = Lapin::Range.ensure_date_range_with_time(date_range)
       plage_ouvertures = plage_ouvertures_for(motif, lieu, datetime_range, agents)
-      free_times_po = free_times_from(plage_ouvertures, datetime_range, off_days) # dépendance sur RDV et Absence
+      free_times_po = free_times_from(plage_ouvertures, datetime_range) # dépendance sur RDV et Absence
       slots_for(free_times_po, motif)
     end
 
@@ -20,20 +20,20 @@ module SlotBuilder
       scope
     end
 
-    def free_times_from(plage_ouvertures, datetime_range, off_days)
+    def free_times_from(plage_ouvertures, datetime_range)
       free_times = {}
       plage_ouvertures.each do |plage_ouverture|
-        free_times[plage_ouverture] = calculate_free_times(plage_ouverture, datetime_range, off_days)
+        free_times[plage_ouverture] = calculate_free_times(plage_ouverture, datetime_range)
       end
       free_times.select { |_, v| v&.any? }
     end
 
-    def calculate_free_times(plage_ouverture, datetime_range, off_days)
+    def calculate_free_times(plage_ouverture, datetime_range)
       ranges = ranges_for(plage_ouverture, datetime_range)
       return [] if ranges.empty?
 
       ranges.flat_map do |range|
-        busy_times = BusyTime.busy_times_for(range, plage_ouverture, off_days)
+        busy_times = BusyTime.busy_times_for(range, plage_ouverture)
         split_range_recursively(range, busy_times)
       end
     end
@@ -137,14 +137,13 @@ module SlotBuilder
     end
 
     class << self
-      def busy_times_for(range, plage_ouverture, off_days = [])
+      def busy_times_for(range, plage_ouverture)
         # c'est là que l'on execute le SQL
         # TODO : Peut-être cacher la récupération de l'ensemble des RDV et absences concernées (pour n'avoir que deux requêtes) puis faire des selections dessus pour le filtre sur le range
 
         busy_times = busy_times_from_rdvs(range, plage_ouverture)
         busy_times += busy_times_from_absences(range, plage_ouverture)
-        date_range = range.begin.to_date..range.end.to_date # off_days are Date objects, we need to match on Dates
-        busy_times += busy_times_from_off_days(off_days.select { |off_day| date_range.cover?(off_day) })
+        busy_times += busy_times_from_off_days(range)
         # Le tri est nécessaire, surtout pour les surcharges.
         busy_times.sort_by(&:starts_at)
       end
@@ -188,12 +187,8 @@ module SlotBuilder
         end_date_time < range.begin || range.end < start_date_time
       end
 
-      def busy_times_from_off_days(off_days)
-        busy_times = []
-        off_days.each do |off_day|
-          busy_times << BusyTime.new(off_day)
-        end
-        busy_times
+      def busy_times_from_off_days(date_range)
+        OffDays.all_in_date_range(date_range).map { |off_day| BusyTime.new(off_day) }
       end
     end
   end
