@@ -25,7 +25,7 @@ L'API est versionnée. La version actuelle est 1.0 (référencée comme v1 dans 
 
 # Routes
 
-Les points de terminaison de l'API sont accessible par une route de la forme : `https://<domain>/api/<version>/<endpoint>`.
+Les points de terminaison de l'API sont accessibles par une route de la forme : `https://<domain>/api/<version>/<endpoint>`.
 
 Avec :
 
