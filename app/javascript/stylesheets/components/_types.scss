@@ -48,9 +48,3 @@ mark, .mark {
     content: "\2014 \00A0";
   }
 }
-
-// This allows to have a "link" with JS behaviour
-.fake-link {
-  @extend a;
-  cursor: pointer;
-}

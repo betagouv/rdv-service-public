@@ -45,9 +45,9 @@
       i.fa.fa-fw.fa-people-carry-box>
     div
       | Rendez-vous pris par
-      span.fake-link.js-toggle *{ data: { "toggle-target": "#prescripteur-explanation" } }
+      a href="#prescripteur-explanation" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseExample"
         =< rdv.prescripteur.full_name
-  #prescripteur-explanation.alert-info.p-2.m-2.hidden
+  #prescripteur-explanation.collapse.alert-info.p-2.m-2
     p
       ' Ce RDV a été pris sur un créneau ouvert au public.
     p
