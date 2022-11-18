@@ -48,3 +48,9 @@ mark, .mark {
     content: "\2014 \00A0";
   }
 }
+
+// This was introduced to have link toggle an element on the page
+.fake-link {
+  @extend a;
+  cursor: pointer;
+}

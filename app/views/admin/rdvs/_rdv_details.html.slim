@@ -44,7 +44,22 @@
     div.mr-1
       i.fa.fa-fw.fa-people-carry-box>
     div
-      = "Rendez-vous pris par #{rdv.prescripteur.full_name} (#{[rdv.prescripteur.phone_number, rdv.prescripteur.email].compact_blank.join(' - ')})"
+      | Rendez-vous pris par
+      span.fake-link.js-toggle *{ data: { "toggle-target": "#prescripteur-explanation" } }
+        =< rdv.prescripteur.full_name
+  #prescripteur-explanation.alert-info.p-2.m-2.hidden
+    p
+      ' Ce RDV a été pris sur un créneau ouvert au public.
+    p
+      ' La réservation a été faite par un "prescripteur", quelqu'un qui ne participera pas au RDV (agent d'accueil, conseiller).
+    p.mb-0
+      ' Si vous pensez qu'il y a une erreur sur le type de rendez-vous qui a été pris, vous pouvez contacter
+      strong => rdv.prescripteur.full_name
+      ' au
+      strong => phone_to(rdv.prescripteur.phone_number)
+      ' ou à l'adresse
+      strong = mail_to(rdv.prescripteur.email)
+      | .
 
 - if rdv.public_office? && rdv.overlapping_plages_ouvertures?
   div.my-3
