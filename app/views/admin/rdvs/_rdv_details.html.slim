@@ -55,9 +55,11 @@
     p.mb-0
       ' Si vous pensez qu'il y a une erreur sur le type de rendez-vous qui a été pris, vous pouvez contacter
       strong => rdv.prescripteur.full_name
-      ' au
-      strong => phone_to(rdv.prescripteur.phone_number)
-      ' ou à l'adresse
+      - if rdv.prescripteur.phone_number.present?
+        ' au
+        strong => phone_to(rdv.prescripteur.phone_number)
+        ' ou
+      ' à l'adresse
       strong = mail_to(rdv.prescripteur.email)
       | .
 
