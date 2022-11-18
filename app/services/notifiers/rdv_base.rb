@@ -2,6 +2,7 @@
 
 class Notifiers::RdvBase < ::BaseService
   include DateHelper
+  attr_reader :rdv_users_tokens_by_user_id
 
   # Base class for Rdv notifiers.
   # Subclasses implement the notify_* methods:
