@@ -49,7 +49,7 @@ mark, .mark {
   }
 }
 
-// This was introduced to have link toggle an element on the page
+// This allows to have a "link" with JS behaviour
 .fake-link {
   @extend a;
   cursor: pointer;
