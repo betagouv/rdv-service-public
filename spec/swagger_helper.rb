@@ -442,8 +442,8 @@ RSpec.configure do |config|
         },
         {
           name: "Absence",
-          description: 
-            "Désigne une absence d'un·e agent·e. 
+          description:
+            "Désigne une absence d'un·e agent·e.
             Elle contient des informations telles que le début et la fin de l'absence, son titre et l'agent·e concerné·e.
             L'absence y est aussi représentée au format iCal.",
         },

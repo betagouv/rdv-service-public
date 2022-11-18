@@ -70,7 +70,7 @@ describe "User Profile authentified API", swagger_doc: "v1/api.json" do
         let(:notes) { "Super Note" }
       end
 
-      it_behaves_like "an endpoint that returns 422 - unprocessable_entity", "l'utilisateur est inconnu, ou l'organisation est inconnue, ou le logement est incorrect, ou ce profil existe déjà", true do
+      it_behaves_like "an endpoint that returns 422 - unprocessable_entity", "l'utilisateur ou l'organisation est inconnu(e), ou le logement est incorrect, ou ce profil existe déjà", true do
         let(:organisation_id) { organisation.id }
         let(:user_id) { "inconnu" }
         let(:logement) { "sdf" }
