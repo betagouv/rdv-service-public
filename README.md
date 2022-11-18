@@ -24,4 +24,5 @@ Ce logiciel et son code source sont distribués sous [licence AGPL](https://www.
 - Guide d'utilisation pour les agent·es et les Conseillers numériques France Service : [doc.rdv-solidarites.fr](https://doc.rdv-solidarites.fr/)
 - Fiche du service : [beta.gouv.fr](https://beta.gouv.fr/startups/lapins.html)
 - Documentation de développement : [docs/0-docs.md](docs/0-docs.md)
-- Décisions de l'équipe : [docs/decisions/](docs/decisions)
+- Décisions de l'équipe : [docs/decisions](docs/decisions)
+- Documentation de l'API : [www.rdv-solidarites.fr/api-docs](https://www.rdv-solidarites.fr/api-docs)
