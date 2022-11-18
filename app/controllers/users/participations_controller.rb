@@ -32,6 +32,7 @@ class Users::ParticipationsController < UserAuthController
     @user ||= current_user
     # C'est plus une mise à jour de la participation que vraiment une création
     # d'un point de vue des autorisations
+    # participation scope à revoir
     authorize(@user, :update?)
   end
 

@@ -18,6 +18,7 @@ module UserRdvWizard
       @attributes = attributes.to_h.symbolize_keys
       rdv_defaults = { user_ids: [user&.id] }
       if attributes[:rdv_id].present?
+        # Droits d'accés ? : S'inscrire à un RDV : Collectif ou déjà dans le rdv ou invité dessus.
         @rdv = Rdv.find(attributes[:rdv_id])
       else
         @rdv = Rdv.new(

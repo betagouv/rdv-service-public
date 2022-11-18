@@ -24,6 +24,7 @@ class RdvsUser < ApplicationRecord
   # Hooks
   after_initialize :set_default_notifications_flags
   before_validation :set_default_notifications_flags
+  # Pose problème : unknown par défaut et recalcul du statut du rdv ?
   before_create :set_status_from_rdv
   after_save :update_counter_cache
   after_destroy :update_counter_cache

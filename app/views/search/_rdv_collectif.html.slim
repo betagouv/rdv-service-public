@@ -17,6 +17,7 @@
       i.fa.fa-fw.fa-users>
       = show_participants_count(rdv)
 
+  / au moins une personne participe
   .card-footer
     - if current_user.participation_for(rdv) && current_user.participation_for(rdv).not_cancelled?
       .text-muted Vous êtes déjà inscrit pour cet atelier.
