@@ -64,7 +64,7 @@ describe "Organisations API", swagger_doc: "v1/api.json" do
         it { expect(parsed_response_body[:organisations]).to eq([]) }
       end
 
-      it_behaves_like "an authenticated endpoint" do
+      it_behaves_like "an endpoint that returns 401 - unauthorized" do
         let(:agent) { create(:agent) }
       end
     end

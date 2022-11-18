@@ -47,11 +47,11 @@ describe "Users API", swagger_doc: "v1/api.json" do
         it { expect(parsed_response_body["user"]["id"]).to eq(user.id) }
       end
 
-      it_behaves_like "an authenticated endpoint" do
+      it_behaves_like "an endpoint that returns 401 - unauthorized" do
         let!(:user) { instance_double(User, id: "123") }
       end
 
-      it_behaves_like "an endpoint with access control", "l'usager·ère est lié·e à une autre organisation" do
+      it_behaves_like "an endpoint that returns 403 - forbidden", "l'usager·ère est lié·e à une autre organisation" do
         let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [create(:organisation)]) }
       end
     end
@@ -154,19 +154,19 @@ describe "Users API", swagger_doc: "v1/api.json" do
         it { expect(user.reload.last_name).to eq(last_name) }
       end
 
-      it_behaves_like "an authenticated endpoint"
+      it_behaves_like "an endpoint that returns 401 - unauthorized"
 
-      it_behaves_like "an endpoint that checks parameters", "des paramètres sont manquants ou mal formés ou impossibles", true do
+      it_behaves_like "an endpoint that returns 422 - unprocessable_entity", "des paramètres sont manquants ou mal formés ou impossibles", true do
         let(:"organisation_ids[]") { nil }
         let(:first_name) { nil }
         let(:last_name) { nil }
       end
 
-      it_behaves_like "an endpoint that checks parameters", "phone number is misformatted", false do
+      it_behaves_like "an endpoint that returns 422 - unprocessable_entity", "phone number is misformatted", false do
         let(:phone_number) { "misformatted phone number" }
       end
 
-      it_behaves_like "an endpoint that checks parameters", "email is taken", false do
+      it_behaves_like "an endpoint that returns 422 - unprocessable_entity", "email is taken", false do
         let!(:existing_user) { create(:user, email: "jean@jacques.fr") }
         let(:email) { existing_user.email }
       end
@@ -215,11 +215,11 @@ describe "Users API", swagger_doc: "v1/api.json" do
         it { expect(user.reload.invitation_due_at).to eq(user.invitation_created_at + User.invite_for) }
       end
 
-      it_behaves_like "an authenticated endpoint" do
+      it_behaves_like "an endpoint that returns 401 - unauthorized" do
         let!(:user) { instance_double(User, id: "123") }
       end
 
-      it_behaves_like "an endpoint with access control", "l'usager·ère est lié·e à une autre organisation" do
+      it_behaves_like "an endpoint that returns 403 - forbidden", "l'usager·ère est lié·e à une autre organisation" do
         let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [create(:organisation)]) }
       end
     end
@@ -267,11 +267,11 @@ describe "Users API", swagger_doc: "v1/api.json" do
         it { expect(user.reload.invitation_due_at).to eq(user.invitation_created_at + User.invite_for) }
       end
 
-      it_behaves_like "an authenticated endpoint" do
+      it_behaves_like "an endpoint that returns 401 - unauthorized" do
         let!(:user) { instance_double(User, id: "123") }
       end
 
-      it_behaves_like "an endpoint with access control", "l'usager·ère est lié·e à une autre organisation" do
+      it_behaves_like "an endpoint that returns 403 - forbidden", "l'usager·ère est lié·e à une autre organisation" do
         let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [create(:organisation)]) }
       end
     end
@@ -321,7 +321,7 @@ describe "Users API", swagger_doc: "v1/api.json" do
         it { expect(parsed_response_body["users"].pluck("id")).to contain_exactly(user.id, user2.id) }
       end
 
-      it_behaves_like "an authenticated endpoint"
+      it_behaves_like "an endpoint that returns 401 - unauthorized"
     end
 
     post "Créer un·e usager·ère" do
@@ -432,24 +432,24 @@ describe "Users API", swagger_doc: "v1/api.json" do
         it { expect(created_user.last_name).to eq(last_name) }
       end
 
-      it_behaves_like "an authenticated endpoint" do
+      it_behaves_like "an endpoint that returns 401 - unauthorized" do
         let(:"organisation_ids[]") { [organisation.id] }
         let(:first_name) { "Johnny" }
         let(:last_name) { "Silverhand" }
       end
 
-      it_behaves_like "an endpoint that checks parameters", "des paramètres sont manquants, mal formés ou impossibles", true do
+      it_behaves_like "an endpoint that returns 422 - unprocessable_entity", "des paramètres sont manquants, mal formés ou impossibles", true do
         let(:first_name) { nil }
         let(:last_name) { nil }
       end
 
-      it_behaves_like "an endpoint that checks parameters", "phone number is misformatted", false do
+      it_behaves_like "an endpoint that returns 422 - unprocessable_entity", "phone number is misformatted", false do
         let(:first_name) { "Johnny" }
         let(:last_name) { "Silverhand" }
         let(:phone_number) { "misformatted phone number" }
       end
 
-      it_behaves_like "an endpoint that checks parameters", "email is taken", false do
+      it_behaves_like "an endpoint that returns 422 - unprocessable_entity", "email is taken", false do
         let(:first_name) { "Johnny" }
         let(:last_name) { "Silverhand" }
 
@@ -502,7 +502,7 @@ describe "Users API", swagger_doc: "v1/api.json" do
         it { expect(parsed_response_body["users"]).to eq([]) }
       end
 
-      it_behaves_like "an authenticated endpoint"
+      it_behaves_like "an endpoint that returns 401 - unauthorized"
     end
   end
 
@@ -547,16 +547,16 @@ describe "Users API", swagger_doc: "v1/api.json" do
         it { expect(parsed_response_body["user"]["id"]).to eq(user.id) }
       end
 
-      it_behaves_like "an authenticated endpoint" do
+      it_behaves_like "an endpoint that returns 401 - unauthorized" do
         let!(:user) { instance_double(User, id: "123") }
       end
 
-      it_behaves_like "an endpoint with access control", "quand l'agent ne fait pas partie de l'organisation" do
+      it_behaves_like "an endpoint that returns 403 - forbidden", "quand l'agent ne fait pas partie de l'organisation" do
         let!(:agent) { create(:agent, basic_role_in_organisations: [create(:organisation)]) }
         let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [organisation], email: "jean@jacques.fr") }
       end
 
-      it_behaves_like "an endpoint that looks for a resource", "l'usager·ère est lié·e à une autre organisation" do
+      it_behaves_like "an endpoint that returns 404 - not found", "l'usager·ère est lié·e à une autre organisation" do
         let!(:another_org) { create(:organisation) }
         let!(:agent) { create(:agent, basic_role_in_organisations: [organisation, another_org]) }
         let!(:user) { create(:user, organisations: [another_org]) }

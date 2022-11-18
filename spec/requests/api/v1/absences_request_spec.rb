@@ -48,7 +48,7 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
         it { expect(parsed_response_body["absences"].pluck("id")).to match_array([absence1.id, absence2.id]) }
       end
 
-      it_behaves_like "an authenticated endpoint"
+      it_behaves_like "an endpoint that returns 401 - unauthorized"
     end
 
     post "Créer une absence" do
@@ -127,7 +127,7 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
         it { expect(created_absence.agent).to eq(agent) }
       end
 
-      it_behaves_like "an authenticated endpoint" do
+      it_behaves_like "an endpoint that returns 401 - unauthorized" do
         let(:title) { "Super absence" }
         let(:first_day) { "2023-11-20" }
         let(:start_time) { "08:00" }
@@ -135,7 +135,7 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
         let(:end_time) { "15:00" }
       end
 
-      it_behaves_like "an endpoint that looks for a resource", "l'agent.e est introuvable" do
+      it_behaves_like "an endpoint that returns 404 - not found", "l'agent.e est introuvable" do
         let(:agent_email) { "test@example.com" }
         let(:title) { "Super absence" }
         let(:first_day) { "2023-11-20" }
@@ -144,7 +144,7 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
         let(:end_time) { "15:00" }
       end
 
-      it_behaves_like "an endpoint that checks parameters", "quand end_time est avant start_time ou que les formats ne sont pas corrects", true do
+      it_behaves_like "an endpoint that returns 422 - unprocessable_entity", "quand end_time est avant start_time ou que les formats ne sont pas corrects", true do
         let(:agent_email) { "agent@example.com" }
         let(:title) { "Super absence" }
         let(:first_day) { "2023-11-20" }
@@ -153,7 +153,7 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
         let(:end_time) { "06:00" }
       end
 
-      it_behaves_like "an endpoint that checks parameters", "le format du start_time ou end_time n'est pas correct", false do
+      it_behaves_like "an endpoint that returns 422 - unprocessable_entity", "le format du start_time ou end_time n'est pas correct", false do
         let(:agent_email) { "agent@example.com" }
         let(:title) { "Super absence" }
         let(:first_day) { "2023-11-20" }
@@ -173,7 +173,7 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
 
         let!(:absence_count_before) { Absence.count }
 
-        it_behaves_like "an endpoint with access control", "l'agent·e est dans un service différent" do
+        it_behaves_like "an endpoint that returns 403 - forbidden", "l'agent·e est dans un service différent" do
           let!(:agent) { create(:agent, service: create(:service)) }
           let!(:agent_role) { create(:agent_role, agent: agent, level: AgentRole::LEVEL_BASIC, organisation: organisation) }
         end
@@ -226,13 +226,13 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
         it { expect(parsed_response_body[:absence][:id]).to eq(absence1.id) }
       end
 
-      it_behaves_like "an authenticated endpoint"
+      it_behaves_like "an endpoint that returns 401 - unauthorized"
 
-      it_behaves_like "an endpoint with access control", "l'agent·e n'est pas autorisé·e à accéder à cette absence" do
+      it_behaves_like "an endpoint that returns 403 - forbidden", "l'agent·e n'est pas autorisé·e à accéder à cette absence" do
         let(:absence_id) { absence2.id }
       end
 
-      it_behaves_like "an endpoint that looks for a resource", "l'absence n'existe pas" do
+      it_behaves_like "an endpoint that returns 404 - not found", "l'absence n'existe pas" do
         let(:absence_id) { "inconnue" }
       end
     end
@@ -276,13 +276,13 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
         it { expect(absence1.reload.title).to eq("Nouveau titre") }
       end
 
-      it_behaves_like "an authenticated endpoint"
+      it_behaves_like "an endpoint that returns 401 - unauthorized"
 
-      it_behaves_like "an endpoint with access control", "l'agent·e n'est pas autorisé·e à accéder à cette absence" do
+      it_behaves_like "an endpoint that returns 403 - forbidden", "l'agent·e n'est pas autorisé·e à accéder à cette absence" do
         let(:absence_id) { absence2.id }
       end
 
-      it_behaves_like "an endpoint that looks for a resource", "l'absence n'existe pas" do
+      it_behaves_like "an endpoint that returns 404 - not found", "l'absence n'existe pas" do
         let(:absence_id) { "inconnue" }
       end
     end
@@ -317,13 +317,13 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
         it { expect(Absence.count).to eq(absence_count_before - 1) }
       end
 
-      it_behaves_like "an authenticated endpoint"
+      it_behaves_like "an endpoint that returns 401 - unauthorized"
 
-      it_behaves_like "an endpoint with access control", "l'agent·e n'est pas autorisé·e à accéder à cette absence" do
+      it_behaves_like "an endpoint that returns 403 - forbidden", "l'agent·e n'est pas autorisé·e à accéder à cette absence" do
         let(:absence_id) { absence2.id }
       end
 
-      it_behaves_like "an endpoint that looks for a resource", "l'absence n'existe pas" do
+      it_behaves_like "an endpoint that returns 404 - not found", "l'absence n'existe pas" do
         let(:absence_id) { "inconnue" }
       end
     end

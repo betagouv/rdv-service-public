@@ -62,7 +62,7 @@ describe "RDV authentified API", swagger_doc: "v1/api.json" do
           it { expect(parsed_response_body[:motifs]).to eq(MotifBlueprint.render_as_json([motif1, motif2])) }
         end
 
-        it_behaves_like "an authenticated endpoint" do
+        it_behaves_like "an endpoint that returns 401 - unauthorized" do
           let!(:agent) { create(:agent, service: service, basic_role_in_organisations: [organisation]) }
           let!(:service) { create(:service) }
           let!(:organisation) { create(:organisation) }

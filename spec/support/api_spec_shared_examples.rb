@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module ApiSpecSharedExamples
-  shared_context "an authenticated endpoint" do
+  shared_context "an endpoint that returns 401 - unauthorized" do
     response 401, "Renvoie 'unauthorized' quand l'authentification est impossible" do
       let(:"access-token") { "false" }
 
@@ -11,7 +11,7 @@ module ApiSpecSharedExamples
     end
   end
 
-  shared_context "an endpoint with access control" do |details|
+  shared_context "an endpoint that returns 403 - forbidden" do |details|
     response 403, "Renvoie 'forbidden' quand #{details}" do
       schema "$ref" => "#/components/schemas/error_forbidden"
 
@@ -19,7 +19,7 @@ module ApiSpecSharedExamples
     end
   end
 
-  shared_context "an endpoint that looks for a resource" do |details|
+  shared_context "an endpoint that returns 404 - not found" do |details|
     response 404, "Renvoie 'not_found' quand #{details}" do
       schema "$ref" => "#/components/schemas/error_not_found"
 
@@ -27,7 +27,7 @@ module ApiSpecSharedExamples
     end
   end
 
-  shared_context "an endpoint that checks parameters" do |details, document|
+  shared_context "an endpoint that returns 422 - unprocessable_entity" do |details, document|
     response 422, "Renvoie 'unprocessable_entity' quand #{details}", document: document do
       schema "$ref" => "#/components/schemas/error_unprocessable_entity"
 
@@ -35,7 +35,7 @@ module ApiSpecSharedExamples
     end
   end
 
-  shared_context "a rate limited endpoint" do |method, path|
+  shared_context "an endpoint that returns 429 - too_many_requests" do |method, path|
     response 429, "Renvoie 'too_many_requests' quand la limite d'appels est atteinte" do
       schema "$ref" => "#/components/schemas/error_too_many_request"
 

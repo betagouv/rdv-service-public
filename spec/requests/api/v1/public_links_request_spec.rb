@@ -73,11 +73,11 @@ describe "Public links API", swagger_doc: "v1/api.json" do
         it { expect(parsed_response_body).to match(missing: "territory") }
       end
 
-      it_behaves_like "an endpoint that looks for a resource", "le territory ne peut pas être trouvé" do
+      it_behaves_like "an endpoint that returns 404 - not found", "le territory ne peut pas être trouvé" do
         let(:territory) { "unknown" }
       end
 
-      it_behaves_like "a rate limited endpoint", :get, Rails.application.routes.url_helpers.api_v1_public_links_path do
+      it_behaves_like "an endpoint that returns 429 - too_many_requests", :get, Rails.application.routes.url_helpers.api_v1_public_links_path do
         let(:territory) { "CN" }
       end
     end

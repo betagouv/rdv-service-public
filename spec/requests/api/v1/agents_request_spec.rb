@@ -47,7 +47,7 @@ describe "Agents API", swagger_doc: "v1/api.json" do
         it { expect(parsed_response_body["agents"].pluck("id")).to match_array([agent.id, agent2.id]) }
       end
 
-      it_behaves_like "an authenticated endpoint"
+      it_behaves_like "an endpoint that returns 401 - unauthorized"
     end
   end
 end

@@ -55,7 +55,7 @@ describe "User Profile authentified API", swagger_doc: "v1/api.json" do
         it { expect(created_user_profile.notes).to eq("Super Note") }
       end
 
-      it_behaves_like "an endpoint with access control", "l'agent·e n'a pas accès à l'organisation" do
+      it_behaves_like "an endpoint that returns 403 - forbidden", "l'agent·e n'a pas accès à l'organisation" do
         let!(:unauthorized_orga) { create(:organisation) }
         let(:organisation_id) { unauthorized_orga.id }
         let(:user_id) { user.id }
@@ -63,28 +63,28 @@ describe "User Profile authentified API", swagger_doc: "v1/api.json" do
         let(:notes) { "Super Note" }
       end
 
-      it_behaves_like "an authenticated endpoint" do
+      it_behaves_like "an endpoint that returns 401 - unauthorized" do
         let(:organisation_id) { organisation.id }
         let(:user_id) { user.id }
         let(:logement) { "sdf" }
         let(:notes) { "Super Note" }
       end
 
-      it_behaves_like "an endpoint that checks parameters", "l'utilisateur est inconnu, ou l'organisation est inconnue, ou le logement est incorrect, ou ce profil existe déjà", true do
+      it_behaves_like "an endpoint that returns 422 - unprocessable_entity", "l'utilisateur est inconnu, ou l'organisation est inconnue, ou le logement est incorrect, ou ce profil existe déjà", true do
         let(:organisation_id) { organisation.id }
         let(:user_id) { "inconnu" }
         let(:logement) { "sdf" }
         let(:notes) { "Super Note" }
       end
 
-      it_behaves_like "an endpoint that checks parameters", "le logement n'est pas parmi les choix possibles", false do
+      it_behaves_like "an endpoint that returns 422 - unprocessable_entity", "le logement n'est pas parmi les choix possibles", false do
         let(:organisation_id) { organisation.id }
         let(:user_id) { user.id }
         let(:logement) { "inconnu" }
         let(:notes) { "Super Note" }
       end
 
-      it_behaves_like "an endpoint that checks parameters", "le user_profil existe déjà", false do
+      it_behaves_like "an endpoint that returns 422 - unprocessable_entity", "le user_profil existe déjà", false do
         let!(:existing_profile) { create(:user_profile, user: user, organisation: organisation) }
         let(:organisation_id) { organisation.id }
         let(:user_id) { user.id }

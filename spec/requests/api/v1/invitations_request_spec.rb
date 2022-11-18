@@ -37,11 +37,11 @@ describe "Invitations API", swagger_doc: "v1/api.json" do
         it { expect(parsed_response_body[:user][:id]).to eq(user.id) }
       end
 
-      it_behaves_like "an authenticated endpoint" do
+      it_behaves_like "an endpoint that returns 401 - unauthorized" do
         let(:invitation_token) { "abcd" }
       end
 
-      it_behaves_like "an endpoint that looks for a resource", "l'usager·ère n'est pas trouvé·e" do
+      it_behaves_like "an endpoint that returns 404 - not found", "l'usager·ère n'est pas trouvé·e" do
         let(:invitation_token) { "abcd" }
       end
     end

@@ -71,7 +71,7 @@ describe "RDV authentified API", swagger_doc: "v1/api.json" do
         it { expect(JSON.parse(response.body)["rdvs"].pluck("id")).to contain_exactly(rdv.id, rdv3.id) }
       end
 
-      it_behaves_like "an authenticated endpoint"
+      it_behaves_like "an endpoint that returns 401 - unauthorized"
     end
   end
 end
