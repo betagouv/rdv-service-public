@@ -18,8 +18,6 @@ module Lapin
         time_begin..time_end
       end
 
-      # @param range [Range<Time>, Range<Date>]
-      # @return Range<Date>
       def ensure_range_is_date(range)
         return range if range.begin.is_a?(Date) && range.end.is_a?(Date)
 
