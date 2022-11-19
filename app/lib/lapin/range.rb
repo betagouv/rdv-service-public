@@ -17,6 +17,12 @@ module Lapin
 
         time_begin..time_end
       end
+
+      def ensure_range_is_date(range)
+        return range if range.begin.is_a?(Date) && range.end.is_a?(Date)
+
+        range.begin.to_date..range.end.to_date
+      end
     end
   end
 end
