@@ -216,7 +216,7 @@ describe "User can search for rdvs" do
 
   def choose_service(service)
     expect_page_h1("Prenez rendez-vous en ligne\navec votre département le 92")
-    expect(page).to have_content("Vous souhaitez prendre un RDV avec le service :")
+    expect(page).to have_content("Sélectionnez le service avec qui vous voulez prendre un RDV")
 
     find("h3", text: service.name).click
   end
