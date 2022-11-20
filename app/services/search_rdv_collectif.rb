@@ -22,6 +22,7 @@ module SearchRdvCollectif
     def available_slots(motif, lieu)
       Rdv.collectif.future
         .with_remaining_seats
+        .where.not(status: "revoked")
         .where(motif_id: motif.id)
         .where(lieu_id: lieu.id)
         .where("starts_at > ?", Time.zone.now + motif.min_booking_delay.seconds)
