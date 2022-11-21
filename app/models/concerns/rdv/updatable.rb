@@ -50,28 +50,28 @@ module Rdv::Updatable
   end
 
   def rdv_user_token(user_id)
-    @rdv_users_tokens_by_user_id&.fetch(user_id, nil)
+    @notifier.rdv_users_tokens_by_user_id&.fetch(user_id, nil)
   end
 
   def notify!(author, previous_participations)
-    @rdv_users_tokens_by_user_id = {}
     if rdv_cancelled?
       file_attentes.destroy_all
-      @rdv_users_tokens_by_user_id = Notifiers::RdvCancelled.perform_with(self, author)
+      @notifier = Notifiers::RdvCancelled.new(self, author)
     end
 
     if rdv_status_reloaded_from_cancelled?
-      @rdv_users_tokens_by_user_id = Notifiers::RdvCreated.perform_with(self, author)
+      @notifier = Notifiers::RdvCreated.new(self, author)
     end
 
     if starts_at_changed? || lieu_changed?
-      @rdv_users_tokens_by_user_id = Notifiers::RdvUpdated.perform_with(self, author)
+      @notifier = Notifiers::RdvUpdated.new(self, author)
     end
 
     if collectif?
-      @rdv_users_tokens_by_user_id = Notifiers::RdvCollectifParticipations.perform_with(self, author, previous_participations)
+      @notifier = Notifiers::RdvCollectifParticipations.new(self, author, previous_participations)
     end
 
+    @notifier.perform
     # we re-enable the webhooks that we deactivated during the notification process
     self.skip_webhooks = false
   end

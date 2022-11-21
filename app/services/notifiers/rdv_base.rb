@@ -27,8 +27,6 @@ class Notifiers::RdvBase < ::BaseService
     notify_users_by_mail
     notify_users_by_sms
     notify_agents
-
-    @rdv_users_tokens_by_user_id
   end
 
   ## Users notifications
