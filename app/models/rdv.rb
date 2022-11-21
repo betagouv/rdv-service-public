@@ -29,6 +29,7 @@ class Rdv < ApplicationRecord
   # https://stackoverflow.com/questions/30629680/rails-isnt-running-destroy-callbacks-for-has-many-through-join-model/30629704
   # https://github.com/rails/rails/issues/7618
   has_many :rdvs_users, validate: false, inverse_of: :rdv, dependent: :destroy
+  after_touch :update_rdv_status_from_participation
   has_many :receipts, dependent: :destroy
 
   accepts_nested_attributes_for :rdvs_users, allow_destroy: true
@@ -311,15 +312,24 @@ class Rdv < ApplicationRecord
   end
 
   def update_rdv_status_from_participation
+    return if !collectif? || rdvs_users.empty?
+
+    update_status_priority_order_participations
+    update_status_similar_participations
+  end
+
+  def update_status_priority_order_participations
     # Priority Order. One participation will change rdv status
-    %w[unknown seen noshow].each do |status|
+    %w[unknown seen noshow revoked].each do |status|
       symbol_method = "#{status}?".to_sym
       next unless rdvs_users.any?(&symbol_method)
 
       update!(status: status)
       break
     end
+  end
 
+  def update_status_similar_participations
     # If all participations are similar the rdv status will change
     %w[seen noshow excused].each do |status|
       if rdvs_users.map(&:status).all? { |participation_status| participation_status.in? [status] }
