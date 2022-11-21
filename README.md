@@ -26,3 +26,4 @@ Ce logiciel et son code source sont distribués sous [licence AGPL](https://www.
 - Documentation de développement : [docs/0-docs.md](docs/0-docs.md)
 - Décisions de l'équipe : [docs/decisions](docs/decisions)
 - Documentation de l'API : [www.rdv-solidarites.fr/api-docs](https://www.rdv-solidarites.fr/api-docs)
+- Documentation de l'API de notifications (webhooks) : [docs/api/webhooks/api-notifications-webhooks.md](docs/api/webhooks/api-notifications-webhooks.md)
