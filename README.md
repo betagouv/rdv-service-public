@@ -19,11 +19,14 @@ Ce service est soutenu par un consortium de plusieurs départements et l'[incuba
 
 Ce logiciel et son code source sont distribués sous [licence AGPL](https://www.gnu.org/licenses/why-affero-gpl.fr.html).
 
-## Documentation
+## Documentation externe
 
-- Guide d'utilisation pour les agent·es et les Conseillers numériques France Service : [doc.rdv-solidarites.fr](https://doc.rdv-solidarites.fr/)
 - Fiche du service : [beta.gouv.fr](https://beta.gouv.fr/startups/lapins.html)
-- Documentation de développement : [docs/0-docs.md](docs/0-docs.md)
-- Décisions de l'équipe : [docs/decisions](docs/decisions)
+- Guide d'utilisation pour les agent·es et les Conseillers numériques France Service : [doc.rdv-solidarites.fr](https://doc.rdv-solidarites.fr/)
 - Documentation de l'API : [www.rdv-solidarites.fr/api-docs](https://www.rdv-solidarites.fr/api-docs)
 - Documentation de l'API de notifications (webhooks) : [docs/api/webhooks/api-notifications-webhooks.md](docs/api/webhooks/api-notifications-webhooks.md)
+
+## Documentation interne
+
+- Documentation de développement : [docs/0-docs.md](docs/0-docs.md)
+- Décisions de l'équipe : [docs/decisions](docs/decisions)
