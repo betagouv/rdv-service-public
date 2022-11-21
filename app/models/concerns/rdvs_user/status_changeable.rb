@@ -27,7 +27,8 @@ module RdvsUser::StatusChangeable
     return nil unless user_valid_for_lifecycle_notifications?
 
     @rdv_users_tokens_by_user_id = {}
-    # Notifiers are returning rdvs_user_token array when a notif is sent
+    # Notifiers are returning rdvs_user_token hash when a notif is sent
+    # { 10:"TOKEN1", 11:"TOKEN2" }
     if rdv_user_cancelled?
       @rdv_users_tokens_by_user_id = Notifiers::RdvCancelled.perform_with(rdv, author, [user])
     end
