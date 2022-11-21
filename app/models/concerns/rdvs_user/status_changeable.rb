@@ -19,11 +19,22 @@ module RdvsUser::StatusChangeable
     rdv.generate_payload_and_send_webhook(:updated)
   end
 
+  def rdv_user_token
+    @notifier.rdv_users_tokens_by_user_id&.fetch(user.id)
+  end
+
   def notify!(author)
     return nil unless user_valid_for_lifecycle_notifications?
-    return Notifiers::RdvCancelled.perform_with(rdv, author, [user]) if rdv_user_cancelled?
-    return Notifiers::RdvCreated.perform_with(rdv, author, [user]) if rdv_status_reloaded_from_cancelled?
-    # Notifiers are returning rdvs_user_token when a notif is sent or nil
+
+    if rdv_user_cancelled?
+      @notifier = Notifiers::RdvCancelled.new(rdv, author, [user])
+    end
+
+    if rdv_status_reloaded_from_cancelled?
+      @notifier = Notifiers::RdvCreated.new(rdv, author, [user])
+    end
+
+    @notifier&.perform
   end
 
   def rdv_user_cancelled?
