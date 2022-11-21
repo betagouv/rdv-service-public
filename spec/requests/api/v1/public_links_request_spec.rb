@@ -56,6 +56,8 @@ describe "Public links API", swagger_doc: "v1/api.json" do
           # Organisation G does not exist
         end
 
+        schema "$ref" => "#/components/schemas/public_links"
+
         run_test!
 
         it { expect(parsed_response_body).to match_array(expected_body) }
@@ -64,34 +66,19 @@ describe "Public links API", swagger_doc: "v1/api.json" do
       response 400, "Retourne 'bad_request' quand le territory est manquant" do
         let(:territory) { nil }
 
+        schema "$ref" => "#/components/schemas/error_missing"
+
         run_test!
 
         it { expect(parsed_response_body).to match(missing: "territory") }
       end
 
-      response 404, "Retourne 'not_found' quand le territory ne peut pas être trouvé" do
+      it_behaves_like "an endpoint that returns 404 - not found", "le territory ne peut pas être trouvé" do
         let(:territory) { "unknown" }
-
-        run_test!
-
-        it { expect(parsed_response_body).to match(not_found: "territory") }
       end
 
-      response 429, "Limite d'appels atteinte" do
-        let!(:terr) { create(:territory, departement_number: "CN") }
-        let(:territory) { terr.departement_number }
-
-        schema "$ref" => "#/components/schemas/error_too_many_request"
-
-        before do
-          Rack::Attack.enabled = true
-          Rack::Attack.reset!
-          3.times do
-            get api_v1_public_links_path
-          end
-        end
-
-        run_test!
+      it_behaves_like "an endpoint that returns 429 - too_many_requests", :get, Rails.application.routes.url_helpers.api_v1_public_links_path do
+        let(:territory) { "CN" }
       end
     end
   end
