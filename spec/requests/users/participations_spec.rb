@@ -61,7 +61,7 @@ RSpec.describe "Users::Participants", type: :request do
     context "for a collective RDV with a responsible user" do
       let(:user) { create(:user, responsible: nil) }
       let(:motif) { create(:motif, collectif: true) }
-      let(:rdv) { create(:rdv, users: [], motif: motif) }
+      let(:rdv) { create(:rdv, :without_users, motif: motif) }
 
       it "create user participation with current_user" do
         post users_rdv_participations_path(rdv)
