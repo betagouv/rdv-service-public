@@ -124,7 +124,7 @@ module UsersHelper
   end
 
   def user_to_link(user)
-    if user.active? && user.organisations.include?(current_organisation)
+    if !user.deleted_at && user.organisations.include?(current_organisation)
       link_to admin_organisation_user_path(current_organisation, user) do
         tag.span(user.full_name) + relative_tag(user)
       end
