@@ -8,7 +8,7 @@ class Agents::PreferencesController < AgentAuthController
   def disable_cnfs_online_booking_banner
     skip_authorization
     cookies.permanent[:disable_cnfs_online_booking_banner] = true
-    redirect_back(fallback_location: root_path)
+    redirect_back_or_to(root_path)
   end
 
   def show

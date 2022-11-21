@@ -44,5 +44,6 @@ test_unit            Run unit tests in parallel
 test_features        Run feature tests
 autocorrect          Fix autocorrectable lint issues
 clean                Clean temporary files (including weppacks) and logs
+generate_db_diagram  Generate docs/domain_model.svg from Rails models
 help                 Display available commands
 ```
