@@ -12,9 +12,20 @@ L’accès à /super_admins se fait:
     * password: défini automatiquement au déploiement (cf [scalingo.json](scalingo.json))
     * obtenu avec `scripts/review_app_super_admin_password.sh <numéro de la PR>`
 
+## Schéma de données de la base
+
+Il est possible de générer un diagramme de la base Postgres avec la commande :
+
+```shell
+make generate_db_diagram
+```
+
+Cela (re-)génère le fichier docs/domain_model.svg à partir de la base et des déclarations d'associations Rails.
+
+Note : la librairie graphviz doit être installée ([voir guide](https://voormedia.github.io/rails-erd/install.html)).
+
 ## Tâches automatisées
 
-* `auto_generate_diagram` est ajouté à `db:migrate` pour tenir à jour docs/domain_model.svg.
 * `schedule_jobs` tourne après chaque `db:migrate` et`db:schema:load` pour ajouter automatiquement les “cron jobs”.
 * Dans `cron_job.rb`, outre les tâches métiers (c’est-à-dire les envois de mail et la gestion de file d’attente), il y a un job de gestion de production, `ScalingoAppRestarterJob` dont le rôle est de redémarrer les instances Scalingo chaque nuit. 
 
