@@ -17,7 +17,7 @@ describe "agents page", js: true do
   end
 
   it "agenda with 3 rdvs is accessible" do
-    travel_to(Time.zone.parse("2022-11-14 13:00"))
+    travel_to(Time.current.beginning_of_week.change(hour: 13))
     territory = create(:territory, departement_number: "75")
     organisation = create(:organisation, territory: territory)
     agent = create(:agent, email: "totoagent@example.com", basic_role_in_organisations: [organisation])

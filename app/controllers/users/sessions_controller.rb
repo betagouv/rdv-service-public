@@ -35,4 +35,15 @@ class Users::SessionsController < Devise::SessionsController
       flash: { error: "Déconnectez-vous d'abord de votre compte agent pour vous connecter en tant qu'utilisateur" }
     )
   end
+
+  # Copied from devise-4.8.1/app/controllers/devise/sessions_controller.rb
+  # We needed to override the call to redirect_to to set `allow_other_host: true`.
+  def respond_to_on_destroy
+    # We actually need to hardcode this as Rails default responder doesn't
+    # support returning empty response on GET request
+    respond_to do |format|
+      format.all { head :no_content }
+      format.any(*navigational_formats) { redirect_to after_sign_out_path_for(resource_name), allow_other_host: true }
+    end
+  end
 end
