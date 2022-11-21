@@ -71,7 +71,7 @@ module Rdv::Updatable
       @notifier = Notifiers::RdvCollectifParticipations.new(self, author, previous_participations)
     end
 
-    @notifier.perform
+    @notifier&.perform
     # we re-enable the webhooks that we deactivated during the notification process
     self.skip_webhooks = false
   end

@@ -34,7 +34,7 @@ module RdvsUser::StatusChangeable
       @notifier = Notifiers::RdvCreated.new(rdv, author, [user])
     end
 
-    @notifier.perform
+    @notifier&.perform
   end
 
   def rdv_user_cancelled?

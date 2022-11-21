@@ -38,7 +38,7 @@ RSpec.describe Users::RdvsController, type: :controller do
         .with(user: user, starts_at: starts_at, motif: motif, lieu: lieu, geo_search: mock_geo_search)
         .and_return(mock_creneau)
       allow(Notifiers::RdvCreated).to receive(:perform_with)
-        .and_return({ user.id => token })
+      allow(Devise.token_generator).to receive(:generate).and_return("12345")
       subject
     end
 
@@ -455,7 +455,7 @@ RSpec.describe Users::RdvsController, type: :controller do
         .with(user: user, starts_at: starts_at, motif: motif, lieu: lieu)
         .and_return(returned_creneau)
       allow(Notifiers::RdvUpdated).to receive(:perform_with)
-        .and_return({ user.id => token })
+      allow(Devise.token_generator).to receive(:generate).and_return("12345")
     end
 
     context "with an available creneau" do
