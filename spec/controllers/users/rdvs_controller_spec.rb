@@ -454,7 +454,6 @@ RSpec.describe Users::RdvsController, type: :controller do
       allow(Users::CreneauSearch).to receive(:creneau_for)
         .with(user: user, starts_at: starts_at, motif: motif, lieu: lieu)
         .and_return(returned_creneau)
-      allow(Notifiers::RdvUpdated).to receive(:perform_with)
       allow(Devise.token_generator).to receive(:generate).and_return("12345")
     end
 
