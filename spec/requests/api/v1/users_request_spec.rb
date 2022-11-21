@@ -47,22 +47,12 @@ describe "Users API", swagger_doc: "v1/api.json" do
         it { expect(parsed_response_body["user"]["id"]).to eq(user.id) }
       end
 
-      response 401, "Problème d'authentification" do
+      it_behaves_like "an endpoint that returns 401 - unauthorized" do
         let!(:user) { instance_double(User, id: "123") }
-
-        let(:"access-token") { "false" }
-
-        schema "$ref" => "#/components/schemas/error_authentication"
-
-        run_test!
       end
 
-      response 403, "Renvoie 'unauthorized' quand l'usager·ère est lié·e à une autre organisation" do
+      it_behaves_like "an endpoint that returns 403 - forbidden", "l'usager·ère est lié·e à une autre organisation" do
         let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [create(:organisation)]) }
-
-        schema "$ref" => "#/components/schemas/error_unauthorized"
-
-        run_test!
       end
     end
 
@@ -164,43 +154,21 @@ describe "Users API", swagger_doc: "v1/api.json" do
         it { expect(user.reload.last_name).to eq(last_name) }
       end
 
-      response 401, "Problème d'authentification" do
-        let(:"access-token") { "false" }
+      it_behaves_like "an endpoint that returns 401 - unauthorized"
 
-        schema "$ref" => "#/components/schemas/error_authentication"
-
-        run_test!
-      end
-
-      response 422, "Des paramètres sont manquants ou mal formés ou impossibles" do
+      it_behaves_like "an endpoint that returns 422 - unprocessable_entity", "des paramètres sont manquants ou mal formés ou impossibles", true do
         let(:"organisation_ids[]") { nil }
         let(:first_name) { nil }
         let(:last_name) { nil }
-
-        schema "$ref" => "#/components/schemas/errors_generic"
-
-        run_test!
       end
 
-      response 422, "phone number is misformatted", document: false do
+      it_behaves_like "an endpoint that returns 422 - unprocessable_entity", "phone number is misformatted", false do
         let(:phone_number) { "misformatted phone number" }
-
-        schema "$ref" => "#/components/schemas/errors_generic"
-
-        run_test!
-
-        it { expect(parsed_response_body["errors"]).to match({ phone_number: [{ error: "invalid" }] }.with_indifferent_access) }
       end
 
-      response 422, "email is taken", document: false do
+      it_behaves_like "an endpoint that returns 422 - unprocessable_entity", "email is taken", false do
         let!(:existing_user) { create(:user, email: "jean@jacques.fr") }
         let(:email) { existing_user.email }
-
-        schema "$ref" => "#/components/schemas/errors_generic"
-
-        run_test!
-
-        it { expect(parsed_response_body["errors"]["email"].first).to match({ error: "taken", value: email, id: existing_user.id }.with_indifferent_access) }
       end
     end
   end
@@ -247,22 +215,12 @@ describe "Users API", swagger_doc: "v1/api.json" do
         it { expect(user.reload.invitation_due_at).to eq(user.invitation_created_at + User.invite_for) }
       end
 
-      response 401, "Problème d'authentification" do
+      it_behaves_like "an endpoint that returns 401 - unauthorized" do
         let!(:user) { instance_double(User, id: "123") }
-
-        let(:"access-token") { "false" }
-
-        schema "$ref" => "#/components/schemas/error_authentication"
-
-        run_test!
       end
 
-      response 403, "Renvoie 'unauthorized' quand l'usager·ère est lié·e à une autre organisation" do
+      it_behaves_like "an endpoint that returns 403 - forbidden", "l'usager·ère est lié·e à une autre organisation" do
         let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [create(:organisation)]) }
-
-        schema "$ref" => "#/components/schemas/error_unauthorized"
-
-        run_test!
       end
     end
 
@@ -309,22 +267,12 @@ describe "Users API", swagger_doc: "v1/api.json" do
         it { expect(user.reload.invitation_due_at).to eq(user.invitation_created_at + User.invite_for) }
       end
 
-      response 401, "Problème d'authentification" do
+      it_behaves_like "an endpoint that returns 401 - unauthorized" do
         let!(:user) { instance_double(User, id: "123") }
-
-        let(:"access-token") { "false" }
-
-        schema "$ref" => "#/components/schemas/error_authentication"
-
-        run_test!
       end
 
-      response 403, "Renvoie 'unauthorized' quand l'usager·ère est lié·e à une autre organisation" do
+      it_behaves_like "an endpoint that returns 403 - forbidden", "l'usager·ère est lié·e à une autre organisation" do
         let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [create(:organisation)]) }
-
-        schema "$ref" => "#/components/schemas/error_unauthorized"
-
-        run_test!
       end
     end
   end
@@ -372,6 +320,8 @@ describe "Users API", swagger_doc: "v1/api.json" do
 
         it { expect(parsed_response_body["users"].pluck("id")).to contain_exactly(user.id, user2.id) }
       end
+
+      it_behaves_like "an endpoint that returns 401 - unauthorized"
     end
 
     post "Créer un·e usager·ère" do
@@ -403,8 +353,9 @@ describe "Users API", swagger_doc: "v1/api.json" do
       let(:uid) { auth_headers["uid"].to_s }
       let(:client) { auth_headers["client"].to_s }
 
+      let(:"organisation_ids[]") { [organisation.id] }
+
       response 200, "Crée et renvoie un·e usager·ère" do
-        let(:"organisation_ids[]") { [organisation.id] }
         let(:first_name) { "Johnny" }
         let(:last_name) { "Silverhand" }
         let(:birth_name) { "Fripouille" }
@@ -462,7 +413,6 @@ describe "Users API", swagger_doc: "v1/api.json" do
       end
 
       response 200, "creates a user with a minimal set of params", document: false do
-        let(:"organisation_ids[]") { [organisation.id] }
         let(:first_name) { "Johnny" }
         let(:last_name) { "Silverhand" }
 
@@ -482,53 +432,29 @@ describe "Users API", swagger_doc: "v1/api.json" do
         it { expect(created_user.last_name).to eq(last_name) }
       end
 
-      response 401, "Problème d'authentification" do
+      it_behaves_like "an endpoint that returns 401 - unauthorized" do
         let(:"organisation_ids[]") { [organisation.id] }
         let(:first_name) { "Johnny" }
         let(:last_name) { "Silverhand" }
-        let(:"access-token") { "false" }
-
-        schema "$ref" => "#/components/schemas/error_authentication"
-
-        run_test!
       end
 
-      response 422, "Des paramètres sont manquants ou mal formés ou impossibles" do
-        let(:"organisation_ids[]") { nil }
+      it_behaves_like "an endpoint that returns 422 - unprocessable_entity", "des paramètres sont manquants, mal formés ou impossibles", true do
         let(:first_name) { nil }
         let(:last_name) { nil }
-
-        schema "$ref" => "#/components/schemas/errors_generic"
-
-        run_test!
       end
 
-      response 422, "phone number is misformatted", document: false do
-        let(:"organisation_ids[]") { [organisation.id] }
+      it_behaves_like "an endpoint that returns 422 - unprocessable_entity", "phone number is misformatted", false do
         let(:first_name) { "Johnny" }
         let(:last_name) { "Silverhand" }
         let(:phone_number) { "misformatted phone number" }
-
-        schema "$ref" => "#/components/schemas/errors_generic"
-
-        run_test!
-
-        it { expect(parsed_response_body["errors"]).to match({ phone_number: [{ error: "invalid" }] }.with_indifferent_access) }
       end
 
-      response 422, "email is taken", document: false do
-        let(:"organisation_ids[]") { [organisation.id] }
+      it_behaves_like "an endpoint that returns 422 - unprocessable_entity", "email is taken", false do
         let(:first_name) { "Johnny" }
         let(:last_name) { "Silverhand" }
 
         let!(:existing_user) { create(:user, email: "jean@jacques.fr") }
         let(:email) { existing_user.email }
-
-        schema "$ref" => "#/components/schemas/errors_generic"
-
-        run_test!
-
-        it { expect(parsed_response_body["errors"]["email"].first).to match({ error: "taken", value: email, id: existing_user.id }.with_indifferent_access) }
       end
     end
   end
@@ -575,6 +501,8 @@ describe "Users API", swagger_doc: "v1/api.json" do
 
         it { expect(parsed_response_body["users"]).to eq([]) }
       end
+
+      it_behaves_like "an endpoint that returns 401 - unauthorized"
     end
   end
 
@@ -619,32 +547,19 @@ describe "Users API", swagger_doc: "v1/api.json" do
         it { expect(parsed_response_body["user"]["id"]).to eq(user.id) }
       end
 
-      response 401, "Problème d'authentification" do
+      it_behaves_like "an endpoint that returns 401 - unauthorized" do
         let!(:user) { instance_double(User, id: "123") }
-        let(:"access-token") { "false" }
-
-        schema "$ref" => "#/components/schemas/error_authentication"
-
-        run_test!
       end
 
-      response 403, "Renvoie 'unauthorized' quand l'agent ne fait pas partie de l'organisation" do
+      it_behaves_like "an endpoint that returns 403 - forbidden", "quand l'agent ne fait pas partie de l'organisation" do
         let!(:agent) { create(:agent, basic_role_in_organisations: [create(:organisation)]) }
         let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [organisation], email: "jean@jacques.fr") }
-
-        schema "$ref" => "#/components/schemas/error_unauthorized"
-
-        run_test!
       end
 
-      response 404, "Renvoie 'not_found' quand l'usager·ère est lié·e à une autre organisation" do
+      it_behaves_like "an endpoint that returns 404 - not found", "l'usager·ère est lié·e à une autre organisation" do
         let!(:another_org) { create(:organisation) }
         let!(:agent) { create(:agent, basic_role_in_organisations: [organisation, another_org]) }
         let!(:user) { create(:user, organisations: [another_org]) }
-
-        schema "$ref" => "#/components/schemas/error_not_found"
-
-        run_test!
       end
     end
   end

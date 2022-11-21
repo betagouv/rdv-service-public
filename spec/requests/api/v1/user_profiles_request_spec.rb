@@ -55,94 +55,41 @@ describe "User Profile authentified API", swagger_doc: "v1/api.json" do
         it { expect(created_user_profile.notes).to eq("Super Note") }
       end
 
-      response 403, "Impossible de créer un profil utilisateur quand on a pas accès à l'organisation" do
+      it_behaves_like "an endpoint that returns 403 - forbidden", "l'agent·e n'a pas accès à l'organisation" do
         let!(:unauthorized_orga) { create(:organisation) }
         let(:organisation_id) { unauthorized_orga.id }
         let(:user_id) { user.id }
         let(:logement) { "sdf" }
         let(:notes) { "Super Note" }
-
-        let!(:user_profile_count_before) { UserProfile.count }
-
-        schema "$ref" => "#/components/schemas/error_unauthorized"
-
-        run_test!
-
-        it { expect(UserProfile.count).to eq(user_profile_count_before) }
       end
 
-      response 401, "Problème d'authentification" do
+      it_behaves_like "an endpoint that returns 401 - unauthorized" do
         let(:organisation_id) { organisation.id }
         let(:user_id) { user.id }
         let(:logement) { "sdf" }
         let(:notes) { "Super Note" }
-
-        let(:"access-token") { "false" }
-
-        schema "$ref" => "#/components/schemas/error_authentication"
-
-        run_test!
       end
 
-      response 403, "Impossible de créer un profil utilisateur quand l'organisation n'est pas connue", document: false do
-        let(:organisation_id) { "inconnu" }
-        let(:user_id) { user.id }
-        let(:logement) { "sdf" }
-        let(:notes) { "Super Note" }
-
-        let!(:user_profile_count_before) { UserProfile.count }
-
-        schema "$ref" => "#/components/schemas/error_unauthorized"
-
-        run_test!
-
-        it { expect(UserProfile.count).to eq(user_profile_count_before) }
-      end
-
-      response 422, "Renvoie 'unprocessable_entity' quand l'utilisateur ou l'organisation n'est pas connue ou quand le logement n'est pas parmi les choix possibles ou que ce profil existe déjà" do
+      it_behaves_like "an endpoint that returns 422 - unprocessable_entity", "l'utilisateur ou l'organisation est inconnu(e), ou le logement est incorrect, ou ce profil existe déjà", true do
         let(:organisation_id) { organisation.id }
         let(:user_id) { "inconnu" }
         let(:logement) { "sdf" }
         let(:notes) { "Super Note" }
-
-        let!(:user_profile_count_before) { UserProfile.count }
-
-        schema "$ref" => "#/components/schemas/error_unprocessable_entity"
-
-        run_test!
-
-        it { expect(UserProfile.count).to eq(user_profile_count_before) }
       end
 
-      response 422, "Renvoie 'unprocessable_entity' quand le logement n'est pas parmi les choix possibles", document: false do
+      it_behaves_like "an endpoint that returns 422 - unprocessable_entity", "le logement n'est pas parmi les choix possibles", false do
         let(:organisation_id) { organisation.id }
         let(:user_id) { user.id }
         let(:logement) { "inconnu" }
         let(:notes) { "Super Note" }
-
-        let!(:user_profile_count_before) { UserProfile.count }
-
-        schema "$ref" => "#/components/schemas/error_unprocessable_entity"
-
-        run_test!
-
-        it { expect(UserProfile.count).to eq(user_profile_count_before) }
       end
 
-      response 422, "Renvoie 'unprocessable_entity' quand le user_profil existe déjà", document: false do
+      it_behaves_like "an endpoint that returns 422 - unprocessable_entity", "le user_profil existe déjà", false do
         let!(:existing_profile) { create(:user_profile, user: user, organisation: organisation) }
         let(:organisation_id) { organisation.id }
         let(:user_id) { user.id }
         let(:logement) { "sdf" }
         let(:notes) { "Super Note" }
-
-        let!(:user_profile_count_before) { UserProfile.count }
-
-        schema "$ref" => "#/components/schemas/error_unprocessable_entity"
-
-        run_test!
-
-        it { expect(UserProfile.count).to eq(user_profile_count_before) }
       end
     end
   end
