@@ -5,7 +5,7 @@
     = simple_form_for(@rdv, url: admin_organisation_rdvs_collectif_path(current_organisation), method: :put) do |f|
       .card
         .card-header
-          h3.text-center #{@rdv.motif.name} (#{@rdv.motif.service.short_name})
+          h3.text-center #{@rdv.motif_name} (#{@rdv.motif.service.short_name})
         .card-body.px-3
           .row.mt-3
             .col-md-6

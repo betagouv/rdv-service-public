@@ -3,13 +3,12 @@
 class SoftDeleteError < StandardError; end
 
 class Agent < ApplicationRecord
-  include OutlookSynchronizable
-
   # Mixins
   has_paper_trail(
     only: %w[email first_name last_name starts_at service_id invitation_sent_at invitation_accepted_at]
   )
 
+  include Outlook::Connectable
   include DeviseInvitable::Inviter
   include FullNameConcern
   include TextSearch
@@ -92,8 +91,10 @@ class Agent < ApplicationRecord
   scope :available_referents_for, lambda { |user|
     where.not(id: [user.agents.map(&:id)])
   }
-
   ## -
+
+  delegate :name, to: :domain, prefix: true
+  delegate :dns_domain_name, to: :domain
 
   def remember_me # Override from Devise::rememberable to enable it by default
     super.nil? ? true : super

@@ -7,7 +7,7 @@ json.array! @rdvs do |rdv|
     json.organisationName rdv.organisation&.name
     json.status rdv.status
     json.readableStatus rdv.human_attribute_value(:status)
-    json.motif rdv.motif.name
+    json.motif rdv.motif_name
     json.lieu rdv.public_office? && rdv.lieu&.name
     json.past rdv.past?
     json.duration rdv.duration_in_min

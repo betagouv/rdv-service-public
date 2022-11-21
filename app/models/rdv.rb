@@ -8,6 +8,7 @@ class Rdv < ApplicationRecord
   )
 
   include WebhookDeliverable
+  include Outlook::Synchronizable
   include Rdv::AddressConcern
   include Rdv::AuthoredConcern
   include Rdv::Updatable
@@ -95,6 +96,9 @@ class Rdv < ApplicationRecord
     end
   }
   ## -
+
+  delegate :domain, to: :organisation
+  delegate :name, to: :motif, prefix: true
 
   def self.ongoing(time_margin: 0.minutes)
     where("starts_at <= ?", Time.zone.now + time_margin)
@@ -294,7 +298,16 @@ class Rdv < ApplicationRecord
     results.exclude?("failure") ? "processed" : "failure"
   end
 
-  delegate :domain, to: :organisation
+  def object
+    collectif? ? ApplicationController.helpers.rdv_title_in_agenda(self) : motif_name
+  end
+
+  def event_description_for(agent)
+    link = Rails.application.routes.url_helpers
+                .admin_organisation_rdv_url(organisation, id, host: agent.dns_domain_name)
+
+    "plus d'infos dans #{agent.domain_name}: #{link}"
+  end
 
   def soft_delete
     # disable the :updated webhook because we want to manually trigger a :destroyed webhook
