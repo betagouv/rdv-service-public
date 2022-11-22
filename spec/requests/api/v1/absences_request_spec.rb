@@ -48,13 +48,7 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
         it { expect(parsed_response_body["absences"].pluck("id")).to match_array([absence1.id, absence2.id]) }
       end
 
-      response 401, "Problème d'authentification" do
-        let(:"access-token") { "false" }
-
-        schema "$ref" => "#/components/schemas/error_authentication"
-
-        run_test!
-      end
+      it_behaves_like "an endpoint that returns 401 - unauthorized"
     end
 
     post "Créer une absence" do
@@ -75,6 +69,7 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
       parameter name: "end_time", in: :query, type: :string, description: "Heure de fin de l'absence", example: "15:00"
 
       let(:organisation) { create(:organisation) }
+      let(:organisation_id) { organisation.id }
       let!(:agent) { create(:agent, id: 12, email: "agent@example.com", basic_role_in_organisations: [organisation]) }
       let(:auth_headers) { api_auth_headers_for_agent(agent) }
       let(:"access-token") { auth_headers["access-token"].to_s }
@@ -82,7 +77,6 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
       let(:client) { auth_headers["client"].to_s }
 
       response 200, "Crée et renvoie une absence" do
-        let(:organisation_id) { organisation.id }
         let(:agent_id) { 12 }
         let(:title) { "Super absence" }
         let(:first_day) { "2023-11-20" }
@@ -115,7 +109,6 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
       end
 
       response 200, "Crée et renvoie une absence quand c'est l'email de l'agent qu'on utilise", document: false do
-        let(:organisation_id) { organisation.id }
         let(:agent_email) { "agent@example.com" }
         let(:title) { "Super absence" }
         let(:first_day) { "2023-11-20" }
@@ -134,63 +127,43 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
         it { expect(created_absence.agent).to eq(agent) }
       end
 
-      response 404, "Renvoie 'not_found' quand l'agent.e est introuvable" do
-        let(:organisation_id) { organisation.id }
+      it_behaves_like "an endpoint that returns 401 - unauthorized" do
+        let(:title) { "Super absence" }
+        let(:first_day) { "2023-11-20" }
+        let(:start_time) { "08:00" }
+        let(:end_day) { "2023-11-20" }
+        let(:end_time) { "15:00" }
+      end
+
+      it_behaves_like "an endpoint that returns 404 - not found", "l'agent.e est introuvable" do
         let(:agent_email) { "test@example.com" }
         let(:title) { "Super absence" }
         let(:first_day) { "2023-11-20" }
         let(:start_time) { "08:00" }
         let(:end_day) { "2023-11-20" }
         let(:end_time) { "15:00" }
-
-        let!(:absence_count_before) { Absence.count }
-
-        schema "$ref" => "#/components/schemas/error_not_found"
-
-        run_test!
-
-        it { expect(Absence.count).to eq(absence_count_before) }
       end
 
-      response 422, "Renvoie 'unprocessable_entity' quand end_time est avant start_time ou que les formats ne sont pas corrects" do
-        let(:organisation_id) { organisation.id }
+      it_behaves_like "an endpoint that returns 422 - unprocessable_entity", "quand end_time est avant start_time ou que les formats ne sont pas corrects", true do
         let(:agent_email) { "agent@example.com" }
         let(:title) { "Super absence" }
         let(:first_day) { "2023-11-20" }
         let(:start_time) { "08:00" }
         let(:end_day) { "2023-11-20" }
         let(:end_time) { "06:00" }
-
-        let!(:absence_count_before) { Absence.count }
-
-        schema "$ref" => "#/components/schemas/error_unprocessable_entity"
-
-        run_test!
-
-        it { expect(Absence.count).to eq(absence_count_before) }
       end
 
-      response 422, "Renvoie 'unprocessable_entity' quand le format du start_time ou end_time n'est pas correct", document: false do
-        let(:organisation_id) { organisation.id }
+      it_behaves_like "an endpoint that returns 422 - unprocessable_entity", "le format du start_time ou end_time n'est pas correct", false do
         let(:agent_email) { "agent@example.com" }
         let(:title) { "Super absence" }
         let(:first_day) { "2023-11-20" }
         let(:start_time) { "8h" }
         let(:end_day) { "2023-11-20" }
         let(:end_time) { "15:00" }
-
-        let!(:absence_count_before) { Absence.count }
-
-        schema "$ref" => "#/components/schemas/error_unprocessable_entity"
-
-        run_test!
-
-        it { expect(Absence.count).to eq(absence_count_before) }
       end
 
       context "Crée une absence pour un.e agent.e dans un service différent" do
         let!(:agent2) { create(:agent, basic_role_in_organisations: [organisation], service: create(:service), email: "another@example.com") }
-        let(:organisation_id) { organisation.id }
         let(:agent_email) { "another@example.com" }
         let(:title) { "Super absence" }
         let(:first_day) { "2023-11-20" }
@@ -200,15 +173,9 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
 
         let!(:absence_count_before) { Absence.count }
 
-        response 403, "Impossible de créer une absence pour un.e agent.e dans un service différent" do
+        it_behaves_like "an endpoint that returns 403 - forbidden", "l'agent·e est dans un service différent" do
           let!(:agent) { create(:agent, service: create(:service)) }
           let!(:agent_role) { create(:agent_role, agent: agent, level: AgentRole::LEVEL_BASIC, organisation: organisation) }
-
-          schema "$ref" => "#/components/schemas/error_unauthorized"
-
-          run_test!
-
-          it { expect(Absence.count).to eq(absence_count_before) }
         end
 
         response 200, "Possible si l'agent est admin", document: false do
@@ -259,28 +226,14 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
         it { expect(parsed_response_body[:absence][:id]).to eq(absence1.id) }
       end
 
-      response 401, "Problème d'authentification" do
-        let(:"access-token") { "false" }
+      it_behaves_like "an endpoint that returns 401 - unauthorized"
 
-        schema "$ref" => "#/components/schemas/error_authentication"
-
-        run_test!
-      end
-
-      response 403, "Pas autorisé à accéder à cette absence" do
+      it_behaves_like "an endpoint that returns 403 - forbidden", "l'agent·e n'est pas autorisé·e à accéder à cette absence" do
         let(:absence_id) { absence2.id }
-
-        schema "$ref" => "#/components/schemas/error_unauthorized"
-
-        run_test!
       end
 
-      response 404, "L'absence n'existe pas" do
+      it_behaves_like "an endpoint that returns 404 - not found", "l'absence n'existe pas" do
         let(:absence_id) { "inconnue" }
-
-        schema "$ref" => "#/components/schemas/error_not_found"
-
-        run_test!
       end
     end
 
@@ -323,28 +276,14 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
         it { expect(absence1.reload.title).to eq("Nouveau titre") }
       end
 
-      response 401, "Problème d'authentification" do
-        let(:"access-token") { "false" }
+      it_behaves_like "an endpoint that returns 401 - unauthorized"
 
-        schema "$ref" => "#/components/schemas/error_authentication"
-
-        run_test!
-      end
-
-      response 403, "Pas autorisé à accéder à cette absence" do
+      it_behaves_like "an endpoint that returns 403 - forbidden", "l'agent·e n'est pas autorisé·e à accéder à cette absence" do
         let(:absence_id) { absence2.id }
-
-        schema "$ref" => "#/components/schemas/error_unauthorized"
-
-        run_test!
       end
 
-      response 404, "L'absence n'existe pas" do
+      it_behaves_like "an endpoint that returns 404 - not found", "l'absence n'existe pas" do
         let(:absence_id) { "inconnue" }
-
-        schema "$ref" => "#/components/schemas/error_not_found"
-
-        run_test!
       end
     end
 
@@ -378,28 +317,14 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
         it { expect(Absence.count).to eq(absence_count_before - 1) }
       end
 
-      response 401, "Problème d'authentification" do
-        let(:"access-token") { "false" }
+      it_behaves_like "an endpoint that returns 401 - unauthorized"
 
-        schema "$ref" => "#/components/schemas/error_authentication"
-
-        run_test!
-      end
-
-      response 403, "Pas autorisé à accéder à cette absence" do
+      it_behaves_like "an endpoint that returns 403 - forbidden", "l'agent·e n'est pas autorisé·e à accéder à cette absence" do
         let(:absence_id) { absence2.id }
-
-        schema "$ref" => "#/components/schemas/error_unauthorized"
-
-        run_test!
       end
 
-      response 404, "L'absence n'existe pas" do
+      it_behaves_like "an endpoint that returns 404 - not found", "l'absence n'existe pas" do
         let(:absence_id) { "inconnue" }
-
-        schema "$ref" => "#/components/schemas/error_not_found"
-
-        run_test!
       end
     end
   end

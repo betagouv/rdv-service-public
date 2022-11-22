@@ -6,7 +6,7 @@ Si vous rencontrez un problème, [contactez-nous par email](mailto:support@rdv-s
 
 ## Soumettre une modification
 
-Les pull requests sont bienvenues ! N’hésitez pas à [nous en parler à l’avance](mailto:contact@rdv-solidarites.fr). La démarche est habituelle: faites un fork, créez une branche, faites un PR. Pour les petites corrections de fautes d’orthographe, n’hésitez pas à proposer une modification directement depuis github.com.
+Les pull requests sont bienvenues ! N’hésitez pas à [nous en parler à l’avance](mailto:contact@rdv-solidarites.fr). La démarche est habituelle : faites un fork, créez une branche, faites un PR. Pour les petites corrections de fautes d’orthographe, n’hésitez pas à proposer une modification directement depuis github.com.
 
 ## Style de code
 
@@ -52,7 +52,7 @@ make autocorrect          Fix autocorrectable lint issues
 
 ## Tests
 
-Note : nos bonnes pratiques sur les tests sont à lire ici : [Bonnes pratiques de test](docs/bonnes-pratiques-de-tests.md)
+Note : nos bonnes pratiques sur les tests sont à lire ici : [Bonnes pratiques de test](bonnes-pratiques-de-tests.md)
 
 Nous utilisons [RSpec](https://rspec.info/) pour écrire nos tests. En principe, la base de données de tests est créée automatiquement. 
 
@@ -79,3 +79,22 @@ bin/rspec file_path/file_name_spec.rb
 ```bash
 bin/rspec file_path/file_name_spec.rb:line_number
 ```
+
+## Workflow de merge des pull requests
+
+Afin de garder un historique git lisible et navigable par `git blame`, nous recommandons l'une de ces deux façons de merger une PR :
+
+- Utiliser _"Squash and merge"_ si les commits de la PR n'apportent pas individuellement de valeur explicative sur le contexte.
+- Utiliser _"Create a merge commit"_ si la PR contient des commits qui permettent de mieux comprendre les différents changements indépendants introduits dans la PR.
+
+Au sein de notre projet, il est assumé que la majorité du contexte autour du changement est trouvable dans la PR et non dans les commits. Cependant, il est tout à fait possible de conserver ses commits si on les a bien créés pour qu'ils permettent d'obtenir rapidement une synthèse du contexte via `git blame`.
+
+Par exemple, si au sein d'une même PR on effectue un (petit 🤞) refactor puis une évolution fonctionnelle, il est apprécié que le refactor fasse l'objet d'un commit séparé.
+
+Note : il est possible de réécrire son historique de commits juste avant de merger, si des commits correctifs ont été ajoutés durant la revue.
+
+Un point d'attention : si vous avez mergé la branche `production` dans votre branche de feature pendant la vie de votre PR, veillez à ce que ces commits de merge ne finissent pas dans `production`. Pour ce faire :
+- si vous utilisez un squash merge, ces commits vont disparaître
+- si vous mergez dans `production` le plus pratique est de rebase votre branche sur `production` avant de merger.
+
+Note : lorsque votre feature branch n'est plus à jour par rapport à `production`, GitHub affiche un avertissement "This branch is out-of-date with the base branch" et vous propose de remédier à la situation. Ce faisant, on déclenche une CI qui teste le code tel qu'il serait s'il était mergé. Si cette CI passe, on peut alors merger.

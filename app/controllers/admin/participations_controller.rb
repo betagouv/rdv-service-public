@@ -20,7 +20,7 @@ class Admin::ParticipationsController < AgentAuthController
 
   def destroy
     authorize(@rdv)
-    if @rdvs_user.destroy
+    if @rdv.rdvs_users.destroy(@rdvs_user)
       flash[:notice] = "La participation de l'usager au rdv a été supprimée."
     else
       flash[:error] = @rdvs_user.errors.full_messages.to_sentence

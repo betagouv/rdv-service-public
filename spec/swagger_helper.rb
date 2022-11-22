@@ -18,7 +18,7 @@ RSpec.configure do |config|
     "v1/api.json" => {
       openapi: "3.0.1",
       info: {
-        title: "API RDV Solidarités V1",
+        title: "API RDV Solidarités",
         version: "v1",
         description: File.read(Rails.root.join("docs/api/v1/description_api.md")),
       },
@@ -234,30 +234,6 @@ RSpec.configure do |config|
             },
             required: %w[id ical_uid title first_day end_day start_time end_time agent organisation],
           },
-          organizations: {
-            type: "object",
-            properties: {
-              organizations: {
-                type: "array",
-                items: { "$ref" => "#/components/schemas/organization" },
-              },
-              meta: { "$ref" => "#/components/schemas/meta" },
-            },
-            required: %w[organizations meta],
-          },
-          organization: {
-            type: "object",
-            properties: {
-              id: { type: "integer" },
-              label: { type: "string" },
-              group_id: { type: "integer" },
-              phone_number: { type: "string", nullable: true },
-              email: { type: "string", nullable: true },
-              website: { type: "string", nullable: true },
-              public_link: { type: "string" },
-            },
-            required: %w[id label group_id public_link],
-          },
           invitation: {
             type: "object",
             properties: {
@@ -313,25 +289,23 @@ RSpec.configure do |config|
             },
             required: %w[send_lifecycle_notifications send_reminder_notification status user],
           },
-          groups: {
+          public_links: {
             type: "object",
             properties: {
-              groups: {
+              public_links: {
                 type: "array",
-                items: { "$ref" => "#/components/schemas/group" },
+                items: { "$ref" => "#/components/schemas/public_link" },
               },
-              meta: { "$ref" => "#/components/schemas/meta" },
             },
-            required: %w[groups meta],
+            required: %w[public_links],
           },
-          group: {
+          public_link: {
             type: "object",
             properties: {
-              id: { type: "integer" },
-              name: { type: "string" },
-              label: { type: "string" },
+              external_id: { type: "string" },
+              public_link: { type: "string" },
             },
-            required: %w[id label],
+            required: %w[external_id public_link],
           },
           meta: {
             type: "object",
@@ -344,8 +318,18 @@ RSpec.configure do |config|
             },
             required: %w[current_page next_page prev_page total_pages total_count],
           },
-          errors_generic: {
+          errors_unprocessable_entity: {
             type: "object",
+            properties: {
+              errors: {
+                type: "object",
+              },
+              error_messages: {
+                type: "array",
+                items: { type: "string" },
+              },
+            },
+            required: %w[errors],
           },
           error_too_many_request: {
             type: "object",
@@ -367,7 +351,7 @@ RSpec.configure do |config|
             },
             required: %w[errors],
           },
-          error_unauthorized: {
+          error_forbidden: {
             type: "object",
             properties: {
               errors: {
@@ -382,6 +366,13 @@ RSpec.configure do |config|
               },
             },
             required: %w[errors],
+          },
+          error_missing: {
+            type: "object",
+            properties: {
+              missing: { type: "string" },
+            },
+            required: %w[missing],
           },
           error_not_found: {
             type: "object",
@@ -409,31 +400,52 @@ RSpec.configure do |config|
       tags: [
         {
           name: "Invitation",
-          description: "Pour manipuler des usager·ères via leur jeton d'invitation",
+          description: "Désigner un jeton d'invitation. Il est lié à un·e usager·ère, et il est unique.",
         },
         {
           name: "User",
-          description: "Pour manipuler des usager·ères",
+          description:
+            "Désigne le compte unique d'un·e usager·ère.
+            Il contient les informations de l'état civil ainsi que des informations communes comme les préférences de notifications.
+            Il contient également un profil (voir UserProfile).",
+        },
+        {
+          name: "UserProfile",
+          description:
+            "Un profil lie un·e usager·ère à une organisation.
+            La plupart des usager·ères n'ont un lien qu'avec une seule organisation, mais une partie interagit avec plusieurs.
+            Ce profil contient aussi quelques informations sur l'usager·ère, indépendantes et non-partagées entre organisations.",
         },
         {
           name: "Agent",
-          description: "Pour manipuler des agent·es",
+          description: "Désigne un·e agent·e. Un·e agent·e est lié·e à une ou plusieurs organisations.",
         },
         {
           name: "RDV",
-          description: "Pour manipuler des rendez-vous",
+          description:
+            "Désigne un rendez-vous.
+            Il contient des informations sur le rendez-vous lui-même, le ou les agent·es, le ou les usager·ères, le lieu, le motif, l'organisation.",
         },
         {
-          name: "Group",
-          description: "Pour manipuler des groupes (représentation des territoires)",
+          name: "Motif",
+          description:
+            "Désigne le motif d'un rendez-vous.
+            Il contient des informations telles que le nom du motif, s'il est téléphonique, sur place ou à domicile, ainsi que des détails annexes (collectif ou non, catégorie).",
         },
         {
           name: "Organisation",
-          description: "Pour manipuler des organisations",
+          description: "Désigne une organisation. Une organisation contient des agent·es.",
         },
         {
           name: "PublicLink",
-          description: "Pour manipuler des liens publics de recherche",
+          description: "Désigne des liens publics de recherche d'un territoire. Ces liens permettent d'accéder directement à la recherche, préfiltrée sur un territoire donné.",
+        },
+        {
+          name: "Absence",
+          description:
+            "Désigne une absence d'un·e agent·e.
+            Elle contient des informations telles que le début et la fin de l'absence, son titre et l'agent·e concerné·e.
+            L'absence y est aussi représentée au format iCal.",
         },
       ],
       servers: [

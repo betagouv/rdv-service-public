@@ -735,13 +735,22 @@ describe Rdv, type: :model do
       expect(rdv.status).to eq("seen")
     end
 
-    it "updated as noshow (last priority)" do
+    it "updated as noshow (third priority)" do
       rdv.rdvs_users.first.update(status: "noshow")
       rdv.rdvs_users.second.update(status: "excused")
       rdv.rdvs_users.third.update(status: "excused")
       rdv.rdvs_users.last.update(status: "excused")
       rdv.update_rdv_status_from_participation
       expect(rdv.status).to eq("noshow")
+    end
+
+    it "updated as noshow (last priority)" do
+      rdv.rdvs_users.first.update(status: "revoked")
+      rdv.rdvs_users.second.update(status: "excused")
+      rdv.rdvs_users.third.update(status: "excused")
+      rdv.rdvs_users.last.update(status: "excused")
+      rdv.update_rdv_status_from_participation
+      expect(rdv.status).to eq("revoked")
     end
 
     %w[seen noshow excused].each do |status|

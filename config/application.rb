@@ -1,6 +1,15 @@
 require_relative "boot"
 
-require "rails/all"
+# frozen_string_literal: true
+
+# Selectively load modules instead of requiring rails/all
+# require "rails/all"
+require "rails"
+require "active_record/railtie"
+require "action_controller/railtie"
+require "action_view/railtie"
+require "action_mailer/railtie"
+require "active_job/railtie"
 
 require "tod/core_extensions"
 
@@ -32,6 +41,8 @@ module Lapin
     config.active_model.i18n_customize_full_message = true
 
     redis_url = ENV.fetch("REDIS_URL") { "redis://localhost:6379" }
+
+    config.active_support.cache_format_version = 6.1 # TODO: Change to 7.0 on final Rails 7 PR
 
     # Both cache and sessions are stored in the same Redis database:
     # - cache keys are prefixed with "cache:"
