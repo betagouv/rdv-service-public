@@ -7,7 +7,7 @@ RSpec.describe "Adding a user to a collective RDV" do
       organisation = create(:organisation, territory: territory)
       agent = create(:agent, organisations: [organisation])
       motif = create(:motif, :collectif, reservable_online: true, organisation: organisation, name: "Atelier")
-      rdv = create(:rdv, motif: motif, users: [], agents: [agent], organisation: organisation)
+      rdv = create(:rdv, :without_users, motif: motif, agents: [agent], organisation: organisation)
       user = create(:user, phone_number: "+33601010101", email: "frederique@example.com")
       login_as(user, scope: :user)
 
@@ -41,7 +41,7 @@ RSpec.describe "Adding a user to a collective RDV" do
       organisation = create(:organisation, territory: territory)
       agent = create(:agent, organisations: [organisation])
       motif = create(:motif, :collectif, reservable_online: true, organisation: organisation, name: "Atelier")
-      rdv = create(:rdv, motif: motif, users: [], agents: [agent], organisation: organisation)
+      rdv = create(:rdv, :without_users, motif: motif, agents: [agent], organisation: organisation)
       user = create(:user, phone_number: "+33601010101", email: "frederique@example.com")
 
       params = {
