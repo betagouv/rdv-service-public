@@ -20,7 +20,7 @@ Afin d'avoir un usage efficace de Sentry, il est nécessaire de limiter le nombr
 L'un des rôles de la vigie est donc de qualifier les issues Sentry :
 - Si l'issue était temporaire et n'est plus active (ex: timeouts temporaires d'un service externe), on ignore "jusqu'à la prochaine occurrence".
 - Si l'issue correspond à un bug / crash, on ouvre une issue GitHub dans laquelle on met un lien vers Sentry, et toutes les informations utiles à la résolution du problème. Afin de facilement s'y retrouver, on met l'URL de l'issue GitHub en commentaire dans l'issue Sentry.
-- Si l'issue ne cause pas de gêne dans l'utilisation de l'application, on peut choisir de l'ignorer avec un paramètre pertinent (ex: pas plus de 10 fois par semaine). La conditions de sortie de "l'ignorement" sont laissés au jugement de la vigie. ;)
+- Si l'issue ne cause pas de gêne dans l'utilisation de l'application, on peut choisir de l'ignorer avec un paramètre pertinent (ex: pas plus de 10 fois par semaine) laissé à l'appréciation de la vigie. ;)
 
 *Note : actuellement, nous ne sommes pas parvenus à lier notre Sentry et notre GitHub, ce qui explique le côté fastidieux du second point.*
 
