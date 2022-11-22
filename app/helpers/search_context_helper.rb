@@ -26,7 +26,7 @@ module SearchContextHelper
     root_path(
       motif_selection(params).merge(
         motif_name_with_location_type: params[:motif_name_with_location_type],
-        lieu_id: params[:lieu_id]
+        lieu_id: params[:lieu_id], user_selected_organisation_id: params[:user_selected_organisation_id]
       )
     )
   end

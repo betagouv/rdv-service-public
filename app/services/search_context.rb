@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/ClassLength
 class SearchContext
   attr_reader :errors, :query, :departement, :address, :city_code, :street_ban_id, :latitude, :longitude,
               :motif_name_with_location_type
@@ -18,6 +17,7 @@ class SearchContext
     @public_link_organisation_id = query[:public_link_organisation_id]
     @user_selected_organisation_id = query[:user_selected_organisation_id]
     @fallback_organisation_ids = query[:organisation_ids]
+    @motif_id = query[:motif_id]
     @motif_search_terms = query[:motif_search_terms]
     @motif_category = query[:motif_category]
     @motif_name_with_location_type = query[:motif_name_with_location_type]
@@ -167,15 +167,13 @@ class SearchContext
   end
 
   def filter_motifs(available_motifs)
-    motifs = if @motif_name_with_location_type.present?
-               available_motifs.search_by_name_with_location_type(@motif_name_with_location_type)
-             else
-               available_motifs
-             end
+    motifs = available_motifs
+    motifs = motifs.search_by_name_with_location_type(@motif_name_with_location_type) if @motif_name_with_location_type.present?
     motifs = motifs.where(service: service) if @service_id.present?
     motifs = motifs.search_by_text(@motif_search_terms) if @motif_search_terms.present?
     motifs = motifs.where(category: @motif_category) if @motif_category.present?
     motifs = motifs.where(organisations: { id: organisation_id }) if organisation_id.present?
+    motifs = motifs.where(id: @motif_id) if @motif_id.present?
     motifs = motifs.where(id: lieu_filtered_motif_ids(motifs)) if @lieu_id.present?
 
     motifs
@@ -222,4 +220,3 @@ class SearchContext
       end
   end
 end
-# rubocop:enable Metrics/ClassLength
