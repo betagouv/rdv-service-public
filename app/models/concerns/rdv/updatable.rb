@@ -50,7 +50,7 @@ module Rdv::Updatable
   end
 
   def rdv_user_token(user_id)
-    @notifier.rdv_users_tokens_by_user_id&.fetch(user_id, nil)
+    @notifier&.rdv_users_tokens_by_user_id&.fetch(user_id, nil)
   end
 
   def notify!(author, previous_participations)

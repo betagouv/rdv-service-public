@@ -20,7 +20,7 @@ module RdvsUser::StatusChangeable
   end
 
   def rdv_user_token
-    @notifier.rdv_users_tokens_by_user_id&.fetch(user.id)
+    @notifier&.rdv_users_tokens_by_user_id&.fetch(user.id)
   end
 
   def notify!(author)
