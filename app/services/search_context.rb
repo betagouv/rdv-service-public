@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/ClassLength
 class SearchContext
   attr_reader :errors, :query, :departement, :address, :city_code, :street_ban_id, :latitude, :longitude,
               :motif_name_with_location_type
@@ -14,7 +15,8 @@ class SearchContext
     @city_code = query[:city_code]
     @departement = query[:departement]
     @street_ban_id = query[:street_ban_id]
-    @organisation_id = query[:organisation_id]
+    @public_link_organisation_id = query[:public_link_organisation_id]
+    @user_selected_organisation_id = query[:user_selected_organisation_id]
     @fallback_organisation_ids = query[:organisation_ids]
     @motif_search_terms = query[:motif_search_terms]
     @motif_category = query[:motif_category]
@@ -27,7 +29,7 @@ class SearchContext
   # *** Method that outputs the next step for the user to complete its rdv journey ***
   # *** It is used in #to_partial_path to render the matching partial view ***
   def current_step
-    if address.blank? && @organisation_id.blank?
+    if address.blank? && organisation_id.blank?
       :address_selection
     elsif !service_selected?
       :service_selection
@@ -69,15 +71,24 @@ class SearchContext
   end
 
   def requires_organisation_selection?
-    !first_matching_motif.requires_lieu? && organisation.nil?
+    !first_matching_motif.requires_lieu? && user_selected_organisation.nil? && public_link_organisation.nil?
   end
 
-  def organisation
-    @organisation ||= \
-      @organisation_id.present? ? Organisation.find(@organisation_id) : nil
+  def user_selected_organisation
+    @user_selected_organisation ||= \
+      @user_selected_organisation_id.present? ? Organisation.find(@user_selected_organisation_id) : nil
   end
 
-  def organisations
+  def public_link_organisation
+    @public_link_organisation ||= \
+      @public_link_organisation_id.present? ? Organisation.find(@public_link_organisation_id) : nil
+  end
+
+  def organisation_id
+    @public_link_organisation_id || @user_selected_organisation_id
+  end
+
+  def motifs_organisations
     matching_motifs.map(&:organisation).uniq
   end
 
@@ -164,7 +175,7 @@ class SearchContext
     motifs = motifs.where(service: service) if @service_id.present?
     motifs = motifs.search_by_text(@motif_search_terms) if @motif_search_terms.present?
     motifs = motifs.where(category: @motif_category) if @motif_category.present?
-    motifs = motifs.where(organisations: { id: @organisation_id }) if @organisation_id.present?
+    motifs = motifs.where(organisations: { id: organisation_id }) if organisation_id.present?
     motifs = motifs.where(id: lieu_filtered_motif_ids(motifs)) if @lieu_id.present?
 
     motifs
@@ -211,3 +222,4 @@ class SearchContext
       end
   end
 end
+# rubocop:enable Metrics/ClassLength

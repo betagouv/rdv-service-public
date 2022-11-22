@@ -17,7 +17,7 @@ module SearchContextHelper
     root_path(
       motif_selection(params).merge(
         motif_name_with_location_type: params[:motif_name_with_location_type],
-        organisation_id: nil
+        user_selected_organisation_id: nil
       )
     )
   end
@@ -42,7 +42,7 @@ module SearchContextHelper
       street_ban_id: params[:street_ban_id],
       address: params[:address],
       service_id: params[:service_id],
-      organisation_id: params[:organisation_id],
+      public_link_organisation_id: params[:public_link_organisation_id],
     }
   end
 end

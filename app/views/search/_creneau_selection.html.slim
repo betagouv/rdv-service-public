@@ -10,10 +10,10 @@ section.bg-light.p-4
               .card-subtitle.my-2.
                 i.fa.fa-map-marker-alt>
                 = context.lieu.address
-            - elsif context.organisation.present?
+            - elsif context.user_selected_organisation.present?
               .card-subtitle.my-2.
                 i.fa.fa-building-columns>
-                = context.organisation.name
+                = context.user_selected_organisation.name
     - else
       .card.card-hoverable
         .card-body
@@ -35,7 +35,7 @@ section.bg-light.p-4
                 .col
                   h2.pb-1.mb-1.card-title= context.lieu.name
                   .card-subtitle= context.lieu.address
-      - elsif context.organisation.present?
+      - elsif context.user_selected_organisation.present?
         .card.card-hoverable
           .card-body
             = link_to path_to_organisation_selection(params), class: "d-block stretched-link" do
@@ -43,8 +43,8 @@ section.bg-light.p-4
                 .col-auto.align-self-center
                   i.fa.fa-chevron-left
                 .col
-                  h2.pb-1.mb-1.card-title= context.organisation.name
-                  = render "organisation_card_subtitles", organisation: context.organisation
+                  h2.pb-1.mb-1.card-title= context.user_selected_organisation.name
+                  = render "organisation_card_subtitles", organisation: context.user_selected_organisation
     - if context.first_matching_motif.collectif?
       h3.font-weight-bold = "Inscrivez-vous à l'atelier de votre choix :"
     - else
