@@ -91,32 +91,30 @@ describe SlotBuilder::BusyTime, type: :service do
 
   context "with an off_day in range" do
     context "with a range on a single day" do
-      let(:range) { Time.zone.parse("2021-10-27 8:00")..Time.zone.parse("2021-10-27 12:00") }
-
-      it "returns off_day from begninning of day to end of day" do
-        off_days = [Date.new(2021, 10, 27)]
-        expect(described_class.busy_times_for(range, plage_ouverture, off_days).first.starts_at).to eq(Time.zone.parse("20211027 0:00"))
-        expect(described_class.busy_times_for(range, plage_ouverture, off_days).first.ends_at).to be_within(1.second).of(Time.zone.parse("20211027 23:59:59"))
+      it "returns off_day from beginning of day to end of day" do
+        christmas_morning = Time.zone.parse("2021-12-25 8:00")..Time.zone.parse("2021-12-25 12:00")
+        busy_time = described_class.busy_times_for(christmas_morning, plage_ouverture).first
+        expect(busy_time.starts_at).to eq(Time.zone.parse("2021-12-25 0:00"))
+        expect(busy_time.ends_at).to be_within(1.second).of(Time.zone.parse("2021-12-25 23:59:59"))
       end
 
       it "returns off_day that in given range only" do
-        off_days = [Date.new(2021, 10, 30)]
-        expect(described_class.busy_times_for(range, plage_ouverture, off_days)).to be_empty
+        regular_monday_morning =  Time.zone.parse("2021-12-13 8:00")..Time.zone.parse("2021-12-13 12:00")
+        expect(described_class.busy_times_for(regular_monday_morning, plage_ouverture)).to be_empty
       end
     end
 
     context "with a range spanning several days" do
-      let(:range) { Time.zone.parse("2021-10-26 8:00")..Time.zone.parse("2021-10-29 12:00") }
-
-      it "returns off_day from begninning of day to end of day" do
-        off_days = [Date.new(2021, 10, 27)]
-        expect(described_class.busy_times_for(range, plage_ouverture, off_days).first.starts_at).to eq(Time.zone.parse("20211027 0:00"))
-        expect(described_class.busy_times_for(range, plage_ouverture, off_days).first.ends_at).to be_within(1.second).of(Time.zone.parse("20211027 23:59:59"))
+      it "returns off_day from beginning of day to end of day" do
+        christmas_week = Time.zone.parse("2021-12-20 8:00")..Time.zone.parse("2021-12-26 12:00")
+        busy_time = described_class.busy_times_for(christmas_week, plage_ouverture).first
+        expect(busy_time.starts_at).to eq(Time.zone.parse("2021-12-25 0:00"))
+        expect(busy_time.ends_at).to be_within(1.second).of(Time.zone.parse("2021-12-25 23:59:59"))
       end
 
       it "returns off_day that in given range only" do
-        off_days = [Date.new(2021, 10, 30)]
-        expect(described_class.busy_times_for(range, plage_ouverture, off_days)).to be_empty
+        all_work_week = Time.zone.parse("2021-12-13 8:00")..Time.zone.parse("2021-12-19 12:00")
+        expect(described_class.busy_times_for(all_work_week, plage_ouverture)).to be_empty
       end
     end
   end
