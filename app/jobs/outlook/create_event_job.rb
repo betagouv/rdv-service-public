@@ -2,8 +2,9 @@
 
 module Outlook
   class CreateEventJob < ApplicationJob
-    def perform(rdv, agent)
-      outlook_event = rdv.create_outlook_event(agent, rdv.outlook_payload(agent))
+    def perform(agents_rdv)
+      outlook_event = agents_rdv.create_outlook_event
+      agents_rdv.update(outlook_id: outlook_event["id"], skip_outlook_update: true)
     end
   end
 end

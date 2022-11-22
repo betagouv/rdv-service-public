@@ -2,7 +2,8 @@
 
 module Outlook
   class UpdateEventJob < ApplicationJob
-    def perform
+    def perform(agents_rdv)
+      agents_rdv.update_outlook_event
     end
   end
 end

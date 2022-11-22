@@ -8,7 +8,6 @@ class Rdv < ApplicationRecord
   )
 
   include WebhookDeliverable
-  include Outlook::Synchronizable
   include Rdv::AddressConcern
   include Rdv::AuthoredConcern
   include Rdv::Updatable
@@ -48,6 +47,8 @@ class Rdv < ApplicationRecord
   # Delegates
   delegate :home?, :phone?, :public_office?, :reservable_online?, :service_social?, :follow_up?, :service, :collectif?, :collectif, :individuel?, to: :motif
 
+  alias_attribute :soft_deleted?, :deleted_at?
+
   # Validations
   validates :starts_at, :ends_at, :agents, presence: true
   validates :rdvs_users, presence: true, unless: :collectif?
@@ -60,6 +61,7 @@ class Rdv < ApplicationRecord
   after_save :associate_users_with_organisation
   after_commit :update_agents_unknown_past_rdv_count, if: -> { past? }
   before_validation { self.uuid ||= SecureRandom.uuid }
+  after_update -> { agents_rdvs.each(&:reflect_update_in_outlook) }
 
   # Scopes
   default_scope { where(deleted_at: nil) }

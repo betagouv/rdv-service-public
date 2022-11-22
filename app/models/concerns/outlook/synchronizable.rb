@@ -6,41 +6,72 @@ module Outlook
     BASE_URL = "https://graph.microsoft.com/v1.0"
 
     included do
-      after_commit :create_outlook_events, on: :create
+      attr_accessor :skip_outlook_update
 
-      after_commit :update_outlook_events, on: :update
+      after_commit :reflect_create_in_outlook, on: :create
 
-      around_destroy :destroy_outlook_events
+      after_commit :reflect_update_in_outlook, on: :update, unless: :skip_outlook_update
+
+      around_destroy :reflect_destroy_in_outlook
 
       alias_attribute :exists_in_outlook?, :outlook_id?
+
+      delegate :connected_to_outlook?, to: :agent, prefix: true
     end
 
-    def exists_in_outlook?
-      !!outlook_id
+    # payload (hash): a JSON hash representing the event entity
+    # calendar_id (string): The Id of the calendar to create the event in.
+    #                     If nil, event is created in the default calendar.
+    def create_outlook_event(calendar_id = nil)
+      agent.refresh_outlook_token
+
+      request_url = if calendar_id.present?
+                      "me/Calendars/#{calendar_id}/Events"
+                    else
+                      "me/Events"
+                    end
+
+      make_api_call(agent, "POST", request_url, outlook_payload)
     end
 
-    def create_outlook_events
-      agents.connected_to_outlook.each do |agent|
-        Outlook::CreateEventJob.perform_now(self, agent)
+    # payload (hash): a JSON hash representing the updated event fields
+    # id (string): The Id of the event to update.
+    def update_outlook_event
+      agent.refresh_outlook_token
+
+      make_api_call(agent, "PATCH", "me/Events/#{outlook_id}", outlook_payload)
+    end
+
+    # id (string): The Id of the event to destroy.
+    def destroy_outlook_event
+      agent.refresh_outlook_token
+
+      make_api_call(agent, "DELETE", "me/Events/#{outlook_id}")
+    end
+
+    def reflect_create_in_outlook
+      return unless agent_connected_to_outlook? && !exists_in_outlook?
+
+      Outlook::CreateEventJob.perform_later(self)
+    end
+
+    def reflect_update_in_outlook
+      if cancelled? || soft_deleted?
+        reflect_destroy_in_outlook
+      elsif exists_in_outlook?
+        Outlook::UpdateEventJob.perform_later(self) if agent_connected_to_outlook?
+      else
+        reflect_create_in_outlook
       end
     end
 
-    def update_outlook_events
-      agents.connected_to_outlook.each do |agent|
-        if cancelled?
-          Outlook::DestroyEventJob.perform_later(self, agent)
-          update(outlook_id: nil)
-        else
-          Outlook::UpdateEventJob.perform_later(self, agent)
-        end
-      end
+    def reflect_destroy_in_outlook
+      return unless agent_connected_to_outlook? && exists_in_outlook?
+
+      Outlook::DestroyEventJob.perform_later(self)
     end
 
-    def destroy_outlook_events
-      agents.connected_to_outlook.each do |agent|
-        Outlook::DestroyEventJob.perform_later(self, agent) if exists_in_outlook?
-      end
-    end
+    private
 
     # https://docs.microsoft.com/en-us/graph/use-the-api?view=graph-rest-1.0
     # method (string): The HTTP method to use for the API call.
@@ -73,53 +104,23 @@ module Outlook
       JSON.parse(response.body)
     end
 
-    # payload (hash): a JSON hash representing the event entity
-    # calendar_id (string): The Id of the calendar to create the event in.
-    #                     If nil, event is created in the default calendar.
-    def create_outlook_event(agent, payload, calendar_id = nil)
-      agent.refresh_outlook_token
-
-      request_url = if calendar_id.present?
-                      "me/Calendars/#{calendar_id}/Events"
-                    else
-                      "me/Events"
-                    end
-
-      make_api_call(agent, "POST", request_url, payload)
-    end
-
-    # payload (hash): a JSON hash representing the updated event fields
-    # id (string): The Id of the event to update.
-    def update_outlook_event(agent, payload, id)
-      agent.refresh_outlook_token
-
-      make_api_call(agent, "PATCH", "me/Events/#{id}", payload)
-    end
-
-    # id (string): The Id of the event to delete.
-    def delete_outlook_event(agent, id)
-      agent.refresh_outlook_token
-
-      make_api_call(agent, "DELETE", "me/Events/#{id}")
-    end
-
-    def outlook_payload(agent)
+    def outlook_payload
       {
-        subject: object,
+        subject: rdv.object,
         body: {
           contentType: "HTML",
-          content: event_description_for(agent)
+          content: rdv.event_description_for(agent)
         },
         start: {
-          dateTime: starts_at.iso8601,
+          dateTime: rdv.starts_at.iso8601,
           timeZone: Time.zone_default.tzinfo.identifier
         },
         end: {
-          dateTime: ends_at.iso8601,
+          dateTime: rdv.ends_at.iso8601,
           timeZone: Time.zone_default.tzinfo.identifier
         },
         location: {
-          displayName: address_without_personal_information
+          displayName: rdv.address_without_personal_information
         }
       }
     end
