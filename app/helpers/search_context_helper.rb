@@ -13,6 +13,15 @@ module SearchContextHelper
     )
   end
 
+  def path_to_organisation_selection(params)
+    root_path(
+      motif_selection(params).merge(
+        motif_name_with_location_type: params[:motif_name_with_location_type],
+        organisation_id: nil
+      )
+    )
+  end
+
   def path_to_creneau_selection(params)
     root_path(
       motif_selection(params).merge(
