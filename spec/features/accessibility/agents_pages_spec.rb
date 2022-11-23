@@ -20,7 +20,7 @@ describe "agents page", js: true do
     territory = create(:territory, departement_number: "75")
     organisation = create(:organisation, territory: territory)
     agent = create(:agent, email: "totoagent@example.com", basic_role_in_organisations: [organisation])
-    create_list(:rdv, 3, agents: [agent])
+    create_list(:rdv, 3, agents: [agent], starts_at: Time.zone.now.beginning_of_week + 10.hours)
     login_as agent
 
     path = admin_organisation_agent_agenda_path(organisation, agent)

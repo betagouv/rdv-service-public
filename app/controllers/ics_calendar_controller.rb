@@ -60,7 +60,7 @@ class IcsCalendarController < ActionController::Base
 
         event.uid = rdv.uuid
         event.summary = rdv.object
-        event.description = event_description_for(agent)
+        event.description = rdv.event_description_for(@agent)
       end
     end
   end

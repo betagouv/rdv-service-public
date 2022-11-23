@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Outlook
   module Connectable
     extend ActiveSupport::Concern

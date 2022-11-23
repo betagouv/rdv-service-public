@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Outlook
   module Synchronizable
     extend ActiveSupport::Concern
@@ -12,7 +14,7 @@ module Outlook
 
       after_commit :reflect_update_in_outlook, on: :update, unless: :skip_outlook_update
 
-      around_destroy :reflect_destroy_in_outlook
+      after_destroy :reflect_destroy_in_outlook
 
       alias_attribute :exists_in_outlook?, :outlook_id?
 
@@ -109,19 +111,19 @@ module Outlook
         subject: rdv.object,
         body: {
           contentType: "HTML",
-          content: rdv.event_description_for(agent)
+          content: rdv.event_description_for(agent),
         },
         start: {
           dateTime: rdv.starts_at.iso8601,
-          timeZone: Time.zone_default.tzinfo.identifier
+          timeZone: Time.zone_default.tzinfo.identifier,
         },
         end: {
           dateTime: rdv.ends_at.iso8601,
-          timeZone: Time.zone_default.tzinfo.identifier
+          timeZone: Time.zone_default.tzinfo.identifier,
         },
         location: {
-          displayName: rdv.address_without_personal_information
-        }
+          displayName: rdv.address_without_personal_information,
+        },
       }
     end
   end
