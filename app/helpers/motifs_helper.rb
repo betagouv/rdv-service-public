@@ -94,4 +94,15 @@ module MotifsHelper
   def human_group_type_value(motif)
     t("activerecord.attributes.motif/collectifs.#{motif.collectif?}")
   end
+
+  def available_slots_count(motif)
+    if motif.collectif?
+      motif.rdvs.with_remaining_seats.future.count
+    else
+      policy_scope(PlageOuverture).joins(:motifs).where(
+        organisation: current_organisation,
+        motifs: { id: motif.id }
+      ).in_range(Time.zone.now..).count
+    end
+  end
 end
