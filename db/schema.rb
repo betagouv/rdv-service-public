@@ -10,8 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_11_09_101323) do
-
+ActiveRecord::Schema[7.0].define(version: 2022_11_09_101323) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "unaccent"
@@ -97,6 +96,7 @@ ActiveRecord::Schema.define(version: 2022_11_09_101323) do
     "franceconnect_sign_up",
     "user_relative_creation",
     "agent_creation_api",
+    "prescripteur",
   ], force: :cascade
 
   create_enum :user_invited_through, [
@@ -168,8 +168,8 @@ ActiveRecord::Schema.define(version: 2022_11_09_101323) do
   create_table "agent_teams", force: :cascade do |t|
     t.bigint "team_id", null: false
     t.bigint "agent_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["agent_id"], name: "index_agent_teams_on_agent_id"
     t.index ["team_id"], name: "index_agent_teams_on_team_id"
   end
@@ -178,8 +178,8 @@ ActiveRecord::Schema.define(version: 2022_11_09_101323) do
     t.bigint "agent_id", null: false
     t.bigint "territory_id", null: false
     t.boolean "allow_to_manage_teams", default: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.boolean "allow_to_manage_access_rights", default: false, null: false
     t.boolean "allow_to_invite_agents", default: false, null: false
     t.boolean "allow_to_download_metrics", default: false, null: false
@@ -294,8 +294,8 @@ ActiveRecord::Schema.define(version: 2022_11_09_101323) do
   create_table "file_attentes", force: :cascade do |t|
     t.bigint "rdv_id", null: false
     t.bigint "user_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.integer "notifications_sent", default: 0
     t.datetime "last_creneau_sent_at"
     t.index ["rdv_id", "user_id"], name: "index_file_attentes_on_rdv_id_and_user_id", unique: true
@@ -472,8 +472,8 @@ ActiveRecord::Schema.define(version: 2022_11_09_101323) do
     t.enum "channel", null: false, enum_type: "receipts_channel"
     t.enum "result", null: false, enum_type: "receipts_result"
     t.string "error_message"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "sms_provider"
     t.integer "sms_count"
     t.string "content"
@@ -501,8 +501,8 @@ ActiveRecord::Schema.define(version: 2022_11_09_101323) do
     t.string "departement"
     t.string "name", null: false
     t.string "human_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.bigint "territory_id", null: false
     t.index ["departement"], name: "index_sectors_on_departement"
     t.index ["human_id", "territory_id"], name: "index_sectors_on_human_id_and_territory_id", unique: true
@@ -512,8 +512,8 @@ ActiveRecord::Schema.define(version: 2022_11_09_101323) do
 
   create_table "services", force: :cascade do |t|
     t.string "name"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "short_name"
     t.index "lower((name)::text)", name: "index_services_on_lower_name", unique: true
     t.index "lower((short_name)::text)", name: "index_services_on_lower_short_name", unique: true
@@ -529,8 +529,8 @@ ActiveRecord::Schema.define(version: 2022_11_09_101323) do
   create_table "teams", force: :cascade do |t|
     t.bigint "territory_id", null: false
     t.string "name", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["name", "territory_id"], name: "index_teams_on_name_and_territory_id", unique: true
     t.index ["territory_id"], name: "index_teams_on_territory_id"
   end
@@ -540,8 +540,8 @@ ActiveRecord::Schema.define(version: 2022_11_09_101323) do
     t.string "name"
     t.string "phone_number"
     t.string "phone_number_formatted"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.enum "sms_provider", enum_type: "sms_provider"
     t.json "sms_configuration"
     t.boolean "has_own_sms_provider", default: false
@@ -646,8 +646,8 @@ ActiveRecord::Schema.define(version: 2022_11_09_101323) do
     t.string "target_url", null: false
     t.string "secret"
     t.bigint "organisation_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "subscriptions", default: ["rdv", "absence", "plage_ouverture"], array: true
     t.index ["organisation_id"], name: "index_webhook_endpoints_on_organisation_id"
   end
@@ -656,8 +656,8 @@ ActiveRecord::Schema.define(version: 2022_11_09_101323) do
     t.string "level"
     t.string "city_name"
     t.string "city_code"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.bigint "sector_id", null: false
     t.string "street_name"
     t.string "street_ban_id"
