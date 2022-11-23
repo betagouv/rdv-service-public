@@ -30,7 +30,7 @@ class SearchContext
   # *** Method that outputs the next step for the user to complete its rdv journey ***
   # *** It is used in #to_partial_path to render the matching partial view ***
   def current_step
-    if address.blank? && organisation_id.blank?
+    if departement.blank? && organisation_id.blank?
       :address_selection
     elsif !service_selected?
       :service_selection
@@ -164,7 +164,7 @@ class SearchContext
   end
 
   def agents
-    @agents ||= Agent.where(id: @agent_ids)
+    @agents ||= retrieve_agents
   end
 
   def filter_motifs(available_motifs)
@@ -176,7 +176,7 @@ class SearchContext
     motifs = motifs.where(organisations: { id: organisation_id }) if organisation_id.present?
     motifs = motifs.where(id: @motif_id) if @motif_id.present?
     motifs = motifs.where(id: lieu_filtered_motif_ids(motifs)) if @lieu_id.present?
-    motifs = motifs.where(id: agent_filtered_motif_ids(motifs)) if @agent_ids.present?
+    motifs = motifs.where(id: agent_filtered_motif_ids(motifs)) unless agents.empty?
 
     motifs
   end
@@ -189,13 +189,13 @@ class SearchContext
     individual_motif_ids = motifs.individuel.joins(:plage_ouvertures).where(plage_ouvertures: { lieu_id: @lieu_id }).ids.uniq
     # Pour prendre en compte le filtre sur le lieu_id pour les RDV Collectif,
     # nous ne pouvons pas passer par une requête `or` qui nécessite les mêmes jointures des deux côtés.
-    collective_motif_ids = Rdv.where(lieu_id: @lieu_id, motif: motifs.collectif).pluck(:motif_id).uniq
+    collective_motif_ids = Rdv.future.where(lieu_id: @lieu_id, motif: motifs.collectif).pluck(:motif_id).uniq
     individual_motif_ids + collective_motif_ids
   end
 
   def agent_filtered_motif_ids(motifs)
-    individual_motif_ids = motifs.individuel.joins(:plage_ouvertures).where(plage_ouvertures: { agent_id: @agent_ids }).ids.uniq
-    collective_motif_ids = Rdv.where(motif: motifs.collectif)
+    individual_motif_ids = motifs.individuel.joins(:plage_ouvertures).where(plage_ouvertures: { agent: @agent_ids }).ids.uniq
+    collective_motif_ids = Rdv.future.where(motif: motifs.collectif)
       .joins(:agents)
       .where(agents: { id: @agent_ids }).pluck(:motif_id).uniq
     individual_motif_ids + collective_motif_ids
@@ -210,6 +210,13 @@ class SearchContext
       geo_search: geo_search,
       agents: agents
     )
+  end
+
+  def retrieve_agents
+    return [] if @agent_ids.blank? || @current_user.nil?
+    return Agent.where(id: @agent_ids) if invitation?
+
+    @current_user.agents.where(id: @agent_ids)
   end
 
   def matching_motifs

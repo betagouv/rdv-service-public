@@ -27,7 +27,7 @@ module Users::CreneauxSearchConcern
       .where(starts_at: start_booking_delay..end_booking_delay)
       .order(:starts_at)
 
-    rdvs = rdvs.joins(:users).where.not(users: { id: user.self_and_relatives.map(&:id) }) if user
+    rdvs = rdvs.where.not(id: user.self_and_relatives.flat_map(&:rdv_ids)) if user
     rdvs = rdvs.joins(:agents).where(agents: attributed_agents) if attributed_agents.any?
     rdvs
   end
