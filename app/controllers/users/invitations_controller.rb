@@ -15,9 +15,7 @@ class Users::InvitationsController < Devise::InvitationsController
     params[:invitation_token] = params[:invitation_token].upcase if params[:invitation_token]&.length == 8
 
     # if the token is invalid we remove it from the session
-    # rubocop:disable Rails/DynamicFindBy
     delete_token_from_session unless resource_class.find_by_invitation_token(params[:invitation_token], true)
-    # rubocop:enable Rails/DynamicFindBy
     super
   end
 

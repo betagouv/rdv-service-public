@@ -72,8 +72,7 @@ Rails/CreateTableWithTimestamps:
     - 'db/migrate/20211215182151_create_active_storage_variant_records.active_storage.rb'
 
 Rails/DynamicFindBy:
-  Exclude:
-    - 'spec/features/agents/admin_can_configure_the_organisation_spec.rb'
+  Enabled: false
 
 Rails/FilePath:
   Exclude:
