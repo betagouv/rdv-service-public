@@ -91,7 +91,6 @@ fr:
         motif:
           attributes:
             base:
-              not_reservable_online_if_collectif: La réservation en ligne n'est pas possible pour les RDV collectifs.
               not_at_home_if_collectif: Les RDV collectifs doivent avoir lieu sur place.
             name:
               taken: est déjà utilisé pour un motif avec le même type de RDV.

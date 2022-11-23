@@ -20,8 +20,9 @@ describe "Public links API", swagger_doc: "v1/api.json" do
         let!(:organisation_b) { create(:organisation, new_domain_beta: true, external_id: "ext_id_B", territory: terr) }
         let!(:organisation_c) { create(:organisation, new_domain_beta: true, external_id: "ext_id_C", territory: terr) }
         let!(:organisation_d) { create(:organisation, new_domain_beta: true, external_id: "ext_id_D", territory: terr) }
-        let!(:organisation_e) { create(:organisation, new_domain_beta: true, external_id: "ext_id_E", territory: create(:territory)) }
-        let!(:organisation_f) { create(:organisation, new_domain_beta: true, external_id: nil,        territory: terr) }
+        let!(:organisation_e) { create(:organisation, new_domain_beta: true, external_id: "ext_id_E", territory: terr) }
+        let!(:organisation_f) { create(:organisation, new_domain_beta: true, external_id: "ext_id_F", territory: create(:territory)) }
+        let!(:organisation_g) { create(:organisation, new_domain_beta: true, external_id: nil,        territory: terr) }
 
         let(:territory) { terr.departement_number }
 
@@ -36,6 +37,10 @@ describe "Public links API", swagger_doc: "v1/api.json" do
                 "external_id" => "ext_id_B",
                 "public_link" => "http://www.rdv-aide-numerique-test.localhost/org/#{organisation_b.id}",
               },
+              {
+                "external_id" => "ext_id_C",
+                "public_link" => "http://www.rdv-aide-numerique-test.localhost/org/#{organisation_c.id}",
+              },
             ],
           }
         end
@@ -44,16 +49,19 @@ describe "Public links API", swagger_doc: "v1/api.json" do
           create(:plage_ouverture, organisation: organisation_a)
           create(:plage_ouverture, organisation: organisation_a)
           create(:plage_ouverture, :no_recurrence, organisation: organisation_b, first_day: Time.zone.today + 5.days)
-          create(:plage_ouverture, :expired, organisation: organisation_c)
-          create(:plage_ouverture, organisation: organisation_f)
+          create(:plage_ouverture, :expired, organisation: organisation_d)
+          create(:plage_ouverture, organisation: organisation_g)
+
+          create(:rdv, :future, motif: create(:motif, :collectif, reservable_online: true), organisation: organisation_c)
 
           # Organisation A has two recurring plages
           # Organisation B has a plage in 5 days
-          # Organisation C has a plage that expired
-          # Organisation D has no plage
-          # Organisation E is not in provided territory
-          # Organisation F does not have an external ID
-          # Organisation G does not exist
+          # Organisation B has an online reservable RDV collectif
+          # Organisation D has a plage that expired
+          # Organisation E has no plage
+          # Organisation F is not in provided territory
+          # Organisation G does not have an external ID
+          # Organisation H does not exist
         end
 
         schema "$ref" => "#/components/schemas/public_links"
