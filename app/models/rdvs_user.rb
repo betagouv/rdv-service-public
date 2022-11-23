@@ -49,7 +49,7 @@ class RdvsUser < ApplicationRecord
   end
 
   def set_status_from_rdv
-    return if rdv&.status.nil?
+    return if rdv&.status.nil? || rdv.collectif?
 
     self.status = rdv.status
   end

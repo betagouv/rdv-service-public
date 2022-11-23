@@ -10,8 +10,12 @@ describe "Agent can edit a Rdv collectif" do
     create(:user, phone_number: "+33611223344", email: "test@exemple.fr")
   end
   let(:rdv) do
-    create(:rdv, motif: motif, organisation: organisation, agents: [agent], users: [],
-                 lieu: create(:lieu, organisation: organisation))
+    create(:rdv,
+           :without_users,
+           motif: motif,
+           organisation: organisation,
+           agents: [agent],
+           lieu: create(:lieu, organisation: organisation))
   end
 
   before do

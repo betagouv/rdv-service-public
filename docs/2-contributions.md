@@ -6,7 +6,7 @@ Si vous rencontrez un problème, [contactez-nous par email](mailto:support@rdv-s
 
 ## Soumettre une modification
 
-Les pull requests sont bienvenues ! N’hésitez pas à [nous en parler à l’avance](mailto:contact@rdv-solidarites.fr). La démarche est habituelle: faites un fork, créez une branche, faites un PR. Pour les petites corrections de fautes d’orthographe, n’hésitez pas à proposer une modification directement depuis github.com.
+Les pull requests sont bienvenues ! N’hésitez pas à [nous en parler à l’avance](mailto:contact@rdv-solidarites.fr). La démarche est habituelle : faites un fork, créez une branche, faites un PR. Pour les petites corrections de fautes d’orthographe, n’hésitez pas à proposer une modification directement depuis github.com.
 
 ## Style de code
 
@@ -95,6 +95,6 @@ Note : il est possible de réécrire son historique de commits juste avant de me
 
 Un point d'attention : si vous avez mergé la branche `production` dans votre branche de feature pendant la vie de votre PR, veillez à ce que ces commits de merge ne finissent pas dans `production`. Pour ce faire :
 - si vous utilisez un squash merge, ces commits vont disparaître
-- si vous mergez dans `production` le plus pratique est de rebase votre branche sur `prodcution` avant de merger.
+- si vous mergez dans `production` le plus pratique est de rebase votre branche sur `production` avant de merger.
 
 Note : lorsque votre feature branch n'est plus à jour par rapport à `production`, GitHub affiche un avertissement "This branch is out-of-date with the base branch" et vous propose de remédier à la situation. Ce faisant, on déclenche une CI qui teste le code tel qu'il serait s'il était mergé. Si cette CI passe, on peut alors merger.
