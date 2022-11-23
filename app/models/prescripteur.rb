@@ -4,8 +4,8 @@ class Prescripteur < ApplicationRecord
   include FullNameConcern
   include PhoneNumberValidation::HasPhoneNumber
 
-  belongs_to :rdv
+  belongs_to :rdvs_user
 
-  validates :rdv_id, uniqueness: true
+  validates :rdvs_user_id, uniqueness: true
   validates :first_name, :last_name, :email, presence: true
 end

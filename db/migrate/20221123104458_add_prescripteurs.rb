@@ -5,7 +5,7 @@ class AddPrescripteurs < ActiveRecord::Migration[6.1]
     add_enum_value :user_created_through, "prescripteur"
 
     create_table :prescripteurs do |t|
-      t.bigint :rdv_id, null: false
+      t.bigint :rdvs_user_id, null: false
       t.string :first_name, null: false
       t.string :last_name, null: false
       t.string :email, null: false
@@ -14,7 +14,7 @@ class AddPrescripteurs < ActiveRecord::Migration[6.1]
       t.timestamps null: false
     end
 
-    add_index :prescripteurs, :rdv_id, unique: true
-    add_foreign_key :prescripteurs, :rdvs
+    add_index :prescripteurs, :rdvs_user_id, unique: true
+    add_foreign_key :prescripteurs, :rdvs_users
   end
 end

@@ -13,17 +13,18 @@ class PrescripteurRdvWizard < UserRdvWizard::Base
   def create_rdv!
     @user.skip_confirmation_notification! # Désactivation du mail Devise de confirmation de compte
 
+    rdvs_user = RdvsUser.new(user: @user, prescripteur: @prescripteur, rdv: rdv)
+
     rdv.assign_attributes(
       lieu: lieu,
       organisation: motif.organisation,
       agents: [creneau.agent],
-      users: [@user],
-      prescripteur: @prescripteur
+      rdvs_users: [rdvs_user]
     )
     rdv.save!
 
     Notifiers::RdvCreated.perform_with(rdv, @prescripteur)
 
-    PrescripteurMailer.rdv_created(rdv, @domain.name).deliver_later
+    PrescripteurMailer.rdv_created(rdvs_user, @domain.name).deliver_later
   end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe "prescripteur can create RDV for a user" do
   let!(:organisation) { create(:organisation) }
   let!(:agent) { create(:agent, :cnfs, admin_role_in_organisations: [organisation], rdv_notifications_level: "all") }
@@ -39,7 +41,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
     created_rdv = Rdv.last
     expect(created_rdv.users.map(&:full_name)).to eq(["Patricia DUROY"])
     expect(created_rdv.agents).to eq([agent])
-    expect(created_rdv.prescripteur).to have_attributes(
+    expect(created_rdv.rdvs_users.first.prescripteur).to have_attributes(
       first_name: "Alex",
       last_name: "Prescripteur",
       email: "alex@prescripteur.fr",

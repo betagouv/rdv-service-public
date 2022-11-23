@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_11_09_101323) do
+ActiveRecord::Schema[7.0].define(version: 2022_11_23_104458) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "unaccent"
@@ -409,6 +409,18 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_09_101323) do
     t.index ["updated_at"], name: "index_plage_ouvertures_on_updated_at"
   end
 
+  create_table "prescripteurs", force: :cascade do |t|
+    t.bigint "rdvs_user_id", null: false
+    t.string "first_name", null: false
+    t.string "last_name", null: false
+    t.string "email", null: false
+    t.string "phone_number"
+    t.string "phone_number_formatted"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["rdvs_user_id"], name: "index_prescripteurs_on_rdvs_user_id", unique: true
+  end
+
   create_table "rdvs", force: :cascade do |t|
     t.datetime "starts_at", null: false
     t.bigint "organisation_id", null: false
@@ -679,6 +691,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_09_101323) do
   add_foreign_key "plage_ouvertures", "agents"
   add_foreign_key "plage_ouvertures", "lieux"
   add_foreign_key "plage_ouvertures", "organisations"
+  add_foreign_key "prescripteurs", "rdvs_users"
   add_foreign_key "rdvs", "lieux"
   add_foreign_key "rdvs", "motifs"
   add_foreign_key "rdvs", "organisations"
