@@ -2,6 +2,7 @@
 
 class Creneau
   include ActiveModel::Model
+  include Comparable
 
   attr_accessor :starts_at, :lieu_id, :motif, :agent
 
@@ -21,6 +22,11 @@ class Creneau
 
   def duration_in_min
     motif.default_duration_in_min
+  end
+
+  # Required by the Comparable module
+  def <=>(other)
+    starts_at <=> other.starts_at
   end
 
   def respects_min_booking_delay?
