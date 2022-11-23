@@ -4,7 +4,7 @@ describe "User can search for rdvs" do
   let(:now) { Time.zone.parse("2021-12-13 8:00") }
 
   let!(:territory92) { create(:territory, departement_number: "92") }
-  let!(:organisation) { create(:organisation, territory: territory92) }
+  let!(:organisation) { create(:organisation, :with_contact, territory: territory92) }
   let(:service) { create(:service) }
   let!(:motif) { create(:motif, name: "Vaccination", reservable_online: true, organisation: organisation, restriction_for_rdv: nil, service: service) }
   let!(:autre_motif) { create(:motif, name: "Consultation", reservable_online: true, organisation: organisation, restriction_for_rdv: nil, service: service) }
@@ -45,6 +45,7 @@ describe "User can search for rdvs" do
           visit root_path
           execute_search
           choose_service(motif_autre_service.service)
+          choose_organisation(organisation)
           choose_creneau
           sign_up
           continue_to_rdv(motif_autre_service)
@@ -99,6 +100,14 @@ describe "User can search for rdvs" do
     find(".card-title", text: /#{lieu.name}/).ancestor(".card").find("a.stretched-link").click
 
     expect(page).to have_content(lieu.name)
+  end
+
+  def choose_organisation(organisation)
+    expect(page).to have_content(organisation.name)
+    expect(page).to have_content(organisation.phone_number)
+    expect(page).to have_content(organisation.website)
+
+    find("h3", text: organisation.name).click
   end
 
   def choose_creneau

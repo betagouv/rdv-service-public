@@ -5,12 +5,15 @@ section.bg-light.p-4
         .card-body
           h2.py-1.my-1
             i.fa.fa-info-circle>
-            = motif_name_with_location_type(context.selected_motif)
+            = motif_name_with_location_type(context.first_matching_motif)
             - if context.lieu.present?
               .card-subtitle.my-2.
                 i.fa.fa-map-marker-alt>
                 = context.lieu.address
-
+            - elsif context.user_selected_organisation.present?
+              .card-subtitle.my-2.
+                i.fa.fa-building-columns>
+                = context.user_selected_organisation.name
     - else
       .card.card-hoverable
         .card-body
@@ -20,8 +23,8 @@ section.bg-light.p-4
                 i.fa.fa-chevron-left
               .col
                 h2.pb-1.mb-1
-                  = motif_name_with_location_type(context.selected_motif)
-                = context.selected_motif.service.name
+                  = motif_name_with_location_type(context.first_matching_motif)
+                = context.service.name
       - if context.lieu.present?
         .card.card-hoverable
           .card-body
@@ -32,16 +35,26 @@ section.bg-light.p-4
                 .col
                   h2.pb-1.mb-1.card-title= context.lieu.name
                   .card-subtitle= context.lieu.address
-    - if context.selected_motif.collectif?
+      - elsif context.user_selected_organisation.present?
+        .card.card-hoverable
+          .card-body
+            = link_to path_to_organisation_selection(params), class: "d-block stretched-link" do
+              .row
+                .col-auto.align-self-center
+                  i.fa.fa-chevron-left
+                .col
+                  h2.pb-1.mb-1.card-title= context.user_selected_organisation.name
+                  = render "organisation_card_subtitles", organisation: context.user_selected_organisation
+    - if context.first_matching_motif.collectif?
       h3.font-weight-bold = "Inscrivez-vous à l'atelier de votre choix :"
     - else
       h3.font-weight-bold = "Sélectionnez un créneau :"
     .card.mb-3
       .card-body
-        - if context.selected_motif.collectif?
+        - if context.first_matching_motif.collectif?
           - context.creneaux.order(:starts_at).each do |search_result|
             = render "rdv_collectif", rdv: search_result
         - elsif context.unique_motifs_by_name_and_location_type.present?
             = render "creneaux", lieu: context.lieu, creneaux: context.creneaux, date_range: context.date_range, departement: context.departement, address: context.address, max_booking_delay: context.max_booking_delay, city_code: context.city_code, next_availability: context.next_availability, query: context.query
         - else
-          .alert.alert-warning= "Le motif <b>#{context.selected_motif.name}</b> n'est plus disponible à la réservation à <b>#{context.lieu.name}</b>".html_safe
+          .alert.alert-warning= "Le motif <b>#{context.first_matching_motif.name}</b> n'est plus disponible à la réservation à <b>#{context.lieu.name}</b>".html_safe
