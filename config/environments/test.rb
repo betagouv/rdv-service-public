@@ -8,7 +8,10 @@ require "active_support/core_ext/integer/time"
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
-  config.cache_classes = false # Required by Spring
+  # When running tests locally, using Spring to speed up test start time requires to set config.cache_classes to false
+  # when running tests in the CI, we want our configuration to be as clase as possible to the production one, so we set this to true
+  # (we rely on the fact that ENV["CI"] is true in github actions)
+  config.cache_classes = ENV["CI"].present?
   config.action_view.cache_template_loading = true
 
   # Eager loading loads your whole application. When running a single test locally,
