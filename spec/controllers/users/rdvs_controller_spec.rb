@@ -357,14 +357,14 @@ RSpec.describe Users::RdvsController, type: :controller do
 
     context "creneaux available" do
       before do
-        # Première plage qui commence dans 3 jours, répétition quotidienne
+        # Une plage quotidienne qui commence dans 3 jours, ouvertures de 10h00 à 12h00
         create(:plage_ouverture, :daily,
                first_day: 3.days.from_now,
                start_time: Tod::TimeOfDay.new(10),
                end_time: Tod::TimeOfDay.new(12),
                lieu: lieu, agent: agent, motifs: [motif], organisation: organisation)
 
-        # Second plage ponctuelle qui a lieu dans 2 jours
+        # Une plage ponctuelle qui a lieu dans 2 jours, ouvertures de 16h00 à 17h00
         create(:plage_ouverture,
                first_day: 2.days.from_now,
                start_time: Tod::TimeOfDay.new(16),
@@ -381,8 +381,8 @@ RSpec.describe Users::RdvsController, type: :controller do
       it { expect(assigns(:creneaux)).not_to be_empty }
       it { expect(response.body).to include("Voici les créneaux disponibles pour modifier votre rendez-vous du") }
       it { expect(response.body).to include("dimanche 06 janvier 2019 à 10h00") }
-      it { expect(response.body).to include("16:00") } # heure de créneau pour la première plage
-      it { expect(response.body).to include("10:00") } # heure de créneau pour la seconde plage
+      it { expect(response.body).to include("10:00") } # heure de créneau pour la plage quotidienne
+      it { expect(response.body).to include("16:00") } # heure de créneau pour la plage ponctuelle
     end
 
     context "when the rdv cannot be edited" do
