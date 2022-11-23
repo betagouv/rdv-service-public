@@ -5,6 +5,7 @@ class RdvsUser < ApplicationRecord
   devise :invitable
 
   include RdvsUser::StatusChangeable
+  include RdvsUser::Creatable
 
   # Attributes
   enum status: { unknown: "unknown", waiting: "waiting", seen: "seen", excused: "excused", revoked: "revoked", noshow: "noshow" }

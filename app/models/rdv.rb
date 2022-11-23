@@ -315,7 +315,10 @@ class Rdv < ApplicationRecord
   def update_rdv_status_from_participation
     return unless collectif?
 
-    update_status_to_unknown and return if rdvs_users.empty?
+    if rdvs_users.empty?
+      update_status_to_unknown
+      return
+    end
 
     update_status_priority_order_participations
     update_status_similar_participations

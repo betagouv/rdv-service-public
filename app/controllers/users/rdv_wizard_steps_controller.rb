@@ -4,7 +4,7 @@ class Users::RdvWizardStepsController < UserAuthController
   RDV_PERMITTED_PARAMS = [:starts_at, :motif_id, :context, { user_ids: [] }].freeze
   EXTRA_PERMITTED_PARAMS = [
     :lieu_id, :departement, :where, :created_user_id, :latitude, :longitude, :city_code, :rdv_collectif_id,
-    :street_ban_id, :invitation_token, :address, :motif_search_terms, :organisation_id, { organisation_ids: [] }
+    :street_ban_id, :invitation_token, :address, :motif_search_terms, :organisation_id, { organisation_ids: [] },
   ].freeze
   after_action :allow_iframe
   before_action :set_step_titles
@@ -14,8 +14,10 @@ class Users::RdvWizardStepsController < UserAuthController
   def new
     @rdv_wizard = rdv_wizard_for(current_user, query_params)
     @rdv = @rdv_wizard.rdv
-    # Authorize Reservation policy -> RDV ou Participation
     authorize(@rdv)
+    # TODO : Mettre en place une policy 'Reservation' qui renverra vers l'authorize du RDV ou du RDVSUSER si c'est un rdv co ou pas
+    # Ne fonctionne pas :
+    # authorize(@rdv, policy_class: User::ReservationPolicy)
     if @rdv_wizard.creneau.present?
       render current_step
     else

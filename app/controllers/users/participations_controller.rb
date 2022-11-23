@@ -36,12 +36,13 @@ class Users::ParticipationsController < UserAuthController
   end
 
   def add_participation
+    # TODO : refacto
     if existing_participation.present?
       authorize(existing_participation)
       if existing_participation.persisted? && !existing_participation.excused?
         # User already participate
         flash[:notice] = "Usager déjà inscrit pour cet atelier."
-        redirect_to users_rdv_path(@rdv, invitation_token: @rdv.rdv_user_token(current_user.id))
+        redirect_to users_rdv_path(@rdv, invitation_token: existing_participation.rdv_user_token)
       elsif existing_participation.persisted? && existing_participation.excused?
         # Participation was cancelled, user is regsitering again (participation update)
         existing_participation.change_status_and_notify(current_user, "unknown")
@@ -56,10 +57,10 @@ class Users::ParticipationsController < UserAuthController
       rdvs_users = @rdv.rdvs_users.to_a
       rdvs_users.reject! { |rdv_user| rdv_user.user_id.in? current_user.self_and_relatives.map(&:id) }
       rdvs_users << participation
-      @rdv.update_and_notify(current_user, rdvs_users: rdvs_users)
+      participation.create_and_notify(current_user)
       set_user_name_initials_verified
       flash[:notice] = "Inscription confirmée"
-      redirect_to users_rdv_path(@rdv, invitation_token: @rdv.rdv_user_token(current_user.id))
+      redirect_to users_rdv_path(@rdv, invitation_token: participation.rdv_user_token)
     end
   end
 end

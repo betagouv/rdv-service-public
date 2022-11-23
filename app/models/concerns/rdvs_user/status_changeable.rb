@@ -9,7 +9,7 @@ module RdvsUser::StatusChangeable
     RdvsUser.transaction do
       if update(status: status)
         rdv.update_rdv_status_from_participation
-        notify!(author)
+        notify_update!(author)
         true
       else
         false
@@ -23,7 +23,7 @@ module RdvsUser::StatusChangeable
     @notifier&.rdv_users_tokens_by_user_id&.fetch(user.id)
   end
 
-  def notify!(author)
+  def notify_update!(author)
     return nil unless user_valid_for_lifecycle_notifications?
 
     if rdv_user_cancelled?
