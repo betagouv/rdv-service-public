@@ -2,8 +2,6 @@
 
 FactoryBot.define do
   factory :rdv do
-    created_at { Time.zone.parse("2020-06-5 13:51").in_time_zone }
-    updated_at { Time.zone.parse("2020-06-5 13:51").in_time_zone }
     organisation { association(:organisation) }
     lieu { build(:lieu, organisation: organisation) }
     motif { build(:motif, organisation: organisation) }
@@ -42,8 +40,13 @@ FactoryBot.define do
       after(:create) do |rdv|
         rdv.users = []
         rdv.rdvs_users = []
-        rdv.save
+        rdv.save!
       end
+    end
+
+    trait(:with_fake_timestamps) do
+      created_at { Time.zone.parse("2020-06-05 13:51") }
+      updated_at { Time.zone.parse("2020-06-05 13:51") }
     end
 
     after(:build) do |rdv|
