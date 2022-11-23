@@ -167,6 +167,7 @@ class SearchContext
     @agents ||= retrieve_agents
   end
 
+  # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
   def filter_motifs(available_motifs)
     motifs = available_motifs
     motifs = motifs.search_by_name_with_location_type(@motif_name_with_location_type) if @motif_name_with_location_type.present?
@@ -180,6 +181,7 @@ class SearchContext
 
     motifs
   end
+  # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
   private
 

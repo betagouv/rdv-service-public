@@ -66,6 +66,72 @@ describe "User can search for rdvs" do
         it_behaves_like "take a rdv without lieu"
       end
     end
+
+    context "when the agents are specified" do
+      let!(:user) { create(:user, agents: [agent]) }
+      let!(:agent) { create(:agent) }
+      let!(:agent2) { create(:agent) }
+      let!(:plage_ouverture) do
+        create(
+          :plage_ouverture, :daily,
+          agent: agent, motifs: [motif], organisation: organisation, first_day: Time.zone.parse("2021-12-15"), lieu: lieu,
+          start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(12)
+        )
+      end
+      let!(:plage_ouverture2) { create(:plage_ouverture, agent: agent2, motifs: [autre_motif], organisation: organisation, first_day: Time.zone.parse("2021-12-15")) }
+      let!(:collectif_motif) { create(:motif, collectif: true, organisation: organisation, reservable_online: true, service: service) }
+      let!(:collectif_rdv) { create(:rdv, motif: collectif_motif, agents: [agent], starts_at: 2.days.from_now) }
+
+      describe "motif selection" do
+        it "can take a rdv only with agent related motifs" do
+          login_as(user, scope: :user)
+          visit root_path(agent_ids: [agent.id], departement: "92", service_id: service.id)
+
+          expect(page).to have_content(motif.name)
+          expect(page).to have_content(collectif_motif.name)
+
+          expect(page).not_to have_content(autre_motif.name)
+        end
+
+        context "when the user is not logged in" do
+          it "shows all the available motifs" do
+            visit root_path(agent_ids: [agent.id], departement: "92", service_id: service.id)
+
+            expect(page).to have_content(motif.name)
+            expect(page).to have_content(collectif_motif.name)
+
+            expect(page).to have_content(autre_motif.name)
+          end
+        end
+      end
+
+      describe "crenaux selection" do
+        let!(:plage_ouverture3) do
+          create(
+            :plage_ouverture, :daily,
+            agent: agent2, motifs: [motif], organisation: organisation, first_day: Time.zone.parse("2021-12-15"), lieu: lieu,
+            start_time: Tod::TimeOfDay.new(14), end_time: Tod::TimeOfDay.new(17)
+          )
+        end
+
+        it "shows only the agents creneaux" do
+          login_as(user, scope: :user)
+          visit root_path(agent_ids: [agent.id], departement: "92", motif_id: motif.id, lieu_id: lieu.id)
+
+          expect(page).to have_content("09:00")
+          expect(page).not_to have_content("14:00")
+        end
+
+        context "when the user is not logged in" do
+          it "shows all the available creneaux" do
+            visit root_path(agent_ids: [agent.id], departement: "92", motif_id: motif.id, lieu_id: lieu.id)
+
+            expect(page).to have_content("09:00")
+            expect(page).to have_content("14:00")
+          end
+        end
+      end
+    end
   end
 
   private

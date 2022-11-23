@@ -88,6 +88,18 @@ describe SearchContext, type: :service do
           expect(subject.send(:matching_motifs)).to eq([motif2])
         end
       end
+
+      context "when agents are specified" do
+        before { search_query[:agent_ids] = [agent.id] }
+
+        let!(:agent) { create(:agent) }
+        let!(:plage_ouverture) { create(:plage_ouverture, agent: agent, motifs: [motif]) }
+        let!(:geo_search) { instance_double(Users::GeoSearch, available_motifs: Motif.where(id: [motif.id, motif2.id])) }
+
+        it "is the motifs related to agent" do
+          expect(subject.send(:matching_motifs)).to eq([motif])
+        end
+      end
     end
   end
 
@@ -152,7 +164,8 @@ describe SearchContext, type: :service do
           motif: motif,
           lieu: lieu,
           date_range: search_context.date_range,
-          geo_search: geo_search
+          geo_search: geo_search,
+          agents: []
         )
         search_context.creneaux_search
       end
@@ -173,7 +186,8 @@ describe SearchContext, type: :service do
           motif: motif,
           lieu: nil,
           date_range: search_context.date_range,
-          geo_search: geo_search
+          geo_search: geo_search,
+          agents: []
         )
         search_context.creneaux_search
       end

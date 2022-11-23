@@ -7,6 +7,7 @@ class Users::CreneauxSearch
 
   delegate :start_booking_delay, :end_booking_delay, to: :motif
 
+  # rubocop:disable Metrics/ParameterLists
   def initialize(user:, motif:, lieu:, date_range:, geo_search: nil, agents: [])
     @user = user
     @motif = motif
@@ -15,4 +16,5 @@ class Users::CreneauxSearch
     @geo_search = geo_search
     @agents = agents
   end
+  # rubocop:enable Metrics/ParameterLists
 end

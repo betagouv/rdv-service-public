@@ -170,7 +170,8 @@ RSpec.describe SearchController, type: :controller do
           motif: motif,
           lieu: lieu,
           date_range: (Date.new(2019, 7, 22)..Date.new(2019, 7, 29)),
-          geo_search: geo_search
+          geo_search: geo_search,
+          agents: []
         ).and_return(creneaux_search)
       end
 
@@ -204,7 +205,8 @@ RSpec.describe SearchController, type: :controller do
           motif: motif,
           lieu: lieu,
           date_range: (Date.new(2019, 7, 22)..Date.new(2019, 7, 28)),
-          geo_search: geo_search
+          geo_search: geo_search,
+          agents: []
         ).and_return(creneaux_search)
       end
 
