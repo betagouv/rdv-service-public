@@ -12,13 +12,14 @@ module UserRdvWizard
 
     delegate :motif, :starts_at, :users, :service, to: :rdv
     delegate :errors, to: :rdv
+    delegate :lieu_full_name, to: :creneau
 
     def initialize(user, attributes)
       @user = user
       @attributes = attributes.to_h.symbolize_keys
       rdv_defaults = { user_ids: [user&.id] }
       if attributes[:rdv_collectif_id].present?
-        @rdv = Rdv.collectif.find(attributes[:rdv_collectif_id])
+        @rdv = Rdv.collectif.reservable_online.find(attributes[:rdv_collectif_id])
       else
         @rdv = Rdv.new(
           rdv_defaults

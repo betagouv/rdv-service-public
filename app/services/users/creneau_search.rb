@@ -14,7 +14,19 @@ class Users::CreneauSearch
   end
 
   def creneau
-    creneaux.select { _1.starts_at == @starts_at }.sample
+    if motif.collectif?
+      rdv = Rdv.with_remaining_seats.find_by(motif: @motif, lieu: @lieu, starts_at: @starts_at)
+      return if rdv.nil?
+
+      Creneau.new(
+        motif: @motif,
+        lieu_id: @lieu.id,
+        starts_at: @starts_at,
+        agent: rdv.agents.first
+      )
+    else
+      creneaux.select { _1.starts_at == @starts_at }.sample
+    end
   end
 
   def next_availability

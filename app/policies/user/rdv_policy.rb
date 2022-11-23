@@ -12,13 +12,13 @@ class User::RdvPolicy < ApplicationPolicy
   end
 
   def new?
-    rdv_belongs_to_user_or_relatives? || record.collectif?
+    rdv_belongs_to_user_or_relatives? || (record.collectif? && record.reservable_online?)
   end
 
   alias create? rdv_belongs_to_user_or_relatives?
 
   def show?
-    return true if record.collectif? && rdv_belongs_to_user_or_relatives?
+    return true if record.collectif? && record.reservable_online? && rdv_belongs_to_user_or_relatives?
 
     rdv_belongs_to_user_or_relatives? && (!current_user.only_invited? || current_user.invited_for_rdv?(record))
   end
@@ -38,7 +38,7 @@ class User::RdvPolicy < ApplicationPolicy
     alias current_user pundit_user
 
     def resolve
-      scope
+      my_rdvs_ids = scope
         .joins(:users)
         .where(users: { id: current_user.id })
         .or(
@@ -47,6 +47,9 @@ class User::RdvPolicy < ApplicationPolicy
           .where(users: { responsible_id: current_user.id })
         )
         .visible
+        .ids
+
+      scope.where(id: my_rdvs_ids + scope.collectif.reservable_online.ids)
     end
   end
 end
