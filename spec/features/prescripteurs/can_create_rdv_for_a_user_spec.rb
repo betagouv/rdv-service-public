@@ -55,15 +55,15 @@ RSpec.describe "prescripteur can create RDV for a user" do
   end
 
   it "sends notifications to the user, agent and prescripteur" do
-    raise "write spec"
+    raise "write that spec"
   end
 
   it "allows prescripteur to make changes for a few minutes" do
-    raise "write spec"
+    raise "write this other spec"
   end
 
   it "prevents hacker from changing motif_id in URL to create illegitimate RDV" do
-    raise "write spec"
+    raise "write that one spec"
   end
 
   context "when creneau is taken by someone else during booking process" do
