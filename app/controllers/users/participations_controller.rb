@@ -50,9 +50,6 @@ class Users::ParticipationsController < UserAuthController
       redirect_to users_rdv_path(@rdv, invitation_token: participation.rdv_user_token)
     else
       # New participation
-      rdvs_users = @rdv.rdvs_users.to_a
-      rdvs_users.reject! { |rdv_user| rdv_user.user_id.in? current_user.self_and_relatives.map(&:id) }
-      rdvs_users << participation
       @rdv.update_and_notify(current_user, rdvs_users: @rdv.rdvs_users)
       set_user_name_initials_verified
       flash[:notice] = "Inscription confirmée"
