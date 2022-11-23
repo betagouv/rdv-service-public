@@ -11,10 +11,15 @@ class User::RdvPolicy < ApplicationPolicy
     !current_user.only_invited?
   end
 
-  alias new? rdv_belongs_to_user_or_relatives?
+  def new?
+    rdv_belongs_to_user_or_relatives? || record.collectif?
+  end
+
   alias create? rdv_belongs_to_user_or_relatives?
 
   def show?
+    return true if record.collectif? && rdv_belongs_to_user_or_relatives?
+
     rdv_belongs_to_user_or_relatives? && (!current_user.only_invited? || current_user.invited_for_rdv?(record))
   end
 
@@ -38,8 +43,8 @@ class User::RdvPolicy < ApplicationPolicy
         .where(users: { id: current_user.id })
         .or(
           User
-            .joins(:users)
-            .where(users: { responsible_id: current_user.id })
+          .joins(:users)
+          .where(users: { responsible_id: current_user.id })
         )
         .visible
     end

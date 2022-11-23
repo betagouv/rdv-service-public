@@ -69,6 +69,14 @@ class RdvsUser < ApplicationRecord
     end
   end
 
+  def not_cancelled?
+    status.in? NOT_CANCELLED_STATUSES
+  end
+
+  def cancelled?
+    status.in? CANCELLED_STATUSES
+  end
+
   def set_default_notifications_flags
     return if rdv&.motif.nil?
 
