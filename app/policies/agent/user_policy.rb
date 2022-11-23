@@ -2,30 +2,30 @@
 
 class Agent::UserPolicy < DefaultAgentPolicy
   def show?
-    same_org?
+    same_org? && not_deleted?
   end
 
   def create?
-    # Un agent est toujours authorisé à créer un usager.
+    # Un agent est toujours autorisé à créer un usager.
     # Il y a des contraintes sur l'association à une organisation,c'est sur le `user_profile`,
     # lié au système d'erreur et de contrainte `ActiveRecord`, et non aux authorisation.
     true
   end
 
   def invite?
-    same_org?
+    same_org? && not_deleted?
   end
 
   def update?
-    same_org?
+    same_org? && not_deleted?
   end
 
   def destroy?
-    same_org?
+    same_org? && not_deleted?
   end
 
   def versions?
-    admin_and_same_org?
+    admin_and_same_org? && not_deleted?
   end
 
   class Scope < Scope
@@ -41,6 +41,10 @@ class Agent::UserPolicy < DefaultAgentPolicy
   end
 
   protected
+
+  def not_deleted?
+    @record.deleted_at.nil?
+  end
 
   def same_org?
     # we cannot use @record.organisation_ids for Users because it uses a
