@@ -38,7 +38,8 @@ class SearchController < ApplicationController
     params.permit(
       :latitude, :longitude, :address, :city_code, :departement, :street_ban_id,
       :service_id, :lieu_id, :date, :motif_search_terms, :motif_name_with_location_type, :motif_category,
-      :invitation_token, :motif_id, :public_link_organisation_id, :user_selected_organisation_id, organisation_ids: []
+      :invitation_token, :motif_id, :public_link_organisation_id,
+      :user_selected_organisation_id, organisation_ids: [], agent_ids: []
     )
   end
 end

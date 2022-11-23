@@ -24,6 +24,7 @@ class SearchContext
     @service_id = query[:service_id]
     @lieu_id = query[:lieu_id]
     @start_date = query[:date]
+    @agent_ids = query[:agent_ids]
   end
 
   # *** Method that outputs the next step for the user to complete its rdv journey ***
@@ -162,6 +163,10 @@ class SearchContext
     @next_availability ||= creneaux.empty? ? creneaux_search.next_availability : nil
   end
 
+  def agents
+    @agents ||= Agent.where(id: @agent_ids)
+  end
+
   def filter_motifs(available_motifs)
     motifs = available_motifs
     motifs = motifs.search_by_name_with_location_type(@motif_name_with_location_type) if @motif_name_with_location_type.present?
@@ -171,6 +176,7 @@ class SearchContext
     motifs = motifs.where(organisations: { id: organisation_id }) if organisation_id.present?
     motifs = motifs.where(id: @motif_id) if @motif_id.present?
     motifs = motifs.where(id: lieu_filtered_motif_ids(motifs)) if @lieu_id.present?
+    motifs = motifs.where(id: agent_filtered_motif_ids(motifs)) if @agent_ids.present?
 
     motifs
   end
@@ -180,13 +186,19 @@ class SearchContext
   def lieu_filtered_motif_ids(motifs)
     # filtrer sur le `lieu_id` dans la table des plages d'ouverture permet de limiter de combiner et construire trop d'objet
     # voir https://github.com/betagouv/rdv-solidarites.fr/issues/2686
-    motif_ids = motifs.individuel.joins(:plage_ouvertures).where(plage_ouvertures: { lieu_id: @lieu_id }).uniq.pluck(:id)
-
+    individual_motif_ids = motifs.individuel.joins(:plage_ouvertures).where(plage_ouvertures: { lieu_id: @lieu_id }).ids.uniq
     # Pour prendre en compte le filtre sur le lieu_id pour les RDV Collectif,
     # nous ne pouvons pas passer par une requête `or` qui nécessite les mêmes jointures des deux côtés.
-    motifs.collectif.each { |motif| motif_ids << motif.id if Rdv.exists?(lieu_id: @lieu_id, motif: motif) }
+    collective_motif_ids = Rdv.where(lieu_id: @lieu_id, motif: motifs.collectif).pluck(:motif_id).uniq
+    individual_motif_ids + collective_motif_ids
+  end
 
-    motif_ids
+  def agent_filtered_motif_ids(motifs)
+    individual_motif_ids = motifs.individuel.joins(:plage_ouvertures).where(plage_ouvertures: { agent_id: @agent_ids }).ids.uniq
+    collective_motif_ids = Rdv.where(motif: motifs.collectif)
+      .joins(:agents)
+      .where(agents: { id: @agent_ids }).pluck(:motif_id).uniq
+    individual_motif_ids + collective_motif_ids
   end
 
   def creneaux_search_for(lieu, date_range, motif)
@@ -195,7 +207,8 @@ class SearchContext
       motif: motif,
       lieu: lieu,
       date_range: date_range,
-      geo_search: geo_search
+      geo_search: geo_search,
+      agents: agents
     )
   end
 
