@@ -25,7 +25,6 @@ li.card
         - if motif.collectif?
           - if slots_count > 0
             i.fa-solid.fa-circle-check.color-scheme-green.mr-1
-            - # TODO: pluralize
             .mr-2 #{slots_count} rendez-vous avec des places disponibles
           - else
             i.fa-regular.fa-circle-xmark.color-scheme-red.mr-1
@@ -34,8 +33,7 @@ li.card
         - else
           - if slots_count > 0
             i.fa-solid.fa-circle-check.color-scheme-green.mr-1
-            / TODO: pluralize
-            .mr-2 #{slots_count} plages d'ouvertures
+            .mr-2 #{pluralize(slots_count, "plage", plural: "plages")} d'ouverture
           - else
             i.fa-regular.fa-circle-xmark.color-scheme-red.mr-1
             .mr-2 Pas de plages d'ouverture
