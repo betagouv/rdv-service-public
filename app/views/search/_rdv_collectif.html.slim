@@ -21,6 +21,6 @@
     - if current_user&.rdvs&.include?(rdv)
       .text-muted Vous êtes déjà inscrit pour cet atelier.
     - else
-      = link_to new_users_rdv_participation_path(rdv), class: "d-flex card-text mb-2" do
-        i.fa.fa-fw.fa-user-plus>
-        | &nbsp;S'inscrire
+      = link_to new_users_rdv_participation_path(rdv), class: "d-flex align-items-center card-text mb-2" do
+        i.fa.fa-fw.fa-user-plus.mr-1
+        | S'inscrire
