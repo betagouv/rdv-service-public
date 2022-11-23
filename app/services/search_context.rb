@@ -151,11 +151,7 @@ class SearchContext
   end
 
   def creneaux
-    @creneaux ||= if first_matching_motif.collectif?
-                    SearchRdvCollectif.creneaux(first_matching_motif, lieu)
-                  else
-                    creneaux_search.creneaux
-                  end
+    @creneaux ||= creneaux_search.creneaux
   end
 
   def creneaux_search
@@ -194,17 +190,13 @@ class SearchContext
   end
 
   def creneaux_search_for(lieu, date_range, motif)
-    if motif.individuel?
-      Users::CreneauxSearch.new(
-        user: @current_user,
-        motif: motif,
-        lieu: lieu,
-        date_range: date_range,
-        geo_search: geo_search
-      )
-    else
-      SearchRdvCollectif.next_availability_for_lieu(motif, lieu)
-    end
+    Users::CreneauxSearch.new(
+      user: @current_user,
+      motif: motif,
+      lieu: lieu,
+      date_range: date_range,
+      geo_search: geo_search
+    )
   end
 
   def matching_motifs
