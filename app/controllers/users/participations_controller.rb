@@ -35,13 +35,16 @@ class Users::ParticipationsController < UserAuthController
     @existing_participation = policy_scope(RdvsUser).find_by(rdv: @rdv, user: @user)
   end
 
+  def new_participation
+    @new_participation ||= RdvsUser.new(rdv: @rdv, user: @user)
+  end
+
   def add_participation
     if existing_participation.present?
       authorize(existing_participation)
       existing_participation.excused? ? change_participation_status : user_is_already_participating
     else
-      participation = RdvsUser.new(rdv: @rdv, user: @user)
-      authorize(participation)
+      authorize(new_participation)
       create_participation
     end
   end
@@ -63,10 +66,10 @@ class Users::ParticipationsController < UserAuthController
     # Empty self_and_relatives participations (only one member by family)
     rdvs_users = @rdv.rdvs_users.to_a
     rdvs_users.reject! { |rdv_user| rdv_user.user_id.in? current_user.self_and_relatives.map(&:id) }
-    rdvs_users << participation
-    participation.create_and_notify(current_user)
+    rdvs_users << new_participation
+    new_participation.create_and_notify(current_user)
     set_user_name_initials_verified
     flash[:notice] = "Inscription confirmée"
-    redirect_to users_rdv_path(@rdv, invitation_token: participation.rdv_user_token)
+    redirect_to users_rdv_path(@rdv, invitation_token: new_participation.rdv_user_token)
   end
 end
