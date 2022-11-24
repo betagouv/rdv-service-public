@@ -1,7 +1,12 @@
 / TODO redirect to this page directly from controler
 .card
   .card-body
-    - if context.invitation?
+    - if context.follow_up?
+      - if context.referents.empty?
+        .font-weight-bold L'agent avec qui vous voulez prendre rdv ne vous est pas assigné comme reférent.
+      - else
+        .font-weight-bold Votre référent de semble pas avoir de plages d'ouvertures disponibles.
+    - elsif context.invitation?
       .font-weight-bold Nous sommes désolés, un problème semble s'être produit pour votre invitation.
       = mail_to SUPPORT_EMAIL,
         subject: "[Problème Invitation]",

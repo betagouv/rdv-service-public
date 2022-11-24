@@ -24,7 +24,7 @@ class SearchContext
     @service_id = query[:service_id]
     @lieu_id = query[:lieu_id]
     @start_date = query[:date]
-    @agent_ids = query[:agent_ids]
+    @referent_ids = query[:referent_ids]
   end
 
   # *** Method that outputs the next step for the user to complete its rdv journey ***
@@ -163,8 +163,12 @@ class SearchContext
     @next_availability ||= creneaux.empty? ? creneaux_search.next_availability : nil
   end
 
-  def agents
-    @agents ||= retrieve_agents
+  def referents
+    @referents ||= retrieve_referents
+  end
+
+  def follow_up?
+    @referent_ids.present?
   end
 
   # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
@@ -177,7 +181,8 @@ class SearchContext
     motifs = motifs.where(organisations: { id: organisation_id }) if organisation_id.present?
     motifs = motifs.where(id: @motif_id) if @motif_id.present?
     motifs = motifs.where(id: lieu_filtered_motif_ids(motifs)) if @lieu_id.present?
-    motifs = motifs.where(id: agent_filtered_motif_ids(motifs)) unless agents.empty?
+    motifs = motifs.where(follow_up: follow_up?)
+    motifs = motifs.where(id: referent_filtered_motif_ids(motifs)) if follow_up?
 
     motifs
   end
@@ -195,11 +200,15 @@ class SearchContext
     individual_motif_ids + collective_motif_ids
   end
 
-  def agent_filtered_motif_ids(motifs)
-    individual_motif_ids = motifs.individuel.joins(:plage_ouvertures).where(plage_ouvertures: { agent: @agent_ids }).ids.uniq
+  def referent_filtered_motif_ids(motifs)
+    return [] if referents.empty?
+
+    individual_motif_ids = motifs.individuel
+      .joins(:plage_ouvertures)
+      .where(plage_ouvertures: { agent: referents }).ids.uniq
     collective_motif_ids = Rdv.future.where(motif: motifs.collectif)
       .joins(:agents)
-      .where(agents: { id: @agent_ids }).pluck(:motif_id).uniq
+      .where(agents: { id: referents }).pluck(:motif_id).uniq
     individual_motif_ids + collective_motif_ids
   end
 
@@ -209,16 +218,14 @@ class SearchContext
       motif: motif,
       lieu: lieu,
       date_range: date_range,
-      geo_search: geo_search,
-      agents: agents
+      geo_search: geo_search
     )
   end
 
-  def retrieve_agents
-    return [] if @agent_ids.blank? || @current_user.nil?
-    return Agent.where(id: @agent_ids) if invitation?
+  def retrieve_referents
+    return [] if @referent_ids.blank? || @current_user.nil?
 
-    @current_user.agents.where(id: @agent_ids)
+    @current_user.agents.where(id: @referent_ids)
   end
 
   def matching_motifs

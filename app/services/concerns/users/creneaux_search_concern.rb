@@ -35,21 +35,17 @@ module Users::CreneauxSearchConcern
   protected
 
   def attributed_agents
-    @attributed_agents ||= \
-      @agents.presence || (follow_up_agents + geo_attributed_agents)
+    @attributed_agents ||= retrieve_attributed_agents
   end
 
-  def follow_up_agents
-    follow_up_rdv_and_online_user? ? @user.agents : []
-  end
+  def retrieve_attributed_agents
+    return @user.agents if motif.follow_up?
+    return geo_attributed_agents if @geo_search.present? && motif.sectorisation_level_agent?
 
-  def follow_up_rdv_and_online_user?
-    @user && motif.follow_up?
+    []
   end
 
   def geo_attributed_agents
-    return [] if @geo_search.nil? || !motif.sectorisation_level_agent?
-
     @geo_search.attributed_agents_by_organisation[@motif.organisation]
   end
 end

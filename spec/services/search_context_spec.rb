@@ -90,9 +90,10 @@ describe SearchContext, type: :service do
       end
 
       context "when agents are specified" do
-        before { search_query[:agent_ids] = [agent.id] }
+        before { search_query[:referent_ids] = [agent.id] }
 
-        let!(:agent) { create(:agent) }
+        let!(:agent) { create(:agent, users: [user]) }
+        let!(:motif) { create(:motif, follow_up: true) }
         let!(:plage_ouverture) { create(:plage_ouverture, agent: agent, motifs: [motif]) }
         let!(:geo_search) { instance_double(Users::GeoSearch, available_motifs: Motif.where(id: [motif.id, motif2.id])) }
 
@@ -164,8 +165,7 @@ describe SearchContext, type: :service do
           motif: motif,
           lieu: lieu,
           date_range: search_context.date_range,
-          geo_search: geo_search,
-          agents: []
+          geo_search: geo_search
         )
         search_context.creneaux_search
       end
@@ -186,8 +186,7 @@ describe SearchContext, type: :service do
           motif: motif,
           lieu: nil,
           date_range: search_context.date_range,
-          geo_search: geo_search,
-          agents: []
+          geo_search: geo_search
         )
         search_context.creneaux_search
       end
@@ -197,7 +196,7 @@ describe SearchContext, type: :service do
   describe "#filter_motifs" do
     it "returns empty without motifs" do
       search_context = described_class.new(nil)
-      expect(search_context.filter_motifs([])).to be_empty
+      expect(search_context.filter_motifs(Motif.none)).to be_empty
     end
 
     it "returns given motif without specific params" do
