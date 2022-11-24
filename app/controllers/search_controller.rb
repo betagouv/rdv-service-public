@@ -25,7 +25,7 @@ class SearchController < ApplicationController
 
   def redirect_to_organisation_search(organisation)
     if organisation
-      redirect_to root_path(
+      redirect_to prendre_rdv_path(
         public_link_organisation_id: organisation.id, departement: organisation.territory.departement_number
       )
     else
