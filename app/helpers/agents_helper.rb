@@ -9,6 +9,12 @@ module AgentsHelper
     tag.span("Vous", class: "badge badge-info") if current_agent?(agent)
   end
 
+  def inactive_tag(agent)
+    if agent.last_sign_in_at.nil? || agent.last_sign_in_at <= 1.month.ago
+      tag.span("Inactif", class: "badge badge-warning")
+    end
+  end
+
   def build_link_to_rdv_wizard_params(creneau, form)
     params = {}
     params[:step] = 2
