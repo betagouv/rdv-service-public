@@ -41,6 +41,16 @@ describe "Agents can configure online booking" do
       expect(page).not_to have_css("i.fa-regular.fa-circle-xmark.color-scheme-red")
       expect(page).to have_content("1 plage d'ouverture")
     end
+
+    it "doesn't show plages d'ouverture in the past" do
+      create(:plage_ouverture, motifs: [motif], agent: agent, organisation: organisation, first_day: 20.days.from_now)
+      create(:plage_ouverture, motifs: [motif], agent: agent, organisation: organisation, first_day: 10.days.ago)
+
+      login_as(agent, scope: :agent)
+      visit admin_organisation_online_booking_path(organisation)
+
+      expect(page).to have_content("1 plage d'ouverture")
+    end
   end
 
   context "motif collectif" do
