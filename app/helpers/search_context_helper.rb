@@ -2,22 +2,31 @@
 
 module SearchContextHelper
   def path_to_motif_selection(params)
-    root_path(motif_selection(params))
+    prendre_rdv_path(motif_selection(params))
   end
 
   def path_to_lieu_selection(params)
-    root_path(
+    prendre_rdv_path(
       motif_selection(params).merge(
         motif_name_with_location_type: params[:motif_name_with_location_type]
       )
     )
   end
 
-  def path_to_creneau_selection(params)
-    root_path(
+  def path_to_organisation_selection(params)
+    prendre_rdv_path(
       motif_selection(params).merge(
         motif_name_with_location_type: params[:motif_name_with_location_type],
-        lieu_id: params[:lieu_id]
+        user_selected_organisation_id: nil
+      )
+    )
+  end
+
+  def path_to_creneau_selection(params)
+    prendre_rdv_path(
+      motif_selection(params).merge(
+        motif_name_with_location_type: params[:motif_name_with_location_type],
+        lieu_id: params[:lieu_id], user_selected_organisation_id: params[:user_selected_organisation_id]
       )
     )
   end
@@ -33,7 +42,7 @@ module SearchContextHelper
       street_ban_id: params[:street_ban_id],
       address: params[:address],
       service_id: params[:service_id],
-      organisation_id: params[:organisation_id],
+      public_link_organisation_id: params[:public_link_organisation_id],
     }
   end
 end
