@@ -20,7 +20,8 @@ module RdvsUser::StatusChangeable
   end
 
   def rdv_user_token
-    @notifier&.rdv_users_tokens_by_user_id&.fetch(user.id)
+    # For user invited with tokens, nil default for not invited users
+    @notifier&.rdv_users_tokens_by_user_id&.fetch(user.id, nil)
   end
 
   def notify_update!(author)

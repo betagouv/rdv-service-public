@@ -63,10 +63,6 @@ class Users::ParticipationsController < UserAuthController
   end
 
   def create_participation
-    # Empty self_and_relatives participations (only one member by family)
-    rdvs_users = @rdv.rdvs_users.to_a
-    rdvs_users.reject! { |rdv_user| rdv_user.user_id.in? current_user.self_and_relatives.map(&:id) }
-    rdvs_users << new_participation
     new_participation.create_and_notify(current_user)
     set_user_name_initials_verified
     flash[:notice] = "Inscription confirmée"
