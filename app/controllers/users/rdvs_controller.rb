@@ -83,8 +83,8 @@ class Users::RdvsController < UserAuthController
     @all_creneaux = @rdv.creneaux_available(Time.zone.today..@rdv.reschedule_max_date)
     return if @all_creneaux.empty?
 
-    start_date = params[:date]&.to_date || @all_creneaux.first.starts_at.to_date
-    end_date = [start_date + 6.days, @all_creneaux.last.starts_at.to_date].min
+    start_date = params[:date]&.to_date || @all_creneaux.min.starts_at.to_date
+    end_date = [start_date + 6.days, @all_creneaux.max.starts_at.to_date].min
     @date_range = start_date..end_date
     @creneaux = @rdv.creneaux_available(@date_range)
     respond_to do |format|

@@ -20,7 +20,7 @@ div id="creneaux-lieu"
 
             - if creneaux_for_date.any?
               - creneaux_for_date.each do |date, creneaux|
-                - creneaux.sort_by(&:starts_at).each do |creneau|
+                - creneaux.sort.each do |creneau|
                   = link_to l(creneau.starts_at, format: "%H:%M"), edit_users_rdv_path(@rdv, starts_at: creneau.starts_at, agent_id: creneau.agent.id), class: "btn btn-light mr-1 mb-1 w-100"
     - if date_range.end < @all_creneaux.last.starts_at.to_date
       .col-12.col-md-auto.mt-2.mt-md-0.d-flex.align-items-center.justify-content-center
