@@ -46,6 +46,6 @@ module Users::CreneauxSearchConcern
   end
 
   def geo_attributed_agents
-    @geo_search.attributed_agents_by_organisation[@motif.organisation]
+    @geo_search.attributed_agents_by_organisation[@motif.organisation].presence || []
   end
 end

@@ -112,7 +112,7 @@ describe "User can search for rdvs" do
       create(
         :plage_ouverture,
         agent: agent2, motifs: [motif2], organisation: organisation, first_day: Time.zone.parse("2021-12-15"), lieu: lieu,
-        start_time: Tod::TimeOfDay.new(16), end_time: Tod::TimeOfDay.new(17),
+        start_time: Tod::TimeOfDay.new(16), end_time: Tod::TimeOfDay.new(17)
       )
     end
     let!(:plage_ouverture3) do

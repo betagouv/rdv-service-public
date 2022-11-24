@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/ClassLength
 class SearchContext
   attr_reader :errors, :query, :departement, :address, :city_code, :street_ban_id, :latitude, :longitude,
               :motif_name_with_location_type
@@ -241,3 +242,4 @@ class SearchContext
       end
   end
 end
+# rubocop:enable Metrics/ClassLength
