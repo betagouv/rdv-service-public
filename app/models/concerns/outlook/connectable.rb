@@ -30,8 +30,8 @@ module Outlook
         REFRESH_TOKEN_URL,
         headers: { "Content-Type" => "application/x-www-form-urlencoded" },
         body: {
-          client_id: ENV.fetch("AZURE_APPLICATION_CLIENT_ID", nil),
-          client_secret: ENV.fetch("AZURE_APPLICATION_CLIENT_SECRET", nil),
+          client_id: ENV["AZURE_APPLICATION_CLIENT_ID"],
+          client_secret: ENV["AZURE_APPLICATION_CLIENT_SECRET"],
           refresh_token: refresh_microsoft_graph_token, grant_type: "refresh_token",
         }
       )

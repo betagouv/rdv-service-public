@@ -18,6 +18,8 @@ module Outlook
 
       alias_attribute :exists_in_outlook?, :outlook_id?
 
+      scope :exists_in_outlook, -> { where.not(outlook_id: nil) }
+
       delegate :connected_to_outlook?, to: :agent, prefix: true
     end
 
@@ -103,7 +105,7 @@ module Outlook
                    Typhoeus.delete(request_url, headers: headers)
                  end
 
-      JSON.parse(response.body)
+      response.response_code == 204 ? "" : JSON.parse(response.body)
     end
 
     def outlook_payload

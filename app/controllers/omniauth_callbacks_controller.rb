@@ -34,10 +34,10 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
       Outlook::MassCreateEventJob.perform_later(@agent)
       flash[:notice] = "Votre compte Outlook a bien été connecté"
     else
-      flash[:alert] = "Votre compte Outlook n'a pas pu être connecté"
+      flash[:alert] = "Votre compte Outlook n'a pas pu être connecté. Est-il bien utilisé avec le même email que votre compte RDV Solidarités ?"
       Rails.logger.error("Outlook OmniAuth failed for #{microsoft_graph_email}")
     end
-    redirect_to agents_calendar_sync_path
+    redirect_to agents_calendar_sync_outlook_sync_path
   end
 
   private

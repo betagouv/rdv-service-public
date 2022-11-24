@@ -3,21 +3,21 @@
 require "omniauth/strategies/franceconnect"
 
 Rails.application.config.middleware.use OmniAuth::Builder do
-  provider :github, ENV.fetch("GITHUB_APP_ID", nil), ENV.fetch("GITHUB_APP_SECRET", nil), scope: "user:email"
+  provider :github, ENV["GITHUB_APP_ID"], ENV["GITHUB_APP_SECRET"], scope: "user:email"
 
-  provider :microsoft_graph, ENV.fetch("AZURE_APPLICATION_CLIENT_ID", nil), ENV.fetch("AZURE_APPLICATION_CLIENT_SECRET", nil),
+  provider :microsoft_graph, ENV["AZURE_APPLICATION_CLIENT_ID"], ENV["AZURE_APPLICATION_CLIENT_SECRET"],
            scope: %w[offline_access openid email profile User.Read Calendars.ReadWrite]
 
   provider(
     :franceconnect,
     name: :franceconnect,
     scope: %i[email openid birthdate birthplace given_name family_name birthcountry],
-    issuer: "https://#{ENV.fetch('FRANCECONNECT_HOST', nil)}",
+    issuer: "https://#{ENV['FRANCECONNECT_HOST']}",
     client_options: {
-      identifier: ENV.fetch("FRANCECONNECT_APP_ID", nil),
-      secret: ENV.fetch("FRANCECONNECT_APP_SECRET", nil),
-      redirect_uri: "#{ENV.fetch('HOST', nil)}/omniauth/franceconnect/callback",
-      host: ENV.fetch("FRANCECONNECT_HOST", nil),
+      identifier: ENV["FRANCECONNECT_APP_ID"],
+      secret: ENV["FRANCECONNECT_APP_SECRET"],
+      redirect_uri: "#{ENV['HOST']}/omniauth/franceconnect/callback",
+      host: ENV["FRANCECONNECT_HOST"],
     }
   )
 

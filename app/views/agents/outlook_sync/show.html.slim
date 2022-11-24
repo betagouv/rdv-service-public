@@ -1,0 +1,18 @@
+- content_for :title, t(".title")
+
+- if current_agent.connected_to_outlook?
+
+  p Votre compte est déjà connecté à outlook. Vous pouvez vous deconnecter si vous le souhaitez en cliquant sur le bouton ci-dessous
+
+  = link_to "Déconnecter votre compte Outlook", agents_calendar_sync_outlook_sync_path, class: "btn btn-primary m-2", method: :delete
+
+- else
+
+  p Vous pouvez envoyer automatiquement vos rdv dans Outlook en vous connectant à votre compte grâce au bouton ci-dessous. Attention, votre compte Outlook doit être lié au même email que votre compte RDV Solidarités.
+
+  = link_to "Se connecter avec Outlook", "/omniauth/microsoft_graph?login_hint=#{current_agent.email}", class: "btn btn-primary mb-4", method: :post
+
+  p Tous vos rendez-vous de #{current_domain.name} seront copiés automatiquement au fur et à mesure de leur création (ou modification).
+  p Pour plus d'informations sur cette fonctionnalité, #{link_to("consultez la FAQ", faq_url, target: :blank)}.
+
+= link_to "Retour aux méthodes de synchronisation calendrier", agents_calendar_sync_path, class: "btn btn-light mt-3"
