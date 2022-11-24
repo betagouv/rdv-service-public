@@ -10,7 +10,7 @@
 
   p Vous pouvez envoyer automatiquement vos rdv dans Outlook en vous connectant à votre compte grâce au bouton ci-dessous. Attention, votre compte Outlook doit être lié au même email que votre compte RDV Solidarités.
 
-  = link_to "Se connecter avec Outlook", "/omniauth/microsoft_graph?login_hint=#{current_agent.email}", class: "btn btn-primary mb-4", method: :post
+  = link_to "Vous connecter avec Outlook", "/omniauth/microsoft_graph?login_hint=#{current_agent.email}", class: "btn btn-primary mb-4", method: :post
 
   p Tous vos rendez-vous de #{current_domain.name} seront copiés automatiquement au fur et à mesure de leur création (ou modification).
   p Pour plus d'informations sur cette fonctionnalité, #{link_to("consultez la FAQ", faq_url, target: :blank)}.

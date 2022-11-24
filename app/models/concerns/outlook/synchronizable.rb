@@ -107,7 +107,7 @@ module Outlook
 
       body_response = JSON.parse(response.body)
 
-      if body_response["error"].any?
+      if body_response["error"].present?
         Sentry.capture_message("Outlook API error for AgentsRdv #{id}: #{body_response.dig("error", "message")}")
       end
 
