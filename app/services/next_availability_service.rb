@@ -13,7 +13,7 @@ class NextAvailabilityService
 
       creneaux = SlotBuilder.available_slots(motif, lieu, date..max_creneau_date, agents)
       # NOTE: We build the whole list of creneaux of the week just to return the first one.
-      return creneaux.min_by(&:starts_at) if creneaux.any?
+      return creneaux.min if creneaux.any?
     end
 
     nil # return nil if nothing found in loop

@@ -21,7 +21,7 @@ div id="creneaux-lieu-#{lieu&.id}"
                 small aucune disponibilité
             - else
               - agents = creneaux.map(&:agent).uniq
-              - creneaux_for_date = creneaux.select { |c| c.starts_at.to_date == date }.sort_by(&:starts_at)
+              - creneaux_for_date = creneaux.select { |c| c.starts_at.to_date == date }.sort
               - creneaux_for_date.each do |creneau|
                 = link_to(new_admin_organisation_rdv_wizard_step_path(build_link_to_rdv_wizard_params(creneau, form)),
                   class: "creneau bg-light d-block w-100 text-center p-1 mb-1 rounded") do
