@@ -36,31 +36,37 @@ class Users::ParticipationsController < UserAuthController
   end
 
   def add_participation
-    # TODO : refacto
     if existing_participation.present?
       authorize(existing_participation)
-      if existing_participation.persisted? && !existing_participation.excused?
-        # User already participate
-        flash[:notice] = "Usager déjà inscrit pour cet atelier."
-        redirect_to users_rdv_path(@rdv, invitation_token: existing_participation.rdv_user_token)
-      elsif existing_participation.persisted? && existing_participation.excused?
-        # Participation was cancelled, user is regsitering again (participation update)
-        existing_participation.change_status_and_notify(current_user, "unknown")
-        set_user_name_initials_verified
-        flash[:notice] = "Ré-Inscription confirmée"
-        redirect_to users_rdv_path(@rdv, invitation_token: existing_participation.rdv_user_token)
-      end
+      existing_participation.excused? ? change_participation_status : user_is_already_participating
     else
       participation = RdvsUser.new(rdv: @rdv, user: @user)
       authorize(participation)
-      # Empty rdv (only one member by family)
-      rdvs_users = @rdv.rdvs_users.to_a
-      rdvs_users.reject! { |rdv_user| rdv_user.user_id.in? current_user.self_and_relatives.map(&:id) }
-      rdvs_users << participation
-      participation.create_and_notify(current_user)
-      set_user_name_initials_verified
-      flash[:notice] = "Inscription confirmée"
-      redirect_to users_rdv_path(@rdv, invitation_token: participation.rdv_user_token)
+      create_participation
     end
+  end
+
+  def user_is_already_participating
+    flash[:notice] = "Usager déjà inscrit pour cet atelier."
+    redirect_to users_rdv_path(@rdv, invitation_token: existing_participation.rdv_user_token)
+  end
+
+  def change_participation_status
+    # Participation was excused but user is registering again (participation update)
+    existing_participation.change_status_and_notify(current_user, "unknown")
+    set_user_name_initials_verified
+    flash[:notice] = "Ré-Inscription confirmée"
+    redirect_to users_rdv_path(@rdv, invitation_token: existing_participation.rdv_user_token)
+  end
+
+  def create_participation
+    # Empty self_and_relatives participations (only one member by family)
+    rdvs_users = @rdv.rdvs_users.to_a
+    rdvs_users.reject! { |rdv_user| rdv_user.user_id.in? current_user.self_and_relatives.map(&:id) }
+    rdvs_users << participation
+    participation.create_and_notify(current_user)
+    set_user_name_initials_verified
+    flash[:notice] = "Inscription confirmée"
+    redirect_to users_rdv_path(@rdv, invitation_token: participation.rdv_user_token)
   end
 end
