@@ -105,7 +105,13 @@ module Outlook
                    Typhoeus.delete(request_url, headers: headers)
                  end
 
-      response.response_code == 204 ? "" : JSON.parse(response.body)
+      body_response = JSON.parse(response.body)
+
+      if body_response["error"].any?
+        Sentry.capture_message("Outlook API error for AgentsRdv #{id}: #{body_response.dig("error", "message")}")
+      end
+
+      response.response_code == 204 ? "" : body_response
     end
 
     def outlook_payload

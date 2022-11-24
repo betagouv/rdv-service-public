@@ -17,7 +17,7 @@ module Outlook
     def refresh_outlook_token
       response = JSON.parse(refresh_token_query.response_body)
       if response["error"].present?
-        Rails.logger.error("Could not get new token for #{email}: #{response['error_description']}")
+      Sentry.capture_message("Error refreshing Microsoft Graph Token for #{email}: #{response['error_description']}")
       elsif response["access_token"].present?
         update(microsoft_graph_token: response["access_token"])
       end
