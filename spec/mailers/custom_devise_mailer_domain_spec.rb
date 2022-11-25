@@ -38,17 +38,13 @@ describe CustomDeviseMailer, "#domain" do
   end
 
   context "when user has mixed RDV domains (and organisation is in beta program)" do
-    let!(:new_domain_organisation) { create(:organisation, new_domain_beta: true) }
     let!(:old_domain_organisation) { create(:organisation, new_domain_beta: false) }
-    let(:user) do
-      mixed_rdvs = [
-        create(:rdv, organisation: new_domain_organisation),
-        create(:rdv, organisation: old_domain_organisation),
-      ]
-      create(:user, rdvs: mixed_rdvs)
-    end
+    let!(:new_domain_organisation) { create(:organisation, new_domain_beta: true) }
+    let!(:recent_rdv) { build(:rdv, organisation: new_domain_organisation, created_at: 2.days.ago) }
+    let!(:old_rdv) { build(:rdv, organisation: old_domain_organisation, created_at: 3.months.ago) }
+    let!(:user) { create(:user, rdvs: [recent_rdv, old_rdv]) }
 
-    it "uses RDV_AIDE_NUMERIQUE" do
+    it "uses the domain of the most recently created rdv" do
       expect_to_use_domain(Domain::RDV_AIDE_NUMERIQUE)
     end
   end

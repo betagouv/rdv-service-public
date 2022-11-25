@@ -184,8 +184,15 @@ class Agent < ApplicationRecord
       .where(created_at: ..date)
       .in_range(date..)
       .reservable_online
+    agents_with_open_plage = joins(:plage_ouvertures).merge(plage_ouvertures_scope)
 
-    joins(:plage_ouvertures).merge(plage_ouvertures_scope).distinct
+    rdv_collectif_scope = Rdv
+      .collectif
+      .where(created_at: ..date)
+      .reservable_online
+    agents_with_open_rdv_collectif = joins(:rdvs).merge(rdv_collectif_scope)
+
+    Agent.where(id: agents_with_open_plage.ids | agents_with_open_rdv_collectif.ids).distinct
   end
 
   def to_s

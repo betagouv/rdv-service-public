@@ -159,14 +159,18 @@ describe SearchContext, type: :service do
     end
 
     context "when lieu is nil" do
+      let!(:motif) { create(:motif, :by_phone, organisation: organisation) }
+
       it "returns a Users::CreneauxSearch using no lieu and the selected motif" do
-        motif = create(:motif, :by_phone, organisation: organisation)
         create(:plage_ouverture, lieu: nil, motifs: [motif], organisation: organisation)
-        search_context = described_class.new(user, search_query)
+        search_context = described_class.new(
+          user,
+          search_query
+        )
 
         expect(Users::CreneauxSearch).to receive(:new).with(
           user: user,
-          motif: search_context.selected_motif,
+          motif: motif,
           lieu: nil,
           date_range: search_context.date_range,
           geo_search: geo_search
