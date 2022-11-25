@@ -2,7 +2,6 @@
 
 class Admin::Organisations::OnlineBookingsController < AgentAuthController
   before_action :set_organisation
-  before_action :check_conseiller_numerique
 
   helper_method :booking_link
 
@@ -17,10 +16,6 @@ class Admin::Organisations::OnlineBookingsController < AgentAuthController
   end
 
   private
-
-  def check_conseiller_numerique
-    redirect_to authenticated_agent_root_path unless current_agent.conseiller_numerique?
-  end
 
   def booking_link
     public_link_to_org_url(organisation_id: current_organisation.id)
