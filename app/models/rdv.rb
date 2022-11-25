@@ -325,6 +325,7 @@ class Rdv < ApplicationRecord
   end
 
   def update_status_to_unknown
+    self.cancelled_at = nil
     update!(status: "unknown")
   end
 
@@ -334,6 +335,7 @@ class Rdv < ApplicationRecord
       symbol_method = "#{status}?".to_sym
       next unless rdvs_users.any?(&symbol_method)
 
+      self.cancelled_at = status.in?(%w[revoked noshow]) ? Time.zone.now : nil
       update!(status: status)
       break
     end
@@ -343,6 +345,7 @@ class Rdv < ApplicationRecord
     # If all participations are similar the rdv status will change
     %w[seen noshow excused].each do |status|
       if rdvs_users.map(&:status).all? { |participation_status| participation_status.in? [status] }
+        self.cancelled_at = status.in?(%w[excused noshow]) ? Time.zone.now : nil
         update!(status: status)
       end
     end

@@ -28,5 +28,7 @@ module RdvsUser::Creatable
   def notify_create!(author)
     @notifier = Notifiers::RdvCreated.new(rdv, author, [user])
     @notifier&.perform
+    # we re-enable the webhooks that we deactivated during the notification process
+    rdv.skip_webhooks = false
   end
 end
