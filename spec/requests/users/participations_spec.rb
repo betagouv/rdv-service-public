@@ -40,14 +40,6 @@ RSpec.describe "Users::Participants", type: :request do
     describe "POST /users/rdvs/:rdv_id/participants, other cases" do
       let(:rdv) { create(:rdv, :collectif, :without_users) }
 
-      it "multiple post" do
-        post users_rdv_participations_path(rdv, user_id: user.id)
-        post users_rdv_participations_path(rdv, user_id: user2.id)
-        expect(flash[:notice]).to eq("Inscription confirmée")
-        expect(rdv.reload.users.count).to eq(2)
-        expect(response).to redirect_to(users_rdv_path(rdv, invitation_token: token))
-      end
-
       it "specific user" do
         post users_rdv_participations_path(rdv, user_id: user.id)
         expect(flash[:notice]).to eq("Inscription confirmée")
@@ -59,8 +51,7 @@ RSpec.describe "Users::Participants", type: :request do
         let(:other_user) { create(:user) }
         let(:user_child) { create(:user, responsible: user) }
         let(:user_other_child) { create(:user, responsible: user) }
-        let(:motif) { create(:motif, collectif: true) }
-        let(:rdv) { create(:rdv, users: [other_user, user_child], motif: motif) }
+        let(:rdv) { create(:rdv, :collectif, users: [other_user, user_child]) }
 
         it "change to other relative user" do
           post users_rdv_participations_path(rdv, user_id: user_other_child.id)
@@ -70,14 +61,38 @@ RSpec.describe "Users::Participants", type: :request do
           expect(response).to redirect_to(users_rdv_path(rdv))
         end
       end
+
+      it "cannot create participation for non relatives users" do
+        post users_rdv_participations_path(rdv, user_id: user.id)
+        expect(flash[:notice]).to eq("Inscription confirmée")
+        expect(response).to redirect_to(users_rdv_path(rdv, invitation_token: token))
+        post users_rdv_participations_path(rdv, user_id: user2.id)
+        expect(rdv.reload.users).to match_array([user])
+      end
     end
   end
 
   describe "Participation already exist" do
+    let!(:other_user) { create(:user) }
+    let!(:rdv) { create(:rdv, :collectif, users: [other_user, user]) }
 
+    it "display notice" do
+      post users_rdv_participations_path(rdv, user_id: user.id)
+      expect(flash[:notice]).to eq("Usager déjà inscrit pour cet atelier.")
+      expect(rdv.reload.users).to match_array([user, other_user])
+      expect(response).to redirect_to(users_rdv_path(rdv))
+    end
   end
 
   describe "Participation update (if excused)" do
+    let(:rdv_user1) { create(:rdvs_user, rdv: rdv, user: user) }
 
+    it "display notice" do
+      rdv_user1.update!(status: "excused")
+      expect(rdv.reload.users).to match_array([user])
+      post users_rdv_participations_path(rdv, user_id: user.id)
+      expect(flash[:notice]).to eq("Ré-Inscription confirmée")
+      expect(rdv.reload.users).to match_array([user])
+    end
   end
 end

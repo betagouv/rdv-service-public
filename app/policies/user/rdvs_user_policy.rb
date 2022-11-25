@@ -16,7 +16,7 @@ class User::RdvsUserPolicy < ApplicationPolicy
   def create?
     return false if record.rdv.revoked?
 
-    (record.rdv.collectif? && record.rdv.reservable_online?) || rdvs_user_belongs_to_user_or_relatives?
+    (record.rdv.collectif? && record.rdv.reservable_online?) && rdvs_user_belongs_to_user_or_relatives?
   end
 
   class Scope < Scope
