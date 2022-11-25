@@ -49,7 +49,7 @@ class Lieu < ApplicationRecord
       .where(motifs: { id: motifs.pluck(:id) })
       .distinct
       .pluck(:lieu_id)
-    rdv_collectif_lieu_ids = Rdv.collectif.with_remaining_seats.future.where(motif_id: motifs.pluck(:id)).distinct.pluck(:lieu_id)
+    rdv_collectif_lieu_ids = Rdv.collectif_and_available_for_reservation.where(motif_id: motifs.pluck(:id)).distinct.pluck(:lieu_id)
 
     enabled.where(id: plage_ouverture_lieu_ids + rdv_collectif_lieu_ids)
   }
