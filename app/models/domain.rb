@@ -44,7 +44,7 @@ class Domain
       dark_logo_path: "logos/logo_sombre_aide_numerique.svg",
       name: "RDV Aide Numérique",
       presentation_for_agents_template_name: "presentation_for_cnfs",
-      online_reservation_with_public_link: false,
+      online_reservation_with_public_link: true,
       sms_sender_name: "RdvAideNum"
     ),
   ].freeze
