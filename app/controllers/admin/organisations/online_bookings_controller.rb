@@ -11,6 +11,7 @@ class Admin::Organisations::OnlineBookingsController < AgentAuthController
 
     @motifs = policy_scope(Motif)
       .available_motifs_for_organisation_and_agent(current_organisation, current_agent)
+      .active
       .includes(:organisation)
       .includes(:service)
   end

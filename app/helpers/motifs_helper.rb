@@ -97,7 +97,7 @@ module MotifsHelper
 
   def available_slots_count(motif)
     if motif.collectif?
-      motif.rdvs.with_remaining_seats.future.not_revoked.count
+      motif.rdvs.collectif_and_available_for_reservation.count
     else
       policy_scope(PlageOuverture).joins(:motifs).where(
         organisation: current_organisation,
