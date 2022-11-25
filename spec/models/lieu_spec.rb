@@ -110,27 +110,41 @@ describe Lieu, type: :model do
     describe "#with_open_slots_for_motifs" do
       subject { described_class.with_open_slots_for_motifs([motif]) }
 
+      let!(:motif) { create(:motif, name: "Vaccination") }
+
       let!(:lieu) { create(:lieu) }
 
-      context "motif has current plage ouvertures" do
-        let!(:motif) { create(:motif, name: "Vaccination") }
-        let!(:plage_ouverture) { create(:plage_ouverture, :daily, motifs: [motif], lieu: lieu) }
+      context "for a motif individuel" do
+        context "motif has current plage ouvertures" do
+          let!(:plage_ouverture) { create(:plage_ouverture, :daily, motifs: [motif], lieu: lieu) }
 
-        it { is_expected.to include(lieu) }
+          it { is_expected.to include(lieu) }
+        end
+
+        context "motif has finished plage ouverture" do
+          let!(:plage_ouverture) { create(:plage_ouverture, :daily, motifs: [motif], lieu: lieu, first_day: 2.days.ago, recurrence: nil) }
+
+          it { is_expected.not_to include(lieu) }
+        end
+
+        context "motif has no plage ouvertures" do
+          let(:plage_ouverture) { nil }
+
+          it { is_expected.not_to include(lieu) }
+        end
       end
 
-      context "motif has finished plage ouverture" do
-        let!(:motif) { create(:motif, name: "Vaccination") }
-        let!(:plage_ouverture) { create(:plage_ouverture, :daily, motifs: [motif], lieu: lieu, first_day: 2.days.ago, recurrence: nil) }
+      context "for a motif collectif" do
+        before do
+          create(:rdv, :collectif, lieu: lieu) # valid rdv
+          create(:rdv, :collectif, status: :revoked) # valid rdv
+          create(:rdv, :collectif, max_participants_count: 3, users_count: 3) # fully booked
+          create(:rdv, :collectif, starts_at: 3.days.ago) # in the past
+        end
 
-        it { is_expected.not_to include(lieu) }
-      end
-
-      context "motif has no plage ouvertures" do
-        let!(:motif) { create(:motif, name: "Vaccination") }
-        let(:plage_ouverture) { nil }
-
-        it { is_expected.not_to include(lieu) }
+        it "only returns lieux with a rdv that is available for reservation" do
+          expect(subject).to eq([lieu])
+        end
       end
     end
   end
