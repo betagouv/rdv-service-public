@@ -17,9 +17,6 @@ class Users::RdvWizardStepsController < UserAuthController
     @rdv_wizard = rdv_wizard_for(current_user, query_params)
     @rdv = @rdv_wizard.rdv
     authorize(@rdv)
-    # TODO : Mettre en place une policy 'Reservation' qui renverra vers l'authorize du RDV ou du RDVSUSER si c'est un rdv co ou pas
-    # Ne fonctionne pas :
-    # authorize(@rdv, policy_class: User::ReservationPolicy)
     if @rdv_wizard.creneau.present?
       render current_step
     else

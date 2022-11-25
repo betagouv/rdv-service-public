@@ -12,7 +12,11 @@ class User::RdvPolicy < ApplicationPolicy
   end
 
   def new?
-    rdv_belongs_to_user_or_relatives? || (record.collectif? && record.reservable_online?)
+    if record.collectif? && record.reservable_online?
+      User::RdvsUserPolicy.new(current_user, RdvsUser.new(rdv: record)).new?
+    else
+      rdv_belongs_to_user_or_relatives?
+    end
   end
 
   alias create? rdv_belongs_to_user_or_relatives?
