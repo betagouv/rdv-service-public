@@ -59,7 +59,8 @@ describe User::RdvsUserPolicy, type: :policy do
   context "Participation belongs to another user" do
     let!(:participation) { build(:rdvs_user, user: user2, rdv: rdv) }
 
-    it_behaves_like "not permit actions", :new?, :create?
+    it_behaves_like "permit actions", :new?
+    it_behaves_like "not permit actions", :create?
     it_behaves_like "not included in scope"
   end
 
