@@ -315,7 +315,6 @@ RSpec.describe Users::RdvsController, type: :controller do
     let!(:rdv_co2) { create(:rdv, :collectif, users: [user2], starts_at: 8.days.from_now) }
     let!(:rdv_co3) { create(:rdv, :collectif, :without_users, starts_at: 9.days.from_now) }
 
-
     context "when signed in" do
       before { sign_in user }
 

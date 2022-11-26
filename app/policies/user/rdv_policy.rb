@@ -19,7 +19,11 @@ class User::RdvPolicy < ApplicationPolicy
     end
   end
 
-  alias create? rdv_belongs_to_user_or_relatives?
+  def create?
+    return false if record.collectif?
+
+    rdv_belongs_to_user_or_relatives?
+  end
 
   def show?
     return true if record.collectif? && record.reservable_online? && rdv_belongs_to_user_or_relatives?

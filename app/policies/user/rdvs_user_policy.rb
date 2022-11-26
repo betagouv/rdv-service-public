@@ -10,14 +10,10 @@ class User::RdvsUserPolicy < ApplicationPolicy
   def new?
     return false if record.rdv.revoked?
 
-    record.rdv.collectif? && record.rdv.reservable_online?
-  end
-
-  def create?
-    return false if record.rdv.revoked?
-
     (record.rdv.collectif? && record.rdv.reservable_online?) && rdvs_user_belongs_to_user_or_relatives?
   end
+
+  alias create? new?
 
   class Scope < Scope
     alias current_user pundit_user
