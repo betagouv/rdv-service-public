@@ -27,4 +27,5 @@ class PrescripteurRdvWizard < UserRdvWizard::Base
 
     PrescripteurMailer.rdv_created(rdvs_user, @domain.name).deliver_later
   end
+
 end

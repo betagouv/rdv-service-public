@@ -51,6 +51,8 @@ class PrescripteurRdvWizardController < ApplicationController
       rdv_wizard = PrescripteurRdvWizard.new(session[:rdv_wizard_attributes], current_domain)
       rdv_wizard.create_rdv!
 
+      session[:prescripteur_id] = rdv_wizard.prescripteur.id
+
       redirect_to prescripteur_confirmation_path
     else
       @step_title = @step_titles[2]
@@ -61,5 +63,6 @@ class PrescripteurRdvWizardController < ApplicationController
 
   def confirmation
     @step_title = @step_titles[3]
+    @prescripteur = Prescripteur.find(session[:prescripteur_id])
   end
 end

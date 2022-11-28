@@ -3,8 +3,11 @@
 RSpec.describe "prescripteur can create RDV for a user" do
   let!(:organisation) { create(:organisation) }
   let!(:agent) { create(:agent, :cnfs, admin_role_in_organisations: [organisation], rdv_notifications_level: "all") }
-  let!(:motif) { create(:motif, organisation: organisation, service: agent.service, reservable_online: true) }
-  let!(:plage_ouverture) { create(:plage_ouverture, organisation: organisation, agent: agent, motifs: [motif]) }
+  let!(:motif) do
+    create(:motif, organisation: organisation, service: agent.service, reservable_online: true, instruction_for_rdv: "Instructions après confirmation")
+  end
+  let!(:lieu) { create(:lieu, organisation: organisation, name: "Bureau") }
+  let!(:plage_ouverture) { create(:plage_ouverture, organisation: organisation, agent: agent, motifs: [motif], lieu: lieu) }
 
   before do
     travel_to(Time.zone.parse("2022-11-07 15:00"))
@@ -52,10 +55,22 @@ RSpec.describe "prescripteur can create RDV for a user" do
     expect(email_sent_to(agent.email).subject).to include("Nouveau RDV ajouté sur votre agenda RDV Solidarités")
     expect(email_sent_to("alex@prescripteur.fr").subject).to include("RDV confirmé")
     expect(email_sent_to("alex@prescripteur.fr").body).to include("RDV Solidarités")
+
+    expect(page).to have_content("Rendez-vous confirmé")
+    expect(page).to have_content("Patricia DUROY")
+    expect(page).to have_content("Le mardi 06 décembre 2022 à 08h00")
+    expect(page).to have_content("Bureau")
+    expect(page).to have_content("Instructions après confirmation")
   end
 
-  it "sends notifications to the user, agent and prescripteur" do
-    raise "write that spec"
+  context "when there already is a user with that email address" do
+    before do
+      create(:user, email: "patricia_duroy@exemple.fr")
+    end
+
+    it "doesn't show existing personal information but still takes the rdv" do
+      raise "write this fun spec"
+    end
   end
 
   it "allows prescripteur to make changes for a few minutes" do
