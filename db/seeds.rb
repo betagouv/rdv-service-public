@@ -428,6 +428,16 @@ lieux_attributes = 100.times.map do |i|
 end
 Lieu.insert_all!(lieux_attributes) # rubocop:disable Rails/SkipsModelValidations
 
+_cnfs_lieu = Lieu.create!(
+  name: "Médiathèque Françoise Sagan",
+  organisation: org_cnfs,
+  latitude: 44.918859,
+  longitude: 4.919825,
+  availability: :enabled,
+  phone_number: "01 53 24 69 70",
+  address: "8 Rue Léon Schwartzenberg, 75010 Paris"
+)
+
 ## ZONES
 zones_csv_path = Rails.root.join("db/seeds/zones_62.csv")
 CSV.read(zones_csv_path, headers: :first_row).each do |row|
