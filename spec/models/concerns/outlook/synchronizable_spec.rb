@@ -126,7 +126,7 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
       end
     end
 
-    context "is cancelled and exists in outlook" do
+    context "is soft_deleted and exists in outlook" do
       let(:agent) { create(:agent, microsoft_graph_token: "token") }
       let(:agents_rdv) { create(:agents_rdv, agent: agent, outlook_id: "abc", skip_outlook_create: true) }
 

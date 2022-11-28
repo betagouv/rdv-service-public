@@ -1,13 +1,15 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe Outlook::MassCreateEventJob, type: :job do
   let(:organisation) { create(:organisation, id: 10) }
-  let(:motif) { create(:motif, name: "Super Motif", location_type: :phone)}
+  let(:motif) { create(:motif, name: "Super Motif", location_type: :phone) }
   let(:agent) { create(:agent) }
-  let(:rdv) { build(:rdv, id: 1, motif: motif, organisation: organisation, starts_at: Time.zone.now + 1.day, agents: [])}
-  let(:rdv2) { build(:rdv, id: 2, motif: motif, organisation: organisation, starts_at: Time.zone.now + 2.days, agents: [])}
-  let(:rdv3) { build(:rdv, id: 3, motif: motif, organisation: organisation, starts_at: Time.zone.now - 1.day, agents: [])}
-  let(:rdv4) { build(:rdv, id: 4, motif: motif, organisation: organisation, starts_at: Time.zone.now - 2.days, agents: [])}
+  let(:rdv) { build(:rdv, id: 1, motif: motif, organisation: organisation, starts_at: 1.day.from_now, agents: []) }
+  let(:rdv2) { build(:rdv, id: 2, motif: motif, organisation: organisation, starts_at: 2.days.from_now, agents: []) }
+  let(:rdv3) { build(:rdv, id: 3, motif: motif, organisation: organisation, starts_at: 1.day.ago, agents: []) }
+  let(:rdv4) { build(:rdv, id: 4, motif: motif, organisation: organisation, starts_at: 2.days.ago, agents: []) }
   let!(:agents_rdv) { create(:agents_rdv, agent: agent, rdv: rdv, skip_outlook_create: true) }
   let!(:agents_rdv2) { create(:agents_rdv, agent: agent, rdv: rdv2, skip_outlook_create: true) }
   let!(:agents_rdv3) { create(:agents_rdv, agent: agent, rdv: rdv3, skip_outlook_create: true) }
@@ -20,7 +22,7 @@ RSpec.describe Outlook::MassCreateEventJob, type: :job do
     allow(agents_rdv3).to receive(:reflect_create_in_outlook)
     allow(agents_rdv4).to receive(:reflect_create_in_outlook)
 
-    Outlook::MassCreateEventJob.perform_now(agent)
+    described_class.perform_now(agent)
   end
 
   it "calls reflect_create_in_outlook for future rdv" do

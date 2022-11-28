@@ -5,7 +5,9 @@ describe "Agent can sync his account to outlook" do
 
   before do
     OmniAuth.config.test_mode = true
-    OmniAuth.config.add_mock(:microsoft_graph, { "extra" => { "raw_info" => { "user_principal_name" => "example@outlook.com" }}, "credentials" => { "token" => "super_token", "refresh_token" => "super_refresh_token" }})
+    OmniAuth.config.add_mock(:microsoft_graph,
+                             { "extra" => { "raw_info" => { "user_principal_name" => "example@outlook.com" } },
+                               "credentials" => { "token" => "super_token", "refresh_token" => "super_refresh_token" }, })
 
     allow(Sentry).to receive(:capture_message)
   end

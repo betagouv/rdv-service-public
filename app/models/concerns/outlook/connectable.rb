@@ -17,7 +17,7 @@ module Outlook
     def refresh_outlook_token
       response = JSON.parse(refresh_token_query.response_body)
       if response["error"].present?
-      Sentry.capture_message("Error refreshing Microsoft Graph Token for #{email}: #{response['error_description']}")
+        Sentry.capture_message("Error refreshing Microsoft Graph Token for #{email}: #{response['error_description']}")
       elsif response["access_token"].present?
         update(microsoft_graph_token: response["access_token"])
       end
@@ -30,8 +30,8 @@ module Outlook
         REFRESH_TOKEN_URL,
         headers: { "Content-Type" => "application/x-www-form-urlencoded" },
         body: {
-          client_id: ENV["AZURE_APPLICATION_CLIENT_ID"],
-          client_secret: ENV["AZURE_APPLICATION_CLIENT_SECRET"],
+          client_id: ENV.fetch("AZURE_APPLICATION_CLIENT_ID", nil),
+          client_secret: ENV.fetch("AZURE_APPLICATION_CLIENT_SECRET", nil),
           refresh_token: refresh_microsoft_graph_token, grant_type: "refresh_token",
         }
       )

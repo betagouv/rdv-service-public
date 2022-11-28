@@ -2,17 +2,18 @@
 
 RSpec.describe Outlook::Connectable, type: :concern do
   describe "#refresh_outlook_token" do
-
     before do
-      stub_request(:post, "https://login.microsoftonline.com/common/oauth2/v2.0/token").
-          with(
-           body: {"client_id"=>nil, "client_secret"=>nil, "grant_type"=>"refresh_token", "refresh_token"=>nil}).
-         to_return(status: 200, body: { error: "Erreur", error_description: "C'est une sacré erreur"}.to_json, headers: {})
+      stub_request(:post, "https://login.microsoftonline.com/common/oauth2/v2.0/token")
+        .with(
+          body: { "client_id" => nil, "client_secret" => nil, "grant_type" => "refresh_token", "refresh_token" => nil }
+        )
+        .to_return(status: 200, body: { error: "Erreur", error_description: "C'est une sacré erreur" }.to_json, headers: {})
 
-      stub_request(:post, "https://login.microsoftonline.com/common/oauth2/v2.0/token").
-          with(
-           body: {"client_id"=>nil, "client_secret"=>nil, "grant_type"=>"refresh_token", "refresh_token"=>"refresh_token"}).
-         to_return(status: 200, body: { access_token: "new_token" }.to_json, headers: {})
+      stub_request(:post, "https://login.microsoftonline.com/common/oauth2/v2.0/token")
+        .with(
+          body: { "client_id" => nil, "client_secret" => nil, "grant_type" => "refresh_token", "refresh_token" => "refresh_token" }
+        )
+        .to_return(status: 200, body: { access_token: "new_token" }.to_json, headers: {})
       allow(Sentry).to receive(:capture_message)
 
       agent.refresh_outlook_token

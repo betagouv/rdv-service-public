@@ -16,6 +16,6 @@ describe "Agent can unsync his account to outlook" do
 
   it "unsyncs the account" do
     expect(Outlook::MassDestroyEventJob).to have_been_enqueued.with(agent)
-    expect(page).to have_content("Votre compte Outlook est bien en cours de déconnexion. Cette action peut prendre plusieurs minutes, nécessaires à la suppression de votre événements dans votre agenda.")
+    expect(page).to have_content("Votre compte Outlook est bien en cours de déconnexion. Cette action peut prendre plusieurs minutes, nécessaires à la suppression de votre événements dans votre agenda.") # rubocop:disable Layout/LineLength
   end
 end
