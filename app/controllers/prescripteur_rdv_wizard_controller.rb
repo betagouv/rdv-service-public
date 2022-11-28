@@ -7,7 +7,7 @@ class PrescripteurRdvWizardController < ApplicationController
     @step_titles = ["Choix du rendez-vous", "Prescripteur", "Bénéficiaire", "Confirmation"]
   end
 
-  before_action :set_rdv_wizard, except: :start
+  before_action :set_rdv_wizard,                  only: %i[new_prescripteur new_beneficiaire create_rdv]
   before_action :redirect_if_creneau_unavailable, only: %i[new_prescripteur new_beneficiaire create_rdv]
 
   def start
@@ -54,6 +54,7 @@ class PrescripteurRdvWizardController < ApplicationController
 
       session[:prescripteur_id] = rdv_wizard.prescripteur.id
 
+      session.delete(:rdv_wizard_attributes)
       redirect_to prescripteur_confirmation_path
     else
       @step_title = @step_titles[2]
