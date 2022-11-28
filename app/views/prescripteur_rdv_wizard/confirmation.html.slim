@@ -40,3 +40,11 @@ main.container
                 i.fa.fa-exclamation-triangle>
                 strong Informations supplémentaires :
                 = auto_link(simple_format(rdv.motif.instruction_for_rdv, class:"pl-3 pt-1"), html: { target: "_blank" })
+            li.list-group-item
+              = "Besoin de déplacer le rendez-vous ou de corriger un détail ? "
+              =< mail_to(SUPPORT_EMAIL, "Contactez-nous", target: "_blank")
+            li.list-group-item
+              = "Vous pouvez aussi "
+              = mail_to(SUPPORT_EMAIL, "nous écrire",target: "_blank")
+              = " pour nous donner votre avis sur la prise de rendez-vous."
+          .mt-4.text-center= link_to "Retour à l'accueil", root_path
