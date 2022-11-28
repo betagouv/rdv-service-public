@@ -1,7 +1,7 @@
 = render "users/rdv_wizard_steps/stepper", step_title: @step_title
 
 main.container
-  .row
+  .row.justify-content-center
     .col-lg-7.col-md-10.col-sm-11
       .card
         .card-body
@@ -32,6 +32,7 @@ main.container
             li.list-group-item
               .fa.fa-user>
               = @prescripteur.user.full_name
+              = " (#{@prescripteur.user.phone_number})" if @prescripteur.user.phone_number.present?
             li.list-group-item
               i.fa.fa-info-circle>
               = rdv.motif.name

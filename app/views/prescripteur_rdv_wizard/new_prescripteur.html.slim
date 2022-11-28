@@ -1,7 +1,7 @@
 = render "users/rdv_wizard_steps/stepper", step_title: @step_title
 
 main.container
-  .row
+  .row.justify-content-center
     .col-lg-7.col-md-10.col-sm-11
       .card
         = render "users/rdv_wizard_steps/rdv_wizard_summary", rdv_wizard: @rdv_wizard if @rdv_wizard.present?
