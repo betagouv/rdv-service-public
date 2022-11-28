@@ -1,9 +1,14 @@
 # frozen_string_literal: true
 
 class PrescripteurRdvWizardController < ApplicationController
+  include SearchContextHelper
+
   before_action do
     @step_titles = ["Choix du rendez-vous", "Prescripteur", "Bénéficiaire", "Confirmation"]
   end
+
+  before_action :set_rdv_wizard, except: :start
+  before_action :redirect_if_creneau_unavailable, only: %i[new_prescripteur new_beneficiaire create_rdv]
 
   def start
     session[:rdv_wizard_attributes] = params.permit(
@@ -18,8 +23,6 @@ class PrescripteurRdvWizardController < ApplicationController
     @step_title = @step_titles[1]
 
     @prescripteur = Prescripteur.new(session[:autocomplete_prescripteur_attributes])
-
-    @rdv_wizard = PrescripteurRdvWizard.new(session[:rdv_wizard_attributes], current_domain)
   end
 
   def save_prescripteur
@@ -36,8 +39,6 @@ class PrescripteurRdvWizardController < ApplicationController
     @step_title = @step_titles[2]
 
     @beneficiaire = BeneficiaireForm.new
-
-    @rdv_wizard = PrescripteurRdvWizard.new(session[:rdv_wizard_attributes], current_domain)
   end
 
   def create_rdv
@@ -56,7 +57,6 @@ class PrescripteurRdvWizardController < ApplicationController
       redirect_to prescripteur_confirmation_path
     else
       @step_title = @step_titles[2]
-      @rdv_wizard = PrescripteurRdvWizard.new(session[:rdv_wizard_attributes], current_domain)
       render :new_beneficiaire
     end
   end
@@ -64,5 +64,18 @@ class PrescripteurRdvWizardController < ApplicationController
   def confirmation
     @step_title = @step_titles[3]
     @prescripteur = Prescripteur.find(session[:prescripteur_id])
+  end
+
+  private
+
+  def set_rdv_wizard
+    @rdv_wizard = PrescripteurRdvWizard.new(session[:rdv_wizard_attributes], current_domain)
+  end
+
+  def redirect_if_creneau_unavailable
+    if @rdv_wizard.creneau.nil?
+      flash[:error] = "Ce créneau n'est plus disponible. Veuillez en choisir un autre."
+      redirect_to path_to_creneau_selection(@rdv_wizard.params_to_selections)
+    end
   end
 end

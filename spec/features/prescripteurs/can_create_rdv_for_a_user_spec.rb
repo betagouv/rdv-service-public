@@ -28,25 +28,28 @@ RSpec.describe "prescripteur can create RDV for a user" do
     fill_in "Votre numéro de téléphone", with: "0611223344"
     click_on "Continuer"
 
+    expect(page).to have_content("Prescripteur : Alex PRESCRIPTEUR")
+    fill_in "Prénom", with: "Patricia"
+    fill_in "Nom", with: "Duroy"
+
     create(:rdv, starts_at: Time.zone.local(2022, 12, 6, 8, 0, 0), motif: motif, agents: [agent], lieu: lieu)
-
-    click_on "Continuer"
-
-    expect(page).to have_content("Ce créneau n'est plus disponible. Veuillez en choisir un autre")
-    click_on "09:00"
+    click_on "Confirmer le rendez-vous"
+    expect(page).to have_content("Ce créneau n'est plus disponible. Veuillez en choisir un autre.")
+    click_on "Prochaine disponibilité le"
+    click_on "08:45"
     click_on "Je suis un prescripteur qui oriente un bénéficiaire"
 
     #
     # Formulaire de prescripteur pré-rempli
     #
-    # TODO: expect que les champs sont remplis
+    expect(page).to have_field("Votre prénom", with: "Alex")
+    expect(page).to have_field("Votre nom", with: "Prescripteur")
     click_on "Continuer"
 
     expect(page).to have_content("Prescripteur : Alex PRESCRIPTEUR")
     fill_in "Prénom", with: "Patricia"
     fill_in "Nom", with: "Duroy"
     click_on "Confirmer le rendez-vous"
-
     expect(page).to have_content("Sans numéro de téléphone, aucune notification ne sera envoyée au bénéficiaire")
     click_on "Annuler et modifier"
     fill_in "Téléphone", with: "0123456789"
@@ -74,7 +77,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
 
     expect(page).to have_content("Rendez-vous confirmé")
     expect(page).to have_content("Patricia DUROY")
-    expect(page).to have_content("Le mardi 06 décembre 2022 à 08h00")
+    expect(page).to have_content("Le mardi 06 décembre 2022 à 08h45")
     expect(page).to have_content("Bureau")
     expect(page).to have_content("Instructions après confirmation")
   end
