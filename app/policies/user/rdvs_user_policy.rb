@@ -19,6 +19,12 @@ class User::RdvsUserPolicy < ApplicationPolicy
     (record.rdv.collectif? && record.rdv.reservable_online?) && rdvs_user_belongs_to_user_or_relatives?
   end
 
+  def cancel?
+    return false if record.rdv.revoked?
+
+    rdvs_user_belongs_to_user_or_relatives?
+  end
+
   class Scope < Scope
     alias current_user pundit_user
 

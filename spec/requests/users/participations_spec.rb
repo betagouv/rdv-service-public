@@ -46,6 +46,15 @@ RSpec.describe "Users::Participants", type: :request do
       end
     end
 
+    describe "POST /users/rdvs/:rdv_id/participations/cancel, norminal case" do
+      it "set a confirmation notice message for users_rdv_participations POST for current_user participation" do
+        create(:rdvs_user, user: user, rdv: rdv)
+        put users_rdv_participations_cancel_path(rdv)
+        expect(flash[:notice]).to eq("Désinscription de l'atelier confirmée")
+        expect(response).to redirect_to(users_rdv_path(rdv, invitation_token: token))
+      end
+    end
+
     describe "POST /users/rdvs/:rdv_id/participants, other cases" do
       let(:rdv) { create(:rdv, :collectif, :without_users) }
 

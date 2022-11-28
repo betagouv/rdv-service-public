@@ -17,6 +17,10 @@ class Users::ParticipationsController < UserAuthController
     add_participation
   end
 
+  def cancel
+    remove_participation
+  end
+
   private
 
   def set_rdv
@@ -32,7 +36,7 @@ class Users::ParticipationsController < UserAuthController
   end
 
   def existing_participation
-    @existing_participation = policy_scope(RdvsUser).find_by(rdv: @rdv, user: @user)
+    @existing_participation = policy_scope(RdvsUser).where(rdv: @rdv, user: @user.self_and_relatives_and_responsible).first
   end
 
   def new_participation
@@ -67,5 +71,18 @@ class Users::ParticipationsController < UserAuthController
     set_user_name_initials_verified
     flash[:notice] = "Inscription confirmée"
     redirect_to users_rdv_path(@rdv, invitation_token: new_participation.rdv_user_token)
+  end
+
+  def remove_participation
+    if existing_participation.present?
+      authorize(existing_participation)
+      existing_participation.change_status_and_notify(current_user, "excused")
+      set_user_name_initials_verified
+      flash[:notice] = "Désinscription de l'atelier confirmée"
+      redirect_to users_rdv_path(@rdv, invitation_token: existing_participation.rdv_user_token)
+    else
+      authorize(new_participation)
+      flash[:notice] = "Cet utilisateur n'est pas inscrit à cet atelier"
+    end
   end
 end
