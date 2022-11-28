@@ -28,6 +28,20 @@ RSpec.describe "prescripteur can create RDV for a user" do
     fill_in "Votre numéro de téléphone", with: "0611223344"
     click_on "Continuer"
 
+    create(:rdv, starts_at: Time.zone.local(2022, 12, 6, 8, 0, 0), motif: motif, agents: [agent], lieu: lieu)
+
+    click_on "Continuer"
+
+    expect(page).to have_content("Ce créneau n'est plus disponible. Veuillez en choisir un autre")
+    click_on "09:00"
+    click_on "Je suis un prescripteur qui oriente un bénéficiaire"
+
+    #
+    # Formulaire de prescripteur pré-rempli
+    #
+    # TODO: expect que les champs sont remplis
+    click_on "Continuer"
+
     expect(page).to have_content("Prescripteur : Alex PRESCRIPTEUR")
     fill_in "Prénom", with: "Patricia"
     fill_in "Nom", with: "Duroy"
@@ -63,17 +77,5 @@ RSpec.describe "prescripteur can create RDV for a user" do
     expect(page).to have_content("Le mardi 06 décembre 2022 à 08h00")
     expect(page).to have_content("Bureau")
     expect(page).to have_content("Instructions après confirmation")
-  end
-
-  context "when the phone number is not a mobile phone" do
-    it "shows an error message" do
-      raise "do it"
-    end
-  end
-
-  context "when creneau is taken by someone else during booking process" do
-    it "redirects to creneau search with error message" do
-      raise "write spec"
-    end
   end
 end
