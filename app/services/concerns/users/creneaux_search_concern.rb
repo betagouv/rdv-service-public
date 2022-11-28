@@ -19,12 +19,8 @@ module Users::CreneauxSearchConcern
   end
 
   def available_collective_rdvs
-    rdvs = Rdv.collectif.future
-      .with_remaining_seats
-      .not_revoked
-      .where(motif_id: motif.id)
-      .where(lieu_id: lieu.id)
-      .where(starts_at: start_booking_delay..end_booking_delay)
+    rdvs = Rdv.collectif_and_available_for_reservation
+      .where(motif: motif, lieu: lieu, starts_at: start_booking_delay..end_booking_delay)
       .order(:starts_at)
 
     rdvs = rdvs.where.not(id: user.self_and_relatives.flat_map(&:rdv_ids)) if user

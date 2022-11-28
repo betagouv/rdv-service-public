@@ -118,7 +118,8 @@ class Users::GeoSearch
   end
 
   def collective_motifs
-    @collective_motifs ||= Motif.reservable_online.active.collectif.joins(:rdvs).merge(Rdv.future.with_remaining_seats).distinct
+    @collective_motifs ||= Motif.reservable_online.active.collectif
+      .joins(:rdvs).merge(Rdv.collectif_and_available_for_reservation).distinct
   end
 
   def available_individual_motifs_from_attributed_agents_arel

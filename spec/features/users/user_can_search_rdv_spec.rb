@@ -185,7 +185,7 @@ describe "User can search for rdvs" do
         expect(page).not_to have_content(motif2.name)
         expect(page).not_to have_content(motif3.name)
 
-        expect(page).to have_content("L'agent avec qui vous voulez prendre rdv ne vous est pas assigné comme reférent")
+        expect(page).to have_content("L'agent avec qui vous voulez prendre rendez-vous ne vous est pas assigné comme référent")
       end
     end
 
@@ -196,7 +196,7 @@ describe "User can search for rdvs" do
       it "shows an error message" do
         visit root_path(referent_ids: [agent3.id], departement: "92", service_id: service.id)
 
-        expect(page).to have_content("Votre référent de semble pas avoir de plages d'ouvertures disponibles")
+        expect(page).to have_content("Votre référent n'a pas de créneaux disponibles")
       end
     end
   end
