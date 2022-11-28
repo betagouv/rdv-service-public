@@ -29,9 +29,11 @@ describe Notifiers::RdvUpdated, type: :service do
       expect(ActionMailer::Base.deliveries.map(&:to).flatten).to match_array([user1.email, user2.email])
     end
 
-    it "outputs the tokens" do
+    it "rdv_users_tokens_by_user_id attribute outputs the tokens" do
       allow(Devise.token_generator).to receive(:generate).and_return("t0k3n")
-      expect(subject).to eq({ user1.id => "t0k3n", user2.id => "t0k3n" })
+      notifier = described_class.new(rdv, agent1)
+      notifier.perform
+      expect(notifier.rdv_users_tokens_by_user_id).to eq({ user1.id => "t0k3n", user2.id => "t0k3n" })
     end
   end
 

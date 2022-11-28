@@ -52,8 +52,14 @@ module UserRdvWizard
     end
 
     def to_query
-      { motif_id: rdv.motif.id, starts_at: rdv.starts_at.to_s, user_ids: rdv.users&.map(&:id) }
-        .merge(@attributes.slice(:where, :departement, :lieu_id, :latitude, :longitude, :city_code, :street_ban_id, :invitation_token, :address, :organisation_ids, :motif_search_terms))
+      {
+        motif_id: rdv.motif.id, starts_at: rdv.starts_at.to_s, user_ids: rdv.users&.map(&:id),
+      }.merge(
+        @attributes.slice(
+          :where, :departement, :lieu_id, :latitude, :longitude, :city_code, :street_ban_id, :invitation_token,
+          :address, :organisation_ids, :motif_search_terms, :public_link_organisation_id, :user_selected_organisation_id
+        )
+      )
     end
 
     def to_search_query

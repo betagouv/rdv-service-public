@@ -37,6 +37,7 @@ class Admin::PlageOuverturesController < AgentAuthController
     end
     @plage_ouverture = PlageOuverture.new(
       organisation: current_organisation,
+      motif_ids: params[:motif_ids],
       agent: @agent,
       **defaults
     )

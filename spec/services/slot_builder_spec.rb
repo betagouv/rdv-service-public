@@ -13,17 +13,16 @@ describe SlotBuilder, type: :service do
     let(:motif) { create(:motif, default_duration_in_min: 60, organisation: organisation) }
     let(:first_day) { Date.new(2021, 5, 3) }
     let(:date_range) { first_day..Date.new(2021, 5, 8) }
-    let(:off_days) { [] }
 
     it "returns 2 slots with a basic context" do
       create(:plage_ouverture, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes, lieu: lieu)
-      slots = described_class.available_slots(motif, lieu, date_range, off_days)
+      slots = described_class.available_slots(motif, lieu, date_range)
       expect(slots.map(&:starts_at).map(&:hour)).to eq([9, 10])
     end
 
     it "return Creneaux object" do
       create(:plage_ouverture, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes, lieu: lieu)
-      slots = described_class.available_slots(motif, lieu, date_range, off_days)
+      slots = described_class.available_slots(motif, lieu, date_range)
       expect(slots.map(&:class).map(&:to_s).uniq).to eq(["Creneau"])
     end
 
@@ -43,7 +42,7 @@ describe SlotBuilder, type: :service do
       end
 
       it "only returns slots in the future" do
-        slots = described_class.available_slots(motif, lieu, two_days_ago..seven_days_from_now, off_days)
+        slots = described_class.available_slots(motif, lieu, two_days_ago..seven_days_from_now)
 
         # Only today's slots are returned, not the ones from the past, even though they are included in the range
         expect(slots.map(&:starts_at)).to eq([Time.zone.parse("2022-07-13 09:00:00"), Time.zone.parse("2022-07-13 10:00:00")])
@@ -52,7 +51,7 @@ describe SlotBuilder, type: :service do
       context "when date range also ends before today" do
         it "returns no result" do
           date_range_in_the_past = (today - 10.days)..(today - 3.days)
-          slots = described_class.available_slots(motif, lieu, date_range_in_the_past, off_days)
+          slots = described_class.available_slots(motif, lieu, date_range_in_the_past)
 
           # No slot is returned since all slots are in the past
           expect(slots).to be_empty
@@ -74,7 +73,7 @@ describe SlotBuilder, type: :service do
 
         travel_to(Time.zone.local(2021, 5, 3, 15, 3, 0))
 
-        slots = described_class.available_slots(motif, lieu, date_range, off_days)
+        slots = described_class.available_slots(motif, lieu, date_range)
 
         # The current time is 15:03
         # The available plages ouvertures are 9:00-12:00, 14:00-17:00, and 18:00-20:00
@@ -198,14 +197,14 @@ describe SlotBuilder, type: :service do
   describe "#free_times_from" do
     it "return an empty hash without plage_ouvertures" do
       range = Date.new(2021, 10, 26)..Date.new(2021, 10, 29)
-      expect(described_class.free_times_from([], range, [])).to eq({})
+      expect(described_class.free_times_from([], range)).to eq({})
     end
 
     it "calls calculate_free_times for given plage_ouvertures" do
       plage_ouverture = build(:plage_ouverture)
       range = Date.new(2021, 10, 26)..Date.new(2021, 10, 29)
-      expect(described_class).to receive(:calculate_free_times).with(plage_ouverture, range, [])
-      described_class.free_times_from([plage_ouverture], range, [])
+      expect(described_class).to receive(:calculate_free_times).with(plage_ouverture, range)
+      described_class.free_times_from([plage_ouverture], range)
     end
   end
 
@@ -216,7 +215,7 @@ describe SlotBuilder, type: :service do
     it "return one free time from plage ouverture date range" do
       plage_ouverture = build(:plage_ouverture, first_day: Date.new(2021, 10, 27), start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
       range = Date.new(2021, 10, 26)..Date.new(2021, 10, 29)
-      expect(described_class.calculate_free_times(plage_ouverture, range, [])).to eq([Time.zone.parse("20211027 9:00")..Time.zone.parse("20211027 11:00")])
+      expect(described_class.calculate_free_times(plage_ouverture, range)).to eq([Time.zone.parse("20211027 9:00")..Time.zone.parse("20211027 11:00")])
     end
 
     it "return plage ouverture slot minus rdv duration" do
@@ -227,7 +226,7 @@ describe SlotBuilder, type: :service do
       range = Date.new(2021, 10, 26)..Date.new(2021, 10, 29)
 
       expected_ranges = [rdv.ends_at..ends_at]
-      expect(described_class.calculate_free_times(plage_ouverture, range, [])).to eq(expected_ranges)
+      expect(described_class.calculate_free_times(plage_ouverture, range)).to eq(expected_ranges)
     end
 
     it "return plage ouverture slot minus RDV duration that overlap po when RDV starts before PO" do
@@ -238,7 +237,7 @@ describe SlotBuilder, type: :service do
       range = Date.new(2021, 10, 26)..Date.new(2021, 10, 29)
 
       expected_ranges = [rdv.ends_at..ends_at]
-      expect(described_class.calculate_free_times(plage_ouverture, range, [])).to eq(expected_ranges)
+      expect(described_class.calculate_free_times(plage_ouverture, range)).to eq(expected_ranges)
     end
 
     it "return plage ouverture slots minus 2 RDV duration that overlap po" do
@@ -250,7 +249,7 @@ describe SlotBuilder, type: :service do
       range = Date.new(2021, 10, 26)..Date.new(2021, 10, 29)
 
       expected_ranges = [rdv.ends_at..other_rdv.starts_at, other_rdv.ends_at..ends_at]
-      expect(described_class.calculate_free_times(plage_ouverture, range, [])).to eq(expected_ranges)
+      expect(described_class.calculate_free_times(plage_ouverture, range)).to eq(expected_ranges)
     end
 
     it "return plage ouverture slots minus 2 Absences duration that overlap po" do
@@ -270,7 +269,7 @@ describe SlotBuilder, type: :service do
       range = Date.new(2021, 10, 25)..Date.new(2021, 10, 30)
 
       expected_ranges = [e9h30..s9h45, e10h45..ends_at]
-      expect(described_class.calculate_free_times(plage_ouverture, range, [])).to eq(expected_ranges)
+      expect(described_class.calculate_free_times(plage_ouverture, range)).to eq(expected_ranges)
     end
 
     it "returns plage ouverture's 3 occurrences of range" do
@@ -284,7 +283,7 @@ describe SlotBuilder, type: :service do
         (Time.zone.parse("2021-10-28 9:00")..Time.zone.parse("2021-10-28 11:00")),
         (Time.zone.parse("2021-10-29 9:00")..Time.zone.parse("2021-10-29 11:00")),
       ]
-      expect(described_class.calculate_free_times(plage_ouverture, range, [])).to eq(expected_ranges)
+      expect(described_class.calculate_free_times(plage_ouverture, range)).to eq(expected_ranges)
     end
 
     it "don't returns past time" do
@@ -296,7 +295,7 @@ describe SlotBuilder, type: :service do
       range = Date.new(2021, 11, 12)..Date.new(2021, 11, 19)
 
       expected_ranges = [(Time.zone.parse("2021-11-19 9:00")..Time.zone.parse("2021-11-19 11:00"))]
-      expect(described_class.calculate_free_times(plage_ouverture, range, [])).to eq(expected_ranges)
+      expect(described_class.calculate_free_times(plage_ouverture, range)).to eq(expected_ranges)
     end
 
     it "don't look at cancelled RDV" do
@@ -309,7 +308,7 @@ describe SlotBuilder, type: :service do
       range = Date.new(2021, 11, 12)..Date.new(2021, 11, 19)
 
       expected_ranges = [(Time.zone.parse("2021-11-19 9:00")..Time.zone.parse("2021-11-19 11:00"))]
-      expect(described_class.calculate_free_times(plage_ouverture, range, [])).to eq(expected_ranges)
+      expect(described_class.calculate_free_times(plage_ouverture, range)).to eq(expected_ranges)
     end
 
     it "return range without only range of multi RDV on same range with same duration" do
@@ -322,7 +321,7 @@ describe SlotBuilder, type: :service do
       range = Date.new(2021, 10, 26)..Date.new(2021, 10, 29)
 
       expected_ranges = [prev_rdv.ends_at..rdv.starts_at, rdv.ends_at..ends_at]
-      expect(described_class.calculate_free_times(plage_ouverture, range, [])).to eq(expected_ranges)
+      expect(described_class.calculate_free_times(plage_ouverture, range)).to eq(expected_ranges)
     end
 
     it "return range without only range of longer overlapped RDV on same range with same duration" do
@@ -335,7 +334,7 @@ describe SlotBuilder, type: :service do
       range = Date.new(2021, 10, 26)..Date.new(2021, 10, 29)
 
       expected_ranges = [prev_rdv.ends_at..rdv.starts_at, rdv.ends_at..ends_at]
-      expect(described_class.calculate_free_times(plage_ouverture, range, [])).to eq(expected_ranges)
+      expect(described_class.calculate_free_times(plage_ouverture, range)).to eq(expected_ranges)
     end
   end
 

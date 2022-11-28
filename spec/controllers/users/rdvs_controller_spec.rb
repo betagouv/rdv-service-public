@@ -38,7 +38,7 @@ RSpec.describe Users::RdvsController, type: :controller do
         .with(user: user, starts_at: starts_at, motif: motif, lieu: lieu, geo_search: mock_geo_search)
         .and_return(mock_creneau)
       allow(Notifiers::RdvCreated).to receive(:perform_with)
-        .and_return({ user.id => token })
+      allow(Devise.token_generator).to receive(:generate).and_return("12345")
       subject
     end
 
@@ -356,16 +356,33 @@ RSpec.describe Users::RdvsController, type: :controller do
     end
 
     context "creneaux available" do
-      let!(:plage_ouverture) do
-        create(:plage_ouverture, :daily, first_day: now + 3.days, start_time: Tod::TimeOfDay.new(10), lieu: lieu, agent: agent, motifs: [motif], organisation: organisation)
+      before do
+        # Une plage quotidienne qui commence dans 3 jours, ouvertures de 10h00 à 12h00
+        create(:plage_ouverture, :daily,
+               first_day: 3.days.from_now,
+               start_time: Tod::TimeOfDay.new(10),
+               end_time: Tod::TimeOfDay.new(12),
+               lieu: lieu, agent: agent, motifs: [motif], organisation: organisation)
+
+        # Une plage ponctuelle qui a lieu dans 2 jours, ouvertures de 16h00 à 17h00
+        create(:plage_ouverture,
+               first_day: 2.days.from_now,
+               start_time: Tod::TimeOfDay.new(16),
+               end_time: Tod::TimeOfDay.new(17),
+               lieu: lieu, agent: agent, motifs: [motif], organisation: organisation)
+
+        subject
       end
 
-      before { subject }
+      it "spans 7 days: from first creneau day to 6 days after that" do
+        expect(assigns(:date_range)).to eq(2.days.from_now.to_date..8.days.from_now.to_date)
+      end
 
-      it { expect(response.body).to include("Voici les créneaux disponibles pour modifier votre rendez-vous du") }
-      it { expect(response.body).to include(I18n.l(rdv.starts_at, format: :human).to_s) }
-      it { expect(assigns(:date_range)).to eq(3.days.from_now.to_date..9.days.from_now.to_date) }
       it { expect(assigns(:creneaux)).not_to be_empty }
+      it { expect(response.body).to include("Voici les créneaux disponibles pour modifier votre rendez-vous du") }
+      it { expect(response.body).to include("dimanche 06 janvier 2019 à 10h00") }
+      it { expect(response.body).to include("10:00") } # heure de créneau pour la plage quotidienne
+      it { expect(response.body).to include("16:00") } # heure de créneau pour la plage ponctuelle
     end
 
     context "when the rdv cannot be edited" do
@@ -454,8 +471,7 @@ RSpec.describe Users::RdvsController, type: :controller do
       allow(Users::CreneauSearch).to receive(:creneau_for)
         .with(user: user, starts_at: starts_at, motif: motif, lieu: lieu)
         .and_return(returned_creneau)
-      allow(Notifiers::RdvUpdated).to receive(:perform_with)
-        .and_return({ user.id => token })
+      allow(Devise.token_generator).to receive(:generate).and_return("12345")
     end
 
     context "with an available creneau" do

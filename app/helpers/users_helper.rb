@@ -18,7 +18,7 @@ module UsersHelper
   end
 
   def age_in_years(user)
-    today = Time.zone.now.to_date
+    today = Time.zone.today
     years = today.year - user.birth_date.year
     if today.month > user.birth_date.month || (today.month == user.birth_date.month && today.day >= user.birth_date.day)
       years
@@ -28,12 +28,12 @@ module UsersHelper
   end
 
   def age_in_months(user)
-    today = Time.zone.now.to_date
+    today = Time.zone.today
     ((today.year - user.birth_date.year) * 12) + today.month - user.birth_date.month - (today.day >= user.birth_date.day ? 0 : 1)
   end
 
   def age_in_days(user)
-    Time.zone.now.to_date - user.birth_date
+    Time.zone.today - user.birth_date
   end
 
   def relative_tag(user)
@@ -45,7 +45,9 @@ module UsersHelper
   end
 
   def user_soft_deleted_tag(organisation, user)
-    user.organisations.include?(organisation) ? nil : tag.span("Supprimé", class: "badge badge-danger")
+    return tag.span("Supprimé", class: "badge badge-danger") if user.deleted_at
+
+    tag.span("Supprimé de cette organisation", class: "badge badge-danger") unless user.profile_for(organisation)
   end
 
   def full_name_and_birthdate(user)
@@ -122,7 +124,7 @@ module UsersHelper
   end
 
   def user_to_link(user)
-    if user.organisations.include?(current_organisation)
+    if !user.deleted_at && user.organisations.include?(current_organisation)
       link_to admin_organisation_user_path(current_organisation, user) do
         tag.span(user.full_name) + relative_tag(user)
       end

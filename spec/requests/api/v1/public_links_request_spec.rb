@@ -20,8 +20,9 @@ describe "Public links API", swagger_doc: "v1/api.json" do
         let!(:organisation_b) { create(:organisation, new_domain_beta: true, external_id: "ext_id_B", territory: terr) }
         let!(:organisation_c) { create(:organisation, new_domain_beta: true, external_id: "ext_id_C", territory: terr) }
         let!(:organisation_d) { create(:organisation, new_domain_beta: true, external_id: "ext_id_D", territory: terr) }
-        let!(:organisation_e) { create(:organisation, new_domain_beta: true, external_id: "ext_id_E", territory: create(:territory)) }
-        let!(:organisation_f) { create(:organisation, new_domain_beta: true, external_id: nil,        territory: terr) }
+        let!(:organisation_e) { create(:organisation, new_domain_beta: true, external_id: "ext_id_E", territory: terr) }
+        let!(:organisation_f) { create(:organisation, new_domain_beta: true, external_id: "ext_id_F", territory: create(:territory)) }
+        let!(:organisation_g) { create(:organisation, new_domain_beta: true, external_id: nil,        territory: terr) }
 
         let(:territory) { terr.departement_number }
 
@@ -36,6 +37,10 @@ describe "Public links API", swagger_doc: "v1/api.json" do
                 "external_id" => "ext_id_B",
                 "public_link" => "http://www.rdv-aide-numerique-test.localhost/org/#{organisation_b.id}",
               },
+              {
+                "external_id" => "ext_id_C",
+                "public_link" => "http://www.rdv-aide-numerique-test.localhost/org/#{organisation_c.id}",
+              },
             ],
           }
         end
@@ -44,17 +49,22 @@ describe "Public links API", swagger_doc: "v1/api.json" do
           create(:plage_ouverture, organisation: organisation_a)
           create(:plage_ouverture, organisation: organisation_a)
           create(:plage_ouverture, :no_recurrence, organisation: organisation_b, first_day: Time.zone.today + 5.days)
-          create(:plage_ouverture, :expired, organisation: organisation_c)
-          create(:plage_ouverture, organisation: organisation_f)
+          create(:plage_ouverture, :expired, organisation: organisation_d)
+          create(:plage_ouverture, organisation: organisation_g)
+
+          create(:rdv, :future, motif: create(:motif, :collectif, reservable_online: true), organisation: organisation_c)
 
           # Organisation A has two recurring plages
           # Organisation B has a plage in 5 days
-          # Organisation C has a plage that expired
-          # Organisation D has no plage
-          # Organisation E is not in provided territory
-          # Organisation F does not have an external ID
-          # Organisation G does not exist
+          # Organisation B has an online reservable RDV collectif
+          # Organisation D has a plage that expired
+          # Organisation E has no plage
+          # Organisation F is not in provided territory
+          # Organisation G does not have an external ID
+          # Organisation H does not exist
         end
+
+        schema "$ref" => "#/components/schemas/public_links"
 
         run_test!
 
@@ -64,34 +74,19 @@ describe "Public links API", swagger_doc: "v1/api.json" do
       response 400, "Retourne 'bad_request' quand le territory est manquant" do
         let(:territory) { nil }
 
+        schema "$ref" => "#/components/schemas/error_missing"
+
         run_test!
 
         it { expect(parsed_response_body).to match(missing: "territory") }
       end
 
-      response 404, "Retourne 'not_found' quand le territory ne peut pas être trouvé" do
+      it_behaves_like "an endpoint that returns 404 - not found", "le territory ne peut pas être trouvé" do
         let(:territory) { "unknown" }
-
-        run_test!
-
-        it { expect(parsed_response_body).to match(not_found: "territory") }
       end
 
-      response 429, "Limite d'appels atteinte" do
-        let!(:terr) { create(:territory, departement_number: "CN") }
-        let(:territory) { terr.departement_number }
-
-        schema "$ref" => "#/components/schemas/error_too_many_request"
-
-        before do
-          Rack::Attack.enabled = true
-          Rack::Attack.reset!
-          3.times do
-            get api_v1_public_links_path
-          end
-        end
-
-        run_test!
+      it_behaves_like "an endpoint that returns 429 - too_many_requests", :get, Rails.application.routes.url_helpers.api_v1_public_links_path do
+        let(:territory) { "CN" }
       end
     end
   end

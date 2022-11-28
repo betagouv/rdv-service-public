@@ -8,16 +8,15 @@ ruby "3.1.2"
 gem "dotenv-rails" # dotenv should always be loaded before rails
 
 # Standard Rails stuff
-gem "rails", "6.1.6.1"
+gem "rails", "~> 7.0.4"
 gem "sprockets-rails"
-gem "puma", "< 6.0" # Until Capybara is compatible with puma 6.0 (https://github.com/teamcapybara/capybara/pull/2530)
+gem "puma", "< 6.0" # Until Puma stops returning HTTP 501 on PROPFIND requests: https://github.com/puma/puma/issues/3014
 gem "jsbundling-rails"
 gem "turbolinks", "~> 5"
 gem "bootsnap", require: false # Reduces boot times through caching; required in config/boot.rb
 gem "rack-cors" # CORS management
 
-# Temporarily fixed versions
-# This RC version supports Ruby 3.1 (https://github.com/mikel/mail/commit/d9d8dcc)
+# Temporarily fixed version : this RC version supports Ruby 3.1 (https://github.com/mikel/mail/commit/d9d8dcc)
 gem "mail", "2.8.0.rc1"
 
 # Ops

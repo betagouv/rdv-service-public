@@ -44,6 +44,7 @@ RSpec.configure do |config|
   config.include Select2SpecHelper
   config.include ApiSpecHelper, type: :request
   config.extend ApiSpecMacros, type: :request
+  config.include ApiSpecSharedExamples, type: :request
   config.include ActiveSupport::Testing::TimeHelpers
   config.include ActiveJob::TestHelper
   config.include Devise::Test::ControllerHelpers, type: :controller

@@ -14,8 +14,10 @@ class SearchContext
     @city_code = query[:city_code]
     @departement = query[:departement]
     @street_ban_id = query[:street_ban_id]
-    @organisation_id = query[:organisation_id]
+    @public_link_organisation_id = query[:public_link_organisation_id]
+    @user_selected_organisation_id = query[:user_selected_organisation_id]
     @fallback_organisation_ids = query[:organisation_ids]
+    @motif_id = query[:motif_id]
     @motif_search_terms = query[:motif_search_terms]
     @motif_category = query[:motif_category]
     @motif_name_with_location_type = query[:motif_name_with_location_type]
@@ -27,14 +29,16 @@ class SearchContext
   # *** Method that outputs the next step for the user to complete its rdv journey ***
   # *** It is used in #to_partial_path to render the matching partial view ***
   def current_step
-    if address.blank? && @organisation_id.blank?
+    if address.blank? && organisation_id.blank?
       :address_selection
     elsif !service_selected?
       :service_selection
-    elsif !motif_selected?
+    elsif !motif_name_and_type_selected?
       :motif_selection
-    elsif selected_motif.requires_lieu? && lieu.nil?
+    elsif requires_lieu_selection?
       :lieu_selection
+    elsif requires_organisation_selection?
+      :organisation_selection
     else
       :creneau_selection
     end
@@ -55,8 +59,8 @@ class SearchContext
   def service
     @service ||= if @service_id.present?
                    Service.find(@service_id)
-                 elsif motif_selected?
-                   selected_motif.service
+                 elsif motif_name_and_type_selected?
+                   first_matching_motif.service
                  elsif services.count == 1
                    services.first
                  end
@@ -66,22 +70,48 @@ class SearchContext
     unique_motifs_by_name_and_location_type.map(&:service).uniq.sort_by(&:name)
   end
 
+  def requires_organisation_selection?
+    !first_matching_motif.requires_lieu? && user_selected_organisation.nil? && public_link_organisation.nil?
+  end
+
+  def user_selected_organisation
+    @user_selected_organisation ||= \
+      @user_selected_organisation_id.present? ? Organisation.find(@user_selected_organisation_id) : nil
+  end
+
+  def public_link_organisation
+    @public_link_organisation ||= \
+      @public_link_organisation_id.present? ? Organisation.find(@public_link_organisation_id) : nil
+  end
+
+  def organisation_id
+    @public_link_organisation_id || @user_selected_organisation_id
+  end
+
+  def motifs_organisations
+    matching_motifs.map(&:organisation).uniq
+  end
+
   def unique_motifs_by_name_and_location_type
     @unique_motifs_by_name_and_location_type ||= matching_motifs.uniq { [_1.name, _1.location_type] }
   end
 
-  def selected_motif
-    return unless motif_selected?
+  def first_matching_motif
+    return unless motif_name_and_type_selected?
 
-    unique_motifs_by_name_and_location_type.first
+    matching_motifs.first
   end
 
-  def motif_selected?
+  def motif_name_and_type_selected?
     unique_motifs_by_name_and_location_type.length == 1
   end
 
   def service_selected?
     service.present?
+  end
+
+  def requires_lieu_selection?
+    first_matching_motif.requires_lieu? && lieu.nil?
   end
 
   def lieu
@@ -98,7 +128,9 @@ class SearchContext
 
   def next_availability_by_lieux
     @next_availability_by_lieux ||= lieux.index_with do |lieu|
-      creneaux_search_for(lieu, date_range).next_availability
+      creneaux_search_for(
+        lieu, date_range, matching_motifs.where(organisation: lieu.organisation).first
+      ).next_availability
     end.compact
   end
 
@@ -119,15 +151,15 @@ class SearchContext
   end
 
   def creneaux
-    @creneaux ||= if selected_motif.collectif?
-                    SearchRdvCollectif.creneaux(selected_motif, lieu)
+    @creneaux ||= if first_matching_motif.collectif?
+                    SearchRdvCollectif.creneaux(first_matching_motif, lieu)
                   else
                     creneaux_search.creneaux
                   end
   end
 
   def creneaux_search
-    creneaux_search_for(lieu, date_range)
+    creneaux_search_for(lieu, date_range, first_matching_motif)
   end
 
   def next_availability
@@ -135,15 +167,13 @@ class SearchContext
   end
 
   def filter_motifs(available_motifs)
-    motifs = if @motif_name_with_location_type.present?
-               available_motifs.search_by_name_with_location_type(@motif_name_with_location_type)
-             else
-               available_motifs
-             end
+    motifs = available_motifs
+    motifs = motifs.search_by_name_with_location_type(@motif_name_with_location_type) if @motif_name_with_location_type.present?
     motifs = motifs.where(service: service) if @service_id.present?
     motifs = motifs.search_by_text(@motif_search_terms) if @motif_search_terms.present?
     motifs = motifs.where(category: @motif_category) if @motif_category.present?
-    motifs = motifs.where(organisations: { id: @organisation_id }) if @organisation_id.present?
+    motifs = motifs.where(organisations: { id: organisation_id }) if organisation_id.present?
+    motifs = motifs.where(id: @motif_id) if @motif_id.present?
     motifs = motifs.where(id: lieu_filtered_motif_ids(motifs)) if @lieu_id.present?
 
     motifs
@@ -163,9 +193,8 @@ class SearchContext
     motif_ids
   end
 
-  def creneaux_search_for(lieu, date_range)
-    motif = lieu.present? ? matching_motifs.where(organisation: lieu.organisation).first : selected_motif
-    if selected_motif.individuel?
+  def creneaux_search_for(lieu, date_range, motif)
+    if motif.individuel?
       Users::CreneauxSearch.new(
         user: @current_user,
         motif: motif,

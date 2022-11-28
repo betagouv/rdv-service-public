@@ -12,8 +12,8 @@ class RdvsUser < ApplicationRecord
   CANCELLED_STATUSES = %w[excused revoked].freeze
 
   # Relations
-  belongs_to :rdv, touch: true, inverse_of: :rdvs_users
-  belongs_to :user
+  belongs_to :rdv, -> { unscope(where: :deleted_at) }, touch: true, inverse_of: :rdvs_users, optional: true
+  belongs_to :user, -> { unscope(where: :deleted_at) }, inverse_of: :rdvs_users, optional: true
 
   # Validations
   # Uniqueness validation doesn’t work with nested_attributes, see https://github.com/rails/rails/issues/4568
@@ -49,7 +49,7 @@ class RdvsUser < ApplicationRecord
   end
 
   def set_status_from_rdv
-    return if rdv&.status.nil?
+    return if rdv&.status.nil? || rdv.collectif?
 
     self.status = rdv.status
   end

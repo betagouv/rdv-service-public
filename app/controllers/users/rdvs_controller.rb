@@ -39,9 +39,10 @@ class Users::RdvsController < UserAuthController
     end
     skip_authorization if @creneau.nil?
     if @save_succeeded
-      rdv_users_tokens_by_user_id = Notifiers::RdvCreated.perform_with(@rdv, current_user)
+      notifier = Notifiers::RdvCreated.new(@rdv, current_user)
+      notifier.perform
       set_user_name_initials_verified
-      redirect_to users_rdv_path(@rdv, invitation_token: rdv_users_tokens_by_user_id[current_user.id]), notice: t(".rdv_confirmed")
+      redirect_to users_rdv_path(@rdv, invitation_token: notifier.rdv_users_tokens_by_user_id[current_user.id]), notice: t(".rdv_confirmed")
     else
       query = {
         address: (new_rdv_extra_params[:address] || new_rdv_extra_params[:where]),
@@ -59,9 +60,10 @@ class Users::RdvsController < UserAuthController
 
   def update
     if @rdv.update(starts_at: @creneau.starts_at, ends_at: @creneau.starts_at + @rdv.duration_in_min.minutes, agent_ids: [@creneau.agent.id])
-      rdv_users_tokens_by_user_id = Notifiers::RdvUpdated.perform_with(@rdv, current_user)
+      notifier = Notifiers::RdvUpdated.new(@rdv, current_user)
+      notifier.perform
       flash[:success] = "Votre RDV a bien été modifié"
-      redirect_to users_rdv_path(@rdv, invitation_token: rdv_users_tokens_by_user_id[current_user.id])
+      redirect_to users_rdv_path(@rdv, invitation_token: notifier.rdv_users_tokens_by_user_id[current_user.id])
     else
       flash[:error] = "Le RDV n'a pas pu être modifié"
       redirect_to creneaux_users_rdv_path(@rdv)
@@ -81,8 +83,8 @@ class Users::RdvsController < UserAuthController
     @all_creneaux = @rdv.creneaux_available(Time.zone.today..@rdv.reschedule_max_date)
     return if @all_creneaux.empty?
 
-    start_date = params[:date]&.to_date || @all_creneaux.first.starts_at.to_date
-    end_date = [start_date + 6.days, @all_creneaux.last.starts_at.to_date].min
+    start_date = params[:date]&.to_date || @all_creneaux.min.starts_at.to_date
+    end_date = [start_date + 6.days, @all_creneaux.max.starts_at.to_date].min
     @date_range = start_date..end_date
     @creneaux = @rdv.creneaux_available(@date_range)
     respond_to do |format|
