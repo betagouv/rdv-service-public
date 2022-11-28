@@ -6,6 +6,7 @@ RSpec.describe "Users::Participants", type: :request do
   let(:user) { create(:user) }
   let(:user2) { create(:user) }
   let(:rdv) { create(:rdv, :collectif, :without_users) }
+  let(:rdv_indiv) { create(:rdv) }
   let(:token) { "12345" }
 
   before do
@@ -26,6 +27,14 @@ RSpec.describe "Users::Participants", type: :request do
         get new_users_rdv_participation_path(rdv)
         expect(flash[:notice]).to eq("Inscription confirmée")
         expect(response).to redirect_to(users_rdv_path(rdv, invitation_token: token))
+      end
+    end
+
+    describe "GET /users/rdvs/:rdv_id/participants/new on an individual rdv (params override by user)" do
+      it "redirect because pundit auth fails" do
+        get new_users_rdv_participation_path(rdv_indiv)
+        expect(flash[:notice]).to eq(nil)
+        expect(response).to redirect_to(users_rdvs_path) # Pundit redirects when authorization fails
       end
     end
 
