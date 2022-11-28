@@ -10,6 +10,7 @@ class Agent < ApplicationRecord
 
   include Outlook::Connectable
   include DeviseInvitable::Inviter
+  include WebhookDeliverable
   include FullNameConcern
   include TextSearch
   def self.search_against
@@ -67,6 +68,7 @@ class Agent < ApplicationRecord
   has_many :motifs, through: :service
   has_many :rdvs, dependent: :destroy, through: :agents_rdvs
   has_many :organisations, through: :roles
+  has_many :webhook_endpoints, through: :organisations
   has_many :territories, through: :territorial_roles
   has_many :organisations_of_territorial_roles, source: :organisations, through: :territories
 

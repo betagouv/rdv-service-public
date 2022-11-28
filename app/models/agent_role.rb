@@ -3,6 +3,8 @@
 class AgentRole < ApplicationRecord
   self.table_name = "agents_organisations" # TODO: sync the model and table name
 
+  include WebhookDeliverable
+
   # Attributes
   # TODO: make it an enum
   LEVEL_BASIC = "basic"
@@ -12,6 +14,9 @@ class AgentRole < ApplicationRecord
   # Relations
   belongs_to :agent
   belongs_to :organisation
+
+  # Through relations
+  has_many :webhook_endpoints, through: :organisation
 
   accepts_nested_attributes_for :agent
 

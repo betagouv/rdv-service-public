@@ -17,11 +17,12 @@ describe "agents page", js: true do
   end
 
   it "agenda with 3 rdvs is accessible" do
+    travel_to(Time.current.beginning_of_week.change(hour: 13))
     territory = create(:territory, departement_number: "75")
     organisation = create(:organisation, territory: territory)
     agent = create(:agent, email: "totoagent@example.com", basic_role_in_organisations: [organisation])
-    create_list(:rdv, 3, agents: [agent], starts_at: Time.zone.now.beginning_of_week + 10.hours)
-    login_as agent
+    create_list(:rdv, 3, agents: [agent], starts_at: 2.days.from_now)
+    login_as agent, scope: :agent
 
     path = admin_organisation_agent_agenda_path(organisation, agent)
 
