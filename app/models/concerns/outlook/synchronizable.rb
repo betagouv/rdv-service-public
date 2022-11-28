@@ -8,9 +8,9 @@ module Outlook
     BASE_URL = "https://graph.microsoft.com/v1.0"
 
     included do
-      attr_accessor :skip_outlook_update
+      attr_accessor :skip_outlook_create, :skip_outlook_update
 
-      after_commit :reflect_create_in_outlook, on: :create
+      after_commit :reflect_create_in_outlook, on: :create, unless: :skip_outlook_create
 
       after_commit :reflect_update_in_outlook, on: :update, unless: :skip_outlook_update
 
@@ -105,12 +105,11 @@ module Outlook
                    Typhoeus.delete(request_url, headers: headers)
                  end
 
-      body_response = JSON.parse(response.body)
+      body_response = response.body == "" ? {} : JSON.parse(response.body)
 
       if body_response["error"].present?
         Sentry.capture_message("Outlook API error for AgentsRdv #{id}: #{body_response.dig("error", "message")}")
       end
-
       response.response_code == 204 ? "" : body_response
     end
 
