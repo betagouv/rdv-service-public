@@ -33,9 +33,8 @@ RSpec.describe "prescripteur can create RDV for a user" do
     fill_in "Nom", with: "Duroy"
     click_on "Confirmer le rendez-vous"
 
-    expect(page).to have_content("Sans email ni numéro de téléphone, aucune notification ne sera envoyée au bénéficiaire")
+    expect(page).to have_content("Sans numéro de téléphone, aucune notification ne sera envoyée au bénéficiaire")
     click_on "Annuler et modifier"
-    fill_in "Email", with: "patricia_duroy@exemple.fr"
     fill_in "Téléphone", with: "0623456789"
 
     stub_netsize_ok
@@ -51,7 +50,6 @@ RSpec.describe "prescripteur can create RDV for a user" do
       phone_number: "0611223344"
     )
 
-    expect(email_sent_to("patricia_duroy@exemple.fr").subject).to include("RDV confirmé")
     expect(email_sent_to(agent.email).subject).to include("Nouveau RDV ajouté sur votre agenda RDV Solidarités")
     expect(email_sent_to("alex@prescripteur.fr").subject).to include("RDV confirmé")
     expect(email_sent_to("alex@prescripteur.fr").body).to include("RDV Solidarités")
@@ -63,13 +61,9 @@ RSpec.describe "prescripteur can create RDV for a user" do
     expect(page).to have_content("Instructions après confirmation")
   end
 
-  context "when there already is a user with that email address" do
-    before do
-      create(:user, email: "patricia_duroy@exemple.fr")
-    end
-
-    it "doesn't show existing personal information but still takes the rdv" do
-      raise "write this fun spec"
+  context "when the phone number is not a mobile phone" do
+    it "shows an error message" do
+      raise "do it"
     end
   end
 
