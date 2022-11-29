@@ -171,8 +171,6 @@ class Motif < ApplicationRecord
     public_office?
   end
 
-<<<<<<< Updated upstream
-=======
   def self.with_availability_for_lieux(lieu_ids)
     individual_motif_ids = individuel.joins(:plage_ouvertures).where(plage_ouvertures: { lieu_id: lieu_ids }).ids.uniq
     # Pour prendre en compte le filtre sur le lieu_id pour les RDV Collectif,
@@ -198,7 +196,6 @@ class Motif < ApplicationRecord
       .distinct
   end
 
->>>>>>> Stashed changes
   private
 
   def booking_delay_validation
