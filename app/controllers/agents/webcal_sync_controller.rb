@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Agents::IcsSyncController < AgentAuthController
+class Agents::WebcalSyncController < AgentAuthController
   include Admin::AuthenticatedControllerConcern
 
   layout "registration"
@@ -13,7 +13,7 @@ class Agents::IcsSyncController < AgentAuthController
   def update
     authorize current_agent
     current_agent.update!(calendar_uid: new_calendar_uid)
-    redirect_to agents_calendar_sync_ics_sync_path, flash: { notice: "Votre url de calendrier a été mise à jour." }
+    redirect_to agents_calendar_sync_webcal_sync_path, flash: { notice: "Votre url de calendrier a été mise à jour." }
   end
 
   def pundit_user

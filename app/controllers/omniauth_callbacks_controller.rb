@@ -29,9 +29,8 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
   end
 
   def microsoft_graph
-    @agent = Agent.find_by(email: microsoft_graph_email)
-    if @agent.present? && @agent.update(microsoft_graph_token: microsoft_graph_token, refresh_microsoft_graph_token: refresh_microsoft_graph_token)
-      Outlook::MassCreateEventJob.perform_later(@agent)
+    if current_agent.update(microsoft_graph_token: microsoft_graph_token, refresh_microsoft_graph_token: refresh_microsoft_graph_token)
+      Outlook::MassCreateEventJob.perform_later(current_agent)
       flash[:notice] = "Votre compte Outlook a bien été connecté"
     else
       flash[:alert] = "Votre compte Outlook n'a pas pu être connecté. Est-il bien utilisé avec le même email que votre compte RDV Solidarités ?"
@@ -43,8 +42,7 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
   private
 
   def microsoft_graph_email
-    @microsoft_graph_email ||=
-      request.env.dig("omniauth.auth", "extra", "raw_info", "user_principal_name")
+    request.env.dig("omniauth.auth", "extra", "raw_info", "user_principal_name")
   end
 
   def refresh_microsoft_graph_token

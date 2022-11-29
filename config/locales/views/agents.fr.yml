@@ -6,7 +6,7 @@ fr:
     outlook_sync:
       show:
         title: Connexion à votre compte Outlook
-    ics_sync:
+    webcal_sync:
       show:
         title: Lien de synchronisation
     preferences:
