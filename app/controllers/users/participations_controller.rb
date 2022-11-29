@@ -46,7 +46,7 @@ class Users::ParticipationsController < UserAuthController
   def add_participation
     if existing_participation.present?
       authorize(existing_participation)
-      existing_participation.excused? ? change_participation_status : user_is_already_participating
+      existing_participation.excused? ? change_participation_status("unknown") : user_is_already_participating
     else
       authorize(new_participation)
       create_participation
@@ -58,11 +58,11 @@ class Users::ParticipationsController < UserAuthController
     redirect_to users_rdv_path(@rdv, invitation_token: existing_participation.rdv_user_token)
   end
 
-  def change_participation_status
-    # Participation was excused but user is registering again (participation update)
-    existing_participation.change_status_and_notify(current_user, "unknown")
+  def change_participation_status(status)
+    existing_participation.change_status_and_notify(current_user, status)
     set_user_name_initials_verified
-    flash[:notice] = "Ré-Inscription confirmée"
+    flash[:notice] = "Ré-Inscription confirmée" if existing_participation.status == "unknown"
+    flash[:notice] = "Désinscription de l'atelier confirmée" if existing_participation.status == "excused"
     redirect_to users_rdv_path(@rdv, invitation_token: existing_participation.rdv_user_token)
   end
 
@@ -76,10 +76,7 @@ class Users::ParticipationsController < UserAuthController
   def remove_participation
     if existing_participation.present?
       authorize(existing_participation)
-      existing_participation.change_status_and_notify(current_user, "excused")
-      set_user_name_initials_verified
-      flash[:notice] = "Désinscription de l'atelier confirmée"
-      redirect_to users_rdv_path(@rdv, invitation_token: existing_participation.rdv_user_token)
+      change_participation_status("excused")
     else
       authorize(new_participation)
       flash[:notice] = "Cet utilisateur n'est pas inscrit à cet atelier"
