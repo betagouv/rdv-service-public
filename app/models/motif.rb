@@ -171,6 +171,34 @@ class Motif < ApplicationRecord
     public_office?
   end
 
+<<<<<<< Updated upstream
+=======
+  def self.with_availability_for_lieux(lieu_ids)
+    individual_motif_ids = individuel.joins(:plage_ouvertures).where(plage_ouvertures: { lieu_id: lieu_ids }).ids.uniq
+    # Pour prendre en compte le filtre sur le lieu_id pour les RDV Collectif,
+    # nous ne pouvons pas passer par une requête `or` qui nécessite les mêmes jointures des deux côtés.
+    collective_motif_ids = Rdv.collectif_and_available_for_reservation
+      .where(lieu_id: lieu_ids, motif: collectif).pluck(:motif_id).uniq
+    where(id: individual_motif_ids + collective_motif_ids)
+  end
+
+  def self.with_availability_for_agents(agent_ids)
+    individual_motif_ids = individuel.joins(:plage_ouvertures).where(plage_ouvertures: { agent_id: agent_ids }).ids.uniq
+    collective_motif_ids = Rdv.collectif_and_available_for_reservation
+      .where(motif: collectif).joins(:agents).where(agents: { id: agent_ids }).pluck(:motif_id).uniq
+
+    where(id: individual_motif_ids + collective_motif_ids)
+  end
+
+  def self.with_availability_for_lieux(_lieu_ids)
+    Motif.joins("LEFT OUTER JOIN motifs_plage_ouvertures ON  motifs_plage_ouvertures.motif_id = motifs.id and motifs.collectif = false")
+      .joins("LEFT OUTER JOIN plage_ouvertures ON plage_ouvertures.id = motifs_plage_ouvertures.plage_ouverture_id")
+      .joins("LEFT OUTER JOIN rdvs ON  rdvs.motif_id = motifs.id and motifs.collectif = true AND (users_count < max_participants_count OR max_participants_count IS NULL) AND rdvs.status != 'revoked'")
+      .where("(plage_ouvertures.lieu_id in (?)) OR (rdvs.lieu_id in (?) ands rdvs.starts_at > ?)", lieu_ids, lieu_ids, Time.zone.now)
+      .distinct
+  end
+
+>>>>>>> Stashed changes
   private
 
   def booking_delay_validation
