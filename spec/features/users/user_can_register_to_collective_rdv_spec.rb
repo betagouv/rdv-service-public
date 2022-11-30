@@ -35,7 +35,7 @@ RSpec.describe "Adding a user to a collective RDV" do
     }
   end
 
-  def motif_selector
+  def select_motif
     expect(page).to have_content("Sélectionnez le motif de votre RDV :")
     click_link(motif.name)
     # Restriction modal
@@ -43,7 +43,7 @@ RSpec.describe "Adding a user to a collective RDV" do
     click_link("Accepter", match: :first)
   end
 
-  def lieu_selector
+  def select_lieu
     expect(page).to have_content("Sélectionnez un lieu de RDV :")
     click_link("Prochaine disponibilité")
   end
@@ -64,8 +64,8 @@ RSpec.describe "Adding a user to a collective RDV" do
     it "works" do
       login_as(logged_user, scope: :user)
       visit root_path(params)
-      motif_selector
-      lieu_selector
+      select_motif
+      select_lieu
 
       # Participation and back buttons
       expect do
@@ -94,8 +94,8 @@ RSpec.describe "Adding a user to a collective RDV" do
   context "with a not signed in user" do
     it "redirect to login page before subscription and follow registering process" do
       visit root_path(params)
-      motif_selector
-      lieu_selector
+      select_motif
+      select_lieu
       click_link("S'inscrire")
 
       expect(page).to have_content("Vous devez vous connecter ou vous inscrire pour continuer.")
@@ -120,8 +120,8 @@ RSpec.describe "Adding a user to a collective RDV" do
       params.merge!(invitation_token: invitation_token)
       visit prendre_rdv_path(params)
 
-      motif_selector
-      lieu_selector
+      select_motif
+      select_lieu
 
       expect do
         click_link("S'inscrire")
@@ -151,7 +151,7 @@ RSpec.describe "Adding a user to a collective RDV" do
 
         rdv.status = "revoked"
         rdv.save
-        motif_selector
+        select_motif
         expect(page).to have_content("Nous n'avons pas trouvé de créneaux pour votre motif.")
 
         rdv2.max_participants_count = 2
@@ -171,8 +171,8 @@ RSpec.describe "Adding a user to a collective RDV" do
         end
         create(:rdvs_user, rdv: rdv, user: user)
         visit root_path(params)
-        motif_selector
-        lieu_selector
+        select_motif
+        select_lieu
         expect(page).to have_content("Vous êtes déjà inscrit pour cet atelier")
       end
 
@@ -186,8 +186,8 @@ RSpec.describe "Adding a user to a collective RDV" do
         create(:rdvs_user, rdv: rdv, user: user, status: "excused")
 
         visit root_path(params)
-        motif_selector
-        lieu_selector
+        select_motif
+        select_lieu
 
         expect do
           click_link("S'inscrire")
@@ -246,8 +246,8 @@ RSpec.describe "Adding a user to a collective RDV" do
           login_as(user, scope: :user)
         end
         visit root_path(params)
-        motif_selector
-        lieu_selector
+        select_motif
+        select_lieu
 
         expect do
           click_link("S'inscrire")
