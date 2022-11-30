@@ -68,6 +68,139 @@ describe "User can search for rdvs" do
     end
   end
 
+  describe "follow up rdvs" do
+    let!(:user) { create(:user, agents: [agent]) }
+    let!(:agent) { create(:agent) }
+    let!(:agent2) { create(:agent) }
+
+    ## follow up motif linked to referent
+    let!(:motif1) do
+      create(
+        :motif,
+        name: "RSA Suivi", follow_up: true, reservable_online: true,
+        organisation: organisation, service: service
+      )
+    end
+
+    ## follow up motif not linked to referent
+    let!(:motif2) do
+      create(
+        :motif,
+        name: "RSA suivi téléphonique", follow_up: true, reservable_online: true, organisation: organisation,
+        restriction_for_rdv: nil, service: service
+      )
+    end
+
+    ## non follow up motif linked to referent
+    let!(:motif3) do
+      create(
+        :motif,
+        name: "RSA Orientation", follow_up: false, reservable_online: true, organisation: organisation,
+        restriction_for_rdv: nil, service: service
+      )
+    end
+
+    ## POs
+    let!(:plage_ouverture) do
+      create(
+        :plage_ouverture, :daily,
+        agent: agent, motifs: [motif1], organisation: organisation, first_day: Time.zone.parse("2021-12-15"), lieu: lieu,
+        start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(12)
+      )
+    end
+    let!(:plage_ouverture2) do
+      create(
+        :plage_ouverture,
+        agent: agent2, motifs: [motif2], organisation: organisation, first_day: Time.zone.parse("2021-12-15"), lieu: lieu,
+        start_time: Tod::TimeOfDay.new(16), end_time: Tod::TimeOfDay.new(17)
+      )
+    end
+    let!(:plage_ouverture3) do
+      create(
+        :plage_ouverture, :daily,
+        agent: agent, motifs: [motif3], organisation: organisation, first_day: Time.zone.parse("2021-12-15"), lieu: lieu,
+        start_time: Tod::TimeOfDay.new(14), end_time: Tod::TimeOfDay.new(17)
+      )
+    end
+    # Available PO for selected motif on other agent
+    let!(:plage_ouverture4) do
+      create(
+        :plage_ouverture, :daily,
+        agent: agent2, motifs: [motif1], organisation: organisation, first_day: Time.zone.parse("2021-12-15"), lieu: lieu,
+        start_time: Tod::TimeOfDay.new(14), end_time: Tod::TimeOfDay.new(15)
+      )
+    end
+
+    ## Collectif follow up motif linked to referent
+    let!(:collectif_motif) do
+      create(:motif, follow_up: true, restriction_for_rdv: nil, collectif: true, organisation: organisation, reservable_online: true, service: service)
+    end
+    let!(:collectif_rdv) { create(:rdv, motif: collectif_motif, agents: [agent], starts_at: 2.days.from_now) }
+
+    before { login_as(user, scope: :user) }
+
+    it "shows only the follow up motifs related to the agent" do
+      visit root_path(referent_ids: [agent.id], departement: "92", service_id: service.id)
+
+      ### Motif selection
+      expect(page).to have_content(motif1.name)
+      expect(page).to have_content(collectif_motif.name)
+
+      expect(page).not_to have_content(motif2.name)
+      expect(page).not_to have_content(motif3.name)
+
+      find(".card-title", text: /#{motif1.name}/).click
+      click_link("Accepter")
+
+      expect(page).to have_content(lieu.name)
+      find(".card-title", text: /#{lieu.name}/).ancestor(".card").find("a.stretched-link").click
+
+      ### Creneau selection
+      expect(page).to have_content(agent.last_name.upcase)
+      expect(page).to have_content("09:00")
+      expect(page).not_to have_content("14:00")
+
+      first(:link, "09:00").click
+
+      ## Take rdv
+      expect(page).to have_content("Vos informations")
+      click_button("Continuer")
+      expect(page).to have_content("Choix de l'usager")
+      click_button("Continuer")
+      expect(page).to have_content("Confirmation")
+      click_link("Confirmer mon RDV")
+
+      expect(page).to have_content("Votre RDV")
+      expect(page).to have_content(lieu.address)
+      expect(page).to have_content(motif1.name)
+      expect(page).to have_content("09h00")
+    end
+
+    context "when the agent is not the referent" do
+      it "shows an error message" do
+        visit root_path(referent_ids: [agent2.id], departement: "92", service_id: service.id)
+
+        expect(page).not_to have_content(motif1.name)
+        expect(page).not_to have_content(collectif_motif.name)
+        expect(page).not_to have_content(motif2.name)
+        expect(page).not_to have_content(motif3.name)
+
+        expect(page).to have_content("L'agent avec qui vous voulez prendre rendez-vous ne vous est pas assigné comme référent")
+      end
+    end
+
+    context "when the agent has no PO" do
+      let!(:user) { create(:user, agents: [agent3]) }
+      let!(:agent3) { create(:agent) }
+
+      it "shows an error message" do
+        visit root_path(referent_ids: [agent3.id], departement: "92", service_id: service.id)
+
+        expect(page).to have_content("Votre référent n'a pas de créneaux disponibles")
+      end
+    end
+  end
+
   private
 
   def execute_search

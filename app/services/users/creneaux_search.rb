@@ -3,9 +3,11 @@
 class Users::CreneauxSearch
   include Users::CreneauxSearchConcern
 
-  attr_reader :motif, :date_range
+  attr_reader :motif, :date_range, :user, :lieu
 
-  def initialize(user:, motif:, lieu:, date_range:, geo_search: nil)
+  delegate :start_booking_delay, :end_booking_delay, to: :motif
+
+  def initialize(user:, motif:, lieu:, date_range: nil, geo_search: nil)
     @user = user
     @motif = motif
     @lieu = lieu
