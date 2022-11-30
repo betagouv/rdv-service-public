@@ -28,7 +28,7 @@ ul.list-group.list-group-flush
       .col
         .fa.fa-user>
         = users_to_sentence(rdv.users)
-    - if can_change_participants?(rdv)
+    - if policy([:user, rdv]).can_change_participants?
       .col-auto
         span>
         = link_to "modifier", users_rdv_participations_path(rdv)

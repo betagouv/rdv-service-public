@@ -39,6 +39,10 @@ class User::RdvPolicy < ApplicationPolicy
     show? && record.editable_by_user?
   end
 
+  def can_change_participants?
+    current_user && !current_user.only_invited? && current_user.participation_for(record).not_cancelled? && !record.in_the_past?
+  end
+
   alias creneaux? edit?
   alias update? edit?
 
@@ -57,7 +61,7 @@ class User::RdvPolicy < ApplicationPolicy
         .visible
         .ids
 
-      scope.where(id: my_rdvs_ids + scope.collectif.reservable_online.ids)
+      scope.where(id: my_rdvs_ids).or(Rdv.where(id: scope.collectif.reservable_online)).distinct
     end
   end
 end

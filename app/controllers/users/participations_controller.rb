@@ -32,7 +32,7 @@ class Users::ParticipationsController < UserAuthController
   end
 
   def existing_participation
-    @existing_participation = policy_scope(RdvsUser).find_by(rdv: @rdv, user: @user)
+    @existing_participation ||= policy_scope(RdvsUser).find_by(rdv: @rdv, user: @user)
   end
 
   def new_participation
@@ -63,9 +63,17 @@ class Users::ParticipationsController < UserAuthController
   end
 
   def create_participation
+    if responsible_or_relatives_participating? && !policy([:user, @rdv]).can_change_participants?
+      raise Pundit::NotAuthorizedError
+    end
+
     new_participation.create_and_notify(current_user)
     set_user_name_initials_verified
     flash[:notice] = "Inscription confirmée"
     redirect_to users_rdv_path(@rdv, invitation_token: new_participation.rdv_user_token)
+  end
+
+  def responsible_or_relatives_participating?
+    @rdv.rdvs_users.where(user: @user.responsible&.self_and_relatives_and_responsible).any?
   end
 end
