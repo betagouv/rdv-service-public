@@ -31,7 +31,6 @@ class Rdv < ApplicationRecord
   has_many :rdvs_users, validate: false, inverse_of: :rdv, dependent: :destroy
   after_touch :update_rdv_status_from_participation
   has_many :receipts, dependent: :destroy
-  has_one :prescripteur, dependent: :destroy
 
   accepts_nested_attributes_for :rdvs_users, allow_destroy: true
   accepts_nested_attributes_for :lieu
