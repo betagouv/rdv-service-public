@@ -1,2 +1,8 @@
-= @domain.name
-/ TODO: rédiger ça
+div
+  p Bonjour,
+  p Nous vous confirmons le rendez-vous que vous avez réservé pour #{@user.full_name}
+  p
+    = render "mailers/common/rdv_overview", rdv: @rdv, for_role: :agent
+
+  br
+  = t("mailers.common.farewell_html", domain_name: domain.name)
