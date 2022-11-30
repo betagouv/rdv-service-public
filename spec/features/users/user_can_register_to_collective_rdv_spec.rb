@@ -54,7 +54,6 @@ RSpec.describe "Adding a user to a collective RDV" do
   end
 
   def expect_webhooks_for(user)
-    rdv.reload
     expect(WebMock).to(have_requested(:post, "https://example.com/").with do |req|
       JSON.parse(req.body)["data"]["users"].map { |local_user| local_user["id"] } == [user.id]
     end.at_least_once)
@@ -152,14 +151,16 @@ RSpec.describe "Adding a user to a collective RDV" do
         rdv.status = "revoked"
         rdv.save
         select_motif
-        expect(page).to have_content("Nous n'avons pas trouvé de créneaux pour votre motif.")
+        expect(page).to have_content("La prise de rendez-vous n'est pas disponible pour ce département.") if user_type == "logged"
+        expect(page).to have_content("Nous sommes désolés, un problème semble s'être produit pour votre invitation") if user_type == "invited"
 
         rdv2.max_participants_count = 2
         create(:rdvs_user, rdv: rdv2)
         create(:rdvs_user, rdv: rdv2)
         rdv2.save
         visit root_path(params)
-        expect(page).to have_content("Nous n'avons pas trouvé de créneaux pour votre motif.")
+        expect(page).to have_content("La prise de rendez-vous n'est pas disponible pour ce département.") if user_type == "logged"
+        expect(page).to have_content("Nous sommes désolés, un problème semble s'être produit pour votre invitation") if user_type == "invited"
       end
 
       it "display message of participation if already exist with #{user_type} user" do

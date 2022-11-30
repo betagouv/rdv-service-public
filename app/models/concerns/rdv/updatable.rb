@@ -78,7 +78,7 @@ module Rdv::Updatable
   end
 
   def rdv_status_reloaded_from_cancelled?
-    status_previously_was.in?(%w[revoked excused]) && status == "unknown"
+    status_previously_was.in?(Rdv::CANCELLED_STATUSES) && status == "unknown"
   end
 
   def lieu_changed?
@@ -91,7 +91,7 @@ module Rdv::Updatable
   end
 
   def rdv_cancelled?
-    previous_changes["status"]&.last.in? %w[excused revoked]
+    previous_changes["status"]&.last.in?(Rdv::CANCELLED_STATUSES)
   end
 
   def starts_at_changed?

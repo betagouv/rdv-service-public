@@ -67,6 +67,10 @@ class Users::ParticipationsController < UserAuthController
   end
 
   def create_participation
+    if responsible_or_relatives_participating? && !policy([:user, @rdv]).can_change_participants?
+      raise Pundit::NotAuthorizedError
+    end
+
     new_participation.create_and_notify(current_user)
     set_user_name_initials_verified
     flash[:notice] = "Inscription confirmée"
@@ -81,5 +85,9 @@ class Users::ParticipationsController < UserAuthController
       authorize(new_participation)
       flash[:notice] = "Cet utilisateur n'est pas inscrit à cet atelier"
     end
+  end
+
+  def responsible_or_relatives_participating?
+    @rdv.rdvs_users.where(user: @user.responsible&.self_and_relatives_and_responsible).any?
   end
 end

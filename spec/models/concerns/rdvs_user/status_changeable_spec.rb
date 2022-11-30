@@ -13,7 +13,7 @@ RSpec.describe RdvsUser::StatusChangeable, type: :concern do
     let(:rdv_user_with_lifecycle_disabled) { create(:rdvs_user, rdv: rdv, send_lifecycle_notifications: false) }
 
     describe "when rdv_user is revoked or excused" do
-      %w[excused revoked].each do |status|
+      RdvsUser::CANCELLED_STATUSES.each do |status|
         it "send notifications and change rdv_user object status to #{status}" do
           expect(Notifiers::RdvCancelled).to receive(:new).with(rdv, agent, [rdv_user1.user]).and_call_original
           rdv_user1.change_status_and_notify(agent, status)

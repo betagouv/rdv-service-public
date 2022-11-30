@@ -72,4 +72,56 @@ describe Users::CreneauxSearch, type: :service do
       described_class.new(user: user, motif: motif, lieu: lieu, date_range: date_range, geo_search: mock_geo_search).creneaux
     end
   end
+
+  context "for a collectif motif" do
+    subject { described_class.new(user: user, motif: motif, lieu: lieu) }
+
+    let!(:motif) { create(:motif, collectif: true) }
+    let!(:rdv) { create(:rdv, :future, motif: motif, lieu: lieu) }
+    let!(:passed_rdv) { create(:rdv, motif: motif, lieu: lieu, starts_at: 2.days.ago) }
+    let!(:rdv_with_user) { create(:rdv, :future, motif: motif, lieu: lieu, users: [user]) }
+    let!(:rdv_in_different_lieu) { create(:rdv, :future, motif: motif, lieu: create(:lieu)) }
+    let!(:rdv_with_no_remaining_seat) { create(:rdv, :future, motif: motif, lieu: lieu, max_participants_count: 1) }
+    let!(:rdv_after_max_booking_delay) { create(:rdv, :future, motif: motif, lieu: lieu, starts_at: motif.end_booking_delay + 1.hour) }
+    let!(:rdv_before_min_booking_delay) { create(:rdv, :future, motif: motif, lieu: lieu, starts_at: motif.start_booking_delay - 1.hour) }
+    let!(:user) { create(:user) }
+
+    it "returns the subscribable collective rdvs (rdv and rdv_with_user)" do
+      expect(subject.next_availability).to eq(rdv)
+      expect(subject.creneaux.count).to eq(2)
+      expect(subject.creneaux.first).to eq(rdv)
+    end
+
+    context "when there are geo attributed agents" do
+      subject { described_class.new(user: user, motif: motif, lieu: lieu, geo_search: geo_search) }
+
+      let!(:agent) { create(:agent) }
+      let!(:motif) { create(:motif, collectif: true, organisation: organisation, sectorisation_level: "agent") }
+      let!(:rdv) { create(:rdv, :future, motif: motif, lieu: lieu, agents: [agent]) }
+      let!(:rdv2) { create(:rdv, :future, motif: motif, lieu: lieu, agents: [build(:agent)]) }
+      let!(:geo_search) { instance_double(Users::GeoSearch, attributed_agents_by_organisation: { organisation => [agent] }) }
+
+      it "returns the rdv linked to the geo attributed agents" do
+        expect(subject.next_availability).to eq(rdv)
+        expect(subject.creneaux.count).to eq(1)
+        expect(subject.creneaux.first).to eq(rdv)
+      end
+    end
+
+    context "when it is a follow up motif" do
+      subject { described_class.new(user: user, motif: motif, lieu: lieu) }
+
+      let!(:agent) { create(:agent) }
+      let!(:user) { create(:user, agents: [agent]) }
+      let!(:motif) { create(:motif, collectif: true, organisation: organisation, follow_up: true) }
+      let!(:rdv) { create(:rdv, :future, motif: motif, lieu: lieu, agents: [agent]) }
+      let!(:rdv2) { create(:rdv, :future, motif: motif, lieu: lieu, agents: [build(:agent)]) }
+
+      it "returns the rdv linked to referents" do
+        expect(subject.next_availability).to eq(rdv)
+        expect(subject.creneaux.count).to eq(1)
+        expect(subject.creneaux.first).to eq(rdv)
+      end
+    end
+  end
 end

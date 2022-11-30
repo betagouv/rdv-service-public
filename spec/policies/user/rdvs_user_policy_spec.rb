@@ -56,6 +56,23 @@ describe User::RdvsUserPolicy, type: :policy do
     it_behaves_like "included in scope"
   end
 
+  context "Participation belongs to relative for a normal rdv change" do
+    let!(:rdv) { create(:rdv, users: [relative], organisation: organisation, agents: [agent]) }
+    let(:participation) { rdv.rdvs_users.first }
+
+    it_behaves_like "permit actions", :create?
+    it_behaves_like "not permit actions", :new?
+    it_behaves_like "included in scope"
+  end
+
+  context "Participation belongs to another user for a normal rdv change" do
+    let!(:rdv) { create(:rdv, users: [user2], organisation: organisation, agents: [agent]) }
+    let(:participation) { rdv.rdvs_users.first }
+
+    it_behaves_like "not permit actions", :new?, :create?
+    it_behaves_like "not included in scope"
+  end
+
   context "Participation belongs to another user" do
     let!(:participation) { build(:rdvs_user, user: user2, rdv: rdv) }
 

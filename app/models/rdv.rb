@@ -16,6 +16,12 @@ class Rdv < ApplicationRecord
 
   # Attributes
   enum status: { unknown: "unknown", waiting: "waiting", seen: "seen", excused: "excused", revoked: "revoked", noshow: "noshow" }
+  # Commentaire pour les status explications
+  # unknown : "A renseigner" ou "A venir" (si le rdv est passé ou pas)
+  # seen : Présent au rdv
+  # noshow : Lapin
+  # excused : Annulé à l'initiative de l'usager
+  # revoked : Annulé à l'initiative du service
   NOT_CANCELLED_STATUSES = %w[unknown waiting seen noshow].freeze
   CANCELLED_STATUSES = %w[excused revoked].freeze
   enum created_by: { agent: 0, user: 1, file_attente: 2 }, _prefix: :created_by
@@ -85,6 +91,7 @@ class Rdv < ApplicationRecord
   }
   scope :visible, -> { joins(:motif).merge(Motif.visible) }
   scope :collectif, -> { joins(:motif).merge(Motif.collectif) }
+  scope :collectif_and_available_for_reservation, -> { collectif.with_remaining_seats.future.not_revoked }
   scope :reservable_online, -> { joins(:motif).merge(Motif.reservable_online) }
   scope :with_remaining_seats, -> { where("users_count < max_participants_count OR max_participants_count IS NULL") }
   scope :for_domain, lambda { |domain|

@@ -123,10 +123,6 @@ module UsersHelper
     end.map(&:full_name).sort.to_sentence
   end
 
-  def can_change_participants?(rdv)
-    current_user && !current_user.only_invited? && current_user.participation_for(rdv).not_cancelled? && !rdv.in_the_past?
-  end
-
   def user_to_link(user)
     if !user.deleted_at && user.organisations.include?(current_organisation)
       link_to admin_organisation_user_path(current_organisation, user) do
