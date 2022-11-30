@@ -9,6 +9,7 @@ class Domain
     name:,
     presentation_for_agents_template_name:,
     sms_sender_name:,
+    online_reservation_with_public_link:,
     default: false
   )
     @logo_path = logo_path
@@ -17,11 +18,13 @@ class Domain
     @name = name
     @presentation_for_agents_template_name = presentation_for_agents_template_name
     @sms_sender_name = sms_sender_name
+    @online_reservation_with_public_link = online_reservation_with_public_link
     @default = default
   end
   # rubocop:enable Metrics/ParameterLists
 
-  attr_reader :logo_path, :public_logo_path, :dark_logo_path, :name, :presentation_for_agents_template_name, :sms_sender_name, :default
+  attr_reader :logo_path, :public_logo_path, :dark_logo_path, :name, :presentation_for_agents_template_name,
+              :sms_sender_name, :online_reservation_with_public_link, :default
 
   ALL = [
     RDV_SOLIDARITES = new(
@@ -31,6 +34,7 @@ class Domain
       dark_logo_path: "logos/logo_sombre_solidarites.svg",
       name: "RDV Solidarités",
       presentation_for_agents_template_name: "rdv_solidarites_presentation_for_agents",
+      online_reservation_with_public_link: false,
       sms_sender_name: "RdvSoli"
     ),
 
@@ -40,6 +44,7 @@ class Domain
       dark_logo_path: "logos/logo_sombre_aide_numerique.svg",
       name: "RDV Aide Numérique",
       presentation_for_agents_template_name: "presentation_for_cnfs",
+      online_reservation_with_public_link: true,
       sms_sender_name: "RdvAideNum"
     ),
   ].freeze

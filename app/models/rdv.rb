@@ -91,6 +91,7 @@ class Rdv < ApplicationRecord
   }
   scope :visible, -> { joins(:motif).merge(Motif.visible) }
   scope :collectif, -> { joins(:motif).merge(Motif.collectif) }
+  scope :collectif_and_available_for_reservation, -> { collectif.with_remaining_seats.future.not_revoked }
   scope :reservable_online, -> { joins(:motif).merge(Motif.reservable_online) }
   scope :with_remaining_seats, -> { where("users_count < max_participants_count OR max_participants_count IS NULL") }
   scope :for_domain, lambda { |domain|

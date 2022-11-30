@@ -43,6 +43,7 @@ module SearchContextHelper
       address: params[:address],
       service_id: params[:service_id],
       public_link_organisation_id: params[:public_link_organisation_id],
+      referent_ids: params[:referent_ids],
     }
   end
 end
