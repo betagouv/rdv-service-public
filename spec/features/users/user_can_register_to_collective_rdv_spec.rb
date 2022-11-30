@@ -54,7 +54,6 @@ RSpec.describe "Adding a user to a collective RDV" do
   end
 
   def expect_webhooks_for(user)
-    rdv.reload
     expect(WebMock).to(have_requested(:post, "https://example.com/").with do |req|
       JSON.parse(req.body)["data"]["users"].map { |local_user| local_user["id"] } == [user.id]
     end.at_least_once)

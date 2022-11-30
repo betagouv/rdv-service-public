@@ -145,7 +145,7 @@ class User < ApplicationRecord
   end
 
   def participation_for(rdv)
-    # Find : Only one self, relative or responsible by rdv
+    # We use find because it can be only one member by family in collective rdv
     rdv.rdvs_users.to_a.find { |participation| participation.user_id.in?(self_and_relatives_and_responsible.map(&:id)) }
   end
 

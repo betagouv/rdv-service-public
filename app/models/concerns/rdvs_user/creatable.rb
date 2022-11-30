@@ -20,6 +20,8 @@ module RdvsUser::Creatable
     @notifier&.rdv_users_tokens_by_user_id&.fetch(user.id, nil)
   end
 
+  private
+
   def empty_rdv_from_relatives
     # Empty self_and_relatives rdvs_users (at the moment, only one member by family), no callbacks, no notifications
     rdv.rdvs_users.where(user: user.responsible&.self_and_relatives_and_responsible).delete_all
@@ -27,7 +29,7 @@ module RdvsUser::Creatable
 
   def notify_create!(author)
     @notifier = Notifiers::RdvCreated.new(rdv, author)
-    @notifier&.perform
+    @notifier.perform
     # we re-enable the webhooks that we deactivated during the notification process
     rdv.skip_webhooks = false
   end
