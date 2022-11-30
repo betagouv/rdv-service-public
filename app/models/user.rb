@@ -54,17 +54,18 @@ class User < ApplicationRecord
 
   # Relations
   has_many :user_profiles, dependent: :restrict_with_error
-  # we specify dependent: :destroy because by default user_profiles will be deleted (dependent: :delete)
-  # and we need to destroy to trigger the callbacks on user_profile
   has_many :rdvs_users, dependent: :destroy
-  has_and_belongs_to_many :agents
+  has_many :referent_assignations, dependent: :destroy
   belongs_to :responsible, class_name: "User", optional: true
   has_many :relatives, foreign_key: "responsible_id", class_name: "User", inverse_of: :responsible, dependent: :nullify
   has_many :file_attentes, dependent: :destroy
   has_many :receipts, dependent: :destroy
 
   # Through relations
+  # we specify dependent: :destroy because by default user_profiles and referent_assignations
+  # will be deleted (dependent: :delete) and we need to destroy to trigger the callbacks on both models
   has_many :organisations, through: :user_profiles, dependent: :destroy
+  has_many :agents, through: :referent_assignations, dependent: :destroy
   has_many :webhook_endpoints, through: :organisations
   has_many :rdvs, through: :rdvs_users
 
