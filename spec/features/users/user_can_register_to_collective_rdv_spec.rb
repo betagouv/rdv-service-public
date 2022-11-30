@@ -17,8 +17,8 @@ RSpec.describe "Adding a user to a collective RDV" do
   let!(:lieu1) { create(:lieu, organisation: organisation) }
   let!(:lieu2) { create(:lieu, organisation: organisation) }
   let!(:rdv) { create(:rdv, :without_users, motif: motif, agents: [agent], organisation: organisation, lieu: lieu1) }
-  let!(:user) { create(:user, phone_number: "+33601010101", email: "frederique@example.com") }
-  let!(:invited_user) { create(:user) }
+  let!(:logged_user) { create(:user, phone_number: "+33601010101", email: "frederique@example.com") }
+  let!(:invited_user) { create(:user, last_name: "INVITE") }
   let!(:rdv2) { create(:rdv, :without_users, motif: motif2, agents: [agent], organisation: organisation, lieu: lieu2) }
   let!(:invitation_token) do
     invited_user.invite! { |u| u.skip_invitation = true }
@@ -62,7 +62,7 @@ RSpec.describe "Adding a user to a collective RDV" do
 
   context "with a signed in user" do
     it "works" do
-      login_as(user, scope: :user)
+      login_as(logged_user, scope: :user)
       visit root_path(params)
       motif_selector
       lieu_selector
@@ -82,11 +82,12 @@ RSpec.describe "Adding a user to a collective RDV" do
       expect(page).to have_content("Inscription confirmée")
       expect(page).to have_content("modifier") # can_change_participants?
 
-      expect_notifications_for(user)
-      expect_webhooks_for(user)
+      expect_notifications_for(logged_user)
+      expect_webhooks_for(logged_user)
 
       # Change participant :
       click_link("modifier")
+      # Todo
     end
   end
 
@@ -98,8 +99,8 @@ RSpec.describe "Adding a user to a collective RDV" do
       click_link("S'inscrire")
 
       expect(page).to have_content("Vous devez vous connecter ou vous inscrire pour continuer.")
-      fill_in("user_email", with: user.email)
-      fill_in("password", with: user.password)
+      fill_in("user_email", with: logged_user.email)
+      fill_in("password", with: logged_user.password)
 
       click_button("Se connecter")
       click_button("Continuer")
@@ -109,8 +110,8 @@ RSpec.describe "Adding a user to a collective RDV" do
 
       expect(page).to have_content("Inscription confirmée")
       expect(rdv.reload.users.count).to eq(1)
-      expect_notifications_for(user)
-      expect_webhooks_for(user)
+      expect_notifications_for(logged_user)
+      expect_webhooks_for(logged_user)
     end
   end
 
@@ -137,83 +138,132 @@ RSpec.describe "Adding a user to a collective RDV" do
     end
   end
 
-  context "Other cases with logged in user" do
-    it "do not display revoked or full rdvs for reservation" do
-      login_as(user, scope: :user)
-      visit root_path(params)
+  context "Specific cases" do
+    %w[invited logged].each do |user_type|
+      it "do not display revoked or full rdvs for reservation with #{user_type} user" do
+        user = user_type == "invited" ? invited_user : logged_user
+        if user_type == "invited"
+          params.merge!(invitation_token: invitation_token)
+        else
+          login_as(user, scope: :user)
+        end
+        visit root_path(params)
 
-      rdv.status = "revoked"
-      rdv.save
-      motif_selector
-      expect(page).to have_content("Nous n'avons pas trouvé de créneaux pour votre motif.")
+        rdv.status = "revoked"
+        rdv.save
+        motif_selector
+        expect(page).to have_content("Nous n'avons pas trouvé de créneaux pour votre motif.")
 
-      rdv2.max_participants_count = 2
-      create(:rdvs_user, rdv: rdv2)
-      create(:rdvs_user, rdv: rdv2)
-      rdv2.save
-      visit root_path(params)
-      expect(page).to have_content("Nous n'avons pas trouvé de créneaux pour votre motif.")
-    end
+        rdv2.max_participants_count = 2
+        create(:rdvs_user, rdv: rdv2)
+        create(:rdvs_user, rdv: rdv2)
+        rdv2.save
+        visit root_path(params)
+        expect(page).to have_content("Nous n'avons pas trouvé de créneaux pour votre motif.")
+      end
 
-    it "display message of participation if already exist" do
-      login_as(user, scope: :user)
-      create(:rdvs_user, rdv: rdv, user: user)
-      visit root_path(params)
-      motif_selector
-      lieu_selector
-      expect(page).to have_content("Vous êtes déjà inscrit pour cet atelier")
-    end
+      it "display message of participation if already exist with #{user_type} user" do
+        user = user_type == "invited" ? invited_user : logged_user
+        if user_type == "invited"
+          params.merge!(invitation_token: invitation_token)
+        else
+          login_as(user, scope: :user)
+        end
+        create(:rdvs_user, rdv: rdv, user: user)
+        visit root_path(params)
+        motif_selector
+        lieu_selector
+        expect(page).to have_content("Vous êtes déjà inscrit pour cet atelier")
+      end
 
-    it "change existing excused participation for re registering process and display message" do
-      login_as(user, scope: :user)
-      create(:rdvs_user, rdv: rdv, user: user, status: "excused")
+      it "change existing excused participation for re registering process and display message with #{user_type} user" do
+        user = user_type == "invited" ? invited_user : logged_user
+        if user_type == "invited"
+          params.merge!(invitation_token: invitation_token)
+        else
+          login_as(user, scope: :user)
+        end
+        create(:rdvs_user, rdv: rdv, user: user, status: "excused")
 
-      visit root_path(params)
-      motif_selector
-      lieu_selector
+        visit root_path(params)
+        motif_selector
+        lieu_selector
 
-      expect do
-        click_link("S'inscrire")
-        click_button("Continuer")
-        click_button("Continuer")
-        stub_request(:post, "https://example.com/")
-        click_on("Confirmer ma participation")
-      end.not_to change { rdv.reload.users.count }
-      expect(page).to have_content("Ré-Inscription confirmée")
+        expect do
+          click_link("S'inscrire")
+          click_button("Continuer")
+          if page.has_button?("Continuer")
+            page.click_button("Continuer")
+          end
+          stub_request(:post, "https://example.com/")
+          click_on("Confirmer ma participation")
+        end.not_to change { rdv.reload.users.count }
+        expect(page).to have_content("Ré-Inscription confirmée")
 
-      expect_notifications_for(user)
-      expect_webhooks_for(user)
-    end
+        expect_notifications_for(user)
+        expect_webhooks_for(user)
+      end
 
-    it "display rdv with cancelled tag when participation is excused or rdv is revoked" do
-      login_as(user, scope: :user)
-      create(:rdvs_user, rdv: rdv, user: user, status: "excused")
-      visit users_rdv_path(rdv)
-      expect(page).to have_content("Annulé")
-      rdv2.status = "revoked"
-      rdv2.save
-      visit users_rdv_path(rdv2)
-      expect(page).to have_content("Annulé")
-    end
+      it "display rdv with cancelled tag when participation is excused or rdv is revoked with #{user_type} user", js: true do
+        user = user_type == "invited" ? invited_user : logged_user
+        if user_type == "invited"
+          params.merge!(invitation_token: invitation_token)
+          visit root_path(params)
+        else
+          login_as(user, scope: :user)
+        end
 
-    it "doesnt send notifications email to user if unchecked" do
-      login_as(user, scope: :user)
-      visit root_path(params)
-      motif_selector
-      lieu_selector
+        create(:rdvs_user, rdv: rdv, user: user, status: "excused")
 
-      expect do
-        click_link("S'inscrire")
-        uncheck "Accepte les notifications par email"
-        click_button("Continuer")
-        click_button("Continuer")
-        stub_request(:post, "https://example.com/")
-        click_on("Confirmer ma participation")
-      end.to change { rdv.reload.users.count }.from(0).to(1)
-      expect(page).to have_content("Inscription confirmée")
+        if user_type == "invited"
+          visit users_rdv_path(rdv, invitation_token: rdv.rdv_user_token(user.id))
+          fill_in(:letter0, with: "I")
+          fill_in(:letter1, with: "N")
+          fill_in(:letter2, with: "V")
+        else
+          visit users_rdv_path(rdv)
+        end
 
-      perform_enqueued_jobs
-      expect(ActionMailer::Base.deliveries.map(&:to).flatten).to match_array([agent.email])
+        expect(page).to have_content("Annulé")
+        create(:rdvs_user, rdv: rdv2, user: user, status: "revoked")
+        rdv2.status = "revoked"
+        rdv2.save
+
+        if user_type == "invited"
+          visit users_rdv_path(rdv2, invitation_token: rdv2.rdv_user_token(user.id))
+        else
+          visit users_rdv_path(rdv)
+        end
+
+        expect(page).to have_content("Annulé")
+      end
+
+      it "doesnt send notifications email to user if unchecked with #{user_type} user" do
+        user = user_type == "invited" ? invited_user : logged_user
+        if user_type == "invited"
+          params.merge!(invitation_token: invitation_token)
+        else
+          login_as(user, scope: :user)
+        end
+        visit root_path(params)
+        motif_selector
+        lieu_selector
+
+        expect do
+          click_link("S'inscrire")
+          uncheck "Accepte les notifications par email"
+          click_button("Continuer")
+          if page.has_button?("Continuer")
+            page.click_button("Continuer")
+          end
+          stub_request(:post, "https://example.com/")
+          click_on("Confirmer ma participation")
+        end.to change { rdv.reload.users.count }.from(0).to(1)
+        expect(page).to have_content("Inscription confirmée")
+
+        perform_enqueued_jobs
+        expect(ActionMailer::Base.deliveries.map(&:to).flatten).to match_array([agent.email])
+      end
     end
   end
 end

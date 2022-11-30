@@ -36,7 +36,7 @@ class Users::ParticipationsController < UserAuthController
   end
 
   def existing_participation
-    @existing_participation = policy_scope(RdvsUser).where(rdv: @rdv, user: @user.self_and_relatives_and_responsible).first
+    @existing_participation ||= policy_scope(RdvsUser).where(rdv: @rdv, user: @user.self_and_relatives_and_responsible).first
   end
 
   def new_participation
