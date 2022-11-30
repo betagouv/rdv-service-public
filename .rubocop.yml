@@ -71,7 +71,6 @@ Rails/CreateTableWithTimestamps:
     - 'db/migrate/20210301135256_create_territories.rb'
     - 'db/migrate/20211215182151_create_active_storage_variant_records.active_storage.rb'
 
-# We don't use the dynamic methods, but sometimes define our own
 Rails/DynamicFindBy:
   Enabled: false
 
