@@ -144,14 +144,14 @@ RSpec.describe "Adding a user to a collective RDV" do
       rdv.status = "revoked"
       rdv.save
       motif_selector
-      expect(page).to have_content("Nous n'avons pas trouvé de créneaux pour votre motif.")
+      expect(page).to have_content("La prise de rendez-vous n'est pas disponible pour ce département.")
 
       rdv2.max_participants_count = 2
       create(:rdvs_user, rdv: rdv2)
       create(:rdvs_user, rdv: rdv2)
       rdv2.save
       visit root_path(params)
-      expect(page).to have_content("Nous n'avons pas trouvé de créneaux pour votre motif.")
+      expect(page).to have_content("La prise de rendez-vous n'est pas disponible pour ce département.")
     end
 
     it "display message of participation if already exist" do

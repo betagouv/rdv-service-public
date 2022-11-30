@@ -86,9 +86,9 @@ describe Users::CreneauxSearch, type: :service do
     let!(:rdv_before_min_booking_delay) { create(:rdv, :future, motif: motif, lieu: lieu, starts_at: motif.start_booking_delay - 1.hour) }
     let!(:user) { create(:user) }
 
-    it "returns the subscribable collective rdvs" do
+    it "returns the subscribable collective rdvs (rdv and rdv_with_user)" do
       expect(subject.next_availability).to eq(rdv)
-      expect(subject.creneaux.count).to eq(1)
+      expect(subject.creneaux.count).to eq(2)
       expect(subject.creneaux.first).to eq(rdv)
     end
 

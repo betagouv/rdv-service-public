@@ -15,7 +15,7 @@ class Users::CreneauSearch
 
   def creneau
     if motif.collectif?
-      rdv = Rdv.with_remaining_seats.find_by(motif: @motif, lieu: @lieu, starts_at: @starts_at)
+      rdv = Rdv.collectif_and_available_for_reservation.find_by(motif: @motif, lieu: @lieu, starts_at: @starts_at)
       return if rdv.nil?
 
       Creneau.new(
