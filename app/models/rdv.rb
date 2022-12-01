@@ -303,6 +303,9 @@ class Rdv < ApplicationRecord
     results.exclude?("failure") ? "processed" : "failure"
   end
 
+  # On aimerait que le helper rdv_title_in_agenda renvoie la bonne chose directement.
+  # Malheureusement il renvoie un titre moins clair dans le cas d'un rdv individuel.
+  # Il nécessiterait peut être une refacto et donc la suppresion de cette méthode
   def object
     collectif? ? ApplicationController.helpers.rdv_title_in_agenda(self) : motif_name
   end

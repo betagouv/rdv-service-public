@@ -33,8 +33,8 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
       Outlook::MassCreateEventJob.perform_later(current_agent)
       flash[:notice] = "Votre compte Outlook a bien été connecté"
     else
-      flash[:alert] = "Votre compte Outlook n'a pas pu être connecté. Est-il bien utilisé avec le même email que votre compte RDV Solidarités ?"
-      Sentry.capture_message("Microsoft Graph OmniAuth failed for #{microsoft_graph_email}")
+      flash[:alert] = "Votre compte Outlook n'a pas pu être connecté"
+      Sentry.capture_message("Microsoft Graph OmniAuth failed for #{microsoft_graph_email}: #{request.env}")
     end
     redirect_to agents_calendar_sync_outlook_sync_path
   end

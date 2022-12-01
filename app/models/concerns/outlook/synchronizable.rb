@@ -27,8 +27,6 @@ module Outlook
     # calendar_id (string): The Id of the calendar to create the event in.
     #                     If nil, event is created in the default calendar.
     def create_outlook_event(calendar_id = nil)
-      agent.refresh_outlook_token
-
       request_url = if calendar_id.present?
                       "me/Calendars/#{calendar_id}/Events"
                     else
@@ -41,15 +39,11 @@ module Outlook
     # payload (hash): a JSON hash representing the updated event fields
     # id (string): The Id of the event to update.
     def update_outlook_event
-      agent.refresh_outlook_token
-
       make_api_call(agent, "PATCH", "me/Events/#{outlook_id}", outlook_payload)
     end
 
     # id (string): The Id of the event to destroy.
     def destroy_outlook_event
-      agent.refresh_outlook_token
-
       make_api_call(agent, "DELETE", "me/Events/#{outlook_id}")
     end
 
@@ -84,6 +78,9 @@ module Outlook
     #               the host. For example: '/api/v2.0/me/messages'
     # payload (hash): a JSON hash representing the API call's payload. Only used
     #                 for POST or PATCH.
+
+    # rubocop:disable Metrics/CyclomaticComplexity
+    # rubocop:disable Metrics/PerceivedComplexity
     def make_api_call(agent, method, url, payload = {})
       headers = {
         "Authorization" => "Bearer #{agent.microsoft_graph_token}",
@@ -108,10 +105,16 @@ module Outlook
       body_response = response.body == "" ? {} : JSON.parse(response.body)
 
       if body_response["error"].present?
-        Sentry.capture_message("Outlook API error for AgentsRdv #{id}: #{body_response.dig('error', 'message')}")
+        if agent.connected_to_outlook? && response.response_code == 401 # token expired
+          agent.refresh_outlook_token && make_api_call(agent, method, url, payload)
+        else
+          Sentry.capture_message("Outlook API error for AgentsRdv #{id}: #{body_response.dig('error', 'message')}")
+        end
       end
       response.response_code == 204 ? "" : body_response
     end
+    # rubocop:enable Metrics/CyclomaticComplexity
+    # rubocop:enable Metrics/PerceivedComplexity
 
     def outlook_payload
       {
