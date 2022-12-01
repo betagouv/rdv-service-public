@@ -26,7 +26,7 @@
     .clear
   - if rdv.follow_up?
     div.row-result
-      span.title Travailleur médico-social :
+      span.title Référent :
       span.float-right= rdv.agents.map(&:short_name).sort.to_sentence
       .clear
   div.row-result
