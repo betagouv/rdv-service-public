@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Admin::ReferentsController, type: :controller do
+describe Admin::ReferentAssignationsController, type: :controller do
   describe "#index" do
     it "assigns available agents and respond success" do
       organisation = create(:organisation)
@@ -47,7 +47,7 @@ describe Admin::ReferentsController, type: :controller do
       post :create, params: { organisation_id: organisation.id, user_id: user.id, agent_id: new_referent.id }
 
       expect(user.reload.agents).to include(new_referent)
-      expect(response).to redirect_to(admin_organisation_user_referents_path(organisation, user))
+      expect(response).to redirect_to(admin_organisation_user_referent_assignations_path(organisation, user))
     end
 
     it "return errors and redirect to index" do
@@ -64,7 +64,7 @@ describe Admin::ReferentsController, type: :controller do
 
       post :create, params: { organisation_id: organisation.id, user_id: user.id, agent_id: new_referent.id }
 
-      expect(response).to redirect_to(admin_organisation_user_referents_path(organisation, user))
+      expect(response).to redirect_to(admin_organisation_user_referent_assignations_path(organisation, user))
       expect(flash[:error]).to eq("problème")
     end
   end
@@ -82,7 +82,7 @@ describe Admin::ReferentsController, type: :controller do
       post :destroy, params: { organisation_id: organisation.id, user_id: user.id, id: referent.id }
 
       expect(user.reload.agents).not_to include(referent)
-      expect(response).to redirect_to(admin_organisation_user_referents_path(organisation, user))
+      expect(response).to redirect_to(admin_organisation_user_referent_assignations_path(organisation, user))
     end
 
     it "return errors and redirect to user's show" do
@@ -100,7 +100,7 @@ describe Admin::ReferentsController, type: :controller do
 
       post :destroy, params: { organisation_id: organisation.id, user_id: user.id, id: referent.id }
 
-      expect(response).to redirect_to(admin_organisation_user_referents_path(organisation, user))
+      expect(response).to redirect_to(admin_organisation_user_referent_assignations_path(organisation, user))
       expect(flash[:error]).to eq("problème")
     end
   end
