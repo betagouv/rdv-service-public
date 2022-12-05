@@ -27,7 +27,6 @@ RSpec.describe "prescripteur can add a user to a RDV collectif" do
     expect(page).to have_content("Prochaine disponibilité lemercredi 09 novembre 2022 à 10h00")
     click_on "Prochaine disponibilité le"
     click_on "S'inscrire"
-    save_and_open_page
     click_on "Je suis un prescripteur qui oriente un bénéficiaire"
 
     fill_in "Votre prénom", with: "Alex"
