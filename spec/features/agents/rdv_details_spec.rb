@@ -28,7 +28,7 @@ describe "Agent can see RDV details correctly" do
     it "displays the prescripteur when present" do
       create(:prescripteur, rdvs_user: rdv.rdvs_users.last, first_name: "Jean", last_name: "Valjean")
       visit admin_organisation_rdvs_path(organisation)
-      expect(page).to have_content("Rendez-vous de #{user.full_name} pris par Jean VALJEAN")
+      expect(page).to have_content("Rendez-vous pris par Jean VALJEAN")
     end
 
     it "Allows showing RDVs data and correctly displays user notifications and notif info" do
