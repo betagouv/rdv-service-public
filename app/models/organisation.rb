@@ -24,7 +24,9 @@ class Organisation < ApplicationRecord
   # Through relations
   has_many :sectors, through: :sector_attributions
   has_many :agents, through: :agent_roles
-  has_many :users, through: :user_profiles
+  # we specify dependent: :destroy because by default it will be deleted (dependent: :delete)
+  # and we need to destroy to trigger the callbacks on the model
+  has_many :users, through: :user_profiles, dependent: :destroy
   has_many :receipts, through: :rdvs
 
   accepts_nested_attributes_for :agent_roles

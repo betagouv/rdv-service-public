@@ -499,6 +499,14 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_30_143520) do
     t.index ["user_id"], name: "index_receipts_on_user_id"
   end
 
+  create_table "referent_assignations", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "agent_id", null: false
+    t.index ["agent_id"], name: "index_referent_assignations_on_agent_id"
+    t.index ["user_id", "agent_id"], name: "index_referent_assignations_on_user_id_and_agent_id", unique: true
+    t.index ["user_id"], name: "index_referent_assignations_on_user_id"
+  end
+
   create_table "sector_attributions", force: :cascade do |t|
     t.bigint "sector_id", null: false
     t.bigint "organisation_id", null: false

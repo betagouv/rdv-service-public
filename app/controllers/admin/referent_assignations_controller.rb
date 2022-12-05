@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Admin::ReferentsController < AgentAuthController
+class Admin::ReferentAssignationsController < AgentAuthController
   def index
     @user = policy_scope(User).find(index_params[:user_id])
     authorize(@user, :update?)
@@ -31,7 +31,7 @@ class Admin::ReferentsController < AgentAuthController
     yield(user, agent)
 
     flash[:error] = user.errors.full_messages.join(", ") unless user.save
-    redirect_to admin_organisation_user_referents_path(current_organisation, user)
+    redirect_to admin_organisation_user_referent_assignations_path(current_organisation, user)
   end
 
   private
