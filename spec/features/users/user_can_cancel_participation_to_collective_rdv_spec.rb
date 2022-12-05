@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+# TODO
 
 RSpec.describe "Adding a user to a collective RDV" do
   include Rails.application.routes.url_helpers
@@ -86,7 +87,7 @@ RSpec.describe "Adding a user to a collective RDV" do
 
       # Change participant :
       click_link("modifier")
-      # TODO
+      # Todo
     end
   end
 

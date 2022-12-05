@@ -60,7 +60,7 @@ describe User::RdvsUserPolicy, type: :policy do
     let!(:rdv) { create(:rdv, users: [relative], organisation: organisation, agents: [agent]) }
     let(:participation) { rdv.rdvs_users.first }
 
-    it_behaves_like "permit actions", :create?
+    it_behaves_like "permit actions", :create?, :cancel?
     it_behaves_like "not permit actions", :new?
     it_behaves_like "included in scope"
   end
@@ -69,7 +69,7 @@ describe User::RdvsUserPolicy, type: :policy do
     let!(:rdv) { create(:rdv, users: [user2], organisation: organisation, agents: [agent]) }
     let(:participation) { rdv.rdvs_users.first }
 
-    it_behaves_like "not permit actions", :new?, :create?
+    it_behaves_like "not permit actions", :new?, :create?, :cancel?
     it_behaves_like "not included in scope"
   end
 
