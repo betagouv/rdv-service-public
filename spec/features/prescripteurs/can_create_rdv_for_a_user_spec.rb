@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe "prescripteur can create RDV for a user" do
+  before do
+    travel_to(Time.zone.parse("2022-11-07 15:00"))
+  end
+
   let!(:organisation) { create(:organisation) }
   let!(:agent) { create(:agent, :cnfs, admin_role_in_organisations: [organisation], rdv_notifications_level: "all") }
   let!(:motif) do
@@ -8,10 +12,6 @@ RSpec.describe "prescripteur can create RDV for a user" do
   end
   let!(:lieu) { create(:lieu, organisation: organisation, name: "Bureau") }
   let!(:plage_ouverture) { create(:plage_ouverture, organisation: organisation, agent: agent, motifs: [motif], lieu: lieu) }
-
-  before do
-    travel_to(Time.zone.parse("2022-11-07 15:00"))
-  end
 
   around { |example| perform_enqueued_jobs { example.run } }
 
@@ -31,8 +31,9 @@ RSpec.describe "prescripteur can create RDV for a user" do
     expect(page).to have_content("Prescripteur : Alex PRESCRIPTEUR")
     fill_in "Prénom", with: "Patricia"
     fill_in "Nom", with: "Duroy"
+    fill_in "Téléphone", with: "0611223344"
 
-    create(:rdv, starts_at: Time.zone.local(2022, 12, 6, 8, 0, 0), motif: motif, agents: [agent], lieu: lieu)
+    create(:rdv, starts_at: Time.zone.local(2022, 11, 15, 8, 0, 0), motif: motif, agents: [agent], lieu: lieu)
     click_on "Confirmer le rendez-vous"
     expect(page).to have_content("Ce créneau n'est plus disponible. Veuillez en choisir un autre.")
     click_on "Prochaine disponibilité le"
@@ -77,7 +78,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
 
     expect(page).to have_content("Rendez-vous confirmé")
     expect(page).to have_content("Patricia DUROY")
-    expect(page).to have_content("Le mardi 06 décembre 2022 à 08h45")
+    expect(page).to have_content("Le mardi 15 novembre 2022 à 08h45")
     expect(page).to have_content("Bureau")
     expect(page).to have_content("Instructions après confirmation")
   end
