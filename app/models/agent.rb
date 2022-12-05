@@ -114,6 +114,10 @@ class Agent < ApplicationRecord
     first_name.present? && last_name.present?
   end
 
+  def inactive?
+    last_sign_in_at.nil? || last_sign_in_at <= 1.month.ago
+  end
+
   def soft_delete
     raise SoftDeleteError, "agent still has attached resources" if organisations.any? || plage_ouvertures.any? || absences.any?
 

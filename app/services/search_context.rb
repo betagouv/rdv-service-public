@@ -126,7 +126,7 @@ class SearchContext
   def lieux
     @lieux ||= \
       Lieu
-        .with_open_slots_for_motifs(@matching_motifs)
+        .with_open_slots_for_motifs(matching_motifs)
         .includes(:organisation)
         .sort_by { |lieu| lieu.distance(@latitude.to_f, @longitude.to_f) }
   end
