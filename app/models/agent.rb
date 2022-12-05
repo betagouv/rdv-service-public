@@ -199,7 +199,7 @@ class Agent < ApplicationRecord
       .reservable_online
     agents_with_open_rdv_collectif = joins(:rdvs).merge(rdv_collectif_scope)
 
-    Agent.where(id: agents_with_open_plage.ids | agents_with_open_rdv_collectif.ids).distinct
+    where_id_in_subqueries([agents_with_open_plage, agents_with_open_rdv_collectif])
   end
 
   def to_s
