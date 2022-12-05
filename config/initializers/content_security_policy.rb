@@ -26,10 +26,6 @@ unless Rails.env.test?
       policy.style_src   :self, :unsafe_inline, "*.bootstrapcdn.com", "cdnjs.cloudflare.com", "api.mapbox.com"
       policy.img_src     :self, :data, :blob, "stats.data.gouv.fr", "voxusagers.numerique.gouv.fr"
     end
-
-    # Specify URI for violation reports
-    # https://docs.sentry.io/error-reporting/security-policy-reporting/#content-security-policy
-    policy.report_uri ENV["CSP_REPORT_URI"]
   end
 
   # If you are using UJS then enable automatic nonce generation

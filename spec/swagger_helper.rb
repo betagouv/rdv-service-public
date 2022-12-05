@@ -180,6 +180,21 @@ RSpec.configure do |config|
             },
             required: %w[organisation logement notes],
           },
+          referent_assignation_with_root: {
+            type: "object",
+            properties: {
+              referent_assignation: { "$ref" => "#/components/schemas/referent_assignation" },
+            },
+            required: %w[referent_assignation],
+          },
+          referent_assignation: {
+            type: "object",
+            properties: {
+              user: { "$ref" => "#/components/schemas/user" },
+              agent: { "$ref" => "#/components/schemas/agent" },
+            },
+            required: %w[agent user],
+          },
           organisations: {
             type: "object",
             properties: {

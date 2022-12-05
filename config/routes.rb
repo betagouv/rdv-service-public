@@ -178,7 +178,7 @@ Rails.application.routes.draw do
           collection do
             get :search
           end
-          resources :referents, only: %i[index create destroy]
+          resources :referent_assignations, only: %i[index create destroy]
         end
         resources :absences, except: %i[index show new]
         resources :agent_agendas, only: %i[show] do

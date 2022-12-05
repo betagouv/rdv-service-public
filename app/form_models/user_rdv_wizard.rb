@@ -57,7 +57,8 @@ module UserRdvWizard
       }.merge(
         @attributes.slice(
           :where, :departement, :lieu_id, :latitude, :longitude, :city_code, :street_ban_id, :invitation_token,
-          :address, :organisation_ids, :motif_search_terms, :public_link_organisation_id, :user_selected_organisation_id
+          :address, :organisation_ids, :motif_search_terms, :public_link_organisation_id, :user_selected_organisation_id,
+          :referent_ids
         )
       )
     end

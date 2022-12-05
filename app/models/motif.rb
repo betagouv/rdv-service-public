@@ -171,6 +171,23 @@ class Motif < ApplicationRecord
     public_office?
   end
 
+  def self.with_availability_for_lieux(lieu_ids)
+    individual_motif_ids = individuel.joins(:plage_ouvertures).where(plage_ouvertures: { lieu_id: lieu_ids }).ids.uniq
+    # Pour prendre en compte le filtre sur le lieu_id pour les RDV Collectif,
+    # nous ne pouvons pas passer par une requête `or` qui nécessite les mêmes jointures des deux côtés.
+    collective_motif_ids = Rdv.collectif_and_available_for_reservation
+      .where(lieu_id: lieu_ids, motif: collectif).pluck(:motif_id).uniq
+    where(id: individual_motif_ids + collective_motif_ids)
+  end
+
+  def self.with_availability_for_agents(agent_ids)
+    individual_motif_ids = individuel.joins(:plage_ouvertures).where(plage_ouvertures: { agent_id: agent_ids }).ids.uniq
+    collective_motif_ids = Rdv.collectif_and_available_for_reservation
+      .where(motif: collectif).joins(:agents).where(agents: { id: agent_ids }).pluck(:motif_id).uniq
+
+    where(id: individual_motif_ids + collective_motif_ids)
+  end
+
   private
 
   def booking_delay_validation
