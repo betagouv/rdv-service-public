@@ -39,8 +39,7 @@
     strong> Professionnel(s) :
     = agents_to_sentence(rdv.agents)
 
-- rdvs_users_with_prescripteur = rdv.rdvs_users.select(&:prescripteur)
-- rdvs_users_with_prescripteur.each do |rdvs_user|
+- rdv.rdvs_users.select(&:prescripteur).each do |rdvs_user|
   - prescripteur = rdvs_user.prescripteur
   .d-flex.card-text.mt-1
     div.mr-1
