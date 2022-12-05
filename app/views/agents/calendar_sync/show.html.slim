@@ -6,6 +6,21 @@ p
   | Pour cela, 3 méthodes :
 
 div.d-flex.justify-content-center.align-items-center.flex-wrap
-  = link_to "Notifications par email", agents_preferences_path, class: "btn btn-primary m-2"
-  = link_to "Synchronisation calendrier", agents_calendar_sync_webcal_sync_path, class: "btn btn-primary m-2"
-  = link_to "Connexion Outlook", agents_calendar_sync_outlook_sync_path, class: "btn btn-primary m-2"
+  div.card.w-100
+    div.card-body
+      h5.card-title Notifications par email
+      p Vous pouvez configurer RDV Solidarités pour recevoir un email pour chaque rendez-vous créé ou modifié. Il contiendra un fichier ICS qui vous permettra de synchroniser votre agenda externe.
+      div.text-center
+        = link_to "Configurer mes emails de notification", agents_preferences_path, class: "btn btn-primary m-2"
+  div.card.w-100
+    div.card-body
+      h5.card-title Lien de synchronisation Webcal
+      p Vous pouvez synchroniser votre agenda externe grâce à un lien Webcal. Chaque rendez-vous arrivera automatiquement sur votre agenda externe au fur et à mesure de sa création ou de sa modification mais un potentiel délai est à prévoir.
+      div.text-center
+        = link_to "Obtenir ou mettre à jour mon lien Webcal", agents_calendar_sync_webcal_sync_path, class: "btn btn-primary m-2"
+  div.card.w-100
+    div.card-body
+      h5.card-title Connexion Outlook
+      p Vous pouvez synchroniser votre agenda externe grâce à un lien Webcal. Chaque rendez-vous arrivera automatiquement sur votre agenda externe au fur et à mesure de sa création ou de sa modification mais un potentiel délai est à prévoir.
+      div.text-center
+        = link_to "Connecter mon compte Outlook", agents_calendar_sync_outlook_sync_path, class: "btn btn-primary m-2"

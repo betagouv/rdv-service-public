@@ -5,8 +5,10 @@ require "rails_helper"
 RSpec.describe Outlook::UpdateEventJob, type: :job do
   let(:organisation) { create(:organisation, id: 10) }
   let(:motif) { create(:motif, name: "Super Motif", location_type: :phone) }
-  let(:agent) { create(:agent) }
-  let(:rdv) { build(:rdv, id: 20, motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: []) }
+  # We need to create a fake agent to initialize a RDV as they have a validation on agents which prevents us to control the data in its AgentsRdv
+  let(:fake_agent) { create(:agent) }
+  let(:agent) { create(:agent, microsoft_graph_token: "token") }
+  let(:rdv) { create(:rdv, id: 20, motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [fake_agent]) }
   let(:agents_rdv) { create(:agents_rdv, id: 12, rdv: rdv, agent: agent, outlook_id: "super_id", skip_outlook_create: true) }
 
   context "when the event is updated" do
