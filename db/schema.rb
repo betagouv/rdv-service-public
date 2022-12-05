@@ -10,8 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_11_09_101323) do
-
+ActiveRecord::Schema[7.0].define(version: 2022_11_29_104727) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "unaccent"
@@ -485,6 +484,14 @@ ActiveRecord::Schema.define(version: 2022_11_09_101323) do
     t.index ["rdv_id"], name: "index_receipts_on_rdv_id"
     t.index ["result"], name: "index_receipts_on_result"
     t.index ["user_id"], name: "index_receipts_on_user_id"
+  end
+
+  create_table "referent_assignations", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "agent_id", null: false
+    t.index ["agent_id"], name: "index_referent_assignations_on_agent_id"
+    t.index ["user_id", "agent_id"], name: "index_referent_assignations_on_user_id_and_agent_id", unique: true
+    t.index ["user_id"], name: "index_referent_assignations_on_user_id"
   end
 
   create_table "sector_attributions", force: :cascade do |t|
