@@ -22,7 +22,7 @@ RSpec.describe RdvsUser::Creatable, type: :concern do
 
       it "sends a webhook" do
         rdv.reload
-        expect(WebhookJob).to receive(:perform_later).at_least(1)
+        expect(WebhookJob).to receive(:perform_later)
         rdv_user1.create_and_notify(user)
       end
     end

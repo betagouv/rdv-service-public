@@ -54,7 +54,7 @@ Rails.application.routes.draw do
   namespace :users do
     resource :rdv_wizard_step, only: %i[new create]
     resources :rdvs, only: %i[index create show edit update] do
-      resources :participations, only: %i[index new create]
+      resources :participations, only: %i[index create]
       put "participations/cancel", to: "participations#cancel"
       member do
         get :creneaux
@@ -179,7 +179,7 @@ Rails.application.routes.draw do
           collection do
             get :search
           end
-          resources :referents, only: %i[index create destroy]
+          resources :referent_assignations, only: %i[index create destroy]
         end
         resources :absences, except: %i[index show new]
         resources :agent_agendas, only: %i[show] do

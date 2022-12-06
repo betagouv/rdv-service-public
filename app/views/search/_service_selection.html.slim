@@ -3,12 +3,21 @@ section.bg-light.p-4
     - if context.unique_motifs_by_name_and_location_type.empty?
       / TODO redirect to this page directly from controler
       = render "nothing_to_show", context: context
-    - else
-      h2.font-weight-bold Vous souhaitez prendre un RDV avec le service :
-      - context.services.each do |service|
-        .card.mb-3
-          = link_to path_to_motif_selection(params.merge(service_id: service.id)) do
-            .card-body
-              .row
-                .col-md
-                  h3.card-title.mb-3.mt-0.text-success.font-weight-bold= service.name
+    h2.font-weight-bold Sélectionnez le service avec qui vous voulez prendre un RDV :
+    - unless context.invitation?
+      .card
+        .m-2
+          | Pour prendre un RDV avec un de vos agents référent, allez sur la page de
+          span>
+          = link_to users_rdvs_path do
+            i.far.fa-calendar
+            span>
+            | vos rendez-vous
+
+    - context.services.each do |service|
+      .card.mb-3
+        = link_to path_to_motif_selection(context.query.merge(service_id: service.id)) do
+          .card-body
+            .row
+              .col-md
+                h3.card-title.mb-3.mt-0.text-success.font-weight-bold= service.name

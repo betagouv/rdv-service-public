@@ -327,8 +327,8 @@ class Rdv < ApplicationRecord
       return
     end
 
-    update_status_priority_order_participations
-    update_status_similar_participations
+    updated = update_status_similar_participations
+    update_status_priority_order_participations unless updated
   end
 
   def update_status_to_unknown
@@ -350,12 +350,16 @@ class Rdv < ApplicationRecord
 
   def update_status_similar_participations
     # If all participations are similar the rdv status will change
+    updated = false
     %w[seen noshow excused].each do |status|
       if rdvs_users.map(&:status).all? { |participation_status| participation_status.in? [status] }
         self.cancelled_at = status.in?(%w[excused noshow]) ? Time.zone.now : nil
         update!(status: status)
+        updated = true
       end
+      next
     end
+    updated
   end
 
   private

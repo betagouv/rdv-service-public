@@ -12,7 +12,6 @@ module UserRdvWizard
 
     delegate :motif, :starts_at, :users, :service, to: :rdv
     delegate :errors, to: :rdv
-    delegate :lieu_full_name, to: :creneau
 
     def initialize(user, attributes)
       @user = user

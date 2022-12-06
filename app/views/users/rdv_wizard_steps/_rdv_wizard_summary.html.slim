@@ -22,7 +22,7 @@ ul.list-group.list-group-flush
         .col
           i.fa.fa-check.fa-fw.mr-1.text-success
           | Lieu :&nbsp;
-          = rdv_wizard.lieu_full_name
+          = rdv_wizard.creneau.lieu.full_name
         - unless rdv_wizard.invitation?
           .col-auto
             = link_to "modifier", path_to_lieu_selection(rdv_wizard.params_to_selections)
