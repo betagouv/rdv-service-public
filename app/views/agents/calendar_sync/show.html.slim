@@ -3,7 +3,7 @@
 p Vous pouvez synchroniser votre agenda de #{current_domain.name} avec un agenda externe, comme Outlook ou Google Calendar.
 
 p
-  | Pour cela, 3 méthodes :
+  | Pour cela, plusieurs méthodes :
 
 div.d-flex.justify-content-center.align-items-center.flex-wrap
   div.card.w-100
@@ -18,9 +18,10 @@ div.d-flex.justify-content-center.align-items-center.flex-wrap
       p Vous pouvez synchroniser votre agenda externe grâce à un lien Webcal. Chaque rendez-vous arrivera automatiquement sur votre agenda externe au fur et à mesure de sa création ou de sa modification mais un potentiel délai est à prévoir.
       div.text-center
         = link_to "Obtenir ou mettre à jour mon lien Webcal", agents_calendar_sync_webcal_sync_path, class: "btn btn-primary m-2"
-  div.card.w-100
-    div.card-body
-      h5.card-title Connexion Outlook
-      p Vous pouvez synchroniser votre agenda externe grâce à un lien Webcal. Chaque rendez-vous arrivera automatiquement sur votre agenda externe au fur et à mesure de sa création ou de sa modification mais un potentiel délai est à prévoir.
-      div.text-center
-        = link_to "Connecter mon compte Outlook", agents_calendar_sync_outlook_sync_path, class: "btn btn-primary m-2"
+  - if current_domain.can_sync_to_outlook
+    div.card.w-100
+      div.card-body
+        h5.card-title Connexion Outlook
+        p Vous pouvez synchroniser votre agenda externe grâce à un lien Webcal. Chaque rendez-vous arrivera automatiquement sur votre agenda externe au fur et à mesure de sa création ou de sa modification mais un potentiel délai est à prévoir.
+        div.text-center
+          = link_to "Connecter mon compte Outlook", agents_calendar_sync_outlook_sync_path, class: "btn btn-primary m-2"
