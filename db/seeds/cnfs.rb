@@ -39,6 +39,16 @@ Motif.create!(
   service: service_cnfs
 )
 
+_cnfs_lieu = Lieu.create!(
+  name: "Médiathèque Françoise Sagan",
+  organisation: org_cnfs,
+  latitude: 44.918859,
+  longitude: 4.919825,
+  availability: :enabled,
+  phone_number: "01 53 24 69 70",
+  address: "8 Rue Léon Schwartzenberg, 75010 Paris"
+)
+
 agent_cnfs = Agent.new(
   email: "camille-clavier@demo.rdv-solidarites.fr",
   uid: "camille-clavier@demo.rdv-solidarites.fr",

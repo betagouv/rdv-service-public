@@ -598,7 +598,7 @@ _plage_ouverture_org_bapaume_bruno_classique = PlageOuverture.create!(
 )
 
 [1, 2, 4, 5].each do |weekday|
-  PlageOuverture.create(
+  PlageOuverture.create!(
     title: "Permamence jour #{weekday}",
     organisation_id: org_bapaume.id,
     agent_id: agent_org_bapaume_pmi_gina.id,
@@ -623,7 +623,7 @@ Rdv.create!(
   user_ids: [user_org_paris_nord_patricia.id],
   context: "Visite de courtoisie"
 )
-Rdv.create(
+Rdv.create!(
   starts_at: Time.zone.today + 4.days + 15.hours,
   duration_in_min: 30,
   motif_id: motif_org_paris_nord_pmi_suivi.id,
@@ -633,7 +633,7 @@ Rdv.create(
   user_ids: [user_org_paris_nord_josephine.id],
   context: "Suivi vaccins"
 )
-Rdv.create(
+Rdv.create!(
   starts_at: Time.zone.today + 5.days + 11.hours,
   duration_in_min: 30,
   motif_id: motif_org_paris_nord_pmi_securite.id,
@@ -644,7 +644,7 @@ Rdv.create(
   context: "Visite à domicile"
 )
 
-Rdv.create(
+Rdv.create!(
   starts_at: Time.zone.today + 5.days + 11.hours,
   duration_in_min: 30,
   motif_id: motif_org_paris_nord_pmi_securite.id,
@@ -656,7 +656,7 @@ Rdv.create(
 )
 
 10.times do |i|
-  Rdv.create(
+  Rdv.create!(
     starts_at: Time.zone.today + 17.hours + i.weeks,
     duration_in_min: 60,
     motif_id: motif_org_paris_nord_pmi_collectif.id,
@@ -667,7 +667,7 @@ Rdv.create(
     user_ids: []
   )
 
-  Rdv.create(
+  Rdv.create!(
     starts_at: Time.zone.today + 2.days + 16.hours + i.weeks,
     duration_in_min: 60,
     motif_id: motif_org_paris_nord_pmi_collectif.id,
@@ -713,5 +713,5 @@ unknown_rdv_count_by_agent.each do |agent_id, unknown_past_rdv_count|
   Agent.where(id: agent_id).update_all(unknown_past_rdv_count: unknown_past_rdv_count) # rubocop:disable Rails/SkipsModelValidations
 end
 
-Absence.create(title: "Formation", agent: agent_org_paris_nord_pmi_martine, organisation: org_paris_nord, first_day: 1.week.from_now, start_time: Tod::TimeOfDay.new(8),
-               end_time: Tod::TimeOfDay.new(18))
+Absence.create!(title: "Formation", agent: agent_org_paris_nord_pmi_martine, organisation: org_paris_nord, first_day: 1.week.from_now, start_time: Tod::TimeOfDay.new(8),
+                end_time: Tod::TimeOfDay.new(18))
