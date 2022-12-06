@@ -2,8 +2,6 @@
 
 require "csv"
 
-# Drome & Yonne territories and related records are created to match rdv-insertion seeds
-
 # TERRITORIEs
 
 territory75 = Territory.create!(
