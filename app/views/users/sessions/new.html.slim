@@ -17,8 +17,7 @@
         = link_to new_registration_path(resource_name, params: params.permit(:lieu_id, :motif_id, :starts_at)) do
           b Je m'inscris
 
-    / TODO: ne pas merger ça avant d'avoir fait les issues 3034 et 3035
-    - if @rdv_wizard.present?
+    - if @rdv_wizard.present? && current_domain == Domain::RDV_AIDE_NUMERIQUE
       hr
         .text-center
           p.text-muted
