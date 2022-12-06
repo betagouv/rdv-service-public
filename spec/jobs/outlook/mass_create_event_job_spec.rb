@@ -12,10 +12,10 @@ RSpec.describe Outlook::MassCreateEventJob, type: :job do
   let(:rdv2) { create(:rdv, id: 2, motif: motif, organisation: organisation, starts_at: 2.days.from_now, agents: [fake_agent]) }
   let(:rdv3) { create(:rdv, id: 3, motif: motif, organisation: organisation, starts_at: 1.day.ago, agents: [fake_agent]) }
   let(:rdv4) { create(:rdv, id: 4, motif: motif, organisation: organisation, starts_at: 2.days.ago, agents: [fake_agent]) }
-  let!(:agents_rdv) { create(:agents_rdv, agent: agent, rdv: rdv, skip_outlook_create: true) }
-  let!(:agents_rdv2) { create(:agents_rdv, agent: agent, rdv: rdv2, skip_outlook_create: true) }
-  let!(:agents_rdv3) { create(:agents_rdv, agent: agent, rdv: rdv3, skip_outlook_create: true) }
-  let!(:agents_rdv4) { create(:agents_rdv, agent: agent, rdv: rdv4, skip_outlook_create: true) }
+  let!(:agents_rdv) { create(:agents_rdv, agent: agent, rdv: rdv) }
+  let!(:agents_rdv2) { create(:agents_rdv, agent: agent, rdv: rdv2) }
+  let!(:agents_rdv3) { create(:agents_rdv, agent: agent, rdv: rdv3) }
+  let!(:agents_rdv4) { create(:agents_rdv, agent: agent, rdv: rdv4) }
 
   before do
     allow(agent).to receive_message_chain(:agents_rdvs, :future).and_return([agents_rdv, agents_rdv2])

@@ -9,7 +9,7 @@ RSpec.describe Outlook::DestroyEventJob, type: :job do
   let(:fake_agent) { create(:agent) }
   let(:agent) { create(:agent, microsoft_graph_token: "token") }
   let(:rdv) { create(:rdv, id: 20, motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [fake_agent]) }
-  let(:agents_rdv) { create(:agents_rdv, id: 12, rdv: rdv, agent: agent, outlook_id: "super_id", skip_outlook_create: true) }
+  let(:agents_rdv) { create(:agents_rdv, id: 12, rdv: rdv, agent: agent, outlook_id: "super_id") }
 
   context "when the event is destroyed" do
     before do

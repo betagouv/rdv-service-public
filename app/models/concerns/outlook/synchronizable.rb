@@ -8,9 +8,9 @@ module Outlook
     BASE_URL = "https://graph.microsoft.com/v1.0"
 
     included do
-      attr_accessor :skip_outlook_create, :skip_outlook_update
+      attr_accessor :skip_outlook_update
 
-      after_commit :sync_create_in_outlook_asynchronously, on: :create, unless: :skip_outlook_create
+      after_commit :sync_create_in_outlook_asynchronously, on: :create
 
       after_commit :sync_update_in_outlook_asynchronously, on: :update, unless: :skip_outlook_update
 

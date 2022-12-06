@@ -4,22 +4,20 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
   describe "#sync_create_in_outlook_asynchronously" do
     context "agent synced with outlook" do
       let(:agent) { create(:agent, microsoft_graph_token: "token") }
-      let(:agents_rdv) { create(:agents_rdv, agent: agent, skip_outlook_create: true) }
-
-      before do
-        allow(Outlook::CreateEventJob).to receive(:perform_later)
-
-        agents_rdv.sync_create_in_outlook_asynchronously
-      end
+      let(:agents_rdv) { create(:agents_rdv, agent: agent) }
 
       it "calls Outlook::CreateEventJob" do
-        expect(Outlook::CreateEventJob).to have_received(:perform_later).with(agents_rdv)
+        allow(Outlook::CreateEventJob).to receive(:perform_later)
+
+        expect(Outlook::CreateEventJob).to receive(:perform_later).with(agents_rdv).once
+
+        agents_rdv.sync_create_in_outlook_asynchronously
       end
     end
 
     context "agent not synced with outlook" do
       let(:agent) { create(:agent) }
-      let(:agents_rdv) { create(:agents_rdv, agent: agent, skip_outlook_create: true) }
+      let(:agents_rdv) { create(:agents_rdv, agent: agent) }
 
       before do
         allow(Outlook::CreateEventJob).to receive(:perform_later)
@@ -34,7 +32,7 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
 
     context "agents_rdv already exists in outlook" do
       let(:agent) { create(:agent, microsoft_graph_token: "token") }
-      let(:agents_rdv) { create(:agents_rdv, agent: agent, outlook_id: "abc", skip_outlook_create: true) }
+      let(:agents_rdv) { create(:agents_rdv, agent: agent, outlook_id: "abc") }
 
       before do
         allow(Outlook::CreateEventJob).to receive(:perform_later)
@@ -51,7 +49,7 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
   describe "#sync_update_in_outlook_asynchronously" do
     context "exists in outlook and agent is synced" do
       let(:agent) { create(:agent, microsoft_graph_token: "token") }
-      let(:agents_rdv) { create(:agents_rdv, agent: agent, outlook_id: "abc", skip_outlook_create: true) }
+      let(:agents_rdv) { create(:agents_rdv, agent: agent, outlook_id: "abc") }
 
       before do
         allow(Outlook::UpdateEventJob).to receive(:perform_later)
@@ -66,7 +64,7 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
 
     context "exists in outlook and agent is not synced" do
       let(:agent) { create(:agent) }
-      let(:agents_rdv) { create(:agents_rdv, agent: agent, outlook_id: "abc", skip_outlook_create: true) }
+      let(:agents_rdv) { create(:agents_rdv, agent: agent, outlook_id: "abc") }
 
       before do
         allow(Outlook::UpdateEventJob).to receive(:perform_later)
@@ -81,22 +79,20 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
 
     context "does not exists in outlook" do
       let(:agent) { create(:agent, microsoft_graph_token: "token") }
-      let(:agents_rdv) { create(:agents_rdv, agent: agent, skip_outlook_create: true) }
-
-      before do
-        allow(Outlook::CreateEventJob).to receive(:perform_later)
-
-        agents_rdv.sync_update_in_outlook_asynchronously
-      end
+      let(:agents_rdv) { create(:agents_rdv, agent: agent) }
 
       it "calls Outlook::CreateEventJob" do
-        expect(Outlook::CreateEventJob).to have_received(:perform_later).with(agents_rdv)
+        allow(Outlook::CreateEventJob).to receive(:perform_later)
+
+        expect(Outlook::CreateEventJob).to receive(:perform_later).with(agents_rdv)
+
+        agents_rdv.sync_update_in_outlook_asynchronously
       end
     end
 
     context "is cancelled and exists in outlook" do
       let(:agent) { create(:agent, microsoft_graph_token: "token") }
-      let(:agents_rdv) { create(:agents_rdv, agent: agent, outlook_id: "abc", skip_outlook_create: true) }
+      let(:agents_rdv) { create(:agents_rdv, agent: agent, outlook_id: "abc") }
 
       before do
         allow(agents_rdv.rdv).to receive(:cancelled?).and_return(true)
@@ -112,7 +108,7 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
 
     context "is cancelled and does not exist in outlook" do
       let(:agent) { create(:agent, microsoft_graph_token: "token") }
-      let(:agents_rdv) { create(:agents_rdv, agent: agent, skip_outlook_create: true) }
+      let(:agents_rdv) { create(:agents_rdv, agent: agent) }
 
       before do
         allow(agents_rdv.rdv).to receive(:cancelled?).and_return(true)
@@ -128,7 +124,7 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
 
     context "is soft_deleted and exists in outlook" do
       let(:agent) { create(:agent, microsoft_graph_token: "token") }
-      let(:agents_rdv) { create(:agents_rdv, agent: agent, outlook_id: "abc", skip_outlook_create: true) }
+      let(:agents_rdv) { create(:agents_rdv, agent: agent, outlook_id: "abc") }
 
       before do
         allow(agents_rdv.rdv).to receive(:soft_deleted?).and_return(true)
@@ -146,7 +142,7 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
   describe "#sync_destroy_in_outlook_asynchronously" do
     context "agent synced with outlook and exists in outlook" do
       let(:agent) { create(:agent, microsoft_graph_token: "token") }
-      let(:agents_rdv) { create(:agents_rdv, agent: agent, outlook_id: "abc", skip_outlook_create: true) }
+      let(:agents_rdv) { create(:agents_rdv, agent: agent, outlook_id: "abc") }
 
       before do
         allow(Outlook::DestroyEventJob).to receive(:perform_later)
@@ -161,7 +157,7 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
 
     context "agent not synced with outlook" do
       let(:agent) { create(:agent) }
-      let(:agents_rdv) { create(:agents_rdv, agent: agent, skip_outlook_create: true) }
+      let(:agents_rdv) { create(:agents_rdv, agent: agent) }
 
       before do
         allow(Outlook::DestroyEventJob).to receive(:perform_later)
@@ -176,7 +172,7 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
 
     context "agents_rdv does not exist in outlook" do
       let(:agent) { create(:agent, microsoft_graph_token: "token") }
-      let(:agents_rdv) { create(:agents_rdv, agent: agent, skip_outlook_create: true) }
+      let(:agents_rdv) { create(:agents_rdv, agent: agent) }
 
       before do
         allow(Outlook::DestroyEventJob).to receive(:perform_later)

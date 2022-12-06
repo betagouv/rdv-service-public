@@ -9,7 +9,7 @@ RSpec.describe Outlook::CreateEventJob, type: :job do
   let(:fake_agent) { create(:agent) }
   let(:agent) { create(:agent, microsoft_graph_token: "token") }
   let(:rdv) { create(:rdv, id: 20, motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [fake_agent]) }
-  let!(:agents_rdv) { create(:agents_rdv, id: 12, agent: agent, rdv: rdv, skip_outlook_create: true) }
+  let!(:agents_rdv) { create(:agents_rdv, id: 12, agent: agent, rdv: rdv) }
 
   context "when the event is created" do
     before do

@@ -12,10 +12,10 @@ RSpec.describe Outlook::MassDestroyEventJob, type: :job do
   let(:rdv2) { create(:rdv, id: 2, motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 13h00"), agents: [fake_agent]) }
   let(:rdv3) { create(:rdv, id: 3, motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 15h00"), agents: [fake_agent]) }
   let(:rdv4) { create(:rdv, id: 4, motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 17h00"), agents: [fake_agent]) }
-  let!(:agents_rdv) { create(:agents_rdv, agent: agent, rdv: rdv, outlook_id: "abc", skip_outlook_create: true) }
-  let!(:agents_rdv2) { create(:agents_rdv, agent: agent, rdv: rdv2, outlook_id: "def", skip_outlook_create: true) }
-  let!(:agents_rdv3) { create(:agents_rdv, agent: agent, rdv: rdv3, skip_outlook_create: true) }
-  let!(:agents_rdv4) { create(:agents_rdv, agent: agent, rdv: rdv4, skip_outlook_create: true) }
+  let!(:agents_rdv) { create(:agents_rdv, agent: agent, rdv: rdv, outlook_id: "abc") }
+  let!(:agents_rdv2) { create(:agents_rdv, agent: agent, rdv: rdv2, outlook_id: "def") }
+  let!(:agents_rdv3) { create(:agents_rdv, agent: agent, rdv: rdv3) }
+  let!(:agents_rdv4) { create(:agents_rdv, agent: agent, rdv: rdv4) }
 
   before do
     stub_request(:delete, "https://graph.microsoft.com/v1.0/me/Events/abc")
