@@ -22,17 +22,9 @@ RSpec.describe "Users::Participants", type: :request do
       end
     end
 
-    describe "GET /users/rdvs/:rdv_id/participants/new, norminal case" do
-      it "set a confirmation notice message for new_users_rdv_participation GET for current_user participation" do
-        get new_users_rdv_participation_path(rdv)
-        expect(flash[:notice]).to eq("Inscription confirmée")
-        expect(response).to redirect_to(users_rdv_path(rdv, invitation_token: token))
-      end
-    end
-
-    describe "GET /users/rdvs/:rdv_id/participants/new on an individual rdv (params override by user)" do
+    describe "POST /users/rdvs/:rdv_id/participants on an individual rdv (params override by user)" do
       it "redirect because pundit auth fails" do
-        get new_users_rdv_participation_path(rdv_indiv)
+        post users_rdv_participations_path(rdv_indiv)
         expect(flash[:notice]).to eq(nil)
         expect(response).to redirect_to(users_rdvs_path) # Pundit redirects when authorization fails
       end
@@ -40,7 +32,7 @@ RSpec.describe "Users::Participants", type: :request do
 
     describe "POST /users/rdvs/:rdv_id/participants, norminal case" do
       it "set a confirmation notice message for users_rdv_participations POST for current_user participation" do
-        get new_users_rdv_participation_path(rdv)
+        post users_rdv_participations_path(rdv)
         expect(flash[:notice]).to eq("Inscription confirmée")
         expect(response).to redirect_to(users_rdv_path(rdv, invitation_token: token))
       end

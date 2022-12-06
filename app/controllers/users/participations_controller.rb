@@ -9,10 +9,6 @@ class Users::ParticipationsController < UserAuthController
     @rdv = policy_scope(Rdv).find(params[:rdv_id])
   end
 
-  def new
-    add_participation
-  end
-
   def create
     add_participation
   end
@@ -51,7 +47,7 @@ class Users::ParticipationsController < UserAuthController
 
   def user_is_already_participating
     flash[:notice] = "Usager déjà inscrit pour cet atelier."
-    redirect_to users_rdv_path(@rdv, invitation_token: existing_participation.rdv_user_token)
+    redirect_to users_rdv_path(@rdv)
   end
 
   def change_participation_status
@@ -63,7 +59,7 @@ class Users::ParticipationsController < UserAuthController
   end
 
   def create_participation
-    if responsible_or_relatives_participating? && !policy([:user, @rdv]).can_change_participants?
+    unless (responsible_or_relatives_participating? && @rdv.collectif?) || @rdv.collectif?
       raise Pundit::NotAuthorizedError
     end
 
@@ -74,6 +70,6 @@ class Users::ParticipationsController < UserAuthController
   end
 
   def responsible_or_relatives_participating?
-    @rdv.rdvs_users.where(user: @user.responsible&.self_and_relatives_and_responsible).any?
+    @rdv.rdvs_users.where(user: current_user.self_and_relatives_and_responsible).any?
   end
 end

@@ -45,14 +45,14 @@ describe User::RdvsUserPolicy, type: :policy do
   context "Participation belongs to user" do
     let!(:participation) { create(:rdvs_user, user: user, rdv: rdv) }
 
-    it_behaves_like "permit actions", :new?, :create?
+    it_behaves_like "permit actions", :create?
     it_behaves_like "included in scope"
   end
 
   context "Participation belongs to relative" do
     let!(:participation) { create(:rdvs_user, user: relative, rdv: rdv) }
 
-    it_behaves_like "permit actions", :new?, :create?
+    it_behaves_like "permit actions", :create?
     it_behaves_like "included in scope"
   end
 
@@ -61,7 +61,6 @@ describe User::RdvsUserPolicy, type: :policy do
     let(:participation) { rdv.rdvs_users.first }
 
     it_behaves_like "permit actions", :create?
-    it_behaves_like "not permit actions", :new?
     it_behaves_like "included in scope"
   end
 
@@ -69,14 +68,13 @@ describe User::RdvsUserPolicy, type: :policy do
     let!(:rdv) { create(:rdv, users: [user2], organisation: organisation, agents: [agent]) }
     let(:participation) { rdv.rdvs_users.first }
 
-    it_behaves_like "not permit actions", :new?, :create?
+    it_behaves_like "not permit actions", :create?
     it_behaves_like "not included in scope"
   end
 
   context "Participation belongs to another user" do
     let!(:participation) { build(:rdvs_user, user: user2, rdv: rdv) }
 
-    it_behaves_like "permit actions", :new?
     it_behaves_like "not permit actions", :create?
     it_behaves_like "not included in scope"
   end
@@ -88,7 +86,7 @@ describe User::RdvsUserPolicy, type: :policy do
       allow(user).to receive(:only_invited?).and_return(true)
     end
 
-    it_behaves_like "permit actions", :new?, :create?
+    it_behaves_like "permit actions", :create?
     it_behaves_like "included in scope"
   end
 
@@ -97,7 +95,7 @@ describe User::RdvsUserPolicy, type: :policy do
     let!(:participation2) { create(:rdvs_user, user: user2, rdv: rdv, status: "revoked") }
     let!(:participation) { build(:rdvs_user, user: user, rdv: rdv) }
 
-    it_behaves_like "not permit actions", :new?, :create?
+    it_behaves_like "not permit actions", :create?
     it_behaves_like "not included in scope"
   end
 end
