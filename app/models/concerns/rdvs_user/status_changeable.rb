@@ -8,8 +8,7 @@ module RdvsUser::StatusChangeable
 
     RdvsUser.transaction do
       if update(status: status)
-        rdv.update_rdv_status_from_participation
-        notify!(author)
+        notify_update!(author)
         true
       else
         false
@@ -20,10 +19,13 @@ module RdvsUser::StatusChangeable
   end
 
   def rdv_user_token
-    @notifier.rdv_users_tokens_by_user_id&.fetch(user.id)
+    # For user invited with tokens, nil default for not invited users
+    @notifier&.rdv_users_tokens_by_user_id&.fetch(user.id, nil)
   end
 
-  def notify!(author)
+  private
+
+  def notify_update!(author)
     return nil unless user_valid_for_lifecycle_notifications?
 
     if rdv_user_cancelled?
@@ -39,11 +41,11 @@ module RdvsUser::StatusChangeable
 
   def rdv_user_cancelled?
     # Do not notify users for cancel statuses for previously cancelled rdv participation
-    (status.in? %w[excused revoked]) && !status_previously_was.in?(%w[excused revoked])
+    (status.in? RdvsUser::CANCELLED_STATUSES) && !status_previously_was.in?(RdvsUser::CANCELLED_STATUSES)
   end
 
   def rdv_status_reloaded_from_cancelled?
-    status_previously_was.in?(%w[excused revoked]) && status == "unknown"
+    status_previously_was.in?(RdvsUser::CANCELLED_STATUSES) && status == "unknown"
   end
 
   def user_valid_for_lifecycle_notifications?

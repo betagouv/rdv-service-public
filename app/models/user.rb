@@ -145,6 +145,11 @@ class User < ApplicationRecord
     @profiles[organisation]
   end
 
+  def participation_for(rdv)
+    # We use find because it can be only one member by family in collective rdv
+    rdv.rdvs_users.to_a.find { |participation| participation.user_id.in?(self_and_relatives_and_responsible.map(&:id)) }
+  end
+
   def deleted_email
     "user_#{id}@deleted.rdv-solidarites.fr"
   end

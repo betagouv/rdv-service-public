@@ -5,6 +5,7 @@ class RdvsUser < ApplicationRecord
   devise :invitable
 
   include RdvsUser::StatusChangeable
+  include RdvsUser::Creatable
 
   # Attributes
   enum status: { unknown: "unknown", waiting: "waiting", seen: "seen", excused: "excused", revoked: "revoked", noshow: "noshow" }
@@ -68,6 +69,14 @@ class RdvsUser < ApplicationRecord
     else
       status
     end
+  end
+
+  def not_cancelled?
+    status.in? NOT_CANCELLED_STATUSES
+  end
+
+  def cancelled?
+    status.in? CANCELLED_STATUSES
   end
 
   def set_default_notifications_flags

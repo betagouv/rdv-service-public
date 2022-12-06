@@ -50,7 +50,7 @@ module RdvsHelper
   end
 
   def rdv_tag(rdv)
-    if rdv.cancelled_at
+    if rdv.cancelled_at || current_user.participation_for(rdv)&.cancelled?
       tag.span("Annulé", class: "badge badge-warning")
     elsif rdv.starts_at.future?
       tag.span("À venir", class: "badge bg-info")
@@ -86,11 +86,11 @@ module RdvsHelper
   end
 
   def cancel_rdv_to_not_notify?(rdv, status)
-    %w[revoked excused].include?(status) && rdv.rdvs_users.select(&:send_lifecycle_notifications?).empty?
+    Rdv::CANCELLED_STATUSES.include?(status) && rdv.rdvs_users.select(&:send_lifecycle_notifications?).empty?
   end
 
   def cancel_rdv_to_notify?(rdv, status)
-    %w[revoked excused].include?(status) && rdv.rdvs_users.select(&:send_lifecycle_notifications?).any?
+    Rdv::CANCELLED_STATUSES.include?(status) && rdv.rdvs_users.select(&:send_lifecycle_notifications?).any?
   end
 
   def reset_futur_rdv?(rdv, status)

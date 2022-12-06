@@ -146,9 +146,17 @@ RSpec.describe Users::RdvsController, type: :controller do
 
   describe "GET #show" do
     let(:user) { create(:user) }
+    let(:user2) { create(:user) }
     let(:rdv) { create(:rdv, users: [user], motif: motif, starts_at: starts_at, created_by: "user") }
+    let(:rdv2) { create(:rdv, users: [user2], motif: create(:motif, :by_phone), lieu: nil, starts_at: starts_at, created_by: "user") }
     let(:starts_at) { Time.zone.parse("2020-10-20 10h30") }
     let(:motif) { build(:motif, reservable_online: true, rdvs_editable_by_user: true, rdvs_cancellable_by_user: true) }
+
+    def raise_error_for_others_rdvs
+      expect do
+        get :show, params: { id: rdv2.id }
+      end.to raise_error(ActiveRecord::RecordNotFound)
+    end
 
     before do
       travel_to(Time.zone.parse("01/01/2019"))
@@ -177,6 +185,10 @@ RSpec.describe Users::RdvsController, type: :controller do
         expect(response.body).to match(/Déplacer le RDV/)
         expect(response.body).to match(/Annuler le RDV/)
       end
+
+      it "doesnt shows other's users rdv" do
+        raise_error_for_others_rdvs
+      end
     end
 
     context "when the rdv is past" do
@@ -189,6 +201,10 @@ RSpec.describe Users::RdvsController, type: :controller do
         expect(response.body).to match(/Votre RDV/)
         expect(response.body).not_to match(/Déplacer le RDV/)
         expect(response.body).not_to match(/Annuler le RDV/)
+      end
+
+      it "doesnt shows other's users rdv" do
+        raise_error_for_others_rdvs
       end
     end
 
@@ -203,6 +219,10 @@ RSpec.describe Users::RdvsController, type: :controller do
         expect(response.body).not_to match(/Déplacer le RDV/)
         expect(response.body).to match(/Annuler le RDV/)
       end
+
+      it "doesnt shows other's users rdv" do
+        raise_error_for_others_rdvs
+      end
     end
 
     context "when the rdv motif is not reservable_online" do
@@ -215,6 +235,10 @@ RSpec.describe Users::RdvsController, type: :controller do
         expect(response.body).to match(/Votre RDV/)
         expect(response.body).not_to match(/Déplacer le RDV/)
         expect(response.body).to match(/Annuler le RDV/)
+      end
+
+      it "doesnt shows other's users rdv" do
+        raise_error_for_others_rdvs
       end
     end
 
@@ -229,6 +253,10 @@ RSpec.describe Users::RdvsController, type: :controller do
         expect(response.body).not_to match(/Déplacer le RDV/)
         expect(response.body).to match(/Annuler le RDV/)
       end
+
+      it "doesnt shows other's users rdv" do
+        raise_error_for_others_rdvs
+      end
     end
 
     context "when the rdv is set as not cancellable" do
@@ -242,6 +270,10 @@ RSpec.describe Users::RdvsController, type: :controller do
         expect(response.body).to match(/Déplacer le RDV/)
         expect(response.body).not_to match(/Annuler le RDV/)
         expect(response.body).to match(/Ce rendez-vous n'est pas annulable en ligne/)
+      end
+
+      it "doesnt shows other's users rdv" do
+        raise_error_for_others_rdvs
       end
     end
 
@@ -275,9 +307,13 @@ RSpec.describe Users::RdvsController, type: :controller do
     subject { get :index }
 
     let!(:user) { create(:user) }
+    let!(:user2) { create(:user) }
     let!(:rdv1) { create(:rdv, users: [user], starts_at: 5.days.from_now) }
     let!(:rdv2) { create(:rdv, users: [user], starts_at: 4.days.from_now) }
     let!(:rdv3) { create(:rdv, motif: create(:motif, :by_phone), lieu: nil, users: [user], starts_at: 3.days.from_now) }
+    let!(:rdv_co) { create(:rdv, :collectif, users: [user], starts_at: 6.days.from_now) }
+    let!(:rdv_co_other_user) { create(:rdv, :collectif, users: [user2], starts_at: 8.days.from_now) }
+    let!(:rdv_co_without_users) { create(:rdv, :collectif, :without_users, starts_at: 9.days.from_now) }
 
     context "when signed in" do
       before { sign_in user }
@@ -289,6 +325,9 @@ RSpec.describe Users::RdvsController, type: :controller do
         expect(response.body).to include(I18n.l(rdv1.starts_at, format: :human).to_s)
         expect(response.body).to include(I18n.l(rdv2.starts_at, format: :human).to_s)
         expect(response.body).to include(I18n.l(rdv3.starts_at, format: :human).to_s)
+        expect(response.body).to include(I18n.l(rdv_co.starts_at, format: :human).to_s)
+        expect(response.body).not_to include(I18n.l(rdv_co_other_user.starts_at, format: :human).to_s)
+        expect(response.body).not_to include(I18n.l(rdv_co_without_users.starts_at, format: :human).to_s)
       end
 
       context "when looking at rdvs on a different domain name" do
