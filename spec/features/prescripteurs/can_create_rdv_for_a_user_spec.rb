@@ -63,8 +63,14 @@ RSpec.describe "prescripteur can create RDV for a user" do
     expect { click_on "Confirmer le rendez-vous" }.to change(Rdv, :count).by(1).and(change(User, :count).by(1))
 
     created_rdv = Rdv.last
-    expect(created_rdv.users.first).to have_attributes(full_name: "Patricia DUROY", created_through: "prescripteur", phone_number: "0611223344")
     expect(created_rdv.agents).to eq([agent])
+    expect(created_rdv.rdvs_users.size).to eq(1)
+    expect(created_rdv.rdvs_users.first.user).to have_attributes(
+      full_name: "Patricia DUROY",
+      created_through: "prescripteur",
+      phone_number: "0611223344",
+      organisations: [organisation]
+    )
     expect(created_rdv.rdvs_users.first.prescripteur).to have_attributes(
       first_name: "Alex",
       last_name: "Prescripteur",
