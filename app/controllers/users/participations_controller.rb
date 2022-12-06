@@ -59,7 +59,7 @@ class Users::ParticipationsController < UserAuthController
   end
 
   def create_participation
-    unless (responsible_or_relatives_participating? && @rdv.collectif?) || @rdv.collectif?
+    unless responsible_or_relatives_participating? || @rdv.collectif?
       raise Pundit::NotAuthorizedError
     end
 
