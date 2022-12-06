@@ -8,6 +8,9 @@ module Outlook
       scope :connected_to_outlook, -> { where.not(microsoft_graph_token: nil) }
 
       alias_attribute :connected_to_outlook?, :microsoft_graph_token?
+
+      encrypts :microsoft_graph_token
+      encrypts :refresh_microsoft_graph_token
     end
 
     # https://docs.microsoft.com/en-us/graph/use-the-api?view=graph-rest-1.0
