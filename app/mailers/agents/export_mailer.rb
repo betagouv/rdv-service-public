@@ -36,7 +36,7 @@ class Agents::ExportMailer < ApplicationMailer
     organisations = agent.organisations.where(id: organisation_ids)
 
     rdvs = Rdv.search_for(organisations, options)
-    rdvs_users = RdvsUser.where(rdv_id: rdvs.ids)
+    rdvs_users = RdvsUser.where(rdv_id: rdvs.select(:id))
 
     file_name = "export-rdvs-user-#{now.strftime('%Y-%m-%d')}.xls"
     mail.attachments[file_name] = {

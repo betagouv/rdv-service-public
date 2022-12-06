@@ -31,7 +31,7 @@ class Api::V1::PublicLinksController < Api::V1::BaseController
     public_organisations = Organisation
       .where(territory: territory)
       .where.not(external_id: nil)
-      .where(id: organisations_with_public_plages.ids | organisations_with_public_rdv_collectifs.ids)
+      .where_id_in_subqueries([organisations_with_public_plages, organisations_with_public_rdv_collectifs])
       .distinct
 
     public_organisations.map do |organisation|
