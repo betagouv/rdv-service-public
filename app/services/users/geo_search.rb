@@ -82,9 +82,11 @@ class Users::GeoSearch
   end
 
   def available_motifs_arels
-    [available_motifs_from_departement_organisations_arel] +
-      [available_motifs_from_attributed_organisations_arel] +
-      [available_motifs_from_attributed_agents_arel]
+    [
+      available_motifs_from_departement_organisations_arel,
+      available_motifs_from_attributed_organisations_arel,
+      available_motifs_from_attributed_agents_arel,
+    ]
   end
 
   def available_motifs_from_departement_organisations_arel
