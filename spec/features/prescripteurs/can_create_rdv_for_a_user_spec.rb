@@ -16,7 +16,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
   around { |example| perform_enqueued_jobs { example.run } }
 
   it "works" do
-    visit public_link_to_org_path(organisation_id: organisation.id)
+    visit "http://www.rdv-aide-numerique-test.localhost/org/#{organisation.id}"
 
     click_on "Prochaine disponibilité le"
     click_on "08:00"
@@ -74,7 +74,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
 
     expect(email_sent_to(agent.email).subject).to include("Nouveau RDV ajouté sur votre agenda RDV Solidarités")
     expect(email_sent_to("alex@prescripteur.fr").subject).to include("RDV confirmé")
-    expect(email_sent_to("alex@prescripteur.fr").body).to include("RDV Solidarités")
+    expect(email_sent_to("alex@prescripteur.fr").body).to include("RDV Aide Numérique")
 
     expect(page).to have_content("Rendez-vous confirmé")
     expect(page).to have_content("Patricia DUROY")
