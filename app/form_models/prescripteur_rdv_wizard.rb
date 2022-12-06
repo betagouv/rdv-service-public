@@ -6,7 +6,7 @@ class PrescripteurRdvWizard < UserRdvWizard::Base
   def initialize(attributes, domain)
     super(nil, attributes)
     @prescripteur = Prescripteur.new(attributes[:prescripteur]) if attributes[:prescripteur].present?
-    @user = User.new(attributes[:user]) if attributes[:user].present?
+    @user = User.new(attributes[:user].merge({ created_through: "prescripteur" })) if attributes[:user].present?
     @domain = domain
   end
 

@@ -64,6 +64,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
 
     created_rdv = Rdv.last
     expect(created_rdv.users.map(&:full_name)).to eq(["Patricia DUROY"])
+    expect(created_rdv.users.map(&:created_through)).to eq(["prescripteur"])
     expect(created_rdv.agents).to eq([agent])
     expect(created_rdv.rdvs_users.first.prescripteur).to have_attributes(
       first_name: "Alex",
