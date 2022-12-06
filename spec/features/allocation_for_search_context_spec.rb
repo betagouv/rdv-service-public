@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "Allocation For Search Context" do
-  it "stay under 2500" do
+  it "stay under 5500" do
     departement_number = "75"
     address = "20 avenue de Ségur 75007 Paris"
     city_code = "75007"
