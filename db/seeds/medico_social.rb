@@ -19,19 +19,6 @@ territory62 = Territory.create!(
   sms_configuration: "login:pwd"
 )
 
-territory_drome = Territory.create!(
-  departement_number: "26",
-  name: "Drôme",
-  sms_provider: "netsize",
-  sms_configuration: "login:pwd"
-)
-territory_yonne = Territory.create!(
-  departement_number: "89",
-  name: "Yonne",
-  sms_provider: "netsize",
-  sms_configuration: "login:pwd"
-)
-
 # ORGANISATIONS & SECTORS
 
 Organisation.skip_callback(:create, :after, :notify_admin_organisation_created)
@@ -41,24 +28,7 @@ org_paris_nord = Organisation.create!(
   human_id: "paris-nord",
   territory: territory75
 )
-org_drome1 = Organisation.create!(
-  name: "Plateforme mutualisée d'orientation",
-  phone_number: "0475796991",
-  human_id: "plateforme-mutualisee-orientation-drome",
-  territory: territory_drome
-)
-org_drome2 = Organisation.create!(
-  name: "PLIE Valence",
-  phone_number: "0101010102",
-  human_id: "plie-valence",
-  territory: territory_drome
-)
-org_yonne = Organisation.create!(
-  name: "UT Avallon",
-  phone_number: "0303030303",
-  human_id: "ut-avallon",
-  territory: territory_yonne
-)
+
 human_id_map = [
   { human_id: "1030", name: "MDS Arques" },
   { human_id: "1031", name: "MDS Arras Nord" },
@@ -229,68 +199,6 @@ motifs = {}
   )
 end
 
-# MOTIFS Drome
-motif1_drome1 = Motif.create!(
-  name: "RSA - Orientation : rdv sur site",
-  color: "#00ffff",
-  default_duration_in_min: 60,
-  organisation: org_drome1,
-  reservable_online: true,
-  max_booking_delay: 2_629_746,
-  service: service_social,
-  restriction_for_rdv:
-   "Avant votre prise de RDV, veuillez vérifier que  :\r\n- vous percevez RSA\r\n- vous avez effectué votre Déclaration Trimestrielle de Revenus",
-  instruction_for_rdv:
-   "Avant le RDV  :\r\n- pensez à vous munir d'un masque \r\n- apporter votre CV à jour ainsi que vos documents justifiant de votre inscription à Pôle Emploi",
-  for_secretariat: true,
-  custom_cancel_warning_message: "Ce RDV est obligatoire",
-  category: "rsa_orientation"
-)
-motif2_drome1 = Motif.create!(
-  name: "RSA accompagnement",
-  color: "#000000",
-  default_duration_in_min: 30,
-  organisation: org_drome1,
-  reservable_online: true,
-  service: service_social,
-  custom_cancel_warning_message: "",
-  collectif: false,
-  category: "rsa_accompagnement"
-)
-motif_drome2 = Motif.create!(
-  name: "RSA - Orientation : rdv sur site",
-  color: "#00ffff",
-  default_duration_in_min: 60,
-  organisation: org_drome2,
-  reservable_online: true,
-  max_booking_delay: 2_629_746,
-  service: service_social,
-  for_secretariat: true,
-  custom_cancel_warning_message: "Ce RDV est obligatoire",
-  category: "rsa_orientation"
-)
-
-# MOTIFS Yonne
-motif_yonne_physique = Motif.create!(
-  name: "RSA - Codiagnostic d'orientation",
-  color: "#000000",
-  default_duration_in_min: 30,
-  organisation: org_yonne,
-  service: service_social,
-  for_secretariat: true,
-  category: "rsa_orientation"
-)
-motif_yonne_telephone = Motif.create!(
-  name: "RSA - Orientation : rdv téléphonique",
-  color: "#000000",
-  default_duration_in_min: 30,
-  organisation: org_yonne,
-  service: service_social,
-  for_secretariat: true,
-  location_type: "phone",
-  category: "rsa_orientation"
-)
-
 now = Time.zone.now
 motifs_attributes = 1000.times.map do |i|
   {
@@ -339,35 +247,6 @@ lieu_bapaume_est = Lieu.create!(
   address: "10 rue emile delot, 62450 Arques",
   latitude: 50.1026,
   longitude: 2.8486
-)
-lieu_org_drome1_crest = Lieu.create!(
-  name: "AIRE - Plate-forme mutualisée d'orientation - Département de la Drôme",
-  organisation: org_drome1,
-  latitude: 44.733748,
-  longitude: 5.004262,
-  availability: :enabled,
-  phone_number: "04.75.79.69.91",
-  phone_number_formatted: "+33475796991",
-  address: "Rue a Combattants Outre Mer, Crest, 26400"
-)
-lieu_org_drome1_valence = Lieu.create!(
-  name: "Le 114 - Plate -forme mutualisée d'orientation - Département de la Drôme",
-  organisation: org_drome1,
-  latitude: 44.918859,
-  longitude: 4.919825,
-  availability: :enabled,
-  phone_number: "04.75.79.69.91",
-  phone_number_formatted: "+33475796991",
-  address: "114 Rue de la Forêt, Valence, 26000"
-)
-lieu_org_yonne = Lieu.create!(
-  name: "PE Avallon",
-  organisation: org_yonne,
-  old_address: "3 Rue Joubert, Auxerre, 89000, 89, Yonne, Bourgogne-Franche-Comté",
-  latitude: 47.796413,
-  longitude: 3.572016,
-  availability: :enabled,
-  address: "3 Rue Joubert, Auxerre, 89000"
 )
 
 now = Time.zone.now
@@ -600,29 +479,6 @@ agent_org_bapaume_pmi_gina = Agent.new(
 agent_org_bapaume_pmi_gina.skip_confirmation!
 agent_org_bapaume_pmi_gina.save!
 
-agent_orgs_rdv_insertion = Agent.new(
-  email: "alain.sertion@rdv-insertion-demo.fr",
-  uid: "alain.sertion@rdv-insertion-demo.fr",
-  first_name: "Alain",
-  last_name: "Sertion",
-  password: "123456",
-  service_id: service_social.id,
-  invitation_accepted_at: 10.days.ago,
-  roles_attributes: [
-    { organisation: org_drome1, level: AgentRole::LEVEL_ADMIN },
-    { organisation: org_drome2, level: AgentRole::LEVEL_ADMIN },
-    { organisation: org_yonne, level: AgentRole::LEVEL_ADMIN },
-  ],
-  agent_territorial_access_rights_attributes: [
-    { territory: territory_drome, allow_to_manage_teams: true },
-    { territory: territory_yonne, allow_to_manage_teams: true },
-  ]
-)
-agent_orgs_rdv_insertion.skip_confirmation!
-agent_orgs_rdv_insertion.save!
-agent_orgs_rdv_insertion.territorial_roles.create!(territory: territory_drome)
-agent_orgs_rdv_insertion.territorial_roles.create!(territory: territory_yonne)
-
 # Insert a lot of agents and add them to the paris_nord organisation
 # rubocop:disable Rails/SkipsModelValidations
 agents_attributes = 1_000.times.map do |i|
@@ -740,39 +596,6 @@ _plage_ouverture_org_bapaume_bruno_classique = PlageOuverture.create!(
   end_time: Tod::TimeOfDay.new(15),
   recurrence: Montrose.every(:week, interval: 1, starts: Date.tomorrow)
 )
-_plage_ouverture_org_drome_lieu1_alain_classique = PlageOuverture.create!(
-  title: "Permanence classique",
-  organisation_id: org_drome1.id,
-  agent_id: agent_orgs_rdv_insertion.id,
-  lieu_id: lieu_org_drome1_valence.id,
-  motif_ids: [motif1_drome1.id, motif2_drome1.id],
-  first_day: Date.tomorrow,
-  start_time: Tod::TimeOfDay.new(8),
-  end_time: Tod::TimeOfDay.new(12),
-  recurrence: Montrose.every(:week, day: [1, 2], interval: 1, starts: Date.tomorrow, on: %i[monday tuesday])
-)
-_plage_ouverture_org_drome_lieu2_alain_classique = PlageOuverture.create!(
-  title: "Permanence classique",
-  organisation_id: org_drome1.id,
-  agent_id: agent_orgs_rdv_insertion.id,
-  lieu_id: lieu_org_drome1_crest.id,
-  motif_ids: [motif_drome2.id],
-  first_day: Date.tomorrow,
-  start_time: Tod::TimeOfDay.new(8),
-  end_time: Tod::TimeOfDay.new(12),
-  recurrence: Montrose.every(:week, day: [3, 4], interval: 1, starts: Date.tomorrow, on: %i[wednesday thursday])
-)
-_plage_ouverture_org_yonne_alain_classique = PlageOuverture.create!(
-  title: "Permanence classique",
-  organisation_id: org_drome1.id,
-  agent_id: agent_orgs_rdv_insertion.id,
-  lieu_id: lieu_org_yonne.id,
-  motif_ids: [motif_yonne_physique.id, motif_yonne_telephone.id],
-  first_day: Date.tomorrow,
-  start_time: Tod::TimeOfDay.new(8),
-  end_time: Tod::TimeOfDay.new(12),
-  recurrence: Montrose.every(:week, day: [5], interval: 1, starts: Date.tomorrow, on: %i[friday])
-)
 
 [1, 2, 4, 5].each do |weekday|
   PlageOuverture.create(
@@ -883,26 +706,6 @@ events = %w[new_creneau_available rdv_cancelled rdv_created rdv_date_updated rdv
 receipts_attributes = rdv_ids.map { |id| { rdv_id: id, event: events.sample, channel: Receipt.channels.values.sample, result: Receipt.results.values.sample, created_at: now, updated_at: now } }
 Receipt.insert_all!(receipts_attributes)
 # rubocop:enable Rails/SkipsModelValidations
-
-# WEBHOOKS
-WebhookEndpoint.create!(
-  target_url: "http://localhost:8000/rdv_solidarites_webhooks",
-  secret: "rdv-solidarites",
-  organisation_id: org_drome1.id,
-  subscriptions: %w[rdv user user_profile organisation]
-)
-WebhookEndpoint.create!(
-  target_url: "http://localhost:8000/rdv_solidarites_webhooks",
-  secret: "rdv-solidarites",
-  organisation_id: org_drome2.id,
-  subscriptions: %w[rdv user user_profile organisation]
-)
-WebhookEndpoint.create!(
-  target_url: "http://localhost:8000/rdv_solidarites_webhooks",
-  secret: "rdv-solidarites",
-  organisation_id: org_yonne.id,
-  subscriptions: %w[rdv user user_profile organisation]
-)
 
 # Sync rdv counter cache
 unknown_rdv_count_by_agent = Rdv.status("unknown_past").joins(:agents_rdvs).group("agents_rdvs.agent_id").count
