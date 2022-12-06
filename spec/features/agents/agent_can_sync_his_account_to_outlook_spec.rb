@@ -21,7 +21,7 @@ describe "Agent can sync his account to outlook" do
   before do
     login_as(agent, scope: :agent)
     visit agents_calendar_sync_outlook_sync_path
-    click_link "Vous connecter avec Outlook"
+    find(:xpath, "//a/img[@alt=\"S'identifier avec Microsoft\"]").find(:xpath, "..").click
   end
 
   it "syncs the account" do

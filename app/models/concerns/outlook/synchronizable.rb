@@ -10,11 +10,11 @@ module Outlook
     included do
       attr_accessor :skip_outlook_create, :skip_outlook_update
 
-      after_commit :reflect_create_in_outlook, on: :create, unless: :skip_outlook_create
+      after_commit :sync_create_in_outlook_asynchronously, on: :create, unless: :skip_outlook_create
 
-      after_commit :reflect_update_in_outlook, on: :update, unless: :skip_outlook_update
+      after_commit :sync_update_in_outlook_asynchronously, on: :update, unless: :skip_outlook_update
 
-      after_destroy :reflect_destroy_in_outlook
+      after_destroy :sync_destroy_in_outlook_asynchronously
 
       alias_attribute :exists_in_outlook?, :outlook_id?
 
@@ -47,23 +47,23 @@ module Outlook
       make_api_call(agent, "DELETE", "me/Events/#{outlook_id}")
     end
 
-    def reflect_create_in_outlook
+    def sync_create_in_outlook_asynchronously
       return unless agent_connected_to_outlook? && !exists_in_outlook?
 
       Outlook::CreateEventJob.perform_later(self)
     end
 
-    def reflect_update_in_outlook
+    def sync_update_in_outlook_asynchronously
       if cancelled? || soft_deleted?
-        reflect_destroy_in_outlook
+        sync_destroy_in_outlook_asynchronously
       elsif exists_in_outlook?
         Outlook::UpdateEventJob.perform_later(self) if agent_connected_to_outlook?
       else
-        reflect_create_in_outlook
+        sync_create_in_outlook_asynchronously
       end
     end
 
-    def reflect_destroy_in_outlook
+    def sync_destroy_in_outlook_asynchronously
       return unless agent_connected_to_outlook? && exists_in_outlook?
 
       Outlook::DestroyEventJob.perform_later(self)

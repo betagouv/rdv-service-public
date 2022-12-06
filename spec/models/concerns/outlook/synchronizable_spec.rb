@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Outlook::Synchronizable, type: :concern do
-  describe "#reflect_create_in_outlook" do
+  describe "#sync_create_in_outlook_asynchronously" do
     context "agent synced with outlook" do
       let(:agent) { create(:agent, microsoft_graph_token: "token") }
       let(:agents_rdv) { create(:agents_rdv, agent: agent, skip_outlook_create: true) }
@@ -9,7 +9,7 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
       before do
         allow(Outlook::CreateEventJob).to receive(:perform_later)
 
-        agents_rdv.reflect_create_in_outlook
+        agents_rdv.sync_create_in_outlook_asynchronously
       end
 
       it "calls Outlook::CreateEventJob" do
@@ -24,7 +24,7 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
       before do
         allow(Outlook::CreateEventJob).to receive(:perform_later)
 
-        agents_rdv.reflect_create_in_outlook
+        agents_rdv.sync_create_in_outlook_asynchronously
       end
 
       it "does not call Outlook::CreateEventJob" do
@@ -39,7 +39,7 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
       before do
         allow(Outlook::CreateEventJob).to receive(:perform_later)
 
-        agents_rdv.reflect_create_in_outlook
+        agents_rdv.sync_create_in_outlook_asynchronously
       end
 
       it "does not call Outlook::CreateEventJob" do
@@ -48,7 +48,7 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
     end
   end
 
-  describe "#reflect_update_in_outlook" do
+  describe "#sync_update_in_outlook_asynchronously" do
     context "exists in outlook and agent is synced" do
       let(:agent) { create(:agent, microsoft_graph_token: "token") }
       let(:agents_rdv) { create(:agents_rdv, agent: agent, outlook_id: "abc", skip_outlook_create: true) }
@@ -56,7 +56,7 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
       before do
         allow(Outlook::UpdateEventJob).to receive(:perform_later)
 
-        agents_rdv.reflect_update_in_outlook
+        agents_rdv.sync_update_in_outlook_asynchronously
       end
 
       it "calls Outlook::UpdateEventJob" do
@@ -71,7 +71,7 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
       before do
         allow(Outlook::UpdateEventJob).to receive(:perform_later)
 
-        agents_rdv.reflect_update_in_outlook
+        agents_rdv.sync_update_in_outlook_asynchronously
       end
 
       it "does not call Outlook::UpdateEventJob" do
@@ -86,7 +86,7 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
       before do
         allow(Outlook::CreateEventJob).to receive(:perform_later)
 
-        agents_rdv.reflect_update_in_outlook
+        agents_rdv.sync_update_in_outlook_asynchronously
       end
 
       it "calls Outlook::CreateEventJob" do
@@ -102,7 +102,7 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
         allow(agents_rdv.rdv).to receive(:cancelled?).and_return(true)
         allow(Outlook::DestroyEventJob).to receive(:perform_later)
 
-        agents_rdv.reflect_update_in_outlook
+        agents_rdv.sync_update_in_outlook_asynchronously
       end
 
       it "calls Outlook::DestroyEventJob" do
@@ -118,7 +118,7 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
         allow(agents_rdv.rdv).to receive(:cancelled?).and_return(true)
         allow(Outlook::DestroyEventJob).to receive(:perform_later)
 
-        agents_rdv.reflect_update_in_outlook
+        agents_rdv.sync_update_in_outlook_asynchronously
       end
 
       it "does not call Outlook::DestroyEventJob" do
@@ -134,7 +134,7 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
         allow(agents_rdv.rdv).to receive(:soft_deleted?).and_return(true)
         allow(Outlook::DestroyEventJob).to receive(:perform_later)
 
-        agents_rdv.reflect_update_in_outlook
+        agents_rdv.sync_update_in_outlook_asynchronously
       end
 
       it "calls DestroyEventJob" do
@@ -143,7 +143,7 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
     end
   end
 
-  describe "#reflect_destroy_in_outlook" do
+  describe "#sync_destroy_in_outlook_asynchronously" do
     context "agent synced with outlook and exists in outlook" do
       let(:agent) { create(:agent, microsoft_graph_token: "token") }
       let(:agents_rdv) { create(:agents_rdv, agent: agent, outlook_id: "abc", skip_outlook_create: true) }
@@ -151,7 +151,7 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
       before do
         allow(Outlook::DestroyEventJob).to receive(:perform_later)
 
-        agents_rdv.reflect_destroy_in_outlook
+        agents_rdv.sync_destroy_in_outlook_asynchronously
       end
 
       it "calls Outlook::DestroyEventJob" do
@@ -166,7 +166,7 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
       before do
         allow(Outlook::DestroyEventJob).to receive(:perform_later)
 
-        agents_rdv.reflect_destroy_in_outlook
+        agents_rdv.sync_destroy_in_outlook_asynchronously
       end
 
       it "does not call Outlook::CreateEventJob" do
@@ -181,7 +181,7 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
       before do
         allow(Outlook::DestroyEventJob).to receive(:perform_later)
 
-        agents_rdv.reflect_destroy_in_outlook
+        agents_rdv.sync_destroy_in_outlook_asynchronously
       end
 
       it "does not call Outlook::CreateEventJob" do

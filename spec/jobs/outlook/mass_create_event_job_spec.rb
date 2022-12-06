@@ -19,18 +19,18 @@ RSpec.describe Outlook::MassCreateEventJob, type: :job do
 
   before do
     allow(agent).to receive_message_chain(:agents_rdvs, :future).and_return([agents_rdv, agents_rdv2])
-    allow(agents_rdv).to receive(:reflect_create_in_outlook)
-    allow(agents_rdv2).to receive(:reflect_create_in_outlook)
-    allow(agents_rdv3).to receive(:reflect_create_in_outlook)
-    allow(agents_rdv4).to receive(:reflect_create_in_outlook)
+    allow(agents_rdv).to receive(:sync_create_in_outlook_asynchronously)
+    allow(agents_rdv2).to receive(:sync_create_in_outlook_asynchronously)
+    allow(agents_rdv3).to receive(:sync_create_in_outlook_asynchronously)
+    allow(agents_rdv4).to receive(:sync_create_in_outlook_asynchronously)
 
     described_class.perform_now(agent)
   end
 
-  it "calls reflect_create_in_outlook for future rdv" do
-    expect(agents_rdv).to have_received(:reflect_create_in_outlook).with(no_args).once
-    expect(agents_rdv2).to have_received(:reflect_create_in_outlook).with(no_args).once
-    expect(agents_rdv3).not_to have_received(:reflect_create_in_outlook)
-    expect(agents_rdv4).not_to have_received(:reflect_create_in_outlook)
+  it "calls sync_create_in_outlook_asynchronously for future rdv" do
+    expect(agents_rdv).to have_received(:sync_create_in_outlook_asynchronously).with(no_args).once
+    expect(agents_rdv2).to have_received(:sync_create_in_outlook_asynchronously).with(no_args).once
+    expect(agents_rdv3).not_to have_received(:sync_create_in_outlook_asynchronously)
+    expect(agents_rdv4).not_to have_received(:sync_create_in_outlook_asynchronously)
   end
 end
