@@ -56,7 +56,7 @@ describe User::RdvsUserPolicy, type: :policy do
     it_behaves_like "included in scope"
   end
 
-  context "Participation belongs to relative for a normal rdv change" do
+  context "Participation belongs to relative for a individual RDV change" do
     let!(:rdv) { create(:rdv, users: [relative], organisation: organisation, agents: [agent]) }
     let(:participation) { rdv.rdvs_users.first }
 
@@ -65,7 +65,7 @@ describe User::RdvsUserPolicy, type: :policy do
     it_behaves_like "included in scope"
   end
 
-  context "Participation belongs to another user for a normal rdv change" do
+  context "Participation belongs to another user for a individual RDV change" do
     let!(:rdv) { create(:rdv, users: [user2], organisation: organisation, agents: [agent]) }
     let(:participation) { rdv.rdvs_users.first }
 

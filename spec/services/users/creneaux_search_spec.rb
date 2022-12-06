@@ -88,8 +88,7 @@ describe Users::CreneauxSearch, type: :service do
 
     it "returns the subscribable collective rdvs (rdv and rdv_with_user)" do
       expect(subject.next_availability).to eq(rdv)
-      expect(subject.creneaux.count).to eq(2)
-      expect(subject.creneaux.first).to eq(rdv)
+      expect(subject.creneaux).to match_array([rdv, rdv_with_user])
     end
 
     context "when there are geo attributed agents" do
@@ -103,8 +102,7 @@ describe Users::CreneauxSearch, type: :service do
 
       it "returns the rdv linked to the geo attributed agents" do
         expect(subject.next_availability).to eq(rdv)
-        expect(subject.creneaux.count).to eq(1)
-        expect(subject.creneaux.first).to eq(rdv)
+        expect(subject.creneaux).to match_array([rdv])
       end
     end
 
@@ -119,8 +117,7 @@ describe Users::CreneauxSearch, type: :service do
 
       it "returns the rdv linked to referents" do
         expect(subject.next_availability).to eq(rdv)
-        expect(subject.creneaux.count).to eq(1)
-        expect(subject.creneaux.first).to eq(rdv)
+        expect(subject.creneaux).to match_array([rdv])
       end
     end
   end
