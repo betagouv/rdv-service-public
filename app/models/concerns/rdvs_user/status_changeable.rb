@@ -26,7 +26,8 @@ module RdvsUser::StatusChangeable
   private
 
   def notify_update!(author)
-    user_to_notify = [user] if user_valid_for_lifecycle_notifications?
+    # We pass an empty array if notifications are disabled to avoid notifying other users
+    user_to_notify = send_lifecycle_notifications? ? [user] : []
 
     if rdv_user_cancelled?
       @notifier = Notifiers::RdvCancelled.new(rdv, author, user_to_notify)
@@ -46,9 +47,5 @@ module RdvsUser::StatusChangeable
 
   def rdv_status_reloaded_from_cancelled?
     status_previously_was.in?(RdvsUser::CANCELLED_STATUSES) && status == "unknown"
-  end
-
-  def user_valid_for_lifecycle_notifications?
-    send_lifecycle_notifications == true
   end
 end
