@@ -167,7 +167,7 @@ class Admin::RdvsController < AgentAuthController
 
   def rdv_success_flash
     {
-      notice: if rdv_params[:status].in?(%w[excused revoked])
+      notice: if rdv_params[:status].in?(Rdv::CANCELLED_STATUSES)
                 I18n.t("admin.rdvs.message.success.cancel")
               else
                 I18n.t("admin.rdvs.message.success.update")

@@ -20,10 +20,9 @@ module Users::CreneauxSearchConcern
 
   def available_collective_rdvs
     rdvs = Rdv.collectif_and_available_for_reservation
-      .where(motif: motif, lieu: lieu, starts_at: start_booking_delay..end_booking_delay)
+      .where(motif: motif, lieu: @lieu, starts_at: @motif.start_booking_delay..@motif.end_booking_delay)
       .order(:starts_at)
 
-    rdvs = rdvs.where.not(id: user.self_and_relatives.flat_map(&:rdv_ids)) if user
     rdvs = rdvs.joins(:agents).where(agents: attributed_agents) if attributed_agents.any?
     rdvs
   end

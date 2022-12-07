@@ -11,10 +11,21 @@ class User::RdvPolicy < ApplicationPolicy
     !current_user.only_invited?
   end
 
-  alias new? rdv_belongs_to_user_or_relatives?
-  alias create? rdv_belongs_to_user_or_relatives?
+  def new?
+    return false if record.revoked?
+
+    (record.collectif? && record.reservable_online?) || rdv_belongs_to_user_or_relatives?
+  end
+
+  def create?
+    return false if record.collectif?
+
+    rdv_belongs_to_user_or_relatives?
+  end
 
   def show?
+    return true if record.collectif? && record.reservable_online? && rdv_belongs_to_user_or_relatives?
+
     rdv_belongs_to_user_or_relatives? && (!current_user.only_invited? || current_user.invited_for_rdv?(record))
   end
 
@@ -26,6 +37,10 @@ class User::RdvPolicy < ApplicationPolicy
     show? && record.editable_by_user?
   end
 
+  def can_change_participants?
+    !current_user.only_invited? && current_user.participation_for(record).not_cancelled? && !record.in_the_past?
+  end
+
   alias creneaux? edit?
   alias update? edit?
 
@@ -33,15 +48,18 @@ class User::RdvPolicy < ApplicationPolicy
     alias current_user pundit_user
 
     def resolve
-      scope
+      my_rdvs_ids = scope
         .joins(:users)
         .where(users: { id: current_user.id })
         .or(
           User
-            .joins(:users)
-            .where(users: { responsible_id: current_user.id })
+          .joins(:users)
+          .where(users: { responsible_id: current_user.id })
         )
         .visible
+        .ids
+
+      scope.where(id: my_rdvs_ids).or(Rdv.where(id: scope.collectif.reservable_online)).distinct
     end
   end
 end

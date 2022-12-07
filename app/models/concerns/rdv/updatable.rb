@@ -50,7 +50,8 @@ module Rdv::Updatable
   end
 
   def rdv_user_token(user_id)
-    @notifier.rdv_users_tokens_by_user_id&.fetch(user_id, nil)
+    # For user invited with tokens, nil default for not invited users
+    @notifier&.rdv_users_tokens_by_user_id&.fetch(user_id, nil)
   end
 
   def notify!(author, previous_participations)
@@ -77,7 +78,7 @@ module Rdv::Updatable
   end
 
   def rdv_status_reloaded_from_cancelled?
-    status_previously_was.in?(%w[revoked excused]) && status == "unknown"
+    status_previously_was.in?(Rdv::CANCELLED_STATUSES) && status == "unknown"
   end
 
   def lieu_changed?
@@ -90,7 +91,7 @@ module Rdv::Updatable
   end
 
   def rdv_cancelled?
-    previous_changes["status"]&.last.in? %w[excused revoked]
+    previous_changes["status"]&.last.in?(Rdv::CANCELLED_STATUSES)
   end
 
   def starts_at_changed?

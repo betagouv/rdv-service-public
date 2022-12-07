@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Notifiers::RdvCollectifParticipations < ::BaseService
+  attr_reader :rdv_users_tokens_by_user_id
+
   def initialize(rdv, author, previous_participations)
     @rdv = rdv
     @author = author
@@ -21,7 +23,7 @@ class Notifiers::RdvCollectifParticipations < ::BaseService
     rdv_cancelled.notify_users_by_mail
     rdv_cancelled.notify_users_by_sms
 
-    rdv_created.rdv_users_tokens_by_user_id
+    @rdv_users_tokens_by_user_id = rdv_created.rdv_users_tokens_by_user_id
   end
 
   private
