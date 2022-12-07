@@ -26,14 +26,14 @@ module RdvsUser::StatusChangeable
   private
 
   def notify_update!(author)
-    return nil unless user_valid_for_lifecycle_notifications?
+    user_to_notify = [user] if user_valid_for_lifecycle_notifications?
 
     if rdv_user_cancelled?
-      @notifier = Notifiers::RdvCancelled.new(rdv, author, [user])
+      @notifier = Notifiers::RdvCancelled.new(rdv, author, user_to_notify)
     end
 
     if rdv_status_reloaded_from_cancelled?
-      @notifier = Notifiers::RdvCreated.new(rdv, author, [user])
+      @notifier = Notifiers::RdvCreated.new(rdv, author, user_to_notify)
     end
 
     @notifier&.perform

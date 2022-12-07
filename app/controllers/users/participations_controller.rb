@@ -13,6 +13,11 @@ class Users::ParticipationsController < UserAuthController
     add_participation
   end
 
+  def cancel
+    authorize(existing_participation)
+    change_participation_status("excused")
+  end
+
   private
 
   def set_rdv
@@ -28,7 +33,7 @@ class Users::ParticipationsController < UserAuthController
   end
 
   def existing_participation
-    @existing_participation ||= policy_scope(RdvsUser).find_by(rdv: @rdv, user: @user)
+    @existing_participation ||= policy_scope(RdvsUser).where(rdv: @rdv, user: @user.self_and_relatives_and_responsible).first
   end
 
   def new_participation
@@ -38,7 +43,11 @@ class Users::ParticipationsController < UserAuthController
   def add_participation
     if existing_participation.present?
       authorize(existing_participation)
-      existing_participation.excused? ? change_participation_status : user_is_already_participating
+      if existing_participation.excused?
+        change_participation_status("unknown")
+      else
+        participation_changed? ? create_participation : user_is_already_participating
+      end
     else
       authorize(new_participation)
       create_participation
@@ -50,11 +59,11 @@ class Users::ParticipationsController < UserAuthController
     redirect_to users_rdv_path(@rdv)
   end
 
-  def change_participation_status
-    # Participation was excused but user is registering again (participation update)
-    existing_participation.change_status_and_notify(current_user, "unknown")
+  def change_participation_status(status)
+    existing_participation.change_status_and_notify(current_user, status)
     set_user_name_initials_verified
-    flash[:notice] = "Ré-Inscription confirmée"
+    flash[:notice] = "Ré-Inscription confirmée" if existing_participation.status == "unknown"
+    flash[:notice] = "Désinscription de l'atelier confirmée" if existing_participation.status == "excused"
     redirect_to users_rdv_path(@rdv, invitation_token: existing_participation.rdv_user_token)
   end
 
@@ -71,5 +80,9 @@ class Users::ParticipationsController < UserAuthController
 
   def responsible_or_relatives_participating?
     @rdv.rdvs_users.where(user: current_user.self_and_relatives_and_responsible).any?
+  end
+
+  def participation_changed?
+    new_participation.user != existing_participation&.user
   end
 end

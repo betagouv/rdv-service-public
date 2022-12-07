@@ -24,6 +24,7 @@ module RdvsUser::Creatable
 
   def empty_rdv_from_relatives
     # Empty self_and_relatives rdvs_users (at the moment, only one member by family), no callbacks, no notifications
+    rdv.rdvs_users.where(user: user.self_and_relatives_and_responsible).delete_all
     rdv.rdvs_users.where(user: user.responsible&.self_and_relatives_and_responsible).delete_all
   end
 
