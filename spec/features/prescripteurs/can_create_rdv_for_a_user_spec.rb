@@ -18,9 +18,9 @@ RSpec.describe "prescripteur can create RDV for a user" do
   it "works" do
     visit "http://www.rdv-aide-numerique-test.localhost/org/#{organisation.id}"
 
-    click_on "Prochaine disponibilité le"
-    click_on "08:00"
-    click_on "Je suis un prescripteur qui oriente un bénéficiaire"
+    click_on "Prochaine disponibilité le" # choix du lieu
+    click_on "08:00" # choix du créneau
+    click_on "Je suis un prescripteur qui oriente un bénéficiaire" # page de login
 
     fill_in "Votre prénom", with: "Alex"
     fill_in "Votre nom", with: "Prescripteur"
@@ -33,16 +33,16 @@ RSpec.describe "prescripteur can create RDV for a user" do
     fill_in "Nom", with: "Duroy"
     fill_in "Téléphone", with: "0611223344"
 
+    # On simule que le créneau choisi est simultanément pris par quelqu'un d'autre
     create(:rdv, starts_at: Time.zone.local(2022, 11, 15, 8, 0, 0), motif: motif, agents: [agent], lieu: lieu)
     click_on "Confirmer le rendez-vous"
     expect(page).to have_content("Ce créneau n'est plus disponible. Veuillez en choisir un autre.")
+    # Dans ce cas, retour à l'étape de choix du lieu
     click_on "Prochaine disponibilité le"
     click_on "08:45"
     click_on "Je suis un prescripteur qui oriente un bénéficiaire"
 
-    #
-    # Formulaire de prescripteur pré-rempli
-    #
+    # On constate que le formulaire de prescripteur est pré-rempli
     expect(page).to have_field("Votre prénom", with: "Alex")
     expect(page).to have_field("Votre nom", with: "Prescripteur")
     click_on "Continuer"
