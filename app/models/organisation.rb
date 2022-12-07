@@ -90,4 +90,8 @@ class Organisation < ApplicationRecord
   def domain
     new_domain_beta? ? Domain::RDV_AIDE_NUMERIQUE : Domain::RDV_SOLIDARITES
   end
+
+  def slug
+    name.parameterize[..80]
+  end
 end
