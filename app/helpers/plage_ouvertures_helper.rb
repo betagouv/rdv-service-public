@@ -2,7 +2,7 @@
 
 module PlageOuverturesHelper
   def time_collections_for_plage_ouverture
-    time_collections_for_hours(7..19) + ["20:00"]
+    time_collections_for_hours(7..22) + ["23:00"]
   end
 
   def time_collections_for_absence

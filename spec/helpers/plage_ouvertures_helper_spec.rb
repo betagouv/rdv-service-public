@@ -8,10 +8,10 @@ describe PlageOuverturesHelper do
   end
 
   describe "#time_collections_for_plage_ouverture" do
-    it "goes from 7:00 to 20:00, so that it's possible to create a plage_ouverture that allows booking a rdv at 19:00" do
-      expect(time_collections_for_plage_ouverture.count).to eq(157)
+    it "goes from 7:00 to 23:00, so that it's possible to create a plage_ouverture that allows booking a rdv at 21:00" do
+      expect(time_collections_for_plage_ouverture.count).to eq(193)
       expect(time_collections_for_plage_ouverture.first).to eq("07:00")
-      expect(time_collections_for_plage_ouverture.last).to eq("20:00")
+      expect(time_collections_for_plage_ouverture.last).to eq("23:00")
     end
   end
 
