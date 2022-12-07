@@ -13,8 +13,6 @@ RSpec.describe "prescripteur can create RDV for a user" do
   let!(:lieu) { create(:lieu, organisation: organisation, name: "Bureau") }
   let!(:plage_ouverture) { create(:plage_ouverture, organisation: organisation, agent: agent, motifs: [motif], lieu: lieu) }
 
-  around { |example| perform_enqueued_jobs { example.run } }
-
   it "works" do
     visit "http://www.rdv-aide-numerique-test.localhost/org/#{organisation.id}"
 
@@ -59,8 +57,13 @@ RSpec.describe "prescripteur can create RDV for a user" do
     expect(page).to have_content("Téléphone ne permet pas de recevoir des SMS")
     fill_in "Téléphone", with: "0611223344"
 
-    stub_netsize_ok
     expect { click_on "Confirmer le rendez-vous" }.to change(Rdv, :count).by(1).and(change(User, :count).by(1))
+
+    expect(page).to have_content("Rendez-vous confirmé")
+    expect(page).to have_content("Patricia DUROY")
+    expect(page).to have_content("Le mardi 15 novembre 2022 à 08h45")
+    expect(page).to have_content("Bureau")
+    expect(page).to have_content("Instructions après confirmation")
 
     created_rdv = Rdv.last
     expect(created_rdv.agents).to eq([agent])
@@ -78,14 +81,12 @@ RSpec.describe "prescripteur can create RDV for a user" do
       phone_number: "0611223344"
     )
 
+    perform_enqueued_jobs(queue: "mailers")
     expect(email_sent_to(agent.email).subject).to include("Nouveau RDV ajouté sur votre agenda RDV Solidarités")
     expect(email_sent_to("alex@prescripteur.fr").subject).to include("RDV confirmé")
     expect(email_sent_to("alex@prescripteur.fr").body).to include("RDV Aide Numérique")
 
-    expect(page).to have_content("Rendez-vous confirmé")
-    expect(page).to have_content("Patricia DUROY")
-    expect(page).to have_content("Le mardi 15 novembre 2022 à 08h45")
-    expect(page).to have_content("Bureau")
-    expect(page).to have_content("Instructions après confirmation")
+    expect(enqueued_jobs.first["job_class"]).to eq("SmsJob")
+    expect(enqueued_jobs.first["arguments"][0]["phone_number"]).to eq("+33611223344")
   end
 end
