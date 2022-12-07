@@ -74,6 +74,9 @@ fr:
           territory_teams_title: Modifier une équipe
 
   activerecord:
+    attributes:
+      beneficiaire_form:
+        _benign: coucou
     errors:
       messages:
         record_invalid: 'La validation a échoué : %{errors}'
