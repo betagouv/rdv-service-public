@@ -17,6 +17,8 @@
         = link_to new_registration_path(resource_name, params: params.permit(:lieu_id, :motif_id, :starts_at)) do
           b Je m'inscris
 
+    / On évite généralement d'avoir de la logique spécifique au domain, mais ici il s'agit d'un feature flag temporaire,
+    / puisqu'on compte bientôt ouvrir cette fonctionnalité à tous les domaines
     - if @rdv_wizard && current_domain == Domain::RDV_AIDE_NUMERIQUE
       hr
         .text-center
