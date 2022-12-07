@@ -13,8 +13,6 @@ RSpec.describe Outlook::CreateEventJob, type: :job do
 
   context "when the event is created" do
     before do
-      stub_request(:post, "https://login.microsoftonline.com/common/oauth2/v2.0/token")
-        .to_return(status: 200, body: { access_token: "token" }.to_json, headers: {})
       stub_request(:post, "https://graph.microsoft.com/v1.0/me/Events")
         .with(
           body: "{\"subject\":\"Super Motif\",\"body\":{\"contentType\":\"HTML\",\"content\":\"plus d'infos dans RDV Solidarités: http://www.rdv-solidarites-test.localhost/admin/organisations/10/rdvs/20\"},\"start\":{\"dateTime\":\"2023-01-01T11:00:00+01:00\",\"timeZone\":\"Europe/Paris\"},\"end\":{\"dateTime\":\"2023-01-01T11:30:00+01:00\",\"timeZone\":\"Europe/Paris\"},\"location\":{\"displayName\":\"Par téléphone\"}}",
@@ -34,8 +32,6 @@ RSpec.describe Outlook::CreateEventJob, type: :job do
 
   context "when the event cannot be created" do
     before do
-      stub_request(:post, "https://login.microsoftonline.com/common/oauth2/v2.0/token")
-        .to_return(status: 200, body: { access_token: "token" }.to_json, headers: {})
       stub_request(:post, "https://graph.microsoft.com/v1.0/me/Events")
         .with(
           body: "{\"subject\":\"Super Motif\",\"body\":{\"contentType\":\"HTML\",\"content\":\"plus d'infos dans RDV Solidarités: http://www.rdv-solidarites-test.localhost/admin/organisations/10/rdvs/20\"},\"start\":{\"dateTime\":\"2023-01-01T11:00:00+01:00\",\"timeZone\":\"Europe/Paris\"},\"end\":{\"dateTime\":\"2023-01-01T11:30:00+01:00\",\"timeZone\":\"Europe/Paris\"},\"location\":{\"displayName\":\"Par téléphone\"}}",

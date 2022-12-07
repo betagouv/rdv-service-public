@@ -13,8 +13,6 @@ RSpec.describe Outlook::DestroyEventJob, type: :job do
 
   context "when the event is destroyed" do
     before do
-      stub_request(:post, "https://login.microsoftonline.com/common/oauth2/v2.0/token")
-        .to_return(status: 200, body: { access_token: "token" }.to_json, headers: {})
       stub_request(:delete, "https://graph.microsoft.com/v1.0/me/Events/super_id")
         .with(
           headers: { "Accept" => "application/json", "Authorization" => "Bearer token", "Content-Type" => "application/json", "Expect" => "", "Return-Client-Request-Id" => "true",
@@ -36,8 +34,6 @@ RSpec.describe Outlook::DestroyEventJob, type: :job do
 
   context "when the event cannot be destroyed" do
     before do
-      stub_request(:post, "https://login.microsoftonline.com/common/oauth2/v2.0/token")
-        .to_return(status: 200, body: { access_token: "token" }.to_json, headers: {})
       stub_request(:delete, "https://graph.microsoft.com/v1.0/me/Events/super_id")
         .with(
           headers: { "Accept" => "application/json", "Authorization" => "Bearer token", "Content-Type" => "application/json", "Expect" => "", "Return-Client-Request-Id" => "true",
