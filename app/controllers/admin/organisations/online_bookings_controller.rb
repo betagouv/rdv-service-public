@@ -3,8 +3,6 @@
 class Admin::Organisations::OnlineBookingsController < AgentAuthController
   before_action :set_organisation
 
-  helper_method :booking_link
-
   def show
     authorize(@organisation)
 
@@ -18,6 +16,7 @@ class Admin::Organisations::OnlineBookingsController < AgentAuthController
   private
 
   def booking_link
-    public_link_to_org_url(organisation_id: current_organisation.id)
+    public_link_to_org_url(organisation_id: current_organisation.id, org_slug: current_organisation.slug)
   end
+  helper_method :booking_link
 end
