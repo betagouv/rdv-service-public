@@ -16,6 +16,7 @@ class PrescripteurRdvWizard < UserRdvWizard::Base
     rdvs_user = RdvsUser.new(user: @user, prescripteur: @prescripteur, rdv: rdv)
 
     rdv.assign_attributes(
+      created_by: :prescripteur,
       lieu: lieu,
       organisation: motif.organisation,
       agents: [creneau.agent],
