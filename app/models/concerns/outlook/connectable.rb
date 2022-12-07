@@ -13,31 +13,13 @@ module Outlook
       encrypts :refresh_microsoft_graph_token
     end
 
-    # https://docs.microsoft.com/en-us/graph/use-the-api?view=graph-rest-1.0
-
-    REFRESH_TOKEN_URL = "https://login.microsoftonline.com/common/oauth2/v2.0/token"
-
     def refresh_outlook_token
-      response = JSON.parse(refresh_token_query.response_body)
-      if response["error"].present?
-        Sentry.capture_message("Error refreshing Microsoft Graph Token for #{email}: #{response['error_description']}")
-      elsif response["access_token"].present?
-        update(microsoft_graph_token: response["access_token"])
+      refresh_token_try = Outlook::User.new(agent: self).refresh_token
+      if refresh_token_try["error"].present?
+        Sentry.capture_message("Error refreshing Microsoft Graph Token for #{email}: #{refresh_token_try['error_description']}")
+      elsif refresh_token_try["access_token"].present?
+        update(microsoft_graph_token: refresh_token_try["access_token"])
       end
-    end
-
-    private
-
-    def refresh_token_query
-      Typhoeus.post(
-        REFRESH_TOKEN_URL,
-        headers: { "Content-Type" => "application/x-www-form-urlencoded" },
-        body: {
-          client_id: ENV.fetch("AZURE_APPLICATION_CLIENT_ID", nil),
-          client_secret: ENV.fetch("AZURE_APPLICATION_CLIENT_SECRET", nil),
-          refresh_token: refresh_microsoft_graph_token, grant_type: "refresh_token",
-        }
-      )
     end
   end
 end

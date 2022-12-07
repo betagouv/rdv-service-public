@@ -3,7 +3,7 @@
 module Outlook
   class UpdateEventJob < ApplicationJob
     def perform(agents_rdv)
-      agents_rdv.update_outlook_event
+      Outlook::Event.new(agents_rdv: agents_rdv).update
     end
   end
 end
