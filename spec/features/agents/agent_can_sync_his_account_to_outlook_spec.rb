@@ -20,7 +20,7 @@ describe "Agent can sync his account to outlook" do
 
   before do
     login_as(agent, scope: :agent)
-    visit agents_calendar_sync_outlook_sync_path
+    visit "http://www.rdv-aide-numerique-test.localhost/agents/calendar_sync/outlook_sync"
     find(:xpath, "//a/img[@alt=\"S'identifier avec Microsoft\"]").find(:xpath, "..").click
   end
 
