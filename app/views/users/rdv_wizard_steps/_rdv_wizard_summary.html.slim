@@ -22,7 +22,7 @@ ul.list-group.list-group-flush
         .col
           i.fa.fa-check.fa-fw.mr-1.text-success
           | Lieu :&nbsp;
-          = rdv_wizard.lieu_full_name
+          = rdv_wizard.creneau.lieu.full_name
         - unless rdv_wizard.invitation?
           .col-auto
             = link_to "modifier", path_to_lieu_selection(rdv_wizard.params_to_selections)
@@ -34,14 +34,17 @@ ul.list-group.list-group-flush
         = rdv_starts_at_and_duration(rdv_wizard.rdv, :human)
       - unless rdv_wizard.invitation?
         .col-auto
-        = link_to "modifier", path_to_creneau_selection(rdv_wizard.params_to_selections)
+          = link_to "modifier", path_to_creneau_selection(rdv_wizard.params_to_selections)
   - if rdv_wizard.is_a?(UserRdvWizard::Step3)
     li.list-group-item
       .row
         .col
           i.fa.fa-check.fa-fw.mr-1.text-success
           | Usager :&nbsp;
-          = users_to_sentence(rdv_wizard.users)
+          - if !rdv_wizard.invitation?
+            = users_to_sentence(rdv_wizard.users)
+          - else
+            = current_user.full_name
         - unless rdv_wizard.invitation?
           .col-auto
             = link_to "modifier", new_users_rdv_wizard_step_path(step: 2, **@rdv_wizard.to_query)

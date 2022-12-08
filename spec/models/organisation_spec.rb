@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe Organisation, type: :model do
-  describe "#contactable" do
+  describe ".contactable" do
     it "return nothing when no organisation" do
       expect(described_class.contactable).to be_empty
     end
@@ -22,6 +22,18 @@ describe Organisation, type: :model do
       organisation = create(:organisation, phone_number: nil, website: nil, email: "aude@pasdecalais.fr")
       create(:organisation, phone_number: nil, website: nil, email: nil)
       expect(described_class.contactable).to eq([organisation])
+    end
+  end
+
+  describe "#slug" do
+    it "separates with dashes, squishes whitespace and skips special characters" do
+      organisation = build(:organisation, name: "SDSEI Est Béarn - site de NAY ($`'&@*!:)")
+      expect(organisation.slug).to eq("sdsei-est-bearn-site-de-nay")
+    end
+
+    it "limits length to 80" do
+      organisation = build(:organisation, name: "SDSEI Pays Basque Intérieur - site de SAINT JEAN LE VIEUX mais aussi d'un autre endroit")
+      expect(organisation.slug).to eq("sdsei-pays-basque-interieur-site-de-saint-jean-le-vieux-mais-aussi-d-un-autre-end")
     end
   end
 end

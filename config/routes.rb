@@ -54,6 +54,7 @@ Rails.application.routes.draw do
   namespace :users do
     resource :rdv_wizard_step, only: %i[new create]
     resources :rdvs, only: %i[index create show edit update] do
+      resources :participations, only: %i[index create]
       member do
         get :creneaux
         put :cancel
@@ -87,7 +88,9 @@ Rails.application.routes.draw do
     put "agents" => "agents/registrations#update", as: "agent_registration"
     delete "agents" => "agents/registrations#destroy", as: "delete_agent_registration"
     namespace :agents do
-      resource :preferences, only: %i[show update]
+      resource :preferences, only: %i[show update] do
+        post :disable_cnfs_online_booking_banner
+      end
       resource :calendar_sync, only: %i[show update], controller: :calendar_sync
     end
   end
@@ -175,7 +178,7 @@ Rails.application.routes.draw do
           collection do
             get :search
           end
-          resources :referents, only: %i[index create destroy]
+          resources :referent_assignations, only: %i[index create destroy]
         end
         resources :absences, except: %i[index show new]
         resources :agent_agendas, only: %i[show] do

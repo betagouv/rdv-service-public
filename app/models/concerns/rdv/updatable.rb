@@ -33,51 +33,52 @@ module Rdv::Updatable
     case status
     when "unknown"
       # Setting to unknown means resetting the rdv status by agents and reset ALL participants statuses
-      rdvs_users.update(status: status)
+      rdvs_users.each { _1.update!(status: status) }
     when "excused"
       # Collective rdv cannot be globally excused
       unless collectif?
         # On non collectives rdv all participants are excused
-        rdvs_users.not_cancelled.update(status: status)
+        rdvs_users.not_cancelled.each { _1.update!(status: status) }
       end
     when "revoked"
       # When rdv status is revoked, all participants are revoked
-      rdvs_users.not_cancelled.update(status: status)
+      rdvs_users.not_cancelled.each { _1.update!(status: status) }
     when "seen", "noshow"
       # When rdv status is seen or noshow, all unknown statuses are changed
-      rdvs_users.not_cancelled.where(status: "unknown").update(status: status)
+      rdvs_users.unknown.each { _1.update!(status: status) }
     end
   end
 
   def rdv_user_token(user_id)
-    @rdv_users_tokens_by_user_id&.fetch(user_id, nil)
+    # For user invited with tokens, nil default for not invited users
+    @notifier&.rdv_users_tokens_by_user_id&.fetch(user_id, nil)
   end
 
   def notify!(author, previous_participations)
-    @rdv_users_tokens_by_user_id = {}
     if rdv_cancelled?
       file_attentes.destroy_all
-      @rdv_users_tokens_by_user_id = Notifiers::RdvCancelled.perform_with(self, author)
+      @notifier = Notifiers::RdvCancelled.new(self, author)
     end
 
     if rdv_status_reloaded_from_cancelled?
-      @rdv_users_tokens_by_user_id = Notifiers::RdvCreated.perform_with(self, author)
+      @notifier = Notifiers::RdvCreated.new(self, author)
     end
 
     if starts_at_changed? || lieu_changed?
-      @rdv_users_tokens_by_user_id = Notifiers::RdvUpdated.perform_with(self, author)
+      @notifier = Notifiers::RdvUpdated.new(self, author)
     end
 
     if collectif?
-      @rdv_users_tokens_by_user_id = Notifiers::RdvCollectifParticipations.perform_with(self, author, previous_participations)
+      @notifier = Notifiers::RdvCollectifParticipations.new(self, author, previous_participations)
     end
 
+    @notifier&.perform
     # we re-enable the webhooks that we deactivated during the notification process
     self.skip_webhooks = false
   end
 
   def rdv_status_reloaded_from_cancelled?
-    status_previously_was.in?(%w[revoked excused]) && status == "unknown"
+    status_previously_was.in?(Rdv::CANCELLED_STATUSES) && status == "unknown"
   end
 
   def lieu_changed?
@@ -90,7 +91,7 @@ module Rdv::Updatable
   end
 
   def rdv_cancelled?
-    previous_changes["status"]&.last.in? %w[excused revoked]
+    previous_changes["status"]&.last.in?(Rdv::CANCELLED_STATUSES)
   end
 
   def starts_at_changed?

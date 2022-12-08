@@ -1,120 +1,95 @@
 # frozen_string_literal: true
 
-describe "api/v1/user_profiles requests", type: :request do
-  let!(:territory) { create(:territory) }
-  let!(:organisation) { create(:organisation, territory: territory) }
-  let!(:user) { create(:user) }
-  let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+require "swagger_helper"
 
-  describe "POST api/v1/user_profiles" do
-    context "valid & minimal params" do
-      it "works" do
-        count_before = UserProfile.count
-        post(
-          api_v1_user_profiles_path,
-          params: {
-            organisation_id: organisation.id,
-            user_id: user.id,
-          },
-          headers: api_auth_headers_for_agent(agent)
-        )
-        expect(response.status).to eq(200)
-        expect(UserProfile.count).to eq(count_before + 1)
-        expect(parsed_response_body["user_profile"]).to be_present
-        expect(parsed_response_body["user_profile"]["user"]["id"]).to eq(user.id)
-        expect(parsed_response_body["user_profile"]["organisation"]["id"]).to eq(organisation.id)
-        expect(user.reload.organisations).to include(organisation)
+describe "User Profile authentified API", swagger_doc: "v1/api.json" do
+  with_examples
+
+  path "/api/v1/user_profiles" do
+    post "Créer un profil utilisateur" do
+      with_authentication
+
+      tags "UserProfile"
+      produces "application/json"
+      operationId "createUserProfile"
+      description "Crée un profil utilisateur"
+
+      parameter name: "organisation_id", in: :query, type: :integer, description: "ID de l'organisation", example: 12
+      parameter name: "user_id", in: :query, type: :integer, description: "ID de l'utilisateur", example: 12
+      parameter name: "logement", in: :query, type: :string, enum: %w[sdf heberge en_accession_propriete proprietaire autre locataire], description: "Type de logement de l'utilisateur",
+                example: "proprietaire", required: false
+      parameter name: "notes", in: :query, type: :string, description: "Une note sur le profil utilisateur", example: "Super note", required: false
+
+      let!(:territory) { create(:territory) }
+      let!(:organisation) { create(:organisation, territory: territory) }
+      let!(:user) { create(:user) }
+      let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+      let(:auth_headers) { api_auth_headers_for_agent(agent) }
+      let(:"access-token") { auth_headers["access-token"].to_s }
+      let(:uid) { auth_headers["uid"].to_s }
+      let(:client) { auth_headers["client"].to_s }
+
+      response 200, "Crée et renvoie un profil utilisateur" do
+        let(:organisation_id) { organisation.id }
+        let(:user_id) { user.id }
+        let(:logement) { "sdf" }
+        let(:notes) { "Super Note" }
+
+        let!(:user_profile_count_before) { UserProfile.count }
+        let(:created_user_profile) do
+          UserProfile.find_by(user_id: parsed_response_body.dig("user_profile", "user", "id"), organisation_id: parsed_response_body.dig("user_profile", "organisation", "id"))
+        end
+
+        schema "$ref" => "#/components/schemas/user_profile_with_root"
+
+        run_test!
+
+        it { expect(UserProfile.count).to eq(user_profile_count_before + 1) }
+
+        it { expect(created_user_profile.organisation).to eq(organisation) }
+
+        it { expect(created_user_profile.user).to eq(user) }
+
+        it { expect(created_user_profile.logement).to eq("sdf") }
+
+        it { expect(created_user_profile.notes).to eq("Super Note") }
       end
-    end
 
-    context "valid & complete params" do
-      it "works" do
-        count_before = UserProfile.count
-        post(
-          api_v1_user_profiles_path,
-          params: {
-            organisation_id: organisation.id,
-            user_id: user.id,
-            logement: "heberge",
-            notes: "Très pressé, vite vite",
-          },
-          headers: api_auth_headers_for_agent(agent)
-        )
-        expect(response.status).to eq(200)
-        expect(UserProfile.count).to eq(count_before + 1)
-        expect(parsed_response_body["user_profile"]).to be_present
-        expect(parsed_response_body["user_profile"]["user"]["id"]).to eq(user.id)
-        expect(parsed_response_body["user_profile"]["organisation"]["id"]).to eq(organisation.id)
-        expect(parsed_response_body["user_profile"]["logement"]).to eq("heberge")
-        expect(parsed_response_body["user_profile"]["notes"]).to eq("Très pressé, vite vite")
-        expect(user.reload.organisations).to include(organisation)
+      it_behaves_like "an endpoint that returns 403 - forbidden", "l'agent·e n'a pas accès à l'organisation" do
+        let!(:unauthorized_orga) { create(:organisation) }
+        let(:organisation_id) { unauthorized_orga.id }
+        let(:user_id) { user.id }
+        let(:logement) { "sdf" }
+        let(:notes) { "Super Note" }
       end
-    end
 
-    context "invalid params: missing orga id" do
-      it "works" do
-        count_before = UserProfile.count
-        post(
-          api_v1_user_profiles_path,
-          params: { user_id: user.id },
-          headers: api_auth_headers_for_agent(agent)
-        )
-        expect(response.status).to eq(403)
-        expect(UserProfile.count).to eq(count_before)
-        expect(parsed_response_body["errors"]).to be_present
+      it_behaves_like "an endpoint that returns 401 - unauthorized" do
+        let(:organisation_id) { organisation.id }
+        let(:user_id) { user.id }
+        let(:logement) { "sdf" }
+        let(:notes) { "Super Note" }
       end
-    end
 
-    context "invalid params: missing user id" do
-      it "works" do
-        count_before = UserProfile.count
-        post(
-          api_v1_user_profiles_path,
-          params: { organisation_id: organisation.id },
-          headers: api_auth_headers_for_agent(agent)
-        )
-        expect(response.status).to eq(422)
-        expect(UserProfile.count).to eq(count_before)
-        expect(parsed_response_body["errors"]).to be_present
+      it_behaves_like "an endpoint that returns 422 - unprocessable_entity", "l'utilisateur ou l'organisation est inconnu(e), ou le logement est incorrect, ou ce profil existe déjà", true do
+        let(:organisation_id) { organisation.id }
+        let(:user_id) { "inconnu" }
+        let(:logement) { "sdf" }
+        let(:notes) { "Super Note" }
       end
-    end
 
-    context "invalid params: unauthorized orga" do
-      let!(:another_territory) { create(:territory) }
-      let!(:unauthorized_orga) { create(:organisation, territory: another_territory) }
-
-      it "works" do
-        count_before = UserProfile.count
-        post(
-          api_v1_user_profiles_path,
-          params: {
-            user_id: user.id,
-            organisation_id: unauthorized_orga.id,
-          },
-          headers: api_auth_headers_for_agent(agent)
-        )
-        expect(response.status).to eq(403)
-        expect(UserProfile.count).to eq(count_before)
-        expect(parsed_response_body["errors"]).to be_present
+      it_behaves_like "an endpoint that returns 422 - unprocessable_entity", "le logement n'est pas parmi les choix possibles", false do
+        let(:organisation_id) { organisation.id }
+        let(:user_id) { user.id }
+        let(:logement) { "inconnu" }
+        let(:notes) { "Super Note" }
       end
-    end
 
-    context "invalid params: profile already exists" do
-      let!(:existing_profile) { create(:user_profile, user: user, organisation: organisation) }
-
-      it "works" do
-        count_before = UserProfile.count
-        post(
-          api_v1_user_profiles_path,
-          params: {
-            user_id: user.id,
-            organisation_id: organisation.id,
-          },
-          headers: api_auth_headers_for_agent(agent)
-        )
-        expect(response.status).to eq(422)
-        expect(UserProfile.count).to eq(count_before)
-        expect(parsed_response_body["errors"]).to be_present
+      it_behaves_like "an endpoint that returns 422 - unprocessable_entity", "le user_profil existe déjà", false do
+        let!(:existing_profile) { create(:user_profile, user: user, organisation: organisation) }
+        let(:organisation_id) { organisation.id }
+        let(:user_id) { user.id }
+        let(:logement) { "sdf" }
+        let(:notes) { "Super Note" }
       end
     end
   end

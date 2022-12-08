@@ -12,7 +12,7 @@ conseillers_numeriques.each do |conseiller_numerique|
   agent = Agent.find_by(external_id: external_id)
   next if agent&.deleted_at?
 
-  agent = AddConseillerNumerique.process!({
+  AddConseillerNumerique.process!({
     external_id: external_id,
     email: conseiller_numerique["Email @conseiller-numerique.fr"],
     alternate_email: conseiller_numerique["Email"],
@@ -24,11 +24,6 @@ conseillers_numeriques.each do |conseiller_numerique|
       address: conseiller_numerique["Adresse de la structure"],
     },
   }.with_indifferent_access)
-
-  # Re-invite the agent if the invitation has expired
-  if agent.invitation_accepted_at.nil? && agent.invitation_sent_at < 1.month.ago
-    agent.invite!(nil, validate: false)
-  end
 
   puts "Import ou mise à jour réussie pour #{conseiller_numerique['Email @conseiller-numerique.fr']}"
 end

@@ -37,4 +37,22 @@ describe "users pages", js: true do
     login_as user
     expect_page_to_be_axe_clean(edit_relative_path(user))
   end
+
+  it "edit_user_path is accessible" do
+    user = create(:user)
+    login_as user
+    expect_page_to_be_axe_clean(edit_user_registration_path)
+  end
+
+  it "new_user_session_path is accessible" do
+    expect_page_to_be_axe_clean(new_user_session_path)
+  end
+
+  it "new_user_password_path is accessible" do
+    expect_page_to_be_axe_clean(new_user_password_path)
+  end
+
+  it "new_user_registration_path is accessible" do
+    expect_page_to_be_axe_clean(new_user_registration_path)
+  end
 end

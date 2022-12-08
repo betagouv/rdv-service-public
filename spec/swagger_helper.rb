@@ -18,7 +18,7 @@ RSpec.configure do |config|
     "v1/api.json" => {
       openapi: "3.0.1",
       info: {
-        title: "API RDV Solidarités V1",
+        title: "API RDV Solidarités",
         version: "v1",
         description: File.read(Rails.root.join("docs/api/v1/description_api.md")),
       },
@@ -41,7 +41,7 @@ RSpec.configure do |config|
           },
         },
         schemas: {
-          get_rdvs: {
+          rdvs: {
             type: "object",
             properties: {
               rdvs: {
@@ -89,6 +89,17 @@ RSpec.configure do |config|
             required: %w[id address agents cancelled_at collectif context created_by deleted_at duration_in_min lieu max_participants_count motif name organisation rdvs_users starts_at status users
                          users_count uuid],
           },
+          agents: {
+            type: "object",
+            properties: {
+              agents: {
+                type: "array",
+                items: { "$ref" => "#/components/schemas/agent" },
+              },
+              meta: { "$ref" => "#/components/schemas/meta" },
+            },
+            required: %w[agents meta],
+          },
           agent: {
             type: "object",
             properties: {
@@ -98,6 +109,24 @@ RSpec.configure do |config|
               last_name: { type: "string", nullable: true },
             },
             required: %w[id email first_name last_name],
+          },
+          user_with_root: {
+            type: "object",
+            properties: {
+              user: { "$ref" => "#/components/schemas/user" },
+            },
+            required: %w[user],
+          },
+          users: {
+            type: "object",
+            properties: {
+              users: {
+                type: "array",
+                items: { "$ref" => "#/components/schemas/user" },
+              },
+              meta: { "$ref" => "#/components/schemas/meta" },
+            },
+            required: %w[users meta],
           },
           user: {
             type: "object",
@@ -109,18 +138,18 @@ RSpec.configure do |config|
               affiliation_number: { type: "string", nullable: true },
               bith_date: { type: "string", format: "date", nullable: true },
               bith_name: { type: "string", nullable: true },
-              caisse_affiliation: { type: "string", enum: %w[aucun caf msa] },
+              caisse_affiliation: { type: "string", enum: %w[aucun caf msa], nullable: true },
               case_number: { type: "string", nullable: true },
               created_at: { type: "string" },
-              email: { type: "string" },
-              family_situation: { type: "string", enum: %w[single in_a_relationship divorced] },
+              email: { type: "string", nullable: true },
+              family_situation: { type: "string", enum: %w[single in_a_relationship divorced], nullable: true },
               first_name: { type: "string" },
               invitation_accepted_at: { type: "string", nullable: true },
               invitation_created_at: { type: "string", nullable: true },
               last_name: { type: "string" },
               notify_by_email: { type: "boolean" },
               notify_by_sms: { type: "boolean" },
-              number_of_children: { type: "integer" },
+              number_of_children: { type: "integer", nullable: true },
               phone_number: { type: "string", nullable: true },
               phone_number_formatted: { type: "string", nullable: true },
               responsible: { type: "object", nullable: true },
@@ -128,21 +157,54 @@ RSpec.configure do |config|
               user_profiles: {
                 type: "array",
                 nullable: true,
-                items: { "$ref" => "#/components/schemas/user_profiles" },
+                items: { "$ref" => "#/components/schemas/user_profile" },
               },
             },
-            required: %w[id address address_details affiliation_number birth_date birth_name caisse_affiliation case_number created_at email family_situation first_name invitation_accepted_at
-                         invitation_created_at last_name notify_by_email notify_by_sms number_of_children phone_number phone_number_formatted responsible responsible_id user_profiles],
+            required: %w[id address address_details affiliation_number birth_date birth_name case_number created_at first_name invitation_accepted_at
+                         invitation_created_at last_name notify_by_email notify_by_sms phone_number phone_number_formatted responsible responsible_id user_profiles],
           },
-          user_profiles: {
+          user_profile_with_root: {
+            type: "object",
+            properties: {
+              user_profile: { "$ref" => "#/components/schemas/user_profile" },
+            },
+            required: %w[user_profile],
+          },
+          user_profile: {
             type: "object",
             properties: {
               user: { "$ref" => "#/components/schemas/user" },
               organisation: { "$ref" => "#/components/schemas/organisation" },
-              logement: { type: "string", enum: %w[sdf heberge en_accession_propriete proprietaire autre locataire] },
-              note: { type: "string", nullable: true },
+              logement: { type: "string", enum: %w[sdf heberge en_accession_propriete proprietaire autre locataire], nullable: true },
+              notes: { type: "string", nullable: true },
             },
-            required: %w[user organisation logement note],
+            required: %w[organisation logement notes],
+          },
+          referent_assignation_with_root: {
+            type: "object",
+            properties: {
+              referent_assignation: { "$ref" => "#/components/schemas/referent_assignation" },
+            },
+            required: %w[referent_assignation],
+          },
+          referent_assignation: {
+            type: "object",
+            properties: {
+              user: { "$ref" => "#/components/schemas/user" },
+              agent: { "$ref" => "#/components/schemas/agent" },
+            },
+            required: %w[agent user],
+          },
+          organisations: {
+            type: "object",
+            properties: {
+              organisations: {
+                type: "array",
+                items: { "$ref" => "#/components/schemas/organisation" },
+              },
+              meta: { "$ref" => "#/components/schemas/meta" },
+            },
+            required: %w[organisations meta],
           },
           organisation: {
             type: "object",
@@ -153,6 +215,47 @@ RSpec.configure do |config|
               phone_number: { type: "string", nullable: true },
             },
             required: %w[id email name phone_number],
+          },
+          absence_with_root: {
+            type: "object",
+            properties: {
+              absence: { "$ref" => "#/components/schemas/absence" },
+            },
+            required: %w[absence],
+          },
+          absences: {
+            type: "object",
+            properties: {
+              absences: {
+                type: "array",
+                items: { "$ref" => "#/components/schemas/absence" },
+              },
+              meta: { "$ref" => "#/components/schemas/meta" },
+            },
+            required: %w[absences meta],
+          },
+          absence: {
+            type: "object",
+            properties: {
+              id: { type: "integer" },
+              ical_uid: { type: "string" },
+              title: { type: "string" },
+              first_day: { type: "string", format: "date" },
+              end_day: { type: "string", format: "date" },
+              start_time: { type: "string" },
+              end_time: { type: "string" },
+              agent: { "$ref" => "#/components/schemas/agent", nullable: true },
+              organisation: { "$ref" => "#/components/schemas/organisation" },
+            },
+            required: %w[id ical_uid title first_day end_day start_time end_time agent organisation],
+          },
+          invitation: {
+            type: "object",
+            properties: {
+              invitation_url: { type: "string" },
+              invitation_token: { type: "string" },
+            },
+            required: %w[invitation_url invitation_token],
           },
           lieu: {
             type: "object",
@@ -165,6 +268,17 @@ RSpec.configure do |config|
               single_use: { type: "boolean" },
             },
             required: %w[id address name organisation_id phone_number single_use],
+          },
+          motifs: {
+            type: "object",
+            properties: {
+              motifs: {
+                type: "array",
+                items: { "$ref" => "#/components/schemas/motif" },
+              },
+              meta: { "$ref" => "#/components/schemas/meta" },
+            },
+            required: %w[motifs meta],
           },
           motif: {
             type: "object",
@@ -190,25 +304,23 @@ RSpec.configure do |config|
             },
             required: %w[send_lifecycle_notifications send_reminder_notification status user],
           },
-          get_groups: {
+          public_links: {
             type: "object",
             properties: {
-              groups: {
+              public_links: {
                 type: "array",
-                items: { "$ref" => "#/components/schemas/group" },
+                items: { "$ref" => "#/components/schemas/public_link" },
               },
-              meta: { "$ref" => "#/components/schemas/meta" },
             },
-            required: %w[groups meta],
+            required: %w[public_links],
           },
-          group: {
+          public_link: {
             type: "object",
             properties: {
-              id: { type: "integer" },
-              name: { type: "string" },
-              label: { type: "string" },
+              external_id: { type: "string" },
+              public_link: { type: "string" },
             },
-            required: %w[id label],
+            required: %w[external_id public_link],
           },
           meta: {
             type: "object",
@@ -221,7 +333,20 @@ RSpec.configure do |config|
             },
             required: %w[current_page next_page prev_page total_pages total_count],
           },
-          errors_object: {
+          errors_unprocessable_entity: {
+            type: "object",
+            properties: {
+              errors: {
+                type: "object",
+              },
+              error_messages: {
+                type: "array",
+                items: { type: "string" },
+              },
+            },
+            required: %w[errors],
+          },
+          error_too_many_request: {
             type: "object",
             properties: {
               errors: {
@@ -231,24 +356,111 @@ RSpec.configure do |config|
             },
             required: %w[errors],
           },
+          error_authentication: {
+            type: "object",
+            properties: {
+              errors: {
+                type: "array",
+                items: { type: "string" },
+              },
+            },
+            required: %w[errors],
+          },
+          error_forbidden: {
+            type: "object",
+            properties: {
+              errors: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    base: { type: "string" },
+                  },
+                  required: %w[base],
+                },
+              },
+            },
+            required: %w[errors],
+          },
+          error_missing: {
+            type: "object",
+            properties: {
+              missing: { type: "string" },
+            },
+            required: %w[missing],
+          },
+          error_not_found: {
+            type: "object",
+            properties: {
+              not_found: { type: "string" },
+            },
+            required: %w[not_found],
+          },
+          error_unprocessable_entity: {
+            type: "object",
+            properties: {
+              success: { type: "boolean" },
+              errors: {
+                type: "object",
+              },
+              error_messages: {
+                type: "array",
+                items: { type: "string" },
+              },
+            },
+            required: %w[success errors error_messages],
+          },
         },
       },
       tags: [
         {
-          name: "RDV",
-          description: "Pour manipuler des rendez-vous",
+          name: "Invitation",
+          description: "Désigner un jeton d'invitation. Il est lié à un·e usager·ère, et il est unique.",
         },
         {
-          name: "Group",
-          description: "Pour manipuler des groupes (représentation des territoires)",
+          name: "User",
+          description:
+            "Désigne le compte unique d'un·e usager·ère.
+            Il contient les informations de l'état civil ainsi que des informations communes comme les préférences de notifications.
+            Il contient également un profil (voir UserProfile).",
+        },
+        {
+          name: "UserProfile",
+          description:
+            "Un profil lie un·e usager·ère à une organisation.
+            La plupart des usager·ères n'ont un lien qu'avec une seule organisation, mais une partie interagit avec plusieurs.
+            Ce profil contient aussi quelques informations sur l'usager·ère, indépendantes et non-partagées entre organisations.",
+        },
+        {
+          name: "Agent",
+          description: "Désigne un·e agent·e. Un·e agent·e est lié·e à une ou plusieurs organisations.",
+        },
+        {
+          name: "RDV",
+          description:
+            "Désigne un rendez-vous.
+            Il contient des informations sur le rendez-vous lui-même, le ou les agent·es, le ou les usager·ères, le lieu, le motif, l'organisation.",
+        },
+        {
+          name: "Motif",
+          description:
+            "Désigne le motif d'un rendez-vous.
+            Il contient des informations telles que le nom du motif, s'il est téléphonique, sur place ou à domicile, ainsi que des détails annexes (collectif ou non, catégorie).",
         },
         {
           name: "Organisation",
-          description: "Pour manipuler des organisations",
+          description: "Désigne une organisation. Une organisation contient des agent·es.",
         },
         {
           name: "PublicLink",
-          description: "Pour manipuler des liens publics de recherche",
+          description: "Désigne des liens publics de recherche d'un territoire. Ces liens permettent d'accéder directement à la recherche, préfiltrée sur un territoire donné.",
+        },
+        {
+          name: "Absence",
+          description:
+            "Désigne une absence d'un·e agent·e.
+            Elle contient des informations telles que le début et la fin de l'absence, son titre et l'agent·e concerné·e.
+            L'absence y est aussi représentée au format iCal.",
         },
       ],
       servers: [

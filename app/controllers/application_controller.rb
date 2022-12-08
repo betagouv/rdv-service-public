@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ApplicationController < ActionController::Base
-  include Pundit
+  include Pundit::Authorization
   protect_from_forgery
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :store_user_location!, if: :storable_location?
@@ -38,7 +38,7 @@ class ApplicationController < ActionController::Base
 
   def sentry_user
     user_or_agent = current_agent || current_user
-    @sentry_user = {
+    {
       id: user_or_agent&.id,
       role: user_or_agent&.class&.name || "Guest",
       email: user_or_agent&.email,

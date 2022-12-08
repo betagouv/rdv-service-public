@@ -54,17 +54,18 @@ class User < ApplicationRecord
 
   # Relations
   has_many :user_profiles, dependent: :restrict_with_error
-  # we specify dependent: :destroy because by default user_profiles will be deleted (dependent: :delete)
-  # and we need to destroy to trigger the callbacks on user_profile
   has_many :rdvs_users, dependent: :destroy
-  has_and_belongs_to_many :agents
+  has_many :referent_assignations, dependent: :destroy
   belongs_to :responsible, class_name: "User", optional: true
   has_many :relatives, foreign_key: "responsible_id", class_name: "User", inverse_of: :responsible, dependent: :nullify
   has_many :file_attentes, dependent: :destroy
   has_many :receipts, dependent: :destroy
 
   # Through relations
+  # we specify dependent: :destroy because by default user_profiles and referent_assignations
+  # will be deleted (dependent: :delete) and we need to destroy to trigger the callbacks on both models
   has_many :organisations, through: :user_profiles, dependent: :destroy
+  has_many :agents, through: :referent_assignations, dependent: :destroy
   has_many :webhook_endpoints, through: :organisations
   has_many :rdvs, through: :rdvs_users
 
@@ -81,7 +82,8 @@ class User < ApplicationRecord
   before_save :set_email_to_null_if_blank
 
   # Scopes
-  scope :active, -> { where(deleted_at: nil) }
+  default_scope { where(deleted_at: nil) }
+
   scope :order_by_last_name, -> { order(Arel.sql("LOWER(last_name)")) }
   scope :responsible, -> { where(responsible_id: nil) }
   scope :relative, -> { where.not(responsible_id: nil) }
@@ -107,7 +109,7 @@ class User < ApplicationRecord
   end
 
   def available_users_for_rdv
-    User.where(responsible_id: id).or(User.where(id: id)).order("responsible_id DESC NULLS FIRST", first_name: :asc).active
+    User.where(responsible_id: id).or(User.where(id: id)).order("responsible_id DESC NULLS FIRST", first_name: :asc)
   end
 
   def self_and_relatives
@@ -141,6 +143,11 @@ class User < ApplicationRecord
   def profile_for(organisation)
     @profiles ||= user_profiles.index_by(&:organisation)
     @profiles[organisation]
+  end
+
+  def participation_for(rdv)
+    # We use find because it can be only one member by family in collective rdv
+    rdv.rdvs_users.to_a.find { |participation| participation.user_id.in?(self_and_relatives_and_responsible.map(&:id)) }
   end
 
   def deleted_email

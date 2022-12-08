@@ -151,14 +151,14 @@ Proposition de pratique à discuter en équipe : mettre en place une GitHub acti
 
 On y constate les chose suivantes : 
 - un test de feature avec JS est 3 fois plus lent qu'un test de feature sans JS
-- un test de request est aussi rapide qu'un test feature sans JS
-- un test de contrôleur est environ 40 % plus rapide qu'un test de request (routage + middleware)
-- un test qui ne fait presque rien prend quand-même 16 à 18 ms à s'exécuter, très probablement à cause de la stratégie de base de données basée sur la troncation des tables plutôt que sur une transaction
+- un test de request a les mêmes perfs qu'un test feature sans JS
+- un test de contrôleur est environ 40 % plus rapide qu'un test de request (car il n'exécute pas le routage + middleware)
+- un test qui ne fait presque rien prend quand-même 3 ms à s'exécuter, car il exécute les setup et teardown internes à RSpec ainsi que les blocks `before` et `after` définirs dans `rails_helper.rb`
 - la création en base de données d'un simple RDV et ses dépendances est 2 fois plus lent que la visite d'une page de feature spec, et donc les différences de perfs entre types de specs sont à mettre en perspective
 
 ```ruby
 RSpec.describe "performance of typical specs" do
-  # ~23 seconds
+  # ~28 seconds (280ms per test)
   describe "feature spec with JS", type: :feature, js: true do
     100.times do
       it "visit page without DB hit" do
@@ -168,7 +168,7 @@ RSpec.describe "performance of typical specs" do
     end
   end
 
-  # ~7 seconds
+  # ~5 seconds (50ms per test)
   describe "feature spec wihtout JS", type: :feature do
     100.times do
       it "visit page without DB hit" do
@@ -178,7 +178,7 @@ RSpec.describe "performance of typical specs" do
     end
   end
 
-  # ~7 seconds
+  # ~5 seconds (50ms per test)
   describe "request spec", type: :request do
     100.times do
       it "visit page without DB hit" do
@@ -188,7 +188,7 @@ RSpec.describe "performance of typical specs" do
     end
   end
 
-  # ~5 seconds
+  # ~3.4 seconds (34ms per test)
   describe StaticPagesController, type: :controller do
     render_views
 
@@ -200,7 +200,7 @@ RSpec.describe "performance of typical specs" do
     end
   end
 
-  # 1600~1800 ms
+  # ~280 ms (3ms per test)
   describe "unit spec" do
     100.times do
       it "does something simple" do
@@ -209,11 +209,20 @@ RSpec.describe "performance of typical specs" do
     end
   end
 
-  # 14 seconds
-  describe "persisting data" do
+  # ~11 seconds (110ms per test)
+  describe "creating records in db" do
     100.times do
       it "creates a RDV and its many associations" do
         create(:rdv)
+      end
+    end
+  end
+
+  # ~1500 ms (15ms per test)
+  describe "building records" do
+    100.times do
+      it "creates a RDV and its many associations" do
+        build(:rdv)
       end
     end
   end

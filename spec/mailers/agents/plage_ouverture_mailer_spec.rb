@@ -60,7 +60,7 @@ describe Agents::PlageOuvertureMailer, type: :mailer do
     let(:plage_ouverture) { create :plage_ouverture }
 
     it "have a STATUS:CANCELLED in ICS file joined" do
-      mail = described_class.with(plage_ouverture: plage_ouverture).send("plage_ouverture_destroyed")
+      mail = described_class.with(plage_ouverture: plage_ouverture).plage_ouverture_destroyed
       cal = mail.find_first_mime_type("text/calendar")
       expect(cal.decoded).to match("STATUS:CANCELLED")
     end

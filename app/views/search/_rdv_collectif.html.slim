@@ -1,0 +1,26 @@
+.card
+  .card-header
+    = rdv_title(rdv)
+  .card-body
+    .card-text
+      - if rdv.name.present?
+        p
+          strong= rdv.name
+      i.fa.fa-fw.fa-user>
+      strong> Animé par
+      = agents_to_sentence(rdv.agents)
+
+    .card-text
+      i.fa.fa-fw.fa-clock>
+      = "#{rdv.duration_in_min} minutes"
+    .card-text
+      i.fa.fa-fw.fa-users>
+      = show_participants_count(rdv)
+
+  .card-footer
+    - if current_user&.participation_for(rdv)&.not_cancelled?
+      .text-muted Vous êtes déjà inscrit pour cet atelier.
+    - else
+      = link_to new_users_rdv_wizard_step_path(@context.query.merge(rdv_collectif_id: rdv.id)), class: "d-flex card-text mb-2" do
+        i.fa.fa-fw.fa-user-plus>
+        | &nbsp;S'inscrire

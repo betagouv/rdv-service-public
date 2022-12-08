@@ -88,6 +88,19 @@ describe SearchContext, type: :service do
           expect(subject.send(:matching_motifs)).to eq([motif2])
         end
       end
+
+      context "when agents are specified" do
+        before { search_query[:referent_ids] = [agent.id] }
+
+        let!(:agent) { create(:agent, users: [user]) }
+        let!(:motif) { create(:motif, follow_up: true) }
+        let!(:plage_ouverture) { create(:plage_ouverture, agent: agent, motifs: [motif]) }
+        let!(:geo_search) { instance_double(Users::GeoSearch, available_motifs: Motif.where(id: [motif.id, motif2.id])) }
+
+        it "is the motifs related to agent" do
+          expect(subject.send(:matching_motifs)).to eq([motif])
+        end
+      end
     end
   end
 
@@ -159,20 +172,59 @@ describe SearchContext, type: :service do
     end
 
     context "when lieu is nil" do
+      let!(:motif) { create(:motif, :by_phone, organisation: organisation) }
+
       it "returns a Users::CreneauxSearch using no lieu and the selected motif" do
-        motif = create(:motif, :by_phone, organisation: organisation)
         create(:plage_ouverture, lieu: nil, motifs: [motif], organisation: organisation)
-        search_context = described_class.new(user, search_query)
+        search_context = described_class.new(
+          user,
+          search_query
+        )
 
         expect(Users::CreneauxSearch).to receive(:new).with(
           user: user,
-          motif: search_context.selected_motif,
+          motif: motif,
           lieu: nil,
           date_range: search_context.date_range,
           geo_search: geo_search
         )
         search_context.creneaux_search
       end
+    end
+  end
+
+  describe "#filter_motifs" do
+    it "returns empty without motifs" do
+      search_context = described_class.new(nil)
+      expect(search_context.filter_motifs(Motif.none)).to be_empty
+    end
+
+    it "returns given motif without specific params" do
+      search_context = described_class.new(nil)
+      motif = create(:motif)
+      expect(search_context.filter_motifs(Motif.where(id: motif.id))).to eq([motif])
+    end
+
+    it "returns collective motif" do
+      search_context = described_class.new(nil)
+      motif = create(:motif, collectif: true)
+      expect(search_context.filter_motifs(Motif.where(id: motif.id))).to eq([motif])
+    end
+
+    it "returns collective motif with lieu_id" do
+      lieu = create(:lieu)
+      search_context = described_class.new(nil, lieu_id: lieu.id)
+      motif = create(:motif, collectif: true)
+      create(:rdv, motif: motif, lieu: lieu)
+      expect(search_context.filter_motifs(Motif.where(id: motif.id))).to eq([motif])
+    end
+
+    it "returns individual motif with lieu_id" do
+      lieu = create(:lieu)
+      search_context = described_class.new(nil, lieu_id: lieu.id)
+      motif = create(:motif, collectif: false)
+      create(:plage_ouverture, motifs: [motif], lieu: lieu)
+      expect(search_context.filter_motifs(Motif.where(id: motif.id))).to eq([motif])
     end
   end
 end

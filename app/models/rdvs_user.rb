@@ -5,6 +5,7 @@ class RdvsUser < ApplicationRecord
   devise :invitable
 
   include RdvsUser::StatusChangeable
+  include RdvsUser::Creatable
 
   # Attributes
   enum status: { unknown: "unknown", waiting: "waiting", seen: "seen", excused: "excused", revoked: "revoked", noshow: "noshow" }
@@ -12,8 +13,9 @@ class RdvsUser < ApplicationRecord
   CANCELLED_STATUSES = %w[excused revoked].freeze
 
   # Relations
-  belongs_to :rdv, touch: true, inverse_of: :rdvs_users
-  belongs_to :user
+  belongs_to :rdv, -> { unscope(where: :deleted_at) }, touch: true, inverse_of: :rdvs_users, optional: true
+  belongs_to :user, -> { unscope(where: :deleted_at) }, inverse_of: :rdvs_users, optional: true
+  has_one :prescripteur, dependent: :destroy
 
   # Validations
   # Uniqueness validation doesn’t work with nested_attributes, see https://github.com/rails/rails/issues/4568
@@ -31,13 +33,25 @@ class RdvsUser < ApplicationRecord
   # Scopes
   scope :order_by_user_last_name, -> { includes(:user).order("users.last_name ASC") }
   scope :not_cancelled, -> { where(status: NOT_CANCELLED_STATUSES) }
+  scope :past, -> { where("rdvs.starts_at < ?", Time.zone.now) }
+  scope :future, -> { where("rdvs.starts_at > ?", Time.zone.now) }
+  scope :status, lambda { |status|
+    case status.to_s
+    when "unknown_past"
+      past.where(status: %w[unknown waiting])
+    when "unknown_future"
+      future.where(status: %w[unknown waiting])
+    else
+      where(status: status)
+    end
+  }
 
   def update_counter_cache
     rdv.update_users_count
   end
 
   def set_status_from_rdv
-    return if rdv&.status.nil?
+    return if rdv&.status.nil? || rdv.collectif?
 
     self.status = rdv.status
   end
@@ -55,6 +69,14 @@ class RdvsUser < ApplicationRecord
     else
       status
     end
+  end
+
+  def not_cancelled?
+    status.in? NOT_CANCELLED_STATUSES
+  end
+
+  def cancelled?
+    status.in? CANCELLED_STATUSES
   end
 
   def set_default_notifications_flags

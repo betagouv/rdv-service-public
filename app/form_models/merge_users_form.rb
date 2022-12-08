@@ -5,7 +5,7 @@ class MergeUsersForm
 
   ATTRIBUTES = %i[
     email
-    first_name last_name birth_name birth_date phone_number
+    first_name last_name birth_name birth_date phone_number responsible_id
     address
   ].freeze
 
@@ -35,7 +35,7 @@ class MergeUsersForm
   end
 
   def available_attributes
-    return %i[first_name last_name birth_date] if user1&.relative? || user2&.relative?
+    return %i[first_name last_name birth_date responsible_id] if user1&.relative? || user2&.relative?
 
     ATTRIBUTES + optional_attributes
   end
@@ -88,7 +88,7 @@ class MergeUsersForm
   end
 
   def attributes_to_merge
-    ATTRIBUTES
+    (ATTRIBUTES + Territory::OPTIONAL_FIELD_TOGGLES.values)
       .select { send(_1) == user_to_merge_number }
       .without(:email) # email cannot be in this list, only to be explicit
   end

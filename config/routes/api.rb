@@ -11,6 +11,7 @@ namespace :api do
       post :invite, on: :member
     end
     resources :user_profiles, only: [:create]
+    resource :referent_assignations, only: %i[create destroy]
     resources :organisations, only: %i[index] do
       resources :users, only: %i[index show]
       resources :motifs, only: %i[index]
@@ -20,8 +21,6 @@ namespace :api do
 
     # Doesn't need authentication
     resources :public_links, only: [:index]
-    resources :groups, only: :index
-    resources :organizations, only: :index
   end
 end
 

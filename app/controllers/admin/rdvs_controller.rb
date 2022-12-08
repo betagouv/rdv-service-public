@@ -16,9 +16,9 @@ class Admin::RdvsController < AgentAuthController
       .includes([:rdvs_users, :agents_rdvs, :organisation, :lieu, :motif, { agents: :service, users: %i[responsible organisations] }])
     @breadcrumb_page = params[:breadcrumb_page]
     @form = Admin::RdvSearchForm.new(parsed_params)
-    @lieux = Lieu.joins(:organisation).where(organisations: { id: @scoped_organisations.ids }).enabled.order(:name)
-    @motifs = Motif.joins(:organisation).where(organisations: { id: @scoped_organisations.ids })
-    @rdvs_users_count = RdvsUser.where(rdv_id: @rdvs.ids).count
+    @lieux = Lieu.joins(:organisation).where(organisations: { id: @scoped_organisations.select(:id) }).enabled.order(:name)
+    @motifs = Motif.joins(:organisation).where(organisations: { id: @scoped_organisations.select(:id) })
+    @rdvs_users_count = RdvsUser.where(rdv: @rdvs).count
     @rdvs = @rdvs.order(starts_at: :asc).page(params[:page]).per(10)
   end
 
@@ -108,15 +108,18 @@ class Admin::RdvsController < AgentAuthController
 
   def set_scoped_organisations
     @scoped_organisations = if params[:scoped_organisation_id].blank?
-                              # l'agent n'a pas accès au filtre d'organisations ou a rénitialisé la page
-                              Organisation.where(id: current_organisation.id)
+                              # l'agent n'a pas accès au filtre d'organisations ou a réinitialisé la page
+                              policy_scope(Organisation).where(id: current_organisation.id)
                             elsif params[:scoped_organisation_id] == "0"
                               # l'agent a sélectionné 'Toutes'
-                              current_agent.organisations
+                              policy_scope(Organisation)
                             else
                               # l'agent a sélectionné une organisation spécifique
-                              Organisation.where(id: parsed_params["scoped_organisation_id"])
+                              policy_scope(Organisation).where(id: parsed_params["scoped_organisation_id"])
                             end
+
+    # An empty scope means the agent tried to access a foreign organisation
+    raise Pundit::NotAuthorizedError unless @scoped_organisations.any?
   end
 
   def set_optional_agent
@@ -164,7 +167,7 @@ class Admin::RdvsController < AgentAuthController
 
   def rdv_success_flash
     {
-      notice: if rdv_params[:status].in?(%w[excused revoked])
+      notice: if rdv_params[:status].in?(Rdv::CANCELLED_STATUSES)
                 I18n.t("admin.rdvs.message.success.cancel")
               else
                 I18n.t("admin.rdvs.message.success.update")

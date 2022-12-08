@@ -52,7 +52,7 @@ class DuplicateUsersFinderService < BaseService
     private
 
     def users_in_scope(user, organisation)
-      u = User.active
+      u = User.all
       u = u.where.not(id: user.id) if user.persisted?
       u = u.merge(organisation.users) if organisation.present?
       u

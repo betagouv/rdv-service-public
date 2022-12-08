@@ -54,6 +54,8 @@ fr:
         rsa_cer_signature: RSA - Signature de CER
         rsa_insertion_offer: RSA - Offre d'insertion professionnelle
         rsa_follow_up: RSA - Suivi
+        rsa_main_tendue: RSA - Main tendue
+        rsa_atelier_collectif_mandatory: RSA - Atelier Collectif (obligatoire)
       motif/collectifs:
         true: RDV collectif
         false: RDV individuel
@@ -89,7 +91,6 @@ fr:
         motif:
           attributes:
             base:
-              not_reservable_online_if_collectif: La réservation en ligne n'est pas possible pour les RDV collectifs.
               not_at_home_if_collectif: Les RDV collectifs doivent avoir lieu sur place.
             name:
               taken: est déjà utilisé pour un motif avec le même type de RDV.

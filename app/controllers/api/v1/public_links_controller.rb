@@ -18,17 +18,23 @@ class Api::V1::PublicLinksController < Api::V1::BaseController
   def public_links_for(territory)
     plage_ouvertures_scope = PlageOuverture
       .not_expired
-      .in_range((Time.zone.now..))
+      .in_range(Time.zone.now..)
       .reservable_online
+    organisations_with_public_plages = Organisation.joins(:plage_ouvertures).merge(plage_ouvertures_scope)
 
-    organisations = Organisation
+    rdv_collectif_scope = Rdv
+      .future
+      .collectif
+      .reservable_online
+    organisations_with_public_rdv_collectifs = Organisation.joins(:rdvs).merge(rdv_collectif_scope)
+
+    public_organisations = Organisation
       .where(territory: territory)
       .where.not(external_id: nil)
-      .joins(:plage_ouvertures)
-      .merge(plage_ouvertures_scope)
+      .where_id_in_subqueries([organisations_with_public_plages, organisations_with_public_rdv_collectifs])
       .distinct
 
-    organisations.map do |organisation|
+    public_organisations.map do |organisation|
       {
         external_id: organisation.external_id,
         public_link: public_link_to_org_url(organisation_id: organisation, host: organisation.domain.dns_domain_name),

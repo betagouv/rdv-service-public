@@ -1,7 +1,7 @@
 / On veut connaître le premier créneau, cette semaine ou plus tard.
 / `search_results.next_availability` contient le premier créneau à partir de la semaine suivante
 / `search_results.creneaux` contient les créneaux de la semaine courante
-- first_availability_this_week = search_result.creneaux.min_by(&:starts_at)
+- first_availability_this_week = search_result.creneaux.min
 - first_availability = first_availability_this_week || search_result.next_availability
 .card.mb-3 class=("card-hoverable" if first_availability)
   .card-body

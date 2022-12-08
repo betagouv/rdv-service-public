@@ -485,9 +485,9 @@ describe Rdv, type: :model do
       rdv3 = create(:rdv, organisation: organisation2, agents: [agent2], users: [user])
 
       options = {}
-      expect(described_class.search_for(organisation, options)).to eq([rdv1, rdv2])
-      expect(described_class.search_for(organisation2, options)).to eq([rdv3])
-      expect(described_class.search_for(Organisation.all, options)).to eq([rdv1, rdv2, rdv3])
+      expect(described_class.search_for(organisation, options)).to match_array([rdv1, rdv2])
+      expect(described_class.search_for(organisation2, options)).to match_array([rdv3])
+      expect(described_class.search_for(Organisation.all, options)).to match_array([rdv1, rdv2, rdv3])
     end
 
     it "returns rdv with given status" do
@@ -644,6 +644,14 @@ describe Rdv, type: :model do
       rdv = build(:rdv, :at_home, starts_at: now + 9.days, motif: motif)
       expect(rdv.available_to_file_attente?).to eq(false)
     end
+
+    it "returns false with a collective motif" do
+      now = Time.zone.parse("20220221 10:34")
+      travel_to(now)
+      motif = build(:motif, collectif: true, reservable_online: true)
+      rdv = build(:rdv, :at_home, starts_at: now + 9.days, motif: motif)
+      expect(rdv.available_to_file_attente?).to eq(false)
+    end
   end
 
   describe "#synthesized_receipts_result" do
@@ -709,6 +717,13 @@ describe Rdv, type: :model do
     let!(:user4) { create(:user) }
     let(:rdv) { create :rdv, :collectif, starts_at: Time.zone.tomorrow, agents: [agent], users: [user1, user2, user3, user4] }
 
+    it "update to unknown when rdv is emptied" do
+      rdv.rdvs_users.each { _1.update(status: "seen") }
+      expect(rdv.status).to eq("seen")
+      rdv.rdvs_users.destroy_all
+      expect(rdv.status).to eq("unknown")
+    end
+
     it "update as unknown (first priority)" do
       rdv.rdvs_users.first.update(status: "seen")
       rdv.rdvs_users.second.update(status: "noshow")
@@ -727,13 +742,31 @@ describe Rdv, type: :model do
       expect(rdv.status).to eq("seen")
     end
 
-    it "updated as noshow (last priority)" do
+    it "updated as noshow (third priority)" do
       rdv.rdvs_users.first.update(status: "noshow")
       rdv.rdvs_users.second.update(status: "excused")
       rdv.rdvs_users.third.update(status: "excused")
       rdv.rdvs_users.last.update(status: "excused")
       rdv.update_rdv_status_from_participation
       expect(rdv.status).to eq("noshow")
+    end
+
+    it "updated as excused (fourth priority)" do
+      rdv.rdvs_users.first.update(status: "revoked")
+      rdv.rdvs_users.second.update(status: "excused")
+      rdv.rdvs_users.third.update(status: "excused")
+      rdv.rdvs_users.last.update(status: "excused")
+      rdv.update_rdv_status_from_participation
+      expect(rdv.status).to eq("excused")
+    end
+
+    it "updated as revoked (last priority)" do
+      rdv.rdvs_users.first.update(status: "revoked")
+      rdv.rdvs_users.second.update(status: "revoked")
+      rdv.rdvs_users.third.update(status: "revoked")
+      rdv.rdvs_users.last.update(status: "revoked")
+      rdv.update_rdv_status_from_participation
+      expect(rdv.status).to eq("revoked")
     end
 
     %w[seen noshow excused].each do |status|

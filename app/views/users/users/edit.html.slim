@@ -9,10 +9,10 @@
       .card-body
         h2.card-title = t(".my_relatives")
         ul.list-group.mb-2
-          - if @user.relatives.active.empty?
+          - if @user.relatives.empty?
             li.list-group-item
               em = t(".no_relatives")
-          - @user.relatives.active.order(:birth_date).each do |relative|
+          - @user.relatives.order(:birth_date).each do |relative|
             li.list-group-item
               .row
                 .col

@@ -2,6 +2,7 @@
 
 class Creneau
   include ActiveModel::Model
+  include Comparable
 
   attr_accessor :starts_at, :lieu_id, :motif, :agent
 
@@ -23,6 +24,11 @@ class Creneau
     motif.default_duration_in_min
   end
 
+  # Required by the Comparable module
+  def <=>(other)
+    starts_at <=> other.starts_at
+  end
+
   def respects_min_booking_delay?
     starts_at >= (Time.zone.now + motif.min_booking_delay.seconds)
   end
@@ -40,9 +46,5 @@ class Creneau
     events.select do |event|
       (starts_at...ends_at).overlaps?(event.starts_at...event.ends_at) # `a...b` is the “[a, b) range” (a included, b excluded)
     end.map(&:ends_at).max
-  end
-
-  def overlaps_jour_ferie?
-    OffDays.all_in_date_range(starts_at.to_date..ends_at.to_date).any?
   end
 end

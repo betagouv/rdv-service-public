@@ -9,6 +9,7 @@ class Agent < ApplicationRecord
   )
 
   include DeviseInvitable::Inviter
+  include WebhookDeliverable
   include FullNameConcern
   include TextSearch
   def self.search_against
@@ -56,7 +57,7 @@ class Agent < ApplicationRecord
   has_many :territorial_roles, class_name: "AgentTerritorialRole", dependent: :destroy
   has_many :sector_attributions, dependent: :destroy
   has_many :agent_teams, dependent: :destroy
-  has_and_belongs_to_many :users
+  has_many :referent_assignations, dependent: :destroy
 
   accepts_nested_attributes_for :roles, :agent_territorial_access_rights
 
@@ -66,8 +67,12 @@ class Agent < ApplicationRecord
   has_many :motifs, through: :service
   has_many :rdvs, dependent: :destroy, through: :agents_rdvs
   has_many :organisations, through: :roles
+  has_many :webhook_endpoints, through: :organisations
   has_many :territories, through: :territorial_roles
   has_many :organisations_of_territorial_roles, source: :organisations, through: :territories
+  # we specify dependent: :destroy because by default it will be deleted (dependent: :delete)
+  # and we need to destroy to trigger the callbacks on the model
+  has_many :users, through: :referent_assignations, dependent: :destroy
 
   # Validation
   # Note about validation and Devise:
@@ -107,6 +112,10 @@ class Agent < ApplicationRecord
 
   def complete?
     first_name.present? && last_name.present?
+  end
+
+  def inactive?
+    last_sign_in_at.nil? || last_sign_in_at <= 1.month.ago
   end
 
   def soft_delete
@@ -175,6 +184,22 @@ class Agent < ApplicationRecord
   # We monkey-patch it for it not to raise.
   def self.dta_find_by(_attrs = {})
     nil
+  end
+
+  def self.with_online_reservations_at(date)
+    plage_ouvertures_scope = PlageOuverture
+      .where(created_at: ..date)
+      .in_range(date..)
+      .reservable_online
+    agents_with_open_plage = joins(:plage_ouvertures).merge(plage_ouvertures_scope)
+
+    rdv_collectif_scope = Rdv
+      .collectif
+      .where(created_at: ..date)
+      .reservable_online
+    agents_with_open_rdv_collectif = joins(:rdvs).merge(rdv_collectif_scope)
+
+    where_id_in_subqueries([agents_with_open_plage, agents_with_open_rdv_collectif])
   end
 
   def to_s

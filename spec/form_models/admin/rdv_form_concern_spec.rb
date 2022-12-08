@@ -158,7 +158,7 @@ describe Admin::RdvFormConcern, type: :form do
   end
 
   describe "#check_duplicates" do
-    let(:rdv) { build(:rdv) }
+    let(:rdv) { create(:rdv) }
 
     it "do nothing when no other RDV" do
       form.check_duplicates

@@ -44,6 +44,8 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
   def retrieve_user
     @user = current_organisation.present? ? current_organisation.users.find(params[:id]) : User.find(params[:id])
     authorize(@user)
+  rescue ActiveRecord::RecordNotFound
+    render_error :not_found, not_found: :user
   end
 
   def user_params

@@ -17,14 +17,19 @@ describe "agents page", js: true do
   end
 
   it "agenda with 3 rdvs is accessible" do
+    travel_to(Time.current.beginning_of_week.change(hour: 13))
     territory = create(:territory, departement_number: "75")
     organisation = create(:organisation, territory: territory)
     agent = create(:agent, email: "totoagent@example.com", basic_role_in_organisations: [organisation])
-    create_list(:rdv, 3, agents: [agent])
-    login_as agent
+    create_list(:rdv, 3, agents: [agent], starts_at: 2.days.from_now)
+    login_as agent, scope: :agent
 
     path = admin_organisation_agent_agenda_path(organisation, agent)
-    expect_page_to_be_axe_clean(path)
+
+    visit path
+    expect(page).to have_current_path(path)
+    expect(page).to have_content(Rdv.last.users.last.full_name)
+    expect(page).to be_axe_clean
   end
 
   it "admin organisation plage_ouvertures path is accessible" do

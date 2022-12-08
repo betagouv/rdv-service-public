@@ -43,12 +43,15 @@ RSpec.configure do |config|
   config.include SigninSpecHelper
   config.include Select2SpecHelper
   config.include ApiSpecHelper, type: :request
+  config.extend ApiSpecMacros, type: :request
+  config.include ApiSpecSharedExamples, type: :request
   config.include ActiveSupport::Testing::TimeHelpers
   config.include ActiveJob::TestHelper
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include Warden::Test::Helpers, type: :feature
   config.include Sentry::TestHelper
   config.include DeviseRequestSpecHelpers, type: :request
+
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
   # instead of true.
@@ -74,23 +77,26 @@ RSpec.configure do |config|
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
 
-  config.before do
-    DatabaseCleaner.start
+  config.before(:suite) do
+    DatabaseCleaner.clean_with(:truncation)
+    Rack::Attack.enabled = false
   end
 
-  config.before(:each, js: true) do
-    DatabaseCleaner.strategy = :truncation
+  config.around do |example|
+    DatabaseCleaner.strategy = if example.metadata[:js]
+                                 :truncation
+                               else
+                                 :transaction
+                               end
+
+    DatabaseCleaner.cleaning do
+      example.run
+    end
   end
 
   config.after do
-    DatabaseCleaner.clean
     ActionMailer::Base.deliveries.clear
     FactoryBot.rewind_sequences
     Rails.cache.clear
-  end
-
-  config.before(:suite) do
-    DatabaseCleaner.strategy = :deletion
-    DatabaseCleaner.clean_with(:truncation)
   end
 end

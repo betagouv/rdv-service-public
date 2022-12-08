@@ -35,8 +35,10 @@ describe Notifiers::RdvCancelled, type: :service do
         subject
       end
 
-      it "outputs the tokens" do
-        expect(subject).to match(user.id => /^[A-Z0-9]{8}$/)
+      it "rdv_users_tokens_by_user_id attribute outputs the tokens" do
+        notifier = described_class.new(rdv, user)
+        notifier.perform
+        expect(notifier.rdv_users_tokens_by_user_id).to match(user.id => /^[A-Z0-9]{8}$/)
       end
     end
 

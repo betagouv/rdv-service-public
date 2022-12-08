@@ -7,6 +7,7 @@ class Motif < ApplicationRecord
   include WebhookDeliverable
 
   include PgSearch::Model
+  include Motif::Category
 
   pg_search_scope(:search_by_text,
                   against: :name,
@@ -29,14 +30,6 @@ class Motif < ApplicationRecord
   SECTORISATION_TYPES = [SECTORISATION_LEVEL_AGENT, SECTORISATION_LEVEL_ORGANISATION, SECTORISATION_LEVEL_DEPARTEMENT].freeze
 
   enum location_type: { public_office: "public_office", phone: "phone", home: "home" }
-  enum category: { rsa_orientation: "rsa_orientation",
-                   rsa_accompagnement: "rsa_accompagnement",
-                   rsa_accompagnement_social: "rsa_accompagnement_social",
-                   rsa_accompagnement_sociopro: "rsa_accompagnement_sociopro",
-                   rsa_orientation_on_phone_platform: "rsa_orientation_on_phone_platform",
-                   rsa_cer_signature: "rsa_cer_signature",
-                   rsa_insertion_offer: "rsa_insertion_offer",
-                   rsa_follow_up: "rsa_follow_up", }
 
   # Relations
   belongs_to :organisation
@@ -66,7 +59,6 @@ class Motif < ApplicationRecord
   validate :booking_delay_validation
   validate :not_associated_with_secretariat
   validates :color, css_hex_color: true
-  validate :not_reservable_online_if_collectif
   validate :not_at_home_if_collectif
 
   # Scopes
@@ -179,6 +171,22 @@ class Motif < ApplicationRecord
     public_office?
   end
 
+  def self.with_availability_for_lieux(lieu_ids)
+    individual_motif_ids = individuel.joins(:plage_ouvertures).where(plage_ouvertures: { lieu_id: lieu_ids }).select(:id)
+    collective_motif_ids = Rdv.collectif_and_available_for_reservation
+      .where(lieu_id: lieu_ids, motif: collectif).select(:motif_id)
+
+    where_id_in_subqueries([individual_motif_ids, collective_motif_ids])
+  end
+
+  def self.with_availability_for_agents(agent_ids)
+    individual_motif_ids = individuel.joins(:plage_ouvertures).where(plage_ouvertures: { agent_id: agent_ids }).select(:id)
+    collective_motif_ids = Rdv.collectif_and_available_for_reservation
+      .where(motif: collectif).joins(:agents).where(agents: { id: agent_ids }).select(:motif_id)
+
+    where_id_in_subqueries([individual_motif_ids, collective_motif_ids])
+  end
+
   private
 
   def booking_delay_validation
@@ -191,12 +199,6 @@ class Motif < ApplicationRecord
     return if service_id.nil?
 
     errors.add(:service_id, "ne peut être le secrétariat") if service.secretariat?
-  end
-
-  def not_reservable_online_if_collectif
-    return unless collectif? && reservable_online
-
-    errors.add(:base, :not_reservable_online_if_collectif)
   end
 
   def not_at_home_if_collectif

@@ -9,31 +9,46 @@ class StatsController < ApplicationController
   end
 
   def rdvs
-    stats = Stat.new(rdvs: @rdvs)
-    stats = if params[:by_territory].present?
-              stats.rdvs_group_by_territory_name
-            elsif params[:by_service].present?
-              stats.rdvs_group_by_service
-            elsif params[:by_location_type].present?
-              stats.rdvs_group_by_type
-            elsif params[:by_status].present?
-              stats.rdvs_group_by_status
-            else
-              stats.rdvs_group_by_week_fr
-            end
-    render json: stats.chart_json
+    cache_key = ["stats_rdvs", request.query_parameters, Time.zone.today]
+    chart_json = Rails.cache.fetch(cache_key, expires_in: 24.hours) do
+      stats = Stat.new(rdvs: @rdvs)
+      results = if params[:by_territory].present?
+                  stats.rdvs_group_by_territory_name
+                elsif params[:by_service].present?
+                  stats.rdvs_group_by_service
+                elsif params[:by_location_type].present?
+                  stats.rdvs_group_by_type
+                elsif params[:by_status].present?
+                  stats.rdvs_group_by_status
+                elsif params[:by_rdv_users_status].present?
+                  stats.rdvs_group_by_rdv_users_status
+                else
+                  stats.rdvs_group_by_week_fr
+                end
+      results.chart_json
+    end
+    render json: chart_json
   end
 
   def receipts
-    attribute = params[:group_by]&.to_sym
-    attribute = :channel unless attribute.in?(%i[event channel result])
-    render json: Stat.new(receipts: @receipts).receipts_group_by(attribute).chart_json
+    cache_key = ["stats_receipts", request.query_parameters, Time.zone.today]
+    chart_json = Rails.cache.fetch(cache_key, expires_in: 24.hours) do
+      attribute = params[:group_by]&.to_sym
+      attribute = :channel unless attribute.in?(%i[event channel result])
+      Stat.new(receipts: @receipts).receipts_group_by(attribute).chart_json
+    end
+    render json: chart_json
   end
 
   def active_agents
-    stats = Stat.new(rdvs: @rdvs).active_agents_group_by_month
-    render json: stats.chart_json
+    cache_key = ["stats_active_agents", request.query_parameters, Time.zone.today]
+    chart_json = Rails.cache.fetch(cache_key, expires_in: 24.hours) do
+      Stat.new(rdvs: @rdvs).active_agents_group_by_month.chart_json
+    end
+    render json: chart_json
   end
+
+  private
 
   def scope_rdv_to_territory
     if params[:territory].present?

@@ -22,7 +22,7 @@ class Notifiers::RdvCancelled < Notifiers::RdvBase
     return true if @rdv.collectif?
 
     # Only send sms for excused cancellations (not for no-show)
-    @rdv.status.in?(%w[excused revoked])
+    @rdv.status.in?(Rdv::CANCELLED_STATUSES)
   end
 
   def rdvs_users_to_notify

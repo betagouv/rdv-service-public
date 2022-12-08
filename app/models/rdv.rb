@@ -16,6 +16,12 @@ class Rdv < ApplicationRecord
 
   # Attributes
   enum status: { unknown: "unknown", waiting: "waiting", seen: "seen", excused: "excused", revoked: "revoked", noshow: "noshow" }
+  # Commentaire pour les status explications
+  # unknown : "A renseigner" ou "A venir" (si le rdv est passé ou pas)
+  # seen : Présent au rdv
+  # noshow : Lapin
+  # excused : Annulé à l'initiative de l'usager
+  # revoked : Annulé à l'initiative du service
   NOT_CANCELLED_STATUSES = %w[unknown waiting seen noshow].freeze
   CANCELLED_STATUSES = %w[excused revoked].freeze
   enum created_by: { agent: 0, user: 1, file_attente: 2 }, _prefix: :created_by
@@ -29,13 +35,8 @@ class Rdv < ApplicationRecord
   has_many :agents_rdvs, inverse_of: :rdv, dependent: :destroy
   # https://stackoverflow.com/questions/30629680/rails-isnt-running-destroy-callbacks-for-has-many-through-join-model/30629704
   # https://github.com/rails/rails/issues/7618
-  has_many  :rdvs_users,
-            after_add: :associations_changed_flag,
-            after_remove: :associations_changed_flag,
-            validate: false,
-            inverse_of: :rdv,
-            dependent: :destroy
-
+  has_many :rdvs_users, validate: false, inverse_of: :rdv, dependent: :destroy
+  after_touch :update_rdv_status_from_participation
   has_many :receipts, dependent: :destroy
 
   accepts_nested_attributes_for :rdvs_users, allow_destroy: true
@@ -91,6 +92,8 @@ class Rdv < ApplicationRecord
   }
   scope :visible, -> { joins(:motif).merge(Motif.visible) }
   scope :collectif, -> { joins(:motif).merge(Motif.collectif) }
+  scope :collectif_and_available_for_reservation, -> { collectif.with_remaining_seats.future.not_revoked }
+  scope :reservable_online, -> { joins(:motif).merge(Motif.reservable_online) }
   scope :with_remaining_seats, -> { where("users_count < max_participants_count OR max_participants_count IS NULL") }
   scope :for_domain, lambda { |domain|
     if domain == Domain::RDV_AIDE_NUMERIQUE
@@ -184,12 +187,16 @@ class Rdv < ApplicationRecord
   end
 
   def available_to_file_attente?
-    motif.reservable_online? && !cancelled? && starts_at > 7.days.from_now && !home?
+    motif.reservable_online? &&
+      motif.individuel? &&
+      !cancelled? &&
+      starts_at > 7.days.from_now &&
+      !home?
   end
 
   def creneaux_available(date_range)
     date_range = Lapin::Range.reduce_range_to_delay(motif, date_range) # réduit le range en fonction du délay
-    SlotBuilder.available_slots(motif, lieu, date_range, OffDays.all_in_date_range(date_range))
+    SlotBuilder.available_slots(motif, lieu, date_range)
   end
 
   def user_for_home_rdv
@@ -322,22 +329,30 @@ class Rdv < ApplicationRecord
   end
 
   def update_rdv_status_from_participation
+    return unless collectif?
+
+    if rdvs_users.empty?
+      update_status_to_unknown
+      return
+    end
+
+    update_status_priority_order_participations
+  end
+
+  def update_status_to_unknown
+    self.cancelled_at = nil
+    update!(status: "unknown")
+  end
+
+  def update_status_priority_order_participations
     # Priority Order. One participation will change rdv status
-    %w[unknown seen noshow].each do |status|
+    %w[unknown seen noshow excused revoked].each do |status|
       symbol_method = "#{status}?".to_sym
       next unless rdvs_users.any?(&symbol_method)
 
-      self.status = status
-      save
+      self.cancelled_at = status.in?(%w[revoked noshow]) ? Time.zone.now : nil
+      update!(status: status)
       break
-    end
-
-    # If all participations are similar the rdv status will change
-    %w[seen noshow excused].each do |status|
-      if rdvs_users.map(&:status).all? { |participation_status| participation_status.in? [status] }
-        self.status = status
-        save
-      end
     end
   end
 

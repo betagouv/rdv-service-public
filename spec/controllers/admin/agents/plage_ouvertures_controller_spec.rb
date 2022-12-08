@@ -36,6 +36,36 @@ describe Admin::Agents::PlageOuverturesController, type: :controller do
         get :index, params: { agent_id: agent.id, organisation_id: organisation.id, start: start_date, end: end_date, format: :json }
         expect(assigns(:organisation)).to eq(organisation)
       end
+
+      describe "JSON response" do
+        render_views
+
+        let!(:plage_ouverture) { create(:plage_ouverture, agent: agent, first_day: Time.zone.today, organisation: organisation) }
+
+        it "is serialized for FullCalendar" do
+          start_date = Time.zone.today.monday
+          end_date = start_date.end_of_week
+
+          get :index, params: { agent_id: agent.id, organisation_id: organisation.id, start: start_date, end: end_date, format: :json }
+
+          expected_response = [
+            {
+              "title" => plage_ouverture.title,
+              "start" => plage_ouverture.starts_at.as_json,
+              "end" => plage_ouverture.ends_at.as_json,
+              "backgroundColor" => "#6fceff80",
+              "textColor" => "#313131",
+              "url" => "/admin/organisations/#{organisation.id}/plage_ouvertures/#{plage_ouverture.id}",
+              "extendedProps" => {
+                "organisationName" => organisation.name,
+                "location" => "1 rue de l'adresse 12345 Ville",
+                "lieu" => plage_ouverture.lieu.name,
+              },
+            },
+          ]
+          expect(JSON.parse(response.body)).to eq(expected_response)
+        end
+      end
     end
   end
 end

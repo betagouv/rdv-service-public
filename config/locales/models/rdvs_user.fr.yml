@@ -20,7 +20,7 @@ fr:
         noshow: Non excusée
         unknown_past: À renseigner
         unknown_today: Rendez-vous aujourd’hui
-        unknown_future: Rendez-vous à venir
+        unknown_future: Inscrit
       rdvs_user/statuses/action:
         unknown: Réinitialiser
         seen: Présent

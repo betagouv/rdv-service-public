@@ -8,17 +8,21 @@ require "active_support/core_ext/integer/time"
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
-  config.cache_classes = false
+  # When running tests locally, using Spring to speed up test start time requires to set config.cache_classes to false
+  # when running tests in the CI, we want our configuration to be as close as possible to the production one, so we set this to true
+  # (we rely on the fact that ENV["CI"] is true in github actions)
+  config.cache_classes = ENV["CI"].present?
+  config.action_view.cache_template_loading = true
 
-  # Do not eager load code on boot. This avoids loading your whole application
-  # just for the purpose of running a single test. If you are using a tool that
-  # preloads Rails for running tests, you may have to set it to true.
-  config.eager_load = false
+  # Eager loading loads your whole application. When running a single test locally,
+  # this probably isn't necessary. It's a good idea to do in a continuous integration
+  # system, or in some way before deploying your code.
+  config.eager_load = ENV["CI"].present?
 
   # Configure public file server for tests with Cache-Control for performance.
   config.public_file_server.enabled = true
   config.public_file_server.headers = {
-    'Cache-Control' => "public, max-age=#{1.hour.to_i}",
+    "Cache-Control" => "public, max-age=#{1.hour.to_i}",
   }
 
   # Show full error reports and disable caching.
@@ -45,7 +49,7 @@ Rails.application.configure do
   config.action_controller.allow_forgery_protection = false
 
   # Store uploaded files on the local file system in a temporary directory.
-  config.active_storage.service = :test
+  # config.active_storage.service = :test
 
   port = 9887 + ENV["TEST_ENV_NUMBER"].to_i
   config.action_mailer.default_url_options = { host: "localhost:#{port}", utm_source: "test", utm_medium: "email", utm_campaign: "default" }
@@ -79,4 +83,6 @@ Rails.application.configure do
   config.i18n.available_locales = %i[fr en]
   # Annotate rendered view with file names.
   # config.action_view.annotate_rendered_view_with_filenames = true
+
+  config.x.rack_attack.limit = 2
 end
