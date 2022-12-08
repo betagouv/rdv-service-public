@@ -45,7 +45,7 @@ class User < ApplicationRecord
   enum family_situation: { single: 0, in_a_relationship: 1, divorced: 2 }
   enum created_through: { agent_creation: "agent_creation", user_sign_up: "user_sign_up",
                           franceconnect_sign_up: "franceconnect_sign_up", user_relative_creation: "user_relative_creation",
-                          unknown: "unknown", agent_creation_api: "agent_creation_api", }
+                          unknown: "unknown", agent_creation_api: "agent_creation_api", prescripteur: "prescripteur", }
   enum invited_through: { devise_email: "devise_email", external: "external" }
 
   # HACK : add *_sign_in_ip to accessor to bypass recording IPs from Trackable Devise's module
