@@ -38,12 +38,6 @@ RSpec.describe "prescripteur can add a user to a RDV collectif" do
     fill_in "Nom", with: "Duroy"
     fill_in "Téléphone", with: "0611223344"
 
-    # On simule que toutes les places sont prises
-    create(:rdvs_user, rdv: rdv_collectif)
-    create(:rdvs_user, rdv: rdv_collectif)
-
-    click_on "Confirmer le rendez-vous"
-    expect(page).to have_content("Ce créneau n'est plus disponible. Veuillez en choisir un autre.")
     # Dans ce cas, retour à l'étape de choix du lieu
     click_on "Prochaine disponibilité le"
     click_on "08:45"
@@ -62,7 +56,13 @@ RSpec.describe "prescripteur can add a user to a RDV collectif" do
     click_on "Annuler et modifier"
     fill_in "Téléphone", with: "0123456789"
 
+    # On simule que toutes les places sont prises
+    create(:rdvs_user, rdv: rdv_collectif)
+    create(:rdvs_user, rdv: rdv_collectif)
     click_on "Confirmer le rendez-vous"
+
+    expect(page).to have_content("Ce créneau n'est plus disponible. Veuillez en choisir un autre.")
+
     expect(page).to have_content("Téléphone ne permet pas de recevoir des SMS")
     fill_in "Téléphone", with: "0611223344"
 

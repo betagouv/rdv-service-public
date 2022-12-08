@@ -159,6 +159,15 @@ RSpec.describe "Adding a user to a collective RDV" do
         visit root_path(params)
         motif_selector
         lieu_selector
+        click_link("S'inscrire")
+        click_button("Continuer")
+
+        rdv.update!(max_participants_count: 2)
+        create(:rdvs_user, rdv: rdv)
+        create(:rdvs_user, rdv: rdv)
+
+        click_button("Continuer")
+        expect(page).to have_content("Plus de places")
       end
     end
 
