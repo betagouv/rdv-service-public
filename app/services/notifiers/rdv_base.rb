@@ -58,7 +58,6 @@ class Notifiers::RdvBase < ::BaseService
       @rdv_users_tokens_by_user_id[rdv_user.user_id] = rdv_user.new_raw_invitation_token
     end
 
-    # we re-enable the webhooks that we deactivated during the notification process
     @rdv.skip_webhooks = false
 
     tokens
