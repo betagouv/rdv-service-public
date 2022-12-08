@@ -153,6 +153,24 @@ RSpec.describe "Adding a user to a collective RDV" do
       expect(page).to have_content("La prise de rendez-vous n'est pas disponible pour ce département.")
     end
 
+    context "when other users sign up before we can finish booking" do
+      it "redirects to creneau search" do
+        login_as(user, scope: :user)
+        visit root_path(params)
+        motif_selector
+        lieu_selector
+        click_link("S'inscrire")
+        click_button("Continuer")
+
+        rdv.update!(max_participants_count: 2)
+        create(:rdvs_user, rdv: rdv)
+        create(:rdvs_user, rdv: rdv)
+
+        click_button("Continuer")
+        expect(page).to have_content("Ce créneau n'est plus disponible")
+      end
+    end
+
     it "display message of participation if already exist" do
       login_as(user, scope: :user)
       create(:rdvs_user, rdv: rdv, user: user)
