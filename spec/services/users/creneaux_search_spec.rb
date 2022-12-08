@@ -77,9 +77,9 @@ describe Users::CreneauxSearch, type: :service do
     subject { described_class.new(user: user, motif: motif, lieu: lieu) }
 
     let!(:motif) { create(:motif, collectif: true) }
-    let!(:rdv) { create(:rdv, :future, motif: motif, lieu: lieu) }
+    let!(:rdv) { create(:rdv, :future, motif: motif, lieu: lieu, starts_at: 3.days.from_now) }
     let!(:passed_rdv) { create(:rdv, motif: motif, lieu: lieu, starts_at: 2.days.ago) }
-    let!(:rdv_with_user) { create(:rdv, :future, motif: motif, lieu: lieu, users: [user]) }
+    let!(:rdv_with_user) { create(:rdv, :future, motif: motif, lieu: lieu, users: [user], starts_at: 4.days.from_now) }
     let!(:rdv_in_different_lieu) { create(:rdv, :future, motif: motif, lieu: create(:lieu)) }
     let!(:rdv_with_no_remaining_seat) { create(:rdv, :future, motif: motif, lieu: lieu, max_participants_count: 1) }
     let!(:rdv_after_max_booking_delay) { create(:rdv, :future, motif: motif, lieu: lieu, starts_at: motif.end_booking_delay + 1.hour) }
