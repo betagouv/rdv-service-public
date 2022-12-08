@@ -35,6 +35,8 @@ RSpec.describe "Adding a user to a collective RDV" do
     }
   end
 
+  # Merge et test avec participants et test sans participants
+
   def select_motif
     expect(page).to have_content("Sélectionnez le motif de votre RDV :")
     click_link(motif.name)
@@ -78,7 +80,7 @@ RSpec.describe "Adding a user to a collective RDV" do
         stub_request(:post, "https://example.com/")
         click_on("Confirmer ma participation")
       end.to change { rdv.reload.users.count }.from(0).to(1)
-      expect(page).to have_content("Inscription confirmée")
+      expect(page).to have_content("Participation à l'atelier confirmée")
       expect(page).to have_content("modifier") # can_change_participants?
 
       expect_notifications_for(logged_user)
@@ -103,7 +105,7 @@ RSpec.describe "Adding a user to a collective RDV" do
       stub_request(:post, "https://example.com/")
       click_on("Confirmer ma participation")
 
-      expect(page).to have_content("Inscription confirmée")
+      expect(page).to have_content("Participation à l'atelier confirmée")
       expect(rdv.reload.users.count).to eq(1)
       expect_notifications_for(logged_user)
       expect_webhooks_for(logged_user)
@@ -124,7 +126,7 @@ RSpec.describe "Adding a user to a collective RDV" do
         stub_request(:post, "https://example.com/")
         click_on("Confirmer ma participation")
       end.to change { rdv.reload.users.count }.from(0).to(1)
-      expect(page).to have_content("Inscription confirmée")
+      expect(page).to have_content("Participation à l'atelier confirmée")
       expect(page).not_to have_content("modifier") # can_change_participants?
       expect(::Addressable::URI.parse(current_url).query_values).to match("invitation_token" => /^[A-Z0-9]{8}$/)
 
@@ -195,7 +197,7 @@ RSpec.describe "Adding a user to a collective RDV" do
           stub_request(:post, "https://example.com/")
           click_on("Confirmer ma participation")
         end.not_to change { rdv.reload.users.count }
-        expect(page).to have_content("Ré-Inscription confirmée")
+        expect(page).to have_content("Participation à l'atelier confirmée")
 
         expect_notifications_for(user)
         expect_webhooks_for(user)
@@ -256,7 +258,7 @@ RSpec.describe "Adding a user to a collective RDV" do
           stub_request(:post, "https://example.com/")
           click_on("Confirmer ma participation")
         end.to change { rdv.reload.users.count }.from(0).to(1)
-        expect(page).to have_content("Inscription confirmée")
+        expect(page).to have_content("Participation à l'atelier confirmée")
 
         perform_enqueued_jobs
         expect(ActionMailer::Base.deliveries.map(&:to).flatten).to match_array([agent.email])
@@ -292,8 +294,8 @@ RSpec.describe "Adding a user to a collective RDV" do
           expect(page).to have_content("À venir")
 
           click_link("Annuler votre participation au RDV")
-          click_link("Oui, annuler votre participation RDV", match: :first)
-          expect(page).to have_content("Désinscription de l'atelier confirmée")
+          click_link("Oui, annuler votre participation au rendez-vous", match: :first)
+          expect(page).to have_content("Participation à l'atelier annulée")
           expect(page).to have_content("Annulé")
           expect(participation.reload.status).to eq("excused")
 
