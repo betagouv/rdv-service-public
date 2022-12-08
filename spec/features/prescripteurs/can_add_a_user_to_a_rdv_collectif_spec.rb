@@ -15,7 +15,8 @@ RSpec.describe "prescripteur can add a user to a RDV collectif" do
       motif: motif_collectif,
       agents: [agent],
       lieu: lieu,
-      starts_at: Time.zone.parse("2022-11-09 10:00")
+      starts_at: Time.zone.parse("2022-11-09 10:00"),
+      max_participants_count: 2
     )
   end
 
@@ -37,8 +38,10 @@ RSpec.describe "prescripteur can add a user to a RDV collectif" do
     fill_in "Nom", with: "Duroy"
     fill_in "Téléphone", with: "0611223344"
 
-    # On simule que le créneau choisi est simultanément pris par quelqu'un d'autre
-    create(:rdv, starts_at: Time.zone.local(2022, 11, 15, 8, 0, 0), motif: motif, agents: [agent], lieu: lieu)
+    # On simule que toutes les places sont prises
+    create(:rdvs_user, rdv: rdv_collectif)
+    create(:rdvs_user, rdv: rdv_collectif)
+
     click_on "Confirmer le rendez-vous"
     expect(page).to have_content("Ce créneau n'est plus disponible. Veuillez en choisir un autre.")
     # Dans ce cas, retour à l'étape de choix du lieu
