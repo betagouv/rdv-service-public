@@ -54,13 +54,11 @@ class Notifiers::RdvBase < ::BaseService
     # attributes or associations of the Rdv.
     @rdv.skip_webhooks = true
 
-    tokens = rdv_users_with_token_needed.each do |rdv_user|
+    rdv_users_with_token_needed.each do |rdv_user|
       @rdv_users_tokens_by_user_id[rdv_user.user_id] = rdv_user.new_raw_invitation_token
     end
 
     @rdv.skip_webhooks = false
-
-    tokens
   end
 
   ## Configured Mailers
