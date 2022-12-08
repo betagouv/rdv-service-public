@@ -1,173 +1,238 @@
 # frozen_string_literal: true
 
 RSpec.describe Outlook::Synchronizable, type: :concern do
-  describe "#sync_create_in_outlook_asynchronously create callback" do
-    around do |example|
-      perform_enqueued_jobs do
-        example.run
-      end
+  around do |example|
+    perform_enqueued_jobs do
+      example.run
     end
+  end
 
+  # I made the choice to have end_to_end tests in this file to make it easier to check the callback behavior without dealing with the view and to encapsulate the test of the logic in a single file.
+  describe "Create callback" do
     context "agent synced with outlook" do
-      let(:organisation) { create(:organisation, id: 10) }
+      let(:organisation) { create(:organisation) }
       let(:motif) { create(:motif, name: "Super Motif", location_type: :phone) }
       # We need to create a fake agent to initialize a RDV as they have a validation on agents which prevents us to control the data in its AgentsRdv
       let(:fake_agent) { create(:agent) }
       let(:agent) { create(:agent, microsoft_graph_token: "token") }
       let(:rdv) { create(:rdv, id: 20, motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [fake_agent]) }
-      let(:agents_rdv) { create(:agents_rdv, id: 12, agent: agent, rdv: rdv) }
 
       before do
         stub_request(:post, "https://graph.microsoft.com/v1.0/me/Events")
           .with(
-            body: "{\"subject\":\"Super Motif\",\"body\":{\"contentType\":\"HTML\",\"content\":\"plus d'infos dans RDV Solidarités: http://www.rdv-solidarites-test.localhost/admin/organisations/10/rdvs/20\"},\"start\":{\"dateTime\":\"2023-01-01T11:00:00+01:00\",\"timeZone\":\"Europe/Paris\"},\"end\":{\"dateTime\":\"2023-01-01T11:30:00+01:00\",\"timeZone\":\"Europe/Paris\"},\"location\":{\"displayName\":\"Par téléphone\"}}",
+            body: "{\"subject\":\"Super Motif\",\"body\":{\"contentType\":\"HTML\",\"content\":\"plus d'infos dans RDV Solidarités: http://www.rdv-solidarites-test.localhost/admin/organisations/#{organisation.id}/rdvs/20\"},\"start\":{\"dateTime\":\"2023-01-01T11:00:00+01:00\",\"timeZone\":\"Europe/Paris\"},\"end\":{\"dateTime\":\"2023-01-01T11:30:00+01:00\",\"timeZone\":\"Europe/Paris\"},\"location\":{\"displayName\":\"Par téléphone\"}}",
             headers: {
               "Accept" => "application/json", "Authorization" => "Bearer token", "Content-Type" => "application/json", "Expect" => "", "Return-Client-Request-Id" => "true", "User-Agent" => "RDVSolidarites",
             }
           )
           .to_return(status: 200, body: { id: "event_id" }.to_json, headers: {})
-
-        agents_rdv.save
       end
 
-      it "update the outlook_id of the agents_rdv" do
+      it "creates the Event in Outlook" do
+        agents_rdv = create(:agents_rdv, id: 12, agent: agent, rdv: rdv)
+
+        expect(a_request(:post,
+                         "https://graph.microsoft.com/v1.0/me/Events").with(body: "{\"subject\":\"Super Motif\",\"body\":{\"contentType\":\"HTML\",\"content\":\"plus d'infos dans RDV Solidarités: http://www.rdv-solidarites-test.localhost/admin/organisations/#{organisation.id}/rdvs/20\"},\"start\":{\"dateTime\":\"2023-01-01T11:00:00+01:00\",\"timeZone\":\"Europe/Paris\"},\"end\":{\"dateTime\":\"2023-01-01T11:30:00+01:00\",\"timeZone\":\"Europe/Paris\"},\"location\":{\"displayName\":\"Par téléphone\"}}")).to have_been_made.once
         expect(agents_rdv.reload.outlook_id).to eq("event_id")
       end
     end
 
     context "agent not synced with outlook" do
       let(:agent) { create(:agent) }
-      let!(:agents_rdv) { create(:agents_rdv, agent: agent) }
 
-      before do
-        allow(Outlook::CreateEventJob).to receive(:perform_later)
-      end
+      it "does not call the Outlook API" do
+        agents_rdv = create(:agents_rdv, agent: agent)
 
-      it "does not call Outlook::CreateEventJob" do
-        expect(Outlook::CreateEventJob).not_to have_received(:perform_later)
+        expect(a_request(:post, "https://graph.microsoft.com/v1.0/me/Events")).not_to have_been_made
+        expect(agents_rdv.reload.outlook_id).to be_nil
       end
     end
 
     context "agents_rdv already exists in outlook" do
       let(:agent) { create(:agent, microsoft_graph_token: "token") }
-      let!(:agents_rdv) { create(:agents_rdv, agent: agent, outlook_id: "abc") }
 
-      before do
-        allow(Outlook::CreateEventJob).to receive(:perform_later)
-      end
+      it "does not call the Outlook API" do
+        create(:agents_rdv, agent: agent, outlook_id: "abc")
 
-      it "does not call Outlook::CreateEventJob" do
-        expect(Outlook::CreateEventJob).not_to have_received(:perform_later)
+        expect(a_request(:post, "https://graph.microsoft.com/v1.0/me/Events")).not_to have_been_made
       end
     end
   end
 
-  describe "#sync_update_in_outlook_asynchronously" do
+  describe "Update callback" do
     context "exists in outlook and agent is synced" do
+      let(:organisation) { create(:organisation) }
+      let(:motif) { create(:motif, name: "Super Motif", location_type: :phone) }
+      # We need to create a fake agent to initialize a RDV as they have a validation on agents which prevents us to control the data in its AgentsRdv
+      let(:fake_agent) { create(:agent) }
       let(:agent) { create(:agent, microsoft_graph_token: "token") }
-      let(:agents_rdv) { create(:agents_rdv, agent: agent, outlook_id: "abc") }
+      let(:rdv) { create(:rdv, id: 20, motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [fake_agent]) }
+      let!(:agents_rdv) { create(:agents_rdv, rdv: rdv, agent: agent, outlook_id: "abc") }
 
       before do
-        allow(Outlook::UpdateEventJob).to receive(:perform_later)
+        stub_request(:patch, "https://graph.microsoft.com/v1.0/me/Events/abc")
+          .with(
+            body: "{\"subject\":\"Super Motif\",\"body\":{\"contentType\":\"HTML\",\"content\":\"plus d'infos dans RDV Solidarités: http://www.rdv-solidarites-test.localhost/admin/organisations/#{organisation.id}/rdvs/20\"},\"start\":{\"dateTime\":\"2023-01-01T11:00:00+01:00\",\"timeZone\":\"Europe/Paris\"},\"end\":{\"dateTime\":\"2023-01-01T11:40:00+01:00\",\"timeZone\":\"Europe/Paris\"},\"location\":{\"displayName\":\"Par téléphone\"}}",
+            headers: {
+              "Accept" => "application/json", "Authorization" => "Bearer token", "Content-Type" => "application/json", "Expect" => "", "Return-Client-Request-Id" => "true", "User-Agent" => "RDVSolidarites",
+            }
+          )
+          .to_return(status: 200, body: { id: "event_id" }.to_json, headers: {})
 
-        agents_rdv.sync_update_in_outlook_asynchronously
+        allow(Sentry).to receive(:capture_message)
       end
 
-      it "calls Outlook::UpdateEventJob" do
-        expect(Outlook::UpdateEventJob).to have_received(:perform_later).with(agents_rdv)
+      it "updates the Outlook Event" do
+        rdv.update(duration_in_min: 40)
+
+        expect(a_request(:patch,
+                         "https://graph.microsoft.com/v1.0/me/Events/abc").with(body: "{\"subject\":\"Super Motif\",\"body\":{\"contentType\":\"HTML\",\"content\":\"plus d'infos dans RDV Solidarités: http://www.rdv-solidarites-test.localhost/admin/organisations/#{organisation.id}/rdvs/20\"},\"start\":{\"dateTime\":\"2023-01-01T11:00:00+01:00\",\"timeZone\":\"Europe/Paris\"},\"end\":{\"dateTime\":\"2023-01-01T11:40:00+01:00\",\"timeZone\":\"Europe/Paris\"},\"location\":{\"displayName\":\"Par téléphone\"}}")).to have_been_made.once
+        expect(Sentry).not_to have_received(:capture_message)
       end
     end
 
     context "exists in outlook and agent is not synced" do
       let(:agent) { create(:agent) }
-      let(:agents_rdv) { create(:agents_rdv, agent: agent, outlook_id: "abc") }
+      let(:rdv) { create(:rdv) }
+      let!(:agents_rdv) { create(:agents_rdv, agent: agent, rdv: rdv, outlook_id: "abc") }
 
-      before do
-        allow(Outlook::UpdateEventJob).to receive(:perform_later)
+      it "does not update the Outlook Event" do
+        rdv.update(duration_in_min: 40)
 
-        agents_rdv.sync_update_in_outlook_asynchronously
-      end
-
-      it "does not call Outlook::UpdateEventJob" do
-        expect(Outlook::UpdateEventJob).not_to have_received(:perform_later)
+        expect(a_request(:patch, "https://graph.microsoft.com/v1.0/me/Events/abc")).not_to have_been_made
       end
     end
 
     context "does not exists in outlook" do
+      let(:organisation) { create(:organisation) }
+      let(:motif) { create(:motif, name: "Super Motif", location_type: :phone) }
+      # We need to create a fake agent to initialize a RDV as they have a validation on agents which prevents us to control the data in its AgentsRdv
+      let(:fake_agent) { create(:agent) }
       let(:agent) { create(:agent, microsoft_graph_token: "token") }
-      let(:agents_rdv) { create(:agents_rdv, agent: agent) }
+      let(:rdv) { create(:rdv, id: 20, motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [fake_agent]) }
 
-      it "calls Outlook::CreateEventJob" do
-        allow(Outlook::CreateEventJob).to receive(:perform_later)
+      before do
+        stub_request(:post, "https://graph.microsoft.com/v1.0/me/Events")
+          .with(
+            body: "{\"subject\":\"Super Motif\",\"body\":{\"contentType\":\"HTML\",\"content\":\"plus d'infos dans RDV Solidarités: http://www.rdv-solidarites-test.localhost/admin/organisations/#{organisation.id}/rdvs/20\"},\"start\":{\"dateTime\":\"2023-01-01T11:00:00+01:00\",\"timeZone\":\"Europe/Paris\"},\"end\":{\"dateTime\":\"2023-01-01T11:30:00+01:00\",\"timeZone\":\"Europe/Paris\"},\"location\":{\"displayName\":\"Par téléphone\"}}",
+            headers: {
+              "Accept" => "application/json", "Authorization" => "Bearer token", "Content-Type" => "application/json", "Expect" => "", "Return-Client-Request-Id" => "true", "User-Agent" => "RDVSolidarites",
+            }
+          )
+          .to_return(status: 200, body: { id: "" }.to_json, headers: {})
+        stub_request(:post, "https://graph.microsoft.com/v1.0/me/Events")
+          .with(
+            body: "{\"subject\":\"Super Motif\",\"body\":{\"contentType\":\"HTML\",\"content\":\"plus d'infos dans RDV Solidarités: http://www.rdv-solidarites-test.localhost/admin/organisations/#{organisation.id}/rdvs/20\"},\"start\":{\"dateTime\":\"2023-01-01T11:00:00+01:00\",\"timeZone\":\"Europe/Paris\"},\"end\":{\"dateTime\":\"2023-01-01T11:40:00+01:00\",\"timeZone\":\"Europe/Paris\"},\"location\":{\"displayName\":\"Par téléphone\"}}",
+            headers: {
+              "Accept" => "application/json", "Authorization" => "Bearer token", "Content-Type" => "application/json", "Expect" => "", "Return-Client-Request-Id" => "true", "User-Agent" => "RDVSolidarites",
+            }
+          )
+          .to_return(status: 200, body: { id: "event_id" }.to_json, headers: {})
+      end
 
-        expect(Outlook::CreateEventJob).to receive(:perform_later).with(agents_rdv)
+      it "creates the Outlook Event" do
+        agents_rdv = create(:agents_rdv, id: 12, agent: agent, rdv: rdv)
+        rdv.update(duration_in_min: 40)
 
-        agents_rdv.sync_update_in_outlook_asynchronously
+        expect(a_request(:post,
+                         "https://graph.microsoft.com/v1.0/me/Events").with(body: "{\"subject\":\"Super Motif\",\"body\":{\"contentType\":\"HTML\",\"content\":\"plus d'infos dans RDV Solidarités: http://www.rdv-solidarites-test.localhost/admin/organisations/#{organisation.id}/rdvs/20\"},\"start\":{\"dateTime\":\"2023-01-01T11:00:00+01:00\",\"timeZone\":\"Europe/Paris\"},\"end\":{\"dateTime\":\"2023-01-01T11:40:00+01:00\",\"timeZone\":\"Europe/Paris\"},\"location\":{\"displayName\":\"Par téléphone\"}}")).to have_been_made.once
+        expect(agents_rdv.reload.outlook_id).to eq("event_id")
       end
     end
 
     context "is cancelled and exists in outlook" do
+      let(:organisation) { create(:organisation) }
+      let(:motif) { create(:motif, name: "Super Motif", location_type: :phone) }
+      # We need to create a fake agent to initialize a RDV as they have a validation on agents which prevents us to control the data in its AgentsRdv
+      let(:fake_agent) { create(:agent) }
       let(:agent) { create(:agent, microsoft_graph_token: "token") }
-      let(:agents_rdv) { create(:agents_rdv, agent: agent, outlook_id: "abc") }
+      let(:rdv) { create(:rdv, id: 20, motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [fake_agent]) }
+      let!(:agents_rdv) { create(:agents_rdv, rdv: rdv, agent: agent, outlook_id: "abc") }
 
       before do
-        allow(agents_rdv.rdv).to receive(:cancelled?).and_return(true)
-        allow(Outlook::DestroyEventJob).to receive(:perform_later)
-
-        agents_rdv.sync_update_in_outlook_asynchronously
+        stub_request(:delete, "https://graph.microsoft.com/v1.0/me/Events/abc").to_return(status: 204, body: "", headers: {})
       end
 
-      it "calls Outlook::DestroyEventJob" do
-        expect(Outlook::DestroyEventJob).to have_received(:perform_later).with(agents_rdv)
+      it "destroys the Outlook Even" do
+        rdv.update(cancelled_at: Time.zone.now, status: "revoked")
+
+        expect(a_request(:delete, "https://graph.microsoft.com/v1.0/me/Events/abc")).to have_been_made.once
+        expect(agents_rdv.reload.outlook_id).to be_nil
       end
     end
 
     context "is cancelled and does not exist in outlook" do
+      let(:organisation) { create(:organisation) }
+      let(:motif) { create(:motif, name: "Super Motif", location_type: :phone) }
+      # We need to create a fake agent to initialize a RDV as they have a validation on agents which prevents us to control the data in its AgentsRdv
+      let(:fake_agent) { create(:agent) }
       let(:agent) { create(:agent, microsoft_graph_token: "token") }
-      let(:agents_rdv) { create(:agents_rdv, agent: agent) }
+      let(:rdv) { create(:rdv, id: 20, motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [fake_agent]) }
 
       before do
-        allow(agents_rdv.rdv).to receive(:cancelled?).and_return(true)
-        allow(Outlook::DestroyEventJob).to receive(:perform_later)
+        stub_request(:post, "https://graph.microsoft.com/v1.0/me/Events")
+          .with(
+            body: "{\"subject\":\"Super Motif\",\"body\":{\"contentType\":\"HTML\",\"content\":\"plus d'infos dans RDV Solidarités: http://www.rdv-solidarites-test.localhost/admin/organisations/#{organisation.id}/rdvs/20\"},\"start\":{\"dateTime\":\"2023-01-01T11:00:00+01:00\",\"timeZone\":\"Europe/Paris\"},\"end\":{\"dateTime\":\"2023-01-01T11:30:00+01:00\",\"timeZone\":\"Europe/Paris\"},\"location\":{\"displayName\":\"Par téléphone\"}}",
+            headers: {
+              "Accept" => "application/json", "Authorization" => "Bearer token", "Content-Type" => "application/json", "Expect" => "", "Return-Client-Request-Id" => "true", "User-Agent" => "RDVSolidarites",
+            }
+          )
+          .to_return(status: 200, body: { id: "" }.to_json, headers: {})
 
-        agents_rdv.sync_update_in_outlook_asynchronously
+        allow(Outlook::DestroyEventJob).to receive(:perform_later)
       end
 
       it "does not call Outlook::DestroyEventJob" do
-        expect(Outlook::DestroyEventJob).not_to have_received(:perform_later)
+        agents_rdv = create(:agents_rdv, id: 12, agent: agent, rdv: rdv)
+        rdv.update(cancelled_at: Time.zone.now, status: "revoked")
+
+        expect(Outlook::DestroyEventJob).not_to have_received(:perform_later).with(agents_rdv)
       end
     end
 
     context "is soft_deleted and exists in outlook" do
+      let(:organisation) { create(:organisation) }
+      let(:motif) { create(:motif, name: "Super Motif", location_type: :phone) }
+      # We need to create a fake agent to initialize a RDV as they have a validation on agents which prevents us to control the data in its AgentsRdv
+      let(:fake_agent) { create(:agent) }
       let(:agent) { create(:agent, microsoft_graph_token: "token") }
-      let(:agents_rdv) { create(:agents_rdv, agent: agent, outlook_id: "abc") }
+      let(:rdv) { create(:rdv, id: 20, motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [fake_agent]) }
+      let!(:agents_rdv) { create(:agents_rdv, rdv: rdv, agent: agent, outlook_id: "abc") }
 
       before do
-        allow(agents_rdv.rdv).to receive(:soft_deleted?).and_return(true)
-        allow(Outlook::DestroyEventJob).to receive(:perform_later)
-
-        agents_rdv.sync_update_in_outlook_asynchronously
+        stub_request(:delete, "https://graph.microsoft.com/v1.0/me/Events/abc").to_return(status: 204, body: "", headers: {})
       end
 
-      it "calls DestroyEventJob" do
-        expect(Outlook::DestroyEventJob).to have_received(:perform_later)
+      it "destroys the Outlook Event" do
+        rdv.update(deleted_at: Time.zone.now)
+
+        expect(a_request(:delete, "https://graph.microsoft.com/v1.0/me/Events/abc")).to have_been_made.once
+        # Important: we cannot delete the outlook_id as the agents_rdv is not longer correct (rdv required but deleted)
+        expect(agents_rdv.reload.outlook_id).to eq("abc")
       end
     end
   end
 
-  describe "#sync_destroy_in_outlook_asynchronously" do
+  describe "Destroy callback" do
     context "agent synced with outlook and exists in outlook" do
+      let(:organisation) { create(:organisation) }
+      let(:motif) { create(:motif, name: "Super Motif", location_type: :phone) }
+      # We need to create a fake agent to initialize a RDV as they have a validation on agents which prevents us to control the data in its AgentsRdv
+      let(:fake_agent) { create(:agent) }
       let(:agent) { create(:agent, microsoft_graph_token: "token") }
-      let(:agents_rdv) { create(:agents_rdv, agent: agent, outlook_id: "abc") }
+      let(:rdv) { create(:rdv, id: 20, motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [fake_agent]) }
+      let!(:agents_rdv) { create(:agents_rdv, rdv: rdv, agent: agent, outlook_id: "abc") }
 
       before do
-        allow(Outlook::DestroyEventJob).to receive(:perform_later)
-
-        agents_rdv.sync_destroy_in_outlook_asynchronously
+        stub_request(:delete, "https://graph.microsoft.com/v1.0/me/Events/abc").to_return(status: 204, body: "", headers: {})
       end
 
-      it "calls Outlook::DestroyEventJob" do
-        expect(Outlook::DestroyEventJob).to have_received(:perform_later).with(agents_rdv)
+      it "destroys the Outlook Even" do
+        # Problem: quand destroy, pas de agents_rdv
+        rdv.destroy
+
+        expect(a_request(:delete, "https://graph.microsoft.com/v1.0/me/Events/abc")).to have_been_made.once
+        expect(agents_rdv.reload).to be_nil
       end
     end
 
@@ -181,7 +246,7 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
         agents_rdv.sync_destroy_in_outlook_asynchronously
       end
 
-      it "does not call Outlook::CreateEventJob" do
+      it "does not call Outlook::DestroyEventJob" do
         expect(Outlook::DestroyEventJob).not_to have_received(:perform_later)
       end
     end
@@ -196,7 +261,7 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
         agents_rdv.sync_destroy_in_outlook_asynchronously
       end
 
-      it "does not call Outlook::CreateEventJob" do
+      it "does not call Outlook::DestroyEventJob" do
         expect(Outlook::DestroyEventJob).not_to have_received(:perform_later)
       end
     end
