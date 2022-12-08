@@ -25,7 +25,6 @@ class Rdv < ApplicationRecord
   NOT_CANCELLED_STATUSES = %w[unknown waiting seen noshow].freeze
   CANCELLED_STATUSES = %w[excused revoked].freeze
   enum created_by: { agent: 0, user: 1, file_attente: 2 }, _prefix: :created_by
-  attr_writer :associations_changed
 
   # Relations
   belongs_to :organisation
@@ -36,7 +35,7 @@ class Rdv < ApplicationRecord
   # https://stackoverflow.com/questions/30629680/rails-isnt-running-destroy-callbacks-for-has-many-through-join-model/30629704
   # https://github.com/rails/rails/issues/7618
   has_many :rdvs_users, validate: false, inverse_of: :rdv, dependent: :destroy
-  after_touch :update_rdv_status_from_participation
+  after_touch :update_rdv_status_from_participation, :associations_changed_flag_for_webhook
   has_many :receipts, dependent: :destroy
 
   accepts_nested_attributes_for :rdvs_users, allow_destroy: true
@@ -105,14 +104,6 @@ class Rdv < ApplicationRecord
     end
   }
   ## -
-
-  def associations_changed?
-    @associations_changed || false
-  end
-
-  def associations_changed_flag(_record)
-    @associations_changed = true
-  end
 
   def self.ongoing(time_margin: 0.minutes)
     where("starts_at <= ?", Time.zone.now + time_margin)

@@ -4,7 +4,6 @@ class Organisation < ApplicationRecord
   # Mixins
   has_paper_trail
   include WebhookDeliverable
-  include WebhookDeliverable
 
   # Attributes
   auto_strip_attributes :email, :name
