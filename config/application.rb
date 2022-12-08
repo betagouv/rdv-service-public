@@ -20,7 +20,7 @@ Bundler.require(*Rails.groups)
 module Lapin
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 6.1
+    config.load_defaults 7.0
 
     # Configuration for the application, engines, and railties goes here.
     #
@@ -42,7 +42,7 @@ module Lapin
 
     redis_url = ENV.fetch("REDIS_URL") { "redis://localhost:6379" }
 
-    config.active_support.cache_format_version = 6.1 # TODO: Change to 7.0 on final Rails 7 PR
+    config.active_support.cache_format_version = 7.0
 
     # Both cache and sessions are stored in the same Redis database:
     # - cache keys are prefixed with "cache:"
