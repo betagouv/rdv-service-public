@@ -19,6 +19,8 @@ RSpec.describe "Adding a user to a collective RDV" do
   let!(:rdv) { create(:rdv, :without_users, motif: motif, agents: [agent], organisation: organisation, lieu: lieu1) }
   let!(:logged_user) { create(:user, phone_number: "+33601010101", email: "frederique@example.com") }
   let!(:invited_user) { create(:user, last_name: "INVITE") }
+  let!(:other_user1) { create(:user) }
+  let!(:other_user2) { create(:user) }
   let!(:rdv2) { create(:rdv, :without_users, motif: motif2, agents: [agent], organisation: organisation, lieu: lieu2) }
   let!(:invitation_token) do
     invited_user.invite! { |u| u.skip_invitation = true }
@@ -35,8 +37,6 @@ RSpec.describe "Adding a user to a collective RDV" do
     }
   end
 
-  # Merge et test avec participants et test sans participants
-
   def select_motif
     expect(page).to have_content("Sélectionnez le motif de votre RDV :")
     click_link(motif.name)
@@ -50,14 +50,21 @@ RSpec.describe "Adding a user to a collective RDV" do
     click_link("Prochaine disponibilité")
   end
 
-  def expect_notifications_for(user)
+  def expect_notifications_for(user, event)
     perform_enqueued_jobs
     expect(ActionMailer::Base.deliveries.map(&:to).flatten).to match_array([agent.email, user.email])
+    if event == "rdv_created" # SMS notification for user created participation
+      expect(Receipt.where(user_id: user.id, channel: "sms", result: "delivered").count).to eq 1
+      expect(Receipt.where(channel: "sms", event: "rdv_created").count).to eq 1
+    else # No SMS notification for user cancelation
+      expect(Receipt.where(user_id: user.id, channel: "sms", result: "delivered").count).to eq 0
+      expect(Receipt.where(channel: "sms", event: "rdv_cancelled").count).to eq 0
+    end
   end
 
   def expect_webhooks_for(user)
     expect(WebMock).to(have_requested(:post, "https://example.com/").with do |req|
-      JSON.parse(req.body)["data"]["users"].map { |local_user| local_user["id"] } == [user.id]
+      JSON.parse(req.body)["data"]["rdvs_users"].map { |rdvs_user| rdvs_user["user"]["id"] == user.id }
     end.at_least_once)
   end
 
@@ -83,7 +90,7 @@ RSpec.describe "Adding a user to a collective RDV" do
       expect(page).to have_content("Participation à l'atelier confirmée")
       expect(page).to have_content("modifier") # can_change_participants?
 
-      expect_notifications_for(logged_user)
+      expect_notifications_for(logged_user, "rdv_created")
       expect_webhooks_for(logged_user)
     end
   end
@@ -107,7 +114,7 @@ RSpec.describe "Adding a user to a collective RDV" do
 
       expect(page).to have_content("Participation à l'atelier confirmée")
       expect(rdv.reload.users.count).to eq(1)
-      expect_notifications_for(logged_user)
+      expect_notifications_for(logged_user, "rdv_created")
       expect_webhooks_for(logged_user)
     end
   end
@@ -130,7 +137,7 @@ RSpec.describe "Adding a user to a collective RDV" do
       expect(page).not_to have_content("modifier") # can_change_participants?
       expect(::Addressable::URI.parse(current_url).query_values).to match("invitation_token" => /^[A-Z0-9]{8}$/)
 
-      expect_notifications_for(invited_user)
+      expect_notifications_for(invited_user, "rdv_created")
       expect_webhooks_for(invited_user)
     end
   end
@@ -199,7 +206,7 @@ RSpec.describe "Adding a user to a collective RDV" do
         end.not_to change { rdv.reload.users.count }
         expect(page).to have_content("Participation à l'atelier confirmée")
 
-        expect_notifications_for(user)
+        expect_notifications_for(user, "rdv_created")
         expect_webhooks_for(user)
       end
 
@@ -303,10 +310,41 @@ RSpec.describe "Adding a user to a collective RDV" do
             perform_enqueued_jobs
             expect(ActionMailer::Base.deliveries.map(&:to).flatten).to match_array([agent.email])
           else
-            expect_notifications_for(user)
+            expect_notifications_for(user, "rdv_cancelled")
           end
           expect_webhooks_for(user)
         end
+      end
+
+      it "works with other participants (and do not notify others users) with #{user_type}" do
+        create(:rdvs_user, rdv: rdv, user: other_user1, status: "excused")
+        create(:rdvs_user, rdv: rdv, user: other_user2, status: "unknown")
+
+        user = user_type == "invited" ? invited_user : logged_user
+        if user_type == "invited"
+          params.merge!(invitation_token: invitation_token)
+        else
+          login_as(user, scope: :user)
+        end
+
+        visit root_path(params)
+        select_motif
+        select_lieu
+
+        expect do
+          click_link("S'inscrire")
+          click_button("Continuer")
+          if page.has_button?("Continuer")
+            page.click_button("Continuer")
+          end
+          stub_request(:post, "https://example.com/")
+          click_on("Confirmer ma participation")
+        end.to change { rdv.reload.users.count }.from(2).to(3)
+        expect(rdv.users_count).to eq(2) # users_count doesnt count other_user1 excused participation
+        expect(page).to have_content("Participation à l'atelier confirmée")
+
+        expect_notifications_for(user, "rdv_created")
+        expect_webhooks_for(user)
       end
     end
   end
