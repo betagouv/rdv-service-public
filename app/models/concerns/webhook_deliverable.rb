@@ -7,7 +7,7 @@ module WebhookDeliverable
   extend ActiveSupport::Concern
 
   def blueprint_class
-    "#{self.class.name}Blueprint".constantize
+    "#{self.class.base_class.name}Blueprint".safe_constantize
   end
 
   def generate_webhook_payload(action)
@@ -52,8 +52,6 @@ module WebhookDeliverable
   end
 
   def associations_declared_in_blueprint_changed?
-    return true if associations_changed?
-
     blueprint_associations = blueprint_class.send(:associations).map(&:name)
     blueprint_associations.map do |blueprint_association|
       if send(blueprint_association).respond_to?(:any?)
@@ -61,9 +59,17 @@ module WebhookDeliverable
         send(blueprint_association).any?(&:changed?)
       else
         # Belongs To association
-        send(blueprint_association).changed?
+        send(blueprint_association)&.changed?
       end
-    end
+    end.include?(true) || self&.associations_changed?
+  end
+
+  def associations_changed?
+    @associations_changed || false
+  end
+
+  def associations_changed_flag_for_webhook
+    @associations_changed = true
   end
 
   included do
