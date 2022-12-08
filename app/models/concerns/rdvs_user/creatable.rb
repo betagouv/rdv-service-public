@@ -29,7 +29,10 @@ module RdvsUser::Creatable
   end
 
   def notify_create!(author)
-    @notifier = Notifiers::RdvCreated.new(rdv, author)
+    # We pass an empty array if notifications are disabled to avoid notifying other users
+    user_to_notify = send_lifecycle_notifications? ? [user] : []
+
+    @notifier = Notifiers::RdvCreated.new(rdv, author, user_to_notify)
     @notifier.perform
     # we re-enable the webhooks that we deactivated during the notification process
     rdv.skip_webhooks = false
