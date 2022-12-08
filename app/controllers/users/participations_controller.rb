@@ -62,8 +62,8 @@ class Users::ParticipationsController < UserAuthController
   def change_participation_status(status)
     existing_participation.change_status_and_notify(current_user, status)
     set_user_name_initials_verified
-    flash[:notice] = "Ré-Inscription confirmée" if existing_participation.status == "unknown"
-    flash[:notice] = "Désinscription de l'atelier confirmée" if existing_participation.status == "excused"
+    flash[:notice] = "Participation à l'atelier confirmée" if existing_participation.status == "unknown"
+    flash[:notice] = "Participation à l'atelier annulée" if existing_participation.status == "excused"
     redirect_to users_rdv_path(@rdv, invitation_token: existing_participation.rdv_user_token)
   end
 
@@ -74,7 +74,7 @@ class Users::ParticipationsController < UserAuthController
 
     new_participation.create_and_notify(current_user)
     set_user_name_initials_verified
-    flash[:notice] = "Inscription confirmée"
+    flash[:notice] = "Participation à l'atelier confirmée"
     redirect_to users_rdv_path(@rdv, invitation_token: new_participation.rdv_user_token)
   end
 

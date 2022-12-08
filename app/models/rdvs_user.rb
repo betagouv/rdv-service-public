@@ -80,7 +80,7 @@ class RdvsUser < ApplicationRecord
   end
 
   def cancellable_by_user?
-    !cancelled? && rdv.collectif? && !rdv.cancelled? && rdv.motif.rdvs_cancellable_by_user? && rdv.starts_at > 4.hours.from_now
+    !cancelled? && rdv.collectif? && !rdv.cancelled? && rdv.motif.rdvs_cancellable_by_user? && rdv.starts_at > Rdv::MIN_DELAY_FOR_CANCEL.from_now
   end
 
   def set_default_notifications_flags
