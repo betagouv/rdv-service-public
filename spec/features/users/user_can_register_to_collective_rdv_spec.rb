@@ -16,10 +16,10 @@ RSpec.describe "Adding a user to a collective RDV" do
   let!(:motif2) { create(:motif, :collectif, reservable_online: true, organisation: organisation, service: service) }
   let!(:lieu1) { create(:lieu, organisation: organisation) }
   let!(:lieu2) { create(:lieu, organisation: organisation) }
-  let!(:rdv) { create(:rdv, :without_users, motif: motif, agents: [agent], organisation: organisation, lieu: lieu1) }
+  let!(:rdv) { create(:rdv, motif: motif, agents: [agent], organisation: organisation, lieu: lieu1) }
   let!(:user) { create(:user, phone_number: "+33601010101", email: "frederique@example.com") }
   let!(:invited_user) { create(:user) }
-  let!(:rdv2) { create(:rdv, :without_users, motif: motif2, agents: [agent], organisation: organisation, lieu: lieu2) }
+  let!(:rdv2) { create(:rdv, motif: motif2, agents: [agent], organisation: organisation, lieu: lieu2) }
   let!(:invitation_token) do
     invited_user.invite! { |u| u.skip_invitation = true }
     invited_user.raw_invitation_token
@@ -55,7 +55,7 @@ RSpec.describe "Adding a user to a collective RDV" do
 
   def expect_webhooks_for(user)
     expect(WebMock).to(have_requested(:post, "https://example.com/").with do |req|
-      JSON.parse(req.body)["data"]["users"].map { |local_user| local_user["id"] } == [user.id]
+      JSON.parse(req.body)["data"]["rdvs_users"].map { |rdvs_user| rdvs_user["user"]["id"] == user.id }
     end.at_least_once)
   end
 
@@ -77,7 +77,7 @@ RSpec.describe "Adding a user to a collective RDV" do
         click_button("Continuer")
         stub_request(:post, "https://example.com/")
         click_on("Confirmer ma participation")
-      end.to change { rdv.reload.users.count }.from(0).to(1)
+      end.to change { rdv.reload.users.count }.from(1).to(2)
       expect(page).to have_content("Inscription confirmée")
       expect(page).to have_content("modifier") # can_change_participants?
 
@@ -107,7 +107,7 @@ RSpec.describe "Adding a user to a collective RDV" do
       click_on("Confirmer ma participation")
 
       expect(page).to have_content("Inscription confirmée")
-      expect(rdv.reload.users.count).to eq(1)
+      expect(rdv.reload.users.count).to eq(2)
       expect_notifications_for(user)
       expect_webhooks_for(user)
     end
@@ -126,7 +126,7 @@ RSpec.describe "Adding a user to a collective RDV" do
         click_button("Continuer")
         stub_request(:post, "https://example.com/")
         click_on("Confirmer ma participation")
-      end.to change { rdv.reload.users.count }.from(0).to(1)
+      end.to change { rdv.reload.users.count }.from(1).to(2)
       expect(page).to have_content("Inscription confirmée")
       expect(page).not_to have_content("modifier") # can_change_participants?
       expect(::Addressable::URI.parse(current_url).query_values).to match("invitation_token" => /^[A-Z0-9]{8}$/)
@@ -147,7 +147,6 @@ RSpec.describe "Adding a user to a collective RDV" do
       expect(page).to have_content("La prise de rendez-vous n'est pas disponible pour ce département.")
 
       rdv2.max_participants_count = 2
-      create(:rdvs_user, rdv: rdv2)
       create(:rdvs_user, rdv: rdv2)
       rdv2.save
       visit root_path(params)
@@ -208,7 +207,7 @@ RSpec.describe "Adding a user to a collective RDV" do
         click_button("Continuer")
         stub_request(:post, "https://example.com/")
         click_on("Confirmer ma participation")
-      end.to change { rdv.reload.users.count }.from(0).to(1)
+      end.to change { rdv.reload.users.count }.from(1).to(2)
       expect(page).to have_content("Inscription confirmée")
 
       perform_enqueued_jobs
