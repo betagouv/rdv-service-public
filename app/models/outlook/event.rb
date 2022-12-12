@@ -7,11 +7,17 @@ module Outlook
     USER_AGENT = "RDVSolidarites"
     BASE_URL = "https://graph.microsoft.com/v1.0"
 
-    attr_accessor :agents_rdv
+    attr_reader :agents_rdv, :outlook_id, :agent
 
-    delegate :agent, :rdv, :id, :outlook_id, to: :agents_rdv
+    delegate :rdv, :id, to: :agents_rdv, allow_nil: true
     delegate :microsoft_graph_token, :connected_to_outlook?, to: :agent, prefix: true
     delegate :object, :event_description_for, :starts_at, :ends_at, :address_without_personal_information, to: :rdv
+
+    def initialize(outlook_id: nil, agents_rdv: nil, agent: nil)
+      @agents_rdv = agents_rdv
+      @outlook_id = @agents_rdv&.outlook_id || outlook_id
+      @agent = @agents_rdv&.agent || agent
+    end
 
     # payload (hash): a JSON hash representing the event entity
     # calendar_id (string): The Id of the calendar to create the event in.
@@ -71,12 +77,11 @@ module Outlook
                  end
 
       body_response = response.body == "" ? {} : JSON.parse(response.body)
-
       if body_response["error"].present?
         if agent_connected_to_outlook? && response.response_code == 401 # token expired
           agent.refresh_outlook_token && make_api_call(method, url, event_payload)
         else
-          Sentry.capture_message("Outlook API error for AgentsRdv #{id}: #{body_response.dig('error', 'message')}")
+          Sentry.capture_message("Outlook API error for AgentsRdv #{id || outlook_id}: #{body_response.dig('error', 'message')}")
         end
       end
       response.response_code == 204 ? "" : body_response

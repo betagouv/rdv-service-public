@@ -39,7 +39,7 @@ module Outlook
     def sync_destroy_in_outlook_asynchronously
       return unless agent_connected_to_outlook? && exists_in_outlook?
 
-      Outlook::DestroyEventJob.perform_later(self)
+      Outlook::DestroyEventJob.perform_later(outlook_id, agent)
     end
   end
 end

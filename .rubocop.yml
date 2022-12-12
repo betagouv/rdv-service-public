@@ -20,6 +20,8 @@ Layout/LineLength:
   Exclude:
     - 'spec/jobs/outlook/create_event_job_spec.rb'
     - 'spec/jobs/outlook/update_event_job_spec.rb'
+    - 'spec/models/concerns/outlook/synchronizable_spec.rb'
+    - 'spec/models/outlook/event_spec.rb'
 
 Layout/MultilineMethodCallIndentation:
   EnforcedStyle: indented

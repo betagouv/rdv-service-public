@@ -9,7 +9,7 @@ RSpec.describe Outlook::DestroyEventJob, type: :job do
   let(:fake_agent) { create(:agent) }
   let(:agent) { create(:agent, microsoft_graph_token: "token") }
   let(:rdv) { create(:rdv, id: 20, motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [fake_agent]) }
-  let(:agents_rdv) { create(:agents_rdv, id: 12, rdv: rdv, agent: agent, outlook_id: "super_id") }
+  let!(:agents_rdv) { create(:agents_rdv, id: 12, rdv: rdv, agent: agent, outlook_id: "super_id") }
 
   context "when the event is destroyed" do
     before do
@@ -22,11 +22,11 @@ RSpec.describe Outlook::DestroyEventJob, type: :job do
 
       allow(Sentry).to receive(:capture_message)
 
-      described_class.perform_now(agents_rdv)
+      described_class.perform_now("super_id", agent)
     end
 
     it "updates the outlook_id" do
-      expect(agents_rdv.outlook_id).to eq(nil)
+      expect(agents_rdv.reload.outlook_id).to eq(nil)
 
       expect(Sentry).not_to have_received(:capture_message)
     end
@@ -43,13 +43,13 @@ RSpec.describe Outlook::DestroyEventJob, type: :job do
 
       allow(Sentry).to receive(:capture_message)
 
-      described_class.perform_now(agents_rdv)
+      described_class.perform_now("super_id", agent)
     end
 
     it "does not update the outlook_id" do
-      expect(agents_rdv.outlook_id).to eq("super_id")
+      expect(agents_rdv.reload.outlook_id).to eq("super_id")
 
-      expect(Sentry).to have_received(:capture_message).with("Outlook API error for AgentsRdv 12: Quelle terrible erreur")
+      expect(Sentry).to have_received(:capture_message).with("Outlook API error for AgentsRdv super_id: Quelle terrible erreur")
     end
   end
 end

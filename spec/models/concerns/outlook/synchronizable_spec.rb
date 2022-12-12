@@ -186,7 +186,7 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
         agents_rdv = create(:agents_rdv, id: 12, agent: agent, rdv: rdv)
         rdv.update(cancelled_at: Time.zone.now, status: "revoked")
 
-        expect(Outlook::DestroyEventJob).not_to have_received(:perform_later).with(agents_rdv)
+        expect(Outlook::DestroyEventJob).not_to have_received(:perform_later).with(agents_rdv.outlook_id, agent.id)
       end
     end
 
@@ -227,23 +227,27 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
         stub_request(:delete, "https://graph.microsoft.com/v1.0/me/Events/abc").to_return(status: 204, body: "", headers: {})
       end
 
-      it "destroys the Outlook Even" do
-        # Problem: quand destroy, pas de agents_rdv
+      it "destroys the Outlook Event" do
         rdv.destroy
 
         expect(a_request(:delete, "https://graph.microsoft.com/v1.0/me/Events/abc")).to have_been_made.once
-        expect(agents_rdv.reload).to be_nil
+        expect { agents_rdv.reload }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
 
     context "agent not synced with outlook" do
+      let(:organisation) { create(:organisation) }
+      let(:motif) { create(:motif, name: "Super Motif", location_type: :phone) }
+      # We need to create a fake agent to initialize a RDV as they have a validation on agents which prevents us to control the data in its AgentsRdv
+      let(:fake_agent) { create(:agent) }
       let(:agent) { create(:agent) }
-      let(:agents_rdv) { create(:agents_rdv, agent: agent) }
+      let(:rdv) { create(:rdv, id: 20, motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [fake_agent]) }
+      let!(:agents_rdv) { create(:agents_rdv, rdv: rdv, agent: agent) }
 
       before do
         allow(Outlook::DestroyEventJob).to receive(:perform_later)
 
-        agents_rdv.sync_destroy_in_outlook_asynchronously
+        rdv.destroy
       end
 
       it "does not call Outlook::DestroyEventJob" do
@@ -252,16 +256,30 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
     end
 
     context "agents_rdv does not exist in outlook" do
+      let(:organisation) { create(:organisation) }
+      let(:motif) { create(:motif, name: "Super Motif", location_type: :phone) }
+      # We need to create a fake agent to initialize a RDV as they have a validation on agents which prevents us to control the data in its AgentsRdv
+      let(:fake_agent) { create(:agent) }
       let(:agent) { create(:agent, microsoft_graph_token: "token") }
-      let(:agents_rdv) { create(:agents_rdv, agent: agent) }
+      let(:rdv) { create(:rdv, id: 20, motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [fake_agent]) }
 
       before do
-        allow(Outlook::DestroyEventJob).to receive(:perform_later)
+        stub_request(:post, "https://graph.microsoft.com/v1.0/me/Events")
+          .with(
+            body: "{\"subject\":\"Super Motif\",\"body\":{\"contentType\":\"HTML\",\"content\":\"plus d'infos dans RDV Solidarités: http://www.rdv-solidarites-test.localhost/admin/organisations/#{organisation.id}/rdvs/20\"},\"start\":{\"dateTime\":\"2023-01-01T11:00:00+01:00\",\"timeZone\":\"Europe/Paris\"},\"end\":{\"dateTime\":\"2023-01-01T11:30:00+01:00\",\"timeZone\":\"Europe/Paris\"},\"location\":{\"displayName\":\"Par téléphone\"}}",
+            headers: {
+              "Accept" => "application/json", "Authorization" => "Bearer token", "Content-Type" => "application/json", "Expect" => "", "Return-Client-Request-Id" => "true", "User-Agent" => "RDVSolidarites",
+            }
+          )
+          .to_return(status: 200, body: { id: "" }.to_json, headers: {})
 
-        agents_rdv.sync_destroy_in_outlook_asynchronously
+        allow(Outlook::DestroyEventJob).to receive(:perform_later)
       end
 
       it "does not call Outlook::DestroyEventJob" do
+        create(:agents_rdv, agent: agent, rdv: rdv)
+        rdv.destroy
+
         expect(Outlook::DestroyEventJob).not_to have_received(:perform_later)
       end
     end
