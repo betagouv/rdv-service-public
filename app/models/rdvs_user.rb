@@ -5,6 +5,7 @@ class RdvsUser < ApplicationRecord
   devise :invitable
 
   include RdvsUser::StatusChangeable
+  include RdvsUser::Creatable
 
   # Attributes
   enum status: { unknown: "unknown", waiting: "waiting", seen: "seen", excused: "excused", revoked: "revoked", noshow: "noshow" }
@@ -14,6 +15,7 @@ class RdvsUser < ApplicationRecord
   # Relations
   belongs_to :rdv, -> { unscope(where: :deleted_at) }, touch: true, inverse_of: :rdvs_users, optional: true
   belongs_to :user, -> { unscope(where: :deleted_at) }, inverse_of: :rdvs_users, optional: true
+  has_one :prescripteur, dependent: :destroy
 
   # Validations
   # Uniqueness validation doesn’t work with nested_attributes, see https://github.com/rails/rails/issues/4568
@@ -67,6 +69,14 @@ class RdvsUser < ApplicationRecord
     else
       status
     end
+  end
+
+  def not_cancelled?
+    status.in? NOT_CANCELLED_STATUSES
+  end
+
+  def cancelled?
+    status.in? CANCELLED_STATUSES
   end
 
   def set_default_notifications_flags

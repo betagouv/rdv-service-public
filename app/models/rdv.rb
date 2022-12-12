@@ -16,9 +16,15 @@ class Rdv < ApplicationRecord
 
   # Attributes
   enum status: { unknown: "unknown", waiting: "waiting", seen: "seen", excused: "excused", revoked: "revoked", noshow: "noshow" }
+  # Commentaire pour les status explications
+  # unknown : "A renseigner" ou "A venir" (si le rdv est passé ou pas)
+  # seen : Présent au rdv
+  # noshow : Lapin
+  # excused : Annulé à l'initiative de l'usager
+  # revoked : Annulé à l'initiative du service
   NOT_CANCELLED_STATUSES = %w[unknown waiting seen noshow].freeze
   CANCELLED_STATUSES = %w[excused revoked].freeze
-  enum created_by: { agent: 0, user: 1, file_attente: 2 }, _prefix: :created_by
+  enum created_by: { agent: 0, user: 1, file_attente: 2, prescripteur: 3 }, _prefix: :created_by
 
   # Relations
   belongs_to :organisation
@@ -332,29 +338,30 @@ class Rdv < ApplicationRecord
   end
 
   def update_rdv_status_from_participation
-    return if !collectif? || rdvs_users.empty?
+    return unless collectif?
+
+    if rdvs_users.empty?
+      update_status_to_unknown
+      return
+    end
 
     update_status_priority_order_participations
-    update_status_similar_participations
+  end
+
+  def update_status_to_unknown
+    self.cancelled_at = nil
+    update!(status: "unknown")
   end
 
   def update_status_priority_order_participations
     # Priority Order. One participation will change rdv status
-    %w[unknown seen noshow revoked].each do |status|
+    %w[unknown seen noshow excused revoked].each do |status|
       symbol_method = "#{status}?".to_sym
       next unless rdvs_users.any?(&symbol_method)
 
+      self.cancelled_at = status.in?(%w[revoked noshow]) ? Time.zone.now : nil
       update!(status: status)
       break
-    end
-  end
-
-  def update_status_similar_participations
-    # If all participations are similar the rdv status will change
-    %w[seen noshow excused].each do |status|
-      if rdvs_users.map(&:status).all? { |participation_status| participation_status.in? [status] }
-        update!(status: status)
-      end
     end
   end
 

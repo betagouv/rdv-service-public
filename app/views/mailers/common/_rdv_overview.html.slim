@@ -9,7 +9,9 @@
       span.title= "#{User.model_name.human} :"
       span.float-right= @user.full_name
     - else
-      span.title Usager(s) :
+      span.title
+        = "Usager".pluralize(rdv.users.size)
+        |  :
       span.float-right= rdv.users.map(&:full_name).sort.to_sentence
     .clear
   div.row-result
@@ -26,7 +28,7 @@
     .clear
   - if rdv.follow_up?
     div.row-result
-      span.title Travailleur médico-social :
+      span.title Référent :
       span.float-right= rdv.agents.map(&:short_name).sort.to_sentence
       .clear
   div.row-result

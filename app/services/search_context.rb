@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/ClassLength
 class SearchContext
-  attr_reader :errors, :query, :departement, :address, :city_code, :street_ban_id, :latitude, :longitude,
+  attr_reader :errors, :query, :address, :city_code, :street_ban_id, :latitude, :longitude,
               :motif_name_with_location_type
 
   def initialize(current_user, query = {})
@@ -12,7 +13,6 @@ class SearchContext
     @longitude = query[:longitude]
     @address = query[:address]
     @city_code = query[:city_code]
-    @departement = query[:departement]
     @street_ban_id = query[:street_ban_id]
     @public_link_organisation_id = query[:public_link_organisation_id]
     @user_selected_organisation_id = query[:user_selected_organisation_id]
@@ -24,12 +24,13 @@ class SearchContext
     @service_id = query[:service_id]
     @lieu_id = query[:lieu_id]
     @start_date = query[:date]
+    @referent_ids = query[:referent_ids]
   end
 
   # *** Method that outputs the next step for the user to complete its rdv journey ***
   # *** It is used in #to_partial_path to render the matching partial view ***
   def current_step
-    if address.blank? && organisation_id.blank?
+    if departement.blank?
       :address_selection
     elsif !service_selected?
       :service_selection
@@ -49,11 +50,15 @@ class SearchContext
   end
 
   def geo_search
-    Users::GeoSearch.new(departement: @departement, city_code: @city_code, street_ban_id: @street_ban_id)
+    Users::GeoSearch.new(departement: departement, city_code: @city_code, street_ban_id: @street_ban_id)
   end
 
   def invitation?
     @invitation_token.present?
+  end
+
+  def departement
+    @departement ||= (@query[:departement] || public_link_organisation&.departement_number)
   end
 
   def service
@@ -121,7 +126,7 @@ class SearchContext
   def lieux
     @lieux ||= \
       Lieu
-        .with_open_slots_for_motifs(@matching_motifs)
+        .with_open_slots_for_motifs(matching_motifs)
         .includes(:organisation)
         .sort_by { |lieu| lieu.distance(@latitude.to_f, @longitude.to_f) }
   end
@@ -151,11 +156,7 @@ class SearchContext
   end
 
   def creneaux
-    @creneaux ||= if first_matching_motif.collectif?
-                    SearchRdvCollectif.creneaux(first_matching_motif, lieu)
-                  else
-                    creneaux_search.creneaux
-                  end
+    @creneaux ||= creneaux_search.creneaux
   end
 
   def creneaux_search
@@ -166,6 +167,15 @@ class SearchContext
     @next_availability ||= creneaux.empty? ? creneaux_search.next_availability : nil
   end
 
+  def referents
+    @referents ||= retrieve_referents
+  end
+
+  def follow_up?
+    @referent_ids.present?
+  end
+
+  # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
   def filter_motifs(available_motifs)
     motifs = available_motifs
     motifs = motifs.search_by_name_with_location_type(@motif_name_with_location_type) if @motif_name_with_location_type.present?
@@ -174,37 +184,30 @@ class SearchContext
     motifs = motifs.where(category: @motif_category) if @motif_category.present?
     motifs = motifs.where(organisations: { id: organisation_id }) if organisation_id.present?
     motifs = motifs.where(id: @motif_id) if @motif_id.present?
-    motifs = motifs.where(id: lieu_filtered_motif_ids(motifs)) if @lieu_id.present?
+    motifs = motifs.with_availability_for_lieux([lieu.id]) if lieu.present?
+    motifs = motifs.where(follow_up: follow_up?)
+    motifs = motifs.with_availability_for_agents(referents.map(&:id)) if follow_up?
 
     motifs
   end
+  # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
   private
 
-  def lieu_filtered_motif_ids(motifs)
-    # filtrer sur le `lieu_id` dans la table des plages d'ouverture permet de limiter de combiner et construire trop d'objet
-    # voir https://github.com/betagouv/rdv-solidarites.fr/issues/2686
-    motif_ids = motifs.individuel.joins(:plage_ouvertures).where(plage_ouvertures: { lieu_id: @lieu_id }).uniq.pluck(:id)
-
-    # Pour prendre en compte le filtre sur le lieu_id pour les RDV Collectif,
-    # nous ne pouvons pas passer par une requête `or` qui nécessite les mêmes jointures des deux côtés.
-    motifs.collectif.each { |motif| motif_ids << motif.id if Rdv.exists?(lieu_id: @lieu_id, motif: motif) }
-
-    motif_ids
+  def creneaux_search_for(lieu, date_range, motif)
+    Users::CreneauxSearch.new(
+      user: @current_user,
+      motif: motif,
+      lieu: lieu,
+      date_range: date_range,
+      geo_search: geo_search
+    )
   end
 
-  def creneaux_search_for(lieu, date_range, motif)
-    if motif.individuel?
-      Users::CreneauxSearch.new(
-        user: @current_user,
-        motif: motif,
-        lieu: lieu,
-        date_range: date_range,
-        geo_search: geo_search
-      )
-    else
-      SearchRdvCollectif.next_availability_for_lieu(motif, lieu)
-    end
+  def retrieve_referents
+    return [] if @referent_ids.blank? || @current_user.nil?
+
+    @current_user.agents.where(id: @referent_ids)
   end
 
   def matching_motifs
@@ -220,3 +223,4 @@ class SearchContext
       end
   end
 end
+# rubocop:enable Metrics/ClassLength

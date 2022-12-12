@@ -36,8 +36,34 @@
   div.mr-1
     i.fa.fa-fw.fa-user.text-primary-blue>
   div
-    strong> Professionnel(s) :
+    strong
+      => "Professionnel".pluralize(rdv.agents.size)
     = agents_to_sentence(rdv.agents)
+
+- rdv.rdvs_users.select(&:prescripteur).each do |rdvs_user|
+  - prescripteur = rdvs_user.prescripteur
+  .d-flex.card-text.mt-1
+    div.mr-1
+      i.fa-solid.fa-user-plus.text-primary-blue
+    div
+      ' Rendez-vous pris par
+      a href="#prescripteur-explanation#{rdvs_user.id}" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseExample"
+        = prescripteur.full_name
+  .collapse.alert-info.p-2.m-2 id="prescripteur-explanation#{rdvs_user.id}"
+    p
+      ' La réservation a été faite par un prescripteur qui ne participera pas au rendez-vous (agent d'accueil, conseiller).
+    p
+      ' Ce rendez-vous a été pris sur un créneau ouvert au public.
+    p.mb-0
+      ' Si vous pensez qu'il y a eu une erreur lors de la prise de rendez-vous, vous pouvez contacter
+      strong => prescripteur.full_name
+      - if prescripteur.phone_number.present?
+        ' au
+        strong => phone_to(prescripteur.phone_number)
+        ' ou
+      ' à l'adresse
+      strong = mail_to(prescripteur.email)
+      | .
 
 - if rdv.public_office? && rdv.overlapping_plages_ouvertures?
   div.my-3

@@ -45,7 +45,7 @@ class User < ApplicationRecord
   enum family_situation: { single: 0, in_a_relationship: 1, divorced: 2 }
   enum created_through: { agent_creation: "agent_creation", user_sign_up: "user_sign_up",
                           franceconnect_sign_up: "franceconnect_sign_up", user_relative_creation: "user_relative_creation",
-                          unknown: "unknown", agent_creation_api: "agent_creation_api", }
+                          unknown: "unknown", agent_creation_api: "agent_creation_api", prescripteur: "prescripteur", }
   enum invited_through: { devise_email: "devise_email", external: "external" }
 
   # HACK : add *_sign_in_ip to accessor to bypass recording IPs from Trackable Devise's module
@@ -54,17 +54,18 @@ class User < ApplicationRecord
 
   # Relations
   has_many :user_profiles, dependent: :restrict_with_error
-  # we specify dependent: :destroy because by default user_profiles will be deleted (dependent: :delete)
-  # and we need to destroy to trigger the callbacks on user_profile
   has_many :rdvs_users, dependent: :destroy
-  has_and_belongs_to_many :agents
+  has_many :referent_assignations, dependent: :destroy
   belongs_to :responsible, class_name: "User", optional: true
   has_many :relatives, foreign_key: "responsible_id", class_name: "User", inverse_of: :responsible, dependent: :nullify
   has_many :file_attentes, dependent: :destroy
   has_many :receipts, dependent: :destroy
 
   # Through relations
+  # we specify dependent: :destroy because by default user_profiles and referent_assignations
+  # will be deleted (dependent: :delete) and we need to destroy to trigger the callbacks on both models
   has_many :organisations, through: :user_profiles, dependent: :destroy
+  has_many :agents, through: :referent_assignations, dependent: :destroy
   has_many :webhook_endpoints, through: :organisations
   has_many :rdvs, through: :rdvs_users
 
@@ -142,6 +143,11 @@ class User < ApplicationRecord
   def profile_for(organisation)
     @profiles ||= user_profiles.index_by(&:organisation)
     @profiles[organisation]
+  end
+
+  def participation_for(rdv)
+    # We use find because it can be only one member by family in collective rdv
+    rdv.rdvs_users.to_a.find { |participation| participation.user_id.in?(self_and_relatives_and_responsible.map(&:id)) }
   end
 
   def deleted_email

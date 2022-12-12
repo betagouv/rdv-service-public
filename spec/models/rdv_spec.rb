@@ -717,6 +717,13 @@ describe Rdv, type: :model do
     let!(:user4) { create(:user) }
     let(:rdv) { create :rdv, :collectif, starts_at: Time.zone.tomorrow, agents: [agent], users: [user1, user2, user3, user4] }
 
+    it "update to unknown when rdv is emptied" do
+      rdv.rdvs_users.each { _1.update(status: "seen") }
+      expect(rdv.status).to eq("seen")
+      rdv.rdvs_users.destroy_all
+      expect(rdv.status).to eq("unknown")
+    end
+
     it "update as unknown (first priority)" do
       rdv.rdvs_users.first.update(status: "seen")
       rdv.rdvs_users.second.update(status: "noshow")
@@ -744,11 +751,20 @@ describe Rdv, type: :model do
       expect(rdv.status).to eq("noshow")
     end
 
-    it "updated as noshow (last priority)" do
+    it "updated as excused (fourth priority)" do
       rdv.rdvs_users.first.update(status: "revoked")
       rdv.rdvs_users.second.update(status: "excused")
       rdv.rdvs_users.third.update(status: "excused")
       rdv.rdvs_users.last.update(status: "excused")
+      rdv.update_rdv_status_from_participation
+      expect(rdv.status).to eq("excused")
+    end
+
+    it "updated as revoked (last priority)" do
+      rdv.rdvs_users.first.update(status: "revoked")
+      rdv.rdvs_users.second.update(status: "revoked")
+      rdv.rdvs_users.third.update(status: "revoked")
+      rdv.rdvs_users.last.update(status: "revoked")
       rdv.update_rdv_status_from_participation
       expect(rdv.status).to eq("revoked")
     end

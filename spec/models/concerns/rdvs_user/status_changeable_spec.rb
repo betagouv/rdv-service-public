@@ -6,12 +6,14 @@ RSpec.describe RdvsUser::StatusChangeable, type: :concern do
   describe "RdvsUser change status" do
     let(:agent) { create :agent }
     let(:rdv) { create :rdv, :collectif, starts_at: Time.zone.tomorrow, agents: [agent] }
+    let!(:organisation) { create(:organisation, rdvs: [rdv]) }
+    let!(:webhook_endpoint) { create(:webhook_endpoint, organisation: organisation, subscriptions: ["rdv"]) }
     let(:rdv_user1) { create(:rdvs_user, rdv: rdv) }
     let(:rdv_user_with_excused_status) { create(:rdvs_user, rdv: rdv) }
     let(:rdv_user_with_lifecycle_disabled) { create(:rdvs_user, rdv: rdv, send_lifecycle_notifications: false) }
 
     describe "when rdv_user is revoked or excused" do
-      %w[excused revoked].each do |status|
+      RdvsUser::CANCELLED_STATUSES.each do |status|
         it "send notifications and change rdv_user object status to #{status}" do
           expect(Notifiers::RdvCancelled).to receive(:new).with(rdv, agent, [rdv_user1.user]).and_call_original
           rdv_user1.change_status_and_notify(agent, status)
@@ -65,6 +67,14 @@ RSpec.describe RdvsUser::StatusChangeable, type: :concern do
         rdv_user_with_lifecycle_disabled.change_status_and_notify(agent, "excused")
         rdv_user_with_lifecycle_disabled.change_status_and_notify(agent, "unknown")
         expect(rdv_user_with_lifecycle_disabled.reload.status).to eq("unknown")
+      end
+    end
+
+    describe "triggers webhook" do
+      it "sends a webhook" do
+        rdv.reload
+        expect(WebhookJob).to receive(:perform_later).at_least(1)
+        rdv_user1.change_status_and_notify(agent, "noshow")
       end
     end
   end

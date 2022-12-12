@@ -16,8 +16,8 @@ class Admin::RdvsController < AgentAuthController
       .includes([:rdvs_users, :agents_rdvs, :organisation, :lieu, :motif, { agents: :service, users: %i[responsible organisations] }])
     @breadcrumb_page = params[:breadcrumb_page]
     @form = Admin::RdvSearchForm.new(parsed_params)
-    @lieux = Lieu.joins(:organisation).where(organisations: { id: @scoped_organisations.ids }).enabled.order(:name)
-    @motifs = Motif.joins(:organisation).where(organisations: { id: @scoped_organisations.ids })
+    @lieux = Lieu.joins(:organisation).where(organisations: { id: @scoped_organisations.select(:id) }).enabled.order(:name)
+    @motifs = Motif.joins(:organisation).where(organisations: { id: @scoped_organisations.select(:id) })
     @rdvs_users_count = RdvsUser.where(rdv: @rdvs).count
     @rdvs = @rdvs.order(starts_at: :asc).page(params[:page]).per(10)
   end
@@ -167,7 +167,7 @@ class Admin::RdvsController < AgentAuthController
 
   def rdv_success_flash
     {
-      notice: if rdv_params[:status].in?(%w[excused revoked])
+      notice: if rdv_params[:status].in?(Rdv::CANCELLED_STATUSES)
                 I18n.t("admin.rdvs.message.success.cancel")
               else
                 I18n.t("admin.rdvs.message.success.update")

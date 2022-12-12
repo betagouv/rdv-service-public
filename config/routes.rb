@@ -54,7 +54,7 @@ Rails.application.routes.draw do
   namespace :users do
     resource :rdv_wizard_step, only: %i[new create]
     resources :rdvs, only: %i[index create show edit update] do
-      resources :participations, only: %i[index new create]
+      resources :participations, only: %i[index create]
       member do
         get :creneaux
         put :cancel
@@ -182,7 +182,7 @@ Rails.application.routes.draw do
           collection do
             get :search
           end
-          resources :referents, only: %i[index create destroy]
+          resources :referent_assignations, only: %i[index create destroy]
         end
         resources :absences, except: %i[index show new]
         resources :agent_agendas, only: %i[show] do
@@ -215,6 +215,15 @@ Rails.application.routes.draw do
   end
   authenticated :agent do
     root to: "admin/organisations#index", as: :authenticated_agent_root, defaults: { follow_unique: "1" }
+  end
+
+  scope path: "prescripteur", as: "prescripteur", controller: "prescripteur_rdv_wizard" do
+    get "start"
+    get "new_prescripteur"
+    post "save_prescripteur"
+    get "new_beneficiaire"
+    post "create_rdv"
+    get "confirmation"
   end
 
   %w[contact mds accessibility mentions_legales cgu politique_de_confidentialite domaines health_check].each do |page_name|

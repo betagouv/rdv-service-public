@@ -58,7 +58,7 @@ class Agent < ApplicationRecord
   has_many :territorial_roles, class_name: "AgentTerritorialRole", dependent: :destroy
   has_many :sector_attributions, dependent: :destroy
   has_many :agent_teams, dependent: :destroy
-  has_and_belongs_to_many :users
+  has_many :referent_assignations, dependent: :destroy
 
   accepts_nested_attributes_for :roles, :agent_territorial_access_rights
 
@@ -71,6 +71,9 @@ class Agent < ApplicationRecord
   has_many :webhook_endpoints, through: :organisations
   has_many :territories, through: :territorial_roles
   has_many :organisations_of_territorial_roles, source: :organisations, through: :territories
+  # we specify dependent: :destroy because by default it will be deleted (dependent: :delete)
+  # and we need to destroy to trigger the callbacks on the model
+  has_many :users, through: :referent_assignations, dependent: :destroy
 
   # Validation
   # Note about validation and Devise:
@@ -112,6 +115,10 @@ class Agent < ApplicationRecord
 
   def complete?
     first_name.present? && last_name.present?
+  end
+
+  def inactive?
+    last_sign_in_at.nil? || last_sign_in_at <= 1.month.ago
   end
 
   def soft_delete
@@ -195,7 +202,7 @@ class Agent < ApplicationRecord
       .reservable_online
     agents_with_open_rdv_collectif = joins(:rdvs).merge(rdv_collectif_scope)
 
-    Agent.where(id: agents_with_open_plage.ids | agents_with_open_rdv_collectif.ids).distinct
+    where_id_in_subqueries([agents_with_open_plage, agents_with_open_rdv_collectif])
   end
 
   def to_s

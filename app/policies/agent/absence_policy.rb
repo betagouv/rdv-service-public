@@ -40,10 +40,7 @@ class Agent::AbsencePolicy < ApplicationPolicy
           .joins(:agent).where(agents: { service: current_agent.service })
         absences_of_orgs_i_basic_same_service = scope.where(id: absences_of_orgs_i_basic_same_service)
 
-        # wrap in subqueries so that we can OR without worrying about “structural compatibility”
-        # (i.e. the joined tables are not the same)
-        scope.where(id: absences_of_orgs_i_admin)
-          .or(scope.where(id: absences_of_orgs_i_basic_same_service))
+        scope.where_id_in_subqueries([absences_of_orgs_i_admin, absences_of_orgs_i_basic_same_service])
       end
     end
   end

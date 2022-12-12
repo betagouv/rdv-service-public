@@ -10,98 +10,98 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_11_22_091242) do
-
+ActiveRecord::Schema[7.0].define(version: 20_221_130_143_520) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "unaccent"
   enable_extension "uuid-ossp"
 
-  create_enum :agents_absence_notification_level, [
-    "all",
-    "none",
+  create_enum :agents_absence_notification_level, %w[
+    all
+    none
   ], force: :cascade
 
-  create_enum :agents_plage_ouverture_notification_level, [
-    "all",
-    "none",
+  create_enum :agents_plage_ouverture_notification_level, %w[
+    all
+    none
   ], force: :cascade
 
-  create_enum :agents_rdv_notifications_level, [
-    "all",
-    "others",
-    "soon",
-    "none",
+  create_enum :agents_rdv_notifications_level, %w[
+    all
+    others
+    soon
+    none
   ], force: :cascade
 
-  create_enum :lieu_availability, [
-    "enabled",
-    "disabled",
-    "single_use",
+  create_enum :lieu_availability, %w[
+    enabled
+    disabled
+    single_use
   ], force: :cascade
 
-  create_enum :location_type, [
-    "public_office",
-    "home",
-    "phone",
+  create_enum :location_type, %w[
+    public_office
+    home
+    phone
   ], force: :cascade
 
-  create_enum :motif_category, [
-    "rsa_orientation",
-    "rsa_accompagnement",
-    "rsa_orientation_on_phone_platform",
-    "rsa_cer_signature",
-    "rsa_insertion_offer",
-    "rsa_follow_up",
-    "rsa_accompagnement_social",
-    "rsa_accompagnement_sociopro",
-    "rsa_main_tendue",
-    "rsa_atelier_collectif_mandatory",
+  create_enum :motif_category, %w[
+    rsa_orientation
+    rsa_accompagnement
+    rsa_orientation_on_phone_platform
+    rsa_cer_signature
+    rsa_insertion_offer
+    rsa_follow_up
+    rsa_accompagnement_social
+    rsa_accompagnement_sociopro
+    rsa_main_tendue
+    rsa_atelier_collectif_mandatory
   ], force: :cascade
 
-  create_enum :rdv_status, [
-    "unknown",
-    "waiting",
-    "seen",
-    "excused",
-    "revoked",
-    "noshow",
+  create_enum :rdv_status, %w[
+    unknown
+    waiting
+    seen
+    excused
+    revoked
+    noshow
   ], force: :cascade
 
-  create_enum :receipts_channel, [
-    "sms",
-    "mail",
-    "webhook",
+  create_enum :receipts_channel, %w[
+    sms
+    mail
+    webhook
   ], force: :cascade
 
-  create_enum :receipts_result, [
-    "processed",
-    "sent",
-    "delivered",
-    "failure",
+  create_enum :receipts_result, %w[
+    processed
+    sent
+    delivered
+    failure
   ], force: :cascade
 
-  create_enum :sms_provider, [
-    "netsize",
-    "send_in_blue",
-    "contact_experience",
-    "sfr_mail2sms",
-    "clever_technologies",
-    "orange_contact_everyone",
+  create_enum :sms_provider, %w[
+    netsize
+    send_in_blue
+    contact_experience
+    sfr_mail2sms
+    clever_technologies
+    orange_contact_everyone
   ], force: :cascade
 
-  create_enum :user_created_through, [
-    "unknown",
-    "agent_creation",
-    "user_sign_up",
-    "franceconnect_sign_up",
-    "user_relative_creation",
-    "agent_creation_api",
+  create_enum :user_created_through, %w[
+    unknown
+    agent_creation
+    user_sign_up
+    franceconnect_sign_up
+    user_relative_creation
+    agent_creation_api
+    prescripteur
   ], force: :cascade
 
-  create_enum :user_invited_through, [
-    "devise_email",
-    "external",
+  create_enum :user_invited_through, %w[
+    devise_email
+    external
   ], force: :cascade
 
   create_table "absences", force: :cascade do |t|
@@ -134,7 +134,7 @@ ActiveRecord::Schema.define(version: 2022_11_22_091242) do
     t.bigint "record_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["record_type", "record_id", "name"], name: "index_action_text_rich_texts_uniqueness", unique: true
+    t.index %w[record_type record_id name], name: "index_action_text_rich_texts_uniqueness", unique: true
   end
 
   create_table "active_storage_attachments", force: :cascade do |t|
@@ -144,7 +144,7 @@ ActiveRecord::Schema.define(version: 2022_11_22_091242) do
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
     t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
-    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+    t.index %w[record_type record_id name blob_id], name: "index_active_storage_attachments_uniqueness", unique: true
   end
 
   create_table "active_storage_blobs", force: :cascade do |t|
@@ -162,14 +162,14 @@ ActiveRecord::Schema.define(version: 2022_11_22_091242) do
   create_table "active_storage_variant_records", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
-    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+    t.index %w[blob_id variation_digest], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
   create_table "agent_teams", force: :cascade do |t|
     t.bigint "team_id", null: false
     t.bigint "agent_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["agent_id"], name: "index_agent_teams_on_agent_id"
     t.index ["team_id"], name: "index_agent_teams_on_team_id"
   end
@@ -178,8 +178,8 @@ ActiveRecord::Schema.define(version: 2022_11_22_091242) do
     t.bigint "agent_id", null: false
     t.bigint "territory_id", null: false
     t.boolean "allow_to_manage_teams", default: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.boolean "allow_to_manage_access_rights", default: false, null: false
     t.boolean "allow_to_invite_agents", default: false, null: false
     t.boolean "allow_to_download_metrics", default: false, null: false
@@ -245,11 +245,11 @@ ActiveRecord::Schema.define(version: 2022_11_22_091242) do
     t.index ["invitation_token"], name: "index_agents_on_invitation_token", unique: true
     t.index ["invitations_count"], name: "index_agents_on_invitations_count"
     t.index ["invited_by_id"], name: "index_agents_on_invited_by_id"
-    t.index ["invited_by_type", "invited_by_id"], name: "index_agents_on_invited_by_type_and_invited_by_id"
+    t.index %w[invited_by_type invited_by_id], name: "index_agents_on_invited_by_type_and_invited_by_id"
     t.index ["last_name"], name: "index_agents_on_last_name"
     t.index ["reset_password_token"], name: "index_agents_on_reset_password_token", unique: true
     t.index ["service_id"], name: "index_agents_on_service_id"
-    t.index ["uid", "provider"], name: "index_agents_on_uid_and_provider", unique: true
+    t.index %w[uid provider], name: "index_agents_on_uid_and_provider", unique: true
   end
 
   create_table "agents_organisations", force: :cascade do |t|
@@ -258,7 +258,7 @@ ActiveRecord::Schema.define(version: 2022_11_22_091242) do
     t.string "level", default: "basic", null: false
     t.index ["agent_id"], name: "index_agents_organisations_on_agent_id"
     t.index ["level"], name: "index_agents_organisations_on_level"
-    t.index ["organisation_id", "agent_id"], name: "index_agents_organisations_on_organisation_id_and_agent_id", unique: true
+    t.index %w[organisation_id agent_id], name: "index_agents_organisations_on_organisation_id_and_agent_id", unique: true
     t.index ["organisation_id"], name: "index_agents_organisations_on_organisation_id"
   end
 
@@ -266,7 +266,7 @@ ActiveRecord::Schema.define(version: 2022_11_22_091242) do
     t.bigint "agent_id", null: false
     t.bigint "rdv_id", null: false
     t.text "outlook_id"
-    t.index ["agent_id", "rdv_id"], name: "index_agents_rdvs_on_agent_id_and_rdv_id", unique: true
+    t.index %w[agent_id rdv_id], name: "index_agents_rdvs_on_agent_id_and_rdv_id", unique: true
     t.index ["agent_id"], name: "index_agents_rdvs_on_agent_id"
     t.index ["rdv_id"], name: "index_agents_rdvs_on_rdv_id"
   end
@@ -291,17 +291,17 @@ ActiveRecord::Schema.define(version: 2022_11_22_091242) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string "cron"
-    t.index ["priority", "run_at"], name: "delayed_jobs_priority"
+    t.index %w[priority run_at], name: "delayed_jobs_priority"
   end
 
   create_table "file_attentes", force: :cascade do |t|
     t.bigint "rdv_id", null: false
     t.bigint "user_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.integer "notifications_sent", default: 0
     t.datetime "last_creneau_sent_at"
-    t.index ["rdv_id", "user_id"], name: "index_file_attentes_on_rdv_id_and_user_id", unique: true
+    t.index %w[rdv_id user_id], name: "index_file_attentes_on_rdv_id_and_user_id", unique: true
     t.index ["rdv_id"], name: "index_file_attentes_on_rdv_id"
     t.index ["user_id"], name: "index_file_attentes_on_user_id"
   end
@@ -333,7 +333,7 @@ ActiveRecord::Schema.define(version: 2022_11_22_091242) do
     t.bigint "organisation_id", null: false
     t.boolean "reservable_online", default: false, null: false
     t.integer "min_booking_delay", default: 1800
-    t.integer "max_booking_delay", default: 7889238
+    t.integer "max_booking_delay", default: 7_889_238
     t.datetime "deleted_at"
     t.bigint "service_id", null: false
     t.text "restriction_for_rdv"
@@ -354,7 +354,7 @@ ActiveRecord::Schema.define(version: 2022_11_22_091242) do
     t.index ["collectif"], name: "index_motifs_on_collectif"
     t.index ["deleted_at"], name: "index_motifs_on_deleted_at"
     t.index ["location_type"], name: "index_motifs_on_location_type"
-    t.index ["name", "organisation_id", "location_type", "service_id"], name: "index_motifs_on_name_scoped", unique: true, where: "(deleted_at IS NULL)"
+    t.index %w[name organisation_id location_type service_id], name: "index_motifs_on_name_scoped", unique: true, where: "(deleted_at IS NULL)"
     t.index ["name"], name: "index_motifs_on_name"
     t.index ["organisation_id"], name: "index_motifs_on_organisation_id"
     t.index ["reservable_online"], name: "index_motifs_on_reservable_online"
@@ -382,9 +382,9 @@ ActiveRecord::Schema.define(version: 2022_11_22_091242) do
     t.bigint "territory_id", null: false
     t.string "external_id", comment: "The organisation's unique and immutable id in the system managing them and adding them to our application"
     t.boolean "new_domain_beta", default: false, null: false, comment: "en mettant ce boolean a true, on active l'utilisation du nouveau domaine pour les conseillers numeriques de cette organisation"
-    t.index ["external_id", "territory_id"], name: "index_organisations_on_external_id_and_territory_id", unique: true
-    t.index ["human_id", "territory_id"], name: "index_organisations_on_human_id_and_territory_id", unique: true, where: "((human_id)::text <> ''::text)"
-    t.index ["name", "territory_id"], name: "index_organisations_on_name_and_territory_id", unique: true
+    t.index %w[external_id territory_id], name: "index_organisations_on_external_id_and_territory_id", unique: true
+    t.index %w[human_id territory_id], name: "index_organisations_on_human_id_and_territory_id", unique: true, where: "((human_id)::text <> ''::text)"
+    t.index %w[name territory_id], name: "index_organisations_on_name_and_territory_id", unique: true
     t.index ["name"], name: "index_organisations_on_name"
     t.index ["territory_id"], name: "index_organisations_on_territory_id"
   end
@@ -410,6 +410,18 @@ ActiveRecord::Schema.define(version: 2022_11_22_091242) do
     t.index ["organisation_id"], name: "index_plage_ouvertures_on_organisation_id"
     t.index ["recurrence"], name: "index_plage_ouvertures_on_recurrence", where: "(recurrence IS NOT NULL)"
     t.index ["updated_at"], name: "index_plage_ouvertures_on_updated_at"
+  end
+
+  create_table "prescripteurs", force: :cascade do |t|
+    t.bigint "rdvs_user_id", null: false
+    t.string "first_name", null: false
+    t.string "last_name", null: false
+    t.string "email", null: false
+    t.string "phone_number"
+    t.string "phone_number_formatted"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["rdvs_user_id"], name: "index_prescripteurs_on_rdvs_user_id", unique: true
   end
 
   create_table "rdvs", force: :cascade do |t|
@@ -461,8 +473,8 @@ ActiveRecord::Schema.define(version: 2022_11_22_091242) do
     t.enum "status", default: "unknown", null: false, enum_type: "rdv_status"
     t.index ["invitation_token"], name: "index_rdvs_users_on_invitation_token", unique: true
     t.index ["invited_by_id"], name: "index_rdvs_users_on_invited_by_id"
-    t.index ["invited_by_type", "invited_by_id"], name: "index_rdvs_users_on_invited_by"
-    t.index ["rdv_id", "user_id"], name: "index_rdvs_users_on_rdv_id_and_user_id", unique: true
+    t.index %w[invited_by_type invited_by_id], name: "index_rdvs_users_on_invited_by"
+    t.index %w[rdv_id user_id], name: "index_rdvs_users_on_rdv_id_and_user_id", unique: true
     t.index ["rdv_id"], name: "index_rdvs_users_on_rdv_id"
     t.index ["status"], name: "index_rdvs_users_on_status"
     t.index ["user_id"], name: "index_rdvs_users_on_user_id"
@@ -475,8 +487,8 @@ ActiveRecord::Schema.define(version: 2022_11_22_091242) do
     t.enum "channel", null: false, enum_type: "receipts_channel"
     t.enum "result", null: false, enum_type: "receipts_result"
     t.string "error_message"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "sms_provider"
     t.integer "sms_count"
     t.string "content"
@@ -488,6 +500,14 @@ ActiveRecord::Schema.define(version: 2022_11_22_091242) do
     t.index ["rdv_id"], name: "index_receipts_on_rdv_id"
     t.index ["result"], name: "index_receipts_on_result"
     t.index ["user_id"], name: "index_receipts_on_user_id"
+  end
+
+  create_table "referent_assignations", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "agent_id", null: false
+    t.index ["agent_id"], name: "index_referent_assignations_on_agent_id"
+    t.index %w[user_id agent_id], name: "index_referent_assignations_on_user_id_and_agent_id", unique: true
+    t.index ["user_id"], name: "index_referent_assignations_on_user_id"
   end
 
   create_table "sector_attributions", force: :cascade do |t|
@@ -504,19 +524,19 @@ ActiveRecord::Schema.define(version: 2022_11_22_091242) do
     t.string "departement"
     t.string "name", null: false
     t.string "human_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.bigint "territory_id", null: false
     t.index ["departement"], name: "index_sectors_on_departement"
-    t.index ["human_id", "territory_id"], name: "index_sectors_on_human_id_and_territory_id", unique: true
+    t.index %w[human_id territory_id], name: "index_sectors_on_human_id_and_territory_id", unique: true
     t.index ["human_id"], name: "index_sectors_on_human_id"
     t.index ["territory_id"], name: "index_sectors_on_territory_id"
   end
 
   create_table "services", force: :cascade do |t|
     t.string "name"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "short_name"
     t.index "lower((name)::text)", name: "index_services_on_lower_name", unique: true
     t.index "lower((short_name)::text)", name: "index_services_on_lower_short_name", unique: true
@@ -532,9 +552,9 @@ ActiveRecord::Schema.define(version: 2022_11_22_091242) do
   create_table "teams", force: :cascade do |t|
     t.bigint "territory_id", null: false
     t.string "name", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["name", "territory_id"], name: "index_teams_on_name_and_territory_id", unique: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index %w[name territory_id], name: "index_teams_on_name_and_territory_id", unique: true
     t.index ["territory_id"], name: "index_teams_on_territory_id"
   end
 
@@ -543,8 +563,8 @@ ActiveRecord::Schema.define(version: 2022_11_22_091242) do
     t.string "name"
     t.string "phone_number"
     t.string "phone_number_formatted"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.enum "sms_provider", enum_type: "sms_provider"
     t.json "sms_configuration"
     t.boolean "has_own_sms_provider", default: false
@@ -566,7 +586,7 @@ ActiveRecord::Schema.define(version: 2022_11_22_091242) do
     t.bigint "user_id", null: false
     t.integer "logement"
     t.text "notes"
-    t.index ["organisation_id", "user_id"], name: "index_user_profiles_on_organisation_id_and_user_id", unique: true
+    t.index %w[organisation_id user_id], name: "index_user_profiles_on_organisation_id_and_user_id", unique: true
     t.index ["organisation_id"], name: "index_user_profiles_on_organisation_id"
     t.index ["user_id"], name: "index_user_profiles_on_user_id"
   end
@@ -626,7 +646,7 @@ ActiveRecord::Schema.define(version: 2022_11_22_091242) do
     t.index ["invitation_token"], name: "index_users_on_invitation_token", unique: true
     t.index ["invitations_count"], name: "index_users_on_invitations_count"
     t.index ["invited_by_id"], name: "index_users_on_invited_by_id"
-    t.index ["invited_by_type", "invited_by_id"], name: "index_users_on_invited_by_type_and_invited_by_id"
+    t.index %w[invited_by_type invited_by_id], name: "index_users_on_invited_by_type_and_invited_by_id"
     t.index ["last_name"], name: "index_users_on_last_name"
     t.index ["phone_number_formatted"], name: "index_users_on_phone_number_formatted"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
@@ -642,16 +662,16 @@ ActiveRecord::Schema.define(version: 2022_11_22_091242) do
     t.datetime "created_at"
     t.text "object_changes"
     t.json "virtual_attributes"
-    t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
+    t.index %w[item_type item_id], name: "index_versions_on_item_type_and_item_id"
   end
 
   create_table "webhook_endpoints", force: :cascade do |t|
     t.string "target_url", null: false
     t.string "secret"
     t.bigint "organisation_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.string "subscriptions", default: ["rdv", "absence", "plage_ouverture"], array: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "subscriptions", default: %w[rdv absence plage_ouverture], array: true
     t.index ["organisation_id"], name: "index_webhook_endpoints_on_organisation_id"
   end
 
@@ -659,8 +679,8 @@ ActiveRecord::Schema.define(version: 2022_11_22_091242) do
     t.string "level"
     t.string "city_name"
     t.string "city_code"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.bigint "sector_id", null: false
     t.string "street_name"
     t.string "street_ban_id"
@@ -682,6 +702,7 @@ ActiveRecord::Schema.define(version: 2022_11_22_091242) do
   add_foreign_key "plage_ouvertures", "agents"
   add_foreign_key "plage_ouvertures", "lieux"
   add_foreign_key "plage_ouvertures", "organisations"
+  add_foreign_key "prescripteurs", "rdvs_users"
   add_foreign_key "rdvs", "lieux"
   add_foreign_key "rdvs", "motifs"
   add_foreign_key "rdvs", "organisations"

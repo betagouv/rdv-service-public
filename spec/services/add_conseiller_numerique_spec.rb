@@ -1,15 +1,7 @@
 # frozen_string_literal: true
 
 describe AddConseillerNumerique do
-  before do
-    create(:territory, name: "Conseillers Numériques")
-    create(:service, :conseiller_numerique)
-    stub_request(
-      :get,
-      "https://api-adresse.data.gouv.fr/search/?postcode=75019&q=16%20quai%20de%20la%20Loire,%2075019%20Paris"
-    ).to_return(status: 200, body: file_fixture("geocode_result.json").read, headers: {})
-  end
-
+  let!(:territory) { create(:territory, name: "Conseillers Numériques") }
   let(:params) do
     {
       external_id: "exemple@conseiller-numerique.fr",
@@ -23,6 +15,14 @@ describe AddConseillerNumerique do
         address: "16 quai de la Loire, 75019 Paris",
       },
     }
+  end
+
+  before do
+    create(:service, :conseiller_numerique)
+    stub_request(
+      :get,
+      "https://api-adresse.data.gouv.fr/search/?postcode=75019&q=16%20quai%20de%20la%20Loire,%2075019%20Paris"
+    ).to_return(status: 200, body: file_fixture("geocode_result.json").read, headers: {})
   end
 
   context "when the conseiller numerique and their structure have never been imported before" do
@@ -80,6 +80,13 @@ describe AddConseillerNumerique do
           )
 
           expect(Agent.last.roles.count).to eq 1
+          expect(Agent.last.agent_territorial_access_rights.first).to have_attributes(
+            territory: territory,
+            allow_to_manage_teams: false,
+            allow_to_manage_access_rights: false,
+            allow_to_invite_agents: false,
+            allow_to_download_metrics: false
+          )
         end
       end
     end
