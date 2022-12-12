@@ -7,11 +7,8 @@
         = date_input(f, :end_day)
 
   .row
-    - time_collections = model.is_a?(Absence) ? time_collections_for_absence : time_collections_for_plage_ouverture
-    .col
-      = f.input :start_time, as: :select, collection: time_collections, selected: model.start_time&.strftime("%H:%M"), include_blank: false
-    .col
-      = f.input :end_time, as: :select, collection: time_collections, selected: model.end_time&.strftime("%H:%M"), include_blank: false
+    .col = f.input :start_time, as: :select, collection: every_5_minutes_of_the_day, selected: model.start_time&.strftime("%H:%M"), include_blank: false
+    .col = f.input :end_time,   as: :select, collection: every_5_minutes_of_the_day, selected: model.end_time&.strftime("%H:%M"),   include_blank: false
 
   = f.input :recurrence, as: :hidden, input_html: { value: model.recurrence ? model.recurrence.as_json.to_json : "", "data-target": "recurrence.recurrenceComputed", class: "js-recurrence-computed" }
 

@@ -214,6 +214,15 @@ Rails.application.routes.draw do
     root to: "admin/organisations#index", as: :authenticated_agent_root, defaults: { follow_unique: "1" }
   end
 
+  scope path: "prescripteur", as: "prescripteur", controller: "prescripteur_rdv_wizard" do
+    get "start"
+    get "new_prescripteur"
+    post "save_prescripteur"
+    get "new_beneficiaire"
+    post "create_rdv"
+    get "confirmation"
+  end
+
   %w[contact mds accessibility mentions_legales cgu politique_de_confidentialite domaines health_check].each do |page_name|
     get page_name => "static_pages##{page_name}"
   end

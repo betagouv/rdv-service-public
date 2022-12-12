@@ -73,8 +73,6 @@ module Rdv::Updatable
     end
 
     @notifier&.perform
-    # we re-enable the webhooks that we deactivated during the notification process
-    self.skip_webhooks = false
   end
 
   def rdv_status_reloaded_from_cancelled?

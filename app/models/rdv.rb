@@ -25,7 +25,7 @@ class Rdv < ApplicationRecord
   MIN_DELAY_FOR_CANCEL = 4.hours
   NOT_CANCELLED_STATUSES = %w[unknown waiting seen noshow].freeze
   CANCELLED_STATUSES = %w[excused revoked].freeze
-  enum created_by: { agent: 0, user: 1, file_attente: 2 }, _prefix: :created_by
+  enum created_by: { agent: 0, user: 1, file_attente: 2, prescripteur: 3 }, _prefix: :created_by
 
   # Relations
   belongs_to :organisation

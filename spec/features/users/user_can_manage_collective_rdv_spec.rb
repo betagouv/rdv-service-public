@@ -290,6 +290,24 @@ RSpec.describe "Adding a user to a collective RDV" do
     context "Logged User" do
       let(:user) { logged_user }
 
+      context "when other users sign up before we can finish booking" do
+        it "redirects to creneau search" do
+          login_as(user, scope: :user)
+          visit root_path(params)
+          select_motif
+          select_lieu
+          click_link("S'inscrire")
+          click_button("Continuer")
+
+          rdv.update!(max_participants_count: 2)
+          create(:rdvs_user, rdv: rdv)
+          create(:rdvs_user, rdv: rdv)
+
+          click_button("Continuer")
+          expect(page).to have_content("Ce créneau n'est plus disponible")
+        end
+      end
+
       it "do not display revoked or full rdvs for reservation (not available in this territory)" do
         login_as(user, scope: :user)
         visit root_path(params)

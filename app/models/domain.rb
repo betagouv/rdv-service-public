@@ -96,6 +96,10 @@ class Domain
     ALL_BY_URL.fetch(domain_name) { RDV_SOLIDARITES }
   end
 
+  def self.find_by_name(name)
+    ALL.find { _1.name == name }
+  end
+
   def self.review_app_domain
     if ENV["REVIEW_APP_DOMAIN"] == "RDV_AIDE_NUMERIQUE"
       RDV_AIDE_NUMERIQUE
