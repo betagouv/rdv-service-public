@@ -13,6 +13,18 @@ class Agent::RdvPolicy < DefaultAgentPolicy
     admin_and_same_org?
   end
 
+  def self.explain(organisation, agent)
+    explainations = if agent.admin_in_organisation?(organisation)
+                      "En tant qu'administrateur de l'organisation, vous voyez les RDV de toute l'organisation #{organisation.name}."
+                    elsif agent.service.secretariat?
+                      "En tant que membre du service secrétariat, vous voyez les RDV de toute l'organisation #{organisation.name}."
+                    else
+                      "En tant qu'agent, Vous voyez uniquement les RDV de votre service ayant lieu dans l'organisation #{organisation.name}."
+                    end
+    explainations << " Vous voyez également les RDV auxquels vous êtes associé"
+    explainations
+  end
+
   class Scope < Scope
     def resolve
       organisation_scope = scope.where(organisation: current_agent.organisations)

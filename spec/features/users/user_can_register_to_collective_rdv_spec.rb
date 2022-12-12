@@ -167,7 +167,7 @@ RSpec.describe "Adding a user to a collective RDV" do
         create(:rdvs_user, rdv: rdv)
 
         click_button("Continuer")
-        expect(page).to have_content("Plus de places")
+        expect(page).to have_content("Ce créneau n'est plus disponible")
       end
     end
 

@@ -38,9 +38,13 @@ class AddConseillerNumerique
   private
 
   def find_or_invite_agent(organisation)
-    agent = Agent.where(deleted_at: nil).find_by(external_id: @conseiller_numerique.external_id)
+    Agent.where(deleted_at: nil).find_by(
+      external_id: @conseiller_numerique.external_id
+    ) || invite_agent(organisation)
+  end
 
-    agent || Agent.invite!(
+  def invite_agent(organisation)
+    Agent.invite!(
       {
         email: @conseiller_numerique.email,
         first_name: @conseiller_numerique.first_name.capitalize,
@@ -51,10 +55,10 @@ class AddConseillerNumerique
         roles_attributes: [{ organisation: organisation, level: AgentRole::LEVEL_ADMIN }],
       },
       nil,
-      {
-        cc: @conseiller_numerique.alternate_email,
-      }
-    )
+      { cc: @conseiller_numerique.alternate_email }
+    ).tap do |agent|
+      AgentTerritorialAccessRight.create!(agent: agent, territory: territory)
+    end
   end
 
   def create_organisation

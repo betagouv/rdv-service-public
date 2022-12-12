@@ -7,27 +7,13 @@ describe PlageOuverturesHelper do
     travel_to(now)
   end
 
-  describe "#time_collections_for_plage_ouverture" do
-    it "goes from 7:00 to 20:00, so that it's possible to create a plage_ouverture that allows booking a rdv at 19:00" do
-      expect(time_collections_for_plage_ouverture.count).to eq(157)
-      expect(time_collections_for_plage_ouverture.first).to eq("07:00")
-      expect(time_collections_for_plage_ouverture.last).to eq("20:00")
-    end
-  end
-
-  describe "#time_collections_for_absence" do
-    it "return 288 entries" do
-      expect(time_collections_for_absence.count).to eq(288)
-      expect(time_collections_for_absence.first).to eq("00:00")
-      expect(time_collections_for_absence.last).to eq("23:55")
-    end
-  end
-
-  describe "#time_collections_for_hours" do
-    it "return 24 parts" do
-      start_time = 12
-      end_time = 13
-      expect(time_collections_for_hours(start_time..end_time).count).to eq(24)
+  describe "#every_5_minutes_of_the_day" do
+    it "return 288 entries for all times of the day by 5 minutes increment" do
+      expect(every_5_minutes_of_the_day.count).to eq(288)
+      expect(every_5_minutes_of_the_day.first).to eq("00:00")
+      expect(every_5_minutes_of_the_day.last).to eq("23:55")
+      expect(every_5_minutes_of_the_day[12 * 18]).to eq("18:00")
+      expect(every_5_minutes_of_the_day[(12 * 18) + 5]).to eq("18:25")
     end
   end
 

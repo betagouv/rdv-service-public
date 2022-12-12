@@ -48,6 +48,7 @@
           span> Exporter les #{@rdvs.total_count} RDVs en XLS
           i.fa.fa-download>
         input.btn.btn-small.btn-link.d-print-none type="submit" value="Imprimer 🖨" onclick="window.print();return false;"
+      = render "admin/rdvs/rdv_visibility"
 
 - if @rdvs.any?
   .mb-2
