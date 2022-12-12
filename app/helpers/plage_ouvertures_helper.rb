@@ -1,22 +1,17 @@
 # frozen_string_literal: true
 
 module PlageOuverturesHelper
-  def time_collections_for_plage_ouverture
-    time_collections_for_hours(7..22) + ["23:00"]
-  end
-
-  def time_collections_for_absence
-    time_collections_for_hours(0..23)
-  end
-
-  def time_collections_for_hours(hours_range)
-    hours_range.flat_map do |h|
-      padded_h = format("%02i", h)
-      (0..55).step(5).map do |m|
-        padded_min = format("%02i", m)
-        "#{padded_h}:#{padded_min}"
-      end
+  # Generates ["00:00", "00:05", "00:10", ... "23:50", "23:55"]
+  EVERY_5_MINUTES_OF_THE_DAY = (0..23).flat_map do |h|
+    padded_h = format("%02i", h)
+    (0..55).step(5).map do |m|
+      padded_min = format("%02i", m)
+      "#{padded_h}:#{padded_min}"
     end
+  end.freeze
+
+  def every_5_minutes_of_the_day
+    EVERY_5_MINUTES_OF_THE_DAY
   end
 
   def display_recurrence(plage_ouverture)
