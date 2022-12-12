@@ -57,7 +57,7 @@ ul.list-group.list-group-flush
     - if policy([:user, rdv]).cancel?
         = link_to "Annuler le RDV", "#", data: { toggle: "modal", target: "#js-cancel-rdv-modal-#{rdv.id}" }, class: "btn btn-outline-danger"
     - if policy([:user, current_user.participation_for(rdv)]).cancel?
-        = link_to "Annuler votre participation au RDV", "#", data: { toggle: "modal", target: "#js-cancel-participation-modal-#{rdv.id}" }, class: "btn btn-outline-danger"
+        = link_to "Annuler votre participation", "#", data: { toggle: "modal", target: "#js-cancel-participation-modal-#{rdv.id}" }, class: "btn btn-outline-danger"
 
 = render( \
   "common/modal_confirmation", \
@@ -75,6 +75,6 @@ ul.list-group.list-group-flush
   body_message: rdv.motif.cancellation_warning, \
   cancel_message: "Non", \
   confirm_path: users_rdv_participations_cancel_path(rdv), \
-  confirm_message: "Oui, annuler votre participation au rendez-vous", \
+  confirm_message: "Oui, annuler votre participation", \
   confirm_link_options: { class: "btn btn-danger", method: :put } \
 )
