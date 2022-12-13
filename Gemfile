@@ -71,7 +71,7 @@ gem "auto_strip_attributes"
 # Frontend
 gem "slim"
 gem "chartkick", "~> 3.4.0"
-gem "groupdate", "~> 4.2"
+gem "groupdate", "~> 6.1"
 gem "rails_autolink"
 gem "active_link_to"
 
