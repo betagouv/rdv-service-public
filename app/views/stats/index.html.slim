@@ -20,7 +20,7 @@
                 - %i[seen excused revoked noshow].each do |temporal_status|
                   = render "stats/rdv_counter_without_link", \
                     temporal_status: temporal_status, \
-                    element: "RDV", \
+                    element: "RDV".pluralize(@stats.rdvs.status(temporal_status).count), \
                     count: @stats.rdvs.status(temporal_status).count
             .col-lg-4
               .px-1
@@ -50,30 +50,34 @@
             .col-lg-4
               .px-1
                 - %i[seen excused revoked noshow].each do |temporal_status|
+                  - count = RdvsUser.where(rdv: @stats.rdvs).status(temporal_status).count
                   = render "stats/rdv_counter_without_link", \
                     temporal_status: temporal_status, \
-                    element: "Usager(s)", \
-                    count: RdvsUser.where(rdv: @stats.rdvs).status(temporal_status).count
+                    element: "Usager".pluralize(count), \
+                    count: count
             .col-lg-4
               .px-1
+                - count = RdvsUser.where(rdv: @stats.rdvs).joins(:rdv).status(:unknown_past).count
                 = render "stats/rdv_counter_without_link", \
                   temporal_status: :unknown_past, \
-                  element: "Usager(s)", \
-                  count: RdvsUser.where(rdv: @stats.rdvs).joins(:rdv).status(:unknown_past).count
+                  element: "Usager".pluralize(count), \
+                  count: count
             .col-lg-4
               .px-1
+                - count = RdvsUser.where(rdv: @stats.rdvs).joins(:rdv).status(:unknown_future).count
                 = render "stats/rdv_counter_without_link", \
-                  element: "Usager(s)", \
+                  element: "Usager".pluralize(count), \
                   temporal_status: :unknown_future, \
-                  count: RdvsUser.where(rdv: @stats.rdvs).joins(:rdv).status(:unknown_future).count
+                  count: count
           hr
           .row
             .col-lg-4
               .px-1
+                - count = RdvsUser.where(rdv: @stats.rdvs).count
                 = render "stats/rdv_counter_without_link", \
-                  element: "Usager(s)", \
+                  element: "Usager".pluralize(count), \
                   label: "Tous", \
-                  count: RdvsUser.where(rdv: @stats.rdvs).count
+                  count: count
 
       .card.mb-5
         .card-body

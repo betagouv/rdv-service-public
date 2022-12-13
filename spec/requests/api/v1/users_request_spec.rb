@@ -556,9 +556,9 @@ describe "Users API", swagger_doc: "v1/api.json" do
         let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [organisation], email: "jean@jacques.fr") }
       end
 
-      it_behaves_like "an endpoint that returns 404 - not found", "l'usager·ère est lié·e à une autre organisation" do
+      it_behaves_like "an endpoint that returns 404 - not found", "l'usager·ère n'est pas lié·e à l'organisation" do
         let!(:another_org) { create(:organisation) }
-        let!(:agent) { create(:agent, basic_role_in_organisations: [organisation, another_org]) }
+        let!(:agent) { create(:agent, basic_role_in_organisations: [another_org]) }
         let!(:user) { create(:user, organisations: [another_org]) }
       end
     end

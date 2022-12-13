@@ -36,7 +36,8 @@
   div.mr-1
     i.fa.fa-fw.fa-user.text-primary-blue>
   div
-    strong> Professionnel(s) :
+    strong
+      => "Professionnel".pluralize(rdv.agents.size)
     = agents_to_sentence(rdv.agents)
 
 - rdv.rdvs_users.select(&:prescripteur).each do |rdvs_user|
