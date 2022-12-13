@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class OmniauthCallbacksController < Devise::OmniauthCallbacksController
+  before_action :log_params_to_sentry
+
   def franceconnect
     upsert_service = UpsertUserForFranceconnectService
       .perform_with(request.env["omniauth.auth"]["info"])

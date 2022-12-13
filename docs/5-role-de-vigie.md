@@ -13,7 +13,7 @@ On peut se permettre de dévier d'une organisation rigide et systématique : il 
 
 ## Sentry
 
-Sur Sentry, il faut filtrer sur les environnements pour avoir uniquement les erreurs de production. C'est possible à cette URL : https://sentry.io/organizations/rdv-solidarites/issues/?environment=production&project=1811205&sort=date&statsPeriod=14d
+Sur Sentry, il faut filtrer sur les environnements pour avoir uniquement les erreurs de production. C'est possible à cette URL :https://sentry.incubateur.net/organizations/betagouv/issues/?environment=production&project=74
 
 Afin d'avoir un usage efficace de Sentry, il est nécessaire de limiter le nombre d'issues non qualifiées, qui doivent être ré-examinées et ré-évaluées à chaque changement de vigie.
 
