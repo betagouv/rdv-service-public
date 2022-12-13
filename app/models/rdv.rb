@@ -22,6 +22,7 @@ class Rdv < ApplicationRecord
   # noshow : Lapin
   # excused : Annulé à l'initiative de l'usager
   # revoked : Annulé à l'initiative du service
+  MIN_DELAY_FOR_CANCEL = 4.hours
   NOT_CANCELLED_STATUSES = %w[unknown waiting seen noshow].freeze
   CANCELLED_STATUSES = %w[excused revoked].freeze
   enum created_by: { agent: 0, user: 1, file_attente: 2, prescripteur: 3 }, _prefix: :created_by
@@ -169,7 +170,7 @@ class Rdv < ApplicationRecord
   end
 
   def cancellable_by_user?
-    !cancelled? && !collectif? && motif.rdvs_cancellable_by_user? && starts_at > 4.hours.from_now
+    !cancelled? && !collectif? && motif.rdvs_cancellable_by_user? && starts_at > MIN_DELAY_FOR_CANCEL.from_now
   end
 
   def editable_by_user?
