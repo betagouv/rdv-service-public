@@ -44,7 +44,12 @@ ul.list-group.list-group-flush
   = render "/users/rdvs/file_attente", rdv: rdv
 
   / Check for authorizations and already cancelled rdv/participation
-  - unless policy([:user, rdv]).cancel? || policy([:user, current_user.participation_for(rdv)]).cancel? || rdv.cancelled? || current_user.participation_for(rdv).cancelled?
+  - unless policy([:user, rdv]).cancel? || \
+      policy([:user, current_user.participation_for(rdv)]).cancel? || \
+      rdv.cancelled? || \
+      current_user.participation_for(rdv).cancelled? || \
+      rdv.in_the_past?
+
     li.list-group-item.font-italic
       i.fa.fa-ban>
       | Ce rendez-vous n'est pas annulable en ligne. Prenez contact avec le secrétariat.
