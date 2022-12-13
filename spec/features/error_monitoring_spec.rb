@@ -32,11 +32,12 @@ RSpec.describe "Error monitoring" do
       it "warns us through Sentry" do
         click_link("durée")
         expect(page).to have_content("RDV")
+        expect(sentry_events.count).to eq 1
         expect(sentry_events.last.exception.values.first.type).to eq("ActiveRecord::RecordNotFound")
       end
     end
 
-    context "when there is a broken somewhere else" do
+    context "when there is a broken link somewhere else" do
       it "ignores it" do
       end
     end
