@@ -13,6 +13,10 @@ class User::RdvsUserPolicy < ApplicationPolicy
     rdvs_user_belongs_to_user_or_relatives?
   end
 
+  def cancel?
+    rdvs_user_belongs_to_user_or_relatives? && record.cancellable_by_user?
+  end
+
   class Scope < Scope
     alias current_user pundit_user
 

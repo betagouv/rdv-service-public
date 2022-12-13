@@ -29,7 +29,7 @@ Motif.create!(
   service: service_cnfs
 )
 
-Motif.create!(
+motif_atelier_collectif = Motif.create!(
   name: "Atelier collectif",
   color: "#4A86E8",
   default_duration_in_min: 120,
@@ -40,7 +40,7 @@ Motif.create!(
   service: service_cnfs
 )
 
-_cnfs_lieu = Lieu.create!(
+cnfs_lieu = Lieu.create!(
   name: "Médiathèque Françoise Sagan",
   organisation: org_cnfs,
   latitude: 44.918859,
@@ -69,3 +69,16 @@ agent_cnfs = Agent.new(
 )
 agent_cnfs.skip_confirmation!
 agent_cnfs.save!
+
+20.times do |i|
+  Rdv.create!(
+    starts_at: Time.zone.today + 17.hours + i.weeks,
+    duration_in_min: 60,
+    motif_id: motif_atelier_collectif.id,
+    lieu: cnfs_lieu,
+    organisation_id: org_cnfs.id,
+    agent_ids: [agent_cnfs.id],
+    users_count: 0,
+    user_ids: []
+  )
+end

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# In case of changes here please make sure rdv_solidarites_model_id didnt change in rdv-insertion seed or update them
 # Territories
 territory_drome = Territory.create!(
   departement_number: "26",
