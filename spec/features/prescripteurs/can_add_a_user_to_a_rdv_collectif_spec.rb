@@ -91,20 +91,23 @@ RSpec.describe "prescripteur can add a user to a RDV collectif" do
   end
 
   context "when creneau is taken by someone else during booking process" do
+    let!(:fallback_rdv_collectif_2_hours_later) do
+      create(:rdv, :without_users, motif: motif_collectif, agents: [agent], lieu: lieu, starts_at: rdv_collectif.starts_at + 2.hours)
+    end
+
     it "redirects to creneau search with error message" do
       visit "http://www.rdv-aide-numerique-test.localhost/org/#{organisation.id}"
 
       click_on "Prochaine disponibilité le" # choix du lieu
-      click_on "S'inscrire" # choix du RDV collectif
+      within "#rdv-collectif-#{rdv_collectif.id}" do
+        click_on "S'inscrire" # choix du RDV collectif
+      end
       click_on "Je suis un prescripteur qui oriente un bénéficiaire" # page de login
-
       fill_in "Votre prénom", with: "Alex"
       fill_in "Votre nom", with: "Prescripteur"
       fill_in "Votre email professionnel", with: "alex@prescripteur.fr"
       fill_in "Votre numéro de téléphone", with: "0611223344"
       click_on "Continuer"
-
-      expect(page).to have_content("Prescripteur : Alex PRESCRIPTEUR")
       fill_in "Prénom", with: "Patricia"
       fill_in "Nom", with: "Duroy"
       fill_in "Téléphone", with: "0611223344"
@@ -115,9 +118,10 @@ RSpec.describe "prescripteur can add a user to a RDV collectif" do
       click_on "Confirmer le rendez-vous"
       expect(page).to have_content("Ce créneau n'est plus disponible. Veuillez en choisir un autre.")
 
-      # Dans ce cas, retour à l'étape de choix du lieu
-      click_on "Prochaine disponibilité le"
-      click_on "08:45"
+      # Dans ce cas, retour à l'étape de choix d'un RDV collectif pour ce motif
+      within "#rdv-collectif-#{fallback_rdv_collectif_2_hours_later.id}" do
+        click_on "S'inscrire" # choix du RDV collectif
+      end
       click_on "Je suis un prescripteur qui oriente un bénéficiaire"
 
       # On constate que le formulaire de prescripteur est pré-rempli
