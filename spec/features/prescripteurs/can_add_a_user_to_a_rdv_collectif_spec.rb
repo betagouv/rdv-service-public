@@ -83,14 +83,6 @@ RSpec.describe "prescripteur can add a user to a RDV collectif" do
     expect(enqueued_jobs.first["arguments"][0]["phone_number"]).to eq("+33611223344")
   end
 
-  xit "allows prescripteur to make changes for a few minutes" do
-    raise "write this other spec"
-  end
-
-  xit "prevents hacker from changing motif_id in URL to create illegitimate RDV" do
-    raise "write that one spec"
-  end
-
   context "when creneau is taken by someone else during booking process" do
     let!(:fallback_rdv_collectif_2_hours_later) do
       create(:rdv, :without_users, motif: motif_collectif, agents: [agent], lieu: lieu, starts_at: rdv_collectif.starts_at + 2.hours)
@@ -100,9 +92,7 @@ RSpec.describe "prescripteur can add a user to a RDV collectif" do
       visit "http://www.rdv-aide-numerique-test.localhost/org/#{organisation.id}"
 
       click_on "Prochaine disponibilité le" # choix du lieu
-      within "#rdv-collectif-#{rdv_collectif.id}" do
-        click_on "S'inscrire" # choix du RDV collectif
-      end
+      click_on "S'inscrire", match: :first # choix du RDV collectif
       click_on "Je suis un prescripteur qui oriente un bénéficiaire" # page de login
       fill_in "Votre prénom", with: "Alex"
       fill_in "Votre nom", with: "Prescripteur"
@@ -120,9 +110,7 @@ RSpec.describe "prescripteur can add a user to a RDV collectif" do
       expect(page).to have_content("Ce créneau n'est plus disponible. Veuillez en choisir un autre.")
 
       # Dans ce cas, retour à l'étape de choix d'un RDV collectif pour ce motif
-      within "#rdv-collectif-#{fallback_rdv_collectif_2_hours_later.id}" do
-        click_on "S'inscrire" # choix du RDV collectif
-      end
+      click_on "S'inscrire" # On s'inscrit à l'autre RDV collectif, le seul restant de la liste
       click_on "Je suis un prescripteur qui oriente un bénéficiaire"
 
       # On constate que le formulaire de prescripteur est pré-rempli
