@@ -9,18 +9,15 @@ describe "Agent can sync his account to outlook" do
     OmniAuth.config.add_mock(:microsoft_graph,
                              { "extra" => { "raw_info" => { "user_principal_name" => "example@outlook.com" } },
                                "credentials" => { "token" => "super_token", "refresh_token" => "super_refresh_token" }, })
-
-    allow(Sentry).to receive(:capture_message)
   end
 
   after do
     OmniAuth.config.mock_auth[:microsoft_graph] = nil
-    clear_enqueued_jobs
   end
 
   before do
     login_as(agent, scope: :agent)
-    visit "http://www.rdv-aide-numerique-test.localhost/agents/calendar_sync/outlook_sync"
+    visit agents_calendar_sync_outlook_sync_path
     find(:xpath, "//a/img[@alt=\"S'identifier avec Microsoft\"]").find(:xpath, "..").click
   end
 

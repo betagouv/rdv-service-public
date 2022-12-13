@@ -6,12 +6,8 @@ describe "Agent can unsync his account to outlook" do
 
   before do
     login_as(agent, scope: :agent)
-    visit "http://www.rdv-aide-numerique-test.localhost/agents/calendar_sync/outlook_sync"
+    visit agents_calendar_sync_outlook_sync_path
     click_link "Déconnecter votre compte Outlook"
-  end
-
-  after do
-    clear_enqueued_jobs
   end
 
   it "unsyncs the account" do

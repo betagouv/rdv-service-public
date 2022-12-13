@@ -49,7 +49,7 @@ class Domain
       name: "RDV Aide Numérique",
       presentation_for_agents_template_name: "presentation_for_cnfs",
       online_reservation_with_public_link: true,
-      can_sync_to_outlook: true,
+      can_sync_to_outlook: false,
       sms_sender_name: "RdvAideNum"
     ),
   ].freeze
@@ -60,7 +60,7 @@ class Domain
       if ENV["IS_REVIEW_APP"] == "true"
         # Les review apps utilisent un domaine de Scalingo, elles
         # ne permettent donc pas d'utiliser plusieurs domaines.
-        URI.parse(ENV["HOST"]).host
+        URI.parse(ENV.fetch("HOST", nil)).host
       elsif ENV["RDV_SOLIDARITES_INSTANCE_NAME"] == "DEMO"
         {
           RDV_SOLIDARITES => "demo.rdv-solidarites.fr",

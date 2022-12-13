@@ -3,8 +3,6 @@
 class Agents::OutlookSyncController < AgentAuthController
   include Admin::AuthenticatedControllerConcern
 
-  before_action :block_unauthorized_domains
-
   layout "registration"
 
   def show
@@ -20,11 +18,5 @@ class Agents::OutlookSyncController < AgentAuthController
 
   def pundit_user
     AgentContext.new(current_agent)
-  end
-
-  private
-
-  def block_unauthorized_domains
-    raise Pundit::NotAuthorizedError unless current_domain.can_sync_to_outlook
   end
 end

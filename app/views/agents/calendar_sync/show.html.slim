@@ -15,13 +15,13 @@ div.d-flex.justify-content-center.align-items-center.flex-wrap
   div.card.w-100
     div.card-body
       h5.card-title Lien de synchronisation Webcal
-      p Vous pouvez synchroniser votre agenda externe grâce à un lien Webcal. Chaque rendez-vous arrivera automatiquement sur votre agenda externe au fur et à mesure de sa création ou de sa modification mais un potentiel délai est à prévoir.
+      p Vous pouvez synchroniser votre agenda externe grâce à un lien Webcal. Vos rendez-vous seront visibles sur votre agenda externe, mais parfois avec quelques heures de retard.
       div.text-center
         = link_to "Obtenir ou mettre à jour mon lien Webcal", agents_calendar_sync_webcal_sync_path, class: "btn btn-primary m-2"
   - if current_domain.can_sync_to_outlook
     div.card.w-100
       div.card-body
         h5.card-title Connexion Outlook
-        p Vous pouvez synchroniser votre agenda externe grâce à un lien Webcal. Chaque rendez-vous arrivera automatiquement sur votre agenda externe au fur et à mesure de sa création ou de sa modification mais un potentiel délai est à prévoir.
+        p Vos rendez-vous seront synchronisés automatiquement et en temps réel dans votre agenda Outlook.
         div.text-center
           = link_to "Connecter mon compte Outlook", agents_calendar_sync_outlook_sync_path, class: "btn btn-primary m-2"
