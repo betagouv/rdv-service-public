@@ -15,6 +15,7 @@ RSpec.describe "prescripteur can add a user to a RDV collectif" do
     create(
       :rdv,
       :without_users,
+      organisation: organisation,
       motif: motif_collectif,
       agents: [agent],
       lieu: lieu,
@@ -64,7 +65,7 @@ RSpec.describe "prescripteur can add a user to a RDV collectif" do
       full_name: "Patricia DUROY",
       created_through: "prescripteur",
       phone_number: "0611223344",
-      # organisations: [organisation]
+      organisations: [organisation]
     )
     expect(rdv_collectif.rdvs_users.first.prescripteur).to have_attributes(
       first_name: "Alex",
