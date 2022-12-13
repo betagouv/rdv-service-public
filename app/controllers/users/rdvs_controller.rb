@@ -8,9 +8,6 @@ class Users::RdvsController < UserAuthController
   before_action :build_creneau, :redirect_if_creneau_not_available, only: %i[edit update]
   after_action :allow_iframe
 
-  # TODO: remove when this is fixed: https://sentry.io/organizations/rdv-solidarites/issues/3268291575
-  before_action :log_params_to_sentry, only: %i[creneaux]
-
   include TokenInvitable
 
   def index
