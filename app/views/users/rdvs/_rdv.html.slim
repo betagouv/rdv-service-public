@@ -28,7 +28,8 @@ ul.list-group.list-group-flush
       .col
         .fa.fa-user>
         = users_to_sentence(rdv.users)
-    - if policy([:user, rdv]).can_change_participants?
+    / Comment refacto ca pour que ce soit plus clair ?
+    - if !current_user.only_invited? && current_user.participation_for(rdv).not_cancelled? && !rdv.in_the_past?
       .col-auto
         span>
         = link_to "modifier", users_rdv_participations_path(rdv)
@@ -43,6 +44,7 @@ ul.list-group.list-group-flush
       = auto_link(simple_format(rdv.motif.instruction_for_rdv, class:"pl-3 pt-1"), html: { target: "_blank" })
   = render "/users/rdvs/file_attente", rdv: rdv
 
+  / Comment refacto ca pour que ce soit plus clair ?
   / Check for authorizations and already cancelled rdv/participation
   - unless policy([:user, rdv]).cancel? || \
       policy([:user, current_user.participation_for(rdv)]).cancel? || \

@@ -169,19 +169,32 @@ class Rdv < ApplicationRecord
     status.in? NOT_CANCELLED_STATUSES
   end
 
-  def cancellable_by_user?
-    !cancelled? && !collectif? && motif.rdvs_cancellable_by_user? && starts_at > MIN_DELAY_FOR_CANCEL.from_now
+  def not_revoked?
+    status != "revoked"
+  end
+
+  def creatable_by_user?
+    !collectif? && motif.reservable_online?
+  end
+
+  def editable_online?
+    not_cancelled? && !collectif? && motif.reservable_online
   end
 
   def editable_by_user?
-    !cancelled? && !collectif? && motif.rdvs_editable_by_user? && starts_at > 2.days.from_now &&
-      motif.reservable_online && !created_by_agent?
+    editable_online? && motif.rdvs_editable_by_user? && starts_at > 2.days.from_now && !created_by_agent?
+  end
+
+  def cancellable?
+    !cancelled? && !collectif? && !in_the_past?
+  end
+
+  def cancellable_by_user?
+    cancellable? && motif.rdvs_cancellable_by_user? && starts_at > MIN_DELAY_FOR_CANCEL.from_now
   end
 
   def available_to_file_attente?
-    motif.reservable_online? &&
-      motif.individuel? &&
-      !cancelled? &&
+    editable_online? &&
       starts_at > 7.days.from_now &&
       !home?
   end

@@ -8,9 +8,8 @@ class User::RdvsUserPolicy < ApplicationPolicy
   end
 
   def create?
-    return false if record.rdv.revoked?
-
-    rdvs_user_belongs_to_user_or_relatives?
+    # J'ai volontairement pas délégué not_revoked du rdv à la participation pour des raisons de clarté
+    rdvs_user_belongs_to_user_or_relatives? && record.rdv.not_revoked?
   end
 
   def cancel?

@@ -79,8 +79,12 @@ class RdvsUser < ApplicationRecord
     status.in? CANCELLED_STATUSES
   end
 
+  def cancellable?
+    !cancelled? && rdv.collectif? && !rdv.cancelled? && !rdv.in_the_past?
+  end
+
   def cancellable_by_user?
-    !cancelled? && rdv.collectif? && !rdv.cancelled? && rdv.motif.rdvs_cancellable_by_user? && rdv.starts_at > Rdv::MIN_DELAY_FOR_CANCEL.from_now
+    cancellable? && rdv.motif.rdvs_cancellable_by_user? && rdv.starts_at > Rdv::MIN_DELAY_FOR_CANCEL.from_now
   end
 
   def set_default_notifications_flags

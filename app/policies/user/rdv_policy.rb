@@ -12,19 +12,15 @@ class User::RdvPolicy < ApplicationPolicy
   end
 
   def new?
-    return false if record.revoked?
-
-    (record.collectif? && record.reservable_online?) || rdv_belongs_to_user_or_relatives?
+    rdv_belongs_to_user_or_relatives? || (record.collectif? && record.reservable_online?)
   end
 
   def create?
-    return false if record.collectif?
-
-    rdv_belongs_to_user_or_relatives?
+    rdv_belongs_to_user_or_relatives? && record.creatable_by_user?
   end
 
   def show?
-    return true if record.collectif? && record.reservable_online? && rdv_belongs_to_user_or_relatives?
+    return true if record.collectif? && rdv_belongs_to_user_or_relatives?
 
     rdv_belongs_to_user_or_relatives? && (!current_user.only_invited? || current_user.invited_for_rdv?(record))
   end
@@ -35,10 +31,6 @@ class User::RdvPolicy < ApplicationPolicy
 
   def edit?
     show? && record.editable_by_user?
-  end
-
-  def can_change_participants?
-    !current_user.only_invited? && current_user.participation_for(record).not_cancelled? && !record.in_the_past?
   end
 
   alias creneaux? edit?
