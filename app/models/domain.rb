@@ -3,23 +3,21 @@
 class Domain
   # rubocop:disable Metrics/ParameterLists
   def initialize(
+    name:,
     logo_path:,
     public_logo_path:,
     dark_logo_path:,
-    name:,
     presentation_for_agents_template_name:,
     sms_sender_name:,
-    online_reservation_with_public_link:,
-    default: false
+    online_reservation_with_public_link:
   )
+    @name = name
     @logo_path = logo_path
     @public_logo_path = public_logo_path
     @dark_logo_path = dark_logo_path
-    @name = name
     @presentation_for_agents_template_name = presentation_for_agents_template_name
     @sms_sender_name = sms_sender_name
     @online_reservation_with_public_link = online_reservation_with_public_link
-    @default = default
   end
   # rubocop:enable Metrics/ParameterLists
 
@@ -28,7 +26,6 @@ class Domain
 
   ALL = [
     RDV_SOLIDARITES = new(
-      default: true,
       logo_path: "logos/logo_solidarites.svg",
       public_logo_path: "/logo_solidarites.png",
       dark_logo_path: "logos/logo_sombre_solidarites.svg",
@@ -83,7 +80,7 @@ class Domain
   end
 
   def default?
-    !!default
+    self == RDV_SOLIDARITES
   end
 
   ALL_BY_URL = ALL.index_by(&:dns_domain_name)
