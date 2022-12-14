@@ -31,7 +31,8 @@ RSpec.describe "Error monitoring" do
 
       it "warns us through Sentry" do
         click_link("durée")
-        expect(page).to have_content("RDV") # Wait for the click to be processed
+        sleep 1 # Wait for the click to be processed
+        # since we have an error page, the usual expect(page).to have_content("foo") doesn't seem to work
         expect(sentry_events.count).to eq 1
         expect(sentry_events.last.exception.values.first.type).to eq("ActiveRecord::RecordNotFound")
       end
@@ -40,7 +41,8 @@ RSpec.describe "Error monitoring" do
     context "when there is a broken link somewhere else" do
       it "doesnt spam Sentry, because there's nothing we can do to fix outside links" do
         visit admin_organisation_rdvs_path(rdv.organisation, rdv.id + 1)
-        expect(page).to have_content("RDV") # Wait for the click to be processed
+        sleep 1 # Wait for the click to be processed
+        # since we have an error page, the usual expect(page).to have_content("foo") doesn't seem to work
         expect(sentry_events.count).to eq 0
       end
     end
