@@ -54,8 +54,10 @@ class Notifiers::RdvBase < ::BaseService
     # attributes or associations of the Rdv.
     @rdv.skip_webhooks = true
 
-    rdv_users_with_token_needed.each do |rdv_user|
-      @rdv_users_tokens_by_user_id[rdv_user.user_id] = rdv_user.new_raw_invitation_token
+    @rdv.rdvs_users.each do |rdv_user|
+      participant = rdv_user.user
+      user_to_notify = participant.user_to_notify
+      @rdv_users_tokens_by_user_id[user_to_notify.id] = rdv_user.new_raw_invitation_token
     end
 
     @rdv.skip_webhooks = false
@@ -75,13 +77,6 @@ class Notifiers::RdvBase < ::BaseService
 
   def users_to_notify
     @users.map(&:user_to_notify).uniq
-  end
-
-  # we generate the tokens for the rdv_users to notify linked to the users we send a notif to
-  def rdv_users_with_token_needed
-    rdvs_users_to_notify.select do |rdv_user|
-      rdv_user.user_id.in?(users_to_notify.map(&:id))
-    end
   end
 
   ## Agents notifications

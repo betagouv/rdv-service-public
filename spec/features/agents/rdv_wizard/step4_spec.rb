@@ -28,7 +28,8 @@ RSpec.describe "Step 4 of the rdv wizard" do
       click_button "Créer RDV"
       expect(page).to have_content("Le rendez-vous a été créé.")
       perform_enqueued_jobs
-      expect(Receipt.last.content).to include("token")
+      rdv_url = rdv_short_url(Rdv.last, host: Domain::RDV_SOLIDARITES.dns_domain_name, tkn: RdvsUser.last.raw_invitation_token)
+      expect(Receipt.last.content).to include(rdv_url)
     end
   end
 end
