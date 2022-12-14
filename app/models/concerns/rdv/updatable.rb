@@ -58,21 +58,17 @@ module Rdv::Updatable
     if rdv_cancelled?
       file_attentes.destroy_all
       @notifier = Notifiers::RdvCancelled.new(self, author)
-    end
-
-    if rdv_status_reloaded_from_cancelled?
+    elsif rdv_status_reloaded_from_cancelled?
       @notifier = Notifiers::RdvCreated.new(self, author)
-    end
-
-    if starts_at_changed? || lieu_changed?
+    elsif rdv_updated?
       @notifier = Notifiers::RdvUpdated.new(self, author)
     end
 
-    if collectif?
-      @notifier = Notifiers::RdvCollectifParticipations.new(self, author, previous_participations)
-    end
-
     @notifier&.perform
+
+    if collectif? && previous_participations.sort != rdvs_users.sort
+      Notifiers::RdvCollectifParticipations.perform_with(self, author, previous_participations)
+    end
   end
 
   def rdv_status_reloaded_from_cancelled?
@@ -94,5 +90,9 @@ module Rdv::Updatable
 
   def starts_at_changed?
     previous_changes["starts_at"].present?
+  end
+
+  def rdv_updated?
+    starts_at_changed? || lieu_changed?
   end
 end
