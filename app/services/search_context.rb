@@ -93,8 +93,11 @@ class SearchContext
     @public_link_organisation_id || @user_selected_organisation_id
   end
 
-  def motifs_organisations
-    matching_motifs.map(&:organisation).uniq
+  # next availability by organisation for motifs without lieu
+  def next_availability_by_motifs_organisations
+    @next_availability_by_motifs_organisations ||= matching_motifs.to_h do |motif|
+      [motif.organisation, creneaux_search_for(nil, date_range, motif).next_availability]
+    end.compact
   end
 
   def unique_motifs_by_name_and_location_type
