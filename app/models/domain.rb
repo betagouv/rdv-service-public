@@ -3,39 +3,39 @@
 class Domain
   # rubocop:disable Metrics/ParameterLists
   def initialize(
+    name:,
     logo_path:,
     public_logo_path:,
     dark_logo_path:,
-    name:,
     presentation_for_agents_template_name:,
     sms_sender_name:,
     online_reservation_with_public_link:,
-    default: false
+    france_connect_enabled:
   )
+    @name = name
     @logo_path = logo_path
     @public_logo_path = public_logo_path
     @dark_logo_path = dark_logo_path
-    @name = name
     @presentation_for_agents_template_name = presentation_for_agents_template_name
     @sms_sender_name = sms_sender_name
     @online_reservation_with_public_link = online_reservation_with_public_link
-    @default = default
+    @france_connect_enabled = france_connect_enabled
   end
   # rubocop:enable Metrics/ParameterLists
 
-  attr_reader :logo_path, :public_logo_path, :dark_logo_path, :name, :presentation_for_agents_template_name,
-              :sms_sender_name, :online_reservation_with_public_link, :default
+  attr_reader :name, :logo_path, :public_logo_path, :dark_logo_path, :presentation_for_agents_template_name,
+              :sms_sender_name, :online_reservation_with_public_link, :france_connect_enabled
 
   ALL = [
     RDV_SOLIDARITES = new(
-      default: true,
       logo_path: "logos/logo_solidarites.svg",
       public_logo_path: "/logo_solidarites.png",
       dark_logo_path: "logos/logo_sombre_solidarites.svg",
       name: "RDV Solidarités",
       presentation_for_agents_template_name: "rdv_solidarites_presentation_for_agents",
       online_reservation_with_public_link: false,
-      sms_sender_name: "RdvSoli"
+      sms_sender_name: "RdvSoli",
+      france_connect_enabled: true
     ),
 
     RDV_AIDE_NUMERIQUE = new(
@@ -45,7 +45,8 @@ class Domain
       name: "RDV Aide Numérique",
       presentation_for_agents_template_name: "presentation_for_cnfs",
       online_reservation_with_public_link: true,
-      sms_sender_name: "RdvAideNum"
+      sms_sender_name: "RdvAideNum",
+      france_connect_enabled: false
     ),
   ].freeze
 
@@ -83,7 +84,7 @@ class Domain
   end
 
   def default?
-    !!default
+    self == RDV_SOLIDARITES
   end
 
   ALL_BY_URL = ALL.index_by(&:dns_domain_name)
