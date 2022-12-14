@@ -35,6 +35,7 @@ motif_atelier_collectif = Motif.create!(
   default_duration_in_min: 120,
   location_type: :public_office,
   collectif: true,
+  reservable_online: true,
   organisation: org_cnfs,
   service: service_cnfs
 )
