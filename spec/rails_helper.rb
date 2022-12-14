@@ -94,6 +94,13 @@ RSpec.configure do |config|
     end
   end
 
+  config.around do |example|
+    setup_sentry_test
+    Sentry.configuration.sending_allowed?
+    example.run
+    teardown_sentry_test
+  end
+
   config.after do
     ActionMailer::Base.deliveries.clear
     FactoryBot.rewind_sequences

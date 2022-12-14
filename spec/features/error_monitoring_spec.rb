@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe "Error monitoring" do
-  stub_sentry_events
-
   describe "pages with a 4xx status" do
     let(:rdv) { create(:rdv) }
 
