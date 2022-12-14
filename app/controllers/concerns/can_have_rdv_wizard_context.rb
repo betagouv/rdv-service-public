@@ -14,12 +14,13 @@ module CanHaveRdvWizardContext
     return if parsed_uri.path != "/users/rdv_wizard_step/new"
 
     parsed_params = Rack::Utils.parse_nested_query(parsed_uri.query).to_h.symbolize_keys
-    return if %i[motif_id starts_at lieu_id].any? { parsed_params[_1].blank? }
+    rdv_wizard = UserRdvWizard::Step1.new(nil, parsed_params)
 
-    @rdv_wizard = UserRdvWizard::Step1.new(nil, parsed_params)
-    return if @rdv_wizard.creneau.present?
+    if rdv_wizard.creneau.blank?
+      session.delete(:user_return_to)
+      return
+    end
 
-    @rdv_wizard = nil
-    session.delete(:user_return_to)
+    @rdv_wizard = rdv_wizard
   end
 end

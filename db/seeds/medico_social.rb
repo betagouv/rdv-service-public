@@ -136,6 +136,7 @@ motif_org_paris_nord_pmi_collectif = Motif.create!(
   organisation_id: org_paris_nord.id,
   service_id: service_pmi.id,
   collectif: true,
+  reservable_online: true,
   default_duration_in_min: 60,
   location_type: :public_office
 )
@@ -170,6 +171,7 @@ _motif_org_paris_nord_social_collectif = Motif.create!(
   organisation_id: org_paris_nord.id,
   service_id: service_social.id,
   collectif: true,
+  reservable_online: true,
   default_duration_in_min: 120,
   location_type: :public_office
 )
