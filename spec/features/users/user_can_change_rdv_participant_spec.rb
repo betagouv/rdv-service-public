@@ -19,7 +19,7 @@ describe "User can change rdv participant" do
         click_link("modifier")
         find("label", text: "Petit BEBE").click
         click_button("Enregistrer")
-        expect(page).to have_content("Inscription confirmée")
+        expect(page).to have_content("Participation confirmée")
         expect(page).to have_content("Petit BEBE")
       end
     end
