@@ -1,4 +1,4 @@
-require "rails_helper"
+# frozen_string_literal: true
 
 RSpec.describe "Error monitoring" do
   stub_sentry_events
