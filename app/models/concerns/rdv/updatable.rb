@@ -60,7 +60,7 @@ module Rdv::Updatable
       @notifier = Notifiers::RdvCancelled.new(self, author)
     elsif rdv_status_reloaded_from_cancelled?
       @notifier = Notifiers::RdvCreated.new(self, author)
-    elsif starts_at_changed? || lieu_changed?
+    elsif rdv_updated?
       @notifier = Notifiers::RdvUpdated.new(self, author)
     end
 
@@ -90,5 +90,9 @@ module Rdv::Updatable
 
   def starts_at_changed?
     previous_changes["starts_at"].present?
+  end
+
+  def rdv_updated?
+    starts_at_changed? || lieu_changed?
   end
 end
