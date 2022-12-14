@@ -68,11 +68,11 @@ module Rdv::Updatable
       @notifier = Notifiers::RdvUpdated.new(self, author)
     end
 
-    if collectif?
-      @notifier = Notifiers::RdvCollectifParticipations.new(self, author, previous_participations)
-    end
-
     @notifier&.perform
+
+    if collectif? && previous_participations != rdvs_users
+      Notifiers::RdvCollectifParticipations.perform_with(self, author, previous_participations)
+    end
   end
 
   def rdv_status_reloaded_from_cancelled?
