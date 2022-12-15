@@ -1,8 +1,8 @@
 .card.rdv-card[id= "rdv-#{rdv.id}"]
   .mx-3[id= "rdv-updated-flash-message-#{rdv.id}"]
   .card-header.border-white
-    .d-flex.justify-content-between.flex-wrap.align-items-center
-      div
+    .d-flex.flex-wrap.align-items-center.flex-gap-1em
+      .flex-grow-1
         h5.header
           span
             = link_to rdv_title(rdv), admin_organisation_rdv_path(rdv.organisation, rdv)
