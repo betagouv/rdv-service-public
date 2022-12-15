@@ -1,6 +1,6 @@
 - if rdv.status == "unknown" && current_organisation.territory.waiting_room_enabled? && rdv.starts_at.today?
 
-  #waiting_room_button
+  div id="waiting_room_button-#{rdv.id}"
     - if rdv.user_in_waiting_room?
       | Usager en salle d'attente
     - else
