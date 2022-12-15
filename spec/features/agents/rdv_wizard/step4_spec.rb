@@ -22,13 +22,16 @@ RSpec.describe "Step 4 of the rdv wizard" do
 
     before { stub_netsize_ok }
 
+    before do
+      allow(Devise.token_generator).to receive(:generate).and_return("12345")
+    end
+
     it "sends a sms with a valid link" do
       login_as(agent, scope: :agent)
       visit new_admin_organisation_rdv_wizard_step_path(params)
       click_button "Créer RDV"
-      expect(page).to have_content("Le rendez-vous a été créé.")
       perform_enqueued_jobs
-      rdv_url = rdv_short_url(Rdv.last, host: Domain::RDV_SOLIDARITES.dns_domain_name, tkn: RdvsUser.last.raw_invitation_token)
+      rdv_url = rdv_short_url(Rdv.last, host: Domain::RDV_SOLIDARITES.dns_domain_name, tkn: "12345")
       expect(Receipt.last.content).to include(rdv_url)
     end
   end
