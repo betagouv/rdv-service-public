@@ -8,17 +8,19 @@ REDIS = Redis.new(url: redis_url)
 module Rdv::UsingWaitingRoom
   extend ActiveSupport::Concern
 
+  REDIS_WAITING_ROOM_KEY = "#{Rails.env}:user_in_waiting_room_rdv_id".freeze
+
   def user_in_waiting_room?
-    status == "unknown" && REDIS.get("#{Rails.env}:user_in_waiting_room_rdv_id:#{id}").to_bool
+    status == "unknown" && REDIS.lpos(REDIS_WAITING_ROOM_KEY).present?
   end
 
   def set_user_in_waiting_room!
-    REDIS.set("#{Rails.env}:user_in_waiting_room_rdv_id:#{id}", true)
+    REDIS.lpush(REDIS_WAITING_ROOM_KEY, id)
   end
 
   class_methods do
     def reset_user_in_waiting_room!
-      REDIS.del(REDIS.keys("#{Rails.env}:user_in_waiting_room_rdv_id:*"))
+      REDIS.del(REDIS_WAITING_ROOM_KEY)
     end
   end
 end
