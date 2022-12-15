@@ -45,8 +45,6 @@ RSpec.describe RdvsUser::Creatable, type: :concern do
         perform_enqueued_jobs
         expect(ActionMailer::Base.deliveries.map(&:to).flatten).to match_array([agent.email, user.email])
         expect(rdv.reload.rdvs_users).to eq([rdv_user_relative])
-        # no token because relatives
-        expect(rdv_user_relative.rdv_user_token).to eq(nil)
         expect(rdv_user1.rdv_user_token).to eq(nil)
       end
     end
@@ -61,8 +59,6 @@ RSpec.describe RdvsUser::Creatable, type: :concern do
         perform_enqueued_jobs
         expect(ActionMailer::Base.deliveries.map(&:to).flatten).to match_array([agent.email])
         expect(rdv.reload.rdvs_users).to eq([rdv_user_with_lifecycle_disabled])
-        # No token because no notifs
-        expect(rdv_user_with_lifecycle_disabled.rdv_user_token).to eq(nil)
       end
 
       it "for a relative" do
