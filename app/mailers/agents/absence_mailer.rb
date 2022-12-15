@@ -3,6 +3,10 @@
 class Agents::AbsenceMailer < ApplicationMailer
   helper PlageOuverturesHelper
 
+  # Some jobs raise ActiveJob::DeserializationError because the PlageOuverture has been deleted
+  # In this case, we want to discard the job without raising an error.
+  discard_on ActiveJob::DeserializationError
+
   before_action do
     @absence = params[:absence]
   end
