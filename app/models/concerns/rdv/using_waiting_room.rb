@@ -11,7 +11,7 @@ module Rdv::UsingWaitingRoom
   REDIS_WAITING_ROOM_KEY = "#{Rails.env}:user_in_waiting_room_rdv_id".freeze
 
   def user_in_waiting_room?
-    status == "unknown" && REDIS.lpos(REDIS_WAITING_ROOM_KEY).present?
+    status == "unknown" && REDIS.lpos(REDIS_WAITING_ROOM_KEY, id).present?
   end
 
   def set_user_in_waiting_room!
