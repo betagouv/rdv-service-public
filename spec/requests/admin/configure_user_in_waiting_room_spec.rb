@@ -9,7 +9,7 @@ RSpec.describe "Configure les préférences de signalisation d'usager en salle d
   before { sign_in agent }
 
   it "show user in waiting room options" do
-    get edit_admin_territory_rdv_fields_path(organisation)
+    get edit_admin_territory_rdv_fields_path(organisation.territory)
     expect(response).to be_successful
     expect(response.body).to include("Salle d&#39;attente")
     expect(response.body).to include("Envoyer un mail de notification à l&#39;agent")
