@@ -236,6 +236,11 @@ Rails.application.routes.draw do
   get "r/:id", to: (redirect do |path_params, req|
     query_params = format_redirect_params(req.params)
     "users/rdvs/#{path_params[:id]}#{query_params}"
+  end), as: "rdv_short_with_optional_tkn" # This is deprecated, because we always want to have a token for these links
+
+  get "r/:id/:tkn", to: (redirect do |path_params, req|
+    query_params = format_redirect_params(req.params)
+    "users/rdvs/#{path_params[:id]}#{query_params}"
   end), as: "rdv_short"
 
   # TODO: remplacer `prendre_rdv` par le root_path
