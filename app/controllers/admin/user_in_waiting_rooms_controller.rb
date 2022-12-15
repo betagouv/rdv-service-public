@@ -4,7 +4,7 @@ class Admin::UserInWaitingRoomsController < AgentAuthController
   respond_to :js
 
   def create
-    @rdv = Rdv.includes(:agents).find(params[:rdv_id])
+    @rdv = Rdv.find(params[:rdv_id])
     authorize(@rdv)
 
     if @rdv.status == "unknown" && @rdv.deleted_at.nil?
