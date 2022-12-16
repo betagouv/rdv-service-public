@@ -14,10 +14,11 @@ RSpec.describe Outlook::Connectable, type: :concern do
           body: { "client_id" => nil, "client_secret" => nil, "grant_type" => "refresh_token", "refresh_token" => "refresh_token" }
         )
         .to_return(status: 200, body: { access_token: "new_token" }.to_json, headers: {})
-      allow(Sentry).to receive(:capture_message)
 
       agent.refresh_outlook_token
     end
+
+    stub_sentry_events
 
     context "the agent is connected to outlook" do
       let(:agent) { create(:agent, microsoft_graph_token: "token", refresh_microsoft_graph_token: "refresh_token") }
@@ -33,7 +34,7 @@ RSpec.describe Outlook::Connectable, type: :concern do
       it "send an error" do
         expect(agent.microsoft_graph_token).to eq(nil)
 
-        expect(Sentry).to have_received(:capture_message).with("Error refreshing Microsoft Graph Token for email@example.com: C'est une sacré erreur")
+        expect(sentry_events.last.message).to eq("Error refreshing Microsoft Graph Token for email@example.com: C'est une sacré erreur")
       end
     end
   end

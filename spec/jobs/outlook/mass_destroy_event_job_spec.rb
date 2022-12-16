@@ -17,27 +17,37 @@ RSpec.describe Outlook::MassDestroyEventJob, type: :job do
   let!(:agents_rdv3) { create(:agents_rdv, agent: agent, rdv: rdv3) }
   let!(:agents_rdv4) { create(:agents_rdv, agent: agent, rdv: rdv4) }
 
+  let(:expected_headers) do
+    {
+      "Accept" => "application/json",
+      "Authorization" => "Bearer token",
+      "Content-Type" => "application/json",
+      "Expect" => "",
+      "Return-Client-Request-Id" => "true",
+      "User-Agent" => "RDVSolidarites",
+    }
+  end
+
   before do
     stub_request(:delete, "https://graph.microsoft.com/v1.0/me/Events/abc")
-      .with(headers: { "Accept" => "application/json", "Authorization" => "Bearer token", "Content-Type" => "application/json", "Expect" => "", "Return-Client-Request-Id" => "true",
-                       "User-Agent" => "RDVSolidarites", })
+      .with(headers: expected_headers)
       .to_return(status: 204, body: "", headers: {})
     stub_request(:delete, "https://graph.microsoft.com/v1.0/me/Events/def")
-      .with(
-        headers: { "Accept" => "application/json", "Authorization" => "Bearer token", "Content-Type" => "application/json", "Expect" => "", "Return-Client-Request-Id" => "true",
-                   "User-Agent" => "RDVSolidarites", }
-      )
+      .with(headers: expected_headers)
       .to_return(status: 204, body: "", headers: {})
-    described_class.perform_now(agent)
   end
 
   it "destroys the existing events in outlook" do
-    expect(agents_rdv.reload.outlook_id).to be_nil
-    expect(agents_rdv2.reload.outlook_id).to be_nil
+    expect do
+      described_class.perform_now(agent)
+    end.to change { agents_rdv.reload.outlook_id }.to(nil)
+      .and change { agents_rdv2.reload.outlook_id }.to(nil)
   end
 
   it "unsyncs the agent" do
-    expect(agent.reload.microsoft_graph_token).to eq(nil)
-    expect(agent.reload.refresh_microsoft_graph_token).to eq(nil)
+    expect do
+      described_class.perform_now(agent)
+    end.to change { agent.reload.microsoft_graph_token }.to(nil)
+      .and change { agent.reload.refresh_microsoft_graph_token }.to(nil)
   end
 end

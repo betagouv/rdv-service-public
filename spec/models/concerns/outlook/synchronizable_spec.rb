@@ -7,6 +7,17 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
     end
   end
 
+  let(:expected_headers) do
+    {
+      "Accept" => "application/json",
+      "Authorization" => "Bearer token",
+      "Content-Type" => "application/json",
+      "Expect" => "",
+      "Return-Client-Request-Id" => "true",
+      "User-Agent" => "RDVSolidarites",
+    }
+  end
+
   # I made the choice to have end_to_end tests in this file to make it easier to check the callback behavior without dealing with the view and to encapsulate the test of the logic in a single file.
   describe "Create callback" do
     context "agent synced with outlook" do
@@ -17,14 +28,30 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
       let(:agent) { create(:agent, microsoft_graph_token: "token") }
       let(:rdv) { create(:rdv, id: 20, motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [fake_agent]) }
 
+      let(:expected_body) do
+        {
+          subject: "Super Motif",
+          body: {
+            contentType: "HTML",
+            content: "plus d'infos dans RDV Solidarités: http://www.rdv-solidarites-test.localhost/admin/organisations/#{organisation.id}/rdvs/20",
+          },
+          start: {
+            dateTime: "2023-01-01T11:00:00+01:00",
+            timeZone: "Europe/Paris",
+          },
+          end: {
+            dateTime: "2023-01-01T11:30:00+01:00",
+            timeZone: "Europe/Paris",
+          },
+          location: {
+            displayName: "Par téléphone",
+          },
+        }
+      end
+
       before do
         stub_request(:post, "https://graph.microsoft.com/v1.0/me/Events")
-          .with(
-            body: "{\"subject\":\"Super Motif\",\"body\":{\"contentType\":\"HTML\",\"content\":\"plus d'infos dans RDV Solidarités: http://www.rdv-solidarites-test.localhost/admin/organisations/#{organisation.id}/rdvs/20\"},\"start\":{\"dateTime\":\"2023-01-01T11:00:00+01:00\",\"timeZone\":\"Europe/Paris\"},\"end\":{\"dateTime\":\"2023-01-01T11:30:00+01:00\",\"timeZone\":\"Europe/Paris\"},\"location\":{\"displayName\":\"Par téléphone\"}}",
-            headers: {
-              "Accept" => "application/json", "Authorization" => "Bearer token", "Content-Type" => "application/json", "Expect" => "", "Return-Client-Request-Id" => "true", "User-Agent" => "RDVSolidarites",
-            }
-          )
+          .with(body: expected_body, headers: expected_headers)
           .to_return(status: 200, body: { id: "event_id" }.to_json, headers: {})
       end
 
@@ -32,7 +59,7 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
         agents_rdv = create(:agents_rdv, id: 12, agent: agent, rdv: rdv)
 
         expect(a_request(:post,
-                         "https://graph.microsoft.com/v1.0/me/Events").with(body: "{\"subject\":\"Super Motif\",\"body\":{\"contentType\":\"HTML\",\"content\":\"plus d'infos dans RDV Solidarités: http://www.rdv-solidarites-test.localhost/admin/organisations/#{organisation.id}/rdvs/20\"},\"start\":{\"dateTime\":\"2023-01-01T11:00:00+01:00\",\"timeZone\":\"Europe/Paris\"},\"end\":{\"dateTime\":\"2023-01-01T11:30:00+01:00\",\"timeZone\":\"Europe/Paris\"},\"location\":{\"displayName\":\"Par téléphone\"}}")).to have_been_made.once
+                         "https://graph.microsoft.com/v1.0/me/Events").with(body: expected_body)).to have_been_made.once
         expect(agents_rdv.reload.outlook_id).to eq("event_id")
       end
     end
@@ -69,25 +96,41 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
       let(:rdv) { create(:rdv, id: 20, motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [fake_agent]) }
       let!(:agents_rdv) { create(:agents_rdv, rdv: rdv, agent: agent, outlook_id: "abc") }
 
+      let(:expected_body) do
+        {
+          subject: "Super Motif",
+          body: {
+            contentType: "HTML",
+            content: "plus d'infos dans RDV Solidarités: http://www.rdv-solidarites-test.localhost/admin/organisations/#{organisation.id}/rdvs/20",
+          },
+          start: {
+            dateTime: "2023-01-01T11:00:00+01:00",
+            timeZone: "Europe/Paris",
+          },
+          end: {
+            dateTime: "2023-01-01T11:40:00+01:00",
+            timeZone: "Europe/Paris",
+          },
+          location: {
+            displayName: "Par téléphone",
+          },
+        }
+      end
+
       before do
         stub_request(:patch, "https://graph.microsoft.com/v1.0/me/Events/abc")
-          .with(
-            body: "{\"subject\":\"Super Motif\",\"body\":{\"contentType\":\"HTML\",\"content\":\"plus d'infos dans RDV Solidarités: http://www.rdv-solidarites-test.localhost/admin/organisations/#{organisation.id}/rdvs/20\"},\"start\":{\"dateTime\":\"2023-01-01T11:00:00+01:00\",\"timeZone\":\"Europe/Paris\"},\"end\":{\"dateTime\":\"2023-01-01T11:40:00+01:00\",\"timeZone\":\"Europe/Paris\"},\"location\":{\"displayName\":\"Par téléphone\"}}",
-            headers: {
-              "Accept" => "application/json", "Authorization" => "Bearer token", "Content-Type" => "application/json", "Expect" => "", "Return-Client-Request-Id" => "true", "User-Agent" => "RDVSolidarites",
-            }
-          )
+          .with(body: expected_body, headers: expected_headers)
           .to_return(status: 200, body: { id: "event_id" }.to_json, headers: {})
-
-        allow(Sentry).to receive(:capture_message)
       end
+
+      stub_sentry_events
 
       it "updates the Outlook Event" do
         rdv.update(duration_in_min: 40)
 
         expect(a_request(:patch,
-                         "https://graph.microsoft.com/v1.0/me/Events/abc").with(body: "{\"subject\":\"Super Motif\",\"body\":{\"contentType\":\"HTML\",\"content\":\"plus d'infos dans RDV Solidarités: http://www.rdv-solidarites-test.localhost/admin/organisations/#{organisation.id}/rdvs/20\"},\"start\":{\"dateTime\":\"2023-01-01T11:00:00+01:00\",\"timeZone\":\"Europe/Paris\"},\"end\":{\"dateTime\":\"2023-01-01T11:40:00+01:00\",\"timeZone\":\"Europe/Paris\"},\"location\":{\"displayName\":\"Par téléphone\"}}")).to have_been_made.once
-        expect(Sentry).not_to have_received(:capture_message)
+                         "https://graph.microsoft.com/v1.0/me/Events/abc").with(body: expected_body)).to have_been_made.once
+        expect(sentry_events).to be_empty
       end
     end
 
@@ -111,22 +154,53 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
       let(:agent) { create(:agent, microsoft_graph_token: "token") }
       let(:rdv) { create(:rdv, id: 20, motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [fake_agent]) }
 
+      let(:expected_body) do
+        {
+          subject: "Super Motif",
+          body: {
+            contentType: "HTML",
+            content: "plus d'infos dans RDV Solidarités: http://www.rdv-solidarites-test.localhost/admin/organisations/#{organisation.id}/rdvs/20",
+          },
+          start: {
+            dateTime: "2023-01-01T11:00:00+01:00",
+            timeZone: "Europe/Paris",
+          },
+          end: {
+            dateTime: "2023-01-01T11:30:00+01:00",
+            timeZone: "Europe/Paris",
+          },
+          location: {
+            displayName: "Par téléphone",
+          },
+        }
+      end
+      let(:expected_updated_body) do
+        {
+          subject: "Super Motif",
+          body: {
+            contentType: "HTML",
+            content: "plus d'infos dans RDV Solidarités: http://www.rdv-solidarites-test.localhost/admin/organisations/#{organisation.id}/rdvs/20",
+          },
+          start: {
+            dateTime: "2023-01-01T11:00:00+01:00",
+            timeZone: "Europe/Paris",
+          },
+          end: {
+            dateTime: "2023-01-01T11:40:00+01:00",
+            timeZone: "Europe/Paris",
+          },
+          location: {
+            displayName: "Par téléphone",
+          },
+        }
+      end
+
       before do
         stub_request(:post, "https://graph.microsoft.com/v1.0/me/Events")
-          .with(
-            body: "{\"subject\":\"Super Motif\",\"body\":{\"contentType\":\"HTML\",\"content\":\"plus d'infos dans RDV Solidarités: http://www.rdv-solidarites-test.localhost/admin/organisations/#{organisation.id}/rdvs/20\"},\"start\":{\"dateTime\":\"2023-01-01T11:00:00+01:00\",\"timeZone\":\"Europe/Paris\"},\"end\":{\"dateTime\":\"2023-01-01T11:30:00+01:00\",\"timeZone\":\"Europe/Paris\"},\"location\":{\"displayName\":\"Par téléphone\"}}",
-            headers: {
-              "Accept" => "application/json", "Authorization" => "Bearer token", "Content-Type" => "application/json", "Expect" => "", "Return-Client-Request-Id" => "true", "User-Agent" => "RDVSolidarites",
-            }
-          )
+          .with(body: expected_body, headers: expected_headers)
           .to_return(status: 200, body: { id: "" }.to_json, headers: {})
         stub_request(:post, "https://graph.microsoft.com/v1.0/me/Events")
-          .with(
-            body: "{\"subject\":\"Super Motif\",\"body\":{\"contentType\":\"HTML\",\"content\":\"plus d'infos dans RDV Solidarités: http://www.rdv-solidarites-test.localhost/admin/organisations/#{organisation.id}/rdvs/20\"},\"start\":{\"dateTime\":\"2023-01-01T11:00:00+01:00\",\"timeZone\":\"Europe/Paris\"},\"end\":{\"dateTime\":\"2023-01-01T11:40:00+01:00\",\"timeZone\":\"Europe/Paris\"},\"location\":{\"displayName\":\"Par téléphone\"}}",
-            headers: {
-              "Accept" => "application/json", "Authorization" => "Bearer token", "Content-Type" => "application/json", "Expect" => "", "Return-Client-Request-Id" => "true", "User-Agent" => "RDVSolidarites",
-            }
-          )
+          .with(body: expected_updated_body, headers: expected_headers)
           .to_return(status: 200, body: { id: "event_id" }.to_json, headers: {})
       end
 
@@ -135,7 +209,7 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
         rdv.update(duration_in_min: 40)
 
         expect(a_request(:post,
-                         "https://graph.microsoft.com/v1.0/me/Events").with(body: "{\"subject\":\"Super Motif\",\"body\":{\"contentType\":\"HTML\",\"content\":\"plus d'infos dans RDV Solidarités: http://www.rdv-solidarites-test.localhost/admin/organisations/#{organisation.id}/rdvs/20\"},\"start\":{\"dateTime\":\"2023-01-01T11:00:00+01:00\",\"timeZone\":\"Europe/Paris\"},\"end\":{\"dateTime\":\"2023-01-01T11:40:00+01:00\",\"timeZone\":\"Europe/Paris\"},\"location\":{\"displayName\":\"Par téléphone\"}}")).to have_been_made.once
+                         "https://graph.microsoft.com/v1.0/me/Events").with(body: expected_updated_body)).to have_been_made.once
         expect(agents_rdv.reload.outlook_id).to eq("event_id")
       end
     end
@@ -169,24 +243,38 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
       let(:agent) { create(:agent, microsoft_graph_token: "token") }
       let(:rdv) { create(:rdv, id: 20, motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [fake_agent]) }
 
+      let(:expected_body) do
+        {
+          subject: "Super Motif",
+          body: {
+            contentType: "HTML",
+            content: "plus d'infos dans RDV Solidarités: http://www.rdv-solidarites-test.localhost/admin/organisations/#{organisation.id}/rdvs/20",
+          },
+          start: {
+            dateTime: "2023-01-01T11:00:00+01:00",
+            timeZone: "Europe/Paris",
+          },
+          end: {
+            dateTime: "2023-01-01T11:30:00+01:00",
+            timeZone: "Europe/Paris",
+          },
+          location: {
+            displayName: "Par téléphone",
+          },
+        }
+      end
+
       before do
         stub_request(:post, "https://graph.microsoft.com/v1.0/me/Events")
-          .with(
-            body: "{\"subject\":\"Super Motif\",\"body\":{\"contentType\":\"HTML\",\"content\":\"plus d'infos dans RDV Solidarités: http://www.rdv-solidarites-test.localhost/admin/organisations/#{organisation.id}/rdvs/20\"},\"start\":{\"dateTime\":\"2023-01-01T11:00:00+01:00\",\"timeZone\":\"Europe/Paris\"},\"end\":{\"dateTime\":\"2023-01-01T11:30:00+01:00\",\"timeZone\":\"Europe/Paris\"},\"location\":{\"displayName\":\"Par téléphone\"}}",
-            headers: {
-              "Accept" => "application/json", "Authorization" => "Bearer token", "Content-Type" => "application/json", "Expect" => "", "Return-Client-Request-Id" => "true", "User-Agent" => "RDVSolidarites",
-            }
-          )
+          .with(body: expected_body, headers: expected_headers)
           .to_return(status: 200, body: { id: "" }.to_json, headers: {})
-
-        allow(Outlook::DestroyEventJob).to receive(:perform_later)
       end
 
       it "does not call Outlook::DestroyEventJob" do
         agents_rdv = create(:agents_rdv, id: 12, agent: agent, rdv: rdv)
-        rdv.update(cancelled_at: Time.zone.now, status: "revoked")
-
-        expect(Outlook::DestroyEventJob).not_to have_received(:perform_later).with(agents_rdv.outlook_id, agent.id)
+        expect do
+          rdv.update(cancelled_at: Time.zone.now, status: "revoked")
+        end.not_to have_enqueued_job(Outlook::DestroyEventJob).with(agents_rdv.outlook_id, agent.id)
       end
     end
 
@@ -251,7 +339,9 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
       end
 
       it "does not call Outlook::DestroyEventJob" do
-        expect(Outlook::DestroyEventJob).not_to have_received(:perform_later)
+        expect do
+          rdv.destroy
+        end.not_to have_enqueued_job(Outlook::DestroyEventJob)
       end
     end
 
@@ -263,14 +353,30 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
       let(:agent) { create(:agent, microsoft_graph_token: "token") }
       let(:rdv) { create(:rdv, id: 20, motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [fake_agent]) }
 
+      let(:expected_body) do
+        {
+          subject: "Super Motif",
+          body: {
+            contentType: "HTML",
+            content: "plus d'infos dans RDV Solidarités: http://www.rdv-solidarites-test.localhost/admin/organisations/#{organisation.id}/rdvs/20",
+          },
+          start: {
+            dateTime: "2023-01-01T11:00:00+01:00",
+            timeZone: "Europe/Paris",
+          },
+          end: {
+            dateTime: "2023-01-01T11:30:00+01:00",
+            timeZone: "Europe/Paris",
+          },
+          location: {
+            displayName: "Par téléphone",
+          },
+        }
+      end
+
       before do
         stub_request(:post, "https://graph.microsoft.com/v1.0/me/Events")
-          .with(
-            body: "{\"subject\":\"Super Motif\",\"body\":{\"contentType\":\"HTML\",\"content\":\"plus d'infos dans RDV Solidarités: http://www.rdv-solidarites-test.localhost/admin/organisations/#{organisation.id}/rdvs/20\"},\"start\":{\"dateTime\":\"2023-01-01T11:00:00+01:00\",\"timeZone\":\"Europe/Paris\"},\"end\":{\"dateTime\":\"2023-01-01T11:30:00+01:00\",\"timeZone\":\"Europe/Paris\"},\"location\":{\"displayName\":\"Par téléphone\"}}",
-            headers: {
-              "Accept" => "application/json", "Authorization" => "Bearer token", "Content-Type" => "application/json", "Expect" => "", "Return-Client-Request-Id" => "true", "User-Agent" => "RDVSolidarites",
-            }
-          )
+          .with(body: expected_body, headers: expected_headers)
           .to_return(status: 200, body: { id: "" }.to_json, headers: {})
 
         allow(Outlook::DestroyEventJob).to receive(:perform_later)
@@ -278,9 +384,9 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
 
       it "does not call Outlook::DestroyEventJob" do
         create(:agents_rdv, agent: agent, rdv: rdv)
-        rdv.destroy
-
-        expect(Outlook::DestroyEventJob).not_to have_received(:perform_later)
+        expect do
+          rdv.destroy
+        end.not_to have_enqueued_job(Outlook::DestroyEventJob)
       end
     end
   end

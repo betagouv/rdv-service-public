@@ -10,113 +10,113 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 20_221_130_143_520) do
+ActiveRecord::Schema[7.0].define(version: 2022_11_30_143520) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "unaccent"
   enable_extension "uuid-ossp"
 
-  create_enum :agents_absence_notification_level, %w[
-    all
-    none
+  create_enum :agents_absence_notification_level, [
+    "all",
+    "none",
   ], force: :cascade
 
-  create_enum :agents_plage_ouverture_notification_level, %w[
-    all
-    none
+  create_enum :agents_plage_ouverture_notification_level, [
+    "all",
+    "none",
   ], force: :cascade
 
-  create_enum :agents_rdv_notifications_level, %w[
-    all
-    others
-    soon
-    none
+  create_enum :agents_rdv_notifications_level, [
+    "all",
+    "others",
+    "soon",
+    "none",
   ], force: :cascade
 
-  create_enum :lieu_availability, %w[
-    enabled
-    disabled
-    single_use
+  create_enum :lieu_availability, [
+    "enabled",
+    "disabled",
+    "single_use",
   ], force: :cascade
 
-  create_enum :location_type, %w[
-    public_office
-    home
-    phone
+  create_enum :location_type, [
+    "public_office",
+    "home",
+    "phone",
   ], force: :cascade
 
-  create_enum :motif_category, %w[
-    rsa_orientation
-    rsa_accompagnement
-    rsa_orientation_on_phone_platform
-    rsa_cer_signature
-    rsa_insertion_offer
-    rsa_follow_up
-    rsa_accompagnement_social
-    rsa_accompagnement_sociopro
-    rsa_main_tendue
-    rsa_atelier_collectif_mandatory
+  create_enum :motif_category, [
+    "rsa_orientation",
+    "rsa_accompagnement",
+    "rsa_orientation_on_phone_platform",
+    "rsa_cer_signature",
+    "rsa_insertion_offer",
+    "rsa_follow_up",
+    "rsa_accompagnement_social",
+    "rsa_accompagnement_sociopro",
+    "rsa_main_tendue",
+    "rsa_atelier_collectif_mandatory",
   ], force: :cascade
 
-  create_enum :rdv_status, %w[
-    unknown
-    waiting
-    seen
-    excused
-    revoked
-    noshow
+  create_enum :rdv_status, [
+    "unknown",
+    "waiting",
+    "seen",
+    "excused",
+    "revoked",
+    "noshow",
   ], force: :cascade
 
-  create_enum :receipts_channel, %w[
-    sms
-    mail
-    webhook
+  create_enum :receipts_channel, [
+    "sms",
+    "mail",
+    "webhook",
   ], force: :cascade
 
-  create_enum :receipts_result, %w[
-    processed
-    sent
-    delivered
-    failure
+  create_enum :receipts_result, [
+    "processed",
+    "sent",
+    "delivered",
+    "failure",
   ], force: :cascade
 
-  create_enum :sms_provider, %w[
-    netsize
-    send_in_blue
-    contact_experience
-    sfr_mail2sms
-    clever_technologies
-    orange_contact_everyone
+  create_enum :sms_provider, [
+    "netsize",
+    "send_in_blue",
+    "contact_experience",
+    "sfr_mail2sms",
+    "clever_technologies",
+    "orange_contact_everyone",
   ], force: :cascade
 
-  create_enum :user_created_through, %w[
-    unknown
-    agent_creation
-    user_sign_up
-    franceconnect_sign_up
-    user_relative_creation
-    agent_creation_api
-    prescripteur
+  create_enum :user_created_through, [
+    "unknown",
+    "agent_creation",
+    "user_sign_up",
+    "franceconnect_sign_up",
+    "user_relative_creation",
+    "agent_creation_api",
+    "prescripteur",
   ], force: :cascade
 
-  create_enum :user_invited_through, %w[
-    devise_email
-    external
+  create_enum :user_invited_through, [
+    "devise_email",
+    "external",
   ], force: :cascade
 
   create_table "absences", force: :cascade do |t|
     t.bigint "agent_id", null: false
     t.string "title", null: false
     t.bigint "organisation_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.text "recurrence"
     t.date "first_day", null: false
     t.time "start_time", null: false
     t.date "end_day", null: false
     t.time "end_time", null: false
     t.boolean "expired_cached", default: false, null: false
-    t.datetime "recurrence_ends_at"
+    t.datetime "recurrence_ends_at", precision: nil
     t.index "tsrange((first_day)::timestamp without time zone, recurrence_ends_at, '[]'::text)", name: "index_absences_on_tsrange_first_day_recurrence_ends_at", using: :gist
     t.index ["agent_id"], name: "index_absences_on_agent_id"
     t.index ["end_day"], name: "index_absences_on_end_day"
@@ -132,9 +132,9 @@ ActiveRecord::Schema[7.0].define(version: 20_221_130_143_520) do
     t.text "body"
     t.string "record_type", null: false
     t.bigint "record_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index %w[record_type record_id name], name: "index_action_text_rich_texts_uniqueness", unique: true
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.index ["record_type", "record_id", "name"], name: "index_action_text_rich_texts_uniqueness", unique: true
   end
 
   create_table "active_storage_attachments", force: :cascade do |t|
@@ -142,9 +142,9 @@ ActiveRecord::Schema[7.0].define(version: 20_221_130_143_520) do
     t.string "record_type", null: false
     t.bigint "record_id", null: false
     t.bigint "blob_id", null: false
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
-    t.index %w[record_type record_id name blob_id], name: "index_active_storage_attachments_uniqueness", unique: true
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
   end
 
   create_table "active_storage_blobs", force: :cascade do |t|
@@ -154,7 +154,7 @@ ActiveRecord::Schema[7.0].define(version: 20_221_130_143_520) do
     t.text "metadata"
     t.bigint "byte_size", null: false
     t.string "checksum", null: false
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.string "service_name", null: false
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
@@ -162,7 +162,7 @@ ActiveRecord::Schema[7.0].define(version: 20_221_130_143_520) do
   create_table "active_storage_variant_records", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
-    t.index %w[blob_id variation_digest], name: "index_active_storage_variant_records_uniqueness", unique: true
+    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
   create_table "agent_teams", force: :cascade do |t|
@@ -198,25 +198,25 @@ ActiveRecord::Schema[7.0].define(version: 20_221_130_143_520) do
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "reset_password_sent_at", precision: nil
+    t.datetime "remember_created_at", precision: nil
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "confirmation_token"
-    t.datetime "confirmed_at"
-    t.datetime "confirmation_sent_at"
+    t.datetime "confirmed_at", precision: nil
+    t.datetime "confirmation_sent_at", precision: nil
     t.string "unconfirmed_email"
     t.string "first_name"
     t.string "last_name"
     t.string "invitation_token"
-    t.datetime "invitation_created_at"
-    t.datetime "invitation_sent_at"
-    t.datetime "invitation_accepted_at"
+    t.datetime "invitation_created_at", precision: nil
+    t.datetime "invitation_sent_at", precision: nil
+    t.datetime "invitation_accepted_at", precision: nil
     t.integer "invitation_limit"
     t.string "invited_by_type"
     t.bigint "invited_by_id"
     t.integer "invitations_count", default: 0
-    t.datetime "deleted_at"
+    t.datetime "deleted_at", precision: nil
     t.bigint "service_id", null: false
     t.string "email_original"
     t.string "provider", default: "email", null: false
@@ -232,8 +232,8 @@ ActiveRecord::Schema[7.0].define(version: 20_221_130_143_520) do
     t.string "external_id", comment: "The agent's unique and immutable id in the system managing them and adding them to our application"
     t.string "calendar_uid", comment: "the uid used for the url of the agent's ics calendar"
     t.integer "sign_in_count", default: 0, null: false
-    t.datetime "current_sign_in_at"
-    t.datetime "last_sign_in_at"
+    t.datetime "current_sign_in_at", precision: nil
+    t.datetime "last_sign_in_at", precision: nil
     t.string "current_sign_in_ip"
     t.string "last_sign_in_ip"
     t.text "microsoft_graph_token"
@@ -245,11 +245,11 @@ ActiveRecord::Schema[7.0].define(version: 20_221_130_143_520) do
     t.index ["invitation_token"], name: "index_agents_on_invitation_token", unique: true
     t.index ["invitations_count"], name: "index_agents_on_invitations_count"
     t.index ["invited_by_id"], name: "index_agents_on_invited_by_id"
-    t.index %w[invited_by_type invited_by_id], name: "index_agents_on_invited_by_type_and_invited_by_id"
+    t.index ["invited_by_type", "invited_by_id"], name: "index_agents_on_invited_by_type_and_invited_by_id"
     t.index ["last_name"], name: "index_agents_on_last_name"
     t.index ["reset_password_token"], name: "index_agents_on_reset_password_token", unique: true
     t.index ["service_id"], name: "index_agents_on_service_id"
-    t.index %w[uid provider], name: "index_agents_on_uid_and_provider", unique: true
+    t.index ["uid", "provider"], name: "index_agents_on_uid_and_provider", unique: true
   end
 
   create_table "agents_organisations", force: :cascade do |t|
@@ -258,7 +258,7 @@ ActiveRecord::Schema[7.0].define(version: 20_221_130_143_520) do
     t.string "level", default: "basic", null: false
     t.index ["agent_id"], name: "index_agents_organisations_on_agent_id"
     t.index ["level"], name: "index_agents_organisations_on_level"
-    t.index %w[organisation_id agent_id], name: "index_agents_organisations_on_organisation_id_and_agent_id", unique: true
+    t.index ["organisation_id", "agent_id"], name: "index_agents_organisations_on_organisation_id_and_agent_id", unique: true
     t.index ["organisation_id"], name: "index_agents_organisations_on_organisation_id"
   end
 
@@ -266,16 +266,9 @@ ActiveRecord::Schema[7.0].define(version: 20_221_130_143_520) do
     t.bigint "agent_id", null: false
     t.bigint "rdv_id", null: false
     t.text "outlook_id"
-    t.index %w[agent_id rdv_id], name: "index_agents_rdvs_on_agent_id_and_rdv_id", unique: true
+    t.index ["agent_id", "rdv_id"], name: "index_agents_rdvs_on_agent_id_and_rdv_id", unique: true
     t.index ["agent_id"], name: "index_agents_rdvs_on_agent_id"
     t.index ["rdv_id"], name: "index_agents_rdvs_on_rdv_id"
-  end
-
-  create_table "agents_users", force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.bigint "agent_id", null: false
-    t.index ["agent_id"], name: "index_agents_users_on_agent_id"
-    t.index ["user_id"], name: "index_agents_users_on_user_id"
   end
 
   create_table "delayed_jobs", force: :cascade do |t|
@@ -283,15 +276,15 @@ ActiveRecord::Schema[7.0].define(version: 20_221_130_143_520) do
     t.integer "attempts", default: 0, null: false
     t.text "handler", null: false
     t.text "last_error"
-    t.datetime "run_at"
-    t.datetime "locked_at"
-    t.datetime "failed_at"
+    t.datetime "run_at", precision: nil
+    t.datetime "locked_at", precision: nil
+    t.datetime "failed_at", precision: nil
     t.string "locked_by"
     t.string "queue"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.string "cron"
-    t.index %w[priority run_at], name: "delayed_jobs_priority"
+    t.index ["priority", "run_at"], name: "delayed_jobs_priority"
   end
 
   create_table "file_attentes", force: :cascade do |t|
@@ -300,8 +293,8 @@ ActiveRecord::Schema[7.0].define(version: 20_221_130_143_520) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "notifications_sent", default: 0
-    t.datetime "last_creneau_sent_at"
-    t.index %w[rdv_id user_id], name: "index_file_attentes_on_rdv_id_and_user_id", unique: true
+    t.datetime "last_creneau_sent_at", precision: nil
+    t.index ["rdv_id", "user_id"], name: "index_file_attentes_on_rdv_id_and_user_id", unique: true
     t.index ["rdv_id"], name: "index_file_attentes_on_rdv_id"
     t.index ["user_id"], name: "index_file_attentes_on_user_id"
   end
@@ -309,8 +302,8 @@ ActiveRecord::Schema[7.0].define(version: 20_221_130_143_520) do
   create_table "lieux", force: :cascade do |t|
     t.string "name", null: false
     t.bigint "organisation_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "old_address"
     t.float "latitude"
     t.float "longitude"
@@ -327,14 +320,14 @@ ActiveRecord::Schema[7.0].define(version: 20_221_130_143_520) do
   create_table "motifs", force: :cascade do |t|
     t.string "name"
     t.string "color"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "default_duration_in_min", default: 30, null: false
     t.bigint "organisation_id", null: false
     t.boolean "reservable_online", default: false, null: false
     t.integer "min_booking_delay", default: 1800
-    t.integer "max_booking_delay", default: 7_889_238
-    t.datetime "deleted_at"
+    t.integer "max_booking_delay", default: 7889238
+    t.datetime "deleted_at", precision: nil
     t.bigint "service_id", null: false
     t.text "restriction_for_rdv"
     t.text "instruction_for_rdv"
@@ -354,7 +347,7 @@ ActiveRecord::Schema[7.0].define(version: 20_221_130_143_520) do
     t.index ["collectif"], name: "index_motifs_on_collectif"
     t.index ["deleted_at"], name: "index_motifs_on_deleted_at"
     t.index ["location_type"], name: "index_motifs_on_location_type"
-    t.index %w[name organisation_id location_type service_id], name: "index_motifs_on_name_scoped", unique: true, where: "(deleted_at IS NULL)"
+    t.index ["name", "organisation_id", "location_type", "service_id"], name: "index_motifs_on_name_scoped", unique: true, where: "(deleted_at IS NULL)"
     t.index ["name"], name: "index_motifs_on_name"
     t.index ["organisation_id"], name: "index_motifs_on_organisation_id"
     t.index ["reservable_online"], name: "index_motifs_on_reservable_online"
@@ -371,8 +364,8 @@ ActiveRecord::Schema[7.0].define(version: 20_221_130_143_520) do
 
   create_table "organisations", force: :cascade do |t|
     t.string "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "departement"
     t.text "horaires"
     t.string "phone_number"
@@ -382,9 +375,9 @@ ActiveRecord::Schema[7.0].define(version: 20_221_130_143_520) do
     t.bigint "territory_id", null: false
     t.string "external_id", comment: "The organisation's unique and immutable id in the system managing them and adding them to our application"
     t.boolean "new_domain_beta", default: false, null: false, comment: "en mettant ce boolean a true, on active l'utilisation du nouveau domaine pour les conseillers numeriques de cette organisation"
-    t.index %w[external_id territory_id], name: "index_organisations_on_external_id_and_territory_id", unique: true
-    t.index %w[human_id territory_id], name: "index_organisations_on_human_id_and_territory_id", unique: true, where: "((human_id)::text <> ''::text)"
-    t.index %w[name territory_id], name: "index_organisations_on_name_and_territory_id", unique: true
+    t.index ["external_id", "territory_id"], name: "index_organisations_on_external_id_and_territory_id", unique: true
+    t.index ["human_id", "territory_id"], name: "index_organisations_on_human_id_and_territory_id", unique: true, where: "((human_id)::text <> ''::text)"
+    t.index ["name", "territory_id"], name: "index_organisations_on_name_and_territory_id", unique: true
     t.index ["name"], name: "index_organisations_on_name"
     t.index ["territory_id"], name: "index_organisations_on_territory_id"
   end
@@ -396,12 +389,12 @@ ActiveRecord::Schema[7.0].define(version: 20_221_130_143_520) do
     t.date "first_day", null: false
     t.time "start_time", null: false
     t.time "end_time", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.text "recurrence"
     t.bigint "lieu_id"
     t.boolean "expired_cached", default: false
-    t.datetime "recurrence_ends_at"
+    t.datetime "recurrence_ends_at", precision: nil
     t.index "tsrange((first_day)::timestamp without time zone, recurrence_ends_at, '[]'::text)", name: "index_plage_ouvertures_on_tsrange_first_day_recurrence_ends_at", using: :gist
     t.index ["agent_id"], name: "index_plage_ouvertures_on_agent_id"
     t.index ["expired_cached"], name: "index_plage_ouvertures_on_expired_cached"
@@ -425,11 +418,11 @@ ActiveRecord::Schema[7.0].define(version: 20_221_130_143_520) do
   end
 
   create_table "rdvs", force: :cascade do |t|
-    t.datetime "starts_at", null: false
+    t.datetime "starts_at", precision: nil, null: false
     t.bigint "organisation_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.datetime "cancelled_at"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "cancelled_at", precision: nil
     t.bigint "motif_id", null: false
     t.integer "sequence", default: 0, null: false
     t.uuid "uuid", default: -> { "uuid_generate_v4()" }, null: false
@@ -438,11 +431,11 @@ ActiveRecord::Schema[7.0].define(version: 20_221_130_143_520) do
     t.text "context"
     t.bigint "lieu_id"
     t.enum "status", default: "unknown", null: false, enum_type: "rdv_status"
-    t.datetime "ends_at", null: false
+    t.datetime "ends_at", precision: nil, null: false
     t.string "name"
     t.integer "max_participants_count"
     t.integer "users_count", default: 0
-    t.datetime "deleted_at"
+    t.datetime "deleted_at", precision: nil
     t.index "tsrange(starts_at, ends_at, '[)'::text)", name: "index_rdvs_on_tsrange_starts_at_ends_at", using: :gist
     t.index ["created_by"], name: "index_rdvs_on_created_by"
     t.index ["deleted_at"], name: "index_rdvs_on_deleted_at"
@@ -463,9 +456,9 @@ ActiveRecord::Schema[7.0].define(version: 20_221_130_143_520) do
     t.boolean "send_lifecycle_notifications", null: false
     t.boolean "send_reminder_notification", null: false
     t.string "invitation_token"
-    t.datetime "invitation_created_at"
-    t.datetime "invitation_sent_at"
-    t.datetime "invitation_accepted_at"
+    t.datetime "invitation_created_at", precision: nil
+    t.datetime "invitation_sent_at", precision: nil
+    t.datetime "invitation_accepted_at", precision: nil
     t.integer "invitation_limit"
     t.string "invited_by_type"
     t.bigint "invited_by_id"
@@ -473,8 +466,8 @@ ActiveRecord::Schema[7.0].define(version: 20_221_130_143_520) do
     t.enum "status", default: "unknown", null: false, enum_type: "rdv_status"
     t.index ["invitation_token"], name: "index_rdvs_users_on_invitation_token", unique: true
     t.index ["invited_by_id"], name: "index_rdvs_users_on_invited_by_id"
-    t.index %w[invited_by_type invited_by_id], name: "index_rdvs_users_on_invited_by"
-    t.index %w[rdv_id user_id], name: "index_rdvs_users_on_rdv_id_and_user_id", unique: true
+    t.index ["invited_by_type", "invited_by_id"], name: "index_rdvs_users_on_invited_by"
+    t.index ["rdv_id", "user_id"], name: "index_rdvs_users_on_rdv_id_and_user_id", unique: true
     t.index ["rdv_id"], name: "index_rdvs_users_on_rdv_id"
     t.index ["status"], name: "index_rdvs_users_on_status"
     t.index ["user_id"], name: "index_rdvs_users_on_user_id"
@@ -506,7 +499,7 @@ ActiveRecord::Schema[7.0].define(version: 20_221_130_143_520) do
     t.bigint "user_id", null: false
     t.bigint "agent_id", null: false
     t.index ["agent_id"], name: "index_referent_assignations_on_agent_id"
-    t.index %w[user_id agent_id], name: "index_referent_assignations_on_user_id_and_agent_id", unique: true
+    t.index ["user_id", "agent_id"], name: "index_referent_assignations_on_user_id_and_agent_id", unique: true
     t.index ["user_id"], name: "index_referent_assignations_on_user_id"
   end
 
@@ -528,7 +521,7 @@ ActiveRecord::Schema[7.0].define(version: 20_221_130_143_520) do
     t.datetime "updated_at", null: false
     t.bigint "territory_id", null: false
     t.index ["departement"], name: "index_sectors_on_departement"
-    t.index %w[human_id territory_id], name: "index_sectors_on_human_id_and_territory_id", unique: true
+    t.index ["human_id", "territory_id"], name: "index_sectors_on_human_id_and_territory_id", unique: true
     t.index ["human_id"], name: "index_sectors_on_human_id"
     t.index ["territory_id"], name: "index_sectors_on_territory_id"
   end
@@ -545,8 +538,8 @@ ActiveRecord::Schema[7.0].define(version: 20_221_130_143_520) do
 
   create_table "super_admins", force: :cascade do |t|
     t.string "email", default: "", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
   create_table "teams", force: :cascade do |t|
@@ -554,7 +547,7 @@ ActiveRecord::Schema[7.0].define(version: 20_221_130_143_520) do
     t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index %w[name territory_id], name: "index_teams_on_name_and_territory_id", unique: true
+    t.index ["name", "territory_id"], name: "index_teams_on_name_and_territory_id", unique: true
     t.index ["territory_id"], name: "index_teams_on_territory_id"
   end
 
@@ -586,7 +579,7 @@ ActiveRecord::Schema[7.0].define(version: 20_221_130_143_520) do
     t.bigint "user_id", null: false
     t.integer "logement"
     t.text "notes"
-    t.index %w[organisation_id user_id], name: "index_user_profiles_on_organisation_id_and_user_id", unique: true
+    t.index ["organisation_id", "user_id"], name: "index_user_profiles_on_organisation_id_and_user_id", unique: true
     t.index ["organisation_id"], name: "index_user_profiles_on_organisation_id"
     t.index ["user_id"], name: "index_user_profiles_on_user_id"
   end
@@ -598,20 +591,20 @@ ActiveRecord::Schema[7.0].define(version: 20_221_130_143_520) do
     t.string "address"
     t.string "phone_number"
     t.date "birth_date"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
+    t.datetime "reset_password_sent_at", precision: nil
+    t.datetime "remember_created_at", precision: nil
     t.string "confirmation_token"
-    t.datetime "confirmed_at"
-    t.datetime "confirmation_sent_at"
+    t.datetime "confirmed_at", precision: nil
+    t.datetime "confirmation_sent_at", precision: nil
     t.string "unconfirmed_email"
     t.string "invitation_token"
-    t.datetime "invitation_created_at"
-    t.datetime "invitation_sent_at"
-    t.datetime "invitation_accepted_at"
+    t.datetime "invitation_created_at", precision: nil
+    t.datetime "invitation_sent_at", precision: nil
+    t.datetime "invitation_accepted_at", precision: nil
     t.integer "invitation_limit"
     t.string "invited_by_type"
     t.bigint "invited_by_id"
@@ -621,13 +614,13 @@ ActiveRecord::Schema[7.0].define(version: 20_221_130_143_520) do
     t.integer "family_situation"
     t.integer "number_of_children"
     t.bigint "responsible_id"
-    t.datetime "deleted_at"
+    t.datetime "deleted_at", precision: nil
     t.string "birth_name"
     t.string "email_original"
     t.string "phone_number_formatted"
     t.boolean "notify_by_sms", default: true
     t.boolean "notify_by_email", default: true
-    t.datetime "last_sign_in_at"
+    t.datetime "last_sign_in_at", precision: nil
     t.string "franceconnect_openid_sub"
     t.boolean "logged_once_with_franceconnect"
     t.integer "invite_for"
@@ -646,7 +639,7 @@ ActiveRecord::Schema[7.0].define(version: 20_221_130_143_520) do
     t.index ["invitation_token"], name: "index_users_on_invitation_token", unique: true
     t.index ["invitations_count"], name: "index_users_on_invitations_count"
     t.index ["invited_by_id"], name: "index_users_on_invited_by_id"
-    t.index %w[invited_by_type invited_by_id], name: "index_users_on_invited_by_type_and_invited_by_id"
+    t.index ["invited_by_type", "invited_by_id"], name: "index_users_on_invited_by_type_and_invited_by_id"
     t.index ["last_name"], name: "index_users_on_last_name"
     t.index ["phone_number_formatted"], name: "index_users_on_phone_number_formatted"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
@@ -659,10 +652,10 @@ ActiveRecord::Schema[7.0].define(version: 20_221_130_143_520) do
     t.string "event", null: false
     t.string "whodunnit"
     t.text "object"
-    t.datetime "created_at"
+    t.datetime "created_at", precision: nil
     t.text "object_changes"
     t.json "virtual_attributes"
-    t.index %w[item_type item_id], name: "index_versions_on_item_type_and_item_id"
+    t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
 
   create_table "webhook_endpoints", force: :cascade do |t|
@@ -671,7 +664,7 @@ ActiveRecord::Schema[7.0].define(version: 20_221_130_143_520) do
     t.bigint "organisation_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "subscriptions", default: %w[rdv absence plage_ouverture], array: true
+    t.string "subscriptions", default: ["rdv", "absence", "plage_ouverture"], array: true
     t.index ["organisation_id"], name: "index_webhook_endpoints_on_organisation_id"
   end
 

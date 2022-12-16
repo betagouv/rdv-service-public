@@ -11,16 +11,24 @@ RSpec.describe Outlook::DestroyEventJob, type: :job do
   let(:rdv) { create(:rdv, id: 20, motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [fake_agent]) }
   let!(:agents_rdv) { create(:agents_rdv, id: 12, rdv: rdv, agent: agent, outlook_id: "super_id") }
 
+  let(:expected_headers) do
+    {
+      "Accept" => "application/json",
+      "Authorization" => "Bearer token",
+      "Content-Type" => "application/json",
+      "Expect" => "",
+      "Return-Client-Request-Id" => "true",
+      "User-Agent" => "RDVSolidarites",
+    }
+  end
+
+  stub_sentry_events
+
   context "when the event is destroyed" do
     before do
       stub_request(:delete, "https://graph.microsoft.com/v1.0/me/Events/super_id")
-        .with(
-          headers: { "Accept" => "application/json", "Authorization" => "Bearer token", "Content-Type" => "application/json", "Expect" => "", "Return-Client-Request-Id" => "true",
-                     "User-Agent" => "RDVSolidarites", }
-        )
+        .with(headers: expected_headers)
         .to_return(status: 204, body: "", headers: {})
-
-      allow(Sentry).to receive(:capture_message)
 
       described_class.perform_now("super_id", agent)
     end
@@ -28,20 +36,15 @@ RSpec.describe Outlook::DestroyEventJob, type: :job do
     it "updates the outlook_id" do
       expect(agents_rdv.reload.outlook_id).to eq(nil)
 
-      expect(Sentry).not_to have_received(:capture_message)
+      expect(sentry_events).to be_empty
     end
   end
 
   context "when the event cannot be destroyed" do
     before do
       stub_request(:delete, "https://graph.microsoft.com/v1.0/me/Events/super_id")
-        .with(
-          headers: { "Accept" => "application/json", "Authorization" => "Bearer token", "Content-Type" => "application/json", "Expect" => "", "Return-Client-Request-Id" => "true",
-                     "User-Agent" => "RDVSolidarites", }
-        )
+        .with(headers: expected_headers)
         .to_return(status: 404, body: { error: { code: "TerribleError", message: "Quelle terrible erreur" } }.to_json, headers: {})
-
-      allow(Sentry).to receive(:capture_message)
 
       described_class.perform_now("super_id", agent)
     end
@@ -49,7 +52,7 @@ RSpec.describe Outlook::DestroyEventJob, type: :job do
     it "does not update the outlook_id" do
       expect(agents_rdv.reload.outlook_id).to eq("super_id")
 
-      expect(Sentry).to have_received(:capture_message).with("Outlook API error for AgentsRdv super_id: Quelle terrible erreur")
+      expect(sentry_events.last.message).to eq("Outlook API error for AgentsRdv super_id: Quelle terrible erreur")
     end
   end
 end
