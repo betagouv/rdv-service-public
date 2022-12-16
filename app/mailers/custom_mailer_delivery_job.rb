@@ -8,7 +8,8 @@ class CustomMailerDeliveryJob < ActionMailer::MailDeliveryJob
     if exception.cause.instance_of?(ActiveRecord::RecordNotFound)
       Rails.logger.error(exception.message)
     else
-      raise exception
+      Sentry.capture_exception(exception)
+      retry_job
     end
   end
 end
