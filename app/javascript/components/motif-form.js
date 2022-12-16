@@ -18,8 +18,12 @@ class MotifForm {
       !document.querySelector("#motif_follow_up:checked")
   }
 
-  toggleSectorisation = () => {
-    const enabled = this.reservableOnlineCheckbox.checked
+  sectorisationShouldBeDisable() {
+    return !document.querySelector("#motif_follow_up:checked")
+  }
+
+  toggleSectorisation() {
+    const enabled = this.reservableOnlineCheckbox.checked && this.sectorisationShouldBeDisable();
     if (enabled == this.sectorisationEnabled) return;
 
     if (!enabled) {
@@ -34,7 +38,6 @@ class MotifForm {
     this.sectorisationEnabled = enabled
   }
 
-
   toggleOnlineSubFields() {
     const enabled = this.reservableOnlineCheckbox.checked
     document.querySelectorAll(".js-rdvs-editable").forEach(rdvEditableElement =>
@@ -47,7 +50,6 @@ class MotifForm {
     document.querySelector("#motif_rdvs_editable_by_user").checked = enabled
   }
 
-
   constructor() {
     this.secretariatCheckbox = document.querySelector('#motif_for_secretariat')
     this.reservableOnlineCheckbox = document.querySelector('#motif_reservable_online')
@@ -56,6 +58,10 @@ class MotifForm {
     const noSecretariatInputs = ["input[name=\"motif[location_type]\"]", "input[name=\"motif[follow_up]\"]"]
     document.querySelectorAll(noSecretariatInputs).forEach(input =>
       input.addEventListener('change', e => this.toggleSecretariat())
+    )
+    const noSectorisationInputs = ["input[name=\"motif[sectorisation_level]\"]", "input[name=\"motif[follow_up]\"]"]
+    document.querySelectorAll(noSectorisationInputs).forEach(input =>
+      input.addEventListener('change', e => this.toggleSectorisation())
     )
     this.reservableOnlineCheckbox.addEventListener('change', e => {
       if (document.querySelector(".js-sectorisation-card") !== null) { this.toggleSectorisation() }

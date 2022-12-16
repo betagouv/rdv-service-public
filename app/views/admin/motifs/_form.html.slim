@@ -103,7 +103,7 @@
                 sectors: attributions_group[:attributions].map { "#{_1.agent.full_name} -> #{_1.sector.name}" }.to_sentence.truncate(100) \
               )
         - if current_agent.territorial_admin_in?(current_organisation.territory)
-          = link_to "Configuration des secteurs", admin_territory_sectors_path(current_organisation.territory)
+          = link_to " Configuration des secteurs", admin_territory_sectors_path(current_organisation.territory)
 
   .card
     .card-body
