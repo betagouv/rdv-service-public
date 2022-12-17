@@ -57,6 +57,9 @@ class SmsSender < BaseService
   # https://rubydoc.info/gems/sib-api-v3-sdk/SibApiV3Sdk/SendSms
   # /!\ does not report routing errors for wrong numbers
   #
+  # Anciennement utilisé par défaut. Il reste quelques crédit pour RDV-Solidarités
+  # Ça pourrait servir de dépannage en cas de problème.
+  #
   def send_with_send_in_blue
     config = SibApiV3Sdk::Configuration.new
     config.api_key["api-key"] = @api_key
@@ -89,6 +92,9 @@ class SmsSender < BaseService
   # NetSize
   # `Netsize Implementation Guide, REST API - SMS.pdf`
   # returns routing errors for wrong numbers
+  #
+  # Utilisé par défaut pour toutes les structures (territoires) utilisant
+  # RDV-Solidarités, sauf celle cité dans les autres commentaires.
   #
   def send_with_netsize
     response = Typhoeus::Request.new(
@@ -130,6 +136,9 @@ class SmsSender < BaseService
   # Contact Experience
   # /!\ does not report routing errors for wrong numbers
   #
+  # Utilisé par
+  # - [jusqu'au 20 décembre 2022] le département du Pas-de-Calais (62)
+  #
   def send_with_contact_experience
     replies_email = SUPPORT_EMAIL
 
@@ -168,8 +177,12 @@ class SmsSender < BaseService
   # SFR with mail2SMS
   # /!\ does not report errors at all
   #
+  # Utilisé par
+  # - le département du Pas-de-Calais (62)
+  # - le département des Hautes-Seine (92)
+  #
   def send_with_sfr_mail2sms
-    Admins::Grc92Mailer.send_sms(@api_key, @phone_number, @content).deliver_now
+    Admins::SfrMail2SmsMailer.send_sms(@api_key, @phone_number, @content).deliver_now
 
     save_receipt(result: :processed)
   end
@@ -177,6 +190,9 @@ class SmsSender < BaseService
   # Clever Technologies
   # `Specifications API_WS_ReST Multimedias.pdf`
   # /!\ does not report routing errors for wrong numbers
+  #
+  # Utilisé par
+  # - le département de la Seine-et-Marne (77)
   #
   def send_with_clever_technologies
     response = Typhoeus::Request.new(
@@ -215,6 +231,9 @@ class SmsSender < BaseService
   # Orange Contact Everyone
   # `API_Light_CEO_Manuel_Utilisateur.pdf`
   # /!\ does not report routing errors for wrong numbers
+  #
+  # Utilisé par
+  # - [Pas encore configuré en prod !] le département de la Somme (80)
   #
   def send_with_orange_contact_everyone
     response = Typhoeus::Request.new(
