@@ -1,18 +1,9 @@
 section.bg-primary.p-4
   .container.mb-4
     .d-flex.justify-content-center
-      button.btn.btn-lg.btn-outline-light type="button" data-toggle="collapse" data-target="#iframe-carto" aria-expanded="false" aria-controls="iframe-carto"
-        .fa.fa-map-location.mr-1
-        | Afficher la carte des Conseillers numériques
-
-    .d-flex.justify-content-center
-      #iframe-carto.collapse.p-4 style="width: 100%"
-        iframe src="https://www.conseiller-numerique.gouv.fr/carte" width="100%" height=600
-
-        .d-flex.justify-content-center.mt-4
-          = link_to("https://carte.conseiller-numerique.gouv.fr/", target: "_blank", class: "btn btn-outline-light btn-lg") do
-            .fa.fa-arrow-up-right-from-square.mr-1
-            | Ouvrir la carte dans un nouvel onglet
+      = link_to("https://carte.conseiller-numerique.gouv.fr/", target: "_blank", class: "btn btn-outline-light btn-lg") do
+        | Consulter la carte des Conseillers numériques
+        .fa.fa-arrow-up-right-from-square.ml-1
 
 section
   .container
