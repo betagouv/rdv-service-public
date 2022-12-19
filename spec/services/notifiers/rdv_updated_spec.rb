@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+# TODO
 
 describe Notifiers::RdvUpdated, type: :service do
   subject { described_class.perform_with(rdv, agent1) }

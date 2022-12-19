@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe Rdv::Updatable, type: :concern do
-  before { stub_netsize_ok }
+  before do
+    stub_netsize_ok
+    allow(Devise.token_generator).to receive(:generate).and_return("12345678")
+  end
 
   let(:agent) { create(:agent, rdv_notifications_level: "all") }
   let(:rdv) { create(:rdv, agents: [agent]) }
@@ -61,10 +64,36 @@ RSpec.describe Rdv::Updatable, type: :concern do
       end
 
       it "notifies agent and users when rdv is cancelled (revoked) for collective rdv" do
-        expect(Notifiers::RdvCancelled).to receive(:new).with(rdv_co, agent).and_call_original
-        rdv_co.update_and_notify(agent, status: "revoked")
-        perform_enqueued_jobs
-        expect(ActionMailer::Base.deliveries.map(&:to).flatten).to match_array([agent.email, user_co1.email, user_co2.email])
+        # Travail avec François :
+        # expect(Notifiers::RdvCancelled).to receive(:new).with(rdv_co, agent).and_call_original
+        # expect do
+        #   rdv_co.update_and_notify(agent, status: "revoked")
+        # end.to have_enqueued_mail(Agents::RdvMailer, :rdv_cancelled).with({ params: { rdv: rdv_co, agent: agent, author: agent }, args: [] })
+        #   .and have_enqueued_mail(Users::RdvMailer, :rdv_cancelled).with({ params: { rdv: rdv_co, user: user_co1, token: "12345" }, args: [] })
+        #   .and have_enqueued_mail(Users::RdvMailer, :rdv_cancelled).with({ params: { rdv: rdv_co, user: user_co2, token: "12345" }, args: [] })
+
+
+        # A adapter dans un block... QUID des options ?
+        # expect(Notifiers::RdvCancelled).to receive(:new).with(rdv_co, agent).and_call_original
+        # expect(Users::RdvSms).to receive(:rdv_cancelled).with(rdv_co, user_co1, /^[A-Z0-9]{8}$/).and_call_original
+        # expect(Users::RdvSms).to receive(:rdv_cancelled).with(rdv_co, user_co2, /^[A-Z0-9]{8}$/).and_call_original
+        # expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv_co, user: user_co2, token: /^[A-Z0-9]{8}$/ }).and_call_original.at_least(1)
+        # expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv_co, user: user_co1, token: /^[A-Z0-9]{8}$/ }).and_call_original.at_least(1)
+
+        # expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv, user: user1, token: /^[A-Z0-9]{8}$/ })
+        # expect(Users::RdvSms).to receive(:rdv_upcoming_reminder).with(rdv, user1, /^[A-Z0-9]{8}$/)
+
+
+        expect_notifiers_instance(rdv_co, agent, [user_co1, user_co2], :rdv_cancelled)
+
+        expect do
+          rdv_co.update_and_notify(agent, status: "revoked")
+        end.to enqueued_notifications_for_user?(rdv_co, user_co1, :rdv_cancelled)
+          .and enqueued_notifications_for_user?(rdv_co, user_co2, :rdv_cancelled)
+          .and enqueued_notifications_for_agent?(rdv_co, agent, :rdv_cancelled)
+
+        expect_performed_notifications_for(agent, user_co1, "rdv_cancelled")
+        expect_performed_notifications_for(agent, user_co2, "rdv_cancelled")
       end
 
       it "does not notify when status does not change" do

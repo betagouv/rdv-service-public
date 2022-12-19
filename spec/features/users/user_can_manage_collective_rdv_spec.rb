@@ -75,6 +75,7 @@ RSpec.describe "Adding a user to a collective RDV" do
   end
 
   def expect_notifications_for(user, event)
+    # TODO A améliorer et mettre dans un helper
     perform_enqueued_jobs
     expect(ActionMailer::Base.deliveries.map(&:to).flatten).to match_array([agent.email, user.email])
     if event == "rdv_created" # SMS notification for user created participation
