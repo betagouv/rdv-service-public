@@ -153,6 +153,7 @@ Rails.application.routes.draw do
         end
         resources :rdvs, except: [:new] do
           resources :participations, only: %i[update destroy]
+          resource :user_in_waiting_room, only: [:create]
           member do
             post :send_reminder_manually
           end

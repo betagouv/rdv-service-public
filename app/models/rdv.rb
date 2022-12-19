@@ -11,11 +11,12 @@ class Rdv < ApplicationRecord
   include Rdv::AddressConcern
   include Rdv::AuthoredConcern
   include Rdv::Updatable
+  include Rdv::UsingWaitingRoom
   include IcalHelpers::Ics
   include Payloads::Rdv
 
   # Attributes
-  enum status: { unknown: "unknown", waiting: "waiting", seen: "seen", excused: "excused", revoked: "revoked", noshow: "noshow" }
+  enum status: { unknown: "unknown", seen: "seen", excused: "excused", revoked: "revoked", noshow: "noshow" }
   # Commentaire pour les status explications
   # unknown : "A renseigner" ou "A venir" (si le rdv est passé ou pas)
   # seen : Présent au rdv
@@ -23,7 +24,7 @@ class Rdv < ApplicationRecord
   # excused : Annulé à l'initiative de l'usager
   # revoked : Annulé à l'initiative du service
   MIN_DELAY_FOR_CANCEL = 4.hours
-  NOT_CANCELLED_STATUSES = %w[unknown waiting seen noshow].freeze
+  NOT_CANCELLED_STATUSES = %w[unknown seen noshow].freeze
   CANCELLED_STATUSES = %w[excused revoked].freeze
   enum created_by: { agent: 0, user: 1, file_attente: 2, prescripteur: 3 }, _prefix: :created_by
 
@@ -83,9 +84,9 @@ class Rdv < ApplicationRecord
   scope :status, lambda { |status|
     case status.to_s
     when "unknown_past"
-      past.where(status: %w[unknown waiting])
+      past.where(status: "unknown")
     when "unknown_future"
-      future.where(status: %w[unknown waiting])
+      future.where(status: "unknown")
     else
       where(status: status)
     end
