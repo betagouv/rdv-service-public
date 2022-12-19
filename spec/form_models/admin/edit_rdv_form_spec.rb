@@ -20,33 +20,6 @@ describe Admin::EditRdvForm, type: :form do
       expect(rdv.reload.lieu).to eq(new_lieu)
     end
 
-    it "updates the requested rdv status" do
-      now = Time.zone.parse("2020-12-12 13h50")
-      travel_to(now)
-      rdv = create(:rdv, agents: [agent], organisation: organisation, lieu: create(:lieu, organisation: organisation))
-
-      edit_rdv_form = described_class.new(rdv, agent_context)
-      edit_rdv_form.update(status: "waiting", ignore_benign_errors: "1")
-
-      expect(rdv.reload.status).to eq("waiting")
-    end
-
-    it "set cancelled_at to nil when change status from cancel to other" do
-      now = Time.zone.parse("2020-08-03 9h00")
-
-      travel_to(now - 2.days)
-      rdv = create(:rdv, cancelled_at: now - 1.day, status: "excused", starts_at: now - 2.days, agents: [agent], organisation: organisation)
-
-      travel_to(now)
-
-      edit_rdv_form = described_class.new(rdv, agent_context)
-      edit_rdv_form.update(status: "waiting", ignore_benign_errors: "1")
-
-      rdv.reload
-      expect(rdv.cancelled_at).to eq(nil)
-      expect(rdv.status).to eq("waiting")
-    end
-
     it "when status is excused, cancelled_at should not be nil" do
       now = Time.zone.parse("2020-08-03 9h00")
       travel_to(now - 3.days)

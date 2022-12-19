@@ -237,8 +237,6 @@ describe Rdv, type: :model do
 
   describe "#temporal_status" do
     it "return status when not unknown" do
-      rdv = build(:rdv, status: "waiting")
-      expect(rdv.temporal_status).to eq("waiting")
       rdv = build(:rdv, status: "seen")
       expect(rdv.temporal_status).to eq("seen")
       rdv = build(:rdv, status: "excused")
