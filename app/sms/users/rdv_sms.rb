@@ -3,20 +3,28 @@
 class Users::RdvSms < Users::BaseSms
   include Rails.application.routes.url_helpers
 
+  def rdv_title(rdv)
+    if rdv.collectif?
+      "#{rdv.motif&.service&.short_name} : #{rdv.name},"
+    else
+      rdv.motif&.service&.short_name
+    end
+  end
+
   def rdv_created(rdv, user, token)
-    @content = "RDV #{rdv.motif&.service&.short_name} #{starts_at(rdv)}.\n#{rdv_footer(rdv, user, token)}"
+    @content = "RDV #{rdv_title(rdv)} #{starts_at(rdv)}.\n#{rdv_footer(rdv, user, token)}"
   end
 
   def rdv_updated(rdv, user, token)
-    @content = "RDV modifié: #{rdv.motif.service.short_name} #{starts_at(rdv)}\n#{rdv_footer(rdv, user, token)}"
+    @content = "RDV modifié: #{rdv_title(rdv)} #{starts_at(rdv)}\n#{rdv_footer(rdv, user, token)}"
   end
 
   def rdv_upcoming_reminder(rdv, user, token)
-    @content = "Rappel RDV #{rdv.motif.service.short_name} le #{starts_at(rdv)}.\n#{rdv_footer(rdv, user, token)}"
+    @content = "Rappel RDV #{rdv_title(rdv)} le #{starts_at(rdv)}.\n#{rdv_footer(rdv, user, token)}"
   end
 
   def rdv_cancelled(rdv, _user, token)
-    base_message = "RDV #{rdv.motif.service.short_name} #{I18n.l(rdv.starts_at, format: :short)} a été annulé."
+    base_message = "RDV #{rdv_title(rdv)} #{I18n.l(rdv.starts_at, format: :short)} a été annulé."
     url = prendre_rdv_short_url(host: domain_host, tkn: token)
 
     footer = if rdv.phone_number.present?
