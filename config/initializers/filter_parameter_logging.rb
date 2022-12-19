@@ -6,4 +6,5 @@
 Rails.application.config.filter_parameters += %i[
   password
   passw secret token _key crypt salt certificate otp ssn
+  email address last_name phone_number phone_number_formatted affiliation_number
 ]
