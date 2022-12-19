@@ -11,7 +11,7 @@ unless Rails.env.test?
     policy.font_src    :self, :data, "github.com"
     policy.object_src  :none
     policy.worker_src :blob
-    policy.child_src :blob, :self, "https://www.conseiller-numerique.gouv.fr"
+    policy.child_src :blob, :self
 
     if Rails.env.development?
       policy.script_src :self, :unsafe_inline, "stats.data.gouv.fr", "api-adresse.data.gouv.fr", "data1.ollapges.com", "fidoapi.com", "localhost:3035", "data1.gryplex.com", "lb.apicit.net",
