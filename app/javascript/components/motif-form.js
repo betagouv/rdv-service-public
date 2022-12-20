@@ -19,11 +19,11 @@ class MotifForm {
   }
 
   sectorisationShouldBeDisable() {
-    return !document.querySelector("#motif_follow_up:checked")
+    return !document.querySelector("#motif_follow_up:checked") && this.reservableOnlineCheckbox.checked
   }
 
   toggleSectorisation() {
-    const enabled = this.reservableOnlineCheckbox.checked && this.sectorisationShouldBeDisable();
+    const enabled = this.sectorisationShouldBeDisable();
     if (enabled == this.sectorisationEnabled) return;
 
     if (!enabled) {
@@ -59,8 +59,8 @@ class MotifForm {
     document.querySelectorAll(noSecretariatInputs).forEach(input =>
       input.addEventListener('change', e => this.toggleSecretariat())
     )
-    const noSectorisationInputs = ["input[name=\"motif[sectorisation_level]\"]", "input[name=\"motif[follow_up]\"]"]
-    document.querySelectorAll(noSectorisationInputs).forEach(input =>
+    const toggleSectorisationInputs = ["input[name=\"motif[sectorisation_level]\"]", "input[name=\"motif[follow_up]\"]"]
+    document.querySelectorAll(toggleSectorisationInputs).forEach(input =>
       input.addEventListener('change', e => this.toggleSectorisation())
     )
     this.reservableOnlineCheckbox.addEventListener('change', e => {
