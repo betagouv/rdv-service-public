@@ -73,27 +73,10 @@ RSpec.describe Rdv::Updatable, type: :concern do
         #   .and have_enqueued_mail(Users::RdvMailer, :rdv_cancelled).with({ params: { rdv: rdv_co, user: user_co2, token: "12345" }, args: [] })
 
 
-        # A adapter dans un block... QUID des options ?
-        # expect(Notifiers::RdvCancelled).to receive(:new).with(rdv_co, agent).and_call_original
-        # expect(Users::RdvSms).to receive(:rdv_cancelled).with(rdv_co, user_co1, /^[A-Z0-9]{8}$/).and_call_original
-        # expect(Users::RdvSms).to receive(:rdv_cancelled).with(rdv_co, user_co2, /^[A-Z0-9]{8}$/).and_call_original
-        # expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv_co, user: user_co2, token: /^[A-Z0-9]{8}$/ }).and_call_original.at_least(1)
-        # expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv_co, user: user_co1, token: /^[A-Z0-9]{8}$/ }).and_call_original.at_least(1)
-
-        # expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv, user: user1, token: /^[A-Z0-9]{8}$/ })
-        # expect(Users::RdvSms).to receive(:rdv_upcoming_reminder).with(rdv, user1, /^[A-Z0-9]{8}$/)
-
-
-        expect_notifiers_instance(rdv_co, agent, [user_co1, user_co2], :rdv_cancelled)
-
-        expect do
-          rdv_co.update_and_notify(agent, status: "revoked")
-        end.to enqueued_notifications_for_user?(rdv_co, user_co1, :rdv_cancelled)
-          .and enqueued_notifications_for_user?(rdv_co, user_co2, :rdv_cancelled)
-          .and enqueued_notifications_for_agent?(rdv_co, agent, :rdv_cancelled)
-
-        expect_performed_notifications_for(agent, user_co1, "rdv_cancelled")
-        expect_performed_notifications_for(agent, user_co2, "rdv_cancelled")
+        rdv_co.update_and_notify(agent, status: "revoked")
+        expect_performed_notifications_for(rdv_co, user_co1, "rdv_cancelled")
+        expect_performed_notifications_for(rdv_co, user_co2, "rdv_cancelled")
+        expect_performed_notifications_for(rdv_co, agent, "rdv_cancelled")
       end
 
       it "does not notify when status does not change" do
@@ -106,10 +89,9 @@ RSpec.describe Rdv::Updatable, type: :concern do
       end
 
       it "notifies when date changes" do
-        expect(Notifiers::RdvUpdated).to receive(:new).with(rdv, agent).and_call_original
         rdv.update_and_notify(agent, starts_at: 2.days.from_now)
-        perform_enqueued_jobs
-        expect(ActionMailer::Base.deliveries.map(&:to).flatten).to match_array([agent.email, user.email])
+        expect_performed_notifications_for(rdv, user, "rdv_updated")
+        expect_performed_notifications_for(rdv, agent, "rdv_updated")
       end
 
       it "notifies when date changes for collective rdv" do
