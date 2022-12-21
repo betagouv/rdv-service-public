@@ -51,3 +51,6 @@
       .col-6= f.input :street_ban_id, input_html: { readonly: true }, required: true
 
   = f.submit class: "btn btn-primary"
+  - if zone.new_record?
+    div ou
+    div = f.submit class: "btn btn-light", value: "Enregistrer puis créer une autre #{zone.level_street? ? 'rue' : 'commune'}"
