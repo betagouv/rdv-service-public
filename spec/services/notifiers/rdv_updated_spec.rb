@@ -22,12 +22,9 @@ describe Notifiers::RdvUpdated, type: :service do
     it "triggers sending mail to users but not to agents" do
       subject
 
-      # SMS are sent to user1 and user2
-      expect_sms_enqueued(phone_number: user1.phone_number_formatted)
-      expect_sms_enqueued(phone_number: user2.phone_number_formatted)
-
-      perform_enqueued_jobs # send emails so we can observe them
-      expect(ActionMailer::Base.deliveries.map(&:to).flatten).to match_array([user1.email, user2.email])
+      expect_performed_notifications_for(rdv, user1, "rdv_updated")
+      expect_performed_notifications_for(rdv, user2, "rdv_updated")
+      dont_expect_performed_notifications_for(rdv, agent1, "rdv_updated")
     end
 
     it "rdv_users_tokens_by_user_id attribute outputs the tokens" do
@@ -43,15 +40,20 @@ describe Notifiers::RdvUpdated, type: :service do
 
     it "triggers sending mails to both user and agents (except the one who initiated the change)" do
       subject
-      perform_enqueued_jobs # send emails so we can observe them
-      expect(ActionMailer::Base.deliveries.map(&:to).flatten).to match_array([agent2.email, user1.email, user2.email])
+
+      expect_performed_notifications_for(rdv, user1, "rdv_updated")
+      expect_performed_notifications_for(rdv, user2, "rdv_updated")
+      expect_performed_notifications_for(rdv, agent2, "rdv_updated")
+      dont_expect_performed_notifications_for(rdv, agent1, "rdv_updated")
     end
 
     it "doesnt send email if user participation is excused" do
       rdv.rdvs_users.where(user: user1).update(status: "excused")
       subject
-      perform_enqueued_jobs
-      expect(ActionMailer::Base.deliveries.map(&:to).flatten).to match_array([agent2.email, user2.email])
+
+      expect_performed_notifications_for(rdv, user2, "rdv_updated")
+      expect_performed_notifications_for(rdv, agent2, "rdv_updated")
+      dont_expect_performed_notifications_for(rdv, user1, "rdv_updated")
     end
   end
 end
