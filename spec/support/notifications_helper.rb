@@ -51,8 +51,19 @@ module NotificationsHelper
     end
   end
 
+  def dont_expect_any_performed_notifications(user = nil)
+    perform_enqueued_jobs
+
+    expect(ActionMailer::Base.deliveries.size).to eq(0)
+
+    if user
+      expect(Receipt.where(user_id: user.id, channel: "sms", result: "delivered").count).to eq 0
+    end
+  end
+
   def email_title_for_agent(rdv, person, event)
     case event
+      # virer le relative_date
     when "rdv_created"
       I18n.t("agents.rdv_mailer.rdv_created.title", domain_name: person.domain.name, date: relative_date(rdv.starts_at))
     when "rdv_cancelled"
