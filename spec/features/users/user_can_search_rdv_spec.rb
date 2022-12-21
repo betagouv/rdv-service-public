@@ -239,6 +239,32 @@ describe "User can search for rdvs" do
     end
   end
 
+  describe "when two motifs have the same name and location type on different services" do
+    let!(:territory) { create(:territory, departement_number: "92") }
+    let!(:organisation) { create(:organisation, territory: territory) }
+
+    let!(:service) { create(:service) }
+    let!(:other_service) { create(:service) }
+    let!(:motif) do
+      create(
+        :motif, :by_phone, reservable_online: true, name: "Consultation", service: service, organisation: organisation, plage_ouvertures: [create(:plage_ouverture)]
+      )
+    end
+    let!(:other_motif) do
+      create(
+        :motif, :by_phone, reservable_online: true, name: "Consultation", service: other_service, organisation: organisation, plage_ouvertures: [create(:plage_ouverture)]
+      )
+    end
+
+    it "shows the service selection" do
+      visit root_path(departement: "92")
+
+      expect(page).to have_content("Sélectionnez le service avec qui vous voulez prendre un RDV")
+      expect(page).to have_content(service.name)
+      expect(page).to have_content(other_service.name)
+    end
+  end
+
   private
 
   def execute_search
