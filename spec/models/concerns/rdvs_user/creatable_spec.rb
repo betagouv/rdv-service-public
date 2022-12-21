@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-# TODO
 
 RSpec.describe RdvsUser::Creatable, type: :concern do
   before do
@@ -34,8 +33,8 @@ RSpec.describe RdvsUser::Creatable, type: :concern do
 
       it "for self (user)" do
         rdv_user1.create_and_notify(user)
-        perform_enqueued_jobs
-        expect(ActionMailer::Base.deliveries.map(&:to).flatten).to match_array([agent.email, user.email])
+        expect_performed_notifications_for(rdv, user, "rdv_created")
+        expect_performed_notifications_for(rdv, agent, "rdv_created")
         expect(rdv.reload.rdvs_users).to eq([rdv_user1])
         expect(rdv_user1.rdv_user_token).to eq("12345")
       end
@@ -43,8 +42,8 @@ RSpec.describe RdvsUser::Creatable, type: :concern do
       it "for a relative with existing participations" do
         rdv_user1.save!
         rdv_user_relative.create_and_notify(user)
-        perform_enqueued_jobs
-        expect(ActionMailer::Base.deliveries.map(&:to).flatten).to match_array([agent.email, user.email])
+        expect_performed_notifications_for(rdv, user, "rdv_created")
+        expect_performed_notifications_for(rdv, agent, "rdv_created")
         expect(rdv.reload.rdvs_users).to eq([rdv_user_relative])
         # no token because relatives
         expect(rdv_user_relative.rdv_user_token).to eq(nil)
@@ -59,8 +58,8 @@ RSpec.describe RdvsUser::Creatable, type: :concern do
 
       it "for self (user)" do
         rdv_user_with_lifecycle_disabled.create_and_notify(user3)
-        perform_enqueued_jobs
-        expect(ActionMailer::Base.deliveries.map(&:to).flatten).to match_array([agent.email])
+        dont_expect_performed_notifications_for(rdv, user, "rdv_created")
+        expect_performed_notifications_for(rdv, agent, "rdv_created")
         expect(rdv.reload.rdvs_users).to eq([rdv_user_with_lifecycle_disabled])
         # No token because no notifs
         expect(rdv_user_with_lifecycle_disabled.rdv_user_token).to eq(nil)
@@ -68,8 +67,8 @@ RSpec.describe RdvsUser::Creatable, type: :concern do
 
       it "for a relative" do
         rdv_user_relative.create_and_notify(user)
-        perform_enqueued_jobs
-        expect(ActionMailer::Base.deliveries.map(&:to).flatten).to match_array([agent.email])
+        dont_expect_performed_notifications_for(rdv, user, "rdv_created")
+        expect_performed_notifications_for(rdv, agent, "rdv_created")
         expect(rdv.reload.rdvs_users).to eq([rdv_user_relative])
       end
     end

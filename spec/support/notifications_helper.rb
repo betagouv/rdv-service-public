@@ -19,6 +19,7 @@ module NotificationsHelper
   def expect_performed_notifications_for(rdv, person, event)
     perform_enqueued_jobs
     klass = person.class
+    other_events = EVENTS.reject { |i| i == event }
 
     expect(ActionMailer::Base.deliveries.map(&:to).flatten).to include(person.email)
 
@@ -27,26 +28,23 @@ module NotificationsHelper
 
       expect(email_sent_to(person.email).subject).to include(email_title_for_user(rdv, event))
       expect(Receipt.where(user_id: person.id, channel: "sms", event: event).count).to eq 1
+      other_events.each { dont_expect_performed_notifications_for(rdv, person, _1) }
     elsif klass == Agent
       expect(email_sent_to(person.email).subject).to include(email_title_for_agent(rdv, person, event))
+      other_events.reject { |i| i == "rdv_upcoming_reminder" }.each { dont_expect_performed_notifications_for(rdv, person, _1) }
     end
-
-    expect_no_other_performed_notifications_for(rdv, person, event)
   end
 
-  def expect_no_other_performed_notifications_for(rdv, person, event)
-    perform_enqueued_jobs
+  def dont_expect_performed_notifications_for(rdv, person, event)
     klass = person.class
-    other_events = EVENTS.reject { |i| i == event }
-
     if klass == User
-      other_events.each do |other_event|
-        expect(Receipt.where(user_id: person.id, channel: "sms", event: other_event).count).not_to eq 1
-        expect(email_sent_to(person.email).subject).not_to include(email_title_for_user(rdv, other_event))
+      expect(Receipt.where(user_id: person.id, channel: "sms", event: event).count).not_to eq 1
+      if ActionMailer::Base.deliveries.map(&:to).flatten.include?(person.email)
+        expect(email_sent_to(person.email).subject).not_to include(email_title_for_user(rdv, event))
       end
     elsif klass == Agent
-      other_events.reject { |i| i == "rdv_upcoming_reminder" }.each do |other_event|
-        expect(email_sent_to(person.email).subject).not_to include(email_title_for_agent(rdv, person, other_event))
+      if ActionMailer::Base.deliveries.map(&:to).flatten.include?(person.email)
+        expect(email_sent_to(person.email).subject).not_to include(email_title_for_agent(rdv, person, event))
       end
     end
   end
