@@ -4,10 +4,10 @@ class Users::RdvSms < Users::BaseSms
   include Rails.application.routes.url_helpers
 
   def rdv_title(rdv)
-    if rdv.collectif?
-      "#{rdv.motif&.service&.short_name} : #{rdv.name},"
+    if rdv.collectif? && rdv.name.present?
+      "#{rdv.motif.service.short_name} : #{rdv.name},"
     else
-      rdv.motif&.service&.short_name
+      rdv.motif.service.short_name
     end
   end
 
