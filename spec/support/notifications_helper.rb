@@ -16,7 +16,7 @@ module NotificationsHelper
     end
   end
 
-  def expect_performed_notifications_for(rdv, person, event)
+  def expect_performed_notifications_for(rdv, person, event, notif_type = nil)
     perform_enqueued_jobs
     klass = person.class
     other_events = EVENTS.reject { |i| i == event }
@@ -24,10 +24,8 @@ module NotificationsHelper
     expect(ActionMailer::Base.deliveries.map(&:to).flatten).to include(person.email)
 
     if klass == User
-      expect(Receipt.where(user_id: person.id, channel: "sms", result: "delivered").count).to eq 1
-
+      expect_performed_sms_for(person, event) unless notif_type == "mail"
       expect(email_sent_to(person.email).subject).to include(email_title_for_user(rdv, event))
-      expect(Receipt.where(user_id: person.id, channel: "sms", event: event).count).to eq 1
       other_events.each { dont_expect_performed_notifications_for(rdv, person, _1) }
     elsif klass == Agent
       expect(email_sent_to(person.email).subject).to include(email_title_for_agent(rdv, person, event))
@@ -35,10 +33,15 @@ module NotificationsHelper
     end
   end
 
+  def expect_performed_sms_for(person, event)
+    expect(Receipt.where(user_id: person.id, channel: "sms", result: "delivered").count).to eq 1
+    expect(Receipt.where(user_id: person.id, channel: "sms", event: event).count).to eq 1
+  end
+
   def dont_expect_performed_notifications_for(rdv, person, event)
     klass = person.class
     if klass == User
-      expect(Receipt.where(user_id: person.id, channel: "sms", event: event).count).not_to eq 1
+      expect(Receipt.where(user_id: person.id, channel: "sms", event: event).count).to eq 0
       if ActionMailer::Base.deliveries.map(&:to).flatten.include?(person.email)
         expect(email_sent_to(person.email).subject).not_to include(email_title_for_user(rdv, event))
       end
