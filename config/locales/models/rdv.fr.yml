@@ -37,6 +37,8 @@ fr:
         status: Statut
         context: Contexte
         name: Intitulé
+        mail_to_agent: Envoyer un mail de notification à l'agent
+        change_rdv_color: Modifier la couleur du rdv dans l'agenda
       rdv/created_by:
         agent: "Créé par un agent"
         user: "RDV Pris sur internet"

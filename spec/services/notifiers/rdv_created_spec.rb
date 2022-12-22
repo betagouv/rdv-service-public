@@ -3,28 +3,19 @@
 describe Notifiers::RdvCreated, type: :service do
   subject { described_class.perform_with(rdv, user1) }
 
-  let(:user1) { build(:user) }
-  let(:user2) { build(:user) }
-  let(:agent1) { build(:agent) }
-  let(:agent2) { build(:agent) }
-  let(:rdv) { create(:rdv, starts_at: starts_at, motif: motif, agents: [agent1, agent2]) }
-  let(:rdv_user1) { create(:rdvs_user, user: user1, rdv: rdv) }
-  let(:rdv_user2) { create(:rdvs_user, user: user2, rdv: rdv) }
-  let(:rdvs_users_relation) { RdvsUser.where(id: [rdv_user1.id, rdv_user2.id]) }
-  let(:rdvs_users_array) { [rdv_user1, rdv_user2] }
+  let(:user1) { create(:user) }
+  let(:user2) { create(:user) }
+  let(:agent1) { create(:agent) }
+  let(:agent2) { create(:agent) }
+  let(:rdv) { create(:rdv, starts_at: starts_at, motif: motif, agents: [agent1, agent2], users: [user1, user2]) }
   let(:token1) { "123456" }
   let(:token2) { "56789" }
 
   before do
     stub_netsize_ok
-
     allow(Users::RdvMailer).to receive(:with).and_call_original
     allow(Agents::RdvMailer).to receive(:with).and_call_original
-    allow(rdv).to receive(:rdvs_users).and_return(rdvs_users_relation)
-    allow(rdvs_users_relation).to receive(:where).with(send_lifecycle_notifications: true)
-      .and_return(rdvs_users_array.select(&:send_lifecycle_notifications))
-    allow(rdv_user1).to receive(:new_raw_invitation_token).and_return(token1)
-    allow(rdv_user2).to receive(:new_raw_invitation_token).and_return(token2)
+    allow(Devise.token_generator).to receive(:generate).and_return(token1, token2)
   end
 
   context "starts in more than 2 days" do

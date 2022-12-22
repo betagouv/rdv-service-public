@@ -31,7 +31,6 @@ describe Configuration::TerritoryPolicy, type: :policy do
                       :show?,
                       :update?,
                       :edit?,
-                      :display_sms_configuration?,
                       :allow_to_manage_access_rights?,
                       :allow_to_invite_agents?,
                       :allow_to_manage_teams?,
@@ -41,7 +40,7 @@ describe Configuration::TerritoryPolicy, type: :policy do
     end
 
     context "admin access to this territory" do
-      let(:territory) { create(:territory, has_own_sms_provider: true) }
+      let(:territory) { create(:territory) }
       let(:agent) { create(:agent, role_in_territories: [territory]) }
       let!(:access_rights) { create(:agent_territorial_access_right, agent: agent, territory: territory) }
 
@@ -49,7 +48,6 @@ describe Configuration::TerritoryPolicy, type: :policy do
                       :show?,
                       :update?,
                       :edit?,
-                      :display_sms_configuration?,
                       :display_user_fields_configuration?,
                       :display_rdv_fields_configuration?,
                       :display_motif_fields_configuration?
@@ -71,7 +69,6 @@ describe Configuration::TerritoryPolicy, type: :policy do
       it_behaves_like "not permit actions",
                       :update?,
                       :edit?,
-                      :display_sms_configuration?,
                       :allow_to_manage_access_rights?,
                       :allow_to_invite_agents?,
                       :display_user_fields_configuration?,
@@ -90,7 +87,6 @@ describe Configuration::TerritoryPolicy, type: :policy do
       it_behaves_like "not permit actions",
                       :update?,
                       :edit?,
-                      :display_sms_configuration?,
                       :allow_to_manage_teams?,
                       :allow_to_invite_agents?,
                       :display_user_fields_configuration?,
@@ -109,7 +105,6 @@ describe Configuration::TerritoryPolicy, type: :policy do
       it_behaves_like "not permit actions",
                       :update?,
                       :edit?,
-                      :display_sms_configuration?,
                       :allow_to_manage_access_rights?,
                       :allow_to_manage_teams?,
                       :display_user_fields_configuration?,
@@ -128,7 +123,6 @@ describe Configuration::TerritoryPolicy, type: :policy do
       it_behaves_like "not permit actions",
                       :update?,
                       :edit?,
-                      :display_sms_configuration?,
                       :allow_to_invite_agents?,
                       :allow_to_manage_access_rights?,
                       :allow_to_manage_teams?,
