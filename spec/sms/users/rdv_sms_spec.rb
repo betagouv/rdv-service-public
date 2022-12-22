@@ -46,7 +46,6 @@ describe Users::RdvSms, type: :service do
       end
     end
 
-
     context "with a follow_up rdv" do
       it "contains referent name" do
         agent = create(:agent, first_name: "James", last_name: "Bond")
