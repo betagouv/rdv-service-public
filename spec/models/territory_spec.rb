@@ -104,4 +104,21 @@ describe Territory, type: :model do
       expect(territory.to_s).to eq("Seine Saint-Denis")
     end
   end
+
+  describe "#waiting_room_enabled?" do
+    it "returns false when no notification selected" do
+      territory = build(:territory, enable_waiting_room_mail_field: false, enable_waiting_room_color_field: false)
+      expect(territory.waiting_room_enabled?).to eq(false)
+    end
+
+    it "returns true when mail notification selected" do
+      territory = build(:territory, enable_waiting_room_mail_field: true, enable_waiting_room_color_field: false)
+      expect(territory.waiting_room_enabled?).to eq(true)
+    end
+
+    it "returns true when agenda rdv color notification selected" do
+      territory = build(:territory, enable_waiting_room_mail_field: false, enable_waiting_room_color_field: true)
+      expect(territory.waiting_room_enabled?).to eq(true)
+    end
+  end
 end

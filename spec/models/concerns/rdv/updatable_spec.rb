@@ -34,7 +34,7 @@ RSpec.describe Rdv::Updatable, type: :concern do
       end
     end
 
-    %w[unknown waiting seen].each do |status|
+    %w[unknown seen].each do |status|
       context "when the status changed and is now #{status}" do
         before { rdv.update!(cancelled_at: 1.day.ago, status: "noshow") }
 
@@ -71,8 +71,8 @@ RSpec.describe Rdv::Updatable, type: :concern do
 
       it "does not notify when status does not change" do
         rdv.reload
-        rdv.update!(status: "waiting")
-        rdv.update_and_notify(agent, status: "waiting")
+        rdv.update!(status: "unknown")
+        rdv.update_and_notify(agent, status: "unknown")
         dont_expect_any_performed_notifications
       end
 

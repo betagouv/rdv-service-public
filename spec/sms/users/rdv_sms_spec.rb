@@ -17,7 +17,7 @@ describe Users::RdvSms, type: :service do
         expect(subject).to include("RDV PMI vendredi 10/12 à 13h10")
         expect(subject).to include("MDS Centre (10 rue d'ici)")
         expect(subject).to include("Infos et annulation")
-        expect(subject).to include("http://www.rdv-solidarites-test.localhost/r/123?tkn=12345")
+        expect(subject).to include("http://www.rdv-solidarites-test.localhost/r/123/12345")
       end
     end
 
@@ -51,7 +51,7 @@ describe Users::RdvSms, type: :service do
       expect(subject).to include("RDV modifié: PMI vendredi 10/12 à 13h10")
       expect(subject).to include("MDS Centre (10 rue d'ici)")
       expect(subject).to include("Infos et annulation")
-      expect(subject).to include("http://www.rdv-solidarites-test.localhost/r/124?tkn=2345")
+      expect(subject).to include("http://www.rdv-solidarites-test.localhost/r/124/2345")
     end
   end
 
@@ -127,7 +127,7 @@ describe Users::RdvSms, type: :service do
       expect(subject).to include("Rappel RDV PMI le vendredi 10/12 à 13h10")
       expect(subject).to include("MDS Centre (10 rue d'ici)")
       expect(subject).to include("Infos et annulation")
-      expect(subject).to include("http://www.rdv-solidarites-test.localhost/r/140?tkn=7777")
+      expect(subject).to include("http://www.rdv-solidarites-test.localhost/r/140/7777")
     end
   end
 

@@ -50,7 +50,7 @@ module TokenInvitable
   end
 
   def invited_user
-    user_by_token || rdv_user_by_token&.user
+    user_by_token || rdv_user_by_token&.user&.user_to_notify
   end
 
   def rdv_by_token

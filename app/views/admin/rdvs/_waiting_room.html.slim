@@ -1,0 +1,7 @@
+- if rdv.status == "unknown" && current_organisation.territory.waiting_room_enabled? && rdv.starts_at.today?
+
+  div id="waiting_room_button-#{rdv.id}"
+    - if rdv.user_in_waiting_room?
+      | Usager en salle d'attente
+    - else
+      = link_to "Salle d'attente", admin_organisation_rdv_user_in_waiting_room_path(rdv.organisation, rdv), method: :post, class: "btn btn-primary", remote: true
