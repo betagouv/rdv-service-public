@@ -68,8 +68,8 @@
               label: "Statut",
               wrapper: "horizontal_form",
               input_html: { class: "select2-input" }
-      = date_input(f, :start, label = "Période - Début", wrapper: "horizontal_form")
-      = date_input(f, :end, label = "Période - Fin", wrapper: "horizontal_form")
+      = f.input(:start, label: "Période - Début", as: :date, html5: true, wrapper: "horizontal_form", input_html: {min: 2.years.ago, max: 2.years.from_now})
+      = f.input(:end, label: "Période - Fin", as: :date, html5: true, wrapper: "horizontal_form", input_hml: {min: 2.years.ago, max: 2.years.from_now})
   .d-flex.justify-content-end
     = link_to "Réinitialiser", admin_organisation_rdvs_path(current_organisation), class: "btn btn-link"
     input.btn.btn-primary.d-print-none type="submit" value="Rafraîchir la liste"
