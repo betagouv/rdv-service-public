@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddCancelledAtToRdvsUser < ActiveRecord::Migration[7.0]
   def change
     add_column :rdvs_users, :cancelled_at, :datetime, null: true
