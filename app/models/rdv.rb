@@ -343,7 +343,7 @@ class Rdv < ApplicationRecord
       symbol_method = "#{status}?".to_sym
       next unless rdvs_users.any?(&symbol_method)
 
-      self.cancelled_at = status.in?(%w[revoked noshow]) ? Time.zone.now : nil
+      self.cancelled_at = status.in?(%w[excused revoked noshow]) ? Time.zone.now : nil
       update!(status: status)
       break
     end

@@ -27,6 +27,7 @@ class RdvsUser < ApplicationRecord
   after_initialize :set_default_notifications_flags
   before_validation :set_default_notifications_flags
   before_create :set_status_from_rdv
+  before_save :set_cancelled_at, if: :will_save_change_to_status?
   after_save :update_counter_cache
   after_destroy :update_counter_cache
 
@@ -54,6 +55,10 @@ class RdvsUser < ApplicationRecord
     return if rdv&.status.nil? || rdv.collectif?
 
     self.status = rdv.status
+  end
+
+  def set_cancelled_at
+    self.cancelled_at = status.in?(%w[excused revoked noshow]) ? Time.zone.now : nil
   end
 
   def temporal_status
