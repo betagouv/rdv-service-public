@@ -50,7 +50,7 @@ module RdvsHelper
   end
 
   def rdv_tag(rdv)
-    if rdv.cancelled_at || current_user&.participation_for(rdv)&.cancelled?
+    if rdv.cancelled_at || current_user&.participation_for(rdv)&.cancelled_at
       tag.span("Annulé", class: "badge badge-warning")
     elsif rdv.starts_at.future?
       tag.span("À venir", class: "badge bg-info")

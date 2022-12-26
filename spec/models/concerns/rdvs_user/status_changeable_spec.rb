@@ -14,12 +14,13 @@ RSpec.describe RdvsUser::StatusChangeable, type: :concern do
 
     describe "when rdv_user is revoked or excused" do
       RdvsUser::CANCELLED_STATUSES.each do |status|
-        it "send notifications and change rdv_user object status to #{status}" do
+        it "send notifications and change rdv_user object status to #{status} and filled cancelled_at" do
           expect(Notifiers::RdvCancelled).to receive(:new).with(rdv, agent, [rdv_user1.user]).and_call_original
           rdv_user1.change_status_and_notify(agent, status)
           perform_enqueued_jobs
           expect(ActionMailer::Base.deliveries.map(&:to).flatten).to match_array([rdv_user1.user.email])
           expect(rdv_user1.reload.status).to eq(status)
+          expect(rdv_user1.reload.cancelled_at).not_to eq(nil)
         end
       end
 
@@ -40,15 +41,17 @@ RSpec.describe RdvsUser::StatusChangeable, type: :concern do
         expect(Notifiers::RdvCreated).not_to receive(:new).with(rdv, agent, [rdv_user1.user])
         rdv_user1.change_status_and_notify(agent, "seen")
         expect(rdv_user1.reload.status).to eq("seen")
+        expect(rdv_user1.reload.cancelled_at).to eq(nil)
       end
     end
 
     describe "when rdv_user is noshow (no notifications)" do
-      it "doesnt send notifications and change rdv_user object status" do
+      it "doesnt send notifications and change rdv_user object status and filled cancelled_at" do
         expect(Notifiers::RdvCancelled).not_to receive(:new).with(rdv, agent, [rdv_user1.user])
         expect(Notifiers::RdvCreated).not_to receive(:new).with(rdv, agent, [rdv_user1.user])
         rdv_user1.change_status_and_notify(agent, "noshow")
         expect(rdv_user1.reload.status).to eq("noshow")
+        expect(rdv_user1.reload.cancelled_at).not_to eq(nil)
       end
     end
 
@@ -60,6 +63,7 @@ RSpec.describe RdvsUser::StatusChangeable, type: :concern do
         perform_enqueued_jobs
         expect(ActionMailer::Base.deliveries.map(&:to).flatten).to match_array([rdv_user1.user.email])
         expect(rdv_user1.reload.status).to eq("unknown")
+        expect(rdv_user1.reload.cancelled_at).to eq(nil)
       end
 
       it "do not send notification creation when lifecycle off and change rdv_user object status" do

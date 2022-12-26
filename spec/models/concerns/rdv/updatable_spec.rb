@@ -25,8 +25,10 @@ RSpec.describe Rdv::Updatable, type: :concern do
 
     %w[excused revoked noshow].each do |status|
       context "when the status changed and is now #{status}" do
-        it "updates the cancelled_at attribute" do
-          expect { rdv.update_and_notify(agent, status: status) }.to change { rdv.reload.cancelled_at }.from(nil)
+        it "updates the cancelled_at attribute (and cancelled_at on rdvs_users)" do
+          rdv.update_and_notify(agent, status: status)
+          expect(rdv.reload.cancelled_at).not_to eq(nil)
+          expect(rdv.rdvs_users.map(&:cancelled_at)).not_to include(nil)
         end
       end
     end
@@ -36,7 +38,9 @@ RSpec.describe Rdv::Updatable, type: :concern do
         before { rdv.update!(cancelled_at: 1.day.ago, status: "noshow") }
 
         it "sets the cancelled_at attribute to nil" do
-          expect { rdv.update_and_notify(agent, status: status) }.to change { rdv.reload.cancelled_at }.to(nil)
+          rdv.update_and_notify(agent, status: status)
+          expect(rdv.reload.cancelled_at).to eq(nil)
+          expect(rdv.rdvs_users.map(&:cancelled_at)).to all(eq nil)
         end
       end
     end
@@ -60,9 +64,12 @@ RSpec.describe Rdv::Updatable, type: :concern do
         expect(ActionMailer::Base.deliveries.map(&:to).flatten).to match_array([agent.email, user.email])
       end
 
-      it "notifies agent and users when rdv is cancelled (revoked) for collective rdv" do
+      it "notifies agent and users when rdv is cancelled (revoked) for collective rdv and update cancelled_at fields" do
         expect(Notifiers::RdvCancelled).to receive(:new).with(rdv_co, agent).and_call_original
+        rdv_co.reload
         rdv_co.update_and_notify(agent, status: "revoked")
+        expect(rdv_co.reload.cancelled_at).not_to eq(nil)
+        expect(rdv_co.rdvs_users.map(&:cancelled_at)).not_to include(nil)
         perform_enqueued_jobs
         expect(ActionMailer::Base.deliveries.map(&:to).flatten).to match_array([agent.email, user_co1.email, user_co2.email])
       end
