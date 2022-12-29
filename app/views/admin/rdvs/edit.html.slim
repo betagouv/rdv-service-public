@@ -72,8 +72,10 @@
                     }
 
             - if @rdv_form.motif.collectif?
-              = f.input :name, wrapper_html: { class: "mb-1" }
-              p.text-muted.font-14= I18n.t("activerecord.attributes.rdv/name.hint")
+              = f.input :name, label: "Intitulé (max 50 caractères)", wrapper_html: { class: "mb-1" }, input_html: { maxlength: 50 }
+              p
+                span.font-14.font-weight-bold= "Avertissement : "
+                span.text-muted.font-14= I18n.t("activerecord.attributes.rdv/name.hint")
 
               = f.input :max_participants_count, input_html: { min: 1 }
             .form-group
