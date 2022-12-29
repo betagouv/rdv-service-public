@@ -17,6 +17,9 @@ class RdvsUser < ApplicationRecord
   belongs_to :user, -> { unscope(where: :deleted_at) }, inverse_of: :rdvs_users, optional: true
   has_one :prescripteur, dependent: :destroy
 
+  # Delegates
+  delegate :full_name, to: :user
+
   # Validations
   # Uniqueness validation doesn’t work with nested_attributes, see https://github.com/rails/rails/issues/4568
   # We do have on a DB constraint.

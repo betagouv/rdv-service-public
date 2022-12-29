@@ -1,7 +1,13 @@
 div
   p Bonjour,
   p
-    | Un nouveau RDV qui aura lieu #{relative_date @rdv.starts_at} vient d’être ajouté à votre agenda.
+    - date = relative_date(@rdv.starts_at)
+    - author = @author&.full_name
+    - if @rdv.collectif?
+      = t(".created_participation_at_date_by_user", date: date , author: author)
+    - else
+      = t(".created_at_date_by_user", date: date , author: author)
+
     = render "mailers/common/rdv_overview", rdv: @rdv, for_role: :agent
 
   p.aligncenter
