@@ -18,3 +18,4 @@ fr:
     confirmed_at: Confirmation
     city_name: Nom de la commune
     city_code: Code commune INSEE
+    responsible_id: Responsable
