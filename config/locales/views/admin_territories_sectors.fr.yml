@@ -4,6 +4,11 @@ fr:
       sms_configurations:
         show:
           explain_default_provider: Si vous ne sélectionnez par de fournisseur de SMS, nous utiliserons le fournisseur de SMS mutualisé par l'ANCT.
+      zones:
+        created: Zone %{zone} créé
+        updated: Zone mis à jour
+        deleted: Zone supprimé
+        delete_error: Erreur lors de la suppression
       sectors:
         created: Secteur %{sector} créé
         updated: Secteur mis à jour
