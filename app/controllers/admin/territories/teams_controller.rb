@@ -3,6 +3,8 @@
 class Admin::Territories::TeamsController < Admin::Territories::BaseController
   before_action :set_team, only: %i[show edit update destroy]
 
+  respond_to :html, :json
+
   def index
     @teams = policy_scope(Team).page(params[:page])
     @teams = params[:search].present? ? @teams.search_by_text(params[:search]) : @teams.order(:name)
@@ -45,16 +47,7 @@ class Admin::Territories::TeamsController < Admin::Territories::BaseController
     redirect_to admin_territory_teams_path(current_territory)
   end
 
-  def search
-    teams = policy_scope(Team).limit(10)
-    @teams = search_params[:term].present? ? teams.search_by_text(search_params[:term]) : teams.order(:name)
-  end
-
   private
-
-  def search_params
-    @search_params ||= params.permit(:term)
-  end
 
   def team_params
     params.require(:team).permit(:name, agent_ids: [])

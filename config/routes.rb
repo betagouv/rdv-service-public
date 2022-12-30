@@ -109,11 +109,7 @@ Rails.application.routes.draw do
           resources :agent_territorial_access_rights, only: %i[update]
           resources :webhook_endpoints, except: %i[show]
           resources :agents, only: %i[index update edit]
-          resources :teams do
-            collection do
-              get :search
-            end
-          end
+          resources :teams
           resource :user_fields, only: %i[edit update]
           resource :rdv_fields, only: %i[edit update]
           resource :motif_fields, only: %i[edit update]
