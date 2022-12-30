@@ -31,7 +31,7 @@ describe "Agent can organize a rdv collectif", js: true do
 
     expect(page).to have_content("Commence")
 
-    fill_in "Commence à", with: "17/3/2022 14:00"
+    fill_in "Commence à", with: Time.zone.parse("17/3/2022 14:00")
     fill_in "Durée en minutes", with: "30"
     fill_in "Nombre de places", with: 4
     fill_in "Intitulé", with: "Traitement de texte"
