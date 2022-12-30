@@ -1,0 +1,11 @@
+= territory_navigation(t(".title", name: current_territory))
+
+.card
+  .card-header
+    h5.card-title Configuration territoire
+  .card-body
+    = simple_form_for([:admin, @territory]) do |f|
+      = f.input :name
+      = f.input :phone_number
+      = f.input :departement_number, disabled: true
+      = f.submit class: "btn btn-primary"

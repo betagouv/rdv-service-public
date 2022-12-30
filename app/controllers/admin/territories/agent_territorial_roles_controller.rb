@@ -16,11 +16,11 @@ class Admin::Territories::AgentTerritorialRolesController < Admin::Territories::
   end
 
   def create
-    @role = AgentTerritorialRole.new(agent_territorial_role_params)
+    @role = AgentTerritorialRole.new(agent_territorial_role_params.merge(territory: current_territory))
     authorize @role
     if @role.save
       redirect_to(
-        admin_territory_agent_territorial_roles_path(current_territory),
+        edit_admin_territory_agent_path(current_territory, @role.agent),
         flash: { success: "#{@role.agent.full_name} a été ajouté(e) en tant qu'administrateur du #{current_territory}" }
       )
     else
@@ -36,7 +36,7 @@ class Admin::Territories::AgentTerritorialRolesController < Admin::Territories::
     else
       flash[:error] = "Erreur lors du retrait du rôle d'administrateur du #{current_territory} pour #{role.agent.full_name}"
     end
-    redirect_to admin_territory_agent_territorial_roles_path(current_territory)
+    redirect_to edit_admin_territory_agent_path(current_territory, role.agent)
   end
 
   private
