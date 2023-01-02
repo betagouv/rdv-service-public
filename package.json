@@ -37,7 +37,6 @@
     "mini-css-extract-plugin": "^2.6.0",
     "moment-locales-webpack-plugin": "^1.2.0",
     "moment-timezone-data-webpack-plugin": "^1.5.0",
-    "rails-erb-loader": ">=5.5.2",
     "sass": "^1.51.0",
     "sass-loader": "^12.6.0",
     "webpack": "^5.72.0",
