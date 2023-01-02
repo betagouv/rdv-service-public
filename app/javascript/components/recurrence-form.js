@@ -26,7 +26,7 @@ class RecurrenceForm {
       this.intervalTarget.value = model.interval;
       if (model.until) {
         // Ignore the timezone in the “until” date. See #1339
-        this.untilTarget.value = moment(model.until).format('YYYY-MM-DD')
+        this.untilTarget.value = moment(model.until).tz("Europe/Paris").format('YYYY-MM-DD')
       }
     }
     if(model.every == "week") this.setOn(model);

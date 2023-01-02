@@ -53,10 +53,7 @@ describe "Agent can manage recurrence on plage d'ouverture" do
     expect_checked("recurrence_on_thursday")
     expect_checked("recurrence_on_friday")
     expect_checked("recurrence_on_saturday")
-    # Si on précise la valeur, ça en passe pas sur la CI (GithubAction ce jour)
-    # alors qu'en local tout va bien.
-    # expect(page).to have_field("recurrence-until", with: "2019-12-30")
-    expect(page).to have_field("recurrence-until")
+    expect(page).to have_field("recurrence-until", with: "2019-12-30")
 
     visit edit_admin_organisation_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture)
     select("mois", from: "recurrence_every")
@@ -75,7 +72,7 @@ describe "Agent can manage recurrence on plage d'ouverture" do
     # problème sur le stockage de la date, qui
     # est transformé en DateTime par Montrose
     # cf https://github.com/betagouv/rdv-solidarites.fr/issues/1339
-    # expect(h_recurrence[:until].to_date).to eq(Date.new(2019, 12, 30))
+    expect(h_recurrence[:until].to_date).to eq(Date.new(2019, 12, 30))
     expect(h_recurrence[:starts].to_date).to eq(Date.new(2019, 12, 11))
 
     # reload page to check if form is filled correctly
@@ -84,9 +81,7 @@ describe "Agent can manage recurrence on plage d'ouverture" do
     expect(page).to have_select("recurrence_every", selected: "mois")
     expect(page).to have_select("recurrence_interval", selected: "1")
     expect(page).to have_text("Tous les 2ème mercredi du mois")
-    expect(page).to have_field("recurrence-until")
-    # expect(page).to have_field("recurrence-until", with: "30/12/2019")
-    # TODO Pourquoi le champs ne contient pas la valeur ici. Quand on le fait à la main, tout va bien.
+    expect(page).to have_field("recurrence-until", with: "2019-12-30")
   end
 
   def expect_checked(element_selector)
