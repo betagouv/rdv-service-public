@@ -16,7 +16,7 @@ describe "User can manage their rdvs" do
       expect(page).to have_content(rdv.motif_name)
       click_link("Annuler le RDV")
       expect(page).to have_content("Confirmation")
-      click_link("Oui, annuler le RDV")
+      click_link("Oui, annuler le rendez-vous")
       expect(page).to have_selector(".badge", text: "Annulé")
     end
   end

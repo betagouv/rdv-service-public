@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-class Admins::Grc92Mailer < ApplicationMailer
+class Admins::SfrMail2SmsMailer < ApplicationMailer
   default reply_to: nil
 
-  def send_sms(recipient, phone_number, message)
+  def send_sms(recipient_and_from_email, phone_number, message)
     headers["Content-Type"] = "text/plain"
 
     delivery_options = {
@@ -14,18 +14,14 @@ class Admins::Grc92Mailer < ApplicationMailer
       authentication: ENV["ALTERNATE_SMTP_AUTHENTIFICATION"],
     }
 
-    mail(to: recipient, subject: phone_number, delivery_method_options: delivery_options) do |format|
+    recipient, from = recipient_and_from_email.split("/")
+
+    mail(to: recipient, from: from, subject: phone_number, delivery_method_options: delivery_options) do |format|
       format.text { render plain: "#{message}\n-- RDV-Solidarités" }
     end
   end
 
   def domain
     Domain::RDV_SOLIDARITES
-  end
-
-  private
-
-  def default_from
-    "ne-pas-repondre-grc@hauts-de-seine.fr"
   end
 end

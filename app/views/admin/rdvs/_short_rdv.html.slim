@@ -3,6 +3,7 @@ li.card-body.py-2
   = rdv_status_tag(short_rdv)
   div
     = short_rdv.motif_name
+    = motif_badges(short_rdv.motif, only: %i[collectif follow_up])
     - if current_organisation.territory.enable_context_field
       div
         - if short_rdv.context.blank?

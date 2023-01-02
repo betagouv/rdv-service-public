@@ -11,18 +11,21 @@ class Rdv < ApplicationRecord
   include Rdv::AddressConcern
   include Rdv::AuthoredConcern
   include Rdv::Updatable
+  include Rdv::UsingWaitingRoom
   include IcalHelpers::Ics
   include Payloads::Rdv
 
   # Attributes
-  enum status: { unknown: "unknown", waiting: "waiting", seen: "seen", excused: "excused", revoked: "revoked", noshow: "noshow" }
+  auto_strip_attributes :name
+  enum status: { unknown: "unknown", seen: "seen", excused: "excused", revoked: "revoked", noshow: "noshow" }
   # Commentaire pour les status explications
   # unknown : "A renseigner" ou "A venir" (si le rdv est passé ou pas)
   # seen : Présent au rdv
   # noshow : Lapin
   # excused : Annulé à l'initiative de l'usager
   # revoked : Annulé à l'initiative du service
-  NOT_CANCELLED_STATUSES = %w[unknown waiting seen noshow].freeze
+  MIN_DELAY_FOR_CANCEL = 4.hours
+  NOT_CANCELLED_STATUSES = %w[unknown seen noshow].freeze
   CANCELLED_STATUSES = %w[excused revoked].freeze
   enum created_by: { agent: 0, user: 1, file_attente: 2, prescripteur: 3 }, _prefix: :created_by
 
@@ -62,6 +65,7 @@ class Rdv < ApplicationRecord
   validate :lieu_is_not_disabled_if_needed
   validate :starts_at_is_plausible
   validate :duration_is_plausible
+  validates :name, length: { maximum: 50 }
   validates :max_participants_count, numericality: { greater_than: 0, allow_nil: true }
 
   # Hooks
@@ -85,9 +89,9 @@ class Rdv < ApplicationRecord
   scope :status, lambda { |status|
     case status.to_s
     when "unknown_past"
-      past.where(status: %w[unknown waiting])
+      past.where(status: "unknown")
     when "unknown_future"
-      future.where(status: %w[unknown waiting])
+      future.where(status: "unknown")
     else
       where(status: status)
     end
@@ -175,7 +179,7 @@ class Rdv < ApplicationRecord
   end
 
   def cancellable_by_user?
-    !cancelled? && !collectif? && motif.rdvs_cancellable_by_user? && starts_at > 4.hours.from_now
+    !cancelled? && !collectif? && motif.rdvs_cancellable_by_user? && starts_at > MIN_DELAY_FOR_CANCEL.from_now
   end
 
   def editable_by_user?

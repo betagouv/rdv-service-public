@@ -64,15 +64,13 @@ class SearchContext
   def service
     @service ||= if @service_id.present?
                    Service.find(@service_id)
-                 elsif motif_name_and_type_selected?
-                   first_matching_motif.service
                  elsif services.count == 1
                    services.first
                  end
   end
 
   def services
-    unique_motifs_by_name_and_location_type.map(&:service).uniq.sort_by(&:name)
+    @services ||= matching_motifs.includes(:service).map(&:service).uniq.sort_by(&:name)
   end
 
   def requires_organisation_selection?
@@ -93,8 +91,11 @@ class SearchContext
     @public_link_organisation_id || @user_selected_organisation_id
   end
 
-  def motifs_organisations
-    matching_motifs.map(&:organisation).uniq
+  # next availability by organisation for motifs without lieu
+  def next_availability_by_motifs_organisations
+    @next_availability_by_motifs_organisations ||= matching_motifs.to_h do |motif|
+      [motif.organisation, creneaux_search_for(nil, date_range, motif).next_availability]
+    end.compact
   end
 
   def unique_motifs_by_name_and_location_type

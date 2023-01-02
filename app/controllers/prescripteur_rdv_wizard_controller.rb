@@ -50,7 +50,7 @@ class PrescripteurRdvWizardController < ApplicationController
       session[:rdv_wizard_attributes][:user] = beneficiaire_params
 
       rdv_wizard = PrescripteurRdvWizard.new(session[:rdv_wizard_attributes], current_domain)
-      rdv_wizard.create_rdv!
+      rdv_wizard.create!
 
       session[:prescripteur_id] = rdv_wizard.prescripteur.id
 

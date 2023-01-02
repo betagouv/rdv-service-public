@@ -7,4 +7,6 @@ class ApplicationMailer < ActionMailer::Base
   prepend IcsMultipartAttached
 
   append_view_path Rails.root.join("app/views/mailers")
+
+  self.delivery_job = CustomMailerDeliveryJob
 end

@@ -7,6 +7,8 @@ div
       = t(".revoked_at_date_by_agent", date: date , author: author)
     - elsif @author.is_a? Agent
       = t(".cancelled_at_date_by_agent", date: date , author: author)
+    - elsif @author.is_a?(User) && @rdv.collectif?
+      = t(".cancelled_participation_at_date_by_user", date: date , author: author)
     - else
       = t(".cancelled_at_date_by_user", date: date , author: author)
 

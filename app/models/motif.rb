@@ -148,7 +148,7 @@ class Motif < ApplicationRecord
   end
 
   def cancellation_warning
-    custom_cancel_warning_message || Motif.human_attribute_name("default_cancel_warning_message")
+    custom_cancel_warning_message.presence || Motif.human_attribute_name("default_cancel_warning_message")
   end
 
   def start_booking_delay

@@ -4,7 +4,10 @@ RSpec.describe Rdv::Updatable, type: :concern do
   before { stub_netsize_ok }
 
   let(:agent) { create(:agent, rdv_notifications_level: "all") }
-  let!(:rdv) { create(:rdv, agents: [agent]) }
+  let(:rdv) { create(:rdv, agents: [agent]) }
+  let(:rdv_co) { create(:rdv, :collectif, users: [user_co1, user_co2], agents: [agent]) }
+  let(:user_co1) { create(:user) }
+  let(:user_co2) { create(:user) }
   let(:user) { rdv.users.first }
 
   describe "#update_and_notify" do
@@ -28,7 +31,7 @@ RSpec.describe Rdv::Updatable, type: :concern do
       end
     end
 
-    %w[unknown waiting seen].each do |status|
+    %w[unknown seen].each do |status|
       context "when the status changed and is now #{status}" do
         before { rdv.update!(cancelled_at: 1.day.ago, status: "noshow") }
 
@@ -50,17 +53,27 @@ RSpec.describe Rdv::Updatable, type: :concern do
     end
 
     describe "sends relevant notifications" do
-      it "notifies when rdv cancelled" do
+      it "notifies agent when rdv is cancelled (excused)" do
         expect(Notifiers::RdvCancelled).to receive(:new).with(rdv, agent).and_call_original
         rdv.update_and_notify(agent, status: "excused")
         perform_enqueued_jobs
-        expect(ActionMailer::Base.deliveries.map(&:to).flatten).to match_array([agent.email])
+        expect(ActionMailer::Base.deliveries.map(&:to).flatten).to match_array([agent.email, user.email])
+      end
+
+      it "notifies agent and users when rdv is cancelled (revoked) for collective rdv" do
+        expect(Notifiers::RdvCancelled).to receive(:new).with(rdv_co, agent).and_call_original
+        rdv_co.update_and_notify(agent, status: "revoked")
+        perform_enqueued_jobs
+        expect(ActionMailer::Base.deliveries.map(&:to).flatten).to match_array([agent.email, user_co1.email, user_co2.email])
       end
 
       it "does not notify when status does not change" do
-        rdv.update!(status: "waiting")
+        rdv.reload
+        rdv.update!(status: "unknown")
         expect(Notifiers::RdvCancelled).not_to receive(:new)
-        rdv.update_and_notify(agent, status: "waiting")
+        rdv.update_and_notify(agent, status: "unknown")
+        perform_enqueued_jobs
+        expect(ActionMailer::Base.deliveries.size).to eq(0)
       end
 
       it "notifies when date changes" do
@@ -70,10 +83,27 @@ RSpec.describe Rdv::Updatable, type: :concern do
         expect(ActionMailer::Base.deliveries.map(&:to).flatten).to match_array([agent.email, user.email])
       end
 
+      it "notifies when date changes for collective rdv" do
+        expect(Notifiers::RdvUpdated).to receive(:new).with(rdv_co, agent).and_call_original
+        rdv_co.update_and_notify(agent, starts_at: 2.days.from_now)
+        perform_enqueued_jobs
+        expect(ActionMailer::Base.deliveries.map(&:to).flatten).to match_array([agent.email, user_co1.email, user_co2.email])
+      end
+
       it "does not notify when date does not change" do
         rdv.reload
         expect(Notifiers::RdvUpdated).not_to receive(:new)
         rdv.update_and_notify(agent, starts_at: rdv.starts_at)
+        perform_enqueued_jobs
+        expect(ActionMailer::Base.deliveries.size).to eq(0)
+      end
+
+      it "does not notify when date does not change for collective rdv" do
+        rdv_co.reload
+        expect(Notifiers::RdvUpdated).not_to receive(:new)
+        rdv_co.update_and_notify(agent, starts_at: rdv_co.starts_at)
+        perform_enqueued_jobs
+        expect(ActionMailer::Base.deliveries.size).to eq(0)
       end
 
       it "does not notify when other attributes change" do
@@ -81,6 +111,15 @@ RSpec.describe Rdv::Updatable, type: :concern do
         expect(Notifiers::RdvCancelled).not_to receive(:new)
         expect(Notifiers::RdvUpdated).not_to receive(:new)
         rdv.update_and_notify(agent, context: "some context")
+        perform_enqueued_jobs
+        expect(ActionMailer::Base.deliveries.size).to eq(0)
+      end
+
+      it "does not notify when other attributes change for collective rdv" do
+        rdv_co.reload
+        rdv_co.update_and_notify(agent, context: "some context")
+        perform_enqueued_jobs
+        expect(ActionMailer::Base.deliveries.size).to eq(0)
       end
     end
 
@@ -90,6 +129,14 @@ RSpec.describe Rdv::Updatable, type: :concern do
       rdv.update_and_notify(agent, status: "unknown")
       perform_enqueued_jobs
       expect(ActionMailer::Base.deliveries.map(&:to).flatten).to match_array([agent.email, user.email])
+    end
+
+    it "call Notifiers::RdvCreated when reloaded status from cancelled status for collective rdv" do
+      rdv_co.update!(status: "revoked", cancelled_at: Time.zone.parse("12/1/2020 12:56"))
+      expect(Notifiers::RdvCreated).to receive(:new).and_call_original
+      rdv_co.update_and_notify(agent, status: "unknown")
+      perform_enqueued_jobs
+      expect(ActionMailer::Base.deliveries.map(&:to).flatten).to match_array([agent.email, user_co1.email, user_co2.email])
     end
 
     describe "triggers webhook" do
@@ -168,6 +215,17 @@ RSpec.describe Rdv::Updatable, type: :concern do
       rdv.notify!(agent, [])
       perform_enqueued_jobs
       expect(ActionMailer::Base.deliveries.map(&:to).flatten).to match_array([agent.email, user.email])
+    end
+
+    it "calls lieu_updated_notifier with lieu changes for collective rdv" do
+      lieu = create(:lieu, availability: "enabled")
+      autre_lieu = create(:lieu, availability: "enabled")
+      rdv_co.update!(lieu: lieu)
+      rdv_co.reload
+      expect(Notifiers::RdvUpdated).to receive(:new).and_call_original
+      rdv_co.update_and_notify(agent, lieu: autre_lieu)
+      perform_enqueued_jobs
+      expect(ActionMailer::Base.deliveries.map(&:to).flatten).to match_array([agent.email, user_co1.email, user_co2.email])
     end
   end
 

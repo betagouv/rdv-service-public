@@ -4,6 +4,13 @@ fr:
       hello: Bonjour,
       farewell_html: "<p>À bientôt,<br>L’équipe %{domain_name}</p>"
   agents:
+    waiting_room_mailer:
+      title: Un usager en salle d'attente
+      user_in_waiting_room:
+        description:
+          zero: "votre rdv va bientôt démarrer"
+          one: "%{users_name} vous attend pour son RDV"
+          other: "%{users_name} vous attendent pour leur RDV"
     absence_mailer:
       absence_created:
         title: "%{domain_name} - Indisponibilité créée - %{title}"
@@ -33,13 +40,18 @@ fr:
     rdv_mailer:
       rdv_created:
         title: Nouveau RDV ajouté sur votre agenda %{domain_name} pour %{date}
+        title_participation: Nouvelle participation au RDV collectif sur votre agenda %{domain_name} pour %{date}
+        created_at_date_by_user: Un nouveau RDV qui aura lieu %{date} vient d’être ajouté à votre agenda.
+        created_participation_at_date_by_user: La participation de %{author} au RDV collectif qui aura lieu %{date} vient d’être ajoutée.
       rdv_updated:
         title: RDV du %{date} modifié
       rdv_cancelled:
         title: RDV annulé %{date}
+        title_participation: Participation au RDV collectif annulée %{date}
         revoked_at_date_by_agent: Un RDV qui devait avoir lieu %{date} vient d’être annulé par %{author} pour raison administrative.
         cancelled_at_date_by_agent: Un RDV qui devait avoir lieu %{date} vient d’être annulé par %{author} à la demande de l’usager.
         cancelled_at_date_by_user: Un RDV qui devait avoir lieu %{date} vient d’être annulé par l’usager %{author}.
+        cancelled_participation_at_date_by_user: La participation au RDV collectif %{date} vient d’être annulé par l’usager %{author}.
     reply_transfer_mailer:
       notify_agent_of_user_reply:
         title: Message d'usager⋅e au sujet de votre RDV %{date}

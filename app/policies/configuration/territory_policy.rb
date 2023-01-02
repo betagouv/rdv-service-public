@@ -19,10 +19,6 @@ class Configuration::TerritoryPolicy
       allow_to_download_metrics?
   end
 
-  def display_sms_configuration?
-    @territory.has_own_sms_provider? && territorial_admin?
-  end
-
   def allow_to_manage_access_rights?
     @access_rights&.allow_to_manage_access_rights?
   end

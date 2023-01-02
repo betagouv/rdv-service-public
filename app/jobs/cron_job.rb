@@ -102,4 +102,13 @@ class CronJob < ApplicationJob
       end
     end
   end
+
+  class DestroyRedisWaitingRoomKeys < CronJob
+    # At 03:00 every day
+    self.cron_expression = "0 3 * * *"
+
+    def perform
+      Rdv.reset_user_in_waiting_room!
+    end
+  end
 end

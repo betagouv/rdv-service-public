@@ -33,14 +33,6 @@
           | Webhook
         p Interconnecter #{current_domain.name} avec vos systèmes.
 
-  - if policy([:configuration, current_territory]).display_sms_configuration?
-    .col.col-md-4.p-2.rounded.settings-box
-      = link_to admin_territory_sms_configuration_path(current_territory) do
-        h2.fw-bold.mb-0
-          i.fa.fa-mobile-alt>
-          | SMS
-        p Configurer votre fournisseur d'envoi de SMS.
-
   - if policy([:configuration, Sector]).display?
     .col.col-md-4.p-2.rounded.settings-box
       = link_to admin_territory_sectorization_path(current_territory) do

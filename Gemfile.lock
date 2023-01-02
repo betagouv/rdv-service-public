@@ -216,8 +216,8 @@ GEM
       raabro (~> 1.4)
     globalid (1.0.0)
       activesupport (>= 5.0)
-    groupdate (4.3.0)
-      activesupport (>= 5)
+    groupdate (6.1.0)
+      activesupport (>= 5.2)
     hashdiff (1.0.1)
     hashie (5.0.0)
     hiredis (0.6.3)
@@ -272,7 +272,7 @@ GEM
     listen (3.7.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
-    loofah (2.19.0)
+    loofah (2.19.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     mail (2.8.0.rc1)
@@ -414,8 +414,8 @@ GEM
       activesupport (>= 4.2)
       choice (~> 0.2.0)
       ruby-graphviz (~> 1.2)
-    rails-html-sanitizer (1.4.3)
-      loofah (~> 2.3)
+    rails-html-sanitizer (1.4.4)
+      loofah (~> 2.19, >= 2.19.1)
     rails_autolink (1.1.7)
       rails (> 3.1)
     railties (7.0.4)
@@ -639,7 +639,7 @@ DEPENDENCIES
   dotenv-rails
   factory_bot
   faker
-  groupdate (~> 4.2)
+  groupdate (~> 6.1)
   hiredis
   icalendar (~> 2.5)
   jbuilder

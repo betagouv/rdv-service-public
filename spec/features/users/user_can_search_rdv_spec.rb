@@ -3,19 +3,6 @@
 describe "User can search for rdvs" do
   let(:now) { Time.zone.parse("2021-12-13 8:00") }
 
-  let!(:territory92) { create(:territory, departement_number: "92") }
-  let!(:organisation) { create(:organisation, :with_contact, territory: territory92) }
-  let(:service) { create(:service) }
-  let!(:motif) { create(:motif, name: "Vaccination", reservable_online: true, organisation: organisation, restriction_for_rdv: nil, service: service) }
-  let!(:autre_motif) { create(:motif, name: "Consultation", reservable_online: true, organisation: organisation, restriction_for_rdv: nil, service: service) }
-  let!(:motif_autre_service) { create(:motif, :by_phone, name: "Télé consultation", reservable_online: true, organisation: organisation, restriction_for_rdv: nil, service: create(:service)) }
-  let!(:lieu) { create(:lieu, organisation: organisation) }
-  let!(:plage_ouverture) { create(:plage_ouverture, :daily, first_day: now + 1.month, motifs: [motif], lieu: lieu, organisation: organisation) }
-  let!(:autre_plage_ouverture) { create(:plage_ouverture, :daily, first_day: now + 1.month, motifs: [autre_motif], lieu: lieu, organisation: organisation) }
-  let!(:plage_ouverture_autre_service) { create(:plage_ouverture, :daily, first_day: now + 1.month, motifs: [motif_autre_service], lieu: lieu, organisation: organisation) }
-  let!(:lieu2) { create(:lieu, organisation: organisation) }
-  let!(:plage_ouverture2) { create(:plage_ouverture, :daily, first_day: now + 1.month, motifs: [motif], lieu: lieu2, organisation: organisation) }
-
   around { |example| perform_enqueued_jobs { example.run } }
 
   before do
@@ -24,6 +11,19 @@ describe "User can search for rdvs" do
   end
 
   describe "default" do
+    let!(:territory92) { create(:territory, departement_number: "92") }
+    let!(:organisation) { create(:organisation, :with_contact, territory: territory92) }
+    let(:service) { create(:service) }
+    let!(:motif) { create(:motif, name: "Vaccination", reservable_online: true, organisation: organisation, restriction_for_rdv: nil, service: service) }
+    let!(:autre_motif) { create(:motif, name: "Consultation", reservable_online: true, organisation: organisation, restriction_for_rdv: nil, service: service) }
+    let!(:motif_autre_service) { create(:motif, :by_phone, name: "Télé consultation", reservable_online: true, organisation: organisation, restriction_for_rdv: nil, service: create(:service)) }
+    let!(:lieu) { create(:lieu, organisation: organisation) }
+    let!(:plage_ouverture) { create(:plage_ouverture, :daily, first_day: now + 1.month, motifs: [motif], lieu: lieu, organisation: organisation) }
+    let!(:autre_plage_ouverture) { create(:plage_ouverture, :daily, first_day: now + 1.month, motifs: [autre_motif], lieu: lieu, organisation: organisation) }
+    let!(:plage_ouverture_autre_service) { create(:plage_ouverture, :daily, first_day: now + 1.month, motifs: [motif_autre_service], lieu: lieu, organisation: organisation) }
+    let!(:lieu2) { create(:lieu, organisation: organisation) }
+    let!(:plage_ouverture2) { create(:plage_ouverture, :daily, first_day: now + 1.month, motifs: [motif], lieu: lieu2, organisation: organisation) }
+
     it "default", js: true do
       visit root_path
       execute_search
@@ -36,35 +36,70 @@ describe "User can search for rdvs" do
       add_relative
       confirm_rdv(motif, lieu)
     end
+  end
 
-    context "when the motif doesn't require a lieu" do
-      before { create(:plage_ouverture, lieu: nil, motifs: [motif_autre_service], organisation: organisation, first_day: 1.day.since) }
+  describe "when the motifs don't require a lieu" do
+    let!(:service) { create(:service) }
+    let!(:territory) { create(:territory, departement_number: "92") }
+    let!(:first_organisation_with_po) { create(:organisation, :with_contact, territory: territory) }
+    let!(:first_motif) do
+      create(:motif, :by_phone, name: "RSA orientation par téléphone", reservable_online: true, organisation: first_organisation_with_po, restriction_for_rdv: nil, service: service)
+    end
+    let!(:first_plage_ouverture) do
+      create(:plage_ouverture, lieu: nil, motifs: [first_motif], organisation: first_organisation_with_po, first_day: Time.zone.parse("2021-12-15"), start_time: Tod::TimeOfDay.new(11))
+    end
 
-      shared_examples "take a rdv without lieu" do
-        it "can take a RDV when there are creneaux without lieu", js: true do
-          visit root_path
-          execute_search
-          choose_service(motif_autre_service.service)
-          choose_organisation(organisation)
-          choose_creneau
-          sign_up
-          continue_to_rdv(motif_autre_service)
-          add_relative
-          confirm_rdv(motif_autre_service)
-        end
+    let!(:other_organisation_with_po) { create(:organisation, :with_contact, territory: territory) }
+    let!(:other_motif_with_po) do
+      create(:motif, :by_phone, name: "RSA orientation par téléphone", reservable_online: true, organisation: other_organisation_with_po, restriction_for_rdv: nil, service: service)
+    end
+    let!(:other_plage_ouverture) do
+      create(:plage_ouverture, lieu: nil, motifs: [other_motif_with_po], organisation: other_organisation_with_po, first_day: Time.zone.parse("2021-12-16"), start_time: Tod::TimeOfDay.new(10))
+    end
+
+    let!(:organisation_without_po) { create(:organisation, :with_contact, territory: territory) }
+    let!(:motif_without_po) do
+      create(:motif, :by_phone, name: "RSA orientation par téléphone", reservable_online: true, organisation: organisation_without_po, restriction_for_rdv: nil, service: service)
+    end
+
+    shared_examples "take a rdv without lieu" do
+      it "can take a RDV in the available organisations", js: true do
+        visit root_path
+        execute_search
+
+        ## Organisation selection
+        expect(page).to have_content(first_organisation_with_po.name)
+        expect(page).to have_content(first_organisation_with_po.phone_number)
+        expect(page).to have_content(first_organisation_with_po.website)
+        expect(page).to have_content("mercredi 15 décembre 2021 à 11h00")
+
+        expect(page).to have_content(other_organisation_with_po.name)
+        expect(page).to have_content(other_organisation_with_po.phone_number)
+        expect(page).to have_content(other_organisation_with_po.website)
+        expect(page).to have_content("jeudi 16 décembre 2021 à 10h00")
+
+        expect(page).not_to have_content(organisation_without_po.name)
+
+        find(".card-title", text: /#{first_organisation_with_po.name}/).ancestor(".card").find("a.stretched-link").click
+
+        choose_creneau
+        sign_up
+        continue_to_rdv(first_motif)
+        add_relative
+        confirm_rdv(first_motif)
+      end
+    end
+
+    context "when the motif is by phone" do
+      it_behaves_like "take a rdv without lieu"
+    end
+
+    context "when the motif is at home" do
+      before do
+        [first_motif, other_motif_with_po, motif_without_po].each { |m| m.update!(location_type: "home") }
       end
 
-      context "when the motif is by phone" do
-        let!(:motif_autre_service) { create(:motif, :by_phone, name: "Télé consultation", reservable_online: true, organisation: organisation, restriction_for_rdv: nil, service: create(:service)) }
-
-        it_behaves_like "take a rdv without lieu"
-      end
-
-      context "when the motif is at home" do
-        let!(:motif_autre_service) { create(:motif, :at_home, name: "À domicile", reservable_online: true, organisation: organisation, restriction_for_rdv: nil, service: create(:service)) }
-
-        it_behaves_like "take a rdv without lieu"
-      end
+      it_behaves_like "take a rdv without lieu"
     end
   end
 
@@ -72,6 +107,9 @@ describe "User can search for rdvs" do
     let!(:user) { create(:user, agents: [agent]) }
     let!(:agent) { create(:agent) }
     let!(:agent2) { create(:agent) }
+    let!(:organisation) { create(:organisation, territory: create(:territory, departement_number: "92")) }
+    let!(:service) { create(:service) }
+    let!(:lieu) { create(:lieu, organisation: organisation) }
 
     ## follow up motif linked to referent
     let!(:motif1) do
@@ -198,6 +236,32 @@ describe "User can search for rdvs" do
 
         expect(page).to have_content("Votre référent n'a pas de créneaux disponibles")
       end
+    end
+  end
+
+  describe "when two motifs have the same name and location type on different services" do
+    let!(:territory) { create(:territory, departement_number: "92") }
+    let!(:organisation) { create(:organisation, territory: territory) }
+
+    let!(:service) { create(:service) }
+    let!(:other_service) { create(:service) }
+    let!(:motif) do
+      create(
+        :motif, :by_phone, reservable_online: true, name: "Consultation", service: service, organisation: organisation, plage_ouvertures: [create(:plage_ouverture)]
+      )
+    end
+    let!(:other_motif) do
+      create(
+        :motif, :by_phone, reservable_online: true, name: "Consultation", service: other_service, organisation: organisation, plage_ouvertures: [create(:plage_ouverture)]
+      )
+    end
+
+    it "shows the service selection" do
+      visit root_path(departement: "92")
+
+      expect(page).to have_content("Sélectionnez le service avec qui vous voulez prendre un RDV")
+      expect(page).to have_content(service.name)
+      expect(page).to have_content(other_service.name)
     end
   end
 

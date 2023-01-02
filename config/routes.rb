@@ -55,6 +55,7 @@ Rails.application.routes.draw do
     resource :rdv_wizard_step, only: %i[new create]
     resources :rdvs, only: %i[index create show edit update] do
       resources :participations, only: %i[index create]
+      put "participations/cancel", to: "participations#cancel"
       member do
         get :creneaux
         put :cancel
@@ -112,11 +113,7 @@ Rails.application.routes.draw do
           resources :agent_territorial_access_rights, only: %i[update]
           resources :webhook_endpoints, except: %i[show]
           resources :agents, only: %i[index update edit]
-          resources :teams do
-            collection do
-              get :search
-            end
-          end
+          resources :teams
           resource :user_fields, only: %i[edit update]
           resource :rdv_fields, only: %i[edit update]
           resource :motif_fields, only: %i[edit update]
@@ -156,6 +153,7 @@ Rails.application.routes.draw do
         end
         resources :rdvs, except: [:new] do
           resources :participations, only: %i[update destroy]
+          resource :user_in_waiting_room, only: [:create]
           member do
             post :send_reminder_manually
           end
@@ -235,7 +233,14 @@ Rails.application.routes.draw do
   ## Shorten urls for SMS
   get "r", to: redirect("users/rdvs", status: 301), as: "rdvs_short"
 
+  # We keep this deprecated route because some users have received sms or emails with this kind of link
   get "r/:id", to: (redirect do |path_params, req|
+    query_params = format_redirect_params(req.params)
+    "users/rdvs/#{path_params[:id]}#{query_params}"
+  end), as: "rdv_short_deprecated"
+
+  # tkn est obligatoire pour s'assurer qu'il est possible de se connecter
+  get "r/:id/:tkn", to: (redirect do |path_params, req|
     query_params = format_redirect_params(req.params)
     "users/rdvs/#{path_params[:id]}#{query_params}"
   end), as: "rdv_short"

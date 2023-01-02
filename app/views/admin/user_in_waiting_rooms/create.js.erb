@@ -1,0 +1,9 @@
+
+<% waiting_room_html = render "admin/rdvs/waiting_room", rdv: @rdv %>
+(function() {
+    let element = document.getElementById('waiting_room_button-<%= @rdv.id %>');
+    if(element) {
+        element.innerHTML = "<%= escape_javascript waiting_room_html %>";
+    }
+})();
+

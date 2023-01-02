@@ -17,6 +17,9 @@ class RdvsUser < ApplicationRecord
   belongs_to :user, -> { unscope(where: :deleted_at) }, inverse_of: :rdvs_users, optional: true
   has_one :prescripteur, dependent: :destroy
 
+  # Delegates
+  delegate :full_name, to: :user
+
   # Validations
   # Uniqueness validation doesn’t work with nested_attributes, see https://github.com/rails/rails/issues/4568
   # We do have on a DB constraint.
@@ -77,6 +80,10 @@ class RdvsUser < ApplicationRecord
 
   def cancelled?
     status.in? CANCELLED_STATUSES
+  end
+
+  def cancellable_by_user?
+    !cancelled? && rdv.collectif? && !rdv.cancelled? && rdv.motif.rdvs_cancellable_by_user? && rdv.starts_at > Rdv::MIN_DELAY_FOR_CANCEL.from_now
   end
 
   def set_default_notifications_flags

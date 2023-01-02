@@ -10,26 +10,40 @@ class PrescripteurRdvWizard < UserRdvWizard::Base
     @domain = domain
   end
 
-  def create_rdv!
+  def create!
     setup_user
 
-    rdvs_user = RdvsUser.new(user: @user, prescripteur: @prescripteur, rdv: rdv)
+    if @rdv.collectif?
+      create_participation!
+    else
+      create_rdv!
+    end
 
+    PrescripteurMailer.rdv_created(participation, @domain.name).deliver_later
+  end
+
+  private
+
+  def create_rdv!
     rdv.assign_attributes(
       created_by: :prescripteur,
       lieu: lieu,
       organisation: motif.organisation,
       agents: [creneau.agent],
-      rdvs_users: [rdvs_user]
+      rdvs_users: [participation]
     )
     rdv.save!
 
     Notifiers::RdvCreated.perform_with(rdv, @prescripteur)
-
-    PrescripteurMailer.rdv_created(rdvs_user, @domain.name).deliver_later
   end
 
-  private
+  def create_participation!
+    participation.create_and_notify(@prescripteur)
+  end
+
+  def participation
+    @participation ||= RdvsUser.new(rdv: @rdv, user: @user, prescripteur: @prescripteur)
+  end
 
   def setup_user
     @user.skip_confirmation_notification! # Désactivation du mail Devise de confirmation de compte

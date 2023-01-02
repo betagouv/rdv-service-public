@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class InclusionConnectController < ApplicationController
+  before_action :log_params_to_sentry
+
   def auth
     session[:ic_state] = Digest::SHA1.hexdigest("InclusionConnect - #{SecureRandom.hex(13)}")
     redirect_to InclusionConnect.auth_path(session[:ic_state], inclusion_connect_callback_url), allow_other_host: true

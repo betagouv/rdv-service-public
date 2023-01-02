@@ -43,7 +43,13 @@ ul.list-group.list-group-flush
       = auto_link(simple_format(rdv.motif.instruction_for_rdv, class:"pl-3 pt-1"), html: { target: "_blank" })
   = render "/users/rdvs/file_attente", rdv: rdv
 
-  - if !policy([:user, rdv]).cancel? && !rdv.cancelled? && !rdv.in_the_past?
+  / Check for authorizations and already cancelled rdv/participation
+  - unless policy([:user, rdv]).cancel? || \
+      policy([:user, current_user.participation_for(rdv)]).cancel? || \
+      rdv.cancelled? || \
+      current_user.participation_for(rdv).cancelled? || \
+      rdv.in_the_past?
+
     li.list-group-item.font-italic
       i.fa.fa-ban>
       | Ce rendez-vous n'est pas annulable en ligne. Prenez contact avec le secrétariat.
@@ -55,6 +61,8 @@ ul.list-group.list-group-flush
   .text-right.mt-2
     - if policy([:user, rdv]).cancel?
         = link_to "Annuler le RDV", "#", data: { toggle: "modal", target: "#js-cancel-rdv-modal-#{rdv.id}" }, class: "btn btn-outline-danger"
+    - if policy([:user, current_user.participation_for(rdv)]).cancel?
+        = link_to "Annuler votre participation", "#", data: { toggle: "modal", target: "#js-cancel-participation-modal-#{rdv.id}" }, class: "btn btn-outline-danger"
 
 = render( \
   "common/modal_confirmation", \
@@ -62,6 +70,16 @@ ul.list-group.list-group-flush
   body_message: rdv.motif.cancellation_warning, \
   cancel_message: "Non", \
   confirm_path: cancel_users_rdv_path(rdv), \
-  confirm_message: "Oui, annuler le RDV", \
+  confirm_message: "Oui, annuler le rendez-vous", \
+  confirm_link_options: { class: "btn btn-danger", method: :put } \
+)
+
+= render( \
+  "common/modal_confirmation", \
+  id: "js-cancel-participation-modal-#{rdv.id}", \
+  body_message: rdv.motif.cancellation_warning, \
+  cancel_message: "Non", \
+  confirm_path: users_rdv_participations_cancel_path(rdv), \
+  confirm_message: "Oui, annuler votre participation", \
   confirm_link_options: { class: "btn btn-danger", method: :put } \
 )

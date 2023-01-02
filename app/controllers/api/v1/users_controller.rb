@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class Api::V1::UsersController < Api::V1::AgentAuthBaseController
-  before_action :retrieve_user, only: %i[show update invite]
+  before_action :set_organisation, only: %i[show update]
+  before_action :set_user, only: %i[show update invite]
 
   def index
     users = policy_scope(User)
@@ -41,8 +42,12 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
 
   private
 
-  def retrieve_user
-    @user = current_organisation.present? ? current_organisation.users.find(params[:id]) : User.find(params[:id])
+  def set_organisation
+    @organisation = params[:organisation_id].present? ? Organisation.find(params[:organisation_id]) : nil
+  end
+
+  def set_user
+    @user = @organisation.present? ? @organisation.users.find(params[:id]) : User.find(params[:id])
     authorize(@user)
   rescue ActiveRecord::RecordNotFound
     render_error :not_found, not_found: :user

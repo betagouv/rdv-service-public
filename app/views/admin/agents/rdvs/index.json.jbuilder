@@ -6,6 +6,9 @@ json.array! @rdvs do |rdv|
   json.extendedProps do
     json.organisationName rdv.organisation&.name
     json.status rdv.status
+    if @organisation.territory.enable_waiting_room_color_field
+      json.userInWaitingRoom rdv.user_in_waiting_room?
+    end
     json.readableStatus rdv.human_attribute_value(:status)
     json.motif rdv.motif_name
     json.lieu rdv.public_office? && rdv.lieu&.name

@@ -227,3 +227,7 @@ Style/TrailingCommaInHashLiteral:
 
 RSpec/ScatteredSetup:
   Enabled: false
+
+RSpec/FilePath:
+  CustomTransform:
+    SfrMail2SmsMailer: sfr_mail_2_sms_mailer
