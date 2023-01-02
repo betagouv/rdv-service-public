@@ -33,6 +33,7 @@ class Stat
       agent: "Agent (#{rdvs.created_by_agent.count})",
       user: "Usager (#{rdvs.created_by_user.count})",
       file_attente: "File d'attente (#{rdvs.created_by_file_attente.count})",
+      prescripteur: "Prescripteur (#{rdvs.created_by_prescripteur.count})",
     }
     rdvs_group_by_week.transform_keys { |key| [new_keys[key[0].to_sym], key[1]] }
   end
