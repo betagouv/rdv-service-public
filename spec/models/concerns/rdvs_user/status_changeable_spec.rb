@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe RdvsUser::StatusChangeable, type: :concern do
+RSpec.describe RdvsUser::StatusChangeable do
   before { stub_netsize_ok }
 
   describe "RdvsUser change status" do
@@ -9,7 +9,7 @@ RSpec.describe RdvsUser::StatusChangeable, type: :concern do
     let!(:organisation) { create(:organisation, rdvs: [rdv]) }
     let!(:webhook_endpoint) { create(:webhook_endpoint, organisation: organisation, subscriptions: ["rdv"]) }
     let(:rdv_user1) { create(:rdvs_user, rdv: rdv) }
-    let(:rdv_user_with_excused_status) { create(:rdvs_user, rdv: rdv) }
+    let(:rdv_user_with_excused_status) { create(:rdvs_user, rdv: rdv, status: "excused") }
     let(:rdv_user_with_lifecycle_disabled) { create(:rdvs_user, rdv: rdv, send_lifecycle_notifications: false) }
 
     describe "when rdv_user is revoked or excused" do
@@ -24,7 +24,6 @@ RSpec.describe RdvsUser::StatusChangeable, type: :concern do
       end
 
       it "do not send notification when already excused or lifecycle off" do
-        rdv_user_with_excused_status.update!(status: "excused")
         expect(Notifiers::RdvCancelled).not_to receive(:new).with(rdv, agent, [rdv_user_with_excused_status.user])
         expect(Notifiers::RdvCancelled).not_to receive(:new).with(rdv, agent, [rdv_user_with_lifecycle_disabled.user])
         rdv_user_with_excused_status.change_status_and_notify(agent, "revoked")
@@ -40,6 +39,21 @@ RSpec.describe RdvsUser::StatusChangeable, type: :concern do
         expect(Notifiers::RdvCreated).not_to receive(:new).with(rdv, agent, [rdv_user1.user])
         rdv_user1.change_status_and_notify(agent, "seen")
         expect(rdv_user1.reload.status).to eq("seen")
+      end
+
+      context "when the rdv status was previously unknown" do
+        let(:rdv_user0) { rdv.rdvs_users.first }
+        let!(:rdv_user1) { create(:rdvs_user, rdv: rdv, status: "unknown") }
+
+        it "updates the rdv status to seen when all the rdvs are" do
+          expect(rdv.status).to eq "unknown"
+
+          rdv_user0.change_status_and_notify(agent, "seen")
+          expect(rdv.reload.status).to eq "unknown"
+
+          rdv_user1.change_status_and_notify(agent, "seen")
+          expect(rdv.reload.status).to eq "seen"
+        end
       end
     end
 

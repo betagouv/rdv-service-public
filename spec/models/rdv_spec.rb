@@ -731,48 +731,13 @@ describe Rdv, type: :model do
       expect(rdv.status).to eq("unknown")
     end
 
-    it "updated as seen (second priority)" do
+    it "updates the rdv status to seen if at least one participation is seen" do
       rdv.rdvs_users.first.update(status: "seen")
       rdv.rdvs_users.second.update(status: "noshow")
       rdv.rdvs_users.third.update(status: "excused")
       rdv.rdvs_users.last.update(status: "noshow")
       rdv.update_rdv_status_from_participation
       expect(rdv.status).to eq("seen")
-    end
-
-    it "updated as noshow (third priority)" do
-      rdv.rdvs_users.first.update(status: "noshow")
-      rdv.rdvs_users.second.update(status: "excused")
-      rdv.rdvs_users.third.update(status: "excused")
-      rdv.rdvs_users.last.update(status: "excused")
-      rdv.update_rdv_status_from_participation
-      expect(rdv.status).to eq("noshow")
-    end
-
-    it "updated as excused (fourth priority)" do
-      rdv.rdvs_users.first.update(status: "revoked")
-      rdv.rdvs_users.second.update(status: "excused")
-      rdv.rdvs_users.third.update(status: "excused")
-      rdv.rdvs_users.last.update(status: "excused")
-      rdv.update_rdv_status_from_participation
-      expect(rdv.status).to eq("excused")
-    end
-
-    it "updated as revoked (last priority)" do
-      rdv.rdvs_users.first.update(status: "revoked")
-      rdv.rdvs_users.second.update(status: "revoked")
-      rdv.rdvs_users.third.update(status: "revoked")
-      rdv.rdvs_users.last.update(status: "revoked")
-      rdv.update_rdv_status_from_participation
-      expect(rdv.status).to eq("revoked")
-    end
-
-    %w[seen noshow excused].each do |status|
-      it "updated as #{status} if all participations statuses are #{status}" do
-        rdv.rdvs_users.update(status: status)
-        rdv.update_rdv_status_from_participation
-        expect(rdv.status).to eq(status)
-      end
     end
   end
 end

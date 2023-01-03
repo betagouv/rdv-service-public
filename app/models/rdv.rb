@@ -38,7 +38,6 @@ class Rdv < ApplicationRecord
   # https://stackoverflow.com/questions/30629680/rails-isnt-running-destroy-callbacks-for-has-many-through-join-model/30629704
   # https://github.com/rails/rails/issues/7618
   has_many :rdvs_users, validate: false, inverse_of: :rdv, dependent: :destroy
-  after_touch :update_rdv_status_from_participation
   has_many :receipts, dependent: :destroy
 
   accepts_nested_attributes_for :rdvs_users, allow_destroy: true
@@ -321,34 +320,6 @@ class Rdv < ApplicationRecord
   def update_users_count
     users_count = rdvs_users.not_cancelled.count
     update_column(:users_count, users_count)
-  end
-
-  def update_rdv_status_from_participation
-    return unless collectif?
-
-    if rdvs_users.empty?
-      update_status_to_unknown
-      return
-    end
-
-    update_status_priority_order_participations
-  end
-
-  def update_status_to_unknown
-    self.cancelled_at = nil
-    update!(status: "unknown")
-  end
-
-  def update_status_priority_order_participations
-    # Priority Order. One participation will change rdv status
-    %w[unknown seen noshow excused revoked].each do |status|
-      symbol_method = "#{status}?".to_sym
-      next unless rdvs_users.any?(&symbol_method)
-
-      self.cancelled_at = status.in?(%w[revoked noshow]) ? Time.zone.now : nil
-      update!(status: status)
-      break
-    end
   end
 
   private

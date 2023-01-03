@@ -8,6 +8,7 @@ module RdvsUser::StatusChangeable
 
     RdvsUser.transaction do
       if update(status: status)
+        update_rdv_status_from_participation
         notify_update!(author)
         true
       else
@@ -38,6 +39,13 @@ module RdvsUser::StatusChangeable
     end
 
     @notifier&.perform
+  end
+
+  def update_rdv_status_from_participation
+    return if rdv.rdvs_users.where.not(status: :seen).any?
+    return if rdv.seen?
+
+    rdv.update!(status: "seen", cancelled_at: nil)
   end
 
   def rdv_user_cancelled?
