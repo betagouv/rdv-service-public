@@ -6,7 +6,11 @@ class Users::RegistrationsController < Devise::RegistrationsController
   include CanHaveRdvWizardContext
   after_action :allow_iframe
 
+  REDIS_CLIENT = Redis.new(url: ENV.fetch("REDIS_URL", "redis://localhost:6379"))
+
   def create
+    raise "lol"
+    REDIS_CLIENT.set("user_session_domain:#{sign_up_params[:email]}", ttl: )
     return invite_and_redirect if User.find_by(email: sign_up_params[:email], confirmed_at: nil)
 
     super

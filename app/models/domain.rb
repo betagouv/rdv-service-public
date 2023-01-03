@@ -1,17 +1,20 @@
 # frozen_string_literal: true
 
-class Domain
-  # rubocop:disable Metrics/ParameterLists
-  def initialize(
-    name:,
-    logo_path:,
-    public_logo_path:,
-    dark_logo_path:,
-    presentation_for_agents_template_name:,
-    sms_sender_name:,
-    online_reservation_with_public_link:,
-    france_connect_enabled:
-  )
+module DomainFields
+  ALL = %i[
+    name
+    logo_path
+    public_logo_path
+    dark_logo_path
+    presentation_for_agents_template_name
+    sms_sender_name
+    online_reservation_with_public_link
+    france_connect_enabled
+  ].freeze
+end
+
+Domain = Struct.new do
+  def initialize
     @name = name
     @logo_path = logo_path
     @public_logo_path = public_logo_path
@@ -21,8 +24,6 @@ class Domain
     @online_reservation_with_public_link = online_reservation_with_public_link
     @france_connect_enabled = france_connect_enabled
   end
-  # rubocop:enable Metrics/ParameterLists
-
   attr_reader :name, :logo_path, :public_logo_path, :dark_logo_path, :presentation_for_agents_template_name,
               :sms_sender_name, :online_reservation_with_public_link, :france_connect_enabled
 
