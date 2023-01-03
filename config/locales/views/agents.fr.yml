@@ -2,7 +2,7 @@ fr:
   agents:
     calendar_sync:
       show:
-        title: Export vers un agenda externe
+        title: Synchronisation vers un agenda externe
     outlook_sync:
       show:
         title: Connexion à votre compte Outlook
