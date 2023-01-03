@@ -52,8 +52,6 @@ fr:
         use4: "✅ Importer vos rendez-vous dans vos agendas externes (Outlook, Google Agenda, etc...) "
         title1: Comment ça marche ?
         paragraph1: Pour mieux comprendre, nous vous proposons de regarder la vidéo de présentation de l’outil %{video_link}.
-        account_info: "💡 La connexion à votre compte se fait via votre adresse %{email}."
-        account_info2: "Une fois le compte activé, vous pouvez changer cette adresse dans vos paramètres."
         first_steps_info: Vous trouverez  également un guide “premiers pas” dans l’interface de l’outil.
         title2: Besoin d’aide ?
         help_info: "Vous pouvez  nous contacter sur le Mattermost dans le canal : %{mattermost}  ou bien par mail à %{support_email}"
