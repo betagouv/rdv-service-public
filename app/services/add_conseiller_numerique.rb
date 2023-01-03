@@ -4,7 +4,7 @@ class AddConseillerNumerique
   class ConseillerNumerique
     include ActiveModel::Model
 
-    attr_accessor :email, :first_name, :last_name, :external_id, :alternate_email
+    attr_accessor :email, :first_name, :last_name, :external_id
   end
 
   class Structure
