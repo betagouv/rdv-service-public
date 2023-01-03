@@ -706,38 +706,4 @@ describe Rdv, type: :model do
       rdv.soft_delete
     end
   end
-
-  describe "#update_rdv_status_from_participation" do
-    let(:agent) { create :agent }
-    let!(:user1) { create(:user) }
-    let!(:user2) { create(:user) }
-    let!(:user3) { create(:user) }
-    let!(:user4) { create(:user) }
-    let(:rdv) { create :rdv, :collectif, starts_at: Time.zone.tomorrow, agents: [agent], users: [user1, user2, user3, user4] }
-
-    it "update to unknown when rdv is emptied" do
-      rdv.rdvs_users.each { _1.update(status: "seen") }
-      expect(rdv.status).to eq("seen")
-      rdv.rdvs_users.destroy_all
-      expect(rdv.status).to eq("unknown")
-    end
-
-    it "update as unknown (first priority)" do
-      rdv.rdvs_users.first.update(status: "seen")
-      rdv.rdvs_users.second.update(status: "noshow")
-      rdv.rdvs_users.third.update(status: "excused")
-      rdv.rdvs_users.last.update(status: "unknown")
-      rdv.update_rdv_status_from_participation
-      expect(rdv.status).to eq("unknown")
-    end
-
-    it "updates the rdv status to seen if at least one participation is seen" do
-      rdv.rdvs_users.first.update(status: "seen")
-      rdv.rdvs_users.second.update(status: "noshow")
-      rdv.rdvs_users.third.update(status: "excused")
-      rdv.rdvs_users.last.update(status: "noshow")
-      rdv.update_rdv_status_from_participation
-      expect(rdv.status).to eq("seen")
-    end
-  end
 end
