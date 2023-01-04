@@ -63,7 +63,6 @@ class Rdv < ApplicationRecord
   validate :lieu_is_not_disabled_if_needed
   validate :starts_at_is_plausible
   validate :duration_is_plausible
-  validates :name, length: { maximum: 50 }
   validates :max_participants_count, numericality: { greater_than: 0, allow_nil: true }
 
   # Hooks
