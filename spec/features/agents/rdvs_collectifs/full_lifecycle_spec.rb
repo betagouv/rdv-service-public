@@ -112,7 +112,7 @@ describe "Agent can organize a rdv collectif", js: true do
       select(lieu.name, from: "rdv_lieu_id")
 
       click_button "Enregistrer"
-      expect(page).to have_content("L'intitulé est trop long et sera abbrévié ainsi dans les notifications sms : Organiser ses fichiers et ses dossiers sur son ord...")
+      expect(page).to have_content("L'intitulé est trop long et sera abrégé ainsi dans les notifications SMS : Organiser ses fichiers et ses dossiers sur son ord...")
     end
   end
 end
