@@ -14,11 +14,6 @@
 Activer mon compte: <%= accept_invitation_url(@resource, invitation_token: @token, user: @user_params) %>
 
 
-<%= t("devise.mailer.invitation_instructions_cnfs.account_info", email: @resource.email) %>
-<%= t("devise.mailer.invitation_instructions_cnfs.account_info2") %>
-
-
-
 <%= t("devise.mailer.invitation_instructions_cnfs.title1") %>
 
 <%= t("devise.mailer.invitation_instructions_cnfs.paragraph1", video_link: "https://peertube.ethibox.fr/w/f5Pd9h7uuor7xDNEKQRkqV") %>

@@ -24,9 +24,6 @@
   <%= link_to("Activer mon compte", accept_invitation_url(@resource, invitation_token: @token, user: @user_params),  class: "btn btn-primary") %>
 </div>
 
-<p><%= t("devise.mailer.invitation_instructions_cnfs.account_info", email: @resource.email) %></p>
-<p><%= t("devise.mailer.invitation_instructions_cnfs.account_info2") %></p>
-
 <br>
 <h1><%= t("devise.mailer.invitation_instructions_cnfs.title1") %></h1>
 
