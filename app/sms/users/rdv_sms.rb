@@ -42,6 +42,8 @@ class Users::RdvSms < Users::BaseSms
   end
 
   def self.truncated_rdv_name(name)
+    return if name.blank?
+
     if name.length > MAX_RDV_NAME_LENGTH
       "#{name.first(MAX_RDV_NAME_LENGTH)}..."
     else

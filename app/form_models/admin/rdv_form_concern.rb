@@ -127,7 +127,7 @@ module Admin::RdvFormConcern
 
     return if truncated_name == rdv.name
 
-    add_benign_error("L'intitulé est trop long et sera abbrévié ainsi dans les notifications sms : #{truncated_name}")
+    add_benign_error("L'intitulé est trop long et sera abrégé ainsi dans les notifications SMS : #{truncated_name}")
   end
 
   def rdv_agent_pairs_ending_shortly_before_grouped_by_agent

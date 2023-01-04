@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 describe "Agent can organize a rdv collectif", js: true do
+  let(:agent) { create(:agent, basic_role_in_organisations: [organisation], service: service, first_name: "Alain", last_name: "DIALO") }
   let!(:motif) do
     create(:motif, :collectif, name: "Atelier participatif", organisation: organisation, service: service)
   end
@@ -11,15 +12,15 @@ describe "Agent can organize a rdv collectif", js: true do
   let!(:user1) { create(:user, organisations: [organisation]) }
   let!(:user2) { create(:user, organisations: [organisation]) }
 
-  before { stub_netsize_ok }
+  before do
+    stub_netsize_ok
+    travel_to(Time.zone.local(2022, 3, 14))
+    login_as(agent, scope: :agent)
+  end
 
   around { |example| perform_enqueued_jobs { example.run } }
 
   def create_rdv_collectif(lieu_availability)
-    travel_to(Time.zone.local(2022, 3, 14))
-    agent = create(:agent, basic_role_in_organisations: [organisation], service: service, first_name: "Alain", last_name: "DIALO")
-    login_as(agent, scope: :agent)
-
     # Creating a new RDV Collectif
     visit admin_organisation_rdvs_collectifs_path(organisation)
     expect(page).to have_content("Aucun RDV")
@@ -87,6 +88,31 @@ describe "Agent can organize a rdv collectif", js: true do
   context "create a RDV collectif an single_use lieu" do
     it do
       create_rdv_collectif(:single_use)
+    end
+  end
+
+  describe "warnings" do
+    it "shows a warning when the name is too long" do
+      # Creating a new RDV Collectif
+      visit admin_organisation_rdvs_collectifs_path(organisation)
+      expect(page).to have_content("Aucun RDV")
+
+      click_link "Nouveau RDV Collectif"
+      expect(page).to have_content("Choisissez un motif")
+      click_link "Atelier participatif"
+
+      expect(page).to have_content("Commence")
+
+      fill_in "Commence à", with: "17/3/2022 14:00"
+      fill_in "Durée en minutes", with: "30"
+      fill_in "Nombre de places", with: 4
+      fill_in "Intitulé", with: "Organiser ses fichiers et ses dossiers sur son ordinateur"
+
+      select("DIALO Alain", from: "rdv_agent_ids")
+      select(lieu.name, from: "rdv_lieu_id")
+
+      click_button "Enregistrer"
+      expect(page).to have_content("L'intitulé est trop long et sera abbrévié ainsi dans les notifications sms : Organiser ses fichiers et ses dossiers sur son ord...")
     end
   end
 end
