@@ -358,7 +358,7 @@ class Rdv < ApplicationRecord
 
   def update_status_priority_order_participations
     # Priority Order. One participation will change rdv status
-    %w[unknown seen noshow excused revoked].each do |status|
+    %w[unknown seen noshow revoked].each do |status|
       symbol_method = "#{status}?".to_sym
       next unless rdvs_users.any?(&symbol_method)
 
