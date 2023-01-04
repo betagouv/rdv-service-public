@@ -38,7 +38,7 @@ class Users::RdvSms < Users::BaseSms
   MAX_RDV_NAME_LENGTH = 50
 
   def truncated_rdv_name
-    self.class.truncated_rdv_name(name)
+    self.class.truncated_rdv_name(@rdv.name)
   end
 
   def self.truncated_rdv_name(name)
