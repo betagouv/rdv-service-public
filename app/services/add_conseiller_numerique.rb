@@ -4,7 +4,7 @@ class AddConseillerNumerique
   class ConseillerNumerique
     include ActiveModel::Model
 
-    attr_accessor :email, :first_name, :last_name, :external_id, :alternate_email
+    attr_accessor :email, :first_name, :last_name, :external_id
   end
 
   class Structure
@@ -45,17 +45,13 @@ class AddConseillerNumerique
 
   def invite_agent(organisation)
     Agent.invite!(
-      {
-        email: @conseiller_numerique.email,
-        first_name: @conseiller_numerique.first_name.capitalize,
-        last_name: @conseiller_numerique.last_name,
-        external_id: @conseiller_numerique.external_id,
-        service: service,
-        password: SecureRandom.hex,
-        roles_attributes: [{ organisation: organisation, level: AgentRole::LEVEL_ADMIN }],
-      },
-      nil,
-      { cc: @conseiller_numerique.alternate_email }
+      email: @conseiller_numerique.email,
+      first_name: @conseiller_numerique.first_name.capitalize,
+      last_name: @conseiller_numerique.last_name,
+      external_id: @conseiller_numerique.external_id,
+      service: service,
+      password: SecureRandom.hex,
+      roles_attributes: [{ organisation: organisation, level: AgentRole::LEVEL_ADMIN }]
     ).tap do |agent|
       AgentTerritorialAccessRight.create!(agent: agent, territory: territory)
     end
