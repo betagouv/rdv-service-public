@@ -9,8 +9,6 @@ RSpec.describe RdvsUser::StatusChangeable do
     let!(:organisation) { create(:organisation, rdvs: [rdv]) }
     let!(:webhook_endpoint) { create(:webhook_endpoint, organisation: organisation, subscriptions: ["rdv"]) }
     let(:rdv_user1) { create(:rdvs_user, rdv: rdv) }
-    let(:rdv_user_with_excused_status) { create(:rdvs_user, rdv: rdv, status: "excused") }
-    let(:rdv_user_with_lifecycle_disabled) { create(:rdvs_user, rdv: rdv, send_lifecycle_notifications: false) }
 
     describe "when rdv_user is revoked or excused" do
       RdvsUser::CANCELLED_STATUSES.each do |status|
@@ -22,6 +20,9 @@ RSpec.describe RdvsUser::StatusChangeable do
           expect(rdv_user1.reload.status).to eq(status)
         end
       end
+
+      let(:rdv_user_with_excused_status) { create(:rdvs_user, rdv: rdv, status: "excused") }
+      let(:rdv_user_with_lifecycle_disabled) { create(:rdvs_user, rdv: rdv, send_lifecycle_notifications: false) }
 
       it "do not send notification when already excused or lifecycle off" do
         expect(Notifiers::RdvCancelled).not_to receive(:new).with(rdv, agent, [rdv_user_with_excused_status.user])
