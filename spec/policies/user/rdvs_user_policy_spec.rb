@@ -92,7 +92,7 @@ describe User::RdvsUserPolicy, type: :policy do
   end
 
   context "Rdv is revoked" do
-    let!(:rdv) { create(:rdv, :collectif, :without_users, organisation: organisation, agents: [agent]) }
+    let!(:rdv) { create(:rdv, :collectif, :without_users, organisation: organisation, agents: [agent], status: :revoked) }
     let!(:participation2) { create(:rdvs_user, user: user2, rdv: rdv, status: "revoked") }
     let!(:participation) { build(:rdvs_user, user: user, rdv: rdv) }
 
