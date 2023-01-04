@@ -25,6 +25,7 @@ module Admin::RdvFormConcern
     validate :warn_rdvs_overlapping_rdv
     validate :warn_rdv_duplicate_suspected
     validate :warn_starts_in_the_past
+    validate :warn_name_too_long_for_sms
   end
 
   def check_duplicates
@@ -116,6 +117,17 @@ module Admin::RdvFormConcern
     return if rdv.starts_at >= Time.zone.now
 
     add_benign_error(I18n.t("activemodel.warnings.models.rdv.attributes.starts_at.in_the_past", distance: distance_of_time_in_words_to_now(rdv.starts_at)))
+  end
+
+  def warn_name_too_long_for_sms
+    return if ignore_benign_errors
+    return if rdv.individuel?
+
+    truncated_name = Users::RdvSms.truncated_rdv_name(rdv.name)
+
+    return if truncated_name == rdv.name
+
+    add_benign_error("L'intitulé est trop long et sera abbrévié ainsi dans les notifications sms : #{truncated_name}")
   end
 
   def rdv_agent_pairs_ending_shortly_before_grouped_by_agent

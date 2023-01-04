@@ -5,7 +5,7 @@ class Users::RdvSms < Users::BaseSms
 
   def rdv_title(rdv)
     if rdv.collectif? && rdv.name.present?
-      "#{rdv.motif.service.short_name} : #{rdv.name},"
+      "#{rdv.motif.service.short_name} : #{truncated_rdv_name},"
     else
       rdv.motif.service.short_name
     end
@@ -33,6 +33,20 @@ class Users::RdvSms < Users::BaseSms
                "Allez sur #{url} pour reprendre RDV."
              end
     @content = "#{base_message}\n#{footer}"
+  end
+
+  MAX_RDV_NAME_LENGTH = 50
+
+  def truncated_rdv_name
+    self.class.truncated_rdv_name(name)
+  end
+
+  def self.truncated_rdv_name(name)
+    if name.length > MAX_RDV_NAME_LENGTH
+      "#{name.first(MAX_RDV_NAME_LENGTH)}..."
+    else
+      name
+    end
   end
 
   private
