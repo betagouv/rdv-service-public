@@ -8,7 +8,7 @@ describe "Agents can export their calendar to other tools, such as Outlook or Go
     agent = create(:agent, basic_role_in_organisations: [organisation], first_name: "Rémi", last_name: "NOM D'AGENT")
     login_as(agent, scope: :agent)
 
-    visit agents_calendar_sync_path
+    visit agents_calendar_sync_webcal_sync_path
 
     webcal_url = "webcal://#{Capybara.server_host}:#{Capybara.server_port}/calendrier/remi-nom-d-agent-#{uid}.ics"
 
@@ -17,7 +17,7 @@ describe "Agents can export their calendar to other tools, such as Outlook or Go
     visit webcal_url
     expect(page).to have_content "BEGIN:VCALENDAR"
 
-    visit agents_calendar_sync_path
+    visit agents_calendar_sync_webcal_sync_path
 
     second_uid = "f7d1f2dd-0911-4f6e-b319-73a982429fd1"
     allow(SecureRandom).to receive(:uuid).and_return(second_uid)

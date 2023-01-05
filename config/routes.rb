@@ -92,8 +92,12 @@ Rails.application.routes.draw do
       resource :preferences, only: %i[show update] do
         post :disable_cnfs_online_booking_banner
       end
-      resource :calendar_sync, only: %i[show update], controller: :calendar_sync
+      resource :calendar_sync, only: %i[show], controller: :calendar_sync do
+        resource :webcal_sync, only: %i[show update], controller: :webcal_sync
+        resource :outlook_sync, only: %i[show destroy], controller: :outlook_sync
+      end
     end
+    get "omniauth/microsoft_graph/callback" => "omniauth_callbacks#microsoft_graph"
   end
 
   get "/calendrier/:id", controller: :ics_calendar, action: :show, as: :ics_calendar

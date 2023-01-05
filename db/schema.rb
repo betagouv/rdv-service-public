@@ -236,6 +236,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_30_143520) do
     t.datetime "last_sign_in_at"
     t.string "current_sign_in_ip"
     t.string "last_sign_in_ip"
+    t.text "microsoft_graph_token"
+    t.text "refresh_microsoft_graph_token"
     t.index ["calendar_uid"], name: "index_agents_on_calendar_uid", unique: true
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true
     t.index ["email"], name: "index_agents_on_email", unique: true
@@ -263,6 +265,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_30_143520) do
   create_table "agents_rdvs", force: :cascade do |t|
     t.bigint "agent_id", null: false
     t.bigint "rdv_id", null: false
+    t.text "outlook_id"
     t.index ["agent_id", "rdv_id"], name: "index_agents_rdvs_on_agent_id_and_rdv_id", unique: true
     t.index ["agent_id"], name: "index_agents_rdvs_on_agent_id"
     t.index ["rdv_id"], name: "index_agents_rdvs_on_rdv_id"

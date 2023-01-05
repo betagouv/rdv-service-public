@@ -18,9 +18,9 @@
     span.title Motif :
     span.float-right
       - if rdv.collectif? && rdv.name.present?
-        = "#{rdv.motif.name} : #{rdv.name}"
+        = "#{rdv.motif_name} : #{rdv.name}"
       - else
-        = rdv.motif.name
+        = rdv.motif_name
     .clear
   div.row-result
     span.title Service :

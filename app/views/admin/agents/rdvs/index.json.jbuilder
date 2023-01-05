@@ -10,7 +10,7 @@ json.array! @rdvs do |rdv|
       json.userInWaitingRoom rdv.user_in_waiting_room?
     end
     json.readableStatus rdv.human_attribute_value(:status)
-    json.motif rdv.motif.name
+    json.motif rdv.motif_name
     json.lieu rdv.public_office? && rdv.lieu&.name
     json.past rdv.past?
     json.duration rdv.duration_in_min

@@ -318,6 +318,9 @@ GEM
     omniauth-github (2.0.1)
       omniauth (~> 2.0)
       omniauth-oauth2 (~> 1.8)
+    omniauth-microsoft_graph (1.2.0)
+      omniauth (~> 2.0)
+      omniauth-oauth2 (~> 1.8.0)
     omniauth-oauth2 (1.8.0)
       oauth2 (>= 1.4, < 3)
       omniauth (~> 2.0)
@@ -647,6 +650,7 @@ DEPENDENCIES
   mail (= 2.8.0.rc1)
   montrose
   omniauth-github
+  omniauth-microsoft_graph
   omniauth-rails_csrf_protection
   omniauth_openid_connect
   paper_trail (< 13.0)
