@@ -1,0 +1,8 @@
+= territory_navigation(t(".title", name: @team.name), [link_to("Équipes", admin_territory_teams_path(current_territory))])
+
+.container-fluid.bg-white.rounded.m-2.p-2
+  = render "form", team: @team, url: admin_territory_team_path(current_territory, @team)
+
+.row.justify-content-center
+  .col-md-8
+    = render "admin/versions/resource_versions_row", policy_scope: :configuration, resource: @team

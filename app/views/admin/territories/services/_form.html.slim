@@ -1,0 +1,18 @@
+= simple_form_for team, url: url do |form|
+  = form.input :name
+  = form.input :agent_ids, collection: team.agents,
+          label_method: :reverse_full_name,
+          input_html: { \
+            multiple: true, \
+            class: "select2-input", \
+            data: { \
+              "select-options": { \
+                ajax: { \
+                  url: admin_territory_agents_path(current_territory),
+                  dataType: "json",
+                  delay: 250, \
+                }, \
+              }, \
+            }, \
+          }
+  = form.submit class: "btn btn-primary"

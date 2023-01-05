@@ -114,6 +114,7 @@ Rails.application.routes.draw do
           resources :webhook_endpoints, except: %i[show]
           resources :agents, only: %i[index update edit]
           resources :teams
+          resources :services
           resource :user_fields, only: %i[edit update]
           resource :rdv_fields, only: %i[edit update]
           resource :motif_fields, only: %i[edit update]
