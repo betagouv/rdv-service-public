@@ -2,6 +2,7 @@
 
 class Users::RdvSms < Users::BaseSms
   include Rails.application.routes.url_helpers
+  extend ActionView::Helpers::TextHelper
 
   def rdv_title(rdv)
     if rdv.collectif? && rdv.name.present?
@@ -42,13 +43,8 @@ class Users::RdvSms < Users::BaseSms
   end
 
   def self.truncated_rdv_name(name)
-    return if name.blank?
-
-    if name.length > MAX_RDV_NAME_LENGTH
-      "#{name.first(MAX_RDV_NAME_LENGTH)}..."
-    else
-      name
-    end
+    omission_length = "...".length
+    truncate(name, length: (MAX_RDV_NAME_LENGTH + omission_length))
   end
 
   private
