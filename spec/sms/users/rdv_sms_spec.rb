@@ -25,24 +25,29 @@ describe Users::RdvSms, type: :service do
     context "with a collective rdv" do
       subject { described_class.rdv_created(rdv, user, token).content }
 
-      let(:rdv) { build(:rdv, :collectif, starts_at: Time.zone.local(2021, 12, 10, 13, 10), id: 123, name: "Super Atelier") }
+      let(:rdv_name) { "Super Atelier" }
+      let(:rdv) { build(:rdv, :collectif, starts_at: Time.zone.local(2021, 12, 10, 13, 10), id: 123, name: rdv_name) }
       let(:user) { build(:user) }
       let(:token) { "12345" }
 
       it "contains rdv title" do
         expect(subject).to include("RDV #{rdv.service.name} : Super Atelier, vendredi 10/12 à 13h10.")
       end
-    end
 
-    context "with a collective rdv without title" do
-      subject { described_class.rdv_created(rdv, user, token).content }
+      context "with a blank name" do
+        let(:rdv_name) { "    " }
 
-      let(:rdv) { build(:rdv, :collectif, starts_at: Time.zone.local(2021, 12, 10, 13, 10), id: 123, name: "  ") }
-      let(:user) { build(:user) }
-      let(:token) { "12345" }
+        it "contains rdv title but not the blank name" do
+          expect(subject).to include("RDV #{rdv.service.name} vendredi 10/12 à 13h10.")
+        end
+      end
 
-      it "contains rdv title" do
-        expect(subject).to include("RDV #{rdv.service.name} vendredi 10/12 à 13h10.")
+      context "when the rdv name is too long" do
+        let(:rdv_name) { "Organiser ses fichiers et ses dossiers sur son ordinateur" }
+
+        it "truncates it too avoid sending too many sms and costing too much money" do
+          expect(subject).to include("RDV #{rdv.service.name} : Organiser ses fichiers et ses dossiers sur son ord..., vendredi 10/12 à 13h10.")
+        end
       end
     end
 

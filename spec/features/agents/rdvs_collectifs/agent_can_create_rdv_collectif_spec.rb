@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Agent can create a Rdv collectif" do
+describe "Agent can create a Rdv collectif from the agenda" do
   include UsersHelper
 
   let!(:organisation) { create(:organisation) }
@@ -24,7 +24,7 @@ describe "Agent can create a Rdv collectif" do
   end
 
   it "default", js: true do
-    find(".fc-minor", match: :first).click
+    find(".fc-minor", match: :first).click # Click on the agenda
 
     select(motif.name, from: "rdv_motif_id")
     click_button("Continuer")
