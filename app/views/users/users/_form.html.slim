@@ -10,7 +10,7 @@
   .form-row
     - unless current_user.only_invited?
       .col-md-6= f.input :birth_name, placeholder: "Nom de naissance", disabled: user.logged_once_with_franceconnect?
-      .col-md-6= date_input(f, :birth_date, disabled: user.logged_once_with_franceconnect?)
+      .col-md-6= f.input(:birth_date, as: :date, html5: true, disabled: user.logged_once_with_franceconnect?, input_html: {min: 150.years.ago, max: 2.months.from_now})
   - if user.logged_once_with_franceconnect?
     .alert.alert-info.d-flex.align-items-center
       .mr-3

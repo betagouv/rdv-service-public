@@ -30,7 +30,7 @@
             = f.input :context, input_html: { rows: 3 }
             .form-row
               .col-md-6 data={ "controller": "past-date-alert" }
-                = datetime_input(f, :starts_at, input_html: { data: { "past-date-alert-target": "date-input" } })
+                = f.input :starts_at, as: :datetime, html5: true, input_html: { data: { "past-date-alert-target": "date-input" } }
               .col-md-6= f.input :duration_in_min
             - if @rdv_form.motif.public_office?
 
