@@ -86,6 +86,17 @@ fr:
         new:
           territory_teams_title: Créer une équipe
           title: Ajouter une équipe
+      services:
+        edit:
+          territory_services_title: Services du territoire
+          title: Modifier le service %{name}
+        index:
+          services_title: Services du territoire
+          create_service: Ajouter un service
+          back: Retour
+        new:
+          territory_services_title: Créer un service
+          title: Ajouter un service
       agents:
         edit:
           agent_title: Modification agent %{name}

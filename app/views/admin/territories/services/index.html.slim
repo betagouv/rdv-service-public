@@ -1,14 +1,14 @@
-= territory_navigation("Équipes")
+= territory_navigation("Services")
 
-= simple_form_for "", url: admin_territory_teams_path(current_territory), html: { method: :get, class: "form-inline" }, wrapper: :inline_form do |f|
+= simple_form_for "", url: admin_territory_services_path(current_territory), html: { method: :get, class: "form-inline" }, wrapper: :inline_form do |f|
 
   .container-fluid.bg-white.rounded.m-2.p-2
 
     .text-right
-      = link_to t(".create_team"), new_admin_territory_team_path(current_territory), class:"btn btn-outline-primary"
+      = link_to t(".create_service"), new_admin_territory_service_path(current_territory), class:"btn btn-outline-primary"
     .m-3.d-flex.justify-content-end
       - search = params[:search].blank? ? "d-none" : ""
-      div= link_to "Réinitialiser", admin_territory_teams_path(current_territory), class: "btn btn-link #{search}"
+      div= link_to "Réinitialiser", admin_territory_services_path(current_territory), class: "btn btn-link #{search}"
       = f.input :search, placeholder: "ex. Puericultrice", label: false, input_html: { autocomplete: "off", class: "search-form-control", value: params[:search] }, required: false
       = f.button :submit, "Rechercher"
 
@@ -19,23 +19,23 @@
           th Nb équipier
           th Actions
       tbody
-        - @teams.each do |team|
-          tr id="team_#{team.id}"
-            td = team.name
-            td = team.agents.count
+        - @services.each do |service|
+          tr id="service_#{service.id}"
+            td = service.name
+            td = service.agents.count
             td
               .d-flex
-                div.mr-3= link_to edit_admin_territory_team_path(current_territory, team),
+                div.mr-3= link_to edit_admin_territory_service_path(current_territory, service),
                         title: t("helpers.edit") do
                   i.fa.fa-edit
-                div.mr-3= link_to( admin_territory_team_path(current_territory, team),
+                div.mr-3= link_to( admin_territory_service_path(current_territory, service),
                         method: :delete,
                         title: t("helpers.delete"),
                         data: { confirm: "Confirmez-vous la suppression de cette équipe ?"} ) do
                   i.fa.fa-trash-alt
     .d-flex.justify-content-center
-      = paginate @teams, theme: "twitter-bootstrap-4"
+      = paginate @services, theme: "twitter-bootstrap-4"
 
     .text-right
       = link_to t(".back"), admin_territory_agents_path(current_territory), class: "btn btn-link"
-      = link_to t(".create_team"), new_admin_territory_team_path(current_territory), class: "btn btn-outline-primary"
+      = link_to t(".create_service"), new_admin_territory_service_path(current_territory), class: "btn btn-outline-primary"

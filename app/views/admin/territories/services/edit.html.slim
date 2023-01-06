@@ -1,8 +1,8 @@
-= territory_navigation(t(".title", name: @team.name), [link_to("Équipes", admin_territory_teams_path(current_territory))])
+= territory_navigation(t(".title", name: @service.name), [link_to("Équipes", admin_territory_services_path(current_territory))])
 
 .container-fluid.bg-white.rounded.m-2.p-2
-  = render "form", team: @team, url: admin_territory_team_path(current_territory, @team)
+  = render "form", service: @service, url: admin_territory_service_path(current_territory, @service)
 
 .row.justify-content-center
   .col-md-8
-    = render "admin/versions/resource_versions_row", policy_scope: :configuration, resource: @team
+    = render "admin/versions/resource_versions_row", policy_scope: :configuration, resource: @service
