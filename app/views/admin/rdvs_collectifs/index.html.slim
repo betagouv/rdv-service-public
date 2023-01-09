@@ -12,7 +12,7 @@
     = simple_form_for(@form, as: "", url: admin_organisation_rdvs_collectifs_path(current_organisation), method: :get) do |f|
       .row
         .col-md-4
-          = date_input(f, :from_date, label = "À partir du", value: @form.from_date)
+          = f.input(:from_date, label: "À partir du", as: :date, html5: true, value: @form.from_date, input_html: {min: 1.year.ago, max: 2.years.from_now})
         .col-md-4
           = f.input :motif_id, \
             include_blank: true, \

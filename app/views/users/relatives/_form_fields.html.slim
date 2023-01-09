@@ -1,4 +1,4 @@
 .form-row
   .col-md-6= f.input :first_name
   .col-md-6= f.input :last_name
-= date_input(f, :birth_date)
+= f.input(:birth_date, as: :date, html5: true, input_html: {min: 150.years.ago, max: 2.months.from_now} )

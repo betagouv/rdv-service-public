@@ -16,33 +16,6 @@ module ApplicationHelper
     end
   end
 
-  def datetime_input(form, field, input_html: {})
-    form.input(
-      field,
-      as: :string,
-      input_html: {
-        value: form.object.send(field)&.strftime("%d/%m/%Y %H:%M"),
-        data: { behaviour: "datetimepicker" },
-        autocomplete: "off",
-      }.deep_merge(input_html)
-    )
-  end
-
-  def date_input(form, field, label = nil, input_html: {}, **kwargs)
-    form.input(
-      field,
-      as: :string,
-      label: label,
-      input_html: {
-        value: form.object&.send(field)&.strftime("%d/%m/%Y"),
-        data: { behaviour: "datepicker" },
-        autocomplete: "off",
-        placeholder: "__/__/___",
-      }.deep_merge(input_html),
-      **kwargs
-    )
-  end
-
   def agents_or_users_body_class
     agent_path? ? "agents" : "users"
   end

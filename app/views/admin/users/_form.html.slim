@@ -38,7 +38,7 @@
         .form-row
           .col-md-6= f.input :first_name, **input_opts[:relative]
           .col-md-6= f.input :last_name, **input_opts[:relative]
-        = date_input(f, :birth_date, **input_opts[:relative])
+        = f.input(:birth_date, **input_opts[:relative], as: :date, html5: true, input_html: {min: 150.years.ago, max: 2.months.from_now} )
         - if current_territory.enable_notes_field?
           = f_user_profile.input :notes, **input_opts[:relative].deep_merge(input_html: { rows: 6 })
 
