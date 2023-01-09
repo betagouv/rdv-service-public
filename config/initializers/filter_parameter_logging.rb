@@ -4,7 +4,8 @@
 # sensitive information. See the ActiveSupport::ParameterFilter documentation for supported
 # notations and behaviors.
 Rails.application.config.filter_parameters += %i[
-  password
-  passw secret token _key crypt salt certificate otp ssn
-  email address last_name phone_number phone_number_formatted affiliation_number
+  password passw secret token _key crypt salt certificate otp ssn api_key notes
+  email first_name last_name phone_number phone_number_formatted affiliation_number birth_date
+  address city_code post_code city_name address_details logement
+  family_situation number_of_children case_number
 ]
