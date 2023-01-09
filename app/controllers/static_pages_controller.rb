@@ -18,4 +18,6 @@ class StaticPagesController < ApplicationController
   def presentation_for_agents
     render current_domain.presentation_for_agents_template_name
   end
+
+  def microsoft_domain_verification; end
 end
