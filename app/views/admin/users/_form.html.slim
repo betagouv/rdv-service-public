@@ -1,6 +1,24 @@
-- div_opts = agent_user_form_div_toggle_opts(user)
-- input_opts = agent_user_form_input_toggle_opts(user)
-- initial_relative_type_tab = user.responsible&.persisted? || user.responsible&.new_and_blank? ? :existing : :new
+ruby:
+  div_opts = agent_user_form_div_toggle_opts(user)
+  input_opts = {
+     responsible: {
+       input_html: {"data-togglable": true, "data-responsability-type": "responsible"},
+      disabled: user.responsability_type != :responsible,
+     },
+     relative: {
+       input_html: {"data-togglable": true, "data-responsability-type": "relative" },
+       disabled: user.responsability_type != :relative,
+     },
+     relative_new: {
+       input_html: {"data-togglable": true, "data-responsability-type": "relative", "data-relative-type": "new"},
+       disabled: !(user.responsability_type == :relative && user.responsible.new_and_blank?),
+     },
+     relative_existing: {
+       input_html: {"data-togglable": true, "data-responsability-type": "relative", "data-relative-type": "existing"},
+       disabled: !(user.responsability_type == :relative && !user.responsible.new_and_blank?),
+     },
+  }
+  initial_relative_type_tab = user.responsible&.persisted? || user.responsible&.new_and_blank? ? :existing : :new
 
 = simple_form_for( \
   user, url: agent_user_form_url(user), remote: from_modal?, \
@@ -38,7 +56,7 @@
         .form-row
           .col-md-6= f.input :first_name, **input_opts[:relative]
           .col-md-6= f.input :last_name, **input_opts[:relative]
-        = f.input(:birth_date, **input_opts[:relative], as: :date, html5: true, input_html: {min: 150.years.ago, max: 2.months.from_now} )
+        = f.input(:birth_date, as: :date, html5: true, **input_opts[:relative].deep_merge({min: 150.years.ago, max: 2.months.from_now}) )
         - if current_territory.enable_notes_field?
           = f_user_profile.input :notes, **input_opts[:relative].deep_merge(input_html: { rows: 6 })
 
