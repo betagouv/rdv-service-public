@@ -36,8 +36,8 @@
               class: "js-filtered-motifs", \
             }
         .col-md-4
-          - input_html = { min: Time.zone.today, max: 1.year.from_now }
-          = f.input(:from_date, label: "À partir du",  as: :date, html5: true, required: true, input_html: input_html)
+          - input_html = { data: { "min-date": Time.zone.today.strftime("%d/%m/%Y") } } # prevent from selecting past dates
+          = date_input(f, :from_date, "À partir du", input_html: input_html, required: true)
       .row
         - if @teams.any?
           .col-md-4

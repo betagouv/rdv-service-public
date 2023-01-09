@@ -1,10 +1,10 @@
 .recurrence-select.recurrence-select--weekly.js-recurrence-container data-controller="recurrence"
   .row
     .col
-      = f.input(:first_day, as: :date, html5: true, input_html: { id: "recurrence-source", data: { target: "recurrence.firstDay", action: "recurrence#updateRecurrence" }, class: "js-recurrence-first-day js-recurrence-input", min: 1.year.ago, max: 2.years.from_now})
+      = date_input(f, :first_day, input_html: { id: "recurrence-source", data: { target: "recurrence.firstDay", action: "recurrence#updateRecurrence" }, class: "js-recurrence-first-day js-recurrence-input"} )
     - if defined?(model.end_day)
       .col
-        = f.input(:end_day, as: :date, html5: true, input_html: {min: 1.year.ago, max: 2.years.from_now})
+        = date_input(f, :end_day)
 
   .row
     .col = f.input :start_time, as: :select, collection: every_5_minutes_of_the_day, selected: model.start_time&.strftime("%H:%M"), include_blank: false
@@ -29,4 +29,4 @@
         span.js-recurrence-monthly data-target="recurrence.monthly" Tous les X du mois
 
       .until-select
-        = n.input(:until, as: :date, html5: true, required: false, label: "Finir la répétition le (si aucune laisser vide)", input_html: { id: "recurrence-until", data: { target: "recurrence.until", action: "recurrence#updateRecurrence" }, class: "js-recurrence-until js-recurrence-input"})
+        = date_input(n, :until, required: false, label: "Finir la répétition le (si aucune laisser vide)", input_html: { id: "recurrence-until", data: { target: "recurrence.until", action: "recurrence#updateRecurrence" }, class: "js-recurrence-until js-recurrence-input" } )

@@ -4,6 +4,7 @@ import 'bootstrap';
 import 'holderjs/holder.min';
 import 'select2/dist/js/select2.full.min.js';
 import 'select2/dist/js/i18n/fr.js';
+import { Datetimepicker } from './components/datetimepicker';
 import { Menu } from './components/menu';
 import { Modal } from './components/modal';
 import { ServiceFilterForMotifsSelects } from './components/service-filter-for-motifs-selects';
@@ -41,11 +42,13 @@ new ServiceFilterForMotifsSelects();
 global.$ = require('jquery');
 
 $(document).on('shown.bs.modal', '.modal', function(e) {
+  new Datetimepicker();
   new AgentUserForm();
 });
 
 $(document).on('hide.bs.modal', '.modal', function(e) {
   $('.modal-backdrop').remove();
+  $("[data-behaviour='datepicker'], [data-behaviour='datetimepicker'], [data-behaviour='timepicker']").datetimepicker('destroy');
 });
 
 $(document).on('show.bs.modal', '.modal', function(e) {
@@ -64,6 +67,8 @@ $(document).on('turbolinks:load', function() {
   });
 
   new PlacesInputs();
+
+  new Datetimepicker();
 
   new MotifForm();
 

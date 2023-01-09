@@ -13,7 +13,7 @@
 
 .form-row
   .col-md-6= f.input :birth_name, **input_opts.deep_merge(frozen_fields_opts)
-  .col-md-6= f.input(:birth_date, as: :date, html5: true,  **input_opts.deep_merge(frozen_fields_opts), input_html: {min: 150.years.ago, max: 2.months.from_now} )
+  .col-md-6= date_input(f, :birth_date, **input_opts.deep_merge(frozen_fields_opts))
 
 = f.input :phone_number, as: :tel, **input_opts
 
