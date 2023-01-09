@@ -1,6 +1,12 @@
-- div_opts = agent_user_form_div_toggle_opts(user)
-- input_opts = agent_user_form_input_toggle_opts(user)
-- initial_relative_type_tab = user.responsible&.persisted? || user.responsible&.new_and_blank? ? :existing : :new
+ruby:
+  div_opts = agent_user_form_div_toggle_opts(user)
+  input_opts = {
+     :responsible=>{:input_html=>{:"data-togglable"=>true, :"data-responsability-type"=>"responsible"}},
+     :relative=>{:input_html=>{:"data-togglable"=>true, :"data-responsability-type"=>"relative" }},
+     :relative_new=>{:input_html=>{:"data-togglable"=>true, :"data-responsability-type"=>"relative", :"data-relative-type"=>"new"}},
+     :relative_existing=>{:input_html=>{:"data-togglable"=>true, :"data-responsability-type"=>"relative", :"data-relative-type"=>"existing"}}
+   }
+  initial_relative_type_tab = user.responsible&.persisted? || user.responsible&.new_and_blank? ? :existing : :new
 
 = simple_form_for( \
   user, url: agent_user_form_url(user), remote: from_modal?, \
