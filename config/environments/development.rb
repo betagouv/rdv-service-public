@@ -61,8 +61,7 @@ Rails.application.configure do
 
   config.action_mailer.perform_caching = false
 
-  # config.log_level = :info
-  config.log_level = :debug # debug logs all the SQL queries made by ActiveRecord
+  config.log_level = ENV.fetch("LOG_LEVEL", :info) # allows for individual config with ENV variable
 
   # allows to see debug logs when running with foreman / overmind
   # cf https://github.com/rails/sprockets-rails/issues/376#issuecomment-287560399
