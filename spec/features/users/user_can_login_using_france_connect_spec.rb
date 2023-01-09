@@ -19,9 +19,9 @@ describe "User can login using FranceConnect" do
   context "visiting rdv-solidarites domain" do
     it "allows a user to create an account using the FranceConnect button" do
       visit "http://www.rdv-solidarites-test.localhost/users/sign_in"
-      expect(page).to have_link("S'identifier avec France connect")
+      expect(page).to have_link("S'identifier avec FranceConnect")
 
-      expect { click_on "S'identifier avec France connect" }.to change(User, :count).by(1)
+      expect { click_on "S'identifier avec FranceConnect" }.to change(User, :count).by(1)
 
       expect(User.last).to have_attributes(
         email: "france@monopolis.fr",
@@ -39,7 +39,7 @@ describe "User can login using FranceConnect" do
   context "visiting rdv-aide-numerique domain" do
     it "hides the FranceConnect button" do
       visit "http://www.rdv-aide-numerique-test.localhost/users/sign_in"
-      expect(page).not_to have_link("S'identifier avec France connect")
+      expect(page).not_to have_link("S'identifier avec FranceConnect")
     end
   end
 end
