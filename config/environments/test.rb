@@ -60,7 +60,6 @@ Rails.application.configure do
   # ActionMailer::Base.deliveries array.
   config.action_mailer.delivery_method = :test
   config.active_job.queue_adapter = :test
-  Delayed::Worker.delay_jobs = false
 
   # Print deprecation notices to the stderr.
   config.active_support.deprecation = :stderr
@@ -85,4 +84,8 @@ Rails.application.configure do
   # config.action_view.annotate_rendered_view_with_filenames = true
 
   config.x.rack_attack.limit = 2
+
+  config.active_record.encryption.primary_key = "test"
+  config.active_record.encryption.deterministic_key = "test"
+  config.active_record.encryption.key_derivation_salt = "test"
 end

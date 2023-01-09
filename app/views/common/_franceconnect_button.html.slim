@@ -2,8 +2,8 @@
   .text-center.mb-3
     p FranceConnect est la solution proposée par l’État pour sécuriser et simplifier la connexion à vos services en ligne
     = link_to "/omniauth/franceconnect", class: "france-connect-link", method: :post do
-      .normal = image_tag("franceconnect-bouton.svg", alt: "S'identifier avec France connect")
-      .hover = image_tag("franceconnect-bouton-hover.svg", alt: "S'identifier avec France connect")
+      .normal = image_tag("franceconnect-bouton.svg", alt: "S'identifier avec FranceConnect")
+      .hover = image_tag("franceconnect-bouton-hover.svg", alt: "S'identifier avec FranceConnect")
     .france-connect-details= link_to "Qu’est-ce que FranceConnect ?", "https://franceconnect.gouv.fr/"
 
   hr

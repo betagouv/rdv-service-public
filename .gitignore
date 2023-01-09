@@ -55,3 +55,11 @@ coverage/
 
 # DB Diagram changes too often to be commited
 docs/domain_model.svg
+
+/config/credentials/development.key
+
+/config/credentials/staging.key
+
+/config/credentials/production.key
+
+/config/credentials/test.key

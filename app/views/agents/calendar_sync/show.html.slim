@@ -1,17 +1,24 @@
 - content_for :title, t(".title")
 
-p Vous pouvez synchroniser votre agenda de #{current_domain.name} avec un agenda externe, comme Outlook ou Google Calendar.
+p Vous pouvez voir vos rendez-vous de #{current_domain.name} dans votre agenda externe, comme Outlook ou Google Calendar.
 
-p
-  | Pour cela, allez dans votre agenda externe et ajoutez un nouveau calendrier avec cette URL :
+div.d-flex.justify-content-center.align-items-center.flex-wrap
+  - if current_domain.can_sync_to_outlook
+    div.card.w-100
+      div.card-body
+        h5.card-title Connexion Outlook
+        p Vos rendez-vous seront synchronisés automatiquement et en temps réel dans votre agenda Outlook.
+        div.text-center
+          = link_to "Connecter mon compte Outlook", agents_calendar_sync_outlook_sync_path, class: "btn btn-primary m-2"
 
-  - calendar_url = ics_calendar_url(@agent.calendar_uid, protocol: :webcal, format: :ics)
-  =  link_to(calendar_url, calendar_url, class: "mb-1")
+  div.card.w-100
+    div.card-body
+      h5.card-title Lien Webcal
+      p Vous pouvez synchroniser votre agenda externe grâce à un lien Webcal. Vos rendez-vous seront visibles sur votre agenda externe, mais parfois avec quelques heures de retard.
+      div.text-center
+        = link_to "Synchronisation par lien Webcal", agents_calendar_sync_webcal_sync_path, class: "btn btn-primary m-2"
 
-p Tous vos rendez-vous de #{current_domain.name} seront copiés automatiquement au fur et à mesure de leur création (ou modification).
-p Pour plus d'informations sur cette fonctionnalité, #{link_to("consultez la FAQ", faq_url, target: :blank)}.
-
-p Si jamais votre lien de synchronisation a été partagé par erreur et qu’il y a un risque que quelqu’un d’autre accède à votre liste de rendez-vous, vous pouvez le réinitialiser immédiatement.
-
-= simple_form_for(@agent, url: agents_calendar_sync_path) do |f|
-  = f.submit "Réinitialiser mon lien de synchronisation", class: "btn btn-secondary", data: { confirm: "Attention, si vous réinitialisez votre lien de synchronisation, vous devrez entrer le nouveau lien dans votre agenda externe" }
+  p.lead.font-weight-bold.mt-4 Notifications par email
+  p Vous pouvez aussi recevoir un email avec une invitation ics pour chaque rendez-vous, absence et plage d'ouverture.
+  div.text-center
+    = link_to t("agents.preferences.show.title"), agents_preferences_path, class: "btn btn-tertiary m-2"

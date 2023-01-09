@@ -61,4 +61,16 @@ RSpec.describe Zone, type: :model do
       expect(zone.errors.attribute_names).to eq([:base])
     end
   end
+
+  describe "#name" do
+    it "return street name with a street level" do
+      zone = build(:zone, level: :street, street_name: "Boulevard Flandres", city_name: "Paris")
+      expect(zone.name).to eq("Boulevard Flandres")
+    end
+
+    it "return city name with a city level" do
+      zone = build(:zone, level: :city, street_name: "Boulevard Flandres", city_name: "Paris")
+      expect(zone.name).to eq("Paris")
+    end
+  end
 end

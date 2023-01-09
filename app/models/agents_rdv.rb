@@ -1,9 +1,13 @@
 # frozen_string_literal: true
 
 class AgentsRdv < ApplicationRecord
+  include Outlook::Synchronizable
+
   # Relations
   belongs_to :rdv, touch: true
   belongs_to :agent
+
+  scope :future, -> { includes(:rdv).where(rdv: { starts_at: Time.zone.now.. }) }
 
   # Validation
   # Uniqueness validation doesn’t work with nested_attributes, see https://github.com/rails/rails/issues/4568
@@ -12,8 +16,9 @@ class AgentsRdv < ApplicationRecord
 
   # Hooks
   after_commit :update_unknown_past_rdv_count
-
   ## -
+
+  delegate :cancelled?, :soft_deleted?, to: :rdv
 
   def update_unknown_past_rdv_count
     agent.update_unknown_past_rdv_count!

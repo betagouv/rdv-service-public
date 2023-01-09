@@ -17,6 +17,11 @@ Bundler/OrderedGems:
 
 Layout/LineLength:
   Max: 200
+  Exclude:
+    - 'spec/jobs/outlook/create_event_job_spec.rb'
+    - 'spec/jobs/outlook/update_event_job_spec.rb'
+    - 'spec/models/concerns/outlook/synchronizable_spec.rb'
+    - 'spec/models/outlook/event_spec.rb'
 
 Layout/MultilineMethodCallIndentation:
   EnforcedStyle: indented
@@ -137,7 +142,7 @@ RSpec/LetSetup:
   Enabled: false
 
 RSpec/MessageSpies:
-  EnforcedStyle: receive
+  Enabled: false
 
 RSpec/MultipleDescribes:
   Exclude:
@@ -169,6 +174,10 @@ RSpec/DescribeClass:
 RSpec/RepeatedExample:
   Exclude:
     - "spec/requests/api/**/*"
+
+RSpec/MessageChain:
+  Exclude:
+    - "spec/jobs/outlook/mass_create_event_job_spec.rb"
 
 Style/AsciiComments:
   Enabled: false
@@ -218,3 +227,7 @@ Style/TrailingCommaInHashLiteral:
 
 RSpec/ScatteredSetup:
   Enabled: false
+
+RSpec/FilePath:
+  CustomTransform:
+    SfrMail2SmsMailer: sfr_mail_2_sms_mailer

@@ -38,6 +38,14 @@ class Zone < ApplicationRecord
     level == LEVEL_STREET
   end
 
+  def name
+    if level_city?
+      city_name
+    else
+      street_name
+    end
+  end
+
   protected
 
   def coherent_city_code_departement

@@ -27,12 +27,6 @@
         i.fa.fa-users>
         span.ml-1 Équipes
 
-    - if current_territory.has_own_sms_provider?
-      li.side-nav-item.mb-4.pl-3.pr-2
-        = active_link_to admin_territory_sms_configuration_path(current_territory)
-          i.fa.fa-mobile-alt>
-          span.ml-1 SMS
-
     li.side-nav-item.mb-4.pl-3.pr-2
       a.active Sectorisation
       ul.side-nav.list-unstyled.mt-4

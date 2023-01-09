@@ -243,6 +243,7 @@ RSpec.describe "Adding a user to a collective RDV" do
         fill_in(:letter2, with: "V")
 
         expect_cancel_participation.to change { participation.reload.status }.from("unknown").to("excused")
+        expect(rdv.reload.status).to eq("unknown")
 
         expect_notifications_for(user, "rdv_cancelled")
         expect_webhooks_for(user)
@@ -264,6 +265,7 @@ RSpec.describe "Adding a user to a collective RDV" do
         fill_in(:letter2, with: "V")
 
         expect_cancel_participation.to change { participation.reload.status }.from("unknown").to("excused")
+        expect(rdv.reload.status).to eq("unknown")
 
         perform_enqueued_jobs
         expect(ActionMailer::Base.deliveries.map(&:to).flatten).to match_array([agent.email])

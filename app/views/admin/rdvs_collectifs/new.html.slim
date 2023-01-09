@@ -11,7 +11,7 @@
     = simple_form_for(@rdv, url: admin_organisation_rdvs_collectifs_path(current_organisation), method: :post) do |f|
       .card
         .card-header
-          h3.text-center #{@rdv.motif.name} (#{@rdv.motif.service.short_name})
+          h3.text-center #{@rdv.motif_name} (#{@rdv.motif.service.short_name})
         .card-body.px-3
           = render "model_errors", model: @rdv, f: f
 
@@ -21,8 +21,9 @@
             .col-md-6= f.input :duration_in_min, as: :integer
           = f.association :agents, collection: @rdv.motif.authorized_agents.includes(:service), label_method: :reverse_full_name_and_service, input_html: { multiple: true, class: "select2-input" }
           = f.input :name, wrapper_html: { class: "mb-1" }
-          p.text-muted.font-14= I18n.t("activerecord.attributes.rdv/name.hint")
-
+          p
+            span.font-14.font-weight-bold= "Avertissement : "
+            span.text-muted.font-14= I18n.t("activerecord.attributes.rdv/name.hint")
           = f.input :context
           = f.hidden_field :motif_id, value: @rdv.motif_id
           - new_lieu_record = @rdv.lieu&.new_record?

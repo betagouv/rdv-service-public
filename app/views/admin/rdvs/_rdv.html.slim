@@ -1,11 +1,12 @@
 .card.rdv-card[id= "rdv-#{rdv.id}"]
   .mx-3[id= "rdv-updated-flash-message-#{rdv.id}"]
   .card-header.border-white
-    .d-flex.justify-content-between.flex-wrap
-      div
-        h5.header.mb-1
+    .d-flex.flex-wrap.align-items-center.flex-gap-1em
+      .flex-grow-1
+        h5.header
           span
             = link_to rdv_title(rdv), admin_organisation_rdv_path(rdv.organisation, rdv)
+      = render "admin/rdvs/waiting_room", rdv: rdv
       = render "admin/rdvs/rdv_status_dropdown", rdv: rdv, agent: local_assigns[:agent], remote: true
   hr.my-0.mx-3
   .card-body.py-3.row

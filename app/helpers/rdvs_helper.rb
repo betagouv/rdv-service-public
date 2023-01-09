@@ -15,9 +15,9 @@ module RdvsHelper
     return rdv_individuel_title_for_agent(rdv) if rdv.individuel?
 
     if rdv.title.present?
-      "#{rdv.motif.name} : #{rdv.title}"
+      "#{rdv.motif_name} : #{rdv.title}"
     else
-      rdv.motif.name
+      rdv.motif_name
     end
   end
 

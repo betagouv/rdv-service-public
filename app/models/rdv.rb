@@ -11,11 +11,13 @@ class Rdv < ApplicationRecord
   include Rdv::AddressConcern
   include Rdv::AuthoredConcern
   include Rdv::Updatable
+  include Rdv::UsingWaitingRoom
   include IcalHelpers::Ics
   include Payloads::Rdv
 
   # Attributes
-  enum status: { unknown: "unknown", waiting: "waiting", seen: "seen", excused: "excused", revoked: "revoked", noshow: "noshow" }
+  auto_strip_attributes :name
+  enum status: { unknown: "unknown", seen: "seen", excused: "excused", revoked: "revoked", noshow: "noshow" }
   # Commentaire pour les status explications
   # unknown : "A renseigner" ou "A venir" (si le rdv est passé ou pas)
   # seen : Présent au rdv
@@ -23,7 +25,7 @@ class Rdv < ApplicationRecord
   # excused : Annulé à l'initiative de l'usager
   # revoked : Annulé à l'initiative du service
   MIN_DELAY_FOR_CANCEL = 4.hours
-  NOT_CANCELLED_STATUSES = %w[unknown waiting seen noshow].freeze
+  NOT_CANCELLED_STATUSES = %w[unknown seen noshow].freeze
   CANCELLED_STATUSES = %w[excused revoked].freeze
   enum created_by: { agent: 0, user: 1, file_attente: 2, prescripteur: 3 }, _prefix: :created_by
 
@@ -55,6 +57,8 @@ class Rdv < ApplicationRecord
   # Delegates
   delegate :home?, :phone?, :public_office?, :reservable_online?, :service_social?, :follow_up?, :service, :collectif?, :collectif, :individuel?, to: :motif
 
+  alias_attribute :soft_deleted?, :deleted_at?
+
   # Validations
   validates :starts_at, :ends_at, :agents, presence: true
   validates :rdvs_users, presence: true, unless: :collectif?
@@ -67,6 +71,7 @@ class Rdv < ApplicationRecord
   after_save :associate_users_with_organisation
   after_commit :update_agents_unknown_past_rdv_count, if: -> { past? }
   before_validation { self.uuid ||= SecureRandom.uuid }
+  after_update -> { agents_rdvs.each(&:sync_update_in_outlook_asynchronously) }
 
   # Scopes
   default_scope { where(deleted_at: nil) }
@@ -83,9 +88,9 @@ class Rdv < ApplicationRecord
   scope :status, lambda { |status|
     case status.to_s
     when "unknown_past"
-      past.where(status: %w[unknown waiting])
+      past.where(status: "unknown")
     when "unknown_future"
-      future.where(status: %w[unknown waiting])
+      future.where(status: "unknown")
     else
       where(status: status)
     end
@@ -105,6 +110,9 @@ class Rdv < ApplicationRecord
     end
   }
   ## -
+
+  delegate :domain, to: :organisation
+  delegate :name, to: :motif, prefix: true
 
   def self.ongoing(time_margin: 0.minutes)
     where("starts_at <= ?", Time.zone.now + time_margin)
@@ -304,7 +312,19 @@ class Rdv < ApplicationRecord
     results.exclude?("failure") ? "processed" : "failure"
   end
 
-  delegate :domain, to: :organisation
+  # On aimerait que le helper rdv_title_in_agenda renvoie la bonne chose directement.
+  # Malheureusement il renvoie un titre moins clair dans le cas d'un rdv individuel.
+  # Il nécessiterait peut être une refacto et donc la suppresion de cette méthode
+  def object
+    collectif? ? ApplicationController.helpers.rdv_title_in_agenda(self) : motif_name
+  end
+
+  def event_description_for(agent)
+    link = Rails.application.routes.url_helpers
+      .admin_organisation_rdv_url(organisation, id, host: agent.dns_domain_name)
+
+    "plus d'infos dans #{agent.domain_name}: #{link}"
+  end
 
   def soft_delete
     # disable the :updated webhook because we want to manually trigger a :destroyed webhook
@@ -338,7 +358,7 @@ class Rdv < ApplicationRecord
 
   def update_status_priority_order_participations
     # Priority Order. One participation will change rdv status
-    %w[unknown seen noshow excused revoked].each do |status|
+    %w[unknown seen noshow revoked].each do |status|
       symbol_method = "#{status}?".to_sym
       next unless rdvs_users.any?(&symbol_method)
 

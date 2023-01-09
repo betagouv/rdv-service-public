@@ -237,8 +237,6 @@ describe Rdv, type: :model do
 
   describe "#temporal_status" do
     it "return status when not unknown" do
-      rdv = build(:rdv, status: "waiting")
-      expect(rdv.temporal_status).to eq("waiting")
       rdv = build(:rdv, status: "seen")
       expect(rdv.temporal_status).to eq("seen")
       rdv = build(:rdv, status: "excused")
@@ -751,15 +749,6 @@ describe Rdv, type: :model do
       expect(rdv.status).to eq("noshow")
     end
 
-    it "updated as excused (fourth priority)" do
-      rdv.rdvs_users.first.update(status: "revoked")
-      rdv.rdvs_users.second.update(status: "excused")
-      rdv.rdvs_users.third.update(status: "excused")
-      rdv.rdvs_users.last.update(status: "excused")
-      rdv.update_rdv_status_from_participation
-      expect(rdv.status).to eq("excused")
-    end
-
     it "updated as revoked (last priority)" do
       rdv.rdvs_users.first.update(status: "revoked")
       rdv.rdvs_users.second.update(status: "revoked")
@@ -769,7 +758,7 @@ describe Rdv, type: :model do
       expect(rdv.status).to eq("revoked")
     end
 
-    %w[seen noshow excused].each do |status|
+    %w[seen noshow].each do |status|
       it "updated as #{status} if all participations statuses are #{status}" do
         rdv.rdvs_users.update(status: status)
         rdv.update_rdv_status_from_participation

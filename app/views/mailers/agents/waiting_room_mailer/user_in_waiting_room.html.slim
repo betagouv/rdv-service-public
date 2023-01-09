@@ -1,0 +1,7 @@
+p = t("mailers.common.hello")
+
+p= t(".description", users_name: @rdv.users.map(&:full_name).join(", "), count: @rdv.users.count)
+
+.btn-wrapper= link_to "Voir sur #{domain.name}", admin_organisation_rdv_url(@rdv.organisation, @rdv), class:"btn btn-primary"
+
+= t("mailers.common.farewell_html", domain_name: domain.name)
