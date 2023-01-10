@@ -21,6 +21,6 @@ class StaticPagesController < ApplicationController
 
   def microsoft_domain_verification
     # see https://learn.microsoft.com/en-us/azure/active-directory/develop/howto-configure-publisher-domain#select-a-verified-domain
-    response.headers['Content-Type'] = "application/json"
+    response.headers["Content-Type"] = "application/json"
   end
 end
