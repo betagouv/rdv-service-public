@@ -39,6 +39,8 @@ class CustomDeviseMailer < Devise::Mailer
     end
   end
 
+  REDIS_CLIENT = Redis.new(url: Rails.configuration.x.redis_url)
+
   # Cette méthode détermine le domaine de l'usager en se basant sur sa liste de RDVs :
   # - Si l'usager n'a pas de RDV, on retourne le domaine par défaut.
   # - Si tous les RDVs ont le même domaine, alors c'est le domaine de l'usager.
@@ -48,7 +50,12 @@ class CustomDeviseMailer < Devise::Mailer
   # domaine de la page à partir duquel la demande a été faite, mais c'était techniquement complexe.
   # Voir : https://stackoverflow.com/questions/49328228
   def user_domain
-    user_rdvs = resource.rdvs
+    user = resource
+    sign_up_domain_name = REDIS_CLIENT.get("user_session_domain:#{user.email}")
+    sign_up_domain = Domain.find_by_name(sign_up_domain_name)
+    return sign_up_domain if sign_up_domain
+
+    user_rdvs = user.rdvs
     if user_rdvs.any?
       user_rdvs.order(created_at: :desc).first.domain
     else
