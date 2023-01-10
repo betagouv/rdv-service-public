@@ -20,6 +20,18 @@ class CustomDeviseMailer < Devise::Mailer
     end
   end
 
+  REDIS_FOR_USER_DOMAIN = Redis.new(url: Rails.configuration.x.redis_url)
+  REDIS_USER_DOMAIN_KEY_PREFIX = "#{Rails.env}:user_session_domain:".freeze
+
+  def self.save_user_domain(email:, domain:)
+    REDIS_FOR_USER_DOMAIN.set("#{REDIS_USER_DOMAIN_KEY_PREFIX}#{email}", domain.id, ex: 12.hours.in_seconds)
+  end
+
+  def self.get_user_domain(email:)
+    user_domain_id = REDIS_FOR_USER_DOMAIN.get("#{REDIS_USER_DOMAIN_KEY_PREFIX}#{email}")
+    Domain.find_by_id(user_domain_id)
+  end
+
   private
 
   def reply_to(record)
@@ -50,12 +62,10 @@ class CustomDeviseMailer < Devise::Mailer
   # domaine de la page à partir duquel la demande a été faite, mais c'était techniquement complexe.
   # Voir : https://stackoverflow.com/questions/49328228
   def user_domain
-    user = resource
-    sign_up_domain_name = REDIS_CLIENT.get("user_session_domain:#{user.email}")
-    sign_up_domain = Domain.find_by_name(sign_up_domain_name)
+    sign_up_domain = self.class.get_user_domain(email: resource.email)
     return sign_up_domain if sign_up_domain
 
-    user_rdvs = user.rdvs
+    user_rdvs = resource.rdvs
     if user_rdvs.any?
       user_rdvs.order(created_at: :desc).first.domain
     else

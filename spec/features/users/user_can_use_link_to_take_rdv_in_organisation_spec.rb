@@ -38,7 +38,8 @@ RSpec.describe "user can use a link that points to RDV search scoped to an organ
 
   describe "the complete process of taking a RDV from a public link" do
     it "works" do
-      visit "/org/ext/#{territory.departement_number}/#{organisation_a.external_id}"
+      # On teste le domaine qui utilise les liens publics
+      visit "http://www.rdv-aide-numerique-test.localhost/org/ext/#{territory.departement_number}/#{organisation_a.external_id}"
       expect(page).to have_content("1 lieu est disponible")
       expect(page).to have_content(lieu_a.name)
       expect(page).to have_content(motif_a.service.name)
@@ -104,21 +105,6 @@ RSpec.describe "user can use a link that points to RDV search scoped to an organ
       click_on "modifier", match: :first
 
       expect(page).to have_content("Sélectionnez un lieu de RDV")
-    end
-
-    it "uses the domain in the confirmation email" do
-      visit "http://www.rdv-aide-numerique-test.localhost/org/#{organisation_a.id}"
-      click_on("Prochaine disponibilité lemardi 20 septembre 2022 à 08h00")
-      click_on("08:00")
-      click_on("Je m'inscris")
-
-      fill_in "user_first_name", with: "David"
-      fill_in "user_last_name", with: "Nchicode"
-      fill_in "user_email", with: "davidnchicode@crotonmail.com"
-      click_on("Je m'inscris")
-
-      open_email("davidnchicode@crotonmail.com")
-      expect(current_email).to have_link("Confirmer mon compte", href: %r{http://www\.rdv-aide-numerique-test\.localhost/users/confirmation})
     end
   end
 end
