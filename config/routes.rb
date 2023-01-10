@@ -227,6 +227,7 @@ Rails.application.routes.draw do
   %w[contact mds accessibility mentions_legales cgu politique_de_confidentialite domaines health_check].each do |page_name|
     get page_name => "static_pages##{page_name}"
   end
+  get "/.well-known/microsoft-identity-association" => "static_pages#microsoft_domain_verification", format: :json
 
   get "/budget", to: redirect("https://pad.incubateur.net/3hxhbOuaSyapxRUg_PnA5g#ANCT-L%E2%80%99Incubateur-des-Territoires", status: 302)
 
