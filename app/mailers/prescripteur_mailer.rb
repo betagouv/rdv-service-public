@@ -5,8 +5,8 @@ class PrescripteurMailer < ApplicationMailer
 
   attr_reader :domain
 
-  def rdv_created(rdvs_user, domain_name)
-    @domain = Domain.find_by_name(domain_name)
+  def rdv_created(rdvs_user, domain_id)
+    @domain = Domain.find_by_id(domain_id)
     @user = rdvs_user.user
     @rdv = rdvs_user.rdv
     mail(
