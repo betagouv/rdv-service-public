@@ -19,5 +19,12 @@ class StaticPagesController < ApplicationController
     render current_domain.presentation_for_agents_template_name
   end
 
-  def microsoft_domain_verification; end
+  def microsoft_domain_verification
+    # see https://learn.microsoft.com/en-us/azure/active-directory/develop/howto-configure-publisher-domain#select-a-verified-domain
+    response.headers["Content-Type"] = "application/json"
+
+    render # pour avoir un response.body sur lequel calculer Content-Length
+
+    response.headers["Content-Length"] = response.body.length.to_s
+  end
 end
