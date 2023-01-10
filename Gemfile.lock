@@ -289,7 +289,7 @@ GEM
     matrix (0.4.2)
     method_source (1.0.0)
     mini_mime (1.1.2)
-    mini_portile2 (2.8.0)
+    mini_portile2 (2.8.1)
     minitest (5.16.3)
     montrose (0.13.0)
       activesupport (>= 5.2, < 7.1)
@@ -306,7 +306,7 @@ GEM
     net-smtp (0.3.3)
       net-protocol
     nio4r (2.5.8)
-    nokogiri (1.13.10)
+    nokogiri (1.14.0.rc1)
       mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
     oauth2 (2.0.9)
@@ -375,7 +375,7 @@ GEM
     pundit (2.2.0)
       activesupport (>= 3.0.0)
     raabro (1.4.0)
-    racc (1.6.1)
+    racc (1.6.2)
     rack (2.2.4)
     rack-attack (6.6.1)
       rack (>= 1.0, < 3)
@@ -655,6 +655,7 @@ DEPENDENCIES
   lograge
   mail (= 2.8.0.rc1)
   montrose
+  nokogiri (= 1.14.0.rc1)
   omniauth-github
   omniauth-microsoft_graph
   omniauth-rails_csrf_protection
