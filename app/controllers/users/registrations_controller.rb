@@ -9,9 +9,10 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def create
     return invite_and_redirect if User.find_by(email: sign_up_params[:email], confirmed_at: nil)
 
-    # This is our only way of passing the domain to the mailer that sends the confirmation email
-    CustomDeviseMailer.save_user_domain(email: sign_up_params[:email], domain: current_domain)
-    super
+    super do |newly_created_user|
+      # This is our only way of passing the domain to the mailer that sends the confirmation email
+      newly_created_user.sign_up_domain = current_domain
+    end
   end
 
   def destroy
