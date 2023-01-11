@@ -49,7 +49,13 @@ class Admin::UsersController < AgentAuthController
     @user.skip_confirmation_notification!
     user_persisted = @user_form.save
 
-    @user.invite! if invite_user?(@user, params)
+    if invite_user?(@user, params)
+      @user.invite! do |user|
+        # This is our only way of passing the domain to the Devise mailer
+        user.sign_up_domain = current_domain
+      end
+    end
+
     prepare_new unless user_persisted
 
     if from_modal?
@@ -91,7 +97,9 @@ class Admin::UsersController < AgentAuthController
 
   def invite
     authorize(@user)
-    @user.invite!
+    @user.invite! do |user|
+      user.sign_up_domain = current_domain
+    end
     redirect_to admin_organisation_user_path(current_organisation, @user), notice: "L’usager a été invité."
   end
 
