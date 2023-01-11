@@ -4,11 +4,10 @@ module User::HasDomain
   extend ActiveSupport::Concern
 
   def domain
-    return sign_up_domain if sign_up_domain
-
-    user_rdvs = resource.rdvs
-    if user_rdvs.any?
-      user_rdvs.order(created_at: :desc).first.domain
+    if rdvs.any?
+      rdvs.order(created_at: :desc).first.domain
+    elsif sign_up_domain
+      sign_up_domain
     else
       Domain::RDV_SOLIDARITES
     end

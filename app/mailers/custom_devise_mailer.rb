@@ -29,13 +29,6 @@ class CustomDeviseMailer < Devise::Mailer
   end
 
   def domain
-    case resource
-    when Agent
-      resource.domain
-    when User
-      user.domain
-    else
-      "Unexpected resource: #{resource.inspect}"
-    end
+    resource.domain
   end
 end
