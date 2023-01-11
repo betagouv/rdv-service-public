@@ -68,6 +68,11 @@ RSpec.describe Agents::RdvMailer, type: :mailer do
 
     before { travel_to(Time.zone.parse("2022-08-24 09:00:00")) }
 
+    it "mentions the new RDV date in the subject" do
+      mail = described_class.with(rdv: rdv, agent: agent, author: agent).rdv_updated(starts_at: previous_starting_time, lieu_id: nil)
+      expect(mail.subject).to eq("RDV du 27 août modifié")
+    end
+
     it "renders the headers" do
       mail = described_class.with(rdv: rdv, agent: agent, author: agent).rdv_updated(starts_at: previous_starting_time, lieu_id: nil)
       expect(mail[:from].to_s).to eq(%("RDV Solidarités" <support@rdv-solidarites.fr>))
