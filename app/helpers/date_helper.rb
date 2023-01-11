@@ -10,7 +10,7 @@ module DateHelper
     elsif date == Date.current + 1
       t "date.helpers.tomorrow"
     else
-      l(date, format: fallback_format)
+      I18n.l(date, format: fallback_format)
     end
   end
 

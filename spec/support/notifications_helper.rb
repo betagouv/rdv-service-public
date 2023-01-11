@@ -1,20 +1,9 @@
 # frozen_string_literal: true
 
 module NotificationsHelper
+  include DateHelper
+
   EVENTS = %w[rdv_created rdv_cancelled rdv_updated rdv_upcoming_reminder].freeze
-
-  def relative_date(date, fallback_format = :short)
-    return if date.nil?
-
-    date = date.to_date
-    if date == Date.current
-      I18n.t "date.helpers.today"
-    elsif date == Date.current + 1
-      I18n.t "date.helpers.tomorrow"
-    else
-      I18n.l(date, format: fallback_format)
-    end
-  end
 
   def expect_performed_notifications_for(rdv, person, event, notif_type = nil)
     perform_enqueued_jobs
