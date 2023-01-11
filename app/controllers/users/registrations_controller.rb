@@ -28,7 +28,9 @@ class Users::RegistrationsController < Devise::RegistrationsController
   private
 
   def build_resource(hash = {})
-    self.resource = Users::RegistrationForm.new(hash, domain: current_domain)
+    form = Users::RegistrationForm.new(hash)
+    form.user.sign_up_domain = current_domain
+    self.resource = form
   end
 
   def user_devise_layout
