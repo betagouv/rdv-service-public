@@ -2,8 +2,9 @@
   .text-center.mb-3
     p Inclusion Connect vous permet d'utiliser le même identifiant et mot de passe pour vous connecter à différents services. Simple, sécurisé, efficace !
     = link_to inclusion_connect_auth_path, class: "inclusion-connect-link", title: "utiliser inclusion connect pour s'authentifier" do
-      .normal = image_tag("inclusionconnect-bouton.svg", role: "none")
-    .inclusion-connect-details
+      span
+        = "Se connecter avec "
+        strong Inclusion Connect
 
   hr
   .text-center.w-75.m-auto

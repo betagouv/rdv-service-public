@@ -1,0 +1,22 @@
+.inclusion-connect-link {
+    display: inline-flex;
+    align-items: center;
+    height: 58px;
+    font-size: 16px;
+    line-height: 22px;
+    font-weight: 400;
+    text-align: center;
+    text-decoration: none;
+    vertical-align: middle;
+    padding: 8px 16px 8px 62px;
+    border-radius: 50rem;
+    cursor: pointer;
+    box-shadow: none;
+    user-select: none;
+    transition: background-color .15s ease-in-out,border-color .15s ease-in-out;
+    color: #fff;
+    border: 4px solid #000091;
+    background-color: #000091;
+    // background-image: url(../images/inclusionconnect-bouton.svg);
+    background-repeat: no-repeat;
+}
