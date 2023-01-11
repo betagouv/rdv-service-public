@@ -6,9 +6,9 @@ module DateHelper
 
     date = date.to_date
     if date == Date.current
-      t "date.helpers.today"
+      I18n.t "date.helpers.today"
     elsif date == Date.current + 1
-      t "date.helpers.tomorrow"
+      I18n.t "date.helpers.tomorrow"
     else
       I18n.l(date, format: fallback_format)
     end
