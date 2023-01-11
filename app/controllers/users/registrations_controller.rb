@@ -9,10 +9,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def create
     return invite_and_redirect if User.find_by(email: sign_up_params[:email], confirmed_at: nil)
 
-    super do |newly_created_user|
-      # This is our only way of passing the domain to the mailer that sends the confirmation email
-      newly_created_user.sign_up_domain = current_domain
-    end
+    super
   end
 
   def destroy
@@ -31,7 +28,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   private
 
   def build_resource(hash = {})
-    self.resource = Users::RegistrationForm.new(hash)
+    self.resource = Users::RegistrationForm.new(hash, domain: current_domain)
   end
 
   def user_devise_layout

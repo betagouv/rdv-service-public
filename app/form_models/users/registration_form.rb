@@ -11,9 +11,11 @@ class Users::RegistrationForm
 
   validates :email, presence: true
 
-  def initialize(attributes)
+  # @param domain This is our only way of passing the domain to the mailer that sends the confirmation email
+  def initialize(attributes, domain:)
     @user = User.new(attributes)
     @user.created_through = "user_sign_up"
+    @user.sign_up_domain = domain
   end
 
   def save
