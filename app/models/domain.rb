@@ -1,38 +1,21 @@
 # frozen_string_literal: true
 
+Domain = Struct.new(
+  :id,
+  :name,
+  :logo_path,
+  :public_logo_path,
+  :dark_logo_path,
+  :presentation_for_agents_template_name,
+  :sms_sender_name,
+  :online_reservation_with_public_link,
+  :can_sync_to_outlook,
+  :france_connect_enabled,
+  :default,
+  keyword_init: true
+)
+
 class Domain
-  # rubocop:disable Metrics/ParameterLists
-  def initialize(
-    id:,
-    name:,
-    logo_path:,
-    public_logo_path:,
-    dark_logo_path:,
-    presentation_for_agents_template_name:,
-    sms_sender_name:,
-    online_reservation_with_public_link:,
-    can_sync_to_outlook:,
-    france_connect_enabled:,
-    default: false
-  )
-    @id = id
-    @name = name
-    @logo_path = logo_path
-    @public_logo_path = public_logo_path
-    @dark_logo_path = dark_logo_path
-    @presentation_for_agents_template_name = presentation_for_agents_template_name
-    @sms_sender_name = sms_sender_name
-    @online_reservation_with_public_link = online_reservation_with_public_link
-    @can_sync_to_outlook = can_sync_to_outlook
-    @france_connect_enabled = france_connect_enabled
-    @default = default
-  end
-  # rubocop:enable Metrics/ParameterLists
-
-  attr_reader :id, :logo_path, :public_logo_path, :dark_logo_path, :name, :presentation_for_agents_template_name,
-              :sms_sender_name, :online_reservation_with_public_link, :can_sync_to_outlook, :france_connect_enabled,
-              :default
-
   ALL = [
     RDV_SOLIDARITES = new(
       id: "RDV_SOLIDARITES",
@@ -97,6 +80,7 @@ class Domain
   def default?
     self == RDV_SOLIDARITES
   end
+  alias default default?
 
   ALL_BY_URL = ALL.index_by(&:dns_domain_name)
 
