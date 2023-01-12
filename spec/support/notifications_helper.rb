@@ -59,9 +59,17 @@ module NotificationsHelper
   def email_title_for_agent(rdv, person, event)
     case event
     when :rdv_created
-      I18n.t("agents.rdv_mailer.rdv_created.title", domain_name: person.domain.name, date: relative_date(rdv.starts_at))
+      if rdv.collectif?
+        I18n.t("agents.rdv_mailer.rdv_created.title_participation", domain_name: person.domain.name, date: relative_date(rdv.starts_at))
+      else
+        I18n.t("agents.rdv_mailer.rdv_created.title", domain_name: person.domain.name, date: relative_date(rdv.starts_at))
+      end
     when :rdv_cancelled
-      I18n.t("agents.rdv_mailer.rdv_cancelled.title", date: relative_date(rdv.starts_at))
+      if rdv.collectif?
+        I18n.t("agents.rdv_mailer.rdv_cancelled.title_participation", date: relative_date(rdv.starts_at))
+      else
+        I18n.t("agents.rdv_mailer.rdv_cancelled.title", date: relative_date(rdv.starts_at))
+      end
     when :rdv_updated
       # Maybe not enough precision here (because specific design choice), the date used for agents rdv update is the previsous date of the rdv
       "modifié"
