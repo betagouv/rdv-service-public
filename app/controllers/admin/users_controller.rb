@@ -50,10 +50,7 @@ class Admin::UsersController < AgentAuthController
     user_persisted = @user_form.save
 
     if invite_user?(@user, params)
-      @user.invite! do |user|
-        # This is our only way of passing the domain to the Devise mailer
-        user.sign_up_domain = current_domain
-      end
+      @user.invite!(domain: current_domain)
     end
 
     prepare_new unless user_persisted
@@ -97,9 +94,7 @@ class Admin::UsersController < AgentAuthController
 
   def invite
     authorize(@user)
-    @user.invite! do |user|
-      user.sign_up_domain = current_domain
-    end
+    @user.invite!(domain: current_domain)
     redirect_to admin_organisation_user_path(current_organisation, @user), notice: "L’usager a été invité."
   end
 

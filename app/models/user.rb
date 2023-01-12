@@ -10,6 +10,10 @@ class User < ApplicationRecord
     ]
   )
 
+  devise :invitable, :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :validatable, :confirmable, :async,
+         :trackable
+
   include PgSearch::Model
   include FullNameConcern
   include User::FranceconnectFrozenFieldsConcern
@@ -33,10 +37,6 @@ class User < ApplicationRecord
       id: "D",
     }
   end
-
-  devise :invitable, :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable, :confirmable, :async,
-         :trackable
 
   # Attributes
   ONGOING_MARGIN = 1.hour.freeze

@@ -42,7 +42,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   def invite_and_redirect(user)
-    user.invite!(nil, user_params: sign_up_params) do |u|
+    user.invite!(domain: current_domain, options: { user_params: sign_up_params }) do |u|
       # This is our only way of passing the domain to the Devise mailer
       u.sign_up_domain = current_domain
     end
