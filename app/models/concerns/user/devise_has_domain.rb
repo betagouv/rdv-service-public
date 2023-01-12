@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-module User::HasDomain
+# Ce concern nous permet de définir le domaine à utiliser pour un⋅e usager⋅e dans les mailers Devise
+module User::DeviseHasDomain
   extend ActiveSupport::Concern
 
   def domain
