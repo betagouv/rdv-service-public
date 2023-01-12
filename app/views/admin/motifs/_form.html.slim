@@ -71,7 +71,7 @@
         = f.input(:rdvs_editable_by_user)
         p.text-muted.font-14= Motif.human_attribute_name("rdvs_editable_by_user_hint")
 
-  - unless current_agent.conseiller_numerique?
+  - unless current_domain.online_reservation_with_public_link?
     .card.js-sectorisation-card
       .card-body
         h5.mb-2= Motif.human_attribute_name("sectorisation_level_title")
