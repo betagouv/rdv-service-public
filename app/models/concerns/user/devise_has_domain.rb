@@ -5,8 +5,8 @@ module User::DeviseHasDomain
   extend ActiveSupport::Concern
 
   # Overriding this method from devise_invitable so we can pass in a domain
-  def invite!(domain:, invited_by: nil, options: {})
-    self.sign_up_domain = domain
+  def invite!(domain: nil, invited_by: nil, options: {})
+    self.sign_up_domain = domain if domain
     super(invited_by, options)
   end
 
