@@ -108,8 +108,8 @@ class Domain
     ALL_BY_URL.fetch(domain_name) { RDV_SOLIDARITES }
   end
 
-  def self.find_by_id(id)
-    ALL.find { _1.id == id }
+  def self.find(id)
+    ALL.find { _1.id == id } or raise "Can't find domain with id=#{id}"
   end
 
   def self.review_app_domain

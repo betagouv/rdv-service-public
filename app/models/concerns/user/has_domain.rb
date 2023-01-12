@@ -25,7 +25,7 @@ module User::HasDomain
     return if email.blank?
 
     user_domain_id = REDIS_FOR_SIGN_UP_DOMAIN.get(redis_key_for_sign_up_domain)
-    Domain.find_by_id(user_domain_id) if user_domain_id
+    Domain.find(user_domain_id) if user_domain_id
   end
 
   private
