@@ -21,9 +21,9 @@ describe Notifiers::RdvUpdated, type: :service do
     it "triggers sending mail to users but not to agents" do
       subject
 
-      expect_performed_notifications_for(rdv, user1, "rdv_updated")
-      expect_performed_notifications_for(rdv, user2, "rdv_updated")
-      dont_expect_performed_notifications_for(rdv, agent1, "rdv_updated")
+      expect_notifications_sent_for(rdv, user1, :rdv_updated)
+      expect_notifications_sent_for(rdv, user2, :rdv_updated)
+      expect_no_notifications_for(rdv, agent1, :rdv_updated)
     end
 
     it "rdv_users_tokens_by_user_id attribute outputs the tokens" do
@@ -40,19 +40,19 @@ describe Notifiers::RdvUpdated, type: :service do
     it "triggers sending mails to both user and agents (except the one who initiated the change)" do
       subject
 
-      expect_performed_notifications_for(rdv, user1, "rdv_updated")
-      expect_performed_notifications_for(rdv, user2, "rdv_updated")
-      expect_performed_notifications_for(rdv, agent2, "rdv_updated")
-      dont_expect_performed_notifications_for(rdv, agent1, "rdv_updated")
+      expect_notifications_sent_for(rdv, user1, :rdv_updated)
+      expect_notifications_sent_for(rdv, user2, :rdv_updated)
+      expect_notifications_sent_for(rdv, agent2, :rdv_updated)
+      expect_no_notifications_for(rdv, agent1, :rdv_updated)
     end
 
     it "doesnt send email if user participation is excused" do
       rdv.rdvs_users.where(user: user1).update(status: "excused")
       subject
 
-      expect_performed_notifications_for(rdv, user2, "rdv_updated")
-      expect_performed_notifications_for(rdv, agent2, "rdv_updated")
-      dont_expect_performed_notifications_for(rdv, user1, "rdv_updated")
+      expect_notifications_sent_for(rdv, user2, :rdv_updated)
+      expect_notifications_sent_for(rdv, agent2, :rdv_updated)
+      expect_no_notifications_for(rdv, user1, :rdv_updated)
     end
   end
 end

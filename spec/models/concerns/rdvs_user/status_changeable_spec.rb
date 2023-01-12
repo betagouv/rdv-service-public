@@ -17,7 +17,7 @@ RSpec.describe RdvsUser::StatusChangeable, type: :concern do
         it "send notifications and change rdv_user object status to #{status}" do
           rdv_user1.change_status_and_notify(agent, status)
           expect(rdv_user1.reload.status).to eq(status)
-          expect_performed_notifications_for(rdv, rdv_user1.user, "rdv_cancelled")
+          expect_notifications_sent_for(rdv, rdv_user1.user, :rdv_cancelled)
         end
       end
 
@@ -27,7 +27,7 @@ RSpec.describe RdvsUser::StatusChangeable, type: :concern do
         rdv_user_with_lifecycle_disabled.change_status_and_notify(agent, "revoked")
         expect(rdv_user_with_excused_status.reload.status).to eq("revoked")
         expect(rdv_user_with_lifecycle_disabled.reload.status).to eq("revoked")
-        dont_expect_any_performed_notifications
+        expect_no_notifications_for_user
       end
     end
 
@@ -35,7 +35,7 @@ RSpec.describe RdvsUser::StatusChangeable, type: :concern do
       it "doesnt send notifications and change rdv_user object status" do
         rdv_user1.change_status_and_notify(agent, "seen")
         expect(rdv_user1.reload.status).to eq("seen")
-        dont_expect_any_performed_notifications(rdv_user1.user)
+        expect_no_notifications_for_user(rdv_user1.user)
       end
     end
 
@@ -43,7 +43,7 @@ RSpec.describe RdvsUser::StatusChangeable, type: :concern do
       it "doesnt send notifications and change rdv_user object status" do
         rdv_user1.change_status_and_notify(agent, "noshow")
         expect(rdv_user1.reload.status).to eq("noshow")
-        dont_expect_any_performed_notifications(rdv_user1.user)
+        expect_no_notifications_for_user(rdv_user1.user)
       end
     end
 
@@ -52,14 +52,14 @@ RSpec.describe RdvsUser::StatusChangeable, type: :concern do
         rdv_user1.update(status: "excused")
         rdv_user1.change_status_and_notify(agent, "unknown")
         expect(rdv_user1.reload.status).to eq("unknown")
-        expect_performed_notifications_for(rdv, rdv_user1.user, "rdv_created")
+        expect_notifications_sent_for(rdv, rdv_user1.user, :rdv_created)
       end
 
       it "do not send notification creation when lifecycle off and change rdv_user object status" do
         rdv_user_with_lifecycle_disabled.change_status_and_notify(agent, "excused")
         rdv_user_with_lifecycle_disabled.change_status_and_notify(agent, "unknown")
         expect(rdv_user_with_lifecycle_disabled.reload.status).to eq("unknown")
-        dont_expect_any_performed_notifications(rdv_user1.user)
+        expect_no_notifications_for_user(rdv_user1.user)
       end
     end
 

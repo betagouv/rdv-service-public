@@ -58,75 +58,75 @@ RSpec.describe Rdv::Updatable, type: :concern do
     describe "sends relevant notifications" do
       it "notifies agent when rdv is cancelled (excused)" do
         rdv.update_and_notify(agent, status: "excused")
-        expect_performed_notifications_for(rdv, user, "rdv_cancelled")
-        expect_performed_notifications_for(rdv, agent, "rdv_cancelled")
+        expect_notifications_sent_for(rdv, user, :rdv_cancelled)
+        expect_notifications_sent_for(rdv, agent, :rdv_cancelled)
       end
 
       it "notifies agent and users when rdv is cancelled (revoked) for collective rdv" do
         rdv_co.update_and_notify(agent, status: "revoked")
-        expect_performed_notifications_for(rdv_co, user_co1, "rdv_cancelled")
-        expect_performed_notifications_for(rdv_co, user_co2, "rdv_cancelled")
-        expect_performed_notifications_for(rdv_co, agent, "rdv_cancelled")
+        expect_notifications_sent_for(rdv_co, user_co1, :rdv_cancelled)
+        expect_notifications_sent_for(rdv_co, user_co2, :rdv_cancelled)
+        expect_notifications_sent_for(rdv_co, agent, :rdv_cancelled)
       end
 
       it "does not notify when status does not change" do
         rdv.reload
         rdv.update!(status: "unknown")
         rdv.update_and_notify(agent, status: "unknown")
-        dont_expect_any_performed_notifications
+        expect_no_notifications_for_user
       end
 
       it "notifies when date changes" do
         rdv.update_and_notify(agent, starts_at: 2.days.from_now)
-        expect_performed_notifications_for(rdv, user, "rdv_updated")
-        expect_performed_notifications_for(rdv, agent, "rdv_updated")
+        expect_notifications_sent_for(rdv, user, :rdv_updated)
+        expect_notifications_sent_for(rdv, agent, :rdv_updated)
       end
 
       it "notifies when date changes for collective rdv" do
         rdv_co.update_and_notify(agent, starts_at: 2.days.from_now)
-        expect_performed_notifications_for(rdv_co, user_co1, "rdv_updated")
-        expect_performed_notifications_for(rdv_co, user_co2, "rdv_updated")
-        expect_performed_notifications_for(rdv_co, agent, "rdv_updated")
+        expect_notifications_sent_for(rdv_co, user_co1, :rdv_updated)
+        expect_notifications_sent_for(rdv_co, user_co2, :rdv_updated)
+        expect_notifications_sent_for(rdv_co, agent, :rdv_updated)
       end
 
       it "does not notify when date does not change" do
         rdv.reload
         rdv.update_and_notify(agent, starts_at: rdv.starts_at)
-        dont_expect_any_performed_notifications
+        expect_no_notifications_for_user
       end
 
       it "does not notify when date does not change for collective rdv" do
         rdv_co.reload
         rdv_co.update_and_notify(agent, starts_at: rdv_co.starts_at)
-        dont_expect_any_performed_notifications
+        expect_no_notifications_for_user
       end
 
       it "does not notify when other attributes change" do
         rdv.reload
         rdv.update_and_notify(agent, context: "some context")
-        dont_expect_any_performed_notifications
+        expect_no_notifications_for_user
       end
 
       it "does not notify when other attributes change for collective rdv" do
         rdv_co.reload
         rdv_co.update_and_notify(agent, context: "some context")
-        dont_expect_any_performed_notifications
+        expect_no_notifications_for_user
       end
     end
 
     it "call Notifiers::RdvCreated when reloaded status from cancelled status" do
       rdv.update!(status: "excused", cancelled_at: Time.zone.parse("12/1/2020 12:56"))
       rdv.update_and_notify(agent, status: "unknown")
-      expect_performed_notifications_for(rdv, user, "rdv_created")
-      expect_performed_notifications_for(rdv, agent, "rdv_created")
+      expect_notifications_sent_for(rdv, user, :rdv_created)
+      expect_notifications_sent_for(rdv, agent, :rdv_created)
     end
 
     it "call Notifiers::RdvCreated when reloaded status from cancelled status for collective rdv" do
       rdv_co.update!(status: "revoked", cancelled_at: Time.zone.parse("12/1/2020 12:56"))
       rdv_co.update_and_notify(agent, status: "unknown")
-      expect_performed_notifications_for(rdv_co, user_co1, "rdv_created")
-      expect_performed_notifications_for(rdv_co, user_co2, "rdv_created")
-      expect_performed_notifications_for(rdv_co, agent, "rdv_created")
+      expect_notifications_sent_for(rdv_co, user_co1, :rdv_created)
+      expect_notifications_sent_for(rdv_co, user_co2, :rdv_created)
+      expect_notifications_sent_for(rdv_co, agent, :rdv_created)
     end
 
     describe "triggers webhook" do
@@ -159,8 +159,8 @@ RSpec.describe Rdv::Updatable, type: :concern do
 
       it "notifies the new participant, and the one that is removed" do
         rdv.update_and_notify(agent, attributes)
-        expect_performed_notifications_for(rdv, user_added, "rdv_created")
-        expect_performed_notifications_for(rdv, user_removed, "rdv_cancelled")
+        expect_notifications_sent_for(rdv, user_added, :rdv_created)
+        expect_notifications_sent_for(rdv, user_removed, :rdv_cancelled)
       end
     end
   end
@@ -193,8 +193,8 @@ RSpec.describe Rdv::Updatable, type: :concern do
       rdv.update(lieu: autre_lieu)
       rdv.notify!(agent, [])
 
-      expect_performed_notifications_for(rdv, user, "rdv_updated")
-      expect_performed_notifications_for(rdv, agent, "rdv_updated")
+      expect_notifications_sent_for(rdv, user, :rdv_updated)
+      expect_notifications_sent_for(rdv, agent, :rdv_updated)
     end
 
     it "calls lieu_updated_notifier with lieu changes for collective rdv" do
@@ -203,9 +203,9 @@ RSpec.describe Rdv::Updatable, type: :concern do
       rdv_co.update!(lieu: lieu)
       rdv_co.reload
       rdv_co.update_and_notify(agent, lieu: autre_lieu)
-      expect_performed_notifications_for(rdv_co, user_co1, "rdv_updated")
-      expect_performed_notifications_for(rdv_co, user_co2, "rdv_updated")
-      expect_performed_notifications_for(rdv_co, agent, "rdv_updated")
+      expect_notifications_sent_for(rdv_co, user_co1, :rdv_updated)
+      expect_notifications_sent_for(rdv_co, user_co2, :rdv_updated)
+      expect_notifications_sent_for(rdv_co, agent, :rdv_updated)
     end
   end
 

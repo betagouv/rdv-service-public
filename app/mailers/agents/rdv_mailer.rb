@@ -29,7 +29,7 @@ class Agents::RdvMailer < ApplicationMailer
     @address_name = Lieu.find(lieu_id).full_name if lieu_id
 
     self.ics_payload = @rdv.payload(:update, @agent)
-    subject = t("agents.rdv_mailer.rdv_updated.title", date: relative_date(@rdv.starts_at))
+    subject = t("agents.rdv_mailer.rdv_updated.title", date: relative_date(@starts_at))
     mail(subject: subject)
   end
 

@@ -33,8 +33,8 @@ RSpec.describe RdvsUser::Creatable, type: :concern do
 
       it "for self (user)" do
         rdv_user1.create_and_notify(user)
-        expect_performed_notifications_for(rdv, user, "rdv_created")
-        expect_performed_notifications_for(rdv, agent, "rdv_created")
+        expect_notifications_sent_for(rdv, user, :rdv_created)
+        expect_notifications_sent_for(rdv, agent, :rdv_created)
         expect(rdv.reload.rdvs_users).to eq([rdv_user1])
         expect(rdv_user1.rdv_user_token).to eq("12345")
       end
@@ -42,8 +42,8 @@ RSpec.describe RdvsUser::Creatable, type: :concern do
       it "for a relative with existing participations" do
         rdv_user1.save!
         rdv_user_relative.create_and_notify(user)
-        expect_performed_notifications_for(rdv, user, "rdv_created")
-        expect_performed_notifications_for(rdv, agent, "rdv_created")
+        expect_notifications_sent_for(rdv, user, :rdv_created)
+        expect_notifications_sent_for(rdv, agent, :rdv_created)
         expect(rdv.reload.rdvs_users).to eq([rdv_user_relative])
         expect(rdv_user1.rdv_user_token).to eq(nil)
       end
@@ -56,15 +56,15 @@ RSpec.describe RdvsUser::Creatable, type: :concern do
 
       it "for self (user)" do
         rdv_user_with_lifecycle_disabled.create_and_notify(user3)
-        dont_expect_performed_notifications_for(rdv, user, "rdv_created")
-        expect_performed_notifications_for(rdv, agent, "rdv_created")
+        expect_no_notifications_for(rdv, user, :rdv_created)
+        expect_notifications_sent_for(rdv, agent, :rdv_created)
         expect(rdv.reload.rdvs_users).to eq([rdv_user_with_lifecycle_disabled])
       end
 
       it "for a relative" do
         rdv_user_relative.create_and_notify(user)
-        dont_expect_performed_notifications_for(rdv, user, "rdv_created")
-        expect_performed_notifications_for(rdv, agent, "rdv_created")
+        expect_no_notifications_for(rdv, user, :rdv_created)
+        expect_notifications_sent_for(rdv, agent, :rdv_created)
         expect(rdv.reload.rdvs_users).to eq([rdv_user_relative])
       end
     end
