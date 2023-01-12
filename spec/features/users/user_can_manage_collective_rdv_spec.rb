@@ -64,6 +64,7 @@ RSpec.describe "Adding a user to a collective RDV" do
     expect do
       click_link("S'inscrire")
       uncheck "Accepte les notifications par email" unless notif
+      uncheck "Accepte les notifications par SMS" unless notif
       click_button("Continuer")
       if page.has_button?("Continuer")
         page.click_button("Continuer")
@@ -71,18 +72,6 @@ RSpec.describe "Adding a user to a collective RDV" do
       stub_request(:post, "https://example.com/")
       click_on("Confirmer ma participation")
       expect(page).to have_content("Participation confirmée")
-    end
-  end
-
-  def expect_notifications_for(user, event)
-    perform_enqueued_jobs
-    expect(ActionMailer::Base.deliveries.map(&:to).flatten).to match_array([agent.email, user.email])
-    if event == "rdv_created" # SMS notification for user created participation
-      expect(Receipt.where(user_id: user.id, channel: "sms", result: "delivered").count).to eq 1
-      expect(Receipt.where(channel: "sms", event: "rdv_created").count).to eq 1
-    else # No SMS notification for user cancelation
-      expect(Receipt.where(user_id: user.id, channel: "sms", result: "delivered").count).to eq 0
-      expect(Receipt.where(channel: "sms", event: "rdv_cancelled").count).to eq 0
     end
   end
 
@@ -114,7 +103,7 @@ RSpec.describe "Adding a user to a collective RDV" do
       expect(page).to have_content("Participation confirmée")
       expect(page).to have_content("modifier") # can_change_participants?
 
-      expect_notifications_for(logged_user, "rdv_created")
+      expect_notifications_sent_for(rdv, logged_user, :rdv_created)
       expect_webhooks_for(logged_user)
     end
 
@@ -135,7 +124,7 @@ RSpec.describe "Adding a user to a collective RDV" do
       click_on("Confirmer ma participation")
       expect(page).to have_content("Participation confirmée")
       expect(rdv.reload.users.count).to eq(1)
-      expect_notifications_for(logged_user, "rdv_created")
+      expect_notifications_sent_for(rdv, logged_user, :rdv_created)
       expect_webhooks_for(logged_user)
     end
 
@@ -150,7 +139,7 @@ RSpec.describe "Adding a user to a collective RDV" do
       expect(page).not_to have_content("modifier") # can_change_participants?
       expect(::Addressable::URI.parse(current_url).query_values).to match("invitation_token" => /^[A-Z0-9]{8}$/)
 
-      expect_notifications_for(invited_user, "rdv_created")
+      expect_notifications_sent_for(rdv, invited_user, :rdv_created)
       expect_webhooks_for(invited_user)
     end
   end
@@ -194,7 +183,7 @@ RSpec.describe "Adding a user to a collective RDV" do
         select_lieu
         expect_confirm_participation.not_to change { rdv.reload.users.count }
 
-        expect_notifications_for(user, "rdv_created")
+        expect_notifications_sent_for(rdv, user, :rdv_created)
         expect_webhooks_for(user)
       end
 
@@ -225,11 +214,11 @@ RSpec.describe "Adding a user to a collective RDV" do
         select_lieu
         expect_confirm_participation(notif: false).to change { rdv.reload.users.count }.from(0).to(1)
 
-        perform_enqueued_jobs
-        expect(ActionMailer::Base.deliveries.map(&:to).flatten).to match_array([agent.email])
+        expect_notifications_sent_for(rdv, agent, :rdv_created)
+        expect_no_notifications_for(rdv, user, :rdv_created)
       end
 
-      it "can cancel collective rdv participation, with notifications", js: true do
+      it "can cancel collective rdv participation, with mail notifications only", js: true do
         params.merge!(invitation_token: invitation_token)
         visit root_path(params)
 
@@ -245,7 +234,9 @@ RSpec.describe "Adding a user to a collective RDV" do
         expect_cancel_participation.to change { participation.reload.status }.from("unknown").to("excused")
         expect(rdv.reload.status).to eq("unknown")
 
-        expect_notifications_for(user, "rdv_cancelled")
+        expect_notifications_sent_for(rdv, agent, :rdv_cancelled)
+        # Mail notif only, SMS are not sent when cancellation is made by the user
+        expect_notifications_sent_for(rdv, user, :rdv_cancelled, :mail)
         expect_webhooks_for(user)
       end
 
@@ -267,8 +258,8 @@ RSpec.describe "Adding a user to a collective RDV" do
         expect_cancel_participation.to change { participation.reload.status }.from("unknown").to("excused")
         expect(rdv.reload.status).to eq("unknown")
 
-        perform_enqueued_jobs
-        expect(ActionMailer::Base.deliveries.map(&:to).flatten).to match_array([agent.email])
+        expect_notifications_sent_for(rdv, agent, :rdv_cancelled)
+        expect_no_notifications_for(rdv, user, :rdv_cancelled)
         expect_webhooks_for(user)
       end
 
@@ -284,7 +275,10 @@ RSpec.describe "Adding a user to a collective RDV" do
         expect_confirm_participation.to change { rdv.reload.users.count }.from(2).to(3)
         expect(rdv.users_count).to eq(2) # users_count doesnt count other_user1 excused participation
 
-        expect_notifications_for(user, "rdv_created")
+        expect_notifications_sent_for(rdv, agent, :rdv_created)
+        expect_notifications_sent_for(rdv, user, :rdv_created)
+        expect_no_notifications_for(rdv, other_user1, :rdv_created)
+        expect_no_notifications_for(rdv, other_user2, :rdv_created)
         expect_webhooks_for(user)
       end
     end
@@ -347,7 +341,8 @@ RSpec.describe "Adding a user to a collective RDV" do
         select_lieu
         expect_confirm_participation.not_to change { rdv.reload.users.count }
 
-        expect_notifications_for(user, "rdv_created")
+        expect_notifications_sent_for(rdv, agent, :rdv_created)
+        expect_notifications_sent_for(rdv, user, :rdv_created)
         expect_webhooks_for(user)
       end
 
@@ -375,11 +370,11 @@ RSpec.describe "Adding a user to a collective RDV" do
         select_lieu
         expect_confirm_participation(notif: false).to change { rdv.reload.users.count }.from(0).to(1)
 
-        perform_enqueued_jobs
-        expect(ActionMailer::Base.deliveries.map(&:to).flatten).to match_array([agent.email])
+        expect_notifications_sent_for(rdv, agent, :rdv_created)
+        expect_no_notifications_for(rdv, user, :rdv_created)
       end
 
-      it "can cancel collective rdv participation, with notifications", js: true do
+      it "can cancel collective rdv participation, with mail notifications only", js: true do
         login_as(user, scope: :user)
         visit root_path(params)
 
@@ -391,7 +386,9 @@ RSpec.describe "Adding a user to a collective RDV" do
 
         expect_cancel_participation.to change { participation.reload.status }.from("unknown").to("excused")
 
-        expect_notifications_for(user, "rdv_cancelled")
+        expect_notifications_sent_for(rdv, agent, :rdv_cancelled)
+        # Mail notif only, SMS are not sent when cancellation is made by the user
+        expect_notifications_sent_for(rdv, user, :rdv_cancelled, :mail)
         expect_webhooks_for(user)
       end
 
@@ -409,8 +406,8 @@ RSpec.describe "Adding a user to a collective RDV" do
 
         expect_cancel_participation.to change { participation.reload.status }.from("unknown").to("excused")
 
-        perform_enqueued_jobs
-        expect(ActionMailer::Base.deliveries.map(&:to).flatten).to match_array([agent.email])
+        expect_notifications_sent_for(rdv, agent, :rdv_cancelled)
+        expect_no_notifications_for(rdv, user, :rdv_cancelled)
         expect_webhooks_for(user)
       end
 
@@ -425,7 +422,10 @@ RSpec.describe "Adding a user to a collective RDV" do
         expect_confirm_participation.to change { rdv.reload.users.count }.from(2).to(3)
         expect(rdv.users_count).to eq(2) # users_count doesnt count other_user1 excused participation
 
-        expect_notifications_for(user, "rdv_created")
+        expect_notifications_sent_for(rdv, agent, :rdv_created)
+        expect_notifications_sent_for(rdv, user, :rdv_created)
+        expect_no_notifications_for(rdv, other_user1, :rdv_created)
+        expect_no_notifications_for(rdv, other_user2, :rdv_created)
         expect_webhooks_for(user)
       end
     end
