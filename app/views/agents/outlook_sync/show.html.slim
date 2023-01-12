@@ -16,6 +16,6 @@
       = image_tag("sign_in_with_microsoft.svg", alt: "S'identifier avec Microsoft")
 
   p Tous vos rendez-vous de #{current_domain.name} seront copiés automatiquement au fur et à mesure de leur création (ou modification).
-  p Pour plus d'informations sur cette fonctionnalité, #{link_to("consultez la FAQ", faq_url, target: :blank)}.
+  p Pour plus d'informations sur cette fonctionnalité, #{link_to("consultez la FAQ", current_domain.faq_url, target: :blank)}.
 
 = link_to "Retour aux méthodes de synchronisation calendrier", agents_calendar_sync_path, class: "btn btn-link float-right mt-3"
