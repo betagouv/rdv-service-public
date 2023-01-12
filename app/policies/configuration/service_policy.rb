@@ -11,12 +11,14 @@ class Configuration::ServicePolicy
     @current_agent.territorial_admin_in?(@current_territory)
   end
 
-  def allow_to_manage_services?
-    @current_agent.access_rights_for_territory(@current_territory)&.allow_to_manage_teams? || false
-  end
-
+  
   alias new? territorial_admin?
-  alias version? allow_to_manage_services?
+  alias versions? territorial_admin?
+  alias edit? territorial_admin?
+  alias create? territorial_admin?
+  alias destroy? territorial_admin?
+  alias update? territorial_admin?
+  alias display? territorial_admin?
 
   class Scope
     def initialize(context, _scope)

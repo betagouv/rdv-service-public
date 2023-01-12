@@ -21,6 +21,10 @@ class Admin::Territories::ServicesController < Admin::Territories::BaseControlle
     authorize Service
   end
 
+  def edit
+    authorize @service
+  end
+
   def update
     authorize @service
     if @service.update(service_params)

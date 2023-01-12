@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 class Service < ApplicationRecord
+  # Mixins
+  has_paper_trail(
+    only: %i[name agent_ids],
+    meta: { virtual_attributes: :virtual_attributes_for_paper_trail }
+  )
+
   # Attributes
   auto_strip_attributes :name, :short_name
 

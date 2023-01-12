@@ -9,7 +9,7 @@
     .m-3.d-flex.justify-content-end
       - search = params[:search].blank? ? "d-none" : ""
       div= link_to "Réinitialiser", admin_territory_services_path(current_territory), class: "btn btn-link #{search}"
-      = f.input :search, placeholder: "ex. Puericultrice", label: false, input_html: { autocomplete: "off", class: "search-form-control", value: params[:search] }, required: false
+      = f.input :search, placeholder: "ex. Médico-social", label: false, input_html: { autocomplete: "off", class: "search-form-control", value: params[:search] }, required: false
       = f.button :submit, "Rechercher"
 
     table.table
@@ -31,7 +31,7 @@
                 div.mr-3= link_to( admin_territory_service_path(current_territory, service),
                         method: :delete,
                         title: t("helpers.delete"),
-                        data: { confirm: "Confirmez-vous la suppression de cette équipe ?"} ) do
+                        data: { confirm: "Confirmez-vous la suppression de ce service ?"} ) do
                   i.fa.fa-trash-alt
     .d-flex.justify-content-center
       = paginate @services, theme: "twitter-bootstrap-4"
