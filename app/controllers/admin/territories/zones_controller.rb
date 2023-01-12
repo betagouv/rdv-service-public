@@ -18,7 +18,7 @@ class Admin::Territories::ZonesController < Admin::Territories::BaseController
   end
 
   def new
-    zone_defaults = { level: Zone::LEVEL_CITY }
+    zone_defaults = { level: params[:default_zone_level] || Zone::LEVEL_CITY }
     @zone = Zone.new(**zone_defaults.merge(zone_params_get), sector: @sector)
     @sectors = policy_scope(Sector)
     authorize @zone
@@ -28,7 +28,11 @@ class Admin::Territories::ZonesController < Admin::Territories::BaseController
     @zone = Zone.new(**zone_params, sector: @sector)
     authorize @zone
     if @zone.save
-      redirect_to admin_territory_sector_path(current_territory, @sector), flash: { success: "#{@zone.human_attribute_value(:level)} ajoutée au secteur" }
+      if params[:commit] == I18n.t("helpers.submit.create")
+        redirect_to admin_territory_sector_path(current_territory, @sector), flash: { success: "#{@zone.human_attribute_value(:level)} ajoutée au secteur" }
+      else
+        redirect_to new_admin_territory_sector_zone_path(current_territory, @sector, default_zone_level: @zone.level), flash: { success: t(".created", zone: @zone.name) }
+      end
     else
       render :new
     end

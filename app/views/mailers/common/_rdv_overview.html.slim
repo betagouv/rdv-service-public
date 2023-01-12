@@ -10,17 +10,17 @@
       span.float-right= @user.full_name
     - else
       span.title
-        = "Usager".pluralize(rdv.users.size)
+        = "Usager".pluralize(rdv.users_count)
         |  :
-      span.float-right= rdv.users.map(&:full_name).sort.to_sentence
+      span.float-right= rdv.rdvs_users.not_cancelled.map(&:full_name).sort.to_sentence
     .clear
   div.row-result
     span.title Motif :
     span.float-right
       - if rdv.collectif? && rdv.name.present?
-        = "#{rdv.motif.name} : #{rdv.name}"
+        = "#{rdv.motif_name} : #{rdv.name}"
       - else
-        = rdv.motif.name
+        = rdv.motif_name
     .clear
   div.row-result
     span.title Service :

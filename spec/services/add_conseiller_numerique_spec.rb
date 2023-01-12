@@ -6,7 +6,6 @@ describe AddConseillerNumerique do
     {
       external_id: "exemple@conseiller-numerique.fr",
       email: "exemple@conseiller-numerique.fr",
-      alternate_email: "exemple@ccas-paris.fr",
       first_name: "Camille",
       last_name: "Clavier",
       structure: {
@@ -26,7 +25,7 @@ describe AddConseillerNumerique do
   end
 
   context "when the conseiller numerique and their structure have never been imported before" do
-    it "creates the agent for the conseiller numerique and notifies them on both email addresses" do
+    it "creates the agent for the conseiller numerique and notifies them" do
       described_class.process!(params)
       expect(Agent.count).to eq 1
       expect(Agent.last).to have_attributes(
@@ -49,10 +48,7 @@ describe AddConseillerNumerique do
       perform_enqueued_jobs
       invitation_email = ActionMailer::Base.deliveries.last
 
-      expect(invitation_email).to have_attributes(
-        to: ["exemple@conseiller-numerique.fr"],
-        cc: ["exemple@ccas-paris.fr"]
-      )
+      expect(invitation_email).to have_attributes(to: ["exemple@conseiller-numerique.fr"])
     end
   end
 

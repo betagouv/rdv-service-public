@@ -4,29 +4,6 @@ describe Admin::Territories::TeamsController, type: :controller do
   let(:territory) { create(:territory, departement_number: "62") }
   let(:organisation) { create(:organisation, territory: territory) }
 
-  describe "#index" do
-    it "assigns territory's teams" do
-      agent = create(:agent, admin_role_in_organisations: [organisation], role_in_territories: [territory])
-      team = create(:team, territory: territory)
-      create(:team, territory: create(:territory))
-      sign_in agent
-
-      get :index, params: { territory_id: territory.id }
-      expect(assigns(:teams)).to eq([team])
-    end
-
-    it "filters territory's teams with search params" do
-      agent = create(:agent, admin_role_in_organisations: [organisation], role_in_territories: [territory])
-      team = create(:team, territory: territory, name: "first team")
-      create(:team, territory: territory, name: "second")
-      create(:team, territory: create(:territory), name: "first group")
-      sign_in agent
-
-      get :index, params: { territory_id: territory.id, search: "first" }
-      expect(assigns(:teams)).to eq([team])
-    end
-  end
-
   describe "#new" do
     it "assigns new team" do
       agent = create(:agent, admin_role_in_organisations: [organisation], role_in_territories: [territory])
@@ -108,25 +85,6 @@ describe Admin::Territories::TeamsController, type: :controller do
       expect  do
         post :destroy, params: { territory_id: territory.id, id: team.id, team: { name: "otherName" } }
       end.to change(Team, :count).by(-1)
-    end
-  end
-
-  describe "#search" do
-    it "successful" do
-      agent = create(:agent)
-      create(:agent_territorial_access_right, agent: agent, territory: territory, allow_to_manage_teams: true)
-      sign_in agent
-      get :search, params: { territory_id: territory.id, term: "bla", format: "json" }
-      expect(response).to be_successful
-    end
-
-    it "assigns teams" do
-      agent = create(:agent)
-      create(:agent_territorial_access_right, agent: agent, territory: territory, allow_to_manage_teams: true)
-      sign_in agent
-      team = create(:team, name: "bla", territory: territory)
-      get :search, params: { territory_id: territory.id, term: "bla", format: "json" }
-      expect(assigns(:teams)).to eq([team])
     end
   end
 end

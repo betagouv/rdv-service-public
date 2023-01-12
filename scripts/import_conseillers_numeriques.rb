@@ -15,7 +15,6 @@ conseillers_numeriques.each do |conseiller_numerique|
   AddConseillerNumerique.process!({
     external_id: external_id,
     email: conseiller_numerique["Email @conseiller-numerique.fr"],
-    alternate_email: conseiller_numerique["Email"],
     first_name: conseiller_numerique["Prénom"],
     last_name: conseiller_numerique["Nom"],
     structure: {

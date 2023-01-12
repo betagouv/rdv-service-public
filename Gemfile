@@ -43,6 +43,7 @@ gem "devise"
 gem "devise_invitable"
 gem "devise-async"
 gem "omniauth-github"
+gem "omniauth-microsoft_graph"
 gem "omniauth_openid_connect"
 gem "omniauth-rails_csrf_protection"
 gem "pundit"
@@ -84,6 +85,8 @@ gem "wannabe_bool" # imports to_b method
 gem "montrose"
 gem "tod", "~> 2.2"
 gem "icalendar", "~> 2.5"
+
+gem "lograge"
 
 group :development, :test do
   gem "byebug", platforms: %i[mri mingw x64_mingw] # Call 'byebug' anywhere in the code to stop execution and get a debugger console

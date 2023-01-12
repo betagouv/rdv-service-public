@@ -10,7 +10,9 @@ class Domain
     presentation_for_agents_template_name:,
     sms_sender_name:,
     online_reservation_with_public_link:,
-    france_connect_enabled:
+    can_sync_to_outlook:,
+    france_connect_enabled:,
+    default: false
   )
     @name = name
     @logo_path = logo_path
@@ -19,12 +21,15 @@ class Domain
     @presentation_for_agents_template_name = presentation_for_agents_template_name
     @sms_sender_name = sms_sender_name
     @online_reservation_with_public_link = online_reservation_with_public_link
+    @can_sync_to_outlook = can_sync_to_outlook
     @france_connect_enabled = france_connect_enabled
+    @default = default
   end
   # rubocop:enable Metrics/ParameterLists
 
-  attr_reader :name, :logo_path, :public_logo_path, :dark_logo_path, :presentation_for_agents_template_name,
-              :sms_sender_name, :online_reservation_with_public_link, :france_connect_enabled
+  attr_reader :logo_path, :public_logo_path, :dark_logo_path, :name, :presentation_for_agents_template_name,
+              :sms_sender_name, :online_reservation_with_public_link, :can_sync_to_outlook, :france_connect_enabled,
+              :default
 
   ALL = [
     RDV_SOLIDARITES = new(
@@ -34,6 +39,7 @@ class Domain
       name: "RDV Solidarités",
       presentation_for_agents_template_name: "rdv_solidarites_presentation_for_agents",
       online_reservation_with_public_link: false,
+      can_sync_to_outlook: false,
       sms_sender_name: "RdvSoli",
       france_connect_enabled: true
     ),
@@ -45,6 +51,7 @@ class Domain
       name: "RDV Aide Numérique",
       presentation_for_agents_template_name: "presentation_for_cnfs",
       online_reservation_with_public_link: true,
+      can_sync_to_outlook: false,
       sms_sender_name: "RdvAideNum",
       france_connect_enabled: false
     ),
@@ -56,7 +63,7 @@ class Domain
       if ENV["IS_REVIEW_APP"] == "true"
         # Les review apps utilisent un domaine de Scalingo, elles
         # ne permettent donc pas d'utiliser plusieurs domaines.
-        URI.parse(ENV["HOST"]).host
+        URI.parse(ENV.fetch("HOST", nil)).host
       elsif ENV["RDV_SOLIDARITES_INSTANCE_NAME"] == "DEMO"
         {
           RDV_SOLIDARITES => "demo.rdv-solidarites.fr",

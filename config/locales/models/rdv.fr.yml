@@ -68,7 +68,7 @@ fr:
         revoked: Le rendez-vous a du être annulé par le service, par exemple pour une raison administrative. Une notification sera envoyée à l’usager.
         noshow: L’usager ne s’est pas présenté a son rendez-vous.
       rdv/name:
-        hint: "Cet intitulé apparaitra dans les notifications par mail envoyées aux usagers."
+        hint: "Cet intitulé apparaitra dans les notifications par mail et par SMS envoyées aux usagers. Il ne doit pas contenir d'information sensible, de données personnelles ou de données de santé."
 
   activemodel:
     warnings:

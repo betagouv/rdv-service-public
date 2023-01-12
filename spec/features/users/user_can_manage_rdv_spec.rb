@@ -13,7 +13,7 @@ describe "User can manage their rdvs" do
     let(:starts_at) { 5.hours.from_now }
 
     it "default", js: true do
-      expect(page).to have_content(rdv.motif.name)
+      expect(page).to have_content(rdv.motif_name)
       click_link("Annuler le RDV")
       expect(page).to have_content("Confirmation")
       click_link("Oui, annuler le rendez-vous")
@@ -25,7 +25,7 @@ describe "User can manage their rdvs" do
     let(:starts_at) { 4.hours.from_now }
 
     it "default", js: true do
-      expect(page).to have_content(rdv.motif.name)
+      expect(page).to have_content(rdv.motif_name)
       expect(page).not_to have_selector("li", text: "Annuler le RDV")
       expect(page).to have_content("Ce rendez-vous n'est pas annulable en ligne. Prenez contact avec le secrétariat.")
     end

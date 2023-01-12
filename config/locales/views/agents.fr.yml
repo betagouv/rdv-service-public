@@ -2,7 +2,13 @@ fr:
   agents:
     calendar_sync:
       show:
-        title: Export vers un agenda externe
+        title: Synchronisation vers un agenda externe
+    outlook_sync:
+      show:
+        title: Connexion à votre compte Outlook
+    webcal_sync:
+      show:
+        title: Lien de synchronisation
     preferences:
       show:
         title: Préférences de notifications

@@ -232,6 +232,7 @@ RSpec.describe "Adding a user to a collective RDV" do
         fill_in(:letter2, with: "V")
 
         expect_cancel_participation.to change { participation.reload.status }.from("unknown").to("excused")
+        expect(rdv.reload.status).to eq("unknown")
 
         expect_notifications_sent_for(rdv, agent, :rdv_cancelled)
         # Mail notif only, SMS are not sent when cancellation is made by the user
@@ -255,6 +256,7 @@ RSpec.describe "Adding a user to a collective RDV" do
         fill_in(:letter2, with: "V")
 
         expect_cancel_participation.to change { participation.reload.status }.from("unknown").to("excused")
+        expect(rdv.reload.status).to eq("unknown")
 
         expect_notifications_sent_for(rdv, agent, :rdv_cancelled)
         expect_no_notifications_for(rdv, user, :rdv_cancelled)

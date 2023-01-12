@@ -12,7 +12,7 @@ class IcsCalendarController < ActionController::Base
     respond_to do |format|
       format.ics do
         cal = Icalendar::Calendar.new
-        cal.x_wr_calname = "#{@agent.full_name} sur #{@agent.domain.name}"
+        cal.x_wr_calname = "#{@agent.full_name} sur #{@agent.domain_name}"
 
         tz = TZInfo::Timezone.get(Time.zone_default.tzinfo.identifier)
         timezone = tz.ical_timezone(rdvs.last&.starts_at || 1.year.ago)
@@ -59,8 +59,8 @@ class IcsCalendarController < ActionController::Base
         event.status = rdv.cancelled? ? "CANCELLED" : "CONFIRMED"
 
         event.uid = rdv.uuid
-        event.summary = rdv.collectif? ? rdv_title_in_agenda(rdv) : rdv.motif.name
-        event.description = "plus d'infos dans #{@agent.domain.name}: #{admin_organisation_rdv_url(rdv.organisation, rdv.id)}"
+        event.summary = rdv.object
+        event.description = rdv.event_description_for(@agent)
       end
     end
   end

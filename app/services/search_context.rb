@@ -64,15 +64,13 @@ class SearchContext
   def service
     @service ||= if @service_id.present?
                    Service.find(@service_id)
-                 elsif motif_name_and_type_selected?
-                   first_matching_motif.service
                  elsif services.count == 1
                    services.first
                  end
   end
 
   def services
-    unique_motifs_by_name_and_location_type.map(&:service).uniq.sort_by(&:name)
+    @services ||= matching_motifs.includes(:service).map(&:service).uniq.sort_by(&:name)
   end
 
   def requires_organisation_selection?

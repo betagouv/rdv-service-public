@@ -272,6 +272,11 @@ GEM
     listen (3.7.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
+    lograge (0.11.2)
+      actionpack (>= 4)
+      activesupport (>= 4)
+      railties (>= 4)
+      request_store (~> 1.0)
     loofah (2.19.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
@@ -318,6 +323,9 @@ GEM
     omniauth-github (2.0.1)
       omniauth (~> 2.0)
       omniauth-oauth2 (~> 1.8)
+    omniauth-microsoft_graph (1.2.0)
+      omniauth (~> 2.0)
+      omniauth-oauth2 (~> 1.8.0)
     omniauth-oauth2 (1.8.0)
       oauth2 (>= 1.4, < 3)
       omniauth (~> 2.0)
@@ -644,9 +652,11 @@ DEPENDENCIES
   kaminari
   letter_opener_web
   listen
+  lograge
   mail (= 2.8.0.rc1)
   montrose
   omniauth-github
+  omniauth-microsoft_graph
   omniauth-rails_csrf_protection
   omniauth_openid_connect
   paper_trail (< 13.0)
