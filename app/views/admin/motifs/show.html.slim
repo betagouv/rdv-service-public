@@ -56,7 +56,7 @@
             motif_option_activated(@motif, :rdvs_editable_by_user), \
             hint: Motif.human_attribute_name(:rdvs_editable_by_user_hint)
 
-          - unless current_domain.online_reservation_with_public_link?
+          - unless current_domain.online_reservation_with_public_link
             = motif_attribute_row("Sectorisation") do
               - if @motif.reservable_online?
                 div= @motif.human_attribute_value(:sectorisation_level)
