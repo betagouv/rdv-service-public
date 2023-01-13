@@ -8,8 +8,8 @@ class RdvsUser < ApplicationRecord
   include RdvsUser::Creatable
 
   # Attributes
-  enum status: { unknown: "unknown", waiting: "waiting", seen: "seen", excused: "excused", revoked: "revoked", noshow: "noshow" }
-  NOT_CANCELLED_STATUSES = %w[unknown waiting seen noshow].freeze
+  enum status: { unknown: "unknown", seen: "seen", excused: "excused", revoked: "revoked", noshow: "noshow" }
+  NOT_CANCELLED_STATUSES = %w[unknown seen noshow].freeze
   CANCELLED_STATUSES = %w[excused revoked].freeze
 
   # Relations
@@ -41,9 +41,9 @@ class RdvsUser < ApplicationRecord
   scope :status, lambda { |status|
     case status.to_s
     when "unknown_past"
-      past.where(status: %w[unknown waiting])
+      past.where(status: %w[unknown])
     when "unknown_future"
-      future.where(status: %w[unknown waiting])
+      future.where(status: %w[unknown])
     else
       where(status: status)
     end

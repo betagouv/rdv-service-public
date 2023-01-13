@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_12_08_091120) do
+ActiveRecord::Schema[7.0].define(version: 2023_01_11_161320) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "unaccent"
@@ -60,7 +60,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_08_091120) do
 
   create_enum :rdv_status, [
     "unknown",
-    "waiting",
     "seen",
     "excused",
     "revoked",
