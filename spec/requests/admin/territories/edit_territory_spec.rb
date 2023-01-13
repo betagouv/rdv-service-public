@@ -8,7 +8,7 @@ RSpec.describe "Edit territory", type: :request do
 
   before { sign_in agent }
 
-  describe "GET /admin/territories/3/edit" do
+  describe "GET /admin/territories/:id/edit" do
     it "is successful" do
       get edit_admin_territory_path(territory)
       expect(response).to be_successful
