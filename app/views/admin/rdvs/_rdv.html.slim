@@ -7,7 +7,10 @@
           span
             = link_to rdv_title(rdv), admin_organisation_rdv_path(rdv.organisation, rdv)
       = render "admin/rdvs/waiting_room", rdv: rdv
-      = render "admin/rdvs/rdv_status_dropdown", rdv: rdv, agent: local_assigns[:agent], remote: true
+      - if rdv.collectif?
+        = render "admin/rdvs/collective_rdv_status_dropdown", rdv: rdv, agent: local_assigns[:agent], remote: true
+      - else
+        = render "admin/rdvs/rdv_status_dropdown", rdv: rdv, agent: local_assigns[:agent], remote: true
   hr.my-0.mx-3
   .card-body.py-3.row
     .col-md-6.col-sm-12

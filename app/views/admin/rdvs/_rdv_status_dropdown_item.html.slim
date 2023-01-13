@@ -4,4 +4,7 @@
     i class=("fa fa-circle mr-1 rdv-status-#{status}")
     = Rdv.human_attribute_value(:status, status, context: :action)
     .text-wrap.text-muted
+    - if rdv.collectif?
+      = Rdv.human_attribute_value(:status, status, context: :collective_rdv_explanation)
+    - else
       = Rdv.human_attribute_value(:status, status, context: :explanation)

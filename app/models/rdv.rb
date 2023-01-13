@@ -27,6 +27,7 @@ class Rdv < ApplicationRecord
   MIN_DELAY_FOR_CANCEL = 4.hours
   NOT_CANCELLED_STATUSES = %w[unknown seen noshow].freeze
   CANCELLED_STATUSES = %w[excused revoked].freeze
+  COLLECTIVE_RDV_STATUSES = %w[unknown seen revoked].freeze
   enum created_by: { agent: 0, user: 1, file_attente: 2, prescripteur: 3 }, _prefix: :created_by
 
   # Relations
@@ -61,11 +62,13 @@ class Rdv < ApplicationRecord
 
   # Validations
   validates :starts_at, :ends_at, :agents, presence: true
-  validates :rdvs_users, presence: true, unless: :collectif?
   validate :lieu_is_not_disabled_if_needed
   validate :starts_at_is_plausible
   validate :duration_is_plausible
   validates :max_participants_count, numericality: { greater_than: 0, allow_nil: true }
+
+  validates :rdvs_users, presence: true, unless: :collectif?
+  validates :status, inclusion: { in: COLLECTIVE_RDV_STATUSES }, if: :collectif?
 
   # Hooks
   after_save :associate_users_with_organisation
