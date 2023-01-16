@@ -108,11 +108,14 @@ Rails.application.routes.draw do
     namespace "admin" do
       resources :territories, only: %i[edit update show] do
         scope module: "territories" do
-          resources :agent_territorial_roles, only: %i[index new create destroy]
           resources :agent_roles, only: %i[edit update create destroy]
           resources :agent_territorial_access_rights, only: %i[update]
           resources :webhook_endpoints, except: %i[show]
-          resources :agents, only: %i[index update edit]
+          resources :agents, only: %i[index update edit] do
+            member do
+              put :territory_admin
+            end
+          end
           resources :teams
           resource :user_fields, only: %i[edit update]
           resource :rdv_fields, only: %i[edit update]

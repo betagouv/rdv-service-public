@@ -94,7 +94,7 @@ fr:
           no_other_organisation: Aucune autre organisation.
           create_organisation: Créer une organisation
           empty_agent_organisations: Aucune organisation affectée
-          agent_territorial_role_legend: Administrateur de territoire
+          agent_territorial_role_caption: Administrateur de territoire
         index:
           territory_agents_title: Agents du territoire
           reset: Retour

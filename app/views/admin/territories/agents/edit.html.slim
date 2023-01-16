@@ -1,7 +1,7 @@
 = territory_navigation(t(".agent_title", name: @agent.full_name), [link_to(t(".territory_agents_title"), admin_territory_agents_path(current_territory))])
 
 .container-fluid
-  - if policy([:configuration, current_territory]).allow_to_manage_access_rights?
+  - if policy([:configuration, current_territory]).allow_to_manage_access_rights? && @agent.agent_territorial_access_rights.find_by(territory: current_territory).present?
     .card.m-2.rounded
       h2.card-header
         = t(".agent_access_rights_legend")
@@ -19,28 +19,16 @@
   - if policy([:configuration, current_territory]).allow_to_manage_access_rights?
     .card.m-2.rounded
       h2.card-header
-        = t(".agent_territorial_role_legend")
-      - if @agent.territorial_admin_in?(current_territory)
-        ruby:
-          element = @agent.territorial_roles.find_by(territory: current_territory)
-          url = admin_territory_agent_territorial_role_path(current_territory, element)
-          method = :delete
-      - else
-        ruby:
-          element = @agent.territorial_roles.new(territory: current_territory, agent: @agent)
-          url = admin_territory_agent_territorial_roles_path
-          method = :post
-      = simple_form_for element, url: url, method: method do |f|
+        = t(".agent_territorial_role_caption")
+
+      = simple_form_for @agent, url: territory_admin_admin_territory_agent_path(current_territory, @agent), method: :put do |f|
         .card-body
-          = f.input :agent_id, as: :hidden, value: @agent.id
-          - if @agent.territorial_admin_in?(current_territory)
-            = check_box_tag :fake, "admin_in_territory", checked: true
-          - else
-            = check_box_tag :fake, "admin_in_territory"
+          = check_box_tag :territorial_admin, 1, @agent.territorial_admin_in?(current_territory)
           span>
-          = label_tag :fake, "Administrateur du territoire"
+          = label_tag :territorial_admin, "Administrateur du territoire"
           small.form-text.text-muted
             | Ce status d'agent ouvre un large accès à la création d'organisation, la gestion de la sectorisation, la gestion des webhook, la configuration de ce qui est visible dans une fiche usager, une fiche RDV, la visiiblité des catégories de motif, ...
+
         .card-footer
           .row
             .col.text-right
