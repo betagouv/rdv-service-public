@@ -39,7 +39,7 @@ class Rdv < ApplicationRecord
   # https://stackoverflow.com/questions/30629680/rails-isnt-running-destroy-callbacks-for-has-many-through-join-model/30629704
   # https://github.com/rails/rails/issues/7618
   has_many :rdvs_users, validate: false, inverse_of: :rdv, dependent: :destroy
-  after_touch :update_rdv_status_from_participation
+  after_touch :update_rdv_status_from_participation, if: :collectif?
   has_many :receipts, dependent: :destroy
 
   accepts_nested_attributes_for :rdvs_users, allow_destroy: true
@@ -344,14 +344,19 @@ class Rdv < ApplicationRecord
   end
 
   def update_rdv_status_from_participation
-    return unless collectif?
-
     if rdvs_users.empty?
       update_status_to_unknown
       return
     end
 
-    update_status_priority_order_participations
+    if rdvs_users.any?(&:seen?)
+      update_status_to_seen
+      return
+    end
+
+    if rdvs_users.none?(&:seen?) && rdvs_users.none?(&:unknown?)
+      update_status_to_revoked
+    end
   end
 
   def update_status_to_unknown
@@ -359,16 +364,16 @@ class Rdv < ApplicationRecord
     update!(status: "unknown")
   end
 
-  def update_status_priority_order_participations
-    # Priority Order. One participation will change rdv status
-    %w[unknown seen noshow revoked].each do |status|
-      symbol_method = "#{status}?".to_sym
-      next unless rdvs_users.any?(&symbol_method)
+  def update_status_to_seen
+    update!(status: "seen")
+  end
 
-      self.cancelled_at = status.in?(%w[revoked noshow]) ? Time.zone.now : nil
-      update!(status: status)
-      break
-    end
+  def update_status_to_revoked
+    # Rdv still opened to reservation cannot be set to revoked since users can register
+    return if reservable_online? && !in_the_past?
+
+    self.cancelled_at = Time.zone.now
+    update!(status: "revoked")
   end
 
   private
