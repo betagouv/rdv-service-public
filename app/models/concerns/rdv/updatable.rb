@@ -12,7 +12,7 @@ module Rdv::Updatable
     Rdv.transaction do
       self.updated_at = Time.zone.now
 
-      if status_changed?
+      if status_changed? && valid?
         self.cancelled_at = status.in?(%w[excused revoked noshow]) ? Time.zone.now : nil
         change_participation_statuses
       end
