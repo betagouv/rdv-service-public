@@ -53,6 +53,7 @@ RSpec.configure do |config|
   config.include Warden::Test::Helpers, type: :feature
   config.include Sentry::TestHelper
   config.include DeviseRequestSpecHelpers, type: :request
+  config.include NotificationsHelper
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false

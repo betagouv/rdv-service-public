@@ -28,26 +28,54 @@ RSpec.describe Outlook::MassDestroyEventJob, type: :job do
     }
   end
 
-  before do
-    stub_request(:delete, "https://graph.microsoft.com/v1.0/me/Events/abc")
-      .with(headers: expected_headers)
-      .to_return(status: 204, body: "", headers: {})
-    stub_request(:delete, "https://graph.microsoft.com/v1.0/me/Events/def")
-      .with(headers: expected_headers)
-      .to_return(status: 204, body: "", headers: {})
+  context "when the events are deleted successfully" do
+    before do
+      stub_request(:delete, "https://graph.microsoft.com/v1.0/me/Events/abc")
+        .with(headers: expected_headers)
+        .to_return(status: 204, body: "", headers: {})
+      stub_request(:delete, "https://graph.microsoft.com/v1.0/me/Events/def")
+        .with(headers: expected_headers)
+        .to_return(status: 204, body: "", headers: {})
+    end
+
+    it "destroys the existing events in outlook" do
+      expect do
+        described_class.perform_now(agent)
+      end.to change { agents_rdv.reload.outlook_id }.to(nil)
+        .and change { agents_rdv2.reload.outlook_id }.to(nil)
+    end
+
+    it "unsyncs the agent" do
+      expect do
+        described_class.perform_now(agent)
+      end.to change { agent.reload.microsoft_graph_token }.to(nil)
+        .and change { agent.reload.refresh_microsoft_graph_token }.to(nil)
+    end
   end
 
-  it "destroys the existing events in outlook" do
-    expect do
-      described_class.perform_now(agent)
-    end.to change { agents_rdv.reload.outlook_id }.to(nil)
-      .and change { agents_rdv2.reload.outlook_id }.to(nil)
-  end
+  context "when there is an error while destroying one of the events" do
+    before do
+      stub_request(:delete, "https://graph.microsoft.com/v1.0/me/Events/abc")
+        .with(headers: expected_headers)
+        .to_return(status: 204, body: "", headers: {})
+      stub_request(:delete, "https://graph.microsoft.com/v1.0/me/Events/def")
+        .with(headers: expected_headers)
+        .to_return(
+          status: 403,
+          body: {
+            "error" => {
+              "message" => "The specified object was not found in the store.",
+            },
+          }.to_json,
+          headers: {}
+        )
+    end
 
-  it "unsyncs the agent" do
-    expect do
-      described_class.perform_now(agent)
-    end.to change { agent.reload.microsoft_graph_token }.to(nil)
-      .and change { agent.reload.refresh_microsoft_graph_token }.to(nil)
+    it "unsyncs the agent" do
+      expect do
+        described_class.perform_now(agent)
+      end.to change { agent.reload.microsoft_graph_token }.to(nil)
+        .and change { agent.reload.refresh_microsoft_graph_token }.to(nil)
+    end
   end
 end
