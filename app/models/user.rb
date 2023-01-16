@@ -20,6 +20,7 @@ class User < ApplicationRecord
   include User::NotificableConcern
   include User::ImprovedUnicityErrorConcern
   include User::DeviseInvitableWithDomain
+  include User::SoftDeletable
   include PhoneNumberValidation::HasPhoneNumber
   include WebhookDeliverable
   include TextSearch
@@ -105,10 +106,6 @@ class User < ApplicationRecord
     end
   end
 
-  def soft_delete(organisation = nil)
-    self_and_relatives.each { _1.do_soft_delete(organisation) }
-  end
-
   def available_users_for_rdv
     User.where(responsible_id: id).or(User.where(id: id)).order("responsible_id DESC NULLS FIRST", first_name: :asc)
   end
@@ -151,20 +148,8 @@ class User < ApplicationRecord
     rdv.rdvs_users.to_a.find { |participation| participation.user_id.in?(self_and_relatives_and_responsible.map(&:id)) }
   end
 
-  def deleted_email
-    "user_#{id}@deleted.rdv-solidarites.fr"
-  end
-
   def notes_for(organisation)
     profile_for(organisation)&.notes
-  end
-
-  def can_be_soft_deleted_from_organisation?(organisation)
-    Rdv.not_cancelled
-      .future
-      .joins(:users).where(users: self_and_relatives)
-      .where(organisation: organisation)
-      .empty?
   end
 
   def rdvs_future_without_ongoing(organisation)
@@ -269,16 +254,5 @@ class User < ApplicationRecord
     return unless birth_date.present? && (birth_date > Time.zone.today || birth_date < 130.years.ago)
 
     errors.add(:birth_date, "est invalide")
-  end
-
-  def do_soft_delete(organisation)
-    if organisation.present?
-      organisations.delete(organisation)
-    else
-      self.organisations = []
-    end
-    return save! if organisations.any? # only actually mark deleted when no orgas left
-
-    update_columns(deleted_at: Time.zone.now, email_original: email, email: deleted_email)
   end
 end

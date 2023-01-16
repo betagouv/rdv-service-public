@@ -12,6 +12,7 @@ class Rdv < ApplicationRecord
   include Rdv::AuthoredConcern
   include Rdv::Updatable
   include Rdv::UsingWaitingRoom
+  include Rdv::SoftDeletable
   include IcalHelpers::Ics
   include Payloads::Rdv
 
@@ -56,8 +57,6 @@ class Rdv < ApplicationRecord
 
   # Delegates
   delegate :home?, :phone?, :public_office?, :reservable_online?, :service_social?, :follow_up?, :service, :collectif?, :collectif, :individuel?, to: :motif
-
-  alias_attribute :soft_deleted?, :deleted_at?
 
   # Validations
   validates :starts_at, :ends_at, :agents, presence: true
@@ -324,15 +323,6 @@ class Rdv < ApplicationRecord
       .admin_organisation_rdv_url(organisation, id, host: agent.dns_domain_name)
 
     "plus d'infos dans #{agent.domain_name}: #{link}"
-  end
-
-  def soft_delete
-    # disable the :updated webhook because we want to manually trigger a :destroyed webhook
-    self.skip_webhooks = true
-    return false unless update(deleted_at: Time.zone.now)
-
-    generate_payload_and_send_webhook_for_destroy
-    true
   end
 
   def update_users_count

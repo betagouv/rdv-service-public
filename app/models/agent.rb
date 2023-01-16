@@ -8,8 +8,16 @@ class Agent < ApplicationRecord
     only: %w[email first_name last_name starts_at service_id invitation_sent_at invitation_accepted_at]
   )
 
-  include Outlook::Connectable
+  devise :invitable, :database_authenticatable, :trackable,
+         :recoverable, :rememberable, :validatable, :confirmable, :async, validate_on_invite: true
+
+  include Agent::SoftDeletable
+
   include DeviseInvitable::Inviter
+  include DeviseTokenAuth::Concerns::ConfirmableSupport
+  include DeviseTokenAuth::Concerns::UserOmniauthCallbacks
+
+  include Outlook::Connectable
   include WebhookDeliverable
   include FullNameConcern
   include TextSearch
@@ -21,12 +29,6 @@ class Agent < ApplicationRecord
       id: "D",
     }
   end
-
-  devise :invitable, :database_authenticatable, :trackable,
-         :recoverable, :rememberable, :validatable, :confirmable, :async, validate_on_invite: true
-
-  include DeviseTokenAuth::Concerns::ConfirmableSupport
-  include DeviseTokenAuth::Concerns::UserOmniauthCallbacks
 
   # Attributes
   auto_strip_attributes :email, :first_name, :last_name
@@ -119,17 +121,6 @@ class Agent < ApplicationRecord
 
   def inactive?
     last_sign_in_at.nil? || last_sign_in_at <= 1.month.ago
-  end
-
-  def soft_delete
-    raise SoftDeleteError, "agent still has attached resources" if organisations.any? || plage_ouvertures.any? || absences.any?
-
-    sector_attributions.destroy_all
-    update_columns(deleted_at: Time.zone.now, email_original: email, email: deleted_email, uid: deleted_email)
-  end
-
-  def deleted_email
-    "agent_#{id}@deleted.rdv-solidarites.fr"
   end
 
   def active_for_authentication?

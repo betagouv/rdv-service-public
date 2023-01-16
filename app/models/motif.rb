@@ -8,6 +8,7 @@ class Motif < ApplicationRecord
 
   include PgSearch::Model
   include Motif::Category
+  include Motif::SoftDeletable
 
   pg_search_scope(:search_by_text,
                   against: :name,
@@ -62,9 +63,6 @@ class Motif < ApplicationRecord
   validate :not_at_home_if_collectif
 
   # Scopes
-  scope :active, lambda { |active = true|
-    active ? where(deleted_at: nil) : where.not(deleted_at: nil)
-  }
   scope :reservable_online, -> { where(reservable_online: true) }
   scope :not_reservable_online, -> { where(reservable_online: false) }
   scope :by_phone, -> { Motif.phone } # default scope created by enum
@@ -103,10 +101,6 @@ class Motif < ApplicationRecord
 
   def to_s
     name
-  end
-
-  def soft_delete
-    rdvs.any? ? update_attribute(:deleted_at, Time.zone.now) : destroy
   end
 
   def authorized_agents
