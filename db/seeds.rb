@@ -36,13 +36,15 @@ territory_drome = Territory.create!(
   departement_number: "26",
   name: "Drôme",
   sms_provider: "netsize",
-  sms_configuration: "login:pwd"
+  sms_configuration: "login:pwd",
+  enable_motif_categories_field: true
 )
 territory_yonne = Territory.create!(
   departement_number: "89",
   name: "Yonne",
   sms_provider: "netsize",
-  sms_configuration: "login:pwd"
+  sms_configuration: "login:pwd",
+  enable_motif_categories_field: true
 )
 
 # ORGANISATIONS & SECTORS
@@ -942,19 +944,19 @@ WebhookEndpoint.create!(
   target_url: "http://localhost:8000/rdv_solidarites_webhooks",
   secret: "rdv-solidarites",
   organisation_id: org_drome1.id,
-  subscriptions: %w[rdv user user_profile organisation]
+  subscriptions: %w[rdv user user_profile organisation motif lieu agent agent_role referent_assignation]
 )
 WebhookEndpoint.create!(
   target_url: "http://localhost:8000/rdv_solidarites_webhooks",
   secret: "rdv-solidarites",
   organisation_id: org_drome2.id,
-  subscriptions: %w[rdv user user_profile organisation]
+  subscriptions: %w[rdv user user_profile organisation motif lieu agent agent_role referent_assignation]
 )
 WebhookEndpoint.create!(
   target_url: "http://localhost:8000/rdv_solidarites_webhooks",
   secret: "rdv-solidarites",
   organisation_id: org_yonne.id,
-  subscriptions: %w[rdv user user_profile organisation]
+  subscriptions: %w[rdv user user_profile organisation motif lieu agent agent_role referent_assignation]
 )
 
 # Sync rdv counter cache
