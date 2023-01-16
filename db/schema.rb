@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_12_08_091120) do
+ActiveRecord::Schema[7.0].define(version: 2023_01_16_135446) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "unaccent"
@@ -56,6 +56,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_08_091120) do
     "rsa_accompagnement_sociopro",
     "rsa_main_tendue",
     "rsa_atelier_collectif_mandatory",
+    "rsa_spie",
   ], force: :cascade
 
   create_enum :rdv_status, [
