@@ -59,7 +59,7 @@ RSpec.describe CronJob::ReminderJob, type: :job do
       perform_now
 
       # Exception raised by rdv_2 is sent to Sentry
-      expect(sentry_events.last.exception.values.last.value).to eq("woopsie")
+      expect(sentry_events.last.exception.values.last.value).to eq("woopsie (RuntimeError)")
       expect(sentry_events.last.breadcrumbs.compact.first.data[:rdv_id]).to eq(rdv2.id)
     end
   end
