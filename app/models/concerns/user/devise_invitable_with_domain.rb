@@ -10,16 +10,6 @@ module User::DeviseInvitableWithDomain
     super(invited_by, options)
   end
 
-  def domain
-    if rdvs.any?
-      rdvs.order(created_at: :desc).first.domain
-    elsif sign_up_domain
-      sign_up_domain
-    else
-      Domain::RDV_SOLIDARITES
-    end
-  end
-
   REDIS_FOR_SIGN_UP_DOMAIN = Redis.new(url: Rails.configuration.x.redis_url)
 
   def sign_up_domain=(domain)

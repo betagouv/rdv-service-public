@@ -224,6 +224,16 @@ class User < ApplicationRecord
     !only_invited?
   end
 
+  def domain
+    if rdvs.any?
+      rdvs.order(created_at: :desc).first.domain
+    elsif sign_up_domain
+      sign_up_domain
+    else
+      Domain::RDV_SOLIDARITES
+    end
+  end
+
   protected
 
   def compute_invitation_due_at
