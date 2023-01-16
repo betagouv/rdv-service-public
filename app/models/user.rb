@@ -19,7 +19,7 @@ class User < ApplicationRecord
   include User::FranceconnectFrozenFieldsConcern
   include User::NotificableConcern
   include User::ImprovedUnicityErrorConcern
-  include User::DeviseHasDomain
+  include User::DeviseInvitableWithDomain
   include PhoneNumberValidation::HasPhoneNumber
   include WebhookDeliverable
   include TextSearch

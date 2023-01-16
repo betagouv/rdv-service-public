@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Ce concern nous permet de définir le domaine à utiliser pour un⋅e usager⋅e dans les mailers Devise
-module User::DeviseHasDomain
+module User::DeviseInvitableWithDomain
   extend ActiveSupport::Concern
 
   # Overriding this method from devise_invitable so we can pass in a domain
