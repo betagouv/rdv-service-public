@@ -42,10 +42,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   def invite_and_redirect(user)
-    user.invite!(domain: current_domain, options: { user_params: sign_up_params }) do |u|
-      # This is our only way of passing the domain to the Devise mailer
-      u.sign_up_domain = current_domain
-    end
+    user.invite!(domain: current_domain, options: { user_params: sign_up_params })
     set_flash_message! :notice, :signed_up_but_unconfirmed
     respond_with user, location: after_inactive_sign_up_path_for(user)
   end
