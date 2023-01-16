@@ -29,7 +29,7 @@ RSpec.describe "CRUDS teams configuration", type: :request do
       create(:team, territory: territory, name: "other name")
       matching_team = create(:team, territory: territory, name: "First Groupe")
 
-      get admin_territory_teams_path(territory, search: "first")
+      get admin_territory_teams_path(territory, term: "first")
 
       expect(response).to be_successful
       expect(assigns(:teams)).to eq([matching_team])
@@ -45,7 +45,7 @@ RSpec.describe "CRUDS teams configuration", type: :request do
       create(:team, territory: territory, name: "other name")
       matching_team = create(:team, territory: territory, name: "First Groupe")
 
-      get admin_territory_teams_path(territory, search: "first", format: :json)
+      get admin_territory_teams_path(territory, term: "first", format: :json)
 
       expect(response).to be_successful
       expect(assigns(:teams)).to eq([matching_team])

@@ -7,9 +7,9 @@
     .text-right
       = link_to t(".create_team"), new_admin_territory_team_path(current_territory), class:"btn btn-outline-primary"
     .m-3.d-flex.justify-content-end
-      - search = params[:search].blank? ? "d-none" : ""
-      div= link_to "Réinitialiser", admin_territory_teams_path(current_territory), class: "btn btn-link #{search}"
-      = f.input :search, placeholder: "ex. Puericultrice", label: false, input_html: { autocomplete: "off", class: "search-form-control", value: params[:search] }, required: false
+      - term = params[:term].blank? ? "d-none" : ""
+      div= link_to "Réinitialiser", admin_territory_teams_path(current_territory), class: "btn btn-link #{term}"
+      = f.input :term, placeholder: "ex. Puericultrice", label: false, input_html: { autocomplete: "off", class: "search-form-control", value: params[:term] }, required: false
       = f.button :submit, "Rechercher"
 
     table.table
