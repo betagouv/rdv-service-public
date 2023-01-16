@@ -3,6 +3,7 @@
 class Domain
   # rubocop:disable Metrics/ParameterLists
   def initialize(
+    id:,
     name:,
     logo_path:,
     public_logo_path:,
@@ -14,6 +15,7 @@ class Domain
     france_connect_enabled:,
     default: false
   )
+    @id = id
     @name = name
     @logo_path = logo_path
     @public_logo_path = public_logo_path
@@ -27,12 +29,13 @@ class Domain
   end
   # rubocop:enable Metrics/ParameterLists
 
-  attr_reader :logo_path, :public_logo_path, :dark_logo_path, :name, :presentation_for_agents_template_name,
+  attr_reader :id, :logo_path, :public_logo_path, :dark_logo_path, :name, :presentation_for_agents_template_name,
               :sms_sender_name, :online_reservation_with_public_link, :can_sync_to_outlook, :france_connect_enabled,
               :default
 
   ALL = [
     RDV_SOLIDARITES = new(
+      id: "RDV_SOLIDARITES",
       logo_path: "logos/logo_solidarites.svg",
       public_logo_path: "/logo_solidarites.png",
       dark_logo_path: "logos/logo_sombre_solidarites.svg",
@@ -45,6 +48,7 @@ class Domain
     ),
 
     RDV_AIDE_NUMERIQUE = new(
+      id: "RDV_AIDE_NUMERIQUE",
       logo_path: "logos/logo_aide_numerique.svg",
       public_logo_path: "/logo_aide_numerique.png",
       dark_logo_path: "logos/logo_sombre_aide_numerique.svg",
@@ -104,8 +108,8 @@ class Domain
     ALL_BY_URL.fetch(domain_name) { RDV_SOLIDARITES }
   end
 
-  def self.find_by_name(name)
-    ALL.find { _1.name == name }
+  def self.find(id)
+    ALL.find { _1.id == id } or raise "Can't find domain with id=#{id}"
   end
 
   def self.review_app_domain
