@@ -49,7 +49,10 @@ class Admin::UsersController < AgentAuthController
     @user.skip_confirmation_notification!
     user_persisted = @user_form.save
 
-    @user.invite! if invite_user?(@user, params)
+    if invite_user?(@user, params)
+      @user.invite!(domain: current_domain)
+    end
+
     prepare_new unless user_persisted
 
     if from_modal?
@@ -91,7 +94,7 @@ class Admin::UsersController < AgentAuthController
 
   def invite
     authorize(@user)
-    @user.invite!
+    @user.invite!(domain: current_domain)
     redirect_to admin_organisation_user_path(current_organisation, @user), notice: "L’usager a été invité."
   end
 

@@ -11,7 +11,7 @@ describe "Agent can create user" do
 
   before do
     login_as(agent, scope: :agent)
-    visit authenticated_agent_root_path
+    visit "http://www.rdv-aide-numerique-test.localhost/"
     click_link "Usagers"
     click_link "Créer un usager", match: :first
     expect_page_title("Nouvel usager")
@@ -28,7 +28,7 @@ describe "Agent can create user" do
     click_button "Enregistrer"
     click_link "Inviter"
     open_email("marco@lebreton.bzh")
-    expect(current_email.subject).to eq "Vous avez été invité sur RDV Solidarités"
+    expect(current_email.subject).to eq("Vous avez été invité sur RDV Aide Numérique")
   end
 
   context "user already exists in other organisation" do

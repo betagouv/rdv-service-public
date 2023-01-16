@@ -19,7 +19,9 @@
 
     / On évite généralement d'avoir de la logique spécifique au domain, mais ici il s'agit d'un feature flag temporaire,
     / puisqu'on compte bientôt ouvrir cette fonctionnalité à tous les domaines
-    - if @rdv_wizard && current_domain == Domain::RDV_AIDE_NUMERIQUE
+    / On a aussi un feature flag pour l'expérimentation dans le Var en démo
+    - demo_var = @rdv_wizard&.motif&.organisation&.territory&.departement_number == "83" && current_domain.dns_domain_name.include?("demo")
+    - if @rdv_wizard && (current_domain == Domain::RDV_AIDE_NUMERIQUE || demo_var)
       hr
         .text-center
           p.text-muted

@@ -19,7 +19,7 @@ class PrescripteurRdvWizard < UserRdvWizard::Base
       create_rdv!
     end
 
-    PrescripteurMailer.rdv_created(participation, @domain.name).deliver_later
+    PrescripteurMailer.rdv_created(participation, @domain.id).deliver_later
   end
 
   private

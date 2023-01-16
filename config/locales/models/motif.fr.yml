@@ -56,6 +56,7 @@ fr:
         rsa_follow_up: RSA - Suivi
         rsa_main_tendue: RSA - Main tendue
         rsa_atelier_collectif_mandatory: RSA - Atelier Collectif (obligatoire)
+        rsa_spie: RSA - SPIE
       motif/collectifs:
         true: RDV collectif
         false: RDV individuel

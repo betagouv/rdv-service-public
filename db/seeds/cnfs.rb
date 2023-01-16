@@ -19,7 +19,8 @@ org_cnfs = Organisation.create!(
 )
 
 # MOTIFS Conseiller Numérique
-Motif.create!(
+
+motif_accompagnement_individuel = Motif.create!(
   name: "Accompagnement individuel",
   color: "#99CC99",
   default_duration_in_min: 60,
@@ -69,6 +70,18 @@ agent_cnfs = Agent.new(
 )
 agent_cnfs.skip_confirmation!
 agent_cnfs.save!
+
+PlageOuverture.create!(
+  title: "Permanence d'accompagnement individuel",
+  organisation_id: org_cnfs.id,
+  agent_id: agent_cnfs.id,
+  lieu_id: cnfs_lieu.id,
+  motif_ids: [motif_accompagnement_individuel.id],
+  first_day: Date.tomorrow,
+  start_time: Tod::TimeOfDay.new(8),
+  end_time: Tod::TimeOfDay.new(12),
+  recurrence: Montrose.every(:week, day: [1, 2, 3, 4, 5], interval: 1, starts: Date.tomorrow, on: %i[monday tuesday thursday friday])
+)
 
 20.times do |i|
   Rdv.create!(

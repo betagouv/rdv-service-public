@@ -5,7 +5,7 @@ require "redis"
 module Rdv::UsingWaitingRoom
   extend ActiveSupport::Concern
 
-  REDIS_FOR_WAITING_ROOMS = Redis.new(url: ENV.fetch("REDIS_URL", "redis://localhost:6379"))
+  REDIS_FOR_WAITING_ROOMS = Redis.new(url: Rails.configuration.x.redis_url)
   REDIS_WAITING_ROOM_KEY = "#{Rails.env}:user_in_waiting_room_rdv_id".freeze
 
   def user_in_waiting_room?

@@ -10,11 +10,16 @@ class User < ApplicationRecord
     ]
   )
 
+  devise :invitable, :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :validatable, :confirmable, :async,
+         :trackable
+
   include PgSearch::Model
   include FullNameConcern
   include User::FranceconnectFrozenFieldsConcern
   include User::NotificableConcern
   include User::ImprovedUnicityErrorConcern
+  include User::DeviseInvitableWithDomain
   include PhoneNumberValidation::HasPhoneNumber
   include WebhookDeliverable
   include TextSearch
@@ -32,10 +37,6 @@ class User < ApplicationRecord
       id: "D",
     }
   end
-
-  devise :invitable, :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable, :confirmable, :async,
-         :trackable
 
   # Attributes
   ONGOING_MARGIN = 1.hour.freeze
@@ -221,6 +222,16 @@ class User < ApplicationRecord
 
   def through_sign_in_form?
     !only_invited?
+  end
+
+  def domain
+    if rdvs.any?
+      rdvs.order(created_at: :desc).first.domain
+    elsif sign_up_domain
+      sign_up_domain
+    else
+      Domain::RDV_SOLIDARITES
+    end
   end
 
   protected
