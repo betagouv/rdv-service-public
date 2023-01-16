@@ -6,12 +6,7 @@
       - when "unknown_future"
         = render "admin/rdvs/rdv_status_dropdown_item", rdv: rdv, agent: agent, status: "revoked", remote: remote
 
-      - when "unknown_today"
-        = render "admin/rdvs/rdv_status_dropdown_item", rdv: rdv, agent: agent, status: "seen", remote: remote
-        .dropdown-divider
-        = render "admin/rdvs/rdv_status_dropdown_item", rdv: rdv, agent: agent, status: "revoked", remote: remote
-
-      - when "unknown_past"
+      - when "unknown_today", "unknown_past"
         = render "admin/rdvs/rdv_status_dropdown_item", rdv: rdv, agent: agent, status: "seen", remote: remote
         .dropdown-divider
         = render "admin/rdvs/rdv_status_dropdown_item", rdv: rdv, agent: agent, status: "revoked", remote: remote

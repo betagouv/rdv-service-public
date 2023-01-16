@@ -92,9 +92,12 @@ describe User::RdvsUserPolicy, type: :policy do
   end
 
   context "Rdv is revoked" do
-    let!(:rdv) { create(:rdv, :collectif, :without_users, organisation: organisation, agents: [agent]) }
-    let!(:participation2) { create(:rdvs_user, user: user2, rdv: rdv, status: "revoked") }
-    let!(:participation) { build(:rdvs_user, user: user, rdv: rdv) }
+    let!(:rdv) { create(:rdv, :collectif, :without_users, organisation: organisation, agents: [agent], starts_at: Time.zone.yesterday) }
+    let!(:participation) { create(:rdvs_user, user: user2, rdv: rdv) }
+
+    before do
+      participation.update(status: "revoked")
+    end
 
     it_behaves_like "not permit actions", :create?, :cancel?
     it_behaves_like "not included in scope"
