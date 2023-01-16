@@ -369,7 +369,7 @@ class Rdv < ApplicationRecord
   end
 
   def update_status_to_revoked
-    # Rdv still opened to reservation cannot be set to revoked since users can register
+    # Rdv still opened to reservation cannot be set to revoked after participations changes, since other users can register
     return if reservable_online? && !in_the_past?
 
     self.cancelled_at = Time.zone.now
