@@ -344,11 +344,6 @@ class Rdv < ApplicationRecord
   end
 
   def update_rdv_status_from_participation
-    if rdvs_users.empty?
-      update_status_to_unknown
-      return
-    end
-
     if rdvs_users.any?(&:seen?)
       update_status_to_seen
       return
@@ -357,11 +352,6 @@ class Rdv < ApplicationRecord
     if rdvs_users.none?(&:seen?) && rdvs_users.none?(&:unknown?)
       update_status_to_revoked
     end
-  end
-
-  def update_status_to_unknown
-    self.cancelled_at = nil
-    update!(status: "unknown")
   end
 
   def update_status_to_seen
