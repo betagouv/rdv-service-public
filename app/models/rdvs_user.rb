@@ -24,7 +24,6 @@ class RdvsUser < ApplicationRecord
   # Uniqueness validation doesn’t work with nested_attributes, see https://github.com/rails/rails/issues/4568
   # We do have on a DB constraint.
   validates :user_id, uniqueness: { scope: :rdv_id }
-  validate :status_cannot_be_changed_if_rdv_status_is_revoked, on: :update
 
   # Hooks
   after_initialize :set_default_notifications_flags
@@ -96,13 +95,5 @@ class RdvsUser < ApplicationRecord
   def new_raw_invitation_token
     invite! { |rdv_u| rdv_u.skip_invitation = true }
     raw_invitation_token
-  end
-
-  private
-
-  def status_cannot_be_changed_if_rdv_status_is_revoked
-    if status_changed? && status != "revoked" && rdv.status == "revoked"
-      errors.add(:status, :status_cannot_be_changed_if_rdv_status_is_revoked)
-    end
   end
 end
