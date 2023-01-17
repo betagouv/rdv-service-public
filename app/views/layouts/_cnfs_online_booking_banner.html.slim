@@ -1,4 +1,4 @@
--if current_agent.conseiller_numerique? && !cookies[:disable_cnfs_online_booking_banner].present?
+-if current_domain.online_reservation_with_public_link && !cookies[:disable_cnfs_online_booking_banner].present?
   - online_booking_path = admin_organisation_online_booking_path(current_organisation)
   .navbar.alert-info.p-2.flex-gap-1em
     div.flex-grow-1
