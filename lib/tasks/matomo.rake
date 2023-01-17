@@ -11,8 +11,8 @@ namespace :matomo do
         Such token is available at: https://stats.data.gouv.fr/index.php?module=UsersManager&action=userSettings"
     end
 
-    # Production and Demo sites
-    id_sites = %w[123 124]
+    # Production, Demo sites et RDV Aides Numériques
+    id_sites = %w[123 124 275]
     id_sites.each do |id_site|
       token_auth = ENV["MATOMO_AUTH_TOKEN"]
       # https://developer.matomo.org/api-reference/reporting-api
