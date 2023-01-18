@@ -16,6 +16,7 @@ module Motif::Category
       rsa_main_tendue: "rsa_main_tendue",
       rsa_atelier_collectif_mandatory: "rsa_atelier_collectif_mandatory",
       rsa_spie: "rsa_spie",
+      rsa_integration_information: "rsa_integration_information",
     }
   end
 end

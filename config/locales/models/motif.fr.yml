@@ -57,6 +57,7 @@ fr:
         rsa_main_tendue: RSA - Main tendue
         rsa_atelier_collectif_mandatory: RSA - Atelier Collectif (obligatoire)
         rsa_spie: RSA - SPIE
+        rsa_integration_information: RSA - Information d'intégration
       motif/collectifs:
         true: RDV collectif
         false: RDV individuel
