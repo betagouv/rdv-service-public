@@ -122,7 +122,8 @@ module RdvsHelper
   end
 
   def rdv_index_selected_order
-    params[:order].presence || :desc
+    default = current_agent.secretariat? ? :asc : :desc
+    params[:order].presence || default
   end
 
   private
