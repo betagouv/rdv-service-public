@@ -114,6 +114,17 @@ module RdvsHelper
     "#{rdv.users_count} / #{rdv.max_participants_count}"
   end
 
+  def rdv_index_order_options
+    [
+      ["Les plus récents en premier", :desc],
+      ["Les plus anciens en premier", :asc],
+    ]
+  end
+
+  def rdv_index_selected_order
+    params[:order].presence || :desc
+  end
+
   private
 
   def rdv_individuel_title_for_agent(rdv)

@@ -16,7 +16,7 @@ class Admin::RdvsController < AgentAuthController
     @lieux = Lieu.joins(:organisation).where(organisations: { id: @scoped_organisations.select(:id) }).enabled.order(:name)
     @motifs = Motif.joins(:organisation).where(organisations: { id: @scoped_organisations.select(:id) })
     @rdvs_users_count = RdvsUser.where(rdv: @rdvs).count
-    @rdvs = @rdvs.order(starts_at: :asc).page(params[:page]).per(10)
+    @rdvs = @rdvs.order(starts_at: rdv_index_selected_order).page(params[:page]).per(10)
   end
 
   def export

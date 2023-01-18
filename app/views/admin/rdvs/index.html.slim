@@ -59,9 +59,15 @@
 
   .row.justify-content-center.pb-3
     .col-md-8
-      .d-flex.justify-content-center= paginate @rdvs, theme: "twitter-bootstrap-4"
+      .d-flex.justify-content-between.align-items-center
+        = paginate @rdvs, theme: "twitter-bootstrap-4"
+        .mb-2 = select_tag("order", options_for_select(rdv_index_order_options, rdv_index_selected_order), { class: "js-submit-on-change form-control select", form: "new_rdv_search_form" })
+
       = render(partial: "rdv", collection: @rdvs, locals: { agent: nil })
-      .d-flex.justify-content-center= paginate @rdvs, theme: "twitter-bootstrap-4"
+
+      .d-flex.justify-content-between.align-items-center
+        = paginate @rdvs, theme: "twitter-bootstrap-4"
+
 - else
   .row.justify-content-center.pb-3
     .col-md-8

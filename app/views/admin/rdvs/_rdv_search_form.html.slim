@@ -1,4 +1,4 @@
-= simple_form_for(form, method: "GET", url: url_for({}), as: "") do |f|
+= simple_form_for(form, method: "GET", url: url_for({}), as: "rdv_search_form") do |f|
   - if current_agent.multiple_organisations_access?
     .row
       .col-md-6
