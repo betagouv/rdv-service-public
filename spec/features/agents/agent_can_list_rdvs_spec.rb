@@ -50,4 +50,29 @@ describe "Agent can list RDVs" do
       expect(page.body).not_to include(path_to_deleted_user_profile)
     end
   end
+
+  describe "ordering" do
+    def expect_rdv_order(expected_rdvs_in_order)
+      html_ids_of_rdv_cards = page.all(".rdv-card").map { _1[:id] }
+      actual_rdv_ids = html_ids_of_rdv_cards.map { _1.split("-").last.to_i }
+      expect(actual_rdv_ids).to eq(expected_rdvs_in_order.map(&:id))
+    end
+
+    let!(:old_rdv) { create(:rdv, organisation: organisation, agents: [current_agent], starts_at: 2.days.ago) }
+    let!(:future_rdv) { create(:rdv, organisation: organisation, agents: [current_agent], starts_at: 2.days.from_now) }
+
+    it "displays most recent RDVs first by default and allows changing" do
+      visit admin_organisation_rdvs_url(organisation, current_agent)
+      expect_rdv_order([future_rdv, old_rdv])
+    end
+
+    context "when current agent is secretariat" do
+      let!(:current_agent) { create(:agent, organisations: [organisation], service: create(:service, :secretariat)) }
+
+      it "displays oldest RDVs first by default" do
+        visit admin_organisation_rdvs_url(organisation, current_agent)
+        expect_rdv_order([old_rdv, future_rdv])
+      end
+    end
+  end
 end
