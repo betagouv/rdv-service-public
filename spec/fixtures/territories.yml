@@ -1,0 +1,11 @@
+paris:
+  departement_number: "75"
+  name: "Pas-de-Calais"
+  sms_provider: "netsize"
+  sms_configuration: "login:pwd"
+
+pas_de_calais:
+  departement_number: "62"
+  name: "Pas-de-Calais"
+  sms_provider: "netsize"
+  sms_configuration: "login:pwd"

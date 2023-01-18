@@ -1,0 +1,17 @@
+paris_nord:
+  territory: paris
+  name: "MDS Paris Nord"
+  phone_number: "0123456789"
+  human_id: "paris-nord"
+
+mds_bapaume:
+  territory: pas_de_calais
+  name: "MDS Bapaume"
+  phone_number: "0123456789"
+  human_id: "1034-nord"
+
+arques:
+  territory: pas_de_calais
+  name: "MDS Arques"
+  phone_number: "0123456789"
+  human_id: "1030"

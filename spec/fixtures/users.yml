@@ -1,0 +1,9 @@
+patricia:
+  first_name: "Patricia"
+  last_name: "Duroy"
+  email: "patricia_duroy@demo.rdv-solidarites.fr"
+  birth_date: <%= Date.parse("20/06/1975") %>
+  encrypted_password: <%= Devise::Encryptor.digest(Agent, "123456") %>
+  phone_number: "0101010101"
+  organisations: paris_nord, arques
+  created_through: "user_sign_up"

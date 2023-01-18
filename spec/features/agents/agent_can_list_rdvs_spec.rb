@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 describe "Agent can list RDVs" do
-  let!(:organisation) { create(:organisation) }
-  let!(:current_agent) { create(:agent, organisations: [organisation]) }
+  fixtures :all
+
+  let!(:organisation) { organisations(:paris_nord) }
+  let!(:current_agent) { agents(:martine) }
 
   before do
     login_as(current_agent, scope: :agent)

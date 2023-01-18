@@ -55,6 +55,13 @@ RSpec.configure do |config|
   config.include DeviseRequestSpecHelpers, type: :request
   config.include NotificationsHelper
 
+  config.fixture_path = Rails.root.join("spec/fixtures")
+  # config.global_fixtures = :all
+
+  config.before(:suite) do
+    Rake.application["db:fixtures:load"].invoke
+  end
+
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
   # instead of true.

@@ -1,0 +1,9 @@
+martine:
+  organisations: paris_nord
+  service: pmi
+  email: "martine@demo.rdv-solidarites.fr"
+  first_name: "Martine"
+  last_name: "Validay"
+  encrypted_password: <%= Devise::Encryptor.digest(Agent, "123456") %>
+  invitation_accepted_at: <%= 10.days.ago %>
+  confirmed_at: <%= 10.days.ago %>

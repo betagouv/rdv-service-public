@@ -1,0 +1,15 @@
+pmi:
+  name: "PMI (Protection Maternelle Infantile)"
+  short_name: "PMI"
+
+social:
+  name: Service social
+  short_name: Service social
+
+secretariat:
+  name: Secrétariat
+  short_name: Secrétariat
+
+medico_social:
+  name: Médico-social
+  short_name: Médico-social
