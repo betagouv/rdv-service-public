@@ -59,9 +59,27 @@
 
   .card#reservable_online_section
     .card-body
-      h5.card-title= Motif.human_attribute_name("reservable_online_title")
-      p.text-muted.font-14= Motif.human_attribute_name("reservable_online_hint")
-      = f.input :reservable_online
+      h5.card-title= "Ouverture de la prise de RDV en ligne"
+      p.text-muted.font-14= "Vous pouvez ouvrir la prise de RDV en ligne à des gens autres que les agents de votre organisation"
+      = label_tag do
+        = f.radio_button(:reservable_online, false)
+        span.ml-1= "Restreindre aux agents de #{@motif.organisation.name}"
+        p.text-muted.font-14= "Les agents peuvent ajouter des rendez-vous à l'agenda de leurs collègues"
+
+      = label_tag do
+        = f.radio_button(:reservable_online, true)
+        span.ml-1= "Ouvrir aux prescripteurs"
+        p.text-muted.font-14
+          = "Les prescripteurs sont des agents d'une autre organisation du service public, qui orientent des usagers vers le service dont ils ont besoin."
+          br
+          = "Ils pourront prendre rendez-vous uniquement sur les plages d'ouvertures définies par les agents de #{@motif.organisation.name}"
+
+      = label_tag do
+        = f.radio_button(:reservable_online, false)
+        span.ml-1= "Ouvrir aux prescripteurs et aux usagers"
+        p.text-muted.font-14.mb-4= "Les usagers pourront directement prendre rendez-vous en ligne sur les plages d'ouverture prédéfinies"
+
+
 
       .form-row.js-rdvs-editable
         .col-md-4= f.input :min_booking_delay, collection: min_max_delay_options
