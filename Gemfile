@@ -15,9 +15,7 @@ gem "jsbundling-rails"
 gem "turbolinks", "~> 5"
 gem "bootsnap", require: false # Reduces boot times through caching; required in config/boot.rb
 gem "rack-cors" # CORS management
-
-# Temporarily fixed version : this RC version supports Ruby 3.1 (https://github.com/mikel/mail/commit/d9d8dcc)
-gem "mail", "2.8.0.rc1"
+gem "mail"
 
 # Ops
 gem "sentry-ruby"
