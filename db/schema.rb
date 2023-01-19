@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_18_141208) do
+ActiveRecord::Schema[7.0].define(version: 2023_01_19_140851) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "unaccent"
@@ -58,6 +58,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_18_141208) do
     "rsa_atelier_collectif_mandatory",
     "rsa_spie",
     "rsa_integration_information",
+    "rsa_atelier_competences",
+    "rsa_atelier_rencontres_pro",
   ], force: :cascade
 
   create_enum :rdv_status, [
