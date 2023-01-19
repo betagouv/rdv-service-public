@@ -58,6 +58,8 @@ fr:
         rsa_atelier_collectif_mandatory: RSA - Atelier Collectif (obligatoire)
         rsa_spie: RSA - SPIE
         rsa_integration_information: RSA - Information d'intégration
+        rsa_atelier_competences: RSA - Atelier compétences
+        rsa_atelier_rencontres_pro: RSA - Atelier rencontres professionnelles
       motif/collectifs:
         true: RDV collectif
         false: RDV individuel
