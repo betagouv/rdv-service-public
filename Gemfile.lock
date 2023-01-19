@@ -214,7 +214,7 @@ GEM
     fugit (1.7.2)
       et-orbi (~> 1, >= 1.2.7)
       raabro (~> 1.4)
-    globalid (1.0.0)
+    globalid (1.0.1)
       activesupport (>= 5.0)
     groupdate (6.1.0)
       activesupport (>= 5.2)
