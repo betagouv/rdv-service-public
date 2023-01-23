@@ -59,16 +59,16 @@
 
   .card#reservable_online_section
     .card-body
-      h5.card-title= "Prise de RDV en ligne"
-      p.text-muted.font-14= "Vous pouvez ouvrir la prise de RDV en ligne à des gens autres que les agents de votre organisation"
+      h5.card-title= "Réservation en ligne"
+      p.text-muted.font-14= "Vous pouvez ouvrir la prise de RDV en ligne à d'autres agents du service public, ou à tous les usagers."
       = label_tag do
         = f.radio_button(:reservable_online, false)
-        span.ml-1= "Restreindre aux agents de #{@motif.organisation.name}"
+        span.ml-1= "Uniquement les agents de #{@motif.organisation.name}"
         p.text-muted.font-14= "Les agents peuvent ajouter des rendez-vous à l'agenda de leurs collègues"
 
       = label_tag do
         = f.radio_button(:reservable_online, true)
-        span.ml-1= "Ouvrir aux prescripteurs"
+        span.ml-1= "Ouvert aux prescripteurs"
         p.text-muted.font-14
           = "Les prescripteurs sont des agents d'une autre organisation du service public, qui orientent des usagers vers le service dont ils ont besoin."
           br
@@ -76,7 +76,7 @@
 
       = label_tag do
         = f.radio_button(:reservable_online, false)
-        span.ml-1= "Ouvrir aux prescripteurs et aux usagers"
+        span.ml-1= "Ouvert aux prescripteurs et aux usagers"
         p.text-muted.font-14.mb-4= "Les usagers pourront directement prendre rendez-vous en ligne sur les plages d'ouverture prédéfinies"
 
 
