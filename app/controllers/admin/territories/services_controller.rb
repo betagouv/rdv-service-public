@@ -19,6 +19,11 @@ class Admin::Territories::ServicesController < Admin::Territories::BaseControlle
 
   def create
     authorize Service
+    if  Service.create(service_params)
+      redirect_to admin_territory_services_path()
+    else
+      render :new
+    end
   end
 
   def edit
@@ -28,7 +33,7 @@ class Admin::Territories::ServicesController < Admin::Territories::BaseControlle
   def update
     authorize @service
     if @service.update(service_params)
-      redirect_to admin_territory_services_path(current_territory)
+      redirect_to admin_territory_services_path()
     else
       render :new
     end
@@ -37,7 +42,7 @@ class Admin::Territories::ServicesController < Admin::Territories::BaseControlle
   def destroy
     authorize @service
     @service.destroy
-    redirect_to admin_territory_services_path(current_territory)
+    redirect_to admin_territory_services_path()
   end
 
   private

@@ -56,4 +56,10 @@ class Service < ApplicationRecord
   def related_to_social?
     service_social? || name.parameterize.include?("social")
   end
+ 
+  def virtual_attributes_for_paper_trail
+    {
+      agent_ids: agents.ids,
+    }
+  end
 end

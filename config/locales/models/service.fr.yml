@@ -5,3 +5,4 @@ fr:
     attributes:
       service:
         short_name: Nom raccourci (SMS)
+        name: Nom
