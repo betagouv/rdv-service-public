@@ -24,4 +24,4 @@ div.flex-grow-1
       - else
         = link_to "Modifier cet usager", edit_admin_organisation_user_path(current_organisation, user), class: "btn btn-secondary btn-small"
     - else
-      = link_to "Associer cet usager à l'organisation courante", link_to_organisation_admin_organisation_user_path(current_organisation, user, return_location: return_location, modal: from_modal), class: "btn btn-warning"
+      = link_to "Également associer cet usager à l'organisation courante", link_to_organisation_admin_organisation_user_path(current_organisation, user, return_location: return_location, modal: from_modal), class: "btn btn-warning"

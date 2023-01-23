@@ -42,7 +42,7 @@ describe "Agent can create user" do
       fill_in :user_email, with: "ceelo@green.com"
       click_button "Créer"
       expect(page).to have_content("Un usager avec le même email existe déjà dans une autre organisation")
-      click_link "Associer cet usager à l'organisation courante"
+      click_link "Également associer cet usager à l'organisation courante"
       expect_page_title("Cee-Lo GREEN")
       expect(page).to have_content("L'usager a été associé à votre organisation.")
       expect(existing_user.reload.organisations).to include(organisation)
