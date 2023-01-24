@@ -271,6 +271,9 @@ Rails.application.routes.draw do
   get "org/:organisation_id(/:org_slug)" => "search#public_link_with_internal_organisation_id", as: :public_link_to_org
   get "org/ext/:territory/:organisation_external_id(/:org_slug)" => "search#public_link_with_external_organisation_id", as: :public_link_to_external_org
 
+  # resin public link
+  get "resin/:external_organisation_ids" => "search#resin", as: :resin_link
+
   ##
 
   get "accueil_mds", to: redirect("presentation_agent", status: 307)
