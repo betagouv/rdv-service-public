@@ -15,8 +15,8 @@ describe "Admin can configure the territory", type: :feature do
     end
   end
 
-  context "with basi agent" do
-    it "update territory phone number", type: :feature do
+  context "with basic agent" do
+    it "forbids from accessing the form", type: :feature do
       territory = create(:territory, phone_number: nil)
       organisation = create(:organisation, territory: territory)
       agent = create(:agent, basic_role_in_organisations: [organisation], role_in_territories: [])
