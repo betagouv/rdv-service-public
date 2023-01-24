@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_19_173936) do
+ActiveRecord::Schema[7.0].define(version: 2023_01_23_163550) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "unaccent"
@@ -231,6 +231,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_19_173936) do
     t.bigint "agent_id", null: false
     t.bigint "rdv_id", null: false
     t.text "outlook_id"
+    t.boolean "outlook_create_in_progress", default: false, null: false
     t.index ["agent_id", "rdv_id"], name: "index_agents_rdvs_on_agent_id_and_rdv_id", unique: true
     t.index ["agent_id"], name: "index_agents_rdvs_on_agent_id"
     t.index ["rdv_id"], name: "index_agents_rdvs_on_rdv_id"
