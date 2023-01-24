@@ -11,7 +11,7 @@ describe "Admin can configure the territory", type: :feature do
       visit edit_admin_territory_path(territory, agent)
       fill_in("Téléphone", with: "0101010101")
       click_on "Enregistrer"
-      expect { click_on "Enregistrer" }.to change { territory.reload.phone_number }.to("0101010101")
+      expect(territory.reload.phone_number).to eq("0101010101")
     end
   end
 

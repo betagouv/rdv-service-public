@@ -1,7 +1,7 @@
 = territory_navigation(t(".agent_title", name: @agent.full_name), [link_to(t(".territory_agents_title"), admin_territory_agents_path(current_territory))])
 
 .container-fluid
-  - if policy([:configuration, current_territory]).allow_to_manage_access_rights? && @agent.agent_territorial_access_rights.find_by(territory: current_territory).present?
+  - if policy([:configuration, current_territory]).allow_to_manage_access_rights?
     .card.m-2.rounded
       h2.card-header
         = t(".agent_access_rights_legend")
