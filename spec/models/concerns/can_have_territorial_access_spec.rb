@@ -5,8 +5,7 @@ describe CanHaveTerritorialAccess, type: :concern do
     it "update agent territorial admin access to true" do
       territory = create(:territory)
       agent = create(:agent, role_in_territories: [])
-      agent.territorial_admin!(territory)
-      expect(agent.reload.territorial_admin_in?(territory)).to eq(true)
+      expect { agent.territorial_admin!(territory) }.to change { agent.reload.territorial_admin_in?(territory) }.to(true)
     end
   end
 
