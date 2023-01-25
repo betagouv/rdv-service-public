@@ -94,8 +94,8 @@ module UsersHelper
     user.responsible_phone_number.present? ? link_to(user.responsible_phone_number, "tel:#{user.responsible_or_self.phone_number_formatted}") : nil
   end
 
-  def formatted_user_notes(user)
-    user.notes.present? ? simple_format(user.notes) : nil
+  def formatted_user_notes(user_profile)
+    user_profile.notes.present? ? simple_format(user_profile.notes) : nil
   end
 
   def user_soft_delete_confirm_message(user)
@@ -158,11 +158,11 @@ module UsersHelper
     :responsible
   end
 
-  def user_merge_attribute_value(user, attribute)
+  def user_merge_attribute_value(user, user_profile, attribute)
     return birth_date_and_age(user) if attribute == :birth_date
     return user.responsible&.full_name if attribute == :responsible_id
-    return formatted_user_notes(user) if attribute == :notes
-    return user&.human_attribute_value(:logement) if attribute == :logement
+    return formatted_user_notes(user_profile) if attribute == :notes
+    return user_profile&.human_attribute_value(:logement) if attribute == :logement
 
     user.send(attribute)
   end
