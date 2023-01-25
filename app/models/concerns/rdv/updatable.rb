@@ -12,6 +12,8 @@ module Rdv::Updatable
     Rdv.transaction do
       self.updated_at = Time.zone.now
 
+      @available_users_for_notif = rdvs_users.select(&:not_cancelled?).map(&:user)
+
       if status_changed? && valid?
         self.cancelled_at = status.in?(%w[excused revoked noshow]) ? Time.zone.now : nil
         change_participation_statuses
@@ -32,6 +34,7 @@ module Rdv::Updatable
     case status
     when "unknown"
       # Setting to unknown means resetting the rdv status by agents and reset ALL participations statuses
+      # Not excused ici
       rdvs_users.each { _1.update!(status: status) }
     when "revoked", "excused"
       # When rdv status is revoked/excused, not cancelled participations are updated to revoked/excused
@@ -52,7 +55,9 @@ module Rdv::Updatable
   def notify!(author, previous_participations)
     if rdv_cancelled?
       file_attentes.destroy_all
-      @notifier = Notifiers::RdvCancelled.new(self, author)
+      # Ici notifier uniquement les nouveaux users cancelled
+      # Mettre cette methode dans le model ? virer les .not_excused, .not_cancelled des Notifier.
+      @notifier = Notifiers::RdvCancelled.new(self, author, @available_users_for_notif)
     elsif rdv_status_reloaded_from_cancelled?
       @notifier = Notifiers::RdvCreated.new(self, author)
     elsif rdv_updated?

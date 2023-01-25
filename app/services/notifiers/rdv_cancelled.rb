@@ -26,6 +26,7 @@ class Notifiers::RdvCancelled < Notifiers::RdvBase
   end
 
   def rdvs_users_to_notify
+    # Ici double notif de cancelled dans une autre pr.
     @rdv.rdvs_users.where(send_lifecycle_notifications: true)
   end
 
