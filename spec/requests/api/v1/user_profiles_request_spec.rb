@@ -16,9 +16,6 @@ describe "User Profile authentified API", swagger_doc: "v1/api.json" do
 
       parameter name: "organisation_id", in: :query, type: :integer, description: "ID de l'organisation", example: 12
       parameter name: "user_id", in: :query, type: :integer, description: "ID de l'utilisateur", example: 12
-      parameter name: "logement", in: :query, type: :string, enum: %w[sdf heberge en_accession_propriete proprietaire autre locataire], description: "Type de logement de l'utilisateur",
-                example: "proprietaire", required: false
-      parameter name: "notes", in: :query, type: :string, description: "Une note sur le profil utilisateur", example: "Super note", required: false
 
       let!(:territory) { create(:territory) }
       let!(:organisation) { create(:organisation, territory: territory) }
@@ -32,8 +29,6 @@ describe "User Profile authentified API", swagger_doc: "v1/api.json" do
       response 200, "Crée et renvoie un profil utilisateur" do
         let(:organisation_id) { organisation.id }
         let(:user_id) { user.id }
-        let(:logement) { "sdf" }
-        let(:notes) { "Super Note" }
 
         let!(:user_profile_count_before) { UserProfile.count }
         let(:created_user_profile) do
@@ -49,47 +44,28 @@ describe "User Profile authentified API", swagger_doc: "v1/api.json" do
         it { expect(created_user_profile.organisation).to eq(organisation) }
 
         it { expect(created_user_profile.user).to eq(user) }
-
-        it { expect(created_user_profile.logement).to eq("sdf") }
-
-        it { expect(created_user_profile.notes).to eq("Super Note") }
       end
 
       it_behaves_like "an endpoint that returns 403 - forbidden", "l'agent·e n'a pas accès à l'organisation" do
         let!(:unauthorized_orga) { create(:organisation) }
         let(:organisation_id) { unauthorized_orga.id }
         let(:user_id) { user.id }
-        let(:logement) { "sdf" }
-        let(:notes) { "Super Note" }
       end
 
       it_behaves_like "an endpoint that returns 401 - unauthorized" do
         let(:organisation_id) { organisation.id }
         let(:user_id) { user.id }
-        let(:logement) { "sdf" }
-        let(:notes) { "Super Note" }
       end
 
-      it_behaves_like "an endpoint that returns 422 - unprocessable_entity", "l'utilisateur ou l'organisation est inconnu(e), ou le logement est incorrect, ou ce profil existe déjà", true do
+      it_behaves_like "an endpoint that returns 422 - unprocessable_entity", "l'utilisateur ou l'organisation est inconnu(e) ou ce profil existe déjà", true do
         let(:organisation_id) { organisation.id }
         let(:user_id) { "inconnu" }
-        let(:logement) { "sdf" }
-        let(:notes) { "Super Note" }
-      end
-
-      it_behaves_like "an endpoint that returns 422 - unprocessable_entity", "le logement n'est pas parmi les choix possibles", false do
-        let(:organisation_id) { organisation.id }
-        let(:user_id) { user.id }
-        let(:logement) { "inconnu" }
-        let(:notes) { "Super Note" }
       end
 
       it_behaves_like "an endpoint that returns 422 - unprocessable_entity", "le user_profil existe déjà", false do
         let!(:existing_profile) { create(:user_profile, user: user, organisation: organisation) }
         let(:organisation_id) { organisation.id }
         let(:user_id) { user.id }
-        let(:logement) { "sdf" }
-        let(:notes) { "Super Note" }
       end
     end
   end

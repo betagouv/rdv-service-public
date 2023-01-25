@@ -3,8 +3,8 @@
     .card-body.p-2
       .mb-1
         = render "admin/users/identity", user: rdvs_user.user
-      - notes = rdvs_user.user.notes_for(current_organisation)
-      - if notes.present?
+      - notes = rdvs_user.user.notes
+      - if current_territory.enable_notes_field? && notes.present?
         .rdv_user_notes
           i.fa.fa-info-circle.text-primary-blue.mr-2
           = simple_format(notes, {}, wrapper_tag: :span)
