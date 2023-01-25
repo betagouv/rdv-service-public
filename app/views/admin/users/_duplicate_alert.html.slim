@@ -6,10 +6,6 @@ ruby:
 div.flex-grow-1
   p
     span>= "Un usager avec le même #{existing_attributes} a déjà un compte sur #{current_domain.name}"
-    - if user.organisation_ids.include?(current_organisation.id)
-      span dans l'organisation courante
-    - else
-      span dans une autre organisation
   p
     div
       b= full_name_and_birthdate(user)
