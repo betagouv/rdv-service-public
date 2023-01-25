@@ -11,12 +11,11 @@ describe "Agent can delete user" do
       first_name: "Aalyah",
       last_name: "SWAN",
       birth_date: nil,
-      phone_number: "01 02 03 04 05",
-      logement: "locataire"
+      phone_number: "01 02 03 04 05"
     )
   end
   let!(:user_profile1) do
-    create(:user_profile, user: user1, organisation: organisation)
+    create(:user_profile, user: user1, organisation: organisation, logement: :locataire)
   end
   let!(:user2) do
     create(
@@ -26,8 +25,7 @@ describe "Agent can delete user" do
       last_name: "SWAN",
       birth_date: nil,
       phone_number: "01 09 09 09 09",
-      organisations: [organisation],
-      logement: "proprietaire"
+      organisations: [organisation]
     )
   end
 

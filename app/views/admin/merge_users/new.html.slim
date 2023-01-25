@@ -27,10 +27,13 @@
         td= render "user_selection", user: @merge_users_form.user2, attribute: "user2_id", f: f, other_user_id: @merge_users_form.user1&.id
 
       - @merge_users_form.available_attributes.each do |attribute|
-        - value1 = user_merge_attribute_value(@merge_users_form.user1, attribute) if @merge_users_form.user1
-        - value2 = user_merge_attribute_value(@merge_users_form.user2, attribute) if @merge_users_form.user2
+        - value1 = user_merge_attribute_value(@merge_users_form.user1, @merge_users_form.user1.profile_for(current_organisation), attribute) if @merge_users_form.user1
+        - value2 = user_merge_attribute_value(@merge_users_form.user2, @merge_users_form.user2.profile_for(current_organisation), attribute) if @merge_users_form.user2
         tr class=@merge_users_form.attribute_comparison(attribute)
-          td= User.human_attribute_name(attribute)
+          - if %i[logement notes].include?(attribute)
+            td= UserProfile.human_attribute_name(attribute)
+          - else
+            td= User.human_attribute_name(attribute)
 
           td
             - if @merge_users_form.user1
