@@ -14,11 +14,11 @@ class Admin::UsersController < AgentAuthController
     family_situation number_of_children
     notify_by_sms notify_by_email
     case_number address_details
+    notes logement
   ].freeze
 
   PERMITTED_NESTED_ATTRIBUTES = {
     agent_ids: [],
-    user_profiles_attributes: %i[notes logement id organisation_id],
   }.freeze
 
   def index
@@ -140,13 +140,13 @@ class Admin::UsersController < AgentAuthController
     return unless @user.responsible.nil?
 
     @user.responsible = User.new
-    @user.responsible.user_profiles.build(organisation: current_organisation)
   end
 
   def prepare_create
     @user = User.new(user_params.merge(invited_by: current_agent, created_through: "agent_creation"))
     @user.responsible.created_through = "agent_creation" if @user.responsible&.new_record?
     @user_form = user_form_object
+    @user.user_profiles.build(organisation: current_organisation)
     @organisation = current_organisation
   end
 

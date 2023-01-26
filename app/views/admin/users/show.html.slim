@@ -42,12 +42,11 @@
         - else
           h2.card-title.mb-3 Informations de votre proche
           ul.list-unstyled
-            - user_profile = @user.profile_for(current_organisation)
             li= object_attribute_tag(@user, :first_name)
             li= object_attribute_tag(@user, :last_name)
             li= object_attribute_tag(@user, :birth_date, birth_date_and_age(@user))
-            - if current_territory.enable_notes_field? && user_profile
-              li= object_attribute_tag(user_profile, :notes, formatted_user_notes(user_profile))
+            - if current_territory.enable_notes_field?
+              li= object_attribute_tag(@user, :notes, formatted_user_notes(@user))
 
         .row.mt-3
           .col.text-left
