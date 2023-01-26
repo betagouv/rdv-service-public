@@ -10,7 +10,7 @@ namespace :api do
       get :invite, on: :member
       post :invite, on: :member
     end
-    resources :user_profiles, only: [:create]
+    resource :user_profiles, only: %i[create destroy]
     resource :referent_assignations, only: %i[create destroy]
     resources :organisations, only: %i[index] do
       resources :users, only: %i[index show]
