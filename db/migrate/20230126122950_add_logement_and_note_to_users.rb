@@ -9,8 +9,9 @@ class AddLogementAndNoteToUsers < ActiveRecord::Migration[6.1]
       profile_with_notes = UserProfile.where.not(notes: ["", nil])
       profile_with_logement = UserProfile.where.not(logement: ["", nil])
 
-      UserProfile.where(id: profile_with_notes + profile_with_logement).distinct.find_each do |profile|
-        user = profile.user
+      user_ids = profile_with_notes.or(profile_with_logement).distinct.pluck(:user_id)
+
+      User.include(:user_profiles).where(id: user_ids).find_in_batch do |users_batch|
         # On part du principe que le logement est identique pour toutes et tous normalement
         # Il y a 34 usagers qui ont 2 profiles avec des valeurs différentes sur le logement
         #
@@ -40,8 +41,12 @@ class AddLogementAndNoteToUsers < ActiveRecord::Migration[6.1]
         # Le Pas-de-Calais et les Pyrénées-Atlantique n'ont pas activé l'utilisation du logement.
         #
 
-        new_notes = [user.notes, profile.notes].compact.join("; ")
-        user.update(logement: profile.logement, notes: new_notes)
+        attrs = users_batch.map do |user|
+          new_notes = ([user.notes] + user.user_profiles.map(&:notes)).compact_blank.join("\n\n --- \n\n")
+          { id: user.id, logement: user.user_profiles.map(&:logement).compact.first, notes: new_notes }
+        end
+
+        User.upsert_all(attrs)
       end
     end
 
