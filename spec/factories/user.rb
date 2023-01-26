@@ -23,6 +23,8 @@ FactoryBot.define do
     affiliation_number { "39012093812038" }
     family_situation { "divorced" }
     number_of_children { 12 }
+    notes { "Super note" }
+    logement { :locataire }
     responsible { nil }
     created_through { "user_sign_up" }
     trait :unconfirmed do
