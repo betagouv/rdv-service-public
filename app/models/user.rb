@@ -142,8 +142,8 @@ class User < ApplicationRecord
   end
 
   def profile_for(organisation)
-    @profiles ||= user_profiles.index_by(&:organisation)
-    @profiles[organisation]
+    @profiles ||= user_profiles.index_by(&:organisation_id)
+    @profiles[organisation.id]
   end
 
   def participation_for(rdv)
