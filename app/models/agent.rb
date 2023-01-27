@@ -9,6 +9,7 @@ class Agent < ApplicationRecord
   )
 
   include Outlook::Connectable
+  include CanHaveTerritorialAccess
   include DeviseInvitable::Inviter
   include WebhookDeliverable
   include FullNameConcern

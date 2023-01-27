@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class Admin::Territories::AgentsController < Admin::Territories::BaseController
-  before_action :set_agent, only: %i[edit update]
-  before_action :authorize_agent, only: %i[edit update]
+  before_action :set_agent, only: %i[edit update territory_admin]
+  before_action :authorize_agent, only: %i[edit update territory_admin]
 
   def index
     @agents = find_agents(params[:q]).page(params[:page])
@@ -29,6 +29,20 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
     else
       render :edit
     end
+  end
+
+  def territory_admin
+    if params[:territorial_admin] == "1"
+      @agent.territorial_admin!(current_territory)
+      message = "Les droits d'administrateur du #{current_territory} ont été ajouté(e) a #{@agent.full_name}"
+    else
+      @agent.remove_territorial_admin!(current_territory)
+      message = "Les droits d'administrateur du #{current_territory} ont été retiré(e) a #{@agent.full_name}"
+    end
+    redirect_to(
+      edit_admin_territory_agent_path(current_territory, @agent),
+      flash: { success: message }
+    )
   end
 
   private
