@@ -93,8 +93,20 @@ class MergeUsersForm
       .without(:email) # email cannot be in this list, only to be explicit
   end
 
+  def user1_profile
+    user1&.profile_for(@organisation)
+  end
+
+  def user2_profile
+    user2&.profile_for(@organisation)
+  end
+
   def values_for(attribute)
-    [user1&.send(attribute), user2&.send(attribute)]
+    if %i[logement notes].include?(attribute)
+      [user1_profile&.send(attribute), user2_profile&.send(attribute)]
+    else
+      [user1&.send(attribute), user2&.send(attribute)]
+    end
   end
 
   def different_users?

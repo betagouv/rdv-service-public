@@ -220,6 +220,15 @@ describe User, type: :model do
     end
   end
 
+  describe "#notes_for" do
+    it "return notes for user and organisation" do
+      organisation = create(:organisation)
+      user = create(:user)
+      _user_profile = create(:user_profile, user: user, organisation: organisation, notes: "blablabla")
+      expect(user.notes_for(organisation)).to eq("blablabla")
+    end
+  end
+
   describe "#rdvs_future_without_ongoing" do
     it "return empty array without next rdv" do
       organisation = create(:organisation)

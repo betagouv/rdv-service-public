@@ -84,6 +84,53 @@ describe MergeUsersService, type: :service do
     end
   end
 
+  context "user profiles existing for same orga" do
+    let(:user_target) { create(:user) }
+    let(:user_to_merge) { create(:user) }
+    let!(:user_profile_target) { create(:user_profile, user: user_target, organisation: organisation, logement: :locataire) }
+    let!(:user_profile_to_merge) { create(:user_profile, user: user_to_merge, organisation: organisation, logement: :proprietaire) }
+
+    context "merging logement" do
+      let(:attributes_to_merge) { [:logement] }
+
+      it "justs destroy the merged user profile" do
+        expect(UserProfile.count).to eq 2
+        subject
+        expect(UserProfile.count).to eq 1
+        expect(user_target.profile_for(organisation).logement).to eq("proprietaire")
+      end
+    end
+
+    context "not merging logement" do
+      it "moves the logement" do
+        expect(UserProfile.count).to eq 2
+        subject
+        expect(UserProfile.count).to eq 1
+        expect(user_target.profile_for(organisation).logement).to eq("locataire")
+      end
+    end
+  end
+
+  context "user profiles for different organisations" do
+    let!(:organisation2) { create(:organisation) }
+    let(:user_target) { create(:user) }
+    let(:user_to_merge) { create(:user) }
+    let!(:user_profile_target) { create(:user_profile, user: user_target, organisation: organisation, logement: :locataire) }
+    let!(:user_profile_to_merge_same_orga) { create(:user_profile, user: user_to_merge, organisation: organisation, logement: :proprietaire) }
+    let!(:user_profile_to_merge) { create(:user_profile, user: user_to_merge, organisation: organisation2, logement: :proprietaire) }
+
+    it "does not import other profile" do
+      expect(UserProfile.count).to eq 3
+      subject
+      expect(UserProfile.count).to eq 2
+      expect(user_target.user_profiles.count).to eq 1
+      expect(user_target.user_profiles.find_by(organisation: organisation).logement).to eq "locataire"
+      expect(user_target.user_profiles.find_by(organisation: organisation2)).to be_nil
+      expect(user_to_merge.user_profiles.find_by(organisation: organisation)).to be_nil
+      expect(user_to_merge.user_profiles.find_by(organisation: organisation2)).not_to be_nil
+    end
+  end
+
   context "with file attentes for different rdvs" do
     let!(:rdv1) { create(:rdv, users: [user_target], organisation: organisation) }
     let!(:file_attente1) { create(:file_attente, user: user_target, rdv: rdv1) }
@@ -191,15 +238,24 @@ describe MergeUsersService, type: :service do
     end
   end
 
+  context "target user has notes" do
+    before { user_target.profile_for(organisation).update(notes: "Sympa") }
+
+    it "moves notes" do
+      subject
+      expect(user_target.notes_for(organisation)).to eq("Sympa")
+    end
+  end
+
   context "both users have notes" do
     before do
-      user_target.update(notes: "Sympa")
-      user_to_merge.update(notes: "thiquement")
+      user_target.profile_for(organisation).update(notes: "Sympa")
+      user_to_merge.profile_for(organisation).update(notes: "thiquement")
     end
 
     it "preserves target by default" do
       subject
-      expect(user_target.notes).to eq("Sympa")
+      expect(user_target.notes_for(organisation)).to eq("Sympa")
     end
 
     context "when merging notes" do
@@ -207,7 +263,7 @@ describe MergeUsersService, type: :service do
 
       it "overrides notes from merged user" do
         subject
-        expect(user_target.notes).to eq("thiquement")
+        expect(user_target.notes_for(organisation)).to eq("thiquement")
       end
     end
   end

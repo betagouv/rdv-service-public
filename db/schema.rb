@@ -552,8 +552,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_19_140851) do
   create_table "user_profiles", force: :cascade do |t|
     t.bigint "organisation_id", null: false
     t.bigint "user_id", null: false
-    t.integer "old_logement"
-    t.text "old_notes"
+    t.integer "logement"
+    t.text "notes"
     t.index ["organisation_id", "user_id"], name: "index_user_profiles_on_organisation_id_and_user_id", unique: true
     t.index ["organisation_id"], name: "index_user_profiles_on_organisation_id"
     t.index ["user_id"], name: "index_user_profiles_on_user_id"
@@ -606,8 +606,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_19_140851) do
     t.enum "created_through", default: "unknown", enum_type: "user_created_through"
     t.string "case_number"
     t.string "address_details"
-    t.integer "logement"
-    t.text "notes"
     t.index ["birth_date"], name: "index_users_on_birth_date"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["created_through"], name: "index_users_on_created_through"

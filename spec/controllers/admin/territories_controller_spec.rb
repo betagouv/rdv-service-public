@@ -11,7 +11,7 @@ RSpec.describe Admin::TerritoriesController, type: :controller do
     context "agent has role in territory" do
       it "returns success" do
         put :update, params: { id: territory.id, territory: { name: "La Clé St Pierre", phone_number: "0202020202" } }
-        expect(response).to redirect_to admin_territory_agent_territorial_roles_path(territory)
+        expect(response).to redirect_to edit_admin_territory_path(territory)
       end
 
       it "update territory" do
