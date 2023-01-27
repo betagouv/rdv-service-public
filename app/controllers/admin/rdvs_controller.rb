@@ -10,7 +10,16 @@ class Admin::RdvsController < AgentAuthController
   def index
     set_scoped_organisations
     @rdvs = policy_scope(Rdv).search_for(@scoped_organisations, parsed_params)
-      .includes([:rdvs_users, :agents_rdvs, :organisation, :lieu, :motif, { agents: :service, users: %i[responsible organisations] }])
+      .includes(
+        [
+          :agents_rdvs, :organisation, :lieu, :motif,
+          {
+            rdvs_users: [:prescripteur, { user: :user_profiles }],
+            agents: :service,
+            users: %i[responsible organisations user_profiles],
+          },
+        ]
+      )
     @breadcrumb_page = params[:breadcrumb_page]
     @form = Admin::RdvSearchForm.new(parsed_params)
     @lieux = Lieu.joins(:organisation).where(organisations: { id: @scoped_organisations.select(:id) }).enabled.order(:name)
