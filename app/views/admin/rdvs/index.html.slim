@@ -37,7 +37,7 @@
   .card-body
     = render "rdv_search_form", form: @form
 
-  - if @rdvs.any?
+  - if @rdvs.total_count > 0
     .card-footer
       div.d-flex.justify-content-end
         - if policy([:configuration, current_territory]).allow_to_download_metrics?
@@ -50,7 +50,7 @@
         input.btn.btn-small.btn-link.d-print-none type="submit" value="Imprimer 🖨" onclick="window.print();return false;"
       = render "admin/rdvs/rdv_visibility"
 
-- if @rdvs.any?
+- if @rdvs.total_count > 0
   .mb-2
     h4>= "#{@rdvs.total_count} rendez-vous"
     .custom-control.custom-switch
