@@ -5,9 +5,7 @@ ruby:
 
 div.flex-grow-1
   p
-    span>= "Un usager avec le même #{existing_attributes} existe déjà"
-    - if user.organisation_ids.exclude?(current_organisation.id)
-      span dans une autre organisation
+    span>= "Un usager avec le même #{existing_attributes} a déjà un compte sur #{current_domain.name}"
   p
     div
       b= full_name_and_birthdate(user)
@@ -24,4 +22,4 @@ div.flex-grow-1
       - else
         = link_to "Modifier cet usager", edit_admin_organisation_user_path(current_organisation, user), class: "btn btn-secondary btn-small"
     - else
-      = link_to "Associer cet usager à l'organisation courante", link_to_organisation_admin_organisation_user_path(current_organisation, user, return_location: return_location, modal: from_modal), class: "btn btn-warning"
+      = link_to "Importer cet usager", link_to_organisation_admin_organisation_user_path(current_organisation, user, return_location: return_location, modal: from_modal), class: "btn btn-warning"
