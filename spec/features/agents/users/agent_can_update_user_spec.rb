@@ -47,7 +47,7 @@ describe "Agent can update user" do
         fill_in "Remarques", with: "souhaite participer au prochain atelier collectif"
         select "MSA", from: "Caisse d'affiliation"
         click_button "Enregistrer"
-        expect(user.reload.notes).to eq "souhaite participer au prochain atelier collectif"
+        expect(user.reload.user_profiles.first.notes).to eq "souhaite participer au prochain atelier collectif"
         expect(user.reload.caisse_affiliation).to eq "msa"
       end
     end

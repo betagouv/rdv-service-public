@@ -48,7 +48,6 @@ class User < ApplicationRecord
                           franceconnect_sign_up: "franceconnect_sign_up", user_relative_creation: "user_relative_creation",
                           unknown: "unknown", agent_creation_api: "agent_creation_api", prescripteur: "prescripteur", }
   enum invited_through: { devise_email: "devise_email", external: "external" }
-  enum logement: { sdf: 0, heberge: 1, en_accession_propriete: 2, proprietaire: 3, autre: 4, locataire: 5 }
 
   # HACK : add *_sign_in_ip to accessor to bypass recording IPs from Trackable Devise's module
   # HACK : add sign_in_count and current_sign_in_at to accessor to bypass recording IPs from Trackable Devise's module
@@ -143,8 +142,8 @@ class User < ApplicationRecord
   end
 
   def profile_for(organisation)
-    @profiles ||= user_profiles.index_by(&:organisation)
-    @profiles[organisation]
+    @profiles ||= user_profiles.index_by(&:organisation_id)
+    @profiles[organisation.id]
   end
 
   def participation_for(rdv)
@@ -154,6 +153,10 @@ class User < ApplicationRecord
 
   def deleted_email
     "user_#{id}@deleted.rdv-solidarites.fr"
+  end
+
+  def notes_for(organisation)
+    profile_for(organisation)&.notes
   end
 
   def can_be_soft_deleted_from_organisation?(organisation)

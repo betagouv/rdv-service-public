@@ -13,12 +13,8 @@ fr:
         title: Configuration
       index:
         configuration_title: Configuration
-      agent_territorial_roles:
-        new:
-          title: Ajouter un agent
-        index:
-          title: Administration %{name}
-          configuration_title: Configuration
+      edit:
+        title: Configuration %{name}
 
       sectorisation_tests:
         search:
@@ -98,6 +94,7 @@ fr:
           no_other_organisation: Aucune autre organisation.
           create_organisation: Créer une organisation
           empty_agent_organisations: Aucune organisation affectée
+          agent_territorial_role_caption: Administrateur de territoire
         index:
           territory_agents_title: Agents du territoire
           reset: Retour

@@ -37,12 +37,12 @@
   .card-body
     = render "rdv_search_form", form: @form
 
-  - if @rdvs.any?
+  - if @rdvs.total_count > 0
     .card-footer
       div.d-flex.justify-content-end
         - if policy([:configuration, current_territory]).allow_to_download_metrics?
           = link_to rdvs_users_export_admin_organisation_rdvs_path(**@form.to_query), method: :post, class: "btn btn-small btn-link d-print-none" do
-            span> Exporter les #{@rdvs_users_count} RDVs par usager en XLS
+            span> Exporter les RDVs par usager en XLS
             i.fa.fa-download>
         = link_to export_admin_organisation_rdvs_path(**@form.to_query), method: :post, class: "btn btn-small btn-link d-print-none" do
           span> Exporter les #{@rdvs.total_count} RDVs en XLS
@@ -50,7 +50,7 @@
         input.btn.btn-small.btn-link.d-print-none type="submit" value="Imprimer 🖨" onclick="window.print();return false;"
       = render "admin/rdvs/rdv_visibility"
 
-- if @rdvs.any?
+- if @rdvs.total_count > 0
   .mb-2
     h4>= "#{@rdvs.total_count} rendez-vous"
     .custom-control.custom-switch

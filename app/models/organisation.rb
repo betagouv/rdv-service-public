@@ -4,7 +4,6 @@ class Organisation < ApplicationRecord
   # Mixins
   has_paper_trail
   include WebhookDeliverable
-  include WebhookDeliverable
 
   # Attributes
   auto_strip_attributes :email, :name
@@ -27,6 +26,7 @@ class Organisation < ApplicationRecord
   # we specify dependent: :destroy because by default it will be deleted (dependent: :delete)
   # and we need to destroy to trigger the callbacks on the model
   has_many :users, through: :user_profiles, dependent: :destroy
+  has_many :referent_assignations, through: :users
   has_many :receipts, through: :rdvs
 
   accepts_nested_attributes_for :agent_roles
