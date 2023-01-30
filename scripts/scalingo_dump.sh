@@ -11,7 +11,11 @@ fi
 REGION=osc-secnum-fr1
 APP="$1"-rdv-solidarites
 ADDON_ID=$(scalingo addons --region $REGION --app "$APP" | grep PostgreSQL | cut -d ' ' -f 4)
-TAR_NAME=$(scalingo backups-download --region $REGION --app "$APP" --addon "$ADDON_ID" | grep '===> ' | sed 's/===> //')
+
+# download archive file
+scalingo backups-download --region $REGION --app "$APP" --addon "$ADDON_ID"
+# get name of most recently created tar.gz file (most likely the archive)
+TAR_NAME=$(ls -t | grep tar.gz | head -n1)
 
 # untar
 tar xf "$TAR_NAME"

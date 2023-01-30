@@ -3,11 +3,11 @@
 .row.mb-3
   - if policy([:configuration, AgentTerritorialRole]).display?
     .col.col-md-4.p-2.rounded.settings-box
-      = link_to admin_territory_agent_territorial_roles_path(current_territory) do
+      = link_to edit_admin_territory_path(current_territory) do
         h2.fw-bold.mb-0
-          i.fa.fa-users>
-          | Administration
-        p Gérer l'accès à la configuration
+          i.fa.fa-location-dot>
+          | Territoire
+        p Configurer le territoire, département, structure
 
   - if policy([:configuration, Agent]).display?
     .col.col-md-4.p-2.rounded.settings-box
