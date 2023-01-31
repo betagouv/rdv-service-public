@@ -53,7 +53,7 @@ motif1_drome1 = Motif.create!(
    "Avant le RDV  :\r\n- pensez à vous munir d'un masque \r\n- apporter votre CV à jour ainsi que vos documents justifiant de votre inscription à Pôle Emploi",
   for_secretariat: true,
   custom_cancel_warning_message: "Ce RDV est obligatoire",
-  category: "rsa_orientation"
+  motif_category_id: MotifCategory.find_by(short_name: "rsa_orientation").id
 )
 motif2_drome1 = Motif.create!(
   name: "RSA accompagnement",
@@ -64,7 +64,7 @@ motif2_drome1 = Motif.create!(
   service: service_rsa,
   custom_cancel_warning_message: "",
   collectif: false,
-  category: "rsa_accompagnement"
+  motif_category_id: MotifCategory.find_by(short_name: "rsa_accompagnement").id
 )
 motif_drome2 = Motif.create!(
   name: "RSA - Orientation : rdv sur site",
@@ -76,7 +76,7 @@ motif_drome2 = Motif.create!(
   service: service_rsa,
   for_secretariat: true,
   custom_cancel_warning_message: "Ce RDV est obligatoire",
-  category: "rsa_orientation"
+  motif_category_id: MotifCategory.find_by(short_name: "rsa_orientation").id
 )
 
 # MOTIFS Yonne
@@ -87,7 +87,7 @@ motif_yonne_physique = Motif.create!(
   organisation: org_yonne,
   service: service_rsa,
   for_secretariat: true,
-  category: "rsa_orientation"
+  motif_category_id: MotifCategory.find_by(short_name: "rsa_orientation").id
 )
 motif_yonne_telephone = Motif.create!(
   name: "RSA - Orientation : rdv téléphonique",
@@ -97,7 +97,7 @@ motif_yonne_telephone = Motif.create!(
   service: service_rsa,
   for_secretariat: true,
   location_type: "phone",
-  category: "rsa_orientation"
+  motif_category_id: MotifCategory.find_by(short_name: "rsa_orientation").id
 )
 
 # Agent

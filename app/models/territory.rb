@@ -22,6 +22,7 @@ class Territory < ApplicationRecord
   has_many :sectors, dependent: :destroy
   has_many :roles, class_name: "AgentTerritorialRole", dependent: :delete_all
   has_many :agent_territorial_access_rights, dependent: :destroy
+  has_and_belongs_to_many :motif_categories
 
   # Through relations
   has_many :organisations_agents, -> { distinct }, through: :organisations, source: :agents
@@ -56,6 +57,7 @@ class Territory < ApplicationRecord
     enable_waiting_room_color_field: :change_rdv_color,
   }.freeze
 
+  # TODO : remove this after motif_categories implementation
   OPTIONAL_MOTIF_FIELD_TOGGLES = {
     enable_motif_categories_field: :category,
   }.freeze

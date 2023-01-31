@@ -34,6 +34,7 @@ class Motif < ApplicationRecord
   # Relations
   belongs_to :organisation
   belongs_to :service
+  belongs_to :motif_category, optional: true
   has_many :rdvs, dependent: :restrict_with_exception
   has_and_belongs_to_many :plage_ouvertures, -> { distinct }
 
@@ -44,8 +45,6 @@ class Motif < ApplicationRecord
   # Delegates
   delegate :service_social?, to: :service
   delegate :name, to: :service, prefix: true
-
-  # Hooks
 
   # Validation
   validates :visibility_type, inclusion: { in: VISIBILITY_TYPES }

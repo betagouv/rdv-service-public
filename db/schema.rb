@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_19_140851) do
+ActiveRecord::Schema[7.0].define(version: 2023_01_31_085254) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "unaccent"
@@ -290,6 +290,21 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_19_140851) do
     t.index ["organisation_id"], name: "index_lieux_on_organisation_id"
   end
 
+  create_table "motif_categories", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "short_name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_motif_categories_on_name", unique: true
+    t.index ["short_name"], name: "index_motif_categories_on_short_name", unique: true
+  end
+
+  create_table "motif_categories_territories", id: false, force: :cascade do |t|
+    t.bigint "motif_category_id", null: false
+    t.bigint "territory_id", null: false
+    t.index ["motif_category_id", "territory_id"], name: "index_motif_cat_territories_on_motif_cat_id_and_territory_id", unique: true
+  end
+
   create_table "motifs", force: :cascade do |t|
     t.string "name"
     t.string "color"
@@ -315,11 +330,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_19_140851) do
     t.enum "category", enum_type: "motif_category"
     t.boolean "rdvs_editable_by_user", default: true
     t.boolean "rdvs_cancellable_by_user", default: true
+    t.bigint "motif_category_id"
     t.index "to_tsvector('simple'::regconfig, (COALESCE(name, (''::text)::character varying))::text)", name: "index_motifs_name_vector", using: :gin
     t.index ["category"], name: "index_motifs_on_category"
     t.index ["collectif"], name: "index_motifs_on_collectif"
     t.index ["deleted_at"], name: "index_motifs_on_deleted_at"
     t.index ["location_type"], name: "index_motifs_on_location_type"
+    t.index ["motif_category_id"], name: "index_motifs_on_motif_category_id"
     t.index ["name", "organisation_id", "location_type", "service_id"], name: "index_motifs_on_name_scoped", unique: true, where: "(deleted_at IS NULL)"
     t.index ["name"], name: "index_motifs_on_name"
     t.index ["organisation_id"], name: "index_motifs_on_organisation_id"
@@ -663,6 +680,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_19_140851) do
   add_foreign_key "file_attentes", "rdvs"
   add_foreign_key "file_attentes", "users"
   add_foreign_key "lieux", "organisations"
+  add_foreign_key "motifs", "motif_categories"
   add_foreign_key "motifs", "organisations"
   add_foreign_key "motifs", "services"
   add_foreign_key "plage_ouvertures", "agents"
