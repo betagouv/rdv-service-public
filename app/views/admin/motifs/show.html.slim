@@ -9,8 +9,8 @@
       .card-body
         = motif_attribute_row(Motif.human_attribute_name(:name), @motif.name)
         = motif_attribute_row(Motif.human_attribute_name(:service), @motif.service.name)
-        - if current_organisation.territory.enable_motif_categories_field
-          = motif_attribute_row(Motif.human_attribute_name(:category), Motif.human_attribute_value(:category, @motif.category))
+        - if @motif.motif_category.present?
+          = motif_attribute_row(Motif.human_attribute_name(:category), @motif.motif_category.name)
         = motif_attribute_row \
           Motif.human_attribute_name(:default_duration_in_min_short), \
           "#{@motif.default_duration_in_min} minutes"

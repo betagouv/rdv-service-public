@@ -17,11 +17,11 @@
   - if current_organisation.territory.enable_motif_categories_field
     .card
       .card-body
-        h5.card-title= Motif.human_attribute_name("category")
-        p.text-muted.font-14= Motif.human_attribute_name("category_hint")
+        h5.card-title= MotifCategory.model_name.human
+        p.text-muted.font-14= MotifCategory.human_attribute_name("category_hint")
         .form-row
           .col-md-12
-              = f.input :category, collection: Motif.human_attribute_values(:categories), include_blank: "Aucune", input_html: { class: "select2-input" }, label: false
+            = f.association :motif_category, collection: current_territory.motif_categories, include_blank: "Aucune", label: false
 
   .card
     .card-body
