@@ -53,20 +53,10 @@
     - if local_assigns[:rdv_wizard]
       ruby:
         current_organisation = Motif.find(rdv_wizard.to_query[:motif_id]).organisation
-        profile = user.profile_for(current_organisation)
-        profile ||= user.user_profiles.build(organisation: current_organisation)
-      = f.simple_fields_for :user_profiles, profile do |n|
-        = n.input :organisation_id, as: :hidden
-        - if current_organisation.territory.enable_logement_field
-          = n.input :logement, collection: UserProfile.human_attribute_values(:logement)
-    - else
-      - user.user_profiles.each do |profile|
-        fieldset
-          = f.simple_fields_for :user_profiles, profile do |n|
-            legend= profile.organisation.name
-            = n.input :organisation_id, as: :hidden
-            - if territories.map(&:enable_logement_field).any?
-              = n.input :logement, collection: UserProfile.human_attribute_values(:logement)
+      - if current_organisation.territory.enable_logement_field
+        = f.input :logement, collection: User.human_attribute_values(:logement)
+    - elsif territories.map(&:enable_logement_field).any?
+      = f.input :logement, collection: User.human_attribute_values(:logement)
 
   - if local_assigns[:rdv_wizard].present?
     - rdv_wizard.to_query.each do |wizard_key, wizard_value|
