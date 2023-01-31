@@ -17,6 +17,15 @@ fr:
         notify_by_sms: "Accepte les notifications par SMS"
         notify_by_email: "Accepte les notifications par email"
         created_through: "Origine du compte"
+        notes: Remarques
+      user/logements:
+        sdf: Sans domicile fixe
+        heberge: Hébergé
+        locataire: Locataire
+        en_accession_propriete: En accession à la propriété
+        proprietaire: Propriétaire
+        autre: Autre
+      logement: Logement
       user/caisse_affiliations:
         aucune: Aucune
         caf: CAF
