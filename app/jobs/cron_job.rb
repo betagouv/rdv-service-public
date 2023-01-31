@@ -40,12 +40,11 @@ class CronJob < ApplicationJob
   end
 
   class ReminderJob < CronJob
-    # Every hour at minute 57 (00:57:, 01:57, 02:57 [...] 23:57)
-    self.cron_expression = "57 * * * *"
+    # At 9:00 every day
+    self.cron_expression = "0 9 * * *"
 
     def perform
-      rdvs_starting_in_48_to_49_hours = Rdv.where("starts_at >= ? AND starts_at < ?", 48.hours.from_now, 49.hours.from_now)
-      rdvs_starting_in_48_to_49_hours.not_cancelled.each do |rdv|
+      Rdv.not_cancelled.day_after_tomorrow.each do |rdv|
         Notifiers::RdvUpcomingReminder.perform_with(rdv, nil)
       rescue StandardError => e # don't interrupt the whole loop when one RDV crashes
         Sentry.add_breadcrumb(Sentry::Breadcrumb.new(message: "Could not send reminder", data: { rdv_id: rdv.id }))
