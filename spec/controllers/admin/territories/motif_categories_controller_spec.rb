@@ -14,10 +14,11 @@ describe Admin::Territories::MotifCategoriesController, type: :controller do
       create_list(:motif_category, 5)
       territory = create(:territory)
       agent = create(:agent, role_in_territories: [territory])
+      random_categories_ids = MotifCategory.all.sample(3).map(&:id)
       sign_in agent
 
       expect do
-        post :update, params: { territory_id: territory.id, territory: { motif_category_ids: [1, 2, 4] } }
+        post :update, params: { territory_id: territory.id, territory: { motif_category_ids: random_categories_ids } }
       end.to change { territory.reload.motif_categories.count }.from(0).to(3)
     end
   end
