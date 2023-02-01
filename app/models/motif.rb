@@ -7,7 +7,6 @@ class Motif < ApplicationRecord
   include WebhookDeliverable
 
   include PgSearch::Model
-  include Motif::Category
 
   pg_search_scope(:search_by_text,
                   against: :name,
@@ -99,6 +98,11 @@ class Motif < ApplicationRecord
   scope :individuel, -> { where(collectif: false) }
 
   ## -
+
+  # TODO Remove this method after RDV-I migration OK
+  def category
+    motif_category.short_name
+  end
 
   def to_s
     name

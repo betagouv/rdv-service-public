@@ -19,7 +19,8 @@ class SearchContext
     @fallback_organisation_ids = query[:organisation_ids]
     @motif_id = query[:motif_id]
     @motif_search_terms = query[:motif_search_terms]
-    @motif_category = query[:motif_category]
+    # TODO Remove "query[:motif_category] ||" after RDV-I migration OK
+    @motif_category_short_name = query[:motif_category] || query[:motif_category_short_name]
     @motif_name_with_location_type = query[:motif_name_with_location_type]
     @service_id = query[:service_id]
     @lieu_id = query[:lieu_id]
@@ -182,7 +183,7 @@ class SearchContext
     motifs = motifs.search_by_name_with_location_type(@motif_name_with_location_type) if @motif_name_with_location_type.present?
     motifs = motifs.where(service: service) if @service_id.present?
     motifs = motifs.search_by_text(@motif_search_terms) if @motif_search_terms.present?
-    motifs = motifs.where(category: @motif_category) if @motif_category.present?
+    motifs = motifs.where(motif_category: { short_name: @motif_category_short_name }) if @motif_category_short_name.present?
     motifs = motifs.where(organisations: { id: organisation_id }) if organisation_id.present?
     motifs = motifs.where(id: @motif_id) if @motif_id.present?
     motifs = motifs.with_availability_for_lieux([lieu.id]) if lieu.present?
