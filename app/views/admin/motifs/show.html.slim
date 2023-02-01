@@ -10,7 +10,7 @@
         = motif_attribute_row(Motif.human_attribute_name(:name), @motif.name)
         = motif_attribute_row(Motif.human_attribute_name(:service), @motif.service.name)
         - if @motif.motif_category.present?
-          = motif_attribute_row(Motif.human_attribute_name(:category), @motif.motif_category.name)
+          = motif_attribute_row(MotifCategory.model_name.human, @motif.motif_category.name)
         = motif_attribute_row \
           Motif.human_attribute_name(:default_duration_in_min_short), \
           "#{@motif.default_duration_in_min} minutes"

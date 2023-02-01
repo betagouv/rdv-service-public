@@ -57,11 +57,6 @@ class Territory < ApplicationRecord
     enable_waiting_room_color_field: :change_rdv_color,
   }.freeze
 
-  # TODO : remove this after motif_categories implementation
-  OPTIONAL_MOTIF_FIELD_TOGGLES = {
-    enable_motif_categories_field: :category,
-  }.freeze
-
   SOCIAL_FIELD_TOGGLES = {
     enable_caisse_affiliation_field: :caisse_affiliation,
     enable_affiliation_number_field: :affiliation_number,

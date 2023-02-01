@@ -14,7 +14,7 @@
         .col-md-4= f.input :default_duration_in_min
         .col-md-4= f.input :color, as: "color"
 
-  - if current_organisation.territory.enable_motif_categories_field
+  - if current_organisation.territory.motif_categories.present?
     .card
       .card-body
         h5.card-title= MotifCategory.model_name.human

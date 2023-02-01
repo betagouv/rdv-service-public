@@ -18,7 +18,9 @@ class CreateMotifCategories < ActiveRecord::Migration[7.0]
     end
 
     populate_tables
+
     remove_column :motifs, :category, :motif_category
+    remove_column :territories, :enable_motif_categories_field
     drop_enum :motif_category
   end
 
@@ -39,6 +41,11 @@ class CreateMotifCategories < ActiveRecord::Migration[7.0]
       rsa_atelier_competences
       rsa_atelier_rencontres_pro
     ]
+
+    add_column :territories, :enable_motif_categories_field, :boolean, default: false
+    Territory.includes(:motif_categories).where.not(motif_categories: { id: nil }).each do |territory|
+      territory.update(enable_motif_categories_field: true)
+    end
 
     drop_join_table :motif_categories, :territories
     add_column :motifs, :category, :motif_category
