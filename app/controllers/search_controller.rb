@@ -35,7 +35,7 @@ class SearchController < ApplicationController
   end
 
   def search_params
-    # TODO Remove motif_category params after RDV-I migration OK
+    # TODO: remove motif_category params after RDV-I migration OK
     params.permit(
       :latitude, :longitude, :address, :city_code, :departement, :street_ban_id,
       :service_id, :lieu_id, :date, :motif_search_terms, :motif_name_with_location_type, :motif_category, :motif_category_short_name,

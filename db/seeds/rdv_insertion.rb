@@ -1,6 +1,21 @@
 # frozen_string_literal: true
 
 # In case of changes here please make sure rdv_solidarites_model_id didnt change in rdv-insertion seed or update them
+
+# Motif Categories
+[
+  {
+    name: "RSA orientation",
+    short_name: "rsa_orientation",
+  },
+  {
+    name: "RSA accompagnement",
+    short_name: "rsa_accompagnement",
+  },
+].each do |category|
+  MotifCategory.create(category)
+end
+
 # Territories
 territory_drome = Territory.create!(
   departement_number: "26",
