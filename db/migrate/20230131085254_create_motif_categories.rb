@@ -18,10 +18,41 @@ class CreateMotifCategories < ActiveRecord::Migration[7.0]
     end
 
     populate_tables
+    remove_column :motifs, :category, :motif_category
+    drop_enum :motif_category
   end
 
   def down
+    create_enum :motif_category, %w[
+      rsa_orientation
+      rsa_accompagnement
+      rsa_orientation_on_phone_platform
+      rsa_cer_signature
+      rsa_insertion_offer
+      rsa_follow_up
+      rsa_accompagnement_social
+      rsa_accompagnement_sociopro
+      rsa_main_tendue
+      rsa_atelier_collectif_mandatory
+      rsa_spie
+      rsa_integration_information
+      rsa_atelier_competences
+      rsa_atelier_rencontres_pro
+    ]
+
     drop_join_table :motif_categories, :territories
+    add_column :motifs, :category, :motif_category
+
+    execute(<<-SQL.squish
+      UPDATE motifs
+      SET category = (
+        SELECT motif_categories.short_name::motif_category from motif_categories
+        WHERE motifs.motif_category_id = motif_categories.id
+      )
+      WHERE motifs.motif_category_id IS NOT NULL
+    SQL
+           )
+
     remove_reference :motifs, :motif_category, foreign_key: true
     drop_table :motif_categories
   end
@@ -94,11 +125,15 @@ class CreateMotifCategories < ActiveRecord::Migration[7.0]
     end
 
     # Filled motif_category_id on motifs with existing category enum column
-    Motif.where.not(category: nil).each do |motif|
-      motif_category = MotifCategory.find_by(short_name: motif.category)
-      motif.motif_category_id = motif_category.id
-      motif.save
-    end
+    execute(<<-SQL.squish
+      UPDATE motifs
+      SET motif_category_id = (
+        SELECT motif_categories.id from motif_categories
+        WHERE motifs.category = motif_categories.short_name::motif_category
+      )
+      WHERE motifs.category IS NOT NULL
+    SQL
+           )
 
     # Link Territories to all MotifCategories for existing territories with category_field enabled
     Territory.where(enable_motif_categories_field: true).each do |territory|

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_26_122950) do
+ActiveRecord::Schema[7.0].define(version: 2023_01_31_085254) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "unaccent"
@@ -43,23 +43,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_26_122950) do
     "public_office",
     "home",
     "phone",
-  ], force: :cascade
-
-  create_enum :motif_category, [
-    "rsa_orientation",
-    "rsa_accompagnement",
-    "rsa_orientation_on_phone_platform",
-    "rsa_cer_signature",
-    "rsa_insertion_offer",
-    "rsa_follow_up",
-    "rsa_accompagnement_social",
-    "rsa_accompagnement_sociopro",
-    "rsa_main_tendue",
-    "rsa_atelier_collectif_mandatory",
-    "rsa_spie",
-    "rsa_integration_information",
-    "rsa_atelier_competences",
-    "rsa_atelier_rencontres_pro",
   ], force: :cascade
 
   create_enum :rdv_status, [
@@ -327,12 +310,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_26_122950) do
     t.text "custom_cancel_warning_message"
     t.boolean "collectif", default: false
     t.enum "location_type", default: "public_office", null: false, enum_type: "location_type"
-    t.enum "category", enum_type: "motif_category"
     t.boolean "rdvs_editable_by_user", default: true
     t.boolean "rdvs_cancellable_by_user", default: true
     t.bigint "motif_category_id"
     t.index "to_tsvector('simple'::regconfig, (COALESCE(name, (''::text)::character varying))::text)", name: "index_motifs_name_vector", using: :gin
-    t.index ["category"], name: "index_motifs_on_category"
     t.index ["collectif"], name: "index_motifs_on_collectif"
     t.index ["deleted_at"], name: "index_motifs_on_deleted_at"
     t.index ["location_type"], name: "index_motifs_on_location_type"
