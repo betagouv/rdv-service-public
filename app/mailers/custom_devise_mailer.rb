@@ -14,8 +14,10 @@ class CustomDeviseMailer < Devise::Mailer
     @user_params = opts[:user_params] || {}
     opts[:reply_to] = reply_to(record)
     if record.is_a?(Agent) && record.conseiller_numerique? && record.invited_by.nil?
+      opts[:subject] = "📧 Invitation sur RDV Aide Numérique"
       devise_mail(record, :invitation_instructions_cnfs, opts)
     else
+      opts[:subject] = I18n.t("devise.mailer.invitation_instructions.subject", domain_name: record.domain.name)
       devise_mail(record, :invitation_instructions, opts)
     end
   end

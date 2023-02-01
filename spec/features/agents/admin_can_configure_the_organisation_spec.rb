@@ -88,7 +88,7 @@ describe "Admin can configure the organisation" do
     expect(page).to have_content("jean@paul.com")
 
     open_email("jean@paul.com")
-    expect(current_email.subject).to eq "Vous avez été invité sur RDV Solidarités."
+    expect(current_email.subject).to eq "Vous avez été invité sur RDV Solidarités"
   end
 
   context "when the organisation is not using the default domain" do
@@ -101,7 +101,7 @@ describe "Admin can configure the organisation" do
       click_button "Envoyer une invitation"
 
       open_email("jean@paul.com")
-      expect(current_email.subject).to eq "Vous avez été invité sur RDV Aide Numérique."
+      expect(current_email.subject).to eq "Vous avez été invité sur RDV Aide Numérique"
       expect(current_email.body).to include "rejoindre RDV Aide Numérique"
     end
   end

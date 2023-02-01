@@ -4,7 +4,7 @@
 @import "./components/types";
 @import "./components/rdv_solidarites_instance_name";
 
-$padding: 30px;
+$padding: 20px;
 
 /* -------------------------------------
     GLOBAL
@@ -48,7 +48,7 @@ body {
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 3px;
   margin: 40px;
-  padding: 20px;
+  padding: $padding;
 }
 
 .body-wrap {
@@ -68,7 +68,7 @@ body {
   max-width: 600px;
   margin: 0 auto;
   display: block;
-  padding: 20px;
+  padding: $padding;
   padding-top: 0px;
 }
 
@@ -83,23 +83,23 @@ body {
 }
 
 .content-wrap {
-  padding: 20px;
+  padding: $padding;
 }
 
 .content-block {
-  padding: 0 0 20px;
+  padding: 0 0 $padding;
 }
 
 .header {
   width: 100%;
-  margin-bottom: 20px;
+  margin-bottom: $padding;
 }
 
 .footer {
   width: 100%;
   clear: both;
   color: #999;
-  padding: 20px;
+  padding: $padding;
 }
 .footer p, .footer a, .footer td {
   color: #999;
@@ -117,11 +117,17 @@ h1, h2, h3 {
 }
 
 h1 {
-  font-size: 20px;
+  font-size: $padding;
   font-weight: 500;
-  margin-bottom: 20px;
+  margin-bottom: $padding;
   /* 1.2em * 32px = 38.4px, use px to get airier line-height also in Thunderbird, and Yahoo!, Outlook.com, AOL webmail clients */
   /*line-height: 38px;*/
+}
+
+h2 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-top: 1em;
 }
 
 h3 {
@@ -216,27 +222,31 @@ html,
   padding-top: 15px; }
 
 .wrapper-inner {
-  padding: 40px 20px;
+  padding: 40px $padding;
 }
 
 .header .container {
   background: transparent; }
 
 .wrapper.secondary {
-  background: #f3f3f3;
+  padding: 0.8em 1.2em;
+  margin: 1em;
+  border-radius: 1em;
+  background: $blueish-light-grey;
 }
 
 .logo{
-  margin-top: 20px;
+  margin-top: $padding;
 }
 
 .btn-primary{
   background-color: $primary;
-  padding: 10px;
+  padding: 0.8em 0.9em;
   color: $white;
   text-decoration: none;
   font-weight: bold;
   font-size: 18px;
+  border-radius: 0.4em;
 }
 
 .btn-wrapper{
