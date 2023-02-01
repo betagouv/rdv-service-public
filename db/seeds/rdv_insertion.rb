@@ -3,18 +3,9 @@
 # In case of changes here please make sure rdv_solidarites_model_id didnt change in rdv-insertion seed or update them
 
 # Motif Categories
-[
-  {
-    name: "RSA orientation",
-    short_name: "rsa_orientation",
-  },
-  {
-    name: "RSA accompagnement",
-    short_name: "rsa_accompagnement",
-  },
-].each do |category|
-  MotifCategory.create(category)
-end
+
+orientation_category = MotifCategory.create!(short_name: "rsa_orientation", name: "RSA orientation")
+accompagnement_category = MotifCategory.create!(short_name: "rsa_accompagnement", name: "RSA accompagnement")
 
 # Territories
 territory_drome = Territory.create!(
@@ -68,7 +59,7 @@ motif1_drome1 = Motif.create!(
    "Avant le RDV  :\r\n- pensez à vous munir d'un masque \r\n- apporter votre CV à jour ainsi que vos documents justifiant de votre inscription à Pôle Emploi",
   for_secretariat: true,
   custom_cancel_warning_message: "Ce RDV est obligatoire",
-  motif_category_id: MotifCategory.find_by(short_name: "rsa_orientation").id
+  motif_category: orientation_category
 )
 motif2_drome1 = Motif.create!(
   name: "RSA accompagnement",
@@ -79,7 +70,7 @@ motif2_drome1 = Motif.create!(
   service: service_rsa,
   custom_cancel_warning_message: "",
   collectif: false,
-  motif_category_id: MotifCategory.find_by(short_name: "rsa_accompagnement").id
+  motif_category: accompagnement_category
 )
 motif_drome2 = Motif.create!(
   name: "RSA - Orientation : rdv sur site",
@@ -91,7 +82,7 @@ motif_drome2 = Motif.create!(
   service: service_rsa,
   for_secretariat: true,
   custom_cancel_warning_message: "Ce RDV est obligatoire",
-  motif_category_id: MotifCategory.find_by(short_name: "rsa_orientation").id
+  motif_category: orientation_category
 )
 
 # MOTIFS Yonne
@@ -102,7 +93,7 @@ motif_yonne_physique = Motif.create!(
   organisation: org_yonne,
   service: service_rsa,
   for_secretariat: true,
-  motif_category_id: MotifCategory.find_by(short_name: "rsa_orientation").id
+  motif_category: orientation_category
 )
 motif_yonne_telephone = Motif.create!(
   name: "RSA - Orientation : rdv téléphonique",
@@ -112,7 +103,7 @@ motif_yonne_telephone = Motif.create!(
   service: service_rsa,
   for_secretariat: true,
   location_type: "phone",
-  motif_category_id: MotifCategory.find_by(short_name: "rsa_orientation").id
+  motif_category: orientation_category
 )
 
 # Agent
