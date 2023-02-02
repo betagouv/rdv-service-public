@@ -3,7 +3,7 @@
     .card-body
       h2.py-1.my-1
         i.fa.fa-info-circle>
-        = motif_name_with_location_type(context.first_matching_motif)
+        = motif_name_and_location_type(context.first_matching_motif)
 - else
   .card.card-hoverable
     .card-body
@@ -13,5 +13,5 @@
             i.fa.fa-chevron-left
           .col
             h2.pb-1.mb-1
-              = motif_name_with_location_type(context.first_matching_motif)
+              = motif_name_and_location_type(context.first_matching_motif)
             = context.service.name
