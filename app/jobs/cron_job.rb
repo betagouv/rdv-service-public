@@ -11,6 +11,7 @@ class CronJob < ApplicationJob
   class << self
     def schedule
       set(cron: cron_expression).perform_later unless scheduled?
+      update_cron_expression!
     end
 
     def remove
@@ -19,6 +20,10 @@ class CronJob < ApplicationJob
 
     def scheduled?
       delayed_job.present?
+    end
+
+    def update_cron_expression!
+      delayed_job.update!(cron: cron_expression)
     end
 
     def delayed_job
