@@ -52,6 +52,7 @@ module SearchContextHelper
       address: params[:address],
       public_link_organisation_id: params[:public_link_organisation_id],
       referent_ids: params[:referent_ids],
+      external_organisation_ids: params[:external_organisation_ids],
     }
   end
 end
