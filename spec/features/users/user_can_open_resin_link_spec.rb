@@ -2,7 +2,6 @@
 
 # Ce test de non-régression a été ajouté pour s'assurer que le
 # lien public que nous avons fourni à Rés'In est toujours fonctionnel.
-# Ce lien est une redirection vers notre
 RSpec.describe "Rés'In specific public link" do
   before do
     travel_to(Time.zone.parse("2023-01-30 17:00"))
