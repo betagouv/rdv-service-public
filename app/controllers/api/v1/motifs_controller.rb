@@ -9,7 +9,16 @@ class Api::V1::MotifsController < Api::V1::AgentAuthBaseController
 
     motifs = motifs.where(service_id: params[:service_id]) if params[:service_id].present?
 
-    motifs = motifs.where(category: params[:category]) if params[:category].present?
+    # TODO: remove this after RDV-I migration OK
+    if params[:category].present?
+      motif_category = MotifCategory.find_by(short_name: params[:category])
+      motifs = motifs.where(motif_category: motif_category)
+    end
+
+    if params[:motif_category_short_name].present?
+      motif_category = MotifCategory.find_by(short_name: params[:motif_category_short_name])
+      motifs = motifs.where(motif_category: motif_category)
+    end
 
     render_collection(motifs.order(:id))
   end

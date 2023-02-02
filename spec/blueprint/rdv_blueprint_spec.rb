@@ -7,7 +7,7 @@ describe RdvBlueprint do
   let(:rdv) { build(:rdv) }
 
   describe "status" do
-    let(:motif) { create(:motif, :with_category) }
+    let(:motif) { create(:motif) }
     let(:rdv) { build(:rdv, status: "revoked", motif: motif) }
 
     it do

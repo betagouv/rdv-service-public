@@ -6,6 +6,7 @@ FactoryBot.define do
   factory :motif do
     organisation { association(:organisation) }
     service { association(:service) }
+    motif_category { association(:motif_category) }
 
     name { generate(:motif_name) }
     default_duration_in_min { 45 }
@@ -22,10 +23,6 @@ FactoryBot.define do
       after(:create) do |motif|
         create_list(:rdv, 5, motif: motif, organisation: motif.organisation)
       end
-    end
-
-    trait :with_category do
-      motif_category { create(:motif_category) }
     end
 
     trait :at_home do
