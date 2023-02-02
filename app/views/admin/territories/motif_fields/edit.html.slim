@@ -12,7 +12,7 @@
 
           h6= t("admin.territories.motif_categories.edit.title")
           p.text-muted.font-14= t("admin.territories.motif_categories.edit.hint_1")
-          = f.association :motif_categories, collection: MotifCategory.all, label: '', as: :check_boxes
+          = f.association :motif_categories, collection: MotifCategory.all, label: "", as: :check_boxes
 
           .text-right
             = f.button :submit
