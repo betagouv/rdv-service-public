@@ -92,7 +92,7 @@ body {
 
 .header {
   width: 100%;
-  margin-bottom: $padding;
+  margin-bottom: 20px;
 }
 
 .footer {
@@ -117,9 +117,9 @@ h1, h2, h3 {
 }
 
 h1 {
-  font-size: $padding;
+  font-size: 20px;
   font-weight: 500;
-  margin-bottom: $padding;
+  margin-bottom: 20px;
   /* 1.2em * 32px = 38.4px, use px to get airier line-height also in Thunderbird, and Yahoo!, Outlook.com, AOL webmail clients */
   /*line-height: 38px;*/
 }
@@ -236,7 +236,7 @@ html,
 }
 
 .logo{
-  margin-top: $padding;
+  margin-top: 20px;
 }
 
 .btn-primary{
