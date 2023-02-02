@@ -1,4 +1,4 @@
-En cas de changement de la base de donnée il faut tenir à jour la documentation Swagger et les tests aasociés.
+En cas de changement de la structure des réponses de l'API (changement dans les blueprints ou sur le format des attributs déjà présents) il faut tenir à jour la documentation Swagger et les tests associés.
 
 Pour cela il faut modifier le fichier `swagger_helper.rb` en renseignant la nouvelle structure des données.
 Exemple de l'ajout du model `MotifCategory` qui remplace l'enum `category` du model `Motif`
@@ -23,7 +23,7 @@ On voit bien la propriété `category`
   },
 ```
 
-Aprés :
+Après :
 Ajout de la strucutre de donnée `motif_category` pour le model `MotifCategory` et sa collection `motif_categories`.
 
 Suppression de l'enum `category` de `motif`.

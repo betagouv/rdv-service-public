@@ -96,6 +96,10 @@ class Motif < ApplicationRecord
   scope :visible, -> { where(visibility_type: [Motif::VISIBLE_AND_NOTIFIED, Motif::VISIBLE_AND_NOT_NOTIFIED]) }
   scope :collectif, -> { where(collectif: true) }
   scope :individuel, -> { where(collectif: false) }
+  scope :with_motif_category_short_name, lambda { |motif_category_short_name|
+    joins(:motif_category)
+      .where(motif_category: { short_name: motif_category_short_name })
+  }
 
   ## -
 
