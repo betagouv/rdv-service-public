@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_26_122950) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_01_155712) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "unaccent"
@@ -546,6 +546,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_26_122950) do
     t.boolean "enable_motif_categories_field", default: false
     t.boolean "enable_waiting_room_mail_field", default: false
     t.boolean "enable_waiting_room_color_field", default: false
+    t.boolean "visible_users_throughout_the_territory", default: false
     t.index ["departement_number"], name: "index_territories_on_departement_number", unique: true, where: "((departement_number)::text <> ''::text)"
   end
 

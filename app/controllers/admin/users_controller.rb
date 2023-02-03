@@ -22,8 +22,14 @@ class Admin::UsersController < AgentAuthController
   }.freeze
 
   def index
-    @form = Admin::UserSearchForm.new(**index_params)
-    @users = policy_scope(User).merge(@form.users).order_by_last_name.page(params[:page])
+    agent_id = params[:agent_id]
+    search_params = params[:search]
+
+    @users = policy_scope(User)
+    @users = @users.none if agent_id.blank? && search_params.blank?
+    @users = @users.merge(Agent.find(agent_id).users) if agent_id.present?
+    @users = @users.search_by_text(search_params) if search_params.present?
+    @users = @users.order_by_last_name.page(params[:page])
   end
 
   def search
