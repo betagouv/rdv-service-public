@@ -36,7 +36,7 @@
         li.mb-1 = link_to "Accessibilité : non conforme", accessibility_path
         li.mb-1 = link_to "Documentation pour les agents", "https://doc.rdv-solidarites.fr/"
         li.mb-1 = link_to "Documentation pour les développeurs", "https://tech.rdv-solidarites.fr/"
-        li.mb-1 = link_to "https://github.com/betagouv/rdv-solidarites.fr/commits/#{ENV['CONTAINER_VERSION']}", title: "Aller au code source de #{current_domain.name}" do
+        li.mb-1 = link_to "https://github.com/betagouv/rdv-solidarites.fr/commit/#{ENV['CONTAINER_VERSION']}", title: "Aller au code source de #{current_domain.name}" do
           span>= ENV["RDV_SOLIDARITES_VERSION"]
           i.fa.fa-external-link-alt
         li.mb-1 = link_to "https://github.com/betagouv/rdv-solidarites.fr/" do

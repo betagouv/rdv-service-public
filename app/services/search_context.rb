@@ -16,6 +16,7 @@ class SearchContext
     @street_ban_id = query[:street_ban_id]
     @public_link_organisation_id = query[:public_link_organisation_id]
     @user_selected_organisation_id = query[:user_selected_organisation_id]
+    @external_organisation_ids = query[:external_organisation_ids]
     @fallback_organisation_ids = query[:organisation_ids]
     @motif_id = query[:motif_id]
     @motif_search_terms = query[:motif_search_terms]
@@ -185,6 +186,7 @@ class SearchContext
     motifs = motifs.search_by_text(@motif_search_terms) if @motif_search_terms.present?
     motifs = motifs.with_motif_category_short_name(@motif_category_short_name) if @motif_category_short_name.present?
     motifs = motifs.where(organisations: { id: organisation_id }) if organisation_id.present?
+    motifs = motifs.where(organisations: { external_id: @external_organisation_ids.compact }) if @external_organisation_ids.present?
     motifs = motifs.where(id: @motif_id) if @motif_id.present?
     motifs = motifs.with_availability_for_lieux([lieu.id]) if lieu.present?
     motifs = motifs.where(follow_up: follow_up?)
