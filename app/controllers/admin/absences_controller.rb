@@ -9,7 +9,6 @@ class Admin::AbsencesController < AgentAuthController
 
   def index
     absences = policy_scope(Absence)
-      .where(organisation: current_organisation)
       .where(agent_id: filter_params[:agent_id])
       .includes(:organisation, :agent)
       .by_starts_at
