@@ -18,7 +18,7 @@
             include_blank: true, \
             collection: @motifs, \
             as: :select, \
-            label_method: -> { motif_name_with_location_type(_1) }, \
+            label_method: -> { motif_name_and_location_type(_1) }, \
             input_html: { \
               data: { placeholder: "Sélectionnez un motif", "allow-clear": true }, \
               class: "select2-input", \
