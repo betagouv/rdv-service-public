@@ -10,7 +10,7 @@ class AgentRemoval
     return false if upcoming_rdvs?
 
     Agent.transaction do
-      @agent.organisations.delete(@organisation)
+      @agent.roles.find_by(organisation: @organisation).destroy!
       @agent.absences.where(organisation: @organisation).each(&:destroy!)
       @agent.plage_ouvertures.where(organisation: @organisation).each(&:destroy!)
       @agent.soft_delete if should_soft_delete?

@@ -17,7 +17,7 @@
               = f.submit class: "btn btn-primary"
 
   - if policy([:configuration, current_territory]).allow_to_manage_access_rights?
-    .card.m-2.rounded
+    .card.m-2.rounded.agent-territorial
       h2.card-header
         = t(".agent_territorial_role_caption")
 

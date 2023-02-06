@@ -56,7 +56,7 @@ do |f|
                   li= t("sectorisation_tests.departement_motifs_count", count: motifs.count, organisation: organisation.name, service: service.short_name)
                   ul
                     - motifs.each do |motif|
-                      li= motif_name_with_location_type(motif)
+                      li= motif_name_and_location_type(motif)
         - else
           div Aucun résultat : cette adresse n'est attribuée à aucun secteur
 
@@ -68,7 +68,7 @@ do |f|
                 | Service #{service.short_name}: #{motifs.count} motifs disponibles
                 ul
                   - motifs.each do |motif|
-                    li= motif_name_with_location_type(motif)
+                    li= motif_name_and_location_type(motif)
 
         .alert.alert-info.d-flex.align-items-center
           .mr-3

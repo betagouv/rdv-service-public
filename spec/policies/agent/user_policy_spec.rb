@@ -13,4 +13,22 @@ describe Agent::UserPolicy, type: :policy do
       it { is_expected.to permit(pundit_context, user) }
     end
   end
+
+  describe "scope" do
+    it "returns empty without users" do
+      organisation = create(:organisation)
+      agent = create(:agent, basic_role_in_organisations: [organisation])
+      policy = described_class::Scope.new(AgentOrganisationContext.new(agent, organisation), User)
+      expect(policy.resolve).to be_empty
+    end
+
+    it "user of organisation" do
+      organisation = create(:organisation)
+      agent = create(:agent, basic_role_in_organisations: [organisation])
+      user = create(:user, organisations: [organisation])
+      create(:user, organisations: [create(:organisation)])
+      policy = described_class::Scope.new(AgentOrganisationContext.new(agent, organisation), User)
+      expect(policy.resolve).to eq([user])
+    end
+  end
 end

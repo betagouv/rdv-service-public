@@ -30,11 +30,16 @@ class Agent::UserPolicy < DefaultAgentPolicy
 
   class Scope < Scope
     def resolve
+      organisation_ids = if current_organisation.present? && current_organisation.territory.visible_users_throughout_the_territory
+                           current_organisation.territory.organisation_ids
+                         else
+                           current_organisation&.id || current_agent.organisation_ids
+                         end
       scope
         .joins(:organisations)
         .where(
           organisations: {
-            id: current_organisation&.id || current_agent.organisation_ids,
+            id: organisation_ids,
           }
         )
     end
@@ -54,10 +59,15 @@ class Agent::UserPolicy < DefaultAgentPolicy
 
     authorized_organisation_ids = \
       if current_organisation
-        [current_organisation.id]
+        if current_organisation.territory.visible_users_throughout_the_territory
+          current_organisation.territory.organisation_ids
+        else
+          [current_organisation.id]
+        end
       else
         current_agent.organisation_ids
       end
+
     (@record.user_profiles.map(&:organisation_id) & authorized_organisation_ids).present?
 
     # also, this is not strictly speaking correct. this only checks that the

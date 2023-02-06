@@ -11,27 +11,16 @@
 .card.border-info
   .card-header ⚙️ Filtres et recherche
   .card-body
-    = simple_form_for(@form, method: "GET", url: url_for({}), as: "") do |f|
+    = form_with url: admin_organisation_users_path(current_organisation), method: :get  do |f|
       .row
         .col-md-6
-          = f.input :search, placeholder: "Prénom, Nom, Email, Téléphone", label: "Recherche", input_html: { autocomplete: "off", class: "search-form-control", value: params[:search] }, required: false
+          .form-group.string.optional._search
+            = label_tag :search, "Recherche", {class: "form-control-label string optional"}
+            = text_field_tag :search, {}, {placeholder: "Prénom, Nom, Email, Téléphone", autocomplete: "off", class: "form-control string optional search-form-control", value: params[:search] }
         .col-md-6
-          = f.input :agent_id,
-                  collection: [],
-                  label: "Agent référent",
-                  label_method: :reverse_full_name,
-                  input_html: { \
-                    class: "select2-input", \
-                    data: { \
-                      "select-options": { \
-                        ajax: { \
-                          url: admin_organisation_agents_path(current_organisation),
-                          dataType: "json",
-                          delay: 250, \
-                        }, \
-                      }, \
-                    }, \
-                  }
+          .form-group.string.optional._search
+            = f.label :agent_id, "Agent référent", {class: "form-control-label select optional"}
+            = f.select :agent_id, [], {}, { class: "form-control select optional select2-input", data: { "select-options": { ajax: { url: admin_organisation_agents_path(current_organisation), dataType: "json", delay: 250 } } } }
 
       input.btn.btn-primary.d-print-none type="submit" value="Rechercher"
 
@@ -46,7 +35,9 @@
             th Téléphone
             th Email
         tbody id="users-list"
-          = render partial: "admin/users/user", collection: @users.includes(:responsible), cached: ->(user) { [user, current_organisation] }
+          / En effet, on rencontre ce problème : Casecommons/pg_search#238
+          / Le uniq est un solution qui casse parfois le décompte, mais ça paraît acceptable !
+          = render partial: "admin/users/user", collection: @users.includes(:responsible).uniq, cached: ->(user) { [user, current_organisation] }
 
     - if @users.empty?
       .mb-4.p.text-center Aucun usager trouvé pour ces critères
