@@ -6,5 +6,11 @@
     .text-wrap.text-muted
     - if rdv.collectif?
       = Rdv.human_attribute_value(:status, status, context: :collective_rdv_explanation)
+      - if status.in?(Rdv::RDV_STATUSES_TO_NOTIFY) && rdv.in_the_future?
+        <br />
+        = Rdv.human_attribute_value(:status, status, context: :collective_rdv_explanation_notif)
     - else
       = Rdv.human_attribute_value(:status, status, context: :explanation)
+      - if status.in?(Rdv::RDV_STATUSES_TO_NOTIFY) && rdv.in_the_future?
+        <br />
+        = Rdv.human_attribute_value(:status, status, context: :explanation_notif)

@@ -28,6 +28,7 @@ class Rdv < ApplicationRecord
   NOT_CANCELLED_STATUSES = %w[unknown seen noshow].freeze
   CANCELLED_STATUSES = %w[excused revoked].freeze
   COLLECTIVE_RDV_STATUSES = %w[unknown seen revoked].freeze
+  RDV_STATUSES_TO_NOTIFY = %w[unknown excused revoked].freeze
   enum created_by: { agent: 0, user: 1, file_attente: 2, prescripteur: 3 }, _prefix: :created_by
 
   # Relations
@@ -126,6 +127,14 @@ class Rdv < ApplicationRecord
 
   def in_the_past?
     starts_at <= Time.zone.now
+  end
+
+  def in_the_future?
+    starts_at >= Time.zone.now
+  end
+
+  def today?
+    starts_at.to_date == Time.zone.today
   end
 
   def temporal_status
@@ -342,23 +351,16 @@ class Rdv < ApplicationRecord
   end
 
   def update_rdv_status_from_participation
-    if rdvs_users.any?(&:seen?)
-      update_status_to_seen
-      return
-    end
+    update!(status: "seen") and return if rdvs_users.any?(&:seen?)
 
     if rdvs_users.none?(&:seen?) && rdvs_users.none?(&:unknown?)
       update_status_to_revoked
     end
   end
 
-  def update_status_to_seen
-    update!(status: "seen")
-  end
-
   def update_status_to_revoked
-    # Rdv still opened to reservation cannot be set to revoked after participations changes, since other users can register
-    return if reservable_online? && !in_the_past?
+    # Only rdv in the past ca be automatically set to revoked
+    return if in_the_future?
 
     self.cancelled_at = Time.zone.now
     update!(status: "revoked")
