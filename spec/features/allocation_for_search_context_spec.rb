@@ -7,7 +7,8 @@ describe "Allocation For Search Context" do
     city_code = "75007"
 
     organisation = create(:organisation)
-    motif = create(:motif, name: "RSA orientation sur site", category: "rsa_orientation", organisation: organisation)
+    rsa_orientation = create(:motif_category, name: "RSA orientation sur site", short_name: "rsa_orientation")
+    motif = create(:motif, name: "RSA orientation sur site", motif_category: rsa_orientation, organisation: organisation)
 
     create_list(:plage_ouverture, 300, lieu: create(:lieu), motifs: [motif])
     lieu = create(:lieu, organisation: organisation)

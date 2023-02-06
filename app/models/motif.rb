@@ -7,7 +7,6 @@ class Motif < ApplicationRecord
   include WebhookDeliverable
 
   include PgSearch::Model
-  include Motif::Category
 
   pg_search_scope(:search_by_text,
                   against: :name,
@@ -34,6 +33,7 @@ class Motif < ApplicationRecord
   # Relations
   belongs_to :organisation
   belongs_to :service
+  belongs_to :motif_category, optional: true
   has_many :rdvs, dependent: :restrict_with_exception
   has_and_belongs_to_many :plage_ouvertures, -> { distinct }
 
@@ -44,8 +44,6 @@ class Motif < ApplicationRecord
   # Delegates
   delegate :service_social?, to: :service
   delegate :name, to: :service, prefix: true
-
-  # Hooks
 
   # Validation
   validates :visibility_type, inclusion: { in: VISIBILITY_TYPES }
@@ -98,8 +96,17 @@ class Motif < ApplicationRecord
   scope :visible, -> { where(visibility_type: [Motif::VISIBLE_AND_NOTIFIED, Motif::VISIBLE_AND_NOT_NOTIFIED]) }
   scope :collectif, -> { where(collectif: true) }
   scope :individuel, -> { where(collectif: false) }
+  scope :with_motif_category_short_name, lambda { |motif_category_short_name|
+    joins(:motif_category)
+      .where(motif_category: { short_name: motif_category_short_name })
+  }
 
   ## -
+
+  # TODO: Remove this method after RDV-I migration OK
+  def category
+    motif_category&.short_name
+  end
 
   def to_s
     name

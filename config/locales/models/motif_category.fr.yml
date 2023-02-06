@@ -1,0 +1,7 @@
+fr:
+  activerecord:
+    models:
+      motif_category: Catégorie
+    attributes:
+      motif_category:
+        category_hint: La catégorie n'est pas visible par les usagers. Elle peut-être utile pour filtrer les motifs proposés dans certains contextes, ou pour permettre de récupérer des motifs via l'API.
