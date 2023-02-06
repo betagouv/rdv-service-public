@@ -68,13 +68,13 @@ class Agent < ApplicationRecord
   has_many :lieux, through: :plage_ouvertures
   has_many :motifs, through: :service
   has_many :rdvs, dependent: :destroy, through: :agents_rdvs
-  has_many :organisations, through: :roles
-  has_many :webhook_endpoints, through: :organisations
   has_many :territories, through: :territorial_roles
   has_many :organisations_of_territorial_roles, source: :organisations, through: :territories
   # we specify dependent: :destroy because by default it will be deleted (dependent: :delete)
   # and we need to destroy to trigger the callbacks on the model
   has_many :users, through: :referent_assignations, dependent: :destroy
+  has_many :organisations, through: :roles, dependent: :destroy
+  has_many :webhook_endpoints, through: :organisations
 
   # Validation
   # Note about validation and Devise:
