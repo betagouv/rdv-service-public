@@ -17,8 +17,7 @@ describe "Admin can configure the organisation" do
   it "can give territorial admin access to other agent" do
     check("Administrateur du territoire")
     within(".agent-territorial") do
-      click_on("Enregistrer")
+      expect { click_on("Enregistrer") }.to change { other_agent.reload.territorial_admin_in?(territory) }.to(true)
     end
-    expect(other_agent.reload.territorial_admin_in?(territory)).to eq(true)
   end
 end
