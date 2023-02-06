@@ -289,10 +289,10 @@ RSpec.configure do |config|
               name: { type: "string" },
               organisation_id: { type: "integer" },
               motif_category: { "$ref" => "#/components/schemas/motif_category" },
-              reservable_online: { type: "boolean" },
+              bookable_publicly: { type: "boolean" },
               service_id: { type: "integer" },
             },
-            required: %w[id deleted_at location_type name organisation_id reservable_online service_id],
+            required: %w[id deleted_at location_type name organisation_id bookable_publicly service_id],
           },
           motif_categories: {
             type: "object",

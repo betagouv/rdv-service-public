@@ -9,7 +9,7 @@ describe "Agent can create a Rdv with creneau search" do
   let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
 
   context "when there are multiple plage d'ouverture and lieux" do
-    let!(:motif) { create(:motif, reservable_online: true, service: agent.service, organisation: organisation) }
+    let!(:motif) { create(:motif, bookable_publicly: true, service: agent.service, organisation: organisation) }
     let!(:plage_ouverture) { create(:plage_ouverture, :daily, motifs: [motif], agent: agent, organisation: organisation) }
     let!(:plage_ouverture2) { create(:plage_ouverture, :daily, motifs: [motif], organisation: organisation) }
 
@@ -34,7 +34,7 @@ describe "Agent can create a Rdv with creneau search" do
   end
 
   context "when the motif is bookable online and the next creneau is after the max booking delay" do
-    let!(:motif) { create(:motif, name: "Vaccination", organisation: organisation, max_booking_delay: 7.days, service: agent.service) }
+    let!(:motif) { create(:motif, name: "Vaccination", organisation: organisation, max_public_booking_delay: 7.days, service: agent.service) }
     let!(:plage_ouverture) { create(:plage_ouverture, :daily, first_day: 8.days.since, motifs: [motif], organisation: organisation) }
 
     it "still allows the agent to book a rdv, because the booking delays should only apply to agents", js: true do
@@ -66,13 +66,13 @@ describe "Agent can create a Rdv with creneau search" do
     end
 
     context "when the motif is by phone and there is a plage d'ouverture without lieu" do
-      let!(:motif) { create(:motif, :by_phone, reservable_online: true, service: agent.service, organisation: organisation) }
+      let!(:motif) { create(:motif, :by_phone, bookable_publicly: true, service: agent.service, organisation: organisation) }
 
       it_behaves_like "book a rdv without a lieu"
     end
 
     context "when the motif is at home and there is a plage d'ouverture without lieu" do
-      let!(:motif) { create(:motif, :at_home, reservable_online: true, service: agent.service, organisation: organisation) }
+      let!(:motif) { create(:motif, :at_home, bookable_publicly: true, service: agent.service, organisation: organisation) }
 
       it_behaves_like "book a rdv without a lieu"
     end

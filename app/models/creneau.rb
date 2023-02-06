@@ -29,16 +29,16 @@ class Creneau
     starts_at <=> other.starts_at
   end
 
-  def respects_min_booking_delay?
-    starts_at >= (Time.zone.now + motif.min_booking_delay.seconds)
+  def respects_min_public_booking_delay?
+    starts_at >= (Time.zone.now + motif.min_public_booking_delay.seconds)
   end
 
-  def respects_max_booking_delay?
-    starts_at <= (Time.zone.now + motif.max_booking_delay.seconds)
+  def respects_max_public_booking_delay?
+    starts_at <= (Time.zone.now + motif.max_public_booking_delay.seconds)
   end
 
   def respects_booking_delays?
-    respects_min_booking_delay? && respects_max_booking_delay?
+    respects_min_public_booking_delay? && respects_max_public_booking_delay?
   end
 
   # Return the first event in the passed array that overlaps with the receiver

@@ -10,12 +10,12 @@ FactoryBot.define do
 
     name { generate(:motif_name) }
     default_duration_in_min { 45 }
-    min_booking_delay { 30.minutes.seconds }
-    max_booking_delay { 6.months.seconds }
+    min_public_booking_delay { 30.minutes.seconds }
+    max_public_booking_delay { 6.months.seconds }
     color { "##{SecureRandom.hex(3)}" }
     instruction_for_rdv { "Intruction pour le RDV" }
     restriction_for_rdv { "Consigne pour le RDV" }
-    reservable_online { true }
+    bookable_publicly { true }
     location_type { :public_office }
     visibility_type { Motif::VISIBLE_AND_NOTIFIED }
 

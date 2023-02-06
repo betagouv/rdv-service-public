@@ -16,7 +16,7 @@ describe "RDV authentified API", swagger_doc: "v1/api.json" do
       parameter name: :organisation_id, in: :path, type: :integer, description: "Identifiant de l'organisation", example: "1"
 
       parameter name: :active, in: :query, type: :boolean, description: "filtre sur les motifs actifs", required: false
-      parameter name: :reservable_online, in: :query, type: :boolean, description: "filtre sur les motifs réservables en ligne", required: false
+      parameter name: :bookable_publicly, in: :query, type: :boolean, description: "filtre sur les motifs réservables en ligne", required: false
       parameter name: :service_id, in: :query, type: :integer, description: "filtre sur les services", example: "1", required: false
 
       with_examples
@@ -101,25 +101,25 @@ describe "RDV authentified API", swagger_doc: "v1/api.json" do
           it { expect(parsed_response_body["motifs"].pluck("deleted_at")).to contain_exactly(deleted_at.to_s) }
         end
 
-        response 200, "Renvoie les motifs filtrés sur reservable_online true", document: false do
-          let!(:motif1) { create(:motif, organisation: organisation, service: service, reservable_online: true) }
-          let!(:motif2) { create(:motif, organisation: organisation, service: service, reservable_online: false) }
-          let(:reservable_online) { true }
+        response 200, "Renvoie les motifs filtrés sur bookable_publicly true", document: false do
+          let!(:motif1) { create(:motif, organisation: organisation, service: service, bookable_publicly: true) }
+          let!(:motif2) { create(:motif, organisation: organisation, service: service, bookable_publicly: false) }
+          let(:bookable_publicly) { true }
 
           run_test!
 
           it { expect(parsed_response_body["motifs"].pluck("id")).to contain_exactly(motif1.id) }
         end
 
-        response 200, "Renvoie les motifs filtrés sur reservable_online false", document: false do
-          let!(:motif1) { create(:motif, organisation: organisation, service: service, reservable_online: true) }
-          let!(:motif2) { create(:motif, organisation: organisation, service: service, reservable_online: false) }
-          let(:reservable_online) { false }
+        response 200, "Renvoie les motifs filtrés sur bookable_publicly false", document: false do
+          let!(:motif1) { create(:motif, organisation: organisation, service: service, bookable_publicly: true) }
+          let!(:motif2) { create(:motif, organisation: organisation, service: service, bookable_publicly: false) }
+          let(:bookable_publicly) { false }
 
           run_test!
 
           it { expect(parsed_response_body["motifs"].pluck("id")).to contain_exactly(motif2.id) }
-          it { expect(parsed_response_body["motifs"].pluck("reservable_online")).to contain_exactly(false) }
+          it { expect(parsed_response_body["motifs"].pluck("bookable_publicly")).to contain_exactly(false) }
         end
 
         response 200, "Renvoie les motifs filtrés sur service_id", document: false do

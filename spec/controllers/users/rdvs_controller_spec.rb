@@ -150,7 +150,7 @@ RSpec.describe Users::RdvsController, type: :controller do
     let(:rdv) { create(:rdv, users: [user], motif: motif, starts_at: starts_at, created_by: "user") }
     let(:rdv2) { create(:rdv, users: [user2], motif: create(:motif, :by_phone), lieu: nil, starts_at: starts_at, created_by: "user") }
     let(:starts_at) { Time.zone.parse("2020-10-20 10h30") }
-    let(:motif) { build(:motif, reservable_online: true, rdvs_editable_by_user: true, rdvs_cancellable_by_user: true) }
+    let(:motif) { build(:motif, bookable_publicly: true, rdvs_editable_by_user: true, rdvs_cancellable_by_user: true) }
 
     def raise_error_for_others_rdvs
       expect do
@@ -225,8 +225,8 @@ RSpec.describe Users::RdvsController, type: :controller do
       end
     end
 
-    context "when the rdv motif is not reservable_online" do
-      let(:motif) { build(:motif, reservable_online: false, rdvs_editable_by_user: true, rdvs_cancellable_by_user: true) }
+    context "when the rdv motif is not bookable_publicly" do
+      let(:motif) { build(:motif, bookable_publicly: false, rdvs_editable_by_user: true, rdvs_cancellable_by_user: true) }
 
       it "does show link to edit" do
         get :show, params: { id: rdv.id }
@@ -243,7 +243,7 @@ RSpec.describe Users::RdvsController, type: :controller do
     end
 
     context "when the rdv is set as not editable" do
-      let(:motif) { build(:motif, reservable_online: true, rdvs_editable_by_user: false, rdvs_cancellable_by_user: true) }
+      let(:motif) { build(:motif, bookable_publicly: true, rdvs_editable_by_user: false, rdvs_cancellable_by_user: true) }
 
       it "does show link to edit" do
         get :show, params: { id: rdv.id }
@@ -260,7 +260,7 @@ RSpec.describe Users::RdvsController, type: :controller do
     end
 
     context "when the rdv is set as not cancellable" do
-      let(:motif) { build(:motif, reservable_online: true, rdvs_editable_by_user: true, rdvs_cancellable_by_user: false) }
+      let(:motif) { build(:motif, bookable_publicly: true, rdvs_editable_by_user: true, rdvs_cancellable_by_user: false) }
 
       it "does show link to edit" do
         get :show, params: { id: rdv.id }
@@ -378,7 +378,7 @@ RSpec.describe Users::RdvsController, type: :controller do
     let(:now) { Time.zone.parse("01/01/2019 10:00") }
     let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
     let!(:lieu) { create(:lieu, address: "10 rue de la Ferronerie 44100 Nantes", organisation: organisation) }
-    let!(:motif) { create(:motif, organisation: organisation, max_booking_delay: 2.weeks.to_i) }
+    let!(:motif) { create(:motif, organisation: organisation, max_public_booking_delay: 2.weeks.to_i) }
     let!(:user) { create(:user) }
     let(:rdv) { create(:rdv, users: [user], starts_at: 5.days.from_now, lieu: lieu, motif: motif, organisation: organisation, created_by: "user") }
 

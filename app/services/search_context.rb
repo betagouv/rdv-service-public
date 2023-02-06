@@ -154,8 +154,8 @@ class SearchContext
     start_date..(start_date + 6.days)
   end
 
-  def max_booking_delay
-    matching_motifs.maximum("max_booking_delay")
+  def max_public_booking_delay
+    matching_motifs.maximum("max_public_booking_delay")
   end
 
   def creneaux
