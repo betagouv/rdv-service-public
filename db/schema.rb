@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_01_155712) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_06_135816) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "unaccent"
@@ -676,6 +676,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_01_155712) do
   add_foreign_key "rdvs", "motifs"
   add_foreign_key "rdvs", "organisations"
   add_foreign_key "sector_attributions", "agents"
+  add_foreign_key "sector_attributions", "organisations"
   add_foreign_key "users", "users", column: "responsible_id"
   add_foreign_key "webhook_endpoints", "organisations"
 end
