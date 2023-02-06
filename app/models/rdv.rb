@@ -105,11 +105,9 @@ class Rdv < ApplicationRecord
   scope :with_remaining_seats, -> { where("users_count < max_participants_count OR max_participants_count IS NULL") }
   scope :for_domain, lambda { |domain|
     if domain == Domain::RDV_AIDE_NUMERIQUE
-      joins(motif: :service).where(service: { name: Service::CONSEILLER_NUMERIQUE })
-        .joins(:organisation).where(organisations: { new_domain_beta: true })
+      joins(:organisation).where(organisations: { new_domain_beta: true })
     else
-      # TODO: #rdv-aide-numerique-v1 afficher uniquement les rdv du médico-social
-      all
+      joins(:organisation).where(organisations: { new_domain_beta: false })
     end
   }
   ## -

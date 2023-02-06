@@ -16,6 +16,24 @@
             .col.text-right
               = f.submit class: "btn btn-primary"
 
+  - if policy([:configuration, current_territory]).allow_to_manage_access_rights?
+    .card.m-2.rounded.agent-territorial
+      h2.card-header
+        = t(".agent_territorial_role_caption")
+
+      = simple_form_for @agent, url: territory_admin_admin_territory_agent_path(current_territory, @agent), method: :put do |f|
+        .card-body
+          = check_box_tag :territorial_admin, 1, @agent.territorial_admin_in?(current_territory)
+          span>
+          = label_tag :territorial_admin, "Administrateur du territoire"
+          small.form-text.text-muted
+            | Ce status d'agent ouvre un large accès à la création d'organisation, la gestion de la sectorisation, la gestion des webhook, la configuration de ce qui est visible dans une fiche usager, une fiche RDV, la visiiblité des catégories de motif, ...
+
+        .card-footer
+          .row
+            .col.text-right
+              = f.submit class: "btn btn-primary"
+
   - if policy([:configuration, current_territory]).allow_to_manage_teams?
     .card.m-2.rounded
       h2.card-header

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_11_161320) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_01_155712) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "unaccent"
@@ -56,6 +56,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_11_161320) do
     "rsa_accompagnement_sociopro",
     "rsa_main_tendue",
     "rsa_atelier_collectif_mandatory",
+    "rsa_spie",
+    "rsa_integration_information",
+    "rsa_atelier_competences",
+    "rsa_atelier_rencontres_pro",
   ], force: :cascade
 
   create_enum :rdv_status, [
@@ -541,14 +545,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_11_161320) do
     t.boolean "enable_motif_categories_field", default: false
     t.boolean "enable_waiting_room_mail_field", default: false
     t.boolean "enable_waiting_room_color_field", default: false
+    t.boolean "visible_users_throughout_the_territory", default: false
     t.index ["departement_number"], name: "index_territories_on_departement_number", unique: true, where: "((departement_number)::text <> ''::text)"
   end
 
   create_table "user_profiles", force: :cascade do |t|
     t.bigint "organisation_id", null: false
     t.bigint "user_id", null: false
-    t.integer "logement"
-    t.text "notes"
+    t.integer "old_logement"
+    t.text "old_notes"
     t.index ["organisation_id", "user_id"], name: "index_user_profiles_on_organisation_id_and_user_id", unique: true
     t.index ["organisation_id"], name: "index_user_profiles_on_organisation_id"
     t.index ["user_id"], name: "index_user_profiles_on_user_id"
@@ -601,6 +606,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_11_161320) do
     t.enum "created_through", default: "unknown", enum_type: "user_created_through"
     t.string "case_number"
     t.string "address_details"
+    t.integer "logement"
+    t.text "notes"
     t.index ["birth_date"], name: "index_users_on_birth_date"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["created_through"], name: "index_users_on_created_through"

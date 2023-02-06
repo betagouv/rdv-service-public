@@ -14,16 +14,22 @@ class Admin::UsersController < AgentAuthController
     family_situation number_of_children
     notify_by_sms notify_by_email
     case_number address_details
+    notes logement
   ].freeze
 
   PERMITTED_NESTED_ATTRIBUTES = {
     agent_ids: [],
-    user_profiles_attributes: %i[notes logement id organisation_id],
   }.freeze
 
   def index
-    @form = Admin::UserSearchForm.new(**index_params)
-    @users = policy_scope(User).merge(@form.users).order_by_last_name.page(params[:page])
+    agent_id = params[:agent_id]
+    search_params = params[:search]
+
+    @users = policy_scope(User)
+    @users = @users.none if agent_id.blank? && search_params.blank?
+    @users = @users.merge(Agent.find(agent_id).users) if agent_id.present?
+    @users = @users.search_by_text(search_params) if search_params.present?
+    @users = @users.order_by_last_name.page(params[:page])
   end
 
   def search
@@ -49,7 +55,10 @@ class Admin::UsersController < AgentAuthController
     @user.skip_confirmation_notification!
     user_persisted = @user_form.save
 
-    @user.invite! if invite_user?(@user, params)
+    if invite_user?(@user, params)
+      @user.invite!(domain: current_domain)
+    end
+
     prepare_new unless user_persisted
 
     if from_modal?
@@ -91,7 +100,7 @@ class Admin::UsersController < AgentAuthController
 
   def invite
     authorize(@user)
-    @user.invite!
+    @user.invite!(domain: current_domain)
     redirect_to admin_organisation_user_path(current_organisation, @user), notice: "L’usager a été invité."
   end
 
@@ -137,13 +146,13 @@ class Admin::UsersController < AgentAuthController
     return unless @user.responsible.nil?
 
     @user.responsible = User.new
-    @user.responsible.user_profiles.build(organisation: current_organisation)
   end
 
   def prepare_create
     @user = User.new(user_params.merge(invited_by: current_agent, created_through: "agent_creation"))
     @user.responsible.created_through = "agent_creation" if @user.responsible&.new_record?
     @user_form = user_form_object
+    @user.user_profiles.build(organisation: current_organisation)
     @organisation = current_organisation
   end
 

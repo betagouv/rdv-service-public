@@ -15,6 +15,10 @@ module Motif::Category
       rsa_follow_up: "rsa_follow_up",
       rsa_main_tendue: "rsa_main_tendue",
       rsa_atelier_collectif_mandatory: "rsa_atelier_collectif_mandatory",
+      rsa_spie: "rsa_spie",
+      rsa_integration_information: "rsa_integration_information",
+      rsa_atelier_competences: "rsa_atelier_competences",
+      rsa_atelier_rencontres_pro: "rsa_atelier_rencontres_pro",
     }
   end
 end

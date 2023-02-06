@@ -38,7 +38,8 @@ RSpec.describe "user can use a link that points to RDV search scoped to an organ
 
   describe "the complete process of taking a RDV from a public link" do
     it "works" do
-      visit "/org/ext/#{territory.departement_number}/#{organisation_a.external_id}"
+      # On teste le domaine qui utilise les liens publics
+      visit "http://www.rdv-aide-numerique-test.localhost/org/ext/#{territory.departement_number}/#{organisation_a.external_id}"
       expect(page).to have_content("1 lieu est disponible")
       expect(page).to have_content(lieu_a.name)
       expect(page).to have_content(motif_a.service.name)
@@ -81,7 +82,7 @@ RSpec.describe "user can use a link that points to RDV search scoped to an organ
                        organisation: organisation_a, name: "Motif C", service: motif_a.service, restriction_for_rdv: nil)
       create(:plage_ouverture, motifs: [motif_c], lieu: lieu_a)
 
-      visit public_link_to_org_url(organisation_id: organisation_a.id, host: Domain::RDV_AIDE_NUMERIQUE.dns_domain_name)
+      visit "http://www.rdv-aide-numerique-test.localhost/org/#{organisation_a.id}"
       click_on("Motif C")
       expect(page).to have_content("Motif C (Sur place)")
 
@@ -91,7 +92,7 @@ RSpec.describe "user can use a link that points to RDV search scoped to an organ
     end
 
     it "allows navigating back from sign in to motif selection" do
-      visit public_link_to_org_url(organisation_id: organisation_a.id, host: Domain::RDV_AIDE_NUMERIQUE.dns_domain_name)
+      visit "http://www.rdv-aide-numerique-test.localhost/org/#{organisation_a.id}"
       expect(page).to have_content("1 lieu est disponible")
       expect(page).to have_content(lieu_a.name)
       expect(page).to have_content(motif_a.service.name)

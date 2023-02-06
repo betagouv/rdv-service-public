@@ -7,109 +7,106 @@
   html: { class: "js-agent-user-form" }, data: { modal: from_modal? } \
 ) do |f|
 
-  - f.simple_fields_for :user_profiles, user.profile_for(current_organisation) do |f_user_profile|
-    = f_user_profile.input :organisation_id, as: :hidden, wrapper: false
+  - if from_modal?
+    = hidden_field "", :return_location, value: params[:return_location]
+    = hidden_field "", :modal, value: true
+  = render "model_errors", model: user_form, f: f
 
-    - if from_modal?
-      = hidden_field "", :return_location, value: params[:return_location]
-      = hidden_field "", :modal, value: true
-    = render "model_errors", model: user_form, f: f
+  = collapsible_form_fields_for_warnings(user_form) do
+    = f.input( \
+      :responsability_type, \
+      as: :radio_buttons, \
+      collection: %i[responsible relative], \
+      checked: @role, \
+      label_method: -> { User.human_attribute_value(:responsability_type, _1) }, \
+      disabled: user.persisted?, \
+      wrapper: :vertical_collection_inline, \
+      input_html: { \
+        autocomplete: "off", \
+        class: "js-responsability-type", \
+      }, \
+      label_html: { class: "mb-0" } \
+    )
 
-    = collapsible_form_fields_for_warnings(user_form) do
-      = f.input( \
-        :responsability_type, \
-        as: :radio_buttons, \
-        collection: %i[responsible relative], \
-        checked: @role, \
-        label_method: -> { User.human_attribute_value(:responsability_type, _1) }, \
-        disabled: user.persisted?, \
-        wrapper: :vertical_collection_inline, \
-        input_html: { \
-          autocomplete: "off", \
-          class: "js-responsability-type", \
-        }, \
-        label_html: { class: "mb-0" } \
-      )
+    div *div_opts[:responsible]
+      = render "responsible_form_fields", f: f, input_opts: input_opts[:responsible]
 
-      div *div_opts[:responsible]
-        = render "responsible_form_fields", f: f, f_user_profile: f_user_profile, input_opts: input_opts[:responsible]
+    div *div_opts[:relative]
+      .form-row
+        .col-md-6= f.input :first_name, **input_opts[:relative]
+        .col-md-6= f.input :last_name, **input_opts[:relative]
+      = date_input(f, :birth_date, **input_opts[:relative])
+      - if current_territory.enable_notes_field?
+        = f.input :notes, **input_opts[:relative].deep_merge(input_html: { rows: 6 })
 
-      div *div_opts[:relative]
-        .form-row
-          .col-md-6= f.input :first_name, **input_opts[:relative]
-          .col-md-6= f.input :last_name, **input_opts[:relative]
-        = date_input(f, :birth_date, **input_opts[:relative])
-        - if current_territory.enable_notes_field?
-          = f_user_profile.input :notes, **input_opts[:relative].deep_merge(input_html: { rows: 6 })
-
-      - if user.new_record?
-        .form-row.mb-2 *div_opts[:relative]
-          .col-md-12.border.p-2.bg-light
-            h5.mb-3 Usager Responsable
-            ul.nav.nav-pills.mb-3 role="tablist"
-              li.nav-item
-                a.nav-link.js-relative-tab-link[
-                  data-toggle="tab"
-                  href=".tab-pane[data-relative-type='existing']"
-                  role="tab"
-                  aria-selected="true"
-                  data-relative-type="existing"
-                  class=("active" if initial_relative_type_tab == :existing)
-                ]
-                  | Usager Existant
-              li.nav-item
-                a.nav-link.js-relative-tab-link[
-                  data-toggle=("tab" unless user.persisted?)
-                  href=".tab-pane[data-relative-type='new']"
-                  role="tab"
-                  aria-selected="false"
-                  data-relative-type="new"
-                  class=("active" if initial_relative_type_tab == :new)
-                ]
-                  | Nouvel Usager
-            .tab-content
-              .tab-pane.show[
-                role="tabpanel"
+    - if user.new_record?
+      .form-row.mb-2 *div_opts[:relative]
+        .col-md-12.border.p-2.bg-light
+          h5.mb-3 Usager Responsable
+          ul.nav.nav-pills.mb-3 role="tablist"
+            li.nav-item
+              a.nav-link.js-relative-tab-link[
+                data-toggle="tab"
+                href=".tab-pane[data-relative-type='existing']"
+                role="tab"
+                aria-selected="true"
                 data-relative-type="existing"
                 class=("active" if initial_relative_type_tab == :existing)
               ]
-                / This is an ajax-backed Select, but we still inline the current value in the html.
-                = f.association( \
-                  :responsible, \
-                  collection: [user.responsible].compact, \
-                  label_method: -> { reverse_full_name_and_birthdate(_1) }, \
-                  label: false, \
-                  **{input_html: { \
-                    class: "select2-input",\
-                    data: { "select-options": { ajax: { url: search_admin_organisation_users_path(current_organisation), dataType: "json", delay: 250 }} }, \
-                   }}.deep_merge(input_opts[:relative_existing]), \
-                  required: true\
-                )
-              - unless user.persisted?
-                .tab-pane[
-                  role="tabpanel"
-                  data-relative-type="new"
-                  class=("active" if initial_relative_type_tab == :new)
-                ]
-                  = render "responsible_form_wrapper", f: f, input_opts: input_opts[:relative_new], user_type_key: :relative_new
+                | Usager Existant
+            li.nav-item
+              a.nav-link.js-relative-tab-link[
+                data-toggle=("tab" unless user.persisted?)
+                href=".tab-pane[data-relative-type='new']"
+                role="tab"
+                aria-selected="false"
+                data-relative-type="new"
+                class=("active" if initial_relative_type_tab == :new)
+              ]
+                | Nouvel Usager
+          .tab-content
+            .tab-pane.show[
+              role="tabpanel"
+              data-relative-type="existing"
+              class=("active" if initial_relative_type_tab == :existing)
+            ]
+              / This is an ajax-backed Select, but we still inline the current value in the html.
+              = f.association( \
+                :responsible, \
+                collection: [user.responsible].compact, \
+                label_method: -> { reverse_full_name_and_birthdate(_1) }, \
+                label: false, \
+                **{input_html: { \
+                  class: "select2-input",\
+                  data: { "select-options": { ajax: { url: search_admin_organisation_users_path(current_organisation), dataType: "json", delay: 250 }} }, \
+                 }}.deep_merge(input_opts[:relative_existing]), \
+                required: true\
+              )
+            - unless user.persisted?
+              .tab-pane[
+                role="tabpanel"
+                data-relative-type="new"
+                class=("active" if initial_relative_type_tab == :new)
+              ]
+                = render "responsible_form_wrapper", f: f, input_opts: input_opts[:relative_new], user_type_key: :relative_new
 
-      - elsif user.persisted? && user.relative?
-        .form-row.mb-2
-          .col-md-12.border.p-2.bg-light
-            h5.mb-3 Usager Responsable
-            a.nav-link.js-relative-tab-link.active.d-none[data-relative-type="existing"]
-            / ^ for JS
-            .mb-3
-              b= link_to full_name_and_birthdate(user.responsible), admin_organisation_user_path(current_organisation, user.responsible)
-            = render "responsible_form_wrapper", f: f, input_opts: input_opts[:relative_existing], user_type_key: :relative_existing
+    - elsif user.persisted? && user.relative?
+      .form-row.mb-2
+        .col-md-12.border.p-2.bg-light
+          h5.mb-3 Usager Responsable
+          a.nav-link.js-relative-tab-link.active.d-none[data-relative-type="existing"]
+          / ^ for JS
+          .mb-3
+            b= link_to full_name_and_birthdate(user.responsible), admin_organisation_user_path(current_organisation, user.responsible)
+          = render "responsible_form_wrapper", f: f, input_opts: input_opts[:relative_existing], user_type_key: :relative_existing
 
-      .text-right
-        - if from_modal?
-          = link_to "Annuler", "#", class: "btn btn-link", data: { dismiss: "modal" }
-        - else
-          = link_to "Annuler", agent_user_form_cancel_path(user), class: "btn btn-link"
+    .text-right
+      - if from_modal?
+        = link_to "Annuler", "#", class: "btn btn-link", data: { dismiss: "modal" }
+      - else
+        = link_to "Annuler", agent_user_form_cancel_path(user), class: "btn btn-link"
 
-        - if user.persisted?
-          = f.button :submit
-        - else
-          = f.button :submit, "Créer usager"
+      - if user.persisted?
+        = f.button :submit
+      - else
+        = f.button :submit, "Créer usager"

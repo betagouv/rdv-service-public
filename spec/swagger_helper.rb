@@ -152,6 +152,8 @@ RSpec.configure do |config|
               number_of_children: { type: "integer", nullable: true },
               phone_number: { type: "string", nullable: true },
               phone_number_formatted: { type: "string", nullable: true },
+              logement: { type: "string", enum: %w[sdf heberge en_accession_propriete proprietaire autre locataire], nullable: true },
+              notes: { type: "string", nullable: true },
               responsible: { type: "object", nullable: true },
               responsible_id: { type: "integer", nullable: true },
               user_profiles: {
@@ -175,10 +177,8 @@ RSpec.configure do |config|
             properties: {
               user: { "$ref" => "#/components/schemas/user" },
               organisation: { "$ref" => "#/components/schemas/organisation" },
-              logement: { type: "string", enum: %w[sdf heberge en_accession_propriete proprietaire autre locataire], nullable: true },
-              notes: { type: "string", nullable: true },
             },
-            required: %w[organisation logement notes],
+            required: %w[organisation],
           },
           referent_assignation_with_root: {
             type: "object",

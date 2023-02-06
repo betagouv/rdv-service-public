@@ -29,30 +29,6 @@ class CustomDeviseMailer < Devise::Mailer
   end
 
   def domain
-    case resource
-    when Agent
-      resource.domain
-    when User
-      user_domain
-    else
-      "Unexpected resource: #{resource.inspect}"
-    end
-  end
-
-  # Cette méthode détermine le domaine de l'usager en se basant sur sa liste de RDVs :
-  # - Si l'usager n'a pas de RDV, on retourne le domaine par défaut.
-  # - Si tous les RDVs ont le même domaine, alors c'est le domaine de l'usager.
-  # - Si les RDVs ont des domaines divers, on retourne le domaine du RDV le plus récent.
-  #
-  # Nous avions l'intention de faire en sorte que le domaine utilisé dans ces e-mails soit le
-  # domaine de la page à partir duquel la demande a été faite, mais c'était techniquement complexe.
-  # Voir : https://stackoverflow.com/questions/49328228
-  def user_domain
-    user_rdvs = resource.rdvs
-    if user_rdvs.any?
-      user_rdvs.order(created_at: :desc).first.domain
-    else
-      Domain::RDV_SOLIDARITES
-    end
+    resource.domain
   end
 end

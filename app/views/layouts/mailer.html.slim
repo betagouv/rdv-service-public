@@ -10,7 +10,7 @@ html
         td.logo.d-block
           = link_to root_url do
             / using <img width=...> attribute because Outlook sometimes ignores the CSS
-            = image_tag domain.public_logo_path, style: "width: 200px; margin: auto;", width: "200"
+            = image_tag domain.public_logo_path, style: "width: 200px; margin: auto;", width: "200", alt: "Le logo de #{domain.name}"
         td.container
           .content
             table.main width="100%"
