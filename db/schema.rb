@@ -45,23 +45,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_06_135816) do
     "phone",
   ], force: :cascade
 
-  create_enum :motif_category, [
-    "rsa_orientation",
-    "rsa_accompagnement",
-    "rsa_orientation_on_phone_platform",
-    "rsa_cer_signature",
-    "rsa_insertion_offer",
-    "rsa_follow_up",
-    "rsa_accompagnement_social",
-    "rsa_accompagnement_sociopro",
-    "rsa_main_tendue",
-    "rsa_atelier_collectif_mandatory",
-    "rsa_spie",
-    "rsa_integration_information",
-    "rsa_atelier_competences",
-    "rsa_atelier_rencontres_pro",
-  ], force: :cascade
-
   create_enum :rdv_status, [
     "unknown",
     "waiting",
@@ -290,6 +273,21 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_06_135816) do
     t.index ["organisation_id"], name: "index_lieux_on_organisation_id"
   end
 
+  create_table "motif_categories", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "short_name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_motif_categories_on_name", unique: true
+    t.index ["short_name"], name: "index_motif_categories_on_short_name", unique: true
+  end
+
+  create_table "motif_categories_territories", id: false, force: :cascade do |t|
+    t.bigint "motif_category_id", null: false
+    t.bigint "territory_id", null: false
+    t.index ["motif_category_id", "territory_id"], name: "index_motif_cat_territories_on_motif_cat_id_and_territory_id", unique: true
+  end
+
   create_table "motifs", force: :cascade do |t|
     t.string "name"
     t.string "color"
@@ -312,14 +310,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_06_135816) do
     t.text "custom_cancel_warning_message"
     t.boolean "collectif", default: false
     t.enum "location_type", default: "public_office", null: false, enum_type: "location_type"
-    t.enum "category", enum_type: "motif_category"
     t.boolean "rdvs_editable_by_user", default: true
     t.boolean "rdvs_cancellable_by_user", default: true
+    t.bigint "motif_category_id"
     t.index "to_tsvector('simple'::regconfig, (COALESCE(name, (''::text)::character varying))::text)", name: "index_motifs_name_vector", using: :gin
-    t.index ["category"], name: "index_motifs_on_category"
     t.index ["collectif"], name: "index_motifs_on_collectif"
     t.index ["deleted_at"], name: "index_motifs_on_deleted_at"
     t.index ["location_type"], name: "index_motifs_on_location_type"
+    t.index ["motif_category_id"], name: "index_motifs_on_motif_category_id"
     t.index ["name", "organisation_id", "location_type", "service_id"], name: "index_motifs_on_name_scoped", unique: true, where: "(deleted_at IS NULL)"
     t.index ["name"], name: "index_motifs_on_name"
     t.index ["organisation_id"], name: "index_motifs_on_organisation_id"
@@ -543,7 +541,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_06_135816) do
     t.boolean "enable_case_number", default: false
     t.boolean "enable_address_details", default: false
     t.boolean "enable_context_field", default: false
-    t.boolean "enable_motif_categories_field", default: false
     t.boolean "enable_waiting_room_mail_field", default: false
     t.boolean "enable_waiting_room_color_field", default: false
     t.boolean "visible_users_throughout_the_territory", default: false
@@ -666,6 +663,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_06_135816) do
   add_foreign_key "file_attentes", "rdvs"
   add_foreign_key "file_attentes", "users"
   add_foreign_key "lieux", "organisations"
+  add_foreign_key "motifs", "motif_categories"
   add_foreign_key "motifs", "organisations"
   add_foreign_key "motifs", "services"
   add_foreign_key "plage_ouvertures", "agents"
