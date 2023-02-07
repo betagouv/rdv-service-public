@@ -6,13 +6,13 @@ FactoryBot.define do
   factory :motif do
     organisation { association(:organisation) }
     service { association(:service) }
+    motif_category { association(:motif_category) }
 
     name { generate(:motif_name) }
     default_duration_in_min { 45 }
     min_booking_delay { 30.minutes.seconds }
     max_booking_delay { 6.months.seconds }
     color { "##{SecureRandom.hex(3)}" }
-    category { Motif.categories.first.first }
     instruction_for_rdv { "Intruction pour le RDV" }
     restriction_for_rdv { "Consigne pour le RDV" }
     reservable_online { true }
