@@ -12,7 +12,7 @@ class Notifiers::RdvCreated < Notifiers::RdvBase
   protected
 
   def rdvs_users_to_notify
-    @rdv.rdvs_users.where(send_lifecycle_notifications: true)
+    @rdv.rdvs_users.not_cancelled.where(send_lifecycle_notifications: true)
   end
 
   def notify_agent(agent)

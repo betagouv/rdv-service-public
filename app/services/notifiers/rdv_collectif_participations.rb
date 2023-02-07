@@ -33,7 +33,7 @@ class Notifiers::RdvCollectifParticipations < ::BaseService
   end
 
   def new_participants_to_notify
-    new_participations.select(&:send_lifecycle_notifications).map(&:user)
+    new_participations.select(&:not_cancelled?).select(&:send_lifecycle_notifications).map(&:user)
   end
 
   def removed_participations
@@ -43,7 +43,8 @@ class Notifiers::RdvCollectifParticipations < ::BaseService
   end
 
   def removed_participants_to_notify
-    removed_participations.select(&:send_lifecycle_notifications).map(&:user)
+    # We do not notify already cancelled participations
+    removed_participations.select(&:not_cancelled?).select(&:send_lifecycle_notifications).map(&:user)
   end
 
   def current_participations

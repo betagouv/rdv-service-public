@@ -40,7 +40,6 @@ class Rdv < ApplicationRecord
   # https://stackoverflow.com/questions/30629680/rails-isnt-running-destroy-callbacks-for-has-many-through-join-model/30629704
   # https://github.com/rails/rails/issues/7618
   has_many :rdvs_users, validate: false, inverse_of: :rdv, dependent: :destroy
-  after_touch :update_rdv_status_from_participation, if: :collectif?
   has_many :receipts, dependent: :destroy
 
   accepts_nested_attributes_for :rdvs_users, allow_destroy: true
