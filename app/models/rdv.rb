@@ -132,10 +132,6 @@ class Rdv < ApplicationRecord
     starts_at >= Time.zone.now
   end
 
-  def today?
-    starts_at.to_date == Time.zone.today
-  end
-
   def temporal_status
     Rdv.temporal_status(status, starts_at)
   end

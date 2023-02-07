@@ -19,7 +19,6 @@ class RdvsUser < ApplicationRecord
 
   # Delegates
   delegate :full_name, to: :user
-  delegate :in_the_future?, :in_the_past?, :today?, to: :rdv
 
   # Validations
   # Uniqueness validation doesn’t work with nested_attributes, see https://github.com/rails/rails/issues/4568
