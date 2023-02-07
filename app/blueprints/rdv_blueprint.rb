@@ -10,7 +10,7 @@ class RdvBlueprint < Blueprinter::Base
   association :motif, blueprint: MotifBlueprint
   # DEPRECATED : Nous laissons l'association `:users` le temps que le 92, 26, 62, 64, et data-insertion mettent à jours leur système.
   association :users, blueprint: UserBlueprint
-  association :rdvs_users, blueprint: RdvsUsersBlueprint
+  association :rdvs_users, blueprint: RdvsUserBlueprint
   association :agents, blueprint: AgentBlueprint
   association :lieu, blueprint: LieuBlueprint
 end

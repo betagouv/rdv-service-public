@@ -8,11 +8,9 @@ fr:
         service: Service
         collectif: Nombre de participants
         color: Couleur
-        category: Catégorie
-        category_hint: La catégorie n'est pas visible par les usagers. Elle peut-être utile pour filtrer les motifs proposés dans certains contextes, ou pour permettre de récupérer des motifs via l'API.
-        reservable_online_title: Prise de RDV en ligne par les usagers
-        reservable_online: Réservable en ligne
-        reservable_online_hint: Ce motif sera disponible à la réservation en ligne par les usagers
+        bookable_publicly_title: Prise de RDV en ligne par les usagers
+        bookable_publicly: Réservable en ligne
+        bookable_publicly_hint: Ce motif sera disponible à la réservation en ligne par les usagers
         visibility_type: Visibilité usager
         custom_cancel_warning_message: Message d’avertissement en cas d’annulation
         custom_cancel_warning_message_hint: Ce message sera affiché à l'usager au moment où il lui sera demandé de confirmer l’annulation de son RDV. Si l’annulation du rendez-vous a des conséquences particulières pour l’usager, vous pouvez lui indiquer dans ce message. Cela peut être le cas, par exemple, pour une convocation pour l’ouverture de droits sociaux.
@@ -45,21 +43,6 @@ fr:
         instruction_for_rdv_short: Indications après
         rdvs_editable_by_user: RDVs modifiables
         rdvs_editable_by_user_hint: L'horaire du RDV peut être changé par l'usager au plus tard 2 jours avant le début du RDV
-      motif/categories:
-        rsa_orientation: RSA - Orientation
-        rsa_accompagnement: RSA - Accompagnement
-        rsa_accompagnement_social: RSA - Accompagnement social
-        rsa_accompagnement_sociopro: RSA - Accompagnement socio-pro
-        rsa_orientation_on_phone_platform: RSA - Orientation sur une plateforme téléphonique dédiée
-        rsa_cer_signature: RSA - Signature de CER
-        rsa_insertion_offer: RSA - Offre d'insertion professionnelle
-        rsa_follow_up: RSA - Suivi
-        rsa_main_tendue: RSA - Main tendue
-        rsa_atelier_collectif_mandatory: RSA - Atelier Collectif (obligatoire)
-        rsa_spie: RSA - SPIE
-        rsa_integration_information: RSA - Information d'intégration
-        rsa_atelier_competences: RSA - Atelier compétences
-        rsa_atelier_rencontres_pro: RSA - Atelier rencontres professionnelles
       motif/collectifs:
         true: RDV collectif
         false: RDV individuel

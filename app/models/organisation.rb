@@ -22,10 +22,10 @@ class Organisation < ApplicationRecord
 
   # Through relations
   has_many :sectors, through: :sector_attributions
-  has_many :agents, through: :agent_roles
   # we specify dependent: :destroy because by default it will be deleted (dependent: :delete)
   # and we need to destroy to trigger the callbacks on the model
   has_many :users, through: :user_profiles, dependent: :destroy
+  has_many :agents, through: :agent_roles, dependent: :destroy
   has_many :referent_assignations, through: :users
   has_many :receipts, through: :rdvs
 

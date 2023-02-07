@@ -4,15 +4,15 @@
   .col-md-6
     .card
       .card-body
-        = simple_form_for current_territory, url: admin_territory_motif_fields_path(current_territory) do |f|
+        h5.card-title= t(".card_title")
+        p.text-muted.font-14= t(".hint_1")
+
+        = simple_form_for current_territory, url: admin_territory_motif_categories_path(current_territory) do |f|
           = render "model_errors", model: current_territory
 
-          h5.card-title= t(".card_title")
-
-          p.text-muted.font-14= t(".hint_1")
-          p.text-muted.font-14= t(".hint_2")
-          - Territory::OPTIONAL_MOTIF_FIELD_TOGGLES.each do |toggle, field_name|
-            = f.input toggle, label: Motif.human_attribute_name(field_name)
+          h6= t("admin.territories.motif_categories.edit.title")
+          p.text-muted.font-14= t("admin.territories.motif_categories.edit.hint_1")
+          = f.association :motif_categories, collection: MotifCategory.all, label: "", as: :check_boxes
 
           .text-right
             = f.button :submit

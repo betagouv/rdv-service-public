@@ -73,9 +73,9 @@ class Admin::MotifsController < AgentAuthController
 
   def online_filtered(motifs, online_filter)
     if online_filter == "En ligne"
-      motifs.reservable_online
+      motifs.bookable_publicly
     else
-      motifs.not_reservable_online
+      motifs.not_bookable_publicly
     end
   end
 
@@ -86,12 +86,12 @@ class Admin::MotifsController < AgentAuthController
   def motif_params
     params.require(:motif)
       .permit(:name, :service_id,
-              :color, :category,
+              :color, :motif_category_id,
               :default_duration_in_min,
-              :reservable_online,
+              :bookable_publicly,
               :location_type,
-              :max_booking_delay,
-              :min_booking_delay,
+              :max_public_booking_delay,
+              :min_public_booking_delay,
               :visibility_type,
               :restriction_for_rdv,
               :instruction_for_rdv,
