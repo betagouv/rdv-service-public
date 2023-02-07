@@ -12,6 +12,8 @@ tr
       br
       = sanitize(display_recurrence(absence).join("<br/>"))
   td
+    span>= organisation.name
+  td
     .d-flex
       div.mr-3= link_to edit_admin_organisation_absence_path(organisation, absence),
                 title: t("helpers.edit") do

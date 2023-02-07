@@ -38,8 +38,8 @@ RSpec.describe "Search", type: :request do
     context "service selection" do
       let(:territory) { create(:territory, departement_number: "75") }
       let(:organisation) { create(:organisation, territory: territory) }
-      let(:motif) { create(:motif, reservable_online: true, organisation: organisation) }
-      let(:other_motif) { create(:motif, reservable_online: true, organisation: organisation) }
+      let(:motif) { create(:motif, bookable_publicly: true, organisation: organisation) }
+      let(:other_motif) { create(:motif, bookable_publicly: true, organisation: organisation) }
       let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif, other_motif], organisation: organisation) }
 
       it "show text to invite to select motif" do
@@ -56,8 +56,8 @@ RSpec.describe "Search", type: :request do
     context "motif selection" do
       let(:territory) { create(:territory, departement_number: "75") }
       let(:organisation) { create(:organisation, territory: territory) }
-      let(:motif) { create(:motif, reservable_online: true, organisation: organisation) }
-      let(:other_motif) { create(:motif, reservable_online: true, organisation: organisation, service: motif.service) }
+      let(:motif) { create(:motif, bookable_publicly: true, organisation: organisation) }
+      let(:other_motif) { create(:motif, bookable_publicly: true, organisation: organisation, service: motif.service) }
       let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif, other_motif], organisation: organisation) }
 
       it "show text to invite to select motif" do

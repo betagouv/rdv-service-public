@@ -2,7 +2,7 @@ ruby:
   content_for(:menu_item) { "menu-agendas" }
   content_for(:title) { t(".page_title", starts_at: l(@rdv.starts_at, format: :dense)) }
   modals_return_location = new_admin_organisation_rdv_wizard_step_path(@rdv_wizard.to_query.merge(step: 2))
-  previous_steps = [{ step: 1, value: motif_name_with_location_type(@rdv.motif) } ]
+  previous_steps = [{ step: 1, value: motif_name_and_location_type(@rdv.motif) } ]
   next_steps = [{step: 3}, {step: 4}]
 
 = render "card", rdv_wizard_form: @rdv_wizard, previous_steps: previous_steps, next_steps: next_steps, step_title: t(".step_title") do

@@ -54,7 +54,7 @@ class PlageOuverture < ApplicationRecord
       plage_ouverture.occurrences_for(range).any? { range.overlaps?(_1.starts_at.._1.ends_at) }
     end
   }
-  scope :reservable_online, -> { joins(:motifs).where(motifs: { reservable_online: true }) }
+  scope :bookable_publicly, -> { joins(:motifs).where(motifs: { bookable_publicly: true }) }
 
   # Delegations
   delegate :name, :address, :enabled?, to: :lieu, prefix: true, allow_nil: true

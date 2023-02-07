@@ -1,5 +1,5 @@
 // Used in admin/motifs/_form.html.slim:
-// the checkboxes created by simpleform have the classes “motif_for_secretariat” and “motif_reservable_online”
+// the checkboxes created by simpleform have the classes “motif_for_secretariat” and “motif_bookable_publicly”
 class MotifForm {
 
   toggleSecretariat() {
@@ -52,7 +52,7 @@ class MotifForm {
 
   constructor() {
     this.secretariatCheckbox = document.querySelector('#motif_for_secretariat')
-    this.reservableOnlineCheckbox = document.querySelector('#motif_reservable_online')
+    this.reservableOnlineCheckbox = document.querySelector('#motif_bookable_publicly')
     if (!this.secretariatCheckbox || !this.reservableOnlineCheckbox) return;
 
     const noSecretariatInputs = ["input[name=\"motif[location_type]\"]", "input[name=\"motif[follow_up]\"]"]

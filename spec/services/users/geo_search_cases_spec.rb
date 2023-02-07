@@ -13,11 +13,11 @@ describe Users::GeoSearch, type: :service_model do
     let(:service1) { create(:service) }
     let(:service2) { create(:service) }
 
-    let!(:motif_ok) { create(:motif, :sectorisation_level_departement, service: service1, reservable_online: true, organisation: organisation1) }
-    let!(:motif_no_plage_ouverture) { create(:motif, :sectorisation_level_departement, service: service1, reservable_online: true, organisation: organisation1) }
-    let!(:motif_service2) { create(:motif, :sectorisation_level_departement, service: service2, reservable_online: true, organisation: organisation1) }
-    let!(:motif_orga2) { create(:motif, :sectorisation_level_departement, service: service1, reservable_online: true, organisation: organisation2) }
-    let!(:motif_offline) { create(:motif, :sectorisation_level_departement, service: service2, reservable_online: false, organisation: organisation1) }
+    let!(:motif_ok) { create(:motif, :sectorisation_level_departement, service: service1, bookable_publicly: true, organisation: organisation1) }
+    let!(:motif_no_plage_ouverture) { create(:motif, :sectorisation_level_departement, service: service1, bookable_publicly: true, organisation: organisation1) }
+    let!(:motif_service2) { create(:motif, :sectorisation_level_departement, service: service2, bookable_publicly: true, organisation: organisation1) }
+    let!(:motif_orga2) { create(:motif, :sectorisation_level_departement, service: service1, bookable_publicly: true, organisation: organisation2) }
+    let!(:motif_offline) { create(:motif, :sectorisation_level_departement, service: service2, bookable_publicly: false, organisation: organisation1) }
     let!(:plage_ouverture_ok) { create(:plage_ouverture, motifs: [motif_ok], organisation: organisation1) }
     let!(:plage_ouverture_service2) { create(:plage_ouverture, motifs: [motif_service2], organisation: organisation1) }
     let!(:plage_ouverture_orga2) { create(:plage_ouverture, motifs: [motif_orga2], organisation: organisation2) }
@@ -41,8 +41,8 @@ describe Users::GeoSearch, type: :service_model do
     let(:service1) { create(:service) }
     let(:service2) { create(:service) }
 
-    let!(:motifs_orga1) { create_list(:motif, 5, :sectorisation_level_agent, service: service1, reservable_online: true, organisation: organisation1) }
-    let!(:motifs_orga2) { create_list(:motif, 2, :sectorisation_level_agent, service: service1, reservable_online: true, organisation: organisation2) }
+    let!(:motifs_orga1) { create_list(:motif, 5, :sectorisation_level_agent, service: service1, bookable_publicly: true, organisation: organisation1) }
+    let!(:motifs_orga2) { create_list(:motif, 2, :sectorisation_level_agent, service: service1, bookable_publicly: true, organisation: organisation2) }
 
     let!(:sector_arques) { create(:sector, territory: territory62, name: "Arques CENTRE", human_id: "arques") }
     let!(:zone_arques) { create(:zone, level: "city", city_code: "62100", city_name: "Arques", sector: sector_arques) }

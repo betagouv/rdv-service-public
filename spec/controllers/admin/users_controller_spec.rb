@@ -125,11 +125,6 @@ RSpec.describe Admin::UsersController, type: :controller do
       expect(assigns(:users)).to eq([])
     end
 
-    it "assigns form" do
-      get :index, params: { organisation_id: organisation.id }
-      expect(assigns(:form)).to be_kind_of(Admin::UserSearchForm)
-    end
-
     it "return success with with_me_as_referent filter" do
       get :index, params: { organisation_id: organisation.id, with_me_as_referent: 1 }
       expect(response).to be_successful

@@ -24,7 +24,7 @@ class ApplicationRecord < ActiveRecord::Base
   #       ) -- subqueries combined with OR
   #
   # It can be useful when merging scopes with different join tables:
-  #     agents_with_open_plage = Agent.joins(:plage_ouvertures).merge(PlageOuverture.reservable_online)
+  #     agents_with_open_plage = Agent.joins(:plage_ouvertures).merge(PlageOuverture.bookable_publicly)
   #     agents_with_open_rdv_collectif = Agent.joins(:rdvs).merge(Rdv.collectif)
   #     Agent.where_id_in_subqueries([agents_with_open_plage, agents_with_open_rdv_collectif])
   #

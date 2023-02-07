@@ -14,7 +14,7 @@ class User::RdvPolicy < ApplicationPolicy
   def new?
     return false if record.revoked?
 
-    (record.collectif? && record.reservable_online?) || rdv_belongs_to_user_or_relatives?
+    (record.collectif? && record.bookable_publicly?) || rdv_belongs_to_user_or_relatives?
   end
 
   def create?
@@ -24,7 +24,7 @@ class User::RdvPolicy < ApplicationPolicy
   end
 
   def show?
-    return true if record.collectif? && record.reservable_online? && rdv_belongs_to_user_or_relatives?
+    return true if record.collectif? && record.bookable_publicly? && rdv_belongs_to_user_or_relatives?
 
     rdv_belongs_to_user_or_relatives? && (!current_user.only_invited? || current_user.invited_for_rdv?(record))
   end
@@ -59,7 +59,7 @@ class User::RdvPolicy < ApplicationPolicy
         .visible
         .ids
 
-      scope.where(id: my_rdvs_ids).or(Rdv.where(id: scope.collectif.reservable_online)).distinct
+      scope.where(id: my_rdvs_ids).or(Rdv.where(id: scope.collectif.bookable_publicly)).distinct
     end
   end
 end

@@ -12,8 +12,8 @@ RSpec.describe "Adding a user to a collective RDV" do
   let!(:organisation) { create(:organisation, territory: territory) }
   let!(:agent) { create(:agent, organisations: [organisation], rdv_notifications_level: "all") }
   let!(:service) { create(:service) }
-  let!(:motif) { create(:motif, :collectif, reservable_online: true, organisation: organisation, service: service) }
-  let!(:motif2) { create(:motif, :collectif, reservable_online: true, organisation: organisation, service: service) }
+  let!(:motif) { create(:motif, :collectif, bookable_publicly: true, organisation: organisation, service: service) }
+  let!(:motif2) { create(:motif, :collectif, bookable_publicly: true, organisation: organisation, service: service) }
   let!(:lieu1) { create(:lieu, organisation: organisation) }
   let!(:lieu2) { create(:lieu, organisation: organisation) }
   let!(:rdv) { create(:rdv, :without_users, motif: motif, agents: [agent], organisation: organisation, lieu: lieu1) }

@@ -14,9 +14,9 @@ describe "User can search for rdvs" do
     let!(:territory92) { create(:territory, departement_number: "92") }
     let!(:organisation) { create(:organisation, :with_contact, territory: territory92) }
     let(:service) { create(:service) }
-    let!(:motif) { create(:motif, name: "Vaccination", reservable_online: true, organisation: organisation, restriction_for_rdv: nil, service: service) }
-    let!(:autre_motif) { create(:motif, name: "Consultation", reservable_online: true, organisation: organisation, restriction_for_rdv: nil, service: service) }
-    let!(:motif_autre_service) { create(:motif, :by_phone, name: "Télé consultation", reservable_online: true, organisation: organisation, restriction_for_rdv: nil, service: create(:service)) }
+    let!(:motif) { create(:motif, name: "Vaccination", bookable_publicly: true, organisation: organisation, restriction_for_rdv: nil, service: service) }
+    let!(:autre_motif) { create(:motif, name: "Consultation", bookable_publicly: true, organisation: organisation, restriction_for_rdv: nil, service: service) }
+    let!(:motif_autre_service) { create(:motif, :by_phone, name: "Télé consultation", bookable_publicly: true, organisation: organisation, restriction_for_rdv: nil, service: create(:service)) }
     let!(:lieu) { create(:lieu, organisation: organisation) }
     let!(:plage_ouverture) { create(:plage_ouverture, :daily, first_day: now + 1.month, motifs: [motif], lieu: lieu, organisation: organisation) }
     let!(:autre_plage_ouverture) { create(:plage_ouverture, :daily, first_day: now + 1.month, motifs: [autre_motif], lieu: lieu, organisation: organisation) }
@@ -43,7 +43,7 @@ describe "User can search for rdvs" do
     let!(:territory) { create(:territory, departement_number: "92") }
     let!(:first_organisation_with_po) { create(:organisation, :with_contact, territory: territory) }
     let!(:first_motif) do
-      create(:motif, :by_phone, name: "RSA orientation par téléphone", reservable_online: true, organisation: first_organisation_with_po, restriction_for_rdv: nil, service: service)
+      create(:motif, :by_phone, name: "RSA orientation par téléphone", bookable_publicly: true, organisation: first_organisation_with_po, restriction_for_rdv: nil, service: service)
     end
     let!(:first_plage_ouverture) do
       create(:plage_ouverture, lieu: nil, motifs: [first_motif], organisation: first_organisation_with_po, first_day: Time.zone.parse("2021-12-15"), start_time: Tod::TimeOfDay.new(11))
@@ -51,7 +51,7 @@ describe "User can search for rdvs" do
 
     let!(:other_organisation_with_po) { create(:organisation, :with_contact, territory: territory) }
     let!(:other_motif_with_po) do
-      create(:motif, :by_phone, name: "RSA orientation par téléphone", reservable_online: true, organisation: other_organisation_with_po, restriction_for_rdv: nil, service: service)
+      create(:motif, :by_phone, name: "RSA orientation par téléphone", bookable_publicly: true, organisation: other_organisation_with_po, restriction_for_rdv: nil, service: service)
     end
     let!(:other_plage_ouverture) do
       create(:plage_ouverture, lieu: nil, motifs: [other_motif_with_po], organisation: other_organisation_with_po, first_day: Time.zone.parse("2021-12-16"), start_time: Tod::TimeOfDay.new(10))
@@ -59,7 +59,7 @@ describe "User can search for rdvs" do
 
     let!(:organisation_without_po) { create(:organisation, :with_contact, territory: territory) }
     let!(:motif_without_po) do
-      create(:motif, :by_phone, name: "RSA orientation par téléphone", reservable_online: true, organisation: organisation_without_po, restriction_for_rdv: nil, service: service)
+      create(:motif, :by_phone, name: "RSA orientation par téléphone", bookable_publicly: true, organisation: organisation_without_po, restriction_for_rdv: nil, service: service)
     end
 
     shared_examples "take a rdv without lieu" do
@@ -115,7 +115,7 @@ describe "User can search for rdvs" do
     let!(:motif1) do
       create(
         :motif,
-        name: "RSA Suivi", follow_up: true, reservable_online: true,
+        name: "RSA Suivi", follow_up: true, bookable_publicly: true,
         organisation: organisation, service: service
       )
     end
@@ -124,7 +124,7 @@ describe "User can search for rdvs" do
     let!(:motif2) do
       create(
         :motif,
-        name: "RSA suivi téléphonique", follow_up: true, reservable_online: true, organisation: organisation,
+        name: "RSA suivi téléphonique", follow_up: true, bookable_publicly: true, organisation: organisation,
         restriction_for_rdv: nil, service: service
       )
     end
@@ -133,7 +133,7 @@ describe "User can search for rdvs" do
     let!(:motif3) do
       create(
         :motif,
-        name: "RSA Orientation", follow_up: false, reservable_online: true, organisation: organisation,
+        name: "RSA Orientation", follow_up: false, bookable_publicly: true, organisation: organisation,
         restriction_for_rdv: nil, service: service
       )
     end
@@ -171,7 +171,7 @@ describe "User can search for rdvs" do
 
     ## Collectif follow up motif linked to referent
     let!(:collectif_motif) do
-      create(:motif, follow_up: true, restriction_for_rdv: nil, collectif: true, organisation: organisation, reservable_online: true, service: service)
+      create(:motif, follow_up: true, restriction_for_rdv: nil, collectif: true, organisation: organisation, bookable_publicly: true, service: service)
     end
     let!(:collectif_rdv) { create(:rdv, motif: collectif_motif, agents: [agent], starts_at: 2.days.from_now) }
 
@@ -247,12 +247,12 @@ describe "User can search for rdvs" do
     let!(:other_service) { create(:service) }
     let!(:motif) do
       create(
-        :motif, :by_phone, reservable_online: true, name: "Consultation", service: service, organisation: organisation, plage_ouvertures: [create(:plage_ouverture)]
+        :motif, :by_phone, bookable_publicly: true, name: "Consultation", service: service, organisation: organisation, plage_ouvertures: [create(:plage_ouverture)]
       )
     end
     let!(:other_motif) do
       create(
-        :motif, :by_phone, reservable_online: true, name: "Consultation", service: other_service, organisation: organisation, plage_ouvertures: [create(:plage_ouverture)]
+        :motif, :by_phone, bookable_publicly: true, name: "Consultation", service: other_service, organisation: organisation, plage_ouvertures: [create(:plage_ouverture)]
       )
     end
 

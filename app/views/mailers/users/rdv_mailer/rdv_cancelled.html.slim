@@ -11,7 +11,7 @@ div
     - telephone_link = link_to(@rdv.phone_number, "tel:#{@rdv.phone_number_formatted}")
     p= t(".reschedule_by_phone", telephone_link: telephone_link).html_safe
 
-  - if @rdv.reservable_online?
+  - if @rdv.bookable_publicly?
     p= t(".reschedule_online")
     .btn-wrapper
       = link_to t(".reschedule_button"), prendre_rdv_url(\

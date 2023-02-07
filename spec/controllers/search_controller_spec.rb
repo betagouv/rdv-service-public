@@ -20,10 +20,14 @@ RSpec.describe SearchController, type: :controller do
 
   let!(:service) { create(:service, name: "Joli service") }
   let(:now) { Date.new(2019, 7, 22) }
-  let!(:motif) { create(:motif, name: "RSA orientation 1", service: service, category: "rsa_orientation", reservable_online: true, organisation: organisation) }
-  let!(:motif2) { create(:motif, name: "RSA orientation 2", service: service, category: "rsa_orientation_on_phone_platform", reservable_online: true, organisation: organisation) }
-  let!(:motif3) { create(:motif, name: "RSA orientation 3", service: service, reservable_online: true, organisation: other_org) }
-  let!(:motif4) { create(:motif, name: "Motif numéro 4", service: service, reservable_online: true, organisation: other_org) }
+
+  let!(:rsa_orientation) { create(:motif_category, name: "RSA orientation sur site", short_name: "rsa_orientation") }
+  let!(:rsa_orientation_on_phone_platform) { create(:motif_category, name: "RSA orientation sur plateforme téléphonique", short_name: "rsa_orientation_on_phone_platform") }
+
+  let!(:motif) { create(:motif, name: "RSA orientation 1", service: service, motif_category: rsa_orientation, bookable_publicly: true, organisation: organisation) }
+  let!(:motif2) { create(:motif, name: "RSA orientation 2", service: service, motif_category: rsa_orientation_on_phone_platform, bookable_publicly: true, organisation: organisation) }
+  let!(:motif3) { create(:motif, name: "RSA orientation 3", service: service, bookable_publicly: true, organisation: other_org) }
+  let!(:motif4) { create(:motif, name: "Motif numéro 4", service: service, bookable_publicly: true, organisation: other_org) }
 
   let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, organisation: organisation) }
   let!(:plage_ouverture2) { create(:plage_ouverture, motifs: [motif2], lieu: lieu2, organisation: organisation) }
@@ -95,9 +99,17 @@ RSpec.describe SearchController, type: :controller do
       end
 
       context "when a motif category is passed" do
-        it "retrieves motifs from the selected category" do
+        it "retrieves motifs from the selected category (old param)" do
           get :search_rdv, params: {
             address: address, departement: departement_number, city_code: city_code, motif_category: "rsa_orientation",
+          }
+          expect(subject).to include("RSA orientation 1")
+          expect(subject).not_to include("RSA orientation 2")
+        end
+
+        it "retrieves motifs from the selected category (new param)" do
+          get :search_rdv, params: {
+            address: address, departement: departement_number, city_code: city_code, motif_category_short_name: "rsa_orientation",
           }
           expect(subject).to include("RSA orientation 1")
           expect(subject).not_to include("RSA orientation 2")
@@ -140,10 +152,21 @@ RSpec.describe SearchController, type: :controller do
         end
 
         context "when there are no matching motifs for the geo search available_motifs after filtering" do
-          it "lists the matching motifs linked to the orgas passed in the url" do
+          it "lists the matching motifs linked to the orgas passed in the url (old param)" do
             get :search_rdv, params: {
               organisation_ids: [organisation.id], address: address, departement: departement_number, city_code: city_code,
               invitation_token: invitation_token, motif_category: "rsa_orientation",
+            }
+            expect(subject).to include("RSA orientation 1")
+            expect(subject).not_to include("RSA orientation 2")
+            expect(subject).not_to include("RSA orientation 3")
+            expect(subject).not_to include("Motif numéro 4")
+          end
+
+          it "lists the matching motifs linked to the orgas passed in the url (new param)" do
+            get :search_rdv, params: {
+              organisation_ids: [organisation.id], address: address, departement: departement_number, city_code: city_code,
+              invitation_token: invitation_token, motif_category_short_name: "rsa_orientation",
             }
             expect(subject).to include("RSA orientation 1")
             expect(subject).not_to include("RSA orientation 2")

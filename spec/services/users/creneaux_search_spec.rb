@@ -82,8 +82,8 @@ describe Users::CreneauxSearch, type: :service do
     let!(:rdv_with_user) { create(:rdv, :future, motif: motif, lieu: lieu, users: [user], starts_at: 4.days.from_now) }
     let!(:rdv_in_different_lieu) { create(:rdv, :future, motif: motif, lieu: create(:lieu)) }
     let!(:rdv_with_no_remaining_seat) { create(:rdv, :future, motif: motif, lieu: lieu, max_participants_count: 1) }
-    let!(:rdv_after_max_booking_delay) { create(:rdv, :future, motif: motif, lieu: lieu, starts_at: motif.end_booking_delay + 1.hour) }
-    let!(:rdv_before_min_booking_delay) { create(:rdv, :future, motif: motif, lieu: lieu, starts_at: motif.start_booking_delay - 1.hour) }
+    let!(:rdv_after_max_public_booking_delay) { create(:rdv, :future, motif: motif, lieu: lieu, starts_at: motif.end_booking_delay + 1.hour) }
+    let!(:rdv_before_min_public_booking_delay) { create(:rdv, :future, motif: motif, lieu: lieu, starts_at: motif.start_booking_delay - 1.hour) }
     let!(:user) { create(:user) }
 
     it "returns the subscribable collective rdvs (rdv and rdv_with_user)" do

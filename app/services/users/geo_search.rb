@@ -116,11 +116,11 @@ class Users::GeoSearch
   end
 
   def individual_motifs
-    @individual_motifs ||= Motif.reservable_online.active.individuel.joins(:plage_ouvertures).distinct
+    @individual_motifs ||= Motif.bookable_publicly.active.individuel.joins(:plage_ouvertures).distinct
   end
 
   def collective_motifs
-    @collective_motifs ||= Motif.reservable_online.active.collectif
+    @collective_motifs ||= Motif.bookable_publicly.active.collectif
       .joins(:rdvs).merge(Rdv.collectif_and_available_for_reservation).distinct
   end
 
