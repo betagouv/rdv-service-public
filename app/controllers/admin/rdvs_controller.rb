@@ -74,7 +74,7 @@ class Admin::RdvsController < AgentAuthController
     respond_to do |format|
       format.js do
         if @success
-          flash.now[:notice] = "Rendez vous mis à jour"
+          flash.now[:notice] = "Rendez-vous mis à jour"
         else
           flash.now[:error] = @rdv.errors.full_messages.to_sentence
         end
