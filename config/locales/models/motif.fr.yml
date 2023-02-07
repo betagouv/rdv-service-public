@@ -29,12 +29,12 @@ fr:
         default_duration_in_min: Durée par défaut en minutes
         default_duration_in_min_short: Durée par défaut
         default_duration: Durée par défaut
-        min_booking_delay: Délai minimum de réservation
-        min_booking_delay_short: Délai minimum
-        min_booking_delay_hint: Les premiers créneaux proposés aux usagers ne commenceront pas avant ce délai minimum
-        max_booking_delay: Délai maximum de réservation
-        max_booking_delay_short: Délai maximum
-        max_booking_delay_hint: Les derniers créneaux proposés aux usagers n'iront pas au delà de ce délai maximum
+        min_public_booking_delay: Délai minimum de réservation
+        min_public_booking_delay_short: Délai minimum
+        min_public_booking_delay_hint: Les premiers créneaux proposés aux usagers ne commenceront pas avant ce délai minimum
+        max_public_booking_delay: Délai maximum de réservation
+        max_public_booking_delay_short: Délai maximum
+        max_public_booking_delay_hint: Les derniers créneaux proposés aux usagers n'iront pas au delà de ce délai maximum
         restriction_for_rdv: Instructions à accepter avant la prise du rendez-vous
         restriction_for_rdv_hint: Instructions à accepter avant la prise du rendez-vous
         restriction_for_rdv_short: Instructions avant

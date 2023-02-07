@@ -86,7 +86,7 @@ motif_org_paris_nord_pmi_rappel = Motif.create!(
   color: "#FF7C00",
   organisation_id: org_paris_nord.id,
   service_id: service_pmi.id,
-  reservable_online: true,
+  bookable_publicly: true,
   location_type: :phone
 )
 motif_org_paris_nord_pmi_gyneco = Motif.create!(
@@ -94,7 +94,7 @@ motif_org_paris_nord_pmi_gyneco = Motif.create!(
   color: "#FF7C00",
   organisation_id: org_paris_nord.id,
   service_id: service_pmi.id,
-  reservable_online: false,
+  bookable_publicly: false,
   location_type: :phone
 )
 motif_org_paris_nord_pmi_prenatale = Motif.create!(
@@ -102,7 +102,7 @@ motif_org_paris_nord_pmi_prenatale = Motif.create!(
   color: "#CC7C00",
   organisation_id: org_paris_nord.id,
   service_id: service_pmi.id,
-  reservable_online: true,
+  bookable_publicly: true,
   location_type: :public_office
 )
 motif_org_paris_nord_pmi_prenatale_phone = Motif.create!(
@@ -110,7 +110,7 @@ motif_org_paris_nord_pmi_prenatale_phone = Motif.create!(
   color: "#CC7C00",
   organisation_id: org_paris_nord.id,
   service_id: service_pmi.id,
-  reservable_online: true,
+  bookable_publicly: true,
   location_type: :phone
 )
 motif_org_paris_nord_pmi_suivi = Motif.create!(
@@ -118,7 +118,7 @@ motif_org_paris_nord_pmi_suivi = Motif.create!(
   color: "#00FC60",
   organisation_id: org_paris_nord.id,
   service_id: service_pmi.id,
-  reservable_online: true,
+  bookable_publicly: true,
   location_type: :public_office,
   follow_up: true
 )
@@ -127,7 +127,7 @@ motif_org_paris_nord_pmi_securite = Motif.create!(
   color: "#1010FF",
   organisation_id: org_paris_nord.id,
   service_id: service_pmi.id,
-  reservable_online: true,
+  bookable_publicly: true,
   location_type: :home
 )
 motif_org_paris_nord_pmi_collectif = Motif.create!(
@@ -136,7 +136,7 @@ motif_org_paris_nord_pmi_collectif = Motif.create!(
   organisation_id: org_paris_nord.id,
   service_id: service_pmi.id,
   collectif: true,
-  reservable_online: true,
+  bookable_publicly: true,
   default_duration_in_min: 60,
   location_type: :public_office
 )
@@ -145,7 +145,7 @@ _motif_org_paris_nord_social_rappel = Motif.create!(
   color: "#FF7C00",
   organisation_id: org_paris_nord.id,
   service_id: service_social.id,
-  reservable_online: true,
+  bookable_publicly: true,
   location_type: :phone
 )
 _motif_org_paris_nord_social_suivi = Motif.create!(
@@ -153,7 +153,7 @@ _motif_org_paris_nord_social_suivi = Motif.create!(
   color: "#CC7C00",
   organisation_id: org_paris_nord.id,
   service_id: service_social.id,
-  reservable_online: true,
+  bookable_publicly: true,
   location_type: :public_office,
   follow_up: true
 )
@@ -162,7 +162,7 @@ _motif_org_paris_nord_social_droits = Motif.create!(
   color: "#00FC60",
   organisation_id: org_paris_nord.id,
   service_id: service_social.id,
-  reservable_online: true,
+  bookable_publicly: true,
   location_type: :public_office
 )
 _motif_org_paris_nord_social_collectif = Motif.create!(
@@ -171,7 +171,7 @@ _motif_org_paris_nord_social_collectif = Motif.create!(
   organisation_id: org_paris_nord.id,
   service_id: service_social.id,
   collectif: true,
-  reservable_online: true,
+  bookable_publicly: true,
   default_duration_in_min: 120,
   location_type: :public_office
 )
@@ -186,7 +186,7 @@ motifs = {}
     color: "#10FF10",
     organisation_id: org.id,
     service_id: service_pmi.id,
-    reservable_online: true,
+    bookable_publicly: true,
     location_type: :phone
   )
   motifs[seed_id][:pmi_prenatale] = Motif.create!(
@@ -194,7 +194,7 @@ motifs = {}
     color: "#FF1010",
     organisation_id: org.id,
     service_id: service_pmi.id,
-    reservable_online: true,
+    bookable_publicly: true,
     location_type: :public_office
   )
 end
@@ -208,7 +208,7 @@ motifs_attributes = 1000.times.map do |i|
     color: "#000000",
     organisation_id: org_arques.id,
     service_id: service_secretariat.id,
-    reservable_online: true,
+    bookable_publicly: true,
     location_type: :public_office,
   }
 end
