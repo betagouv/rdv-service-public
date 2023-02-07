@@ -34,7 +34,7 @@
             td
               div.mr-3
                 - if @referents.include?(agent)
-                  = link_to admin_organisation_user_referent_path(current_organisation, @user, agent), method: :delete, class: "btn btn-danger", data: { confirm: "Êtes-vous sûr de vouloir retirer ce référent ?"} do
+                  = link_to admin_organisation_user_referent_path(current_organisation, @user, agent), method: :delete, class: "btn btn-danger", data: { confirm: "Voulez-vous vraiment retirer ce référent ?"} do
                     span> Retirer
                     i.fa.fa-angle-right
                 - else

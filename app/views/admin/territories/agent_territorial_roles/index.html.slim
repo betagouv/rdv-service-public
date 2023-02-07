@@ -23,7 +23,7 @@
                 = link_to "Retirer le rôle d'administrateur du #{current_territory}", \
                   admin_territory_agent_territorial_role_path(current_territory, role), \
                   method: :delete, \
-                  data: { confirm: "Êtes-vous sûr de vouloir retirer le rôle d'administrateur du #{current_territory} à #{role.agent.full_name} ?" }
+                  data: { confirm: "Voulez-vous vraiment retirer le rôle d'administrateur du #{current_territory} à #{role.agent.full_name} ?" }
 
       .card-body.text-center
         = link_to "Ajouter un administrateur du #{current_territory}", \
