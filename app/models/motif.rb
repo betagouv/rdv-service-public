@@ -51,9 +51,9 @@ class Motif < ApplicationRecord
   validates :name, presence: true, uniqueness: { scope: %i[organisation location_type service],
                                                  conditions: -> { where(deleted_at: nil) }, }
 
-  validates :color, :default_duration_in_min, :min_booking_delay, :max_booking_delay, presence: true
-  validates :min_booking_delay, numericality: { greater_than_or_equal_to: 30.minutes, less_than_or_equal_to: 1.year.minutes }
-  validates :max_booking_delay, numericality: { greater_than_or_equal_to: 30.minutes, less_than_or_equal_to: 1.year.minutes }
+  validates :color, :default_duration_in_min, :min_public_booking_delay, :max_public_booking_delay, presence: true
+  validates :min_public_booking_delay, numericality: { greater_than_or_equal_to: 30.minutes, less_than_or_equal_to: 1.year.minutes }
+  validates :max_public_booking_delay, numericality: { greater_than_or_equal_to: 30.minutes, less_than_or_equal_to: 1.year.minutes }
   validate :booking_delay_validation
   validate :not_associated_with_secretariat
   validates :color, css_hex_color: true
@@ -63,12 +63,12 @@ class Motif < ApplicationRecord
   scope :active, lambda { |active = true|
     active ? where(deleted_at: nil) : where.not(deleted_at: nil)
   }
-  scope :reservable_online, -> { where(reservable_online: true) }
-  scope :not_reservable_online, -> { where(reservable_online: false) }
+  scope :bookable_publicly, -> { where(bookable_publicly: true) }
+  scope :not_bookable_publicly, -> { where(bookable_publicly: false) }
   scope :by_phone, -> { Motif.phone } # default scope created by enum
   scope :for_secretariat, -> { where(for_secretariat: true) }
   scope :ordered_by_name, -> { order(Arel.sql("unaccent(LOWER(motifs.name))")) }
-  scope :available_with_plages_ouvertures, -> { active.reservable_online.joins(:organisation, :plage_ouvertures) }
+  scope :available_with_plages_ouvertures, -> { active.bookable_publicly.joins(:organisation, :plage_ouvertures) }
   scope :available_motifs_for_organisation_and_agent, lambda { |organisation, agent|
     available_motifs = if agent.admin_in_organisation?(organisation)
                          all
@@ -159,11 +159,11 @@ class Motif < ApplicationRecord
   end
 
   def start_booking_delay
-    Time.zone.now + min_booking_delay.seconds
+    Time.zone.now + min_public_booking_delay.seconds
   end
 
   def end_booking_delay
-    Time.zone.now + max_booking_delay.seconds
+    Time.zone.now + max_public_booking_delay.seconds
   end
 
   def booking_delay_range
@@ -197,9 +197,9 @@ class Motif < ApplicationRecord
   private
 
   def booking_delay_validation
-    return if min_booking_delay.zero? && max_booking_delay.zero?
+    return if min_public_booking_delay.zero? && max_public_booking_delay.zero?
 
-    errors.add(:max_booking_delay, "doit être supérieur au délai de réservation minimum") if max_booking_delay <= min_booking_delay
+    errors.add(:max_public_booking_delay, "doit être supérieur au délai de réservation minimum") if max_public_booking_delay <= min_public_booking_delay
   end
 
   def not_associated_with_secretariat

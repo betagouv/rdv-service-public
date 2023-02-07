@@ -169,7 +169,7 @@ describe Users::GeoSearch, type: :service_model do
     context "one agent attributed with online motif" do
       let!(:organisation) { create(:organisation, territory: territory62, name: "MDS Arques") }
       let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
-      let!(:motif) { create(:motif, :sectorisation_level_agent, reservable_online: true, organisation: organisation) }
+      let!(:motif) { create(:motif, :sectorisation_level_agent, bookable_publicly: true, organisation: organisation) }
       let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], organisation: organisation, agent: agent) }
       let!(:sector) { create(:sector, territory: territory62, name: "Arques VILLE", human_id: "arques") }
       let!(:zone) { create(:zone, level: "city", city_code: "62100", city_name: "Arques", sector: sector) }
@@ -209,7 +209,7 @@ describe Users::GeoSearch, type: :service_model do
 
     context "matching sector attributed to orga" do
       let!(:organisation) { create(:organisation, territory: territory62, name: "MDS Arques") }
-      let!(:motif) { create(:motif, :sectorisation_level_organisation, reservable_online: true, organisation: organisation) }
+      let!(:motif) { create(:motif, :sectorisation_level_organisation, bookable_publicly: true, organisation: organisation) }
       let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], organisation: organisation) }
       let!(:sector) { create(:sector, territory: territory62, name: "Arques VILLE", human_id: "arques") }
       let!(:zone) { create(:zone, level: "city", city_code: "62100", city_name: "Arques", sector: sector) }
@@ -220,7 +220,7 @@ describe Users::GeoSearch, type: :service_model do
 
     context "motif sectorisation level is agent" do
       let!(:organisation) { create(:organisation, territory: territory62, name: "MDS Arques") }
-      let!(:motif) { create(:motif, :sectorisation_level_agent, reservable_online: true, organisation: organisation) }
+      let!(:motif) { create(:motif, :sectorisation_level_agent, bookable_publicly: true, organisation: organisation) }
       let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], organisation: organisation) }
       let!(:sector) { create(:sector, territory: territory62, name: "Arques VILLE", human_id: "arques") }
       let!(:zone) { create(:zone, level: "city", city_code: "62100", city_name: "Arques", sector: sector) }
@@ -231,9 +231,9 @@ describe Users::GeoSearch, type: :service_model do
 
     context "2 motifs with 2 plage ouvertures match" do
       let!(:organisation) { create(:organisation, territory: territory62, name: "MDS Arques") }
-      let!(:motif1) { create(:motif, :sectorisation_level_organisation, reservable_online: true, organisation: organisation) }
+      let!(:motif1) { create(:motif, :sectorisation_level_organisation, bookable_publicly: true, organisation: organisation) }
       let!(:plage_ouverture1) { create(:plage_ouverture, motifs: [motif1], organisation: organisation) }
-      let!(:motif2) { create(:motif, :sectorisation_level_organisation, reservable_online: true, organisation: organisation) }
+      let!(:motif2) { create(:motif, :sectorisation_level_organisation, bookable_publicly: true, organisation: organisation) }
       let!(:plage_ouverture2) { create(:plage_ouverture, motifs: [motif2], organisation: organisation) }
       let!(:sector) { create(:sector, territory: territory62, name: "Arques VILLE", human_id: "arques") }
       let!(:zone) { create(:zone, level: "city", city_code: "62100", city_name: "Arques", sector: sector) }
@@ -244,9 +244,9 @@ describe Users::GeoSearch, type: :service_model do
 
     context "2 motifs, one without plage ouverture" do
       let!(:organisation) { create(:organisation, territory: territory62, name: "MDS Arques") }
-      let!(:motif1) { create(:motif, :sectorisation_level_organisation, reservable_online: true, organisation: organisation) }
+      let!(:motif1) { create(:motif, :sectorisation_level_organisation, bookable_publicly: true, organisation: organisation) }
       let!(:plage_ouverture1) { create(:plage_ouverture, motifs: [motif1], organisation: organisation) }
-      let!(:motif2) { create(:motif, :sectorisation_level_organisation, reservable_online: true, organisation: organisation) }
+      let!(:motif2) { create(:motif, :sectorisation_level_organisation, bookable_publicly: true, organisation: organisation) }
       let!(:sector) { create(:sector, territory: territory62, name: "Arques VILLE", human_id: "arques") }
       let!(:zone) { create(:zone, level: "city", city_code: "62100", city_name: "Arques", sector: sector) }
       let!(:attribution) { create(:sector_attribution, :level_organisation, sector: sector, organisation: organisation) }
@@ -256,9 +256,9 @@ describe Users::GeoSearch, type: :service_model do
 
     context "2 motifs, one offline" do
       let!(:organisation) { create(:organisation, territory: territory62, name: "MDS Arques") }
-      let!(:motif1) { create(:motif, :sectorisation_level_organisation, reservable_online: true, organisation: organisation) }
+      let!(:motif1) { create(:motif, :sectorisation_level_organisation, bookable_publicly: true, organisation: organisation) }
       let!(:plage_ouverture1) { create(:plage_ouverture, motifs: [motif1], organisation: organisation) }
-      let!(:motif2) { create(:motif, :sectorisation_level_organisation, reservable_online: false, organisation: organisation) }
+      let!(:motif2) { create(:motif, :sectorisation_level_organisation, bookable_publicly: false, organisation: organisation) }
       let!(:plage_ouverture2) { create(:plage_ouverture, motifs: [motif2], organisation: organisation) }
       let!(:sector) { create(:sector, territory: territory62, name: "Arques VILLE", human_id: "arques") }
       let!(:zone) { create(:zone, level: "city", city_code: "62100", city_name: "Arques", sector: sector) }
@@ -269,9 +269,9 @@ describe Users::GeoSearch, type: :service_model do
 
     context "2 motifs, one deleted" do
       let!(:organisation) { create(:organisation, territory: territory62, name: "MDS Arques") }
-      let!(:motif1) { create(:motif, :sectorisation_level_organisation, reservable_online: true, organisation: organisation) }
+      let!(:motif1) { create(:motif, :sectorisation_level_organisation, bookable_publicly: true, organisation: organisation) }
       let!(:plage_ouverture1) { create(:plage_ouverture, motifs: [motif1], organisation: organisation) }
-      let!(:motif2) { create(:motif, :sectorisation_level_organisation, reservable_online: true, organisation: organisation, deleted_at: 2.hours.ago) }
+      let!(:motif2) { create(:motif, :sectorisation_level_organisation, bookable_publicly: true, organisation: organisation, deleted_at: 2.hours.ago) }
       let!(:plage_ouverture2) { create(:plage_ouverture, motifs: [motif2], organisation: organisation) }
       let!(:sector) { create(:sector, territory: territory62, name: "Arques VILLE", human_id: "arques") }
       let!(:zone) { create(:zone, level: "city", city_code: "62100", city_name: "Arques", sector: sector) }
@@ -286,9 +286,9 @@ describe Users::GeoSearch, type: :service_model do
       let!(:organisation3) { create(:organisation, territory: territory62, name: "MDS Bapaume") }
       let!(:agent) { create(:agent, basic_role_in_organisations: [organisation2]) }
 
-      let!(:motif_organisation) { create(:motif, :sectorisation_level_organisation, reservable_online: true, organisation: organisation1) }
-      let!(:motif_agent) { create(:motif, :sectorisation_level_agent, reservable_online: true, organisation: organisation2) }
-      let!(:motif_departement) { create(:motif, :sectorisation_level_departement, reservable_online: true, organisation: organisation3) }
+      let!(:motif_organisation) { create(:motif, :sectorisation_level_organisation, bookable_publicly: true, organisation: organisation1) }
+      let!(:motif_agent) { create(:motif, :sectorisation_level_agent, bookable_publicly: true, organisation: organisation2) }
+      let!(:motif_departement) { create(:motif, :sectorisation_level_departement, bookable_publicly: true, organisation: organisation3) }
 
       let!(:plage_ouverture_organisation) { create(:plage_ouverture, motifs: [motif_organisation], organisation: organisation1) }
       let!(:plage_ouverture_agent) { create(:plage_ouverture, motifs: [motif_agent], organisation: organisation2, agent: agent) }
@@ -319,9 +319,9 @@ describe Users::GeoSearch, type: :service_model do
       let!(:organisation) { create(:organisation, territory: territory62, name: "MDS Arques") }
       let!(:service1) { create(:service) }
       let!(:service2) { create(:service) }
-      let!(:motif1) { create(:motif, :sectorisation_level_organisation, reservable_online: true, organisation: organisation, service: service1) }
+      let!(:motif1) { create(:motif, :sectorisation_level_organisation, bookable_publicly: true, organisation: organisation, service: service1) }
       let!(:plage_ouverture1) { create(:plage_ouverture, motifs: [motif1], organisation: organisation) }
-      let!(:motif2) { create(:motif, :sectorisation_level_organisation, reservable_online: true, organisation: organisation, service: service2) }
+      let!(:motif2) { create(:motif, :sectorisation_level_organisation, bookable_publicly: true, organisation: organisation, service: service2) }
       let!(:plage_ouverture2) { create(:plage_ouverture, motifs: [motif2], organisation: organisation) }
       let!(:sector) { create(:sector, territory: territory62, name: "Arques VILLE", human_id: "arques") }
       let!(:zone) { create(:zone, level: "city", city_code: "62100", city_name: "Arques", sector: sector) }
@@ -333,9 +333,9 @@ describe Users::GeoSearch, type: :service_model do
     context "matching sector with 2 motifs with POs from same service" do
       let!(:organisation) { create(:organisation, territory: territory62, name: "MDS Arques") }
       let!(:service) { create(:service) }
-      let!(:motif1) { create(:motif, :sectorisation_level_organisation, reservable_online: true, organisation: organisation, service: service) }
+      let!(:motif1) { create(:motif, :sectorisation_level_organisation, bookable_publicly: true, organisation: organisation, service: service) }
       let!(:plage_ouverture1) { create(:plage_ouverture, motifs: [motif1], organisation: organisation) }
-      let!(:motif2) { create(:motif, :sectorisation_level_organisation, reservable_online: true, organisation: organisation, service: service) }
+      let!(:motif2) { create(:motif, :sectorisation_level_organisation, bookable_publicly: true, organisation: organisation, service: service) }
       let!(:plage_ouverture2) { create(:plage_ouverture, motifs: [motif2], organisation: organisation) }
       let!(:sector) { create(:sector, territory: territory62, name: "Arques VILLE", human_id: "arques") }
       let!(:zone) { create(:zone, level: "city", city_code: "62100", city_name: "Arques", sector: sector) }

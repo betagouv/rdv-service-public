@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_06_135816) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_06_161834) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "unaccent"
@@ -295,9 +295,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_06_135816) do
     t.datetime "updated_at", null: false
     t.integer "default_duration_in_min", default: 30, null: false
     t.bigint "organisation_id", null: false
-    t.boolean "reservable_online", default: false, null: false
-    t.integer "min_booking_delay", default: 1800
-    t.integer "max_booking_delay", default: 7889238
+    t.boolean "bookable_publicly", default: false, null: false
+    t.integer "min_public_booking_delay", default: 1800
+    t.integer "max_public_booking_delay", default: 7889238
     t.datetime "deleted_at"
     t.bigint "service_id", null: false
     t.text "restriction_for_rdv"
@@ -314,6 +314,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_06_135816) do
     t.boolean "rdvs_cancellable_by_user", default: true
     t.bigint "motif_category_id"
     t.index "to_tsvector('simple'::regconfig, (COALESCE(name, (''::text)::character varying))::text)", name: "index_motifs_name_vector", using: :gin
+    t.index ["bookable_publicly"], name: "index_motifs_on_bookable_publicly"
     t.index ["collectif"], name: "index_motifs_on_collectif"
     t.index ["deleted_at"], name: "index_motifs_on_deleted_at"
     t.index ["location_type"], name: "index_motifs_on_location_type"
@@ -321,7 +322,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_06_135816) do
     t.index ["name", "organisation_id", "location_type", "service_id"], name: "index_motifs_on_name_scoped", unique: true, where: "(deleted_at IS NULL)"
     t.index ["name"], name: "index_motifs_on_name"
     t.index ["organisation_id"], name: "index_motifs_on_organisation_id"
-    t.index ["reservable_online"], name: "index_motifs_on_reservable_online"
     t.index ["service_id"], name: "index_motifs_on_service_id"
     t.index ["visibility_type"], name: "index_motifs_on_visibility_type"
   end

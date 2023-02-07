@@ -18,13 +18,13 @@ class MotifDashboard < Administrate::BaseDashboard
     restriction_for_rdv: Field::Text,
     instruction_for_rdv: Field::Text,
     custom_cancel_warning_message: Field::Text,
-    reservable_online: Field::Boolean,
+    bookable_publicly: Field::Boolean,
     location_type: EnumField,
     for_secretariat: Field::Boolean,
     default_duration_in_min: Field::Number,
-    min_booking_delay: Field::Number,
+    min_public_booking_delay: Field::Number,
     visibility_type: Field::String,
-    max_booking_delay: Field::Number,
+    max_public_booking_delay: Field::Number,
     deleted_at: Field::DateTime,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
@@ -50,15 +50,15 @@ class MotifDashboard < Administrate::BaseDashboard
     organisation
     service
     color
-    reservable_online
+    bookable_publicly
     location_type
     for_secretariat
     restriction_for_rdv
     instruction_for_rdv
     custom_cancel_warning_message
     default_duration_in_min
-    min_booking_delay
-    max_booking_delay
+    min_public_booking_delay
+    max_public_booking_delay
     visibility_type
     deleted_at
     created_at
@@ -71,14 +71,14 @@ class MotifDashboard < Administrate::BaseDashboard
   FORM_ATTRIBUTES = %i[
     name
     color
-    reservable_online
+    bookable_publicly
     location_type
     for_secretariat
     default_duration_in_min
     organisation
     service
-    min_booking_delay
-    max_booking_delay
+    min_public_booking_delay
+    max_public_booking_delay
     visibility_type
     restriction_for_rdv
     instruction_for_rdv

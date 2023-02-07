@@ -8,9 +8,9 @@ fr:
         service: Service
         collectif: Nombre de participants
         color: Couleur
-        reservable_online_title: Prise de RDV en ligne par les usagers
-        reservable_online: Réservable en ligne
-        reservable_online_hint: Ce motif sera disponible à la réservation en ligne par les usagers
+        bookable_publicly_title: Prise de RDV en ligne par les usagers
+        bookable_publicly: Réservable en ligne
+        bookable_publicly_hint: Ce motif sera disponible à la réservation en ligne par les usagers
         visibility_type: Visibilité usager
         custom_cancel_warning_message: Message d’avertissement en cas d’annulation
         custom_cancel_warning_message_hint: Ce message sera affiché à l'usager au moment où il lui sera demandé de confirmer l’annulation de son RDV. Si l’annulation du rendez-vous a des conséquences particulières pour l’usager, vous pouvez lui indiquer dans ce message. Cela peut être le cas, par exemple, pour une convocation pour l’ouverture de droits sociaux.

@@ -105,7 +105,7 @@ describe NextAvailabilityService, type: :service do
       let!(:motif) do
         create(:motif,
                name: "Vaccination", default_duration_in_min: 30, organisation: organisation,
-               min_booking_delay: 1.week.from_now, max_booking_delay: 7.months.from_now)
+               min_public_booking_delay: 1.week.from_now, max_public_booking_delay: 7.months.from_now)
       end
 
       let!(:plage_ouverture) do
@@ -119,7 +119,7 @@ describe NextAvailabilityService, type: :service do
         let!(:now) { Time.zone.parse("20210318 17:00") }
 
         it "returns a next creneau the week after the first occurrence" do
-          next_creneau = described_class.find(motif, lieu, [], from: Time.zone.at(motif.min_booking_delay))
+          next_creneau = described_class.find(motif, lieu, [], from: Time.zone.at(motif.min_public_booking_delay))
           expect(next_creneau.starts_at).to eq(today.in_time_zone + 2.weeks + 9.hours)
         end
       end

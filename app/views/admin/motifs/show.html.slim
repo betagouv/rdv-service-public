@@ -37,20 +37,20 @@
         hr
 
         = motif_attribute_row \
-          Motif.human_attribute_name(:reservable_online), \
-          motif_option_activated(@motif, :reservable_online), \
-          hint: Motif.human_attribute_name(:reservable_online_hint)
-        - if @motif.reservable_online
+          Motif.human_attribute_name(:bookable_publicly), \
+          motif_option_activated(@motif, :bookable_publicly), \
+          hint: Motif.human_attribute_name(:bookable_publicly_hint)
+        - if @motif.bookable_publicly
           = motif_attribute_row \
-            Motif.human_attribute_name(:min_booking_delay_short), \
-            @motif.reservable_online? && \
-              min_max_delay_int_to_human(@motif.min_booking_delay), \
-            hint: Motif.human_attribute_name(:min_booking_delay_hint)
+            Motif.human_attribute_name(:min_public_booking_delay_short), \
+            @motif.bookable_publicly? && \
+              min_max_delay_int_to_human(@motif.min_public_booking_delay), \
+            hint: Motif.human_attribute_name(:min_public_booking_delay_hint)
           = motif_attribute_row \
-            Motif.human_attribute_name(:max_booking_delay_short), \
-            @motif.reservable_online? && \
-              min_max_delay_int_to_human(@motif.max_booking_delay), \
-            hint: Motif.human_attribute_name(:max_booking_delay_hint)
+            Motif.human_attribute_name(:max_public_booking_delay_short), \
+            @motif.bookable_publicly? && \
+              min_max_delay_int_to_human(@motif.max_public_booking_delay), \
+            hint: Motif.human_attribute_name(:max_public_booking_delay_hint)
           = motif_attribute_row \
             Motif.human_attribute_name(:rdvs_editable_by_user), \
             motif_option_activated(@motif, :rdvs_editable_by_user), \
@@ -58,7 +58,7 @@
 
           - unless current_domain.online_reservation_with_public_link
             = motif_attribute_row("Sectorisation") do
-              - if @motif.reservable_online?
+              - if @motif.bookable_publicly?
                 div= @motif.human_attribute_value(:sectorisation_level)
                 div.text-muted= @motif.human_attribute_value(:sectorisation_level, context: :hint)
               - else

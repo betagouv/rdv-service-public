@@ -57,15 +57,15 @@
         span.ml-1=  Motif.human_attribute_value(:collectif, true)
         p.text-muted.font-14= Motif.human_attribute_value(:collectif, true, context: :hint)
 
-  .card#reservable_online_section
+  .card#bookable_publicly_section
     .card-body
-      h5.card-title= Motif.human_attribute_name("reservable_online_title")
-      p.text-muted.font-14= Motif.human_attribute_name("reservable_online_hint")
-      = f.input :reservable_online
+      h5.card-title= Motif.human_attribute_name("bookable_publicly_title")
+      p.text-muted.font-14= Motif.human_attribute_name("bookable_publicly_hint")
+      = f.input :bookable_publicly
 
       .form-row.js-rdvs-editable
-        .col-md-4= f.input :min_booking_delay, collection: min_max_delay_options
-        .col-md-4= f.input :max_booking_delay, collection: min_max_delay_options
+        .col-md-4= f.input :min_public_booking_delay, collection: min_max_delay_options
+        .col-md-4= f.input :max_public_booking_delay, collection: min_max_delay_options
 
       .js-rdvs-editable
         = f.input(:rdvs_editable_by_user)

@@ -23,7 +23,7 @@
           th= Motif.human_attribute_name("name")
           th
             div
-              = Motif.human_attribute_name("reservable_online")
+              = Motif.human_attribute_name("bookable_publicly")
             div
               - options = options_for_select(["En ligne", "Hors ligne"], params[:online_filter])
               = select_tag("online_filter", options, include_blank: "Tous", class: "js-submit-on-change select2-input")
