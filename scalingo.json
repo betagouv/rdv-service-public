@@ -52,6 +52,39 @@
     "DEFAULT_SMS_PROVIDER_KEY": {
       "description": "Credentials des SMS par défaut : définir cette valeur si l'on veut tester un système d'envoi",
       "value": "change_me_if_needed"
+    },
+
+    "FRANCECONNECT_APP_ID": {
+      "description": "App ID de notre app FranceConnect ; à priori désactivé sur les review apps car le mécanisme de callback pointe vers la prod.",
+      "value": "change_me_if_needed"
+    },
+    "FRANCECONNECT_APP_SECRET": {
+      "description": "App secret de notre app FranceConnect ; à priori désactivé sur les review apps car le mécanisme de callback pointe vers la prod.",
+      "value": "change_me_if_needed"
+    },
+
+    "GITHUB_APP_ID": {
+      "description": " Identifiant de notre app GitHub utilisée pour se connecter en super admin. Nous avons une app pour la prod, une pour la démo, mais rien pour les review apps.",
+      "value": "change_me_if_needed"
+    },
+      "GITHUB_APP_SECRET": {
+      "description": " Password de notre app GitHub utilisée pour se connecter en super admin. Nous avons une app pour la prod, une pour la démo, mais rien pour les review apps.",
+      "value": "change_me_if_needed"
+    },
+
+    "INCLUSION_CONNECT_CLIENT_SECRET": {
+      "description": "Notre secret partagé avec InclusionConnect. Inutile sur une review app puisque IC n'aura pas la bonne URL de callback.",
+      "value": "change_me_if_needed"
+    },
+
+    "SENDINBLUE_INBOUND_PASSWORD": {
+      "description": "Cette valeur est passée en paramètre dans le webhook que nous avons défini chez SendInBlue. C'est un secret, donc non hérité en review app.",
+      "value": "change_me_if_needed"
+    },
+
+    "SKYLIGHT_AUTHENTICATION": {
+      "description": "Pas besoin de skylight en review app, sauf cas particulier.",
+      "value": "change_me_if_needed"
     }
   },
   "scripts": {
