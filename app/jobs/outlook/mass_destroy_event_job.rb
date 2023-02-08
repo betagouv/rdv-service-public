@@ -2,6 +2,8 @@
 
 module Outlook
   class MassDestroyEventJob < ApplicationJob
+    queue_as :outlook_sync
+
     def perform(agent)
       agent.agents_rdvs.exists_in_outlook.each do |agents_rdv|
         Outlook::DestroyEventJob.perform_now(agents_rdv.outlook_id, agents_rdv.agent)

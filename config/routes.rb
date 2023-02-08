@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Rails.application.routes.draw do
   mount Rswag::Ui::Engine => '/api-docs'
   mount Rswag::Api::Engine => '/api-docs'
@@ -36,8 +38,8 @@ Rails.application.routes.draw do
     end
     root to: "agents#index"
 
-    authenticate :super_admin do
-      match "/delayed_job" => DelayedJobWeb, anchor: false, via: %i[get post]
+    authenticate(:super_admin) do
+      mount GoodJob::Engine => "good_job"
     end
   end
   get "super_admin", to: redirect("super_admins", status: 301)

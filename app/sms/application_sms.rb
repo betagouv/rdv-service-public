@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Similar to ActionMailer::Base, but for sms.
-# Prepare the Sms to be sent and schedule a DelayedJob with SmsSender.
+# Prepare the Sms to be sent and schedule a job with SmsSender.
 #
 # To be subclassed:
 # class SomeSmsSubclass < ApplicationSms
