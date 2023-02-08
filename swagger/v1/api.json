@@ -635,7 +635,7 @@
           "motif_category": {
             "$ref": "#/components/schemas/motif_category"
           },
-          "reservable_online": {
+          "bookable_publicly": {
             "type": "boolean"
           },
           "service_id": {
@@ -648,7 +648,7 @@
           "location_type",
           "name",
           "organisation_id",
-          "reservable_online",
+          "bookable_publicly",
           "service_id"
         ]
       },
@@ -2192,7 +2192,7 @@
             }
           },
           {
-            "name": "reservable_online",
+            "name": "bookable_publicly",
             "in": "query",
             "description": "filtre sur les motifs réservables en ligne",
             "required": false,
@@ -2234,7 +2234,7 @@
                           },
                           "name": "Motif 1",
                           "organisation_id": 115,
-                          "reservable_online": true,
+                          "bookable_publicly": true,
                           "service_id": 104
                         },
                         {
@@ -2251,7 +2251,7 @@
                           },
                           "name": "Motif 2",
                           "organisation_id": 115,
-                          "reservable_online": true,
+                          "bookable_publicly": true,
                           "service_id": 104
                         }
                       ],
@@ -2667,7 +2667,7 @@
                             },
                             "name": "Motif 1",
                             "organisation_id": 195,
-                            "reservable_online": true,
+                            "bookable_publicly": true,
                             "service_id": 163
                           },
                           "name": null,
