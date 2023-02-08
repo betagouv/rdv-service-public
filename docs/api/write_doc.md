@@ -6,7 +6,8 @@ Exemple de l'ajout du model `MotifCategory` qui remplace l'enum `category` du mo
 Avant :
 On voit bien la propriété `category`
 
-```json
+```ruby
+{
   motif: {
     type: "object",
     properties: {
@@ -21,6 +22,7 @@ On voit bien la propriété `category`
     },
     required: %w[id category deleted_at location_type name organisation_id bookable_publicly service_id],
   },
+}
 ```
 
 Après :
@@ -30,7 +32,8 @@ Suppression de l'enum `category` de `motif`.
 
 J'ai fait apparaître l'objet `motif_category` dans la structure des objets `motif` en utilisant la syntaxe `"$ref" => "#/components/schemas/motif_category"`
 
-```json
+```ruby
+{
   motif: {
     type: "object",
     properties: {
@@ -65,6 +68,7 @@ J'ai fait apparaître l'objet `motif_category` dans la structure des objets `mot
     },
     required: %w[id name short_name],
   },
+}
 ```
 
 
