@@ -1,46 +1,136 @@
-<% message.subject = I18n.t("devise.mailer.invitation_instructions_cnfs.subject", domain_name: domain.name) %>
-
-<p><%= t("devise.mailer.invitation_instructions_cnfs.hello") %></p>
-
 <p>
-  <%= t("devise.mailer.invitation_instructions_cnfs.create_account", domain_name: domain.name) %>
+  Bonjour 👋
 </p>
 
 <p>
-  <%= t("devise.mailer.invitation_instructions_cnfs.usage_info", domain_name: domain.name) %>
+  Ce mail est une invitation pour rejoindre votre espace <strong>RDV Aide Numérique</strong> !
 </p>
 
-<%= t("devise.mailer.invitation_instructions_cnfs.use1") %>
-<br>
-<%= t("devise.mailer.invitation_instructions_cnfs.use2") %>
-<br>
-<%= t("devise.mailer.invitation_instructions_cnfs.use3") %>
-<br>
-<%= t("devise.mailer.invitation_instructions_cnfs.use4") %>
-
-<br>
+<p>
+  <strong>RDV Aide Numérique</strong> est un outil de gestion et de prise de rendez-vous pour les Conseillers Numériques. Vous pouvez le tester 👇
+</p>
 
 <div class="btn-wrapper">
-  <%= link_to("Activer mon compte", accept_invitation_url(@resource, invitation_token: @token, user: @user_params),  class: "btn btn-primary") %>
+  <%= link_to("Testez l'outil", accept_invitation_url(@resource, invitation_token: @token, user: @user_params),  class: "btn btn-primary") %>
 </div>
 
-<br>
-<h1><%= t("devise.mailer.invitation_instructions_cnfs.title1") %></h1>
+<div class="wrapper secondary">
+  <h1>À quoi ça sert ?</h1>
+
+  <h2>📱 Envoyez des notifications de rappel aux apprenants</h2>
+
+  <p>
+    Vos usagers recevront un SMS et ou un mail de rappel de rendez-vous.
+    Ils pourront alors modifier ou annuler le rendez-vous.
+  </p>
 
 
-<p><%= t("devise.mailer.invitation_instructions_cnfs.paragraph1", video_link: link_to("ici", "https://peertube.ethibox.fr/w/f5Pd9h7uuor7xDNEKQRkqV")).html_safe %></p>
+  <h2>✅ Partagez vos disponibilités à vos collègues</h2>
 
-<p><%= t("devise.mailer.invitation_instructions_cnfs.first_steps_info") %></p>
+  <p>
+    Informez vos collègues de vos créneaux disponibles. Ils pourront planifier des rendez-vous dans votre agenda,
+    selon vos disponibilités.
+  </p>
 
-<br>
-<h1><%= t("devise.mailer.invitation_instructions_cnfs.title2") %></h1>
+
+  <h2>🗓️ Importez vos rendez-vous dans votre agenda</h2>
+
+  <p>
+    Synchronisez vos rendez-vous sur votre agenda favori. RDV Aide Numérique est là pour gérer vos disponibilités et
+    l’envoi des notifications.
+  </p>
+
+
+  <h2>🗺️ Faites apparaître vos disponibilités sur la cartographie nationale</h2>
+
+  <p>
+    Informez vos usagers de vos disponibilités en apparaissant dans la cartographie nationale des conseillers numériques.
+    Elle est accessible <a href="https://www.conseiller-numerique.gouv.fr/carte">ici</a>.
+    Des agents publics de votre territoire pourront rediriger des usagers vers vos services via la fonctionnalité “prescripteur”
+  </p>
+
+</div>
+
+<div class="wrapper secondary">
+  <h1>Qui sommes-nous ? 👥</h1>
+
+  <p>
+    Nous sommes une équipe de l’<strong>Incubateur des Territoires de l’Agence Nationale de la Cohésion des Territoires</strong>,
+    la structure qui pilote le programme <strong>Conseiller Numérique</strong>.
+  </p>
+
+  <p>
+    Nous développons une solution de gestion et de prise de rendez-vous pour les Conseillers Numériques.
+  </p>
+
+</div>
+
+
+<div class="wrapper secondary">
+  <h2>Vous avez des questions ? ⚙️</h2>
+
+  <p>
+    Vous souhaitez savoir comment envoyer des SMS de rappel ?
+    <br>
+    Vous souhaitez savoir comment faire apparaître vos disponibilités sur la cartographie nationale ?
+    <br>
+    Vous souhaitez mieux comprendre comment des agents publics de votre territoire pourraient rediriger des usagers vers vos services ?
+  </p>
+
+  <p>
+    Une documentation est à votre disposition pour vous accompagner. Elle est accessible
+    <a href="https://rdvs.notion.site/RDV-Aide-Num-rique-b4d23fd9c9434a1bbad0d8200c51ff42">ici</a>.
+  </p>
+</div>
+
+
+<div class="wrapper secondary">
+  <h2>Les retours utilisateurs ✨️</h2>
+
+  <p>
+    <em>
+      “L'essayer c'est l'adopter”
+    </em>
+  </p>
+
+  <p>
+    <em>
+      “J'ai cherché pendant longtemps un outil qui permettait de prendre des rendez-vous selon des plages horaires
+      définies avec un temps donné. RDV Aide Numérique, une solution qui m'a permis une meilleure gestion des
+      rendez-vous et de travailler en équipe.”
+    </em>
+  </p>
+
+  <p>
+    <em>
+      “Je n'imagine plus mon quotidien sans RDV Aide Numérique”
+    </em>
+  </p>
+</div>
+
+<h2>Vous n'êtes pas intéressé·e ? ❌</h2>
 
 <p>
-  <%= t("devise.mailer.invitation_instructions_cnfs.help_info",
-        mattermost: link_to("RDV Aide Numérique", "https://discussion.conseiller-numerique.gouv.fr/cnum/channels/rdv-aide-numerique"),
-        support_email: link_to("support@rdv-solidarites.fr", "mailto:support@rdv-solidarites.fr")
-       ).html_safe %>
+  Vous recevez ce mail car nous travaillons avec le programme Conseillers Numérique piloté par
+  l'Agence Nationale de la Cohésion des Territoire. Le programme cherche à faciliter le
+  quotidien des Conseillers Numérique en proposant des outils numériques adaptés.
 </p>
 
-<p><%= t("devise.mailer.invitation_instructions_cnfs.sign_off") %></p>
-<p><%= t("devise.mailer.invitation_instructions_cnfs.signature", domain_name: domain.name) %></p>
+<p>
+  Si vous ne souhaitez pas utiliser RDV Aide Numérique, vous pouvez vous
+  désinscrire de la mailing liste en cliquant sur ce bouton 👇
+</p>
+
+<% unsubscribe_link = "https://dc1a8bc9.sibforms.com/serve/MUIEAB8d1c9hKd2xe9RwQvxxqGlYMbMHEYipAw8FE6RQ88lEVxc_CPEQAq8z7V1AUvGG9SRo-X3ulkt8OOEbIE-YlRZ-Ur3trKnbiV3fQKPcVG7yzty_mjjGs3V8F-Nzr0E1NcdQR_3nqFVcTF4ZnB4sYaIJrNso2D-l14n2N6ds6KTWSlcPmsOV-vZ4H6b_9izOsFLVA_pwdQjk" %>
+<div class="btn-wrapper">
+  <%= link_to("Me désincrire", unsubscribe_link,  class: "btn btn-primary") %>
+</div>
+
+
+<h2>Besoin d’un contact avec notre équipe ?</h2>
+
+<p>
+  Pour une demande d’amélioration, une question sur l’utilisation ou tout autre sujet,
+  vous pouvez nous contacter à cette adresse mail&nbsp;:
+  <a href="mailto:contact@rdv-solidarités.fr">contact@rdv-solidarités.fr</a>
+</p>

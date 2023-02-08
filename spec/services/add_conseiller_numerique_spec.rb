@@ -6,6 +6,7 @@ describe AddConseillerNumerique do
     {
       external_id: "exemple@conseiller-numerique.fr",
       email: "exemple@conseiller-numerique.fr",
+      secondary_email: "mail_perso@gemelle.com",
       first_name: "Camille",
       last_name: "Clavier",
       structure: {
@@ -31,6 +32,7 @@ describe AddConseillerNumerique do
       expect(Agent.last).to have_attributes(
         external_id: "exemple@conseiller-numerique.fr",
         email: "exemple@conseiller-numerique.fr",
+        cnfs_secondary_email: "mail_perso@gemelle.com",
         first_name: "Camille",
         last_name: "Clavier"
       )
@@ -58,7 +60,7 @@ describe AddConseillerNumerique do
         before { create(:agent, external_id: "exemple@conseiller-numerique.fr") }
 
         it "does nothing" do
-          expect { described_class.process!(params) }.not_to change(Agent, :count)
+          expect { described_class.process!(params) }.not_to change { [Agent.count, Agent.maximum(:updated_at)] }
         end
       end
 

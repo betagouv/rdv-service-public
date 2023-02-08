@@ -1,5 +1,3 @@
-<% message.subject = I18n.t("devise.mailer.invitation_instructions.subject", domain_name: domain.name) %>
-
 <p><%= t("devise.mailer.invitation_instructions.hello", email: @resource.email) %></p>
 
 <p><%= t("devise.mailer.invitation_instructions_for_agents.body", inviter: @resource.invited_by.full_name, service: @resource.service.name, domain_name: domain.name) %></p>

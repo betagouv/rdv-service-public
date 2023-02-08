@@ -4,7 +4,7 @@ class AddConseillerNumerique
   class ConseillerNumerique
     include ActiveModel::Model
 
-    attr_accessor :email, :first_name, :last_name, :external_id
+    attr_accessor :email, :first_name, :last_name, :external_id, :secondary_email
   end
 
   class Structure
@@ -38,14 +38,19 @@ class AddConseillerNumerique
   private
 
   def find_or_invite_agent(organisation)
-    Agent.where(deleted_at: nil).find_by(
-      external_id: @conseiller_numerique.external_id
-    ) || invite_agent(organisation)
+    existing_agent = Agent.where(deleted_at: nil).find_by(external_id: @conseiller_numerique.external_id)
+    if existing_agent
+      Rails.logger.info("#{@conseiller_numerique.email} already exists, no update made.")
+    else
+      Rails.logger.info "Invitation de #{@conseiller_numerique.email}..."
+      invite_agent(organisation)
+    end
   end
 
   def invite_agent(organisation)
     Agent.invite!(
       email: @conseiller_numerique.email,
+      cnfs_secondary_email: @conseiller_numerique.secondary_email,
       first_name: @conseiller_numerique.first_name.capitalize,
       last_name: @conseiller_numerique.last_name,
       external_id: @conseiller_numerique.external_id,
