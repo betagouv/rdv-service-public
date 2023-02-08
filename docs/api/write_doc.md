@@ -6,7 +6,8 @@ Exemple de l'ajout du model `MotifCategory` qui remplace l'enum `category` du mo
 Avant :
 On voit bien la propriété `category`
 
-```json
+```ruby
+{
   motif: {
     type: "object",
     properties: {
@@ -16,11 +17,12 @@ On voit bien la propriété `category`
       location_type: { type: "string", enum: %w[public_office phone home] },
       name: { type: "string" },
       organisation_id: { type: "integer" },
-      reservable_online: { type: "boolean" },
+      bookable_publicly: { type: "boolean" },
       service_id: { type: "integer" },
     },
-    required: %w[id category deleted_at location_type name organisation_id reservable_online service_id],
+    required: %w[id category deleted_at location_type name organisation_id bookable_publicly service_id],
   },
+}
 ```
 
 Après :
@@ -30,7 +32,8 @@ Suppression de l'enum `category` de `motif`.
 
 J'ai fait apparaître l'objet `motif_category` dans la structure des objets `motif` en utilisant la syntaxe `"$ref" => "#/components/schemas/motif_category"`
 
-```json
+```ruby
+{
   motif: {
     type: "object",
     properties: {
@@ -40,10 +43,10 @@ J'ai fait apparaître l'objet `motif_category` dans la structure des objets `mot
       name: { type: "string" },
       organisation_id: { type: "integer" },
       motif_category: { "$ref" => "#/components/schemas/motif_category" },
-      reservable_online: { type: "boolean" },
+      bookable_publicly: { type: "boolean" },
       service_id: { type: "integer" },
     },
-    required: %w[id deleted_at location_type name organisation_id reservable_online service_id],
+    required: %w[id deleted_at location_type name organisation_id bookable_publicly service_id],
   },
   motif_categories: {
     type: "object",
@@ -65,6 +68,7 @@ J'ai fait apparaître l'objet `motif_category` dans la structure des objets `mot
     },
     required: %w[id name short_name],
   },
+}
 ```
 
 
