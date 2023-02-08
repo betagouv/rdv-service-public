@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_06_161834) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_08_100659) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "unaccent"
@@ -114,6 +114,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_06_161834) do
     t.index ["updated_at"], name: "index_absences_on_updated_at"
   end
 
+  create_table "agent_roles", force: :cascade do |t|
+    t.bigint "agent_id", null: false
+    t.bigint "organisation_id", null: false
+    t.string "level", default: "basic", null: false
+    t.index ["agent_id"], name: "index_agent_roles_on_agent_id"
+    t.index ["level"], name: "index_agent_roles_on_level"
+    t.index ["organisation_id", "agent_id"], name: "index_agent_roles_on_organisation_id_and_agent_id", unique: true
+    t.index ["organisation_id"], name: "index_agent_roles_on_organisation_id"
+  end
+
   create_table "agent_teams", force: :cascade do |t|
     t.bigint "team_id", null: false
     t.bigint "agent_id", null: false
@@ -199,16 +209,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_06_161834) do
     t.index ["reset_password_token"], name: "index_agents_on_reset_password_token", unique: true
     t.index ["service_id"], name: "index_agents_on_service_id"
     t.index ["uid", "provider"], name: "index_agents_on_uid_and_provider", unique: true
-  end
-
-  create_table "agents_organisations", force: :cascade do |t|
-    t.bigint "agent_id", null: false
-    t.bigint "organisation_id", null: false
-    t.string "level", default: "basic", null: false
-    t.index ["agent_id"], name: "index_agents_organisations_on_agent_id"
-    t.index ["level"], name: "index_agents_organisations_on_level"
-    t.index ["organisation_id", "agent_id"], name: "index_agents_organisations_on_organisation_id_and_agent_id", unique: true
-    t.index ["organisation_id"], name: "index_agents_organisations_on_organisation_id"
   end
 
   create_table "agents_rdvs", force: :cascade do |t|

@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class AgentRole < ApplicationRecord
-  self.table_name = "agents_organisations" # TODO: sync the model and table name
-
   include WebhookDeliverable
 
   # Attributes
