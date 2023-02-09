@@ -14,6 +14,9 @@ class Admin::AbsencesController < AgentAuthController
       .by_starts_at
       .page(filter_params[:page])
 
+    @organisations = policy_scope(@agent.organisations)
+
+
     @absences = params[:current_tab] == "expired" ? absences.expired : absences.not_expired
     @display_tabs = absences.expired.any? || params[:current_tab] == "expired"
   end
@@ -34,10 +37,12 @@ class Admin::AbsencesController < AgentAuthController
     @absence = Absence.new(organisation: current_organisation, agent: @agent, **defaults)
 
     authorize(@absence)
+    @organisations = policy_scope(@agent.organisations)
   end
 
   def edit
     authorize(@absence)
+    @organisations = policy_scope(@agent.organisations)
   end
 
   def create
