@@ -58,6 +58,7 @@ class Motif < ApplicationRecord
   validate :not_associated_with_secretariat
   validates :color, css_hex_color: true
   validate :not_at_home_if_collectif
+  validate :unused_motif, if: :location_type_changed?
 
   # Scopes
   scope :active, lambda { |active = true|
@@ -212,5 +213,11 @@ class Motif < ApplicationRecord
     return unless collectif? && !public_office?
 
     errors.add(:base, :not_at_home_if_collectif)
+  end
+
+  def unused_motif
+    return if rdvs.empty?
+
+    errors.add(:location_type, :cant_change_because_already_used)
   end
 end
