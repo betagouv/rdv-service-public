@@ -36,8 +36,8 @@ Rails.application.routes.draw do
     end
     root to: "agents#index"
 
+    match "/delayed_job" => DelayedJobWeb, anchor: false, via: %i[get post]
     authenticate :super_admin do
-      match "/delayed_job" => DelayedJobWeb, anchor: false, via: %i[get post]
     end
   end
   get "super_admin", to: redirect("super_admins", status: 301)
