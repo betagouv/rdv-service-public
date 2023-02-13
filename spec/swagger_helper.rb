@@ -78,7 +78,7 @@ RSpec.configure do |config|
                 items: { "$ref" => "#/components/schemas/rdvs_user" },
               },
               starts_at: { type: "string" },
-              status: { type: "string", enum: %w[unknown waiting seen excused revoked noshow] },
+              status: { type: "string", enum: %w[unknown seen excused revoked noshow] },
               users: {
                 type: "array",
                 items: { "$ref" => "#/components/schemas/user" },
@@ -319,7 +319,7 @@ RSpec.configure do |config|
             properties: {
               send_lifecycle_notifications: { type: "boolean" },
               send_reminder_notification: { type: "boolean" },
-              status: { type: "string", enum: %w[unknown waiting seen excused revoked noshow] },
+              status: { type: "string", enum: %w[unknown seen excused revoked noshow] },
               user: { "$ref" => "#/components/schemas/user" },
             },
             required: %w[send_lifecycle_notifications send_reminder_notification status user],
