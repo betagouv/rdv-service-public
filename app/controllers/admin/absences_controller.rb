@@ -51,6 +51,7 @@ class Admin::AbsencesController < AgentAuthController
       flash[:notice] = t(".busy_time_created")
       redirect_to admin_organisation_agent_absences_path(@absence.organisation_id, @absence.agent_id)
     else
+      @organisations = policy_scope(@agent.organisations)
       render :edit
     end
   end
@@ -62,6 +63,7 @@ class Admin::AbsencesController < AgentAuthController
       flash[:notice] = t(".busy_time_updated")
       redirect_to admin_organisation_agent_absences_path(@absence.organisation_id, @absence.agent_id)
     else
+      @organisations = policy_scope(@agent.organisations)
       render :edit
     end
   end
@@ -74,6 +76,7 @@ class Admin::AbsencesController < AgentAuthController
       flash[:notice] = t(".busy_time_deleted")
       redirect_to admin_organisation_agent_absences_path(@absence.organisation_id, @absence.agent_id)
     else
+      @organisations = policy_scope(@agent.organisations)
       render :edit
     end
   end
@@ -95,7 +98,11 @@ class Admin::AbsencesController < AgentAuthController
   end
 
   def absence_params
-    params.require(:absence).permit(:title, :agent_id, :first_day, :end_day, :start_time, :end_time, :recurrence, :organisation_id)
+    p = params.require(:absence).permit(:title, :agent_id, :first_day, :end_day, :start_time, :end_time, :recurrence, :organisation_id)
+    if p[:organisation_id].blank?
+      p = p.merge(organisation_id: current_organisation.id)
+    end
+    p
   end
 
   def filter_params
