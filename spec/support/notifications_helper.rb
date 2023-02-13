@@ -49,10 +49,12 @@ module NotificationsHelper
   def expect_no_notifications_for_user(user = nil)
     perform_enqueued_jobs
 
-    expect(ActionMailer::Base.deliveries.size).to eq(0)
-
     if user
+      expect(ActionMailer::Base.deliveries.map(&:to).flatten).not_to include(user.email)
       expect(Receipt.where(user_id: user.id, channel: "sms", result: "delivered").count).to eq 0
+    else
+      expect(ActionMailer::Base.deliveries.size).to eq(0)
+      expect(Receipt.count).to eq(0)
     end
   end
 
