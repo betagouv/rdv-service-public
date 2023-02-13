@@ -3,42 +3,39 @@
 describe Notifiers::RdvCancelled, type: :service do
   subject { described_class.perform_with(rdv, author) }
 
-  let(:agent1) { build(:agent) }
-  let(:agent2) { build(:agent) }
-  let(:user) { build(:user) }
-  let(:rdv) { build(:rdv, starts_at: starts_at, agents: [agent1, agent2]) }
-  let(:rdv_user) { create(:rdvs_user, user: user, rdv: rdv) }
-  let(:rdvs_users) { RdvsUser.where(id: rdv_user.id) }
+  let!(:agent1) { create(:agent) }
+  let!(:agent2) { create(:agent) }
+  let!(:user1) { create(:user) }
+  let!(:user2) { create(:user) }
+  let!(:rdv) { create(:rdv, starts_at: starts_at, agents: [agent1, agent2], users: [user1, user2]) }
+  let!(:rdv_user1) { rdv.rdvs_users.where(user: user1).first }
+  let!(:rdv_user2) { rdv.rdvs_users.where(user: user2).first }
 
   before do
     stub_netsize_ok
-
     rdv.update!(status: new_status)
-
-    allow(Agents::RdvMailer).to receive(:with).and_call_original
-    allow(Users::RdvMailer).to receive(:with).and_call_original
-    allow(rdv).to receive(:rdvs_users).and_return(rdvs_users)
   end
 
   context "cancellation by agent" do
-    let(:author) { agent1 }
-    let(:new_status) { :revoked }
+    let!(:author) { agent1 }
+    let!(:new_status) { :revoked }
 
     context "starts in more than 2 days" do
       let(:starts_at) { 3.days.from_now }
 
       it "only notifies the user" do
-        expect(Agents::RdvMailer).not_to receive(:with).with({ rdv: rdv, agent: agent1, author: agent1 })
-        expect(Agents::RdvMailer).not_to receive(:with).with({ rdv: rdv, agent: agent2, author: agent1 })
-        expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv, user: user, token: /^[A-Z0-9]{8}$/ })
-
         subject
+        expect_notifications_sent_for(rdv, user1, :rdv_cancelled)
+        expect_notifications_sent_for(rdv, user2, :rdv_cancelled)
+        expect_no_notifications_for(rdv, agent1, :rdv_cancelled)
+        expect_no_notifications_for(rdv, agent2, :rdv_cancelled)
       end
 
       it "rdv_users_tokens_by_user_id attribute outputs the tokens" do
-        notifier = described_class.new(rdv, user)
+        allow(Devise.token_generator).to receive(:generate).and_return("t0k3n")
+        notifier = described_class.new(rdv, nil)
         notifier.perform
-        expect(notifier.rdv_users_tokens_by_user_id).to match(user.id => /^[A-Z0-9]{8}$/)
+        expect(notifier.rdv_users_tokens_by_user_id).to eq({ user1.id => "t0k3n", user2.id => "t0k3n" })
       end
     end
 
@@ -46,26 +43,27 @@ describe Notifiers::RdvCancelled, type: :service do
       let(:starts_at) { 1.day.from_now }
 
       it "notifies the users and the other agents (not the author)" do
-        expect(Agents::RdvMailer).not_to receive(:with).with({ rdv: rdv, agent: agent1, author: agent1 })
-        expect(Agents::RdvMailer).to receive(:with).with({ rdv: rdv, agent: agent2, author: agent1 })
-        expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv, user: user, token: /^[A-Z0-9]{8}$/ })
-
         subject
+        expect_notifications_sent_for(rdv, user1, :rdv_cancelled)
+        expect_notifications_sent_for(rdv, user2, :rdv_cancelled)
+        expect_notifications_sent_for(rdv, agent2, :rdv_cancelled)
+        expect_no_notifications_for(rdv, agent1, :rdv_cancelled)
       end
     end
   end
 
   context "cancellation by user" do
-    let(:author) { user }
-    let(:new_status) { :excused }
-    let(:starts_at) { 1.day.from_now }
+    let!(:author) { user1 }
+    let!(:new_status) { :excused }
+    let!(:starts_at) { 1.day.from_now }
 
-    it "notifies the user and the agents" do
-      expect(Agents::RdvMailer).to receive(:with).with({ rdv: rdv, agent: agent1, author: user })
-      expect(Agents::RdvMailer).to receive(:with).with({ rdv: rdv, agent: agent2, author: user })
-      expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv, user: user, token: /^[A-Z0-9]{8}$/ })
-
+    it "notifies the user and the agents only by mails" do
       subject
+      # Excused rdvs when author is a user doesnt notify users by sms
+      expect_notifications_sent_for(rdv, user1, :rdv_cancelled, :mail)
+      expect_notifications_sent_for(rdv, user2, :rdv_cancelled, :mail)
+      expect_notifications_sent_for(rdv, agent1, :rdv_cancelled)
+      expect_notifications_sent_for(rdv, agent2, :rdv_cancelled)
     end
   end
 end

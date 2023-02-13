@@ -32,12 +32,12 @@ describe Notifiers::RdvUpcomingReminder, type: :service do
     rdv_user1.update(status: "excused")
     rdv_user2.update(status: "revoked")
     subject
-    expect_no_notifications_for_user
+    expect_no_notifications
   end
 
   it "rdv_users_tokens_by_user_id attribute outputs the tokens" do
     allow(Devise.token_generator).to receive(:generate).and_return("t0k3n")
-    notifier = described_class.new(rdv, user1)
+    notifier = described_class.new(rdv, nil)
     notifier.perform
     expect(notifier.rdv_users_tokens_by_user_id).to eq({ user1.id => "t0k3n", user2.id => "t0k3n" })
   end
