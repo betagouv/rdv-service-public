@@ -46,6 +46,7 @@ module UsersHelper
 
   def user_soft_deleted_tag(organisation, user)
     return tag.span("Supprimé", class: "badge badge-danger") if user.deleted_at
+    return if organisation.territory.visible_users_throughout_the_territory?
 
     tag.span("Supprimé de cette organisation", class: "badge badge-danger") unless user.profile_for(organisation)
   end
