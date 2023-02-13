@@ -116,7 +116,6 @@
             "type": "string",
             "enum": [
               "unknown",
-              "waiting",
               "seen",
               "excused",
               "revoked",
@@ -702,7 +701,6 @@
             "type": "string",
             "enum": [
               "unknown",
-              "waiting",
               "seen",
               "excused",
               "revoked",
