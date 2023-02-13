@@ -219,4 +219,32 @@ describe Motif, type: :model do
       expect(build(:motif, :at_public_office).requires_lieu?).to eq(true)
     end
   end
+
+  describe "cant update type when already used for a rdv" do
+    it "valid when no RDV use this motif" do
+      motif = create(:motif, location_type: "public_office")
+      expect do
+        motif.update(location_type: "phone")
+      end.to change {
+        motif.reload.location_type
+      }.from("public_office").to("phone")
+    end
+
+    it "invalid when RDV use this motif" do
+      motif = create(:motif, location_type: "public_office")
+      create(:rdv, motif: motif)
+      expect do
+        motif.update(location_type: "phone")
+      end.not_to change {
+        motif.reload.location_type
+      }
+    end
+
+    it "error with clear error message when RDV use this motif" do
+      motif = create(:motif, location_type: "public_office")
+      create(:rdv, motif: motif)
+      motif.update(location_type: "phone")
+      expect(motif.reload.errors.full_messages).to eq(["Type de RDV ne peut être modifié car le motif est utilisé pour un RDV"])
+    end
+  end
 end
