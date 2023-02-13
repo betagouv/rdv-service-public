@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_07_142918) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_13_103220) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "unaccent"
@@ -94,7 +94,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_07_142918) do
   create_table "absences", force: :cascade do |t|
     t.bigint "agent_id", null: false
     t.string "title", null: false
-    t.bigint "organisation_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "recurrence"
@@ -109,9 +108,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_07_142918) do
     t.index ["end_day"], name: "index_absences_on_end_day"
     t.index ["expired_cached"], name: "index_absences_on_expired_cached"
     t.index ["first_day"], name: "index_absences_on_first_day"
-    t.index ["organisation_id"], name: "index_absences_on_organisation_id"
     t.index ["recurrence"], name: "index_absences_on_recurrence", where: "(recurrence IS NOT NULL)"
     t.index ["updated_at"], name: "index_absences_on_updated_at"
+  end
+
+  create_table "absences_organisations", id: false, force: :cascade do |t|
+    t.bigint "absence_id", null: false
+    t.bigint "organisation_id", null: false
+    t.index ["absence_id", "organisation_id"], name: "index_absences_organisations_on_absence_id_and_organisation_id", unique: true
   end
 
   create_table "agent_teams", force: :cascade do |t|
@@ -503,9 +507,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_07_142918) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "short_name"
+    t.bigint "territory_id"
     t.index "lower((name)::text)", name: "index_services_on_lower_name", unique: true
     t.index "lower((short_name)::text)", name: "index_services_on_lower_short_name", unique: true
     t.index ["name"], name: "index_services_on_name"
+    t.index ["territory_id"], name: "index_services_on_territory_id"
   end
 
   create_table "super_admins", force: :cascade do |t|
@@ -657,7 +663,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_07_142918) do
   end
 
   add_foreign_key "absences", "agents"
-  add_foreign_key "absences", "organisations"
   add_foreign_key "agent_territorial_access_rights", "agents"
   add_foreign_key "agent_territorial_access_rights", "territories"
   add_foreign_key "agents", "services"

@@ -16,10 +16,10 @@ class Absence < ApplicationRecord
 
   # Relations
   belongs_to :agent
-  belongs_to :organisation
+  has_many :absences_organisation, dependent: :destroy
 
   # Through relations
-  has_many :webhook_endpoints, through: :organisation
+  has_many :organisation, through: :absences_organisation
 
   # Validation
   validates :first_day, :title, presence: true
@@ -45,6 +45,13 @@ class Absence < ApplicationRecord
 
   def ical_uid
     "absence_#{id}@#{IcalHelpers::ICS_UID_SUFFIX}"
+  end
+
+  # remplace la jointure :
+  # `has_many :webhook_endpoints, through: :organisation`
+  # nécessaire depuis la création de la table de jointure entre les organisations et les absences
+  def webhook_endpoints
+    organisations.flap_map(&:webhook_endpoints)
   end
 
   private
