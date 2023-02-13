@@ -1,7 +1,7 @@
 = simple_form_for [:admin, absence.organisation, absence] do |f|
   = render "model_errors", model: absence
   = f.hidden_field :agent_id
-  
+
   - if @organisations.count > 1
     = f.input :organisation_id, collection: @organisations.map {[_1.name, _1.id]}, \
                 label: "Organisation", \

@@ -16,7 +16,6 @@ class Admin::AbsencesController < AgentAuthController
 
     @organisations = policy_scope(@agent.organisations)
 
-
     @absences = params[:current_tab] == "expired" ? absences.expired : absences.not_expired
     @display_tabs = absences.expired.any? || params[:current_tab] == "expired"
   end
@@ -46,7 +45,6 @@ class Admin::AbsencesController < AgentAuthController
   end
 
   def create
-    @absence.organisation = current_organisation
     authorize(@absence)
     if @absence.save
       absence_mailer.absence_created.deliver_later if @agent.absence_notification_level == "all"
@@ -97,7 +95,7 @@ class Admin::AbsencesController < AgentAuthController
   end
 
   def absence_params
-    params.require(:absence).permit(:title, :agent_id, :first_day, :end_day, :start_time, :end_time, :recurrence)
+    params.require(:absence).permit(:title, :agent_id, :first_day, :end_day, :start_time, :end_time, :recurrence, :organisation_id)
   end
 
   def filter_params
