@@ -81,3 +81,5 @@ fr:
               not_at_home_if_collectif: Les RDV collectifs doivent avoir lieu sur place.
             name:
               taken: est déjà utilisé pour un motif avec le même type de RDV.
+            location_type:
+              cant_change_because_already_used: ne peut être modifié car le motif est utilisé pour un RDV
