@@ -41,6 +41,7 @@ class Stat
   def rdvs_group_by_status
     res = rdvs
       .where("starts_at < ?", Time.zone.today)
+      .where.not(status: :waiting)
       .group("status")
       .group_by_week("rdvs.starts_at", format: DEFAULT_FORMAT)
       .count
@@ -66,6 +67,7 @@ class Stat
       .joins(:rdv)
       .where(rdv: rdvs)
       .where("rdvs.starts_at < ?", Time.zone.today)
+      .where.not(status: :waiting)
       .group("status")
       .group_by_week("rdvs.starts_at", format: DEFAULT_FORMAT)
       .count
