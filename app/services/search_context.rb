@@ -188,12 +188,7 @@ class SearchContext
     motifs = motifs.where(organisations: { external_id: @external_organisation_ids.compact }) if @external_organisation_ids.present?
     motifs = motifs.where(id: @motif_id) if @motif_id.present?
     motifs = motifs.with_availability_for_lieux([lieu.id]) if lieu.present?
-
-    # Il manquerai pas un if ici ?
     motifs = motifs.where(follow_up: follow_up?)
-    # ---------------------
-    # Les motifs des cnfs sont cochés comme rdv de suivi et cette ligne empéche le search_context de fonctionner correctement
-    # pour les CNFS car le if follow_up? renvoi true mais il n'y a pas de referents
     motifs = motifs.with_availability_for_agents(referents.map(&:id)) if follow_up?
 
     motifs
