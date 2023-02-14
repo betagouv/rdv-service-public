@@ -401,12 +401,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_13_155047) do
     t.integer "created_by", default: 0
     t.text "context"
     t.bigint "lieu_id"
-    t.enum "status", default: "unknown", null: false, enum_type: "rdv_status"
     t.datetime "ends_at", null: false
     t.string "name"
     t.integer "max_participants_count"
     t.integer "users_count", default: 0
     t.datetime "deleted_at"
+    t.enum "status", default: "unknown", null: false, enum_type: "rdv_status"
     t.index "tsrange(starts_at, ends_at, '[)'::text)", name: "index_rdvs_on_tsrange_starts_at_ends_at", using: :gist
     t.index ["created_by"], name: "index_rdvs_on_created_by"
     t.index ["deleted_at"], name: "index_rdvs_on_deleted_at"
