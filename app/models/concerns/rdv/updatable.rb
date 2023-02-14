@@ -57,6 +57,7 @@ module Rdv::Updatable
 
   def notify!(author, previous_participations)
     if rdv_cancelled?
+      file_attentes.destroy_all
       @notifier = new_cancelled_notifier(author, previous_participations)
     elsif rdv_status_reloaded_from_cancelled?
       @notifier = Notifiers::RdvCreated.new(self, author)
@@ -72,8 +73,7 @@ module Rdv::Updatable
   end
 
   def new_cancelled_notifier(author, previous_participations)
-    file_attentes.destroy_all
-    # Only notify cancellation for NEW cancelled participations
+    # Don't notify RDV cancellation to users that had previously cancelled their individual participation
     available_users_for_notif = previous_participations.select(&:not_cancelled?).map(&:user)
     Notifiers::RdvCancelled.new(self, author, available_users_for_notif)
   end
