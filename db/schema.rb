@@ -47,11 +47,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_07_142918) do
 
   create_enum :rdv_status, [
     "unknown",
-    "waiting",
     "seen",
     "excused",
     "revoked",
     "noshow",
+    "waiting",
   ], force: :cascade
 
   create_enum :receipts_channel, [
