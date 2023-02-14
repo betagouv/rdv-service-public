@@ -9,6 +9,8 @@
                 input_html: { \
                   class: "select2-input", \
                 }
+  - else
+    = f.input :organisation_id, as: :hidden, input_html: {value: current_organisation.id}
 
   = f.input :title, hint:"Uniquement visible en interne", placeholder: t(".busy_time_example")
 

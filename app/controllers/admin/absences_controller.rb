@@ -98,11 +98,7 @@ class Admin::AbsencesController < AgentAuthController
   end
 
   def absence_params
-    p = params.require(:absence).permit(:title, :agent_id, :first_day, :end_day, :start_time, :end_time, :recurrence, :organisation_id)
-    if p[:organisation_id].blank?
-      p = p.merge(organisation_id: current_organisation.id)
-    end
-    p
+    params.require(:absence).permit(:title, :agent_id, :first_day, :end_day, :start_time, :end_time, :recurrence, :organisation_id)
   end
 
   def filter_params
