@@ -49,11 +49,11 @@ module HumanAttributeValue
     #
     # @example:
     # > Rdv.human_attribute_values(:status)
-    # => { "État indéterminé" => "unknown", "En salle d’attente" => "waiting", "Rendez-vous honoré" => "seen" ... }
+    # => { "État indéterminé" => "unknown", "Rendez-vous honoré" => "seen" ... }
     #
     # @example:
     # > Rdv.human_attribute_values(:status, context: :action)
-    # => { "unknown"=>"Pour corriger l’état du rendez-vous", "waiting"=>"L’usager est présent", "seen"=>"L’usager s’est présenté à son rendez-vous et a été reçu." ... }
+    # => { "unknown"=>"Pour corriger l’état du rendez-vous", "seen"=>"L’usager s’est présenté à son rendez-vous et a été reçu." ... }
     def human_attribute_values(attr_name, options = {})
       mapping = send(attr_name.to_s.pluralize)
       attr_values = if options.delete(:raw_values)
