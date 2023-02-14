@@ -2,6 +2,8 @@
 
 describe AgentRemoval, type: :service do
   context "agent belongs to single organisation, with a few absences and plages ouvertures" do
+    # orgs must have at least one admin
+    let!(:admin_agent) { create(:agent, admin_role_in_organisations: [organisation]) }
     let!(:organisation) { create(:organisation) }
     let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
     let!(:plage_ouvertures) { create_list(:plage_ouverture, 2, agent: agent, organisation: organisation) }
@@ -18,6 +20,8 @@ describe AgentRemoval, type: :service do
   end
 
   context "agent belongs to multiple organisations" do
+    # orgs must have at least one admin
+    let!(:admin_agent) { create(:agent, admin_role_in_organisations: [organisation1, organisation2]) }
     let!(:organisation1) { create(:organisation) }
     let!(:organisation2) { create(:organisation) }
     let!(:agent) { create(:agent, basic_role_in_organisations: [organisation1, organisation2]) }
@@ -37,6 +41,8 @@ describe AgentRemoval, type: :service do
   end
 
   context "agent has upcoming RDVs" do
+    # orgs must have at least one admin
+    let!(:admin_agent) { create(:agent, admin_role_in_organisations: [organisation]) }
     let!(:organisation) { create(:organisation) }
     let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
     let!(:rdv) { create(:rdv, agents: [agent], organisation: organisation, starts_at: Time.zone.today.next_week(:monday) + 10.hours) }
@@ -50,10 +56,13 @@ describe AgentRemoval, type: :service do
   end
 
   context "agent has old RDVs" do
+    # orgs must have at least one admin
+    let!(:admin_agent) { create(:agent, admin_role_in_organisations: [organisation]) }
+    let!(:organisation) { create(:organisation) }
+
     it "succeeds" do
       now = Time.zone.parse("2021-2-13 13h00")
       travel_to(now - 2.weeks)
-      organisation = create(:organisation)
       agent = create(:agent, basic_role_in_organisations: [organisation])
       create(:rdv, agents: [agent], organisation: organisation, starts_at: now.prev_week(:monday) + 10.hours)
       travel_to(now)
@@ -62,6 +71,17 @@ describe AgentRemoval, type: :service do
       result = described_class.new(agent, organisation).remove!
       expect(result).to eq true
       expect(agent.organisations).to be_empty
+    end
+  end
+
+  context "when the agent is the only admin of the org" do
+    let!(:organisation) { create(:organisation) }
+    let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
+
+    it "raises" do
+      expect do
+        described_class.new(agent, organisation).remove!
+      end.to raise_error(ActiveRecord::RecordNotDestroyed)
     end
   end
 

@@ -284,15 +284,35 @@ RSpec.configure do |config|
             type: "object",
             properties: {
               id: { type: "integer" },
-              category: { type: "string", enum: %w[rsa_orientation rsa_accompagnement rsa_orientation_on_phone_platform rsa_cer_signature rsa_insertion_offer rsa_follow_up] },
               deleted_at: { type: "string", nullable: true },
               location_type: { type: "string", enum: %w[public_office phone home] },
               name: { type: "string" },
               organisation_id: { type: "integer" },
-              reservable_online: { type: "boolean" },
+              motif_category: { "$ref" => "#/components/schemas/motif_category" },
+              bookable_publicly: { type: "boolean" },
               service_id: { type: "integer" },
             },
-            required: %w[id category deleted_at location_type name organisation_id reservable_online service_id],
+            required: %w[id deleted_at location_type name organisation_id bookable_publicly service_id],
+          },
+          motif_categories: {
+            type: "object",
+            properties: {
+              motif_categories: {
+                type: "array",
+                items: { "$ref" => "#/components/schemas/motif_category" },
+              },
+              meta: { "$ref" => "#/components/schemas/meta" },
+            },
+            required: %w[motif_categories meta],
+          },
+          motif_category: {
+            type: "object",
+            properties: {
+              id: { type: "integer" },
+              name: { type: "string" },
+              short_name: { type: "string" },
+            },
+            required: %w[id name short_name],
           },
           rdvs_user: {
             type: "object",

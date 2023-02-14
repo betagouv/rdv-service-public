@@ -19,7 +19,11 @@ class Agent::ReferentAssignationPolicy < DefaultAgentPolicy
 
   def same_user_org?
     if current_organisation.present?
-      @record.user.organisation_ids.include?(current_organisation.id)
+      if current_organisation.territory.visible_users_throughout_the_territory
+        (@record.user.organisation_ids & current_organisation.territory.organisation_ids).any?
+      else
+        @record.user.organisation_ids.include?(current_organisation.id)
+      end
     else
       (@record.user.organisation_ids & current_agent.organisation_ids).any?
     end

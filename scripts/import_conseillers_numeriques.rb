@@ -15,6 +15,7 @@ conseillers_numeriques.each do |conseiller_numerique|
   AddConseillerNumerique.process!({
     external_id: external_id,
     email: conseiller_numerique["Email @conseiller-numerique.fr"],
+    secondary_email: conseiller_numerique["Email"],
     first_name: conseiller_numerique["Prénom"],
     last_name: conseiller_numerique["Nom"],
     structure: {
@@ -23,6 +24,4 @@ conseillers_numeriques.each do |conseiller_numerique|
       address: conseiller_numerique["Adresse de la structure"],
     },
   }.with_indifferent_access)
-
-  puts "Import ou mise à jour réussie pour #{conseiller_numerique['Email @conseiller-numerique.fr']}"
 end

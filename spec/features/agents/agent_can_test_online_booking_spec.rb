@@ -5,7 +5,7 @@ describe "Agents can try the user-facing online booking pages" do
   let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
 
   before do
-    motif = create(:motif, organisation: organisation, service: agent.service, reservable_online: true)
+    motif = create(:motif, organisation: organisation, service: agent.service, bookable_publicly: true)
     motif.plage_ouvertures << create(:plage_ouverture, organisation: organisation, agent: agent)
   end
 

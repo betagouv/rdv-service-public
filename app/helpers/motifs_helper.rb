@@ -3,7 +3,7 @@
 module MotifsHelper
   YIQ_DARK_LIGHT_FRONTIER = 128
 
-  def motif_name_with_location_type(motif)
+  def motif_name_and_location_type(motif)
     "#{motif.name} (#{motif.human_attribute_value(:location_type)})"
   end
 
@@ -16,14 +16,14 @@ module MotifsHelper
   end
 
   def motif_name_with_special_location_type(motif)
-    motif.public_office? ? motif.name : motif_name_with_location_type(motif)
+    motif.public_office? ? motif.name : motif_name_and_location_type(motif)
   end
 
   def motif_name_with_location_type_and_badges(motif)
-    tag.span(motif_name_with_location_type(motif)) + motif_badges(motif)
+    tag.span(motif_name_and_location_type(motif)) + motif_badges(motif)
   end
 
-  def motif_badges(motif, only: %i[reservable_online secretariat follow_up collectif])
+  def motif_badges(motif, only: %i[bookable_publicly secretariat follow_up collectif])
     safe_join(only.select { motif.send("#{_1}?") }.map { build_badge_tag_for(_1) })
   end
 

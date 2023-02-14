@@ -13,8 +13,8 @@ describe "Anybody can see stats" do
     visit stats_path
     expect(page).to have_content("0 ont des créneaux ouverts au public")
 
-    create(:plage_ouverture, motifs: [create(:motif, reservable_online: true)]) # reservable online plage
-    create(:rdv, motif: create(:motif, :collectif, reservable_online: true)) # reservable online RDV collectif
+    create(:plage_ouverture, motifs: [create(:motif, bookable_publicly: true)]) # reservable online plage
+    create(:rdv, motif: create(:motif, :collectif, bookable_publicly: true)) # reservable online RDV collectif
 
     visit stats_path
     expect(page).to have_content("2 ont des créneaux ouverts au public")
