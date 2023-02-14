@@ -12,9 +12,9 @@ module Rdv::Updatable
     Rdv.transaction do
       self.updated_at = Time.zone.now
 
-      if status_changed?
+      if status_changed? && valid?
         self.cancelled_at = status.in?(%w[excused revoked noshow]) ? Time.zone.now : nil
-        change_participation_statuses(status)
+        change_participation_statuses
       end
 
       previous_participations = rdvs_users.select(&:persisted?)
@@ -25,27 +25,6 @@ module Rdv::Updatable
       else
         false
       end
-    end
-  end
-
-  def change_participation_statuses(status)
-    # Consequences on participations with RDV.status changes :
-    case status
-    when "unknown"
-      # Setting to unknown means resetting the rdv status by agents and reset ALL participants statuses
-      rdvs_users.each { _1.update!(status: status) }
-    when "excused"
-      # Collective rdv cannot be globally excused
-      unless collectif?
-        # On non collectives rdv all participants are excused
-        rdvs_users.not_cancelled.each { _1.update!(status: status) }
-      end
-    when "revoked"
-      # When rdv status is revoked, all participants are revoked
-      rdvs_users.not_cancelled.each { _1.update!(status: status) }
-    when "seen", "noshow"
-      # When rdv status is seen or noshow, all unknown statuses are changed
-      rdvs_users.unknown.each { _1.update!(status: status) }
     end
   end
 
@@ -94,5 +73,23 @@ module Rdv::Updatable
 
   def rdv_updated?
     starts_at_changed? || lieu_changed?
+  end
+
+  private
+
+  def change_participation_statuses
+    case status
+    when "unknown"
+      # Setting to unknown means resetting the rdv status by agents and reset ALL participations statuses
+      rdvs_users.each { _1.update!(status: status) }
+    when "revoked", "excused"
+      # When rdv status is revoked/excused, not cancelled participations are updated to revoked/excused
+      # Collectives RDV status cannot be excused (validations)
+      rdvs_users.not_cancelled.each { _1.update!(status: status) }
+    when "seen", "noshow"
+      # When rdv status is seen/noshow, unknowns participations statuses are updated to seen/noshow
+      # Collectives RDV status cannot be noshow (validations)
+      rdvs_users.unknown.each { _1.update!(status: status) }
+    end
   end
 end

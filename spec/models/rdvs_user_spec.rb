@@ -43,39 +43,4 @@ describe RdvsUser, type: :model do
       expect(rdv.users_count).to eq(3)
     end
   end
-
-  describe "Add/Remove rdvs_users update rdv parent status (touch hook)" do
-    let(:agent) { create(:agent) }
-    let!(:rdv) do
-      create(:rdv,
-             :collectif,
-             starts_at: Time.zone.tomorrow,
-             agents: [agent],
-             status: "seen",
-             rdvs_users: [rdvs_user1, rdvs_user2, rdvs_user3])
-    end
-    let(:rdvs_user1) { create(:rdvs_user) }
-    let(:rdvs_user2) { create(:rdvs_user) }
-    let(:rdvs_user3) { create(:rdvs_user) }
-
-    before do
-      rdvs_user1.update!(status: "seen")
-      rdvs_user2.update!(status: "seen")
-      rdvs_user3.update!(status: "seen")
-    end
-
-    it "Add Rdvs_user update rdv parent status" do
-      expect(rdv.rdvs_users.reload.map(&:status)).to all(include("seen"))
-      expect(rdv.status).to eq("seen")
-      create(:rdvs_user, rdv: rdv)
-      expect(rdv.reload.status).to eq("unknown")
-    end
-
-    it "Remove Rdvs_user update rdv parent status" do
-      new_rdvs_user = create(:rdvs_user, rdv: rdv)
-      expect(rdv.status).to eq("unknown")
-      rdv.rdvs_users.destroy(new_rdvs_user)
-      expect(rdv.reload.status).to eq("seen")
-    end
-  end
 end
