@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MigrateRdvCoStatus < ActiveRecord::Migration[7.0]
   def change
     # Change invalid collectives rdv statuses noshow and excused (approx 500 rdvs in production)
