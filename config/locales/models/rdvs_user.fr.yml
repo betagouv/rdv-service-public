@@ -28,6 +28,9 @@ fr:
         noshow: Absence non excusée
       rdvs_user/statuses/explanation:
         unknown: Pour corriger l’état du rendez-vous.
-        seen: L’usager s’est présenté et a été reçu.
-        excused: L’usager a prévenu de son absence. Une notification de confirmation lui sera envoyée.
+        seen: L’usager s’est présenté au rendez-vous.
+        excused: L’usager a prévenu de son absence.
         noshow: L’usager ne s’est pas présenté.
+      rdvs_user/statuses/explanation_notif:
+        unknown: Une notification de nouveau RDV sera envoyée à l'usager.
+        excused: Une notification de confirmation lui sera envoyée.
