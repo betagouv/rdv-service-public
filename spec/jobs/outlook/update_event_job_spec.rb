@@ -3,13 +3,13 @@
 require "rails_helper"
 
 RSpec.describe Outlook::UpdateEventJob, type: :job do
-  let(:organisation) { create(:organisation, id: 10) }
+  let(:organisation) { create(:organisation) }
   let(:motif) { create(:motif, name: "Super Motif", location_type: :phone) }
   # We need to create a fake agent to initialize a RDV as they have a validation on agents which prevents us to control the data in its AgentsRdv
   let(:fake_agent) { create(:agent) }
   let(:agent) { create(:agent, microsoft_graph_token: "token") }
   let(:user) { create(:user, email: "user@example.fr", first_name: "First", last_name: "Last", organisations: [organisation]) }
-  let(:rdv) { create(:rdv, id: 20, motif: motif, users: [user], organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [fake_agent]) }
+  let(:rdv) { create(:rdv, motif: motif, users: [user], organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [fake_agent]) }
   let(:agents_rdv) { create(:agents_rdv, rdv: rdv, agent: agent, outlook_id: "super_id") }
 
   let(:expected_body) do
@@ -17,7 +17,7 @@ RSpec.describe Outlook::UpdateEventJob, type: :job do
       subject: "Super Motif",
       body: {
         contentType: "HTML",
-        content: "plus d'infos dans RDV Solidarités: http://www.rdv-solidarites-test.localhost/admin/organisations/10/rdvs/20",
+        content: "plus d'infos dans RDV Solidarités: http://www.rdv-solidarites-test.localhost/admin/organisations/#{organisation.id}/rdvs/#{rdv.id}",
       },
       start: {
         dateTime: "2023-01-01T11:00:00+01:00",
