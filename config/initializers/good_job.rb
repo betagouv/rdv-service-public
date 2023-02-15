@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 Rails.application.configure do
-  # Configure options individually...
+  config.active_job.default_priority = 0
+
   config.good_job.preserve_job_records = true
   config.good_job.retry_on_unhandled_error = false
   config.good_job.on_thread_error = ->(exception) { Sentry.capture_exception(exception) }
