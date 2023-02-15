@@ -8,7 +8,7 @@ describe "using netsize to send an SMS" do
 
   stub_sentry_events
 
-  it "calls netsize API" do
+  it "calls netsize API, sends nothing to Sentry, enqueues nothing" do
     stub_netsize_ok
 
     Users::RdvSms.rdv_created(rdv, rdv.users.first, "t0k3n").deliver_later
@@ -25,6 +25,8 @@ describe "using netsize to send an SMS" do
       expect(body).to include(expected_body)
     end
     expect(WebMock).to(have_requested(:post, "https://europe.ipx.com/restapi/v1/sms/send").with(&valid_request))
+    expect(sentry_events).to be_empty
+    expect(enqueued_jobs).to be_empty
   end
 
   def expect_error_to_be_logged
