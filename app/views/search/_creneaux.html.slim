@@ -18,7 +18,7 @@ div id="creneaux-lieu-#{lieu&.id}"
               = l(date, format: "%d %b")
             - creneaux_for_date = creneaux.group_by { |c| c.starts_at.to_date }.select { |k, v| k == date }
 
-            - if creneaux_for_date.any? && creneaux_for_date[date].first.respects_max_booking_delay?
+            - if creneaux_for_date.any? && creneaux_for_date[date].first.respects_max_public_booking_delay?
               - creneaux_for_date.each do |date, creneaux|
                 - creneaux.sort.each do |creneau|
                   = link_to new_users_rdv_wizard_step_path(query.merge(motif_id: creneau.motif.id, starts_at: creneau.starts_at)), "data-turbolinks": false, class: "btn btn-light mr-1 mb-1 w-100", aria: { label: "Choisir le créneau de #{l(creneau.starts_at, format: '%H:%M')}"} do
@@ -26,7 +26,7 @@ div id="creneaux-lieu-#{lieu&.id}"
                     - if creneau.motif.follow_up?
                       br
                       small= creneau.agent.short_name
-            - elsif date >= (Time.now + max_booking_delay.seconds).to_date
+            - elsif date >= (Time.now + max_public_booking_delay.seconds).to_date
               p.text-center.text-muted
                 | Date fermée à la reservation
             - elsif creneaux.any?
@@ -43,7 +43,7 @@ div id="creneaux-lieu-#{lieu&.id}"
                   strong= l(next_availability.starts_at, format: :human)
                 .ml-2
                   i.fa.fa-chevron-right
-    - if params[:date].blank? || (params[:date].to_date + 6.days) < (Time.now + max_booking_delay.seconds).to_date
+    - if params[:date].blank? || (params[:date].to_date + 6.days) < (Time.now + max_public_booking_delay.seconds).to_date
       .col-12.col-md-auto.mt-2.mt-md-0.d-flex.align-items-center.justify-content-center
         = link_to prendre_rdv_path(query.merge(date: date_range.end + 1.day)), class: "btn btn-primary", data: { disable_with: "..." }, aria: { label: "semaine suivante"} do
           span.d-md-none.mr-1

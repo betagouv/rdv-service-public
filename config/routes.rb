@@ -106,17 +106,21 @@ Rails.application.routes.draw do
 
   authenticate :agent do
     namespace "admin" do
-      resources :territories, only: %i[update show] do
+      resources :territories, only: %i[edit update show] do
         scope module: "territories" do
-          resources :agent_territorial_roles, only: %i[index new create destroy]
           resources :agent_roles, only: %i[edit update create destroy]
           resources :agent_territorial_access_rights, only: %i[update]
           resources :webhook_endpoints, except: %i[show]
-          resources :agents, only: %i[index update edit]
+          resources :agents, only: %i[index update edit] do
+            member do
+              put :territory_admin
+            end
+          end
           resources :teams
           resource :user_fields, only: %i[edit update]
           resource :rdv_fields, only: %i[edit update]
           resource :motif_fields, only: %i[edit update]
+          resource :motif_categories, only: %i[update]
           resource :sms_configuration, only: %i[show edit update]
           resources :zone_imports, only: %i[new create]
           resources :zones, only: [:index] # exports only
@@ -267,6 +271,9 @@ Rails.application.routes.draw do
   # short public link
   get "org/:organisation_id(/:org_slug)" => "search#public_link_with_internal_organisation_id", as: :public_link_to_org
   get "org/ext/:territory/:organisation_external_id(/:org_slug)" => "search#public_link_with_external_organisation_id", as: :public_link_to_external_org
+
+  # resin public link
+  get "resin/:external_organisation_ids" => "search#resin"
 
   ##
 

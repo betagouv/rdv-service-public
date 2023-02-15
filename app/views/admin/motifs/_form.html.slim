@@ -14,27 +14,36 @@
         .col-md-4= f.input :default_duration_in_min
         .col-md-4= f.input :color, as: "color"
 
-  - if current_organisation.territory.enable_motif_categories_field
+  - if current_organisation.territory.motif_categories.present?
     .card
       .card-body
-        h5.card-title= Motif.human_attribute_name("category")
-        p.text-muted.font-14= Motif.human_attribute_name("category_hint")
+        h5.card-title= MotifCategory.model_name.human
+        p.text-muted.font-14= MotifCategory.human_attribute_name("category_hint")
         .form-row
           .col-md-12
-              = f.input :category, collection: Motif.human_attribute_values(:categories), include_blank: "Aucune", input_html: { class: "select2-input" }, label: false
+            = f.association :motif_category, collection: current_territory.motif_categories, include_blank: "Aucune", label: false
 
   .card
     .card-body
       h5.card-title= Motif.human_attribute_name("location_type")
-      - %i[public_office phone home].each do |value|
-        = label_tag do
-          = f.radio_button(:location_type, value)
-          span.ml-1= Motif.human_attribute_value(:location_type, value)
-          p.text-muted.font-14= Motif.human_attribute_value(:location_type, value, context: :hint)
+      - if motif.rdvs.empty?
+        - %i[public_office phone home].each do |value|
+          = label_tag do
+            = f.radio_button(:location_type, value)
+            span.ml-1= Motif.human_attribute_value(:location_type, value)
+            p.text-muted.font-14= Motif.human_attribute_value(:location_type, value, context: :hint)
+      - else
+        p.alert.alert-warning Ce motif est déjà utilisé dans au moins un RDV, il n'est pas possible de changer le type
+        - %i[public_office phone home].each do |value|
+          = label_tag do
+            = f.radio_button(:location_type, value, disabled: true)
+            span.text-muted.ml-1= Motif.human_attribute_value(:location_type, value)
+            p.text-muted.font-14= Motif.human_attribute_value(:location_type, value, context: :hint)
 
   .card
     .card-body
       h5.card-title= Motif.human_attribute_name("follow_up_short")
+      p.text-muted.font-14= Motif.human_attribute_name("follow_up_warning")
       = f.input :follow_up
 
   .card
@@ -57,15 +66,15 @@
         span.ml-1=  Motif.human_attribute_value(:collectif, true)
         p.text-muted.font-14= Motif.human_attribute_value(:collectif, true, context: :hint)
 
-  .card#reservable_online_section
+  .card#bookable_publicly_section
     .card-body
-      h5.card-title= Motif.human_attribute_name("reservable_online_title")
-      p.text-muted.font-14= Motif.human_attribute_name("reservable_online_hint")
-      = f.input :reservable_online
+      h5.card-title= Motif.human_attribute_name("bookable_publicly_title")
+      p.text-muted.font-14= Motif.human_attribute_name("bookable_publicly_hint")
+      = f.input :bookable_publicly
 
       .form-row.js-rdvs-editable
-        .col-md-4= f.input :min_booking_delay, collection: min_max_delay_options
-        .col-md-4= f.input :max_booking_delay, collection: min_max_delay_options
+        .col-md-4= f.input :min_public_booking_delay, collection: min_max_delay_options
+        .col-md-4= f.input :max_public_booking_delay, collection: min_max_delay_options
 
       .js-rdvs-editable
         = f.input(:rdvs_editable_by_user)

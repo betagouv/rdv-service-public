@@ -5,6 +5,10 @@ class Agent::UserProfilePolicy < DefaultAgentPolicy
     same_territory?
   end
 
+  def destroy?
+    current_agent.organisation_ids.include?(@record.organisation_id)
+  end
+
   protected
 
   def same_territory?

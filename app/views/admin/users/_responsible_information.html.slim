@@ -1,4 +1,3 @@
-- user_profile = user.profile_for(current_organisation)
 ul.list-unstyled.mb-5
   li.mb-2= object_attribute_tag(user, :first_name)
   li.mb-2= object_attribute_tag(user, :last_name)
@@ -19,8 +18,8 @@ ul.list-unstyled.mb-5
     .text-muted.mb-2
       | En attente de confirmation pour #{user.unconfirmed_email}
 
-  - if current_territory.enable_notes_field? && user_profile
-    li.mb-2= object_attribute_tag(user_profile, :notes, formatted_user_notes(user_profile))
+  - if current_territory.enable_notes_field?
+    li.mb-2= object_attribute_tag(user, :notes, formatted_user_notes(user))
 
 - if current_territory.any_social_field_enabled?
   h4.card-title.mb-3 Informations sociales
@@ -29,4 +28,4 @@ ul.list-unstyled.mb-5
     - if current_territory.attributes[toggle.to_s]
       li.mb-2= object_attribute_tag(user, field_name)
   - if current_territory.enable_logement_field
-    li.mb-2= object_attribute_tag(user_profile, :logement)
+    li.mb-2= object_attribute_tag(user, :logement)

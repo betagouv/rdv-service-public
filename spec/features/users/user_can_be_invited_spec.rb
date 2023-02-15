@@ -26,7 +26,7 @@ describe "User can be invited" do
   let!(:city_code) { "26000" }
   let!(:territory26) { create(:territory, departement_number: departement_number) }
   let!(:organisation) { create(:organisation, territory: territory26) }
-  let!(:motif) { create(:motif, name: "RSA orientation sur site", reservable_online: true, organisation: organisation, service: agent.service) }
+  let!(:motif) { create(:motif, name: "RSA orientation sur site", bookable_publicly: true, organisation: organisation, service: agent.service) }
   let!(:lieu) { create(:lieu, organisation: organisation) }
   let!(:lieu2) { create(:lieu, organisation: organisation) }
   let!(:plage_ouverture) { create(:plage_ouverture, :daily, first_day: now - 1.month, motifs: [motif], lieu: lieu, organisation: organisation) }
@@ -112,7 +112,7 @@ describe "User can be invited" do
         create(:plage_ouverture, :daily, first_day: now + 8.days, motifs: [motif], lieu: lieu2, organisation: organisation)
       end
       let!(:motif) do
-        create(:motif, name: "RSA orientation sur site", max_booking_delay: 7.days, reservable_online: true, organisation: organisation, service: agent.service)
+        create(:motif, name: "RSA orientation sur site", max_public_booking_delay: 7.days, bookable_publicly: true, organisation: organisation, service: agent.service)
       end
 
       it "does not show the lieux" do
@@ -130,7 +130,7 @@ describe "User can be invited" do
 
   describe "in motifs selection page" do
     let!(:geo_search) { instance_double(Users::GeoSearch, available_motifs: Motif.where(id: [motif.id, motif2.id])) }
-    let!(:motif2) { create(:motif, name: "RSA orientation telephone", reservable_online: true, organisation: organisation2, service: agent.service) }
+    let!(:motif2) { create(:motif, name: "RSA orientation telephone", bookable_publicly: true, organisation: organisation2, service: agent.service) }
     let!(:plage_ouverture2) { create(:plage_ouverture, motifs: [motif2], organisation: organisation2) }
 
     before do
@@ -185,7 +185,7 @@ describe "User can be invited" do
 
   describe "when no motifs found through geo search" do
     let!(:geo_search) { instance_double(Users::GeoSearch, available_motifs: Motif.none) }
-    let!(:motif2) { create(:motif, name: "RSA orientation telephone", reservable_online: true, organisation: organisation2, service: agent.service) }
+    let!(:motif2) { create(:motif, name: "RSA orientation telephone", bookable_publicly: true, organisation: organisation2, service: agent.service) }
     let!(:plage_ouverture2) { create(:plage_ouverture, motifs: [motif2], organisation: organisation2) }
 
     before do

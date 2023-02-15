@@ -43,7 +43,7 @@ describe Lapin::Range do
       friday = Time.zone.parse("20210430 8:00")
       travel_to(friday)
       date_range = (friday + 60.minutes)..(friday + 7.days)
-      motif = build(:motif, min_booking_delay: 30 * 60, max_booking_delay: 8 * 24 * 60 * 60)
+      motif = build(:motif, min_public_booking_delay: 30 * 60, max_public_booking_delay: 8 * 24 * 60 * 60)
       expected_range = (friday + 60.minutes)..(friday + 7.days)
       expect(described_class.reduce_range_to_delay(motif, date_range)).to eq(expected_range)
     end
@@ -52,7 +52,7 @@ describe Lapin::Range do
       friday = Time.zone.parse("20210430 8:00")
       travel_to(friday)
       date_range = friday..(friday + 7.days)
-      motif = build(:motif, min_booking_delay: (3 * 24 * 60 * 60), max_booking_delay: (8 * 24 * 60 * 60))
+      motif = build(:motif, min_public_booking_delay: (3 * 24 * 60 * 60), max_public_booking_delay: (8 * 24 * 60 * 60))
       expected_range = friday + 3.days..(friday + 7.days)
       expect(described_class.reduce_range_to_delay(motif, date_range)).to eq(expected_range)
     end
@@ -61,7 +61,7 @@ describe Lapin::Range do
       friday = Time.zone.parse("20210430 8:00")
       travel_to(friday)
       date_range = (friday + 60.minutes)..(friday + 7.days)
-      motif = build(:motif, min_booking_delay: 30 * 60, max_booking_delay: (3 * 24 * 60 * 60))
+      motif = build(:motif, min_public_booking_delay: 30 * 60, max_public_booking_delay: (3 * 24 * 60 * 60))
       expected_range = (friday + 60.minutes)..(friday + 3.days)
       expect(described_class.reduce_range_to_delay(motif, date_range)).to eq(expected_range)
     end
@@ -70,7 +70,7 @@ describe Lapin::Range do
       friday = Time.zone.parse("20210430 8:00")
       travel_to(friday)
       date_range = friday..(friday + 7.days)
-      motif = build(:motif, min_booking_delay: (8 * 24 * 60 * 60), max_booking_delay: (9 * 24 * 60 * 60))
+      motif = build(:motif, min_public_booking_delay: (8 * 24 * 60 * 60), max_public_booking_delay: (9 * 24 * 60 * 60))
       expect(described_class.reduce_range_to_delay(motif, date_range)).to be_nil
     end
 
@@ -79,7 +79,7 @@ describe Lapin::Range do
       travel_to(now)
       friday = Date.new(2022, 4, 8)
       date_range = friday..(friday + 6.days)
-      motif = build(:motif, min_booking_delay: (1 * 24 * 60 * 60), max_booking_delay: (7 * 24 * 60 * 60))
+      motif = build(:motif, min_public_booking_delay: (1 * 24 * 60 * 60), max_public_booking_delay: (7 * 24 * 60 * 60))
       expect(described_class.reduce_range_to_delay(motif, date_range)).to be_nil
     end
   end

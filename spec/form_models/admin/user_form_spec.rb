@@ -49,7 +49,7 @@ describe Admin::UserForm, type: :form do
       expect(subject.errors).to be_present
       expect(subject.errors[:base]).to be_present
       expect(subject.errors[:base][0]).to include("Jeannot")
-      expect(subject.errors[:base][0]).to include("Un usager avec le même email existe déjà")
+      expect(subject.errors[:base][0]).to include("Un usager avec le même email a déjà un compte")
     end
 
     it "does not save the user" do
@@ -67,7 +67,7 @@ describe Admin::UserForm, type: :form do
       expect(subject.valid?).to eq false
       expect(subject.benign_errors).to be_present
       expect(subject.benign_errors[0]).to include("Jeannot")
-      expect(subject.benign_errors[0]).to include("Un usager avec le même téléphone existe déjà")
+      expect(subject.benign_errors[0]).to include("Un usager avec le même téléphone a déjà un compte")
     end
 
     it "does not save the user" do
@@ -107,7 +107,7 @@ describe Admin::UserForm, type: :form do
       expect(subject.errors).to be_present
       expect(subject.benign_errors).to be_present
       expect(subject.benign_errors[0]).to include("Jeannot")
-      expect(subject.benign_errors[0]).to include("Un usager avec le même téléphone existe déjà")
+      expect(subject.benign_errors[0]).to include("Un usager avec le même téléphone a déjà un compte")
     end
 
     it "does not save the user" do

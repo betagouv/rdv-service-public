@@ -11,7 +11,7 @@
     div= t("sectorisation_tests.available_motifs_count", count: sectorisation_test_form.available_motifs_from_attributed_agent(attribution.agent, attribution.organisation).count)
     ul
       - sectorisation_test_form.available_motifs_from_attributed_agent(attribution.agent, attribution.organisation).each do |motif|
-        li= motif_name_with_location_type(motif)
+        li= motif_name_and_location_type(motif)
 
 - else
   div
@@ -27,4 +27,4 @@
           = t("sectorisation_tests.available_motifs_in_service_count", count: motifs.count, service: service.short_name)
           ul
             - motifs.each do |motif|
-              li= motif_name_with_location_type(motif)
+              li= motif_name_and_location_type(motif)

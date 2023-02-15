@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_23_163550) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_07_142918) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "unaccent"
@@ -43,21 +43,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_23_163550) do
     "public_office",
     "home",
     "phone",
-  ], force: :cascade
-
-  create_enum :motif_category, [
-    "rsa_orientation",
-    "rsa_accompagnement",
-    "rsa_orientation_on_phone_platform",
-    "rsa_cer_signature",
-    "rsa_insertion_offer",
-    "rsa_follow_up",
-    "rsa_accompagnement_social",
-    "rsa_accompagnement_sociopro",
-    "rsa_main_tendue",
-    "rsa_atelier_collectif_mandatory",
-    "rsa_spie",
-    "rsa_integration_information",
   ], force: :cascade
 
   create_enum :rdv_status, [
@@ -203,6 +188,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_23_163550) do
     t.text "microsoft_graph_token"
     t.text "refresh_microsoft_graph_token"
     t.boolean "outlook_disconnect_in_progress", default: false, null: false
+    t.string "cnfs_secondary_email"
     t.index ["calendar_uid"], name: "index_agents_on_calendar_uid", unique: true
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true
     t.index ["email"], name: "index_agents_on_email", unique: true
@@ -290,6 +276,21 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_23_163550) do
     t.index ["organisation_id"], name: "index_lieux_on_organisation_id"
   end
 
+  create_table "motif_categories", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "short_name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_motif_categories_on_name", unique: true
+    t.index ["short_name"], name: "index_motif_categories_on_short_name", unique: true
+  end
+
+  create_table "motif_categories_territories", id: false, force: :cascade do |t|
+    t.bigint "motif_category_id", null: false
+    t.bigint "territory_id", null: false
+    t.index ["motif_category_id", "territory_id"], name: "index_motif_cat_territories_on_motif_cat_id_and_territory_id", unique: true
+  end
+
   create_table "motifs", force: :cascade do |t|
     t.string "name"
     t.string "color"
@@ -297,9 +298,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_23_163550) do
     t.datetime "updated_at", null: false
     t.integer "default_duration_in_min", default: 30, null: false
     t.bigint "organisation_id", null: false
-    t.boolean "reservable_online", default: false, null: false
-    t.integer "min_booking_delay", default: 1800
-    t.integer "max_booking_delay", default: 7889238
+    t.boolean "bookable_publicly", default: false, null: false
+    t.integer "min_public_booking_delay", default: 1800
+    t.integer "max_public_booking_delay", default: 7889238
     t.datetime "deleted_at"
     t.bigint "service_id", null: false
     t.text "restriction_for_rdv"
@@ -312,18 +313,18 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_23_163550) do
     t.text "custom_cancel_warning_message"
     t.boolean "collectif", default: false
     t.enum "location_type", default: "public_office", null: false, enum_type: "location_type"
-    t.enum "category", enum_type: "motif_category"
     t.boolean "rdvs_editable_by_user", default: true
     t.boolean "rdvs_cancellable_by_user", default: true
+    t.bigint "motif_category_id"
     t.index "to_tsvector('simple'::regconfig, (COALESCE(name, (''::text)::character varying))::text)", name: "index_motifs_name_vector", using: :gin
-    t.index ["category"], name: "index_motifs_on_category"
+    t.index ["bookable_publicly"], name: "index_motifs_on_bookable_publicly"
     t.index ["collectif"], name: "index_motifs_on_collectif"
     t.index ["deleted_at"], name: "index_motifs_on_deleted_at"
     t.index ["location_type"], name: "index_motifs_on_location_type"
+    t.index ["motif_category_id"], name: "index_motifs_on_motif_category_id"
     t.index ["name", "organisation_id", "location_type", "service_id"], name: "index_motifs_on_name_scoped", unique: true, where: "(deleted_at IS NULL)"
     t.index ["name"], name: "index_motifs_on_name"
     t.index ["organisation_id"], name: "index_motifs_on_organisation_id"
-    t.index ["reservable_online"], name: "index_motifs_on_reservable_online"
     t.index ["service_id"], name: "index_motifs_on_service_id"
     t.index ["visibility_type"], name: "index_motifs_on_visibility_type"
   end
@@ -543,17 +544,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_23_163550) do
     t.boolean "enable_case_number", default: false
     t.boolean "enable_address_details", default: false
     t.boolean "enable_context_field", default: false
-    t.boolean "enable_motif_categories_field", default: false
     t.boolean "enable_waiting_room_mail_field", default: false
     t.boolean "enable_waiting_room_color_field", default: false
+    t.boolean "visible_users_throughout_the_territory", default: false
     t.index ["departement_number"], name: "index_territories_on_departement_number", unique: true, where: "((departement_number)::text <> ''::text)"
   end
 
   create_table "user_profiles", force: :cascade do |t|
     t.bigint "organisation_id", null: false
     t.bigint "user_id", null: false
-    t.integer "logement"
-    t.text "notes"
+    t.integer "old_logement"
+    t.text "old_notes"
     t.index ["organisation_id", "user_id"], name: "index_user_profiles_on_organisation_id_and_user_id", unique: true
     t.index ["organisation_id"], name: "index_user_profiles_on_organisation_id"
     t.index ["user_id"], name: "index_user_profiles_on_user_id"
@@ -606,6 +607,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_23_163550) do
     t.enum "created_through", default: "unknown", enum_type: "user_created_through"
     t.string "case_number"
     t.string "address_details"
+    t.integer "logement"
+    t.text "notes"
     t.index ["birth_date"], name: "index_users_on_birth_date"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["created_through"], name: "index_users_on_created_through"
@@ -663,6 +666,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_23_163550) do
   add_foreign_key "file_attentes", "rdvs"
   add_foreign_key "file_attentes", "users"
   add_foreign_key "lieux", "organisations"
+  add_foreign_key "motifs", "motif_categories"
   add_foreign_key "motifs", "organisations"
   add_foreign_key "motifs", "services"
   add_foreign_key "plage_ouvertures", "agents"
@@ -673,6 +677,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_23_163550) do
   add_foreign_key "rdvs", "motifs"
   add_foreign_key "rdvs", "organisations"
   add_foreign_key "sector_attributions", "agents"
+  add_foreign_key "sector_attributions", "organisations"
   add_foreign_key "users", "users", column: "responsible_id"
   add_foreign_key "webhook_endpoints", "organisations"
 end

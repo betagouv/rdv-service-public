@@ -23,8 +23,8 @@ module SearchRdvCollectif
       Rdv.collectif_and_available_for_reservation
         .where(motif_id: motif.id)
         .where(lieu_id: lieu.id)
-        .where("starts_at > ?", Time.zone.now + motif.min_booking_delay.seconds)
-        .where("starts_at < ?", Time.zone.now + motif.max_booking_delay.seconds)
+        .where("starts_at > ?", Time.zone.now + motif.min_public_booking_delay.seconds)
+        .where("starts_at < ?", Time.zone.now + motif.max_public_booking_delay.seconds)
         .order(:starts_at)
     end
 

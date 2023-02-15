@@ -18,7 +18,7 @@ module UserRdvWizard
       @attributes = attributes.to_h.symbolize_keys
       rdv_defaults = { user_ids: [user&.id] }
       if attributes[:rdv_collectif_id].present?
-        @rdv = Rdv.collectif.reservable_online.find(attributes[:rdv_collectif_id])
+        @rdv = Rdv.collectif.bookable_publicly.find(attributes[:rdv_collectif_id])
       else
         @rdv = Rdv.new(
           rdv_defaults
@@ -61,7 +61,7 @@ module UserRdvWizard
         @attributes.slice(
           :where, :departement, :lieu_id, :latitude, :longitude, :city_code, :street_ban_id, :invitation_token,
           :address, :organisation_ids, :motif_search_terms, :public_link_organisation_id, :user_selected_organisation_id,
-          :referent_ids
+          :referent_ids, :external_organisation_ids
         )
       )
     end

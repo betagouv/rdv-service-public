@@ -26,7 +26,7 @@ ul.list-group.my-1
       .card-header.d-flex.align-items-center
         - slots_count = available_slots_count(motif)
         h4.mr-2
-          - if motif.reservable_online? && slots_count > 0
+          - if motif.bookable_publicly? && slots_count > 0
             i.fa-solid.fa-circle-check.color-scheme-green.mr-1
           - else
             i.fa-regular.fa-circle-xmark.color-scheme-red.mr-1
@@ -36,13 +36,13 @@ ul.list-group.my-1
       .card-body
         .row.mb-1
           .col-12.d-flex.align-items-center
-            - if motif.reservable_online?
+            - if motif.bookable_publicly?
               i.fa-solid.fa-circle-check.color-scheme-green.mr-1
               .mr-2 Réservable en ligne
             - else
               i.fa-regular.fa-circle-xmark.color-scheme-red.mr-1
               .mr-2 Ce motif n'est pas réservable en ligne
-            = link_to "modifier", edit_admin_organisation_motif_path(motif.organisation, motif, anchor: "reservable_online_section")
+            = link_to "modifier", edit_admin_organisation_motif_path(motif.organisation, motif, anchor: "bookable_publicly_section")
 
         .row
           .col-12.d-flex.align-items-center

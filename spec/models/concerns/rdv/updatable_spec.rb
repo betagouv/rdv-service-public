@@ -69,11 +69,20 @@ RSpec.describe Rdv::Updatable, type: :concern do
         expect_notifications_sent_for(rdv_co, agent, :rdv_cancelled)
       end
 
+      it "doesnt notify already cancelled participations" do
+        rdv_co.rdvs_users.where(user: user_co1).first.update!(status: "excused")
+        rdv_co.rdvs_users.reload
+        rdv_co.update_and_notify(agent, status: "revoked")
+        expect_no_notifications_for_user(user_co1)
+        expect_notifications_sent_for(rdv_co, user_co2, :rdv_cancelled)
+        expect_notifications_sent_for(rdv_co, agent, :rdv_cancelled)
+      end
+
       it "does not notify when status does not change" do
         rdv.reload
         rdv.update!(status: "unknown")
         rdv.update_and_notify(agent, status: "unknown")
-        expect_no_notifications_for_user
+        expect_no_notifications
       end
 
       it "notifies when date changes" do
@@ -92,25 +101,25 @@ RSpec.describe Rdv::Updatable, type: :concern do
       it "does not notify when date does not change" do
         rdv.reload
         rdv.update_and_notify(agent, starts_at: rdv.starts_at)
-        expect_no_notifications_for_user
+        expect_no_notifications
       end
 
       it "does not notify when date does not change for collective rdv" do
         rdv_co.reload
         rdv_co.update_and_notify(agent, starts_at: rdv_co.starts_at)
-        expect_no_notifications_for_user
+        expect_no_notifications
       end
 
       it "does not notify when other attributes change" do
         rdv.reload
         rdv.update_and_notify(agent, context: "some context")
-        expect_no_notifications_for_user
+        expect_no_notifications
       end
 
       it "does not notify when other attributes change for collective rdv" do
         rdv_co.reload
         rdv_co.update_and_notify(agent, context: "some context")
-        expect_no_notifications_for_user
+        expect_no_notifications
       end
     end
 
@@ -278,9 +287,10 @@ RSpec.describe Rdv::Updatable, type: :concern do
     end
 
     context "when the status changed and is now seen" do
-      it "updates participations statuses" do
+      it "updates statuses" do
         rdv.update_and_notify(agent, status: "seen")
         rdv.reload
+        expect(rdv.status).to eq("seen")
         expect(rdvs_user1.reload.status).to eq("seen")
         expect(rdvs_user2.reload.status).to eq("seen")
         expect(rdvs_user_excused.reload.status).to eq("excused")
@@ -300,9 +310,10 @@ RSpec.describe Rdv::Updatable, type: :concern do
     end
 
     context "when the status changed and is now revoked" do
-      it "updates participations statuses" do
+      it "updates statuses" do
         rdv.update_and_notify(agent, status: "revoked")
         rdv.reload
+        expect(rdv.status).to eq("revoked")
         expect(rdvs_user1.reload.status).to eq("revoked")
         expect(rdvs_user2.reload.status).to eq("revoked")
         expect(rdvs_user_excused.reload.status).to eq("excused")
@@ -310,19 +321,21 @@ RSpec.describe Rdv::Updatable, type: :concern do
     end
 
     context "when the status changed and is now excused" do
-      it "do not updates participations statuses if collectif" do
+      it "do not updates statuses if collectif" do
         rdv.update_and_notify(agent, status: "excused")
         rdv.reload
+        expect(rdv.status).not_to eq("excused")
         expect(rdvs_user1.reload.status).not_to eq("excused")
         expect(rdvs_user2.reload.status).not_to eq("excused")
         expect(rdvs_user_seen.reload.status).not_to eq("excused")
         expect(rdvs_user_excused.reload.status).to eq("excused")
       end
 
-      it "updates participations statuses if not collectif" do
+      it "updates statuses if not collectif" do
         rdv.update!(motif: create(:motif))
         rdv.update_and_notify(agent, status: "excused")
         rdv.reload
+        expect(rdv.status).to eq("excused")
         expect(rdvs_user1.reload.status).to eq("excused")
         expect(rdvs_user2.reload.status).to eq("excused")
         expect(rdvs_user_seen.reload.status).to eq("excused")

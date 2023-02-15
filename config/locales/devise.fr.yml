@@ -41,29 +41,13 @@ fr:
         submit_button: "Créer son compte"
         click_on_link_sent: "Veuillez cliquer sur le lien dans l'email qui vient de vous être envoyé"
     mailer:
-      invitation_instructions_cnfs:
-        subject: "Vous avez été invité sur %{domain_name}"
-        hello: "Hello 👋"
-        create_account: "Dans le cadre de vos mission de Conseiller-ère Numérique, l'ANCT vous fournit un accès à %{domain_name}."
-        usage_info: "%{domain_name} est un outil de gestion de rendez-vous qui vous permet de :"
-        use1: "✅ Gérer vos rendez-vous individuels et collectifs"
-        use2: "✅ Envoyer des rappels SMS et mail aux usagers"
-        use3: "✅ Partager vos créneaux disponibles avec vos collègues ou votre secrétariat"
-        use4: "✅ Importer vos rendez-vous dans vos agendas externes (Outlook, Google Agenda, etc...) "
-        title1: Comment ça marche ?
-        paragraph1: Pour mieux comprendre, nous vous proposons de regarder la vidéo de présentation de l’outil %{video_link}.
-        first_steps_info: Vous trouverez  également un guide “premiers pas” dans l’interface de l’outil.
-        title2: Besoin d’aide ?
-        help_info: "Vous pouvez  nous contacter sur le Mattermost dans le canal : %{mattermost}  ou bien par mail à %{support_email}"
-        sign_off: En vous souhaitant un bon embarquement !
-        signature: L'équipe %{domain_name}
       invitation_instructions_for_agents:
         body: "Vous avez été invité par %{inviter} à rejoindre %{domain_name} en tant qu'agent du service %{service}"
         accept: "Accepter l'invitation"
         accept_until: "Cette invitation est valable jusqu'au %{due_date}. Si vous ratez cette date mais souhaitez accepter, veuillez demander à <a href='mailto:%{inviter_email}'>%{inviter} (%{inviter_email})</a> de vous renvoyer l'invitation"
         ignore: "Si vous n'acceptez pas cette invitation, ignorez cet email. Aucun compte ne sera créé sans votre autorisation."
       invitation_instructions:
-        subject: "Vous avez été invité sur %{domain_name}."
+        subject: "Vous avez été invité sur %{domain_name}"
         hello: "Bonjour %{email}"
         someone_invited_you: "Vous avez été invité sur %{domain_name}. Vous pouvez accepter cette invitation grâce au lien ci-dessous."
         accept: "Accepter l'invitation"

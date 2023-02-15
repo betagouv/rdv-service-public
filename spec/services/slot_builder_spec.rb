@@ -61,7 +61,7 @@ describe SlotBuilder, type: :service do
 
     context "when asking for slots that may start right now" do
       let(:motif) do
-        create(:motif, default_duration_in_min: 60, organisation: organisation, min_booking_delay: 45 * 60)
+        create(:motif, default_duration_in_min: 60, organisation: organisation, min_public_booking_delay: 45 * 60)
       end
 
       it "returns only slots that start in the future, without minimum booking delay" do

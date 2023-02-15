@@ -8,11 +8,9 @@ fr:
         service: Service
         collectif: Nombre de participants
         color: Couleur
-        category: Catégorie
-        category_hint: La catégorie n'est pas visible par les usagers. Elle peut-être utile pour filtrer les motifs proposés dans certains contextes, ou pour permettre de récupérer des motifs via l'API.
-        reservable_online_title: Prise de RDV en ligne par les usagers
-        reservable_online: Réservable en ligne
-        reservable_online_hint: Ce motif sera disponible à la réservation en ligne par les usagers
+        bookable_publicly_title: Prise de RDV en ligne par les usagers
+        bookable_publicly: Réservable en ligne
+        bookable_publicly_hint: Ce motif sera disponible à la réservation en ligne par les usagers
         visibility_type: Visibilité usager
         custom_cancel_warning_message: Message d’avertissement en cas d’annulation
         custom_cancel_warning_message_hint: Ce message sera affiché à l'usager au moment où il lui sera demandé de confirmer l’annulation de son RDV. Si l’annulation du rendez-vous a des conséquences particulières pour l’usager, vous pouvez lui indiquer dans ce message. Cela peut être le cas, par exemple, pour une convocation pour l’ouverture de droits sociaux.
@@ -27,16 +25,17 @@ fr:
         for_secretariat_hint: Les membres du service Secrétariat pourront poser des RDV dans leur agenda et configurer les plages d'ouverture avec ce motif
         follow_up: Ce motif est réservé aux usagers bénéficiant d'un accompagnement
         follow_up_short: RDV de suivi
+        follow_up_warning: Ne cochez cette case que si vous savez ce que vous faîtes
         follow_up_hint: Ce motif est réservé aux usagers bénéficiant d'un accompagnement
         default_duration_in_min: Durée par défaut en minutes
         default_duration_in_min_short: Durée par défaut
         default_duration: Durée par défaut
-        min_booking_delay: Délai minimum de réservation
-        min_booking_delay_short: Délai minimum
-        min_booking_delay_hint: Les premiers créneaux proposés aux usagers ne commenceront pas avant ce délai minimum
-        max_booking_delay: Délai maximum de réservation
-        max_booking_delay_short: Délai maximum
-        max_booking_delay_hint: Les derniers créneaux proposés aux usagers n'iront pas au delà de ce délai maximum
+        min_public_booking_delay: Délai minimum de réservation
+        min_public_booking_delay_short: Délai minimum
+        min_public_booking_delay_hint: Les premiers créneaux proposés aux usagers ne commenceront pas avant ce délai minimum
+        max_public_booking_delay: Délai maximum de réservation
+        max_public_booking_delay_short: Délai maximum
+        max_public_booking_delay_hint: Les derniers créneaux proposés aux usagers n'iront pas au delà de ce délai maximum
         restriction_for_rdv: Instructions à accepter avant la prise du rendez-vous
         restriction_for_rdv_hint: Instructions à accepter avant la prise du rendez-vous
         restriction_for_rdv_short: Instructions avant
@@ -45,19 +44,6 @@ fr:
         instruction_for_rdv_short: Indications après
         rdvs_editable_by_user: RDVs modifiables
         rdvs_editable_by_user_hint: L'horaire du RDV peut être changé par l'usager au plus tard 2 jours avant le début du RDV
-      motif/categories:
-        rsa_orientation: RSA - Orientation
-        rsa_accompagnement: RSA - Accompagnement
-        rsa_accompagnement_social: RSA - Accompagnement social
-        rsa_accompagnement_sociopro: RSA - Accompagnement socio-pro
-        rsa_orientation_on_phone_platform: RSA - Orientation sur une plateforme téléphonique dédiée
-        rsa_cer_signature: RSA - Signature de CER
-        rsa_insertion_offer: RSA - Offre d'insertion professionnelle
-        rsa_follow_up: RSA - Suivi
-        rsa_main_tendue: RSA - Main tendue
-        rsa_atelier_collectif_mandatory: RSA - Atelier Collectif (obligatoire)
-        rsa_spie: RSA - SPIE
-        rsa_integration_information: RSA - Information d'intégration
       motif/collectifs:
         true: RDV collectif
         false: RDV individuel
@@ -96,3 +82,5 @@ fr:
               not_at_home_if_collectif: Les RDV collectifs doivent avoir lieu sur place.
             name:
               taken: est déjà utilisé pour un motif avec le même type de RDV.
+            location_type:
+              cant_change_because_already_used: ne peut être modifié car le motif est utilisé pour un RDV

@@ -10,8 +10,10 @@ describe SearchContext, type: :service do
   end
   let!(:organisation) { create(:organisation) }
   let!(:service) { create(:service) }
-  let!(:motif) { create(:motif, name: "RSA orientation sur site", category: "rsa_orientation", organisation: organisation) }
-  let!(:motif2) { create(:motif, name: "RSA orientation sur plateforme téléphonique", category: "rsa_orientation_on_phone_platform", organisation: organisation, service: motif.service) }
+  let!(:rsa_orientation) { create(:motif_category, name: "RSA orientation sur site", short_name: "rsa_orientation") }
+  let!(:motif) { create(:motif, name: "RSA orientation sur site", motif_category: rsa_orientation, organisation: organisation) }
+  let!(:rsa_orientation_on_phone_platform) { create(:motif_category, name: "RSA orientation sur plateforme téléphonique", short_name: "rsa_orientation_on_phone_platform") }
+  let!(:motif2) { create(:motif, name: "RSA orientation sur plateforme téléphonique", motif_category: rsa_orientation_on_phone_platform, organisation: organisation, service: motif.service) }
   let!(:departement_number) { "75" }
   let!(:address) { "20 avenue de Ségur 75007 Paris" }
   let!(:city_code) { "75007" }
@@ -64,7 +66,7 @@ describe SearchContext, type: :service do
       expect(subject.send(:matching_motifs)).to eq([motif])
     end
 
-    context "for an invitation" do
+    context "for an invitation (old param)" do
       before do
         search_query[:invitation_token] = invitation_token
         search_query[:motif_category] = "rsa_orientation"
@@ -93,7 +95,46 @@ describe SearchContext, type: :service do
         before { search_query[:referent_ids] = [agent.id] }
 
         let!(:agent) { create(:agent, users: [user]) }
-        let!(:motif) { create(:motif, follow_up: true) }
+        let!(:motif) { create(:motif, follow_up: true, motif_category: rsa_orientation) }
+        let!(:plage_ouverture) { create(:plage_ouverture, agent: agent, motifs: [motif]) }
+        let!(:geo_search) { instance_double(Users::GeoSearch, available_motifs: Motif.where(id: [motif.id, motif2.id])) }
+
+        it "is the motifs related to agent" do
+          expect(subject.send(:matching_motifs)).to eq([motif])
+        end
+      end
+    end
+
+    context "for an invitation (new param)" do
+      before do
+        search_query[:invitation_token] = invitation_token
+        search_query[:motif_category_short_name] = "rsa_orientation"
+      end
+
+      context "when there are matching motifs for the geo search" do
+        it "is the geo maching motif" do
+          expect(subject.send(:matching_motifs)).to eq([motif])
+        end
+      end
+
+      context "when there are no matching motifs for the geo search" do
+        before do
+          allow(Motif).to receive(:available_with_plages_ouvertures)
+            .and_return(Motif.where(id: motif2.id))
+          search_query[:invitation_token] = invitation_token
+          search_query[:motif_category_short_name] = "rsa_orientation_on_phone_platform"
+        end
+
+        it "is the organisation matching motif" do
+          expect(subject.send(:matching_motifs)).to eq([motif2])
+        end
+      end
+
+      context "when agents are specified" do
+        before { search_query[:referent_ids] = [agent.id] }
+
+        let!(:agent) { create(:agent, users: [user]) }
+        let!(:motif) { create(:motif, follow_up: true, motif_category: rsa_orientation) }
         let!(:plage_ouverture) { create(:plage_ouverture, agent: agent, motifs: [motif]) }
         let!(:geo_search) { instance_double(Users::GeoSearch, available_motifs: Motif.where(id: [motif.id, motif2.id])) }
 

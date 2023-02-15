@@ -11,6 +11,7 @@ class CronJob < ApplicationJob
   class << self
     def schedule
       set(cron: cron_expression).perform_later unless scheduled?
+      update_cron_expression!
     end
 
     def remove
@@ -19,6 +20,10 @@ class CronJob < ApplicationJob
 
     def scheduled?
       delayed_job.present?
+    end
+
+    def update_cron_expression!
+      delayed_job.update!(cron: cron_expression)
     end
 
     def delayed_job
@@ -40,15 +45,13 @@ class CronJob < ApplicationJob
   end
 
   class ReminderJob < CronJob
-    # At 9:00 every day
-    self.cron_expression = "0 9 * * *"
+    # At 3:00 every day
+    self.cron_expression = "0 3 * * *"
 
     def perform
-      Rdv.not_cancelled.day_after_tomorrow.each do |rdv|
-        Notifiers::RdvUpcomingReminder.perform_with(rdv, nil)
-      rescue StandardError => e # don't interrupt the whole loop when one RDV crashes
-        Sentry.add_breadcrumb(Sentry::Breadcrumb.new(message: "Could not send reminder", data: { rdv_id: rdv.id }))
-        Sentry.capture_exception(e)
+      Rdv.not_cancelled.day_after_tomorrow.find_each do |rdv|
+        run_at = rdv.starts_at - 48.hours
+        RdvUpcomingReminderJob.set(wait_until: run_at).perform_later(rdv)
       end
     end
   end

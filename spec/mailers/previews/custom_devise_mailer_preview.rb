@@ -18,6 +18,6 @@ class CustomDeviseMailerPreview < ActionMailer::Preview
   end
 
   def invitation_instructions
-    CustomDeviseMailer.invitation_instructions(User.last, "faketoken")
+    CustomDeviseMailer.invitation_instructions(User.where.not(invitation_sent_at: nil).last, "faketoken")
   end
 end
