@@ -66,46 +66,7 @@ describe SearchContext, type: :service do
       expect(subject.send(:matching_motifs)).to eq([motif])
     end
 
-    context "for an invitation (old param)" do
-      before do
-        search_query[:invitation_token] = invitation_token
-        search_query[:motif_category] = "rsa_orientation"
-      end
-
-      context "when there are matching motifs for the geo search" do
-        it "is the geo maching motif" do
-          expect(subject.send(:matching_motifs)).to eq([motif])
-        end
-      end
-
-      context "when there are no matching motifs for the geo search" do
-        before do
-          allow(Motif).to receive(:available_with_plages_ouvertures)
-            .and_return(Motif.where(id: motif2.id))
-          search_query[:invitation_token] = invitation_token
-          search_query[:motif_category] = "rsa_orientation_on_phone_platform"
-        end
-
-        it "is the organisation matching motif" do
-          expect(subject.send(:matching_motifs)).to eq([motif2])
-        end
-      end
-
-      context "when agents are specified" do
-        before { search_query[:referent_ids] = [agent.id] }
-
-        let!(:agent) { create(:agent, users: [user]) }
-        let!(:motif) { create(:motif, follow_up: true, motif_category: rsa_orientation) }
-        let!(:plage_ouverture) { create(:plage_ouverture, agent: agent, motifs: [motif]) }
-        let!(:geo_search) { instance_double(Users::GeoSearch, available_motifs: Motif.where(id: [motif.id, motif2.id])) }
-
-        it "is the motifs related to agent" do
-          expect(subject.send(:matching_motifs)).to eq([motif])
-        end
-      end
-    end
-
-    context "for an invitation (new param)" do
+    context "for an invitation" do
       before do
         search_query[:invitation_token] = invitation_token
         search_query[:motif_category_short_name] = "rsa_orientation"
