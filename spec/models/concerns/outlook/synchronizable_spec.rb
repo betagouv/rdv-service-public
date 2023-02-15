@@ -27,14 +27,14 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
       let(:fake_agent) { create(:agent) }
       let(:agent) { create(:agent, microsoft_graph_token: "token") }
       let(:user) { create(:user, email: "user@example.fr", first_name: "First", last_name: "Last", organisations: [organisation]) }
-      let(:rdv) { create(:rdv, id: 20, users: [user], motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [fake_agent]) }
+      let(:rdv) { create(:rdv, users: [user], motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [fake_agent]) }
 
       let(:expected_body) do
         {
           subject: "Super Motif",
           body: {
             contentType: "HTML",
-            content: "plus d'infos dans RDV Solidarités: http://www.rdv-solidarites-test.localhost/admin/organisations/#{organisation.id}/rdvs/20",
+            content: "plus d'infos dans RDV Solidarités: http://www.rdv-solidarites-test.localhost/admin/organisations/#{organisation.id}/rdvs/#{rdv.id}",
           },
           start: {
             dateTime: "2023-01-01T11:00:00+01:00",
@@ -65,7 +65,7 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
       end
 
       it "creates the Event in Outlook" do
-        agents_rdv = create(:agents_rdv, id: 12, agent: agent, rdv: rdv)
+        agents_rdv = create(:agents_rdv, agent: agent, rdv: rdv)
 
         expect(a_request(:post,
                          "https://graph.microsoft.com/v1.0/me/Events").with(body: expected_body)).to have_been_made.once
@@ -103,7 +103,7 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
       let(:fake_agent) { create(:agent) }
       let(:agent) { create(:agent, microsoft_graph_token: "token") }
       let(:user) { create(:user, email: "user@example.fr", first_name: "First", last_name: "Last", organisations: [organisation]) }
-      let(:rdv) { create(:rdv, id: 20, users: [user], motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [fake_agent]) }
+      let(:rdv) { create(:rdv, users: [user], motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [fake_agent]) }
       let!(:agents_rdv) { create(:agents_rdv, rdv: rdv, agent: agent, outlook_id: "abc") }
 
       let(:expected_body) do
@@ -111,7 +111,7 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
           subject: "Super Motif",
           body: {
             contentType: "HTML",
-            content: "plus d'infos dans RDV Solidarités: http://www.rdv-solidarites-test.localhost/admin/organisations/#{organisation.id}/rdvs/20",
+            content: "plus d'infos dans RDV Solidarités: http://www.rdv-solidarites-test.localhost/admin/organisations/#{organisation.id}/rdvs/#{rdv.id}",
           },
           start: {
             dateTime: "2023-01-01T11:00:00+01:00",
@@ -171,14 +171,14 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
       let(:fake_agent) { create(:agent) }
       let(:agent) { create(:agent, microsoft_graph_token: "token") }
       let(:user) { create(:user, email: "user@example.fr", first_name: "First", last_name: "Last", organisations: [organisation]) }
-      let(:rdv) { create(:rdv, id: 20, users: [user], motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [fake_agent]) }
+      let(:rdv) { create(:rdv, users: [user], motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [fake_agent]) }
 
       let(:expected_body) do
         {
           subject: "Super Motif",
           body: {
             contentType: "HTML",
-            content: "plus d'infos dans RDV Solidarités: http://www.rdv-solidarites-test.localhost/admin/organisations/#{organisation.id}/rdvs/20",
+            content: "plus d'infos dans RDV Solidarités: http://www.rdv-solidarites-test.localhost/admin/organisations/#{organisation.id}/rdvs/#{rdv.id}",
           },
           start: {
             dateTime: "2023-01-01T11:00:00+01:00",
@@ -206,7 +206,7 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
           subject: "Super Motif",
           body: {
             contentType: "HTML",
-            content: "plus d'infos dans RDV Solidarités: http://www.rdv-solidarites-test.localhost/admin/organisations/#{organisation.id}/rdvs/20",
+            content: "plus d'infos dans RDV Solidarités: http://www.rdv-solidarites-test.localhost/admin/organisations/#{organisation.id}/rdvs/#{rdv.id}",
           },
           start: {
             dateTime: "2023-01-01T11:00:00+01:00",
@@ -240,7 +240,7 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
       end
 
       it "creates the Outlook Event" do
-        agents_rdv = create(:agents_rdv, id: 12, agent: agent, rdv: rdv)
+        agents_rdv = create(:agents_rdv, agent: agent, rdv: rdv)
         rdv.update(duration_in_min: 40)
 
         expect(a_request(:post,
@@ -255,7 +255,7 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
       # We need to create a fake agent to initialize a RDV as they have a validation on agents which prevents us to control the data in its AgentsRdv
       let(:fake_agent) { create(:agent) }
       let(:agent) { create(:agent, microsoft_graph_token: "token") }
-      let(:rdv) { create(:rdv, id: 20, motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [fake_agent]) }
+      let(:rdv) { create(:rdv, motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [fake_agent]) }
       let!(:agents_rdv) { create(:agents_rdv, rdv: rdv, agent: agent, outlook_id: "abc") }
 
       before do
@@ -277,14 +277,14 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
       let(:fake_agent) { create(:agent) }
       let(:agent) { create(:agent, microsoft_graph_token: "token") }
       let(:user) { create(:user, email: "user@example.fr", first_name: "First", last_name: "Last", organisations: [organisation]) }
-      let(:rdv) { create(:rdv, id: 20, users: [user], motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [fake_agent]) }
+      let(:rdv) { create(:rdv, users: [user], motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [fake_agent]) }
 
       let(:expected_body) do
         {
           subject: "Super Motif",
           body: {
             contentType: "HTML",
-            content: "plus d'infos dans RDV Solidarités: http://www.rdv-solidarites-test.localhost/admin/organisations/#{organisation.id}/rdvs/20",
+            content: "plus d'infos dans RDV Solidarités: http://www.rdv-solidarites-test.localhost/admin/organisations/#{organisation.id}/rdvs/#{rdv.id}",
           },
           start: {
             dateTime: "2023-01-01T11:00:00+01:00",
@@ -315,7 +315,7 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
       end
 
       it "does not call Outlook::DestroyEventJob" do
-        agents_rdv = create(:agents_rdv, id: 12, agent: agent, rdv: rdv)
+        agents_rdv = create(:agents_rdv, agent: agent, rdv: rdv)
         expect do
           rdv.update(cancelled_at: Time.zone.now, status: "revoked")
         end.not_to have_enqueued_job(Outlook::DestroyEventJob).with(agents_rdv.outlook_id, agent.id)
@@ -328,7 +328,7 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
       # We need to create a fake agent to initialize a RDV as they have a validation on agents which prevents us to control the data in its AgentsRdv
       let(:fake_agent) { create(:agent) }
       let(:agent) { create(:agent, microsoft_graph_token: "token") }
-      let(:rdv) { create(:rdv, id: 20, motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [fake_agent]) }
+      let(:rdv) { create(:rdv, motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [fake_agent]) }
       let!(:agents_rdv) { create(:agents_rdv, rdv: rdv, agent: agent, outlook_id: "abc") }
 
       before do
@@ -352,7 +352,7 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
       # We need to create a fake agent to initialize a RDV as they have a validation on agents which prevents us to control the data in its AgentsRdv
       let(:fake_agent) { create(:agent) }
       let(:agent) { create(:agent, microsoft_graph_token: "token") }
-      let(:rdv) { create(:rdv, id: 20, motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [fake_agent]) }
+      let(:rdv) { create(:rdv, motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [fake_agent]) }
       let!(:agents_rdv) { create(:agents_rdv, rdv: rdv, agent: agent, outlook_id: "abc") }
 
       before do
@@ -373,7 +373,7 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
       # We need to create a fake agent to initialize a RDV as they have a validation on agents which prevents us to control the data in its AgentsRdv
       let(:fake_agent) { create(:agent) }
       let(:agent) { create(:agent) }
-      let(:rdv) { create(:rdv, id: 20, motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [fake_agent]) }
+      let(:rdv) { create(:rdv, motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [fake_agent]) }
       let!(:agents_rdv) { create(:agents_rdv, rdv: rdv, agent: agent) }
 
       before do
@@ -396,14 +396,14 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
       let(:fake_agent) { create(:agent) }
       let(:agent) { create(:agent, microsoft_graph_token: "token") }
       let(:user) { create(:user, email: "user@example.fr", first_name: "First", last_name: "Last", organisations: [organisation]) }
-      let(:rdv) { create(:rdv, id: 20, users: [user], motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [fake_agent]) }
+      let(:rdv) { create(:rdv, users: [user], motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [fake_agent]) }
 
       let(:expected_body) do
         {
           subject: "Super Motif",
           body: {
             contentType: "HTML",
-            content: "plus d'infos dans RDV Solidarités: http://www.rdv-solidarites-test.localhost/admin/organisations/#{organisation.id}/rdvs/20",
+            content: "plus d'infos dans RDV Solidarités: http://www.rdv-solidarites-test.localhost/admin/organisations/#{organisation.id}/rdvs/#{rdv.id}",
           },
           start: {
             dateTime: "2023-01-01T11:00:00+01:00",
