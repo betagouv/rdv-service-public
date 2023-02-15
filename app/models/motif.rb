@@ -104,11 +104,6 @@ class Motif < ApplicationRecord
 
   ## -
 
-  # TODO: Remove this method after RDV-I migration OK
-  def category
-    motif_category&.short_name
-  end
-
   def to_s
     name
   end
