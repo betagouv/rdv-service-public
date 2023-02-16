@@ -8,7 +8,7 @@ module Outlook
       agent.agents_rdvs.exists_in_outlook.each do |agents_rdv|
         Outlook::DestroyEventJob.perform_now(agents_rdv.outlook_id, agents_rdv.agent)
       end
-      agent.update!(microsoft_graph_token: nil, refresh_microsoft_graph_token: nil)
+      agent.update!(microsoft_graph_token: nil, refresh_microsoft_graph_token: nil, outlook_disconnect_in_progress: false)
     end
   end
 end
