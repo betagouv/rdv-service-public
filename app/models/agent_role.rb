@@ -3,6 +3,8 @@
 class AgentRole < ApplicationRecord
   include WebhookDeliverable
 
+  has_paper_trail
+
   # Attributes
   # TODO: make it an enum
   LEVEL_BASIC = "basic"
