@@ -21,8 +21,9 @@ module Outlook
     end
 
     def sync_create_in_outlook_asynchronously
-      return unless agent_connected_to_outlook? && !exists_in_outlook?
+      return unless agent_connected_to_outlook? && !exists_in_outlook? && !outlook_create_in_progress?
 
+      update(outlook_create_in_progress: true)
       Outlook::CreateEventJob.perform_later(self)
     end
 

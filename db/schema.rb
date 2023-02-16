@@ -47,6 +47,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_13_175430) do
 
   create_enum :rdv_status, [
     "unknown",
+    "waiting",
     "seen",
     "excused",
     "revoked",
@@ -196,6 +197,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_13_175430) do
     t.string "last_sign_in_ip"
     t.text "microsoft_graph_token"
     t.text "refresh_microsoft_graph_token"
+    t.boolean "outlook_disconnect_in_progress", default: false, null: false
     t.string "cnfs_secondary_email"
     t.index ["calendar_uid"], name: "index_agents_on_calendar_uid", unique: true
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true
@@ -215,6 +217,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_13_175430) do
     t.bigint "agent_id", null: false
     t.bigint "rdv_id", null: false
     t.text "outlook_id"
+    t.boolean "outlook_create_in_progress", default: false, null: false
     t.index ["agent_id", "rdv_id"], name: "index_agents_rdvs_on_agent_id_and_rdv_id", unique: true
     t.index ["agent_id"], name: "index_agents_rdvs_on_agent_id"
     t.index ["rdv_id"], name: "index_agents_rdvs_on_rdv_id"

@@ -26,6 +26,11 @@
         .dropdown-divider
         = render "admin/rdvs/rdv_status_dropdown_item", rdv: rdv, agent: agent, status: "revoked", remote: remote
 
+      - when "waiting"
+        = render "admin/rdvs/rdv_status_dropdown_item", rdv: rdv, agent: agent, status: "seen", remote: remote
+        .dropdown-divider
+        = render "admin/rdvs/rdv_status_dropdown_item", rdv: rdv, agent: agent, status: "unknown", remote: remote
+
       - else
         = render "admin/rdvs/rdv_status_dropdown_item", rdv: rdv, agent: agent, status: "unknown", remote: remote
 

@@ -9,7 +9,7 @@ module Outlook
 
     attr_reader :agents_rdv, :outlook_id, :agent
 
-    delegate :rdv, :id, to: :agents_rdv, allow_nil: true
+    delegate :rdv, :id, :users, to: :agents_rdv, allow_nil: true
     delegate :microsoft_graph_token, :connected_to_outlook?, to: :agent, prefix: true
     delegate :object, :event_description_for, :starts_at, :ends_at, :address_without_personal_information, to: :rdv
 
@@ -107,6 +107,14 @@ module Outlook
         location: {
           displayName: address_without_personal_information,
         },
+        attendees: users.map do |user|
+          {
+            emailAddress: {
+              address: user.email,
+              name: user.full_name,
+            },
+          }
+        end,
       }
     end
   end

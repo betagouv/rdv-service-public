@@ -102,7 +102,7 @@ describe RdvsHelper do
       travel_to(now)
     end
 
-    %i[seen excused revoked noshow].each do |rdv_status|
+    %i[waiting seen excused revoked noshow].each do |rdv_status|
       context "with a today's RDV" do
         let(:rdv) { build(:rdv, starts_at: now) }
 
