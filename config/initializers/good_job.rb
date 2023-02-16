@@ -15,6 +15,7 @@ Rails.application.configure do
 
   # Enable cron in this process; e.g. only run on the first Scalingo worker process
   config.good_job.enable_cron = ENV["CONTAINER"] == "worker-1"
+  # To locally run GoodJob with cron enabled, run: `GOOD_JOB_ENABLE_CRON=1 bundle exec good_job start`
 
   config.good_job.cron = {
     file_attente_job: {
