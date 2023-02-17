@@ -29,9 +29,12 @@ describe WebhookJob, type: :job do
 
       it "does not retry but sends notification to Sentry" do
         expect do
-          described_class.perform_now(payload, webhook_endpoint.id)
+          expect do
+            described_class.perform_now(payload, webhook_endpoint.id)
+          end.to raise_error(OutgoingWebhookError)
         end.not_to have_enqueued_job
 
+        expect(sentry_events.size).to eq(1)
         expect(sentry_events.last.exception.values.first.value).to match(/Webhook-Failure\s\(ERROR\):/)
         expect(sentry_events.last.exception.values.first.type).to eq("OutgoingWebhookError")
       end
