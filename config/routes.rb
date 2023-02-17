@@ -38,7 +38,7 @@ Rails.application.routes.draw do
     end
     root to: "agents#index"
 
-    authenticate(:super_admin) do
+    authenticate :super_admin do
       mount GoodJob::Engine => "good_job"
     end
   end

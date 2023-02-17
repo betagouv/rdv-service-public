@@ -7,9 +7,7 @@ class WebhookJob < ApplicationJob
 
   queue_as :webhook
 
-  retry_on(OutgoingWebhookError, wait: :exponentially_longer, attempts: 10, queue: :webhook_retries) do |_job, error|
-    Sentry.capture_exception(error)
-  end
+  retry_on(OutgoingWebhookError, wait: :exponentially_longer, attempts: 10, queue: :webhook_retries)
 
   def perform(payload, webhook_endpoint_id)
     webhook_endpoint = WebhookEndpoint.find(webhook_endpoint_id)
