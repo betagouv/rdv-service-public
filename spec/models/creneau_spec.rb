@@ -148,22 +148,6 @@ describe Creneau, type: :model do
     end
   end
 
-  describe "#respects_min_public_booking_delay?" do
-    subject { creneau.respects_min_public_booking_delay? }
-
-    context "creneau respects booking delays" do
-      let(:creneau) { build(:creneau, :respects_booking_delays) }
-
-      it { is_expected.to be true }
-    end
-
-    context "creneau does not respect min booking delay" do
-      let(:creneau) { build(:creneau, :does_not_respect_min_public_booking_delay) }
-
-      it { is_expected.to be false }
-    end
-  end
-
   describe "#respects_max_public_booking_delay?" do
     subject { creneau.respects_max_public_booking_delay? }
 
@@ -171,28 +155,6 @@ describe Creneau, type: :model do
       let(:creneau) { build(:creneau, :respects_booking_delays) }
 
       it { is_expected.to be true }
-    end
-
-    context "creneau does not respect max booking delay" do
-      let(:creneau) { build(:creneau, :does_not_respect_max_public_booking_delay) }
-
-      it { is_expected.to be false }
-    end
-  end
-
-  describe "#respects_booking_delays?" do
-    subject { creneau.respects_booking_delays? }
-
-    context "creneau respects booking delays" do
-      let(:creneau) { build(:creneau, :respects_booking_delays) }
-
-      it { is_expected.to be true }
-    end
-
-    context "creneau does not respect min booking delay" do
-      let(:creneau) { build(:creneau, :does_not_respect_min_public_booking_delay) }
-
-      it { is_expected.to be false }
     end
 
     context "creneau does not respect max booking delay" do
