@@ -29,10 +29,6 @@ class Creneau
     starts_at <=> other.starts_at
   end
 
-  def respects_max_public_booking_delay?
-    starts_at <= (Time.zone.now + motif.max_public_booking_delay.seconds)
-  end
-
   # Return the first event in the passed array that overlaps with the receiver
   def last_overlapping_event_ends_at(events)
     events.select do |event|

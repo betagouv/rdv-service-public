@@ -148,21 +148,6 @@ describe Creneau, type: :model do
     end
   end
 
-  describe "#respects_max_public_booking_delay?" do
-    subject { creneau.respects_max_public_booking_delay? }
-
-    context "creneau respects booking delays" do
-      let(:creneau) { build(:creneau, :respects_booking_delays) }
-
-      it { is_expected.to be true }
-    end
-
-    context "creneau does not respect max booking delay" do
-      let(:creneau) { build(:creneau, :does_not_respect_max_public_booking_delay) }
-
-      it { is_expected.to be false }
-    end
-  end
 
   describe "#lieu" do
     it "returns the lieu when the lieu_id is present" do

@@ -17,7 +17,7 @@ div id="creneaux-lieu-#{lieu.id}"
               br
               = l(date, format: "%d %b")
             - creneaux_for_date = extract_uniq_slots_for_date_and_time(creneaux, date)
-            - if creneaux_for_date.any? && creneaux_for_date[date].first.respects_max_public_booking_delay?
+            - if creneaux_for_date.any?
               - creneaux_for_date.each do |date, creneaux|
                 - creneaux.sort.each do |creneau|
                   - if creneau.motif.restriction_for_rdv.blank?
