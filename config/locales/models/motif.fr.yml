@@ -25,6 +25,7 @@ fr:
         for_secretariat_hint: Les membres du service Secrétariat pourront poser des RDV dans leur agenda et configurer les plages d'ouverture avec ce motif
         follow_up: Ce motif est réservé aux usagers bénéficiant d'un accompagnement
         follow_up_short: RDV de suivi
+        follow_up_warning: Ne cochez cette case que si vous savez ce que vous faîtes
         follow_up_hint: Ce motif est réservé aux usagers bénéficiant d'un accompagnement
         default_duration_in_min: Durée par défaut en minutes
         default_duration_in_min_short: Durée par défaut

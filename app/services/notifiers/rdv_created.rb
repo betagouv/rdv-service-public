@@ -12,7 +12,8 @@ class Notifiers::RdvCreated < Notifiers::RdvBase
   protected
 
   def rdvs_users_to_notify
-    @rdv.rdvs_users.where(send_lifecycle_notifications: true)
+    # Rdv_created with cancelled status is not supposed to happen
+    @rdv.rdvs_users.not_cancelled.where(send_lifecycle_notifications: true)
   end
 
   def notify_agent(agent)

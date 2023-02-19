@@ -56,10 +56,8 @@ class Admin::RdvsCollectifsController < AgentAuthController
     @rdv = Rdv.find(params[:id])
     authorize(@rdv, :update?)
 
-    previous_participations = @rdv.rdvs_users.to_a
-    if @rdv.update(update_users_params)
+    if @rdv.update_and_notify(current_agent, update_users_params)
       flash[:notice] = "Participants mis à jour"
-      Notifiers::RdvCollectifParticipations.perform_with(@rdv, current_agent, previous_participations)
       redirect_to admin_organisation_rdvs_collectifs_path(current_organisation)
     else
       render :edit
