@@ -27,7 +27,7 @@ RSpec.describe RdvsUser::StatusChangeable, type: :concern do
         rdv_user_with_lifecycle_disabled.change_status_and_notify(agent, "revoked")
         expect(rdv_user_with_excused_status.reload.status).to eq("revoked")
         expect(rdv_user_with_lifecycle_disabled.reload.status).to eq("revoked")
-        expect_no_notifications_for_user
+        expect_no_notifications
       end
     end
 

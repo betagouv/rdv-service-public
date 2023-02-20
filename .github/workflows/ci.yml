@@ -55,6 +55,10 @@ jobs:
         ports: ["5432:5432"]
     steps:
       - uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.19.1
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -102,6 +106,10 @@ jobs:
         ports: ["5432:5432"]
     steps:
       - uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.19.1
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:

@@ -1,0 +1,48 @@
+.btn-inclusion-connect {
+  display: inline-flex;
+  align-items: center;
+  height: 58px;
+  font-size: 16px;
+  line-height: 22px;
+  font-weight: 400;
+  text-align: center;
+  text-decoration: none;
+  vertical-align: middle;
+  padding: 8px 16px 8px 62px;
+  border-radius: 50rem;
+  cursor: pointer;
+  box-shadow: none;
+  user-select: none;
+  transition: background-color .15s ease-in-out, border-color .15s ease-in-out;
+  color: #fff;
+  border: 4px solid #000091;
+  background-color: #000091;
+  background-repeat: no-repeat;
+}
+
+.btn-inclusion-connect.active, .btn-inclusion-connect.focus, .btn-inclusion-connect.hover, .btn-inclusion-connect:active, .btn-inclusion-connect:focus, .btn-inclusion-connect:hover {
+  text-decoration: none;
+  color: #fff;
+  border-color: #2323ff;
+  background-color: #2323ff;
+}
+
+.btn-inclusion-connect:focus {
+  outline-offset: 2px;
+  outline: #0a76f6 2px solid;
+}
+
+.btn-inclusion-connect:focus:not(:focus-visible) {
+  outline: 0;
+}
+
+.btn-inclusion-connect:focus-visible {
+  outline-offset: 2px;
+  outline: #0a76f6 2px solid;
+}
+
+.btn-inclusion-connect.disabled, .btn-inclusion-connect:disabled {
+  pointer-events: none;
+  background-color: #b3b4c3;
+  border-color: #b3b4c3;
+}
