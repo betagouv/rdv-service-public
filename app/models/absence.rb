@@ -16,10 +16,10 @@ class Absence < ApplicationRecord
 
   # Relations
   belongs_to :agent
-  has_many :absences_organisation, dependent: :destroy
+  has_many :absences_organisations, dependent: :destroy
 
   # Through relations
-  has_many :organisation, through: :absences_organisation
+  has_many :organisations, through: :absences_organisations
 
   # Validation
   validates :first_day, :title, presence: true
@@ -51,7 +51,7 @@ class Absence < ApplicationRecord
   # `has_many :webhook_endpoints, through: :organisation`
   # nécessaire depuis la création de la table de jointure entre les organisations et les absences
   def webhook_endpoints
-    organisations.flap_map(&:webhook_endpoints)
+    organisations.map(&:webhook_endpoints).flatten
   end
 
   private
