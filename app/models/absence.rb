@@ -30,6 +30,11 @@ class Absence < ApplicationRecord
   before_validation :set_end_day
 
   # Scopes
+  scope :for_organisation, lambda { |org|
+    joins(:absences_organisations)
+      .where(territory_wide: false, absences_organisations: { organisation_id: org.id })
+      .or(where(territory_wide: true))
+  }
   scope :by_starts_at, -> { order(first_day: :desc, start_time: :desc) }
   scope :in_range, lambda { |range|
     return all if range.nil?
