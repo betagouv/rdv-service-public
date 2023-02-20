@@ -2,7 +2,7 @@
   "name": "lapin",
   "private": true,
   "scripts": {
-    "build": "webpack --config webpack.config.js"
+    "build": "export SET NODE_OPTIONS=--openssl-legacy-provider && webpack --config webpack.config.js"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.1.1",
