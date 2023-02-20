@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_13_175430) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_20_103220) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "unaccent"
@@ -509,11 +509,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_13_175430) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "short_name"
-    t.bigint "territory_id"
     t.index "lower((name)::text)", name: "index_services_on_lower_name", unique: true
     t.index "lower((short_name)::text)", name: "index_services_on_lower_short_name", unique: true
     t.index ["name"], name: "index_services_on_name"
-    t.index ["territory_id"], name: "index_services_on_territory_id"
   end
 
   create_table "super_admins", force: :cascade do |t|
