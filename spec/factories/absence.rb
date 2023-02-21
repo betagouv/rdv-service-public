@@ -11,6 +11,7 @@ FactoryBot.define do
     start_time { Tod::TimeOfDay.new(10) }
     end_time { Tod::TimeOfDay.new(15, 30) }
     no_recurrence
+    territory_wide { true }
 
     trait :no_recurrence do
       recurrence { nil }

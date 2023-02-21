@@ -13,6 +13,26 @@ describe Absence, type: :model do
     end
   end
 
+  describe "linking to organisations" do
+    context "when absence is territory wide" do
+      let(:absence) { create(:absence, territory_wide: true) }
+
+      it "forbids linking to a particular organisation" do
+        expect(build(:absences_organisation, absence: absence)).to be_invalid
+      end
+    end
+
+    context "when absence is NOT territory wide" do
+      let(:absence) { build(:absence, territory_wide: false) }
+
+      it "is invalid if not linked to any organisation" do
+        expect(absence).to be_invalid
+        absence.organisations << build(:organisation)
+        expect(absence).to be_valid
+      end
+    end
+  end
+
   describe "no reccurence for absence for several days" do
     it "invalid with recurrence and absence on more than one day" do
       expect(build(:absence, :weekly, first_day: Date.new(2019, 7, 20), end_day: Date.new(2019, 7, 23))).to be_invalid
@@ -74,7 +94,7 @@ describe Absence, type: :model do
       expect(absence.expired?).to be true
     end
 
-    it "return stil works for plage_ouverture" do
+    it "return still works for plage_ouverture" do
       today = Time.zone.parse("20210323 13:45")
       travel_to(today)
       plage_ouverture = build(:plage_ouverture, first_day: today - 3.days)
