@@ -362,29 +362,17 @@ RSpec.describe Rdv::Updatable, type: :concern do
     end
 
     context "when the status changed and is now noshow" do
-      it "updates participations statuses" do
+      it "updates statuses" do
         rdv.update_and_notify(agent, status: "noshow")
         rdv.reload
+        expect(rdv.status).to eq("noshow")
         expect(rdvs_user1.reload.status).to eq("noshow")
         expect(rdvs_user2.reload.status).to eq("noshow")
       end
     end
 
     context "when the status changed and is now excused" do
-      it "do not updates statuses if collectif" do
-        rdv.update_and_notify(agent, status: "excused")
-        rdv.reload
-        expect(rdv.status).not_to eq("excused")
-        expect(rdvs_user1.reload.status).not_to eq("excused")
-        expect(rdvs_user2.reload.status).not_to eq("excused")
-        expect(rdvs_user_seen.reload.status).not_to eq("excused")
-        expect(rdvs_user_excused.reload.status).to eq("excused")
-      end
-    end
-
-    context "when the status changed and is now excused" do
-      it "updates statuses if not collectif" do
-        rdv.update!(motif: create(:motif))
+      it "updates statuses" do
         rdv.update_and_notify(agent, status: "excused")
         rdv.reload
         expect(rdv.status).to eq("excused")
