@@ -136,14 +136,14 @@ describe "User can be invited" do
     before do
       travel_to(now)
       allow(Users::GeoSearch).to receive(:new).and_return(geo_search)
+    end
 
+    it "shows the geo search available motifs to take a rdv", js: true do
       visit prendre_rdv_path(
         departement: departement_number, city_code: city_code, invitation_token: invitation_token,
         address: "16 rue de la résistance", motif_search_terms: "RSA orientation"
       )
-    end
 
-    it "shows the geo search available motifs to take a rdv", js: true do
       # Motif selection
       expect(page).to have_content(motif.name)
       expect(page).to have_content(motif2.name)
@@ -180,6 +180,19 @@ describe "User can be invited" do
       expect(page).to have_content("Votre RDV")
       expect(page).to have_content(lieu.address)
       expect(page).to have_content("11h00")
+    end
+
+    context "when the organisations are preselected" do
+      it "shows the available motifs for the preselected orgs" do
+        visit prendre_rdv_path(
+          departement: departement_number, city_code: city_code, invitation_token: invitation_token,
+          address: "16 rue de la résistance", motif_search_terms: "RSA orientation", organisation_ids: [organisation.id]
+        )
+
+        # It directly selects the first motif and goes to lieu selection
+        expect(page).to have_content(lieu.name)
+        find(".card-title", text: /#{lieu.name}/).ancestor(".card").find("a.stretched-link").click
+      end
     end
   end
 

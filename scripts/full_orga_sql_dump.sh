@@ -26,7 +26,7 @@ psql $SOURCE_DB_URL -c "COPY services TO '$OUTPUT_PATH/services.csv' CSV HEADER;
 # direct links
 psql $SOURCE_DB_URL -c "COPY (SELECT * FROM organisations WHERE id=$ORGANISATION_ID) TO '$OUTPUT_PATH/organisations.csv' CSV HEADER;"
 psql $SOURCE_DB_URL -c "COPY (SELECT * FROM absences              WHERE organisation_id=$ORGANISATION_ID) TO '$OUTPUT_PATH/absences.csv' CSV HEADER;"
-psql $SOURCE_DB_URL -c "COPY (SELECT * FROM agents_organisations  WHERE organisation_id=$ORGANISATION_ID) TO '$OUTPUT_PATH/agents_organisations.csv' CSV HEADER;"
+psql $SOURCE_DB_URL -c "COPY (SELECT * FROM agent_roles  WHERE organisation_id=$ORGANISATION_ID) TO '$OUTPUT_PATH/agent_roles.csv' CSV HEADER;"
 psql $SOURCE_DB_URL -c "COPY (SELECT * FROM lieux                 WHERE organisation_id=$ORGANISATION_ID) TO '$OUTPUT_PATH/lieux.csv' CSV HEADER;"
 psql $SOURCE_DB_URL -c "COPY (SELECT * FROM motifs                WHERE organisation_id=$ORGANISATION_ID) TO '$OUTPUT_PATH/motifs.csv' CSV HEADER;"
 psql $SOURCE_DB_URL -c "COPY (SELECT * FROM plage_ouvertures      WHERE organisation_id=$ORGANISATION_ID) TO '$OUTPUT_PATH/plage_ouvertures.csv' CSV HEADER;"
@@ -46,18 +46,18 @@ psql $SOURCE_DB_URL -c "COPY (
 
 psql $SOURCE_DB_URL -c "COPY (
   SELECT agents.* FROM agents
-  LEFT JOIN agents_organisations ON agents_organisations.agent_id = agents.id
-  WHERE agents_organisations.organisation_id=$ORGANISATION_ID
+  LEFT JOIN agent_roles ON agent_roles.agent_id = agents.id
+  WHERE agent_roles.organisation_id=$ORGANISATION_ID
 ) TO '$OUTPUT_PATH/agents.csv' CSV HEADER;"
 psql $SOURCE_DB_URL -c "COPY (
   SELECT agents_rdvs.* FROM agents_rdvs
-  LEFT JOIN agents_organisations ON agents_organisations.agent_id = agents_rdvs.agent_id
-  WHERE agents_organisations.organisation_id=$ORGANISATION_ID
+  LEFT JOIN agent_roles ON agent_roles.agent_id = agents_rdvs.agent_id
+  WHERE agent_roles.organisation_id=$ORGANISATION_ID
 ) TO '$OUTPUT_PATH/agents_rdvs.csv' CSV HEADER;"
 psql $SOURCE_DB_URL -c "COPY (
   SELECT agents_users.* FROM agents_users
-  LEFT JOIN agents_organisations ON agents_organisations.agent_id = agents_users.agent_id
-  WHERE agents_organisations.organisation_id=$ORGANISATION_ID
+  LEFT JOIN agent_roles ON agent_roles.agent_id = agents_users.agent_id
+  WHERE agent_roles.organisation_id=$ORGANISATION_ID
 ) TO '$OUTPUT_PATH/agents_users.csv' CSV HEADER;"
 psql $SOURCE_DB_URL -c "COPY (
   SELECT file_attentes.* FROM file_attentes
@@ -107,7 +107,7 @@ psql $TEMP_DB_URL -c "COPY services FROM '$OUTPUT_PATH/services.csv' CSV HEADER;
 psql $TEMP_DB_URL -c "COPY organisations FROM '$OUTPUT_PATH/organisations.csv' CSV HEADER;"
 psql $TEMP_DB_URL -c "COPY agents FROM '$OUTPUT_PATH/agents.csv' CSV HEADER;"
 psql $TEMP_DB_URL -c "COPY absences FROM '$OUTPUT_PATH/absences.csv' CSV HEADER;"
-psql $TEMP_DB_URL -c "COPY agents_organisations FROM '$OUTPUT_PATH/agents_organisations.csv' CSV HEADER;"
+psql $TEMP_DB_URL -c "COPY agent_roles FROM '$OUTPUT_PATH/agent_roles.csv' CSV HEADER;"
 psql $TEMP_DB_URL -c "COPY lieux FROM '$OUTPUT_PATH/lieux.csv' CSV HEADER;"
 psql $TEMP_DB_URL -c "COPY motifs FROM '$OUTPUT_PATH/motifs.csv' CSV HEADER;"
 psql $TEMP_DB_URL -c "COPY plage_ouvertures FROM '$OUTPUT_PATH/plage_ouvertures.csv' CSV HEADER;"

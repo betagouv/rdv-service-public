@@ -114,6 +114,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_14_122417) do
     t.index ["updated_at"], name: "index_absences_on_updated_at"
   end
 
+  create_table "agent_roles", force: :cascade do |t|
+    t.bigint "agent_id", null: false
+    t.bigint "organisation_id", null: false
+    t.string "level", default: "basic", null: false
+    t.index ["agent_id"], name: "index_agent_roles_on_agent_id"
+    t.index ["level"], name: "index_agent_roles_on_level"
+    t.index ["organisation_id", "agent_id"], name: "index_agent_roles_on_organisation_id_and_agent_id", unique: true
+    t.index ["organisation_id"], name: "index_agent_roles_on_organisation_id"
+  end
+
   create_table "agent_teams", force: :cascade do |t|
     t.bigint "team_id", null: false
     t.bigint "agent_id", null: false
@@ -187,6 +197,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_14_122417) do
     t.string "last_sign_in_ip"
     t.text "microsoft_graph_token"
     t.text "refresh_microsoft_graph_token"
+    t.boolean "outlook_disconnect_in_progress", default: false, null: false
     t.string "cnfs_secondary_email"
     t.index ["calendar_uid"], name: "index_agents_on_calendar_uid", unique: true
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true
@@ -202,20 +213,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_14_122417) do
     t.index ["uid", "provider"], name: "index_agents_on_uid_and_provider", unique: true
   end
 
-  create_table "agents_organisations", force: :cascade do |t|
-    t.bigint "agent_id", null: false
-    t.bigint "organisation_id", null: false
-    t.string "level", default: "basic", null: false
-    t.index ["agent_id"], name: "index_agents_organisations_on_agent_id"
-    t.index ["level"], name: "index_agents_organisations_on_level"
-    t.index ["organisation_id", "agent_id"], name: "index_agents_organisations_on_organisation_id_and_agent_id", unique: true
-    t.index ["organisation_id"], name: "index_agents_organisations_on_organisation_id"
-  end
-
   create_table "agents_rdvs", force: :cascade do |t|
     t.bigint "agent_id", null: false
     t.bigint "rdv_id", null: false
     t.text "outlook_id"
+    t.boolean "outlook_create_in_progress", default: false, null: false
     t.index ["agent_id", "rdv_id"], name: "index_agents_rdvs_on_agent_id_and_rdv_id", unique: true
     t.index ["agent_id"], name: "index_agents_rdvs_on_agent_id"
     t.index ["rdv_id"], name: "index_agents_rdvs_on_rdv_id"

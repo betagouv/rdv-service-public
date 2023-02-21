@@ -39,7 +39,7 @@ class Rdv < ApplicationRecord
   has_many :agents_rdvs, inverse_of: :rdv, dependent: :destroy
   # https://stackoverflow.com/questions/30629680/rails-isnt-running-destroy-callbacks-for-has-many-through-join-model/30629704
   # https://github.com/rails/rails/issues/7618
-  has_many :rdvs_users, validate: false, inverse_of: :rdv, dependent: :destroy
+  has_many :rdvs_users, validate: false, inverse_of: :rdv, dependent: :destroy, class_name: "RdvsUser"
   has_many :receipts, dependent: :destroy
 
   accepts_nested_attributes_for :rdvs_users, allow_destroy: true
@@ -391,7 +391,7 @@ class Rdv < ApplicationRecord
       user_ids: users.ids,
       agent_ids: agents.ids,
       rdvs_users: rdvs_users.map do |rdvs_user|
-        rdvs_user.slice(:user_id, :send_lifecycle_notifications, :send_reminder_notification)
+        rdvs_user.slice(:user_id, :send_lifecycle_notifications, :send_reminder_notification, :status)
       end,
     }
   end

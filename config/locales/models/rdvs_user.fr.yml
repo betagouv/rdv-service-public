@@ -6,6 +6,7 @@ fr:
       rdvs_user:
         send_lifecycle_notifications: Notifications de création et modification
         send_reminder_notification: Notification de rappel
+        status: Statut
       rdvs_user/send_lifecycle_notifications:
         true: Notifications de création et modification activées
         false: Notifications de création et modification désactivées

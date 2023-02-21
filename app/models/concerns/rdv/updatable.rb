@@ -11,13 +11,14 @@ module Rdv::Updatable
   def save_and_notify(author)
     Rdv.transaction do
       self.updated_at = Time.zone.now
+      previous_participations = rdvs_users.select(&:persisted?)
 
       if status_changed? && valid?
         self.cancelled_at = status.in?(%w[excused revoked noshow]) ? Time.zone.now : nil
         change_participation_statuses
+        # Reload is needed after .persisted? method call.
+        rdvs_users.reload
       end
-
-      previous_participations = rdvs_users.select(&:persisted?)
 
       if save
         notify!(author, previous_participations)
@@ -36,7 +37,7 @@ module Rdv::Updatable
   def notify!(author, previous_participations)
     if rdv_cancelled?
       file_attentes.destroy_all
-      @notifier = Notifiers::RdvCancelled.new(self, author)
+      @notifier = new_cancelled_notifier(author, previous_participations)
     elsif rdv_status_reloaded_from_cancelled?
       @notifier = Notifiers::RdvCreated.new(self, author)
     elsif rdv_updated?
@@ -48,6 +49,12 @@ module Rdv::Updatable
     if collectif? && previous_participations.sort != rdvs_users.sort
       Notifiers::RdvCollectifParticipations.perform_with(self, author, previous_participations)
     end
+  end
+
+  def new_cancelled_notifier(author, previous_participations)
+    # Don't notify RDV cancellation to users that had previously cancelled their individual participation
+    available_users_for_notif = previous_participations.select(&:not_cancelled?).map(&:user)
+    Notifiers::RdvCancelled.new(self, author, available_users_for_notif)
   end
 
   def rdv_status_reloaded_from_cancelled?

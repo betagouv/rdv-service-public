@@ -10,6 +10,8 @@ class Notifiers::RdvCollectifParticipations < ::BaseService
   end
 
   def perform
+    # This is the historical way to notify participations changes
+    # when rdv is updated by the agent with participations add/remove in the updatable concern
     return if @rdv.starts_at < Time.zone.now
 
     # FIXME: this is not ideal but it's the simplest workaround to avoid notifying the agent
@@ -33,7 +35,7 @@ class Notifiers::RdvCollectifParticipations < ::BaseService
   end
 
   def new_participants_to_notify
-    new_participations.select(&:send_lifecycle_notifications).map(&:user)
+    new_participations.select(&:not_cancelled?).select(&:send_lifecycle_notifications).map(&:user)
   end
 
   def removed_participations
@@ -43,7 +45,8 @@ class Notifiers::RdvCollectifParticipations < ::BaseService
   end
 
   def removed_participants_to_notify
-    removed_participations.select(&:send_lifecycle_notifications).map(&:user)
+    # We do not notify already cancelled participations
+    removed_participations.select(&:not_cancelled?).select(&:send_lifecycle_notifications).map(&:user)
   end
 
   def current_participations
