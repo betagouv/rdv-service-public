@@ -5,25 +5,11 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
   include DeviseTokenAuth::Concerns::SetUserByToken
 
   skip_before_action :verify_authenticity_token
-  before_action :authenticate_api_v1_agent_with_token_auth!, unless: :shared_secret_is_valid?
-  before_action :authenticate_agent_with_shared_secret, if: :shared_secret_is_valid?
+  before_action :authenticate_api_v1_agent_with_token_auth!, unless: :shared_secret_is_passed?
+  before_action :authenticate_agent_with_shared_secret, if: :shared_secret_is_passed?
 
   def pundit_user
     AgentOrganisationContext.new(current_agent, current_organisation)
-  end
-
-  def shared_secret_is_valid?
-    return false if request.headers["shared-secret-for-agents-auth"].nil?
-
-    if ActiveSupport::SecurityUtils.secure_compare(
-      Digest::SHA256.hexdigest(request.headers["shared-secret-for-agents-auth"]),
-      Digest::SHA256.hexdigest(ENV.fetch("SHARED_SECRET_FOR_AGENTS_AUTH"))
-    )
-      true
-    else
-      Sentry.capture_message("API authentication agent was called with an invalid shared secret !")
-      false
-    end
   end
 
   def current_organisation
@@ -85,8 +71,24 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
 
   private
 
+  def shared_secret_is_passed?
+    request.headers["shared-secret-for-agents-auth"].present?
+  end
+
+  def shared_secret_is_valid?
+    ActiveSupport::SecurityUtils.secure_compare(
+      Digest::SHA256.hexdigest(request.headers["shared-secret-for-agents-auth"]),
+      Digest::SHA256.hexdigest(ENV.fetch("SHARED_SECRET_FOR_AGENTS_AUTH"))
+    )
+  end
+
   def authenticate_agent_with_shared_secret
     # Bypass DeviseTokenAuth
-    @current_agent = Agent.find_by(email: request.headers["uid"])
+    if shared_secret_is_valid?
+      @current_agent = Agent.find_by(email: request.headers["uid"])
+    else
+      Sentry.capture_message("API authentication agent was called with an invalid shared secret !")
+      head :unauthorized
+    end
   end
 end
