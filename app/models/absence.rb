@@ -32,7 +32,8 @@ class Absence < ApplicationRecord
 
   # Scopes
   scope :for_organisation, lambda { |org|
-    joins(:absences_organisations).where(absences_organisations: { organisation_id: org.id })
+    # org can be a single Organisation or a relation, ActiveRecord will build the query accordingly
+    joins(:absences_organisations).where(absences_organisations: { organisation_id: org })
   }
   scope :by_starts_at, -> { order(first_day: :desc, start_time: :desc) }
   scope :in_range, lambda { |range|

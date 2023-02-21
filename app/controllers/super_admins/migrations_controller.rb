@@ -58,7 +58,7 @@ module SuperAdmins
         Lieu.joins(rdvs: :agents_rdvs).where(agents_rdvs: { agent_id: agent.id }).where(organisation: old_organisation).update_all(organisation_id: new_organisation.id)
 
         # migrer les absence
-        Absence.where(agent_id: agent.id).where(organisation: old_organisation).update_all(organisation_id: new_organisation.id)
+        AbsencesOrganisation.where(agent: agent, organisation: old_organisation).update_all(organisation_id: new_organisation.id)
 
         # et ajouter les usagers
         User.joins(rdvs_users: { rdv: :agents_rdvs }).where(agents_rdvs: { agent_id: agent.id }).find_each do |user|

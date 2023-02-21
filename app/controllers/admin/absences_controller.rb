@@ -85,7 +85,7 @@ class Admin::AbsencesController < AgentAuthController
 
   def set_absence
     @absence = policy_scope(Absence)
-      .where(organisation: current_organisation)
+      .for_organisation(current_organisation)
       .find(params[:id])
   end
 

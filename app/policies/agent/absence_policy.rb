@@ -32,11 +32,11 @@ class Agent::AbsencePolicy < ApplicationPolicy
 
     def resolve
       if current_agent.service.secretariat?
-        scope.where(organisation: current_agent.organisations)
+        scope.for_organisation(current_agent.organisations)
       else
-        absences_of_orgs_i_admin = scope.where(organisation: current_agent.organisations_level(:admin))
+        absences_of_orgs_i_admin = scope.for_organisation(current_agent.organisations_level(:admin))
 
-        absences_of_orgs_i_basic_same_service = scope.where(organisation: current_agent.organisations_level(:basic))
+        absences_of_orgs_i_basic_same_service = scope.for_organisation(current_agent.organisations_level(:basic))
           .joins(:agent).where(agents: { service: current_agent.service })
         absences_of_orgs_i_basic_same_service = scope.where(id: absences_of_orgs_i_basic_same_service)
 
