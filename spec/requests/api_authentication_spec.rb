@@ -4,8 +4,13 @@ describe "API auth", type: :request do
   # inspired by https://devise-token-auth.gitbook.io/devise-token-auth/usage/testing
 
   let!(:organisation) { create(:organisation) }
+  let!(:organisation2) { create(:organisation) }
   let!(:agent) { create(:agent, password: "123456", basic_role_in_organisations: [organisation]) }
+  let!(:agent2) { create(:agent, password: "123456", basic_role_in_organisations: [organisation2]) }
   let!(:absence) { create(:absence, agent: agent, organisation: organisation) }
+  let!(:absence2) { create(:absence, agent: agent, organisation: organisation2) }
+
+  stub_sentry_events
 
   context "login with wrong password" do
     it "returns error" do
@@ -71,6 +76,59 @@ describe "API auth", type: :request do
       )
       expect(response.status).to eq(200)
       expect(parsed_response_body["absences"].count).to eq(1)
+    end
+  end
+
+  context "with agent shared secret auth" do
+    before do
+      ENV["SHARED_SECRET_FOR_AGENTS_AUTH"] = "S3cr3T"
+    end
+
+    it "log sentry and return error when shared secret is invalid" do
+      get(
+        api_v1_absences_path,
+        headers: {
+          uid: agent.email,
+          "shared-secret-for-agents-auth": "BAD_S3cr3T",
+        }
+      )
+      expect(response).to have_http_status(:unauthorized)
+      expect(sentry_events.last.message).to eq("API authentication agent was called with an invalid shared secret !")
+    end
+
+    it "query is correctly processed with the agent authorizations when shared secret is valid" do
+      get(
+        api_v1_absences_path,
+        headers: {
+          uid: agent.email,
+          "shared-secret-for-agents-auth": "S3cr3T",
+        }
+      )
+      expect(response).to have_http_status(:ok)
+      expect(parsed_response_body["absences"].count).to eq(1)
+      expect(sentry_events).to be_empty
+    end
+
+    it "use normal authentication process if shared secret is nil" do
+      post(
+        api_v1_agent_with_token_auth_session_path,
+        params: { email: agent.email, password: "123456" }.to_json,
+        headers: { CONTENT_TYPE: "application/json", ACCEPT: "application/json" }
+      )
+      expect(response).to have_http_status(:ok)
+      expect(response.has_header?("access-token")).to eq(true)
+      get(
+        api_v1_absences_path,
+        headers: {
+          "access-token": response.headers["access-token"],
+          client: response.headers["client"],
+          uid: response.headers["uid"],
+          "shared-secret-for-agents-auth": nil,
+        }
+      )
+      expect(response).to have_http_status(:ok)
+      expect(parsed_response_body["absences"].count).to eq(1)
+      expect(sentry_events).to be_empty
     end
   end
 
