@@ -13,6 +13,10 @@ describe AbsenceBlueprint do
                                                        })
     end
 
+    it "contains organisations" do
+
+    end
+
     it "contains rrules" do
       now = Time.zone.parse("2020-12-23 14h00")
       absence = build(:absence, recurrence: Montrose.every(:week, starts: now))

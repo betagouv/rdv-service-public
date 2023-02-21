@@ -11,7 +11,10 @@ FactoryBot.define do
     start_time { Tod::TimeOfDay.new(10) }
     end_time { Tod::TimeOfDay.new(15, 30) }
     no_recurrence
-    territory_wide { true }
+
+    after(:build) do |absence, _evaluator|
+      absence.organisations << build(:organisation) if absence.organisations.none?
+    end
 
     trait :no_recurrence do
       recurrence { nil }

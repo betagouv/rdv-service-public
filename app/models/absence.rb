@@ -23,7 +23,7 @@ class Absence < ApplicationRecord
 
   # Validation
   validates :first_day, :title, presence: true
-  validates :absences_organisations, presence: true, unless: :territory_wide
+  validates :absences_organisations, presence: true
   validate :ends_at_should_be_after_starts_at
   validate :no_recurrence_for_absence_for_several_days
 
@@ -32,9 +32,7 @@ class Absence < ApplicationRecord
 
   # Scopes
   scope :for_organisation, lambda { |org|
-    joins(:absences_organisations)
-      .where(territory_wide: false, absences_organisations: { organisation_id: org.id })
-      .or(where(territory_wide: true))
+    joins(:absences_organisations).where(absences_organisations: { organisation_id: org.id })
   }
   scope :by_starts_at, -> { order(first_day: :desc, start_time: :desc) }
   scope :in_range, lambda { |range|
