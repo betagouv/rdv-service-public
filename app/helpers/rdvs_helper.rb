@@ -76,6 +76,13 @@ module RdvsHelper
     end
   end
 
+  def collective_rdv_status_dropdown_toggle(rdv)
+    tag.div(data: { toggle: "dropdown" },
+            class: "dropdown-toggle btn rdv-status-#{rdv.temporal_status}") do
+      Rdv.human_attribute_value(:collective_status, rdv.temporal_status, disable_cast: true)
+    end
+  end
+
   def change_status_confirmation_message(rdv, status)
     return "" if rdv.past?
     return I18n.t("admin.rdvs.message.confirm.simple_cancel") if cancel_rdv_to_not_notify?(rdv, status)

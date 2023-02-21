@@ -71,9 +71,20 @@ fr:
         unknown: Une notification de nouveau RDV sera envoyée à l'usager.
         excused: Une notification de confirmation lui sera envoyée.
         revoked: Une notification sera envoyée à l’usager.
+      rdv/collective_statuses:
+        unknown: État indéterminé
+        seen: Effectué
+        revoked: Annulé
+        unknown_past: À renseigner
+        unknown_today: Rendez-vous aujourd’hui
+        unknown_future: Rendez-vous à venir
+      rdv/statuses/collective_action:
+        unknown: Réinitialiser
+        seen: Effectué
+        revoked: Annulé
       rdv/statuses/collective_rdv_explanation:
         unknown: Pour corriger l’état du rendez-vous et de toutes les participations.
-        revoked: Le rendez-vous a du être annulé par le service (raison administrative, manque de participants...).
+        revoked: Le rendez-vous a du être annulé (raison administrative, manque de participants...).
         seen: Le rendez-vous collectif a eu lieu.
       rdv/statuses/collective_rdv_explanation_notif:
         unknown: Une notification de nouveau RDV sera envoyée aux usagers.
