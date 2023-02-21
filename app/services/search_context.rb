@@ -17,7 +17,7 @@ class SearchContext
     @public_link_organisation_id = query[:public_link_organisation_id]
     @user_selected_organisation_id = query[:user_selected_organisation_id]
     @external_organisation_ids = query[:external_organisation_ids]
-    @fallback_organisation_ids = query[:organisation_ids]
+    @preselected_organisation_ids = query[:organisation_ids]
     @motif_id = query[:motif_id]
     @motif_search_terms = query[:motif_search_terms]
     # TODO: Remove "query[:motif_category] ||" after RDV-I migration OK
@@ -185,6 +185,7 @@ class SearchContext
     motifs = motifs.where(service: service) if @service_id.present?
     motifs = motifs.search_by_text(@motif_search_terms) if @motif_search_terms.present?
     motifs = motifs.with_motif_category_short_name(@motif_category_short_name) if @motif_category_short_name.present?
+    motifs = motifs.where(organisation_id: @preselected_organisation_ids) if @preselected_organisation_ids.present?
     motifs = motifs.where(organisations: { id: organisation_id }) if organisation_id.present?
     motifs = motifs.where(organisations: { external_id: @external_organisation_ids.compact }) if @external_organisation_ids.present?
     motifs = motifs.where(id: @motif_id) if @motif_id.present?
@@ -220,7 +221,7 @@ class SearchContext
         # we retrieve the geolocalised matching motifs, if there are none we fallback
         # on the matching motifs for the organisations passed in the query
         filter_motifs(geo_search.available_motifs).presence || filter_motifs(
-          Motif.available_with_plages_ouvertures.where(organisation_id: @fallback_organisation_ids)
+          Motif.available_with_plages_ouvertures.where(organisation_id: @preselected_organisation_ids)
         )
       else
         filter_motifs(geo_search.available_motifs)

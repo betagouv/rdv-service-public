@@ -22,9 +22,6 @@
 /storage/*
 !/storage/.keep
 
-/node_modules
-/yarn-error.log
-
 .byebug_history
 
 # Ignore master key for decrypting credentials and more.
