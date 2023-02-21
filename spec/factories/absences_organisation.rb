@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :absences_organisation do
-    association(:absence)
-    association(:organisation)
+    absence { association(:absence) }
+    organisation { association(:organisation) }
   end
 end

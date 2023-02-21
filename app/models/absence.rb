@@ -23,6 +23,7 @@ class Absence < ApplicationRecord
 
   # Validation
   validates :first_day, :title, presence: true
+  validates :absences_organisations, presence: true, unless: :territory_wide
   validate :ends_at_should_be_after_starts_at
   validate :no_recurrence_for_absence_for_several_days
 

@@ -32,6 +32,6 @@ class ManyOrganisationsToAbsences < ActiveRecord::Migration[7.0]
     end
 
     # supprimer jointure
-    remove_column :absences, :organisation_id
+    remove_column :absences, :organisation_id, :bigint, null: false
   end
 end

@@ -21,12 +21,12 @@ describe Admin::AbsencesController, type: :controller do
       it "assigns absences" do
         absence_juin = create(:absence,
                               agent: agent,
-                              organisation: organisation,
+                              organisations: [organisation],
                               first_day: today + 2.days)
 
         absence_juillet = create(:absence,
                                  agent: agent,
-                                 organisation: organisation,
+                                 organisations: [organisation],
                                  first_day: today + 1.month,
                                  end_day: today + 1.month + 3.days)
 
@@ -44,7 +44,7 @@ describe Admin::AbsencesController, type: :controller do
 
     describe "GET #edit" do
       it "returns a success response" do
-        absence = create(:absence, agent_id: agent.id, organisation: organisation)
+        absence = create(:absence, agent_id: agent.id, organisations: [organisation])
         get :edit, params: { organisation_id: organisation.id, agent_id: agent.id, id: absence.to_param }
         expect(response).to be_successful
       end
@@ -53,7 +53,7 @@ describe Admin::AbsencesController, type: :controller do
     describe "POST #create" do
       context "with valid params" do
         let(:valid_attributes) do
-          build(:absence, agent: agent, organisation: organisation).attributes
+          build(:absence, agent: agent, organisations: [organisation]).attributes
         end
 
         it "creates a new Absence" do
@@ -110,7 +110,7 @@ describe Admin::AbsencesController, type: :controller do
     end
 
     describe "PUT #update" do
-      let(:absence) { create(:absence, agent_id: agent.id, organisation: organisation) }
+      let(:absence) { create(:absence, agent_id: agent.id, organisations: [organisation]) }
 
       context "with valid params" do
         let(:new_attributes) do
@@ -171,7 +171,7 @@ describe Admin::AbsencesController, type: :controller do
     end
 
     describe "DELETE #destroy" do
-      let!(:absence) { create(:absence, agent_id: agent.id, organisation: organisation) }
+      let!(:absence) { create(:absence, agent_id: agent.id, organisations: [organisation]) }
 
       it "destroys the requested absence" do
         expect do

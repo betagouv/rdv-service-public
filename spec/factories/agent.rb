@@ -52,5 +52,10 @@ FactoryBot.define do
     trait :cnfs do
       service { Service.find_by(name: Service::CONSEILLER_NUMERIQUE) || build(:service, :conseiller_numerique) }
     end
+    trait :within_organisation do
+      after(:create) do |agent, _evaluator|
+        agent.organisations << create(:organisation) if agent.organisations.none?
+      end
+    end
   end
 end
