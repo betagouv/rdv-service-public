@@ -66,6 +66,24 @@ describe SearchContext, type: :service do
       expect(subject.send(:matching_motifs)).to eq([motif])
     end
 
+    context "when there are two available motifs from the geo search" do
+      let!(:geo_search) { instance_double(Users::GeoSearch, available_motifs: Motif.where(id: [motif.id, motif2.id])) }
+
+      it "is the returns the two matching motifs" do
+        expect(subject.send(:matching_motifs)).to match_array([motif, motif2])
+      end
+
+      context "when one of the motif does not belong to the preselected orgs" do
+        let!(:other_org) { create(:organisation) }
+
+        before { motif2.update! organisation: other_org }
+
+        it "returns only the matching motif from the preselected orgs" do
+          expect(subject.send(:matching_motifs)).to eq([motif])
+        end
+      end
+    end
+
     context "for an invitation (old param)" do
       before do
         search_query[:invitation_token] = invitation_token
@@ -95,7 +113,7 @@ describe SearchContext, type: :service do
         before { search_query[:referent_ids] = [agent.id] }
 
         let!(:agent) { create(:agent, users: [user]) }
-        let!(:motif) { create(:motif, follow_up: true, motif_category: rsa_orientation) }
+        let!(:motif) { create(:motif, follow_up: true, motif_category: rsa_orientation, organisation: organisation) }
         let!(:plage_ouverture) { create(:plage_ouverture, agent: agent, motifs: [motif]) }
         let!(:geo_search) { instance_double(Users::GeoSearch, available_motifs: Motif.where(id: [motif.id, motif2.id])) }
 
@@ -134,7 +152,7 @@ describe SearchContext, type: :service do
         before { search_query[:referent_ids] = [agent.id] }
 
         let!(:agent) { create(:agent, users: [user]) }
-        let!(:motif) { create(:motif, follow_up: true, motif_category: rsa_orientation) }
+        let!(:motif) { create(:motif, follow_up: true, motif_category: rsa_orientation, organisation: organisation) }
         let!(:plage_ouverture) { create(:plage_ouverture, agent: agent, motifs: [motif]) }
         let!(:geo_search) { instance_double(Users::GeoSearch, available_motifs: Motif.where(id: [motif.id, motif2.id])) }
 

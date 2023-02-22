@@ -7,6 +7,8 @@ describe "API auth", type: :request do
   let!(:agent) { create(:agent, password: "123456", basic_role_in_organisations: [organisation]) }
   let!(:absence) { create(:absence, agent: agent, organisation: organisation) }
 
+  stub_sentry_events
+
   context "login with wrong password" do
     it "returns error" do
       post(
@@ -71,6 +73,51 @@ describe "API auth", type: :request do
       )
       expect(response.status).to eq(200)
       expect(parsed_response_body["absences"].count).to eq(1)
+    end
+  end
+
+  context "with agent shared secret auth" do
+    before do
+      allow(ENV).to receive(:fetch).with("SHARED_SECRET_FOR_AGENTS_AUTH").and_return("S3cr3T")
+    end
+
+    it "log sentry and return error when shared secret is invalid" do
+      get(
+        api_v1_absences_path,
+        headers: {
+          uid: agent.email,
+          "shared-secret-for-agents-auth": "BAD_S3cr3T",
+        }
+      )
+      expect(response).to have_http_status(:unauthorized)
+      expect(parsed_response_body).to eq({ "errors" => ["Vous devez vous connecter ou vous inscrire pour continuer."] })
+      expect(sentry_events.last.message).to eq("API authentication agent was called with an invalid shared secret !")
+    end
+
+    it "log sentry and return error when shared secret is nil" do
+      get(
+        api_v1_absences_path,
+        headers: {
+          uid: agent.email,
+          "shared-secret-for-agents-auth": nil,
+        }
+      )
+      expect(response).to have_http_status(:unauthorized)
+      expect(parsed_response_body).to eq({ "errors" => ["Vous devez vous connecter ou vous inscrire pour continuer."] })
+      expect(sentry_events.last.message).to eq("API authentication agent was called with an invalid shared secret !")
+    end
+
+    it "query is correctly processed with the agent authorizations when shared secret is valid" do
+      get(
+        api_v1_absences_path,
+        headers: {
+          uid: agent.email,
+          "shared-secret-for-agents-auth": "S3cr3T",
+        }
+      )
+      expect(response).to have_http_status(:ok)
+      expect(parsed_response_body["absences"].count).to eq(1)
+      expect(sentry_events).to be_empty
     end
   end
 

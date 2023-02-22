@@ -50,8 +50,9 @@ module PaperTrailHelper
       name = user.full_name
       lifecycle = RdvsUser.human_attribute_value(:send_lifecycle_notifications, value["send_lifecycle_notifications"])
       reminder = RdvsUser.human_attribute_value(:send_reminder_notification, value["send_reminder_notification"])
+      status = RdvsUser.human_attribute_value(:status, value["status"])
 
-      "#{name}: #{lifecycle}, #{reminder}"
+      "#{name}: #{lifecycle}, #{reminder} - Statut : #{status}"
     end.compact.join("\n")
   end
 end
