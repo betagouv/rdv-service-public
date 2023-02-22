@@ -11,8 +11,9 @@ tr
       | Se répète :
       br
       = sanitize(display_recurrence(absence).join("<br/>"))
-  td
-    span>= organisation.name
+  - if @agent_organisations.count > 1
+    td
+      span>= organisation.name
   td
     .d-flex
       div.mr-3= link_to edit_admin_organisation_absence_path(organisation, absence),
