@@ -6,6 +6,7 @@ class Admin::AbsencesController < AgentAuthController
   before_action :set_absence, only: %i[edit update destroy]
   before_action :build_absence, only: [:create]
   before_action :set_agent
+  before_action :set_agent_organisations
 
   def index
     absences = policy_scope(Absence)
@@ -13,8 +14,6 @@ class Admin::AbsencesController < AgentAuthController
       .includes(:organisation, :agent)
       .by_starts_at
       .page(filter_params[:page])
-
-    @organisations = policy_scope(@agent.organisations)
 
     @absences = params[:current_tab] == "expired" ? absences.expired : absences.not_expired
     @display_tabs = absences.expired.any? || params[:current_tab] == "expired"
@@ -36,12 +35,10 @@ class Admin::AbsencesController < AgentAuthController
     @absence = Absence.new(organisation: current_organisation, agent: @agent, **defaults)
 
     authorize(@absence)
-    @organisations = policy_scope(@agent.organisations)
   end
 
   def edit
     authorize(@absence)
-    @organisations = policy_scope(@agent.organisations)
   end
 
   def create
@@ -51,7 +48,6 @@ class Admin::AbsencesController < AgentAuthController
       flash[:notice] = t(".busy_time_created")
       redirect_to admin_organisation_agent_absences_path(@absence.organisation_id, @absence.agent_id)
     else
-      @organisations = policy_scope(@agent.organisations)
       render :edit
     end
   end
@@ -63,7 +59,6 @@ class Admin::AbsencesController < AgentAuthController
       flash[:notice] = t(".busy_time_updated")
       redirect_to admin_organisation_agent_absences_path(@absence.organisation_id, @absence.agent_id)
     else
-      @organisations = policy_scope(@agent.organisations)
       render :edit
     end
   end
@@ -76,12 +71,15 @@ class Admin::AbsencesController < AgentAuthController
       flash[:notice] = t(".busy_time_deleted")
       redirect_to admin_organisation_agent_absences_path(@absence.organisation_id, @absence.agent_id)
     else
-      @organisations = policy_scope(@agent.organisations)
       render :edit
     end
   end
 
   private
+
+  def set_agent_organisations
+    @agent_organisations = policy_scope(@agent.organisations)
+  end
 
   def set_absence
     @absence = policy_scope(Absence)
