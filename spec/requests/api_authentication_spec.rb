@@ -77,6 +77,16 @@ describe "API auth", type: :request do
   end
 
   context "with agent shared secret auth" do
+    let!(:encrypted_payload) do
+      payload = {
+        id: agent.id,
+        first_name: agent.first_name,
+        last_name: agent.last_name,
+        email: agent.email,
+      }
+      OpenSSL::HMAC.hexdigest("SHA256", "S3cr3T", payload.to_s)
+    end
+
     before do
       allow(ENV).to receive(:fetch).with("SHARED_SECRET_FOR_AGENTS_AUTH").and_return("S3cr3T")
     end
@@ -86,7 +96,7 @@ describe "API auth", type: :request do
         api_v1_absences_path,
         headers: {
           uid: agent.email,
-          "shared-secret-for-agents-auth": "BAD_S3cr3T",
+          "X-Agent-Auth-Signature": "BAD_PAYLOAD",
         }
       )
       expect(response).to have_http_status(:unauthorized)
@@ -99,7 +109,7 @@ describe "API auth", type: :request do
         api_v1_absences_path,
         headers: {
           uid: agent.email,
-          "shared-secret-for-agents-auth": nil,
+          "X-Agent-Auth-Signature": nil,
         }
       )
       expect(response).to have_http_status(:unauthorized)
@@ -112,7 +122,7 @@ describe "API auth", type: :request do
         api_v1_absences_path,
         headers: {
           uid: agent.email,
-          "shared-secret-for-agents-auth": "S3cr3T",
+          "X-Agent-Auth-Signature": encrypted_payload,
         }
       )
       expect(response).to have_http_status(:ok)
