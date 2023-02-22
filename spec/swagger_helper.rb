@@ -198,7 +198,7 @@ RSpec.configure do |config|
           organisation_with_root: {
             type: "object",
             properties: {
-              organisation: { "$ref" => "#/components/schemas/organisation" }
+              organisation: { "$ref" => "#/components/schemas/organisation" },
             },
             required: %w[organisation],
           },
