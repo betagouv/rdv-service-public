@@ -92,7 +92,9 @@ describe Admin::AbsencesController, type: :controller do
             agent_id: agent.id,
             first_day: "12/09/2019",
             start_time: "09:00",
+            # end_time before start_time !
             end_time: "07:00",
+            organisation_id: organisation.id,
           }
         end
 
