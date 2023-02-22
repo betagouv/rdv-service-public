@@ -3,7 +3,10 @@
 class ManyOrganisationsToAbsences < ActiveRecord::Migration[7.0]
   def change
     # creer table abs-organisations => jointure entre les deux
-    create_join_table :absences, :organisations do |t|
+    create_table :absences_organisations do |t|
+      t.references :absence, index: true, foreign_key: true
+      t.references :organisation, index: true, foreign_key: true
+      t.timestamps
       t.index %i[absence_id organisation_id], unique: true
     end
 

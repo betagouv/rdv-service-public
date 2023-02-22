@@ -4,6 +4,7 @@ FactoryBot.define do
   sequence(:absence_title) { |n| "Indisponibilité #{n}" }
 
   factory :absence do
+    organisations { [build(:organisation)] }
     agent { association(:agent, basic_role_in_organisations: organisations) }
 
     title { generate(:absence_title) }
@@ -11,10 +12,6 @@ FactoryBot.define do
     start_time { Tod::TimeOfDay.new(10) }
     end_time { Tod::TimeOfDay.new(15, 30) }
     no_recurrence
-
-    after(:build) do |absence, _evaluator|
-      absence.organisations << build(:organisation) if absence.organisations.none?
-    end
 
     trait :no_recurrence do
       recurrence { nil }

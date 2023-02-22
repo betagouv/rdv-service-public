@@ -14,22 +14,21 @@ describe Absence, type: :model do
   end
 
   describe "linking to organisations" do
-    context "when absence is territory wide" do
-      let(:absence) { create(:absence, territory_wide: true) }
+    let(:absence) { build(:absence, organisations: []) }
 
-      it "forbids linking to a particular organisation" do
-        expect(build(:absences_organisation, absence: absence)).to be_invalid
-      end
+    it "is invalid if not linked to any organisation" do
+      expect(absence).to be_invalid
+      absence.organisations << build(:organisation)
+      expect(absence).to be_valid
     end
+  end
 
-    context "when absence is NOT territory wide" do
-      let(:absence) { build(:absence, territory_wide: false) }
+  describe "#destroy" do
+    let(:absence) { create(:absence, organisations: [create(:organisation)]) }
 
-      it "is invalid if not linked to any organisation" do
-        expect(absence).to be_invalid
-        absence.organisations << build(:organisation)
-        expect(absence).to be_valid
-      end
+    it "destroys links to organisations in cascade" do
+      absence_id = absence.id
+      expect { absence.destroy! }.to change { AbsencesOrganisation.where(absence_id: absence_id).count }.from(1).to(0)
     end
   end
 
