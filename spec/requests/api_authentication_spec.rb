@@ -1,11 +1,19 @@
 # frozen_string_literal: true
 
-describe "API auth", type: :request do
+RSpec.describe "API auth", type: :request do
   # inspired by https://devise-token-auth.gitbook.io/devise-token-auth/usage/testing
 
   let!(:organisation) { create(:organisation) }
   let!(:agent) { create(:agent, password: "123456", basic_role_in_organisations: [organisation]) }
   let!(:absence) { create(:absence, agent: agent, organisation: organisation) }
+
+  before do
+    setup_sentry_test
+  end
+
+  after do
+    teardown_sentry_test
+  end
 
   context "login with wrong password" do
     it "returns error" do
@@ -73,8 +81,6 @@ describe "API auth", type: :request do
       expect(parsed_response_body["absences"].count).to eq(1)
     end
   end
-
-  stub_sentry_events
 
   context "with agent shared secret auth" do
     let!(:payload) do
