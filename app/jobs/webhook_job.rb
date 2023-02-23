@@ -7,6 +7,8 @@ class WebhookJob < ApplicationJob
 
   queue_as :webhook
 
+  retry_on(OutgoingWebhookError, wait: :exponentially_longer, attempts: 10, queue: :webhook_retries)
+
   def perform(payload, webhook_endpoint_id)
     webhook_endpoint = WebhookEndpoint.find(webhook_endpoint_id)
 
@@ -41,7 +43,7 @@ class WebhookJob < ApplicationJob
   # c'est en général lié à une mise à jour
   # ou une suppression qui ne fonctionne pas
   #
-  # Ce petit paliatif est là en attendant qu'ils
+  # Ce petit palliatif est là en attendant qu'ils
   # fassent évoluer leur système.
   def self.false_negative_from_drome?(body)
     body = JSON.parse(body)

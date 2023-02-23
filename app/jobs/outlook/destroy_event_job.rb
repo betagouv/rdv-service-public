@@ -2,6 +2,8 @@
 
 module Outlook
   class DestroyEventJob < ApplicationJob
+    queue_as :outlook_sync
+
     def perform(outlook_id, agent)
       outlook_event = Outlook::Event.new(outlook_id: outlook_id, agent: agent).destroy
 

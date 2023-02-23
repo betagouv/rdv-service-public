@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class SmsJob < ApplicationJob
+  queue_as :sms
+
   class InvalidMobilePhoneNumberError < StandardError; end
 
   def perform(sender_name:, phone_number:, content:, provider:, api_key:, receipt_params:) # rubocop:disable Metrics/ParameterLists
