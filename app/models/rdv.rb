@@ -393,7 +393,7 @@ class Rdv < ApplicationRecord
       user_ids: users.ids,
       agent_ids: agents.ids,
       rdvs_users: rdvs_users.map do |rdvs_user|
-        rdvs_user.slice(:user_id, :send_lifecycle_notifications, :send_reminder_notification)
+        rdvs_user.slice(:user_id, :send_lifecycle_notifications, :send_reminder_notification, :status)
       end,
     }
   end

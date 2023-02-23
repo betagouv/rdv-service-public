@@ -5,7 +5,7 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
   include DeviseTokenAuth::Concerns::SetUserByToken
 
   skip_before_action :verify_authenticity_token
-  before_action :authenticate_api_v1_agent_with_token_auth!
+  before_action :authenticate_agent
 
   def pundit_user
     AgentOrganisationContext.new(current_agent, current_organisation)
@@ -66,5 +66,47 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
         error_messages: exception.record.errors.map { "#{_1.attribute} #{_1.message}" },
       }
     )
+  end
+
+  private
+
+  def authenticate_agent
+    if request.headers.include?("X-Agent-Auth-Signature")
+      # Bypass DeviseTokenAuth
+      authenticate_agent_with_shared_secret
+    else
+      # Use DeviseTokenAuth
+      authenticate_api_v1_agent_with_token_auth!
+    end
+  end
+
+  def authenticate_agent_with_shared_secret
+    if shared_secret_is_valid?
+      @current_agent = Agent.find_by(email: request.headers["uid"])
+    else
+      Sentry.capture_message("API authentication agent was called with an invalid signature !")
+      render(
+        status: :unauthorized,
+        json: {
+          errors: [I18n.t("devise.failure.unauthenticated")],
+        }
+      )
+    end
+  end
+
+  def shared_secret_is_valid?
+    return false if request.headers["X-Agent-Auth-Signature"].nil?
+
+    agent = Agent.find_by(email: request.headers["uid"])
+    # Structure of the payload need to be exact for digest comparison
+    payload = {
+      id: agent.id,
+      first_name: agent.first_name,
+      last_name: agent.last_name,
+      email: agent.email,
+    }
+
+    OpenSSL::HMAC.hexdigest("SHA256", ENV.fetch("SHARED_SECRET_FOR_AGENTS_AUTH"), payload.to_json) ==
+      request.headers["X-Agent-Auth-Signature"]
   end
 end
