@@ -953,5 +953,4225 @@
       "url": "https://www.rdv-solidarites.fr",
       "description": "Serveur de production"
     }
-  ]
+  ],
+  "paths": {
+    "/api/v1/absences": {
+      "get": {
+        "summary": "Lister les absences",
+        "security": [
+          {
+            "access_token": [
+
+            ],
+            "uid": [
+
+            ],
+            "client": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access-token",
+            "in": "header",
+            "description": "Token d'accès (authentification)",
+            "example": "SFYBngO55ImjD1HOcv-ivQ",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "client",
+            "in": "header",
+            "description": "Clé client d'accès (authentification)",
+            "example": "Z6EihQAY9NWsZByfZ47i_Q",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "uid",
+            "in": "header",
+            "description": "Identifiant d'accès (authentification)",
+            "example": "martine@demo.rdv-solidarites.fr",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "La page souhaitée",
+            "example": "1",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "organisation_id",
+            "in": "query",
+            "description": "L'ID d'une organisation donnée",
+            "example": 123,
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "tags": [
+          "Absence"
+        ],
+        "operationId": "getAbsences",
+        "description": "Renvoie les absences des organisations accessibles, de manière paginée",
+        "responses": {
+          "200": {
+            "description": "Renvoie les absences d'une organisation donnée",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "absences": [
+                        {
+                          "id": 4,
+                          "agent": {
+                            "id": 2,
+                            "email": "agent_1@lapin.fr",
+                            "first_name": "Anastase",
+                            "last_name": "Bouchet"
+                          },
+                          "end_day": "2023-02-24",
+                          "end_time": "15:30:00",
+                          "first_day": "2023-02-24",
+                          "ical": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:RDV Solidarités\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\nBEGIN:VTIMEZONE\r\nTZID:Europe/Paris\r\nBEGIN:DAYLIGHT\r\nDTSTART:20230326T030000\r\nTZOFFSETFROM:+0100\r\nTZOFFSETTO:+0200\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=3\r\nTZNAME:CEST\r\nEND:DAYLIGHT\r\nBEGIN:STANDARD\r\nDTSTART:20221030T020000\r\nTZOFFSETFROM:+0200\r\nTZOFFSETTO:+0100\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10\r\nTZNAME:CET\r\nEND:STANDARD\r\nEND:VTIMEZONE\r\nBEGIN:VEVENT\r\nDTSTAMP:20230223T160249Z\r\nUID:absence_4@RDV Solidarités\r\nDTSTART;TZID=Europe/Paris:20230224T100000\r\nDTEND;TZID=Europe/Paris:20230224T153000\r\nORGANIZER:mailto:secretariat-auto@rdv-solidarites.fr\r\nSUMMARY:RDV Solidarités Indisponibilité 1\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
+                          "ical_uid": "absence_4@RDV Solidarités",
+                          "organisation": {
+                            "id": 4,
+                            "email": null,
+                            "name": "Organisation n°1",
+                            "phone_number": null
+                          },
+                          "rrule": null,
+                          "start_time": "10:00:00",
+                          "title": "Indisponibilité 1"
+                        }
+                      ],
+                      "meta": {
+                        "current_page": 1,
+                        "next_page": null,
+                        "prev_page": null,
+                        "total_pages": 1,
+                        "total_count": 1
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/absences"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Renvoie 'unauthorized' quand l'authentification est impossible",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "errors": [
+                        "Vous devez vous connecter ou vous inscrire pour continuer."
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_authentication"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer une absence",
+        "security": [
+          {
+            "access_token": [
+
+            ],
+            "uid": [
+
+            ],
+            "client": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access-token",
+            "in": "header",
+            "description": "Token d'accès (authentification)",
+            "example": "SFYBngO55ImjD1HOcv-ivQ",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "client",
+            "in": "header",
+            "description": "Clé client d'accès (authentification)",
+            "example": "Z6EihQAY9NWsZByfZ47i_Q",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "uid",
+            "in": "header",
+            "description": "Identifiant d'accès (authentification)",
+            "example": "martine@demo.rdv-solidarites.fr",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "organisation_id",
+            "in": "query",
+            "description": "ID de l'organisation",
+            "example": 12,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "agent_id",
+            "in": "query",
+            "description": "ID de l'agent",
+            "example": 23,
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "agent_email",
+            "in": "query",
+            "description": "Email de l'agent",
+            "example": "agent@example.com",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "title",
+            "in": "query",
+            "description": "Titre de l'absence",
+            "example": "Super absence",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "first_day",
+            "in": "query",
+            "description": "Premier jour de l'absence",
+            "example": "2023-11-20",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "start_time",
+            "in": "query",
+            "description": "Heure de début de l'absence",
+            "example": "08:00",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "end_day",
+            "in": "query",
+            "description": "Dernier jour de l'absence",
+            "example": "2023-11-20",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "end_time",
+            "in": "query",
+            "description": "Heure de fin de l'absence",
+            "example": "15:00",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Absence"
+        ],
+        "operationId": "createAbsence",
+        "description": "Crée une absence",
+        "responses": {
+          "200": {
+            "description": "Crée et renvoie une absence",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "absence": {
+                        "id": 24,
+                        "agent": {
+                          "id": 12,
+                          "email": "agent@example.com",
+                          "first_name": "Lothaire",
+                          "last_name": "Le Goff"
+                        },
+                        "end_day": "2023-11-20",
+                        "end_time": "15:00:00",
+                        "first_day": "2023-11-20",
+                        "ical": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:RDV Solidarités\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\nBEGIN:VTIMEZONE\r\nTZID:Europe/Paris\r\nBEGIN:DAYLIGHT\r\nDTSTART:20240331T030000\r\nTZOFFSETFROM:+0100\r\nTZOFFSETTO:+0200\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=3\r\nTZNAME:CEST\r\nEND:DAYLIGHT\r\nBEGIN:STANDARD\r\nDTSTART:20231029T020000\r\nTZOFFSETFROM:+0200\r\nTZOFFSETTO:+0100\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10\r\nTZNAME:CET\r\nEND:STANDARD\r\nEND:VTIMEZONE\r\nBEGIN:VEVENT\r\nDTSTAMP:20230223T160250Z\r\nUID:absence_24@RDV Solidarités\r\nDTSTART;TZID=Europe/Paris:20231120T080000\r\nDTEND;TZID=Europe/Paris:20231120T150000\r\nORGANIZER:mailto:secretariat-auto@rdv-solidarites.fr\r\nSUMMARY:RDV Solidarités Super absence\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
+                        "ical_uid": "absence_24@RDV Solidarités",
+                        "organisation": {
+                          "id": 24,
+                          "email": null,
+                          "name": "Organisation n°1",
+                          "phone_number": null
+                        },
+                        "rrule": null,
+                        "start_time": "08:00:00",
+                        "title": "Super absence"
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/absence_with_root"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Renvoie 'unauthorized' quand l'authentification est impossible",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "errors": [
+                        "Vous devez vous connecter ou vous inscrire pour continuer."
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_authentication"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Renvoie 'not_found' quand l'agent.e est introuvable",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "not_found": "agent"
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_not_found"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Renvoie 'unprocessable_entity' quand quand end_time est avant start_time ou que les formats ne sont pas corrects",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "success": false,
+                      "errors": {
+                        "ends_time": [
+                          {
+                            "error": "doit être après le début."
+                          }
+                        ]
+                      },
+                      "error_messages": [
+                        "ends_time doit être après le début."
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_unprocessable_entity"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Renvoie 'forbidden' quand l'agent·e est dans un service différent",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "errors": [
+                        {
+                          "base": "forbidden"
+                        }
+                      ],
+                      "error_messages": [
+                        "Vous ne pouvez pas effectuer cette action."
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_forbidden"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/absences/{absence_id}": {
+      "get": {
+        "summary": "Récupérer une absence",
+        "security": [
+          {
+            "access_token": [
+
+            ],
+            "uid": [
+
+            ],
+            "client": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access-token",
+            "in": "header",
+            "description": "Token d'accès (authentification)",
+            "example": "SFYBngO55ImjD1HOcv-ivQ",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "client",
+            "in": "header",
+            "description": "Clé client d'accès (authentification)",
+            "example": "Z6EihQAY9NWsZByfZ47i_Q",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "uid",
+            "in": "header",
+            "description": "Identifiant d'accès (authentification)",
+            "example": "martine@demo.rdv-solidarites.fr",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "absence_id",
+            "in": "path",
+            "description": "L'ID d'une absence donnée",
+            "example": "12",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Absence"
+        ],
+        "operationId": "getAbsence",
+        "description": "Renvoie une absence",
+        "responses": {
+          "200": {
+            "description": "Renvoie l'absence",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "absence": {
+                        "id": 33,
+                        "agent": {
+                          "id": 15,
+                          "email": "agent_1@lapin.fr",
+                          "first_name": "Agneflète",
+                          "last_name": "Guillaume"
+                        },
+                        "end_day": "2023-02-24",
+                        "end_time": "15:30:00",
+                        "first_day": "2023-02-24",
+                        "ical": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:RDV Solidarités\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\nBEGIN:VTIMEZONE\r\nTZID:Europe/Paris\r\nBEGIN:DAYLIGHT\r\nDTSTART:20230326T030000\r\nTZOFFSETFROM:+0100\r\nTZOFFSETTO:+0200\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=3\r\nTZNAME:CEST\r\nEND:DAYLIGHT\r\nBEGIN:STANDARD\r\nDTSTART:20221030T020000\r\nTZOFFSETFROM:+0200\r\nTZOFFSETTO:+0100\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10\r\nTZNAME:CET\r\nEND:STANDARD\r\nEND:VTIMEZONE\r\nBEGIN:VEVENT\r\nDTSTAMP:20230223T160250Z\r\nUID:absence_33@RDV Solidarités\r\nDTSTART;TZID=Europe/Paris:20230224T100000\r\nDTEND;TZID=Europe/Paris:20230224T153000\r\nORGANIZER:mailto:secretariat-auto@rdv-solidarites.fr\r\nSUMMARY:RDV Solidarités Indisponibilité 1\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
+                        "ical_uid": "absence_33@RDV Solidarités",
+                        "organisation": {
+                          "id": 38,
+                          "email": null,
+                          "name": "Organisation n°1",
+                          "phone_number": null
+                        },
+                        "rrule": null,
+                        "start_time": "10:00:00",
+                        "title": "Indisponibilité 1"
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/absence_with_root"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Renvoie 'unauthorized' quand l'authentification est impossible",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "errors": [
+                        "Vous devez vous connecter ou vous inscrire pour continuer."
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_authentication"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Renvoie 'forbidden' quand l'agent·e n'est pas autorisé·e à accéder à cette absence",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "errors": [
+                        {
+                          "base": "forbidden"
+                        }
+                      ],
+                      "error_messages": [
+                        "Vous ne pouvez pas effectuer cette action."
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_forbidden"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Renvoie 'not_found' quand l'absence n'existe pas",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "not_found": "absence"
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_not_found"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Modifier une absence",
+        "security": [
+          {
+            "access_token": [
+
+            ],
+            "uid": [
+
+            ],
+            "client": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access-token",
+            "in": "header",
+            "description": "Token d'accès (authentification)",
+            "example": "SFYBngO55ImjD1HOcv-ivQ",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "client",
+            "in": "header",
+            "description": "Clé client d'accès (authentification)",
+            "example": "Z6EihQAY9NWsZByfZ47i_Q",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "uid",
+            "in": "header",
+            "description": "Identifiant d'accès (authentification)",
+            "example": "martine@demo.rdv-solidarites.fr",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "absence_id",
+            "in": "path",
+            "description": "L'ID d'une absence donnée",
+            "example": "12",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "title",
+            "in": "query",
+            "description": "Titre de l'absence",
+            "example": "Super absence",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "first_day",
+            "in": "query",
+            "description": "Premier jour de l'absence",
+            "example": "2023-11-20",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "start_time",
+            "in": "query",
+            "description": "Heure de début de l'absence",
+            "example": "08:00",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "end_day",
+            "in": "query",
+            "description": "Dernier jour de l'absence",
+            "example": "2023-11-20",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "end_time",
+            "in": "query",
+            "description": "Heure de fin de l'absence",
+            "example": "15:00",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Absence"
+        ],
+        "operationId": "updateAbsence",
+        "description": "Modifie une absence",
+        "responses": {
+          "200": {
+            "description": "Modifie et renvoie l'absence",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "absence": {
+                        "id": 45,
+                        "agent": {
+                          "id": 21,
+                          "email": "agent_1@lapin.fr",
+                          "first_name": "Juliette",
+                          "last_name": "Pons"
+                        },
+                        "end_day": "2023-02-24",
+                        "end_time": "15:30:00",
+                        "first_day": "2023-02-24",
+                        "ical": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:RDV Solidarités\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\nBEGIN:VTIMEZONE\r\nTZID:Europe/Paris\r\nBEGIN:DAYLIGHT\r\nDTSTART:20230326T030000\r\nTZOFFSETFROM:+0100\r\nTZOFFSETTO:+0200\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=3\r\nTZNAME:CEST\r\nEND:DAYLIGHT\r\nBEGIN:STANDARD\r\nDTSTART:20221030T020000\r\nTZOFFSETFROM:+0200\r\nTZOFFSETTO:+0100\r\nRRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10\r\nTZNAME:CET\r\nEND:STANDARD\r\nEND:VTIMEZONE\r\nBEGIN:VEVENT\r\nDTSTAMP:20230223T160251Z\r\nUID:absence_45@RDV Solidarités\r\nDTSTART;TZID=Europe/Paris:20230224T100000\r\nDTEND;TZID=Europe/Paris:20230224T153000\r\nORGANIZER:mailto:secretariat-auto@rdv-solidarites.fr\r\nSUMMARY:RDV Solidarités Nouveau titre\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
+                        "ical_uid": "absence_45@RDV Solidarités",
+                        "organisation": {
+                          "id": 50,
+                          "email": null,
+                          "name": "Organisation n°1",
+                          "phone_number": null
+                        },
+                        "rrule": null,
+                        "start_time": "10:00:00",
+                        "title": "Nouveau titre"
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/absence_with_root"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Renvoie 'unauthorized' quand l'authentification est impossible",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "errors": [
+                        "Vous devez vous connecter ou vous inscrire pour continuer."
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_authentication"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Renvoie 'forbidden' quand l'agent·e n'est pas autorisé·e à accéder à cette absence",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "errors": [
+                        {
+                          "base": "forbidden"
+                        }
+                      ],
+                      "error_messages": [
+                        "Vous ne pouvez pas effectuer cette action."
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_forbidden"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Renvoie 'not_found' quand l'absence n'existe pas",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "not_found": "absence"
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_not_found"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Détruire une absence",
+        "security": [
+          {
+            "access_token": [
+
+            ],
+            "uid": [
+
+            ],
+            "client": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access-token",
+            "in": "header",
+            "description": "Token d'accès (authentification)",
+            "example": "SFYBngO55ImjD1HOcv-ivQ",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "client",
+            "in": "header",
+            "description": "Clé client d'accès (authentification)",
+            "example": "Z6EihQAY9NWsZByfZ47i_Q",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "uid",
+            "in": "header",
+            "description": "Identifiant d'accès (authentification)",
+            "example": "martine@demo.rdv-solidarites.fr",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "absence_id",
+            "in": "path",
+            "description": "L'ID d'une absence donnée",
+            "example": "12",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Absence"
+        ],
+        "operationId": "deleteAbsence",
+        "description": "Détruit une absence",
+        "responses": {
+          "204": {
+            "description": "Détruit l'absence",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": ""
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Renvoie 'unauthorized' quand l'authentification est impossible",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "errors": [
+                        "Vous devez vous connecter ou vous inscrire pour continuer."
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_authentication"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Renvoie 'forbidden' quand l'agent·e n'est pas autorisé·e à accéder à cette absence",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "errors": [
+                        {
+                          "base": "forbidden"
+                        }
+                      ],
+                      "error_messages": [
+                        "Vous ne pouvez pas effectuer cette action."
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_forbidden"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Renvoie 'not_found' quand l'absence n'existe pas",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "not_found": "absence"
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_not_found"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/agents": {
+      "get": {
+        "summary": "Lister les agent·es",
+        "security": [
+          {
+            "access_token": [
+
+            ],
+            "uid": [
+
+            ],
+            "client": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access-token",
+            "in": "header",
+            "description": "Token d'accès (authentification)",
+            "example": "SFYBngO55ImjD1HOcv-ivQ",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "client",
+            "in": "header",
+            "description": "Clé client d'accès (authentification)",
+            "example": "Z6EihQAY9NWsZByfZ47i_Q",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "uid",
+            "in": "header",
+            "description": "Identifiant d'accès (authentification)",
+            "example": "martine@demo.rdv-solidarites.fr",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "La page souhaitée",
+            "example": "1",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "organisation_id",
+            "in": "query",
+            "description": "L'ID d'une organisation donnée",
+            "example": "123",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "tags": [
+          "Agent"
+        ],
+        "operationId": "getAgents",
+        "description": "Renvoie les agent·es des organisations accessibles, de manière paginée",
+        "responses": {
+          "200": {
+            "description": "Renvoie les agent·es",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "agents": [
+                        {
+                          "id": 33,
+                          "email": "agent_1@lapin.fr",
+                          "first_name": "Apollinaire",
+                          "last_name": "Benard"
+                        }
+                      ],
+                      "meta": {
+                        "current_page": 1,
+                        "next_page": null,
+                        "prev_page": null,
+                        "total_pages": 1,
+                        "total_count": 1
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/agents"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Renvoie 'unauthorized' quand l'authentification est impossible",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "errors": [
+                        "Vous devez vous connecter ou vous inscrire pour continuer."
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_authentication"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/invitations/{invitation_token}": {
+      "get": {
+        "summary": "Récupérer un·e usager·ère",
+        "security": [
+          {
+            "access_token": [
+
+            ],
+            "uid": [
+
+            ],
+            "client": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access-token",
+            "in": "header",
+            "description": "Token d'accès (authentification)",
+            "example": "SFYBngO55ImjD1HOcv-ivQ",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "client",
+            "in": "header",
+            "description": "Clé client d'accès (authentification)",
+            "example": "Z6EihQAY9NWsZByfZ47i_Q",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "uid",
+            "in": "header",
+            "description": "Identifiant d'accès (authentification)",
+            "example": "martine@demo.rdv-solidarites.fr",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "invitation_token",
+            "in": "path",
+            "description": "Jeton d'invitation",
+            "example": "abcdef123456",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Invitation",
+          "User"
+        ],
+        "operationId": "getUserByInvitationToken",
+        "description": "Renvoie un·e usager·ère grâce à son jeton d'invitation",
+        "responses": {
+          "200": {
+            "description": "Renvoie l'usager·ère",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "user": {
+                        "id": 2,
+                        "address": "20 avenue de Ségur, Paris",
+                        "address_details": null,
+                        "affiliation_number": "39012093812038",
+                        "birth_date": "1985-07-20",
+                        "birth_name": null,
+                        "caisse_affiliation": "caf",
+                        "case_number": null,
+                        "created_at": "2023-02-23 17:02:52 +0100",
+                        "email": "jean@jacques.fr",
+                        "family_situation": "divorced",
+                        "first_name": "Jean",
+                        "invitation_accepted_at": null,
+                        "invitation_created_at": "2023-02-23 17:02:52 +0100",
+                        "last_name": "JACQUES",
+                        "logement": "locataire",
+                        "notes": "Super note",
+                        "notify_by_email": true,
+                        "notify_by_sms": true,
+                        "number_of_children": 12,
+                        "phone_number": "0635727900",
+                        "phone_number_formatted": "+33635727900",
+                        "responsible": null,
+                        "responsible_id": null,
+                        "user_profiles": null
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/user_with_root"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Renvoie 'unauthorized' quand l'authentification est impossible",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "errors": [
+                        "Vous devez vous connecter ou vous inscrire pour continuer."
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_authentication"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Renvoie 'not_found' quand l'usager·ère n'est pas trouvé·e",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "not_found": "user"
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_not_found"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/organisations/{organisation_id}/motifs": {
+      "get": {
+        "summary": "Lister les motifs",
+        "tags": [
+          "Motif"
+        ],
+        "operationId": "getMotifs",
+        "description": "Renvoie tous les motifs à partir d'une organisation",
+        "security": [
+          {
+            "access_token": [
+
+            ],
+            "uid": [
+
+            ],
+            "client": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access-token",
+            "in": "header",
+            "description": "Token d'accès (authentification)",
+            "example": "SFYBngO55ImjD1HOcv-ivQ",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "client",
+            "in": "header",
+            "description": "Clé client d'accès (authentification)",
+            "example": "Z6EihQAY9NWsZByfZ47i_Q",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "uid",
+            "in": "header",
+            "description": "Identifiant d'accès (authentification)",
+            "example": "martine@demo.rdv-solidarites.fr",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "La page souhaitée",
+            "example": "1",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "organisation_id",
+            "in": "path",
+            "description": "Identifiant de l'organisation",
+            "example": "1",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "active",
+            "in": "query",
+            "description": "filtre sur les motifs actifs",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "bookable_publicly",
+            "in": "query",
+            "description": "filtre sur les motifs réservables en ligne",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "service_id",
+            "in": "query",
+            "description": "filtre sur les services",
+            "example": "1",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Renvoie les motifs liés à la bonne organisation",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "motifs": [
+                        {
+                          "id": 6,
+                          "bookable_publicly": true,
+                          "category": "1_motif_cat",
+                          "collectif": false,
+                          "deleted_at": null,
+                          "follow_up": false,
+                          "location_type": "public_office",
+                          "motif_category": {
+                            "id": 6,
+                            "name": "Catégorie de motif n°1",
+                            "short_name": "1_motif_cat"
+                          },
+                          "name": "Motif 1",
+                          "organisation_id": 91,
+                          "service_id": 68
+                        },
+                        {
+                          "id": 7,
+                          "bookable_publicly": true,
+                          "category": "2_motif_cat",
+                          "collectif": false,
+                          "deleted_at": null,
+                          "follow_up": false,
+                          "location_type": "public_office",
+                          "motif_category": {
+                            "id": 7,
+                            "name": "Catégorie de motif n°2",
+                            "short_name": "2_motif_cat"
+                          },
+                          "name": "Motif 2",
+                          "organisation_id": 91,
+                          "service_id": 68
+                        }
+                      ],
+                      "meta": {
+                        "current_page": 1,
+                        "next_page": null,
+                        "prev_page": null,
+                        "total_pages": 1,
+                        "total_count": 2
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/motifs"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Renvoie 'unauthorized' quand l'authentification est impossible",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "errors": [
+                        "Vous devez vous connecter ou vous inscrire pour continuer."
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_authentication"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/organisations": {
+      "get": {
+        "summary": "Lister les organisations",
+        "security": [
+          {
+            "access_token": [
+
+            ],
+            "uid": [
+
+            ],
+            "client": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access-token",
+            "in": "header",
+            "description": "Token d'accès (authentification)",
+            "example": "SFYBngO55ImjD1HOcv-ivQ",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "client",
+            "in": "header",
+            "description": "Clé client d'accès (authentification)",
+            "example": "Z6EihQAY9NWsZByfZ47i_Q",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "uid",
+            "in": "header",
+            "description": "Identifiant d'accès (authentification)",
+            "example": "martine@demo.rdv-solidarites.fr",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "La page souhaitée",
+            "example": "1",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "departement_number",
+            "in": "query",
+            "description": "Le numéro ou code de département du territoire concerné",
+            "example": "26",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "city_code",
+            "in": "query",
+            "description": "Le code INSEE de la localité",
+            "example": "26323",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Organisation"
+        ],
+        "operationId": "getOrganisations",
+        "description": "Renvoie toutes les organisations accessibles à l'agent·e authentifié·e, de manière paginée",
+        "responses": {
+          "200": {
+            "description": "Retourne des Organisations",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "organisations": [
+                        {
+                          "id": 118,
+                          "email": null,
+                          "name": "Organisation n°1",
+                          "phone_number": null
+                        },
+                        {
+                          "id": 119,
+                          "email": null,
+                          "name": "Organisation n°2",
+                          "phone_number": null
+                        },
+                        {
+                          "id": 120,
+                          "email": null,
+                          "name": "Organisation n°3",
+                          "phone_number": null
+                        },
+                        {
+                          "id": 121,
+                          "email": null,
+                          "name": "Organisation n°4",
+                          "phone_number": null
+                        },
+                        {
+                          "id": 122,
+                          "email": null,
+                          "name": "Organisation n°5",
+                          "phone_number": null
+                        }
+                      ],
+                      "meta": {
+                        "current_page": 1,
+                        "next_page": null,
+                        "prev_page": null,
+                        "total_pages": 1,
+                        "total_count": 5
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/organisations"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Renvoie 'unauthorized' quand l'authentification est impossible",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "errors": [
+                        "Vous devez vous connecter ou vous inscrire pour continuer."
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_authentication"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "api/v1/organisations/{organisation_id}": {
+      "patch": {
+        "summary": "Mettre à jour une organisation",
+        "security": [
+          {
+            "access_token": [
+
+            ],
+            "uid": [
+
+            ],
+            "client": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access-token",
+            "in": "header",
+            "description": "Token d'accès (authentification)",
+            "example": "SFYBngO55ImjD1HOcv-ivQ",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "client",
+            "in": "header",
+            "description": "Clé client d'accès (authentification)",
+            "example": "Z6EihQAY9NWsZByfZ47i_Q",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "uid",
+            "in": "header",
+            "description": "Identifiant d'accès (authentification)",
+            "example": "martine@demo.rdv-solidarites.fr",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "organisation_id",
+            "in": "path",
+            "description": "ID de l'organisation",
+            "example": 123,
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Nom",
+            "example": "Centre d'action sociale",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "email",
+            "in": "query",
+            "description": "Email",
+            "example": "cas@77.com",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "phone_number",
+            "in": "query",
+            "description": "Numéro de téléphone",
+            "example": "33100008012",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Organisation"
+        ],
+        "operationId": "updateOrganisation",
+        "description": "Met à jour une organisation",
+        "responses": {
+          "200": {
+            "description": "Met à jour et renvoie un·e usager·ère",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "organisation": {
+                        "id": 131,
+                        "email": "pole@parcours.fr",
+                        "name": "Pole parcours",
+                        "phone_number": "33100008012"
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/organisation_with_root"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Renvoie 'unauthorized' quand l'authentification est impossible",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "errors": [
+                        "Vous devez vous connecter ou vous inscrire pour continuer."
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_authentication"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Renvoie 'forbidden' quand ",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "errors": [
+                        {
+                          "base": "forbidden"
+                        }
+                      ],
+                      "error_messages": [
+                        "Vous ne pouvez pas effectuer cette action."
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_forbidden"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/public_links": {
+      "get": {
+        "summary": "Lister les liens publics de recherche",
+        "tags": [
+          "PublicLink"
+        ],
+        "operationId": "getPublicLinks",
+        "description": "Renvoie les liens publics de recherche d'un territoire donné",
+        "parameters": [
+          {
+            "name": "territory",
+            "in": "query",
+            "description": "Le numéro ou code de département du territoire concerné",
+            "example": "26",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retourne les liens publics de recherche",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "public_links": [
+                        {
+                          "external_id": "ext_id_A",
+                          "public_link": "http://www.rdv-aide-numerique-test.localhost/org/168"
+                        },
+                        {
+                          "external_id": "ext_id_B",
+                          "public_link": "http://www.rdv-aide-numerique-test.localhost/org/169"
+                        },
+                        {
+                          "external_id": "ext_id_C",
+                          "public_link": "http://www.rdv-aide-numerique-test.localhost/org/170"
+                        }
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/public_links"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Retourne 'bad_request' quand le territory est manquant",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "missing": "territory"
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_missing"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Renvoie 'not_found' quand le territory ne peut pas être trouvé",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "not_found": "territory"
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_not_found"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Renvoie 'too_many_requests' quand la limite d'appels est atteinte",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "errors": [
+                        "Limite d'appels API atteinte. Merci de patienter.\n"
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_too_many_request"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/organisations/{organisation_id}/rdvs": {
+      "get": {
+        "summary": "Lister les rendez-vous d'une organisation",
+        "security": [
+          {
+            "access_token": [
+
+            ],
+            "uid": [
+
+            ],
+            "client": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access-token",
+            "in": "header",
+            "description": "Token d'accès (authentification)",
+            "example": "SFYBngO55ImjD1HOcv-ivQ",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "client",
+            "in": "header",
+            "description": "Clé client d'accès (authentification)",
+            "example": "Z6EihQAY9NWsZByfZ47i_Q",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "uid",
+            "in": "header",
+            "description": "Identifiant d'accès (authentification)",
+            "example": "martine@demo.rdv-solidarites.fr",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "organisation_id",
+            "in": "path",
+            "description": "Identifiant de l'organisation",
+            "example": "20",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "RDV"
+        ],
+        "operationId": "getRdvs",
+        "description": "Renvoie les RDVs du service dont l'agent fait partie dans cette organisation. Si l'agent est administrateurice ou secrétaire, renvoie tous les RDVs de l'organisation en question.",
+        "responses": {
+          "200": {
+            "description": "Appel API réussi",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "rdvs": [
+                        {
+                          "id": 6,
+                          "address": "1 rue de l'adresse 12345 Ville",
+                          "agents": [
+                            {
+                              "id": 106,
+                              "email": "agent_1@lapin.fr",
+                              "first_name": "Taurin",
+                              "last_name": "Sanchez"
+                            }
+                          ],
+                          "cancelled_at": null,
+                          "collectif": false,
+                          "context": null,
+                          "created_by": "agent",
+                          "deleted_at": null,
+                          "duration_in_min": 45,
+                          "ends_at": "2023-02-26 17:47:56 +0100",
+                          "lieu": {
+                            "id": 16,
+                            "address": "1 rue de l'adresse 12345 Ville",
+                            "name": "Lieu n°1",
+                            "organisation_id": 180,
+                            "phone_number": null,
+                            "single_use": false
+                          },
+                          "max_participants_count": null,
+                          "motif": {
+                            "id": 47,
+                            "bookable_publicly": true,
+                            "category": "1_motif_cat",
+                            "collectif": false,
+                            "deleted_at": null,
+                            "follow_up": false,
+                            "location_type": "public_office",
+                            "motif_category": {
+                              "id": 47,
+                              "name": "Catégorie de motif n°1",
+                              "short_name": "1_motif_cat"
+                            },
+                            "name": "Motif 1",
+                            "organisation_id": 182,
+                            "service_id": 137
+                          },
+                          "name": null,
+                          "organisation": {
+                            "id": 180,
+                            "email": null,
+                            "name": "Organisation n°1",
+                            "phone_number": null
+                          },
+                          "rdvs_users": [
+                            {
+                              "id": 6,
+                              "send_lifecycle_notifications": true,
+                              "send_reminder_notification": true,
+                              "status": "unknown",
+                              "user": {
+                                "id": 8,
+                                "address": "20 avenue de Ségur, Paris",
+                                "address_details": null,
+                                "affiliation_number": "39012093812038",
+                                "birth_date": "1985-07-20",
+                                "birth_name": null,
+                                "caisse_affiliation": "caf",
+                                "case_number": null,
+                                "created_at": "2023-02-23 17:02:56 +0100",
+                                "email": "usager_1@lapin.fr",
+                                "family_situation": "divorced",
+                                "first_name": "Ségolène",
+                                "invitation_accepted_at": null,
+                                "invitation_created_at": null,
+                                "last_name": "HOARAU",
+                                "logement": "locataire",
+                                "notes": "Super note",
+                                "notify_by_email": true,
+                                "notify_by_sms": true,
+                                "number_of_children": 12,
+                                "phone_number": "7 39 61 13 32",
+                                "phone_number_formatted": "+33739611332",
+                                "responsible": null,
+                                "responsible_id": null,
+                                "user_profiles": null
+                              }
+                            }
+                          ],
+                          "starts_at": "2023-02-26 17:02:56 +0100",
+                          "status": "unknown",
+                          "users": [
+                            {
+                              "id": 8,
+                              "address": "20 avenue de Ségur, Paris",
+                              "address_details": null,
+                              "affiliation_number": "39012093812038",
+                              "birth_date": "1985-07-20",
+                              "birth_name": null,
+                              "caisse_affiliation": "caf",
+                              "case_number": null,
+                              "created_at": "2023-02-23 17:02:56 +0100",
+                              "email": "usager_1@lapin.fr",
+                              "family_situation": "divorced",
+                              "first_name": "Ségolène",
+                              "invitation_accepted_at": null,
+                              "invitation_created_at": null,
+                              "last_name": "HOARAU",
+                              "logement": "locataire",
+                              "notes": "Super note",
+                              "notify_by_email": true,
+                              "notify_by_sms": true,
+                              "number_of_children": 12,
+                              "phone_number": "7 39 61 13 32",
+                              "phone_number_formatted": "+33739611332",
+                              "responsible": null,
+                              "responsible_id": null,
+                              "user_profiles": null
+                            }
+                          ],
+                          "users_count": 1,
+                          "uuid": "ce2c8950-2d86-41a4-a098-4ef6a0f35510"
+                        }
+                      ],
+                      "meta": {
+                        "current_page": 1,
+                        "next_page": null,
+                        "prev_page": null,
+                        "total_pages": 1,
+                        "total_count": 1
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/rdvs"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Renvoie 'unauthorized' quand l'authentification est impossible",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "errors": [
+                        "Vous devez vous connecter ou vous inscrire pour continuer."
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_authentication"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/referent_assignations": {
+      "post": {
+        "summary": "Créer une assignation à un référent",
+        "security": [
+          {
+            "access_token": [
+
+            ],
+            "uid": [
+
+            ],
+            "client": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access-token",
+            "in": "header",
+            "description": "Token d'accès (authentification)",
+            "example": "SFYBngO55ImjD1HOcv-ivQ",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "client",
+            "in": "header",
+            "description": "Clé client d'accès (authentification)",
+            "example": "Z6EihQAY9NWsZByfZ47i_Q",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "uid",
+            "in": "header",
+            "description": "Identifiant d'accès (authentification)",
+            "example": "martine@demo.rdv-solidarites.fr",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "agent_id",
+            "in": "query",
+            "description": "ID de l'agent",
+            "example": 14,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "user_id",
+            "in": "query",
+            "description": "ID de l'utilisateur",
+            "example": 12,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "tags": [
+          "ReferentAssignation"
+        ],
+        "operationId": "createReferentAssignation",
+        "description": "Crée une assignation à un référent",
+        "responses": {
+          "200": {
+            "description": "Crée et renvoie une assignation à un référent",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "referent_assignation": {
+                        "agent": {
+                          "id": 139,
+                          "email": "agent_2@lapin.fr",
+                          "first_name": "Galeran",
+                          "last_name": "Meyer"
+                        },
+                        "user": {
+                          "id": 29,
+                          "address": "20 avenue de Ségur, Paris",
+                          "address_details": null,
+                          "affiliation_number": "39012093812038",
+                          "birth_date": "1985-07-20",
+                          "birth_name": null,
+                          "caisse_affiliation": "caf",
+                          "case_number": null,
+                          "created_at": "2023-02-23 17:02:57 +0100",
+                          "email": "usager_1@lapin.fr",
+                          "family_situation": "divorced",
+                          "first_name": "Maxime",
+                          "invitation_accepted_at": null,
+                          "invitation_created_at": null,
+                          "last_name": "DANIEL",
+                          "logement": "locataire",
+                          "notes": "Super note",
+                          "notify_by_email": true,
+                          "notify_by_sms": true,
+                          "number_of_children": 12,
+                          "phone_number": "642281396",
+                          "phone_number_formatted": "+33642281396",
+                          "responsible": null,
+                          "responsible_id": null,
+                          "user_profiles": null
+                        }
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/referent_assignation_with_root"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Renvoie 'forbidden' quand l'agent.e n'est pas sur le même territoire que le reférent",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "errors": [
+                        {
+                          "base": "forbidden"
+                        }
+                      ],
+                      "error_messages": [
+                        "Vous ne pouvez pas effectuer cette action."
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_forbidden"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Renvoie 'unauthorized' quand l'authentification est impossible",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "errors": [
+                        "Vous devez vous connecter ou vous inscrire pour continuer."
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_authentication"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Détruit une assignation à un référent",
+        "security": [
+          {
+            "access_token": [
+
+            ],
+            "uid": [
+
+            ],
+            "client": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access-token",
+            "in": "header",
+            "description": "Token d'accès (authentification)",
+            "example": "SFYBngO55ImjD1HOcv-ivQ",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "client",
+            "in": "header",
+            "description": "Clé client d'accès (authentification)",
+            "example": "Z6EihQAY9NWsZByfZ47i_Q",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "uid",
+            "in": "header",
+            "description": "Identifiant d'accès (authentification)",
+            "example": "martine@demo.rdv-solidarites.fr",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "agent_id",
+            "in": "query",
+            "description": "ID de l'agent",
+            "example": 14,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "user_id",
+            "in": "query",
+            "description": "ID de l'utilisateur",
+            "example": 12,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "tags": [
+          "ReferentAssignation"
+        ],
+        "operationId": "deleteReferentAssignation",
+        "description": "Détruit une assignation à un référent",
+        "responses": {
+          "204": {
+            "description": "Détruit une assignation à un référent",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": ""
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Renvoie 'forbidden' quand l'agent.e n'est pas sur le même territoire que le reférent",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "errors": [
+                        {
+                          "base": "forbidden"
+                        }
+                      ],
+                      "error_messages": [
+                        "Vous ne pouvez pas effectuer cette action."
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_forbidden"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Renvoie 'unauthorized' quand l'authentification est impossible",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "errors": [
+                        "Vous devez vous connecter ou vous inscrire pour continuer."
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_authentication"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "l'assignation n'existe pas",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": ""
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user_profiles": {
+      "post": {
+        "summary": "Créer un profil utilisateur",
+        "security": [
+          {
+            "access_token": [
+
+            ],
+            "uid": [
+
+            ],
+            "client": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access-token",
+            "in": "header",
+            "description": "Token d'accès (authentification)",
+            "example": "SFYBngO55ImjD1HOcv-ivQ",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "client",
+            "in": "header",
+            "description": "Clé client d'accès (authentification)",
+            "example": "Z6EihQAY9NWsZByfZ47i_Q",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "uid",
+            "in": "header",
+            "description": "Identifiant d'accès (authentification)",
+            "example": "martine@demo.rdv-solidarites.fr",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "organisation_id",
+            "in": "query",
+            "description": "ID de l'organisation",
+            "example": 12,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "user_id",
+            "in": "query",
+            "description": "ID de l'utilisateur",
+            "example": 12,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "tags": [
+          "UserProfile"
+        ],
+        "operationId": "createUserProfile",
+        "description": "Crée un profil utilisateur",
+        "responses": {
+          "200": {
+            "description": "Crée et renvoie un profil utilisateur",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "user_profile": {
+                        "organisation": {
+                          "id": 225,
+                          "email": null,
+                          "name": "Organisation n°1",
+                          "phone_number": null
+                        },
+                        "user": {
+                          "id": 43,
+                          "address": "20 avenue de Ségur, Paris",
+                          "address_details": null,
+                          "affiliation_number": "39012093812038",
+                          "birth_date": "1985-07-20",
+                          "birth_name": null,
+                          "caisse_affiliation": "caf",
+                          "case_number": null,
+                          "created_at": "2023-02-23 17:02:58 +0100",
+                          "email": "usager_1@lapin.fr",
+                          "family_situation": "divorced",
+                          "first_name": "Lydie",
+                          "invitation_accepted_at": null,
+                          "invitation_created_at": null,
+                          "last_name": "GUÉRIN",
+                          "logement": "locataire",
+                          "notes": "Super note",
+                          "notify_by_email": true,
+                          "notify_by_sms": true,
+                          "number_of_children": 12,
+                          "phone_number": "6 83 02 06 77",
+                          "phone_number_formatted": "+33683020677",
+                          "responsible": null,
+                          "responsible_id": null,
+                          "user_profiles": null
+                        }
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/user_profile_with_root"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Renvoie 'forbidden' quand l'agent·e n'a pas accès à l'organisation",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "errors": [
+                        {
+                          "base": "forbidden"
+                        }
+                      ],
+                      "error_messages": [
+                        "Vous ne pouvez pas effectuer cette action."
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_forbidden"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Renvoie 'unauthorized' quand l'authentification est impossible",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "errors": [
+                        "Vous devez vous connecter ou vous inscrire pour continuer."
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_authentication"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Renvoie 'unprocessable_entity' quand l'utilisateur ou l'organisation est inconnu(e) ou ce profil existe déjà",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "success": false,
+                      "errors": {
+                        "user": [
+                          {
+                            "error": "blank"
+                          }
+                        ]
+                      },
+                      "error_messages": [
+                        "user doit exister"
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_unprocessable_entity"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Détruit le profil utilisateur de l'organisation",
+        "security": [
+          {
+            "access_token": [
+
+            ],
+            "uid": [
+
+            ],
+            "client": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access-token",
+            "in": "header",
+            "description": "Token d'accès (authentification)",
+            "example": "SFYBngO55ImjD1HOcv-ivQ",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "client",
+            "in": "header",
+            "description": "Clé client d'accès (authentification)",
+            "example": "Z6EihQAY9NWsZByfZ47i_Q",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "uid",
+            "in": "header",
+            "description": "Identifiant d'accès (authentification)",
+            "example": "martine@demo.rdv-solidarites.fr",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "organisation_id",
+            "in": "query",
+            "description": "ID de l'organisation",
+            "example": 14,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "user_id",
+            "in": "query",
+            "description": "ID de l'utilisateur",
+            "example": 12,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "tags": [
+          "UserProfile"
+        ],
+        "operationId": "deleteUserProfile",
+        "description": "Détruit le profil utilisateur de l'organisation",
+        "responses": {
+          "204": {
+            "description": "ne détruit pas l'utilisateur s'il n'appartient à plusieurs organisations",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": ""
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Renvoie 'forbidden' quand l'agent n'appartient pas à l'organisation",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "errors": [
+                        {
+                          "base": "forbidden"
+                        }
+                      ],
+                      "error_messages": [
+                        "Vous ne pouvez pas effectuer cette action."
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_forbidden"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Renvoie 'unauthorized' quand l'authentification est impossible",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "errors": [
+                        "Vous devez vous connecter ou vous inscrire pour continuer."
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_authentication"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "le profil utilisateur n'existe pas",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": ""
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/users/{user_id}": {
+      "get": {
+        "summary": "Récupérer un·e usager·ère",
+        "security": [
+          {
+            "access_token": [
+
+            ],
+            "uid": [
+
+            ],
+            "client": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access-token",
+            "in": "header",
+            "description": "Token d'accès (authentification)",
+            "example": "SFYBngO55ImjD1HOcv-ivQ",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "client",
+            "in": "header",
+            "description": "Clé client d'accès (authentification)",
+            "example": "Z6EihQAY9NWsZByfZ47i_Q",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "uid",
+            "in": "header",
+            "description": "Identifiant d'accès (authentification)",
+            "example": "martine@demo.rdv-solidarites.fr",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "ID de l'usager·ère",
+            "example": 123,
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "tags": [
+          "User"
+        ],
+        "operationId": "getUser",
+        "description": "Renvoie un·e usager·ère",
+        "responses": {
+          "200": {
+            "description": "Renvoie l'usager·ère",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "user": {
+                        "id": 59,
+                        "address": "20 avenue de Ségur, Paris",
+                        "address_details": null,
+                        "affiliation_number": "39012093812038",
+                        "birth_date": "1985-07-20",
+                        "birth_name": null,
+                        "caisse_affiliation": "caf",
+                        "case_number": null,
+                        "created_at": "2023-02-23 17:02:59 +0100",
+                        "email": "jean@jacques.fr",
+                        "family_situation": "divorced",
+                        "first_name": "Jean",
+                        "invitation_accepted_at": null,
+                        "invitation_created_at": null,
+                        "last_name": "JACQUES",
+                        "logement": "locataire",
+                        "notes": "Super note",
+                        "notify_by_email": true,
+                        "notify_by_sms": true,
+                        "number_of_children": 12,
+                        "phone_number": "636002253",
+                        "phone_number_formatted": "+33636002253",
+                        "responsible": null,
+                        "responsible_id": null,
+                        "user_profiles": [
+                          {
+                            "organisation": {
+                              "id": 245,
+                              "email": null,
+                              "name": "Organisation n°1",
+                              "phone_number": null
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/user_with_root"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Renvoie 'unauthorized' quand l'authentification est impossible",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "errors": [
+                        "Vous devez vous connecter ou vous inscrire pour continuer."
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_authentication"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Renvoie 'forbidden' quand l'usager·ère est lié·e à une autre organisation",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "errors": [
+                        {
+                          "base": "forbidden"
+                        }
+                      ],
+                      "error_messages": [
+                        "Vous ne pouvez pas effectuer cette action."
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_forbidden"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Mettre à jour un·e usager·ère",
+        "security": [
+          {
+            "access_token": [
+
+            ],
+            "uid": [
+
+            ],
+            "client": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access-token",
+            "in": "header",
+            "description": "Token d'accès (authentification)",
+            "example": "SFYBngO55ImjD1HOcv-ivQ",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "client",
+            "in": "header",
+            "description": "Clé client d'accès (authentification)",
+            "example": "Z6EihQAY9NWsZByfZ47i_Q",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "uid",
+            "in": "header",
+            "description": "Identifiant d'accès (authentification)",
+            "example": "martine@demo.rdv-solidarites.fr",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "ID de l'usager·ère",
+            "example": 123,
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "organisation_ids[]",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "description": "ID des organisations",
+            "example": "[123]",
+            "required": false
+          },
+          {
+            "name": "first_name",
+            "in": "query",
+            "description": "Prénom",
+            "example": "Johnny",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "last_name",
+            "in": "query",
+            "description": "Nom",
+            "example": "Silverhand",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "birth_name",
+            "in": "query",
+            "description": "Nom de naissance",
+            "example": "Fripouille",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "birth_date",
+            "in": "query",
+            "description": "Date de naissance",
+            "example": "1976-10-01",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "email",
+            "in": "query",
+            "description": "Email",
+            "example": "johnny@77.com",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "phone_number",
+            "in": "query",
+            "description": "Numéro de téléphone",
+            "example": "33600008012",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "address",
+            "in": "query",
+            "description": "Adresse",
+            "example": "10 rue du Havre, Paris",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "caisse_affiliation",
+            "in": "query",
+            "description": "Caisse d'affiliation",
+            "example": "caf",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "affiliation_number",
+            "in": "query",
+            "description": "Numéro d'affiliation",
+            "example": "101010",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "family_situation",
+            "in": "query",
+            "description": "Situation familiale",
+            "example": "single",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "number_of_children",
+            "in": "query",
+            "description": "Nombre d'enfants",
+            "example": "3",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "logement",
+            "in": "query",
+            "enum": [
+              "sdf",
+              "heberge",
+              "en_accession_propriete",
+              "proprietaire",
+              "autre",
+              "locataire"
+            ],
+            "description": "Type de logement de l'utilisateur",
+            "example": "locataire",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "notes",
+            "in": "query",
+            "description": "Une note sur l'utilisateur",
+            "example": "Super note",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "notify_by_sms",
+            "in": "query",
+            "description": "Accepte les notifications par SMS",
+            "example": "true",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "notify_by_email",
+            "in": "query",
+            "description": "Accepte les notifications par email",
+            "example": "true",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "responsible_id",
+            "in": "query",
+            "description": "ID de l'usager·ère responsable",
+            "example": 123,
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "tags": [
+          "User"
+        ],
+        "operationId": "updateUser",
+        "description": "Met à jour un·e usager·ère",
+        "responses": {
+          "200": {
+            "description": "Met à jour et renvoie un·e usager·ère",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "user": {
+                        "id": 98,
+                        "address": "10 rue du Havre, Paris",
+                        "address_details": null,
+                        "affiliation_number": "101010",
+                        "birth_date": "1976-10-01",
+                        "birth_name": "Fripouille",
+                        "caisse_affiliation": "caf",
+                        "case_number": null,
+                        "created_at": "2023-02-23 17:03:01 +0100",
+                        "email": "jean@jacques.fr",
+                        "family_situation": "single",
+                        "first_name": "Alain",
+                        "invitation_accepted_at": null,
+                        "invitation_created_at": null,
+                        "last_name": "Verse",
+                        "logement": "locataire",
+                        "notes": "Super note",
+                        "notify_by_email": false,
+                        "notify_by_sms": false,
+                        "number_of_children": 3,
+                        "phone_number": "33600008012",
+                        "phone_number_formatted": "+33600008012",
+                        "responsible": {
+                          "id": 97,
+                          "address": "20 avenue de Ségur, Paris",
+                          "address_details": null,
+                          "affiliation_number": "39012093812038",
+                          "birth_date": "1985-07-20",
+                          "birth_name": null,
+                          "caisse_affiliation": "caf",
+                          "case_number": null,
+                          "created_at": "2023-02-23 17:03:01 +0100",
+                          "email": "usager_1@lapin.fr",
+                          "family_situation": "divorced",
+                          "first_name": "Denise",
+                          "invitation_accepted_at": null,
+                          "invitation_created_at": null,
+                          "last_name": "MALLET",
+                          "logement": "locataire",
+                          "notes": "Super note",
+                          "notify_by_email": true,
+                          "notify_by_sms": true,
+                          "number_of_children": 12,
+                          "phone_number": "7 41 01 37 76",
+                          "phone_number_formatted": "+33741013776",
+                          "responsible": null,
+                          "responsible_id": null,
+                          "user_profiles": null
+                        },
+                        "responsible_id": 97,
+                        "user_profiles": null
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/user_with_root"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Renvoie 'unauthorized' quand l'authentification est impossible",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "errors": [
+                        "Vous devez vous connecter ou vous inscrire pour continuer."
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_authentication"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Renvoie 'unprocessable_entity' quand des paramètres sont manquants ou mal formés ou impossibles",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "success": false,
+                      "errors": {
+                        "last_name": [
+                          {
+                            "error": "blank"
+                          }
+                        ],
+                        "first_name": [
+                          {
+                            "error": "blank"
+                          }
+                        ]
+                      },
+                      "error_messages": [
+                        "last_name doit être rempli(e)",
+                        "first_name doit être rempli(e)"
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_unprocessable_entity"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/users/{user_id}/invite": {
+      "get": {
+        "summary": "Récupérer l'invitation d'un usager·ère",
+        "security": [
+          {
+            "access_token": [
+
+            ],
+            "uid": [
+
+            ],
+            "client": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access-token",
+            "in": "header",
+            "description": "Token d'accès (authentification)",
+            "example": "SFYBngO55ImjD1HOcv-ivQ",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "client",
+            "in": "header",
+            "description": "Clé client d'accès (authentification)",
+            "example": "Z6EihQAY9NWsZByfZ47i_Q",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "uid",
+            "in": "header",
+            "description": "Identifiant d'accès (authentification)",
+            "example": "martine@demo.rdv-solidarites.fr",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "ID de l'usager·ère",
+            "example": 123,
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "tags": [
+          "User",
+          "Invitation"
+        ],
+        "operationId": "getUserInvitation",
+        "description": "Renvoie l'URL d'invitation d'un·e usager·ère",
+        "responses": {
+          "200": {
+            "description": "Renvoie l'URL d'invitation de l'usager·ère",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "invitation_url": "http://www.example.com/users/invitation/accept?invitation_token=CI5Z8PPH",
+                      "invitation_token": "CI5Z8PPH"
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/invitation"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Renvoie 'unauthorized' quand l'authentification est impossible",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "errors": [
+                        "Vous devez vous connecter ou vous inscrire pour continuer."
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_authentication"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Renvoie 'forbidden' quand l'usager·ère est lié·e à une autre organisation",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "errors": [
+                        {
+                          "base": "forbidden"
+                        }
+                      ],
+                      "error_messages": [
+                        "Vous ne pouvez pas effectuer cette action."
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_forbidden"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Récupérer l'invitation d'un usager·ère",
+        "security": [
+          {
+            "access_token": [
+
+            ],
+            "uid": [
+
+            ],
+            "client": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access-token",
+            "in": "header",
+            "description": "Token d'accès (authentification)",
+            "example": "SFYBngO55ImjD1HOcv-ivQ",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "client",
+            "in": "header",
+            "description": "Clé client d'accès (authentification)",
+            "example": "Z6EihQAY9NWsZByfZ47i_Q",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "uid",
+            "in": "header",
+            "description": "Identifiant d'accès (authentification)",
+            "example": "martine@demo.rdv-solidarites.fr",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "ID de l'usager·ère",
+            "example": 123,
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "invite_for",
+            "in": "query",
+            "description": "Durée souhaitée de l'invitation (en secondes)",
+            "example": 86400,
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "tags": [
+          "User",
+          "Invitation"
+        ],
+        "operationId": "createUserInvitation",
+        "description": "Renvoie l'URL d'invitation d'un·e usager·ère",
+        "responses": {
+          "200": {
+            "description": "Renvoie l'URL d'invitation de l'usager·ère",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "invitation_url": "http://www.example.com/users/invitation/accept?invitation_token=9WZVD0BL",
+                      "invitation_token": "9WZVD0BL"
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/invitation"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Renvoie 'unauthorized' quand l'authentification est impossible",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "errors": [
+                        "Vous devez vous connecter ou vous inscrire pour continuer."
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_authentication"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Renvoie 'forbidden' quand l'usager·ère est lié·e à une autre organisation",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "errors": [
+                        {
+                          "base": "forbidden"
+                        }
+                      ],
+                      "error_messages": [
+                        "Vous ne pouvez pas effectuer cette action."
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_forbidden"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/users": {
+      "get": {
+        "summary": "Récupérer une liste d'usager·rès",
+        "security": [
+          {
+            "access_token": [
+
+            ],
+            "uid": [
+
+            ],
+            "client": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access-token",
+            "in": "header",
+            "description": "Token d'accès (authentification)",
+            "example": "SFYBngO55ImjD1HOcv-ivQ",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "client",
+            "in": "header",
+            "description": "Clé client d'accès (authentification)",
+            "example": "Z6EihQAY9NWsZByfZ47i_Q",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "uid",
+            "in": "header",
+            "description": "Identifiant d'accès (authentification)",
+            "example": "martine@demo.rdv-solidarites.fr",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "La page souhaitée",
+            "example": "1",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "ids[]",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "description": "ID des usager·ères",
+            "example": "[123]",
+            "required": false
+          }
+        ],
+        "tags": [
+          "User"
+        ],
+        "operationId": "getUsers",
+        "description": "Renvoie une liste paginée d'usager·ères",
+        "responses": {
+          "200": {
+            "description": "Renvoie une liste paginée d'usager·ères",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "users": [
+                        {
+                          "id": 123,
+                          "address": "20 avenue de Ségur, Paris",
+                          "address_details": null,
+                          "affiliation_number": "39012093812038",
+                          "birth_date": "1985-07-20",
+                          "birth_name": null,
+                          "caisse_affiliation": "caf",
+                          "case_number": null,
+                          "created_at": "2023-02-23 17:03:02 +0100",
+                          "email": "usager_1@lapin.fr",
+                          "family_situation": "divorced",
+                          "first_name": "Guilhemine",
+                          "invitation_accepted_at": null,
+                          "invitation_created_at": null,
+                          "last_name": "LOUIS",
+                          "logement": "locataire",
+                          "notes": "Super note",
+                          "notify_by_email": true,
+                          "notify_by_sms": true,
+                          "number_of_children": 12,
+                          "phone_number": "6 67 16 74 56",
+                          "phone_number_formatted": "+33667167456",
+                          "responsible": null,
+                          "responsible_id": null,
+                          "user_profiles": null
+                        }
+                      ],
+                      "meta": {
+                        "current_page": 1,
+                        "next_page": null,
+                        "prev_page": null,
+                        "total_pages": 1,
+                        "total_count": 1
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/users"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Renvoie 'unauthorized' quand l'authentification est impossible",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "errors": [
+                        "Vous devez vous connecter ou vous inscrire pour continuer."
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_authentication"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer un·e usager·ère",
+        "security": [
+          {
+            "access_token": [
+
+            ],
+            "uid": [
+
+            ],
+            "client": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access-token",
+            "in": "header",
+            "description": "Token d'accès (authentification)",
+            "example": "SFYBngO55ImjD1HOcv-ivQ",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "client",
+            "in": "header",
+            "description": "Clé client d'accès (authentification)",
+            "example": "Z6EihQAY9NWsZByfZ47i_Q",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "uid",
+            "in": "header",
+            "description": "Identifiant d'accès (authentification)",
+            "example": "martine@demo.rdv-solidarites.fr",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "organisation_ids[]",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "description": "ID des organisations",
+            "example": "[123]"
+          },
+          {
+            "name": "first_name",
+            "in": "query",
+            "description": "Prénom",
+            "example": "Johnny",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "last_name",
+            "in": "query",
+            "description": "Nom",
+            "example": "Silverhand",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "birth_name",
+            "in": "query",
+            "description": "Nom de naissance",
+            "example": "Fripouille",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "birth_date",
+            "in": "query",
+            "description": "Date de naissance",
+            "example": "1976-10-01",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "email",
+            "in": "query",
+            "description": "Email",
+            "example": "johnny@77.com",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "phone_number",
+            "in": "query",
+            "description": "Numéro de téléphone",
+            "example": "33600008012",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "address",
+            "in": "query",
+            "description": "Adresse",
+            "example": "10 rue du Havre, Paris",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "caisse_affiliation",
+            "in": "query",
+            "description": "Caisse d'affiliation",
+            "example": "caf",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "affiliation_number",
+            "in": "query",
+            "description": "Numéro d'affiliation",
+            "example": "101010",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "family_situation",
+            "in": "query",
+            "description": "Situation familiale",
+            "example": "single",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "number_of_children",
+            "in": "query",
+            "description": "Nombre d'enfants",
+            "example": "3",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "notify_by_sms",
+            "in": "query",
+            "description": "Accepte les notifications par SMS",
+            "example": "true",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "notify_by_email",
+            "in": "query",
+            "description": "Accepte les notifications par email",
+            "example": "true",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "responsible_id",
+            "in": "query",
+            "description": "ID de l'usager·ère responsable",
+            "example": 123,
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "tags": [
+          "User"
+        ],
+        "operationId": "createUser",
+        "description": "Crée un·e usager·ère",
+        "responses": {
+          "200": {
+            "description": "Crée et renvoie un·e usager·ère",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "user": {
+                        "id": 164,
+                        "address": "10 rue du Havre, Paris",
+                        "address_details": null,
+                        "affiliation_number": "101010",
+                        "birth_date": "1976-10-01",
+                        "birth_name": "Fripouille",
+                        "caisse_affiliation": "caf",
+                        "case_number": null,
+                        "created_at": "2023-02-23 17:03:04 +0100",
+                        "email": "jean@jacques.fr",
+                        "family_situation": "single",
+                        "first_name": "Johnny",
+                        "invitation_accepted_at": null,
+                        "invitation_created_at": null,
+                        "last_name": "Silverhand",
+                        "logement": null,
+                        "notes": null,
+                        "notify_by_email": false,
+                        "notify_by_sms": false,
+                        "number_of_children": 3,
+                        "phone_number": "33600008012",
+                        "phone_number_formatted": "+33600008012",
+                        "responsible": {
+                          "id": 163,
+                          "address": "20 avenue de Ségur, Paris",
+                          "address_details": null,
+                          "affiliation_number": "39012093812038",
+                          "birth_date": "1985-07-20",
+                          "birth_name": null,
+                          "caisse_affiliation": "caf",
+                          "case_number": null,
+                          "created_at": "2023-02-23 17:03:04 +0100",
+                          "email": "usager_1@lapin.fr",
+                          "family_situation": "divorced",
+                          "first_name": "Adrehilde",
+                          "invitation_accepted_at": null,
+                          "invitation_created_at": null,
+                          "last_name": "MARCHAND",
+                          "logement": "locataire",
+                          "notes": "Super note",
+                          "notify_by_email": true,
+                          "notify_by_sms": true,
+                          "number_of_children": 12,
+                          "phone_number": "0687603799",
+                          "phone_number_formatted": "+33687603799",
+                          "responsible": null,
+                          "responsible_id": null,
+                          "user_profiles": null
+                        },
+                        "responsible_id": 163,
+                        "user_profiles": null
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/user_with_root"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Renvoie 'unauthorized' quand l'authentification est impossible",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "errors": [
+                        "Vous devez vous connecter ou vous inscrire pour continuer."
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_authentication"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Renvoie 'unprocessable_entity' quand des paramètres sont manquants, mal formés ou impossibles",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "success": false,
+                      "errors": {
+                        "last_name": [
+                          {
+                            "error": "blank"
+                          }
+                        ],
+                        "first_name": [
+                          {
+                            "error": "blank"
+                          }
+                        ]
+                      },
+                      "error_messages": [
+                        "last_name doit être rempli(e)",
+                        "first_name doit être rempli(e)"
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_unprocessable_entity"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/organisations/{organisation_id}/users": {
+      "get": {
+        "summary": "Récupérer une liste d'usager·rès d'une organisation",
+        "security": [
+          {
+            "access_token": [
+
+            ],
+            "uid": [
+
+            ],
+            "client": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access-token",
+            "in": "header",
+            "description": "Token d'accès (authentification)",
+            "example": "SFYBngO55ImjD1HOcv-ivQ",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "client",
+            "in": "header",
+            "description": "Clé client d'accès (authentification)",
+            "example": "Z6EihQAY9NWsZByfZ47i_Q",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "uid",
+            "in": "header",
+            "description": "Identifiant d'accès (authentification)",
+            "example": "martine@demo.rdv-solidarites.fr",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "La page souhaitée",
+            "example": "1",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "organisation_id",
+            "in": "path",
+            "description": "ID de l'organisation",
+            "example": 123,
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "tags": [
+          "User"
+        ],
+        "operationId": "getUsersFromOrganisation",
+        "description": "Renvoie une liste paginée d'usager·ères d'une organisation",
+        "responses": {
+          "200": {
+            "description": "Renvoie une liste paginée d'usager·ères d'une organisation",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "users": [
+                        {
+                          "id": 173,
+                          "address": "20 avenue de Ségur, Paris",
+                          "address_details": null,
+                          "affiliation_number": "39012093812038",
+                          "birth_date": "1985-07-20",
+                          "birth_name": null,
+                          "caisse_affiliation": "caf",
+                          "case_number": null,
+                          "created_at": "2023-02-23 17:03:04 +0100",
+                          "email": "usager_1@lapin.fr",
+                          "family_situation": "divorced",
+                          "first_name": "Marius",
+                          "invitation_accepted_at": null,
+                          "invitation_created_at": null,
+                          "last_name": "CHARPENTIER",
+                          "logement": "locataire",
+                          "notes": "Super note",
+                          "notify_by_email": true,
+                          "notify_by_sms": true,
+                          "number_of_children": 12,
+                          "phone_number": "620027397",
+                          "phone_number_formatted": "+33620027397",
+                          "responsible": null,
+                          "responsible_id": null,
+                          "user_profiles": null
+                        }
+                      ],
+                      "meta": {
+                        "current_page": 1,
+                        "next_page": null,
+                        "prev_page": null,
+                        "total_pages": 1,
+                        "total_count": 1
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/users"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Renvoie 'unauthorized' quand l'authentification est impossible",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "errors": [
+                        "Vous devez vous connecter ou vous inscrire pour continuer."
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_authentication"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/organisations/{organisation_id}/users/{user_id}": {
+      "get": {
+        "summary": "Récupérer un·e usager·ère d'une organisation",
+        "security": [
+          {
+            "access_token": [
+
+            ],
+            "uid": [
+
+            ],
+            "client": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access-token",
+            "in": "header",
+            "description": "Token d'accès (authentification)",
+            "example": "SFYBngO55ImjD1HOcv-ivQ",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "client",
+            "in": "header",
+            "description": "Clé client d'accès (authentification)",
+            "example": "Z6EihQAY9NWsZByfZ47i_Q",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "uid",
+            "in": "header",
+            "description": "Identifiant d'accès (authentification)",
+            "example": "martine@demo.rdv-solidarites.fr",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "ID de l'usager·ère",
+            "example": 123,
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "organisation_id",
+            "in": "path",
+            "description": "ID de l'organisation",
+            "example": 456,
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "tags": [
+          "User"
+        ],
+        "operationId": "getUserFromOrganisation",
+        "description": "Renvoie un·e usager·ère",
+        "responses": {
+          "200": {
+            "description": "Renvoie l'usager·ère d'une organisation",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "user": {
+                        "id": 178,
+                        "address": "20 avenue de Ségur, Paris",
+                        "address_details": null,
+                        "affiliation_number": "39012093812038",
+                        "birth_date": "1985-07-20",
+                        "birth_name": null,
+                        "caisse_affiliation": "caf",
+                        "case_number": null,
+                        "created_at": "2023-02-23 17:03:05 +0100",
+                        "email": "jean@jacques.fr",
+                        "family_situation": "divorced",
+                        "first_name": "Jean",
+                        "invitation_accepted_at": null,
+                        "invitation_created_at": null,
+                        "last_name": "JACQUES",
+                        "logement": "locataire",
+                        "notes": "Super note",
+                        "notify_by_email": true,
+                        "notify_by_sms": true,
+                        "number_of_children": 12,
+                        "phone_number": "06 14 64 91 46",
+                        "phone_number_formatted": "+33614649146",
+                        "responsible": null,
+                        "responsible_id": null,
+                        "user_profiles": [
+                          {
+                            "organisation": {
+                              "id": 341,
+                              "email": null,
+                              "name": "Organisation n°1",
+                              "phone_number": null
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/user_with_root"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Renvoie 'unauthorized' quand l'authentification est impossible",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "errors": [
+                        "Vous devez vous connecter ou vous inscrire pour continuer."
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_authentication"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Renvoie 'forbidden' quand quand l'agent ne fait pas partie de l'organisation",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "errors": [
+                        {
+                          "base": "forbidden"
+                        }
+                      ],
+                      "error_messages": [
+                        "Vous ne pouvez pas effectuer cette action."
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_forbidden"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Renvoie 'not_found' quand l'usager·ère n'est pas lié·e à l'organisation",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "not_found": "user"
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_not_found"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 }
