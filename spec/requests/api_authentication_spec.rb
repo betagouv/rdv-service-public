@@ -77,14 +77,13 @@ describe "API auth", type: :request do
   stub_sentry_events
 
   context "with agent shared secret auth" do
-    let!(:encrypted_payload) do
-      payload = {
+    let!(:payload) do
+      {
         id: agent.id,
         first_name: agent.first_name,
         last_name: agent.last_name,
         email: agent.email,
       }
-      OpenSSL::HMAC.hexdigest("SHA256", "S3cr3T", payload.to_json)
     end
 
     before do
@@ -118,6 +117,7 @@ describe "API auth", type: :request do
     end
 
     it "query is correctly processed with the agent authorizations when shared secret is valid" do
+      encrypted_payload = OpenSSL::HMAC.hexdigest("SHA256", "S3cr3T", payload.to_json)
       get(
         api_v1_absences_path,
         headers: {
