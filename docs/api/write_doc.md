@@ -86,7 +86,7 @@ Pour chaque endpoint, utiliser [le DSL rswag](https://github.com/rswag/rswag) po
 Pour générer la documentation de l'API, utilisez la commande :
 
 ```sh
-SWAGGER_DRY_RUN=0 RAILS_ENV=test rails rswag
+make rswag
 ```
 
 Cette commande va regénérer le fichier api.json.
