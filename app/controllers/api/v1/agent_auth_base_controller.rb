@@ -106,7 +106,7 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
       email: agent.email,
     }
 
-    OpenSSL::HMAC.hexdigest("SHA256", ENV.fetch("SHARED_SECRET_FOR_AGENTS_AUTH"), payload.to_s) ==
+    OpenSSL::HMAC.hexdigest("SHA256", ENV.fetch("SHARED_SECRET_FOR_AGENTS_AUTH"), payload.to_json) ==
       request.headers["X-Agent-Auth-Signature"]
   end
 end

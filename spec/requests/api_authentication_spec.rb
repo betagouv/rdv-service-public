@@ -84,7 +84,7 @@ describe "API auth", type: :request do
         last_name: agent.last_name,
         email: agent.email,
       }
-      OpenSSL::HMAC.hexdigest("SHA256", "S3cr3T", payload.to_s)
+      OpenSSL::HMAC.hexdigest("SHA256", "S3cr3T", payload.to_json)
     end
 
     before do
