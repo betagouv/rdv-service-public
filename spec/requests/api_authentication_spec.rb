@@ -74,9 +74,9 @@ describe "API auth", type: :request do
     end
   end
 
-  context "with agent shared secret auth" do
-    stub_sentry_events
+  stub_sentry_events
 
+  context "with agent shared secret auth" do
     let!(:encrypted_payload) do
       payload = {
         id: agent.id,
