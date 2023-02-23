@@ -7,8 +7,6 @@ describe "API auth", type: :request do
   let!(:agent) { create(:agent, password: "123456", basic_role_in_organisations: [organisation]) }
   let!(:absence) { create(:absence, agent: agent, organisation: organisation) }
 
-  stub_sentry_events
-
   context "login with wrong password" do
     it "returns error" do
       post(
@@ -77,6 +75,8 @@ describe "API auth", type: :request do
   end
 
   context "with agent shared secret auth" do
+    stub_sentry_events
+
     let!(:encrypted_payload) do
       payload = {
         id: agent.id,
