@@ -35,13 +35,8 @@ class Agent::UserPolicy < DefaultAgentPolicy
                          else
                            current_organisation&.id || current_agent.organisation_ids
                          end
-      scope
-        .joins(:organisations)
-        .where(
-          organisations: {
-            id: organisation_ids,
-          }
-        )
+
+      scope.where(id: UserProfile.where("user_profiles.organisation_id": organisation_ids).distinct.select(:user_id))
     end
   end
 
