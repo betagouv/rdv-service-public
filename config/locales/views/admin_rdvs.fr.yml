@@ -5,11 +5,11 @@ fr:
         cancel:
           excused: Sur demande de l’usager
           revoked: Pour raison administrative
-          confirm: Êtes-vous sûr de vouloir annuler ce rendez-vous ?
+          confirm: Voulez-vous vraiment annuler ce rendez-vous ?
           user_will_be_notified: L’usager recevra une notification de cette annulation.
       delete:
         details: En tant qu’administrateur, vous pouvez aussi complètement supprimer ce rendez-vous de la base de données. Aucune notification ne sera alors envoyée.
-        confirm: Êtes-vous sûr de vouloir supprimer ce rendez-vous ?
+        confirm: Voulez-vous vraiment supprimer ce rendez-vous ?
     rdvs_users:
       notifications_summary:
         all: "Notif. activées"
@@ -22,4 +22,4 @@ fr:
       delete:
         title: Supprimer l'inscription du participant
         details: En tant qu’administrateur, vous pouvez supprimer la participation de l'usager au RDV. Aucune notification ne sera envoyée.
-        confirm: Êtes-vous sûr de vouloir supprimer l'inscription de ce participant ?
+        confirm: Voulez-vous vraiment supprimer l'inscription de ce participant ?
