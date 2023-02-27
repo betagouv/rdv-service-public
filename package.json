@@ -24,7 +24,7 @@
     "kind-of": ">=6.0.3",
     "minimist": "^1.2.6",
     "moment": "^2.29.4",
-    "moment-timezone": "^0.5.35",
+    "moment-timezone": "^0.5.41",
     "popper.js": "^1.15.0",
     "select2": "^4.0.8",
     "select2-bootstrap4-theme": "^1.0.0",
