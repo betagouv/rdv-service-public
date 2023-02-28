@@ -1,21 +1,38 @@
 # frozen_string_literal: true
 
 describe Outlook::Event, type: :model do
-  around do |example|
-    perform_enqueued_jobs do
-      example.run
+  let(:organisation) { create(:organisation) }
+  let(:motif) { create(:motif, name: "Super Motif", location_type: :phone) }
+  let(:agent) { create(:agent, microsoft_graph_token: "token", refresh_microsoft_graph_token: "refresh_token") }
+  let(:user) { create(:user, email: "user@example.fr", first_name: "First", last_name: "Last", organisations: [organisation]) }
+  let(:rdv) { create(:rdv, users: [user], motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [agent]) }
+  let(:agents_rdv) { rdv.agents_rdvs.first }
+
+  describe "#create" do
+    context "when the call fails" do
+      before do
+        stub_request(:post, "https://graph.microsoft.com/v1.0/me/Events")
+          .to_return(
+            status: 403,
+            body: {
+              error: {
+                code: "ErrorAccountSuspend",
+                message: "Account suspended. Follow the instructions in your Inbox to verify your account.",
+              },
+            }.to_json,
+            headers: {}
+          )
+      end
+
+      it "raises an error so that the job around it is retried later" do
+        expect do
+          described_class.new(agents_rdv: agents_rdv).create
+        end.to raise_error("Outlook API error for AgentsRdv #{agents_rdv.id}: Account suspended. Follow the instructions in your Inbox to verify your account.")
+      end
     end
   end
 
   describe "refresh_token mechanism" do
-    let(:organisation) { create(:organisation) }
-    let(:motif) { create(:motif, name: "Super Motif", location_type: :phone) }
-    # We need to create a fake agent to initialize a RDV as they have a validation on agents which prevents us to control the data in its AgentsRdv
-    let(:fake_agent) { create(:agent) }
-    let(:agent) { create(:agent, microsoft_graph_token: "token", refresh_microsoft_graph_token: "refresh_token") }
-    let(:user) { create(:user, email: "user@example.fr", first_name: "First", last_name: "Last", organisations: [organisation]) }
-    let(:rdv) { create(:rdv, users: [user], motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [fake_agent]) }
-
     let(:expected_headers) do
       {
         "Accept" => "application/json",
@@ -83,7 +100,7 @@ describe Outlook::Event, type: :model do
     end
 
     it "refreshes the Outlook::User's token when needed" do
-      create(:agents_rdv, agent: agent, rdv: rdv)
+      described_class.new(agents_rdv: agents_rdv).create
 
       expect(a_request(:post,
                        "https://graph.microsoft.com/v1.0/me/Events").with(body: expected_body)).to have_been_made.twice

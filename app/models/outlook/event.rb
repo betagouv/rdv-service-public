@@ -19,8 +19,10 @@ module Outlook
       @agent = @agents_rdv&.agent || agent
     end
 
+    # @return [String] the outlook_id of the created event
     def create
-      make_api_call("POST", "me/Events", payload)
+      outlook_event = make_api_call("POST", "me/Events", payload)
+      outlook_event["id"]
     end
 
     def update
@@ -69,7 +71,7 @@ module Outlook
         if agent_connected_to_outlook? && response.response_code == 401 # token expired
           agent.refresh_outlook_token && make_api_call(method, url, event_payload)
         else
-          Sentry.capture_message("Outlook API error for AgentsRdv #{id || outlook_id}: #{body_response.dig('error', 'message')}")
+          raise "Outlook API error for AgentsRdv #{id || outlook_id}: #{body_response.dig('error', 'message')}"
         end
       end
       response.response_code == 204 ? "" : body_response
