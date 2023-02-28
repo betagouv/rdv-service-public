@@ -55,6 +55,9 @@ jobs:
         ports: ["5432:5432"]
     steps:
       - uses: actions/checkout@v3
+      - uses: szenius/set-timezone@v1.0
+        with:
+          timezoneLinux: "Europe/Paris"
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
@@ -106,6 +109,9 @@ jobs:
         ports: ["5432:5432"]
     steps:
       - uses: actions/checkout@v3
+      - uses: szenius/set-timezone@v1.0
+        with:
+          timezoneLinux: "Europe/Paris"
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
