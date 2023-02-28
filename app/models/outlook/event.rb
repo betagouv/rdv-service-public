@@ -9,10 +9,6 @@ module Outlook
 
     attr_reader :agents_rdv, :outlook_id, :agent
 
-    delegate :rdv, :id, :users, to: :agents_rdv, allow_nil: true
-    delegate :microsoft_graph_token, :connected_to_outlook?, to: :agent, prefix: true
-    delegate :object, :event_description_for, :starts_at, :ends_at, :address_without_personal_information, to: :rdv
-
     def initialize(outlook_id: nil, agents_rdv: nil, agent: nil)
       @agents_rdv = agents_rdv
       @outlook_id = @agents_rdv&.outlook_id || outlook_id
@@ -34,6 +30,10 @@ module Outlook
     end
 
     private
+
+    delegate :rdv, :id, :users, to: :agents_rdv, allow_nil: true
+    delegate :microsoft_graph_token, :connected_to_outlook?, to: :agent, prefix: true
+    delegate :object, :starts_at, :ends_at, :address_without_personal_information, to: :rdv
 
     # https://docs.microsoft.com/en-us/graph/use-the-api?view=graph-rest-1.0
     # method (string): The HTTP method to use for the API call.
@@ -97,15 +97,31 @@ module Outlook
         location: {
           displayName: address_without_personal_information,
         },
-        attendees: users.map do |user|
-          {
-            emailAddress: {
-              address: user.email,
-              name: user.full_name,
-            },
-          }
-        end,
+        attendees: [],
       }
+    end
+
+    def event_description
+      url_helpers = Rails.application.routes.url_helpers
+
+      show_link = url_helpers.admin_organisation_rdv_url(organisation, id, host: agent.dns_domain_name)
+      edit_link = url_helpers.edit_admin_organisation_rdv_url(organisation, id, host: agent.dns_domain_name)
+
+      participants_list = rdv.users.map do |user|
+        "<li>#{user.full_name}</li>"
+      end.join
+
+      <<~HTML
+        participants:
+          <ul>#{participants_list}</ul>
+          <br />
+
+          plus d'infos sur <href a="#{show_link}">#{agent.domain_name}</href>:
+          <br />
+
+          Attention: ne modifiez pas cet évènement directement dans outlook, car il ne sera pas mis à jour sur #{agent.domain_name}.
+          Pour modifier ce rendez-vous, allez sur <href a="#{edit_link}">#{agent.domain_name}</href>
+      HTML
     end
   end
 end
