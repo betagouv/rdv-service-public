@@ -22,14 +22,8 @@ module Outlook
     # payload (hash): a JSON hash representing the event entity
     # calendar_id (string): The Id of the calendar to create the event in.
     #                     If nil, event is created in the default calendar.
-    def create(calendar_id = nil)
-      request_url = if calendar_id.present?
-                      "me/Calendars/#{calendar_id}/Events"
-                    else
-                      "me/Events"
-                    end
-
-      make_api_call("POST", request_url, payload)
+    def create
+      make_api_call("POST", "me/Events", payload)
     end
 
     # payload (hash): a JSON hash representing the updated event fields
