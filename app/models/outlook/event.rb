@@ -38,14 +38,13 @@ module Outlook
     # https://docs.microsoft.com/en-us/graph/use-the-api?view=graph-rest-1.0
     # method (string): The HTTP method to use for the API call.
     #                  Must be 'GET', 'POST', 'PATCH', or 'DELETE'
-    # url (string): The URL to use for the API call. Must not contain
-    #               the host. For example: '/api/v2.0/me/messages'
+    # path (string): The path to use for the API call. Must not contain a forward slash. For example: 'api/v2.0/me/messages'
     # payload (hash): a JSON hash representing the API call's payload. Only used
     #                 for POST or PATCH.
 
     # rubocop:disable Metrics/CyclomaticComplexity
     # rubocop:disable Metrics/PerceivedComplexity
-    def make_api_call(method, url, event_payload = {})
+    def make_api_call(method, path, event_payload = {})
       headers = {
         "Authorization" => "Bearer #{agent_microsoft_graph_token}",
         "Content-Type" => "application/json",
@@ -55,7 +54,7 @@ module Outlook
         "return-client-request-id" => "true",
       }
 
-      request_url = "#{BASE_URL}/#{url}"
+      request_url = "#{BASE_URL}/#{path}"
 
       response = case method.upcase
                  when "POST"
@@ -69,7 +68,7 @@ module Outlook
       body_response = response.body == "" ? {} : JSON.parse(response.body)
       if body_response["error"].present?
         if agent_connected_to_outlook? && response.response_code == 401 # token expired
-          agent.refresh_outlook_token && make_api_call(method, url, event_payload)
+          agent.refresh_outlook_token && make_api_call(method, path, event_payload)
         else
           raise "Outlook API error for AgentsRdv #{id || outlook_id}: #{body_response.dig('error', 'message')}"
         end
