@@ -9,6 +9,9 @@ class WebhookJob < ApplicationJob
 
   retry_on(OutgoingWebhookError, wait: :exponentially_longer, attempts: 10, queue: :webhook_retries)
 
+  # Pour éviter de fuiter des données personnelles dans les logs
+  self.log_arguments = false
+
   def perform(payload, webhook_endpoint_id)
     webhook_endpoint = WebhookEndpoint.find(webhook_endpoint_id)
 
