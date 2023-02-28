@@ -19,20 +19,14 @@ module Outlook
       @agent = @agents_rdv&.agent || agent
     end
 
-    # payload (hash): a JSON hash representing the event entity
-    # calendar_id (string): The Id of the calendar to create the event in.
-    #                     If nil, event is created in the default calendar.
     def create
       make_api_call("POST", "me/Events", payload)
     end
 
-    # payload (hash): a JSON hash representing the updated event fields
-    # id (string): The Id of the event to update.
     def update
       make_api_call("PATCH", "me/Events/#{outlook_id}", payload)
     end
 
-    # id (string): The Id of the event to destroy.
     def destroy
       make_api_call("DELETE", "me/Events/#{outlook_id}")
     end
