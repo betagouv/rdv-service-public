@@ -4,7 +4,6 @@ class Api::V1::AbsencesController < Api::V1::AgentAuthBaseController
   before_action :retrieve_absence, only: %i[show update destroy]
   def index
     absences = policy_scope(Absence)
-    absences = absences.where(organisation: current_organisation) if current_organisation.present?
     render_collection(absences.by_starts_at)
   end
 
