@@ -47,10 +47,12 @@ RSpec.describe Outlook::DestroyEventJob, type: :job do
         .to_return(status: 404, body: { error: { code: "TerribleError", message: "Quelle terrible erreur" } }.to_json, headers: {})
     end
 
-    it "does not update the outlook_id" do
+    it "retries the job, notifies the error monitoring, and does not update the outlook_id" do
       expect do
         described_class.perform_now("super_id", agent)
-      end.to raise_error("Outlook API error for AgentsRdv super_id: Quelle terrible erreur")
+      end.to have_enqueued_job(described_class).with("super_id", agent)
+
+      expect(sentry_events.last.exception.values.first.value).to eq("Outlook API error for AgentsRdv super_id: Quelle terrible erreur (RuntimeError)")
 
       expect(agents_rdv.reload.outlook_id).to eq("super_id")
     end

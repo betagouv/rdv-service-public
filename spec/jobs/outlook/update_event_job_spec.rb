@@ -64,11 +64,10 @@ RSpec.describe Outlook::UpdateEventJob, type: :job do
       stub_request(:patch, "https://graph.microsoft.com/v1.0/me/Events/super_id")
         .with(body: expected_body, headers: expected_headers)
         .to_return(status: 200, body: { id: "event_id" }.to_json, headers: {})
-
-      described_class.perform_now(agents_rdv)
     end
 
     it "does not call Sentry" do
+      described_class.perform_now(agents_rdv)
       expect(sentry_events).to be_empty
     end
   end
