@@ -206,6 +206,10 @@ class Agent < ApplicationRecord
     where_id_in_subqueries([agents_with_open_plage, agents_with_open_rdv_collectif])
   end
 
+  def self.in_orgs(organisations)
+    joins(:roles).where(agent_roles: { organisations: organisations })
+  end
+
   def to_s
     "#{first_name} #{last_name}"
   end
