@@ -17,7 +17,7 @@ RSpec.describe Outlook::UpdateEventJob, type: :job do
       subject: "Super Motif",
       body: {
         contentType: "HTML",
-        content: "plus d'infos dans RDV Solidarités: http://www.rdv-solidarites-test.localhost/admin/organisations/#{organisation.id}/rdvs/#{rdv.id}",
+        content: expected_description,
       },
       start: {
         dateTime: "2023-01-01T11:00:00+01:00",
@@ -30,15 +30,21 @@ RSpec.describe Outlook::UpdateEventJob, type: :job do
       location: {
         displayName: "Par téléphone",
       },
-      attendees: [
-        {
-          emailAddress: {
-            address: "user@example.fr",
-            name: "First LAST",
-          },
-        },
-      ],
+      attendees: [],
     }
+  end
+  let(:expected_description) do
+    <<~HTML
+      Participants:
+      <ul><li>First LAST</li></ul>
+      <br />
+
+      Plus d'infos sur <href a="http://www.rdv-solidarites-test.localhost/admin/organisations/#{organisation.id}/rdvs/#{rdv.id}">RDV Solidarités</href>:
+      <br />
+
+      Attention: ne modifiez pas cet évènement directement dans Outlook, car il ne sera pas mis à jour sur RDV Solidarités.
+      Pour modifier ce rendez-vous, allez sur <href a="http://www.rdv-solidarites-test.localhost/admin/organisations/#{organisation.id}/rdvs/#{rdv.id}/edit">RDV Solidarités</href>
+    HTML
   end
   let(:expected_headers) do
     {
