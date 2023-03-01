@@ -60,14 +60,14 @@ describe Outlook::Event, type: :model do
         body: {
           contentType: "HTML",
           content: <<~HTML,
-            participants:
+            Participants:
             <ul><li>First LAST</li></ul>
             <br />
 
-            plus d'infos sur <href a="http://www.rdv-solidarites-test.localhost/admin/organisations/#{organisation.id}/rdvs/#{rdv.id}">RDV Solidarités</href>:
+            Plus d'infos sur <href a="http://www.rdv-solidarites-test.localhost/admin/organisations/#{organisation.id}/rdvs/#{rdv.id}">RDV Solidarités</href>:
             <br />
 
-            Attention: ne modifiez pas cet évènement directement dans outlook, car il ne sera pas mis à jour sur RDV Solidarités.
+            Attention: ne modifiez pas cet évènement directement dans Outlook, car il ne sera pas mis à jour sur RDV Solidarités.
             Pour modifier ce rendez-vous, allez sur <href a="http://www.rdv-solidarites-test.localhost/admin/organisations/#{organisation.id}/rdvs/#{rdv.id}/edit">RDV Solidarités</href>
           HTML
         },
