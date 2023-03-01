@@ -162,10 +162,6 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
     end
 
     context "does not exists in outlook" do
-      let(:organisation) { create(:organisation) }
-      let(:motif) { create(:motif, name: "Super Motif", location_type: :phone) }
-      # We need to create a fake agent to initialize a RDV as they have a validation on agents which prevents us to control the data in its AgentsRdv
-      let(:fake_agent) { create(:agent) }
       let(:agent) { create(:agent, microsoft_graph_token: "token") }
       let(:user) { create(:user, email: "user@example.fr", first_name: "First", last_name: "Last", organisations: [organisation]) }
       let(:rdv) { create(:rdv, users: [user], motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [fake_agent]) }
@@ -188,14 +184,7 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
           location: {
             displayName: "Par téléphone",
           },
-          attendees: [
-            {
-              emailAddress: {
-                address: "user@example.fr",
-                name: "First LAST",
-              },
-            },
-          ],
+          attendees: [],
         }
       end
       let(:expected_updated_body) do
@@ -216,14 +205,7 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
           location: {
             displayName: "Par téléphone",
           },
-          attendees: [
-            {
-              emailAddress: {
-                address: "user@example.fr",
-                name: "First LAST",
-              },
-            },
-          ],
+          attendees: [],
         }
       end
 
@@ -294,14 +276,7 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
           location: {
             displayName: "Par téléphone",
           },
-          attendees: [
-            {
-              emailAddress: {
-                address: "user@example.fr",
-                name: "First LAST",
-              },
-            },
-          ],
+          attendees: [],
         }
       end
 
@@ -413,14 +388,7 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
           location: {
             displayName: "Par téléphone",
           },
-          attendees: [
-            {
-              emailAddress: {
-                address: "user@example.fr",
-                name: "First LAST",
-              },
-            },
-          ],
+          attendees: [],
         }
       end
 
