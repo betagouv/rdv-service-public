@@ -103,22 +103,22 @@ module Outlook
     def event_description
       url_helpers = Rails.application.routes.url_helpers
 
-      show_link = url_helpers.admin_organisation_rdv_url(rdv.organisation, id, host: agent.dns_domain_name)
-      edit_link = url_helpers.edit_admin_organisation_rdv_url(rdv.organisation, id, host: agent.dns_domain_name)
+      show_link = url_helpers.admin_organisation_rdv_url(rdv.organisation, rdv.id, host: agent.dns_domain_name)
+      edit_link = url_helpers.edit_admin_organisation_rdv_url(rdv.organisation, rdv.id, host: agent.dns_domain_name)
 
       participants_list = rdv.users.map do |user|
         "<li>#{user.full_name}</li>"
       end.join
 
       <<~HTML
-        participants:
+        Participants:
         <ul>#{participants_list}</ul>
         <br />
 
-        plus d'infos sur <href a="#{show_link}">#{agent.domain_name}</href>:
+        Plus d'infos sur <href a="#{show_link}">#{agent.domain_name}</href>:
         <br />
 
-        Attention: ne modifiez pas cet évènement directement dans outlook, car il ne sera pas mis à jour sur #{agent.domain_name}.
+        Attention: ne modifiez pas cet évènement directement dans Outlook, car il ne sera pas mis à jour sur #{agent.domain_name}.
         Pour modifier ce rendez-vous, allez sur <href a="#{edit_link}">#{agent.domain_name}</href>
       HTML
     end
