@@ -100,7 +100,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_28_083444) do
   create_table "absences", force: :cascade do |t|
     t.bigint "agent_id", null: false
     t.string "title", null: false
-    t.bigint "organisation_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "recurrence"
@@ -115,7 +114,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_28_083444) do
     t.index ["end_day"], name: "index_absences_on_end_day"
     t.index ["expired_cached"], name: "index_absences_on_expired_cached"
     t.index ["first_day"], name: "index_absences_on_first_day"
-    t.index ["organisation_id"], name: "index_absences_on_organisation_id"
     t.index ["recurrence"], name: "index_absences_on_recurrence", where: "(recurrence IS NOT NULL)"
     t.index ["updated_at"], name: "index_absences_on_updated_at"
   end
@@ -725,7 +723,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_28_083444) do
   end
 
   add_foreign_key "absences", "agents"
-  add_foreign_key "absences", "organisations"
   add_foreign_key "agent_territorial_access_rights", "agents"
   add_foreign_key "agent_territorial_access_rights", "territories"
   add_foreign_key "agents", "services"
