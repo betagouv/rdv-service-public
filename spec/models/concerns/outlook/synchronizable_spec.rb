@@ -192,7 +192,7 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
           subject: "Super Motif",
           body: {
             contentType: "HTML",
-            content: "plus d'infos dans RDV Solidarités: http://www.rdv-solidarites-test.localhost/admin/organisations/#{organisation.id}/rdvs/#{rdv.id}",
+            content: expected_description,
           },
           start: {
             dateTime: "2023-01-01T11:00:00+01:00",
