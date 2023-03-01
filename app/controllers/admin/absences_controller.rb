@@ -6,12 +6,11 @@ class Admin::AbsencesController < AgentAuthController
   before_action :set_absence, only: %i[edit update destroy]
   before_action :build_absence, only: [:create]
   before_action :set_agent
-  before_action :set_agent_organisations
 
   def index
     absences = policy_scope(Absence)
       .where(agent_id: filter_params[:agent_id])
-      .includes(:organisation, :agent)
+      .includes(:agent)
       .by_starts_at
       .page(filter_params[:page])
 
@@ -20,7 +19,6 @@ class Admin::AbsencesController < AgentAuthController
   end
 
   def new
-    @absence = Absence.new(organisation: current_organisation, agent: @agent)
     if params[:duplicate_absence_id].present?
       original_abs = Absence.find(params[:duplicate_absence_id])
       defaults = original_abs.slice(:title, :first_day, :start_time, :end_day, :end_time, :recurrence)
@@ -32,7 +30,7 @@ class Admin::AbsencesController < AgentAuthController
       }
     end
 
-    @absence = Absence.new(organisation: current_organisation, agent: @agent, **defaults)
+    @absence = Absence.new(agent: @agent, **defaults)
 
     authorize(@absence)
   end
@@ -46,7 +44,7 @@ class Admin::AbsencesController < AgentAuthController
     if @absence.save
       absence_mailer.absence_created.deliver_later if @agent.absence_notification_level == "all"
       flash[:notice] = t(".busy_time_created")
-      redirect_to admin_organisation_agent_absences_path(@absence.organisation_id, @absence.agent_id)
+      redirect_to admin_organisation_agent_absences_path(current_organisation, @absence.agent_id)
     else
       render :edit
     end
@@ -57,7 +55,7 @@ class Admin::AbsencesController < AgentAuthController
     if @absence.update(absence_params)
       absence_mailer.absence_updated.deliver_later if @agent.absence_notification_level == "all"
       flash[:notice] = t(".busy_time_updated")
-      redirect_to admin_organisation_agent_absences_path(@absence.organisation_id, @absence.agent_id)
+      redirect_to admin_organisation_agent_absences_path(current_organisation, @absence.agent_id)
     else
       render :edit
     end
@@ -69,7 +67,7 @@ class Admin::AbsencesController < AgentAuthController
       # NOTE: the destruction email is sent synchronously (not in a job) to ensure @absence still exists.
       absence_mailer.absence_destroyed.deliver_now if @agent.absence_notification_level == "all"
       flash[:notice] = t(".busy_time_deleted")
-      redirect_to admin_organisation_agent_absences_path(@absence.organisation_id, @absence.agent_id)
+      redirect_to admin_organisation_agent_absences_path(current_organisation, @absence.agent_id)
     else
       render :edit
     end
@@ -77,13 +75,8 @@ class Admin::AbsencesController < AgentAuthController
 
   private
 
-  def set_agent_organisations
-    @agent_organisations = policy_scope(@agent.organisations)
-  end
-
   def set_absence
     @absence = policy_scope(Absence)
-      .where(organisation: current_organisation)
       .find(params[:id])
   end
 
@@ -96,11 +89,11 @@ class Admin::AbsencesController < AgentAuthController
   end
 
   def absence_params
-    params.require(:absence).permit(:title, :agent_id, :first_day, :end_day, :start_time, :end_time, :recurrence, :organisation_id)
+    params.require(:absence).permit(:title, :agent_id, :first_day, :end_day, :start_time, :end_time, :recurrence)
   end
 
   def filter_params
-    params.permit(:start, :end, :organisation_id, :agent_id, :page, :current_tab)
+    params.permit(:start, :end, :agent_id, :page, :current_tab)
   end
 
   def absence_mailer

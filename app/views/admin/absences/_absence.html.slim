@@ -1,7 +1,6 @@
 tr
-  - organisation = absence.organisation
   td
-    = link_to absence.title, edit_admin_organisation_absence_path(organisation, absence)
+    = link_to absence.title, edit_admin_organisation_absence_path(current_organisation, absence)
     = absence_tag(absence)
   td
     | Du #{l(absence.starts_at, format: :human)} au #{l(absence.first_occurrence_ends_at, format: :human)}
@@ -11,18 +10,15 @@ tr
       | Se répète :
       br
       = sanitize(display_recurrence(absence).join("<br/>"))
-  - if @agent_organisations.count > 1
-    td
-      span>= organisation.name
   td
     .d-flex
-      div.mr-3= link_to edit_admin_organisation_absence_path(organisation, absence),
+      div.mr-3= link_to edit_admin_organisation_absence_path(current_organisation, absence),
                 title: t("helpers.edit") do
         i.fa.fa-edit
-      div.mr-3= link_to new_admin_organisation_agent_absence_path(organisation, absence.agent, duplicate_absence_id: absence),
+      div.mr-3= link_to new_admin_organisation_agent_absence_path(current_organisation, absence.agent, duplicate_absence_id: absence),
               title: t("helpers.clone") do
         i.fa.fa-clone
-      div.mr-3= link_to( admin_organisation_absence_path(organisation, absence),
+      div.mr-3= link_to( admin_organisation_absence_path(current_organisation, absence),
               method: :delete,
               title: t("helpers.delete"),
               data: { confirm: t(".confirm_delete_busy_time")} ) do
