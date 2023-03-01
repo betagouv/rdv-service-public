@@ -2,8 +2,6 @@
 
 module Outlook
   class Event
-    include ActiveModel::Model
-
     USER_AGENT = "RDVSolidarites"
     BASE_URL = "https://graph.microsoft.com/v1.0"
 
