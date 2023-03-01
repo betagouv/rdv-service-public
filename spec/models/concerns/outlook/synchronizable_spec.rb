@@ -229,10 +229,6 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
     end
 
     context "is cancelled and exists in outlook" do
-      let(:organisation) { create(:organisation) }
-      let(:motif) { create(:motif, name: "Super Motif", location_type: :phone) }
-      # We need to create a fake agent to initialize a RDV as they have a validation on agents which prevents us to control the data in its AgentsRdv
-      let(:fake_agent) { create(:agent) }
       let(:agent) { create(:agent, microsoft_graph_token: "token") }
       let(:rdv) { create(:rdv, motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [fake_agent]) }
       let!(:agents_rdv) { create(:agents_rdv, rdv: rdv, agent: agent, outlook_id: "abc") }
@@ -250,10 +246,6 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
     end
 
     context "is cancelled and does not exist in outlook" do
-      let(:organisation) { create(:organisation) }
-      let(:motif) { create(:motif, name: "Super Motif", location_type: :phone) }
-      # We need to create a fake agent to initialize a RDV as they have a validation on agents which prevents us to control the data in its AgentsRdv
-      let(:fake_agent) { create(:agent) }
       let(:agent) { create(:agent, microsoft_graph_token: "token") }
       let(:user) { create(:user, email: "user@example.fr", first_name: "First", last_name: "Last", organisations: [organisation]) }
       let(:rdv) { create(:rdv, users: [user], motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [fake_agent]) }
@@ -295,10 +287,6 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
     end
 
     context "is soft_deleted and exists in outlook" do
-      let(:organisation) { create(:organisation) }
-      let(:motif) { create(:motif, name: "Super Motif", location_type: :phone) }
-      # We need to create a fake agent to initialize a RDV as they have a validation on agents which prevents us to control the data in its AgentsRdv
-      let(:fake_agent) { create(:agent) }
       let(:agent) { create(:agent, microsoft_graph_token: "token") }
       let(:rdv) { create(:rdv, motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [fake_agent]) }
       let!(:agents_rdv) { create(:agents_rdv, rdv: rdv, agent: agent, outlook_id: "abc") }
@@ -319,10 +307,6 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
 
   describe "Destroy callback" do
     context "agent synced with outlook and exists in outlook" do
-      let(:organisation) { create(:organisation) }
-      let(:motif) { create(:motif, name: "Super Motif", location_type: :phone) }
-      # We need to create a fake agent to initialize a RDV as they have a validation on agents which prevents us to control the data in its AgentsRdv
-      let(:fake_agent) { create(:agent) }
       let(:agent) { create(:agent, microsoft_graph_token: "token") }
       let(:rdv) { create(:rdv, motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [fake_agent]) }
       let!(:agents_rdv) { create(:agents_rdv, rdv: rdv, agent: agent, outlook_id: "abc") }
@@ -340,10 +324,6 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
     end
 
     context "agent not synced with outlook" do
-      let(:organisation) { create(:organisation) }
-      let(:motif) { create(:motif, name: "Super Motif", location_type: :phone) }
-      # We need to create a fake agent to initialize a RDV as they have a validation on agents which prevents us to control the data in its AgentsRdv
-      let(:fake_agent) { create(:agent) }
       let(:agent) { create(:agent) }
       let(:rdv) { create(:rdv, motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [fake_agent]) }
       let!(:agents_rdv) { create(:agents_rdv, rdv: rdv, agent: agent) }
@@ -362,35 +342,9 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
     end
 
     context "agents_rdv does not exist in outlook" do
-      let(:organisation) { create(:organisation) }
-      let(:motif) { create(:motif, name: "Super Motif", location_type: :phone) }
-      # We need to create a fake agent to initialize a RDV as they have a validation on agents which prevents us to control the data in its AgentsRdv
-      let(:fake_agent) { create(:agent) }
       let(:agent) { create(:agent, microsoft_graph_token: "token") }
       let(:user) { create(:user, email: "user@example.fr", first_name: "First", last_name: "Last", organisations: [organisation]) }
       let(:rdv) { create(:rdv, users: [user], motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [fake_agent]) }
-
-      let(:expected_body) do
-        {
-          subject: "Super Motif",
-          body: {
-            contentType: "HTML",
-            content: expected_description,
-          },
-          start: {
-            dateTime: "2023-01-01T11:00:00+01:00",
-            timeZone: "Europe/Paris",
-          },
-          end: {
-            dateTime: "2023-01-01T11:30:00+01:00",
-            timeZone: "Europe/Paris",
-          },
-          location: {
-            displayName: "Par téléphone",
-          },
-          attendees: [],
-        }
-      end
 
       before do
         stub_request(:post, "https://graph.microsoft.com/v1.0/me/Events")
