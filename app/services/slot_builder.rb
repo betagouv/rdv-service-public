@@ -157,7 +157,6 @@ module SlotBuilder
       def busy_times_from_absences(range, plage_ouverture)
         absences = plage_ouverture.agent.absences
           .not_expired
-          .where(organisation: plage_ouverture.organisation)
           .in_range(range)
         busy_times = []
         absences.each do |absence|
