@@ -95,6 +95,7 @@ module Outlook
           displayName: address_without_personal_information,
         },
         attendees: [],
+        transactionId: "agents_rdv.#{agents_rdv.id}",
       }
     end
 
