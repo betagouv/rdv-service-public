@@ -31,6 +31,7 @@ RSpec.describe Outlook::UpdateEventJob, type: :job do
         displayName: "Par téléphone",
       },
       attendees: [],
+      transactionId: "agents_rdv-#{agents_rdv.id}",
     }
   end
   let(:expected_description) do
