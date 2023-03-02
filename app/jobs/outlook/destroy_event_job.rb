@@ -9,7 +9,9 @@ module Outlook
 
       agents_rdv = AgentsRdv.find_by(outlook_id: outlook_id)
 
-      agents_rdv&.update!(outlook_id: nil, skip_outlook_update: true)
+      # We use #update_columns because the validation will fail because the rdv can be soft-deleted
+      # It also allows skipping the outlook_update callback
+      agents_rdv&.update_columns(outlook_id: nil)
     end
   end
 end

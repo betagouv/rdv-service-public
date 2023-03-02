@@ -299,8 +299,7 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
         rdv.update(deleted_at: Time.zone.now)
 
         expect(a_request(:delete, "https://graph.microsoft.com/v1.0/me/Events/abc")).to have_been_made.once
-        # Important: we cannot delete the outlook_id as the agents_rdv is not longer correct (rdv required but deleted)
-        expect(agents_rdv.reload.outlook_id).to eq("abc")
+        expect(agents_rdv.reload.outlook_id).to eq(nil)
       end
     end
   end
@@ -342,22 +341,17 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
     end
 
     context "agents_rdv does not exist in outlook" do
-      let(:agent) { create(:agent, microsoft_graph_token: "token") }
       let(:user) { create(:user, email: "user@example.fr", first_name: "First", last_name: "Last", organisations: [organisation]) }
-      let(:rdv) { create(:rdv, users: [user], motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [fake_agent]) }
+      let!(:rdv) { create(:rdv, users: [user], motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30) }
+      let(:agent) { create(:agent) }
 
-      before do
-        stub_request(:post, "https://graph.microsoft.com/v1.0/me/Events")
-          .with(body: expected_body, headers: expected_headers)
-          .to_return(status: 200, body: { id: "" }.to_json, headers: {})
-
-        allow(Outlook::DestroyEventJob).to receive(:perform_later)
-      end
+      # We add the token after creating the rdv to avoid sending the rdv to Outlook
+      # We skip the validations to simplify the spec
+      before { rdv.agents.first.update_columns(microsoft_graph_token: "token") }
 
       it "does not call Outlook::DestroyEventJob" do
-        create(:agents_rdv, agent: agent, rdv: rdv)
         expect do
-          rdv.destroy
+          rdv.destroy!
         end.not_to have_enqueued_job(Outlook::DestroyEventJob)
       end
     end
