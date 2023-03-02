@@ -346,8 +346,10 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
       let(:agent) { create(:agent) }
 
       # We add the token after creating the rdv to avoid sending the rdv to Outlook
-      # We skip the validations to simplify the spec
-      before { rdv.agents.first.update_columns(microsoft_graph_token: "token") }
+      before do
+        # We skip the validations to simplify the spec
+        rdv.agents.first.update_columns(microsoft_graph_token: "token") # rubocop:disable Rails/SkipsModelValidations
+      end
 
       it "does not call Outlook::DestroyEventJob" do
         expect do

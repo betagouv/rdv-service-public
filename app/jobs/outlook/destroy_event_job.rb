@@ -11,7 +11,7 @@ module Outlook
 
       # We use #update_columns because the validation will fail because the rdv can be soft-deleted
       # It also allows skipping the outlook_update callback
-      agents_rdv&.update_columns(outlook_id: nil)
+      agents_rdv&.update_columns(outlook_id: nil) # rubocop:disable Rails/SkipsModelValidations
     end
   end
 end
