@@ -114,11 +114,11 @@ module Outlook
         <ul>#{participants_list}</ul>
         <br />
 
-        Plus d'infos sur <href a="#{show_link}">#{agent.domain_name}</href>:
+        Plus d'infos sur <a href="#{show_link}">#{agent.domain_name}</a>:
         <br />
 
         Attention: ne modifiez pas cet évènement directement dans Outlook, car il ne sera pas mis à jour sur #{agent.domain_name}.
-        Pour modifier ce rendez-vous, allez sur <href a="#{edit_link}">#{agent.domain_name}</href>
+        Pour modifier ce rendez-vous, allez sur <a href="#{edit_link}">#{agent.domain_name}</a>
       HTML
     end
   end
