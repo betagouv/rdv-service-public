@@ -8,7 +8,6 @@ json.cache! [@absence_occurrences, :all_occurrences_for, date_range_params], exp
     json.backgroundColor "rgba(127, 140, 141, 0.7)"
 
     # url pour éditer l'absence
-    # TODO trouver un meilleur nom à cet attribut pour en plus avoir besoin de ce commentaire
-    json.url edit_admin_organisation_absence_path(absence.agent.organisations.first, absence) if absence.organisation == @organisation
+    json.url edit_admin_organisation_absence_path(@organisation, absence)
   end
 end
