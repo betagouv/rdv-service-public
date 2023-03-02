@@ -9,3 +9,9 @@ Rails.application.config.filter_parameters += %i[
   address city_code post_code city_name address_details logement
   family_situation number_of_children case_number
 ]
+
+# NOTE: Le logging des paramètres a été désactivé dans
+# https://github.com/betagouv/rdv-solidarites.fr/pull/3374
+# et donc cette liste de champs n'es plus opérante.
+# Nous la laissons pour qu'elle serve de base si l'on
+# décide de logger à nouveau les params HTTP.
