@@ -80,7 +80,7 @@ module Outlook
       {
         subject: object,
         body: {
-          contentType: "HTML",
+          contentType: "html",
           content: event_description,
         },
         start: {
