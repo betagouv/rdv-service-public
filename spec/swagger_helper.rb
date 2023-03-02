@@ -195,6 +195,13 @@ RSpec.configure do |config|
             },
             required: %w[agent user],
           },
+          organisation_with_root: {
+            type: "object",
+            properties: {
+              organisation: { "$ref" => "#/components/schemas/organisation" },
+            },
+            required: %w[organisation],
+          },
           organisations: {
             type: "object",
             properties: {
