@@ -80,7 +80,7 @@ module Outlook
       {
         subject: object,
         body: {
-          contentType: "html",
+          contentType: "HTML",
           content: event_description,
         },
         start: {
@@ -95,7 +95,7 @@ module Outlook
           displayName: address_without_personal_information,
         },
         attendees: [],
-        transactionId: "agents_rdv.#{agents_rdv.id}",
+        transactionId: "agents_rdv-#{agents_rdv.id}", # This makes the event creation idempotent
       }
     end
 

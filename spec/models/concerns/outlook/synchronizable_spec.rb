@@ -32,11 +32,11 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
       <ul><li>First LAST</li></ul>
       <br />
 
-      Plus d'infos sur <href a="http://www.rdv-solidarites-test.localhost/admin/organisations/#{organisation.id}/rdvs/#{rdv.id}">RDV Solidarités</href>:
+      Plus d'infos sur <a href="http://www.rdv-solidarites-test.localhost/admin/organisations/#{organisation.id}/rdvs/#{rdv.id}">RDV Solidarités</a>:
       <br />
 
       Attention: ne modifiez pas cet évènement directement dans Outlook, car il ne sera pas mis à jour sur RDV Solidarités.
-      Pour modifier ce rendez-vous, allez sur <href a="http://www.rdv-solidarites-test.localhost/admin/organisations/#{organisation.id}/rdvs/#{rdv.id}/edit">RDV Solidarités</href>
+      Pour modifier ce rendez-vous, allez sur <a href="http://www.rdv-solidarites-test.localhost/admin/organisations/#{organisation.id}/rdvs/#{rdv.id}/edit">RDV Solidarités</a>
     HTML
   end
 
@@ -63,6 +63,9 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
             displayName: "Par téléphone",
           },
           attendees: [],
+          # This is a terrible hack to get the id of the next AgentsRdv
+          # It is not yet created when we stub the request
+          transactionId: "agents_rdv-#{(AgentsRdv.last&.id || 0) + 1}",
         }
       end
 
@@ -129,6 +132,7 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
             displayName: "Par téléphone",
           },
           attendees: [],
+          transactionId: "agents_rdv-#{rdv.agents_rdv_ids.last}",
         }
       end
 
@@ -185,6 +189,7 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
             displayName: "Par téléphone",
           },
           attendees: [],
+          transactionId: "agents_rdv-#{rdv.agents_rdv_ids.last}",
         }
       end
       let(:expected_updated_body) do
@@ -206,6 +211,7 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
             displayName: "Par téléphone",
           },
           attendees: [],
+          transactionId: "agents_rdv-#{rdv.agents_rdv_ids.last + 1}",
         }
       end
 
@@ -220,6 +226,7 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
 
       it "creates the Outlook Event" do
         agents_rdv = create(:agents_rdv, agent: agent, rdv: rdv)
+
         rdv.update(duration_in_min: 40)
 
         expect(a_request(:post,
