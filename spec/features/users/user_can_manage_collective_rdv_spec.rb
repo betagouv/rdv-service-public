@@ -155,14 +155,14 @@ RSpec.describe "Adding a user to a collective RDV" do
         rdv.status = "revoked"
         rdv.save
         select_motif
-        expect(page).to have_content("Nous sommes désolés, un problème semble s'être produit pour votre invitation")
+        expect(page).to have_content("Un problème semble s'être produit pour votre invitation. Toutes nos excuses pour cela.")
 
         rdv2.max_participants_count = 2
         create(:rdvs_user, rdv: rdv2)
         create(:rdvs_user, rdv: rdv2)
         rdv2.save
         visit root_path(params)
-        expect(page).to have_content("Nous sommes désolés, un problème semble s'être produit pour votre invitation")
+        expect(page).to have_content("Un problème semble s'être produit pour votre invitation. Toutes nos excuses pour cela.")
       end
 
       it "correctly display message of participation already existing" do

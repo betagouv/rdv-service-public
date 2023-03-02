@@ -15,7 +15,7 @@
           li.list-group-item
             span>= link_to agent_role.organisation.name, organisation_home_path(agent_role.organisation, agent_role.agent)
             - if agent_role.admin?
-              i.fa.fa-user-cog.text-muted[title="Vous êtes administrateur de cette organisation"]
+              i.fa.fa-user-cog.text-muted[title="Vous administrez cette organisation"]
       - if policy([:agent, Organisation.new(territory: territory)]).new?
         .text-center.mt-4
           = link_to "Créer une nouvelle organisation", new_admin_organisation_path(territory_id: territory.id), class: "btn btn-primary"

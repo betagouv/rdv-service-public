@@ -28,7 +28,7 @@ class AgentRemovalPresenter
       STR
     else
       <<~STR
-        Êtes-vous sûr de vouloir retirer cet agent de l'organisation #{organisation.name} ?
+        Voulez-vous vraiment retirer cet agent de l'organisation #{organisation.name} ?
 
         Toutes ses indisponibilités et ses plages d'ouvertures seront supprimées de manière irréversible.
 

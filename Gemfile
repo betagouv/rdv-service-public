@@ -48,9 +48,7 @@ gem "pundit"
 gem "devise_token_auth", github: "lynndylanhurley/devise_token_auth"
 
 # Jobs
-gem "delayed_job_active_record"
-gem "delayed_job_web"
-gem "delayed_cron_job"
+gem "good_job"
 gem "daemons"
 
 # JSON serialization and queries
