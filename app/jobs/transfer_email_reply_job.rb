@@ -3,6 +3,9 @@
 class TransferEmailReplyJob < ApplicationJob
   queue_as :mailers
 
+  # Pour éviter de fuiter des données personnelles dans les logs
+  self.log_arguments = false
+
   def self.reply_address_for_rdv(rdv)
     "rdv+#{rdv.uuid}@reply.rdv-solidarites.fr"
   end

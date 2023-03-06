@@ -5,6 +5,10 @@ class Agent::OrganisationPolicy < DefaultAgentPolicy
     current_agent.organisation_ids.include?(@record.id)
   end
 
+  def admin_in_record_organisation?
+    current_agent.roles.level_admin.pluck(:organisation_id).include?(record.id)
+  end
+
   def new?
     current_agent.territorial_admin_in?(record.territory)
   end
@@ -27,6 +31,10 @@ class Agent::OrganisationPolicy < DefaultAgentPolicy
 
   def versions?
     admin?
+  end
+
+  def update?
+    admin_in_record_organisation?
   end
 
   class Scope < Scope

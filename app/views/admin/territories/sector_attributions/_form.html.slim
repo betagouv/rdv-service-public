@@ -47,7 +47,7 @@ do |f|
 
   - if available_organisations.blank?
     .alert.alert-warning.mt-2
-      | Impossible de rajouter une attribution à une organisation entière car les organisations dont vous êtes administrateur sont déjà attribuées à ce Secteur.
+      | Impossible de rajouter une attribution à une organisation entière car les organisations que vous administrez sont déjà attribuées à ce Secteur.
   - elsif sector_attribution.level_agent? && available_agents&.empty?
     .alert.alert-warning.mt-2
       - if sector.attributions.level_agent.where(organisation: sector_attribution.organisation).any?
