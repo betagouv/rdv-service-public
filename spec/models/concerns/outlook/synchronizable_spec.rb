@@ -166,32 +166,11 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
     end
 
     context "does not exists in outlook" do
-      let(:agent) { create(:agent, microsoft_graph_token: "token") }
+      let(:agent) { create(:agent, microsoft_graph_token: nil) }
       let(:user) { create(:user, email: "user@example.fr", first_name: "First", last_name: "Last", organisations: [organisation]) }
-      let(:rdv) { create(:rdv, users: [user], motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [fake_agent]) }
+      let(:rdv) { create(:rdv, users: [user], motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [agent]) }
+      let(:agents_rdv) { rdv.agents_rdvs.first }
 
-      let(:expected_body) do
-        {
-          subject: "Super Motif",
-          body: {
-            contentType: "HTML",
-            content: expected_description,
-          },
-          start: {
-            dateTime: "2023-01-01T11:00:00+01:00",
-            timeZone: "Europe/Paris",
-          },
-          end: {
-            dateTime: "2023-01-01T11:30:00+01:00",
-            timeZone: "Europe/Paris",
-          },
-          location: {
-            displayName: "Par téléphone",
-          },
-          attendees: [],
-          transactionId: "agents_rdv-#{rdv.agents_rdv_ids.last}",
-        }
-      end
       let(:expected_updated_body) do
         {
           subject: "Super Motif",
@@ -211,26 +190,24 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
             displayName: "Par téléphone",
           },
           attendees: [],
-          transactionId: "agents_rdv-#{rdv.agents_rdv_ids.last + 1}",
+          transactionId: "agents_rdv-#{agents_rdv.id}",
         }
       end
 
       before do
-        stub_request(:post, "https://graph.microsoft.com/v1.0/me/Events")
-          .with(body: expected_body, headers: expected_headers)
-          .to_return(status: 200, body: { id: "" }.to_json, headers: {})
+        agent.update!(microsoft_graph_token: "token")
+
         stub_request(:post, "https://graph.microsoft.com/v1.0/me/Events")
           .with(body: expected_updated_body, headers: expected_headers)
           .to_return(status: 200, body: { id: "event_id" }.to_json, headers: {})
       end
 
       it "creates the Outlook Event" do
-        agents_rdv = create(:agents_rdv, agent: agent, rdv: rdv)
-
         rdv.update(duration_in_min: 40)
 
         expect(a_request(:post,
                          "https://graph.microsoft.com/v1.0/me/Events").with(body: expected_updated_body)).to have_been_made.once
+
         expect(agents_rdv.reload.outlook_id).to eq("event_id")
       end
     end
