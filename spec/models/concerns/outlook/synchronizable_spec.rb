@@ -246,7 +246,7 @@ RSpec.describe Outlook::Synchronizable, type: :concern do
       it "does not call Outlook::DestroyEventJob when cancelling the rdv" do
         expect do
           rdv.update!(cancelled_at: Time.zone.now, status: "revoked")
-        end.not_to have_enqueued_job(Outlook::DestroyEventJob).with(agents_rdv.outlook_id, agent.id)
+        end.not_to have_enqueued_job(Outlook::DestroyEventJob)
       end
     end
 
