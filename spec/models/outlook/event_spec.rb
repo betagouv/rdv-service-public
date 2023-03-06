@@ -83,6 +83,7 @@ describe Outlook::Event, type: :model do
           displayName: "Par téléphone",
         },
         attendees: [],
+        transactionId: "agents_rdv-#{agents_rdv.id}",
       }
     end
 
