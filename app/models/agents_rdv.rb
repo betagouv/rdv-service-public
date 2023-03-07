@@ -18,8 +18,6 @@ class AgentsRdv < ApplicationRecord
   after_commit :update_unknown_past_rdv_count
   ## -
 
-  delegate :cancelled?, :soft_deleted?, :users, to: :rdv
-
   def update_unknown_past_rdv_count
     agent.update_unknown_past_rdv_count!
   end
