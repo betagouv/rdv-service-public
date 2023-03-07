@@ -6,6 +6,24 @@ module Outlook
   class Event
     attr_reader :agents_rdv, :outlook_id, :agent
 
+    def self.set_callbacks!
+      AgentRdv.attr_accessor :needs_sync_to_outlook
+
+      # On ajoute les callbacks à toutes les classes qui sont utilisées pour générer un event,
+      # puisque si un de ces objet est modifié, il faut envoyer une mise à jour dans outlook.
+      Rdv.after_save do |rdv|
+        rdv.agents_rdvs.joins(:agent).merge(agent: Agent.connected_to_outlook).each do |agents_rdv|
+          agents_rdv.assign_attributes(needs_sync_to_outlook: true)
+        end
+      end
+
+      AgentsRdv.after_commit do |agents_rdv|
+        if agents_rdv.needs_sync_to_outlook
+          OutlookEvent.new(agents_rdv: agents_rdv).sync_to_outlook
+        end
+      end
+    end
+
     def initialize(outlook_id: nil, agents_rdv: nil, agent: nil)
       @agents_rdv = agents_rdv
       @outlook_id = @agents_rdv&.outlook_id || outlook_id
@@ -22,15 +40,6 @@ module Outlook
 
     def destroy
       api_client.delete_event(outlook_id)
-    end
-
-    def self.set_callbacks!
-      # On ajoute les callbacks à toutes les classes qui sont utilisées pour générer un event,
-      # puisque si un de ces objet est modifié, il faut envoyer une mise à jour dans outlook.
-      Rdv.after_save do |rdv|
-        rdv.agents_rdvs.merge(Agent.)
-        .each(&:)
-      end
     end
 
     private
