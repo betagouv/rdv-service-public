@@ -6,20 +6,19 @@ class MigrateRdvCoStatus < ActiveRecord::Migration[7.0]
     # This will set collectives rdv statuses to seen (if one or more participation is seen)
     # This will set collectives rdv statuses to revoked (if no participation is seen or unknown)
     Rdv.collectif.where(status: "noshow").each do |rdv|
-      update_to_seen(rdv)
+      if rdv.rdvs_users.any?(&:seen?)
+        rdv.update_column(:status, "seen")
+        next
+      end
       update_to_revoked(rdv)
     end
 
     Rdv.collectif.where(status: "excused").each do |rdv|
-      update_to_seen(rdv)
+      if rdv.rdvs_users.any?(&:seen?)
+        rdv.update_column(:status, "seen")
+        next
+      end
       update_to_revoked(rdv)
-    end
-  end
-
-  def update_to_seen(rdv)
-    if rdv.rdvs_users.any?(&:seen?)
-      rdv.update_column(:status, "seen")
-      next
     end
   end
 
