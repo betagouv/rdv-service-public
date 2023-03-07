@@ -71,7 +71,8 @@ class Rdv < ApplicationRecord
   after_save :associate_users_with_organisation
   after_commit :update_agents_unknown_past_rdv_count, if: -> { past? }
   before_validation { self.uuid ||= SecureRandom.uuid }
-  after_update -> { agents_rdvs.each(&:sync_update_in_outlook_asynchronously) }
+  # TODO: test
+  after_touch -> { agents_rdvs.each(&:sync_update_in_outlook_asynchronously) }
 
   # Scopes
   default_scope { where(deleted_at: nil) }
