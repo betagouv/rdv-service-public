@@ -11,7 +11,8 @@ class MigrateRdvCoStatus < ActiveRecord::Migration[7.0]
         next
       end
       if rdv.rdvs_users.none?(&:seen?) && rdv.rdvs_users.none?(&:unknown?)
-        rdv.update_columns(status: "revoked", cancelled_at: Time.zone.now)
+        cancelled_at_date = rdv.cancelled_at || rdv.updated_at
+        rdv.update_columns(status: "revoked", cancelled_at: cancelled_at_date)
       end
     end
 
@@ -21,7 +22,8 @@ class MigrateRdvCoStatus < ActiveRecord::Migration[7.0]
         next
       end
       if rdv.rdvs_users.none?(&:seen?) && rdv.rdvs_users.none?(&:unknown?)
-        rdv.update_columns(status: "revoked", cancelled_at: Time.zone.now)
+        cancelled_at_date = rdv.cancelled_at || rdv.updated_at
+        rdv.update_columns(status: "revoked", cancelled_at: cancelled_at_date)
       end
     end
   end
