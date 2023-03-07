@@ -52,7 +52,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_16_211211) do
     "excused",
     "revoked",
     "noshow",
-    "waiting",
   ], force: :cascade
 
   create_enum :receipts_channel, [
