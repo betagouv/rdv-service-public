@@ -8,8 +8,8 @@ class MigrateRdvCoStatus < ActiveRecord::Migration[7.0]
     Rdv.collectif.where(status: "noshow").map(&:update_rdv_status_from_participation)
     Rdv.collectif.where(status: "excused").map(&:update_rdv_status_from_participation)
 
-    # We set restants collective rdvs statuses to 'unknown'
-    Rdv.collectif.where(status: "noshow").each { |rdv| rdv.update!(status: "unknown") }
-    Rdv.collectif.where(status: "excused").each { |rdv| rdv.update!(status: "unknown") }
+    # We set restants collective rdvs statuses to 'revoked'
+    Rdv.collectif.where(status: "noshow").each { |rdv| rdv.update!(status: "revoked") }
+    Rdv.collectif.where(status: "excused").each { |rdv| rdv.update!(status: "revoked") }
   end
 end

@@ -69,7 +69,7 @@ module RdvsHelper
     "#{l(rdv.starts_at, format: format)} (#{rdv.duration_in_min} minutes)"
   end
 
-  def rdv_status_dropdown_toggle(rdv)
+  def individual_rdv_status_dropdown_toggle(rdv)
     tag.div(data: { toggle: "dropdown" },
             class: "dropdown-toggle btn rdv-status-#{rdv.temporal_status}") do
       Rdv.human_attribute_value(:status, rdv.temporal_status, disable_cast: true)
