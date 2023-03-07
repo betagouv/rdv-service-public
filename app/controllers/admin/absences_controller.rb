@@ -6,10 +6,10 @@ class Admin::AbsencesController < AgentAuthController
   before_action :set_absence, only: %i[edit update destroy]
   before_action :build_absence, only: [:create]
   before_action :set_agent
+  before_action :set_agent_organisations
 
   def index
     absences = policy_scope(Absence)
-      .where(organisation: current_organisation)
       .where(agent_id: filter_params[:agent_id])
       .includes(:organisation, :agent)
       .by_starts_at
@@ -42,7 +42,6 @@ class Admin::AbsencesController < AgentAuthController
   end
 
   def create
-    @absence.organisation = current_organisation
     authorize(@absence)
     if @absence.save
       absence_mailer.absence_created.deliver_later if @agent.absence_notification_level == "all"
@@ -78,6 +77,10 @@ class Admin::AbsencesController < AgentAuthController
 
   private
 
+  def set_agent_organisations
+    @agent_organisations = policy_scope(@agent.organisations)
+  end
+
   def set_absence
     @absence = policy_scope(Absence)
       .where(organisation: current_organisation)
@@ -93,7 +96,7 @@ class Admin::AbsencesController < AgentAuthController
   end
 
   def absence_params
-    params.require(:absence).permit(:title, :agent_id, :first_day, :end_day, :start_time, :end_time, :recurrence)
+    params.require(:absence).permit(:title, :agent_id, :first_day, :end_day, :start_time, :end_time, :recurrence, :organisation_id)
   end
 
   def filter_params

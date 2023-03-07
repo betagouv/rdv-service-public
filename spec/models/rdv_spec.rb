@@ -688,6 +688,13 @@ describe Rdv, type: :model do
       expect(described_class.all).to be_empty
     end
 
+    it "hide soft_deleted rdv of one user" do
+      rdv = create(:rdv)
+      user = rdv.users.first
+      rdv.soft_delete
+      expect(user.rdvs).to be_empty
+    end
+
     it "allows finding soft_deleted rdv using `unscoped`" do
       rdv = create(:rdv)
       rdv.soft_delete

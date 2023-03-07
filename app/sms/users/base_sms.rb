@@ -14,10 +14,8 @@ class Users::BaseSms < ApplicationSms
 
   attr_reader :content
 
-  # Enqueue a DelayedJob with the sms
-  # Note: the stored parameter in the delayed_jobs table is the ApplicationSms instance.
-  def deliver_later(queue: :sms)
-    SmsJob.set(queue: queue).perform_later(
+  def deliver_later(queue: :sms, priority: 0)
+    SmsJob.set(queue: queue, priority: priority).perform_later(
       sender_name: @rdv.domain.sms_sender_name,
       phone_number: @user.phone_number_formatted,
       content: content,

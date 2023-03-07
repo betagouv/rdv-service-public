@@ -12,7 +12,7 @@ namespace :api do
     end
     resource :user_profiles, only: %i[create destroy]
     resource :referent_assignations, only: %i[create destroy]
-    resources :organisations, only: %i[index] do
+    resources :organisations, only: %i[index update] do
       resources :users, only: %i[index show]
       resources :motifs, only: %i[index]
       resources :rdvs, only: %i[index]

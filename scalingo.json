@@ -1,6 +1,6 @@
 {
   "name": "RDV-Solidarités",
-  "stack": "scalingo-18",
+  "stack": "scalingo-22",
   "env": {
     "HOST": {
       "description": "HOST",
