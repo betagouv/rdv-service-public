@@ -90,4 +90,15 @@ RSpec.describe "prescripteur can create RDV for a user" do
     expect(enqueued_jobs.first["job_class"]).to eq("SmsJob")
     expect(enqueued_jobs.first["arguments"][0]["phone_number"]).to eq("+33611223344")
   end
+
+  context "when using the prescripteur route" do
+    it "goes directly to prescripteur forms after creneau selection" do
+      visit "http://www.rdv-solidarites-test.localhost/prescripteur/#{organisation.territory.departement_number}"
+
+      click_on "Prochaine disponibilité le" # choix du lieu
+      click_on "08:00" # choix du créneau
+
+      expect(page).to have_content("Vos coordonnées de prescripteur")
+    end
+  end
 end
