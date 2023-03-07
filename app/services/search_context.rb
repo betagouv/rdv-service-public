@@ -27,6 +27,7 @@ class SearchContext
     @lieu_id = query[:lieu_id]
     @start_date = query[:date]
     @referent_ids = query[:referent_ids]
+    @prescripteur = query[:prescripteur]
   end
 
   # *** Method that outputs the next step for the user to complete its rdv journey ***
@@ -49,6 +50,15 @@ class SearchContext
 
   def to_partial_path
     "search/#{current_step}"
+  end
+
+  def wizard_after_creneau_selection_path(params)
+    url_helpers = Rails.application.routes.url_helpers
+    if @prescripteur
+      url_helpers.prescripteur_start_path(query.merge(params))
+    else
+      url_helpers.new_users_rdv_wizard_step_path(query.merge(params))
+    end
   end
 
   def geo_search
