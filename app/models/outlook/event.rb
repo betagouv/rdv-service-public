@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
+# Responsable de la sérialisation d'un event outlook à partir de nos données,
+# et donc aussi d'ajouter les callbacks qui feront ces mises à jour
 module Outlook
   class Event
-    USER_AGENT = "RDVSolidarites"
-    BASE_URL = "https://graph.microsoft.com/v1.0"
-
     attr_reader :agents_rdv, :outlook_id, :agent
 
     def initialize(outlook_id: nil, agents_rdv: nil, agent: nil)
@@ -13,68 +12,36 @@ module Outlook
       @agent = @agents_rdv&.agent || agent
     end
 
-    # @return [String] the outlook_id of the created event
     def create
-      outlook_event = make_api_call("POST", "me/Events", payload)
-      outlook_event["id"]
+      api_client.create_event(payload)
     end
 
     def update
-      make_api_call("PATCH", "me/Events/#{outlook_id}", payload)
+      api_client.update_event(outlook_id, payload)
     end
 
     def destroy
-      make_api_call("DELETE", "me/Events/#{outlook_id}")
+      api_client.delete_event(outlook_id)
+    end
+
+    def self.set_callbacks!
+      # On ajoute les callbacks à toutes les classes qui sont utilisées pour générer un event,
+      # puisque si un de ces objet est modifié, il faut envoyer une mise à jour dans outlook.
+      Rdv.after_save do |rdv|
+        rdv.agents_rdvs.merge(Agent.)
+        .each(&:)
+      end
     end
 
     private
 
+    def api_client
+      @api_client ||= Outlook::ApiClient.new(@agent)
+    end
+
     delegate :rdv, :id, :users, to: :agents_rdv, allow_nil: true
     delegate :microsoft_graph_token, :connected_to_outlook?, to: :agent, prefix: true
     delegate :object, :starts_at, :ends_at, :address_without_personal_information, to: :rdv
-
-    # https://docs.microsoft.com/en-us/graph/use-the-api?view=graph-rest-1.0
-    # method (string): The HTTP method to use for the API call.
-    #                  Must be 'GET', 'POST', 'PATCH', or 'DELETE'
-    # path (string): The path to use for the API call. Must not contain a forward slash. For example: 'api/v2.0/me/messages'
-    # payload (hash): a JSON hash representing the API call's payload. Only used
-    #                 for POST or PATCH.
-
-    # rubocop:disable Metrics/CyclomaticComplexity
-    # rubocop:disable Metrics/PerceivedComplexity
-    def make_api_call(method, path, event_payload = {})
-      headers = {
-        "Authorization" => "Bearer #{agent_microsoft_graph_token}",
-        "Content-Type" => "application/json",
-        "Accept" => "application/json",
-        "User-Agent" => USER_AGENT,
-        "client-request-id" => SecureRandom.uuid,
-        "return-client-request-id" => "true",
-      }
-
-      request_url = "#{BASE_URL}/#{path}"
-
-      response = case method.upcase
-                 when "POST"
-                   Typhoeus.post(request_url, headers: headers, body: JSON.dump(event_payload))
-                 when "PATCH"
-                   Typhoeus.patch(request_url, headers: headers, body: JSON.dump(event_payload))
-                 when "DELETE"
-                   Typhoeus.delete(request_url, headers: headers)
-                 end
-
-      body_response = response.body == "" ? {} : JSON.parse(response.body)
-      if body_response["error"].present?
-        if agent_connected_to_outlook? && response.response_code == 401 # token expired
-          agent.refresh_outlook_token && make_api_call(method, path, event_payload)
-        else
-          raise "Outlook API error for AgentsRdv #{id || outlook_id}: #{body_response.dig('error', 'message')}"
-        end
-      end
-      response.response_code == 204 ? "" : body_response
-    end
-    # rubocop:enable Metrics/CyclomaticComplexity
-    # rubocop:enable Metrics/PerceivedComplexity
 
     def payload
       {
