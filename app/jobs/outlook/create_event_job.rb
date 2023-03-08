@@ -6,7 +6,7 @@ module Outlook
 
     def perform(agents_rdv)
       outlook_event_id = Outlook::Event.new(agents_rdv: agents_rdv).create
-      agents_rdv.update!(outlook_id: outlook_event_id, skip_outlook_update: true, outlook_create_in_progress: false)
+      agents_rdv.update_columns(outlook_id: outlook_event_id)
     end
   end
 end
