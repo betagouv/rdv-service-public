@@ -18,8 +18,6 @@ class AgentsRdv < ApplicationRecord
   after_commit :update_unknown_past_rdv_count
   # voir app/models/outlook/event_serializer_and_listener.rb pour d'autres callbacks
 
-  delegate :connected_to_outlook?, to: :agent, prefix: true
-
   def update_unknown_past_rdv_count
     agent.update_unknown_past_rdv_count!
   end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Outlook::Synchronizable, type: :concern do
+RSpec.describe "Outlook sync" do
   around do |example|
     perform_enqueued_jobs do
       example.run

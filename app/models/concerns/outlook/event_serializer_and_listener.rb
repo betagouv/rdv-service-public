@@ -13,19 +13,27 @@ module Outlook
       # Le découpage en deux temps permet d'envoyer un seul job si plusieurs callbacks sont appelés
       attr_accessor :needs_sync_to_outlook
 
-      AgentsRdv
-        .before_commit { |agents_rdv| mark_for_sync([agents_rdv]) }
-      Rdv
-        .before_commit { |rdv|        mark_for_sync(rdv.agents_rdvs) }
-      RdvsUser
-        .before_commit { |rdvs_user|  mark_for_sync(rdvs_user.rdv.agents_rdvs) }
+      delegate :connected_to_outlook?, to: :agent, prefix: true
 
-      AgentsRdv
-        .after_commit { |agents_rdv| enqueue_sync_for_marked_records([agents_rdv]) }
-      Rdv
-        .after_commit { |rdv|        enqueue_sync_for_marked_records(rdv.agents_rdv) }
-      RdvsUser
-        .after_commit { |rdvs_user|  enqueue_sync_for_marked_records(rdvs_user.rdv.agents_rdv) }
+      AgentsRdv.before_commit do |agents_rdv|
+        Outlook::EventSerializerAndListener.mark_for_sync([agents_rdv])
+      end
+      Rdv.before_commit do |rdv|
+        Outlook::EventSerializerAndListener.mark_for_sync(rdv.agents_rdvs)
+      end
+      RdvsUser.before_commit do |rdvs_user|
+        Outlook::EventSerializerAndListener.mark_for_sync(rdvs_user.rdv.agents_rdvs)
+      end
+
+      AgentsRdv.after_commit do |agents_rdv|
+        Outlook::EventSerializerAndListener.enqueue_sync_for_marked_records([agents_rdv])
+      end
+      Rdv.after_commit do |rdv|
+        Outlook::EventSerializerAndListener.enqueue_sync_for_marked_records(rdv.agents_rdvs)
+      end
+      RdvsUser.after_commit do |rdvs_user|
+        Outlook::EventSerializerAndListener.enqueue_sync_for_marked_records(rdvs_user.rdv.agents_rdvs)
+      end
     end
 
     def serialize_for_outlook_api
@@ -55,20 +63,20 @@ module Outlook
       }
     end
 
-    private
-
-    def mark_for_sync(agents_rdvs)
-      agents_rdvs.select(&:agent_connected_to_outlook).each do |agents_rdv|
+    def self.mark_for_sync(agents_rdvs)
+      agents_rdvs.select(&:agent_connected_to_outlook?).each do |agents_rdv|
         agents_rdv.assign_attributes(needs_sync_to_outlook: true)
       end
     end
 
-    def enqueue_sync_for_marked_records(agents_rdvs)
+    def self.enqueue_sync_for_marked_records(agents_rdvs)
       agents_rdvs.select(&:needs_sync_to_outlook).each do |agents_rdv|
         EnqueueSyncToOutlook.run(agents_rdv)
         agents_rdv.assign_attributes(needs_sync_to_outlook: false)
       end
     end
+
+    private
 
     def event_description
       url_helpers = Rails.application.routes.url_helpers

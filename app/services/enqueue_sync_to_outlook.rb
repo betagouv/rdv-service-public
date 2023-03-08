@@ -10,7 +10,7 @@ class EnqueueSyncToOutlook
   end
 
   def run
-    return unless @agents_rdv.agent_connected_to_outlook
+    return unless @agents_rdv.agent_connected_to_outlook?
 
     if (@agents_rdv.outlook_id && rdv.cancelled?) || rdv.soft_deleted? || @agents_rdv.id.nil? # deleted
       Outlook::DestroyEventJob.perform_later(@agents_rdv.outlook_id, @agents_rdv.agent)
