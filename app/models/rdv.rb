@@ -71,7 +71,7 @@ class Rdv < ApplicationRecord
   after_save :associate_users_with_organisation
   after_commit :update_agents_unknown_past_rdv_count, if: -> { past? }
   before_validation { self.uuid ||= SecureRandom.uuid }
-  # voir app/models/outlook/event_serializer_and_listener.rb pour d'autres callbacks
+  # voir app/models/concerns/outlook/event_serializer_and_listener.rb pour d'autres callbacks
 
   # Scopes
   default_scope { where(deleted_at: nil) }

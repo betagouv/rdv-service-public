@@ -16,7 +16,7 @@ class AgentsRdv < ApplicationRecord
 
   # Hooks
   after_commit :update_unknown_past_rdv_count
-  # voir app/models/outlook/event_serializer_and_listener.rb pour d'autres callbacks
+  # voir app/models/concerns/outlook/event_serializer_and_listener.rb pour d'autres callbacks
 
   def update_unknown_past_rdv_count
     agent.update_unknown_past_rdv_count!

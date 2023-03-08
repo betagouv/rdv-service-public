@@ -26,7 +26,7 @@ class EnqueueSyncToOutlook
   end
 
   def rdv_is_not_cancelled_or_deleted?
-    !rdv.destroyed? && !rdv.cancelled? && !rdv.soft_deleted?
+    !rdv.cancelled? && !rdv.soft_deleted? && !rdv.destroyed?
   end
 
   def rdv
