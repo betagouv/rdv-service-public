@@ -8,8 +8,6 @@ module Outlook
       client = Outlook::ApiClient.new(agent)
       client.delete_event!(outlook_id)
 
-      Outlook::Event.new(outlook_id: outlook_id, agent: agent).destroy
-
       agents_rdv = AgentsRdv.find_by(outlook_id: outlook_id)
 
       # On utilise #update_columns parce que les validations AR échouent si le rdv est soft-deleted
