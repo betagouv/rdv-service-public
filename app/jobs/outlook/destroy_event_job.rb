@@ -8,10 +8,12 @@ module Outlook
       client = Outlook::ApiClient.new(agent)
       client.delete_event!(outlook_id)
 
+      Outlook::Event.new(outlook_id: outlook_id, agent: agent).destroy
+
       agents_rdv = AgentsRdv.find_by(outlook_id: outlook_id)
 
-      # We use #update_columns because the validation will fail because the rdv can be soft-deleted
-      # It also allows skipping the outlook_update callback
+      # On utilise #update_columns parce que les validations AR échouent si le rdv est soft-deleted
+      # Ça permet aussi d'éviter de lancer les callbacks, dont notamment celui qui amène à l'exécution de ce job
       agents_rdv&.update_columns(outlook_id: nil) # rubocop:disable Rails/SkipsModelValidations
     end
   end
