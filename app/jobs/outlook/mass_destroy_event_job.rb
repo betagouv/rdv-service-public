@@ -5,7 +5,7 @@ module Outlook
     queue_as :outlook_sync
 
     def perform(agent)
-      agent.agents_rdvs.exists_in_outlook.each do |agents_rdv|
+      agent.agents_rdvs.where.not(outlook_id: nil).each do |agents_rdv|
         Outlook::DestroyEventJob.perform_now(agents_rdv.outlook_id, agents_rdv.agent)
       end
       agent.update!(microsoft_graph_token: nil, refresh_microsoft_graph_token: nil, outlook_disconnect_in_progress: false)

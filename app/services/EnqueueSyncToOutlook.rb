@@ -15,7 +15,7 @@ class EnqueueSyncToOutlook
 
     if rdv.cancelled? || rdv.soft_deleted? || @agents_rdv.id.nil? # deleted
       Outlook::DestroyEventJob.perform_later(@agents_rdv.outlook_id, @agents_rdv.agent)
-    elsif @agents_rdv.exists_in_outlook?
+    elsif @agents_rdv.outlook_id
       Outlook::UpdateEventJob.perform_later(@agents_rdv)
     else
       Outlook::CreateEventJob.perform_later(@agents_rdv)
