@@ -36,6 +36,7 @@ module Outlook
       # Les before_commit permettent de marquer tous les agents_rdvs qui ont besoin d'être synchronisés dans outlook
       # Les after_commit permet d'enqueuer les jobs
       # Le découpage en deux temps permet d'envoyer un seul job si plusieurs callbacks sont appelés
+      AgentsRdv.attr_accessor(:needs_sync_to_outlook)
 
       AgentsRdv
         .before_commit { |agents_rdv| mark_for_sync([agents_rdv]) }

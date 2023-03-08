@@ -9,7 +9,6 @@ class EnqueueSyncToOutlook
     @agents_rdv = agents_rdv
   end
 
-  # TODO: just have all the job logic in this class (and turn it into a job)
   def run
     return unless @agents_rdv.agent_connected_to_outlook
 
