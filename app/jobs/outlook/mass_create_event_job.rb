@@ -5,8 +5,9 @@ module Outlook
     queue_as :outlook_sync
 
     def perform(agent)
-      # TODO: fix bug: if rdv is cancelled, we don't want to create it in outlook
-      agent.agents_rdvs.future.each(&:sync_create_in_outlook_asynchronously)
+      agent.agents_rdvs.future.each do |agents_rdv|
+        EnqueueSyncToOutlook.run(agents_rdv)
+      end
     end
   end
 end
