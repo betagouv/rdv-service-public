@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Outlook::Event, type: :model do
+describe Outlook::ApiClient do
   let(:organisation) { create(:organisation) }
   let(:motif) { create(:motif, name: "Super Motif", location_type: :phone) }
   let(:agent) { create(:agent, microsoft_graph_token: "token", refresh_microsoft_graph_token: "refresh_token") }
@@ -8,31 +8,29 @@ describe Outlook::Event, type: :model do
   let(:rdv) { create(:rdv, users: [user], motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [agent]) }
   let(:agents_rdv) { rdv.agents_rdvs.first }
 
-  describe "#create" do
-    context "when the call fails" do
-      before do
-        stub_request(:post, "https://graph.microsoft.com/v1.0/me/Events")
-          .to_return(
-            status: 403,
-            body: {
-              error: {
-                code: "ErrorAccountSuspend",
-                message: "Account suspended. Follow the instructions in your Inbox to verify your account.",
-              },
-            }.to_json,
-            headers: {}
-          )
-      end
+  context "when a call fails" do
+    before do
+      stub_request(:post, "https://graph.microsoft.com/v1.0/me/Events")
+        .to_return(
+          status: 403,
+          body: {
+            error: {
+              code: "ErrorAccountSuspend",
+              message: "Account suspended. Follow the instructions in your Inbox to verify your account.",
+            },
+          }.to_json,
+          headers: {}
+        )
+    end
 
-      it "raises an error so that the job around it is retried later" do
-        expect do
-          described_class.new(agents_rdv: agents_rdv).create
-        end.to raise_error("Outlook API error for AgentsRdv #{agents_rdv.id}: Account suspended. Follow the instructions in your Inbox to verify your account.")
-      end
+    it "raises an error so that the job around it is retried later" do
+      expect do
+        described_class.new(agent).create
+      end.to raise_error("Outlook API error for AgentsRdv #{agents_rdv.id}: Account suspended. Follow the instructions in your Inbox to verify your account.")
     end
   end
 
-  describe "refresh_token mechanism" do
+  describe "when the token needs to be refreshed" do
     let(:expected_headers) do
       {
         "Accept" => "application/json",
@@ -103,7 +101,7 @@ describe Outlook::Event, type: :model do
         .to_return(status: 200, body: { id: "event_id" }.to_json, headers: {})
     end
 
-    it "refreshes the Outlook::User's token when needed" do
+    it "refreshes it and retries, and saves the refresh token on the agent" do
       described_class.new(agents_rdv: agents_rdv).create
 
       expect(a_request(:post,
