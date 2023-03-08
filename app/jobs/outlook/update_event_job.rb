@@ -5,7 +5,9 @@ module Outlook
     queue_as :outlook_sync
 
     def perform(agents_rdv)
-      Outlook::Event.new(agents_rdv: agents_rdv).update
+      client = Outlook::ApiClient.new(agents_rdv.agent)
+
+      client.update_event!(agents_rdv.outlook_id, agents_rdv.serialize_for_outlook_api)
     end
   end
 end

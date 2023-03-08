@@ -7,17 +7,17 @@ module Outlook
     end
 
     # @return [String] the outlook_id of the created event
-    def create_event(payload)
+    def create_event!(payload)
       outlook_event = call_events_api("POST", "me/Events", payload)
       outlook_event["id"]
     end
 
-    def update_event(outlook_event_id, payload)
+    def update_event!(outlook_event_id, payload)
       call_events_api("PATCH", "me/Events/#{outlook_event_id}", payload)
     end
 
-    def delete_event(outlook_event_id)
-      make_api_call("DELETE", "me/Events/#{outlook_event_id}")
+    def delete_event!(outlook_event_id)
+      call_events_api("DELETE", "me/Events/#{outlook_event_id}")
     end
 
     private

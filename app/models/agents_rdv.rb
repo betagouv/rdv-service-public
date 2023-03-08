@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class AgentsRdv < ApplicationRecord
-  Outlook::EventSerializerAndListener.set_callbacks!
+  include Outlook::EventSerializerAndListener
 
   # Relations
   belongs_to :rdv, touch: true
