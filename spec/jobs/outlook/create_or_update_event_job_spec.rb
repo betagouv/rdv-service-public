@@ -2,7 +2,8 @@
 
 require "rails_helper"
 
-RSpec.describe Outlook::CreateEventJob, type: :job do
+# TODO: add a spec for the logic when choosing the proper update
+RSpec.describe Outlook::CreateOrUpdateEventJob, type: :job do
   let(:organisation) { create(:organisation) }
   let(:motif) { create(:motif, name: "Super Motif", location_type: :phone) }
   # We need to create a fake agent to initialize a RDV as they have a validation on agents which prevents us to control the data in its AgentsRdv
@@ -93,7 +94,7 @@ RSpec.describe Outlook::CreateEventJob, type: :job do
       end.to have_enqueued_job(described_class).with(agents_rdv)
 
       expect(agents_rdv.reload.outlook_id).to eq(nil)
-      expect(sentry_events.last.exception.values.first.value).to eq("Outlook API error for AgentsRdv #{agents_rdv.id}: Quelle terrible erreur (RuntimeError)")
+      expect(sentry_events.last.exception.values.first.value).to eq("Outlook Events API error: Quelle terrible erreur (RuntimeError)")
     end
   end
 end

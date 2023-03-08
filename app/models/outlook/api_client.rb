@@ -60,7 +60,7 @@ module Outlook
         if @agent.connected_to_outlook? && response.response_code == 401 # token expired
           refresh_outlook_token && make_api_call(method, path, event_payload)
         else
-          raise "Outlook API error for AgentsRdv #{id || outlook_id}: #{body_response.dig('error', 'message')}"
+          raise "Outlook Events API error: #{body_response.dig('error', 'message')}"
         end
       end
       response.response_code == 204 ? "" : body_response
