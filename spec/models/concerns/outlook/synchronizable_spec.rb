@@ -108,10 +108,9 @@ RSpec.describe "Outlook sync" do
 
   describe "Update callback" do
     context "exists in outlook and agent is synced" do
-      let(:agent) { create(:agent, microsoft_graph_token: "token") }
+      let(:agent) { create(:agent, microsoft_graph_token: nil) }
       let(:user) { create(:user, email: "user@example.fr", first_name: "First", last_name: "Last", organisations: [organisation]) }
-      let(:rdv) { create(:rdv, users: [user], motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [fake_agent]) }
-      let!(:agents_rdv) { create(:agents_rdv, rdv: rdv, agent: agent, outlook_id: "abc") }
+      let(:rdv) { create(:rdv, users: [user], motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [agent]) }
 
       let(:expected_body) do
         {
@@ -137,6 +136,8 @@ RSpec.describe "Outlook sync" do
       end
 
       before do
+        rdv.agents_rdvs.first.update!(outlook_id: "event_id")
+        agent.update!(outlook_token: "token")
         stub_request(:patch, "https://graph.microsoft.com/v1.0/me/Events/abc")
           .with(body: expected_body, headers: expected_headers)
           .to_return(status: 200, body: { id: "event_id" }.to_json, headers: {})
