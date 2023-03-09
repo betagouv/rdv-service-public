@@ -7,7 +7,7 @@
       - else
         .font-weight-bold Votre référent n'a pas de créneaux disponibles.
     - elsif context.invitation?
-      .font-weight-bold Nous sommes désolés, un problème semble s'être produit pour votre invitation.
+      .font-weight-bold Un problème semble s'être produit pour votre invitation. Toutes nos excuses pour cela.
       = mail_to SUPPORT_EMAIL,
         subject: "[Problème Invitation]",
         class: "btn btn-primary" do

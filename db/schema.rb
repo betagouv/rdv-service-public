@@ -10,8 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_07_142918) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_16_211211) do
   # These are extensions that must be enabled in order to support this database
+  enable_extension "pgcrypto"
   enable_extension "plpgsql"
   enable_extension "unaccent"
   enable_extension "uuid-ossp"
@@ -47,7 +48,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_07_142918) do
 
   create_enum :rdv_status, [
     "unknown",
-    "waiting",
     "seen",
     "excused",
     "revoked",
@@ -112,6 +112,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_07_142918) do
     t.index ["organisation_id"], name: "index_absences_on_organisation_id"
     t.index ["recurrence"], name: "index_absences_on_recurrence", where: "(recurrence IS NOT NULL)"
     t.index ["updated_at"], name: "index_absences_on_updated_at"
+  end
+
+  create_table "agent_roles", force: :cascade do |t|
+    t.bigint "agent_id", null: false
+    t.bigint "organisation_id", null: false
+    t.string "level", default: "basic", null: false
+    t.index ["agent_id"], name: "index_agent_roles_on_agent_id"
+    t.index ["level"], name: "index_agent_roles_on_level"
+    t.index ["organisation_id", "agent_id"], name: "index_agent_roles_on_organisation_id_and_agent_id", unique: true
+    t.index ["organisation_id"], name: "index_agent_roles_on_organisation_id"
   end
 
   create_table "agent_teams", force: :cascade do |t|
@@ -187,6 +197,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_07_142918) do
     t.string "last_sign_in_ip"
     t.text "microsoft_graph_token"
     t.text "refresh_microsoft_graph_token"
+    t.boolean "outlook_disconnect_in_progress", default: false, null: false
     t.string "cnfs_secondary_email"
     t.index ["calendar_uid"], name: "index_agents_on_calendar_uid", unique: true
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true
@@ -202,20 +213,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_07_142918) do
     t.index ["uid", "provider"], name: "index_agents_on_uid_and_provider", unique: true
   end
 
-  create_table "agents_organisations", force: :cascade do |t|
-    t.bigint "agent_id", null: false
-    t.bigint "organisation_id", null: false
-    t.string "level", default: "basic", null: false
-    t.index ["agent_id"], name: "index_agents_organisations_on_agent_id"
-    t.index ["level"], name: "index_agents_organisations_on_level"
-    t.index ["organisation_id", "agent_id"], name: "index_agents_organisations_on_organisation_id_and_agent_id", unique: true
-    t.index ["organisation_id"], name: "index_agents_organisations_on_organisation_id"
-  end
-
   create_table "agents_rdvs", force: :cascade do |t|
     t.bigint "agent_id", null: false
     t.bigint "rdv_id", null: false
     t.text "outlook_id"
+    t.boolean "outlook_create_in_progress", default: false, null: false
     t.index ["agent_id", "rdv_id"], name: "index_agents_rdvs_on_agent_id_and_rdv_id", unique: true
     t.index ["agent_id"], name: "index_agents_rdvs_on_agent_id"
     t.index ["rdv_id"], name: "index_agents_rdvs_on_rdv_id"
@@ -254,6 +256,65 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_07_142918) do
     t.index ["rdv_id", "user_id"], name: "index_file_attentes_on_rdv_id_and_user_id", unique: true
     t.index ["rdv_id"], name: "index_file_attentes_on_rdv_id"
     t.index ["user_id"], name: "index_file_attentes_on_user_id"
+  end
+
+  create_table "good_job_batches", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.text "description"
+    t.jsonb "serialized_properties"
+    t.text "on_finish"
+    t.text "on_success"
+    t.text "on_discard"
+    t.text "callback_queue_name"
+    t.integer "callback_priority"
+    t.datetime "enqueued_at"
+    t.datetime "discarded_at"
+    t.datetime "finished_at"
+  end
+
+  create_table "good_job_processes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.jsonb "state"
+  end
+
+  create_table "good_job_settings", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.text "key"
+    t.jsonb "value"
+    t.index ["key"], name: "index_good_job_settings_on_key", unique: true
+  end
+
+  create_table "good_jobs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.text "queue_name"
+    t.integer "priority"
+    t.jsonb "serialized_params"
+    t.datetime "scheduled_at"
+    t.datetime "performed_at"
+    t.datetime "finished_at"
+    t.text "error"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.uuid "active_job_id"
+    t.text "concurrency_key"
+    t.text "cron_key"
+    t.uuid "retried_good_job_id"
+    t.datetime "cron_at"
+    t.uuid "batch_id"
+    t.uuid "batch_callback_id"
+    t.index ["active_job_id", "created_at"], name: "index_good_jobs_on_active_job_id_and_created_at"
+    t.index ["active_job_id"], name: "index_good_jobs_on_active_job_id"
+    t.index ["batch_callback_id"], name: "index_good_jobs_on_batch_callback_id", where: "(batch_callback_id IS NOT NULL)"
+    t.index ["batch_id"], name: "index_good_jobs_on_batch_id", where: "(batch_id IS NOT NULL)"
+    t.index ["concurrency_key"], name: "index_good_jobs_on_concurrency_key_when_unfinished", where: "(finished_at IS NULL)"
+    t.index ["cron_key", "created_at"], name: "index_good_jobs_on_cron_key_and_created_at"
+    t.index ["cron_key", "cron_at"], name: "index_good_jobs_on_cron_key_and_cron_at", unique: true
+    t.index ["finished_at"], name: "index_good_jobs_jobs_on_finished_at", where: "((retried_good_job_id IS NULL) AND (finished_at IS NOT NULL))"
+    t.index ["priority", "created_at"], name: "index_good_jobs_jobs_on_priority_created_at_when_unfinished", order: { priority: "DESC NULLS LAST" }, where: "(finished_at IS NULL)"
+    t.index ["queue_name", "scheduled_at"], name: "index_good_jobs_on_queue_name_and_scheduled_at", where: "(finished_at IS NULL)"
+    t.index ["scheduled_at"], name: "index_good_jobs_on_scheduled_at", where: "(finished_at IS NULL)"
   end
 
   create_table "lieux", force: :cascade do |t|
@@ -402,12 +463,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_07_142918) do
     t.integer "created_by", default: 0
     t.text "context"
     t.bigint "lieu_id"
-    t.enum "status", default: "unknown", null: false, enum_type: "rdv_status"
     t.datetime "ends_at", null: false
     t.string "name"
     t.integer "max_participants_count"
     t.integer "users_count", default: 0
     t.datetime "deleted_at"
+    t.enum "status", default: "unknown", null: false, enum_type: "rdv_status"
     t.index "tsrange(starts_at, ends_at, '[)'::text)", name: "index_rdvs_on_tsrange_starts_at_ends_at", using: :gist
     t.index ["created_by"], name: "index_rdvs_on_created_by"
     t.index ["deleted_at"], name: "index_rdvs_on_deleted_at"

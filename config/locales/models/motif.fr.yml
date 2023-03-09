@@ -14,7 +14,7 @@ fr:
         visibility_type: Visibilité usager
         custom_cancel_warning_message: Message d’avertissement en cas d’annulation
         custom_cancel_warning_message_hint: Ce message sera affiché à l'usager au moment où il lui sera demandé de confirmer l’annulation de son RDV. Si l’annulation du rendez-vous a des conséquences particulières pour l’usager, vous pouvez lui indiquer dans ce message. Cela peut être le cas, par exemple, pour une convocation pour l’ouverture de droits sociaux.
-        default_cancel_warning_message: Êtes-vous sûr de vouloir annuler ce RDV ?
+        default_cancel_warning_message: Voulez-vous vraiment annuler ce RDV ?
         sectorisation_level: Sectorisation
         sectorisation_level_title: Sectorisation géographique
         sectorisation_level_hint: Seules les recherches des usagers sont concernées par ces règles de sectorisation. Elles n'ont donc pas d'effet si le motif n'est pas réservable en ligne.
@@ -25,6 +25,7 @@ fr:
         for_secretariat_hint: Les membres du service Secrétariat pourront poser des RDV dans leur agenda et configurer les plages d'ouverture avec ce motif
         follow_up: Ce motif est réservé aux usagers bénéficiant d'un accompagnement
         follow_up_short: RDV de suivi
+        follow_up_warning: Ne cochez cette case que si vous savez ce que vous faîtes
         follow_up_hint: Ce motif est réservé aux usagers bénéficiant d'un accompagnement
         default_duration_in_min: Durée par défaut en minutes
         default_duration_in_min_short: Durée par défaut

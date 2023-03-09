@@ -24,7 +24,8 @@
         tr
           th Description
           th Dates
-          th Organisation
+          - if @agent_organisations.count > 1
+            th Organisation
           th Actions
       tbody
         = render @absences
