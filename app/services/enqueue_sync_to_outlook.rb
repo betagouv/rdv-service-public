@@ -9,6 +9,8 @@ class EnqueueSyncToOutlook
     @agents_rdv = agents_rdv
   end
 
+  # TODO: replace this by enqueuing directly a generic job, and determine the kind of sync needed at job runtime
+  # this would avoid errors in case of race condition when an update and destroy job are executed out of order
   def run
     return unless @agents_rdv.agent_connected_to_outlook?
 

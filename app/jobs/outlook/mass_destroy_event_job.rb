@@ -5,8 +5,9 @@ module Outlook
     queue_as :outlook_sync
 
     def perform(agent)
+      client = Outlook::ApiClient.new(agent)
       agent.agents_rdvs.where.not(outlook_id: nil).each do |agents_rdv|
-        Outlook::DestroyEventJob.perform_now(agents_rdv.outlook_id, agents_rdv.agent)
+        client.delete_event!(agents_rdv.outlook_id)
       end
       agent.update!(microsoft_graph_token: nil, refresh_microsoft_graph_token: nil, outlook_disconnect_in_progress: false)
     end
