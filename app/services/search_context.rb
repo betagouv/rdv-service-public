@@ -20,8 +20,7 @@ class SearchContext
     @preselected_organisation_ids = query[:organisation_ids]
     @motif_id = query[:motif_id]
     @motif_search_terms = query[:motif_search_terms]
-    # TODO: Remove "query[:motif_category] ||" after RDV-I migration OK
-    @motif_category_short_name = query[:motif_category] || query[:motif_category_short_name]
+    @motif_category_short_name = query[:motif_category_short_name]
     @motif_name_with_location_type = query[:motif_name_with_location_type]
     @service_id = query[:service_id]
     @lieu_id = query[:lieu_id]
