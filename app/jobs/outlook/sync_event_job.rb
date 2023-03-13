@@ -4,6 +4,12 @@ module Outlook
   class SyncEventJob < ApplicationJob
     queue_as :outlook_sync
 
+    def perform_later_for(agents_rdv)
+      # En cas de suppression du agents_rdv, on aura besoin du outlook_id et de l'agent
+      # pour supprimer l'event dans Outlook
+      perform_later(agents_rdv.id, agents_rdv.outlook_id, agents_rdv.agent)
+    end
+
     def perform(agents_rdv_id, outlook_id, agent)
       @agents_rdv_id = agents_rdv_id
       @outlook_id = outlook_id

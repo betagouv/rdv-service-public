@@ -6,7 +6,7 @@ module Outlook
 
     def perform(agent)
       agent.agents_rdvs.future.each do |agents_rdv|
-        EnqueueSyncToOutlook.run(agents_rdv)
+        Outlook::SyncEventJob.perform_later_for(agents_rdv)
       end
     end
   end
