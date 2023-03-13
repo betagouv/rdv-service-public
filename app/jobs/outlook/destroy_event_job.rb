@@ -4,7 +4,6 @@ module Outlook
   class DestroyEventJob < ApplicationJob
     queue_as :outlook_sync
 
-    def perform(outlook_id, agent)
-    end
+    def perform(outlook_id, agent); end
   end
 end

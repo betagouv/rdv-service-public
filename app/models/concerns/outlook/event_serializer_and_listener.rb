@@ -99,7 +99,8 @@ module Outlook
 
     def self.enqueue_sync_for_marked_records(agents_rdvs)
       agents_rdvs.select(&:needs_sync_to_outlook).each do |agents_rdv|
-        Outlook::SyncEventJob.perform_later(agents_rdv, agents_rdv.outlook_id)
+        # En cas de suppression du agents_rdv, on aura besoin du outlook_id et de l'agent pour supprimer l'event dans Outlook
+        Outlook::SyncEventJob.perform_later(agents_rdv.id, agents_rdv.outlook_id, agents_rdv.agent)
         agents_rdv.assign_attributes(needs_sync_to_outlook: false)
       end
     end
