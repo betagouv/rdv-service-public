@@ -99,7 +99,7 @@ module Outlook
 
     def self.enqueue_sync_for_marked_records(agents_rdvs)
       agents_rdvs.select(&:needs_sync_to_outlook).each do |agents_rdv|
-        EnqueueSyncToOutlook.run(agents_rdv)
+        Outlook::SyncEventJob.perform_later(agents_rdv, agents_rdv.outlook_id)
         agents_rdv.assign_attributes(needs_sync_to_outlook: false)
       end
     end

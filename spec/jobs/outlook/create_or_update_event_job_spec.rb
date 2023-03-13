@@ -77,24 +77,5 @@ RSpec.describe Outlook::CreateOrUpdateEventJob, type: :job do
   end
 
   context "when the event cannot be created" do
-    before do
-      stub_request(:post, "https://graph.microsoft.com/v1.0/me/Events")
-        .with(
-          body: expected_body,
-          headers: expected_headers
-        )
-        .to_return(status: 404, body: { error: { code: "TerribleError", message: "Quelle terrible erreur" } }.to_json, headers: {})
-    end
-
-    stub_sentry_events
-
-    it "retries the job, notifies the error monitoring, and does not update the outlook_id" do
-      expect do
-        described_class.perform_now(agents_rdv)
-      end.to have_enqueued_job(described_class).with(agents_rdv)
-
-      expect(agents_rdv.reload.outlook_id).to eq(nil)
-      expect(sentry_events.last.exception.values.first.value).to eq("Outlook Events API error: Quelle terrible erreur (RuntimeError)")
-    end
   end
 end

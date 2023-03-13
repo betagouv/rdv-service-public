@@ -5,8 +5,9 @@ class EnqueueSyncToOutlook
     new(agents_rdv).run
   end
 
-  def initialize(agents_rdv)
-    @agents_rdv = agents_rdv
+  def initialize(agents_rdv_id, outlook_event_id)
+    @agents_rdv_id = agents_rdv_id
+    @outlook_event_id = outlook_event_id
   end
 
   # TODO: replace this by enqueuing directly a generic job, and determine the kind of sync needed at job runtime
@@ -22,6 +23,10 @@ class EnqueueSyncToOutlook
   end
 
   private
+
+  def agents_rdv
+    @agents_rdv ||= AgentsRdv.find_by_id(@agents_rdv_id)
+  end
 
   def event_should_be_in_outlook?
     rdv_is_not_cancelled_or_deleted? && !@agents_rdv.destroyed?
