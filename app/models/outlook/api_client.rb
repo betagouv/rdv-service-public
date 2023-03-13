@@ -58,7 +58,7 @@ module Outlook
       body_response = response.body == "" ? {} : JSON.parse(response.body)
       if body_response["error"].present?
         if @agent.connected_to_outlook? && response.response_code == 401 # token expired
-          refresh_outlook_token && make_api_call(method, path, event_payload)
+          refresh_outlook_token && call_events_api(method, path, event_payload)
         else
           raise "Outlook Events API error: #{body_response.dig('error', 'message')}"
         end
@@ -67,26 +67,26 @@ module Outlook
     end
     # rubocop:enable Metrics/CyclomaticComplexity
     # rubocop:enable Metrics/PerceivedComplexity
-  end
 
-  def refresh_outlook_token
-    refresh_token_query =
-      Typhoeus.post(
-        # voir https://docs.microsoft.com/en-us/graph/use-the-api?view=graph-rest-1.0
-        "https://login.microsoftonline.com/common/oauth2/v2.0/token",
-        headers: { "Content-Type" => "application/x-www-form-urlencoded" },
-        body: {
-          client_id: ENV.fetch("AZURE_APPLICATION_CLIENT_ID", nil),
-          client_secret: ENV.fetch("AZURE_APPLICATION_CLIENT_SECRET", nil),
-          refresh_token: @agent.refresh_microsoft_graph_token, grant_type: "refresh_token",
-        }
-      )
-    refresh_token_response = JSON.parse(refresh_token_query.response_body)
+    def refresh_outlook_token
+      refresh_token_query =
+        Typhoeus.post(
+          # voir https://docs.microsoft.com/en-us/graph/use-the-api?view=graph-rest-1.0
+          "https://login.microsoftonline.com/common/oauth2/v2.0/token",
+          headers: { "Content-Type" => "application/x-www-form-urlencoded" },
+          body: {
+            client_id: ENV.fetch("AZURE_APPLICATION_CLIENT_ID", nil),
+            client_secret: ENV.fetch("AZURE_APPLICATION_CLIENT_SECRET", nil),
+            refresh_token: @agent.refresh_microsoft_graph_token, grant_type: "refresh_token",
+          }
+        )
+      refresh_token_response = JSON.parse(refresh_token_query.response_body)
 
-    if refresh_token_response["error"].present?
-      Sentry.capture_message("Error refreshing Microsoft Graph Token for #{email}: #{refresh_token_response['error_description']}")
-    elsif refresh_token_response["access_token"].present?
-      @agent.update!(microsoft_graph_token: refresh_token_response["access_token"])
+      if refresh_token_response["error"].present?
+        Sentry.capture_message("Error refreshing Microsoft Graph Token for #{email}: #{refresh_token_response['error_description']}")
+      elsif refresh_token_response["access_token"].present?
+        @agent.update!(microsoft_graph_token: refresh_token_response["access_token"])
+      end
     end
   end
 end
