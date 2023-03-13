@@ -20,7 +20,7 @@ RSpec.describe Outlook::SyncEventJob do
     end
 
     it "creates the event and updates the outlook_id" do
-      expect(client_double).to receive(:create_event!).and_return("stubbed_outlook_event_id")
+      allow(client_double).to receive(:create_event!).and_return("stubbed_outlook_event_id")
       described_class.perform_now(agents_rdv.id, agents_rdv.outlook_id, agents_rdv.agent)
 
       expect(agents_rdv.reload.outlook_id).to eq("stubbed_outlook_event_id")
@@ -34,7 +34,7 @@ RSpec.describe Outlook::SyncEventJob do
       stub_sentry_events
 
       it "retries the job, notifies the error monitoring, and does not update the outlook_id" do
-        expect(client_double).to receive(:create_event!).and_raise("Outlook api error!")
+        allow(client_double).to receive(:create_event!).and_raise("Outlook api error!")
         expect do
           described_class.perform_now(agents_rdv.id, nil, agents_rdv.agent)
         end.to have_enqueued_job(described_class).with(agents_rdv.id, nil, agents_rdv.agent)
