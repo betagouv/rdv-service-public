@@ -4,7 +4,7 @@ module Outlook
   class SyncEventJob < ApplicationJob
     queue_as :outlook_sync
 
-    def perform_later_for(agents_rdv)
+    def self.perform_later_for(agents_rdv)
       # En cas de suppression du agents_rdv, on aura besoin du outlook_id et de l'agent
       # pour supprimer l'event dans Outlook
       perform_later(agents_rdv.id, agents_rdv.outlook_id, agents_rdv.agent)
@@ -31,11 +31,7 @@ module Outlook
     end
 
     def event_should_be_in_outlook?
-      agents_rdv.present? && rdv_is_not_cancelled_or_deleted?
-    end
-
-    def rdv_is_not_cancelled_or_deleted?
-      rdv.present? && !rdv.cancelled? && !rdv.soft_deleted?
+      agents_rdv.present? && rdv.present? && !rdv.cancelled? && !rdv.soft_deleted?
     end
 
     def create_or_update_event
@@ -60,9 +56,7 @@ module Outlook
       agents_rdv&.update_columns(outlook_id: nil) # rubocop:disable Rails/SkipsModelValidations
     end
 
-    def rdv
-      agents_rdv.rdv
-    end
+    delegate :rdv, to: :agents_rdv
 
     def api_client
       @api_client ||= Outlook::ApiClient.new(@agent)
