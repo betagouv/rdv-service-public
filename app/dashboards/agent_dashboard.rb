@@ -15,6 +15,7 @@ class AgentDashboard < Administrate::BaseDashboard
     first_name: Field::String,
     last_name: Field::String,
     organisations: Field::HasMany,
+    territories: Field::HasMany,
     service: Field::BelongsTo,
     invitation_sent_at: Field::DateTime,
     deleted_at: Field::DateTime,
@@ -42,6 +43,7 @@ class AgentDashboard < Administrate::BaseDashboard
     first_name
     last_name
     organisations
+    territories
     service
     invitation_sent_at
     created_at
@@ -57,6 +59,7 @@ class AgentDashboard < Administrate::BaseDashboard
     first_name
     last_name
     organisations
+    territories
     service
     deleted_at
   ].freeze
