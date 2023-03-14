@@ -40,7 +40,7 @@ module Outlook
       else
         outlook_event_id = api_client.create_event!(agents_rdv.serialize_for_outlook_api)
 
-        # On évite de lancer les callbacks en utilisant #updated_columns, notamment celui qui est à
+        # On évite de lancer les callbacks en utilisant #update_columns, notamment celui qui est à
         # l'origine de l'exécution de ce job
         agents_rdv.update_columns(outlook_id: outlook_event_id) # rubocop:disable Rails/SkipsModelValidations
       end
