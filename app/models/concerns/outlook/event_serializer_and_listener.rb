@@ -82,12 +82,7 @@ module Outlook
           displayName: rdv.address_without_personal_information,
         },
         attendees: [],
-        # Le transactionId rend la création d'events idempotente.
-        # On a parfois observé des appels à l'api de création qui renvoyaient un statut d'erreurs, mais qui
-        # créent quand même un event. Le transactionId évite de créer des doublons dans ce cas.
-        # Ça évite aussi des doublons en cas de race condition où deux jobs essayent de faire une création en même temps.
-        # voir https://learn.microsoft.com/en-us/graph/api/resources/event?view=graph-rest-1.0#properties
-        transactionId: "agents_rdv-#{id}",
+        transactionId: "agents_rdv-#{id}", # voir https://learn.microsoft.com/en-us/graph/api/resources/event?view=graph-rest-1.0#properties
       }
     end
 

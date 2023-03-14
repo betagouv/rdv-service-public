@@ -38,11 +38,15 @@ module Outlook
       if agents_rdv.outlook_id
         api_client.update_event!(agents_rdv.outlook_id, agents_rdv.serialize_for_outlook_api)
       else
+        return unless agents_rdv.outlook_create_in_progress
+
+        agents_rdv.update_columns(outlook_create_in_progress: false) # rubocop:disable Rails/SkipsModelValidations
+
         outlook_event_id = api_client.create_event!(agents_rdv.serialize_for_outlook_api)
 
         # On évite de lancer les callbacks en utilisant #update_columns, notamment celui qui est à
         # l'origine de l'exécution de ce job
-        agents_rdv.update_columns(outlook_id: outlook_event_id, outlook_create_in_progress: false) # rubocop:disable Rails/SkipsModelValidations
+        agents_rdv.update_columns(outlook_id: outlook_event_id) # rubocop:disable Rails/SkipsModelValidations
       end
     end
 
