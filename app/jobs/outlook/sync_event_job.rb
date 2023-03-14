@@ -5,6 +5,7 @@ module Outlook
     queue_as :outlook_sync
 
     def self.perform_later_for(agents_rdv)
+      Rails.logger.info("QUEUEING JOB")
       # En cas de suppression du agents_rdv, on ne pourra pas le désérialiser au moment de l'exécution du job.
       # On aura donc besoin du outlook_id et de l'agent pour supprimer l'event dans Outlook
       perform_later(agents_rdv.id, agents_rdv.outlook_id, agents_rdv.agent)
