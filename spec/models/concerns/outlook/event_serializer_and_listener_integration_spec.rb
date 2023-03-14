@@ -211,10 +211,10 @@ RSpec.describe Outlook::EventSerializerAndListener, database_cleaner_strategy: :
         agent.update!(microsoft_graph_token: "token")
       end
 
-      it "does not call Outlook::DestroyEventJob when cancelling the rdv" do
+      it "does not call a sync job when cancelling the rdv" do
         expect do
           rdv.update!(cancelled_at: Time.zone.now, status: "revoked")
-        end.not_to have_enqueued_job(Outlook::DestroyEventJob)
+        end.not_to have_enqueued_job(Outlook::SyncEventJob)
       end
     end
 
@@ -264,7 +264,7 @@ RSpec.describe Outlook::EventSerializerAndListener, database_cleaner_strategy: :
       it "does not call Outlook::DestroyEventJob" do
         expect do
           rdv.destroy
-        end.not_to have_enqueued_job(Outlook::DestroyEventJob)
+        end.not_to have_enqueued_job(Outlook::SyncEventJob)
       end
     end
 
@@ -279,10 +279,10 @@ RSpec.describe Outlook::EventSerializerAndListener, database_cleaner_strategy: :
         rdv.agents.first.update_columns(microsoft_graph_token: "token") # rubocop:disable Rails/SkipsModelValidations
       end
 
-      it "does not call Outlook::DestroyEventJob" do
+      it "does not call an outlook sync job" do
         expect do
           rdv.destroy!
-        end.not_to have_enqueued_job(Outlook::DestroyEventJob)
+        end.not_to have_enqueued_job(Outlook::SyncEventJob)
       end
     end
   end
