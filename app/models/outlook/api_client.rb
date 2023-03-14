@@ -2,6 +2,8 @@
 
 module Outlook
   class ApiClient
+    class ApiError < StandardError; end
+
     def initialize(agent)
       @agent = agent
     end
@@ -60,7 +62,7 @@ module Outlook
         if @agent.connected_to_outlook? && response.response_code == 401 # token expired
           refresh_outlook_token && call_events_api(method, path, event_payload)
         else
-          raise "Outlook Events API error: #{body_response.dig('error', 'message')}"
+          raise ApiError, "Outlook Events API error: #{body_response.dig('error', 'message')}"
         end
       end
       response.response_code == 204 ? "" : body_response
