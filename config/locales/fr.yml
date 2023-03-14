@@ -72,15 +72,23 @@ fr:
           territory_teams_title: Créer une équipe
         edit:
           territory_teams_title: Modifier une équipe
+      agent_roles:
+        destroy:
+          cannot_delete_because_of_rdvs: Impossible de retirer cet agent car il a des RDVs à venir dans cette organisation. Veuillez les supprimer ou les réaffecter avant de retirer cet agent.
+          invitation_deleted: L’invitation a été supprimée.
+          agent_deleted: Le compte agent a été supprimé.
+          agent_removed_from_org: L’agent a été retiré de l’organisation.
 
   activerecord:
     errors:
       messages:
-        record_invalid: 'La validation a échoué : %{errors}'
+        record_invalid: "La validation a échoué : %{errors}"
         restrict_dependent_destroy:
-          has_one: Vous ne pouvez pas supprimer l'enregistrement car un(e) %{record}
+          has_one:
+            Vous ne pouvez pas supprimer l'enregistrement car un(e) %{record}
             dépendant(e) existe
-          has_many: Vous ne pouvez pas supprimer l'enregistrement parce que les %{record}
+          has_many:
+            Vous ne pouvez pas supprimer l'enregistrement parce que les %{record}
             dépendants existent
       models:
         team:

@@ -26,12 +26,31 @@ class Admin::Territories::AgentRolesController < Admin::Territories::BaseControl
   end
 
   def destroy
+    # utiliser AgentRemoval.new(@agent, current_organisation)
     agent_role = AgentRole.find(params[:id])
     authorize(agent_role)
-    if agent_role.destroy
-      flash[:success] = "L'affectation à l'organisation #{agent_role.organisation.name} a bien été supprimée"
+
+    agent = Agent.find(agent_role.agent_id)
+    organisation = Organisation.find(agent_role.organisation_id)
+    removal_service = AgentRemoval.new(agent, organisation)
+
+    if removal_service.upcoming_rdvs?
+      redirect_to edit_admin_territory_agent_path(current_territory, agent_role.agent), flash: { error: t(".cannot_delete_because_of_rdvs") }
+
+    else
+      if agent.organisations.count > 1
+        if agent.invitation_accepted_at.blank?
+          redirect_to edit_admin_territory_agent_path(current_territory, agent_role.agent), notice: t(".invitation_deleted")
+        elsif agent.deleted_at?
+          redirect_to edit_admin_territory_agent_path(current_territory, agent_role.agent), notice: t(".agent_deleted")
+        else
+          redirect_to edit_admin_territory_agent_path(current_territory, agent_role.agent), notice: t(".agent_removed_from_org")
+        end
+      else
+        redirect_to admin_territory_agents_path(current_territory), notice: t(".agent_removed_from_org")
+      end
+      removal_service.remove!
     end
-    redirect_to edit_admin_territory_agent_path(current_territory, agent_role.agent)
   end
 
   private
