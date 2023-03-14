@@ -71,10 +71,15 @@ RSpec.describe Outlook::EventSerializerAndListener, database_cleaner_strategy: :
       describe "when the user participation and the rdv are updated" do
         let!(:rdv) { create(:rdv, agents: [agent]) }
 
-        it "enqueues a job when the transaction is committed" do
+        it "enqueues a single job after the transaction is committed" do
           allow(Outlook::SyncEventJob).to receive(:perform_later)
+
           ActiveRecord::Base.transaction do
+            rdv.update!(starts_at: rdv.starts_at + 1.hour)
+            create(:rdvs_user, rdv: rdv)
+            expect(Outlook::SyncEventJob).not_to have_received(:perform_later)
           end
+
           expect(Outlook::SyncEventJob).to have_received(:perform_later).once
         end
       end
