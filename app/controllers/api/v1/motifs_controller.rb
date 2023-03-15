@@ -5,7 +5,13 @@ class Api::V1::MotifsController < Api::V1::AgentAuthBaseController
     motifs = policy_scope(Motif)
     motifs = motifs.active(params[:active].to_b) unless params[:active].nil?
 
-    motifs = motifs.where(bookable_publicly: params[:bookable_publicly].to_b) unless params[:bookable_publicly].nil?
+    if params.has_key?(:bookable_publicly)
+      motifs = if params[:bookable_publicly].to_b
+                 motifs.bookable_publicly
+               else
+                 motifs.not_bookable_publicly
+               end
+    end
 
     motifs = motifs.where(service_id: params[:service_id]) if params[:service_id].present?
 
