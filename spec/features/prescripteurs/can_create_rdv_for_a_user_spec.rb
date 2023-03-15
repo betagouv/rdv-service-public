@@ -7,8 +7,9 @@ RSpec.describe "prescripteur can create RDV for a user" do
 
   let!(:organisation) { create(:organisation) }
   let!(:agent) { create(:agent, :cnfs, admin_role_in_organisations: [organisation], rdv_notifications_level: "all") }
+  let(:bookable_by) { "agents_and_prescripteurs_and_users" }
   let!(:motif) do
-    create(:motif, organisation: organisation, service: agent.service, bookable_by: "agents_and_prescripteurs", instruction_for_rdv: "Instructions après confirmation")
+    create(:motif, organisation: organisation, service: agent.service, bookable_by: bookable_by, instruction_for_rdv: "Instructions après confirmation")
   end
   let!(:lieu) { create(:lieu, organisation: organisation, name: "Bureau") }
   let!(:plage_ouverture) { create(:plage_ouverture, organisation: organisation, agent: agent, motifs: [motif], lieu: lieu) }
@@ -93,6 +94,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
   context "when using the prescripteur route" do
     let!(:lieu2) { create(:lieu, organisation: organisation, name: "Autre bureau") }
     let!(:plage_ouverture2) { create(:plage_ouverture, organisation: organisation, agent: agent, motifs: [motif], lieu: lieu2) }
+    let(:bookable_by) { "agents_and_prescripteurs" }
 
     it "goes directly to prescripteur forms after creneau selection ands keeps the prescripteur param when navigating backwards" do
       visit "http://www.rdv-solidarites-test.localhost/prendre_rdv_prescripteur/#{organisation.territory.departement_number}"

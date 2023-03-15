@@ -63,7 +63,7 @@ class SearchContext
   end
 
   def geo_search
-    Users::GeoSearch.new(departement: departement, city_code: @city_code, street_ban_id: @street_ban_id)
+    @geo_search ||= Users::GeoSearch.new(departement: departement, city_code: @city_code, street_ban_id: @street_ban_id, prescripteur: !!@prescripteur)
   end
 
   def invitation?
