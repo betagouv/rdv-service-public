@@ -99,15 +99,7 @@ RSpec.describe SearchController, type: :controller do
       end
 
       context "when a motif category is passed" do
-        it "retrieves motifs from the selected category (old param)" do
-          get :search_rdv, params: {
-            address: address, departement: departement_number, city_code: city_code, motif_category: "rsa_orientation",
-          }
-          expect(subject).to include("RSA orientation 1")
-          expect(subject).not_to include("RSA orientation 2")
-        end
-
-        it "retrieves motifs from the selected category (new param)" do
+        it "retrieves motifs from the selected category" do
           get :search_rdv, params: {
             address: address, departement: departement_number, city_code: city_code, motif_category_short_name: "rsa_orientation",
           }
@@ -152,18 +144,7 @@ RSpec.describe SearchController, type: :controller do
         end
 
         context "when there are no matching motifs for the geo search available_motifs after filtering" do
-          it "lists the matching motifs linked to the orgas passed in the url (old param)" do
-            get :search_rdv, params: {
-              organisation_ids: [organisation.id], address: address, departement: departement_number, city_code: city_code,
-              invitation_token: invitation_token, motif_category: "rsa_orientation",
-            }
-            expect(subject).to include("RSA orientation 1")
-            expect(subject).not_to include("RSA orientation 2")
-            expect(subject).not_to include("RSA orientation 3")
-            expect(subject).not_to include("Motif numéro 4")
-          end
-
-          it "lists the matching motifs linked to the orgas passed in the url (new param)" do
+          it "lists the matching motifs linked to the orgas passed in the url" do
             get :search_rdv, params: {
               organisation_ids: [organisation.id], address: address, departement: departement_number, city_code: city_code,
               invitation_token: invitation_token, motif_category_short_name: "rsa_orientation",
