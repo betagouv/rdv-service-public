@@ -1,0 +1,10 @@
+= link_to admin_organisation_rdv_path(rdv.organisation, rdv, rdv: { status: status, ignore_benign_errors: true }, agent_id: agent&.id),
+  method: :put, class: "dropdown-item", data: { confirm: change_status_confirmation_message(rdv, status) }, remote: remote do
+  span
+    i class=("fa fa-circle mr-1 rdv-status-#{status}")
+    = Rdv.human_attribute_value(:status, status, context: :action)
+    .text-wrap.text-muted
+    = Rdv.human_attribute_value(:status, status, context: :explanation)
+    - if status.in?(Rdv::RDV_STATUSES_TO_NOTIFY) && rdv.in_the_future?
+      <br />
+      = Rdv.human_attribute_value(:status, status, context: :explanation_notif)

@@ -8,6 +8,7 @@ module RdvsUser::StatusChangeable
 
     RdvsUser.transaction do
       if update(status: status)
+        rdv.update_rdv_status_from_participation
         notify_update!(author)
         true
       else
