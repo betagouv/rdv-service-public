@@ -68,9 +68,40 @@
 
   .card#bookable_publicly_section
     .card-body
-      h5.card-title= Motif.human_attribute_name("bookable_publicly_title")
-      p.text-muted.font-14= Motif.human_attribute_name("bookable_publicly_hint")
-      = f.input :bookable_publicly
+      h5.card-title= Motif.human_attribute_name("bookable_by_title")
+
+      p.text-muted.font-14= Motif.human_attribute_name("bookable_by_hint")
+
+      .form-row
+        .col-md-12
+          = label_tag do
+            = f.radio_button(:bookable_by, :agents)
+            span.ml-1= "Uniquement les agents de #{@motif.organisation.name}"
+            p.text-muted.font-14= "Les agents peuvent ajouter des rendez-vous à l'agenda de leurs collègues"
+
+      - var_prescripteur_experiment = @motif&.organisation&.territory&.departement_number == "83" || Rails.env.development?
+
+      - if var_prescripteur_experiment
+        .form-row
+          .col-md-12
+            = label_tag do
+              = f.radio_button(:bookable_by, :agents_and_prescripteurs)
+              span.ml-1= "Ouvert agents et aux prescripteurs"
+              p.text-muted.font-14
+                = "Les prescripteurs sont des agents d'une autre organisation du service public, qui orientent des usagers vers le service dont ils ont besoin."
+                br
+                = "Ils pourront prendre rendez-vous uniquement sur les plages d'ouvertures définies par les agents de #{@motif.organisation.name}"
+
+      .form-row
+        .col-md-12
+          = label_tag do
+            = f.radio_button(:bookable_by, :agents_and_prescripteurs_and_users)
+            span.ml-1
+              - if var_prescripteur_experiment
+                = "Ouvert aux agents, aux prescripteurs et aux usagers"
+              - else
+                = "Ouvert aux agents et aux usagers"
+            p.text-muted.font-14= "Les usagers pourront aussi prendre rendez-vous en ligne sur les plages d'ouverture définies par les agents de #{@motif.organisation.name}"
 
       .form-row.js-rdvs-editable
         .col-md-4= f.input :min_public_booking_delay, collection: min_max_delay_options

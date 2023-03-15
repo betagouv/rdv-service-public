@@ -36,16 +36,13 @@
           hint: Motif.human_attribute_name(:for_secretariat_hint)
         hr
 
-        = motif_attribute_row \
-          Motif.human_attribute_name(:bookable_publicly), \
-          motif_option_activated(@motif, :bookable_publicly), \
-          hint: Motif.human_attribute_name(:bookable_publicly_hint)
+        = motif_attribute_row(Motif.human_attribute_name(:bookable_by_title),
+            motif_option_activated(@motif, :bookable_publicly),
+            hint: Motif.human_attribute_name(:bookable_publicly_hint))
         - if @motif.bookable_publicly
-          = motif_attribute_row \
-            Motif.human_attribute_name(:min_public_booking_delay_short), \
-            @motif.bookable_publicly? && \
-              min_max_delay_int_to_human(@motif.min_public_booking_delay), \
-            hint: Motif.human_attribute_name(:min_public_booking_delay_hint)
+          = motif_attribute_row(Motif.human_attribute_name(:min_public_booking_delay_short),
+              @motif.bookable_publicly? &&  min_max_delay_int_to_human(@motif.min_public_booking_delay),
+              hint: Motif.human_attribute_name(:min_public_booking_delay_hint))
           = motif_attribute_row \
             Motif.human_attribute_name(:max_public_booking_delay_short), \
             @motif.bookable_publicly? && \
