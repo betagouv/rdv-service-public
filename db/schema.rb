@@ -363,7 +363,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_15_131846) do
     t.datetime "updated_at", null: false
     t.integer "default_duration_in_min", default: 30, null: false
     t.bigint "organisation_id", null: false
-    t.boolean "bookable_publicly", default: false, null: false
+    t.boolean "legacy_bookable_publicly", default: false, null: false
     t.integer "min_public_booking_delay", default: 1800
     t.integer "max_public_booking_delay", default: 7889238
     t.datetime "deleted_at"
@@ -383,9 +383,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_15_131846) do
     t.bigint "motif_category_id"
     t.enum "bookable_by", default: "agents", null: false, enum_type: "bookable_by"
     t.index "to_tsvector('simple'::regconfig, (COALESCE(name, (''::text)::character varying))::text)", name: "index_motifs_name_vector", using: :gin
-    t.index ["bookable_publicly"], name: "index_motifs_on_bookable_publicly"
     t.index ["collectif"], name: "index_motifs_on_collectif"
     t.index ["deleted_at"], name: "index_motifs_on_deleted_at"
+    t.index ["legacy_bookable_publicly"], name: "index_motifs_on_legacy_bookable_publicly"
     t.index ["location_type"], name: "index_motifs_on_location_type"
     t.index ["motif_category_id"], name: "index_motifs_on_motif_category_id"
     t.index ["name", "organisation_id", "location_type", "service_id"], name: "index_motifs_on_name_scoped", unique: true, where: "(deleted_at IS NULL)"

@@ -29,6 +29,11 @@ class Motif < ApplicationRecord
   SECTORISATION_TYPES = [SECTORISATION_LEVEL_AGENT, SECTORISATION_LEVEL_ORGANISATION, SECTORISATION_LEVEL_DEPARTEMENT].freeze
 
   enum location_type: { public_office: "public_office", phone: "phone", home: "home" }
+  enum bookable_by: {
+    agents: "agents",
+    agents_and_prescripteurs: "agents_and_prescripteurs",
+    agents_and_prescripteurs_and_users: "agents_and_prescripteurs_and_users",
+  }
 
   # Relations
   belongs_to :organisation
@@ -64,8 +69,8 @@ class Motif < ApplicationRecord
   scope :active, lambda { |active = true|
     active ? where(deleted_at: nil) : where.not(deleted_at: nil)
   }
-  scope :bookable_publicly, -> { where(bookable_publicly: true) }
-  scope :not_bookable_publicly, -> { where(bookable_publicly: false) }
+  scope :bookable_publicly, -> { where(bookable_by: :agents_and_prescripteurs_and_users) }
+  scope :not_bookable_publicly, -> { where.not(bookable_by: :agents_and_prescripteurs_and_users) }
   scope :by_phone, -> { Motif.phone } # default scope created by enum
   scope :for_secretariat, -> { where(for_secretariat: true) }
   scope :ordered_by_name, -> { order(Arel.sql("unaccent(LOWER(motifs.name))")) }
@@ -188,6 +193,22 @@ class Motif < ApplicationRecord
       .where(motif: collectif).joins(:agents).where(agents: { id: agent_ids }).select(:motif_id)
 
     where_id_in_subqueries([individual_motif_ids, collective_motif_ids])
+  end
+
+  def bookable_publicly
+    bookable_by == "agents_and_prescripteurs_and_users"
+  end
+
+  def bookable_publicly?
+    bookable_publicly
+  end
+
+  def bookable_publicly=(value)
+    self.bookable_by = if value
+                         "agents_and_prescripteurs_and_users"
+                       else
+                         "agents"
+                       end
   end
 
   private
