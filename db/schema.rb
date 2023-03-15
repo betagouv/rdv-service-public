@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_16_211211) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_15_131846) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -32,6 +32,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_16_211211) do
     "others",
     "soon",
     "none",
+  ], force: :cascade
+
+  create_enum :bookable_by, [
+    "agents",
+    "agents_and_prescripteurs",
+    "agents_and_prescripteurs_and_users",
   ], force: :cascade
 
   create_enum :lieu_availability, [
@@ -375,6 +381,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_16_211211) do
     t.boolean "rdvs_editable_by_user", default: true
     t.boolean "rdvs_cancellable_by_user", default: true
     t.bigint "motif_category_id"
+    t.enum "bookable_by", default: "agents", null: false, enum_type: "bookable_by"
     t.index "to_tsvector('simple'::regconfig, (COALESCE(name, (''::text)::character varying))::text)", name: "index_motifs_name_vector", using: :gin
     t.index ["bookable_publicly"], name: "index_motifs_on_bookable_publicly"
     t.index ["collectif"], name: "index_motifs_on_collectif"
