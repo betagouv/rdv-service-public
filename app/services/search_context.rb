@@ -193,9 +193,9 @@ class SearchContext
   def filter_motifs(available_motifs)
     motifs = available_motifs
     motifs = if @prescripteur
-               motifs.where(bookable_by: %i[agents_and_prescripteurs agents_and_prescripteurs_and_users])
+               motifs.where(bookable_by: %i[agents_and_prescripteurs everyone])
              else
-               motifs.where(bookable_by: :agents_and_prescripteurs_and_users)
+               motifs.where(bookable_by: :everyone)
              end
     motifs = motifs.search_by_name_with_location_type(@motif_name_with_location_type) if @motif_name_with_location_type.present?
     motifs = motifs.where(service: service) if @service_id.present?

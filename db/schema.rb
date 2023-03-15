@@ -37,7 +37,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_15_131846) do
   create_enum :bookable_by, [
     "agents",
     "agents_and_prescripteurs",
-    "agents_and_prescripteurs_and_users",
+    "everyone",
   ], force: :cascade
 
   create_enum :lieu_availability, [

@@ -95,7 +95,7 @@
       .form-row
         .col-md-12
           = label_tag do
-            = f.radio_button(:bookable_by, :agents_and_prescripteurs_and_users)
+            = f.radio_button(:bookable_by, :everyone)
             span.ml-1
               - if var_prescripteur_experiment
                 = "Ouvert aux agents, aux prescripteurs et aux usagers"

@@ -32,7 +32,7 @@ class Motif < ApplicationRecord
   enum bookable_by: {
     agents: "agents",
     agents_and_prescripteurs: "agents_and_prescripteurs",
-    agents_and_prescripteurs_and_users: "agents_and_prescripteurs_and_users",
+    everyone: "everyone",
   }
 
   # Relations
@@ -69,8 +69,8 @@ class Motif < ApplicationRecord
   scope :active, lambda { |active = true|
     active ? where(deleted_at: nil) : where.not(deleted_at: nil)
   }
-  scope :bookable_publicly, -> { where(bookable_by: :agents_and_prescripteurs_and_users) }
-  scope :not_bookable_publicly, -> { where.not(bookable_by: :agents_and_prescripteurs_and_users) }
+  scope :bookable_publicly, -> { where(bookable_by: :everyone) }
+  scope :not_bookable_publicly, -> { where.not(bookable_by: :everyone) }
   scope :by_phone, -> { Motif.phone } # default scope created by enum
   scope :for_secretariat, -> { where(for_secretariat: true) }
   scope :ordered_by_name, -> { order(Arel.sql("unaccent(LOWER(motifs.name))")) }
@@ -196,7 +196,7 @@ class Motif < ApplicationRecord
   end
 
   def bookable_publicly
-    bookable_by == "agents_and_prescripteurs_and_users"
+    bookable_by == "everyone"
   end
 
   def bookable_publicly?
@@ -205,7 +205,7 @@ class Motif < ApplicationRecord
 
   def bookable_publicly=(value)
     self.bookable_by = if value
-                         "agents_and_prescripteurs_and_users"
+                         "everyone"
                        else
                          "agents"
                        end
