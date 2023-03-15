@@ -22,6 +22,10 @@ class PrescripteurRdvWizard < UserRdvWizard::Base
     PrescripteurMailer.rdv_created(participation, @domain.id).deliver_later
   end
 
+  def params_to_selections
+    super.merge(prescripteur: 1)
+  end
+
   private
 
   def create_rdv!
