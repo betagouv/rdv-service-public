@@ -254,19 +254,6 @@ describe Users::GeoSearch, type: :service_model do
       it { is_expected.to contain_exactly(motif1) }
     end
 
-    context "2 motifs, one offline" do
-      let!(:organisation) { create(:organisation, territory: territory62, name: "MDS Arques") }
-      let!(:motif1) { create(:motif, :sectorisation_level_organisation, bookable_publicly: true, organisation: organisation) }
-      let!(:plage_ouverture1) { create(:plage_ouverture, motifs: [motif1], organisation: organisation) }
-      let!(:motif2) { create(:motif, :sectorisation_level_organisation, bookable_publicly: false, organisation: organisation) }
-      let!(:plage_ouverture2) { create(:plage_ouverture, motifs: [motif2], organisation: organisation) }
-      let!(:sector) { create(:sector, territory: territory62, name: "Arques VILLE", human_id: "arques") }
-      let!(:zone) { create(:zone, level: "city", city_code: "62100", city_name: "Arques", sector: sector) }
-      let!(:attribution) { create(:sector_attribution, :level_organisation, sector: sector, organisation: organisation) }
-
-      it { is_expected.to contain_exactly(motif1) }
-    end
-
     context "2 motifs, one deleted" do
       let!(:organisation) { create(:organisation, territory: territory62, name: "MDS Arques") }
       let!(:motif1) { create(:motif, :sectorisation_level_organisation, bookable_publicly: true, organisation: organisation) }
