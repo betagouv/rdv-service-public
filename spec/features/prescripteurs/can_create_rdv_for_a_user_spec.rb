@@ -91,18 +91,26 @@ RSpec.describe "prescripteur can create RDV for a user" do
   end
 
   context "when using the prescripteur route" do
-    it "goes directly to prescripteur forms after creneau selection ands keeps the prescripteur param" do
+    let!(:lieu2) { create(:lieu, organisation: organisation, name: "Autre bureau") }
+    let!(:plage_ouverture2) { create(:plage_ouverture, organisation: organisation, agent: agent, motifs: [motif], lieu: lieu2) }
+
+    it "goes directly to prescripteur forms after creneau selection ands keeps the prescripteur param when navigating backwards" do
       visit "http://www.rdv-solidarites-test.localhost/prendre_rdv_prescripteur/#{organisation.territory.departement_number}"
 
-      click_on "Prochaine disponibilité le" # choix du lieu
+      click_on "Prochaine disponibilité le", match: :first # choix du lieu
       click_on "08:00" # choix du créneau
 
       expect(page).to have_content("Vos coordonnées de prescripteur")
 
-      find_all("a", text: "modifier").last.click # Retour en arrière
+      find_all("a", text: "modifier").last.click # Retour en arrière au choix de créneau
+
       expect(page).to have_content("Sélectionnez un créneau :")
-      click_on("Prochaine disponibilité") # il y a un petit bug ici : quand on revient en arrière, il manque le paramètre "date"
-      # qui permettrait d'afficher la liste des disponibilités à partir de la première dispo du lieu
+
+      click_on(lieu.name)
+
+      expect(page).to have_content("Sélectionnez un lieu de RDV")
+      click_on("Prochaine disponibilité", match: :first)
+
       click_on "08:00" # choix du créneau
 
       expect(page).to have_content("Vos coordonnées de prescripteur")
