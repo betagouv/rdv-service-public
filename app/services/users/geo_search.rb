@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
 class Users::GeoSearch
-  def initialize(departement:, city_code: nil, street_ban_id: nil, prescripteur: false)
+  def initialize(departement:, city_code: nil, street_ban_id: nil)
     @departement = departement
     @city_code = city_code
     @street_ban_id = street_ban_id
-    @prescripteur = prescripteur
   end
 
   def attributed_organisations
@@ -117,20 +116,12 @@ class Users::GeoSearch
   end
 
   def individual_motifs
-    @individual_motifs ||= bookable_scope.individuel.joins(:plage_ouvertures).distinct
+    @individual_motifs ||= Motif.active.individuel.joins(:plage_ouvertures).distinct
   end
 
   def collective_motifs
-    @collective_motifs ||= bookable_scope.collectif
+    @collective_motifs ||= Motif.active.collectif
       .joins(:rdvs).merge(Rdv.collectif_and_available_for_reservation).distinct
-  end
-
-  def bookable_scope
-    if @prescripteur
-      Motif.active.where.not(bookable_by: :agents)
-    else
-      Motif.active.where(bookable_by: :agents_and_prescripteurs_and_users)
-    end
   end
 
   def available_individual_motifs_from_attributed_agents_arel

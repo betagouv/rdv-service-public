@@ -63,7 +63,7 @@ class SearchContext
   end
 
   def geo_search
-    @geo_search ||= Users::GeoSearch.new(departement: departement, city_code: @city_code, street_ban_id: @street_ban_id, prescripteur: !!@prescripteur)
+    @geo_search ||= Users::GeoSearch.new(departement: departement, city_code: @city_code, street_ban_id: @street_ban_id)
   end
 
   def invitation?
@@ -192,6 +192,11 @@ class SearchContext
   # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
   def filter_motifs(available_motifs)
     motifs = available_motifs
+    motifs = if @prescripteur
+               motifs.where(bookable_by: %i[agents_and_prescripteurs agents_and_prescripteurs_and_users])
+             else
+               motifs.where(bookable_by: :agents_and_prescripteurs_and_users)
+             end
     motifs = motifs.search_by_name_with_location_type(@motif_name_with_location_type) if @motif_name_with_location_type.present?
     motifs = motifs.where(service: service) if @service_id.present?
     motifs = motifs.search_by_text(@motif_search_terms) if @motif_search_terms.present?
