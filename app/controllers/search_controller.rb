@@ -26,7 +26,8 @@ class SearchController < ApplicationController
       departement: "CN",
       service_id: Service.find_by(name: Service::CONSEILLER_NUMERIQUE)&.id,
       motif_name_with_location_type: "Accompagnement individuel-public_office",
-      external_organisation_ids: params[:external_organisation_ids].split(",")
+      external_organisation_ids: params[:external_organisation_ids].split(","),
+      prescripteur: 1
     )
   end
 
