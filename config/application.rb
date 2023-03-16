@@ -56,6 +56,7 @@ module Lapin
                          redis: {
                            key_prefix: "session:",
                            url: config.x.redis_url,
+                           ttl: 2.weeks,
                          }
 
     # Devise layout
