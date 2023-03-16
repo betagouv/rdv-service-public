@@ -27,6 +27,8 @@ class Rdv < ApplicationRecord
   MIN_DELAY_FOR_CANCEL = 4.hours
   NOT_CANCELLED_STATUSES = %w[unknown seen noshow].freeze
   CANCELLED_STATUSES = %w[excused revoked].freeze
+  COLLECTIVE_RDV_STATUSES = %w[unknown seen revoked].freeze
+  RDV_STATUSES_TO_NOTIFY = %w[unknown excused revoked].freeze
   enum created_by: { agent: 0, user: 1, file_attente: 2, prescripteur: 3 }, _prefix: :created_by
 
   # Relations
@@ -38,7 +40,6 @@ class Rdv < ApplicationRecord
   # https://stackoverflow.com/questions/30629680/rails-isnt-running-destroy-callbacks-for-has-many-through-join-model/30629704
   # https://github.com/rails/rails/issues/7618
   has_many :rdvs_users, validate: false, inverse_of: :rdv, dependent: :destroy, class_name: "RdvsUser"
-  after_touch :update_rdv_status_from_participation
   has_many :receipts, dependent: :destroy
 
   accepts_nested_attributes_for :rdvs_users, allow_destroy: true
@@ -61,11 +62,13 @@ class Rdv < ApplicationRecord
 
   # Validations
   validates :starts_at, :ends_at, :agents, presence: true
-  validates :rdvs_users, presence: true, unless: :collectif?
   validate :lieu_is_not_disabled_if_needed
   validate :starts_at_is_plausible
   validate :duration_is_plausible
   validates :max_participants_count, numericality: { greater_than: 0, allow_nil: true }
+
+  validates :rdvs_users, presence: true, unless: :collectif?
+  validates :status, inclusion: { in: COLLECTIVE_RDV_STATUSES }, if: :collectif?
 
   # Hooks
   after_save :associate_users_with_organisation
@@ -123,6 +126,10 @@ class Rdv < ApplicationRecord
 
   def in_the_past?
     starts_at <= Time.zone.now
+  end
+
+  def in_the_future?
+    starts_at >= Time.zone.now
   end
 
   def temporal_status
@@ -339,31 +346,22 @@ class Rdv < ApplicationRecord
   end
 
   def update_rdv_status_from_participation
-    return unless collectif?
-
-    if rdvs_users.empty?
-      update_status_to_unknown
+    if rdvs_users.any?(&:seen?)
+      update!(status: "seen")
       return
     end
 
-    update_status_priority_order_participations
-  end
-
-  def update_status_to_unknown
-    self.cancelled_at = nil
-    update!(status: "unknown")
-  end
-
-  def update_status_priority_order_participations
-    # Priority Order. One participation will change rdv status
-    %w[unknown seen noshow revoked].each do |status|
-      symbol_method = "#{status}?".to_sym
-      next unless rdvs_users.any?(&symbol_method)
-
-      self.cancelled_at = status.in?(%w[revoked noshow]) ? Time.zone.now : nil
-      update!(status: status)
-      break
+    if rdvs_users.none?(&:seen?) && rdvs_users.none?(&:unknown?)
+      update_status_to_revoked
     end
+  end
+
+  def update_status_to_revoked
+    # Only rdv in the past ca be automatically set to revoked
+    return if in_the_future?
+
+    self.cancelled_at = Time.zone.now
+    update!(status: "revoked")
   end
 
   private

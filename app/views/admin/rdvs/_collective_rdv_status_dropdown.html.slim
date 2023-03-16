@@ -1,0 +1,19 @@
+.dropdown.text-right id="rdv-status-#{rdv.id}"
+  = collective_rdv_status_dropdown_toggle(rdv)
+  - remote = local_assigns.fetch(:remote, false)
+  .dropdown-menu
+    - case rdv.temporal_status
+      - when "unknown_future"
+        = render "admin/rdvs/collective_rdv_status_dropdown_item", rdv: rdv, agent: agent, status: "revoked", remote: remote
+
+      - when "unknown_today", "unknown_past"
+        = render "admin/rdvs/collective_rdv_status_dropdown_item", rdv: rdv, agent: agent, status: "seen", remote: remote
+        .dropdown-divider
+        = render "admin/rdvs/collective_rdv_status_dropdown_item", rdv: rdv, agent: agent, status: "revoked", remote: remote
+
+      - else
+        = render "admin/rdvs/collective_rdv_status_dropdown_item", rdv: rdv, agent: agent, status: "unknown", remote: remote
+
+    - if policy([:agent, rdv]).destroy?
+      .dropdown-divider
+      = rdv_status_delete_dropdown_item(rdv, agent)

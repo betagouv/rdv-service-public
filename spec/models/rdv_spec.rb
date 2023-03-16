@@ -714,6 +714,27 @@ describe Rdv, type: :model do
     end
   end
 
+  describe "validates collectives rdvs statuses" do
+    let(:rdv) { create :rdv, :collectif }
+
+    it "rdv is excused" do
+      rdv.status = "excused"
+      expect(rdv).not_to be_valid
+    end
+
+    it "rdv is noshow" do
+      rdv.status = "noshow"
+      expect(rdv).not_to be_valid
+    end
+
+    Rdv::COLLECTIVE_RDV_STATUSES.each do |status|
+      it "rdv is #{status}" do
+        rdv.status = status
+        expect(rdv).to be_valid
+      end
+    end
+  end
+
   describe "#update_rdv_status_from_participation" do
     let(:agent) { create :agent }
     let!(:user1) { create(:user) }
@@ -722,23 +743,7 @@ describe Rdv, type: :model do
     let!(:user4) { create(:user) }
     let(:rdv) { create :rdv, :collectif, starts_at: Time.zone.tomorrow, agents: [agent], users: [user1, user2, user3, user4] }
 
-    it "update to unknown when rdv is emptied" do
-      rdv.rdvs_users.each { _1.update(status: "seen") }
-      expect(rdv.status).to eq("seen")
-      rdv.rdvs_users.destroy_all
-      expect(rdv.status).to eq("unknown")
-    end
-
-    it "update as unknown (first priority)" do
-      rdv.rdvs_users.first.update(status: "seen")
-      rdv.rdvs_users.second.update(status: "noshow")
-      rdv.rdvs_users.third.update(status: "excused")
-      rdv.rdvs_users.last.update(status: "unknown")
-      rdv.update_rdv_status_from_participation
-      expect(rdv.status).to eq("unknown")
-    end
-
-    it "updated as seen (second priority)" do
+    it "updated as seen if one participation is seen" do
       rdv.rdvs_users.first.update(status: "seen")
       rdv.rdvs_users.second.update(status: "noshow")
       rdv.rdvs_users.third.update(status: "excused")
@@ -747,30 +752,33 @@ describe Rdv, type: :model do
       expect(rdv.status).to eq("seen")
     end
 
-    it "updated as noshow (third priority)" do
+    it "updated as revoked if none seen or unknown participation and rdv is in the past" do
+      rdv.starts_at = Time.zone.yesterday
+      rdv.save
       rdv.rdvs_users.first.update(status: "noshow")
-      rdv.rdvs_users.second.update(status: "excused")
+      rdv.rdvs_users.second.update(status: "noshow")
       rdv.rdvs_users.third.update(status: "excused")
       rdv.rdvs_users.last.update(status: "excused")
-      rdv.update_rdv_status_from_participation
-      expect(rdv.status).to eq("noshow")
-    end
-
-    it "updated as revoked (last priority)" do
-      rdv.rdvs_users.first.update(status: "revoked")
-      rdv.rdvs_users.second.update(status: "revoked")
-      rdv.rdvs_users.third.update(status: "revoked")
-      rdv.rdvs_users.last.update(status: "revoked")
       rdv.update_rdv_status_from_participation
       expect(rdv.status).to eq("revoked")
     end
 
-    %w[seen noshow].each do |status|
-      it "updated as #{status} if all participations statuses are #{status}" do
-        rdv.rdvs_users.update(status: status)
-        rdv.update_rdv_status_from_participation
-        expect(rdv.status).to eq(status)
-      end
+    it "stay unknown if none seen or unknown participation and rdv is in the future" do
+      rdv.rdvs_users.first.update(status: "noshow")
+      rdv.rdvs_users.second.update(status: "noshow")
+      rdv.rdvs_users.third.update(status: "excused")
+      rdv.rdvs_users.last.update(status: "excused")
+      rdv.update_rdv_status_from_participation
+      expect(rdv.status).to eq("unknown")
+    end
+
+    it "stay unknown if one participation is unknown" do
+      rdv.rdvs_users.first.update(status: "noshow")
+      rdv.rdvs_users.second.update(status: "excused")
+      rdv.rdvs_users.third.update(status: "excused")
+      rdv.rdvs_users.last.update(status: "unknown")
+      rdv.update_rdv_status_from_participation
+      expect(rdv.status).to eq("unknown")
     end
   end
 end

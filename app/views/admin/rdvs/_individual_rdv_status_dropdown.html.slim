@@ -1,0 +1,30 @@
+.dropdown id="rdv-status-#{rdv.id}"
+  = individual_rdv_status_dropdown_toggle(rdv)
+  - remote = local_assigns.fetch(:remote, false)
+  .dropdown-menu
+    - case rdv.temporal_status
+      - when "unknown_future"
+        = render "admin/rdvs/individual_rdv_status_dropdown_item", rdv: rdv, agent: agent, status: "excused", remote: remote
+        = render "admin/rdvs/individual_rdv_status_dropdown_item", rdv: rdv, agent: agent, status: "revoked", remote: remote
+
+      - when "unknown_today"
+        = render "admin/rdvs/individual_rdv_status_dropdown_item", rdv: rdv, agent: agent, status: "seen", remote: remote
+        - if rdv.in_the_past? # See issue #1642, I’d rather get rid of `temporal_status` than adding more variants.
+          = render "admin/rdvs/individual_rdv_status_dropdown_item", rdv: rdv, agent: agent, status: "noshow", remote: remote
+        .dropdown-divider
+        = render "admin/rdvs/individual_rdv_status_dropdown_item", rdv: rdv, agent: agent, status: "excused", remote: remote
+        = render "admin/rdvs/individual_rdv_status_dropdown_item", rdv: rdv, agent: agent, status: "revoked", remote: remote
+
+      - when "unknown_past"
+        = render "admin/rdvs/individual_rdv_status_dropdown_item", rdv: rdv, agent: agent, status: "seen", remote: remote
+        = render "admin/rdvs/individual_rdv_status_dropdown_item", rdv: rdv, agent: agent, status: "noshow", remote: remote
+        .dropdown-divider
+        = render "admin/rdvs/individual_rdv_status_dropdown_item", rdv: rdv, agent: agent, status: "excused", remote: remote
+        = render "admin/rdvs/individual_rdv_status_dropdown_item", rdv: rdv, agent: agent, status: "revoked", remote: remote
+
+      - else
+        = render "admin/rdvs/individual_rdv_status_dropdown_item", rdv: rdv, agent: agent, status: "unknown", remote: remote
+
+    - if policy([:agent, rdv]).destroy?
+      .dropdown-divider
+      = rdv_status_delete_dropdown_item(rdv, agent)
