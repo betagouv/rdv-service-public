@@ -9,7 +9,7 @@
 
 = simple_form_for "", url: admin_organisation_motifs_path(current_organisation), html: { method: :get, class: "form-inline" }, wrapper: :inline_form do |f|
 
-  .container-fluid.bg-white.rounded
+  .container-fluid.bg-white.rounded.card
 
     .m-3.d-flex.justify-content-end
       - search = params[:search].blank? ? "d-none" : ""
