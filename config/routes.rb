@@ -277,7 +277,7 @@ Rails.application.routes.draw do
   # resin public link
   get "resin/:external_organisation_ids" => "search#resin"
 
-  get "prendre_rdv_prescripteur/:territory_short_name" => "search#prescripteur"
+  get "prendre_rdv_prescripteur/:territory_short_name" => "search#prescripteur", as: :prendre_rdv_prescripteur
 
   ##
 
