@@ -30,7 +30,7 @@ RSpec.describe "Rés'In specific public link" do
 
     click_on "Prochaine disponibilité lemardi 07 février 2023 à 08h00"
     click_on "08:00"
-    expect(page).to have_content("Vous devez vous connecter ou vous inscrire pour continuer")
+    expect(page).to have_content("Vos coordonnées de prescripteur")
   end
 
   context 'when a motif is not named "Accompagnement individuel"' do

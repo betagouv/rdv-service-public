@@ -38,7 +38,6 @@ RSpec.describe "prescripteur can create RDV for a user" do
     # Dans ce cas, retour à l'étape de choix du lieu
     click_on "Prochaine disponibilité le"
     click_on "08:45"
-    click_on "Je suis un prescripteur qui oriente un bénéficiaire"
 
     # On constate que le formulaire de prescripteur est pré-rempli
     expect(page).to have_field("Votre prénom", with: "Alex")
@@ -89,5 +88,32 @@ RSpec.describe "prescripteur can create RDV for a user" do
 
     expect(enqueued_jobs.first["job_class"]).to eq("SmsJob")
     expect(enqueued_jobs.first["arguments"][0]["phone_number"]).to eq("+33611223344")
+  end
+
+  context "when using the prescripteur route" do
+    let!(:lieu2) { create(:lieu, organisation: organisation, name: "Autre bureau") }
+    let!(:plage_ouverture2) { create(:plage_ouverture, organisation: organisation, agent: agent, motifs: [motif], lieu: lieu2) }
+
+    it "goes directly to prescripteur forms after creneau selection ands keeps the prescripteur param when navigating backwards" do
+      visit "http://www.rdv-solidarites-test.localhost/prendre_rdv_prescripteur/#{organisation.territory.departement_number}"
+
+      click_on "Prochaine disponibilité le", match: :first # choix du lieu
+      click_on "08:00" # choix du créneau
+
+      expect(page).to have_content("Vos coordonnées de prescripteur")
+
+      find_all("a", text: "modifier").last.click # Retour en arrière au choix de créneau
+
+      expect(page).to have_content("Sélectionnez un créneau :")
+
+      click_on(lieu.name)
+
+      expect(page).to have_content("Sélectionnez un lieu de RDV")
+      click_on("Prochaine disponibilité", match: :first)
+
+      click_on "08:00" # choix du créneau
+
+      expect(page).to have_content("Vos coordonnées de prescripteur")
+    end
   end
 end
