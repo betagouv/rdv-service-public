@@ -72,21 +72,21 @@
 
       p.text-muted.font-14= Motif.human_attribute_name("bookable_by_hint")
 
+      - presenter = Admin::MotifPresenter.new(@motif)
+
       .form-row
         .col-md-12
           = label_tag do
             = f.radio_button(:bookable_by, :agents)
-            span.ml-1= "Uniquement les agents de #{@motif.organisation.name}"
+            span.ml-1= presenter.bookable_by_label(:agents)
             p.text-muted.font-14= "Les agents peuvent ajouter des rendez-vous à l'agenda de leurs collègues"
 
-      - var_prescripteur_experiment = @motif&.organisation&.territory&.departement_number == "83" || Rails.env.development?
-
-      - if var_prescripteur_experiment
+      - if presenter.show_bookable_by_prescripteur?
         .form-row
           .col-md-12
             = label_tag do
               = f.radio_button(:bookable_by, :agents_and_prescripteurs)
-              span.ml-1= "Ouvert agents et aux prescripteurs"
+              span.ml-1= presenter.bookable_by_label(:agents_and_prescripteurs)
               p.text-muted.font-14
                 = "Les prescripteurs sont des agents d'une autre organisation du service public, qui orientent des usagers vers le service dont ils ont besoin."
                 br
@@ -96,11 +96,7 @@
         .col-md-12
           = label_tag do
             = f.radio_button(:bookable_by, :everyone)
-            span.ml-1
-              - if var_prescripteur_experiment
-                = "Ouvert aux agents, aux prescripteurs et aux usagers"
-              - else
-                = "Ouvert aux agents et aux usagers"
+            span.ml-1= presenter.bookable_by_label(:everyone)
             p.text-muted.font-14= "Les usagers pourront aussi prendre rendez-vous en ligne sur les plages d'ouverture définies par les agents de #{@motif.organisation.name}"
 
       .form-row.js-rdvs-editable

@@ -211,6 +211,10 @@ class Motif < ApplicationRecord
                        end
   end
 
+  def bookable_outside_of_organisation?
+    bookable_by != "agents"
+  end
+
   private
 
   def booking_delay_validation
