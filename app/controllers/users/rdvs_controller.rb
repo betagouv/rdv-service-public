@@ -3,7 +3,6 @@
 class Users::RdvsController < UserAuthController
   before_action :verify_user_name_initials, :set_rdv, :set_can_see_rdv_motif, only: %i[show creneaux edit cancel update]
   before_action :set_can_see_rdv_motif, only: %i[show edit index]
-  before_action :set_geo_search, only: [:create]
   before_action :set_lieu, only: %i[creneaux edit update]
   before_action :build_creneau, :redirect_if_creneau_not_available, only: %i[edit update]
   after_action :allow_iframe
@@ -26,7 +25,7 @@ class Users::RdvsController < UserAuthController
         starts_at: Time.zone.parse(rdv_params[:starts_at]),
         motif: motif,
         lieu: lieu,
-        geo_search: @geo_search
+        geo_search: geo_search
       )
       if @creneau.present?
         @rdv = build_rdv_from_creneau(@creneau)
@@ -122,8 +121,8 @@ class Users::RdvsController < UserAuthController
     redirect_to creneaux_users_rdv_path(@rdv)
   end
 
-  def set_geo_search
-    @geo_search = Users::GeoSearch.new(
+  def geo_search
+    Users::GeoSearch.new(
       departement: params[:departement],
       city_code: params[:city_code],
       street_ban_id: params[:street_ban_id].presence
