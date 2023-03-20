@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ExpectRedisNotToLeak
   def self.check_and_flush_redis!
     redis = Redis.new(url: Rails.configuration.x.redis_url)
