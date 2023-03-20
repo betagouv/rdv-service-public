@@ -101,6 +101,7 @@ RSpec.configure do |config|
   config.after do
     ActionMailer::Base.deliveries.clear
     FactoryBot.rewind_sequences
+    ExpectRedisNotToLeak.run!
     Rails.cache.clear
     Warden.test_reset!
   end
