@@ -3,7 +3,7 @@ p[style="margin-top:12px;"]
   strong>
     | jusqu'à 4h avant celui-ci
   - if rdv.phone_number.present?
-    span> en appelant au #{link_to rdv.phone_number, "tel:#{rdv.phone_number_formatted}"} ou
+    span> en appelant au #{link_to rdv.phone_number_humanized, "tel:#{rdv.phone_number_formatted}"} ou
   | en cliquant sur le lien ci-dessous.
 
 .btn-wrapper

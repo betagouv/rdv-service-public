@@ -22,7 +22,7 @@ main.container
                 - if rdv.lieu&.phone_number
                   span>
                   span.fa.fa-phone>
-                  = link_to rdv.lieu.phone_number, "tel:#{rdv.lieu.phone_number_formatted}"
+                  = link_to rdv.lieu.phone_number_humanized, "tel:#{rdv.lieu.phone_number_formatted}"
 
             - elsif rdv.phone?
               li.list-group-item
@@ -32,7 +32,7 @@ main.container
             li.list-group-item
               .fa.fa-user>
               = @prescripteur.user.full_name
-              = " (#{@prescripteur.user.phone_number})" if @prescripteur.user.phone_number.present?
+              = " (#{@prescripteur.user.phone_number_humanized})" if @prescripteur.user.phone_number.present?
             li.list-group-item
               i.fa.fa-info-circle>
               = rdv.motif.name

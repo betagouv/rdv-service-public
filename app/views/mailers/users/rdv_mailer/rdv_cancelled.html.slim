@@ -8,7 +8,7 @@ div
     p= t(".cancelled_for_motif_at_date", motif: motif, date: date)
 
   - if @rdv.phone_number.present?
-    - telephone_link = link_to(@rdv.phone_number, "tel:#{@rdv.phone_number_formatted}")
+    - telephone_link = link_to(@rdv.phone_number_humanized, "tel:#{@rdv.phone_number_formatted}")
     p= t(".reschedule_by_phone", telephone_link: telephone_link).html_safe
 
   - if @rdv.bookable_publicly?
