@@ -62,10 +62,6 @@ class SearchContext
     end
   end
 
-  def geo_search
-    @geo_search ||= Users::GeoSearch.new(departement: departement, city_code: @city_code, street_ban_id: @street_ban_id)
-  end
-
   def invitation?
     @invitation_token.present?
   end
@@ -209,6 +205,10 @@ class SearchContext
   # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
   private
+
+  def geo_search
+    @geo_search ||= Users::GeoSearch.new(departement: departement, city_code: @city_code, street_ban_id: @street_ban_id)
+  end
 
   def creneaux_search_for(lieu, date_range, motif)
     Users::CreneauxSearch.new(
