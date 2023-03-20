@@ -13,20 +13,32 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
       tags "Absence"
       produces "application/json"
       operationId "getAbsences"
-      description "Renvoie les absences des agents des organisations auxquelles j'ai accès, de manière paginée"
+      description "Renvoie les absences des organisations accessibles, de manière paginée"
+
+      parameter name: "organisation_id", in: :query, type: :integer, description: "L'ID d'une organisation donnée", example: 123, required: false
 
       let!(:organisation) { create(:organisation) }
       let!(:organisation2) { create(:organisation) }
       let!(:organisation3) { create(:organisation) }
       let!(:agent) { create(:agent, basic_role_in_organisations: [organisation, organisation2]) }
-      let!(:absence1) { create(:absence, agent: create(:agent)) }
-      let!(:absence2) { create(:absence, agent: create(:agent)) }
-      let!(:absence3) { create(:absence, agent: create(:agent)) }
+      let!(:absence1) { create(:absence, agent: agent, organisation: organisation) }
+      let!(:absence2) { create(:absence, agent: agent, organisation: organisation2) }
+      let!(:absence3) { create(:absence, agent: agent, organisation: organisation3) }
 
       let(:auth_headers) { api_auth_headers_for_agent(agent) }
       let(:"access-token") { auth_headers["access-token"].to_s }
       let(:uid) { auth_headers["uid"].to_s }
       let(:client) { auth_headers["client"].to_s }
+
+      response 200, "Renvoie les absences d'une organisation donnée" do
+        let(:organisation_id) { organisation.id }
+
+        schema "$ref" => "#/components/schemas/absences"
+
+        run_test!
+
+        it { expect(parsed_response_body["absences"].pluck("id")).to match_array([absence1.id]) }
+      end
 
       response 200, "Renvoie les absences des organisations auxquelles l'agent.e a accès", document: false do
         schema "$ref" => "#/components/schemas/absences"
@@ -47,6 +59,7 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
       operationId "createAbsence"
       description "Crée une absence"
 
+      parameter name: "organisation_id", in: :query, type: :integer, description: "ID de l'organisation", example: 12
       parameter name: "agent_id", in: :query, type: :integer, description: "ID de l'agent", example: 23, required: false
       parameter name: "agent_email", in: :query, type: :string, description: "Email de l'agent", example: "agent@example.com", required: false
       parameter name: "title", in: :query, type: :string, description: "Titre de l'absence", example: "Super absence"
@@ -55,7 +68,9 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
       parameter name: "end_day", in: :query, type: :string, description: "Dernier jour de l'absence", example: "2023-11-20"
       parameter name: "end_time", in: :query, type: :string, description: "Heure de fin de l'absence", example: "15:00"
 
-      let!(:agent) { create(:agent, id: 12, email: "agent@example.com") }
+      let(:organisation) { create(:organisation) }
+      let(:organisation_id) { organisation.id }
+      let!(:agent) { create(:agent, id: 12, email: "agent@example.com", basic_role_in_organisations: [organisation]) }
       let(:auth_headers) { api_auth_headers_for_agent(agent) }
       let(:"access-token") { auth_headers["access-token"].to_s }
       let(:uid) { auth_headers["uid"].to_s }
@@ -77,6 +92,8 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
         run_test!
 
         it { expect(Absence.count).to eq(absence_count_before + 1) }
+
+        it { expect(created_absence.organisation).to eq(organisation) }
 
         it { expect(created_absence.agent).to eq(agent) }
 
@@ -192,8 +209,8 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
       let!(:organisation) { create(:organisation) }
       let!(:organisation2) { create(:organisation) }
       let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
-      let!(:absence1) { create(:absence, agent: agent) }
-      let!(:absence2) { create(:absence, agent: agent) }
+      let!(:absence1) { create(:absence, agent: agent, organisation: organisation) }
+      let!(:absence2) { create(:absence, agent: agent, organisation: organisation2) }
       let(:absence_id) { absence1.id }
 
       let(:auth_headers) { api_auth_headers_for_agent(agent) }
@@ -239,8 +256,8 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
       let!(:organisation) { create(:organisation) }
       let!(:organisation2) { create(:organisation) }
       let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
-      let!(:absence1) { create(:absence, agent: agent, title: "Titre 1") }
-      let!(:absence2) { create(:absence, agent: agent, title: "Titre 2") }
+      let!(:absence1) { create(:absence, agent: agent, organisation: organisation, title: "Titre 1") }
+      let!(:absence2) { create(:absence, agent: agent, organisation: organisation2, title: "Titre 2") }
       let(:absence_id) { absence1.id }
       let(:title) { "Nouveau titre" }
 
@@ -283,8 +300,8 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
       let!(:organisation) { create(:organisation) }
       let!(:organisation2) { create(:organisation) }
       let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
-      let!(:absence1) { create(:absence, agent: agent) }
-      let!(:absence2) { create(:absence, agent: agent) }
+      let!(:absence1) { create(:absence, agent: agent, organisation: organisation) }
+      let!(:absence2) { create(:absence, agent: agent, organisation: organisation2) }
       let(:absence_id) { absence1.id }
 
       let(:auth_headers) { api_auth_headers_for_agent(agent) }
