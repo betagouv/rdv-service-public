@@ -1,5 +1,5 @@
 class ExpectRedisNotToLeak
-  def self.run!
+  def self.check_and_flush_redis!
     redis = Redis.new(url: Rails.configuration.x.redis_url)
 
     keys = redis.keys
@@ -9,5 +9,7 @@ class ExpectRedisNotToLeak
         raise "Redis leak risk: the key #{key} has been set without an expiration time"
       end
     end
+
+    redis.flushall
   end
 end
