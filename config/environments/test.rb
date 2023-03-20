@@ -27,7 +27,7 @@ Rails.application.configure do
 
   # Show full error reports and disable caching.
   config.consider_all_requests_local       = true
-  config.action_controller.perform_caching = false
+  config.action_controller.perform_caching = true
 
   # Test env has the same config as the global one (defined in application.rb)
   # except we separate Redis keys in each parallel test using TEST_ENV_NUMBER.
