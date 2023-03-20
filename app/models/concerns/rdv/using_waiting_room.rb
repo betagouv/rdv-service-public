@@ -14,7 +14,7 @@ module Rdv::UsingWaitingRoom
 
   def set_user_in_waiting_room!
     REDIS_FOR_WAITING_ROOMS.lpush(REDIS_WAITING_ROOM_KEY, id)
-    REDIS_FOR_WAITING_ROOMS.expire(REDIS_FOR_WAITING_ROOMS, 24.hours)
+    REDIS_FOR_WAITING_ROOMS.expire(REDIS_WAITING_ROOM_KEY, 24.hours.to_i)
   end
 
   class_methods do
