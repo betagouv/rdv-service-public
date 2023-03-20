@@ -59,7 +59,7 @@
       strong => prescripteur.full_name
       - if prescripteur.phone_number.present?
         ' au
-        strong => phone_to(prescripteur.phone_number)
+        strong => phone_to(prescripteur.phone_number_humanized)
         ' ou
       ' à l'adresse
       strong = mail_to(prescripteur.email)

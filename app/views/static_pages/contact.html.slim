@@ -7,7 +7,7 @@
     - Territory.all.where.not(phone_number: nil).each do |territory|
       li
         span> #{territory}
-        = link_to territory.phone_number, "tel:#{territory.phone_number_formatted}"
+        = link_to territory.phone_number_humanized, "tel:#{territory.phone_number_formatted}"
     li
       span> Autres départements, voir
       = link_to "l'annuaire des services publics", "https://lannuaire.service-public.fr/"

@@ -24,7 +24,7 @@
           - if @rdv.lieu&.phone_number
             span>
             span.fa.fa-phone>
-            = link_to @rdv.lieu.phone_number, "tel:#{@rdv.lieu.phone_number_formatted}"
+            = link_to @rdv.lieu.phone_number_humanized, "tel:#{@rdv.lieu.phone_number_formatted}"
 
       - elsif @rdv.phone?
         li.list-group-item

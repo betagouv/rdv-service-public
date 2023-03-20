@@ -20,7 +20,7 @@
           - if organisation.phone_number.present?
             div
               i.fa.fa-phone>
-              = link_to organisation.phone_number, "tel:#{organisation.phone_number}", class: "text-white"
+              = link_to organisation.phone_number_humanized, "tel:#{organisation.phone_number}", class: "text-white"
           - if organisation.email.present?
             div
               i.fa.fa-envelope>

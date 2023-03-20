@@ -56,5 +56,9 @@ module PhoneNumberValidation
       format_phone_number
       super
     end
+
+    def phone_number_humanized
+      Phonelib.parse(phone_number_formatted).national
+    end
   end
 end
