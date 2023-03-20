@@ -40,6 +40,7 @@ Rails.application.configure do
                        redis: {
                          key_prefix: "test:session#{ENV['TEST_ENV_NUMBER']}:",
                          url: "redis://localhost:6379",
+                         ttl: 2.weeks,
                        }
 
   # Raise exceptions instead of rendering exception templates.
