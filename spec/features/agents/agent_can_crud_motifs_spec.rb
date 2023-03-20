@@ -13,7 +13,7 @@ describe "Agent can CRUD motifs" do
   end
 
   context "when agent from organisation reach motifs#index" do
-    it "can CRUD motifs" do
+    it "can CRUD motifs", js: true do
       expect_page_title("Vos motifs")
       click_link motif.name
 
