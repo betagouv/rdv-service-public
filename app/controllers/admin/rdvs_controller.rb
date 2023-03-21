@@ -9,22 +9,27 @@ class Admin::RdvsController < AgentAuthController
 
   def index
     set_scoped_organisations
-    @rdvs = policy_scope(Rdv).search_for(@scoped_organisations, parsed_params)
-      .includes(
-        [
-          :agents_rdvs, :organisation, :lieu, :motif,
-          {
-            rdvs_users: [:prescripteur, { user: :user_profiles }],
-            agents: :service,
-            users: %i[responsible organisations user_profiles],
-          },
-        ]
-      )
     @breadcrumb_page = params[:breadcrumb_page]
+
+    @rdvs = policy_scope(Rdv).search_for(@scoped_organisations, parsed_params)
+      .order(starts_at: :asc).page(params[:page]).per(10)
+
+    # On fait cette requête en deux temps pour éviter de faire un `order` et un `include` sur le même scope,
+    # parce que ça fait un sort et beaucoup de left outer joins
+    @rdvs_in_page = Rdv.where(id: @rdvs.pluck(:id)).includes(
+      [
+        :agents_rdvs, :organisation, :lieu, :motif,
+        {
+          rdvs_users: [:prescripteur, { user: :user_profiles }],
+          agents: :service,
+          users: %i[responsible organisations user_profiles],
+        },
+      ]
+    )
+
     @form = Admin::RdvSearchForm.new(parsed_params)
     @lieux = Lieu.joins(:organisation).where(organisations: { id: @scoped_organisations.select(:id) }).enabled.order(:name)
     @motifs = Motif.joins(:organisation).where(organisations: { id: @scoped_organisations.select(:id) })
-    @rdvs = @rdvs.order(starts_at: :asc).page(params[:page]).per(10)
   end
 
   def export

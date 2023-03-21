@@ -70,7 +70,7 @@
   .row.justify-content-center.pb-3
     .col-md-8
       .d-flex.justify-content-center= paginate @rdvs, theme: "twitter-bootstrap-4"
-      = render(partial: "rdv", collection: @rdvs, locals: { agent: nil })
+      = render(partial: "rdv", collection: @rdvs_in_page, locals: { agent: nil })
       .d-flex.justify-content-center= paginate @rdvs, theme: "twitter-bootstrap-4"
 - else
   .row.justify-content-center.pb-3
