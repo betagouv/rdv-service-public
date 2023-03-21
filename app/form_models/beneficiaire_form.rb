@@ -31,4 +31,11 @@ class BeneficiaireForm
     errors.add(:phone_number, :invalid) if PhoneNumberValidation.parsed_number(phone_number).blank?
     errors.add(:phone_number, "ne permet pas de recevoir des SMS") unless PhoneNumberValidation.number_is_mobile?(phone_number)
   end
+
+  def already_exists
+    beneficiaire = User.find_by(phone_number: phone_number)
+    # si exist => verifier si nom ok
+    
+  
+  end
 end

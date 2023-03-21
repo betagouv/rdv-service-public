@@ -89,4 +89,16 @@ RSpec.describe BeneficiaireForm do
       expect(form.errors.first.full_message).to eq("Téléphone ne permet pas de recevoir des SMS")
     end
   end
+
+  context "when the user already exists" do
+    let(:params) do
+      {
+        first_name: "Steve",
+        last_name: "Rogne",
+        phone_number: "0611223344",
+      }
+    end
+    
+  
+  end
 end
