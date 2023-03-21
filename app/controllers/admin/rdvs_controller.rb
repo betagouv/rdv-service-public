@@ -9,10 +9,14 @@ class Admin::RdvsController < AgentAuthController
 
   def index
     set_scoped_organisations
-    @rdvs = policy_scope(Rdv).search_for(@scoped_organisations, parsed_params).order(starts_at: :asc).page(params[:page]).per(10)
-
     @breadcrumb_page = params[:breadcrumb_page]
-    @rdvs = Rdv.where(id: @rdvs.pluck(:id)).includes(
+
+    @rdvs = policy_scope(Rdv).search_for(@scoped_organisations, parsed_params)
+      .order(starts_at: :asc).page(params[:page]).per(10)
+
+    # On fait cette requête en deux temps pour éviter de faire un `order` et un `include` sur le même scope,
+    # parce que ça fait un sort et beaucoup de left outer joins
+    @rdvs_in_page = Rdv.where(id: @rdvs.pluck(:id)).includes(
       [
         :agents_rdvs, :organisation, :lieu, :motif,
         {
