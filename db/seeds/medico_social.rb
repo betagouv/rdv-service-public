@@ -208,7 +208,7 @@ motifs_attributes = 1000.times.map do |i|
     color: "#000000",
     organisation_id: org_arques.id,
     service_id: service_secretariat.id,
-    bookable_publicly: true,
+    bookable_by: :everyone,
     location_type: :public_office,
   }
 end
