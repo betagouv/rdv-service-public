@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
-class Admin::MotifPresenter < SimpleDelegator
+# Cette classe sert principalement à gérer l'état transitoire pendant qu'on expérimente avec les prescripteurs
+# dans le Var (83). On espère pouvoir la supprimer une fois que la réservation par prescripteurs sera ouverte
+# plus largement (voir la PR https://github.com/betagouv/rdv-solidarites.fr/pull/3391)
+class Admin::PrescripteurExperimentMotifPresenter < SimpleDelegator
   def bookable_by_label(bookable_by_value = bookable_by)
     case bookable_by_value.to_sym
     when :agents

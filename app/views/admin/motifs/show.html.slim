@@ -36,7 +36,7 @@
           hint: Motif.human_attribute_name(:for_secretariat_hint)
         hr
 
-        - presenter = Admin::MotifPresenter.new(@motif)
+        - presenter = Admin::PrescripteurExperimentMotifPresenter.new(@motif)
 
         .mb-2= motif_attribute_row(Motif.human_attribute_name(:bookable_by_title), presenter.bookable_by_label)
         - if @motif.bookable_outside_of_organisation?
