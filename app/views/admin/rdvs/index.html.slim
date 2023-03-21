@@ -37,16 +37,16 @@
   .card-body
     = render "rdv_search_form", form: @form
 
-  - if @rdvs.total_count > 0
+  - if @rdvs.count > 0
     .card-footer
       div.d-flex.justify-content-end.align-items-center
-        - if @rdvs.total_count < 10_000
+        - if @rdvs.count < 10_000
           - if policy([:configuration, current_territory]).allow_to_download_metrics?
             = link_to rdvs_users_export_admin_organisation_rdvs_path(**@form.to_query), method: :post, class: "btn btn-sm btn-link d-print-none" do
               span> Exporter les RDVs par usager en XLS
               i.fa.fa-download>
           = link_to export_admin_organisation_rdvs_path(**@form.to_query), method: :post, class: "btn btn-sm btn-link d-print-none" do
-            span> Exporter les #{@rdvs.total_count} RDVs en XLS
+            span> Exporter les #{@rdvs.count} RDVs en XLS
             i.fa.fa-download>
 
         - else
@@ -60,18 +60,18 @@
 
 = render "admin/rdvs/rdv_visibility"
 
-- if @rdvs.total_count > 0
+- if @rdvs.count > 0
   .mb-2
-    h4>= "#{@rdvs.total_count} rendez-vous"
+    h4>= "#{@rdvs.count} rendez-vous"
     .custom-control.custom-switch
       input.custom-control-input[type="checkbox" id="show-users-details-switch" data-toggle="collapse" data-target=".users-details"]
       label.custom-control-label for="show-users-details-switch" Afficher plus de détails usagers
 
   .row.justify-content-center.pb-3
     .col-md-8
-      .d-flex.justify-content-center= paginate @rdvs, theme: "twitter-bootstrap-4"
+      /.d-flex.justify-content-center= paginate @rdvs, theme: "twitter-bootstrap-4"
       = render(partial: "rdv", collection: @rdvs, locals: { agent: nil })
-      .d-flex.justify-content-center= paginate @rdvs, theme: "twitter-bootstrap-4"
+      /.d-flex.justify-content-center= paginate @rdvs, theme: "twitter-bootstrap-4"
 - else
   .row.justify-content-center.pb-3
     .col-md-8
