@@ -31,6 +31,7 @@ class RdvsUser < ApplicationRecord
   before_create :set_status_from_rdv
   after_save :update_counter_cache
   after_destroy :update_counter_cache
+  # voir Outlook::EventSerializerAndListener pour d'autres callbacks
 
   # Scopes
   scope :order_by_user_last_name, -> { includes(:user).order("users.last_name ASC") }
