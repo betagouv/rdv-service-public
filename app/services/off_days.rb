@@ -63,7 +63,7 @@ class OffDays
     JOURS_FERIES.intersection(date_range)
   end
 
-  def self.to_a
+  def self.to_full_calendar_array
     JOURS_FERIES.map do |jour_ferie|
       {
         title: "Jour férié 🎉",
