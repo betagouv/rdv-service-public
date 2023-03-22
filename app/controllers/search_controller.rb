@@ -26,7 +26,15 @@ class SearchController < ApplicationController
       departement: "CN",
       service_id: Service.find_by(name: Service::CONSEILLER_NUMERIQUE)&.id,
       motif_name_with_location_type: "Accompagnement individuel-public_office",
-      external_organisation_ids: params[:external_organisation_ids].split(",")
+      external_organisation_ids: params[:external_organisation_ids].split(","),
+      prescripteur: 1
+    )
+  end
+
+  def prescripteur
+    redirect_to prendre_rdv_path(
+      departement: params[:territory_short_name],
+      prescripteur: 1
     )
   end
 
@@ -47,7 +55,7 @@ class SearchController < ApplicationController
     params.permit(
       :latitude, :longitude, :address, :city_code, :departement, :street_ban_id,
       :service_id, :lieu_id, :date, :motif_search_terms, :motif_name_with_location_type, :motif_category_short_name,
-      :invitation_token, :motif_id, :public_link_organisation_id, :user_selected_organisation_id,
+      :invitation_token, :motif_id, :public_link_organisation_id, :user_selected_organisation_id, :prescripteur,
       organisation_ids: [], referent_ids: [], external_organisation_ids: []
     )
   end

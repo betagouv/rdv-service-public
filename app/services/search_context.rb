@@ -5,6 +5,7 @@ class SearchContext
   attr_reader :errors, :query, :address, :city_code, :street_ban_id, :latitude, :longitude,
               :motif_name_with_location_type
 
+  # rubocop:disable Metrics/MethodLength
   def initialize(current_user, query = {})
     @current_user = current_user
     @query = query
@@ -26,7 +27,9 @@ class SearchContext
     @lieu_id = query[:lieu_id]
     @start_date = query[:date]
     @referent_ids = query[:referent_ids]
+    @prescripteur = query[:prescripteur]
   end
+  # rubocop:enable Metrics/MethodLength
 
   # *** Method that outputs the next step for the user to complete its rdv journey ***
   # *** It is used in #to_partial_path to render the matching partial view ***
@@ -48,6 +51,15 @@ class SearchContext
 
   def to_partial_path
     "search/#{current_step}"
+  end
+
+  def wizard_after_creneau_selection_path(params)
+    url_helpers = Rails.application.routes.url_helpers
+    if @prescripteur
+      url_helpers.prescripteur_start_path(query.merge(params))
+    else
+      url_helpers.new_users_rdv_wizard_step_path(query.merge(params))
+    end
   end
 
   def geo_search

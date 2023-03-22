@@ -5,3 +5,6 @@
     = RdvsUser.human_attribute_value(:status, status, context: :action)
     .text-wrap.text-muted
       = RdvsUser.human_attribute_value(:status, status, context: :explanation)
+      - if status.in?(Rdv::RDV_STATUSES_TO_NOTIFY) && rdvs_user.rdv.in_the_future?
+        <br />
+        = RdvsUser.human_attribute_value(:status, status, context: :explanation_notif)

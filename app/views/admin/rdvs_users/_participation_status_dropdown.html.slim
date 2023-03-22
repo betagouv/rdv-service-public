@@ -1,31 +1,26 @@
 .dropdown.text-right
-  - if rdvs_user.rdv.temporal_status == "revoked"
-    / Avoid users participations change as long as rdv is revoked TODORDV-C rspec on this
-    button.btn.btn-outline-primary[disabled]
-      span> Annulé (par le service)
-  - else
-    = participation_status_dropdown_toggle(rdvs_user)
-    .dropdown-menu
-      - case rdvs_user.temporal_status
-      - when "unknown_future"
-        = render "admin/rdvs_users/participation_status_dropdown_item", rdvs_user: rdvs_user, agent: agent, status: "excused", remote: true
+  = participation_status_dropdown_toggle(rdvs_user)
+  .dropdown-menu
+    - case rdvs_user.temporal_status
+    - when "unknown_future"
+      = render "admin/rdvs_users/participation_status_dropdown_item", rdvs_user: rdvs_user, agent: agent, status: "excused", remote: true
 
-      - when "unknown_today"
-        = render "admin/rdvs_users/participation_status_dropdown_item", rdvs_user: rdvs_user, agent: agent, status: "seen", remote: true
-        - if rdvs_user.rdv.in_the_past?
-          = render "admin/rdvs_users/participation_status_dropdown_item", rdvs_user: rdvs_user, agent: agent, status: "noshow", remote: true
-        .dropdown-divider
-        = render "admin/rdvs_users/participation_status_dropdown_item", rdvs_user: rdvs_user, agent: agent, status: "excused", remote: true
-
-      - when "unknown_past"
-        = render "admin/rdvs_users/participation_status_dropdown_item", rdvs_user: rdvs_user, agent: agent, status: "seen", remote: true
+    - when "unknown_today"
+      = render "admin/rdvs_users/participation_status_dropdown_item", rdvs_user: rdvs_user, agent: agent, status: "seen", remote: true
+      - if rdvs_user.rdv.in_the_past?
         = render "admin/rdvs_users/participation_status_dropdown_item", rdvs_user: rdvs_user, agent: agent, status: "noshow", remote: true
-        .dropdown-divider
-        = render "admin/rdvs_users/participation_status_dropdown_item", rdvs_user: rdvs_user, agent: agent, status: "excused", remote: true
+      .dropdown-divider
+      = render "admin/rdvs_users/participation_status_dropdown_item", rdvs_user: rdvs_user, agent: agent, status: "excused", remote: true
 
-      - else
-        = render "admin/rdvs_users/participation_status_dropdown_item", rdvs_user: rdvs_user, agent: agent, status: "unknown", remote: true
+    - when "unknown_past"
+      = render "admin/rdvs_users/participation_status_dropdown_item", rdvs_user: rdvs_user, agent: agent, status: "seen", remote: true
+      = render "admin/rdvs_users/participation_status_dropdown_item", rdvs_user: rdvs_user, agent: agent, status: "noshow", remote: true
+      .dropdown-divider
+      = render "admin/rdvs_users/participation_status_dropdown_item", rdvs_user: rdvs_user, agent: agent, status: "excused", remote: true
 
-      - if policy([:agent, rdvs_user.rdv]).destroy?
-        .dropdown-divider
-        = participation_delete_dropdown_item(rdvs_user, agent)
+    - else
+      = render "admin/rdvs_users/participation_status_dropdown_item", rdvs_user: rdvs_user, agent: agent, status: "unknown", remote: true
+
+    - if policy([:agent, rdvs_user.rdv]).destroy?
+      .dropdown-divider
+      = participation_delete_dropdown_item(rdvs_user, agent)
