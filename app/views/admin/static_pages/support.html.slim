@@ -10,11 +10,9 @@
           i.fa.fa-book
       .card-body
         p
-          -puts "*" *100
-          - puts "domaine => #{current_domain}"
-          span> Vous trouverez de la documentation sur les différentes fonctionnalités sur le site
-          = link_to "https://rdvs.notion.site/RDV-Solidarit-s-94176a1507814d19aeaaf6e678ffcbed" do
-            span> doc.rdv-solidarites.fr
+          span> Vous trouverez de la documentation sur les différentes fonctionnalités
+          = link_to current_domain.documentation_url do
+            span> ici
             i.fa.fa-external-link-alt>
         p
           span> Vous pouvez aussi consulter les
