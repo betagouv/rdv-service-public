@@ -14,10 +14,46 @@ class OffDays
     Date.new(2023, 11, 1),
     Date.new(2023, 11, 11),
     Date.new(2023, 12, 25),
+
+    Date.new(2024, 1, 1),
+    Date.new(2024, 4, 1),
+    Date.new(2024, 5, 1),
+    Date.new(2024, 5, 8),
+    Date.new(2024, 5, 9),
+    Date.new(2024, 5, 20),
+    Date.new(2024, 7, 14),
+    Date.new(2024, 8, 15),
+    Date.new(2024, 11, 1),
+    Date.new(2024, 11, 11),
+    Date.new(2024, 12, 25),
+
+    Date.new(2025, 1, 1),
+    Date.new(2025, 4, 21),
+    Date.new(2025, 5, 1),
+    Date.new(2025, 5, 8),
+    Date.new(2025, 5, 29),
+    Date.new(2025, 6, 9),
+    Date.new(2025, 7, 14),
+    Date.new(2025, 8, 15),
+    Date.new(2025, 11, 1),
+    Date.new(2025, 11, 11),
+    Date.new(2025, 12, 25),
+
+    Date.new(2026, 1, 1),
+    Date.new(2026, 4, 6),
+    Date.new(2026, 5, 1),
+    Date.new(2026, 5, 8),
+    Date.new(2026, 5, 14),
+    Date.new(2026, 5, 25),
+    Date.new(2026, 7, 14),
+    Date.new(2026, 8, 15),
+    Date.new(2026, 11, 1),
+    Date.new(2026, 11, 11),
+    Date.new(2026, 12, 25),
   ].to_set.freeze
 
-  # This reminder will be triggered on server startup
-  Sentry.capture_message("Il faut mettre à jour la liste des jours fériés pour 2024") if Time.zone.today.year > 2023
+  # On crash la CI pour se forcer à mettre à jour la liste à temps
+  raise "Il faut mettre à jour la liste des jours fériés" if Time.zone.today.year >= 2026 && Rails.env.test?
 
   def self.all_in_date_range(date_range)
     return [] if date_range.blank?
