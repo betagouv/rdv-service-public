@@ -40,7 +40,7 @@ Rails.application.configure do
       class: "CronJob::DestroyOldPlageOuvertureJob",
     },
     destroy_redis_waiting_room_keys: {
-      cron: "0 13 * * *", # At 3:00 every day
+      cron: "every day at 22:00 Europe/Paris",
       class: "CronJob::DestroyRedisWaitingRoomKeys",
     },
   }
