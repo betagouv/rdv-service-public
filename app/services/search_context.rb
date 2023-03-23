@@ -3,7 +3,7 @@
 # rubocop:disable Metrics/ClassLength
 class SearchContext
   attr_reader :errors, :query, :address, :city_code, :street_ban_id, :latitude, :longitude,
-              :motif_name_with_location_type
+              :motif_name_with_location_type, :prescripteur
 
   # rubocop:disable Metrics/MethodLength
   def initialize(current_user, query = {})
@@ -34,7 +34,7 @@ class SearchContext
   # *** Method that outputs the next step for the user to complete its rdv journey ***
   # *** It is used in #to_partial_path to render the matching partial view ***
   def current_step
-    if departement.blank?
+    if address.blank?
       :address_selection
     elsif !service_selected?
       :service_selection
