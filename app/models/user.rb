@@ -26,9 +26,9 @@ class User < ApplicationRecord
 
   def self.search_against
     {
-      last_name: "A",
-      first_name: "B",
-      birth_name: "C",
+      unaccented_last_name: "A",
+      unaccented_first_name: "B",
+      unaccented_birth_name: "C",
 
       # Ces champs sont moins pondérés car on ne veut leur
       # donner de l'importance que si le match est très proche ou exact.
@@ -36,6 +36,12 @@ class User < ApplicationRecord
       phone_number_formatted: "D",
       id: "D",
     }
+  end
+
+  before_save do
+    self.unaccented_last_name = I18n.transliterate(last_name).gsub(/[^0-9A-Za-z]/, '') if last_name
+    self.unaccented_first_name = I18n.transliterate(first_name).gsub(/[^0-9A-Za-z]/, '') if first_name
+    self.unaccented_birth_name = I18n.transliterate(birth_name).gsub(/[^0-9A-Za-z]/, '') if birth_name
   end
 
   # Attributes

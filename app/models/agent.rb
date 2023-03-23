@@ -16,11 +16,16 @@ class Agent < ApplicationRecord
   include TextSearch
   def self.search_against
     {
-      last_name: "A",
-      first_name: "B",
+      unaccented_last_name: "A",
+      unaccented_first_name: "B",
       email: "D",
       id: "D",
     }
+  end
+
+  before_save do
+    self.unaccented_last_name = I18n.transliterate(last_name).gsub(/[^0-9A-Za-z]/, '') if last_name
+    self.unaccented_first_name = I18n.transliterate(first_name).gsub(/[^0-9A-Za-z]/, '') if first_name
   end
 
   devise :invitable, :database_authenticatable, :trackable,

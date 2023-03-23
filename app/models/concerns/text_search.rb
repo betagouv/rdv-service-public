@@ -29,7 +29,6 @@ module TextSearch
       {
         against: search_against,
         using: { tsearch: { prefix: true, any_word: true } },
-        ignoring: :accents,
         order_within_rank: "#{table_name}.updated_at desc",
         query: query,
       }
