@@ -252,9 +252,8 @@ RSpec.configure do |config|
               start_time: { type: "string" },
               end_time: { type: "string" },
               agent: { "$ref" => "#/components/schemas/agent", nullable: true },
-              organisation: { "$ref" => "#/components/schemas/organisation" },
             },
-            required: %w[id ical_uid title first_day end_day start_time end_time agent organisation],
+            required: %w[id ical_uid title first_day end_day start_time end_time agent],
           },
           invitation: {
             type: "object",

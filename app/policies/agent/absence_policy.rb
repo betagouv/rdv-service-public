@@ -4,8 +4,9 @@ class Agent::AbsencePolicy < ApplicationPolicy
   include CurrentAgentInPolicyConcern
 
   def same_agent_or_has_access?
+    return true if record.agent_id == current_agent.id
+
     agent_role_in_record_organisation.present? && (
-      record.agent_id == current_agent.id ||
       record.agent.service_id == current_agent.service_id ||
       agent_role_in_record_organisation.can_access_others_planning?
     )
@@ -41,7 +42,7 @@ class Agent::AbsencePolicy < ApplicationPolicy
         agents_in_my_basic_orgs = Agent.in_orgs(my_basic_orgs)
         agents_in_my_basic_orgs_with_same_service = agents_in_my_basic_orgs.where(service: current_agent.service)
 
-        scope.where(agent: agents_in_my_admin_orgs + agents_in_my_basic_orgs_with_same_service)
+        scope.where(agent: agents_in_my_admin_orgs + agents_in_my_basic_orgs_with_same_service + [current_agent.id])
       end
     end
   end
