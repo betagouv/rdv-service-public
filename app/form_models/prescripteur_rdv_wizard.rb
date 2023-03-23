@@ -6,7 +6,7 @@ class PrescripteurRdvWizard < UserRdvWizard::Base
   def initialize(attributes, domain)
     super(nil, attributes)
     @prescripteur = Prescripteur.new(attributes[:prescripteur]) if attributes[:prescripteur].present?
-    @user = User.new(attributes[:user]) if attributes[:user].present?
+    @user_attributes = attributes[:user]
     @domain = domain
   end
 
@@ -50,6 +50,13 @@ class PrescripteurRdvWizard < UserRdvWizard::Base
   end
 
   def setup_user
+    user_from_params = User.new(@user_attributes)
+
+    @user = User.find_by(
+      first_name: user_from_params.first_name,
+      phone_number_formatted: user_from_params.phone_number_formatted
+    ) || user_from_params
+
     @user.skip_confirmation_notification! # Désactivation du mail Devise de confirmation de compte
     @user.created_through = "prescripteur"
     @user.organisations << rdv.motif.organisation
