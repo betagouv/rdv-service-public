@@ -97,8 +97,16 @@ RSpec.describe "prescripteur can create RDV for a user" do
   end
 
   context "when a similar user already exists" do
-    before do
+    let!(:user) do
       create(:user, first_name: "Patricia", last_name: "Duroy", phone_number: "0611223344")
+    end
+
+    def fill_prescripteur_form
+      fill_in "Votre prénom", with: "Alex"
+      fill_in "Votre nom", with: "Prescripteur"
+      fill_in "Votre email professionnel", with: "alex@prescripteur.fr"
+      fill_in "Votre numéro de téléphone", with: "0655443322"
+      click_on "Continuer"
     end
 
     it "doesn't create a new one" do
@@ -107,11 +115,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
       click_on "Prochaine disponibilité le", match: :first # choix du lieu
       click_on "08:00" # choix du créneau
 
-      fill_in "Votre prénom", with: "Alex"
-      fill_in "Votre nom", with: "Prescripteur"
-      fill_in "Votre email professionnel", with: "alex@prescripteur.fr"
-      fill_in "Votre numéro de téléphone", with: "0655443322"
-      click_on "Continuer"
+      fill_prescripteur_form
 
       fill_in "Prénom", with: "Patricia"
       fill_in "Nom", with: "DUROY"
@@ -119,6 +123,28 @@ RSpec.describe "prescripteur can create RDV for a user" do
       fill_in "Téléphone", with: "06 11 22 33 44"
 
       expect { click_on "Confirmer le rendez-vous" }.to change(Rdv, :count).by(1).and(change(User, :count).by(0))
+    end
+
+    context "and is already part of the organisation" do
+      before do
+        create(:user_profile, organisation: organisation, user: user)
+      end
+
+      it "doesn't create a duplicate profile" do
+        visit "http://www.rdv-solidarites-test.localhost/prendre_rdv_prescripteur/#{organisation.territory.departement_number}"
+
+        click_on "Prochaine disponibilité le", match: :first # choix du lieu
+        click_on "08:00" # choix du créneau
+
+        fill_prescripteur_form
+
+        fill_in "Prénom", with: "Patricia"
+        fill_in "Nom", with: "DUROY"
+        # Le format du numéro de téléphone n'est pas exactement le même que celui en base
+        fill_in "Téléphone", with: "06 11 22 33 44"
+
+        expect { click_on "Confirmer le rendez-vous" }.to change(Rdv, :count).by(1).and(change(UserProfile, :count).by(0))
+      end
     end
   end
 
