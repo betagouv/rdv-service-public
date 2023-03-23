@@ -16,7 +16,7 @@
 # Ignore pidfiles, but keep the directory.
 /tmp/pids/*
 !/tmp/pids/
-!/tmp/pids/.keep 
+!/tmp/pids/.keep
 
 # Ignore uploaded files in development
 /storage/*
@@ -45,6 +45,8 @@ coverage/
 # This directory is used by jsbundling-rails
 /app/assets/builds/*
 !/app/assets/builds/.keep
+
+/public/assets/*
 
 # Postgres dumps
 **/20*.tar.gz

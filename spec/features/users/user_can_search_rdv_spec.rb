@@ -265,6 +265,29 @@ describe "User can search for rdvs" do
     end
   end
 
+  describe "when a motif is bookable by prescripteurs only" do
+    let!(:territory) { create(:territory, departement_number: "92") }
+    let!(:organisation) { create(:organisation, territory: territory) }
+
+    let!(:service) { create(:service) }
+    let!(:lieu) { create(:lieu, organisation: organisation) }
+    let!(:motif) do
+      create(
+        :motif, bookable_by: :agents_and_prescripteurs, organisation: organisation, plage_ouvertures: [create(:plage_ouverture, lieu: lieu)]
+      )
+    end
+
+    it "isn't shown to the users" do
+      visit root_path(departement: "92")
+      expect(page).to have_content("La prise de rendez-vous n'est pas disponible pour ce département.")
+
+      motif.update!(bookable_by: "everyone") # to make sure this spec isn't a false positive
+
+      visit root_path(departement: "92")
+      expect(page).not_to have_content("La prise de rendez-vous n'est pas disponible pour ce département.")
+    end
+  end
+
   private
 
   def execute_search
