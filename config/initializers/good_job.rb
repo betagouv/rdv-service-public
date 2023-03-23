@@ -14,33 +14,41 @@ Rails.application.configure do
   config.good_job.enable_cron = ENV["CONTAINER"] == "jobs-1"
   # To locally run GoodJob with cron enabled, run: `GOOD_JOB_ENABLE_CRON=1 bundle exec good_job start`
 
+  # Rappel des changements d'heure :
+  # - au passage à l'heure d'hiver, on passe deux fois sur l'heure entre 02:00 et 02:59
+  # - au passage à l'heure d'été, on passe de 01:59 à 03:00
+  # Il est donc dangereux de déclarer un cron entre 02:00 et 02:59.
   config.good_job.cron = {
     file_attente_job: {
-      cron: "0/10 9,10,11,12,13,14,15,16,17,18 * * *", # Every 10 minutes, from 9:00 to 18:00
+      cron: "0/10 9,10,11,12,13,14,15,16,17,18 * * * Europe/Paris", # Every 10 minutes, from 9:00 to 18:00
       class: "CronJob::FileAttenteJob",
     },
+
+    # Ces jobs doivent s'exécuter dans la matinée, pas la soirée
     reminder_job: {
-      cron: "0 3 * * *", # At 3:00 every day
+      cron: "every day at 03:00 Europe/Paris",
       class: "CronJob::ReminderJob",
     },
     update_expirations_job: {
-      cron: "0 1 * * *", # At 1:00 every day
+      cron: "every day at 03:30 Europe/Paris",
       class: "CronJob::UpdateExpirationsJob",
     },
     warm_up_occurrences_cache: {
-      cron: "0 23 * * *", # At 23:00 every day
+      cron: "every day at 04:00 Europe/Paris",
       class: "CronJob::WarmUpOccurrencesCache",
     },
+
+    # Ces jobs peuvent s'exécuter dans la soirée
     destroy_old_rdvs_job: {
-      cron: "0 2 * * *", # At 2:00 every day
+      cron: "every day at 22:00 Europe/Paris",
       class: "CronJob::DestroyOldRdvsJob",
     },
     destroy_old_plage_ouverture_job: {
-      cron: "0 1 * * *", # At 1:00 every day
+      cron: "every day at 22:30 Europe/Paris",
       class: "CronJob::DestroyOldPlageOuvertureJob",
     },
     destroy_redis_waiting_room_keys: {
-      cron: "every day at 22:00 Europe/Paris",
+      cron: "every day at 23:00 Europe/Paris",
       class: "CronJob::DestroyRedisWaitingRoomKeys",
     },
   }
