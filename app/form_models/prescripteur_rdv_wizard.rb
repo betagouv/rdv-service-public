@@ -54,6 +54,7 @@ class PrescripteurRdvWizard < UserRdvWizard::Base
 
     @user = User.find_by(
       first_name: user_from_params.first_name,
+      last_number: user_from_params.last_name,
       phone_number_formatted: user_from_params.phone_number_formatted
     ) || user_from_params
 
