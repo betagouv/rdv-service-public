@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class AgentsRdv < ApplicationRecord
-  include Outlook::Synchronizable
+  include Outlook::EventSerializerAndListener
 
   # Relations
   belongs_to :rdv, touch: true
@@ -16,9 +16,7 @@ class AgentsRdv < ApplicationRecord
 
   # Hooks
   after_commit :update_unknown_past_rdv_count
-  ## -
-
-  delegate :cancelled?, :soft_deleted?, :users, to: :rdv
+  # voir Outlook::EventSerializerAndListener pour d'autres callbacks
 
   def update_unknown_past_rdv_count
     agent.update_unknown_past_rdv_count!

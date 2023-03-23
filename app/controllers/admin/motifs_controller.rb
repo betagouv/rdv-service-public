@@ -88,7 +88,7 @@ class Admin::MotifsController < AgentAuthController
       .permit(:name, :service_id,
               :color, :motif_category_id,
               :default_duration_in_min,
-              :bookable_publicly,
+              :bookable_by,
               :location_type,
               :max_public_booking_delay,
               :min_public_booking_delay,

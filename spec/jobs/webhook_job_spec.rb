@@ -16,7 +16,7 @@ describe WebhookJob, type: :job do
         expect do
           described_class.perform_now(payload, webhook_endpoint.id)
         end.to have_enqueued_job(described_class).with(payload, webhook_endpoint.id).on_queue(:webhook_retries)
-        # expect(sentry_events).to be_empty
+
         expect(sentry_events.last.exception.values.first.value).to match(/Webhook-Failure\s\(ERROR\):/)
         expect(sentry_events.last.exception.values.first.type).to eq("OutgoingWebhookError")
       end

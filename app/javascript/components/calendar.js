@@ -43,7 +43,7 @@ class CalendarRdvSolidarites {
 
   setRefetchInterval = () => {
     if (this.refreshCalendarInterval) return
-    this.refreshCalendarInterval = setInterval(() => this.fullCalendarInstance.refetchEvents(), 30000)
+    this.refreshCalendarInterval = setInterval(() => this.fullCalendarInstance.refetchEvents(), 60000)
   }
 
   clearRefetchInterval = () => {

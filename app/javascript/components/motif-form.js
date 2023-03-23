@@ -19,7 +19,7 @@ class MotifForm {
   }
 
   sectorisationShouldBeDisable() {
-    return !document.querySelector("#motif_follow_up:checked") && this.reservableOnlineCheckbox.checked
+    return !document.querySelector("#motif_follow_up:checked") && !this.bookableByAgentsButton.checked
   }
 
   toggleSectorisation() {
@@ -39,21 +39,21 @@ class MotifForm {
   }
 
   toggleOnlineSubFields() {
-    const enabled = this.reservableOnlineCheckbox.checked
+    const enabled = !this.bookableByAgentsButton.checked
     document.querySelectorAll(".js-rdvs-editable").forEach(rdvEditableElement =>
       rdvEditableElement.classList.toggle('hidden', !enabled)
     )
   }
 
   toggleRdvsEditable() {
-    const enabled = this.reservableOnlineCheckbox.checked
+    const enabled = !this.bookableByAgentsButton.checked
     document.querySelector("#motif_rdvs_editable_by_user").checked = enabled
   }
 
   constructor() {
     this.secretariatCheckbox = document.querySelector('#motif_for_secretariat')
-    this.reservableOnlineCheckbox = document.querySelector('#motif_bookable_publicly')
-    if (!this.secretariatCheckbox || !this.reservableOnlineCheckbox) return;
+    this.bookableByAgentsButton = document.querySelector('#motif_bookable_by_agents')
+    if (!this.secretariatCheckbox || !this.bookableByAgentsButton) return;
 
     const noSecretariatInputs = ["input[name=\"motif[location_type]\"]", "input[name=\"motif[follow_up]\"]"]
     document.querySelectorAll(noSecretariatInputs).forEach(input =>
@@ -63,11 +63,14 @@ class MotifForm {
     document.querySelectorAll(toggleSectorisationInputs).forEach(input =>
       input.addEventListener('change', e => this.toggleSectorisation())
     )
-    this.reservableOnlineCheckbox.addEventListener('change', e => {
-      if (document.querySelector(".js-sectorisation-card") !== null) { this.toggleSectorisation() }
-      this.toggleOnlineSubFields()
-      this.toggleRdvsEditable()
-    })
+
+    document.querySelectorAll('input[name="motif[bookable_by]"]').forEach(elt =>
+      elt.addEventListener("change", evt => {
+        if (document.querySelector(".js-sectorisation-card") !== null) { this.toggleSectorisation() }
+        this.toggleOnlineSubFields()
+        this.toggleRdvsEditable()
+      })
+    )
 
     this.toggleSecretariat()
     if (document.querySelector(".js-sectorisation-card") !== null) { this.toggleSectorisation() }

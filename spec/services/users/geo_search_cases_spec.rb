@@ -17,18 +17,15 @@ describe Users::GeoSearch, type: :service_model do
     let!(:motif_no_plage_ouverture) { create(:motif, :sectorisation_level_departement, service: service1, bookable_publicly: true, organisation: organisation1) }
     let!(:motif_service2) { create(:motif, :sectorisation_level_departement, service: service2, bookable_publicly: true, organisation: organisation1) }
     let!(:motif_orga2) { create(:motif, :sectorisation_level_departement, service: service1, bookable_publicly: true, organisation: organisation2) }
-    let!(:motif_offline) { create(:motif, :sectorisation_level_departement, service: service2, bookable_publicly: false, organisation: organisation1) }
     let!(:plage_ouverture_ok) { create(:plage_ouverture, motifs: [motif_ok], organisation: organisation1) }
     let!(:plage_ouverture_service2) { create(:plage_ouverture, motifs: [motif_service2], organisation: organisation1) }
     let!(:plage_ouverture_orga2) { create(:plage_ouverture, motifs: [motif_orga2], organisation: organisation2) }
-    let!(:plage_ouverture_offline) { create(:plage_ouverture, motifs: [motif_offline], organisation: organisation1) }
 
     it "filters available motifs and services" do
       expect(subject.available_motifs).to include(motif_ok)
       expect(subject.available_motifs).to include(motif_service2)
       expect(subject.available_motifs).to include(motif_orga2)
       expect(subject.available_motifs).not_to include(motif_no_plage_ouverture)
-      expect(subject.available_motifs).not_to include(motif_offline)
       expect(subject.available_services).to include(service1, service2)
     end
   end

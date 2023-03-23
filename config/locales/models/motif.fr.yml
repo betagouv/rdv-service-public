@@ -10,7 +10,9 @@ fr:
         color: Couleur
         bookable_publicly_title: Prise de RDV en ligne par les usagers
         bookable_publicly: Réservable en ligne
-        bookable_publicly_hint: Ce motif sera disponible à la réservation en ligne par les usagers
+        bookable_publicly_hint: Ce motif est disponible à la réservation en ligne par les usagers
+        bookable_by_title: Réservation en ligne
+        bookable_by_hint: Vous pouvez décider de qui peut prendre RDV pour ce motif
         visibility_type: Visibilité usager
         custom_cancel_warning_message: Message d’avertissement en cas d’annulation
         custom_cancel_warning_message_hint: Ce message sera affiché à l'usager au moment où il lui sera demandé de confirmer l’annulation de son RDV. Si l’annulation du rendez-vous a des conséquences particulières pour l’usager, vous pouvez lui indiquer dans ce message. Cela peut être le cas, par exemple, pour une convocation pour l’ouverture de droits sociaux.
@@ -32,10 +34,8 @@ fr:
         default_duration: Durée par défaut
         min_public_booking_delay: Délai minimum de réservation
         min_public_booking_delay_short: Délai minimum
-        min_public_booking_delay_hint: Les premiers créneaux proposés aux usagers ne commenceront pas avant ce délai minimum
         max_public_booking_delay: Délai maximum de réservation
         max_public_booking_delay_short: Délai maximum
-        max_public_booking_delay_hint: Les derniers créneaux proposés aux usagers n'iront pas au delà de ce délai maximum
         restriction_for_rdv: Instructions à accepter avant la prise du rendez-vous
         restriction_for_rdv_hint: Instructions à accepter avant la prise du rendez-vous
         restriction_for_rdv_short: Instructions avant

@@ -12,8 +12,13 @@ RSpec.describe "Rés'In specific public link" do
   let!(:orga_cnfs_lyon_a) { create(:organisation, territory: cnfs_territory, external_id: "123") }
   let!(:orga_cnfs_lyon_b) { create(:organisation, territory: cnfs_territory, external_id: "456") }
 
-  let!(:motif_a) { create(:motif, :sectorisation_level_departement, service: cnfs_service, organisation: orga_cnfs_lyon_a, name: "Accompagnement individuel", location_type: :public_office) }
-  let!(:motif_b) { create(:motif, :sectorisation_level_departement, service: cnfs_service, organisation: orga_cnfs_lyon_b, name: "Accompagnement individuel", location_type: :public_office) }
+  let!(:motif_a) do
+    create(:motif, :sectorisation_level_departement, bookable_by: :everyone, service: cnfs_service, organisation: orga_cnfs_lyon_a, name: "Accompagnement individuel", location_type: :public_office)
+  end
+  let!(:motif_b) do
+    create(:motif, :sectorisation_level_departement, bookable_by: :agents_and_prescripteurs, service: cnfs_service, organisation: orga_cnfs_lyon_b, name: "Accompagnement individuel",
+                                                     location_type: :public_office)
+  end
 
   let!(:lieu_a) { create(:lieu, name: "Antenne Voltaire Lyon", organisation: orga_cnfs_lyon_a) }
   let!(:lieu_b) { create(:lieu, name: "Maison de la Métropole de Lyon", organisation: orga_cnfs_lyon_b) }
