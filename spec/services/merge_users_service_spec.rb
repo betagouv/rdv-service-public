@@ -245,6 +245,7 @@ describe MergeUsersService, type: :service do
 
     it "merges users" do
       described_class.perform_with(user1, user2, attributes_to_merge, organisation)
+      expect(Prescripteur.last.user).to eq(user1)
     end
   end
 end
