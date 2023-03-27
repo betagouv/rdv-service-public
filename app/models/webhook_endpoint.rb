@@ -6,7 +6,7 @@ class WebhookEndpoint < ApplicationRecord
   belongs_to :organisation
 
   # Validations
-  validates :target_url, presence: true
+  validates :target_url, presence: true, uniqueness: { scope: :organisation_id }
   validates :secret, presence: true
 
   ALL_SUBSCRIPTIONS = %w[
