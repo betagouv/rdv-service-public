@@ -231,4 +231,20 @@ describe MergeUsersService, type: :service do
       expect(user_target.franceconnect_openid_sub).to eq("unechainedecharacteres")
     end
   end
+
+  context "when one of the users was created by a prescripteur" do
+    let(:user1) { create(:user) }
+    let(:user2) do
+      create(:user, created_through: :prescripteur)
+    end
+    let(:rdv) { create(:rdv, organisation: organisation) }
+
+    before do
+      create(:rdvs_user, rdv: rdv, user: user2, prescripteur: create(:prescripteur))
+    end
+
+    it "merges users" do
+      described_class.perform_with(user1, user2, attributes_to_merge, organisation)
+    end
+  end
 end
