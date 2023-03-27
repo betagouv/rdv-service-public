@@ -34,7 +34,7 @@ class SearchContext
   # *** Method that outputs the next step for the user to complete its rdv journey ***
   # *** It is used in #to_partial_path to render the matching partial view ***
   def current_step
-    if address.blank?
+    if departement.blank?
       :address_selection
     elsif !service_selected?
       :service_selection
