@@ -70,6 +70,7 @@ Rails.application.routes.draw do
   get "stats/rdvs", to: "stats#rdvs", as: "rdvs_stats"
   get "stats/active_agents", to: "stats#active_agents", as: "active_agents_stats"
   get "stats/receipts", to: "stats#receipts", as: "receipts_stats"
+  get "stats/notifications", to: "stats#notifications_index", as: "notifications_index_stats"
 
   authenticate :user do
     get "/users/informations", to: "users/users#edit"
