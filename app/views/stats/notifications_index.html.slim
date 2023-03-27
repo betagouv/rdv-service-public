@@ -1,0 +1,33 @@
+/ Include the charts pack in the <head> section
+- content_for(:charts_script) { javascript_include_tag "charts", "data-turbolinks-track": "reload" }
+
+- content_for :title do
+  h1
+    | Statistiques de notifications
+    = " pour le #{@territory}" if @territory.present?
+
+- cache([@territory, Time.zone.today], expires_in: 24.hours) do
+  .container.mt-3
+    - if @territory.present? && Organisation.joins(:territory).where(territories: [@territory]).empty?
+      h3 Cette structure n'utilise pas #{current_domain.name}.
+    - else
+      .card.mb-5
+        .card-body
+          = self_anchor "notifications"
+            h2.card-title #{Receipt.model_name.human(count: 2)} (#{@stats.receipts.count})
+          - %i[event channel result].each do |attribute|
+            h3.card-subtitle Par #{Receipt.human_attribute_name(attribute).downcase}
+            = column_chart receipts_stats_path(group_by: attribute, departement: @departement, territory: @territory), stacked: true
+
+      .card.mb-5
+        .card-header
+          = "#{@territories.count} structures utilisent RDV-Solidarités"
+        .card-body
+          ul
+            - @territories.order(:name).each do |territory|
+              li = link_to territory, stats_path(territory: territory)
+          .m-3 = link_to "Retour aux statistiques de la plateforme", stats_path
+          .alert.alert-info.d-flex.align-items-center
+            .mr-3
+              i.fa.fa-info
+            = "Les chiffres donnés sur cette page englobent les plateformes #{Domain::ALL.map(&:name).join(' et ')} indifféremment."

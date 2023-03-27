@@ -30,6 +30,11 @@ class StatsController < ApplicationController
     render json: chart_json
   end
 
+  def notifications_index
+    @territories = Territory.all
+    @stats = Stat.new(agents: @agents, organisations: @organisations, rdvs: @rdvs, users: @users, receipts: @receipts)
+  end
+
   def receipts
     cache_key = ["stats_receipts", request.query_parameters, Time.zone.today]
     chart_json = Rails.cache.fetch(cache_key, expires_in: 24.hours) do
