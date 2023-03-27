@@ -12,7 +12,7 @@ class PrescripteurRdvWizard < UserRdvWizard::Base
 
   def create!
     ActiveRecord::Base.transaction do
-      setup_user
+      find_or_create_user
 
       if @rdv.collectif?
         create_participation!
@@ -51,7 +51,7 @@ class PrescripteurRdvWizard < UserRdvWizard::Base
     @participation ||= RdvsUser.new(rdv: @rdv, user: @user, prescripteur: @prescripteur)
   end
 
-  def setup_user
+  def find_or_create_user
     user_from_params = User.new(@user_attributes)
 
     @user = User.where(
