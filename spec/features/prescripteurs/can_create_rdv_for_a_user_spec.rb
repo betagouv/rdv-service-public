@@ -109,7 +109,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
       click_on "Continuer"
     end
 
-    it "doesn't create a new one" do
+    it "doesn't create a new one but adds the user to the organisation" do
       visit "http://www.rdv-solidarites-test.localhost/prendre_rdv_prescripteur/#{organisation.territory.departement_number}"
 
       click_on "Prochaine disponibilité le", match: :first # choix du lieu
@@ -122,7 +122,14 @@ RSpec.describe "prescripteur can create RDV for a user" do
       # Le format du numéro de téléphone n'est pas exactement le même que celui en base
       fill_in "Téléphone", with: "06 11 22 33 44"
 
-      expect { click_on "Confirmer le rendez-vous" }.to change(Rdv, :count).by(1).and(change(User, :count).by(0))
+      expect { click_on "Confirmer le rendez-vous" }.to change(Rdv, :count).by(1)
+        .and(change(User, :count).by(0))
+        .and(change(UserProfile, :count).by(1))
+
+      expect(UserProfile.last).to have_attributes(
+        user: user,
+        organisation: motif.organisation
+      )
     end
 
     context "and is already part of the organisation" do
