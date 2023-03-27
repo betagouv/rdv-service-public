@@ -11,12 +11,14 @@ class PrescripteurRdvWizard < UserRdvWizard::Base
   end
 
   def create!
-    setup_user
+    ActiveRecord::Base.transaction do
+      setup_user
 
-    if @rdv.collectif?
-      create_participation!
-    else
-      create_rdv!
+      if @rdv.collectif?
+        create_participation!
+      else
+        create_rdv!
+      end
     end
 
     PrescripteurMailer.rdv_created(participation, @domain.id).deliver_later
@@ -52,8 +54,11 @@ class PrescripteurRdvWizard < UserRdvWizard::Base
   def setup_user
     user_from_params = User.new(@user_attributes)
 
-    @user = User.find_by(
-      first_name: user_from_params.first_name,
+    @user = User.where(
+      "unaccent(lower(first_name)) = unaccent((lower(?)))", user_from_params.first_name
+    ).where(
+      "unaccent(lower(last_name)) = unaccent((lower(?)))", user_from_params.last_name
+    ).find_by(
       phone_number_formatted: user_from_params.phone_number_formatted
     ) || user_from_params
 
