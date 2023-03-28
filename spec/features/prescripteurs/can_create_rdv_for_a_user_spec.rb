@@ -96,7 +96,17 @@ RSpec.describe "prescripteur can create RDV for a user" do
     expect(enqueued_jobs.first["arguments"][0]["phone_number"]).to eq("+33611223344")
   end
 
-  context "when a similar user already exists" do
+  def fill_address_form
+    fill_in :search_where, with: "21 rue des Ardennes, 75019 Paris"
+
+    # fake address autocomplete
+    page.execute_script("document.querySelector('#search_departement').value = '#{motif.organisation.territory.departement_number}'")
+    page.execute_script("document.querySelector('#search_submit').disabled = false")
+
+    click_on("Rechercher")
+  end
+
+  context "when a similar user already exists", js: true do
     let!(:user) do
       create(:user, first_name: "Patricia", last_name: "Duroy", phone_number: "0611223344")
     end
@@ -110,7 +120,9 @@ RSpec.describe "prescripteur can create RDV for a user" do
     end
 
     it "doesn't create a new one but adds the user to the organisation" do
-      visit "http://www.rdv-solidarites-test.localhost/prendre_rdv_prescripteur/#{organisation.territory.departement_number}"
+      visit "http://www.rdv-solidarites-test.localhost/prendre_rdv_prescripteur"
+
+      fill_address_form
 
       click_on "Prochaine disponibilité le", match: :first # choix du lieu
       click_on "08:00" # choix du créneau
@@ -138,7 +150,9 @@ RSpec.describe "prescripteur can create RDV for a user" do
       end
 
       it "doesn't create a duplicate profile" do
-        visit "http://www.rdv-solidarites-test.localhost/prendre_rdv_prescripteur/#{organisation.territory.departement_number}"
+        visit "http://www.rdv-solidarites-test.localhost/prendre_rdv_prescripteur"
+
+        fill_address_form
 
         click_on "Prochaine disponibilité le", match: :first # choix du lieu
         click_on "08:00" # choix du créneau
@@ -163,13 +177,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
     it "goes directly to prescripteur forms after creneau selection ands keeps the prescripteur param when navigating backwards", js: true do
       visit "http://www.rdv-solidarites-test.localhost/prendre_rdv_prescripteur"
 
-      fill_in :search_where, with: "21 rue des Ardennes, 75019 Paris"
-
-      # fake address autocomplete
-      page.execute_script("document.querySelector('#search_departement').value = '#{motif.organisation.territory.departement_number}'")
-      page.execute_script("document.querySelector('#search_submit').disabled = false")
-
-      click_on("Rechercher")
+      fill_address_form
 
       click_on "Prochaine disponibilité le", match: :first # choix du lieu
       click_on "08:00" # choix du créneau
