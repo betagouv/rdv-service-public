@@ -160,8 +160,16 @@ RSpec.describe "prescripteur can create RDV for a user" do
     let!(:plage_ouverture2) { create(:plage_ouverture, organisation: organisation, agent: agent, motifs: [motif], lieu: lieu2) }
     let(:bookable_by) { "agents_and_prescripteurs" }
 
-    it "goes directly to prescripteur forms after creneau selection ands keeps the prescripteur param when navigating backwards" do
-      visit "http://www.rdv-solidarites-test.localhost/prendre_rdv_prescripteur/#{organisation.territory.departement_number}"
+    it "goes directly to prescripteur forms after creneau selection ands keeps the prescripteur param when navigating backwards", js: true do
+      visit "http://www.rdv-solidarites-test.localhost/prendre_rdv_prescripteur"
+
+      fill_in :search_where, with: "21 rue des Ardennes, 75019 Paris"
+
+      # fake address autocomplete
+      page.execute_script("document.querySelector('#search_departement').value = '#{motif.organisation.territory.departement_number}'")
+      page.execute_script("document.querySelector('#search_submit').disabled = false")
+
+      click_on("Rechercher")
 
       click_on "Prochaine disponibilité le", match: :first # choix du lieu
       click_on "08:00" # choix du créneau

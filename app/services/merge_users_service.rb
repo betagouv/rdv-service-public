@@ -37,10 +37,13 @@ class MergeUsersService < BaseService
 
   def merge_rdvs
     @user_to_merge.rdvs.where(organisation: @organisation).each do |rdv|
-      users = rdv.users.to_a
-      users.delete(@user_to_merge)
-      users.append(@user_target) unless users.include?(@user_target)
-      rdv.users.replace(users)
+      rdv.rdvs_users.where(user: @user_to_merge).each do |rdv_user|
+        if rdv.rdvs_users.where(user_id: @user_target).any?
+          rdv_user.destroy!
+        else
+          rdv_user.update!(user: @user_target)
+        end
+      end
     end
   end
 

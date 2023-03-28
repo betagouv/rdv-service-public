@@ -3,6 +3,8 @@ section.bg-primary.p-4
     #search_form
       = simple_form_for :search, url: prendre_rdv_path, method: :get do |f|
         = f.input :departement, as: :hidden, input_html: { name: "departement", value: context.departement }
+        - if context.prescripteur.to_boolean
+          = f.input :prescripteur, as: :hidden, input_html: { name: "prescripteur", value: 1 }
         = f.input :city_code,  as: :hidden, input_html: { name: "city_code", value: context.city_code }
         = f.input :street_ban_id, as: :hidden, input_html: { name: "street_ban_id", value: context.street_ban_id }
         = f.input :latitude, as: :hidden, input_html: { name: "latitude", value: context.latitude }

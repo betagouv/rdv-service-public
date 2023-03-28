@@ -262,7 +262,7 @@ describe "Users API", swagger_doc: "v1/api.json" do
 
         it { expect(parsed_response_body["invitation_url"]).to start_with("http://www.example.com/users/invitation/accept?invitation_token=") }
 
-        it { expect(user.reload.invitation_due_at).to eq(user.invitation_created_at + 1.day) }
+        it { expect(user.reload.invitation_due_at).to eq(user.invitation_created_at + 24.hours) }
 
         it { expect(user.reload.invited_through).to eq("external") }
       end
