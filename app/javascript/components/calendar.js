@@ -123,13 +123,6 @@ class CalendarRdvSolidarites {
       starts_at: info.startStr,
       "agent_ids[]": this.data.agentId,
     });
-    let plage_ouvertures = this.fullCalendarInstance.getEvents()
-      .filter(e => e.rendering == "background")
-      .filter(e => e.start.getTime() <= startDate.getTime() && startDate.getTime() <= e.end.getTime());
-
-    if (plage_ouvertures[0] !== undefined) {
-      urlSearchParams.append('plage_ouverture_location', plage_ouvertures[0].extendedProps.location);
-    }
     window.location = `/admin/organisations/${this.data.organisationId}/rdv_wizard_step/new?${urlSearchParams.toString()}`;;
   }
 
