@@ -23,7 +23,6 @@ class RecurrenceForm {
       this.everyTarget.value = model.every;
       this.intervalTarget.value = model.interval;
       if (model.until) {
-        // Ignore the timezone in the “until” date. See #1339
         this.untilTarget.value = Intl.DateTimeFormat("fr").format(new Date(model.until))
       }
     }
