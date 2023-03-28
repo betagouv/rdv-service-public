@@ -116,9 +116,6 @@ class CalendarRdvSolidarites {
   }
 
   selectEvent = (info) => {
-    // We use UTC because it's what makes the event display at the right time in the calendar.
-    // It's not entirely clear why utc is the right choice, we suspect it's because the fullcalendar and back-end timezones are the same.
-    let startDate = info.start;
     const urlSearchParams = new URLSearchParams({
       starts_at: info.startStr,
       "agent_ids[]": this.data.agentId,
