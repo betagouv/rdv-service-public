@@ -19,7 +19,10 @@ class PastDateAlertController {
   }
 
   showAlertWhenDatePast(inputValue) {
-    if (moment().isAfter(moment(inputValue, 'DD/MM/YYYY h:mm'))) {
+    const datePattern = /^(\d{2})\/(\d{2})\/(\d{4})\s(\d{1,2}):(\d{2})$/;
+    const [, day, month, year, hour, minute] = datePattern.exec(inputValue)
+    const d = new Date(`${year}-${month}-${day}T${hour}:${minute}:00`);
+    if ((new Date()).getTime() >= d.getTime()) {
       this.showAlertMessage()
     } else {
       this.hideAlertMessage()
