@@ -11,14 +11,15 @@ EXCLUDE_KEYS = %w[id created_at updated_at old_address old_enabled enabled servi
 
 SERVICE_ID = 3
 ORGANISATION_ID = 4
-AGENT_ID = 4
+AGENT_ID = 5
 # 6971 en prod ?
 
-json_file = "agent_rdvs.json"
+if ARGV.blank?
+  puts "il faut passer le chemin vers le fichier qui contient les rendez-vous au format json en paramètre du script"
+  exit 0
+end
 
-file = File.read(json_file)
-
-rdvs = JSON.parse(file)
+rdvs = JSON.parse(File.read(ARGV[0]))
 
 rdv_params = {}
 users = []
