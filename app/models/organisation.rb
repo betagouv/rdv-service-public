@@ -38,7 +38,7 @@ class Organisation < ApplicationRecord
   # Validation
   validates :name, presence: true, uniqueness: { scope: :territory }
   validates :external_id, uniqueness: { scope: :territory, allow_nil: true }
-  validate :validate_phone_number
+  validate :validate_organisation_phone_number
   validates(
     :human_id,
     format: {
@@ -95,7 +95,7 @@ class Organisation < ApplicationRecord
     name.parameterize[..80]
   end
 
-  def validate_phone_number
+  def validate_organisation_phone_number
     return if phone_number_is_valid?
 
     errors.add(:phone_number, :invalid)
