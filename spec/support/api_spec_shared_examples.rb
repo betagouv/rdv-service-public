@@ -24,6 +24,7 @@ module ApiSpecSharedExamples
       schema "$ref" => "#/components/schemas/error_not_found"
 
       run_test!
+
     end
   end
 

@@ -7,6 +7,7 @@ class WebhookEndpoint < ApplicationRecord
 
   # Validations
   validates :target_url, presence: true, uniqueness: { scope: :organisation_id }
+  validate :subscriptions_validity
   validates :secret, presence: true
 
   ALL_SUBSCRIPTIONS = %w[
@@ -26,5 +27,13 @@ class WebhookEndpoint < ApplicationRecord
 
   def trigger_for(record)
     WebhookJob.perform_later(record.generate_webhook_payload(:created), id)
+  end
+
+  private
+
+  def subscriptions_validity
+    return if subscriptions.all? { |subscription| ALL_SUBSCRIPTIONS.include?(subscription) }
+
+    errors.add(:base, "la liste des abonnements choisis contient une ou plusieurs valeurs incorrectes")
   end
 end

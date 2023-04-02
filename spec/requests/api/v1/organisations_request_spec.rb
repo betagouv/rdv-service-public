@@ -71,6 +71,37 @@ describe "Organisations API", swagger_doc: "v1/api.json" do
   end
 
   path "api/v1/organisations/{organisation_id}" do
+    get "Récupérer une organisation" do
+      with_authentication
+      with_pagination
+
+      tags "Organisation"
+      produces "application/json"
+      operationId "getOrganisation"
+      description "Renvoie une organisation"
+
+      parameter name: :organisation_id, in: :path, type: :integer, description: "ID de l'organisation", example: 123
+
+      let!(:organisation) { create(:organisation) }
+      let!(:agent) { create(:agent, basic_role_in_organisations: Organisation.all) }
+      let(:organisation_id) { organisation.id }
+
+      let(:auth_headers) { api_auth_headers_for_agent(agent) }
+      let(:"access-token") { auth_headers["access-token"].to_s }
+      let(:uid) { auth_headers["uid"].to_s }
+      let(:client) { auth_headers["client"].to_s }
+
+      response 200, "Retourne une Organisation" do
+        schema "$ref" => "#/components/schemas/organisation_with_root"
+
+        run_test!
+
+        it { expect(parsed_response_body[:organisation]).to match(OrganisationBlueprint.render_as_hash(organisation)) }
+      end
+    end
+  end
+
+  path "api/v1/organisations/{organisation_id}" do
     patch "Mettre à jour une organisation" do
       with_authentication
 
