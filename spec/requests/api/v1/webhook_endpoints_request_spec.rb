@@ -16,7 +16,7 @@ describe "WebhookEndpoints API", swagger_doc: "v1/api.json" do
       description "Renvoie tous les webhook_endpoints d'une organisation accessibles à l'agent·e authentifié·e, de manière paginée"
 
       parameter name: :organisation_id, in: :path, type: :integer, description: "ID de l'organisation", example: 123
-      parameter name: "target_url", in: :query, type: :string, description: "L'url de destination du webhook endpoint", example: "https://www.rdv-insertion.fr/rdv_solidarites_webhooks", required: false
+      parameter name: "target_url", in: :query, type: :string, description: "L'url de destination du webhook endpoint", example: "https://www.rdv-insertion.fr/rdvs_webhooks", required: false
 
       let(:auth_headers) { api_auth_headers_for_agent(agent) }
       let(:"access-token") { auth_headers["access-token"].to_s }
