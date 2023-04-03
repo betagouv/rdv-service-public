@@ -25,5 +25,20 @@ class AgentRemoval
   def should_soft_delete?
     (@agent.organisations - [@organisation]).empty?
   end
+
+  def errors
+    I18n.t(".cannot_delete_because_of_rdvs") if upcoming_rdvs?
+  end
+
+  def confirm
+    if @agent.invitation_accepted_at.blank?
+      I18n.t(".invitation_deleted")
+    elsif @agent.deleted_at?
+      I18n.t(".agent_deleted")
+    else
+      I18n.t(".agent_removed_from_org")
+    end
+  end
+
   alias will_soft_delete? should_soft_delete?
 end
