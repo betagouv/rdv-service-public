@@ -6,4 +6,6 @@ table.table.table-sm
       th= Receipt.human_attribute_name(:content)
       th= Receipt.human_attribute_name(:result)
   tbody
-    = render partial: "admin/receipts/receipt", collection: receipts, cached: true
+    - receipts.each do |receipt|
+      - cache(receipt, expires_in: 7.days) do
+        = render partial: "admin/receipts/receipt", locals: { receipt: receipt }

@@ -4,7 +4,6 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import frLocale from '@fullcalendar/core/locales/fr';
 import interactionPlugin from '@fullcalendar/interaction';
-import moment from 'moment-timezone';
 
 import Bowser from "bowser";
 const browser = Bowser.getParser(window.navigator.userAgent);
@@ -117,20 +116,10 @@ class CalendarRdvSolidarites {
   }
 
   selectEvent = (info) => {
-    // We use UTC because it's what makes the event display at the right time in the calendar.
-    // It's not entirely clear why utc is the right choice, we suspect it's because the fullcalendar and back-end timezones are the same.
-    let startDate = moment(info.start).utc();
     const urlSearchParams = new URLSearchParams({
       starts_at: info.startStr,
       "agent_ids[]": this.data.agentId,
     });
-    let plage_ouvertures = this.fullCalendarInstance.getEvents()
-      .filter(e => e.rendering == "background")
-      .filter(e => startDate.isBetween(e.start, e.end, null, "[]"));
-
-    if (plage_ouvertures[0] !== undefined) {
-      urlSearchParams.append('plage_ouverture_location', plage_ouvertures[0].extendedProps.location);
-    }
     window.location = `/admin/organisations/${this.data.organisationId}/rdv_wizard_step/new?${urlSearchParams.toString()}`;;
   }
 
@@ -157,10 +146,12 @@ class CalendarRdvSolidarites {
       if (info.view.type != "timeGridOneDay") return
 
       const url = new URL(printLinkElt.href)
-      const date = moment(info.view.currentStart).utc()
-      printLinkElt.querySelector(".js-date").innerHTML = date.format("DD/MM/YYYY")
-      url.searchParams.set("start", date.format("YYYY-MM-DD"))
-      url.searchParams.set("end", date.format("YYYY-MM-DD"))
+      printLinkElt.querySelector(".js-date").innerHTML = Intl.DateTimeFormat("fr", { day: "numeric", month: "numeric", year: "numeric" }).format(info.view.currentStart)
+      const currentStart = info.view.currentStart.toISOString().split('T')[0]
+      url.searchParams.set("start", currentStart)
+      url.searchParams.set("end", currentStart)
+
+
       printLinkElt.href = url.toString()
     }
   }
@@ -169,19 +160,19 @@ class CalendarRdvSolidarites {
     let $el = $(info.el);
     let extendedProps = info.event.extendedProps;
 
-    if(extendedProps.past == true) {
+    if (extendedProps.past == true) {
       $el.addClass("fc-event-past");
     };
-    if(extendedProps.duration <= 30) {
+    if (extendedProps.duration <= 30) {
       $el.addClass("fc-event-small");
     };
 
     if (this.data.selectedEventId && info.event.id == this.data.selectedEventId)
       $el.addClass("selected");
 
-    $el.addClass("fc-event-"+ extendedProps.status);
+    $el.addClass("fc-event-" + extendedProps.status);
 
-    if (extendedProps.userInWaitingRoom == true)  {
+    if (extendedProps.userInWaitingRoom == true) {
       $el.addClass("fc-event-waiting");
     }
 
@@ -190,14 +181,14 @@ class CalendarRdvSolidarites {
     }
 
     let title = ``;
-    const start = moment(info.event.start).utc().format('H:mm');
-    const end = moment(info.event.end).utc().format('H:mm');
+    const start = Intl.DateTimeFormat("fr", { timeZone: 'UTC', hour: 'numeric', minute: 'numeric' }).format(info.event.start);
+    const end = Intl.DateTimeFormat("fr", { timeZone: 'UTC', hour: 'numeric', minute: 'numeric' }).format(info.event.end);
 
     if (info.isStart && info.isEnd) {
       title += `${start} - ${end}`;
-    } else if(info.isStart) {
+    } else if (info.isStart) {
       title += `À partir de ${start}`;
-    } else if(info.isEnd) {
+    } else if (info.isEnd) {
       title += `Jusqu'à ${end}`;
     } else {
       title += `Toute la journée`;
@@ -248,6 +239,6 @@ class CalendarRdvSolidarites {
   }
 }
 
-document.addEventListener('turbolinks:load', function() {
+document.addEventListener('turbolinks:load', function () {
   new CalendarRdvSolidarites()
 });

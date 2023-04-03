@@ -1,5 +1,3 @@
-import 'moment/locale/fr.js';
-
 class RecurrenceForm {
   constructor() {
     this.element = document.querySelector('.js-recurrence-container')
@@ -25,8 +23,7 @@ class RecurrenceForm {
       this.everyTarget.value = model.every;
       this.intervalTarget.value = model.interval;
       if (model.until) {
-        // Ignore the timezone in the “until” date. See #1339
-        this.untilTarget.value = moment(model.until, 'YYYY-MM-DD').format("DD/MM/YYYY");
+        this.untilTarget.value = Intl.DateTimeFormat("fr").format(new Date(model.until))
       }
     }
     if(model.every == "week") this.setOn(model);
@@ -42,7 +39,9 @@ class RecurrenceForm {
   }
 
   getFirstDay = () => {
-    return moment(this.firstDayTarget.value, "DD/MM/YYYY");
+    const datePattern = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+    const [, day, month, year] = datePattern.exec(this.firstDayTarget.value)
+    return new Date(`${year}-${month}-${day}`);
   }
 
   setRecurrenceComputed = (model) => {
@@ -74,7 +73,7 @@ class RecurrenceForm {
         }
       } else if (model.every == "month") {
         model.day = {};
-        model.day[this.getWeekday(this.getFirstDay())] = this.getWeekdayPositionInMonth(this.getFirstDay());
+        model.day[this.getWeekday(this.getFirstDay())] = this.getWeekdayPositionInMonth(this.getFirstDay().getDate());
       }
 
       if (this.untilTarget.value) model.until = this.untilTarget.value;
@@ -99,24 +98,25 @@ class RecurrenceForm {
     }
   }
 
-  getWeekday = (momentDate) => {
-    return momentDate.locale("en").format("dddd").toLowerCase();
+  getWeekday = (date) => {
+    // On force EN ici parce que Montrose vérifie avec les noms anglais des jours de semaine
+    return Intl.DateTimeFormat("en", {weekday: "long"}).format(date).toLowerCase();
   }
 
-  getWeekdayPositionInMonth = (momentDate) => {
-    let dayInMonth = momentDate.date();
+  getWeekdayPositionInMonth = (dayInMonth) => {
     return Math.floor((dayInMonth - 1) / 7) + 1;
   }
 
-  getDayText = (momentDate) => {
-    let nthWeekdayOfMonth = this.getWeekdayPositionInMonth(momentDate)
+  getDayText = (date) => {
+    let nthWeekdayOfMonth = this.getWeekdayPositionInMonth(date.getDate())
     if (nthWeekdayOfMonth == 1) {
       nthWeekdayOfMonth = `${nthWeekdayOfMonth}er`
     } else {
       nthWeekdayOfMonth = `${nthWeekdayOfMonth}ème`
     }
 
-    return `Tous les ${nthWeekdayOfMonth} ${momentDate.format("dddd")} du mois`;
+    // On force en françois puisque c'est affiché en français
+    return `Tous les ${nthWeekdayOfMonth} ${Intl.DateTimeFormat("fr", {weekday: "long"}).format(date).toLowerCase()} du mois`;
   }
 }
 

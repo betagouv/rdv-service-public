@@ -3,7 +3,7 @@
 # rubocop:disable Metrics/ClassLength
 class SearchContext
   attr_reader :errors, :query, :address, :city_code, :street_ban_id, :latitude, :longitude,
-              :motif_name_with_location_type
+              :motif_name_with_location_type, :prescripteur
 
   # rubocop:disable Metrics/MethodLength
   def initialize(current_user, query = {})

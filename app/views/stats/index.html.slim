@@ -129,12 +129,12 @@
           = column_chart rdvs_stats_path(by_rdv_users_status: true, territory: @territory), stacked: :percent, max: 100, suffix: "%", colors: colors
 
       .card.mb-5
-        .card-body
+        .card-header
           = self_anchor "notifications"
-            h2.card-title #{Receipt.model_name.human(count: 2)} (#{@stats.receipts.count})
-          - %i[event channel result].each do |attribute|
-            h3.card-subtitle Par #{Receipt.human_attribute_name(attribute).downcase}
-            = column_chart receipts_stats_path(group_by: attribute, departement: @departement, territory: @territory), stacked: true
+            h2.card-title #{Receipt.model_name.human(count: 2)}
+        .card-body
+          = "Vous pouvez consulter les statistiques sur les notifications envoyées "
+          = link_to("ici", notifications_index_stats_path(params.permit(:territory)))
 
       .card.mb-5
         .card-body

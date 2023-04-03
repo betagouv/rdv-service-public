@@ -38,7 +38,7 @@ class Organisation < ApplicationRecord
   # Validation
   validates :name, presence: true, uniqueness: { scope: :territory }
   validates :external_id, uniqueness: { scope: :territory, allow_nil: true }
-  validates :phone_number, phone: { allow_blank: true }
+  validate :validate_organisation_phone_number
   validates(
     :human_id,
     format: {
@@ -93,5 +93,16 @@ class Organisation < ApplicationRecord
 
   def slug
     name.parameterize[..80]
+  end
+
+  def validate_organisation_phone_number
+    return if phone_number_is_valid?
+
+    errors.add(:phone_number, :invalid)
+  end
+
+  def phone_number_is_valid?
+    # Blank, Valid Phone, 4 digits phone (organisations only)
+    phone_number.blank? || Phonelib.parse(phone_number).valid? || phone_number.match(/^\d{4}$/)
   end
 end
