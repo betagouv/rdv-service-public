@@ -19,6 +19,8 @@ class RdvsUser < ApplicationRecord
 
   # Delegates
   delegate :full_name, to: :user
+  # Temporary delegation for rdv_insertion
+  delegate :motif_category_for_rdv_insertion?, to: :rdv
 
   # Validations
   # Uniqueness validation doesn’t work with nested_attributes, see https://github.com/rails/rails/issues/4568

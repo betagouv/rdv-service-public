@@ -114,6 +114,8 @@ class Rdv < ApplicationRecord
 
   delegate :domain, to: :organisation
   delegate :name, to: :motif, prefix: true
+  # Temporary delegation for rdv_insertion
+  delegate :motif_category_for_rdv_insertion?, to: :motif
 
   def self.ongoing(time_margin: 0.minutes)
     where("starts_at <= ?", Time.zone.now + time_margin)
