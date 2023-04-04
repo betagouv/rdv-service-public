@@ -27,7 +27,7 @@ module SuperAdmins
           page: Administrate::Page::Form.new(dashboard, resource),
         }
       else
-        agent.organisations.select(:territory_id).uniq.each do |territory_id|
+        agent.organisations.pluck(:territory_id).uniq.each do |territory_id|
           AgentTerritorialAccessRight.find_or_create_by!(agent: agent, territory_id: territory_id)
         end
         redirect_to(
