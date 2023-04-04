@@ -151,9 +151,8 @@
           span.ml-1= Motif.human_attribute_value(:visibility_type, value)
           p
             span.text-muted.font-14= Motif.human_attribute_value(:visibility_type, value, context: :hint)
-            - if motif.motif_category_for_rdv_insertion?
-              br
-              span.text-muted.font-14= Motif.human_attribute_value(:visibility_type, value, context: :hint_rdv_insertion)
+            br
+            span.text-muted.font-14.rdv-insertion-notif-hint= Motif.human_attribute_value(:visibility_type, value, context: :hint_rdv_insertion)
 
   .card
     .card-body

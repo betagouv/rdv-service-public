@@ -50,6 +50,16 @@ class MotifForm {
     document.querySelector("#motif_rdvs_editable_by_user").checked = enabled
   }
 
+  toggleRdvInsertionNotifsDivs() {
+    // Specifique RDV-I temporaire
+    const selectedValue = this.selectList.value;
+    const hiddenDivs = document.getElementsByClassName('rdv-insertion-notif-hint');
+
+    Array.from(hiddenDivs).forEach(div => {
+      div.style.display = selectedValue !== "" ? 'block' : 'none';
+    });
+  }
+
   constructor() {
     this.secretariatCheckbox = document.querySelector('#motif_for_secretariat')
     this.bookableByAgentsButton = document.querySelector('#motif_bookable_by_agents')
@@ -75,6 +85,13 @@ class MotifForm {
     this.toggleSecretariat()
     if (document.querySelector(".js-sectorisation-card") !== null) { this.toggleSectorisation() }
     this.toggleOnlineSubFields()
+
+    // Specifique RDV-I temporaire
+    this.selectList = document.getElementById('motif_motif_category_id')
+    if (this.selectList) {
+      this.selectList.addEventListener('change', () => this.toggleRdvInsertionNotifsDivs())
+      this.toggleRdvInsertionNotifsDivs()
+    }
   }
 
 }
