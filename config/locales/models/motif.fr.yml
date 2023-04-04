@@ -58,6 +58,16 @@ fr:
         visible_and_notified: Le RDV sera visible dans la liste des RDVs côté usager, l'usager sera notifié par SMS et/ou email
         visible_and_not_notified: Le RDV sera visible dans la liste des RDVs côté usager, l'usager ne recevra aucune notification (ni SMS ni email)
         invisible: Le RDV sera invisible dans la liste des RDVs côté usager, l'usager ne recevra aucune notification (ni SMS ni email)
+      # Temporary hint for motif categories condition
+      motif/visibility_types/hint_rdv_insertion:
+        visible_and_notified: ""
+        visible_and_not_notified: "Toutefois des notifications peuvent être envoyées d'une application externe (ex : RDV-Insertion)"
+        invisible: "Toutefois des notifications peuvent être envoyées d'une application externe (ex : RDV-Insertion)"
+      motif/visibility_types/hint_checkbox:
+        visible_and_notified: ""
+        visible_and_not_notified: "Des notifications peuvent être envoyées d'une application externe (ex : RDV-Insertion). Dans ce cas vous pouvez laisser cette case décochée"
+        invisible: "Des notifications peuvent être envoyées d'une application externe (ex : RDV-Insertion). Dans ce cas vous pouvez laisser cette case décochée"
+      # --------------------------------------------
       motif/sectorisation_levels:
         agent: Sectorisation à l'agent
         organisation: Sectorisation à l'organisation
