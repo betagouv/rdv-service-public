@@ -52,11 +52,11 @@ class MotifForm {
 
   toggleRdvInsertionNotifsDivs() {
     // Specifique RDV-I temporaire
-    const selectedValue = this.selectList.value;
+    const selectedValue = this.selectList?.value;
     const hiddenDivs = document.getElementsByClassName('rdv-insertion-notif-hint');
 
     Array.from(hiddenDivs).forEach(div => {
-      div.style.display = selectedValue !== "" ? 'block' : 'none';
+      div.style.display = selectedValue !== ("" || undefined) ? 'block' : 'none';
     });
   }
 
@@ -87,10 +87,10 @@ class MotifForm {
     this.toggleOnlineSubFields()
 
     // Specifique RDV-I temporaire
+    this.toggleRdvInsertionNotifsDivs()
     this.selectList = document.getElementById('motif_motif_category_id')
     if (this.selectList) {
       this.selectList.addEventListener('change', () => this.toggleRdvInsertionNotifsDivs())
-      this.toggleRdvInsertionNotifsDivs()
     }
   }
 
