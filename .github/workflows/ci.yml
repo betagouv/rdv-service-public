@@ -12,7 +12,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.2.0
+          ruby-version: 3.2.2
           bundler-cache: true
       - run: bundle exec rubocop --parallel
   slim-lint:
@@ -23,7 +23,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.2.0
+          ruby-version: 3.2.2
           bundler-cache: true
       - run: bundle exec slim-lint app/views/
   brakeman:
@@ -34,7 +34,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.2.0
+          ruby-version: 3.2.2
           bundler-cache: true
       - run: bundle exec brakeman
   test_unit:
@@ -65,7 +65,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.2.0
+          ruby-version: 3.2.2
           bundler-cache: true
       - name: Set up Redis
         uses: zhulik/redis-action@1.1.0
@@ -119,7 +119,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.2.0
+          ruby-version: 3.2.2
           bundler-cache: true
       - name: Set up Redis
         uses: zhulik/redis-action@1.1.0
