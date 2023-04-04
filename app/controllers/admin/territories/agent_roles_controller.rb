@@ -34,13 +34,13 @@ class Admin::Territories::AgentRolesController < Admin::Territories::BaseControl
     removal_service = AgentRemoval.new(agent, organisation)
 
     if removal_service.remove!
-      if agent.organisations.count > 1
+      if agent.organisations.count >= 1
         redirect_to edit_admin_territory_agent_path(current_territory, agent_role.agent), notice: removal_service.confirm
       else
         redirect_to admin_territory_agents_path(current_territory), notice: removal_service.confirm
       end
     else
-      redirect_to edit_admin_organisation_agent_role_path(current_organisation, @agent.role_in_organisation(current_organisation)), flash: { error: removal_service.errors }
+      redirect_to edit_admin_territory_agent_path(current_territory, agent_role.agent), flash: { error: removal_service.errors }
     end
   end
 

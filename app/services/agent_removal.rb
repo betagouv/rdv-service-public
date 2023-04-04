@@ -27,16 +27,16 @@ class AgentRemoval
   end
 
   def errors
-    I18n.t(".cannot_delete_because_of_rdvs") if upcoming_rdvs?
+    I18n.t("admin.territories.agent_roles.destroy.cannot_delete_because_of_rdvs") if upcoming_rdvs?
   end
 
   def confirm
     if @agent.invitation_accepted_at.blank?
-      I18n.t(".invitation_deleted")
+      I18n.t("admin.territories.agent_roles.destroy.invitation_deleted")
     elsif @agent.deleted_at?
-      I18n.t(".agent_deleted")
+      I18n.t("admin.territories.agent_roles.destroy.agent_deleted")
     else
-      I18n.t(".agent_removed_from_org")
+      I18n.t("admin.territories.agent_roles.destroy.agent_removed_from_org")
     end
   end
 
