@@ -14,32 +14,36 @@ class Api::V1::WebhookEndpointsController < Api::V1::AgentAuthBaseController
     @webhook_endpoint = WebhookEndpoint.new(webhook_endpoint_params)
     authorize @webhook_endpoint
     @webhook_endpoint.save!
-    @webhook_endpoint.trigger_for_all_subscribed_resources
+    TriggerWebhookJob.perform_later(@webhook_endpoint.id) unless trigger_disabled
     render_record @webhook_endpoint
   end
 
   def update
     @webhook_endpoint.update!(webhook_endpoint_params)
-    @webhook_endpoint.trigger_for_all_subscribed_resources
+    TriggerWebhookJob.perform_later(@webhook_endpoint.id) unless trigger_disabled
     render_record @webhook_endpoint
   end
 
   private
 
+  def trigger_disabled
+    params[:trigger].present? && params[:trigger] == false
+  end
+
   def set_webhook_endpoint
     @webhook_endpoint = policy_scope(WebhookEndpoint).find(params[:id])
-  rescue ActiveRecord::RecordNotFound
-    render_error :not_found, not_found: :webhook_endpoint unless @webhook_endpoint
     authorize @webhook_endpoint
   end
 
   def set_organisation
     @organisation = Organisation.find(params[:organisation_id])
-  rescue ActiveRecord::RecordNotFound
-    render_error :not_found, not_found: :organisation unless @organisation
+  end
+
+  def permitted_params
+    params.permit(:target_url, :secret, :organisation_id, :trigger, subscriptions: [])
   end
 
   def webhook_endpoint_params
-    params.permit(:target_url, :secret, :organisation_id, subscriptions: [])
+    permitted_params.except(:trigger)
   end
 end

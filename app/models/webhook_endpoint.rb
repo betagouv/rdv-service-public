@@ -20,7 +20,7 @@ class WebhookEndpoint < ApplicationRecord
         trigger_for(organisation)
       else
         records = organisation.send(subscription.pluralize)
-        records.each { |record| trigger_for(record) }
+        records.find_each { |record| trigger_for(record) }
       end
     end
   end

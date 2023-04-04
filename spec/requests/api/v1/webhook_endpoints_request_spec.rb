@@ -66,9 +66,7 @@ describe "WebhookEndpoints API", swagger_doc: "v1/api.json" do
         let(:agent) { create(:agent) }
       end
     end
-  end
 
-  path "api/v1/webhook_endpoints" do
     post "Créer un webhook_endpoint" do
       with_authentication
 
@@ -77,7 +75,7 @@ describe "WebhookEndpoints API", swagger_doc: "v1/api.json" do
       operationId "createWebhookEndpoint"
       description "Crée un webhook_endpoint et le renvoie"
 
-      parameter name: "organisation_id", in: :query, type: :string, description: "ID de l'organisation", example: "123"
+      parameter name: "organisation_id", in: :path, type: :integer, description: "ID de l'organisation", example: 123
       parameter name: "target_url", in: :query, type: :string, description: "L'url de destination du webhook endpoint", example: "https://www.rdv-insertion.fr/rdv_solidarites_webhooks"
       parameter name: "secret", in: :query, type: :string, description: "Le secret partagé avec l'application de destination du webhook", example: "abc123", required: false
       parameter name: "subscriptions[]", in: :query, style: :form, explode: true, schema: { type: :array, items: { type: :string } },
@@ -118,10 +116,6 @@ describe "WebhookEndpoints API", swagger_doc: "v1/api.json" do
 
       it_behaves_like "an endpoint that returns 401 - unauthorized"
 
-      # it_behaves_like "an endpoint that returns 404 - not found", "l'organisation n'existe pas", true do
-      #   let(:organisation_id) { nil }
-      # end
-
       it_behaves_like "an endpoint that returns 422 - unprocessable_entity", "des paramètres sont manquants, mal formés ou impossibles", true do
         let(:target_url) { nil }
         let(:secret) { nil }
@@ -133,7 +127,7 @@ describe "WebhookEndpoints API", swagger_doc: "v1/api.json" do
     end
   end
 
-  path "api/v1/webhook_endpoints/{webhook_endpoint_id}" do
+  path "api/v1/organisations/{organisation_id}/webhook_endpoints/{webhook_endpoint_id}" do
     patch "Mettre à jour un webhook_endpoint" do
       with_authentication
 
@@ -143,7 +137,7 @@ describe "WebhookEndpoints API", swagger_doc: "v1/api.json" do
       description "Met à jour un webhook_endpoint"
 
       parameter name: :webhook_endpoint_id, in: :path, type: :integer, description: "ID du wehbook_endpoint", example: 123
-      parameter name: "organisation_id", in: :query, type: :string, description: "ID de l'organisation", example: "123"
+      parameter name: :organisation_id, in: :path, type: :integer, description: "ID de l'organisation", example: 123
       parameter name: "target_url", in: :query, type: :string, description: "L'url de destination du webhook endpoint", example: "https://www.rdv-insertion.fr/rdv_solidarites_webhooks"
       parameter name: "secret", in: :query, type: :string, description: "Le secret partagé avec l'application de destination du webhook", example: "abc123", required: false
       parameter name: "subscriptions[]", in: :query, style: :form, explode: true, schema: { type: :array, items: { type: :string } },
@@ -183,10 +177,6 @@ describe "WebhookEndpoints API", swagger_doc: "v1/api.json" do
       end
 
       it_behaves_like "an endpoint that returns 401 - unauthorized"
-
-      it_behaves_like "an endpoint that returns 404 - not found", "l'organisation n'existe pas", true do
-        let(:organisation_id) { nil }
-      end
 
       it_behaves_like "an endpoint that returns 422 - unprocessable_entity", "des paramètres sont manquants, mal formés ou impossibles", true do
         let(:target_url) { nil }
