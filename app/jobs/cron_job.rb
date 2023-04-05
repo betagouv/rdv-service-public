@@ -48,11 +48,10 @@ class CronJob < ApplicationJob
   class DestroyOldPlageOuvertureJob < CronJob
     def perform
       po_exceptionnelle_closed_since_1_year = PlageOuverture.where(recurrence: nil).where(first_day: ..1.year.ago)
-      po_reccurent_closed_since_1_year = PlageOuverture.where(recurrence_ends_at: ..1.year.ago)
-      po_exceptionnelle_closed_since_1_year.or(po_reccurent_closed_since_1_year).each do |po|
-        po.skip_webhooks = true
-        po.destroy
-      end
+      po_recurrent_closed_since_1_year = PlageOuverture.where(recurrence_ends_at: ..1.year.ago)
+      ids_to_destroy = po_exceptionnelle_closed_since_1_year.or(po_recurrent_closed_since_1_year).ids
+      MotifsPlageOuverture.where(plage_ouverture_id: ids_to_destroy).delete_all
+      PlageOuverture.where(id: ids_to_destroy).delete_all
     end
   end
 
