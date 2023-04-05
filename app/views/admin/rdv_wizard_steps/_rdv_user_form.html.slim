@@ -25,7 +25,7 @@ div id=element_id
       h6= t("admin.rdvs_users.notifications_overrides")
       = form.input :send_lifecycle_notifications, wrapper: false
       - if rdvs_user.motif_category_for_rdv_insertion?
-      span.text-muted.font-14= rdvs_user.rdv.motif.human_attribute_value(:visibility_type, context: :hint_checkbox)
-      = form.input :send_reminder_notification, wrapper: false
+        span.text-muted.font-14= rdvs_user.rdv.motif.human_attribute_value(:visibility_type, context: :hint_checkbox)
+        = form.input :send_reminder_notification, wrapper: false
       - if rdvs_user.motif_category_for_rdv_insertion?
-      span.text-muted.font-14= rdvs_user.rdv.motif.human_attribute_value(:visibility_type, context: :hint_checkbox)
+        span.text-muted.font-14= rdvs_user.rdv.motif.human_attribute_value(:visibility_type, context: :hint_checkbox)
