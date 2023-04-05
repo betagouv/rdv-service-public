@@ -223,6 +223,40 @@ RSpec.configure do |config|
             },
             required: %w[id email name phone_number],
           },
+          webhook_endpoint_with_root: {
+            type: "object",
+            properties: {
+              webhook_endpoint: { "$ref" => "#/components/schemas/webhook_endpoint" },
+            },
+            required: %w[webhook_endpoint],
+          },
+          webhook_endpoints: {
+            type: "object",
+            properties: {
+              webhook_endpoints: {
+                type: "array",
+                items: { "$ref" => "#/components/schemas/webhook_endpoint" },
+              },
+              meta: { "$ref" => "#/components/schemas/meta" },
+            },
+            required: %w[webhook_endpoints meta],
+          },
+          webhook_endpoint: {
+            type: "object",
+            properties: {
+              id: { type: "integer" },
+              target_url: { type: "string" },
+              subscriptions: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+              organisation_id: { type: "integer" },
+              secret: { type: "string", nullable: true },
+            },
+            required: %w[id target_url organisation_id],
+          },
           absence_with_root: {
             type: "object",
             properties: {
