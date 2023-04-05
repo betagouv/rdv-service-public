@@ -24,21 +24,32 @@ Rails.application.configure do
       class: "CronJob::FileAttenteJob",
     },
 
-    # Ces jobs doivent s'exécuter dans la matinée, pas la soirée
+    # Ce job doit impérativement s'exécuter exactement une fois dans la journée,
+    # il schedule les envois des notifs des RDVs ayant lieu le surlendemain.
     reminder_job: {
       cron: "every day at 03:00 Europe/Paris",
       class: "CronJob::ReminderJob",
     },
+
+    # Pré-calcul d'index : pas essentiel mais idéalement quotidien
     update_expirations_job: {
       cron: "every day at 03:30 Europe/Paris",
       class: "CronJob::UpdateExpirationsJob",
     },
+
+    # Préchauffage de cache : pas essentiel mais idéalement quotidien
     warm_up_occurrences_cache: {
       cron: "every day at 04:00 Europe/Paris",
       class: "CronJob::WarmUpOccurrencesCache",
     },
 
-    # Ces jobs peuvent s'exécuter dans la soirée
+    # Reset de la liste d'usagers en salle d'attente, à vider chaque soir
+    destroy_redis_waiting_room_keys: {
+      cron: "every day at 21:30 Europe/Paris",
+      class: "CronJob::DestroyRedisWaitingRoomKeys",
+    },
+
+    # Nettoyage de vieille données : pas essentiel mais idéalement quotidien
     destroy_old_rdvs_job: {
       cron: "every day at 22:00 Europe/Paris",
       class: "CronJob::DestroyOldRdvsJob",
@@ -47,9 +58,9 @@ Rails.application.configure do
       cron: "every day at 22:30 Europe/Paris",
       class: "CronJob::DestroyOldPlageOuvertureJob",
     },
-    destroy_redis_waiting_room_keys: {
+    destroy_old_versions: {
       cron: "every day at 23:00 Europe/Paris",
-      class: "CronJob::DestroyRedisWaitingRoomKeys",
+      class: "CronJob::DestroyOldVersions",
     },
   }
 end
