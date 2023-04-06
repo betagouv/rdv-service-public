@@ -52,7 +52,7 @@ section.bg-light.p-4
     .card.mb-3
       .card-body
         - if context.first_matching_motif.collectif?
-          - context.creneaux.includes(:agents_rdvs, :agents, :motif).each do |rdv|
+          - context.available_collective_rdvs.includes(:agents_rdvs, :agents, :motif).each do |rdv|
             = render "rdv_collectif", rdv: rdv
         - elsif context.unique_motifs_by_name_and_location_type.present?
           = render "creneaux", lieu: context.lieu, creneaux: context.creneaux, date_range: context.date_range, departement: context.departement, address: context.address, max_public_booking_delay: context.max_public_booking_delay, city_code: context.city_code, next_availability: context.next_availability, query: context.query, context: context
