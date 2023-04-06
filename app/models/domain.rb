@@ -12,6 +12,7 @@ Domain = Struct.new(
   :can_sync_to_outlook,
   :france_connect_enabled,
   :faq_url,
+  :documentation_url,
   keyword_init: true
 )
 
@@ -27,6 +28,7 @@ class Domain
       online_reservation_with_public_link: false,
       can_sync_to_outlook: false,
       sms_sender_name: "RdvSoli",
+      documentation_url: "https://rdvs.notion.site/RDV-Solidarit-s-94176a1507814d19aeaaf6e678ffcbed",
       faq_url: "https://rdv-solidarites.notion.site/F-A-Q-M-dico-social-aaf94709c0ea448b8eb9d93f548acdb9",
       france_connect_enabled: true
     ),
@@ -41,6 +43,7 @@ class Domain
       online_reservation_with_public_link: true,
       can_sync_to_outlook: false,
       sms_sender_name: "RdvAideNum",
+      documentation_url: "https://rdvs.notion.site/RDV-Aide-Num-rique-cd6f04a9d90a444a800d81f77428eaf4",
       faq_url: "https://rdvs.notion.site/FAQ-CNFS-c55933f66f054aaba60fe4799851000e",
       france_connect_enabled: false
     ),

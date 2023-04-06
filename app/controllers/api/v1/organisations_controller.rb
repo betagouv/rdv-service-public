@@ -1,12 +1,16 @@
 # frozen_string_literal: true
 
 class Api::V1::OrganisationsController < Api::V1::AgentAuthBaseController
-  before_action :set_organisation, only: %i[update]
+  before_action :set_organisation, only: %i[show update]
 
   def index
     organisations = policy_scope(Organisation)
     organisations = organisations.where(id: organisations_relevant_to_sector.pluck(:id)) if geo_params?
     render_collection(organisations.order(:id))
+  end
+
+  def show
+    render_record @organisation
   end
 
   def update
