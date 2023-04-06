@@ -66,6 +66,9 @@
           div= @motif.human_attribute_value(:visibility_type)
           div.text-muted
             = @motif.human_attribute_value(:visibility_type, context: :hint)
+            - if @motif.motif_category_for_rdv_insertion?
+              br
+              span= @motif.human_attribute_value(:visibility_type, context: :hint_rdv_insertion)
         hr
 
         = motif_attribute_row \
