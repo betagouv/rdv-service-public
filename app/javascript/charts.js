@@ -1,2 +1,1 @@
-require("chartkick")
-require("chart.js")
+import "chartkick/chart.js"
