@@ -41,40 +41,40 @@ describe Admin::Territories::AgentRolesController, type: :controller do
   end
 
   describe "#destoy" do
-    it "redirect to territorial_agent_edit on success if agent is in another organisation" do
+    it "redirect to territorial_agent_edit on success if agent has another organisation" do
       territory = create(:territory)
+      organisation = create(:organisation, territory: territory)
+      organisation2 = create(:organisation, territory: territory)
       agent = create(:agent, role_in_territories: [territory])
+      create(:agent_territorial_access_right, territory: territory, agent: agent)
+      agent_role = create(:agent_role, organisation: organisation, agent: agent, level: "basic")
+      create(:agent_role, organisation: organisation2, agent: agent, level: "basic")
 
-      create(:agent_territorial_access_right, allow_to_manage_teams: true, agent: agent)
-      agent_role = create(:agent_role, agent: agent, level: "basic")
-      agent_role2 = create(:agent_role, agent: agent, level: "basic")
-
-      puts "redirect to territorial_agent_edit on success if agent has more as one organisation"
-      puts "territory => #{territory.id}"
-      puts "agent => #{agent.id}"
-      puts "agent_role => #{agent_role.inspect}"
-      puts "agent_role2 => #{agent_role2.inspect}"
+      last_agent = create(:agent)
+      create(:agent_territorial_access_right, territory: territory, agent: last_agent)
+      create(:agent_role, organisation: organisation, agent: last_agent, level: "admin")
 
       sign_in agent
 
-
-
-      delete :destroy, params: {territory_id: territory.id, organisation_id: agent_role.organisation_id, id: agent.id }
+      delete :destroy, params: { territory_id: territory.id, id: agent_role.id }
       expect(response).to redirect_to(edit_admin_territory_agent_path(territory, agent))
-
-
     end
 
-    it "redirect to admin_territory_agents on success" do
+    it "redirect to territorial_agent_edit on success if it the last organisation" do
       territory = create(:territory)
+      organisation = create(:organisation, territory: territory)
       agent = create(:agent, role_in_territories: [territory])
+      create(:agent_territorial_access_right, territory: territory, agent: agent)
+      agent_role = create(:agent_role, organisation: organisation, agent: agent, level: "basic")
 
-      create(:agent_territorial_access_right, allow_to_manage_teams: true, agent: agent)
-      agent_role = create(:agent_role, agent: agent, level: "basic")
+      last_agent = create(:agent)
+      create(:agent_territorial_access_right, territory: territory, agent: last_agent)
+      create(:agent_role, organisation: organisation, agent: last_agent, level: "admin")
+
       sign_in agent
 
-      delete :destroy, params: { organisation_id: agent_role.organisation_id, id: agent.id }
-      expect(response).to redirect_to(edit_admin_territory_agent_path(territory, agent))
+      delete :destroy, params: { territory_id: territory.id, id: agent_role.id }
+      expect(response).to redirect_to(admin_territory_agents_path(territory))
     end
 
     it "destroy agent_role" do
