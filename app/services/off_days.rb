@@ -52,9 +52,6 @@ class OffDays
     Date.new(2026, 12, 25),
   ].to_set.freeze
 
-  # On crash la CI pour se forcer à mettre à jour la liste à temps
-  raise "Il faut mettre à jour la liste des jours fériés" if Time.zone.today.year >= 2026 && Rails.env.test?
-
   def self.all_in_date_range(date_range)
     return [] if date_range.blank?
 

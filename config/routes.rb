@@ -214,8 +214,6 @@ Rails.application.routes.draw do
         devise_for :agents, controllers: { invitations: "admin/invitations_devise" }, only: :invitations
         get "support", to: "static_pages#support"
       end
-
-      resources :jours_feries, only: [:index]
     end
   end
   authenticated :agent do
