@@ -198,4 +198,11 @@ RSpec.describe "prescripteur can create RDV for a user" do
       expect(page).to have_content("Vos coordonnées de prescripteur")
     end
   end
+
+  context "when going directly to a prescripteur form without having selected a creneau" do
+    it "redirects to the homepage with an error message" do
+      visit "http://www.rdv-solidarites-test.localhost/prescripteur/new_prescripteur"
+      expect(page).to have_content("Nous n'avons pas trouvé le créneau pour lequel vous souhaitiez prendre rendez-vous.")
+    end
+  end
 end

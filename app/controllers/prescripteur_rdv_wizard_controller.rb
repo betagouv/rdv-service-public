@@ -70,6 +70,11 @@ class PrescripteurRdvWizardController < ApplicationController
   private
 
   def set_rdv_wizard
+    if session[:rdv_wizard_attributes].blank?
+      flash[:error] = "Nous n'avons pas trouvé le créneau pour lequel vous souhaitiez prendre rendez-vous."
+      redirect_to prendre_rdv_path(prescripteur: 1) and return
+    end
+
     @rdv_wizard = PrescripteurRdvWizard.new(session[:rdv_wizard_attributes], current_domain)
   end
 

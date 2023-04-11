@@ -4,5 +4,8 @@ div
   p
     = render "mailers/common/rdv_overview", rdv: @rdv, for_role: :agent
 
+  = "Besoin de déplacer le rendez-vous ou de corriger un détail ? "
+  =< mail_to(SUPPORT_EMAIL, "Contactez-nous", target: "_blank")
+  br
   br
   = t("mailers.common.farewell_html", domain_name: domain.name)
