@@ -39,7 +39,7 @@ describe "User can search for creneaux" do
     let!(:plage_ouverture1) { create(:plage_ouverture, first_day: Time.zone.tomorrow, motifs: [motif], lieu: lieu, organisation: organisation) }
     let!(:plage_ouverture2) { create(:plage_ouverture, first_day: Time.zone.tomorrow, motifs: [motif], lieu: lieu, organisation: organisation) }
 
-    it "does does not show duplicate creneaux" do
+    it "does not show duplicate creneaux" do
       visit public_link_to_org_path(organisation_id: organisation.id)
 
       click_on("Vaccination (Sur place)")
