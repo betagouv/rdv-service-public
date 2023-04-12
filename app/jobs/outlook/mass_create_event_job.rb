@@ -6,9 +6,9 @@ module Outlook
 
     def perform(agent)
       agent.agents_rdvs.future.find_each do |agents_rdv|
-        # if agents_rdv.outlook_id.nil?
-        #   agents_rdv.update_columns(outlook_create_in_progress: true)
-        # end
+        if agents_rdv.outlook_id.nil?
+          agents_rdv.update_columns(outlook_create_in_progress: true)
+        end
         Outlook::SyncEventJob.perform_later_for(agents_rdv)
       end
     end
