@@ -26,7 +26,7 @@ class AgentRemoval
     (@agent.organisations - [@organisation]).empty?
   end
 
-  def errors
+  def error_message
     I18n.t("admin.territories.agent_roles.destroy.cannot_delete_because_of_rdvs") if upcoming_rdvs?
   end
 
