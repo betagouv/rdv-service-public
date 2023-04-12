@@ -30,7 +30,7 @@ class AgentRemoval
     I18n.t("admin.territories.agent_roles.destroy.cannot_delete_because_of_rdvs") if upcoming_rdvs?
   end
 
-  def confirm
+  def confirmation_message
     if @agent.invitation_accepted_at.blank?
       I18n.t("admin.territories.agent_roles.destroy.invitation_deleted")
     elsif @agent.deleted_at?
