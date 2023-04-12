@@ -26,7 +26,7 @@ describe "Agent can sync his account to outlook" do
     login_as(agent, scope: :agent)
     visit agents_calendar_sync_outlook_sync_path
 
-    expect(client_double).to receive(:create_event!).and_return("stubbed_outlook_event_id")
+    expect(client_double).to receive(:create_event!)
     perform_enqueued_jobs do
       find(:xpath, "//a/img[@alt=\"S'identifier avec Microsoft\"]").find(:xpath, "..").click
 
