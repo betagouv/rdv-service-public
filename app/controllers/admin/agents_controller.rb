@@ -21,12 +21,12 @@ class Admin::AgentsController < AgentAuthController
 
     if removal_service.remove!
       if @agent.invitation_accepted_at.blank?
-        redirect_to admin_organisation_invitations_path(current_organisation), notice: removal_service.confirm
+        redirect_to admin_organisation_invitations_path(current_organisation), notice: removal_service.confirmation_message
       else
-        redirect_to admin_organisation_agents_path(current_organisation), notice: removal_service.confirm
+        redirect_to admin_organisation_agents_path(current_organisation), notice: removal_service.confirmation_message
       end
     else
-      redirect_to edit_admin_organisation_agent_role_path(current_organisation, @agent.role_in_organisation(current_organisation)), flash: { error: removal_service.errors }
+      redirect_to edit_admin_organisation_agent_role_path(current_organisation, @agent.role_in_organisation(current_organisation)), flash: { error: removal_service.error_message }
     end
   end
 
