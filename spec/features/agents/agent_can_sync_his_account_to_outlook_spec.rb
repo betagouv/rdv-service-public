@@ -3,7 +3,7 @@
 describe "Agent can sync his account to outlook" do
   let!(:organisation) { create(:organisation) }
   let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
-  let!(:rdv) { create(:rdv, organisation: organisation, agents: [agent]) }
+  let!(:rdv) { create(:rdv, organisation: organisation, agents: [agent], starts_at: 10.days.ago) }
 
   let(:client_double) { instance_double(Outlook::ApiClient) }
 
