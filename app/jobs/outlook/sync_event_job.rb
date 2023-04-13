@@ -5,7 +5,7 @@ module Outlook
     queue_as :outlook_sync
 
     def self.perform_later_for(agents_rdv)
-      if agents_rdv.outlook_id.nil? && agents_rdv.persisted?
+      if agents_rdv.outlook_id.nil? && !agents_rdv.destroyed?
         agents_rdv.update_columns(outlook_create_in_progress: true) # rubocop:disable Rails/SkipsModelValidations
       end
       # En cas de suppression du agents_rdv, on ne pourra pas le désérialiser au moment de l'exécution du job.
