@@ -15,7 +15,7 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
     set_search_results
     if (params[:commit].present? || request.format.js?) && motif_selected? && (results_without_lieu? || only_one_lieu?)
       skip_policy_scope # TODO: improve pundit checks for creneaux
-      redirect_to admin_organisation_slots_path(current_organisation, creneaux_search_params), class: "d-block stretched-link"
+      redirect_to admin_organisation_slots_path(current_organisation, creneaux_search_params)
     else
       @motifs = policy_scope(Motif).active.ordered_by_name
       @services = policy_scope(Service)
