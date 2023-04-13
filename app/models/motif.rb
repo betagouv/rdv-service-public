@@ -215,6 +215,11 @@ class Motif < ApplicationRecord
     bookable_by != "agents"
   end
 
+  # Temporary method for rdv-insertion motifs
+  def motif_category_for_rdv_insertion?
+    motif_category.present?
+  end
+
   private
 
   def booking_delay_validation

@@ -10,16 +10,10 @@
           i.fa.fa-book
       .card-body
         p
-          span> Vous trouverez de la documentation sur les différentes fonctionnalités sur le site
-          = link_to "https://doc.rdv-solidarites.fr/" do
-            span> doc.rdv-solidarites.fr
+          span> Explorez les fonctionnalités de l'outil à travers la
+          = link_to current_domain.documentation_url do
+            span> documentation
             i.fa.fa-external-link-alt>
-        p
-          span> Vous pouvez aussi consulter les
-          ruby:
-          = link_to current_domain.faq_url do
-            span> Questions fréquentes
-            i.fa.fa-external-link-alt
 
     .card
       .card-header
