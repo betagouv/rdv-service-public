@@ -258,8 +258,7 @@ RSpec.describe Outlook::EventSerializerAndListener, database_cleaner_strategy: :
 
     context "agent not synced with outlook" do
       let(:agent) { create(:agent, microsoft_graph_token: nil) }
-      let(:rdv) { create(:rdv, motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30) }
-      let!(:agents_rdv) { create(:agents_rdv, rdv: rdv, agent: agent) }
+      let(:rdv) { create(:rdv, agents: [agent], motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30) }
 
       it "does not call Outlook::DestroyEventJob" do
         expect do
