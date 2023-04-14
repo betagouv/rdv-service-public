@@ -155,8 +155,12 @@ class Agent < ApplicationRecord
     roles.find_by(organisation: organisation)
   end
 
-  def organisations_level(level)
-    organisations.merge(roles.where(level: level)) # self.organisations is a through relation. This implicitly joins through roles and agent_roles
+  def admin_orgs
+    organisations.merge(roles.where(level: AgentRole::LEVEL_ADMIN))
+  end
+
+  def basic_orgs
+    organisations.merge(roles.where(level: AgentRole::LEVEL_BASIC))
   end
 
   def multiple_organisations_access?
