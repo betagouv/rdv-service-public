@@ -24,7 +24,7 @@ describe Agents::AbsenceMailer, type: :mailer do
       end
 
       describe "using the agent domain's branding" do
-        context "when agent's is on RDV_SOLIDARITES" do
+        context "when agent is on RDV_SOLIDARITES" do
           before do
             allow(agent).to receive(:domain).and_return(Domain::RDV_SOLIDARITES)
           end
