@@ -1,4 +1,7 @@
+# frozen_string_literal: true
+
 class AddForeignKeys < ActiveRecord::Migration[7.0]
+  # rubocop:disable Metrics/MethodLength
   def change
     up_only do
       MotifsPlageOuverture.where.not(plage_ouverture_id: PlageOuverture.all.select(:id)).delete_all
@@ -36,4 +39,5 @@ class AddForeignKeys < ActiveRecord::Migration[7.0]
     add_foreign_key :user_profiles, :users
     add_foreign_key :zones, :sectors
   end
+  # rubocop:enable Metrics/MethodLength
 end
