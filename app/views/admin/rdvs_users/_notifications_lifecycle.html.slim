@@ -5,11 +5,20 @@
     span.mr-1
       i.fa.fa-times-circle.text-danger.mr-2
       strong = t("admin.rdvs_users.notifications_summary.none")
+    - if rdvs_user.rdv.motif.motif_category_for_rdv_insertion?
+      br
+      span.text-muted.font-14= rdvs_user.rdv.motif.human_attribute_value(:visibility_type, context: :hint_rdv_insertion)
   - elsif !rdvs_user.send_lifecycle_notifications
     span.mr-1
       i.fa.fa-times-circle.text-danger.mr-2
       strong = t("admin.rdvs_users.notifications_summary.lifecycle_off")
+    - if rdvs_user.rdv.motif.motif_category_for_rdv_insertion?
+      br
+      span.text-muted.font-14= rdvs_user.rdv.motif.human_attribute_value(:visibility_type, context: :hint_rdv_insertion)
   - elsif !rdvs_user.send_reminder_notification
     span.mr-1
       i.fa.fa-times-circle.text-danger.mr-2
       strong = t("admin.rdvs_users.notifications_summary.reminder_off")
+    - if rdvs_user.rdv.motif.motif_category_for_rdv_insertion?
+      br
+      span.text-muted.font-14= rdvs_user.rdv.motif.human_attribute_value(:visibility_type, context: :hint_rdv_insertion)

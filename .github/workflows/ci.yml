@@ -12,7 +12,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.2.0
+          ruby-version: 3.2.2
           bundler-cache: true
       - run: bundle exec rubocop --parallel
   slim-lint:
@@ -23,7 +23,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.2.0
+          ruby-version: 3.2.2
           bundler-cache: true
       - run: bundle exec slim-lint app/views/
   brakeman:
@@ -34,7 +34,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.2.0
+          ruby-version: 3.2.2
           bundler-cache: true
       - run: bundle exec brakeman
   test_unit:
@@ -55,14 +55,17 @@ jobs:
         ports: ["5432:5432"]
     steps:
       - uses: actions/checkout@v3
+      - uses: szenius/set-timezone@v1.0
+        with:
+          timezoneLinux: "Europe/Paris"
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 16.19.1
+          node-version: 18.14.1
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.2.0
+          ruby-version: 3.2.2
           bundler-cache: true
       - name: Set up Redis
         uses: zhulik/redis-action@1.1.0
@@ -106,14 +109,17 @@ jobs:
         ports: ["5432:5432"]
     steps:
       - uses: actions/checkout@v3
+      - uses: szenius/set-timezone@v1.0
+        with:
+          timezoneLinux: "Europe/Paris"
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 16.19.1
+          node-version: 18.14.1
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.2.0
+          ruby-version: 3.2.2
           bundler-cache: true
       - name: Set up Redis
         uses: zhulik/redis-action@1.1.0

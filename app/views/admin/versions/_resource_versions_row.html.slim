@@ -7,6 +7,6 @@
           = t("admin.versions.title")
     .collapse.hide#history-collapse
       .card-body
-        = cache [resource, resource.class.paper_trail_options[:only]] do
+        = cache([resource, resource.class.paper_trail_options[:only]], expires_in: 7.days) do
           - versions = PaperTrailAugmentedVersion.for_resource(resource)
           = render "admin/versions/versions", versions: versions.reverse

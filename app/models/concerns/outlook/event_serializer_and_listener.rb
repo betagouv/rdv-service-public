@@ -94,9 +94,6 @@ module Outlook
 
     def self.enqueue_sync_for_marked_records(agents_rdvs)
       agents_rdvs.select(&:needs_sync_to_outlook).each do |agents_rdv|
-        if agents_rdv.outlook_id.nil? && agents_rdv.persisted?
-          agents_rdv.update_columns(outlook_create_in_progress: true) # rubocop:disable Rails/SkipsModelValidations
-        end
         Outlook::SyncEventJob.perform_later_for(agents_rdv)
         agents_rdv.assign_attributes(needs_sync_to_outlook: false)
       end

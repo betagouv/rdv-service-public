@@ -37,7 +37,9 @@
         tbody id="users-list"
           / En effet, on rencontre ce problème : Casecommons/pg_search#238
           / Le uniq est un solution qui casse parfois le décompte, mais ça paraît acceptable !
-          = render partial: "admin/users/user", collection: @users.includes(:responsible).uniq, cached: ->(user) { [user, current_organisation] }
+          - @users.includes(:responsible).uniq.each do |user|
+            - cache([current_organisation.id, user], expires_in: 7.days)
+              = render partial: "admin/users/user", locals: { user: user }
 
     - if @users.empty?
       .mb-4.p.text-center Aucun usager trouvé pour ces critères

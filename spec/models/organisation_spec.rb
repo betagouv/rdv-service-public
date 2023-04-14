@@ -36,4 +36,21 @@ describe Organisation, type: :model do
       expect(organisation.slug).to eq("sdsei-pays-basque-interieur-site-de-saint-jean-le-vieux-mais-aussi-d-un-autre-end")
     end
   end
+
+  describe "phone_number" do
+    it "invalid phone" do
+      organisation = build(:organisation, phone_number: "12345")
+      expect(organisation).to be_invalid
+    end
+
+    it "blank phone is valid" do
+      organisation = build(:organisation, phone_number: nil)
+      expect(organisation).to be_valid
+    end
+
+    it "4 digits phones are valid" do
+      organisation = build(:organisation, phone_number: "3949")
+      expect(organisation).to be_valid
+    end
+  end
 end

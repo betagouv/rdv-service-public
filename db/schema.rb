@@ -201,8 +201,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_28_083444) do
     t.string "last_sign_in_ip"
     t.text "microsoft_graph_token"
     t.text "refresh_microsoft_graph_token"
-    t.boolean "outlook_disconnect_in_progress", default: false, null: false
     t.string "cnfs_secondary_email"
+    t.boolean "outlook_disconnect_in_progress", default: false, null: false
     t.index ["calendar_uid"], name: "index_agents_on_calendar_uid", unique: true
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true
     t.index ["email"], name: "index_agents_on_email", unique: true
@@ -707,6 +707,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_28_083444) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "subscriptions", default: ["rdv", "absence", "plage_ouverture"], array: true
+    t.index ["organisation_id", "target_url"], name: "index_webhook_endpoints_on_organisation_id_and_target_url", unique: true
     t.index ["organisation_id"], name: "index_webhook_endpoints_on_organisation_id"
   end
 

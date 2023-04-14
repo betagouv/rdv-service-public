@@ -1,8 +1,6 @@
 const path = require("path")
 const webpack = require("webpack")
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
-const MomentTimezoneDataPlugin = require('moment-timezone-data-webpack-plugin');
 
 module.exports = {
   devtool: "source-map",
@@ -42,16 +40,9 @@ module.exports = {
   },
   plugins: [
     new MiniCssExtractPlugin(),
-    new MomentLocalesPlugin({
-      localesToKeep: ['en', 'fr'],
-    }),
-    new MomentTimezoneDataPlugin({
-      matchZones: /Europe\/Paris/,
-    }),
     new webpack.ProvidePlugin({
       $: 'jquery',
       jQuery: 'jquery',
-      moment: 'moment',
       Holder: 'holderjs',
       Popper: ['popper.js', 'default'],
       Rails: ['@rails/ujs']
