@@ -20,8 +20,6 @@ class Agent::AbsencePolicy < ApplicationPolicy
   alias destroy? same_agent_or_has_access?
   alias versions? same_agent_or_has_access?
 
-  private
-
   class Scope < Scope
     include CurrentAgentInPolicyConcern
 
