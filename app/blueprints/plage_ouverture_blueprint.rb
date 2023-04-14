@@ -13,4 +13,12 @@ class PlageOuvertureBlueprint < Blueprinter::Base
   field(:rrule) { _1.rrule }
   field(:ical) { _1.to_ical }
   # rubocop:enable Style/SymbolProc
+
+  field(:web_url) do |plage|
+    Rails.application.routes.url_helpers.admin_organisation_plage_ouverture_url(
+      id: plage.id,
+      organisation_id: plage.organisation.id,
+      host: plage.domain.dns_domain_name
+    )
+  end
 end

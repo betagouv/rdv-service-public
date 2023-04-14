@@ -13,4 +13,12 @@ class RdvBlueprint < Blueprinter::Base
   association :rdvs_users, blueprint: RdvsUserBlueprint
   association :agents, blueprint: AgentBlueprint
   association :lieu, blueprint: LieuBlueprint
+
+  field(:web_url) do |rdv|
+    Rails.application.routes.url_helpers.admin_organisation_rdv_url(
+      id: rdv.id,
+      organisation_id: rdv.organisation.id,
+      host: rdv.domain.dns_domain_name
+    )
+  end
 end

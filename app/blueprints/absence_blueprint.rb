@@ -11,4 +11,12 @@ class AbsenceBlueprint < Blueprinter::Base
   field(:rrule) { _1.rrule }
   field(:ical) { _1.to_ical }
   # rubocop:enable Style/SymbolProc
+
+  field(:web_url) do |absence|
+    Rails.application.routes.url_helpers.edit_admin_organisation_absence_url(
+      id: absence.id,
+      organisation_id: absence.organisation.id,
+      host: absence.domain.dns_domain_name
+    )
+  end
 end
