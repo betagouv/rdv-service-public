@@ -6,7 +6,7 @@ describe PlageOuvertureBlueprint do
   let(:rendered) { described_class.render(plage_ouverture, { root: :plage_ouverture }) }
   let(:plage_ouverture) { build(:plage_ouverture) }
 
-  describe "web_url" do
+  describe "attributes" do
     let(:organisation) { create(:organisation) }
     let(:plage_ouverture) { create(:plage_ouverture, organisation: organisation) }
 
