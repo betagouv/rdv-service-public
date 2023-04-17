@@ -7,7 +7,7 @@ class PrescripteurRdvWizardController < ApplicationController
     @step_titles = ["Choix du rendez-vous", "Prescripteur", "Bénéficiaire", "Confirmation"]
   end
 
-  before_action :set_rdv_wizard,                  only: %i[new_prescripteur new_beneficiaire create_rdv]
+  before_action :set_rdv_wizard,                  only: %i[new_prescripteur save_prescripteur new_beneficiaire create_rdv]
   before_action :redirect_if_creneau_unavailable, only: %i[new_prescripteur new_beneficiaire create_rdv]
 
   def start
