@@ -15,6 +15,8 @@ class RdvBlueprint < Blueprinter::Base
   association :lieu, blueprint: LieuBlueprint
 
   field(:web_url) do |rdv|
+    next unless rdv.persisted?
+
     Rails.application.routes.url_helpers.admin_organisation_rdv_url(
       id: rdv.id,
       organisation_id: rdv.organisation.id,

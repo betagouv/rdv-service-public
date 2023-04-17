@@ -15,6 +15,8 @@ class PlageOuvertureBlueprint < Blueprinter::Base
   # rubocop:enable Style/SymbolProc
 
   field(:web_url) do |plage|
+    next unless plage.persisted?
+
     Rails.application.routes.url_helpers.admin_organisation_plage_ouverture_url(
       id: plage.id,
       organisation_id: plage.organisation.id,

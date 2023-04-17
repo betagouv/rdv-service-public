@@ -13,6 +13,8 @@ class AbsenceBlueprint < Blueprinter::Base
   # rubocop:enable Style/SymbolProc
 
   field(:web_url) do |absence|
+    next unless absence.persisted?
+
     Rails.application.routes.url_helpers.edit_admin_organisation_absence_url(
       id: absence.id,
       organisation_id: absence.organisation.id,

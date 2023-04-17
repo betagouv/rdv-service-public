@@ -4,11 +4,11 @@ describe RdvBlueprint do
   subject(:json) { JSON.parse(rendered) }
 
   let(:rendered) { described_class.render(rdv, { root: :rdv }) }
-  let(:rdv) { create(:rdv) }
+  let(:rdv) { build(:rdv) }
 
   describe "status" do
     let(:motif) { create(:motif) }
-    let(:rdv) { create(:rdv, status: "revoked", motif: motif) }
+    let(:rdv) { build(:rdv, status: "revoked", motif: motif) }
 
     it do
       expect(json.dig("rdv", "status")).to eq("revoked")
@@ -29,7 +29,7 @@ describe RdvBlueprint do
 
   describe "users (DEPRECATED)" do
     let(:user) { build(:user, first_name: "Jean") }
-    let(:rdv) { create(:rdv, users: [user]) }
+    let(:rdv) { build(:rdv, users: [user]) }
 
     it do
       expect(json.dig("rdv", "users").first["first_name"]).to eq("Jean")
