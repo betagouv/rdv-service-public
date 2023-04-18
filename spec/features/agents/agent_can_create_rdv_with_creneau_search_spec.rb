@@ -42,7 +42,7 @@ describe "Agent can create a Rdv with creneau search" do
       create(:plage_ouverture, motifs: [motif], first_day: first_day, agent: other_agent, organisation: organisation, lieu: plage_ouverture1.lieu)
     end
 
-    it "displays a slot for each agent", js: true do
+    it "displays a slot for each agent" do
       travel_to(first_day)
       visit admin_organisation_agent_searches_path(organisation)
       expect(page).to have_content("Trouver un RDV")
