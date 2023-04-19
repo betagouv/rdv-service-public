@@ -97,6 +97,10 @@ class Agent < ApplicationRecord
   scope :available_referents_for, lambda { |user|
     where.not(id: [user.agents.map(&:id)])
   }
+  scope :in_orgs, lambda { |organisations|
+    joins(:roles).where(agent_roles: { organisations: organisations })
+  }
+
   ## -
 
   delegate :name, to: :domain, prefix: true
@@ -208,10 +212,6 @@ class Agent < ApplicationRecord
     agents_with_open_rdv_collectif = joins(:rdvs).merge(rdv_collectif_scope)
 
     where_id_in_subqueries([agents_with_open_plage, agents_with_open_rdv_collectif])
-  end
-
-  def self.in_orgs(organisations)
-    joins(:roles).where(agent_roles: { organisations: organisations })
   end
 
   def to_s
