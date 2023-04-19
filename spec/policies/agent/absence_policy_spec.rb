@@ -6,12 +6,12 @@ describe Agent::AbsencePolicy, type: :policy do
   let(:pundit_context) { AgentContext.new(agent) }
   let!(:organisation) { create(:organisation) }
 
-  describe "#show?" do
+  describe "#update?" do
     context "regular agent, own absence" do
       let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
       let!(:absence) { create(:absence, agent: agent) }
 
-      permissions(:show?) { it { is_expected.to permit(pundit_context, absence) } }
+      permissions(:update?) { it { is_expected.to permit(pundit_context, absence) } }
     end
 
     context "regular agent, other agent's absence BUT same service" do
@@ -20,7 +20,7 @@ describe Agent::AbsencePolicy, type: :policy do
       let!(:other_agent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }
       let!(:absence) { create(:absence, agent: other_agent) }
 
-      permissions(:show?) { it { is_expected.to permit(pundit_context, absence) } }
+      permissions(:update?) { it { is_expected.to permit(pundit_context, absence) } }
     end
 
     context "regular agent, other agent's absence, different service" do
@@ -29,7 +29,7 @@ describe Agent::AbsencePolicy, type: :policy do
       let!(:other_agent) { create(:agent, basic_role_in_organisations: [organisation], service: create(:service)) }
       let!(:absence) { create(:absence, agent: other_agent) }
 
-      permissions(:show?) { it { is_expected.not_to permit(pundit_context, absence) } }
+      permissions(:update?) { it { is_expected.not_to permit(pundit_context, absence) } }
     end
 
     context "admin agent, other agent's absence, different service" do
@@ -38,7 +38,7 @@ describe Agent::AbsencePolicy, type: :policy do
       let!(:other_agent) { create(:agent, basic_role_in_organisations: [organisation], service: create(:service)) }
       let!(:absence) { create(:absence, agent: other_agent) }
 
-      permissions(:show?) { it { is_expected.to permit(pundit_context, absence) } }
+      permissions(:update?) { it { is_expected.to permit(pundit_context, absence) } }
     end
   end
 end

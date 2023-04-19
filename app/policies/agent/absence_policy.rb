@@ -3,11 +3,11 @@
 class Agent::AbsencePolicy < ApplicationPolicy
   include CurrentAgentInPolicyConcern
 
+  # Règle métier : on peut gérer une absence si on peut voir l'agent auquel elle appartient.
   def can_manage_absence?
-    agent_policy.can_manage_agent? || same_service_and_org_in_common?
+    ::Agent::AgentPolicy::Scope.new(pundit_user, Agent.all).resolve.exists?(record.agent_id)
   end
 
-  alias show? can_manage_absence?
   alias create? can_manage_absence?
   alias cancel? can_manage_absence?
   alias new? can_manage_absence?
@@ -16,23 +16,14 @@ class Agent::AbsencePolicy < ApplicationPolicy
   alias destroy? can_manage_absence?
   alias versions? can_manage_absence?
 
-  private
-
-  def same_service_and_org_in_common?
-    ___
-  end
-
-  def agent_policy
-    ::Agent::AgentPolicy.new(pundit_user, record.agent)
-  end
-
   class Scope < Scope
     include CurrentAgentInPolicyConcern
 
-    # delegate to AgentPolicy: if I can manage an agent, I can manage her absences
+    # Même règle métier : on peut gérer, donc lister, les absences si
+    # on peut voir les agents auquel elles appartiennent.
     def resolve
-      agents_i_can_manage = agent_policy.resolve
-      scope.where(agent: agents_i_can_manage)
+      agents_i_can_see = agent_policy.resolve
+      scope.where(agent: agents_i_can_see)
     end
 
     private
