@@ -3,10 +3,8 @@
 class Agent::AbsencePolicy < ApplicationPolicy
   include CurrentAgentInPolicyConcern
 
-  def can_manage_agent?
-    # delegate to AgentPolicy: if I can manage an agent, I can manage her absences
-    ::Agent::AgentPolicy.new(pundit_user, record.agent).current_agent_or_admin_in_record_organisation?
-  end
+  # delegate to AgentPolicy: if I can manage an agent, I can manage her absences
+  delegate :can_manage_agent?, to: :agent_policy
 
   alias show? can_manage_agent?
   alias create? can_manage_agent?
@@ -17,12 +15,22 @@ class Agent::AbsencePolicy < ApplicationPolicy
   alias destroy? can_manage_agent?
   alias versions? can_manage_agent?
 
+  private
+
+  def agent_policy
+    ::Agent::AgentPolicy.new(pundit_user, record.agent)
+  end
+
   class Scope < Scope
     include CurrentAgentInPolicyConcern
 
-    def resolve
-      # delegate to AgentPolicy: if I can manage an agent, I can manage her absences
-      ::Agent::AgentPolicy::Scope.new(pundit_user, Agent.all).resolve
+    # delegate to AgentPolicy: if I can manage an agent, I can manage her absences
+    delegate :resolve, to: :agent_policy
+
+    private
+
+    def agent_policy
+      ::Agent::AgentPolicy::Scope.new(pundit_user, Agent.all)
     end
   end
 end
