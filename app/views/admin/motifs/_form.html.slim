@@ -152,7 +152,7 @@
           p
             span.text-muted.font-14= Motif.human_attribute_value(:visibility_type, value, context: :hint)
             br
-            span.text-muted.font-14.rdv-insertion-notif-hint= Motif.human_attribute_value(:visibility_type, value, context: :hint_rdv_insertion)
+            span.text-muted.font-14.rdv-insertion-notif-hint[style="display: none;"]= Motif.human_attribute_value(:visibility_type, value, context: :hint_rdv_insertion)
 
   .card
     .card-body
