@@ -15,7 +15,7 @@ describe AgentRemoval, type: :service do
       expect(result).to eq true
       agent.reload
       expect(agent.organisations).to be_empty
-      expect(agent.absences).to match_array(absences)
+      expect(agent.absences).to be_empty
       expect(agent.plage_ouvertures).to be_empty
     end
   end
