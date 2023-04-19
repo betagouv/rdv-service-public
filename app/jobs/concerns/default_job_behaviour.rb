@@ -12,6 +12,13 @@ module DefaultJobBehaviour
     # backoff:  1s, 16s, 81s, 4m, 10m, 21m, 40m, 68m, 109m, 166m, 4h, 6h, 8h, 11h, 14h, 18h, 23h, 29h, 36h, 44h
     retry_on(StandardError, wait: :exponentially_longer, attempts: 20)
 
+    around_perform do |_job, block|
+      Sentry.with_scope do |scope|
+        scope.set_context(:job, { job_id: job_id, queue_name: queue_name, arguments: arguments })
+        block.call
+      end
+    end
+
     # Makes sure every failed attempt is logged to Sentry
     # (see: https://github.com/bensheldon/good_job#retries)
     around_perform do |_job, block|
