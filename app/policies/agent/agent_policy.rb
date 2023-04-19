@@ -19,6 +19,7 @@ class Agent::AgentPolicy < ApplicationPolicy
     ).any?
   end
 
+  alias show? current_agent_or_admin_in_record_organisation?
   alias new? current_agent_or_admin_in_record_organisation?
   alias create? current_agent_or_admin_in_record_organisation?
   alias update? current_agent_or_admin_in_record_organisation?

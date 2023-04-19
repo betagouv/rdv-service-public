@@ -8,6 +8,7 @@ class Agent::AbsencePolicy < ApplicationPolicy
     ::Agent::AgentPolicy::Scope.new(pundit_user, Agent.all).resolve.exists?(record.agent_id)
   end
 
+  alias show? can_manage_absence?
   alias create? can_manage_absence?
   alias cancel? can_manage_absence?
   alias new? can_manage_absence?
