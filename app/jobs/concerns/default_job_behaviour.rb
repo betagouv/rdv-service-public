@@ -4,7 +4,7 @@ module DefaultJobBehaviour
   extend ActiveSupport::Concern
 
   included do
-    # Include job metadata to Sentry context
+    # Include job metadata in Sentry context
     around_perform do |_job, block|
       Sentry.with_scope do |scope|
         scope.set_context(:job, { job_id: job_id, queue_name: queue_name, arguments: arguments })
