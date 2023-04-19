@@ -18,7 +18,9 @@ class Absence < ApplicationRecord
   belongs_to :agent
 
   # Through relations
-  def webhook_endpoints = WebhookEndpoint.where(organisation: agent.organisations)
+  def webhook_endpoints
+    WebhookEndpoint.where(organisation: agent.organisations)
+  end
 
   # Validation
   validates :first_day, :title, presence: true
