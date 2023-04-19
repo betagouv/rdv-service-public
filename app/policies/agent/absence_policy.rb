@@ -25,7 +25,10 @@ class Agent::AbsencePolicy < ApplicationPolicy
     include CurrentAgentInPolicyConcern
 
     # delegate to AgentPolicy: if I can manage an agent, I can manage her absences
-    delegate :resolve, to: :agent_policy
+    def resolve
+      agents_i_can_manage = agent_policy.resolve
+      scope.where(agent: agents_i_can_manage)
+    end
 
     private
 
