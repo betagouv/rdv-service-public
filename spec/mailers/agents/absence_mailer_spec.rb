@@ -24,10 +24,8 @@ describe Agents::AbsenceMailer, type: :mailer do
       end
 
       describe "using the agent domain's branding" do
-        context "when agent is on RDV_SOLIDARITES" do
-          before do
-            allow(agent).to receive(:domain).and_return(Domain::RDV_SOLIDARITES)
-          end
+        context "when agent belongs to an organisation with new_domain_beta=false" do
+          before { agent.organisations.first.update!(new_domain_beta: false) }
 
           it "works" do
             mail = described_class.with(absence: absence).send("absence_#{action}")
@@ -38,7 +36,9 @@ describe Agents::AbsenceMailer, type: :mailer do
           end
         end
 
-        context "when agent is on RDV_AIDE_NUMERIQUE" do
+        context "when agent belongs to an organisation with new_domain_beta=true" do
+          before { agent.organisations.first.update!(new_domain_beta: false) }
+
           before do
             allow(agent).to receive(:domain).and_return(Domain::RDV_AIDE_NUMERIQUE)
           end
