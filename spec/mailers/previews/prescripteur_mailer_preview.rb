@@ -2,6 +2,6 @@
 
 class PrescripteurMailerPreview < ActionMailer::Preview
   def rdv_created
-    PrescripteurMailer.rdv_created(Rdv.last.rdvs_users.first, Rdv.last.domain.name)
+    PrescripteurMailer.rdv_created(Rdv.last.rdvs_users.first, Rdv.last.domain.id)
   end
 end
