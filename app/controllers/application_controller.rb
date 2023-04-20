@@ -37,12 +37,18 @@ class ApplicationController < ActionController::Base
   end
 
   def sentry_user
-    user_or_agent = current_agent || current_user
+    current_person = current_agent || current_user || current_prescripteur
     {
-      id: user_or_agent&.id,
-      role: user_or_agent&.class&.name || "Guest",
-      email: user_or_agent&.email,
+      id: current_person&.id,
+      role: current_person&.class&.name || "Guest",
+      email: current_person&.email,
     }.compact
+  end
+
+  def current_prescripteur
+    return nil unless session[:autocomplete_prescripteur_attributes]
+
+    @current_prescripteur ||= Prescripteur.new(session[:autocomplete_prescripteur_attributes])
   end
 
   # By default, Sentry does not log request URL and params because they could
