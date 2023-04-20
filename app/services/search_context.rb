@@ -199,6 +199,9 @@ class SearchContext
     motifs = available_motifs
     motifs = if @prescripteur
                motifs.where(bookable_by: %i[agents_and_prescripteurs everyone])
+             elsif invitation?
+               # Invited users (RDV-Insertion) can book rdv even if the motifs is not bookable by everyone
+               motifs
              else
                motifs.where(bookable_by: :everyone)
              end
