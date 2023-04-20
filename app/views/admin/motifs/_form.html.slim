@@ -78,12 +78,12 @@
         .col-md-12
           = label_tag do
             = f.radio_button(:bookable_by, :agents)
-            span.ml-1= presenter.bookable_by_label(:agents)
+            span.ml-1.rdv-insertion-divs-to-hide[style="display: inline-block;"]= presenter.bookable_by_label(:agents)
+            span.ml-1.rdv-insertion-divs-to-show[style="display: none;"]= "Agents de l'organisation #{@motif.organisation.name} et usagers avec une invitation"
             p.text-muted.font-14
               = "Les agents peuvent ajouter des rendez-vous à l'agenda de leurs collègues"
-              - if current_organisation.motif_categories_for_rdv_insertion?
-                br
-                = "Les usagers avec une invitation (RDV-Insertion) pourront prendre rendez-vous"
+              br
+              span.text-muted.font-14.rdv-insertion-divs-to-show[style="display: none;"]= "Les usagers avec une invitation (RDV-Insertion) pourront prendre rendez-vous"
 
       - if presenter.show_bookable_by_prescripteur?
         .form-row
@@ -156,7 +156,7 @@
           p
             span.text-muted.font-14= Motif.human_attribute_value(:visibility_type, value, context: :hint)
             br
-            span.text-muted.font-14.rdv-insertion-notif-hint[style="display: none;"]= Motif.human_attribute_value(:visibility_type, value, context: :hint_rdv_insertion)
+            span.text-muted.font-14.rdv-insertion-divs-to-show[style="display: none;"]= Motif.human_attribute_value(:visibility_type, value, context: :hint_rdv_insertion)
 
   .card
     .card-body
