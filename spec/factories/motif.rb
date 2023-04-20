@@ -15,15 +15,9 @@ FactoryBot.define do
     color { "##{SecureRandom.hex(3)}" }
     instruction_for_rdv { "Intruction pour le RDV" }
     restriction_for_rdv { "Consigne pour le RDV" }
-    bookable_by { "everyone" }
     bookable_publicly { true }
     location_type { :public_office }
     visibility_type { Motif::VISIBLE_AND_NOTIFIED }
-
-    trait :bookable_by_agents_only do
-      bookable_by { "agents" }
-      bookable_publicly { false }
-    end
 
     trait :with_rdvs do
       after(:create) do |motif|
