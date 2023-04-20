@@ -105,4 +105,9 @@ class Organisation < ApplicationRecord
     # Blank, Valid Phone, 4 digits phone (organisations only)
     phone_number.blank? || Phonelib.parse(phone_number).valid? || phone_number.match(/^\d{4}$/)
   end
+
+  # Temporary method for rdv-insertion motifs
+  def motif_categories_for_rdv_insertion?
+    territory.motif_categories.present?
+  end
 end

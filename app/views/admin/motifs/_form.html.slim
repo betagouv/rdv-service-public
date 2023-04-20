@@ -79,7 +79,11 @@
           = label_tag do
             = f.radio_button(:bookable_by, :agents)
             span.ml-1= presenter.bookable_by_label(:agents)
-            p.text-muted.font-14= "Les agents peuvent ajouter des rendez-vous à l'agenda de leurs collègues"
+            p.text-muted.font-14
+              = "Les agents peuvent ajouter des rendez-vous à l'agenda de leurs collègues"
+              - if current_organisation.motif_categories_for_rdv_insertion?
+                br
+                = "Les usagers avec une invitation (RDV-Insertion) pourront prendre rendez-vous"
 
       - if presenter.show_bookable_by_prescripteur?
         .form-row

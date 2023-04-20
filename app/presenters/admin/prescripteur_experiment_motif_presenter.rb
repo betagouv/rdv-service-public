@@ -7,7 +7,11 @@ class Admin::PrescripteurExperimentMotifPresenter < SimpleDelegator
   def bookable_by_label(bookable_by_value = bookable_by)
     case bookable_by_value.to_sym
     when :agents
-      "Uniquement les agents de #{organisation.name}"
+      if organisation.motif_categories_for_rdv_insertion?
+        "Agents de l'organisation #{organisation.name} et usagers avec une invitation"
+      else
+        "Uniquement les agents de #{organisation.name}"
+      end
     when :agents_and_prescripteurs
       "Ouvert aux agents et aux prescripteurs"
     when :everyone

@@ -39,25 +39,35 @@ class MotifForm {
   }
 
   toggleOnlineSubFields() {
-    const enabled = !this.bookableByAgentsButton.checked
+    const enabled = !this.bookableByAgentsButton.checked || this.motifCategorySelectIsEnabled()
     document.querySelectorAll(".js-rdvs-editable").forEach(rdvEditableElement =>
       rdvEditableElement.classList.toggle('hidden', !enabled)
     )
   }
 
   toggleRdvsEditable() {
-    const enabled = !this.bookableByAgentsButton.checked
+    const enabled = !this.bookableByAgentsButton.checked || this.motifCategorySelectIsEnabled()
     document.querySelector("#motif_rdvs_editable_by_user").checked = enabled
   }
 
   toggleRdvInsertionNotifsDivs = () => {
     // Specifique RDV-I temporaire
-    const selectedValue = this.motifCategorySelect?.value;
+    const selectedValue = this.motifCategorySelect()?.value;
     const hiddenDivs = document.getElementsByClassName('rdv-insertion-notif-hint');
 
     Array.from(hiddenDivs).forEach(div => {
       div.style.display = (selectedValue != "" && selectedValue != undefined) ? 'block' : 'none';
     });
+  }
+
+  motifCategorySelect() {
+    // Specifique RDV-I temporaire
+    return document.getElementById('motif_motif_category_id');
+  }
+
+  motifCategorySelectIsEnabled() {
+    // Specifique RDV-I temporaire
+    return this.motifCategorySelect() !== null
   }
 
   constructor() {
@@ -87,11 +97,10 @@ class MotifForm {
     this.toggleOnlineSubFields()
 
     // Specifique RDV-I temporaire
-    document.addEventListener('turbolinks:load', this.toggleRdvInsertionNotifsDivs);
+    document.addEventListener('turbolinks:load', this.toggleRdvInsertionNotifsDivs());
 
-    this.motifCategorySelect = document.getElementById('motif_motif_category_id')
-    if (this.motifCategorySelect) {
-      this.motifCategorySelect.addEventListener('change', this.toggleRdvInsertionNotifsDivs)
+    if (this.motifCategorySelectIsEnabled()) {
+      this.motifCategorySelect().addEventListener('change', this.toggleRdvInsertionNotifsDivs)
     }
   }
 
