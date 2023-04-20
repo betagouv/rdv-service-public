@@ -46,7 +46,6 @@ gem "omniauth_openid_connect"
 gem "omniauth-rails_csrf_protection"
 gem "pundit"
 gem "devise_token_auth"
-gem "responders", "3.0.1"
 
 # Jobs
 gem "good_job"
