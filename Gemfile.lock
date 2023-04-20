@@ -433,9 +433,9 @@ GEM
     regexp_parser (2.8.0)
     request_store (1.5.1)
       rack (>= 1.4)
-    responders (3.1.0)
-      actionpack (>= 5.2)
-      railties (>= 5.2)
+    responders (3.0.1)
+      actionpack (>= 5.0)
+      railties (>= 5.0)
     rexml (3.2.5)
     rspec-core (3.12.2)
       rspec-support (~> 3.12.0)
@@ -660,6 +660,7 @@ DEPENDENCIES
   rails_autolink
   redis (< 5.0)
   redis-session-store (= 0.11.4)
+  responders (= 3.0.1)
   rspec-rails
   rspec_junit_formatter
   rswag-api
