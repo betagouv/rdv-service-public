@@ -193,8 +193,8 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
 
       parameter name: "absence_id", in: :path, type: :string, description: "L'ID d'une absence donnée", example: "12"
 
-      let!(:agent) { create(:agent) }
-      let!(:agent2) { create(:agent) }
+      let!(:agent) { create(:agent, :with_basic_org) }
+      let!(:agent2) { create(:agent, :with_basic_org) }
       let!(:absence1) { create(:absence, agent: agent) }
       let!(:absence2) { create(:absence, agent: agent2) }
       let(:absence_id) { absence1.id }
@@ -239,10 +239,8 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
       parameter name: "end_day", in: :query, type: :string, description: "Dernier jour de l'absence", example: "2023-11-20", required: false
       parameter name: "end_time", in: :query, type: :string, description: "Heure de fin de l'absence", example: "15:00", required: false
 
-      let!(:organisation) { create(:organisation) }
-      let!(:organisation2) { create(:organisation) }
-      let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
-      let!(:agent2) { create(:agent, basic_role_in_organisations: [organisation2]) }
+      let!(:agent) { create(:agent, :with_basic_org) }
+      let!(:agent2) { create(:agent, :with_basic_org) }
       let!(:absence1) { create(:absence, agent: agent, title: "Titre 1") }
       let!(:absence2) { create(:absence, agent: agent2, title: "Titre 2") }
       let(:absence_id) { absence1.id }
@@ -284,10 +282,8 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
 
       parameter name: "absence_id", in: :path, type: :string, description: "L'ID d'une absence donnée", example: "12"
 
-      let!(:organisation) { create(:organisation) }
-      let!(:organisation2) { create(:organisation) }
-      let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
-      let!(:agent2) { create(:agent, basic_role_in_organisations: [organisation2]) }
+      let!(:agent) { create(:agent, :with_basic_org) }
+      let!(:agent2) { create(:agent, :with_basic_org) }
       let!(:absence1) { create(:absence, agent: agent) }
       let!(:absence2) { create(:absence, agent: agent2) }
       let(:absence_id) { absence1.id }
