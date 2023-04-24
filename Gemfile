@@ -45,7 +45,7 @@ gem "omniauth-microsoft_graph"
 gem "omniauth_openid_connect"
 gem "omniauth-rails_csrf_protection"
 gem "pundit"
-gem "devise_token_auth"
+gem "devise_token_auth", github: "lynndylanhurley/devise_token_auth"
 
 # Jobs
 gem "good_job"
