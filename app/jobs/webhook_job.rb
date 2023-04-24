@@ -4,10 +4,11 @@ class OutgoingWebhookError < StandardError; end
 
 class WebhookJob < ApplicationJob
   TIMEOUT = 10
+  MAX_ATTEMPTS = 10
 
   queue_as :webhook
 
-  retry_on(OutgoingWebhookError, wait: :exponentially_longer, attempts: 10, queue: :webhook_retries)
+  retry_on(OutgoingWebhookError, wait: :exponentially_longer, attempts: MAX_ATTEMPTS, queue: :webhook_retries)
 
   # Pour éviter de fuiter des données personnelles dans les logs
   self.log_arguments = false
@@ -40,7 +41,7 @@ class WebhookJob < ApplicationJob
   end
 
   def log_failure_to_sentry?
-    executions >= 10 # only log last attempt to Sentry, to prevent noise
+    executions >= MAX_ATTEMPTS # only log last attempt to Sentry, to prevent noise
   end
 
   # La réponse de la Drôme est en JSON
