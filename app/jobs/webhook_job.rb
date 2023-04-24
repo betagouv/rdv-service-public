@@ -39,10 +39,8 @@ class WebhookJob < ApplicationJob
     request.run
   end
 
-  # Don't log first failures to Sentry, to prevent noise
-  # on temporary unavailability of an external service.
   def log_failure_to_sentry?
-    executions > 2
+    executions >= 10 # only log last attempt to Sentry, to prevent noise
   end
 
   # La réponse de la Drôme est en JSON
