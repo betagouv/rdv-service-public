@@ -23,14 +23,8 @@ class Agent::AbsencePolicy < ApplicationPolicy
     # Même règle métier : on peut gérer, donc lister, les absences si
     # on peut voir les agents auquel elles appartiennent.
     def resolve
-      agents_i_can_see = agent_policy.resolve
+      agents_i_can_see = ::Agent::AgentPolicy::Scope.new(pundit_user, Agent.all).resolve
       scope.where(agent: agents_i_can_see)
-    end
-
-    private
-
-    def agent_policy
-      ::Agent::AgentPolicy::Scope.new(pundit_user, Agent.all)
     end
   end
 end
