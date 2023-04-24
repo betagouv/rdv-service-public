@@ -7,37 +7,27 @@ describe WebhookJob, type: :job do
     let(:payload) { "{}" }
     let(:webhook_endpoint) { create(:webhook_endpoint, secret: "bla", target_url: "https://example.com/rdv-s-endpoint") }
 
-    before do
+    it "retries 10 times, then fails and notifies Sentry" do
       stub_request(:post, "https://example.com/rdv-s-endpoint").and_return({ status: 500, body: "ERROR" })
-    end
 
-    context "when running the job for the first time" do
-      it "retries and sends info to Sentry" do
-        expect do
-          described_class.perform_now(payload, webhook_endpoint.id)
-        end.to have_enqueued_job(described_class).with(payload, webhook_endpoint.id).on_queue(:webhook_retries)
+      described_class.perform_later(payload, webhook_endpoint.id)
 
-        expect(sentry_events.last.exception.values.first.value).to match(/Webhook-Failure\s\(ERROR\):/)
-        expect(sentry_events.last.exception.values.first.type).to eq("OutgoingWebhookError")
-      end
-    end
+      expect(enqueued_jobs.first["executions"]).to eq(0)
 
-    context "when running the job for the 10th time" do
-      before do
-        allow_any_instance_of(described_class).to receive(:executions_for).with([OutgoingWebhookError]).and_return(10) # rubocop:disable RSpec/AnyInstance
-      end
+      # first execution, error is not logged
+      perform_enqueued_jobs
+      expect(enqueued_jobs.first["executions"]).to eq(1)
+      expect(sentry_events).to be_empty
 
-      it "does not retry but sends notification to Sentry" do
-        expect do
-          expect do
-            described_class.perform_now(payload, webhook_endpoint.id)
-          end.to raise_error(OutgoingWebhookError)
-        end.not_to have_enqueued_job
+      # retry 8 times, nothing logged
+      8.times { perform_enqueued_jobs }
+      expect(enqueued_jobs.first["executions"]).to eq(9)
+      expect(sentry_events).to be_empty
 
-        expect(sentry_events.size).to eq(1)
-        expect(sentry_events.last.exception.values.first.value).to match(/Webhook-Failure\s\(ERROR\):/)
-        expect(sentry_events.last.exception.values.first.type).to eq("OutgoingWebhookError")
-      end
+      # 10th execution, error is logged and job is discarded
+      expect { perform_enqueued_jobs }.to raise_error(OutgoingWebhookError)
+      expect(enqueued_jobs).to be_empty # no retry
+      expect(sentry_events.last.exception.values.last.type).to eq("OutgoingWebhookError")
     end
   end
 

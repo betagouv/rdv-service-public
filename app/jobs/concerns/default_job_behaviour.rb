@@ -22,11 +22,15 @@ module DefaultJobBehaviour
 
     # Makes sure every failed attempt is logged to Sentry
     # (see: https://github.com/bensheldon/good_job#retries)
-    around_perform do |_job, block|
+    around_perform do |job, block|
       block.call
     rescue StandardError => e
-      Sentry.capture_exception(e)
+      Sentry.capture_exception(e) if job.log_failure_to_sentry?
       raise # will be caught by the retry mechanism
     end
+  end
+
+  def log_failure_to_sentry?
+    true
   end
 end
