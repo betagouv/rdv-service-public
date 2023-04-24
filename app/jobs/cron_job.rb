@@ -3,10 +3,6 @@
 class CronJob < ApplicationJob
   queue_as :cron
 
-  def log_failure_to_sentry?
-    true
-  end
-
   class FileAttenteJob < CronJob
     def perform
       FileAttente.send_notifications
