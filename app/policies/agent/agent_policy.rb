@@ -6,7 +6,6 @@ class Agent::AgentPolicy < ApplicationPolicy
   def current_agent_or_admin_in_record_organisation?
     current_agent? || admin_in_record_organisation?
   end
-  alias can_manage_agent? current_agent_or_admin_in_record_organisation?
 
   def current_agent?
     record == current_agent
