@@ -37,6 +37,38 @@ jobs:
           ruby-version: 3.2.2
           bundler-cache: true
       - run: bundle exec brakeman
+  active_record_doctor:
+    name: active_record_doctor
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: lapin_test
+          POSTGRES_PASSWORD: lapin_test
+          POSTGRES_DB: lapin_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports: ["5432:5432"]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.2.2
+          bundler-cache: true
+      - name: Run active_record_doctor:missing_foreign_keys
+        run: RAILS_ENV=test bundle exec rails active_record_doctor:missing_foreign_keys
+        env:
+          HOST: http://example.com
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+          POSTGRES_USER: lapin_test
+          POSTGRES_PASSWORD: lapin_test
+          POSTGRES_DB: lapin_test
   test_unit:
     name: Unit Tests
     runs-on: ubuntu-latest

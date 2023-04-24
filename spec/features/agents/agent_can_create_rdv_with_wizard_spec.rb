@@ -53,6 +53,7 @@ describe "Agent can create a Rdv with wizard" do
     sleep(1) # wait for modal to hide completely
     fill_in :rdv_context, with: "RDV très spécial"
     click_button("Continuer")
+    expect(page).not_to have_content("Le rendez-vous a été créé")
   end
 
   def step3(lieu_availability)

@@ -34,7 +34,7 @@ class Admin::RdvWizardStepsController < AgentAuthController
     end
 
     if @rdv_wizard.save
-      redirect_to @rdv_wizard.success_path, notice: I18n.t("admin.rdvs.message.success.create")
+      redirect_to @rdv_wizard.success_path, @rdv_wizard.success_flash
     else
       render current_step
     end

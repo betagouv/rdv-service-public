@@ -75,4 +75,8 @@ module Admin::RdvWizardFormConcern
   def path_for_step(target_step_number)
     new_admin_organisation_rdv_wizard_step_path(organisation, to_query.merge(step: target_step_number))
   end
+
+  def success_flash
+    {}
+  end
 end
