@@ -18,7 +18,7 @@ describe SmsJob do
 
       specify do
         expect(SmsSender).to receive(:perform_with)
-        expect { subject.perform }.not_to raise_error
+        expect { subject }.not_to raise_error
       end
     end
 
@@ -26,7 +26,7 @@ describe SmsJob do
       let(:phone_number) { "0130303030" }
 
       specify do
-        expect { subject.perform }.to raise_error(SmsJob::InvalidMobilePhoneNumberError)
+        expect { subject }.to raise_error(SmsJob::InvalidMobilePhoneNumberError)
       end
     end
   end
