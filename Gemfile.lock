@@ -58,6 +58,8 @@ GEM
     active_link_to (1.0.5)
       actionpack
       addressable
+    active_record_doctor (1.11.0)
+      activerecord (>= 4.2.0)
     activejob (7.0.4.3)
       activesupport (= 7.0.4.3)
       globalid (>= 0.3.6)
@@ -607,6 +609,7 @@ PLATFORMS
 
 DEPENDENCIES
   active_link_to
+  active_record_doctor
   activerecord-postgres_enum
   administrate
   auto_strip_attributes

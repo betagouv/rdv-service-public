@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_28_083444) do
+ActiveRecord::Schema[7.0].define(version: 2023_04_24_083444) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -724,15 +724,28 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_28_083444) do
   end
 
   add_foreign_key "absences", "agents"
+  add_foreign_key "agent_roles", "agents"
+  add_foreign_key "agent_roles", "organisations"
+  add_foreign_key "agent_teams", "agents"
+  add_foreign_key "agent_teams", "teams"
   add_foreign_key "agent_territorial_access_rights", "agents"
   add_foreign_key "agent_territorial_access_rights", "territories"
+  add_foreign_key "agent_territorial_roles", "agents"
+  add_foreign_key "agent_territorial_roles", "territories"
   add_foreign_key "agents", "services"
+  add_foreign_key "agents_rdvs", "agents"
+  add_foreign_key "agents_rdvs", "rdvs"
   add_foreign_key "file_attentes", "rdvs"
   add_foreign_key "file_attentes", "users"
   add_foreign_key "lieux", "organisations"
+  add_foreign_key "motif_categories_territories", "motif_categories"
+  add_foreign_key "motif_categories_territories", "territories"
   add_foreign_key "motifs", "motif_categories"
   add_foreign_key "motifs", "organisations"
   add_foreign_key "motifs", "services"
+  add_foreign_key "motifs_plage_ouvertures", "motifs"
+  add_foreign_key "motifs_plage_ouvertures", "plage_ouvertures"
+  add_foreign_key "organisations", "territories"
   add_foreign_key "plage_ouvertures", "agents"
   add_foreign_key "plage_ouvertures", "lieux"
   add_foreign_key "plage_ouvertures", "organisations"
@@ -740,8 +753,20 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_28_083444) do
   add_foreign_key "rdvs", "lieux"
   add_foreign_key "rdvs", "motifs"
   add_foreign_key "rdvs", "organisations"
+  add_foreign_key "rdvs_users", "rdvs"
+  add_foreign_key "rdvs_users", "users"
+  add_foreign_key "receipts", "rdvs"
+  add_foreign_key "receipts", "users"
+  add_foreign_key "referent_assignations", "agents"
+  add_foreign_key "referent_assignations", "users"
   add_foreign_key "sector_attributions", "agents"
   add_foreign_key "sector_attributions", "organisations"
+  add_foreign_key "sector_attributions", "sectors"
+  add_foreign_key "sectors", "territories"
+  add_foreign_key "teams", "territories"
+  add_foreign_key "user_profiles", "organisations"
+  add_foreign_key "user_profiles", "users"
   add_foreign_key "users", "users", column: "responsible_id"
   add_foreign_key "webhook_endpoints", "organisations"
+  add_foreign_key "zones", "sectors"
 end

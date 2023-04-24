@@ -1,0 +1,20 @@
+# frozen_string_literal: true
+
+ActiveRecordDoctor.configure do
+  # Global settings affect all detectors.
+  global :ignore_tables, [
+    # Ignore internal Rails-related tables.
+    "good_jobs",
+  ]
+
+  # Detector-specific settings affect only one specific detector.
+  detector :missing_foreign_keys,
+           ignore_columns: %w[
+             agents.external_id
+             organisations.human_id
+             organisations.external_id
+             agents_rdvs.outlook_id
+             sectors.human_id
+             zones.street_ban_id
+           ]
+end
