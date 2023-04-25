@@ -17,10 +17,8 @@
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 
 require "axe-rspec"
-require "webdrivers/chromedriver"
 require "capybara/rspec"
 require "capybara/email/rspec"
-require "webdrivers"
 require "capybara-screenshot/rspec"
 require "pundit/rspec"
 require "webmock/rspec"

@@ -102,4 +102,10 @@ RSpec.configure do |config|
     FactoryBot.rewind_sequences
     Rails.cache.clear
   end
+
+  # config.before do
+  #   stub_request(:get, /__identify__/).
+  #     to_return(status: 200, body: "", headers: {})
+  #
+  # end
 end

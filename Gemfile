@@ -103,7 +103,6 @@ group :development, :test do
   # New versions of axe are more strict
   gem "axe-core-api", "4.3.2"
   gem "axe-core-rspec", "4.3.2"
-  gem "selenium-webdriver"
   gem "spring", require: false
   gem "spring-commands-rspec"
   gem "rswag-specs"
@@ -122,7 +121,7 @@ group :test do
   gem "capybara"
   gem "capybara-email"
   gem "capybara-screenshot"
-  gem "webdrivers"
+  gem "cuprite"
   gem "database_cleaner"
   gem "webmock"
 end
