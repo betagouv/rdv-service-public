@@ -101,8 +101,8 @@ group :development, :test do
   gem "simplecov", require: false
   gem "slim_lint", require: false
   # New versions of axe are more strict
-  gem "axe-core-api", "4.3.2"
-  gem "axe-core-rspec", "4.3.2"
+  gem "axe-core-api", "~> 4.2.0"
+  gem "axe-core-rspec", "~> 4.2.0"
   gem "spring", require: false
   gem "spring-commands-rspec"
   gem "rswag-specs"

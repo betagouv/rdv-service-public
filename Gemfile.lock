@@ -98,10 +98,13 @@ GEM
     attr_required (1.0.1)
     auto_strip_attributes (2.6.0)
       activerecord (>= 4.0)
-    axe-core-api (4.3.2)
+    axe-core-api (4.2.1)
+      capybara
       dumb_delegator
+      selenium-webdriver
       virtus
-    axe-core-rspec (4.3.2)
+      watir
+    axe-core-rspec (4.2.1)
       axe-core-api
       dumb_delegator
       virtus
@@ -502,6 +505,7 @@ GEM
     ruby-ole (1.2.12.2)
     ruby-progressbar (1.11.0)
     ruby2_keywords (0.0.5)
+    rubyzip (2.3.2)
     sassc (2.4.0)
       ffi (~> 1.9)
     sassc-rails (2.1.2)
@@ -511,6 +515,10 @@ GEM
       sprockets-rails
       tilt
     selectize-rails (0.12.6)
+    selenium-webdriver (4.9.0)
+      rexml (~> 3.2, >= 3.2.5)
+      rubyzip (>= 1.2.2, < 3.0)
+      websocket (~> 1.0)
     sentry-rails (5.6.0)
       railties (>= 5.0)
       sentry-ruby (~> 5.6.0)
@@ -585,6 +593,9 @@ GEM
     wannabe_bool (0.7.1)
     warden (1.2.9)
       rack (>= 2.0.9)
+    watir (7.2.2)
+      regexp_parser (>= 1.2, < 3)
+      selenium-webdriver (~> 4.2)
     webfinger (1.2.0)
       activesupport
       httpclient (>= 2.4)
@@ -593,6 +604,7 @@ GEM
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
     webrick (1.8.1)
+    websocket (1.2.9)
     websocket-driver (0.7.5)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
@@ -609,8 +621,8 @@ DEPENDENCIES
   activerecord-postgres_enum
   administrate
   auto_strip_attributes
-  axe-core-api (= 4.3.2)
-  axe-core-rspec (= 4.3.2)
+  axe-core-api (~> 4.2.0)
+  axe-core-rspec (~> 4.2.0)
   better_errors
   binding_of_caller
   blueprinter
