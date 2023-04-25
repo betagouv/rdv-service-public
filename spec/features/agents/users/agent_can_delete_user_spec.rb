@@ -11,8 +11,9 @@ describe "Agent can delete user" do
   end
 
   it "delete user", js: true do
-    click_link("Supprimer")
-    page.driver.browser.switch_to.alert.accept
+    accept_prompt do
+      click_link("Supprimer")
+    end
     expect_page_title("Vos usagers")
     expect_page_with_no_record_text("Utilisez le champ de recherche pour trouver un usager")
   end

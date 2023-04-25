@@ -50,14 +50,16 @@ describe "Agent can delete user" do
     find("label", text: "Locataire").click
 
     # forget to check phone number
-    find("input[type=submit]").click
-    page.driver.browser.switch_to.alert.accept
+    accept_prompt do
+      find("input[type=submit]").click
+    end
     message = page.find("#merge_users_form_phone_number_1").native.attribute("validationMessage") # cf https://stackoverflow.com/a/48206413
     expect(message).to eq("Please select one of these options.").or(eq("Veuillez sélectionner l'une de ces options."))
 
     choose "01 02 03 04 05"
-    find("input[type=submit]").click
-    page.driver.browser.switch_to.alert.accept
+    accept_prompt do
+      find("input[type=submit]").click
+    end
 
     expect_page_title("Anna SWAN")
     expect(page).to have_content("Les usagers ont été fusionnés")

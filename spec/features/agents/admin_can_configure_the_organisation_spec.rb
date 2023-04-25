@@ -133,12 +133,8 @@ describe "Admin can configure the organisation" do
     click_link "Motifs"
     click_link "Être appelé par"
     expect(page).to have_content("Être appelé par")
-    click_link("Supprimer")
-    begin
-      page.driver.browser.switch_to.alert.accept
-    rescue Selenium::WebDriver::Error::NoSuchAlertError
+    accept_prompt do
       click_link("Supprimer")
-      retry
     end
 
     expect_page_title("Vos motifs")
