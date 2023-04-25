@@ -60,7 +60,7 @@ fr:
       forward_to_default_mailbox:
         title: Message d'usager⋅e en réponse à un e-mail de notification
         intro: "L'usager⋅e %{author} a répondu à un e-mail de notification :"
-        instructions: Merci de ne pas répondre à cet e-mail.
+        instructions: Nous n'avons pas pu transmettre ce mail automatiquement à l'agent concerné. Si l'usager⋅e écrit pour prévenir d'un empêchement, merci de retrouver l'agent et de lui transmettre l'information.
       shared:
         attachments: Le mail de l'usager⋅e avait en pièce jointe "%{attachment_names}". Il nous est impossible de vous transmettre ce fichier. Vous pouvez contacter l'usager⋅e pour qu'iel l'envoie à votre adresse.
   users:
