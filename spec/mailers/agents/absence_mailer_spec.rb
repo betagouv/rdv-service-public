@@ -3,7 +3,7 @@
 describe Agents::AbsenceMailer, type: :mailer do
   { created: "créée", updated: "modifiée", destroyed: "supprimée" }.each do |action, verb|
     context "when #{action}" do
-      let(:agent) { create(:agent, email: "bob@demo.rdv-solidarites.fr") }
+      let(:agent) { create(:agent, email: "bob@demo.rdv-solidarites.fr", basic_role_in_organisations: [create(:organisation)]) }
       let(:absence) { create :absence, agent: agent }
 
       it "mail to absence's agent" do
@@ -24,8 +24,8 @@ describe Agents::AbsenceMailer, type: :mailer do
       end
 
       describe "using the agent domain's branding" do
-        context "when agent's service is not conseiller_numerique" do
-          let(:agent) { build(:agent, service: build(:service, :social)) }
+        context "when agent belongs to an organisation with new_domain_beta=false" do
+          before { agent.organisations.first.update!(new_domain_beta: false) }
 
           it "works" do
             mail = described_class.with(absence: absence).send("absence_#{action}")
@@ -36,8 +36,8 @@ describe Agents::AbsenceMailer, type: :mailer do
           end
         end
 
-        context "when agent is on a different domain" do
-          let(:agent) { build(:agent, service: build(:service, :conseiller_numerique)) }
+        context "when agent belongs to an organisation with new_domain_beta=true" do
+          before { agent.organisations.first.update!(new_domain_beta: false) }
 
           before do
             allow(agent).to receive(:domain).and_return(Domain::RDV_AIDE_NUMERIQUE)

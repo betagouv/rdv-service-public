@@ -4,8 +4,7 @@ FactoryBot.define do
   sequence(:absence_title) { |n| "Indisponibilité #{n}" }
 
   factory :absence do
-    organisation { association(:organisation) }
-    agent { association(:agent, basic_role_in_organisations: [organisation]) }
+    agent { association(:agent) }
 
     title { generate(:absence_title) }
     first_day { Time.zone.tomorrow }

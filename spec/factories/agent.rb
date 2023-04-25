@@ -37,6 +37,9 @@ FactoryBot.define do
       end
     end
 
+    trait :with_basic_org do
+      basic_role_in_organisations { [build(:organisation)] }
+    end
     trait :not_confirmed do
       confirmed_at { nil }
     end

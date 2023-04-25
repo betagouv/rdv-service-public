@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_04_13_163145) do
+ActiveRecord::Schema[7.0].define(version: 2023_04_24_083444) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -100,7 +100,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_13_163145) do
   create_table "absences", force: :cascade do |t|
     t.bigint "agent_id", null: false
     t.string "title", null: false
-    t.bigint "organisation_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "recurrence"
@@ -115,7 +114,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_13_163145) do
     t.index ["end_day"], name: "index_absences_on_end_day"
     t.index ["expired_cached"], name: "index_absences_on_expired_cached"
     t.index ["first_day"], name: "index_absences_on_first_day"
-    t.index ["organisation_id"], name: "index_absences_on_organisation_id"
     t.index ["recurrence"], name: "index_absences_on_recurrence", where: "(recurrence IS NOT NULL)"
     t.index ["updated_at"], name: "index_absences_on_updated_at"
   end
@@ -726,7 +724,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_13_163145) do
   end
 
   add_foreign_key "absences", "agents"
-  add_foreign_key "absences", "organisations"
   add_foreign_key "agent_roles", "agents"
   add_foreign_key "agent_roles", "organisations"
   add_foreign_key "agent_teams", "agents"
