@@ -67,6 +67,7 @@ class SearchContext
   end
 
   def invitation?
+    # Token validity is already handle in TokenInvitable module, prepend_before_action method handle_invitation_token
     @invitation_token.present?
   end
 
@@ -200,7 +201,6 @@ class SearchContext
     motifs = if @prescripteur
                motifs.where(bookable_by: %i[agents_and_prescripteurs everyone])
              elsif invitation?
-               # Invited users (RDV-Insertion) can book rdv even if the motifs is not bookable by everyone
                motifs
              else
                motifs.where(bookable_by: :everyone)
