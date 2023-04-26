@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_04_13_163145) do
+ActiveRecord::Schema[7.0].define(version: 2023_04_25_142805) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -38,6 +38,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_13_163145) do
     "agents",
     "agents_and_prescripteurs",
     "everyone",
+  ], force: :cascade
+
+  create_enum :created_by, [
+    "agent",
+    "user",
+    "prescripteur",
   ], force: :cascade
 
   create_enum :lieu_availability, [
@@ -504,6 +510,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_13_163145) do
     t.bigint "invited_by_id"
     t.integer "invitations_count", default: 0
     t.enum "status", default: "unknown", null: false, enum_type: "rdv_status"
+    t.enum "created_by", default: "agent", null: false, enum_type: "created_by"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["invitation_token"], name: "index_rdvs_users_on_invitation_token", unique: true
     t.index ["invited_by_id"], name: "index_rdvs_users_on_invited_by_id"
     t.index ["invited_by_type", "invited_by_id"], name: "index_rdvs_users_on_invited_by"
