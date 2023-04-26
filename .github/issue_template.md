@@ -6,21 +6,28 @@ labels: ''
 assignees: ''
 ---
 
-Soyez clair et concis :)
+## Contexte
+
+- Ticket Zammad :
+- Issue Sentry :
+
+<!-- Quelle est la problématique ? Dans quel contexte se pose-t-elle ? Qui est impacté⋅e ? -->
 
 ## Actuellement
 
-* Comportement actuel
-* Étapes pour reproduire cette situation
-* Captures d'écran si pertinent
+### Comportement actuel
+
+### Étapes pour reproduire cette situation
+
+#### Captures d'écran si pertinent
 
 ## Objectif
 
-* Comportement attendu
-* Options envisagées, le cas échéant
+### Comportement attendu
+
+### Options envisagées, le cas échéant
 
 ## Technique
 
-Informations techniques :
 * Environnement : version du navigateur / du téléphone…
 * Pistes d’investigation ou d’implémentation
