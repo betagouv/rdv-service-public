@@ -18,7 +18,6 @@ class TransferEmailReplyJob < ApplicationJob
     if rdv
       notify_agents
     else
-      Sentry.capture_message("Reply email could not be forwarded to agent, it was sent to default mailbox")
       forward_to_default_mailbox
     end
   end

@@ -61,11 +61,6 @@ RSpec.describe TransferEmailReplyJob do
       expect(transferred_email.html_part.body.to_s).to include(%(L'usager⋅e "Bénédicte Ficiaire" &lt;bene_ficiaire@lapin.fr&gt; a répondu))
       expect(transferred_email.html_part.body.to_s).to include("Je souhaite annuler mon RDV") # reply content
     end
-
-    it "warns Sentry" do
-      expect { perform_job }.to change(sentry_events, :size).by(1)
-      expect(sentry_events.last.message).to eq("Reply email could not be forwarded to agent, it was sent to default mailbox")
-    end
   end
 
   context "when an e-mail address does not match our pattern" do

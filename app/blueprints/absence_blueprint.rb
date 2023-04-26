@@ -5,7 +5,13 @@ class AbsenceBlueprint < Blueprinter::Base
 
   fields :ical_uid, :title, :first_day, :end_day, :start_time, :end_time
   association :agent, blueprint: AgentBlueprint
-  association :organisation, blueprint: OrganisationBlueprint
+
+  # TODO: Supprimer quand la solution à ce problème est mise en place:
+  #   https://github.com/betagouv/rdv-solidarites.fr/pull/3456
+  field(:organisation) do |absence|
+    organisation = absence.agent.organisations.first
+    OrganisationBlueprint.render_as_hash(organisation) if organisation
+  end
 
   # rubocop:disable Style/SymbolProc
   field(:rrule) { _1.rrule }
