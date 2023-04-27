@@ -25,7 +25,7 @@ describe Admin::Agents::AbsencesController, type: :controller do
 
         first_day = Date.new(2019, 8, 15)
         create(:absence, agent: agent, first_day: first_day)
-        create(:absence, agent: given_agent, organisation: organisation, first_day: first_day)
+        create(:absence, agent: given_agent, first_day: first_day)
         start_date = Date.new(2019, 8, 12)
         end_date = Date.new(2019, 8, 19)
 
@@ -37,7 +37,7 @@ describe Admin::Agents::AbsencesController, type: :controller do
       describe "JSON response" do
         render_views
 
-        let!(:absence) { create(:absence, agent: agent, first_day: Time.zone.today, organisation: organisation) }
+        let!(:absence) { create(:absence, agent: agent, first_day: Time.zone.today) }
 
         it "is serialized for FullCalendar" do
           start_date = Time.zone.today.monday
@@ -52,9 +52,6 @@ describe Admin::Agents::AbsencesController, type: :controller do
               "end" => absence.ends_at.as_json,
               "backgroundColor" => "rgba(127, 140, 141, 0.7)",
               "url" => "/admin/organisations/#{organisation.id}/absences/#{absence.id}/edit",
-              "extendedProps" => {
-                "organisationName" => organisation.name,
-              },
             },
           ]
           expect(JSON.parse(response.body)).to eq(expected_response)

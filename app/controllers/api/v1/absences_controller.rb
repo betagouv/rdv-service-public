@@ -4,7 +4,6 @@ class Api::V1::AbsencesController < Api::V1::AgentAuthBaseController
   before_action :retrieve_absence, only: %i[show update destroy]
   def index
     absences = policy_scope(Absence)
-    absences = absences.where(organisation: current_organisation) if current_organisation.present?
     render_collection(absences.by_starts_at)
   end
 
@@ -61,8 +60,7 @@ class Api::V1::AbsencesController < Api::V1::AgentAuthBaseController
       params.delete(:agent_email)
     end
 
-    params.require(:organisation_id)
-    params.permit(:organisation_id, :agent_id, :title, :first_day, :start_time, :end_day, :end_time)
+    params.permit(:agent_id, :title, :first_day, :start_time, :end_day, :end_time)
   end
 
   def update_params
