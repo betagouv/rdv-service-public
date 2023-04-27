@@ -37,7 +37,7 @@ class Users::ParticipationsController < UserAuthController
   end
 
   def new_participation
-    @new_participation ||= RdvsUser.new(rdv: @rdv, user: @user)
+    @new_participation ||= RdvsUser.new(rdv: @rdv, user: @user, created_by: :user)
   end
 
   def add_participation
