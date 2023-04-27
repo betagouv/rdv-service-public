@@ -73,7 +73,6 @@ class Rdv < ApplicationRecord
   # Hooks
   after_save :associate_users_with_organisation
   after_commit :update_agents_unknown_past_rdv_count, if: -> { past? }
-  before_create :set_created_by_for_participations
   before_validation { self.uuid ||= SecureRandom.uuid }
   # voir Outlook::EventSerializerAndListener pour d'autres callbacks
 
@@ -413,9 +412,5 @@ class Rdv < ApplicationRecord
 
   def update_agents_unknown_past_rdv_count
     agents.each(&:update_unknown_past_rdv_count!)
-  end
-
-  def set_created_by_for_participations
-    rdvs_users.each { |rdvs_user| rdvs_user.created_by = created_by }
   end
 end

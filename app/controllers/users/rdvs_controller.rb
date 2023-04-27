@@ -30,6 +30,7 @@ class Users::RdvsController < UserAuthController
       )
       if @creneau.present?
         @rdv = build_rdv_from_creneau(@creneau)
+        set_participation_attributes
         authorize(@rdv)
         @save_succeeded = @rdv.save
       end
@@ -128,6 +129,10 @@ class Users::RdvsController < UserAuthController
       city_code: params[:city_code],
       street_ban_id: params[:street_ban_id].presence
     )
+  end
+
+  def set_participation_attributes
+    @rdv.rdvs_users.each { |rdvs_user| rdvs_user.created_by = :user }
   end
 
   def build_rdv_from_creneau(creneau)
