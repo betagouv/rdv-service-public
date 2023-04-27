@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddCreatedByToRdvsUsers < ActiveRecord::Migration[7.0]
   def up
     create_enum :created_by, %i[
