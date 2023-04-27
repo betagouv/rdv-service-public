@@ -5,6 +5,6 @@ p= t(".description_2")
 
 = render "absence_overview", absence: @absence
 
-.btn-wrapper= link_to "Voir sur #{domain.name}", edit_admin_organisation_absence_url(@absence.organisation, @absence), class:"btn btn-primary"
+.btn-wrapper= link_to "Voir sur #{domain.name}", edit_admin_organisation_absence_url(@absence.agent.organisations.first, @absence), class:"btn btn-primary"
 
 = t("mailers.common.farewell_html", domain_name: domain.name)

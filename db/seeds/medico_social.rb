@@ -713,5 +713,10 @@ unknown_rdv_count_by_agent.each do |agent_id, unknown_past_rdv_count|
   Agent.where(id: agent_id).update_all(unknown_past_rdv_count: unknown_past_rdv_count) # rubocop:disable Rails/SkipsModelValidations
 end
 
-Absence.create!(title: "Formation", agent: agent_org_paris_nord_pmi_martine, organisation: org_paris_nord, first_day: 1.week.from_now, start_time: Tod::TimeOfDay.new(8),
-                end_time: Tod::TimeOfDay.new(18))
+Absence.create!(
+  title: "Formation",
+  agent: agent_org_paris_nord_pmi_martine,
+  first_day: 1.week.from_now,
+  start_time: Tod::TimeOfDay.new(8),
+  end_time: Tod::TimeOfDay.new(18)
+)

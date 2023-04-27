@@ -7,12 +7,13 @@ describe AgentRemoval, type: :service do
     let!(:organisation) { create(:organisation) }
     let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
     let!(:plage_ouvertures) { create_list(:plage_ouverture, 2, agent: agent, organisation: organisation) }
-    let!(:absences) { create_list(:absence, 2, agent: agent, organisation: organisation) }
+    let!(:absences) { create_list(:absence, 2, agent: agent) }
 
-    it "succeed,s destroy absences and plages ouvertures, and soft delete" do
+    it "succeeds destroy absences and plages ouvertures, and soft delete" do
       expect(agent).to receive(:soft_delete)
       result = described_class.new(agent, organisation).remove!
       expect(result).to eq true
+      agent.reload
       expect(agent.organisations).to be_empty
       expect(agent.absences).to be_empty
       expect(agent.plage_ouvertures).to be_empty
@@ -26,17 +27,17 @@ describe AgentRemoval, type: :service do
     let!(:organisation2) { create(:organisation) }
     let!(:agent) { create(:agent, basic_role_in_organisations: [organisation1, organisation2]) }
     let!(:plage_ouvertures1) { create_list(:plage_ouverture, 2, agent: agent, organisation: organisation1) }
-    let!(:absences1) { create_list(:absence, 2, agent: agent, organisation: organisation1) }
     let!(:plage_ouvertures2) { create_list(:plage_ouverture, 2, agent: agent, organisation: organisation2) }
-    let!(:absences2) { create_list(:absence, 2, agent: agent, organisation: organisation2) }
+    let!(:absences) { create_list(:absence, 2, agent: agent) }
 
     it "succeeds and destroy absences and plages ouvertures and not soft delete" do
       expect(agent).not_to receive(:soft_delete)
       result = described_class.new(agent, organisation1).remove!
       expect(result).to eq true
+      agent.reload
       expect(agent.organisations).to contain_exactly(organisation2)
       expect(agent.plage_ouvertures).to contain_exactly(*plage_ouvertures2)
-      expect(agent.absences).to contain_exactly(*absences2)
+      expect(agent.absences).to contain_exactly(*absences)
     end
   end
 

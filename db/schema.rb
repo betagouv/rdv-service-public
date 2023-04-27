@@ -106,7 +106,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_25_142805) do
   create_table "absences", force: :cascade do |t|
     t.bigint "agent_id", null: false
     t.string "title", null: false
-    t.bigint "organisation_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "recurrence"
@@ -121,7 +120,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_25_142805) do
     t.index ["end_day"], name: "index_absences_on_end_day"
     t.index ["expired_cached"], name: "index_absences_on_expired_cached"
     t.index ["first_day"], name: "index_absences_on_first_day"
-    t.index ["organisation_id"], name: "index_absences_on_organisation_id"
     t.index ["recurrence"], name: "index_absences_on_recurrence", where: "(recurrence IS NOT NULL)"
     t.index ["updated_at"], name: "index_absences_on_updated_at"
   end
@@ -233,29 +231,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_25_142805) do
     t.index ["agent_id", "rdv_id"], name: "index_agents_rdvs_on_agent_id_and_rdv_id", unique: true
     t.index ["agent_id"], name: "index_agents_rdvs_on_agent_id"
     t.index ["rdv_id"], name: "index_agents_rdvs_on_rdv_id"
-  end
-
-  create_table "agents_users", force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.bigint "agent_id", null: false
-    t.index ["agent_id"], name: "index_agents_users_on_agent_id"
-    t.index ["user_id"], name: "index_agents_users_on_user_id"
-  end
-
-  create_table "delayed_jobs", force: :cascade do |t|
-    t.integer "priority", default: 0, null: false
-    t.integer "attempts", default: 0, null: false
-    t.text "handler", null: false
-    t.text "last_error"
-    t.datetime "run_at"
-    t.datetime "locked_at"
-    t.datetime "failed_at"
-    t.string "locked_by"
-    t.string "queue"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string "cron"
-    t.index ["priority", "run_at"], name: "delayed_jobs_priority"
   end
 
   create_table "file_attentes", force: :cascade do |t|
@@ -735,7 +710,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_25_142805) do
   end
 
   add_foreign_key "absences", "agents"
-  add_foreign_key "absences", "organisations"
   add_foreign_key "agent_roles", "agents"
   add_foreign_key "agent_roles", "organisations"
   add_foreign_key "agent_teams", "agents"
