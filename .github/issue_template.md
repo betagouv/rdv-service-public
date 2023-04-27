@@ -13,6 +13,7 @@ assignees: ''
 * Comportement actuel : 
   * Étapes pour reproduire cette situation
   * Captures d'écran si pertinent
+  * Environnement (version du navigateur / du téléphone…)
 
 ## ❓ Définition du problème
 
@@ -23,10 +24,9 @@ assignees: ''
 * Comportement attendu
 * Options envisagées, le cas échéant
 * Technique
-* Environnement : version du navigateur / du téléphone…
 * Pistes d’investigation ou d’implémentation
 
-## 🧪 Scénario de test
+## 🧪 Scénarios de test
 
 * Étapes pour aboutir sur le comportement attendu
 * Lien de la review app pour tester : 
