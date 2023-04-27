@@ -86,6 +86,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
       phone_number: "0611223344"
     )
     expect(created_rdv.created_by).to eq("prescripteur")
+    expect(created_rdv.rdvs_users.first.created_by).to eq("prescripteur")
 
     perform_enqueued_jobs(queue: "mailers")
     expect(email_sent_to(agent.email).subject).to include("Nouveau RDV ajouté sur votre agenda RDV Solidarités")
