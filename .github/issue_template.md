@@ -6,28 +6,27 @@ labels: ''
 assignees: ''
 ---
 
-## Contexte
+## ℹ️ Contexte 
 
-- Ticket Zammad :
-- Issue Sentry :
+* Ticket Zammad :
+* Issue Sentry :
+* Comportement actuel : 
+  * Étapes pour reproduire cette situation
+  * Captures d'écran si pertinent
 
-<!-- Quelle est la problématique ? Dans quel contexte se pose-t-elle ? Qui est impacté⋅e ? -->
+## ❓ Définition du problème
 
-## Actuellement
+* Ce que nous pensons qu'est le problème
 
-### Comportement actuel
+## 💡 Solution envisagée
 
-### Étapes pour reproduire cette situation
-
-#### Captures d'écran si pertinent
-
-## Objectif
-
-### Comportement attendu
-
-### Options envisagées, le cas échéant
-
-## Technique
-
-* Environnement : version du navigateur / du téléphone…
+* Comportement attendu
+* Options envisagées, le cas échéant
+* Technique
+* Environnement : version du navigateur / du téléphone…
 * Pistes d’investigation ou d’implémentation
+
+## 🧪 Scénario de test
+
+* Étapes pour aboutir sur le comportement attendu
+* Lien de la review app pour tester : 
