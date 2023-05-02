@@ -21,9 +21,10 @@ class AbsenceBlueprint < Blueprinter::Base
   field(:web_url) do |absence|
     next unless absence.persisted?
 
+    organisation = absence.agent.organisations.first
     Rails.application.routes.url_helpers.edit_admin_organisation_absence_url(
       id: absence.id,
-      organisation_id: absence.organisation.id,
+      organisation_id: organisation.id,
       host: absence.domain.dns_domain_name
     )
   end

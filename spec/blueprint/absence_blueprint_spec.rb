@@ -34,7 +34,7 @@ describe AbsenceBlueprint do
     it "contains web_url" do
       organisation = create(:organisation)
       agent = create(:agent, basic_role_in_organisations: [organisation])
-      absence = create(:absence, agent: agent, organisation: organisation)
+      absence = create(:absence, agent: agent)
       parsed_absence = JSON.parse(described_class.render(absence, root: :absence))
       expect(parsed_absence["absence"]["web_url"]).to eq("http://www.rdv-solidarites-test.localhost/admin/organisations/#{organisation.id}/absences/#{absence.id}/edit")
     end
