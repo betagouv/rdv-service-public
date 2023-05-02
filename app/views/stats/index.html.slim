@@ -179,6 +179,14 @@
             h2.card-title Agents actifs par mois
           p Nombre d'agents ayant participé à au moins un rdv chaque mois
           = column_chart active_agents_stats_path(territory: @territory)
+
+      .card.mb-5
+        .card-header
+          = self_anchor "outlook_sync"
+            h2.card-title Synchronisation Outlook
+        .card-body
+          p #{@agents.where.not(microsoft_graph_token: nil).count} agents utilisent la synchronisation d'agenda avec Outlook
+
       .card.mb-5
         .card-header
           = "#{@territories.count} structures utilisent RDV-Solidarités"

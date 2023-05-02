@@ -5,7 +5,7 @@ RSpec.describe "API auth", type: :request do
 
   let!(:organisation) { create(:organisation) }
   let!(:agent) { create(:agent, password: "123456", basic_role_in_organisations: [organisation]) }
-  let!(:absence) { create(:absence, agent: agent, organisation: organisation) }
+  let!(:absence) { create(:absence, agent: agent) }
 
   context "login with wrong password" do
     it "returns error" do

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_27_152334) do
+ActiveRecord::Schema[7.0].define(version: 2023_04_25_084138) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -100,7 +100,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_27_152334) do
   create_table "absences", force: :cascade do |t|
     t.bigint "agent_id", null: false
     t.string "title", null: false
-    t.bigint "organisation_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "recurrence"
@@ -115,7 +114,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_27_152334) do
     t.index ["end_day"], name: "index_absences_on_end_day"
     t.index ["expired_cached"], name: "index_absences_on_expired_cached"
     t.index ["first_day"], name: "index_absences_on_first_day"
-    t.index ["organisation_id"], name: "index_absences_on_organisation_id"
     t.index ["recurrence"], name: "index_absences_on_recurrence", where: "(recurrence IS NOT NULL)"
     t.index ["updated_at"], name: "index_absences_on_updated_at"
   end
@@ -227,29 +225,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_27_152334) do
     t.index ["agent_id", "rdv_id"], name: "index_agents_rdvs_on_agent_id_and_rdv_id", unique: true
     t.index ["agent_id"], name: "index_agents_rdvs_on_agent_id"
     t.index ["rdv_id"], name: "index_agents_rdvs_on_rdv_id"
-  end
-
-  create_table "agents_users", force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.bigint "agent_id", null: false
-    t.index ["agent_id"], name: "index_agents_users_on_agent_id"
-    t.index ["user_id"], name: "index_agents_users_on_user_id"
-  end
-
-  create_table "delayed_jobs", force: :cascade do |t|
-    t.integer "priority", default: 0, null: false
-    t.integer "attempts", default: 0, null: false
-    t.text "handler", null: false
-    t.text "last_error"
-    t.datetime "run_at"
-    t.datetime "locked_at"
-    t.datetime "failed_at"
-    t.string "locked_by"
-    t.string "queue"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string "cron"
-    t.index ["priority", "run_at"], name: "delayed_jobs_priority"
   end
 
   create_table "file_attentes", force: :cascade do |t|
@@ -726,16 +701,28 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_27_152334) do
   end
 
   add_foreign_key "absences", "agents"
-  add_foreign_key "absences", "organisations"
+  add_foreign_key "agent_roles", "agents"
+  add_foreign_key "agent_roles", "organisations"
+  add_foreign_key "agent_teams", "agents"
+  add_foreign_key "agent_teams", "teams"
   add_foreign_key "agent_territorial_access_rights", "agents"
   add_foreign_key "agent_territorial_access_rights", "territories"
+  add_foreign_key "agent_territorial_roles", "agents"
+  add_foreign_key "agent_territorial_roles", "territories"
   add_foreign_key "agents", "services"
+  add_foreign_key "agents_rdvs", "agents"
+  add_foreign_key "agents_rdvs", "rdvs"
   add_foreign_key "file_attentes", "rdvs"
   add_foreign_key "file_attentes", "users"
   add_foreign_key "lieux", "organisations"
+  add_foreign_key "motif_categories_territories", "motif_categories"
+  add_foreign_key "motif_categories_territories", "territories"
   add_foreign_key "motifs", "motif_categories"
   add_foreign_key "motifs", "organisations"
   add_foreign_key "motifs", "services"
+  add_foreign_key "motifs_plage_ouvertures", "motifs"
+  add_foreign_key "motifs_plage_ouvertures", "plage_ouvertures"
+  add_foreign_key "organisations", "territories"
   add_foreign_key "plage_ouvertures", "agents"
   add_foreign_key "plage_ouvertures", "lieux"
   add_foreign_key "plage_ouvertures", "organisations"
@@ -743,8 +730,20 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_27_152334) do
   add_foreign_key "rdvs", "lieux"
   add_foreign_key "rdvs", "motifs"
   add_foreign_key "rdvs", "organisations"
+  add_foreign_key "rdvs_users", "rdvs"
+  add_foreign_key "rdvs_users", "users"
+  add_foreign_key "receipts", "rdvs"
+  add_foreign_key "receipts", "users"
+  add_foreign_key "referent_assignations", "agents"
+  add_foreign_key "referent_assignations", "users"
   add_foreign_key "sector_attributions", "agents"
   add_foreign_key "sector_attributions", "organisations"
+  add_foreign_key "sector_attributions", "sectors"
+  add_foreign_key "sectors", "territories"
+  add_foreign_key "teams", "territories"
+  add_foreign_key "user_profiles", "organisations"
+  add_foreign_key "user_profiles", "users"
   add_foreign_key "users", "users", column: "responsible_id"
   add_foreign_key "webhook_endpoints", "organisations"
+  add_foreign_key "zones", "sectors"
 end

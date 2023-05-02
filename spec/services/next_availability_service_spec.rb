@@ -28,7 +28,7 @@ describe NextAvailabilityService, type: :service do
                motifs: [motif], lieu: lieu, agent: agent, organisation: organisation,
                first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
         create(:absence,
-               agent: agent, organisation: organisation,
+               agent: agent,
                first_day: today, start_time: Tod::TimeOfDay.new(9), end_day: today, end_time: Tod::TimeOfDay.new(12, 0))
 
         next_available = described_class.find(motif, lieu, [], from: today)
@@ -42,7 +42,7 @@ describe NextAvailabilityService, type: :service do
                first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11),
                recurrence: recurrence)
         create(:absence,
-               agent: agent, organisation: organisation,
+               agent: agent,
                first_day: today, start_time: Tod::TimeOfDay.new(9), end_day: today, end_time: Tod::TimeOfDay.new(12, 0))
 
         next_available = described_class.find(motif, lieu, [], from: today)

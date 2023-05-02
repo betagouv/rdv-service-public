@@ -1,6 +1,5 @@
 - content_for(:menu_item) { "menu-absences" }
 - content_for(:menu_agent_select_path_helper_name) { "new_admin_organisation_agent_absence_path" }
-= render "layouts/absences_change_banner"
 
 - content_for :title do
   - if @absence.agent == current_agent
@@ -11,7 +10,7 @@
 - content_for :breadcrumb do
   ol.breadcrumb.m-0
     li.breadcrumb-item
-      = link_to admin_organisation_agent_absences_path(@absence.organisation, @absence.agent) do
+      = link_to admin_organisation_agent_absences_path(current_organisation, @absence.agent) do
         - if @absence.agent == current_agent
           = t(".your_busy_times")
         - else

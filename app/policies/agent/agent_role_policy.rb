@@ -23,7 +23,7 @@ class Agent::AgentRolePolicy < ApplicationPolicy
 
     def resolve
       my_roles = scope.merge(current_agent.roles)
-      roles_of_orgs_i_admin = scope.where(organisation: current_agent.organisations_level(:admin))
+      roles_of_orgs_i_admin = scope.where(organisation: current_agent.admin_orgs)
 
       my_roles.or roles_of_orgs_i_admin
     end

@@ -4,6 +4,14 @@ module DefaultJobBehaviour
   extend ActiveSupport::Concern
 
   included do
+    # Include job metadata in Sentry context
+    around_perform do |_job, block|
+      Sentry.with_scope do |scope|
+        scope.set_context(:job, { job_id: job_id, queue_name: queue_name, arguments: arguments })
+        block.call
+      end
+    end
+
     # This retry_on means:
     # "retry 20 times with an exponential backoff, then mark job as discarded"
     #
@@ -14,11 +22,15 @@ module DefaultJobBehaviour
 
     # Makes sure every failed attempt is logged to Sentry
     # (see: https://github.com/bensheldon/good_job#retries)
-    around_perform do |_job, block|
+    around_perform do |job, block|
       block.call
     rescue StandardError => e
-      Sentry.capture_exception(e)
+      Sentry.capture_exception(e) if job.log_failure_to_sentry?
       raise # will be caught by the retry mechanism
     end
+  end
+
+  def log_failure_to_sentry?
+    true
   end
 end

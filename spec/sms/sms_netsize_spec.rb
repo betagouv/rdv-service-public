@@ -29,20 +29,20 @@ describe "using netsize to send an SMS" do
     expect(enqueued_jobs).to be_empty
   end
 
-  def expect_error_to_be_logged
+  def try_sending_sms
     expect do
       expect do
         Users::RdvSms.rdv_created(rdv, rdv.users.first, "t0k3n").deliver_later
-        perform_enqueued_jobs
+        3.times { perform_enqueued_jobs } # We only start sending errors to Sentry after 3rd failure
       end.to change { sentry_events.last&.exception&.values&.first&.type }.from(nil).to("SmsSender::SmsSenderFailure")
-    end.to(change(Receipt, :count).by(1).and(change(sentry_events, :size).by(1)))
+    end.to(change(Receipt, :count).by(3).and(change(sentry_events, :size).by(1)))
   end
 
   it "warns Sentry when netsize has a timeout" do
     stub_request(:post, "https://europe.ipx.com/restapi/v1/sms/send")
       .to_timeout
 
-    expect_error_to_be_logged
+    try_sending_sms
 
     breadcrumbs = sentry_events.last.breadcrumbs.compact
     expect(breadcrumbs[0]).to have_attributes(message: "HTTP request")
@@ -53,7 +53,7 @@ describe "using netsize to send an SMS" do
     stub_request(:post, "https://europe.ipx.com/restapi/v1/sms/send")
       .to_return(status: 500, body: "", headers: {})
 
-    expect_error_to_be_logged
+    try_sending_sms
 
     breadcrumbs = sentry_events.last.breadcrumbs.compact
     expect(breadcrumbs[0]).to have_attributes(message: "HTTP request")
@@ -69,7 +69,7 @@ describe "using netsize to send an SMS" do
     stub_request(:post, "https://europe.ipx.com/restapi/v1/sms/send")
       .to_return(status: 200, body: stubbed_body, headers: {})
 
-    expect_error_to_be_logged
+    try_sending_sms
 
     breadcrumbs = sentry_events.last.breadcrumbs.compact
     expect(breadcrumbs[0]).to have_attributes(message: "HTTP request")
