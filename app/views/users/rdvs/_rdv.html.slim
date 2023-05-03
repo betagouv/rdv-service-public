@@ -7,7 +7,7 @@ ul.list-group.list-group-flush
   - if rdv.motif.restriction_for_rdv.present?
     li.list-group-item.alert.alert-warning
       .fa.fa-warning>
-      = rdv.motif.restriction_for_rdv
+      = restriction_for_rdv_to_html(rdv.motif)
 
   - if rdv.home?
     li.list-group-item
@@ -45,7 +45,8 @@ ul.list-group.list-group-flush
     li.list-group-item
       i.fa.fa-exclamation-triangle>
       strong Informations supplémentaires :
-      = auto_link(simple_format(rdv.motif.instruction_for_rdv, class:"pl-3 pt-1"), html: { target: "_blank" })
+      .pl-3.pt-1
+        = instruction_for_rdv_to_html(rdv.motif)
   = render "/users/rdvs/file_attente", rdv: rdv
 
   / Check for authorizations and already cancelled rdv/participation

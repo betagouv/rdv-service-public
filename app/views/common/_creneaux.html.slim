@@ -34,7 +34,7 @@ div id="creneaux-lieu-#{lieu.id}"
                         small= creneau.agent.short_name
 
                     =  render "/common/modal", id: "js-rdv-restriction-motif#{creneau.starts_at.to_i}" , title: "À lire avant de prendre un rendez-vous", confirm_path: new_users_rdv_wizard_step_path(@query.merge(motif_id: creneau.motif.id, starts_at: creneau.starts_at)) do
-                      = ActionController::Base.helpers.auto_link(simple_format(creneau.motif.restriction_for_rdv), html: { target: "_blank"})
+                      = restriction_for_rdv_to_html(creneau.motif)
             - elsif date >= (Time.now + max_public_booking_delay.seconds).to_date
               p.text-center.text-muted
                 | Date fermée à la reservation
