@@ -4,10 +4,10 @@ ul.list-group.list-group-flush
     = rdv_title(rdv)
     = rdv_tag(rdv)
 
-  - if rdv.motif.restriction_for_rdv
+  - if rdv.motif.restriction_for_rdv.present?
     li.list-group-item.alert.alert-warning
-        .fa.fa-warning>
-        = rdv.motif.restriction_for_rdv
+      .fa.fa-warning>
+      = rdv.motif.restriction_for_rdv
 
   - if rdv.home?
     li.list-group-item
