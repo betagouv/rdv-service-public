@@ -73,11 +73,11 @@
 
         = motif_attribute_row \
           Motif.human_attribute_name(:restriction_for_rdv_short), \
-          @motif.restriction_for_rdv, \
+          simple_format(@motif.restriction_for_rdv), \
           hint: Motif.human_attribute_name(:restriction_for_rdv_hint)
         = motif_attribute_row \
           Motif.human_attribute_name(:instruction_for_rdv_short), \
-          @motif.instruction_for_rdv, \
+          simple_format(@motif.instruction_for_rdv), \
           hint: Motif.human_attribute_name(:instruction_for_rdv_hint)
         = motif_attribute_row \
           Motif.human_attribute_name(:custom_cancel_warning_message), \

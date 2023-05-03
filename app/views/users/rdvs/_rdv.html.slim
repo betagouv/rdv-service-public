@@ -7,7 +7,7 @@ ul.list-group.list-group-flush
   - if rdv.motif.restriction_for_rdv.present?
     li.list-group-item.alert.alert-warning
       .fa.fa-warning>
-      = rdv.motif.restriction_for_rdv
+      = auto_link(simple_format(rdv.motif.restriction_for_rdv, {}, wrapper_tag: "span"), html: { target: "_blank" })
 
   - if rdv.home?
     li.list-group-item
