@@ -613,7 +613,7 @@ end
 
 # RDVs
 
-Rdv.create!(
+rdv = Rdv.new(
   starts_at: Time.zone.today + 3.days + 10.hours,
   duration_in_min: 30,
   motif_id: motif_org_paris_nord_pmi_rappel.id,
@@ -623,7 +623,10 @@ Rdv.create!(
   user_ids: [user_org_paris_nord_patricia.id],
   context: "Visite de courtoisie"
 )
-Rdv.create!(
+rdv.rdvs_users.each { |rdvs_user| rdvs_user.created_by = :agent }
+rdv.save!
+
+rdv = Rdv.new(
   starts_at: Time.zone.today + 4.days + 15.hours,
   duration_in_min: 30,
   motif_id: motif_org_paris_nord_pmi_suivi.id,
@@ -633,18 +636,10 @@ Rdv.create!(
   user_ids: [user_org_paris_nord_josephine.id],
   context: "Suivi vaccins"
 )
-Rdv.create!(
-  starts_at: Time.zone.today + 5.days + 11.hours,
-  duration_in_min: 30,
-  motif_id: motif_org_paris_nord_pmi_securite.id,
-  lieu: lieu_org_paris_nord_bd_aubervilliers,
-  organisation_id: org_paris_nord.id,
-  agent_ids: [agent_org_paris_nord_pmi_martine.id],
-  user_ids: [user_org_paris_nord_josephine.id],
-  context: "Visite à domicile"
-)
+rdv.rdvs_users.each { |rdvs_user| rdvs_user.created_by = :agent }
+rdv.save!
 
-Rdv.create!(
+rdv = Rdv.new(
   starts_at: Time.zone.today + 5.days + 11.hours,
   duration_in_min: 30,
   motif_id: motif_org_paris_nord_pmi_securite.id,
@@ -654,6 +649,21 @@ Rdv.create!(
   user_ids: [user_org_paris_nord_josephine.id],
   context: "Visite à domicile"
 )
+rdv.rdvs_users.each { |rdvs_user| rdvs_user.created_by = :agent }
+rdv.save!
+
+rdv = Rdv.new(
+  starts_at: Time.zone.today + 5.days + 11.hours,
+  duration_in_min: 30,
+  motif_id: motif_org_paris_nord_pmi_securite.id,
+  lieu: lieu_org_paris_nord_bd_aubervilliers,
+  organisation_id: org_paris_nord.id,
+  agent_ids: [agent_org_paris_nord_pmi_martine.id],
+  user_ids: [user_org_paris_nord_josephine.id],
+  context: "Visite à domicile"
+)
+rdv.rdvs_users.each { |rdvs_user| rdvs_user.created_by = :agent }
+rdv.save!
 
 10.times do |i|
   Rdv.create!(
@@ -700,7 +710,7 @@ results = Rdv.insert_all!(rdv_attributes, returning: Arel.sql("id")) # [{"id"=>1
 rdv_ids = results.flat_map(&:values) # [1, 2, ...]
 agent_rdv_attributes = rdv_ids.map { |id| { agent_id: agent_org_paris_nord_pmi_martine.id, rdv_id: id } }
 AgentsRdv.insert_all!(agent_rdv_attributes)
-rdv_user_attributes = rdv_ids.map { |id| { user_id: user_org_paris_nord_josephine.id, rdv_id: id, send_lifecycle_notifications: true, send_reminder_notification: true } }
+rdv_user_attributes = rdv_ids.map { |id| { user_id: user_org_paris_nord_josephine.id, rdv_id: id, send_lifecycle_notifications: true, send_reminder_notification: true, created_by: :agent } }
 RdvsUser.insert_all!(rdv_user_attributes)
 events = %w[new_creneau_available rdv_cancelled rdv_created rdv_date_updated rdv_upcoming_reminder]
 receipts_attributes = rdv_ids.map { |id| { rdv_id: id, event: events.sample, channel: Receipt.channels.values.sample, result: Receipt.results.values.sample, created_at: now, updated_at: now } }
