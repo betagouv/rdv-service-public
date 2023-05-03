@@ -52,4 +52,4 @@
   - if rdv.motif.instruction_for_rdv.present? && for_role == :user
     .div.row-result.no-border
       span.title Informations supplémentaires :
-      = auto_link(simple_format(rdv.motif.instruction_for_rdv), html: { target: "_blank" })
+      = instruction_for_rdv_to_html(rdv.motif)
