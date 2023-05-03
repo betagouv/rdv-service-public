@@ -12,7 +12,7 @@ describe CustomDeviseMailer, "#domain" do
   end
 
   context "when user has no RDV" do
-    let(:user) { create(:user, rdvs: []) }
+    let(:user) { create(:user) }
 
     it "uses RDV_SOLIDARITES" do
       expect_to_use_domain(Domain::RDV_SOLIDARITES)
@@ -21,7 +21,8 @@ describe CustomDeviseMailer, "#domain" do
 
   context "when user only has RDV Solidarités rdvs" do
     let!(:organisation) { create(:organisation, new_domain_beta: false) }
-    let(:user) { create(:user, rdvs: create_list(:rdv, 2, organisation: organisation)) }
+    let!(:user) { create(:user) }
+    let!(:rdvs) { create_list(:rdv, 2, organisation: organisation, users: [user]) }
 
     it "uses RDV_SOLIDARITES" do
       expect_to_use_domain(Domain::RDV_SOLIDARITES)
@@ -30,7 +31,8 @@ describe CustomDeviseMailer, "#domain" do
 
   context "when user only has RDV Aide Numérique rdvs" do
     let!(:organisation) { create(:organisation, new_domain_beta: true) }
-    let(:user) { create(:user, rdvs: create_list(:rdv, 2, organisation: organisation)) }
+    let!(:user) { create(:user) }
+    let!(:rdvs) { create_list(:rdv, 2, organisation: organisation, users: [user]) }
 
     it "uses RDV_AIDE_NUMERIQUE" do
       expect_to_use_domain(Domain::RDV_AIDE_NUMERIQUE)
@@ -38,11 +40,11 @@ describe CustomDeviseMailer, "#domain" do
   end
 
   context "when user has mixed RDV domains (and organisation is in beta program)" do
+    let!(:user) { create(:user) }
     let!(:old_domain_organisation) { create(:organisation, new_domain_beta: false) }
     let!(:new_domain_organisation) { create(:organisation, new_domain_beta: true) }
-    let!(:recent_rdv) { build(:rdv, organisation: new_domain_organisation, created_at: 2.days.ago) }
-    let!(:old_rdv) { build(:rdv, organisation: old_domain_organisation, created_at: 3.months.ago) }
-    let!(:user) { create(:user, rdvs: [recent_rdv, old_rdv]) }
+    let!(:recent_rdv) { create(:rdv, organisation: new_domain_organisation, created_at: 2.days.ago, users: [user]) }
+    let!(:old_rdv) { create(:rdv, organisation: old_domain_organisation, created_at: 3.months.ago, users: [user]) }
 
     it "uses the domain of the most recently created rdv" do
       expect_to_use_domain(Domain::RDV_AIDE_NUMERIQUE)

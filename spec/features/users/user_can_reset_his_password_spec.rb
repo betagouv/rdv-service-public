@@ -26,11 +26,10 @@ describe "User resets his password spec" do
   # Les tests unitaires des variations sont fait dans une spec de mailer.
   describe "using the user's domain" do
     context "when the user only has RDVs for motif Conseiller Numérique" do
-      let(:user) do
-        organisation = create(:organisation, new_domain_beta: true)
-        motif_numerique = create(:motif, service: create(:service, :conseiller_numerique))
-        create(:user, rdvs: create_list(:rdv, 2, organisation: organisation, motif: motif_numerique))
-      end
+      let!(:user) { create(:user) }
+      let(:organisation) { create(:organisation, new_domain_beta: true) }
+      let(:motif_numerique) { create(:motif, service: create(:service, :conseiller_numerique)) }
+      let!(:rdvs) { create_list(:rdv, 2, organisation: organisation, motif: motif_numerique, users: [user]) }
 
       it "uses the default domain" do
         # Le domaine visité n'a pas d'importance. Voir la doc de User#domain.

@@ -332,20 +332,22 @@ describe User, type: :model do
     let(:organisation) { create(:organisation) }
 
     it "return true when no rdv for self and relatives" do
-      user = create(:user, rdvs: [], organisations: [organisation])
+      user = create(:user, organisations: [organisation])
       expect(user.can_be_soft_deleted_from_organisation?(organisation)).to be true
     end
 
     it "return false when rdv for self" do
       rdv = create(:rdv, organisation: organisation)
-      user = create(:user, rdvs: [rdv], organisations: [organisation])
+      user = create(:user, organisations: [organisation])
+      create(:rdvs_user, user: user, rdv: rdv)
       expect(user.can_be_soft_deleted_from_organisation?(organisation)).to be false
     end
 
     it "return false when rdv for relatives" do
       rdv = create(:rdv, organisation: organisation)
-      responsible = create(:user, rdvs: [], organisations: [organisation])
-      relative = create(:user, responsible: responsible, rdvs: [rdv], organisations: [organisation])
+      responsible = create(:user, organisations: [organisation])
+      relative = create(:user, responsible: responsible, organisations: [organisation])
+      create(:rdvs_user, user: relative, rdv: rdv)
       expect(relative.can_be_soft_deleted_from_organisation?(organisation)).to be false
     end
   end
