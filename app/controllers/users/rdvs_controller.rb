@@ -30,7 +30,6 @@ class Users::RdvsController < UserAuthController
       )
       if @creneau.present?
         @rdv = build_rdv_from_creneau(@creneau)
-        set_participation_attributes
         authorize(@rdv)
         @save_succeeded = @rdv.save
       end
@@ -131,12 +130,8 @@ class Users::RdvsController < UserAuthController
     )
   end
 
-  def set_participation_attributes
-    @rdv.rdvs_users.each { |rdvs_user| rdvs_user.created_by = :user }
-  end
-
   def build_rdv_from_creneau(creneau)
-    Rdv.new(
+    rdv = Rdv.new(
       agents: [creneau.agent],
       duration_in_min: creneau.duration_in_min,
       starts_at: creneau.starts_at,
@@ -146,6 +141,8 @@ class Users::RdvsController < UserAuthController
       users: [user_for_rdv],
       created_by: :user
     )
+    rdv.rdvs_users.each { |rdvs_user| rdvs_user.created_by = :user }
+    rdv
   end
 
   def user_for_rdv
