@@ -7,7 +7,17 @@ class AddCreatedByToRdvsUsers < ActiveRecord::Migration[7.0]
       user
       prescripteur
     ]
-    add_column :rdvs_users, :created_by, :created_by, null: false, default: :agent
+    add_column :rdvs_users, :created_by, :created_by, null: true
+
+    # migrate created_by :agent
+    execute(<<-SQL.squish
+      UPDATE rdvs_users
+      SET created_by = 'agent'
+      FROM rdvs
+      WHERE rdvs_users.rdv_id = rdvs.id
+      AND rdvs.created_by = 0
+    SQL
+           )
 
     # migrate created_by :user
     execute(<<-SQL.squish
@@ -16,6 +26,16 @@ class AddCreatedByToRdvsUsers < ActiveRecord::Migration[7.0]
       FROM rdvs
       WHERE rdvs_users.rdv_id = rdvs.id
       AND rdvs.created_by = 1
+    SQL
+           )
+
+    # migrate created_by :file_attente to user
+    execute(<<-SQL.squish
+      UPDATE rdvs_users
+      SET created_by = 'user'
+      FROM rdvs
+      WHERE rdvs_users.rdv_id = rdvs.id
+      AND rdvs.created_by = 2
     SQL
            )
 
@@ -38,6 +58,7 @@ class AddCreatedByToRdvsUsers < ActiveRecord::Migration[7.0]
            )
     change_column_null :rdvs_users, :created_at, false
     change_column_null :rdvs_users, :updated_at, false
+    change_column_null :rdvs_users, :created_by, false
   end
 
   def down

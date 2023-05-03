@@ -12,6 +12,7 @@ module Rdv::Updatable
     Rdv.transaction do
       self.updated_at = Time.zone.now
       previous_participations = rdvs_users.select(&:persisted?)
+      set_created_by_for_new_participations(author)
 
       if status_changed? && valid?
         self.cancelled_at = status.in?(%w[excused revoked noshow]) ? Time.zone.now : nil
@@ -98,5 +99,10 @@ module Rdv::Updatable
       # Collectives RDV status cannot be noshow (validations)
       rdvs_users.unknown.each { _1.update!(status: status) }
     end
+  end
+
+  def set_created_by_for_new_participations(author)
+    creator = author.is_a?(Agent) ? :agent : :user
+    rdvs_users.select(&:new_record?).each { |rdvs_user| rdvs_user.created_by = creator }
   end
 end

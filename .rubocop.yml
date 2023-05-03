@@ -231,3 +231,7 @@ RSpec/ScatteredSetup:
 RSpec/FilePath:
   CustomTransform:
     SfrMail2SmsMailer: sfr_mail_2_sms_mailer
+
+Naming/AccessorMethodName:
+  Exclude:
+   - "app/models/concerns/rdv/updatable.rb"
