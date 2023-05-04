@@ -70,7 +70,9 @@ module RecurrenceConcern
 
     cache_key = "earliest_future_occurrence_#{self.class.table_name}_#{id}_#{updated_at}"
     Rails.cache.fetch(cache_key, force: refresh, expires_in: 1.week) do
-      recurrence.hourly.starting(starts_at).until(recurrence_ends_at).lazy.select(&:future?).first
+      recurrence.starting(starts_at).until(recurrence_ends_at).lazy do |occurence|
+        occurence.future?
+      end.first
     end
   end
 
@@ -100,22 +102,14 @@ module RecurrenceConcern
   # The value of a recent occurrence is computed and cached in #earliest_future_occurrence_time.
   # Warning: using `only_future: true` will only yield future occurrences, not past ones.
   def occurrence_start_at_list_for(inclusive_date_range, only_future:)
-    puts "--------------------- occurrence_start_at_list_for ---------------"
     min_until = [inclusive_date_range.end, recurrence_ends_at].compact.min.end_of_day
     inclusive_datetime_range = (earliest_future_occurrence_time)..(inclusive_date_range.end.end_of_day)
 
-    puts "inclusive_date_range #{inclusive_date_range}"
     if recurring?
       min_from = only_future ? (earliest_future_occurrence_time || starts_at) : starts_at
-      puts "starts_at: #{starts_at}"
-      puts "earliest_future_occurrence_time: #{earliest_future_occurrence_time}"
-      puts "min_from  #{min_from}"
-      puts "min_until: #{min_until}"
 
 
       recurrence.starting(min_from).until(min_until).lazy.select do |occurrence_starts_at|
-        puts "occurrence_starts_at: #{occurrence_starts_at}"
-        puts "inclusive_datetime_range #{inclusive_datetime_range}"
         event_in_range?(occurrence_starts_at, occurrence_starts_at + duration, inclusive_datetime_range)
 
       end.to_a
