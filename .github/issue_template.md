@@ -6,21 +6,27 @@ labels: ''
 assignees: ''
 ---
 
-Soyez clair et concis :)
+## ℹ️ Contexte 
 
-## Actuellement
+* Ticket Zammad :
+* Issue Sentry :
+* Comportement actuel : 
+  * Étapes pour reproduire cette situation
+  * Captures d'écran si pertinent
+  * Environnement (version du navigateur / du téléphone…)
 
-* Comportement actuel
-* Étapes pour reproduire cette situation
-* Captures d'écran si pertinent
+## ❓ Définition du problème
 
-## Objectif
+* Ce que nous pensons qu'est le problème
+
+## 💡 Solution envisagée
 
 * Comportement attendu
 * Options envisagées, le cas échéant
-
-## Technique
-
-Informations techniques :
-* Environnement : version du navigateur / du téléphone…
+* Technique
 * Pistes d’investigation ou d’implémentation
+
+## 🧪 Scénarios de test
+
+* Étapes pour aboutir sur le comportement attendu
+* Lien de la review app pour tester : 

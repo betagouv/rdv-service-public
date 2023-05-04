@@ -76,7 +76,7 @@ gem "omniauth-rails_csrf_protection"
 # OO authorization for Rails
 gem "pundit"
 # Token based authentication for rails. Uses Devise + OmniAuth.
-gem "devise_token_auth", github: "lynndylanhurley/devise_token_auth"
+gem "devise_token_auth"
 
 # Jobs
 # A multithreaded, Postgres-based ActiveJob backend for Ruby on Rails
@@ -144,7 +144,6 @@ gem "icalendar", "~> 2.5"
 gem "lograge"
 
 group :development, :test do
-  # Ruby fast debugger - base + CLI
   gem "byebug", platforms: %i[mri mingw x64_mingw] # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   # Security vulnerability scanner for Ruby on Rails.
   gem "brakeman", require: false

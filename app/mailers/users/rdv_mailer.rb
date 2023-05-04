@@ -5,6 +5,7 @@ class Users::RdvMailer < ApplicationMailer
   helper UsersHelper
   helper RdvsHelper
   helper DateHelper
+  helper MotifsHelper
 
   before_action do
     @rdv = params[:rdv]

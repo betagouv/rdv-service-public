@@ -1,16 +1,6 @@
-= simple_form_for [:admin, absence.organisation, absence] do |f|
+= simple_form_for [:admin, current_organisation, absence] do |f|
   = render "model_errors", model: absence
   = f.hidden_field :agent_id
-
-  - if @agent_organisations.count > 1
-    = f.input :organisation_id, collection: @agent_organisations.map {[_1.name, _1.id]}, \
-                label: "Organisation", \
-                include_blank: false, \
-                input_html: { \
-                  class: "select2-input", \
-                }
-  - else
-    = f.input :organisation_id, as: :hidden, input_html: {value: current_organisation.id}
 
   = f.input :title, hint:"Uniquement visible en interne", placeholder: t(".busy_time_example")
 
@@ -20,6 +10,6 @@
   .row
     - if absence.persisted?
       .col.text-left
-        = link_to "Supprimer", admin_organisation_absence_path(absence.organisation, absence), method: :delete, class: "btn btn-outline-danger", data: { confirm: t(".confirm_delete_busy_time")}
+        = link_to "Supprimer", admin_organisation_absence_path(current_organisation, absence), method: :delete, class: "btn btn-outline-danger", data: { confirm: t(".confirm_delete_busy_time")}
     .col.text-right
       = f.button :submit
