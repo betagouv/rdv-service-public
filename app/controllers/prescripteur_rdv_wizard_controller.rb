@@ -29,11 +29,23 @@ class PrescripteurRdvWizardController < ApplicationController
   def save_prescripteur
     prescripteur_attributes = params[:prescripteur].permit(:first_name, :last_name, :email, :phone_number)
 
-    session[:autocomplete_prescripteur_attributes] = prescripteur_attributes
+    @prescripteur = Prescripteur.new(prescripteur_attributes)
 
-    session[:rdv_wizard_attributes][:prescripteur] = prescripteur_attributes
+    @prescripteur.validate
+    # On veut valider uniquement les attributs qui sont sur le formulaire, pas l'association avec le RdvUser
+    valid_prescripteur_form = prescripteur_attributes.keys.none? { |key| @prescripteur.errors[key] }
 
-    redirect_to prescripteur_new_beneficiaire_path
+    if valid_prescripteur_form
+      session[:autocomplete_prescripteur_attributes] = prescripteur_attributes
+
+      session[:rdv_wizard_attributes][:prescripteur] = prescripteur_attributes
+
+      redirect_to prescripteur_new_beneficiaire_path
+    else
+      @step_title = @step_titles[1]
+
+      render :new_prescripteur
+    end
   end
 
   def new_beneficiaire
