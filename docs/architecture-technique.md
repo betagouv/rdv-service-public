@@ -25,13 +25,13 @@ __IMPORTANT: DOSSIER A COMPLETER EN ÉDITANT TOUTES LES PARTIES `!!<>!!`__
 
 > Cette fiche a pour vocation de lister l’ensemble des acteurs du projet ainsi que leur rôle dans la rédaction de ce dossier.
 
-| Organisme                  | Nom                   | Rôle                    | Activité            |
-|----------------------------|-----------------------|-------------------------|---------------------|
-| RDV Services Publics       | François Ferrandis    | Lead tech               | Rédaction           |
-| RDV Services Publics       | Victor Mours          | Lead tech               | Relecture           |
-| RDV Services Publics       | Mehdi Karouch Idrissi | Product Manager         | Relecture> |
-| ANCT                       | Amélie Naquet         | Cheffe de projet - programme Société Numérique | Relecture |
-| Incubateur des territoires | Charles Capelli       | Consultant SSI          | Relecture           |
+| Organisme                  | Nom                   | Rôle                    | Activité   |
+|----------------------------|-----------------------|-------------------------|------------|
+| RDV Services Publics       | François Ferrandis    | Lead tech               | Rédaction  |
+| RDV Services Publics       | Victor Mours          | Lead tech               | Relecture  |
+| RDV Services Publics       | Mehdi Karouch Idrissi | Product Manager         | Relecture  |
+| ANCT                       | Amélie Naquet         | Cheffe de projet - programme Société Numérique | Relecture  |
+| Incubateur des territoires | Charles Capelli       | Consultant SSI          | Relecture  |
 
 ## Description du projet
 
@@ -130,7 +130,57 @@ https://github.com/betagouv/rdv-solidarites.fr/blob/f12411c0760be1316aae571bb35c
 
 ### Accès aux serveurs et sécurité des échanges
 
-!!<Détailler en quelques lignes la façon dont vous administrer le SI et quelles mesures de sécurité vous avez mis en place pour cela>!!
+Les serveurs (applicatif et base de données) sont gérés par Scalingo. Scalingo ne fournit pas de système de rôle : soit
+on a accès à un app, soit on ne l'a pas.
+
+Nous avons actuellement 2 apps Scalingo :
+
+- `osc-secnum-fr1/production-rdv-solidarites`
+- `osc-secnum-fr1/demo-rdv-solidarites`
+
+Le fait d'avoir accès à une app Scalingo donne les droits suivants :
+
+- augmenter au réduire ne nombre d'instances applicatives de l'app / régler les paramètres d'autoscaling
+- administrer la base Postgres (changer la taille de l'instance, mettre à jour Postgres, télécharger des backups, etc)
+- administrer la base Redis (même fonctionnalités que pour Postgres ci-dessus)
+- visualiser les déploiements passés ou en cours
+- configurer le déploiement automatique d'une branche GitHub
+- visualiser l'activité de l'app (scaling, déploiements, commandes lancées en one-off)
+- visualiser les logs (app + jobs + routeur Scalingo) et en télécharger des archives
+- visualiser des metrics (requêtes par minute, temps de réponse, CPU, RAM)
+- lire et modifier les variables d'environnements :
+  - credentials SMTP du compte secretariat@rdv-solidarites.fr
+  - credentials Microsoft Azure
+  - credentials de Postgres
+  - credentials de Netsize (envoi de SMS)
+  - credentials FranceConnect
+  - credentials InclusionConnect
+  - credentials GitHub
+  - master key Rails (permettant de déchiffrer les colonnes chiffrées en base)
+  - credentials Brevo (ex Sendinblue)
+- octroyer aux équipes support Scalingo le droit d'accéder à l'environnement d'exécution de l'application et aux
+  métadonnées et aux données de surveillance des bases de données
+- ajouter ou supprimer des collaborateurs sur l'app
+- ajouter au supprimer les domaines autorisés à pointer vers l'app
+- gérer les alertes
+
+Les accès Scalingo sont octroyés uniquement à l'équipe technique ("devs") car iels en ont besoin de tout ou une partie
+des fonctionnalités listées afin de :
+
+- surveiller la santé de l'app de production
+- lancer une console distante en production afin d'investiguer des bugs
+- ajouter ou mettre à jour des variables d'environnement
+- vérifier le bon déploiement des nouvelles versions du code
+
+**Scalingo propose du 2FA par TOTP, mais aucun mécanisme ne force les collaborateurs à l'activer. Nous avons donc dans
+notre checklist d'obnboarding un point précisant qu'il faut impérativement activer le 2FA.** En cas de perte des codes
+TOTP, Scalingo propose une procédure qui inclut la vérification de l'identité de l'utilisateur concerné par la
+transmission d'un document d'identité.
+
+Note : la fonctionnalité de review app est activée sur l'app de démo. Le fichier `scalingo.json` contient la liste des
+variables d'environnement qu'il ne faut pas hériter de l'app de démo lors de la création d'une review app. Une review
+app est automatiquement créée lors de l'ouverture d'une Pull Request Github, et automatiquement détruire lors de la
+fermeture / merge d'une PR.
 
 ### Authentification, contrôle d’accès, habilitations et profils
 
@@ -138,7 +188,25 @@ https://github.com/betagouv/rdv-solidarites.fr/blob/f12411c0760be1316aae571bb35c
 
 ### Traçabilité des erreurs et des actions utilisateurs
 
-!!<Détailler en quelques lignes la façon dont vous reportez les erreurs et les logs>!!
+Les logs sont écrits dans le système de log de Scalingo.
+
+Les logs applicatifs (générés par Rails) contiennent, pour chaque requêtes HTTP :
+
+- timestamp
+- path HTTP
+- méthode HTTP
+- format (HTML, JSON)
+- controller + action
+- durée
+
+Les logs produits par le routeur de Scalingo contiennent, pour chaque requêtes HTTP :
+
+- timestamp
+- path HTTP
+- méthode HTTP
+- IP d'origine
+- referer
+- user agent
 
 ### Politique de mise à jour des applicatifs
 
@@ -146,7 +214,8 @@ https://github.com/betagouv/rdv-solidarites.fr/blob/f12411c0760be1316aae571bb35c
 
 ### Intégrité
 
-!!<Quels contrôles avez vous mis en place pour détecter des problèmes d’intégrité du SI et qu’avez vous mis en place pour vous en prémunir (monitoring, backups, etc)>!!
+!!<Quels contrôles avez vous mis en place pour détecter des problèmes d’intégrité du SI et qu’avez vous mis en place
+pour vous en prémunir (monitoring, backups, etc)>!!
 
 ### Confidentialité
 
