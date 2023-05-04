@@ -106,6 +106,24 @@ RSpec.describe "prescripteur can create RDV for a user" do
     click_on("Rechercher")
   end
 
+  context "when the prescripteur info isn't filled in" do
+    it "doesn't shows error messages and doesn't allow continuing" do
+      visit "http://www.rdv-aide-numerique-test.localhost/org/#{organisation.id}"
+
+      click_on "Prochaine disponibilité le" # choix du lieu
+      click_on "08:00" # choix du créneau
+      click_on "Je suis un prescripteur qui oriente un bénéficiaire" # page de login
+
+      fill_in "Votre prénom", with: "Alex"
+      fill_in "Votre nom", with: "  "
+      fill_in "Votre email professionnel", with: "alex@prescripteur.fr"
+      fill_in "Votre numéro de téléphone", with: "0611223344"
+      click_on "Continuer"
+
+      expect(page).to have_content("Vos coordonnées de prescripteur")
+    end
+  end
+
   context "when a similar user already exists", js: true do
     let!(:user) do
       create(:user, first_name: "Patricia", last_name: "Duroy", phone_number: "0611223344")
