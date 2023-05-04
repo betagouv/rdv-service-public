@@ -102,7 +102,7 @@ module Rdv::Updatable
   end
 
   def set_created_by_for_new_participations(author) # rubocop:disable Naming/AccessorMethodName
-    creator = author.is_a?(Agent) ? :agent : :user
+    creator = author.class.model_name.singular
     rdvs_users.select(&:new_record?).each { |rdvs_user| rdvs_user.created_by = creator }
   end
 end

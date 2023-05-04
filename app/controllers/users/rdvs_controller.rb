@@ -131,7 +131,7 @@ class Users::RdvsController < UserAuthController
   end
 
   def build_rdv_from_creneau(creneau)
-    rdv = Rdv.new(
+    Rdv.new(
       agents: [creneau.agent],
       duration_in_min: creneau.duration_in_min,
       starts_at: creneau.starts_at,
@@ -141,8 +141,6 @@ class Users::RdvsController < UserAuthController
       users: [user_for_rdv],
       created_by: :user
     )
-    rdv.rdvs_users.each { |rdvs_user| rdvs_user.created_by = :user }
-    rdv
   end
 
   def user_for_rdv

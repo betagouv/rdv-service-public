@@ -30,7 +30,6 @@ module Admin::RdvWizardFormConcern
       @rdv = ::Rdv.new(rdv_defaults.merge(rdv_attributes))
       @rdv.duration_in_min ||= @rdv.motif.default_duration_in_min if @rdv.motif.present?
       @rdv.rdvs_users.each(&:set_default_notifications_flags)
-      @rdv.rdvs_users.each { |rdvs_user| rdvs_user.created_by = :agent }
       @service_id = attributes.to_h.symbolize_keys[:service_id]
     end
   end
