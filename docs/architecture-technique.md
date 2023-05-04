@@ -210,7 +210,17 @@ Les logs produits par le routeur de Scalingo contiennent, pour chaque requêtes 
 
 ### Politique de mise à jour des applicatifs
 
-!!<Détailler en quelques lignes votre politique de mise a jour des dépendances de votre SI>!!
+Voici les cas dans lesquels nous mettons à jour à jour une librairie spécifique :
+
+- une version plus récente corrige une faille de sécurité (nous utilisons Dependabot pour être prévenu⋅es)
+- une version plus récente permet de répondre à un besoin technique ou fonctionnel
+- une montée de version est requises par une librairie correspondant aux critères ci-dessus (autrement dit, nous devons
+  mettre à jour de manière indirecte)
+- une fois par mois, nous mettons à jour les gems vers leur dernier "patch level", afin d'être proactif sur les fixes de
+  sécurité et de bug
+
+La décision a été prise le 24 avril 2023, voir log de décision
+ici : [2023-04-24-politique-maj-gems.md](/docs/decisions/2023-04-24-politique-maj-gems.md)
 
 ### Intégrité
 
