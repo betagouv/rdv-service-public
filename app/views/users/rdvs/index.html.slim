@@ -44,7 +44,7 @@
             = link_to prendre_rdv_path(referent_ids: [agent.id], departement: agent.agent_territorial_access_rights.first.territory.departement_number, service_id: agent.service_id), class: "btn btn-primary " do
               i.fa.fa-calendar
               span>
-              | Prendre un RDV
+              | Prendre un RDV de suivi
     - else
       | Vous n'avez pas de référents
 
