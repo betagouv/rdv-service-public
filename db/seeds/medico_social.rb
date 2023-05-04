@@ -613,7 +613,7 @@ end
 
 # RDVs
 
-rdv = Rdv.new(
+Rdv.create!(
   starts_at: Time.zone.today + 3.days + 10.hours,
   duration_in_min: 30,
   motif_id: motif_org_paris_nord_pmi_rappel.id,
@@ -621,12 +621,10 @@ rdv = Rdv.new(
   organisation_id: org_paris_nord.id,
   agent_ids: [agent_org_paris_nord_pmi_martine.id],
   user_ids: [user_org_paris_nord_patricia.id],
-  context: "Visite de courtoisie"
+  context: "Visite de courtoisie",
+  created_by: :agent
 )
-rdv.rdvs_users.each { |rdvs_user| rdvs_user.created_by = :agent }
-rdv.save!
-
-rdv = Rdv.new(
+Rdv.create!(
   starts_at: Time.zone.today + 4.days + 15.hours,
   duration_in_min: 30,
   motif_id: motif_org_paris_nord_pmi_suivi.id,
@@ -634,12 +632,10 @@ rdv = Rdv.new(
   organisation_id: org_paris_nord.id,
   agent_ids: [agent_org_paris_nord_pmi_martine.id],
   user_ids: [user_org_paris_nord_josephine.id],
-  context: "Suivi vaccins"
+  context: "Suivi vaccins",
+  created_by: :agent
 )
-rdv.rdvs_users.each { |rdvs_user| rdvs_user.created_by = :agent }
-rdv.save!
-
-rdv = Rdv.new(
+Rdv.create!(
   starts_at: Time.zone.today + 5.days + 11.hours,
   duration_in_min: 30,
   motif_id: motif_org_paris_nord_pmi_securite.id,
@@ -647,12 +643,11 @@ rdv = Rdv.new(
   organisation_id: org_paris_nord.id,
   agent_ids: [agent_org_paris_nord_pmi_martine.id],
   user_ids: [user_org_paris_nord_josephine.id],
-  context: "Visite à domicile"
+  context: "Visite à domicile",
+  created_by: :agent
 )
-rdv.rdvs_users.each { |rdvs_user| rdvs_user.created_by = :agent }
-rdv.save!
 
-rdv = Rdv.new(
+Rdv.create!(
   starts_at: Time.zone.today + 5.days + 11.hours,
   duration_in_min: 30,
   motif_id: motif_org_paris_nord_pmi_securite.id,
@@ -660,10 +655,9 @@ rdv = Rdv.new(
   organisation_id: org_paris_nord.id,
   agent_ids: [agent_org_paris_nord_pmi_martine.id],
   user_ids: [user_org_paris_nord_josephine.id],
-  context: "Visite à domicile"
+  context: "Visite à domicile",
+  created_by: :agent
 )
-rdv.rdvs_users.each { |rdvs_user| rdvs_user.created_by = :agent }
-rdv.save!
 
 10.times do |i|
   Rdv.create!(

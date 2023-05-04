@@ -52,9 +52,5 @@ FactoryBot.define do
         rdv.users = [build(:user, organisations: [rdv.organisation])]
       end
     end
-
-    after(:build) do |rdv|
-      rdv.rdvs_users.each { |rdvs_user| rdvs_user.created_by = :agent }
-    end
   end
 end
