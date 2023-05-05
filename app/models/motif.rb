@@ -114,7 +114,7 @@ class Motif < ApplicationRecord
   end
 
   def soft_delete
-    rdvs.any? ? update_attribute(:deleted_at, Time.zone.now) : destroy
+    rdvs.unscoped.any? ? update_attribute(:deleted_at, Time.zone.now) : destroy
   end
 
   def authorized_agents

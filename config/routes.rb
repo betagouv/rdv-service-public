@@ -223,7 +223,7 @@ Rails.application.routes.draw do
   scope path: "prescripteur", as: "prescripteur", controller: "prescripteur_rdv_wizard" do
     get "start"
     get "new_prescripteur"
-    post "save_prescripteur"
+    post "store_prescripteur_in_session"
     get "new_beneficiaire"
     post "create_rdv"
     get "confirmation"
