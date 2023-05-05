@@ -26,7 +26,7 @@ class PrescripteurRdvWizardController < ApplicationController
     @prescripteur = Prescripteur.new(session[:autocomplete_prescripteur_attributes])
   end
 
-  def save_prescripteur
+  def store_prescripteur_in_session
     prescripteur_attributes = params[:prescripteur].permit(:first_name, :last_name, :email, :phone_number)
 
     @prescripteur = Prescripteur.new(prescripteur_attributes)
