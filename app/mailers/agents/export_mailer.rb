@@ -17,10 +17,8 @@ class Agents::ExportMailer < ApplicationMailer
                 else
                   "export-rdv-#{now.strftime('%Y-%m-%d')}.xls"
                 end
-    mail.attachments[file_name] = {
-      mime_type: "application/vnd.ms-excel",
-      content: RdvExporter.export(rdvs.order(starts_at: :desc)),
-    }
+    xls_string = RdvExporter.export(rdvs.order(starts_at: :desc))
+    add_zip_as_attachment(file_name: file_name, file_content: xls_string)
 
     mail(
       to: agent.email,
@@ -39,10 +37,8 @@ class Agents::ExportMailer < ApplicationMailer
     rdvs_users = RdvsUser.where(rdv_id: rdvs.select(:id))
 
     file_name = "export-rdvs-user-#{now.strftime('%Y-%m-%d')}.xls"
-    mail.attachments[file_name] = {
-      mime_type: "application/vnd.ms-excel",
-      content: RdvsUserExporter.export(rdvs_users.order(id: :desc)),
-    }
+    xls_string = RdvsUserExporter.export(rdvs_users.order(id: :desc))
+    add_zip_as_attachment(file_name: file_name, file_content: xls_string)
 
     mail(
       to: agent.email,
@@ -56,5 +52,19 @@ class Agents::ExportMailer < ApplicationMailer
 
   def default_from
     SECRETARIAT_EMAIL
+  end
+
+  private
+
+  def add_zip_as_attachment(file_name:, file_content:)
+    zip_file = Zip::OutputStream.write_buffer do |zos|
+      zos.put_next_entry(file_name)
+      zos.write file_content
+    end
+
+    mail.attachments["#{file_name}.zip"] = {
+      mime_type: "application/zip",
+      content: zip_file.string,
+    }
   end
 end
