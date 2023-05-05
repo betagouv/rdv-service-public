@@ -1,12 +1,7 @@
 # frozen_string_literal: true
 
 describe RdvExportJob do
-  def expect_zipped_attached_xls(attachment, expected_file_name:)
-    expect(attachment.filename).to eq("#{expected_file_name}.zip")
-    Zip::File.open_buffer(attachment.body.raw_source) do |zip_file|
-      expect(zip_file.map(&:name)).to eq([expected_file_name])
-    end
-  end
+  stub_sentry_events
 
   describe "#rdv_export" do
     it "has an attachment file name which contains the current date without org ID when more than one orga" do
@@ -44,6 +39,13 @@ describe RdvExportJob do
         described_class.perform_now(agent, [agents_org.id, not_agents_org.id], {})
       end.to change(sentry_events, :size).by(1)
       expect(sentry_events.last.exception.values.first.value).to eq("Agent does not belong to all requested organisation(s) (RuntimeError)")
+    end
+  end
+
+  def expect_zipped_attached_xls(attachment, expected_file_name:)
+    expect(attachment.filename).to eq("#{expected_file_name}.zip")
+    Zip::File.open_buffer(attachment.body.raw_source) do |zip_file|
+      expect(zip_file.map(&:name)).to eq([expected_file_name])
     end
   end
 end
