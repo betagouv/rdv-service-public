@@ -10,9 +10,9 @@ describe RdvsExportJob do
       agent = create(:agent, admin_role_in_organisations: [organisation, other_organisation])
       travel_to(Time.zone.parse("2022-09-14 09:00:00"))
 
-      rdv_export = described_class.perform_now(agent, [organisation.id, other_organisation.id], {})
+      described_class.perform_now(agent, [organisation.id, other_organisation.id], {})
 
-      expect_zipped_attached_xls(rdv_export.attachments.first, expected_file_name: "export-rdv-2022-09-14.xls")
+      expect_zipped_attached_xls(expected_file_name: "export-rdv-2022-09-14.xls")
     end
 
     it "has an attachment which contains the current date and org ID" do
@@ -24,10 +24,9 @@ describe RdvsExportJob do
       agent = create(:agent, admin_role_in_organisations: [organisation])
       travel_to(Time.zone.parse("2022-09-14 09:00:00"))
 
-      rdv_export = described_class.perform_now(agent, [organisation.id], {})
+      described_class.perform_now(agent, [organisation.id], {})
 
-      expected_file_name = "export-rdv-2022-09-14-org-#{organisation.id.to_s.rjust(6, '0')}.xls"
-      expect_zipped_attached_xls(rdv_export.attachments.first, expected_file_name: expected_file_name)
+      expect_zipped_attached_xls(expected_file_name: "export-rdv-2022-09-14-org-#{organisation.id.to_s.rjust(6, '0')}.xls")
     end
 
     it "prevents agent from exporting an org in which she does not belong" do
@@ -42,7 +41,8 @@ describe RdvsExportJob do
     end
   end
 
-  def expect_zipped_attached_xls(attachment, expected_file_name:)
+  def expect_zipped_attached_xls(expected_file_name:)
+    attachment = ActionMailer::Base.deliveries.last.attachments.first
     expect(attachment.filename).to eq("#{expected_file_name}.zip")
     Zip::File.open_buffer(attachment.body.raw_source) do |zip_file|
       expect(zip_file.map(&:name)).to eq([expected_file_name])
