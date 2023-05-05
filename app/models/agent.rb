@@ -127,7 +127,7 @@ class Agent < ApplicationRecord
   end
 
   def soft_delete
-    still_has_attached_resources = roles.any? { |r| !r.destroyed? } || plage_ouvertures.any? { |r| !r.destroyed? } || absences.any? { |r| !r.destroyed? }
+    still_has_attached_resources = organisations.any? || plage_ouvertures.any? { |r| !r.destroyed? } || absences.any? { |r| !r.destroyed? }
 
     raise SoftDeleteError, "agent still has attached resources" if still_has_attached_resources
 
