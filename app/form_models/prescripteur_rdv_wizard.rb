@@ -44,7 +44,7 @@ class PrescripteurRdvWizard < UserRdvWizard::Base
   end
 
   def create_participation!
-    participation.create_and_notify(@prescripteur)
+    participation.create_and_notify!(@prescripteur)
   end
 
   def participation

@@ -3,15 +3,11 @@
 module RdvsUser::Creatable
   extend ActiveSupport::Concern
 
-  def create_and_notify(author)
+  def create_and_notify!(author)
     RdvsUser.transaction do
       empty_rdv_from_relatives
-      if save
-        notify_create!(author)
-        true
-      else
-        false
-      end
+      save!
+      notify_create!(author)
     end
   end
 
