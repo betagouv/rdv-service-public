@@ -144,6 +144,9 @@ gem "icalendar", "~> 2.5"
 gem "lograge"
 
 group :development, :test do
+  # Identify database issues before they hit production.
+  gem "active_record_doctor"
+  # Ruby fast debugger - base + CLI
   gem "byebug", platforms: %i[mri mingw x64_mingw] # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   # Security vulnerability scanner for Ruby on Rails.
   gem "brakeman", require: false
@@ -193,9 +196,9 @@ group :development do
   # Retrieve the binding of a method's caller, or further up the stack.
   gem "binding_of_caller" # Enable the REPL in better_errors
   # Gives letter_opener an interface for browsing sent emails
-  gem "letter_opener_web"
+  gem "letter_opener_web" # Saves sent emails and serves them on /letter_opener
   # Entity-relationship diagram for your Rails models.
-  gem "rails-erd"
+  gem "rails-erd" # Keeps docs/domain_model.svg up-to-date. See .erdconfig
   # Profiles loading speed for rack applications.
   gem "rack-mini-profiler"
 end
