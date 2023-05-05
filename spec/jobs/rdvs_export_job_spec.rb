@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe RdvExportJob do
+describe RdvsExportJob do
   stub_sentry_events
 
   describe "#rdv_export" do

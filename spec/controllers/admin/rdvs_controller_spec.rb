@@ -182,7 +182,7 @@ describe Admin::RdvsController, type: :controller do
 
       expect do
         post :export, params: { organisation_id: organisation.id }.merge(params)
-      end.to have_enqueued_job(RdvExportJob).with(agent, [organisation.id], params.stringify_keys)
+      end.to have_enqueued_job(RdvsExportJob).with(agent, [organisation.id], params.stringify_keys)
     end
 
     context "when passing scoped_organisation_id param to which agent not belong" do

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class RdvExportJob < ExportJob
+class RdvsExportJob < ExportJob
   def perform(agent, organisation_ids, options)
     raise "Agent does not belong to all requested organisation(s)" if (organisation_ids - agent.organisation_ids).any?
 

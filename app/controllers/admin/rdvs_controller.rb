@@ -37,7 +37,7 @@ class Admin::RdvsController < AgentAuthController
     skip_authorization # RDV will be scoped in SendExportJob
     set_scoped_organisations
 
-    RdvExportJob.perform_later(
+    RdvsExportJob.perform_later(
       current_agent,
       @scoped_organisations.ids,
       parsed_params
