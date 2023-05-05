@@ -198,9 +198,9 @@ group :development do
   # Retrieve the binding of a method's caller, or further up the stack.
   gem "binding_of_caller" # Enable the REPL in better_errors
   # Gives letter_opener an interface for browsing sent emails
-  gem "letter_opener_web"
+  gem "letter_opener_web" # Saves sent emails and serves them on /letter_opener
   # Entity-relationship diagram for your Rails models.
-  gem "rails-erd"
+  gem "rails-erd" # Keeps docs/domain_model.svg up-to-date. See .erdconfig
   # Profiles loading speed for rack applications.
   gem "rack-mini-profiler"
 end
