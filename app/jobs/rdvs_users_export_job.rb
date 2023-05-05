@@ -14,6 +14,7 @@ class RdvsUsersExportJob < ExportJob
     file_name = "export-rdvs-user-#{now.strftime('%Y-%m-%d')}.xls"
     xls_string = RdvsUserExporter.export(rdvs_users.order(id: :desc))
 
+    # Using #deliver_now because we don't want to enqueue a job with a huge payload
     Agents::ExportMailer.rdvs_users_export(agent, file_name, xls_string).deliver_now
   end
 end

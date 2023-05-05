@@ -19,6 +19,7 @@ class RdvsExportJob < ExportJob
                 end
     xls_string = RdvExporter.export(rdvs.order(starts_at: :desc))
 
+    # Using #deliver_now because we don't want to enqueue a job with a huge payload
     Agents::ExportMailer.rdv_export(agent, file_name, xls_string).deliver_now
   end
 end

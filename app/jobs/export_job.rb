@@ -5,7 +5,7 @@ class ExportJob < ApplicationJob
 
   include GoodJob::ActiveJobExtensions::Concurrency
 
-  # Prevent from running several exports at the same time
+  # Run export jobs one at a time to keep it light on Postgres
   good_job_control_concurrency_with(
     perform_limit: 1,
     key: "ExportJob"
