@@ -121,6 +121,8 @@ RSpec.describe "prescripteur can create RDV for a user" do
       click_on "Continuer"
 
       expect(page).to have_content("Vos coordonnées de prescripteur")
+      expect(page).to have_content("Nom d’usage doit être rempli(e)")
+      expect(page).to have_content("Veuillez compléter tous les champs obligatoires")
     end
   end
 
