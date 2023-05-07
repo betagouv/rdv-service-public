@@ -10,13 +10,13 @@ describe AgentRemoval, type: :service do
     let!(:absences) { create_list(:absence, 2, agent: agent) }
 
     it "succeeds destroy absences and plages ouvertures, and soft delete" do
-      expect(agent).to receive(:soft_delete)
       result = described_class.new(agent, organisation).remove!
       expect(result).to eq true
       agent.reload
       expect(agent.organisations).to be_empty
       expect(agent.absences).to be_empty
       expect(agent.plage_ouvertures).to be_empty
+      expect(agent.deleted_at).not_to be_nil
     end
   end
 
