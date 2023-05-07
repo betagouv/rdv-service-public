@@ -91,8 +91,8 @@ describe "Admin can configure the organisation" do
     expect(current_email.subject).to eq "Vous avez été invité sur RDV Solidarités"
   end
 
-  context "when the organisation is not using the default domain" do
-    let!(:organisation) { create(:organisation, new_domain_beta: true) }
+  context "when the organisation is using rdv_aide_numerique verticale" do
+    let!(:organisation) { create(:organisation, verticale: :rdv_aide_numerique) }
 
     it "allows inviting agents on the correct domain" do
       click_link "Agents"
@@ -103,6 +103,20 @@ describe "Admin can configure the organisation" do
       open_email("jean@paul.com")
       expect(current_email.subject).to eq "Vous avez été invité sur RDV Aide Numérique"
       expect(current_email.body).to include "rejoindre RDV Aide Numérique"
+    end
+  end
+
+  context "when the organisation is using rdv_insertion verticale" do
+    let!(:organisation) { create(:organisation, verticale: :rdv_insertion) }
+
+    it "allows inviting agents on the correct domain" do
+      click_link "Agents"
+      click_link "Inviter un agent", match: :first
+      fill_in "Email", with: "jean@paul.com"
+      click_button "Envoyer une invitation"
+
+      open_email("jean@paul.com")
+      expect(current_email.subject).to eq "Vous avez été invité sur RDV Solidarités"
     end
   end
 

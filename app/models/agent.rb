@@ -226,7 +226,7 @@ class Agent < ApplicationRecord
   delegate :conseiller_numerique?, to: :service
 
   def domain
-    @domain ||= if organisations.where(new_domain_beta: true).any?
+    @domain ||= if organisations.where(verticale: :rdv_aide_numerique).any?
                   Domain::RDV_AIDE_NUMERIQUE
                 else
                   Domain::RDV_SOLIDARITES
