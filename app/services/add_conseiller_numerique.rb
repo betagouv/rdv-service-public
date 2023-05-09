@@ -67,7 +67,7 @@ class AddConseillerNumerique
       external_id: @structure.external_id,
       name: next_available_organisation_name,
       territory: territory,
-      new_domain_beta: true
+      verticale: :rdv_aide_numerique
     )
     create_motifs(organisation)
     create_lieu(organisation)

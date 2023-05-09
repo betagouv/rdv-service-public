@@ -27,7 +27,7 @@ describe "User resets his password spec" do
   describe "using the user's domain" do
     context "when the user only has RDVs for motif Conseiller Numérique" do
       let!(:user) { create(:user) }
-      let(:organisation) { create(:organisation, new_domain_beta: true) }
+      let(:organisation) { create(:organisation, verticale: :rdv_aide_numerique) }
       let(:motif_numerique) { create(:motif, service: create(:service, :conseiller_numerique)) }
       let!(:rdvs) { create_list(:rdv, 2, organisation: organisation, motif: motif_numerique, users: [user]) }
 

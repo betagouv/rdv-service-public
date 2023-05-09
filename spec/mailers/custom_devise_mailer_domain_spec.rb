@@ -20,7 +20,17 @@ describe CustomDeviseMailer, "#domain" do
   end
 
   context "when user only has RDV Solidarités rdvs" do
-    let!(:organisation) { create(:organisation, new_domain_beta: false) }
+    let!(:organisation) { create(:organisation, verticale: :rdv_solidarites) }
+    let!(:user) { create(:user) }
+    let!(:rdvs) { create_list(:rdv, 2, organisation: organisation, users: [user]) }
+
+    it "uses RDV_SOLIDARITES" do
+      expect_to_use_domain(Domain::RDV_SOLIDARITES)
+    end
+  end
+
+  context "when user only has RDV Insertion rdvs" do
+    let!(:organisation) { create(:organisation, verticale: :rdv_insertion) }
     let!(:user) { create(:user) }
     let!(:rdvs) { create_list(:rdv, 2, organisation: organisation, users: [user]) }
 
@@ -30,7 +40,7 @@ describe CustomDeviseMailer, "#domain" do
   end
 
   context "when user only has RDV Aide Numérique rdvs" do
-    let!(:organisation) { create(:organisation, new_domain_beta: true) }
+    let!(:organisation) { create(:organisation, verticale: :rdv_aide_numerique) }
     let!(:user) { create(:user) }
     let!(:rdvs) { create_list(:rdv, 2, organisation: organisation, users: [user]) }
 
@@ -39,15 +49,45 @@ describe CustomDeviseMailer, "#domain" do
     end
   end
 
-  context "when user has mixed RDV domains (and organisation is in beta program)" do
+  context "when user has mixed RDV domains and most recent is rdv_aide_numerique" do
     let!(:user) { create(:user) }
-    let!(:old_domain_organisation) { create(:organisation, new_domain_beta: false) }
-    let!(:new_domain_organisation) { create(:organisation, new_domain_beta: true) }
+    let!(:old_domain_organisation) { create(:organisation, verticale: :rdv_solidarites) }
+    let!(:old_domain_organisation2) { create(:organisation, verticale: :rdv_insertion) }
+    let!(:new_domain_organisation) { create(:organisation, verticale: :rdv_aide_numerique) }
     let!(:recent_rdv) { create(:rdv, organisation: new_domain_organisation, created_at: 2.days.ago, users: [user]) }
     let!(:old_rdv) { create(:rdv, organisation: old_domain_organisation, created_at: 3.months.ago, users: [user]) }
+    let!(:old_rdv2) { create(:rdv, organisation: old_domain_organisation2, created_at: 4.months.ago, users: [user]) }
 
     it "uses the domain of the most recently created rdv" do
       expect_to_use_domain(Domain::RDV_AIDE_NUMERIQUE)
+    end
+  end
+
+  context "when user has mixed RDV domains and most recent is rdv_solidarites" do
+    let!(:user) { create(:user) }
+    let!(:old_domain_organisation) { create(:organisation, verticale: :rdv_aide_numerique) }
+    let!(:old_domain_organisation2) { create(:organisation, verticale: :rdv_insertion) }
+    let!(:new_domain_organisation) { create(:organisation, verticale: :rdv_solidarites) }
+    let!(:recent_rdv) { create(:rdv, organisation: new_domain_organisation, created_at: 2.days.ago, users: [user]) }
+    let!(:old_rdv) { create(:rdv, organisation: old_domain_organisation, created_at: 3.months.ago, users: [user]) }
+    let!(:old_rdv2) { create(:rdv, organisation: old_domain_organisation2, created_at: 4.months.ago, users: [user]) }
+
+    it "uses the domain of the most recently created rdv" do
+      expect_to_use_domain(Domain::RDV_SOLIDARITES)
+    end
+  end
+
+  context "when user has mixed RDV domains and most recent is rdv_insertion" do
+    let!(:user) { create(:user) }
+    let!(:old_domain_organisation) { create(:organisation, verticale: :rdv_solidarites) }
+    let!(:old_domain_organisation2) { create(:organisation, verticale: :rdv_aide_numerique) }
+    let!(:new_domain_organisation) { create(:organisation, verticale: :rdv_insertion) }
+    let!(:recent_rdv) { create(:rdv, organisation: new_domain_organisation, created_at: 2.days.ago, users: [user]) }
+    let!(:old_rdv) { create(:rdv, organisation: old_domain_organisation, created_at: 3.months.ago, users: [user]) }
+    let!(:old_rdv2) { create(:rdv, organisation: old_domain_organisation2, created_at: 4.months.ago, users: [user]) }
+
+    it "uses the domain of the most recently created rdv" do
+      expect_to_use_domain(Domain::RDV_SOLIDARITES)
     end
   end
 end

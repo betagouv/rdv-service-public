@@ -127,7 +127,9 @@ class Agent < ApplicationRecord
   end
 
   def soft_delete
-    raise SoftDeleteError, "agent still has attached resources" if organisations.any? || plage_ouvertures.any? || absences.any?
+    still_has_attached_resources = organisations.any? || plage_ouvertures.any? { |r| !r.destroyed? } || absences.any? { |r| !r.destroyed? }
+
+    raise SoftDeleteError, "agent still has attached resources" if still_has_attached_resources
 
     sector_attributions.destroy_all
     update_columns(deleted_at: Time.zone.now, email_original: email, email: deleted_email, uid: deleted_email)
@@ -224,7 +226,7 @@ class Agent < ApplicationRecord
   delegate :conseiller_numerique?, to: :service
 
   def domain
-    @domain ||= if organisations.where(new_domain_beta: true).any?
+    @domain ||= if organisations.where(verticale: :rdv_aide_numerique).any?
                   Domain::RDV_AIDE_NUMERIQUE
                 else
                   Domain::RDV_SOLIDARITES
