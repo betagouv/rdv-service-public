@@ -253,7 +253,7 @@ describe SearchContext, type: :service do
     end
 
     it "returns motif when user is invited (even if bookable_by agents only)" do
-      # This test will be obsolete when the invitation behavior will be integrated in Rdv-s
+      # This test will be obsolete when the invitation behavior will be integrated in Rdv-s (https://github.com/betagouv/rdv-solidarites.fr/issues/3438)
       lieu = create(:lieu)
       search_query[:invitation_token] = invitation_token
       search_query[:motif_category_short_name] = "rsa_orientation"
