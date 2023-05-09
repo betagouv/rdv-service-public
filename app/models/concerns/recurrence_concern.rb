@@ -20,6 +20,7 @@ module RecurrenceConcern
 
   def starts_at
     return nil if start_time.blank? || first_day.blank?
+
     start_time&.on(first_day)
   end
 
@@ -61,7 +62,7 @@ module RecurrenceConcern
     return [] if inclusive_date_range.nil?
 
     occurrence_start_at_list_for(inclusive_date_range, only_future: only_future)
-      .map { |o| Recurrence::Occurrence.new(starts_at: o, ends_at: o + duration)}
+      .map { |o| Recurrence::Occurrence.new(starts_at: o, ends_at: o + duration) }
   end
 
   # @return [ActiveSupport::TimeWithZone, nil] the earliest future occurrence at the time of computation
@@ -70,9 +71,7 @@ module RecurrenceConcern
 
     cache_key = "earliest_future_occurrence_#{self.class.table_name}_#{id}_#{updated_at}"
     Rails.cache.fetch(cache_key, force: refresh, expires_in: 1.week) do
-      recurrence.starting(starts_at).until(recurrence_ends_at).lazy do |occurence|
-        occurence.future?
-      end.first
+      recurrence.starting(starts_at).until(recurrence_ends_at).lazy(&:future?).first
     end
   end
 
@@ -108,10 +107,8 @@ module RecurrenceConcern
     if recurring?
       min_from = only_future ? (earliest_future_occurrence_time || starts_at) : starts_at
 
-
       recurrence.starting(min_from).until(min_until).lazy.select do |occurrence_starts_at|
         event_in_range?(occurrence_starts_at, occurrence_starts_at + duration, inclusive_datetime_range)
-
       end.to_a
     else
       event_in_range?(starts_at, first_occurrence_ends_at, inclusive_datetime_range) ? [starts_at] : []
