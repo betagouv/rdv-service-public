@@ -76,6 +76,7 @@ gem "premailer-rails" # Mail formatting
 gem "sib-api-v3-sdk" # SendInBlue (SMS)
 gem "spreadsheet" # Excel export
 gem "wannabe_bool" # imports to_b method
+gem "rubyzip" # zip export files
 
 ## Time Management
 gem "montrose"
