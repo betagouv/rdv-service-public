@@ -4,9 +4,7 @@ module Outlook
   class SyncEventJob < ApplicationJob
     queue_as :outlook_sync
 
-    discard_on(ApiClient::FinalError) do |_job, error|
-      # Rails.logger.error(error.message) # Log error but no need to make noise in Sentry
-    end
+    discard_on(ApiClient::FinalError)
 
     def self.perform_later_for(agents_rdv)
       if agents_rdv.outlook_id.nil? && !agents_rdv.destroyed?
