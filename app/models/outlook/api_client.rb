@@ -4,6 +4,12 @@ module Outlook
   class ApiClient
     class ApiError < StandardError; end
 
+    class FinalError < ApiError; end
+
+    class NotFoundError < FinalError; end
+
+    class AlreadyExistsError < FinalError; end
+
     def initialize(agent)
       @agent = agent
     end
@@ -62,7 +68,7 @@ module Outlook
         if @agent.connected_to_outlook? && response.response_code == 401 # token expired
           refresh_outlook_token && call_events_api(method, path, event_payload)
         else
-          raise ApiError, "Outlook Events API error: #{body_response.dig('error', 'message')}"
+          raise_exception(error_code: body_response["error"]["code"], error_message: body_response["error"]["message"])
         end
       end
       response.response_code == 204 ? "" : body_response
@@ -89,6 +95,18 @@ module Outlook
       elsif refresh_token_response["access_token"].present?
         @agent.update!(microsoft_graph_token: refresh_token_response["access_token"])
       end
+    end
+
+    def raise_exception(error_code:, error_message:)
+      exception_class = case error_code
+                        when "ErrorItemNotFound"
+                          NotFoundError
+                        when "ErrorDuplicateTransactionId"
+                          AlreadyExistsError
+                        else
+                          ApiError
+                        end
+      raise exception_class, error_message
     end
   end
 end

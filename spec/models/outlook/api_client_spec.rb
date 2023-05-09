@@ -59,7 +59,29 @@ describe Outlook::ApiClient do
     it "raises an error so that the job around it is retried later" do
       expect do
         described_class.new(agent).create_event!(expected_body)
-      end.to raise_error("Outlook Events API error: Account suspended. Follow the instructions in your Inbox to verify your account.")
+      end.to raise_error(Outlook::ApiClient::ApiError, "Account suspended. Follow the instructions in your Inbox to verify your account.")
+    end
+
+    context "when the error is fatal" do
+      before do
+        stub_request(:post, "https://graph.microsoft.com/v1.0/me/Events")
+          .to_return(
+            status: 404,
+            body: {
+              error: {
+                code: "ErrorItemNotFound",
+                message: "The specified object was not found in the store",
+              },
+            }.to_json,
+            headers: {}
+          )
+      end
+
+      it "raises a specific exception that allows the job to be discarded" do
+        expect do
+          described_class.new(agent).create_event!(expected_body)
+        end.to raise_error(Outlook::ApiClient::NotFoundError, "The specified object was not found in the store")
+      end
     end
   end
 
