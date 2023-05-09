@@ -22,9 +22,9 @@ div id="creneaux-lieu-#{lieu&.id}"
             - else
               - agents = creneaux.map(&:agent).uniq
               - creneaux_for_date = creneaux.select { |c| c.starts_at.to_date == date }.sort
-              - if creneaux_for_date.any? && creneaux_for_date.first.respects_max_public_booking_delay? 
+              - if creneaux_for_date.any? && creneaux_for_date.first.respects_max_public_booking_delay?
                 - creneaux_for_date.each do |creneau|
-                  - if creneau.respects_min_public_booking_delay?             
+                  - if creneau.respects_min_public_booking_delay?
                     = link_to(new_admin_organisation_rdv_wizard_step_path(build_link_to_rdv_wizard_params(creneau, form)),
                       class: "creneau bg-light d-block w-100 text-center p-1 mb-1 rounded") do
                       .text-left.m-1

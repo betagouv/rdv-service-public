@@ -102,7 +102,7 @@ module RecurrenceConcern
   # Warning: using `only_future: true` will only yield future occurrences, not past ones.
   def occurrence_start_at_list_for(inclusive_date_range, only_future:)
     min_until = [inclusive_date_range.end, recurrence_ends_at].compact.min.end_of_day
-    inclusive_datetime_range = (earliest_future_occurrence_time)..(inclusive_date_range.end.end_of_day)
+    inclusive_datetime_range = (inclusive_date_range.begin)..(inclusive_date_range.end.end_of_day)
 
     if recurring?
       min_from = only_future ? (earliest_future_occurrence_time || starts_at) : starts_at
