@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_04_25_084138) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_04_120852) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -95,6 +95,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_25_084138) do
   create_enum :user_invited_through, [
     "devise_email",
     "external",
+  ], force: :cascade
+
+  create_enum :verticale, [
+    "rdv_insertion",
+    "rdv_solidarites",
+    "rdv_aide_numerique",
   ], force: :cascade
 
   create_table "absences", force: :cascade do |t|
@@ -389,7 +395,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_25_084138) do
     t.string "email"
     t.bigint "territory_id", null: false
     t.string "external_id", comment: "The organisation's unique and immutable id in the system managing them and adding them to our application"
-    t.boolean "new_domain_beta", default: false, null: false, comment: "en mettant ce boolean a true, on active l'utilisation du nouveau domaine pour les conseillers numeriques de cette organisation"
+    t.enum "verticale", default: "rdv_solidarites", null: false, enum_type: "verticale"
     t.index ["external_id", "territory_id"], name: "index_organisations_on_external_id_and_territory_id", unique: true
     t.index ["human_id", "territory_id"], name: "index_organisations_on_human_id_and_territory_id", unique: true, where: "((human_id)::text <> ''::text)"
     t.index ["name", "territory_id"], name: "index_organisations_on_name_and_territory_id", unique: true

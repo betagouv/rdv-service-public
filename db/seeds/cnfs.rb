@@ -15,7 +15,7 @@ org_cnfs = Organisation.create!(
   human_id: "mediatheque-paris-nord",
   territory: territory_cnfs,
   external_id: "666",
-  new_domain_beta: true
+  verticale: :rdv_aide_numerique
 )
 
 # MOTIFS Conseiller Numérique

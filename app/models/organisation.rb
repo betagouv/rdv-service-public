@@ -7,6 +7,7 @@ class Organisation < ApplicationRecord
 
   # Attributes
   auto_strip_attributes :email, :name
+  enum verticale: { rdv_insertion: "rdv_insertion", rdv_solidarites: "rdv_solidarites", rdv_aide_numerique: "rdv_aide_numerique" }
 
   # Relations
   belongs_to :territory
@@ -88,7 +89,7 @@ class Organisation < ApplicationRecord
   end
 
   def domain
-    new_domain_beta? ? Domain::RDV_AIDE_NUMERIQUE : Domain::RDV_SOLIDARITES
+    rdv_aide_numerique? ? Domain::RDV_AIDE_NUMERIQUE : Domain::RDV_SOLIDARITES
   end
 
   def slug
