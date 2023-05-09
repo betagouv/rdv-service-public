@@ -38,9 +38,9 @@ class Admin::RdvsController < AgentAuthController
     set_scoped_organisations
 
     RdvsExportJob.perform_later(
-      current_agent,
-      @scoped_organisations.ids,
-      parsed_params
+      agent: current_agent,
+      organisation_ids: @scoped_organisations.ids,
+      options: parsed_params
     )
     flash[:notice] = I18n.t("layouts.flash.confirm_export_send_when_done", agent_email: current_agent.email)
     redirect_to admin_organisation_rdvs_path(organisation_id: current_organisation.id)
@@ -51,9 +51,9 @@ class Admin::RdvsController < AgentAuthController
     set_scoped_organisations
 
     RdvsUsersExportJob.perform_later(
-      current_agent,
-      @scoped_organisations.ids,
-      parsed_params
+      agent: current_agent,
+      organisation_ids: @scoped_organisations.ids,
+      options: parsed_params
     )
     flash[:notice] = I18n.t("layouts.flash.confirm_rdvs_users_export_send_when_done", agent_email: current_agent.email)
     redirect_to admin_organisation_rdvs_path(organisation_id: current_organisation.id)
