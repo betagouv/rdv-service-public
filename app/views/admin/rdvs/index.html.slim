@@ -41,10 +41,10 @@
     .card-footer
       div.d-flex.justify-content-end.align-items-center
         - if policy([:configuration, current_territory]).allow_to_download_metrics?
-          = link_to rdvs_users_export_admin_organisation_rdvs_path(**@form.to_query), method: :post, class: "btn btn-sm btn-link d-print-none" do
+          = button_to rdvs_users_export_admin_organisation_rdvs_path(**@form.to_query), method: :post, class: "btn btn-sm btn-link d-print-none", disable_with: "..." do
             span> Exporter les RDVs par usager en XLS
             i.fa.fa-download>
-        = link_to export_admin_organisation_rdvs_path(**@form.to_query), method: :post, class: "btn btn-sm btn-link d-print-none" do
+        = button_to export_admin_organisation_rdvs_path(**@form.to_query), method: :post, class: "btn btn-sm btn-link d-print-none", disable_with: "..." do
           span> Exporter les #{@rdvs.total_count} RDVs en XLS
           i.fa.fa-download>
 
