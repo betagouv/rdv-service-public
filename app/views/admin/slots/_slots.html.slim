@@ -22,14 +22,16 @@ div id="creneaux-lieu-#{lieu&.id}"
             - else
               - agents = creneaux.map(&:agent).uniq
               - creneaux_for_date = creneaux.select { |c| c.starts_at.to_date == date }.sort
-              - creneaux_for_date.each do |creneau|
-                = link_to(new_admin_organisation_rdv_wizard_step_path(build_link_to_rdv_wizard_params(creneau, form)),
-                  class: "creneau bg-light d-block w-100 text-center p-1 mb-1 rounded") do
-                  .text-left.m-1
-                    span.strong.font-weight-bold= l(creneau.starts_at, format: "%H:%M")
-                    br
-                    i class= "mr-1 fa fa-user-alt #{agent_color(agents.index(creneau.agent))}"
-                    small.text-dark= creneau.agent.short_name
+              - if creneaux_for_date.any? && creneaux_for_date.first.respects_max_public_booking_delay? 
+                - creneaux_for_date.each do |creneau|
+                  - if creneau.respects_min_public_booking_delay?             
+                    = link_to(new_admin_organisation_rdv_wizard_step_path(build_link_to_rdv_wizard_params(creneau, form)),
+                      class: "creneau bg-light d-block w-100 text-center p-1 mb-1 rounded") do
+                      .text-left.m-1
+                        span.strong.font-weight-bold= l(creneau.starts_at, format: "%H:%M")
+                        br
+                        i class= "mr-1 fa fa-user-alt #{agent_color(agents.index(creneau.agent))}"
+                        small.text-dark= creneau.agent.short_name
 
     - if next_availability
       - if form.date_range.end < next_availability.starts_at.to_date && creneaux.empty?
