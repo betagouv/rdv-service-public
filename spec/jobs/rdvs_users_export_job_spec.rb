@@ -9,7 +9,7 @@ describe RdvsUsersExportJob do
       agent = create(:agent, admin_role_in_organisations: [organisation])
       travel_to(Time.zone.parse("2022-09-14 09:00:00"))
 
-      described_class.perform_now(agent, [organisation.id], {})
+      described_class.perform_now(agent: agent, organisation_ids: [organisation.id], options: {})
 
       expect_zipped_attached_xls(expected_file_name: "export-rdvs-user-2022-09-14.xls")
     end
@@ -19,7 +19,7 @@ describe RdvsUsersExportJob do
       not_agents_org = create(:organisation)
       agent = create(:agent, organisations: [agents_org])
 
-      described_class.perform_later(agent, [agents_org.id, not_agents_org.id], {})
+      described_class.perform_later(agent: agent, organisation_ids: [agents_org.id, not_agents_org.id], options: {})
       expect do
         perform_enqueued_jobs
       end.to change(sentry_events, :size).by(1)

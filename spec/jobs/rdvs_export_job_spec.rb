@@ -10,7 +10,7 @@ describe RdvsExportJob do
       agent = create(:agent, admin_role_in_organisations: [organisation, other_organisation])
       travel_to(Time.zone.parse("2022-09-14 09:00:00"))
 
-      described_class.perform_now(agent, [organisation.id, other_organisation.id], {})
+      described_class.perform_now(agent: agent, organisation_ids: [organisation.id, other_organisation.id], options: {})
 
       expect_zipped_attached_xls(expected_file_name: "export-rdv-2022-09-14.xls")
     end
@@ -24,7 +24,7 @@ describe RdvsExportJob do
       agent = create(:agent, admin_role_in_organisations: [organisation])
       travel_to(Time.zone.parse("2022-09-14 09:00:00"))
 
-      described_class.perform_now(agent, [organisation.id], {})
+      described_class.perform_now(agent: agent, organisation_ids: [organisation.id], options: {})
 
       expect_zipped_attached_xls(expected_file_name: "export-rdv-2022-09-14-org-#{organisation.id.to_s.rjust(6, '0')}.xls")
     end
@@ -35,7 +35,7 @@ describe RdvsExportJob do
       agent = create(:agent, organisations: [agents_org])
 
       expect do
-        described_class.perform_now(agent, [agents_org.id, not_agents_org.id], {})
+        described_class.perform_now(agent: agent, organisation_ids: [agents_org.id, not_agents_org.id], options: {})
       end.to change(sentry_events, :size).by(1)
       expect(sentry_events.last.exception.values.first.value).to eq("Agent does not belong to all requested organisation(s) (RuntimeError)")
     end
