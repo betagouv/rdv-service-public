@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "zip"
+
 class Agents::ExportMailer < ApplicationMailer
   def rdv_export(agent, file_name, xls_string)
     @agent = agent
