@@ -5,9 +5,7 @@ module Outlook
     class ApiError < StandardError; end
 
     class FinalError < ApiError; end
-
     class NotFoundError < FinalError; end
-
     class AlreadyExistsError < FinalError; end
 
     def initialize(agent)
