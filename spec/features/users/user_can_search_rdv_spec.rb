@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "User can search for rdvs" do
+describe "User can search for rdvs", js: true do
   let(:now) { Time.zone.parse("2021-12-13 8:00") }
 
   around { |example| perform_enqueued_jobs { example.run } }
