@@ -38,17 +38,6 @@ RSpec.describe Outlook::SyncEventJob do
         expect(agents_rdv.reload.outlook_id).to eq(nil)
         expect(sentry_events.last.exception.values.first.value).to eq("Outlook api error! (RuntimeError)")
       end
-
-      context "when the error is fatal" do
-        it "discards the job, notifies the error monitoring, and does not update the outlook_id" do
-          allow(client_double).to receive(:create_event!).and_raise(Outlook::ApiClient::NotFoundError, "The specified object was not found in the store")
-          described_class.perform_later(agents_rdv.id, nil, agents_rdv.agent)
-          expect { perform_enqueued_jobs }.not_to have_enqueued_job
-
-          expect(agents_rdv.reload.outlook_id).to eq(nil)
-          expect(sentry_events.last.exception.values.first.value).to eq("The specified object was not found in the store (Outlook::ApiClient::NotFoundError)")
-        end
-      end
     end
   end
 

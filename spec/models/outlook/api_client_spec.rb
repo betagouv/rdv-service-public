@@ -62,14 +62,14 @@ describe Outlook::ApiClient do
       end.to raise_error(Outlook::ApiClient::ApiError, "Account suspended. Follow the instructions in your Inbox to verify your account.")
     end
 
-    context "when the error is fatal" do
+    context "when the error is permanent" do
       before do
-        stub_request(:post, "https://graph.microsoft.com/v1.0/me/Events")
+        stub_request(:delete, "https://graph.microsoft.com/v1.0/me/Events/abc")
           .to_return(
             status: 404,
             body: {
               error: {
-                code: "ErrorItemNotFound",
+                code: "ErrorItemNotFound", # this error is permanent
                 message: "The specified object was not found in the store",
               },
             }.to_json,
@@ -77,10 +77,14 @@ describe Outlook::ApiClient do
           )
       end
 
-      it "raises a specific exception that allows the job to be discarded" do
-        expect do
-          described_class.new(agent).create_event!(expected_body)
-        end.to raise_error(Outlook::ApiClient::NotFoundError, "The specified object was not found in the store")
+      stub_sentry_events
+
+      it "logs the error but does not warn Sentry" do
+        allow(Rails.logger).to receive(:error)
+        described_class.new(agent).delete_event!("abc")
+
+        expect(Rails.logger).to have_received(:error).with("Outlook error while deleting event: The specified object was not found in the store")
+        expect(sentry_events).to be_empty
       end
     end
   end

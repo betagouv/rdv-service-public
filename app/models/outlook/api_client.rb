@@ -4,9 +4,9 @@ module Outlook
   class ApiClient
     class ApiError < StandardError; end
 
-    class FinalError < ApiError; end
-    class NotFoundError < FinalError; end
-    class AlreadyExistsError < FinalError; end
+    class NotFoundError < StandardError; end
+
+    class AlreadyExistsError < StandardError; end
 
     def initialize(agent)
       @agent = agent
@@ -16,6 +16,8 @@ module Outlook
     def create_event!(payload)
       outlook_event = call_events_api("POST", "me/Events", payload)
       outlook_event["id"]
+    rescue AlreadyExistsError => e
+      Rails.logger.error("Outlook error while creating event: #{e.message}")
     end
 
     def update_event!(outlook_event_id, payload)
@@ -24,6 +26,8 @@ module Outlook
 
     def delete_event!(outlook_event_id)
       call_events_api("DELETE", "me/Events/#{outlook_event_id}")
+    rescue NotFoundError => e
+      Rails.logger.error("Outlook error while deleting event: #{e.message}")
     end
 
     private
