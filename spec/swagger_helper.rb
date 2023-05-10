@@ -539,6 +539,15 @@ RSpec.configure do |config|
         },
       ],
     },
+    "ants/api.json" => {
+      openapi: "3.0.1",
+      info: {
+        title: "API RDV Services Publics pour l'ANTS",
+        version: "ants",
+        description: "Une API pour permettre à l'ANTS de référencer les mairies de RDV Services Publics sur son moteur de recherche",
+      },
+      components: {},
+    },
   }
 
   # Specify the format of the output Swagger file when running 'rswag:specs:swaggerize'.
