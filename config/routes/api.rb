@@ -23,6 +23,10 @@ namespace :api do
     # Doesn't need authentication
     resources :public_links, only: [:index]
   end
+
+  namespace :ants do
+    get "getManagedMeetingPoints", to: "editor#get_managed_meeting_points"
+  end
 end
 
 # This one has been published before versioning the public API and unification with auth API:
