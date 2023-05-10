@@ -170,6 +170,7 @@ describe "Agent can create a Rdv with wizard" do
       expect(rdv.duration_in_min).to eq(35)
       expect(rdv.starts_at).to eq(Time.zone.local(2019, 10, 11, 14, 15))
       expect(rdv.created_by_agent?).to be(true)
+      expect(rdv.rdvs_users.first.created_by_agent?).to be(true)
       expect(rdv.context).to eq("RDV très spécial")
 
       expect(page).to have_current_path(admin_organisation_agent_agenda_path(organisation, agent, date: rdv.starts_at.to_date, selected_event_id: rdv.id))
