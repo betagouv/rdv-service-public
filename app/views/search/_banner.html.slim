@@ -4,5 +4,7 @@ section.py-2
       h1.text-white
         - if current_domain == Domain::RDV_AIDE_NUMERIQUE
           = render("search/banners/rdv_aide_numerique", context: context)
+        - elsif current_domain == Domain::RDV_MAIRIE
+          = render("search/banners/rdv_mairie", context: context)
         - else
           = render("search/banners/rdv_solidarites", context: context)
