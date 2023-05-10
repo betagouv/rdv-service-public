@@ -3,10 +3,8 @@
 module Outlook
   class ApiClient
     class ApiError < StandardError; end
-
-    class NotFoundError < StandardError; end
-
-    class AlreadyExistsError < StandardError; end
+    class NotFoundError < ApiError; end
+    class AlreadyExistsError < ApiError; end
 
     def initialize(agent)
       @agent = agent
