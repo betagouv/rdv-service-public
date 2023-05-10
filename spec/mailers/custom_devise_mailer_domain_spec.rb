@@ -8,7 +8,7 @@ describe CustomDeviseMailer, "#domain" do
     # L'adresse support@rdv-solidarites.fr est utilisée comme adresse de support
     # à la fois sur le domaine RDV Solidarité et le domaine RDV Aide Numérique.
     # En revanche on adapte le nom affiché pour que ce soit dans l'inbox du destinataire.
-    expect(sent_email[:from].to_s).to eq(%("#{domain.name}" <support@rdv-solidarites.fr>))
+    expect(sent_email[:from].unparsed_value).to match(%("#{domain.name}" <support@rdv-solidarites.fr>))
   end
 
   context "when user has no RDV" do
@@ -43,6 +43,15 @@ describe CustomDeviseMailer, "#domain" do
 
     it "uses RDV_AIDE_NUMERIQUE" do
       expect_to_use_domain(Domain::RDV_AIDE_NUMERIQUE)
+    end
+  end
+
+  context "when user only has RDV Mairie rdvs" do
+    let!(:organisation) { create(:organisation, verticale: :rdv_mairie) }
+    let(:user) { create(:user, rdvs: create_list(:rdv, 2, organisation: organisation)) }
+
+    it "uses RDV_MAIRIE" do
+      expect_to_use_domain(Domain::RDV_MAIRIE)
     end
   end
 
