@@ -54,6 +54,8 @@ class User < ApplicationRecord
   # HACK : add sign_in_count and current_sign_in_at to accessor to bypass recording IPs from Trackable Devise's module
   attr_accessor :current_sign_in_ip, :last_sign_in_ip, :sign_in_count, :current_sign_in_at
 
+  alias_attribute :soft_deleted?, :deleted_at?
+
   # Relations
   has_many :user_profiles, dependent: :restrict_with_error
   has_many :rdvs_users, dependent: :destroy
