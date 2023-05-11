@@ -16,14 +16,7 @@ class StaticPagesController < ApplicationController
   end
 
   def presentation_for_agents
-    case current_domain
-    when Domain::RDV_AIDE_NUMERIQUE
-      render("static_pages/presentation_for_cnfs")
-    when Domain::RDV_MAIRIE
-      render("static_pages/presentation_for_mairie")
-    else
-      render("static_pages/rdv_solidarites_presentation_for_agents")
-    end
+    render current_domain.presentation_for_agents_template_name
   end
 
   def microsoft_domain_verification
