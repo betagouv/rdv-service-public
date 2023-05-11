@@ -4,7 +4,7 @@ describe Admin::ReferentAssignationsController, type: :controller do
   describe "#index" do
     it "assigns available agents and respond success" do
       organisation = create(:organisation)
-      user = create(:user, agents: [], organisations: [organisation])
+      user = create(:user, referents: [], organisations: [organisation])
       service = create(:service)
       agent = create(:agent, basic_role_in_organisations: [organisation], service: service)
       lea = create(:agent, basic_role_in_organisations: [organisation], service: service)
@@ -20,7 +20,7 @@ describe Admin::ReferentAssignationsController, type: :controller do
 
     it "assigns matching search agent" do
       organisation = create(:organisation)
-      user = create(:user, agents: [], organisations: [organisation])
+      user = create(:user, referents: [], organisations: [organisation])
       service = create(:service)
       connected_agent = create(:agent, basic_role_in_organisations: [organisation], service: service, first_name: "Marc", last_name: "Dubois")
       agent = create(:agent, basic_role_in_organisations: [organisation], service: service, first_name: "Martine", last_name: "Durant")
@@ -38,7 +38,7 @@ describe Admin::ReferentAssignationsController, type: :controller do
   describe "#create" do
     it "add given agent to referents and redirect to user show" do
       organisation = create(:organisation)
-      user = create(:user, agents: [], organisations: [organisation])
+      user = create(:user, referents: [], organisations: [organisation])
       service = create(:service)
       agent = create(:agent, basic_role_in_organisations: [organisation], service: service)
       new_referent = create(:agent, basic_role_in_organisations: [organisation], service: service)
@@ -52,7 +52,7 @@ describe Admin::ReferentAssignationsController, type: :controller do
 
     it "return errors and redirect to index" do
       organisation = create(:organisation)
-      user = create(:user, agents: [], organisations: [organisation])
+      user = create(:user, referents: [], organisations: [organisation])
       service = create(:service)
       agent = create(:agent, basic_role_in_organisations: [organisation], service: service)
       new_referent = create(:agent, basic_role_in_organisations: [organisation], service: service)
@@ -75,7 +75,7 @@ describe Admin::ReferentAssignationsController, type: :controller do
       service = create(:service)
       referent = create(:agent, basic_role_in_organisations: [organisation], service: service)
       agent = create(:agent, basic_role_in_organisations: [organisation], service: service)
-      user = create(:user, agents: [referent], organisations: [organisation])
+      user = create(:user, referents: [referent], organisations: [organisation])
 
       sign_in agent
 
@@ -90,7 +90,7 @@ describe Admin::ReferentAssignationsController, type: :controller do
       service = create(:service)
       referent = create(:agent, basic_role_in_organisations: [organisation], service: service)
       agent = create(:agent, basic_role_in_organisations: [organisation], service: service)
-      user = create(:user, agents: [referent], organisations: [organisation])
+      user = create(:user, referents: [referent], organisations: [organisation])
 
       sign_in agent
 

@@ -133,9 +133,9 @@ describe MergeUsersService, type: :service do
 
   context "with different agents from same orga attached" do
     let!(:agent1) { create(:agent, basic_role_in_organisations: [organisation]) }
-    let(:user_target) { create(:user, agents: [agent1], organisations: [organisation]) }
+    let(:user_target) { create(:user, referents: [agent1], organisations: [organisation]) }
     let!(:agent2) { create(:agent, basic_role_in_organisations: [organisation]) }
-    let(:user_to_merge) { create(:user, agents: [agent2], organisations: [organisation]) }
+    let(:user_to_merge) { create(:user, referents: [agent2], organisations: [organisation]) }
 
     it "appends agents" do
       subject
@@ -146,8 +146,8 @@ describe MergeUsersService, type: :service do
   context "with same agents" do
     let!(:agent1) { create(:agent, basic_role_in_organisations: [organisation]) }
     let!(:agent2) { create(:agent, basic_role_in_organisations: [organisation]) }
-    let(:user_target) { create(:user, agents: [agent1, agent2], organisations: [organisation]) }
-    let(:user_to_merge) { create(:user, agents: [agent1, agent2], organisations: [organisation]) }
+    let(:user_target) { create(:user, referents: [agent1, agent2], organisations: [organisation]) }
+    let(:user_to_merge) { create(:user, referents: [agent1, agent2], organisations: [organisation]) }
 
     it "does not do anything" do
       subject
@@ -157,8 +157,8 @@ describe MergeUsersService, type: :service do
 
   context "target user doesn't have any agents yet" do
     let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
-    let(:user_target) { create(:user, agents: [], organisations: [organisation]) }
-    let(:user_to_merge) { create(:user, agents: [agent], organisations: [organisation]) }
+    let(:user_target) { create(:user, referents: [], organisations: [organisation]) }
+    let(:user_to_merge) { create(:user, referents: [agent], organisations: [organisation]) }
 
     it "sets agent" do
       subject
@@ -168,8 +168,8 @@ describe MergeUsersService, type: :service do
 
   context "merged user doesn't have any agents yet" do
     let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
-    let(:user_target) { create(:user, agents: [agent], organisations: [organisation]) }
-    let(:user_to_merge) { create(:user, agents: [], organisations: [organisation]) }
+    let(:user_target) { create(:user, referents: [agent], organisations: [organisation]) }
+    let(:user_to_merge) { create(:user, referents: [], organisations: [organisation]) }
 
     it "does not do anything" do
       subject
@@ -181,8 +181,8 @@ describe MergeUsersService, type: :service do
     let!(:organisation2) { create(:organisation) }
     let!(:agent1) { create(:agent, basic_role_in_organisations: [organisation]) }
     let!(:agent2) { create(:agent, basic_role_in_organisations: [organisation2]) }
-    let(:user_target) { create(:user, agents: [agent1], organisations: [organisation]) }
-    let(:user_to_merge) { create(:user, agents: [agent2], organisations: [organisation, organisation2]) }
+    let(:user_target) { create(:user, referents: [agent1], organisations: [organisation]) }
+    let(:user_to_merge) { create(:user, referents: [agent2], organisations: [organisation, organisation2]) }
 
     it "does not move the agent from the other orga anything" do
       subject
