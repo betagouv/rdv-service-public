@@ -139,7 +139,7 @@ describe MergeUsersService, type: :service do
 
     it "appends agents" do
       subject
-      expect(user_target.agents).to contain_exactly(agent1, agent2)
+      expect(user_target.referents).to contain_exactly(agent1, agent2)
     end
   end
 
@@ -151,7 +151,7 @@ describe MergeUsersService, type: :service do
 
     it "does not do anything" do
       subject
-      expect(user_target.agents).to contain_exactly(agent1, agent2)
+      expect(user_target.referents).to contain_exactly(agent1, agent2)
     end
   end
 
@@ -162,7 +162,7 @@ describe MergeUsersService, type: :service do
 
     it "sets agent" do
       subject
-      expect(user_target.agents).to contain_exactly(agent)
+      expect(user_target.referents).to contain_exactly(agent)
     end
   end
 
@@ -173,7 +173,7 @@ describe MergeUsersService, type: :service do
 
     it "does not do anything" do
       subject
-      expect(user_target.agents).to contain_exactly(agent)
+      expect(user_target.referents).to contain_exactly(agent)
     end
   end
 
@@ -186,8 +186,8 @@ describe MergeUsersService, type: :service do
 
     it "does not move the agent from the other orga anything" do
       subject
-      expect(user_target.reload.agents).to contain_exactly(agent1)
-      expect(user_to_merge.reload.agents).to contain_exactly(agent2)
+      expect(user_target.reload.referents).to contain_exactly(agent1)
+      expect(user_to_merge.reload.referents).to contain_exactly(agent2)
     end
   end
 

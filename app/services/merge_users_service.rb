@@ -14,7 +14,7 @@ class MergeUsersService < BaseService
       merge_rdvs
       merge_relatives
       merge_file_attentes
-      merge_agents
+      merge_referents
       @user_to_merge.reload.soft_delete(@organisation) # ! reload refreshes associations to delete
     end
   end
@@ -56,23 +56,23 @@ class MergeUsersService < BaseService
 
   def merge_file_attentes
     @user_to_merge.file_attentes
-      .joins(:rdv).where(rdvs: { organisation: @organisation })
-      .each do |file_attente_to_merge|
-        file_attente_target = @user_target.file_attentes.find_by(rdv: file_attente_to_merge.rdv)
-        if file_attente_target
-          file_attente_to_merge.destroy
-        else
-          file_attente_to_merge.update!(user: @user_target)
-        end
+                  .joins(:rdv).where(rdvs: { organisation: @organisation })
+                  .each do |file_attente_to_merge|
+      file_attente_target = @user_target.file_attentes.find_by(rdv: file_attente_to_merge.rdv)
+      if file_attente_target
+        file_attente_to_merge.destroy
+      else
+        file_attente_to_merge.update!(user: @user_target)
       end
+    end
   end
 
-  def merge_agents
-    return unless @user_to_merge.agents.merge(@organisation.agents).any?
+  def merge_referents
+    return unless @user_to_merge.referents.merge(@organisation.agents).any?
 
     agents = (
-      @user_target.agents.to_a +
-      @user_to_merge.agents.merge(@organisation.agents).to_a
+      @user_target.referents.to_a +
+        @user_to_merge.referents.merge(@organisation.agents).to_a
     ).uniq
     @user_target.update!(agents: agents)
   end

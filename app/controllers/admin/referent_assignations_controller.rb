@@ -4,7 +4,7 @@ class Admin::ReferentAssignationsController < AgentAuthController
   def index
     @user = policy_scope(User).find(index_params[:user_id])
     authorize(@user, :update?)
-    @referents = policy_scope(@user.agents).distinct.order(:last_name)
+    @referents = policy_scope(@user.referents).distinct.order(:last_name)
     @agents = policy_scope(Agent).merge(current_organisation.agents)
     @agents = @agents.search_by_text(index_params[:search]) if index_params[:search].present?
     @agents = @agents.page(params[:page])
@@ -12,13 +12,13 @@ class Admin::ReferentAssignationsController < AgentAuthController
 
   def create
     find_agent_and_user_save_and_redirect_with(params) do |user, agent|
-      user.agents << agent
+      user.referents << agent
     end
   end
 
   def destroy
     find_agent_and_user_save_and_redirect_with(params) do |user, agent|
-      user.agents.delete(agent)
+      user.referents.delete(agent)
     end
   end
 

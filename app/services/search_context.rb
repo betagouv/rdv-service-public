@@ -233,7 +233,7 @@ class SearchContext
   def retrieve_referents
     return [] if @referent_ids.blank? || @current_user.nil?
 
-    @current_user.agents.where(id: @referent_ids)
+    @current_user.referents.where(id: @referent_ids)
   end
 
   def matching_motifs

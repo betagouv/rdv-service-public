@@ -95,7 +95,7 @@ class Agent < ApplicationRecord
     motif.for_secretariat ? joins(:service).where(service: motif.service).or(secretariat) : where(service: motif.service)
   }
   scope :available_referents_for, lambda { |user|
-    where.not(id: [user.agents.map(&:id)])
+    where.not(id: [user.referents.map(&:id)])
   }
   scope :in_orgs, lambda { |organisations|
     joins(:roles).where(agent_roles: { organisations: organisations })
