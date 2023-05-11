@@ -9,6 +9,7 @@ class RdvsUser < ApplicationRecord
 
   # Attributes
   enum status: { unknown: "unknown", seen: "seen", excused: "excused", revoked: "revoked", noshow: "noshow" }
+  enum created_by: { agent: "agent", user: "user", prescripteur: "prescripteur" }, _prefix: :created_by
   NOT_CANCELLED_STATUSES = %w[unknown seen noshow].freeze
   CANCELLED_STATUSES = %w[excused revoked].freeze
 

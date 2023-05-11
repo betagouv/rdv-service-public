@@ -52,6 +52,7 @@ RSpec.describe Users::RdvsController, type: :controller do
         expect(Rdv.count).to eq(1)
         expect(response).to redirect_to users_rdv_path(Rdv.last, invitation_token: token)
         expect(user.rdvs.last.created_by_user?).to be(true)
+        expect(user.rdvs_users.last.created_by_user?).to be(true)
       end
 
       context "when the motif is by phone and lieu is missing" do
@@ -62,6 +63,7 @@ RSpec.describe Users::RdvsController, type: :controller do
           expect(Rdv.count).to eq(1)
           expect(response).to redirect_to users_rdv_path(Rdv.last, invitation_token: token)
           expect(user.rdvs.last.created_by_user?).to be(true)
+          expect(user.rdvs_users.last.created_by_user?).to be(true)
         end
       end
     end
