@@ -12,6 +12,16 @@
       "get": {
         "summary": "Lister les municipalités pour lesquelles nous permettons la prise de RDV",
         "operationId": "getManagedMeetingPoints",
+        "parameters": [
+          {
+            "name": "x-hub-rdv-auth-token",
+            "in": "header",
+            "description": "Token d'accès (authentification)",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "401": {
             "description": "Renvoie 'unauthorized' quand l'authentification est impossible"
