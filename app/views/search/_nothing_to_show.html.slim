@@ -5,7 +5,9 @@
       - if context.referents.empty?
         .font-weight-bold L'agent avec qui vous voulez prendre rendez-vous ne vous est pas assigné comme référent.
       - else
-        .font-weight-bold Votre référent n'a pas de créneaux disponibles.
+        .mb-3.font-weight-bold Votre référent n'a pas de créneaux disponibles. Voulez-vous prendre rendez-vous avec un autre agent ?
+        .float-left
+          = render "users/rdvs/prendre_rdv_button"
     - elsif context.invitation?
       .font-weight-bold Un problème semble s'être produit pour votre invitation. Toutes nos excuses pour cela.
       = mail_to SUPPORT_EMAIL,
