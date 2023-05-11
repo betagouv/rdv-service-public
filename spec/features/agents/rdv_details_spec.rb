@@ -43,7 +43,7 @@ describe "Agent can see RDV details correctly" do
       let(:user2) { create(:user, :with_no_email, :with_no_phone_number) }
 
       before do
-        rdv.rdvs_users.create(user: user2)
+        create(:rdvs_user, user: user2, rdv: rdv)
       end
 
       it "User_count is correct" do
