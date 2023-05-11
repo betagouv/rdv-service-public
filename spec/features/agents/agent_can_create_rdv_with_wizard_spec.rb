@@ -137,7 +137,7 @@ describe "Agent can create a Rdv with wizard" do
       before do
         # Creating a duplicate RDV with same attributes but different user / agent
         create(:rdv, organisation: organisation, users: [create(:user)], referents: [create(:agent)], motif: motif,
-               lieu: lieu, starts_at: Time.zone.parse("2019-10-11 14:15:00"), duration_in_min: 35, skip_webhooks: true)
+                     lieu: lieu, starts_at: Time.zone.parse("2019-10-11 14:15:00"), duration_in_min: 35, skip_webhooks: true)
       end
 
       # There was a bug that caused the Rdv payload's "users" to
