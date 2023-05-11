@@ -2,7 +2,4 @@ section.py-2
   .container
     .col-lg-12.justify-content-md-center
       h1.text-white
-        - if current_domain == Domain::RDV_AIDE_NUMERIQUE
-          = render("search/banners/rdv_aide_numerique", context: context)
-        - else
-          = render("search/banners/rdv_solidarites", context: context)
+        = render(current_domain.search_banner_template_name, context: context)

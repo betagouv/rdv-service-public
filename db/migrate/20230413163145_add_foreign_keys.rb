@@ -5,6 +5,9 @@ class AddForeignKeys < ActiveRecord::Migration[7.0]
   def change
     up_only do
       MotifsPlageOuverture.where.not(plage_ouverture_id: PlageOuverture.all.select(:id)).delete_all
+      AgentRole.where.not(agent_id: Agent.all.select(:id)).delete_all
+      AgentsRdv.where.not(agent_id: Agent.all.select(:id)).delete_all
+      UserProfile.where.not(organisation_id: Organisation.all.select(:id)).delete_all
 
       # This is much much faster that a subquery
       user_ids = User.unscope(:where).pluck(:id).to_set

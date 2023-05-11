@@ -389,6 +389,7 @@ describe "User can search for rdvs" do
     expect(page).to have_content(lieu.address) if lieu.present?
     expect(page).to have_content(motif.name)
     expect(page).to have_content("11h00")
+    expect(Rdv.first.rdvs_users.first.created_by_user?).to be(true)
   end
 
   def expect_page_h1(title)

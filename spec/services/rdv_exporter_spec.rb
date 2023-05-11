@@ -89,11 +89,6 @@ describe RdvExporter, type: :service do
         rdv = build(:rdv, :with_fake_timestamps, created_by: :user)
         expect(described_class.row_array_from(rdv)[3]).to eq("RDV Pris sur internet")
       end
-
-      it "return « RDV en file d'attente? » when rdv created from file d'attente" do
-        rdv = build(:rdv, :with_fake_timestamps, created_by: :file_attente)
-        expect(described_class.row_array_from(rdv)[3]).to eq("RDV en file d'attente")
-      end
     end
 
     describe "date" do
