@@ -25,6 +25,10 @@ module ApiSpecMacros
     parameter name: "uid", in: :header, type: :string, description: "Identifiant d'accès (authentification)", example: "martine@demo.rdv-solidarites.fr"
   end
 
+  def with_ants_authentication
+    parameter name: "x-hub-rdv-auth-token", in: :header, type: :string, description: "Token d'accès (authentification)"
+  end
+
   def with_pagination
     parameter name: "page", in: :query, type: :integer, description: "La page souhaitée", example: "1", required: false
   end

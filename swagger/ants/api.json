@@ -13,6 +13,9 @@
         "summary": "Lister les municipalités pour lesquelles nous permettons la prise de RDV",
         "operationId": "getManagedMeetingPoints",
         "responses": {
+          "401": {
+            "description": "Renvoie 'unauthorized' quand l'authentification est impossible"
+          },
           "200": {
             "description": "Renvoie la liste des lieux correspondant aux municipalités"
           }
