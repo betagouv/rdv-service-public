@@ -46,7 +46,7 @@ describe Admin::ReferentAssignationsController, type: :controller do
 
       post :create, params: { organisation_id: organisation.id, user_id: user.id, agent_id: new_referent.id }
 
-      expect(user.reload.agents).to include(new_referent)
+      expect(user.reload.referents).to include(new_referent)
       expect(response).to redirect_to(admin_organisation_user_referent_assignations_path(organisation, user))
     end
 
@@ -81,7 +81,7 @@ describe Admin::ReferentAssignationsController, type: :controller do
 
       post :destroy, params: { organisation_id: organisation.id, user_id: user.id, id: referent.id }
 
-      expect(user.reload.agents).not_to include(referent)
+      expect(user.reload.referents).not_to include(referent)
       expect(response).to redirect_to(admin_organisation_user_referent_assignations_path(organisation, user))
     end
 

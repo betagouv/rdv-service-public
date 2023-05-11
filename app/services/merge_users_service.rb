@@ -74,6 +74,6 @@ class MergeUsersService < BaseService
       @user_target.referents.to_a +
         @user_to_merge.referents.merge(@organisation.agents).to_a
     ).uniq
-    @user_target.update!(agents: agents)
+    @user_target.update!(referents: agents)
   end
 end
