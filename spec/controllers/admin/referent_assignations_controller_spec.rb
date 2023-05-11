@@ -4,7 +4,7 @@ describe Admin::ReferentAssignationsController, type: :controller do
   describe "#index" do
     it "assigns available agents and respond success" do
       organisation = create(:organisation)
-      user = create(:user, referents: [], organisations: [organisation])
+      user = create(:user, referent_agents: [], organisations: [organisation])
       service = create(:service)
       agent = create(:agent, basic_role_in_organisations: [organisation], service: service)
       lea = create(:agent, basic_role_in_organisations: [organisation], service: service)
@@ -20,7 +20,7 @@ describe Admin::ReferentAssignationsController, type: :controller do
 
     it "assigns matching search agent" do
       organisation = create(:organisation)
-      user = create(:user, referents: [], organisations: [organisation])
+      user = create(:user, referent_agents: [], organisations: [organisation])
       service = create(:service)
       connected_agent = create(:agent, basic_role_in_organisations: [organisation], service: service, first_name: "Marc", last_name: "Dubois")
       agent = create(:agent, basic_role_in_organisations: [organisation], service: service, first_name: "Martine", last_name: "Durant")
@@ -38,7 +38,7 @@ describe Admin::ReferentAssignationsController, type: :controller do
   describe "#create" do
     it "add given agent to referents and redirect to user show" do
       organisation = create(:organisation)
-      user = create(:user, referents: [], organisations: [organisation])
+      user = create(:user, referent_agents: [], organisations: [organisation])
       service = create(:service)
       agent = create(:agent, basic_role_in_organisations: [organisation], service: service)
       new_referent = create(:agent, basic_role_in_organisations: [organisation], service: service)
@@ -46,13 +46,13 @@ describe Admin::ReferentAssignationsController, type: :controller do
 
       post :create, params: { organisation_id: organisation.id, user_id: user.id, agent_id: new_referent.id }
 
-      expect(user.reload.referents).to include(new_referent)
+      expect(user.reload.referent_agents).to include(new_referent)
       expect(response).to redirect_to(admin_organisation_user_referent_assignations_path(organisation, user))
     end
 
     it "return errors and redirect to index" do
       organisation = create(:organisation)
-      user = create(:user, referents: [], organisations: [organisation])
+      user = create(:user, referent_agents: [], organisations: [organisation])
       service = create(:service)
       agent = create(:agent, basic_role_in_organisations: [organisation], service: service)
       new_referent = create(:agent, basic_role_in_organisations: [organisation], service: service)
@@ -75,13 +75,13 @@ describe Admin::ReferentAssignationsController, type: :controller do
       service = create(:service)
       referent = create(:agent, basic_role_in_organisations: [organisation], service: service)
       agent = create(:agent, basic_role_in_organisations: [organisation], service: service)
-      user = create(:user, referents: [referent], organisations: [organisation])
+      user = create(:user, referent_agents: [referent], organisations: [organisation])
 
       sign_in agent
 
       post :destroy, params: { organisation_id: organisation.id, user_id: user.id, id: referent.id }
 
-      expect(user.reload.referents).not_to include(referent)
+      expect(user.reload.referent_agents).not_to include(referent)
       expect(response).to redirect_to(admin_organisation_user_referent_assignations_path(organisation, user))
     end
 
@@ -90,7 +90,7 @@ describe Admin::ReferentAssignationsController, type: :controller do
       service = create(:service)
       referent = create(:agent, basic_role_in_organisations: [organisation], service: service)
       agent = create(:agent, basic_role_in_organisations: [organisation], service: service)
-      user = create(:user, referents: [referent], organisations: [organisation])
+      user = create(:user, referent_agents: [referent], organisations: [organisation])
 
       sign_in agent
 

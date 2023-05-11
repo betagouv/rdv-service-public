@@ -186,8 +186,8 @@ class SearchContext
     @next_availability ||= creneaux.empty? ? creneaux_search.next_availability : nil
   end
 
-  def referents
-    @referents ||= retrieve_referents
+  def referent_agents
+    @referent_agents ||= retrieve_referent_agents
   end
 
   def follow_up?
@@ -230,10 +230,10 @@ class SearchContext
     )
   end
 
-  def retrieve_referents
+  def retrieve_referent_agents
     return [] if @referent_ids.blank? || @current_user.nil?
 
-    @current_user.referents.where(id: @referent_ids)
+    @current_user.referent_agents.where(id: @referent_ids)
   end
 
   def matching_motifs

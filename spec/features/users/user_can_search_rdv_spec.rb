@@ -104,7 +104,7 @@ describe "User can search for rdvs" do
   end
 
   describe "follow up rdvs" do
-    let!(:user) { create(:user, referents: [agent]) }
+    let!(:user) { create(:user, referent_agents: [agent]) }
     let!(:agent) { create(:agent) }
     let!(:agent2) { create(:agent) }
     let!(:organisation) { create(:organisation, territory: create(:territory, departement_number: "92")) }
@@ -228,7 +228,7 @@ describe "User can search for rdvs" do
     end
 
     context "when the agent has no PO" do
-      let!(:user) { create(:user, referents: [agent3]) }
+      let!(:user) { create(:user, referent_agents: [agent3]) }
       let!(:agent3) { create(:agent) }
 
       it "shows an error message" do
