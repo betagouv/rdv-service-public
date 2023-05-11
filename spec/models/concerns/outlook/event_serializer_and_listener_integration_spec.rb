@@ -2,7 +2,7 @@
 
 # Ce fichier teste l'intégration de la chaine d'appels depuis les modifications des objets activerecord
 # jusqu'à l'appel http à l'api Outlook
-RSpec.describe Outlook::EventSerializerAndListener, database_cleaner_strategy: :truncation do
+RSpec.describe Outlook::EventSerializerAndListener do
   around do |example|
     perform_enqueued_jobs { example.run }
   end
