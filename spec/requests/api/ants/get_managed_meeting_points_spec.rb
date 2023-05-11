@@ -25,6 +25,10 @@ describe "ANTS API", swagger_doc: "ants/api.json" do
 
         response 401, "Renvoie 'unauthorized' quand l'authentification est impossible" do
           run_test!
+
+          specify do
+            expect(parsed_response_body["error"]).to be_present
+          end
         end
       end
 
@@ -33,6 +37,10 @@ describe "ANTS API", swagger_doc: "ants/api.json" do
 
         response 401, "Renvoie 'unauthorized' quand l'authentification est impossible" do
           run_test!
+
+          specify do
+            expect(parsed_response_body["error"]).to be_present
+          end
         end
       end
 

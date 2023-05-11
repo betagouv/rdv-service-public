@@ -546,7 +546,15 @@ RSpec.configure do |config|
         version: "ants",
         description: "Une API pour permettre à l'ANTS de référencer les mairies de RDV Services Publics sur son moteur de recherche",
       },
-      components: {},
+      components: {
+        securitySchemes: {
+          auth_token: {
+            type: :apiKey,
+            name: "x-hub-rdv-auth-token",
+            in: :header,
+          },
+        },
+      },
     },
   }
 
