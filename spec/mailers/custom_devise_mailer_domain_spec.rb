@@ -29,32 +29,32 @@ describe CustomDeviseMailer, "#domain" do
     end
   end
 
-  context "when user only has RDV Insertion rdvs" do
-    let!(:organisation) { create(:organisation, verticale: :rdv_insertion) }
+  context "when user has some rdvs" do
     let!(:user) { create(:user) }
     let!(:rdvs) { create_list(:rdv, 2, organisation: organisation, users: [user]) }
 
-    it "uses RDV_SOLIDARITES" do
-      expect_to_use_domain(Domain::RDV_SOLIDARITES)
+    context "in a RDV Insertion organisation" do
+      let!(:organisation) { create(:organisation, verticale: :rdv_insertion) }
+
+      it "uses RDV_SOLIDARITES" do
+        expect_to_use_domain(Domain::RDV_SOLIDARITES)
+      end
     end
-  end
 
-  context "when user only has RDV Aide Numérique rdvs" do
-    let!(:organisation) { create(:organisation, verticale: :rdv_aide_numerique) }
-    let!(:user) { create(:user) }
-    let!(:rdvs) { create_list(:rdv, 2, organisation: organisation, users: [user]) }
+    context "in a RDV Aide Numerique organisation" do
+      let!(:organisation) { create(:organisation, verticale: :rdv_aide_numerique) }
 
-    it "uses RDV_AIDE_NUMERIQUE" do
-      expect_to_use_domain(Domain::RDV_AIDE_NUMERIQUE)
+      it "uses RDV_AIDE_NUMERIQUE" do
+        expect_to_use_domain(Domain::RDV_AIDE_NUMERIQUE)
+      end
     end
-  end
 
-  context "when user only has RDV Mairie rdvs" do
-    let!(:organisation) { create(:organisation, verticale: :rdv_mairie) }
-    let(:user) { create(:user, rdvs: create_list(:rdv, 2, organisation: organisation)) }
+    context "in a RDV Mairie organisation" do
+      let!(:organisation) { create(:organisation, verticale: :rdv_mairie) }
 
-    it "uses RDV_MAIRIE" do
-      expect_to_use_domain(Domain::RDV_MAIRIE)
+      it "uses RDV_MAIRIE" do
+        expect_to_use_domain(Domain::RDV_MAIRIE)
+      end
     end
   end
 
