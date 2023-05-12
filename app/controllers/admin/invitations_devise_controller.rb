@@ -78,10 +78,6 @@ class Admin::InvitationsDeviseController < Devise::InvitationsController
     # Only ever invite to the current organisation
     params[:roles_attributes]["0"][:organisation] = current_organisation
 
-    if current_agent.conseiller_numerique?
-      params[:roles_attributes]["0"][:level] = AgentRole::LEVEL_BASIC
-    end
-
     # The omniauth uid _is_ the email, always. Note: this may be better suited in a hook in Agent.rb
     params[:uid] = params[:email]
 

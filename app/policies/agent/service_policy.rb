@@ -11,7 +11,6 @@ class Agent::ServicePolicy < Agent::AdminPolicy
 
   class AdminScope < Scope
     def resolve
-      return scope.secretariat if current_agent.conseiller_numerique?
       return scope.all if current_agent_role.admin?
 
       scope.where(id: current_agent.service_id)
