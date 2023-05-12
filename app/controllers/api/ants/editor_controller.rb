@@ -12,7 +12,6 @@ class Api::Ants::EditorController < Api::Ants::BaseController
         public_entry_address: public_entry_address,
         zip_code: zip_code,
         city_name: city_name,
-
       }
     end
 
