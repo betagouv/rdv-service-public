@@ -6,10 +6,36 @@ class Api::Ants::EditorController < Api::Ants::BaseController
   end
 
   def available_time_slots
-    render json: params[:meeting_point_ids].map do |meeting_point_id|
-      [
-        meeting_point_id, [],
-      ]
-    end.to_hash.to_json
+    response_hash = {}
+
+    lieux.each do |lieu|
+      response_hash[lieu.id] = creneaux(
+        lieu,
+        Date.parse(params[:start_date]),
+        Date.parse(params[:end_date])
+      ).map do |creneau|
+        { datetime: creneau.starts_at }
+      end
+    end
+
+    render json: response_hash
+  end
+
+  private
+
+  def lieux
+    @lieux ||= Lieu.joins(:organisation).where(organisations: { verticale: :rdv_mairie })
+      .where(id: params[:meeting_point_ids])
+  end
+
+  def creneaux(lieu, start_date, end_date)
+    motif = lieu.organisation.motifs.first
+
+    Users::CreneauxSearch.new(
+      user: @current_user,
+      motif: motif,
+      lieu: lieu,
+      date_range: (start_date..end_date)
+    ).creneaux
   end
 end
