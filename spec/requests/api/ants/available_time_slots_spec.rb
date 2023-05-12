@@ -35,7 +35,7 @@ describe "ANTS API : availableTimeSlots endpoint" do
 
     expect(JSON.parse(response.body)).to eq(
       {
-        lieu.id => [
+        lieu.id.to_s => [
           {
             datetime: "2022-11-01T09:00Z",
           },
@@ -49,7 +49,7 @@ describe "ANTS API : availableTimeSlots endpoint" do
             datetime: "2022-11-01T10:30Z",
           },
         ],
-      }
+      }.with_indifferent_access
     )
   end
 end

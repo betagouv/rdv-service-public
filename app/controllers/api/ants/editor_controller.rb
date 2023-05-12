@@ -14,7 +14,7 @@ class Api::Ants::EditorController < Api::Ants::BaseController
         Date.parse(params[:start_date]),
         Date.parse(params[:end_date])
       ).map do |creneau|
-        { datetime: creneau.starts_at }
+        { datetime: creneau.starts_at.strftime("%Y-%m-%dT%H:%MZ") }
       end
     end
 
