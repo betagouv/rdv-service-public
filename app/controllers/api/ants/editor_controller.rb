@@ -2,13 +2,27 @@
 
 class Api::Ants::EditorController < Api::Ants::BaseController
   def get_managed_meeting_points # rubocop:disable Naming/AccessorMethodName
-    render json: [].to_json
+    response_body = lieux.map do |lieu|
+      public_entry_address, city_name, zip_code = lieu.address.split(", ")
+      {
+        id: lieu.id.to_s,
+        name: lieu.name,
+        longitude: lieu.longitude,
+        latitude: lieu.latitude,
+        public_entry_address: public_entry_address,
+        zip_code: zip_code,
+        city_name: city_name,
+
+      }
+    end
+
+    render json: response_body
   end
 
   def available_time_slots
     response_hash = {}
 
-    lieux.each do |lieu|
+    lieux.where(id: params[:meeting_point_ids]).each do |lieu|
       response_hash[lieu.id] = creneaux(
         lieu,
         Date.parse(params[:start_date]),
@@ -25,7 +39,6 @@ class Api::Ants::EditorController < Api::Ants::BaseController
 
   def lieux
     @lieux ||= Lieu.joins(:organisation).where(organisations: { verticale: :rdv_mairie })
-      .where(id: params[:meeting_point_ids])
   end
 
   def creneaux(lieu, start_date, end_date)

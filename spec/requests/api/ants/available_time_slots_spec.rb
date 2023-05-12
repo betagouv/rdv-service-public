@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "ANTS API : availableTimeSlots endpoint" do
+describe "ANTS API: availableTimeSlots" do
   around do |example|
     previous_auth_token = ENV["ANTS_API_AUTH_TOKEN"]
 

@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-require "swagger_helper"
-
-describe "ANTS API", swagger_doc: "ants/api.json" do
+describe "ANTS API: getManagedMeetingPoints" do
   around do |example|
     previous_auth_token = ENV["ANTS_API_AUTH_TOKEN"]
 
@@ -13,47 +11,34 @@ describe "ANTS API", swagger_doc: "ants/api.json" do
     ENV["ANTS_API_AUTH_TOKEN"] = previous_auth_token
   end
 
-  let(:parsed_response_body) { JSON.parse(response.body) }
+  context "with the wrong authentication header" do
+    it "returns a 401 status" do
+      get "/api/ants/getManagedMeetingPoints", headers: { "X-HUB-RDV-AUTH-TOKEN" => "wrong token" }
+      expect(response.status).to eq 401
+    end
+  end
 
-  path "/api/ants/getManagedMeetingPoints" do
-    get "Lister les municipalités pour lesquelles nous permettons la prise de RDV" do
-      produces "application/json"
-      operationId "getManagedMeetingPoints"
+  context "with the correct authentication" do
+    let!(:lieu) do
+      create(:lieu,
+             organisation: organisation, name: "Mairie de Romainville",
+             address: "89 rue Roger Bouvry, Seclin, 59113",
+             longitude: 3.0348016639327,
+             latitude: 50.549140395451)
+    end
+    let(:organisation) { create(:organisation, verticale: :rdv_mairie) }
 
-      context "sans le header d'authentification" do
-        let(:"x-hub-rdv-auth-token") { nil }
-
-        response 401, "Renvoie 'unauthorized' quand l'authentification est impossible" do
-          run_test!
-
-          specify do
-            expect(parsed_response_body["error"]).to be_present
-          end
-        end
-      end
-
-      context "avec le mauvais header d'autentification" do
-        let(:"x-hub-rdv-auth-token") { "wrong token" }
-
-        response 401, "Renvoie 'unauthorized' quand l'authentification est impossible" do
-          run_test!
-
-          specify do
-            expect(parsed_response_body["error"]).to be_present
-          end
-        end
-      end
-
-      let(:"x-hub-rdv-auth-token") { "fake_ants_api_auth_token" }
-
-      response 200, "Renvoie la liste des lieux correspondant aux municipalités" do
-        run_test!
-        with_ants_authentication
-
-        specify do
-          expect(parsed_response_body).to eq([])
-        end
-      end
+    it "returns a list of lieux" do
+      get "/api/ants/getManagedMeetingPoints", headers: { "X-HUB-RDV-AUTH-TOKEN" => "fake_ants_api_auth_token" }
+      expect(JSON.parse(response.body)).to eq [{
+        id: lieu.id.to_s,
+        name: "Mairie de Romainville",
+        longitude: 3.0348016639327,
+        latitude: 50.549140395451,
+        public_entry_address: "89 rue Roger Bouvry",
+        zip_code: "59113",
+        city_name: "Seclin",
+      }.stringify_keys]
     end
   end
 end
