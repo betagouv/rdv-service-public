@@ -7,12 +7,12 @@ class CustomDeviseMailer < Devise::Mailer
   include Devise::Controllers::UrlHelpers # Optional. eg. `confirmation_url`
 
   helper :application
-  default template_path: "devise/mailer"
+  default template_path: "devise/mailer",
+          reply_to: proc { inviter_or_default }
 
   def invitation_instructions(record, token, opts = {})
     @token = token
     @user_params = opts[:user_params] || {}
-    opts[:reply_to] = reply_to(record)
     if record.is_a?(Agent) && record.conseiller_numerique? && record.invited_by.nil?
       opts[:subject] = "📧 Invitation sur RDV Aide Numérique"
       opts[:cc] = record.cnfs_secondary_email if record.cnfs_secondary_email.present?
@@ -25,10 +25,10 @@ class CustomDeviseMailer < Devise::Mailer
 
   private
 
-  def reply_to(record)
-    return unless record.is_a? Agent
+  def inviter_or_default
+    return unless resource.is_a? Agent
 
-    record.invited_by&.email || default_from
+    resource.invited_by&.email || default_from
   end
 
   def domain

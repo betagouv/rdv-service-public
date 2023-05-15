@@ -50,7 +50,7 @@ describe AddConseillerNumerique do
       perform_enqueued_jobs
       invitation_email = ActionMailer::Base.deliveries.last
 
-      expect(invitation_email).to have_attributes(to: ["exemple@conseiller-numerique.fr"])
+      expect(invitation_email).to have_attributes(to: ["exemple@conseiller-numerique.fr"], reply_to: ["support@rdv-aide-numerique.fr"])
     end
   end
 
