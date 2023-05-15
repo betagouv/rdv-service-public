@@ -114,7 +114,7 @@ class Domain
   end
   alias default default?
 
-  ALL_BY_URL = ALL.index_by(&:host_name)
+  ALL_BY_HOST_NAME = ALL.index_by(&:host_name)
 
   def self.find_matching(domain_name)
     # Les review apps utilisent un host de Scalingo, elles ne permettent
@@ -123,7 +123,7 @@ class Domain
       return find(ENV["REVIEW_APP_DOMAIN"])
     end
 
-    ALL_BY_URL.fetch(domain_name) { RDV_SOLIDARITES }
+    ALL_BY_HOST_NAME.fetch(domain_name) { RDV_SOLIDARITES }
   end
 
   def self.find(id)
