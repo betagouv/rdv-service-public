@@ -235,7 +235,7 @@ class CalendarRdvSolidarites {
   }
 
   handleAjaxError = () => {
-    alert("Le chargement du calendrier a échoué; un rapport d’erreur a été transmis à l’équipe.\nRechargez la page, et si ce problème persiste, contactez-nous à support@rdv-solidarites.fr.");
+    alert(`Le chargement du calendrier a échoué; un rapport d’erreur a été transmis à l’équipe.\nRechargez la page, et si ce problème persiste, contactez-nous à ${ENV.SUPPORT_EMAIL}.`);
   }
 }
 

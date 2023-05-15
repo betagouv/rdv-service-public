@@ -25,6 +25,6 @@ module CommonMailer
   end
 
   def default_from
-    SUPPORT_EMAIL
+    domain.support_email
   end
 end

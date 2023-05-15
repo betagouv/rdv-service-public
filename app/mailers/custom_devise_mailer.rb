@@ -28,7 +28,7 @@ class CustomDeviseMailer < Devise::Mailer
   def reply_to(record)
     return unless record.is_a? Agent
 
-    record.invited_by&.email || SUPPORT_EMAIL
+    record.invited_by&.email || default_from
   end
 
   def domain
