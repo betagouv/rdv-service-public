@@ -37,9 +37,9 @@ describe "Agent can create a Rdv with creneau search" do
     let(:first_day_of_plages) { 2.weeks.from_now.beginning_of_week.to_date }
     let!(:other_agent) { create(:agent, basic_role_in_organisations: [organisation], service: agent.service) }
     let!(:motif) { create(:motif, bookable_publicly: true, service: agent.service, organisation: organisation) }
-    let!(:plage_ouverture1) { create(:plage_ouverture, motifs: [motif], first_day: first_day_of_plages, agent: agent, organisation: organisation) }
+    let!(:plage_ouverture1) { create(:plage_ouverture, :daily, motifs: [motif], first_day: first_day_of_plages, agent: agent, organisation: organisation) }
     let!(:plage_ouverture2) do
-      create(:plage_ouverture, motifs: [motif], first_day: first_day_of_plages, agent: other_agent, organisation: organisation, lieu: plage_ouverture1.lieu)
+      create(:plage_ouverture, :daily, motifs: [motif], first_day: first_day_of_plages, agent: other_agent, organisation: organisation, lieu: plage_ouverture1.lieu)
     end
 
     it "displays a slot for each agent" do
