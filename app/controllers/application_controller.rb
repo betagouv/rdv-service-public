@@ -3,7 +3,9 @@
 class ApplicationController < ActionController::Base
   include Pundit::Authorization
   include DomainDetection
+
   protect_from_forgery
+
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :store_user_location!, if: :storable_location?
   before_action :set_sentry_context
