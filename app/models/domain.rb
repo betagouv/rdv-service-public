@@ -119,24 +119,13 @@ class Domain
   def self.find_matching(domain_name)
     # Les review apps utilisent un domaine de Scalingo, elles
     # ne permettent donc pas d'utiliser plusieurs domaines.
-    return review_app_domain if ENV["IS_REVIEW_APP"] == "true"
+    return find(ENV["FORCE_DOMAIN"]) if ENV["FORCE_DOMAIN"].present?
 
     ALL_BY_URL.fetch(domain_name) { RDV_SOLIDARITES }
   end
 
   def self.find(id)
     ALL.find { _1.id == id } or raise "Can't find domain with id=#{id}"
-  end
-
-  def self.review_app_domain
-    case ENV["REVIEW_APP_DOMAIN"]
-    when "RDV_AIDE_NUMERIQUE"
-      RDV_AIDE_NUMERIQUE
-    when "RDV_MAIRIE"
-      RDV_MAIRIE
-    else
-      RDV_SOLIDARITES
-    end
   end
 
   def to_s
