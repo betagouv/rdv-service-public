@@ -104,8 +104,8 @@ module Outlook
     def event_description
       url_helpers = Rails.application.routes.url_helpers
 
-      show_link = url_helpers.admin_organisation_rdv_url(rdv.organisation, rdv.id, host: agent.dns_domain_name)
-      edit_link = url_helpers.edit_admin_organisation_rdv_url(rdv.organisation, rdv.id, host: agent.dns_domain_name)
+      show_link = url_helpers.admin_organisation_rdv_url(rdv.organisation, rdv.id, host: agent.host_name)
+      edit_link = url_helpers.edit_admin_organisation_rdv_url(rdv.organisation, rdv.id, host: agent.host_name)
 
       participants_list = rdv.rdvs_users.not_cancelled.map do |rdv_user|
         "<li>#{rdv_user.user.full_name}</li>"

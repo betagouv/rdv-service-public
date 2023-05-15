@@ -104,7 +104,7 @@ class Agent < ApplicationRecord
   ## -
 
   delegate :name, to: :domain, prefix: true
-  delegate :dns_domain_name, to: :domain
+  delegate :host_name, to: :domain
 
   def remember_me # Override from Devise::rememberable to enable it by default
     super.nil? ? true : super

@@ -329,7 +329,7 @@ class Rdv < ApplicationRecord
 
   def event_description_for(agent)
     link = Rails.application.routes.url_helpers
-      .admin_organisation_rdv_url(organisation, id, host: agent.dns_domain_name)
+      .admin_organisation_rdv_url(organisation, id, host: agent.host_name)
 
     "plus d'infos dans #{agent.domain_name}: #{link}"
   end

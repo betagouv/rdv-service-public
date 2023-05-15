@@ -72,7 +72,7 @@ class Domain
     ),
   ].freeze
 
-  def dns_domain_name
+  def host_name
     case Rails.env.to_sym
     when :production
       if ENV["IS_REVIEW_APP"] == "true"
@@ -114,7 +114,7 @@ class Domain
   end
   alias default default?
 
-  ALL_BY_URL = ALL.index_by(&:dns_domain_name)
+  ALL_BY_URL = ALL.index_by(&:host_name)
 
   def self.find_matching(domain_name)
     # Les review apps utilisent un domaine de Scalingo, elles
