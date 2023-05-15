@@ -27,7 +27,18 @@ class SmsSender < BaseService
   end
 
   def perform
-    send("send_with_#{@provider}")
+    case @provider.to_sym
+    when :netsize
+      send_with_netsize
+    when :clever_technologies
+      send_with_clever_technologies
+    when :sfr_mail2sms
+      send_with_sfr_mail2sms
+    when :debug_logger
+      send_with_debug_logger
+    else
+      raise "Invalid provider: #{@provider.inspect}"
+    end
   end
 
   private
@@ -50,35 +61,6 @@ class SmsSender < BaseService
       raise SmsSenderFailure, error_message
     else
       Sentry.capture_message(error_message)
-    end
-  end
-
-  # SendInBlue
-  # https://rubydoc.info/gems/sib-api-v3-sdk/SibApiV3Sdk/SendSms
-  # /!\ does not report routing errors for wrong numbers
-  #
-  # Anciennement utilisé par défaut. Il reste quelques crédit pour RDV-Solidarités
-  # Ça pourrait servir de dépannage en cas de problème.
-  #
-  def send_with_send_in_blue
-    config = SibApiV3Sdk::Configuration.new
-    config.api_key["api-key"] = @api_key
-    api_client = SibApiV3Sdk::ApiClient.new(config)
-    begin
-      response = SibApiV3Sdk::TransactionalSMSApi.new(api_client).send_transac_sms(
-        SibApiV3Sdk::SendTransacSms.new(
-          sender: @sender_name,
-          recipient: @phone_number,
-          content: @content
-        )
-      )
-      # response is a SibApiV3Sdk.SendSms
-      # attributes of interest are :message_id, :sms_count, :used_credits, :remaining_credits
-      save_receipt(result: :sent, sms_count: response.sms_count)
-    rescue SibApiV3Sdk::ApiError => e
-      # 401 Unauthorized
-      # 400 Invalid telephone number
-      handle_failure(error_message: "SendInBlue error: #{e.message} (#{e.code})")
     end
   end
 
@@ -129,47 +111,6 @@ class SmsSender < BaseService
       else
         retry_job = !parsed_response["responseCode"].in?(NETSIZE_PERMANENT_ERRORS)
         handle_failure(error_message: "NetSize error: #{parsed_response['responseMessage']}", retry_job: retry_job)
-      end
-    end
-  end
-
-  # Contact Experience
-  # /!\ does not report routing errors for wrong numbers
-  #
-  # Utilisé par
-  # - [jusqu'au 20 décembre 2022] le département du Pas-de-Calais (62)
-  #
-  def send_with_contact_experience
-    replies_email = SUPPORT_EMAIL
-
-    response = Typhoeus::Request.new(
-      "https://contact-experience.com/ccv/webServicesCCV/SMS/sendSms.php",
-      params: {
-        number: @phone_number,
-        msg: @content,
-        devCode: @api_key,
-        emetteur: replies_email, # The parameter is called “emetteur” but it is actually an email where we can receive replies to the sms.
-      }
-    ).run
-
-    if response.timed_out?
-      handle_failure(error_message: "Contact Experience error: Timeout")
-    elsif response.failure?
-      handle_failure(error_message: "Contact Experience HTTP error: #{response.code}")
-    else
-      parsed_response = JSON.parse(response.body)
-      # parsed_response is a hash. Relevant keys are:
-      # httpStatusCode: 201 on success, ? on error
-      # size: number of sent sms
-      # status: KO on error, absent on success
-      # message: Error text on error, absent on success
-      if parsed_response["httpStatusCode"] == 201
-        # ex: {"size"=>3, "total"=>nil, "list"=>[{"id"=>"680560"}], "httpStatusCode"=>201}
-        save_receipt(result: :sent, sms_count: parsed_response["size"])
-      else
-        # ex: {"status"=>"KO", "message"=>"BAD DEV CODE "}
-        # ex: {"status"=>"KO", "message"=>"Invalid number "}
-        handle_failure(error_message: "Contact Experience error: #{parsed_response['message']}")
       end
     end
   end
@@ -225,38 +166,6 @@ class SmsSender < BaseService
         errors = parsed_response["errors"]&.values&.join("\n")
         handle_failure(error_message: "Clever Technologies HTTP error: #{errors}")
       end
-    end
-  end
-
-  # Orange Contact Everyone
-  # `API_Light_CEO_Manuel_Utilisateur.pdf`
-  # /!\ does not report routing errors for wrong numbers
-  #
-  # Utilisé par
-  # - [Pas encore configuré en prod !] le département de la Somme (80)
-  #
-  def send_with_orange_contact_everyone
-    response = Typhoeus::Request.new(
-      "https://contact-everyone.orange-business.com/api/light/diffusions/sms",
-      method: :post,
-      headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" },
-      timeout: 5,
-      body: {
-        token: @api_key,
-        to: @phone_number,
-        msg: @content,
-      }
-    ).run
-
-    if response.timed_out?
-      handle_failure(error_message: "Orange Contact Everyone error: Timeout")
-    elsif response.failure? || response.code == :http_returned_error
-      handle_failure(error_message: "Orange Contact Everyone HTTP error: #{response.code}")
-    elsif response.code == 200
-      save_receipt(result: :sent)
-    else
-      parsed_response = JSON.parse(response.body)
-      handle_failure(error_message: "Orange Contact Everyone HTTP error: #{parsed_response['message']}")
     end
   end
 
