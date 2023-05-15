@@ -117,9 +117,11 @@ class Domain
   ALL_BY_URL = ALL.index_by(&:host_name)
 
   def self.find_matching(domain_name)
-    # Les review apps utilisent un domaine de Scalingo, elles
-    # ne permettent donc pas d'utiliser plusieurs domaines.
-    return find(ENV["FORCE_DOMAIN"]) if ENV["FORCE_DOMAIN"].present?
+    # Les review apps utilisent un host de Scalingo, elles ne permettent
+    # donc pas de tester la correspondance du domaine via le host.
+    if ENV["IS_REVIEW_APP"] == "true" && ENV["REVIEW_APP_DOMAIN"].present?
+      return find(ENV["REVIEW_APP_DOMAIN"])
+    end
 
     ALL_BY_URL.fetch(domain_name) { RDV_SOLIDARITES }
   end
