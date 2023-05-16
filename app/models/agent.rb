@@ -189,7 +189,7 @@ class Agent < ApplicationRecord
   end
 
   def update_unknown_past_rdv_count!
-    update_column(:unknown_past_rdv_count, rdvs.status(:unknown_past).count)
+    update_column(:unknown_past_rdv_count, rdvs.status(:unknown_past).count) if persisted?
   end
 
   # This method is called when calling #current_agent on a controller action that is automatically generated
