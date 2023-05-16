@@ -34,6 +34,8 @@ describe "Agent can create a Rdv with creneau search" do
   end
 
   context "when there are multiple plages from different agents in the same lieu" do
+    before { travel_to(Date.new(2023, 5, 2)) }
+
     let(:first_day_of_plages) { 2.weeks.from_now.beginning_of_week.to_date }
     let!(:other_agent) { create(:agent, basic_role_in_organisations: [organisation], service: agent.service) }
     let!(:motif) { create(:motif, bookable_publicly: true, service: agent.service, organisation: organisation) }
@@ -43,7 +45,7 @@ describe "Agent can create a Rdv with creneau search" do
     end
 
     it "displays a slot for each agent" do
-      travel_to(first_day_of_plages)
+      travel_to(Date.new(2023, 5, 9))
       visit admin_organisation_agent_searches_path(organisation)
       expect(page).to have_content("Trouver un RDV")
       select(motif.name, from: "motif_id")

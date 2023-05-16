@@ -17,9 +17,9 @@ module Payloads
       description += "RDV Téléphonique " if motif.phone?
       description += case recipient
                      when User
-                       "Infos et annulation: #{Rails.application.routes.url_helpers.rdvs_short_url(host: domain.dns_domain_name)}"
+                       "Infos et annulation: #{Rails.application.routes.url_helpers.rdvs_short_url(host: domain.host_name)}"
                      when Agent
-                       "Voir sur #{domain.name}: #{Rails.application.routes.url_helpers.admin_organisation_rdv_url(organisation_id, self, host: domain.dns_domain_name)}"
+                       "Voir sur #{domain.name}: #{Rails.application.routes.url_helpers.admin_organisation_rdv_url(organisation_id, self, host: domain.host_name)}"
                      end
       payload[:description] = description
 

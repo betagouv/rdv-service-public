@@ -26,6 +26,10 @@ class MergeUsersService < BaseService
       @user_target.send("#{attribute}=", @user_to_merge.send(attribute))
     end
 
+    # On évite ici que l'usager cible soit responsable de lui-même.
+    # On arrive dans ce cas lorsque l'usager source a pour responsable l'usager cible.
+    @user_target.responsible = nil if @user_target.responsible == @user_target
+
     # Si le user_target s'est déjà connecté avec FranceConnect,
     # les attributs ne sont pas écrasés lors de la fusion
     if @user_to_merge.logged_once_with_franceconnect?
