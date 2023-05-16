@@ -6,7 +6,7 @@ class Api::Ants::EditorController < Api::Ants::BaseController
   end
 
   def available_time_slots
-    render json: lieux.map { |lieu| [lieu.id, time_slots(lieu)] }.to_h
+    render json: lieux.to_h { |lieu| [lieu.id, time_slots(lieu)] }
   end
 
   private
