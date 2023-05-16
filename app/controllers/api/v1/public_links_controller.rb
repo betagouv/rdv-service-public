@@ -37,7 +37,7 @@ class Api::V1::PublicLinksController < Api::V1::BaseController
     public_organisations.map do |organisation|
       {
         external_id: organisation.external_id,
-        public_link: public_link_to_org_url(organisation_id: organisation, host: organisation.domain.dns_domain_name),
+        public_link: public_link_to_org_url(organisation_id: organisation, host: organisation.domain.host_name),
       }
     end
   end

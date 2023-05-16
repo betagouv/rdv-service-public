@@ -66,7 +66,7 @@ class IcsCalendarController < ActionController::Base
   end
 
   def default_url_options
-    super.merge(host: @agent.domain.dns_domain_name)
+    super.merge(host: @agent.domain.host_name)
   end
 end
 # rubocop:enable Rails/ApplicationController
