@@ -22,8 +22,11 @@ Rails.application.config.middleware.use OmniAuth::Builder do
   )
 
   on_failure do |env|
-    Sentry.capture_message("Omniauth failed : #{env['omniauth.error']}")
-    Devise.mappings[:user]
-    OmniauthCallbacksController.action(:failure).call(env)
+    Sentry.with_scope do |scope|
+      scope.set_context(:rack_env, env.to_h)
+      Sentry.capture_message("Omniauth failed : #{env['omniauth.error']}")
+
+      OmniauthCallbacksController.action(:failure).call(env)
+    end
   end
 end
