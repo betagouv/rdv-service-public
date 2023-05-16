@@ -33,7 +33,7 @@ describe "User resets his password spec" do
 
       it "uses the rdv-aide-numerique domain" do
         # Le domaine visité n'a pas d'importance. Voir la doc de User#domain.
-        visit new_user_password_url(host: Domain::RDV_SOLIDARITES.dns_domain_name)
+        visit new_user_password_url(host: Domain::RDV_SOLIDARITES.host_name)
         fill_in "user_email", with: user.email
         click_on "Envoyer"
         open_email(user.email)

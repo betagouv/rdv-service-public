@@ -76,7 +76,7 @@ class Domain
     ),
   ].freeze
 
-  def dns_domain_name
+  def host_name
     case Rails.env.to_sym
     when :production
       if ENV["IS_REVIEW_APP"] == "true"
@@ -119,29 +119,20 @@ class Domain
 
   alias default default?
 
-  ALL_BY_URL = ALL.index_by(&:dns_domain_name)
+  ALL_BY_HOST_NAME = ALL.index_by(&:host_name)
 
   def self.find_matching(domain_name)
-    # Les review apps utilisent un domaine de Scalingo, elles
-    # ne permettent donc pas d'utiliser plusieurs domaines.
-    return review_app_domain if ENV["IS_REVIEW_APP"] == "true"
+    # Les review apps utilisent un host de Scalingo, elles ne permettent
+    # donc pas de tester la correspondance du domaine via le host.
+    if ENV["IS_REVIEW_APP"] == "true" && ENV["REVIEW_APP_DOMAIN"].present?
+      return find(ENV["REVIEW_APP_DOMAIN"])
+    end
 
-    ALL_BY_URL.fetch(domain_name) { RDV_SOLIDARITES }
+    ALL_BY_HOST_NAME.fetch(domain_name) { RDV_SOLIDARITES }
   end
 
   def self.find(id)
     ALL.find { _1.id == id } or raise "Can't find domain with id=#{id}"
-  end
-
-  def self.review_app_domain
-    case ENV["REVIEW_APP_DOMAIN"]
-    when "RDV_AIDE_NUMERIQUE"
-      RDV_AIDE_NUMERIQUE
-    when "RDV_MAIRIE"
-      RDV_MAIRIE
-    else
-      RDV_SOLIDARITES
-    end
   end
 
   def to_s

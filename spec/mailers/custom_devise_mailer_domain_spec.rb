@@ -4,7 +4,7 @@ describe CustomDeviseMailer, "#domain" do
   subject(:sent_email) { described_class.reset_password_instructions(user, "t0k3n") }
 
   def expect_to_use_domain(domain)
-    expect(sent_email.body).to include(domain.dns_domain_name)
+    expect(sent_email.body).to include(domain.host_name)
     expect(sent_email[:from].unparsed_value).to match(%("#{domain.name}" <#{domain.support_email}>))
   end
 
