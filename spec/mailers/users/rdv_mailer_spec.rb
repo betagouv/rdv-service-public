@@ -189,6 +189,18 @@ RSpec.describe Users::RdvMailer, type: :mailer do
           expect(mail.html_part.body.to_s).to include(%(L’équipe RDV Aide Numérique))
         end
       end
+
+      context "when the organisation uses the rdv_mairie verticale" do
+        let(:organisation) { create(:organisation, verticale: :rdv_mairie) }
+
+        it "works" do
+          mail = described_class.with(rdv: rdv, user: rdv.users.first, token: "12345").send(action)
+          expect(mail[:from].to_s).to eq(%(RDV Mairie <support@rdv-mairie.fr>))
+          expect(mail.html_part.body.to_s).to include(%(src="/logo_mairie.png))
+          expect(mail.html_part.body.to_s).to include(%(href="http://www.rdv-mairie-test.localhost))
+          expect(mail.html_part.body.to_s).to include(%(L’équipe RDV Mairie))
+        end
+      end
     end
   end
 end
