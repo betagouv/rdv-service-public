@@ -212,7 +212,12 @@ class Motif < ApplicationRecord
   end
 
   def bookable_outside_of_organisation?
-    bookable_by != "agents" || organisation.rdv_insertion?
+    bookable_by != "agents"
+  end
+
+  # Temporary method for rdv-insertion motifs
+  def motif_category_for_rdv_insertion?
+    motif_category.present?
   end
 
   private
