@@ -125,7 +125,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
         organisation_ids: [rdv.organisation_id], \
         address: rdv.address, \
         invitation_token: token, \
-        host: Domain::RDV_SOLIDARITES.dns_domain_name
+        host: Domain::RDV_SOLIDARITES.host_name
       )
 
       expect(mail.html_part.body).to have_link("Reprendre RDV", href: expected_url)

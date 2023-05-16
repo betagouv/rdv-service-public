@@ -67,6 +67,7 @@ class SearchContext
   end
 
   def invitation?
+    # Token validity is already handle in TokenInvitable module, prepend_before_action method handle_invitation_token
     @invitation_token.present?
   end
 
@@ -199,6 +200,8 @@ class SearchContext
     motifs = available_motifs
     motifs = if @prescripteur
                motifs.where(bookable_by: %i[agents_and_prescripteurs everyone])
+             elsif invitation?
+               motifs
              else
                motifs.where(bookable_by: :everyone)
              end
