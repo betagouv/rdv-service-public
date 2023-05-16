@@ -248,4 +248,29 @@ describe MergeUsersService, type: :service do
       end.to change { prescripteur.reload.user }.from(user2).to(user1)
     end
   end
+
+  context "when target user is responsible for user to merge" do
+    context "when target user has no responsible of her own" do
+      let!(:user_target) { create(:user) }
+      let!(:user_to_merge) { create(:user, responsible: user_target) }
+
+      it "leaves no responsible in the resulting user" do
+        described_class.perform_with(user_target, user_to_merge, [:responsible_id], organisation)
+        expect(User.find_by(id: user_to_merge.id)).to be_nil # Expect user to be deleted
+        expect(user_target.responsible).to be_nil
+      end
+    end
+
+    context "when target user has a responsible user of her own" do
+      let!(:responsible_of_target_user) { create(:user) }
+      let!(:user_target) { create(:user, responsible: responsible_of_target_user) }
+      let!(:user_to_merge) { create(:user, responsible: user_target) }
+
+      it "keeps the responsible" do
+        described_class.perform_with(user_target, user_to_merge, [], organisation)
+        expect(User.find_by(id: user_to_merge.id)).to be_nil # Expect user to be deleted
+        expect(user_target.responsible).to eq(responsible_of_target_user)
+      end
+    end
+  end
 end
