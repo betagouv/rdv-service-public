@@ -7,17 +7,24 @@ html lang="fr"
     = dsfr_header logo_text: "République Française", title: "RDV Mairie" do |header|
       - header.with_tool_link title: "Comment ça marche", path: "#comment-ca-marche"
       - header.with_tool_link title: "Contact", path: "#contact"
+
     header.header.bg-primary
       = render "layouts/rdv_solidarites_instance_name"
       = render "layouts/degraded_service", message: ENV["DEGRADED_SERVICE_MESSAGE_USERS"]
-      = render "layouts/flash"
-      - if content_for :title
-        .row
-          .col-md-12.d-flex.justify-content-between.align-items-center
-            .my-4= yield :title
-            - if content_for :breadcrumb
-              div
-                = yield :breadcrumb
+      .container
+        - if current_user.present? && !current_user.only_invited?
+          = render "common/header_user_logged"
+        - else
+          = render "common/header"
+
+        = render "layouts/flash"
+        - if content_for :title
+          .row
+            .col-md-12.d-flex.justify-content-between.align-items-center
+              .my-4= yield :title
+              - if content_for :breadcrumb
+                div
+                  = yield :breadcrumb
 
       = yield :header
 
