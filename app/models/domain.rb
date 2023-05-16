@@ -116,7 +116,6 @@ class Domain
   def default?
     self == RDV_SOLIDARITES
   end
-
   alias default default?
 
   ALL_BY_HOST_NAME = ALL.index_by(&:host_name)
