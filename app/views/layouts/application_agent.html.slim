@@ -11,7 +11,6 @@ html lang="fr"
       main
         .content-page
           .content
-            = content_for(:cnfs_online_booking_banner)
             = render "layouts/rdv_a_renseigner", agent: current_agent, organisation: defined?(current_organisation) ? current_organisation : nil
             = render "layouts/domain_change_banner", agent: current_agent, organisation: defined?(current_organisation) ? current_organisation : nil
             .container-fluid
