@@ -2,7 +2,7 @@
 .card
   .card-body
     - if context.follow_up?
-      - if context.referents.empty?
+      - if context.referent_agents.empty?
         .font-weight-bold L'agent avec qui vous voulez prendre rendez-vous ne vous est pas assigné comme référent.
       - else
         .mb-3.font-weight-bold Votre référent n'a pas de créneaux disponibles. Voulez-vous prendre rendez-vous avec un autre agent ?

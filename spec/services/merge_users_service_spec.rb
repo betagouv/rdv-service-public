@@ -133,47 +133,47 @@ describe MergeUsersService, type: :service do
 
   context "with different agents from same orga attached" do
     let!(:agent1) { create(:agent, basic_role_in_organisations: [organisation]) }
-    let(:user_target) { create(:user, agents: [agent1], organisations: [organisation]) }
+    let(:user_target) { create(:user, referent_agents: [agent1], organisations: [organisation]) }
     let!(:agent2) { create(:agent, basic_role_in_organisations: [organisation]) }
-    let(:user_to_merge) { create(:user, agents: [agent2], organisations: [organisation]) }
+    let(:user_to_merge) { create(:user, referent_agents: [agent2], organisations: [organisation]) }
 
     it "appends agents" do
       subject
-      expect(user_target.agents).to contain_exactly(agent1, agent2)
+      expect(user_target.referent_agents).to contain_exactly(agent1, agent2)
     end
   end
 
   context "with same agents" do
     let!(:agent1) { create(:agent, basic_role_in_organisations: [organisation]) }
     let!(:agent2) { create(:agent, basic_role_in_organisations: [organisation]) }
-    let(:user_target) { create(:user, agents: [agent1, agent2], organisations: [organisation]) }
-    let(:user_to_merge) { create(:user, agents: [agent1, agent2], organisations: [organisation]) }
+    let(:user_target) { create(:user, referent_agents: [agent1, agent2], organisations: [organisation]) }
+    let(:user_to_merge) { create(:user, referent_agents: [agent1, agent2], organisations: [organisation]) }
 
     it "does not do anything" do
       subject
-      expect(user_target.agents).to contain_exactly(agent1, agent2)
+      expect(user_target.referent_agents).to contain_exactly(agent1, agent2)
     end
   end
 
   context "target user doesn't have any agents yet" do
     let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
-    let(:user_target) { create(:user, agents: [], organisations: [organisation]) }
-    let(:user_to_merge) { create(:user, agents: [agent], organisations: [organisation]) }
+    let(:user_target) { create(:user, referent_agents: [], organisations: [organisation]) }
+    let(:user_to_merge) { create(:user, referent_agents: [agent], organisations: [organisation]) }
 
     it "sets agent" do
       subject
-      expect(user_target.agents).to contain_exactly(agent)
+      expect(user_target.referent_agents).to contain_exactly(agent)
     end
   end
 
   context "merged user doesn't have any agents yet" do
     let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
-    let(:user_target) { create(:user, agents: [agent], organisations: [organisation]) }
-    let(:user_to_merge) { create(:user, agents: [], organisations: [organisation]) }
+    let(:user_target) { create(:user, referent_agents: [agent], organisations: [organisation]) }
+    let(:user_to_merge) { create(:user, referent_agents: [], organisations: [organisation]) }
 
     it "does not do anything" do
       subject
-      expect(user_target.agents).to contain_exactly(agent)
+      expect(user_target.referent_agents).to contain_exactly(agent)
     end
   end
 
@@ -181,13 +181,13 @@ describe MergeUsersService, type: :service do
     let!(:organisation2) { create(:organisation) }
     let!(:agent1) { create(:agent, basic_role_in_organisations: [organisation]) }
     let!(:agent2) { create(:agent, basic_role_in_organisations: [organisation2]) }
-    let(:user_target) { create(:user, agents: [agent1], organisations: [organisation]) }
-    let(:user_to_merge) { create(:user, agents: [agent2], organisations: [organisation, organisation2]) }
+    let(:user_target) { create(:user, referent_agents: [agent1], organisations: [organisation]) }
+    let(:user_to_merge) { create(:user, referent_agents: [agent2], organisations: [organisation, organisation2]) }
 
     it "does not move the agent from the other orga anything" do
       subject
-      expect(user_target.reload.agents).to contain_exactly(agent1)
-      expect(user_to_merge.reload.agents).to contain_exactly(agent2)
+      expect(user_target.reload.referent_agents).to contain_exactly(agent1)
+      expect(user_to_merge.reload.referent_agents).to contain_exactly(agent2)
     end
   end
 

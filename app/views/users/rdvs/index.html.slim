@@ -29,8 +29,8 @@
             .text-center.mt-2
   .col-md-6
     h1.text-dark.mb-3 Vos référents
-    - if current_user.agents.any?
-      - current_user.agents.each do |agent|
+    - if current_user.referent_agents.any?
+      - current_user.referent_agents.each do |agent|
         .card
           .card-body
             = agent.full_name_and_service
