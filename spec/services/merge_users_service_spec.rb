@@ -256,7 +256,7 @@ describe MergeUsersService, type: :service do
 
       it "leaves no responsible in the resulting user" do
         described_class.perform_with(user_target, user_to_merge, [:responsible_id], organisation)
-        expect(user_to_merge).to be_soft_deleted
+        expect(User.find_by(id: user_to_merge.id)).to be_nil # Expect user to be deleted
         expect(user_target.responsible).to be_nil
       end
     end
@@ -268,7 +268,7 @@ describe MergeUsersService, type: :service do
 
       it "keeps the responsible" do
         described_class.perform_with(user_target, user_to_merge, [], organisation)
-        expect(user_to_merge).to be_soft_deleted
+        expect(User.find_by(id: user_to_merge.id)).to be_nil # Expect user to be deleted
         expect(user_target.responsible).to eq(responsible_of_target_user)
       end
     end
