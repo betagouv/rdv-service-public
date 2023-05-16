@@ -289,6 +289,7 @@ Rails.application.routes.draw do
 
   # TODO: remplacer `prendre_rdv` par le root_path
   get "/prendre_rdv", to: "search#search_rdv"
+  get "/creneaux", to: "search#public_link_to_creneaux"
 
   # rubocop:disable Style/FormatStringToken
   # temporary route after admin namespace introduction

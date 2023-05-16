@@ -19,14 +19,14 @@ describe "ANTS API: getManagedMeetingPoints" do
   end
 
   context "with the correct authentication" do
-    let!(:lieu_1) do
+    let!(:lieu1) do
       create(:lieu,
              organisation: organisation, name: "Mairie de Romainville",
              address: "89 rue Roger Bouvry, Seclin, 59113",
              longitude: 3.0348016639327,
              latitude: 50.549140395451)
     end
-    let!(:lieu_2) do
+    let!(:lieu2) do
       create(:lieu,
              organisation: organisation, name: "Mairie de Paris 7",
              address: "89 rue du Général Leclerc, Paris, 75007",
@@ -39,7 +39,7 @@ describe "ANTS API: getManagedMeetingPoints" do
       get "/api/ants/getManagedMeetingPoints", headers: { "X-HUB-RDV-AUTH-TOKEN" => "fake_ants_api_auth_token" }
       expect(JSON.parse(response.body)).to eq [
         {
-          id: lieu_1.id.to_s,
+          id: lieu1.id.to_s,
           name: "Mairie de Romainville",
           longitude: 3.0348016639327,
           latitude: 50.549140395451,
@@ -48,7 +48,7 @@ describe "ANTS API: getManagedMeetingPoints" do
           city_name: "Seclin",
         }.stringify_keys,
         {
-          id: lieu_2.id.to_s,
+          id: lieu2.id.to_s,
           name: "Mairie de Paris 7",
           longitude: 4.0348016639327,
           latitude: 60.549140395451,

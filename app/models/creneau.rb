@@ -3,10 +3,12 @@
 class Creneau
   include ActiveModel::Model
   include Comparable
+  include Rails.application.routes.url_helpers
 
   attr_accessor :starts_at, :lieu_id, :motif, :agent
 
   delegate :full_name, to: :lieu, prefix: true, allow_nil: true
+  delegate :organisation, to: :motif
 
   def ends_at
     starts_at + duration_in_min.minutes

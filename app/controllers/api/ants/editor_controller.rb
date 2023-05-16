@@ -18,7 +18,16 @@ class Api::Ants::EditorController < Api::Ants::BaseController
   end
 
   def time_slots(lieu)
-    creneaux(lieu).map { |creneau| { datetime: creneau.starts_at.strftime("%Y-%m-%dT%H:%MZ") } }
+    creneaux(lieu).map do |creneau|
+      {
+        datetime: creneau.starts_at.strftime("%Y-%m-%dT%H:%MZ"),
+        callback_url: creneaux_url(
+          starts_at: creneau.starts_at.strftime("%Y-%m-%d %H:%M"),
+          lieu_id: lieu.id,
+          motif_id: motif.id
+        ),
+      }
+    end
   end
 
   def creneaux(lieu)
