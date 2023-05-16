@@ -11,7 +11,10 @@ describe "ANTS API: availableTimeSlots" do
     ENV["ANTS_API_AUTH_TOKEN"] = previous_auth_token
   end
 
-  let(:lieu) do
+  let(:lieu_1) do
+    create(:lieu, organisation: organisation)
+  end
+  let(:lieu_2) do
     create(:lieu, organisation: organisation)
   end
   let(:organisation) { create(:organisation, verticale: :rdv_mairie) }
@@ -19,23 +22,26 @@ describe "ANTS API: availableTimeSlots" do
 
   before do
     travel_to(Date.new(2022, 10, 28))
-    create(:plage_ouverture, lieu: lieu, first_day: Date.new(2022, 11, 1),
+    create(:plage_ouverture, lieu: lieu_1, first_day: Date.new(2022, 11, 1),
                              start_time: Tod::TimeOfDay(9), end_time: Tod::TimeOfDay(11),
+                             organisation: organisation, motifs: [motif])
+    create(:plage_ouverture, lieu: lieu_2, first_day: Date.new(2022, 11, 2),
+                             start_time: Tod::TimeOfDay(12), end_time: Tod::TimeOfDay(13),
                              organisation: organisation, motifs: [motif])
   end
 
   it "returns a list of slots" do
     get "/api/ants/availableTimeSlots", params: {
-      meeting_point_ids: [lieu.id],
+      meeting_point_ids: [lieu_1.id, lieu_2.id],
       start_date: "2022-11-01",
-      end_date: "2022-11-01",
+      end_date: "2022-11-02",
       reason: "CNI",
       documents_number: 1,
     }, headers: { "X-HUB-RDV-AUTH-TOKEN" => "fake_ants_api_auth_token" }
 
     expect(JSON.parse(response.body)).to eq(
       {
-        lieu.id.to_s => [
+        lieu_1.id.to_s => [
           {
             datetime: "2022-11-01T09:00Z",
           },
@@ -49,7 +55,15 @@ describe "ANTS API: availableTimeSlots" do
             datetime: "2022-11-01T10:30Z",
           },
         ],
-      }.with_indifferent_access
+        lieu_2.id.to_s => [
+          {
+            datetime: "2022-11-02T12:00Z",
+          },
+          {
+            datetime: "2022-11-02T12:30Z",
+          }
+        ],
+      }.with_indifferent_access,
     )
   end
 end
