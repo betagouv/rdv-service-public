@@ -10,7 +10,7 @@
           = render "users/rdvs/prendre_rdv_button"
     - elsif context.invitation?
       .font-weight-bold Un problème semble s'être produit pour votre invitation. Toutes nos excuses pour cela.
-      = mail_to SUPPORT_EMAIL,
+      = mail_to current_domain.support_email,
         subject: "[Problème Invitation]",
         class: "btn btn-primary" do
         span>

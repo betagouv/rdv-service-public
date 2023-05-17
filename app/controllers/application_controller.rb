@@ -2,7 +2,10 @@
 
 class ApplicationController < ActionController::Base
   include Pundit::Authorization
+  include DomainDetection
+
   protect_from_forgery
+
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :store_user_location!, if: :storable_location?
   before_action :set_sentry_context
@@ -26,11 +29,6 @@ class ApplicationController < ActionController::Base
   end
 
   protected
-
-  def current_domain
-    @current_domain ||= Domain.find_matching(URI.parse(request.url).host)
-  end
-  helper_method :current_domain
 
   def set_sentry_context
     Sentry.set_user(sentry_user)
