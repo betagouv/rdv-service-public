@@ -14,26 +14,9 @@ html lang="fr"
 
     header.header.bg-primary
       = render "layouts/rdv_solidarites_instance_name"
-      = render "layouts/degraded_service", message: ENV["DEGRADED_SERVICE_MESSAGE_USERS"]
-      .container
-        - if current_user.present? && !current_user.only_invited?
-          = render "common/header_user_logged"
-        - else
-          = render "common/header"
-
-        = render "layouts/flash"
-        - if content_for :title
-          .row
-            .col-md-12.d-flex.justify-content-between.align-items-center
-              .my-4= yield :title
-              - if content_for :breadcrumb
-                div
-                  = yield :breadcrumb
-
       = yield :header
 
-    main class="#{ "container" if params[:controller].include?("users/") }"
+    main
       = yield
-    #modal-holder
-    footer.main-footer
+    footer
       = render "common/footer_users"
