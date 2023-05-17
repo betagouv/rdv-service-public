@@ -76,8 +76,8 @@
       - unless @merge_users_form.user1&.relative? && @merge_users_form.user2&.relative?
         tr
           td= "🔒 Agents Responsables"
-          td.text-right= render "user_agents", user: @merge_users_form.user1
-          td.text-left= render "user_agents", user: @merge_users_form.user2
+          td.text-right= render "referent_agents", user: @merge_users_form.user1
+          td.text-left= render "referent_agents", user: @merge_users_form.user2
         tr
           td= "🔒 Proches"
           td.text-right= render "user_relatives", user: @merge_users_form.user1

@@ -67,7 +67,7 @@ class User < ApplicationRecord
   # we specify dependent: :destroy because by default user_profiles and referent_assignations
   # will be deleted (dependent: :delete) and we need to destroy to trigger the callbacks on both models
   has_many :organisations, through: :user_profiles, dependent: :destroy
-  has_many :agents, through: :referent_assignations, dependent: :destroy
+  has_many :referent_agents, through: :referent_assignations, source: :agent, dependent: :destroy, class_name: "Agent"
   has_many :webhook_endpoints, through: :organisations
   has_many :rdvs, through: :rdvs_users
 
