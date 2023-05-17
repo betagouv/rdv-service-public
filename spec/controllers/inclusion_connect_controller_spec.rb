@@ -43,6 +43,12 @@ describe InclusionConnectController, type: :controller do
       expect(flash[:error]).to eq("Nous n'avons pas pu vous authentifier. Contacter le support à l'adresse <support@rdv-solidarites.fr> si le problème persiste.")
     end
 
+    it "uses the current domain's support email address in the error message" do
+      request.host = "www.rdv-mairie-test.localhost"
+      get :callback, params: { state: "zefjzelkf", session_state: "zfjzerklfjz", code: "klzefklzejlf" }
+      expect(flash[:error]).to include("support@rdv-mairie.fr")
+    end
+
     it "returns an error if token request error" do
       stub_const("InclusionConnect::IC_CLIENT_ID", "truc")
       stub_const("InclusionConnect::IC_CLIENT_SECRET", "truc secret")

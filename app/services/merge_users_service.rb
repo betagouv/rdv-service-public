@@ -14,7 +14,7 @@ class MergeUsersService < BaseService
       merge_rdvs
       merge_relatives
       merge_file_attentes
-      merge_agents
+      merge_referent_agents
       @user_to_merge.reload.soft_delete(@organisation) # ! reload refreshes associations to delete
     end
   end
@@ -25,6 +25,10 @@ class MergeUsersService < BaseService
     @attributes_to_merge.each do |attribute|
       @user_target.send("#{attribute}=", @user_to_merge.send(attribute))
     end
+
+    # On évite ici que l'usager cible soit responsable de lui-même.
+    # On arrive dans ce cas lorsque l'usager source a pour responsable l'usager cible.
+    @user_target.responsible = nil if @user_target.responsible == @user_target
 
     # Si le user_target s'est déjà connecté avec FranceConnect,
     # les attributs ne sont pas écrasés lors de la fusion
@@ -55,25 +59,26 @@ class MergeUsersService < BaseService
   end
 
   def merge_file_attentes
-    @user_to_merge.file_attentes
-      .joins(:rdv).where(rdvs: { organisation: @organisation })
-      .each do |file_attente_to_merge|
-        file_attente_target = @user_target.file_attentes.find_by(rdv: file_attente_to_merge.rdv)
-        if file_attente_target
-          file_attente_to_merge.destroy
-        else
-          file_attente_to_merge.update!(user: @user_target)
-        end
+    file_attentes = @user_to_merge.file_attentes
+      .joins(:rdv)
+      .where(rdvs: { organisation: @organisation })
+    file_attentes.each do |file_attente_to_merge|
+      file_attente_target = @user_target.file_attentes.find_by(rdv: file_attente_to_merge.rdv)
+      if file_attente_target
+        file_attente_to_merge.destroy
+      else
+        file_attente_to_merge.update!(user: @user_target)
       end
+    end
   end
 
-  def merge_agents
-    return unless @user_to_merge.agents.merge(@organisation.agents).any?
+  def merge_referent_agents
+    return unless @user_to_merge.referent_agents.merge(@organisation.agents).any?
 
     agents = (
-      @user_target.agents.to_a +
-      @user_to_merge.agents.merge(@organisation.agents).to_a
+      @user_target.referent_agents.to_a +
+        @user_to_merge.referent_agents.merge(@organisation.agents).to_a
     ).uniq
-    @user_target.update!(agents: agents)
+    @user_target.update!(referent_agents: agents)
   end
 end

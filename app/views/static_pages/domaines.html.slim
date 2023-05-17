@@ -13,7 +13,7 @@
   .row
     .col-lg-8
       - Domain::ALL.each do |domain|
-        p> #{domain.name} est accessible à l'adresse #{link_to(domain.dns_domain_name, "https://#{domain.dns_domain_name}")}
+        p> #{domain.name} est accessible à l'adresse #{link_to(domain.host_name, "https://#{domain.host_name}")}
 
   .row.align-items-center.mb-4.content
     .col-lg-8

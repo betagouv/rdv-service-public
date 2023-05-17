@@ -44,11 +44,11 @@ class PrescripteurRdvWizard < UserRdvWizard::Base
   end
 
   def create_participation!
-    participation.create_and_notify(@prescripteur)
+    participation.create_and_notify!(@prescripteur)
   end
 
   def participation
-    @participation ||= RdvsUser.new(rdv: @rdv, user: @user, prescripteur: @prescripteur)
+    @participation ||= RdvsUser.new(rdv: @rdv, user: @user, prescripteur: @prescripteur, created_by: :prescripteur)
   end
 
   def find_or_create_user

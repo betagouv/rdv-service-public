@@ -44,6 +44,6 @@ class Users::BaseSms < ApplicationSms
   end
 
   def domain_host
-    @rdv.domain.dns_domain_name
+    @rdv.domain.host_name
   end
 end

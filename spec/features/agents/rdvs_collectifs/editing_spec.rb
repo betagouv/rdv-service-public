@@ -19,7 +19,7 @@ describe "Agent can edit a Rdv collectif" do
   end
 
   before do
-    rdv.rdvs_users.create(user: create(:user), send_lifecycle_notifications: true)
+    create(:rdvs_user, user: user, rdv: rdv, send_lifecycle_notifications: true)
   end
 
   # js: true is necessary for the lieu selection

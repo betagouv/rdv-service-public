@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_04_25_084138) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_10_124620) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -38,6 +38,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_25_084138) do
     "agents",
     "agents_and_prescripteurs",
     "everyone",
+  ], force: :cascade
+
+  create_enum :created_by, [
+    "agent",
+    "user",
+    "prescripteur",
   ], force: :cascade
 
   create_enum :lieu_availability, [
@@ -95,6 +101,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_25_084138) do
   create_enum :user_invited_through, [
     "devise_email",
     "external",
+  ], force: :cascade
+
+  create_enum :verticale, [
+    "rdv_insertion",
+    "rdv_solidarites",
+    "rdv_aide_numerique",
+    "rdv_mairie",
   ], force: :cascade
 
   create_table "absences", force: :cascade do |t|
@@ -389,7 +402,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_25_084138) do
     t.string "email"
     t.bigint "territory_id", null: false
     t.string "external_id", comment: "The organisation's unique and immutable id in the system managing them and adding them to our application"
-    t.boolean "new_domain_beta", default: false, null: false, comment: "en mettant ce boolean a true, on active l'utilisation du nouveau domaine pour les conseillers numeriques de cette organisation"
+    t.enum "verticale", default: "rdv_solidarites", null: false, enum_type: "verticale"
     t.index ["external_id", "territory_id"], name: "index_organisations_on_external_id_and_territory_id", unique: true
     t.index ["human_id", "territory_id"], name: "index_organisations_on_human_id_and_territory_id", unique: true, where: "((human_id)::text <> ''::text)"
     t.index ["name", "territory_id"], name: "index_organisations_on_name_and_territory_id", unique: true
@@ -479,6 +492,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_25_084138) do
     t.bigint "invited_by_id"
     t.integer "invitations_count", default: 0
     t.enum "status", default: "unknown", null: false, enum_type: "rdv_status"
+    t.enum "created_by", null: false, enum_type: "created_by"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["invitation_token"], name: "index_rdvs_users_on_invitation_token", unique: true
     t.index ["invited_by_id"], name: "index_rdvs_users_on_invited_by_id"
     t.index ["invited_by_type", "invited_by_id"], name: "index_rdvs_users_on_invited_by"

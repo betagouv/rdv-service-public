@@ -85,7 +85,8 @@ RSpec.describe "prescripteur can create RDV for a user" do
       email: "alex@prescripteur.fr",
       phone_number: "0611223344"
     )
-    expect(created_rdv.created_by).to eq("prescripteur")
+    expect(created_rdv.created_by_prescripteur?).to be(true)
+    expect(created_rdv.rdvs_users.first.created_by_prescripteur?).to be(true)
 
     perform_enqueued_jobs(queue: "mailers")
     expect(email_sent_to(agent.email).subject).to include("Nouveau RDV ajouté sur votre agenda RDV Solidarités")
@@ -104,6 +105,26 @@ RSpec.describe "prescripteur can create RDV for a user" do
     page.execute_script("document.querySelector('#search_submit').disabled = false")
 
     click_on("Rechercher")
+  end
+
+  context "when the prescripteur info isn't filled in" do
+    it "doesn't shows error messages and doesn't allow continuing" do
+      visit "http://www.rdv-aide-numerique-test.localhost/org/#{organisation.id}"
+
+      click_on "Prochaine disponibilité le" # choix du lieu
+      click_on "08:00" # choix du créneau
+      click_on "Je suis un prescripteur qui oriente un bénéficiaire" # page de login
+
+      fill_in "Votre prénom", with: "Alex"
+      fill_in "Votre nom", with: "  "
+      fill_in "Votre email professionnel", with: "alex@prescripteur.fr"
+      fill_in "Votre numéro de téléphone", with: "0611223344"
+      click_on "Continuer"
+
+      expect(page).to have_content("Vos coordonnées de prescripteur")
+      expect(page).to have_content("Nom d’usage doit être rempli(e)")
+      expect(page).to have_content("Veuillez compléter tous les champs obligatoires")
+    end
   end
 
   context "when a similar user already exists", js: true do

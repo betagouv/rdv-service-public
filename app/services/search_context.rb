@@ -186,8 +186,8 @@ class SearchContext
     @next_availability ||= creneaux.empty? ? creneaux_search.next_availability : nil
   end
 
-  def referents
-    @referents ||= retrieve_referents
+  def referent_agents
+    @referent_agents ||= retrieve_referent_agents
   end
 
   def follow_up?
@@ -212,7 +212,7 @@ class SearchContext
     motifs = motifs.where(id: @motif_id) if @motif_id.present?
     motifs = motifs.with_availability_for_lieux([lieu.id]) if lieu.present?
     motifs = motifs.where(follow_up: follow_up?)
-    motifs = motifs.with_availability_for_agents(referents.map(&:id)) if follow_up?
+    motifs = motifs.with_availability_for_agents(referent_agents.map(&:id)) if follow_up?
 
     motifs
   end
@@ -230,10 +230,10 @@ class SearchContext
     )
   end
 
-  def retrieve_referents
+  def retrieve_referent_agents
     return [] if @referent_ids.blank? || @current_user.nil?
 
-    @current_user.agents.where(id: @referent_ids)
+    @current_user.referent_agents.where(id: @referent_ids)
   end
 
   def matching_motifs

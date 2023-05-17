@@ -24,8 +24,8 @@ describe Agents::AbsenceMailer, type: :mailer do
       end
 
       describe "using the agent domain's branding" do
-        context "when agent belongs to an organisation with new_domain_beta=false" do
-          before { agent.organisations.first.update!(new_domain_beta: false) }
+        context "when agent belongs to an organisation with rdv_solidarites verticale" do
+          before { agent.organisations.first.update!(verticale: :rdv_solidarites) }
 
           it "works" do
             mail = described_class.with(absence: absence).send("absence_#{action}")
@@ -36,12 +36,20 @@ describe Agents::AbsenceMailer, type: :mailer do
           end
         end
 
-        context "when agent belongs to an organisation with new_domain_beta=true" do
-          before { agent.organisations.first.update!(new_domain_beta: false) }
+        context "when agent belongs to an organisation with rdv_insertion verticale" do
+          before { agent.organisations.first.update!(verticale: :rdv_insertion) }
 
-          before do
-            allow(agent).to receive(:domain).and_return(Domain::RDV_AIDE_NUMERIQUE)
+          it "works" do
+            mail = described_class.with(absence: absence).send("absence_#{action}")
+            expect(mail.subject).to start_with("RDV Solidarités - Indisponibilité")
+            expect(mail.html_part.body.to_s).to include(%(src="/logo_solidarites.png))
+            expect(mail.html_part.body.to_s).to include("Voir sur RDV Solidarités") unless action == :destroyed
+            expect(mail.html_part.body.to_s).to include(%(href="http://www.rdv-solidarites-test.localhost/))
           end
+        end
+
+        context "when agent belongs to an organisation with rdv_aide_numerique verticale" do
+          before { agent.organisations.first.update!(verticale: :rdv_aide_numerique) }
 
           it "works" do
             mail = described_class.with(absence: absence).send("absence_#{action}")

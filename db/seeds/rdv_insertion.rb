@@ -26,19 +26,22 @@ org_drome1 = Organisation.create!(
   name: "Plateforme mutualisée d'orientation",
   phone_number: "0475796991",
   human_id: "plateforme-mutualisee-orientation-drome",
-  territory: territory_drome
+  territory: territory_drome,
+  verticale: :rdv_insertion
 )
 org_drome2 = Organisation.create!(
   name: "PLIE Valence",
   phone_number: "0101010102",
   human_id: "plie-valence",
-  territory: territory_drome
+  territory: territory_drome,
+  verticale: :rdv_insertion
 )
 org_yonne = Organisation.create!(
   name: "UT Avallon",
   phone_number: "0303030303",
   human_id: "ut-avallon",
-  territory: territory_yonne
+  territory: territory_yonne,
+  verticale: :rdv_insertion
 )
 
 # Service

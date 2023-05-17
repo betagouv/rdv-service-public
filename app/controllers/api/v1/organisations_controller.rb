@@ -26,7 +26,7 @@ class Api::V1::OrganisationsController < Api::V1::AgentAuthBaseController
   end
 
   def organisation_params
-    params.permit(:name, :phone_number, :email)
+    params.permit(:name, :phone_number, :email, :verticale)
   end
 
   def organisations_relevant_to_sector

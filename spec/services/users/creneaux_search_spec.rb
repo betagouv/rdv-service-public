@@ -20,14 +20,14 @@ describe Users::CreneauxSearch, type: :service do
   it "call with referent as filter when follow_up motif" do
     motif = create(:motif, follow_up: true, organisation: organisation)
     agent = create(:agent, basic_role_in_organisations: [organisation])
-    user = create(:user, organisations: [organisation], agents: [agent])
+    user = create(:user, organisations: [organisation], referent_agents: [agent])
     expect(SlotBuilder).to receive(:available_slots).with(motif, lieu, date_range, [agent])
     described_class.new(user: user, motif: motif, lieu: lieu, date_range: date_range).creneaux
   end
 
   it "call without referents when user without referents" do
     motif = create(:motif, follow_up: true, organisation: organisation)
-    user = create(:user, agents: [])
+    user = create(:user, referent_agents: [])
     expect(SlotBuilder).to receive(:available_slots).with(motif, lieu, date_range, [])
     described_class.new(user: user, motif: motif, lieu: lieu, date_range: date_range).creneaux
   end
@@ -110,7 +110,7 @@ describe Users::CreneauxSearch, type: :service do
       subject { described_class.new(user: user, motif: motif, lieu: lieu) }
 
       let!(:agent) { create(:agent) }
-      let!(:user) { create(:user, agents: [agent]) }
+      let!(:user) { create(:user, referent_agents: [agent]) }
       let!(:motif) { create(:motif, collectif: true, organisation: organisation, follow_up: true) }
       let!(:rdv) { create(:rdv, :future, motif: motif, lieu: lieu, agents: [agent]) }
       let!(:rdv2) { create(:rdv, :future, motif: motif, lieu: lieu, agents: [build(:agent)]) }

@@ -117,4 +117,5 @@ Rails.application.configure do
   # En effet, Firefox et Chrome font pointer le TLD .localhost vers 127.0.0.1.
   config.hosts << "www.rdv-solidarites.localhost" # http://rdv-solidarites.localhost:3000/
   config.hosts << "www.rdv-aide-numerique.localhost" # http://rdv-aide-numerique.localhost:3000/
+  config.hosts << "www.rdv-mairie.localhost" # http://rdv-mairie.localhost:3000/
 end
