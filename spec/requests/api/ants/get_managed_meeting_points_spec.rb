@@ -1,15 +1,7 @@
 # frozen_string_literal: true
 
 describe "ANTS API: getManagedMeetingPoints" do
-  around do |example|
-    previous_auth_token = ENV["ANTS_API_AUTH_TOKEN"]
-
-    ENV["ANTS_API_AUTH_TOKEN"] = "fake_ants_api_auth_token"
-
-    example.run
-
-    ENV["ANTS_API_AUTH_TOKEN"] = previous_auth_token
-  end
+  include_context "rdv_mairie_api_authentication"
 
   context "with the wrong authentication header" do
     it "returns a 401 status" do
@@ -36,7 +28,7 @@ describe "ANTS API: getManagedMeetingPoints" do
     let(:organisation) { create(:organisation, verticale: :rdv_mairie) }
 
     it "returns a list of lieux" do
-      get "/api/ants/getManagedMeetingPoints", headers: { "X-HUB-RDV-AUTH-TOKEN" => "fake_ants_api_auth_token" }
+      get "/api/ants/getManagedMeetingPoints", headers: { "X-HUB-RDV-AUTH-TOKEN" => "" }
       expect(JSON.parse(response.body)).to eq [
         {
           id: lieu1.id.to_s,

@@ -1,15 +1,7 @@
 # frozen_string_literal: true
 
 describe "ANTS API: availableTimeSlots" do
-  around do |example|
-    previous_auth_token = ENV["ANTS_API_AUTH_TOKEN"]
-
-    ENV["ANTS_API_AUTH_TOKEN"] = "fake_ants_api_auth_token"
-
-    example.run
-
-    ENV["ANTS_API_AUTH_TOKEN"] = previous_auth_token
-  end
+  include_context "rdv_mairie_api_authentication"
 
   let(:lieu1) do
     create(:lieu, organisation: organisation)
@@ -37,7 +29,7 @@ describe "ANTS API: availableTimeSlots" do
       end_date: "2022-11-02",
       reason: "CNI",
       documents_number: 1,
-    }, headers: { "X-HUB-RDV-AUTH-TOKEN" => "fake_ants_api_auth_token" }
+    }
 
     expect(JSON.parse(response.body)).to eq(
       {

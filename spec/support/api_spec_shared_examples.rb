@@ -50,4 +50,15 @@ module ApiSpecSharedExamples
       run_test!
     end
   end
+
+  shared_context "rdv_mairie_api_authentication", :rdv_mairie_api_authentication do
+    around do |example|
+      previous_auth_token = ENV["ANTS_API_AUTH_TOKEN"]
+      ENV["ANTS_API_AUTH_TOKEN"] = ""
+
+      example.run
+
+      ENV["ANTS_API_AUTH_TOKEN"] = previous_auth_token
+    end
+  end
 end

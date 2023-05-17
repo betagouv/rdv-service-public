@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe "User can search rdv on rdv mairie" do
+  include_context "rdv_mairie_api_authentication"
+
   let(:now) { Time.zone.parse("2021-12-13 8:00") }
 
   def json_response
@@ -9,15 +11,6 @@ describe "User can search rdv on rdv mairie" do
 
   before do
     default_url_options[:host] = "http://www.rdv-mairie-test.localhost"
-  end
-
-  around do |example|
-    previous_auth_token = ENV["ANTS_API_AUTH_TOKEN"]
-    ENV["ANTS_API_AUTH_TOKEN"] = ""
-
-    example.run
-
-    ENV["ANTS_API_AUTH_TOKEN"] = previous_auth_token
   end
 
   before do
