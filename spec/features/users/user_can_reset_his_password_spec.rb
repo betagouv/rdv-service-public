@@ -28,8 +28,7 @@ describe "User resets his password spec" do
     context "when the most recent RDV is in an organisation with verticale rdv_aide_numerique" do
       let!(:user) { create(:user) }
       let(:organisation) { create(:organisation, verticale: :rdv_aide_numerique) }
-      let(:motif_social) { create(:motif, service: create(:service, :social)) } # Le motif n'a pas d'importance
-      let!(:rdvs) { create_list(:rdv, 2, organisation: organisation, motif: motif_social, users: [user]) }
+      let!(:rdvs) { create_list(:rdv, 2, organisation: organisation, users: [user]) }
 
       it "uses the rdv-aide-numerique domain" do
         # Le domaine visité n'a pas d'importance. Voir la doc de User#domain.
