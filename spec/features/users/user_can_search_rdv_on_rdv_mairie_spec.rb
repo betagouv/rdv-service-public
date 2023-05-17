@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe "User can search rdv on rdv mairie" do
+  let(:now) { Time.zone.parse("2021-12-13 8:00") }
+
   def json_response
     JSON.parse(page.html)
   end
@@ -19,15 +21,15 @@ describe "User can search rdv on rdv mairie" do
   end
 
   before do
-    travel_to(Time.zone.now)
-    create(:plage_ouverture, :daily, first_day: Time.zone.today, motifs: [motif], lieu: lieu, organisation: organisation, start_time: Tod::TimeOfDay(9), end_time: Tod::TimeOfDay(10))
+    travel_to(now)
+    create(:plage_ouverture, :no_recurrence, first_day: now, motifs: [motif], lieu: lieu, organisation: organisation, start_time: Tod::TimeOfDay(9), end_time: Tod::TimeOfDay.new(10))
   end
 
   describe "default" do
     let!(:territory92) { create(:territory, departement_number: "92") }
     let!(:organisation) { create(:organisation, :with_contact, territory: territory92, verticale: :rdv_mairie) }
     let(:service) { create(:service) }
-    let!(:motif) { create(:motif, name: "Vaccination", bookable_publicly: true, organisation: organisation, restriction_for_rdv: nil, service: service) }
+    let!(:motif) { create(:motif, name: "Passeport", bookable_publicly: true, organisation: organisation, restriction_for_rdv: nil, service: service) }
     let!(:lieu) { create(:lieu, organisation: organisation) }
 
     it "default" do
@@ -64,7 +66,7 @@ describe "User can search rdv on rdv mairie" do
           {
             "datetime" => time.strftime("%Y-%m-%dT%H:%MZ"),
             "callback_url" => creneaux_url(starts_at: time.strftime("%Y-%m-%d %H:%M"), lieu_id: lieu.id, motif_id: motif.id),
-          },
+          }
         ],
       }
     )
