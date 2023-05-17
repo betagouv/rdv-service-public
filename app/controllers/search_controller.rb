@@ -25,11 +25,10 @@ class SearchController < ApplicationController
   end
 
   def public_link_to_creneaux
-    starts_at = Time.zone.parse(params[:starts_at])
     motif = Motif.find(params[:motif_id])
 
     redirect_to prendre_rdv_path(
-      date: starts_at,
+      date: params[:starts_at],
       lieu_id: params[:lieu_id],
       motif_name_with_location_type: motif.name_with_location_type,
       departement: motif.organisation.departement_number
