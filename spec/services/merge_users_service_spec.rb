@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe MergeUsersService, type: :service do
-  subject { described_class.perform_with(user_target, user_to_merge, attributes_to_merge, organisation) }
+  subject(:perform) { described_class.perform_with(user_target, user_to_merge, attributes_to_merge, organisation) }
 
   # defaults
   let!(:organisation) { create(:organisation) }
@@ -15,7 +15,7 @@ describe MergeUsersService, type: :service do
     let(:attributes_to_merge) { [:first_name] }
 
     it "merges attributes" do
-      subject
+      perform
       user_target.reload
       expect(user_target.first_name).to eq("Francis")
       expect(user_target.last_name).to eq("PAUL")
@@ -33,7 +33,7 @@ describe MergeUsersService, type: :service do
     let!(:rdv4) { create(:rdv, users: [user_to_merge], organisation: organisation) }
 
     it "moves RDVs to target user" do
-      subject
+      perform
       expect(rdv1.reload.users).to contain_exactly(user_target)
       expect(rdv2.reload.users).to contain_exactly(user_target)
       expect(rdv3.reload.users).to contain_exactly(user_target)
@@ -51,7 +51,7 @@ describe MergeUsersService, type: :service do
     let!(:rdv3) { create(:rdv, users: [user_to_merge], organisation: organisation2) }
 
     it "moves RDVs to target user" do
-      subject
+      perform
       expect(rdv1.reload.users).to contain_exactly(user_target)
       expect(rdv2.reload.users).to contain_exactly(user_target)
       expect(rdv3.reload.users).to contain_exactly(user_to_merge)
@@ -63,7 +63,7 @@ describe MergeUsersService, type: :service do
     let!(:rdv) { create(:rdv, users: [user_target, user_to_merge], organisation: organisation) }
 
     it "justs remove user_to_merge from rdv" do
-      subject
+      perform
       expect(rdv.reload.users).to contain_exactly(user_target)
     end
   end
@@ -75,7 +75,7 @@ describe MergeUsersService, type: :service do
     let!(:relative4) { create(:user, responsible: user_to_merge, organisations: [organisation]) }
 
     it "moves relatives" do
-      subject
+      perform
       expect(user_target.relatives.count).to eq 4
       expect(relative1.reload.responsible).to eq user_target
       expect(relative2.reload.responsible).to eq user_target
@@ -92,7 +92,7 @@ describe MergeUsersService, type: :service do
 
     it "moves file attente" do
       expect(FileAttente.count).to eq 2
-      subject
+      perform
       expect(FileAttente.count).to eq 2
       expect(user_target.file_attentes.count).to eq 2
       expect(file_attente2.reload.user).to eq user_target
@@ -109,7 +109,7 @@ describe MergeUsersService, type: :service do
 
     it "does not move file attente from other orga" do
       expect(FileAttente.count).to eq 2
-      subject
+      perform
       expect(FileAttente.count).to eq 2
       expect(user_target.reload.file_attentes.count).to eq 1
       expect(user_to_merge.reload.file_attentes.count).to eq 1
@@ -124,7 +124,7 @@ describe MergeUsersService, type: :service do
 
     it "moves file attente" do
       expect(FileAttente.count).to eq 2
-      subject
+      perform
       expect(FileAttente.count).to eq 1
       expect(user_target.file_attentes.count).to eq 1
       expect(user_target.file_attentes.first.rdv).to eq rdv
@@ -138,7 +138,7 @@ describe MergeUsersService, type: :service do
     let(:user_to_merge) { create(:user, referent_agents: [agent2], organisations: [organisation]) }
 
     it "appends agents" do
-      subject
+      perform
       expect(user_target.referent_agents).to contain_exactly(agent1, agent2)
     end
   end
@@ -150,7 +150,7 @@ describe MergeUsersService, type: :service do
     let(:user_to_merge) { create(:user, referent_agents: [agent1, agent2], organisations: [organisation]) }
 
     it "does not do anything" do
-      subject
+      perform
       expect(user_target.referent_agents).to contain_exactly(agent1, agent2)
     end
   end
@@ -161,7 +161,7 @@ describe MergeUsersService, type: :service do
     let(:user_to_merge) { create(:user, referent_agents: [agent], organisations: [organisation]) }
 
     it "sets agent" do
-      subject
+      perform
       expect(user_target.referent_agents).to contain_exactly(agent)
     end
   end
@@ -172,7 +172,7 @@ describe MergeUsersService, type: :service do
     let(:user_to_merge) { create(:user, referent_agents: [], organisations: [organisation]) }
 
     it "does not do anything" do
-      subject
+      perform
       expect(user_target.referent_agents).to contain_exactly(agent)
     end
   end
@@ -185,7 +185,7 @@ describe MergeUsersService, type: :service do
     let(:user_to_merge) { create(:user, referent_agents: [agent2], organisations: [organisation, organisation2]) }
 
     it "does not move the agent from the other orga anything" do
-      subject
+      perform
       expect(user_target.reload.referent_agents).to contain_exactly(agent1)
       expect(user_to_merge.reload.referent_agents).to contain_exactly(agent2)
     end
@@ -198,7 +198,7 @@ describe MergeUsersService, type: :service do
     end
 
     it "preserves target by default" do
-      subject
+      perform
       expect(user_target.notes).to eq("Sympa")
     end
 
@@ -206,7 +206,7 @@ describe MergeUsersService, type: :service do
       let(:attributes_to_merge) { [:notes] }
 
       it "overrides notes from merged user" do
-        subject
+        perform
         expect(user_target.notes).to eq("thiquement")
       end
     end
@@ -270,6 +270,69 @@ describe MergeUsersService, type: :service do
         described_class.perform_with(user_target, user_to_merge, [], organisation)
         expect(User.find_by(id: user_to_merge.id)).to be_nil # Expect user to be deleted
         expect(user_target.responsible).to eq(responsible_of_target_user)
+      end
+    end
+  end
+
+  # Comportement spécifique au 92, voir :
+  # https://github.com/betagouv/rdv-solidarites.fr/issues/3429
+  context "when organisation's territory has visible_users_throughout_the_territory: true" do
+    let!(:territory) { create(:territory, visible_users_throughout_the_territory: true) }
+    let!(:organisation1) { create(:organisation, territory: territory) }
+
+    context "when both users belong to the current org" do
+      let(:user_target) { create(:user, organisations: [organisation1]) }
+      let(:user_to_merge) { create(:user, organisations: [organisation1]) }
+
+      it "removes the user to merge" do
+        perform
+        expect(user_target.reload.organisations).to eq([organisation])
+        expect(UserProfile.find_by(user_id: user_to_merge.id)).to be_nil
+        expect(User.find_by(id: user_to_merge.id)).to be_nil
+      end
+    end
+
+    context "when they each belong to a different org" do
+      let(:organisation2) { create(:organisation, territory: territory) }
+      let(:user_target) { create(:user, organisations: [organisation1]) }
+      let(:user_to_merge) { create(:user, organisations: [organisation2]) }
+
+      it "add all organisations to the target user and deletes the user to merge" do
+        perform
+        expect(user_target.reload.organisations).to match_array([organisation, organisation2])
+        expect(UserProfile.find_by(user_id: user_to_merge.id)).to be_nil
+        expect(User.find_by(id: user_to_merge.id)).to be_nil
+      end
+    end
+
+    context "when they have some orgs in common" do
+      let(:organisation2) { create(:organisation, territory: territory) }
+      let(:organisation3) { create(:organisation, territory: territory) }
+      let(:user_target) { create(:user, organisations: [organisation1, organisation2]) }
+      let(:user_to_merge) { create(:user, organisations: [organisation2, organisation3]) }
+
+      it "add all organisations to the target user and deletes the user to merge" do
+        perform
+        expect(user_target.reload.organisations).to match_array([organisation, organisation2, organisation3])
+        expect(UserProfile.find_by(user_id: user_to_merge.id)).to be_nil
+        expect(User.find_by(id: user_to_merge.id)).to be_nil
+      end
+    end
+
+    context "when they have some orgs in common and others from a different territory" do
+      let(:other_territory) { create(:territory) }
+      let(:organisation2) { create(:organisation, territory: territory) }
+      let(:organisation3) { create(:organisation, territory: territory) }
+      let(:organisation_in_other_territory) { create(:organisation, territory: other_territory) }
+      let(:user_target) { create(:user, organisations: [organisation1, organisation2]) }
+      let(:user_to_merge) { create(:user, organisations: [organisation2, organisation3, organisation_in_other_territory]) }
+
+      it "add all organisations OF THE CURRENT TERRITORY to the target user and DOES NOT delete the user to merge" do
+        perform
+        expect(user_target.reload.organisations).to match_array([organisation, organisation2, organisation3])
+        expect(user_target.organisations).to exclude(organisation_in_other_territory)
+        expect(UserProfile.where(user_id: user_to_merge.id).pluck(:organisation_id)).to eq([organisation_in_other_territory.id])
+        expect(User.find_by(id: user_to_merge.id)).to eq(user_to_merge)
       end
     end
   end

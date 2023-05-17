@@ -40,7 +40,10 @@ class MergeUsersService < BaseService
   end
 
   def merge_rdvs
-    @user_to_merge.rdvs.where(organisation: @organisation).each do |rdv|
+    rdvs_to_merge = @user_to_merge.rdvs
+    rdvs_to_merge = rdvs_to_merge.where(organisation: @organisation) if users_visible_through_territory?
+
+    rdvs_to_merge.each do |rdv|
       rdv.rdvs_users.where(user: @user_to_merge).each do |rdv_user|
         if rdv.rdvs_users.where(user_id: @user_target).any?
           rdv_user.destroy!
@@ -59,10 +62,10 @@ class MergeUsersService < BaseService
   end
 
   def merge_file_attentes
-    file_attentes = @user_to_merge.file_attentes
-      .joins(:rdv)
-      .where(rdvs: { organisation: @organisation })
-    file_attentes.each do |file_attente_to_merge|
+    files_attentes_to_merge = @user_to_merge.file_attentes
+    files_attentes_to_merge = files_attentes_to_merge.joins(:rdv).where(rdvs: { organisation: @organisation }) if users_visible_through_territory?
+
+    files_attentes_to_merge.each do |file_attente_to_merge|
       file_attente_target = @user_target.file_attentes.find_by(rdv: file_attente_to_merge.rdv)
       if file_attente_target
         file_attente_to_merge.destroy
@@ -80,5 +83,9 @@ class MergeUsersService < BaseService
         @user_to_merge.referent_agents.merge(@organisation.agents).to_a
     ).uniq
     @user_target.update!(referent_agents: agents)
+  end
+
+  def users_visible_through_territory?
+    organisation.territory.visible_users_throughout_the_territory
   end
 end
