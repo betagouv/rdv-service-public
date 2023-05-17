@@ -27,11 +27,12 @@ class SearchController < ApplicationController
   def public_link_to_creneaux
     motif = Motif.find(params[:motif_id])
 
-    redirect_to prendre_rdv_path(
-      date: params[:starts_at],
+    redirect_to new_users_rdv_wizard_step_path(
+      starts_at: params[:starts_at],
       lieu_id: params[:lieu_id],
+      departement: motif.organisation.departement_number,
       motif_name_with_location_type: motif.name_with_location_type,
-      departement: motif.organisation.departement_number
+      motif_id: motif.id
     )
   end
 

@@ -26,17 +26,16 @@ describe "User can search rdv on rdv mairie" do
   end
 
   describe "default" do
-    let!(:territory92) { create(:territory, departement_number: "92") }
-    let!(:organisation) { create(:organisation, :with_contact, territory: territory92, verticale: :rdv_mairie) }
+    let!(:territory95) { create(:territory, departement_number: "95") }
+    let!(:organisation) { create(:organisation, :with_contact, territory: territory95, verticale: :rdv_mairie) }
     let(:service) { create(:service) }
     let!(:motif) { create(:motif, name: "Passeport", bookable_publicly: true, organisation: organisation, restriction_for_rdv: nil, service: service) }
-    let!(:lieu) { create(:lieu, organisation: organisation) }
+    let!(:lieu) { create(:lieu, organisation: organisation, name: "Mairie de Sannois", address: "15 Place du Général Leclerc, Sannois, 95110") }
 
     it "default" do
       lieux_ids = fetch_lieux_ids_from_ants
       creneaux_url = fetch_time_slots_from_ants(lieux_ids)
-      visit_creneaux_url(creneaux_url)
-      pick_creneau
+      visit_public_creneaux_link(creneaux_url)
     end
   end
 
@@ -74,26 +73,13 @@ describe "User can search rdv on rdv mairie" do
     json_response[lieu.id.to_s].first["callback_url"]
   end
 
-  def visit_creneaux_url(creneaux_url)
+  def visit_public_creneaux_link(creneaux_url)
     visit creneaux_url
-
-    expect(page).to have_current_path(
-      prendre_rdv_path(
-        lieu_id: lieu.id,
-        motif_name_with_location_type: motif.name_with_location_type,
-        departement: organisation.departement_number,
-        date: Time.zone.now.change(hour: 9, min: 0o0).strftime("%Y-%m-%d %H:%M")
-      )
-    )
-
-    expect(page).to have_selector("h1", text: "Prenez rendez-vous avec votre mairie")
-    expect(page).to have_selector("h3", text: "Sélectionnez un créneau")
-  end
-
-  def pick_creneau
-    first(:link, "09:00").click
 
     expect(page).to have_current_path("/users/sign_in")
     expect(page).to have_content("Vous devez vous connecter ou vous inscrire pour continuer")
+    expect(page).to have_content("Motif : Passeport")
+    expect(page).to have_content("Lieu : Mairie de Sannois (15 Place du Général Leclerc, Sannois, 95110)")
+    expect(page).to have_content("Date du rendez-vous : lundi 13 décembre 2021 à 09h00 (45 minutes)")
   end
 end

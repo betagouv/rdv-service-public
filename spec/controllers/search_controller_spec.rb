@@ -253,11 +253,12 @@ RSpec.describe SearchController, type: :controller do
     it "redirects to /prendre_rdv with the proper params" do
       get :public_link_to_creneaux, params: params
 
-      expect(response).to redirect_to(prendre_rdv_url(
-                                        date: params[:starts_at],
-                                        departement: organisation.departement_number,
+      expect(response).to redirect_to(new_users_rdv_wizard_step_path(
+                                        starts_at: params[:starts_at],
                                         lieu_id: params[:lieu_id],
-                                        motif_name_with_location_type: motif.name_with_location_type
+                                        departement: organisation.departement_number,
+                                        motif_name_with_location_type: motif.name_with_location_type,
+                                        motif_id: motif.id
                                       ))
     end
   end
