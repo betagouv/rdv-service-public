@@ -1,9 +1,6 @@
 # Dossier technique
 
-__IMPORTANT: DOSSIER A COMPLETER EN ÉDITANT TOUTES LES PARTIES `!!<>!!`__
-
 > Ce dossier a pour but de présenter l’architecture technique du SI. Il n’est par conséquent ni un dossier d’installation, ni un dossier d’exploitation ou un dossier de spécifications fonctionnelles.
-
 
 **Nom du projet :** RDV Services Publics
 
@@ -13,7 +10,7 @@ __IMPORTANT: DOSSIER A COMPLETER EN ÉDITANT TOUTES LES PARTIES `!!<>!!`__
 
 **Décision d’homologation :** !!<date>!!
 
-**France Relance :**  !!<✅/❌>!!
+**France Relance :** ❌
 
 **Inclusion numérique :** ✅
 
@@ -25,13 +22,13 @@ __IMPORTANT: DOSSIER A COMPLETER EN ÉDITANT TOUTES LES PARTIES `!!<>!!`__
 
 > Cette fiche a pour vocation de lister l’ensemble des acteurs du projet ainsi que leur rôle dans la rédaction de ce dossier.
 
-| Organisme                  | Nom                   | Rôle                    | Activité   |
-|----------------------------|-----------------------|-------------------------|------------|
-| RDV Services Publics       | François Ferrandis    | Lead tech               | Rédaction  |
-| RDV Services Publics       | Victor Mours          | Lead tech               | Relecture  |
-| RDV Services Publics       | Mehdi Karouch Idrissi | Product Manager         | Relecture  |
-| ANCT                       | Amélie Naquet         | Cheffe de projet - programme Société Numérique | Relecture  |
-| Incubateur des territoires | Charles Capelli       | Consultant SSI          | Relecture  |
+| Organisme                  | Nom                   | Rôle                   | Activité  |
+|----------------------------|-----------------------|------------------------|-----------|
+| RDV Services Publics       | François Ferrandis    | Lead tech              | Rédaction |
+| RDV Services Publics       | Victor Mours          | Lead tech              | Relecture |
+| RDV Services Publics       | Mehdi Karouch Idrissi | Product Manager        | Relecture |
+| ANCT                       | Amélie Naquet         | Cheffe de projet SoNum | Relecture |
+| Incubateur des territoires | Charles Capelli       | Consultant SSI         | Relecture |
 
 ## Description du projet
 
@@ -45,39 +42,80 @@ Plus d'infos sur la fiche beta : https://beta.gouv.fr/startups/rdv-services-publ
 
 ### Stack technique
 
-Le projet est un monolithe Ruby on Rails avec une base Postgres pour les données métier et un Redis pour le cache et les sessions. L'infrastructure est entièrement gérée par Scalingo en PaaS. 
+Le projet est un monolithe Ruby on Rails avec une base Postgres pour les données métier et un Redis pour le cache et les
+sessions. L'infrastructure est entièrement gérée par Scalingo en PaaS.
 
-Le projet ne contient que très peu de Javascript (petites touches de vanilla JS, pas de framework front) et le HTML est généré côté serveur. C'est Bootstrap qui est utilisé coté CSS / composants.
+Le projet ne contient que très peu de Javascript (petites touches de vanilla JS, pas de framework front) et le HTML est
+généré côté serveur. C'est Bootstrap qui est utilisé coté CSS / composants.
 
 Ces choix reflètent un désir de simplicité avant tout, afin de se concentrer sur la valeur métier.
 
 ### Matrice des flux
 
-| Source | Destination | Protocole | Port | Localisation | Interne/URL Externe |
-|----|----|----|----|----|----|
-| *!!<Front>!!* | *!!<API>!!* | *!!<HTTPS>!!* | *!!<443>!!* | *!!<Cluster X Namespace Y>!!* | *!!<Interne>!!* |
-| *!!<API>!!* | *!!<Base de données>!!* | *!!<TCP>!!* | *!!<5432>!!* | *!!<Cluster X Namespace Y>!!* | *!!<Interne>!!* |
-| *!!<Front>!!* | *!!<API lambda>!!* | *<!!HTTPS>!!* | *!!<443>!!* | *!!<France - OVH>!!* | *!!<https://api.lambda.fr>!!* |
+#### Application principale
+
+| Source     | Destination       | Protocole | Port | Localisation      | Interne/URL Externe |
+|------------|-------------------|-----------|------|-------------------|---------------------|
+| Navigateur | App Rails         | HTTPS     | 443  | Paris/SecNumCloud | Externe             |
+| App Rails  | Postgres Scalingo | TCP       | 5432 | Paris/SecNumCloud | Interne             |
+| App Rails  | Redis Scalingo    | TCP       | 6379 | Paris/SecNumCloud | Interne             |
+
+#### Tooling
+
+| Source     | Destination | Protocole | Port | Localisation           | Interne/URL Externe   |
+|------------|-------------|-----------|------|------------------------|-----------------------|
+| App Rails  | Sentry      | HTTPS     | 443  | Tours, France          | sentry.incubateur.net |
+| App Rails  | Skylight    | HTTPS     | 443  | Ashburn, Virginia, USA | skylight.io           |
+| Navigateur | Matomo      | HTTPS     | 443  | France                 | stats.data.gouv.fr    |
+
+#### Services externes
+
+| Source    | Destination         | Protocole | Port | Localisation  | Interne/URL Externe                 |
+|-----------|---------------------|-----------|------|---------------|-------------------------------------|
+| App Rails | Brevo               | SMTP      | 587  | Paris, France | smtp-relay.sendinblue.com           |
+| App Rails | API Microsoft       | HTTPS     | 587  | Paris, France | graph.microsoft.com                 |
+| App Rails | Netsize             | HTTPS     | 587  | France        | europe.ipx.com                      |
+| App Rails | SFR mail2SMS        | SMTP      | 587  | France        | @mailtosms.dmc.sfr-sh.fr            |
+| App Rails | Clever Technologies | HTTPS     | 587  | France        | webservicesmultimedias.clever-is.fr |
+
+#### Fournisseurs d'identité
+
+| Source     | Destination      | Protocole     | Port | Localisation        | Interne/URL Externe            |
+|------------|------------------|---------------|------|---------------------|--------------------------------|
+| Navigateur | FranceConnect    | HTTPS (OAuth) | 587  | Paris, France       | smtp-relay.sendinblue.com      |
+| Navigateur | InclusionConnect | HTTPS (OAuth) | 587  | France              | connect.inclusion.beta.gouv.fr |
+| Navigateur | API Microsoft    | HTTPS (OAuth) | 587  | Amsterdam, Pays-Bas | login.microsoftonline.com      |
+| Navigateur | GitHub           | HTTPS (OAuth) | 587  | USA                 | github.com                     |
 
 ### Inventaire des dépendances
 
-| Nom de l’applicatif | Service          | Version | Commentaires                                                    |
-|---------------------|------------------|---------|-----------------------------------------------------------------|
-| Serveur web         | Rails @ Scalingo | Rails 7 | Voir ci-dessous pour le détail des librairies                   |
+| Nom de l’applicatif | Service          | Version  | Commentaires                                                    |
+|---------------------|------------------|----------|-----------------------------------------------------------------|
+| Serveur web         | Rails @ Scalingo | Rails 7  | Voir ci-dessous pour le détail des librairies                   |
 | BDD métier          | PostgreSQL       | `13.7.0` | Stockage des données métier, voir [db/schema.rb](/db/schema.rb) |
 | BDD technique       | Redis            | `7.0.10` | Stockage des sessions et du cache                               |
 
 La liste des librairies Ruby est disponible dans : 
 - [Gemfile](/Gemfile) pour la liste des dépendances directes et la description de la fonctionnalité de chacune des gem
-- [Gemfile.lock](/Gemfile.lock) pour la liste complète des gems utilisées directement et indirectement (dépendances indirectes), et leurs versions précises
+- [Gemfile.lock](/Gemfile.lock) pour la liste complète des gems utilisées directement et indirectement (dépendances
+  indirectes), et leurs versions précises
 
 La liste des librairies JS utilisée est disponible dans :
+
 - [package.json](/package.json) pour la liste des dépendances directes
-- [package.json](/yarn.lock) pour la liste complète des librairies JS utilisées directement et indirectement (dépendances indirectes), et leurs versions précises
+- [package.json](/yarn.lock) pour la liste complète des librairies JS utilisées directement et indirectement (
+  dépendances indirectes), et leurs versions précises
 
 ### Schéma de l’architecture
 
-!!<Ajouter un graphe sur l’architecture du SI et de ses relations avec les services externes, vous pouvez utiliser notre instance Kroki pour cela:!! [!!https://kroki.incubateur.anct.gouv.fr/!!](https://kroki.incubateur.anct.gouv.fr/)!!. Les formats DITAA, BlockDiag ou UML conviennent pour cet exercice>!!
+!!<Ajouter un graphe sur l’architecture du SI et de ses relations avec les services externes, vous pouvez utiliser notre
+instance Kroki pour cela:!! [!!https://kroki.incubateur.anct.gouv.fr/!!](https://kroki.incubateur.anct.gouv.fr/)!!. Les
+formats DITAA, BlockDiag ou UML conviennent pour cet exercice>!!
+
+
+TODO : Faire un diagramme par sous-section de "Matrice des flux"
+TODO :  ou faire deux diagrammes : l'un avec Sclingo interne et l'autre avec les services externes qui pointent vers une boite
+TODO : Note : FranceConnect et IncluConnect -> Faire un lien vers l'app ET vers l'user
 
 ```mermaid
 C4Container
@@ -108,16 +146,6 @@ C4Container
 
     UpdateRelStyle(sendinblue, user, $offsetY="20", $offsetX="-10")
 ```
-
-Systèmes non représentés par souci de simplification :
-
-- FranceConnect
-- InclusionConnect
-- Netsize
-- CleverTechnologies
-- SFRMail2Sms
-- Skylight
-- GitHub (pour la connexion SuperAdmin)
 
 ### Schéma des données
 
@@ -186,6 +214,9 @@ fermeture / merge d'une PR.
 
 !!<Détailler en quelques lignes le processus d’authentification et la façon dont les accès sont restreints>!!
 
+TODO : Expliquer les logins au sein de l'application : login+password, Franceconnect, *
+TODO : Synthèse de comment on définit les rôles (policies), synthèse des typologies d'admins
+
 ### Traçabilité des erreurs et des actions utilisateurs
 
 Les logs sont écrits dans le système de log de Scalingo.
@@ -208,6 +239,10 @@ Les logs produits par le routeur de Scalingo contiennent, pour chaque requêtes 
 - referer
 - user agent
 
+TODO : Mentionner Papertrail, dire qu'on a pas de système pour dire qui a eu accès à quoi
+TODO : Quel type de veille des logs ? On y va que pour investiguer ?
+TODO : Parler système alertes Sentry + alertes Scalingo (WIP) vers Mattermost
+
 ### Politique de mise à jour des applicatifs
 
 Voici les cas dans lesquels nous mettons à jour à jour une librairie spécifique :
@@ -222,11 +257,17 @@ Voici les cas dans lesquels nous mettons à jour à jour une librairie spécifiq
 La décision a été prise le 24 avril 2023, voir log de décision
 ici : [2023-04-24-politique-maj-gems.md](/docs/decisions/2023-04-24-politique-maj-gems.md)
 
+TODO : Mentionner dependabot (notifs email activées manuellement par les devs mais je leur ai dit de le faire)
+
 ### Intégrité
 
 !!<Quels contrôles avez vous mis en place pour détecter des problèmes d’intégrité du SI et qu’avez vous mis en place
 pour vous en prémunir (monitoring, backups, etc)>!!
 
+TODO : Parler de Sentry + backups Scalingo Postgres et Redis + et dire qu'on les teste en local
+
 ### Confidentialité
 
 !!<Avez-vous un besoin accru en confidentialité et si oui, qu’avez vous mis en place>!!
+
+TODO : Identifier ce qui est critique et ce qui est protégé, et éventuellement voir ce qui pourrait être prioritaire
