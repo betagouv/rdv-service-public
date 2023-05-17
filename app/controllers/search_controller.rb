@@ -8,6 +8,9 @@ class SearchController < ApplicationController
 
   def search_rdv
     @context = SearchContext.new(current_user, search_params.to_h)
+    if current_domain == Domain::RDV_MAIRIE
+      render layout: "application_dsfr"
+    end
   end
 
   def public_link_with_internal_organisation_id
