@@ -7,12 +7,10 @@ html lang="fr"
     = javascript_include_tag "@gouvfr/dsfr/dist/dsfr.module.min.js", type: "module"
     = javascript_include_tag "@gouvfr/dsfr/dist/dsfr.nomodule.min.js", nomodule: true
 
-
-
   body class="#{agents_or_users_body_class}"
     = dsfr_header logo_text: "République Française", title: "RDV Mairie" do |header|
-      - header.with_tool_link title: "Comment ça marche", path: "#comment-ca-marche"
-      - header.with_tool_link title: "Contact", path: "#contact"
+      - header.with_tool_link title: "Espace Usager", path: new_user_session_path
+      - header.with_tool_link title: "Se connecter en tant qu'agent", path: new_agent_session_path
 
     header.header.bg-primary
       = render "layouts/rdv_solidarites_instance_name"
