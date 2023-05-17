@@ -6,15 +6,13 @@ class Api::Ants::EditorController < Api::Ants::BaseController
   end
 
   def available_time_slots
-    render json: lieux.to_h { |lieu| [lieu.id, time_slots(lieu)] }
+    render json: lieux.where(id: params[:meeting_point_ids]).to_h { |lieu| [lieu.id, time_slots(lieu)] }
   end
 
   private
 
   def lieux
-    lieux = Lieu.joins(:organisation).where(organisations: { verticale: :rdv_mairie })
-    lieux = lieux.where(id: params[:meeting_point_ids]) if params[:meeting_point_ids]
-    lieux
+    Lieu.joins(:organisation).where(organisations: { verticale: :rdv_mairie })
   end
 
   def time_slots(lieu)
