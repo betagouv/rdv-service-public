@@ -25,32 +25,17 @@ describe "User can search rdv on rdv mairie" do
     create(:plage_ouverture, :no_recurrence, first_day: now, motifs: [motif], lieu: lieu, organisation: organisation, start_time: Tod::TimeOfDay(9), end_time: Tod::TimeOfDay.new(10))
   end
 
-  describe "default" do
-    let!(:territory95) { create(:territory, departement_number: "95") }
-    let!(:organisation) { create(:organisation, :with_contact, territory: territory95, verticale: :rdv_mairie) }
-    let(:service) { create(:service) }
-    let!(:motif) { create(:motif, name: "Passeport", bookable_publicly: true, organisation: organisation, restriction_for_rdv: nil, service: service) }
-    let!(:lieu) { create(:lieu, organisation: organisation, name: "Mairie de Sannois", address: "15 Place du Général Leclerc, Sannois, 95110") }
+  let!(:territory95) { create(:territory, departement_number: "95") }
+  let!(:organisation) { create(:organisation, :with_contact, territory: territory95, verticale: :rdv_mairie) }
+  let(:service) { create(:service) }
+  let!(:motif) { create(:motif, name: "Passeport", bookable_publicly: true, organisation: organisation, restriction_for_rdv: nil, service: service) }
+  let!(:lieu) { create(:lieu, organisation: organisation, name: "Mairie de Sannois", address: "15 Place du Général Leclerc, Sannois, 95110") }
 
-    it "default" do
-      lieux_ids = fetch_lieux_ids_from_ants
-      creneaux_url = fetch_time_slots_from_ants(lieux_ids)
-      visit_public_creneaux_link(creneaux_url)
-    end
-  end
-
-  private
-
-  def fetch_lieux_ids_from_ants
+  it "default" do
     visit api_ants_getManagedMeetingPoints_url
     lieux_ids = json_response.map { |lieu_data| lieu_data["id"] }
-
     expect(lieux_ids).to eq([lieu.id.to_s])
 
-    lieux_ids
-  end
-
-  def fetch_time_slots_from_ants(lieux_ids)
     visit api_ants_availableTimeSlots_url(
       meeting_point_ids: lieux_ids,
       start_date: Date.yesterday,
@@ -69,9 +54,12 @@ describe "User can search rdv on rdv mairie" do
         ],
       }
     )
+    creneaux_url = json_response[lieu.id.to_s].first["callback_url"]
 
-    json_response[lieu.id.to_s].first["callback_url"]
+    visit_public_creneaux_link(creneaux_url)
   end
+
+  private
 
   def visit_public_creneaux_link(creneaux_url)
     visit creneaux_url
