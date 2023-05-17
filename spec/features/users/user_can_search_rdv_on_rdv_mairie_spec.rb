@@ -4,6 +4,11 @@ describe "User can search rdv on rdv mairie" do
   include_context "rdv_mairie_api_authentication"
 
   let(:now) { Time.zone.parse("2021-12-13 8:00") }
+  let!(:territory95) { create(:territory, departement_number: "95") }
+  let!(:organisation) { create(:organisation, :with_contact, territory: territory95, verticale: :rdv_mairie) }
+  let(:service) { create(:service) }
+  let!(:motif) { create(:motif, name: "Passeport", bookable_publicly: true, organisation: organisation, restriction_for_rdv: nil, service: service) }
+  let!(:lieu) { create(:lieu, organisation: organisation, name: "Mairie de Sannois", address: "15 Place du Général Leclerc, Sannois, 95110") }
 
   def json_response
     JSON.parse(page.html)
@@ -17,12 +22,6 @@ describe "User can search rdv on rdv mairie" do
     travel_to(now)
     create(:plage_ouverture, :no_recurrence, first_day: now, motifs: [motif], lieu: lieu, organisation: organisation, start_time: Tod::TimeOfDay(9), end_time: Tod::TimeOfDay.new(10))
   end
-
-  let!(:territory95) { create(:territory, departement_number: "95") }
-  let!(:organisation) { create(:organisation, :with_contact, territory: territory95, verticale: :rdv_mairie) }
-  let(:service) { create(:service) }
-  let!(:motif) { create(:motif, name: "Passeport", bookable_publicly: true, organisation: organisation, restriction_for_rdv: nil, service: service) }
-  let!(:lieu) { create(:lieu, organisation: organisation, name: "Mairie de Sannois", address: "15 Place du Général Leclerc, Sannois, 95110") }
 
   it "default" do
     visit api_ants_getManagedMeetingPoints_url
