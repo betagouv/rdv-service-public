@@ -2,4 +2,6 @@
 
 # Cette classe donne un nom à la table de jointure correspondante pour permettre de la modifier dans la logique de migration d'un agent
 class MotifsPlageOuverture < ApplicationRecord
+  belongs_to :motif
+  belongs_to :plage_ouverture
 end

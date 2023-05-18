@@ -116,7 +116,7 @@ class Users::GeoSearch
   end
 
   def individual_motifs
-    @individual_motifs ||= Motif.active.individuel.joins(:plage_ouvertures).distinct
+    @individual_motifs ||= Motif.active.individuel.joins(:motifs_plage_ouvertures).distinct
   end
 
   def collective_motifs
