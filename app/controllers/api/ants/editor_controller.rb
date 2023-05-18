@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Api::Ants::EditorController < Api::Ants::BaseController
+  before_action :check_required_params!, only: [:available_time_slots]
+
   def get_managed_meeting_points # rubocop:disable Naming/AccessorMethodName
     render json: lieux.map { |lieu| lieu_infos(lieu) }
   end
@@ -57,5 +59,11 @@ class Api::Ants::EditorController < Api::Ants::BaseController
       zip_code: zip_code,
       city_name: city_name,
     }
+  end
+
+  def check_required_params!
+    params.require(:meeting_point_ids)
+    params.require(:start_date)
+    params.require(:end_date)
   end
 end
