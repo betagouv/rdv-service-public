@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_10_124620) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_18_102009) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -371,14 +371,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_10_124620) do
     t.bigint "motif_category_id"
     t.enum "bookable_by", default: "agents", null: false, enum_type: "bookable_by"
     t.index "to_tsvector('simple'::regconfig, (COALESCE(name, (''::text)::character varying))::text)", name: "index_motifs_name_vector", using: :gin
+    t.index ["bookable_by"], name: "index_motifs_on_bookable_by"
     t.index ["collectif"], name: "index_motifs_on_collectif"
     t.index ["deleted_at"], name: "index_motifs_on_deleted_at"
+    t.index ["follow_up"], name: "index_motifs_on_follow_up"
     t.index ["legacy_bookable_publicly"], name: "index_motifs_on_legacy_bookable_publicly"
     t.index ["location_type"], name: "index_motifs_on_location_type"
     t.index ["motif_category_id"], name: "index_motifs_on_motif_category_id"
     t.index ["name", "organisation_id", "location_type", "service_id"], name: "index_motifs_on_name_scoped", unique: true, where: "(deleted_at IS NULL)"
     t.index ["name"], name: "index_motifs_on_name"
     t.index ["organisation_id"], name: "index_motifs_on_organisation_id"
+    t.index ["sectorisation_level"], name: "index_motifs_on_sectorisation_level"
     t.index ["service_id"], name: "index_motifs_on_service_id"
     t.index ["visibility_type"], name: "index_motifs_on_visibility_type"
   end
