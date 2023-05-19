@@ -38,15 +38,13 @@
       h2 Comment l’utiliser ?
       p
         | Pour utiliser notre solution dans votre mairie, vous devez remplir le formulaire en cliquant sur le bouton ci-dessous :
-      = dsfr_button(label: "Remplir le formulaire")
+      = dsfr_button(label: "Remplir le formulaire", classes: ["fr-mb-4w"])
       p
         | Une fois le formulaire envoyé, vous recevrez dans un délais maximum de 48h une invitation sur l’adresse mail indiquée dans la formulaire pour rejoindre votre espace.
       p
         | Notre équipe est à votre entière disposition pour organiser un temps de formation avec les agents de votre mairie. Vous pouvez planifier un rendez-vous :
-      = dsfr_button(label: "Prendre RDV avec l’équipe")
+      = dsfr_button(label: "Prendre RDV avec l’équipe", level: :secondary, classes: ["fr-mb-4w"])
       p Une documentation utilisateur est en accès libre à tous les agents :
       = link_to("Lire la documentation","https://rdvs.notion.site/RDV-Mairie-b831caa05dd7416bb489f06f7468903a", rel: "noopener", target: "_blank")
 
     .fr-col-md-5
-
-
