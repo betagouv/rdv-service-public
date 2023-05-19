@@ -72,8 +72,8 @@ class Admin::UsersController < AgentAuthController
 
   def show
     authorize(@user)
-    @rdvs = policy_scope(Rdv).merge(@user.rdvs)
-    @rdvs_users = @user.rdvs_users
+    @rdvs = policy_scope(Rdv).merge(@user.rdvs.where(organisation: current_organisation))
+    @rdvs_users = @user.rdvs_users.where(rdvs: @rdvs)
     @referent_assignations = @user.referent_assignations.includes(agent: :service)
     respond_modal_with @user if from_modal?
   end
