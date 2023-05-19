@@ -71,8 +71,7 @@ gem "chartkick", "~> 5.0.1"
 gem "groupdate", "~> 6.1"
 gem "rails_autolink"
 gem "active_link_to"
-gem 'dsfr-view-components'
-
+gem "dsfr-view-components"
 
 gem "premailer-rails" # Mail formatting
 gem "sib-api-v3-sdk" # SendInBlue (SMS)
