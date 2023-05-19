@@ -1,14 +1,52 @@
 .fr-py-12w
   .fr-container.fr-grid-row.fr-grid-row--center
-    .fr-col-md-8
+    .fr-col-md-8[style="text-align: center"]
       h1
         | Facilitez la gestion
         br
         | et la prise de rendez-vous en ligne
       b Une solution publique de gestion et de prise de rendez-vous pour les mairies
-      ul.fr-pt-4w.fr-btns-group.fr-btns-group--inline
-        li = dsfr_button(label: "Utiliser RDV Mairie")
-        li = dsfr_button(label: "Prendre RDV avec l’équipe", level: :secondary)
+      ul.fr-pt-4w.fr-btns-group.fr-btns-group--inline.fr-btns-group--center
+        li= dsfr_button(label: "Utiliser RDV Mairie")
+        li= dsfr_button(label: "Prendre RDV avec l’équipe", level: :secondary)
 
 .fr-py-12w
   .fr-container.fr-grid-row.fr-grid-row--center
+    .fr-col-md-5
+    .fr-col-md-5
+      h2 Qui sommes-nous ?
+      p
+        | Nous sommes l’équipe RDV Services Publics, solution numérique incubée par l’Incubateur des Territoires et sponsorisée par le Programme Société Numérique de l’Agence Nationale de la Cohésion des Territoires.
+      p
+        | Nous développons un outil de gestion et de prise de rendez-vous pour tous les services publics, simple à utiliser et simple à déployer.
+      p
+        | Nous travaillons avec 5 partenaires publics qui s’engagent collectivement au développement de la solution. Notre solution est aujourd’hui déployée au sein des services de nos 5 partenaires.
+
+.fr-py-12w
+  .fr-container.fr-grid-row.fr-grid-row--center
+    .fr-col-md-5
+      h2 Notre mission
+      p
+        | Suite aux annonces récentes de la Première Ministre pour diviser par deux le temps d’attente pour obtenir un titre d’identité, notre solution s’ouvre désormais à toutes les mairies souhaitant s’outiller d’une solution de gestion et de prise de rendez-vous.
+      p
+        | Les plages de disponibilités concernant les titres de sécurités (carte nationale d’identité, passeport) seront automatiquement branchées au moteur de recherche de l’ANTS.
+    .fr-col-md-5
+
+.fr-py-12w
+  .fr-container.fr-grid-row.fr-grid-row--center
+    .fr-col-md-5
+      h2 Comment l’utiliser ?
+      p
+        | Pour utiliser notre solution dans votre mairie, vous devez remplir le formulaire en cliquant sur le bouton ci-dessous :
+      = dsfr_button(label: "Remplir le formulaire")
+      p
+        | Une fois le formulaire envoyé, vous recevrez dans un délais maximum de 48h une invitation sur l’adresse mail indiquée dans la formulaire pour rejoindre votre espace.
+      p
+        | Notre équipe est à votre entière disposition pour organiser un temps de formation avec les agents de votre mairie. Vous pouvez planifier un rendez-vous :
+      = dsfr_button(label: "Prendre RDV avec l’équipe")
+      p Une documentation utilisateur est en accès libre à tous les agents :
+      = link_to("Lire la documentation","https://rdvs.notion.site/RDV-Mairie-b831caa05dd7416bb489f06f7468903a", rel: "noopener", target: "_blank")
+
+    .fr-col-md-5
+
+
