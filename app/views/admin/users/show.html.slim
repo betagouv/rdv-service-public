@@ -133,7 +133,7 @@
             - %i[seen excused revoked noshow].each do |temporal_status|
               = render "stats/rdv_counter_with_link", \
                 temporal_status: temporal_status, \
-                count: @rdvs.status(temporal_status).count,
+                count: @rdvs_users.status(temporal_status).count,
                 path: admin_organisation_rdvs_path(current_organisation, status: temporal_status, user_id: @user.id, breadcrumb_page: "user")
           .col-lg-6
             - %i[unknown_future unknown_past].each do |temporal_status|
