@@ -27,59 +27,23 @@ describe "can see users' RDV" do
     let!(:rdv) { create :rdv, :future, users: [user], organisation: organisation, motif: motif, agents: [agent] }
 
     before do
+      %i[seen excused revoked noshow].each do |status|
+        create(:rdv, :past, status: status, users: [user], organisation: organisation, motif: motif, agents: [agent])
+      end
+
       visit admin_organisation_user_path(organisation, user)
     end
 
     it do
+      expect(page).to have_content("Excusé\n1 RDV")
+      expect(page).to have_content("Vu\n1 RDV")
+      expect(page).to have_content("Annulé par un agent\n1 ")
+      expect(page).to have_content("Non excusé\n1 ")
+
       expect(page).to have_content("À venir\n1 RDV")
       click_link "Voir tous les rendez-vous de Tanguy LAVERDURE"
       expect_page_title("Liste des RDV")
       expect(page).to have_content("Le #{I18n.l(rdv.starts_at, format: :human)} (durée : #{rdv.duration_in_min} minutes)")
-    end
-  end
-
-  context "with a past RDV" do
-    subject do
-      visit admin_organisation_user_path(organisation, user)
-    end
-
-    let!(:rdv) { create :rdv, :past, status: :seen, users: [user], organisation: organisation, motif: motif, agents: [agent] }
-    let(:rdv_user) { user.rdvs_users.first }
-
-    context "user has seen RDV" do
-      before { rdv_user.seen! }
-
-      it do
-        subject
-        expect(page).to have_content("Vu\n1 RDV")
-      end
-    end
-
-    context "user was excused for RDV" do
-      before { rdv_user.excused! }
-
-      it do
-        subject
-        expect(page).to have_content("Excusé\n1 RDV")
-      end
-    end
-
-    context "user was revoked from RDV" do
-      before { rdv_user.revoked! }
-
-      it do
-        subject
-        expect(page).to have_content("Annulé par un agent\n1 ")
-      end
-    end
-
-    context "user did not show for RDV" do
-      before { rdv_user.noshow! }
-
-      it do
-        subject
-        expect(page).to have_content("Non excusé\n1 ")
-      end
     end
   end
 end
