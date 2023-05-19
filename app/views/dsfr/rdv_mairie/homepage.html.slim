@@ -1,14 +1,16 @@
-.fr-py-12w
+- brevo_form_url = 'https://dc1a8bc9.sibforms.com/serve/MUIEANp1tYksaTME-VN6GRNuj1e3mX-DVmz1ZDOs2UNo-PTUJOMNHxcCPt_xlRx7vqHn5FnPi_tgoMWoDG3JVaWilm6-Hm-el0hYT3ll6CfItVTv16lTR_7NfqipkZ3gYPlWnl_CWvfcv8QgR08kTZOqInhCapvx6CPvta5a3FwQNFz6ylu1kPOV5ZUGt6G9tYaUuQKinolFSjtC'
+.fr-py-12w[style="background-color:  #F4F6FE"]
   .fr-container.fr-grid-row.fr-grid-row--center
     .fr-col-md-8[style="text-align: center"]
       h1
         | Facilitez la gestion
         br
-        | et la prise de rendez-vous en ligne
+        = "et la prise de "
+        span[style="color: #2F4077"] rendez-vous en ligne
       b Une solution publique de gestion et de prise de rendez-vous pour les mairies
       ul.fr-pt-4w.fr-btns-group.fr-btns-group--inline.fr-btns-group--center
-        li= dsfr_button(label: "Utiliser RDV Mairie")
-        li= dsfr_button(label: "Prendre RDV avec l’équipe", level: :secondary)
+        li= link_to("Utiliser RDV Mairie", brevo_form_url, class: "fr-btn ")
+        li= link_to("Prendre RDV avec l’équipe", "#", class: ["fr-btn fr-btn--secondary"])
 
 .fr-py-12w
   .fr-container.fr-grid-row.fr-grid-row--center

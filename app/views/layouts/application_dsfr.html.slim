@@ -12,8 +12,7 @@ html lang="fr"
       - header.with_tool_link title: "Espace Usager", path: new_user_session_path
       - header.with_tool_link title: "Se connecter en tant qu'agent", path: new_agent_session_path
 
-    header.header.bg-primary
-      = render "layouts/rdv_solidarites_instance_name"
+    = render "layouts/rdv_solidarites_instance_name"
 
     main
       = yield
