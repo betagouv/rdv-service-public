@@ -1,4 +1,5 @@
 - brevo_form_url = 'https://dc1a8bc9.sibforms.com/serve/MUIEANp1tYksaTME-VN6GRNuj1e3mX-DVmz1ZDOs2UNo-PTUJOMNHxcCPt_xlRx7vqHn5FnPi_tgoMWoDG3JVaWilm6-Hm-el0hYT3ll6CfItVTv16lTR_7NfqipkZ3gYPlWnl_CWvfcv8QgR08kTZOqInhCapvx6CPvta5a3FwQNFz6ylu1kPOV5ZUGt6G9tYaUuQKinolFSjtC'
+- team_meeting_url = 'https://meet.brevo.com/-1918'
 .fr-py-12w[style="background-color:  #F4F6FE"]
   .fr-container.fr-grid-row.fr-grid-row--center
     .fr-col-md-8[style="text-align: center"]
@@ -6,24 +7,32 @@
         | Facilitez la gestion
         br
         = "et la prise de "
-        span[style="color: #2F4077"] rendez-vous en ligne
+        span[style="color: #000091"] rendez-vous en ligne
       b Une solution publique de gestion et de prise de rendez-vous pour les mairies
       ul.fr-pt-4w.fr-btns-group.fr-btns-group--inline.fr-btns-group--center
         li= link_to("Utiliser RDV Mairie", brevo_form_url, class: "fr-btn ")
-        li= link_to("Prendre RDV avec l’équipe", "#", class: ["fr-btn fr-btn--secondary"])
+        li= link_to("Prendre RDV avec l’équipe", team_meeting_url, class: ["fr-btn fr-btn--secondary"])
 
+hr
 .fr-py-12w
   .fr-container.fr-grid-row.fr-grid-row--center
     .fr-col-md-5
     .fr-col-md-5
       h2 Qui sommes-nous ?
       p
-        | Nous sommes l’équipe RDV Services Publics, solution numérique incubée par l’Incubateur des Territoires et sponsorisée par le Programme Société Numérique de l’Agence Nationale de la Cohésion des Territoires.
+        = "Nous sommes l’équipe "
+        = link_to("RDV Services Publics", "https://beta.gouv.fr/startups/rdv-services-publics.html", target: "_blank", rel: "noopener")
+        | , solution numérique incubée par l’
+        = link_to("Incubateur des Territoires", "https://incubateur.anct.gouv.fr/", target: "_blank", rel: "noopener")
+        = " et sponsorisée par le Programme Société Numérique de l’"
+        = link_to("Agence Nationale de la Cohésion des Territoires", "https://agence-cohesion-territoires.gouv.fr/", target: "_blank", rel: "noopener")
+        | .
       p
         | Nous développons un outil de gestion et de prise de rendez-vous pour tous les services publics, simple à utiliser et simple à déployer.
       p
         | Nous travaillons avec 5 partenaires publics qui s’engagent collectivement au développement de la solution. Notre solution est aujourd’hui déployée au sein des services de nos 5 partenaires.
 
+hr
 .fr-py-12w
   .fr-container.fr-grid-row.fr-grid-row--center
     .fr-col-md-5
@@ -31,21 +40,24 @@
       p
         | Suite aux annonces récentes de la Première Ministre pour diviser par deux le temps d’attente pour obtenir un titre d’identité, notre solution s’ouvre désormais à toutes les mairies souhaitant s’outiller d’une solution de gestion et de prise de rendez-vous.
       p
-        | Les plages de disponibilités concernant les titres de sécurités (carte nationale d’identité, passeport) seront automatiquement branchées au moteur de recherche de l’ANTS.
+        = "Les plages de disponibilités concernant les titres de sécurités (carte nationale d’identité, passeport) seront automatiquement branchées au "
+        = link_to("moteur de recherche de l’ANT", "https://rendezvouspasseport.ants.gouv.fr/", target: "_blank", rel: "noopener")
+        | .
     .fr-col-md-5
 
+hr
 .fr-py-12w
   .fr-container.fr-grid-row.fr-grid-row--center
     .fr-col-md-5
       h2 Comment l’utiliser ?
       p
         | Pour utiliser notre solution dans votre mairie, vous devez remplir le formulaire en cliquant sur le bouton ci-dessous :
-      = dsfr_button(label: "Remplir le formulaire", classes: ["fr-mb-4w"])
+      = link_to("Utiliser RDV Mairie", brevo_form_url, class: "fr-btn fr-mb-4w")
       p
         | Une fois le formulaire envoyé, vous recevrez dans un délais maximum de 48h une invitation sur l’adresse mail indiquée dans la formulaire pour rejoindre votre espace.
       p
         | Notre équipe est à votre entière disposition pour organiser un temps de formation avec les agents de votre mairie. Vous pouvez planifier un rendez-vous :
-      = dsfr_button(label: "Prendre RDV avec l’équipe", level: :secondary, classes: ["fr-mb-4w"])
+      = link_to("Prendre RDV avec l’équipe", team_meeting_url, class: ["fr-btn fr-btn--secondary fr-mb-4w"])
       p Une documentation utilisateur est en accès libre à tous les agents :
       = link_to("Lire la documentation","https://rdvs.notion.site/RDV-Mairie-b831caa05dd7416bb489f06f7468903a", rel: "noopener", target: "_blank")
 
