@@ -12,13 +12,13 @@ class Admin::ReferentAssignationsController < AgentAuthController
 
   def create
     find_agent_and_user_save_and_redirect_with(params) do |user, agent|
-      user.referent_agents << agent
+      user.referent_assignations.find_or_create_by!(agent: agent)
     end
   end
 
   def destroy
     find_agent_and_user_save_and_redirect_with(params) do |user, agent|
-      user.referent_agents.delete(agent)
+      user.referent_assignations.find_by(agent: agent)&.destroy
     end
   end
 
