@@ -245,10 +245,53 @@ fermeture / merge d'une PR.
 
 ### Authentification, contrôle d’accès, habilitations et profils
 
-!!<Détailler en quelques lignes le processus d’authentification et la façon dont les accès sont restreints>!!
+L'application a 3 types d'utilisateur : 
+- usager⋅e
+- agent⋅e
+- super admin
 
-TODO : Expliquer les logins au sein de l'application : login+password, Franceconnect, *
-TODO : Synthèse de comment on définit les rôles (policies), synthèse des typologies d'admins
+#### Les usager⋅es
+
+Les usager⋅es prennent RDV avec les agents. Iels peuvent voir leurs RDVs, annuler ou modifier des RDVs futurs, et 
+changer son e-mail, mot de passe et infos personnelles.
+
+Pour visualiser, modifier ou annuler un RDV, l'usager peut soit cliquer sur un lien fourni en notification mail ou SMS,
+soit se connecter pour accéder à tous ses RDVs.
+
+La connexion à un profil usager est faite par email + mot de passe. Les mots de passes sont stockés salés et chiffrés
+(en utilisant Devise qui utilise Bcrypt). Une connexion via FranceConnect est aussi proposée : un compte est alors
+créé ou relié si l'e-mail existe déjà dans notre base usagers.
+
+Note : Il n'y a aucune contrainte sur la complexité ou la longueur du mot de passe choisi.
+
+#### Les agents
+
+Les agents ont accès à diverses fonctionnalités touchant à :
+- la déclaration de leurs plages d'ouvertures et absences
+- le configuration des motifs de RDVs et des lieux de RDVs
+- la gestion des autres agents de leur organisation
+- la liste de leurs RDVs et de ceux de leurs collègues
+- la sectorisation géographique des lieux
+- la définition de webhooks (sortants) pour l'interopérabilité de la solution
+
+Les règles d'accès à ces ressources sont complexes et dépendent de plusieurs niveau d'accès attribués aux agents.
+Ce niveaux d'accès sont gérés par les administrateurs locaux de la solution au sein des organisations
+utilisatrices (département, mairie).
+
+La connexion à un profil agent est faite par email + mot de passe. Les mots de passes sont stockés salés et chiffrés
+(en utilisant Devise qui utilise Bcrypt). Une connexion via InclusionConnect est aussi proposée : un compte est alors
+créé ou relié si l'e-mail existe déjà dans notre base agents.
+
+Note : Il n'y a aucune contrainte sur la complexité ou la longueur du mot de passe choisi.
+
+#### Les super admins
+
+Une interface CRUD permettant de gérer l'ensemble des organisations, services, motifs, lieux, territoires et
+usagers est proposée en interne à l'équipe. 
+
+Afin de s'y connecter, il faut utiliser l'OAuth de GitHub. L'adresse e-mail alors fournie par GitHub doit être
+présente dans une table `super_admins`, où les entrées sont crées et supprimées à la main lors de l'arrivée et
+du départ de membres de l'équipe;
 
 ### Traçabilité des erreurs et des actions utilisateurs
 
