@@ -27,9 +27,10 @@ describe "can see users' RDV" do
     let!(:rdv) { create :rdv, :future, users: [user], organisation: organisation, motif: motif, agents: [agent] }
 
     before do
-      %i[seen excused revoked noshow].each do |status|
-        create(:rdv, :past, status: status, users: [user], organisation: organisation, motif: motif, agents: [agent])
-      end
+      create(:rdv, :past, status: :seen, users: [user], organisation: organisation, motif: motif, agents: [agent])
+      create(:rdv, :past, status: :excused, users: [user], organisation: organisation, motif: motif, agents: [agent])
+      create(:rdv, :past, status: :revoked, users: [user], organisation: organisation, motif: motif, agents: [agent])
+      create(:rdv, :past, status: :noshow, users: [user], organisation: organisation, motif: motif, agents: [agent])
 
       visit admin_organisation_user_path(organisation, user)
     end
