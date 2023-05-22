@@ -61,7 +61,7 @@ module IcalHelpers
       event.rrule = payload[:recurrence]
       event.sequence = payload[:sequence]
       event.description = payload[:description]
-      event.organizer = "mailto:#{SECRETARIAT_EMAIL}"
+      event.organizer = "mailto:#{ApplicationMailer::SECRETARIAT_EMAIL}"
     end
   end
 end
