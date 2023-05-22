@@ -95,7 +95,7 @@ Ces choix reflètent un désir de simplicité avant tout, afin de se concentrer 
 | BDD métier          | PostgreSQL       | `13.7.0` | Stockage des données métier, voir [db/schema.rb](/db/schema.rb) |
 | BDD technique       | Redis            | `7.0.10` | Stockage des sessions et du cache                               |
 
-La liste des librairies Ruby est disponible dans : 
+La liste des librairies Ruby est disponible dans :
 - [Gemfile](/Gemfile) pour la liste des dépendances directes et la description de la fonctionnalité de chacune des gem
 - [Gemfile.lock](/Gemfile.lock) pour la liste complète des gems utilisées directement et indirectement (dépendances
   indirectes), et leurs versions précises
@@ -136,19 +136,19 @@ C4Container
 ```mermaid
 C4Container
     title Échanges entre l'app et les services externes
-    
+
     System(web_app, "Ruby on Rails", "Application web + API JSON")
-    
+
     System_Ext(sentry, "Sentry", "Error monitoring")
     System_Ext(skylight, "Skylight", "APM")
     System_Ext(matomo, "Matomo", "Analytics")
-    
+
     System_Ext(brevo, "Brevo", "Emails transactionnels")
     System_Ext(api_microsoft, "API Microsoft", "Synchro Outlook")
     System_Ext(netsize, "Netsize", "Envoi SMS")
     System_Ext(sfr_mail2sms, "SFR Mail2SMS", "Envoi SMS")
     System_Ext(clever_technologies, "Clever Technologies", "Envoi SMS")
-    
+
     Rel(web_app, sentry, "HTTPS")
     Rel(web_app, skylight, "HTTPS")
     Rel(web_app, matomo, "HTTPS")
@@ -162,18 +162,18 @@ C4Container
 ```mermaid
 C4Container
     title Échanges entre l'app, les fournisseurs d'identités, et les utilisateur⋅ices
-    
+
     System(web_app, "Ruby on Rails", "Application web + API JSON")
 
     Person(user, "Utilisateur⋅ice", "Agent / usager")
-    
+
     System_Ext(france_connect, "FranceConnect", "")
     System_Ext(inclusion_connect, "InclusionConnect", "")
     System_Ext(oauth_microsoft, "Oauth Microsoft", "")
     System_Ext(oauth_github, "Oauth GitHub", "")
-    
+
     Rel(user, web_app, "HTTPS redirect")
-    
+
     Rel(user, france_connect, "HTTPS redirect")
     Rel(user, inclusion_connect, "HTTPS redirect")
     Rel(user, oauth_microsoft, "HTTPS redirect")
@@ -245,14 +245,14 @@ fermeture / merge d'une PR.
 
 ### Authentification, contrôle d’accès, habilitations et profils
 
-L'application a 3 types d'utilisateur : 
+L'application a 3 types d'utilisateur :
 - usager⋅e
 - agent⋅e
 - super admin
 
 #### Les usager⋅es
 
-Les usager⋅es prennent RDV avec les agents. Iels peuvent voir leurs RDVs, annuler ou modifier des RDVs futurs, et 
+Les usager⋅es prennent RDV avec les agents. Iels peuvent voir leurs RDVs, annuler ou modifier des RDVs futurs, et
 changer son e-mail, mot de passe et infos personnelles.
 
 Pour visualiser, modifier ou annuler un RDV, l'usager peut soit cliquer sur un lien fourni en notification mail ou SMS,
@@ -287,7 +287,7 @@ Note : Il n'y a aucune contrainte sur la complexité ou la longueur du mot de pa
 #### Les super admins
 
 Une interface CRUD permettant de gérer l'ensemble des organisations, services, motifs, lieux, territoires et
-usagers est proposée en interne à l'équipe. 
+usagers est proposée en interne à l'équipe.
 
 Afin de s'y connecter, il faut utiliser l'OAuth de GitHub. L'adresse e-mail alors fournie par GitHub doit être
 présente dans une table `super_admins`, où les entrées sont crées et supprimées à la main lors de l'arrivée et
@@ -335,7 +335,7 @@ Nous sommes alertée⋅es en cas de nouvelle erreur ou volume inhabituel, en dir
 communication principal Mattermost.
 
 Notre hébergeur Scalingo propose aussi un système d'alerting déclenché selon des métriques diverses, mais
-il n'est pas utilisé actuellement car sa calibration est difficile. 
+il n'est pas utilisé actuellement car sa calibration est difficile.
 
 ### Politique de mise à jour des applicatifs
 
