@@ -112,39 +112,72 @@ La liste des librairies JS utilisée est disponible dans :
 instance Kroki pour cela:!! [!!https://kroki.incubateur.anct.gouv.fr/!!](https://kroki.incubateur.anct.gouv.fr/)!!. Les
 formats DITAA, BlockDiag ou UML conviennent pour cet exercice>!!
 
-
-TODO : Faire un diagramme par sous-section de "Matrice des flux"
-TODO :  ou faire deux diagrammes : l'un avec Sclingo interne et l'autre avec les services externes qui pointent vers une boite
-TODO : Note : FranceConnect et IncluConnect -> Faire un lien vers l'app ET vers l'user
-
 ```mermaid
 C4Container
-    title Architecture du SI de RDV Services Publics
+    title Architecture interne à Scalingo
 
     Person(user, "Utilisateur⋅ice", "Agent / usager")
-    
-    System_Ext(sendinblue, "SendInBlue", "Email transactionnels")
-    System_Ext(api_microsoft, "API Microsoft", "Synchro Outlook")
-    System_Ext(sentry, "Sentry", "Monitoring d'erreurs beta")
 
     Container_Boundary(scalingo, "Scalingo") {
-        System(scalingo_router, "Routeur Scalingo", "")
+        System(scalingo_gateway, "Gateway Scalingo", "Load balancer+ router")
         Container(web_app, "Ruby on Rails", "Application web + API JSON")
         ContainerDb(postgres, "PostgreSQL", "Données métier")
         ContainerDb(redis, "Redis", "Cache + sessions")
     }
 
-    Rel(user, scalingo_router, "")
-    Rel(scalingo_router, web_app, "")
-    Rel(web_app, postgres, "")
-    Rel(web_app, redis, "")
+    Rel(user, scalingo_gateway, "HTTPS")
+    Rel(scalingo_gateway, web_app, "")
+    Rel(web_app, postgres, "TCP")
+    Rel(web_app, redis, "TCP")
 
-    Rel(sendinblue, user, "SMTP")
+    UpdateRelStyle(web_app, redis, $offsetY="20", $offsetX="150")
+```
+
+```mermaid
+C4Container
+    title Échanges entre l'app et les services externes
+    
+    System(web_app, "Ruby on Rails", "Application web + API JSON")
+    
+    System_Ext(sentry, "Sentry", "Error monitoring")
+    System_Ext(skylight, "Skylight", "APM")
+    System_Ext(matomo, "Matomo", "Analytics")
+    
+    System_Ext(brevo, "Brevo", "Emails transactionnels")
+    System_Ext(api_microsoft, "API Microsoft", "Synchro Outlook")
+    System_Ext(netsize, "Netsize", "Envoi SMS")
+    System_Ext(sfr_mail2sms, "SFR Mail2SMS", "Envoi SMS")
+    System_Ext(clever_technologies, "Clever Technologies", "Envoi SMS")
+    
     Rel(web_app, sentry, "HTTPS")
-    Rel(web_app, sendinblue, "SMTP")
+    Rel(web_app, skylight, "HTTPS")
+    Rel(web_app, matomo, "HTTPS")
+    Rel(web_app, brevo, "SMTP")
     Rel(web_app, api_microsoft, "HTTPS")
+    Rel(web_app, netsize, "HTTPS")
+    Rel(web_app, sfr_mail2sms, "SMTP")
+    Rel(web_app, clever_technologies, "HTTPS")
+```
 
-    UpdateRelStyle(sendinblue, user, $offsetY="20", $offsetX="-10")
+```mermaid
+C4Container
+    title Échanges entre l'app, les fournisseurs d'identités, et les utilisateur⋅ices
+    
+    System(web_app, "Ruby on Rails", "Application web + API JSON")
+
+    Person(user, "Utilisateur⋅ice", "Agent / usager")
+    
+    System_Ext(france_connect, "FranceConnect", "")
+    System_Ext(inclusion_connect, "InclusionConnect", "")
+    System_Ext(oauth_microsoft, "Oauth Microsoft", "")
+    System_Ext(oauth_github, "Oauth GitHub", "")
+    
+    Rel(user, web_app, "HTTPS redirect")
+    
+    Rel(user, france_connect, "HTTPS redirect")
+    Rel(user, inclusion_connect, "HTTPS redirect")
+    Rel(user, oauth_microsoft, "HTTPS redirect")
+    Rel(user, oauth_github, "HTTPS redirect")
 ```
 
 ### Schéma des données
