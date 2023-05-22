@@ -351,17 +351,25 @@ Voici les cas dans lesquels nous mettons à jour à jour une librairie spécifiq
 La décision a été prise le 24 avril 2023, voir log de décision
 ici : [2023-04-24-politique-maj-gems.md](/docs/decisions/2023-04-24-politique-maj-gems.md)
 
-TODO : Mentionner dependabot (notifs email activées manuellement par les devs mais je leur ai dit de le faire)
+Afin d'être prévenus lors de la  publication d'une CVE, nous utilisons Dependabot sur notre dépôt GitHub.
+Une alerte e-mail est envoyée aux devs qui watchent le dépôt (et nous faisons en sorte de le watch à travers
+notre procédure d'onboarding).
 
 ### Intégrité
 
-!!<Quels contrôles avez vous mis en place pour détecter des problèmes d’intégrité du SI et qu’avez vous mis en place
-pour vous en prémunir (monitoring, backups, etc)>!!
+Des backups de nos bases de données Postgres et Redis sont faîtes automatiquement par Scalingo. Ces backups sont
+créés quotidiennement et gardés 1 an.
 
-TODO : Parler de Sentry + backups Scalingo Postgres et Redis + et dire qu'on les teste en local
+Nous les testons régulièrement en les téléchargeant et en les chargeant dans notre environnement local.
+
+Scalingo nous offre également la fonctionnalité de Point-in-time Recovery. Nous profitons également d'un système
+de cluster avec 2 nodes, qui permet un failover automatique en cas de plantage d'une instance Postgres.
 
 ### Confidentialité
 
-!!<Avez-vous un besoin accru en confidentialité et si oui, qu’avez vous mis en place>!!
+**L'application est initialement conçue pour la pris de RDV dans le milieu médico-social. Nous manipulons donc des données médicales.**
 
-TODO : Identifier ce qui est critique et ce qui est protégé, et éventuellement voir ce qui pourrait être prioritaire
+Parmi les données que nous manipulons, les plus critiques sont :
+- les coordonnées des usager⋅es
+- l'historique des RDVs pris par une personne ainsi que le motif de ces RDV
+- des champs "texte" libres où les agents peuvent saisir des informations de contexte sur un RDV
