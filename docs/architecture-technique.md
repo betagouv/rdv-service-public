@@ -108,14 +108,28 @@ La liste des librairies JS utilisée est disponible dans :
 
 ### Schéma de l’architecture
 
-!!<Ajouter un graphe sur l’architecture du SI et de ses relations avec les services externes, vous pouvez utiliser notre
-instance Kroki pour cela:!! [!!https://kroki.incubateur.anct.gouv.fr/!!](https://kroki.incubateur.anct.gouv.fr/)!!. Les
-formats DITAA, BlockDiag ou UML conviennent pour cet exercice>!!
+Notre application est accessible sous 3 "marques" différentes : 
+- https://www.rdv-solidarites.fr/
+- https://www.rdv-aide-numerique.fr/
+- https://www.rdv-mairie.fr/
+
+TODO: Expliquer que nous avons 3 domaines et que les deux premières sont sur la même instance.
+
+Nous avons actuellement 3 instances :
+- `production-rdv-solidarites` : serveur de production pour `www.rdv-solidarites.fr` et `www.rdv-aide-numerique.fr`
+- `production-rdv-mairie` : serveur de production pour `www.rdv-mairie.fr`
+- `demo-rdv-solidarites` : serveur de démo pour `demo.rdv-solidarites.fr`, `demo.rdv-aide-numerique.fr` et `demo.rdv-mairie.fr`
+
+`production-rdv-solidarites` est notre instance de production actuelle. Elle est représentée fidèlement dans les
+schémas ci-dessous. `production-rdv-mairie` est une nouvelle instance que nous venons de créer (mai 2023). Nous avons
+créé cette instance afin de séparer les données de la future plateforme `www.rdv-mairie.fr` de nos données existantes.
+
+L'instance `demo-rdv-solidarites` sert de plateforme de démo pour nos 3 domaines.
+
+#### Architecture interne à Scalingo
 
 ```mermaid
 C4Container
-    title Architecture interne à Scalingo
-
     Person(user, "Utilisateur⋅ice", "Agent / usager")
 
     Container_Boundary(scalingo, "Scalingo") {
@@ -133,10 +147,10 @@ C4Container
     UpdateRelStyle(web_app, redis, $offsetY="20", $offsetX="150")
 ```
 
+#### Échanges entre l'app et les services externes
+
 ```mermaid
 C4Container
-    title Échanges entre l'app et les services externes
-
     System(web_app, "Ruby on Rails", "Application web + API JSON")
 
     System_Ext(sentry, "Sentry", "Error monitoring")
@@ -159,10 +173,10 @@ C4Container
     Rel(web_app, clever_technologies, "HTTPS")
 ```
 
+#### Échanges entre l'app, les fournisseurs d'identités, et les utilisateur⋅ices
+
 ```mermaid
 C4Container
-    title Échanges entre l'app, les fournisseurs d'identités, et les utilisateur⋅ices
-
     System(web_app, "Ruby on Rails", "Application web + API JSON")
 
     Person(user, "Utilisateur⋅ice", "Agent / usager")
@@ -194,9 +208,10 @@ https://github.com/betagouv/rdv-solidarites.fr/blob/f12411c0760be1316aae571bb35c
 Les serveurs (applicatif et base de données) sont gérés par Scalingo. Scalingo ne fournit pas de système de rôle : soit
 on a accès à un app, soit on ne l'a pas.
 
-Nous avons actuellement 2 apps Scalingo :
+Nous avons actuellement 3 apps Scalingo :
 
 - `osc-secnum-fr1/production-rdv-solidarites`
+- `osc-secnum-fr1/production-rdv-mairie`
 - `osc-secnum-fr1/demo-rdv-solidarites`
 
 Le fait d'avoir accès à une app Scalingo donne les droits suivants :
