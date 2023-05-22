@@ -64,7 +64,7 @@ RSpec.configure do |config|
               cancelled_at: { type: "string", nullable: true },
               collectif: { type: "boolean" },
               context: { type: "string", nullable: true },
-              created_by: { type: "string", enum: %w[agent user file_attente] },
+              created_by: { type: "string", enum: %w[agent user file_attente prescripteur] },
               deleted_at: { type: "string", nullable: true },
               duration_in_min: { type: "integer" },
               ends_at: { type: "string" },
@@ -223,6 +223,40 @@ RSpec.configure do |config|
             },
             required: %w[id email name phone_number],
           },
+          webhook_endpoint_with_root: {
+            type: "object",
+            properties: {
+              webhook_endpoint: { "$ref" => "#/components/schemas/webhook_endpoint" },
+            },
+            required: %w[webhook_endpoint],
+          },
+          webhook_endpoints: {
+            type: "object",
+            properties: {
+              webhook_endpoints: {
+                type: "array",
+                items: { "$ref" => "#/components/schemas/webhook_endpoint" },
+              },
+              meta: { "$ref" => "#/components/schemas/meta" },
+            },
+            required: %w[webhook_endpoints meta],
+          },
+          webhook_endpoint: {
+            type: "object",
+            properties: {
+              id: { type: "integer" },
+              target_url: { type: "string" },
+              subscriptions: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+              organisation_id: { type: "integer" },
+              secret: { type: "string", nullable: true },
+            },
+            required: %w[id target_url organisation_id],
+          },
           absence_with_root: {
             type: "object",
             properties: {
@@ -252,9 +286,8 @@ RSpec.configure do |config|
               start_time: { type: "string" },
               end_time: { type: "string" },
               agent: { "$ref" => "#/components/schemas/agent", nullable: true },
-              organisation: { "$ref" => "#/components/schemas/organisation" },
             },
-            required: %w[id ical_uid title first_day end_day start_time end_time agent organisation],
+            required: %w[id ical_uid title first_day end_day start_time end_time agent],
           },
           invitation: {
             type: "object",
@@ -328,6 +361,7 @@ RSpec.configure do |config|
               send_reminder_notification: { type: "boolean" },
               status: { type: "string", enum: %w[unknown seen excused revoked noshow] },
               user: { "$ref" => "#/components/schemas/user" },
+              created_by: { type: "string", enum: %w[agent user prescripteur] },
             },
             required: %w[send_lifecycle_notifications send_reminder_notification status user],
           },

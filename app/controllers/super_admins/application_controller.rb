@@ -8,6 +8,8 @@
 # you're free to overwrite the RESTful controller actions.
 module SuperAdmins
   class ApplicationController < Administrate::ApplicationController
+    include DomainDetection
+
     helper all_helpers_from_path "app/helpers"
 
     if ENV["ADMIN_BASIC_AUTH_PASSWORD"].present?

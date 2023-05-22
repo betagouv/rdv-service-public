@@ -125,7 +125,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
         organisation_ids: [rdv.organisation_id], \
         address: rdv.address, \
         invitation_token: token, \
-        host: Domain::RDV_SOLIDARITES.dns_domain_name
+        host: Domain::RDV_SOLIDARITES.host_name
       )
 
       expect(mail.html_part.body).to have_link("Reprendre RDV", href: expected_url)
@@ -154,8 +154,8 @@ RSpec.describe Users::RdvMailer, type: :mailer do
         create(:motif, service: create(:service), organisation: organisation)
       end
 
-      context "when the organisation uses the default domain name" do
-        let(:organisation) { create(:organisation, new_domain_beta: false) }
+      context "when the organisation uses the rdv_solidarites verticale" do
+        let(:organisation) { create(:organisation, verticale: :rdv_solidarites) }
 
         it "works" do
           mail = described_class.with(rdv: rdv, user: rdv.users.first, token: "12345").send(action)
@@ -166,15 +166,39 @@ RSpec.describe Users::RdvMailer, type: :mailer do
         end
       end
 
-      context "when the organisation is part of the beta" do
-        let(:organisation) { create(:organisation, new_domain_beta: true) }
+      context "when the organisation uses the rdv_insertion verticale" do
+        let(:organisation) { create(:organisation, verticale: :rdv_insertion) }
 
         it "works" do
           mail = described_class.with(rdv: rdv, user: rdv.users.first, token: "12345").send(action)
-          expect(mail[:from].to_s).to eq(%("RDV Aide Numérique" <support@rdv-solidarites.fr>))
+          expect(mail[:from].to_s).to eq(%("RDV Solidarités" <support@rdv-solidarites.fr>))
+          expect(mail.html_part.body.to_s).to include(%(src="/logo_solidarites.png))
+          expect(mail.html_part.body.to_s).to include(%(href="http://www.rdv-solidarites-test.localhost))
+          expect(mail.html_part.body.to_s).to include(%(L’équipe RDV Solidarités))
+        end
+      end
+
+      context "when the organisation uses the rdv_aide_numerique verticale" do
+        let(:organisation) { create(:organisation, verticale: :rdv_aide_numerique) }
+
+        it "works" do
+          mail = described_class.with(rdv: rdv, user: rdv.users.first, token: "12345").send(action)
+          expect(mail[:from].to_s).to eq(%("RDV Aide Numérique" <support@rdv-aide-numerique.fr>))
           expect(mail.html_part.body.to_s).to include(%(src="/logo_aide_numerique.png))
           expect(mail.html_part.body.to_s).to include(%(href="http://www.rdv-aide-numerique-test.localhost))
           expect(mail.html_part.body.to_s).to include(%(L’équipe RDV Aide Numérique))
+        end
+      end
+
+      context "when the organisation uses the rdv_mairie verticale" do
+        let(:organisation) { create(:organisation, verticale: :rdv_mairie) }
+
+        it "works" do
+          mail = described_class.with(rdv: rdv, user: rdv.users.first, token: "12345").send(action)
+          expect(mail[:from].to_s).to eq(%(RDV Mairie <support@rdv-mairie.fr>))
+          expect(mail.html_part.body.to_s).to include(%(src="/logo_mairie.png))
+          expect(mail.html_part.body.to_s).to include(%(href="http://www.rdv-mairie-test.localhost))
+          expect(mail.html_part.body.to_s).to include(%(L’équipe RDV Mairie))
         end
       end
     end

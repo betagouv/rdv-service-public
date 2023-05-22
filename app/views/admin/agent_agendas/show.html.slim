@@ -20,7 +20,7 @@
       data-selected-event-id="#{@selected_event_id}"
       data-organisation-id="#{@organisation.id}"
       data-display-saturdays="#{current_agent.display_saturdays}"
-      data-event-sources-json="#{[admin_agent_rdvs_path(@agent, organisation_id: current_organisation.id), admin_agent_absences_path(@agent, organisation_id: current_organisation.id), admin_agent_plage_ouvertures_path(@agent, organisation_id: current_organisation.id, in_background: true), admin_jours_feries_path].to_json}"
+      data-event-sources-json="#{[admin_agent_rdvs_path(@agent, organisation_id: current_organisation.id), admin_agent_absences_path(@agent, organisation_id: current_organisation.id), admin_agent_plage_ouvertures_path(@agent, organisation_id: current_organisation.id, in_background: true), OffDays.to_full_calendar_array].to_json}"
     ]
     .mt-3.flex-grow-1.text-right
       .m-2

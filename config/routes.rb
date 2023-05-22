@@ -70,6 +70,7 @@ Rails.application.routes.draw do
   get "stats/rdvs", to: "stats#rdvs", as: "rdvs_stats"
   get "stats/active_agents", to: "stats#active_agents", as: "active_agents_stats"
   get "stats/receipts", to: "stats#receipts", as: "receipts_stats"
+  get "stats/notifications", to: "stats#notifications_index", as: "notifications_index_stats"
 
   authenticate :user do
     get "/users/informations", to: "users/users#edit"
@@ -213,8 +214,6 @@ Rails.application.routes.draw do
         devise_for :agents, controllers: { invitations: "admin/invitations_devise" }, only: :invitations
         get "support", to: "static_pages#support"
       end
-
-      resources :jours_feries, only: [:index]
     end
   end
   authenticated :agent do
@@ -224,7 +223,7 @@ Rails.application.routes.draw do
   scope path: "prescripteur", as: "prescripteur", controller: "prescripteur_rdv_wizard" do
     get "start"
     get "new_prescripteur"
-    post "save_prescripteur"
+    post "store_prescripteur_in_session"
     get "new_beneficiaire"
     post "create_rdv"
     get "confirmation"
@@ -277,7 +276,7 @@ Rails.application.routes.draw do
   # resin public link
   get "resin/:external_organisation_ids" => "search#resin"
 
-  get "prendre_rdv_prescripteur/:territory_short_name" => "search#prescripteur", as: :prendre_rdv_prescripteur
+  get "prendre_rdv_prescripteur" => "search#prescripteur", as: :prendre_rdv_prescripteur
 
   ##
 

@@ -32,6 +32,7 @@ describe IcalHelpers::Ics do
         expect(subject).to include("DESCRIPTION:Infos et annulation:")
         expect(subject).to include("LOCATION:10 rue de la Ferronerie 44100 Nantes")
         expect(subject).to include("RRULE:FREQ=WEEKLY")
+        expect(subject).to include("ORGANIZER:mailto:secretariat-auto@rdv-solidarites.fr")
         expect(subject).to include("END:VEVENT")
       end
     end

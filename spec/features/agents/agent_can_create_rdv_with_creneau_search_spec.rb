@@ -13,7 +13,7 @@ describe "Agent can create a Rdv with creneau search" do
     let!(:plage_ouverture) { create(:plage_ouverture, :daily, motifs: [motif], agent: agent, organisation: organisation) }
     let!(:plage_ouverture2) { create(:plage_ouverture, :daily, motifs: [motif], organisation: organisation) }
 
-    it "displays lieux and allow filtering on lieux", js: true do
+    it "displays lieux and allow filtering on lieux" do
       visit admin_organisation_agent_searches_path(organisation)
       expect(page).to have_content("Trouver un RDV")
       select(motif.name, from: "motif_id")
@@ -33,11 +33,54 @@ describe "Agent can create a Rdv with creneau search" do
     end
   end
 
+  context "when there are multiple plages from different agents in the same lieu" do
+    before { travel_to(Date.new(2023, 5, 2)) }
+
+    let(:first_day_of_plages) { 2.weeks.from_now.beginning_of_week.to_date }
+    let!(:other_agent) { create(:agent, basic_role_in_organisations: [organisation], service: agent.service) }
+    let!(:motif) { create(:motif, bookable_publicly: true, service: agent.service, organisation: organisation) }
+    let!(:plage_ouverture1) { create(:plage_ouverture, motifs: [motif], first_day: first_day_of_plages, agent: agent, organisation: organisation) }
+    let!(:plage_ouverture2) do
+      create(:plage_ouverture, motifs: [motif], first_day: first_day_of_plages, agent: other_agent, organisation: organisation, lieu: plage_ouverture1.lieu)
+    end
+
+    it "displays a slot for each agent" do
+      travel_to(Date.new(2023, 5, 9))
+      visit admin_organisation_agent_searches_path(organisation)
+      expect(page).to have_content("Trouver un RDV")
+      select(motif.name, from: "motif_id")
+      click_button("Afficher les créneaux")
+
+      creneaux_labels = all("a.creneau").map(&:text)
+      expect(creneaux_labels).to include(a_string_matching(agent.short_name))
+      expect(creneaux_labels).to include(a_string_matching(other_agent.short_name))
+    end
+  end
+
+  context "when there are multiple plages from the same agent in the same lieu" do
+    let!(:motif) { create(:motif, bookable_publicly: true, service: agent.service, organisation: organisation) }
+    let!(:plage_ouverture1) { create(:plage_ouverture, motifs: [motif], agent: agent, organisation: organisation) }
+    let!(:plage_ouverture2) do
+      create(:plage_ouverture, motifs: [motif], agent: agent, organisation: organisation, lieu: plage_ouverture1.lieu,
+                               first_day: plage_ouverture1.first_day, ignore_benign_errors: true)
+    end
+
+    it "displays a slot for each time of the day, without duplicate times" do
+      visit admin_organisation_agent_searches_path(organisation)
+      expect(page).to have_content("Trouver un RDV")
+      select(motif.name, from: "motif_id")
+      click_button("Afficher les créneaux")
+
+      creneaux_labels = all("a.creneau").map(&:text)
+      expect(creneaux_labels).to eq(creneaux_labels.uniq) # look mom, no duplicates
+    end
+  end
+
   context "when the motif is bookable online and the next creneau is after the max booking delay" do
     let!(:motif) { create(:motif, name: "Vaccination", organisation: organisation, max_public_booking_delay: 7.days, service: agent.service) }
     let!(:plage_ouverture) { create(:plage_ouverture, :daily, first_day: 8.days.since, motifs: [motif], organisation: organisation) }
 
-    it "still allows the agent to book a rdv, because the booking delays should only apply to agents", js: true do
+    it "still allows the agent to book a rdv, because the booking delays should only apply to agents" do
       visit admin_organisation_agent_searches_path(organisation)
       expect(page).to have_content("Trouver un RDV")
       select(motif.name, from: "motif_id")
@@ -54,7 +97,7 @@ describe "Agent can create a Rdv with creneau search" do
     let!(:plage_ouverture_without_lieu) { create(:plage_ouverture, motifs: [motif], lieu: nil, organisation: organisation) }
 
     shared_examples "book a rdv without a lieu" do
-      it "allows the agent to book a rdv", js: true do
+      it "allows the agent to book a rdv" do
         visit admin_organisation_agent_searches_path(organisation)
         expect(page).to have_content("Trouver un RDV")
         select(motif.name, from: "motif_id")

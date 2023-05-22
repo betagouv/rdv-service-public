@@ -37,6 +37,10 @@ class Agent::OrganisationPolicy < DefaultAgentPolicy
     admin_in_record_organisation?
   end
 
+  def show?
+    link_to_organisation?
+  end
+
   class Scope < Scope
     def resolve
       scope.merge(current_agent.organisations)

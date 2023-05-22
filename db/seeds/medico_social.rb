@@ -621,7 +621,8 @@ Rdv.create!(
   organisation_id: org_paris_nord.id,
   agent_ids: [agent_org_paris_nord_pmi_martine.id],
   user_ids: [user_org_paris_nord_patricia.id],
-  context: "Visite de courtoisie"
+  context: "Visite de courtoisie",
+  created_by: :agent
 )
 Rdv.create!(
   starts_at: Time.zone.today + 4.days + 15.hours,
@@ -631,7 +632,8 @@ Rdv.create!(
   organisation_id: org_paris_nord.id,
   agent_ids: [agent_org_paris_nord_pmi_martine.id],
   user_ids: [user_org_paris_nord_josephine.id],
-  context: "Suivi vaccins"
+  context: "Suivi vaccins",
+  created_by: :agent
 )
 Rdv.create!(
   starts_at: Time.zone.today + 5.days + 11.hours,
@@ -641,7 +643,8 @@ Rdv.create!(
   organisation_id: org_paris_nord.id,
   agent_ids: [agent_org_paris_nord_pmi_martine.id],
   user_ids: [user_org_paris_nord_josephine.id],
-  context: "Visite à domicile"
+  context: "Visite à domicile",
+  created_by: :agent
 )
 
 Rdv.create!(
@@ -652,7 +655,8 @@ Rdv.create!(
   organisation_id: org_paris_nord.id,
   agent_ids: [agent_org_paris_nord_pmi_martine.id],
   user_ids: [user_org_paris_nord_josephine.id],
-  context: "Visite à domicile"
+  context: "Visite à domicile",
+  created_by: :agent
 )
 
 10.times do |i|
@@ -700,7 +704,7 @@ results = Rdv.insert_all!(rdv_attributes, returning: Arel.sql("id")) # [{"id"=>1
 rdv_ids = results.flat_map(&:values) # [1, 2, ...]
 agent_rdv_attributes = rdv_ids.map { |id| { agent_id: agent_org_paris_nord_pmi_martine.id, rdv_id: id } }
 AgentsRdv.insert_all!(agent_rdv_attributes)
-rdv_user_attributes = rdv_ids.map { |id| { user_id: user_org_paris_nord_josephine.id, rdv_id: id, send_lifecycle_notifications: true, send_reminder_notification: true } }
+rdv_user_attributes = rdv_ids.map { |id| { user_id: user_org_paris_nord_josephine.id, rdv_id: id, send_lifecycle_notifications: true, send_reminder_notification: true, created_by: :agent } }
 RdvsUser.insert_all!(rdv_user_attributes)
 events = %w[new_creneau_available rdv_cancelled rdv_created rdv_date_updated rdv_upcoming_reminder]
 receipts_attributes = rdv_ids.map { |id| { rdv_id: id, event: events.sample, channel: Receipt.channels.values.sample, result: Receipt.results.values.sample, created_at: now, updated_at: now } }
@@ -713,5 +717,10 @@ unknown_rdv_count_by_agent.each do |agent_id, unknown_past_rdv_count|
   Agent.where(id: agent_id).update_all(unknown_past_rdv_count: unknown_past_rdv_count) # rubocop:disable Rails/SkipsModelValidations
 end
 
-Absence.create!(title: "Formation", agent: agent_org_paris_nord_pmi_martine, organisation: org_paris_nord, first_day: 1.week.from_now, start_time: Tod::TimeOfDay.new(8),
-                end_time: Tod::TimeOfDay.new(18))
+Absence.create!(
+  title: "Formation",
+  agent: agent_org_paris_nord_pmi_martine,
+  first_day: 1.week.from_now,
+  start_time: Tod::TimeOfDay.new(8),
+  end_time: Tod::TimeOfDay.new(18)
+)

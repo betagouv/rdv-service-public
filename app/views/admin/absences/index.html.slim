@@ -1,8 +1,6 @@
 - content_for(:menu_item) { "menu-absences" }
 - content_for(:menu_agent_select_path_helper_name) { "admin_organisation_agent_absences_path" }
 
-= render "layouts/absences_change_banner"
-
 - content_for :title do
   - if current_agent == @agent
     = t(".your_busy_times")
@@ -26,8 +24,6 @@
         tr
           th Description
           th Dates
-          - if @agent_organisations.count > 1
-            th Organisation
           th Actions
       tbody
         = render @absences

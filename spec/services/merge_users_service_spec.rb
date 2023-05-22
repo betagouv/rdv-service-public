@@ -133,47 +133,47 @@ describe MergeUsersService, type: :service do
 
   context "with different agents from same orga attached" do
     let!(:agent1) { create(:agent, basic_role_in_organisations: [organisation]) }
-    let(:user_target) { create(:user, agents: [agent1], organisations: [organisation]) }
+    let(:user_target) { create(:user, referent_agents: [agent1], organisations: [organisation]) }
     let!(:agent2) { create(:agent, basic_role_in_organisations: [organisation]) }
-    let(:user_to_merge) { create(:user, agents: [agent2], organisations: [organisation]) }
+    let(:user_to_merge) { create(:user, referent_agents: [agent2], organisations: [organisation]) }
 
     it "appends agents" do
       subject
-      expect(user_target.agents).to contain_exactly(agent1, agent2)
+      expect(user_target.referent_agents).to contain_exactly(agent1, agent2)
     end
   end
 
   context "with same agents" do
     let!(:agent1) { create(:agent, basic_role_in_organisations: [organisation]) }
     let!(:agent2) { create(:agent, basic_role_in_organisations: [organisation]) }
-    let(:user_target) { create(:user, agents: [agent1, agent2], organisations: [organisation]) }
-    let(:user_to_merge) { create(:user, agents: [agent1, agent2], organisations: [organisation]) }
+    let(:user_target) { create(:user, referent_agents: [agent1, agent2], organisations: [organisation]) }
+    let(:user_to_merge) { create(:user, referent_agents: [agent1, agent2], organisations: [organisation]) }
 
     it "does not do anything" do
       subject
-      expect(user_target.agents).to contain_exactly(agent1, agent2)
+      expect(user_target.referent_agents).to contain_exactly(agent1, agent2)
     end
   end
 
   context "target user doesn't have any agents yet" do
     let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
-    let(:user_target) { create(:user, agents: [], organisations: [organisation]) }
-    let(:user_to_merge) { create(:user, agents: [agent], organisations: [organisation]) }
+    let(:user_target) { create(:user, referent_agents: [], organisations: [organisation]) }
+    let(:user_to_merge) { create(:user, referent_agents: [agent], organisations: [organisation]) }
 
     it "sets agent" do
       subject
-      expect(user_target.agents).to contain_exactly(agent)
+      expect(user_target.referent_agents).to contain_exactly(agent)
     end
   end
 
   context "merged user doesn't have any agents yet" do
     let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
-    let(:user_target) { create(:user, agents: [agent], organisations: [organisation]) }
-    let(:user_to_merge) { create(:user, agents: [], organisations: [organisation]) }
+    let(:user_target) { create(:user, referent_agents: [agent], organisations: [organisation]) }
+    let(:user_to_merge) { create(:user, referent_agents: [], organisations: [organisation]) }
 
     it "does not do anything" do
       subject
-      expect(user_target.agents).to contain_exactly(agent)
+      expect(user_target.referent_agents).to contain_exactly(agent)
     end
   end
 
@@ -181,13 +181,13 @@ describe MergeUsersService, type: :service do
     let!(:organisation2) { create(:organisation) }
     let!(:agent1) { create(:agent, basic_role_in_organisations: [organisation]) }
     let!(:agent2) { create(:agent, basic_role_in_organisations: [organisation2]) }
-    let(:user_target) { create(:user, agents: [agent1], organisations: [organisation]) }
-    let(:user_to_merge) { create(:user, agents: [agent2], organisations: [organisation, organisation2]) }
+    let(:user_target) { create(:user, referent_agents: [agent1], organisations: [organisation]) }
+    let(:user_to_merge) { create(:user, referent_agents: [agent2], organisations: [organisation, organisation2]) }
 
     it "does not move the agent from the other orga anything" do
       subject
-      expect(user_target.reload.agents).to contain_exactly(agent1)
-      expect(user_to_merge.reload.agents).to contain_exactly(agent2)
+      expect(user_target.reload.referent_agents).to contain_exactly(agent1)
+      expect(user_to_merge.reload.referent_agents).to contain_exactly(agent2)
     end
   end
 
@@ -229,6 +229,48 @@ describe MergeUsersService, type: :service do
       user_target.reload
       expect(user_target.logged_once_with_franceconnect).to be_truthy
       expect(user_target.franceconnect_openid_sub).to eq("unechainedecharacteres")
+    end
+  end
+
+  context "when one of the users was created by a prescripteur" do
+    let(:user1) { create(:user) }
+    let(:user2) { create(:user, created_through: :prescripteur) }
+    let(:rdv) { create(:rdv, organisation: organisation) }
+    let(:prescripteur) { create(:prescripteur) }
+
+    before do
+      create(:rdvs_user, rdv: rdv, user: user2, prescripteur: prescripteur)
+    end
+
+    it "changes the prescripteur to the target user" do
+      expect do
+        described_class.perform_with(user1, user2, attributes_to_merge, organisation)
+      end.to change { prescripteur.reload.user }.from(user2).to(user1)
+    end
+  end
+
+  context "when target user is responsible for user to merge" do
+    context "when target user has no responsible of her own" do
+      let!(:user_target) { create(:user) }
+      let!(:user_to_merge) { create(:user, responsible: user_target) }
+
+      it "leaves no responsible in the resulting user" do
+        described_class.perform_with(user_target, user_to_merge, [:responsible_id], organisation)
+        expect(User.find_by(id: user_to_merge.id)).to be_nil # Expect user to be deleted
+        expect(user_target.responsible).to be_nil
+      end
+    end
+
+    context "when target user has a responsible user of her own" do
+      let!(:responsible_of_target_user) { create(:user) }
+      let!(:user_target) { create(:user, responsible: responsible_of_target_user) }
+      let!(:user_to_merge) { create(:user, responsible: user_target) }
+
+      it "keeps the responsible" do
+        described_class.perform_with(user_target, user_to_merge, [], organisation)
+        expect(User.find_by(id: user_to_merge.id)).to be_nil # Expect user to be deleted
+        expect(user_target.responsible).to eq(responsible_of_target_user)
+      end
     end
   end
 end

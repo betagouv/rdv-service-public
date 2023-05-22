@@ -131,8 +131,8 @@ RSpec.describe Admin::UsersController, type: :controller do
     end
 
     it "assigns user where I am referent" do
-      user_with_referent = create(:user, agents: [agent], organisations: [organisation])
-      create(:user, agents: [], organisations: [organisation])
+      user_with_referent = create(:user, referent_agents: [agent], organisations: [organisation])
+      create(:user, referent_agents: [], organisations: [organisation])
       get :index, params: { organisation_id: organisation.id, agent_id: agent.id }
       expect(assigns(:users)).to eq([user_with_referent])
     end

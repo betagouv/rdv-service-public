@@ -3,7 +3,7 @@
 # rubocop:disable Metrics/ClassLength
 class SearchContext
   attr_reader :errors, :query, :address, :city_code, :street_ban_id, :latitude, :longitude,
-              :motif_name_with_location_type
+              :motif_name_with_location_type, :prescripteur
 
   # rubocop:disable Metrics/MethodLength
   def initialize(current_user, query = {})
@@ -171,6 +171,11 @@ class SearchContext
 
   def creneaux
     @creneaux ||= creneaux_search.creneaux
+      .uniq(&:starts_at) # On n'affiche qu'un créneau par horaire, même si plusieurs agents sont dispos
+  end
+
+  def available_collective_rdvs
+    @available_collective_rdvs ||= creneaux_search.available_collective_rdvs
   end
 
   def creneaux_search
@@ -181,8 +186,8 @@ class SearchContext
     @next_availability ||= creneaux.empty? ? creneaux_search.next_availability : nil
   end
 
-  def referents
-    @referents ||= retrieve_referents
+  def referent_agents
+    @referent_agents ||= retrieve_referent_agents
   end
 
   def follow_up?
@@ -207,7 +212,7 @@ class SearchContext
     motifs = motifs.where(id: @motif_id) if @motif_id.present?
     motifs = motifs.with_availability_for_lieux([lieu.id]) if lieu.present?
     motifs = motifs.where(follow_up: follow_up?)
-    motifs = motifs.with_availability_for_agents(referents.map(&:id)) if follow_up?
+    motifs = motifs.with_availability_for_agents(referent_agents.map(&:id)) if follow_up?
 
     motifs
   end
@@ -225,10 +230,10 @@ class SearchContext
     )
   end
 
-  def retrieve_referents
+  def retrieve_referent_agents
     return [] if @referent_ids.blank? || @current_user.nil?
 
-    @current_user.agents.where(id: @referent_ids)
+    @current_user.referent_agents.where(id: @referent_ids)
   end
 
   def matching_motifs

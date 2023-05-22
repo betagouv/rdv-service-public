@@ -10,7 +10,7 @@ describe "Agent can CRUD absences" do
   end
 
   context "for an agent" do
-    let!(:absence) { create(:absence, agent: agent, organisation: organisation) }
+    let!(:absence) { create(:absence, agent: agent) }
 
     it "can crud a absence" do
       click_link "Indisponibilités"
@@ -45,7 +45,7 @@ describe "Agent can CRUD absences" do
   context "for an other agent calendar" do
     let!(:service) { create(:service, name: "PMI") }
     let!(:other_agent) { create(:agent, first_name: "Jane", last_name: "FAROU", service: service, basic_role_in_organisations: [organisation]) }
-    let!(:absence) { create(:absence, agent: other_agent, organisation: organisation) }
+    let!(:absence) { create(:absence, agent: other_agent) }
 
     it "can crud a absence" do
       visit admin_organisation_agent_absences_path(organisation, other_agent.id)
@@ -77,8 +77,8 @@ describe "Agent can CRUD absences" do
   end
 
   context "view past absences" do
-    let!(:future_absence) { create(:absence, agent: agent, organisation: organisation) }
-    let!(:past_absence) { create(:absence, first_day: Date.new(2019, 7, 4), agent: agent, organisation: organisation) }
+    let!(:future_absence) { create(:absence, agent: agent) }
+    let!(:past_absence) { create(:absence, first_day: Date.new(2019, 7, 4), agent: agent) }
 
     it do
       click_link "Indisponibilités"

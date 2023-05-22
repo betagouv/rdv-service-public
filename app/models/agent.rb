@@ -100,12 +100,15 @@ class Agent < ApplicationRecord
     motif.for_secretariat ? joins(:service).where(service: motif.service).or(secretariat) : where(service: motif.service)
   }
   scope :available_referents_for, lambda { |user|
-    where.not(id: [user.agents.map(&:id)])
+    where.not(id: [user.referent_agents.map(&:id)])
   }
+  scope :in_orgs, lambda { |organisations|
+    joins(:roles).where(agent_roles: { organisations: organisations })
+  }
+
   ## -
 
   delegate :name, to: :domain, prefix: true
-  delegate :dns_domain_name, to: :domain
 
   def remember_me # Override from Devise::rememberable to enable it by default
     super.nil? ? true : super
@@ -128,7 +131,9 @@ class Agent < ApplicationRecord
   end
 
   def soft_delete
-    raise SoftDeleteError, "agent still has attached resources" if organisations.any? || plage_ouvertures.any? || absences.any?
+    still_has_attached_resources = organisations.any? || plage_ouvertures.any? { |r| !r.destroyed? } || absences.any? { |r| !r.destroyed? }
+
+    raise SoftDeleteError, "agent still has attached resources" if still_has_attached_resources
 
     sector_attributions.destroy_all
     update_columns(deleted_at: Time.zone.now, email_original: email, email: deleted_email, uid: deleted_email)
@@ -160,8 +165,12 @@ class Agent < ApplicationRecord
     roles.find_by(organisation: organisation)
   end
 
-  def organisations_level(level)
-    organisations.merge(roles.where(level: level)) # self.organisations is a through relation. This implicitly joins through roles and agent_roles
+  def admin_orgs
+    organisations.merge(roles.where(level: AgentRole::LEVEL_ADMIN))
+  end
+
+  def basic_orgs
+    organisations.merge(roles.where(level: AgentRole::LEVEL_BASIC))
   end
 
   def multiple_organisations_access?
@@ -185,7 +194,7 @@ class Agent < ApplicationRecord
   end
 
   def update_unknown_past_rdv_count!
-    update_column(:unknown_past_rdv_count, rdvs.status(:unknown_past).count)
+    update_column(:unknown_past_rdv_count, rdvs.status(:unknown_past).count) if persisted?
   end
 
   # This method is called when calling #current_agent on a controller action that is automatically generated
@@ -221,8 +230,10 @@ class Agent < ApplicationRecord
   delegate :conseiller_numerique?, to: :service
 
   def domain
-    @domain ||= if organisations.where(new_domain_beta: true).any?
+    @domain ||= if organisations.where(verticale: :rdv_aide_numerique).any?
                   Domain::RDV_AIDE_NUMERIQUE
+                elsif organisations.where(verticale: :rdv_mairie).any?
+                  Domain::RDV_MAIRIE
                 else
                   Domain::RDV_SOLIDARITES
                 end

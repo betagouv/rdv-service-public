@@ -37,4 +37,4 @@ section.bg-light.p-4
              = link_to("#", "data-turbolinks": false, data: { toggle: "modal", target: "#js-rdv-restriction-motif#{motif.id}" }) do
                = render "motif_selection_card", motif: motif
              = render "/common/modal", id: "js-rdv-restriction-motif#{motif.id}" , title: "À lire avant de prendre un rendez-vous", confirm_path: prendre_rdv_path(context.query.merge(motif_name_with_location_type: motif.name_with_location_type)) do
-               = ActionController::Base.helpers.auto_link(simple_format(motif.restriction_for_rdv), html: { target: "_blank"})
+               = restriction_for_rdv_to_html(motif)

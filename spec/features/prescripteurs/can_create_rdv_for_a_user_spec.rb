@@ -67,20 +67,26 @@ RSpec.describe "prescripteur can create RDV for a user" do
 
     created_rdv = Rdv.last
     expect(created_rdv.agents).to eq([agent])
+
     expect(created_rdv.rdvs_users.size).to eq(1)
-    expect(created_rdv.rdvs_users.first.user).to have_attributes(
+
+    created_participation = created_rdv.rdvs_users.first
+    created_user = created_participation.user
+
+    expect(created_user).to have_attributes(
       full_name: "Patricia DUROY",
       created_through: "prescripteur",
       phone_number: "0611223344",
-      organisations: [organisation]
+      organisation_ids: [organisation.id]
     )
-    expect(created_rdv.rdvs_users.first.prescripteur).to have_attributes(
+    expect(created_participation.prescripteur).to have_attributes(
       first_name: "Alex",
       last_name: "Prescripteur",
       email: "alex@prescripteur.fr",
       phone_number: "0611223344"
     )
-    expect(created_rdv.created_by).to eq("prescripteur")
+    expect(created_rdv.created_by_prescripteur?).to be(true)
+    expect(created_rdv.rdvs_users.first.created_by_prescripteur?).to be(true)
 
     perform_enqueued_jobs(queue: "mailers")
     expect(email_sent_to(agent.email).subject).to include("Nouveau RDV ajouté sur votre agenda RDV Solidarités")
@@ -91,13 +97,108 @@ RSpec.describe "prescripteur can create RDV for a user" do
     expect(enqueued_jobs.first["arguments"][0]["phone_number"]).to eq("+33611223344")
   end
 
+  def fill_address_form
+    fill_in :search_where, with: "21 rue des Ardennes, 75019 Paris"
+
+    # fake address autocomplete
+    page.execute_script("document.querySelector('#search_departement').value = '#{motif.organisation.territory.departement_number}'")
+    page.execute_script("document.querySelector('#search_submit').disabled = false")
+
+    click_on("Rechercher")
+  end
+
+  context "when the prescripteur info isn't filled in" do
+    it "doesn't shows error messages and doesn't allow continuing" do
+      visit "http://www.rdv-aide-numerique-test.localhost/org/#{organisation.id}"
+
+      click_on "Prochaine disponibilité le" # choix du lieu
+      click_on "08:00" # choix du créneau
+      click_on "Je suis un prescripteur qui oriente un bénéficiaire" # page de login
+
+      fill_in "Votre prénom", with: "Alex"
+      fill_in "Votre nom", with: "  "
+      fill_in "Votre email professionnel", with: "alex@prescripteur.fr"
+      fill_in "Votre numéro de téléphone", with: "0611223344"
+      click_on "Continuer"
+
+      expect(page).to have_content("Vos coordonnées de prescripteur")
+      expect(page).to have_content("Nom d’usage doit être rempli(e)")
+      expect(page).to have_content("Veuillez compléter tous les champs obligatoires")
+    end
+  end
+
+  context "when a similar user already exists", js: true do
+    let!(:user) do
+      create(:user, first_name: "Patricia", last_name: "Duroy", phone_number: "0611223344")
+    end
+
+    def fill_prescripteur_form
+      fill_in "Votre prénom", with: "Alex"
+      fill_in "Votre nom", with: "Prescripteur"
+      fill_in "Votre email professionnel", with: "alex@prescripteur.fr"
+      fill_in "Votre numéro de téléphone", with: "0655443322"
+      click_on "Continuer"
+    end
+
+    it "doesn't create a new one but adds the user to the organisation" do
+      visit "http://www.rdv-solidarites-test.localhost/prendre_rdv_prescripteur"
+
+      fill_address_form
+
+      click_on "Prochaine disponibilité le", match: :first # choix du lieu
+      click_on "08:00" # choix du créneau
+
+      fill_prescripteur_form
+
+      fill_in "Prénom", with: "Patricia"
+      fill_in "Nom", with: "DUROY"
+      # Le format du numéro de téléphone n'est pas exactement le même que celui en base
+      fill_in "Téléphone", with: "06 11 22 33 44"
+
+      expect { click_on "Confirmer le rendez-vous" }.to change(Rdv, :count).by(1)
+        .and(change(User, :count).by(0))
+        .and(change(UserProfile, :count).by(1))
+
+      expect(UserProfile.last).to have_attributes(
+        user: user,
+        organisation: motif.organisation
+      )
+    end
+
+    context "and is already part of the organisation" do
+      before do
+        create(:user_profile, organisation: organisation, user: user)
+      end
+
+      it "doesn't create a duplicate profile" do
+        visit "http://www.rdv-solidarites-test.localhost/prendre_rdv_prescripteur"
+
+        fill_address_form
+
+        click_on "Prochaine disponibilité le", match: :first # choix du lieu
+        click_on "08:00" # choix du créneau
+
+        fill_prescripteur_form
+
+        fill_in "Prénom", with: "Patricia"
+        fill_in "Nom", with: "DUROY"
+        # Le format du numéro de téléphone n'est pas exactement le même que celui en base
+        fill_in "Téléphone", with: "06 11 22 33 44"
+
+        expect { click_on "Confirmer le rendez-vous" }.to change(Rdv, :count).by(1).and(change(UserProfile, :count).by(0))
+      end
+    end
+  end
+
   context "when using the prescripteur route" do
     let!(:lieu2) { create(:lieu, organisation: organisation, name: "Autre bureau") }
     let!(:plage_ouverture2) { create(:plage_ouverture, organisation: organisation, agent: agent, motifs: [motif], lieu: lieu2) }
     let(:bookable_by) { "agents_and_prescripteurs" }
 
-    it "goes directly to prescripteur forms after creneau selection ands keeps the prescripteur param when navigating backwards" do
-      visit "http://www.rdv-solidarites-test.localhost/prendre_rdv_prescripteur/#{organisation.territory.departement_number}"
+    it "goes directly to prescripteur forms after creneau selection ands keeps the prescripteur param when navigating backwards", js: true do
+      visit "http://www.rdv-solidarites-test.localhost/prendre_rdv_prescripteur"
+
+      fill_address_form
 
       click_on "Prochaine disponibilité le", match: :first # choix du lieu
       click_on "08:00" # choix du créneau
@@ -116,6 +217,14 @@ RSpec.describe "prescripteur can create RDV for a user" do
       click_on "08:00" # choix du créneau
 
       expect(page).to have_content("Vos coordonnées de prescripteur")
+    end
+  end
+
+  context "when going directly to a prescripteur form without having selected a creneau" do
+    it "redirects to the homepage with an error message" do
+      expect(Sentry).to receive(:capture_message)
+      visit "http://www.rdv-solidarites-test.localhost/prescripteur/new_prescripteur"
+      expect(page).to have_content("Nous n'avons pas trouvé le créneau pour lequel vous souhaitiez prendre rendez-vous.")
     end
   end
 end

@@ -18,4 +18,8 @@ class Admin::RdvWizardForm::Step4
       date: starts_at.to_date
     )
   end
+
+  def success_flash
+    { notice: I18n.t("admin.rdvs.message.success.create") }
+  end
 end

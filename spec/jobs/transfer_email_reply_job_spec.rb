@@ -61,10 +61,19 @@ RSpec.describe TransferEmailReplyJob do
       expect(transferred_email.html_part.body.to_s).to include(%(L'usager⋅e "Bénédicte Ficiaire" &lt;bene_ficiaire@lapin.fr&gt; a répondu))
       expect(transferred_email.html_part.body.to_s).to include("Je souhaite annuler mon RDV") # reply content
     end
+  end
 
-    it "warns Sentry" do
-      expect { perform_job }.to change(sentry_events, :size).by(1)
-      expect(sentry_events.last.message).to eq("Reply email could not be forwarded to agent, it was sent to default mailbox")
+  context "when the rdv has been soft deleted" do
+    before { rdv.soft_delete }
+
+    it "sends a notification email to the agent, containing the user reply" do
+      expect { perform_job }.to change { ActionMailer::Base.deliveries.size }.by(1)
+      transferred_email = ActionMailer::Base.deliveries.last
+      expect(transferred_email.to).to eq(["je_suis_un_agent@departement.fr"])
+      expect(transferred_email[:from].to_s).to eq(%("RDV Solidarités" <support@rdv-solidarites.fr>))
+      expect(transferred_email.html_part.body.to_s).to include("Dans le cadre du RDV du 20 mai, l'usager⋅e Bénédicte FICIAIRE a envoyé")
+      expect(transferred_email.html_part.body.to_s).to include("Je souhaite annuler mon RDV") # reply content
+      expect(transferred_email.html_part.body.to_s).to include(%(href="http://www.rdv-solidarites-test.localhost/admin/organisations/#{rdv.organisation_id}/rdvs/#{rdv.id}))
     end
   end
 

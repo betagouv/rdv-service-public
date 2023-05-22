@@ -37,7 +37,7 @@ class Users::ParticipationsController < UserAuthController
   end
 
   def new_participation
-    @new_participation ||= RdvsUser.new(rdv: @rdv, user: @user)
+    @new_participation ||= RdvsUser.new(rdv: @rdv, user: @user, created_by: :user)
   end
 
   def add_participation
@@ -72,7 +72,7 @@ class Users::ParticipationsController < UserAuthController
       raise Pundit::NotAuthorizedError
     end
 
-    new_participation.create_and_notify(current_user)
+    new_participation.create_and_notify!(current_user)
     set_user_name_initials_verified
     flash[:notice] = "Participation confirmée"
     redirect_to users_rdv_path(@rdv, invitation_token: new_participation.rdv_user_token)

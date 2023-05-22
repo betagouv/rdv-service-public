@@ -16,13 +16,13 @@ describe "Public links API", swagger_doc: "v1/api.json" do
 
       response 200, "Retourne les liens publics de recherche" do
         let!(:terr) { create(:territory, departement_number: "CN") }
-        let!(:organisation_a) { create(:organisation, new_domain_beta: true, external_id: "ext_id_A", territory: terr) }
-        let!(:organisation_b) { create(:organisation, new_domain_beta: true, external_id: "ext_id_B", territory: terr) }
-        let!(:organisation_c) { create(:organisation, new_domain_beta: true, external_id: "ext_id_C", territory: terr) }
-        let!(:organisation_d) { create(:organisation, new_domain_beta: true, external_id: "ext_id_D", territory: terr) }
-        let!(:organisation_e) { create(:organisation, new_domain_beta: true, external_id: "ext_id_E", territory: terr) }
-        let!(:organisation_f) { create(:organisation, new_domain_beta: true, external_id: "ext_id_F", territory: create(:territory)) }
-        let!(:organisation_g) { create(:organisation, new_domain_beta: true, external_id: nil,        territory: terr) }
+        let!(:organisation_a) { create(:organisation, verticale: :rdv_aide_numerique, external_id: "ext_id_A", territory: terr) }
+        let!(:organisation_b) { create(:organisation, verticale: :rdv_aide_numerique, external_id: "ext_id_B", territory: terr) }
+        let!(:organisation_c) { create(:organisation, verticale: :rdv_aide_numerique, external_id: "ext_id_C", territory: terr) }
+        let!(:organisation_d) { create(:organisation, verticale: :rdv_aide_numerique, external_id: "ext_id_D", territory: terr) }
+        let!(:organisation_e) { create(:organisation, verticale: :rdv_aide_numerique, external_id: "ext_id_E", territory: terr) }
+        let!(:organisation_f) { create(:organisation, verticale: :rdv_aide_numerique, external_id: "ext_id_F", territory: create(:territory)) }
+        let!(:organisation_g) { create(:organisation, verticale: :rdv_aide_numerique, external_id: nil,        territory: terr) }
 
         let(:territory) { terr.departement_number }
 

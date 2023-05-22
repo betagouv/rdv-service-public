@@ -7,6 +7,12 @@ class Organisation < ApplicationRecord
 
   # Attributes
   auto_strip_attributes :email, :name
+  enum verticale: {
+    rdv_insertion: "rdv_insertion",
+    rdv_solidarites: "rdv_solidarites",
+    rdv_aide_numerique: "rdv_aide_numerique",
+    rdv_mairie: "rdv_mairie",
+  }
 
   # Relations
   belongs_to :territory
@@ -38,7 +44,7 @@ class Organisation < ApplicationRecord
   # Validation
   validates :name, presence: true, uniqueness: { scope: :territory }
   validates :external_id, uniqueness: { scope: :territory, allow_nil: true }
-  validates :phone_number, phone: { allow_blank: true }
+  validate :validate_organisation_phone_number
   validates(
     :human_id,
     format: {
@@ -88,10 +94,28 @@ class Organisation < ApplicationRecord
   end
 
   def domain
-    new_domain_beta? ? Domain::RDV_AIDE_NUMERIQUE : Domain::RDV_SOLIDARITES
+    case verticale.to_sym
+    when :rdv_aide_numerique
+      Domain::RDV_AIDE_NUMERIQUE
+    when :rdv_mairie
+      Domain::RDV_MAIRIE
+    else
+      Domain::RDV_SOLIDARITES
+    end
   end
 
   def slug
     name.parameterize[..80]
+  end
+
+  def validate_organisation_phone_number
+    return if phone_number_is_valid?
+
+    errors.add(:phone_number, :invalid)
+  end
+
+  def phone_number_is_valid?
+    # Blank, Valid Phone, 4 digits phone (organisations only)
+    phone_number.blank? || Phonelib.parse(phone_number).valid? || phone_number.match(/^\d{4}$/)
   end
 end

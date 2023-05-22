@@ -2,7 +2,7 @@
 
 # Ce fichier teste l'intégration de la chaine d'appels depuis les modifications des objets activerecord
 # jusqu'à l'appel http à l'api Outlook
-RSpec.describe Outlook::EventSerializerAndListener, database_cleaner_strategy: :truncation do
+RSpec.describe Outlook::EventSerializerAndListener do
   around do |example|
     perform_enqueued_jobs { example.run }
   end
@@ -258,8 +258,7 @@ RSpec.describe Outlook::EventSerializerAndListener, database_cleaner_strategy: :
 
     context "agent not synced with outlook" do
       let(:agent) { create(:agent, microsoft_graph_token: nil) }
-      let(:rdv) { create(:rdv, motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30) }
-      let!(:agents_rdv) { create(:agents_rdv, rdv: rdv, agent: agent) }
+      let(:rdv) { create(:rdv, agents: [agent], motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30) }
 
       it "does not call Outlook::DestroyEventJob" do
         expect do

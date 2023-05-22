@@ -53,6 +53,7 @@ describe "Agent can create a Rdv with wizard" do
     sleep(1) # wait for modal to hide completely
     fill_in :rdv_context, with: "RDV très spécial"
     click_button("Continuer")
+    expect(page).not_to have_content("Le rendez-vous a été créé")
   end
 
   def step3(lieu_availability)
@@ -169,6 +170,7 @@ describe "Agent can create a Rdv with wizard" do
       expect(rdv.duration_in_min).to eq(35)
       expect(rdv.starts_at).to eq(Time.zone.local(2019, 10, 11, 14, 15))
       expect(rdv.created_by_agent?).to be(true)
+      expect(rdv.rdvs_users.first.created_by_agent?).to be(true)
       expect(rdv.context).to eq("RDV très spécial")
 
       expect(page).to have_current_path(admin_organisation_agent_agenda_path(organisation, agent, date: rdv.starts_at.to_date, selected_event_id: rdv.id))

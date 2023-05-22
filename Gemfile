@@ -3,7 +3,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.2.0"
+ruby "3.2.2"
 
 gem "dotenv-rails" # dotenv should always be loaded before rails
 
@@ -45,7 +45,7 @@ gem "omniauth-microsoft_graph"
 gem "omniauth_openid_connect"
 gem "omniauth-rails_csrf_protection"
 gem "pundit"
-gem "devise_token_auth", github: "lynndylanhurley/devise_token_auth"
+gem "devise_token_auth"
 
 # Jobs
 gem "good_job"
@@ -67,7 +67,7 @@ gem "auto_strip_attributes"
 
 # Frontend
 gem "slim"
-gem "chartkick", "~> 3.4.0"
+gem "chartkick", "~> 5.0.1"
 gem "groupdate", "~> 6.1"
 gem "rails_autolink"
 gem "active_link_to"
@@ -85,6 +85,7 @@ gem "icalendar", "~> 2.5"
 gem "lograge"
 
 group :development, :test do
+  gem "active_record_doctor"
   gem "byebug", platforms: %i[mri mingw x64_mingw] # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem "brakeman", require: false
   gem "rubocop", "1.24.1", require: false

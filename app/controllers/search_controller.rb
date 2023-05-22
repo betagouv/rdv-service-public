@@ -33,7 +33,6 @@ class SearchController < ApplicationController
 
   def prescripteur
     redirect_to prendre_rdv_path(
-      departement: params[:territory_short_name],
       prescripteur: 1
     )
   end

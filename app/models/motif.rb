@@ -114,7 +114,7 @@ class Motif < ApplicationRecord
   end
 
   def soft_delete
-    rdvs.any? ? update_attribute(:deleted_at, Time.zone.now) : destroy
+    rdvs.unscoped.any? ? update_attribute(:deleted_at, Time.zone.now) : destroy
   end
 
   def authorized_agents
@@ -213,6 +213,11 @@ class Motif < ApplicationRecord
 
   def bookable_outside_of_organisation?
     bookable_by != "agents"
+  end
+
+  # Temporary method for rdv-insertion motifs
+  def motif_category_for_rdv_insertion?
+    motif_category.present?
   end
 
   private

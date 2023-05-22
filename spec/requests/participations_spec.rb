@@ -11,8 +11,8 @@ RSpec.describe "Participations", type: :request do
 
   before do
     login_as(agent, scope: :agent)
-    rdv.rdvs_users.create(user: user1)
-    rdv.rdvs_users.create(user: user2)
+    create(:rdvs_user, user: user1, rdv: rdv)
+    create(:rdvs_user, user: user2, rdv: rdv)
   end
 
   describe "update" do

@@ -7,8 +7,6 @@ class AgentsRdv < ApplicationRecord
   belongs_to :rdv, touch: true
   belongs_to :agent
 
-  scope :future, -> { includes(:rdv).where(rdv: { starts_at: Time.zone.now.. }) }
-
   # Validation
   # Uniqueness validation doesn’t work with nested_attributes, see https://github.com/rails/rails/issues/4568
   # We do have on a DB constraint.

@@ -18,7 +18,6 @@ class TransferEmailReplyJob < ApplicationJob
     if rdv
       notify_agents
     else
-      Sentry.capture_message("Reply email could not be forwarded to agent, it was sent to default mailbox")
       forward_to_default_mailbox
     end
   end
@@ -43,7 +42,7 @@ class TransferEmailReplyJob < ApplicationJob
   end
 
   def rdv
-    Rdv.find_by(uuid: uuid) if uuid
+    Rdv.unscoped.find_by(uuid: uuid) if uuid
   end
 
   def user
