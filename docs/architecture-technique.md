@@ -295,7 +295,9 @@ du départ de membres de l'équipe;
 
 ### Traçabilité des erreurs et des actions utilisateurs
 
-Les logs sont écrits dans le système de log de Scalingo.
+#### Logs textuels
+
+Les logs textuels sont écrits dans le système de log de Scalingo.
 
 Les logs applicatifs (générés par Rails) contiennent, pour chaque requêtes HTTP :
 
@@ -315,9 +317,25 @@ Les logs produits par le routeur de Scalingo contiennent, pour chaque requêtes 
 - referer
 - user agent
 
-TODO : Mentionner Papertrail, dire qu'on a pas de système pour dire qui a eu accès à quoi
-TODO : Quel type de veille des logs ? On y va que pour investiguer ?
-TODO : Parler système alertes Sentry + alertes Scalingo (WIP) vers Mattermost
+La consultation des logs textuels ne se fait que lors d'investigations de bugs. Leur usage est donc uniquement ponctuel
+et leur consultation est manuelle. Nous n'avons pas de système d'analyse de logs.
+
+#### Traçabilité applicative / auditing
+
+Nous utilisons également la gem `paper_trail`, qui permet d'enregistrer chaque modification (création, modification,
+suppression) effectué dans une sélection de tables Postgres. Elle est activé sur une partie des tables et colonnes
+et permet ainsi d'avoir une traçabilité partielle des changements.
+
+Nous n'avons en revanche pas de système permettant de savoir quel profil a eu accès à quelle information et quand.
+
+#### Monitoring d'erreur
+
+Nous utilisons Sentry afin d'être informé⋅es sur les nouvelles erreurs, et le volume des erreurs existantes.
+Nous sommes alertée⋅es en cas de nouvelle erreur ou volume inhabituel, en direct sur notre outil de
+communication principal Mattermost.
+
+Notre hébergeur Scalingo propose aussi un système d'alerting déclenché selon des métriques diverses, mais
+il n'est pas utilisé actuellement car sa calibration est difficile. 
 
 ### Politique de mise à jour des applicatifs
 
