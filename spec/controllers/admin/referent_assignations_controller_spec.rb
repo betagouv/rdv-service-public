@@ -51,6 +51,15 @@ describe Admin::ReferentAssignationsController, type: :controller do
       expect(response).to redirect_to(admin_organisation_user_referent_assignations_path(organisation, user))
     end
 
+    it "is idempotent" do
+      sign_in agent
+
+      post :create, params: { organisation_id: organisation.id, user_id: user.id, agent_id: new_referent.id }
+
+      # Calling the action with same params does not raise error
+      post :create, params: { organisation_id: organisation.id, user_id: user.id, agent_id: new_referent.id }
+    end
+
     it "return errors and redirect to index" do
       sign_in agent
 
@@ -79,6 +88,15 @@ describe Admin::ReferentAssignationsController, type: :controller do
 
       expect(user.reload.referent_agents).not_to include(referent)
       expect(response).to redirect_to(admin_organisation_user_referent_assignations_path(organisation, user))
+    end
+
+    it "is idempotent" do
+      sign_in agent
+
+      post :destroy, params: { organisation_id: organisation.id, user_id: user.id, id: referent.id }
+
+      # Calling the action with same params does not raise error
+      post :destroy, params: { organisation_id: organisation.id, user_id: user.id, id: referent.id }
     end
 
     it "return errors and redirect to user's show" do
