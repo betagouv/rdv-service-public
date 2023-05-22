@@ -36,12 +36,13 @@ describe Admin::ReferentAssignationsController, type: :controller do
   end
 
   describe "#create" do
+    let!(:organisation) { create(:organisation) }
+    let!(:user) { create(:user, referent_agents: [], organisations: [organisation]) }
+    let!(:service) { create(:service) }
+    let!(:agent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }
+    let!(:new_referent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }
+
     it "add given agent to referents and redirect to user show" do
-      organisation = create(:organisation)
-      user = create(:user, referent_agents: [], organisations: [organisation])
-      service = create(:service)
-      agent = create(:agent, basic_role_in_organisations: [organisation], service: service)
-      new_referent = create(:agent, basic_role_in_organisations: [organisation], service: service)
       sign_in agent
 
       post :create, params: { organisation_id: organisation.id, user_id: user.id, agent_id: new_referent.id }
@@ -51,11 +52,6 @@ describe Admin::ReferentAssignationsController, type: :controller do
     end
 
     it "return errors and redirect to index" do
-      organisation = create(:organisation)
-      user = create(:user, referent_agents: [], organisations: [organisation])
-      service = create(:service)
-      agent = create(:agent, basic_role_in_organisations: [organisation], service: service)
-      new_referent = create(:agent, basic_role_in_organisations: [organisation], service: service)
       sign_in agent
 
       allow_any_instance_of(User).to receive(:save).and_return(false)
@@ -70,13 +66,13 @@ describe Admin::ReferentAssignationsController, type: :controller do
   end
 
   describe "#delete" do
-    it "remove given agent from user's referents" do
-      organisation = create(:organisation)
-      service = create(:service)
-      referent = create(:agent, basic_role_in_organisations: [organisation], service: service)
-      agent = create(:agent, basic_role_in_organisations: [organisation], service: service)
-      user = create(:user, referent_agents: [referent], organisations: [organisation])
+    let!(:organisation) { create(:organisation) }
+    let!(:service) { create(:service) }
+    let!(:referent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }
+    let!(:agent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }
+    let!(:user) { create(:user, referent_agents: [referent], organisations: [organisation]) }
 
+    it "remove given agent from user's referents" do
       sign_in agent
 
       post :destroy, params: { organisation_id: organisation.id, user_id: user.id, id: referent.id }
@@ -86,12 +82,6 @@ describe Admin::ReferentAssignationsController, type: :controller do
     end
 
     it "return errors and redirect to user's show" do
-      organisation = create(:organisation)
-      service = create(:service)
-      referent = create(:agent, basic_role_in_organisations: [organisation], service: service)
-      agent = create(:agent, basic_role_in_organisations: [organisation], service: service)
-      user = create(:user, referent_agents: [referent], organisations: [organisation])
-
       sign_in agent
 
       allow_any_instance_of(User).to receive(:save).and_return(false)
