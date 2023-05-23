@@ -34,7 +34,7 @@
 
 Outil de prise de RDV pour le service public. Il permet aux agents de gérer leur planning de RDV, leurs disponibilités et leurs absences, et offre un système de notification envoyées aux usagers pour éviter les lapins.
 
-Il est open source bien qu'il n'y ait qu'une instance, gérée par l'équipe.
+Il est open source bien que toutes les instances soient gérées par l'équipe.
 
 Plus d'infos sur la fiche beta : https://beta.gouv.fr/startups/rdv-services-publics.html
 
@@ -48,11 +48,12 @@ sessions. L'infrastructure est entièrement gérée par Scalingo en PaaS.
 Le projet ne contient que très peu de Javascript (petites touches de vanilla JS, pas de framework front) et le HTML est
 généré côté serveur. C'est Bootstrap qui est utilisé coté CSS / composants.
 
-Ces choix reflètent un désir de simplicité avant tout, afin de se concentrer sur la valeur métier.
+Ces choix reflètent un désir de simplicité avant tout, afin de rester agiles et se concentrer sur la valeur métier.
+Ces choix techniques sont aussi influencés par la culture de la communauté Ruby.
 
 ### Matrice des flux
 
-#### Application principale
+#### Application Scalingo
 
 | Source     | Destination       | Protocole | Port | Localisation      | Interne/URL Externe |
 |------------|-------------------|-----------|------|-------------------|---------------------|
@@ -60,7 +61,7 @@ Ces choix reflètent un désir de simplicité avant tout, afin de se concentrer 
 | App Rails  | Postgres Scalingo | TCP       | 5432 | Paris/SecNumCloud | Interne             |
 | App Rails  | Redis Scalingo    | TCP       | 6379 | Paris/SecNumCloud | Interne             |
 
-#### Tooling
+#### Tooling (error monitoring, APM, analytics)
 
 | Source     | Destination | Protocole | Port | Localisation           | Interne/URL Externe   |
 |------------|-------------|-----------|------|------------------------|-----------------------|
@@ -77,6 +78,9 @@ Ces choix reflètent un désir de simplicité avant tout, afin de se concentrer 
 | App Rails | Netsize             | HTTPS     | 587  | France        | europe.ipx.com                      |
 | App Rails | SFR mail2SMS        | SMTP      | 587  | France        | @mailtosms.dmc.sfr-sh.fr            |
 | App Rails | Clever Technologies | HTTPS     | 587  | France        | webservicesmultimedias.clever-is.fr |
+
+Note : l'application permet aussi de définir des webhooks sortant, et donc d'appeler en HTTPS un service externe
+lors de la création, modification ou suppression de certaines données applicatives.
 
 #### Fournisseurs d'identité
 
