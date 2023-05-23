@@ -27,6 +27,8 @@ module SuperAdmins
       end
     end
 
+    private
+
     def create_organisation
       Organisation.create!(
         name: resource_params[:name],
