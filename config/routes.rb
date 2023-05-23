@@ -36,6 +36,7 @@ Rails.application.routes.draw do
     resources :users do
       get "sign_in_as", on: :member
     end
+    resources :mairie_comptes
     root to: "agents#index"
 
     authenticate :super_admin do
