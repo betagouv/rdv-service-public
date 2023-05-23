@@ -228,7 +228,7 @@ C4Container
 
 ### Schéma des données
 
-Lancer `make generate_db_diagram` pour obtenir un SVG de l'état actuel des tables Postgres.
+Lancer `make generate_db_diagram` pour obtenir un SVG de l'état actuel des tables Postgres. Le fichier `db/schema.rb` donne aussi une description des tables via un DSL Ruby.
 
 Nous avons cessé de versionner ce SVG depuis le commit 6b3069c. La dernière version commitée était celle-ci :
 https://github.com/betagouv/rdv-solidarites.fr/blob/f12411c0760be1316aae571bb35c62a78a5b7d7f/docs/domain_model.svg
