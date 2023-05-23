@@ -75,7 +75,7 @@ Ces choix techniques sont aussi influencés par la culture de la communauté Rub
 |-----------|---------------------|-----------|------|---------------|-------------------------------------|
 | App Rails | Brevo               | SMTP      | 587  | Paris, France | smtp-relay.sendinblue.com           |
 | App Rails | API Microsoft       | HTTPS     | 443  | Paris, France | graph.microsoft.com                 |
-| App Rails | Netsize             | HTTPS     | 587  | France        | europe.ipx.com                      |
+| App Rails | Netsize             | HTTPS     | 443  | France        | europe.ipx.com                      |
 | App Rails | SFR mail2SMS        | SMTP      | 587  | France        | @mailtosms.dmc.sfr-sh.fr            |
 | App Rails | Clever Technologies | HTTPS     | 587  | France        | webservicesmultimedias.clever-is.fr |
 
