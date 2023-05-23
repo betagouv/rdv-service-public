@@ -108,23 +108,51 @@ La liste des librairies JS utilisée est disponible dans :
 
 ### Schéma de l’architecture
 
-Notre application est accessible sous 3 "marques" différentes : 
+Notre application est accessible sous 3 "marques" différentes :
 - https://www.rdv-solidarites.fr/
 - https://www.rdv-aide-numerique.fr/
 - https://www.rdv-mairie.fr/
-
-TODO: Expliquer que nous avons 3 domaines et que les deux premières sont sur la même instance.
 
 Nous avons actuellement 3 instances :
 - `production-rdv-solidarites` : serveur de production pour `www.rdv-solidarites.fr` et `www.rdv-aide-numerique.fr`
 - `production-rdv-mairie` : serveur de production pour `www.rdv-mairie.fr`
 - `demo-rdv-solidarites` : serveur de démo pour `demo.rdv-solidarites.fr`, `demo.rdv-aide-numerique.fr` et `demo.rdv-mairie.fr`
 
+```mermaid
+flowchart TD
+    %% Domaines de prod
+    www.rdv-solidarites.fr
+    www.rdv-aide-numerique.fr
+    www.rdv-mairie.fr
+
+    %% Domaines de demo
+    demo.rdv-solidarites.fr
+    demo.rdv-aide-numerique.fr
+    demo.rdv-mairie.fr
+
+    %% Apps Scalingo
+    production-rdv-solidarites((production-rdv-solidarites))
+    production-rdv-mairie((production-rdv-mairie))
+    demo-rdv-solidarites((demo-rdv-solidarites))
+
+    %% Relations domaine -> app
+    www.rdv-solidarites.fr --> production-rdv-solidarites
+    www.rdv-aide-numerique.fr --> production-rdv-solidarites
+    www.rdv-mairie.fr --> production-rdv-mairie
+    demo.rdv-solidarites.fr --> demo-rdv-solidarites
+    demo.rdv-aide-numerique.fr --> demo-rdv-solidarites
+    demo.rdv-mairie.fr --> demo-rdv-solidarites
+```
+
 `production-rdv-solidarites` est notre instance de production actuelle. Elle est représentée fidèlement dans les
 schémas ci-dessous. `production-rdv-mairie` est une nouvelle instance que nous venons de créer (mai 2023). Nous avons
 créé cette instance afin de séparer les données de la future plateforme `www.rdv-mairie.fr` de nos données existantes.
 
 L'instance `demo-rdv-solidarites` sert de plateforme de démo pour nos 3 domaines.
+
+Chaque schémas ci-dessous représente une seule instance (une seule app Scalingo), qu'elle soit de prod ou de demo.
+À noter que les instances `demo-rdv-solidarites` et `production-rdv-mairie` n'utilisent que `netsize` comme
+fournisseur de SMS, les autres fournisseurs étant spécifiques à des département du médico-social.
 
 #### Architecture interne à Scalingo
 
