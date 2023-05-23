@@ -12,8 +12,6 @@ class MairieCompteDashboard < Administrate::BaseDashboard
   ATTRIBUTE_TYPES = {
     id: Field::Number,
     name: Field::String,
-    latitude: Field::Number.with_options(decimals: 6),
-    longitude: Field::Number.with_options(decimals: 6),
     address: Field::String,
     agent_email: Field::String,
     agent_first_name: Field::String,
@@ -47,8 +45,6 @@ class MairieCompteDashboard < Administrate::BaseDashboard
   # on the model's form (`new` and `edit`) pages.
   FORM_ATTRIBUTES = %i[
     name
-    latitude
-    longitude
     address
     agent_first_name
     agent_last_name

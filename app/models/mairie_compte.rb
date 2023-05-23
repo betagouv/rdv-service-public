@@ -4,7 +4,7 @@
 class MairieCompte
   include ActiveModel::Model
 
-  attr_accessor :id, :name, :latitude, :longitude, :address, :agent_first_name, :agent_last_name, :agent_email
+  attr_accessor :id, :name, :address, :agent_first_name, :agent_last_name, :agent_email
 
   # Utilisé par Administrate afin de récupérer la liste des objets (ou ressources)
   # Nécessaire parce que la classe n'hérite pas de ActiveRecord::Base
