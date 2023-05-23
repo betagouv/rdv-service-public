@@ -23,6 +23,8 @@ class ExportCnfsAgents
     puts "Exports files are located at", export_files
   end
 
+  private
+
   def top_agents_by_rdvs_count(limit: 100)
     agents.joins(:agents_rdvs).select(
       "agents.id",
