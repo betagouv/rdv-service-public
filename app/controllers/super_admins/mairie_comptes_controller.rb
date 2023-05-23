@@ -8,7 +8,7 @@ module SuperAdmins
 
       lieu = nil
       Lieu.transaction do
-        service = Service.find_by(name: Service::TITRES_SECURISES)
+        service = Service.find_by(name: Service::MAIRIE)
         organisation = create_organisation
         invite_agent(organisation, service)
         create_motif(organisation, service)
