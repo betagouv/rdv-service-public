@@ -420,3 +420,12 @@ Parmi les données que nous manipulons, les plus critiques sont :
 - les coordonnées des usager⋅es
 - l'historique des RDVs pris par une personne ainsi que le motif de ces RDV
 - des champs "texte" libres où les agents peuvent saisir des informations de contexte sur un RDV
+
+#### Suppression automatique de données anciennes
+
+Voici les suppressions automatiques mises en place :
+- Suppression des RDVs de plus de 2 ans
+- Suppression des plages d'ouverture de plus de 1 an
+- Suppression des logs PaperTrail (auditing) de plus de 2 ans
+
+Note : **Aucune suppression automatique de profil usager ou agent inactif après un certain laps de temps.**
