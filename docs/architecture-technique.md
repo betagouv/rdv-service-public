@@ -16,7 +16,7 @@
 
 ## Suivi du document
 
-> Le suivi de ce document est assure par le versionnage Git.
+> Le suivi de ce document est assuré par le versionnage Git.
 
 ## Fiche de contrôle
 
@@ -32,9 +32,9 @@
 
 ## Description du projet
 
-Outil de prise de RDV pour le service public. Il permet aux agents de gérer leur planning de RDV, leurs disponibilités et leurs absences, et offre un système de notification envoyées aux usagers pour éviter les lapins.
+Outil de prise de RDV pour le service public. Il permet aux agents de gérer leur planning de RDV, leurs disponibilités et leurs absences, et offre un système de notifications envoyées aux usagers pour éviter rendez-vous non-honorés.
 
-Il est open source bien que toutes les instances soient gérées par l'équipe.
+Il est open source, bien que toutes les instances soient gérées par l'équipe.
 
 Plus d'infos sur la fiche beta : https://beta.gouv.fr/startups/rdv-services-publics.html
 
@@ -79,7 +79,7 @@ Ces choix techniques sont aussi influencés par la culture de la communauté Rub
 | App Rails | SFR mail2SMS        | SMTP      | 587  | France        | @mailtosms.dmc.sfr-sh.fr            |
 | App Rails | Clever Technologies | HTTPS     | 587  | France        | webservicesmultimedias.clever-is.fr |
 
-Note : l'application permet aussi de définir des webhooks sortant, et donc d'appeler en HTTPS un service externe
+Note : l'application permet aussi de définir des webhooks sortants, et donc d'appeler en HTTPS un service externe
 lors de la création, modification ou suppression de certaines données applicatives.
 
 #### Fournisseurs d'identité
@@ -100,7 +100,7 @@ lors de la création, modification ou suppression de certaines données applicat
 | BDD technique       | Redis            | `7.0.10` | Stockage des sessions et du cache                               |
 
 La liste des librairies Ruby est disponible dans :
-- [Gemfile](/Gemfile) pour la liste des dépendances directes et la description de la fonctionnalité de chacune des gem
+- [Gemfile](/Gemfile) pour la liste des dépendances directes et la description de la fonctionnalité de chacune des gems
 - [Gemfile.lock](/Gemfile.lock) pour la liste complète des gems utilisées directement et indirectement (dépendances
   indirectes), et leurs versions précises
 
@@ -154,9 +154,9 @@ créé cette instance afin de séparer les données de la future plateforme `www
 
 L'instance `demo-rdv-solidarites` sert de plateforme de démo pour nos 3 domaines.
 
-Chaque schémas ci-dessous représente une seule instance (une seule app Scalingo), qu'elle soit de prod ou de demo.
+Chaque schémas ci-dessous représente une seule instance (une seule app Scalingo), qu'elle soit de prod ou de démo.
 À noter que les instances `demo-rdv-solidarites` et `production-rdv-mairie` n'utilisent que `netsize` comme
-fournisseur de SMS, les autres fournisseurs étant spécifiques à des département du médico-social.
+fournisseur de SMS, les autres fournisseurs étant spécifiques à des départements du médico-social.
 
 #### Architecture interne à Scalingo
 
@@ -238,7 +238,7 @@ https://github.com/betagouv/rdv-solidarites.fr/blob/f12411c0760be1316aae571bb35c
 ### Accès aux serveurs et sécurité des échanges
 
 Les serveurs (applicatif et base de données) sont gérés par Scalingo. Scalingo ne fournit pas de système de rôle : soit
-on a accès à un app, soit on ne l'a pas.
+on a accès à une app, soit on ne l'a pas.
 
 Nous avons actuellement 3 apps Scalingo :
 
@@ -281,7 +281,7 @@ des fonctionnalités listées afin de :
 - vérifier le bon déploiement des nouvelles versions du code
 
 **Scalingo propose du 2FA par TOTP, mais aucun mécanisme ne force les collaborateurs à l'activer. Nous avons donc dans
-notre checklist d'obnboarding un point précisant qu'il faut impérativement activer le 2FA.** En cas de perte des codes
+notre checklist d'onboarding un point précisant qu'il faut impérativement activer le 2FA.** En cas de perte des codes
 TOTP, Scalingo propose une procédure qui inclut la vérification de l'identité de l'utilisateur concerné par la
 transmission d'un document d'identité.
 
@@ -292,7 +292,7 @@ fermeture / merge d'une PR.
 
 ### Authentification, contrôle d’accès, habilitations et profils
 
-L'application a 3 types d'utilisateur :
+L'application a 3 types d'utilisateurs :
 - usager⋅e
 - agent⋅e
 - super admin
@@ -313,7 +313,7 @@ Note : Il n'y a aucune contrainte sur la complexité ou la longueur du mot de pa
 
 #### Les agents
 
-Les agents ont accès à diverses fonctionnalités touchant à :
+Les agents ont accès à diverses fonctionnalités touchants à :
 - la déclaration de leurs plages d'ouvertures et absences
 - le configuration des motifs de RDVs et des lieux de RDVs
 - la gestion des autres agents de leur organisation
@@ -321,12 +321,12 @@ Les agents ont accès à diverses fonctionnalités touchant à :
 - la sectorisation géographique des lieux
 - la définition de webhooks (sortants) pour l'interopérabilité de la solution
 
-Les règles d'accès à ces ressources sont complexes et dépendent de plusieurs niveau d'accès attribués aux agents.
-Ce niveaux d'accès sont gérés par les administrateurs locaux de la solution au sein des organisations
-utilisatrices (département, mairie).
+Les règles d'accès à ces ressources sont complexes et dépendent de plusieurs niveaux d'accès attribués aux agents.
+Ces niveaux d'accès sont gérés par les administrateurs locaux de la solution au sein des organisations
+utilisatrices (départements, mairies).
 
 La connexion à un profil agent est faite par email + mot de passe. Les mots de passes sont stockés salés et chiffrés
-(en utilisant Devise qui utilise Bcrypt). Une connexion via InclusionConnect est aussi proposée : un compte est alors
+(en utilisant une Devise qui utilise Bcrypt). Une connexion via InclusionConnect est aussi proposée : un compte est alors
 créé ou relié si l'e-mail existe déjà dans notre base agents.
 
 Note : Il n'y a aucune contrainte sur la complexité ou la longueur du mot de passe choisi.
@@ -370,7 +370,7 @@ et leur consultation est manuelle. Nous n'avons pas de système d'analyse de log
 #### Traçabilité applicative / auditing
 
 Nous utilisons également la gem `paper_trail`, qui permet d'enregistrer chaque modification (création, modification,
-suppression) effectué dans une sélection de tables Postgres. Elle est activé sur une partie des tables et colonnes
+suppression) effectuée dans une sélection de tables Postgres. Elle est activée sur une partie des tables et colonnes
 et permet ainsi d'avoir une traçabilité partielle des changements.
 
 Nous n'avons en revanche pas de système permettant de savoir quel profil a eu accès à quelle information et quand.
@@ -378,27 +378,27 @@ Nous n'avons en revanche pas de système permettant de savoir quel profil a eu a
 #### Monitoring d'erreur
 
 Nous utilisons Sentry afin d'être informé⋅es sur les nouvelles erreurs, et le volume des erreurs existantes.
-Nous sommes alertée⋅es en cas de nouvelle erreur ou volume inhabituel, en direct sur notre outil de
+Nous sommes alerté⋅es en cas de nouvelles erreurs ou volume inhabituel, en direct sur notre outil de
 communication principal Mattermost.
 
 Notre hébergeur Scalingo propose aussi un système d'alerting déclenché selon des métriques diverses, mais
-il n'est pas utilisé actuellement car sa calibration est difficile.
+celui-ci n'est pas utilisé actuellement car sa calibration est difficile.
 
 ### Politique de mise à jour des applicatifs
 
-Voici les cas dans lesquels nous mettons à jour à jour une librairie spécifique :
+Voici les cas dans lesquels nous mettons à jour une librairie spécifique :
 
 - une version plus récente corrige une faille de sécurité (nous utilisons Dependabot pour être prévenu⋅es)
 - une version plus récente permet de répondre à un besoin technique ou fonctionnel
 - une montée de version est requises par une librairie correspondant aux critères ci-dessus (autrement dit, nous devons
   mettre à jour de manière indirecte)
 - une fois par mois, nous mettons à jour les gems vers leur dernier "patch level", afin d'être proactif sur les fixes de
-  sécurité et de bug
+  sécurité et de bugs
 
 La décision a été prise le 24 avril 2023, voir log de décision
 ici : [2023-04-24-politique-maj-gems.md](/docs/decisions/2023-04-24-politique-maj-gems.md)
 
-Afin d'être prévenus lors de la  publication d'une CVE, nous utilisons Dependabot sur notre dépôt GitHub.
+Afin d'être prévenus lors de la publication d'une CVE, nous utilisons Dependabot sur notre dépôt GitHub.
 Une alerte e-mail est envoyée aux devs qui watchent le dépôt (et nous faisons en sorte de le watch à travers
 notre procédure d'onboarding).
 
@@ -414,7 +414,7 @@ de cluster avec 2 nodes, qui permet un failover automatique en cas de plantage d
 
 ### Confidentialité
 
-**L'application est initialement conçue pour la pris de RDV dans le milieu médico-social. Nous manipulons donc des données médicales.**
+**L'application est initialement conçue pour la prise de RDV dans le milieu médico-social. Nous manipulons donc des données médicales.**
 
 Parmi les données que nous manipulons, les plus critiques sont :
 - les coordonnées des usager⋅es
