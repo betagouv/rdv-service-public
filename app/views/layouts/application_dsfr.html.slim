@@ -4,13 +4,14 @@ html lang="fr"
     = render "common/meta"
     = render "common/env"
     = stylesheet_link_tag "@gouvfr/dsfr/dist/dsfr.min.css", "data-turbo-track": "reload"
+    = stylesheet_link_tag "@gouvfr/dsfr/dist/utility/icons/icons.min.css", "data-turbo-track": "reload"
     = javascript_include_tag "@gouvfr/dsfr/dist/dsfr.module.min.js", type: "module"
     = javascript_include_tag "@gouvfr/dsfr/dist/dsfr.nomodule.min.js", nomodule: true
 
   body class="#{agents_or_users_body_class}"
     = dsfr_header logo_text: "République<br>Française".html_safe, title: "RDV Mairie" do |header|
-      - header.with_tool_link title: "Espace Usager", path: new_user_session_path
-      - header.with_tool_link title: "Se connecter en tant qu'agent", path: new_agent_session_path
+      - header.with_tool_link title: "Espace Usager", path: new_user_session_path, classes: "fr-icon-arrow-right-line"
+      - header.with_tool_link title: "Se connecter en tant qu'agent", path: new_agent_session_path, classes: "fr-fi-account-fill"
 
     main
       = yield
