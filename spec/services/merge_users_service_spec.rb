@@ -284,7 +284,7 @@ describe MergeUsersService, type: :service do
       let(:user_target) { create(:user, organisations: [organisation]) }
       let(:user_to_merge) { create(:user, organisations: [organisation]) }
 
-      it "removes the user to merge" do
+      it "deletes the user to merge" do
         perform
         expect(user_target.reload.organisations).to eq([organisation])
         expect(UserProfile.find_by(user_id: user_to_merge.id)).to be_nil
@@ -297,7 +297,7 @@ describe MergeUsersService, type: :service do
       let(:user_target) { create(:user, organisations: [organisation]) }
       let(:user_to_merge) { create(:user, organisations: [organisation2]) }
 
-      it "add all organisations to the target user and deletes the user to merge" do
+      it "adds all organisations to the target user and deletes the user to merge" do
         perform
         expect(user_target.reload.organisations).to match_array([organisation, organisation2])
         expect(UserProfile.find_by(user_id: user_to_merge.id)).to be_nil
@@ -311,7 +311,7 @@ describe MergeUsersService, type: :service do
       let(:user_target) { create(:user, organisations: [organisation, organisation2]) }
       let(:user_to_merge) { create(:user, organisations: [organisation2, organisation3]) }
 
-      it "add all organisations to the target user and deletes the user to merge" do
+      it "adds all organisations to the target user and deletes the user to merge" do
         perform
         expect(user_target.reload.organisations).to match_array([organisation, organisation2, organisation3])
         expect(UserProfile.find_by(user_id: user_to_merge.id)).to be_nil
@@ -327,12 +327,58 @@ describe MergeUsersService, type: :service do
       let(:user_target) { create(:user, organisations: [organisation, organisation2]) }
       let(:user_to_merge) { create(:user, organisations: [organisation2, organisation3, organisation_in_other_territory]) }
 
-      it "add all organisations OF THE CURRENT TERRITORY to the target user and DOES NOT delete the user to merge" do
+      it "adds all organisations OF THE CURRENT TERRITORY to the target user and DOES NOT delete the user to merge" do
         perform
         expect(user_target.reload.organisations).to match_array([organisation, organisation2, organisation3])
         expect(user_target.organisations).not_to include(organisation_in_other_territory)
         expect(UserProfile.where(user_id: user_to_merge.id).pluck(:organisation_id)).to eq([organisation_in_other_territory.id])
         expect(User.find_by(id: user_to_merge.id)).to eq(user_to_merge)
+      end
+
+      describe "RDVs" do
+        let!(:rdv_in_same_territory) { create(:rdv, users: [user_to_merge], organisation: organisation2) }
+        let!(:rdv_in_other_territory) { create(:rdv, users: [user_to_merge], organisation: organisation_in_other_territory) }
+
+        it "moves RDVs of the current territory, not the others" do
+          perform
+
+          # RDV in current territory is moved to target user
+          expect(rdv_in_same_territory.reload.organisation).to eq(organisation2)
+          expect(rdv_in_same_territory.users).to eq([user_target])
+
+          # RDV in other territory is NOT moved to target user
+          expect(rdv_in_other_territory.reload.organisation).to eq(organisation_in_other_territory)
+          expect(rdv_in_other_territory.users).to eq([user_to_merge])
+        end
+      end
+
+      describe "files d'attente" do
+        let!(:file_attente_in_same_territory) { create(:file_attente, user: user_to_merge, rdv: create(:rdv, organisation: organisation2)) }
+        let!(:file_attente_in_other_territory) { create(:file_attente, user: user_to_merge, rdv: create(:rdv, organisation: organisation_in_other_territory)) }
+
+        it "moves file d'attentes of the current territory, not the others" do
+          perform
+
+          expect(file_attente_in_same_territory.reload.user).to eq(user_target)
+          expect(file_attente_in_other_territory.reload.user).to eq(user_to_merge)
+        end
+      end
+
+      describe "referent agents" do
+        let!(:referent_agent_from_same_territory) { create(:agent, organisations: [organisation2]) }
+        let!(:referent_agent_from_other_territory) { create(:agent, organisations: [organisation_in_other_territory]) }
+
+        before do
+          user_to_merge.referent_agents.push(referent_agent_from_same_territory)
+          user_to_merge.referent_agents.push(referent_agent_from_other_territory)
+        end
+
+        it "moves referents of the current territory, not the others" do
+          perform
+
+          expect(user_target.referent_agents).to include(referent_agent_from_same_territory)
+          expect(user_target.referent_agents).not_to include(referent_agent_from_other_territory)
+        end
       end
     end
   end
