@@ -14,76 +14,80 @@
         li= link_to("Prendre RDV avec l’équipe", team_meeting_url, class: ["fr-btn fr-btn--secondary"])
 
 .fr-py-12w
-  .fr-container.fr-grid-row.fr-grid-row--center
-    .fr-col-md-10
-      h2 Les fonctionnalités de notre solution
-    .fr-col-md-5
-      h3
-        = "Faciliter "
-        span[style="color: #000091"] la prise de rendez-vous
-        = " en mairie"
-      p La mairie rend accessible ses disponibilités en ligne. Les usagers peuvent planifier des rendez-vous d’information téléphonique ou des rendez-vous au guichet.
-    .fr-col-md-5
-      h3
-        = "Faciliter "
-        span[style="color: #000091"] la gestion de rendez-vous
-        = " en mairie"
-      p Les agents mettent à disposition de leurs collègues leurs disponibilités. Un agent peut planifier des rendez-vous dans les agendas des collègues.
-    .fr-col-md-5
-      h3 Envoyer des notifications de rappel aux usagers
-      p Des SMS et mail de notifications sont envoyés à chaque planification de rendez-vous. Les usagers peuvent modifier ou annuler le rendez-vous depuis cette notification.
-    .fr-col-md-5
-      h3 Faire de la prescription
-      p Les services publics locaux de votre territoire peuvent planifier un rendez-vous directement dans les disponibilités de vos agents pour accompagner les parcours des usagers.
+  .fr-container
+    .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
+      .fr-col-md-10
+        h2 Les fonctionnalités de notre solution
+      .fr-col-md-5
+        h3
+          = "Faciliter "
+          span[style="color: #000091"] la prise de rendez-vous
+          = " en mairie"
+        p La mairie rend accessible ses disponibilités en ligne. Les usagers peuvent planifier des rendez-vous d’information téléphonique ou des rendez-vous au guichet.
+      .fr-col-md-5
+        h3
+          = "Faciliter "
+          span[style="color: #000091"] la gestion de rendez-vous
+          = " en mairie"
+        p Les agents mettent à disposition de leurs collègues leurs disponibilités. Un agent peut planifier des rendez-vous dans les agendas des collègues.
+      .fr-col-md-5
+        h3 Envoyer des notifications de rappel aux usagers
+        p Des SMS et mail de notifications sont envoyés à chaque planification de rendez-vous. Les usagers peuvent modifier ou annuler le rendez-vous depuis cette notification.
+      .fr-col-md-5
+        h3 Faire de la prescription
+        p Les services publics locaux de votre territoire peuvent planifier un rendez-vous directement dans les disponibilités de vos agents pour accompagner les parcours des usagers.
 
 .fr-py-12w[style="background-color:  #F4F6FE"]
-  .fr-container.fr-grid-row.fr-grid-row--center
-    .fr-col-md-5
-      figure.fr-content-media
-        .fr-content-media__img
-          = image_tag "rdv_mairie/image_2.svg"
-    .fr-col-md-5
-      h2 Qui sommes-nous ?
-      p
-        = "Nous sommes l’équipe "
-        = link_to("RDV Services Publics", "https://beta.gouv.fr/startups/rdv-services-publics.html", target: "_blank", rel: "noopener")
-        | , solution numérique incubée par l’
-        = link_to("Incubateur des Territoires", "https://incubateur.anct.gouv.fr/", target: "_blank", rel: "noopener")
-        = " et sponsorisée par le Programme Société Numérique de l’"
-        = link_to("Agence Nationale de la Cohésion des Territoires", "https://agence-cohesion-territoires.gouv.fr/", target: "_blank", rel: "noopener")
-        | .
-      p
-        | Nous développons un outil de gestion et de prise de rendez-vous pour tous les services publics, simple à utiliser et simple à déployer.
-      p
-        | Nous travaillons avec 5 partenaires publics qui s’engagent collectivement au développement de la solution. Notre solution est aujourd’hui déployée au sein des services de nos 5 partenaires.
+  .fr-container
+    .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
+      .fr-col-md-5
+        figure.fr-content-media
+          .fr-content-media__img
+            = image_tag "rdv_mairie/image_2.svg", class: "fr-responsive-img fr-ratio-1x1"
+      .fr-col-md-5
+        h2 Qui sommes-nous ?
+        p
+          = "Nous sommes l’équipe "
+          = link_to("RDV Services Publics", "https://beta.gouv.fr/startups/rdv-services-publics.html", target: "_blank", rel: "noopener")
+          | , solution numérique incubée par l’
+          = link_to("Incubateur des Territoires", "https://incubateur.anct.gouv.fr/", target: "_blank", rel: "noopener")
+          = " et sponsorisée par le Programme Société Numérique de l’"
+          = link_to("Agence Nationale de la Cohésion des Territoires", "https://agence-cohesion-territoires.gouv.fr/", target: "_blank", rel: "noopener")
+          | .
+        p
+          | Nous développons un outil de gestion et de prise de rendez-vous pour tous les services publics, simple à utiliser et simple à déployer.
+        p
+          | Nous travaillons avec 5 partenaires publics qui s’engagent collectivement au développement de la solution. Notre solution est aujourd’hui déployée au sein des services de nos 5 partenaires.
 
 .fr-py-12w
-  .fr-container.fr-grid-row.fr-grid-row--center
-    .fr-col-md-5
-      h2 Notre mission
-      p
-        | Suite aux annonces récentes de la Première Ministre pour diviser par deux le temps d’attente pour obtenir un titre d’identité, notre solution s’ouvre désormais à toutes les mairies souhaitant s’outiller d’une solution de gestion et de prise de rendez-vous.
-      p
-        = "Les plages de disponibilités concernant les titres de sécurités (carte nationale d’identité, passeport) seront automatiquement branchées au "
-        = link_to("moteur de recherche de l’ANTS", "https://rendezvouspasseport.ants.gouv.fr/", target: "_blank", rel: "noopener")
-        | .
-    .fr-col-md-5
-      = image_tag "rdv_mairie/image_1.svg"
+  .fr-container
+    .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
+      .fr-col-md-5
+        h2 Notre mission
+        p
+          | Suite aux annonces récentes de la Première Ministre pour diviser par deux le temps d’attente pour obtenir un titre d’identité, notre solution s’ouvre désormais à toutes les mairies souhaitant s’outiller d’une solution de gestion et de prise de rendez-vous.
+        p
+          = "Les plages de disponibilités concernant les titres de sécurités (carte nationale d’identité, passeport) seront automatiquement branchées au "
+          = link_to("moteur de recherche de l’ANTS", "https://rendezvouspasseport.ants.gouv.fr/", target: "_blank", rel: "noopener")
+          | .
+      .fr-col-md-5
+        = image_tag "rdv_mairie/image_1.svg"
 
 .fr-py-12w[style="background-color:  #F4F6FE"]
-  .fr-container.fr-grid-row.fr-grid-row--center
-    .fr-col-md-5
-      h2 Comment l’utiliser ?
-      p
-        | Pour utiliser notre solution dans votre mairie, vous devez remplir le formulaire en cliquant sur le bouton ci-dessous :
-      = link_to("Utiliser RDV Mairie", brevo_form_url, class: "fr-btn fr-mb-4w")
-      p
-        | Une fois le formulaire envoyé, vous recevrez dans un délais maximum de 48h une invitation sur l’adresse mail indiquée dans la formulaire pour rejoindre votre espace.
-      p
-        | Notre équipe est à votre entière disposition pour organiser un temps de formation avec les agents de votre mairie. Vous pouvez planifier un rendez-vous :
-      = link_to("Prendre RDV avec l’équipe", team_meeting_url, class: ["fr-btn fr-btn--secondary fr-mb-4w"])
-      p Une documentation utilisateur est en accès libre à tous les agents :
-      = link_to("Lire la documentation","https://rdvs.notion.site/RDV-Mairie-b831caa05dd7416bb489f06f7468903a", rel: "noopener", target: "_blank")
+  .fr-container
+    .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
+      .fr-col-md-5
+        h2 Comment l’utiliser ?
+        p
+          | Pour utiliser notre solution dans votre mairie, vous devez remplir le formulaire en cliquant sur le bouton ci-dessous :
+        = link_to("Utiliser RDV Mairie", brevo_form_url, class: "fr-btn fr-mb-4w")
+        p
+          | Une fois le formulaire envoyé, vous recevrez dans un délais maximum de 48h une invitation sur l’adresse mail indiquée dans la formulaire pour rejoindre votre espace.
+        p
+          | Notre équipe est à votre entière disposition pour organiser un temps de formation avec les agents de votre mairie. Vous pouvez planifier un rendez-vous :
+        = link_to("Prendre RDV avec l’équipe", team_meeting_url, class: ["fr-btn fr-btn--secondary fr-mb-4w"])
+        p Une documentation utilisateur est en accès libre à tous les agents :
+        = link_to("Lire la documentation","https://rdvs.notion.site/RDV-Mairie-b831caa05dd7416bb489f06f7468903a", rel: "noopener", target: "_blank")
 
-    .fr-col-md-5
-      = image_tag "rdv_mairie/image_3.svg"
+      .fr-col-md-5
+        = image_tag "rdv_mairie/image_3.svg"
