@@ -12,6 +12,7 @@ require "action_mailer/railtie"
 require "active_job/railtie"
 
 require "tod/core_extensions"
+require "dsfr/components"
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.

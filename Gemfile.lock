@@ -180,6 +180,13 @@ GEM
     dotenv-rails (2.8.1)
       dotenv (= 2.8.1)
       railties (>= 3.2)
+    dsfr-view-components (0.3.0)
+      actionpack (>= 6.1)
+      activemodel (>= 6.1)
+      html-attributes-utils (~> 1)
+      pagy (~> 6)
+      railties (>= 6.1)
+      view_component (~> 2)
     dumb_delegator (1.0.0)
     erubi (1.12.0)
     et-orbi (1.2.7)
@@ -215,6 +222,8 @@ GEM
     hashdiff (1.0.1)
     hashie (5.0.0)
     hiredis (0.6.3)
+    html-attributes-utils (1.0.0)
+      activesupport (>= 6.1.4.4)
     htmlentities (4.3.4)
     httpclient (2.8.3)
     i18n (1.12.0)
@@ -341,6 +350,7 @@ GEM
       validate_url
       webfinger (~> 1.2)
     orm_adapter (0.5.0)
+    pagy (6.0.4)
     paper_trail (12.3.0)
       activerecord (>= 5.2)
       request_store (~> 1.1)
@@ -574,6 +584,10 @@ GEM
       activemodel (>= 3.0.0)
       public_suffix
     version_gem (1.1.2)
+    view_component (2.82.0)
+      activesupport (>= 5.2.0, < 8.0)
+      concurrent-ruby (~> 1.0)
+      method_source (~> 1.0)
     virtus (2.0.0)
       axiom-types (~> 0.1)
       coercible (~> 1.0)
@@ -631,6 +645,7 @@ DEPENDENCIES
   devise_invitable
   devise_token_auth
   dotenv-rails
+  dsfr-view-components
   factory_bot
   faker
   good_job
