@@ -10,30 +10,30 @@ footer#footer.fr-footer[role="contentinfo"]
       .fr-footer__content
         p.fr-footer__content-desc
           | #{current_domain.name} est géré par RDV Services Publics, un service fourni par l'
-          = link_to("Agence Nationale de la Cohésion des Territoires", "https://agence-cohesion-territoires.gouv.fr/", rel: "noopener", target: "_blank")
+          = link_to("Agence Nationale de la Cohésion des Territoires", "https://agence-cohesion-territoires.gouv.fr/", rel: "noopener", target: "_blank", title: "Agence Nationale de la Cohésion des Territoires - nouvel onglet")
           | en partenariat avec un consortium de départements.
         ul.fr-footer__content-list
 
           li.fr-footer__content-item
-            a.fr-footer__content-link[target="_blank" href="https://legifrance.gouv.fr"]
+            a.fr-footer__content-link[target="_blank" href="https://legifrance.gouv.fr" title="legifrance.gouv.fr - nouvel onglet"]
               | legifrance.gouv.fr
           li.fr-footer__content-item
-            a.fr-footer__content-link[target="_blank" href="https://gouvernement.fr"]
+            a.fr-footer__content-link[target="_blank" href="https://gouvernement.fr" title="gouvernement.fr - nouvel onglet"]
               | gouvernement.fr
           li.fr-footer__content-item
-            a.fr-footer__content-link[target="_blank" href="https://service-public.fr"]
+            a.fr-footer__content-link[target="_blank" href="https://service-public.fr" title="service-public.fr - nouvel onglet"]
               | service-public.fr
           li.fr-footer__content-item
-            a.fr-footer__content-link[target="_blank" href="https://data.gouv.fr"]
+            a.fr-footer__content-link[target="_blank" href="https://data.gouv.fr" title="data.gouv.fr - nouvel onglet"]
               | data.gouv.fr
       .fr-footer__bottom
         ul.fr-footer__bottom-list
           li.fr-footer__bottom-item
             = link_to "Statistiques", stats_path, class: "fr-footer__bottom-link"
           li.fr-footer__bottom-item
-            = link_to "Budget", budget_path, class: "fr-footer__bottom-link", rel: "noopener", target: "_blank"
+            = link_to "Budget", budget_path, class: "fr-footer__bottom-link", rel: "noopener", target: "_blank", title: "Budget - nouvel onglet"
           li.fr-footer__bottom-item
-            = link_to "Code source", "https://github.com/betagouv/rdv-solidarites.fr/", class: "fr-footer__bottom-link", rel: "noopener", target: "_blank"
+            = link_to "Code source", "https://github.com/betagouv/rdv-solidarites.fr/", class: "fr-footer__bottom-link", rel: "noopener", target: "_blank", title: "Code source - nouvel onglet"
           li.fr-footer__bottom-item
             = link_to "Accessibilité : non conforme", accessibility_path, class: "fr-footer__bottom-link"
           li.fr-footer__bottom-item
@@ -47,5 +47,5 @@ footer#footer.fr-footer[role="contentinfo"]
         .fr-footer__bottom-copy
           p
             ="Sauf mention explicite de propriété intellectuelle détenue par des tiers, les contenus de ce site sont proposés sous "
-            a[href="https://github.com/etalab/licence-ouverte/blob/master/LO.md" target="_blank"]
+            a[href="https://github.com/etalab/licence-ouverte/blob/master/LO.md" target="_blank" title="licence etalab-2.0 - nouvel onglet"]
               | licence etalab-2.0
