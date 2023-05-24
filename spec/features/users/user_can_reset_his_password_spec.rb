@@ -23,21 +23,20 @@ describe "User resets his password spec" do
   end
 
   # Ce test constitue un test d'intégration du cas normal.
-  # Les tests unitaires des variations sont fait dans une spec de mailer.
+  # Les tests unitaires des variations sont fait dans une spec de CustomDeviseMailer.
   describe "using the user's domain" do
-    context "when the user only has RDVs for motif Conseiller Numérique" do
+    context "when the most recent RDV is in an organisation with verticale rdv_aide_numerique" do
       let!(:user) { create(:user) }
       let(:organisation) { create(:organisation, verticale: :rdv_aide_numerique) }
-      let(:motif_numerique) { create(:motif, service: create(:service, :conseiller_numerique)) }
-      let!(:rdvs) { create_list(:rdv, 2, organisation: organisation, motif: motif_numerique, users: [user]) }
+      let!(:rdvs) { create_list(:rdv, 2, organisation: organisation, users: [user]) }
 
-      it "uses the default domain" do
+      it "uses the rdv-aide-numerique domain" do
         # Le domaine visité n'a pas d'importance. Voir la doc de User#domain.
         visit new_user_password_url(host: Domain::RDV_SOLIDARITES.host_name)
         fill_in "user_email", with: user.email
         click_on "Envoyer"
         open_email(user.email)
-        expect(current_email.base.email[:from].to_s).to eq(%("RDV Aide Numérique" <support@rdv-solidarites.fr>))
+        expect(current_email.base.email[:from].to_s).to eq(%("RDV Aide Numérique" <support@rdv-aide-numerique.fr>))
         expect(current_email.html_part.body.to_s).to include('<a href="http://www.rdv-aide-numerique-test.localhost/users/password/edit?reset_password_token=')
       end
     end

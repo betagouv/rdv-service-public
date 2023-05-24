@@ -21,7 +21,7 @@
           span> Contacter l'équipe technique
           i.fa.fa-question-circle
       .card-body
-        = mail_to SUPPORT_EMAIL,
+        = mail_to current_domain.support_email,
           subject: "[Problème Agent]",
           body: t(".contact-email-body"), class: "btn btn-primary" do
           span>

@@ -15,6 +15,7 @@ Domain = Struct.new(
   :france_connect_enabled,
   :faq_url,
   :documentation_url,
+  :support_email,
   keyword_init: true
 )
 
@@ -34,7 +35,8 @@ class Domain
       sms_sender_name: "RdvSoli",
       documentation_url: "https://rdvs.notion.site/RDV-Solidarit-s-94176a1507814d19aeaaf6e678ffcbed",
       faq_url: "https://rdv-solidarites.notion.site/F-A-Q-M-dico-social-aaf94709c0ea448b8eb9d93f548acdb9",
-      france_connect_enabled: true
+      france_connect_enabled: true,
+      support_email: "support@rdv-solidarites.fr"
     ),
 
     RDV_AIDE_NUMERIQUE = new(
@@ -51,7 +53,8 @@ class Domain
       sms_sender_name: "RdvAideNum",
       documentation_url: "https://rdvs.notion.site/RDV-Aide-Num-rique-cd6f04a9d90a444a800d81f77428eaf4",
       faq_url: "https://rdvs.notion.site/FAQ-CNFS-c55933f66f054aaba60fe4799851000e",
-      france_connect_enabled: false
+      france_connect_enabled: false,
+      support_email: "support@rdv-aide-numerique.fr"
     ),
 
     RDV_MAIRIE = new(
@@ -68,7 +71,8 @@ class Domain
       sms_sender_name: "Rdvmairie",
       documentation_url: "https://rdvs.notion.site/RDV-Mairie-b831caa05dd7416bb489f06f7468903a",
       faq_url: "https://rdvs.notion.site/FAQ-RDV-Mairie-6baf4af187a14e42beafe56b7005d199",
-      france_connect_enabled: false
+      france_connect_enabled: true,
+      support_email: "support@rdv-mairie.fr"
     ),
   ].freeze
 

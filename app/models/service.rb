@@ -8,6 +8,7 @@ class Service < ApplicationRecord
   SERVICE_SOCIAL = "Service social"
   PMI = "PMI (Protection Maternelle Infantile)"
   CONSEILLER_NUMERIQUE = "Conseiller Numérique"
+  MAIRIE = "Mairie"
 
   # Relations
   has_many :agents, dependent: :nullify
@@ -41,6 +42,10 @@ class Service < ApplicationRecord
 
   def conseiller_numerique?
     name == CONSEILLER_NUMERIQUE
+  end
+
+  def mairie?
+    name == MAIRIE
   end
 
   def user_field_groups
