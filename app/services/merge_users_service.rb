@@ -11,7 +11,7 @@ class MergeUsersService < BaseService
   def perform
     User.transaction do
       merge_user_attributes
-      merge_organisations if users_visible_through_territory?
+      merge_organisations
       merge_rdvs
       merge_relatives
       merge_file_attentes
@@ -41,6 +41,8 @@ class MergeUsersService < BaseService
   end
 
   def merge_organisations
+    return unless users_visible_through_territory?
+
     orgs_of_both_users = @user_to_merge.organisations + @user_target.organisations
     orgs_to_move_to_target = orgs_of_both_users.select { _1.territory == @organisation.territory }.uniq
     @user_target.organisations += (orgs_to_move_to_target - @user_target.organisations)
@@ -49,7 +51,7 @@ class MergeUsersService < BaseService
 
   def merge_rdvs
     rdvs_to_merge = if users_visible_through_territory?
-                      @user_to_merge.rdvs.joins(:territory).where(organisation: { territory: @organisation.territory })
+                      @user_to_merge.rdvs.joins(:territory).where(territories: @organisation.territory)
                     else
                       @user_to_merge.rdvs.where(organisation: @organisation)
                     end
