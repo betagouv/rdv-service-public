@@ -13,6 +13,6 @@ html lang="fr"
       - header.with_tool_link title: "Espace Usager", path: new_user_session_path, classes: "fr-icon-arrow-right-line"
       - header.with_tool_link title: "Se connecter en tant qu'agent", path: new_agent_session_path, classes: "fr-fi-account-fill"
 
-    main
+    main[role="main"]
       = yield
     = render "dsfr/footer"
