@@ -278,11 +278,11 @@ describe MergeUsersService, type: :service do
   # https://github.com/betagouv/rdv-solidarites.fr/issues/3429
   context "when organisation's territory has visible_users_throughout_the_territory: true" do
     let!(:territory) { create(:territory, visible_users_throughout_the_territory: true) }
-    let!(:organisation1) { create(:organisation, territory: territory) }
+    let!(:organisation) { create(:organisation, territory: territory) }
 
     context "when both users belong to the current org" do
-      let(:user_target) { create(:user, organisations: [organisation1]) }
-      let(:user_to_merge) { create(:user, organisations: [organisation1]) }
+      let(:user_target) { create(:user, organisations: [organisation]) }
+      let(:user_to_merge) { create(:user, organisations: [organisation]) }
 
       it "removes the user to merge" do
         perform
@@ -294,7 +294,7 @@ describe MergeUsersService, type: :service do
 
     context "when they each belong to a different org" do
       let(:organisation2) { create(:organisation, territory: territory) }
-      let(:user_target) { create(:user, organisations: [organisation1]) }
+      let(:user_target) { create(:user, organisations: [organisation]) }
       let(:user_to_merge) { create(:user, organisations: [organisation2]) }
 
       it "add all organisations to the target user and deletes the user to merge" do
@@ -308,7 +308,7 @@ describe MergeUsersService, type: :service do
     context "when they have some orgs in common" do
       let(:organisation2) { create(:organisation, territory: territory) }
       let(:organisation3) { create(:organisation, territory: territory) }
-      let(:user_target) { create(:user, organisations: [organisation1, organisation2]) }
+      let(:user_target) { create(:user, organisations: [organisation, organisation2]) }
       let(:user_to_merge) { create(:user, organisations: [organisation2, organisation3]) }
 
       it "add all organisations to the target user and deletes the user to merge" do
@@ -324,13 +324,13 @@ describe MergeUsersService, type: :service do
       let(:organisation2) { create(:organisation, territory: territory) }
       let(:organisation3) { create(:organisation, territory: territory) }
       let(:organisation_in_other_territory) { create(:organisation, territory: other_territory) }
-      let(:user_target) { create(:user, organisations: [organisation1, organisation2]) }
+      let(:user_target) { create(:user, organisations: [organisation, organisation2]) }
       let(:user_to_merge) { create(:user, organisations: [organisation2, organisation3, organisation_in_other_territory]) }
 
       it "add all organisations OF THE CURRENT TERRITORY to the target user and DOES NOT delete the user to merge" do
         perform
         expect(user_target.reload.organisations).to match_array([organisation, organisation2, organisation3])
-        expect(user_target.organisations).to exclude(organisation_in_other_territory)
+        expect(user_target.organisations).not_to include(organisation_in_other_territory)
         expect(UserProfile.where(user_id: user_to_merge.id).pluck(:organisation_id)).to eq([organisation_in_other_territory.id])
         expect(User.find_by(id: user_to_merge.id)).to eq(user_to_merge)
       end

@@ -11,6 +11,7 @@ class MergeUsersService < BaseService
   def perform
     User.transaction do
       merge_user_attributes
+      merge_organisations if users_visible_through_territory?
       merge_rdvs
       merge_relatives
       merge_file_attentes
@@ -39,9 +40,16 @@ class MergeUsersService < BaseService
     @user_target.save!
   end
 
+  def merge_organisations
+    orgs_of_both_users = @user_to_merge.organisations + @user_target.organisations
+    orgs_to_move_to_target = orgs_of_both_users.select { _1.territory == @organisation.territory }.uniq
+    @user_target.organisations += (orgs_to_move_to_target - @user_target.organisations)
+    @user_to_merge.organisations -= orgs_to_move_to_target
+  end
+
   def merge_rdvs
     rdvs_to_merge = @user_to_merge.rdvs
-    rdvs_to_merge = rdvs_to_merge.where(organisation: @organisation) if users_visible_through_territory?
+    rdvs_to_merge = rdvs_to_merge.where(organisation: @organisation) unless users_visible_through_territory?
 
     rdvs_to_merge.each do |rdv|
       rdv.rdvs_users.where(user: @user_to_merge).each do |rdv_user|
@@ -63,7 +71,7 @@ class MergeUsersService < BaseService
 
   def merge_file_attentes
     files_attentes_to_merge = @user_to_merge.file_attentes
-    files_attentes_to_merge = files_attentes_to_merge.joins(:rdv).where(rdvs: { organisation: @organisation }) if users_visible_through_territory?
+    files_attentes_to_merge = files_attentes_to_merge.joins(:rdv).where(rdvs: { organisation: @organisation }) unless users_visible_through_territory?
 
     files_attentes_to_merge.each do |file_attente_to_merge|
       file_attente_target = @user_target.file_attentes.find_by(rdv: file_attente_to_merge.rdv)
@@ -86,6 +94,6 @@ class MergeUsersService < BaseService
   end
 
   def users_visible_through_territory?
-    organisation.territory.visible_users_throughout_the_territory
+    @organisation&.territory&.visible_users_throughout_the_territory
   end
 end
