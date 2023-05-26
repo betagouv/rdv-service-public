@@ -39,9 +39,13 @@ module InclusionConnect
       }
       uri = URI("#{IC_BASE_URL}/token")
 
-      res = Net::HTTP.post_form(uri, data)
+      res = Typhoeus.post(
+        uri,
+        body: data,
+        headers: { "Content-Type" => "application/x-www-form-urlencoded" }
+      )
 
-      return false unless res.is_a?(Net::HTTPSuccess)
+      return false unless res.success?
 
       JSON.parse(res.body)["access_token"]
     end
@@ -49,14 +53,10 @@ module InclusionConnect
     def get_user_info(token)
       uri = URI("#{IC_BASE_URL}/userinfo")
       uri.query = URI.encode_www_form({ schema: "openid" })
-      req = Net::HTTP::Get.new(uri)
-      req["Authorization"] = "Bearer #{token}"
 
-      res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme == "https") do |http|
-        http.request(req)
-      end
+      res = Typhoeus.get(uri, headers: { "Authorization" => "Bearer #{token}" })
 
-      return false unless res.is_a?(Net::HTTPSuccess)
+      return false unless res.success?
 
       JSON.parse(res.body)
     end
