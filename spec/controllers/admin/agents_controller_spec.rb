@@ -28,7 +28,7 @@ RSpec.describe Admin::AgentsController, type: :controller do
 
     it "destroys the requested agent" do
       subject
-      expect(agent1.reload.organisations).not_to include(organisation)
+      expect { agent1.reload }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
     it "redirects to the invitations list" do

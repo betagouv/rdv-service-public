@@ -12,23 +12,19 @@ RSpec.describe Admin::UsersController, type: :controller do
   end
 
   describe "DELETE destroy" do
-    it "removes user from organisation" do
+    it "removes user from organisation but keeps her in other organisation" do
+      other_organisation = create(:organisation)
+      user.organisations << other_organisation
       expect do
         delete :destroy, params: { organisation_id: organisation.id, id: user.id }
         user.reload
-      end.to change(user, :organisation_ids).from([organisation.id]).to([])
+      end.to change(user, :organisation_ids).from([organisation.id, other_organisation.id]).to([other_organisation.id])
     end
 
-    it "appaers to destroy user" do
+    it "destroys the user" do
       expect do
         delete :destroy, params: { organisation_id: organisation.id, id: user.id }
-      end.to change(User, :count)
-    end
-
-    it "not really destroy user" do
-      expect do
-        delete :destroy, params: { organisation_id: organisation.id, id: user.id }
-      end.not_to change { User.unscoped.count }
+      end.to change(User.unscope(:where), :count)
     end
   end
 
