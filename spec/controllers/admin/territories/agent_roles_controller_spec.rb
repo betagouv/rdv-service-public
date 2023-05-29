@@ -40,11 +40,21 @@ describe Admin::Territories::AgentRolesController, type: :controller do
     end
   end
 
-  describe "#destoy" do
+  describe "DELETE #destroy" do
+    let(:territory) { create(:territory) }
+    let(:organisation) { create(:organisation) }
+
+    before do
+      # Il doit toujours y avoir au moins un agent responsable par territoire
+      create(:agent, territories: [territory])
+
+      # Il doit toujours y avoir au moins un agent Admin par organisation
+      last_agent = create(:agent)
+      create(:agent_territorial_access_right, territory: territory, agent: last_agent)
+      create(:agent_role, organisation: organisation, agent: last_agent, level: "admin")
+    end
+
     it "redirect to territorial_agent_edit on success if agent has another organisation" do
-      territory = create(:territory)
-      organisation = create(:organisation, territory: territory)
-      organisation2 = create(:organisation, territory: territory)
       agent = create(:agent, role_in_territories: [territory])
       create(:agent_territorial_access_right, territory: territory, agent: agent)
       agent_role = create(:agent_role, organisation: organisation, agent: agent, access_level: "basic")
@@ -61,8 +71,6 @@ describe Admin::Territories::AgentRolesController, type: :controller do
     end
 
     it "redirect to territorial_agent_edit on success if it the last organisation" do
-      territory = create(:territory)
-      organisation = create(:organisation, territory: territory)
       agent = create(:agent, role_in_territories: [territory])
       create(:agent_territorial_access_right, territory: territory, agent: agent)
       agent_role = create(:agent_role, organisation: organisation, agent: agent, access_level: "basic")
@@ -78,8 +86,6 @@ describe Admin::Territories::AgentRolesController, type: :controller do
     end
 
     it "destroy agent_role" do
-      territory = create(:territory)
-      organisation = create(:organisation, territory: territory)
       agent = create(:agent, role_in_territories: [territory])
       create(:agent_territorial_access_right, territory: territory, agent: agent)
       agent_role = create(:agent_role, organisation: organisation, agent: agent, access_level: "basic")
