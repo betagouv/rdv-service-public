@@ -63,30 +63,6 @@ describe AddConseillerNumerique do
           expect { described_class.process!(params) }.not_to change { [Agent.count, Agent.maximum(:updated_at)] }
         end
       end
-
-      context "and their account has been deleted by mistake before the external id was set" do
-        before { create(:agent, external_id: nil, deleted_at: 1.day.ago) }
-
-        it "creates a new agent, and assigns them to the organisation" do
-          described_class.process!(params)
-          expect(Agent.count).to eq 2
-          expect(Agent.last).to have_attributes(
-            external_id: "exemple@conseiller-numerique.fr",
-            email: "exemple@conseiller-numerique.fr",
-            first_name: "Camille",
-            last_name: "Clavier"
-          )
-
-          expect(Agent.last.roles.count).to eq 1
-          expect(Agent.last.agent_territorial_access_rights.first).to have_attributes(
-            territory: territory,
-            allow_to_manage_teams: false,
-            allow_to_manage_access_rights: false,
-            allow_to_invite_agents: false,
-            allow_to_download_metrics: false
-          )
-        end
-      end
     end
   end
 

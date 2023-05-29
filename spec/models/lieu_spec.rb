@@ -90,8 +90,8 @@ describe Lieu, type: :model do
         it { expect(subject).to contain_exactly(lieu) }
       end
 
-      context "with a motif not active" do
-        before { motif.update(deleted_at: Time.zone.now) }
+      context "with an archived motif" do
+        before { motif.update!(archived_at: Time.zone.now) }
 
         it { expect(subject).to eq([]) }
       end

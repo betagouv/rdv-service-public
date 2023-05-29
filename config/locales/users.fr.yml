@@ -1,7 +1,7 @@
 fr:
   users:
     can_not_delete_because_has_future_rdvs: L'usager ou ses proches ont des rendez-vous programmés, vous ne pouvez pas le supprimer.
-    soft_delete_confirm_message:
+    destroy_confirm_message:
       relatives:
         one: ⚠️ Cet usager a un proche qui sera aussi supprimé
         other: ⚠️ Cet usager a %{count} proches qui seront aussi supprimés

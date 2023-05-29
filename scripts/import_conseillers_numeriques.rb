@@ -15,7 +15,6 @@ conseillers_numeriques.each do |conseiller_numerique|
   external_id = "conseiller-numerique-#{conseiller_numerique['Id du conseiller']}"
 
   agent = Agent.find_by(external_id: external_id)
-  next if agent&.deleted_at?
 
   AddConseillerNumerique.process!({
     external_id: external_id,

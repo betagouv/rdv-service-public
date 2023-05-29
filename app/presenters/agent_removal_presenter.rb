@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class AgentRemovalPresenter
-  delegate :will_soft_delete?, to: :agent_removal_service
+  delegate :will_destroy?, to: :agent_removal_service
   attr_reader :agent, :organisation
 
   def initialize(agent, organisation)
@@ -10,7 +10,7 @@ class AgentRemovalPresenter
   end
 
   def button_value
-    if will_soft_delete?
+    if will_destroy?
       "Supprimer le compte"
     else
       "Retirer de l'organisation"
@@ -18,7 +18,7 @@ class AgentRemovalPresenter
   end
 
   def confirm_message
-    if will_soft_delete?
+    if will_destroy?
       <<~STR
         Cet agent appartient uniquement à l'organisation #{organisation.name}. Vous vous apprêtez à retirer cet agent de cette organisation et à supprimer son compte définitivement.
 

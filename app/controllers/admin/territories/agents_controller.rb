@@ -10,7 +10,6 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
 
   def find_agents(search_term)
     organisation_agents = policy_scope(Agent)
-      .active
       .complete
 
     agents = Agent.where(id: organisation_agents) # Use a subquery (IN) instead of .distinct, to be able to sort by an expression

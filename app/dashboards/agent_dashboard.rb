@@ -18,7 +18,6 @@ class AgentDashboard < Administrate::BaseDashboard
     roles: Field::HasMany,
     service: Field::BelongsTo,
     invitation_sent_at: Field::DateTime,
-    deleted_at: Field::DateTime,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
   }.freeze
@@ -47,7 +46,6 @@ class AgentDashboard < Administrate::BaseDashboard
     service
     invitation_sent_at
     created_at
-    deleted_at
     updated_at
   ].freeze
 
@@ -60,7 +58,6 @@ class AgentDashboard < Administrate::BaseDashboard
     last_name
     organisations
     service
-    deleted_at
   ].freeze
 
   def display_resource(agent)

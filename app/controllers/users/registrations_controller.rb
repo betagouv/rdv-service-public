@@ -14,7 +14,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   def destroy
     authorize([:user, resource])
-    resource.soft_delete
+    resource.destroy!
     Devise.sign_out_all_scopes ? sign_out : sign_out(resource_name)
     set_flash_message! :notice, :destroyed
     yield resource if block_given?

@@ -56,7 +56,7 @@ class Motif < ApplicationRecord
   validates :visibility_type, inclusion: { in: VISIBILITY_TYPES }
   validates :sectorisation_level, inclusion: { in: SECTORISATION_TYPES }
   validates :name, presence: true, uniqueness: { scope: %i[organisation location_type service],
-                                                 conditions: -> { where(deleted_at: nil) }, }
+                                                 conditions: -> { where(archived_at: nil) }, }
 
   validates :color, :default_duration_in_min, :min_public_booking_delay, :max_public_booking_delay, presence: true
   validates :min_public_booking_delay, numericality: { greater_than_or_equal_to: 30.minutes, less_than_or_equal_to: 1.year.minutes }
@@ -69,7 +69,7 @@ class Motif < ApplicationRecord
 
   # Scopes
   scope :active, lambda { |active = true|
-    active ? where(deleted_at: nil) : where.not(deleted_at: nil)
+    active ? where(archived_at: nil) : where.not(archived_at: nil)
   }
   scope :bookable_by_everyone, -> { where(bookable_by: %i[everyone]) }
   scope :bookable_by_everyone_or_bookable_by_invited_users, -> { where(bookable_by: %i[everyone agents_and_prescripteurs_and_invited_users]) }
@@ -123,8 +123,8 @@ class Motif < ApplicationRecord
     name
   end
 
-  def soft_delete
-    rdvs.unscoped.any? ? update_attribute(:deleted_at, Time.zone.now) : destroy
+  def destroy_or_archive
+    rdvs.unscoped.any? ? update_attribute(:archived_at, Time.zone.now) : destroy
   end
 
   def authorized_agents
@@ -132,7 +132,6 @@ class Motif < ApplicationRecord
       .joins(:organisations)
       .where(organisations: { id: organisation.id })
       .complete
-      .active
       .where(service: authorized_services)
       .order_by_last_name
   end

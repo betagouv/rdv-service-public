@@ -79,9 +79,9 @@ describe "RDV authentified API", swagger_doc: "v1/api.json" do
         let(:organisation_id) { organisation.id }
 
         response 200, "Renvoie les motifs filtrés sur active true", document: false do
-          let!(:deleted_at) { Time.zone.yesterday.noon }
+          let!(:archived_at) { Time.zone.yesterday.noon }
           let!(:motif1) { create(:motif, organisation: organisation, service: service) }
-          let!(:motif2) { create(:motif, organisation: organisation, service: service, deleted_at: deleted_at) }
+          let!(:motif2) { create(:motif, organisation: organisation, service: service, archived_at: archived_at) }
           let(:active) { true }
 
           run_test!
@@ -90,15 +90,15 @@ describe "RDV authentified API", swagger_doc: "v1/api.json" do
         end
 
         response 200, "Renvoie les motifs filtrés sur active false", document: false do
-          let!(:deleted_at) { Time.zone.yesterday.noon }
+          let!(:archived_at) { Time.zone.yesterday.noon }
           let!(:motif1) { create(:motif, organisation: organisation, service: service) }
-          let!(:motif2) { create(:motif, organisation: organisation, service: service, deleted_at: deleted_at) }
+          let!(:motif2) { create(:motif, organisation: organisation, service: service, archived_at: archived_at) }
           let(:active) { false }
 
           run_test!
 
           it { expect(parsed_response_body["motifs"].pluck("id")).to contain_exactly(motif2.id) }
-          it { expect(parsed_response_body["motifs"].pluck("deleted_at")).to contain_exactly(deleted_at.to_s) }
+          it { expect(parsed_response_body["motifs"].pluck("archived_at")).to contain_exactly(archived_at.to_s) }
         end
 
         response 200, "Renvoie les motifs filtrés sur bookable_publicly true", document: false do

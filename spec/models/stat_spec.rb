@@ -54,17 +54,6 @@ describe Stat, type: :model do
     end
   end
 
-  describe "#agents_for_default_range" do
-    it "returns active agents only" do
-      now = Time.zone.parse("20220123 13:00")
-      travel_to(now)
-      active_agent = create(:agent)
-      create(:agent, deleted_at: now - 1.week)
-      stats = described_class.new(agents: Agent.all)
-      expect(stats.agents_for_default_range).to eq([active_agent])
-    end
-  end
-
   describe "#rdvs_group_by_territory_name" do
     it "returns rdv group by département" do
       now = Time.zone.parse("20220123 13:00")

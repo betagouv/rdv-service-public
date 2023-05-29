@@ -76,7 +76,6 @@ X-Runtime: 0.194743< Transfer-Encoding: chunked
 {
   "data": {
     "id":1,
-    "deleted_at":null,
     "email":"martine@demo.rdv-solidarites.fr",
     "provider":"email",
     "service_id":1,
@@ -84,7 +83,6 @@ X-Runtime: 0.194743< Transfer-Encoding: chunked
     "last_name":"VALIDAY",
     "first_name":"Martine",
     "uid":"martine@demo.rdv-solidarites.fr",
-    "email_original":null,
     "allow_password_change":false
   }
 }

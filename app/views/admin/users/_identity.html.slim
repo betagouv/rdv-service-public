@@ -7,4 +7,4 @@
 - else
   = t(".identity_html", user: admin_link_to_if_permitted(current_organisation, user))
 
-= user_soft_deleted_tag(current_organisation, user)
+= user_not_in_org_tag(current_organisation, user)

@@ -42,8 +42,8 @@ Agent.transaction do
     end
     puts "RDV nouveau motif: #{new_motif.rdvs.count} - RDV ancien motif: #{motif.rdvs.count}"
 
-    puts "soft deleting motif"
-    motif.soft_delete
+    puts "archiving motif"
+    motif.destroy_or_archive
   end
 
   puts "Déplacement des agents:"

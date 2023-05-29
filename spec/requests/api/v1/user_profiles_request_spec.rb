@@ -99,7 +99,7 @@ describe "User Profile authentified API", swagger_doc: "v1/api.json" do
       response 204, "détruit l'utilisateur s'il n'appartient qu'à une organisation" do
         run_test!
 
-        it { expect(user.reload.deleted_at).not_to be_nil }
+        it { expect { user.reload }.to raise_error(ActiveRecord::RecordNotFound) }
       end
 
       response 204, "ne détruit pas l'utilisateur s'il n'appartient à plusieurs organisations" do
@@ -108,7 +108,7 @@ describe "User Profile authentified API", swagger_doc: "v1/api.json" do
 
         run_test!
 
-        it { expect(user.reload.deleted_at).to be_nil }
+        it { expect(user).not_to be_destroyed }
       end
 
       it_behaves_like "an endpoint that returns 403 - forbidden", "l'agent n'appartient pas à l'organisation" do

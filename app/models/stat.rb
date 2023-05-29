@@ -6,10 +6,8 @@ class Stat
 
   DEFAULT_FORMAT = "%d/%m/%Y"
 
-  delegate :active, to: :users, prefix: true
-
   def agents_for_default_range
-    agents.active
+    agents
   end
 
   def rdvs_group_by_week

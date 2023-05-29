@@ -38,7 +38,7 @@ class AddConseillerNumerique
   private
 
   def find_or_invite_agent(organisation)
-    existing_agent = Agent.where(deleted_at: nil).find_by(external_id: @conseiller_numerique.external_id)
+    existing_agent = Agent.find_by(external_id: @conseiller_numerique.external_id)
     if existing_agent
       Rails.logger.info("#{@conseiller_numerique.email} already exists, no update made.")
     else

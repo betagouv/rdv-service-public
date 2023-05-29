@@ -33,7 +33,7 @@ class Lieu < ApplicationRecord
     lieux_ids = PlageOuverture
       .where.not("recurrence IS ? AND first_day < ?", nil, Time.zone.today)
       .joins(:motifs)
-      .where(motifs: { id: motif.id, deleted_at: nil })
+      .where(motifs: { id: motif.id, archived_at: nil })
       .map(&:lieu_id)
       .uniq
     enabled.where(id: lieux_ids)

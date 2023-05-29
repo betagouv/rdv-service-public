@@ -11,9 +11,9 @@ class AgentRemoval
 
     Agent.transaction do
       @agent.roles.find_by(organisation: @organisation).destroy!
-      @agent.absences.each(&:destroy!) if should_soft_delete?
+      @agent.absences.each(&:destroy!) if should_destroy?
       @agent.plage_ouvertures.where(organisation: @organisation).each(&:destroy!)
-      @agent.soft_delete if should_soft_delete?
+      @agent.destroy! if should_destroy?
       true
     end
   end
@@ -22,7 +22,7 @@ class AgentRemoval
     @upcoming_rdvs ||= @agent.rdvs.where(organisation: @organisation).future.not_cancelled.any?
   end
 
-  def should_soft_delete?
+  def should_destroy?
     (@agent.organisations - [@organisation]).empty?
   end
 
@@ -33,12 +33,12 @@ class AgentRemoval
   def confirmation_message
     if @agent.invitation_accepted_at.blank?
       I18n.t("admin.territories.agent_roles.destroy.invitation_deleted")
-    elsif @agent.deleted_at?
+    elsif @agent.destroyed?
       I18n.t("admin.territories.agent_roles.destroy.agent_deleted")
     else
       I18n.t("admin.territories.agent_roles.destroy.agent_removed_from_org")
     end
   end
 
-  alias will_soft_delete? should_soft_delete?
+  alias will_destroy? should_destroy?
 end

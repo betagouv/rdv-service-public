@@ -11,7 +11,7 @@ class Agents::RegistrationsController < Devise::RegistrationsController
   def destroy
     flash[:notice] = "Votre compte a été supprimé."
     current_agent.organisations.each { AgentRemoval.new(@agent, _1).remove! }
-    current_agent.soft_delete
+    current_agent.destroy! if current_agent.persisted?
     Devise.sign_out_all_scopes ? sign_out : sign_out(resource_name)
     redirect_to root_path
   end

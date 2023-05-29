@@ -16,7 +16,7 @@ class MergeUsersService < BaseService
       merge_relatives
       merge_file_attentes
       merge_referent_agents
-      @user_to_merge.reload.soft_delete(@organisation) # ! reload refreshes associations to delete
+      @user_to_merge.reload.remove_from_organisation!(@organisation) # ! reload refreshes associations to delete
     end
   end
 

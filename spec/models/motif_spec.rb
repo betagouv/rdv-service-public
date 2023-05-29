@@ -35,26 +35,14 @@ describe Motif, type: :model do
     it { expect(motif).not_to be_valid }
   end
 
-  describe "#soft_delete" do
+  describe "#destroy_or_archive" do
     it "doesn't delete the motif with rdvs" do
       now = Time.zone.parse("2020-03-23 15h45")
       travel_to(now)
-      motif.soft_delete
-      motif_with_rdv.soft_delete
+      motif.destroy_or_archive
+      motif_with_rdv.destroy_or_archive
       expect(described_class.all).to eq [motif_with_rdv]
-      expect(motif_with_rdv.reload.deleted_at).to eq(now)
-    end
-
-    context "when the motif only has a soft deleted rdv" do
-      before do
-        rdv = create(:rdv, motif: motif)
-        rdv.soft_delete
-      end
-
-      it "soft deletes the motif" do
-        motif.soft_delete
-        expect(motif.deleted_at).not_to be_nil
-      end
+      expect(motif_with_rdv.reload.archived_at).to eq(now)
     end
   end
 

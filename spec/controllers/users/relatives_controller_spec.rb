@@ -128,20 +128,20 @@ RSpec.describe Users::RelativesController, type: :controller do
   end
 
   describe "DELETE #destroy" do
-    subject { delete :destroy, params: { id: relative.id } }
+    subject(:make_request) { delete :destroy, params: { id: relative.id } }
 
     let(:now) { Time.zone.parse("21/07/2019 08:22") }
 
     before { travel_to(now) }
 
-    it "soft deletes the relative" do
-      expect do
-        subject
-      end.to change { relative.reload.deleted_at }.from(nil).to(now)
+    it "destroys the relative" do
+      expect(relative.reload).to be_persisted
+      make_request
+      expect { relative.reload }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
     it "redirects to user edit" do
-      subject
+      make_request
       expect(response).to redirect_to(users_informations_path)
     end
   end

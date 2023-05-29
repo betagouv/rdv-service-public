@@ -13,7 +13,6 @@ class ApplicationRecord < ActiveRecord::Base
   # Allows combining structurally different queries using subqueries.
   # The resulting query looks like this:
   #     SELECT * FROM table
-  #     WHERE `table.deleted_at` IS NULL -- conditions previously defined on self
   #     AND
   #       (
   #         `table.id` IN (SELECT... first subquery)

@@ -9,14 +9,13 @@ describe AgentRemoval, type: :service do
     let!(:plage_ouvertures) { create_list(:plage_ouverture, 2, agent: agent, organisation: organisation) }
     let!(:absences) { create_list(:absence, 2, agent: agent) }
 
-    it "succeeds destroy absences and plages ouvertures, and soft delete" do
+    it "succeeds destroy absences and plages ouvertures, and finally destroys the agent" do
       result = described_class.new(agent, organisation).remove!
       expect(result).to eq true
-      agent.reload
       expect(agent.organisations).to be_empty
       expect(agent.absences).to be_empty
       expect(agent.plage_ouvertures).to be_empty
-      expect(agent.deleted_at).not_to be_nil
+      expect(agent).to be_destroyed
     end
   end
 
@@ -30,14 +29,14 @@ describe AgentRemoval, type: :service do
     let!(:plage_ouvertures2) { create_list(:plage_ouverture, 2, agent: agent, organisation: organisation2) }
     let!(:absences) { create_list(:absence, 2, agent: agent) }
 
-    it "succeeds and destroy absences and plages ouvertures and not soft delete" do
-      expect(agent).not_to receive(:soft_delete)
+    it "succeeds and destroy absences and plages ouvertures but does not destroy agent" do
       result = described_class.new(agent, organisation1).remove!
       expect(result).to eq true
       agent.reload
       expect(agent.organisations).to contain_exactly(organisation2)
       expect(agent.plage_ouvertures).to contain_exactly(*plage_ouvertures2)
       expect(agent.absences).to contain_exactly(*absences)
+      expect(agent.reload).not_to be_destroyed
     end
   end
 
@@ -49,10 +48,10 @@ describe AgentRemoval, type: :service do
     let!(:rdv) { create(:rdv, agents: [agent], organisation: organisation, starts_at: Time.zone.today.next_week(:monday) + 10.hours) }
 
     it "does not succeed" do
-      expect(agent).not_to receive(:soft_delete)
       result = described_class.new(agent, organisation).remove!
-      expect(result).to eq false
+      expect(result).to eq(false)
       expect(agent.organisations).to include(organisation)
+      expect(agent.reload).not_to be_destroyed
     end
   end
 
@@ -68,10 +67,10 @@ describe AgentRemoval, type: :service do
       create(:rdv, agents: [agent], organisation: organisation, starts_at: now.prev_week(:monday) + 10.hours)
       travel_to(now)
 
-      expect(agent).to receive(:soft_delete)
       result = described_class.new(agent, organisation).remove!
       expect(result).to eq true
       expect(agent.organisations).to be_empty
+      expect(agent).to be_destroyed
     end
   end
 
@@ -86,8 +85,8 @@ describe AgentRemoval, type: :service do
     end
   end
 
-  describe "#should_soft_delete?" do
-    subject { described_class.new(agent, organisation1).should_soft_delete? }
+  describe "#should_destroy?" do
+    subject { described_class.new(agent, organisation1).should_destroy? }
 
     let(:organisation1) { build(:organisation) }
 

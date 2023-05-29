@@ -54,7 +54,7 @@ class Admin::MotifsController < AgentAuthController
 
   def destroy
     authorize(@motif)
-    if @motif.soft_delete
+    if @motif.destroy
       flash[:notice] = "Le motif a été supprimé."
       redirect_to admin_organisation_motifs_path(@motif.organisation)
     else

@@ -25,7 +25,6 @@ class MotifDashboard < Administrate::BaseDashboard
     min_public_booking_delay: Field::Number,
     visibility_type: Field::String,
     max_public_booking_delay: Field::Number,
-    deleted_at: Field::DateTime,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
   }.freeze
@@ -60,7 +59,6 @@ class MotifDashboard < Administrate::BaseDashboard
     min_public_booking_delay
     max_public_booking_delay
     visibility_type
-    deleted_at
     created_at
     updated_at
   ].freeze
@@ -83,7 +81,6 @@ class MotifDashboard < Administrate::BaseDashboard
     restriction_for_rdv
     instruction_for_rdv
     custom_cancel_warning_message
-    deleted_at
   ].freeze
 
   def display_resource(motif)
