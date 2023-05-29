@@ -199,7 +199,7 @@ class SearchContext
   def filter_motifs(available_motifs)
     motifs = available_motifs
     motifs = if @prescripteur
-               motifs.where(bookable_by: %i[agents_and_prescripteurs everyone])
+               motifs.where(bookable_by: %i[agents_and_prescripteurs agents_and_prescripteurs_and_invited_users everyone])
              elsif invitation?
                motifs.where(bookable_by: %i[agents_and_prescripteurs_and_invited_users everyone])
              else

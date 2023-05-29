@@ -286,6 +286,17 @@ describe "User can search for rdvs" do
       visit root_path(departement: "92")
       expect(page).not_to have_content("La prise de rendez-vous n'est pas disponible pour ce département.")
     end
+
+    it "isn't shown to the users when bookable_by is agents_and_prescripteurs_and_invited_users" do
+      motif.update!(bookable_by: "agents_and_prescripteurs_and_invited_users")
+      visit root_path(departement: "92")
+      expect(page).to have_content("La prise de rendez-vous n'est pas disponible pour ce département.")
+
+      motif.update!(bookable_by: "everyone") # to make sure this spec isn't a false positive
+
+      visit root_path(departement: "92")
+      expect(page).not_to have_content("La prise de rendez-vous n'est pas disponible pour ce département.")
+    end
   end
 
   private
