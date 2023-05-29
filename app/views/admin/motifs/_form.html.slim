@@ -92,6 +92,14 @@
                 br
                 = "Ils pourront prendre rendez-vous uniquement sur les plages d'ouvertures définies par les agents de #{@motif.organisation.name}"
 
+      - if current_organisation.rdv_insertion?
+        .form-row
+          .col-md-12
+            = label_tag do
+              = f.radio_button(:bookable_by, :agents_and_prescripteurs_and_invited_users)
+              span.ml-1= presenter.bookable_by_label(:agents_and_prescripteurs_and_invited_users)
+              p.text-muted.font-14= "Les usagers avec une invitation (RDV-Insertion) pourront prendre rendez-vous"
+
       .form-row
         .col-md-12
           = label_tag do
@@ -151,8 +159,9 @@
           span.ml-1= Motif.human_attribute_value(:visibility_type, value)
           p
             span.text-muted.font-14= Motif.human_attribute_value(:visibility_type, value, context: :hint)
-            br
-            span.text-muted.font-14.rdv-insertion-notif-hint= Motif.human_attribute_value(:visibility_type, value, context: :hint_rdv_insertion)
+            - if current_organisation.rdv_insertion?
+              br
+              span.text-muted.font-14.rdv-insertion-notif-hint= Motif.human_attribute_value(:visibility_type, value, context: :hint_rdv_insertion)
 
   .card
     .card-body

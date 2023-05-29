@@ -251,5 +251,27 @@ describe SearchContext, type: :service do
       create(:plage_ouverture, motifs: [motif], lieu: lieu)
       expect(search_context.filter_motifs(Motif.where(id: motif.id))).to eq([motif])
     end
+
+    it "returns motif when user is invited (and motif's bookable_by is agents_and_prescripteurs_and_invited_users)" do
+      # This test will be obsolete when the invitation behavior will be integrated in Rdv-s (https://github.com/betagouv/rdv-solidarites.fr/issues/3438)
+      lieu = create(:lieu)
+      search_query[:invitation_token] = invitation_token
+      search_query[:motif_category_short_name] = "rsa_orientation"
+      search_query[:lieu_id] = lieu.id
+      search_context = described_class.new(nil, search_query)
+      motif = create(:motif, bookable_by: :agents_and_prescripteurs_and_invited_users, motif_category: rsa_orientation, organisation: organisation)
+      create(:plage_ouverture, motifs: [motif], lieu: lieu)
+      expect(search_context.filter_motifs(Motif.where(id: motif.id))).to eq([motif])
+    end
+
+    it "doesnt returns motif when user is not invited (and motif's bookable_by is agents_and_prescripteurs_and_invited_users)" do
+      lieu = create(:lieu)
+      search_query[:motif_category_short_name] = "rsa_orientation"
+      search_query[:lieu_id] = lieu.id
+      search_context = described_class.new(nil, search_query)
+      motif = create(:motif, bookable_by: :agents_and_prescripteurs_and_invited_users, motif_category: rsa_orientation, organisation: organisation)
+      create(:plage_ouverture, motifs: [motif], lieu: lieu)
+      expect(search_context.filter_motifs(Motif.where(id: motif.id))).to eq([])
+    end
   end
 end

@@ -32,7 +32,9 @@ class Motif < ApplicationRecord
   enum bookable_by: {
     agents: "agents",
     agents_and_prescripteurs: "agents_and_prescripteurs",
+    agents_and_prescripteurs_and_invited_users: "agents_and_prescripteurs_and_invited_users",
     everyone: "everyone",
+
   }
 
   # Relations
