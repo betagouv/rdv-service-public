@@ -15,7 +15,7 @@ describe AgentRemoval, type: :service do
       expect(agent.organisations).to be_empty
       expect(agent.absences).to be_empty
       expect(agent.plage_ouvertures).to be_empty
-      expect(agent).to be_destroyed
+      expect { agent.reload }.to raise_error(ActiveRecord::RecordNotFound)
     end
   end
 
@@ -70,7 +70,7 @@ describe AgentRemoval, type: :service do
       result = described_class.new(agent, organisation).remove!
       expect(result).to eq true
       expect(agent.organisations).to be_empty
-      expect(agent).to be_destroyed
+      expect { agent.reload }.to raise_error(ActiveRecord::RecordNotFound)
     end
   end
 

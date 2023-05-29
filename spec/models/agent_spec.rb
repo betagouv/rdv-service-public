@@ -6,8 +6,9 @@ describe Agent, type: :model do
       let(:organisation) { create(:organisation) }
       let(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
 
-      it "raises" do
-        expect { agent.destroy }.to raise_error SoftDeleteError
+      it "aborts destruction" do
+        expect(agent.destroy).to eq(false)
+        agent.reload # does not crash, so agent was not desrtroyed
       end
     end
 
@@ -16,7 +17,7 @@ describe Agent, type: :model do
 
       it "destroys the agent" do
         agent.destroy
-        expect(agent).to be_destroyed
+        expect { agent.reload }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
   end

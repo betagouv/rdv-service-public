@@ -138,13 +138,12 @@ class Agent < ApplicationRecord
     last_sign_in_at.nil? || last_sign_in_at <= 1.month.ago
   end
 
-  def destroy
+  before_destroy do
     still_has_attached_resources = organisations.any? || plage_ouvertures.any? { |r| !r.destroyed? } || absences.any? { |r| !r.destroyed? }
 
     raise SoftDeleteError, "agent still has attached resources" if still_has_attached_resources
 
     sector_attributions.destroy_all
-    super
   end
 
   def deleted_email

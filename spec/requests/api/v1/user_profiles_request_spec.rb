@@ -108,7 +108,7 @@ describe "User Profile authentified API", swagger_doc: "v1/api.json" do
 
         run_test!
 
-        it { expect(user).not_to be_destroyed }
+        it { expect(user.reload).not_to be_destroyed }
       end
 
       it_behaves_like "an endpoint that returns 403 - forbidden", "l'agent n'appartient pas à l'organisation" do

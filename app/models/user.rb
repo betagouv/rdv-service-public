@@ -118,6 +118,7 @@ class User < ApplicationRecord
 
   def remove_from_organisation!(organisation)
     raise "we need an org" unless organisation
+
     self_and_relatives.each { _1.remove_from_org!(organisation) }
   end
 

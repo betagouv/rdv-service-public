@@ -20,7 +20,7 @@ describe MergeUsersService, type: :service do
       expect(user_target.first_name).to eq("Francis")
       expect(user_target.last_name).to eq("PAUL")
       expect(user_target.email).to eq("jean@paul.fr")
-      expect(user_to_merge.reload.deleted_at).to be_within(3.seconds).of(Time.zone.now)
+      expect { user_to_merge.reload }.to raise_error(ActiveRecord::RecordNotFound)
     end
   end
 
@@ -38,7 +38,7 @@ describe MergeUsersService, type: :service do
       expect(rdv2.reload.users).to contain_exactly(user_target)
       expect(rdv3.reload.users).to contain_exactly(user_target)
       expect(rdv4.reload.users).to contain_exactly(user_target)
-      expect(user_to_merge.deleted_at).not_to be_nil
+      expect { user_to_merge.reload }.to raise_error(ActiveRecord::RecordNotFound)
     end
   end
 
@@ -55,7 +55,7 @@ describe MergeUsersService, type: :service do
       expect(rdv1.reload.users).to contain_exactly(user_target)
       expect(rdv2.reload.users).to contain_exactly(user_target)
       expect(rdv3.reload.users).to contain_exactly(user_to_merge)
-      expect(user_to_merge.deleted_at).to be_nil
+      expect(user_to_merge.reload).not_to be_destroyed
     end
   end
 

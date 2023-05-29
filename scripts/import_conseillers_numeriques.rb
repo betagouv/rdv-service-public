@@ -14,8 +14,6 @@ conseillers_numeriques.each do |conseiller_numerique|
 
   external_id = "conseiller-numerique-#{conseiller_numerique['Id du conseiller']}"
 
-  agent = Agent.find_by(external_id: external_id)
-
   AddConseillerNumerique.process!({
     external_id: external_id,
     email: conseiller_numerique["Email @conseiller-numerique.fr"],
