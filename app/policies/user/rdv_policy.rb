@@ -48,7 +48,7 @@ class User::RdvPolicy < ApplicationPolicy
     alias current_user pundit_user
 
     def resolve
-      my_rdvs_ids = scope
+      my_rdvs = scope
         .joins(:users)
         .where(users: { id: current_user.id })
         .or(
@@ -57,9 +57,10 @@ class User::RdvPolicy < ApplicationPolicy
           .where(users: { responsible_id: current_user.id })
         )
         .visible
-        .ids
 
-      scope.where(id: my_rdvs_ids).or(Rdv.where(id: scope.collectif.bookable_publicly)).distinct
+      bookable_rdv_collectifs = scope.where(id: scope.collectif.bookable_publicly)
+
+      scope.where(id: my_rdvs).or(bookable_rdv_collectifs).distinct
     end
   end
 end
