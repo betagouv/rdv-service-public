@@ -290,6 +290,12 @@ variables d'environnement qu'il ne faut pas hériter de l'app de démo lors de l
 app est automatiquement créée lors de l'ouverture d'une Pull Request Github, et automatiquement détruire lors de la
 fermeture / merge d'une PR.
 
+#### Détection de fuite de secrets
+
+Nous utilisons GitGuardian sur notre dépôt GitHub afin de détecter les fuites de secrets dans le code.
+
+Nous ne disposons pas d'autre système automatisé de détection de fuite de secrets.
+
 ### Authentification, contrôle d’accès, habilitations et profils
 
 L'application a 3 types d'utilisateurs :
