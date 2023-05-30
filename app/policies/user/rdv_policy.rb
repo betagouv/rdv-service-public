@@ -58,7 +58,9 @@ class User::RdvPolicy < ApplicationPolicy
         )
         .visible
 
-      scope.where(id: my_rdvs).or(scope.where(id: scope.collectif.bookable_publicly)).distinct
+      bookable_rdv_collectifs = scope.where(id: scope.collectif.bookable_publicly)
+
+      scope.where(id: my_rdvs).or(bookable_rdv_collectifs).distinct
     end
   end
 end
