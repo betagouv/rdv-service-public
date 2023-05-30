@@ -19,7 +19,7 @@ RSpec.describe "Search", type: :request do
     context "with connected user" do
       let(:organisation) { create(:organisation) }
       let(:agent) { create(:agent, organisations: [organisation]) }
-      let(:user) { create(:user, organisations: [organisation], agents: [agent]) }
+      let(:user) { create(:user, organisations: [organisation], referent_agents: [agent]) }
 
       before do
         login_as(user)

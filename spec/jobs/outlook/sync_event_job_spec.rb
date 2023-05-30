@@ -27,10 +27,6 @@ RSpec.describe Outlook::SyncEventJob do
     end
 
     context "when the call to the api fails" do
-      before do
-        stub_request(:post, "https://graph.microsoft.com/v1.0/me/Events").to_return(status: 404, body: { error: { code: "TerribleError", message: "Quelle terrible erreur" } }.to_json, headers: {})
-      end
-
       stub_sentry_events
 
       it "retries the job, notifies the error monitoring, and does not update the outlook_id" do

@@ -1,0 +1,5 @@
+- referent_agents = user&.referent_agents&.merge(current_organisation.agents)
+- if referent_agents.present?
+  = referent_agents.map(&:full_name).to_sentence
+- else
+  i.text-muted Aucun agent responsable

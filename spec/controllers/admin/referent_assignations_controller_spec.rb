@@ -4,7 +4,7 @@ describe Admin::ReferentAssignationsController, type: :controller do
   describe "#index" do
     it "assigns available agents and respond success" do
       organisation = create(:organisation)
-      user = create(:user, agents: [], organisations: [organisation])
+      user = create(:user, referent_agents: [], organisations: [organisation])
       service = create(:service)
       agent = create(:agent, basic_role_in_organisations: [organisation], service: service)
       lea = create(:agent, basic_role_in_organisations: [organisation], service: service)
@@ -20,7 +20,7 @@ describe Admin::ReferentAssignationsController, type: :controller do
 
     it "assigns matching search agent" do
       organisation = create(:organisation)
-      user = create(:user, agents: [], organisations: [organisation])
+      user = create(:user, referent_agents: [], organisations: [organisation])
       service = create(:service)
       connected_agent = create(:agent, basic_role_in_organisations: [organisation], service: service, first_name: "Marc", last_name: "Dubois")
       agent = create(:agent, basic_role_in_organisations: [organisation], service: service, first_name: "Martine", last_name: "Durant")
@@ -36,26 +36,31 @@ describe Admin::ReferentAssignationsController, type: :controller do
   end
 
   describe "#create" do
+    let!(:organisation) { create(:organisation) }
+    let!(:user) { create(:user, referent_agents: [], organisations: [organisation]) }
+    let!(:service) { create(:service) }
+    let!(:agent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }
+    let!(:new_referent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }
+
     it "add given agent to referents and redirect to user show" do
-      organisation = create(:organisation)
-      user = create(:user, agents: [], organisations: [organisation])
-      service = create(:service)
-      agent = create(:agent, basic_role_in_organisations: [organisation], service: service)
-      new_referent = create(:agent, basic_role_in_organisations: [organisation], service: service)
       sign_in agent
 
       post :create, params: { organisation_id: organisation.id, user_id: user.id, agent_id: new_referent.id }
 
-      expect(user.reload.agents).to include(new_referent)
+      expect(user.reload.referent_agents).to include(new_referent)
       expect(response).to redirect_to(admin_organisation_user_referent_assignations_path(organisation, user))
     end
 
+    it "is idempotent" do
+      sign_in agent
+
+      post :create, params: { organisation_id: organisation.id, user_id: user.id, agent_id: new_referent.id }
+
+      # Calling the action with same params does not raise error
+      post :create, params: { organisation_id: organisation.id, user_id: user.id, agent_id: new_referent.id }
+    end
+
     it "return errors and redirect to index" do
-      organisation = create(:organisation)
-      user = create(:user, agents: [], organisations: [organisation])
-      service = create(:service)
-      agent = create(:agent, basic_role_in_organisations: [organisation], service: service)
-      new_referent = create(:agent, basic_role_in_organisations: [organisation], service: service)
       sign_in agent
 
       allow_any_instance_of(User).to receive(:save).and_return(false)
@@ -70,28 +75,31 @@ describe Admin::ReferentAssignationsController, type: :controller do
   end
 
   describe "#delete" do
-    it "remove given agent from user's referents" do
-      organisation = create(:organisation)
-      service = create(:service)
-      referent = create(:agent, basic_role_in_organisations: [organisation], service: service)
-      agent = create(:agent, basic_role_in_organisations: [organisation], service: service)
-      user = create(:user, agents: [referent], organisations: [organisation])
+    let!(:organisation) { create(:organisation) }
+    let!(:service) { create(:service) }
+    let!(:referent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }
+    let!(:agent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }
+    let!(:user) { create(:user, referent_agents: [referent], organisations: [organisation]) }
 
+    it "remove given agent from user's referents" do
       sign_in agent
 
       post :destroy, params: { organisation_id: organisation.id, user_id: user.id, id: referent.id }
 
-      expect(user.reload.agents).not_to include(referent)
+      expect(user.reload.referent_agents).not_to include(referent)
       expect(response).to redirect_to(admin_organisation_user_referent_assignations_path(organisation, user))
     end
 
-    it "return errors and redirect to user's show" do
-      organisation = create(:organisation)
-      service = create(:service)
-      referent = create(:agent, basic_role_in_organisations: [organisation], service: service)
-      agent = create(:agent, basic_role_in_organisations: [organisation], service: service)
-      user = create(:user, agents: [referent], organisations: [organisation])
+    it "is idempotent" do
+      sign_in agent
 
+      post :destroy, params: { organisation_id: organisation.id, user_id: user.id, id: referent.id }
+
+      # Calling the action with same params does not raise error
+      post :destroy, params: { organisation_id: organisation.id, user_id: user.id, id: referent.id }
+    end
+
+    it "return errors and redirect to user's show" do
       sign_in agent
 
       allow_any_instance_of(User).to receive(:save).and_return(false)

@@ -246,4 +246,20 @@ RSpec.describe SearchController, type: :controller do
       end
     end
   end
+
+  describe "#publick_link_to_creneaux" do
+    let(:params) { { starts_at: Time.zone.now, lieu_id: lieu.id, motif_id: motif.id } }
+
+    it "redirects to /prendre_rdv with the proper params" do
+      get :public_link_to_creneaux, params: params
+
+      expect(response).to redirect_to(new_users_rdv_wizard_step_path(
+                                        starts_at: params[:starts_at],
+                                        lieu_id: params[:lieu_id],
+                                        departement: organisation.departement_number,
+                                        motif_name_with_location_type: motif.name_with_location_type,
+                                        motif_id: motif.id
+                                      ))
+    end
+  end
 end

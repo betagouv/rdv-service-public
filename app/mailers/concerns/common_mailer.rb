@@ -17,7 +17,7 @@ module CommonMailer
   private
 
   def default_url_options
-    super.merge(host: domain.dns_domain_name)
+    super.merge(host: domain.host_name)
   end
 
   def set_default_from_with_display_name
@@ -25,6 +25,6 @@ module CommonMailer
   end
 
   def default_from
-    SUPPORT_EMAIL
+    domain.support_email
   end
 end

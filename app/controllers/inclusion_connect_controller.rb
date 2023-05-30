@@ -10,7 +10,8 @@ class InclusionConnectController < ApplicationController
 
   def callback
     if params[:state] != session[:ic_state]
-      flash[:error] = "Nous n'avons pas pu vous authentifier. Contacter le support à l'adresse <support@rdv-solidarites.fr> si le problème persiste."
+      Sentry.capture_message("InclusionConnect states do not match", extra: { params_state: params[:state], session_ic_state: session[:ic_state] })
+      flash[:error] = "Nous n'avons pas pu vous authentifier. Contacter le support à l'adresse <#{current_domain.support_email}> si le problème persiste."
       redirect_to new_agent_session_path and return
     end
 
@@ -21,7 +22,7 @@ class InclusionConnectController < ApplicationController
       session[:connected_with_inclusionconnect] = true
       redirect_to root_path
     else
-      flash[:error] = "Nous n'avons pas pu vous authentifier. Contacter le support à l'adresse <support@rdv-solidarites.fr> si le problème persiste."
+      flash[:error] = "Nous n'avons pas pu vous authentifier. Contacter le support à l'adresse <#{current_domain.support_email}> si le problème persiste."
       Sentry.capture_message("Failed to authentify agent with inclusionConnect")
       redirect_to new_agent_session_path
     end

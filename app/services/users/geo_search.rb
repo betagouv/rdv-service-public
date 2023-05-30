@@ -112,16 +112,22 @@ class Users::GeoSearch
   end
 
   def available_motifs_base
-    @available_motifs_base ||= Motif.where(id: individual_motifs + collective_motifs).joins(:organisation)
+    @available_motifs_base ||= Motif.where(id: individual_and_collectifs_motifs_ids).joins(:organisation)
   end
 
   def individual_motifs
-    @individual_motifs ||= Motif.active.individuel.joins(:plage_ouvertures).distinct
+    @individual_motifs ||= Motif.active.where.not(bookable_by: :agents).individuel.joins(:plage_ouvertures)
+      .joins(organisation: :territory).where(territories: { departement_number: @departement }).distinct
   end
 
   def collective_motifs
-    @collective_motifs ||= Motif.active.collectif
+    @collective_motifs ||= Motif.active.where.not(bookable_by: :agents).collectif
+      .joins(organisation: :territory).where(territories: { departement_number: @departement })
       .joins(:rdvs).merge(Rdv.collectif_and_available_for_reservation).distinct
+  end
+
+  def individual_and_collectifs_motifs_ids
+    @individual_and_collectifs_motifs_ids ||= individual_motifs.select(:id).ids + collective_motifs.select(:id).ids
   end
 
   def available_individual_motifs_from_attributed_agents_arel

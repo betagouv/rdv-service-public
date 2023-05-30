@@ -52,6 +52,7 @@ RSpec.describe Users::RdvsController, type: :controller do
         expect(Rdv.count).to eq(1)
         expect(response).to redirect_to users_rdv_path(Rdv.last, invitation_token: token)
         expect(user.rdvs.last.created_by_user?).to be(true)
+        expect(user.rdvs_users.last.created_by_user?).to be(true)
       end
 
       context "when the motif is by phone and lieu is missing" do
@@ -62,6 +63,7 @@ RSpec.describe Users::RdvsController, type: :controller do
           expect(Rdv.count).to eq(1)
           expect(response).to redirect_to users_rdv_path(Rdv.last, invitation_token: token)
           expect(user.rdvs.last.created_by_user?).to be(true)
+          expect(user.rdvs_users.last.created_by_user?).to be(true)
         end
       end
     end
@@ -332,7 +334,7 @@ RSpec.describe Users::RdvsController, type: :controller do
 
       context "when looking at rdvs on a different domain name" do
         before do
-          controller.request.host = Domain::RDV_AIDE_NUMERIQUE.dns_domain_name
+          controller.request.host = Domain::RDV_AIDE_NUMERIQUE.host_name
         end
 
         it "only shows the rdvs of the domain" do

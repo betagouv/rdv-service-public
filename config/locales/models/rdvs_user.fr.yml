@@ -7,6 +7,10 @@ fr:
         send_lifecycle_notifications: Notifications de création et modification
         send_reminder_notification: Notification de rappel
         status: Statut
+      rdvs_user/created_by:
+        agent: "Inscription faite par un agent"
+        user: "Inscription faite par un usager"
+        prescripteur: "Inscription faite par un prescripteur"
       rdvs_user/send_lifecycle_notifications:
         true: Notifications de création et modification activées
         false: Notifications de création et modification désactivées

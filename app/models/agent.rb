@@ -95,7 +95,7 @@ class Agent < ApplicationRecord
     motif.for_secretariat ? joins(:service).where(service: motif.service).or(secretariat) : where(service: motif.service)
   }
   scope :available_referents_for, lambda { |user|
-    where.not(id: [user.agents.map(&:id)])
+    where.not(id: [user.referent_agents.map(&:id)])
   }
   scope :in_orgs, lambda { |organisations|
     joins(:roles).where(agent_roles: { organisations: organisations })
@@ -104,7 +104,6 @@ class Agent < ApplicationRecord
   ## -
 
   delegate :name, to: :domain, prefix: true
-  delegate :dns_domain_name, to: :domain
 
   def remember_me # Override from Devise::rememberable to enable it by default
     super.nil? ? true : super
@@ -190,7 +189,7 @@ class Agent < ApplicationRecord
   end
 
   def update_unknown_past_rdv_count!
-    update_column(:unknown_past_rdv_count, rdvs.status(:unknown_past).count)
+    update_column(:unknown_past_rdv_count, rdvs.status(:unknown_past).count) if persisted?
   end
 
   # This method is called when calling #current_agent on a controller action that is automatically generated
@@ -228,6 +227,8 @@ class Agent < ApplicationRecord
   def domain
     @domain ||= if organisations.where(verticale: :rdv_aide_numerique).any?
                   Domain::RDV_AIDE_NUMERIQUE
+                elsif organisations.where(verticale: :rdv_mairie).any?
+                  Domain::RDV_MAIRIE
                 else
                   Domain::RDV_SOLIDARITES
                 end

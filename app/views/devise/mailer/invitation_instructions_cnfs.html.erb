@@ -129,8 +129,9 @@
 
 <h2>Besoin d’un contact avec notre équipe ?</h2>
 
+<% support_email = Domain::RDV_AIDE_NUMERIQUE.support_email %>
 <p>
   Pour une demande d’amélioration, une question sur l’utilisation ou tout autre sujet,
   vous pouvez nous contacter à cette adresse mail&nbsp;:
-  <a href="mailto:contact@rdv-solidarités.fr">contact@rdv-solidarites.fr</a>
+  <a href="mailto:<%= support_email %>"><%= support_email %></a>
 </p>

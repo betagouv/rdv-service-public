@@ -100,7 +100,7 @@ section.bg-lightturquoise.py-5
         | .
       p.m-auto
         | Des questions ?
-        =< link_to("Contactez-nous", "mailto:#{SUPPORT_EMAIL}", target: "_blank")
+        =< link_to("Contactez-nous", "mailto:#{current_domain.support_email}", target: "_blank")
         | .
 
 section.bg-white.py-5

@@ -59,7 +59,33 @@ describe Outlook::ApiClient do
     it "raises an error so that the job around it is retried later" do
       expect do
         described_class.new(agent).create_event!(expected_body)
-      end.to raise_error("Outlook Events API error: Account suspended. Follow the instructions in your Inbox to verify your account.")
+      end.to raise_error(Outlook::ApiClient::ApiError, "Account suspended. Follow the instructions in your Inbox to verify your account.")
+    end
+
+    context "when the error is permanent" do
+      before do
+        stub_request(:delete, "https://graph.microsoft.com/v1.0/me/Events/abc")
+          .to_return(
+            status: 404,
+            body: {
+              error: {
+                code: "ErrorItemNotFound", # this error is permanent
+                message: "The specified object was not found in the store",
+              },
+            }.to_json,
+            headers: {}
+          )
+      end
+
+      stub_sentry_events
+
+      it "logs the error but does not warn Sentry" do
+        allow(Rails.logger).to receive(:error)
+        described_class.new(agent).delete_event!("abc")
+
+        expect(Rails.logger).to have_received(:error).with("Outlook error while deleting event: The specified object was not found in the store")
+        expect(sentry_events).to be_empty
+      end
     end
   end
 
