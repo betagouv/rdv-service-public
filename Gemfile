@@ -8,7 +8,7 @@ ruby "3.2.2"
 gem "dotenv-rails" # dotenv should always be loaded before rails
 
 # Standard Rails stuff
-gem "rails", "~> 7.0.4"
+gem "rails", "~> 7.0.5"
 gem "sprockets-rails"
 gem "puma", "< 6.0" # Until Puma stops returning HTTP 501 on PROPFIND requests: https://github.com/puma/puma/issues/3014
 gem "jsbundling-rails"
