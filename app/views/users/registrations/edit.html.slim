@@ -1,27 +1,43 @@
-.row.justify-content-md-center
-  .col-md-6
-    h1.text-dark.my-3 Votre compte
-    .card.mt-3
-      .card-body
-        - if resource.logged_once_with_franceconnect?
-          .alert.alert-info.d-flex.align-items-center
-            .mr-3
-              .fa.fa-info
-            div Vous pouvez ici changer l'email et le mot de passe de votre compte #{current_domain.name}, et pas ceux de FranceConnect
-        = simple_form_for(resource, as: resource_name, url: registration_path(resource_name), remote: request.xhr?, html: { method: :put }) do |f|
-          = render "devise/shared/error_messages", resource: resource
-          = f.input :email, value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email), placeholder: "nom.prenom@email.com"
+.fr-container.fr-py-4w
+  .fr-grid-row.fr-grid-row--center
+    .fr-col-12.fr-col-lg-6
+      h1 Votre compte
+
+      - if resource.logged_once_with_franceconnect?
+        .fr-alert.fr-alert--info
+          p Vous pouvez ici changer l'email et le mot de passe de votre compte #{current_domain.name}, et pas ceux de FranceConnect
+
+      = form_for(resource, builder: FormBuilderDsfr, as: resource_name, url: registration_path(resource_name), remote: request.xhr?, html: { method: :put }) do |f|
+
+        = render "devise/shared/error_messages_dsfr", resource: resource
+
+        .fr-input-group
+          = f.label :email do
+            | Adresse électronique
+            span.fr-hint-text Format attendu : nom@domaine.fr
+          - existing_email = resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email
+          = f.email_field :email, value: existing_email, autocomplete: "email"
+
           - if devise_mapping.confirmable? && resource.pending_reconfirmation?
-            .form-text.text-muted.mb-2
-              | En attente de confirmation pour #{resource.unconfirmed_email}
-          = f.input :password, placeholder: "Votre mot de passe (au moins 6 caractères)"
-          .form-text.text-muted.mb-2
-            | Laissez ce champ vide si vous ne souhaitez pas changer votre mot de passe.
-          = f.input :current_password, placeholder: "Votre mot de passe (au moins 6 caractères)", required: true, autocomplete: "off"
-          .form-text.text-muted.mb-2
-            | Renseignez votre mot de passe actuel pour tout changement.
-          .text-right= f.submit "Modifier", class: "btn btn-primary"
-          .mt-5.text-center
-            hr
-            p.font-13 Vous souhaitez supprimer votre compte ?
-            = link_to "Supprimer", user_registration_path, data:{confirm: "Voulez-vous vraiment supprimer votre compte ?"}, method: :delete, class: "btn btn-outline-danger btn-sm"
+            .fr-alert.fr-alert--info
+              p En attente de confirmation pour #{resource.unconfirmed_email}
+
+        .fr-input-group
+          = f.label :password do
+            | Nouveau mot de passe
+            span.fr-hint-text Laissez ce champ vide si vous ne souhaitez pas changer votre mot de passe.
+          = f.password_field :password, autocomplete: "new-password", minlength: 6
+
+        .fr-input-group
+          = f.label :current_password do
+            | Mot de passe actuel
+            span.fr-hint-text Renseignez votre mot de passe actuel pour tout changement.
+          = f.password_field :current_password, autocomplete: "current-password", required: true
+
+        = f.submit "Modifier", class: "btn btn-primary"
+
+      hr.fr-mt-4w
+
+      h2 Supprimer votre compte
+      p Vous souhaitez supprimer votre compte ?
+      = button_to "Supprimer", user_registration_path, data: { confirm: "Voulez-vous vraiment supprimer votre compte ?" }, method: :delete, class: "fr-btn"

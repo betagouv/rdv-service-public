@@ -2,6 +2,7 @@
 
 class Users::RegistrationsController < Devise::RegistrationsController
   layout :user_devise_layout
+  layout "application_dsfr", only: %i[edit update]
 
   include CanHaveRdvWizardContext
   after_action :allow_iframe
