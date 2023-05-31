@@ -270,16 +270,8 @@ class User < ApplicationRecord
   end
 
   def remove_from_org!(organisation)
-    if organisation.present?
-      organisations.delete(organisation)
-    else
-      self.organisations = []
-    end
+    organisations.delete(organisation)
 
-    if organisations.any?
-      save! # only actually mark deleted when no orgas left
-    else
-      destroy
-    end
+    destroy if organisations.none?
   end
 end
