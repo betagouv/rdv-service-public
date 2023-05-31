@@ -3,6 +3,8 @@
     .fr-col-12.fr-col-lg-6
       h1 Votre compte
 
+      p Tous les champs sont obligatoires pour réinitialiser votre mot de passe.
+
       - if resource.logged_once_with_franceconnect?
         .fr-alert.fr-alert--info
           p Vous pouvez ici changer l'email et le mot de passe de votre compte #{current_domain.name}, et pas ceux de FranceConnect
@@ -16,17 +18,11 @@
             | Adresse électronique
             span.fr-hint-text Format attendu : nom@domaine.fr
           - existing_email = resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email
-          = f.email_field :email, value: existing_email, autocomplete: "email", class: "fr-input"
+          = f.email_field :email, value: existing_email, autocomplete: "email", required: true, class: "fr-input"
 
           - if devise_mapping.confirmable? && resource.pending_reconfirmation?
             .fr-alert.fr-alert--info
               p En attente de confirmation pour #{resource.unconfirmed_email}
-
-        .fr-input-group
-          = f.label :password, :class => "fr-label" do
-            | Nouveau mot de passe
-            span.fr-hint-text Laissez ce champ vide si vous ne souhaitez pas changer votre mot de passe.
-          = f.password_field :password, autocomplete: "new-password", minlength: 6, class: "fr-input"
 
         .fr-input-group
           = f.label :current_password, :class => "fr-label" do
@@ -34,10 +30,16 @@
             span.fr-hint-text Renseignez votre mot de passe actuel pour tout changement.
           = f.password_field :current_password, autocomplete: "current-password", required: true, class: "fr-input"
 
-        = f.submit "Modifier", class: "fr-btn"
+        .fr-input-group
+          = f.label :password, :class => "fr-label" do
+            | Nouveau mot de passe
+            span.fr-hint-text Laissez ce champ vide si vous ne souhaitez pas changer votre mot de passe.
+          = f.password_field :password, autocomplete: "new-password", minlength: 6, required: true, class: "fr-input"
+
+        = f.submit "Modifier le mot de passe", class: "fr-btn"
 
       hr.fr-mt-4w
 
       h2 Supprimer votre compte
       p Vous souhaitez supprimer votre compte ?
-      = button_to "Supprimer", user_registration_path, data: { confirm: "Voulez-vous vraiment supprimer votre compte ?" }, method: :delete, class: "fr-btn"
+      = button_to "Supprimer le compte", user_registration_path, data: { confirm: "Voulez-vous vraiment supprimer votre compte ?" }, method: :delete, class: "fr-btn fr-btn--secondary"
