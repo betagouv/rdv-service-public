@@ -40,7 +40,7 @@ class WebhookJob < ApplicationJob
     request.run
   end
 
-  def log_failure_to_sentry?
+  def log_failure_to_sentry?(_exception)
     executions >= MAX_ATTEMPTS # only log last attempt to Sentry, to prevent noise
   end
 
