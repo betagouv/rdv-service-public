@@ -86,6 +86,7 @@ class Agent < ApplicationRecord
   validate :service_cannot_be_changed
 
   # Hooks
+  before_destroy :check_agent_has_no_attached_resources
 
   # Scopes
   scope :complete, lambda {
@@ -136,14 +137,6 @@ class Agent < ApplicationRecord
 
   def inactive?
     last_sign_in_at.nil? || last_sign_in_at <= 1.month.ago
-  end
-
-  before_destroy do
-    still_has_attached_resources = organisations.any? || plage_ouvertures.any? { |r| !r.destroyed? } || absences.any? { |r| !r.destroyed? }
-
-    raise SoftDeleteError, "agent still has attached resources" if still_has_attached_resources
-
-    sector_attributions.destroy_all
   end
 
   def deleted_email
@@ -236,5 +229,15 @@ class Agent < ApplicationRecord
                 else
                   Domain::RDV_SOLIDARITES
                 end
+  end
+
+  private
+
+  def check_agent_has_no_attached_resources
+    still_has_attached_resources = organisations.any? || plage_ouvertures.any? { |r| !r.destroyed? } || absences.any? { |r| !r.destroyed? }
+
+    raise SoftDeleteError, "agent still has attached resources" if still_has_attached_resources
+
+    sector_attributions.destroy_all
   end
 end
