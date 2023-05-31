@@ -7,34 +7,34 @@
         .fr-alert.fr-alert--info
           p Vous pouvez ici changer l'email et le mot de passe de votre compte #{current_domain.name}, et pas ceux de FranceConnect
 
-      = form_for(resource, builder: FormBuilderDsfr, as: resource_name, url: registration_path(resource_name), remote: request.xhr?, html: { method: :put }) do |f|
+      = form_for(resource, as: resource_name, url: registration_path(resource_name), remote: request.xhr?, html: { method: :put }) do |f|
 
         = render "devise/shared/error_messages_dsfr", resource: resource
 
         .fr-input-group
-          = f.label :email do
+          = f.label :email, :class => "fr-label" do
             | Adresse électronique
             span.fr-hint-text Format attendu : nom@domaine.fr
           - existing_email = resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email
-          = f.email_field :email, value: existing_email, autocomplete: "email"
+          = f.email_field :email, value: existing_email, autocomplete: "email", class: "fr-input"
 
           - if devise_mapping.confirmable? && resource.pending_reconfirmation?
             .fr-alert.fr-alert--info
               p En attente de confirmation pour #{resource.unconfirmed_email}
 
         .fr-input-group
-          = f.label :password do
+          = f.label :password, :class => "fr-label" do
             | Nouveau mot de passe
             span.fr-hint-text Laissez ce champ vide si vous ne souhaitez pas changer votre mot de passe.
-          = f.password_field :password, autocomplete: "new-password", minlength: 6
+          = f.password_field :password, autocomplete: "new-password", minlength: 6, class: "fr-input"
 
         .fr-input-group
-          = f.label :current_password do
+          = f.label :current_password, :class => "fr-label" do
             | Mot de passe actuel
             span.fr-hint-text Renseignez votre mot de passe actuel pour tout changement.
-          = f.password_field :current_password, autocomplete: "current-password", required: true
+          = f.password_field :current_password, autocomplete: "current-password", required: true, class: "fr-input"
 
-        = f.submit "Modifier", class: "btn btn-primary"
+        = f.submit "Modifier", class: "fr-btn"
 
       hr.fr-mt-4w
 
