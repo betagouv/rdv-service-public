@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'English'
 class ExportJob < ApplicationJob
   queue_as :exports
 
@@ -13,9 +12,9 @@ class ExportJob < ApplicationJob
   )
 
   def log_failure_to_sentry?(exception)
-    # When a job tries to run but their already is an
-    # export job running, this exception is raised.
-    # We should not send it to Sentry.
+    # This exception is raised by the concurrency control system
+    # when a job tries to execute but another job is already running.
+    # It is thus only used as a control flow mechanism, and should not e sent to Sentry.
     !exception.is_a?(GoodJob::ActiveJobExtensions::Concurrency::ConcurrencyExceededError)
   end
 end
