@@ -6,8 +6,10 @@ tr
           i.fas.fa-calendar-day.mr-1
           = "Né(e) le #{I18n.l(rdvs_user.user.birth_date)}"
   td
-    = render "admin/rdvs_users/notifications_email", rdvs_user: rdvs_user
+    = rdvs_user.user.rdv_external_number
   td
+    = render "admin/rdvs_users/notifications_email", rdvs_user: rdvs_user
+    br
     = render "admin/rdvs_users/notifications_sms", rdvs_user: rdvs_user
   td
     = render "admin/rdvs_users/notifications_lifecycle", rdvs_user: rdvs_user

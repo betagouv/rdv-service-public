@@ -91,6 +91,7 @@ class Users::RdvWizardStepsController < UserAuthController
                     :number_of_children,
                     :notify_by_email,
                     :notify_by_sms,
+                    :rdv_external_number,
                     { user_profiles_attributes: %i[logement id organisation_id] },
                   ])
   end

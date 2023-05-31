@@ -19,3 +19,4 @@ fr:
     city_name: Nom de la commune
     city_code: Code commune INSEE
     responsible_id: Responsable
+    rdv_external_number: Numéro de pré-demande ANTS
