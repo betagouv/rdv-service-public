@@ -4,6 +4,7 @@
   = render "users/rdv_wizard_steps/rdv_wizard_summary", rdv_wizard: @rdv_wizard if @rdv_wizard.present?
 
   .card-body
+    h1.fr-h1 Inscription
     = simple_form_for resource, as: :user, url: registration_path(resource_name) do |f|
       .mb-3= render "common/franceconnect_button"
       = render "devise/shared/error_messages", resource: resource
