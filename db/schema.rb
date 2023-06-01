@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_31_134257) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_31_152232) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -166,7 +166,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_31_134257) do
 
   create_table "agent_territorial_roles", force: :cascade do |t|
     t.bigint "agent_id", null: false
-    t.bigint "territory_id"
+    t.bigint "territory_id", null: false
+    t.index ["agent_id", "territory_id"], name: "index_agent_territorial_roles_unique_agent_territory", unique: true
     t.index ["agent_id"], name: "index_agent_territorial_roles_on_agent_id"
     t.index ["territory_id"], name: "index_agent_territorial_roles_on_territory_id"
   end
