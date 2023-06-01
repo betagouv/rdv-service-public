@@ -71,7 +71,7 @@ class Domain
       sms_sender_name: "Rdvmairie",
       documentation_url: "https://rdvs.notion.site/RDV-Mairie-b831caa05dd7416bb489f06f7468903a",
       faq_url: "https://rdvs.notion.site/FAQ-RDV-Mairie-6baf4af187a14e42beafe56b7005d199",
-      france_connect_enabled: false,
+      france_connect_enabled: true,
       support_email: "support@rdv-mairie.fr"
     ),
   ].freeze
@@ -121,13 +121,19 @@ class Domain
   ALL_BY_HOST_NAME = ALL.index_by(&:host_name)
 
   def self.find_matching(domain_name)
-    # Les review apps utilisent un host de Scalingo, elles ne permettent
-    # donc pas de tester la correspondance du domaine via le host.
-    if ENV["IS_REVIEW_APP"] == "true" && ENV["REVIEW_APP_DOMAIN"].present?
-      return find(ENV["REVIEW_APP_DOMAIN"])
-    end
+    return review_app_domain if ENV["IS_REVIEW_APP"] == "true"
 
     ALL_BY_HOST_NAME.fetch(domain_name) { RDV_SOLIDARITES }
+  end
+
+  # Les review apps utilisent un host de Scalingo, elles ne permettent
+  # donc pas de tester la correspondance du domaine via le host.
+  def self.review_app_domain
+    if ENV["REVIEW_APP_DOMAIN"].present?
+      find(ENV["REVIEW_APP_DOMAIN"])
+    else
+      RDV_SOLIDARITES
+    end
   end
 
   def self.find(id)

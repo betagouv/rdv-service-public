@@ -59,6 +59,7 @@ class ApplicationController < ActionController::Base
     Sentry.configure_scope do |scope|
       scope.set_context("params", params.to_unsafe_h)
       scope.set_context("url", { "request.original_url" => request.original_url })
+      scope.set_context("session", { "key" => "session:#{session.id}" })
     end
   end
 

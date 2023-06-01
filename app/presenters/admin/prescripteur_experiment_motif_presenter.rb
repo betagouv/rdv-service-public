@@ -20,7 +20,7 @@ class Admin::PrescripteurExperimentMotifPresenter < SimpleDelegator
   end
 
   def show_bookable_by_prescripteur?
-    organisation.territory.departement_number == "83" || Rails.env.development?
+    organisation.territory.departement_number.in?(%w[80 83]) || Rails.env.development?
   end
 
   def min_public_booking_delay_hint

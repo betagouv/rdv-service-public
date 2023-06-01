@@ -8,6 +8,9 @@ class SearchController < ApplicationController
 
   def search_rdv
     @context = SearchContext.new(current_user, search_params.to_h)
+    if current_domain == Domain::RDV_MAIRIE
+      render "dsfr/rdv_mairie/homepage", layout: "application_dsfr"
+    end
   end
 
   def public_link_with_internal_organisation_id
@@ -19,6 +22,18 @@ class SearchController < ApplicationController
     territory = Territory.find_by!(departement_number: params[:territory])
     organisation = territory.organisations.find_by!(external_id: params[:organisation_external_id])
     redirect_to_organisation_search(organisation)
+  end
+
+  def public_link_to_creneaux
+    motif = Motif.find(params[:motif_id])
+
+    redirect_to new_users_rdv_wizard_step_path(
+      starts_at: params[:starts_at],
+      lieu_id: params[:lieu_id],
+      departement: motif.organisation.departement_number,
+      motif_name_with_location_type: motif.name_with_location_type,
+      motif_id: motif.id
+    )
   end
 
   def resin

@@ -1,0 +1,51 @@
+footer#footer.fr-footer[role="contentinfo"]
+  .fr-container
+    .fr-footer__body
+      .fr-footer__brand.fr-enlarge-link
+        a[href="/" title="Retour à l’accueil du site - République Française"]
+          p.fr-logo
+            |  République
+            br
+            | française
+      .fr-footer__content
+        p.fr-footer__content-desc
+          | #{current_domain.name} est géré par RDV Services Publics, un service fourni par l'
+          = link_to("Agence Nationale de la Cohésion des Territoires", "https://agence-cohesion-territoires.gouv.fr/", rel: "noopener", target: "_blank")
+          | en partenariat avec un consortium de départements.
+        ul.fr-footer__content-list
+
+          li.fr-footer__content-item
+            a.fr-footer__content-link[target="_blank" href="https://legifrance.gouv.fr"]
+              | legifrance.gouv.fr
+          li.fr-footer__content-item
+            a.fr-footer__content-link[target="_blank" href="https://gouvernement.fr"]
+              | gouvernement.fr
+          li.fr-footer__content-item
+            a.fr-footer__content-link[target="_blank" href="https://service-public.fr"]
+              | service-public.fr
+          li.fr-footer__content-item
+            a.fr-footer__content-link[target="_blank" href="https://data.gouv.fr"]
+              | data.gouv.fr
+      .fr-footer__bottom
+        ul.fr-footer__bottom-list
+          li.fr-footer__bottom-item
+            = link_to "Statistiques", stats_path, class: "fr-footer__bottom-link"
+          li.fr-footer__bottom-item
+            = link_to "Budget", budget_path, class: "fr-footer__bottom-link", rel: "noopener", target: "_blank"
+          li.fr-footer__bottom-item
+            = link_to "Code source", "https://github.com/betagouv/rdv-solidarites.fr/", class: "fr-footer__bottom-link", rel: "noopener", target: "_blank"
+          li.fr-footer__bottom-item
+            = link_to "Accessibilité : non conforme", accessibility_path, class: "fr-footer__bottom-link"
+          li.fr-footer__bottom-item
+            = link_to "Mentions Légales", mentions_legales_path, class: "fr-footer__bottom-link"
+          li.fr-footer__bottom-item
+            = link_to "C.G.U", cgu_path,  class: "fr-footer__bottom-link"
+          li.fr-footer__bottom-item
+            = link_to "Données personnelles", politique_de_confidentialite_path,  class: "fr-footer__bottom-link"
+          li.fr-footer__bottom-item
+            = link_to "Gestion des cookies", politique_de_confidentialite_path(anchor: "cookies"),  class: "fr-footer__bottom-link"
+        .fr-footer__bottom-copy
+          p
+            ="Sauf mention explicite de propriété intellectuelle détenue par des tiers, les contenus de ce site sont proposés sous "
+            a[href="https://github.com/etalab/licence-ouverte/blob/master/LO.md" target="_blank"]
+              | licence etalab-2.0

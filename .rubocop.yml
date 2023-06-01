@@ -70,6 +70,7 @@ Rails/ApplicationController:
   Exclude:
     - 'app/controllers/api/v1/base_controller.rb'
     - 'app/controllers/api/v1/agent_auth_base_controller.rb'
+    - 'app/controllers/api/ants/base_controller.rb'
 
 Rails/CreateTableWithTimestamps:
   Exclude:

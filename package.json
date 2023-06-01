@@ -11,6 +11,7 @@
     "@fullcalendar/interaction": "^4.4.2",
     "@fullcalendar/list": "^4.4.2",
     "@fullcalendar/timegrid": "^4.4.2",
+    "@gouvfr/dsfr": "^1.9.2",
     "@rails/ujs": "^6.0.0",
     "autocomplete.js": "^0.37.1",
     "bootstrap": "^4.3.1",

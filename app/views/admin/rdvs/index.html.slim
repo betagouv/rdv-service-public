@@ -40,19 +40,13 @@
   - if @rdvs.total_count > 0
     .card-footer
       div.d-flex.justify-content-end.align-items-center
-        - if @rdvs.total_count < 10_000
-          - if policy([:configuration, current_territory]).allow_to_download_metrics?
-            = link_to rdvs_users_export_admin_organisation_rdvs_path(**@form.to_query), method: :post, class: "btn btn-sm btn-link d-print-none" do
-              span> Exporter les RDVs par usager en XLS
-              i.fa.fa-download>
-          = link_to export_admin_organisation_rdvs_path(**@form.to_query), method: :post, class: "btn btn-sm btn-link d-print-none" do
-            span> Exporter les #{@rdvs.total_count} RDVs en XLS
+        - if policy([:configuration, current_territory]).allow_to_download_metrics?
+          = button_to rdvs_users_export_admin_organisation_rdvs_path(**@form.to_query), method: :post, class: "btn btn-sm btn-link d-print-none", disable_with: "..." do
+            span> Exporter les RDVs par usager en XLS
             i.fa.fa-download>
-
-        - else
-          .btn.btn-sm.btn-link.disabled.d-print-none
-            span> Export impossible pour plus de 10 000 RDVs
-            i.fa.fa-download>
+        = button_to export_admin_organisation_rdvs_path(**@form.to_query), method: :post, class: "btn btn-sm btn-link d-print-none", disable_with: "..." do
+          span> Exporter les #{@rdvs.total_count} RDVs en XLS
+          i.fa.fa-download>
 
         .btn.btn-sm.btn-link.d-print-none role="button" onclick="window.print();return false;"
           span> Imprimer

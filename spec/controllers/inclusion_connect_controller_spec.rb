@@ -3,6 +3,8 @@
 describe InclusionConnectController, type: :controller do
   let(:base_url) { "https://test.inclusion.connect.fr" }
 
+  stub_sentry_events
+
   describe "#callback" do
     it "update first_name and last_name of agent" do
       now = Time.zone.parse("2022-08-22 11h34")
@@ -17,11 +19,9 @@ describe InclusionConnectController, type: :controller do
 
       stub_request(:get, "#{base_url}/userinfo?schema=openid").with(
         headers: {
-          "Accept" => "*/*",
-          "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
+          "Expect" => "",
           "Authorization" => "Bearer zekfjzeklfjl",
-          "Host" => "test.inclusion.connect.fr",
-          "User-Agent" => "Ruby",
+          "User-Agent" => "Typhoeus - https://github.com/typhoeus/typhoeus",
         }
       ).to_return(status: 200, body: { email_verified: true, given_name: "Bob", family_name: "Eponge", email: "bob@demo.rdv-solidarites.fr" }.to_json, headers: {})
 
@@ -41,6 +41,10 @@ describe InclusionConnectController, type: :controller do
       get :callback, params: { state: "zefjzelkf", session_state: "zfjzerklfjz", code: "klzefklzejlf" }
       expect(response).to redirect_to(new_agent_session_path)
       expect(flash[:error]).to eq("Nous n'avons pas pu vous authentifier. Contacter le support à l'adresse <support@rdv-solidarites.fr> si le problème persiste.")
+
+      # Error message is sent to Sentry
+      expect(sentry_events.last.message).to include("InclusionConnect states do not match")
+      expect(sentry_events.last.extra.keys).to match_array(%i[params_state session_ic_state])
     end
 
     it "uses the current domain's support email address in the error message" do
@@ -60,6 +64,9 @@ describe InclusionConnectController, type: :controller do
       get :callback, params: { state: "a state", session_state: "a state", code: "klzefklzejlf" }
       expect(response).to redirect_to(new_agent_session_path)
       expect(flash[:error]).to eq("Nous n'avons pas pu vous authentifier. Contacter le support à l'adresse <support@rdv-solidarites.fr> si le problème persiste.")
+
+      # HTTP request is sent to Sentry as breadcrumbs
+      expect(sentry_events.last.breadcrumbs.compact.map(&:message)).to eq(["HTTP request", "HTTP response"])
     end
 
     it "returns an error if token request doesn't contains token" do
@@ -74,6 +81,9 @@ describe InclusionConnectController, type: :controller do
 
       expect(response).to redirect_to(new_agent_session_path)
       expect(flash[:error]).to eq("Nous n'avons pas pu vous authentifier. Contacter le support à l'adresse <support@rdv-solidarites.fr> si le problème persiste.")
+
+      # HTTP request is sent to Sentry as breadcrumbs
+      expect(sentry_events.last.breadcrumbs.compact.map(&:message)).to eq(["HTTP request", "HTTP response"])
     end
 
     it "returns an error if userinfo request doesnt work" do
@@ -85,11 +95,9 @@ describe InclusionConnectController, type: :controller do
 
       stub_request(:get, "#{base_url}/userinfo?schema=openid").with(
         headers: {
-          "Accept" => "*/*",
-          "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
+          "Expect" => "",
           "Authorization" => "Bearer zekfjzeklfjl",
-          "Host" => "test.inclusion.connect.fr",
-          "User-Agent" => "Ruby",
+          "User-Agent" => "Typhoeus - https://github.com/typhoeus/typhoeus",
         }
       ).to_return(status: 500, body: "", headers: {})
 
@@ -98,6 +106,9 @@ describe InclusionConnectController, type: :controller do
 
       expect(response).to redirect_to(new_agent_session_path)
       expect(flash[:error]).to eq("Nous n'avons pas pu vous authentifier. Contacter le support à l'adresse <support@rdv-solidarites.fr> si le problème persiste.")
+
+      # HTTP request is sent to Sentry as breadcrumbs
+      expect(sentry_events.last.breadcrumbs.compact.map(&:message).uniq).to eq(["HTTP request", "HTTP response"])
     end
 
     it "returns an error if userinfo's email checked is false" do
@@ -109,11 +120,9 @@ describe InclusionConnectController, type: :controller do
 
       stub_request(:get, "#{base_url}/userinfo?schema=openid").with(
         headers: {
-          "Accept" => "*/*",
-          "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
+          "Expect" => "",
           "Authorization" => "Bearer zekfjzeklfjl",
-          "Host" => "test.inclusion.connect.fr",
-          "User-Agent" => "Ruby",
+          "User-Agent" => "Typhoeus - https://github.com/typhoeus/typhoeus",
         }
       ).to_return(status: 200, body: { email_verified: false, given_name: "Bob", family_name: "Eponge", email: "bob@demo.rdv-solidarites.fr" }.to_json, headers: {})
 
@@ -122,6 +131,9 @@ describe InclusionConnectController, type: :controller do
 
       expect(response).to redirect_to(new_agent_session_path)
       expect(flash[:error]).to eq("Nous n'avons pas pu vous authentifier. Contacter le support à l'adresse <support@rdv-solidarites.fr> si le problème persiste.")
+
+      # HTTP request is sent to Sentry as breadcrumbs
+      expect(sentry_events.last.breadcrumbs.compact.map(&:message).uniq).to eq(["HTTP request", "HTTP response"])
     end
 
     it "call sentry about authentification failure" do
@@ -148,11 +160,9 @@ describe InclusionConnectController, type: :controller do
         "redirect_uri" => inclusion_connect_callback_url,
       },
       headers: {
-        "Accept" => "*/*",
-        "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
+        "Expect" => "",
+        "User-Agent" => "Typhoeus - https://github.com/typhoeus/typhoeus",
         "Content-Type" => "application/x-www-form-urlencoded",
-        "Host" => "test.inclusion.connect.fr",
-        "User-Agent" => "Ruby",
       }
     )
   end

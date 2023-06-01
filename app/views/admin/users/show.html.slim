@@ -123,7 +123,7 @@
         .d-flex.justify-content-between
           .mt-1
             | Statuts
-            small.text-muted< sur #{@rdvs.count} RDV
+            small.text-muted< sur #{@rdvs_users.count} RDV
           - if @user.rdvs.count > 0
             = link_to "Voir tous les rendez-vous de #{@user.full_name}", admin_organisation_rdvs_path(current_organisation, user_id: @user.id), class: "btn btn-outline-primary small"
       .card-body
@@ -133,13 +133,13 @@
             - %i[seen excused revoked noshow].each do |temporal_status|
               = render "stats/rdv_counter_with_link", \
                 temporal_status: temporal_status, \
-                count: @rdvs.status(temporal_status).count,
+                count: @rdvs_users.status(temporal_status).count,
                 path: admin_organisation_rdvs_path(current_organisation, status: temporal_status, user_id: @user.id, breadcrumb_page: "user")
           .col-lg-6
             - %i[unknown_future unknown_past].each do |temporal_status|
               = render "stats/rdv_counter_with_link", \
                 temporal_status: temporal_status, \
-                count: @rdvs.status(temporal_status).count,
+                count: @rdvs_users.joins(:rdv).status(temporal_status).count,
                 path: admin_organisation_rdvs_path(current_organisation, status: temporal_status, user_id: @user.id, breadcrumb_page: "user")
       .card-footer
         .alert.alert-info.d-flex.align-items-center

@@ -277,8 +277,7 @@ fr:
       update: Enregistrer
   layouts:
     flash:
-      confirm_export_send_when_done: Le fichier Excel des RDV sera envoyé à %{agent_email}.
-      confirm_rdvs_users_export_send_when_done: Le fichier Excel de l'ensemble des rdvs par usager du territoire sera envoyé à %{agent_email}.
+      confirm_export_queued: Votre export est en cours de création, il sera envoyé à %{agent_email} dès qu'il sera prêt. L'opération peut prendre plusieurs minutes. N'hésitez pas à contacter le support (support@rdv-solidarites.fr), si vous ne recevez rien d'ici 1h.
   number:
     currency:
       format:
