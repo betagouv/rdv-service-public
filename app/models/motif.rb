@@ -40,11 +40,12 @@ class Motif < ApplicationRecord
   belongs_to :service
   belongs_to :motif_category, optional: true
   has_many :rdvs, dependent: :restrict_with_exception
-  has_and_belongs_to_many :plage_ouvertures, -> { distinct }
+  has_many :motifs_plage_ouvertures, dependent: :delete_all
 
   # Through relations
   has_many :lieux, through: :plage_ouvertures
   has_many :webhook_endpoints, through: :organisation
+  has_many :plage_ouvertures, -> { distinct }, through: :motifs_plage_ouvertures
 
   # Delegates
   delegate :service_social?, to: :service
