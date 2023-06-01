@@ -12,9 +12,17 @@ html lang="fr"
     = javascript_include_tag "application", "data-turbolinks-track": "reload"
 
   body class="#{agents_or_users_body_class}"
-    = dsfr_header logo_text: "République<br>Française".html_safe, title: "RDV Mairie" do |header|
-      - header.with_tool_link title: "Espace Usager", path: new_user_session_path, classes: "fr-icon-arrow-right-line"
-      - header.with_tool_link title: "Se connecter en tant qu'agent", path: new_agent_session_path, classes: "fr-fi-account-fill"
+    - if current_user.present? && !current_user.only_invited?
+      = dsfr_header logo_text: "République<br>Française".html_safe, title: "RDV Mairie" do |header|
+        - header.with_tool_link title: "Vos rendez-vous", path: users_rdvs_path
+        - header.with_tool_link title: "Vos informations", path: users_informations_path
+        - header.with_tool_link title: "Votre compte", path: edit_user_registration_path
+        - header.with_tool_link title: "Déconnexion", path: destroy_user_session_path, html_attributes: { "data-method": "DELETE" }, classes: "fr-fi-account-fill"
+
+    - else
+      = dsfr_header logo_text: "République<br>Française".html_safe, title: "RDV Mairie" do |header|
+        - header.with_tool_link title: "Espace Usager", path: new_user_session_path, classes: "fr-icon-arrow-right-line"
+        - header.with_tool_link title: "Se connecter en tant qu'agent", path: new_agent_session_path, classes: "fr-fi-account-fill"
 
     main
       = yield
