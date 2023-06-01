@@ -29,12 +29,6 @@ footer#footer.fr-footer[role="contentinfo"]
       .fr-footer__bottom
         ul.fr-footer__bottom-list
           li.fr-footer__bottom-item
-            = link_to "Statistiques", stats_path, class: "fr-footer__bottom-link"
-          li.fr-footer__bottom-item
-            = link_to "Budget", budget_path, class: "fr-footer__bottom-link", rel: "noopener", target: "_blank"
-          li.fr-footer__bottom-item
-            = link_to "Code source", "https://github.com/betagouv/rdv-solidarites.fr/", class: "fr-footer__bottom-link", rel: "noopener", target: "_blank"
-          li.fr-footer__bottom-item
             = link_to "Accessibilité : non conforme", accessibility_path, class: "fr-footer__bottom-link"
           li.fr-footer__bottom-item
             = link_to "Mentions Légales", mentions_legales_path, class: "fr-footer__bottom-link"
@@ -44,6 +38,12 @@ footer#footer.fr-footer[role="contentinfo"]
             = link_to "Données personnelles", politique_de_confidentialite_path,  class: "fr-footer__bottom-link"
           li.fr-footer__bottom-item
             = link_to "Gestion des cookies", politique_de_confidentialite_path(anchor: "cookies"),  class: "fr-footer__bottom-link"
+          li.fr-footer__bottom-item
+            = link_to "Statistiques", stats_path, class: "fr-footer__bottom-link"
+          li.fr-footer__bottom-item
+            = link_to "Budget", budget_path, class: "fr-footer__bottom-link", rel: "noopener", target: "_blank"
+          li.fr-footer__bottom-item
+            = link_to "Code source", "https://github.com/betagouv/rdv-solidarites.fr/", class: "fr-footer__bottom-link", rel: "noopener", target: "_blank"
         .fr-footer__bottom-copy
           p
             ="Sauf mention explicite de propriété intellectuelle détenue par des tiers, les contenus de ce site sont proposés sous "
