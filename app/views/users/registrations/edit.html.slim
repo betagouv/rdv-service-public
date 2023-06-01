@@ -9,7 +9,7 @@
         .fr-alert.fr-alert--info
           p Vous pouvez ici changer l'email et le mot de passe de votre compte #{current_domain.name}, et pas ceux de FranceConnect
 
-      = form_for(resource, as: resource_name, url: registration_path(resource_name), remote: request.xhr?, html: { method: :put }) do |f|
+      = form_for(resource, builder: FormBuilderDsfr, as: resource_name, url: registration_path(resource_name), remote: request.xhr?, html: { method: :put }) do |f|
 
         = render "devise/shared/error_messages_dsfr", resource: resource
 
