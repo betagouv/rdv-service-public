@@ -26,7 +26,7 @@ class PlageOuverture < ApplicationRecord
   belongs_to :organisation
   belongs_to :agent
   belongs_to :lieu, optional: true
-  has_many :motifs_plage_ouvertures, dependent: :destroy
+  has_many :motifs_plage_ouvertures, dependent: :delete_all
 
   # Through relations
   has_many :webhook_endpoints, through: :organisation

@@ -40,7 +40,7 @@ class Motif < ApplicationRecord
   belongs_to :service
   belongs_to :motif_category, optional: true
   has_many :rdvs, dependent: :restrict_with_exception
-  has_many :motifs_plage_ouvertures, dependent: :destroy
+  has_many :motifs_plage_ouvertures, dependent: :delete_all
 
   # Through relations
   has_many :lieux, through: :plage_ouvertures
