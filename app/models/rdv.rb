@@ -56,7 +56,7 @@ class Rdv < ApplicationRecord
   has_one :territory, through: :organisation
 
   # Delegates
-  delegate :home?, :phone?, :public_office?, :bookable_publicly?, :bookable_publicly_or_invited?, :service_social?, :follow_up?, :service, :collectif?, :collectif, :individuel?, to: :motif
+  delegate :home?, :phone?, :public_office?, :bookable_publicly?, :service_social?, :follow_up?, :service, :collectif?, :collectif, :individuel?, to: :motif
 
   alias_attribute :soft_deleted?, :deleted_at?
 
@@ -103,7 +103,6 @@ class Rdv < ApplicationRecord
   scope :collectif, -> { joins(:motif).merge(Motif.collectif) }
   scope :collectif_and_available_for_reservation, -> { collectif.with_remaining_seats.future.not_revoked }
   scope :bookable_publicly, -> { joins(:motif).merge(Motif.bookable_publicly) }
-  scope :bookable_publicly_or_invited, -> { joins(:motif).merge(Motif.bookable_publicly_or_invited) }
   scope :with_remaining_seats, -> { where("users_count < max_participants_count OR max_participants_count IS NULL") }
   scope :for_domain, lambda { |domain|
     if domain == Domain::RDV_AIDE_NUMERIQUE

@@ -2,7 +2,7 @@ fr:
   motifs:
     badges:
       collectif: "Collectif"
-      bookable_publicly: "En ligne"
+      bookable_by_everyone: "En ligne"
       bookable_by_invited_users: "En ligne (sur invitation)"
       phone: "Par tél."
       home: "À domicile"
