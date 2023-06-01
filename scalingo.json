@@ -92,7 +92,7 @@
   },
   "addons": [
     {
-      "plan": "postgresql-starter-512"
+      "plan": "postgresql:postgresql-starter-512"
     },
     {
       "plan": "redis:redis-sandbox"
