@@ -90,6 +90,14 @@
   "scripts": {
     "first-deploy": "bundle exec rake db:schema:load db:seed"
   },
+  "addons": [
+    {
+      "plan": "postgresql-starter-512"
+    },
+    {
+      "plan": "redis:redis-sandbox"
+    }
+  ],
   "formation": {
     "web": {
       "amount": 1,
