@@ -1,5 +1,3 @@
-exclude: 
-  - 'app/views/layouts/application_dsfr.html.slim'
 linters:
   RuboCop:
     enabled: true
@@ -76,6 +74,8 @@ linters:
       - Style/RedundantInterpolation
       - Style/RedundantParentheses
       - Style/WordArray
+  ConsecutiveControlStatements:
+    enabled: false
   ControlStatementSpacing:
     enabled: false
   LineLength:
