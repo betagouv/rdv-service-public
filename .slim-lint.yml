@@ -1,5 +1,6 @@
 linters:
   RuboCop:
+    exclude: 'app/views/layouts/application_dsfr.html.slim'
     enabled: true
     ignored_cops:
       # The ignored cops below, until the next comment, are copied from the default slim-lint config
