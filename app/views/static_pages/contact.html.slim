@@ -2,6 +2,7 @@
   h1 Contact
 
 .container.mt-3
+  h1.fr-mb-4w Contact
   h2 Votre département
   ul.list-group.mb-2
     - Territory.all.where.not(phone_number: nil).each do |territory|
