@@ -20,7 +20,6 @@ class AddUniqueIndexOnAgentTerritorialRoles < ActiveRecord::Migration[7.0]
 
           AgentTerritorialRole
             .where(agent: agent, territory: territory)
-            .order(updated_at: :asc)
             .limit(number_of_duplicates)
             .delete_all
         end
