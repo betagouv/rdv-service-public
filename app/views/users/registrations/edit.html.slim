@@ -14,29 +14,29 @@
         = render "devise/shared/error_messages_dsfr", resource: resource
 
         .fr-input-group
-          = f.label :email, :class => "fr-label" do
+          = f.label :email do
             | Adresse électronique
             span.fr-hint-text Format attendu : nom@domaine.fr
           - existing_email = resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email
-          = f.email_field :email, value: existing_email, autocomplete: "email", required: true, class: "fr-input"
+          = f.email_field :email, value: existing_email, autocomplete: "email", required: true
 
           - if devise_mapping.confirmable? && resource.pending_reconfirmation?
             .fr-alert.fr-alert--info
               p En attente de confirmation pour #{resource.unconfirmed_email}
 
         .fr-input-group
-          = f.label :current_password, :class => "fr-label" do
+          = f.label :current_password do
             | Mot de passe actuel
             span.fr-hint-text Renseignez votre mot de passe actuel pour tout changement.
-          = f.password_field :current_password, autocomplete: "current-password", required: true, class: "fr-input"
+          = f.password_field :current_password, autocomplete: "current-password", required: true
 
         .fr-input-group
-          = f.label :password, :class => "fr-label" do
+          = f.label :password do
             | Nouveau mot de passe
             span.fr-hint-text Laissez ce champ vide si vous ne souhaitez pas changer votre mot de passe.
-          = f.password_field :password, autocomplete: "new-password", minlength: 6, required: true, class: "fr-input"
+          = f.password_field :password, autocomplete: "new-password", minlength: 6, required: true
 
-        = f.submit "Modifier le mot de passe", class: "fr-btn"
+        = f.submit "Modifier le mot de passe"
 
       hr.fr-mt-4w
 
