@@ -150,7 +150,6 @@ RSpec.describe "Adding a user to a collective RDV" do
       let(:user) { invited_user }
       let!(:motif) { create(:motif, :collectif, bookable_by: "agents_and_prescripteurs_and_invited_users", organisation: organisation, service: service) }
 
-
       it "do not display revoked or full rdvs for reservation (invitation error)" do
         params.merge!(invitation_token: invitation_token)
         visit root_path(params)

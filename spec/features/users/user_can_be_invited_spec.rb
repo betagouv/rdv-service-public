@@ -112,7 +112,14 @@ describe "User can be invited" do
         create(:plage_ouverture, :daily, first_day: now + 8.days, motifs: [motif], lieu: lieu2, organisation: organisation)
       end
       let!(:motif) do
-        create(:motif, name: "RSA orientation sur site", max_public_booking_delay: 7.days, bookable_by: "agents_and_prescripteurs_and_invited_users", organisation: organisation, service: agent.service)
+        create(
+          :motif,
+          name: "RSA orientation sur site",
+          max_public_booking_delay: 7.days,
+          bookable_by: "agents_and_prescripteurs_and_invited_users",
+          organisation: organisation,
+          service: agent.service
+        )
       end
 
       it "does not show the lieux" do
