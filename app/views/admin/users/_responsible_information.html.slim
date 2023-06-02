@@ -1,6 +1,7 @@
 ul.list-unstyled.mb-5
   li.mb-2= object_attribute_tag(user, :first_name)
   li.mb-2= object_attribute_tag(user, :last_name)
+  li.mb-2= object_attribute_tag(user, :rdv_external_number)
   li.mb-2= object_attribute_tag(user, :birth_name)
   li.mb-2= object_attribute_tag(user, :birth_date, birth_date_and_age(user))
   li.mb-2= object_attribute_tag(user, :address)
