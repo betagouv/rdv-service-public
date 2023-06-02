@@ -78,7 +78,15 @@ class User < ApplicationRecord
   # Validations
   validates :last_name, :first_name, :created_through, presence: true
   validates :number_of_children, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
-  validates :rdv_external_number, format: { with: /\A[A-Za-z0-9]+\z/, message: "Seulement des nombres et lettres" }, length: { is: 10 }
+  validates(
+    :rdv_external_number,
+    length: { is: 10 },
+    format: {
+      with: /\A[A-Za-z0-9]+\z/,
+      message: "Seulement des nombres et lettres",
+      if: -> { rdv_external_number.present? },
+    }
+  )
 
   validate :birth_date_validity
 
