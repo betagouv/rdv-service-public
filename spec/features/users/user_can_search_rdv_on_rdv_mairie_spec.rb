@@ -7,7 +7,7 @@ describe "User can search rdv on rdv mairie" do
   let!(:territory95) { create(:territory, departement_number: "95") }
   let!(:organisation) { create(:organisation, :with_contact, territory: territory95, verticale: :rdv_mairie) }
   let(:service) { create(:service) }
-  let!(:motif) { create(:motif, name: "Passeport", bookable_publicly: true, organisation: organisation, restriction_for_rdv: nil, service: service) }
+  let!(:motif) { create(:motif, name: "Passeport", organisation: organisation, restriction_for_rdv: nil, service: service) }
   let!(:lieu) { create(:lieu, organisation: organisation, name: "Mairie de Sannois", address: "15 Place du Général Leclerc, Sannois, 95110") }
 
   def json_response

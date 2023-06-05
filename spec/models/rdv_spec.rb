@@ -95,7 +95,7 @@ describe Rdv, type: :model do
     let(:now) { Time.zone.parse("2021-05-03 14h00") }
     let(:rdv) { build :rdv, starts_at: starts_at, motif: motif, created_by: "user" }
     let(:starts_at) { now + 3.days }
-    let(:motif) { build(:motif, rdvs_editable_by_user: true, bookable_publicly: true) }
+    let(:motif) { build(:motif, rdvs_editable_by_user: true) }
 
     before { travel_to(now) }
 
@@ -128,7 +128,7 @@ describe Rdv, type: :model do
     end
 
     context "when the motif is not reservable online" do
-      let(:motif) { build(:motif, bookable_publicly: false) }
+      let(:motif) { build(:motif, bookable_by: :agents) }
 
       it { expect(rdv.editable_by_user?).to eq(false) }
     end
@@ -638,7 +638,7 @@ describe Rdv, type: :model do
     it "returns false with a not allowed online reservation motif" do
       now = Time.zone.parse("20220221 10:34")
       travel_to(now)
-      motif = build(:motif, bookable_publicly: false)
+      motif = build(:motif, bookable_by: :agents)
       rdv = build(:rdv, :at_home, starts_at: now + 9.days, motif: motif)
       expect(rdv.available_to_file_attente?).to eq(false)
     end
@@ -646,7 +646,7 @@ describe Rdv, type: :model do
     it "returns false with a collective motif" do
       now = Time.zone.parse("20220221 10:34")
       travel_to(now)
-      motif = build(:motif, collectif: true, bookable_publicly: true)
+      motif = build(:motif, collectif: true)
       rdv = build(:rdv, :at_home, starts_at: now + 9.days, motif: motif)
       expect(rdv.available_to_file_attente?).to eq(false)
     end

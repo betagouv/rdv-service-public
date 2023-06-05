@@ -2,8 +2,7 @@
 
 describe Creneau, type: :model do
   let(:organisation) { create(:organisation) }
-  let!(:motif) { create(:motif, name: "Vaccination", default_duration_in_min: 30, bookable_publicly: bookable_publicly, organisation: organisation) }
-  let(:bookable_publicly) { true }
+  let!(:motif) { create(:motif, name: "Vaccination", default_duration_in_min: 30, organisation: organisation) }
   let!(:lieu) { create(:lieu, organisation: organisation) }
   let(:today) { Time.zone.local(2019, 9, 19) }
   let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
@@ -14,7 +13,7 @@ describe Creneau, type: :model do
   before { travel_to(today) }
 
   describe "#last_overlapping_event_ends_at" do
-    let(:motif2) { build(:motif, name: "Visite 12 mois", default_duration_in_min: 60, bookable_publicly: bookable_publicly, organisation: organisation) }
+    let(:motif2) { build(:motif, name: "Visite 12 mois", default_duration_in_min: 60, organisation: organisation) }
     let(:creneau) { build(:creneau, starts_at: Time.zone.local(2019, 9, 19, 9, 0), lieu_id: lieu.id, motif: motif2) }
 
     describe "for absences" do
