@@ -190,7 +190,7 @@ class Rdv < ApplicationRecord
 
   def editable_by_user?
     !cancelled? && !collectif? && motif.rdvs_editable_by_user? && starts_at > 2.days.from_now &&
-      motif.bookable_by_everyone && !created_by_agent?
+      motif.bookable_by_everyone_or_invited && !created_by_agent?
   end
 
   def available_to_file_attente?

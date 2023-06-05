@@ -201,9 +201,9 @@ class SearchContext
     motifs = if @prescripteur
                motifs.where(bookable_by: %i[agents_and_prescripteurs agents_and_prescripteurs_and_invited_users everyone])
              elsif invitation?
-               motifs.where(bookable_by: %i[agents_and_prescripteurs_and_invited_users everyone])
+               motifs.bookable_by_everyone_or_invited
              else
-               motifs.where(bookable_by: :everyone)
+               motifs.bookable_by_everyone
              end
     motifs = motifs.search_by_name_with_location_type(@motif_name_with_location_type) if @motif_name_with_location_type.present?
     motifs = motifs.where(service: service) if @service_id.present?
