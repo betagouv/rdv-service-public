@@ -41,9 +41,7 @@
   .fr-container
     .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
       .fr-col-md-5
-        figure.fr-content-media
-          .fr-content-media__img
-            = image_tag "rdv_mairie/image_2.svg", alt: "", class: "fr-responsive-img fr-ratio-1x1"
+        = dsfr_image_tag "rdv_mairie/image_2.svg", alt: "", classes: "fr-ratio-1x1"
       .fr-col-md-5
         h2 Qui sommes-nous ?
         p
@@ -73,7 +71,7 @@
       .fr-col-md-5
         figure.fr-content-media
           .fr-content-media__img
-            = image_tag "rdv_mairie/image_1.svg", alt: "", class: "fr-responsive-img fr-ratio-16x9"
+            = dsfr_image_tag "rdv_mairie/image_1.svg", alt: "", classes: "fr-ratio-16x9"
 
 .fr-py-12w[style="background-color:  #F4F6FE"]
   .fr-container
@@ -90,6 +88,4 @@
         = link_to("Prendre RDV avec l’équipe", team_meeting_url, class: ["fr-btn fr-btn--secondary fr-mb-4w"])
 
       .fr-col-md-5
-        figure.fr-content-media
-          .fr-content-media__img
-            = image_tag "rdv_mairie/image_3.svg", alt: "", class: "fr-responsive-img fr-ratio-3x4"
+        = dsfr_image_tag "rdv_mairie/image_3.svg", alt: "", classes: "fr-ratio-3x4"
