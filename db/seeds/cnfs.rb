@@ -25,7 +25,7 @@ motif_accompagnement_individuel = Motif.create!(
   color: "#99CC99",
   default_duration_in_min: 60,
   location_type: :public_office,
-  bookable_publicly: true,
+  bookable_by: :everyone,
   organisation: org_cnfs,
   service: service_cnfs
 )
@@ -36,7 +36,7 @@ motif_atelier_collectif = Motif.create!(
   default_duration_in_min: 120,
   location_type: :public_office,
   collectif: true,
-  bookable_publicly: true,
+  bookable_by: :everyone,
   organisation: org_cnfs,
   service: service_cnfs
 )
