@@ -18,7 +18,7 @@ module UserRdvWizard
       @attributes = attributes.to_h.symbolize_keys
       rdv_defaults = { user_ids: [user&.id] }
       if attributes[:rdv_collectif_id].present?
-        @rdv = Rdv.collectif.bookable_publicly.find(attributes[:rdv_collectif_id])
+        @rdv = Rdv.collectif.bookable_by_everyone_or_invited.find(attributes[:rdv_collectif_id])
       else
         @rdv = Rdv.new(
           rdv_defaults

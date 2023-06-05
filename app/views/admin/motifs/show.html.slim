@@ -55,7 +55,7 @@
 
           - unless current_domain.online_reservation_with_public_link
             = motif_attribute_row("Sectorisation") do
-              - if @motif.bookable_publicly?
+              - if @motif.bookable_by_everyone_or_invited?
                 div= @motif.human_attribute_value(:sectorisation_level)
                 div.text-muted= @motif.human_attribute_value(:sectorisation_level, context: :hint)
               - else

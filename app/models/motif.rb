@@ -34,7 +34,6 @@ class Motif < ApplicationRecord
     agents_and_prescripteurs: "agents_and_prescripteurs",
     agents_and_prescripteurs_and_invited_users: "agents_and_prescripteurs_and_invited_users",
     everyone: "everyone",
-
   }
 
   # Relations
@@ -71,12 +70,13 @@ class Motif < ApplicationRecord
   scope :active, lambda { |active = true|
     active ? where(deleted_at: nil) : where.not(deleted_at: nil)
   }
-  scope :bookable_publicly, -> { where(bookable_by: %i[everyone agents_and_prescripteurs_and_invited_users]) }
-  scope :not_bookable_publicly, -> { where.not(bookable_by: %i[everyone agents_and_prescripteurs_and_invited_users]) }
+  scope :bookable_by_everyone, -> { where(bookable_by: %i[everyone]) }
+  scope :bookable_by_everyone_or_invited, -> { where(bookable_by: %i[everyone agents_and_prescripteurs_and_invited_users]) }
+  scope :not_bookable_by_everyone_or_invited, -> { where.not(bookable_by: %i[everyone agents_and_prescripteurs_and_invited_users]) }
   scope :by_phone, -> { Motif.phone } # default scope created by enum
   scope :for_secretariat, -> { where(for_secretariat: true) }
   scope :ordered_by_name, -> { order(Arel.sql("unaccent(LOWER(motifs.name))")) }
-  scope :available_with_plages_ouvertures, -> { active.bookable_publicly.joins(:organisation, :plage_ouvertures) }
+  scope :available_with_plages_ouvertures, -> { active.bookable_by_everyone_or_invited.joins(:organisation, :plage_ouvertures) }
   scope :available_motifs_for_organisation_and_agent, lambda { |organisation, agent|
     available_motifs = if agent.admin_in_organisation?(organisation)
                          all
@@ -197,9 +197,12 @@ class Motif < ApplicationRecord
     where_id_in_subqueries([individual_motif_ids, collective_motif_ids])
   end
 
-  def bookable_publicly
+  def bookable_by_everyone_or_invited
     bookable_by_everyone || bookable_by_invited_users
   end
+
+  # Keep this for api compatibility ?
+  alias bookable_publicly bookable_by_everyone_or_invited
 
   def bookable_by_everyone
     bookable_by == "everyone"
@@ -209,24 +212,16 @@ class Motif < ApplicationRecord
     bookable_by == "agents_and_prescripteurs_and_invited_users"
   end
 
-  def bookable_publicly?
-    bookable_publicly
-  end
-
-  def bookable_by_invited_users?
-    bookable_by_invited_users
+  def bookable_by_everyone_or_invited?
+    bookable_by_everyone_or_invited
   end
 
   def bookable_by_everyone?
     bookable_by_everyone
   end
 
-  def bookable_publicly=(value)
-    self.bookable_by = if value
-                         "everyone"
-                       else
-                         "agents"
-                       end
+  def bookable_by_invited_users?
+    bookable_by_invited_users
   end
 
   def bookable_outside_of_organisation?

@@ -8,9 +8,6 @@ fr:
         service: Service
         collectif: Nombre de participants
         color: Couleur
-        bookable_publicly_title: Prise de RDV en ligne par les usagers
-        bookable_publicly: Réservable en ligne
-        bookable_publicly_hint: Ce motif est disponible à la réservation en ligne par les usagers
         bookable_by_title: Réservation en ligne
         bookable_by_hint: Vous pouvez décider de qui peut prendre RDV pour ce motif
         visibility_type: Visibilité usager

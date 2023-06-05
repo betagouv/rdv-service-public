@@ -1,5 +1,5 @@
 // Used in admin/motifs/_form.html.slim:
-// the checkboxes created by simpleform have the classes “motif_for_secretariat” and “motif_bookable_publicly”
+// the checkboxes created by simpleform have the classes “motif_for_secretariat” and “motif_bookable_by_xxx”
 class MotifForm {
 
   toggleSecretariat() {
