@@ -18,6 +18,7 @@ fr:
         notify_by_email: "Accepte les notifications par email"
         created_through: "Origine du compte"
         notes: Remarques
+        ants_pre_demande_number: Numéro de pré-demande ANTS
       user/logements:
         sdf: Sans domicile fixe
         heberge: Hébergé
@@ -51,3 +52,4 @@ fr:
     hints:
       user:
         phone_number: Saisissez un numéro à 10 chiffres de France métropole ou d’outre-mer, ou bien un numéro international avec le préfixe du pays.
+        ants_pre_demande_number: Saisissez le numéro de pré-demande obtenu depuis la plateforme de prise de RDV de l'ANTS
