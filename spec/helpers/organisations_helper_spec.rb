@@ -41,6 +41,15 @@ describe OrganisationsHelper do
         expect(show_checklist?(organisation, agent)).to be_falsey
       end
     end
+
+    context "for mairie services" do
+      let(:service_mairie) { create(:service, :mairie) }
+
+      it "returns false" do
+        agent = create(:agent, admin_role_in_organisations: [organisation], service: service_mairie)
+        expect(show_checklist?(organisation, agent)).to be_falsey
+      end
+    end
   end
 
   describe "#organisation_home_path" do

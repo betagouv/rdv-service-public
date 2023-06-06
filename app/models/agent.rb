@@ -203,13 +203,13 @@ class Agent < ApplicationRecord
     plage_ouvertures_scope = PlageOuverture
       .where(created_at: ..date)
       .in_range(date..)
-      .bookable_publicly
+      .bookable_by_everyone_or_invited
     agents_with_open_plage = joins(:plage_ouvertures).merge(plage_ouvertures_scope)
 
     rdv_collectif_scope = Rdv
       .collectif
       .where(created_at: ..date)
-      .bookable_publicly
+      .bookable_by_everyone_or_invited
     agents_with_open_rdv_collectif = joins(:rdvs).merge(rdv_collectif_scope)
 
     where_id_in_subqueries([agents_with_open_plage, agents_with_open_rdv_collectif])
@@ -222,7 +222,7 @@ class Agent < ApplicationRecord
   # This is the main toggle to enable or disable features for Conseillers Numériques (cnfs)
   # TODO: As the usage of this toggle grows, we might need to rethink it, and see if these changes
   # should be done via configuration, or something else
-  delegate :conseiller_numerique?, to: :service
+  delegate :conseiller_numerique?, :mairie?, to: :service
 
   def domain
     @domain ||= if organisations.where(verticale: :rdv_aide_numerique).any?

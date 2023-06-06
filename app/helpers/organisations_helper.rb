@@ -2,7 +2,8 @@
 
 module OrganisationsHelper
   def show_checklist?(organisation, agent)
-    return false if current_domain == Domain::RDV_MAIRIE
+
+    return false if agent.mairie?
     return false unless agent.admin_in_organisation?(organisation)
     return false unless agent.invitation_accepted_at # This shouldn't happen, but we'd rather be safe
 
