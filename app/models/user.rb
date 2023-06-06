@@ -80,13 +80,13 @@ class User < ApplicationRecord
   validates :number_of_children, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
   validates(
     :ants_pre_demande_number,
-    length: { is: 10 },
     format: {
       with: /\A[A-Za-z0-9]+\z/,
       message: "Seulement des nombres et lettres",
       if: -> { ants_pre_demande_number.present? },
     }
   )
+  validates :ants_pre_demande_number, length: { is: 10 }, if: -> { ants_pre_demande_number.present? }
 
   validate :birth_date_validity
 
