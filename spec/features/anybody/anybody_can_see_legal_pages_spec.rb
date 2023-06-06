@@ -12,7 +12,7 @@ describe "Anybody can see legal pages" do
     visit root_path
     expect(page).to have_content("C.G.U.")
     click_link "C.G.U."
-    expect(page).to have_selector("h1", text: "Conditions d’utilisation de la plateforme RDV Solidarités")
+    expect(page).to have_selector("h1", text: "Conditions générales d’utilisation")
   end
 
   it "displays privacy policy" do
