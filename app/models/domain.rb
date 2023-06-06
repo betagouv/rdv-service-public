@@ -59,15 +59,9 @@ class Domain
 
     RDV_MAIRIE = new(
       id: "RDV_MAIRIE",
-<<<<<<< Updated upstream
       logo_path: "logos/logo_rdv_service_public.svg",
-      public_logo_path: "/logo_mairie.png",
-      dark_logo_path: "logos/logo_sombre_rdv_service_public.svg",
-=======
-      logo_path: "logos/logo_mairie.svg",
       public_logo_path: "/logo_rdv_service_public.png",
-      dark_logo_path: "logos/logo_sombre_mairie.svg",
->>>>>>> Stashed changes
+      dark_logo_path: "logos/logo_sombre_rdv_service_public.svg",
       name: "RDV Service Public",
       presentation_for_agents_template_name: "presentation_for_mairie",
       address_selection_template_name: "search/address_selection/rdv_mairie",
