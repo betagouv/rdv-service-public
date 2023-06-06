@@ -74,7 +74,14 @@ class Motif < ApplicationRecord
   scope :by_phone, -> { Motif.phone } # default scope created by enum
   scope :for_secretariat, -> { where(for_secretariat: true) }
   scope :ordered_by_name, -> { order(Arel.sql("unaccent(LOWER(motifs.name))")) }
-  scope :available_with_plages_ouvertures, -> { active.bookable_publicly.joins(:organisation, :plage_ouvertures) }
+  scope :available_for_booking, lambda {
+    where_id_in_subqueries(
+      [
+        individuel.active.bookable_publicly.joins(:organisation, :plage_ouvertures).select(:id),
+        Rdv.collectif_and_available_for_reservation.select(:motif_id),
+      ]
+    )
+  }
   scope :available_motifs_for_organisation_and_agent, lambda { |organisation, agent|
     available_motifs = if agent.admin_in_organisation?(organisation)
                          all
