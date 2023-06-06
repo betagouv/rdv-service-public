@@ -112,7 +112,7 @@ class Users::RdvsController < UserAuthController
   end
 
   def set_can_see_rdv_motif
-    @can_see_rdv_motif = current_user.through_sign_in_form?
+    @can_see_rdv_motif = !current_user.only_invited?
   end
 
   def redirect_if_creneau_not_available

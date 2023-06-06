@@ -3,13 +3,13 @@
 # rubocop:disable Metrics/ClassLength
 class SearchContext
   attr_reader :errors, :query, :address, :city_code, :street_ban_id, :latitude, :longitude,
-              :motif_name_with_location_type, :prescripteur
+              :motif_name_with_location_type, :prescripteur, :through_invitation
+  alias invitation? through_invitation
 
   # rubocop:disable Metrics/MethodLength
-  def initialize(current_user, query = {})
-    @current_user = current_user
+  def initialize(user:, query: {}, through_invitation: false)
+    @user = user
     @query = query
-    @invitation_token = query[:invitation_token]
     @latitude = query[:latitude]
     @longitude = query[:longitude]
     @address = query[:address]
@@ -28,6 +28,7 @@ class SearchContext
     @start_date = query[:date]
     @referent_ids = query[:referent_ids]
     @prescripteur = query[:prescripteur]
+    @through_invitation = through_invitation
   end
   # rubocop:enable Metrics/MethodLength
 
@@ -64,11 +65,6 @@ class SearchContext
 
   def geo_search
     Users::GeoSearch.new(departement: departement, city_code: @city_code, street_ban_id: @street_ban_id)
-  end
-
-  def invitation?
-    # Token validity is handled in TokenInvitable module, prepend_before_action method handle_invitation_token
-    @invitation_token.present?
   end
 
   def departement
@@ -225,7 +221,7 @@ class SearchContext
 
   def creneaux_search_for(lieu, date_range, motif)
     Users::CreneauxSearch.new(
-      user: @current_user,
+      user: @user,
       motif: motif,
       lieu: lieu,
       date_range: date_range,
@@ -234,9 +230,9 @@ class SearchContext
   end
 
   def retrieve_referent_agents
-    return [] if @referent_ids.blank? || @current_user.nil?
+    return [] if @referent_ids.blank? || @user.nil?
 
-    @current_user.referent_agents.where(id: @referent_ids)
+    @user.referent_agents.where(id: @referent_ids)
   end
 
   def matching_motifs

@@ -4,19 +4,14 @@ section.bg-light.p-4
     = render "nothing_to_show", context: context
   - else
     .container
-      - if context.invitation?
-        .card
-          .card-body
-            h2.pb-1.mb-1 = context.service.name
-      - else
-        .card
-          .card-body
-            = link_to path_to_service_selection(params), class: "d-block stretched-link" do
-              .row
-                .col-auto.align-self-center
-                  i.fa.fa-chevron-left
-                .col
-                  h2.pb-1.mb-1 = context.service.name
+      .card
+        .card-body
+          = link_to path_to_service_selection(params), class: "d-block stretched-link" do
+            .row
+              .col-auto.align-self-center
+                i.fa.fa-chevron-left
+              .col
+                h2.pb-1.mb-1 = context.service.name
     .container
        h2.font-weight-bold Sélectionnez le motif de votre RDV :
        - unless context.invitation?

@@ -1,30 +1,15 @@
 section.bg-light.p-4
   .container
-    - if context.invitation?
-      .card
-        .card-body
-          h2.py-1.my-1
-            i.fa.fa-info-circle>
-            = motif_name_and_location_type(context.first_matching_motif)
-            - if context.lieu.present?
-              .card-subtitle.my-2
-                i.fa.fa-map-marker-alt>
-                = context.lieu.address
-            - elsif context.user_selected_organisation.present?
-              .card-subtitle.my-2
-                i.fa.fa-building-columns>
-                = context.user_selected_organisation.name
-    - else
-      .card.card-hoverable
-        .card-body
-          = link_to path_to_motif_selection(params), class: "d-block stretched-link" do
-            .row
-              .col-auto.align-self-center
-                i.fa.fa-chevron-left
-              .col
-                h2.pb-1.mb-1
-                  = motif_name_and_location_type(context.first_matching_motif)
-                = context.service.name
+    .card.card-hoverable
+      .card-body
+        = link_to path_to_motif_selection(params), class: "d-block stretched-link" do
+          .row
+            .col-auto.align-self-center
+              i.fa.fa-chevron-left
+            .col
+              h2.pb-1.mb-1
+                = motif_name_and_location_type(context.first_matching_motif)
+              = context.service.name
       - if context.lieu.present?
         .card.card-hoverable
           .card-body

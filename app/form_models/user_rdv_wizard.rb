@@ -59,7 +59,7 @@ module UserRdvWizard
         motif_id: rdv.motif.id, starts_at: rdv.starts_at.to_s, user_ids: rdv.users&.map(&:id), rdv_collectif_id: rdv.id,
       }.merge(
         @attributes.slice(
-          :where, :departement, :lieu_id, :latitude, :longitude, :city_code, :street_ban_id, :invitation_token,
+          :where, :departement, :lieu_id, :latitude, :longitude, :city_code, :street_ban_id,
           :address, :organisation_ids, :motif_search_terms, :public_link_organisation_id, :user_selected_organisation_id,
           :referent_ids, :external_organisation_ids
         )
