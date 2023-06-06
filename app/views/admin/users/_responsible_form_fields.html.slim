@@ -12,7 +12,7 @@
   .col-md-6= f.input :last_name, **input_opts
 
 - if current_domain == Domain::RDV_MAIRIE
-  = f.input :rdv_external_number, **input_opts
+  = f.input :ants_pre_demande_number, **input_opts
 - else
   .form-row
     .col-md-6= f.input :birth_name, **input_opts.deep_merge(frozen_fields_opts)

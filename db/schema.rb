@@ -666,7 +666,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_31_152232) do
     t.string "address_details"
     t.integer "logement"
     t.text "notes"
-    t.string "rdv_external_number"
+    t.string "ants_pre_demande_number"
     t.index ["birth_date"], name: "index_users_on_birth_date"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["created_through"], name: "index_users_on_created_through"
