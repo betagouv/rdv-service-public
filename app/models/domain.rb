@@ -59,20 +59,20 @@ class Domain
 
     RDV_MAIRIE = new(
       id: "RDV_MAIRIE",
-      logo_path: "logos/logo_mairie.svg",
+      logo_path: "logos/logo_rdv_service_public.svg",
       public_logo_path: "/logo_mairie.png",
-      dark_logo_path: "logos/logo_sombre_mairie.svg",
+      dark_logo_path: "logos/logo_sombre_rdv_service_public.svg",
       name: "RDV Service Public",
       presentation_for_agents_template_name: "presentation_for_mairie",
       address_selection_template_name: "search/address_selection/rdv_mairie",
       search_banner_template_name: "search/banners/rdv_mairie",
       online_reservation_with_public_link: true,
       can_sync_to_outlook: false,
-      sms_sender_name: "Rdvmairie",
+      sms_sender_name: "RDV S.P.",
       documentation_url: "https://rdvs.notion.site/RDV-Mairie-b831caa05dd7416bb489f06f7468903a",
       faq_url: "https://rdvs.notion.site/FAQ-RDV-Mairie-6baf4af187a14e42beafe56b7005d199",
       france_connect_enabled: true,
-      support_email: "support@rdv-mairie.fr"
+      support_email: "support@rdv-service-public.fr"
     ),
   ].freeze
 
