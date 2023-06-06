@@ -2,8 +2,7 @@
 
 module OrganisationsHelper
   def show_checklist?(organisation, agent)
-
-    return false if agent.mairie?
+    return false if organisation.rdv_mairie?
     return false unless agent.admin_in_organisation?(organisation)
     return false unless agent.invitation_accepted_at # This shouldn't happen, but we'd rather be safe
 

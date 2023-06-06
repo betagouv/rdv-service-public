@@ -222,7 +222,7 @@ class Agent < ApplicationRecord
   # This is the main toggle to enable or disable features for Conseillers Numériques (cnfs)
   # TODO: As the usage of this toggle grows, we might need to rethink it, and see if these changes
   # should be done via configuration, or something else
-  delegate :conseiller_numerique?, :mairie?, to: :service
+  delegate :conseiller_numerique?, to: :service
 
   def domain
     @domain ||= if organisations.where(verticale: :rdv_aide_numerique).any?

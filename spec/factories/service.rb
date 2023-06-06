@@ -18,10 +18,6 @@ FactoryBot.define do
       name { Service::SECRETARIAT }
     end
 
-    trait :mairie do
-      name { Service::MAIRIE }
-    end
-
     trait :pmi do
       name { Service::PMI }
     end
