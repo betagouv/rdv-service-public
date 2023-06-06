@@ -93,7 +93,7 @@ class Domain
         {
           RDV_SOLIDARITES => "www.rdv-solidarites.fr",
           RDV_AIDE_NUMERIQUE => "www.rdv-aide-numerique.fr",
-          RDV_MAIRIE => "www.rdv-mairie.fr",
+          RDV_MAIRIE => "rdv.anct.gouv.fr",
         }.fetch(self)
       end
     when :development
