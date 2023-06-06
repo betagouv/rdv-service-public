@@ -4,11 +4,12 @@
     = collapsible_form_fields_for_warnings(plage_ouverture) do
       = f.hidden_field :agent_id
       = f.input :title, hint: "Uniquement visible en interne", placeholder: "Ex: Permanence PMI exceptionnelle"
+      - lieux = policy_scope(Lieu).enabled.ordered_by_name
       = f.association :lieu, \
-        collection: policy_scope(Lieu).enabled.ordered_by_name, \
+        collection: lieux, \
         label_method: :full_name, \
         include_blank: true, \
-        selected: (policy_scope(Lieu).size == 1 ? policy_scope(Lieu).first.id : nil)
+        selected: (lieux.size == 1 ? lieux.first.id : nil)
       = f.association :motifs, collection: plage_ouverture.available_motifs, label_method: -> { motif_name_with_location_type_and_badges(_1) }, as: :check_boxes
 
       hr
