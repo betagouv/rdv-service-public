@@ -114,7 +114,7 @@ class Domain
   end
 
   def default?
-    self == RDV_SOLIDARITES
+    self == RDV_MAIRIE
   end
   alias default default?
 
