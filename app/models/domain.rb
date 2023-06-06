@@ -62,7 +62,7 @@ class Domain
       logo_path: "logos/logo_mairie.svg",
       public_logo_path: "/logo_mairie.png",
       dark_logo_path: "logos/logo_sombre_mairie.svg",
-      name: "RDV Mairie",
+      name: "RDV Service Public",
       presentation_for_agents_template_name: "presentation_for_mairie",
       address_selection_template_name: "search/address_selection/rdv_mairie",
       search_banner_template_name: "search/banners/rdv_mairie",
@@ -93,7 +93,7 @@ class Domain
         {
           RDV_SOLIDARITES => "www.rdv-solidarites.fr",
           RDV_AIDE_NUMERIQUE => "www.rdv-aide-numerique.fr",
-          RDV_MAIRIE => "www.rdv-mairie.fr",
+          RDV_MAIRIE => "rdv.anct.gouv.fr",
         }.fetch(self)
       end
     when :development
