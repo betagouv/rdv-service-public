@@ -21,25 +21,30 @@ footer#footer.fr-footer[role="contentinfo"]
             = external_link_to("service-public.fr", "https://service-public.fr", class: "fr-footer__content-link")
           li.fr-footer__content-item
             = external_link_to("data.gouv.fr", "https://data.gouv.fr", class: "fr-footer__content-link")
-      .fr-footer__bottom
-        ul.fr-footer__bottom-list
-          li.fr-footer__bottom-item
-            = link_to "Statistiques", stats_path, class: "fr-footer__bottom-link"
-          li.fr-footer__bottom-item
-            = external_link_to "Budget", budget_path, class: "fr-footer__bottom-link"
-          li.fr-footer__bottom-item
-            = external_link_to "Code source", "https://github.com/betagouv/rdv-solidarites.fr/", class: "fr-footer__bottom-link"
-          li.fr-footer__bottom-item
-            = link_to "Accessibilité : non conforme", accessibility_path, class: "fr-footer__bottom-link"
-          li.fr-footer__bottom-item
-            = link_to "Mentions Légales", mentions_legales_path, class: "fr-footer__bottom-link"
-          li.fr-footer__bottom-item
-            = link_to "C.G.U", cgu_path,  class: "fr-footer__bottom-link"
-          li.fr-footer__bottom-item
-            = link_to "Données personnelles", politique_de_confidentialite_path,  class: "fr-footer__bottom-link"
-          li.fr-footer__bottom-item
-            = link_to "Gestion des cookies", politique_de_confidentialite_path(anchor: "cookies"),  class: "fr-footer__bottom-link"
-        .fr-footer__bottom-copy
-          p
-            ="Sauf mention explicite de propriété intellectuelle détenue par des tiers, les contenus de ce site sont proposés sous "
-            = external_link_to("licence etalab-2.0", "https://github.com/etalab/licence-ouverte/blob/master/LO.md")
+    .fr-footer__partners
+      h4.fr-footer__partners-title Nos partenaires
+      .fr-footer__partners-logos
+        .fr-footer__partners-main
+          = link_to(image_tag("logos/logo_anct.png", alt: "Logo de l'ANCT", style: "height: 5.625rem"), "https://agence-cohesion-territoires.gouv.fr/", class: "fr-footer__partners-link" )
+    .fr-footer__bottom
+      ul.fr-footer__bottom-list
+        li.fr-footer__bottom-item
+          = link_to "Statistiques", stats_path, class: "fr-footer__bottom-link"
+        li.fr-footer__bottom-item
+          = external_link_to "Budget", budget_path, class: "fr-footer__bottom-link"
+        li.fr-footer__bottom-item
+          = external_link_to "Code source", "https://github.com/betagouv/rdv-solidarites.fr/", class: "fr-footer__bottom-link"
+        li.fr-footer__bottom-item
+          = link_to "Accessibilité : non conforme", accessibility_path, class: "fr-footer__bottom-link"
+        li.fr-footer__bottom-item
+          = link_to "Mentions Légales", mentions_legales_path, class: "fr-footer__bottom-link"
+        li.fr-footer__bottom-item
+          = link_to "C.G.U", cgu_path,  class: "fr-footer__bottom-link"
+        li.fr-footer__bottom-item
+          = link_to "Données personnelles", politique_de_confidentialite_path,  class: "fr-footer__bottom-link"
+        li.fr-footer__bottom-item
+          = link_to "Gestion des cookies", politique_de_confidentialite_path(anchor: "cookies"),  class: "fr-footer__bottom-link"
+      .fr-footer__bottom-copy
+        p
+          ="Sauf mention explicite de propriété intellectuelle détenue par des tiers, les contenus de ce site sont proposés sous "
+          = external_link_to("licence etalab-2.0", "https://github.com/etalab/licence-ouverte/blob/master/LO.md")
