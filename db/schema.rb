@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_10_124620) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_07_081934) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -666,6 +666,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_10_124620) do
     t.string "address_details"
     t.integer "logement"
     t.text "notes"
+    t.string "ants_pre_demande_number"
     t.index ["birth_date"], name: "index_users_on_birth_date"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["created_through"], name: "index_users_on_created_through"

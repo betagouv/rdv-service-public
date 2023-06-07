@@ -14,7 +14,7 @@ class Admin::UsersController < AgentAuthController
     family_situation number_of_children
     notify_by_sms notify_by_email
     case_number address_details
-    notes logement
+    notes logement ants_pre_demande_number
   ].freeze
 
   PERMITTED_NESTED_ATTRIBUTES = {
