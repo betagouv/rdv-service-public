@@ -9,7 +9,7 @@
         collection: lieux, \
         label_method: :full_name, \
         include_blank: true, \
-        selected: (lieux.size == 1 ? lieux.first.id : nil)
+        selected: plage_ouverture.lieu_id || (lieux.size == 1 ? lieux.first.id : nil)
       = f.association :motifs, collection: plage_ouverture.available_motifs, label_method: -> { motif_name_with_location_type_and_badges(_1) }, as: :check_boxes
 
       hr
