@@ -1,6 +1,10 @@
-<p><%= t("devise.mailer.invitation_instructions.hello", email: @resource.email) %></p>
+<p><%= t("devise.mailer.invitation_instructions.hello", email: @resource.first_name || @resource.email) %></p>
 
-<p><%= t("devise.mailer.invitation_instructions_for_agents.body", inviter: @resource.invited_by.full_name, service: @resource.service.name, domain_name: domain.name) %></p>
+<% if @resource.invited_by.is_a?(Agent) %>
+  <p><%= t("devise.mailer.invitation_instructions_for_agents.body", inviter: @resource.invited_by.full_name, service: @resource.service.name, domain_name: domain.name) %></p>
+<% else %>
+  <p><%= t("devise.mailer.invitation_instructions_for_agents.invited_by_super_admin", service: @resource.service.name, domain_name: domain.name) %></p>
+<% end %>
 
 <p><%= link_to t("devise.mailer.invitation_instructions_for_agents.accept"), accept_invitation_url(@resource, invitation_token: @token) %></p>
 
