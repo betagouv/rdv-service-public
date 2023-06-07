@@ -111,10 +111,11 @@ class Rdv < ApplicationRecord
       joins(:organisation).where.not(organisations: { verticale: :rdv_aide_numerique })
     end
   }
-  ## -
-
+  # Delegations
   delegate :domain, to: :organisation
   delegate :name, to: :motif, prefix: true
+
+  ## -
 
   def self.ongoing(time_margin: 0.minutes)
     where("starts_at <= ?", Time.zone.now + time_margin)

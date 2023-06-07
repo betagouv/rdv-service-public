@@ -59,9 +59,9 @@ class PlageOuverture < ApplicationRecord
 
   # Delegations
   delegate :name, :address, :enabled?, to: :lieu, prefix: true, allow_nil: true
+  delegate :domain, to: :organisation
 
   ## -
-  delegate :domain, to: :organisation
 
   def ical_uid
     "plage_ouverture_#{id}@#{IcalHelpers::ICS_UID_SUFFIX}"
