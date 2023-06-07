@@ -10,6 +10,7 @@ module Payloads
         ical_uid: ical_uid,
         summary: "#{IcalHelpers::ICS_UID_SUFFIX} #{title}",
         recurrence: rrule,
+        domain: domain,
       }
 
       payload[:action] = action if action.present?

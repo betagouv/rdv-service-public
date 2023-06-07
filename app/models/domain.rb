@@ -16,6 +16,7 @@ Domain = Struct.new(
   :faq_url,
   :documentation_url,
   :support_email,
+  :secretariat_email,
   keyword_init: true
 )
 
@@ -36,7 +37,12 @@ class Domain
       documentation_url: "https://rdvs.notion.site/RDV-Solidarit-s-94176a1507814d19aeaaf6e678ffcbed",
       faq_url: "https://rdv-solidarites.notion.site/F-A-Q-M-dico-social-aaf94709c0ea448b8eb9d93f548acdb9",
       france_connect_enabled: true,
-      support_email: "support@rdv-solidarites.fr"
+      support_email: "support@rdv-solidarites.fr",
+      secretariat_email: "secretariat-auto@rdv-solidarites.fr"
+      # secretariat_email est utilisé comme adresse de "Reply-To" pour les e-mails
+      # qui contiennent des ICS. Lorsque l'événement ICS est acceptée par le
+      # client mail / calendrier, ce client mail envoie un accusé de réception
+      # à cette adresse (ex: "Accepted: RDV Consultation médicale ").
     ),
 
     RDV_AIDE_NUMERIQUE = new(
@@ -54,7 +60,8 @@ class Domain
       documentation_url: "https://rdvs.notion.site/RDV-Aide-Num-rique-cd6f04a9d90a444a800d81f77428eaf4",
       faq_url: "https://rdvs.notion.site/FAQ-CNFS-c55933f66f054aaba60fe4799851000e",
       france_connect_enabled: false,
-      support_email: "support@rdv-aide-numerique.fr"
+      support_email: "support@rdv-aide-numerique.fr",
+      secretariat_email: "secretariat-auto@rdv-solidarites.fr"
     ),
 
     RDV_MAIRIE = new(
@@ -72,7 +79,8 @@ class Domain
       documentation_url: "https://rdvs.notion.site/RDV-Mairie-b831caa05dd7416bb489f06f7468903a",
       faq_url: "https://rdvs.notion.site/FAQ-RDV-Mairie-6baf4af187a14e42beafe56b7005d199",
       france_connect_enabled: true,
-      support_email: "support@rdv-service-public.fr"
+      support_email: "support@rdv-service-public.fr",
+      secretariat_email: "secretariat-auto@rdv-service-public.fr"
     ),
   ].freeze
 
