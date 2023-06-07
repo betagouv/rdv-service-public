@@ -9,7 +9,7 @@ module Select2SpecHelper
   end
 
   def add_user(user)
-    find("span", text: "Sélectionner un usager existant", match: :first).click
+    find("span", text: "Ajouter un usager", match: :first).click
     within(".select2-search--dropdown") do
       fill_in(class: "select2-search__field", with: "#{user.last_name} #{user.first_name}")
     end

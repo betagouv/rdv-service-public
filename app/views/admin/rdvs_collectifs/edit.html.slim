@@ -63,6 +63,16 @@
               = render "admin/rdvs_users/form", form: rdv_user_form
 
           .form-group
+            = select_tag :status,
+                    options_for_select([]),
+                    include_blank: "Ajouter un usager",
+                    required: false,
+                    class: "select2-input js-rdv-user-select",
+                    data: { \
+              width: "auto", \
+              "scroll-to-bottom": @add_user_ids.present?, \
+              "select-options": { ajax: { url: search_admin_organisation_users_path(current_organisation, exclude_ids: @rdv.rdvs_users.map(&:user_id)), dataType: "json", delay: 250 } }, \
+             }
             span.small.text-muted
               | L'usager n'existe pas ?&nbsp;
               = link_to \
@@ -71,16 +81,6 @@
                   current_organisation, modal: true, return_location: edit_admin_organisation_rdvs_collectif_path(current_organisation, @rdv, add_user: @add_user_ids), role: default_service_selection_from(@rdv.motif.service) \
                     ), \
                 data: { modal: true }
-            = select_tag :status,
-                    options_for_select([]),
-                    include_blank: "Sélectionner un usager existant",
-                    required: false,
-                    class: "select2-input js-rdv-user-select",
-                    data: { \
-              width: "auto", \
-              "scroll-to-bottom": @add_user_ids.present?, \
-              "select-options": { ajax: { url: search_admin_organisation_users_path(current_organisation, exclude_ids: @rdv.rdvs_users.map(&:user_id)), dataType: "json", delay: 250 } }, \
-             }
 
           .text-right
             = link_to t("helpers.back"), admin_organisation_rdvs_collectifs_path(current_organisation), class: "btn btn-link"
