@@ -44,6 +44,8 @@ class Absence < ApplicationRecord
 
   ## -
 
+  delegate :domain, to: :agent
+
   def ical_uid
     "absence_#{id}@#{IcalHelpers::ICS_UID_SUFFIX}"
   end
