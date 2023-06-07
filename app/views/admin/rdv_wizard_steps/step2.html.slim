@@ -42,16 +42,6 @@ ruby:
         i.fa.fa-plus-circle
         span.ml-1= t("helpers.add")
     .mt-2.collapse.collapse-add-user-selection.no-transition class=(show_add_user ? "show" : "")
-      = select_tag :status,
-      options_for_select([]),
-      include_blank: "Sélectionner un usager",
-      required: false,
-      class: "select2-input js-new-rdv-users-select",
-      data: { \
-        width: "auto", \
-        "select-options": { ajax: { url: search_admin_organisation_users_path(current_organisation, exclude_ids: @rdv.users.map(&:id)), dataType: "json", delay: 250 }}, \
-      }
-
       span.small.text-muted
         | L'usager n'existe pas ?&nbsp;
         = link_to \
@@ -60,6 +50,15 @@ ruby:
               current_organisation, modal: true, return_location: modals_return_location, role: default_service_selection_from(@rdv.motif.service) \
               ), \
           data: { modal: true }
+      = select_tag :status,
+      options_for_select([]),
+      include_blank: "Sélectionner un usager existant",
+      required: false,
+      class: "select2-input js-new-rdv-users-select",
+      data: { \
+        width: "auto", \
+        "select-options": { ajax: { url: search_admin_organisation_users_path(current_organisation, exclude_ids: @rdv.users.map(&:id)), dataType: "json", delay: 250 }}, \
+      }
 
     - if current_organisation.territory.enable_context_field
       .mt-3= f.input :context, as: :text, label: Rdv.human_attribute_name(:context), input_html: { rows: 4 }

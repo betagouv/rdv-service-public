@@ -20,8 +20,14 @@ ruby:
         .form-group data=controller_data
           = f.label :lieu, required: true
           fieldset
-            = f.association :lieu, collection: policy_scope(Lieu).enabled.ordered_by_name, label_method: :full_name,
-              label: false,  include_blank: true,  required: false,
+            - lieux = policy_scope(Lieu).enabled.ordered_by_name
+            = f.association :lieu, \
+              collection: lieux, \
+              label_method: :full_name, \
+              label: false, \
+              include_blank: true, \
+              required: false, \
+              selected: (lieux.size == 1 ? lieux.first.id : nil), \
               input_html: { class: "select2-input", data: { "rdv-lieu-target": "existing_lieu_select", placeholder: ""} }
             small.form-text.text-muted data={"rdv-lieu-target": "new_lieu_link"}
               = t(".single_use_lieu_hint_html")
