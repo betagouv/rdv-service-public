@@ -11,6 +11,7 @@ module Payloads
         summary: "RDV #{motif&.name}",
         address: motif.phone? ? nil : address,
         sequence: sequence,
+        domain: domain,
       }
 
       description = ""
