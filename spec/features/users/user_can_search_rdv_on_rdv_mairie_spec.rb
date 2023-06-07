@@ -9,6 +9,8 @@ describe "User can search rdv on rdv mairie" do
   let(:service) { create(:service) }
   let!(:motif) { create(:motif, name: "Passeport", bookable_publicly: true, organisation: organisation, restriction_for_rdv: nil, service: service) }
   let!(:lieu) { create(:lieu, organisation: organisation, name: "Mairie de Sannois", address: "15 Place du Général Leclerc, Sannois, 95110") }
+  let(:user) { create(:user, email: "jeanmairie@example.com") }
+  let(:ants_pre_demande_number) { "1122334455" }
 
   def json_response
     JSON.parse(page.html)
@@ -49,6 +51,7 @@ describe "User can search rdv on rdv mairie" do
     creneaux_url = json_response[lieu.id.to_s].first["callback_url"]
 
     visit_public_creneaux_link(creneaux_url)
+    login_and_confirm_rdv
   end
 
   private
@@ -61,5 +64,19 @@ describe "User can search rdv on rdv mairie" do
     expect(page).to have_content("Motif : Passeport")
     expect(page).to have_content("Lieu : Mairie de Sannois (15 Place du Général Leclerc, Sannois, 95110)")
     expect(page).to have_content("Date du rendez-vous : lundi 13 décembre 2021 à 09h00 (45 minutes)")
+  end
+
+  def login_and_confirm_rdv
+    fill_in("user_email", with: user.email)
+    fill_in("password", with: user.password)
+    click_button("Se connecter")
+
+    expect(page).to have_field("Numéro de pré-demande ANTS")
+    fill_in("user_ants_pre_demande_number", with: ants_pre_demande_number)
+    click_button("Continuer")
+    click_button("Continuer")
+    click_link("Confirmer mon RDV")
+    expect(page).to have_content("Votre rendez vous a été confirmé.")
+    expect(user.reload.ants_pre_demande_number).to eq(ants_pre_demande_number)
   end
 end

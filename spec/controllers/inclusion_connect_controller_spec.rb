@@ -50,7 +50,7 @@ describe InclusionConnectController, type: :controller do
     it "uses the current domain's support email address in the error message" do
       request.host = "www.rdv-mairie-test.localhost"
       get :callback, params: { state: "zefjzelkf", session_state: "zfjzerklfjz", code: "klzefklzejlf" }
-      expect(flash[:error]).to include("support@rdv-mairie.fr")
+      expect(flash[:error]).to include("support@rdv-service-public.fr")
     end
 
     it "returns an error if token request error" do
