@@ -116,7 +116,7 @@ class Users::GeoSearch
   end
 
   def individual_motifs
-    @individual_motifs ||= Motif.active.where.not(bookable_by: :agents).individuel.joins(:plage_ouvertures)
+    @individual_motifs ||= Motif.active.where.not(bookable_by: :agents).individuel.joins(:motifs_plage_ouvertures)
       .joins(organisation: :territory).where(territories: { departement_number: @departement }).distinct
   end
 

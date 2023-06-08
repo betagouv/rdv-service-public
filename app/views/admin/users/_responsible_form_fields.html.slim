@@ -11,9 +11,10 @@
   .col-md-6= f.input :first_name, **input_opts.deep_merge(frozen_fields_opts)
   .col-md-6= f.input :last_name, **input_opts
 
-.form-row
-  .col-md-6= f.input :birth_name, **input_opts.deep_merge(frozen_fields_opts)
-  .col-md-6= date_input(f, :birth_date, **input_opts.deep_merge(frozen_fields_opts))
+- unless current_domain == Domain::RDV_MAIRIE
+  .form-row
+    .col-md-6= f.input :birth_name, **input_opts.deep_merge(frozen_fields_opts)
+    .col-md-6= date_input(f, :birth_date, **input_opts.deep_merge(frozen_fields_opts))
 
 = f.input :phone_number, as: :tel, **input_opts
 
@@ -44,11 +45,12 @@
   .mt-1.text-muted
     | L'usager ayant validé son compte, vous ne pouvez plus modifier ses préférences
 
-= f.input :address, **(input_opts.deep_merge(input_html: { class: "places-js-container" }))
+- unless current_domain == Domain::RDV_MAIRIE
+  = f.input :address, **(input_opts.deep_merge(input_html: { class: "places-js-container" }))
 
-= f.input :city_code, as: :hidden, **input_opts
-= f.input :post_code, as: :hidden, **input_opts
-= f.input :city_name, as: :hidden, **input_opts
+  = f.input :city_code, as: :hidden, **input_opts
+  = f.input :post_code, as: :hidden, **input_opts
+  = f.input :city_name, as: :hidden, **input_opts
 
 - if current_territory.enable_address_details
   = f.input :address_details, **input_opts

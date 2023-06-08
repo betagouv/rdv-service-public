@@ -8,9 +8,11 @@
     .col-md-6= f.input :first_name, placeholder: "Prénom", disabled: user.logged_once_with_franceconnect?
     .col-md-6= f.input :last_name, placeholder: "Nom"
   .form-row
-    - unless current_user.only_invited?
+    - unless current_user.only_invited? || current_domain == Domain::RDV_MAIRIE
       .col-md-6= f.input :birth_name, placeholder: "Nom de naissance", disabled: user.logged_once_with_franceconnect?
       .col-md-6= date_input(f, :birth_date, disabled: user.logged_once_with_franceconnect?)
+  - if current_domain == Domain::RDV_MAIRIE
+    = f.input :ants_pre_demande_number, required: true
   - if user.logged_once_with_franceconnect?
     .alert.alert-info.d-flex.align-items-center
       .mr-3
@@ -24,7 +26,7 @@
   div.mb-2 Préférences de notifications
   div= f.input :notify_by_email
   div= f.input :notify_by_sms
-  - unless current_user.only_invited?
+  - unless current_user.only_invited? || current_domain == Domain::RDV_MAIRIE
     - address_value = local_assigns[:rdv_wizard].present? && user.address.nil? ? rdv_wizard.to_query[:where] : user.address
     = f.input :address, input_html: {value: address_value, class: "places-js-container" }
 

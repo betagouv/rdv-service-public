@@ -55,7 +55,7 @@ module SuperAdmins
       Motif.create!(
         name: "Passeport / Carte d'identité",
         color: "#99CC99",
-        default_duration_in_min: 30,
+        default_duration_in_min: 15,
         location_type: :public_office,
         organisation: organisation,
         service: service,
