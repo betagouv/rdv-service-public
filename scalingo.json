@@ -95,7 +95,7 @@
       "plan": "postgresql:postgresql-starter-512"
     },
     {
-      "plan": "redis:redis-sandbox"
+      "plan": "redis:redis-starter-256"
     }
   ],
   "formation": {
