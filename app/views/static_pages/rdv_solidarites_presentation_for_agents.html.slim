@@ -1,108 +1,68 @@
-- content_for :header
-  section.pb-0.py-5
-    .container
-      .row
-        .col-md-9.m-auto
-          h1.mb-3.text-white
-            span.text-secondary> Gérez les rendez-vous
-            | de votre département
-          .mt-5= link_to "Se connecter en tant qu'agent", new_agent_session_path, class: "btn btn-outline-white"
+- content_for(:title, "Gérez les rendez-vous de votre département - RDV Mairie")
 
-section.py-5.bg-lightturquoise.text-primary
-  .container
-    .row
-      .col-md-9.m-auto
-        h2.pb-0 Notre mission
-        h3.mb-5
-          span.text-dark> Réduire le nombre de rendez-vous manqués
-          | dans les services sociaux départementaux
-        .divider
+.fr-pt-2w
+  .fr-container.fr-my-4w
+    .fr-grid-row
+      .fr-col-xl-2
+      .fr-col-xl-8
 
-        .row
-          .col-4.mb-4
-            .row.d-flex.align-items-stretch
-              .col-md-3.p-2.px-3.p-md-0
-                = image_tag "welcome/illu-4x.svg", alt: "quatre fois"
-              .col-md-9.d-flex.align-items-center
-                h4.m-0 moins de lapins
-          .col-4.mb-4
-            .row.d-flex.align-items-stretch
-              .col-md-3.p-2.px-3.p-md-0
-                = image_tag "welcome/illu-3x.svg", alt: "trois fois"
-              .col-md-9.d-flex.align-items-center
-                h4.m-0 plus rapide pour prendre RDV
-          .col-4.mb-4
-            .row.d-flex.align-items-stretch
-              .col-md-3.p-2.px-3.p-md-0
-                = image_tag "welcome/illu-2x.svg", alt: "deux fois"
-              .col-md-9.d-flex.align-items-center
-                h4.m-0 moins d'attente pour l'usager
-
-        .text-dark.text-center.mt-5
-          p.lead Vous souhaitez en savoir plus ?
-          .row.d-flex.justify-content-center
-            .col-md-3.p-2.px-3.p-md-0
-              = link_to "Contactez-nous", contact_path(anchor: "tech-support"), class: "btn btn-tertiary"
-            .col-md-3.p-2.px-3.p-md-0
-              = link_to "Testez l’outil", "https://demo.rdv-solidarites.fr#{new_organisation_path}", class: "btn btn-tertiary"
-
-section.bg-white.py-5
-  .container
-    .text-center.w-75.m-auto
-      h2.mb-5 Comment ça marche ?
-    .divider
-    .row
-      .col-md-4
-        .w-50.p-3.m-auto
-          = image_tag "welcome/illu-prise-rdv.svg", alt: ""
-        h3 Prise de RDV en ligne
-        p
-          | Vous choisissez quels motifs de RDV sont ouverts à la prise de RDV en ligne. Les agents peuvent garder la main sur les motifs de RDV de leur choix.
-
-      .col-md-4
-        .w-50.p-3.m-auto
-          = image_tag "welcome/illu-rappel-rdv.svg", alt: ""
-        h3 Rappels de RDV
-        p
-          | Vos usagers sont notifiés lors de la prise de RDV et à l'échéance du RDV par SMS et par email. Ils peuvent le cas échéant modifier ou annuler le RDV directement en ligne.
-
-      .col-md-4
-        .w-50.p-3.m-auto
-          = image_tag "welcome/illu-gestion.svg", alt: ""
-        h3 Gestion des files d'attente
-        p
-          | RDV Solidarités optimise pour vous les calendriers de vos agents. À l'annulation d'un RDV, nous notifions pour vous les usagers de la disponibilité d'un nouveau créneau.
-
-section.bg-lightturquoise.py-5
-  .container
-    .text-center.w-75.m-auto
-      h2.mb-4 Quelles fonctionnalités ?
-    .divider
-    .row
-      .col-md-6
-        .p-6.m-auto
-          h3.mb-3 Toutes les typologies de RDV
-          ul
-            li Consultation
-            li RDV téléphonique
-            li Visite à domicile
-            li Suivi avec des référents
-            li RDV collectif (à venir)
-      .col-md-6
-        .p-6.m-auto
-          h3.mb-3 Adapté à vos contraintes opérationnelles
-          ul
-            li Multi-sites
-            li Utilisable en itinérance
-            li Sectorisation (en cours)
-            li Notifications vers des systèmes d'informations externes
-
-    .row
-      .col-md-12.text-center.mt-5
-        p.lead Vous y pensez pour votre Maison des Solidarités ?
-        .col-md-9.m-auto
-          .row.d-flex.justify-content-center
-            .col-md-3.p-2.px-3.p-md-0
-              = link_to "Contactez-nous", contact_path(anchor: "tech-support"), class: "btn btn-tertiary"
-            .col-md-3.p-2.px-3.p-md-0
-              = link_to "Testez l’outil", "https://demo.rdv-solidarites.fr#{new_organisation_path}", class: "btn btn-tertiary"
+        h1.fr-mb-4w Gérez les rendez-vous de votre département
+        = link_to "Se connecter en tant qu'agent", new_agent_session_path, class: "fr-btn fr-mb-5v"
+        h2 Notre mission : Réduire le nombre de rendez-vous manqués dans les services sociaux départementaux
+        .fr-grid-row.r-grid-row--gutters.fr-pt-10v.fr-pb-10v[role="list"]
+          .fr-col-12.fr-col-sm-4.fr-col-md-4.fr-col-lg-4.fr-pr-3v.fr-pl-3v[role="listitem"]
+            .img.fr-p-6v.fr-col-6.fr-m-auto
+              = image_tag "welcome/illu-4x.svg", alt: "quatre fois"
+            .fr-col-6.fr-m-auto
+              p.fr-mb-2w moins de lapins
+          .fr-col-12.fr-col-sm-4.fr-col-md-4.fr-col-lg-4.fr-pr-3v.fr-pl-3v[role="listitem"]
+            .img.fr-p-6v.fr-col-6.fr-m-auto
+              = image_tag "welcome/illu-3x.svg", alt: "trois fois"
+            .fr-col-6.fr-m-auto
+              p.fr-mb-2w plus rapide pour prendre RDV
+          .fr-col-12.fr-col-sm-4.fr-col-md-4.fr-col-lg-4.fr-pr-3v.fr-pl-3v[role="listitem"]
+            .img.fr-p-6v.fr-col-6.fr-m-auto
+              = image_tag "welcome/illu-2x.svg", alt: "deux fois"
+            .fr-col-6.fr-m-auto
+              p.fr-mb-2w moins d'attente pour l'usager
+        h2 Vous souhaitez en savoir plus ?
+        p.fr-mb-2w
+          = link_to "Contactez-nous", contact_path(anchor: "tech-support"), class: "fr-btn"
+        p.fr-mb-2w
+          = link_to "Testez l’outil", "https://demo.rdv-solidarites.fr#{new_organisation_path}", class: "fr-btn"
+        h2 Comment ça marche ?
+        .fr-grid-row.r-grid-row--gutters.fr-pt-2v.fr-pb-10v[role="list"]
+          .fr-col-12.fr-col-sm-4.fr-col-md-4.fr-col-lg-4.fr-pr-3v.fr-pl-3v[role="listitem"]
+            .img.fr-p-6v.fr-col-6.fr-m-auto
+              = image_tag "welcome/illu-prise-rdv.svg", alt: ""
+            h3 Prise de RDV en ligne
+            p.fr-mb-2w Vous choisissez quels motifs de RDV sont ouverts à la prise de RDV en ligne. Les agents peuvent garder la main sur les motifs de RDV de leur choix.
+          .fr-col-12.fr-col-sm-4.fr-col-md-4.fr-col-lg-4.fr-pr-3v.fr-pl-3v[role="listitem"]
+            .img.fr-p-6v.fr-col-6.fr-m-auto
+              = image_tag "welcome/illu-rappel-rdv.svg", alt: ""
+            h3 Rappels de RDV
+            p.fr-mb-2w
+              | Vos usagers sont notifiés lors de la prise de RDV et à l'échéance du RDV par SMS et par email. Ils peuvent le cas échéant modifier ou annuler le RDV directement en ligne.
+          .fr-col-12.fr-col-sm-4.fr-col-md-4.fr-col-lg-4.fr-pr-3v.fr-pl-3v[role="listitem"]
+            .img.fr-p-6v.fr-col-6.fr-m-auto
+              = image_tag "welcome/illu-gestion.svg", alt: ""
+            h3 Gestion des files d'attente
+            p.fr-mb-2w
+              | RDV Solidarités optimise pour vous les calendriers de vos agents. À l'annulation d'un RDV, nous notifions pour vous les usagers de la disponibilité d'un nouveau créneau.
+        h2 Quelles fonctionnalités ?
+        h3 Toutes les typologies de RDV
+        ul
+          li Consultation
+          li RDV téléphonique
+          li Visite à domicile
+          li Suivi avec des référents
+          li RDV collectif (à venir)
+        h3 Adapté à vos contraintes opérationnelles
+        ul
+          li Multi-sites
+          li Utilisable en itinérance
+          li Sectorisation (en cours)
+          li Notifications vers des systèmes d'informations externes
+        p.fr-mb-2w Vous y pensez pour votre Maison des Solidarités ?
+        p.fr-mb-2w = link_to "Contactez-nous", contact_path(anchor: "tech-support"), class: "fr-btn"
+        p.fr-mb-2w = link_to "Testez l’outil", "https://demo.rdv-solidarites.fr#{new_organisation_path}", class: "fr-btn"
