@@ -17,18 +17,16 @@
             span> Autres départements, voir
             = link_to "l'annuaire des services publics", "https://lannuaire.service-public.fr/"
 
-        .row#tech-support
-          button.fr-btn.fr-mb-4w
-            = mail_to current_domain.support_email,
-              subject: "[Problème Usager]",
-              body: "Code postal: \n\rNom: \n\rProblème ou Question:", class: "btn btn-primary" do
-              span>
-                i.fa.fa-envelope
-              | Contacter l'équipe technique
+        = mail_to current_domain.support_email,
+          subject: "[Problème Usager]",
+          body: "Code postal: \n\rNom: \n\rProblème ou Question:", class: "fr-btn fr-mb-4w" do
+          span>
+            i.fa.fa-envelope
+          | Contacter l'équipe technique
 
-          .fr-alert.fr-alert--warning
-            h2 Attention
-            p.fr-mb-2w
-              strong> Nous ne sommes pas travailleurs médico-sociaux,
-              span> et nous ne pouvons pas débloquer d'autres créneaux que ceux affichés,
-              | nous pouvons seulement aider avec les sujets techniques.
+        .fr-alert.fr-alert--warning
+          h2 Attention
+          p.fr-mb-2w
+            strong> Nous ne sommes pas travailleurs médico-sociaux,
+            span> et nous ne pouvons pas débloquer d'autres créneaux que ceux affichés,
+            | nous pouvons seulement aider avec les sujets techniques.
