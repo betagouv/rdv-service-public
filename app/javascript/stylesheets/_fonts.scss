@@ -7,4 +7,9 @@
   src: local('Lato Regular'), local('Lato-Regular'),
        url('../fonts/lato-v17-latin-regular.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
        url('../fonts/lato-v17-latin-regular.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+  src: local('Marianne Regular'), local('Marianne-Regular'),
+       url('../fonts/Marianne-Regular.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url('../fonts/Marianne-Regular.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+  src: local('Spectral Regular'), local('Spectral-Regular'),
+       url('../fonts/Spectral-Regular.ttf') format('ttf'), /* Chrome 26+, Opera 23+, Firefox 39+ */
 }
