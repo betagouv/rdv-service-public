@@ -28,7 +28,7 @@ class Agents::ExportMailer < ApplicationMailer
   end
 
   def default_from
-    SECRETARIAT_EMAIL
+    domain.secretariat_email
   end
 
   private

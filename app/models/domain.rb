@@ -16,6 +16,7 @@ Domain = Struct.new(
   :faq_url,
   :documentation_url,
   :support_email,
+  :secretariat_email,
   keyword_init: true
 )
 
@@ -36,7 +37,12 @@ class Domain
       documentation_url: "https://rdvs.notion.site/RDV-Solidarit-s-94176a1507814d19aeaaf6e678ffcbed",
       faq_url: "https://rdv-solidarites.notion.site/F-A-Q-M-dico-social-aaf94709c0ea448b8eb9d93f548acdb9",
       france_connect_enabled: true,
-      support_email: "support@rdv-solidarites.fr"
+      support_email: "support@rdv-solidarites.fr",
+      secretariat_email: "secretariat-auto@rdv-solidarites.fr"
+      # secretariat_email est utilisé comme adresse de "Reply-To" pour les e-mails
+      # qui contiennent des ICS. Lorsque l'événement ICS est acceptée par le
+      # client mail / calendrier, ce client mail envoie un accusé de réception
+      # à cette adresse (ex: "Accepted: RDV Consultation médicale ").
     ),
 
     RDV_AIDE_NUMERIQUE = new(
@@ -54,25 +60,27 @@ class Domain
       documentation_url: "https://rdvs.notion.site/RDV-Aide-Num-rique-cd6f04a9d90a444a800d81f77428eaf4",
       faq_url: "https://rdvs.notion.site/FAQ-CNFS-c55933f66f054aaba60fe4799851000e",
       france_connect_enabled: false,
-      support_email: "support@rdv-aide-numerique.fr"
+      support_email: "support@rdv-aide-numerique.fr",
+      secretariat_email: "secretariat-auto@rdv-solidarites.fr"
     ),
 
     RDV_MAIRIE = new(
       id: "RDV_MAIRIE",
-      logo_path: "logos/logo_mairie.svg",
-      public_logo_path: "/logo_mairie.png",
-      dark_logo_path: "logos/logo_sombre_mairie.svg",
-      name: "RDV Mairie",
+      logo_path: "logos/logo_rdv_service_public.svg",
+      public_logo_path: "/logo_rdv_service_public.png",
+      dark_logo_path: "logos/logo_sombre_rdv_service_public.svg",
+      name: "RDV Service Public",
       presentation_for_agents_template_name: "presentation_for_mairie",
       address_selection_template_name: "search/address_selection/rdv_mairie",
       search_banner_template_name: "search/banners/rdv_mairie",
       online_reservation_with_public_link: true,
       can_sync_to_outlook: false,
-      sms_sender_name: "Rdvmairie",
+      sms_sender_name: "RDV S.P.",
       documentation_url: "https://rdvs.notion.site/RDV-Mairie-b831caa05dd7416bb489f06f7468903a",
       faq_url: "https://rdvs.notion.site/FAQ-RDV-Mairie-6baf4af187a14e42beafe56b7005d199",
       france_connect_enabled: true,
-      support_email: "support@rdv-mairie.fr"
+      support_email: "support@rdv-service-public.fr",
+      secretariat_email: "secretariat-auto@rdv-service-public.fr"
     ),
   ].freeze
 
@@ -93,7 +101,7 @@ class Domain
         {
           RDV_SOLIDARITES => "www.rdv-solidarites.fr",
           RDV_AIDE_NUMERIQUE => "www.rdv-aide-numerique.fr",
-          RDV_MAIRIE => "www.rdv-mairie.fr",
+          RDV_MAIRIE => "rdv.anct.gouv.fr",
         }.fetch(self)
       end
     when :development
@@ -114,7 +122,7 @@ class Domain
   end
 
   def default?
-    self == RDV_SOLIDARITES
+    self == RDV_MAIRIE
   end
   alias default default?
 

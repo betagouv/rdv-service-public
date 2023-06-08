@@ -6,14 +6,14 @@
         ul.list-unstyled
           li.mb-2
             - if current_domain.default?
-              span> Un service fourni par
+              span> #{current_domain.name} est fourni par
               = link_to("l'Agence Nationale de la Cohésion des Territoires", "https://agence-cohesion-territoires.gouv.fr", class: "inline")
               = " et un consortium de départements"
             - else
               span
-              = "#{current_domain.name} est géré par #{Domain::RDV_SOLIDARITES.name}, un service fourni par "
+              = "#{current_domain.name} est géré par #{Domain::RDV_MAIRIE.name}, un service fourni par "
               = link_to("l'Agence Nationale de la Cohésion des Territoires", "https://agence-cohesion-territoires.gouv.fr", class: "inline")
-              = "."
+              = ". "
               = link_to "En savoir plus", domaines_path
           li.mb-2
             = link_to image_tag("logos/logo-incub-territoire.svg", size: "80x70", alt:"incubateur.anct.gouv.fr"), "https://incubateur.anct.gouv.fr/", title: "Aller sur le site de l'incubateur des territoires"

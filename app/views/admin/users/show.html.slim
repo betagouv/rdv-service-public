@@ -44,6 +44,8 @@
           ul.list-unstyled
             li= object_attribute_tag(@user, :first_name)
             li= object_attribute_tag(@user, :last_name)
+            - if current_domain == Domain::RDV_MAIRIE
+              li= object_attribute_tag(@user, :ants_pre_demande_number)
             li= object_attribute_tag(@user, :birth_date, birth_date_and_age(@user))
             - if current_territory.enable_notes_field?
               li= object_attribute_tag(@user, :notes, formatted_user_notes(@user))
