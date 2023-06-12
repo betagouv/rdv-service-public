@@ -1,3 +1,13 @@
+GIT
+  remote: https://github.com/betagouv/dsfr-view-components
+  revision: dddb2f0f2b5e8759ada0aac794f61ae69e355ac9
+  branch: add-header-logo-image
+  specs:
+    dsfr-view-components (0.4.0)
+      html-attributes-utils (~> 1)
+      pagy (~> 6)
+      view_component (~> 2)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -180,13 +190,6 @@ GEM
     dotenv-rails (2.8.1)
       dotenv (= 2.8.1)
       railties (>= 3.2)
-    dsfr-view-components (0.3.0)
-      actionpack (>= 6.1)
-      activemodel (>= 6.1)
-      html-attributes-utils (~> 1)
-      pagy (~> 6)
-      railties (>= 6.1)
-      view_component (~> 2)
     dumb_delegator (1.0.0)
     erubi (1.12.0)
     et-orbi (1.2.7)
@@ -646,7 +649,7 @@ DEPENDENCIES
   devise_invitable
   devise_token_auth
   dotenv-rails
-  dsfr-view-components
+  dsfr-view-components!
   factory_bot
   faker
   good_job
