@@ -55,32 +55,38 @@ Ces choix techniques sont aussi influencés par la culture de la communauté Rub
 
 #### Application Scalingo
 
-| Source     | Destination       | Protocole | Port | Localisation      | Interne/URL Externe |
-|------------|-------------------|-----------|------|-------------------|---------------------|
-| Navigateur | App Rails         | HTTPS     | 443  | Paris/SecNumCloud | Externe             |
-| App Rails  | Postgres Scalingo | TCP       | 5432 | Paris/SecNumCloud | Interne             |
-| App Rails  | Redis Scalingo    | TCP       | 6379 | Paris/SecNumCloud | Interne             |
+| Source           | Destination       | Protocole | Port | Localisation      | Interne/URL Externe |
+|------------------|-------------------|-----------|------|-------------------|---------------------|
+| Navigateur       | App Rails         | HTTPS     | 443  | Paris/SecNumCloud | Externe             |
+| Clients API JSON | App Rails         | HTPPS     | 443  | Paris/SecNumCloud | Externe             |
+| Clients Webcal   | App Rails         | HTPPS     | 443  | Paris/SecNumCloud | Externe             |
+| App Rails        | Postgres Scalingo | TCP       | 5432 | Paris/SecNumCloud | Interne             |
+| App Rails        | Redis Scalingo    | TCP       | 6379 | Paris/SecNumCloud | Interne             |
 
 #### Tooling (error monitoring, APM, analytics)
 
-| Source     | Destination | Protocole | Port | Localisation           | Interne/URL Externe   |
-|------------|-------------|-----------|------|------------------------|-----------------------|
-| App Rails  | Sentry      | HTTPS     | 443  | Tours, France          | sentry.incubateur.net |
-| App Rails  | Skylight    | HTTPS     | 443  | Ashburn, Virginia, USA | skylight.io           |
-| Navigateur | Matomo      | HTTPS     | 443  | France                 | stats.data.gouv.fr    |
+| Source     | Destination | Protocole | Port | Localisation           | Interne/URL Externe                             |
+|------------|-------------|-----------|------|------------------------|-------------------------------------------------|
+| App Rails  | Sentry      | HTTPS     | 443  | Tours, France          | sentry.incubateur.net                           |
+| Sentry     | N8n         | HTTPS     | 443  |                        | n8n.inclusion-numerique.incubateur.anct.gouv.fr |
+| N8n        | Mattermost  | HTTPS     | 443  |                        | mattermost.incubateur.net                       |
+| App Rails  | Skylight    | HTTPS     | 443  | Ashburn, Virginia, USA | skylight.io                                     |
+| Navigateur | Matomo      | HTTPS     | 443  | France                 | stats.data.gouv.fr                              |
 
 #### Services externes
 
-| Source    | Destination         | Protocole | Port | Localisation  | Interne/URL Externe                 |
-|-----------|---------------------|-----------|------|---------------|-------------------------------------|
-| App Rails | Brevo               | SMTP      | 587  | Paris, France | smtp-relay.sendinblue.com           |
-| App Rails | API Microsoft       | HTTPS     | 443  | Paris, France | graph.microsoft.com                 |
-| App Rails | Netsize             | HTTPS     | 443  | France        | europe.ipx.com                      |
-| App Rails | SFR mail2SMS        | SMTP      | 587  | France        | @mailtosms.dmc.sfr-sh.fr            |
-| App Rails | Clever Technologies | HTTPS     | 443  | France        | webservicesmultimedias.clever-is.fr |
+| Source                            | Destination                | Protocole     | Port | Localisation        | Interne/URL Externe                 |
+|-----------------------------------|----------------------------|---------------|------|---------------------|-------------------------------------|
+| App Rails                         | Brevo                      | SMTP          | 587  | Paris, France       | smtp-relay.sendinblue.com           |
+| App Rails                         | API et Oauth Microsoft     | HTTPS         | 443  | Paris, France       | graph.microsoft.com                 |
+| App Rails                         | Netsize                    | HTTPS         | 443  | France              | europe.ipx.com                      |
+| App Rails                         | SFR mail2SMS               | SMTP          | 587  | France              | @mailtosms.dmc.sfr-sh.fr            |
+| App Rails                         | Clever Technologies        | HTTPS         | 443  | France              | webservicesmultimedias.clever-is.fr |
+| Navigateur redirigé par App Rails | API Microsoft              | HTTPS (OAuth) | 443  | Amsterdam, Pays-Bas | login.microsoftonline.com      |
 
 Note : l'application permet aussi de définir des webhooks sortants, et donc d'appeler en HTTPS un service externe
-lors de la création, modification ou suppression de certaines données applicatives.
+lors de la création, modification ou suppression de certaines données applicatives. On sait que la Drôme et les départements qui
+utilisent RDV Insertion utilisent ces webhooks.
 
 #### Fournisseurs d'identité
 
@@ -88,7 +94,6 @@ lors de la création, modification ou suppression de certaines données applicat
 |------------|------------------|---------------|------|---------------------|--------------------------------|
 | Navigateur | FranceConnect    | HTTPS (OAuth) | 587  | Paris, France       | smtp-relay.sendinblue.com      |
 | Navigateur | InclusionConnect | HTTPS (OAuth) | 587  | France              | connect.inclusion.beta.gouv.fr |
-| Navigateur | API Microsoft    | HTTPS (OAuth) | 587  | Amsterdam, Pays-Bas | login.microsoftonline.com      |
 | Navigateur | GitHub           | HTTPS (OAuth) | 587  | USA                 | github.com                     |
 
 ### Inventaire des dépendances
@@ -425,7 +430,7 @@ de cluster avec 2 nodes, qui permet un failover automatique en cas de plantage d
 Parmi les données que nous manipulons, les plus critiques sont :
 - les coordonnées des usager⋅es
 - l'historique des RDVs pris par une personne ainsi que le motif de ces RDV
-- des champs "texte" libres où les agents peuvent saisir des informations de contexte sur un RDV
+- le champs "contexte", un champs texte libre où les agents peuvent saisir des informations de contexte sur un RDV
 
 #### Suppression automatique de données anciennes
 
