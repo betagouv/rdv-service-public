@@ -11,6 +11,7 @@ describe "User can search rdv on rdv mairie" do
   let!(:lieu) { create(:lieu, organisation: organisation, name: "Mairie de Sannois", address: "15 Place du Général Leclerc, Sannois, 95110") }
   let(:user) { create(:user, email: "jeanmairie@example.com") }
   let(:ants_pre_demande_number) { "1122334455" }
+  let(:pre_demande_number_status_response) { { ants_pre_demande_number => { "status" => "validated" } } }
 
   def json_response
     JSON.parse(page.html)
@@ -18,9 +19,17 @@ describe "User can search rdv on rdv mairie" do
 
   before do
     default_url_options[:host] = "http://www.rdv-mairie-test.localhost"
-  end
 
-  before do
+    stub_request(:get, "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status?application_ids=#{ants_pre_demande_number}")
+      .with(
+        headers: {
+          "Accept" => "application/json",
+          "Expect" => "",
+          "User-Agent" => "Typhoeus - https://github.com/typhoeus/typhoeus",
+          "X-Rdv-Opt-Auth-Token" => ENV["ANTS_RDV_OPT_AUTH_TOKEN"],
+        }
+      ).to_return(status: 200, body: pre_demande_number_status_response.to_json, headers: {})
+
     travel_to(now)
     create(:plage_ouverture, :no_recurrence, first_day: now, motifs: [motif], lieu: lieu, organisation: organisation, start_time: Tod::TimeOfDay(9), end_time: Tod::TimeOfDay.new(10))
   end

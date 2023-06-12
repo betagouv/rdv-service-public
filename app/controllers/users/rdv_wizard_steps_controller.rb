@@ -29,7 +29,7 @@ class Users::RdvWizardStepsController < UserAuthController
     @rdv_wizard = rdv_wizard_for(current_user, rdv_params.merge(user_params))
     @rdv = @rdv_wizard.rdv
     skip_authorization
-    if @rdv_wizard.valid? && @rdv_wizard.save
+    if @rdv_wizard.valid? && @rdv_wizard.user.errors.blank? && @rdv_wizard.save
       redirect_to new_users_rdv_wizard_step_path(@rdv_wizard.to_query.merge(step: next_step_index))
     else
       render current_step
