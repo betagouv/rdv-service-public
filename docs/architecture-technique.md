@@ -302,7 +302,7 @@ L'application a 3 types d'utilisateurs :
 - usager⋅e
 - agent⋅e
 - super admin
-
+Pour visualiser, modifier ou annuler un RDV, l'usager peut soit cliquer sur un lien fourni en notification mail ou SMS et entrer les trois premières lettres de son nom de famille,
 #### Les usager⋅es
 
 Les usager⋅es prennent RDV avec les agents. Iels peuvent voir leurs RDVs, annuler ou modifier des RDVs futurs, et
