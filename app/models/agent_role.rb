@@ -6,10 +6,14 @@ class AgentRole < ApplicationRecord
   has_paper_trail
 
   # Attributes
-  # TODO: make it an enum
-  LEVEL_BASIC = "basic"
-  LEVEL_ADMIN = "admin"
-  LEVELS = [LEVEL_BASIC, LEVEL_ADMIN].freeze
+  ACCESS_LEVEL_BASIC = "basic"
+  ACCESS_LEVEL_ADMIN = "admin"
+  ACCESS_LEVELS = [ACCESS_LEVEL_BASIC, ACCESS_LEVEL_ADMIN].freeze
+
+  enum access_level: {
+    basic: "basic", # Basic Role
+    admin: "admin", # Admin Role
+  }
 
   # Relations
   belongs_to :agent
@@ -21,7 +25,6 @@ class AgentRole < ApplicationRecord
   accepts_nested_attributes_for :agent
 
   # Validation
-  validates :level, inclusion: { in: LEVELS }
   validate :organisation_cannot_change
   validate :organisation_have_at_least_one_admin
   # Customize the uniqueness error message. This class needs to be declared before the validates :agent, uniqueness: line.
@@ -42,17 +45,13 @@ class AgentRole < ApplicationRecord
   before_destroy :organisation_have_at_least_one_admin_before_destroy
 
   # Scopes
-  scope :level_basic, -> { where(level: LEVEL_BASIC) }
-  scope :level_admin, -> { where(level: LEVEL_ADMIN) }
+  scope :access_level_basic, -> { where(access_level: :basic) }
+  scope :access_level_admin, -> { where(access_level: :admin) }
 
   ## -
 
-  def basic?
-    level == LEVEL_BASIC
-  end
-
-  def admin?
-    level == LEVEL_ADMIN
+  def level # TODO: For API compatibility only, change in rdv-insertion and remove this method
+    access_level
   end
 
   def can_access_others_planning?
@@ -68,7 +67,7 @@ class AgentRole < ApplicationRecord
   end
 
   def organisation_have_at_least_one_admin
-    return if new_record? || level == LEVEL_ADMIN || organisation.agent_roles.where.not(id: id).any?(&:admin?)
+    return if new_record? || admin? || organisation.agent_roles.where.not(id: id).any?(&:admin?)
 
     errors.add(:base, "Il doit toujours y avoir au moins un agent Admin par organisation")
   end
