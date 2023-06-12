@@ -6,10 +6,10 @@ html lang="fr"
     header.header.bg-primary
       = render "layouts/rdv_solidarites_instance_name"
       = render "layouts/degraded_service", message: ENV["DEGRADED_SERVICE_MESSAGE_USERS"]
-      .container
-        - if current_user.present? && !current_user.only_invited?
-          = render "common/header_user_logged"
-        - else
+      - if current_user.present? && !current_user.only_invited?
+        = render "common/header_user_logged"
+      - else
+        .container
           = render "common/header"
 
         = render "layouts/flash"
