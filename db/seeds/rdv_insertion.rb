@@ -119,9 +119,9 @@ agent_orgs_rdv_insertion = Agent.new(
   service_id: service_rsa.id,
   invitation_accepted_at: 10.days.ago,
   roles_attributes: [
-    { organisation: org_drome1, level: AgentRole::LEVEL_ADMIN },
-    { organisation: org_drome2, level: AgentRole::LEVEL_ADMIN },
-    { organisation: org_yonne, level: AgentRole::LEVEL_ADMIN },
+    { organisation: org_drome1, access_level: AgentRole::ACCESS_LEVEL_ADMIN },
+    { organisation: org_drome2, access_level: AgentRole::ACCESS_LEVEL_ADMIN },
+    { organisation: org_yonne, access_level: AgentRole::ACCESS_LEVEL_ADMIN },
   ],
   agent_territorial_access_rights_attributes: [
     { territory: territory_drome, allow_to_manage_teams: true },

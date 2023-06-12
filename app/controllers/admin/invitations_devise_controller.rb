@@ -6,7 +6,7 @@ class Admin::InvitationsDeviseController < Devise::InvitationsController
     authorize(resource)
 
     @services = services.order(:name)
-    @roles = current_agent.conseiller_numerique? ? [AgentRole::LEVEL_BASIC] : AgentRole::LEVELS
+    @roles = current_agent.conseiller_numerique? ? [AgentRole::ACCESS_LEVEL_BASIC] : AgentRole::ACCESS_LEVELS
 
     render :new, layout: "application_agent"
   end
@@ -79,7 +79,7 @@ class Admin::InvitationsDeviseController < Devise::InvitationsController
     params[:roles_attributes]["0"][:organisation] = current_organisation
 
     if current_agent.conseiller_numerique?
-      params[:roles_attributes]["0"][:level] = AgentRole::LEVEL_BASIC
+      params[:roles_attributes]["0"][:access_level] = AgentRole::ACCESS_LEVEL_BASIC
     end
 
     # The omniauth uid _is_ the email, always. Note: this may be better suited in a hook in Agent.rb

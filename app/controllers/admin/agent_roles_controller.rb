@@ -19,7 +19,7 @@ class Admin::AgentRolesController < AgentAuthController
   private
 
   def agent_role_params
-    params.require(:agent_role).permit(:level)
+    params.require(:agent_role).permit(:access_level)
   end
 
   def set_agent_role

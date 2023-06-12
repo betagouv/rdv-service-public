@@ -162,12 +162,12 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
 
         it_behaves_like "an endpoint that returns 403 - forbidden", "l'agent·e est dans un service différent" do
           let!(:agent) { create(:agent, service: create(:service)) }
-          let!(:agent_role) { create(:agent_role, agent: agent, level: AgentRole::LEVEL_BASIC, organisation: organisation) }
+          let!(:agent_role) { create(:agent_role, agent: agent, access_level: AgentRole::ACCESS_LEVEL_BASIC, organisation: organisation) }
         end
 
         response 200, "Possible si l'agent est admin", document: false do
           let!(:agent) { create(:agent, service: create(:service)) }
-          let!(:agent_role) { create(:agent_role, agent: agent, level: AgentRole::LEVEL_ADMIN, organisation: organisation) }
+          let!(:agent_role) { create(:agent_role, agent: agent, access_level: AgentRole::ACCESS_LEVEL_ADMIN, organisation: organisation) }
 
           let(:created_absence) { Absence.find(parsed_response_body["absence"]["id"]) }
 
