@@ -39,6 +39,9 @@ class Users::RdvsController < UserAuthController
       notifier = Notifiers::RdvCreated.new(@rdv, current_user)
       notifier.perform
       set_user_name_initials_verified
+      if current_domain == Domain::RDV_MAIRIE
+        Ants::CreateAppointment.perform_later(rdv: @rdv, user: current_user)
+      end
       redirect_to users_rdv_path(@rdv, invitation_token: notifier.rdv_users_tokens_by_user_id[current_user.id]), notice: t(".rdv_confirmed")
     else
       query = {
