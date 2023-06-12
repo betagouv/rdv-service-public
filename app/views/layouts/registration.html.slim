@@ -8,6 +8,7 @@ html lang="fr"
     = csp_meta_tag
     = render "common/env"
     = stylesheet_link_tag    "application", media: "all", "data-turbolinks-track": "reload"
+    = stylesheet_link_tag "/marianne_font_face.css", "data-turbo-track": "reload"
     = javascript_include_tag "application", "data-turbolinks-track": "reload"
   main
     body.auth-fluid-pages.pb-0 class="#{agents_or_users_body_class}"
