@@ -1,18 +1,18 @@
-nav.navbar.navbar-expand-lg.bg-primary
+nav.navbar.navbar-expand-lg.primary
   = link_logo
   button.navbar-toggler.navbar-toggler-right aria-controls="navbarSupportedContent" aria-expanded="false" aria-label=("Toggle navigation") data-target="#navbarSupportedContent" data-toggle="collapse" type="button"
-    i.fa.fa-bars.text-white
+    i.fa.fa-bars.text-primary
   #navbarSupportedContent.collapse.navbar-collapse
     ul.navbar-nav.ml-auto.align-items-start.align-items-lg-center
       li.list-inline-item
-        = link_to users_rdvs_path, class: "btn btn-link text-white" do
+        = link_to users_rdvs_path, class: "btn btn-link text-primary" do
           i.far.fa-calendar>
           | Vos rendez-vous
       li.list-inline-item
-        = link_to "Vos informations", users_informations_path, class: "btn btn-link text-white"
+        = link_to "Vos informations", users_informations_path, class: "btn btn-link text-primary"
       li.list-inline-item
-        = link_to  "Votre compte", edit_user_registration_path , class: "btn btn-link text-white"
+        = link_to  "Votre compte", edit_user_registration_path , class: "btn btn-link text-primary"
       li.list-inline-item
-        = link_to destroy_user_session_path, method: :delete, class: "btn btn-link text-white" do
+        = link_to destroy_user_session_path, method: :delete, class: "btn btn-link text-primary" do
           span> Déconnexion
           i.fa.fa-sign-out-alt>

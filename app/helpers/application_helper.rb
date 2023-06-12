@@ -49,7 +49,7 @@ module ApplicationHelper
 
   def link_logo
     link_to root_path do
-      image_tag current_domain.logo_path, height: 40, alt: current_domain.name, class: "d-inline logo"
+      image_tag current_domain.dark_logo_path, height: 40, alt: current_domain.name, class: "d-inline logo"
     end
   end
 
