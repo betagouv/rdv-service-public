@@ -1,6 +1,6 @@
 = dsfr_header logo_text: "République<br>Française".html_safe, title: "" do |header|
   - header.with_operator_image title: "beta.gouv.fr", src: asset_path(current_domain.dark_logo_path), alt: "RDV Service Public"
-  - header.with_tool_link title: "Vos rendez-vous", path: users_rdvs_path, classes: "fr-icon-arrow-right-line"
-  - header.with_tool_link title: "Vos informations", path: users_informations_path, classes: "fr-fi-account-fill"
+  - header.with_tool_link title: "Vos rendez-vous", path: users_rdvs_path, classes: "fr-icon-calendar-event-line"
+  - header.with_tool_link title: "Vos informations", path: users_informations_path, classes: "fr-icon-article-line"
   - header.with_tool_link title: "Votre compte", path: edit_user_registration_path, classes: "fr-fi-account-fill"
-  - header.with_tool_link title: "Déconnexion", path: destroy_user_session_path, classes: "fr-fi-account-fill"
+  - header.with_tool_link title: "Déconnexion", path: destroy_user_session_path, classes: "fr-icon-arrow-right-line"
