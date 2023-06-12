@@ -11,26 +11,32 @@ describe "User can search rdv on rdv mairie" do
   let!(:lieu) { create(:lieu, organisation: organisation, name: "Mairie de Sannois", address: "15 Place du Général Leclerc, Sannois, 95110") }
   let(:user) { create(:user, email: "jeanmairie@example.com") }
   let(:ants_pre_demande_number) { "1122334455" }
-  let(:pre_demande_number_status_response) { { ants_pre_demande_number => { "status" => "validated" } } }
+  let(:invalid_ants_pre_demande_number) { "5544332211" }
+  let(:ants_api_url) { "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api" }
+  let(:ants_api_headers) do
+    {
+      "Accept" => "application/json",
+      "Expect" => "",
+      "User-Agent" => "Typhoeus - https://github.com/typhoeus/typhoeus",
+      "X-Rdv-Opt-Auth-Token" => ENV["ANTS_RDV_OPT_AUTH_TOKEN"],
+    }
+  end
+  let!(:stub_pre_demande_status_request) do
+    stub_request(:get, "#{ants_api_url}/status?application_ids=#{ants_pre_demande_number}")
+      .with(headers: ants_api_headers).to_return(body: { ants_pre_demande_number => { "status" => "validated" } }.to_json)
+  end
+  let!(:stub_invalid_ants_pre_demande_status_request) do
+    stub_request(:get, "#{ants_api_url}/status?application_ids=#{invalid_ants_pre_demande_number}")
+      .with(headers: ants_api_headers).to_return(body: { invalid_ants_pre_demande_number => { "status" => "consumed" } }.to_json)
+  end
 
   def json_response
     JSON.parse(page.html)
   end
 
   before do
-    ENV["ANTS_RDV_API_URL"] = "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr"
+    ENV["ANTS_RDV_API_URL"] = ants_api_url
     default_url_options[:host] = "http://www.rdv-mairie-test.localhost"
-
-    stub_request(:get, "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status?application_ids=#{ants_pre_demande_number}")
-      .with(
-        headers: {
-          "Accept" => "application/json",
-          "Expect" => "",
-          "User-Agent" => "Typhoeus - https://github.com/typhoeus/typhoeus",
-          "X-Rdv-Opt-Auth-Token" => ENV["ANTS_RDV_OPT_AUTH_TOKEN"],
-        }
-      ).to_return(status: 200, body: pre_demande_number_status_response.to_json, headers: {})
-
     travel_to(now)
     create(:plage_ouverture, :no_recurrence, first_day: now, motifs: [motif], lieu: lieu, organisation: organisation, start_time: Tod::TimeOfDay(9), end_time: Tod::TimeOfDay.new(10))
   end
@@ -82,11 +88,20 @@ describe "User can search rdv on rdv mairie" do
     click_button("Se connecter")
 
     expect(page).to have_field("Numéro de pré-demande ANTS")
+    check_ants_pre_demande_number_status
     fill_in("user_ants_pre_demande_number", with: ants_pre_demande_number)
     click_button("Continuer")
     click_button("Continuer")
+    expect(stub_pre_demande_status_request).to have_been_requested.at_least_once
     click_link("Confirmer mon RDV")
     expect(page).to have_content("Votre rendez vous a été confirmé.")
     expect(user.reload.ants_pre_demande_number).to eq(ants_pre_demande_number)
+  end
+
+  def check_ants_pre_demande_number_status
+    fill_in("user_ants_pre_demande_number", with: invalid_ants_pre_demande_number)
+    click_button("Continuer")
+    expect(stub_invalid_ants_pre_demande_status_request).to have_been_requested.at_least_once
+    expect(page).to have_content("Le numéro de pré-demande n'est pas valide")
   end
 end

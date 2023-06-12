@@ -11,7 +11,7 @@ class AntsApi
 
     def create_appointment(rdv:, user:)
       Typhoeus.post(
-        "#{ENV['ANTS_RDV_API_URL']}/api/appointments",
+        "#{ENV['ANTS_RDV_API_URL']}/appointments",
         params: {
           application_id: user.ants_pre_demande_number,
           management_url: rdvs_short_url(rdv, host: rdv.organisation.domain.host_name),
@@ -26,7 +26,7 @@ class AntsApi
 
     def request_pre_demande_number_status(pre_demande_number)
       response = Typhoeus.get(
-        "#{ENV['ANTS_RDV_API_URL']}/api/status?application_ids=#{pre_demande_number}",
+        "#{ENV['ANTS_RDV_API_URL']}/status?application_ids=#{pre_demande_number}",
         **headers
       )
 
