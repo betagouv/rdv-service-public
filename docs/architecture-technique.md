@@ -92,9 +92,9 @@ utilisent RDV Insertion utilisent ces webhooks.
 
 | Source     | Destination      | Protocole     | Port | Localisation        | Interne/URL Externe            |
 |------------|------------------|---------------|------|---------------------|--------------------------------|
-| Navigateur | FranceConnect    | HTTPS (OAuth) | 587  | Paris, France       | smtp-relay.sendinblue.com      |
-| Navigateur | InclusionConnect | HTTPS (OAuth) | 587  | France              | connect.inclusion.beta.gouv.fr |
-| Navigateur | GitHub           | HTTPS (OAuth) | 587  | USA                 | github.com                     |
+| Navigateur | FranceConnect    | HTTPS (OAuth) | 443  | Paris, France       | smtp-relay.sendinblue.com      |
+| Navigateur | InclusionConnect | HTTPS (OAuth) | 443  | France              | connect.inclusion.beta.gouv.fr |
+| Navigateur | GitHub           | HTTPS (OAuth) | 443  | USA                 | github.com                     |
 
 ### Inventaire des dépendances
 
@@ -120,11 +120,11 @@ La liste des librairies JS utilisée est disponible dans :
 Notre application est accessible sous 3 "marques" différentes :
 - https://www.rdv-solidarites.fr/
 - https://www.rdv-aide-numerique.fr/
-- https://www.rdv-mairie.fr/
+- https://rdv.anct.gouv.fr/
 
 Nous avons actuellement 3 instances :
 - `production-rdv-solidarites` : serveur de production pour `www.rdv-solidarites.fr` et `www.rdv-aide-numerique.fr`
-- `production-rdv-mairie` : serveur de production pour `www.rdv-mairie.fr`
+- `production-rdv-mairie` : serveur de production pour `rdv.anct.gouv.fr`
 - `demo-rdv-solidarites` : serveur de démo pour `demo.rdv-solidarites.fr`, `demo.rdv-aide-numerique.fr` et `demo.rdv-mairie.fr`
 
 ```mermaid
@@ -132,7 +132,7 @@ flowchart TD
     %% Domaines de prod
     www.rdv-solidarites.fr
     www.rdv-aide-numerique.fr
-    www.rdv-mairie.fr
+    rdv.anct.gouv.fr
 
     %% Domaines de demo
     demo.rdv-solidarites.fr
@@ -147,7 +147,7 @@ flowchart TD
     %% Relations domaine -> app
     www.rdv-solidarites.fr --> production-rdv-solidarites
     www.rdv-aide-numerique.fr --> production-rdv-solidarites
-    www.rdv-mairie.fr --> production-rdv-mairie
+    rdv.anct.gouv.fr --> production-rdv-mairie
     demo.rdv-solidarites.fr --> demo-rdv-solidarites
     demo.rdv-aide-numerique.fr --> demo-rdv-solidarites
     demo.rdv-mairie.fr --> demo-rdv-solidarites
@@ -155,7 +155,7 @@ flowchart TD
 
 `production-rdv-solidarites` est notre instance de production actuelle. Elle est représentée fidèlement dans les
 schémas ci-dessous. `production-rdv-mairie` est une nouvelle instance que nous venons de créer (mai 2023). Nous avons
-créé cette instance afin de séparer les données de la future plateforme `www.rdv-mairie.fr` de nos données existantes.
+créé cette instance afin de séparer les données de la future plateforme `rdv.anct.gouv.fr` de nos données existantes.
 
 L'instance `demo-rdv-solidarites` sert de plateforme de démo pour nos 3 domaines.
 
@@ -351,6 +351,8 @@ Afin de s'y connecter, il faut utiliser l'OAuth de GitHub. L'adresse e-mail alor
 présente dans une table `super_admins`, où les entrées sont crées et supprimées à la main lors de l'arrivée et
 du départ de membres de l'équipe;
 
+Tous les membres de l'équipe faisant partie de l'organisation betagouv sur Github, ils ont utilisent une authentification à 2 facteurs.
+
 ### Traçabilité des erreurs et des actions utilisateurs
 
 #### Logs textuels
@@ -431,6 +433,16 @@ Parmi les données que nous manipulons, les plus critiques sont :
 - les coordonnées des usager⋅es
 - l'historique des RDVs pris par une personne ainsi que le motif de ces RDV
 - le champs "contexte", un champs texte libre où les agents peuvent saisir des informations de contexte sur un RDV
+
+### Bonnes pratiques de sécurité au sein de l'équipe
+
+Lors de l'accueil d'un nouveau membre de l'équipe, on le forme à plusieurs bonnes pratiques de sécurité :
+- chiffrer son disque dur
+- Prendre l’habitude de verrouiller son écran dès qu’on est dans un lieu public (coworking, bureaux à Ourq, etc). Sous Mac OSX, nous recommandons l’usage des coins actifs.
+
+Pour les membres de l'équipe technique, on prend ces mesures supplémentaires :
+- [formation aux bonnes pratiques d'accès aux dumps de la production](docs/4-notes-techniques.md#Dumps-de-production)
+- activation de l'authentification à 2 facteur sur Scalingo
 
 #### Suppression automatique de données anciennes
 
