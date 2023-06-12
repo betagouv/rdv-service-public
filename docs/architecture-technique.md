@@ -77,7 +77,7 @@ Ces choix techniques sont aussi influencés par la culture de la communauté Rub
 | App Rails | API Microsoft       | HTTPS     | 443  | Paris, France | graph.microsoft.com                 |
 | App Rails | Netsize             | HTTPS     | 443  | France        | europe.ipx.com                      |
 | App Rails | SFR mail2SMS        | SMTP      | 587  | France        | @mailtosms.dmc.sfr-sh.fr            |
-| App Rails | Clever Technologies | HTTPS     | 587  | France        | webservicesmultimedias.clever-is.fr |
+| App Rails | Clever Technologies | HTTPS     | 443  | France        | webservicesmultimedias.clever-is.fr |
 
 Note : l'application permet aussi de définir des webhooks sortants, et donc d'appeler en HTTPS un service externe
 lors de la création, modification ou suppression de certaines données applicatives.
