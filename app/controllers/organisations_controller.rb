@@ -5,7 +5,7 @@ class OrganisationsController < ApplicationController
 
   def new
     @organisation = Organisation.new(territory: Territory.new)
-    @organisation.agent_roles.build(level: AgentRole::LEVEL_ADMIN)
+    @organisation.agent_roles.build(access_level: AgentRole::ACCESS_LEVEL_ADMIN)
     @organisation.agent_roles.first.build_agent
   end
 
@@ -30,7 +30,7 @@ class OrganisationsController < ApplicationController
     params.require(:organisation)
       .permit(
         :name,
-        agent_roles_attributes: [:level, { agent_attributes: %i[email service_id] }],
+        agent_roles_attributes: [:access_level, { agent_attributes: %i[email service_id] }],
         territory_attributes: [:departement_number]
       )
   end

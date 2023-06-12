@@ -11,7 +11,7 @@ describe OrganisationsController, type: :controller do
             departement_number: "56",
           },
           agent_roles_attributes: [{
-            level: "admin",
+            access_level: "admin",
             agent_attributes: {
               email: "me@myself.hi",
               service_id: service.id,
@@ -41,7 +41,7 @@ describe OrganisationsController, type: :controller do
             departement_number: "56",
           },
           agent_roles_attributes: [{
-            level: "admin",
+            access_level: "admin",
             agent_attributes: {
               email: "me@myself.hi",
               service_id: "unknow", # this is the error
