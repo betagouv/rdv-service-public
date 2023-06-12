@@ -18,6 +18,7 @@ describe "User can search rdv on rdv mairie" do
   end
 
   before do
+    ENV["ANTS_RDV_API_URL"] = "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr"
     default_url_options[:host] = "http://www.rdv-mairie-test.localhost"
 
     stub_request(:get, "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status?application_ids=#{ants_pre_demande_number}")
