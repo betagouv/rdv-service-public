@@ -13,6 +13,9 @@
     - else
       .card.mb-5
         .card-body
+          h1.text-primary-blue
+            | Statistiques
+            = " pour le #{@territory}" if @territory.present?
           h2.card-title Nombre de RDV par statut
           .row
             .col-lg-4

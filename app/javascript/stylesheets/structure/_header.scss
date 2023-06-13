@@ -1,0 +1,78 @@
+header {
+    box-shadow: 0px 3px 14px 0px $lightgrey;
+
+    .alert-warning,
+    .alert-info {
+        color: $gray-900;
+        background-color: $white;
+        border: 1px solid $gray-900;
+        border-radius: 0;
+    }
+}
+
+.header-brand {
+    a {
+        width: 10rem;
+    }
+}
+
+.navbar-dsfr {
+    padding: .8rem 0;
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    align-items: center;
+    flex-grow: inherit;
+
+    .link-connect {
+        font-size: .875rem;
+    }
+}
+
+.logo-dsfr {
+    max-height: 3.3rem;
+    padding: 0.3rem;
+}
+
+.logo-brand {
+    padding: 0.3rem;
+    max-width: 6rem;
+}
+
+.link-dsfr {
+    padding: 0.5rem;
+    font-size: .875rem;
+    line-height: 1.5rem;
+    color: $blue;
+    border: 2px solid transparent;
+
+    &:hover {
+        background-color: rgb(246, 246, 246);
+    }
+
+    &:focus {
+        border: 2px solid $focus-dsfr;
+        box-shadow: none;
+    }
+}
+
+// Responsive Mobile
+
+@media (max-width: 991px) {
+    .navbar-dsfr {
+        align-items: flex-start;
+    }
+
+    .header-brand {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .link-dsfr {
+        margin-bottom: 1rem;
+    }
+}
