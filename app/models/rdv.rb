@@ -56,7 +56,8 @@ class Rdv < ApplicationRecord
   has_one :territory, through: :organisation
 
   # Delegates
-  delegate :home?, :phone?, :public_office?, :bookable_by_everyone?, :bookable_by_everyone_or_bookable_by_invited_users?, :service_social?, :follow_up?, :service, :collectif?, :collectif, :individuel?, to: :motif
+  delegate :home?, :phone?, :public_office?, :bookable_by_everyone?,
+           :bookable_by_everyone_or_bookable_by_invited_users?, :service_social?, :follow_up?, :service, :collectif?, :collectif, :individuel?, to: :motif
 
   alias_attribute :soft_deleted?, :deleted_at?
 
