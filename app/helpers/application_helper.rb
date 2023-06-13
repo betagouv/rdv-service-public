@@ -53,6 +53,12 @@ module ApplicationHelper
     end
   end
 
+  def link_logo_dsfr
+    link_to root_path do
+      image_tag current_domain.dark_logo_path, alt: current_domain.name, class: "logo-dsfr"
+    end
+  end
+
   def errors_full_messages(object)
     errors = object.respond_to?(:not_benign_errors) ? object.not_benign_errors : object.errors
     errors.map do |error|

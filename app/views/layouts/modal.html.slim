@@ -2,7 +2,7 @@
   .modal-dialog class=(content_for(:modal_class) || "modal-md")
     .modal-content
       .modal-header.modal-colored-header.bg-primary
-        h4#mainModalLabel.modal-title.m-0.text-white.text-center.w-100
+        #mainModalLabel.modal-title.m-0.text-white.text-center.w-100
           = yield :title if content_for? :title
         button.close.text-white aria-hidden="true" data-dismiss="modal" type="button"  ×
       .modal-body

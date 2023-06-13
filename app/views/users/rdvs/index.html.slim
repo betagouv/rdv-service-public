@@ -2,12 +2,11 @@
   .col-md-6
     h1.text-dark.mb-3 Vos rendez-vous
     div.mb-3
-      .float-right
-        = render "prendre_rdv_button"
+      = render "prendre_rdv_button"
       - if params[:past].present?
         = link_to "Voir vos prochains RDV", users_rdvs_path, class: "btn btn-outline-primary"
       - else
-        = link_to "Voir vos RDV passés", users_rdvs_path(past: true), class: "btn btn-outline-primary"
+        = link_to "Voir vos RDV passés", users_rdvs_path(past: true), class: "btn btn-outline-primary mb-2"
 
     - if @rdvs.any?
           - @rdvs.each do |rdv|

@@ -1,13 +1,10 @@
-- content_for :header
-  section.pb-0.py-5
-    .container
-      .row
-        .col-md-9.m-auto
-          h1.mb-3.text-white
-            span.text-secondary> Gérez les rendez-vous
-            | de votre département
-          .mt-5= link_to "Se connecter en tant qu'agent", new_agent_session_path, class: "btn btn-outline-white"
-
+section.py-5.text-white.bg-primary
+  .container
+    .row
+      .col-md-9.m-auto
+        h1.mb-3
+          span> Gérez les rendez-vous de votre département
+        .mt-5= link_to "Se connecter en tant qu'agent", new_agent_session_path, class: "btn text-white btn-outline-white bg-primary"
 section.py-5.bg-lightturquoise.text-primary
   .container
     .row
