@@ -201,7 +201,7 @@ class SearchContext
     motifs = if @prescripteur
                motifs.where(bookable_by: %i[agents_and_prescripteurs agents_and_prescripteurs_and_invited_users everyone])
              elsif invitation?
-               motifs.bookable_by_everyone_or_invited
+               motifs.bookable_by_everyone_or_bookable_by_invited_users
              else
                motifs.bookable_by_everyone
              end
