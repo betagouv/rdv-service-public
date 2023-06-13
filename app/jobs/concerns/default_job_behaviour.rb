@@ -25,12 +25,12 @@ module DefaultJobBehaviour
     around_perform do |job, block|
       block.call
     rescue StandardError => e
-      Sentry.capture_exception(e) if job.log_failure_to_sentry?
+      Sentry.capture_exception(e) if job.log_failure_to_sentry?(e)
       raise # will be caught by the retry mechanism
     end
   end
 
-  def log_failure_to_sentry?
+  def log_failure_to_sentry?(_exception)
     true
   end
 end

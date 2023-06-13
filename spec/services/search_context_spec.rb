@@ -98,7 +98,7 @@ describe SearchContext, type: :service do
 
       context "when there are no matching motifs for the geo search" do
         before do
-          allow(Motif).to receive(:available_with_plages_ouvertures)
+          allow(Motif).to receive(:available_for_booking)
             .and_return(Motif.where(id: motif2.id))
           search_query[:invitation_token] = invitation_token
           search_query[:motif_category_short_name] = "rsa_orientation_on_phone_platform"

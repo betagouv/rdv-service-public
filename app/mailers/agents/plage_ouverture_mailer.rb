@@ -32,6 +32,6 @@ class Agents::PlageOuvertureMailer < ApplicationMailer
   end
 
   def default_from
-    SECRETARIAT_EMAIL
+    domain.secretariat_email
   end
 end

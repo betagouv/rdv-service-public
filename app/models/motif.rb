@@ -41,11 +41,12 @@ class Motif < ApplicationRecord
   belongs_to :service
   belongs_to :motif_category, optional: true
   has_many :rdvs, dependent: :restrict_with_exception
-  has_and_belongs_to_many :plage_ouvertures, -> { distinct }
+  has_many :motifs_plage_ouvertures, dependent: :delete_all
 
   # Through relations
   has_many :lieux, through: :plage_ouvertures
   has_many :webhook_endpoints, through: :organisation
+  has_many :plage_ouvertures, -> { distinct }, through: :motifs_plage_ouvertures
 
   # Delegates
   delegate :service_social?, to: :service
@@ -76,7 +77,14 @@ class Motif < ApplicationRecord
   scope :by_phone, -> { Motif.phone } # default scope created by enum
   scope :for_secretariat, -> { where(for_secretariat: true) }
   scope :ordered_by_name, -> { order(Arel.sql("unaccent(LOWER(motifs.name))")) }
-  scope :available_with_plages_ouvertures, -> { active.bookable_by_everyone_or_bookable_by_invited_users.joins(:organisation, :plage_ouvertures) }
+  scope :available_for_booking, lambda {
+    where_id_in_subqueries(
+      [
+        individuel.active.bookable_by_everyone_or_bookable_by_invited_users.joins(:organisation, :plage_ouvertures).select(:id),
+        Rdv.collectif_and_available_for_reservation.select(:motif_id),
+      ]
+    )
+  }
   scope :available_motifs_for_organisation_and_agent, lambda { |organisation, agent|
     available_motifs = if agent.admin_in_organisation?(organisation)
                          all

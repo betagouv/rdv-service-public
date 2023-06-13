@@ -9,7 +9,7 @@ describe "Agents can try the user-facing online booking pages" do
     motif.plage_ouvertures << create(:plage_ouverture, organisation: organisation, agent: agent)
   end
 
-  it "shows the online booking forms, until" do
+  it "shows the online booking forms, until the creneau selection" do
     login_as(agent, scope: :agent)
     visit public_link_to_org_path(organisation_id: organisation.id)
     expect(page).to have_content("Sélectionnez le service avec qui vous voulez prendre un RDV")
@@ -17,5 +17,11 @@ describe "Agents can try the user-facing online booking pages" do
     expect(page).to have_content("Sélectionnez un lieu de RDV :")
     click_link("Prochaine disponibilité")
     expect(page).to have_content("Sélectionnez un créneau :")
+  end
+
+  it "works on the RDV_MAIRIE domain" do
+    login_as(agent, scope: :agent)
+    visit "http://www.rdv-mairie-test.localhost/#{public_link_to_org_path(organisation_id: organisation.id)}"
+    expect(page).to have_content("Sélectionnez le service avec qui vous voulez prendre un RDV")
   end
 end

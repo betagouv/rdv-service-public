@@ -10,12 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_29_091214) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_12_092945) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
   enable_extension "unaccent"
   enable_extension "uuid-ossp"
+
+  create_enum :access_level, [
+    "admin",
+    "basic",
+  ], force: :cascade
 
   create_enum :agents_absence_notification_level, [
     "all",
@@ -135,9 +140,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_29_091214) do
   create_table "agent_roles", force: :cascade do |t|
     t.bigint "agent_id", null: false
     t.bigint "organisation_id", null: false
-    t.string "level", default: "basic", null: false
+    t.enum "access_level", default: "basic", null: false, enum_type: "access_level"
+    t.index ["access_level"], name: "index_agent_roles_on_access_level"
     t.index ["agent_id"], name: "index_agent_roles_on_agent_id"
-    t.index ["level"], name: "index_agent_roles_on_level"
     t.index ["organisation_id", "agent_id"], name: "index_agent_roles_on_organisation_id_and_agent_id", unique: true
     t.index ["organisation_id"], name: "index_agent_roles_on_organisation_id"
   end
@@ -667,6 +672,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_29_091214) do
     t.string "address_details"
     t.integer "logement"
     t.text "notes"
+    t.string "ants_pre_demande_number"
     t.index ["birth_date"], name: "index_users_on_birth_date"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["created_through"], name: "index_users_on_created_through"

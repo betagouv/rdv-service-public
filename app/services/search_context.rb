@@ -245,7 +245,7 @@ class SearchContext
         # we retrieve the geolocalised matching motifs, if there are none we fallback
         # on the matching motifs for the organisations passed in the query
         filter_motifs(geo_search.available_motifs).presence || filter_motifs(
-          Motif.available_with_plages_ouvertures.where(organisation_id: @preselected_organisation_ids)
+          Motif.available_for_booking.where(organisation_id: @preselected_organisation_ids)
         )
       else
         filter_motifs(geo_search.available_motifs)

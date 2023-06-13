@@ -15,7 +15,7 @@ tr id="agent_#{agent.id}"
   td
     = agent.service&.name
   td.text-nowrap
-    span>= agent_role.human_attribute_value(:level)
+    span>= agent_role.human_attribute_value(:access_level)
     - if agent_role.admin?
       i.fa.fa-user-cog
   td

@@ -59,7 +59,7 @@ agent_cnfs = Agent.new(
   password: "123456",
   service_id: service_cnfs.id,
   invitation_accepted_at: 1.day.ago,
-  roles_attributes: [{ organisation: org_cnfs, level: AgentRole::LEVEL_ADMIN }],
+  roles_attributes: [{ organisation: org_cnfs, access_level: AgentRole::ACCESS_LEVEL_ADMIN }],
   agent_territorial_access_rights_attributes: [{
     territory: territory_cnfs,
     allow_to_manage_teams: false,

@@ -12,7 +12,7 @@ class MairieCompteDashboard < Administrate::BaseDashboard
   ATTRIBUTE_TYPES = {
     id: Field::Number,
     name: Field::String,
-    address: Field::String,
+    address: PlacesField,
     agent_email: Field::String,
     agent_first_name: Field::String,
     agent_last_name: Field::String,

@@ -46,7 +46,7 @@ module SuperAdmins
         last_name: resource_params[:agent_last_name],
         service: service,
         password: SecureRandom.hex,
-        roles_attributes: [{ organisation: organisation, level: AgentRole::LEVEL_ADMIN }],
+        roles_attributes: [{ organisation: organisation, access_level: AgentRole::ACCESS_LEVEL_ADMIN }],
         invited_by: current_super_admin
       )
     end
@@ -55,7 +55,7 @@ module SuperAdmins
       Motif.create!(
         name: "Passeport / Carte d'identité",
         color: "#99CC99",
-        default_duration_in_min: 30,
+        default_duration_in_min: 15,
         location_type: :public_office,
         organisation: organisation,
         service: service,

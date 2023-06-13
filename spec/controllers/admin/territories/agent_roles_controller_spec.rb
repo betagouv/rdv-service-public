@@ -6,10 +6,10 @@ describe Admin::Territories::AgentRolesController, type: :controller do
       territory = create(:territory)
       agent = create(:agent, role_in_territories: [territory])
       create(:agent_territorial_access_right, allow_to_manage_teams: true, agent: agent)
-      agent_role = create(:agent_role, agent: agent, level: "basic")
+      agent_role = create(:agent_role, agent: agent, access_level: "basic")
       sign_in agent
 
-      post :update, params: { territory_id: territory.id, id: agent_role.id, agent_role: { level: "admin" } }
+      post :update, params: { territory_id: territory.id, id: agent_role.id, agent_role: { access_level: "admin" } }
       expect(response).to redirect_to(edit_admin_territory_agent_path(territory, agent))
     end
 
@@ -17,12 +17,12 @@ describe Admin::Territories::AgentRolesController, type: :controller do
       territory = create(:territory)
       agent = create(:agent, role_in_territories: [territory])
       create(:agent_territorial_access_right, allow_to_manage_teams: true, agent: agent)
-      agent_role = create(:agent_role, agent: agent, level: "basic")
+      agent_role = create(:agent_role, agent: agent, access_level: "basic")
       sign_in agent
 
       expect do
-        post :update, params: { territory_id: territory.id, id: agent_role.id, agent_role: { level: "admin" } }
-      end.to change { agent_role.reload.level }.from(AgentRole::LEVEL_BASIC).to(AgentRole::LEVEL_ADMIN)
+        post :update, params: { territory_id: territory.id, id: agent_role.id, agent_role: { access_level: "admin" } }
+      end.to change { agent_role.reload.access_level }.from(AgentRole::ACCESS_LEVEL_BASIC).to(AgentRole::ACCESS_LEVEL_ADMIN)
     end
   end
 
@@ -35,7 +35,7 @@ describe Admin::Territories::AgentRolesController, type: :controller do
       other_agent = create(:agent, organisations: [])
       sign_in agent
 
-      post :create, params: { territory_id: territory.id, agent_role: { level: "admin", agent_id: other_agent.id, organisation_id: organisation.id } }
+      post :create, params: { territory_id: territory.id, agent_role: { access_level: "admin", agent_id: other_agent.id, organisation_id: organisation.id } }
       expect(response).to redirect_to(edit_admin_territory_agent_path(territory, other_agent))
     end
   end
@@ -47,12 +47,12 @@ describe Admin::Territories::AgentRolesController, type: :controller do
       organisation2 = create(:organisation, territory: territory)
       agent = create(:agent, role_in_territories: [territory])
       create(:agent_territorial_access_right, territory: territory, agent: agent)
-      agent_role = create(:agent_role, organisation: organisation, agent: agent, level: "basic")
-      create(:agent_role, organisation: organisation2, agent: agent, level: "basic")
+      agent_role = create(:agent_role, organisation: organisation, agent: agent, access_level: "basic")
+      create(:agent_role, organisation: organisation2, agent: agent, access_level: "basic")
 
       last_agent = create(:agent)
       create(:agent_territorial_access_right, territory: territory, agent: last_agent)
-      create(:agent_role, organisation: organisation, agent: last_agent, level: "admin")
+      create(:agent_role, organisation: organisation, agent: last_agent, access_level: "admin")
 
       sign_in agent
 
@@ -65,11 +65,11 @@ describe Admin::Territories::AgentRolesController, type: :controller do
       organisation = create(:organisation, territory: territory)
       agent = create(:agent, role_in_territories: [territory])
       create(:agent_territorial_access_right, territory: territory, agent: agent)
-      agent_role = create(:agent_role, organisation: organisation, agent: agent, level: "basic")
+      agent_role = create(:agent_role, organisation: organisation, agent: agent, access_level: "basic")
 
       last_agent = create(:agent)
       create(:agent_territorial_access_right, territory: territory, agent: last_agent)
-      create(:agent_role, organisation: organisation, agent: last_agent, level: "admin")
+      create(:agent_role, organisation: organisation, agent: last_agent, access_level: "admin")
 
       sign_in agent
 
@@ -82,12 +82,12 @@ describe Admin::Territories::AgentRolesController, type: :controller do
       organisation = create(:organisation, territory: territory)
       agent = create(:agent, role_in_territories: [territory])
       create(:agent_territorial_access_right, territory: territory, agent: agent)
-      agent_role = create(:agent_role, organisation: organisation, agent: agent, level: "basic")
+      agent_role = create(:agent_role, organisation: organisation, agent: agent, access_level: "basic")
 
       # Il doit toujours y avoir un dernier admin dans une organisation pour le moment
       last_agent = create(:agent)
       create(:agent_territorial_access_right, territory: territory, agent: last_agent)
-      create(:agent_role, organisation: organisation, agent: last_agent, level: "admin")
+      create(:agent_role, organisation: organisation, agent: last_agent, access_level: "admin")
 
       sign_in agent
 

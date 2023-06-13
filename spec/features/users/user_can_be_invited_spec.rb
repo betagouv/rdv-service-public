@@ -205,8 +205,14 @@ describe "User can be invited" do
 
   describe "when no motifs found through geo search" do
     let!(:geo_search) { instance_double(Users::GeoSearch, available_motifs: Motif.none) }
-    let!(:motif2) { create(:motif, name: "RSA orientation telephone", bookable_by: "agents_and_prescripteurs_and_invited_users", organisation: organisation2, service: agent.service) }
-    let!(:plage_ouverture2) { create(:plage_ouverture, motifs: [motif2], organisation: organisation2) }
+    let!(:second_motif) do
+      create(:motif, name: "RSA orientation telephone", bookable_by: "agents_and_prescripteurs_and_invited_users", organisation: organisation2, service: agent.service)
+    end
+    let!(:second_plage_ouverture) { create(:plage_ouverture, motifs: [second_motif], organisation: organisation2) }
+    let!(:collectif_motif) do
+      create(:motif, name: "RSA orientation collectif", collectif: true, bookable_by: "agents_and_prescripteurs_and_invited_users", organisation: organisation, service: agent.service)
+    end
+    let!(:collectif_rdv) { create(:rdv, motif: collectif_motif, starts_at: 1.week.from_now, max_participants_count: 10) }
 
     before do
       travel_to(now)
@@ -222,7 +228,8 @@ describe "User can be invited" do
     it "shows the organisations available motifs", js: true do
       # Motif selection
       expect(page).to have_content(motif.name)
-      expect(page).to have_content(motif2.name)
+      expect(page).to have_content(second_motif.name)
+      expect(page).to have_content(collectif_motif.name)
     end
   end
 end

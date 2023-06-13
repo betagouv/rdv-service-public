@@ -365,7 +365,7 @@ agent_org_paris_nord_pmi_martine = Agent.new(
   password: "123456",
   service_id: service_pmi.id,
   invitation_accepted_at: 10.days.ago,
-  roles_attributes: [{ organisation: org_paris_nord, level: AgentRole::LEVEL_ADMIN }],
+  roles_attributes: [{ organisation: org_paris_nord, access_level: AgentRole::ACCESS_LEVEL_ADMIN }],
   agent_territorial_access_rights_attributes: [{
     territory: territory75,
     allow_to_manage_teams: true,
@@ -386,7 +386,7 @@ agent_org_paris_nord_pmi_marco = Agent.new(
   password: "123456",
   service_id: service_pmi.id,
   invitation_accepted_at: 10.days.ago,
-  roles_attributes: [{ organisation: org_paris_nord, level: AgentRole::LEVEL_BASIC }],
+  roles_attributes: [{ organisation: org_paris_nord, access_level: AgentRole::ACCESS_LEVEL_BASIC }],
   agent_territorial_access_rights_attributes: [{
     territory: territory75,
     allow_to_manage_teams: false,
@@ -406,7 +406,7 @@ agent_org_paris_nord_social_polo = Agent.new(
   password: "123456",
   service_id: service_social.id,
   invitation_accepted_at: 10.days.ago,
-  roles_attributes: [{ organisation: org_paris_nord, level: AgentRole::LEVEL_BASIC }],
+  roles_attributes: [{ organisation: org_paris_nord, access_level: AgentRole::ACCESS_LEVEL_BASIC }],
   agent_territorial_access_rights_attributes: [{
     territory: territory75,
     allow_to_manage_teams: false,
@@ -426,7 +426,7 @@ org_arques_pmi_maya = Agent.new(
   password: "123456",
   service_id: service_pmi.id,
   invitation_accepted_at: 10.days.ago,
-  roles_attributes: Organisation.where(territory: territory62).pluck(:id).map { { organisation_id: _1, level: AgentRole::LEVEL_ADMIN } },
+  roles_attributes: Organisation.where(territory: territory62).pluck(:id).map { { organisation_id: _1, access_level: AgentRole::ACCESS_LEVEL_ADMIN } },
   agent_territorial_access_rights_attributes: [{
     territory: territory62,
     allow_to_manage_teams: true,
@@ -446,7 +446,7 @@ agent_org_bapaume_pmi_bruno = Agent.new(
   password: "123456",
   service_id: service_pmi.id,
   invitation_accepted_at: 10.days.ago,
-  roles_attributes: [{ organisation: org_bapaume, level: AgentRole::LEVEL_ADMIN }],
+  roles_attributes: [{ organisation: org_bapaume, access_level: AgentRole::ACCESS_LEVEL_ADMIN }],
   agent_territorial_access_rights_attributes: [{
     territory: territory62,
     allow_to_manage_teams: false,
@@ -467,7 +467,7 @@ agent_org_bapaume_pmi_gina = Agent.new(
   password: "123456",
   service_id: service_pmi.id,
   invitation_accepted_at: 10.days.ago,
-  roles_attributes: [{ organisation: org_bapaume, level: AgentRole::LEVEL_ADMIN }],
+  roles_attributes: [{ organisation: org_bapaume, access_level: AgentRole::ACCESS_LEVEL_ADMIN }],
   agent_territorial_access_rights_attributes: [{
     territory: territory62,
     allow_to_manage_teams: false,

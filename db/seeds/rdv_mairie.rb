@@ -42,7 +42,7 @@ agent_mairie_de_sannois = Agent.new(
   service_id: service_titres.id,
   invitation_accepted_at: 10.days.ago,
   roles_attributes: [
-    { organisation: org_mairie_de_sannois, level: AgentRole::LEVEL_ADMIN },
+    { organisation: org_mairie_de_sannois, access_level: AgentRole::ACCESS_LEVEL_ADMIN },
   ],
   agent_territorial_access_rights_attributes: [
     { territory: territory_val_doise, allow_to_manage_teams: true },
