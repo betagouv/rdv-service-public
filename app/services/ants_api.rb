@@ -25,12 +25,12 @@ class AntsApi
     private
 
     def request_pre_demande_number_status(pre_demande_number)
-      response = Typhoeus.get(
+      response_body = Typhoeus.get(
         "#{ENV['ANTS_RDV_API_URL']}/status?application_ids=#{pre_demande_number}",
         **headers
-      )
+      ).response_body
 
-      JSON.parse(response.response_body)
+      JSON.parse(response_body)
     end
 
     def headers
