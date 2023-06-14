@@ -1,5 +1,5 @@
 // Used in admin/motifs/_form.html.slim:
-// the checkboxes created by simpleform have the classes “motif_for_secretariat” and “motif_bookable_publicly”
+// the checkboxes created by simpleform have the classes “motif_for_secretariat” and “motif_bookable_by_xxx”
 class MotifForm {
 
   toggleSecretariat() {
@@ -50,16 +50,6 @@ class MotifForm {
     document.querySelector("#motif_rdvs_editable_by_user").checked = enabled
   }
 
-  toggleRdvInsertionNotifsDivs = () => {
-    // Specifique RDV-I temporaire
-    const selectedValue = this.motifCategorySelect?.value;
-    const hiddenDivs = document.getElementsByClassName('rdv-insertion-notif-hint');
-
-    Array.from(hiddenDivs).forEach(div => {
-      div.style.display = (selectedValue != "" && selectedValue != undefined) ? 'block' : 'none';
-    });
-  }
-
   constructor() {
     this.secretariatCheckbox = document.querySelector('#motif_for_secretariat')
     this.bookableByAgentsButton = document.querySelector('#motif_bookable_by_agents')
@@ -85,14 +75,6 @@ class MotifForm {
     this.toggleSecretariat()
     if (document.querySelector(".js-sectorisation-card") !== null) { this.toggleSectorisation() }
     this.toggleOnlineSubFields()
-
-    // Specifique RDV-I temporaire
-    document.addEventListener('turbolinks:load', this.toggleRdvInsertionNotifsDivs);
-
-    this.motifCategorySelect = document.getElementById('motif_motif_category_id')
-    if (this.motifCategorySelect) {
-      this.motifCategorySelect.addEventListener('change', this.toggleRdvInsertionNotifsDivs)
-    }
   }
 
 }

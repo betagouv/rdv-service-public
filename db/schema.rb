@@ -43,6 +43,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_12_092945) do
     "agents",
     "agents_and_prescripteurs",
     "everyone",
+    "agents_and_prescripteurs_and_invited_users",
   ], force: :cascade
 
   create_enum :created_by, [

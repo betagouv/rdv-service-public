@@ -73,9 +73,9 @@ class Admin::MotifsController < AgentAuthController
 
   def online_filtered(motifs, online_filter)
     if online_filter == "En ligne"
-      motifs.bookable_publicly
+      motifs.bookable_by_everyone_or_bookable_by_invited_users
     else
-      motifs.not_bookable_publicly
+      motifs.not_bookable_by_everyone_or_not_bookable_by_invited_users
     end
   end
 

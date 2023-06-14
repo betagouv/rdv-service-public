@@ -24,10 +24,10 @@ RSpec.describe SearchController, type: :controller do
   let!(:rsa_orientation) { create(:motif_category, name: "RSA orientation sur site", short_name: "rsa_orientation") }
   let!(:rsa_orientation_on_phone_platform) { create(:motif_category, name: "RSA orientation sur plateforme téléphonique", short_name: "rsa_orientation_on_phone_platform") }
 
-  let!(:motif) { create(:motif, name: "RSA orientation 1", service: service, motif_category: rsa_orientation, bookable_publicly: true, organisation: organisation) }
-  let!(:motif2) { create(:motif, name: "RSA orientation 2", service: service, motif_category: rsa_orientation_on_phone_platform, bookable_publicly: true, organisation: organisation) }
-  let!(:motif3) { create(:motif, name: "RSA orientation 3", service: service, bookable_publicly: true, organisation: other_org) }
-  let!(:motif4) { create(:motif, name: "Motif numéro 4", service: service, bookable_publicly: true, organisation: other_org) }
+  let!(:motif) { create(:motif, name: "RSA orientation 1", service: service, motif_category: rsa_orientation, organisation: organisation) }
+  let!(:motif2) { create(:motif, name: "RSA orientation 2", service: service, motif_category: rsa_orientation_on_phone_platform, organisation: organisation) }
+  let!(:motif3) { create(:motif, name: "RSA orientation 3", service: service, organisation: other_org) }
+  let!(:motif4) { create(:motif, name: "Motif numéro 4", service: service, organisation: other_org) }
 
   let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, organisation: organisation) }
   let!(:plage_ouverture2) { create(:plage_ouverture, motifs: [motif2], lieu: lieu2, organisation: organisation) }

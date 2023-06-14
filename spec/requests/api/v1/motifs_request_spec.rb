@@ -102,18 +102,20 @@ describe "RDV authentified API", swagger_doc: "v1/api.json" do
         end
 
         response 200, "Renvoie les motifs filtrés sur bookable_publicly true", document: false do
-          let!(:motif1) { create(:motif, organisation: organisation, service: service, bookable_publicly: true) }
-          let!(:motif2) { create(:motif, organisation: organisation, service: service, bookable_publicly: false) }
+          let!(:motif1) { create(:motif, organisation: organisation, service: service, bookable_by: :everyone) }
+          let!(:motif2) { create(:motif, organisation: organisation, service: service, bookable_by: :agents) }
+          let!(:motif3) { create(:motif, organisation: organisation, service: service, bookable_by: :agents_and_prescripteurs_and_invited_users) }
           let(:bookable_publicly) { true }
 
           run_test!
 
-          it { expect(parsed_response_body["motifs"].pluck("id")).to contain_exactly(motif1.id) }
+          it { expect(parsed_response_body["motifs"].pluck("id")).to contain_exactly(motif1.id, motif3.id) }
         end
 
         response 200, "Renvoie les motifs filtrés sur bookable_publicly false", document: false do
-          let!(:motif1) { create(:motif, organisation: organisation, service: service, bookable_publicly: true) }
-          let!(:motif2) { create(:motif, organisation: organisation, service: service, bookable_publicly: false) }
+          let!(:motif1) { create(:motif, organisation: organisation, service: service, bookable_by: :everyone) }
+          let!(:motif2) { create(:motif, organisation: organisation, service: service, bookable_by: :agents) }
+          let!(:motif3) { create(:motif, organisation: organisation, service: service, bookable_by: :agents_and_prescripteurs_and_invited_users) }
           let(:bookable_publicly) { false }
 
           run_test!

@@ -26,7 +26,7 @@ motif_passeport = Motif.create!(
   color: "#00ffff",
   default_duration_in_min: 30,
   organisation: org_mairie_de_sannois,
-  bookable_publicly: true,
+  bookable_by: :everyone,
   max_public_booking_delay: 2_629_746,
   service: service_titres,
   for_secretariat: true
