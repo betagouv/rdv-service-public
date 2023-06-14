@@ -32,7 +32,7 @@ module Ants
         application_id: users.first.ants_pre_demande_number,
         meeting_point: lieu.name,
         appointment_date: starts_at.strftime("%Y-%m-%d %H:%M:%S"),
-        management_url: rdvs_short_url(self, host: organisation.domain.host_name)
+        management_url: rdvs_short_url(self, host: organisation.domain.host_name),
       }
     end
   end

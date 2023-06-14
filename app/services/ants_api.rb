@@ -14,7 +14,7 @@ class AntsApi
           application_id: application_id,
           meeting_point: meeting_point,
           appointment_date: appointment_date,
-          management_url: management_url
+          management_url: management_url,
         },
         headers: headers
       )
@@ -28,7 +28,7 @@ class AntsApi
           meeting_point: meeting_point,
           appointment_date: appointment_date,
         },
-        headers: headers,
+        headers: headers
       )
     end
 
@@ -54,7 +54,7 @@ class AntsApi
       {
         application_id: user.ants_pre_demande_number,
         meeting_point: rdv.lieu.name,
-        appointment_date: rdv.starts_at.strftime("%Y-%m-%d %H:%M:%S")
+        appointment_date: rdv.starts_at.strftime("%Y-%m-%d %H:%M:%S"),
       }
     end
   end
