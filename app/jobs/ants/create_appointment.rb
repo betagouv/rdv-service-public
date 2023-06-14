@@ -2,8 +2,8 @@
 
 module Ants
   class CreateAppointment < ApplicationJob
-    def perform(rdv:, user:)
-      AntsApi.create_appointment(rdv: rdv, user: user)
+    def perform(rdv_params)
+      AntsApi.create_appointment(**rdv_params)
     end
   end
 end
