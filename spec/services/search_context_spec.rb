@@ -4,10 +4,6 @@ describe SearchContext, type: :service do
   subject { described_class.new(user: user, query: search_query) }
 
   let!(:user) { create(:user, organisations: [organisation]) }
-  let!(:invitation_token) do
-    user.invite! { |u| u.skip_invitation = true }
-    user.raw_invitation_token
-  end
   let!(:organisation) { create(:organisation) }
   let!(:service) { create(:service) }
   let!(:rsa_orientation) { create(:motif_category, name: "RSA orientation sur site", short_name: "rsa_orientation") }
