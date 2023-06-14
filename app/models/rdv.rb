@@ -50,7 +50,7 @@ class Rdv < ApplicationRecord
   end
 
   # Through relations
-  has_many :agents, through: :agents_rdvs, dependent: :destroy
+  has_many :agents, through: :agents_rdvs, dependent: :destroy, validate: false
   has_many :users, through: :rdvs_users, validate: false
   has_many :webhook_endpoints, through: :organisation
   has_one :territory, through: :organisation
@@ -70,6 +70,7 @@ class Rdv < ApplicationRecord
   validates :rdvs_users, presence: true, unless: :collectif?
   validates :status, inclusion: { in: COLLECTIVE_RDV_STATUSES }, if: :collectif?
 
+  validates_associated :agents, if: :agents_are_not_intervenants?
   # Hooks
   after_save :associate_users_with_organisation
   after_commit :update_agents_unknown_past_rdv_count, if: -> { past? }
@@ -116,6 +117,10 @@ class Rdv < ApplicationRecord
   delegate :name, to: :motif, prefix: true
 
   ## -
+
+  def agents_are_not_intervenants?
+    agents.present? && agents.flat_map(&:roles).to_a.all? { |role| role.access_level != "intervenant" }
+  end
 
   def self.ongoing(time_margin: 0.minutes)
     where("starts_at <= ?", Time.zone.now + time_margin)

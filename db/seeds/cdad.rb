@@ -72,9 +72,7 @@ cdad_agent.territorial_roles.create!(territory: territory_gironde)
 
 # Intervenants
 
-cdad_intervenant1 = Intervenant.create!(
-  email: "",
-  uid: "",
+cdad_intervenant1 = Agent.new(
   first_name: "#1",
   last_name: "Avocat",
   service_id: service_cdad.id,
@@ -82,10 +80,10 @@ cdad_intervenant1 = Intervenant.create!(
     { organisation: org_cdad1, access_level: AgentRole::ACCESS_LEVEL_INTERVENANT },
   ],
 )
+cdad_intervenant1.skip_confirmation!
+cdad_intervenant1.save(validate: false)
 
-cdad_intervenant2 = Intervenant.create!(
-  email: "",
-  uid: "",
+cdad_intervenant2 = Agent.new(
   first_name: "#2",
   last_name: "Avocat",
   service_id: service_cdad.id,
@@ -93,10 +91,10 @@ cdad_intervenant2 = Intervenant.create!(
     { organisation: org_cdad1, access_level: AgentRole::ACCESS_LEVEL_INTERVENANT },
   ],
 )
+cdad_intervenant2.skip_confirmation!
+cdad_intervenant2.save(validate: false)
 
-Intervenant.create!(
-  email: "",
-  uid: "",
+cdad_intervenant3 = Agent.new(
   first_name: "#3",
   last_name: "Avocat",
   service_id: service_cdad.id,
@@ -104,6 +102,8 @@ Intervenant.create!(
     { organisation: org_cdad2, access_level: AgentRole::ACCESS_LEVEL_INTERVENANT },
   ],
 )
+cdad_intervenant3.skip_confirmation!
+cdad_intervenant3.save(validate: false)
 
 ## Lieux
 lieu1_bordeaux = Lieu.create!(

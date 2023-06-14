@@ -52,6 +52,7 @@ module Admin::RdvFormConcern
   private
 
   def validate_rdv
+    byebug
     rdv.validate
   end
 
