@@ -3,8 +3,7 @@
 class AgentRoleBlueprint < Blueprinter::Base
   identifier :id
 
-  # TODO: remove :level field after rdv-i migration
-  fields :level, :access_level
+  fields :access_level
   association :organisation, blueprint: OrganisationBlueprint
   association :agent, blueprint: AgentBlueprint
 end
