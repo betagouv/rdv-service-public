@@ -4,7 +4,7 @@ class AntsApi
   class << self
     def pre_demande_number_valid?(pre_demande_number)
       api_response = request_pre_demande_number_status(pre_demande_number)
-      api_response["status"] == "validated" && api_response["appointments"].empty?
+      api_response["status"] == "validated" && api_response["appointments"].blank?
     end
 
     def create_appointment(application_id:, meeting_point:, appointment_date:, management_url:)

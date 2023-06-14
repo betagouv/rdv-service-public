@@ -9,4 +9,3 @@ fr:
         title: Choix de l'usager
       step3:
         title: Confirmation
-      ants_pre_demande_number_invalid: "Le numéro de pré-demande n'est pas valide ou il a déjà utilisé pour prendre rendez-vous. Veuillez annuler vos rendez-vous existant ou fournir un numéro de pré-demande valide."

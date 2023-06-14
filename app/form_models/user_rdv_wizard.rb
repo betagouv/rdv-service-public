@@ -94,7 +94,10 @@ module UserRdvWizard
     def ants_pre_demande_number_is_valid
       return if AntsApi.pre_demande_number_valid?(@user_attributes[:ants_pre_demande_number])
 
-      user.errors.add(:ants_pre_demande_number, t(".ants_pre_demande_number_invalid"))
+      user.errors.add(
+        :ants_pre_demande_number,
+        "Le numéro de pré-demande n'est pas valide ou il a déjà utilisé pour prendre rendez-vous. Veuillez annuler vos rendez-vous existant ou fournir un numéro de pré-demande valide."
+      )
     end
 
     def initialize(user, attributes)
