@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe SearchContext, type: :service do
-  subject { described_class.new(user, search_query) }
+  subject { described_class.new(user: user, query: search_query) }
 
   let!(:user) { create(:user, organisations: [organisation]) }
   let!(:invitation_token) do
@@ -85,8 +85,9 @@ describe SearchContext, type: :service do
     end
 
     context "for an invitation" do
+      subject { described_class.new(user: user, query: search_query, through_invitation: true) }
+
       before do
-        search_query[:invitation_token] = invitation_token
         search_query[:motif_category_short_name] = "rsa_orientation"
       end
 
@@ -100,7 +101,6 @@ describe SearchContext, type: :service do
         before do
           allow(Motif).to receive(:available_for_booking)
             .and_return(Motif.where(id: motif2.id))
-          search_query[:invitation_token] = invitation_token
           search_query[:motif_category_short_name] = "rsa_orientation_on_phone_platform"
         end
 
@@ -131,7 +131,7 @@ describe SearchContext, type: :service do
       motif_a = create(:motif, service: service_a)
       motif_b = create(:motif, service: service_b)
       matching_motifs = Motif.where(id: [motif_a.id, motif_b.id])
-      search_context = described_class.new(nil, motif_name_with_location_type: [])
+      search_context = described_class.new(user: nil, query: { motif_name_with_location_type: "" })
       allow(search_context).to receive(:matching_motifs).and_return(matching_motifs)
       expect(search_context.services).to eq([service_a, service_b])
     end
@@ -140,14 +140,14 @@ describe SearchContext, type: :service do
   describe "#service" do
     it "returns serice from service_id params when given" do
       service = create(:service)
-      search_context = described_class.new(nil, { service_id: service.id })
+      search_context = described_class.new(user: nil, query: { service_id: service.id })
       expect(search_context.service).to eq(service)
     end
 
     it "returns service from selected motif" do
       motif = create(:motif)
       matching_motifs = Motif.where(id: motif.id)
-      search_context = described_class.new(nil, {})
+      search_context = described_class.new(user: nil, query: {})
       allow(search_context).to receive(:matching_motifs).and_return(matching_motifs)
       expect(search_context.service).to eq(motif.service)
     end
@@ -156,13 +156,13 @@ describe SearchContext, type: :service do
       motif = create(:motif)
       autre_motif = create(:motif, service: motif.service)
       matching_motifs = Motif.where(id: [motif.id, autre_motif.id])
-      search_context = described_class.new(nil, {})
+      search_context = described_class.new(user: nil, query: {})
       allow(search_context).to receive(:matching_motifs).and_return(matching_motifs)
       expect(search_context.service).to eq(motif.service)
     end
 
     it "returns nil without motifs or service_id" do
-      search_context = described_class.new(nil, {})
+      search_context = described_class.new(user: nil, query: {})
       matching_motifs = Motif.none
       allow(search_context).to receive(:matching_motifs).and_return(matching_motifs)
       expect(search_context.service).to be_nil
@@ -172,7 +172,7 @@ describe SearchContext, type: :service do
       motif = create(:motif)
       autre_motif = create(:motif)
       matching_motifs = Motif.where(id: [motif.id, autre_motif.id])
-      search_context = described_class.new(nil, {})
+      search_context = described_class.new(user: nil, query: {})
       allow(search_context).to receive(:matching_motifs).and_return(matching_motifs)
       expect(search_context.service).to be_nil
     end
@@ -183,7 +183,7 @@ describe SearchContext, type: :service do
       it "returns a Users::CreneauxSearch using the lieu and the first matching motif" do
         plage_ouverture = create(:plage_ouverture, motifs: [motif, motif2], organisation: organisation)
         lieu = plage_ouverture.lieu
-        search_context = described_class.new(user, search_query.merge(lieu_id: lieu.id))
+        search_context = described_class.new(user:, query: search_query.merge(lieu_id: lieu.id))
 
         expect(Users::CreneauxSearch).to receive(:new).with(
           user: user,
@@ -202,8 +202,8 @@ describe SearchContext, type: :service do
       it "returns a Users::CreneauxSearch using no lieu and the selected motif" do
         create(:plage_ouverture, lieu: nil, motifs: [motif], organisation: organisation)
         search_context = described_class.new(
-          user,
-          search_query
+          user:,
+          query: search_query
         )
 
         expect(Users::CreneauxSearch).to receive(:new).with(
@@ -220,25 +220,25 @@ describe SearchContext, type: :service do
 
   describe "#filter_motifs" do
     it "returns empty without motifs" do
-      search_context = described_class.new(nil)
+      search_context = described_class.new(user: nil)
       expect(search_context.filter_motifs(Motif.none)).to be_empty
     end
 
     it "returns given motif without specific params" do
-      search_context = described_class.new(nil)
+      search_context = described_class.new(user: nil)
       motif = create(:motif)
       expect(search_context.filter_motifs(Motif.where(id: motif.id))).to eq([motif])
     end
 
     it "returns collective motif" do
-      search_context = described_class.new(nil)
+      search_context = described_class.new(user: nil)
       motif = create(:motif, collectif: true)
       expect(search_context.filter_motifs(Motif.where(id: motif.id))).to eq([motif])
     end
 
     it "returns collective motif with lieu_id" do
       lieu = create(:lieu)
-      search_context = described_class.new(nil, lieu_id: lieu.id)
+      search_context = described_class.new(user: nil, query: { lieu_id: lieu.id })
       motif = create(:motif, collectif: true)
       create(:rdv, motif: motif, lieu: lieu)
       expect(search_context.filter_motifs(Motif.where(id: motif.id))).to eq([motif])
@@ -246,7 +246,7 @@ describe SearchContext, type: :service do
 
     it "returns individual motif with lieu_id" do
       lieu = create(:lieu)
-      search_context = described_class.new(nil, lieu_id: lieu.id)
+      search_context = described_class.new(user: nil, query: { lieu_id: lieu.id })
       motif = create(:motif, collectif: false)
       create(:plage_ouverture, motifs: [motif], lieu: lieu)
       expect(search_context.filter_motifs(Motif.where(id: motif.id))).to eq([motif])
@@ -255,10 +255,9 @@ describe SearchContext, type: :service do
     it "returns motif when user is invited (and motif's bookable_by is agents_and_prescripteurs_and_invited_users)" do
       # This test will be obsolete when the invitation behavior will be integrated in Rdv-s (https://github.com/betagouv/rdv-solidarites.fr/issues/3438)
       lieu = create(:lieu)
-      search_query[:invitation_token] = invitation_token
       search_query[:motif_category_short_name] = "rsa_orientation"
       search_query[:lieu_id] = lieu.id
-      search_context = described_class.new(nil, search_query)
+      search_context = described_class.new(user: nil, query: search_query, through_invitation: true)
       motif = create(:motif, bookable_by: :agents_and_prescripteurs_and_invited_users, motif_category: rsa_orientation, organisation: organisation)
       create(:plage_ouverture, motifs: [motif], lieu: lieu)
       expect(search_context.filter_motifs(Motif.where(id: motif.id))).to eq([motif])
@@ -268,7 +267,7 @@ describe SearchContext, type: :service do
       lieu = create(:lieu)
       search_query[:motif_category_short_name] = "rsa_orientation"
       search_query[:lieu_id] = lieu.id
-      search_context = described_class.new(nil, search_query)
+      search_context = described_class.new(user: nil, query: search_query)
       motif = create(:motif, bookable_by: :agents_and_prescripteurs_and_invited_users, motif_category: rsa_orientation, organisation: organisation)
       create(:plage_ouverture, motifs: [motif], lieu: lieu)
       expect(search_context.filter_motifs(Motif.where(id: motif.id))).to eq([])

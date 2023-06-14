@@ -203,7 +203,7 @@ describe "User can be invited" do
     end
   end
 
-  describe "when no motifs found through geo search" do
+  describe "when no motifs are found through geo search" do
     let!(:geo_search) { instance_double(Users::GeoSearch, available_motifs: Motif.none) }
     let!(:second_motif) do
       create(:motif, name: "RSA orientation telephone", bookable_by: "agents_and_prescripteurs_and_invited_users", organisation: organisation2, service: agent.service)
@@ -230,6 +230,26 @@ describe "User can be invited" do
       expect(page).to have_content(motif.name)
       expect(page).to have_content(second_motif.name)
       expect(page).to have_content(collectif_motif.name)
+    end
+  end
+
+  describe "invitation attributes cannot be modified" do
+    it "priorize the session invitation attributes to the url attributes" do
+      visit prendre_rdv_path(
+        departement: departement_number, city_code: city_code, invitation_token: invitation_token,
+        address: "16 rue de la résistance", lieu_id: lieu.id
+      )
+
+      expect(page).to have_content(lieu.name)
+      expect(page).not_to have_content(lieu2.name)
+
+      visit prendre_rdv_path(
+        departement: departement_number, city_code: city_code,
+        address: "16 rue de la résistance", lieu_id: lieu2.id
+      )
+
+      expect(page).to have_content(lieu.name)
+      expect(page).not_to have_content(lieu2.name)
     end
   end
 end

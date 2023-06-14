@@ -45,7 +45,7 @@ class Users::RdvsController < UserAuthController
         address: (new_rdv_extra_params[:address] || new_rdv_extra_params[:where]),
         city_code: new_rdv_extra_params[:city_code], street_ban_id: new_rdv_extra_params[:street_ban_id],
         service: motif.service.id, motif_name_with_location_type: motif.name_with_location_type,
-        departement: new_rdv_extra_params[:departement], organisation_ids:  new_rdv_extra_params[:organisation_ids], invitation_token: invitation_token,
+        departement: new_rdv_extra_params[:departement], organisation_ids:  new_rdv_extra_params[:organisation_ids],
       }
       redirect_to prendre_rdv_path(query), flash: { error: t(".creneau_unavailable") }
     end

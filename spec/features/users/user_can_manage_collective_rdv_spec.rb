@@ -138,7 +138,6 @@ RSpec.describe "Adding a user to a collective RDV" do
       expect_confirm_participation.to change { rdv.reload.users.count }.from(0).to(1)
 
       expect(page).not_to have_content("modifier") # can_change_participants?
-      expect(::Addressable::URI.parse(current_url).query_values).to match("invitation_token" => /^[A-Z0-9]{8}$/)
 
       expect_notifications_sent_for(rdv, invited_user, :rdv_created)
       expect_webhooks_for(invited_user)

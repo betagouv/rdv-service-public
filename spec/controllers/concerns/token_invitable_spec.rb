@@ -9,76 +9,32 @@ describe TokenInvitable, type: :controller do
     end
   end
 
-  subject { get :fake_action, params: { invitation_token: token } }
+  let!(:token) { "some-token" }
+  let!(:invitation) { instance_double(Invitation) }
+  let!(:user) { create(:user) }
+  let!(:now) { Time.zone.parse("2022-08-03 10:22:00") }
 
   before do
+    travel_to(now)
     routes.draw { get "fake_action" => "anonymous#fake_action" }
   end
 
-  context "when no token is passed" do
-    let!(:token) { nil }
+  describe "#store_invitation_in_session_and_redirect" do
+    subject { get :fake_action, params: params }
 
-    it "does not assign an invited user" do
-      subject
-      expect(assigns(:user_by_token)).to be_nil
+    let!(:params) { { invitation_token: token, motif_category_short_name: "rsa_orientation" } }
+
+    before do
+      allow(Invitation).to receive(:new).with(invitation_token: token).and_return(invitation)
+      allow(invitation).to receive(:user).and_return(user)
     end
 
-    it "does not redirect to root path" do
-      subject
-      expect(response).to be_successful
-      expect(response).not_to redirect_to(root_path)
-    end
-  end
+    context "when no token is passed" do
+      let!(:token) { nil }
 
-  context "when an invalid user token is passed" do
-    let!(:token) { "some-random-token" }
-
-    it "does not assign an invited user" do
-      subject
-      expect(assigns(:user_by_token)).to be_nil
-    end
-
-    it "redirects to root path with a message" do
-      subject
-      expect(response).to redirect_to(root_path)
-      expect(flash[:error]).to eq("Votre invitation n'est pas valide.")
-    end
-  end
-
-  context "when a valid user token is passed" do
-    let!(:user) { create(:user) }
-    let!(:token) do
-      user.invite! { |u| u.skip_invitation = true }
-      user.raw_invitation_token
-    end
-
-    it "assigns the user" do
-      subject
-      expect(assigns(:user_by_token)).to eq(user)
-    end
-
-    it "does not redirect to root path" do
-      subject
-      expect(response).to be_successful
-      expect(response).not_to redirect_to(root_path)
-    end
-
-    it "signs in the invited user" do
-      subject
-      expect(assigns(:current_user)).to eq(user)
-    end
-
-    it "marks the user as only invited" do
-      subject
-      expect(assigns(:current_user).only_invited?).to eq(true)
-    end
-
-    context "when the user is already connected" do
-      before { sign_in user }
-
-      it "does not mark the user as only invited" do
+      it "does not store the token in session" do
         subject
-        expect(assigns(:current_user).only_invited?).to eq(false)
+        expect(request.session[:invitation]).to be_nil
       end
 
       it "does not redirect to root path" do
@@ -88,60 +44,151 @@ describe TokenInvitable, type: :controller do
       end
     end
 
-    context "when another user is already connected" do
-      let!(:another_user) { create(:user) }
+    context "when an invalid user token is passed" do
+      before do
+        allow(invitation).to receive(:token_valid?).and_return(false)
+      end
 
-      before { sign_in another_user }
+      it "does not store the token in session" do
+        subject
+        expect(request.session[:invitation]).to be_nil
+      end
 
       it "redirects to root path with a message" do
         subject
         expect(response).to redirect_to(root_path)
-        expect(flash[:error]).to eq("L’utilisateur connecté ne correspond pas à l’utilisateur invité. Déconnectez-vous et réessayez.")
+        expect(flash[:error]).to eq("Votre invitation n'est pas valide.")
+      end
+    end
+
+    context "when a valid user token is passed" do
+      before do
+        allow(invitation).to receive(:token_valid?).and_return(true)
       end
 
-      it "does not mark the user as only invited" do
+      it "stores the token in session" do
         subject
-        expect(assigns(:current_user).only_invited?).to eq(false)
+        expect(request.session[:invitation]).to eq(params.merge(expires_at: Time.zone.parse("2022-08-03 10:32:00")))
+      end
+
+      it "redirects to current path without the token" do
+        subject
+        expect(response).to redirect_to("/fake_action?motif_category_short_name=rsa_orientation")
+      end
+
+      context "when a user is already connected" do
+        let!(:user) { create(:user) }
+
+        before { sign_in user }
+
+        context "when it is the user linked to the invitation" do
+          before do
+            allow(invitation).to receive(:user).and_return(user)
+          end
+
+          it "does stores the invitation in session and redirect" do
+            subject
+            expect(request.session[:invitation]).to eq(params.merge(expires_at: Time.zone.parse("2022-08-03 10:32:00")))
+            expect(response).to redirect_to("/fake_action?motif_category_short_name=rsa_orientation")
+          end
+        end
+
+        context "when it is another user" do
+          let!(:other_user) { create(:user) }
+
+          before do
+            allow(invitation).to receive(:user).and_return(other_user)
+          end
+
+          it "redirects to root path with a message" do
+            subject
+            expect(response).to redirect_to(root_path)
+            expect(flash[:error]).to eq("L’utilisateur connecté ne correspond pas à l’utilisateur invité. Déconnectez-vous et réessayez.")
+          end
+        end
       end
     end
   end
 
-  context "when a rdv user token is passed" do
-    let!(:user) { create(:user) }
-    let!(:rdv) { create(:rdv) }
-    let!(:rdv_user) { create(:rdvs_user, rdv: rdv, user: user) }
+  describe "#sign_in_with_session_token" do
+    subject { get :fake_action }
 
-    let!(:another_rdv) { create(:rdv, users: [user]) }
-
-    let!(:token) do
-      rdv_user.invite! { |rdv_u| rdv_u.skip_invitation = true }
-      rdv_user.raw_invitation_token
+    let!(:attributes) do
+      { invitation_token: token, motif_category_short_name: "rsa_orientation", expires_at: Time.zone.parse("2022-08-03 10:32:00") }
     end
 
-    it "does not assign the user directly" do
-      subject
-      expect(assigns(:user_by_token)).to be_nil
-    end
-
-    it "assigns the rdv user" do
-      subject
-      expect(assigns(:rdv_user_by_token)).to eq(rdv_user)
+    before do
+      request.session[:invitation] = attributes
+      allow(Invitation).to receive(:new).with(attributes).and_return(invitation)
+      allow(invitation).to receive(:token_valid?).and_return(true)
+      allow(invitation).to receive(:expired?).and_return(false)
+      allow(invitation).to receive(:user).and_return(user)
+      allow(invitation).to receive(:rdv)
     end
 
     it "signs in the user" do
       subject
+      expect(response).to be_successful
       expect(assigns(:current_user)).to eq(user)
     end
 
-    it "marks the user as only invited" do
+    it "marks the user as only_invited" do
       subject
-      expect(assigns(:current_user).only_invited?).to eq(true)
+      expect(response).to be_successful
+      expect(assigns(:current_user).only_invited?).to be(true)
     end
 
-    it "marks the user as invited only for the rdv linked to token" do
-      subject
-      expect(assigns(:current_user).invited_for_rdv?(rdv)).to eq(true)
-      expect(assigns(:current_user).invited_for_rdv?(another_rdv)).to eq(false)
+    context "when the token is invalid" do
+      before do
+        allow(invitation).to receive(:token_valid?).and_return(false)
+      end
+
+      it "deletes the invitation and redirects to root path with a message" do
+        subject
+        expect(request.session[:invitation]).to be_nil
+        expect(response).to redirect_to(root_path)
+        expect(flash[:error]).to eq("Votre invitation n'est pas valide.")
+      end
+    end
+
+    context "when the session expired" do
+      before do
+        allow(invitation).to receive(:expired?).and_return(true)
+      end
+
+      it "deletes the invitation and redirects to root path with a message" do
+        subject
+        expect(request.session[:invitation]).to be_nil
+        expect(response).to redirect_to(root_path)
+        expect(flash[:error]).to eq("La session a expiré")
+      end
+    end
+
+    context "when a user is logged in already" do
+      before { sign_in user }
+
+      context "when it is the invited user" do
+        it "does not mark the user as only invited" do
+          subject
+          expect(response).to be_successful
+          expect(assigns(:current_user)).to eq(user)
+          expect(assigns(:current_user).only_invited?).to be(false)
+        end
+      end
+
+      context "when it is another user" do
+        let!(:other_user) { create(:user) }
+
+        before do
+          allow(invitation).to receive(:user).and_return(other_user)
+        end
+
+        it "redirects to root path with a message" do
+          subject
+          expect(response).to redirect_to(root_path)
+          expect(flash[:error]).to eq("L’utilisateur connecté ne correspond pas à l’utilisateur invité. Déconnectez-vous et réessayez.")
+        end
+      end
     end
   end
 end
