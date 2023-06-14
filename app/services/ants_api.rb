@@ -6,7 +6,7 @@ class AntsApi
 
     def pre_demande_number_valid?(pre_demande_number)
       api_response = request_pre_demande_number_status(pre_demande_number)
-      api_response.fetch(pre_demande_number, {})["status"] == "validated"
+      api_response["status"] == "validated" && api_response["appointments"].empty?
     end
 
     def create_appointment(rdv:, user:)
@@ -30,7 +30,7 @@ class AntsApi
         **headers
       ).response_body
 
-      JSON.parse(response_body)
+      JSON.parse(response_body).fetch(pre_demande_number, {})
     end
 
     def headers
