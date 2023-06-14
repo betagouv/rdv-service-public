@@ -307,7 +307,11 @@ L'application a 3 types d'utilisateurs :
 - usager⋅e
 - agent⋅e
 - super admin
-Pour visualiser, modifier ou annuler un RDV, l'usager peut soit cliquer sur un lien fourni en notification mail ou SMS et entrer les trois premières lettres de son nom de famille,
+Pour visualiser, modifier ou annuler un RDV, l'usager peut soit cliquer sur un lien fourni en notification mail ou SMS et entrer les trois premières lettres de son nom de famille.
+
+Les comptes utilisateurs ont une contrainte d'unicite sur les emails mais ce n'est pas le cas des profils sans emails créés par les agents.
+
+Les sessions sont déconnectées automatiquement.
 #### Les usager⋅es
 
 Les usager⋅es prennent RDV avec les agents. Iels peuvent voir leurs RDVs, annuler ou modifier des RDVs futurs, et
@@ -357,7 +361,9 @@ Tous les membres de l'équipe faisant partie de l'organisation betagouv sur Gith
 
 #### Logs textuels
 
-Les logs textuels sont écrits dans le système de log de Scalingo.
+Les logs textuels sont écrits dans le système de log de Scalingo. Cela comprend :
+- Les logs des commandes de la production (e.g. lancer la console)
+- les changements de variables d'environnements
 
 Les logs applicatifs (générés par Rails) contiennent, pour chaque requêtes HTTP :
 
