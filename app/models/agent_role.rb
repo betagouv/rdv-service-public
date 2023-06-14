@@ -8,11 +8,13 @@ class AgentRole < ApplicationRecord
   # Attributes
   ACCESS_LEVEL_BASIC = "basic"
   ACCESS_LEVEL_ADMIN = "admin"
+  ACCESS_LEVEL_INTERVENANT = "intervenant"
   ACCESS_LEVELS = [ACCESS_LEVEL_BASIC, ACCESS_LEVEL_ADMIN].freeze
 
   enum access_level: {
     basic: "basic", # Basic Role
     admin: "admin", # Admin Role
+    intervenant: "intervenant", # Intervenant Role
   }
 
   # Relations
