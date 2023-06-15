@@ -27,7 +27,7 @@ class Agent < ApplicationRecord
          :recoverable, :rememberable, :validatable, :confirmable, :async, validate_on_invite: true
 
   include DeviseTokenAuth::Concerns::ConfirmableSupport
-  include Agent::CustomDeviseUserOmniauthCallbacks
+  include Agent::CustomDeviseTokenAuthUserOmniauthCallbacks
 
   # Attributes
   auto_strip_attributes :email, :first_name, :last_name
@@ -80,7 +80,6 @@ class Agent < ApplicationRecord
   # Note about validation and Devise:
   # * Invitable#invite! creates the Agent without validation, but validates manually in advance (because we set validate_on_invite to true)
   # * it validates :email (the invite_key) specifically with Devise.email_regexp.
-  validates :email, presence: true, unless: :all_roles_intervenant?
   validates :last_name, :first_name, presence: true, on: :update
   validate :service_cannot_be_changed
 
@@ -104,18 +103,6 @@ class Agent < ApplicationRecord
   ## -
 
   delegate :name, to: :domain, prefix: true
-
-  def all_roles_intervenant?
-    @all_roles_intervenant ||= roles.present? && roles.to_a.all? { |role| role.access_level == "intervenant" }
-  end
-
-  def password_required?
-    false if all_roles_intervenant?
-  end
-
-  def email_required?
-    false if all_roles_intervenant?
-  end
 
   def remember_me # Override from Devise::rememberable to enable it by default
     super.nil? ? true : super

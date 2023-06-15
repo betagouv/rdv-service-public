@@ -5,7 +5,7 @@
 # This is an override of the default concern : DeviseTokenAuth::Concerns::UserOmniauthCallbacks
 # Changes :
 # Add `&& !all_roles_intervenant?` condition to the included validations
-module Agent::CustomDeviseUserOmniauthCallbacks
+module Agent::CustomDeviseTokenAuthUserOmniauthCallbacks
   extend ActiveSupport::Concern
 
   included do
@@ -21,7 +21,19 @@ module Agent::CustomDeviseUserOmniauthCallbacks
     before_create :sync_uid
   end
 
+  def all_roles_intervenant?
+    @all_roles_intervenant ||= roles.present? && roles.to_a.all? { |role| role.access_level == "intervenant" }
+  end
+
   protected
+
+  def password_required?
+    false if all_roles_intervenant?
+  end
+
+  def email_required?
+    false if all_roles_intervenant?
+  end
 
   def uid_and_provider_defined?
     defined?(provider) && defined?(uid)

@@ -29,6 +29,7 @@ class AgentRole < ApplicationRecord
   # Validation
   validate :organisation_cannot_change
   validate :intervenant_cannot_change
+  validate :cannot_change_to_intervenant
   validate :organisation_have_at_least_one_admin
   # Customize the uniqueness error message. This class needs to be declared before the validates :agent, uniqueness: line.
   class UniquenessValidator < ActiveRecord::Validations::UniquenessValidator
@@ -72,6 +73,12 @@ class AgentRole < ApplicationRecord
   def intervenant_cannot_change
     if access_level_was.in?("intervenant") && access_level_changed? && !new_record?
       errors.add(:access_level, "Vous ne pouvez pas changer le rôle d'un intervenant")
+    end
+  end
+
+  def cannot_change_to_intervenant
+    if !access_level_was.in?("intervenant") && intervenant? && !new_record?
+      errors.add(:access_level, "Vous ne pouvez pas changer pour le rôle d'intervenant")
     end
   end
 
