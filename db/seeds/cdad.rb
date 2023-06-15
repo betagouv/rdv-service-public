@@ -38,16 +38,6 @@ motif1_cdad1 = Motif.create!(
   service: service_cdad,
   for_secretariat: true
 )
-motif1_cdad2 = Motif.create!(
-  name: "RDV Avocat",
-  color: "#00ffff",
-  default_duration_in_min: 60,
-  organisation: org_cdad2,
-  bookable_publicly: false,
-  max_public_booking_delay: 2_629_746,
-  service: service_cdad,
-  for_secretariat: true
-)
 
 # Agent
 cdad_agent = Agent.new(
@@ -73,37 +63,34 @@ cdad_agent.territorial_roles.create!(territory: territory_gironde)
 # Intervenants
 
 cdad_intervenant1 = Agent.new(
-  first_name: "#1",
-  last_name: "Avocat",
+  first_name: "#",
+  last_name: "Avocat 1",
   service_id: service_cdad.id,
   roles_attributes: [
     { organisation: org_cdad1, access_level: AgentRole::ACCESS_LEVEL_INTERVENANT },
   ],
 )
-cdad_intervenant1.skip_confirmation!
-cdad_intervenant1.save(validate: false)
+cdad_intervenant1.save!
 
 cdad_intervenant2 = Agent.new(
-  first_name: "#2",
-  last_name: "Avocat",
+  first_name: "#",
+  last_name: "Avocat 2",
   service_id: service_cdad.id,
   roles_attributes: [
     { organisation: org_cdad1, access_level: AgentRole::ACCESS_LEVEL_INTERVENANT },
   ],
 )
-cdad_intervenant2.skip_confirmation!
-cdad_intervenant2.save(validate: false)
+cdad_intervenant2.save!
 
 cdad_intervenant3 = Agent.new(
-  first_name: "#3",
-  last_name: "Avocat",
+  first_name: "#",
+  last_name: "Avocat 3",
   service_id: service_cdad.id,
   roles_attributes: [
     { organisation: org_cdad2, access_level: AgentRole::ACCESS_LEVEL_INTERVENANT },
   ],
 )
-cdad_intervenant3.skip_confirmation!
-cdad_intervenant3.save(validate: false)
+cdad_intervenant3.save!
 
 ## Lieux
 lieu1_bordeaux = Lieu.create!(
@@ -116,7 +103,7 @@ lieu1_bordeaux = Lieu.create!(
   phone_number_formatted: "+33547339117",
   address: "30 rue des Frères Bonie, 33000 BORDEAUX"
 )
-lieu2_bordeaux = Lieu.create!(
+Lieu.create!(
   name: "Point-justice de LANGON",
   organisation: org_cdad2,
   latitude: 44.5615,
@@ -134,7 +121,7 @@ PlageOuverture.create!(
   organisation_id: org_cdad1.id,
   agent_id: cdad_intervenant1.id,
   lieu_id: lieu1_bordeaux.id,
-  motif_ids: [motif1_cdad1.id, motif1_cdad2.id],
+  motif_ids: [motif1_cdad1.id],
   first_day: Date.tomorrow,
   start_time: Tod::TimeOfDay.new(8),
   end_time: Tod::TimeOfDay.new(12),
@@ -143,12 +130,12 @@ PlageOuverture.create!(
 
 PlageOuverture.create!(
   title: "Permanence classique Avocat",
-  organisation_id: org_cdad2.id,
+  organisation_id: org_cdad1.id,
   agent_id: cdad_intervenant2.id,
-  lieu_id: lieu2_bordeaux.id,
-  motif_ids: [motif1_cdad1.id, motif1_cdad2.id],
+  lieu_id: lieu1_bordeaux.id,
+  motif_ids: [motif1_cdad1.id],
   first_day: Date.tomorrow,
   start_time: Tod::TimeOfDay.new(8),
   end_time: Tod::TimeOfDay.new(12),
-  recurrence: Montrose.every(:week, day: [1, 2], interval: 1, starts: Date.tomorrow, on: %i[monday tuesday])
+  recurrence: Montrose.every(:week, day: [4], interval: 1, starts: Date.tomorrow, on: %i[thirsday])
 )
