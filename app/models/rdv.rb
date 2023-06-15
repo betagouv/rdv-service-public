@@ -70,7 +70,7 @@ class Rdv < ApplicationRecord
   validates :rdvs_users, presence: true, unless: :collectif?
   validates :status, inclusion: { in: COLLECTIVE_RDV_STATUSES }, if: :collectif?
 
-  validates_associated :agents, if: :agents_are_not_intervenants?
+  validates_associated :agents, unless: :agents_are_intervenants?
   # Hooks
   after_save :associate_users_with_organisation
   after_commit :update_agents_unknown_past_rdv_count, if: -> { past? }
@@ -118,8 +118,8 @@ class Rdv < ApplicationRecord
 
   ## -
 
-  def agents_are_not_intervenants?
-    agents.present? && agents.flat_map(&:roles).to_a.all? { |role| role.access_level != "intervenant" }
+  def agents_are_intervenants?
+    agents.present? && agents.flat_map(&:roles).to_a.all? { |role| role.access_level == "intervenant" }
   end
 
   def self.ongoing(time_margin: 0.minutes)

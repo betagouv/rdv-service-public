@@ -1,5 +1,10 @@
 # frozen_string_literal: true
 
+# rubocop:disable all
+
+# This is an override of the default concern : DeviseTokenAuth::Concerns::UserOmniauthCallbacks
+# Changes :
+# Add `&& !all_roles_intervenant?` condition to the included validations
 module Agent::CustomDeviseUserOmniauthCallbacks
   extend ActiveSupport::Concern
 

@@ -68,7 +68,7 @@ cdad_intervenant1 = Agent.new(
   service_id: service_cdad.id,
   roles_attributes: [
     { organisation: org_cdad1, access_level: AgentRole::ACCESS_LEVEL_INTERVENANT },
-  ],
+  ]
 )
 cdad_intervenant1.save!
 
@@ -78,7 +78,7 @@ cdad_intervenant2 = Agent.new(
   service_id: service_cdad.id,
   roles_attributes: [
     { organisation: org_cdad1, access_level: AgentRole::ACCESS_LEVEL_INTERVENANT },
-  ],
+  ]
 )
 cdad_intervenant2.save!
 
@@ -88,7 +88,7 @@ cdad_intervenant3 = Agent.new(
   service_id: service_cdad.id,
   roles_attributes: [
     { organisation: org_cdad2, access_level: AgentRole::ACCESS_LEVEL_INTERVENANT },
-  ],
+  ]
 )
 cdad_intervenant3.save!
 

@@ -106,7 +106,7 @@ class Agent < ApplicationRecord
   delegate :name, to: :domain, prefix: true
 
   def all_roles_intervenant?
-    roles.present? && roles.to_a.all? { |role| role.access_level == "intervenant" }
+    @all_roles_intervenant ||= roles.present? && roles.to_a.all? { |role| role.access_level == "intervenant" }
   end
 
   def password_required?
