@@ -25,7 +25,7 @@ describe TokenInvitable, type: :controller do
     let!(:params) { { invitation_token: token, motif_category_short_name: "rsa_orientation" } }
 
     before do
-      allow(Invitation).to receive(:new).with(invitation_token: token).and_return(invitation)
+      allow(Invitation).to receive(:new).with(params).and_return(invitation)
       allow(invitation).to receive(:user).and_return(user)
     end
 

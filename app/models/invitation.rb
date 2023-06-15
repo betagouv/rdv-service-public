@@ -15,7 +15,7 @@ class Invitation
     @attributes[:invitation_token]
   end
 
-  def params
+  def query_params
     @attributes.except(:invitation_token, :expires_at)
   end
 

@@ -15,7 +15,7 @@ module TokenInvitable
   private
 
   def store_invitation_in_session_and_redirect
-    invitation = Invitation.new(invitation_token: params[:invitation_token])
+    invitation = Invitation.new(current_url_params)
     return redirect_with_error(t("devise.invitations.invitation_token_invalid")) unless invitation.token_valid?
     return redirect_with_error(t("devise.invitations.current_user_mismatch")) if current_user_mismatch?(invitation.user)
 
@@ -37,7 +37,7 @@ module TokenInvitable
     return delete_invitation_from_session_and_redirect(t("devise.invitations.invitation_token_invalid")) unless invitation.token_valid?
     return delete_invitation_from_session_and_redirect(t("devise.invitations.current_user_mismatch")) if current_user_mismatch?(invitation.user)
     return delete_invitation_from_session_and_redirect(t("devise.invitations.session_expired")) if invitation.expired?
-    return if current_user.present? # no need to sign in if a user is already connected
+    return if current_user.present? # no need to sign in if the user is already connected
 
     user = invitation.user
     user.only_invited!(rdv: invitation.rdv)

@@ -3,7 +3,7 @@ div id="creneaux-lieu-#{lieu&.id}"
     - previous_from_date = date_range.begin - 7.days
     - if date_range.begin > Time.zone.today
       .col-12.col-md-auto.mb-2.mb-md-0.d-flex.align-items-center.justify-content-center
-        = link_to prendre_rdv_path(query.merge(date: previous_from_date)), class: "btn btn-primary", data: { disable_with: "..." }, aria: { label: "Semaine précédente" } do
+        = link_to prendre_rdv_path(query_params.merge(date: previous_from_date)), class: "btn btn-primary", data: { disable_with: "..." }, aria: { label: "Semaine précédente" } do
           i.fa.fa-chevron-left
           span.d-md-none.ml-1<
             | sem. précédente
@@ -35,7 +35,7 @@ div id="creneaux-lieu-#{lieu&.id}"
 
         - if next_availability
           .position-absolute.h-100.w-100.bg-overlay.d-flex.align-items-center.justify-content-center
-            = link_to prendre_rdv_path(query.merge(date: next_availability.starts_at)), class: "btn btn-light", data: { disable_with: "..." } do
+            = link_to prendre_rdv_path(query_params.merge(date: next_availability.starts_at)), class: "btn btn-light", data: { disable_with: "..." } do
               .d-flex.align-items-center
                 div
                   | Prochaine disponibilité le
@@ -45,7 +45,7 @@ div id="creneaux-lieu-#{lieu&.id}"
                   i.fa.fa-chevron-right
     - if params[:date].blank? || (params[:date].to_date + 6.days) < (Time.now + max_public_booking_delay.seconds).to_date
       .col-12.col-md-auto.mt-2.mt-md-0.d-flex.align-items-center.justify-content-center
-        = link_to prendre_rdv_path(query.merge(date: date_range.end + 1.day)), class: "btn btn-primary", data: { disable_with: "..." }, aria: { label: "semaine suivante"} do
+        = link_to prendre_rdv_path(query_params.merge(date: date_range.end + 1.day)), class: "btn btn-primary", data: { disable_with: "..." }, aria: { label: "semaine suivante"} do
           span.d-md-none.mr-1
             | sem. prochaine
           i.fa.fa-chevron-right

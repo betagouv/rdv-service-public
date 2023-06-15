@@ -7,7 +7,7 @@ class SearchController < ApplicationController
   after_action :allow_iframe
 
   def search_rdv
-    @context = SearchContext.new(user: current_user, query: search_query, through_invitation: invitation?)
+    @context = SearchContext.new(user: current_user, query_params: query_params, through_invitation: invitation?)
     if current_domain == Domain::RDV_MAIRIE && request.path == "/"
       render "dsfr/rdv_mairie/homepage", layout: "application_dsfr"
     end
@@ -65,8 +65,8 @@ class SearchController < ApplicationController
     end
   end
 
-  def search_query
-    search_params.to_h.deep_symbolize_keys.merge(invitation? ? invitation.params : {})
+  def query_params
+    search_params.to_h.deep_symbolize_keys.merge(invitation? ? invitation.query_params : {})
   end
 
   def invitation?

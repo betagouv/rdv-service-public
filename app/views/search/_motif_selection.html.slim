@@ -26,10 +26,10 @@ section.bg-light.p-4
        - context.unique_motifs_by_name_and_location_type.each do |motif|
          .card.mb-3
            - if motif.restriction_for_rdv.blank?
-             = link_to(prendre_rdv_path(context.query.merge(motif_name_with_location_type: motif.name_with_location_type))) do
+             = link_to(prendre_rdv_path(context.query_params.merge(motif_name_with_location_type: motif.name_with_location_type))) do
                = render "motif_selection_card", motif: motif
            - else
              = link_to("#", "data-turbolinks": false, data: { toggle: "modal", target: "#js-rdv-restriction-motif#{motif.id}" }) do
                = render "motif_selection_card", motif: motif
-             = render "/common/modal", id: "js-rdv-restriction-motif#{motif.id}" , title: "À lire avant de prendre un rendez-vous", confirm_path: prendre_rdv_path(context.query.merge(motif_name_with_location_type: motif.name_with_location_type)) do
+             = render "/common/modal", id: "js-rdv-restriction-motif#{motif.id}" , title: "À lire avant de prendre un rendez-vous", confirm_path: prendre_rdv_path(context.query_params.merge(motif_name_with_location_type: motif.name_with_location_type)) do
                = restriction_for_rdv_to_html(motif)
