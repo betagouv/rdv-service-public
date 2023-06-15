@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Invitation
   attr_reader :attributes
 
