@@ -61,6 +61,14 @@ describe AgentRole, type: :model do
       let!(:agent_role1) { create(:agent_role, access_level: AgentRole::ACCESS_LEVEL_ADMIN, organisation: organisation) }
       let!(:agent_role2) { create(:agent_role, access_level: AgentRole::ACCESS_LEVEL_BASIC, organisation: organisation) }
 
+      before do
+        described_class.set_callback(:validate, :organisation_have_at_least_one_admin)
+      end
+
+      after do
+        described_class.skip_callback(:validate, :organisation_have_at_least_one_admin)
+      end
+
       it "forbids downgrading admin" do
         result = agent_role1.update(access_level: AgentRole::ACCESS_LEVEL_BASIC)
         expect(result).to be_falsey

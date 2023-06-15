@@ -39,6 +39,14 @@ end
 OmniAuth.config.test_mode = true
 
 RSpec.configure do |config|
+  # Rspec Skipping callbacks
+  config.before do
+    AgentRole.skip_callback(:validate, :organisation_have_at_least_one_admin)
+  end
+
+  config.after do
+    AgentRole.set_callback(:validate, :organisation_have_at_least_one_admin)
+  end
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   # config.fixture_path = "#{::Rails.root}/spec/fixtures"
   config.include PageSpecHelper

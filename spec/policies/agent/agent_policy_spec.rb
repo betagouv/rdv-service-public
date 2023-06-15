@@ -24,7 +24,7 @@ describe Agent::AgentPolicy, type: :policy do
       let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
       let!(:other_agent) { create(:agent, basic_role_in_organisations: [organisation]) }
 
-      permissions(:show?) { it { is_expected.to permit(pundit_context, other_agent) } }
+      permissions(:show?) { it { is_expected.to permit(pundit_context, other_agent.reload) } }
     end
 
     context "admin agent, other agent different orga" do
@@ -54,7 +54,7 @@ describe Agent::AgentPolicy, type: :policy do
       let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
       let!(:other_agent) { create(:agent, basic_role_in_organisations: [organisation]) }
 
-      permissions(:destroy?) { it { is_expected.to permit(pundit_context, other_agent) } }
+      permissions(:destroy?) { it { is_expected.to permit(pundit_context, other_agent.reload) } }
     end
 
     context "admin agent, self" do
