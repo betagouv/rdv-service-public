@@ -22,11 +22,21 @@ Rails.application.config.middleware.use OmniAuth::Builder do
   )
 
   on_failure do |env|
-    Sentry.with_scope do |scope|
-      scope.set_context(:rack_env, env.to_h)
-      Sentry.capture_message("Omniauth failed : #{env['omniauth.error']}")
+    crumb = Sentry::Breadcrumb.new(
+      message: "Omniauth env values",
+      data: {
+        error: env["omniauth.error"],
+        error_type: env["omniauth.error.type"],
+        full_env: env.to_json, # for testing in review app
+      }
+    )
+    Sentry.add_breadcrumb(crumb)
 
-      OmniauthCallbacksController.action(:failure).call(env)
-    end
+    Sentry.capture_message(
+      "Omniauth failed : #{env['omniauth.error']}",
+      fingerprint: [env["omniauth.error.strategy"], env["omniauth.error.type"]]
+    )
+
+    OmniauthCallbacksController.action(:failure).call(env)
   end
 end
