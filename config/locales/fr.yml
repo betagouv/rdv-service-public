@@ -16,7 +16,7 @@ fr:
           update: Le rendez-vous a été modifié.
           cancel: Le rendez-vous a été annulé.
       edit:
-        single_use_lieu_hint_html: Ce rendez-vous aura lieu à un adresse inhabituelle ? <a href>Définir un lieu ponctuel.</a>
+        single_use_lieu_hint_html: Ce rendez-vous aura lieu à une adresse inhabituelle ? <a href>Définir un lieu ponctuel.</a>
         existing_lieu_hint_html: Ce rendez-vous aura lieu à une adresse habituelle ? <a href>Choisir un lieu existant.</a>
         select_placeholder_existing_lieu: Choisir un lieu existant
         select_placeholder_single_use_lieu: Lieu ponctuel
@@ -25,7 +25,7 @@ fr:
         duplicate: Dupliquer…
     rdvs_collectifs:
       new:
-        single_use_lieu_hint_html: Ce rendez-vous aura lieu à un adresse inhabituelle ? <a href>Définir un lieu ponctuel.</a>
+        single_use_lieu_hint_html: Ce rendez-vous aura lieu à une adresse inhabituelle ? <a href>Définir un lieu ponctuel.</a>
         existing_lieu_hint_html: Ce rendez-vous aura lieu à une adresse habituelle ? <a href>Choisir un lieu existant.</a>
         select_placeholder_existing_lieu: Choisir un lieu existant
         select_placeholder_single_use_lieu: Lieu ponctuel
@@ -277,8 +277,7 @@ fr:
       update: Enregistrer
   layouts:
     flash:
-      confirm_export_send_when_done: Le fichier Excel des RDV sera envoyé à %{agent_email}.
-      confirm_rdvs_users_export_send_when_done: Le fichier Excel de l'ensemble des rdvs par usager du territoire sera envoyé à %{agent_email}.
+      confirm_export_queued: Votre export est en cours de création, il sera envoyé à %{agent_email} dès qu'il sera prêt. L'opération peut prendre plusieurs minutes. N'hésitez pas à contacter le support (support@rdv-solidarites.fr), si vous ne recevez rien d'ici 1h.
   number:
     currency:
       format:

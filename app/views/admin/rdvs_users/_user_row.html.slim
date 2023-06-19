@@ -5,6 +5,9 @@ tr
         .rdv_user_birthdate.small
           i.fas.fa-calendar-day.mr-1
           = "Né(e) le #{I18n.l(rdvs_user.user.birth_date)}"
+  - if current_domain == Domain::RDV_MAIRIE && rdvs_user.rdv.individuel?
+    td
+      = rdvs_user.user.ants_pre_demande_number
   td
     = render "admin/rdvs_users/notifications_email", rdvs_user: rdvs_user
   td

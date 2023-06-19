@@ -14,7 +14,7 @@ class User::RdvPolicy < ApplicationPolicy
   def new?
     return false if record.revoked?
 
-    (record.collectif? && record.bookable_publicly?) || rdv_belongs_to_user_or_relatives?
+    (record.collectif? && record.bookable_by_everyone_or_bookable_by_invited_users?) || rdv_belongs_to_user_or_relatives?
   end
 
   def create?
@@ -24,7 +24,7 @@ class User::RdvPolicy < ApplicationPolicy
   end
 
   def show?
-    return true if record.collectif? && record.bookable_publicly? && rdv_belongs_to_user_or_relatives?
+    return true if record.collectif? && record.bookable_by_everyone_or_bookable_by_invited_users? && rdv_belongs_to_user_or_relatives?
 
     rdv_belongs_to_user_or_relatives? && (!current_user.only_invited? || current_user.invited_for_rdv?(record))
   end
@@ -48,7 +48,7 @@ class User::RdvPolicy < ApplicationPolicy
     alias current_user pundit_user
 
     def resolve
-      my_rdvs_ids = scope
+      my_rdvs = scope
         .joins(:users)
         .where(users: { id: current_user.id })
         .or(
@@ -57,9 +57,10 @@ class User::RdvPolicy < ApplicationPolicy
           .where(users: { responsible_id: current_user.id })
         )
         .visible
-        .ids
 
-      scope.where(id: my_rdvs_ids).or(Rdv.where(id: scope.collectif.bookable_publicly)).distinct
+      bookable_rdv_collectifs = scope.where(id: scope.collectif.bookable_by_everyone_or_bookable_by_invited_users)
+
+      scope.where(id: my_rdvs).or(bookable_rdv_collectifs).distinct
     end
   end
 end

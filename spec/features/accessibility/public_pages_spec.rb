@@ -23,6 +23,12 @@ describe "public pages", js: true do
     # expect(page).to be_axe_clean
   end
 
+  it "home page for RDV Mairie is accessible" do
+    visit "http://www.rdv-mairie-test.localhost/"
+    expect(page).to have_current_path("/")
+    expect(page).to be_axe_clean
+  end
+
   it "presentation page for RDV Mairie is accessible" do
     visit "http://www.rdv-mairie-test.localhost/presentation_agent"
     expect(page).to have_current_path("/presentation_agent")
@@ -46,7 +52,7 @@ describe "public pages", js: true do
       territory = create(:territory, departement_number: "75")
       service = create(:service)
       organisation = create(:organisation, territory: territory)
-      motif = create(:motif, service: service, organisation: organisation, bookable_publicly: true)
+      motif = create(:motif, service: service, organisation: organisation)
       lieu = create(:lieu, organisation: organisation)
       create(:plage_ouverture, motifs: [motif], lieu: lieu)
 

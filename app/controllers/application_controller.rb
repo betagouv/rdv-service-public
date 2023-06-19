@@ -59,6 +59,7 @@ class ApplicationController < ActionController::Base
     Sentry.configure_scope do |scope|
       scope.set_context("params", params.to_unsafe_h)
       scope.set_context("url", { "request.original_url" => request.original_url })
+      scope.set_context("session", { "key" => "session:#{session.id}" })
     end
   end
 
@@ -69,7 +70,7 @@ class ApplicationController < ActionController::Base
   def configure_permitted_parameters
     if resource_class == Agent
       devise_parameter_sanitizer.permit(:invite, keys: [:email, :service_id, { organisation_ids: [] },
-                                                        { agent_territorial_access_rights_attributes: :territory_id }, { roles_attributes: %i[level organisation_id] },])
+                                                        { agent_territorial_access_rights_attributes: :territory_id }, { roles_attributes: %i[access_level organisation_id] },])
       devise_parameter_sanitizer.permit(:accept_invitation, keys: %i[first_name last_name])
       devise_parameter_sanitizer.permit(:account_update, keys: %i[first_name last_name service_id])
     elsif resource_class == User

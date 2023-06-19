@@ -9,14 +9,14 @@ describe Agent::AgentRolePolicy, type: :policy do
   describe "#update?" do
     context "regular agent, own agent_role" do
       let!(:agent) { create(:agent) }
-      let!(:agent_role) { create(:agent_role, level: AgentRole::LEVEL_BASIC, agent: agent, organisation: organisation) }
+      let!(:agent_role) { create(:agent_role, access_level: AgentRole::ACCESS_LEVEL_BASIC, agent: agent, organisation: organisation) }
 
       permissions(:update?) { it { is_expected.not_to permit(pundit_context, agent_role) } }
     end
 
     context "admin agent, own agent_role" do
       let!(:agent) { create(:agent) }
-      let!(:agent_role) { create(:agent_role, level: AgentRole::LEVEL_ADMIN, agent: agent, organisation: organisation) }
+      let!(:agent_role) { create(:agent_role, access_level: AgentRole::ACCESS_LEVEL_ADMIN, agent: agent, organisation: organisation) }
 
       permissions(:update?) { it { is_expected.to permit(pundit_context, agent_role) } }
     end
@@ -24,7 +24,7 @@ describe Agent::AgentRolePolicy, type: :policy do
     context "admin agent, other agent's agent_role" do
       let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
       let!(:other_agent) { create(:agent) }
-      let!(:agent_role) { create(:agent_role, level: AgentRole::LEVEL_ADMIN, agent: other_agent, organisation: organisation) }
+      let!(:agent_role) { create(:agent_role, access_level: AgentRole::ACCESS_LEVEL_ADMIN, agent: other_agent, organisation: organisation) }
 
       permissions(:update?) { it { is_expected.to permit(pundit_context, agent_role) } }
     end
@@ -33,7 +33,7 @@ describe Agent::AgentRolePolicy, type: :policy do
       let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
       let!(:other_organisation) { create(:organisation) }
       let!(:other_agent) { create(:agent) }
-      let!(:agent_role) { create(:agent_role, level: AgentRole::LEVEL_ADMIN, agent: other_agent, organisation: other_organisation) }
+      let!(:agent_role) { create(:agent_role, access_level: AgentRole::ACCESS_LEVEL_ADMIN, agent: other_agent, organisation: other_organisation) }
 
       permissions(:update?) { it { is_expected.not_to permit(pundit_context, agent_role) } }
     end

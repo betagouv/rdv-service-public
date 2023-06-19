@@ -15,7 +15,7 @@ FactoryBot.define do
     color { "##{SecureRandom.hex(3)}" }
     instruction_for_rdv { "Intruction pour le RDV" }
     restriction_for_rdv { "Consigne pour le RDV" }
-    bookable_publicly { true }
+    bookable_by { :everyone }
     location_type { :public_office }
     visibility_type { Motif::VISIBLE_AND_NOTIFIED }
 

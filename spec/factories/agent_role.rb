@@ -4,10 +4,10 @@ FactoryBot.define do
   factory :agent_role do
     agent
     organisation
-    level { AgentRole::LEVEL_BASIC }
+    access_level { AgentRole::ACCESS_LEVEL_BASIC }
 
     trait :admin do
-      level { AgentRole::LEVEL_ADMIN }
+      access_level { AgentRole::ACCESS_LEVEL_ADMIN }
     end
   end
 end

@@ -86,7 +86,7 @@ motif_org_paris_nord_pmi_rappel = Motif.create!(
   color: "#FF7C00",
   organisation_id: org_paris_nord.id,
   service_id: service_pmi.id,
-  bookable_publicly: true,
+  bookable_by: :everyone,
   location_type: :phone
 )
 motif_org_paris_nord_pmi_gyneco = Motif.create!(
@@ -94,7 +94,7 @@ motif_org_paris_nord_pmi_gyneco = Motif.create!(
   color: "#FF7C00",
   organisation_id: org_paris_nord.id,
   service_id: service_pmi.id,
-  bookable_publicly: false,
+  bookable_by: :agents,
   location_type: :phone
 )
 motif_org_paris_nord_pmi_prenatale = Motif.create!(
@@ -102,7 +102,7 @@ motif_org_paris_nord_pmi_prenatale = Motif.create!(
   color: "#CC7C00",
   organisation_id: org_paris_nord.id,
   service_id: service_pmi.id,
-  bookable_publicly: true,
+  bookable_by: :everyone,
   location_type: :public_office
 )
 motif_org_paris_nord_pmi_prenatale_phone = Motif.create!(
@@ -110,7 +110,7 @@ motif_org_paris_nord_pmi_prenatale_phone = Motif.create!(
   color: "#CC7C00",
   organisation_id: org_paris_nord.id,
   service_id: service_pmi.id,
-  bookable_publicly: true,
+  bookable_by: :everyone,
   location_type: :phone
 )
 motif_org_paris_nord_pmi_suivi = Motif.create!(
@@ -118,7 +118,7 @@ motif_org_paris_nord_pmi_suivi = Motif.create!(
   color: "#00FC60",
   organisation_id: org_paris_nord.id,
   service_id: service_pmi.id,
-  bookable_publicly: true,
+  bookable_by: :everyone,
   location_type: :public_office,
   follow_up: true
 )
@@ -127,7 +127,7 @@ motif_org_paris_nord_pmi_securite = Motif.create!(
   color: "#1010FF",
   organisation_id: org_paris_nord.id,
   service_id: service_pmi.id,
-  bookable_publicly: true,
+  bookable_by: :everyone,
   location_type: :home
 )
 motif_org_paris_nord_pmi_collectif = Motif.create!(
@@ -136,7 +136,7 @@ motif_org_paris_nord_pmi_collectif = Motif.create!(
   organisation_id: org_paris_nord.id,
   service_id: service_pmi.id,
   collectif: true,
-  bookable_publicly: true,
+  bookable_by: :everyone,
   default_duration_in_min: 60,
   location_type: :public_office
 )
@@ -145,7 +145,7 @@ _motif_org_paris_nord_social_rappel = Motif.create!(
   color: "#FF7C00",
   organisation_id: org_paris_nord.id,
   service_id: service_social.id,
-  bookable_publicly: true,
+  bookable_by: :everyone,
   location_type: :phone
 )
 _motif_org_paris_nord_social_suivi = Motif.create!(
@@ -153,7 +153,7 @@ _motif_org_paris_nord_social_suivi = Motif.create!(
   color: "#CC7C00",
   organisation_id: org_paris_nord.id,
   service_id: service_social.id,
-  bookable_publicly: true,
+  bookable_by: :everyone,
   location_type: :public_office,
   follow_up: true
 )
@@ -162,7 +162,7 @@ _motif_org_paris_nord_social_droits = Motif.create!(
   color: "#00FC60",
   organisation_id: org_paris_nord.id,
   service_id: service_social.id,
-  bookable_publicly: true,
+  bookable_by: :everyone,
   location_type: :public_office
 )
 _motif_org_paris_nord_social_collectif = Motif.create!(
@@ -171,7 +171,7 @@ _motif_org_paris_nord_social_collectif = Motif.create!(
   organisation_id: org_paris_nord.id,
   service_id: service_social.id,
   collectif: true,
-  bookable_publicly: true,
+  bookable_by: :everyone,
   default_duration_in_min: 120,
   location_type: :public_office
 )
@@ -186,7 +186,7 @@ motifs = {}
     color: "#10FF10",
     organisation_id: org.id,
     service_id: service_pmi.id,
-    bookable_publicly: true,
+    bookable_by: :everyone,
     location_type: :phone
   )
   motifs[seed_id][:pmi_prenatale] = Motif.create!(
@@ -194,7 +194,7 @@ motifs = {}
     color: "#FF1010",
     organisation_id: org.id,
     service_id: service_pmi.id,
-    bookable_publicly: true,
+    bookable_by: :everyone,
     location_type: :public_office
   )
 end
@@ -365,7 +365,7 @@ agent_org_paris_nord_pmi_martine = Agent.new(
   password: "123456",
   service_id: service_pmi.id,
   invitation_accepted_at: 10.days.ago,
-  roles_attributes: [{ organisation: org_paris_nord, level: AgentRole::LEVEL_ADMIN }],
+  roles_attributes: [{ organisation: org_paris_nord, access_level: AgentRole::ACCESS_LEVEL_ADMIN }],
   agent_territorial_access_rights_attributes: [{
     territory: territory75,
     allow_to_manage_teams: true,
@@ -386,7 +386,7 @@ agent_org_paris_nord_pmi_marco = Agent.new(
   password: "123456",
   service_id: service_pmi.id,
   invitation_accepted_at: 10.days.ago,
-  roles_attributes: [{ organisation: org_paris_nord, level: AgentRole::LEVEL_BASIC }],
+  roles_attributes: [{ organisation: org_paris_nord, access_level: AgentRole::ACCESS_LEVEL_BASIC }],
   agent_territorial_access_rights_attributes: [{
     territory: territory75,
     allow_to_manage_teams: false,
@@ -406,7 +406,7 @@ agent_org_paris_nord_social_polo = Agent.new(
   password: "123456",
   service_id: service_social.id,
   invitation_accepted_at: 10.days.ago,
-  roles_attributes: [{ organisation: org_paris_nord, level: AgentRole::LEVEL_BASIC }],
+  roles_attributes: [{ organisation: org_paris_nord, access_level: AgentRole::ACCESS_LEVEL_BASIC }],
   agent_territorial_access_rights_attributes: [{
     territory: territory75,
     allow_to_manage_teams: false,
@@ -426,7 +426,7 @@ org_arques_pmi_maya = Agent.new(
   password: "123456",
   service_id: service_pmi.id,
   invitation_accepted_at: 10.days.ago,
-  roles_attributes: Organisation.where(territory: territory62).pluck(:id).map { { organisation_id: _1, level: AgentRole::LEVEL_ADMIN } },
+  roles_attributes: Organisation.where(territory: territory62).pluck(:id).map { { organisation_id: _1, access_level: AgentRole::ACCESS_LEVEL_ADMIN } },
   agent_territorial_access_rights_attributes: [{
     territory: territory62,
     allow_to_manage_teams: true,
@@ -446,7 +446,7 @@ agent_org_bapaume_pmi_bruno = Agent.new(
   password: "123456",
   service_id: service_pmi.id,
   invitation_accepted_at: 10.days.ago,
-  roles_attributes: [{ organisation: org_bapaume, level: AgentRole::LEVEL_ADMIN }],
+  roles_attributes: [{ organisation: org_bapaume, access_level: AgentRole::ACCESS_LEVEL_ADMIN }],
   agent_territorial_access_rights_attributes: [{
     territory: territory62,
     allow_to_manage_teams: false,
@@ -467,7 +467,7 @@ agent_org_bapaume_pmi_gina = Agent.new(
   password: "123456",
   service_id: service_pmi.id,
   invitation_accepted_at: 10.days.ago,
-  roles_attributes: [{ organisation: org_bapaume, level: AgentRole::LEVEL_ADMIN }],
+  roles_attributes: [{ organisation: org_bapaume, access_level: AgentRole::ACCESS_LEVEL_ADMIN }],
   agent_territorial_access_rights_attributes: [{
     territory: territory62,
     allow_to_manage_teams: false,

@@ -7,9 +7,9 @@ class Api::V1::MotifsController < Api::V1::AgentAuthBaseController
 
     if params.key?(:bookable_publicly)
       motifs = if params[:bookable_publicly].to_b
-                 motifs.bookable_publicly
+                 motifs.bookable_by_everyone_or_bookable_by_invited_users
                else
-                 motifs.not_bookable_publicly
+                 motifs.not_bookable_by_everyone_or_not_bookable_by_invited_users
                end
     end
 

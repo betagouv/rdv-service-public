@@ -42,6 +42,9 @@ class Absence < ApplicationRecord
     not_recurring_start_in_range.or(recurring_in_range)
   }
 
+  # Delegations
+  delegate :domain, to: :agent
+
   ## -
 
   def ical_uid

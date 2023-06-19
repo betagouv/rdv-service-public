@@ -161,11 +161,11 @@ class Agent < ApplicationRecord
   end
 
   def admin_orgs
-    organisations.merge(roles.where(level: AgentRole::LEVEL_ADMIN))
+    organisations.merge(roles.where(access_level: AgentRole::ACCESS_LEVEL_ADMIN))
   end
 
   def basic_orgs
-    organisations.merge(roles.where(level: AgentRole::LEVEL_BASIC))
+    organisations.merge(roles.where(access_level: AgentRole::ACCESS_LEVEL_BASIC))
   end
 
   def multiple_organisations_access?
@@ -203,13 +203,13 @@ class Agent < ApplicationRecord
     plage_ouvertures_scope = PlageOuverture
       .where(created_at: ..date)
       .in_range(date..)
-      .bookable_publicly
+      .bookable_by_everyone_or_bookable_by_invited_users
     agents_with_open_plage = joins(:plage_ouvertures).merge(plage_ouvertures_scope)
 
     rdv_collectif_scope = Rdv
       .collectif
       .where(created_at: ..date)
-      .bookable_publicly
+      .bookable_by_everyone_or_bookable_by_invited_users
     agents_with_open_rdv_collectif = joins(:rdvs).merge(rdv_collectif_scope)
 
     where_id_in_subqueries([agents_with_open_plage, agents_with_open_rdv_collectif])

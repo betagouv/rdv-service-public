@@ -27,9 +27,19 @@ Note : la librairie graphviz doit être installée ([voir guide](https://voormed
 ## Tâches automatisées
 
 * `schedule_jobs` tourne après chaque `db:migrate` et`db:schema:load` pour ajouter automatiquement les “cron jobs”.
-* Dans `cron_job.rb`, outre les tâches métiers (c’est-à-dire les envois de mail et la gestion de file d’attente), il y a un job de gestion de production, `ScalingoAppRestarterJob` dont le rôle est de redémarrer les instances Scalingo chaque nuit. 
+* Dans `cron_job.rb`, outre les tâches métiers (c’est-à-dire les envois de mail et la gestion de file d’attente), il y a un job de gestion de production, `ScalingoAppRestarterJob` dont le rôle est de redémarrer les instances Scalingo chaque nuit.
 
-## Restore production
+## Dumps de production
+
+### Règles d'utilisation
+
+Pour du débuggage ou des investigations sur la performance, il peut arriver aux membres de l'équipe de télécharger un dump de la production.
+
+Cette opération est sensible, et doit donc toujours se faire en suivant ces règles :
+- Supprimez le fichier zip du dump dès qu'il est chargé localement. Vérifiez qu'il est bien supprimé de la corbeille
+- dès que vous avez fini votre investigation, supprimez la base de données et reprenez le seed avec les données factices.
+- Pour éviter un oubli, ne gardez jamais un dump de production chargé en local pour plus de 48h.
+- Faites attention à ce qu'il n'y ai pas de backup automatique de votre disque dur pendant que le dump de la db est dessus, que ça soit sous la forme de données en base, de fichier .pgsql, ou de fichier dans la corbeille.
 
 Pour tester les migrations avec les données de prod, il faut récupérer un backup de la prod localement. Ça permet aussi de tester que nous arrivons bien à récupérer un backup valable de la production.
 

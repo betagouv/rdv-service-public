@@ -63,7 +63,7 @@ module SuperAdmins
         end
 
         old_role = AgentRole.find_by(agent_id: agent.id, organisation_id: params[:old_organisation_id])
-        AgentRole.create!(agent_id: agent.id, organisation: new_organisation, level: old_role.level)
+        AgentRole.create!(agent_id: agent.id, organisation: new_organisation, access_level: old_role.access_level)
         old_role.delete
       end
       # rubocop:enable Rails/SkipsModelValidations

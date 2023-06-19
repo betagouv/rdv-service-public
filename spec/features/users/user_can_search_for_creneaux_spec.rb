@@ -11,10 +11,10 @@ describe "User can search for creneaux" do
   before { travel_to(now) }
 
   context "when the next creneau is after the max booking delay" do
-    let!(:motif) { create(:motif, name: "Vaccination", bookable_publicly: true, organisation: organisation, max_public_booking_delay: 7.days, restriction_for_rdv: nil, service: service) }
+    let!(:motif) { create(:motif, name: "Vaccination", organisation: organisation, max_public_booking_delay: 7.days, restriction_for_rdv: nil, service: service) }
     # Avec un seul motif on passe par le choix d'un lieu.
     # Avec deux motifs, on affiche directement la disponibilité.
-    let!(:autre_motif) { create(:motif, bookable_publicly: true, organisation: organisation, max_public_booking_delay: 7.days, service: service) }
+    let!(:autre_motif) { create(:motif, organisation: organisation, max_public_booking_delay: 7.days, service: service) }
     let!(:plage_ouverture) { create(:plage_ouverture, :daily, first_day: now + 8.days, motifs: [motif], lieu: lieu, organisation: organisation) }
     let!(:autre_plage_ouverture) { create(:plage_ouverture, :daily, first_day: now + 8.days, motifs: [autre_motif], lieu: lieu, organisation: organisation) }
 
@@ -35,7 +35,7 @@ describe "User can search for creneaux" do
   end
 
   context "when two agents are available for the given motif" do
-    let!(:motif) { create(:motif, name: "Vaccination", bookable_publicly: true, organisation: organisation) }
+    let!(:motif) { create(:motif, name: "Vaccination", organisation: organisation) }
     let!(:plage_ouverture1) { create(:plage_ouverture, first_day: Time.zone.tomorrow, motifs: [motif], lieu: lieu, organisation: organisation) }
     let!(:plage_ouverture2) { create(:plage_ouverture, first_day: Time.zone.tomorrow, motifs: [motif], lieu: lieu, organisation: organisation) }
 
