@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# API de mise à disposition pour le moteur de recherche de l'ANTS
 class Api::Ants::BaseController < ActionController::Base
   respond_to :json
 

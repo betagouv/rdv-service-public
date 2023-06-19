@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Wrapper autour de l'API de l'ANTS pour la gestion des doublons
 module AntsApi
   class Appointment
     attr_reader :application_id, :meeting_point, :appointment_date, :management_url
