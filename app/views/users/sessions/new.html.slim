@@ -17,7 +17,8 @@
         = link_to new_registration_path(resource_name, params: params.permit(:lieu_id, :motif_id, :starts_at)) do
           b Je m'inscris
 
-    hr
-      .text-center.text-muted
-        = link_to prescripteur_start_path(@rdv_wizard.to_query) do
-          b Je suis un prescripteur qui oriente un bénéficiaire
+    - if @rdv_wizard
+      hr
+        .text-center.text-muted
+          = link_to prescripteur_start_path(@rdv_wizard.to_query) do
+            b Je suis un prescripteur qui oriente un bénéficiaire
