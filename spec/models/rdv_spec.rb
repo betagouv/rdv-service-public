@@ -798,6 +798,7 @@ describe Rdv, type: :model do
     end
 
     before do
+      travel_to(Time.zone.parse("01/01/2020"))
       ENV["ANTS_RDV_API_URL"] = ants_api_url
       ENV["ANTS_RDV_OPT_AUTH_TOKEN"] = "fake-token"
       stub_request(:post, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/appointments/*})
