@@ -816,7 +816,7 @@ describe Rdv, type: :model do
       end
     end
 
-    describe "before_commit on_destroy" do
+    describe "after on_destroy" do
       it "deletes appointment on ANTS" do
         perform_enqueued_jobs do
           rdv.save
