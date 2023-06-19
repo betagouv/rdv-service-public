@@ -3,7 +3,6 @@
 module Ants
   module EventSerializerAndListener
     extend ActiveSupport::Concern
-    include Rails.application.routes.url_helpers
 
     ATTRIBUTES_TO_WATCH = %w[id status starts_at lieu_id].freeze
 
@@ -37,7 +36,7 @@ module Ants
       {
         meeting_point: lieu.name,
         appointment_date: starts_at.strftime("%Y-%m-%d %H:%M:%S"),
-        management_url: rdvs_short_url(self, host: organisation.domain.host_name),
+        management_url: Rails.application.routes.url_helpers.rdvs_short_url(self, host: organisation.domain.host_name),
       }
     end
 
