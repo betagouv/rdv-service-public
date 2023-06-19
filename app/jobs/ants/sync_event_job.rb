@@ -14,31 +14,29 @@ module Ants
       @rdv_attributes = rdv_attributes
       @appointment_data = appointment_data
 
-      rdv_canceled_or_deleted? ? delete_appointments : create_appointments
+      rdv_cancelled_or_deleted? ? delete_appointments : create_appointments
     end
 
     private
 
     def delete_appointments
-      users.each do |user|
-        appointment = AntsApi::Appointment.new(application_id: user.ants_pre_demande_number, **@appointment_data)
-        AntsApi.delete_appointment(appointment)
-      end
+      users.each { |user| AntsApi.delete_appointment(appointment(user)) }
     end
 
     def create_appointments
-      users.each do |user|
-        appointment = AntsApi::Appointment.new(application_id: user.ants_pre_demande_number, **@appointment_data)
-        AntsApi.create_appointment(appointment)
-      end
+      users.each { |user| AntsApi.create_appointment(appointment(user)) }
     end
 
     def users
       @users ||= User.where(id: @rdv_attributes[:users_ids])
     end
 
-    def rdv_canceled_or_deleted?
+    def rdv_cancelled_or_deleted?
       Rdv::CANCELLED_STATUSES.include?(@rdv_attributes[:status]) || !Rdv.exists?(id: @rdv_attributes[:id])
+    end
+
+    def appointment(user)
+      AntsApi::Appointment.new(application_id: user.ants_pre_demande_number, **@appointment_data)
     end
   end
 end

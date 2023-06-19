@@ -10,17 +10,22 @@ module AntsApi
       @appointment_date = appointment_date
       @management_url = management_url
     end
+
+    def to_request_params(action: :create)
+      params = {
+        application_id: appointment.application_id,
+        meeting_point: appointment.meeting_point,
+        appointment_date: appointment.appointment_date,
+      }
+
+      action == :delete ? params : params.merge(management_url: appointment.management_url)
+    end
   end
 
   def self.create_appointment(appointment)
     Typhoeus.post(
       "#{ENV['ANTS_RDV_API_URL']}/appointments",
-      params: {
-        application_id: appointment.application_id,
-        meeting_point: appointment.meeting_point,
-        appointment_date: appointment.appointment_date,
-        management_url: appointment.management_url,
-      },
+      params: appointment.to_request_params,
       headers: headers
     )
   end
@@ -28,11 +33,7 @@ module AntsApi
   def self.delete_appointment(appointment)
     Typhoeus.delete(
       "#{ENV['ANTS_RDV_API_URL']}/appointments",
-      params: {
-        application_id: appointment.application_id,
-        meeting_point: appointment.meeting_point,
-        appointment_date: appointment.appointment_date,
-      },
+      params: appointment.to_request_params(action: :delete),
       headers: headers
     )
   end
