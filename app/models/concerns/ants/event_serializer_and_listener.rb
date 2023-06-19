@@ -9,7 +9,9 @@ module Ants
       attr_accessor :needs_sync_to_ants
 
       Rdv.before_commit do |rdv|
-        Ants::EventSerializerAndListener.mark_for_sync([rdv])
+        if rdv.saved_change_to_id? || rdv.saved_change_to_status?
+          Ants::EventSerializerAndListener.mark_for_sync([rdv])
+        end
       end
       User.before_commit do |user|
         if user.saved_change_to_ants_pre_demande_number?
@@ -18,7 +20,9 @@ module Ants
       end
 
       Rdv.after_commit do |rdv|
-        Ants::EventSerializerAndListener.enqueue_sync_for_marked_record([rdv])
+        if rdv.saved_change_to_id? || rdv.saved_change_to_status?
+          Ants::EventSerializerAndListener.enqueue_sync_for_marked_record([rdv])
+        end
       end
       User.after_commit do |user|
         if user.saved_change_to_ants_pre_demande_number?
