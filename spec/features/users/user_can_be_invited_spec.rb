@@ -208,7 +208,7 @@ describe "User can be invited" do
       end
     end
 
-    context "when this is not an invitation is not to take rdv" do
+    context "when this is not an invitation to take rdv" do
       let!(:rdvs_user) { create(:rdvs_user, user: user) }
       let!(:invitation_token) { rdvs_user.new_raw_invitation_token }
 
