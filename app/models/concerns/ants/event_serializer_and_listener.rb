@@ -5,11 +5,13 @@ module Ants
     extend ActiveSupport::Concern
     include Rails.application.routes.url_helpers
 
+    ATTRIBUTES_TO_WATCH = %w[id status starts_at lieu_id].freeze
+
     included do
       attr_accessor :needs_sync_to_ants
 
       Rdv.before_commit do |rdv|
-        if rdv.saved_change_to_id? || rdv.saved_change_to_status?
+        if rdv.watching_attributes_for_ants_api_changed?
           Ants::EventSerializerAndListener.mark_for_sync([rdv])
         end
       end
@@ -20,7 +22,7 @@ module Ants
       end
 
       Rdv.after_commit do |rdv|
-        if rdv.saved_change_to_id? || rdv.saved_change_to_status?
+        if rdv.watching_attributes_for_ants_api_changed?
           Ants::EventSerializerAndListener.enqueue_sync_for_marked_record([rdv])
         end
       end
@@ -37,6 +39,10 @@ module Ants
         appointment_date: starts_at.strftime("%Y-%m-%d %H:%M:%S"),
         management_url: rdvs_short_url(self, host: organisation.domain.host_name),
       }
+    end
+
+    def watching_attributes_for_ants_api_changed?
+      saved_changes.keys & ATTRIBUTES_TO_WATCH
     end
 
     def self.mark_for_sync(rdvs)
