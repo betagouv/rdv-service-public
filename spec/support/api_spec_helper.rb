@@ -16,10 +16,10 @@ module ApiSpecHelper
 
   def save_without_validating_roles(agent)
     # organisation_have_at_least_one_admin validation on AgentRole model
-    # is causing agents not saving if  agent's organisation has no admin
-    agent.roles.each do |role|
-      role.save(validate: false)
-    end
+    # is causing validation error if agent's organisation has no admin
+    AgentRole.skip_callback(:validate, :organisation_have_at_least_one_admin)
+    agent.roles.map(&:save)
+    AgentRole.set_callback(:validate, :organisation_have_at_least_one_admin)
     agent.save!
   end
 end

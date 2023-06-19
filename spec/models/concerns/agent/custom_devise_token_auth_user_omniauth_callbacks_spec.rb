@@ -21,4 +21,40 @@ RSpec.describe Agent::CustomDeviseTokenAuthUserOmniauthCallbacks, type: :concern
       expect(current_digest).to eq(original_digest)
     end
   end
+
+  describe "included validations" do
+    context "when agent has all roles intervenant" do
+      let!(:organisation) { create(:organisation) }
+      let(:agent) { build(:agent, email: nil) }
+      let(:existing_agent) { build(:agent, email: nil) }
+
+      before do
+        existing_agent.roles = [create(:agent_role, :intervenant)]
+        existing_agent.save
+        agent.roles = [create(:agent_role, :intervenant)]
+        agent.valid?
+      end
+
+      it "does not validate presence or nil uniqueness of the email" do
+        expect(agent.errors[:email]).to be_empty
+      end
+    end
+
+    context "when agent has not all roles intervenant" do
+      let!(:organisation) { create(:organisation) }
+      let!(:existing_agent) { create(:agent, admin_role_in_organisations: [organisation], email: "super_agent@gmail.com") }
+      let(:agent) { build(:agent, admin_role_in_organisations: [organisation], email: nil) }
+
+      it "validates presence of email" do
+        agent.valid?
+        expect(agent.errors[:email]).to include("doit être rempli(e)")
+      end
+
+      it "validates uniqueness of email" do
+        agent.email = "super_agent@gmail.com"
+        agent.valid?
+        expect(agent.errors[:email]).to include("est déjà utilisé")
+      end
+    end
+  end
 end
