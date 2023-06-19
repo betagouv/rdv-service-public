@@ -12,7 +12,10 @@ module Ants
 
     def perform(rdv_attributes:, appointment_data:)
       @rdv_attributes = rdv_attributes
-      @appointment_data = appointment_data
+      rdv = Rdv.find_by(id: rdv_attributes[:id])
+      # If the RDV is present (not deleted), we serialize now to get the most recent data
+      # This way, we'll only be using the appointment_data argument if the RDV has been deleted
+      @appointment_data = rdv.present? ? rdv.serialize_for_ants_api : appointment_data
 
       rdv_cancelled_or_deleted? ? delete_appointments : create_appointments
     end
