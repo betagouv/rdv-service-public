@@ -13,12 +13,12 @@ module AntsApi
 
     def to_request_params(action: :create)
       params = {
-        application_id: appointment.application_id,
-        meeting_point: appointment.meeting_point,
-        appointment_date: appointment.appointment_date,
+        application_id: application_id,
+        meeting_point: meeting_point,
+        appointment_date: appointment_date,
       }
 
-      action == :delete ? params : params.merge(management_url: appointment.management_url)
+      action == :delete ? params : params.merge(management_url: management_url)
     end
   end
 

@@ -351,4 +351,25 @@ describe User, type: :model do
       expect(relative.can_be_soft_deleted_from_organisation?(organisation)).to be false
     end
   end
+
+  describe "ANTS callbacks" do
+    let!(:organisation) { create(:organisation, verticale: :rdv_mairie) }
+    let!(:user) { create(:user, organisations: [organisation]) }
+    let!(:rdv) { create(:rdv, users: [user], organisation: organisation) }
+    let!(:create_appointment_stub) { stub_request(:post, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/appointments/*}) }
+
+    before do
+      ENV["ANTS_RDV_API_URL"] = "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api"
+    end
+
+    describe "after_commit: Changing the value of ants_pre_demande_number" do
+      it "triggers a sync with ANTS" do
+        perform_enqueued_jobs do
+          user.update!(ants_pre_demande_number: "1122334455")
+
+          expect(create_appointment_stub).to have_been_requested.at_least_once
+        end
+      end
+    end
+  end
 end
