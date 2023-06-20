@@ -125,4 +125,20 @@ RSpec.describe Ants::EventSerializerAndListener do
       end
     end
   end
+
+  describe "Lieu callbacks" do
+    let(:create_appointment_stub) { stub_request(:post, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/appointments/*}) }
+
+    before { rdv.save }
+
+    describe "after_commit: Changing the name of the lieu" do
+      it "triggers a sync with ANTS" do
+        perform_enqueued_jobs do
+          lieu.update(name: "Nouveau Lieu")
+
+          expect(create_appointment_stub).to have_been_requested.at_least_once
+        end
+      end
+    end
+  end
 end

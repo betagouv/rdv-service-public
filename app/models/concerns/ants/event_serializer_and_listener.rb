@@ -10,25 +10,23 @@ module Ants
       attr_accessor :needs_sync_to_ants
 
       Rdv.before_commit do |rdv|
-        if rdv.watching_attributes_for_ants_api_changed?
-          Ants::EventSerializerAndListener.mark_for_sync([rdv])
-        end
+        Ants::EventSerializerAndListener.mark_for_sync([rdv]) if rdv.watching_attributes_for_ants_api_changed?
       end
       User.before_commit do |user|
-        if user.saved_change_to_ants_pre_demande_number?
-          Ants::EventSerializerAndListener.mark_for_sync(user.rdvs)
-        end
+        Ants::EventSerializerAndListener.mark_for_sync(user.rdvs) if user.saved_change_to_ants_pre_demande_number?
+      end
+      Lieu.before_commit do |lieu|
+        Ants::EventSerializerAndListener.mark_for_sync(lieu.rdvs) if lieu.saved_change_to_name?
       end
 
       Rdv.after_commit do |rdv|
-        if rdv.watching_attributes_for_ants_api_changed?
-          Ants::EventSerializerAndListener.enqueue_sync_for_marked_record([rdv])
-        end
+        Ants::EventSerializerAndListener.enqueue_sync_for_marked_record([rdv]) if rdv.watching_attributes_for_ants_api_changed?
       end
       User.after_commit do |user|
-        if user.saved_change_to_ants_pre_demande_number?
-          Ants::EventSerializerAndListener.enqueue_sync_for_marked_record(user.rdvs)
-        end
+        Ants::EventSerializerAndListener.enqueue_sync_for_marked_record(user.rdvs) if user.saved_change_to_ants_pre_demande_number?
+      end
+      Lieu.after_commit do |lieu|
+        Ants::EventSerializerAndListener.enqueue_sync_for_marked_record(lieu.rdvs) if lieu.saved_change_to_name?
       end
     end
 
