@@ -43,8 +43,10 @@ describe Users::RdvWizardStepsController, type: :controller do
           user.raw_invitation_token
         end
 
+        before { request.session[:invitation] = { invitation_token:, expires_at: 10.hours.from_now } }
+
         it "return success" do
-          get :new, params: { step: 2, motif_id: motif.id, lieu_id: lieu.id, starts_at: starts_at, invitation_token: invitation_token }
+          get :new, params: { step: 2, motif_id: motif.id, lieu_id: lieu.id, starts_at: starts_at }
           expect(response).to have_http_status(:success)
           expect(assigns(:rdv).users).to eq([user])
           expect(response).to render_template("users/rdv_wizard_steps/step2")

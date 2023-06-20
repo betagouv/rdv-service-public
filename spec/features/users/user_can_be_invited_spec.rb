@@ -26,7 +26,10 @@ describe "User can be invited" do
   let!(:city_code) { "26000" }
   let!(:territory26) { create(:territory, departement_number: departement_number) }
   let!(:organisation) { create(:organisation, territory: territory26) }
-  let!(:motif) { create(:motif, name: "RSA orientation sur site", bookable_by: "agents_and_prescripteurs_and_invited_users", organisation: organisation, service: agent.service) }
+  let!(:motif_category) { create(:motif_category, short_name: "rsa_orientation") }
+  let!(:motif) do
+    create(:motif, name: "RSA orientation sur site", bookable_by: "agents_and_prescripteurs_and_invited_users", organisation:, service: agent.service, motif_category:)
+  end
   let!(:lieu) { create(:lieu, organisation: organisation) }
   let!(:lieu2) { create(:lieu, organisation: organisation) }
   let!(:plage_ouverture) { create(:plage_ouverture, :daily, first_day: now - 1.month, motifs: [motif], lieu: lieu, organisation: organisation) }
@@ -47,7 +50,7 @@ describe "User can be invited" do
     it "shows the available lieux to take a rdv", js: true do
       visit prendre_rdv_path(
         departement: departement_number, city_code: city_code, invitation_token: invitation_token,
-        address: "16 rue de la résistance", motif_search_terms: "RSA orientation"
+        address: "16 rue de la résistance", motif_category_short_name: "rsa_orientation"
       )
 
       # Lieu selection
@@ -117,15 +120,16 @@ describe "User can be invited" do
           name: "RSA orientation sur site",
           max_public_booking_delay: 7.days,
           bookable_by: "agents_and_prescripteurs_and_invited_users",
-          organisation: organisation,
-          service: agent.service
+          organisation:,
+          service: agent.service,
+          motif_category:
         )
       end
 
       it "does not show the lieux" do
         visit prendre_rdv_path(
           departement: departement_number, city_code: city_code, invitation_token: invitation_token,
-          address: "16 rue de la résistance", motif_search_terms: "RSA orientation"
+          address: "16 rue de la résistance", motif_category_short_name: "rsa_orientation"
         )
 
         expect(page).not_to have_content(lieu.name)
@@ -137,7 +141,9 @@ describe "User can be invited" do
 
   describe "in motifs selection page" do
     let!(:geo_search) { instance_double(Users::GeoSearch, available_motifs: Motif.where(id: [motif.id, motif2.id])) }
-    let!(:motif2) { create(:motif, name: "RSA orientation telephone", bookable_by: "agents_and_prescripteurs_and_invited_users", organisation: organisation2, service: agent.service) }
+    let!(:motif2) do
+      create(:motif, name: "RSA orientation telephone", bookable_by: "everyone", organisation: organisation2, service: agent.service, motif_category:)
+    end
     let!(:plage_ouverture2) { create(:plage_ouverture, motifs: [motif2], organisation: organisation2) }
 
     before do
@@ -148,7 +154,7 @@ describe "User can be invited" do
     it "shows the geo search available motifs to take a rdv", js: true do
       visit prendre_rdv_path(
         departement: departement_number, city_code: city_code, invitation_token: invitation_token,
-        address: "16 rue de la résistance", motif_search_terms: "RSA orientation"
+        address: "16 rue de la résistance", motif_category_short_name: "rsa_orientation"
       )
 
       # Motif selection
@@ -201,9 +207,24 @@ describe "User can be invited" do
         find(".card-title", text: /#{lieu.name}/).ancestor(".card").find("a.stretched-link").click
       end
     end
+
+    context "when this is not an invitation to take rdv" do
+      let!(:rdvs_user) { create(:rdvs_user, user: user) }
+      let!(:invitation_token) { rdvs_user.new_raw_invitation_token }
+
+      it "does not show the motifs that can be booked through invitation only" do
+        visit prendre_rdv_path(
+          departement: departement_number, city_code: city_code, invitation_token: invitation_token,
+          address: "16 rue de la résistance", motif_category_short_name: "rsa_orientation"
+        )
+
+        expect(page).to have_content(motif2.name)
+        expect(page).not_to have_content(motif.name)
+      end
+    end
   end
 
-  describe "when no motifs found through geo search" do
+  describe "when no motifs are found through geo search" do
     let!(:geo_search) { instance_double(Users::GeoSearch, available_motifs: Motif.none) }
     let!(:second_motif) do
       create(:motif, name: "RSA orientation telephone", bookable_by: "agents_and_prescripteurs_and_invited_users", organisation: organisation2, service: agent.service)
@@ -230,6 +251,26 @@ describe "User can be invited" do
       expect(page).to have_content(motif.name)
       expect(page).to have_content(second_motif.name)
       expect(page).to have_content(collectif_motif.name)
+    end
+  end
+
+  describe "invitation attributes cannot be modified" do
+    it "priorize the session invitation attributes to the url attributes" do
+      visit prendre_rdv_path(
+        departement: departement_number, city_code: city_code, invitation_token: invitation_token,
+        address: "16 rue de la résistance", lieu_id: lieu.id
+      )
+
+      expect(page).to have_content(lieu.name)
+      expect(page).not_to have_content(lieu2.name)
+
+      visit prendre_rdv_path(
+        departement: departement_number, city_code: city_code,
+        address: "16 rue de la résistance", lieu_id: lieu2.id
+      )
+
+      expect(page).to have_content(lieu.name)
+      expect(page).not_to have_content(lieu2.name)
     end
   end
 end

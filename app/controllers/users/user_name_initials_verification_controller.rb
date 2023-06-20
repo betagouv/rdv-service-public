@@ -25,7 +25,7 @@ class Users::UserNameInitialsVerificationController < UserAuthController
 
   def after_success_redirect_path
     return session.delete(:return_to_after_verification) if session[:return_to_after_verification]
-    return users_rdv_path(rdv_by_token) if rdv_by_token
+    return users_rdv_path(invitation.rdv) if invitation&.rdv
 
     root_path
   end

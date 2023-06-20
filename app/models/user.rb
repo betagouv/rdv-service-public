@@ -227,10 +227,6 @@ class User < ApplicationRecord
     rdv.id == @invitation_rdv&.id
   end
 
-  def through_sign_in_form?
-    !only_invited?
-  end
-
   def domain
     if rdvs.any?
       rdvs.order(created_at: :desc).first.domain

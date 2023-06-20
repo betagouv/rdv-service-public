@@ -12,7 +12,7 @@ section.bg-light.p-4
               .card-subtitle= lieu.address
               .card-subtitle= context.service.name
             .col-md.align-self-center.pt-3.pt-md-0.position-static
-              = link_to prendre_rdv_path(context.query.merge(lieu_id: lieu.id, date: next_availability.starts_at)), class: "d-block stretched-link" do
+              = link_to prendre_rdv_path(context.query_params.merge(lieu_id: lieu.id, date: next_availability.starts_at)), class: "d-block stretched-link" do
                 .row
                   .col
                     = t(".next_availability")
