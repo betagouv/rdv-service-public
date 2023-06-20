@@ -10,6 +10,13 @@ Pour cela, ce système d'informations doit :
 
 Du code d’exemple est [disponible C# et en NodeJS](https://github.com/guillett/webhook).
 
+## Configuration
+
+Vous pouvez mettre en place des webhooks en toute autonomie. À partir de la [page de configuration] de votre organisation :
+
+![Panneau de configuration](./config.png)
+
+
 ## Démonstration
 
 Dans notre environnement de démonstration, nous pouvons envoyer des notifications sur une URL de test ou envoyer des emails qui contiennent le contenu brut des notifications envoyées par les requêtes HTTP. Pour cela, [contactez-nous](mailto:contact@rdv-solidarites.fr) !
