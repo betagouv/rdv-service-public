@@ -33,7 +33,7 @@ motif1_cdad1 = Motif.create!(
   color: "#00ffff",
   default_duration_in_min: 60,
   organisation: org_cdad1,
-  bookable_publicly: false,
+  bookable_by: "agents",
   max_public_booking_delay: 2_629_746,
   service: service_cdad,
   for_secretariat: true
@@ -68,6 +68,9 @@ cdad_intervenant1 = Agent.new(
   service_id: service_cdad.id,
   roles_attributes: [
     { organisation: org_cdad1, access_level: AgentRole::ACCESS_LEVEL_INTERVENANT },
+  ],
+  agent_territorial_access_rights_attributes: [
+    { territory: territory_girondee },
   ]
 )
 cdad_intervenant1.save!
@@ -78,6 +81,9 @@ cdad_intervenant2 = Agent.new(
   service_id: service_cdad.id,
   roles_attributes: [
     { organisation: org_cdad1, access_level: AgentRole::ACCESS_LEVEL_INTERVENANT },
+  ],
+  agent_territorial_access_rights_attributes: [
+    { territory: territory_girondee },
   ]
 )
 cdad_intervenant2.save!
@@ -88,6 +94,9 @@ cdad_intervenant3 = Agent.new(
   service_id: service_cdad.id,
   roles_attributes: [
     { organisation: org_cdad2, access_level: AgentRole::ACCESS_LEVEL_INTERVENANT },
+  ],
+  agent_territorial_access_rights_attributes: [
+    { territory: territory_girondee },
   ]
 )
 cdad_intervenant3.save!
