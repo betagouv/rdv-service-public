@@ -20,7 +20,7 @@ tr id="agent_#{agent.id}"
       i.fa.fa-user-cog
   td
     .d-flex
-      - if policy([:agent, agent_role]).create? && !agent.invitation_accepted?
+      - if policy([:agent, agent_role]).create? && !agent.invitation_accepted? && !agent.all_roles_intervenant?
         div.mr-3= link_to t("devise.invitations.reinvite"),
                 reinvite_admin_organisation_invitation_path(current_organisation, agent),
                 method: :post

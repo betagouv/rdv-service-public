@@ -5,6 +5,7 @@ describe "Agents can export their calendar to other tools, such as Outlook or Go
     uid = "37b24280-7015-4a8a-b752-907e33171106"
     allow(SecureRandom).to receive(:uuid).and_return(uid)
     organisation = create(:organisation)
+    create(:agent, admin_role_in_organisations: [organisation])
     agent = create(:agent, basic_role_in_organisations: [organisation], first_name: "Rémi", last_name: "NOM D'AGENT")
     login_as(agent, scope: :agent)
 

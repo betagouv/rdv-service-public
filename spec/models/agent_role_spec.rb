@@ -95,6 +95,41 @@ describe AgentRole, type: :model do
     end
   end
 
+  describe "#intervenant_cannot_change validation" do
+    let!(:organisation) { create(:organisation) }
+    let!(:agent_role1) { create(:agent_role, :intervenant, organisation: organisation) }
+
+    it "does not allow access_level change from intervenant to basic" do
+      result = agent_role1.update(access_level: AgentRole::ACCESS_LEVEL_BASIC)
+      expect(result).to be_falsey
+      expect(agent_role1.reload.access_level).to eq(AgentRole::ACCESS_LEVEL_INTERVENANT)
+    end
+
+    it "does not allow access_level change from intervenant to admin" do
+      result = agent_role1.update(access_level: AgentRole::ACCESS_LEVEL_ADMIN)
+      expect(result).to be_falsey
+      expect(agent_role1.reload.access_level).to eq(AgentRole::ACCESS_LEVEL_INTERVENANT)
+    end
+  end
+
+  describe "#cannot_change_to_intervenant validation" do
+    let!(:organisation) { create(:organisation) }
+    let!(:agent_role1) { create(:agent_role, access_level: AgentRole::ACCESS_LEVEL_BASIC, organisation: organisation) }
+    let!(:agent_role2) { create(:agent_role, access_level: AgentRole::ACCESS_LEVEL_ADMIN, organisation: organisation) }
+
+    it "does not allow access_level change from basic to intervenant" do
+      result = agent_role1.update(access_level: AgentRole::ACCESS_LEVEL_INTERVENANT)
+      expect(result).to be_falsey
+      expect(agent_role1.reload.access_level).to eq(AgentRole::ACCESS_LEVEL_BASIC)
+    end
+
+    it "does not allow access_level change from admin to intervenant" do
+      result = agent_role2.update(access_level: AgentRole::ACCESS_LEVEL_INTERVENANT)
+      expect(result).to be_falsey
+      expect(agent_role2.reload.access_level).to eq(AgentRole::ACCESS_LEVEL_ADMIN)
+    end
+  end
+
   describe "uniqueness error differ if the agent has not accepted the invitation yet" do
     subject { build(:agent_role, agent: agent, organisation: organisation) }
 
