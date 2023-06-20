@@ -11,6 +11,10 @@ class Api::Ants::EditorController < Api::Ants::BaseController
     render json: lieux.where(id: params[:meeting_point_ids]).to_h { |lieu| [lieu.id, time_slots(lieu)] }
   end
 
+  CNI_MOTIF_CATEGORY_NAME = "Carte d'identité disponible sur le site de l'ANTS"
+  PASSPORT_MOTIF_CATEGORY_NAME = "Passeport disponible sur le site de l'ANTS"
+  CNI_AND_PASS_MOTIF_CATEGORY_NAME = "Carte d'identité et passeport disponible sur le site de l'ANTS"
+
   private
 
   def lieux
