@@ -78,6 +78,7 @@ class Rdv < ApplicationRecord
   before_validation { self.uuid ||= SecureRandom.uuid }
   before_create :set_created_by_for_participations
   # voir Outlook::EventSerializerAndListener pour d'autres callbacks
+  # voir Ants::EventSerializerAndListener pour d'autres callbacks
 
   # Scopes
   default_scope { where(deleted_at: nil) }

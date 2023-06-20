@@ -23,7 +23,6 @@ class User < ApplicationRecord
   include PhoneNumberValidation::HasPhoneNumber
   include WebhookDeliverable
   include TextSearch
-  include Ants::EventSerializerAndListener
 
   def self.search_against
     {
@@ -93,6 +92,7 @@ class User < ApplicationRecord
 
   # Hooks
   before_save :set_email_to_null_if_blank
+  # voir Ants::EventSerializerAndListener pour d'autres callbacks
 
   # Scopes
   default_scope { where(deleted_at: nil) }
