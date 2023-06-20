@@ -70,7 +70,7 @@ cdad_intervenant1 = Agent.new(
     { organisation: org_cdad1, access_level: AgentRole::ACCESS_LEVEL_INTERVENANT },
   ],
   agent_territorial_access_rights_attributes: [
-    { territory: territory_girondee },
+    { territory: territory_gironde },
   ]
 )
 cdad_intervenant1.save!
@@ -83,7 +83,7 @@ cdad_intervenant2 = Agent.new(
     { organisation: org_cdad1, access_level: AgentRole::ACCESS_LEVEL_INTERVENANT },
   ],
   agent_territorial_access_rights_attributes: [
-    { territory: territory_girondee },
+    { territory: territory_gironde },
   ]
 )
 cdad_intervenant2.save!
@@ -96,7 +96,7 @@ cdad_intervenant3 = Agent.new(
     { organisation: org_cdad2, access_level: AgentRole::ACCESS_LEVEL_INTERVENANT },
   ],
   agent_territorial_access_rights_attributes: [
-    { territory: territory_girondee },
+    { territory: territory_gironde },
   ]
 )
 cdad_intervenant3.save!
