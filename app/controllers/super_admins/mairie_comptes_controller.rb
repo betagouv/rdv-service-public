@@ -13,7 +13,7 @@ module SuperAdmins
         service = Service.find_by(name: Service::MAIRIE)
         organisation = create_organisation
         invite_agent(organisation, service)
-        create_motif(organisation, service)
+        create_motifs(organisation, service)
         lieu = create_lieu(organisation)
       end
 
@@ -51,14 +51,35 @@ module SuperAdmins
       )
     end
 
-    def create_motif(organisation, service)
+    def create_motifs(organisation, service)
       Motif.create!(
-        name: "Passeport / Carte d'identité",
+        name: "Carte d'identité",
         color: "#99CC99",
         default_duration_in_min: 15,
         location_type: :public_office,
         organisation: organisation,
         service: service,
+        motif_category: MotifCategory.find_by(name: Api::Ants::EditorController::CNI_MOTIF_CATEGORY_NAME),
+        bookable_by: :everyone
+      )
+      Motif.create!(
+        name: "Passeport",
+        color: "#99CC99",
+        default_duration_in_min: 15,
+        location_type: :public_office,
+        organisation: organisation,
+        service: service,
+        motif_category: MotifCategory.find_by(name: Api::Ants::EditorController::PASSPORT_MOTIF_CATEGORY_NAME),
+        bookable_by: :everyone
+      )
+      Motif.create!(
+        name: "Passeport et carte d'identité",
+        color: "#99CC99",
+        default_duration_in_min: 30,
+        location_type: :public_office,
+        organisation: organisation,
+        service: service,
+        motif_category: MotifCategory.find_by(name: Api::Ants::EditorController::CNI_AND_PASSPORT_MOTIF_CATEGORY_NAME),
         bookable_by: :everyone
       )
     end
