@@ -8,7 +8,7 @@ class Api::Ants::EditorController < Api::Ants::BaseController
   end
 
   def available_time_slots
-    render json: lieux.where(id: params[:meeting_point_ids]).to_h { |lieu| [lieu.id, time_slots(lieu)] }
+    render json: lieux.where(id: params[:meeting_point_ids]).to_h { |lieu| [lieu.id, time_slots(lieu, params[:reason])] }
   end
 
   CNI_MOTIF_CATEGORY_NAME = "Carte d'identité disponible sur le site de l'ANTS"
@@ -21,24 +21,26 @@ class Api::Ants::EditorController < Api::Ants::BaseController
     Lieu.joins(:organisation).where(organisations: { verticale: :rdv_mairie })
   end
 
-  def time_slots(lieu)
-    creneaux(lieu).map do |creneau|
+  def time_slots(lieu, reason)
+    motif = motif(lieu, reason)
+
+    creneaux(lieu, motif).map do |creneau|
       {
         datetime: creneau.starts_at.strftime("%Y-%m-%dT%H:%MZ"),
         callback_url: creneaux_url(
           starts_at: creneau.starts_at.strftime("%Y-%m-%d %H:%M"),
           lieu_id: lieu.id,
-          motif_id: motif(lieu).id
+          motif_id: motif.id
         ),
       }
     end
   end
 
-  def creneaux(lieu)
+  def creneaux(lieu, motif)
     Users::CreneauxSearch.new(
       lieu: lieu,
       user: @current_user,
-      motif: motif(lieu),
+      motif: motif,
       date_range: date_range
     ).creneaux
   end
@@ -47,8 +49,18 @@ class Api::Ants::EditorController < Api::Ants::BaseController
     @date_range ||= (Date.parse(params[:start_date])..Date.parse(params[:end_date]))
   end
 
-  def motif(lieu)
-    @motif ||= lieu.organisation.motifs.first
+  def motif(lieu, reason)
+    lieu.organisation.motifs.where(motif_category_id: reason_to_motif_category_id(reason)).first
+  end
+
+  def reason_to_motif_category_id(reason)
+    motif_category_name = {
+      "CNI" => CNI_MOTIF_CATEGORY_NAME,
+      "PASSPORT" => PASSPORT_MOTIF_CATEGORY_NAME,
+      "CNI-PASSPORT" => CNI_AND_PASS_MOTIF_CATEGORY_NAME,
+    }[reason]
+
+    MotifCategory.find_by(name: motif_category_name).id
   end
 
   def lieu_infos(lieu)
@@ -69,5 +81,6 @@ class Api::Ants::EditorController < Api::Ants::BaseController
     params.require(:meeting_point_ids)
     params.require(:start_date)
     params.require(:end_date)
+    params.require(:reason)
   end
 end

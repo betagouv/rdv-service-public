@@ -83,7 +83,7 @@ describe "User can search rdv on rdv mairie" do
   context "with multiple mairies" do
     let!(:organisation2) { create(:organisation, :with_contact, territory: territory95, verticale: :rdv_mairie) }
     let!(:lieu2) { create(:lieu, organisation: organisation2, name: "Mairie de Romainville", address: "Place de la mairie, Romainville, 93230") }
-    let!(:motif2) { create(:motif, name: "Passeport", organisation: organisation2, restriction_for_rdv: nil, service: service) }
+    let!(:motif2) { create(:motif, name: "Passeport", organisation: organisation2, restriction_for_rdv: nil, service: service, motif_category: passport_motif_category) }
 
     before do
       create(:plage_ouverture, :no_recurrence, first_day: now, motifs: [motif2], lieu: lieu2, organisation: organisation2, start_time: Tod::TimeOfDay(9), end_time: Tod::TimeOfDay.new(10))
@@ -93,7 +93,8 @@ describe "User can search rdv on rdv mairie" do
       visit api_ants_availableTimeSlots_url(
         meeting_point_ids: [lieu2.id],
         start_date: Date.yesterday,
-        end_date: Date.tomorrow
+        end_date: Date.tomorrow,
+        reason: "PASSPORT"
       )
 
       time = Time.zone.now.change(hour: 9, min: 0o0)
