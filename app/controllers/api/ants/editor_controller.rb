@@ -24,7 +24,7 @@ class Api::Ants::EditorController < Api::Ants::BaseController
         callback_url: creneaux_url(
           starts_at: creneau.starts_at.strftime("%Y-%m-%d %H:%M"),
           lieu_id: lieu.id,
-          motif_id: motif.id
+          motif_id: motif(lieu).id
         ),
       }
     end
@@ -34,7 +34,7 @@ class Api::Ants::EditorController < Api::Ants::BaseController
     Users::CreneauxSearch.new(
       lieu: lieu,
       user: @current_user,
-      motif: motif,
+      motif: motif(lieu),
       date_range: date_range
     ).creneaux
   end
@@ -43,8 +43,8 @@ class Api::Ants::EditorController < Api::Ants::BaseController
     @date_range ||= (Date.parse(params[:start_date])..Date.parse(params[:end_date]))
   end
 
-  def motif
-    @motif ||= lieux.first.organisation.motifs.first
+  def motif(lieu)
+    @motif ||= lieu.organisation.motifs.first
   end
 
   def lieu_infos(lieu)
