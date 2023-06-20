@@ -19,13 +19,13 @@ class Api::V1::PublicLinksController < Api::V1::BaseController
     plage_ouvertures_scope = PlageOuverture
       .not_expired
       .in_range(Time.zone.now..)
-      .bookable_publicly
+      .bookable_by_everyone
     organisations_with_public_plages = Organisation.joins(:plage_ouvertures).merge(plage_ouvertures_scope)
 
     rdv_collectif_scope = Rdv
       .future
       .collectif
-      .bookable_publicly
+      .bookable_by_everyone
     organisations_with_public_rdv_collectifs = Organisation.joins(:rdvs).merge(rdv_collectif_scope)
 
     public_organisations = Organisation

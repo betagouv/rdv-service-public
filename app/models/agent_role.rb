@@ -54,10 +54,6 @@ class AgentRole < ApplicationRecord
 
   ## -
 
-  def level # TODO: For API compatibility only, change in rdv-insertion and remove this method
-    access_level
-  end
-
   def can_access_others_planning?
     admin? || agent.service.secretariat?
   end

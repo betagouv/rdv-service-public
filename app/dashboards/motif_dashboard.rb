@@ -18,7 +18,7 @@ class MotifDashboard < Administrate::BaseDashboard
     restriction_for_rdv: Field::Text,
     instruction_for_rdv: Field::Text,
     custom_cancel_warning_message: Field::Text,
-    bookable_publicly: Field::Boolean,
+    bookable_by: EnumField,
     location_type: EnumField,
     for_secretariat: Field::Boolean,
     default_duration_in_min: Field::Number,
@@ -50,7 +50,7 @@ class MotifDashboard < Administrate::BaseDashboard
     organisation
     service
     color
-    bookable_publicly
+    bookable_by
     location_type
     for_secretariat
     restriction_for_rdv
@@ -71,7 +71,7 @@ class MotifDashboard < Administrate::BaseDashboard
   FORM_ATTRIBUTES = %i[
     name
     color
-    bookable_publicly
+    bookable_by
     location_type
     for_secretariat
     default_duration_in_min

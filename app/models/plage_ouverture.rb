@@ -55,7 +55,8 @@ class PlageOuverture < ApplicationRecord
       plage_ouverture.occurrences_for(range).any? { range.overlaps?(_1.starts_at.._1.ends_at) }
     end
   }
-  scope :bookable_publicly, -> { joins(:motifs).where(motifs: { bookable_by: [:everyone] }) }
+  scope :bookable_by_everyone, -> { joins(:motifs).merge(Motif.bookable_by_everyone) }
+  scope :bookable_by_everyone_or_bookable_by_invited_users, -> { joins(:motifs).merge(Motif.bookable_by_everyone_or_bookable_by_invited_users) }
 
   # Delegations
   delegate :name, :address, :enabled?, to: :lieu, prefix: true, allow_nil: true

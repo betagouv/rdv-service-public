@@ -32,6 +32,7 @@ class Motif < ApplicationRecord
   enum bookable_by: {
     agents: "agents",
     agents_and_prescripteurs: "agents_and_prescripteurs",
+    agents_and_prescripteurs_and_invited_users: "agents_and_prescripteurs_and_invited_users",
     everyone: "everyone",
   }
 
@@ -70,12 +71,20 @@ class Motif < ApplicationRecord
   scope :active, lambda { |active = true|
     active ? where(deleted_at: nil) : where.not(deleted_at: nil)
   }
-  scope :bookable_publicly, -> { where(bookable_by: :everyone) }
-  scope :not_bookable_publicly, -> { where.not(bookable_by: :everyone) }
+  scope :bookable_by_everyone, -> { where(bookable_by: %i[everyone]) }
+  scope :bookable_by_everyone_or_bookable_by_invited_users, -> { where(bookable_by: %i[everyone agents_and_prescripteurs_and_invited_users]) }
+  scope :not_bookable_by_everyone_or_not_bookable_by_invited_users, -> { where.not(bookable_by: %i[everyone agents_and_prescripteurs_and_invited_users]) }
   scope :by_phone, -> { Motif.phone } # default scope created by enum
   scope :for_secretariat, -> { where(for_secretariat: true) }
   scope :ordered_by_name, -> { order(Arel.sql("unaccent(LOWER(motifs.name))")) }
-  scope :available_with_plages_ouvertures, -> { active.bookable_publicly.joins(:organisation, :plage_ouvertures) }
+  scope :available_for_booking, lambda {
+    where_id_in_subqueries(
+      [
+        individuel.active.bookable_by_everyone_or_bookable_by_invited_users.joins(:organisation, :plage_ouvertures).select(:id),
+        Rdv.collectif_and_available_for_reservation.select(:motif_id),
+      ]
+    )
+  }
   scope :available_motifs_for_organisation_and_agent, lambda { |organisation, agent|
     available_motifs = if agent.admin_in_organisation?(organisation)
                          all
@@ -197,28 +206,24 @@ class Motif < ApplicationRecord
   end
 
   def bookable_publicly
+    # bookable_publicly has been renamed to bookable_by_everyone_or_bookable_by_invited_users. Keep this for API compatibility
+    bookable_by_everyone_or_bookable_by_invited_users?
+  end
+
+  def bookable_by_everyone_or_bookable_by_invited_users?
+    bookable_by_everyone? || bookable_by_invited_users?
+  end
+
+  def bookable_by_everyone?
     bookable_by == "everyone"
   end
 
-  def bookable_publicly?
-    bookable_publicly
-  end
-
-  def bookable_publicly=(value)
-    self.bookable_by = if value
-                         "everyone"
-                       else
-                         "agents"
-                       end
+  def bookable_by_invited_users?
+    bookable_by == "agents_and_prescripteurs_and_invited_users"
   end
 
   def bookable_outside_of_organisation?
     bookable_by != "agents"
-  end
-
-  # Temporary method for rdv-insertion motifs
-  def motif_category_for_rdv_insertion?
-    motif_category.present?
   end
 
   private

@@ -52,7 +52,7 @@ describe "public pages", js: true do
       territory = create(:territory, departement_number: "75")
       service = create(:service)
       organisation = create(:organisation, territory: territory)
-      motif = create(:motif, service: service, organisation: organisation, bookable_publicly: true)
+      motif = create(:motif, service: service, organisation: organisation)
       lieu = create(:lieu, organisation: organisation)
       create(:plage_ouverture, motifs: [motif], lieu: lieu)
 
