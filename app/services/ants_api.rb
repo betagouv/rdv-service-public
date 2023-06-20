@@ -39,6 +39,28 @@ module AntsApi
     )
   end
 
+  def self.find_appointment(application_id:, management_url:)
+    response = Typhoeus.get(
+      "#{ENV['ANTS_RDV_API_URL']}/status",
+      params: { application_ids: application_id },
+      headers: headers
+    )
+    response_body = response.body.empty? ? {} : JSON.parse(response.body)
+    appointments = response_body.fetch(application_id, {})["appointments"]
+    return nil if appointments.blank?
+
+    appointment_data = appointments.find do |appointment|
+      appointment["management_url"] == management_url
+    end
+
+    Appointment.new(
+      application_id: application_id,
+      management_url: appointment_data["management_url"],
+      meeting_point: appointment_data["meeting_point"],
+      appointment_date: appointment_data["appointment_date"]
+    )
+  end
+
   def self.headers
     {
       "Accept" => "application/json",

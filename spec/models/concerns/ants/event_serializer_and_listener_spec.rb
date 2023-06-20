@@ -15,12 +15,30 @@ RSpec.describe Ants::EventSerializerAndListener do
     }
   end
 
+  def stub_status_endpoint
+    stub_request(:get, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status}).to_return(
+      status: 200,
+      body: {
+        user.ants_pre_demande_number => {
+          appointments: [
+            {
+              management_url: Rails.application.routes.url_helpers.rdvs_short_url(rdv, host: organisation.domain.host_name),
+              meeting_point: rdv.lieu.name,
+              appointment_date: rdv.starts_at.strftime("%Y-%m-%d %H:%M:%S"),
+            },
+          ],
+        },
+      }.to_json
+    )
+  end
+
   before do
     travel_to(Time.zone.parse("01/01/2020"))
     ENV["ANTS_RDV_API_URL"] = ants_api_url
     ENV["ANTS_RDV_OPT_AUTH_TOKEN"] = "fake-token"
-    stub_request(:post, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/appointments/*})
+    stub_request(:post, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/appointments/*}).to_return(status: 200, body: "{}".to_json)
     stub_request(:delete, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/appointments/*})
+    stub_request(:get, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status})
   end
 
   describe "RDV callbacks" do
@@ -37,9 +55,14 @@ RSpec.describe Ants::EventSerializerAndListener do
     end
 
     describe "after_commit on_destroy" do
+      before do
+        rdv.save
+
+        stub_status_endpoint
+      end
+
       it "deletes appointment on ANTS" do
         perform_enqueued_jobs do
-          rdv.save
           rdv.destroy
           expect(WebMock).to have_requested(
             :delete,
@@ -50,7 +73,11 @@ RSpec.describe Ants::EventSerializerAndListener do
     end
 
     describe "after_commit on_update" do
-      before { rdv.save }
+      before do
+        rdv.save
+
+        stub_status_endpoint
+      end
 
       describe "Rdv is cancelled" do
         it "deletes appointment on ANTS" do
@@ -91,7 +118,7 @@ RSpec.describe Ants::EventSerializerAndListener do
     describe "after_commit: Changing the value of ants_pre_demande_number" do
       it "triggers a sync with ANTS" do
         perform_enqueued_jobs do
-          user.update!(ants_pre_demande_number: "1122334455")
+          user.update(ants_pre_demande_number: "AABBCCDDEE")
 
           expect(create_appointment_stub).to have_been_requested.at_least_once
         end
