@@ -7,7 +7,15 @@ describe "User can search rdv on rdv mairie" do
   let!(:territory95) { create(:territory, departement_number: "95") }
   let!(:organisation) { create(:organisation, :with_contact, territory: territory95, verticale: :rdv_mairie) }
   let(:service) { create(:service) }
-  let!(:motif) { create(:motif, name: "Passeport", organisation: organisation, restriction_for_rdv: nil, service: service) }
+  let!(:cni_motif) do
+    create(:motif, name: "Carte d'identité", organisation: organisation, restriction_for_rdv: nil, service: service, motif_category: cni_motif_category)
+  end
+  let!(:passport_motif) do
+    create(:motif, name: "Passeport", organisation: organisation, restriction_for_rdv: nil, service: service, motif_category: passport_motif_category)
+  end
+
+  let!(:cni_motif_category) { create(:motif_category, name: Api::Ants::EditorController::CNI_MOTIF_CATEGORY_NAME) }
+  let!(:passport_motif_category) { create(:motif_category, name: Api::Ants::EditorController::PASSPORT_MOTIF_CATEGORY_NAME) }
   let!(:lieu) { create(:lieu, organisation: organisation, name: "Mairie de Sannois", address: "15 Place du Général Leclerc, Sannois, 95110") }
   let(:user) { create(:user, email: "jeanmairie@example.com") }
   let(:ants_pre_demande_number) { "1122334455" }
@@ -22,7 +30,7 @@ describe "User can search rdv on rdv mairie" do
 
   before do
     travel_to(now)
-    create(:plage_ouverture, :no_recurrence, first_day: now, motifs: [motif], lieu: lieu, organisation: organisation, start_time: Tod::TimeOfDay(9), end_time: Tod::TimeOfDay.new(10))
+    create(:plage_ouverture, :no_recurrence, first_day: now, motifs: [passport_motif], lieu: lieu, organisation: organisation, start_time: Tod::TimeOfDay(9), end_time: Tod::TimeOfDay.new(10))
   end
 
   it "allows booking a rdv through the full lifecycle of api calls" do
@@ -33,7 +41,8 @@ describe "User can search rdv on rdv mairie" do
     visit api_ants_availableTimeSlots_url(
       meeting_point_ids: lieux_ids,
       start_date: Date.yesterday,
-      end_date: Date.tomorrow
+      end_date: Date.tomorrow,
+      reason: "PASSPORT"
     )
 
     time = Time.zone.now.change(hour: 9, min: 0o0)
@@ -43,7 +52,7 @@ describe "User can search rdv on rdv mairie" do
         lieu.id.to_s => [
           {
             "datetime" => time.strftime("%Y-%m-%dT%H:%MZ"),
-            "callback_url" => creneaux_url(starts_at: time.strftime("%Y-%m-%d %H:%M"), lieu_id: lieu.id, motif_id: motif.id),
+            "callback_url" => creneaux_url(starts_at: time.strftime("%Y-%m-%d %H:%M"), lieu_id: lieu.id, motif_id: passport_motif.id),
           },
         ],
       }
