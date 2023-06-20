@@ -25,7 +25,7 @@ describe "User can search rdv on rdv mairie" do
     create(:plage_ouverture, :no_recurrence, first_day: now, motifs: [motif], lieu: lieu, organisation: organisation, start_time: Tod::TimeOfDay(9), end_time: Tod::TimeOfDay.new(10))
   end
 
-  it "default" do
+  it "allows booking a rdv through the full lifecycle of api calls" do
     visit api_ants_getManagedMeetingPoints_url
     lieux_ids = json_response.map { |lieu_data| lieu_data["id"] }
     expect(lieux_ids).to eq([lieu.id.to_s])
@@ -50,13 +50,6 @@ describe "User can search rdv on rdv mairie" do
     )
     creneaux_url = json_response[lieu.id.to_s].first["callback_url"]
 
-    visit_public_creneaux_link(creneaux_url)
-    login_and_confirm_rdv
-  end
-
-  private
-
-  def visit_public_creneaux_link(creneaux_url)
     visit creneaux_url
 
     expect(page).to have_current_path("/users/sign_in")
@@ -64,9 +57,7 @@ describe "User can search rdv on rdv mairie" do
     expect(page).to have_content("Motif : Passeport")
     expect(page).to have_content("Lieu : Mairie de Sannois (15 Place du Général Leclerc, Sannois, 95110)")
     expect(page).to have_content("Date du rendez-vous : lundi 13 décembre 2021 à 09h00 (45 minutes)")
-  end
 
-  def login_and_confirm_rdv
     fill_in("user_email", with: user.email)
     fill_in("password", with: user.password)
     click_button("Se connecter")
