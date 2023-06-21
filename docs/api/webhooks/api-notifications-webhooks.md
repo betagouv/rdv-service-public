@@ -12,10 +12,7 @@ Du code d’exemple est [disponible C# et en NodeJS](https://github.com/guillett
 
 ## Configuration
 
-Vous pouvez mettre en place des webhooks en toute autonomie. À partir de la [page de configuration] de votre organisation :
-
-![Panneau de configuration](./config.png)
-
+Vous pouvez mettre en place des webhooks en toute autonomie à partir de la page de configuration de votre organisation accessible en suivant « Mon compte », « Mes organisations » et « Configuration ». Depuis la page « Webhook », vous pourrez indiquer l'organisation concernée, l'URL à notifier, le secret partagé et les modèles pour lesquels vous souhaitez recevoir des notifications.
 
 ## Démonstration
 
