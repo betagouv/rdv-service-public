@@ -13,7 +13,7 @@ class Api::Ants::EditorController < Api::Ants::BaseController
 
   CNI_MOTIF_CATEGORY_NAME = "Carte d'identité disponible sur le site de l'ANTS"
   PASSPORT_MOTIF_CATEGORY_NAME = "Passeport disponible sur le site de l'ANTS"
-  CNI_AND_PASS_MOTIF_CATEGORY_NAME = "Carte d'identité et passeport disponible sur le site de l'ANTS"
+  CNI_AND_PASSPORT_MOTIF_CATEGORY_NAME = "Carte d'identité et passeport disponible sur le site de l'ANTS"
 
   private
 
@@ -57,7 +57,7 @@ class Api::Ants::EditorController < Api::Ants::BaseController
     motif_category_name = {
       "CNI" => CNI_MOTIF_CATEGORY_NAME,
       "PASSPORT" => PASSPORT_MOTIF_CATEGORY_NAME,
-      "CNI-PASSPORT" => CNI_AND_PASS_MOTIF_CATEGORY_NAME,
+      "CNI-PASSPORT" => CNI_AND_PASSPORT_MOTIF_CATEGORY_NAME,
     }[reason]
 
     MotifCategory.find_by(name: motif_category_name).id
