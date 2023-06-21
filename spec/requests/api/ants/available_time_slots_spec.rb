@@ -10,7 +10,8 @@ describe "ANTS API: availableTimeSlots" do
     create(:lieu, organisation: organisation)
   end
   let(:organisation) { create(:organisation, verticale: :rdv_mairie) }
-  let(:motif) { create(:motif, organisation: organisation, default_duration_in_min: 30) }
+  let(:motif) { create(:motif, organisation: organisation, default_duration_in_min: 30, motif_category: cni_motif_category) }
+  let!(:cni_motif_category) { create(:motif_category, name: Api::Ants::EditorController::CNI_MOTIF_CATEGORY_NAME) }
 
   before do
     travel_to(Date.new(2022, 10, 28))
