@@ -5,7 +5,7 @@ tr id="agent_#{agent.id}"
     - if agent.complete?
       - if policy([:agent, agent_role]).edit?
         = link_to agent.reverse_full_name, edit_admin_organisation_agent_role_path(current_organisation, agent_role), class: "mr-2"
-        - if agent.inactive?
+        - if agent.inactive? && !agent.all_roles_intervenant?
           = tag.span("Inactif", class: "badge badge-warning")
       - else
         span.mr-2= agent.reverse_full_name
