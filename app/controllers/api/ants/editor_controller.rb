@@ -22,18 +22,18 @@ class Api::Ants::EditorController < Api::Ants::BaseController
   end
 
   def time_slots(lieu, reason)
-    motif = motif(lieu, reason)
-
-    creneaux(lieu, motif).map do |creneau|
-      {
-        datetime: creneau.starts_at.strftime("%Y-%m-%dT%H:%MZ"),
-        callback_url: creneaux_url(
-          starts_at: creneau.starts_at.strftime("%Y-%m-%d %H:%M"),
-          lieu_id: lieu.id,
-          motif_id: motif.id
-        ),
-      }
-    end
+    motifs(lieu, reason).map do |motif|
+      creneaux(lieu, motif).map do |creneau|
+        {
+          datetime: creneau.starts_at.strftime("%Y-%m-%dT%H:%MZ"),
+          callback_url: creneaux_url(
+            starts_at: creneau.starts_at.strftime("%Y-%m-%d %H:%M"),
+            lieu_id: lieu.id,
+            motif_id: motif.id
+          ),
+        }
+      end
+    end.flatten
   end
 
   def creneaux(lieu, motif)
@@ -49,8 +49,8 @@ class Api::Ants::EditorController < Api::Ants::BaseController
     @date_range ||= (Date.parse(params[:start_date])..Date.parse(params[:end_date]))
   end
 
-  def motif(lieu, reason)
-    lieu.organisation.motifs.where(motif_category_id: reason_to_motif_category_id(reason)).first
+  def motifs(lieu, reason)
+    lieu.organisation.motifs.where(motif_category_id: reason_to_motif_category_id(reason))
   end
 
   def reason_to_motif_category_id(reason)
