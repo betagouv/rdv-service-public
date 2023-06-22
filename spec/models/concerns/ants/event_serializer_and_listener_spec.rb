@@ -67,7 +67,7 @@ RSpec.describe Ants::EventSerializerAndListener do
           expect(WebMock).to have_requested(
             :delete,
             "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/appointments?application_id=A123456789&appointment_date=2020-04-20%2008:00:00&meeting_point=Lieu1"
-          ).with(headers: ants_api_headers)
+          ).with(headers: ants_api_headers).at_least_once
         end
       end
     end
@@ -87,7 +87,7 @@ RSpec.describe Ants::EventSerializerAndListener do
             expect(WebMock).to have_requested(
               :delete,
               "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/appointments?application_id=A123456789&appointment_date=2020-04-20%2008:00:00&meeting_point=Lieu1"
-            ).with(headers: ants_api_headers)
+            ).with(headers: ants_api_headers).at_least_once
           end
         end
       end
@@ -111,7 +111,7 @@ RSpec.describe Ants::EventSerializerAndListener do
   end
 
   describe "User callbacks" do
-    let(:create_appointment_stub) { stub_request(:post, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/appointments/*}) }
+    let(:create_appointment_stub) { stub_request(:post, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/appointments\?application_id=AABBCCDDEE*}) }
 
     before do
       rdv.save
@@ -119,7 +119,7 @@ RSpec.describe Ants::EventSerializerAndListener do
     end
 
     describe "after_commit: Changing the value of ants_pre_demande_number" do
-      it "triggers a sync with ANTS" do
+      it "creates appointment with new ants_pre_demande_number" do
         perform_enqueued_jobs do
           user.update(ants_pre_demande_number: "AABBCCDDEE")
 
@@ -143,6 +143,23 @@ RSpec.describe Ants::EventSerializerAndListener do
           lieu.update(name: "Nouveau Lieu")
 
           expect(create_appointment_stub).to have_been_requested.at_least_once
+        end
+      end
+    end
+  end
+
+  describe "RdvUser callbacks" do
+    before do
+      rdv.save
+      user.reload
+      rdv.rdvs_users.reload
+      stub_status_endpoint
+    end
+
+    describe "after_commit: Removing user participation" do
+      it "deletes appointment" do
+        perform_enqueued_jobs do
+          user.rdvs_users.first.destroy
         end
       end
     end

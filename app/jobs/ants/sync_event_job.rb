@@ -5,7 +5,12 @@ module Ants
     def self.perform_later_for(rdv)
       # We pass some of the attributes of RDV instead of the Rdv active record object, to avoid an error in case the Rdv is deleted
       perform_later(
-        rdv_attributes: { id: rdv.id, status: rdv.status, users_ids: rdv.users.ids },
+        rdv_attributes: {
+          id: rdv.id,
+          status: rdv.status,
+          users_ids: rdv.users.ids,
+          obsolete_application_id: rdv.obsolete_application_id,
+        },
         appointment_data: rdv.serialize_for_ants_api
       )
     end
@@ -13,14 +18,28 @@ module Ants
     def perform(rdv_attributes:, appointment_data:)
       @rdv_attributes = rdv_attributes
       rdv = Rdv.find_by(id: rdv_attributes[:id])
+
       # If the RDV is present (not deleted), we serialize now to get the most recent data
       # This way, we'll only be using the appointment_data argument if the RDV has been deleted
       @appointment_data = rdv.present? ? rdv.serialize_for_ants_api : appointment_data
+
+      delete_obsolete_appointment
 
       rdv_cancelled_or_deleted? ? delete_appointments : create_or_update_appointments
     end
 
     private
+
+    def delete_obsolete_appointment
+      if @rdv_attributes[:obsolete_application_id].present?
+        obsolete_appointment = AntsApi.find_appointment(
+          application_id: @rdv_attributes[:obsolete_application_id],
+          management_url: @appointment_data[:management_url]
+        )
+
+        AntsApi.delete_appointment(obsolete_appointment) if obsolete_appointment
+      end
+    end
 
     def delete_appointments
       users.each do |user|
