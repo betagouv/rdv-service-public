@@ -110,10 +110,13 @@ RSpec.describe Ants::EventSerializerAndListener do
     end
   end
 
-  pending "User callbacks" do
+  describe "User callbacks" do
     let(:create_appointment_stub) { stub_request(:post, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/appointments/*}) }
 
-    before { rdv.save }
+    before do
+      rdv.save
+      user.reload
+    end
 
     describe "after_commit: Changing the value of ants_pre_demande_number" do
       it "triggers a sync with ANTS" do
@@ -126,10 +129,13 @@ RSpec.describe Ants::EventSerializerAndListener do
     end
   end
 
-  pending "Lieu callbacks" do
+  describe "Lieu callbacks" do
     let(:create_appointment_stub) { stub_request(:post, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/appointments/*}) }
 
-    before { rdv.save }
+    before do
+      rdv.save
+      lieu.reload
+    end
 
     describe "after_commit: Changing the name of the lieu" do
       it "triggers a sync with ANTS" do
