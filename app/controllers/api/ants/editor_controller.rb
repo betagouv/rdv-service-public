@@ -10,7 +10,7 @@ class Api::Ants::EditorController < Api::Ants::BaseController
   def available_time_slots
     # On ne peut pas utiliser params[:meeting_point_ids] car l'ants passe une liste de paramètres sans crochets.
     # Autrement dit, ils utilisent la syntaxe meeting_point_ids=1&meeting_point_ids=2 pour envoyer un tableau d'ids
-    meeting_point_ids = extract_meeting_point_ids_without_square_brackets(request.query_string)
+    meeting_point_ids = request.query_string.scan(/meeting_point_ids=(\d+)/).flatten
 
     render json: lieux.where(id: meeting_point_ids).to_h { |lieu| [lieu.id, time_slots(lieu, params[:reason])] }
   end
@@ -20,14 +20,6 @@ class Api::Ants::EditorController < Api::Ants::BaseController
   CNI_AND_PASSPORT_MOTIF_CATEGORY_NAME = "Carte d'identité et passeport disponible sur le site de l'ANTS"
 
   private
-
-  def extract_meeting_point_ids_without_square_brackets(query_string)
-    query_string.split("&").select do |query_string_segment|
-      query_string_segment.start_with?("meeting_point_ids=")
-    end.map do |query_string_segment|
-      query_string_segment.split("=").last
-    end
-  end
 
   def lieux
     Lieu.joins(:organisation).where(organisations: { verticale: :rdv_mairie })
