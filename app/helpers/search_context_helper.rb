@@ -2,9 +2,12 @@
 
 module SearchContextHelper
   def path_to_motif_selection(params)
+    service = Service.find_by(id: params[:service])
+
     prendre_rdv_path(
       service_selection(params).merge(
-        service_id: params[:service_id]
+        service_id: params[:service],
+        lieu_id: service&.mairie? ? params[:lieu_id] : nil
       )
     )
   end
@@ -17,7 +20,7 @@ module SearchContextHelper
     prendre_rdv_path(
       service_selection(params).merge(
         motif_name_with_location_type: params[:motif_name_with_location_type],
-        service_id: params[:service_id]
+        service_id: params[:service]
       )
     )
   end
