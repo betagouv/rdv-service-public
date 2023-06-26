@@ -7,10 +7,12 @@ describe "ANTS API: availableTimeSlots" do
     create(:lieu, organisation: organisation)
   end
   let(:lieu2) do
-    create(:lieu, organisation: organisation)
+    create(:lieu, organisation: organisation2)
   end
   let(:organisation) { create(:organisation, verticale: :rdv_mairie) }
+  let(:organisation2) { create(:organisation, verticale: :rdv_mairie) }
   let(:motif) { create(:motif, organisation: organisation, default_duration_in_min: 30, motif_category: cni_motif_category) }
+  let(:motif2) { create(:motif, organisation: organisation2, default_duration_in_min: 30, motif_category: cni_motif_category) }
   let!(:cni_motif_category) { create(:motif_category, name: Api::Ants::EditorController::CNI_MOTIF_CATEGORY_NAME) }
 
   before do
@@ -20,7 +22,7 @@ describe "ANTS API: availableTimeSlots" do
                              organisation: organisation, motifs: [motif])
     create(:plage_ouverture, lieu: lieu2, first_day: Date.new(2022, 11, 2),
                              start_time: Tod::TimeOfDay(12), end_time: Tod::TimeOfDay(13),
-                             organisation: organisation, motifs: [motif])
+                             organisation: organisation2, motifs: [motif2])
   end
 
   it "returns a list of slots" do
@@ -43,11 +45,11 @@ describe "ANTS API: availableTimeSlots" do
         lieu2.id.to_s => [
           {
             datetime: "2022-11-02T12:00Z",
-            callback_url: creneaux_url(starts_at: "2022-11-02 12:00", lieu_id: lieu2.id, motif_id: motif.id),
+            callback_url: creneaux_url(starts_at: "2022-11-02 12:00", lieu_id: lieu2.id, motif_id: motif2.id),
           },
           {
             datetime: "2022-11-02T12:30Z",
-            callback_url: creneaux_url(starts_at: "2022-11-02 12:30", lieu_id: lieu2.id, motif_id: motif.id),
+            callback_url: creneaux_url(starts_at: "2022-11-02 12:30", lieu_id: lieu2.id, motif_id: motif2.id),
           },
         ],
       }.with_indifferent_access
