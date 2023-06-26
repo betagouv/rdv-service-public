@@ -32,7 +32,8 @@ class SearchController < ApplicationController
       lieu_id: params[:lieu_id],
       departement: motif.organisation.departement_number,
       motif_name_with_location_type: motif.name_with_location_type,
-      motif_id: motif.id
+      motif_id: motif.id,
+      public_link_organisation_id: params[:public_link_organisation_id]
     )
   end
 

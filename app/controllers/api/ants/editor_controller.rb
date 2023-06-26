@@ -33,7 +33,8 @@ class Api::Ants::EditorController < Api::Ants::BaseController
           callback_url: creneaux_url(
             starts_at: creneau.starts_at.strftime("%Y-%m-%d %H:%M"),
             lieu_id: lieu.id,
-            motif_id: motif.id
+            motif_id: motif.id,
+            public_link_organisation_id: lieu.organisation.id
           ),
         }
       end
