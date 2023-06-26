@@ -212,9 +212,6 @@ Style/HashSyntax:
 Style/DateTime:
   Enabled: true
 
-Style/MultilineBlockChain:
-  Enabled: false
-
 Naming/BlockForwarding:
   Enabled: false
 
