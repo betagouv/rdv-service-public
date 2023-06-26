@@ -14,7 +14,7 @@
       "devise.mailer.invitation_instructions_for_agents.accept_until", \
       due_date: l(@resource.invitation_due_at, format: :'devise.mailer.invitation_instructions.accept_until_format'), \
       inviter: @resource.invited_by.full_name, \
-      inviter_email: @resource.invited_by.email \
+      inviter_email: @resource.invited_by.is_a?(Agent) ? @resource.invited_by.email : domain.support_email \
     ).html_safe %>
   </p>
 <% end %>
