@@ -8,7 +8,11 @@ class Api::Ants::EditorController < Api::Ants::BaseController
   end
 
   def available_time_slots
-    render json: lieux.where(id: params[:meeting_point_ids]).to_h { |lieu| [lieu.id, time_slots(lieu, params[:reason])] }
+    # On ne peut pas utiliser params[:meeting_point_ids] car l'ants passe une liste de paramètres sans crochets.
+    # Autrement dit, ils utilisent la syntaxe meeting_point_ids=1&meeting_point_ids=2 pour envoyer un tableau d'ids
+    meeting_point_ids = request.query_string.scan(/meeting_point_ids=(\d+)/).flatten
+
+    render json: lieux.where(id: meeting_point_ids).to_h { |lieu| [lieu.id, time_slots(lieu, params[:reason])] }
   end
 
   CNI_MOTIF_CATEGORY_NAME = "Carte d'identité disponible sur le site de l'ANTS"
