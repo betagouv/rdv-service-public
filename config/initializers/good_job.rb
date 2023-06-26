@@ -4,6 +4,7 @@ Rails.application.configure do
   config.active_job.default_priority = 0
 
   config.good_job.preserve_job_records = true
+  config.cleanup_preserved_jobs_before_seconds_ago = 604_800 # 1 semaine
   config.good_job.on_thread_error = ->(exception) { Sentry.capture_exception(exception) }
   config.good_job.execution_mode = :external
   config.good_job.queues = '*'
