@@ -4,8 +4,8 @@ describe "User can search rdv on rdv mairie" do
   include_context "rdv_mairie_api_authentication"
 
   let(:now) { Time.zone.parse("2021-12-13 8:00") }
-  let!(:territory95) { create(:territory, departement_number: "95") }
-  let!(:organisation) { create(:organisation, :with_contact, territory: territory95, verticale: :rdv_mairie) }
+  let!(:territory) { create(:territory, departement_number: "MA") }
+  let!(:organisation) { create(:organisation, :with_contact, territory: territory, verticale: :rdv_mairie) }
   let(:service) { create(:service) }
   let!(:cni_motif) do
     create(:motif, name: "Carte d'identité", organisation: organisation, restriction_for_rdv: nil, service: service, motif_category: cni_motif_category)
@@ -52,7 +52,7 @@ describe "User can search rdv on rdv mairie" do
         lieu.id.to_s => [
           {
             "datetime" => time.strftime("%Y-%m-%dT%H:%MZ"),
-            "callback_url" => creneaux_url(starts_at: time.strftime("%Y-%m-%d %H:%M"), lieu_id: lieu.id, motif_id: passport_motif.id),
+            "callback_url" => creneaux_url(starts_at: time.strftime("%Y-%m-%d %H:%M"), lieu_id: lieu.id, motif_id: passport_motif.id, public_link_organisation_id: organisation.id),
           },
         ],
       }
@@ -66,6 +66,12 @@ describe "User can search rdv on rdv mairie" do
     expect(page).to have_content("Motif : Passeport")
     expect(page).to have_content("Lieu : Mairie de Sannois (15 Place du Général Leclerc, Sannois, 95110)")
     expect(page).to have_content("Date du rendez-vous : lundi 13 décembre 2021 à 09h00 (45 minutes)")
+    expect(page).to have_link("modifier", href: prendre_rdv_path(departement: "MA", public_link_organisation_id: organisation.id))
+    expect(page).to have_link("modifier",
+                              href: prendre_rdv_path(departement: "MA", motif_name_with_location_type: passport_motif.name_with_location_type, public_link_organisation_id: organisation.id))
+    expect(page).to have_link("modifier",
+                              href: prendre_rdv_path(departement: "MA", lieu_id: lieu.id, motif_name_with_location_type: passport_motif.name_with_location_type,
+                                                     public_link_organisation_id: organisation.id))
 
     fill_in("user_email", with: user.email)
     fill_in("password", with: user.password)
