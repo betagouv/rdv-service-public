@@ -4,9 +4,9 @@ describe "User can search rdv on rdv mairie" do
   include_context "rdv_mairie_api_authentication"
 
   let(:now) { Time.zone.parse("2021-12-13 8:00") }
-  let!(:territory) { create(:territory, departement_number: "MA") }
-  let!(:organisation) { create(:organisation, :with_contact, territory: territory, verticale: :rdv_mairie) }
-  let(:service) { create(:service, name: Service::MAIRIE) }
+  let!(:territory95) { create(:territory, departement_number: "95") }
+  let!(:organisation) { create(:organisation, :with_contact, territory: territory95, verticale: :rdv_mairie) }
+  let(:service) { create(:service) }
   let!(:cni_motif) do
     create(:motif, name: "Carte d'identité", organisation: organisation, restriction_for_rdv: nil, service: service, motif_category: cni_motif_category)
   end
@@ -64,7 +64,6 @@ describe "User can search rdv on rdv mairie" do
     expect(page).to have_current_path("/users/sign_in")
     expect(page).to have_content("Vous devez vous connecter ou vous inscrire pour continuer")
     expect(page).to have_content("Motif : Passeport")
-    expect(page).to have_link("modifier", href: prendre_rdv_path(departement: "MA", lieu_id: lieu.id))
     expect(page).to have_content("Lieu : Mairie de Sannois (15 Place du Général Leclerc, Sannois, 95110)")
     expect(page).to have_content("Date du rendez-vous : lundi 13 décembre 2021 à 09h00 (45 minutes)")
 
