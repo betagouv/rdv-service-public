@@ -53,7 +53,7 @@ motif1_drome1 = Motif.create!(
   color: "#00ffff",
   default_duration_in_min: 60,
   organisation: org_drome1,
-  bookable_publicly: true,
+  bookable_by: :agents_and_prescripteurs_and_invited_users,
   max_public_booking_delay: 2_629_746,
   service: service_rsa,
   restriction_for_rdv:
@@ -69,7 +69,7 @@ motif2_drome1 = Motif.create!(
   color: "#000000",
   default_duration_in_min: 30,
   organisation: org_drome1,
-  bookable_publicly: true,
+  bookable_by: :agents_and_prescripteurs_and_invited_users,
   service: service_rsa,
   custom_cancel_warning_message: "",
   collectif: false,
@@ -80,7 +80,7 @@ motif_drome2 = Motif.create!(
   color: "#00ffff",
   default_duration_in_min: 60,
   organisation: org_drome2,
-  bookable_publicly: true,
+  bookable_by: :agents_and_prescripteurs_and_invited_users,
   max_public_booking_delay: 2_629_746,
   service: service_rsa,
   for_secretariat: true,
@@ -119,9 +119,9 @@ agent_orgs_rdv_insertion = Agent.new(
   service_id: service_rsa.id,
   invitation_accepted_at: 10.days.ago,
   roles_attributes: [
-    { organisation: org_drome1, level: AgentRole::LEVEL_ADMIN },
-    { organisation: org_drome2, level: AgentRole::LEVEL_ADMIN },
-    { organisation: org_yonne, level: AgentRole::LEVEL_ADMIN },
+    { organisation: org_drome1, access_level: AgentRole::ACCESS_LEVEL_ADMIN },
+    { organisation: org_drome2, access_level: AgentRole::ACCESS_LEVEL_ADMIN },
+    { organisation: org_yonne, access_level: AgentRole::ACCESS_LEVEL_ADMIN },
   ],
   agent_territorial_access_rights_attributes: [
     { territory: territory_drome, allow_to_manage_teams: true },
@@ -154,6 +154,16 @@ lieu_org_drome1_valence = Lieu.create!(
   phone_number_formatted: "+33475796991",
   address: "114 Rue de la Forêt, Valence, 26000"
 )
+lieu_org_drome2_valence = Lieu.create!(
+  name: "PLIE Valence Drome2 - Département de la Drôme",
+  organisation: org_drome2,
+  latitude: 44.918859,
+  longitude: 4.919825,
+  availability: :enabled,
+  phone_number: "04.75.79.69.91",
+  phone_number_formatted: "+33475796991",
+  address: "114 Rue de la Forêt, Valence, 26000"
+)
 lieu_org_yonne = Lieu.create!(
   name: "PE Avallon",
   organisation: org_yonne,
@@ -166,7 +176,7 @@ lieu_org_yonne = Lieu.create!(
 
 ## Plages d'Ouvertures
 
-_plage_ouverture_org_drome_lieu1_alain_classique = PlageOuverture.create!(
+_plage_ouverture_org_drome1_lieu1_alain_classique = PlageOuverture.create!(
   title: "Permanence classique",
   organisation_id: org_drome1.id,
   agent_id: agent_orgs_rdv_insertion.id,
@@ -177,20 +187,31 @@ _plage_ouverture_org_drome_lieu1_alain_classique = PlageOuverture.create!(
   end_time: Tod::TimeOfDay.new(12),
   recurrence: Montrose.every(:week, day: [1, 2], interval: 1, starts: Date.tomorrow, on: %i[monday tuesday])
 )
-_plage_ouverture_org_drome_lieu2_alain_classique = PlageOuverture.create!(
+_plage_ouverture_org_drome1_lieu2_alain_classique = PlageOuverture.create!(
   title: "Permanence classique",
   organisation_id: org_drome1.id,
   agent_id: agent_orgs_rdv_insertion.id,
   lieu_id: lieu_org_drome1_crest.id,
+  motif_ids: [motif2_drome1.id],
+  first_day: Date.tomorrow,
+  start_time: Tod::TimeOfDay.new(8),
+  end_time: Tod::TimeOfDay.new(12),
+  recurrence: Montrose.every(:week, day: [3], interval: 1, starts: Date.tomorrow, on: %i[wednesday])
+)
+_plage_ouverture_org_drome2_lieu1_alain_classique = PlageOuverture.create!(
+  title: "Permanence classique",
+  organisation_id: org_drome2.id,
+  agent_id: agent_orgs_rdv_insertion.id,
+  lieu_id: lieu_org_drome2_valence.id,
   motif_ids: [motif_drome2.id],
   first_day: Date.tomorrow,
   start_time: Tod::TimeOfDay.new(8),
   end_time: Tod::TimeOfDay.new(12),
-  recurrence: Montrose.every(:week, day: [3, 4], interval: 1, starts: Date.tomorrow, on: %i[wednesday thursday])
+  recurrence: Montrose.every(:week, day: [4], interval: 1, starts: Date.tomorrow, on: %i[thursday])
 )
 _plage_ouverture_org_yonne_alain_classique = PlageOuverture.create!(
   title: "Permanence classique",
-  organisation_id: org_drome1.id,
+  organisation_id: org_yonne.id,
   agent_id: agent_orgs_rdv_insertion.id,
   lieu_id: lieu_org_yonne.id,
   motif_ids: [motif_yonne_physique.id, motif_yonne_telephone.id],

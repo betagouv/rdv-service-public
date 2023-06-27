@@ -4,12 +4,13 @@ fr:
       agent_role: Rôle agent
     attributes:
       agent_role:
-        level: Niveau de permissions
-      agent_role/levels:
+        access_level: Niveau de permissions
+      agent_role/access_levels:
         none: Inaccessible
         basic: Agent
         admin: Admin
-      agent_role/levels/explanation:
+        intervenant: Intervenant
+      agent_role/access_levels/explanation:
         basic: "<i class='far fa-user'></i> Agent<br><ul><li>Peut consulter et modifier son agenda et celui des agents de son service</li><li>Service secrétariat: peut consulter et modifier les agendas de tous les agents de l'organisation</li></ul>"
         admin: <i class='fa fa-user-cog'></i> Admin<br><ul><li>Peut consulter et modifier l'agenda de tous les agents de l'organisation</li><li>Peut créer, modifier et supprimer des lieux, des motifs et des agents</li><li>Peut accéder aux statistiques de l'organisation</li></ul>
     warnings:

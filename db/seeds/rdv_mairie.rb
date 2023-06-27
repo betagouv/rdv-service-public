@@ -20,13 +20,17 @@ org_mairie_de_sannois = Organisation.create!(
 # Service
 service_titres = Service.create!(name: "Service Titres Sécurisés", short_name: "STS")
 
+MotifCategory.create!(name: "Carte d'identité disponible sur le site de l'ANTS", short_name: "CNI")
+MotifCategory.create!(name: "Passeport disponible sur le site de l'ANTS", short_name: "PASSPORT")
+MotifCategory.create!(name: "Carte d'identité et passeport disponible sur le site de l'ANTS", short_name: "CNI-PASSPORT")
+
 # MOTIFS
 motif_passeport = Motif.create!(
   name: "Passeport",
   color: "#00ffff",
   default_duration_in_min: 30,
   organisation: org_mairie_de_sannois,
-  bookable_publicly: true,
+  bookable_by: :everyone,
   max_public_booking_delay: 2_629_746,
   service: service_titres,
   for_secretariat: true
@@ -42,7 +46,7 @@ agent_mairie_de_sannois = Agent.new(
   service_id: service_titres.id,
   invitation_accepted_at: 10.days.ago,
   roles_attributes: [
-    { organisation: org_mairie_de_sannois, level: AgentRole::LEVEL_ADMIN },
+    { organisation: org_mairie_de_sannois, access_level: AgentRole::ACCESS_LEVEL_ADMIN },
   ],
   agent_territorial_access_rights_attributes: [
     { territory: territory_val_doise, allow_to_manage_teams: true },

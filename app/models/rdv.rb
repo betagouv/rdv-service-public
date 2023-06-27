@@ -56,7 +56,8 @@ class Rdv < ApplicationRecord
   has_one :territory, through: :organisation
 
   # Delegates
-  delegate :home?, :phone?, :public_office?, :bookable_publicly?, :service_social?, :follow_up?, :service, :collectif?, :collectif, :individuel?, to: :motif
+  delegate :home?, :phone?, :public_office?, :bookable_by_everyone?,
+           :bookable_by_everyone_or_bookable_by_invited_users?, :service_social?, :follow_up?, :service, :collectif?, :collectif, :individuel?, to: :motif
 
   alias_attribute :soft_deleted?, :deleted_at?
 
@@ -102,7 +103,8 @@ class Rdv < ApplicationRecord
   scope :visible, -> { joins(:motif).merge(Motif.visible) }
   scope :collectif, -> { joins(:motif).merge(Motif.collectif) }
   scope :collectif_and_available_for_reservation, -> { collectif.with_remaining_seats.future.not_revoked }
-  scope :bookable_publicly, -> { joins(:motif).merge(Motif.bookable_publicly) }
+  scope :bookable_by_everyone, -> { joins(:motif).merge(Motif.bookable_by_everyone) }
+  scope :bookable_by_everyone_or_bookable_by_invited_users, -> { joins(:motif).merge(Motif.bookable_by_everyone_or_bookable_by_invited_users) }
   scope :with_remaining_seats, -> { where("users_count < max_participants_count OR max_participants_count IS NULL") }
   scope :for_domain, lambda { |domain|
     if domain == Domain::RDV_AIDE_NUMERIQUE
@@ -190,11 +192,11 @@ class Rdv < ApplicationRecord
 
   def editable_by_user?
     !cancelled? && !collectif? && motif.rdvs_editable_by_user? && starts_at > 2.days.from_now &&
-      motif.bookable_publicly && !created_by_agent?
+      motif.bookable_by_everyone_or_bookable_by_invited_users? && !created_by_agent?
   end
 
   def available_to_file_attente?
-    motif.bookable_publicly? &&
+    motif.bookable_by_everyone? &&
       motif.individuel? &&
       !cancelled? &&
       starts_at > 7.days.from_now &&

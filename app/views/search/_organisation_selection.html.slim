@@ -10,7 +10,7 @@ section.bg-light.p-4
               h3.card-title.mb-3.mt-0.text-success.font-weight-bold= organisation.name
               = render "organisation_card_subtitles", organisation: organisation
             .col-md.align-self-center.pt-3.pt-md-0.position-static
-              = link_to prendre_rdv_path(context.query.merge(user_selected_organisation_id: organisation.id, date: next_availability.starts_at)), class: "d-block stretched-link" do
+              = link_to prendre_rdv_path(context.query_params.merge(user_selected_organisation_id: organisation.id, date: next_availability.starts_at)), class: "d-block stretched-link" do
                 .row
                   .col
                     | Prochaine disponibilité le

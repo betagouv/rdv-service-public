@@ -6,6 +6,6 @@ h6.mb-2
     = motif.human_attribute_value(:visibility_type)
     p.mb-0
       span.text-muted.font-14= motif.human_attribute_value(:visibility_type, context: :hint)
-      - if motif.motif_category_for_rdv_insertion?
+      - if current_organisation.rdv_insertion?
         br
         span.text-muted.font-14= motif.human_attribute_value(:visibility_type, context: :hint_rdv_insertion)

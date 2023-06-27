@@ -10,12 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_08_134258) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_14_081124) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
   enable_extension "unaccent"
   enable_extension "uuid-ossp"
+
+  create_enum :access_level, [
+    "admin",
+    "basic",
+    "intervenant",
+  ], force: :cascade
 
   create_enum :agents_absence_notification_level, [
     "all",
@@ -38,6 +44,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_08_134258) do
     "agents",
     "agents_and_prescripteurs",
     "everyone",
+    "agents_and_prescripteurs_and_invited_users",
   ], force: :cascade
 
   create_enum :created_by, [
@@ -134,9 +141,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_08_134258) do
   create_table "agent_roles", force: :cascade do |t|
     t.bigint "agent_id", null: false
     t.bigint "organisation_id", null: false
-    t.string "level", default: "basic", null: false
+    t.enum "access_level", default: "basic", null: false, enum_type: "access_level"
+    t.index ["access_level"], name: "index_agent_roles_on_access_level"
     t.index ["agent_id"], name: "index_agent_roles_on_agent_id"
-    t.index ["level"], name: "index_agent_roles_on_level"
     t.index ["organisation_id", "agent_id"], name: "index_agent_roles_on_organisation_id_and_agent_id", unique: true
     t.index ["organisation_id"], name: "index_agent_roles_on_organisation_id"
   end
@@ -173,7 +180,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_08_134258) do
   end
 
   create_table "agents", force: :cascade do |t|
-    t.string "email", default: "", null: false
+    t.string "email", default: ""
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
@@ -198,7 +205,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_08_134258) do
     t.bigint "service_id", null: false
     t.string "email_original"
     t.string "provider", default: "email", null: false
-    t.string "uid", default: "", null: false
+    t.string "uid", default: ""
     t.text "tokens"
     t.boolean "allow_password_change", default: false
     t.enum "rdv_notifications_level", default: "soon", enum_type: "agents_rdv_notifications_level"
@@ -220,7 +227,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_08_134258) do
     t.boolean "outlook_disconnect_in_progress", default: false, null: false
     t.index ["calendar_uid"], name: "index_agents_on_calendar_uid", unique: true
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true
-    t.index ["email"], name: "index_agents_on_email", unique: true
+    t.index ["email"], name: "index_agents_on_email", unique: true, where: "(email IS NOT NULL)"
     t.index ["external_id"], name: "index_agents_on_external_id", unique: true
     t.index ["invitation_token"], name: "index_agents_on_invitation_token", unique: true
     t.index ["invitations_count"], name: "index_agents_on_invitations_count"
@@ -229,7 +236,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_08_134258) do
     t.index ["last_name"], name: "index_agents_on_last_name"
     t.index ["reset_password_token"], name: "index_agents_on_reset_password_token", unique: true
     t.index ["service_id"], name: "index_agents_on_service_id"
-    t.index ["uid", "provider"], name: "index_agents_on_uid_and_provider", unique: true
+    t.index ["uid", "provider"], name: "index_agents_on_uid_and_provider", unique: true, where: "(uid IS NOT NULL)"
   end
 
   create_table "agents_rdvs", force: :cascade do |t|

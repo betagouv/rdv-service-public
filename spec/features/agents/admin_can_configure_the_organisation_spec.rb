@@ -68,7 +68,7 @@ describe "Admin can configure the organisation" do
 
     click_link "PATRICK Tony"
     expect_page_title("Modifier le rôle de l'agent Tony PATRICK")
-    choose :agent_role_level_admin
+    choose :agent_role_access_level_admin
     click_button("Enregistrer")
 
     expect_page_title("Agents de Organisation n°1")

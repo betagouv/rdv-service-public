@@ -1,5 +1,10 @@
 
-.badge-motif-bookable_publicly {
+.badge-motif-bookable_by_everyone {
+  background-color: $yellow;
+  color: $dark;
+}
+
+.badge-motif-bookable_by_invited_users {
   background-color: $yellow;
   color: $dark;
 }

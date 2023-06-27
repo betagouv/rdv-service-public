@@ -27,6 +27,7 @@ Rails.application.routes.draw do
       post :invite, on: :member
       resources :migrations, only: %i[new create]
     end
+    resources :agent_roles, except: %i[index]
     resources :super_admins
     resources :organisations
     resources :services

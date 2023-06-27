@@ -137,7 +137,7 @@ class SmsSender < BaseService
   #
   def send_with_clever_technologies
     response = Typhoeus::Request.new(
-      "http://webservicesmultimedias.clever-is.fr/api/pushs",
+      "https://webservicesmultimedias.clever-is.fr/api/pushs",
       method: :post,
       headers: { "Content-Type": "application/json; charset=UTF-8", Authorization: "Basic #{Base64.encode64(@api_key).chomp}" },
       timeout: 5,

@@ -56,14 +56,14 @@ describe Lieu, type: :model do
   end
 
   context "with motif" do
-    let!(:motif) { create(:motif, name: "Vaccination", bookable_publicly: bookable_publicly, organisation: organisation) }
+    let!(:motif) { create(:motif, name: "Vaccination", bookable_by: bookable_by, organisation: organisation) }
     let!(:plage_ouverture) { create(:plage_ouverture, :daily, motifs: [motif], lieu: lieu, organisation: organisation) }
     let!(:lieu) { create(:lieu) }
 
     describe ".for_motif" do
       subject { described_class.for_motif(motif) }
 
-      let(:bookable_publicly) { false }
+      let(:bookable_by) { :agents }
 
       before { freeze_time }
 
@@ -101,7 +101,7 @@ describe Lieu, type: :model do
       let!(:lieu) { create(:lieu) }
       let!(:lieu_lille) { create(:lieu, latitude: 50.63, longitude: 3.053) }
       let(:paris_loc) { { latitude: 48.83, longitude: 2.37 } }
-      let(:bookable_publicly) { true }
+      let(:bookable_by) { :everyone }
 
       it { expect(lieu_lille.distance(paris_loc[:latitude], paris_loc[:longitude])).to be_a_kind_of(Float) }
       it { expect(lieu_lille.distance(paris_loc[:latitude], paris_loc[:longitude])).to be_within(10_000).of(204_000) }

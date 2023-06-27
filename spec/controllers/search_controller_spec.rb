@@ -24,10 +24,10 @@ RSpec.describe SearchController, type: :controller do
   let!(:rsa_orientation) { create(:motif_category, name: "RSA orientation sur site", short_name: "rsa_orientation") }
   let!(:rsa_orientation_on_phone_platform) { create(:motif_category, name: "RSA orientation sur plateforme téléphonique", short_name: "rsa_orientation_on_phone_platform") }
 
-  let!(:motif) { create(:motif, name: "RSA orientation 1", service: service, motif_category: rsa_orientation, bookable_publicly: true, organisation: organisation) }
-  let!(:motif2) { create(:motif, name: "RSA orientation 2", service: service, motif_category: rsa_orientation_on_phone_platform, bookable_publicly: true, organisation: organisation) }
-  let!(:motif3) { create(:motif, name: "RSA orientation 3", service: service, bookable_publicly: true, organisation: other_org) }
-  let!(:motif4) { create(:motif, name: "Motif numéro 4", service: service, bookable_publicly: true, organisation: other_org) }
+  let!(:motif) { create(:motif, name: "RSA orientation 1", service: service, motif_category: rsa_orientation, organisation: organisation) }
+  let!(:motif2) { create(:motif, name: "RSA orientation 2", service: service, motif_category: rsa_orientation_on_phone_platform, organisation: organisation) }
+  let!(:motif3) { create(:motif, name: "RSA orientation 3", service: service, organisation: other_org) }
+  let!(:motif4) { create(:motif, name: "Motif numéro 4", service: service, organisation: other_org) }
 
   let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, organisation: organisation) }
   let!(:plage_ouverture2) { create(:plage_ouverture, motifs: [motif2], lieu: lieu2, organisation: organisation) }
@@ -115,8 +115,7 @@ RSpec.describe SearchController, type: :controller do
 
         it "lists the available motifs that match the search terms" do
           get :search_rdv, params: {
-            address: address, departement: departement_number, city_code: city_code,
-            invitation_token: invitation_token, motif_search_terms: "RSA orientation",
+            address: address, departement: departement_number, city_code: city_code, motif_search_terms: "RSA orientation",
           }
           expect(subject).to include("RSA orientation 1")
           expect(subject).to include("RSA orientation 2")
@@ -130,12 +129,16 @@ RSpec.describe SearchController, type: :controller do
           instance_double(Users::GeoSearch, available_motifs: Motif.where(id: [motif2.id]))
         end
 
+        before do
+          request.session["invitation"] = {
+            address: address, departement: departement_number, city_code: city_code, invitation_token: invitation_token,
+            expires_at: 1.hour.from_now,
+          }
+        end
+
         context "when there are matching motifs for the geo search available_motifs" do
           it "lists the available motifs" do
-            get :search_rdv, params: {
-              address: address, departement: departement_number, city_code: city_code,
-              invitation_token: invitation_token,
-            }
+            get :search_rdv
             expect(subject).to include("RSA orientation 2")
             expect(subject).not_to include("RSA orientation 1")
             expect(subject).not_to include("RSA orientation 3")
@@ -146,8 +149,7 @@ RSpec.describe SearchController, type: :controller do
         context "when there are no matching motifs for the geo search available_motifs after filtering" do
           it "lists the matching motifs linked to the orgas passed in the url" do
             get :search_rdv, params: {
-              organisation_ids: [organisation.id], address: address, departement: departement_number, city_code: city_code,
-              invitation_token: invitation_token, motif_category_short_name: "rsa_orientation",
+              organisation_ids: [organisation.id], motif_category_short_name: "rsa_orientation",
             }
             expect(subject).to include("RSA orientation 1")
             expect(subject).not_to include("RSA orientation 2")
@@ -157,8 +159,7 @@ RSpec.describe SearchController, type: :controller do
 
           it "reveals a problem when no motifs are available" do
             get :search_rdv, params: {
-              organisation_ids: [other_org.id], address: address, departement: departement_number, city_code: city_code,
-              invitation_token: invitation_token, motif_search_terms: "something random",
+              organisation_ids: [other_org.id], motif_search_terms: "something random",
             }
             expect(subject).to include("Un problème semble s'être produit pour votre invitation. Toutes nos excuses pour cela.")
             expect(subject).to include("support@rdv-solidarites.fr")

@@ -6,7 +6,7 @@ class Agent::OrganisationPolicy < DefaultAgentPolicy
   end
 
   def admin_in_record_organisation?
-    current_agent.roles.level_admin.pluck(:organisation_id).include?(record.id)
+    current_agent.roles.access_level_admin.pluck(:organisation_id).include?(record.id)
   end
 
   def new?

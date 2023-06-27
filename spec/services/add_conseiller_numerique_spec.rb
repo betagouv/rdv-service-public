@@ -43,7 +43,7 @@ describe AddConseillerNumerique do
       )
 
       expect(Agent.last.roles.last).to have_attributes(
-        level: "admin",
+        access_level: "admin",
         organisation_id: Organisation.last.id
       )
 

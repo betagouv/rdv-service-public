@@ -5,10 +5,10 @@ tr
     = link_to motif.name, admin_organisation_motif_path(motif.organisation, motif)
     = motif_badges(motif, only: %i[secretariat follow_up collectif])
   td
-    = motif_badges(motif, only: %i[bookable_publicly])
+    = motif_badges(motif, only: %i[bookable_by_everyone bookable_by_invited_users])
   - if @display_sectorisation_level
     td
-      - if !motif.bookable_publicly?
+      - if motif.bookable_outside_of_organisation?
         | &nbsp;
       - elsif motif.sectorisation_level_departement?
         | Tout le #{current_organisation.departement_number}

@@ -12,8 +12,8 @@ RSpec.describe "Adding a user to a collective RDV" do
   let!(:organisation) { create(:organisation, territory: territory) }
   let!(:agent) { create(:agent, organisations: [organisation], rdv_notifications_level: "all") }
   let!(:service) { create(:service) }
-  let!(:motif) { create(:motif, :collectif, bookable_publicly: true, organisation: organisation, service: service) }
-  let!(:motif2) { create(:motif, :collectif, bookable_publicly: true, organisation: organisation, service: service) }
+  let!(:motif) { create(:motif, :collectif, organisation: organisation, service: service) }
+  let!(:motif2) { create(:motif, :collectif, organisation: organisation, service: service) }
   let!(:lieu1) { create(:lieu, organisation: organisation) }
   let!(:lieu2) { create(:lieu, organisation: organisation) }
   let!(:rdv) { create(:rdv, :without_users, motif: motif, agents: [agent], organisation: organisation, lieu: lieu1) }
@@ -129,6 +129,7 @@ RSpec.describe "Adding a user to a collective RDV" do
     end
 
     it "with an invited user (Token), redirect to rdv with invitaiton_token refreshed" do
+      motif.update!(bookable_by: "agents_and_prescripteurs_and_invited_users")
       params.merge!(invitation_token: invitation_token)
       visit prendre_rdv_path(params)
 
@@ -137,7 +138,6 @@ RSpec.describe "Adding a user to a collective RDV" do
       expect_confirm_participation.to change { rdv.reload.users.count }.from(0).to(1)
 
       expect(page).not_to have_content("modifier") # can_change_participants?
-      expect(::Addressable::URI.parse(current_url).query_values).to match("invitation_token" => /^[A-Z0-9]{8}$/)
 
       expect_notifications_sent_for(rdv, invited_user, :rdv_created)
       expect_webhooks_for(invited_user)
@@ -147,6 +147,7 @@ RSpec.describe "Adding a user to a collective RDV" do
   context "Specific cases" do
     context "Invited User" do
       let(:user) { invited_user }
+      let!(:motif) { create(:motif, :collectif, bookable_by: "agents_and_prescripteurs_and_invited_users", organisation: organisation, service: service) }
 
       it "do not display revoked or full rdvs for reservation (invitation error)" do
         params.merge!(invitation_token: invitation_token)

@@ -25,7 +25,7 @@ motif_accompagnement_individuel = Motif.create!(
   color: "#99CC99",
   default_duration_in_min: 60,
   location_type: :public_office,
-  bookable_publicly: true,
+  bookable_by: :everyone,
   organisation: org_cnfs,
   service: service_cnfs
 )
@@ -36,7 +36,7 @@ motif_atelier_collectif = Motif.create!(
   default_duration_in_min: 120,
   location_type: :public_office,
   collectif: true,
-  bookable_publicly: true,
+  bookable_by: :everyone,
   organisation: org_cnfs,
   service: service_cnfs
 )
@@ -59,7 +59,7 @@ agent_cnfs = Agent.new(
   password: "123456",
   service_id: service_cnfs.id,
   invitation_accepted_at: 1.day.ago,
-  roles_attributes: [{ organisation: org_cnfs, level: AgentRole::LEVEL_ADMIN }],
+  roles_attributes: [{ organisation: org_cnfs, access_level: AgentRole::ACCESS_LEVEL_ADMIN }],
   agent_territorial_access_rights_attributes: [{
     territory: territory_cnfs,
     allow_to_manage_teams: false,

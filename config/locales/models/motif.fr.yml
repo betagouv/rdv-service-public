@@ -8,9 +8,6 @@ fr:
         service: Service
         collectif: Nombre de participants
         color: Couleur
-        bookable_publicly_title: Prise de RDV en ligne par les usagers
-        bookable_publicly: Réservable en ligne
-        bookable_publicly_hint: Ce motif est disponible à la réservation en ligne par les usagers
         bookable_by_title: Réservation en ligne
         bookable_by_hint: Vous pouvez décider de qui peut prendre RDV pour ce motif
         visibility_type: Visibilité usager
@@ -58,15 +55,14 @@ fr:
         visible_and_notified: Le RDV sera visible dans la liste des RDVs côté usager, l'usager sera notifié par SMS et/ou email
         visible_and_not_notified: Le RDV sera visible dans la liste des RDVs côté usager, l'usager ne recevra aucune notification (ni SMS ni email)
         invisible: Le RDV sera invisible dans la liste des RDVs côté usager, l'usager ne recevra aucune notification (ni SMS ni email)
-      # Temporary hint for motif categories condition
       motif/visibility_types/hint_rdv_insertion:
         visible_and_notified: ""
-        visible_and_not_notified: "Toutefois des notifications peuvent être envoyées d'une application externe (ex : RDV-Insertion)"
-        invisible: "Toutefois des notifications peuvent être envoyées d'une application externe (ex : RDV-Insertion)"
+        visible_and_not_notified: "Les notifications peuvent être envoyées d'une application externe (ex : Motif de Convocation avec RDV-Insertion)"
+        invisible: "Les notifications peuvent être envoyées d'une application externe (ex : Motif de Convocation avec RDV-Insertion)"
       motif/visibility_types/hint_checkbox:
         visible_and_notified: ""
-        visible_and_not_notified: "Des notifications peuvent être envoyées d'une application externe (ex : RDV-Insertion). Dans ce cas vous pouvez laisser cette case décochée"
-        invisible: "Des notifications peuvent être envoyées d'une application externe (ex : RDV-Insertion). Dans ce cas vous pouvez laisser cette case décochée"
+        visible_and_not_notified: "Les notifications peuvent être envoyées d'une application externe (ex : Motif de Convocation avec RDV-Insertion). Dans ce cas vous pouvez laisser cette case décochée"
+        invisible: "Les notifications peuvent être envoyées d'une application externe (ex : Motif de Convocation avec RDV-Insertion). Dans ce cas vous pouvez laisser cette case décochée"
       # --------------------------------------------
       motif/sectorisation_levels:
         agent: Sectorisation à l'agent
