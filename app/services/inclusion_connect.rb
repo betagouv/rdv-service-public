@@ -24,7 +24,7 @@ module InclusionConnect
       return false if token.blank?
 
       user_info = get_user_info(token)
-      return false if user_info.blank? || (user_info["email_verified"] == false)
+      return false if user_info.blank?
 
       get_and_update_agent(user_info)
     end
