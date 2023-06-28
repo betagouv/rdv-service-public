@@ -14,6 +14,9 @@ header {
     .logo-dsfr {
         width: 10rem;
     }
+    &:hover {
+      background-color: rgb(246, 246, 246);
+    }
 }
 
 .navbar-dsfr {
@@ -28,6 +31,7 @@ header {
 
     .link-connect {
         font-size: .875rem;
+        font-weight: 500;
     }
 }
 
