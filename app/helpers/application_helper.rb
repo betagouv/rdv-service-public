@@ -54,8 +54,9 @@ module ApplicationHelper
   end
 
   def link_logo_dsfr
-    link_to root_path do
-      image_tag current_domain.dark_logo_path, alt: current_domain.name, class: "logo-dsfr"
+    link_to root_path, class: "header-brand" do
+      concat image_tag("logos/republique-francaise-logo.svg", alt: "République Française", class: "logo-brand mb-2 mr-3")
+      concat image_tag current_domain.dark_logo_path, alt: current_domain.name, class: "logo-dsfr"
     end
   end
 

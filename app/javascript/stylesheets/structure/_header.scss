@@ -11,7 +11,7 @@ header {
 }
 
 .header-brand {
-    a {
+    .logo-dsfr {
         width: 10rem;
     }
 }
@@ -44,6 +44,8 @@ header {
 .link-dsfr {
     padding: 0.5rem;
     font-size: .875rem;
+    font-weight: 500;
+
     line-height: 1.5rem;
     color: $blue;
     border: 2px solid transparent;
