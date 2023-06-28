@@ -12,11 +12,24 @@ section.bg-light.p-4
               .card-subtitle= lieu.address
               .card-subtitle= context.service.name
             .col-md.align-self-center.pt-3.pt-md-0.position-static
-              = link_to prendre_rdv_path(context.query_params.merge(lieu_id: lieu.id, date: next_availability.starts_at)), class: "d-block stretched-link" do
-                .row
-                  .col
-                    = t(".next_availability")
-                    br
-                    strong= l(next_availability.starts_at, format: :human)
-                  .col-auto.align-self-center
-                      i.fa.fa-chevron-right
+              - motif = next_availability.motif
+              - if motif.restriction_for_rdv.blank?
+                = link_to prendre_rdv_path(context.query_params.merge(lieu_id: lieu.id, date: next_availability.starts_at)), class: "d-block stretched-link" do
+                  .row
+                    .col
+                      = t(".next_availability")
+                      br
+                      strong= l(next_availability.starts_at, format: :human)
+                    .col-auto.align-self-center
+                        i.fa.fa-chevron-right
+              - else
+                = link_to prendre_rdv_path(context.query_params.merge(lieu_id: lieu.id, date: next_availability.starts_at)), class: "d-block stretched-link", "data-turbolinks": false, data: { toggle: "modal", target: "#js-rdv-restriction-motif#{motif.id}" } do
+                  .row
+                    .col
+                      = t(".next_availability")
+                      br
+                      strong= l(next_availability.starts_at, format: :human)
+                    .col-auto.align-self-center
+                        i.fa.fa-chevron-right
+                = render "/common/modal", id: "js-rdv-restriction-motif#{motif.id}" , title: "À lire avant de prendre un rendez-vous", confirm_path: prendre_rdv_path(context.query_params.merge(lieu_id: lieu.id, date: next_availability.starts_at)) do
+                  = restriction_for_rdv_to_html(motif)

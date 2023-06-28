@@ -116,7 +116,7 @@ describe "User can search for rdvs" do
       create(
         :motif,
         name: "RSA Suivi", follow_up: true,
-        organisation: organisation, service: service
+        organisation: organisation, service: service, restriction_for_rdv: "Instructions pour le RDV"
       )
     end
 
@@ -177,7 +177,7 @@ describe "User can search for rdvs" do
 
     before { login_as(user, scope: :user) }
 
-    it "shows only the follow up motifs related to the agent" do
+    it "shows only the follow up motifs related to the agent", js: true do
       visit root_path(referent_ids: [agent.id], departement: "92", service_id: service.id)
 
       ### Motif selection
@@ -188,10 +188,10 @@ describe "User can search for rdvs" do
       expect(page).not_to have_content(motif3.name)
 
       find(".card-title", text: /#{motif1.name}/).click
-      click_link("Accepter")
 
       expect(page).to have_content(lieu.name)
       find(".card-title", text: /#{lieu.name}/).ancestor(".card").find("a.stretched-link").click
+      click_link("Accepter")
 
       ### Creneau selection
       expect(page).to have_content(agent.last_name.upcase)

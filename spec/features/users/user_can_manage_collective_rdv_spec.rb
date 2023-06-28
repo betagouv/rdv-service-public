@@ -40,14 +40,16 @@ RSpec.describe "Adding a user to a collective RDV" do
   def select_motif
     expect(page).to have_content("Sélectionnez le motif de votre RDV :")
     click_link(motif.name)
-    # Restriction modal
-    expect(page).to have_content(motif.restriction_for_rdv)
-    click_link("Accepter", match: :first)
   end
 
   def select_lieu
     expect(page).to have_content("Sélectionnez un lieu de RDV :")
     click_link("Prochaine disponibilité")
+  end
+
+  def accept_restriction_modal
+    expect(page).to have_content(motif.restriction_for_rdv)
+    click_link("Accepter", match: :first)
   end
 
   def expect_cancel_participation
@@ -81,12 +83,14 @@ RSpec.describe "Adding a user to a collective RDV" do
     end.at_least_once)
   end
 
-  context "Nominal cases" do
+  context "Nominal cases", js: true do
     it "with a signed in user" do
+      motif.update!(restriction_for_rdv: "Test restriction")
       login_as(logged_user, scope: :user)
       visit root_path(params)
       select_motif
       select_lieu
+      accept_restriction_modal
 
       # Testing participation (with back buttons)
       expect do
@@ -95,7 +99,6 @@ RSpec.describe "Adding a user to a collective RDV" do
         click_link("S'inscrire")
         click_button("Continuer")
         click_link("Revenir en arrière")
-        click_button("Continuer")
         click_button("Continuer")
         stub_request(:post, "https://example.com/")
         click_on("Confirmer ma participation")
@@ -347,7 +350,7 @@ RSpec.describe "Adding a user to a collective RDV" do
         expect_webhooks_for(user)
       end
 
-      it "display rdv with cancelled tag when participation is excused or rdv is revoked", js: true do
+      it "display rdv with cancelled tag when participation is excused or rdv is revoked" do
         login_as(user, scope: :user)
         visit root_path(params)
 
@@ -375,7 +378,7 @@ RSpec.describe "Adding a user to a collective RDV" do
         expect_no_notifications_for(rdv, user, :rdv_created)
       end
 
-      it "can cancel collective rdv participation, with mail notifications only", js: true do
+      it "can cancel collective rdv participation, with mail notifications only" do
         login_as(user, scope: :user)
         visit root_path(params)
 
@@ -393,7 +396,7 @@ RSpec.describe "Adding a user to a collective RDV" do
         expect_webhooks_for(user)
       end
 
-      it "can cancel collective rdv participation, without notifications", js: true do
+      it "can cancel collective rdv participation, without notifications" do
         login_as(user, scope: :user)
         visit root_path(params)
 
