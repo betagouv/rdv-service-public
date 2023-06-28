@@ -14,75 +14,78 @@ $gray-700: #6c757d;
 $gray-900: #313131;
 
 $grays: ();
-$grays: map-merge(("100": $gray-100,
-        "200": $gray-200,
-        "300": $gray-300,
-        "400": $gray-400,
-        "500": $gray-500,
-        "600": $gray-600,
-        "700": $gray-700,
-        "800": $gray-800,
-        "900": $gray-900), $grays);
+$grays: map-merge( (
+  "100": $gray-100,
+  "200": $gray-200,
+  "300": $gray-300,
+  "400": $gray-400,
+  "500": $gray-500,
+  "600": $gray-600,
+  "700": $gray-700,
+  "800": $gray-800,
+  "900": $gray-900), $grays);
 
 $blueish-light-grey: #eff2f7;
 
-$blue: #222e5c;
-$turquoise: #66d9ce;
+$blue:       #222e5c;
+$turquoise:  #66d9ce;
 $lightturquoise: #cef3ef;
-$indigo: #727cf5;
-$purple: #6b5eae;
-$pink: #ff679b;
-$red: #E90130;
-$orange: #ff7d00;
-$yellow: #ffbc00;
-$green: #078766;
-$teal: #02a8b5;
-$cyan: #39afd1;
-$lightgrey: #DDDDDD;
+$indigo:     #727cf5;
+$purple:     #6b5eae;
+$pink:       #ff679b;
+$red:        #E90130;
+$orange:     #ff7d00;
+$yellow:     #ffbc00;
+$green:      #078766;
+$teal:       #02a8b5;
+$cyan:       #39afd1;
+$lightgrey:  #DDDDDD;
 
 // DSFR Colors
 $focus-dsfr: #0067F7;
 
 
 $colors: ();
-$colors: map-merge(("blue": $blue,
-        "turquoise": $turquoise,
-        "lightturquoise": $lightturquoise,
-        "indigo": $indigo,
-        "purple": $purple,
-        "pink": $pink,
-        "red": $red,
-        "orange": $orange,
-        "yellow": $yellow,
-        "green": $green,
-        "teal": $teal,
-        "cyan": $cyan,
-        "white": $white,
-        "gray": $gray-600,
-        "gray-dark": $gray-900), $colors);
+$colors: map-merge((
+  "blue": $blue,
+  "turquoise": $turquoise,
+  "lightturquoise": $lightturquoise,
+  "indigo": $indigo,
+  "purple": $purple,
+  "pink": $pink,
+  "red": $red,
+  "orange": $orange,
+  "yellow": $yellow,
+  "green": $green,
+  "teal": $teal,
+  "cyan": $cyan,
+  "white": $white,
+  "gray": $gray-600,
+  "gray-dark": $gray-900), $colors);
 
-$white: white;
-$primary: $blue;
-$secondary: $orange;
-$tertiary: $turquoise;
-$success: $green;
-$info: $cyan;
-$warning: $yellow;
-$danger: $red;
-$light: $gray-200;
-$dark: $gray-900;
+$white:         white;
+$primary:       $blue;
+$secondary:     $orange;
+$tertiary:      $turquoise;
+$success:       $green;
+$info:          $cyan;
+$warning:       $yellow;
+$danger:        $red;
+$light:         $gray-200;
+$dark:          $gray-900;
 
 $theme-colors: ();
-$theme-colors: map-merge(("primary": $primary,
-        "secondary": $secondary,
-        "tertiary": $tertiary,
-        "success": $success,
-        "info": $info,
-        "warning": $warning,
-        "danger": $danger,
-        "light": $light,
-        "dark": $dark,
-        "white": $white), $theme-colors);
+$theme-colors: map-merge((
+  "primary": $primary,
+  "secondary": $secondary,
+  "tertiary": $tertiary,
+  "success": $success,
+  "info": $info,
+  "warning": $warning,
+  "danger": $danger,
+  "light": $light,
+  "dark": $dark,
+  "white": $white), $theme-colors);
 
 
 // Customize the light and dark text colors for use in our YIQ color contrast function.
@@ -94,7 +97,7 @@ $yiq-text-dark: $gray-900;
 //
 // Quickly modify global styling by enabling or disabling optional features.
 
-$enable-caret: true;
+$enable-caret:              true;
 
 
 // Spacing
@@ -106,19 +109,19 @@ $enable-caret: true;
 $spacer: 1.5rem;
 $spacers: ();
 $spacers: map-merge((0: 0,
-        1: ($spacer * .25),
-        2: ($spacer * .5),
-        3: $spacer,
-        4: ($spacer * 1.5),
-        5: ($spacer * 3)), $spacers);
+1: ($spacer * .25),
+2: ($spacer * .5),
+3: $spacer,
+4: ($spacer * 1.5),
+5: ($spacer * 3)), $spacers);
 
 // This variable affects the `.h-*` and `.w-*` classes.
 $sizes: ();
 $sizes: map-merge((15: 15%,
-        25: 25%,
-        50: 50%,
-        75: 75%,
-        100: 100%), $sizes);
+25: 25%,
+50: 50%,
+75: 75%,
+100: 100%), $sizes);
 
 // Body
 //
