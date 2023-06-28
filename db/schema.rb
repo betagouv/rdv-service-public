@@ -166,13 +166,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_14_081124) do
     t.boolean "allow_to_manage_access_rights", default: false, null: false
     t.boolean "allow_to_invite_agents", default: false, null: false
     t.boolean "allow_to_download_metrics", default: false, null: false
+    t.index ["agent_id", "territory_id"], name: "index_agent_territorial_access_rights_unique_agent_territory", unique: true
     t.index ["agent_id"], name: "index_agent_territorial_access_rights_on_agent_id"
     t.index ["territory_id"], name: "index_agent_territorial_access_rights_on_territory_id"
   end
 
   create_table "agent_territorial_roles", force: :cascade do |t|
     t.bigint "agent_id", null: false
-    t.bigint "territory_id"
+    t.bigint "territory_id", null: false
+    t.index ["agent_id", "territory_id"], name: "index_agent_territorial_roles_unique_agent_territory", unique: true
     t.index ["agent_id"], name: "index_agent_territorial_roles_on_agent_id"
     t.index ["territory_id"], name: "index_agent_territorial_roles_on_territory_id"
   end
