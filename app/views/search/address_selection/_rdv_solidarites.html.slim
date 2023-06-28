@@ -1,4 +1,4 @@
-section.bg-primary.p-4
+section.p-4
   .container.mb-4
     #search_form
       = simple_form_for :search, url: prendre_rdv_path, method: :get do |f|
@@ -13,11 +13,11 @@ section.bg-primary.p-4
             / TODO: change input name to address and change whereInput in application.js
             .col-lg-9= f.input :where, label: "Votre adresse", placeholder: "ex : 21 rue Anatole France, Calais", input_html: { value: context.address, name: "address", class: "form-control-lg places-js-container" }, wrapper_html: { class: "mb-1 mb-lg-0" }
             .col-lg-3.align-self-end
-              = f.button :button, id: "search_submit", class: "btn-white btn-lg w-100 text-center", disabled: true do
+              = f.button :button, id: "search_submit", class: "btn-primary btn-lg w-100 text-center", disabled: true do
                 i.fa.fa-search>
                 | Rechercher
 
-section
+section.bg-white.p-2
   .container
     .row.mt-4
       .col-lg-12
