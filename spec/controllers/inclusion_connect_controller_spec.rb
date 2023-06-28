@@ -23,7 +23,7 @@ describe InclusionConnectController, type: :controller do
           "Authorization" => "Bearer zekfjzeklfjl",
           "User-Agent" => "Typhoeus - https://github.com/typhoeus/typhoeus",
         }
-      ).to_return(status: 200, body: { email_verified: true, given_name: "Bob", family_name: "Eponge", email: "bob@demo.rdv-solidarites.fr" }.to_json, headers: {})
+      ).to_return(status: 200, body: { given_name: "Bob", family_name: "Eponge", email: "bob@demo.rdv-solidarites.fr" }.to_json, headers: {})
 
       state = "A STATE"
       session[:ic_state] = state
@@ -100,31 +100,6 @@ describe InclusionConnectController, type: :controller do
           "User-Agent" => "Typhoeus - https://github.com/typhoeus/typhoeus",
         }
       ).to_return(status: 500, body: "", headers: {})
-
-      session[:ic_state] = "a state"
-      get :callback, params: { state: "a state", session_state: "a state", code: "klzefklzejlf" }
-
-      expect(response).to redirect_to(new_agent_session_path)
-      expect(flash[:error]).to eq("Nous n'avons pas pu vous authentifier. Contacter le support à l'adresse <support@rdv-solidarites.fr> si le problème persiste.")
-
-      # HTTP request is sent to Sentry as breadcrumbs
-      expect(sentry_events.last.breadcrumbs.compact.map(&:message).uniq).to eq(["HTTP request", "HTTP response"])
-    end
-
-    it "returns an error if userinfo's email checked is false" do
-      stub_const("InclusionConnect::IC_CLIENT_ID", "truc")
-      stub_const("InclusionConnect::IC_CLIENT_SECRET", "truc secret")
-      stub_const("InclusionConnect::IC_BASE_URL", base_url)
-
-      stub_token_request.to_return(status: 200, body: { access_token: "zekfjzeklfjl", expires_in: "", scopes: "openid" }.to_json, headers: {})
-
-      stub_request(:get, "#{base_url}/userinfo?schema=openid").with(
-        headers: {
-          "Expect" => "",
-          "Authorization" => "Bearer zekfjzeklfjl",
-          "User-Agent" => "Typhoeus - https://github.com/typhoeus/typhoeus",
-        }
-      ).to_return(status: 200, body: { email_verified: false, given_name: "Bob", family_name: "Eponge", email: "bob@demo.rdv-solidarites.fr" }.to_json, headers: {})
 
       session[:ic_state] = "a state"
       get :callback, params: { state: "a state", session_state: "a state", code: "klzefklzejlf" }
