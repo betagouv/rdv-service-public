@@ -38,7 +38,7 @@ h1 {
   color: white;
 }
 
-h2 {
+h2{
   color: $primary;
   font-weight: bold;
   font-size: 2rem;
@@ -49,11 +49,9 @@ h2 {
   h1 {
     font-size: 2rem;
   }
-
   h2 {
     font-size: 1.5rem;
   }
-
   h3 {
     font-size: 1.3rem;
   }
@@ -93,21 +91,20 @@ section header {
   }
 
   .content {
-    .col-lg-4 {
+    .col-lg-4{
       order: 1;
     }
-
-    .col-lg-8 {
+    .col-lg-8{
       order: 2;
     }
   }
 }
 
 /*
- * ==========================================================
- *     NAVBAR
- * ==========================================================
- */
+* ==========================================================
+*     NAVBAR
+* ==========================================================
+*/
 
 nav.navbar {
   background: none;
@@ -120,24 +117,18 @@ nav.navbar {
     font-size: 1.7rem;
     color: #222;
   }
-
   a.nav-link {
     color: #333;
     font-size: 1.1rem;
-
-    &:hover,
-    &.active {
+    &:hover, &.active {
       color: $primary;
     }
   }
-
   .navbar-btn {
     margin-left: 15px;
   }
-
   .navbar-toggler {
     outline: none;
-
     span {
       width: 25px;
       margin: 5px;
@@ -147,18 +138,15 @@ nav.navbar {
       -webkit-transition: all 0.2s;
       transition: all 0.2s;
     }
-
     &.active span {
       &:first-of-type {
         -webkit-transform: rotate(45deg) translate(10px);
         transform: rotate(45deg) translate(10px);
       }
-
       &:last-of-type {
         -webkit-transform: rotate(-45deg) translate(10px);
         transform: rotate(-45deg) translate(10px);
       }
-
       &:nth-of-type(2) {
         opacity: 0;
       }
@@ -175,10 +163,10 @@ nav.navbar {
 
 
 /*
- * ==========================================================
- *     HERO SECTION
- * ==========================================================
- */
+* ==========================================================
+*     HERO SECTION
+* ==========================================================
+*/
 
 section {
   &.hero {
@@ -186,7 +174,6 @@ section {
       margin: 20px 0;
     }
   }
-
   &.our-mission p {
     margin: 30px 0;
   }
@@ -198,8 +185,8 @@ section {
 
 
 /* =========================================
-THEMING OF BOOTSTRAP COMPONENTS
-========================================= */
+   THEMING OF BOOTSTRAP COMPONENTS
+   ========================================= */
 /*
  * 1. NAVBAR
  */
@@ -226,7 +213,6 @@ THEMING OF BOOTSTRAP COMPONENTS
 
 .img-circle {
   margin-top: -70px;
-
   @include media-breakpoint-down(md) {
     margin-top: 0;
   }
