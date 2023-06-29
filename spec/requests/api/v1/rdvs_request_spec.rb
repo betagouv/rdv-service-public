@@ -16,6 +16,13 @@ describe "RDV authentified API", swagger_doc: "v1/api.json" do
 
       parameter name: :organisation_id, in: :path, type: :string, description: "Identifiant de l'organisation", example: "20"
 
+      parameter name: :starts_after, in: :query, type: :string,
+                description: "Filtre les rendez-vous avec un starts_at aprés cette date. Accepte des formats date ou time différents '01/01/2020 12:00:00', '2020-01-01T12:00:00+02:00'...",
+                example: "01/01/2020", required: false
+      parameter name: :starts_before, in: :query, type: :string,
+                description: "Filtre les rendez-vous avec un starts_at avant cette date. Accepte des formats date ou time différents '01/01/2020 12:00:00', '2020-01-01T12:00:00+02:00'...",
+                example: "01/01/2020", required: false
+
       let(:access_basic_agent) { api_auth_headers_for_agent(basic_agent) }
       let(:"access-token") { access_basic_agent["access-token"].to_s }
       let(:uid) { access_basic_agent["uid"].to_s }
@@ -30,9 +37,9 @@ describe "RDV authentified API", swagger_doc: "v1/api.json" do
       let!(:motif) { create(:motif, service: service) }
       let!(:motif2) { create(:motif, service: service2) }
 
-      let!(:rdv) { create(:rdv, organisation: organisation, motif: motif) }
-      let!(:rdv2) { create(:rdv, organisation: organisation2, motif: motif) }
-      let!(:rdv3) { create(:rdv, organisation: organisation, motif: motif2) }
+      let!(:rdv) { create(:rdv, organisation: organisation, motif: motif, starts_at: "01-01-2022") }
+      let!(:rdv2) { create(:rdv, organisation: organisation2, motif: motif, starts_at: "01-01-2023") }
+      let!(:rdv3) { create(:rdv, organisation: organisation, motif: motif2, starts_at: "01-01-2024") }
 
       let!(:basic_agent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }
       let(:organisation_id) { organisation.id }
@@ -57,6 +64,52 @@ describe "RDV authentified API", swagger_doc: "v1/api.json" do
         run_test!
 
         it { expect(JSON.parse(response.body)["rdvs"]).to eq([]) }
+      end
+
+      context "with starts_after and starts_before params" do
+        let!(:rdv2020) { create(:rdv, organisation: organisation, motif: motif, starts_at: "2020-01-01 09:00:00 +0200") }
+        let!(:rdv2021) { create(:rdv, organisation: organisation, motif: motif, starts_at: "2021-01-01 09:00:00 +0200") }
+
+        response 200, "returns policy scoped RDVs filtered with starts_after and starts_before", document: false do
+          let(:starts_after) { "01/01/2020" }
+          let(:starts_before) { "01/02/2020" }
+
+          run_test!
+
+          it { expect(JSON.parse(response.body)["rdvs"].pluck("id")).to contain_exactly(rdv2020.id) }
+        end
+
+        response 200, "returns policy scoped RDVs filtered with starts_after only", document: false do
+          let(:starts_after) { "01/01/2020" }
+
+          run_test!
+
+          it { expect(JSON.parse(response.body)["rdvs"].pluck("id")).to contain_exactly(rdv2020.id, rdv2021.id, rdv.id) }
+        end
+
+        response 200, "returns policy scoped RDVs filtered with starts_before only", document: false do
+          let(:starts_before) { "01/02/2020" }
+
+          run_test!
+
+          it { expect(JSON.parse(response.body)["rdvs"].pluck("id")).to contain_exactly(rdv2020.id) }
+        end
+
+        response 200, "also works with time params", document: false do
+          let(:starts_before) { "2020-01-01 10:00:00" }
+
+          run_test!
+
+          it { expect(JSON.parse(response.body)["rdvs"].pluck("id")).to contain_exactly(rdv2020.id) }
+        end
+
+        response 200, "also works with time params (with another standard)", document: false do
+          let(:starts_before) { "2020-01-01T01:00:00+02:00" }
+
+          run_test!
+
+          it { expect(JSON.parse(response.body)["rdvs"].pluck("id")).to be_empty }
+        end
       end
 
       response 200, "returns policy scoped RDVs when agent is admin", document: false do
