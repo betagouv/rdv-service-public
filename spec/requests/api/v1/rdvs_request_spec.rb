@@ -17,11 +17,11 @@ describe "RDV authentified API", swagger_doc: "v1/api.json" do
       parameter name: :organisation_id, in: :path, type: :string, description: "Identifiant de l'organisation", example: "20"
 
       parameter name: :starts_after, in: :query, type: :string,
-                description: "Filtre les rendez-vous avec un starts_at aprés cette date. Accepte des formats date ou time différents '01/01/2020 12:00:00', '2020-01-01T12:00:00+02:00'...",
-                example: "01/01/2020", required: false
+                description: "Filtre les rendez-vous avec un starts_at aprés cette date. Accepte des formats date ou time (iso8601).",
+                example: "2020-01-01", required: false
       parameter name: :starts_before, in: :query, type: :string,
-                description: "Filtre les rendez-vous avec un starts_at avant cette date. Accepte des formats date ou time différents '01/01/2020 12:00:00', '2020-01-01T12:00:00+02:00'...",
-                example: "01/01/2020", required: false
+                description: "Filtre les rendez-vous avec un starts_at avant cette date. Accepte des formats date ou time (iso8601).",
+                example: "2020-01-01", required: false
 
       let(:access_basic_agent) { api_auth_headers_for_agent(basic_agent) }
       let(:"access-token") { access_basic_agent["access-token"].to_s }
@@ -71,8 +71,8 @@ describe "RDV authentified API", swagger_doc: "v1/api.json" do
         let!(:rdv2021) { create(:rdv, organisation: organisation, motif: motif, starts_at: "2021-01-01 09:00:00 +0200") }
 
         response 200, "returns policy scoped RDVs filtered with starts_after and starts_before", document: false do
-          let(:starts_after) { "01/01/2020" }
-          let(:starts_before) { "01/02/2020" }
+          let(:starts_after) { "2020-01-01" }
+          let(:starts_before) { "2020-01-02" }
 
           run_test!
 
@@ -80,7 +80,7 @@ describe "RDV authentified API", swagger_doc: "v1/api.json" do
         end
 
         response 200, "returns policy scoped RDVs filtered with starts_after only", document: false do
-          let(:starts_after) { "01/01/2020" }
+          let(:starts_after) { "2020-01-01" }
 
           run_test!
 
@@ -88,7 +88,7 @@ describe "RDV authentified API", swagger_doc: "v1/api.json" do
         end
 
         response 200, "returns policy scoped RDVs filtered with starts_before only", document: false do
-          let(:starts_before) { "01/02/2020" }
+          let(:starts_before) { "2020-01-02" }
 
           run_test!
 
