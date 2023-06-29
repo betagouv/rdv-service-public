@@ -13,7 +13,8 @@ html lang="fr"
 
   body class="#{agents_or_users_body_class}"
     - if current_user.present? && !current_user.only_invited?
-      = dsfr_header logo_text: "République<br>Française".html_safe, title: "RDV Mairie" do |header|
+      = dsfr_header logo_text: "République<br>Française".html_safe do |header|
+        - header.with_operator_image title: "Accueil - RDV Service Public", src: asset_path(current_domain.dark_logo_path), alt: "RDV Service Public"
         - header.with_tool_link title: "Vos rendez-vous", path: users_rdvs_path
         - header.with_tool_link title: "Vos informations", path: users_informations_path
         - header.with_tool_link title: "Votre compte", path: edit_user_registration_path
