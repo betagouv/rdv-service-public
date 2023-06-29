@@ -1,11 +1,7 @@
 - content_for :title, "Contact"
 
-.py-3.text-white.bg-primary
-  .container
-    .row
-      .col-md-9.m-auto
-        h1.mb-3 Contact
 .container.mt-3
+  h1.text-dark.mb-3 Contact
   h2 Votre département
   ul.list-group.mb-2
     - Territory.all.where.not(phone_number: nil).each do |territory|
