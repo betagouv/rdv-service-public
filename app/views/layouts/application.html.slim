@@ -20,8 +20,6 @@ html lang="fr"
                 div
                   = yield :breadcrumb
 
-      = yield :header
-
     main class="#{ "container" if params[:controller].include?("users/") }"
       = yield
     #modal-holder
