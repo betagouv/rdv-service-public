@@ -98,6 +98,8 @@ RSpec.describe "Adding a user to a collective RDV" do
         click_link("S'inscrire")
         click_button("Continuer")
         click_link("Revenir en arrière")
+        sleep(1)
+        click_button("Continuer")
         click_button("Continuer")
         stub_request(:post, "https://example.com/")
         click_on("Confirmer ma participation")
