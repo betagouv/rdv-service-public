@@ -40,6 +40,10 @@ $yellow:     #ffbc00;
 $green:      #078766;
 $teal:       #02a8b5;
 $cyan:       #39afd1;
+$lightgrey:  #DDDDDD;
+
+// DSFR Colors
+$focus-dsfr: #0067F7;
 
 
 $colors: ();
@@ -248,9 +252,9 @@ $btn-link-disabled-color:     $gray-500;
 
 // Allows for customizing button radius independently from global border radius
 
-$btn-border-radius:           .15rem;
-$btn-border-radius-lg:        .15rem;
-$btn-border-radius-sm:        .15rem;
+$btn-border-radius:           0;
+$btn-border-radius-lg:        0;
+$btn-border-radius-sm:        0;
 
 
 // Forms
