@@ -37,9 +37,9 @@ describe "RDV authentified API", swagger_doc: "v1/api.json" do
       let!(:motif) { create(:motif, service: service) }
       let!(:motif2) { create(:motif, service: service2) }
 
-      let!(:rdv) { create(:rdv, organisation: organisation, motif: motif, starts_at: "01-01-2022") }
-      let!(:rdv2) { create(:rdv, organisation: organisation2, motif: motif, starts_at: "01-01-2023") }
-      let!(:rdv3) { create(:rdv, organisation: organisation, motif: motif2, starts_at: "01-01-2024") }
+      let!(:rdv) { create(:rdv, organisation: organisation, motif: motif, starts_at: "2022-01-01 09:00:00 +0200") }
+      let!(:rdv2) { create(:rdv, organisation: organisation2, motif: motif, starts_at: "2023-01-01 09:00:00 +0200") }
+      let!(:rdv3) { create(:rdv, organisation: organisation, motif: motif2, starts_at: "2024-01-01 09:00:00 +0200") }
 
       let!(:basic_agent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }
       let(:organisation_id) { organisation.id }
