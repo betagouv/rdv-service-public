@@ -87,7 +87,6 @@ RSpec.describe "Adding a user to a collective RDV" do
       select_lieu
 
       # Restriction for rdv modal
-      sleep(1) # wait for modal to appear
       expect(page).to have_content("À lire avant de prendre un rendez-vous")
       expect(page).to have_content(motif.restriction_for_rdv)
       click_link("Accepter")
@@ -99,6 +98,8 @@ RSpec.describe "Adding a user to a collective RDV" do
         click_link("S'inscrire")
         click_button("Continuer")
         click_link("Revenir en arrière")
+        sleep(1)
+        click_button("Continuer")
         click_button("Continuer")
         stub_request(:post, "https://example.com/")
         click_on("Confirmer ma participation")
