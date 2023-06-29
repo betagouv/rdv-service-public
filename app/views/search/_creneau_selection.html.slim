@@ -10,17 +10,17 @@ section.bg-light.p-4
               h2.pb-1.mb-1
                 = motif_name_and_location_type(context.first_matching_motif)
               = context.service.name
-      - if context.lieu.present?
-        .card.card-hoverable
-          .card-body
-            = link_to path_to_lieu_selection(params), class: "d-block stretched-link" do
-              .row
-                .col-auto.align-self-center
-                  i.fa.fa-chevron-left
-                .col
-                  h2.pb-1.mb-1.card-title= context.lieu.name
-                  .card-subtitle= context.lieu.address
-      - elsif context.user_selected_organisation.present?
+    - if context.lieu.present?
+      .card.card-hoverable
+        .card-body
+          = link_to path_to_lieu_selection(params), class: "d-block stretched-link" do
+            .row
+              .col-auto.align-self-center
+                i.fa.fa-chevron-left
+              .col
+                h2.pb-1.mb-1.card-title= context.lieu.name
+                .card-subtitle= context.lieu.address
+    - elsif context.user_selected_organisation.present?
         .card.card-hoverable
           .card-body
             = link_to path_to_organisation_selection(params), class: "d-block stretched-link" do

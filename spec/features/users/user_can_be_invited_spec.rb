@@ -152,6 +152,8 @@ describe "User can be invited" do
     end
 
     it "shows the geo search available motifs to take a rdv", js: true do
+      motif.update(restriction_for_rdv: "Consigne pour le RDV")
+
       visit prendre_rdv_path(
         departement: departement_number, city_code: city_code, invitation_token: invitation_token,
         address: "16 rue de la résistance", motif_category_short_name: "rsa_orientation"
@@ -162,14 +164,14 @@ describe "User can be invited" do
       expect(page).to have_content(motif2.name)
       find(".card-title", text: /#{motif.name}/).click
 
+      # Lieu selection
+      expect(page).to have_content(lieu.name)
+      find(".card-title", text: /#{lieu.name}/).ancestor(".card").find("a.stretched-link").click
+
       # Restriction Page
       expect(page).to have_content("À lire avant de prendre un rendez-vous")
       expect(page).to have_content(motif.restriction_for_rdv)
       click_link("Accepter")
-
-      # Lieu selection
-      expect(page).to have_content(lieu.name)
-      find(".card-title", text: /#{lieu.name}/).ancestor(".card").find("a.stretched-link").click
 
       # Creneau selection
       expect(page).to have_content(lieu.name)
