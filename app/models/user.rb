@@ -179,7 +179,7 @@ class User < ApplicationRecord
   end
 
   def rdvs_future_without_ongoing(organisation)
-    rdvs_for_organisation(organisation).start_after(Time.zone.now + ONGOING_MARGIN)
+    rdvs_for_organisation(organisation).starts_after(Time.zone.now + ONGOING_MARGIN)
   end
 
   def ongoing_rdvs(organisation)

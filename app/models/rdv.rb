@@ -83,7 +83,8 @@ class Rdv < ApplicationRecord
   scope :not_cancelled, -> { where(status: NOT_CANCELLED_STATUSES) }
   scope :past, -> { where("starts_at < ?", Time.zone.now) }
   scope :future, -> { where("starts_at > ?", Time.zone.now) }
-  scope :start_after, ->(time) { where("starts_at > ?", time) }
+  scope :starts_after, ->(time) { where("starts_at >= ?", time) }
+  scope :starts_before, ->(time) { where("starts_at <= ?", time) }
   scope :on_day, ->(day) { where(starts_at: day.all_day) }
   scope :day_after_tomorrow, -> { on_day(Time.zone.tomorrow + 1.day) }
   scope :for_today, -> { on_day(Time.zone.today) }
