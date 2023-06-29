@@ -47,11 +47,6 @@ RSpec.describe "Adding a user to a collective RDV" do
     click_link("Prochaine disponibilité")
   end
 
-  def accept_restriction_modal
-    expect(page).to have_content(motif.restriction_for_rdv)
-    click_link("Accepter", match: :first)
-  end
-
   def expect_cancel_participation
     expect do
       expect(page).to have_content("À venir")
@@ -90,7 +85,11 @@ RSpec.describe "Adding a user to a collective RDV" do
       visit root_path(params)
       select_motif
       select_lieu
-      accept_restriction_modal
+
+      # Restriction for rdv modal
+      expect(page).to have_content("À lire avant de prendre un rendez-vous")
+      expect(page).to have_content(motif.restriction_for_rdv)
+      click_link("Accepter")
 
       # Testing participation (with back buttons)
       expect do
