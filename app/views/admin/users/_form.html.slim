@@ -28,6 +28,9 @@
       label_html: { class: "mb-0" } \
     )
 
+    - if current_domain == Domain::RDV_MAIRIE
+      = f.input :ants_pre_demande_number, **input_opts, hint: t("simple_form.hints.agent.ants_pre_demande_number").html_safe
+
     div *div_opts[:responsible]
       = render "responsible_form_fields", f: f, input_opts: input_opts[:responsible]
 
@@ -35,7 +38,8 @@
       .form-row
         .col-md-6= f.input :first_name, **input_opts[:relative]
         .col-md-6= f.input :last_name, **input_opts[:relative]
-      = date_input(f, :birth_date, **input_opts[:relative])
+      - unless current_domain == Domain::RDV_MAIRIE
+        = date_input(f, :birth_date, **input_opts[:relative])
       - if current_territory.enable_notes_field?
         = f.input :notes, **input_opts[:relative].deep_merge(input_html: { rows: 6 })
 

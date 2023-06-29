@@ -23,7 +23,6 @@ RSpec.describe Users::RdvsController, type: :controller do
         motif_id: motif.id,
         starts_at: starts_at,
         organisation_ids: [organisation.id],
-        invitation_token: "44444",
       }
     end
 
@@ -75,8 +74,7 @@ RSpec.describe Users::RdvsController, type: :controller do
         expect(Rdv.count).to eq(0)
         expect(response).to redirect_to prendre_rdv_path(
           departement: "12", service: motif.service_id, motif_name_with_location_type: motif.name_with_location_type,
-          address: "1 rue de la, ville 12345", organisation_ids: [organisation.id], invitation_token: "44444",
-          city_code: "12100"
+          address: "1 rue de la, ville 12345", organisation_ids: [organisation.id], city_code: "12100"
         )
         expect(flash[:error]).to eq "Ce créneau n’est plus disponible. Veuillez en sélectionner un autre."
       end
@@ -152,7 +150,7 @@ RSpec.describe Users::RdvsController, type: :controller do
     let(:rdv) { create(:rdv, users: [user], motif: motif, starts_at: starts_at, created_by: "user") }
     let(:rdv2) { create(:rdv, users: [user2], motif: create(:motif, :by_phone), lieu: nil, starts_at: starts_at, created_by: "user") }
     let(:starts_at) { Time.zone.parse("2020-10-20 10h30") }
-    let(:motif) { build(:motif, bookable_publicly: true, rdvs_editable_by_user: true, rdvs_cancellable_by_user: true) }
+    let(:motif) { build(:motif, rdvs_editable_by_user: true, rdvs_cancellable_by_user: true) }
 
     def raise_error_for_others_rdvs
       expect do
@@ -227,8 +225,8 @@ RSpec.describe Users::RdvsController, type: :controller do
       end
     end
 
-    context "when the rdv motif is not bookable_publicly" do
-      let(:motif) { build(:motif, bookable_publicly: false, rdvs_editable_by_user: true, rdvs_cancellable_by_user: true) }
+    context "when the rdv motif is not bookable_by_everone" do
+      let(:motif) { build(:motif, bookable_by: :agents, rdvs_editable_by_user: true, rdvs_cancellable_by_user: true) }
 
       it "does show link to edit" do
         get :show, params: { id: rdv.id }
@@ -245,7 +243,7 @@ RSpec.describe Users::RdvsController, type: :controller do
     end
 
     context "when the rdv is set as not editable" do
-      let(:motif) { build(:motif, bookable_publicly: true, rdvs_editable_by_user: false, rdvs_cancellable_by_user: true) }
+      let(:motif) { build(:motif, rdvs_editable_by_user: false, rdvs_cancellable_by_user: true) }
 
       it "does show link to edit" do
         get :show, params: { id: rdv.id }
@@ -262,7 +260,7 @@ RSpec.describe Users::RdvsController, type: :controller do
     end
 
     context "when the rdv is set as not cancellable" do
-      let(:motif) { build(:motif, bookable_publicly: true, rdvs_editable_by_user: true, rdvs_cancellable_by_user: false) }
+      let(:motif) { build(:motif, rdvs_editable_by_user: true, rdvs_cancellable_by_user: false) }
 
       it "does show link to edit" do
         get :show, params: { id: rdv.id }
@@ -296,8 +294,12 @@ RSpec.describe Users::RdvsController, type: :controller do
           user.raw_invitation_token
         end
 
+        before do
+          request.session[:invitation] = { invitation_token:, expires_at: 1.hour.from_now }
+        end
+
         it "redirects to the identity verification form" do
-          get :show, params: { id: rdv.id, invitation_token: invitation_token }
+          get :show, params: { id: rdv.id }
 
           expect(response).to redirect_to(new_users_user_name_initials_verification_path)
         end
@@ -360,8 +362,12 @@ RSpec.describe Users::RdvsController, type: :controller do
           user.raw_invitation_token
         end
 
+        before do
+          request.session[:invitation] = { invitation_token: invitation_token, expires_at: 1.hour.from_now }
+        end
+
         it "is not authorized" do
-          get :index, params: { invitation_token: invitation_token }
+          get :index
 
           expect(response).to redirect_to(root_path)
           expect(flash[:error]).to eq("Vous ne pouvez pas effectuer cette action.")

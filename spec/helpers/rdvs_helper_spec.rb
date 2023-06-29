@@ -35,7 +35,7 @@ describe RdvsHelper do
       end
     end
 
-    context "created by user (bookable_publicly)" do
+    context "created by user (bookabled by everyone (default))" do
       let(:rdv) { build(:rdv, users: [user], motif: motif, created_by: :user) }
 
       it { is_expected.to eq "@ Marie DENIS" }

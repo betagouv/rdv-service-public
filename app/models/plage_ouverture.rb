@@ -26,10 +26,11 @@ class PlageOuverture < ApplicationRecord
   belongs_to :organisation
   belongs_to :agent
   belongs_to :lieu, optional: true
-  has_and_belongs_to_many :motifs, -> { distinct }
+  has_many :motifs_plage_ouvertures, dependent: :delete_all
 
   # Through relations
   has_many :webhook_endpoints, through: :organisation
+  has_many :motifs, -> { distinct }, through: :motifs_plage_ouvertures
 
   # Validations
   validate :end_after_start
@@ -54,10 +55,12 @@ class PlageOuverture < ApplicationRecord
       plage_ouverture.occurrences_for(range).any? { range.overlaps?(_1.starts_at.._1.ends_at) }
     end
   }
-  scope :bookable_publicly, -> { joins(:motifs).where(motifs: { bookable_by: [:everyone] }) }
+  scope :bookable_by_everyone, -> { joins(:motifs).merge(Motif.bookable_by_everyone) }
+  scope :bookable_by_everyone_or_bookable_by_invited_users, -> { joins(:motifs).merge(Motif.bookable_by_everyone_or_bookable_by_invited_users) }
 
   # Delegations
   delegate :name, :address, :enabled?, to: :lieu, prefix: true, allow_nil: true
+  delegate :domain, to: :organisation
 
   ## -
 

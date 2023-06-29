@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class AgentTerritorialRole < ApplicationRecord
+  has_paper_trail
+
   # Relations
   belongs_to :agent
   belongs_to :territory

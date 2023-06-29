@@ -1,7 +1,7 @@
-- content_for :title do
-  h1 Contact
+- content_for :title, "Contact"
 
 .container.mt-3
+  h1.text-dark.mb-3 Contact
   h2 Votre département
   ul.list-group.mb-2
     - Territory.all.where.not(phone_number: nil).each do |territory|

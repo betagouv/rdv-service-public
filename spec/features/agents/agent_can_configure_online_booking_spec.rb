@@ -6,7 +6,7 @@ describe "Agents can configure online booking" do
 
   context "motif individuel" do
     let!(:motif) do
-      create(:motif, organisation: organisation, service: agent.service, bookable_publicly: false, collectif: false, name: "Motif individuel")
+      create(:motif, organisation: organisation, service: agent.service, bookable_by: :agents, collectif: false, name: "Motif individuel")
     end
 
     it "displays the motif's status" do
@@ -23,7 +23,7 @@ describe "Agents can configure online booking" do
       expect(page).to have_link("modifier")
       expect(page).to have_content("Pas de plages d'ouverture")
 
-      motif.update!(bookable_publicly: true)
+      motif.update!(bookable_by: :everyone)
 
       visit admin_organisation_online_booking_path(organisation)
       expect(page).to have_content("Réservable en ligne")
@@ -55,7 +55,7 @@ describe "Agents can configure online booking" do
 
   context "motif collectif" do
     let!(:motif) do
-      create(:motif, organisation: organisation, service: agent.service, bookable_publicly: true, collectif: true, name: "Motif collectif")
+      create(:motif, organisation: organisation, service: agent.service, collectif: true, name: "Motif collectif")
     end
 
     it "displays the motif's status" do

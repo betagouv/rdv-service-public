@@ -177,7 +177,7 @@ describe Motif, type: :model do
   end
 
   describe "motif de rdv collectif" do
-    subject(:motif) { build(:motif, collectif: true, bookable_publicly: true, location_type: :home) }
+    subject(:motif) { build(:motif, collectif: true, location_type: :home) }
 
     it "validates that a rdv collectif can't be at the user's home" do
       expect(motif).not_to be_valid

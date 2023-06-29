@@ -1,41 +1,26 @@
 section.bg-light.p-4
   .container
-    - if context.invitation?
-      .card
-        .card-body
-          h2.py-1.my-1
-            i.fa.fa-info-circle>
-            = motif_name_and_location_type(context.first_matching_motif)
-            - if context.lieu.present?
-              .card-subtitle.my-2
-                i.fa.fa-map-marker-alt>
-                = context.lieu.address
-            - elsif context.user_selected_organisation.present?
-              .card-subtitle.my-2
-                i.fa.fa-building-columns>
-                = context.user_selected_organisation.name
-    - else
+    .card.card-hoverable
+      .card-body
+        = link_to path_to_motif_selection(params), class: "d-block stretched-link" do
+          .row
+            .col-auto.align-self-center
+              i.fa.fa-chevron-left
+            .col
+              h2.pb-1.mb-1
+                = motif_name_and_location_type(context.first_matching_motif)
+              = context.service.name
+    - if context.lieu.present?
       .card.card-hoverable
         .card-body
-          = link_to path_to_motif_selection(params), class: "d-block stretched-link" do
+          = link_to path_to_lieu_selection(params), class: "d-block stretched-link" do
             .row
               .col-auto.align-self-center
                 i.fa.fa-chevron-left
               .col
-                h2.pb-1.mb-1
-                  = motif_name_and_location_type(context.first_matching_motif)
-                = context.service.name
-      - if context.lieu.present?
-        .card.card-hoverable
-          .card-body
-            = link_to path_to_lieu_selection(params), class: "d-block stretched-link" do
-              .row
-                .col-auto.align-self-center
-                  i.fa.fa-chevron-left
-                .col
-                  h2.pb-1.mb-1.card-title= context.lieu.name
-                  .card-subtitle= context.lieu.address
-      - elsif context.user_selected_organisation.present?
+                h2.pb-1.mb-1.card-title= context.lieu.name
+                .card-subtitle= context.lieu.address
+    - elsif context.user_selected_organisation.present?
         .card.card-hoverable
           .card-body
             = link_to path_to_organisation_selection(params), class: "d-block stretched-link" do
@@ -55,6 +40,6 @@ section.bg-light.p-4
           - context.available_collective_rdvs.includes(:agents_rdvs, :agents, :motif).each do |rdv|
             = render "rdv_collectif", rdv: rdv
         - elsif context.unique_motifs_by_name_and_location_type.present?
-          = render "creneaux", lieu: context.lieu, creneaux: context.creneaux, date_range: context.date_range, departement: context.departement, address: context.address, max_public_booking_delay: context.max_public_booking_delay, city_code: context.city_code, next_availability: context.next_availability, query: context.query, context: context
+          = render "creneaux", lieu: context.lieu, creneaux: context.creneaux, date_range: context.date_range, departement: context.departement, address: context.address, max_public_booking_delay: context.max_public_booking_delay, city_code: context.city_code, next_availability: context.next_availability, query_params: context.query_params, context: context
         - else
           .alert.alert-warning= "Le motif <b>#{context.first_matching_motif.name}</b> n'est plus disponible à la réservation à <b>#{context.lieu.name}</b>".html_safe

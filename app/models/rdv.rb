@@ -56,7 +56,8 @@ class Rdv < ApplicationRecord
   has_one :territory, through: :organisation
 
   # Delegates
-  delegate :home?, :phone?, :public_office?, :bookable_publicly?, :service_social?, :follow_up?, :service, :collectif?, :collectif, :individuel?, to: :motif
+  delegate :home?, :phone?, :public_office?, :bookable_by_everyone?,
+           :bookable_by_everyone_or_bookable_by_invited_users?, :service_social?, :follow_up?, :service, :collectif?, :collectif, :individuel?, to: :motif
 
   alias_attribute :soft_deleted?, :deleted_at?
 
@@ -82,7 +83,8 @@ class Rdv < ApplicationRecord
   scope :not_cancelled, -> { where(status: NOT_CANCELLED_STATUSES) }
   scope :past, -> { where("starts_at < ?", Time.zone.now) }
   scope :future, -> { where("starts_at > ?", Time.zone.now) }
-  scope :start_after, ->(time) { where("starts_at > ?", time) }
+  scope :starts_after, ->(time) { where("starts_at >= ?", time) }
+  scope :starts_before, ->(time) { where("starts_at <= ?", time) }
   scope :on_day, ->(day) { where(starts_at: day.all_day) }
   scope :day_after_tomorrow, -> { on_day(Time.zone.tomorrow + 1.day) }
   scope :for_today, -> { on_day(Time.zone.today) }
@@ -102,7 +104,8 @@ class Rdv < ApplicationRecord
   scope :visible, -> { joins(:motif).merge(Motif.visible) }
   scope :collectif, -> { joins(:motif).merge(Motif.collectif) }
   scope :collectif_and_available_for_reservation, -> { collectif.with_remaining_seats.future.not_revoked }
-  scope :bookable_publicly, -> { joins(:motif).merge(Motif.bookable_publicly) }
+  scope :bookable_by_everyone, -> { joins(:motif).merge(Motif.bookable_by_everyone) }
+  scope :bookable_by_everyone_or_bookable_by_invited_users, -> { joins(:motif).merge(Motif.bookable_by_everyone_or_bookable_by_invited_users) }
   scope :with_remaining_seats, -> { where("users_count < max_participants_count OR max_participants_count IS NULL") }
   scope :for_domain, lambda { |domain|
     if domain == Domain::RDV_AIDE_NUMERIQUE
@@ -111,10 +114,11 @@ class Rdv < ApplicationRecord
       joins(:organisation).where.not(organisations: { verticale: :rdv_aide_numerique })
     end
   }
-  ## -
-
+  # Delegations
   delegate :domain, to: :organisation
   delegate :name, to: :motif, prefix: true
+
+  ## -
 
   def self.ongoing(time_margin: 0.minutes)
     where("starts_at <= ?", Time.zone.now + time_margin)
@@ -189,11 +193,11 @@ class Rdv < ApplicationRecord
 
   def editable_by_user?
     !cancelled? && !collectif? && motif.rdvs_editable_by_user? && starts_at > 2.days.from_now &&
-      motif.bookable_publicly && !created_by_agent?
+      motif.bookable_by_everyone_or_bookable_by_invited_users? && !created_by_agent?
   end
 
   def available_to_file_attente?
-    motif.bookable_publicly? &&
+    motif.bookable_by_everyone? &&
       motif.individuel? &&
       !cancelled? &&
       starts_at > 7.days.from_now &&

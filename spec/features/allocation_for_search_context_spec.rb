@@ -21,7 +21,7 @@ describe "Allocation For Search Context" do
 
     params = { address: address, departement: departement_number, city_code: city_code, lieu_id: lieu.id, motif_name_with_location_type: "#{motif.name}-#{motif.location_type}" }
 
-    search_context = SearchContext.new(nil, params)
+    search_context = SearchContext.new(user: nil, query_params: params)
 
     before = GC.stat[:total_allocated_objects]
     search_context.unique_motifs_by_name_and_location_type

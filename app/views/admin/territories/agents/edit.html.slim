@@ -79,7 +79,7 @@
                 .card-body
                   = f.input :organisation_id, as: :hidden, input_html: { value: organisation.id }
                   = f.input :agent_id, as: :hidden, input_html: { value: @agent.id }
-                  = f.input :level, as: :radio_buttons, collection: AgentRole::LEVELS, label_method: -> { AgentRole.human_attribute_value(:level, _1) }, checked: role&.level || "none"
+                  = f.input :access_level, as: :radio_buttons, collection: AgentRole::ACCESS_LEVELS, label_method: -> { AgentRole.human_attribute_value(:access_level, _1) }, checked: role&.access_level || "none"
                 .card-footer
                   .row
                     .col.text-left
@@ -92,7 +92,7 @@
       - if policy([:configuration, current_territory]).allow_to_invite_agents? && available_other_organisations.any?
         = simple_form_for AgentRole.new, url: admin_territory_agent_roles_path(current_territory) do |f|
           = f.input :agent_id, as: :hidden, input_html: { value: @agent.id }
-          = f.input :level, as: :hidden, input_html: { value: AgentRole::LEVEL_BASIC }
+          = f.input :access_level, as: :hidden, input_html: { value: AgentRole::ACCESS_LEVEL_BASIC }
           = f.input :organisation_id, collection: available_other_organisations, include_blank: "-- sélectionner une organisation --",
                   required: false,
                   label: false

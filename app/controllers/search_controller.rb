@@ -7,8 +7,8 @@ class SearchController < ApplicationController
   after_action :allow_iframe
 
   def search_rdv
-    @context = SearchContext.new(current_user, search_params.to_h)
-    if current_domain == Domain::RDV_MAIRIE
+    @context = SearchContext.new(user: current_user, query_params: query_params, through_invitation: invitation?)
+    if current_domain == Domain::RDV_MAIRIE && request.path == "/"
       render "dsfr/rdv_mairie/homepage", layout: "application_dsfr"
     end
   end
@@ -32,7 +32,8 @@ class SearchController < ApplicationController
       lieu_id: params[:lieu_id],
       departement: motif.organisation.departement_number,
       motif_name_with_location_type: motif.name_with_location_type,
-      motif_id: motif.id
+      motif_id: motif.id,
+      public_link_organisation_id: params[:public_link_organisation_id]
     )
   end
 
@@ -65,11 +66,19 @@ class SearchController < ApplicationController
     end
   end
 
+  def query_params
+    search_params.to_h.deep_symbolize_keys.merge(invitation? ? invitation.query_params : {})
+  end
+
+  def invitation?
+    invitation.present? && invitation.to_take_rdv?
+  end
+
   def search_params
     params.permit(
       :latitude, :longitude, :address, :city_code, :departement, :street_ban_id,
       :service_id, :lieu_id, :date, :motif_search_terms, :motif_name_with_location_type, :motif_category_short_name,
-      :invitation_token, :motif_id, :public_link_organisation_id, :user_selected_organisation_id, :prescripteur,
+      :motif_id, :public_link_organisation_id, :user_selected_organisation_id, :prescripteur,
       organisation_ids: [], referent_ids: [], external_organisation_ids: []
     )
   end

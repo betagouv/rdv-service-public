@@ -88,3 +88,21 @@ ul.horizontal-border-between-items {
 .inline {
   display: inline;
 }
+
+.flex-direction-col-sm-row-reverse-md {
+  display: flex;
+  flex-direction: column;
+  @include media-breakpoint-up(md) {
+    flex-direction: row-reverse;
+  }
+  justify-content: space-between;
+  align-items: center;
+
+  a:last-child {
+    margin-top: 1rem;
+    @include media-breakpoint-up(md) {
+      margin-top: 0;
+      margin-right: 1rem;
+    }
+  }
+}

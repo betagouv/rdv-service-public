@@ -14,6 +14,9 @@
       .card.mb-5
         .card-body
           = self_anchor "notifications"
+            h1.text-primary-blue
+              | Statistiques de notifications
+              = " pour le #{@territory}" if @territory.present?
             h2.card-title #{Receipt.model_name.human(count: 2)} (#{@stats.receipts.count})
           - %i[event channel result].each do |attribute|
             h3.card-subtitle Par #{Receipt.human_attribute_name(attribute).downcase}

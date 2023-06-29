@@ -61,7 +61,7 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
             service_id: service_id,
             roles_attributes: {
               "0" => {
-                level: "basic",
+                access_level: "basic",
               },
             },
           },
@@ -83,7 +83,7 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
             service_id: service_id,
             roles_attributes: {
               "0" => {
-                level: "basic",
+                access_level: "basic",
               },
             },
           },
@@ -105,7 +105,7 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
             service_id: service_id,
             roles_attributes: {
               "0" => {
-                level: "basic",
+                access_level: "basic",
                 organisation_id: organisation2.id,
               },
             },
@@ -128,7 +128,7 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
             service_id: service_id,
             roles_attributes: {
               "0" => {
-                level: "admin",
+                access_level: "admin",
               },
             },
           },
@@ -141,7 +141,7 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
 
       it "creates a new basic agent instead of an admin" do
         expect { subject }.to change(Agent, :count).by(1)
-        expect(AgentRole.last).to have_attributes(level: AgentRole::LEVEL_BASIC)
+        expect(AgentRole.last).to have_attributes(access_level: AgentRole::ACCESS_LEVEL_BASIC)
       end
 
       context "when the agent already exists" do
@@ -156,14 +156,14 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
             agent: {
               email: agent2.email,
               service_id: agent2.service_id,
-              roles_attributes: { "0" => { level: "basic" } },
+              roles_attributes: { "0" => { access_level: "basic" } },
             },
           }
         end
 
         it "invites the agent" do
           expect { subject }.to change { organisation.agents.count }.by(1)
-          expect(AgentRole.last).to have_attributes(level: AgentRole::LEVEL_BASIC)
+          expect(AgentRole.last).to have_attributes(access_level: AgentRole::ACCESS_LEVEL_BASIC)
         end
       end
     end
@@ -177,7 +177,7 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
             service_id: service_id,
             roles_attributes: {
               "0" => {
-                level: "basic",
+                access_level: "basic",
               },
             },
           },
@@ -209,7 +209,7 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
             service_id: service_id,
             roles_attributes: {
               "0" => {
-                level: "basic",
+                access_level: "basic",
               },
             },
           },
@@ -240,7 +240,7 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
             service_id: service_id,
             roles_attributes: {
               "0" => {
-                level: "basic",
+                access_level: "basic",
               },
             },
           },
@@ -304,7 +304,7 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
             service_id: service_id,
             roles_attributes: {
               "0" => {
-                level: "basic",
+                access_level: "basic",
               },
             },
           },
@@ -323,7 +323,7 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
                    agent: {
                      email: "hacker@renard.com",
                      service_id: service_id,
-                     roles_attributes: { "0" => { level: "basic" } },
+                     roles_attributes: { "0" => { access_level: "basic" } },
                    }, }
         expect do
           post :create, params: params
@@ -338,7 +338,7 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
                    agent: {
                      email: "hacker@renard.com",
                      service_id: service_id,
-                     roles_attributes: { "0" => { level: "basic" } },
+                     roles_attributes: { "0" => { access_level: "basic" } },
                    }, }
         expect do
           post :create, params: params

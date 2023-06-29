@@ -8,6 +8,9 @@
 
 - cache([@territory, Time.zone.today], expires_in: 24.hours) do
   .container.mt-3
+    h1.text-primary-blue
+      | Statistiques
+      = " pour le #{@territory}" if @territory.present?
     - if @territory.present? && Organisation.joins(:territory).where(territories: [@territory]).empty?
       h3 Cette structure n'utilise pas #{current_domain.name}.
     - else

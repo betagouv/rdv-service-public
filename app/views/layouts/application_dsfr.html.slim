@@ -20,9 +20,10 @@ html lang="fr"
         - header.with_tool_link title: "Déconnexion", path: destroy_user_session_path, html_attributes: { "data-method": "DELETE" }, classes: "fr-fi-account-fill"
 
     - else
-      = dsfr_header logo_text: "République<br>Française".html_safe, title: "RDV Mairie" do |header|
-        - header.with_tool_link title: "Espace Usager", path: new_user_session_path, classes: "fr-icon-arrow-right-line"
-        - header.with_tool_link title: "Se connecter en tant qu'agent", path: new_agent_session_path, classes: "fr-fi-account-fill"
+      = dsfr_header logo_text: "République<br>Française".html_safe do |header|
+        - header.with_operator_image title: "Accueil - RDV Service Public", src: asset_path(current_domain.dark_logo_path), alt: "RDV Service Public"
+        - header.with_tool_link title: "Connexion Usager", path: new_user_session_path, classes: "fr-fi-account-fill"
+        - header.with_tool_link title: "Connexion Agent", path: new_agent_session_path, classes: "fr-fi-account-fill"
 
     main
       = yield

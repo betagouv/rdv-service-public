@@ -7,7 +7,13 @@
       h5.card-title Configuration générale
       .form-row
         .col-md-6
-          = f.association :service, collection: Service.all_for_territory(current_territory)
+          = f.association :service, collection: Service.all_for_territory(current_territory), input_html: { \
+            class: "select2-input", \
+            data: { \
+              placeholder: "Sélectionnez un service", \
+              "select-options": { disableSearch: true }, \
+            }, \
+          }
         .col-md-6
           = f.input :name
       .form-row
@@ -66,7 +72,7 @@
         span.ml-1=  Motif.human_attribute_value(:collectif, true)
         p.text-muted.font-14= Motif.human_attribute_value(:collectif, true, context: :hint)
 
-  .card#bookable_publicly_section
+  .card#bookable_by_section
     .card-body
       h5.card-title= Motif.human_attribute_name("bookable_by_title")
 
@@ -91,6 +97,14 @@
                 = "Les prescripteurs sont des agents d'une autre organisation du service public, qui orientent des usagers vers le service dont ils ont besoin."
                 br
                 = "Ils pourront prendre rendez-vous uniquement sur les plages d'ouvertures définies par les agents de #{@motif.organisation.name}"
+
+      - if current_organisation.rdv_insertion?
+        .form-row
+          .col-md-12
+            = label_tag do
+              = f.radio_button(:bookable_by, :agents_and_prescripteurs_and_invited_users)
+              span.ml-1= presenter.bookable_by_label(:agents_and_prescripteurs_and_invited_users)
+              p.text-muted.font-14= "Les usagers avec une invitation envoyée par RDV-Insertion pourront prendre rendez-vous"
 
       .form-row
         .col-md-12
@@ -151,8 +165,9 @@
           span.ml-1= Motif.human_attribute_value(:visibility_type, value)
           p
             span.text-muted.font-14= Motif.human_attribute_value(:visibility_type, value, context: :hint)
-            br
-            span.text-muted.font-14.rdv-insertion-notif-hint= Motif.human_attribute_value(:visibility_type, value, context: :hint_rdv_insertion)
+            - if current_organisation.rdv_insertion?
+              br
+              span.text-muted.font-14= Motif.human_attribute_value(:visibility_type, value, context: :hint_rdv_insertion)
 
   .card
     .card-body

@@ -3,7 +3,7 @@ html lang="fr"
   head
     = render "common/head"
   body class="#{agents_or_users_body_class}"
-    header.header.bg-primary
+    header.header.bg-white
       = render "layouts/rdv_solidarites_instance_name"
       = render "layouts/degraded_service", message: ENV["DEGRADED_SERVICE_MESSAGE_USERS"]
       .container
@@ -16,12 +16,9 @@ html lang="fr"
         - if content_for :title
           .row
             .col-md-12.d-flex.justify-content-between.align-items-center
-              .my-4= yield :title
               - if content_for :breadcrumb
                 div
                   = yield :breadcrumb
-
-      = yield :header
 
     main class="#{ "container" if params[:controller].include?("users/") }"
       = yield
