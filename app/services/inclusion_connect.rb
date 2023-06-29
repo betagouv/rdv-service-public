@@ -11,7 +11,7 @@ module InclusionConnect
         response_type: "code",
         client_id: IC_CLIENT_ID,
         redirect_uri: inclusion_connect_callback_url,
-        scope: "openid email",
+        scope: "openid email profile",
         state: ic_state,
         nonce: Digest::SHA1.hexdigest("Something to check when it come back ?"),
         from: "community",
