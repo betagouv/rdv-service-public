@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Ants::EventSerializerAndListener do
+RSpec.describe Ants::AppointmentSerializerAndListener do
   let(:organisation) { create(:organisation, verticale: :rdv_mairie) }
   let(:user) { create(:user, ants_pre_demande_number: "A123456789", organisations: [organisation]) }
   let(:lieu) { create(:lieu, organisation: organisation, name: "Lieu1") }

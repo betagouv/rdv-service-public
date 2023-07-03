@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Ants
-  module EventSerializerAndListener
+  module AppointmentSerializerAndListener
     extend ActiveSupport::Concern
 
     ATTRIBUTES_TO_WATCH = %w[id status starts_at lieu_id].freeze
@@ -10,29 +10,29 @@ module Ants
       attr_accessor :needs_sync_to_ants, :obsolete_application_id
 
       Rdv.before_commit do |rdv|
-        Ants::EventSerializerAndListener.mark_for_sync([rdv]) if rdv.watching_attributes_for_ants_api_changed?
+        Ants::AppointmentSerializerAndListener.mark_for_sync([rdv]) if rdv.watching_attributes_for_ants_api_changed?
       end
       User.before_commit do |user|
-        Ants::EventSerializerAndListener.mark_for_sync(user.rdvs) if user.saved_change_to_ants_pre_demande_number?
+        Ants::AppointmentSerializerAndListener.mark_for_sync(user.rdvs) if user.saved_change_to_ants_pre_demande_number?
       end
       RdvsUser.before_commit do |rdv_user|
-        Ants::EventSerializerAndListener.mark_for_sync([rdv_user.rdv], obsolete_application_id: rdv_user.user.ants_pre_demande_number)
+        Ants::AppointmentSerializerAndListener.mark_for_sync([rdv_user.rdv], obsolete_application_id: rdv_user.user.ants_pre_demande_number)
       end
       Lieu.before_commit do |lieu|
-        Ants::EventSerializerAndListener.mark_for_sync(lieu.rdvs) if lieu.saved_change_to_name?
+        Ants::AppointmentSerializerAndListener.mark_for_sync(lieu.rdvs) if lieu.saved_change_to_name?
       end
 
       Rdv.after_commit do |rdv|
-        Ants::EventSerializerAndListener.enqueue_sync_for_marked_record([rdv]) if rdv.watching_attributes_for_ants_api_changed?
+        Ants::AppointmentSerializerAndListener.enqueue_sync_for_marked_record([rdv]) if rdv.watching_attributes_for_ants_api_changed?
       end
       User.after_commit do |user|
-        Ants::EventSerializerAndListener.enqueue_sync_for_marked_record(user.rdvs) if user.saved_change_to_ants_pre_demande_number?
+        Ants::AppointmentSerializerAndListener.enqueue_sync_for_marked_record(user.rdvs) if user.saved_change_to_ants_pre_demande_number?
       end
       RdvsUser.after_commit do |rdv_user|
-        Ants::EventSerializerAndListener.enqueue_sync_for_marked_record([rdv_user.rdv])
+        Ants::AppointmentSerializerAndListener.enqueue_sync_for_marked_record([rdv_user.rdv])
       end
       Lieu.after_commit do |lieu|
-        Ants::EventSerializerAndListener.enqueue_sync_for_marked_record(lieu.rdvs) if lieu.saved_change_to_name?
+        Ants::AppointmentSerializerAndListener.enqueue_sync_for_marked_record(lieu.rdvs) if lieu.saved_change_to_name?
       end
     end
 
@@ -59,7 +59,7 @@ module Ants
 
     def self.enqueue_sync_for_marked_record(rdvs)
       rdvs.select(&:needs_sync_to_ants).each do |rdv|
-        Ants::SyncEventJob.perform_later_for(rdv)
+        Ants::SyncAppointmentJob.perform_later_for(rdv)
         rdv.assign_attributes(needs_sync_to_ants: false)
       end
     end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Ants
-  class SyncEventJob < ApplicationJob
+  class SyncAppointmentJob < ApplicationJob
     def self.perform_later_for(rdv)
       # We pass some of the attributes of RDV instead of the Rdv active record object, to avoid an error in case the Rdv is deleted
       perform_later(
