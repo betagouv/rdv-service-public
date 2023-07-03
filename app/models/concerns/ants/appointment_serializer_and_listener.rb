@@ -40,7 +40,7 @@ module Ants
       {
         meeting_point: lieu.name,
         appointment_date: starts_at.strftime("%Y-%m-%d %H:%M:%S"),
-        management_url: Rails.application.routes.url_helpers.rdvs_short_url(self, host: organisation.domain.host_name),
+        management_url: Rails.application.routes.url_helpers.users_rdv_url(self, host: organisation.domain.host_name),
       }
     end
 
@@ -50,7 +50,7 @@ module Ants
 
     def self.mark_for_sync(rdvs, obsolete_application_id: nil)
       rdvs.each do |rdv|
-        next unless rdv.in_the_future? && rdv.organisation.rdv_mairie?
+        next unless rdv.organisation.rdv_mairie?
 
         rdv.assign_attributes(needs_sync_to_ants: true)
         rdv.assign_attributes(obsolete_application_id: obsolete_application_id) if obsolete_application_id
