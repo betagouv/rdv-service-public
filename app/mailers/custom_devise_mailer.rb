@@ -19,7 +19,10 @@ class CustomDeviseMailer < Devise::Mailer
       devise_mail(record, :invitation_instructions_cnfs, opts)
     else
       opts[:subject] = I18n.t("devise.mailer.invitation_instructions.subject", domain_name: record.domain.name)
-      devise_mail(record, :invitation_instructions, opts)
+
+      template = record.invited_by_type == "SuperAdmin" ? :invitation_by_superadmin_instructions : :invitation_instructions
+
+      devise_mail(record, template, opts)
     end
   end
 

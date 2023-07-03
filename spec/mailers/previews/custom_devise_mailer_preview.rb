@@ -17,6 +17,10 @@ class CustomDeviseMailerPreview < ActionMailer::Preview
     CustomDeviseMailer.invitation_instructions(Agent.joins(:service).where(service: { name: Service::CONSEILLER_NUMERIQUE }, invited_by: nil).last, "faketoken")
   end
 
+  def invitation_by_superadmin_instructions
+    CustomDeviseMailer.invitation_instructions(Agent.where(invited_by_type: "SuperAdmin").last, "faketoken")
+  end
+
   def invitation_instructions
     CustomDeviseMailer.invitation_instructions(User.where.not(invitation_sent_at: nil).last, "faketoken")
   end
