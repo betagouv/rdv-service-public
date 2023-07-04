@@ -46,12 +46,13 @@ module AntsApi
       headers: headers
     )
     response_body = response.body.empty? ? {} : JSON.parse(response.body)
-    appointments = response_body.fetch(application_id, {})["appointments"]
-    return nil if appointments.blank?
+    appointments = response_body.fetch(application_id, Hash.new([]))["appointments"]
 
     appointment_data = appointments.find do |appointment|
       appointment["management_url"] == management_url
     end
+
+    return nil if appointment_data.blank?
 
     Appointment.new(
       application_id: application_id,
