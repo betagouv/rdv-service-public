@@ -92,6 +92,7 @@ class User < ApplicationRecord
 
   # Hooks
   before_save :set_email_to_null_if_blank
+  # voir Ants::AppointmentSerializerAndListener pour d'autres callbacks
 
   # Scopes
   default_scope { where(deleted_at: nil) }

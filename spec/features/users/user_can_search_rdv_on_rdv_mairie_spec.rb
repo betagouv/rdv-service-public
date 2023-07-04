@@ -19,6 +19,7 @@ describe "User can search rdv on rdv mairie" do
   let!(:lieu) { create(:lieu, organisation: organisation, name: "Mairie de Sannois", address: "15 Place du Général Leclerc, Sannois, 95110") }
   let(:user) { create(:user, email: "jeanmairie@example.com") }
   let(:ants_pre_demande_number) { "1122334455" }
+  let(:invalid_ants_pre_demande_number) { "5544332211" }
 
   def json_response
     JSON.parse(page.html)
@@ -26,9 +27,6 @@ describe "User can search rdv on rdv mairie" do
 
   before do
     default_url_options[:host] = "http://www.rdv-mairie-test.localhost"
-  end
-
-  before do
     travel_to(now)
     create(:plage_ouverture, :no_recurrence, first_day: now, motifs: [passport_motif], lieu: lieu, organisation: organisation, start_time: Tod::TimeOfDay(9), end_time: Tod::TimeOfDay.new(10))
   end
