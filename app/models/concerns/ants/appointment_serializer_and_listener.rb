@@ -7,60 +7,59 @@ module Ants
     ATTRIBUTES_TO_WATCH = %w[id status starts_at lieu_id].freeze
 
     included do
-      attr_accessor :needs_sync_to_ants, :obsolete_application_id
+      attr_accessor :needs_sync_to_ants
 
-      Rdv.before_commit do |rdv|
-        Ants::AppointmentSerializerAndListener.mark_for_sync([rdv]) if rdv.watching_attributes_for_ants_api_changed?
-      end
       User.before_commit do |user|
-        Ants::AppointmentSerializerAndListener.mark_for_sync(user.rdvs) if user.saved_change_to_ants_pre_demande_number?
+        if user.saved_change_to_ants_pre_demande_number?
+          Ants::SyncAppointmentJob.perform_later(user.ants_pre_demande_number_was)
+          Ants::AppointmentSerializerAndListener.mark_for_sync([user])
+        end
       end
       RdvsUser.before_commit do |rdv_user|
-        Ants::AppointmentSerializerAndListener.mark_for_sync([rdv_user.rdv], obsolete_application_id: rdv_user.user.ants_pre_demande_number)
+        Ants::AppointmentSerializerAndListener.mark_for_sync([rdv_user.user])
       end
-      Lieu.before_commit do |lieu|
-        Ants::AppointmentSerializerAndListener.mark_for_sync(lieu.rdvs) if lieu.saved_change_to_name?
+      Rdv.before_commit do |rdv|
+        Ants::AppointmentSerializerAndListener.mark_for_sync(rdv.users) if rdv.saved_changes.keys & ATTRIBUTES_TO_WATCH
       end
 
-      Rdv.after_commit do |rdv|
-        Ants::AppointmentSerializerAndListener.enqueue_sync_for_marked_record([rdv]) if rdv.watching_attributes_for_ants_api_changed?
-      end
       User.after_commit do |user|
-        Ants::AppointmentSerializerAndListener.enqueue_sync_for_marked_record(user.rdvs) if user.saved_change_to_ants_pre_demande_number?
+        Ants::AppointmentSerializerAndListener.enqueue_sync_for_marked_record([user]) if user.saved_change_to_ants_pre_demande_number?
       end
       RdvsUser.after_commit do |rdv_user|
-        Ants::AppointmentSerializerAndListener.enqueue_sync_for_marked_record([rdv_user.rdv])
+        Ants::AppointmentSerializerAndListener.enqueue_sync_for_marked_record([rdv_user.user])
       end
+      Rdv.after_commit do |rdv|
+        Ants::AppointmentSerializerAndListener.enqueue_sync_for_marked_record(rdv.users) if rdv.saved_changes.keys & ATTRIBUTES_TO_WATCH
+      end
+
       Lieu.after_commit do |lieu|
-        Ants::AppointmentSerializerAndListener.enqueue_sync_for_marked_record(lieu.rdvs) if lieu.saved_change_to_name?
+        if lieu.saved_change_to_name?
+          updated_users = User.joins(:rdvs).where(rdvs: { lieu_id: lieu.id }).where.not(ants_pre_demande_number: [nil, ""]).where("rdvs.starts_at > ?", Time.zone.now)
+          updated_users.each do |user|
+            Ants::SyncAppointmentJob.perform_later_for(user)
+          end
+        end
       end
     end
 
-    def serialize_for_ants_api
+    def self.serialize_for_ants_api(rdv)
       {
-        meeting_point: lieu.name,
-        appointment_date: starts_at.strftime("%Y-%m-%d %H:%M:%S"),
-        management_url: Rails.application.routes.url_helpers.users_rdv_url(self, host: organisation.domain.host_name),
+        meeting_point: rdv.lieu.name,
+        appointment_date: rdv.starts_at.strftime("%Y-%m-%d %H:%M:%S"),
+        management_url: Rails.application.routes.url_helpers.users_rdv_url(rdv.id, host: Domain::RDV_MAIRIE.host_name),
       }
     end
 
-    def watching_attributes_for_ants_api_changed?
-      saved_changes.keys & ATTRIBUTES_TO_WATCH
-    end
-
-    def self.mark_for_sync(rdvs, obsolete_application_id: nil)
-      rdvs.each do |rdv|
-        next unless rdv.organisation.rdv_mairie?
-
-        rdv.assign_attributes(needs_sync_to_ants: true)
-        rdv.assign_attributes(obsolete_application_id: obsolete_application_id) if obsolete_application_id
+    def self.mark_for_sync(users)
+      users.each do |user|
+        user.assign_attributes(needs_sync_to_ants: true)
       end
     end
 
-    def self.enqueue_sync_for_marked_record(rdvs)
-      rdvs.select(&:needs_sync_to_ants).each do |rdv|
-        Ants::SyncAppointmentJob.perform_later_for(rdv)
-        rdv.assign_attributes(needs_sync_to_ants: false)
+    def self.enqueue_sync_for_marked_record(users)
+      users.select(&:needs_sync_to_ants).each do |user|
+        Ants::SyncAppointmentJob.perform_later(user.ants_pre_demande_number)
+        user.assign_attributes(needs_sync_to_ants: false)
       end
     end
   end

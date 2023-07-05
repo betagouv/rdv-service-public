@@ -14,7 +14,6 @@ class Rdv < ApplicationRecord
   include Rdv::UsingWaitingRoom
   include IcalHelpers::Ics
   include Payloads::Rdv
-  include Ants::AppointmentSerializerAndListener
 
   # Attributes
   auto_strip_attributes :name

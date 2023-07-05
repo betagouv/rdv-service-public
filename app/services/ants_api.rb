@@ -23,43 +23,30 @@ module AntsApi
     end
   end
 
-  def self.create_appointment(appointment)
+  def self.create_appointment(ants_pre_demande_number, appointment_hash)
     Typhoeus.post(
       "#{ENV['ANTS_RDV_API_URL']}/appointments",
-      params: appointment.to_request_params,
+      params: appointment_hash.merge(application_id: ants_pre_demande_number),
       headers: headers
     )
   end
 
-  def self.delete_appointment(appointment)
+  def self.delete_appointment(_ants_pre_demande_number, appointment_hash)
     Typhoeus.delete(
       "#{ENV['ANTS_RDV_API_URL']}/appointments",
-      params: appointment.to_request_params(action: :delete),
+      params: appointment_hash.merge(application_id: ants_pre_demande_number, action: :delete),
       headers: headers
     )
   end
 
-  def self.find_appointment(application_id:, management_url:)
+  def self.list_appointments(ants_pre_demande_number)
     response = Typhoeus.get(
       "#{ENV['ANTS_RDV_API_URL']}/status",
-      params: { application_ids: application_id },
+      params: { application_ids: ants_pre_demande_number },
       headers: headers
     )
     response_body = response.body.empty? ? {} : JSON.parse(response.body)
-    appointments = response_body.fetch(application_id, Hash.new([]))["appointments"]
-
-    appointment_data = appointments.find do |appointment|
-      appointment["management_url"] == management_url
-    end
-
-    return nil if appointment_data.blank?
-
-    Appointment.new(
-      application_id: application_id,
-      management_url: appointment_data["management_url"],
-      meeting_point: appointment_data["meeting_point"],
-      appointment_date: appointment_data["appointment_date"]
-    )
+    response_body.dig(ants_pre_demande_number, "appointments")
   end
 
   def self.headers

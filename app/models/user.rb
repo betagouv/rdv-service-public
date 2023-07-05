@@ -23,6 +23,7 @@ class User < ApplicationRecord
   include PhoneNumberValidation::HasPhoneNumber
   include WebhookDeliverable
   include TextSearch
+  include Ants::AppointmentSerializerAndListener
 
   def self.search_against
     {

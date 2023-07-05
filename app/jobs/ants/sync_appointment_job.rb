@@ -2,33 +2,41 @@
 
 module Ants
   class SyncAppointmentJob < ApplicationJob
-    def self.perform_later_for(rdv)
-      # We pass some of the attributes of RDV instead of the Rdv active record object, to avoid an error in case the Rdv is deleted
-      perform_later(
-        rdv_attributes: {
-          id: rdv.id,
-          status: rdv.status,
-          users_ids: rdv.users.ids,
-          obsolete_application_id: rdv.obsolete_application_id,
-        },
-        appointment_data: rdv.serialize_for_ants_api
-      )
-    end
+    def perform(ants_pre_demande_number)
+      @ants_pre_demande_number = ants_pre_demande_number
 
-    def perform(rdv_attributes:, appointment_data:)
-      @rdv_attributes = rdv_attributes
-      rdv = Rdv.find_by(id: rdv_attributes[:id])
+      appointments_in_ants_api = fetch_existing_appointments
 
-      # If the RDV is present (not deleted), we serialize now to get the most recent data
-      # This way, we'll only be using the appointment_data argument if the RDV has been deleted
-      @appointment_data = rdv.present? ? rdv.serialize_for_ants_api : appointment_data
+      obsolete_appointments = appointments_in_ants_api - appointments_in_our_database
 
-      delete_obsolete_appointment
+      obsolete_appointments.each do |appointment|
+        AntsApi.delete_appointment(@ants_pre_demande_number, appointment)
+      end
 
-      rdv_cancelled_or_deleted? ? delete_appointments : create_or_update_appointments
+      missing_appointments = appointments_in_our_database - appointments_in_ants_api
+
+      missing_appointments.each do |appointment|
+        AntsApi.create_appointment(@ants_pre_demande_number, appointment)
+      end
     end
 
     private
+
+    def fetch_existing_appointments
+      AntsApi.list_appointments(@ants_pre_demande_number).select do |appointment|
+        appointment.delete("editor_comment")
+        appointment["management_url"].include?(Domain::RDV_MAIRIE.host_name)
+      end.map(&:symbolize_keys)
+    end
+
+    def appointments_in_our_database
+      @appointments_in_our_database = Rdv.not_cancelled.joins(:users, :organisation).where(
+        users: { ants_pre_demande_number: @ants_pre_demande_number },
+        organisations: { verticale: :rdv_mairie }
+      ).map do |rdv|
+        AppointmentSerializerAndListener.serialize_for_ants_api(rdv)
+      end
+    end
 
     def delete_obsolete_appointment
       if @rdv_attributes[:obsolete_application_id].present?
