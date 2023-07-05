@@ -1,0 +1,65 @@
+# frozen_string_literal: true
+
+module AntsApi
+  class Appointment
+    HEADERS = {
+      "Accept" => "application/json",
+      "x-rdv-opt-auth-token" => ENV["ANTS_RDV_OPT_AUTH_TOKEN"],
+    }.freeze
+
+    attr_reader :application_id, :meeting_point, :appointment_date, :management_url
+
+    def initialize(application_id:, meeting_point:, appointment_date:, management_url:)
+      @application_id = application_id
+      @meeting_point = meeting_point
+      @appointment_date = appointment_date
+      @management_url = management_url
+    end
+
+    def to_request_params
+      {
+        application_id: application_id,
+        meeting_point: meeting_point,
+        appointment_date: appointment_date,
+        management_url: management_url,
+      }
+    end
+
+    def create
+      Typhoeus.post(
+        "#{ENV['ANTS_RDV_API_URL']}/appointments",
+        params: to_request_params,
+        headers: HEADERS
+      )
+    end
+
+    def delete
+      Typhoeus.delete(
+        "#{ENV['ANTS_RDV_API_URL']}/appointments",
+        params: to_request_params.except(:management_url),
+        headers: HEADERS
+      )
+    end
+
+    class << self
+      def find_by(application_id:, management_url:)
+        appointment_data = load_appointments(application_id).find do |appointment|
+          appointment["management_url"] == management_url
+        end
+        Appointment.new(application_id: application_id, **appointment_data.symbolize_keys) if appointment_data
+      end
+
+      private
+
+      def load_appointments(application_id)
+        response = Typhoeus.get(
+          "#{ENV['ANTS_RDV_API_URL']}/status",
+          params: { application_ids: application_id },
+          headers: HEADERS
+        )
+        response_body = response.body.empty? ? {} : JSON.parse(response.body)
+        response_body.fetch(application_id, {}).fetch("appointments", [])
+      end
+    end
+  end
+end
