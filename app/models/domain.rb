@@ -95,7 +95,7 @@ class Domain
         {
           RDV_SOLIDARITES => "demo.rdv-solidarites.fr",
           RDV_AIDE_NUMERIQUE => "demo.rdv-aide-numerique.fr",
-          RDV_MAIRIE => "demo.rdv-mairie.fr",
+          RDV_MAIRIE => "demo.rdv.anct.gouv.fr",
         }.fetch(self)
       else
         {
