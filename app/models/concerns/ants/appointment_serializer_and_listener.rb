@@ -43,7 +43,7 @@ module Ants
     end
 
     def self.serialize_for_ants_api(ants_pre_demande_number, rdv)
-      AntsApi::Appointment.new(
+      AntsApiAppointment.new(
         application_id: ants_pre_demande_number,
         meeting_point: rdv.lieu.name,
         appointment_date: rdv.starts_at,

@@ -7,21 +7,17 @@ module Ants
 
       obsolete_appointments = appointments_in_ants_api - appointments_in_our_database
 
-      obsolete_appointments.each do |appointment|
-        AntsApi.delete_appointment(appointment)
-      end
+      obsolete_appointments.each(&:delete!)
 
       missing_appointments = appointments_in_our_database - appointments_in_ants_api
 
-      missing_appointments.each do |appointment|
-        AntsApi.create_appointment(appointment)
-      end
+      missing_appointments.each(&:create!)
     end
 
     private
 
     def appointments_in_ants_api
-      @appointments_in_ants_api ||= AntsApi.list_appointments(@ants_pre_demande_number).select do |appointment|
+      @appointments_in_ants_api ||= AntsApiAppointment.list(@ants_pre_demande_number).select do |appointment|
         appointment.management_url.include?(Domain::RDV_MAIRIE.host_name)
       end
     end
