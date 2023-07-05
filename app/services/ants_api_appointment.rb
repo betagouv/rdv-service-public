@@ -45,7 +45,7 @@ class AntsApiAppointment
   end
 
   def ==(other)
-    to_delete_params == other.to_delete_params
+    create_params == other.create_params
   end
 
   def self.headers
