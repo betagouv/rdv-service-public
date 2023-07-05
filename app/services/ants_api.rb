@@ -12,29 +12,35 @@ module AntsApi
       @management_url = management_url
     end
 
-    def to_request_params(action: :create)
-      params = {
+    def to_create_params
+      {
         application_id: application_id,
         meeting_point: meeting_point,
-        appointment_date: appointment_date,
+        appointment_date: appointment_date.strftime("%Y-%m-%d %H:%M:%S"),
       }
+    end
 
-      action == :delete ? params : params.merge(management_url: management_url)
+    def to_delete_params
+      to_create_params.merge(management_url: management_url)
+    end
+
+    def ==(other)
+      to_delete_params == other.to_delete_params
     end
   end
 
-  def self.create_appointment(ants_pre_demande_number, appointment_hash)
+  def self.create_appointment(appointment)
     Typhoeus.post(
       "#{ENV['ANTS_RDV_API_URL']}/appointments",
-      params: appointment_hash.merge(application_id: ants_pre_demande_number),
+      params: appointment.to_create_params,
       headers: headers
     )
   end
 
-  def self.delete_appointment(_ants_pre_demande_number, appointment_hash)
+  def self.delete_appointment(appointment)
     Typhoeus.delete(
       "#{ENV['ANTS_RDV_API_URL']}/appointments",
-      params: appointment_hash.merge(application_id: ants_pre_demande_number, action: :delete),
+      params: appointment.to_delete_params,
       headers: headers
     )
   end
@@ -46,7 +52,14 @@ module AntsApi
       headers: headers
     )
     response_body = response.body.empty? ? {} : JSON.parse(response.body)
-    response_body.dig(ants_pre_demande_number, "appointments")
+    response_body.dig(ants_pre_demande_number, "appointments").map do |appointment|
+      AntsApi::Appointment.new(
+        application_id: ants_pre_demande_number,
+        meeting_point: appointment["meeting_point"],
+        management_url: appointment["management_url"],
+        appointment_date: Time.zone.parse(appointment["appointment_date"])
+      )
+    end
   end
 
   def self.headers

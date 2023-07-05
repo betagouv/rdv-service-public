@@ -9,7 +9,7 @@ describe "Agent can update a RDV and changes are synced to the ANTS doublon api"
           "status": "declared",
           "appointments": [
             {
-              "management_url": "www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
+              "management_url": "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
               "meeting_point": "Mairie de Sannois",
               "appointment_date": "2023-07-04 09:00:00",
               "editor_comment": null
@@ -53,16 +53,22 @@ describe "Agent can update a RDV and changes are synced to the ANTS doublon api"
       stub_request(:get, "http://status/?application_ids=1234567890").to_return(status: 200, body: api_response1, headers: {})
       stub_request(:get, "http://status/?application_ids=1122334455").to_return(status: 200, body: api_response2, headers: {})
 
-      expect(AntsApi).to receive(:delete_appointment).with("1234567890", {
-                                                             appointment_date: "2023-07-04 09:00:00",
-                                                             management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
-                                                             meeting_point: "Mairie de Sannois",
-                                                           })
-      expect(AntsApi).to receive(:create_appointment).with("1122334455", {
-                                                             appointment_date: "2023-07-04 09:00:00",
-                                                             management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
-                                                             meeting_point: "Mairie de Sannois",
-                                                           })
+      expect(AntsApi).to receive(:delete_appointment).with(
+        AntsApi::Appointment.new(
+          application_id: "1234567890",
+          appointment_date: rdv.starts_at,
+          management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
+          meeting_point: "Mairie de Sannois"
+        )
+      )
+      expect(AntsApi).to receive(:create_appointment).with(
+        AntsApi::Appointment.new(
+          application_id: "1122334455",
+          appointment_date: rdv.starts_at,
+          management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
+          meeting_point: "Mairie de Sannois"
+        )
+      )
 
       perform_enqueued_jobs(queue: :default)
     end

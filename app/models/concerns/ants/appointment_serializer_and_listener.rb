@@ -42,12 +42,13 @@ module Ants
       end
     end
 
-    def self.serialize_for_ants_api(rdv)
-      {
+    def self.serialize_for_ants_api(ants_pre_demande_number, rdv)
+      AntsApi::Appointment.new(
+        application_id: ants_pre_demande_number,
         meeting_point: rdv.lieu.name,
-        appointment_date: rdv.starts_at.strftime("%Y-%m-%d %H:%M:%S"),
-        management_url: Rails.application.routes.url_helpers.users_rdv_url(rdv.id, host: Domain::RDV_MAIRIE.host_name),
-      }
+        appointment_date: rdv.starts_at,
+        management_url: Rails.application.routes.url_helpers.users_rdv_url(rdv.id, host: Domain::RDV_MAIRIE.host_name)
+      )
     end
 
     def self.mark_for_sync(users)
