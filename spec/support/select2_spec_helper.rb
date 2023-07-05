@@ -11,12 +11,12 @@ module Select2SpecHelper
   def add_user(user)
     find("span", text: "Ajouter un usager", match: :first).click
     within(".select2-search--dropdown") do
-      fill_in(class: "select2-search__field", with: "#{user.last_name} #{user.first_name}")
+      fill_in(class: "select2-search__field", with: "#{user.last_name.upcase} #{user.first_name}")
     end
-    find("li", text: "#{user.last_name} #{user.first_name}").click
+    find("li", text: "#{user.last_name.upcase} #{user.first_name}").click
 
     # This is to make sure we wait for the user to be added before doing the next action
-    expect(page).to have_content("#{user.first_name} #{user.last_name}")
+    expect(page).to have_content("#{user.first_name} #{user.last_name.upcase}")
   end
 
   def add_new_user(options = {})
