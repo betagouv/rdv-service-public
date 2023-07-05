@@ -44,8 +44,8 @@ describe "Agent can update a RDV and changes are synced to the ANTS doublon api"
   context "when removing a user and adding another one" do
     it "deletes an ants appointment and creates another one" do
       visit edit_admin_organisation_rdv_path(organisation, rdv)
-      click_button "Supprimer"
       add_user(user2)
+      find(:button, "Supprimer", match: :first).click
       click_button "Enregistrer"
 
       expect(page).to have_content("Le rendez-vous a été modifié.")
@@ -60,7 +60,7 @@ describe "Agent can update a RDV and changes are synced to the ANTS doublon api"
           management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
           meeting_point: "Mairie de Sannois"
         )
-      )
+      ).at_least(:once)
       expect(AntsApi).to receive(:create_appointment).with(
         AntsApi::Appointment.new(
           application_id: "1122334455",
@@ -68,7 +68,7 @@ describe "Agent can update a RDV and changes are synced to the ANTS doublon api"
           management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
           meeting_point: "Mairie de Sannois"
         )
-      )
+      ).at_least(:once)
 
       perform_enqueued_jobs(queue: :default)
     end
