@@ -9,11 +9,12 @@ module AntsApi
 
     attr_reader :application_id, :meeting_point, :appointment_date, :management_url
 
-    def initialize(application_id:, meeting_point:, appointment_date:, management_url:)
+    def initialize(application_id:, meeting_point:, appointment_date:, management_url:, editor_comment: nil)
       @application_id = application_id
       @meeting_point = meeting_point
       @appointment_date = appointment_date
       @management_url = management_url
+      @editor_comment = editor_comment
     end
 
     def to_request_params
@@ -46,6 +47,11 @@ module AntsApi
         appointment_data = load_appointments(application_id).find do |appointment|
           appointment["management_url"] == management_url
         end
+        Appointment.new(application_id: application_id, **appointment_data.symbolize_keys) if appointment_data
+      end
+
+      def first(application_id:)
+        appointment_data = load_appointments(application_id).first
         Appointment.new(application_id: application_id, **appointment_data.symbolize_keys) if appointment_data
       end
 
