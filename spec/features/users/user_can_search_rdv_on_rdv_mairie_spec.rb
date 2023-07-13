@@ -19,7 +19,6 @@ describe "User can search rdv on rdv mairie" do
   let!(:lieu) { create(:lieu, organisation: organisation, name: "Mairie de Sannois", address: "15 Place du Général Leclerc, Sannois, 95110") }
   let(:user) { create(:user, email: "jeanmairie@example.com") }
   let(:ants_pre_demande_number) { "1122334455" }
-  let(:invalid_ants_pre_demande_number) { "5544332211" }
 
   def json_response
     JSON.parse(page.html)
@@ -29,6 +28,21 @@ describe "User can search rdv on rdv mairie" do
     default_url_options[:host] = "http://www.rdv-mairie-test.localhost"
     travel_to(now)
     create(:plage_ouverture, :no_recurrence, first_day: now, motifs: [passport_motif], lieu: lieu, organisation: organisation, start_time: Tod::TimeOfDay(9), end_time: Tod::TimeOfDay.new(10))
+
+    stub_request(:get, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status}).to_return(
+      status: 200,
+      body: {
+        ants_pre_demande_number => {
+          appointments: [
+            {
+              management_url: "https://gerer-rdv.com",
+              meeting_point: "Mairie de Sannois",
+              appointment_date: "01/01/2030",
+            },
+          ],
+        },
+      }.to_json
+    )
   end
 
   it "allows booking a rdv through the full lifecycle of api calls" do
@@ -76,8 +90,13 @@ describe "User can search rdv on rdv mairie" do
     click_button("Se connecter")
 
     expect(page).to have_field("Numéro de pré-demande ANTS")
-    fill_in("user_ants_pre_demande_number", with: ants_pre_demande_number)
+    fill_in("user_ants_pre_demande_number", with: "1122334455")
     click_button("Continuer")
+    fill_in("user_ants_pre_demande_number", with: "1122334455")
+    expect(page).to have_content(
+      "Le numéro de pré-demande ANTS renseigné, est déjà utilisé pour une prise de RDV auprès de Mairie de Sannois. Veuillez dans un premier temps, annuler ce RDV en cliquant ici"
+    )
+    click_button("Confirmer en ignorant les avertissements")
     click_button("Continuer")
     click_link("Confirmer mon RDV")
     expect(page).to have_content("Votre rendez vous a été confirmé.")
