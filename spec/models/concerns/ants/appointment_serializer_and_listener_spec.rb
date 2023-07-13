@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe Ants::AppointmentSerializerAndListener do
+  include_context "rdv_mairie_api_authentication"
   let(:organisation) { create(:organisation, verticale: :rdv_mairie) }
   let(:user) { create(:user, ants_pre_demande_number: "A123456789", organisations: [organisation]) }
   let(:lieu) { create(:lieu, organisation: organisation, name: "Lieu1") }
   let(:rdv) { build(:rdv, users: [user], lieu: lieu, organisation: organisation, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
-  let(:ants_api_url) { "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api" }
   let(:ants_api_headers) do
     {
       "Accept" => "application/json",
@@ -34,8 +34,6 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
 
   before do
     travel_to(Time.zone.parse("01/01/2020"))
-    ENV["ANTS_RDV_API_URL"] = ants_api_url
-    ENV["ANTS_RDV_OPT_AUTH_TOKEN"] = "fake-token"
     stub_request(:post, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/appointments/*}).to_return(status: 200, body: "{}".to_json)
     stub_request(:delete, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/appointments/*})
     stub_request(:get, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status})

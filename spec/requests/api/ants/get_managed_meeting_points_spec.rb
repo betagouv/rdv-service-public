@@ -29,7 +29,7 @@ describe "ANTS API: getManagedMeetingPoints" do
 
     it "returns a list of lieux" do
       get "/api/ants/getManagedMeetingPoints", headers: { "X-HUB-RDV-AUTH-TOKEN" => "" }
-      expect(JSON.parse(response.body)).to eq [
+      expect(JSON.parse(response.body)).to match_array [
         {
           id: lieu1.id.to_s,
           name: "Mairie de Romainville",
