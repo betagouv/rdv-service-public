@@ -8,7 +8,7 @@ module UserRdvWizard
   class Base
     include ActiveModel::Model
 
-    attr_accessor :rdv
+    attr_accessor :rdv, :user
 
     delegate :motif, :starts_at, :users, :service, to: :rdv
     delegate :errors, to: :rdv
@@ -85,9 +85,25 @@ module UserRdvWizard
 
   class Step1 < Base
     validate :phone_number_present_for_motif_by_phone
+    validate :ants_pre_demande_number_is_valid
 
     def phone_number_present_for_motif_by_phone
       errors.add(:phone_number, :missing_for_phone_motif) if rdv.motif.phone? && @user_attributes[:phone_number].blank?
+    end
+
+    def ants_pre_demande_number_is_valid
+      return if @user_attributes["ants_pre_demande_number"].blank?
+
+      appointment = AntsApi::Appointment.first(application_id: @user_attributes["ants_pre_demande_number"])
+      if appointment
+        @user.add_benign_error(
+          I18n.t(
+            "activerecord.warnings.models.user.ants_pre_demande_number_already_used",
+            management_url: appointment.management_url,
+            meeting_point: appointment.meeting_point
+          )
+        )
+      end
     end
 
     def initialize(user, attributes)

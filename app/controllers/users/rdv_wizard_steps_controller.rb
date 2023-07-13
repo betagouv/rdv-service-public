@@ -29,7 +29,7 @@ class Users::RdvWizardStepsController < UserAuthController
     @rdv_wizard = rdv_wizard_for(current_user, rdv_params.merge(user_params))
     @rdv = @rdv_wizard.rdv
     skip_authorization
-    if @rdv_wizard.valid? && @rdv_wizard.save
+    if @rdv_wizard.valid? && no_warnings_to_show? && @rdv_wizard.save
       redirect_to new_users_rdv_wizard_step_path(@rdv_wizard.to_query.merge(step: next_step_index))
     else
       render current_step
@@ -94,5 +94,9 @@ class Users::RdvWizardStepsController < UserAuthController
                     :ants_pre_demande_number,
                     { user_profiles_attributes: %i[logement id organisation_id] },
                   ])
+  end
+
+  def no_warnings_to_show?
+    params.dig(:user, :ignore_benign_errors) || @rdv_wizard.user.benign_errors.blank?
   end
 end
