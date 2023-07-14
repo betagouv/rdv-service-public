@@ -2,6 +2,7 @@
 
 class Admin::UserForm
   include ActiveModel::Model
+  include User::Ants
 
   attr_reader :user
 
@@ -9,6 +10,11 @@ class Admin::UserForm
 
   delegate :ignore_benign_errors, :ignore_benign_errors=, :add_benign_error, :benign_errors, :not_benign_errors, :errors_are_all_benign?, to: :user
   validate :warn_duplicates
+  validate do
+    unless ignore_benign_errors || @user.ants_pre_demande_number.blank?
+      validate_ants_pre_demande_number(@user, @user.ants_pre_demande_number)
+    end
+  end
 
   delegate :errors, to: :user
 
