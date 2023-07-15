@@ -11,9 +11,11 @@ class Admin::UserForm
   delegate :ignore_benign_errors, :ignore_benign_errors=, :add_benign_error, :benign_errors, :not_benign_errors, :errors_are_all_benign?, to: :user
   validate :warn_duplicates
   validate do
-    unless ignore_benign_errors || @user.ants_pre_demande_number.blank?
-      validate_ants_pre_demande_number(@user, @user.ants_pre_demande_number)
-    end
+    validate_ants_pre_demande_number(
+      user: @user,
+      ants_pre_demande_number: @user.ants_pre_demande_number,
+      ignore_benign_errors: ignore_benign_errors
+    )
   end
 
   delegate :errors, to: :user

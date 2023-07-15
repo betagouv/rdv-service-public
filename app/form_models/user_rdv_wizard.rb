@@ -88,9 +88,11 @@ module UserRdvWizard
 
     validate :phone_number_present_for_motif_by_phone
     validate do
-      unless @user_attributes[:ignore_benign_errors] || @user_attributes[:ants_pre_demande_number].blank?
-        validate_ants_pre_demande_number(@user, @user_attributes[:ants_pre_demande_number])
-      end
+      validate_ants_pre_demande_number(
+        user: @user,
+        ants_pre_demande_number: @user_attributes[:ants_pre_demande_number],
+        ignore_benign_errors: @user_attributes[:ignore_benign_errors]
+      )
     end
 
     def phone_number_present_for_motif_by_phone
