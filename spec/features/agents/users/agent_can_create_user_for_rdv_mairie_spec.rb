@@ -13,7 +13,7 @@ describe "Agent can create user" do
     expect_page_title("Nouvel usager")
   end
 
-  context "ants_pre_demander is not used" do
+  context "ants_pre_demander number is not used" do
     before do
       stub_request(:get, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status}).to_return(
         status: 200,
@@ -58,7 +58,7 @@ describe "Agent can create user" do
       fill_in :user_ants_pre_demande_number, with: ants_pre_demande_number
       click_button "Créer"
       expect(page).to have_content(
-        "Le numéro de pré-demande ANTS renseigné, est déjà utilisé pour une prise de RDV auprès de Mairie de Sannois. Veuillez dans un premier temps, annuler ce RDV en cliquant ici"
+        "Ce numéro de pré-demande ANTS est déjà utilisé pour un RDV auprès de Mairie de Sannois. Veuillez annuler ce RDV avant d'en prendre un nouveau"
       )
       click_button("Confirmer en ignorant les avertissements")
       expect_page_title("Marco LEBRETON")

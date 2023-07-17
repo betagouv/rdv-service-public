@@ -94,7 +94,7 @@ describe "User can search rdv on rdv mairie" do
     click_button("Continuer")
     fill_in("user_ants_pre_demande_number", with: "1122334455")
     expect(page).to have_content(
-      "Le numéro de pré-demande ANTS renseigné, est déjà utilisé pour une prise de RDV auprès de Mairie de Sannois. Veuillez dans un premier temps, annuler ce RDV en cliquant ici"
+      "Ce numéro de pré-demande ANTS est déjà utilisé pour un RDV auprès de Mairie de Sannois. Veuillez annuler ce RDV avant d'en prendre un nouveau"
     )
     click_button("Confirmer en ignorant les avertissements")
     click_button("Continuer")

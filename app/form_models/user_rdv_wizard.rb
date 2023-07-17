@@ -84,11 +84,9 @@ module UserRdvWizard
   end
 
   class Step1 < Base
-    include User::Ants
-
     validate :phone_number_present_for_motif_by_phone
     validate do
-      validate_ants_pre_demande_number(
+      User::Ants.validate_ants_pre_demande_number(
         user: @user,
         ants_pre_demande_number: @user_attributes[:ants_pre_demande_number],
         ignore_benign_errors: @user_attributes[:ignore_benign_errors]
