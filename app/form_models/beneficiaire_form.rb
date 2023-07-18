@@ -9,6 +9,7 @@ class BeneficiaireForm
     last_name
     phone_number
     ignore_benign_errors
+    ants_pre_demande_number
   ].freeze
 
   attr_accessor(*ATTRIBUTES)
@@ -16,6 +17,13 @@ class BeneficiaireForm
   validates_presence_of :first_name, :last_name
   validate :warn_no_contact_information
   validate :validate_phone_number
+  validate do
+    User::Ants.validate_ants_pre_demande_number(
+      user: self,
+      ants_pre_demande_number: ants_pre_demande_number,
+      ignore_benign_errors: ignore_benign_errors
+    )
+  end
 
   def warn_no_contact_information
     return if ignore_benign_errors
