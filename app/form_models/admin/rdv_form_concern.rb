@@ -107,7 +107,7 @@ module Admin::RdvFormConcern
 
       if suspicious_rdvs.any?
         user_path = admin_organisation_user_path(rdv.organisation, user)
-        add_benign_error(I18n.t("activemodel.warnings.models.rdv.attributes.base.rdv_duplicate_suspected", user_path: user_path, user_name: user.full_name))
+        add_benign_error(I18n.t("activemodel.warnings.models.rdv.attributes.base.rdv_duplicate_suspected_html", user_path: user_path, user_name: user.full_name))
       end
     end
   end

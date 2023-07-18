@@ -6,7 +6,7 @@ RSpec.describe "Avoid usage of html_safe on translation keys" do
 
     # Un bricolage pour trouver les clés potentielles qui pourraint necessiter un html_safe
     translations_string = I18n.backend.translations[:fr].to_s
-    translation_key_with_html_regex = /:[^=]*[^(_html)]=>"[^"]*<[^"]*>[^"]*"/
+    translation_key_with_html_regex = /:[^=]*[^(_html)]=>"[^"]*<[^"]*"/
 
     regex_matches = translations_string.scan(translation_key_with_html_regex)
     if regex_matches.any?
