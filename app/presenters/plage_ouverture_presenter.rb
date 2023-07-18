@@ -15,7 +15,7 @@ class PlageOuverturePresenter
     i18n_key = [
       "overlapping_plage_ouverture",
       (in_scope? ? "in_scope" : "out_of_scope"),
-      (same_organisation? ? "in_current_organisation" : "in_other_organisation"),
+      (same_organisation? ? "in_current_organisation_html" : "in_other_organisation_html"),
     ].join(".")
     attrs = { agent_name: plage_ouverture.agent.full_name }
     if in_scope?

@@ -28,11 +28,11 @@ class RdvsOverlappingRdvPresenter
 
   def i18n_suffix
     if @agent == agent_context.agent
-      "current_agent"
+      "current_agent_html"
     elsif in_scope?
-      "in_scope"
+      "in_scope_html"
     else
-      "out_of_scope"
+      "out_of_scope_html"
     end
   end
 
