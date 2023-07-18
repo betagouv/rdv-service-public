@@ -2,6 +2,7 @@
 
 class RdvEndingShortlyBeforePresenter
   include Rails.application.routes.url_helpers
+  include ActionView::Helpers::TranslationHelper # allows getting a SafeBuffer instead of a String when using #translate (which a direct call to I18n.t doesn't do)
 
   attr_accessor :rdv, :agent, :agent_context, :rdv_context
 
@@ -13,7 +14,7 @@ class RdvEndingShortlyBeforePresenter
   end
 
   def warning_message
-    I18n.t("activemodel.warnings.models.rdv.attributes.base.#{i18n_key}", **i18n_attrs_base, **i18n_attrs_in_scope)
+    translate("activemodel.warnings.models.rdv.attributes.base.#{i18n_key}", **i18n_attrs_base, **i18n_attrs_in_scope)
   end
 
   private

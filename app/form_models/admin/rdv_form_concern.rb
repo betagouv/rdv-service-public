@@ -3,6 +3,7 @@
 module Admin::RdvFormConcern
   extend ActiveSupport::Concern
   include ActionView::Helpers::DateHelper
+  include ActionView::Helpers::TranslationHelper # allows getting a SafeBuffer instead of a String when using #translate (which a direct call to I18n.t doesn't do)
   include Rails.application.routes.url_helpers
 
   included do
@@ -105,10 +106,10 @@ module Admin::RdvFormConcern
         .where(motif: motif, status: Rdv::NOT_CANCELLED_STATUSES)
       suspicious_rdvs = suspicious_rdvs.where.not(id: rdv.id) if rdv.persisted?
 
-      if suspicious_rdvs.any?
-        user_path = admin_organisation_user_path(rdv.organisation, user)
-        add_benign_error(I18n.t("activemodel.warnings.models.rdv.attributes.base.rdv_duplicate_suspected_html", user_path: user_path, user_name: user.full_name))
-      end
+      next unless suspicious_rdvs.any?
+
+      user_path = admin_organisation_user_path(rdv.organisation, user)
+      add_benign_error(translate("activemodel.warnings.models.rdv.attributes.base.rdv_duplicate_suspected_html", user_path: user_path, user_name: user.full_name))
     end
   end
 

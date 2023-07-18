@@ -3,6 +3,7 @@
 class PlageOuverturePresenter
   include PlageOuverturesHelper
   include Rails.application.routes.url_helpers
+  include ActionView::Helpers::TranslationHelper # allows getting a SafeBuffer instead of a String when using #translate (which a direct call to I18n.t doesn't do)
 
   attr_accessor :plage_ouverture, :agent_context
 
@@ -26,7 +27,7 @@ class PlageOuverturePresenter
         organisation_name: plage_ouverture.organisation.name
       )
     end
-    I18n.t("activemodel.warnings.models.rdv.attributes.base.#{i18n_key}", **attrs)
+    translate("activemodel.warnings.models.rdv.attributes.base.#{i18n_key}", **attrs)
   end
 
   def same_organisation?
