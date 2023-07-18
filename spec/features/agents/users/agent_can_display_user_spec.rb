@@ -32,7 +32,7 @@ describe "Agent can display user" do
     let!(:user) { create(:user, :unconfirmed, :unregistered, invited_through: "external", organisations: [organisation]) }
 
     it "displays a message to inform the agent" do
-      expect(page).to have_content("Cet usager a reçu une invitation via un partenaire de RDV Solidarités (ex : RDV-Insertion).")
+      expect(page).to have_content("Cet usager a reçu une invitation via un partenaire de RDV Solidarités (ex : rdv-insertion).")
     end
   end
 end
