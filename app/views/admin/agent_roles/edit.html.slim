@@ -20,11 +20,13 @@
             = ff.input :service_id, collection: [@agent_role.agent.service], as: :select, label: "Service", hint: "Vous ne pouvez pas changer un agent de service, cela créerait des incohérences. Si vous voulez vraiment réaliser cette opération, il faut supprimer et recréer le compte de l'agent", disabled: true
 
           = f.input :organisation, as: :hidden
+          - # rubocop:disable Rails/OutputSafety
           = f.input :access_level, \
             collection: AgentRole::ACCESS_LEVELS, \
             label_method: -> { AgentRole.human_attribute_value(:access_level, _1, context: :explanation).html_safe }, \
             hint: "Les agents peuvent avoir des permissions différentes sur chaque organisation.", \
             as: :radio_buttons
+          - # rubocop:enable Rails/OutputSafety
 
           .row
             - if policy([:agent, @agent_role.agent]).destroy?
