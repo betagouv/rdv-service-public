@@ -5,7 +5,7 @@
       - model.benign_errors.each do |msg|
         li
           i.fa-solid.fa-triangle-exclamation.mr-2
-          = msg.html_safe
+          = msg
 
   - if local_assigns[:f]
     .collapse.show.js-collapse-warning-confirmation
@@ -26,4 +26,4 @@
   .alert.alert-danger.fade.show
     ul.m-0
       - errors_full_messages(model).each do |msg|
-        li= msg.html_safe
+        li= msg

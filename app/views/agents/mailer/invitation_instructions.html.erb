@@ -7,11 +7,11 @@
 <% if @resource.invitation_due_at %>
   <p>
     <%= t( \
-      "devise.mailer.invitation_instructions_for_agents.accept_until", \
+      "devise.mailer.invitation_instructions_for_agents.accept_until_html", \
       due_date: l(@resource.invitation_due_at, format: :'devise.mailer.invitation_instructions.accept_until_format'), \
       inviter: @resource.invited_by.full_name, \
       inviter_email: @resource.invited_by.email \
-    ).html_safe %>
+    ) %>
   </p>
 <% end %>
 

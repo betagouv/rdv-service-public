@@ -46,7 +46,7 @@ fr:
         body: "Vous avez été invité par %{inviter} à rejoindre %{domain_name} en tant qu'agent du service %{service}"
         invited_by_super_admin: "Vous avez été invité à rejoindre %{domain_name} en tant qu'agent du service %{service}"
         accept: "Accepter l'invitation"
-        accept_until: "Cette invitation est valable jusqu'au %{due_date}. Si vous ratez cette date mais souhaitez accepter, veuillez demander à <a href='mailto:%{inviter_email}'>%{inviter} (%{inviter_email})</a> de vous renvoyer l'invitation"
+        accept_until_html: "Cette invitation est valable jusqu'au %{due_date}. Si vous ratez cette date mais souhaitez accepter, veuillez demander à <a href='mailto:%{inviter_email}'>%{inviter} (%{inviter_email})</a> de vous renvoyer l'invitation"
         ignore: "Si vous n'acceptez pas cette invitation, ignorez cet email. Aucun compte ne sera créé sans votre autorisation."
       invitation_instructions:
         subject: "Vous avez été invité sur %{domain_name}"

@@ -61,7 +61,6 @@ linters:
       - Lint/UselessAssignment
       - Rails/Blank
       - Rails/LinkToBlank
-      - Rails/OutputSafety
       - Rails/Presence
       - Rails/Present
       - Rails/TimeZone

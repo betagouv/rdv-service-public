@@ -29,9 +29,13 @@
               td
                 ul.list-unstyled
                   - if sector.zones.cities.any?
-                    li= "#{sector.zones.cities.count}&nbsp;communes".html_safe
+                    li
+                      = sector.zones.cities.count
+                      = "&nbsp;communes".html_safe
                   - if sector.zones.streets.any?
-                    li= "#{sector.zones.streets.count}&nbsp;rues".html_safe
+                    li
+                      = sector.zones.streets.count
+                      = "&nbsp;rues".html_safe
               td
                 - if sector.attributions.any?
                   ul.pl-2.mb-0

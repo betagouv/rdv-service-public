@@ -17,7 +17,7 @@
           - version.changeset.except("updated_at").each do |property,change|
             tr
               td=property
-              td=change.first.to_s.html_safe
-              td=change.last.to_s.html_safe
+              td=change.first.to_s
+              td=change.last.to_s
               td=l version.created_at
               td= version.whodunnit
