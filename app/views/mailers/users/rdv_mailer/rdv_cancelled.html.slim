@@ -9,7 +9,7 @@ div
 
   - if @rdv.phone_number.present?
     - telephone_link = link_to(@rdv.phone_number, "tel:#{@rdv.phone_number_formatted}")
-    p= t(".reschedule_by_phone", telephone_link: telephone_link).html_safe
+    p= t(".reschedule_by_phone_html", telephone_link: telephone_link)
 
   - if @rdv.bookable_by_everyone?
     p= t(".reschedule_online")
