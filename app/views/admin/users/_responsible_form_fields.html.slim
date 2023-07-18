@@ -11,10 +11,9 @@
   .col-md-6= f.input :first_name, **input_opts.deep_merge(frozen_fields_opts)
   .col-md-6= f.input :last_name, **input_opts
 
-- unless current_domain == Domain::RDV_MAIRIE
-  .form-row
-    .col-md-6= f.input :birth_name, **input_opts.deep_merge(frozen_fields_opts)
-    .col-md-6= date_input(f, :birth_date, **input_opts.deep_merge(frozen_fields_opts))
+.form-row
+  .col-md-6= f.input :birth_name, **input_opts.deep_merge(frozen_fields_opts)
+  .col-md-6= date_input(f, :birth_date, **input_opts.deep_merge(frozen_fields_opts))
 
 = f.input :phone_number, as: :tel, **input_opts
 

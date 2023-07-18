@@ -8,7 +8,7 @@
     .col-md-6= f.input :first_name, placeholder: "Prénom", disabled: user.logged_once_with_franceconnect?
     .col-md-6= f.input :last_name, placeholder: "Nom"
   .form-row
-    - unless current_user.only_invited? || current_domain == Domain::RDV_MAIRIE
+    - unless current_user.only_invited?
       .col-md-6= f.input :birth_name, placeholder: "Nom de naissance", disabled: user.logged_once_with_franceconnect?
       .col-md-6= date_input(f, :birth_date, disabled: user.logged_once_with_franceconnect?)
   - if current_domain == Domain::RDV_MAIRIE

@@ -38,7 +38,6 @@
       .form-row
         .col-md-6= f.input :first_name, **input_opts[:relative]
         .col-md-6= f.input :last_name, **input_opts[:relative]
-      - unless current_domain == Domain::RDV_MAIRIE
         = date_input(f, :birth_date, **input_opts[:relative])
       - if current_territory.enable_notes_field?
         = f.input :notes, **input_opts[:relative].deep_merge(input_html: { rows: 6 })
