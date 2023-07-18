@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe "Agent can create user" do
+  include_context "rdv_mairie_api_authentication"
+
   let!(:organisation) { create(:organisation, name: "Mairie de Romainville") }
   let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
   let(:ants_pre_demande_number) { "1122334455" }
