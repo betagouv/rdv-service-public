@@ -32,29 +32,26 @@ module Ants
 
     def delete_obsolete_appointment
       if @rdv_attributes[:obsolete_application_id].present?
-        obsolete_appointment = AntsApi.find_appointment(
+        obsolete_appointment = AntsApi::Appointment.find_by(
           application_id: @rdv_attributes[:obsolete_application_id],
           management_url: @appointment_data[:management_url]
         )
 
-        AntsApi.delete_appointment(obsolete_appointment) if obsolete_appointment
+        obsolete_appointment&.delete
       end
     end
 
     def delete_appointments
       users.each do |user|
-        existing_appointment = existing_appointment(user)
-        AntsApi.delete_appointment(existing_appointment) if existing_appointment
+        existing_appointment(user)&.delete
       end
     end
 
     def create_or_update_appointments
       users.each do |user|
-        existing_appointment = existing_appointment(user)
-        AntsApi.delete_appointment(existing_appointment) if existing_appointment
+        existing_appointment(user)&.delete
 
-        new_appointment = AntsApi::Appointment.new(application_id: user.ants_pre_demande_number, **@appointment_data)
-        AntsApi.create_appointment(new_appointment)
+        AntsApi::Appointment.new(application_id: user.ants_pre_demande_number, **@appointment_data).create
       end
     end
 
@@ -67,7 +64,7 @@ module Ants
     end
 
     def existing_appointment(user)
-      AntsApi.find_appointment(
+      AntsApi::Appointment.find_by(
         application_id: user.ants_pre_demande_number,
         management_url: @appointment_data[:management_url]
       )

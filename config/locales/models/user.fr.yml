@@ -48,6 +48,11 @@ fr:
               franceconnect_frozen_field_cannot_change: Le nom de naissance ne peut-être changé car il a été certifié par FranceConnect
             birth_date:
               franceconnect_frozen_field_cannot_change: La date de naissance ne peut-être changée car elle a été certifiée par FranceConnect
+    warnings:
+      models:
+        user:
+          ants_pre_demande_number_already_used_html: Ce numéro de pré-demande ANTS est déjà utilisé pour un RDV auprès de %{meeting_point}. Veuillez <a href='%{management_url}' target="_blank">annuler ce RDV<a> avant d'en prendre un nouveau.
+
   simple_form:
     hints:
       user:

@@ -3,7 +3,7 @@
 - territories = Territory.joins(organisations: :user_profiles).where(user_profiles: { user_id: user.id }).to_a
 
 = simple_form_for user, url: form_url, method: form_method  do |f|
-  = render "model_errors", model: user
+  = render "model_errors", model: user, f: f
   .form-row
     .col-md-6= f.input :first_name, placeholder: "Prénom", disabled: user.logged_once_with_franceconnect?
     .col-md-6= f.input :last_name, placeholder: "Nom"
