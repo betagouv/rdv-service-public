@@ -295,7 +295,7 @@ RSpec.configure do |config|
               invitation_url: { type: "string" },
               invitation_token: { type: "string" },
             },
-            required: %w[invitation_url invitation_token],
+            required: %w[invitation_token],
           },
           lieu: {
             type: "object",

@@ -12,9 +12,9 @@ describe "Invitations API", swagger_doc: "v1/api.json" do
       tags "Invitation", "User"
       produces "application/json"
       operationId "getUserByInvitationToken"
-      description "Renvoie un·e usager·ère grâce à son jeton d'invitation"
+      description "Renvoie un·e usager·ère grâce à son jeton d'invitation à prendre rendez-vous"
 
-      parameter name: :invitation_token, in: :path, type: :string, description: "Jeton d'invitation", example: "abcdef123456"
+      parameter name: :invitation_token, in: :path, type: :string, description: "Jeton d'invitation pour un rendez-vous", example: "abcdef123456"
 
       let!(:organisation) { create(:organisation) }
       let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
@@ -26,8 +26,9 @@ describe "Invitations API", swagger_doc: "v1/api.json" do
       response 200, "Renvoie l'usager·ère" do
         let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [organisation], email: "jean@jacques.fr") }
         let!(:invitation_token) do
-          user.invite! { |u| u.skip_invitation = true }
-          user.raw_invitation_token
+          user.assign_rdv_invitation_token
+          user.save!
+          user.rdv_invitation_token
         end
 
         schema "$ref" => "#/components/schemas/user_with_root"
