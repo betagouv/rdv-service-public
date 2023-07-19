@@ -276,16 +276,12 @@ describe User, type: :model do
     subject { user.send(:invitation_period_valid?) }
 
     let(:invitation_created_at) { Time.zone.parse("2022-04-05 13:00") }
-    let(:user) { create(:user, invitation_created_at: invitation_created_at, invite_for: invite_for) }
+    let(:user) { create(:user, invitation_created_at: invitation_created_at) }
 
     before { travel_to(Time.zone.parse("2022-04-05 13:45")) }
 
-    context "when no invitation period is precised" do
-      let(:invite_for) { nil }
-
-      it "is valid" do
-        expect(subject).to eq(true)
-      end
+    it "is valid" do
+      expect(subject).to eq(true)
     end
   end
 

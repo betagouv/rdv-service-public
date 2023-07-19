@@ -41,7 +41,6 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
       }
     )
 
-    @user.invite_for = params[:invite_for]
     @user.invite! do |u|
       u.skip_invitation = true
       u.invited_by = pundit_user.agent
