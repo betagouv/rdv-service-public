@@ -16,6 +16,9 @@ class Agent::UserPolicy < DefaultAgentPolicy
     same_org? && not_deleted?
   end
 
+  alias invite_get? invite?
+  alias invite_post? invite?
+
   def update?
     same_org? && not_deleted?
   end

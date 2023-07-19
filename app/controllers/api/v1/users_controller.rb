@@ -2,7 +2,7 @@
 
 class Api::V1::UsersController < Api::V1::AgentAuthBaseController
   before_action :set_organisation, only: %i[show update]
-  before_action :set_user, only: %i[show update invite]
+  before_action :set_user, only: %i[show update invite_post invite_get]
 
   def index
     users = policy_scope(User)
@@ -30,13 +30,30 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
     render_record @user
   end
 
-  def invite
+  def invite_get
+    # TODO : remove this endpoint if unused
+    Sentry.capture_message(
+      "User invited by agent with invite get endpoint",
+      extra: {
+        user_id: @user.id,
+        agent_id: pundit_user.agent.id,
+        issue: "https://github.com/betagouv/rdv-solidarites.fr/issues/3689",
+      }
+    )
+
     @user.invite_for = params[:invite_for]
     @user.invite! do |u|
       u.skip_invitation = true
       u.invited_by = pundit_user.agent
       u.invited_through = "external"
     end
+    # NOTE: The #invite endpoint uses a jbuilder view instead of a blueprint.
+  end
+
+  def invite_post
+    @user.invited_through = "external"
+    @user.assign_rdv_invitation_token
+    @user.save!
     # NOTE: The #invite endpoint uses a jbuilder view instead of a blueprint.
   end
 

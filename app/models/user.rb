@@ -203,11 +203,6 @@ class User < ApplicationRecord
     birth_date.present? && birth_date > 18.years.ago
   end
 
-  # overriding Devise to allow custom invitation validity duration (PR #1484)
-  def invitation_due_at
-    invite_for.present? ? compute_invitation_due_at : super
-  end
-
   # This method is called when calling #current_user on a controller action that is automatically generated
   # by the devise_token_auth gem. It can happen since these actions inherits from ApplicationController (see PR #1933).
   # We monkey-patch it for it not to raise.
@@ -238,15 +233,17 @@ class User < ApplicationRecord
     end
   end
 
-  protected
-
-  def compute_invitation_due_at
-    (invitation_created_at || invitation_sent_at) + invite_for
+  def assign_rdv_invitation_token
+    self.rdv_invitation_token = generate_rdv_invitation_token
   end
 
-  # overriding Devise to allow custom invitation validity duration (PR #1484)
-  def invitation_period_valid?
-    invite_for.present? ? (Time.zone.now <= invitation_due_at) : super
+  protected
+
+  def generate_rdv_invitation_token
+    loop do
+      rdv_invitation_token = SecureRandom.send(:choose, [*"A".."Z", *"0".."9"], 8)
+      break rdv_invitation_token unless User.find_by(rdv_invitation_token: rdv_invitation_token)
+    end
   end
 
   def password_required?
