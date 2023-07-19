@@ -164,6 +164,26 @@ describe "Users API", swagger_doc: "v1/api.json" do
         it { expect(user.reload.last_name).to eq(last_name) }
       end
 
+      response 200, "updates a user frozen by franceconnect", document: false do
+        let(:user) do
+          create(:user,
+                 first_name: "Jean",
+                 organisations: [organisation],
+                 logged_once_with_franceconnect: true)
+        end
+
+        let(:first_name) { "Alain" }
+        let(:address) { "10 rue du Havre, Paris" }
+
+        schema "$ref" => "#/components/schemas/user_with_root"
+
+        run_test!
+
+        it { expect(user.reload.first_name).not_to eq(first_name) }
+
+        it { expect(user.reload.address).to eq(address) }
+      end
+
       it_behaves_like "an endpoint that returns 401 - unauthorized"
 
       it_behaves_like "an endpoint that returns 422 - unprocessable_entity", "des paramètres sont manquants ou mal formés ou impossibles", true do
