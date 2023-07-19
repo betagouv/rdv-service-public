@@ -153,8 +153,9 @@ describe "public pages", js: true do
       context "when invited" do
         let!(:user) { create(:user) }
         let!(:invitation_token) do
-          user.invite! { |u| u.skip_invitation = true }
-          user.raw_invitation_token
+          user.assign_rdv_invitation_token
+          user.save!
+          user.rdv_invitation_token
         end
 
         it "root path with a city_code and a service page is accessible" do

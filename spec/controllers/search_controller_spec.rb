@@ -9,8 +9,9 @@ RSpec.describe SearchController, type: :controller do
   let!(:city_code) { "75007" }
   let!(:address) { "20 avenue de ségur" }
   let!(:invitation_token) do
-    user.invite! { |u| u.skip_invitation = true }
-    user.raw_invitation_token
+    user.assign_rdv_invitation_token
+    user.save!
+    user.rdv_invitation_token
   end
 
   let!(:user) { create(:user, organisations: [organisation]) }

@@ -290,8 +290,9 @@ RSpec.describe Users::RdvsController, type: :controller do
 
       context "with a valid invitation token" do
         let!(:invitation_token) do
-          user.invite! { |u| u.skip_invitation = true }
-          user.raw_invitation_token
+          user.assign_rdv_invitation_token
+          user.save!
+          user.rdv_invitation_token
         end
 
         before do
@@ -358,8 +359,9 @@ RSpec.describe Users::RdvsController, type: :controller do
 
       context "with a valid invitation token" do
         let!(:invitation_token) do
-          user.invite! { |u| u.skip_invitation = true }
-          user.raw_invitation_token
+          user.assign_rdv_invitation_token
+          user.save!
+          user.rdv_invitation_token
         end
 
         before do

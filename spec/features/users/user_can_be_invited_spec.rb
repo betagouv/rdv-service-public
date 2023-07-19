@@ -18,8 +18,9 @@ describe "User can be invited" do
                   organisations: [organisation])
   end
   let!(:invitation_token) do
-    user.invite! { |u| u.skip_invitation = true }
-    user.raw_invitation_token
+    user.assign_rdv_invitation_token
+    user.save!
+    user.rdv_invitation_token
   end
   let!(:agent) { create(:agent) }
   let!(:departement_number) { "26" }

@@ -287,22 +287,6 @@ describe User, type: :model do
         expect(subject).to eq(true)
       end
     end
-
-    context "when invitation was created less than invitation period ago" do
-      let(:invite_for) { 1.hour.to_i }
-
-      it "is valid" do
-        expect(subject).to eq(true)
-      end
-    end
-
-    context "when invitation was created more than invitation period ago" do
-      let(:invite_for) { 30.minutes.to_i }
-
-      it "is not valid" do
-        expect(subject).to eq(false)
-      end
-    end
   end
 
   describe "#minor?" do
