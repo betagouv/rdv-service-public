@@ -44,7 +44,9 @@ class Invitation
   end
 
   def user_by_rdv_invitation_token
-    @user_by_rdv_invitation_token ||= token.present? ? User.find_by(rdv_invitation_token: token) : nil
+    # We keep the find_by_invitation_token for backward compatibility, remove this after rdvi token migration is done
+    user = User.find_by(rdv_invitation_token: token) || User.find_by_invitation_token(token, true)
+    @user_by_rdv_invitation_token ||= token.present? ? user : nil
   end
 
   def rdvs_user_by_invitation_token

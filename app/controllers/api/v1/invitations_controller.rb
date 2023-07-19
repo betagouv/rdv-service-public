@@ -11,8 +11,7 @@ class Api::V1::InvitationsController < Api::V1::AgentAuthBaseController
   private
 
   def set_user
-    # We keep the find_by_invitation_token for backward compatibility
-    @user = User.find_by(rdv_invitation_token: params[:token]) || User.find_by_invitation_token(params[:token], true)
+    @user = User.find_by(rdv_invitation_token: params[:token])
 
     render_error :not_found, not_found: :user unless @user
   end
