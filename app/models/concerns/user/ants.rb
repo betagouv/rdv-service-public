@@ -14,6 +14,9 @@ module User::Ants
 
   def self.find_appointment(application_id)
     AntsApi::Appointment.first(application_id: application_id)
+  rescue AntsApi::Appointment::ApiRequestError => e
+    Sentry.capture_exception(e)
+    nil
   end
 
   def self.warning_message(appointment)
