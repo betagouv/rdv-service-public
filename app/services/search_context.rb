@@ -206,7 +206,7 @@ class SearchContext
     motifs = motifs.search_by_text(@motif_search_terms) if @motif_search_terms.present?
     motifs = motifs.with_motif_category_short_name(@motif_category_short_name) if @motif_category_short_name.present?
     motifs = motifs.where(organisation_id: @preselected_organisation_ids) if @preselected_organisation_ids.present?
-    motifs = motifs.where(organisations: { id: organisation_id }) if organisation_id.present?
+    motifs = motifs.where(organisation_id: organisation_id) if organisation_id.present?
     motifs = motifs.where(organisations: { external_id: @external_organisation_ids.compact }) if @external_organisation_ids.present?
     motifs = motifs.where(id: @motif_id) if @motif_id.present?
     motifs = motifs.with_availability_for_lieux([lieu.id]) if lieu.present?
@@ -241,7 +241,7 @@ class SearchContext
         # we retrieve the geolocalised matching motifs, if there are none we fallback
         # on the matching motifs for the organisations passed in the query_params
         filter_motifs(geo_search.available_motifs).presence || filter_motifs(
-          Motif.available_for_booking.where(organisation_id: @preselected_organisation_ids)
+          Motif.available_for_booking.where(organisation_id: @preselected_organisation_ids).joins(:organisation)
         )
       else
         filter_motifs(geo_search.available_motifs)
