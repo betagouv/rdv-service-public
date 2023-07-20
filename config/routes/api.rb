@@ -8,6 +8,8 @@ namespace :api do
     resources :agents, only: %i[index]
     resources :users, only: %i[create index show update] do
       get :invite, to: 'users#invite_get', on: :member
+      post :rdv_invitation_token, to: 'users#rdv_invitation_token', on: :member
+      # Todo remove this method after rdvi migrated to the new rdv_invitation_token endpoint
       post :invite, to: 'users#invite_post', on: :member
     end
     resource :user_profiles, only: %i[create destroy]
@@ -18,8 +20,8 @@ namespace :api do
       resources :motifs, only: %i[index]
       resources :rdvs, only: %i[index]
     end
+    # Todo remove this method after rdvi migrated to the new rdv_invitation_token endpoint
     get '/invitations/:token', to: 'invitations#show'
-    post '/invitations/rdv_invitation_token', to: 'invitations#rdv_invitation_token'
     # Doesn't need authentication
     resources :public_links, only: [:index]
   end

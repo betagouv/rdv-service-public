@@ -233,7 +233,9 @@ describe "Users API", swagger_doc: "v1/api.json" do
         let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [create(:organisation)]) }
       end
     end
+  end
 
+  path "/api/v1/users/{user_id}/rdv_invitation_token" do
     post "Récupérer le jeton d'invitation à prendre un rdv d'un usager·ère" do
       with_authentication
 

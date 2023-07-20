@@ -2,7 +2,7 @@
 
 class Api::V1::UsersController < Api::V1::AgentAuthBaseController
   before_action :set_organisation, only: %i[show update]
-  before_action :set_user, only: %i[show update invite_post invite_get]
+  before_action :set_user, only: %i[show update invite_get rdv_invitation_token]
 
   def index
     users = policy_scope(User)
@@ -49,15 +49,20 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
     # NOTE: The #invite endpoint uses a jbuilder view instead of a blueprint.
   end
 
-  def invite_post
-    # Todo remove this method after rdvi migrated to the new Api::V1::InvitationsController.rdv_invitation_token endpoint
-    @user.invited_through = "external"
-    @user.assign_rdv_invitation_token
-    @user.save!
+  def rdv_invitation_token
+    assign_rdv_invitation_token if @user.rdv_invitation_token.nil?
     render json: { invitation_token: @user.rdv_invitation_token }
   end
+  # Todo remove this method after rdvi migrated to the new rdv_invitation_token endpoint
+  alias invite_post rdv_invitation_token
 
   private
+
+  def assign_rdv_invitation_token
+    @user.assign_rdv_invitation_token
+    @user.invited_through = "external"
+    @user.save!
+  end
 
   def set_organisation
     @organisation = params[:organisation_id].present? ? Organisation.find(params[:organisation_id]) : nil
