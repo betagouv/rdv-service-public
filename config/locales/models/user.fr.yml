@@ -48,6 +48,8 @@ fr:
               franceconnect_frozen_field_cannot_change: Le nom de naissance ne peut-être changé car il a été certifié par FranceConnect
             birth_date:
               franceconnect_frozen_field_cannot_change: La date de naissance ne peut-être changée car elle a été certifiée par FranceConnect
+            password:
+              format: "%{message}"
     warnings:
       models:
         user:
