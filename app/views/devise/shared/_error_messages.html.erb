@@ -1,6 +1,6 @@
-<% resource.errors.add("password",  "Ce mot de passe fait partie d'une liste de mots de passe très fréquemment utilisés et ne permet donc pas d'assurer la sécurité de votre compte. Veuillez en choisir un autre.") %>
+<% resource.errors.add("password",  "Ce mot de passe fait partie d'une liste de mots de passe fréquemment utilisés et ne permet donc pas d'assurer la sécurité de votre compte. Veuillez en choisir un autre.") %>
 <% if resource.errors.any? %>
-  <div class="alert alert-danger alert-block devise-bs">
+  <div class="alert alert-danger alert-block devise-bs text-left">
     <button type="button" class="close" data-dismiss="alert">&times;</button>
     <ul class="mb-0">
       <% resource.errors.full_messages.each do |message| %>

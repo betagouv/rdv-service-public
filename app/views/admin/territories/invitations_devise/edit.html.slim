@@ -14,4 +14,5 @@
       = f.label :password
       = f.password_field :password, required: true, class: "form-control ", placeholder: "Choisissez votre mot de passe", id: "password"
       span.fa.fa-fw.fa-eye.toggle-password role="button" tabindex="0"
+      .font-14.mt-1.text-muted.text-left = "10 caractères minimum"
     .text-center= f.button :submit, t("devise.invitations.edit.submit_button")
