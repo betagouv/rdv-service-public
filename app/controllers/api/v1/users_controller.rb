@@ -50,10 +50,11 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
   end
 
   def invite_post
+    # Todo remove this method after rdvi migrated to the new Api::V1::InvitationsController.rdv_invitation_token endpoint
     @user.invited_through = "external"
     @user.assign_rdv_invitation_token
     @user.save!
-    # NOTE: The #invite endpoint uses a jbuilder view instead of a blueprint.
+    render json: { invitation_token: @user.rdv_invitation_token }
   end
 
   private

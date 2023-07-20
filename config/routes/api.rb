@@ -18,8 +18,8 @@ namespace :api do
       resources :motifs, only: %i[index]
       resources :rdvs, only: %i[index]
     end
-    resources :invitations, param: "token", only: [:show]
-
+    get '/invitations/:token', to: 'invitations#show'
+    post '/invitations/rdv_invitation_token', to: 'invitations#rdv_invitation_token'
     # Doesn't need authentication
     resources :public_links, only: [:index]
   end
