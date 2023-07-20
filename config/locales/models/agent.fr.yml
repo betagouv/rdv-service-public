@@ -32,3 +32,9 @@ fr:
       agent/display_saturdays:
         true: "Afficher les samedis"
         false: "Ne pas afficher les samedis"
+    errors:
+      models:
+        agent:
+          attributes:
+            password:
+              format: "%{message}"
