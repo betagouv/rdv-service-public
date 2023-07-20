@@ -236,13 +236,13 @@ describe "Users API", swagger_doc: "v1/api.json" do
   end
 
   path "/api/v1/users/{user_id}/rdv_invitation_token" do
-    post "Récupérer le jeton d'invitation à prendre un rdv d'un usager·ère" do
+    post "Récupérer le token d'invitation à prendre un rdv d'un usager·ère" do
       with_authentication
 
       tags "User", "Invitation"
       produces "application/json"
       operationId "createUserInvitation"
-      description "Renvoie le jeton d'invitation à prendre rdv d'un·e usager·ère"
+      description "Renvoie le token d'invitation à prendre rdv de l'usager·ère"
 
       parameter name: :user_id, in: :path, type: :integer, description: "ID de l'usager·ère", example: 123
 

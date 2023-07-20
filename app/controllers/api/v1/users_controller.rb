@@ -53,7 +53,7 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
     assign_rdv_invitation_token if @user.rdv_invitation_token.nil?
     render json: { invitation_token: @user.rdv_invitation_token }
   end
-  # Todo remove this method after rdvi migrated to the new rdv_invitation_token endpoint
+  # Todo remove this alias after rdvi migrated to the new rdv_invitation_token endpoint
   alias invite_post rdv_invitation_token
 
   private
