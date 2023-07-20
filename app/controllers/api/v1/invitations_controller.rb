@@ -33,8 +33,7 @@ class Api::V1::InvitationsController < Api::V1::AgentAuthBaseController
 
   def set_user
     @user = User.find(params[:user_id])
-    authorize(@user)
-  rescue ActiveRecord::RecordNotFound
-    render_error :not_found, not_found: :user
+
+    render_error :not_found, not_found: :user unless @user
   end
 end
