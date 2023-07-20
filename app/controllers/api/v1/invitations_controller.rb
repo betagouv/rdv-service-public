@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Todo remove this method after rdvi migrated to the new endpoint
+# Todo remove this class after rdvi migrated to the new endpoint
 class Api::V1::InvitationsController < Api::V1::AgentAuthBaseController
   before_action :set_user
 
