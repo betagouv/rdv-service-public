@@ -179,9 +179,10 @@ describe "Users API", swagger_doc: "v1/api.json" do
 
         run_test!
 
-        it { expect(user.reload.first_name).not_to eq(first_name) }
-
-        it { expect(user.reload.address).to eq(address) }
+        it "updates non frozen attributes" do
+          expect(user.reload.first_name).not_to eq(first_name)
+          expect(user.address).to eq(address)
+        end
       end
 
       it_behaves_like "an endpoint that returns 401 - unauthorized"
@@ -411,37 +412,26 @@ describe "Users API", swagger_doc: "v1/api.json" do
 
         run_test!
 
-        it { expect(User.count).to eq(user_count_before + 1) }
-
-        it { expect(created_user.organisations).to match_array([organisation]) }
-
-        it { expect(created_user.first_name).to eq(first_name) }
-
-        it { expect(created_user.last_name).to eq(last_name) }
-
-        it { expect(created_user.birth_name).to eq(birth_name) }
-
-        it { expect(created_user.birth_date).to eq(Date.new(1976, 10, 1)) }
-
-        it { expect(created_user.email).to eq(email) }
-
-        it { expect(created_user.phone_number).to eq(phone_number) }
-
-        it { expect(created_user.address).to eq(address) }
-
-        it { expect(created_user.caisse_affiliation).to eq(caisse_affiliation) }
-
-        it { expect(created_user.affiliation_number).to eq(affiliation_number) }
-
-        it { expect(created_user.family_situation).to eq(family_situation) }
-
-        it { expect(created_user.number_of_children).to eq(number_of_children) }
-
-        it { expect(created_user.notify_by_sms).to eq(notify_by_sms) }
-
-        it { expect(created_user.notify_by_email).to eq(notify_by_email) }
-
-        it { expect(created_user.responsible).to eq(user_responsible) }
+        it "creates user with expected attributes" do
+          expect(User.count).to eq(user_count_before + 1)
+          expect(created_user.organisations).to contain_exactly(organisation)
+          expect(created_user).to have_attributes(
+            first_name:,
+            last_name:,
+            birth_name:,
+            birth_date: Date.new(1976, 10, 1),
+            email:,
+            phone_number:,
+            address:,
+            caisse_affiliation:,
+            affiliation_number:,
+            family_situation:,
+            number_of_children:,
+            notify_by_sms:,
+            notify_by_email:,
+            responsible: user_responsible
+          )
+        end
       end
 
       response 200, "creates a user with a minimal set of params", document: false do
