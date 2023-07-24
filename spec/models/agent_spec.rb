@@ -49,6 +49,20 @@ describe Agent, type: :model do
     end
   end
 
+  describe "password validations" do
+    let(:organisation) { create(:organisation) }
+
+    let(:agent) do
+      create(:agent, admin_role_in_organisations: [organisation]).reload # The reload makes sure the role is in memory
+    end
+
+    it "has validation for password length" do
+      agent.password = "123"
+      agent.validate
+      expect(agent.errors.count).to eq(1)
+    end
+  end
+
   describe "#available_referents_for" do
     it "returns empty array without agents" do
       user = build(:user, referent_agents: [])

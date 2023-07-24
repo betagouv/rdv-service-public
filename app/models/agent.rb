@@ -56,7 +56,7 @@ class Agent < ApplicationRecord
   has_many :plage_ouvertures, dependent: :destroy
   has_many :absences, dependent: :destroy
   has_many :agents_rdvs, dependent: :destroy
-  has_many :roles, class_name: "AgentRole", dependent: :destroy
+  has_many :roles, class_name: "AgentRole", dependent: :destroy, inverse_of: :agent
   has_many :territorial_roles, class_name: "AgentTerritorialRole", dependent: :destroy
   has_many :sector_attributions, dependent: :destroy
   has_many :agent_teams, dependent: :destroy
