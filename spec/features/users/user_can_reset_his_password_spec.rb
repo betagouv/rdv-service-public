@@ -16,7 +16,13 @@ describe "User resets his password spec" do
     open_email(user.email)
     current_email.click_link("Changer")
     expect(page).to have_content("Définir mon mot de passe")
+
+    fill_in "password", with: "1234567890"
+    expect { click_on "Enregistrer" }.not_to change { user.reload.encrypted_password }
+    expect(page).to have_content("Ce mot de passe fait partie d'une liste de mots de passe fréquemment utilisés")
+
     fill_in "password", with: "correct horse battery staple"
+
     expect { click_on "Enregistrer" }.to change { user.reload.encrypted_password }
     expect(page).to have_content("Votre mot de passe a été édité avec succès")
     expect(page).to have_current_path("/users/rdvs")

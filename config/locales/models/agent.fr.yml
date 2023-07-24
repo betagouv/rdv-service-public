@@ -38,3 +38,4 @@ fr:
           attributes:
             password:
               format: "%{message}"
+              too_common: "Ce mot de passe fait partie d'une liste de mots de passe fréquemment utilisés et ne permet donc pas d'assurer la sécurité de votre compte. Veuillez en choisir un autre."
