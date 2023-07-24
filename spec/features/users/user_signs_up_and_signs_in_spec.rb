@@ -44,7 +44,7 @@ describe "User signs up and signs in" do
       open_email(invited_user.email)
       current_email.click_link "Accepter l'invitation"
       expect(page).to have_content("Inscription")
-      fill_in :password, with: "123456"
+      fill_in :password, with: "correcthorse"
       click_on "Enregistrer"
       expect(page).to have_current_path(root_path, ignore_query: true)
       expect_flash_info(I18n.t("devise.invitations.updated"))
@@ -71,7 +71,7 @@ describe "User signs up and signs in" do
   end
 
   context "if agent goes wrong" do
-    let!(:agent) { create(:agent, password: "123456", basic_role_in_organisations: [create(:organisation)]) }
+    let!(:agent) { create(:agent, password: "correcthorse", basic_role_in_organisations: [create(:organisation)]) }
 
     it ".sign_in as user and be signed in as agent" do
       visit "http://www.rdv-solidarites-test.localhost/"
