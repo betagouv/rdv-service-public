@@ -20,7 +20,7 @@ class Invitation
   end
 
   def user
-    user_by_invitation_token || rdvs_user_by_invitation_token&.user&.user_to_notify
+    user_by_rdv_invitation_token || rdvs_user_by_invitation_token&.user&.user_to_notify
   end
 
   def rdv
@@ -32,7 +32,7 @@ class Invitation
   end
 
   def to_take_rdv?
-    user_by_invitation_token.present?
+    user_by_rdv_invitation_token.present?
   end
 
   def to_edit_rdv?
@@ -43,12 +43,14 @@ class Invitation
     expires_at.blank? || expires_at < Time.zone.now
   end
 
-  def user_by_invitation_token
-    # find_by_invitation_token is a method added by the devise_invitable gem
-    @user_by_invitation_token ||= token.present? ? User.find_by_invitation_token(token, true) : nil
+  def user_by_rdv_invitation_token
+    # We keep the find_by_invitation_token for backward compatibility, remove this after rdvi token migration is done
+    user = User.find_by(rdv_invitation_token: token) || User.find_by_invitation_token(token, true)
+    @user_by_rdv_invitation_token ||= token.present? ? user : nil
   end
 
   def rdvs_user_by_invitation_token
+    # find_by_invitation_token is a method added by the devise_invitable gem
     @rdvs_user_by_invitation_token ||= token.present? ? RdvsUser.find_by_invitation_token(token, true) : nil
   end
 end

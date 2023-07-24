@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_28_075808) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_20_102741) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -663,7 +663,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_28_075808) do
     t.datetime "last_sign_in_at"
     t.string "franceconnect_openid_sub"
     t.boolean "logged_once_with_franceconnect"
-    t.integer "invite_for"
     t.string "city_code"
     t.string "post_code"
     t.string "city_name"
@@ -674,6 +673,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_28_075808) do
     t.integer "logement"
     t.text "notes"
     t.string "ants_pre_demande_number"
+    t.string "rdv_invitation_token"
     t.index ["birth_date"], name: "index_users_on_birth_date"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["created_through"], name: "index_users_on_created_through"
@@ -685,6 +685,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_28_075808) do
     t.index ["invited_by_type", "invited_by_id"], name: "index_users_on_invited_by_type_and_invited_by_id"
     t.index ["last_name"], name: "index_users_on_last_name"
     t.index ["phone_number_formatted"], name: "index_users_on_phone_number_formatted"
+    t.index ["rdv_invitation_token"], name: "index_users_on_rdv_invitation_token", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["responsible_id"], name: "index_users_on_responsible_id"
   end

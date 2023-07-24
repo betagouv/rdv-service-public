@@ -233,17 +233,18 @@ describe "Users API", swagger_doc: "v1/api.json" do
         let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [create(:organisation)]) }
       end
     end
+  end
 
-    post "Récupérer l'invitation d'un usager·ère" do
+  path "/api/v1/users/{user_id}/rdv_invitation_token" do
+    post "Récupérer le token d'invitation à prendre un rdv d'un usager·ère" do
       with_authentication
 
       tags "User", "Invitation"
       produces "application/json"
       operationId "createUserInvitation"
-      description "Renvoie l'URL d'invitation d'un·e usager·ère"
+      description "Renvoie le token d'invitation à prendre rdv de l'usager·ère"
 
       parameter name: :user_id, in: :path, type: :integer, description: "ID de l'usager·ère", example: 123
-      parameter name: :invite_for, in: :query, type: :integer, description: "Durée souhaitée de l'invitation (en secondes)", example: 86_400, required: false
 
       let(:auth_headers) { api_auth_headers_for_agent(agent) }
       let(:"access-token") { auth_headers["access-token"].to_s }
@@ -252,17 +253,14 @@ describe "Users API", swagger_doc: "v1/api.json" do
 
       let!(:user_id) { user.id }
 
-      response 200, "Renvoie l'URL d'invitation de l'usager·ère" do
+      response 200, "Renvoie le token d'invitation à prendre rdv de l'usager·ère" do
         let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [organisation], email: "jean@jacques.fr") }
-        let!(:invite_for) { 86_400 }
 
         run_test!
 
         schema "$ref" => "#/components/schemas/invitation"
 
-        it { expect(parsed_response_body["invitation_url"]).to start_with("http://www.example.com/users/invitation/accept?invitation_token=") }
-
-        it { expect(user.reload.invitation_due_at).to eq(user.invitation_created_at + 24.hours) }
+        it { expect(parsed_response_body["invitation_token"]).to eq(user.reload.rdv_invitation_token) }
 
         it { expect(user.reload.invited_through).to eq("external") }
       end
@@ -273,8 +271,6 @@ describe "Users API", swagger_doc: "v1/api.json" do
         schema "$ref" => "#/components/schemas/invitation"
 
         run_test!
-
-        it { expect(user.reload.invitation_due_at).to eq(user.invitation_created_at + User.invite_for) }
       end
 
       it_behaves_like "an endpoint that returns 401 - unauthorized" do

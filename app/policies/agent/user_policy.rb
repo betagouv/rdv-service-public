@@ -16,6 +16,14 @@ class Agent::UserPolicy < DefaultAgentPolicy
     same_org? && not_deleted?
   end
 
+  alias invite_get? invite?
+
+  def rdv_invitation_token?
+    same_org? && not_deleted?
+  end
+
+  alias invite_post? rdv_invitation_token?
+
   def update?
     same_org? && not_deleted?
   end
