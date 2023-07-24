@@ -3,8 +3,6 @@
 module StrongPasswordConcern
   extend ActiveSupport::Concern
 
-  MIN_PASSWORD_LENGTH = 10
-
   included do
     validate :check_password_is_uncommon
   end
@@ -20,6 +18,6 @@ module StrongPasswordConcern
   end
 
   def common_passwords
-    CommonFrenchPasswords.list.select { |p| p.length >= MIN_PASSWORD_LENGTH }
+    CommonFrenchPasswords.list.select { |p| p.length >= Devise.password_length.first }
   end
 end
