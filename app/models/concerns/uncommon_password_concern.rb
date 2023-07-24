@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module StrongPasswordConcern
+module UncommonPasswordConcern
   extend ActiveSupport::Concern
 
   included do
