@@ -2,7 +2,7 @@
 
 class Api::V1::UsersController < Api::V1::AgentAuthBaseController
   before_action :set_organisation, only: %i[show update]
-  before_action :set_user, only: %i[show update invite_get invite_post rdv_invitation_token]
+  before_action :set_user, only: %i[show update invite_get rdv_invitation_token]
 
   def index
     users = policy_scope(User)
@@ -52,11 +52,6 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
   def rdv_invitation_token
     assign_rdv_invitation_token if @user.rdv_invitation_token.nil?
     render json: { invitation_token: @user.rdv_invitation_token }
-  end
-
-  # Todo remove this method after rdvi migrated to the new rdv_invitation_token endpoint
-  def invite_post
-    rdv_invitation_token
   end
 
   private
