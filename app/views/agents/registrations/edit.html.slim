@@ -14,7 +14,7 @@
   = f.input :password, label: "Nouveau mot de passe", placeholder: "Votre nouveau mot de passe (au moins 10 caractères)"
   .form-text.text-muted.mb-2
     | Laissez ce champ vide si vous ne souhaitez pas changer votre mot de passe.
-  = f.input :current_password, placeholder: "Votre mot de passe (au moins 10 caractères)", required: true, autocomplete: "off"
+  = f.input :current_password, placeholder: "Votre mot de passe actuel", required: true, autocomplete: "off"
   .form-text.text-muted.mb-2
     | Renseignez votre mot de passe actuel pour tout changement.
   .text-right= f.submit "Modifier", class: "btn btn-primary"
