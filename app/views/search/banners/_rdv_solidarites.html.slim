@@ -1,11 +1,10 @@
 - if context.invitation?
-  | Vous avez été invité(e) à prendre&nbsp;
-  span rendez-vous
+  | J'organise mon rendez-vous
 - else
   | Prenez&nbsp;
   span rendez-vous en ligne
-br
-  | avec votre département&nbsp;
-  - if context.departement.present?
-    | le&nbsp;
-    span #{context.departement}
+  br
+    | avec votre département&nbsp;
+    - if context.departement.present?
+      | le&nbsp;
+      span #{context.departement}
