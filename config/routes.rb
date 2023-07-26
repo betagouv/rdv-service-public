@@ -93,6 +93,10 @@ Rails.application.routes.draw do
     get "agents/edit" => "agents/registrations#edit", as: "edit_agent_registration"
     put "agents" => "agents/registrations#update", as: "agent_registration"
     delete "agents" => "agents/registrations#destroy", as: "delete_agent_registration"
+
+    get "agents/mot_de_passe/edit" => "agents/mot_de_passes#edit", as: "edit_agent_mot_de_passes"
+    put "agents/mot_de_passe" => "agents/mot_de_passes#update", as: "agent_mot_de_passes"
+
     namespace :agents do
       resource :preferences, only: %i[show update] do
         post :disable_cnfs_online_booking_banner
