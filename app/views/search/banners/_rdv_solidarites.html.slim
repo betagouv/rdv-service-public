@@ -1,8 +1,6 @@
-- if context.invitation?
-  | J'organise mon rendez-vous
-- else
-  | Prenez&nbsp;
-  span rendez-vous en ligne
+| Prenez&nbsp;
+span rendez-vous en ligne
+- if !context.invitation?
   br
     | avec votre département&nbsp;
     - if context.departement.present?
