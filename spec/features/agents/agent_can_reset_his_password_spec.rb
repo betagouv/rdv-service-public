@@ -24,7 +24,7 @@ describe "Agent resets his password spec" do
     fill_in "password", with: "correct horse battery staple"
     expect { click_on "Enregistrer" }.to change { agent.reload.encrypted_password }
     expect(page).to have_content("Votre mot de passe a été édité avec succès")
-    expect(page).to have_link("Mes organisations")
+    expect(page).to have_link("Vos organisations")
   end
 
   it "works when using the user's password reset form" do
@@ -41,6 +41,6 @@ describe "Agent resets his password spec" do
     fill_in "password", with: "correct horse battery staple"
     expect { click_on "Enregistrer" }.to change { agent.reload.encrypted_password }
     expect(page).to have_content("Votre mot de passe a été édité avec succès")
-    expect(page).to have_link("Mes organisations")
+    expect(page).to have_link("Vos organisations")
   end
 end
