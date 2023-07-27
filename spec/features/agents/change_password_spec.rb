@@ -34,7 +34,7 @@ RSpec.describe "Agents can change their passwords" do
 
     expect { click_button "Enregistrer" }.not_to change { agent.reload.encrypted_password }
 
-    expect(page).to have_content "Ce mot de passe fait partie d'une liste de mots de passe fréquemment utilisés et ne permet donc pas d'assurer la sécurité de votre compte. Veuillez en choisir un autre."
+    expect(page).to have_content "Ce mot de passe fait partie d'une liste de mots de passe fréquemment utilisés et ne permet donc pas d'assurer la sécurité de votre compte."
 
     fill_in "Nouveau mot de passe", with: "correcthorsebattery"
     fill_in "Confirmation du mot de passe", with: "correcthorsebattery"
