@@ -7,33 +7,24 @@ WebMock.disable_net_connect!(allow: [
                                "chromedriver.storage.googleapis.com", # Autorise Chromedrive storage pour l'execution de la CI
                              ])
 
-Capybara.register_driver :chrome_headless do |app|
-  options = ::Selenium::WebDriver::Chrome::Options.new
-  options.add_argument("--headless")
-  options.add_argument("--no-sandbox")
-  options.add_argument("--disable-dev-shm-usage")
-  options.add_argument("--window-size=1400,1400")
-
-  Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
-end
-
-Capybara.javascript_driver = :chrome_headless
-
 Capybara.register_driver :selenium do |app|
-  # these args seem to reduce test flakyness
-  args = %w[headless no-sandbox disable-gpu window-size=1500,1000]
   chrome_bin = ENV.fetch("GOOGLE_CHROME_SHIM", nil)
   binary = chrome_bin if chrome_bin
+  browser_options = Selenium::WebDriver::Chrome::Options.new(
+    # these args seem to reduce test flakyness
+    args: %w[headless no-sandbox disable-gpu disable-dev-shm-usage window-size=1500,1000],
+    "goog:loggingPrefs": { browser: "ALL" },
+    binary: binary
+  )
+
   Capybara::Selenium::Driver.new(
     app,
     browser: :chrome,
-    capabilities: [Selenium::WebDriver::Chrome::Options.new(
-      args: args,
-      binary: binary,
-      "goog:loggingPrefs": { browser: "ALL" }
-    )]
+    options: browser_options
   )
 end
+
+Capybara.javascript_driver = :selenium
 
 Capybara.configure do |config|
   port = 9887 + ENV["TEST_ENV_NUMBER"].to_i

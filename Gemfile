@@ -214,8 +214,6 @@ group :test do
   gem "capybara-email"
   # Automatically create snapshots when Cucumber steps fail with Capybara and Rails
   gem "capybara-screenshot"
-  # Easy download and use of browser drivers.
-  gem "webdrivers"
   # Strategies for cleaning databases. Can be used to ensure a clean slate for testing.
   gem "database_cleaner"
   # Library for stubbing HTTP requests in Ruby.
