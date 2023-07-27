@@ -77,6 +77,8 @@ gem "omniauth-rails_csrf_protection"
 gem "pundit"
 # Token based authentication for rails. Uses Devise + OmniAuth.
 gem "devise_token_auth"
+# List of frequently used passwords
+gem "common_french_passwords"
 
 # Jobs
 # A multithreaded, Postgres-based ActiveJob backend for Ruby on Rails

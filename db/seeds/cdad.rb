@@ -45,7 +45,7 @@ cdad_agent = Agent.new(
   uid: "secretariat@cdad.fr",
   first_name: "Secre",
   last_name: "Tariat",
-  password: "123456",
+  password: "lapinlapin",
   service_id: service_cdad.id,
   invitation_accepted_at: 10.days.ago,
   roles_attributes: [

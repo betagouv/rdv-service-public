@@ -32,3 +32,16 @@ fr:
       agent/display_saturdays:
         true: "Afficher les samedis"
         false: "Ne pas afficher les samedis"
+    errors:
+      models:
+        agent:
+          attributes:
+            password:
+              format: "%{message}"
+              too_common: "Ce mot de passe fait partie d'une liste de mots de passe fréquemment utilisés et ne permet donc pas d'assurer la sécurité de votre compte. Veuillez en choisir un autre."
+              too_short:
+                other: "Pour assurer la sécurité de votre compte, votre mot de passe doit faire au moins %{count} caractères"
+        agent/roles/agent:
+          attributes:
+            password:
+              format: "%{message}"
