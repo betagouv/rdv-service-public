@@ -29,7 +29,7 @@ module Agent::CustomDeviseTokenAuthUserOmniauthCallbacks
 
   def password_required?
     return false if all_roles_intervenant?
-    super
+    super # Cette méthode est aussi implémentée par Devise::Models::Validatable, et utilisée pour vérifier les confirmations de mot de passe
   end
 
   def email_required?
