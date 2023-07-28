@@ -24,7 +24,10 @@ module UserRdvWizard
           rdv_defaults
             .merge(@attributes.slice(:starts_at, :user_ids, :motif_id))
         )
-        @rdv.duration_in_min ||= @rdv.motif.default_duration_in_min if @rdv.motif.present?
+        if @rdv.motif.present?
+          users_count = @attributes.fetch(:users_count, 1).to_i
+          @rdv.duration_in_min ||= @rdv.motif.default_duration_in_min * users_count
+        end
       end
     end
 

@@ -35,21 +35,21 @@ describe "ANTS API: availableTimeSlots" do
         lieu1.id.to_s => [
           {
             datetime: "2022-11-01T09:00Z",
-            callback_url: creneaux_url(starts_at: "2022-11-01 09:00", lieu_id: lieu1.id, motif_id: motif.id, public_link_organisation_id: organisation.id),
+            callback_url: creneaux_url(starts_at: "2022-11-01 09:00", lieu_id: lieu1.id, motif_id: motif.id, public_link_organisation_id: organisation.id, users_count: 1),
           },
           {
             datetime: "2022-11-01T09:30Z",
-            callback_url: creneaux_url(starts_at: "2022-11-01 09:30", lieu_id: lieu1.id, motif_id: motif.id, public_link_organisation_id: organisation.id),
+            callback_url: creneaux_url(starts_at: "2022-11-01 09:30", lieu_id: lieu1.id, motif_id: motif.id, public_link_organisation_id: organisation.id, users_count: 1),
           },
         ],
         lieu2.id.to_s => [
           {
             datetime: "2022-11-02T12:00Z",
-            callback_url: creneaux_url(starts_at: "2022-11-02 12:00", lieu_id: lieu2.id, motif_id: motif2.id, public_link_organisation_id: organisation2.id),
+            callback_url: creneaux_url(starts_at: "2022-11-02 12:00", lieu_id: lieu2.id, motif_id: motif2.id, public_link_organisation_id: organisation2.id, users_count: 1),
           },
           {
             datetime: "2022-11-02T12:30Z",
-            callback_url: creneaux_url(starts_at: "2022-11-02 12:30", lieu_id: lieu2.id, motif_id: motif2.id, public_link_organisation_id: organisation2.id),
+            callback_url: creneaux_url(starts_at: "2022-11-02 12:30", lieu_id: lieu2.id, motif_id: motif2.id, public_link_organisation_id: organisation2.id, users_count: 1),
           },
         ],
       }.with_indifferent_access
@@ -67,14 +67,14 @@ describe "ANTS API: availableTimeSlots" do
           lieu1.id.to_s => [
             {
               datetime: "2022-11-01T09:00Z",
-              callback_url: creneaux_url(starts_at: "2022-11-01 09:00", lieu_id: lieu1.id, motif_id: motif.id, public_link_organisation_id: organisation.id),
-            }
+              callback_url: creneaux_url(starts_at: "2022-11-01 09:00", lieu_id: lieu1.id, motif_id: motif.id, public_link_organisation_id: organisation.id, users_count: participants_count),
+            },
           ],
           lieu2.id.to_s => [
             {
               datetime: "2022-11-02T12:00Z",
-              callback_url: creneaux_url(starts_at: "2022-11-02 12:00", lieu_id: lieu2.id, motif_id: motif2.id, public_link_organisation_id: organisation2.id),
-            }
+              callback_url: creneaux_url(starts_at: "2022-11-02 12:00", lieu_id: lieu2.id, motif_id: motif2.id, public_link_organisation_id: organisation2.id, users_count: participants_count),
+            },
           ],
         }.with_indifferent_access
       )

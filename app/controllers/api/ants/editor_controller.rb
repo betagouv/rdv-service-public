@@ -34,7 +34,8 @@ class Api::Ants::EditorController < Api::Ants::BaseController
             starts_at: creneau.starts_at.strftime("%Y-%m-%d %H:%M"),
             lieu_id: lieu.id,
             motif_id: motif.id,
-            public_link_organisation_id: lieu.organisation.id
+            public_link_organisation_id: lieu.organisation.id,
+            users_count: users_count
           ),
         }
       end
@@ -85,7 +86,7 @@ class Api::Ants::EditorController < Api::Ants::BaseController
   end
 
   def users_count
-    (params[:documents_number] || 1).to_i
+    params.fetch(:documents_number, 1).to_i
   end
 
   def check_required_params!

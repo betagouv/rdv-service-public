@@ -5,7 +5,7 @@ class Users::RdvWizardStepsController < UserAuthController
   EXTRA_PERMITTED_PARAMS = [
     :lieu_id, :departement, :where, :created_user_id, :latitude, :longitude, :city_code, :rdv_collectif_id,
     :street_ban_id, :address, :motif_search_terms, :user_selected_organisation_id,
-    :public_link_organisation_id,
+    :public_link_organisation_id, :users_count,
     { organisation_ids: [], referent_ids: [], external_organisation_ids: [] },
   ].freeze
   after_action :allow_iframe
