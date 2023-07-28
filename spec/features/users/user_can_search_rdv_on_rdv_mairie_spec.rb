@@ -45,7 +45,7 @@ describe "User can search rdv on rdv mairie" do
     )
   end
 
-  it "allows booking a rdv through the full lifecycle of api calls" do
+  it "allows booking a rdv through the full lifecycle of api calls", js: true do
     visit api_ants_getManagedMeetingPoints_url
     lieux_ids = json_response.map { |lieu_data| lieu_data["id"] }
     expect(lieux_ids).to eq([lieu.id.to_s])
@@ -98,9 +98,24 @@ describe "User can search rdv on rdv mairie" do
       "Ce numéro de pré-demande ANTS est déjà utilisé pour un RDV auprès de Mairie de Sannois. Veuillez annuler ce RDV avant d'en prendre un nouveau"
     )
     click_button("Confirmer en ignorant les avertissements")
-    click_button("Continuer")
+
+    add_relative
+
     click_link("Confirmer mon RDV")
     expect(page).to have_content("Votre rendez vous a été confirmé.")
     expect(user.reload.ants_pre_demande_number).to eq(ants_pre_demande_number)
+  end
+
+  private
+
+  def add_relative
+    click_link("Ajouter un proche")
+    fill_in("user_first_name", with: "Alain")
+    fill_in("user_last_name", with: "Mairie")
+    fill_in("user_ants_pre_demande_number", with: "5544332211")
+    click_button("Enregistrer")
+    expect(page).to have_content("Alain MAIRIE")
+    expect(User.exists?(first_name: "Alain", last_name: "Mairie", ants_pre_demande_number: "5544332211")).to eq(true)
+    click_button("Continuer")
   end
 end
