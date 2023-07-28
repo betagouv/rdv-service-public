@@ -42,6 +42,8 @@ class Api::Ants::EditorController < Api::Ants::BaseController
   end
 
   def creneaux(lieu, motif)
+    motif.default_duration_in_min = motif.default_duration_in_min * users_count
+
     Users::CreneauxSearch.new(
       lieu: lieu,
       user: @current_user,
@@ -80,6 +82,10 @@ class Api::Ants::EditorController < Api::Ants::BaseController
       zip_code: zip_code,
       city_name: city_name,
     }
+  end
+
+  def users_count
+    (params[:documents_number] || 1).to_i
   end
 
   def check_required_params!

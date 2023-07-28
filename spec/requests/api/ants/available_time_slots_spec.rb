@@ -55,4 +55,29 @@ describe "ANTS API: availableTimeSlots" do
       }.with_indifferent_access
     )
   end
+
+  context "there's more than 1 participant" do
+    let(:participants_count) { 2 }
+
+    it "returns slots with a duration matching the number of participants" do
+      get "/api/ants/availableTimeSlots?meeting_point_ids=#{lieu1.id}&meeting_point_ids=#{lieu2.id}&start_date=2022-11-01&end_date=2022-11-02&documents_number=#{participants_count}&reason=CNI"
+
+      expect(JSON.parse(response.body)).to eq(
+        {
+          lieu1.id.to_s => [
+            {
+              datetime: "2022-11-01T09:00Z",
+              callback_url: creneaux_url(starts_at: "2022-11-01 09:00", lieu_id: lieu1.id, motif_id: motif.id, public_link_organisation_id: organisation.id),
+            }
+          ],
+          lieu2.id.to_s => [
+            {
+              datetime: "2022-11-02T12:00Z",
+              callback_url: creneaux_url(starts_at: "2022-11-02 12:00", lieu_id: lieu2.id, motif_id: motif2.id, public_link_organisation_id: organisation2.id),
+            }
+          ],
+        }.with_indifferent_access
+      )
+    end
+  end
 end
