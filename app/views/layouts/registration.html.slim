@@ -28,15 +28,15 @@ html lang="fr"
                 .d-flex.flex-row.justify-content-center
                   ul.list-unstyled.text-left.text-white
                     li
-                      h5= link_to "Mon compte", edit_agent_registration_path
+                      h5= link_to "Votre compte", edit_agent_registration_path
                     li
                       h5= link_to t("agents.preferences.show.title"), agents_preferences_path
                     li
                       h5= link_to "Synchronisation d'agenda", agents_calendar_sync_path
                     li
-                      h5= link_to "Mes organisations", admin_organisations_path
+                      h5= link_to "Vos organisations", admin_organisations_path
                     li
-                      h5= link_to "Me déconnecter", destroy_agent_session_path, method: :delete
+                      h5= link_to "Se déconnecter", destroy_agent_session_path, method: :delete
               - else
                 h4.mb-3 Prenez RDV en ligne avec votre département !
 

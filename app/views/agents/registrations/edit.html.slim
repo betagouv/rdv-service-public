@@ -7,13 +7,13 @@
     .form-text.text-muted
       | En attente de confirmation pour #{resource.unconfirmed_email}
 
+  = f.input :password, disabled: true, input_html: { value: "**********" }
+  = link_to("Changer de mot de passe", edit_agent_mot_de_passes_path, class: "mb-2")
+
   = f.input :first_name, placeholder: "Prénom"
   = f.input :last_name, placeholder: "Nom"
   = f.association :service, collection: [resource.service], hint: "Vous ne pouvez pas changer de service, cela créerait des incohérences. Si vous voulez vraiment réaliser cette opération, il faut supprimer votre compte et vous faire réinviter, ou bien vous créer un deuxième compte avec une autre adresse email.", disabled: true
 
-  = f.input :password, label: "Nouveau mot de passe", placeholder: "Votre nouveau mot de passe (au moins #{Devise.password_length.first} caractères)"
-  .form-text.text-muted.mb-2
-    | Laissez ce champ vide si vous ne souhaitez pas changer votre mot de passe.
   = f.input :current_password, placeholder: "Votre mot de passe actuel", required: true, autocomplete: "off"
   .form-text.text-muted.mb-2
     | Renseignez votre mot de passe actuel pour tout changement.
