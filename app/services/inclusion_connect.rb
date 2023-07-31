@@ -68,7 +68,9 @@ module InclusionConnect
       agent.update!(
         first_name: user_info["given_name"],
         last_name: user_info["family_name"],
-        confirmed_at: Time.zone.now
+        confirmed_at: Time.zone.now,
+        last_sign_in_at: Time.zone.now,
+        invitation_accepted_at: agent.invitation_accepted_at || Time.zone.now
       )
       agent
     end
