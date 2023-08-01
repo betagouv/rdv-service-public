@@ -4,35 +4,38 @@
 
 # This is an override of the default concern : DeviseTokenAuth::Concerns::UserOmniauthCallbacks
 # Changes :
-# Add `&& !all_roles_intervenant?` condition to the included validations
+# Add `&& !is_an_intervenant?` condition to the included validations
 module Agent::CustomDeviseTokenAuthUserOmniauthCallbacks
   extend ActiveSupport::Concern
 
   included do
-    validates :email, presence: true, if: lambda { uid_and_provider_defined? && email_provider? && !all_roles_intervenant? }
-    validates :email, :devise_token_auth_email => true, allow_nil: true, allow_blank: true, if: lambda { uid_and_provider_defined? && email_provider? && !all_roles_intervenant? }
-    validates_presence_of :uid, if: lambda { uid_and_provider_defined? && !email_provider? && !all_roles_intervenant? }
+    validates :email, presence: true, if: lambda { uid_and_provider_defined? && email_provider? && !is_an_intervenant? }
+    validates :email, :devise_token_auth_email => true, allow_nil: true, allow_blank: true, if: lambda { uid_and_provider_defined? && email_provider? && !is_an_intervenant? }
+    validates_presence_of :uid, if: lambda { uid_and_provider_defined? && !email_provider? && !is_an_intervenant? }
 
     # only validate unique emails among email registration users
-    validates :email, uniqueness: { case_sensitive: false, scope: :provider }, on: :create, if: lambda { uid_and_provider_defined? && email_provider? && !all_roles_intervenant? }
+    validates :email, uniqueness: { case_sensitive: false, scope: :provider }, on: :create, if: lambda { uid_and_provider_defined? && email_provider? && !is_an_intervenant? }
 
     # keep uid in sync with email
     before_save :sync_uid
     before_create :sync_uid
   end
 
-  def all_roles_intervenant?
-    @all_roles_intervenant ||= roles.present? && roles.to_a.all? { |role| role.access_level == "intervenant" }
+  def is_an_intervenant?
+    # Intervenant is an agent with no email and only one role in one organisation (validation in AgentRole model)
+    # TODO: Avoir une réflexion globale sur l'authentification des agents et des users.
+    # TODO: Penser à la mise en place de nouveaux models UserAccount et AgentAccount
+    @is_an_intervenant ||= roles.present? && roles.one? && roles.first.access_level == "intervenant"
   end
 
   protected
 
   def password_required?
-    false if all_roles_intervenant?
+    super && !is_an_intervenant?
   end
 
   def email_required?
-    false if all_roles_intervenant?
+    super && !is_an_intervenant?
   end
 
   def uid_and_provider_defined?

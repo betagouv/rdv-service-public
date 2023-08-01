@@ -2,6 +2,7 @@
 
 class AgentRole < ApplicationRecord
   include WebhookDeliverable
+  include AgentRole::AccessLevelChangeable
 
   has_paper_trail
 
@@ -10,6 +11,7 @@ class AgentRole < ApplicationRecord
   ACCESS_LEVEL_ADMIN = "admin"
   ACCESS_LEVEL_INTERVENANT = "intervenant"
   ACCESS_LEVELS = [ACCESS_LEVEL_BASIC, ACCESS_LEVEL_ADMIN].freeze
+  ACCESS_LEVELS_WITH_INTERVENANT = [ACCESS_LEVEL_BASIC, ACCESS_LEVEL_ADMIN, ACCESS_LEVEL_INTERVENANT].freeze
 
   enum access_level: {
     basic: "basic", # Basic Role
@@ -28,9 +30,8 @@ class AgentRole < ApplicationRecord
 
   # Validation
   validate :organisation_cannot_change
-  validate :intervenant_cannot_change
-  validate :cannot_change_to_intervenant
   validate :organisation_have_at_least_one_admin
+  validate :single_organisation_for_intervenant
   # Customize the uniqueness error message. This class needs to be declared before the validates :agent, uniqueness: line.
   class UniquenessValidator < ActiveRecord::Validations::UniquenessValidator
     def validate_each(record, attribute, value)
@@ -66,15 +67,9 @@ class AgentRole < ApplicationRecord
     errors.add(:organisation_id, "Vous ne pouvez pas changer ce rôle d'organisation")
   end
 
-  def intervenant_cannot_change
-    if access_level_was.in?("intervenant") && access_level_changed? && !new_record?
-      errors.add(:access_level, "Vous ne pouvez pas changer le rôle d'un intervenant")
-    end
-  end
-
-  def cannot_change_to_intervenant
-    if !access_level_was.in?("intervenant") && intervenant? && !new_record?
-      errors.add(:access_level, "Vous ne pouvez pas changer pour le rôle d'intervenant")
+  def single_organisation_for_intervenant
+    if intervenant? && agent.roles.count > 1
+      errors.add(:access_level, "Un intervenant ne peut pas faire partie de plusieurs organisations")
     end
   end
 
