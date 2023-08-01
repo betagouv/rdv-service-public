@@ -61,6 +61,7 @@ class Admin::AgentRolesController < AgentAuthController
   end
 
   def process_role_change_to_intervenant
+    agent = @agent_role.agent
     @agent_role.assign_attributes(agent_role_params)
     if @agent_role.change_to_intervenant
       flash[:notice] = I18n.t "activerecord.notice.models.agent_role.updated"

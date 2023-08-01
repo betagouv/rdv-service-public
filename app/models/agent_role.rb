@@ -31,7 +31,7 @@ class AgentRole < ApplicationRecord
   # Validation
   validate :organisation_cannot_change
   validate :organisation_have_at_least_one_admin
-  validate :single_organisation_for_intervenant
+
   # Customize the uniqueness error message. This class needs to be declared before the validates :agent, uniqueness: line.
   class UniquenessValidator < ActiveRecord::Validations::UniquenessValidator
     def validate_each(record, attribute, value)
@@ -65,12 +65,6 @@ class AgentRole < ApplicationRecord
     return if !organisation_id_changed? || new_record?
 
     errors.add(:organisation_id, "Vous ne pouvez pas changer ce rôle d'organisation")
-  end
-
-  def single_organisation_for_intervenant
-    if intervenant? && agent.roles.count > 1
-      errors.add(:access_level, "Un intervenant ne peut pas faire partie de plusieurs organisations")
-    end
   end
 
   def organisation_have_at_least_one_admin

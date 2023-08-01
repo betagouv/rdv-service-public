@@ -4,6 +4,13 @@ module AgentRole::AccessLevelChangeable
   extend ActiveSupport::Concern
 
   def change_to_intervenant
+    # Verificaton que l'agent n'est pas présent dans une autre organisation
+    if agent.organisations.count > 1
+      errors.add(:base, "Un intervenant ne peut pas faire partie de plusieurs organisations")
+      return false
+    end
+
+    # On reset les champs d'invitation pour que l'agent soit invité à nouveau
     reset_agent_email_and_password
     reset_agent_invitation_fields
     assign_role_from_agent && agent.save!
