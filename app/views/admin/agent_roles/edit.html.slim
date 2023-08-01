@@ -27,7 +27,7 @@
             hint: "Les agents peuvent avoir des permissions différentes sur chaque organisation.", \
             as: :radio_buttons
           = f.simple_fields_for :agent do |af|
-            = af.input :email, as: :email, label: "Email d'invitation de l'agent", wrapper_html: { style: 'display:none;', id: 'agent_email_input' }
+            = af.input :email, as: :email, label: "Email d'invitation de l'agent", wrapper_html: { style: "display:none;", id: "agent_email_input" }
           - # rubocop:enable Rails/OutputSafety
 
           .row
