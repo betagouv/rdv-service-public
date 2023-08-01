@@ -42,7 +42,6 @@ class Admin::AgentRolesController < AgentAuthController
       flash[:notice] = I18n.t "activerecord.notice.models.agent_role.updated"
       redirect_to admin_organisation_agents_path(current_organisation)
     else
-      flash[:error] = @agent_role.errors.full_messages.to_sentence
       render :edit
     end
   end
@@ -55,19 +54,16 @@ class Admin::AgentRolesController < AgentAuthController
       flash[:notice] = I18n.t "activerecord.notice.models.agent_role.invited", email: agent.email
       redirect_to admin_organisation_invitations_path(current_organisation)
     else
-      flash[:error] = @agent_role.errors.full_messages.to_sentence + agent.errors.full_messages.to_sentence
       render :edit
     end
   end
 
   def process_role_change_to_intervenant
-    agent = @agent_role.agent
     @agent_role.assign_attributes(agent_role_params)
     if @agent_role.change_to_intervenant
       flash[:notice] = I18n.t "activerecord.notice.models.agent_role.updated"
       redirect_to admin_organisation_invitations_path(current_organisation)
     else
-      flash[:error] = @agent_role.errors.full_messages.to_sentence + agent.errors.full_messages.to_sentence
       render :edit
     end
   end

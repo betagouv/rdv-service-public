@@ -4,13 +4,11 @@ module AgentRole::AccessLevelChangeable
   extend ActiveSupport::Concern
 
   def change_to_intervenant
-    # Verificaton que l'agent n'est pas présent dans une autre organisation
     if agent.organisations.count > 1
       errors.add(:base, "Un intervenant ne peut pas faire partie de plusieurs organisations")
       return false
     end
 
-    # On reset les champs d'invitation pour que l'agent soit invité à nouveau
     reset_agent_email_and_password
     reset_agent_invitation_fields
     assign_role_from_agent && agent.save!
@@ -28,10 +26,13 @@ module AgentRole::AccessLevelChangeable
     # Devise va essayer de confirmer l'agent car il y a un changement d'email hors on passe d'agent à intervenant, d'un email nil à un email d'invitation.
     # On skip donc la confirmation car on souhaite l'inviter
     agent.skip_confirmation_notification!
-    return false unless agent.update(email: invitation_email, uid: invitation_email)
-
-    agent.confirm
-    true
+    if agent.update(email: invitation_email, uid: invitation_email)
+      agent.confirm
+      true
+    else
+      errors.add(:base, agent.errors.full_messages.uniq.to_sentence)
+      false
+    end
   end
 
   def assign_role_from_agent
