@@ -35,6 +35,7 @@ module Agent::CustomDeviseTokenAuthUserOmniauthCallbacks
   end
 
   def email_required?
+    # Cette méthode est aussi implémentée par Devise::Models::Validatable, et utilisée pour vérifier les confirmations de mot de passe
     super && !is_an_intervenant?
   end
 

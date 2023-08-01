@@ -16,8 +16,8 @@ FactoryBot.define do
     end
     birth_date { Date.parse("1985-07-20") }
     address { "20 avenue de Ségur, Paris" }
-    password { "12345678" }
-    password_confirmation { "12345678" }
+    password { "correcthorse" }
+    password_confirmation { "correcthorse" }
     confirmed_at { Time.zone.now }
     caisse_affiliation { "caf" }
     affiliation_number { "39012093812038" }

@@ -34,6 +34,8 @@ describe InclusionConnectController, type: :controller do
       expect(agent.first_name).to eq("Bob")
       expect(agent.last_name).to eq("Eponge")
       expect(agent.confirmed_at).to be_within(10.seconds).of(now)
+      expect(agent.invitation_accepted_at).to be_within(10.seconds).of(now)
+      expect(agent.last_sign_in_at).to be_within(10.seconds).of(now)
     end
 
     it "returns an error if state doesn't match" do
