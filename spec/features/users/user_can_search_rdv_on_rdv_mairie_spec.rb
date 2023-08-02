@@ -65,7 +65,7 @@ describe "User can search rdv on rdv mairie" do
         lieu.id.to_s => [
           {
             "datetime" => time.strftime("%Y-%m-%dT%H:%MZ"),
-            "callback_url" => creneaux_url(starts_at: time.strftime("%Y-%m-%d %H:%M"), lieu_id: lieu.id, motif_id: passport_motif.id, public_link_organisation_id: organisation.id, users_count: 2),
+            "callback_url" => creneaux_url(starts_at: time.strftime("%Y-%m-%d %H:%M"), lieu_id: lieu.id, motif_id: passport_motif.id, public_link_organisation_id: organisation.id, duration: 50),
           },
         ],
       }
