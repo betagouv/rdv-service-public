@@ -60,9 +60,9 @@ class Admin::AgentRolesController < AgentAuthController
 
   def process_role_change_to_intervenant
     @agent_role.assign_attributes(agent_role_params)
-    if @agent_role.change_to_intervenant
+    if @agent_role.change_role_to_intervenant
       flash[:notice] = I18n.t "activerecord.notice.models.agent_role.updated"
-      redirect_to admin_organisation_invitations_path(current_organisation)
+      redirect_to admin_organisation_agents_path(current_organisation)
     else
       render :edit
     end

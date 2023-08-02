@@ -3,9 +3,9 @@
 module AgentRole::AccessLevelChangeable
   extend ActiveSupport::Concern
 
-  def change_to_intervenant
+  def change_role_to_intervenant
     if agent.organisations.count > 1
-      errors.add(:base, "Un intervenant ne peut pas faire partie de plusieurs organisations")
+      errors.add(:base, "Un agent membre de plusieurs organisations ne peut pas avoir un statut d'intervenant")
       return false
     end
 
@@ -15,6 +15,11 @@ module AgentRole::AccessLevelChangeable
   end
 
   def change_role_from_intervenant_and_invite(current_agent, invitation_email)
+    if invitation_email.blank?
+      errors.add(:base, "L'email d'invitation doit être rempli")
+      return false
+    end
+
     update_agent_and_confirm(invitation_email) &&
       assign_role_from_agent &&
       agent.invite!(current_agent)
