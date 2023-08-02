@@ -63,8 +63,8 @@ all_cdad_agent.territorial_roles.create!(territory: territory_gironde)
 cdad1_agent = Agent.new(
   email: "cdad1@cdad.fr",
   uid: "cdad1@cdad.fr",
-  first_name: "Secre",
-  last_name: "Tariat",
+  first_name: "Basic",
+  last_name: "CDAD1",
   password: "lapinlapin",
   service_id: service_cdad.id,
   invitation_accepted_at: 10.days.ago,
@@ -82,8 +82,8 @@ cdad1_agent.territorial_roles.create!(territory: territory_gironde)
 cdad1_admin = Agent.new(
   email: "cdad1_admin@cdad.fr",
   uid: "cdad1_admin@cdad.fr",
-  first_name: "Secre",
-  last_name: "Tariat",
+  first_name: "Admin",
+  last_name: "CDAD1",
   password: "lapinlapin",
   service_id: service_cdad.id,
   invitation_accepted_at: 10.days.ago,
@@ -101,8 +101,8 @@ cdad1_admin.territorial_roles.create!(territory: territory_gironde)
 cdad2_agent = Agent.new(
   email: "cdad2@cdad.fr",
   uid: "cdad2@cdad.fr",
-  first_name: "Secre",
-  last_name: "Tariat",
+  first_name: "Basic",
+  last_name: "CDAD2",
   password: "lapinlapin",
   service_id: service_cdad.id,
   invitation_accepted_at: 10.days.ago,
@@ -120,8 +120,8 @@ cdad2_agent.territorial_roles.create!(territory: territory_gironde)
 cdad2_admin = Agent.new(
   email: "cdad2_admin@cdad.fr",
   uid: "cdad2_admin@cdad.fr",
-  first_name: "Secre",
-  last_name: "Tariat",
+  first_name: "Admin",
+  last_name: "CDAD2",
   password: "lapinlapin",
   service_id: service_cdad.id,
   invitation_accepted_at: 10.days.ago,
