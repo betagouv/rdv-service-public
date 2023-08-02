@@ -1,6 +1,6 @@
 | Prenez&nbsp;
 span rendez-vous en ligne
-- if !context.invitation?
+- unless context.invitation?
   br
     | avec votre département&nbsp;
     - if context.departement.present?
