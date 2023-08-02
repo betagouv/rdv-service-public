@@ -80,7 +80,7 @@ module AgentsHelper
 
   def access_levels_collection
     # For CDAD Expe
-    if current_organisation.territory_id == 59 || Rails.env.development?
+    if current_organisation.territory_id == 59 || Rails.env.development? || ENV["RDV_SOLIDARITES_INSTANCE_NAME"] == "DEMO"
       AgentRole::ACCESS_LEVELS_WITH_INTERVENANT
     else
       AgentRole::ACCESS_LEVELS
