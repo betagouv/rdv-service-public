@@ -54,7 +54,7 @@ module SearchContextHelper
       referent_ids: params[:referent_ids],
       external_organisation_ids: params[:external_organisation_ids],
       prescripteur: params[:prescripteur],
-      duration: params[:duration]
+      duration: params[:duration],
     }
   end
 end
