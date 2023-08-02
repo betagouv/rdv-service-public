@@ -11,7 +11,7 @@ module AgentRole::AccessLevelChangeable
 
     reset_agent_email_and_password
     reset_agent_invitation_fields
-    assign_role_from_agent && agent.save!
+    assign_role_from_agent && agent.save
   end
 
   def change_role_from_intervenant_and_invite(current_agent, invitation_email)
