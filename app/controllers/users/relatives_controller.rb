@@ -52,6 +52,6 @@ class Users::RelativesController < UserAuthController
   end
 
   def user_params
-    params.require(:user).permit(:first_name, :last_name, :birth_date)
+    params.require(:user).permit(:first_name, :last_name, :birth_date, :ants_pre_demande_number)
   end
 end
