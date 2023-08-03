@@ -93,6 +93,8 @@ class Api::Ants::EditorController < Api::Ants::BaseController
     }
   end
 
+  # Cette méthode change en mémoire, la durée par défaut du motif
+  # Cela permet de rechercher des créneaux d'une durée adaptée au nombre de participants au Rdv
   def rdv_duration(motif)
     users_count = params.fetch(:documents_number, 1).to_i
     # Le reload permet d'eviter des side-effects du fait que nous modifions motif#reload.default_duration_in_min en memoire
