@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module AgentRole::AccessLevelChangeable
+module AgentRole::IntervenantRoleChangeable
   extend ActiveSupport::Concern
 
   def change_role_to_intervenant

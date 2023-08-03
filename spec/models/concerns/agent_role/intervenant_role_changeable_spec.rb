@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe AgentRole::AccessLevelChangeable, type: :concern do
+describe AgentRole::IntervenantRoleChangeable, type: :concern do
   let!(:organisation) { create(:organisation) }
   let!(:current_agent) { create(:agent, admin_role_in_organisations: [organisation]) }
 

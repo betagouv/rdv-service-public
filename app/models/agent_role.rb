@@ -2,7 +2,7 @@
 
 class AgentRole < ApplicationRecord
   include WebhookDeliverable
-  include AgentRole::AccessLevelChangeable
+  include AgentRole::IntervenantRoleChangeable
 
   has_paper_trail
 
