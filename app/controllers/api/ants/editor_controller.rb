@@ -15,6 +15,14 @@ class Api::Ants::EditorController < Api::Ants::BaseController
     render json: lieux.where(id: meeting_point_ids).to_h { |lieu| [lieu.id, time_slots(lieu, params[:reason])] }
   end
 
+  def search_application_ids
+    # On ne peut pas utiliser params[:application_ids] car l'ants passe une liste de paramètres sans crochets.
+    # Autrement dit, ils utilisent la syntaxe application_ids=1&application_ids=2 pour envoyer un tableau d'ids
+    application_ids = request.query_string.scan(/application_ids=(\d+)/).flatten
+
+    render json: application_ids.index_with { |_application_id| [] }
+  end
+
   CNI_MOTIF_CATEGORY_NAME = "Carte d'identité disponible sur le site de l'ANTS"
   PASSPORT_MOTIF_CATEGORY_NAME = "Passeport disponible sur le site de l'ANTS"
   CNI_AND_PASSPORT_MOTIF_CATEGORY_NAME = "Carte d'identité et passeport disponible sur le site de l'ANTS"
