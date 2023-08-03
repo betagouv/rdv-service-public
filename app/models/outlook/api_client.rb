@@ -91,7 +91,7 @@ module Outlook
       refresh_token_response = JSON.parse(refresh_token_query.response_body)
 
       if refresh_token_response["error"].present?
-        Sentry.capture_message("Error refreshing Microsoft Graph Token for #{email}: #{refresh_token_response['error_description']}")
+        Sentry.capture_message("Error refreshing Microsoft Graph Token for #{@agent.email}: #{refresh_token_response['error_description']}")
       elsif refresh_token_response["access_token"].present?
         @agent.update!(microsoft_graph_token: refresh_token_response["access_token"])
       end
