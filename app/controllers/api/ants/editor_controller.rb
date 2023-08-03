@@ -15,6 +15,14 @@ class Api::Ants::EditorController < Api::Ants::BaseController
     render json: lieux.where(id: meeting_point_ids).to_h { |lieu| [lieu.id, time_slots(lieu, params[:reason])] }
   end
 
+  def search_application_ids
+    # On ne peut pas utiliser params[:application_ids] car l'ants passe une liste de paramètres sans crochets.
+    # Autrement dit, ils utilisent la syntaxe application_ids=1&application_ids=2 pour envoyer un tableau d'ids
+    application_ids = request.query_string.scan(/application_ids=(\d+)/).flatten
+
+    render json: application_ids.index_with { |_application_id| [] }
+  end
+
   CNI_MOTIF_CATEGORY_NAME = "Carte d'identité disponible sur le site de l'ANTS"
   PASSPORT_MOTIF_CATEGORY_NAME = "Passeport disponible sur le site de l'ANTS"
   CNI_AND_PASSPORT_MOTIF_CATEGORY_NAME = "Carte d'identité et passeport disponible sur le site de l'ANTS"
@@ -34,7 +42,8 @@ class Api::Ants::EditorController < Api::Ants::BaseController
             starts_at: creneau.starts_at.strftime("%Y-%m-%d %H:%M"),
             lieu_id: lieu.id,
             motif_id: motif.id,
-            public_link_organisation_id: lieu.organisation.id
+            public_link_organisation_id: lieu.organisation.id,
+            duration: rdv_duration(motif)
           ),
         }
       end
@@ -42,6 +51,8 @@ class Api::Ants::EditorController < Api::Ants::BaseController
   end
 
   def creneaux(lieu, motif)
+    motif.default_duration_in_min = rdv_duration(motif)
+
     Users::CreneauxSearch.new(
       lieu: lieu,
       user: @current_user,
@@ -80,6 +91,13 @@ class Api::Ants::EditorController < Api::Ants::BaseController
       zip_code: zip_code,
       city_name: city_name,
     }
+  end
+
+  def rdv_duration(motif)
+    users_count = params.fetch(:documents_number, 1).to_i
+    # Le reload permet d'eviter des side-effects du fait que nous modifions motif#reload.default_duration_in_min en memoire
+    # Voir la méthode #creneaux plus haut
+    motif.reload.default_duration_in_min * users_count
   end
 
   def check_required_params!

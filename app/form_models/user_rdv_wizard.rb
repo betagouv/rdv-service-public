@@ -24,7 +24,7 @@ module UserRdvWizard
           rdv_defaults
             .merge(@attributes.slice(:starts_at, :user_ids, :motif_id))
         )
-        @rdv.duration_in_min ||= @rdv.motif.default_duration_in_min if @rdv.motif.present?
+        @rdv.duration_in_min = @attributes[:duration]&.to_i || @rdv.motif&.default_duration_in_min
       end
     end
 
@@ -41,9 +41,12 @@ module UserRdvWizard
     end
 
     def creneau
+      motif = @rdv.motif
+      motif.default_duration_in_min = @attributes[:duration].to_i if @attributes[:duration]
+
       @creneau ||= Users::CreneauSearch.creneau_for(
         user: @user,
-        motif: @rdv.motif,
+        motif: motif,
         lieu: lieu,
         starts_at: @rdv.starts_at,
         geo_search: geo_search
