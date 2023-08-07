@@ -91,9 +91,9 @@ module Outlook
       refresh_token_response = JSON.parse(refresh_token_query.response_body)
 
       if refresh_token_response["error"].present?
-        # TODO: Revoir comment gérer les erreurs de rafraichissement de token, cela créé beaucoup trop de bruit dans Sentry
-        # Je désactive pour le moment et j'ouvre un ticket pour revoir ça ici : https://github.com/betagouv/rdv-solidarites.fr/issues/3721
-        # Sentry.capture_message("Error refreshing Microsoft Graph Token for #{@agent.email}: #{refresh_token_response['error_description']}")
+        # TODO: Revoir comment gérer les erreurs de rafraichissement de token, cela créé beaucoup trop de bruit dans Sentry quand on fix ca
+        # Je remet comme c'était avant (erreur sur la variable email) pour le moment et j'ouvre un ticket pour revoir ça ici : https://github.com/betagouv/rdv-solidarites.fr/issues/3721
+        Sentry.capture_message("Error refreshing Microsoft Graph Token for #{email}: #{refresh_token_response['error_description']}")
       elsif refresh_token_response["access_token"].present?
         @agent.update!(microsoft_graph_token: refresh_token_response["access_token"])
       end
