@@ -40,10 +40,9 @@
   - if @rdvs.total_count > 0
     .card-footer
       div.d-flex.justify-content-end.align-items-center
-        - if policy([:configuration, current_territory]).allow_to_download_metrics?
-          = button_to rdvs_users_export_admin_organisation_rdvs_path(**@form.to_query), method: :post, class: "btn btn-sm btn-link d-print-none", disable_with: "..." do
-            span> Exporter les RDVs par usager en XLS
-            i.fa.fa-download>
+        = button_to rdvs_users_export_admin_organisation_rdvs_path(**@form.to_query), method: :post, class: "btn btn-sm btn-link d-print-none", disable_with: "..." do
+          span> Exporter les RDVs par usager en XLS
+          i.fa.fa-download>
         = button_to export_admin_organisation_rdvs_path(**@form.to_query), method: :post, class: "btn btn-sm btn-link d-print-none", disable_with: "..." do
           span> Exporter les #{@rdvs.total_count} RDVs en XLS
           i.fa.fa-download>

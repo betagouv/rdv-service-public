@@ -40,7 +40,7 @@ motif1_cdad1 = Motif.create!(
 )
 
 # Agent
-cdad_agent = Agent.new(
+all_cdad_agent = Agent.new(
   email: "secretariat@cdad.fr",
   uid: "secretariat@cdad.fr",
   first_name: "Secre",
@@ -56,10 +56,85 @@ cdad_agent = Agent.new(
     { territory: territory_gironde, allow_to_manage_teams: true },
   ]
 )
-cdad_agent.skip_confirmation!
-cdad_agent.save!
-cdad_agent.territorial_roles.create!(territory: territory_gironde)
+all_cdad_agent.skip_confirmation!
+all_cdad_agent.save!
+all_cdad_agent.territorial_roles.create!(territory: territory_gironde)
 
+cdad1_agent = Agent.new(
+  email: "cdad1@cdad.fr",
+  uid: "cdad1@cdad.fr",
+  first_name: "Basic",
+  last_name: "CDAD1",
+  password: "lapinlapin",
+  service_id: service_cdad.id,
+  invitation_accepted_at: 10.days.ago,
+  roles_attributes: [
+    { organisation: org_cdad1, access_level: AgentRole::ACCESS_LEVEL_BASIC },
+  ],
+  agent_territorial_access_rights_attributes: [
+    { territory: territory_gironde, allow_to_manage_teams: true },
+  ]
+)
+cdad1_agent.skip_confirmation!
+cdad1_agent.save!
+cdad1_agent.territorial_roles.create!(territory: territory_gironde)
+
+cdad1_admin = Agent.new(
+  email: "cdad1_admin@cdad.fr",
+  uid: "cdad1_admin@cdad.fr",
+  first_name: "Admin",
+  last_name: "CDAD1",
+  password: "lapinlapin",
+  service_id: service_cdad.id,
+  invitation_accepted_at: 10.days.ago,
+  roles_attributes: [
+    { organisation: org_cdad1, access_level: AgentRole::ACCESS_LEVEL_ADMIN },
+  ],
+  agent_territorial_access_rights_attributes: [
+    { territory: territory_gironde, allow_to_manage_teams: true },
+  ]
+)
+cdad1_admin.skip_confirmation!
+cdad1_admin.save!
+cdad1_admin.territorial_roles.create!(territory: territory_gironde)
+
+cdad2_agent = Agent.new(
+  email: "cdad2@cdad.fr",
+  uid: "cdad2@cdad.fr",
+  first_name: "Basic",
+  last_name: "CDAD2",
+  password: "lapinlapin",
+  service_id: service_cdad.id,
+  invitation_accepted_at: 10.days.ago,
+  roles_attributes: [
+    { organisation: org_cdad2, access_level: AgentRole::ACCESS_LEVEL_BASIC },
+  ],
+  agent_territorial_access_rights_attributes: [
+    { territory: territory_gironde, allow_to_manage_teams: true },
+  ]
+)
+cdad2_agent.skip_confirmation!
+cdad2_agent.save!
+cdad2_agent.territorial_roles.create!(territory: territory_gironde)
+
+cdad2_admin = Agent.new(
+  email: "cdad2_admin@cdad.fr",
+  uid: "cdad2_admin@cdad.fr",
+  first_name: "Admin",
+  last_name: "CDAD2",
+  password: "lapinlapin",
+  service_id: service_cdad.id,
+  invitation_accepted_at: 10.days.ago,
+  roles_attributes: [
+    { organisation: org_cdad2, access_level: AgentRole::ACCESS_LEVEL_ADMIN },
+  ],
+  agent_territorial_access_rights_attributes: [
+    { territory: territory_gironde, allow_to_manage_teams: true },
+  ]
+)
+cdad2_admin.skip_confirmation!
+cdad2_admin.save!
+cdad2_admin.territorial_roles.create!(territory: territory_gironde)
 # Intervenants
 
 cdad_intervenant1 = Agent.new(

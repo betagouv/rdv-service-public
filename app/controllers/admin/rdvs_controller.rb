@@ -47,7 +47,7 @@ class Admin::RdvsController < AgentAuthController
   end
 
   def rdvs_users_export
-    authorize(current_agent)
+    skip_authorization # RDV will be scoped in SendExportJob
     set_scoped_organisations
 
     RdvsUsersExportJob.perform_later(

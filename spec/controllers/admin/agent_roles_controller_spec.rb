@@ -19,19 +19,48 @@ RSpec.describe Admin::AgentRolesController, type: :controller do
     end
   end
 
-  describe "POST #update" do
-    subject do
-      post :update, params: { organisation_id: organisation.id, id: agent_role.id, agent_role: { access_level: "admin" } }
-      agent_role.reload
+  describe "PUT #update" do
+    let(:invitation_email) { "jesuisunagent@intervenant.com" }
+
+    context "when agent_role access_level is updated from admin to intervenant" do
+      let(:agent_role) { create(:agent_role, :admin, agent: agent_user, organisation: organisation) }
+      let(:agent_role_params) { { agent_role: { access_level: "intervenant" } } }
+
+      it "updates the requested agent_role" do
+        put :update, params: { organisation_id: organisation.id, id: agent_role.id }.merge(agent_role_params)
+        expect(response).to redirect_to(admin_organisation_agents_path)
+      end
     end
 
-    it "returns a success response" do
-      subject
-      expect(response).to redirect_to(admin_organisation_agents_path(organisation))
+    context "when agent_role access_level is updated from admin to basic" do
+      let(:agent_role) { create(:agent_role, :basic, agent: agent_user, organisation: organisation) }
+      let(:agent_role_params) { { agent_role: { access_level: "basic" } } }
+
+      it "updates the requested agent_role" do
+        put :update, params: { organisation_id: organisation.id, id: agent_role.id }.merge(agent_role_params)
+        expect(response).to redirect_to(admin_organisation_agents_path)
+      end
     end
 
-    it "changes role" do
-      expect { subject }.to change(agent_role, :access_level).from(AgentRole::ACCESS_LEVEL_BASIC).to(AgentRole::ACCESS_LEVEL_ADMIN)
+    context "when agent_role access_level is updated from intervenant to admin" do
+      let(:agent_role) { create(:agent_role, :intervenant, agent: agent_user, organisation: organisation) }
+      let(:agent_role_params) { { agent_role: { access_level: "admin", agent_attributes: { email: invitation_email } } } }
+
+      it "updates the requested agent_role" do
+        put :update, params: { organisation_id: organisation.id, id: agent_role.id }.merge(agent_role_params)
+        expect(response).to redirect_to(admin_organisation_invitations_path)
+      end
+    end
+
+    context "when agent_role access_level is updated from intervenant to admin with invalid params" do
+      let(:agent_role) { create(:agent_role, :intervenant, agent: agent_user, organisation: organisation) }
+      let(:agent_role_params) { { agent_role: { access_level: "admin", agent_attributes: { email: "bad-email" } } } }
+
+      it "returns edit template with error" do
+        put :update, params: { organisation_id: organisation.id, id: agent_role.id }.merge(agent_role_params)
+        expect(unescaped_response_body).to include("Email n'est pas valide")
+        expect(response).to render_template(:edit)
+      end
     end
   end
 end

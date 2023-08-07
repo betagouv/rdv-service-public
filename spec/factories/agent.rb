@@ -55,5 +55,16 @@ FactoryBot.define do
     trait :cnfs do
       service { Service.find_by(name: Service::CONSEILLER_NUMERIQUE) || build(:service, :conseiller_numerique) }
     end
+    trait :intervenant do
+      before(:create) do |agent|
+        agent.email = nil
+        agent.uid = nil
+        if agent.organisations.any?
+          agent.roles.first.update(access_level: AgentRole::ACCESS_LEVEL_INTERVENANT)
+        else
+          agent.roles = [build(:agent_role, access_level: AgentRole::ACCESS_LEVEL_INTERVENANT, organisation: create(:organisation))]
+        end
+      end
+    end
   end
 end
