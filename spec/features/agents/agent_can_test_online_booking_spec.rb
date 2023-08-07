@@ -5,8 +5,10 @@ describe "Agents can try the user-facing online booking pages" do
   let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
 
   before do
+    first_day = Date.parse("2023/08/01")
+    travel_to(first_day.beginning_of_day)
     motif = create(:motif, organisation: organisation, service: agent.service)
-    motif.plage_ouvertures << create(:plage_ouverture, organisation: organisation, agent: agent)
+    motif.plage_ouvertures << create(:plage_ouverture, first_day: first_day, organisation: organisation, agent: agent)
   end
 
   it "shows the online booking forms, until the creneau selection" do

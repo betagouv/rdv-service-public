@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe PrescripteurRdvWizard do
-  let!(:organisation) { create(:organisation) }
-  let!(:motif) { create(:motif, organisation: organisation) }
-  let!(:lieu) { create(:lieu, organisation: organisation) }
-  let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, organisation: organisation) }
+  let(:organisation) { create(:organisation) }
+  let(:motif) { create(:motif, organisation: organisation) }
+  let(:lieu) { create(:lieu, organisation: organisation) }
+  let(:first_day) { Date.parse("2023/08/01") }
+  let(:plage_ouverture) { create(:plage_ouverture, first_day: first_day, motifs: [motif], lieu: lieu, organisation: organisation) }
 
   let(:attributes) do
     {
@@ -20,6 +21,8 @@ RSpec.describe PrescripteurRdvWizard do
       city_code: "62100",
     }
   end
+
+  before { travel_to(first_day.beginning_of_day) }
 
   context "when the user already exists but with different case or accents in their name" do
     let!(:user) do
