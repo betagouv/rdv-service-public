@@ -79,14 +79,18 @@ module AgentsHelper
   end
 
   def access_levels_collection
-    # For CDAD Expe
-    if  current_organisation.territory_id == 59 ||
-        Rails.env.development? ||
-        ENV["RDV_SOLIDARITES_INSTANCE_NAME"] == "DEMO" ||
-        ENV["IS_REVIEW_APP"] == "true"
+    if activate_intervenants_feature?
       AgentRole::ACCESS_LEVELS_WITH_INTERVENANT
     else
       AgentRole::ACCESS_LEVELS
     end
+  end
+
+  def activate_intervenants_feature?
+    # For CDAD Expe
+    current_organisation.territory_id == 59 ||
+      Rails.env.development? ||
+      Rails.env.test? ||
+      ENV["RDV_SOLIDARITES_INSTANCE_NAME"] == "DEMO"
   end
 end

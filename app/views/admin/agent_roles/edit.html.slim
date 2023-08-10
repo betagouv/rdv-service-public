@@ -1,7 +1,10 @@
 - content_for(:menu_item) { "menu-agents" }
 
 - content_for :title do
-  | Modifier le rôle de l'agent #{@agent_role.agent.full_name}
+  - if @agent_role.agent.is_an_intervenant?
+    | Modifier l'intervenant #{@agent_role.agent.full_name}
+  - else
+    | Modifier le rôle de l'agent #{@agent_role.agent.full_name}
 
 - content_for :breadcrumb do
   ol.breadcrumb.m-0
@@ -9,6 +12,9 @@
       = link_to "Vos agents", admin_organisation_agents_path(current_organisation)
     li.breadcrumb-item.active
       = @agent_role.agent.full_name
+
+- if @agent_role.agent.is_an_intervenant?
+  = render "admin/agent_intervenants/form", agent_intervenant: @agent_role.agent
 
 .row.justify-content-center
   .col-md-8

@@ -1,6 +1,7 @@
 - content_for(:menu_item) { "menu-agents" }
 
-- content_for(:title, "Agents de #{current_organisation.name}")
+- content_for(:title, "Agents de #{current_organisation.name}") unless activate_intervenants_feature?
+- content_for(:title, "Agents et intervenants de #{current_organisation.name}") if activate_intervenants_feature?
 
 - if current_agent_can?(:create, Agent)
   - content_for :breadcrumb do
@@ -38,3 +39,31 @@
           = link_to "Voir les #{@invited_agents_count} invitations en attente", admin_organisation_invitations_path(current_organisation), class: "btn btn-link"
         - else
           .m-2 Aucune invitation en attente
+
+- if activate_intervenants_feature?
+  = simple_form_for "", url: admin_organisation_agents_path(current_organisation), html: { method: :get, class: "form-inline" }, wrapper: :inline_form do |f|
+    .container-fluid.bg-white.rounded
+      .m-3.d-flex.justify-content-end
+        - search = params[:intervenant_term].blank? && "d-none"
+        div= link_to t("helpers.reset"), admin_organisation_agents_path(current_organisation), class: "btn btn-link #{search}"
+        = f.input :intervenant_term, placeholder: "Désignation", label: false, input_html: { autocomplete: "off", class: "search-form-control", value: params[:intervenant_term] }, required: false
+        = f.button :submit, t("helpers.search")
+      table.table
+        thead
+          tr
+            th= "Désignation"
+            th= Agent.human_attribute_name(:service)
+            th= AgentRole.human_attribute_name(:access_level)
+            th Actions
+        tbody
+          = render partial: "intervenant", collection: @intervenants, as: :agent
+      - if current_agent_can?(:create, Agent)
+        .m-3.d-flex.justify-content-center
+          = link_to "Créer un intervenant", new_admin_organisation_agent_intervenant_path(current_organisation), class:"btn btn-primary"
+      - if @intervenants.empty?
+        .mb-4.p.text-center Aucun intervenant trouvé
+      - elsif @intervenants.total_pages > 1
+        .m-3
+          .d-flex.justify-content-center
+            = paginate @intervenants, theme: "twitter-bootstrap-4", param_name: :intervenants_page
+          .text-center= page_entries_info @intervenants
