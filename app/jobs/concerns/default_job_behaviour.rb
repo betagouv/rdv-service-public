@@ -2,6 +2,7 @@
 
 module DefaultJobBehaviour
   extend ActiveSupport::Concern
+  JobTimeoutError = Class.new(StandardError)
 
   included do
     # Include job metadata in Sentry context
@@ -10,6 +11,17 @@ module DefaultJobBehaviour
         scope.set_context(:job, { job_id: job_id, queue_name: queue_name, arguments: arguments })
         block.call
       end
+    end
+
+    # https://github.com/bensheldon/good_job#timeouts
+    around_perform do |_job, block|
+      timeout_value = queue_name == "exports" ? 1.hour : 30.seconds
+      Timeout.timeout(timeout_value, JobTimeoutError) do
+        block.call
+      end
+    rescue JobTimeoutError => e
+      Sentry.capture_exception(e)
+      raise
     end
 
     # This retry_on means:
