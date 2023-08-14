@@ -31,6 +31,7 @@ module DefaultJobBehaviour
     # attempt:  1   2    3    4   5    6    7    8    9     10    11  12  13  14   15   16   17   18   19   20
     # backoff:  1s, 16s, 81s, 4m, 10m, 21m, 40m, 68m, 109m, 166m, 4h, 6h, 8h, 11h, 14h, 18h, 23h, 29h, 36h, 44h
     retry_on(StandardError, wait: :exponentially_longer, attempts: 20)
+    retry_on(JobTimeoutError, wait: :exponentially_longer, attempts: 20)
 
     # Makes sure every failed attempt is logged to Sentry
     # (see: https://github.com/bensheldon/good_job#retries)
