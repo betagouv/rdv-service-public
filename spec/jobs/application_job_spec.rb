@@ -50,7 +50,7 @@ describe ApplicationJob, type: :job do
     end
 
     it "reports job timeout to Sentry for custom_queue" do
-      allow(Timeout).to receive(:timeout).with(30.seconds, DefaultJobBehaviour::JobTimeoutError).and_raise(DefaultJobBehaviour::JobTimeoutError, "execution expired")
+      allow(Timeout).to receive(:timeout).with(30.seconds).and_raise(Timeout::Error)
 
       timeout_job_class.perform_later
       enqueued_job_id = enqueued_jobs.last["job_id"]
@@ -58,12 +58,12 @@ describe ApplicationJob, type: :job do
 
       expect(sentry_events.last.contexts[:job][:job_id]).to eq(enqueued_job_id)
       expect(sentry_events.last.contexts[:job][:queue_name]).to eq("custom_queue")
-      expect(sentry_events.last.exception.values.first.value).to match("execution expired (DefaultJobBehaviour::JobTimeoutError)")
-      expect(sentry_events.last.exception.values.first.type).to eq("DefaultJobBehaviour::JobTimeoutError")
+      expect(sentry_events.last.exception.values.first.value).to match("Timeout::Error (Timeout::Error)")
+      expect(sentry_events.last.exception.values.first.type).to eq("Timeout::Error")
     end
 
     it "reports exports job timeout to Sentry for exports queue" do
-      allow(Timeout).to receive(:timeout).with(1.hour, DefaultJobBehaviour::JobTimeoutError).and_raise(DefaultJobBehaviour::JobTimeoutError, "execution expired")
+      allow(Timeout).to receive(:timeout).with(1.hour).and_raise(Timeout::Error)
 
       exports_timeout_job_class.perform_later
       enqueued_job_id = enqueued_jobs.last["job_id"]
@@ -71,8 +71,8 @@ describe ApplicationJob, type: :job do
 
       expect(sentry_events.last.contexts[:job][:job_id]).to eq(enqueued_job_id)
       expect(sentry_events.last.contexts[:job][:queue_name]).to eq("exports")
-      expect(sentry_events.last.exception.values.first.value).to match("execution expired (DefaultJobBehaviour::JobTimeoutError)")
-      expect(sentry_events.last.exception.values.first.type).to eq("DefaultJobBehaviour::JobTimeoutError")
+      expect(sentry_events.last.exception.values.first.value).to match("Timeout::Error (Timeout::Error)")
+      expect(sentry_events.last.exception.values.first.type).to eq("Timeout::Error")
     end
   end
 end
