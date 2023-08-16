@@ -34,6 +34,16 @@ describe ApplicationJob, type: :job do
       ExportsTimeoutJob
     end
 
+    let(:cron_timeout_job_class) do
+      stub_const "CronTimeoutJob", Class.new(described_class)
+      CronTimeoutJob.class_eval do
+        queue_as :cron
+
+        def perform; end
+      end
+      CronTimeoutJob
+    end
+
     stub_sentry_events
 
     it "reports job metadata to Sentry" do
@@ -71,6 +81,19 @@ describe ApplicationJob, type: :job do
 
       expect(sentry_events.last.contexts[:job][:job_id]).to eq(enqueued_job_id)
       expect(sentry_events.last.contexts[:job][:queue_name]).to eq("exports")
+      expect(sentry_events.last.exception.values.first.value).to match("Timeout::Error (Timeout::Error)")
+      expect(sentry_events.last.exception.values.first.type).to eq("Timeout::Error")
+    end
+
+    it "reports cron job timeout to Sentry for cron queue" do
+      allow(Timeout).to receive(:timeout).with(1.hour).and_raise(Timeout::Error)
+
+      cron_timeout_job_class.perform_later
+      enqueued_job_id = enqueued_jobs.last["job_id"]
+      expect { perform_enqueued_jobs }.to change(sentry_events, :size).by(1)
+
+      expect(sentry_events.last.contexts[:job][:job_id]).to eq(enqueued_job_id)
+      expect(sentry_events.last.contexts[:job][:queue_name]).to eq("cron")
       expect(sentry_events.last.exception.values.first.value).to match("Timeout::Error (Timeout::Error)")
       expect(sentry_events.last.exception.values.first.type).to eq("Timeout::Error")
     end
