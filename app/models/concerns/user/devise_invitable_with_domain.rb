@@ -15,7 +15,7 @@ module User::DeviseInvitableWithDomain
   def sign_up_domain=(domain)
     return if email.blank?
 
-    REDIS_FOR_SIGN_UP_DOMAIN.set(redis_key_for_sign_up_domain, domain.id, ex: 12.hours.in_seconds)
+    REDIS_FOR_SIGN_UP_DOMAIN.set(redis_key_for_sign_up_domain, domain.id, ex: 6.months.in_seconds)
   end
 
   private
