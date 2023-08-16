@@ -456,5 +456,6 @@ Voici les suppressions automatiques mises en place :
 - Suppression des RDVs de plus de 2 ans
 - Suppression des plages d'ouverture de plus de 1 an
 - Suppression des logs PaperTrail (auditing) de plus de 2 ans
+- Suppression des usagers inactifs (pas de rdv dans les 2 dernières années, et compte créé depuis plus de 2 ans)
 
-Note : **Aucune suppression automatique de profil usager ou agent inactif après un certain laps de temps.**
+Note : **Aucune suppression automatique de profil agent inactif après un certain laps de temps.**
