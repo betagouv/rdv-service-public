@@ -27,6 +27,9 @@ class Admin::AgentsController < AgentAuthController
   end
 
   def create
+    @services = services.order(:name)
+    @roles = current_agent.conseiller_numerique? ? [AgentRole::ACCESS_LEVEL_BASIC] : access_levels_collection
+
     if agent_params[:email].present?
       create_agent
     else
@@ -98,7 +101,21 @@ class Admin::AgentsController < AgentAuthController
     end
   end
 
-  def create_intervenant; end
+  def create_intervenant
+    @agent = Agent.new(
+      last_name: agent_params[:last_name],
+      service_id: agent_params[:service_id],
+      roles_attributes: [
+        { organisation: current_organisation, access_level: access_level(agent_params) },
+      ]
+    )
+    authorize(@agent)
+    if @agent.save
+      redirect_to admin_organisation_agents_path(current_organisation), notice: "Intervenant créé avec succès."
+    else
+      render :new
+    end
+  end
 
   def services
     Agent::ServicePolicy::AdminScope.new(pundit_user, Service).resolve

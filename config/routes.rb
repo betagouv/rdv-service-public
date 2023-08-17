@@ -200,7 +200,7 @@ Rails.application.routes.draw do
           put :toggle_displays, on: :member
         end
         resources :agent_roles, only: %i[edit update]
-        resources :agent_intervenants, only: %i[new create update]
+        resources :agent_intervenants, only: %i[update]
         resources :agents, only: %i[index destroy new create] do
           resources :absences, only: %i[index new]
           resources :plage_ouvertures, only: %i[index new]
