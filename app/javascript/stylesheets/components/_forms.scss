@@ -41,6 +41,16 @@ select.form-control-sm {
   min-width: 300px;
 }
 
+.full-width-inline-form {
+  span.form-group-valid {
+    width: 100%;
+  }
+}
+
+.full-width-input {
+  width: 100% !important;
+}
+
 .ap-icon-pin{
   display: none;
 }

@@ -39,7 +39,7 @@ RSpec.describe Admin::AgentIntervenantsController, type: :controller do
 
     it "renders new on failure" do
       post :create, params: { organisation_id: organisation.id, agent: { last_name: "" } }
-      expect(unescaped_response_body).to include("Désignation doit être remplie")
+      expect(unescaped_response_body).to include("Nom d’usage doit être rempli(e)")
       expect(response).to render_template(:new)
     end
   end
@@ -63,7 +63,7 @@ RSpec.describe Admin::AgentIntervenantsController, type: :controller do
     it "renders edit on failure" do
       put :update, params: { organisation_id: organisation.id, id: agent_intervenant.id, agent: { last_name: "" } }
       expect(response).to redirect_to(edit_admin_organisation_agent_role_path(organisation, agent_intervenant.roles.first))
-      expect(flash[:error]).to eq("Désignation doit être remplie")
+      expect(flash[:error]).to eq("Nom d’usage doit être rempli(e)")
     end
   end
 end

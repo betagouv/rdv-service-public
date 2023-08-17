@@ -145,7 +145,7 @@ describe Agent, type: :model do
         agent_intervenant.last_name = nil
         agent_intervenant.first_name = nil
         agent_intervenant.valid?
-        expect(agent_intervenant.errors[:base]).to include("Désignation doit être remplie")
+        expect(agent_intervenant.errors.full_messages.uniq.to_sentence).to eq("Nom d’usage doit être rempli(e)")
       end
 
       it "validates presence of last_name only on update" do
@@ -154,7 +154,7 @@ describe Agent, type: :model do
         agent_intervenant.last_name = nil
         agent_intervenant.first_name = nil
         agent_intervenant.valid?
-        expect(agent_intervenant.errors[:base]).to include("Désignation doit être remplie")
+        expect(agent_intervenant.errors.full_messages.uniq.to_sentence).to eq("Nom d’usage doit être rempli(e)")
       end
     end
 

@@ -33,7 +33,7 @@ describe "Agent can CRUD intervenants" do
     expect_page_title("Agents et intervenants de Organisation n°1")
     click_link "Créer un intervenant"
     expect_page_title("Créer un intervenant pour Organisation n°1")
-    fill_in "Désignation", with: "Avocat 1"
+    fill_in "Nom", with: "Avocat 1"
     click_button("Créer l'intervenant")
     expect_page_title("Agents et intervenants de Organisation n°1")
     expect(page).to have_content("AVOCAT 1")
@@ -44,7 +44,7 @@ describe "Agent can CRUD intervenants" do
     expect_page_title("Agents et intervenants de Organisation n°1")
     click_link "INTERVENANT1"
     expect_page_title("Modifier l'intervenant INTERVENANT1")
-    fill_in "Désignation", with: "Nouveau nom"
+    fill_in "Nom", with: "Nouveau nom"
     click_button("Modifier l'intervenant")
     expect_page_title("Agents et intervenants de Organisation n°1")
     expect(page).to have_content("NOUVEAU NOM")

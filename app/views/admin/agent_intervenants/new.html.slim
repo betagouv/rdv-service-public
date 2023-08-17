@@ -9,7 +9,7 @@
       .card-body
         = simple_form_for [:admin, current_organisation,  @agent_intervenant], url: admin_organisation_agent_intervenants_path(current_organisation, @agent_intervenant), html: { method: :post } do |f|
           = render "model_errors", model: @agent_intervenant
-          = f.input :last_name, label: "Désignation", placeholder: "Avocat #1", input_html: { autocomplete: "off"}
+          = f.input :last_name, label: "Nom", placeholder: "Avocat #1", input_html: { autocomplete: "off"}
           = f.association :service, collection: @services, include_blank: false, hint: "Attention, le service d'un intervenant est définitif, il ne pourra pas changer de service par la suite."
           .text-right
             = f.button :submit, "Créer l'intervenant"

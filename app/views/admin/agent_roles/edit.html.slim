@@ -1,10 +1,7 @@
 - content_for(:menu_item) { "menu-agents" }
 
 - content_for :title do
-  - if @agent_role.agent.is_an_intervenant?
-    | Modifier l'intervenant #{@agent_role.agent.full_name}
-  - else
-    | Modifier le rôle de l'agent #{@agent_role.agent.full_name}
+  | Modifier le niveau de permission de l'agent #{@agent_role.agent.full_name}
 
 - content_for :breadcrumb do
   ol.breadcrumb.m-0

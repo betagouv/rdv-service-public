@@ -2,14 +2,13 @@
 
 tr id="agent_#{agent.id}"
   td
-    - if agent.complete?
-      - if policy([:agent, agent_role]).edit?
-        = link_to agent.reverse_full_name, edit_admin_organisation_agent_role_path(current_organisation, agent_role), class: "mr-2"
-        - if agent.inactive?
-          = tag.span("Inactif", class: "badge badge-warning")
-      - else
-        span.mr-2= agent.reverse_full_name
-      = me_tag(agent)
+    - if policy([:agent, agent_role]).edit?
+      = link_to agent.reverse_full_name, edit_admin_organisation_agent_role_path(current_organisation, agent_role), class: "mr-2"
+      - if agent.inactive? && agent.complete?
+        = tag.span("Inactif", class: "badge badge-warning")
+    - else
+      span.mr-2= agent.reverse_full_name
+    = me_tag(agent)
   td.word-break-all
     = agent.email
   td
@@ -20,7 +19,7 @@ tr id="agent_#{agent.id}"
       i.fa.fa-user-cog
   td
     .d-flex
-      - if policy([:agent, agent_role]).create? && !agent.invitation_accepted?
+      - if policy([:agent, agent_role]).create? && !agent.invitation_accepted? && !agent.is_an_intervenant?
         div.mr-3= link_to t("devise.invitations.reinvite"),
                 reinvite_admin_organisation_invitation_path(current_organisation, agent),
                 method: :post

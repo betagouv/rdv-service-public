@@ -11,12 +11,9 @@ class Admin::AgentsController < AgentAuthController
     @agents = @agents.joins(:organisations).where(organisations: { id: current_organisation.id }) if current_organisation
     @invited_agents_count = @agents.invitation_not_accepted.created_by_invite.count
 
-    @intervenants = index_params[:intervenant_term].present? ? @agents.intervenants.search_by_text(index_params[:intervenant_term]) : @agents.intervenants.order_by_last_name
-    @intervenants = @intervenants.page(params[:intervenants_page])
-
-    @agents = index_params[:term].present? ? @agents.not_intervenants.search_by_text(index_params[:term]) : @agents.not_intervenants.order_by_last_name
-    @agents = @agents.complete.page(params[:page])
-    @agents_and_intervenants = @agents + @intervenants
+    @agents = @agents.not_intervenants.complete.invitation_accepted.or(@agents.intervenants)
+    @agents = index_params[:term].present? ? @agents.search_by_text(index_params[:term]) : @agents.order_by_last_name
+    @agents = @agents.page(params[:page])
   end
 
   def destroy
