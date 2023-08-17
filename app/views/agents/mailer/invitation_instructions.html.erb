@@ -1,5 +1,5 @@
 <% inviter_email = @resource.invited_by&.email || "contact@rdv-solidarites.fr" %>
-<% inviter_name = @resource.invited_by&.full_name || "Équipe de RDV Service Public" %>
+<% inviter_name = @resource.invited_by&.full_name || "Équipe de #{domain.name}" %>
 
 <p><%= t("devise.mailer.invitation_instructions.hello", email: @resource.email) %></p>
 
