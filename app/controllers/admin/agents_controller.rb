@@ -60,7 +60,7 @@ class Admin::AgentsController < AgentAuthController
     if agent.nil?
       authorize(Agent.new(organisations: [current_organisation])) # Authorize against a dummy Agent
 
-      Agent.invite!(
+      agent = Agent.invite!(
         email: agent_params[:email],
         uid: agent_params[:email],
         service_id: agent_params[:service_id],
