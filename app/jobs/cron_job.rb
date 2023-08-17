@@ -60,6 +60,7 @@ class CronJob < ApplicationJob
           profile.skip_webhooks = true
           profile.destroy
         end
+        user.reload
         user.skip_webhooks = true
         user.destroy
       end
