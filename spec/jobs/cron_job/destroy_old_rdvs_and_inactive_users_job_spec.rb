@@ -14,6 +14,11 @@ describe CronJob::DestroyOldRdvsAndInactiveUsersJob do
     relative = create(:user, responsible: user_created_25_months_ago_with_a_relative_that_has_a_rdv)
     create(:rdv, users: [relative])
 
+    other_relative = create(:user, responsible: user_created_25_months_ago_with_a_relative_that_has_a_rdv)
+
+    user_created_25_months_ago_with_a_relative_without_a_rdv, = travel_to(25.months.ago) { create(:user) }
+    relative_without_rdv = create(:user, responsible: user_created_25_months_ago_with_a_relative_without_a_rdv)
+
     described_class.new.perform
     perform_enqueued_jobs # to perform the DestroyInactiveUsers job
 
@@ -24,6 +29,9 @@ describe CronJob::DestroyOldRdvsAndInactiveUsersJob do
                                       user_without_rdv_created_23_months_ago,
                                       user_created_25_months_ago_with_a_relative_that_has_a_rdv,
                                       relative,
+                                      other_relative,
+                                      user_created_25_months_ago_with_a_relative_without_a_rdv,
+                                      relative_without_rdv,
                                       rdv_occurring_11_months_ago.users.first,
                                       rdv_occurring_23_months_ago.users.first,
                                     ])

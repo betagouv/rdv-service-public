@@ -53,11 +53,9 @@ class CronJob < ApplicationJob
     def perform(date_limit)
       old_users_without_rdvs = User.where("users.created_at < ?", date_limit).left_outer_joins(:rdvs_users).where(rdvs_users: { id: nil })
 
-      old_users_without_rdvs_or_relative_having_rdvs = old_users_without_rdvs.joins("left outer join users as relatives on users.id = relatives.responsible_id")
-        .joins("left outer join rdvs_users as rdvs_relatives on rdvs_relatives.user_id = relatives.id")
-        .where(rdvs_relatives: { id: nil })
+      old_users_without_rdvs_or_relatives = old_users_without_rdvs.joins("left outer join users as relatives on users.id = relatives.responsible_id").where(relatives: { id: nil })
 
-      old_users_without_rdvs_or_relative_having_rdvs.find_each do |user|
+      old_users_without_rdvs_or_relatives.find_each do |user|
         user.user_profiles.destroy_all
         user.skip_webhooks = true
         user.destroy
