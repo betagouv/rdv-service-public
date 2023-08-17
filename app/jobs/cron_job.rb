@@ -63,6 +63,17 @@ class CronJob < ApplicationJob
     end
   end
 
+  class DestroyInactiveAgents < CronJob
+    def perform
+      old_agents = Agent.where("created_at < ?", 2.years.ago).where("last_sign_in_at < ? OR last_sign_in_at IS NULL", 2.years.ago)
+
+      inactive_agents = old_agents.left_outer_joins(:rdvs_agents).where(rdvs_agents: { id: nil })
+
+      inactive_agents.find_each do |agent|
+      end
+    end
+  end
+
   class DestroyOldPlageOuvertureJob < CronJob
     def perform
       po_exceptionnelle_closed_since_1_year = PlageOuverture.where(recurrence: nil).where(first_day: ..1.year.ago)
