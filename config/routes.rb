@@ -201,7 +201,7 @@ Rails.application.routes.draw do
         end
         resources :agent_roles, only: %i[edit update]
         resources :agent_intervenants, only: %i[new create update]
-        resources :agents, only: %i[index destroy] do
+        resources :agents, only: %i[index destroy new create] do
           resources :absences, only: %i[index new]
           resources :plage_ouvertures, only: %i[index new]
           resources :stats, only: :index do
@@ -218,7 +218,7 @@ Rails.application.routes.draw do
         resource :rdv_wizard_step, only: [:new] do
           get :create
         end
-        devise_for :agents, controllers: { invitations: "admin/invitations_devise" }, only: :invitations
+        devise_for :agents, controllers: { invitations: "admin/invitations_devise" }, only: :invitations # TODO: voir si on peut supprimer
         get "support", to: "static_pages#support"
       end
     end

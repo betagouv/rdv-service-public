@@ -16,6 +16,24 @@ class Admin::AgentsController < AgentAuthController
     @agents = @agents.page(params[:page])
   end
 
+  def new
+    @agent = Agent.new(organisations: [current_organisation])
+    authorize(@agent)
+
+    @services = services.order(:name)
+    @roles = current_agent.conseiller_numerique? ? [AgentRole::ACCESS_LEVEL_BASIC] : access_levels_collection
+
+    render :new, layout: "application_agent"
+  end
+
+  def create
+    if agent_params[:email].present?
+      create_agent
+    else
+      create_intervenant
+    end
+  end
+
   def destroy
     @agent = policy_scope(Agent).find(params[:id])
     authorize(@agent)
@@ -36,7 +54,85 @@ class Admin::AgentsController < AgentAuthController
 
   private
 
+  def create_agent
+    agent = Agent.find_by(email: agent_params[:email].downcase)
+
+    if agent.nil?
+      authorize(Agent.new(organisations: [current_organisation])) # Authorize against a dummy Agent
+
+      Agent.invite!(
+        email: agent_params[:email],
+        uid: agent_params[:email],
+        service_id: agent_params[:service_id],
+        roles_attributes: [{ organisation: current_organisation, access_level: access_level(agent_params) }]
+      )
+    else
+      new_role = agent.roles.new(
+        organisation: current_organisation,
+        access_level: access_level(agent_params)
+      )
+      authorize(new_role) # Checks that the current agent is an admin of the role's organisation
+      agent.save(context: :invite) # Specify a different validation context to bypass last_name/first_name presence
+      # Warn if the service isn’t the one that was requested
+      service = services.find(agent_params[:service_id])
+
+      if agent.service != service
+        flash[:error] = I18n.t("activerecord.warnings.models.agent_role.different_service", service: service.name, agent_service: agent.service.name)
+      end
+    end
+
+    if agent.errors.empty?
+      AgentTerritorialAccessRight.find_or_create_by!(agent: agent, territory: current_organisation.territory)
+      if agent.invitation_accepted?
+        flash[:notice] = I18n.t "activerecord.notice.models.agent_role.existing", email: agent.email
+        redirect_to admin_organisation_agents_path(current_organisation)
+      else
+        flash[:notice] = I18n.t "activerecord.notice.models.agent_role.invited", email: agent.email
+        redirect_to admin_organisation_invitations_path(current_organisation)
+      end
+    else
+      # Keep the error message, but redirect instead of just rendering the template:
+      # we want a new empty form.
+      flash[:error] = agent.errors.full_messages.to_sentence
+      redirect_to action: :new
+    end
+  end
+
+  def create_intervenant; end
+
+  def services
+    Agent::ServicePolicy::AdminScope.new(pundit_user, Service).resolve
+  end
+
   def index_params
     @index_params ||= params.permit(:term, :intervenant_term)
+  end
+
+  def access_levels_collection
+    if activate_intervenants_feature?
+      AgentRole::ACCESS_LEVELS_WITH_INTERVENANT
+    else
+      AgentRole::ACCESS_LEVELS
+    end
+  end
+
+  def activate_intervenants_feature?
+    # For CDAD Expe
+    current_organisation.territory_id == 59 ||
+      Rails.env.development? ||
+      Rails.env.test? ||
+      ENV["RDV_SOLIDARITES_INSTANCE_NAME"] == "DEMO"
+  end
+
+  def access_level(params)
+    if current_agent.conseiller_numerique?
+      AgentRole::ACCESS_LEVEL_BASIC
+    else
+      params[:roles_attributes]["0"]["access_level"]
+    end
+  end
+
+  def agent_params
+    params.require(:agent).permit(:email, :service_id, :last_name, roles_attributes: [:access_level])
   end
 end

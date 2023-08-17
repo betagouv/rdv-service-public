@@ -1,15 +1,15 @@
 - content_for(:menu_item) { "menu-agents" }
 
 - content_for :title do
-  = t "devise.invitations.new.header"
+  = "Ajouter un agent"
+  -# TODO: unifier ça dans une clé de traduction
 
 .row.justify-content-center
   .col-md-6
     .card
       .card-body
-        = simple_form_for [:admin, resource], as: resource_name, url: admin_agent_organisation_invitation_path(current_organisation, resource), html: { method: :post } do |f|
-          = render "devise/shared/error_messages", resource: resource
-          = f.input :email, placeholder: "jean.dupond@departement.fr", input_html: { autocomplete: "off"}
+        = simple_form_for [:admin, @agent], as: @agent_name, url: admin_organisation_agents_path(current_organisation, @agent), html: { method: :post } do |f|
+          = render "devise/shared/error_messages", resource: @agent
           = f.association :service, collection: @services, include_blank: false, hint: "Attention, le service d'un agent est définitif, il ne pourra pas changer de service par la suite. Si un agent appartient à deux services il faut pour l'instant lui créer deux comptes avec deux emails différents."
           - # rubocop:disable Rails/OutputSafety
           = f.simple_fields_for :roles do |ff|
@@ -19,5 +19,7 @@
               hint: "Les agents peuvent avoir des permissions différentes sur chaque organisation.", \
               as: :radio_buttons
           - # rubocop:enable Rails/OutputSafety
+          = f.input :email, placeholder: "jean.dupond@departement.fr", input_html: { autocomplete: "off"}
+          = f.input :last_name, input_html: { autocomplete: "off"}, label: "Nom"
           .text-right
             = f.button :submit, t("devise.invitations.new.submit_button")

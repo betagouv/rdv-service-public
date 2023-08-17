@@ -78,6 +78,7 @@ module AgentsHelper
     )
   end
 
+  # TODO: make sure this is deleted once we move the edit action
   def access_levels_collection
     if activate_intervenants_feature?
       AgentRole::ACCESS_LEVELS_WITH_INTERVENANT
