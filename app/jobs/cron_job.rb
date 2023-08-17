@@ -46,6 +46,7 @@ class CronJob < ApplicationJob
       # La suppression d'utilisateurs inactifs a besoin que les vieux rdv soient supprimés
       # On utilise la même date limite pour éviter une race condition liée au temps d'exécution du premier job
       DestroyInactiveUsers.perform_later(two_years_ago)
+      DestroyInactiveAgents.perform_later(two_years_ago)
     end
   end
 
@@ -64,13 +65,12 @@ class CronJob < ApplicationJob
   end
 
   class DestroyInactiveAgents < CronJob
-    def perform
-      old_agents = Agent.where("created_at < ?", 2.years.ago).where("last_sign_in_at < ? OR last_sign_in_at IS NULL", 2.years.ago)
+    def perform(date_limit)
+      old_agents = Agent.where("created_at < ?", date_limit).where("last_sign_in_at < ? OR last_sign_in_at IS NULL", date_limit)
 
       inactive_agents = old_agents.left_outer_joins(:rdvs_agents).where(rdvs_agents: { id: nil })
 
-      inactive_agents.find_each do |agent|
-      end
+      inactive_agents.find_each(&:destroy)
     end
   end
 
