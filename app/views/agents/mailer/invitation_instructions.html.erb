@@ -1,6 +1,9 @@
+<% inviter_email = @resource.invited_by&.email || "contact@rdv-solidarites.fr" %>
+<% inviter_name = @resource.invited_by&.full_name || "Équipe de RDV Service Public" %>
+
 <p><%= t("devise.mailer.invitation_instructions.hello", email: @resource.email) %></p>
 
-<p><%= t("devise.mailer.invitation_instructions_for_agents.body", inviter: @resource.invited_by.full_name, service: @resource.service.name, domain_name: domain.name) %></p>
+<p><%= t("devise.mailer.invitation_instructions_for_agents.body", inviter: inviter_name, service: @resource.service.name, domain_name: domain.name) %></p>
 
 <p><%= link_to t("devise.mailer.invitation_instructions_for_agents.accept"), accept_invitation_url(@resource, invitation_token: @token) %></p>
 
@@ -9,8 +12,8 @@
     <%= t( \
       "devise.mailer.invitation_instructions_for_agents.accept_until_html", \
       due_date: l(@resource.invitation_due_at, format: :'devise.mailer.invitation_instructions.accept_until_format'), \
-      inviter: @resource.invited_by.full_name, \
-      inviter_email: @resource.invited_by.email \
+      inviter: inviter_name, \
+      inviter_email: inviter_email \
     ) %>
   </p>
 <% end %>
