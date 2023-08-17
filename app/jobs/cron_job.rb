@@ -64,6 +64,19 @@ class CronJob < ApplicationJob
     end
   end
 
+  class InactiveAgentsJob < CronJob
+
+    protected
+
+    def inactive_agents(date_limit)
+
+    end
+  end
+
+  class WarnInactiveAgentsOfAccountDeletion < CronJob
+
+  end
+
   class DestroyInactiveAgents < CronJob
     def perform(date_limit)
       old_agents = Agent.where("created_at < ?", date_limit).where("last_sign_in_at < ? OR last_sign_in_at IS NULL", date_limit)
