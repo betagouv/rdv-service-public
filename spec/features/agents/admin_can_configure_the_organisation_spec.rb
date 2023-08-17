@@ -73,7 +73,7 @@ describe "Admin can configure the organisation" do
     click_button("Enregistrer")
 
     expect_page_title("Agents de Organisation n°1")
-    expect(page).to have_content("Admin", count: 2)
+    expect(page).to have_content("Administrateur", count: 2)
 
     click_link "PATRICK Tony"
     click_link("Supprimer le compte")

@@ -11,7 +11,7 @@ class Admin::AgentsController < AgentAuthController
     @agents = @agents.joins(:organisations).where(organisations: { id: current_organisation.id }) if current_organisation
     @invited_agents_count = @agents.invitation_not_accepted.created_by_invite.count
 
-    @agents = @agents.not_intervenants.complete.invitation_accepted.or(@agents.intervenants)
+    @agents = @agents.not_intervenants.complete.or(@agents.intervenants)
     @agents = index_params[:term].present? ? @agents.search_by_text(index_params[:term]) : @agents.order_by_last_name
     @agents = @agents.page(params[:page])
   end

@@ -31,7 +31,8 @@ module AgentRole::IntervenantRoleChangeable
     # Devise va essayer de confirmer l'agent car il y a un changement d'email hors on passe d'agent à intervenant, d'un email nil à un email d'invitation.
     # On skip donc la confirmation car on souhaite l'inviter
     agent.skip_confirmation_notification!
-    if agent.update(email: invitation_email, uid: invitation_email)
+    agent.skip_last_name_and_first_name_validation = true
+    if agent.update(last_name: nil, first_name: nil, email: invitation_email, uid: invitation_email)
       agent.confirm
       true
     else

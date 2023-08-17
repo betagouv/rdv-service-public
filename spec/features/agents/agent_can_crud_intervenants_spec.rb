@@ -14,10 +14,10 @@ describe "Agent can CRUD intervenants" do
 
   it "Change intervenant to admin (update agent_role)", js: true do
     visit admin_organisation_agents_path(organisation)
-    expect_page_title("Agents et intervenants de Organisation n°1")
+    expect_page_title("Agents de Organisation n°1")
 
     click_link "INTERVENANT1"
-    expect_page_title("Modifier l'intervenant INTERVENANT1")
+    expect_page_title("Modifier le niveau de permission de l'agent INTERVENANT1")
     choose :agent_role_access_level_admin
     fill_in "Email", with: "ancien_intervenant1@invitation.com"
     click_button("Enregistrer")
@@ -30,33 +30,33 @@ describe "Agent can CRUD intervenants" do
 
   it "Create intervenant" do
     visit admin_organisation_agents_path(organisation)
-    expect_page_title("Agents et intervenants de Organisation n°1")
+    expect_page_title("Agents de Organisation n°1")
     click_link "Créer un intervenant"
     expect_page_title("Créer un intervenant pour Organisation n°1")
     fill_in "Nom", with: "Avocat 1"
     click_button("Créer l'intervenant")
-    expect_page_title("Agents et intervenants de Organisation n°1")
+    expect_page_title("Agents de Organisation n°1")
     expect(page).to have_content("AVOCAT 1")
   end
 
   it "Update intervenant last_name" do
     visit admin_organisation_agents_path(organisation)
-    expect_page_title("Agents et intervenants de Organisation n°1")
+    expect_page_title("Agents de Organisation n°1")
     click_link "INTERVENANT1"
-    expect_page_title("Modifier l'intervenant INTERVENANT1")
+    expect_page_title("Modifier le niveau de permission de l'agent INTERVENANT1")
     fill_in "Nom", with: "Nouveau nom"
-    click_button("Modifier l'intervenant")
-    expect_page_title("Agents et intervenants de Organisation n°1")
+    click_button("Modifier le nom")
+    expect_page_title("Agents de Organisation n°1")
     expect(page).to have_content("NOUVEAU NOM")
   end
 
   it "Delete intervenant" do
     visit admin_organisation_agents_path(organisation)
-    expect_page_title("Agents et intervenants de Organisation n°1")
+    expect_page_title("Agents de Organisation n°1")
     click_link "INTERVENANT1"
-    expect_page_title("Modifier l'intervenant INTERVENANT1")
+    expect_page_title("Modifier le niveau de permission de l'agent INTERVENANT1")
     click_link("Supprimer le compte")
-    expect_page_title("Agents et intervenants de Organisation n°1")
+    expect_page_title("Agents de Organisation n°1")
     expect(page).to have_no_content("INTERVENANT1")
   end
 
