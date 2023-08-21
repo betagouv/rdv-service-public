@@ -26,7 +26,12 @@ class Admin::AgentsController < AgentAuthController
   def create
     authorize(Agent.new(organisations: [current_organisation]))
 
-    create_agent = CreateAgent.new(agent_params, current_agent, current_organisation, access_level)
+    create_agent = CreateAgent.new(
+      agent_params,
+      current_agent,
+      current_organisation,
+      access_level
+    )
 
     @agent = create_agent.call
 
@@ -87,6 +92,7 @@ class Admin::AgentsController < AgentAuthController
   def render_new
     @services = services.order(:name)
     @roles = current_agent.conseiller_numerique? ? [AgentRole::ACCESS_LEVEL_BASIC] : access_levels_collection
+    @agent_role = AgentRole.new
 
     render :new, layout: "application_agent"
   end
@@ -135,7 +141,7 @@ class Admin::AgentsController < AgentAuthController
     if @current_agent.conseiller_numerique?
       AgentRole::ACCESS_LEVEL_BASIC
     else
-      params[:agent][:roles_attributes]["0"]["access_level"]
+      params[:agent][:agent_role][:access_level]
     end
   end
 

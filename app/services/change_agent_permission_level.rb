@@ -37,24 +37,22 @@ class ChangeAgentPermissionLevel
       return false
     end
 
-    if update_and_confirm_agent && agent_role.update(access_level: @new_access_level)
+    assign_agent_and_role_attributes
+    if @agent.save
+      @agent.confirm
       @agent.invite!(@inviting_agent)
       @success_message = I18n.t("activerecord.notice.models.agent_role.invited", email: @new_email)
       true
     end
   end
 
-  def update_and_confirm_agent
+  def assign_agent_and_role_attributes
     # Devise va essayer de confirmer l'agent car il y a un changement d'email hors on passe d'agent à intervenant, d'un email nil à un email d'invitation.
     # On skip donc la confirmation car on souhaite l'inviter
     @agent.skip_confirmation_notification!
     @agent.skip_last_name_and_first_name_validation = true
-    if @agent.update(last_name: nil, first_name: nil, email: @new_email, uid: @new_email)
-      @agent.confirm
-      true
-    else
-      false
-    end
+    @agent.assign_attributes(last_name: nil, first_name: nil, email: @new_email, uid: @new_email)
+    agent_role.assign_attributes(access_level: @new_access_level)
   end
 
   def turn_agent_with_account_into_intervenant

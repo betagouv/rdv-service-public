@@ -3,7 +3,7 @@ class AgentForm {
     this.formElt = document.querySelector('.js_agent_role_form')
     if (!this.formElt) return
 
-    this.accessLevelRadios = document.querySelectorAll('input[name="agent[roles_attributes][0][access_level]"]')
+    this.accessLevelRadios = document.querySelectorAll('input[name="agent[agent_role][access_level]"]')
 
     this.emailElements = document.querySelector('.js_agent_role_form__email_and_submit')
     this.lastNameElements = document.querySelector('.js_agent_role_form__last_name_and_submit')
