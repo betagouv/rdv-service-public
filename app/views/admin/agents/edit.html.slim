@@ -21,6 +21,8 @@
           = render "model_errors", model: @agent
           = f.input :service_id, collection: [@agent.service], as: :select, label: "Service", hint: "Vous ne pouvez pas changer un agent de service, cela créerait des incohérences. Si vous voulez vraiment réaliser cette opération, il faut supprimer et recréer le compte de l'agent", disabled: true
 
+          - # TODO: ajouter une alerte de warning quand on transforme un agent en intervenant, puisque c'est une action destructive
+          - # TODO: on pourrait aussi ajouter une couleur d'avertissement dans les hints
           = f.simple_fields_for @agent_role do |ff|
             - # rubocop:disable Rails/OutputSafety
             = ff.input :access_level, \

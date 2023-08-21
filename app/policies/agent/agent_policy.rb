@@ -18,15 +18,11 @@ class Agent::AgentPolicy < ApplicationPolicy
     ).any?
   end
 
-  def update?
-    # Cannot update other agents unless they are intervenants
-    current_agent? || (admin_in_record_organisation? && record.is_an_intervenant?)
-  end
-
   alias show? current_agent_or_admin_in_record_organisation?
   alias new? current_agent_or_admin_in_record_organisation?
   alias create? current_agent_or_admin_in_record_organisation?
   alias edit? current_agent_or_admin_in_record_organisation?
+  alias update? edit?
   alias invite? current_agent_or_admin_in_record_organisation?
   alias rdvs? current_agent_or_admin_in_record_organisation?
   alias reinvite? current_agent_or_admin_in_record_organisation?

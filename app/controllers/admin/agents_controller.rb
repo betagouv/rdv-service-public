@@ -41,8 +41,29 @@ class Admin::AgentsController < AgentAuthController
     @agent = Agent.find(params[:id])
     authorize(@agent)
 
+    render_edit
+  end
+
+  def update
+    @agent = Agent.find(params[:id])
+    authorize(@agent)
+
     @agent_role = @agent.roles.find_by(organisation: current_organisation)
-    @agent_removal_presenter = AgentRemovalPresenter.new(@agent, current_organisation)
+
+    access_level = params[:agent][:agent_role][:access_level]
+
+    change_agent_permission_level = ChangeAgentPermissionLevel.new(
+      agent: @agent,
+      organisation: current_organisation,
+      new_access_level: access_level
+    )
+
+    if change_agent_permission_level.call
+      flash[:notice] = change_agent_permission_level.success_message
+      redirect_to admin_organisation_agents_path(current_organisation)
+    else
+      render_edit
+    end
   end
 
   def destroy
@@ -64,6 +85,12 @@ class Admin::AgentsController < AgentAuthController
   end
 
   private
+
+  def render_edit
+    @agent_role = @agent.roles.find_by(organisation: current_organisation)
+    @agent_removal_presenter = AgentRemovalPresenter.new(@agent, current_organisation)
+    render :edit
+  end
 
   def create_agent
     agent = Agent.find_by(email: agent_params[:email].downcase)
