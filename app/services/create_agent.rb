@@ -1,22 +1,27 @@
 # frozen_string_literal: true
 
 class CreateAgent
-  def initialize(agent_params, current_agent, organisation)
+  def initialize(agent_params, current_agent, organisation, access_level)
     @agent_params = agent_params
     @current_agent = current_agent
     @organisation = organisation
+    @access_level = access_level
   end
 
   def call
-    @agent = find_agent || create_agent
+    Agent.transaction do
+      @agent = find_agent || Agent.create(@agent_params)
 
-    add_agent_to_organisation
+      add_agent_to_organisation
+    end
 
-    if !intervenant? && @agent.organisations.count == 1
+    return @agent if @agent.invalid?
+
+    if @agent.has_a_role_with_account_access? && @agent.organisations.count == 1
       @agent.invite!(@current_agent, validate: false)
     end
 
-    true
+    @agent
   end
 
   attr_reader :warning_message
@@ -41,32 +46,20 @@ class CreateAgent
     Agent.find_by(email: @agent_params[:email].downcase)
   end
 
-  def create_agent
-    Agent.create(@agent_params).tap do |agent|
-      AgentTerritorialAccessRight.find_or_create_by!(agent: agent, territory: @organisation.territory)
-    end
-  end
-
   def add_agent_to_organisation
     @agent.roles.new(
-      organisation: current_organisation,
-      access_level: access_level
+      organisation: @organisation,
+      access_level: @access_level
     )
     @agent.save(context: :invite) # Specify a different validation context to bypass last_name/first_name presence
 
+    AgentTerritorialAccessRight.find_or_create_by!(agent: @agent, territory: @organisation.territory)
+
     # Warn if the service isn’t the one that was requested
-    service = services.find(@agent_params[:service_id])
+    service = Service.find(@agent_params[:service_id])
 
-    if agent.service != service
+    if @agent.service != service
       @warning_message = I18n.t("activerecord.warnings.models.agent_role.different_service", service: service.name, agent_service: agent.service.name)
-    end
-  end
-
-  def access_level
-    if @current_agent.conseiller_numerique?
-      AgentRole::ACCESS_LEVEL_BASIC
-    else
-      @agent_params[:roles_attributes]["0"]["access_level"]
     end
   end
 end

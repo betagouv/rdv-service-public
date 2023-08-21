@@ -26,7 +26,7 @@ class Admin::AgentsController < AgentAuthController
   def create
     authorize(Agent.new(organisations: [current_organisation]))
 
-    create_agent = CreateAgent.new(agent_params, current_agent, current_organisation)
+    create_agent = CreateAgent.new(agent_params, current_agent, current_organisation, access_level)
 
     @agent = create_agent.call
 
@@ -131,7 +131,15 @@ class Admin::AgentsController < AgentAuthController
       ENV["RDV_SOLIDARITES_INSTANCE_NAME"] == "DEMO"
   end
 
+  def access_level
+    if @current_agent.conseiller_numerique?
+      AgentRole::ACCESS_LEVEL_BASIC
+    else
+      params[:agent][:roles_attributes]["0"]["access_level"]
+    end
+  end
+
   def agent_params
-    params.require(:agent).permit(:email, :service_id, :last_name, roles_attributes: [:access_level])
+    params.require(:agent).permit(:email, :service_id, :last_name)
   end
 end

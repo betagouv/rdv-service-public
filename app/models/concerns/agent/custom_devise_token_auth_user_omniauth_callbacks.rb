@@ -4,17 +4,17 @@
 
 # This is an override of the default concern : DeviseTokenAuth::Concerns::UserOmniauthCallbacks
 # Changes :
-# Add `&& !is_an_intervenant?` condition to the included validations
+# Add `&& has_a_role_with_account_access?` condition to the included validations
 module Agent::CustomDeviseTokenAuthUserOmniauthCallbacks
   extend ActiveSupport::Concern
 
   included do
-    validates :email, presence: true, if: lambda { uid_and_provider_defined? && email_provider? && !is_an_intervenant? }
-    validates :email, :devise_token_auth_email => true, allow_nil: true, allow_blank: true, if: lambda { uid_and_provider_defined? && email_provider? && !is_an_intervenant? }
-    validates_presence_of :uid, if: lambda { uid_and_provider_defined? && !email_provider? && !is_an_intervenant? }
+    validates :email, presence: true, if: lambda { uid_and_provider_defined? && email_provider? && has_a_role_with_account_access? }
+    validates :email, :devise_token_auth_email => true, allow_nil: true, allow_blank: true, if: lambda { uid_and_provider_defined? && email_provider? && has_a_role_with_account_access? }
+    validates_presence_of :uid, if: lambda { uid_and_provider_defined? && !email_provider? && has_a_role_with_account_access? }
 
     # only validate unique emails among email registration users
-    validates :email, uniqueness: { case_sensitive: false, scope: :provider }, on: :create, if: lambda { uid_and_provider_defined? && email_provider? && !is_an_intervenant? }
+    validates :email, uniqueness: { case_sensitive: false, scope: :provider }, on: :create, if: lambda { uid_and_provider_defined? && email_provider? && has_a_role_with_account_access? }
 
     # keep uid in sync with email
     before_save :sync_uid
@@ -28,15 +28,19 @@ module Agent::CustomDeviseTokenAuthUserOmniauthCallbacks
     @is_an_intervenant ||= roles.present? && roles.one? && roles.first.access_level == "intervenant"
   end
 
+  def has_a_role_with_account_access?
+    roles.where.not(access_level: :intervenant).any?
+  end
+
   protected
 
   def password_required?
-    super && !is_an_intervenant?
+    super && has_a_role_with_account_access?
   end
 
   def email_required?
     # Cette méthode est aussi implémentée par Devise::Models::Validatable, et utilisée pour vérifier les confirmations de mot de passe
-    super && !is_an_intervenant?
+    super && has_a_role_with_account_access?
   end
 
   def uid_and_provider_defined?
