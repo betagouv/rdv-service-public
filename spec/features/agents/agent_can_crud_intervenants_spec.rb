@@ -18,7 +18,7 @@ describe "Agent can CRUD intervenants" do
 
     click_link "INTERVENANT1"
     expect_page_title("Modifier le niveau de permission de l'agent INTERVENANT1")
-    choose :agent_role_access_level_admin
+    find("label", text: "Administrateur").click
     fill_in "Email", with: "ancien_intervenant1@invitation.com"
     click_button("Enregistrer")
 
@@ -28,13 +28,14 @@ describe "Agent can CRUD intervenants" do
     expect(page).to have_no_content("INTERVENANT1")
   end
 
-  it "Create intervenant" do
+  it "Create intervenant", js: true do
     visit admin_organisation_agents_path(organisation)
     expect_page_title("Agents de Organisation n°1")
-    click_link "Créer un intervenant"
-    expect_page_title("Créer un intervenant pour Organisation n°1")
+    click_link "Ajouter un agent", match: :first
+    expect_page_title("Ajouter un agent")
+    find("label", text: "Intervenant").click
     fill_in "Nom", with: "Avocat 1"
-    click_button("Créer l'intervenant")
+    click_button("Ajouter l'intervenant")
     expect_page_title("Agents de Organisation n°1")
     expect(page).to have_content("AVOCAT 1")
   end

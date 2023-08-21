@@ -14,8 +14,6 @@ class AgentRoleForm {
 
   updateEmailFieldDisplay() {
     const selectedAccessLevel = [...this.accessLevelRadios].find(radio => radio.checked)?.value
-    console.log(this.originalAccessLevel)
-    console.log(selectedAccessLevel)
     const emailFieldShouldBeDisplayed = this.originalAccessLevel === 'intervenant' && selectedAccessLevel !== 'intervenant'
     this.emailField.style.display = emailFieldShouldBeDisplayed ? 'block' : 'none'
   }

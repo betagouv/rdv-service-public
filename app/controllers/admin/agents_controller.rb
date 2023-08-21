@@ -55,12 +55,19 @@ class Admin::AgentsController < AgentAuthController
     change_agent_permission_level = ChangeAgentPermissionLevel.new(
       agent: @agent,
       organisation: current_organisation,
-      new_access_level: access_level
+      new_access_level: access_level,
+      new_email: params[:agent][:email],
+      inviting_agent: current_agent
     )
 
     if change_agent_permission_level.call
       flash[:notice] = change_agent_permission_level.success_message
-      redirect_to admin_organisation_agents_path(current_organisation)
+
+      if @agent.invitation_accepted_at.blank? && access_level != "intervenant"
+        redirect_to admin_organisation_invitations_path(current_organisation)
+      else
+        redirect_to admin_organisation_agents_path(current_organisation)
+      end
     else
       render_edit
     end
@@ -68,13 +75,12 @@ class Admin::AgentsController < AgentAuthController
 
   def destroy
     @agent = policy_scope(Agent).find(params[:id])
+    was_intervenant = @agent.roles.find_by(organisation: current_organisation).intervenant?
     authorize(@agent)
     removal_service = AgentRemoval.new(@agent, current_organisation)
 
     if removal_service.remove!
-      if @agent.is_an_intervenant?
-        redirect_to admin_organisation_agents_path(current_organisation), notice: "Intervenant supprimé avec succès."
-      elsif @agent.invitation_accepted_at.blank?
+      if @agent.invitation_accepted_at.blank? && !was_intervenant
         redirect_to admin_organisation_invitations_path(current_organisation), notice: removal_service.confirmation_message
       else
         redirect_to admin_organisation_agents_path(current_organisation), notice: removal_service.confirmation_message
