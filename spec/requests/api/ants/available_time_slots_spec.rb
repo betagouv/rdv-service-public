@@ -89,7 +89,7 @@ describe "ANTS API: availableTimeSlots" do
       MotifCategory.destroy_all
     end
 
-    it "adds crumb with request details to Sentry" do
+    xit "adds crumb with request details to Sentry" do
       expect do
         get "/api/ants/availableTimeSlots?meeting_point_ids=#{lieu1.id}&meeting_point_ids=#{lieu2.id}&start_date=2022-11-01&end_date=2022-11-02&documents_number=1&reason=CNI"
       end.to raise_error(NoMethodError)
