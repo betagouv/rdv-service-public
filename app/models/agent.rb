@@ -83,7 +83,7 @@ class Agent < ApplicationRecord
   # * Invitable#invite! creates the Agent without validation, but validates manually in advance (because we set validate_on_invite to true)
   # * it validates :email (the invite_key) specifically with Devise.email_regexp.
   validates :last_name, :first_name, presence: true, on: :update, unless: -> { is_an_intervenant? || skip_last_name_and_first_name_validation }
-  validates :last_name, presence: true, unless: -> { !is_an_intervenant? || skip_last_name_and_first_name_validation}
+  validates :last_name, presence: true, unless: -> { !is_an_intervenant? || skip_last_name_and_first_name_validation }
   validate :service_cannot_be_changed
 
   # Hooks
