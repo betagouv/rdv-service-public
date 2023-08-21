@@ -100,10 +100,10 @@ class Admin::AgentsController < AgentAuthController
   end
 
   def index_path_for(agent)
-    if agent.invitation_accepted? || agent.roles.where(access_level: :intervenant).any?
-      admin_organisation_agents_path(current_organisation)
-    else
+    if agent.invitation_sent_at? && !agent.invitation_accepted?
       admin_organisation_invitations_path(current_organisation)
+    else
+      admin_organisation_agents_path(current_organisation)
     end
   end
 

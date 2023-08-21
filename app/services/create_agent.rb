@@ -13,6 +13,7 @@ class CreateAgent
       @agent = find_agent || Agent.create(@agent_params)
 
       add_agent_to_organisation
+      check_agent_service
     end
 
     return @agent if @agent.invalid?
@@ -54,7 +55,9 @@ class CreateAgent
     @agent.save(context: :invite) # Specify a different validation context to bypass last_name/first_name presence
 
     AgentTerritorialAccessRight.find_or_create_by!(agent: @agent, territory: @organisation.territory)
+  end
 
+  def check_agent_service
     # Warn if the service isn’t the one that was requested
     service = Service.find(@agent_params[:service_id])
 
