@@ -37,6 +37,14 @@ class Admin::AgentsController < AgentAuthController
     end
   end
 
+  def edit
+    @agent = Agent.find(params[:id])
+    authorize(@agent)
+
+    @agent_role = @agent.roles.find_by(organisation: current_organisation)
+    @agent_removal_presenter = AgentRemovalPresenter.new(@agent, current_organisation)
+  end
+
   def destroy
     @agent = policy_scope(Agent).find(params[:id])
     authorize(@agent)
