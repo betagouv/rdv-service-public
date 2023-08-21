@@ -19,7 +19,7 @@ class ChangeAgentPermissionLevel
     end
   end
 
-  attr_reader :success_message
+  attr_reader :success_message, :new_access_level
 
   private
 

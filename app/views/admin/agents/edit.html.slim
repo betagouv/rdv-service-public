@@ -26,7 +26,7 @@
           = f.simple_fields_for @agent_role do |ff|
             - # rubocop:disable Rails/OutputSafety
             = ff.input :access_level, \
-              collection: access_levels_collection, \
+              collection: @roles, \
               label_method: -> { AgentRole.human_attribute_value(:access_level, _1, context: :explanation).html_safe }, \
               hint: "Les agents peuvent avoir des permissions différentes sur chaque organisation.", \
               as: :radio_buttons

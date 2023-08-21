@@ -20,20 +20,22 @@ class Admin::AgentsController < AgentAuthController
     @agent = Agent.new(organisations: [current_organisation])
     authorize(@agent)
 
-    @services = services.order(:name)
-    @roles = current_agent.conseiller_numerique? ? [AgentRole::ACCESS_LEVEL_BASIC] : access_levels_collection
-
-    render :new, layout: "application_agent"
+    render_new
   end
 
   def create
-    @services = services.order(:name)
-    @roles = current_agent.conseiller_numerique? ? [AgentRole::ACCESS_LEVEL_BASIC] : access_levels_collection
+    authorize(Agent.new(organisations: [current_organisation]))
 
-    if agent_params[:email].present?
-      create_agent
+    create_agent = CreateAgent.new(agent_params, current_agent, current_organisation)
+
+    @agent = create_agent.call
+
+    if @agent.valid?
+      flash[:notice] = create_agent.confirmation_message
+      flash[:error] = create_agent.warning_message
+      redirect_to index_path_for(@agent)
     else
-      create_intervenant
+      render_new
     end
   end
 
@@ -48,14 +50,10 @@ class Admin::AgentsController < AgentAuthController
     @agent = Agent.find(params[:id])
     authorize(@agent)
 
-    @agent_role = @agent.roles.find_by(organisation: current_organisation)
-
-    access_level = params[:agent][:agent_role][:access_level]
-
     change_agent_permission_level = ChangeAgentPermissionLevel.new(
       agent: @agent,
       organisation: current_organisation,
-      new_access_level: access_level,
+      new_access_level: params[:agent][:agent_role][:access_level],
       new_email: params[:agent][:email],
       inviting_agent: current_agent
     )
@@ -63,11 +61,7 @@ class Admin::AgentsController < AgentAuthController
     if change_agent_permission_level.call
       flash[:notice] = change_agent_permission_level.success_message
 
-      if @agent.invitation_accepted_at.blank? && access_level != "intervenant"
-        redirect_to admin_organisation_invitations_path(current_organisation)
-      else
-        redirect_to admin_organisation_agents_path(current_organisation)
-      end
+      redirect_to index_path_for(@agent)
     else
       render_edit
     end
@@ -75,86 +69,41 @@ class Admin::AgentsController < AgentAuthController
 
   def destroy
     @agent = policy_scope(Agent).find(params[:id])
-    was_intervenant = @agent.roles.find_by(organisation: current_organisation).intervenant?
     authorize(@agent)
+
     removal_service = AgentRemoval.new(@agent, current_organisation)
 
     if removal_service.remove!
-      if @agent.invitation_accepted_at.blank? && !was_intervenant
-        redirect_to admin_organisation_invitations_path(current_organisation), notice: removal_service.confirmation_message
-      else
-        redirect_to admin_organisation_agents_path(current_organisation), notice: removal_service.confirmation_message
-      end
+      flash[:notice] = removal_service.confirmation_message
+
+      redirect_to index_path_for(@agent)
     else
-      redirect_to edit_admin_organisation_agent_role_path(current_organisation, @agent.role_in_organisation(current_organisation)), flash: { error: removal_service.error_message }
+      redirect_to edit_admin_organisation_agent_path(current_organisation, @agent), flash: { error: removal_service.error_message }
     end
   end
 
   private
 
+  def render_new
+    @services = services.order(:name)
+    @roles = current_agent.conseiller_numerique? ? [AgentRole::ACCESS_LEVEL_BASIC] : access_levels_collection
+
+    render :new, layout: "application_agent"
+  end
+
   def render_edit
     @agent_role = @agent.roles.find_by(organisation: current_organisation)
     @agent_removal_presenter = AgentRemovalPresenter.new(@agent, current_organisation)
+    @roles = current_agent.conseiller_numerique? ? [AgentRole::ACCESS_LEVEL_BASIC] : access_levels_collection
+
     render :edit
   end
 
-  def create_agent
-    agent = Agent.find_by(email: agent_params[:email].downcase)
-
-    if agent.nil?
-      authorize(Agent.new(organisations: [current_organisation])) # Authorize against a dummy Agent
-
-      agent = Agent.invite!(
-        email: agent_params[:email],
-        uid: agent_params[:email],
-        service_id: agent_params[:service_id],
-        roles_attributes: [{ organisation: current_organisation, access_level: access_level(agent_params) }]
-      )
+  def index_path_for(agent)
+    if agent.invitation_accepted? || agent.roles.where(access_level: :intervenant).any?
+      admin_organisation_agents_path(current_organisation)
     else
-      new_role = agent.roles.new(
-        organisation: current_organisation,
-        access_level: access_level(agent_params)
-      )
-      authorize(new_role) # Checks that the current agent is an admin of the role's organisation
-      agent.save(context: :invite) # Specify a different validation context to bypass last_name/first_name presence
-      # Warn if the service isn’t the one that was requested
-      service = services.find(agent_params[:service_id])
-
-      if agent.service != service
-        flash[:error] = I18n.t("activerecord.warnings.models.agent_role.different_service", service: service.name, agent_service: agent.service.name)
-      end
-    end
-
-    if agent.errors.empty?
-      AgentTerritorialAccessRight.find_or_create_by!(agent: agent, territory: current_organisation.territory)
-      if agent.invitation_accepted?
-        flash[:notice] = I18n.t "activerecord.notice.models.agent_role.existing", email: agent.email
-        redirect_to admin_organisation_agents_path(current_organisation)
-      else
-        flash[:notice] = I18n.t "activerecord.notice.models.agent_role.invited", email: agent.email
-        redirect_to admin_organisation_invitations_path(current_organisation)
-      end
-    else
-      # Keep the error message, but redirect instead of just rendering the template:
-      # we want a new empty form.
-      flash[:error] = agent.errors.full_messages.to_sentence
-      redirect_to action: :new
-    end
-  end
-
-  def create_intervenant
-    @agent = Agent.new(
-      last_name: agent_params[:last_name],
-      service_id: agent_params[:service_id],
-      roles_attributes: [
-        { organisation: current_organisation, access_level: access_level(agent_params) },
-      ]
-    )
-    authorize(@agent)
-    if @agent.save
-      redirect_to admin_organisation_agents_path(current_organisation), notice: "Intervenant créé avec succès."
-    else
-      render :new
+      admin_organisation_invitations_path(current_organisation)
     end
   end
 
@@ -180,14 +129,6 @@ class Admin::AgentsController < AgentAuthController
       Rails.env.development? ||
       Rails.env.test? ||
       ENV["RDV_SOLIDARITES_INSTANCE_NAME"] == "DEMO"
-  end
-
-  def access_level(params)
-    if current_agent.conseiller_numerique?
-      AgentRole::ACCESS_LEVEL_BASIC
-    else
-      params[:roles_attributes]["0"]["access_level"]
-    end
   end
 
   def agent_params
