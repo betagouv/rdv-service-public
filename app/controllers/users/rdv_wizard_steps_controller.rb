@@ -69,7 +69,7 @@ class Users::RdvWizardStepsController < UserAuthController
   end
 
   def rdv_params
-    params.require(:rdv).permit(*RDV_PERMITTED_PARAMS).merge(params.permit(*EXTRA_PERMITTED_PARAMS))
+    params.require(:rdv).permit(*RDV_PERMITTED_PARAMS).merge(params.permit(*EXTRA_PERMITTED_PARAMS)).merge(user_ids: current_user.available_users_for_rdv.ids)
   end
 
   def query_params
