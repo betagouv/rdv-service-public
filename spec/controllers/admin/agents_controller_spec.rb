@@ -92,9 +92,7 @@ RSpec.describe Admin::AgentsController, type: :controller do
           agent: {
             email: "hacker@renard.com",
             service_id: service_id,
-            agent_role: {
-              access_level: "basic",
-            },
+            agent_role: { access_level: "basic" },
           },
         }
       end
@@ -112,9 +110,7 @@ RSpec.describe Admin::AgentsController, type: :controller do
           agent: {
             email: "hacker@renard.com",
             service_id: service_id,
-            agent_role: {
-              access_level: "basic",
-            },
+            agent_role: { access_level: "basic", organisation_id: organisation2.id },
           },
         }
       end
@@ -132,9 +128,7 @@ RSpec.describe Admin::AgentsController, type: :controller do
           agent: {
             email: "michel@lapin.com",
             service_id: service_id,
-            agent_role: {
-              access_level: "basic",
-            },
+            agent_role: { access_level: "basic" },
           },
         }
       end
@@ -181,24 +175,16 @@ RSpec.describe Admin::AgentsController, type: :controller do
           agent: {
             email: "michel@lapin.com",
             service_id: service_id,
-            agent_role: {
-              access_level: "basic",
-            },
+            agent_role: { access_level: "basic" },
           },
         }
       end
 
-      it "creates a new agent" do
+      it "creates a new agent, sends an email and redirect to invitations list" do
         expect { subject }.to change(Agent, :count).by(1)
-      end
 
-      it "redirects to invitations list" do
-        subject
         expect(response).to redirect_to(admin_organisation_invitations_path(organisation.id))
-      end
 
-      it "sends an email" do
-        subject
         perform_enqueued_jobs
         expect(Devise.mailer.deliveries.count).to eq(1)
       end
@@ -220,8 +206,8 @@ RSpec.describe Admin::AgentsController, type: :controller do
 
       it "does not create a new agent and renders the form" do
         expect { subject }.not_to change(Agent, :count)
-        expect(response).to have_content("Email n'est pas valide")
-        expect(response).to have_content("Les agents peuvent avoir des permissions différentes sur chaque organisation.")
+        expect(response.body).to have_content("Email n'est pas valide")
+        expect(response.body).to have_content("Les agents peuvent avoir des permissions différentes sur chaque organisation.")
       end
     end
 
@@ -294,9 +280,7 @@ RSpec.describe Admin::AgentsController, type: :controller do
           agent: {
             email: "MARCO@demo.rdv-solidarites.fr",
             service_id: service_id,
-            agent_role: {
-              access_level: "basic",
-            },
+            agent_role: { access_level: "basic" },
           },
         }
       end

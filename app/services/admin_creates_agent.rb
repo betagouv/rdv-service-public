@@ -19,10 +19,10 @@ class AdminCreatesAgent
       elsif @access_level == "intervenant"
         @agent = Agent.create(agent_and_role_params)
       else
-        @agent = Agent.invite!(agent_and_role_params)
+        @agent = Agent.invite!(agent_and_role_params, @current_agent)
       end
 
-      if @agent.valid?
+      if @agent.errors.none? # Si on relance des validations en appelant #valid?, on va déclencher les validations sur first_name et last_name
         AgentTerritorialAccessRight.find_or_create_by!(agent: @agent, territory: @organisation.territory)
       end
     end
