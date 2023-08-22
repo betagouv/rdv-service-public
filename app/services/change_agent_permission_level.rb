@@ -19,7 +19,7 @@ class ChangeAgentPermissionLevel
     end
   end
 
-  attr_reader :success_message, :new_access_level
+  attr_reader :confirmation_message, :new_access_level
 
   private
 
@@ -36,7 +36,7 @@ class ChangeAgentPermissionLevel
     if @agent.save
       @agent.confirm
       @agent.invite!(@inviting_agent)
-      @success_message = I18n.t("activerecord.notice.models.agent_role.invited", email: @agent.email)
+      @confirmation_message = I18n.t("activerecord.notice.models.agent_role.invited", email: @agent.email)
       true
     end
   end
@@ -67,7 +67,7 @@ class ChangeAgentPermissionLevel
                                access_level: @new_access_level,
                              })
     if @agent.save
-      @success_message = I18n.t("activerecord.notice.models.agent_role.updated")
+      @confirmation_message = I18n.t("activerecord.notice.models.agent_role.updated")
     end
   end
 

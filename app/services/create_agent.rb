@@ -10,6 +10,7 @@ class CreateAgent
 
   def call
     Agent.transaction do
+      # TODO: faire un new ici pour éviter de modifier le custom devise machin
       @agent = find_agent || Agent.create(@agent_params)
 
       add_agent_to_organisation

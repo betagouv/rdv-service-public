@@ -9,9 +9,9 @@ class Admin::AgentsController < AgentAuthController
       .active
 
     @agents = @agents.joins(:organisations).where(organisations: { id: current_organisation.id }) if current_organisation
-    @invited_agents_count = @agents.invitation_not_accepted.created_by_invite.count
+    @invited_agents_count = @agents.invitation_not_accepted.where.not(invitation_sent_at: nil).created_by_invite.count
 
-    @agents = @agents.not_intervenants.complete.or(@agents.intervenants)
+    @agents.where("(invitation_sent_at IS NULL AND invitation_accepted_at is NULL) OR (invitation_sent_at IS NOT NULL AND invitation_accepted_at IS NULL)")
     @agents = index_params[:term].present? ? @agents.search_by_text(index_params[:term]) : @agents.order_by_last_name
     @agents = @agents.page(params[:page])
   end
@@ -64,7 +64,7 @@ class Admin::AgentsController < AgentAuthController
     )
 
     if change_agent_permission_level.call
-      flash[:notice] = change_agent_permission_level.success_message
+      flash[:notice] = change_agent_permission_level.confirmation_message
 
       redirect_to_index_path_for(@agent)
     else
