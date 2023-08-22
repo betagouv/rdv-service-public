@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
-class CreateAgent
-  def initialize(agent_params, current_agent, organisation, access_level)
+# La phrase du nom de la classe indique le contexte et l'action métier réalisés par ce service object en PORO
+class AdminCreatesAgent
+  def initialize(agent_params:, current_agent:, organisation:, access_level:)
     @agent_params = agent_params
     @current_agent = current_agent
     @organisation = organisation
@@ -10,8 +11,7 @@ class CreateAgent
 
   def call
     Agent.transaction do
-      # TODO: faire un new ici pour éviter de modifier le custom devise machin
-      @agent = find_agent || Agent.create(@agent_params)
+      @agent = find_agent || Agent.new(@agent_params)
 
       add_agent_to_organisation
       check_agent_service

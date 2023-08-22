@@ -26,11 +26,11 @@ class Admin::AgentsController < AgentAuthController
   def create
     authorize(Agent.new(organisations: [current_organisation]))
 
-    create_agent = CreateAgent.new(
-      create_agent_params,
-      current_agent,
-      current_organisation,
-      access_level
+    create_agent = AdminCreatesAgent.new(
+      agent_params: create_agent_params,
+      current_agent: current_agent,
+      organisation: current_organisation,
+      access_level: access_level
     )
 
     @agent = create_agent.call
@@ -55,7 +55,7 @@ class Admin::AgentsController < AgentAuthController
     @agent = Agent.find(params[:id])
     authorize(@agent)
 
-    change_agent_permission_level = ChangeAgentPermissionLevel.new(
+    update_agent = AdminUpdatesAgent.new(
       agent: @agent,
       organisation: current_organisation,
       new_access_level: params[:agent][:agent_role][:access_level],
@@ -63,8 +63,8 @@ class Admin::AgentsController < AgentAuthController
       inviting_agent: current_agent
     )
 
-    if change_agent_permission_level.call
-      flash[:notice] = change_agent_permission_level.confirmation_message
+    if update_agent.call
+      flash[:notice] = update_agent.confirmation_message
 
       redirect_to_index_path_for(@agent)
     else

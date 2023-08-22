@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# La phrase du nom de la classe indique le contexte et l'action métier réalisés par ce service object en PORO
 class ChangeAgentPermissionLevel
   def initialize(agent:, organisation:, new_access_level:, agent_params:, inviting_agent:)
     @agent = agent

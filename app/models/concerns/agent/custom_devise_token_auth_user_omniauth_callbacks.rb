@@ -28,6 +28,7 @@ module Agent::CustomDeviseTokenAuthUserOmniauthCallbacks
     @is_an_intervenant ||= roles.present? && roles.one? && roles.first.access_level == "intervenant"
   end
 
+  # TODO: voir si on peut se passer de cette méthode
   def has_a_role_with_account_access?
     roles.any? { |r| !r.intervenant?  }
   end
