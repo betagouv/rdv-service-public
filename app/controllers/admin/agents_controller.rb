@@ -122,7 +122,7 @@ class Admin::AgentsController < AgentAuthController
   end
 
   def access_levels_collection
-    if activate_intervenants_feature?
+    if activate_intervenants_feature? && @agent != current_agent
       AgentRole::ACCESS_LEVELS_WITH_INTERVENANT
     else
       AgentRole::ACCESS_LEVELS

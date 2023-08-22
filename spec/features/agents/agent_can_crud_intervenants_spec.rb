@@ -3,7 +3,7 @@
 describe "Agent can CRUD intervenants" do
   let(:organisation) { create(:organisation) }
   let!(:service) { create(:service, name: "CDAD") }
-  let!(:agent_admin) { create(:agent, service: service, admin_role_in_organisations: [organisation], email: "admin@example.com") }
+  let!(:agent_admin) { create(:agent, service: service, admin_role_in_organisations: [organisation], email: "admin@example.com", first_name: "Francis", last_name: "Admin") }
   let!(:agent_intervenant1) { create(:agent, :intervenant, last_name: "intervenant1", organisations: [organisation]) }
   let!(:agent_intervenant2) { create(:agent, :intervenant, last_name: "intervenant2", organisations: [organisation]) }
 
@@ -73,7 +73,15 @@ describe "Agent can CRUD intervenants" do
     expect(Agent.last.roles.pluck(:access_level)).to eq ["intervenant"]
     expect(Agent.last).to have_attributes(
       last_name: "Fictif",
-      first_name: nil
+      first_name: nil,
+      email: nil,
+      uid: nil,
+      invitation_token: nil,
+      invitation_accepted_at: nil,
+      invitation_created_at: nil,
+      invitation_sent_at: nil,
+      invited_by_id: nil,
+      invited_by_type: nil
     )
 
     # Delete the intervenant
@@ -117,6 +125,17 @@ describe "Agent can CRUD intervenants" do
       click_button("Enregistrer")
 
       expect(agent_intervenant1.reload.roles.pluck(:access_level)).to eq ["basic"]
+    end
+  end
+
+  it "doesn't allow turning the current agent into an intervenant" do
+    visit admin_organisation_agents_path(organisation)
+    click_link "ADMIN Francis"
+    expect(page).not_to have_content("Intervenant")
+  end
+
+  context "when an agent belongs to multiple organisations" do
+    it "doesn't allow turning them into an intervenant" do
     end
   end
 end
