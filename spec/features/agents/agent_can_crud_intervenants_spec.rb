@@ -43,6 +43,16 @@ describe "Agent can CRUD intervenants" do
 
     expect(Agent.last.roles.pluck(:access_level)).to eq ["admin"]
 
+    expect { perform_enqueued_jobs }.not_to raise_error
+    expect(ActionMailer::Base.deliveries.size).to eq(1)
+    expect(ActionMailer::Base.deliveries.last.subject).to eq("Vous avez été invité sur RDV Solidarités")
+    expect(ActionMailer::Base.deliveries.last.to).to eq(["ancien_intervenant1@invitation.com"])
+
+    expect(Agent.last).to have_attributes(
+      email: "ancien_intervenant1@invitation.com",
+      uid: "ancien_intervenant1@invitation.com"
+    )
+
     expect_page_title("Invitations en cours pour Organisation n°1")
     expect(page).to have_content("ancien_intervenant1@invitation.com")
     expect(page).to have_content("FICTIF Bob")
@@ -63,17 +73,24 @@ describe "Agent can CRUD intervenants" do
     expect(Agent.last.roles.pluck(:access_level)).to eq ["intervenant"]
     expect(Agent.last).to have_attributes(
       last_name: "Fictif",
-      first_name: "Bob"
+      first_name: nil
     )
 
     # Delete the intervenant
     expect_page_title("Agents de Organisation n°1")
-    click_link "FICTIF Bob"
-    expect_page_title("Modifier le niveau de permission de l'agent Bob FICTIF")
+    click_link "FICTIF"
+    expect_page_title("Modifier le niveau de permission de l'agent FICTIF")
     accept_alert do
       click_link("Supprimer le compte")
     end
     expect_page_title("Agents de Organisation n°1")
     expect(page).to have_no_content("FICTIF")
+  end
+
+  describe "validation errors on agent email when turning an intervenant into an agent with account" do
+    it "displays errors" do
+      visit admin_organisation_agents_path(organisation)
+      # TODO: finish spec
+    end
   end
 end

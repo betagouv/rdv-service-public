@@ -12,18 +12,6 @@ describe AgentRole::IntervenantRoleChangeable, type: :concern do
       let!(:agent_user) { create(:agent, :intervenant, organisations: [organisation]) }
       let!(:agent_role) { agent_user.roles.first }
 
-      it "updates the agent_role and send invitation" do
-        agent_role.access_level = "admin"
-        agent_role.change_role_from_intervenant_and_invite(current_agent, invitation_email)
-        expect(agent_role.access_level).to eq("admin")
-        expect(agent_role.agent.email).to eq(invitation_email)
-        expect(agent_role.agent.uid).to eq(invitation_email)
-        expect { perform_enqueued_jobs }.not_to raise_error
-        expect(ActionMailer::Base.deliveries.size).to eq(1)
-        expect(ActionMailer::Base.deliveries.last.subject).to eq("Vous avez été invité sur RDV Solidarités")
-        expect(ActionMailer::Base.deliveries.last.to).to eq([invitation_email])
-      end
-
       it "does not update the requested agent_role if invitation email is invalid" do
         invalid_email = "invalid_email"
         agent_role.change_role_from_intervenant_and_invite(current_agent, invalid_email)
