@@ -68,7 +68,7 @@ describe "Admin can configure the organisation" do
 
     click_link "PATRICK Tony"
     expect_page_title("Modifier le niveau de permission de l'agent Tony PATRICK")
-    choose :agent_role_access_level_admin
+    choose "Administrateur"
     click_button("Enregistrer")
 
     expect_page_title("Agents de Organisation n°1")
@@ -77,10 +77,10 @@ describe "Admin can configure the organisation" do
     click_link "PATRICK Tony"
     click_link("Supprimer le compte")
 
-    expect_page_title("Invitations en cours pour Organisation n°1")
+    expect_page_title("Agents de Organisation n°1")
     expect(page).to have_no_content("Tony PATRICK")
 
-    click_link "Inviter un agent", match: :first
+    click_link "Ajouter un agent", match: :first
     fill_in "Email", with: "jean@paul.com"
     click_button "Envoyer une invitation"
 
@@ -96,7 +96,7 @@ describe "Admin can configure the organisation" do
 
     it "allows inviting agents on the correct domain" do
       click_link "Agents"
-      click_link "Inviter un agent", match: :first
+      click_link "Ajouter un agent", match: :first
       fill_in "Email", with: "jean@paul.com"
       click_button "Envoyer une invitation"
 
@@ -111,7 +111,7 @@ describe "Admin can configure the organisation" do
 
     it "allows inviting agents on the correct domain" do
       click_link "Agents"
-      click_link "Inviter un agent", match: :first
+      click_link "Ajouter un agent", match: :first
       fill_in "Email", with: "jean@paul.com"
       click_button "Envoyer une invitation"
 
