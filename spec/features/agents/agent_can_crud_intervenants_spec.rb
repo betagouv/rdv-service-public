@@ -135,7 +135,32 @@ describe "Agent can CRUD intervenants" do
   end
 
   context "when an agent belongs to multiple organisations" do
+    let!(:agent_in_multiple_organisations) do
+      create(:agent, service: service, basic_role_in_organisations: [organisation], first_name: "Francis", last_name: "Factice")
+    end
+
+    let!(:other_role) do
+      create(:agent_role, agent: agent_in_multiple_organisations, access_level: :basic)
+    end
+
     it "doesn't allow turning them into an intervenant" do
+      # Front end validation
+      visit admin_organisation_agents_path(organisation)
+      click_link "FACTICE Francis"
+      expect(page).not_to have_content("Intervenant")
+
+      # Backend validation
+      other_role.delete
+
+      visit current_path
+      find("label", text: "Intervenant").click
+
+      create(:agent_role, agent: agent_in_multiple_organisations, access_level: :basic)
+
+      click_button("Enregistrer")
+
+      expect(page).to have_content("Un agent membre de plusieurs organisations ne peut pas avoir un statut d'intervenant")
+      expect(agent_in_multiple_organisations.reload.roles.pluck(:access_level)).to eq(%w[basic basic])
     end
   end
 end
