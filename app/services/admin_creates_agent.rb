@@ -11,16 +11,20 @@ class AdminCreatesAgent
 
   def call
     Agent.transaction do
-      @agent = find_agent || Agent.new(@agent_params)
+      @agent = find_agent
 
-      add_agent_to_organisation
-      check_agent_service
-    end
+      if @agent
+        add_agent_to_organisation
+        check_agent_service
+      elsif @access_level == "intervenant"
+        @agent = Agent.create(agent_and_role_params)
+      else
+        @agent = Agent.invite!(agent_and_role_params)
+      end
 
-    return @agent if @agent.invalid?
-
-    if @access_level != "intervenant" && @agent.organisations.count == 1
-      @agent.invite!(@current_agent, validate: false)
+      if @agent.valid?
+        AgentTerritorialAccessRight.find_or_create_by!(agent: @agent, territory: @organisation.territory)
+      end
     end
 
     @agent
@@ -42,6 +46,15 @@ class AdminCreatesAgent
 
   private
 
+  def agent_and_role_params
+    @agent_params.merge(
+      roles_attributes: [
+        organisation: @organisation,
+        access_level: @access_level,
+      ]
+    )
+  end
+
   def find_agent
     return nil if @agent_params[:email].blank?
 
@@ -49,16 +62,12 @@ class AdminCreatesAgent
   end
 
   def add_agent_to_organisation
-    @agent.assign_attributes(
+    @agent.update(
       roles_attributes: [
         organisation: @organisation,
         access_level: @access_level,
       ]
     )
-
-    if @agent.save(context: :invite) # Specify a different validation context to bypass last_name/first_name presence
-      AgentTerritorialAccessRight.find_or_create_by!(agent: @agent, territory: @organisation.territory)
-    end
   end
 
   def check_agent_service
