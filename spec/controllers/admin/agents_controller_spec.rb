@@ -55,10 +55,10 @@ RSpec.describe Admin::AgentsController, type: :controller do
     subject { post :create, params: params }
 
     shared_examples "existing agent is added to organization" do
-      it "adds agent to organisation and redirects to the invitations list and does not create a new agent" do
+      it "adds agent to organisation and redirects to the agents list and does not create a new agent" do
         expect { subject }.not_to change(Agent, :count)
         expect(existing_agent.organisation_ids).to include(organisation.id)
-        expect(response).to redirect_to(admin_organisation_invitations_path(organisation.id))
+        expect(response).to redirect_to(admin_organisation_agents_path(organisation.id))
       end
     end
 
