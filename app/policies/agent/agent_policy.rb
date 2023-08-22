@@ -22,7 +22,7 @@ class Agent::AgentPolicy < ApplicationPolicy
   alias new? current_agent_or_admin_in_record_organisation?
   alias create? current_agent_or_admin_in_record_organisation?
   alias edit? current_agent_or_admin_in_record_organisation?
-  alias update? edit?
+  alias update? current_agent_or_admin_in_record_organisation?
   alias invite? current_agent_or_admin_in_record_organisation?
   alias rdvs? current_agent_or_admin_in_record_organisation?
   alias reinvite? current_agent_or_admin_in_record_organisation?

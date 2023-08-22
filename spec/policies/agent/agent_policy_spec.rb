@@ -7,7 +7,7 @@ describe Agent::AgentPolicy, type: :policy do
   let!(:organisation) { create(:organisation) }
   let!(:organisation2) { create(:organisation) }
 
-  %i[show? new? create? edit? invite? rdvs? reinvite? versions?].each do |action|
+  %i[show? new? create? edit? update? invite? rdvs? reinvite? versions?].each do |action|
     describe "##{action}" do
       context "regular agent, self" do
         let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
@@ -64,57 +64,6 @@ describe Agent::AgentPolicy, type: :policy do
       let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
 
       permissions(:destroy?) { it { is_expected.not_to permit(pundit_context, agent) } }
-    end
-  end
-
-  describe "#update?" do
-    context "regular agent, other agent same org" do
-      let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
-      let!(:other_agent) { create(:agent, basic_role_in_organisations: [organisation]) }
-
-      permissions(:update?) { it { is_expected.not_to permit(pundit_context, other_agent) } }
-    end
-
-    context "admin agent, other agent same org" do
-      let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
-      let!(:other_agent) { create(:agent, basic_role_in_organisations: [organisation]) }
-
-      permissions(:update?) { it { is_expected.not_to permit(pundit_context, other_agent.reload) } }
-    end
-
-    context "admin agent, other agent other org" do
-      let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
-      let!(:other_agent) { create(:agent, basic_role_in_organisations: [organisation2]) }
-
-      permissions(:update?) { it { is_expected.not_to permit(pundit_context, other_agent.reload) } }
-    end
-
-    context "basic agent, intervenant same org" do
-      let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
-      let!(:intervenant) { create(:agent, :intervenant, organisations: [organisation]) }
-
-      permissions(:update?) { it { is_expected.not_to permit(pundit_context, intervenant) } }
-    end
-
-    context "admin agent, intervenant same org" do
-      let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
-      let!(:intervenant) { create(:agent, :intervenant, organisations: [organisation]) }
-
-      permissions(:update?) { it { is_expected.to permit(pundit_context, intervenant) } }
-    end
-
-    context "basic agent, intervenant other org" do
-      let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
-      let!(:intervenant) { create(:agent, :intervenant, organisations: [organisation2]) }
-
-      permissions(:update?) { it { is_expected.not_to permit(pundit_context, intervenant) } }
-    end
-
-    context "admin agent, intervenant other org" do
-      let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
-      let!(:intervenant) { create(:agent, :intervenant, organisations: [organisation2]) }
-
-      permissions(:update?) { it { is_expected.not_to permit(pundit_context, intervenant) } }
     end
   end
 end
