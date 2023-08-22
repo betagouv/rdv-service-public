@@ -10,12 +10,12 @@ class Admin::AgentIntervenantsController < AgentAuthController
     agent_role = @agent.roles.find_by(organisation: current_organisation)
 
     if agent_role.intervenant? && @agent.update(last_name: params[:agent][:last_name])
-      flash[:notice] = "Agent renommé"
+      flash[:notice] = "Intervenant modifié avec succès."
 
       redirect_to admin_organisation_agents_path(current_organisation)
     else
-      flash[:error] = @agent.errors.full_messages.join(", ")
-      redirect_to edit_admin_organisation_agents_path(current_organisation, @agent)
+      flash[:error] = @agent.errors.full_messages.uniq.join(", ")
+      redirect_to edit_admin_organisation_agent_path(current_organisation, @agent)
     end
   end
 end
