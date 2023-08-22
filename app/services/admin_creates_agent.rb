@@ -19,7 +19,7 @@ class AdminCreatesAgent
 
     return @agent if @agent.invalid?
 
-    if @agent.has_a_role_with_account_access? && @agent.organisations.count == 1
+    if @access_level != "intervenant" && @agent.organisations.count == 1
       @agent.invite!(@current_agent, validate: false)
     end
 
@@ -34,9 +34,9 @@ class AdminCreatesAgent
     if @agent.is_an_intervenant?
       "Intervenant créé avec succès."
     elsif @agent.invitation_accepted?
-      I18n.t("activerecord.notice.models.agent_role.existing", email: agent.email)
+      I18n.t("activerecord.notice.models.agent_role.existing", email: @agent.email)
     else
-      I18n.t("activerecord.notice.models.agent_role.invited", email: agent.email)
+      I18n.t("activerecord.notice.models.agent_role.invited", email: @agent.email)
     end
   end
 
@@ -49,13 +49,16 @@ class AdminCreatesAgent
   end
 
   def add_agent_to_organisation
-    @agent.roles.new(
-      organisation: @organisation,
-      access_level: @access_level
+    @agent.assign_attributes(
+      roles_attributes: [
+        organisation: @organisation,
+        access_level: @access_level,
+      ]
     )
-    @agent.save(context: :invite) # Specify a different validation context to bypass last_name/first_name presence
 
-    AgentTerritorialAccessRight.find_or_create_by!(agent: @agent, territory: @organisation.territory)
+    if @agent.save(context: :invite) # Specify a different validation context to bypass last_name/first_name presence
+      AgentTerritorialAccessRight.find_or_create_by!(agent: @agent, territory: @organisation.territory)
+    end
   end
 
   def check_agent_service
@@ -63,7 +66,7 @@ class AdminCreatesAgent
     service = Service.find(@agent_params[:service_id])
 
     if @agent.service != service
-      @warning_message = I18n.t("activerecord.warnings.models.agent_role.different_service", service: service.name, agent_service: agent.service.name)
+      @warning_message = I18n.t("activerecord.warnings.models.agent_role.different_service", service: service.name, agent_service: @agent.service.name)
     end
   end
 end
