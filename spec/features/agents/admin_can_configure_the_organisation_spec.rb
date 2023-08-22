@@ -17,7 +17,6 @@ describe "Admin can configure the organisation" do
   around { |example| perform_enqueued_jobs { example.run } }
 
   before do
-    allow_any_instance_of(AgentsHelper).to receive(:activate_intervenants_feature?).and_return(false)
     login_as(agent_admin, scope: :agent)
     visit authenticated_agent_root_path
   end
