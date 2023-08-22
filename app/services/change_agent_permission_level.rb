@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 class ChangeAgentPermissionLevel
-  def initialize(agent:, organisation:, new_access_level:, new_email:, inviting_agent:)
+  def initialize(agent:, organisation:, new_access_level:, agent_params:, inviting_agent:)
     @agent = agent
     @organisation = organisation
     @new_access_level = new_access_level.to_s
-    @new_email = new_email
+    @agent_params = agent_params
     @inviting_agent = inviting_agent
   end
 
@@ -32,16 +32,11 @@ class ChangeAgentPermissionLevel
   end
 
   def turn_intervenant_into_agent_with_account
-    if @new_email.blank?
-      errors.add(:base, "L'email d'invitation doit être rempli")
-      return false
-    end
-
     assign_agent_and_role_attributes
     if @agent.save
       @agent.confirm
       @agent.invite!(@inviting_agent)
-      @success_message = I18n.t("activerecord.notice.models.agent_role.invited", email: @new_email)
+      @success_message = I18n.t("activerecord.notice.models.agent_role.invited", email: @agent.email)
       true
     end
   end
@@ -51,8 +46,11 @@ class ChangeAgentPermissionLevel
     # On skip donc la confirmation car on souhaite l'inviter
     @agent.skip_confirmation_notification!
     @agent.skip_last_name_and_first_name_validation = true
-    @agent.assign_attributes(last_name: nil, first_name: nil, email: @new_email, uid: @new_email)
-    agent_role.assign_attributes(access_level: @new_access_level)
+    @agent.assign_attributes(@agent_params)
+    @agent.assign_attributes(roles_attributes: {
+                               id: agent_role.id,
+                               access_level: @new_access_level,
+                             })
   end
 
   def turn_agent_with_account_into_intervenant
@@ -63,7 +61,10 @@ class ChangeAgentPermissionLevel
 
     reset_agent_email_and_password
     reset_agent_invitation_fields
-    agent_role.assign_attributes(access_level: @new_access_level)
+    @agent.assign_attributes(roles_attributes: {
+                               id: agent_role.id,
+                               access_level: @new_access_level,
+                             })
     if @agent.save
       @success_message = I18n.t("activerecord.notice.models.agent_role.updated")
     end

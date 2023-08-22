@@ -29,7 +29,7 @@ module Agent::CustomDeviseTokenAuthUserOmniauthCallbacks
   end
 
   def has_a_role_with_account_access?
-    roles.where.not(access_level: :intervenant).any?
+    roles.any? { |r| !r.intervenant?  }
   end
 
   protected

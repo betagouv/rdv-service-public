@@ -7,30 +7,13 @@ describe "Agent can CRUD intervenants" do
   let!(:agent_intervenant1) { create(:agent, :intervenant, last_name: "intervenant1", organisations: [organisation]) }
   let!(:agent_intervenant2) { create(:agent, :intervenant, last_name: "intervenant2", organisations: [organisation]) }
 
-  before do
-    login_as(agent_admin, scope: :agent)
-    visit authenticated_agent_root_path
-  end
+  before { login_as(agent_admin, scope: :agent) }
 
-  it "Change intervenant to admin (update agent_role)", js: true do
+  specify "full intervenant lifecycle", js: true do
     visit admin_organisation_agents_path(organisation)
     expect_page_title("Agents de Organisation n°1")
 
-    click_link "INTERVENANT1"
-    expect_page_title("Modifier le niveau de permission de l'agent INTERVENANT1")
-    find("label", text: "Administrateur").click
-    fill_in "Email", with: "ancien_intervenant1@invitation.com"
-    click_button("Enregistrer")
-
-    expect_page_title("Invitations en cours pour Organisation n°1")
-    expect(page).to have_content("ancien_intervenant1@invitation.com")
-    # last_name and first_name are reset when an intervenant is changed to agent
-    expect(page).to have_no_content("INTERVENANT1")
-  end
-
-  it "Create intervenant", js: true do
-    visit admin_organisation_agents_path(organisation)
-    expect_page_title("Agents de Organisation n°1")
+    # Create an intervenant
     click_link "Ajouter un agent", match: :first
     expect_page_title("Ajouter un agent")
     find("label", text: "Intervenant").click
@@ -38,33 +21,53 @@ describe "Agent can CRUD intervenants" do
     click_button("Ajouter l'intervenant")
     expect_page_title("Agents de Organisation n°1")
     expect(page).to have_content("AVOCAT 1")
-  end
 
-  it "Update intervenant last_name" do
-    visit admin_organisation_agents_path(organisation)
-    expect_page_title("Agents de Organisation n°1")
+    # Change their last name
     click_link "INTERVENANT1"
     expect_page_title("Modifier le niveau de permission de l'agent INTERVENANT1")
     fill_in "Nom", with: "Nouveau nom"
     click_button("Modifier le nom")
     expect_page_title("Agents de Organisation n°1")
-    expect(page).to have_content("NOUVEAU NOM")
-  end
+    expect(page).to have_content("AVOCAT 1")
 
-  it "Delete intervenant" do
-    visit admin_organisation_agents_path(organisation)
-    expect_page_title("Agents de Organisation n°1")
-    click_link "INTERVENANT1"
-    expect_page_title("Modifier le niveau de permission de l'agent INTERVENANT1")
-    click_link("Supprimer le compte")
-    expect_page_title("Agents de Organisation n°1")
-    expect(page).to have_no_content("INTERVENANT1")
-  end
+    # Change the intervenant into an admin agent
+    click_link "AVOCAT 1"
+    expect_page_title("Modifier le niveau de permission de l'agent AVOCAT 1")
+    find("label", text: "Administrateur").click
+    fill_in "Email", with: "ancien_intervenant1@invitation.com"
+    fill_in "Prénom", with: "Bob"
+    within(".js_agent_form") do
+      fill_in "Nom d’usage", with: "Fictif", match: :smart
+    end
+    click_button("Enregistrer")
 
-  it "See intervenant and agents in the dropdown", js: true do
+    expect(Agent.last.roles.pluck(:access_level)).to eq ["admin"]
+
+    expect_page_title("Invitations en cours pour Organisation n°1")
+    expect(page).to have_content("ancien_intervenant1@invitation.com")
+    expect(page).to have_content("FICTIF Bob")
+
+    # Verify the agent name display
+    visit authenticated_agent_root_path
     find("span", text: agent_admin.reverse_full_name, match: :first).click
     expect(page).to have_content(agent_admin.reverse_full_name)
-    expect(page).to have_content("INTERVENANT1")
+    expect(page).to have_content("FICTIF Bob")
     expect(page).to have_content("INTERVENANT2")
+
+    # Change the agent back into an intervenant
+    visit admin_organisation_invitations_path(organisation)
+    click_link "FICTIF Bob"
+    find("label", text: "Intervenant").click
+    click_button("Enregistrer")
+
+    # Delete the intervenant
+    expect_page_title("Agents de Organisation n°1")
+    click_link "FICTIF Bob"
+    expect_page_title("Modifier le niveau de permission de l'agent Bob FICTIF")
+    accept_alert do
+      click_link("Supprimer le compte")
+    end
+    expect_page_title("Agents de Organisation n°1")
+    expect(page).to have_no_content("FICTIF")
   end
 end

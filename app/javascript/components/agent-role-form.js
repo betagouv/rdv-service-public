@@ -6,7 +6,7 @@ class AgentRoleForm {
     this.originalAccessLevel = this.formElt.getAttribute('data-originalaccesslevel')
 
     this.accessLevelRadios = document.querySelectorAll('input[name="agent[agent_role][access_level]"]')
-    this.emailField = document.querySelector('.js_agent_form__email_field')
+    this.agentWithAccountFields = document.querySelector('.js_agent_form__agent_with_account_fields')
 
     this.updateEmailFieldDisplay()
     this.addEventListeners()
@@ -15,7 +15,19 @@ class AgentRoleForm {
   updateEmailFieldDisplay() {
     const selectedAccessLevel = [...this.accessLevelRadios].find(radio => radio.checked)?.value
     const emailFieldShouldBeDisplayed = this.originalAccessLevel === 'intervenant' && selectedAccessLevel !== 'intervenant'
-    this.emailField.style.display = emailFieldShouldBeDisplayed ? 'block' : 'none'
+    if (emailFieldShouldBeDisplayed ) {
+
+      this.agentWithAccountFields.style.display = 'block'
+      this.agentWithAccountFields.querySelectorAll('input').forEach((input) => {
+        input.disabled = false
+      })
+    } else {
+      this.agentWithAccountFields.style.display = 'none'
+      this.agentWithAccountFields.querySelectorAll('input').forEach((input) => {
+        input.disabled = true
+      })
+
+    }
   }
 
   addEventListeners() {

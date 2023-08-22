@@ -31,7 +31,14 @@
               hint: "Les agents peuvent avoir des permissions différentes sur chaque organisation.", \
               as: :radio_buttons
           - # rubocop:enable Rails/OutputSafety
-          = f.input :email, as: :email, label: "Email d'invitation de l'agent", wrapper_html: { style: "display:none;", class: "js_agent_form__email_field" }, required: true
+
+          .js_agent_form__agent_with_account_fields[style="display:none;"]
+            = f.input :email, label: "Email d'invitation de l'agent", required: true, disabled: true
+            .row
+              .col-md-6
+                = f.input :first_name, required: true, disabled: true
+              .col-md-6
+                = f.input :last_name, required: true, input_html: { value: '' }, disabled: true
 
           .row
             - if policy([:agent, @agent]).destroy?

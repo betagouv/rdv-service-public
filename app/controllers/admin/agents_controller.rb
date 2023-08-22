@@ -27,7 +27,7 @@ class Admin::AgentsController < AgentAuthController
     authorize(Agent.new(organisations: [current_organisation]))
 
     create_agent = CreateAgent.new(
-      agent_params,
+      create_agent_params,
       current_agent,
       current_organisation,
       access_level
@@ -59,7 +59,7 @@ class Admin::AgentsController < AgentAuthController
       agent: @agent,
       organisation: current_organisation,
       new_access_level: params[:agent][:agent_role][:access_level],
-      new_email: params[:agent][:email],
+      agent_params: update_agent_params,
       inviting_agent: current_agent
     )
 
@@ -145,7 +145,11 @@ class Admin::AgentsController < AgentAuthController
     end
   end
 
-  def agent_params
+  def create_agent_params
     params.require(:agent).permit(:email, :service_id, :last_name)
+  end
+
+  def update_agent_params
+    params.require(:agent).permit(:email, :last_name, :first_name)
   end
 end
