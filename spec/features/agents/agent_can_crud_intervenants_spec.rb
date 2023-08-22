@@ -3,7 +3,7 @@
 describe "Agent can CRUD intervenants" do
   let(:organisation) { create(:organisation) }
   let!(:service) { create(:service, name: "CDAD") }
-  let!(:agent_admin) { create(:agent, service: service, admin_role_in_organisations: [organisation]) }
+  let!(:agent_admin) { create(:agent, service: service, admin_role_in_organisations: [organisation], email: "admin@example.com") }
   let!(:agent_intervenant1) { create(:agent, :intervenant, last_name: "intervenant1", organisations: [organisation]) }
   let!(:agent_intervenant2) { create(:agent, :intervenant, last_name: "intervenant2", organisations: [organisation]) }
 
@@ -88,9 +88,35 @@ describe "Agent can CRUD intervenants" do
   end
 
   describe "validation errors on agent email when turning an intervenant into an agent with account" do
-    it "displays errors" do
+    it "displays errors", js: true do
       visit admin_organisation_agents_path(organisation)
-      # TODO: finish spec
+      click_link "INTERVENANT1"
+
+      find("label", text: "Basique").click
+      fill_in "Email", with: agent_admin.email
+      fill_in "Prénom", with: "  "
+      within(".js_agent_form") do
+        fill_in "Nom", with: "  ", match: :smart
+      end
+      click_button("Enregistrer")
+
+      expect(page).to have_content("Email est déjà utilisé")
+      expect(page).to have_content("Prénom doit être rempli(e)")
+      expect(page).to have_content("Nom d’usage doit être rempli(e)")
+
+      expect(enqueued_jobs).to be_empty
+
+      expect(agent_intervenant1.reload.roles.pluck(:access_level)).to eq ["intervenant"]
+      expect(agent_intervenant1).to have_attributes(first_name: nil, last_name: "intervenant1", email: nil)
+
+      fill_in "Email", with: "nouvel_agent@exemple.fr"
+      fill_in "Prénom", with: "Bob"
+      within(".js_agent_form") do
+        fill_in "Nom", with: "Fictif", match: :smart
+      end
+      click_button("Enregistrer")
+
+      expect(agent_intervenant1.reload.roles.pluck(:access_level)).to eq ["basic"]
     end
   end
 end

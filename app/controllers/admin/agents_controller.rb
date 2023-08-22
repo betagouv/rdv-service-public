@@ -98,7 +98,7 @@ class Admin::AgentsController < AgentAuthController
   end
 
   def render_edit
-    @agent_role = @agent.roles.find_by(organisation: current_organisation)
+    @agent_role = @agent.roles.find { |r| r.organisation == current_organisation }
     @agent_removal_presenter = AgentRemovalPresenter.new(@agent, current_organisation)
     @roles = current_agent.conseiller_numerique? ? [AgentRole::ACCESS_LEVEL_BASIC] : access_levels_collection
 

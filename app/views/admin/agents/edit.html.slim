@@ -17,7 +17,7 @@
   .col-md-8
     .card
       .card-body
-        = simple_form_for [:admin, current_organisation, @agent], data: { originalAccessLevel: @agent_role.access_level }, html: { class: "js_agent_form" } do |f|
+        = simple_form_for [:admin, current_organisation, @agent], data: { originalAccessLevel: AgentRole.find(@agent_role.id).access_level }, html: { class: "js_agent_form" } do |f|
           = render "model_errors", model: @agent
           = f.input :service_id, collection: [@agent.service], as: :select, label: "Service", hint: "Vous ne pouvez pas changer un agent de service, cela créerait des incohérences. Si vous voulez vraiment réaliser cette opération, il faut supprimer et recréer le compte de l'agent", disabled: true
 

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # La phrase du nom de la classe indique le contexte et l'action métier réalisés par ce service object en PORO
-class ChangeAgentPermissionLevel
+class AdminUpdatesAgent
   def initialize(agent:, organisation:, new_access_level:, agent_params:, inviting_agent:)
     @agent = agent
     @organisation = organisation
@@ -46,7 +46,6 @@ class ChangeAgentPermissionLevel
     # Devise va essayer de confirmer l'agent car il y a un changement d'email hors on passe d'agent à intervenant, d'un email nil à un email d'invitation.
     # On skip donc la confirmation car on souhaite l'inviter
     @agent.skip_confirmation_notification!
-    @agent.skip_last_name_and_first_name_validation = true
     @agent.assign_attributes(@agent_params)
     @agent.assign_attributes(roles_attributes: {
                                id: agent_role.id,
