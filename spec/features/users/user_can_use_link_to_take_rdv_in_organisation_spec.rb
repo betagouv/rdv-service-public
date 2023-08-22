@@ -66,7 +66,7 @@ RSpec.describe "user can use a link that points to RDV search scoped to an organ
       click_on("Continuer")
 
       # Pour l'instant cette page s'affiche même si l'on a une seule personne dans la liste des choix. :/
-      expect(page).to have_content("Pour qui prenez-vous rendez-vous ?") # David est sélectionné par défaut
+      expect(page).to have_content("Si la demande concerne plusieurs personnes, veuillez renseigner leurs informations ci dessous en cliquant sur 'Ajouter un proche'")
       click_on("Continuer")
 
       # Page finale de confirmation
