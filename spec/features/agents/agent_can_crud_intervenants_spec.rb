@@ -37,7 +37,7 @@ describe "Agent can CRUD intervenants" do
     fill_in "Email", with: "ancien_intervenant1@invitation.com"
     fill_in "Prénom", with: "Bob"
     within(".js_agent_form") do
-      fill_in "Nom d’usage", with: "Fictif", match: :smart
+      fill_in "Nom", with: "Fictif", match: :smart
     end
     click_button("Enregistrer")
 
@@ -59,6 +59,12 @@ describe "Agent can CRUD intervenants" do
     click_link "FICTIF Bob"
     find("label", text: "Intervenant").click
     click_button("Enregistrer")
+
+    expect(Agent.last.roles.pluck(:access_level)).to eq ["intervenant"]
+    expect(Agent.last).to have_attributes(
+      last_name: "Fictif",
+      first_name: "Bob"
+    )
 
     # Delete the intervenant
     expect_page_title("Agents de Organisation n°1")

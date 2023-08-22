@@ -61,6 +61,7 @@ class ChangeAgentPermissionLevel
 
     reset_agent_email_and_password
     reset_agent_invitation_fields
+    @agent.assign_attributes(first_name: nil)
     @agent.assign_attributes(roles_attributes: {
                                id: agent_role.id,
                                access_level: @new_access_level,
