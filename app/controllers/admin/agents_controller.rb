@@ -38,7 +38,7 @@ class Admin::AgentsController < AgentAuthController
     if @agent.valid?
       flash[:notice] = create_agent.confirmation_message
       flash[:error] = create_agent.warning_message
-      redirect_to index_path_for(@agent)
+      redirect_to_index_path_for(@agent)
     else
       render_new
     end
@@ -66,7 +66,7 @@ class Admin::AgentsController < AgentAuthController
     if change_agent_permission_level.call
       flash[:notice] = change_agent_permission_level.success_message
 
-      redirect_to index_path_for(@agent)
+      redirect_to_index_path_for(@agent)
     else
       render_edit
     end
@@ -81,7 +81,7 @@ class Admin::AgentsController < AgentAuthController
     if removal_service.remove!
       flash[:notice] = removal_service.confirmation_message
 
-      redirect_to index_path_for(@agent)
+      redirect_to_index_path_for(@agent)
     else
       redirect_to edit_admin_organisation_agent_path(current_organisation, @agent), flash: { error: removal_service.error_message }
     end
@@ -105,11 +105,11 @@ class Admin::AgentsController < AgentAuthController
     render :edit
   end
 
-  def index_path_for(agent)
+  def redirect_to_index_path_for(agent)
     if agent.invitation_sent_at? && !agent.invitation_accepted?
-      admin_organisation_invitations_path(current_organisation)
+      redirect_to admin_organisation_invitations_path(current_organisation)
     else
-      admin_organisation_agents_path(current_organisation)
+      redirect_to admin_organisation_agents_path(current_organisation)
     end
   end
 
