@@ -36,7 +36,7 @@ describe "Agent can CRUD intervenants" do
     find("label", text: "Administrateur").click
     fill_in "Email", with: "ancien_intervenant1@invitation.com"
     fill_in "Prénom", with: "Bob"
-    within(".js_agent_form") do
+    within(".js_agent_role_form") do
       fill_in "Nom", with: "Fictif", match: :smart
     end
     click_button("Enregistrer")
@@ -68,7 +68,12 @@ describe "Agent can CRUD intervenants" do
     visit admin_organisation_invitations_path(organisation)
     click_link "FICTIF Bob"
     find("label", text: "Intervenant").click
-    click_button("Enregistrer")
+
+    accept_alert do
+      click_button("Enregistrer")
+    end
+
+    expect_page_title("Agents de Organisation n°1")
 
     expect(Agent.last.roles.pluck(:access_level)).to eq ["intervenant"]
     expect(Agent.last).to have_attributes(
@@ -85,7 +90,6 @@ describe "Agent can CRUD intervenants" do
     )
 
     # Delete the intervenant
-    expect_page_title("Agents de Organisation n°1")
     click_link "FICTIF"
     expect_page_title("Modifier le niveau de permission de l'agent FICTIF")
     accept_alert do
@@ -103,7 +107,7 @@ describe "Agent can CRUD intervenants" do
       find("label", text: "Basique").click
       fill_in "Email", with: agent_admin.email
       fill_in "Prénom", with: "  "
-      within(".js_agent_form") do
+      within(".js_agent_role_form") do
         fill_in "Nom", with: "  ", match: :smart
       end
       click_button("Enregistrer")
@@ -119,7 +123,7 @@ describe "Agent can CRUD intervenants" do
 
       fill_in "Email", with: "nouvel_agent@exemple.fr"
       fill_in "Prénom", with: "Bob"
-      within(".js_agent_form") do
+      within(".js_agent_role_form") do
         fill_in "Nom", with: "Fictif", match: :smart
       end
       click_button("Enregistrer")
