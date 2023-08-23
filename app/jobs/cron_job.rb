@@ -56,7 +56,11 @@ class CronJob < ApplicationJob
       old_users_without_rdvs_or_relatives = old_users_without_rdvs.joins("left outer join users as relatives on users.id = relatives.responsible_id").where(relatives: { id: nil })
 
       old_users_without_rdvs_or_relatives.find_each do |user|
-        user.user_profiles.destroy_all
+        user.user_profiles.each do |profile|
+          profile.skip_webhooks = true
+          profile.destroy
+        end
+        user.reload
         user.skip_webhooks = true
         user.destroy
       end
