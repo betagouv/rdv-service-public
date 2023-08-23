@@ -36,7 +36,7 @@ class CronJob < ApplicationJob
     end
   end
 
-  class DestroyOldRdvsAndInactiveUsersJob < CronJob
+  class DestroyOldRdvsAndInactiveAccountsJob < CronJob
     def perform
       two_years_ago = 2.years.ago
       Rdv.unscoped.where(starts_at: ..two_years_ago).each do |rdv|
