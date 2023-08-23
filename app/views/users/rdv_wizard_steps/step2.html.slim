@@ -10,11 +10,17 @@
 
           = f.association :motif, as: :hidden, wrapper_html: { class: "mb-0" }
           = f.input :starts_at, as: :hidden, wrapper_html: { class: "mb-0" }
-          h5 Si la demande concerne plusieurs personnes, veuillez renseigner leurs informations ci dessous en cliquant sur 'Ajouter un proche'
-          - current_user.available_users_for_rdv.each do |user|
-            p
-              = full_name_and_birthdate(user)
-              = link_to("", relative_path(user), method: :delete, class: "ml-1 fa fa-times-circle text-danger")
+          / https://blog.bigbinary.com/2016/05/18/rails-5-add-a-hidden-field-on-collection-radio-buttons.html
+          = f.association \
+              :users,
+              label: "Pour qui prenez-vous rendez-vous ?",
+              as: :radio_buttons,
+              include_hidden: false,
+              collection: current_user.available_users_for_rdv,
+              checked: (current_user.participation_for(@rdv)&.user&.id || current_user.id),
+              label_method: lambda { |user| full_name_and_birthdate(user) },
+              wrapper_html: { class: "mb-0" },
+              input_html: { name: "rdv[user_ids][]" }
           .form-group
             = link_to "Ajouter un proche", new_relative_path, data: { modal: true }
           .row
