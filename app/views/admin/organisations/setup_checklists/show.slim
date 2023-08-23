@@ -17,7 +17,7 @@
               i= @lieux.length == 1 ? @lieux.first.name : "#{@lieux.length} lieux créés"
           li.mb-2
             span>= setup_checklist_item(@other_agents.any?)
-            span>= link_to "Ajouter un agent", new_admin_agent_territory_invitation_path(@organisation.territory)
+            span>= link_to t("agents.create_cta"), new_admin_agent_territory_invitation_path(@organisation.territory)
             - if @other_agents.any?
               i= @other_agents.length == 1 ? @other_agents.last.full_name : "#{@other_agents.length} agents créés"
           li.mb-2
