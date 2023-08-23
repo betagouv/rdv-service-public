@@ -5,6 +5,7 @@ class Api::Ants::BaseController < ActionController::Base
   respond_to :json
 
   before_action :check_authentication_token!
+  before_action :add_sentry_crumb
 
   private
 
@@ -23,5 +24,19 @@ class Api::Ants::BaseController < ActionController::Base
 
   def authentication_token
     request.headers.fetch("X-HUB-RDV-AUTH-TOKEN", "")
+  end
+
+  def add_sentry_crumb
+    Sentry.add_breadcrumb(
+      Sentry::Breadcrumb.new(
+        message: "ANTS API Request details",
+        data: {
+          method: request.method,
+          url: request.url,
+          headers: request.headers,
+          params: params,
+        }
+      )
+    )
   end
 end

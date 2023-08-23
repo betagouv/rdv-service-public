@@ -50,10 +50,9 @@ Rails.application.configure do
       class: "CronJob::DestroyRedisWaitingRoomKeys",
     },
 
-    # Nettoyage de vieille données : pas essentiel mais idéalement quotidien
-    destroy_old_rdvs_job: {
+    destroy_old_rdvs_and_inactive_users_job: {
       cron: "every day at 22:00 Europe/Paris",
-      class: "CronJob::DestroyOldRdvsJob",
+      class: "CronJob::DestroyOldRdvsAndInactiveUsersJob",
     },
     destroy_old_plage_ouverture_job: {
       cron: "every day at 22:30 Europe/Paris",

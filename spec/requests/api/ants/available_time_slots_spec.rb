@@ -2,6 +2,7 @@
 
 describe "ANTS API: availableTimeSlots" do
   include_context "rdv_mairie_api_authentication"
+  stub_sentry_events
 
   let(:lieu1) do
     create(:lieu, organisation: organisation)
@@ -78,6 +79,25 @@ describe "ANTS API: availableTimeSlots" do
           ],
         }.with_indifferent_access
       )
+    end
+  end
+
+  context "Responds with an Error" do
+    before do
+      # Delete motifs and motifs category to create an error
+      organisation.motifs.destroy_all
+      MotifCategory.destroy_all
+    end
+
+    xit "adds crumb with request details to Sentry" do
+      expect do
+        get "/api/ants/availableTimeSlots?meeting_point_ids=#{lieu1.id}&meeting_point_ids=#{lieu2.id}&start_date=2022-11-01&end_date=2022-11-02&documents_number=1&reason=CNI"
+      end.to raise_error(NoMethodError)
+
+      crumb = sentry_events.last.breadcrumbs.compact.first
+      expect(crumb.message).to eq("ANTS API Request details")
+      expect(crumb.data[:params]).to match(hash_including({ "start_date" => "2022-11-01", "end_date" => "2022-11-02", "documents_number" => "1", "reason" => "CNI", "controller" => "api/ants/editor",
+                                                            "action" => "available_time_slots", }))
     end
   end
 end
