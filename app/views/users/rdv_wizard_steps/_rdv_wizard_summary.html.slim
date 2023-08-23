@@ -40,7 +40,7 @@ ul.list-group.list-group-flush
       .row
         .col
           i.fa.fa-check.fa-fw.mr-1.text-success
-          | Usager(s) :&nbsp;
+          | Usager :&nbsp;
           - if !rdv_wizard.invitation?
             = users_to_sentence(rdv_wizard.users)
           - else
