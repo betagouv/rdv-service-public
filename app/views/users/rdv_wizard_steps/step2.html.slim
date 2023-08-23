@@ -18,7 +18,7 @@
                 - current_user.available_users_for_rdv.each do |user|
                   div
                     = f.check_box :user_ids, { multiple: true, class: "form-check-input" }, user.id, false
-                    = f.label full_name_and_birthdate(user)
+                    = f.label "user_ids_#{user.id}", full_name_and_birthdate(user), class: "form-check-label"
           - else
             / https://blog.bigbinary.com/2016/05/18/rails-5-add-a-hidden-field-on-collection-radio-buttons.html
             = f.association \
