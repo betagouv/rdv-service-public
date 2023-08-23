@@ -16,13 +16,11 @@
 .row.justify-content-center
   .col-md-8
     .card
-      .card-body
-        = simple_form_for [:admin, current_organisation, @agent], data: { originalAccessLevel: AgentRole.find(@agent_role.id).access_level }, html: { class: "js_agent_form" } do |f|
+      .card-body.js_agent_role_form
+        = simple_form_for [:admin, current_organisation, @agent] do |f|
           = render "model_errors", model: @agent
           = f.input :service_id, collection: [@agent.service], as: :select, label: "Service", hint: "Vous ne pouvez pas changer un agent de service, cela créerait des incohérences. Si vous voulez vraiment réaliser cette opération, il faut supprimer et recréer le compte de l'agent", disabled: true
 
-          - # TODO: ajouter une alerte de warning quand on transforme un agent en intervenant, puisque c'est une action destructive
-          - # TODO: on pourrait aussi ajouter une couleur d'avertissement dans les hints
           = f.simple_fields_for @agent_role do |ff|
             - # rubocop:disable Rails/OutputSafety
             = ff.input :access_level, \
@@ -32,13 +30,15 @@
               as: :radio_buttons
           - # rubocop:enable Rails/OutputSafety
 
-          .js_agent_form__agent_with_account_fields[style="display:none;"]
-            = f.input :email, label: "Email d'invitation de l'agent", required: true, disabled: true
-            .row
-              .col-md-6
-                = f.input :first_name, required: true, disabled: true
-              .col-md-6
-                = f.input :last_name, required: true, input_html: { value: '' }, disabled: true
+          / allow turning an intervenant into an agent with an account
+          - if AgentRole.find(@agent_role.id).access_level == "intervenant"
+            .js_agent_role_form__agent_with_account_fields[style="display:none;"]
+              = f.input :email, label: "Email d'invitation de l'agent", required: true, disabled: true
+              .row
+                .col-md-6
+                  = f.input :first_name, required: true, disabled: true
+                .col-md-6
+                  = f.input :last_name, required: true, input_html: { value: '' }, disabled: true
 
           .row
             - if policy([:agent, @agent]).destroy?
@@ -49,7 +49,13 @@
                   method: :delete, \
                   class: "btn btn-outline-danger"
             .col.text-right
-              = f.button :submit
+              - if AgentRole.find(@agent_role.id).access_level == "intervenant"
+                = f.button :submit
+              - else
+                .js_agent_role_form__agent_with_account_fields
+                  = f.button :submit
+                .js_agent_role_form__intervenant_fields[style="display:none;"]
+                  = f.button :submit, data: { confirm: "Cet agent ne pourra plus se connecter à son compter. Êtes vous sûr de vouloir continuer ?" }
 
 .row.justify-content-center
   .col-md-8

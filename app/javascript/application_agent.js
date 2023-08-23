@@ -19,7 +19,6 @@ import { MotifForm } from './components/motif-form.js'
 import { ZonesMap } from './components/zones-map.js'
 import { AgentUserForm } from './components/agent-user-form.js'
 import { AgentRoleForm } from './components/agent-role-form.js'
-import { AgentForm } from './components/agent-form.js'
 import { RecurrenceForm } from './components/recurrence-form.js'
 import { MergeUsersForm } from './components/merge-users-form.js'
 import { SectorAttributionForm } from './components/sector-attribution-form.js'
@@ -89,7 +88,6 @@ $(document).on('turbolinks:load', function() {
   new AgentUserForm()
 
   new AgentRoleForm()
-  new AgentForm()
 
   new RecurrenceForm()
 

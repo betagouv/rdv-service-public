@@ -1,38 +1,50 @@
 class AgentRoleForm {
   constructor() {
-    this.formElt = document.querySelector('.js_agent_form')
-    if (!this.formElt) return
+    const formElt = document.querySelector('.js_agent_role_form')
+    if (!formElt) return
 
-    this.originalAccessLevel = this.formElt.getAttribute('data-originalaccesslevel')
+    this.accessLevelRadios = formElt.querySelectorAll('input[name="agent[agent_role][access_level]"]')
 
-    this.accessLevelRadios = document.querySelectorAll('input[name="agent[agent_role][access_level]"]')
-    this.agentWithAccountFields = document.querySelector('.js_agent_form__agent_with_account_fields')
+    this.agentWithAccountFields = formElt.querySelectorAll('.js_agent_role_form__agent_with_account_fields')
+    this.intervenantFields = formElt.querySelectorAll('.js_agent_role_form__intervenant_fields')
 
-    this.updateEmailFieldDisplay()
+    this.updateFieldsDisplay()
     this.addEventListeners()
   }
 
-  updateEmailFieldDisplay() {
+  updateFieldsDisplay() {
     const selectedAccessLevel = [...this.accessLevelRadios].find(radio => radio.checked)?.value
-    const emailFieldShouldBeDisplayed = this.originalAccessLevel === 'intervenant' && selectedAccessLevel !== 'intervenant'
-    if (emailFieldShouldBeDisplayed ) {
 
-      this.agentWithAccountFields.style.display = 'block'
-      this.agentWithAccountFields.querySelectorAll('input').forEach((input) => {
+    if (selectedAccessLevel === 'intervenant') {
+      this.displayElementsAndEnableInputs(this.intervenantFields)
+      this.hideElementsAndDisableInputs(this.agentWithAccountFields)
+    } else {
+      this.hideElementsAndDisableInputs(this.intervenantFields)
+      this.displayElementsAndEnableInputs(this.agentWithAccountFields)
+    }
+  }
+
+  displayElementsAndEnableInputs(elts) {
+    elts.forEach(elt => {
+      elt.style.display = 'block'
+      elt.querySelectorAll('input').forEach((input) => {
         input.disabled = false
       })
-    } else {
-      this.agentWithAccountFields.style.display = 'none'
-      this.agentWithAccountFields.querySelectorAll('input').forEach((input) => {
+    })
+  }
+
+  hideElementsAndDisableInputs(elts) {
+    elts.forEach(elt => {
+      elt.style.display = 'none'
+      elt.querySelectorAll('input').forEach((input) => {
         input.disabled = true
       })
-
-    }
+    })
   }
 
   addEventListeners() {
     this.accessLevelRadios.forEach(radio => {
-      radio.addEventListener('change', () => this.updateEmailFieldDisplay())
+      radio.addEventListener('change', () => this.updateFieldsDisplay())
     })
   }
 }
