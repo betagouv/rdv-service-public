@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe CronJob::DestroyInactiveAgents do
+describe CronJob do
   it "deletes old agents" do
     agent_created_25_months_ago_without_warning = travel_to(25.months.ago) { create(:agent) }
 
