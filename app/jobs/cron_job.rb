@@ -81,7 +81,7 @@ class CronJob < ApplicationJob
         .where("account_deletion_warning_sent_at IS NULL OR account_deletion_warning_sent_at < ?", date_limit)
 
       inactive_agents_without_recent_warning.find_each do |agent|
-        Agents::AccountDeletionMailer.with(agent).upcoming_deletion_warning.deliver_later
+        Agents::AccountDeletionMailer.with(agent: agent).upcoming_deletion_warning.deliver_later
         # Cet update doit réussir même si l'agent n'est pas valide, et ne nécessite pas les callbacks (comme les webhooks), d'où le update_columns
         agent.update_columns(account_deletion_warning_sent_at: Time.zone.now) # rubocop:disable Rails/SkipsModelValidations
       end
