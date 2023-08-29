@@ -10,17 +10,27 @@
 
           = f.association :motif, as: :hidden, wrapper_html: { class: "mb-0" }
           = f.input :starts_at, as: :hidden, wrapper_html: { class: "mb-0" }
-          / https://blog.bigbinary.com/2016/05/18/rails-5-add-a-hidden-field-on-collection-radio-buttons.html
-          = f.association \
-              :users,
-              label: "Pour qui prenez-vous rendez-vous ?",
-              as: :radio_buttons,
-              include_hidden: false,
-              collection: current_user.available_users_for_rdv,
-              checked: (current_user.participation_for(@rdv)&.user&.id || current_user.id),
-              label_method: lambda { |user| full_name_and_birthdate(user) },
-              wrapper_html: { class: "mb-0" },
-              input_html: { name: "rdv[user_ids][]" }
+
+          div Pour qui prenez-vous rendez-vous ?
+          - if current_domain == Domain::RDV_MAIRIE
+            .custom-control.custom-checkbox
+              .form-group
+                - current_user.available_users_for_rdv.each do |user|
+                  div
+                    = f.check_box :user_ids, { multiple: true, class: "form-check-input" }, user.id, false
+                    = f.label "user_ids_#{user.id}", full_name_and_birthdate(user), class: "form-check-label"
+          - else
+            / https://blog.bigbinary.com/2016/05/18/rails-5-add-a-hidden-field-on-collection-radio-buttons.html
+            = f.association \
+                :users,
+                label: "",
+                as: :radio_buttons,
+                include_hidden: false,
+                collection: current_user.available_users_for_rdv,
+                checked: (current_user.participation_for(@rdv)&.user&.id || current_user.id),
+                label_method: lambda { |user| full_name_and_birthdate(user) },
+                wrapper_html: { class: "mb-0" },
+                input_html: { name: "rdv[user_ids][]" }
           .form-group
             = link_to "Ajouter un proche", new_relative_path, data: { modal: true }
           .row

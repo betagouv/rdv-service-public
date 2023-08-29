@@ -102,5 +102,6 @@ RSpec.configure do |config|
     ActionMailer::Base.deliveries.clear
     FactoryBot.rewind_sequences
     Rails.cache.clear
+    Warden.test_reset!
   end
 end
