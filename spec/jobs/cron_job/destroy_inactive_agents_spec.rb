@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe CronJob do
+describe CronJob::DestroyInactiveAgents do
   it "warns and deletes old agents" do
     agent_created_25_months_ago_without_warning = travel_to(25.months.ago) { create(:agent) }
 
@@ -12,7 +12,7 @@ describe CronJob do
 
     two_years_ago = 2.years.ago
     CronJob::WarnInactiveAgentsOfAccountDeletion.new.perform(two_years_ago)
-    CronJob::DestroyInactiveAgents.new.perform(two_years_ago)
+    described_class.new.perform(two_years_ago)
 
     perform_enqueued_jobs
     expect(ActionMailer::Base.deliveries.map(&:to).flatten).to eq([agent_created_25_months_ago_without_warning.email])
