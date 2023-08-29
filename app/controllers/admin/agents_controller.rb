@@ -134,7 +134,8 @@ class Admin::AgentsController < AgentAuthController
     current_organisation.territory_id == 59 ||
       Rails.env.development? ||
       Rails.env.test? ||
-      ENV["RDV_SOLIDARITES_INSTANCE_NAME"] == "DEMO"
+      ENV["RDV_SOLIDARITES_INSTANCE_NAME"] == "DEMO" ||
+      ENV["IS_REVIEW_APP"] == "true"
   end
 
   def access_level
