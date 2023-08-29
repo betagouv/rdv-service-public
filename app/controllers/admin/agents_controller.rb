@@ -30,7 +30,7 @@ class Admin::AgentsController < AgentAuthController
       agent_params: create_agent_params,
       current_agent: current_agent,
       organisation: current_organisation,
-      access_level: access_level
+      access_level: params[:agent][:agent_role][:access_level]
     )
 
     @agent = create_agent.call
@@ -91,7 +91,7 @@ class Admin::AgentsController < AgentAuthController
 
   def render_new
     @services = services.order(:name)
-    @roles = current_agent.conseiller_numerique? ? [AgentRole::ACCESS_LEVEL_BASIC] : access_levels_collection
+    @roles = access_levels_collection
     @agent_role = AgentRole.new
 
     render :new, layout: "application_agent"
@@ -100,7 +100,7 @@ class Admin::AgentsController < AgentAuthController
   def render_edit
     @agent_role = @agent.roles.find { |r| r.organisation == current_organisation }
     @agent_removal_presenter = AgentRemovalPresenter.new(@agent, current_organisation)
-    @roles = current_agent.conseiller_numerique? ? [AgentRole::ACCESS_LEVEL_BASIC] : access_levels_collection
+    @roles = access_levels_collection
 
     render :edit
   end
@@ -136,14 +136,6 @@ class Admin::AgentsController < AgentAuthController
       Rails.env.test? ||
       ENV["RDV_SOLIDARITES_INSTANCE_NAME"] == "DEMO" ||
       ENV["IS_REVIEW_APP"] == "true"
-  end
-
-  def access_level
-    if @current_agent.conseiller_numerique?
-      AgentRole::ACCESS_LEVEL_BASIC
-    else
-      params[:agent][:agent_role][:access_level]
-    end
   end
 
   def create_agent_params
