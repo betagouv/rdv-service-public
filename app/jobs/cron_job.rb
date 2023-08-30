@@ -36,7 +36,7 @@ class CronJob < ApplicationJob
     end
   end
 
-  class DestroyOldRdvsAndInactiveUsersJob < CronJob
+  class DestroyOldRdvsAndInactiveAccountsJob < CronJob
     def perform
       two_years_ago = 2.years.ago
       Rdv.unscoped.where(starts_at: ..two_years_ago).each do |rdv|
@@ -46,6 +46,8 @@ class CronJob < ApplicationJob
       # La suppression d'utilisateurs inactifs a besoin que les vieux rdv soient supprimés
       # On utilise la même date limite pour éviter une race condition liée au temps d'exécution du premier job
       DestroyInactiveUsers.perform_later(two_years_ago)
+      WarnInactiveAgentsOfAccountDeletion.perform_later(two_years_ago)
+      DestroyInactiveAgents.perform_later(two_years_ago)
     end
   end
 
@@ -64,6 +66,35 @@ class CronJob < ApplicationJob
         user.skip_webhooks = true
         user.destroy
       end
+    end
+  end
+
+  class InactiveAgentsJob < CronJob
+    protected
+
+    def inactive_agents(date_limit)
+      agents_without_rdvs = Agent.left_outer_joins(:agents_rdvs).where(agents_rdvs: { id: nil })
+
+      agents_without_rdvs.where("created_at < ?", date_limit).where("last_sign_in_at IS NULL OR last_sign_in_at < ?", date_limit)
+    end
+  end
+
+  class WarnInactiveAgentsOfAccountDeletion < InactiveAgentsJob
+    def perform(date_limit)
+      inactive_agents_without_recent_warning = inactive_agents(date_limit - 30.days)
+        .where("account_deletion_warning_sent_at IS NULL OR account_deletion_warning_sent_at < ?", date_limit)
+
+      inactive_agents_without_recent_warning.find_each do |agent|
+        Agents::AccountDeletionMailer.with(agent: agent).upcoming_deletion_warning.deliver_later
+        # Cet update doit réussir même si l'agent n'est pas valide, et ne nécessite pas les callbacks (comme les webhooks), d'où le update_columns
+        agent.update_columns(account_deletion_warning_sent_at: Time.zone.now) # rubocop:disable Rails/SkipsModelValidations
+      end
+    end
+  end
+
+  class DestroyInactiveAgents < InactiveAgentsJob
+    def perform(date_limit)
+      inactive_agents(date_limit).where("account_deletion_warning_sent_at < ?", 30.days.ago).find_each(&:destroy)
     end
   end
 

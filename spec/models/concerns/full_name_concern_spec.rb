@@ -50,5 +50,11 @@ describe FullNameConcern do
 
       it { is_expected.to eq "P. CURIE" }
     end
+
+    context "for an intervenant" do
+      let(:person) { build(:agent, :intervenant, last_name: "Avocat") }
+
+      it { is_expected.to eq "Avocat" }
+    end
   end
 end
