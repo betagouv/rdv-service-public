@@ -22,6 +22,10 @@ FactoryBot.define do
     end
 
     transient do
+      intervenant_role_in_organisations { [] }
+    end
+
+    transient do
       role_in_territories { [] }
     end
 
@@ -31,6 +35,9 @@ FactoryBot.define do
       end
       evaluator.admin_role_in_organisations.each do |organisation|
         create :agent_role, :admin, agent: agent, organisation: organisation
+      end
+      evaluator.intervenant_role_in_organisations.each do |organisation|
+        create :agent_role, :intervenant, agent: agent, organisation: organisation
       end
       evaluator.role_in_territories.each do |territory|
         create :agent_territorial_role, agent: agent, territory: territory

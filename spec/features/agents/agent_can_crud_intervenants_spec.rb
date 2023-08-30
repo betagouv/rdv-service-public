@@ -89,6 +89,12 @@ describe "Agent can CRUD intervenants" do
       invited_by_type: nil
     )
 
+    # On vérifie que nos factories correspondent à la réalité
+    intervenant_from_factory = create(:agent, :intervenant)
+    attributes_from_factory = intervenant_from_factory.attributes.compact.keys.sort
+    attributes_from_integration_spec = Agent.last.attributes.compact.keys.sort
+    expect(attributes_from_factory).to match_array(attributes_from_integration_spec)
+
     # Delete the intervenant
     click_link "FICTIF"
     expect_page_title("Modifier le niveau de permission de l'agent FICTIF")
