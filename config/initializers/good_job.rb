@@ -52,7 +52,7 @@ Rails.application.configure do
 
     destroy_old_rdvs_and_inactive_users_job: {
       cron: "every day at 22:00 Europe/Paris",
-      class: "CronJob::DestroyOldRdvsAndInactiveUsersJob",
+      class: "CronJob::DestroyOldRdvsAndInactiveAccountsJob",
     },
     destroy_old_plage_ouverture_job: {
       cron: "every day at 22:30 Europe/Paris",

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_20_102741) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_23_144508) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -225,6 +225,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_20_102741) do
     t.text "refresh_microsoft_graph_token"
     t.string "cnfs_secondary_email"
     t.boolean "outlook_disconnect_in_progress", default: false, null: false
+    t.datetime "account_deletion_warning_sent_at"
+    t.index ["account_deletion_warning_sent_at"], name: "index_agents_on_account_deletion_warning_sent_at"
     t.index ["calendar_uid"], name: "index_agents_on_calendar_uid", unique: true
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true
     t.index ["email"], name: "index_agents_on_email", unique: true, where: "(email IS NOT NULL)"

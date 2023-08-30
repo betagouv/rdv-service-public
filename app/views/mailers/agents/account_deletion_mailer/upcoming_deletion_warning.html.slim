@@ -1,0 +1,16 @@
+p = t("mailers.common.hello")
+
+p
+  | Votre compte sur #{domain.name} est inactif depuis au moins 2 ans.
+p
+  | Sans action de votre part, il sera supprimé automatiquement dans 30 jours.
+
+p
+  | Si vous souhaitez conserver votre compte, il vous suffit de vous connecter sur #{domain.name} via ce lien :
+
+.btn-wrapper= link_to "Connexion", new_agent_session_url, class:"btn btn-primary"
+
+p
+  | Sinon, aucune action n'est nécessaire de votre part.
+
+= t("mailers.common.farewell_html", domain_name: domain.name)
