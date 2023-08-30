@@ -58,8 +58,8 @@ Ces choix techniques sont aussi influencés par la culture de la communauté Rub
 | Source           | Destination       | Protocole | Port | Localisation      | Interne/URL Externe |
 |------------------|-------------------|-----------|------|-------------------|---------------------|
 | Navigateur       | App Rails         | HTTPS     | 443  | Paris/SecNumCloud | Externe             |
-| Clients API JSON | App Rails         | HTPPS     | 443  | Paris/SecNumCloud | Externe             |
-| Clients Webcal   | App Rails         | HTPPS     | 443  | Paris/SecNumCloud | Externe             |
+| Clients API JSON | App Rails         | HTTPS     | 443  | Paris/SecNumCloud | Externe             |
+| Clients Webcal   | App Rails         | HTTPS     | 443  | Paris/SecNumCloud | Externe             |
 | App Rails        | Postgres Scalingo | TCP       | 5432 | Paris/SecNumCloud | Interne             |
 | App Rails        | Redis Scalingo    | TCP       | 6379 | Paris/SecNumCloud | Interne             |
 
@@ -253,7 +253,7 @@ Nous avons actuellement 3 apps Scalingo :
 
 Le fait d'avoir accès à une app Scalingo donne les droits suivants :
 
-- augmenter au réduire ne nombre d'instances applicatives de l'app / régler les paramètres d'autoscaling
+- augmenter ou réduire le nombre d'instances applicatives de l'app / régler les paramètres d'autoscaling
 - administrer la base Postgres (changer la taille de l'instance, mettre à jour Postgres, télécharger des backups, etc)
 - administrer la base Redis (même fonctionnalités que pour Postgres ci-dessus)
 - visualiser les déploiements passés ou en cours
@@ -355,7 +355,7 @@ Afin de s'y connecter, il faut utiliser l'OAuth de GitHub. L'adresse e-mail alor
 présente dans une table `super_admins`, où les entrées sont crées et supprimées à la main lors de l'arrivée et
 du départ de membres de l'équipe;
 
-Tous les membres de l'équipe faisant partie de l'organisation betagouv sur Github, ils ont utilisent une authentification à 2 facteurs.
+Tous les membres de l'équipe faisant partie de l'organisation betagouv sur Github, ils utilisent une authentification à 2 facteurs.
 
 ### Traçabilité des erreurs et des actions utilisateurs
 
