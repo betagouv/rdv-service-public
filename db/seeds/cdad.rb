@@ -138,7 +138,6 @@ cdad2_admin.territorial_roles.create!(territory: territory_gironde)
 # Intervenants
 
 cdad_intervenant1 = Agent.new(
-  first_name: "#",
   last_name: "Avocat 1",
   service_id: service_cdad.id,
   roles_attributes: [
@@ -151,7 +150,6 @@ cdad_intervenant1 = Agent.new(
 cdad_intervenant1.save!
 
 cdad_intervenant2 = Agent.new(
-  first_name: "#",
   last_name: "Avocat 2",
   service_id: service_cdad.id,
   roles_attributes: [
@@ -164,7 +162,6 @@ cdad_intervenant2 = Agent.new(
 cdad_intervenant2.save!
 
 cdad_intervenant3 = Agent.new(
-  first_name: "#",
   last_name: "Avocat 3",
   service_id: service_cdad.id,
   roles_attributes: [
