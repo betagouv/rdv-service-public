@@ -25,6 +25,10 @@ module FullNameConcern
 
   # M. Curie
   def short_name
-    "#{first_name.first.upcase}. #{last_name.upcase}"
+    if first_name.present?
+      "#{first_name.first.upcase}. #{last_name.upcase}"
+    else
+      last_name
+    end
   end
 end

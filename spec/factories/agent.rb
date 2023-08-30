@@ -56,9 +56,10 @@ FactoryBot.define do
       service { Service.find_by(name: Service::CONSEILLER_NUMERIQUE) || build(:service, :conseiller_numerique) }
     end
     trait :intervenant do
+      first_name { nil }
+      email { nil }
+      uid { nil }
       before(:create) do |agent|
-        agent.email = nil
-        agent.uid = nil
         if agent.organisations.any?
           agent.roles.first.update(access_level: AgentRole::ACCESS_LEVEL_INTERVENANT)
         else
