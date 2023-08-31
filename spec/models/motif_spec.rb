@@ -111,7 +111,7 @@ describe Motif, type: :model do
     context "motif is available for secretariat" do
       let!(:motif) { create(:motif, service: service_pmi, organisation: org1, for_secretariat: true) }
 
-      it { is_expected.to match_array([agent_pmi1, agent_pmi2, agent_secretariat1]) }
+      it { is_expected.to match_array([agent_pmi1, agent_pmi2, intervenant_pmi, agent_secretariat1]) }
     end
 
     context "agent from same service but different orga" do
