@@ -88,7 +88,17 @@ class Agent < ApplicationRecord
   # Hooks
 
   # Scopes
-  scope :complete, -> { where.not(first_name: nil).where.not(last_name: nil) }
+  scope :complete, lambda {
+    # Les agents complets sont soit des intervenant qui n'ont pas reçu d'invitation,
+    # soit des agents normaux qui ont reçu et accepté leur invitation
+    where("invitation_sent_at IS NULL OR invitation_accepted_at IS NOT NULL")
+  }
+  scope :intervenants, lambda {
+    where(id: AgentRole.where(access_level: "intervenant").select(:agent_id))
+  }
+  scope :not_intervenants, lambda {
+    where.not(id: AgentRole.where(access_level: "intervenant").select(:agent_id))
+  }
   scope :active, -> { where(deleted_at: nil) }
   scope :order_by_last_name, -> { order(Arel.sql("LOWER(last_name)")) }
   scope :secretariat, -> { joins(:service).where(services: { name: "Secrétariat" }) }
@@ -119,7 +129,9 @@ class Agent < ApplicationRecord
   end
 
   def complete?
-    first_name.present? && last_name.present?
+    # Les agents complets sont soit des intervenant qui n'ont pas reçu d'invitation,
+    # soit des agents normaux qui ont reçu et accepté leur invitation
+    invitation_sent_at.nil? || invitation_accepted_at.present?
   end
 
   def inactive?

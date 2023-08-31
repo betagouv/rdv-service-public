@@ -1,23 +1,30 @@
 - content_for(:menu_item) { "menu-agents" }
 
 - content_for :title do
-  = t "devise.invitations.new.header"
+  = t("agents.create_cta")
 
 .row.justify-content-center
   .col-md-6
     .card
-      .card-body
-        = simple_form_for [:admin, resource], as: resource_name, url: admin_agent_organisation_invitation_path(current_organisation, resource), html: { method: :post } do |f|
-          = render "devise/shared/error_messages", resource: resource
-          = f.input :email, placeholder: "jean.dupond@departement.fr", input_html: { autocomplete: "off"}
+      .card-body.js_agent_role_form
+        = simple_form_for [:admin, @agent], url: admin_organisation_agents_path(current_organisation, @agent), html: { method: :post } do |f|
+          = render "devise/shared/error_messages", resource: @agent
           = f.association :service, collection: @services, include_blank: false, hint: "Attention, le service d'un agent est définitif, il ne pourra pas changer de service par la suite. Si un agent appartient à deux services il faut pour l'instant lui créer deux comptes avec deux emails différents."
           - # rubocop:disable Rails/OutputSafety
-          = f.simple_fields_for :roles do |ff|
+          = f.simple_fields_for @agent_role do |ff|
             = ff.input :access_level, \
               collection: @roles, \
               label_method: -> { AgentRole.human_attribute_value(:access_level, _1, context: :explanation).html_safe }, \
               hint: "Les agents peuvent avoir des permissions différentes sur chaque organisation.", \
               as: :radio_buttons
           - # rubocop:enable Rails/OutputSafety
-          .text-right
-            = f.button :submit, t("devise.invitations.new.submit_button")
+
+          .js_agent_role_form__agent_with_account_fields
+            = f.input :email, placeholder: "jean.dupond@departement.fr", input_html: { autocomplete: "off"}
+            .text-right
+              = f.button :submit, "Envoyer une invitation"
+
+          .js_agent_role_form__intervenant_fields
+            = f.input :last_name, input_html: { autocomplete: "off"}, label: "Nom"
+            .text-right
+              = f.button :submit, "Ajouter l'intervenant"

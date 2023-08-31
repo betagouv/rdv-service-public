@@ -199,8 +199,8 @@ Rails.application.routes.draw do
         resources :agent_agendas, only: %i[show] do
           put :toggle_displays, on: :member
         end
-        resources :agent_roles, only: %i[edit update]
-        resources :agents, only: %i[index destroy] do
+        resources :agent_intervenants, only: %i[update]
+        resources :agents, except: %i[show] do
           resources :absences, only: %i[index new]
           resources :plage_ouvertures, only: %i[index new]
           resources :stats, only: :index do
@@ -217,7 +217,6 @@ Rails.application.routes.draw do
         resource :rdv_wizard_step, only: [:new] do
           get :create
         end
-        devise_for :agents, controllers: { invitations: "admin/invitations_devise" }, only: :invitations
         get "support", to: "static_pages#support"
       end
     end

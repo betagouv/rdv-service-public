@@ -100,6 +100,7 @@ fr:
             lieu:
               blank: est obligatoire pour les motifs sur place
   agents:
+    create_cta: "Ajouter un agent"
     export_mailer:
       rdv_export:
         description: Vous trouverez en pièce jointe l’export des RDVs que vous avez demandé.

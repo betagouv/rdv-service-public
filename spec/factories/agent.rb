@@ -22,6 +22,10 @@ FactoryBot.define do
     end
 
     transient do
+      intervenant_role_in_organisations { [] }
+    end
+
+    transient do
       role_in_territories { [] }
     end
 
@@ -31,6 +35,9 @@ FactoryBot.define do
       end
       evaluator.admin_role_in_organisations.each do |organisation|
         create :agent_role, :admin, agent: agent, organisation: organisation
+      end
+      evaluator.intervenant_role_in_organisations.each do |organisation|
+        create :agent_role, :intervenant, agent: agent, organisation: organisation
       end
       evaluator.role_in_territories.each do |territory|
         create :agent_territorial_role, agent: agent, territory: territory
@@ -46,6 +53,7 @@ FactoryBot.define do
     trait :invitation_not_accepted do
       invitation_token { "blah" }
       invitation_created_at { 2.days.ago }
+      invitation_sent_at { 2.days.ago }
       invitation_accepted_at { nil }
       confirmed_at { nil }
     end
@@ -56,10 +64,13 @@ FactoryBot.define do
       service { Service.find_by(name: Service::CONSEILLER_NUMERIQUE) || build(:service, :conseiller_numerique) }
     end
     trait :intervenant do
-      first_name { nil }
       email { nil }
       uid { nil }
-      before(:create) do |agent|
+      first_name { nil }
+      invitation_token { nil }
+      invitation_created_at { nil }
+      invitation_accepted_at { nil }
+      after(:build) do |agent|
         if agent.organisations.any?
           agent.roles.first.update(access_level: AgentRole::ACCESS_LEVEL_INTERVENANT)
         else

@@ -5,40 +5,43 @@ describe Agent::AgentPolicy, type: :policy do
 
   let(:pundit_context) { AgentContext.new(agent) }
   let!(:organisation) { create(:organisation) }
+  let!(:organisation2) { create(:organisation) }
 
-  describe "#show?" do
-    context "regular agent, self" do
-      let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+  %i[show? new? create? edit? update? invite? rdvs? reinvite? versions?].each do |action|
+    describe "##{action}" do
+      context "regular agent, self" do
+        let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
 
-      permissions(:show?) { it { is_expected.to permit(pundit_context, agent) } }
-    end
+        permissions(action) { it { is_expected.to permit(pundit_context, agent) } }
+      end
 
-    context "regular agent, other agent same orga" do
-      let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
-      let!(:other_agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+      context "regular agent, other agent same orga" do
+        let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+        let!(:other_agent) { create(:agent, basic_role_in_organisations: [organisation]) }
 
-      permissions(:show?) { it { is_expected.not_to permit(pundit_context, other_agent) } }
-    end
+        permissions(action) { it { is_expected.not_to permit(pundit_context, other_agent) } }
+      end
 
-    context "admin agent, other agent same orga" do
-      let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
-      let!(:other_agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+      context "admin agent, other agent same orga" do
+        let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
+        let!(:other_agent) { create(:agent, basic_role_in_organisations: [organisation]) }
 
-      permissions(:show?) { it { is_expected.to permit(pundit_context, other_agent.reload) } }
-    end
+        permissions(action) { it { is_expected.to permit(pundit_context, other_agent.reload) } }
+      end
 
-    context "admin agent, other agent different orga" do
-      let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
-      let!(:other_agent) { create(:agent, basic_role_in_organisations: [create(:organisation)]) }
+      context "admin agent, other agent different orga" do
+        let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
+        let!(:other_agent) { create(:agent, basic_role_in_organisations: [create(:organisation)]) }
 
-      permissions(:show?) { it { is_expected.not_to permit(pundit_context, other_agent) } }
-    end
+        permissions(action) { it { is_expected.not_to permit(pundit_context, other_agent) } }
+      end
 
-    context "regular agent, other agent is admin in same orga" do
-      let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
-      let!(:other_agent) { create(:agent, admin_role_in_organisations: [create(:organisation)]) }
+      context "regular agent, other agent is admin in same orga" do
+        let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+        let!(:other_agent) { create(:agent, admin_role_in_organisations: [create(:organisation)]) }
 
-      permissions(:show?) { it { is_expected.not_to permit(pundit_context, other_agent) } }
+        permissions(action) { it { is_expected.not_to permit(pundit_context, other_agent) } }
+      end
     end
   end
 
