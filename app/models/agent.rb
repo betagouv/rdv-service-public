@@ -100,7 +100,6 @@ class Agent < ApplicationRecord
   scope :not_intervenants, lambda {
     where.not(id: AgentRole.where(access_level: "intervenant").select(:agent_id))
   }
-  scope :active, -> { where(deleted_at: nil) }
   scope :order_by_last_name, -> { order(Arel.sql("LOWER(last_name)")) }
   scope :secretariat, -> { joins(:service).where(services: { name: "Secrétariat" }) }
   scope :can_perform_motif, lambda { |motif|

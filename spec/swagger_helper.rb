@@ -332,7 +332,7 @@ RSpec.configure do |config|
               bookable_by: { type: "string", enum: %w[agents agents_and_prescripteurs agents_and_prescripteurs_and_invited_users everyone] },
               service_id: { type: "integer" },
             },
-            required: %w[id deleted_at location_type name organisation_id bookable_publicly bookable_by service_id],
+            required: %w[id archived_at location_type name organisation_id bookable_publicly bookable_by service_id],
           },
           motif_categories: {
             type: "object",
