@@ -16,7 +16,7 @@ module Ants
         Ants::AppointmentSerializerAndListener.mark_for_sync(user.rdvs) if user.saved_change_to_ants_pre_demande_number?
       end
       RdvsUser.before_commit do |rdv_user|
-        Ants::AppointmentSerializerAndListener.mark_for_sync([rdv_user.rdv], obsolete_application_id: rdv_user.user.ants_pre_demande_number)
+        Ants::AppointmentSerializerAndListener.mark_for_sync([rdv_user.rdv], obsolete_application_id: rdv_user.user.ants_pre_demande_number) if rdv_user.user.present?
       end
       Lieu.before_commit do |lieu|
         Ants::AppointmentSerializerAndListener.mark_for_sync(lieu.rdvs) if lieu.saved_change_to_name?
