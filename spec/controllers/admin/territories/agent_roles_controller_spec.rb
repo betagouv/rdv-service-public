@@ -51,10 +51,10 @@ describe Admin::Territories::AgentRolesController, type: :controller do
       # Il doit toujours y avoir au moins un agent Admin par organisation
       last_agent = create(:agent)
       create(:agent_territorial_access_right, territory: territory, agent: last_agent)
-      create(:agent_role, organisation: organisation, agent: last_agent, level: "admin")
     end
 
     it "redirect to territorial_agent_edit on success if agent has another organisation" do
+      organisation2 = create(:organisation, territory: territory)
       agent = create(:agent, role_in_territories: [territory])
       create(:agent_territorial_access_right, territory: territory, agent: agent)
       agent_role = create(:agent_role, organisation: organisation, agent: agent, access_level: "basic")
