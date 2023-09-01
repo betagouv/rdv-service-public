@@ -62,7 +62,7 @@ class User < ApplicationRecord
   belongs_to :responsible, class_name: "User", optional: true
   has_many :relatives, foreign_key: "responsible_id", class_name: "User", inverse_of: :responsible, dependent: :nullify
   has_many :file_attentes, dependent: :destroy
-  has_many :receipts, dependent: :destroy
+  has_many :receipts, dependent: :nullify
 
   # Through relations
   # we specify dependent: :destroy because by default user_profiles and referent_assignations

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_23_144508) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_01_110149) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -512,7 +512,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_23_144508) do
   end
 
   create_table "receipts", force: :cascade do |t|
-    t.bigint "rdv_id", null: false
+    t.bigint "rdv_id"
     t.bigint "user_id"
     t.string "event", null: false
     t.enum "channel", null: false, enum_type: "receipts_channel"
