@@ -2,6 +2,7 @@
 
 # Usage:
 # - télécharger le fichier de tous les cnfs depuis https://coop.conseiller-numerique.gouv.fr/accueil
+# - Exclure du fichier, les cnfs dont les comptes furent supprimés précédemment (voir avec l'équipe produit), afin d'éviter de les recréer
 # - mettre le fichier export_cnfs.csv dans tmp
 # - exécuter: scalingo --app=production-rdv-solidarites --region=osc-secnum-fr1 run --file=tmp/export-cnfs.csv "rails runner scripts/import_conseillers_numeriques.rb"
 
