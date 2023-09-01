@@ -7,7 +7,7 @@ describe Agent, type: :model do
       let(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
 
       it "aborts destruction" do
-        expect(agent.destroy).to eq(false)
+        expect { agent.destroy }.to raise_error(ActiveRecord::InvalidForeignKey)
         agent.reload # does not crash, so agent was not desrtroyed
       end
     end
