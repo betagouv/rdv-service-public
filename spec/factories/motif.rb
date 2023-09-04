@@ -17,12 +17,6 @@ FactoryBot.define do
     location_type { :public_office }
     visibility_type { Motif::VISIBLE_AND_NOTIFIED }
 
-    trait :with_rdvs do
-      after(:create) do |motif|
-        create_list(:rdv, 5, motif: motif, organisation: motif.organisation)
-      end
-    end
-
     trait :at_home do
       location_type { :home }
     end
