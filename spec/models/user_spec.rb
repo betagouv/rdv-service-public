@@ -68,43 +68,13 @@ describe User, type: :model do
     end
   end
 
-  describe "#soft_delete" do
-    it "change email to a « deleted.rdv-solidarites.fr » domain" do
-      user = create(:user, email: "jean@valjean.fr")
-      user.soft_delete
-      expect(user.email).to end_with("deleted.rdv-solidarites.fr")
-    end
-
-    it "keep original email in an other attribute" do
-      user = create(:user, email: "jean@valjean.fr")
-      user.soft_delete
-      expect(user.email_original).to eq("jean@valjean.fr")
-    end
-
-    it "set deleted_at to now" do
-      user = create(:user)
-      user.soft_delete
-      expect(user.deleted_at).to be_within(5.seconds).of(Time.zone.now)
-    end
-
-    it "hidden user by default" do
-      user = create(:user)
-      user.soft_delete
-      expect(described_class.all).to be_empty
-    end
-
-    it "show user with unscoped" do
-      user = create(:user)
-      user.soft_delete
-      expect(described_class.unscoped.all).to eq([user])
-    end
-
+  describe "#remove_from_organisation!" do
     context "belongs to one organisation" do
-      it "removes this organisation" do
+      it "destroys the user" do
         organisation = create(:organisation)
         user = create(:user, organisations: [organisation])
-        user.soft_delete(organisation)
-        expect(user.reload.organisations).to be_empty
+        user.remove_from_organisation!(organisation)
+        expect { user.reload }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
 
@@ -118,75 +88,52 @@ describe User, type: :model do
             responsible = create(:user, organisations: [organisation, other_organisation])
             relative = create(:user, responsible: responsible)
 
-            responsible.soft_delete(organisation)
+            responsible.remove_from_organisation!(organisation)
             expect(relative.reload.organisations).to eq([other_organisation])
             expect(responsible.reload.organisations).to eq([other_organisation])
           end
 
-          it "doesnt mark relative as deleted" do
+          it "doesnt delete relative" do
             responsible = create(:user, organisations: [organisation, other_organisation])
             relative = create(:user, responsible: responsible)
 
-            responsible.soft_delete(organisation)
-            expect(relative.reload.deleted_at).to eq(nil)
+            responsible.remove_from_organisation!(organisation)
+            expect(relative.reload).not_to be_destroyed
           end
         end
 
         it "removes given organisation only" do
           user = create(:user, organisations: [organisation, other_organisation], email: "jean@valjean.fr")
-          user.soft_delete(organisation)
+          user.remove_from_organisation!(organisation)
           expect(user.reload.organisations).not_to include(organisation)
           expect(user.reload.organisations).to include(other_organisation)
         end
 
-        it "does not mark user as deleted" do
+        it "does not delete the user" do
           user = create(:user, organisations: [organisation, other_organisation], email: "jean@valjean.fr")
-          user.soft_delete(organisation)
-          expect(user.deleted_at).to be_nil
-          expect(user.email).to eq "jean@valjean.fr"
-        end
-      end
-
-      context "without a given organisation" do
-        it "removes all organisations and mark user as deleted" do
-          user = create(:user, organisations: [organisation, other_organisation], email: "jean@valjean.fr")
-          user.soft_delete
-          expect(user.reload.organisations).to be_empty
-        end
-
-        it "set deleted_at to Time.zone.now" do
-          user = create(:user, organisations: [organisation, other_organisation], email: "jean@valjean.fr")
-          user.soft_delete
-          expect(user.deleted_at).to be_within(5.seconds).of(Time.zone.now)
+          user.remove_from_organisation!(organisation)
+          expect(user.reload.email).to eq "jean@valjean.fr"
         end
       end
     end
 
     context "when user is a relative" do
       it "deletes user anyhow" do
-        user = create(:user, responsible_id: create(:user).id)
-        user.soft_delete
-        expect(user.reload.deleted_at).to be_within(5.seconds).of(Time.zone.now)
+        org = create(:organisation)
+        user = create(:user, organisations: [org], responsible: create(:user, organisations: [org]))
+        user.remove_from_organisation!(user.organisations.first)
+        expect { user.reload }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
 
     context "when user has a relative" do
       it "deletes relative" do
-        user = create(:user)
-        relative = create(:user, responsible: user, organisations: user.organisations)
-        user.soft_delete
-        expect(relative.reload.deleted_at).to be_within(5.seconds).of(Time.zone.now)
-      end
-
-      context "with given organisation" do
-        it "deletes relative" do
-          organisation = create(:organisation)
-          user = create(:user, organisations: [organisation])
-          relative = create(:user, responsible: user, organisations: [organisation])
-          user.soft_delete(organisation)
-
-          expect(relative.reload.deleted_at).to be_within(5.seconds).of(Time.zone.now)
-        end
+        org = create(:organisation)
+        user = create(:user, organisations: [org])
+        relative = create(:user, responsible: user, organisations: [org])
+        user.remove_from_organisation!(org)
+        expect { user.reload }.to raise_error(ActiveRecord::RecordNotFound)
+        expect { relative.reload }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
   end
@@ -308,19 +255,19 @@ describe User, type: :model do
     end
   end
 
-  describe "#can_be_soft_deleted_from_organisation?" do
+  describe "#can_be_removed_from_organisation?" do
     let(:organisation) { create(:organisation) }
 
     it "return true when no rdv for self and relatives" do
       user = create(:user, organisations: [organisation])
-      expect(user.can_be_soft_deleted_from_organisation?(organisation)).to be true
+      expect(user.can_be_removed_from_organisation?(organisation)).to be true
     end
 
     it "return false when rdv for self" do
       rdv = create(:rdv, organisation: organisation)
       user = create(:user, organisations: [organisation])
       create(:rdvs_user, user: user, rdv: rdv)
-      expect(user.can_be_soft_deleted_from_organisation?(organisation)).to be false
+      expect(user.can_be_removed_from_organisation?(organisation)).to be false
     end
 
     it "return false when rdv for relatives" do
@@ -328,7 +275,7 @@ describe User, type: :model do
       responsible = create(:user, organisations: [organisation])
       relative = create(:user, responsible: responsible, organisations: [organisation])
       create(:rdvs_user, user: relative, rdv: rdv)
-      expect(relative.can_be_soft_deleted_from_organisation?(organisation)).to be false
+      expect(relative.can_be_removed_from_organisation?(organisation)).to be false
     end
   end
 end

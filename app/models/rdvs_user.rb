@@ -15,7 +15,7 @@ class RdvsUser < ApplicationRecord
 
   # Relations
   belongs_to :rdv, touch: true, inverse_of: :rdvs_users, optional: true
-  belongs_to :user, -> { unscope(where: :deleted_at) }, inverse_of: :rdvs_users, optional: true
+  belongs_to :user, inverse_of: :rdvs_users, optional: true
   has_one :prescripteur, dependent: :destroy
 
   # Delegates

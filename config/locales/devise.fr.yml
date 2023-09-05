@@ -7,7 +7,6 @@ fr:
       send_instructions: "Vous allez recevoir les instructions nécessaires à la confirmation de votre compte dans quelques minutes."
       send_paranoid_instructions: "Si votre e-mail existe dans notre base de données, vous allez bientôt recevoir un e-mail contenant les instructions de confirmation de votre compte."
     failure:
-      deleted_account: "Votre compte a été supprimé !"
       invited: "Vous avez une invitation en attente. Acceptez-la pour terminer votre inscription."
       already_authenticated: "Votre connexion est déjà active"
       inactive: "Votre compte n'est pas encore activé."

@@ -44,8 +44,7 @@ module UsersHelper
     user.logged_once_with_franceconnect? ? tag.span("FranceConnect", class: "badge badge-info") : nil
   end
 
-  def user_soft_deleted_tag(organisation, user)
-    return tag.span("Supprimé", class: "badge badge-danger") if user.deleted_at
+  def user_not_in_org_tag(organisation, user)
     return if organisation.territory.visible_users_throughout_the_territory?
 
     tag.span("Supprimé de cette organisation", class: "badge badge-danger") unless user.profile_for(organisation)
@@ -99,11 +98,11 @@ module UsersHelper
     user.notes.present? ? simple_format(user.notes) : nil
   end
 
-  def user_soft_delete_confirm_message(user)
+  def user_destroy_confirm_message(user)
     relatives = user.relatives.merge(current_organisation.users)
     [
       "Confirmez-vous la suppression de cet usager ?",
-      (I18n.t("users.soft_delete_confirm_message.relatives", count: relatives.size) if relatives.any?),
+      (I18n.t("users.destroy_confirm_message.relatives", count: relatives.size) if relatives.any?),
     ].select(&:present?).join("\n\n")
   end
 
@@ -125,14 +124,14 @@ module UsersHelper
   end
 
   def user_to_link(user)
-    if !user.deleted_at && user.organisations.include?(current_organisation)
+    if user.organisations.include?(current_organisation)
       link_to admin_organisation_user_path(current_organisation, user) do
         tag.span(user.full_name) + relative_tag(user)
       end
     else
       tag.span(user.full_name) +
         relative_tag(user) +
-        user_soft_deleted_tag(current_organisation, user)
+        user_not_in_org_tag(current_organisation, user)
     end
   end
 
