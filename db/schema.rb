@@ -514,7 +514,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_05_090020) do
   end
 
   create_table "receipts", force: :cascade do |t|
-    t.bigint "rdv_id", null: false
+    t.bigint "rdv_id"
     t.bigint "user_id"
     t.string "event", null: false
     t.enum "channel", null: false, enum_type: "receipts_channel"
