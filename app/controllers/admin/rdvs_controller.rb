@@ -106,7 +106,7 @@ class Admin::RdvsController < AgentAuthController
 
   def destroy
     authorize(@rdv)
-    if @rdv.soft_delete
+    if @rdv.destroy
       flash[:notice] = "Le rendez-vous a été supprimé."
       redirect_to admin_organisation_rdvs_path(current_organisation)
     else

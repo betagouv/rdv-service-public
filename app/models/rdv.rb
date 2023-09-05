@@ -41,7 +41,7 @@ class Rdv < ApplicationRecord
   # https://stackoverflow.com/questions/30629680/rails-isnt-running-destroy-callbacks-for-has-many-through-join-model/30629704
   # https://github.com/rails/rails/issues/7618
   has_many :rdvs_users, validate: false, inverse_of: :rdv, dependent: :destroy, class_name: "RdvsUser"
-  has_many :receipts, dependent: :destroy
+  has_many :receipts, dependent: :nullify
 
   accepts_nested_attributes_for :rdvs_users, allow_destroy: true
   accepts_nested_attributes_for :lieu
@@ -59,8 +59,6 @@ class Rdv < ApplicationRecord
   # Delegates
   delegate :home?, :phone?, :public_office?, :bookable_by_everyone?,
            :bookable_by_everyone_or_bookable_by_invited_users?, :service_social?, :follow_up?, :service, :collectif?, :collectif, :individuel?, to: :motif
-
-  alias_attribute :soft_deleted?, :deleted_at?
 
   # Validations
   validates :starts_at, :ends_at, :agents, presence: true
@@ -81,7 +79,6 @@ class Rdv < ApplicationRecord
   # voir Ants::AppointmentSerializerAndListener pour d'autres callbacks
 
   # Scopes
-  default_scope { where(deleted_at: nil) }
   scope :not_cancelled, -> { where(status: NOT_CANCELLED_STATUSES) }
   scope :past, -> { where("starts_at < ?", Time.zone.now) }
   scope :future, -> { where("starts_at > ?", Time.zone.now) }
@@ -338,15 +335,6 @@ class Rdv < ApplicationRecord
       .admin_organisation_rdv_url(organisation, id, host: agent.domain.host_name)
 
     "plus d'infos dans #{agent.domain_name}: #{link}"
-  end
-
-  def soft_delete
-    # disable the :updated webhook because we want to manually trigger a :destroyed webhook
-    self.skip_webhooks = true
-    return false unless update(deleted_at: Time.zone.now)
-
-    generate_payload_and_send_webhook_for_destroy
-    true
   end
 
   def update_users_count
