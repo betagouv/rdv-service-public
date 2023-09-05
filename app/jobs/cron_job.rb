@@ -40,7 +40,7 @@ class CronJob < ApplicationJob
     def perform
       two_years_ago = 2.years.ago
 
-      Receipt.where(starts_at: ..two_years_ago).destroy_all
+      Receipt.where(created_at: ..two_years_ago).destroy_all
 
       Rdv.unscoped.where(starts_at: ..two_years_ago).each do |rdv|
         rdv.skip_webhooks = true
