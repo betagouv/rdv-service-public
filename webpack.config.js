@@ -10,6 +10,7 @@ module.exports = {
     application_agent: "./app/javascript/application_agent",
     charts: "./app/javascript/charts",
     mail: "./app/javascript/mail",
+    instance_name: "./app/javascript/instance_name"
   },
   output: {
     filename: '[name].js',
