@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_23_144508) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_05_145446) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -656,7 +656,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_23_144508) do
     t.integer "family_situation"
     t.integer "number_of_children"
     t.bigint "responsible_id"
-    t.datetime "deleted_at"
     t.string "birth_name"
     t.string "email_original"
     t.string "phone_number_formatted"
