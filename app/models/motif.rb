@@ -124,7 +124,7 @@ class Motif < ApplicationRecord
   end
 
   def soft_delete
-    Rdv.unscoped.where(motif: self).any? ? update_attribute(:deleted_at, Time.zone.now) : destroy
+    rdvs.unscope(where: :deleted_at).any? ? update_attribute(:deleted_at, Time.zone.now) : destroy
   end
 
   def authorized_agents
