@@ -76,6 +76,14 @@ describe User, type: :model do
         user.remove_from_organisation!(organisation)
         expect { user.reload }.to raise_error(ActiveRecord::RecordNotFound)
       end
+
+      it "anonymizes its receipts" do
+        organisation = create(:organisation)
+        user = create(:user, organisations: [organisation])
+        rdv = create(:rdv, users: [user], organisation: organisation)
+        receipt = create(:receipt, rdv: rdv, user: user)
+        expect { user.reload.remove_from_organisation!(organisation) }.to change { [receipt.reload.sms_phone_number, receipt.email_address] }.to([nil, nil])
+      end
     end
 
     context "belongs to 2 organisations" do

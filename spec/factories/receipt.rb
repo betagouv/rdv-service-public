@@ -7,6 +7,8 @@ FactoryBot.define do
     event { :rdv_created }
     channel { :sms }
     result { :processed }
+    sms_phone_number { user.phone_number }
+    email_address { user.email }
     created_at { Time.zone.now }
     updated_at { Time.zone.now }
   end

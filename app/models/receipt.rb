@@ -14,4 +14,8 @@ class Receipt < ApplicationRecord
 
   # Scopes
   scope :most_recent_first, -> { order(created_at: :desc) }
+
+  def anonymize!
+    update!(sms_phone_number: nil, email_address: nil)
+  end
 end

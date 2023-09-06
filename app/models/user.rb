@@ -62,6 +62,8 @@ class User < ApplicationRecord
   belongs_to :responsible, class_name: "User", optional: true
   has_many :relatives, foreign_key: "responsible_id", class_name: "User", inverse_of: :responsible, dependent: :nullify
   has_many :file_attentes, dependent: :destroy
+
+  before_destroy :anonymize_receipts # this needs to be before `dependent: :nullify`, see https://github.com/rails/rails/issues/5205
   has_many :receipts, dependent: :nullify
 
   # Through relations
@@ -259,6 +261,10 @@ class User < ApplicationRecord
 
   def set_email_to_null_if_blank
     self.email = nil if email.blank?
+  end
+
+  def anonymize_receipts
+    receipts.each(&:anonymize!)
   end
 
   def birth_date_validity
