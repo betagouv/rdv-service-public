@@ -53,7 +53,7 @@ class Admin::UsersController < AgentAuthController
     prepare_create
     authorize(@user)
     @user.skip_confirmation_notification!
-    user_persisted = @user_form.save
+    user_persisted = @user_form.duplicate_results.none? && @user_form.save
 
     if invite_user?(@user, params)
       @user.invite!(domain: current_domain)
@@ -168,12 +168,7 @@ class Admin::UsersController < AgentAuthController
   def user_form_object
     Admin::UserForm.new(
       @user,
-      ignore_benign_errors: params.dig(:user, :ignore_benign_errors),
-      view_locals: {
-        current_organisation: current_organisation,
-        from_modal: from_modal?,
-        return_location: params[:return_location],
-      }
+      ignore_benign_errors: params.dig(:user, :ignore_benign_errors)
     )
   end
 

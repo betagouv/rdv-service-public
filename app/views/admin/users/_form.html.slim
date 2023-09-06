@@ -12,6 +12,10 @@
     = hidden_field "", :modal, value: true
   = render "model_errors", model: user_form, f: f
 
+  - if user_form.duplicate_results.any?
+    - user_form.duplicate_results.each do |duplicate_result|
+      = render "admin/users/duplicate_alert", user: duplicate_result.user, attributes: duplicate_result.attributes
+
   = collapsible_form_fields_for_warnings(user_form) do
     = f.input( \
       :responsability_type, \
