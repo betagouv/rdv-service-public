@@ -9,7 +9,6 @@ class Api::V1::RdvsController < Api::V1::AgentAuthBaseController
   end
 
   def update
-    Rails.logger.debug params
     rdv = policy_scope(Rdv).find(params[:id])
 
     if rdv_params[:status].present?
