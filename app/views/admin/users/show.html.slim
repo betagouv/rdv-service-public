@@ -64,10 +64,9 @@
         .card-header(id="agents-referents") Agents référents
         .card-body
           ul.list-unstyled.mb-2
-            - @referent_assignations.each do |referent_assignation|
-              - if policy([:agent, referent_assignation]).show?
-                li.mb-2 = referent_assignation.agent.full_name_and_service
-            - if @referent_assignations.empty?
+            - @referent_agents.each do |referent_agent|
+              li.mb-2 = referent_agent.full_name_and_service
+            - if @referent_agents.empty?
               li.font-italic Aucun référent
 
           .text-right

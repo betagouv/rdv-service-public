@@ -11,6 +11,18 @@
     li.breadcrumb-item.active Modifier les référents
 
 = simple_form_for "", url: admin_organisation_user_referent_assignations_path(current_organisation), html: { method: :get, class: "form-inline" }, wrapper: :inline_form do |f|
+  - if @referents.any?
+    .container-fluid.bg-white.rounded
+      table.table
+        thead
+          tr
+            th Nom
+            th Service
+            th Actions
+        tbody
+          - @referents.order(:last_name).each do |agent|
+            = render partial: "admin/referent_assignations/referent_assignation_row", locals: { agent: agent, action: :remove }
+
   .container-fluid.bg-white.rounded
     .m-3.d-flex.justify-content-end
       - search = params[:search].blank? && "d-none"
@@ -26,21 +38,9 @@
           th Actions
       tbody
         - @agents.order(:last_name).each do |agent|
-          tr id="agent_#{agent.id}"
-            td
-              span.mr-2= agent.reverse_full_name
-            td
-              = agent.service&.short_name
-            td
-              div.mr-3
-                - if @referents.include?(agent)
-                  = link_to admin_organisation_user_referent_assignation_path(current_organisation, @user, agent), method: :delete, class: "btn btn-danger", data: { confirm: "Voulez-vous vraiment retirer ce référent ?"} do
-                    span> Retirer
-                    i.fa.fa-angle-right
-                - else
-                  = link_to admin_organisation_user_referent_assignations_path(current_organisation, @user, agent_id: agent.id),  method: :post, class: "btn btn-primary" do
-                    span> Ajouter
-                    i.fa.fa-angle-right
+          - next if @referents.include?(agent)
+          = render partial: "admin/referent_assignations/referent_assignation_row", locals: { agent: agent, action: :add }
+
     - if @agents.total_pages > 1
       .m-3
         .d-flex.justify-content-center
