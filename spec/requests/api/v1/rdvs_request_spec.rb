@@ -54,7 +54,7 @@ describe "RDV authentified API", swagger_doc: "v1/api.json" do
         run_test!
 
         it "returns policy scoped RDVs" do
-          expect(JSON.parse(response.body)["rdvs"].pluck("id")).to contain_exactly(rdv.id)
+          expect(response.parsed_body["rdvs"].pluck("id")).to contain_exactly(rdv.id)
         end
       end
 
@@ -63,7 +63,7 @@ describe "RDV authentified API", swagger_doc: "v1/api.json" do
 
         run_test!
 
-        it { expect(JSON.parse(response.body)["rdvs"]).to eq([]) }
+        it { expect(response.parsed_body["rdvs"]).to eq([]) }
       end
 
       context "with starts_after and starts_before params" do
@@ -76,7 +76,7 @@ describe "RDV authentified API", swagger_doc: "v1/api.json" do
 
           run_test!
 
-          it { expect(JSON.parse(response.body)["rdvs"].pluck("id")).to contain_exactly(rdv2020.id) }
+          it { expect(response.parsed_body["rdvs"].pluck("id")).to contain_exactly(rdv2020.id) }
         end
 
         response 200, "returns policy scoped RDVs filtered with starts_after only", document: false do
@@ -84,7 +84,7 @@ describe "RDV authentified API", swagger_doc: "v1/api.json" do
 
           run_test!
 
-          it { expect(JSON.parse(response.body)["rdvs"].pluck("id")).to contain_exactly(rdv2020.id, rdv2021.id, rdv.id) }
+          it { expect(response.parsed_body["rdvs"].pluck("id")).to contain_exactly(rdv2020.id, rdv2021.id, rdv.id) }
         end
 
         response 200, "returns policy scoped RDVs filtered with starts_before only", document: false do
@@ -92,7 +92,7 @@ describe "RDV authentified API", swagger_doc: "v1/api.json" do
 
           run_test!
 
-          it { expect(JSON.parse(response.body)["rdvs"].pluck("id")).to contain_exactly(rdv2020.id) }
+          it { expect(response.parsed_body["rdvs"].pluck("id")).to contain_exactly(rdv2020.id) }
         end
 
         response 200, "also works with time params", document: false do
@@ -100,7 +100,7 @@ describe "RDV authentified API", swagger_doc: "v1/api.json" do
 
           run_test!
 
-          it { expect(JSON.parse(response.body)["rdvs"].pluck("id")).to contain_exactly(rdv2020.id) }
+          it { expect(response.parsed_body["rdvs"].pluck("id")).to contain_exactly(rdv2020.id) }
         end
 
         response 200, "also works with time params (with another standard)", document: false do
@@ -108,7 +108,7 @@ describe "RDV authentified API", swagger_doc: "v1/api.json" do
 
           run_test!
 
-          it { expect(JSON.parse(response.body)["rdvs"].pluck("id")).to be_empty }
+          it { expect(response.parsed_body["rdvs"].pluck("id")).to be_empty }
         end
       end
 
@@ -121,10 +121,59 @@ describe "RDV authentified API", swagger_doc: "v1/api.json" do
 
         run_test!
 
-        it { expect(JSON.parse(response.body)["rdvs"].pluck("id")).to contain_exactly(rdv.id, rdv3.id) }
+        it { expect(response.parsed_body["rdvs"].pluck("id")).to contain_exactly(rdv.id, rdv3.id) }
       end
 
       it_behaves_like "an endpoint that returns 401 - unauthorized"
+    end
+
+    path "api/v1/rdvs/{id}" do
+      put "Mettre à jour un rendez-vous" do
+        with_authentication
+
+        tags "RDV"
+        produces "application/json"
+        operationId "putRdv"
+        description "Permet de modifier un rdv. Seul le champ `status` est modifiable."
+
+        parameter name: :id, in: :path, type: :string, description: "Identifiant du rendez-vous", example: "20"
+        parameter(
+          name: :rdv,
+          in: :query,
+          schema: {
+            type: :object,
+            properties: {
+              rdv: {
+                type: :object,
+                properties: {
+                  status: { type: :string },
+                  enum: %w[unknown seen excused revoked noshow],
+                },
+                required: %w[status],
+              },
+            },
+          },
+
+          required: %w[rdv]
+        )
+
+        response 200, "returns policy scoped RDVs when agent is admin", document: false do
+          let!(:organisation) { create(:organisation) }
+          let!(:service) { create(:service) }
+          let!(:admin_agent) { create(:agent, admin_role_in_organisations: [organisation], service: service) }
+          let(:access_admin_agent) { api_auth_headers_for_agent(admin_agent) }
+          let(:"access-token") { access_admin_agent["access-token"].to_s }
+          let(:uid) { access_admin_agent["uid"].to_s }
+          let(:client) { access_admin_agent["client"].to_s }
+          let(:id) { create(:rdv, organisation: organisation, agents: [admin_agent]).id }
+          let(:status) { "seen" }
+          let(:rdv) { { rdv: { status: status } } }
+
+          run_test!
+
+          it { expect(response.parsed_body["rdv"]["status"]).to eq(status) }
+        end
+      end
     end
   end
 end
