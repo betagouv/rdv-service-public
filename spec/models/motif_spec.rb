@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 describe Motif, type: :model do
-  let(:motif_with_rdv) { create(:motif, :with_rdvs, organisation: organisation) }
   let(:secretariat) { create(:service, :secretariat) }
   let(:motif) { create(:motif, organisation: organisation) }
   let!(:organisation) { create(:organisation) }
@@ -39,8 +38,12 @@ describe Motif, type: :model do
     it "doesn't delete the motif with rdvs" do
       now = Time.zone.parse("2020-03-23 15h45")
       travel_to(now)
-      motif.soft_delete
+      motif = create(:motif)
+      motif_with_rdv = create(:rdv).motif
+
       motif_with_rdv.soft_delete
+      motif.soft_delete
+
       expect(described_class.all).to eq [motif_with_rdv]
       expect(motif_with_rdv.reload.deleted_at).to eq(now)
     end
