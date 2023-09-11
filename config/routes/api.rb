@@ -20,7 +20,9 @@ namespace :api do
     end
     # Doesn't need authentication
     resources :public_links, only: [:index]
-    resources :rdvs, only: %i[update]
+    resources :rdvs, only: [] do
+      resources :rdvs_users, only: %i[update]
+    end
   end
 
   namespace :ants do
