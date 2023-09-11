@@ -12,6 +12,7 @@ RSpec.describe "Sectorisation display for motifs" do
 
     it "doesn't display the sectorisation level in the motif index" do
       visit admin_organisation_motifs_path(organisation)
+      expect(page).not_to have_content("Sectorisation")
       expect(page).not_to have_content("Tout le 26")
     end
   end
