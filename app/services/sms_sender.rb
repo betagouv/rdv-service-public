@@ -11,8 +11,9 @@ class SmsSender < BaseService
     @sender_name = sender_name
     @phone_number = phone_number
     @content = formatted_content(content)
-    @provider = provider
-    @api_key = api_key
+    # Temporary hack to use netsize for sfr_mail2sms
+    @provider = provider.to_sym == :sfr_mail2sms ? :netsize : provider
+    @api_key = provider.to_sym == :sfr_mail2sms ? Territory.find_by(sms_provider: :netsize)&.sms_configuration : api_key
     @receipt_params = receipt_params
   end
 

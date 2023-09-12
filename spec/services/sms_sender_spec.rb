@@ -1,10 +1,14 @@
 # frozen_string_literal: true
 
 describe SmsSender, type: :service do
+  let(:rdv) { create(:rdv) }
+  let(:user) { create(:user) }
+  let(:receipt_params) { { event: "rdv_created", rdv: rdv, user: user } }
+
   describe "#content" do
     subject { test_sms.content }
 
-    let(:test_sms) { described_class.new("RdvSoli", "0612345678", content, nil, nil, nil) }
+    let(:test_sms) { described_class.new("RdvSoli", "0612345678", content, "netsize", nil, receipt_params) }
 
     context "remove accents and weird chars" do
       let(:content) { "àáäâãèéëẽêìíïîĩòóöôõùúüûũñçÀÁÄÂÃÈÉËẼÊÌÍÏÎĨÒÓÖÔÕÙÚÜÛŨÑÇ" }
@@ -40,12 +44,9 @@ describe SmsSender, type: :service do
   end
 
   describe "receipt creation" do
-    let(:rdv) { create(:rdv) }
-    let(:user) { create(:user) }
-
     before do
       stub_netsize_ok
-      described_class.perform_with("RdvSoli", "0612345678", "content", "netsize", "key", { event: "rdv_created", rdv: rdv, user: user })
+      described_class.perform_with("RdvSoli", "0612345678", "content", "netsize", "key", receipt_params)
     end
 
     it do
