@@ -20,6 +20,7 @@ RSpec.describe "Agent can create another agent" do
       click_link("Ajouter un agent", match: :first)
       fill_in("Email", with: "bob@test.com")
       click_button("Envoyer une invitation")
+      expect(Agent.count).to eq(2)
 
       expect(page).to have_content("Invitations en cours")
       expect(organisation2.reload.agents.count).to eq 2
