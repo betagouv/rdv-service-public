@@ -14,6 +14,7 @@ RSpec.describe "Agent can incite another agent" do
       click_link("Ajouter un agent", match: :first)
       fill_in("Email", with: "bob@test.com")
       click_button("Envoyer une invitation")
+      expect(Agent.count).to eq(2)
 
       visit admin_organisation_agents_path(organisation2)
       click_link("Ajouter un agent", match: :first)
