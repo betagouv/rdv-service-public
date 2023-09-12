@@ -7,12 +7,12 @@ class SmsSender < BaseService
 
   attr_reader :phone_number, :content, :provider, :api_key
 
-  def initialize(sender_name, phone_number, content, provider, api_key, receipt_params) # rubocop:disable Metrics/ParameterLists
+  def initialize(sender_name, phone_number, content, _provider, _api_key, receipt_params) # rubocop:disable Metrics/ParameterLists
     @sender_name = sender_name
     @phone_number = phone_number
     @content = formatted_content(content)
-    @provider = provider
-    @api_key = api_key
+    @provider = receipt_params[:rdv]&.organisation&.territory&.sms_provider
+    @api_key = receipt_params[:rdv]&.organisation&.territory&.sms_configuration
     @receipt_params = receipt_params
   end
 
