@@ -35,7 +35,7 @@ class Admin::AgentsController < AgentAuthController
 
     @agent = create_agent.call
 
-    if @agent.errors.none? # Si on relance des validations en appelant #valid?, on va déclencher les validations sur first_name et last_name
+    if @agent.valid?
       flash[:notice] = create_agent.confirmation_message
       flash[:error] = create_agent.warning_message
       redirect_to_index_path_for(@agent)

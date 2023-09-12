@@ -22,7 +22,7 @@ class AdminCreatesAgent
         @agent = Agent.invite!(agent_and_role_params.merge(allow_blank_name: true), @current_agent)
       end
 
-      if @agent.errors.none? # Si on relance des validations en appelant #valid?, on va déclencher les validations sur first_name et last_name
+      if @agent.valid?
         AgentTerritorialAccessRight.find_or_create_by!(agent: @agent, territory: @organisation.territory)
       end
     end
