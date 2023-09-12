@@ -123,6 +123,7 @@ class SmsSender < BaseService
   # - le département des Hautes-Seine (92)
   #
   def send_with_sfr_mail2sms
+    raise "Disabling this until sfr works again"
     Admins::SfrMail2SmsMailer.send_sms(@api_key, @phone_number, @content).deliver_now
 
     save_receipt(result: :processed)
