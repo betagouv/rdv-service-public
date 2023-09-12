@@ -8,6 +8,8 @@ class Admin::Territories::InvitationsDeviseController < Devise::InvitationsContr
     render :new, layout: "application_configuration"
   end
 
+  # Dette technique : ce controller pourrait sans doute reprendre la logique et le service object
+  # utilisés dans Admin::AgentsController
   def create
     agent = Agent.find_by(email: invite_params[:email].downcase)
     if agent.nil?
@@ -59,7 +61,8 @@ class Admin::Territories::InvitationsDeviseController < Devise::InvitationsContr
   def invite_params
     super.merge(
       # the omniauth uid _is_ the email, always. note: this may be better suited in a hook in agent.rb
-      uid: params[:email]
+      uid: params[:email],
+      allow_blank_name: true
     )
   end
 end
