@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Agent can incite another agent" do
+RSpec.describe "Agent can create another agent" do
   let(:territory) { create(:territory) }
   let(:organisation1) { create(:organisation, territory: territory) }
   let(:organisation2) { create(:organisation, territory: territory) }
@@ -9,7 +9,7 @@ RSpec.describe "Agent can incite another agent" do
   before { login_as(agent, scope: :agent) }
 
   context "in two different organisations" do
-    it "allows inviting the agent" do
+    specify do
       visit admin_organisation_agents_path(organisation1)
       click_link("Ajouter un agent", match: :first)
       fill_in("Email", with: "bob@test.com")
