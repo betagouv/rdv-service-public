@@ -232,8 +232,3 @@ RSpec/ScatteredSetup:
 RSpec/FilePath:
   CustomTransform:
     SfrMail2SmsMailer: sfr_mail_2_sms_mailer
-
-# Temp Build Fix for SFRMail2SmsMailer
-Lint/UnreachableCode:
-  Exclude:
-    - "app/services/sms_sender.rb"
