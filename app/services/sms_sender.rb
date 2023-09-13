@@ -11,9 +11,8 @@ class SmsSender < BaseService
     @sender_name = sender_name
     @phone_number = phone_number
     @content = formatted_content(content)
-    # Temporary hack to use netsize for sfr_mail2sms
-    @provider = provider.to_sym == :sfr_mail2sms ? :netsize : provider
-    @api_key = provider.to_sym == :sfr_mail2sms ? Territory.find_by(sms_provider: :netsize)&.sms_configuration : api_key
+    @provider = provider
+    @api_key = api_key
     @receipt_params = receipt_params
   end
 
@@ -124,7 +123,6 @@ class SmsSender < BaseService
   # - le département des Hautes-Seine (92)
   #
   def send_with_sfr_mail2sms
-    raise "Disabling this until sfr works again"
     Admins::SfrMail2SmsMailer.send_sms(@api_key, @phone_number, @content).deliver_now
 
     save_receipt(result: :processed)
