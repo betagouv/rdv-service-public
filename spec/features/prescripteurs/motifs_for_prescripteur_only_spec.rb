@@ -28,7 +28,7 @@ RSpec.describe "motifs for prescripteurs only", js: true do
   end
 
   context "when the territory doesn't have that feature enabled" do
-    let(:territory) { create(:territory, departement_number: "12") }
+    let(:territory) { create(:territory, departement_number: "26") }
 
     it "doesn't show the possibility to have prescripteurs and toggles the online booking options properly" do
       visit edit_admin_organisation_motif_path(organisation, motif)
@@ -65,7 +65,7 @@ RSpec.describe "motifs for prescripteurs only", js: true do
     end
 
     context "when the territory doesn't have that feature enabled" do
-      let(:territory) { create(:territory, departement_number: "12") }
+      let(:territory) { create(:territory, departement_number: "26") }
 
       it "doesn't show the possibility to have prescripteurs in bookable_by options" do
         visit edit_admin_organisation_motif_path(organisation, motif)
