@@ -357,29 +357,28 @@ class Rdv < ApplicationRecord
   def update_rdv_status_from_participation
     return update_to_seen if seen_users?
 
-    update_to_revoked_for_past_rdv if no_seen_and_no_unknown_users?
-    return if collectif?
-
+    # Only rdv in the past ca be automatically set to revoked
+    return update_to_revoked if no_seen_and_no_unknown_users? && in_the_past?
     # API participation update
     # Keep rdv status consistent with rdv_users status
-    update_to_excused if all_users_excused?
-    update_to_revoked if all_users_revoked?
-    update_to_unknown if all_users_unknown?
+    return if collectif?
+
+    if all_users_excused?
+      update_to_excused
+    elsif all_users_revoked?
+      update_to_revoked
+    else
+      update_to_unknown
+    end
   end
 
   def update_to_seen
+    self.cancelled_at = nil
     update!(status: "seen")
   end
 
   def seen_users?
     rdvs_users.any?(&:seen?)
-  end
-
-  def update_to_revoked_for_past_rdv
-    # Only rdv in the past ca be automatically set to revoked
-    return if in_the_future?
-
-    update_to_revoked
   end
 
   def no_seen_and_no_unknown_users?
@@ -405,6 +404,7 @@ class Rdv < ApplicationRecord
   end
 
   def update_to_unknown
+    self.cancelled_at = nil
     update!(status: "unknown")
   end
 
