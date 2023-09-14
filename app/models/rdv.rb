@@ -355,22 +355,61 @@ class Rdv < ApplicationRecord
   end
 
   def update_rdv_status_from_participation
-    if rdvs_users.any?(&:seen?)
-      update!(status: "seen")
-      return
-    end
+    return update_to_seen if seen_users?
 
-    if rdvs_users.none?(&:seen?) && rdvs_users.none?(&:unknown?)
-      update_status_to_revoked
-    end
+    update_to_revoked_for_past_rdv if no_seen_and_no_unknown_users?
+    return if collectif?
+
+    # API participation update
+    # Keep rdv status consistent with rdv_users status
+    update_to_excused if all_users_excused?
+    update_to_revoked if all_users_revoked?
+    update_to_unknown if all_users_unknown?
   end
 
-  def update_status_to_revoked
+  def update_to_seen
+    update!(status: "seen")
+  end
+
+  def seen_users?
+    rdvs_users.any?(&:seen?)
+  end
+
+  def update_to_revoked_for_past_rdv
     # Only rdv in the past ca be automatically set to revoked
     return if in_the_future?
 
+    update_to_revoked
+  end
+
+  def no_seen_and_no_unknown_users?
+    rdvs_users.none?(&:seen?) && rdvs_users.none?(&:unknown?)
+  end
+
+  def update_to_excused
+    self.cancelled_at = Time.zone.now
+    update!(status: "excused")
+  end
+
+  def all_users_excused?
+    rdvs_users.all?(&:excused?)
+  end
+
+  def update_to_revoked
     self.cancelled_at = Time.zone.now
     update!(status: "revoked")
+  end
+
+  def all_users_revoked?
+    rdvs_users.all?(&:revoked?)
+  end
+
+  def update_to_unknown
+    update!(status: "unknown")
+  end
+
+  def all_users_unknown?
+    rdvs_users.all?(&:unknown?)
   end
 
   private
