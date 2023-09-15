@@ -258,6 +258,9 @@ fr:
         one: 'Impossible d''enregistrer ce(tte) %{model} : 1 erreur'
         other: 'Impossible d''enregistrer ce(tte) %{model} : %{count} erreurs'
   helpers:
+    label:
+      agent:
+        territories:  "Admin de Territoires"
     add: Ajouter
     back: Retour
     clone: Dupliquer

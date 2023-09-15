@@ -1,7 +1,7 @@
 fr:
   activerecord:
     models:
-      territory: Territory
+      territory: Territoire
     attributes:
       territory:
         base: "" # weird hack for nested base error
