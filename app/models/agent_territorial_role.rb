@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class AgentTerritorialRole < ApplicationRecord
+  # Mixins
   has_paper_trail
 
   # Relations

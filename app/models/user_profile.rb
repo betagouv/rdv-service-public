@@ -2,6 +2,7 @@
 
 class UserProfile < ApplicationRecord
   # Mixins
+  has_paper_trail
   include WebhookDeliverable
 
   # Attributes

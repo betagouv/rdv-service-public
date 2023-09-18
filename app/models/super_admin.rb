@@ -2,6 +2,7 @@
 
 class SuperAdmin < ApplicationRecord
   # Mixins
+  has_paper_trail
   include DeviseInvitable::Inviter
 
   devise :authenticatable
