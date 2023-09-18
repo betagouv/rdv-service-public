@@ -21,7 +21,7 @@ RSpec.describe Admin::InvitationsController, type: :controller do
 
     context "some invitations exist" do
       let!(:agent1) { create(:agent, admin_role_in_organisations: [organisation]) }
-      let!(:agent_invitee) { create(:agent, :invitation_not_accepted, first_name: nil, last_name: nil, basic_role_in_organisations: [organisation]) }
+      let!(:agent_invitee) { create(:agent, :invitation_not_accepted, first_name: nil, last_name: nil, allow_blank_name: true, basic_role_in_organisations: [organisation]) }
 
       it "returns a success response" do
         get :index, params: { organisation_id: organisation.id }
@@ -33,7 +33,7 @@ RSpec.describe Admin::InvitationsController, type: :controller do
   end
 
   describe "POST #reinvite" do
-    let(:agent_invitee) { create(:agent, invited_by: agent, confirmed_at: nil, first_name: nil, last_name: nil, basic_role_in_organisations: [organisation]) }
+    let(:agent_invitee) { create(:agent, invited_by: agent, confirmed_at: nil, first_name: nil, last_name: nil, allow_blank_name: true, basic_role_in_organisations: [organisation]) }
 
     it "returns a success response" do
       post :reinvite, params: { organisation_id: organisation.id, id: agent_invitee.to_param }
