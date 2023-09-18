@@ -354,62 +354,36 @@ class Rdv < ApplicationRecord
     update_column(:users_count, users_count)
   end
 
+  # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
   def update_rdv_status_from_participation
-    return update_to_seen if seen_users?
-
-    # Only rdv in the past ca be automatically set to revoked
-    return update_to_revoked if no_seen_and_no_unknown_users? && in_the_past?
-    # API participation update
-    # Keep rdv status consistent with rdv_users status
+    return seen! if rdvs_users.any?(&:seen?)
+    return revoked! if rdvs_users.none?(&:unknown?) && in_the_past?
     return if collectif?
 
-    if all_users_excused?
-      update_to_excused
-    elsif all_users_revoked?
-      update_to_revoked
+    if rdvs_users.all?(&:excused?)
+      excused!
+    elsif rdvs_users.all?(&:revoked?)
+      revoked!
     else
-      update_to_unknown
+      unknown!
     end
   end
+  # rubocop:enable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
 
-  def update_to_seen
-    self.cancelled_at = nil
-    update!(status: "seen")
+  def seen!
+    update!(cancelled_at: nil, status: "seen")
   end
 
-  def seen_users?
-    rdvs_users.any?(&:seen?)
+  def excused!
+    update!(cancelled_at: Time.zone.now, status: "excused")
   end
 
-  def no_seen_and_no_unknown_users?
-    rdvs_users.none?(&:seen?) && rdvs_users.none?(&:unknown?)
+  def revoked!
+    update!(cancelled_at: Time.zone.now, status: "revoked")
   end
 
-  def update_to_excused
-    self.cancelled_at = Time.zone.now
-    update!(status: "excused")
-  end
-
-  def all_users_excused?
-    rdvs_users.all?(&:excused?)
-  end
-
-  def update_to_revoked
-    self.cancelled_at = Time.zone.now
-    update!(status: "revoked")
-  end
-
-  def all_users_revoked?
-    rdvs_users.all?(&:revoked?)
-  end
-
-  def update_to_unknown
-    self.cancelled_at = nil
-    update!(status: "unknown")
-  end
-
-  def all_users_unknown?
-    rdvs_users.all?(&:unknown?)
+  def unknown!
+    update!(cancelled_at: nil, status: "unknown")
   end
 
   private
