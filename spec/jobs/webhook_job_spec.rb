@@ -30,6 +30,14 @@ describe WebhookJob, type: :job do
       expect(enqueued_jobs).to be_empty # no retry
       expect(sentry_events.last.exception.values.last.type).to eq("OutgoingWebhookError")
     end
+
+    it "retries with a lower priority" do
+      stub_request(:post, "https://example.com/rdv-s-endpoint").and_return({ status: 500, body: "ERROR" })
+      described_class.perform_later(payload, webhook_endpoint.id)
+
+      perform_enqueued_jobs
+      expect(enqueued_jobs.first["priority"]).to eq(-20)
+    end
   end
 
   describe ".false_negative_from_drome?" do
