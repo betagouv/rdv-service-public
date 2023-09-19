@@ -8,7 +8,7 @@ class WebhookJob < ApplicationJob
 
   queue_as :webhook
 
-  retry_on(OutgoingWebhookError, wait: :exponentially_longer, attempts: MAX_ATTEMPTS, queue: :webhook_retries)
+  retry_on(OutgoingWebhookError, wait: :exponentially_longer, attempts: MAX_ATTEMPTS, queue: :webhook_retries, priority: -20)
 
   # Pour éviter de fuiter des données personnelles dans les logs
   self.log_arguments = false
