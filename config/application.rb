@@ -51,6 +51,10 @@ module Lapin
     config.cache_store = :redis_cache_store, {
       url: config.x.redis_url,
       namespace: "cache",
+      connect_timeout: 30, # Defaults to 20 seconds
+      read_timeout: 1, # Defaults to 1 second
+      write_timeout: 1, # Defaults to 1 second
+      reconnect_attempts: 1, # Defaults to 0
     }
     config.session_store :redis_session_store,
                          key: "_lapin_session_id", # cookie name
