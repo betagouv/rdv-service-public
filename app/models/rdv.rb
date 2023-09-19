@@ -354,12 +354,21 @@ class Rdv < ApplicationRecord
     update_column(:users_count, users_count)
   end
 
-  # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
   def update_rdv_status_from_participation
     return seen! if rdvs_users.any?(&:seen?)
-    return revoked! if rdvs_users.none?(&:unknown?) && in_the_past? && collectif?
-    return if collectif?
 
+    if collectif?
+      update_collective_rdv_status
+    else
+      update_individual_rdv_status
+    end
+  end
+
+  def update_collective_rdv_status
+    revoked! if rdvs_users.none?(&:unknown?) && in_the_past?
+  end
+
+  def update_individual_rdv_status
     if rdvs_users.all?(&:excused?)
       excused!
     elsif rdvs_users.all?(&:revoked?) || rdvs_users.all?(&:noshow?)
@@ -368,7 +377,6 @@ class Rdv < ApplicationRecord
       unknown!
     end
   end
-  # rubocop:enable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
 
   def seen!
     update!(cancelled_at: nil, status: "seen")
