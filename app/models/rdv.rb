@@ -357,12 +357,12 @@ class Rdv < ApplicationRecord
   # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
   def update_rdv_status_from_participation
     return seen! if rdvs_users.any?(&:seen?)
-    return revoked! if rdvs_users.none?(&:unknown?) && in_the_past?
+    return revoked! if rdvs_users.none?(&:unknown?) && in_the_past? && collectif?
     return if collectif?
 
     if rdvs_users.all?(&:excused?)
       excused!
-    elsif rdvs_users.all?(&:revoked?)
+    elsif rdvs_users.all?(&:revoked?) || rdvs_users.all?(&:noshow?)
       revoked!
     else
       unknown!
