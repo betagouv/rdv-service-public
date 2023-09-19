@@ -331,4 +331,12 @@ describe User, type: :model do
       expect(relative.can_be_soft_deleted_from_organisation?(organisation)).to be false
     end
   end
+
+  describe "#responsible" do
+    it "can't be a relative to the user" do
+      guardian = create(:user)
+      relative = create(:user, responsible: guardian)
+      expect { guardian.update!(responsible: relative) }.to raise_error(ActiveRecord::RecordInvalid, /Deux usagers ne peuvent être réciproquement responsable/)
+    end
+  end
 end
