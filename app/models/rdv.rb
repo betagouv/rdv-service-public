@@ -364,6 +364,8 @@ class Rdv < ApplicationRecord
     end
   end
 
+  private
+
   def update_collective_rdv_status
     revoked! if rdvs_users.none?(&:unknown?) && in_the_past?
   end
@@ -393,8 +395,6 @@ class Rdv < ApplicationRecord
   def unknown!
     update!(cancelled_at: nil, status: "unknown")
   end
-
-  private
 
   def starts_at_is_plausible
     return unless will_save_change_to_attribute?("starts_at")
