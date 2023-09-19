@@ -33,6 +33,7 @@ class Organisation < ApplicationRecord
   has_many :agents, through: :agent_roles, dependent: :destroy
   has_many :referent_assignations, through: :users
   has_many :receipts, through: :rdvs
+  has_many :agents_rdvs, through: :rdvs
 
   accepts_nested_attributes_for :agent_roles
   accepts_nested_attributes_for :territory

@@ -1,11 +1,17 @@
 # frozen_string_literal: true
 
 class AgentsRdv < ApplicationRecord
+  # Mixins
   include Outlook::EventSerializerAndListener
+  include WebhookDeliverable
 
   # Relations
   belongs_to :rdv, touch: true
   belongs_to :agent
+
+  # Delegates
+  delegate :organisation, to: :rdv
+  delegate :webhook_endpoints, to: :organisation
 
   # Validation
   # Uniqueness validation doesn’t work with nested_attributes, see https://github.com/rails/rails/issues/4568

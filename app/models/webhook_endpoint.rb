@@ -12,6 +12,7 @@ class WebhookEndpoint < ApplicationRecord
 
   ALL_SUBSCRIPTIONS = %w[
     rdv absence plage_ouverture user user_profile organisation motif lieu agent agent_role referent_assignation
+    agents_rdv
   ].freeze
 
   def trigger_for_all_subscribed_resources
