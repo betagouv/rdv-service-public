@@ -364,22 +364,6 @@ class Rdv < ApplicationRecord
     end
   end
 
-  private
-
-  def update_collective_rdv_status
-    revoked! if rdvs_users.none?(&:unknown?) && in_the_past?
-  end
-
-  def update_individual_rdv_status
-    if rdvs_users.all?(&:excused?)
-      excused!
-    elsif rdvs_users.all?(&:revoked?) || rdvs_users.all?(&:noshow?)
-      revoked!
-    else
-      unknown!
-    end
-  end
-
   def seen!
     update!(cancelled_at: nil, status: "seen")
   end
@@ -394,6 +378,22 @@ class Rdv < ApplicationRecord
 
   def unknown!
     update!(cancelled_at: nil, status: "unknown")
+  end
+
+  private
+
+  def update_collective_rdv_status
+    revoked! if rdvs_users.none?(&:unknown?) && in_the_past?
+  end
+
+  def update_individual_rdv_status
+    if rdvs_users.all?(&:excused?)
+      excused!
+    elsif rdvs_users.all?(&:revoked?) || rdvs_users.all?(&:noshow?)
+      revoked!
+    else
+      unknown!
+    end
   end
 
   def starts_at_is_plausible
