@@ -7,7 +7,7 @@ module User::ResponsabilityConcern
     before_save :set_organisation_ids_from_responsible, if: :responsible_id_changed?
     accepts_nested_attributes_for :responsible
     validate :cannot_be_responsible_of_self
-    validate :cannot_have_reciprocal_responsible
+    validate :cannot_be_responsible_for_my_responsible
   end
 
   delegate(
@@ -63,11 +63,11 @@ module User::ResponsabilityConcern
     errors.add(:responsible_id, "ne peut pas être l'usager lui même") if responsible_id.present? && responsible_id == id
   end
 
-  def cannot_have_reciprocal_responsible
+  def cannot_be_responsible_for_my_responsible
     return unless responsible
 
     if responsible && responsible.responsible == self
-      errors.add(:base, "Deux usagers ne peuvent être réciproquement responsable")
+      errors.add(:base, "L'usager ne peut être responsable de son propre responsable")
     end
   end
 end

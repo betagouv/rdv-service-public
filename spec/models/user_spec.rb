@@ -336,7 +336,7 @@ describe User, type: :model do
     it "can't be a relative to the user" do
       guardian = create(:user)
       relative = create(:user, responsible: guardian)
-      expect { guardian.update!(responsible: relative) }.to raise_error(ActiveRecord::RecordInvalid, /Deux usagers ne peuvent être réciproquement responsable/)
+      expect { guardian.update!(responsible: relative) }.to raise_error(ActiveRecord::RecordInvalid, /L'usager ne peut être responsable de son propre responsable/)
     end
   end
 end
