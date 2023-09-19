@@ -261,6 +261,10 @@ fr:
     label:
       agent:
         territories:  "Admin de Territoires"
+        territorial_roles: "Admin de Territoires"
+      territory:
+        roles: "Admins du Territoire"
+        admin_agents: "Admins du Territoire"
     add: Ajouter
     back: Retour
     clone: Dupliquer

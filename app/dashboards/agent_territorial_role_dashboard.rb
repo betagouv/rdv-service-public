@@ -2,7 +2,7 @@
 
 require "administrate/base_dashboard"
 
-class TerritoryDashboard < Administrate::BaseDashboard
+class AgentTerritorialRoleDashboard < Administrate::BaseDashboard
   # ATTRIBUTE_TYPES
   # a hash that describes the type of each of the model's fields.
   #
@@ -11,12 +11,8 @@ class TerritoryDashboard < Administrate::BaseDashboard
   # on pages throughout the dashboard.
   ATTRIBUTE_TYPES = {
     id: Field::Number,
-    departement_number: Field::String,
-    name: Field::String,
-    admin_agents: Field::HasMany,
-    roles: Field::HasMany,
-    created_at: Field::DateTime,
-    updated_at: Field::DateTime,
+    territory: Field::BelongsTo,
+    agent: Field::BelongsTo,
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -26,31 +22,24 @@ class TerritoryDashboard < Administrate::BaseDashboard
   # Feel free to add, remove, or rearrange items.
   COLLECTION_ATTRIBUTES = %i[
     id
-    departement_number
-    name
+    territory
+    agent
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
   # an array of attributes that will be displayed on the model's show page.
   SHOW_PAGE_ATTRIBUTES = %i[
     id
-    name
-    roles
-    departement_number
-    created_at
-    updated_at
+    territory
+    agent
   ].freeze
 
   # FORM_ATTRIBUTES
   # an array of attributes that will be displayed
   # on the model's form (`new` and `edit`) pages.
-  FORM_ATTRIBUTES = %i[
-    name
-    admin_agents
-    departement_number
-  ].freeze
+  FORM_ATTRIBUTES = %i[].freeze
 
-  def display_resource(territory)
-    "Territory ##{territory.id} - #{territory.name} (#{territory.departement_number})"
+  def display_resource(territorial_role)
+    "Territory ##{territorial_role.id} - #{territorial_role.territory.name} (#{territorial_role.territory.departement_number})"
   end
 end
