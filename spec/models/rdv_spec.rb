@@ -816,6 +816,5 @@ describe Rdv, type: :model do
       rdv.update_rdv_status_from_participation
       expect(rdv.status).to eq("unknown")
     end
-
   end
 end
