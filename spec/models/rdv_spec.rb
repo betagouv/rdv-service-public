@@ -805,10 +805,10 @@ describe Rdv, type: :model do
       expect(rdv.status).to eq("revoked")
     end
 
-    it "updated as revoked if one participation is noshow" do
+    it "updated as noshow if one participation is noshow" do
       rdv.rdvs_users.first.update(status: "noshow")
       rdv.update_rdv_status_from_participation
-      expect(rdv.status).to eq("revoked")
+      expect(rdv.status).to eq("noshow")
     end
 
     it "updated as unknown if one participation is unknown" do

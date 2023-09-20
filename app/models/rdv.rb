@@ -368,16 +368,20 @@ class Rdv < ApplicationRecord
     update!(cancelled_at: nil, status: "seen")
   end
 
+  def unknown!
+    update!(cancelled_at: nil, status: "unknown")
+  end
+
   def excused!
     update!(cancelled_at: Time.zone.now, status: "excused")
   end
 
-  def revoked!
-    update!(cancelled_at: Time.zone.now, status: "revoked")
+  def noshow!
+    update!(cancelled_at: Time.zone.now, status: "noshow")
   end
 
-  def unknown!
-    update!(cancelled_at: nil, status: "unknown")
+  def revoked!
+    update!(cancelled_at: Time.zone.now, status: "revoked")
   end
 
   private
@@ -389,8 +393,10 @@ class Rdv < ApplicationRecord
   def update_individual_rdv_status
     if rdvs_users.all?(&:excused?)
       excused!
-    elsif rdvs_users.all?(&:revoked?) || rdvs_users.all?(&:noshow?)
+    elsif rdvs_users.all?(&:revoked?)
       revoked!
+    elsif rdvs_users.all?(&:noshow?)
+      noshow!
     else
       unknown!
     end
