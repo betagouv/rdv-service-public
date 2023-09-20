@@ -12,30 +12,32 @@
 
 = simple_form_for "", url: admin_organisation_user_referent_assignations_path(current_organisation), html: { method: :get, class: "form-inline" }, wrapper: :inline_form do |f|
   - if @referents.any?
-    .container-fluid.bg-white.rounded
+    .container-fluid.bg-white.rounded.col-lg-10.mb-3
       table.table
         thead
           tr
             th Nom
             th Service
-            th Actions
+            th
         tbody
           - @referents.order(:last_name).each do |agent|
             = render partial: "admin/referent_assignations/referent_assignation_row", locals: { agent: agent, action: :remove }
 
-  .container-fluid.bg-white.rounded
-    .m-3.d-flex.justify-content-end
-      - search = params[:search].blank? && "d-none"
-      div= link_to t("helpers.reset"), admin_organisation_agents_path(current_organisation), class: "btn btn-link #{search}"
-      = f.input :search, placeholder: "Prénom, Nom, Email", label: false, input_html: { autocomplete: "off", class: "search-form-control", value: params[:search] }, required: false
-      = f.button :submit, t("helpers.search")
+  .container-fluid.bg-white.rounded.col-lg-10
+    .d-flex.justify-content-between
+      h2 Agents de l'organisation
+      .m-3.d-flex.justify-content-end
+        - search = params[:search].blank? && "d-none"
+        div= link_to t("helpers.reset"), admin_organisation_agents_path(current_organisation), class: "btn btn-link #{search}"
+        = f.input :search, placeholder: "Prénom, Nom, Email", label: false, input_html: { autocomplete: "off", class: "search-form-control", value: params[:search] }, required: false
+        = f.button :submit, t("helpers.search")
 
     table.table
       thead
         tr
           th Nom
           th Service
-          th Actions
+          th
       tbody
         - @agents.order(:last_name).each do |agent|
           - next if @referents.include?(agent)

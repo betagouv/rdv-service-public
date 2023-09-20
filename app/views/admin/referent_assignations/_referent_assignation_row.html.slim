@@ -3,7 +3,7 @@ tr id="agent_#{agent.id}"
     span.mr-2= agent.reverse_full_name
   td
     = agent.service&.short_name
-  td
+  td.text-right
     div.mr-3
       - if action == :remove
         = link_to admin_organisation_user_referent_assignation_path(current_organisation, @user, agent), method: :delete, class: "btn btn-danger", data: { confirm: "Voulez-vous vraiment retirer ce référent ?"} do
