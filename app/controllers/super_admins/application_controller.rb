@@ -8,6 +8,8 @@
 # you're free to overwrite the RESTful controller actions.
 module SuperAdmins
   class ApplicationController < Administrate::ApplicationController
+    PROTECTED_RESOURCES = %w[organisation].freeze
+
     include DomainDetection
 
     helper all_helpers_from_path "app/helpers"
@@ -36,6 +38,20 @@ module SuperAdmins
 
     def sign_in_as_allowed?
       ENV.fetch("SIGN_IN_AS_ALLOWED", false)
+    end
+
+    # We override this method, so we don't show the "Supprimer" button for Protected resources
+    def existing_action?(resource, action_name)
+      return false if action_name.to_s == "destroy" && PROTECTED_RESOURCES.include?(resource.to_s)
+
+      super
+    end
+
+    # We override this method, so DELETE requests for Protected resources are not allowed
+    def valid_action?(action_name, resource = resource_class)
+      return false if action_name.to_s == "destroy" && PROTECTED_RESOURCES.include?(resource.to_s)
+
+      super
     end
   end
 end
