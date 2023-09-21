@@ -3,8 +3,8 @@
 class OutgoingWebhookError < StandardError; end
 
 class WebhookJob < ApplicationJob
-  TIMEOUT = 7
-  MAX_ATTEMPTS = 3
+  TIMEOUT = 10
+  MAX_ATTEMPTS = 10
 
   queue_as :webhook
 
