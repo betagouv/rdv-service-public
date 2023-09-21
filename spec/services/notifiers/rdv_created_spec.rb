@@ -18,14 +18,30 @@ describe Notifiers::RdvCreated, type: :service do
     allow(Devise.token_generator).to receive(:generate).and_return(token1, token2)
   end
 
+  context "edited by agent" do
+    subject { described_class.perform_with(rdv, agent1) }
+
+    let(:starts_at) { 3.days.from_now }
+    let(:motif) { build(:motif) }
+
+    it "triggers sending mail to users and other agents" do
+      expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv, user: user1, token: token1 })
+      expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv, user: user2, token: token2 })
+      expect(Agents::RdvMailer).to receive(:with).with({ rdv: rdv, agent: agent2, author: agent1 })
+      expect(Agents::RdvMailer).not_to receive(:with).with({ rdv: rdv, agent: agent1, author: agent1 })
+      subject
+    end
+  end
+
   context "starts in more than 2 days" do
     let(:starts_at) { 3.days.from_now }
     let(:motif) { build(:motif) }
 
-    it "triggers sending mail to users but not to agents" do
+    it "triggers sending mail to users and agents" do
       expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv, user: user1, token: token1 })
       expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv, user: user2, token: token2 })
-      expect(Agents::RdvMailer).not_to receive(:with)
+      expect(Agents::RdvMailer).to receive(:with).with({ rdv: rdv, agent: agent1, author: user1 })
+      expect(Agents::RdvMailer).to receive(:with).with({ rdv: rdv, agent: agent2, author: user1 })
       subject
     end
 

@@ -20,14 +20,23 @@ describe WebhookJob, type: :job do
       expect(sentry_events).to be_empty
 
       # retry 8 times, nothing logged
-      8.times { perform_enqueued_jobs }
-      expect(enqueued_jobs.first["executions"]).to eq(9)
+      # Temporary Fix for Sfr2mail problems (max webhooks attempt set to 3 instead of 10)
+      perform_enqueued_jobs
+      expect(enqueued_jobs.first["executions"]).to eq(2)
       expect(sentry_events).to be_empty
 
       # 10th execution, error is logged and job is discarded
       expect { perform_enqueued_jobs }.to raise_error(OutgoingWebhookError)
       expect(enqueued_jobs).to be_empty # no retry
       expect(sentry_events.last.exception.values.last.type).to eq("OutgoingWebhookError")
+    end
+
+    it "retries with a lower priority" do
+      stub_request(:post, "https://example.com/rdv-s-endpoint").and_return({ status: 500, body: "ERROR" })
+      described_class.perform_later(payload, webhook_endpoint.id)
+
+      perform_enqueued_jobs
+      expect(enqueued_jobs.first["priority"]).to eq(-20)
     end
   end
 

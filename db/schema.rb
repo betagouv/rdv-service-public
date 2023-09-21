@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_23_144508) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_12_082341) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -208,7 +208,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_23_144508) do
     t.string "uid", default: ""
     t.text "tokens"
     t.boolean "allow_password_change", default: false
-    t.enum "rdv_notifications_level", default: "soon", enum_type: "agents_rdv_notifications_level"
+    t.enum "rdv_notifications_level", default: "others", enum_type: "agents_rdv_notifications_level"
     t.integer "unknown_past_rdv_count", default: 0
     t.boolean "display_saturdays", default: false
     t.boolean "display_cancelled_rdv", default: true

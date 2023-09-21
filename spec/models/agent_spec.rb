@@ -135,51 +135,43 @@ describe Agent, type: :model do
     end
   end
 
-  describe "last_name and first_name validations" do
-    context "when agent is an intervenant" do
+  describe "last_name validation" do
+    let!(:agent) { build(:agent) }
+
+    it "can be bypassed when needed" do
+      expect(agent).to be_valid
+      agent.last_name = nil
+      expect(agent).not_to be_valid
+
+      agent.errors.clear
+
+      agent.allow_blank_name = true
+      expect(agent).to be_valid
+    end
+  end
+
+  describe "first_name validation" do
+    let!(:agent) { build(:agent) }
+
+    it "can be bypassed when needed" do
+      expect(agent).to be_valid
+      agent.first_name = nil
+      expect(agent).not_to be_valid
+
+      agent.errors.clear
+
+      agent.allow_blank_name = true
+      expect(agent).to be_valid
+    end
+
+    context "for an intervenant" do
       let!(:organisation) { create(:organisation) }
       let!(:agent_admin) { create(:agent, admin_role_in_organisations: [organisation]) }
       let(:agent_intervenant) { build(:agent, :intervenant, organisations: [organisation]) }
 
-      it "validates presence of last_name only on create" do
-        agent_intervenant.last_name = nil
+      it "is never needed" do
         agent_intervenant.first_name = nil
-        agent_intervenant.valid?
-        expect(agent_intervenant.errors.full_messages.uniq.to_sentence).to eq("Nom d’usage doit être rempli(e)")
-      end
-
-      it "validates presence of last_name only on update" do
-        agent_intervenant.last_name = "jesuisintervenant"
-        agent_intervenant.save
-        agent_intervenant.last_name = nil
-        agent_intervenant.first_name = nil
-        agent_intervenant.valid?
-        expect(agent_intervenant.errors.full_messages.uniq.to_sentence).to eq("Nom d’usage doit être rempli(e)")
-      end
-    end
-
-    context "when agent is not an intervenant" do
-      let!(:organisation) { create(:organisation) }
-      let!(:agent_admin) { build(:agent, admin_role_in_organisations: [organisation]) }
-
-      it "does not validates presence of last_name and first_name on create" do
-        # On Agent creation first_name and last_name are leave blank for invited agent to fill them later
-        agent_admin.last_name = nil
-        agent_admin.first_name = nil
-        agent_admin.valid?
-        expect(agent_admin.email).not_to be_nil
-        expect(agent_admin.errors).to be_empty
-      end
-
-      it "validates presence of last_name and first_name on update" do
-        agent_admin.last_name = "ancien last name"
-        agent_admin.first_name = "ancien first name"
-        agent_admin.save
-        agent_admin.last_name = nil
-        agent_admin.first_name = nil
-        agent_admin.valid?
-        expect(agent_admin.errors[:last_name]).to include("doit être rempli(e)")
-        expect(agent_admin.errors[:first_name]).to include("doit être rempli(e)")
+        expect(agent_intervenant).to be_valid
       end
     end
   end

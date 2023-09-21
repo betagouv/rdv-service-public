@@ -17,6 +17,7 @@ class OrganisationsController < ApplicationController
       # callbacks:
       agent_role.agent.skip_confirmation!
       agent_role.agent.skip_invitation = true
+      agent_role.agent.allow_blank_name = true
       agent_role.agent.define_singleton_method(:password_required?) { false }
       agent_role.agent.define_singleton_method(:postpone_email_change?) { false }
       # forces devise_token_auth sync_uid to run

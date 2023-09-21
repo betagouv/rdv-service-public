@@ -9,7 +9,7 @@ describe InclusionConnectController, type: :controller do
     it "update first_name and last_name of agent" do
       now = Time.zone.parse("2022-08-22 11h34")
       travel_to(now)
-      agent = create(:agent, :invitation_not_accepted, first_name: nil, last_name: nil, email: "bob@demo.rdv-solidarites.fr")
+      agent = create(:agent, :invitation_not_accepted, first_name: nil, last_name: nil, allow_blank_name: true, email: "bob@demo.rdv-solidarites.fr")
 
       stub_const("InclusionConnect::IC_CLIENT_ID", "truc")
       stub_const("InclusionConnect::IC_CLIENT_SECRET", "truc secret")

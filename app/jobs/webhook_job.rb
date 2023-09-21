@@ -3,12 +3,12 @@
 class OutgoingWebhookError < StandardError; end
 
 class WebhookJob < ApplicationJob
-  TIMEOUT = 10
-  MAX_ATTEMPTS = 10
+  TIMEOUT = 7
+  MAX_ATTEMPTS = 3
 
   queue_as :webhook
 
-  retry_on(OutgoingWebhookError, wait: :exponentially_longer, attempts: MAX_ATTEMPTS, queue: :webhook_retries)
+  retry_on(OutgoingWebhookError, wait: :exponentially_longer, attempts: MAX_ATTEMPTS, queue: :webhook_retries, priority: PRIORITY_OF_RETRIES)
 
   # Pour éviter de fuiter des données personnelles dans les logs
   self.log_arguments = false
