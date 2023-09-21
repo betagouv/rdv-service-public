@@ -64,9 +64,7 @@ module User::ResponsabilityConcern
   end
 
   def cannot_be_responsible_for_my_responsible
-    return unless responsible
-
-    if responsible && responsible.responsible == self
+    if responsible&.responsible == self
       errors.add(:base, "L'usager ne peut être responsable de son propre responsable")
     end
   end
