@@ -21,6 +21,11 @@ describe "Agent can CRUD intervenants" do
     click_button("Ajouter l'intervenant")
     expect_page_title("Agents de Organisation n°1")
     expect(page).to have_content("AVOCAT 1")
+    expect(Agent.last).to have_attributes(
+      plage_ouverture_notification_level: "none",
+      rdv_notifications_level: "none",
+      absence_notification_level: "none"
+    )
 
     # Change their last name
     click_link "INTERVENANT1"
@@ -50,7 +55,10 @@ describe "Agent can CRUD intervenants" do
 
     expect(Agent.last).to have_attributes(
       email: "ancien_intervenant1@invitation.com",
-      uid: "ancien_intervenant1@invitation.com"
+      uid: "ancien_intervenant1@invitation.com",
+      plage_ouverture_notification_level: "all",
+      rdv_notifications_level: "others",
+      absence_notification_level: "all"
     )
 
     expect_page_title("Invitations en cours pour Organisation n°1")
@@ -86,7 +94,10 @@ describe "Agent can CRUD intervenants" do
       invitation_created_at: nil,
       invitation_sent_at: nil,
       invited_by_id: nil,
-      invited_by_type: nil
+      invited_by_type: nil,
+      plage_ouverture_notification_level: "none",
+      rdv_notifications_level: "none",
+      absence_notification_level: "none"
     )
 
     # On vérifie que nos factories correspondent à la réalité
