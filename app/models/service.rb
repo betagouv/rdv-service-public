@@ -11,6 +11,7 @@ class Service < ApplicationRecord
   MAIRIE = "Mairie"
 
   # Relations
+  belongs_to :territory, optional: true
   has_many :agents, dependent: :nullify
   has_many :motifs, dependent: :destroy
 

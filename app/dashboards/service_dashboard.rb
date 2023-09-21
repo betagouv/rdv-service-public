@@ -13,6 +13,7 @@ class ServiceDashboard < Administrate::BaseDashboard
     id: Field::Number,
     name: Field::String,
     short_name: Field::String,
+    territory: Field::BelongsTo,
     agents: Field::HasMany,
     motifs: Field::HasMany,
     created_at: Field::DateTime,
@@ -36,6 +37,7 @@ class ServiceDashboard < Administrate::BaseDashboard
     id
     name
     short_name
+    territory
     agents
     motifs
     created_at
@@ -48,6 +50,7 @@ class ServiceDashboard < Administrate::BaseDashboard
   FORM_ATTRIBUTES = %i[
     name
     short_name
+    territory
     motifs
   ].freeze
 
