@@ -218,7 +218,6 @@ GEM
       activesupport (>= 5.2)
     hashdiff (1.0.1)
     hashie (5.0.0)
-    hiredis (0.6.3)
     html-attributes-utils (1.0.0)
       activesupport (>= 6.1.4.4)
     htmlentities (4.3.4)
@@ -645,7 +644,6 @@ DEPENDENCIES
   faker
   good_job
   groupdate (~> 6.1)
-  hiredis
   icalendar (~> 2.5)
   jbuilder
   jsbundling-rails
