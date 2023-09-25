@@ -28,7 +28,7 @@ class WebhookJob < ApplicationJob
     )
 
     request.on_complete do |response|
-      if !response.success? && !WebhookJob.false_negative_from_drome?(response.body)
+      if !response.success? && !response.timed_out? && !WebhookJob.false_negative_from_drome?(response.body)
         message = "Webhook-Failure (#{response.body.force_encoding('UTF-8')[0...1000]}):\n"
         message += "  url: #{webhook_endpoint.target_url}\n"
         message += "  org: #{webhook_endpoint.organisation.name}\n"
