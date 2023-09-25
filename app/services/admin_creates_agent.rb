@@ -17,7 +17,13 @@ class AdminCreatesAgent
         add_agent_to_organisation
         check_agent_service
       elsif @access_level == "intervenant"
-        @agent = Agent.create(agent_and_role_params)
+        @agent = Agent.create(
+          agent_and_role_params.merge(
+            rdv_notifications_level: "none",
+            plage_ouverture_notification_level: "none",
+            absence_notification_level: "none"
+          )
+        )
       else
         @agent = Agent.invite!(agent_and_role_params.merge(allow_blank_name: true), @current_agent)
       end
