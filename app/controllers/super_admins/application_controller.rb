@@ -19,8 +19,11 @@ module SuperAdmins
       before_action :authenticate_super_admin!
     end
     before_action :set_paper_trail_whodunnit
+    before_action :set_sentry_context
 
     helper_method :sign_in_as_allowed?
+
+    private
 
     def user_for_paper_trail
       return "SuperAdmin" if current_super_admin.nil?
@@ -36,6 +39,10 @@ module SuperAdmins
 
     def sign_in_as_allowed?
       ENV.fetch("SIGN_IN_AS_ALLOWED", false)
+    end
+
+    def set_sentry_context
+      Sentry.set_user({ email: current_super_admin.email }) if super_admin_signed_in?
     end
   end
 end
