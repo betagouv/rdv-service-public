@@ -18,6 +18,7 @@ namespace :api do
       resources :motifs, only: %i[index]
       resources :rdvs, only: %i[index]
     end
+    resources :rdvs_users, only: %i[update]
     # Doesn't need authentication
     resources :public_links, only: [:index]
   end

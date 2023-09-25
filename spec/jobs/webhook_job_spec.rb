@@ -20,9 +20,8 @@ describe WebhookJob, type: :job do
       expect(sentry_events).to be_empty
 
       # retry 8 times, nothing logged
-      # Temporary Fix for Sfr2mail problems (max webhooks attempt set to 3 instead of 10)
-      perform_enqueued_jobs
-      expect(enqueued_jobs.first["executions"]).to eq(2)
+      8.times { perform_enqueued_jobs }
+      expect(enqueued_jobs.first["executions"]).to eq(9)
       expect(sentry_events).to be_empty
 
       # 10th execution, error is logged and job is discarded
