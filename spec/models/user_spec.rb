@@ -331,4 +331,12 @@ describe User, type: :model do
       expect(relative.can_be_soft_deleted_from_organisation?(organisation)).to be false
     end
   end
+
+  describe "#responsible" do
+    it "can't be a relative to the user" do
+      parent = create(:user)
+      child = create(:user, responsible: parent)
+      expect { parent.update!(responsible: child) }.to raise_error(ActiveRecord::RecordInvalid, /L'usager⋅e ne peut être responsable de son propre responsable/)
+    end
+  end
 end
