@@ -50,24 +50,6 @@ Agent.transaction do
   teams_to_add_to_destination.update!(agent_id: dest.id)
   source.agent_teams.reload.destroy_all
 
-  puts "---Merging Agent Territorial Access Rights---"
-  source_access_right = source.agent_territorial_access_rights.take
-  destination_access_right = dest.agent_territorial_access_rights.take
-
-  if source_access_right.present?
-    destination_access_right&.destroy!
-    source_access_right.update!(agent_id: dest.id)
-  end
-
-  puts "---Merging Agent Territorial Roles---"
-  source_territorial_role = AgentTerritorialRole.find_by(agent_id: source.id)
-  destination_territorial_role = AgentTerritorialRole.find_by(agent_id: dest.id)
-
-  if source_territorial_role.present?
-    destination_territorial_role&.destroy!
-    source_territorial_role.update!(agent_id: dest.id)
-  end
-
   puts "---Merging Agent Rdvs---"
   source.agents_rdvs.update!(agent_id: dest.id)
 
