@@ -27,13 +27,11 @@ class WebhookJob < ApplicationJob
       timeout: TIMEOUT
     )
 
-    request.on_complete do |response|
-      if !response.success? && !response.timed_out? && !WebhookJob.false_negative_from_drome?(response.body)
-        message = "Webhook-Failure (#{response.body.force_encoding('UTF-8')[0...1000]}):\n"
-        message += "  url: #{webhook_endpoint.target_url}\n"
-        message += "  org: #{webhook_endpoint.organisation.name}\n"
-        message += "  response: #{response.code}"
-        raise OutgoingWebhookError, message
+    request.on_failure do |response|
+      if response.timed_out?
+        raise OutgoingWebhookError, "Error: HTTP Timeout, URL: #{webhook_endpoint.target_url}"
+      elsif !WebhookJob.false_negative_from_drome?(response.body)
+        raise OutgoingWebhookError, "HTTP #{response.code}, URL: #{webhook_endpoint.target_url}"
       end
     end
 
