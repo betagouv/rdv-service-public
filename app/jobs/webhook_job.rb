@@ -41,7 +41,11 @@ class WebhookJob < ApplicationJob
   end
 
   def log_failure_to_sentry?(_exception)
-    executions >= MAX_ATTEMPTS # only log last attempt to Sentry, to prevent noise
+    # Pour limiter le bruit dans Sentry, on ne veut pas avoir de notification pour chaque retry.
+    # On veut seulement :
+    # - un premier avertissement assez rapide s'il y a un problème (4e essai)
+    # - une notification pour le dernier essai, avant que le job passe en "abandonnés"
+    executions == 4 || executions >= MAX_ATTEMPTS
   end
 
   # La réponse de la Drôme est en JSON
