@@ -4,11 +4,8 @@ class OutgoingWebhookError < StandardError; end
 
 class WebhookJob < ApplicationJob
   TIMEOUT = 10
-  MAX_ATTEMPTS = 10
 
   queue_as :webhook
-
-  retry_on(OutgoingWebhookError, wait: :exponentially_longer, attempts: MAX_ATTEMPTS, queue: :webhook_retries, priority: PRIORITY_OF_RETRIES)
 
   # Pour éviter de fuiter des données personnelles dans les logs
   self.log_arguments = false
@@ -45,7 +42,7 @@ class WebhookJob < ApplicationJob
     # On veut seulement :
     # - un premier avertissement assez rapide s'il y a un problème (4e essai)
     # - une notification pour le dernier essai, avant que le job passe en "abandonnés"
-    executions == 4 || executions >= MAX_ATTEMPTS
+    executions == 4 || executions >= 10 || executions == MAX_ATTEMPTS
   end
 
   # La réponse de la Drôme est en JSON
