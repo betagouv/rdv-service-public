@@ -38,8 +38,8 @@ Agent.transaction do
   source.absences.update!(agent_id: dest.id)
 
   puts "---Merging Roles---"
-  source_role = source.roles.take
-  destination_role = dest.roles.take
+  source_role = source.roles.first
+  destination_role = dest.roles.first
 
   destination_role.destroy!
   source_role.update!(agent_id: dest.id)
