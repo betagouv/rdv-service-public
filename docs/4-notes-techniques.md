@@ -24,10 +24,11 @@ Cela (re-)génère le fichier docs/domain_model.svg à partir de la base et des 
 
 Note : la librairie graphviz doit être installée ([voir guide](https://voormedia.github.io/rails-erd/install.html)).
 
-## Tâches automatisées
+## Tâches récurrentes
 
-* `schedule_jobs` tourne après chaque `db:migrate` et`db:schema:load` pour ajouter automatiquement les “cron jobs”.
-* Dans `cron_job.rb`, outre les tâches métiers (c’est-à-dire les envois de mail et la gestion de file d’attente), il y a un job de gestion de production, `ScalingoAppRestarterJob` dont le rôle est de redémarrer les instances Scalingo chaque nuit.
+Nous utilisons la fonctionnalité de cron inclue dans GoodJob pour gérer nos tâches récurrentes.
+Les jobs récurrents sont implémentés dans `app/jobs/cron_job.rb`. 
+Les horaires de ces jobs sont définis dans `config/initializers/good_job.rb`.
 
 ## Dumps de production
 
