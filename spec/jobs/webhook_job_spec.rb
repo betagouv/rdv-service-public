@@ -7,7 +7,7 @@ describe WebhookJob, type: :job do
     let(:payload) { "{}" }
     let(:webhook_endpoint) { create(:webhook_endpoint, secret: "bla", target_url: "https://example.com/rdv-s-endpoint") }
 
-    it "retries 10 times, then fails and notifies Sentry" do
+    it "retries and notifies Sentry on the 3rd and 10th tries" do
       stub_request(:post, "https://example.com/rdv-s-endpoint").and_return({ status: 500, body: "ERROR" })
 
       described_class.perform_later(payload, webhook_endpoint.id)
@@ -19,14 +19,24 @@ describe WebhookJob, type: :job do
       expect(enqueued_jobs.first["executions"]).to eq(1)
       expect(sentry_events).to be_empty
 
-      # retry 8 times, nothing logged
-      8.times { perform_enqueued_jobs }
-      expect(enqueued_jobs.first["executions"]).to eq(9)
+      # retry twice, nothing logged
+      2.times { perform_enqueued_jobs }
+      expect(enqueued_jobs.first["executions"]).to eq(3)
       expect(sentry_events).to be_empty
 
-      # 10th execution, error is logged and job is discarded
-      expect { perform_enqueued_jobs }.to raise_error(OutgoingWebhookError)
-      expect(enqueued_jobs).to be_empty # no retry
+      # retry again, the error is logged
+      perform_enqueued_jobs
+      expect(sentry_events.last.exception.values.last.type).to eq("OutgoingWebhookError")
+
+      # reset sentry stubs
+      # teardown_sentry_test
+      # setup_sentry_test
+
+      # retry again, no more errors
+      5.times { perform_enqueued_jobs }
+
+      # 10th execution, error is logged
+      perform_enqueued_jobs
       expect(sentry_events.last.exception.values.last.type).to eq("OutgoingWebhookError")
     end
 
