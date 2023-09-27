@@ -23,7 +23,7 @@ class RdvsExportJob < ExportJob
     batch.save
 
     batch.add do
-      rdvs.find_in_batches.with_index do |rdv_batch, page_index|
+      rdvs.find_in_batches(batch_size: 200).with_index do |rdv_batch, page_index|
         rdv_ids = rdv_batch.pluck(:id)
         RdvsExportPageJob.perform_later(rdv_ids, page_index, redis_key)
       end
