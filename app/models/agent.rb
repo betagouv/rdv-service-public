@@ -27,7 +27,8 @@ class Agent < ApplicationRecord
          :recoverable, :rememberable, :validatable, :confirmable, :async, validate_on_invite: true
 
   include DeviseTokenAuth::Concerns::ConfirmableSupport
-  include DeviseTokenAuth::Concerns::UserOmniauthCallbacks
+  include Agent::CustomDeviseTokenAuthUserOmniauthCallbacks
+  include UncommonPasswordConcern
 
   # Attributes
   auto_strip_attributes :email, :first_name, :last_name
@@ -76,18 +77,30 @@ class Agent < ApplicationRecord
   has_many :organisations, through: :roles, dependent: :destroy
   has_many :webhook_endpoints, through: :organisations
 
+  attr_accessor :allow_blank_name
+
   # Validation
   # Note about validation and Devise:
   # * Invitable#invite! creates the Agent without validation, but validates manually in advance (because we set validate_on_invite to true)
   # * it validates :email (the invite_key) specifically with Devise.email_regexp.
-  validates :email, presence: true
-  validates :last_name, :first_name, presence: true, on: :update
+  validates :first_name, presence: true, unless: -> { allow_blank_name || is_an_intervenant? }
+  validates :last_name, presence: true, unless: -> { allow_blank_name }
   validate :service_cannot_be_changed
 
   # Hooks
 
   # Scopes
-  scope :complete, -> { where.not(first_name: nil).where.not(last_name: nil) }
+  scope :complete, lambda {
+    # Les agents complets sont soit des intervenant qui n'ont pas reçu d'invitation,
+    # soit des agents normaux qui ont reçu et accepté leur invitation
+    where("invitation_sent_at IS NULL OR invitation_accepted_at IS NOT NULL")
+  }
+  scope :intervenants, lambda {
+    where(id: AgentRole.where(access_level: "intervenant").select(:agent_id))
+  }
+  scope :not_intervenants, lambda {
+    where.not(id: AgentRole.where(access_level: "intervenant").select(:agent_id))
+  }
   scope :active, -> { where(deleted_at: nil) }
   scope :order_by_last_name, -> { order(Arel.sql("LOWER(last_name)")) }
   scope :secretariat, -> { joins(:service).where(services: { name: "Secrétariat" }) }
@@ -118,7 +131,9 @@ class Agent < ApplicationRecord
   end
 
   def complete?
-    first_name.present? && last_name.present?
+    # Les agents complets sont soit des intervenant qui n'ont pas reçu d'invitation,
+    # soit des agents normaux qui ont reçu et accepté leur invitation
+    invitation_sent_at.nil? || invitation_accepted_at.present?
   end
 
   def inactive?

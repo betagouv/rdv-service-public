@@ -10,6 +10,8 @@ class Admin::Territories::AgentRolesController < Admin::Territories::BaseControl
     authorize(agent_role)
     if agent_role.update(agent_role_params)
       flash[:success] = "Les permissions de l'agent ont été mises à jour"
+    else
+      flash[:error] = agent_role.errors.full_messages.join(", ")
     end
 
     redirect_to edit_admin_territory_agent_path(current_territory, agent_role.agent)
@@ -20,6 +22,8 @@ class Admin::Territories::AgentRolesController < Admin::Territories::BaseControl
     authorize(agent_role)
     if agent_role.save
       flash[:success] = "Les permissions de l'agent ont été mises à jour"
+    else
+      flash[:error] = agent_role.errors.full_messages.join(", ")
     end
 
     redirect_to edit_admin_territory_agent_path(current_territory, agent_role.agent)

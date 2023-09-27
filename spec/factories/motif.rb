@@ -13,17 +13,9 @@ FactoryBot.define do
     min_public_booking_delay { 30.minutes.seconds }
     max_public_booking_delay { 6.months.seconds }
     color { "##{SecureRandom.hex(3)}" }
-    instruction_for_rdv { "Intruction pour le RDV" }
-    restriction_for_rdv { "Consigne pour le RDV" }
     bookable_by { :everyone }
     location_type { :public_office }
     visibility_type { Motif::VISIBLE_AND_NOTIFIED }
-
-    trait :with_rdvs do
-      after(:create) do |motif|
-        create_list(:rdv, 5, motif: motif, organisation: motif.organisation)
-      end
-    end
 
     trait :at_home do
       location_type { :home }

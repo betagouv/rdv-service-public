@@ -11,7 +11,7 @@ module InclusionConnect
         response_type: "code",
         client_id: IC_CLIENT_ID,
         redirect_uri: inclusion_connect_callback_url,
-        scope: "openid email",
+        scope: "openid email profile",
         state: ic_state,
         nonce: Digest::SHA1.hexdigest("Something to check when it come back ?"),
         from: "community",
@@ -24,7 +24,7 @@ module InclusionConnect
       return false if token.blank?
 
       user_info = get_user_info(token)
-      return false if user_info.blank? || (user_info["email_verified"] == false)
+      return false if user_info.blank?
 
       get_and_update_agent(user_info)
     end
@@ -68,7 +68,9 @@ module InclusionConnect
       agent.update!(
         first_name: user_info["given_name"],
         last_name: user_info["family_name"],
-        confirmed_at: Time.zone.now
+        confirmed_at: Time.zone.now,
+        last_sign_in_at: Time.zone.now,
+        invitation_accepted_at: agent.invitation_accepted_at || Time.zone.now
       )
       agent
     end

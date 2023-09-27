@@ -4,8 +4,8 @@ class Users::RdvWizardStepsController < UserAuthController
   RDV_PERMITTED_PARAMS = [:starts_at, :motif_id, :context, { user_ids: [] }].freeze
   EXTRA_PERMITTED_PARAMS = [
     :lieu_id, :departement, :where, :created_user_id, :latitude, :longitude, :city_code, :rdv_collectif_id,
-    :street_ban_id, :invitation_token, :address, :motif_search_terms, :user_selected_organisation_id,
-    :public_link_organisation_id,
+    :street_ban_id, :address, :motif_search_terms, :user_selected_organisation_id,
+    :public_link_organisation_id, :duration,
     { organisation_ids: [], referent_ids: [], external_organisation_ids: [] },
   ].freeze
   after_action :allow_iframe
@@ -29,7 +29,7 @@ class Users::RdvWizardStepsController < UserAuthController
     @rdv_wizard = rdv_wizard_for(current_user, rdv_params.merge(user_params))
     @rdv = @rdv_wizard.rdv
     skip_authorization
-    if @rdv_wizard.valid? && @rdv_wizard.save
+    if @rdv_wizard.valid? && @rdv_wizard.user.benign_errors.blank? && @rdv_wizard.save
       redirect_to new_users_rdv_wizard_step_path(@rdv_wizard.to_query.merge(step: next_step_index))
     else
       render current_step
@@ -92,6 +92,7 @@ class Users::RdvWizardStepsController < UserAuthController
                     :notify_by_email,
                     :notify_by_sms,
                     :ants_pre_demande_number,
+                    :ignore_benign_errors,
                     { user_profiles_attributes: %i[logement id organisation_id] },
                   ])
   end

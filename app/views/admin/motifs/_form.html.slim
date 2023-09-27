@@ -7,7 +7,13 @@
       h5.card-title Configuration générale
       .form-row
         .col-md-6
-          = f.association :service, collection: Service.all_for_territory(current_territory)
+          = f.association :service, collection: Service.all_for_territory(current_territory), input_html: { \
+            class: "select2-input", \
+            data: { \
+              placeholder: "Sélectionnez un service", \
+              "select-options": { disableSearch: true }, \
+            }, \
+          }
         .col-md-6
           = f.input :name
       .form-row

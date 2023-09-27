@@ -34,7 +34,7 @@ class UserAuthController < ApplicationController
   end
 
   def should_verify_user_name_initials?
-    return false if current_user.through_sign_in_form?
+    return false unless current_user.only_invited?
     return false if cookies.encrypted[user_name_initials_cookie_name] == true
 
     true

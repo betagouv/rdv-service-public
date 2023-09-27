@@ -4,37 +4,26 @@ section.bg-light.p-4
     = render "nothing_to_show", context: context
   - else
     .container
-      - if context.invitation?
-        .card
-          .card-body
-            h2.pb-1.mb-1 = context.service.name
-      - else
-        .card
-          .card-body
-            = link_to path_to_service_selection(params), class: "d-block stretched-link" do
-              .row
-                .col-auto.align-self-center
-                  i.fa.fa-chevron-left
-                .col
-                  h2.pb-1.mb-1 = context.service.name
+      .card
+        .card-body
+          = link_to path_to_service_selection(params), class: "d-block stretched-link" do
+            .row
+              .col-auto.align-self-center
+                i.fa.fa-chevron-left
+              .col
+                h2.pb-1.mb-1 = context.service.name
     .container
-       h2.font-weight-bold Sélectionnez le motif de votre RDV :
-       - unless context.invitation?
-         .card
-           .m-2
+      h2.font-weight-bold Sélectionnez le motif de votre RDV :
+      - unless context.invitation?
+        .card
+          .m-2
             | Pour prendre un RDV avec un de vos agents référent, allez sur la page de
             span>
             = link_to users_rdvs_path do
               i.far.fa-calendar
               span>
               | vos rendez-vous
-       - context.unique_motifs_by_name_and_location_type.each do |motif|
-         .card.mb-3
-           - if motif.restriction_for_rdv.blank?
-             = link_to(prendre_rdv_path(context.query.merge(motif_name_with_location_type: motif.name_with_location_type))) do
-               = render "motif_selection_card", motif: motif
-           - else
-             = link_to("#", "data-turbolinks": false, data: { toggle: "modal", target: "#js-rdv-restriction-motif#{motif.id}" }) do
-               = render "motif_selection_card", motif: motif
-             = render "/common/modal", id: "js-rdv-restriction-motif#{motif.id}" , title: "À lire avant de prendre un rendez-vous", confirm_path: prendre_rdv_path(context.query.merge(motif_name_with_location_type: motif.name_with_location_type)) do
-               = restriction_for_rdv_to_html(motif)
+      - context.unique_motifs_by_name_and_location_type.each do |motif|
+        .card.mb-3
+          = link_to(prendre_rdv_path(context.query_params.merge(motif_name_with_location_type: motif.name_with_location_type))) do
+            = render "motif_selection_card", motif: motif

@@ -18,8 +18,11 @@ class Users::RdvsController < UserAuthController
   end
 
   def create
-    motif = Motif.find(rdv_params[:motif_id])
     lieu = new_rdv_extra_params[:lieu_id].present? ? Lieu.find(new_rdv_extra_params[:lieu_id]) : nil
+    motif = Motif.find(rdv_params[:motif_id])
+    # Nous modifions en mémoire la durée par défaut du motif
+    # Cela permet d'effectuer une recherche de créneaux, avec une durée différente
+    motif.default_duration_in_min = params[:duration] if params[:duration]
     ActiveRecord::Base.transaction do
       @creneau = Users::CreneauSearch.creneau_for(
         user: current_user,
@@ -45,7 +48,7 @@ class Users::RdvsController < UserAuthController
         address: (new_rdv_extra_params[:address] || new_rdv_extra_params[:where]),
         city_code: new_rdv_extra_params[:city_code], street_ban_id: new_rdv_extra_params[:street_ban_id],
         service: motif.service.id, motif_name_with_location_type: motif.name_with_location_type,
-        departement: new_rdv_extra_params[:departement], organisation_ids:  new_rdv_extra_params[:organisation_ids], invitation_token: invitation_token,
+        departement: new_rdv_extra_params[:departement], organisation_ids:  new_rdv_extra_params[:organisation_ids],
       }
       redirect_to prendre_rdv_path(query), flash: { error: t(".creneau_unavailable") }
     end
@@ -112,7 +115,7 @@ class Users::RdvsController < UserAuthController
   end
 
   def set_can_see_rdv_motif
-    @can_see_rdv_motif = current_user.through_sign_in_form?
+    @can_see_rdv_motif = !current_user.only_invited?
   end
 
   def redirect_if_creneau_not_available

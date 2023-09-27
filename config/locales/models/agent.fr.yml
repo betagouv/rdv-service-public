@@ -7,6 +7,7 @@ fr:
         role: Rôle
         rdvs: Rendez-vous
         service: Service
+        territories: Admin de Territoires
         rdv_notifications_level: Notifications de RDV
         display_saturdays: Affichage des samedis sur le calendrier
         display_cancelled_rdv: Affichage des rendez-vous annulés
@@ -32,3 +33,25 @@ fr:
       agent/display_saturdays:
         true: "Afficher les samedis"
         false: "Ne pas afficher les samedis"
+    errors:
+      models:
+        agent:
+          attributes:
+            current_password:
+              invalid: "Le mot de passe actuel n'est pas valide"
+              format: "%{message}"
+            password:
+              format: "%{message}"
+              too_common: "Ce mot de passe fait partie d'une liste de mots de passe fréquemment utilisés et ne permet donc pas d'assurer la sécurité de votre compte. Veuillez en choisir un autre."
+              too_short:
+                other: "Pour assurer la sécurité de votre compte, votre mot de passe doit faire au moins %{count} caractères"
+            password_confirmation:
+              format: "%{message}"
+              confirmation: "Le nouveau mot de passe et la confirmation ne concordent pas"
+        agent/roles/agent:
+          attributes:
+            password:
+              format: "%{message}"
+            password_confirmation:
+              format: "%{message}"
+              confirmation: "Le nouveau mot de passe et la confirmation ne concordent pas"

@@ -19,7 +19,11 @@ class Select2Inputs {
     document.querySelectorAll(this.selector).forEach(this.initInput)
   }
 
-  initInput = (elt) => $(elt).select2(this.getInputOptions(elt))
+  initInput = (elt) => {
+    const options = this.getInputOptions(elt)
+    $(elt).select2(options)
+    this.autoSelectOption(elt, options)
+  }
 
   getInputOptions = elt => {
     let options = {}
@@ -27,7 +31,6 @@ class Select2Inputs {
       options = JSON.parse(elt.dataset.selectOptions)
     if (options.disableSearch)
       options.minimumResultsForSearch = Infinity // cf https://select2.org/searching
-
     // Make sure select2 works correctly inside a modal
     // https://select2.org/troubleshooting/common-problems#select2-does-not-function-properly-when-i-use-it-inside-a-bootst
     let modal = $(elt).closest(".modal")[0]
@@ -51,6 +54,24 @@ class Select2Inputs {
   destroyInputs = () => {
     if ($(this.selector).first().data('select2') != undefined)
       $(this.selector).select2('destroy')
+  }
+
+  autoSelectOption = (elt, options) => {
+    // This code checks if a select element (represented by the `elt` variable) has only one option.
+    // return all options if it is ajax
+    const isAjax = elt.dataset.selectOptions?.includes("ajax");
+    if (isAjax) return options;
+
+    // Get all options and remove blank values if exists (placeholders)
+    const optionsList = $(elt).find("option").filter(function() {
+      return $(this).val() !== "";
+    });
+    if (optionsList.length === 1) {
+      // if one option is already selected, return
+      if ($(elt).val() === optionsList.val()) return;
+      // Otherwise, set the value of the select element to the value of its only option and trigger a change event on it.
+      $(elt).val(optionsList.val()).trigger('change');
+    }
   }
 }
 

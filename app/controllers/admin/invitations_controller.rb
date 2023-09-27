@@ -4,7 +4,7 @@ class Admin::InvitationsController < AgentAuthController
   def index
     @invited_agents = policy_scope(Agent)
       .joins(:organisations).where(organisations: { id: current_organisation.id })
-      .invitation_not_accepted
+      .invitation_not_accepted.where.not(invitation_sent_at: nil)
       .created_by_invite
       .page(params[:page])
     @invited_agents = index_params[:search].present? ? @invited_agents.search_by_text(index_params[:search]) : @invited_agents.order(invitation_sent_at: :desc)

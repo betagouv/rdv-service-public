@@ -18,6 +18,12 @@ describe FullNameConcern do
 
       it { is_expected.to eq "Pierre CURIE" }
     end
+
+    context "when birth name is the same" do
+      let(:person) { build :user, first_name: "Pierre", last_name: "Curie", birth_name: "curie" }
+
+      it { is_expected.to eq "Pierre CURIE" }
+    end
   end
 
   describe "reverse_full_name" do
@@ -31,6 +37,12 @@ describe FullNameConcern do
 
     context "without birth_name" do
       let(:person) { pierre }
+
+      it { is_expected.to eq "CURIE Pierre" }
+    end
+
+    context "when birth name is the same" do
+      let(:person) { build :user, first_name: "Pierre", last_name: "Curie", birth_name: "curie" }
 
       it { is_expected.to eq "CURIE Pierre" }
     end
@@ -49,6 +61,12 @@ describe FullNameConcern do
       let(:person) { pierre }
 
       it { is_expected.to eq "P. CURIE" }
+    end
+
+    context "for an intervenant" do
+      let(:person) { build(:agent, :intervenant, last_name: "Avocat") }
+
+      it { is_expected.to eq "Avocat" }
     end
   end
 end

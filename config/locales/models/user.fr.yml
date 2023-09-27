@@ -48,11 +48,21 @@ fr:
               franceconnect_frozen_field_cannot_change: Le nom de naissance ne peut-être changé car il a été certifié par FranceConnect
             birth_date:
               franceconnect_frozen_field_cannot_change: La date de naissance ne peut-être changée car elle a été certifiée par FranceConnect
+            password:
+              format: "%{message}"
+              too_common: "Ce mot de passe fait partie d'une liste de mots de passe fréquemment utilisés et ne permet donc pas d'assurer la sécurité de votre compte. Veuillez en choisir un autre."
+              too_short:
+                other: "Pour assurer la sécurité de votre compte, votre mot de passe doit faire au moins %{count} caractères"
+    warnings:
+      models:
+        user:
+          ants_pre_demande_number_already_used_html: Ce numéro de pré-demande ANTS est déjà utilisé pour un RDV auprès de %{meeting_point}. Veuillez <a href='%{management_url}' target="_blank">annuler ce RDV<a> avant d'en prendre un nouveau.
+
   simple_form:
     hints:
       user:
         phone_number: Saisissez un numéro à 10 chiffres de France métropole ou d’outre-mer, ou bien un numéro international avec le préfixe du pays.
-        ants_pre_demande_number: Pour accélérer votre démarche, nous vous recommandons très fortement de pré-remplir votre dossier sur le <a href="https://passeport.ants.gouv.fr/demarches-en-ligne">site de l'ANTS</a>, et d'indiquer votre numéro de pré-demande.
+        ants_pre_demande_number_html: Pour accélérer votre démarche, nous vous recommandons très fortement de pré-remplir votre dossier sur le <a href="https://passeport.ants.gouv.fr/demarches-en-ligne" target="_blank">site de l'ANTS</a>, et d'indiquer votre numéro de pré-demande.
       agent:
-        ants_pre_demande_number: Pour accélérer la démarche de l'usager, nous vous recommandons très fortement de pré-remplir son dossier sur le <a href="https://passeport.ants.gouv.fr/demarches-en-ligne">site de l'ANTS</a>, et d'indiquer son numéro de pré-demande.
+        ants_pre_demande_number_html: Pour accélérer la démarche de l'usager, nous vous recommandons très fortement de pré-remplir son dossier sur le <a href="https://passeport.ants.gouv.fr/demarches-en-ligne" target="_blank">site de l'ANTS</a>, et d'indiquer son numéro de pré-demande.
 

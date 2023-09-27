@@ -8,7 +8,7 @@ module UserRdvWizard
   class Base
     include ActiveModel::Model
 
-    attr_accessor :rdv
+    attr_accessor :rdv, :user
 
     delegate :motif, :starts_at, :users, :service, to: :rdv
     delegate :errors, to: :rdv
@@ -24,7 +24,7 @@ module UserRdvWizard
           rdv_defaults
             .merge(@attributes.slice(:starts_at, :user_ids, :motif_id))
         )
-        @rdv.duration_in_min ||= @rdv.motif.default_duration_in_min if @rdv.motif.present?
+        @rdv.duration_in_min = @attributes[:duration]&.to_i || @rdv.motif&.default_duration_in_min
       end
     end
 
@@ -41,9 +41,12 @@ module UserRdvWizard
     end
 
     def creneau
+      motif = @rdv.motif
+      motif.default_duration_in_min = @attributes[:duration].to_i if @attributes[:duration]
+
       @creneau ||= Users::CreneauSearch.creneau_for(
         user: @user,
-        motif: @rdv.motif,
+        motif: motif,
         lieu: lieu,
         starts_at: @rdv.starts_at,
         geo_search: geo_search
@@ -59,9 +62,9 @@ module UserRdvWizard
         motif_id: rdv.motif.id, starts_at: rdv.starts_at.to_s, user_ids: rdv.users&.map(&:id), rdv_collectif_id: rdv.id,
       }.merge(
         @attributes.slice(
-          :where, :departement, :lieu_id, :latitude, :longitude, :city_code, :street_ban_id, :invitation_token,
+          :where, :departement, :lieu_id, :latitude, :longitude, :city_code, :street_ban_id,
           :address, :organisation_ids, :motif_search_terms, :public_link_organisation_id, :user_selected_organisation_id,
-          :referent_ids, :external_organisation_ids
+          :referent_ids, :external_organisation_ids, :duration
         )
       )
     end
@@ -85,6 +88,13 @@ module UserRdvWizard
 
   class Step1 < Base
     validate :phone_number_present_for_motif_by_phone
+    validate do
+      User::Ants.validate_ants_pre_demande_number(
+        user: @user,
+        ants_pre_demande_number: @user_attributes[:ants_pre_demande_number],
+        ignore_benign_errors: @user_attributes[:ignore_benign_errors]
+      )
+    end
 
     def phone_number_present_for_motif_by_phone
       errors.add(:phone_number, :missing_for_phone_motif) if rdv.motif.phone? && @user_attributes[:phone_number].blank?

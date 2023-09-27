@@ -97,19 +97,19 @@ fr:
             base:
               overlapping_plage_ouverture:
                 in_scope:
-                  in_current_organisation: "%{agent_name} a <a href='%{path}'>une plage d'ouverture</a> à %{lieu_name} %{occurrence_text}"
-                  in_other_organisation: "%{agent_name} a <a href='%{path}'>une plage d'ouverture</a> à %{lieu_name} (%{organisation_name}) %{occurrence_text}"
+                  in_current_organisation_html: "%{agent_name} a <a href='%{path}'>une plage d'ouverture</a> à %{lieu_name} %{occurrence_text}"
+                  in_other_organisation_html: "%{agent_name} a <a href='%{path}'>une plage d'ouverture</a> à %{lieu_name} (%{organisation_name}) %{occurrence_text}"
                 out_of_scope:
-                  in_current_organisation: "%{agent_name} a une plage d'ouverture dans un autre lieu au moment de ce RDV (vous n'avez pas les permissions nécessaires pour voir cette plage d'ouverture)"
-                  in_other_organisation: "%{agent_name} a une plage d'ouverture dans une autre organisation au moment de ce RDV (vous n'avez pas les permissions nécessaires pour voir cette plage d'ouverture)"
+                  in_current_organisation_html: "%{agent_name} a une plage d'ouverture dans un autre lieu au moment de ce RDV (vous n'avez pas les permissions nécessaires pour voir cette plage d'ouverture)"
+                  in_other_organisation_html: "%{agent_name} a une plage d'ouverture dans une autre organisation au moment de ce RDV (vous n'avez pas les permissions nécessaires pour voir cette plage d'ouverture)"
               rdv_ending_shortly_before:
-                current_agent: "Vous avez <a href='%{path}'>un RDV</a> finissant à %{ends_at_time} avec %{user_names}, vous allez laisser un trou de %{gap_duration_in_min} minutes dans votre agenda"
-                in_scope: "%{agent_name} a <a href='%{path}'>un RDV</a> finissant à %{ends_at_time} avec %{user_names}, vous allez laisser un trou de %{gap_duration_in_min} minutes dans son agenda"
-                out_of_scope: "%{agent_name} a un RDV finissant à %{ends_at_time}, vous allez laisser un trou de %{gap_duration_in_min} minutes dans son agenda (ce RDV est dans un autre service ou une autre organisation à laquelle vous n'avez pas accès)"
+                current_agent_html: "Vous avez <a href='%{path}'>un RDV</a> finissant à %{ends_at_time} avec %{user_names}, vous allez laisser un trou de %{gap_duration_in_min} minutes dans votre agenda"
+                in_scope_html: "%{agent_name} a <a href='%{path}'>un RDV</a> finissant à %{ends_at_time} avec %{user_names}, vous allez laisser un trou de %{gap_duration_in_min} minutes dans son agenda"
+                out_of_scope_html: "%{agent_name} a un RDV finissant à %{ends_at_time}, vous allez laisser un trou de %{gap_duration_in_min} minutes dans son agenda (ce RDV est dans un autre service ou une autre organisation à laquelle vous n'avez pas accès)"
               rdvs_overlapping_rdv:
-                current_agent: "Vous avez <a href='%{path}'>un autre RDV</a> qui chevauche celui-ci"
-                in_scope: "%{agent_name} a <a href='%{path}'>un autre RDV</a> qui chevauche celui-ci"
-                out_of_scope: "Ce rendez-vous en chevauche un autre. %{agent_name} a un RDV dans une autre organisation (ce RDV est dans un autre service ou une autre organisation à laquelle vous n'avez pas accès)"
-              rdv_duplicate_suspected: L'usager⋅e <a href="%{user_path}">%{user_name}</a> a un autre RDV pour le même motif le même jour
+                current_agent_html: "Vous avez <a href='%{path}'>un autre RDV</a> qui chevauche celui-ci"
+                in_scope_html: "%{agent_name} a <a href='%{path}'>un autre RDV</a> qui chevauche celui-ci"
+                out_of_scope_html: "Ce rendez-vous en chevauche un autre. %{agent_name} a un RDV dans une autre organisation (ce RDV est dans un autre service ou une autre organisation à laquelle vous n'avez pas accès)"
+              rdv_duplicate_suspected_html: L'usager⋅e <a href="%{user_path}">%{user_name}</a> a un autre RDV pour le même motif le même jour
             starts_at:
               in_the_past:  Ce rendez-vous a une date située dans le passé (il y a %{distance})

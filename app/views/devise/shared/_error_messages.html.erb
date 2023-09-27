@@ -2,7 +2,7 @@
   <div class="alert alert-danger alert-block devise-bs">
     <button type="button" class="close" data-dismiss="alert">&times;</button>
     <ul class="mb-0">
-      <% resource.errors.full_messages.each do |message| %>
+      <% resource.errors.full_messages.uniq.each do |message| %>
         <li><%= message %></li>
       <% end %>
     </ul>

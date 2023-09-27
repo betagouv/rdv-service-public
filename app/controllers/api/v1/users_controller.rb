@@ -2,7 +2,7 @@
 
 class Api::V1::UsersController < Api::V1::AgentAuthBaseController
   before_action :set_organisation, only: %i[show update]
-  before_action :set_user, only: %i[show update invite]
+  before_action :set_user, only: %i[show update invite_get rdv_invitation_token]
 
   def index
     users = policy_scope(User)
@@ -30,8 +30,17 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
     render_record @user
   end
 
-  def invite
-    @user.invite_for = params[:invite_for]
+  def invite_get
+    # TODO : remove this endpoint if unused
+    Sentry.capture_message(
+      "User invited by agent with invite get endpoint",
+      extra: {
+        user_id: @user.id,
+        agent_id: pundit_user.agent.id,
+        issue: "https://github.com/betagouv/rdv-solidarites.fr/issues/3689",
+      }
+    )
+
     @user.invite! do |u|
       u.skip_invitation = true
       u.invited_by = pundit_user.agent
@@ -40,7 +49,18 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
     # NOTE: The #invite endpoint uses a jbuilder view instead of a blueprint.
   end
 
+  def rdv_invitation_token
+    assign_rdv_invitation_token if @user.rdv_invitation_token.nil?
+    render json: { invitation_token: @user.rdv_invitation_token }
+  end
+
   private
+
+  def assign_rdv_invitation_token
+    @user.assign_rdv_invitation_token
+    @user.invited_through = "external"
+    @user.save!
+  end
 
   def set_organisation
     @organisation = params[:organisation_id].present? ? Organisation.find(params[:organisation_id]) : nil
@@ -54,9 +74,14 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
   end
 
   def user_params
-    params.permit(:first_name, :birth_name, :last_name, :email, :address, :phone_number,
-                  :birth_date, :responsible_id, :caisse_affiliation, :affiliation_number,
-                  :family_situation, :number_of_children, :notify_by_sms, :notify_by_email,
-                  organisation_ids: [])
+    attrs = %i[
+      first_name birth_name last_name email address phone_number
+      birth_date responsible_id caisse_affiliation affiliation_number
+      family_situation number_of_children notify_by_sms notify_by_email
+    ]
+
+    attrs -= User::FranceconnectFrozenFieldsConcern::FROZEN_FIELDS if @user&.logged_once_with_franceconnect?
+
+    params.permit(attrs, organisation_ids: [])
   end
 end

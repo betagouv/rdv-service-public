@@ -1,7 +1,9 @@
 div
   b= user_to_link(user)
 - if user.responsible.present?
-  div= "proche de #{user_to_link(user.responsible)}".html_safe
+  div
+    = "proche de "
+    = user_to_link(user.responsible)
 div
   ul.list-unstyled
     li= object_attribute_tag(user, :birth_date, birth_date_and_age(user))

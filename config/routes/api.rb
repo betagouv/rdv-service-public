@@ -7,8 +7,8 @@ namespace :api do
     resources :absences, except: %i[new edit]
     resources :agents, only: %i[index]
     resources :users, only: %i[create index show update] do
-      get :invite, on: :member
-      post :invite, on: :member
+      get :invite, to: 'users#invite_get', on: :member
+      post :rdv_invitation_token, to: 'users#rdv_invitation_token', on: :member
     end
     resource :user_profiles, only: %i[create destroy]
     resource :referent_assignations, only: %i[create destroy]
@@ -18,8 +18,7 @@ namespace :api do
       resources :motifs, only: %i[index]
       resources :rdvs, only: %i[index]
     end
-    resources :invitations, param: "token", only: [:show]
-
+    resources :rdvs_users, only: %i[update]
     # Doesn't need authentication
     resources :public_links, only: [:index]
   end
@@ -27,6 +26,7 @@ namespace :api do
   namespace :ants do
     get "getManagedMeetingPoints", to: "editor#get_managed_meeting_points"
     get "availableTimeSlots", to: "editor#available_time_slots"
+    get "searchApplicationIds", to: "editor#search_application_ids"
   end
 end
 

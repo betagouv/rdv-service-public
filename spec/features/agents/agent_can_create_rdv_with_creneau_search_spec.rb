@@ -33,6 +33,38 @@ describe "Agent can create a Rdv with creneau search" do
     end
   end
 
+  context "when there is only one option for lieu, service and motif selector", js: true do
+    let!(:motif) { create(:motif, service: agent.service, organisation: organisation) }
+    let!(:plage_ouverture) { create(:plage_ouverture, :daily, motifs: [motif], agent: agent, organisation: organisation) }
+
+    it "automatically select the option" do
+      visit admin_organisation_agent_searches_path(organisation)
+      expect(page).to have_content("Trouver un RDV")
+      expect(page).to have_select("lieu_ids", selected: plage_ouverture.lieu_name)
+      expect(page).to have_select("motif_id", selected: "Motif 1 (Sur place)")
+      expect(page).to have_select("service_id", selected: agent.service.name)
+    end
+  end
+
+  context "when there is more than one option for lieux, services and motifs selector", js: true do
+    let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
+    let!(:lieu) { create(:lieu, organisation: organisation) }
+    let!(:motif) { create(:motif, service: agent.service, organisation: organisation) }
+    let!(:motif2) { create(:motif, service: agent.service, organisation: organisation) }
+    let!(:another_service) { create(:service) }
+    let!(:another_agent) { create(:agent, service: another_service, basic_role_in_organisations: [organisation]) }
+    let!(:another_lieu) { create(:lieu, organisation: organisation) }
+    let!(:another_motif) { create(:motif, service: another_service, organisation: organisation) }
+
+    it "doesnt automatically select options" do
+      visit admin_organisation_agent_searches_path(organisation)
+      expect(page).to have_content("Trouver un RDV")
+      expect(page).to have_select("lieu_ids", selected: [])
+      expect(page).to have_select("motif_id", selected: "")
+      expect(page).to have_select("service_id", selected: "")
+    end
+  end
+
   context "when there are multiple plages from different agents in the same lieu" do
     before { travel_to(Date.new(2023, 5, 2)) }
 

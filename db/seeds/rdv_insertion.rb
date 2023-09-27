@@ -115,7 +115,7 @@ agent_orgs_rdv_insertion = Agent.new(
   uid: "alain.sertion@rdv-insertion-demo.fr",
   first_name: "Alain",
   last_name: "Sertion",
-  password: "123456",
+  password: "lapinlapin",
   service_id: service_rsa.id,
   invitation_accepted_at: 10.days.ago,
   roles_attributes: [

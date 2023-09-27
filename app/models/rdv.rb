@@ -14,6 +14,7 @@ class Rdv < ApplicationRecord
   include Rdv::UsingWaitingRoom
   include IcalHelpers::Ics
   include Payloads::Rdv
+  include Ants::AppointmentSerializerAndListener
 
   # Attributes
   auto_strip_attributes :name
@@ -77,13 +78,15 @@ class Rdv < ApplicationRecord
   before_validation { self.uuid ||= SecureRandom.uuid }
   before_create :set_created_by_for_participations
   # voir Outlook::EventSerializerAndListener pour d'autres callbacks
+  # voir Ants::AppointmentSerializerAndListener pour d'autres callbacks
 
   # Scopes
   default_scope { where(deleted_at: nil) }
   scope :not_cancelled, -> { where(status: NOT_CANCELLED_STATUSES) }
   scope :past, -> { where("starts_at < ?", Time.zone.now) }
   scope :future, -> { where("starts_at > ?", Time.zone.now) }
-  scope :start_after, ->(time) { where("starts_at > ?", time) }
+  scope :starts_after, ->(time) { where("starts_at >= ?", time) }
+  scope :starts_before, ->(time) { where("starts_at <= ?", time) }
   scope :on_day, ->(day) { where(starts_at: day.all_day) }
   scope :day_after_tomorrow, -> { on_day(Time.zone.tomorrow + 1.day) }
   scope :for_today, -> { on_day(Time.zone.today) }
@@ -352,25 +355,52 @@ class Rdv < ApplicationRecord
   end
 
   def update_rdv_status_from_participation
-    if rdvs_users.any?(&:seen?)
-      update!(status: "seen")
-      return
-    end
+    return seen! if rdvs_users.any?(&:seen?)
 
-    if rdvs_users.none?(&:seen?) && rdvs_users.none?(&:unknown?)
-      update_status_to_revoked
+    if collectif?
+      update_collective_rdv_status
+    else
+      update_individual_rdv_status
     end
   end
 
-  def update_status_to_revoked
-    # Only rdv in the past ca be automatically set to revoked
-    return if in_the_future?
+  def seen!
+    update!(cancelled_at: nil, status: "seen")
+  end
 
-    self.cancelled_at = Time.zone.now
-    update!(status: "revoked")
+  def unknown!
+    update!(cancelled_at: nil, status: "unknown")
+  end
+
+  def excused!
+    update!(cancelled_at: Time.zone.now, status: "excused")
+  end
+
+  def noshow!
+    update!(cancelled_at: Time.zone.now, status: "noshow")
+  end
+
+  def revoked!
+    update!(cancelled_at: Time.zone.now, status: "revoked")
   end
 
   private
+
+  def update_collective_rdv_status
+    revoked! if rdvs_users.none?(&:unknown?) && in_the_past?
+  end
+
+  def update_individual_rdv_status
+    if rdvs_users.all?(&:excused?)
+      excused!
+    elsif rdvs_users.all?(&:revoked?)
+      revoked!
+    elsif rdvs_users.all?(&:noshow?)
+      noshow!
+    else
+      unknown!
+    end
+  end
 
   def starts_at_is_plausible
     return unless will_save_change_to_attribute?("starts_at")

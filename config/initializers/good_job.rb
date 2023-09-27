@@ -4,6 +4,7 @@ Rails.application.configure do
   config.active_job.default_priority = 0
 
   config.good_job.preserve_job_records = true
+  config.cleanup_preserved_jobs_before_seconds_ago = 604_800 # 1 semaine
   config.good_job.on_thread_error = ->(exception) { Sentry.capture_exception(exception) }
   config.good_job.execution_mode = :external
   config.good_job.queues = '*'
@@ -49,10 +50,9 @@ Rails.application.configure do
       class: "CronJob::DestroyRedisWaitingRoomKeys",
     },
 
-    # Nettoyage de vieille données : pas essentiel mais idéalement quotidien
-    destroy_old_rdvs_job: {
+    destroy_old_rdvs_and_inactive_users_job: {
       cron: "every day at 22:00 Europe/Paris",
-      class: "CronJob::DestroyOldRdvsJob",
+      class: "CronJob::DestroyOldRdvsAndInactiveAccountsJob",
     },
     destroy_old_plage_ouverture_job: {
       cron: "every day at 22:30 Europe/Paris",

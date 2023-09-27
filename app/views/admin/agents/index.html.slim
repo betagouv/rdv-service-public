@@ -4,7 +4,7 @@
 
 - if current_agent_can?(:create, Agent)
   - content_for :breadcrumb do
-    = link_to "Inviter un agent", new_admin_agent_organisation_invitation_path(current_organisation), class:"btn btn-outline-primary"
+    = link_to t("agents.create_cta"), new_admin_organisation_agent_path(current_organisation), class:"btn btn-outline-primary"
 
 = simple_form_for "", url: admin_organisation_agents_path(current_organisation), html: { method: :get, class: "form-inline" }, wrapper: :inline_form do |f|
   .container-fluid.bg-white.rounded
@@ -33,7 +33,7 @@
 
     - if current_agent_can?(:create, Agent)
       .m-3.d-flex.justify-content-center
-        = link_to "Inviter un agent", new_admin_agent_organisation_invitation_path(current_organisation), class: "btn btn-primary"
+        = link_to t("agents.create_cta"), new_admin_organisation_agent_path(current_organisation), class: "btn btn-primary"
         - if @invited_agents_count > 0
           = link_to "Voir les #{@invited_agents_count} invitations en attente", admin_organisation_invitations_path(current_organisation), class: "btn btn-link"
         - else

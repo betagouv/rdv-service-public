@@ -30,7 +30,7 @@
         - if @user.invited_through == "external" && @user.invitation_accepted_at.nil?
           .row.bg-info.text-white.p-2.mb-3
             .col-md-8
-              | Cet usager a reçu une invitation via un partenaire de #{current_domain.name}, mais il ne l’a pas encore acceptée.
+              | Cet usager a reçu une invitation via un partenaire de #{current_domain.name} (ex : rdv-insertion).
 
         - if @user.logged_once_with_franceconnect?
           .row.bg-info.text-white.p-2.mb-3 Cet usager s'est déjà connecté via FranceConnect.
@@ -64,10 +64,9 @@
         .card-header(id="agents-referents") Agents référents
         .card-body
           ul.list-unstyled.mb-2
-            - @referent_assignations.each do |referent_assignation|
-              - if policy([:agent, referent_assignation]).show?
-                li.mb-2 = referent_assignation.agent.full_name_and_service
-            - if @referent_assignations.empty?
+            - @referent_agents.each do |referent_agent|
+              li.mb-2 = referent_agent.full_name_and_service
+            - if @referent_agents.empty?
               li.font-italic Aucun référent
 
           .text-right

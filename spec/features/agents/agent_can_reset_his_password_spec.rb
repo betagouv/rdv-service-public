@@ -16,10 +16,15 @@ describe "Agent resets his password spec" do
     open_email(agent.email)
     current_email.click_link("Changer")
     expect(page).to have_content("Définir mon mot de passe")
+
+    fill_in "password", with: "1234567890"
+    expect { click_on "Enregistrer" }.not_to change { agent.reload.encrypted_password }
+    expect(page).to have_content("Ce mot de passe fait partie d'une liste de mots de passe fréquemment utilisés")
+
     fill_in "password", with: "correct horse battery staple"
     expect { click_on "Enregistrer" }.to change { agent.reload.encrypted_password }
     expect(page).to have_content("Votre mot de passe a été édité avec succès")
-    expect(page).to have_link("Mes organisations")
+    expect(page).to have_link("Vos organisations")
   end
 
   it "works when using the user's password reset form" do
@@ -36,6 +41,6 @@ describe "Agent resets his password spec" do
     fill_in "password", with: "correct horse battery staple"
     expect { click_on "Enregistrer" }.to change { agent.reload.encrypted_password }
     expect(page).to have_content("Votre mot de passe a été édité avec succès")
-    expect(page).to have_link("Mes organisations")
+    expect(page).to have_link("Vos organisations")
   end
 end

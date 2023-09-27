@@ -2,32 +2,33 @@
 
 # rubocop:disable Metrics/ClassLength
 class SearchContext
-  attr_reader :errors, :query, :address, :city_code, :street_ban_id, :latitude, :longitude,
-              :motif_name_with_location_type, :prescripteur
+  attr_reader :errors, :query_params, :address, :city_code, :street_ban_id, :latitude, :longitude,
+              :motif_name_with_location_type, :prescripteur, :through_invitation
+  alias invitation? through_invitation
 
   # rubocop:disable Metrics/MethodLength
-  def initialize(current_user, query = {})
-    @current_user = current_user
-    @query = query
-    @invitation_token = query[:invitation_token]
-    @latitude = query[:latitude]
-    @longitude = query[:longitude]
-    @address = query[:address]
-    @city_code = query[:city_code]
-    @street_ban_id = query[:street_ban_id]
-    @public_link_organisation_id = query[:public_link_organisation_id]
-    @user_selected_organisation_id = query[:user_selected_organisation_id]
-    @external_organisation_ids = query[:external_organisation_ids]
-    @preselected_organisation_ids = query[:organisation_ids]
-    @motif_id = query[:motif_id]
-    @motif_search_terms = query[:motif_search_terms]
-    @motif_category_short_name = query[:motif_category_short_name]
-    @motif_name_with_location_type = query[:motif_name_with_location_type]
-    @service_id = query[:service_id]
-    @lieu_id = query[:lieu_id]
-    @start_date = query[:date]
-    @referent_ids = query[:referent_ids]
-    @prescripteur = query[:prescripteur]
+  def initialize(user:, query_params: {}, through_invitation: false)
+    @user = user
+    @query_params = query_params
+    @latitude = query_params[:latitude]
+    @longitude = query_params[:longitude]
+    @address = query_params[:address]
+    @city_code = query_params[:city_code]
+    @street_ban_id = query_params[:street_ban_id]
+    @public_link_organisation_id = query_params[:public_link_organisation_id]
+    @user_selected_organisation_id = query_params[:user_selected_organisation_id]
+    @external_organisation_ids = query_params[:external_organisation_ids]
+    @preselected_organisation_ids = query_params[:organisation_ids]
+    @motif_id = query_params[:motif_id]
+    @motif_search_terms = query_params[:motif_search_terms]
+    @motif_category_short_name = query_params[:motif_category_short_name]
+    @motif_name_with_location_type = query_params[:motif_name_with_location_type]
+    @service_id = query_params[:service_id]
+    @lieu_id = query_params[:lieu_id]
+    @start_date = query_params[:date]
+    @referent_ids = query_params[:referent_ids]
+    @prescripteur = query_params[:prescripteur]
+    @through_invitation = through_invitation
   end
   # rubocop:enable Metrics/MethodLength
 
@@ -56,9 +57,9 @@ class SearchContext
   def wizard_after_creneau_selection_path(params)
     url_helpers = Rails.application.routes.url_helpers
     if @prescripteur
-      url_helpers.prescripteur_start_path(query.merge(params))
+      url_helpers.prescripteur_start_path(query_params.merge(params))
     else
-      url_helpers.new_users_rdv_wizard_step_path(query.merge(params))
+      url_helpers.new_users_rdv_wizard_step_path(query_params.merge(params))
     end
   end
 
@@ -66,13 +67,8 @@ class SearchContext
     Users::GeoSearch.new(departement: departement, city_code: @city_code, street_ban_id: @street_ban_id)
   end
 
-  def invitation?
-    # Token validity is handled in TokenInvitable module, prepend_before_action method handle_invitation_token
-    @invitation_token.present?
-  end
-
   def departement
-    @departement ||= (@query[:departement] || public_link_organisation&.departement_number)
+    @departement ||= (@query_params[:departement] || public_link_organisation&.departement_number)
   end
 
   def service
@@ -210,7 +206,7 @@ class SearchContext
     motifs = motifs.search_by_text(@motif_search_terms) if @motif_search_terms.present?
     motifs = motifs.with_motif_category_short_name(@motif_category_short_name) if @motif_category_short_name.present?
     motifs = motifs.where(organisation_id: @preselected_organisation_ids) if @preselected_organisation_ids.present?
-    motifs = motifs.where(organisations: { id: organisation_id }) if organisation_id.present?
+    motifs = motifs.where(organisation_id: organisation_id) if organisation_id.present?
     motifs = motifs.where(organisations: { external_id: @external_organisation_ids.compact }) if @external_organisation_ids.present?
     motifs = motifs.where(id: @motif_id) if @motif_id.present?
     motifs = motifs.with_availability_for_lieux([lieu.id]) if lieu.present?
@@ -225,7 +221,7 @@ class SearchContext
 
   def creneaux_search_for(lieu, date_range, motif)
     Users::CreneauxSearch.new(
-      user: @current_user,
+      user: @user,
       motif: motif,
       lieu: lieu,
       date_range: date_range,
@@ -234,18 +230,18 @@ class SearchContext
   end
 
   def retrieve_referent_agents
-    return [] if @referent_ids.blank? || @current_user.nil?
+    return [] if @referent_ids.blank? || @user.nil?
 
-    @current_user.referent_agents.where(id: @referent_ids)
+    @user.referent_agents.where(id: @referent_ids)
   end
 
   def matching_motifs
     @matching_motifs ||= \
       if invitation?
         # we retrieve the geolocalised matching motifs, if there are none we fallback
-        # on the matching motifs for the organisations passed in the query
+        # on the matching motifs for the organisations passed in the query_params
         filter_motifs(geo_search.available_motifs).presence || filter_motifs(
-          Motif.available_for_booking.where(organisation_id: @preselected_organisation_ids)
+          Motif.available_for_booking.where(organisation_id: @preselected_organisation_ids).joins(:organisation)
         )
       else
         filter_motifs(geo_search.available_motifs)

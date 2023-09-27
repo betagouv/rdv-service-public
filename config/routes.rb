@@ -27,6 +27,7 @@ Rails.application.routes.draw do
       post :invite, on: :member
       resources :migrations, only: %i[new create]
     end
+    resources :agent_roles, except: %i[index]
     resources :super_admins
     resources :organisations
     resources :services
@@ -92,6 +93,10 @@ Rails.application.routes.draw do
     get "agents/edit" => "agents/registrations#edit", as: "edit_agent_registration"
     put "agents" => "agents/registrations#update", as: "agent_registration"
     delete "agents" => "agents/registrations#destroy", as: "delete_agent_registration"
+
+    get "agents/mot_de_passe/edit" => "agents/mot_de_passes#edit", as: "edit_agent_mot_de_passes"
+    put "agents/mot_de_passe" => "agents/mot_de_passes#update", as: "agent_mot_de_passes"
+
     namespace :agents do
       resource :preferences, only: %i[show update] do
         post :disable_cnfs_online_booking_banner
@@ -194,8 +199,8 @@ Rails.application.routes.draw do
         resources :agent_agendas, only: %i[show] do
           put :toggle_displays, on: :member
         end
-        resources :agent_roles, only: %i[edit update]
-        resources :agents, only: %i[index destroy] do
+        resources :agent_intervenants, only: %i[update]
+        resources :agents, except: %i[show] do
           resources :absences, only: %i[index new]
           resources :plage_ouvertures, only: %i[index new]
           resources :stats, only: :index do
@@ -212,7 +217,6 @@ Rails.application.routes.draw do
         resource :rdv_wizard_step, only: [:new] do
           get :create
         end
-        devise_for :agents, controllers: { invitations: "admin/invitations_devise" }, only: :invitations
         get "support", to: "static_pages#support"
       end
     end

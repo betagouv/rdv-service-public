@@ -42,12 +42,12 @@ class Admin::RdvsController < AgentAuthController
       organisation_ids: @scoped_organisations.ids,
       options: parsed_params
     )
-    flash[:notice] = I18n.t("layouts.flash.confirm_export_queued", agent_email: current_agent.email)
+    flash[:notice] = t("layouts.flash.confirm_export_queued_html", agent_email: current_agent.email, support_email: current_domain.support_email)
     redirect_to admin_organisation_rdvs_path(organisation_id: current_organisation.id)
   end
 
   def rdvs_users_export
-    authorize(current_agent)
+    skip_authorization # RDV will be scoped in SendExportJob
     set_scoped_organisations
 
     RdvsUsersExportJob.perform_later(
@@ -55,7 +55,7 @@ class Admin::RdvsController < AgentAuthController
       organisation_ids: @scoped_organisations.ids,
       options: parsed_params
     )
-    flash[:notice] = I18n.t("layouts.flash.confirm_export_queued", agent_email: current_agent.email)
+    flash[:notice] = t("layouts.flash.confirm_export_queued_html", agent_email: current_agent.email, support_email: current_domain.support_email)
     redirect_to admin_organisation_rdvs_path(organisation_id: current_organisation.id)
   end
 

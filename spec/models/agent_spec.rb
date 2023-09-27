@@ -49,6 +49,27 @@ describe Agent, type: :model do
     end
   end
 
+  describe "password validations" do
+    let(:organisation) { create(:organisation) }
+
+    let(:agent) do
+      create(:agent, admin_role_in_organisations: [organisation]).reload # The reload makes sure the role is in memory
+    end
+
+    xit "has only one validation for password length" do
+      # Actuellement, ce test ne passe pas parce la validation est exécutée deux fois :
+      # - une fois sur agent.password
+      # - une fois sur agent.roles.agent.password
+      # La deuxième validation est causée par le fait qu'on a un cycle de accepts_nested_attributes_for de agent, vers roles, puis à nouveau vers l'agent.
+      # J'ai essayé d'ajouter un inverse_of sur le has_many, mais sans succès.
+      # Pour le moment, cette double validation est contournée en dupliquant les clés de traductions des erreurs de agent vers agents/roles/agent, puis en faisant un uniq
+      # sur les messages d'erreur.
+      agent.password = "123"
+      agent.validate
+      expect(agent.errors.count).to eq(1)
+    end
+  end
+
   describe "#available_referents_for" do
     it "returns empty array without agents" do
       user = build(:user, referent_agents: [])
@@ -111,6 +132,47 @@ describe Agent, type: :model do
     it "return false when agent allow to access multiple organisations" do
       agent = create(:agent, organisations: [create(:organisation)])
       expect(agent.multiple_organisations_access?).to eq(false)
+    end
+  end
+
+  describe "last_name validation" do
+    let!(:agent) { build(:agent) }
+
+    it "can be bypassed when needed" do
+      expect(agent).to be_valid
+      agent.last_name = nil
+      expect(agent).not_to be_valid
+
+      agent.errors.clear
+
+      agent.allow_blank_name = true
+      expect(agent).to be_valid
+    end
+  end
+
+  describe "first_name validation" do
+    let!(:agent) { build(:agent) }
+
+    it "can be bypassed when needed" do
+      expect(agent).to be_valid
+      agent.first_name = nil
+      expect(agent).not_to be_valid
+
+      agent.errors.clear
+
+      agent.allow_blank_name = true
+      expect(agent).to be_valid
+    end
+
+    context "for an intervenant" do
+      let!(:organisation) { create(:organisation) }
+      let!(:agent_admin) { create(:agent, admin_role_in_organisations: [organisation]) }
+      let(:agent_intervenant) { build(:agent, :intervenant, organisations: [organisation]) }
+
+      it "is never needed" do
+        agent_intervenant.first_name = nil
+        expect(agent_intervenant).to be_valid
+      end
     end
   end
 end

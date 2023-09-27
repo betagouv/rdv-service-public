@@ -164,6 +164,27 @@ describe "Users API", swagger_doc: "v1/api.json" do
         it { expect(user.reload.last_name).to eq(last_name) }
       end
 
+      response 200, "updates a user frozen by franceconnect", document: false do
+        let(:user) do
+          create(:user,
+                 first_name: "Jean",
+                 organisations: [organisation],
+                 logged_once_with_franceconnect: true)
+        end
+
+        let(:first_name) { "Alain" }
+        let(:address) { "10 rue du Havre, Paris" }
+
+        schema "$ref" => "#/components/schemas/user_with_root"
+
+        run_test!
+
+        it "updates non frozen attributes" do
+          expect(user.reload.first_name).not_to eq(first_name)
+          expect(user.address).to eq(address)
+        end
+      end
+
       it_behaves_like "an endpoint that returns 401 - unauthorized"
 
       it_behaves_like "an endpoint that returns 422 - unprocessable_entity", "des paramètres sont manquants ou mal formés ou impossibles", true do
@@ -233,17 +254,18 @@ describe "Users API", swagger_doc: "v1/api.json" do
         let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [create(:organisation)]) }
       end
     end
+  end
 
-    post "Récupérer l'invitation d'un usager·ère" do
+  path "/api/v1/users/{user_id}/rdv_invitation_token" do
+    post "Récupérer le token d'invitation à prendre un rdv d'un usager·ère" do
       with_authentication
 
       tags "User", "Invitation"
       produces "application/json"
       operationId "createUserInvitation"
-      description "Renvoie l'URL d'invitation d'un·e usager·ère"
+      description "Renvoie le token d'invitation à prendre rdv de l'usager·ère"
 
       parameter name: :user_id, in: :path, type: :integer, description: "ID de l'usager·ère", example: 123
-      parameter name: :invite_for, in: :query, type: :integer, description: "Durée souhaitée de l'invitation (en secondes)", example: 86_400, required: false
 
       let(:auth_headers) { api_auth_headers_for_agent(agent) }
       let(:"access-token") { auth_headers["access-token"].to_s }
@@ -252,17 +274,14 @@ describe "Users API", swagger_doc: "v1/api.json" do
 
       let!(:user_id) { user.id }
 
-      response 200, "Renvoie l'URL d'invitation de l'usager·ère" do
+      response 200, "Renvoie le token d'invitation à prendre rdv de l'usager·ère" do
         let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [organisation], email: "jean@jacques.fr") }
-        let!(:invite_for) { 86_400 }
 
         run_test!
 
         schema "$ref" => "#/components/schemas/invitation"
 
-        it { expect(parsed_response_body["invitation_url"]).to start_with("http://www.example.com/users/invitation/accept?invitation_token=") }
-
-        it { expect(user.reload.invitation_due_at).to eq(user.invitation_created_at + 24.hours) }
+        it { expect(parsed_response_body["invitation_token"]).to eq(user.reload.rdv_invitation_token) }
 
         it { expect(user.reload.invited_through).to eq("external") }
       end
@@ -273,8 +292,6 @@ describe "Users API", swagger_doc: "v1/api.json" do
         schema "$ref" => "#/components/schemas/invitation"
 
         run_test!
-
-        it { expect(user.reload.invitation_due_at).to eq(user.invitation_created_at + User.invite_for) }
       end
 
       it_behaves_like "an endpoint that returns 401 - unauthorized" do
@@ -391,37 +408,26 @@ describe "Users API", swagger_doc: "v1/api.json" do
 
         run_test!
 
-        it { expect(User.count).to eq(user_count_before + 1) }
-
-        it { expect(created_user.organisations).to match_array([organisation]) }
-
-        it { expect(created_user.first_name).to eq(first_name) }
-
-        it { expect(created_user.last_name).to eq(last_name) }
-
-        it { expect(created_user.birth_name).to eq(birth_name) }
-
-        it { expect(created_user.birth_date).to eq(Date.new(1976, 10, 1)) }
-
-        it { expect(created_user.email).to eq(email) }
-
-        it { expect(created_user.phone_number).to eq(phone_number) }
-
-        it { expect(created_user.address).to eq(address) }
-
-        it { expect(created_user.caisse_affiliation).to eq(caisse_affiliation) }
-
-        it { expect(created_user.affiliation_number).to eq(affiliation_number) }
-
-        it { expect(created_user.family_situation).to eq(family_situation) }
-
-        it { expect(created_user.number_of_children).to eq(number_of_children) }
-
-        it { expect(created_user.notify_by_sms).to eq(notify_by_sms) }
-
-        it { expect(created_user.notify_by_email).to eq(notify_by_email) }
-
-        it { expect(created_user.responsible).to eq(user_responsible) }
+        it "creates user with expected attributes" do
+          expect(User.count).to eq(user_count_before + 1)
+          expect(created_user.organisations).to contain_exactly(organisation)
+          expect(created_user).to have_attributes(
+            first_name:,
+            last_name:,
+            birth_name:,
+            birth_date: Date.new(1976, 10, 1),
+            email:,
+            phone_number:,
+            address:,
+            caisse_affiliation:,
+            affiliation_number:,
+            family_situation:,
+            number_of_children:,
+            notify_by_sms:,
+            notify_by_email:,
+            responsible: user_responsible
+          )
+        end
       end
 
       response 200, "creates a user with a minimal set of params", document: false do

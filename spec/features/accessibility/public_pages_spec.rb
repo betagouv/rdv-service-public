@@ -153,8 +153,9 @@ describe "public pages", js: true do
       context "when invited" do
         let!(:user) { create(:user) }
         let!(:invitation_token) do
-          user.invite! { |u| u.skip_invitation = true }
-          user.raw_invitation_token
+          user.assign_rdv_invitation_token
+          user.save!
+          user.rdv_invitation_token
         end
 
         it "root path with a city_code and a service page is accessible" do
@@ -165,8 +166,7 @@ describe "public pages", js: true do
             latitude: 48.859,
             longitude: 2.347,
             address: "Paris 75001",
-            service_id: motif.service_id,
-            invitation_token: invitation_token
+            service_id: motif.service_id
           )
           visit path
           expect(page).to have_content("Sélectionnez le motif de votre RDV")
@@ -182,8 +182,7 @@ describe "public pages", js: true do
             departement: 75,
             latitude: 48.859,
             longitude: 2.347,
-            street_ban_id: nil,
-            invitation_token: invitation_token
+            street_ban_id: nil
           )
           visit path
           expect(page).to have_content("Sélectionnez un lieu de RDV")
@@ -201,8 +200,7 @@ describe "public pages", js: true do
             longitude: 2.347,
             street_ban_id: nil,
             lieu_id: lieu.id,
-            date: Time.zone.now,
-            invitation_token: invitation_token
+            date: Time.zone.now
           )
 
           visit path

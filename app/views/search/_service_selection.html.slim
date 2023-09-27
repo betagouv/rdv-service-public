@@ -16,7 +16,7 @@ section.bg-light.p-4
 
     - context.services.each do |service|
       .card.mb-3
-        = link_to prendre_rdv_path(context.query.merge(service_id: service.id)) do
+        = link_to prendre_rdv_path(context.query_params.merge(service_id: service.id)) do
           .card-body
             .row
               .col-md

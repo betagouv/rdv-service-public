@@ -8,11 +8,14 @@ class AgentRole < ApplicationRecord
   # Attributes
   ACCESS_LEVEL_BASIC = "basic"
   ACCESS_LEVEL_ADMIN = "admin"
+  ACCESS_LEVEL_INTERVENANT = "intervenant"
   ACCESS_LEVELS = [ACCESS_LEVEL_BASIC, ACCESS_LEVEL_ADMIN].freeze
+  ACCESS_LEVELS_WITH_INTERVENANT = [ACCESS_LEVEL_BASIC, ACCESS_LEVEL_ADMIN, ACCESS_LEVEL_INTERVENANT].freeze
 
   enum access_level: {
     basic: "basic", # Basic Role
     admin: "admin", # Admin Role
+    intervenant: "intervenant", # Intervenant Role
   }
 
   # Relations
@@ -27,6 +30,7 @@ class AgentRole < ApplicationRecord
   # Validation
   validate :organisation_cannot_change
   validate :organisation_have_at_least_one_admin
+
   # Customize the uniqueness error message. This class needs to be declared before the validates :agent, uniqueness: line.
   class UniquenessValidator < ActiveRecord::Validations::UniquenessValidator
     def validate_each(record, attribute, value)

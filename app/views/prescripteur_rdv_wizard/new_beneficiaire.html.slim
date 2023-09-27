@@ -16,6 +16,10 @@ main.container
                   = f.input :first_name, required: true
                 .col-6
                   = f.input :last_name, required: true
+            - if current_domain == Domain::RDV_MAIRIE
+              .row
+                .col-12
+                  = f.input :ants_pre_demande_number, label: "Numéro de pré-demande ANTS", required: true
 
             = render("model_errors", model: @beneficiaire, f: f)
             .form-group

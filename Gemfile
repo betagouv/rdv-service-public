@@ -9,7 +9,7 @@ ruby "3.2.2"
 gem "dotenv-rails" # dotenv should always be loaded before rails
 
 # Full-stack web application framework.
-gem "rails", "~> 7.0.5"
+gem "rails", "~> 7.0.6"
 # Rack-based asset packaging system
 gem "sprockets-rails"
 # Puma is a simple, fast, threaded, and highly parallel HTTP 1.1 server for Ruby/Rack applications
@@ -55,8 +55,6 @@ gem "activerecord-postgres_enum"
 gem "redis", "< 5.0"
 # A drop-in replacement for e.g. MemCacheStore to store Rails sessions (and Rails sessions only) in Redis.
 gem "redis-session-store", "0.11.4"
-# Ruby wrapper for hiredis (protocol serialization/deserialization and blocking I/O)
-gem "hiredis"
 
 # Devise / auth
 # Flexible authentication solution for Rails with Warden
@@ -77,6 +75,8 @@ gem "omniauth-rails_csrf_protection"
 gem "pundit"
 # Token based authentication for rails. Uses Devise + OmniAuth.
 gem "devise_token_auth"
+# List of frequently used passwords
+gem "common_french_passwords"
 
 # Jobs
 # A multithreaded, Postgres-based ActiveJob backend for Ruby on Rails
@@ -212,8 +212,6 @@ group :test do
   gem "capybara-email"
   # Automatically create snapshots when Cucumber steps fail with Capybara and Rails
   gem "capybara-screenshot"
-  # Easy download and use of browser drivers.
-  gem "webdrivers"
   # Strategies for cleaning databases. Can be used to ensure a clean slate for testing.
   gem "database_cleaner"
   # Library for stubbing HTTP requests in Ruby.

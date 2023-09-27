@@ -43,6 +43,7 @@ RSpec.configure do |config|
   # config.fixture_path = "#{::Rails.root}/spec/fixtures"
   config.include PageSpecHelper
   config.include SigninSpecHelper
+  config.include UnescapeHtmlSpecHelper
   config.include Select2SpecHelper
   config.include ApiSpecHelper, type: :request
   config.extend ApiSpecMacros, type: :request
@@ -101,5 +102,6 @@ RSpec.configure do |config|
     ActionMailer::Base.deliveries.clear
     FactoryBot.rewind_sequences
     Rails.cache.clear
+    Warden.test_reset!
   end
 end

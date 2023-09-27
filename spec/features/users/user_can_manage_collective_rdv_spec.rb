@@ -23,8 +23,9 @@ RSpec.describe "Adding a user to a collective RDV" do
   let!(:other_user2) { create(:user) }
   let!(:rdv2) { create(:rdv, :without_users, motif: motif2, agents: [agent], organisation: organisation, lieu: lieu2) }
   let!(:invitation_token) do
-    invited_user.invite! { |u| u.skip_invitation = true }
-    invited_user.raw_invitation_token
+    invited_user.assign_rdv_invitation_token
+    invited_user.save!
+    invited_user.rdv_invitation_token
   end
 
   let(:params) do
@@ -40,9 +41,6 @@ RSpec.describe "Adding a user to a collective RDV" do
   def select_motif
     expect(page).to have_content("Sélectionnez le motif de votre RDV :")
     click_link(motif.name)
-    # Restriction modal
-    expect(page).to have_content(motif.restriction_for_rdv)
-    click_link("Accepter", match: :first)
   end
 
   def select_lieu
@@ -81,12 +79,18 @@ RSpec.describe "Adding a user to a collective RDV" do
     end.at_least_once)
   end
 
-  context "Nominal cases" do
+  context "Nominal cases", js: true do
     it "with a signed in user" do
+      motif.update!(restriction_for_rdv: "Test restriction")
       login_as(logged_user, scope: :user)
       visit root_path(params)
       select_motif
       select_lieu
+
+      # Restriction for rdv modal
+      expect(page).to have_content("À lire avant de prendre un rendez-vous")
+      expect(page).to have_content(motif.restriction_for_rdv)
+      click_link("Accepter")
 
       # Testing participation (with back buttons)
       expect do
@@ -95,6 +99,7 @@ RSpec.describe "Adding a user to a collective RDV" do
         click_link("S'inscrire")
         click_button("Continuer")
         click_link("Revenir en arrière")
+        sleep(1)
         click_button("Continuer")
         click_button("Continuer")
         stub_request(:post, "https://example.com/")
@@ -138,7 +143,6 @@ RSpec.describe "Adding a user to a collective RDV" do
       expect_confirm_participation.to change { rdv.reload.users.count }.from(0).to(1)
 
       expect(page).not_to have_content("modifier") # can_change_participants?
-      expect(::Addressable::URI.parse(current_url).query_values).to match("invitation_token" => /^[A-Z0-9]{8}$/)
 
       expect_notifications_sent_for(rdv, invited_user, :rdv_created)
       expect_webhooks_for(invited_user)
@@ -348,7 +352,7 @@ RSpec.describe "Adding a user to a collective RDV" do
         expect_webhooks_for(user)
       end
 
-      it "display rdv with cancelled tag when participation is excused or rdv is revoked", js: true do
+      it "display rdv with cancelled tag when participation is excused or rdv is revoked" do
         login_as(user, scope: :user)
         visit root_path(params)
 
@@ -376,7 +380,7 @@ RSpec.describe "Adding a user to a collective RDV" do
         expect_no_notifications_for(rdv, user, :rdv_created)
       end
 
-      it "can cancel collective rdv participation, with mail notifications only", js: true do
+      it "can cancel collective rdv participation, with mail notifications only" do
         login_as(user, scope: :user)
         visit root_path(params)
 
@@ -394,7 +398,7 @@ RSpec.describe "Adding a user to a collective RDV" do
         expect_webhooks_for(user)
       end
 
-      it "can cancel collective rdv participation, without notifications", js: true do
+      it "can cancel collective rdv participation, without notifications" do
         login_as(user, scope: :user)
         visit root_path(params)
 

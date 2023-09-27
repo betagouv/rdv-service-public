@@ -47,6 +47,16 @@ class ServiceFilterForMotifsSelects {
     const filteredOptionsWithBlank = [{id: "", text: ""}].concat(filteredOptionsWithSelected)
     $(this.motifSelect).html("") // otherwise it doesn't clear previous options
     $(this.motifSelect).select2({ data: filteredOptionsWithBlank })
+
+    if (filteredOptionsWithSelected.length == 1 && filteredOptionsWithSelected[0].children.length == 1) {
+      this.autoselectFirstMotif();
+    }
+  }
+
+  autoselectFirstMotif = () => {
+    const options = this.motifSelect.querySelectorAll("option")
+    options[1].selected = true
+    $(this.motifSelect).trigger("change")
   }
 
   getFilteredGroupedOptions = (serviceName) =>
