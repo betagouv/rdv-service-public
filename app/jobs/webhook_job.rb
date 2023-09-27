@@ -29,7 +29,7 @@ class WebhookJob < ApplicationJob
 
     request.on_failure do |response|
       if response.timed_out?
-        raise OutgoingWebhookError, "Error: HTTP Timeout, URL: #{webhook_endpoint.target_url}"
+        raise OutgoingWebhookError, "HTTP Timeout, URL: #{webhook_endpoint.target_url}"
       elsif !WebhookJob.false_negative_from_drome?(response.body)
         raise OutgoingWebhookError, "HTTP #{response.code}, URL: #{webhook_endpoint.target_url}"
       end
