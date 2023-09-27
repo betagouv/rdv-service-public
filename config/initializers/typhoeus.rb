@@ -3,12 +3,16 @@
 DEFAULT_TYPHOEUS_TIMEOUT = 15
 class Typhoeus::Errors::TimeoutError < Typhoeus::Errors::TyphoeusError; end
 
+#
 # Typhoeus ne lève pas d'exception en cas de timeout, donc on fait
 # en sorte de mettre un timeout par défaut et de lever l'exception.
+#
+# IMPORTANT : L'usage conventionnel est donc le suivant :
+#   si aucun callback `on_failure` n'est défini dans le code de la
+#   requête, c'est le `on_failure` ci-dessous qui sera exécuté.
+#
 Typhoeus.before do |request|
   request.options[:timeout] ||= DEFAULT_TYPHOEUS_TIMEOUT
-  # Les timeouts sont parfois gérés de façon adaptée au niveau de l'appel.
-  # Nous ajoutons ce callback `on_failure` pour avoir une levée d'exception par défaut.
   if request.on_failure.blank?
     request.on_failure do |response|
       if response.timed_out?
@@ -16,7 +20,7 @@ Typhoeus.before do |request|
       end
     end
   end
-  true # Si le block de callback retourne une valeur falsy, la requête est annulée.
+  true # Petit piège :  si on retourne du falsy, la requête n'est pas exécutée du tout.
 end
 
 Typhoeus.before do |request|
