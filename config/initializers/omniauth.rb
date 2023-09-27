@@ -27,7 +27,7 @@ Rails.application.config.middleware.use OmniAuth::Builder do
       data: {
         error: env["omniauth.error"],
         error_type: env["omniauth.error.type"],
-        full_env: env.to_json, # for testing in review app
+        full_env: env.select { |_key, value| value.is_a?(String) },
       }
     )
     Sentry.add_breadcrumb(crumb)
