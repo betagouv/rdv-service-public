@@ -7,19 +7,19 @@ class RdvsExportJob < ExportJob
     @agent = agent
     now = Time.zone.now
     organisations = agent.organisations.where(id: organisation_ids)
-    rdvs = Rdv.search_for(organisations, options)
+    rdvs = Rdv.search_for(organisations, options).order(starts_at: :desc)
 
-    # Le département du Var se base sur la position de chaque caractère du nom
-    # de fichier pour extraire la date et l'ID d'organisation, donc
-    # si on modifie le fichier il faut soit les prévenir soit ajouter à la fin.
-    file_name = if organisations.count == 1
-                  "export-rdv-#{now.strftime('%Y-%m-%d')}-org-#{organisations.first.id.to_s.rjust(6, '0')}.xls"
-                else
-                  "export-rdv-#{now.strftime('%Y-%m-%d')}.xls"
-                end
-    xls_string = RdvExporter.export(rdvs.order(starts_at: :desc))
+    redis_key = "RdvsExportJob-#{SecureRandom.uuid}"
 
-    # Using #deliver_now because we don't want to enqueue a job with a huge payload
-    Agents::ExportMailer.rdv_export(agent, file_name, xls_string).deliver_now
+    batch = GoodJob::Batch.create(properties: { redis_key: redis_key })
+
+    batch.add do
+      rdvs.find_in_batches.with_index do |rdv_batch, _index|
+        rdv_ids = rdv_batch.pluck(:id)
+        RdvsExportPageJob.perform_later(rdv_ids, page_index, redis_key)
+      end
+    end
+
+    batch.enqueue(on_success: RdvsExportSendEmailJob)
   end
 end
