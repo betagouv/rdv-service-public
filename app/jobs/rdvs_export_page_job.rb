@@ -1,25 +1,24 @@
 # frozen_string_literal: true
 
 class RdvsExportPageJob < ExportJob
-  def perform(agent:, organisation_ids:, options:)
-    raise "Agent does not belong to all requested organisation(s)" if (organisation_ids - agent.organisation_ids).any?
+  def perform(rdv_ids, page_index, redis_key)
+    rdvs = Rdv.where(id: rdv_ids).includes(
+      :organisation,
+      :agents,
+      :lieu,
+      :receipts,
+      :versions_where_event_eq_create,
+      motif: :service,
+      users: :responsible
+    ).order(starts_at: :desc)
 
-    @agent = agent
-    now = Time.zone.now
-    organisations = agent.organisations.where(id: organisation_ids)
-    rdvs = Rdv.search_for(organisations, options)
+    redis_connection = Redis.new(url: Rails.configuration.x.redis_url)
 
-    # Le département du Var se base sur la position de chaque caractère du nom
-    # de fichier pour extraire la date et l'ID d'organisation, donc
-    # si on modifie le fichier il faut soit les prévenir soit ajouter à la fin.
-    file_name = if organisations.count == 1
-                  "export-rdv-#{now.strftime('%Y-%m-%d')}-org-#{organisations.first.id.to_s.rjust(6, '0')}.xls"
-                else
-                  "export-rdv-#{now.strftime('%Y-%m-%d')}.xls"
-                end
-    xls_string = RdvExporter.export(rdvs.order(starts_at: :desc))
+    rows = rdvs.map do |rdv|
+      RdvExporter.row_array_from(rdv)
+    end
 
-    # Using #deliver_now because we don't want to enqueue a job with a huge payload
-    Agents::ExportMailer.rdv_export(agent, file_name, xls_string).deliver_now
+    redis_connection.hset(redis_key, page_index, rows.to_json)
+    redis_connection.expire(redis_key, 1.week)
   end
 end

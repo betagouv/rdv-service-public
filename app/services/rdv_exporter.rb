@@ -37,32 +37,24 @@ module RdvExporter
     file.string
   end
 
-  def self.build_excel_workbook_from(rdvs)
+  def self.build_excel_workbook
     Spreadsheet.client_encoding = "UTF-8"
     book = Spreadsheet::Workbook.new
     sheet = book.create_worksheet
     sheet.row(0).concat(HEADER)
-
-    rdvs = rdvs.includes(
-      :organisation,
-      :agents,
-      :lieu,
-      :receipts,
-      :versions_where_event_eq_create,
-      motif: :service,
-      users: :responsible
-    )
-
-    rdvs.find_each.with_index do |rdv, index|
-      row = sheet.row(index + 1)
-      row.set_format 1, DateFormat
-      row.set_format 2, HourFormat
-      row.set_format 4, DateFormat
-      row.set_format 5, HourFormat
-
-      row.concat(row_array_from(rdv))
-    end
     book
+  end
+
+  def self.add_row_to(workbook, row_content, row_index)
+    sheet = workbook.worksheets.first
+
+    row = sheet.row(row_index)
+    row.set_format 1, DateFormat
+    row.set_format 2, HourFormat
+    row.set_format 4, DateFormat
+    row.set_format 5, HourFormat
+
+    row.concat(row_content)
   end
 
   # rubocop:disable Metrics/CyclomaticComplexity

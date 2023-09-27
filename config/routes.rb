@@ -41,8 +41,8 @@ Rails.application.routes.draw do
     root to: "agents#index"
 
     authenticate :super_admin do
-      mount GoodJob::Engine => "good_job"
     end
+    mount GoodJob::Engine => "good_job"
   end
   get "super_admin", to: redirect("super_admins", status: 301)
 
