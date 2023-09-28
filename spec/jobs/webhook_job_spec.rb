@@ -47,6 +47,14 @@ describe WebhookJob, type: :job do
       perform_enqueued_jobs
       expect(enqueued_jobs.first["priority"]).to eq(-20)
     end
+
+    it "retries on timeout" do
+      stub_request(:post, "https://example.com/rdv-s-endpoint").to_timeout
+      described_class.perform_later(payload, webhook_endpoint.id)
+
+      perform_enqueued_jobs
+      expect(enqueued_jobs.first["executions"]).to eq(1)
+    end
   end
 
   describe ".false_negative_from_drome?" do
