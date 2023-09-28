@@ -27,34 +27,25 @@ module RdvExporter
     "email(s) professionnel.le(s)",
   ].freeze
 
-  def self.export(rdvs)
-    extract_string_from(build_excel_workbook_from(rdvs))
-  end
-
-  def self.extract_string_from(workbook)
-    file = StringIO.new
-    workbook.write(file)
-    file.string
-  end
-
-  def self.build_excel_workbook
+  def self.workbook_from_rdvs_rows(rdvs_rows)
     Spreadsheet.client_encoding = "UTF-8"
     book = Spreadsheet::Workbook.new
     sheet = book.create_worksheet
     sheet.row(0).concat(HEADER)
-    book
-  end
 
-  def self.add_row_to(workbook, row_content, row_index)
-    sheet = workbook.worksheets.first
+    rdvs_rows.each.with_index(1) do |row_content, row_index|
+      row = sheet.row(row_index)
+      row.set_format 1, DateFormat
+      row.set_format 2, HourFormat
+      row.set_format 4, DateFormat
+      row.set_format 5, HourFormat
 
-    row = sheet.row(row_index)
-    row.set_format 1, DateFormat
-    row.set_format 2, HourFormat
-    row.set_format 4, DateFormat
-    row.set_format 5, HourFormat
+      row.concat(row_content)
+    end
 
-    row.concat(row_content)
+    file = StringIO.new
+    workbook.write(file)
+    file.string
   end
 
   # rubocop:disable Metrics/CyclomaticComplexity
