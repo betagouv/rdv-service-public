@@ -12,6 +12,9 @@ describe RdvsExportJob do
 
       described_class.perform_now(agent: agent, organisation_ids: [organisation.id, other_organisation.id], options: {})
 
+      # Perform batch of jobs and callback job
+      perform_enqueued_jobs
+
       expect_zipped_attached_xls(expected_file_name: "export-rdv-2022-09-14.xls")
     end
 
@@ -25,6 +28,9 @@ describe RdvsExportJob do
       travel_to(Time.zone.parse("2022-09-14 09:00:00"))
 
       described_class.perform_now(agent: agent, organisation_ids: [organisation.id], options: {})
+
+      # Perform batch of jobs and callback job
+      perform_enqueued_jobs
 
       expect_zipped_attached_xls(expected_file_name: "export-rdv-2022-09-14-org-#{organisation.id.to_s.rjust(6, '0')}.xls")
     end
