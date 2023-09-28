@@ -25,7 +25,8 @@ Rails.application.config.middleware.use OmniAuth::Builder do
     crumb = Sentry::Breadcrumb.new(
       message: "Omniauth env values",
       data: {
-        error: env["omniauth.error"],
+        strategy: env["omniauth.error"],
+        error: env["omniauth.error.strategy"].class,
         error_type: env["omniauth.error.type"],
         full_env: env.select { |_key, value| value.is_a?(String) },
       }
@@ -34,7 +35,7 @@ Rails.application.config.middleware.use OmniAuth::Builder do
 
     Sentry.capture_message(
       "Omniauth failed : #{env['omniauth.error']}",
-      fingerprint: [env["omniauth.error.strategy"], env["omniauth.error.type"]]
+      fingerprint: [env["omniauth.error.strategy"].class, env["omniauth.error.type"]]
     )
 
     OmniauthCallbacksController.action(:failure).call(env)
