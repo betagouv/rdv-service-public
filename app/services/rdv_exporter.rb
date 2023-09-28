@@ -27,10 +27,10 @@ module RdvExporter
     "email(s) professionnel.le(s)",
   ].freeze
 
-  def self.workbook_from_rdvs_rows(rdvs_rows)
+  def self.xls_string_from_rdvs_rows(rdvs_rows)
     Spreadsheet.client_encoding = "UTF-8"
-    book = Spreadsheet::Workbook.new
-    sheet = book.create_worksheet
+    workbook = Spreadsheet::Workbook.new
+    sheet = workbook.create_worksheet
     sheet.row(0).concat(HEADER)
 
     rdvs_rows.each.with_index(1) do |row_content, row_index|

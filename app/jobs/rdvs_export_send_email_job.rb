@@ -23,7 +23,7 @@ class RdvsExportSendEmailJob < ExportJob
       end
     end
 
-    xls_string = RdvExporter.workbook_from_rdvs_rows(rdvs_rows)
+    xls_string = RdvExporter.xls_string_from_rdvs_rows(rdvs_rows)
 
     # Using #deliver_now because we don't want to enqueue a job with a huge payload
     Agents::ExportMailer.rdv_export(agent, batch.properties[:file_name], xls_string).deliver_now
