@@ -48,6 +48,21 @@ module RdvExporter
     file.string
   end
 
+  def self.rows_from_rdvs(rdvs)
+    rdvs.includes(
+          :organisation,
+          :agents,
+          :lieu,
+          :receipts,
+          :versions_where_event_eq_create,
+          motif: :service,
+          users: :responsible
+        )
+    rdvs.map do |rdv|
+      row_array_from(rdv)
+    end
+  end
+
   # rubocop:disable Metrics/CyclomaticComplexity
   # rubocop:disable Metrics/PerceivedComplexity
   def self.row_array_from(rdv)
