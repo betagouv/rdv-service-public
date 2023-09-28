@@ -4,9 +4,6 @@ class RdvsExportSendEmailJob < ExportJob
   def perform(batch, _params)
     agent = Agent.find(batch.properties[:agent_id])
 
-    # Le département du Var se base sur la position de chaque caractère du nom
-    # de fichier pour extraire la date et l'ID d'organisation, donc
-    # si on modifie le fichier il faut soit les prévenir soit ajouter à la fin.
     redis_connection = Redis.new(url: Rails.configuration.x.redis_url)
     redis_key = batch.properties[:redis_key]
 
