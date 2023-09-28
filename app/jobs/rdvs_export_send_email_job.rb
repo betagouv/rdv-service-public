@@ -11,6 +11,7 @@ class RdvsExportSendEmailJob < ExportJob
     redis_key = batch.properties[:redis_key]
 
     pages = redis_connection.hgetall(redis_key)
+    redis_connection.close
 
     page_numbers = pages.keys.map(&:to_i).sort
 

@@ -12,13 +12,13 @@ class RdvsExportPageJob < ExportJob
       users: :responsible
     ).order(starts_at: :desc)
 
-    redis_connection = Redis.new(url: Rails.configuration.x.redis_url)
-
     rows = rdvs.map do |rdv|
       RdvExporter.row_array_from(rdv)
     end
 
+    redis_connection = Redis.new(url: Rails.configuration.x.redis_url)
     redis_connection.hset(redis_key, page_index, rows.to_json)
     redis_connection.expire(redis_key, 1.week)
+    redis_connection.close
   end
 end
