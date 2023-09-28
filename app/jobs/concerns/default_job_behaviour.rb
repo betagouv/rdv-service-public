@@ -36,6 +36,8 @@ module DefaultJobBehaviour
     # (see: https://github.com/bensheldon/good_job#retries)
   end
 
+  private
+
   def log_failure_to_sentry?(_exception)
     true
   end
