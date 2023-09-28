@@ -17,4 +17,10 @@ class ExportJob < ApplicationJob
     # It is thus only used as a control flow mechanism, and should not e sent to Sentry.
     !exception.is_a?(GoodJob::ActiveJobExtensions::Concurrency::ConcurrencyExceededError)
   end
+
+  private
+
+  def hard_timeout
+    1.hour
+  end
 end

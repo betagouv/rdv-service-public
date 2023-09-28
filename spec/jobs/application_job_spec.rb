@@ -25,20 +25,16 @@ describe ApplicationJob, type: :job do
     end
 
     let(:exports_timeout_job_class) do
-      stub_const "ExportsTimeoutJob", Class.new(described_class)
+      stub_const "ExportsTimeoutJob", Class.new(ExportJob)
       ExportsTimeoutJob.class_eval do
-        queue_as :exports
-
         def perform; end
       end
       ExportsTimeoutJob
     end
 
     let(:cron_timeout_job_class) do
-      stub_const "CronTimeoutJob", Class.new(described_class)
+      stub_const "CronTimeoutJob", Class.new(CronJob)
       CronTimeoutJob.class_eval do
-        queue_as :cron
-
         def perform; end
       end
       CronTimeoutJob
