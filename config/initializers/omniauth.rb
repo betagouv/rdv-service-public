@@ -32,7 +32,7 @@ Rails.application.config.middleware.use OmniAuth::Builder do
         strategy: strategy,
         error: error,
         error_type: error_type,
-        full_env: env.select { |_key, value| value.is_a?(String) },
+        full_env: env.transform_values { |value| value.is_a?(String) ? value : value.inspect },
       }
     )
     Sentry.add_breadcrumb(crumb)
