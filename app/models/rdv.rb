@@ -295,6 +295,12 @@ class Rdv < ApplicationRecord
     Time.zone.now + motif.max_public_booking_delay
   end
 
+  def remaining_seats
+    return 0 unless max_participants_count
+
+    max_participants_count - users_count
+  end
+
   def remaining_seats?
     return true unless max_participants_count
 

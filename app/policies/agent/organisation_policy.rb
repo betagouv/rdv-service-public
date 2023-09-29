@@ -9,6 +9,9 @@ class Agent::OrganisationPolicy < DefaultAgentPolicy
     current_agent.roles.access_level_admin.pluck(:organisation_id).include?(record.id)
   end
 
+  # Droit à faire valider/vérifier
+  alias available_creneaux_count? admin_in_record_organisation?
+
   def new?
     current_agent.territorial_admin_in?(record.territory)
   end

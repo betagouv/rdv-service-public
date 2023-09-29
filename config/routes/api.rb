@@ -27,6 +27,12 @@ namespace :api do
     get "availableTimeSlots", to: "editor#available_time_slots"
     get "searchApplicationIds", to: "editor#search_application_ids"
   end
+
+  namespace :rdvi do
+    resources :organisations, only: [] do
+      get 'available_creneaux_count', to: 'organisations#available_creneaux_count', on: :member
+    end
+  end
 end
 
 # This one has been published before versioning the public API and unification with auth API:
