@@ -26,7 +26,7 @@ class RdvsExportJob < ExportJob
   private
 
   def file_name(organisations)
-    today = Time.zone.now.strftime('%Y-%m-%d')
+    today = Time.zone.now.strftime("%Y-%m-%d")
     # Le département du Var se base sur la position de chaque caractère du nom
     # de fichier pour extraire la date et l'ID d'organisation, donc
     # si on modifie le fichier il faut soit les prévenir soit ajouter à la fin.
