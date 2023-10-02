@@ -8,17 +8,16 @@ module DefaultJobBehaviour
 
   included do
     # Include job metadata in Sentry context
-    around_perform do |job, block|
+    around_perform do |_job, block|
       Sentry.with_scope do |scope|
         scope.set_context(:job, { job_id: job_id, queue_name: queue_name, arguments: arguments })
 
-        timeout_value = queue_name.in?(%w[exports cron]) ? 1.hour : 30.seconds
-        Timeout.timeout(timeout_value) do
+        Timeout.timeout(hard_timeout) do
           block.call
         end
 
       rescue StandardError => e
-        Sentry.capture_exception(e) if job.log_failure_to_sentry?(e)
+        Sentry.capture_exception(e) if log_failure_to_sentry?(e)
         raise # will be caught by the retry mechanism
       end
     end
@@ -37,7 +36,13 @@ module DefaultJobBehaviour
     # (see: https://github.com/bensheldon/good_job#retries)
   end
 
+  private
+
   def log_failure_to_sentry?(_exception)
     true
+  end
+
+  def hard_timeout
+    30.seconds
   end
 end

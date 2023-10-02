@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class SmsSender < BaseService
-  # rubocop:disable Metrics/PerceivedComplexity
-
   class SmsSenderFailure < StandardError; end
 
   attr_reader :phone_number, :content, :provider, :api_key
@@ -79,7 +77,7 @@ class SmsSender < BaseService
   # RDV-Solidarités, sauf celle cité dans les autres commentaires.
   #
   def send_with_netsize
-    response = Typhoeus::Request.new(
+    request = Typhoeus::Request.new(
       "https://europe.ipx.com/restapi/v1/sms/send",
       method: :post,
       userpwd: @api_key,
@@ -92,13 +90,9 @@ class SmsSender < BaseService
         originatorTON: 1,
         maxConcatenatedMessages: 10,
       }
-    ).run
+    )
 
-    if response.timed_out?
-      handle_failure(error_message: "NetSize timeout")
-    elsif response.failure?
-      handle_failure(error_message: "NetSize HTTP error: #{response.code}")
-    else
+    request.on_success do |response|
       parsed_response = JSON.parse(response.body)
       # parsed_response is a hash. Relevant keys are:
       # responseCode: nonzero on error. 18 is “Too low balance”, 100 is “Invalid destination address”.
@@ -113,6 +107,16 @@ class SmsSender < BaseService
         handle_failure(error_message: "NetSize error: #{parsed_response['responseMessage']}", retry_job: retry_job)
       end
     end
+
+    request.on_failure do |response|
+      if response.timed_out?
+        handle_failure(error_message: "NetSize timeout")
+      elsif response.failure?
+        handle_failure(error_message: "NetSize HTTP error: #{response.code}")
+      end
+    end
+
+    request.run
   end
 
   # SFR with mail2SMS
@@ -136,7 +140,7 @@ class SmsSender < BaseService
   # - le département de la Seine-et-Marne (77)
   #
   def send_with_clever_technologies
-    response = Typhoeus::Request.new(
+    request = Typhoeus::Request.new(
       "https://webservicesmultimedias.clever-is.fr/api/pushs",
       method: :post,
       headers: { "Content-Type": "application/json; charset=UTF-8", Authorization: "Basic #{Base64.encode64(@api_key).chomp}" },
@@ -148,13 +152,9 @@ class SmsSender < BaseService
           encodage: 3,
         },
       }.to_json
-    ).run
+    )
 
-    if response.timed_out?
-      handle_failure(error_message: "Clever Technologies error: Timeout")
-    elsif response.failure? || response.code == :http_returned_error
-      handle_failure(error_message: "Clever Technologies HTTP error: #{response.code}")
-    else
+    request.on_success do |response|
       parsed_response = JSON.parse(response.body)
       if response.code == 201
         # 201 Created on success
@@ -167,6 +167,16 @@ class SmsSender < BaseService
         handle_failure(error_message: "Clever Technologies HTTP error: #{errors}")
       end
     end
+
+    request.on_failure do |response|
+      if response.timed_out?
+        handle_failure(error_message: "Clever Technologies error: Timeout")
+      else
+        handle_failure(error_message: "Clever Technologies HTTP error: #{response.code}")
+      end
+    end
+
+    request.run
   end
 
   # DebugLogger
@@ -178,6 +188,4 @@ class SmsSender < BaseService
 
     save_receipt(result: :processed)
   end
-
-  # rubocop:enable Metrics/PerceivedComplexity
 end
