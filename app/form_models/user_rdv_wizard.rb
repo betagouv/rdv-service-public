@@ -79,6 +79,10 @@ module UserRdvWizard
       true
     end
 
+    def verticale
+      motif&.organisation&.verticale
+    end
+
     private
 
     def lieu
