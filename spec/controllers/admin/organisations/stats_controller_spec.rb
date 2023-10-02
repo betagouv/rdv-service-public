@@ -3,6 +3,7 @@
 RSpec.describe Admin::Organisations::StatsController do
   describe "#rdvs" do
     it "returns rdvs of the current organisation only" do
+      travel_to(Time.zone.parse("2023-09-24"))
       organisation = create(:organisation)
       other_organisation = create(:organisation)
       agent = create(:agent, admin_role_in_organisations: [organisation, other_organisation])
