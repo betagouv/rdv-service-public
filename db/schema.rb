@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_12_082341) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_02_124541) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -487,6 +487,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_12_082341) do
     t.index ["status"], name: "index_rdvs_on_status"
     t.index ["updated_at"], name: "index_rdvs_on_updated_at"
     t.index ["users_count"], name: "index_rdvs_on_users_count"
+    t.index ["uuid"], name: "index_rdvs_on_uuid"
   end
 
   create_table "rdvs_users", force: :cascade do |t|
