@@ -50,15 +50,14 @@ module RdvExporter
 
   def self.rows_from_rdvs(rdvs)
     rdvs.includes(
-          :organisation,
-          :agents,
-          :lieu,
-          :receipts,
-          :versions_where_event_eq_create,
-          motif: :service,
-          users: :responsible
-        )
-    rdvs.map do |rdv|
+      :organisation,
+      :agents,
+      :lieu,
+      :receipts,
+      :versions_where_event_eq_create,
+      motif: :service,
+      users: :responsible
+    ).map do |rdv|
       row_array_from(rdv)
     end
   end
@@ -90,6 +89,7 @@ module RdvExporter
       rdv.agents.map(&:email).join(", "),
     ]
   end
+
   # rubocop:enable Metrics/PerceivedComplexity
   # rubocop:enable Metrics/CyclomaticComplexity
 
