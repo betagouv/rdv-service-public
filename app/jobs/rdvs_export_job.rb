@@ -9,10 +9,7 @@ class RdvsExportJob < ExportJob
     rdvs = Rdv.search_for(organisations, options).order(starts_at: :desc)
 
     redis_key = "RdvsExportJob-#{SecureRandom.uuid}"
-
-    batch = GoodJob::Batch.new
-
-    batch.properties = { redis_key: redis_key, file_name: file_name(organisations), agent_id: agent.id }
+    batch = GoodJob::Batch.new(redis_key: redis_key, file_name: file_name(organisations), agent_id: agent.id)
 
     batch.add do
       rdvs.find_in_batches(batch_size: 200).with_index do |rdv_batch, page_index|
