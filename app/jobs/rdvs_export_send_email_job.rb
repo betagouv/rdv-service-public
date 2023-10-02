@@ -8,7 +8,6 @@ class RdvsExportSendEmailJob < ExportJob
     redis_key = batch.properties[:redis_key]
 
     pages = redis_connection.hgetall(redis_key)
-    redis_connection.close
 
     page_numbers = pages.keys.map(&:to_i).sort
 
@@ -25,5 +24,8 @@ class RdvsExportSendEmailJob < ExportJob
 
     # Using #deliver_now because we don't want to enqueue a job with a huge payload
     Agents::ExportMailer.rdv_export(agent, batch.properties[:file_name], xls_string).deliver_now
+
+    redis_connection.del(redis_key)
+    redis_connection.close
   end
 end
