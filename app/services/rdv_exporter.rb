@@ -89,7 +89,6 @@ module RdvExporter
       rdv.agents.map(&:email).join(", "),
     ]
   end
-
   # rubocop:enable Metrics/PerceivedComplexity
   # rubocop:enable Metrics/CyclomaticComplexity
 

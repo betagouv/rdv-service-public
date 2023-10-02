@@ -1,18 +1,14 @@
 # frozen_string_literal: true
 
 describe RdvExporter, type: :service do
-  def rows_from_xls(xls_string)
-    Spreadsheet.open(StringIO.new(xls_string)).worksheets.first.rows
-  end
-
   describe "#xls_string_from_rdvs_rows" do
     # rubocop:disable RSpec/ExampleLength
     it "return export with header" do
       rdv = create(:rdv, created_at: Time.zone.parse("2023-01-01"), agents: [create(:agent, email: "agent@mail.com")])
       rdv_row = described_class.row_array_from(rdv)
-      string = described_class.xls_string_from_rdvs_rows([rdv_row])
+      xls_string = described_class.xls_string_from_rdvs_rows([rdv_row])
 
-      header_row, first_data_row = rows_from_xls(string)
+      header_row, first_data_row = Spreadsheet.open(StringIO.new(xls_string)).worksheets.first.rows
 
       # Les lettres sont les noms de colonnes Excel.
       # Il est important de toujours ajouter les nouvelles colonnes
