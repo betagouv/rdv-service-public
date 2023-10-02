@@ -13,8 +13,10 @@ module User::Ants
   end
 
   def self.find_appointment(application_id)
-    AntsApi::Appointment.first(application_id: application_id)
-  rescue AntsApi::Appointment::ApiRequestError => e
+    AntsApi::Appointment.first(application_id: application_id, timeout: 2)
+  rescue AntsApi::Appointment::ApiRequestError, Typhoeus::Errors::TimeoutError => e
+    # Si l'api de l'ANTS renvoie une erreur ou un timeout, on ne veut pas bloquer la prise de rendez-vous
+    # pour l'usager, donc on considère le numéro comme valide.
     Sentry.capture_exception(e)
     nil
   end
