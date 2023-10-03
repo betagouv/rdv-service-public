@@ -11,7 +11,7 @@ class Admin::RdvsController < AgentAuthController
     set_scoped_organisations
     @breadcrumb_page = params[:breadcrumb_page]
 
-    order = { starts_at: :desc }
+    order = { starts_at: :asc }
     @rdvs = policy_scope(Rdv).search_for(@scoped_organisations, parsed_params)
       .order(order).page(params[:page]).per(10)
 
