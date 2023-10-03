@@ -12,8 +12,8 @@ class Service < ApplicationRecord
 
   # Relations
   belongs_to :territory, optional: true
-  has_many :agents, dependent: :nullify
-  has_many :motifs, dependent: :destroy
+  has_many :agents, dependent: :restrict_with_exception
+  has_many :motifs, dependent: :restrict_with_exception
 
   # Validations
   validates :name, :short_name, presence: true, uniqueness: { case_sensitive: false }
