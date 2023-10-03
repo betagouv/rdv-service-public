@@ -48,7 +48,7 @@ class CronJob < ApplicationJob
 
       Receipt.where(created_at: ..two_years_ago).destroy_all
 
-      Rdv.unscoped.where(starts_at: ..two_years_ago).each do |rdv|
+      Rdv.where(starts_at: ..two_years_ago).each do |rdv|
         rdv.skip_webhooks = true
         rdv.destroy
       end
