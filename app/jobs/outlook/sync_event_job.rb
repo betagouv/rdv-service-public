@@ -34,7 +34,7 @@ module Outlook
     end
 
     def event_should_be_in_outlook?
-      agents_rdv.present? && rdv.present? && !rdv.cancelled? && !rdv.soft_deleted?
+      agents_rdv.present? && rdv.present? && !rdv.cancelled?
     end
 
     def create_or_update_event
@@ -58,8 +58,7 @@ module Outlook
 
       agents_rdv = AgentsRdv.find_by(outlook_id: @outlook_id)
 
-      # On utilise #update_columns parce que les validations AR échouent si le rdv est soft-deleted
-      # Ça permet aussi d'éviter de lancer les callbacks, dont notamment celui qui amène à l'exécution de ce job
+      # On utilise #update_columns pour éviter de lancer les callbacks, dont notamment celui qui amène à l'exécution de ce job
       agents_rdv&.update_columns(outlook_id: nil) # rubocop:disable Rails/SkipsModelValidations
     end
 
