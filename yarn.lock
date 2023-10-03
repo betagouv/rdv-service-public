@@ -506,6 +506,11 @@ date-fns@>=2:
   resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.29.3.tgz#27402d2fc67eb442b511b70bbdf98e6411cd68a8"
   integrity sha512-dDCnyH2WnnKusqvZZ6+jA1O51Ibt8ZMRNkDZdyAyK4YfbDwa/cEmuztzG5pk6hqlp9aSBPYcjOlktquahGwGeA==
 
+dsfr-connect@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/dsfr-connect/-/dsfr-connect-1.0.5.tgz#919bb398f992b4bfe8e5de0df806197ae5a9a2e8"
+  integrity sha512-TmM+TR5lkvRsT4KrPuTCn8Bdd8VU66DYc3KpsjgAAruKE7QKKtnVDToltD4YzoRvL/k5JLiEp50BEZnv1Vc3yA==
+
 electron-to-chromium@^1.4.118:
   version "1.4.132"
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.132.tgz#b64599eb018221e52e2e4129de103b03a413c55d"

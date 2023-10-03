@@ -20,6 +20,7 @@
     "chartjs-adapter-date-fns": "^3.0.0",
     "chartkick": "^5.0.1",
     "custom-event-polyfill": "^1.0.7",
+    "dsfr-connect": "^1.0.5",
     "holderjs": "^2.9.6",
     "jquery": "^3.4.0",
     "jquery-datetimepicker": "^2.5.21",
