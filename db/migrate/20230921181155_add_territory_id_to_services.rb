@@ -22,7 +22,6 @@ class AddTerritoryIdToServices < ActiveRecord::Migration[7.0]
       :id, :name, :short_name
     )
 
-    # rubocop:disable Rails/SkipsModelValidations
     Service.transaction do
       services.each do |service|
         service.territories_ids.each do |territory_id|
@@ -40,6 +39,5 @@ class AddTerritoryIdToServices < ActiveRecord::Migration[7.0]
 
       Service.where(territory_id: nil).destroy_all
     end
-    # rubocop:enable Rails/SkipsModelValidations
   end
 end
