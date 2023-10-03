@@ -30,12 +30,12 @@ class Admin::AgentsController < AgentAuthController
       agent_params: create_agent_params,
       current_agent: current_agent,
       organisation: current_organisation,
-      access_level: access_level
+      access_level: params[:agent][:agent_role][:access_level]
     )
 
     @agent = create_agent.call
 
-    if @agent.errors.none? # Si on relance des validations en appelant #valid?, on va déclencher les validations sur first_name et last_name
+    if @agent.valid?
       flash[:notice] = create_agent.confirmation_message
       flash[:error] = create_agent.warning_message
       redirect_to_index_path_for(@agent)
@@ -91,7 +91,7 @@ class Admin::AgentsController < AgentAuthController
 
   def render_new
     @services = services.order(:name)
-    @roles = current_agent.conseiller_numerique? ? [AgentRole::ACCESS_LEVEL_BASIC] : access_levels_collection
+    @roles = access_levels_collection
     @agent_role = AgentRole.new
 
     render :new, layout: "application_agent"
@@ -100,7 +100,7 @@ class Admin::AgentsController < AgentAuthController
   def render_edit
     @agent_role = @agent.roles.find { |r| r.organisation == current_organisation }
     @agent_removal_presenter = AgentRemovalPresenter.new(@agent, current_organisation)
-    @roles = current_agent.conseiller_numerique? ? [AgentRole::ACCESS_LEVEL_BASIC] : access_levels_collection
+    @roles = access_levels_collection
 
     render :edit
   end
@@ -131,19 +131,11 @@ class Admin::AgentsController < AgentAuthController
 
   def activate_intervenants_feature?
     # For CDAD Expe
-    current_organisation.territory_id == 59 ||
+    current_organisation.territory_id.in?([59, 147, 148]) ||
       Rails.env.development? ||
       Rails.env.test? ||
       ENV["RDV_SOLIDARITES_INSTANCE_NAME"] == "DEMO" ||
       ENV["IS_REVIEW_APP"] == "true"
-  end
-
-  def access_level
-    if @current_agent.conseiller_numerique?
-      AgentRole::ACCESS_LEVEL_BASIC
-    else
-      params[:agent][:agent_role][:access_level]
-    end
   end
 
   def create_agent_params

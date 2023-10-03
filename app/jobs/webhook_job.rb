@@ -4,11 +4,8 @@ class OutgoingWebhookError < StandardError; end
 
 class WebhookJob < ApplicationJob
   TIMEOUT = 10
-  MAX_ATTEMPTS = 10
 
   queue_as :webhook
-
-  retry_on(OutgoingWebhookError, wait: :exponentially_longer, attempts: MAX_ATTEMPTS, queue: :webhook_retries)
 
   # Pour éviter de fuiter des données personnelles dans les logs
   self.log_arguments = false
@@ -27,13 +24,11 @@ class WebhookJob < ApplicationJob
       timeout: TIMEOUT
     )
 
-    request.on_complete do |response|
-      if !response.success? && !WebhookJob.false_negative_from_drome?(response.body)
-        message = "Webhook-Failure (#{response.body.force_encoding('UTF-8')[0...1000]}):\n"
-        message += "  url: #{webhook_endpoint.target_url}\n"
-        message += "  org: #{webhook_endpoint.organisation.name}\n"
-        message += "  response: #{response.code}"
-        raise OutgoingWebhookError, message
+    request.on_failure do |response|
+      if response.timed_out?
+        raise OutgoingWebhookError, "HTTP Timeout, URL: #{webhook_endpoint.target_url}"
+      elsif !WebhookJob.false_negative_from_drome?(response.body)
+        raise OutgoingWebhookError, "HTTP #{response.code}, URL: #{webhook_endpoint.target_url}"
       end
     end
 
@@ -41,7 +36,11 @@ class WebhookJob < ApplicationJob
   end
 
   def log_failure_to_sentry?(_exception)
-    executions >= MAX_ATTEMPTS # only log last attempt to Sentry, to prevent noise
+    # Pour limiter le bruit dans Sentry, on ne veut pas avoir de notification pour chaque retry.
+    # On veut seulement :
+    # - un premier avertissement assez rapide s'il y a un problème (4e essai)
+    # - une notification pour le dernier essai, avant que le job passe en "abandonnés"
+    executions == 4 || executions >= 10 || executions == MAX_ATTEMPTS
   end
 
   # La réponse de la Drôme est en JSON

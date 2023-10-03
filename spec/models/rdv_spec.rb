@@ -699,7 +699,7 @@ describe Rdv, type: :model do
     end
   end
 
-  describe "#update_rdv_status_from_participation" do
+  describe "#update_rdv_status_from_participation for collective rdv" do
     let(:agent) { create :agent }
     let!(:user1) { create(:user) }
     let!(:user2) { create(:user) }
@@ -741,6 +741,42 @@ describe Rdv, type: :model do
       rdv.rdvs_users.second.update(status: "excused")
       rdv.rdvs_users.third.update(status: "excused")
       rdv.rdvs_users.last.update(status: "unknown")
+      rdv.update_rdv_status_from_participation
+      expect(rdv.status).to eq("unknown")
+    end
+  end
+
+  describe "#update_rdv_status_from_participation for individual rdv (participation can be changed with api)" do
+    let(:agent) { create :agent }
+    let!(:user1) { create(:user) }
+    let(:rdv) { create :rdv, starts_at: Time.zone.tomorrow, agents: [agent], users: [user1] }
+
+    it "updated as seen if one participation is seen" do
+      rdv.rdvs_users.first.update(status: "seen")
+      rdv.update_rdv_status_from_participation
+      expect(rdv.status).to eq("seen")
+    end
+
+    it "updated as excused if one participation is excused" do
+      rdv.rdvs_users.first.update(status: "excused")
+      rdv.update_rdv_status_from_participation
+      expect(rdv.status).to eq("excused")
+    end
+
+    it "updated as revoked if one participation is revoked" do
+      rdv.rdvs_users.first.update(status: "revoked")
+      rdv.update_rdv_status_from_participation
+      expect(rdv.status).to eq("revoked")
+    end
+
+    it "updated as noshow if one participation is noshow" do
+      rdv.rdvs_users.first.update(status: "noshow")
+      rdv.update_rdv_status_from_participation
+      expect(rdv.status).to eq("noshow")
+    end
+
+    it "updated as unknown if one participation is unknown" do
+      rdv.rdvs_users.first.update(status: "unknown")
       rdv.update_rdv_status_from_participation
       expect(rdv.status).to eq("unknown")
     end

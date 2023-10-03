@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_05_090020) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_02_124541) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -208,7 +208,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_05_090020) do
     t.string "uid", default: ""
     t.text "tokens"
     t.boolean "allow_password_change", default: false
-    t.enum "rdv_notifications_level", default: "soon", enum_type: "agents_rdv_notifications_level"
+    t.enum "rdv_notifications_level", default: "others", enum_type: "agents_rdv_notifications_level"
     t.integer "unknown_past_rdv_count", default: 0
     t.boolean "display_saturdays", default: false
     t.boolean "display_cancelled_rdv", default: true
@@ -485,6 +485,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_05_090020) do
     t.index ["status"], name: "index_rdvs_on_status"
     t.index ["updated_at"], name: "index_rdvs_on_updated_at"
     t.index ["users_count"], name: "index_rdvs_on_users_count"
+    t.index ["uuid"], name: "index_rdvs_on_uuid"
   end
 
   create_table "rdvs_users", force: :cascade do |t|
