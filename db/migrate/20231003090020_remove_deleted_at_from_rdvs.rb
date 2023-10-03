@@ -11,8 +11,8 @@ class RemoveDeletedAtFromRdvs < ActiveRecord::Migration[7.0]
           rdv.destroy
         end
       end
-
-      remove_column :rdvs, :deleted_at, :datetime
     end
+
+    remove_column :rdvs, :deleted_at, :datetime
   end
 end
