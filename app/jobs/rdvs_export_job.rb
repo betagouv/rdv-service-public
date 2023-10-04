@@ -4,7 +4,6 @@ class RdvsExportJob < ExportJob
   def perform(agent:, organisation_ids:, options:)
     raise "Agent does not belong to all requested organisation(s)" if (organisation_ids - agent.organisation_ids).any?
 
-    @agent = agent
     organisations = agent.organisations.where(id: organisation_ids)
     rdvs = Rdv.search_for(organisations, options).order(starts_at: :desc)
 
@@ -13,7 +12,7 @@ class RdvsExportJob < ExportJob
 
     batch.add do
       rdvs.find_in_batches(batch_size: 200).with_index do |rdv_batch, page_index|
-        RdvsExportPageJob.perform_later(rdv_batch.ids, page_index, redis_key)
+        RdvsExportPageJob.perform_later(rdv_batch.map(&:id), page_index, redis_key)
       end
     end
 
