@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_12_082341) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_03_090020) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -473,11 +473,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_12_082341) do
     t.string "name"
     t.integer "max_participants_count"
     t.integer "users_count", default: 0
-    t.datetime "deleted_at"
     t.enum "status", default: "unknown", null: false, enum_type: "rdv_status"
     t.index "tsrange(starts_at, ends_at, '[)'::text)", name: "index_rdvs_on_tsrange_starts_at_ends_at", using: :gist
     t.index ["created_by"], name: "index_rdvs_on_created_by"
-    t.index ["deleted_at"], name: "index_rdvs_on_deleted_at"
     t.index ["ends_at"], name: "index_rdvs_on_ends_at"
     t.index ["lieu_id"], name: "index_rdvs_on_lieu_id"
     t.index ["max_participants_count"], name: "index_rdvs_on_max_participants_count"
@@ -487,6 +485,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_12_082341) do
     t.index ["status"], name: "index_rdvs_on_status"
     t.index ["updated_at"], name: "index_rdvs_on_updated_at"
     t.index ["users_count"], name: "index_rdvs_on_users_count"
+    t.index ["uuid"], name: "index_rdvs_on_uuid"
   end
 
   create_table "rdvs_users", force: :cascade do |t|
@@ -516,7 +515,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_12_082341) do
   end
 
   create_table "receipts", force: :cascade do |t|
-    t.bigint "rdv_id", null: false
+    t.bigint "rdv_id"
     t.bigint "user_id"
     t.string "event", null: false
     t.enum "channel", null: false, enum_type: "receipts_channel"
@@ -529,9 +528,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_12_082341) do
     t.string "content"
     t.string "sms_phone_number"
     t.string "email_address"
+    t.bigint "organisation_id", null: false
     t.index ["channel"], name: "index_receipts_on_channel"
     t.index ["created_at"], name: "index_receipts_on_created_at"
     t.index ["event"], name: "index_receipts_on_event"
+    t.index ["organisation_id"], name: "index_receipts_on_organisation_id"
     t.index ["rdv_id"], name: "index_receipts_on_rdv_id"
     t.index ["result"], name: "index_receipts_on_result"
     t.index ["user_id"], name: "index_receipts_on_user_id"
@@ -759,6 +760,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_12_082341) do
   add_foreign_key "rdvs", "organisations"
   add_foreign_key "rdvs_users", "rdvs"
   add_foreign_key "rdvs_users", "users"
+  add_foreign_key "receipts", "organisations"
   add_foreign_key "receipts", "rdvs"
   add_foreign_key "receipts", "users"
   add_foreign_key "referent_assignations", "agents"

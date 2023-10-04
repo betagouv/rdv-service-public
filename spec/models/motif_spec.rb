@@ -47,18 +47,6 @@ describe Motif, type: :model do
       expect(described_class.all).to eq [motif_with_rdv]
       expect(motif_with_rdv.reload.deleted_at).to eq(now)
     end
-
-    context "when the motif only has a soft deleted rdv" do
-      before do
-        rdv = create(:rdv, motif: motif)
-        rdv.soft_delete
-      end
-
-      it "soft deletes the motif" do
-        motif.soft_delete
-        expect(motif.deleted_at).not_to be_nil
-      end
-    end
   end
 
   describe "#available_motifs_for_organisation_and_agent" do

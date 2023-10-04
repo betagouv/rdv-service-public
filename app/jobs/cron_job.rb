@@ -45,10 +45,14 @@ class CronJob < ApplicationJob
   class DestroyOldRdvsAndInactiveAccountsJob < CronJob
     def perform
       two_years_ago = 2.years.ago
-      Rdv.unscoped.where(starts_at: ..two_years_ago).each do |rdv|
+
+      Receipt.where(created_at: ..two_years_ago).destroy_all
+
+      Rdv.where(starts_at: ..two_years_ago).each do |rdv|
         rdv.skip_webhooks = true
         rdv.destroy
       end
+
       # La suppression d'utilisateurs inactifs a besoin que les vieux rdv soient supprimés
       # On utilise la même date limite pour éviter une race condition liée au temps d'exécution du premier job
       DestroyInactiveUsers.perform_later(two_years_ago)

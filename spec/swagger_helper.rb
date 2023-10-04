@@ -65,7 +65,6 @@ RSpec.configure do |config|
               collectif: { type: "boolean" },
               context: { type: "string", nullable: true },
               created_by: { type: "string", enum: %w[agent user file_attente prescripteur] },
-              deleted_at: { type: "string", nullable: true },
               duration_in_min: { type: "integer" },
               ends_at: { type: "string" },
               lieu: { "$ref" => "#/components/schemas/lieu" },
@@ -86,7 +85,7 @@ RSpec.configure do |config|
               users_count: { type: "integer" },
               uuid: { type: "string" },
             },
-            required: %w[id address agents cancelled_at collectif context created_by deleted_at duration_in_min lieu max_participants_count motif name organisation rdvs_users starts_at status users
+            required: %w[id address agents cancelled_at collectif context created_by duration_in_min lieu max_participants_count motif name organisation rdvs_users starts_at status users
                          users_count uuid],
           },
           agents: {
