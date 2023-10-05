@@ -54,8 +54,51 @@ module Users::CreneauxWizardConcern
     matching_motifs.first
   end
 
-  def lieu
-    @lieu ||= @lieu_id.blank? ? nil : Lieu.find(@lieu_id)
+  # next availability by organisation for motifs without lieu
+  def next_availability_by_motifs_organisations
+    @next_availability_by_motifs_organisations ||= matching_motifs.to_h do |motif|
+      [motif.organisation, creneaux_search_for(nil, date_range, motif).next_availability]
+    end.compact
+  end
+
+  def service
+    @service ||= if @service_id.present?
+                   Service.find(@service_id)
+                 elsif services.count == 1
+                   services.first
+                 end
+  end
+
+  def services
+    @services ||= matching_motifs.includes(:service).map(&:service).uniq.sort_by(&:name)
+  end
+
+  def lieux
+    @lieux ||= \
+      Lieu
+        .with_open_slots_for_motifs(matching_motifs)
+        .includes(:organisation)
+        .sort_by { |lieu| lieu.distance(@latitude.to_f, @longitude.to_f) }
+  end
+
+  def next_availability_by_lieux
+    @next_availability_by_lieux ||= lieux.index_with do |lieu|
+      creneaux_search_for(
+        lieu, date_range, matching_motifs.where(organisation: lieu.organisation).first
+      ).next_availability
+    end.compact
+  end
+
+  def shown_lieux
+    next_availability_by_lieux.keys
+  end
+
+  def next_availability
+    @next_availability ||= creneaux.empty? ? creneaux_search.next_availability : nil
+  end
+
+  def max_public_booking_delay
+    matching_motifs.maximum("max_public_booking_delay")
   end
 
   private

@@ -7,7 +7,11 @@ class SearchController < ApplicationController
   after_action :allow_iframe
 
   def search_rdv
-    @context = SearchContext.new(user: current_user, query_params: query_params, through_invitation: invitation?)
+    @context = if invitation?
+                 WebInvitationSearchContext.new(user: current_user, query_params: query_params)
+               else
+                 WebSearchContext.new(user: current_user, query_params: query_params)
+               end
     if current_domain == Domain::RDV_MAIRIE && request.path == "/"
       render "dsfr/rdv_mairie/homepage", layout: "application_dsfr"
     end
