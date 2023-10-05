@@ -44,6 +44,7 @@ class Users::RdvsController < UserAuthController
       set_user_name_initials_verified
       redirect_to users_rdv_path(@rdv, invitation_token: notifier.rdv_users_tokens_by_user_id[current_user.id]), notice: t(".rdv_confirmed")
     else
+      # TODO: cette liste de paramètres devrait ressembler a SearchController#search_params, mais sans certains paramètres de choix du wizard de crenau
       query = {
         address: (new_rdv_extra_params[:address] || new_rdv_extra_params[:where]),
         city_code: new_rdv_extra_params[:city_code], street_ban_id: new_rdv_extra_params[:street_ban_id],

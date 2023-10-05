@@ -21,6 +21,10 @@ module Users::CreneauxWizardConcern
     end
   end
 
+  def start_date
+    query_params[:date]&.to_date || super
+  end
+
   def to_partial_path
     "search/#{current_step}"
   end
@@ -46,12 +50,6 @@ module Users::CreneauxWizardConcern
 
   def unique_motifs_by_name_and_location_type
     @unique_motifs_by_name_and_location_type ||= matching_motifs.uniq { [_1.name, _1.location_type] }
-  end
-
-  def first_matching_motif
-    return unless motif_name_and_type_selected?
-
-    matching_motifs.first
   end
 
   # next availability by organisation for motifs without lieu
