@@ -1,7 +1,20 @@
 # frozen_string_literal: true
 
 describe CronJob::DestroyOldRdvsAndInactiveAccountsJob do
-  it "only destroys Rdvs that are more than 2 years old and inactive users created 2 more than years ago" do
+  let!(:organisation) { create(:organisation) }
+  let!(:webhook_endpoint) do
+    create(
+      :webhook_endpoint,
+      organisation: organisation,
+      subscriptions: %w[rdv user user_profile agent]
+    )
+  end
+
+  after do
+    clear_enqueued_jobs
+  end
+
+  it "only destroys Rdvs that are more than 2 years old and inactive users created more than 2 years ago" do
     rdv_occurring_25_months_ago = travel_to(25.months.ago) { create(:rdv, starts_at: Time.zone.today.change(hour: 16)) }
     rdv_occurring_23_months_ago = travel_to(23.months.ago) { create(:rdv, starts_at: Time.zone.today.change(hour: 16)) }
     rdv_occurring_11_months_ago = travel_to(11.months.ago) { create(:rdv, starts_at: Time.zone.today.change(hour: 16)) }
@@ -39,10 +52,10 @@ describe CronJob::DestroyOldRdvsAndInactiveAccountsJob do
     expect(User.all).not_to include(user_without_rdv_created_25_months_ago)
   end
 
-  it "does not call any webhook" do
-    travel_to(25.months.ago) { create(:rdv, starts_at: Time.zone.today.change(hour: 16)) }
+  it "calls the webhooks" do
+    travel_to(25.months.ago) { create(:rdv, organisation: organisation, starts_at: Time.zone.today.change(hour: 16)) }
     expect do
       described_class.new.perform
-    end.not_to have_enqueued_job(WebhookJob)
+    end.to have_enqueued_job(WebhookJob).at_least(:once)
   end
 end

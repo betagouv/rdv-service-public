@@ -15,6 +15,7 @@ module WebhookDeliverable
     meta = {
       model: self.class.name,
       event: action,
+      trigger: action_source,
       timestamp: Time.zone.now,
     }
     blueprint_class = "#{self.class.name}Blueprint".constantize
@@ -46,7 +47,7 @@ module WebhookDeliverable
   included do
     # this attribute is used in some cases to explicitly disable webhooks callbacks
     # See: https://stackoverflow.com/a/38998807/2864020
-    attr_accessor :skip_webhooks
+    attr_accessor :skip_webhooks, :action_source
 
     after_commit on: :create, unless: :skip_webhooks do
       generate_payload_and_send_webhook(:created)
