@@ -12,8 +12,8 @@ class RdvsUsersExportJob < ExportJob
     batch = GoodJob::Batch.new(redis_key: redis_key, file_name: file_name, agent_id: agent.id)
 
     batch.add do
-      rdvs_users.ids.each_slice(200).to_a.with_index do |rdvs_users_batch, page_index|
-        RdvsUsersExportPageJob.perform_later(rdvs_users_batch.map(&:id), page_index, redis_key)
+      rdvs_users.ids.each_slice(200).to_a.each_with_index do |rdvs_users_batch, page_index|
+        RdvsUsersExportPageJob.perform_later(rdvs_users_batch, page_index, redis_key)
       end
     end
 
