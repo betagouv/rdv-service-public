@@ -1,12 +1,11 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/ClassLength
 class SearchContext
+  include Users::CreneauxWizardConcern
   attr_reader :errors, :query_params, :address, :city_code, :street_ban_id, :latitude, :longitude,
               :motif_name_with_location_type, :prescripteur, :through_invitation
   alias invitation? through_invitation
 
-  # rubocop:disable Metrics/MethodLength
   def initialize(user:, query_params: {}, through_invitation: false)
     @user = user
     @query_params = query_params
@@ -20,7 +19,6 @@ class SearchContext
     @external_organisation_ids = query_params[:external_organisation_ids]
     @preselected_organisation_ids = query_params[:organisation_ids]
     @motif_id = query_params[:motif_id]
-    @motif_search_terms = query_params[:motif_search_terms]
     @motif_category_short_name = query_params[:motif_category_short_name]
     @motif_name_with_location_type = query_params[:motif_name_with_location_type]
     @service_id = query_params[:service_id]
@@ -29,38 +27,6 @@ class SearchContext
     @referent_ids = query_params[:referent_ids]
     @prescripteur = query_params[:prescripteur]
     @through_invitation = through_invitation
-  end
-  # rubocop:enable Metrics/MethodLength
-
-  # *** Method that outputs the next step for the user to complete its rdv journey ***
-  # *** It is used in #to_partial_path to render the matching partial view ***
-  def current_step
-    if departement.blank?
-      :address_selection
-    elsif !service_selected?
-      :service_selection
-    elsif !motif_name_and_type_selected?
-      :motif_selection
-    elsif requires_lieu_selection?
-      :lieu_selection
-    elsif requires_organisation_selection?
-      :organisation_selection
-    else
-      :creneau_selection
-    end
-  end
-
-  def to_partial_path
-    "search/#{current_step}"
-  end
-
-  def wizard_after_creneau_selection_path(params)
-    url_helpers = Rails.application.routes.url_helpers
-    if @prescripteur
-      url_helpers.prescripteur_start_path(query_params.merge(params))
-    else
-      url_helpers.new_users_rdv_wizard_step_path(query_params.merge(params))
-    end
   end
 
   def geo_search
@@ -83,20 +49,6 @@ class SearchContext
     @services ||= matching_motifs.includes(:service).map(&:service).uniq.sort_by(&:name)
   end
 
-  def requires_organisation_selection?
-    !first_matching_motif.requires_lieu? && user_selected_organisation.nil? && public_link_organisation.nil?
-  end
-
-  def user_selected_organisation
-    @user_selected_organisation ||= \
-      @user_selected_organisation_id.present? ? Organisation.find(@user_selected_organisation_id) : nil
-  end
-
-  def public_link_organisation
-    @public_link_organisation ||= \
-      @public_link_organisation_id.present? ? Organisation.find(@public_link_organisation_id) : nil
-  end
-
   def organisation_id
     @public_link_organisation_id || @user_selected_organisation_id
   end
@@ -106,32 +58,6 @@ class SearchContext
     @next_availability_by_motifs_organisations ||= matching_motifs.to_h do |motif|
       [motif.organisation, creneaux_search_for(nil, date_range, motif).next_availability]
     end.compact
-  end
-
-  def unique_motifs_by_name_and_location_type
-    @unique_motifs_by_name_and_location_type ||= matching_motifs.uniq { [_1.name, _1.location_type] }
-  end
-
-  def first_matching_motif
-    return unless motif_name_and_type_selected?
-
-    matching_motifs.first
-  end
-
-  def motif_name_and_type_selected?
-    unique_motifs_by_name_and_location_type.length == 1
-  end
-
-  def service_selected?
-    service.present?
-  end
-
-  def requires_lieu_selection?
-    first_matching_motif.requires_lieu? && lieu.nil?
-  end
-
-  def lieu
-    @lieu ||= @lieu_id.blank? ? nil : Lieu.find(@lieu_id)
   end
 
   def lieux
@@ -203,7 +129,6 @@ class SearchContext
              end
     motifs = motifs.search_by_name_with_location_type(@motif_name_with_location_type) if @motif_name_with_location_type.present?
     motifs = motifs.where(service: service) if @service_id.present?
-    motifs = motifs.search_by_text(@motif_search_terms) if @motif_search_terms.present?
     motifs = motifs.with_motif_category_short_name(@motif_category_short_name) if @motif_category_short_name.present?
     motifs = motifs.where(organisation_id: @preselected_organisation_ids) if @preselected_organisation_ids.present?
     motifs = motifs.where(organisation_id: organisation_id) if organisation_id.present?
@@ -248,4 +173,3 @@ class SearchContext
       end
   end
 end
-# rubocop:enable Metrics/ClassLength
