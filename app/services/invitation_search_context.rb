@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class InvitationSearchContext < SearchContext
-  attr_reader :departement
+  attr_reader :departement, :city_code, :street_ban_id
 
   def initialize(user:, query_params: {})
     @user = user
@@ -25,10 +25,7 @@ class InvitationSearchContext < SearchContext
     motifs
   end
 
-  private
-
-  attr_reader :referent_ids, :lieu_id
-
+  # We use matching_motifs in API so we need to keep it public
   def matching_motifs
     # we retrieve the geolocalised matching motifs, if there are none we fallback
     # on the matching motifs for the organisations passed in the query_params
@@ -37,4 +34,8 @@ class InvitationSearchContext < SearchContext
         Motif.available_for_booking.where(organisation_id: @preselected_organisation_ids).joins(:organisation)
       )
   end
+
+  private
+
+  attr_reader :referent_ids, :lieu_id
 end

@@ -4,6 +4,7 @@ module Lapin
   module Range
     class << self
       def reduce_range_to_delay(motif, date_range)
+        return fallback_to_motif_delay(motif) if date_range.nil?
         return nil unless motif.booking_delay_range.overlaps?(date_range)
 
         start_range = [motif.start_booking_delay, date_range.begin].max
@@ -22,6 +23,10 @@ module Lapin
         return range if range.begin.is_a?(Date) && range.end.is_a?(Date)
 
         range.begin.to_date..range.end.to_date
+      end
+
+      def fallback_to_motif_delay(motif)
+        motif.start_booking_delay..motif.end_booking_delay
       end
     end
   end
