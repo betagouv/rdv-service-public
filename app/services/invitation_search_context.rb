@@ -27,6 +27,8 @@ class InvitationSearchContext < SearchContext
 
   private
 
+  attr_reader :referent_ids, :lieu_id
+
   def matching_motifs
     # we retrieve the geolocalised matching motifs, if there are none we fallback
     # on the matching motifs for the organisations passed in the query_params

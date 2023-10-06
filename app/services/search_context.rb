@@ -7,15 +7,11 @@ class SearchContext
   end
 
   def geo_search
-    Users::GeoSearch.new(departement: departement, city_code: @city_code, street_ban_id: @street_ban_id)
+    Users::GeoSearch.new(departement: departement, city_code: city_code, street_ban_id: street_ban_id)
   end
 
   def lieu
-    @lieu ||= @lieu_id.blank? ? nil : Lieu.find(@lieu_id)
-  end
-
-  def departement
-    raise NotImplementedError
+    @lieu ||= lieu_id.blank? ? nil : Lieu.find(lieu_id)
   end
 
   def start_date
@@ -56,6 +52,7 @@ class SearchContext
     motifs = motifs.where(follow_up: follow_up?)
     motifs = motifs.with_availability_for_lieux([lieu.id]) if lieu.present?
     motifs = motifs.with_availability_for_agents(referent_agents.map(&:id)) if follow_up?
+    motifs
   end
 
   private
@@ -65,6 +62,22 @@ class SearchContext
   end
 
   def matching_motifs
+    raise NotImplementedError
+  end
+
+  def departement
+    raise NotImplementedError
+  end
+
+  def city_code
+    raise NotImplementedError
+  end
+
+  def street_ban_id
+    raise NotImplementedError
+  end
+
+  def lieu_id
     raise NotImplementedError
   end
 

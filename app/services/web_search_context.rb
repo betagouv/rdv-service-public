@@ -54,13 +54,12 @@ class WebSearchContext < SearchContext
     motifs = motifs.where(service: service) if @service_id.present?
     motifs = motifs.where(organisation_id: organisation_id) if organisation_id.present?
     motifs = motifs.where(id: @motif_id) if @motif_id.present?
-
     motifs
   end
 
   private
 
-  attr_reader :referent_ids
+  attr_reader :referent_ids, :lieu_id
 
   def matching_motifs
     @matching_motifs ||= filter_motifs(geo_search.available_motifs)
