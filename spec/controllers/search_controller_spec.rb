@@ -99,21 +99,7 @@ RSpec.describe SearchController, type: :controller do
         expect(subject).not_to include("RSA orientation 3")
       end
 
-      context "when a motif category is passed" do
-        it "retrieves motifs from the selected category" do
-          get :search_rdv, params: {
-            address: address, departement: departement_number, city_code: city_code, motif_category_short_name: "rsa_orientation",
-          }
-          expect(subject).to include("RSA orientation 1")
-          expect(subject).not_to include("RSA orientation 2")
-        end
-      end
-
       context "for an invitation" do
-        let!(:geo_search) do
-          instance_double(Users::GeoSearch, available_motifs: Motif.where(id: [motif2.id]))
-        end
-
         before do
           request.session["invitation"] = {
             address: address, departement: departement_number, city_code: city_code, invitation_token: invitation_token,
@@ -121,7 +107,21 @@ RSpec.describe SearchController, type: :controller do
           }
         end
 
+        context "when a motif category is passed" do
+          it "retrieves motifs from the selected category" do
+            get :search_rdv, params: {
+              address: address, departement: departement_number, city_code: city_code, motif_category_short_name: "rsa_orientation",
+            }
+            expect(subject).to include("RSA orientation 1")
+            expect(subject).not_to include("RSA orientation 2")
+          end
+        end
+
         context "when there are matching motifs for the geo search available_motifs" do
+          let(:geo_search) do
+            instance_double(Users::GeoSearch, available_motifs: Motif.where(id: [motif2.id]))
+          end
+
           it "lists the available motifs" do
             get :search_rdv
             expect(subject).to include("RSA orientation 2")
