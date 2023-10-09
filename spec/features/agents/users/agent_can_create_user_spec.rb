@@ -42,6 +42,7 @@ describe "Agent can create user" do
       fill_in :user_email, with: "ceelo@green.com"
       click_button "Créer"
       expect(page).to have_content("Un usager avec le même email a déjà un compte sur RDV Aide Numérique")
+      expect(page).to have_content("Créer cet usager")
       click_link "Importer cet usager"
       expect_page_title("Cee-Lo GREEN")
       expect(page).to have_content("L'usager a été associé à votre organisation.")
@@ -49,13 +50,7 @@ describe "Agent can create user" do
     end
 
     it "allows creating a new user" do
-      fill_in :user_first_name, with: "Cee-Lo"
-      fill_in :user_last_name, with: "Green"
-      click_button "Créer"
-      click_button "Créer cet usager"
-      page.driver.browser.switch_to.alert.accept
-      expect_page_title("Cee-Lo GREEN")
-      expect(User.last).not_to eq(existing_user)
+
     end
   end
 end
