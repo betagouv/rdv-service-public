@@ -4,7 +4,7 @@ describe "Agent can create a Rdv with wizard" do
   let(:territory) { create(:territory, enable_context_field: true) }
   let(:organisation) { create(:organisation, territory: territory) }
   let(:service) { create(:service) }
-  let!(:agent) { create(:agent, first_name: "Alain", last_name: "DIALO", service: service, basic_role_in_organisations: [organisation]) }
+  let!(:agent) { create(:agent, first_name: "Alain", last_name: "DIALO", service: service, basic_role_in_organisations: [organisation], territories: [territory]) }
   let!(:agent2) { create(:agent, first_name: "Robert", last_name: "Martin", service: service, basic_role_in_organisations: [organisation]) }
   let!(:motif) { create(:motif, :collectif, :at_public_office, service: service, organisation: organisation, name: "Super Motif") }
   let!(:lieu) { create(:lieu, organisation: organisation) }
@@ -113,6 +113,26 @@ describe "Agent can create a Rdv with wizard" do
       expect(page).to have_current_path(admin_organisation_agent_agenda_path(organisation, agent, date: rdv.starts_at.to_date, selected_event_id: rdv.id))
       expect(page).to have_content("Le rendez-vous a été créé.")
       expect(page).to have_css("*", text: "14:15", visible: :all)
+    end
+
+    describe "with a user from outside the organisation" do
+      let(:other_organisation) { create(:organisation, territory: territory) }
+
+      let!(:user_from_other_organisation) { create(:user, organisations: [other_organisation]) }
+
+      it "creates the rdv and adds the user to the organisation", js: true do
+        step1
+
+        select_user(user_from_other_organisation)
+
+        click_button("Continuer")
+
+        step3(:enabled)
+        step4
+
+        expect(user_from_other_organisation.rdvs.count).to eq(1)
+        expect(user_from_other_organisation.reload.organisations).to include(organisation)
+      end
     end
 
     describe "sending webhook upon creation" do
