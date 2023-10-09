@@ -11,7 +11,7 @@ class Admin::RdvsController < AgentAuthController
     set_scoped_organisations
     @breadcrumb_page = params[:breadcrumb_page]
 
-    order = { starts_at: :desc }
+    order = { starts_at: :asc }
     @rdvs = policy_scope(Rdv).search_for(@scoped_organisations, parsed_params)
       .order(order).page(params[:page]).per(10)
 
@@ -106,7 +106,7 @@ class Admin::RdvsController < AgentAuthController
 
   def destroy
     authorize(@rdv)
-    if @rdv.soft_delete
+    if @rdv.destroy
       flash[:notice] = "Le rendez-vous a été supprimé."
       redirect_to admin_organisation_rdvs_path(current_organisation)
     else

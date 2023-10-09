@@ -42,7 +42,7 @@ class TransferEmailReplyJob < ApplicationJob
   end
 
   def rdv
-    Rdv.unscoped.find_by(uuid: uuid) if uuid
+    Rdv.find_by(uuid: uuid) if uuid
   end
 
   def user

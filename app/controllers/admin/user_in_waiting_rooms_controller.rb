@@ -7,7 +7,7 @@ class Admin::UserInWaitingRoomsController < AgentAuthController
     @rdv = Rdv.find(params[:rdv_id])
     authorize(@rdv)
 
-    if @rdv.status == "unknown" && @rdv.deleted_at.nil?
+    if @rdv.status == "unknown"
       @rdv.set_user_in_waiting_room!
 
       if current_organisation.territory.enable_waiting_room_mail_field
