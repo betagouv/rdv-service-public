@@ -49,7 +49,7 @@ class CronJob < ApplicationJob
       Receipt.where(created_at: ..two_years_ago).destroy_all
 
       Rdv.where(starts_at: ..two_years_ago).each do |rdv|
-        rdv.action_source = "rgpd"
+        rdv.webhook_reason = "rgpd"
         rdv.destroy
       end
 
@@ -69,11 +69,11 @@ class CronJob < ApplicationJob
 
       old_users_without_rdvs_or_relatives.find_each do |user|
         user.user_profiles.each do |profile|
-          profile.action_source = "rgpd"
+          profile.webhook_reason = "rgpd"
           profile.destroy
         end
         user.reload
-        user.action_source = "rgpd"
+        user.webhook_reason = "rgpd"
         user.destroy
       end
     end
@@ -105,7 +105,7 @@ class CronJob < ApplicationJob
   class DestroyInactiveAgents < InactiveAgentsJob
     def perform(date_limit)
       inactive_agents(date_limit).where("account_deletion_warning_sent_at < ?", 30.days.ago).find_each do |agent|
-        agent.action_source = "rgpd"
+        agent.webhook_reason = "rgpd"
         agent.destroy
       end
     end
@@ -116,7 +116,7 @@ class CronJob < ApplicationJob
       po_exceptionnelle_closed_since_1_year = PlageOuverture.where(recurrence: nil).where(first_day: ..1.year.ago)
       po_recurrent_closed_since_1_year = PlageOuverture.where(recurrence_ends_at: ..1.year.ago)
       po_exceptionnelle_closed_since_1_year.or(po_recurrent_closed_since_1_year).each do |po|
-        po.action_source = "rgpd"
+        po.webhook_reason = "rgpd"
         po.destroy
       end
     end
