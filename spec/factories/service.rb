@@ -5,6 +5,7 @@ FactoryBot.define do
 
   factory :service do
     name { generate(:service_name) }
+    territory
 
     after(:build) do |service|
       service.short_name = service.name if service.short_name.blank?

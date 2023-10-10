@@ -2,6 +2,7 @@
 
 RSpec.describe "Agent can create another agent" do
   let(:territory) { create(:territory) }
+  let!(:service) { create(:service, name: "Joli service", territory: territory) }
   let(:organisation1) { create(:organisation, territory: territory) }
   let(:organisation2) { create(:organisation, territory: territory) }
   let(:agent) { create(:agent, admin_role_in_organisations: [organisation1, organisation2]) }
