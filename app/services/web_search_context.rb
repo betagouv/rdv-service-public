@@ -64,4 +64,10 @@ class WebSearchContext < SearchContext
   def matching_motifs
     @matching_motifs ||= filter_motifs(geo_search.available_motifs)
   end
+
+  # TODO : move this to a specific search context https://github.com/betagouv/rdv-solidarites.fr/pull/3827#discussion_r1351988739
+  def public_link_organisation
+    @public_link_organisation ||= \
+      @public_link_organisation_id.present? ? Organisation.find(@public_link_organisation_id) : nil
+  end
 end

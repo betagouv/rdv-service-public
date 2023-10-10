@@ -29,9 +29,9 @@ namespace :api do
     get "searchApplicationIds", to: "editor#search_application_ids"
   end
 
-  namespace :rdvi do
+  namespace :rdvinsertion do
     resources :invitations, only: [] do
-      get 'available_creneaux_count', to: 'invitations#available_creneaux_count', on: :collection
+      get 'creneau_availability', to: 'invitations#creneau_availability', on: :collection
     end
   end
 end

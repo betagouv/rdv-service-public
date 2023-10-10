@@ -58,27 +58,27 @@ class SearchContext
   private
 
   def referent_ids
-    raise NotImplementedError
+    raise NoMethodError
   end
 
   def matching_motifs
-    raise NotImplementedError
+    raise NoMethodError
   end
 
   def departement
-    raise NotImplementedError
+    raise NoMethodError
   end
 
   def city_code
-    raise NotImplementedError
+    raise NoMethodError
   end
 
   def street_ban_id
-    raise NotImplementedError
+    raise NoMethodError
   end
 
   def lieu_id
-    raise NotImplementedError
+    raise NoMethodError
   end
 
   def creneaux_search_for(lieu, date_range, motif)

@@ -3,7 +3,7 @@
 describe WebSearchContext, type: :service do
   subject { described_class.new(user: user, query_params: query_params) }
 
-  include_context "SearchContext"
+  include_examples "SearchContext"
 
   describe "#filter_motifs" do
     it "doesnt returns motif when user is not invited (and motif's bookable_by is agents_and_prescripteurs_and_invited_users)" do

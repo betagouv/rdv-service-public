@@ -43,11 +43,6 @@ module Users::CreneauxWizardConcern
       @user_selected_organisation_id.present? ? Organisation.find(@user_selected_organisation_id) : nil
   end
 
-  def public_link_organisation
-    @public_link_organisation ||= \
-      @public_link_organisation_id.present? ? Organisation.find(@public_link_organisation_id) : nil
-  end
-
   def unique_motifs_by_name_and_location_type
     @unique_motifs_by_name_and_location_type ||= matching_motifs.uniq { [_1.name, _1.location_type] }
   end
