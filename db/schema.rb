@@ -574,10 +574,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_03_090020) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "short_name"
-    t.integer "territory_id"
+    t.bigint "territory_id"
     t.index "lower((name)::text)", name: "index_services_on_lower_name", unique: true
     t.index "lower((short_name)::text)", name: "index_services_on_lower_short_name", unique: true
     t.index ["name"], name: "index_services_on_name"
+    t.index ["territory_id"], name: "index_services_on_territory_id"
   end
 
   create_table "super_admins", force: :cascade do |t|
@@ -770,6 +771,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_03_090020) do
   add_foreign_key "sector_attributions", "organisations"
   add_foreign_key "sector_attributions", "sectors"
   add_foreign_key "sectors", "territories"
+  add_foreign_key "services", "territories"
   add_foreign_key "teams", "territories"
   add_foreign_key "user_profiles", "organisations"
   add_foreign_key "user_profiles", "users"

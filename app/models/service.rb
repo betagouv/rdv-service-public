@@ -11,7 +11,7 @@ class Service < ApplicationRecord
   MAIRIE = "Mairie"
 
   # Relations
-  belongs_to :territory, optional: true #TODO: rendre obligatoire une fois la PR passée
+  belongs_to :territory, optional: true # TODO: rendre obligatoire une fois la PR passée
   has_many :agents, dependent: :restrict_with_exception
   has_many :motifs, dependent: :restrict_with_exception
 
