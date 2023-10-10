@@ -33,7 +33,7 @@ class AddTerritoryIdToServices < ActiveRecord::Migration[7.0]
           new_service.save!
 
           Agent.joins(organisations: :territory).where(service_id: service.id, organisations: { territory_id: territory_id }).update_all(service_id: new_service.id)
-          Motif.joins(organisation: :territory).where(service_id: service.id, organisation: { territory_id: terr }).update_all(service_id: new_service.id)
+          Motif.joins(organisation: :territory).where(service_id: service.id, organisation: { territory_id: territory_id }).update_all(service_id: new_service.id)
         end
       end
 
