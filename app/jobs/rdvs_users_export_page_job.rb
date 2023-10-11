@@ -7,6 +7,7 @@ class RdvsUsersExportPageJob < ExportJob
     redis_connection = Redis.new(url: Rails.configuration.x.redis_url)
     redis_connection.hset(redis_key, page_index, rows.to_json)
     redis_connection.expire(redis_key, 1.week)
-    redis_connection.close
+  ensure
+    redis_connection&.close
   end
 end

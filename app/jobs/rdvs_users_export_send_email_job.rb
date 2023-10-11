@@ -24,6 +24,7 @@ class RdvsUsersExportSendEmailJob < ExportJob
     Agents::ExportMailer.rdvs_users_export(agent, batch.properties[:file_name], xls_string).deliver_now
 
     redis_connection.del(redis_key)
-    redis_connection.close
+  ensure
+    redis_connection&.close
   end
 end
