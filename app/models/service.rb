@@ -16,7 +16,7 @@ class Service < ApplicationRecord
   has_many :motifs, dependent: :restrict_with_exception
 
   # Validations
-  validates :name, :short_name, presence: true, uniqueness: { case_sensitive: false }
+  validates :name, :short_name, presence: true, uniqueness: { case_sensitive: false, scope: :territory_id }
 
   # Scopes
   scope :with_motifs, -> { where.not(name: SECRETARIAT) }
