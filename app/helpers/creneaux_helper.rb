@@ -32,6 +32,8 @@ module CreneauxHelper
   end
 
   def build_agent_creneaux_search_form(organisation, params)
+    raise "et voilà" if params.fetch(:user_ids, []).compact_blank.present?
+
     AgentCreneauxSearchForm.new(
       organisation_id: organisation.id,
       service_id: params[:service_id],
