@@ -15,7 +15,10 @@
             }, \
           }
         .col-md-6
-          = f.input :name
+          = f.input :name, input_html: { list: "motif_names", autocomplete: "off" }
+          datalist#motif_names
+            - Motif.where(organisation_id: current_agent.organisations).map(&:name).uniq.each do |org_name|
+              option= org_name
       .form-row
         .col-md-4= f.input :default_duration_in_min
         .col-md-4= f.input :color, as: "color"
