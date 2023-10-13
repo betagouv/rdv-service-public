@@ -3,12 +3,20 @@
 class InvitationSearchContext < SearchContext
   attr_reader :departement, :city_code, :street_ban_id
 
-  INVITATION_PARAMS = %i[city_code latitude longitude departement organisation_ids street_ban_id motif_category_short_name lieu_id referent_ids].freeze
+  INVITATION_PARAMS = %i[city_code departement street_ban_id motif_category_short_name lieu_id].freeze + [
+    organisation_ids: [], referent_ids: [],
+  ].freeze
 
   def initialize(user:, query_params: {})
     super
     INVITATION_PARAMS.each do |param_name|
-      instance_variable_set("@#{param_name}", query_params[param_name])
+      if param_name.is_a?(Hash)
+        param_name.each_key do |key|
+          instance_variable_set("@#{key}", query_params[key])
+        end
+      else
+        instance_variable_set("@#{param_name}", query_params[param_name])
+      end
     end
   end
 

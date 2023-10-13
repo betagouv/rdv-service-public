@@ -11,6 +11,8 @@ class WebInvitationSearchContext < InvitationSearchContext
     @motif_name_with_location_type = query_params[:motif_name_with_location_type]
     @service_id = query_params[:service_id]
     @address = query_params[:address]
+    @latitude = query_params[:latitude]
+    @longitude = query_params[:longitude]
   end
 
   # dupliqué de WebSearchContext

@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
 class Api::Rdvinsertion::InvitationsController < Api::V1::AgentAuthBaseController
-  INVITATION_LINK_PARAMS = (InvitationSearchContext::INVITATION_PARAMS + %i[address invitation_token]).freeze
+  INVITATION_LINK_PARAMS = (InvitationSearchContext::INVITATION_PARAMS + %i[address latitude longitude invitation_token]).freeze
 
   def creneau_availability
     render json: { creneau_availability: creneau_available? }
+  rescue StandardError => e
+    render json: { error: e.message }, status: :internal_server_error
   end
 
   private
