@@ -28,6 +28,7 @@ class Service < ApplicationRecord
   scope :with_motifs, -> { where.not(name: SECRETARIAT) }
   scope :secretariat, -> { where(name: SECRETARIAT) }
   scope :ordered_by_name, -> { order(Arel.sql("unaccent(LOWER(name))")) }
+  scope :in_verticale, ->(verticale) { where(verticale: [verticale, nil]) }
 
   ## -
 
