@@ -10,6 +10,13 @@ class Service < ApplicationRecord
   CONSEILLER_NUMERIQUE = "Conseiller Numérique"
   MAIRIE = "Mairie"
 
+  enum verticale: {
+    rdv_insertion: "rdv_insertion",
+    rdv_solidarites: "rdv_solidarites",
+    rdv_aide_numerique: "rdv_aide_numerique",
+    rdv_mairie: "rdv_mairie",
+  }
+
   # Relations
   has_many :agents, dependent: :nullify
   has_many :motifs, dependent: :destroy
