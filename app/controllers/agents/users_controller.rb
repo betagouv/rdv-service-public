@@ -18,7 +18,34 @@ class Agents::UsersController < AgentAuthController
                            else
                              []
                            end
+    if users_from_organisation.none? && users_from_territory.none?
+      render json: { results: [] }
+    else
 
-    @users = users_from_organisation + users_from_territory
+      render json: {
+        results: [
+          {
+            text: nil,
+            children: users_from_organisation.map do |user|
+              {
+                id: user.id,
+                text: UsersHelper.reverse_full_name_and_notification_coordinates(user),
+              }
+            end,
+          },
+          users_from_territory.first && {
+            text: "Usagers des autres organisations",
+            children: users_from_territory.map do |user|
+              {
+                id: user.id,
+                text: UsersHelper.reverse_full_name_and_notification_coordinates(user),
+              }
+            end,
+
+          },
+        ].compact,
+
+      }
+    end
   end
 end

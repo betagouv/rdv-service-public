@@ -57,7 +57,7 @@ module UsersHelper
     user.reverse_full_name + birth_date_and_age_if_exist(user)
   end
 
-  def reverse_full_name_and_notification_coordinates(user)
+  def self.reverse_full_name_and_notification_coordinates(user)
     [user.reverse_full_name, user.humanized_phone_number, user.email].compact.join(" - ")
   end
 

@@ -21,7 +21,7 @@ ruby:
           div
             i.fa.fa-user
             | &nbsp;
-            = reverse_full_name_and_notification_coordinates(user)
+            = UsersHelper.reverse_full_name_and_notification_coordinates(user)
             = relative_tag(user)
           ruby:
             remove_path_params = @rdv_wizard.to_query.deep_dup.merge(step: 2)
