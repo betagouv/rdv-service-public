@@ -15,6 +15,8 @@
             }, \
           }
         .col-md-6
+          / Nous voulons que l'autocomplete ne propose que les noms des motifs en base,
+          / pas celles de l'historique de saisie du navigateur, d'où le autocomplete="off".
           = f.input :name, input_html: { list: "motif_names", autocomplete: "off" }
           datalist#motif_names
             - Motif.where(organisation_id: current_agent.organisations).map(&:name).uniq.each do |org_name|
