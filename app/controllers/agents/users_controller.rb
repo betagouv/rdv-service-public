@@ -9,7 +9,7 @@ class Agents::UsersController < AgentAuthController
     skip_authorization # On scope les usagers par organisation puis par territoire via de la logique métier plutôt qu'une policy Pundit
     # Dans cette recherche, on autorise un périmètre plus grand que la policy de base, puisqu'on est en train d'ajouter un usager à l'organisation en créant un rdv
 
-    # On veut quand même vérifier que l'organisation demandée fait partie des organisations de l'agent
+    # On vérifie quand même que l'organisation demandée fait partie des organisations de l'agent
     if current_agent.organisations.find_by(id: params[:organisation_id]).nil?
       return head :forbidden
     end
@@ -33,14 +33,14 @@ class Agents::UsersController < AgentAuthController
     if users_from_organisation.any?
       results << {
         text: nil,
-        children: users_from_organisation.map { |user| serialize(user) },
+        children: serialize(users_from_organisation),
       }
     end
 
     if users_from_territory.any?
       results << {
         text: "Usagers des autres organisations",
-        children: users_from_territory.map { |user| serialize(user) },
+        children: serialize(users_from_territory),
       }
     end
 
@@ -49,10 +49,12 @@ class Agents::UsersController < AgentAuthController
 
   private
 
-  def serialize(user)
-    {
-      id: user.id,
-      text: UsersHelper.reverse_full_name_and_notification_coordinates(user),
-    }
+  def serialize(users)
+    users.map do |user|
+      {
+        id: user.id,
+        text: UsersHelper.reverse_full_name_and_notification_coordinates(user),
+      }
+    end
   end
 end
