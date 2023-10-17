@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class Service < ApplicationRecord
+  # Mixins
+  include HasVerticale
+
   # Attributes
   auto_strip_attributes :name, :short_name
 
@@ -9,13 +12,6 @@ class Service < ApplicationRecord
   PMI = "PMI (Protection Maternelle Infantile)"
   CONSEILLER_NUMERIQUE = "Conseiller Numérique"
   MAIRIE = "Mairie"
-
-  enum verticale: {
-    rdv_insertion: "rdv_insertion",
-    rdv_solidarites: "rdv_solidarites",
-    rdv_aide_numerique: "rdv_aide_numerique",
-    rdv_mairie: "rdv_mairie",
-  }
 
   # Relations
   has_many :agents, dependent: :nullify
