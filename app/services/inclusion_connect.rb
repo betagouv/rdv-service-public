@@ -16,7 +16,7 @@ module InclusionConnect
         nonce: Digest::SHA1.hexdigest("Something to check when it come back ?"),
         from: "community",
       }
-      "#{IC_BASE_URL}/authorize?#{query.to_query}"
+      "#{IC_BASE_URL}/authorize/?#{query.to_query}"
     end
 
     def agent(code, inclusion_connect_callback_url)
