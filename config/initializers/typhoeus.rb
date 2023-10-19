@@ -26,7 +26,7 @@ end
 Typhoeus.before do |request|
   if Rails.env.development? && ENV["ALLOW_HTTP_REQUEST_IN_DEV"] != "true"
     Rails.logger.info("Blocked HTTP request to #{request.url} because this is dev env")
-    false
+    false # Un callback Typhoeus interrompt la requête si un callback `before` retourne `nil` ou `false`
   else
     true
   end
