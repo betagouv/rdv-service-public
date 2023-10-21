@@ -98,6 +98,7 @@ class Admin::AgentsController < AgentAuthController
   end
 
   def render_edit
+    @services = services.order(:name)
     @agent_role = @agent.roles.find { |r| r.organisation == current_organisation }
     @agent_removal_presenter = AgentRemovalPresenter.new(@agent, current_organisation)
     @roles = access_levels_collection
@@ -143,6 +144,6 @@ class Admin::AgentsController < AgentAuthController
   end
 
   def update_agent_params
-    params.require(:agent).permit(:email, :last_name, :first_name)
+    params.require(:agent).permit(:email, :last_name, :first_name, service_ids: [])
   end
 end
