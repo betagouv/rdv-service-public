@@ -96,24 +96,9 @@ class Agent < ApplicationRecord
     # soit des agents normaux qui ont reçu et accepté leur invitation
     where("invitation_sent_at IS NULL OR invitation_accepted_at IS NOT NULL")
   }
-  scope :intervenants, lambda {
-    where(id: AgentRole.where(access_level: "intervenant").select(:agent_id))
-  }
-  scope :not_intervenants, lambda {
-    where.not(id: AgentRole.where(access_level: "intervenant").select(:agent_id))
-  }
   scope :active, -> { where(deleted_at: nil) }
   scope :order_by_last_name, -> { order(Arel.sql("LOWER(last_name)")) }
-  scope :secretariat, -> { joins(:service).where(services: { name: "Secrétariat" }) }
-  scope :can_perform_motif, lambda { |motif|
-    motif.for_secretariat ? joins(:service).where(service: motif.service).or(secretariat) : where(service: motif.service)
-  }
-  scope :available_referents_for, lambda { |user|
-    where.not(id: [user.referent_agents.map(&:id)])
-  }
-  scope :in_orgs, lambda { |organisations|
-    joins(:roles).where(agent_roles: { organisations: organisations })
-  }
+  scope :secretariat, -> { joins(:services).where(services: { name: "Secrétariat" }) }
 
   ## -
 
