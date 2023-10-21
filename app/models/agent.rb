@@ -86,7 +86,6 @@ class Agent < ApplicationRecord
   # * it validates :email (the invite_key) specifically with Devise.email_regexp.
   validates :first_name, presence: true, unless: -> { allow_blank_name || is_an_intervenant? }
   validates :last_name, presence: true, unless: -> { allow_blank_name }
-  validate :service_cannot_be_changed
 
   # Hooks
 
@@ -149,12 +148,6 @@ class Agent < ApplicationRecord
 
   def name_for_paper_trail
     "[Agent] #{full_name}"
-  end
-
-  def service_cannot_be_changed
-    return if new_record? || !service_id_changed?
-
-    errors.add(:service_id, "changement interdit")
   end
 
   def role_in_organisation(organisation)
