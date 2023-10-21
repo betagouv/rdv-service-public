@@ -14,7 +14,8 @@ class Service < ApplicationRecord
   MAIRIE = "Mairie"
 
   # Relations
-  has_many :agents, dependent: :nullify
+  has_many :agent_services, dependent: :restrict_with_error
+  has_many :agents, through: :agent_services
   has_many :motifs, dependent: :destroy
 
   # Validations

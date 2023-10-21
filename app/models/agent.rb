@@ -51,7 +51,7 @@ class Agent < ApplicationRecord
   }, _prefix: true
 
   # Relations
-  belongs_to :service
+  has_many :agent_services, dependent: :delete_all
   has_many :agent_territorial_access_rights, dependent: :destroy
   has_many :plage_ouvertures, dependent: :destroy
   has_many :absences, dependent: :destroy
@@ -65,9 +65,10 @@ class Agent < ApplicationRecord
   accepts_nested_attributes_for :roles, :agent_territorial_access_rights
 
   # Through relations
+  has_many :services, through: :agent_services
   has_many :teams, through: :agent_teams
   has_many :lieux, through: :plage_ouvertures
-  has_many :motifs, through: :service
+  has_many :motifs, through: :services
   has_many :rdvs, dependent: :destroy, through: :agents_rdvs
   has_many :territories, through: :territorial_roles
   has_many :organisations_of_territorial_roles, source: :organisations, through: :territories

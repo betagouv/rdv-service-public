@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_16_075305) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_21_103223) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -146,6 +146,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_16_075305) do
     t.index ["agent_id"], name: "index_agent_roles_on_agent_id"
     t.index ["organisation_id", "agent_id"], name: "index_agent_roles_on_organisation_id_and_agent_id", unique: true
     t.index ["organisation_id"], name: "index_agent_roles_on_organisation_id"
+  end
+
+  create_table "agent_services", force: :cascade do |t|
+    t.bigint "agent_id"
+    t.bigint "service_id"
+    t.datetime "created_at", null: false
+    t.index ["agent_id"], name: "index_agent_services_on_agent_id"
+    t.index ["service_id"], name: "index_agent_services_on_service_id"
   end
 
   create_table "agent_teams", force: :cascade do |t|
@@ -732,6 +740,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_16_075305) do
   add_foreign_key "absences", "agents"
   add_foreign_key "agent_roles", "agents"
   add_foreign_key "agent_roles", "organisations"
+  add_foreign_key "agent_services", "agents"
+  add_foreign_key "agent_services", "services"
   add_foreign_key "agent_teams", "agents"
   add_foreign_key "agent_teams", "teams"
   add_foreign_key "agent_territorial_access_rights", "agents"
