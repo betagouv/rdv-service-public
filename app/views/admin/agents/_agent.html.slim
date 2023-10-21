@@ -12,7 +12,9 @@ tr id="agent_#{agent.id}"
   td.word-break-all
     = agent.email
   td
-    = agent.service&.name
+    - agent.services.each do |service|
+      = service.name
+      br
   td.text-nowrap
     span>= agent_role.human_attribute_value(:access_level)
     - if agent_role.admin?

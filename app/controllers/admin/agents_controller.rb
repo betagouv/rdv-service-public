@@ -139,7 +139,7 @@ class Admin::AgentsController < AgentAuthController
   end
 
   def create_agent_params
-    params.require(:agent).permit(:email, :service_id, :last_name)
+    params.require(:agent).permit(:email, :last_name, service_ids: [])
   end
 
   def update_agent_params

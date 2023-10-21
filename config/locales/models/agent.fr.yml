@@ -7,6 +7,7 @@ fr:
         role: Rôle
         rdvs: Rendez-vous
         service: Service
+        services: Services
         territories: Admin de Territoires
         rdv_notifications_level: Notifications de RDV
         display_saturdays: Affichage des samedis sur le calendrier

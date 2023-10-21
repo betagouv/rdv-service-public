@@ -9,7 +9,7 @@
       .card-body.js_agent_role_form
         = simple_form_for [:admin, @agent], url: admin_organisation_agents_path(current_organisation, @agent), html: { method: :post } do |f|
           = render "devise/shared/error_messages", resource: @agent
-          = f.association :service, collection: @services, include_blank: false
+          = f.association :services, collection: @services, include_blank: false, input_html: { class: "select2-input" }
           - # rubocop:disable Rails/OutputSafety
           = f.simple_fields_for @agent_role do |ff|
             = ff.input :access_level, \

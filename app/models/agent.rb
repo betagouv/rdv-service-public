@@ -62,8 +62,6 @@ class Agent < ApplicationRecord
   has_many :agent_teams, dependent: :destroy
   has_many :referent_assignations, dependent: :destroy
 
-  accepts_nested_attributes_for :roles, :agent_territorial_access_rights, :services
-
   # Through relations
   has_many :services, through: :agent_services
   has_many :teams, through: :agent_teams
@@ -77,6 +75,8 @@ class Agent < ApplicationRecord
   has_many :users, through: :referent_assignations, dependent: :destroy
   has_many :organisations, through: :roles, dependent: :destroy
   has_many :webhook_endpoints, through: :organisations
+
+  accepts_nested_attributes_for :roles, :agent_territorial_access_rights, :services
 
   attr_accessor :allow_blank_name
 

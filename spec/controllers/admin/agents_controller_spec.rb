@@ -70,7 +70,7 @@ RSpec.describe Admin::AgentsController, type: :controller do
           organisation_id: organisation.id,
           agent: {
             email: "hacker@renard.com",
-            service_id: service_id,
+            service_ids: [service_id],
             agent_role: {
               access_level: "basic",
             },
@@ -91,7 +91,7 @@ RSpec.describe Admin::AgentsController, type: :controller do
           organisation_id: organisation2.id,
           agent: {
             email: "hacker@renard.com",
-            service_id: service_id,
+            service_ids: [service_id],
             agent_role: { access_level: "basic" },
           },
         }
@@ -109,7 +109,7 @@ RSpec.describe Admin::AgentsController, type: :controller do
           organisation_id: organisation.id,
           agent: {
             email: "hacker@renard.com",
-            service_id: service_id,
+            service_ids: [service_id],
             agent_role: { access_level: "basic", organisation_id: organisation2.id },
           },
         }
@@ -127,7 +127,7 @@ RSpec.describe Admin::AgentsController, type: :controller do
           organisation_id: organisation.id,
           agent: {
             email: "michel@lapin.com",
-            service_id: service_id,
+            service_ids: [service_id],
             agent_role: { access_level: "basic" },
           },
         }
@@ -153,7 +153,7 @@ RSpec.describe Admin::AgentsController, type: :controller do
             organisation_id: organisation.id,
             agent: {
               email: agent2.email,
-              service_id: agent2.service_id,
+              service_ids: [agent2.services.first.id],
               agent_role: {
                 access_level: "basic",
               },
@@ -174,7 +174,7 @@ RSpec.describe Admin::AgentsController, type: :controller do
           organisation_id: organisation.id,
           agent: {
             email: "michel@lapin.com",
-            service_id: service_id,
+            service_ids: [service_id],
             agent_role: { access_level: "basic" },
           },
         }
@@ -196,7 +196,7 @@ RSpec.describe Admin::AgentsController, type: :controller do
           organisation_id: organisation.id,
           agent: {
             email: "aa@hhh",
-            service_id: service_id,
+            service_ids: [service_id],
             agent_role: {
               access_level: "basic",
             },
@@ -217,7 +217,7 @@ RSpec.describe Admin::AgentsController, type: :controller do
           organisation_id: organisation.id,
           agent: {
             email: existing_agent.email,
-            service_id: service_id,
+            service_ids: [service_id],
             agent_role: {
               access_level: "basic",
             },
@@ -279,7 +279,7 @@ RSpec.describe Admin::AgentsController, type: :controller do
           organisation_id: organisation.id,
           agent: {
             email: "MARCO@demo.rdv-solidarites.fr",
-            service_id: service_id,
+            service_ids: [service_id],
             agent_role: { access_level: "basic" },
           },
         }
@@ -296,7 +296,7 @@ RSpec.describe Admin::AgentsController, type: :controller do
         params = { organisation_id: organisation.id,
                    agent: {
                      email: "hacker@renard.com",
-                     service_id: service_id,
+                     service_ids: [service_id],
                      agent_role: { access_level: "basic" },
                    }, }
         expect do
@@ -311,7 +311,7 @@ RSpec.describe Admin::AgentsController, type: :controller do
         params = { organisation_id: organisation.id,
                    agent: {
                      email: "hacker@renard.com",
-                     service_id: service_id,
+                     service_ids: [service_id],
                      agent_role: { access_level: "basic" },
                    }, }
         expect do

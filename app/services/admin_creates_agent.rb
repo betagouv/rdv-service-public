@@ -79,10 +79,12 @@ class AdminCreatesAgent
 
   def check_agent_service
     # Warn if the service isn’t the one that was requested
-    service = Service.find(@agent_params[:service_id])
+    services = Service.where(id: @agent_params[:service_ids])
 
-    if @agent.service != service
-      @warning_message = I18n.t("activerecord.warnings.models.agent_role.different_service", service: service.name, agent_services: @agent.services.map(&:name).join(", "))
+    if services.any? { !_1.in?(@agent.services) }
+      agent_service_names = @agent.services.map(&:name).join(", ")
+      new_service_names = services.map(&:name).join(", ")
+      @warning_message = I18n.t("activerecord.warnings.models.agent_role.different_service", service: new_service_names, agent_services: agent_service_names)
     end
   end
 end
