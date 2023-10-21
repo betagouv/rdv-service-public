@@ -82,7 +82,7 @@ class AdminCreatesAgent
     service = Service.find(@agent_params[:service_id])
 
     if @agent.service != service
-      @warning_message = I18n.t("activerecord.warnings.models.agent_role.different_service", service: service.name, agent_service: @agent.service.name)
+      @warning_message = I18n.t("activerecord.warnings.models.agent_role.different_service", service: service.name, agent_services: @agent.services.map(&:name).join(", "))
     end
   end
 end

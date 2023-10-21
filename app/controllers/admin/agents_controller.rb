@@ -5,7 +5,7 @@ class Admin::AgentsController < AgentAuthController
 
   def index
     @agents = policy_scope(Agent)
-      .includes(:service, :roles, :organisations)
+      .includes(:services, :roles, :organisations)
       .active
 
     @agents = @agents.joins(:organisations).where(organisations: { id: current_organisation.id }) if current_organisation

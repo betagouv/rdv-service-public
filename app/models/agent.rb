@@ -62,7 +62,7 @@ class Agent < ApplicationRecord
   has_many :agent_teams, dependent: :destroy
   has_many :referent_assignations, dependent: :destroy
 
-  accepts_nested_attributes_for :roles, :agent_territorial_access_rights
+  accepts_nested_attributes_for :roles, :agent_territorial_access_rights, :services
 
   # Through relations
   has_many :services, through: :agent_services
@@ -86,6 +86,7 @@ class Agent < ApplicationRecord
   # * it validates :email (the invite_key) specifically with Devise.email_regexp.
   validates :first_name, presence: true, unless: -> { allow_blank_name || is_an_intervenant? }
   validates :last_name, presence: true, unless: -> { allow_blank_name }
+  validates :agent_services, presence: true
 
   # Hooks
 
@@ -98,10 +99,22 @@ class Agent < ApplicationRecord
   scope :active, -> { where(deleted_at: nil) }
   scope :order_by_last_name, -> { order(Arel.sql("LOWER(last_name)")) }
   scope :secretariat, -> { joins(:services).where(services: { name: "Secrétariat" }) }
+  scope :in_services, lambda { |services|
+    joins(:agent_services).where(agent_services: { service_id: services.map(&:id) })
+  }
 
   ## -
 
   delegate :name, to: :domain, prefix: true
+
+  # TODO: delete when code migration is done
+  def service
+    services.first
+  end
+  def service=(service)
+    raise "ah OK" if agent_services.present?
+    agent_services.build(service: service)
+  end
 
   def remember_me # Override from Devise::rememberable to enable it by default
     super.nil? ? true : super

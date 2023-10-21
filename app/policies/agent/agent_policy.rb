@@ -52,7 +52,7 @@ class Agent::AgentPolicy < ApplicationPolicy
         agents_of_orgs_i_admin = scope.joins(:organisations).merge(current_agent.admin_orgs)
 
         agents_of_orgs_i_basic_same_service = scope.joins(:organisations).merge(current_agent.basic_orgs)
-          .where(service: current_agent.service)
+          .in_services([current_agent.service])
 
         scope.where_id_in_subqueries([agents_of_territories_i_admin, agents_of_orgs_i_admin, agents_of_orgs_i_basic_same_service])
       end

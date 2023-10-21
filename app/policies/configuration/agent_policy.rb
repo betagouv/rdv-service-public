@@ -39,8 +39,8 @@ class Configuration::AgentPolicy
       unless @current_agent.territorial_admin_in?(@current_territory)
         scope = scope.includes(:organisations) \
           .where(organisations: @current_agent.organisations)
-          .includes(:service) \
-          .where(service: @current_agent.service)
+          .includes(:services) \
+          .in_services([@current_agent.service])
       end
       scope
     end

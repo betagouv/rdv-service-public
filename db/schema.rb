@@ -210,7 +210,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_21_103223) do
     t.bigint "invited_by_id"
     t.integer "invitations_count", default: 0
     t.datetime "deleted_at"
-    t.bigint "service_id", null: false
     t.string "email_original"
     t.string "provider", default: "email", null: false
     t.string "uid", default: ""
@@ -245,7 +244,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_21_103223) do
     t.index ["invited_by_type", "invited_by_id"], name: "index_agents_on_invited_by_type_and_invited_by_id"
     t.index ["last_name"], name: "index_agents_on_last_name"
     t.index ["reset_password_token"], name: "index_agents_on_reset_password_token", unique: true
-    t.index ["service_id"], name: "index_agents_on_service_id"
     t.index ["uid", "provider"], name: "index_agents_on_uid_and_provider", unique: true, where: "(uid IS NOT NULL)"
   end
 
@@ -748,7 +746,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_21_103223) do
   add_foreign_key "agent_territorial_access_rights", "territories"
   add_foreign_key "agent_territorial_roles", "agents"
   add_foreign_key "agent_territorial_roles", "territories"
-  add_foreign_key "agents", "services"
   add_foreign_key "agents_rdvs", "agents"
   add_foreign_key "agents_rdvs", "rdvs"
   add_foreign_key "file_attentes", "rdvs"

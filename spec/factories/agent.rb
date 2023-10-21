@@ -4,7 +4,6 @@ FactoryBot.define do
   sequence(:agent_email) { |n| "agent_#{n}@lapin.fr" }
 
   factory :agent do
-    service { association(:service) }
     email { generate(:agent_email) }
     uid { email }
     first_name { Faker::Name.first_name }
@@ -12,6 +11,18 @@ FactoryBot.define do
     password { "correcthorse" }
     confirmed_at { Time.zone.parse("2020-07-30 10:30").in_time_zone }
     invitation_accepted_at { Time.zone.parse("2020-07-30 10:30").in_time_zone }
+
+    transient do
+      service { build(:service) }
+    end
+    after(:build) do |agent, evaluator|
+      if evaluator.service
+        agent.services = [evaluator.service]
+      end
+      if agent.agent_services.empty?
+        agent.services = [build(:service)]
+      end
+    end
 
     transient do
       basic_role_in_organisations { [] }
