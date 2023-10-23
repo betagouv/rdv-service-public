@@ -27,23 +27,29 @@ module RdvExporter
     "email(s) professionnel.le(s)",
   ].freeze
 
-  def self.export(rdvs)
-    extract_string_from(build_excel_workbook_from(rdvs))
-  end
+  def self.xls_string_from_rdvs_rows(rdvs_rows)
+    Spreadsheet.client_encoding = "UTF-8"
+    workbook = Spreadsheet::Workbook.new
+    sheet = workbook.create_worksheet
+    sheet.row(0).concat(HEADER)
 
-  def self.extract_string_from(workbook)
+    rdvs_rows.each.with_index(1) do |row_content, row_index|
+      row = sheet.row(row_index)
+      row.set_format 1, DateFormat
+      row.set_format 2, HourFormat
+      row.set_format 4, DateFormat
+      row.set_format 5, HourFormat
+
+      row.concat(row_content)
+    end
+
     file = StringIO.new
     workbook.write(file)
     file.string
   end
 
-  def self.build_excel_workbook_from(rdvs)
-    Spreadsheet.client_encoding = "UTF-8"
-    book = Spreadsheet::Workbook.new
-    sheet = book.create_worksheet
-    sheet.row(0).concat(HEADER)
-
-    rdvs = rdvs.includes(
+  def self.rows_from_rdvs(rdvs)
+    rdvs.includes(
       :organisation,
       :agents,
       :lieu,
@@ -51,18 +57,9 @@ module RdvExporter
       :versions_where_event_eq_create,
       motif: :service,
       users: :responsible
-    )
-
-    rdvs.find_each.with_index do |rdv, index|
-      row = sheet.row(index + 1)
-      row.set_format 1, DateFormat
-      row.set_format 2, HourFormat
-      row.set_format 4, DateFormat
-      row.set_format 5, HourFormat
-
-      row.concat(row_array_from(rdv))
+    ).map do |rdv|
+      row_array_from(rdv)
     end
-    book
   end
 
   # rubocop:disable Metrics/CyclomaticComplexity
