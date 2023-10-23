@@ -11,6 +11,9 @@ describe RdvsUsersExportJob do
 
       described_class.perform_now(agent: agent, organisation_ids: [organisation.id], options: {})
 
+      # Perform batch of jobs and callback job
+      perform_enqueued_jobs
+
       expect_zipped_attached_xls(expected_file_name: "export-rdvs-user-2022-09-14.xls")
     end
 

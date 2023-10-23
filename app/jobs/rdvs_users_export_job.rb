@@ -4,17 +4,25 @@ class RdvsUsersExportJob < ExportJob
   def perform(agent:, organisation_ids:, options:)
     raise "Agent does not belong to all requested organisation(s)" if (organisation_ids - agent.organisation_ids).any?
 
-    @agent = agent
-    now = Time.zone.now
     organisations = agent.organisations.where(id: organisation_ids)
-
     rdvs = Rdv.search_for(organisations, options)
-    rdvs_users = RdvsUser.where(rdv_id: rdvs.select(:id))
+    rdvs_users = RdvsUser.where(rdv_id: rdvs.select(:id)).order(id: :desc)
 
-    file_name = "export-rdvs-user-#{now.strftime('%Y-%m-%d')}.xls"
-    xls_string = RdvsUserExporter.export(rdvs_users.order(id: :desc))
+    redis_key = "RdvsUsersExportJob-#{SecureRandom.uuid}"
+    batch = GoodJob::Batch.new(redis_key: redis_key, file_name: file_name, agent_id: agent.id)
 
-    # Using #deliver_now because we don't want to enqueue a job with a huge payload
-    Agents::ExportMailer.rdvs_users_export(agent, file_name, xls_string).deliver_now
+    batch.add do
+      rdvs_users.ids.each_slice(200).to_a.each_with_index do |rdvs_users_batch, page_index|
+        RdvsUsersExportPageJob.perform_later(rdvs_users_batch, page_index, redis_key)
+      end
+    end
+
+    batch.enqueue(on_success: RdvsUsersExportSendEmailJob)
+  end
+
+  private
+
+  def file_name
+    @file_name ||= "export-rdvs-user-#{Time.zone.now.strftime('%Y-%m-%d')}.xls"
   end
 end
