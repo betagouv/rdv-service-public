@@ -15,9 +15,7 @@ class RdvsExportSendEmailJob < ExportJob
     page_numbers.each do |page_number|
       page = JSON.parse(pages[page_number.to_s])
 
-      page.each do |row|
-        rdvs_rows += row
-      end
+      rdvs_rows += page
     end
 
     xls_string = RdvExporter.xls_string_from_rdvs_rows(rdvs_rows)
