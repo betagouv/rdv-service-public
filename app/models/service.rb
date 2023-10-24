@@ -31,7 +31,7 @@ class Service < ApplicationRecord
 
   def self.all_for_territory(territory)
     agents_of_territory = Agent.joins(:organisations).merge(territory.organisations)
-    joins(:agent_services).where(agent_services: { agents: agents_of_territory })
+    joins(:agent_services).where(agent_services: { agents: agents_of_territory }).distinct
   end
 
   def secretariat?
