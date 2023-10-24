@@ -143,7 +143,7 @@ describe "User can be invited" do
   describe "in motifs selection page" do
     let!(:geo_search) { instance_double(Users::GeoSearch, available_motifs: Motif.where(id: [motif.id, motif2.id])) }
     let!(:motif2) do
-      create(:motif, name: "RSA orientation telephone", bookable_by: "everyone", organisation: organisation2, service: agent.service, motif_category:)
+      create(:motif, name: "RSA orientation telephone", bookable_by: "everyone", organisation: organisation2, service: agent.service, motif_category:, location_type: "phone")
     end
     let!(:plage_ouverture2) { create(:plage_ouverture, motifs: [motif2], organisation: organisation2) }
 
@@ -202,7 +202,7 @@ describe "User can be invited" do
       it "shows the available motifs for the preselected orgs" do
         visit prendre_rdv_path(
           departement: departement_number, city_code: city_code, invitation_token: invitation_token,
-          address: "16 rue de la résistance", motif_search_terms: "RSA orientation", organisation_ids: [organisation.id]
+          address: "16 rue de la résistance", motif_category_short_name: "rsa_orientation", organisation_ids: [organisation.id]
         )
 
         # It directly selects the first motif and goes to lieu selection
@@ -225,16 +225,55 @@ describe "User can be invited" do
         expect(page).not_to have_content(motif.name)
       end
     end
+
+    context "when the motif is a phone motif" do
+      let!(:motif) do
+        create(:motif, name: "RSA orientation telephone", bookable_by: "everyone", organisation: organisation, service: agent.service, motif_category:, location_type: "phone")
+      end
+
+      it "shows the geo search available organisation to take a rdv", js: true do
+        visit prendre_rdv_path(
+          departement: departement_number, city_code: city_code, invitation_token: invitation_token,
+          address: "16 rue de la résistance", motif_category_short_name: "rsa_orientation"
+        )
+
+        # Organisation selection
+        expect(page).to have_content(organisation.name)
+        find(".card-title", text: /#{organisation.name}/).ancestor(".card").find("a.stretched-link").click
+
+        # Creneau selection
+        first(:link, "11:00").click
+
+        # RDV informations
+        expect(page).to have_content("Vos informations")
+        expect(page).not_to have_field("Date de naissance")
+        expect(page).not_to have_field("Adresse")
+        expect(page).to have_field("Email", with: user.email, disabled: true)
+        expect(page).to have_field("Téléphone", with: user.phone_number)
+        click_button("Continuer")
+
+        # Confirmation
+        expect(page).to have_content("Informations de contact")
+        expect(page).to have_content("johndoe@gmail.com")
+        expect(page).to have_content("0682605955")
+        click_link("Confirmer mon RDV")
+
+        # RDV page
+        expect(page).to have_content("Votre RDV")
+        expect(page).to have_content("RDV Téléphonique")
+        expect(page).to have_content("11h00")
+      end
+    end
   end
 
   describe "when no motifs are found through geo search" do
     let!(:geo_search) { instance_double(Users::GeoSearch, available_motifs: Motif.none) }
     let!(:second_motif) do
-      create(:motif, name: "RSA orientation telephone", bookable_by: "agents_and_prescripteurs_and_invited_users", organisation: organisation2, service: agent.service)
+      create(:motif, name: "RSA orientation telephone", bookable_by: "agents_and_prescripteurs_and_invited_users", organisation: organisation2, service: agent.service, motif_category:)
     end
     let!(:second_plage_ouverture) { create(:plage_ouverture, motifs: [second_motif], organisation: organisation2) }
     let!(:collectif_motif) do
-      create(:motif, name: "RSA orientation collectif", collectif: true, bookable_by: "agents_and_prescripteurs_and_invited_users", organisation: organisation, service: agent.service)
+      create(:motif, name: "RSA orientation collectif", collectif: true, bookable_by: "agents_and_prescripteurs_and_invited_users", organisation: organisation, service: agent.service, motif_category:)
     end
     let!(:collectif_rdv) { create(:rdv, motif: collectif_motif, starts_at: 1.week.from_now, max_participants_count: 10) }
 
@@ -244,7 +283,7 @@ describe "User can be invited" do
 
       visit prendre_rdv_path(
         departement: departement_number, city_code: city_code, invitation_token: invitation_token,
-        address: "16 rue de la résistance", motif_search_terms: "RSA orientation",
+        address: "16 rue de la résistance", motif_category_short_name: "rsa_orientation",
         organisation_ids: [organisation.id, organisation2.id]
       )
     end
