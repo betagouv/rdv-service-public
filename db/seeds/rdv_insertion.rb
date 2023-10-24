@@ -116,7 +116,6 @@ agent_orgs_rdv_insertion = Agent.new(
   first_name: "Alain",
   last_name: "Sertion",
   password: "lapinlapin",
-  service_id: service_rsa.id,
   invitation_accepted_at: 10.days.ago,
   roles_attributes: [
     { organisation: org_drome1, access_level: AgentRole::ACCESS_LEVEL_ADMIN },
@@ -128,6 +127,7 @@ agent_orgs_rdv_insertion = Agent.new(
     { territory: territory_yonne, allow_to_manage_teams: true },
   ]
 )
+agent_orgs_rdv_insertion.services = [service_rsa]
 agent_orgs_rdv_insertion.skip_confirmation!
 agent_orgs_rdv_insertion.save!
 agent_orgs_rdv_insertion.territorial_roles.create!(territory: territory_drome)

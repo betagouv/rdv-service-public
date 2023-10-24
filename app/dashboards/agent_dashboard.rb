@@ -18,7 +18,7 @@ class AgentDashboard < Administrate::BaseDashboard
     roles: Field::HasMany,
     territories: Field::HasMany,
     territorial_roles: Field::HasMany,
-    service: Field::BelongsTo,
+    services: Field::HasMany,
     invitation_sent_at: Field::DateTime,
     deleted_at: Field::DateTime,
     created_at: Field::DateTime,
@@ -47,7 +47,7 @@ class AgentDashboard < Administrate::BaseDashboard
     organisations
     roles
     territorial_roles
-    service
+    services
     invitation_sent_at
     created_at
     deleted_at
@@ -62,7 +62,7 @@ class AgentDashboard < Administrate::BaseDashboard
     first_name
     last_name
     organisations
-    service
+    services
     territories
     deleted_at
   ].freeze

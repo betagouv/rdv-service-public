@@ -16,6 +16,7 @@ describe "Agent can CRUD intervenants" do
     # Create an intervenant
     click_link "Ajouter un agent", match: :first
     expect_page_title("Ajouter un agent")
+    select(service.name, from: "Services")
     find("label", text: "Intervenant").click
     fill_in "Nom", with: "Avocat 1"
     click_button("Ajouter l'intervenant")

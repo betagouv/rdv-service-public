@@ -13,6 +13,7 @@ RSpec.describe "Agent can create another agent" do
       visit admin_organisation_agents_path(organisation1)
       click_link("Ajouter un agent", match: :first)
       fill_in("Email", with: "bob@test.com")
+      select(agent.service.name, from: "Services")
       click_button("Envoyer une invitation")
       expect(Agent.count).to eq(2)
 

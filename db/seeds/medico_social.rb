@@ -489,13 +489,14 @@ agents_attributes = 1_000.times.map do |i|
     last_name: "last_name_#{i}",
     email: "email_#{i}@test.com",
     uid: "email_#{i}@test.com",
-    service_id: service_social.id,
   }
 end
 results = Agent.insert_all!(agents_attributes, returning: Arel.sql("id")) # [{"id"=>1}, {"id"=>2}, ...]
 agent_ids = results.flat_map(&:values) # [1, 2, ...]
 agent_role_attributes = agent_ids.map { |id| { agent_id: id, organisation_id: org_paris_nord.id } }
 AgentRole.insert_all!(agent_role_attributes)
+agent_service_attributes = agent_ids.map { |id| { agent_id: id, service_id: service_social.id } }
+AgentService.insert_all!(agent_service_attributes)
 
 agent_territorial_access_rights_attributes = agent_ids.map { |id| { agent_id: id, territory_id: territory75.id, created_at: Time.zone.now, updated_at: Time.zone.now } }
 AgentTerritorialAccessRight.insert_all!(agent_territorial_access_rights_attributes)
