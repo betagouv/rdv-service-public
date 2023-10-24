@@ -43,8 +43,8 @@ describe OrganisationsController, type: :controller do
           agent_roles_attributes: [{
             access_level: "admin",
             agent_attributes: {
-              email: "me@myself.hi",
-              service_id: "unknow", # this is the error
+              email: "", # this is the error
+              service_id: create(:service),
             },
           }],
         },
