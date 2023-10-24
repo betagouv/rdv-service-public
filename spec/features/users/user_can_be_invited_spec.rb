@@ -202,7 +202,7 @@ describe "User can be invited" do
       it "shows the available motifs for the preselected orgs" do
         visit prendre_rdv_path(
           departement: departement_number, city_code: city_code, invitation_token: invitation_token,
-          address: "16 rue de la résistance", motif_category_short_name: "rsa_orientation", organisation_ids: [organisation.id]
+          address: "16 rue de la résistance", motif_search_terms: "RSA orientation", organisation_ids: [organisation.id]
         )
 
         # It directly selects the first motif and goes to lieu selection
@@ -230,11 +230,11 @@ describe "User can be invited" do
   describe "when no motifs are found through geo search" do
     let!(:geo_search) { instance_double(Users::GeoSearch, available_motifs: Motif.none) }
     let!(:second_motif) do
-      create(:motif, name: "RSA orientation telephone", bookable_by: "agents_and_prescripteurs_and_invited_users", organisation: organisation2, service: agent.service, motif_category:)
+      create(:motif, name: "RSA orientation telephone", bookable_by: "agents_and_prescripteurs_and_invited_users", organisation: organisation2, service: agent.service)
     end
     let!(:second_plage_ouverture) { create(:plage_ouverture, motifs: [second_motif], organisation: organisation2) }
     let!(:collectif_motif) do
-      create(:motif, name: "RSA orientation collectif", collectif: true, bookable_by: "agents_and_prescripteurs_and_invited_users", organisation: organisation, service: agent.service, motif_category:)
+      create(:motif, name: "RSA orientation collectif", collectif: true, bookable_by: "agents_and_prescripteurs_and_invited_users", organisation: organisation, service: agent.service)
     end
     let!(:collectif_rdv) { create(:rdv, motif: collectif_motif, starts_at: 1.week.from_now, max_participants_count: 10) }
 
@@ -244,7 +244,7 @@ describe "User can be invited" do
 
       visit prendre_rdv_path(
         departement: departement_number, city_code: city_code, invitation_token: invitation_token,
-        address: "16 rue de la résistance", motif_category_short_name: "rsa_orientation",
+        address: "16 rue de la résistance", motif_search_terms: "RSA orientation",
         organisation_ids: [organisation.id, organisation2.id]
       )
     end
