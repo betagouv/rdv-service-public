@@ -44,9 +44,14 @@ class Motif < ApplicationRecord
   has_many :motifs_plage_ouvertures, dependent: :delete_all
 
   # Through relations
-  has_many :lieux, through: :plage_ouvertures
   has_many :webhook_endpoints, through: :organisation
   has_many :plage_ouvertures, -> { distinct }, through: :motifs_plage_ouvertures
+  has_many :lieux_through_po, through: :plage_ouvertures, source: :lieu
+  has_many :lieux_through_rdvs, through: :rdvs, source: :lieu
+
+  def lieux
+    collectif? ? lieux_through_rdvs : lieux_through_po
+  end
 
   # Delegates
   delegate :service_social?, to: :service
