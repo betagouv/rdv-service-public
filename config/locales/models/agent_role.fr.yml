@@ -17,7 +17,7 @@ fr:
     warnings:
       models:
         agent_role:
-          different_service: "Attention : le service demandé (%{service}) ne correspond pas aux services déjà connus de cet agent (%{agent_services})."
+          different_service: "Attention : le service demandé (%{service}) ne correspond pas au service déjà connu de cet agent (%{agent_service})."
     notice:
       models:
         agent_role:

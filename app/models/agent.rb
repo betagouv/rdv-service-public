@@ -111,18 +111,20 @@ class Agent < ApplicationRecord
   def service
     services.first
   end
+
   def service=(service)
     raise "ah OK" if agent_services.present?
+
     agent_services.build(service: service)
   end
-  def service_id
-    service.id
-  end
+
+  delegate :id, to: :service, prefix: true
+
   def service_id=(id)
     self.service = Service.find(id)
   end
 
-  def has_same_service_as?(other_agent)
+  def same_services_as?(other_agent)
     service_ids.to_set == other_agent.service_ids.to_set
   end
 

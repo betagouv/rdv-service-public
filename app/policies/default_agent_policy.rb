@@ -56,15 +56,12 @@ class DefaultAgentPolicy < ApplicationPolicy
   end
 
   def same_service?
-    if @record.respond_to?(:services)
-      raise "used by #{@record.class.name}"
-    elsif @record.respond_to?(:service)
+    if @record.respond_to?(:service)
       @record.service.in?(current_agent.services)
-    elsif @record.respond_to?(:agent_id)
-      @record.agent.has_same_service_as?(current_agent)
-    elsif @record.respond_to?(:agent_ids)
-      raise "still used by #{@record.class.name}"
-      Agent.where(id: @record.agent_ids).pluck(:service_id).uniq == [current_agent.service_id]
+    elsif @record.respond_to?(:agent)
+      @record.agent.same_services_as?(current_agent)
+    else
+      raise "used by #{@record.class.name}"
     end
   end
 

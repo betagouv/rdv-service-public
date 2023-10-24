@@ -20,7 +20,8 @@ class Admin::Territories::InvitationsDeviseController < Devise::InvitationsContr
       agent.save(context: :invite) # Specify a different validation context to bypass last_name/first_name presence
       # Warn if the service isn’t the one that was requested
       service = Service.find(invite_params[:service_id])
-      flash[:error] = I18n.t "activerecord.warnings.models.agent_role.different_service", service: service.name, agent_services: agent.services.map(&:name).join(", ") if agent.service != service
+      # TODO: handle multi service?
+      flash[:error] = I18n.t "activerecord.warnings.models.agent_role.different_service", service: service.name, agent_service: agent.service.name if agent.service != service
     end
 
     if agent.errors.empty?
