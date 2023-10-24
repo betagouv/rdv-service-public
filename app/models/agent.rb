@@ -118,6 +118,13 @@ class Agent < ApplicationRecord
   def service_id
     service.id
   end
+  def service_id=(id)
+    self.service = Service.find(id)
+  end
+
+  def has_same_service_as?(other_agent)
+    service_ids.to_set == other_agent.service_ids.to_set
+  end
 
   def remember_me # Override from Devise::rememberable to enable it by default
     super.nil? ? true : super
