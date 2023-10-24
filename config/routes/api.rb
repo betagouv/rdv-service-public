@@ -28,12 +28,6 @@ namespace :api do
     get "availableTimeSlots", to: "editor#available_time_slots"
     get "searchApplicationIds", to: "editor#search_application_ids"
   end
-
-  namespace :rdvinsertion do
-    resources :invitations, only: [] do
-      get 'creneau_availability', to: 'invitations#creneau_availability', on: :collection
-    end
-  end
 end
 
 # This one has been published before versioning the public API and unification with auth API:
