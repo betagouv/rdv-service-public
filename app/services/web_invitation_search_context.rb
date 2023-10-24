@@ -36,4 +36,9 @@ class WebInvitationSearchContext < InvitationSearchContext
   def organisation_id
     @user_selected_organisation_id
   end
+
+  def public_link_organisation
+    # public_link_organisation is not used in web invitation context
+    nil
+  end
 end
