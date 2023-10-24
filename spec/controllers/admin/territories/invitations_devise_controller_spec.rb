@@ -32,7 +32,7 @@ RSpec.describe Admin::Territories::InvitationsDeviseController, type: :controlle
         params = { territory_id: territory.id,
                    agent: {
                      email: "hacker@renard.com",
-                     service_id: service.id,
+                     service_ids: [service.id],
                    }, }
         expect do
           post :create, params: params
