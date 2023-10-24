@@ -115,6 +115,9 @@ class Agent < ApplicationRecord
     raise "ah OK" if agent_services.present?
     agent_services.build(service: service)
   end
+  def service_id
+    service.id
+  end
 
   def remember_me # Override from Devise::rememberable to enable it by default
     super.nil? ? true : super
