@@ -11,6 +11,8 @@ class WebhookJob < ApplicationJob
   self.log_arguments = false
 
   def perform(payload, webhook_endpoint_id)
+    return if Rails.env.development? # On évite le risque d'appeler des URL de prod en local
+
     webhook_endpoint = WebhookEndpoint.find(webhook_endpoint_id)
 
     request = Typhoeus::Request.new(

@@ -24,15 +24,6 @@ Typhoeus.before do |request|
 end
 
 Typhoeus.before do |request|
-  if Rails.env.development? && ENV["ALLOW_HTTP_REQUEST_IN_DEV"] != "true"
-    Rails.logger.info("Blocked HTTP request to #{request.url} because this is dev env")
-    false # Un callback Typhoeus interrompt la requête si un callback `before` retourne `nil` ou `false`
-  else
-    true
-  end
-end
-
-Typhoeus.before do |request|
   filter_secrets_from_body = lambda do |body|
     body.to_s.gsub(InclusionConnect::IC_CLIENT_SECRET || "", "filtered")
   end
