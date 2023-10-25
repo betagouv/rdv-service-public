@@ -13,8 +13,7 @@ tr id="agent_#{agent.id}"
     = agent.email
   td
     - agent.services.each do |service|
-      = service.name
-      br
+      .badge.badge-primary= service.short_name
   td.text-nowrap
     span>= agent_role.human_attribute_value(:access_level)
     - if agent_role.admin?

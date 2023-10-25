@@ -29,7 +29,7 @@ class Agent::RdvPolicy < DefaultAgentPolicy
     def resolve
       organisation_scope = scope.where(organisation: current_agent.organisations)
       unless context.can_access_others_planning?
-        organisation_scope = organisation_scope.joins(%i[motif agents_rdvs]).where(motifs: { service: current_agent.service })
+        organisation_scope = organisation_scope.joins(%i[motif agents_rdvs]).where(motifs: { service: current_agent.services })
           .or(Rdv.where("agents_rdvs.agent_id": current_agent.id))
       end
       organisation_scope
@@ -43,7 +43,7 @@ class Agent::RdvPolicy < DefaultAgentPolicy
       else
         scope.joins(%i[motif agents_rdvs])
           .where(organisation: current_agent.organisations)
-          .where(motifs: { service: current_agent.service })
+          .where(motifs: { service: current_agent.services })
           .or(Rdv.where("agents_rdvs.agent_id": current_agent.id))
       end
     end
