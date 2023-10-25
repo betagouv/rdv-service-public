@@ -82,8 +82,8 @@ class AdminCreatesAgent
     service = Service.where(id: @agent_params[:service_ids])
 
     # TODO: handle multi service?
-    if @agent.service != service
-      @warning_message = I18n.t("activerecord.warnings.models.agent_role.different_service", service: service.name, agent_service: @agent.service.name)
+    if @agent.services.first != service
+      @warning_message = I18n.t("activerecord.warnings.models.agent_role.different_service", service: service.name, agent_service: @agent.services.first.name)
     end
   end
 end

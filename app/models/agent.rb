@@ -128,6 +128,10 @@ class Agent < ApplicationRecord
     service_ids.to_set == other_agent.service_ids.to_set
   end
 
+  def secretariat?
+    services.any?(&:secretariat?)
+  end
+
   def remember_me # Override from Devise::rememberable to enable it by default
     super.nil? ? true : super
   end

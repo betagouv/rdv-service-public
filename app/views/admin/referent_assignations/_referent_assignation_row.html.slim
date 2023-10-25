@@ -2,7 +2,7 @@ tr id="agent_#{agent.id}"
   td
     span.mr-2= agent.reverse_full_name
   td
-    = agent.service&.short_name
+    = agent.services.map(&:short_name).join(", ")
   td.text-right
     div.mr-3
       - if action == :remove

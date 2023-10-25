@@ -101,7 +101,8 @@
         - @sector.attributions.level_agent.to_a.group_by(&:organisation).each do |organisation, all_attributions|
           div.mb-1= "Organisation #{organisation.name} :"
           .pl-2.py-1.border-left
-            - all_attributions.group_by { _1.agent.service }.each do |service, attributions|
+            / TODO:  Adapter maintenant que les agents ont plusieurs services ?
+            - all_attributions.group_by { _1.agent.services.first }.each do |service, attributions|
               span> Service #{service.short_name}
               span.text-muted.ml-1
                 - service_motifs = Motif.sectorisation_level_agent.where(organisation: organisation, service: service)

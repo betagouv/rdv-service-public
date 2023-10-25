@@ -21,7 +21,7 @@ class Admin::Territories::InvitationsDeviseController < Devise::InvitationsContr
       # Warn if the service isn’t the one that was requested
       service = Service.find(invite_params[:service_id])
       # TODO: handle multi service?
-      flash[:error] = I18n.t "activerecord.warnings.models.agent_role.different_service", service: service.name, agent_service: agent.service.name if agent.service != service
+      flash[:error] = I18n.t "activerecord.warnings.models.agent_role.different_service", service: service.name, agent_service: agent.services.first.name if agent.services.first != service
     end
 
     if agent.errors.empty?
