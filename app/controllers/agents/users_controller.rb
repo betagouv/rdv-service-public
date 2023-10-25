@@ -21,8 +21,8 @@ class Agents::UsersController < AgentAuthController
     results_count = users_from_organisation.count
 
     users_from_territory = if results_count < MAX_RESULTS
-                             user_scope.joins(:territories).where(territories: { id: current_agent.agent_territorial_access_rights.pluck(:territory_id) })
-                               .where.not(id: users_from_organisation.ids)
+                             user_scope.joins(:territories).where(territories: { id: current_agent.agent_territorial_access_rights.select(:territory_id) })
+                               .where.not(id: users_from_organisation.select(:id))
                                .limit(MAX_RESULTS - results_count)
                            else
                              []
