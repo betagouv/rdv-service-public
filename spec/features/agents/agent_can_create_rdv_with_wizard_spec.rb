@@ -131,7 +131,7 @@ describe "Agent can create a Rdv with wizard" do
         step4
 
         expect(user_from_other_organisation.rdvs.count).to eq(1)
-        expect(user_from_other_organisation.reload.organisations).to include(organisation)
+        expect(user_from_other_organisation.reload.organisations).to match_array([organisation, other_organisation])
       end
     end
 
