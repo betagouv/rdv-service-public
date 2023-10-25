@@ -47,13 +47,19 @@ describe "User can search rdv on rdv service public" do
   end
 
   it "allows adding a relative", js: true do
-    time = Time.zone.now.change(hour: 9, min: 0o0)
-    creneaux_url = creneaux_url(starts_at: time.strftime("%Y-%m-%d %H:%M"), lieu_id: lieu.id, motif_id: passport_motif.id, public_link_organisation_id: organisation.id, duration: 50)
-    visit creneaux_url
+    visit public_link_to_org_url(organisation_id: organisation.id, host: "http://www.rdv-mairie-test.localhost")
+    click_on("Clarification du dossier")
+    click_on("Prochaine disponibilité le") # choix du lieu
+
+    first(:link, "09:00").click
+    expect(page).to have_current_path("/users/sign_in")
+    expect(page).to have_content("Vous devez vous connecter ou vous inscrire pour continuer")
 
     fill_in("user_email", with: user.email)
     fill_in("password", with: user.password)
     click_button("Se connecter")
+
+    click_button("Continuer")
 
     click_link("Ajouter un proche")
     fill_in("user_first_name", with: "Alain")

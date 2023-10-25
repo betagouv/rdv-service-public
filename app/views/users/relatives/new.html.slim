@@ -3,7 +3,7 @@
 
 = simple_form_for @user, url: relatives_path, remote: true, data: { modal: true } do |f|
   = render "model_errors", model: @user
-  = render "form_fields", f: f
+  = render "form_fields", f: f, requires_ants_predemande_number: @requires_ants_predemande_number
   .row
     .col.text-right
       button.btn.btn-link data-dismiss="modal" type="button" Annuler

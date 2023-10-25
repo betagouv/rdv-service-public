@@ -232,7 +232,7 @@ class Motif < ApplicationRecord
   end
 
   def requires_ants_predemande_number?
-    motif_category&.requires_ants_predemande_number?
+    motif_category&.requires_ants_predemande_number?.to_boolean
   end
 
   private
