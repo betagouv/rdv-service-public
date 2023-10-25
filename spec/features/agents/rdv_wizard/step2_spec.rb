@@ -18,7 +18,7 @@ RSpec.describe "Step 2 of the rdv wizard" do
   let(:other_organisation) { create(:organisation, territory: territory) }
   let(:agent) { create(:agent, service: motif.service, basic_role_in_organisations: [organisation]) }
 
-  before { create(:agent_territorial_role, agent: agent, territory: territory) }
+  before { create(:agent_territorial_access_right, agent: agent, territory: territory) }
 
   it "allows searching for users", js: true do
     login_as(agent, scope: :agent)

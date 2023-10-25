@@ -4,7 +4,7 @@ describe "Agent can create a Rdv with wizard" do
   let(:territory) { create(:territory, enable_context_field: true) }
   let(:organisation) { create(:organisation, territory: territory) }
   let(:service) { create(:service) }
-  let!(:agent) { create(:agent, first_name: "Alain", last_name: "DIALO", service: service, basic_role_in_organisations: [organisation], territories: [territory]) }
+  let!(:agent) { create(:agent, first_name: "Alain", last_name: "DIALO", service: service, basic_role_in_organisations: [organisation]) }
   let!(:agent2) { create(:agent, first_name: "Robert", last_name: "Martin", service: service, basic_role_in_organisations: [organisation]) }
   let!(:motif) { create(:motif, :collectif, :at_public_office, service: service, organisation: organisation, name: "Super Motif") }
   let!(:lieu) { create(:lieu, organisation: organisation) }
@@ -116,6 +116,8 @@ describe "Agent can create a Rdv with wizard" do
     end
 
     describe "with a user from outside the organisation" do
+      before { create(:agent_territorial_access_right, agent: agent, territory: territory) }
+
       let(:other_organisation) { create(:organisation, territory: territory) }
 
       let!(:user_from_other_organisation) { create(:user, organisations: [other_organisation]) }
