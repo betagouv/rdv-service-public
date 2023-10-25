@@ -28,23 +28,29 @@ module RdvsUserExporter
     "email(s) professionnel.le(s)",
   ].freeze
 
-  def self.export(rdv_users)
-    extract_string_from(build_excel_workbook_from(rdv_users))
-  end
+  def self.xls_string_from_rdvs_users_rows(rdvs_users_rows)
+    Spreadsheet.client_encoding = "UTF-8"
+    workbook = Spreadsheet::Workbook.new
+    sheet = workbook.create_worksheet
+    sheet.row(0).concat(HEADER)
 
-  def self.extract_string_from(workbook)
+    rdvs_users_rows.each.with_index(1) do |row_content, row_index|
+      row = sheet.row(row_index)
+      row.set_format 3, DateFormat
+      row.set_format 4, HourFormat
+      row.set_format 6, DateFormat
+      row.set_format 7, HourFormat
+
+      row.concat(row_content)
+    end
+
     file = StringIO.new
     workbook.write(file)
     file.string
   end
 
-  def self.build_excel_workbook_from(rdv_users)
-    Spreadsheet.client_encoding = "UTF-8"
-    book = Spreadsheet::Workbook.new
-    sheet = book.create_worksheet
-    sheet.row(0).concat(HEADER)
-
-    rdv_users = rdv_users.includes(
+  def self.rows_from_rdvs_users(rdvs_users)
+    rdvs_users.includes(
       user: :responsible,
       rdv: [
         :organisation,
@@ -55,18 +61,9 @@ module RdvsUserExporter
         :users,
         { motif: :service },
       ]
-    )
-
-    rdv_users.find_each.with_index do |rdv_user, index|
-      row = sheet.row(index + 1)
-      row.set_format 3, DateFormat
-      row.set_format 4, HourFormat
-      row.set_format 6, DateFormat
-      row.set_format 7, HourFormat
-
-      row.concat(row_array_from(rdv_user))
+    ).map do |rdvs_user|
+      row_array_from(rdvs_user)
     end
-    book
   end
 
   def self.row_array_from(rdv_user)

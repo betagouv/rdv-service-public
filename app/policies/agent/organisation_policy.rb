@@ -9,6 +9,8 @@ class Agent::OrganisationPolicy < DefaultAgentPolicy
     current_agent.roles.access_level_admin.pluck(:organisation_id).include?(record.id)
   end
 
+  alias creneau_availability? link_to_organisation?
+
   def new?
     current_agent.territorial_admin_in?(record.territory)
   end
