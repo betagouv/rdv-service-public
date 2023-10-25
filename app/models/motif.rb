@@ -231,6 +231,10 @@ class Motif < ApplicationRecord
     bookable_by != "agents"
   end
 
+  def requires_ants_predemande_number?
+    motif_category&.requires_ants_predemande_number?
+  end
+
   private
 
   def booking_delay_validation

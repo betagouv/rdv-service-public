@@ -8,4 +8,8 @@ class MotifCategory < ApplicationRecord
   # Validations
   validates :name, presence: true, uniqueness: true
   validates :short_name, presence: true, uniqueness: true
+
+  def requires_ants_predemande_number?
+    name.in?(Api::Ants::EditorController::ANTS_MOTIF_CATEROGY_NAMES)
+  end
 end

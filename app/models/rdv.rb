@@ -58,7 +58,7 @@ class Rdv < ApplicationRecord
 
   # Delegates
   delegate :home?, :phone?, :public_office?, :bookable_by_everyone?,
-           :bookable_by_everyone_or_bookable_by_invited_users?, :service_social?, :follow_up?, :service, :collectif?, :collectif, :individuel?, to: :motif
+           :bookable_by_everyone_or_bookable_by_invited_users?, :service_social?, :follow_up?, :service, :collectif?, :collectif, :individuel?, :requires_ants_predemande_number?, to: :motif
 
   # Validations
   validates :starts_at, :ends_at, :agents, presence: true
