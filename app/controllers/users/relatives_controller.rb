@@ -7,7 +7,6 @@ class Users::RelativesController < UserAuthController
 
   def new
     @user = current_user.relatives.new
-    @requires_ants_predemande_number = params[:requires_ants_predemande_number].to_boolean
     authorize(@user)
     respond_modal_with @user
   end

@@ -121,7 +121,6 @@ class Motif < ApplicationRecord
     joins(:motif_category)
       .where(motif_category: { short_name: motif_category_short_name })
   }
-  scope :requires_ants_predemande_number, -> { joins(:motif_category).merge(MotifCategory.requires_ants_predemande_number) }
 
   ## -
 
