@@ -32,7 +32,7 @@
                 wrapper_html: { class: "mb-0" },
                 input_html: { name: "rdv[user_ids][]" }
           .form-group
-            = link_to "Ajouter un proche", new_relative_path(requires_ants_predemande_number: @rdv.requires_ants_predemande_number?), data: { modal: true }
+            = link_to "Ajouter un proche", new_relative_path, data: { modal: true }
           .row
             .col
               = link_to "Revenir en arrière", new_users_rdv_wizard_step_path(step: 1, **@rdv_wizard.to_query), class: "btn btn-link"

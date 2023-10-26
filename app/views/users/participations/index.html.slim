@@ -51,6 +51,6 @@
               = possible_participant.full_name
             br
           .form-group
-            = link_to "Ajouter un proche", new_relative_path(requires_ants_predemande_number: @rdv.requires_ants_predemande_number?), data: { modal: true }
+            = link_to "Ajouter un proche", new_relative_path, data: { modal: true }
           .form-group
             = submit_tag "Enregistrer", class: "btn btn-primary"
