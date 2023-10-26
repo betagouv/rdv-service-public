@@ -40,7 +40,7 @@ class Configuration::AgentPolicy
         scope = scope.includes(:organisations) \
           .where(organisations: @current_agent.organisations)
           .includes(:services) \
-          .in_services([@current_agent.service])
+          .merge(@current_agent.colleagues)
       end
       scope
     end

@@ -138,7 +138,7 @@ class Motif < ApplicationRecord
       .where(organisations: { id: organisation.id })
       .complete
       .active
-      .in_services(authorized_services)
+      .in_any_of_these_services(authorized_services)
       .order_by_last_name
   end
 

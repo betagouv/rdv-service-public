@@ -6,8 +6,7 @@ class Agent::PlageOuverturePolicy < DefaultAgentPolicy
       if context.can_access_others_planning?
         scope.where(organisation: current_organisation)
       else
-        # TODO: parler de ça
-        scope.joins(:agent).where(organisation: current_organisation).merge(Agent.in_services(current_agent.services))
+        scope.joins(:agent).where(organisation: current_organisation).merge(current_agent.colleagues)
       end
     end
   end
@@ -19,7 +18,7 @@ class Agent::PlageOuverturePolicy < DefaultAgentPolicy
       else
         scope.joins(:agent)
           .where(organisation: current_agent.organisations)
-          .merge(Agent.in_services(current_agent.services)) # TODO: parler de ça
+          .merge(current_agent.colleagues)
       end
     end
   end

@@ -99,7 +99,7 @@ class Agent < ApplicationRecord
   scope :active, -> { where(deleted_at: nil) }
   scope :order_by_last_name, -> { order(Arel.sql("LOWER(last_name)")) }
   scope :secretariat, -> { joins(:services).where(services: { name: "Secrétariat" }) }
-  scope :in_services, lambda { |services|
+  scope :in_any_of_these_services, lambda { |services|
     joins(:agent_services).where(agent_services: { service_id: services.map(&:id) })
   }
 
@@ -126,6 +126,14 @@ class Agent < ApplicationRecord
 
   def same_services_as?(other_agent)
     service_ids.to_set == other_agent.service_ids.to_set
+  end
+
+  def colleague_with?(other_agent)
+    service_ids.to_set.intersection(other_agent.service_ids.to_set).present?
+  end
+
+  def colleagues
+    Agent.in_any_of_these_services(services)
   end
 
   def secretariat?
