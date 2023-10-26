@@ -39,7 +39,7 @@ describe "territory admin can manage agents", type: :feature do
 
       visit edit_admin_territory_agent_path(territory_id: territory.id, id: agent.id)
       unselect team_a.name, from: "Équipes"
-      expect { click_on "Enregistrer" }.to change { agent.reload.teams.map(&:name).sort }.from(%w[A B]).to(["B"])
+      expect { click_on "Enregistrer" }.to change { agent.reload.teams }.to([team_b])
     end
   end
 end
