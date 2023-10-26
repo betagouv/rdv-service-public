@@ -113,6 +113,8 @@ class Rdv < ApplicationRecord
       joins(:organisation).where.not(organisations: { verticale: :rdv_aide_numerique })
     end
   }
+  scope :requires_ants_predemande_number, -> { joins(:motif).merge(Motif.requires_ants_predemande_number) }
+
   # Delegations
   delegate :domain, to: :organisation
   delegate :name, to: :motif, prefix: true
