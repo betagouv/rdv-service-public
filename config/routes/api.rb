@@ -7,7 +7,6 @@ namespace :api do
     resources :absences, except: %i[new edit]
     resources :agents, only: %i[index]
     resources :users, only: %i[create index show update] do
-      get :invite, to: 'users#invite_get', on: :member
       post :rdv_invitation_token, to: 'users#rdv_invitation_token', on: :member
     end
     resource :user_profiles, only: %i[create destroy]
