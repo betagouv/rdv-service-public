@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class PlageOuvertureOverlap
   attr_reader :po1, :po2
 

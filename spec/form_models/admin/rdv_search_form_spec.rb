@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe Admin::RdvSearchForm do
   describe "#lieu" do
     it "have a lieu when given" do

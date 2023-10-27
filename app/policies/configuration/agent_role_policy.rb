@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Configuration::AgentRolePolicy
   def initialize(context, _agent)
     @current_agent = context.agent

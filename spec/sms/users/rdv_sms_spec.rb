@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe Users::RdvSms, type: :service do
   describe "#rdv_created" do
     context "with a basic rdv" do

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 json.cache! [@absence_occurrences, :all_occurrences_for, date_range_params, @organisation.id], expires_in: 8.hours do
   json.array! @absence_occurrences do |absence, occurrence|
     json.title absence.title

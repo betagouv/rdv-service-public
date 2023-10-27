@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe "Allocation For Search Context" do
   it "stay under 5500" do
     departement_number = "75"

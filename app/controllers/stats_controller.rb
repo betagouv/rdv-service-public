@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class StatsController < ApplicationController
   before_action :scope_rdv_to_territory
 

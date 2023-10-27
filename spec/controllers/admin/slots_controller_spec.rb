@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe Admin::SlotsController, type: :controller do
   let(:organisation) { create(:organisation) }
 

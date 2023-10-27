@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 FactoryBot.define do
   sequence(:name) { |n| "Catégorie de motif n°#{n}" }
   sequence(:short_name) { |n| "#{n}_motif_cat" }

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe "Agent can see rdvs in their calendar", js: true do
   context "for a rdv collectif" do
     it "shows the number of participants and the max number of participants" do

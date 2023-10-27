@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Agents::ReplyTransferMailerPreview < ActionMailer::Preview
   def notify_agent_of_user_reply
     rdv = Rdv.last

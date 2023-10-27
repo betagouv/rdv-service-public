@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Admin::ParticipationsController < AgentAuthController
   # Participation is @rdv.rdvs_users
   include ParticipationsHelper

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module PaperTrailHelper
   def paper_trail_change_value(property_name, value)
     # TODO: use human_attribute_value instead of these custom helpers

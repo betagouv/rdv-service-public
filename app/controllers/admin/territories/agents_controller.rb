@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Admin::Territories::AgentsController < Admin::Territories::BaseController
   before_action :set_agent, only: %i[edit update territory_admin]
   before_action :authorize_agent, only: %i[edit update territory_admin]

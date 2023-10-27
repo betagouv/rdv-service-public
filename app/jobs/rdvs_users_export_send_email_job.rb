@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class RdvsUsersExportSendEmailJob < ExportJob
   def perform(batch, _params)
     agent = Agent.find(batch.properties[:agent_id])

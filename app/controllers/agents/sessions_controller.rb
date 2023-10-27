@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Agents::SessionsController < Devise::SessionsController
   before_action :exclude_signed_in_users, only: [:new]
 

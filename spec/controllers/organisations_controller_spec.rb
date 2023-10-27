@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe OrganisationsController, type: :controller do
   describe "#create" do
     it "responds succesfully, creates organisation, agent and roles" do

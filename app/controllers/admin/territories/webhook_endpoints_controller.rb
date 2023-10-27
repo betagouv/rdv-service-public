@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Admin::Territories::WebhookEndpointsController < Admin::Territories::BaseController
   before_action :set_webhook_endpoint, only: %i[edit update destroy]
 

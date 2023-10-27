@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Notifiers::RdvCollectifParticipations < ::BaseService
   attr_reader :rdv_users_tokens_by_user_id
 

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Admin::Territories::SectorsController < Admin::Territories::BaseController
   before_action :set_sector, only: %i[show edit update destroy]
   before_action :authorize_sector, only: %i[show edit update destroy]

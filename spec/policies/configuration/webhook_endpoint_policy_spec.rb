@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe Configuration::WebhookEndpointPolicy, type: :policy do
   %i[display? new? create? edit? update? destroy?].each do |action|
     describe "##{action}" do

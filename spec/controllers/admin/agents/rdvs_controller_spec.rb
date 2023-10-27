@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe Admin::Agents::RdvsController, type: :controller do
   describe "GET index" do
     context "with a signed in agent" do

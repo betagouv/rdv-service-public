@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class SearchContext
   def initialize(user:, query_params: {})
     @user = user

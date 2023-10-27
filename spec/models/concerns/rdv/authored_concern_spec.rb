@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe Rdv::AuthoredConcern, type: :concern do
   describe ".author" do
     let(:rdv) { create(:rdv) }

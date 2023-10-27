@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module IcsMultipartAttached
   # Sending icalendar events by email is complicated, buggy and unreliable.
   # This module is added to ApplicationMailer and used in all emails that include an icalendar

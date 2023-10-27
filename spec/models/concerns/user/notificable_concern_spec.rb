@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe User::NotificableConcern do
   describe "#notifiable_by_email?" do
     subject { user.notifiable_by_email? }

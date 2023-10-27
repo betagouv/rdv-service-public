@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe WebhookEndpoint, type: :model do
   describe "target_url validation" do
     subject { webhook_endpoint.valid? }

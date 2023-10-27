@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class BeneficiaireForm
   include ActiveModel::Model
   include BenignErrors

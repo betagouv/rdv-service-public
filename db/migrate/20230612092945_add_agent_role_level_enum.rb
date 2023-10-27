@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class AddAgentRoleLevelEnum < ActiveRecord::Migration[7.0]
   def up
     create_enum :access_level, %i[admin basic]

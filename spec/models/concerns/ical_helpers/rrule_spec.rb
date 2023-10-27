@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe IcalHelpers::Rrule do
   describe "#from_recurrence" do
     subject { described_class.from_recurrence(recurrence) }

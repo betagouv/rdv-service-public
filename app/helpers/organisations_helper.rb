@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module OrganisationsHelper
   def show_checklist?(organisation, agent)
     return false if organisation.rdv_mairie?

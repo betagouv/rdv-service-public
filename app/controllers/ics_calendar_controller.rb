@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require "icalendar/tzinfo"
 
 # rubocop:disable Rails/ApplicationController

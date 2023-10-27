@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module ParticipationsHelper
   def participation_status_dropdown_toggle(rdvs_user)
     tag.div(data: { toggle: "dropdown" },

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe WebhookDeliverable, type: :concern do
   include ActiveJob::TestHelper
 

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe "user can use a link that points to RDV search scoped to an organisation" do
   before { travel_to(Time.zone.parse("2022-09-12 15:00:00")) }
 

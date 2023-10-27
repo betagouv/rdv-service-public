@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe UpsertUserForFranceconnectService, type: :service do
   let(:omniauth_info) do
     OpenStruct.new(email: "jeanne@longo.fr",

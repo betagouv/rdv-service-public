@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module Admin::RdvFormConcern
   extend ActiveSupport::Concern
   include ActionView::Helpers::DateHelper

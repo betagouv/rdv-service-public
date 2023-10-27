@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe Notifiers::RdvCreated, type: :service do
   subject { described_class.perform_with(rdv, user1) }
 

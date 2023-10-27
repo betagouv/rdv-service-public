@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Api::V1::OrganisationsController < Api::V1::AgentAuthBaseController
   before_action :set_organisation, only: %i[show update]
 

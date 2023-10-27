@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe "Agent can see RDV details correctly" do
   before do
     travel_to(Time.zone.local(2022, 4, 4))

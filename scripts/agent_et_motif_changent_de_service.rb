@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # rails runner scripts/agent_et_motif_changent_de_service.rb ID_ORGA ID_SERVICE_SOURCE ID_DESTINATION
 
 ID_ORGANISATION = ARGV[0]

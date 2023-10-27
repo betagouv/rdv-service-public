@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Configuration::SectorAttributionPolicy
   def initialize(context, agent)
     @current_agent = context.agent

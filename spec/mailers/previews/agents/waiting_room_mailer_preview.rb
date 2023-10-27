@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Agents::WaitingRoomMailerPreview < ActionMailer::Preview
   def user_in_waiting_room
     rdv = Rdv.last

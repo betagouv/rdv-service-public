@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe "Agent can create a Rdv with wizard" do
   include UsersHelper
 

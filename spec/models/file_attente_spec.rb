@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe FileAttente, type: :model do
   let(:now) { Time.zone.parse("01-01-2019 09:00 +0100") }
 

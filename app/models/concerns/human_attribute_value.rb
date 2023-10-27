@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module HumanAttributeValue
   # Like :human_attribute_name, but for attribute values.
   #

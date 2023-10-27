@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # Utilisé uniquement au niveau du SuperAdmin, afin de faciliter la création d'accès pour les Mairies
 class MairieCompte
   include ActiveModel::Model

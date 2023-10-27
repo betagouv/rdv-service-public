@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe CronJob::UpdateExpirationsJob, type: :job do
   let(:now) { Time.zone.parse("20211015 8:50") }
 

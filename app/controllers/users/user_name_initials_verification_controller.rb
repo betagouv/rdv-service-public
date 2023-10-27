@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Users::UserNameInitialsVerificationController < UserAuthController
   skip_after_action :verify_authorized
 

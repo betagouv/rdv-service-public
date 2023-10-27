@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module CreneauxHelper
   COLORS = %w[
     color-scheme-bleu

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Agents::RdvMailerPreview < ActionMailer::Preview
   def rdv_created
     rdv = Rdv.joins(:users).not_cancelled.last

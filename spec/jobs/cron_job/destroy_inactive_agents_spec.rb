@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe CronJob::DestroyInactiveAgents do
   it "warns and deletes old agents" do
     # agents that will not be modified

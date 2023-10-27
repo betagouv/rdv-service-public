@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe Rdv, type: :model do
   describe "#starts_at_is_plausible" do
     let(:now) { Time.zone.parse("2021-05-03 14h00") }

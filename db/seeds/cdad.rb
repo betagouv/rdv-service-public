@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # Territories
 territory_gironde = Territory.create!(
   departement_number: "33",

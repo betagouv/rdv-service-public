@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require "swagger_helper"
 
 describe "WebhookEndpoints API", swagger_doc: "v1/api.json" do

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Service < ApplicationRecord
   # Mixins
   include HasVerticale
@@ -7,11 +5,11 @@ class Service < ApplicationRecord
   # Attributes
   auto_strip_attributes :name, :short_name
 
-  SECRETARIAT = "Secrétariat"
-  SERVICE_SOCIAL = "Service social"
-  PMI = "PMI (Protection Maternelle Infantile)"
-  CONSEILLER_NUMERIQUE = "Conseiller Numérique"
-  MAIRIE = "Mairie"
+  SECRETARIAT = "Secrétariat".freeze
+  SERVICE_SOCIAL = "Service social".freeze
+  PMI = "PMI (Protection Maternelle Infantile)".freeze
+  CONSEILLER_NUMERIQUE = "Conseiller Numérique".freeze
+  MAIRIE = "Mairie".freeze
 
   # Relations
   has_many :agents, dependent: :nullify

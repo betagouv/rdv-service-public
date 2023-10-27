@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe Agents::RdvMailer, type: :mailer do
   describe "#rdv_created" do
     let(:agent) { build(:agent) }

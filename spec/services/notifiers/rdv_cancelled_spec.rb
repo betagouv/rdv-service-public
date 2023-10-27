@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe Notifiers::RdvCancelled, type: :service do
   subject { described_class.perform_with(rdv, author) }
 

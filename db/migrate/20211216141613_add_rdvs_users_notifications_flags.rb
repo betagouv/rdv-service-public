@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class AddRdvsUsersNotificationsFlags < ActiveRecord::Migration[6.0]
   def change
     add_column :rdvs_users, :send_lifecycle_notifications, :boolean

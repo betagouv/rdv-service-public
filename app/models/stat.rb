@@ -1,10 +1,8 @@
-# frozen_string_literal: true
-
 class Stat
   include ActiveModel::Model
   attr_accessor :agents, :organisations, :users, :rdvs, :receipts
 
-  DEFAULT_FORMAT = "%d/%m/%Y"
+  DEFAULT_FORMAT = "%d/%m/%Y".freeze
 
   delegate :active, to: :users, prefix: true
 

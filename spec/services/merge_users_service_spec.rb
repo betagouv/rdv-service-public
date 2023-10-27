@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe MergeUsersService, type: :service do
   subject(:perform) { described_class.perform_with(user_target, user_to_merge, attributes_to_merge, organisation) }
 

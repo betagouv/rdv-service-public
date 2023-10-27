@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Notifiers::RdvUpdated < Notifiers::RdvBase
   def rdvs_users_to_notify
     @rdv.rdvs_users.not_cancelled.where(send_lifecycle_notifications: true)

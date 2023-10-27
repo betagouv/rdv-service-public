@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Admin::SlotsController < AgentAuthController
   def index
     @form = helpers.build_agent_creneaux_search_form(current_organisation, params)

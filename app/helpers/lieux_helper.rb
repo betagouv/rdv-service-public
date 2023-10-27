@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module LieuxHelper
   def unavailability_tag(lieu)
     return if lieu.nil?

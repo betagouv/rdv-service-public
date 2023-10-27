@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class UserAuthController < ApplicationController
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 

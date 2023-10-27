@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe Admin::Territories::MotifCategoriesController, type: :controller do
   describe "#update" do
     it "responds redirect" do

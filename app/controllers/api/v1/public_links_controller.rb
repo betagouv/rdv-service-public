@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Api::V1::PublicLinksController < Api::V1::BaseController
   before_action -> { check_parameters_presence(:territory) }
   before_action :set_territory

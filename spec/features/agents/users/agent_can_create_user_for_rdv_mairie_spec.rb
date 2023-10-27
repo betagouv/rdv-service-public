@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe "Agent can create user" do
   include_context "rdv_mairie_api_authentication"
 

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Creneau
   include ActiveModel::Model
   include Comparable

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 Rails.application.configure do
   config.active_job.default_priority = 0
 

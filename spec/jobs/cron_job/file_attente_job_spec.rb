@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe CronJob::FileAttenteJob, type: :job do
   describe "#perform" do
     let(:now) { Time.zone.parse("01-01-2019 09:00") }

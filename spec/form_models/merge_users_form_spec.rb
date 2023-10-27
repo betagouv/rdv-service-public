@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe MergeUsersForm, type: :form do
   let(:organisation) { create(:organisation) }
 

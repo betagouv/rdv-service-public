@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe "User can search for creneaux" do
   let(:now) { Time.zone.parse("2021-12-13 8:00") }
 

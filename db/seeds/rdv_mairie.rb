@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # Territories
 territory_val_doise = Territory.create!(
   departement_number: "95",

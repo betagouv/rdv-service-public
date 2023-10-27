@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Notifiers::RdvUpcomingReminder < Notifiers::RdvBase
   protected
 

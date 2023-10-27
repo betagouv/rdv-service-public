@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module User::FranceconnectFrozenFieldsConcern
   FROZEN_FIELDS = %i[first_name birth_name birth_date].freeze
 

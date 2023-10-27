@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 FactoryBot.define do
   sequence(:absence_title) { |n| "Indisponibilité #{n}" }
 

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Api::Rdvinsertion::InvitationsController < Api::V1::AgentAuthBaseController
   INVITATION_LINK_PARAMS = (InvitationSearchContext::INVITATION_PARAMS + %i[address latitude longitude invitation_token]).freeze
 

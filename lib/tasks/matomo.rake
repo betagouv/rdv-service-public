@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 namespace :matomo do
   task :exclude_params do
     # Please run bundle exec rake matomo:exclude_params

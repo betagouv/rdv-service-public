@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # Ce concern a la responsabilité de faire la sérialisation qui permet de générer le json envoyé
 # à Outlook pour représenter un AgentsRdv sous la forme d'un event.
 # La connaissance du graphe d'objet qui sert à faire cette sérialisation permet de savoir sur quelles

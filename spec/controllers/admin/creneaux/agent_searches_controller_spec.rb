@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe Admin::Creneaux::AgentSearchesController, type: :controller do
   context "with a secretaire signed_in" do
     let(:organisation) { create(:organisation) }

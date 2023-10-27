@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Api::V1::ReferentAssignationsController < Api::V1::AgentAuthBaseController
   def create
     referent_assignation = ReferentAssignation.new(referent_assignation_params)

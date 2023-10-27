@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Users::UsersController < UserAuthController
   def edit
     @user = current_user

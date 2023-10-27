@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Api::V1::AbsencesController < Api::V1::AgentAuthBaseController
   before_action :retrieve_absence, only: %i[show update destroy]
   def index

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Notifiers::RdvCreated < Notifiers::RdvBase
   def notify_user_by_mail(user)
     user_mailer(user).rdv_created.deliver_later

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # rubocop:disable Rails/ApplicationController
 class InboundEmailsController < ActionController::Base
   skip_before_action :verify_authenticity_token

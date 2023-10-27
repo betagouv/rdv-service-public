@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe "Agent can unsync his account to outlook" do
   let!(:organisation) { create(:organisation) }
   let!(:agent) { create(:agent, microsoft_graph_token: "super_token", refresh_microsoft_graph_token: "super_refresh_token", basic_role_in_organisations: [organisation]) }

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Admin::AgentAgendasController < AgentAuthController
   def show
     @agent = policy_scope(Agent).find(params[:id])

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class BackfillMotifsBookableBy < ActiveRecord::Migration[7.0]
   def up
     Motif.where(bookable_publicly: true).update_all(bookable_by: :everyone)

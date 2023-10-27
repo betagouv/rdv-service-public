@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class TriggerWebhookJob < ApplicationJob
   queue_as :trigger_webhook
 

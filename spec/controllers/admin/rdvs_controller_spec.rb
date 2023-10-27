@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe Admin::RdvsController, type: :controller do
   let(:now) { Time.zone.parse("19/07/2019 15:00") }
   let!(:organisation) { create(:organisation) }

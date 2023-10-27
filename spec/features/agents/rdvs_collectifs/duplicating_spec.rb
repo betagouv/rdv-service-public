@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe "Agent can duplicate a Rdv collectif" do
   let!(:organisation) { create(:organisation) }
   let!(:service) { create(:service) }

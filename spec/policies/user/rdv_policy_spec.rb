@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe User::RdvPolicy, type: :policy do
   subject { described_class }
 
