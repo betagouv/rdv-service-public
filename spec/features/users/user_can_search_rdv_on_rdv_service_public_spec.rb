@@ -26,7 +26,7 @@ describe "User can search rdv on rdv service public" do
   end
 
   it "allows booking a rdv", js: true do
-    visit public_link_to_org_url(organisation_id: organisation.id, host: "http://www.rdv-mairie-test.localhost")
+    visit "http://www.rdv-mairie-test.localhost/org/#{organisation.id}"
     click_on("Clarification du dossier")
     click_on("Prochaine disponibilité le") # choix du lieu
 
