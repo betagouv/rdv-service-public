@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe Admin::Organisations::StatsController do
   describe "#rdvs" do
     it "returns rdvs of the current organisation only" do

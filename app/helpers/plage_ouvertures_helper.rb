@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module PlageOuverturesHelper
   # Generates ["00:00", "00:05", "00:10", ... "23:50", "23:55"]
   EVERY_5_MINUTES_OF_THE_DAY = (0..23).flat_map do |h|

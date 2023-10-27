@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class AddRdvsEndsAt < ActiveRecord::Migration[6.0]
   def change
     add_column :rdvs, :ends_at, :datetime

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module InclusionConnect
   IC_CLIENT_ID = ENV["INCLUSION_CONNECT_CLIENT_ID"]
   IC_CLIENT_SECRET = ENV["INCLUSION_CONNECT_CLIENT_SECRET"]

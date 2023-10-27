@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class RemoveWaitingFromEnumStatus < ActiveRecord::Migration[7.0]
   def up
     # Migrate waiting status to unknown

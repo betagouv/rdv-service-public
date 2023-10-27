@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe BeneficiaireForm do
   subject(:form) { described_class.new(params) }
 

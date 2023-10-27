@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe WebInvitationSearchContext, type: :service do
   subject { described_class.new(user: user, query_params: query_params) }
 

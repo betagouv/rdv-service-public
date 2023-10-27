@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class DuplicateUsersFinderService < BaseService
   def initialize(user, organisation = nil)
     # TODO: Remove organisation from the parameters

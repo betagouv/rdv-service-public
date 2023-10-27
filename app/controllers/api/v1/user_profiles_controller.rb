@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Api::V1::UserProfilesController < Api::V1::AgentAuthBaseController
   def create
     user_profile = UserProfile.new(user_profile_params)

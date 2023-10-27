@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe "Adding a user to a collective RDV" do
   include Rails.application.routes.url_helpers
 

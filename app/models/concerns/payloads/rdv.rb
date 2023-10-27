@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module Payloads
   module Rdv
     def payload(action = nil, recipient = users.first) # rubocop:disable Metrics/CyclomaticComplexity

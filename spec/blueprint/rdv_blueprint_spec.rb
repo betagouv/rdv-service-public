@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe RdvBlueprint do
   subject(:json) { JSON.parse(rendered) }
 

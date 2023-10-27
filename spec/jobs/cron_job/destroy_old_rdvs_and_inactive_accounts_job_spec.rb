@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe CronJob::DestroyOldRdvsAndInactiveAccountsJob do
   it "only destroys Rdvs that are more than 2 years old and inactive users created 2 more than years ago" do
     rdv_occurring_25_months_ago = travel_to(25.months.ago) { create(:rdv, starts_at: Time.zone.today.change(hour: 16)) }

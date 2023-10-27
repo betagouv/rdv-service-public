@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Api::V1::WebhookEndpointsController < Api::V1::AgentAuthBaseController
   before_action :set_webhook_endpoint, only: %i[update]
   before_action :set_organisation, only: %i[index create update]

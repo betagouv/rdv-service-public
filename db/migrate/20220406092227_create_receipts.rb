@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class CreateReceipts < ActiveRecord::Migration[6.1]
   def change
     create_enum :receipts_channel, %i[sms mail webhook]

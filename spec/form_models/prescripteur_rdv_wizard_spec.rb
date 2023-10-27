@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe PrescripteurRdvWizard do
   let(:organisation) { create(:organisation) }
   let(:motif) { create(:motif, organisation: organisation) }

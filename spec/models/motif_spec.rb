@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe Motif, type: :model do
   let(:secretariat) { create(:service, :secretariat) }
   let(:motif) { create(:motif, organisation: organisation) }

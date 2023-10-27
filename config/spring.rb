@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 %w[
   .env
   .ruby-version

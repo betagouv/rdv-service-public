@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # Contrairement au Agents::PasswordsController qui gère les reset de mot de passe via les mécanismes custom de devise
 # et qui ne nécessite pas que l'agent soit connecté,
 # ce controller gère la modification de mot de passe pour un agent connecté, sans utiliser Devise.

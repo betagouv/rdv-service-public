@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Api::Ants::EditorController < Api::Ants::BaseController
   before_action :check_required_params!, only: [:available_time_slots]
 
@@ -24,9 +22,9 @@ class Api::Ants::EditorController < Api::Ants::BaseController
   end
 
   ANTS_MOTIF_CATEGORY_NAMES = [
-    CNI_MOTIF_CATEGORY_NAME = "Carte d'identité disponible sur le site de l'ANTS",
-    PASSPORT_MOTIF_CATEGORY_NAME = "Passeport disponible sur le site de l'ANTS",
-    CNI_AND_PASSPORT_MOTIF_CATEGORY_NAME = "Carte d'identité et passeport disponible sur le site de l'ANTS",
+    CNI_MOTIF_CATEGORY_NAME = "Carte d'identité disponible sur le site de l'ANTS".freeze,
+    PASSPORT_MOTIF_CATEGORY_NAME = "Passeport disponible sur le site de l'ANTS".freeze,
+    CNI_AND_PASSPORT_MOTIF_CATEGORY_NAME = "Carte d'identité et passeport disponible sur le site de l'ANTS".freeze,
   ].freeze
 
   private

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe "prescripteur can create RDV for a user" do
   before do
     travel_to(Time.zone.parse("2022-11-07 15:00"))

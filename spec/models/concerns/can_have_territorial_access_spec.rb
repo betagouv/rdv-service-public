@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe CanHaveTerritorialAccess, type: :concern do
   describe "#territorial_admin!" do
     it "update agent territorial admin access to true" do

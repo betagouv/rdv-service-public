@@ -1,5 +1,3 @@
-# frozen_string_literal: false
-
 describe ApplicationJob, type: :job do
   describe "error logging" do
     let(:job_class) do

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # This concern allows to sign in users when a valid invitation token is passed through url params.
 # If valid the invitation token and params will be stored in the session. The user will then be signed in through the invitation in session.
 # If the token is linked to a RdvsUser, it will also be linked to a rdv.

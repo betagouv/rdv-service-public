@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe RdvsUser::Creatable, type: :concern do
   before do
     stub_netsize_ok

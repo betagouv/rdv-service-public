@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Agents::ExportMailerPreview < ActionMailer::Preview
   def rdv_export
     agent = Agent.first

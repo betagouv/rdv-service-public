@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Agent::RdvsUserPolicy < DefaultAgentPolicy
   class Scope < Scope
     def resolve

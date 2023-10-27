@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe Users::FileAttentesController, type: :controller do
   let(:user) { create(:user) }
   let!(:rdv) { create(:rdv, users: [user]) }

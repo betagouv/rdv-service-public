@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe "Configure les préférences de signalisation d'usager en salle d'attente", type: :request do
   include Rails.application.routes.url_helpers
 

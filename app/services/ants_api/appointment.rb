@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module AntsApi
   class Appointment
     class ApiRequestError < StandardError; end

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe "Admin can configure the territory", type: :feature do
   context "with admin agent" do
     it "update territory phone number", type: :feature do

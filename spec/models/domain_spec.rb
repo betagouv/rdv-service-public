@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe Domain do
   it "has domains initialized with all the required keys" do
     Domain::ALL.each do |domain|

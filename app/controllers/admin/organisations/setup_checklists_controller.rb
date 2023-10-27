@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Admin::Organisations::SetupChecklistsController < AgentAuthController
   before_action :set_organisation
 

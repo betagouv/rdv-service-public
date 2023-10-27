@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe Admin::Territories::InvitationsDeviseController, type: :controller do
   render_views
 

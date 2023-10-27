@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Team < ApplicationRecord
   # Mixins
   has_paper_trail(

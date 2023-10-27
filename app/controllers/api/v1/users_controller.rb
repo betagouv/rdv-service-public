@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Api::V1::UsersController < Api::V1::AgentAuthBaseController
   before_action :set_organisation, only: %i[show update]
   before_action :set_user, only: %i[show update rdv_invitation_token]

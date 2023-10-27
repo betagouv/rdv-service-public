@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Admin::ReferentAssignationsController < AgentAuthController
   def index
     @user = policy_scope(User).find(index_params[:user_id])

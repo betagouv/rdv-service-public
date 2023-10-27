@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class MotifCategory < ApplicationRecord
   # Relations
   has_many :motifs, dependent: :nullify

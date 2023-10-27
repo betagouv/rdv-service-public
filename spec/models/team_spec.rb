@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe Team, type: :model do
   describe "validation" do
     it "invalid without name" do

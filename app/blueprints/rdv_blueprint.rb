@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class RdvBlueprint < Blueprinter::Base
   identifier :id
 

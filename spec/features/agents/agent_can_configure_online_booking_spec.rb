@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe "Agents can configure online booking" do
   let!(:organisation) { create(:organisation) }
   let!(:agent) { create(:agent, :cnfs, admin_role_in_organisations: [organisation]) }

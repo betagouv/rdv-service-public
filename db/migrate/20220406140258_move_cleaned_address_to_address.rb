@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class MoveCleanedAddressToAddress < ActiveRecord::Migration[6.1]
   def change
     # Move out the existing address (and make it optional)

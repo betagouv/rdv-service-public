@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe AbsencesHelper do
   describe "#absence_tag" do
     it "return En cours when absence is today" do

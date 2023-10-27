@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class WebSearchContext < SearchContext
   include Users::CreneauxWizardConcern
   attr_reader :errors, :query_params, :address, :city_code, :street_ban_id, :latitude, :longitude

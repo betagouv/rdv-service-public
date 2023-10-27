@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Admin::UsersController < AgentAuthController
   respond_to :html, :json
 

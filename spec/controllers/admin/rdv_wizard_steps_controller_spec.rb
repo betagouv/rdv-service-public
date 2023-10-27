@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe Admin::RdvWizardStepsController, type: :controller do
   let(:motif) { create(:motif) }
   let(:organisation) { motif.organisation }

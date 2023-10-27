@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe "ANTS API: getManagedMeetingPoints" do
   include_context "rdv_mairie_api_authentication"
 

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe "Agent can CRUD motifs" do
   let(:organisation) { create(:organisation) }
   let!(:service) { create(:service, name: "PMI") }

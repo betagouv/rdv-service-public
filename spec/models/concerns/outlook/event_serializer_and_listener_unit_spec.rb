@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # Ce fichier teste que le bon nombre de jobs est envoyé pour différentes transactions
 RSpec.describe Outlook::EventSerializerAndListener do
   context "when the agent is not connected to outlook" do

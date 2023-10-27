@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class AddStatusToRdvsUsers < ActiveRecord::Migration[6.1]
   def change
     add_column :rdvs_users, :status, :rdv_status, null: false, default: :unknown

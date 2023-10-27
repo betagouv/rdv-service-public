@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Agents::AccountDeletionMailer < ApplicationMailer
   before_action do
     @agent = params[:agent]

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module TextSearch
   extend ActiveSupport::Concern
   # Full Text Search support, using pg_search (https://github.com/Casecommons/pg_search).

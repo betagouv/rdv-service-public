@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module Outlook
   class MassCreateEventJob < ApplicationJob
     queue_as :outlook_sync

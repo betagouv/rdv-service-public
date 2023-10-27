@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # Cette policy n'est utilisée que par l'API,
 # voir https://github.com/betagouv/rdv-solidarites.fr/pull/3138
 class Agent::ReferentAssignationPolicy < DefaultAgentPolicy

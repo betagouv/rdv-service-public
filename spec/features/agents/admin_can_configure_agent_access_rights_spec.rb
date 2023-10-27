@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe "Admin can configure the organisation" do
   let(:territory) { create(:territory) }
   let(:organisation) { create(:organisation, territory: territory) }

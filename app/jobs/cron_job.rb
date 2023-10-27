@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class CronJob < ApplicationJob
   queue_as :cron
 

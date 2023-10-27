@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe "configuration pages", js: true do
   it "index of configuration" do
     territory = create(:territory)

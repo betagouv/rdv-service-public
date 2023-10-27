@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe "prescripteur can create RDV for a user" do
   include_context "rdv_mairie_api_authentication"
 

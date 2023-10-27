@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class AgentCreneauxSearchForm
   include ActiveModel::Model
 

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe Configuration::SectorPolicy, type: :policy do
   %i[display? edit? show? update?].each do |action|
     describe "##{action}" do

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.shared_examples "SearchContext" do
   let!(:user) { create(:user, organisations: [organisation]) }
   let!(:organisation) { create(:organisation) }

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe "Anybody can see stats" do
   it "displays all the stats" do
     visit root_path

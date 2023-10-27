@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe CustomMailerDeliveryJob do
   mailer = Class.new(ApplicationMailer) do
     def a_sample_email(absence)

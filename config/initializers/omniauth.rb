@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require "omniauth/strategies/franceconnect"
 
 Rails.application.config.middleware.use OmniAuth::Builder do

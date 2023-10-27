@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # rails runner scripts/export_cnfs_agents.rb
 
 require "csv"

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module Ants
   class SyncAppointmentJob < ApplicationJob
     def self.perform_later_for(rdv)

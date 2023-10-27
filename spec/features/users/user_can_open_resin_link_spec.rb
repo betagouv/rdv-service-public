@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # Ce test de non-régression a été ajouté pour s'assurer que le
 # lien public que nous avons fourni à Rés'In est toujours fonctionnel.
 RSpec.describe "Rés'In specific public link" do

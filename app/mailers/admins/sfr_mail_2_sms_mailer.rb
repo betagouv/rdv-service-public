@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Admins::SfrMail2SmsMailer < ApplicationMailer
   default reply_to: nil
 

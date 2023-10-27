@@ -195,9 +195,7 @@ Style/Documentation:
   Enabled: false
 
 Style/FrozenStringLiteralComment:
-  Exclude:
-    - "config/**/*"
-    - "config.ru"
+  EnforcedStyle: never
 
 Style/GuardClause:
   Enabled: false

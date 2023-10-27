@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # TODO: move those tests to fatures tests
 RSpec.describe SearchController, type: :controller do
   render_views

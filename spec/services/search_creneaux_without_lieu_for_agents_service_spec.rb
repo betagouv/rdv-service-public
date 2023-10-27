@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe SearchCreneauxWithoutLieuForAgentsService, type: :service do
   describe "creneaux" do
     before do

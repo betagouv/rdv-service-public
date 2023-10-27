@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Admin::RdvWizardForm::Step4
   include Admin::RdvWizardFormConcern
   include Admin::RdvFormConcern

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe "public pages", js: true do
   it "accessibility_path page is accessible" do
     expect_page_to_be_axe_clean(accessibility_path)

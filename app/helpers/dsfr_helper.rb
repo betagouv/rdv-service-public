@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module DsfrHelper
   def dsfr_image_tag(path, alt, html_options = {})
     tag.figure(class: "fr-content-media") do

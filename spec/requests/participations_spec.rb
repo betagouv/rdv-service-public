@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe "Participations", type: :request do
   let(:service) { create(:service) }
   let(:organisation) { create(:organisation) }
