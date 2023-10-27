@@ -121,6 +121,7 @@ class Motif < ApplicationRecord
     joins(:motif_category)
       .where(motif_category: { short_name: motif_category_short_name })
   }
+  scope :requires_ants_predemande_number, -> { joins(:motif_category).merge(MotifCategory.requires_ants_predemande_number) }
 
   ## -
 
@@ -229,6 +230,10 @@ class Motif < ApplicationRecord
 
   def bookable_outside_of_organisation?
     bookable_by != "agents"
+  end
+
+  def requires_ants_predemande_number?
+    motif_category&.requires_ants_predemande_number?
   end
 
   private

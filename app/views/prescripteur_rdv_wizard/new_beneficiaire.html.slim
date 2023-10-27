@@ -4,7 +4,7 @@ main.container
   .row.justify-content-center
     .col-lg-7.col-md-10.col-sm-11
       .card
-        = render "users/rdv_wizard_steps/rdv_wizard_summary", rdv_wizard: @rdv_wizard if @rdv_wizard.present?
+        = render "users/rdv_wizard_steps/rdv_wizard_summary", rdv_wizard: @rdv_wizard
         .card-body
           h3 Bénéficiaire
           p Indiquez les coordonnées de la personne qui viendra au rendez-vous
@@ -16,7 +16,7 @@ main.container
                   = f.input :first_name, required: true
                 .col-6
                   = f.input :last_name, required: true
-            - if current_domain == Domain::RDV_MAIRIE
+            - if @rdv_wizard.rdv.requires_ants_predemande_number?
               .row
                 .col-12
                   = f.input :ants_pre_demande_number, label: "Numéro de pré-demande ANTS", required: true
