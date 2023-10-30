@@ -6,6 +6,7 @@ class CreateAgentServices < ActiveRecord::Migration[7.0]
 
       t.datetime :created_at, null: false
     end
+    add_index :agent_services, %i[agent_id service_id], unique: true
 
     agent_services_hashes = Agent.pluck(:id, :service_id, :created_at).map do |agent_id, service_id, created_at|
       { agent_id: agent_id, service_id: service_id, created_at: created_at }

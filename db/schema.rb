@@ -153,6 +153,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_21_103223) do
     t.bigint "agent_id"
     t.bigint "service_id"
     t.datetime "created_at", null: false
+    t.index ["agent_id", "service_id"], name: "index_agent_services_on_agent_id_and_service_id", unique: true
     t.index ["agent_id"], name: "index_agent_services_on_agent_id"
     t.index ["service_id"], name: "index_agent_services_on_service_id"
   end
