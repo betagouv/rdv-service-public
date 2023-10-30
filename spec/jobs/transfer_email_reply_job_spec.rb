@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe TransferEmailReplyJob do
   subject(:perform_job) { described_class.perform_now(sendinblue_payload) }
 

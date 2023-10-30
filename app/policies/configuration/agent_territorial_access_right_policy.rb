@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Configuration::AgentTerritorialAccessRightPolicy
   def initialize(context, agent_territorial_access_right)
     @current_agent = context.agent

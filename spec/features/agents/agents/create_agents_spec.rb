@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe "Agent can create another agent" do
   let(:territory) { create(:territory) }
   let(:organisation1) { create(:organisation, territory: territory) }

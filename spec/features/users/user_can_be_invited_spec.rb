@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe "User can be invited" do
   around { |example| perform_enqueued_jobs { example.run } }
 

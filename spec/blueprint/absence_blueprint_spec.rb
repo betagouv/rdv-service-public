@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe AbsenceBlueprint do
   describe "#render" do
     it "contains an agent" do

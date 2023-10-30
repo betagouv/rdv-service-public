@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class CreateMotifCategories < ActiveRecord::Migration[7.0]
   def up
     create_table :motif_categories do |t|

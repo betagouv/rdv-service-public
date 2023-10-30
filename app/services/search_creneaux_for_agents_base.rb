@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class SearchCreneauxForAgentsBase < BaseService
   def initialize(agent_creneaux_search_form)
     @form = agent_creneaux_search_form

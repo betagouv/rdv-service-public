@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 territory_cnfs = Territory.create!(
   departement_number: "CN",
   name: "Conseillers Numériques",

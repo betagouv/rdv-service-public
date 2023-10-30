@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module Payloads
   module PlageOuverture
     def payload(action = nil)

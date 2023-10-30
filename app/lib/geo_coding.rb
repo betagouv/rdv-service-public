@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module GeoCoding
   def find_geo_coordinates(address)
     address_api_response(address).dig("features", 0, "geometry", "coordinates")

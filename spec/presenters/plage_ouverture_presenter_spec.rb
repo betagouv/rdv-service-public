@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe PlageOuverturePresenter, type: :presenter do
   describe "#overlaps_rdv_error_message" do
     subject { presenter.overlaps_rdv_error_message }

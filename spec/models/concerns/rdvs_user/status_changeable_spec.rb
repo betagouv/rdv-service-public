@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe RdvsUser::StatusChangeable, type: :concern do
   before { stub_netsize_ok }
 

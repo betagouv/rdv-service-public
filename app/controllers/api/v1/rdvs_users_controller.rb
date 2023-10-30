@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Api::V1::RdvsUsersController < Api::V1::AgentAuthBaseController
   def update
     rdvs_user = policy_scope(RdvsUser).find(params[:id])

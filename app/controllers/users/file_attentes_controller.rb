@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Users::FileAttentesController < UserAuthController
   respond_to :js
 

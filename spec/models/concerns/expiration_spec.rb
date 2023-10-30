@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe Expiration, type: :concern do
   shared_examples "#expired?" do
     def build(factory, params)

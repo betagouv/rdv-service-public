@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Users::ParticipationsController < UserAuthController
   before_action :set_rdv, :set_user
 

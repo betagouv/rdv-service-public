@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe "territory admin can manage agents", type: :feature do
   let(:territory) { create(:territory, departement_number: "62") }
   let(:organisation) { create(:organisation, territory: territory) }

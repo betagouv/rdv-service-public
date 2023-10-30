@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # DebugLogger:
 #
 # TEST_PHONE_NUMBER=<0639981234> rails runner scripts/sms_sender_test.rb

@@ -1,7 +1,5 @@
 require_relative "boot"
 
-# frozen_string_literal: true
-
 # Selectively load modules instead of requiring rails/all
 # require "rails/all"
 require "rails"

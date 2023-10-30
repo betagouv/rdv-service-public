@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module PhoneNumberValidation
   # See issue #1471. We want to allow:
   # * international (e164) phone numbers

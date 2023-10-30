@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class RemoveUnusedRailsTables < ActiveRecord::Migration[7.0]
   def up
     # To recreate, run `bin/rails action_text:install`

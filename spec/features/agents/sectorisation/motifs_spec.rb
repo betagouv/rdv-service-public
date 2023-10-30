@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe "Sectorisation display for motifs" do
   let(:territory) { create(:territory, departement_number: "26") }
   let(:organisation) { create(:organisation, territory: territory) }

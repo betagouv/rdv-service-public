@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module PageSpecHelper
   def expect_page_title(title)
     expect(page).to have_selector("h1.page-title", text: title)

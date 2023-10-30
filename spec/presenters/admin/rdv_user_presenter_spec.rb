@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe Admin::RdvUserPresenter do
   let(:organisation) { create(:organisation) }
   let(:user) { create(:user, organisations: [organisation]) }

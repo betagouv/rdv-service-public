@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Admin::Territories::InvitationsDeviseController < Devise::InvitationsController
   def new
     @services = Service.all.order(:name)

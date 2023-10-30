@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe RdvsUsersExportJob do
   stub_sentry_events
 

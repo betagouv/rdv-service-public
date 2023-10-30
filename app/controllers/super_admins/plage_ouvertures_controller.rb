@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module SuperAdmins
   class PlageOuverturesController < SuperAdmins::ApplicationController
     # To customize the behavior of this controller,

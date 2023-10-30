@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe LieuxHelper do
   describe ".lieu_tag" do
     context "when the lieu is nil" do

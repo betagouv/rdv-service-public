@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe "Agents can change their passwords" do
   let!(:organisation) { create(:organisation) }
   let!(:agent) { create(:agent, basic_role_in_organisations: [organisation], password: "lapinlapin") }

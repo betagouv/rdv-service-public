@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe PlageOuvertureOverlap do
   let(:organisation) { build(:organisation) }
   let(:agent) { build(:agent, organisations: [organisation]) }

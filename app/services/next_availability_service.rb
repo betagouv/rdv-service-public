@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class NextAvailabilityService
   def self.find(motif, lieu, agents, from:, to: nil)
     from = from.to_datetime # rubocop:disable Style/DateTime

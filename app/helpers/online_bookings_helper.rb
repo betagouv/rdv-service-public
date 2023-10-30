@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module OnlineBookingsHelper
   def motifs_checkbox_text(motifs)
     if motifs.any?

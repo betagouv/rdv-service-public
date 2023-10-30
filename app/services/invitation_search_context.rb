@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class InvitationSearchContext < SearchContext
   attr_reader :departement, :city_code, :street_ban_id
 

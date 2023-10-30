@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class AddForeignKeys < ActiveRecord::Migration[7.0]
   # rubocop:disable Metrics/MethodLength
   def change

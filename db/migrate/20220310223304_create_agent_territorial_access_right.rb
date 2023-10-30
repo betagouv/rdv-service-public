@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class CreateAgentTerritorialAccessRight < ActiveRecord::Migration[6.1]
   def change
     create_table :agent_territorial_access_rights do |t|

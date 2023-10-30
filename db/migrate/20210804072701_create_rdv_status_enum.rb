@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class CreateRdvStatusEnum < ActiveRecord::Migration[6.0]
   def change
     rename_column :rdvs, :status, :old_status

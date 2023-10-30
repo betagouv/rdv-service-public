@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # In case of changes here please make sure rdv_solidarites_model_id didnt change in rdv-insertion seed or update them
 
 # Motif Categories

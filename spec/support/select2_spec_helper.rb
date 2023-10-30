@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module Select2SpecHelper
   def select_user(user)
     find(".collapse-add-user-selection .select2-selection").click

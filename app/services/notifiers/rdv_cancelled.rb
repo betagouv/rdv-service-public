@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Notifiers::RdvCancelled < Notifiers::RdvBase
   def notify_user_by_mail(user)
     return unless notify_cancellation?

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe Admin::EditRdvForm, type: :form do
   let(:organisation) { create(:organisation) }
   let(:agent) { create(:agent) }

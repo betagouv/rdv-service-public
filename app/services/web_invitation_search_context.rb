@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class WebInvitationSearchContext < InvitationSearchContext
   include Users::CreneauxWizardConcern
   attr_reader :errors, :query_params, :address, :latitude, :longitude

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class RdvsUser < ApplicationRecord
   # Mixins
   devise :invitable

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class AddOrganisationToReceipts < ActiveRecord::Migration[7.0]
   def change
     add_reference :receipts, :organisation, foreign_key: true

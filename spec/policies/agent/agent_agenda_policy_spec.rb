@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe Agent::AgentAgendaPolicy, type: :policy do
   subject { described_class }
 

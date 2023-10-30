@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module RdvSolidaritesInstanceNameHelper
   # Display a small indicator that this is not the production website.
   def rdv_solidarites_instance_name

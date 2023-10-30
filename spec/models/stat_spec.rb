@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe Stat, type: :model do
   describe "#rdvs_group_by_type" do
     it "return empty hash without rdv" do

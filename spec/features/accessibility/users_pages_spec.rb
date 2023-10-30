@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe "users pages", js: true do
   describe "users_rdvs_path page" do
     it "without RDV is accessible" do

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe Admin::ReferentAssignationsController, type: :controller do
   describe "#index" do
     it "assigns available agents and respond success" do

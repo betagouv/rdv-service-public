@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module SuperAdmins
   class MairieComptesController < SuperAdmins::ApplicationController
     include GeoCoding

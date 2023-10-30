@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class RdvsUsersExportPageJob < ExportJob
   def perform(rdvs_users_ids, page_index, redis_key)
     rows = RdvsUserExporter.rows_from_rdvs_users(RdvsUser.where(id: rdvs_users_ids).order(id: :desc))

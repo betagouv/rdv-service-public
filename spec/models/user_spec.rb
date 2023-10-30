@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe User, type: :model do
   describe "#add_organisation" do
     subject do

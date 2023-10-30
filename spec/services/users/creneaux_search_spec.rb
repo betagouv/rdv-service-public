@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe Users::CreneauxSearch, type: :service do
   let(:organisation) { create(:organisation) }
   let(:lieu) { create(:lieu, organisation: organisation) }

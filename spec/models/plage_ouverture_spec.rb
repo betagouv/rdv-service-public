@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe PlageOuverture, type: :model do
   let!(:organisation) { create(:organisation) }
 

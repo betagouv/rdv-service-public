@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe "Adding a user to a collective RDV" do
   include Rails.application.routes.url_helpers
 
@@ -317,14 +315,14 @@ RSpec.describe "Adding a user to a collective RDV" do
         rdv.status = "revoked"
         rdv.save
         select_motif
-        expect(page).to have_content("La prise de rendez-vous n'est pas disponible pour ce département.")
+        expect(page).to have_content("Malheureusement, aucun créneau correspondant à votre recherche n'a été trouvé.")
 
         rdv2.max_participants_count = 2
         create(:rdvs_user, rdv: rdv2)
         create(:rdvs_user, rdv: rdv2)
         rdv2.save
         visit root_path(params)
-        expect(page).to have_content("La prise de rendez-vous n'est pas disponible pour ce département.")
+        expect(page).to have_content("Malheureusement, aucun créneau correspondant à votre recherche n'a été trouvé.")
       end
 
       it "correctly display message of participation already existing" do

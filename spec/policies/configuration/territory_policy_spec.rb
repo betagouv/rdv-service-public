@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe Configuration::TerritoryPolicy, type: :policy do
   subject { described_class }
 

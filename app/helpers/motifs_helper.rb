@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module MotifsHelper
   YIQ_DARK_LIGHT_FRONTIER = 128
 

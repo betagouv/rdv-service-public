@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Notifiers::RdvBase < ::BaseService
   include DateHelper
   attr_reader :rdv_users_tokens_by_user_id

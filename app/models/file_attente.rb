@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class FileAttente < ApplicationRecord
   # Constants
   NO_MORE_NOTIFICATIONS = 7.days

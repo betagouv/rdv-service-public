@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module UsersHelper
   def birth_date_and_age(user)
     return unless user.birth_date

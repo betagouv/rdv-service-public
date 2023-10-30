@@ -1,10 +1,8 @@
-# frozen_string_literal: true
-
 class Zone < ApplicationRecord
   # Attributes
   # TODO: make it an enum
-  LEVEL_CITY = "city"
-  LEVEL_STREET = "street"
+  LEVEL_CITY = "city".freeze
+  LEVEL_STREET = "street".freeze
   LEVELS = [LEVEL_CITY, LEVEL_STREET].freeze
 
   attr_accessor :city_label, :street_label # used in zone form

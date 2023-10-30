@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class AddVerticaleToOrganisations < ActiveRecord::Migration[7.0]
   def up
     create_enum :verticale, %i[rdv_insertion rdv_solidarites rdv_aide_numerique]

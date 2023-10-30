@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe "Agent can list RDVs" do
   let!(:organisation) { create(:organisation) }
   let!(:current_agent) { create(:agent, organisations: [organisation]) }

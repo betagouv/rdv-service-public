@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe RdvExporter, type: :service do
   describe "#xls_string_from_rdvs_rows" do
     # rubocop:disable RSpec/ExampleLength

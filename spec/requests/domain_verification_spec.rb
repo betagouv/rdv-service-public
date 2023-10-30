@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # see https://learn.microsoft.com/en-us/azure/active-directory/develop/howto-configure-publisher-domain
 RSpec.describe "Microsoft domain verification" do
   around do |example|

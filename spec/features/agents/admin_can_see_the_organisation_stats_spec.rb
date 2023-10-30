@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe "Admin can configure the organisation" do
   it "displays all the stats" do
     organisation = create(:organisation)

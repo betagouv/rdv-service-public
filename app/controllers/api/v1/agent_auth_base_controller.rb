@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Api::V1::AgentAuthBaseController < Api::V1::BaseController
   include Pundit::Authorization
   include DeviseTokenAuth::Concerns::SetUserByToken

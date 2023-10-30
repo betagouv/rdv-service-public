@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe "CRUDS teams configuration", type: :request do
   include Rails.application.routes.url_helpers
 

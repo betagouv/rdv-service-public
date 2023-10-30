@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe SmsSender, type: :service do
   let(:rdv) { create(:rdv) }
   let(:user) { create(:user) }

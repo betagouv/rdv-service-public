@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # Ce fichier teste l'intégration de la chaine d'appels depuis les modifications des objets activerecord
 # jusqu'à l'appel http à l'api Outlook
 RSpec.describe Outlook::EventSerializerAndListener do

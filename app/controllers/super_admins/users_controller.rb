@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module SuperAdmins
   class UsersController < SuperAdmins::ApplicationController
     def sign_in_as

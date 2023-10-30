@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class AddPrescripteurs < ActiveRecord::Migration[7.0]
   def change
     add_enum_value :user_created_through, "prescripteur"

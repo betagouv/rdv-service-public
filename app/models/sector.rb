@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Sector < ApplicationRecord
   # Attributes
   auto_strip_attributes :name

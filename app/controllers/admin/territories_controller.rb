@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Admin::TerritoriesController < Admin::Territories::BaseController
   skip_before_action :set_territory
   before_action :set_territory_with_id

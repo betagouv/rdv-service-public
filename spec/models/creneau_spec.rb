@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe Creneau, type: :model do
   let(:organisation) { create(:organisation) }
   let!(:motif) { create(:motif, name: "Vaccination", default_duration_in_min: 30, organisation: organisation) }

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # La phrase du nom de la classe indique le contexte et l'action métier réalisés par ce service object en PORO
 class AdminCreatesAgent
   def initialize(agent_params:, current_agent:, organisation:, access_level:)

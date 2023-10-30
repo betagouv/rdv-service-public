@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module RdvsUser::Creatable
   extend ActiveSupport::Concern
 

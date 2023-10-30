@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module BenignErrors
   # ActiveModel errors that can be ignored
   #

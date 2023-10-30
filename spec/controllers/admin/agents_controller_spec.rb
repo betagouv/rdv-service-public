@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe Admin::AgentsController, type: :controller do
   render_views
 

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe "Agent can search plage ouverture" do
   let(:organisation) { create(:organisation) }
   let(:agent) { create(:agent, organisations: [organisation]) }

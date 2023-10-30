@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Admin::Territories::RdvFieldsController < Admin::Territories::BaseController
   def edit
     authorize current_territory

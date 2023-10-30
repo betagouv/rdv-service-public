@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 def stub_netsize_ok
   stubbed_body = {
     responseCode: 0,

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe RecurrenceConcern do
   shared_examples "#set_recurrence_ends_at" do
     it "set to ends of day of last occurrence" do

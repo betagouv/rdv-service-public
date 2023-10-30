@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Motif < ApplicationRecord
   # Mixins
   has_paper_trail
@@ -17,15 +15,15 @@ class Motif < ApplicationRecord
   auto_strip_attributes :name, :color
 
   # TODO: make it an enum
-  VISIBLE_AND_NOTIFIED = "visible_and_notified"
-  VISIBLE_AND_NOT_NOTIFIED = "visible_and_not_notified"
-  INVISIBLE = "invisible"
+  VISIBLE_AND_NOTIFIED = "visible_and_notified".freeze
+  VISIBLE_AND_NOT_NOTIFIED = "visible_and_not_notified".freeze
+  INVISIBLE = "invisible".freeze
   VISIBILITY_TYPES = [VISIBLE_AND_NOTIFIED, VISIBLE_AND_NOT_NOTIFIED, INVISIBLE].freeze
 
   # TODO: make it an enum
-  SECTORISATION_LEVEL_AGENT = "agent"
-  SECTORISATION_LEVEL_ORGANISATION = "organisation"
-  SECTORISATION_LEVEL_DEPARTEMENT = "departement"
+  SECTORISATION_LEVEL_AGENT = "agent".freeze
+  SECTORISATION_LEVEL_ORGANISATION = "organisation".freeze
+  SECTORISATION_LEVEL_DEPARTEMENT = "departement".freeze
   SECTORISATION_TYPES = [SECTORISATION_LEVEL_AGENT, SECTORISATION_LEVEL_ORGANISATION, SECTORISATION_LEVEL_DEPARTEMENT].freeze
 
   enum location_type: { public_office: "public_office", phone: "phone", home: "home" }
@@ -121,6 +119,7 @@ class Motif < ApplicationRecord
     joins(:motif_category)
       .where(motif_category: { short_name: motif_category_short_name })
   }
+  scope :requires_ants_predemande_number, -> { joins(:motif_category).merge(MotifCategory.requires_ants_predemande_number) }
 
   ## -
 
@@ -229,6 +228,10 @@ class Motif < ApplicationRecord
 
   def bookable_outside_of_organisation?
     bookable_by != "agents"
+  end
+
+  def requires_ants_predemande_number?
+    motif_category&.requires_ants_predemande_number?
   end
 
   private

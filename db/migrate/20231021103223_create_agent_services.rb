@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class CreateAgentServices < ActiveRecord::Migration[7.0]
   def up
     create_table :agent_services do |t|

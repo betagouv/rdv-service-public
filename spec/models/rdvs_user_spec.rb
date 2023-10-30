@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe RdvsUser, type: :model do
   describe "RdvsUser is getting Rdv parent status" do
     %w[collectif individuel].each do |rdv_type|

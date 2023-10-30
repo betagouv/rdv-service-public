@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe SlotBuilder, type: :service do
   let(:friday) { Time.zone.parse("20210430 8:00") }
   let(:organisation) { create(:organisation) }

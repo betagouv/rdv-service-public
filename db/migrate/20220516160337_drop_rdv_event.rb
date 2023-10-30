@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class DropRdvEvent < ActiveRecord::Migration[6.1]
   def change
     drop_table "rdv_events" do |t|

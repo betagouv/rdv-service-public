@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe InclusionConnectController, type: :controller do
   let(:base_url) { "https://test.inclusion.connect.fr" }
 

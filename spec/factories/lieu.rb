@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 FactoryBot.define do
   sequence(:lieu_name) { |n| "Lieu n°#{n}" }
   sequence(:address) { |n| "#{n} rue de l'adresse 12345 Ville" }

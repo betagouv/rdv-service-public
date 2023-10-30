@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # this file contains ~integration specs, there is another with ~unit tests
 
 describe Users::GeoSearch, type: :service_model do

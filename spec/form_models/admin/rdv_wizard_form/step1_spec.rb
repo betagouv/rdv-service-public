@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe Admin::RdvWizardForm::Step1 do
   let(:organisation) { build(:organisation) }
   let!(:agent) { create(:agent) }

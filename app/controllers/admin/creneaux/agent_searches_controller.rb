@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Admin::Creneaux::AgentSearchesController < AgentAuthController
   respond_to :html, :js
 

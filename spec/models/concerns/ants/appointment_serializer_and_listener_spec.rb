@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe Ants::AppointmentSerializerAndListener do
   include_context "rdv_mairie_api_authentication"
   let(:organisation) { create(:organisation, verticale: :rdv_mairie) }

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class AddLieuSingleUse < ActiveRecord::Migration[6.1]
   def change
     # Replace Lieu#enabled by Lieu#availability

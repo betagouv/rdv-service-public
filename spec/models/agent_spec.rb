@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe Agent, type: :model do
   describe "#soft_delete" do
     context "with remaining organisations attached" do
