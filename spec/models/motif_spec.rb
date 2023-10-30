@@ -111,7 +111,7 @@ describe Motif, type: :model do
     end
   end
 
-  describe "for_secretariat?" do
+  describe "secretariat?" do
     it "return true if motif for_secretariat" do
       motif = build(:motif, for_secretariat: true, organisation: organisation)
       expect(motif.for_secretariat?).to be true
