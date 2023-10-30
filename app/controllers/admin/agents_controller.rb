@@ -2,9 +2,14 @@ class Admin::AgentsController < AgentAuthController
   respond_to :html, :json
 
   def index
-    @agents = policy_scope(Agent)
-      .includes(:service, :roles, :organisations)
-      .active
+    if params[:scope] == "all"
+      @agents = current_organisation.agents.includes(:service, :roles, :organisations).active
+      policy_scope(@agents)
+    else
+      @agents = policy_scope(Agent)
+        .includes(:service, :roles, :organisations)
+        .active
+    end
 
     @agents = @agents.joins(:organisations).where(organisations: { id: current_organisation.id }) if current_organisation
     @invited_agents_count = @agents.invitation_not_accepted.where.not(invitation_sent_at: nil).created_by_invite.count
