@@ -13,7 +13,7 @@ class Service < ApplicationRecord
 
   # Relations
   has_many :agents, dependent: :nullify
-  has_many :motifs, dependent: :destroy
+  has_many :motifs, dependent: :restrict_with_error
 
   # Validations
   validates :name, :short_name, presence: true, uniqueness: { case_sensitive: false }
