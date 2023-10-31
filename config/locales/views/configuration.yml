@@ -86,6 +86,8 @@ fr:
         edit:
           agent_title: Modification agent %{name}
           territory_agents_title: Agents du territoire
+          services: Services
+          agent_services_legend: Attribuer des services à l'agent
           teams: Équipes
           agent_teams_legend: Affecter/retirer des équipes à l'agent
           submit: Enregistrer

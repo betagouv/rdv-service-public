@@ -34,6 +34,32 @@
             .col.text-right
               = f.submit class: "btn btn-primary"
 
+  - if policy([:configuration, current_territory]).allow_to_manage_access_rights?
+    .card.m-2.rounded
+      h2.card-header
+        = t(".agent_services_legend")
+      - agent_services = @agent.plage_ouvertures.reduce([]) { |acc, plage| acc + plage.motifs }.map(&:service).uniq
+      - if agent_services.any?
+        .alert.alert-warning.m-2
+          | L'agent a des plages d'ouvertures dans les services suivants :
+          ul
+            - agent_services.each do |service|
+              li= service.name
+          | Veillez à ne pas lui retirer ces services pour ne pas créer d'incohérences.
+      = simple_form_for @agent, url: admin_territory_agent_path(current_territory, @agent) do |f|
+        .card-body
+          = f.input :service_ids, collection: Service.all_for_territory(current_territory),
+                label: t(".services"),
+                label_method: :name,
+                input_html: { \
+                  multiple: true, \
+                  class: "select2-input",\
+                }
+        .card-footer
+          .row
+            .col.text-right
+              = f.submit class: "btn btn-primary"
+
   - if policy([:configuration, current_territory]).allow_to_manage_teams?
     .card.m-2.rounded
       h2.card-header

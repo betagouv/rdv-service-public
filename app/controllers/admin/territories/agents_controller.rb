@@ -23,6 +23,7 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
 
   def update
     if @agent.update(agent_params)
+      flash[:success] = "L'agent a été mis à jour"
       redirect_to admin_territory_agents_path(current_territory)
     else
       render :edit
@@ -54,6 +55,6 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
   end
 
   def agent_params
-    params.require(:agent).permit(team_ids: [])
+    params.require(:agent).permit(team_ids: [], service_ids: [])
   end
 end
