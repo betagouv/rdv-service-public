@@ -41,7 +41,9 @@
       - agent_services = @agent.plage_ouvertures.reduce([]) { |acc, plage| acc + plage.motifs }.map(&:service).uniq
       - if agent_services.any?
         .alert.alert-warning.m-2
-          | L'agent a des plages d'ouvertures dans les services suivants :
+          div
+            strong Cette fonctionnalité est expérimentale. 🧪 Soyez sûr⋅e que vous savez ce que vous faîtes.
+          div L'agent a des plages d'ouvertures dans les services suivants :
           ul
             - agent_services.each do |service|
               li= service.name
