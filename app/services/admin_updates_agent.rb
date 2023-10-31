@@ -14,7 +14,6 @@ class AdminUpdatesAgent
     elsif change_role_to_intervenant?
       turn_agent_with_account_into_intervenant
     else
-      @agent.update!(service_ids: @agent_params[:service_ids])
       agent_role.update(access_level: @new_access_level)
     end
   end
