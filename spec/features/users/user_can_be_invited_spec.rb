@@ -133,7 +133,8 @@ describe "User can be invited" do
 
         expect(page).not_to have_content(lieu.name)
         expect(page).not_to have_content(lieu2.name)
-        expect(page).to have_content("Malheureusement, aucun créneau correspondant à votre invitation n'a été trouvé")
+        expect(page).to have_content("Malheureusement, aucun créneau correspondant à votre invitation n'a été trouvé.")
+        expect(page).to have_content("Toutes nos excuses pour cela.")
       end
     end
   end
