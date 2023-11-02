@@ -50,6 +50,8 @@ class PrescripteurRdvWizard < UserRdvWizard::Base
   end
 
   def find_or_create_user
+    @user_attributes[:first_name] = @user_attributes[:first_name]&.strip
+    @user_attributes[:last_name] = @user_attributes[:last_name]&.strip
     user_from_params = User.new(@user_attributes)
 
     @user = User.where(
