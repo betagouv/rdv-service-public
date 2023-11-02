@@ -2,7 +2,6 @@ section.bg-light.p-4
   .container
     = render "selected_motif_recap", context: context
     h3.font-weight-bold Sélectionnez la structure avec laquelle prendre RDV:
-    p = "Nous n'avons pas trouvé de créneaux pour votre motif" if context.next_availability_by_motifs_organisations.blank?
     - context.next_availability_by_motifs_organisations.each do |organisation, next_availability|
       .card.mb-3 class="card-hoverable"
         .card-body

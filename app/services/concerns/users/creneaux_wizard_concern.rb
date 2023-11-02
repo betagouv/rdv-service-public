@@ -3,21 +3,26 @@ module Users::CreneauxWizardConcern
 
   # *** Method that outputs the next step for the user to complete its rdv journey ***
   # *** It is used in #to_partial_path to render the matching partial view ***
+
+  # rubocop:disable Metrics/PerceivedComplexity
+  # rubocop:disable Metrics/CyclomaticComplexity
   def current_step
     if departement.blank?
       :address_selection
     elsif !service_selected?
-      :service_selection
+      unique_motifs_by_name_and_location_type.empty? ? :nothing_to_show : :service_selection
     elsif !motif_name_and_type_selected?
-      :motif_selection
+      unique_motifs_by_name_and_location_type.empty? ? :nothing_to_show : :motif_selection
     elsif requires_lieu_selection?
-      :lieu_selection
+      shown_lieux.empty? ? :nothing_to_show : :lieu_selection
     elsif requires_organisation_selection?
-      :organisation_selection
+      next_availability_by_motifs_organisations.blank? ? :nothing_to_show : :organisation_selection
     else
-      :creneau_selection
+      creneaux.empty? && next_availability.nil? ? :nothing_to_show : :creneau_selection
     end
   end
+  # rubocop:enable Metrics/PerceivedComplexity
+  # rubocop:enable Metrics/CyclomaticComplexity
 
   def start_date
     query_params[:date]&.to_date || super

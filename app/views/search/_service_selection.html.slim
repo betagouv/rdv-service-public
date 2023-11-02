@@ -1,8 +1,5 @@
 section.bg-light.p-4
   .container
-    - if context.unique_motifs_by_name_and_location_type.empty?
-      / TODO redirect to this page directly from controler
-      = render "nothing_to_show", context: context
     h2.font-weight-bold Sélectionnez le service avec qui vous voulez prendre un RDV :
     - unless context.invitation?
       .card
