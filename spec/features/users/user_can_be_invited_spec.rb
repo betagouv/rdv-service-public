@@ -133,7 +133,7 @@ describe "User can be invited" do
 
         expect(page).not_to have_content(lieu.name)
         expect(page).not_to have_content(lieu2.name)
-        expect(page).to have_content("Nous n'avons pas trouvé de créneaux pour votre motif.")
+        expect(page).to have_content("Malheureusement, aucun créneau correspondant à votre invitation n'a été trouvé")
       end
     end
   end
@@ -143,7 +143,7 @@ describe "User can be invited" do
     let!(:motif2) do
       create(:motif, name: "RSA orientation telephone", bookable_by: "everyone", organisation: organisation2, service: agent.service, motif_category:, location_type: "phone")
     end
-    let!(:plage_ouverture2) { create(:plage_ouverture, motifs: [motif2], organisation: organisation2) }
+    let!(:plage_ouverture2) { create(:plage_ouverture, :daily, first_day: now - 1.month, motifs: [motif2], organisation: organisation2) }
 
     before do
       travel_to(now)
