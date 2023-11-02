@@ -50,14 +50,12 @@ class PrescripteurRdvWizard < UserRdvWizard::Base
   end
 
   def find_or_create_user
-    @user_attributes[:first_name] = @user_attributes[:first_name]&.strip
-    @user_attributes[:last_name] = @user_attributes[:last_name]&.strip
     user_from_params = User.new(@user_attributes)
 
     @user = User.where(
-      "unaccent(lower(first_name)) = unaccent((lower(?)))", user_from_params.first_name
+      "unaccent(lower(first_name)) = unaccent((lower(?)))", user_from_params.first_name.strip
     ).where(
-      "unaccent(lower(last_name)) = unaccent((lower(?)))", user_from_params.last_name
+      "unaccent(lower(last_name)) = unaccent((lower(?)))", user_from_params.last_name.strip
     ).find_by(
       phone_number_formatted: user_from_params.phone_number_formatted
     ) || user_from_params
