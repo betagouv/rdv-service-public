@@ -9,7 +9,7 @@ RSpec.describe "Admin::UserInWaitingRoomController", type: :request do
       rdv = create(:rdv, agents: [agent], organisation: organisation)
       sign_in agent
 
-      post admin_organisation_rdv_user_in_waiting_room_path(rdv.organisation, rdv, format: :js)
+      post admin_organisation_participation_in_waiting_room_path(rdv.organisation, rdv, format: :js)
       expect(response.body).to include("waiting_room_button")
     end
 
@@ -21,7 +21,7 @@ RSpec.describe "Admin::UserInWaitingRoomController", type: :request do
       sign_in agent
 
       expect do
-        post admin_organisation_rdv_user_in_waiting_room_path(rdv.organisation, rdv, format: :js)
+        post admin_organisation_participation_in_waiting_room_path(rdv.organisation, rdv, format: :js)
       end.to have_enqueued_mail(Agents::WaitingRoomMailer, :user_in_waiting_room).with(params: { agent: agent, rdv: rdv }, args: [])
 
       rdv.reload
@@ -35,7 +35,7 @@ RSpec.describe "Admin::UserInWaitingRoomController", type: :request do
       rdv = create(:rdv, agents: [agent], organisation: organisation)
       sign_in agent
 
-      post admin_organisation_rdv_user_in_waiting_room_path(rdv.organisation, rdv, format: :js)
+      post admin_organisation_participation_in_waiting_room_path(rdv.organisation, rdv, format: :js)
 
       rdv.reload
       expect(rdv.user_in_waiting_room?).to eq(true)

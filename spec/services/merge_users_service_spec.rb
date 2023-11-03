@@ -237,7 +237,7 @@ describe MergeUsersService, type: :service do
     let(:prescripteur) { create(:prescripteur) }
 
     before do
-      create(:rdvs_user, rdv: rdv, user: user2, prescripteur: prescripteur)
+      create(:participation, rdv: rdv, user: user2, prescripteur: prescripteur)
     end
 
     it "changes the prescripteur to the target user" do

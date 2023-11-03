@@ -1,9 +1,9 @@
-class RdvsUser < ApplicationRecord
+class Participation < ApplicationRecord
   # Mixins
   devise :invitable
 
-  include RdvsUser::StatusChangeable
-  include RdvsUser::Creatable
+  include Participation::StatusChangeable
+  include Participation::Creatable
 
   # Attributes
   enum status: { unknown: "unknown", seen: "seen", excused: "excused", revoked: "revoked", noshow: "noshow" }
@@ -12,8 +12,8 @@ class RdvsUser < ApplicationRecord
   CANCELLED_STATUSES = %w[excused revoked].freeze
 
   # Relations
-  belongs_to :rdv, touch: true, inverse_of: :rdvs_users, optional: true
-  belongs_to :user, -> { unscope(where: :deleted_at) }, inverse_of: :rdvs_users, optional: true
+  belongs_to :rdv, touch: true, inverse_of: :participations, optional: true
+  belongs_to :user, -> { unscope(where: :deleted_at) }, inverse_of: :participations, optional: true
   has_one :prescripteur, dependent: :destroy
 
   # Delegates

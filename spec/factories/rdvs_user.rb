@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :rdvs_user do
+  factory :participation do
     user
     rdv
     send_lifecycle_notifications { nil }

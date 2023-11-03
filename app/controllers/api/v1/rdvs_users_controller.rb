@@ -1,17 +1,17 @@
-class Api::V1::RdvsUsersController < Api::V1::AgentAuthBaseController
+class Api::V1::ParticipationsController < Api::V1::AgentAuthBaseController
   def update
-    rdvs_user = policy_scope(RdvsUser).find(params[:id])
+    participation = policy_scope(Participation).find(params[:id])
 
-    if rdvs_user_params[:status].present?
-      rdvs_user.change_status_and_notify(current_agent, rdvs_user_params[:status])
+    if participation_params[:status].present?
+      participation.change_status_and_notify(current_agent, participation_params[:status])
     end
 
-    render_record rdvs_user.rdv
+    render_record participation.rdv
   end
 
   private
 
-  def rdvs_user_params
-    params.require(:rdvs_user).permit(:status)
+  def participation_params
+    params.require(:participation).permit(:status)
   end
 end

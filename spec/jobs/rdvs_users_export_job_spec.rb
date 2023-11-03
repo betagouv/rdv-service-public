@@ -1,7 +1,7 @@
-describe RdvsUsersExportJob do
+describe ParticipationsExportJob do
   stub_sentry_events
 
-  describe "#rdvs_users_export" do
+  describe "#participations_export" do
     it "has an attachment which contains the current date" do
       organisation = create(:organisation)
       agent = create(:agent, admin_role_in_organisations: [organisation])

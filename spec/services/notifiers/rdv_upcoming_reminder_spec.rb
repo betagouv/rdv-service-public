@@ -5,8 +5,8 @@ describe Notifiers::RdvUpcomingReminder, type: :service do
   let!(:user1) { create(:user) }
   let!(:user2) { create(:user) }
   let!(:user3) { create(:user) }
-  let!(:rdv_user1) { rdv.rdvs_users.where(user: user1).first }
-  let!(:rdv_user2) { rdv.rdvs_users.where(user: user2).first }
+  let!(:participation1) { rdv.participations.where(user: user1).first }
+  let!(:participation2) { rdv.participations.where(user: user2).first }
 
   before do
     stub_netsize_ok
@@ -20,23 +20,23 @@ describe Notifiers::RdvUpcomingReminder, type: :service do
   end
 
   it "doesnt send email if user participation is excused" do
-    rdv_user1.update(status: "excused")
+    participation1.update(status: "excused")
     subject
     expect_no_notifications_for_user(user1)
     expect_notifications_sent_for(rdv, user2, :rdv_upcoming_reminder)
   end
 
   it "doesnt send email if user participation is revoked" do
-    rdv_user1.update(status: "excused")
-    rdv_user2.update(status: "revoked")
+    participation1.update(status: "excused")
+    participation2.update(status: "revoked")
     subject
     expect_no_notifications
   end
 
-  it "rdv_users_tokens_by_user_id attribute outputs the tokens" do
+  it "participations_tokens_by_user_id attribute outputs the tokens" do
     allow(Devise.token_generator).to receive(:generate).and_return("t0k3n")
     notifier = described_class.new(rdv, nil)
     notifier.perform
-    expect(notifier.rdv_users_tokens_by_user_id).to eq({ user1.id => "t0k3n", user2.id => "t0k3n" })
+    expect(notifier.participations_tokens_by_user_id).to eq({ user1.id => "t0k3n", user2.id => "t0k3n" })
   end
 end

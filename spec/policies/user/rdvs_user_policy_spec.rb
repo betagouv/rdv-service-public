@@ -1,4 +1,4 @@
-describe User::RdvsUserPolicy, type: :policy do
+describe User::ParticipationPolicy, type: :policy do
   subject { described_class }
 
   shared_examples "permit actions" do |*actions|
@@ -19,13 +19,13 @@ describe User::RdvsUserPolicy, type: :policy do
 
   shared_examples "included in scope" do
     it "is included in scope" do
-      expect(User::RdvsUserPolicy::Scope.new(pundit_context, RdvsUser).resolve).to include(participation)
+      expect(User::ParticipationPolicy::Scope.new(pundit_context, Participation).resolve).to include(participation)
     end
   end
 
   shared_examples "not included in scope" do
     it "is not included in scope" do
-      expect(User::RdvsUserPolicy::Scope.new(pundit_context, RdvsUser).resolve).not_to include(participation)
+      expect(User::ParticipationPolicy::Scope.new(pundit_context, Participation).resolve).not_to include(participation)
     end
   end
 
@@ -41,14 +41,14 @@ describe User::RdvsUserPolicy, type: :policy do
   let!(:rdv) { create(:rdv, :collectif, :without_users, organisation: organisation, agents: [agent]) }
 
   context "Participation belongs to user" do
-    let!(:participation) { create(:rdvs_user, user: user, rdv: rdv) }
+    let!(:participation) { create(:participation, user: user, rdv: rdv) }
 
     it_behaves_like "permit actions", :create?, :cancel?
     it_behaves_like "included in scope"
   end
 
   context "Participation belongs to relative" do
-    let!(:participation) { create(:rdvs_user, user: relative, rdv: rdv) }
+    let!(:participation) { create(:participation, user: relative, rdv: rdv) }
 
     it_behaves_like "permit actions", :create?, :cancel?
     it_behaves_like "included in scope"
@@ -56,7 +56,7 @@ describe User::RdvsUserPolicy, type: :policy do
 
   context "Participation belongs to relative for a individual RDV change" do
     let!(:rdv) { create(:rdv, users: [relative], organisation: organisation, agents: [agent]) }
-    let(:participation) { rdv.rdvs_users.first }
+    let(:participation) { rdv.participations.first }
 
     it_behaves_like "not permit actions", :cancel?
     it_behaves_like "permit actions", :create?
@@ -65,21 +65,21 @@ describe User::RdvsUserPolicy, type: :policy do
 
   context "Participation belongs to another user for a individual RDV change" do
     let!(:rdv) { create(:rdv, users: [user2], organisation: organisation, agents: [agent]) }
-    let(:participation) { rdv.rdvs_users.first }
+    let(:participation) { rdv.participations.first }
 
     it_behaves_like "not permit actions", :create?, :cancel?
     it_behaves_like "not included in scope"
   end
 
   context "Participation belongs to another user" do
-    let!(:participation) { build(:rdvs_user, user: user2, rdv: rdv) }
+    let!(:participation) { build(:participation, user: user2, rdv: rdv) }
 
     it_behaves_like "not permit actions", :create?, :cancel?
     it_behaves_like "not included in scope"
   end
 
   context "User is invited to participate" do
-    let!(:participation) { create(:rdvs_user, user: user, rdv: rdv) }
+    let!(:participation) { create(:participation, user: user, rdv: rdv) }
 
     before do
       allow(user).to receive(:only_invited?).and_return(true)
@@ -91,7 +91,7 @@ describe User::RdvsUserPolicy, type: :policy do
 
   context "Rdv is revoked" do
     let!(:rdv) { create(:rdv, :collectif, :without_users, organisation: organisation, agents: [agent], starts_at: Time.zone.yesterday) }
-    let!(:participation) { create(:rdvs_user, user: user2, rdv: rdv) }
+    let!(:participation) { create(:participation, user: user2, rdv: rdv) }
 
     before do
       participation.update(status: "revoked")

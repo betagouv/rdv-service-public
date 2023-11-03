@@ -2,18 +2,18 @@
   .card.light-gray-card
     .card-body.p-2
       .mb-1
-        = render "admin/users/identity", user: rdvs_user.user
-      - notes = rdvs_user.user.notes
+        = render "admin/users/identity", user: participation.user
+      - notes = participation.user.notes
       - if current_territory.enable_notes_field? && notes.present?
-        .rdv_user_notes
+        .participation_notes
           i.fa.fa-info-circle.text-primary-blue.mr-2
           = simple_format(notes, {}, wrapper_tag: :span)
       div
-        = render "admin/rdvs_users/notifications_email", rdvs_user: rdvs_user
+        = render "admin/participations/notifications_email", participation: participation
       div
-        = render "admin/rdvs_users/notifications_sms", rdvs_user: rdvs_user
+        = render "admin/participations/notifications_sms", participation: participation
       div
-      = render "admin/rdvs_users/notifications_lifecycle", rdvs_user: rdvs_user
-      - if rdvs_user.rdv.collectif?
+      = render "admin/participations/notifications_lifecycle", participation: participation
+      - if participation.rdv.collectif?
         div
-        = render "admin/rdvs_users/participation_status_dropdown", rdvs_user: rdvs_user, agent: agent
+        = render "admin/participations/participation_status_dropdown", participation: participation, agent: agent

@@ -31,11 +31,11 @@ class Users::ParticipationsController < UserAuthController
   end
 
   def existing_participation
-    @existing_participation ||= policy_scope(RdvsUser).where(rdv: @rdv, user: @user.self_and_relatives_and_responsible).first
+    @existing_participation ||= policy_scope(Participation).where(rdv: @rdv, user: @user.self_and_relatives_and_responsible).first
   end
 
   def new_participation
-    @new_participation ||= RdvsUser.new(rdv: @rdv, user: @user, created_by: :user)
+    @new_participation ||= Participation.new(rdv: @rdv, user: @user, created_by: :user)
   end
 
   def add_participation
@@ -62,7 +62,7 @@ class Users::ParticipationsController < UserAuthController
     set_user_name_initials_verified
     flash[:notice] = "Participation confirmée" if existing_participation.status == "unknown"
     flash[:notice] = "Participation annulée" if existing_participation.status == "excused"
-    redirect_to users_rdv_path(@rdv, invitation_token: existing_participation.rdv_user_token)
+    redirect_to users_rdv_path(@rdv, invitation_token: existing_participation.participation_token)
   end
 
   def create_participation
@@ -73,11 +73,11 @@ class Users::ParticipationsController < UserAuthController
     new_participation.create_and_notify!(current_user)
     set_user_name_initials_verified
     flash[:notice] = "Participation confirmée"
-    redirect_to users_rdv_path(@rdv, invitation_token: new_participation.rdv_user_token)
+    redirect_to users_rdv_path(@rdv, invitation_token: new_participation.participation_token)
   end
 
   def responsible_or_relatives_participating?
-    @rdv.rdvs_users.where(user: current_user.self_and_relatives_and_responsible).any?
+    @rdv.participations.where(user: current_user.self_and_relatives_and_responsible).any?
   end
 
   def participation_changed?

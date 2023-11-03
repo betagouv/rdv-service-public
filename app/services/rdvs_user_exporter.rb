@@ -1,4 +1,4 @@
-module RdvsUserExporter
+module ParticipationExporter
   HourFormat = Spreadsheet::Format.new(number_format: "hh:mm")
   DateFormat = Spreadsheet::Format.new(number_format: "DD/MM/YYYY")
   HEADER = [
@@ -26,13 +26,13 @@ module RdvsUserExporter
     "email(s) professionnel.le(s)",
   ].freeze
 
-  def self.xls_string_from_rdvs_users_rows(rdvs_users_rows)
+  def self.xls_string_from_participations_rows(participations_rows)
     Spreadsheet.client_encoding = "UTF-8"
     workbook = Spreadsheet::Workbook.new
     sheet = workbook.create_worksheet
     sheet.row(0).concat(HEADER)
 
-    rdvs_users_rows.each.with_index(1) do |row_content, row_index|
+    participations_rows.each.with_index(1) do |row_content, row_index|
       row = sheet.row(row_index)
       row.set_format 3, DateFormat
       row.set_format 4, HourFormat
@@ -47,8 +47,8 @@ module RdvsUserExporter
     file.string
   end
 
-  def self.rows_from_rdvs_users(rdvs_users)
-    rdvs_users.includes(
+  def self.rows_from_participations(participations)
+    participations.includes(
       user: :responsible,
       rdv: [
         :organisation,
@@ -59,14 +59,14 @@ module RdvsUserExporter
         :users,
         { motif: :service },
       ]
-    ).map do |rdvs_user|
-      row_array_from(rdvs_user)
+    ).map do |participation|
+      row_array_from(participation)
     end
   end
 
-  def self.row_array_from(rdv_user)
-    rdv = rdv_user.rdv
-    user = rdv_user.user
+  def self.row_array_from(participation)
+    rdv = participation.rdv
+    user = participation.user
     [
       user.full_name,
       rdv.id,

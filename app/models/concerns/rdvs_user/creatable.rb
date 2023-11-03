@@ -1,25 +1,25 @@
-module RdvsUser::Creatable
+module Participation::Creatable
   extend ActiveSupport::Concern
 
   def create_and_notify!(author)
-    RdvsUser.transaction do
+    Participation.transaction do
       empty_rdv_from_relatives
       save!
       notify_create!(author)
     end
   end
 
-  def rdv_user_token
+  def participation_token
     # For user invited with tokens, nil default for not invited users
-    @notifier&.rdv_users_tokens_by_user_id&.fetch(user.id, nil)
+    @notifier&.participations_tokens_by_user_id&.fetch(user.id, nil)
   end
 
   private
 
   def empty_rdv_from_relatives
-    # Empty self_and_relatives rdvs_users (at the moment, only one member by family), no callbacks, no notifications
-    rdv.rdvs_users.where(user: user.self_and_relatives_and_responsible).delete_all
-    rdv.rdvs_users.where(user: user.responsible&.self_and_relatives_and_responsible).delete_all
+    # Empty self_and_relatives participations (at the moment, only one member by family), no callbacks, no notifications
+    rdv.participations.where(user: user.self_and_relatives_and_responsible).delete_all
+    rdv.participations.where(user: user.responsible&.self_and_relatives_and_responsible).delete_all
   end
 
   def notify_create!(author)

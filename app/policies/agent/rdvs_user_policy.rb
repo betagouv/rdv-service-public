@@ -1,4 +1,4 @@
-class Agent::RdvsUserPolicy < DefaultAgentPolicy
+class Agent::ParticipationPolicy < DefaultAgentPolicy
   class Scope < Scope
     def resolve
       accessible_rdvs = Agent::RdvPolicy::Scope.new(context, Rdv.all).resolve

@@ -1,4 +1,4 @@
-class Admin::RdvUserPresenter
+class Admin::ParticipationPresenter
   PREVIOUS_RDVS_LIMIT = 5
 
   attr_reader :rdv, :user

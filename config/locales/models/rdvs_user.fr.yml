@@ -1,23 +1,23 @@
 fr:
   activerecord:
     models:
-      rdvs_user: Participation
+      participation: Participation
     attributes:
-      rdvs_user:
+      participation:
         send_lifecycle_notifications: Notifications de création et modification
         send_reminder_notification: Notification de rappel
         status: Statut
-      rdvs_user/created_by:
+      participation/created_by:
         agent: "Inscription faite par un agent"
         user: "Inscription faite par un usager"
         prescripteur: "Inscription faite par un prescripteur"
-      rdvs_user/send_lifecycle_notifications:
+      participation/send_lifecycle_notifications:
         true: Notifications de création et modification activées
         false: Notifications de création et modification désactivées
-      rdvs_user/send_reminder_notifications:
+      participation/send_reminder_notifications:
         true: Notification de rappel activée
         false: Notification de rappel désactivée
-      rdvs_user/statuses:
+      participation/statuses:
         unknown: État indéterminé
         seen: Présent
         excused: Annulé (excusé)
@@ -26,16 +26,16 @@ fr:
         unknown_past: À renseigner
         unknown_today: Rendez-vous aujourd’hui
         unknown_future: Inscrit
-      rdvs_user/statuses/action:
+      participation/statuses/action:
         unknown: Réinitialiser
         seen: Présent
         excused: Annulation
         noshow: Absence non excusée
-      rdvs_user/statuses/explanation:
+      participation/statuses/explanation:
         unknown: Pour corriger l’état du rendez-vous.
         seen: L’usager s’est présenté au rendez-vous.
         excused: L’usager a prévenu de son absence.
         noshow: L’usager ne s’est pas présenté.
-      rdvs_user/statuses/explanation_notif:
+      participation/statuses/explanation_notif:
         unknown: Une notification de nouveau RDV sera envoyée à l'usager.
         excused: Une notification de confirmation lui sera envoyée.

@@ -18,11 +18,11 @@ class Invitation
   end
 
   def user
-    user_by_rdv_invitation_token || rdvs_user_by_invitation_token&.user&.user_to_notify
+    user_by_rdv_invitation_token || participation_by_invitation_token&.user&.user_to_notify
   end
 
   def rdv
-    rdvs_user_by_invitation_token&.rdv
+    participation_by_invitation_token&.rdv
   end
 
   def token_valid?
@@ -34,7 +34,7 @@ class Invitation
   end
 
   def to_edit_rdv?
-    rdvs_user_by_invitation_token.present?
+    participation_by_invitation_token.present?
   end
 
   def expired?
@@ -45,8 +45,8 @@ class Invitation
     @user_by_rdv_invitation_token ||= token.present? ? User.find_by(rdv_invitation_token: token) : nil
   end
 
-  def rdvs_user_by_invitation_token
+  def participation_by_invitation_token
     # find_by_invitation_token is a method added by the devise_invitable gem
-    @rdvs_user_by_invitation_token ||= token.present? ? RdvsUser.find_by_invitation_token(token, true) : nil
+    @participation_by_invitation_token ||= token.present? ? Participation.find_by_invitation_token(token, true) : nil
   end
 end

@@ -1,4 +1,4 @@
-class RdvsUsersExportSendEmailJob < ExportJob
+class ParticipationsExportSendEmailJob < ExportJob
   def perform(batch, _params)
     agent = Agent.find(batch.properties[:agent_id])
 
@@ -16,10 +16,10 @@ class RdvsUsersExportSendEmailJob < ExportJob
       rdvs_rows += page
     end
 
-    xls_string = RdvsUserExporter.xls_string_from_rdvs_users_rows(rdvs_rows)
+    xls_string = ParticipationExporter.xls_string_from_participations_rows(rdvs_rows)
 
     # Using #deliver_now because we don't want to enqueue a job with a huge payload
-    Agents::ExportMailer.rdvs_users_export(agent, batch.properties[:file_name], xls_string).deliver_now
+    Agents::ExportMailer.participations_export(agent, batch.properties[:file_name], xls_string).deliver_now
 
     redis_connection.del(redis_key)
   ensure

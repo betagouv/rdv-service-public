@@ -1,10 +1,10 @@
-= link_to admin_organisation_rdv_participation_path(rdvs_user.rdv.organisation, rdvs_user.rdv, rdvs_user, rdvs_user: { status: status }, agent_id: agent&.id),
-  method: :put, class: "dropdown-item", data: { confirm: change_status_confirmation_message(rdvs_user.rdv, status) }, remote: remote do
+= link_to admin_organisation_rdv_participation_path(participation.rdv.organisation, participation.rdv, participation, participation: { status: status }, agent_id: agent&.id),
+  method: :put, class: "dropdown-item", data: { confirm: change_status_confirmation_message(participation.rdv, status) }, remote: remote do
   span
     i class=("fa fa-circle mr-1 rdv-status-#{status}")
-    = RdvsUser.human_attribute_value(:status, status, context: :action)
+    = Participation.human_attribute_value(:status, status, context: :action)
     .text-wrap.text-muted
-      = RdvsUser.human_attribute_value(:status, status, context: :explanation)
-      - if status.in?(Rdv::RDV_STATUSES_TO_NOTIFY) && rdvs_user.rdv.in_the_future?
+      = Participation.human_attribute_value(:status, status, context: :explanation)
+      - if status.in?(Rdv::RDV_STATUSES_TO_NOTIFY) && participation.rdv.in_the_future?
         <br />
-        = RdvsUser.human_attribute_value(:status, status, context: :explanation_notif)
+        = Participation.human_attribute_value(:status, status, context: :explanation_notif)

@@ -1,10 +1,10 @@
-module RdvsUser::StatusChangeable
+module Participation::StatusChangeable
   extend ActiveSupport::Concern
 
   def change_status_and_notify(author, status)
     return if self.status == status
 
-    RdvsUser.transaction do
+    Participation.transaction do
       if update(status: status)
         rdv.update_rdv_status_from_participation
         notify_update!(author)
@@ -17,9 +17,9 @@ module RdvsUser::StatusChangeable
     rdv.generate_payload_and_send_webhook(:updated)
   end
 
-  def rdv_user_token
+  def participation_token
     # For user invited with tokens, nil default for not invited users
-    @notifier&.rdv_users_tokens_by_user_id&.fetch(user.id, nil)
+    @notifier&.participations_tokens_by_user_id&.fetch(user.id, nil)
   end
 
   private
@@ -28,7 +28,7 @@ module RdvsUser::StatusChangeable
     # We pass an empty array if notifications are disabled to avoid notifying other users
     user_to_notify = send_lifecycle_notifications? ? [user] : []
 
-    if rdv_user_cancelled?
+    if participation_cancelled?
       @notifier = Notifiers::RdvCancelled.new(rdv, author, user_to_notify)
     end
 
@@ -39,12 +39,12 @@ module RdvsUser::StatusChangeable
     @notifier&.perform
   end
 
-  def rdv_user_cancelled?
+  def participation_cancelled?
     # Do not notify users for cancel statuses for previously cancelled rdv participation
-    (status.in? RdvsUser::CANCELLED_STATUSES) && !status_previously_was.in?(RdvsUser::CANCELLED_STATUSES)
+    (status.in? Participation::CANCELLED_STATUSES) && !status_previously_was.in?(Participation::CANCELLED_STATUSES)
   end
 
   def rdv_status_reloaded_from_cancelled?
-    status_previously_was.in?(RdvsUser::CANCELLED_STATUSES) && status == "unknown"
+    status_previously_was.in?(Participation::CANCELLED_STATUSES) && status == "unknown"
   end
 end

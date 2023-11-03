@@ -70,9 +70,9 @@ RSpec.configure do |config|
               motif: { "$ref" => "#/components/schemas/motif" },
               name: { type: "string", nullable: true },
               organisation: { "$ref" => "#/components/schemas/organisation" },
-              rdvs_users: {
+              participations: {
                 type: "array",
-                items: { "$ref" => "#/components/schemas/rdvs_user" },
+                items: { "$ref" => "#/components/schemas/participation" },
               },
               starts_at: { type: "string" },
               status: { type: "string", enum: %w[unknown seen excused revoked noshow] },
@@ -83,7 +83,7 @@ RSpec.configure do |config|
               users_count: { type: "integer" },
               uuid: { type: "string" },
             },
-            required: %w[id address agents cancelled_at collectif context created_by duration_in_min lieu max_participants_count motif name organisation rdvs_users starts_at status users
+            required: %w[id address agents cancelled_at collectif context created_by duration_in_min lieu max_participants_count motif name organisation participations starts_at status users
                          users_count uuid],
           },
           agents: {
@@ -352,7 +352,7 @@ RSpec.configure do |config|
             },
             required: %w[id name short_name],
           },
-          rdvs_user: {
+          participation: {
             type: "object",
             properties: {
               send_lifecycle_notifications: { type: "boolean" },

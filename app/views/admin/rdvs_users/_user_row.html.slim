@@ -1,19 +1,19 @@
 tr
   td
-    = render "admin/users/identity", user: rdvs_user.user
-    - if rdvs_user.user.birth_date
-        .rdv_user_birthdate.small
+    = render "admin/users/identity", user: participation.user
+    - if participation.user.birth_date
+        .participation_birthdate.small
           i.fas.fa-calendar-day.mr-1
-          = "Né(e) le #{I18n.l(rdvs_user.user.birth_date)}"
-  - if rdvs_user.rdv.requires_ants_predemande_number?
+          = "Né(e) le #{I18n.l(participation.user.birth_date)}"
+  - if participation.rdv.requires_ants_predemande_number?
     td
-      = rdvs_user.user.ants_pre_demande_number
+      = participation.user.ants_pre_demande_number
   td
-    = render "admin/rdvs_users/notifications_email", rdvs_user: rdvs_user
+    = render "admin/participations/notifications_email", participation: participation
   td
-    = render "admin/rdvs_users/notifications_sms", rdvs_user: rdvs_user
+    = render "admin/participations/notifications_sms", participation: participation
   td
-    = render "admin/rdvs_users/notifications_lifecycle", rdvs_user: rdvs_user
-  - if rdvs_user.rdv.collectif?
+    = render "admin/participations/notifications_lifecycle", participation: participation
+  - if participation.rdv.collectif?
     td
-      = render "admin/rdvs_users/participation_status_dropdown", rdvs_user: rdvs_user, agent: agent
+      = render "admin/participations/participation_status_dropdown", participation: participation, agent: agent
