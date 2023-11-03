@@ -3,23 +3,23 @@ require "swagger_helper"
 describe "RDVs Users authentified API", swagger_doc: "v1/api.json" do
   with_examples
 
-  path "api/v1/participations/{id}/" do
-    put "Mettre à jour une participation" do
+  path "api/v1/rdvs_users/{id}/" do
+    put "DEPRECIE rdvs_users est remplacé par participations, Mettre à jour une participation" do
       with_authentication
 
       tags "RDV"
       produces "application/json"
-      operationId "putParticipations"
-      description "Permet de modifier une participation à un rdv. Seul le champ `status` est modifiable."
+      operationId "putRdvsUsers"
+      description "DEPRECIE, la route change pour api/v1/participations/{id}/, Permet de modifier une participation à un rdv. Seul le champ `status` est modifiable."
 
       parameter name: :id, in: :path, type: :string, description: "Identifiant de la participation", example: "20"
       parameter(
-        name: :participation,
+        name: :rdvs_user,
         in: :query,
         schema: {
           type: :object,
           properties: {
-            participation: {
+            rdvs_user: {
               type: :object,
               properties: {
                 status: { type: :string },
@@ -29,7 +29,7 @@ describe "RDVs Users authentified API", swagger_doc: "v1/api.json" do
             },
           },
         },
-        required: %w[participation]
+        required: %w[rdvs_user]
       )
 
       response 200, "updates participation status", document: false do
@@ -46,7 +46,7 @@ describe "RDVs Users authentified API", swagger_doc: "v1/api.json" do
         let!(:rdv) { create(:rdv, organisation: organisation, agents: [admin_agent]) }
         let(:id) { participation.id }
         let(:status) { "seen" }
-        let(:participation) { { participation: { status: status } } }
+        let(:rdvs_user) { { participation: { status: status } } }
 
         run_test!
 

@@ -10,6 +10,7 @@ class RdvBlueprint < Blueprinter::Base
   association :users, blueprint: UserBlueprint
   # DEPRECATED : On garde l'ancien nom des participations le temps que le 92, 26, 62, 64, et data-insertion mettent à jours leur système.
   association :participations, blueprint: ParticipationBlueprint, name: :rdvs_users
+  association :participations, blueprint: ParticipationBlueprint
   association :agents, blueprint: AgentBlueprint
   association :lieu, blueprint: LieuBlueprint
 end
