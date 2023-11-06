@@ -271,7 +271,8 @@ describe "User can be invited" do
     end
     let!(:second_plage_ouverture) { create(:plage_ouverture, motifs: [second_motif], organisation: organisation2) }
     let!(:collectif_motif) do
-      create(:motif, name: "RSA orientation collectif", collectif: true, bookable_by: "agents_and_prescripteurs_and_invited_users", organisation: organisation, service: agent.services.first, motif_category:)
+      create(:motif, name: "RSA orientation collectif", collectif: true, bookable_by: "agents_and_prescripteurs_and_invited_users", organisation: organisation, service: agent.services.first,
+                     motif_category:)
     end
     let!(:collectif_rdv) { create(:rdv, motif: collectif_motif, starts_at: 1.week.from_now, max_participants_count: 10) }
 
