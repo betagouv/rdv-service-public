@@ -1,7 +1,7 @@
 class Agent::ServicePolicy < Agent::AdminPolicy
   class Scope < Scope
     def resolve
-      if current_agent_role.admin? || current_agent.service.secretariat?
+      if current_agent_role.admin? || current_agent.secretariat?
         return scope.in_verticale(current_agent_role.organisation.verticale)
       end
 

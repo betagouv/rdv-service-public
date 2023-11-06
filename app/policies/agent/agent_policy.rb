@@ -42,7 +42,7 @@ class Agent::AgentPolicy < ApplicationPolicy
     include CurrentAgentInPolicyConcern
 
     def resolve
-      if current_agent.service.secretariat?
+      if current_agent.secretariat?
         scope.where(id: AgentRole.where(organisation_id: current_agent.organisations).select(:agent_id))
       else
         agents_of_territories_i_admin = scope.joins(:organisations).merge(current_agent.organisations_of_territorial_roles)

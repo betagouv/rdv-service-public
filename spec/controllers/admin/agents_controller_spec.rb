@@ -5,7 +5,7 @@ RSpec.describe Admin::AgentsController, type: :controller do
   let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
   let!(:agent1) { create(:agent, admin_role_in_organisations: [organisation], invitation_sent_at: 3.days.ago, invitation_accepted_at: nil) }
   let!(:organisation2) { create(:organisation) }
-  let(:service_id) { agent.service.id }
+  let(:service_id) { agent.services.first.id }
 
   before do
     request.env["devise.mapping"] = Devise.mappings[:agent]
@@ -132,7 +132,7 @@ RSpec.describe Admin::AgentsController, type: :controller do
       end
 
       before do
-        agent.service.update!(name: Service::CONSEILLER_NUMERIQUE)
+        agent.services.first.update!(name: Service::CONSEILLER_NUMERIQUE)
       end
 
       it "creates a new basic agent instead of an admin" do

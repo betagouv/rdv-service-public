@@ -106,21 +106,21 @@ class Agent < ApplicationRecord
   delegate :name, to: :domain, prefix: true
 
   # TODO: delete when code migration is done
-  def service
-    services.first
-  end
-
-  def service=(service)
-    raise "ah OK" if agent_services.present?
-
-    agent_services.build(service: service)
-  end
-
-  delegate :id, to: :service, prefix: true
-
-  def service_id=(id)
-    self.service = Service.find(id)
-  end
+  # def service
+  #   services.first
+  # end
+  #
+  # def service=(service)
+  #   raise "ah OK" if agent_services.present?
+  #
+  #   agent_services.build(service: service)
+  # end
+  #
+  # delegate :id, to: :service, prefix: true
+  #
+  # def service_id=(id)
+  #   self.service = Service.find(id)
+  # end
 
   def same_services_as?(other_agent)
     service_ids.to_set == other_agent.service_ids.to_set
@@ -132,10 +132,6 @@ class Agent < ApplicationRecord
 
   def colleagues
     Agent.in_any_of_these_services(services)
-  end
-
-  def secretariat?
-    services.any?(&:secretariat?)
   end
 
   def remember_me # Override from Devise::rememberable to enable it by default
@@ -248,10 +244,16 @@ class Agent < ApplicationRecord
     "#{first_name} #{last_name}"
   end
 
+  def secretariat?
+    services.any?(&:secretariat?)
+  end
+
   # This is the main toggle to enable or disable features for Conseillers Numériques (cnfs)
   # TODO: As the usage of this toggle grows, we might need to rethink it, and see if these changes
   # should be done via configuration, or something else
-  delegate :conseiller_numerique?, to: :service
+  def conseiller_numerique?
+    services.any?(&:conseiller_numerique?)
+  end
 
   def domain
     @domain ||= if organisations.where(verticale: :rdv_aide_numerique).any?
