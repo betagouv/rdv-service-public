@@ -12,7 +12,7 @@ describe OrganisationsController, type: :controller do
             access_level: "admin",
             agent_attributes: {
               email: "me@myself.hi",
-              service_id: service.id,
+              service_ids: [service.id],
             },
           }],
         },
@@ -42,7 +42,7 @@ describe OrganisationsController, type: :controller do
             access_level: "admin",
             agent_attributes: {
               email: "", # this is the error
-              service_id: create(:service),
+              service_ids: [create(:service)],
             },
           }],
         },

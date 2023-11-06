@@ -27,7 +27,7 @@ RSpec.describe "Search", type: :request do
         it "render motif_selection template" do
           motif = create(:motif, service: agent.services.first, follow_up: true, organisation: organisation)
           create(:plage_ouverture, agent: agent, motifs: [motif], organisation: organisation)
-          get prendre_rdv_path(referent_ids: [agent.id], service: agent.service_id, departement: organisation.territory.departement_number)
+          get prendre_rdv_path(referent_ids: [agent.id], service: agent.services.first.id, departement: organisation.territory.departement_number)
           expect(response).to render_template("search/_lieu_selection")
         end
       end

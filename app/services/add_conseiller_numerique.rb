@@ -52,7 +52,7 @@ class AddConseillerNumerique
       first_name: @conseiller_numerique.first_name.capitalize,
       last_name: @conseiller_numerique.last_name,
       external_id: @conseiller_numerique.external_id,
-      service: service,
+      services: [service],
       password: SecureRandom.hex,
       roles_attributes: [{ organisation: organisation, access_level: AgentRole::ACCESS_LEVEL_ADMIN }]
     ).tap do |agent|
