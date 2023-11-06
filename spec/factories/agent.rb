@@ -14,11 +14,12 @@ FactoryBot.define do
       service { build(:service) }
     end
     after(:build) do |agent, evaluator|
-      if evaluator.service
-        agent.services = [evaluator.service]
-      end
-      if agent.agent_services.empty?
-        agent.services = [build(:service)]
+      if agent.agent_services.empty? && agent.services.empty?
+        if evaluator.service
+          agent.services = [evaluator.service]
+        else
+          agent.services = [build(:service)]
+        end
       end
     end
 
