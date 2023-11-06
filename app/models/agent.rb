@@ -139,11 +139,15 @@ class Agent < ApplicationRecord
   end
 
   def reverse_full_name_and_service
-    service.present? ? "#{reverse_full_name} (#{service.short_name})" : full_name
+    services.present? ? "#{reverse_full_name} (#{services_short_names})" : full_name
   end
 
   def full_name_and_service
-    service.present? ? "#{full_name} (#{service.short_name})" : full_name
+    services.present? ? "#{full_name} (#{services_short_names})" : full_name
+  end
+
+  def services_short_names
+    services.map(&:short_name).join(", ")
   end
 
   def complete?
