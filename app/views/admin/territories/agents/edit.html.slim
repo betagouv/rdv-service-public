@@ -50,7 +50,7 @@
           | Veillez à ne pas lui retirer ces services pour ne pas créer d'incohérences.
       = simple_form_for @agent, url: admin_territory_agent_path(current_territory, @agent) do |f|
         .card-body
-          = f.input :service_ids, collection: Service.all_for_territory(current_territory),
+          = f.input :service_ids, collection: Service.used_by_agents_of_territory(current_territory),
                 label: t(".services"),
                 label_method: :name,
                 input_html: { \

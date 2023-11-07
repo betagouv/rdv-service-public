@@ -27,7 +27,8 @@ class Service < ApplicationRecord
 
   ## -
 
-  def self.all_for_territory(territory)
+  # Retourne les services des agents des orgas du territoire
+  def self.used_by_agents_of_territory(territory)
     agents_of_territory = Agent.joins(:organisations).merge(territory.organisations)
     joins(:agent_services).where(agent_services: { agents: agents_of_territory }).distinct
   end
