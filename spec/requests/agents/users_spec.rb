@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe "Agents::UsersController" do
   describe "#search" do
     describe "when passing an organisation_id the agent doesn't belong to" do
