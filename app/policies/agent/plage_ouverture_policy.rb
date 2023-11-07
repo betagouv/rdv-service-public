@@ -1,4 +1,8 @@
 class Agent::PlageOuverturePolicy < DefaultAgentPolicy
+  def same_service?
+    @record.agent.exactly_same_services_as?(current_agent)
+  end
+
   class Scope < Scope
     def resolve
       if context.can_access_others_planning?
