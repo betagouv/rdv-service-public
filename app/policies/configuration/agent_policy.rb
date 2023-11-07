@@ -35,10 +35,10 @@ class Configuration::AgentPolicy
     def resolve
       scope = Agent.includes(:agent_territorial_access_rights).where("agent_territorial_access_rights.territory": @current_territory)
       unless @current_agent.territorial_admin_in?(@current_territory)
-        scope = scope.includes(:organisations) \
+        scope = scope.includes(:organisations)
           .where(organisations: @current_agent.organisations)
-          .includes(:services) \
-          .merge(@current_agent.confreres)
+          .where(services: @current_agent.services)
+          .includes(:services)
       end
       scope
     end
