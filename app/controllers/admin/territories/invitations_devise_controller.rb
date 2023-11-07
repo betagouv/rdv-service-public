@@ -7,7 +7,7 @@ class Admin::Territories::InvitationsDeviseController < Devise::InvitationsContr
   end
 
   # Dette technique : ce controller pourrait sans doute reprendre la logique et le service object
-  # utilisés dans Admin::AgentsController
+  # AdminCreatesAgent utilisé dans Admin::AgentsController
   def create
     agent = Agent.find_by(email: permitted_params[:email].downcase)
     if agent.nil?
@@ -17,10 +17,7 @@ class Admin::Territories::InvitationsDeviseController < Devise::InvitationsContr
     else
       agent.save(context: :invite) # Specify a different validation context to bypass last_name/first_name presence
       # Warn if the service isn’t the one that was requested
-      services = Service.where(id: permitted_params[:service_ids])
-      if agent.services.sort != services.sort
-        flash[:error] = I18n.t "activerecord.warnings.models.agent_role.different_services", services: services.map(&:short_name), agent_services: agent.services_short_names
-      end
+      flash[:error] = AdminCreatesAgent.check_agent_service(agent, permitted_params[:service_ids])
     end
 
     if agent.errors.empty?
