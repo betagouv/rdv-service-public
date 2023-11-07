@@ -26,7 +26,7 @@
             .alert.alert-warning
               p 🧪 Expérimental : Le changement de service est désormais possible pour les admins de territoire.
               a.btn.btn-warning href=edit_admin_territory_agent_path(territory_id: current_territory.id, agent_id: @agent.id)
-                | Changer le service de cet agent
+                | Changer le service de cet agent sur l'admin de territoire
 
           = f.simple_fields_for @agent_role do |ff|
             - # rubocop:disable Rails/OutputSafety
