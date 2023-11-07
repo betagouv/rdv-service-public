@@ -4,6 +4,34 @@
   - if policy([:configuration, current_territory]).allow_to_manage_access_rights?
     .card.m-2.rounded
       h2.card-header
+        = t(".agent_services_legend")
+      - agent_services_with_plages = @agent.plage_ouvertures.reduce([]) { |acc, plage| acc + plage.motifs }.map(&:service).uniq
+      - if agent_services_with_plages.any?
+        .alert.alert-warning.m-2
+          div
+            strong Cette fonctionnalité est expérimentale. 🧪 Soyez sûr⋅e que vous savez ce que vous faîtes.
+          div L'agent a des plages d'ouvertures dans les services suivants :
+          ul
+            - agent_services_with_plages.each do |service|
+              li= service.name
+          | Veillez à ne pas lui retirer ces services pour ne pas créer d'incohérences.
+      = simple_form_for @agent, url: admin_territory_agent_path(current_territory, @agent) do |f|
+        .card-body
+          = f.input :service_ids, collection: Service.used_by_agents_of_territory(current_territory),
+                label: t(".services"),
+                label_method: :name,
+                input_html: { \
+                  multiple: true, \
+                  class: "select2-input",\
+                }
+        .card-footer
+          .row
+            .col.text-right
+              = f.submit class: "btn btn-primary"
+
+  - if policy([:configuration, current_territory]).allow_to_manage_access_rights?
+    .card.m-2.rounded
+      h2.card-header
         = t(".agent_access_rights_legend")
       = simple_form_for @agent.agent_territorial_access_rights.find_by(territory: current_territory), url: admin_territory_agent_territorial_access_right_path do |f|
         .card-body
@@ -29,34 +57,6 @@
           small.form-text.text-muted
             | Ce status d'agent ouvre un large accès à la création d'organisation, la gestion de la sectorisation, la gestion des webhook, la configuration de ce qui est visible dans une fiche usager, une fiche RDV, la visiiblité des catégories de motif, ...
 
-        .card-footer
-          .row
-            .col.text-right
-              = f.submit class: "btn btn-primary"
-
-  - if policy([:configuration, current_territory]).allow_to_manage_access_rights?
-    .card.m-2.rounded
-      h2.card-header
-        = t(".agent_services_legend")
-      - agent_services = @agent.plage_ouvertures.reduce([]) { |acc, plage| acc + plage.motifs }.map(&:service).uniq
-      - if agent_services.any?
-        .alert.alert-warning.m-2
-          div
-            strong Cette fonctionnalité est expérimentale. 🧪 Soyez sûr⋅e que vous savez ce que vous faîtes.
-          div L'agent a des plages d'ouvertures dans les services suivants :
-          ul
-            - agent_services.each do |service|
-              li= service.name
-          | Veillez à ne pas lui retirer ces services pour ne pas créer d'incohérences.
-      = simple_form_for @agent, url: admin_territory_agent_path(current_territory, @agent) do |f|
-        .card-body
-          = f.input :service_ids, collection: Service.used_by_agents_of_territory(current_territory),
-                label: t(".services"),
-                label_method: :name,
-                input_html: { \
-                  multiple: true, \
-                  class: "select2-input",\
-                }
         .card-footer
           .row
             .col.text-right

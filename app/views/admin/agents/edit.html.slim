@@ -19,7 +19,14 @@
       .card-body.js_agent_role_form
         = simple_form_for [:admin, current_organisation, @agent] do |f|
           = render "model_errors", model: @agent
-          = f.association :services, collection: @services, disabled: true, input_html: { class: "select2-input" }
+          - allowed_to_change_services = policy([:configuration, current_territory]).allow_to_manage_access_rights?
+
+          = f.association :services, collection: @services, disabled: true, input_html: { class: "select2-input" }, hint: allowed_to_change_services ? nil : "Le changement de service est réservé aux admins de territoire"
+          - if allowed_to_change_services
+            .alert.alert-warning
+              p 🧪 Expérimental : Le changement de service est désormais possible pour les admins de territoire.
+              a.btn.btn-warning href=edit_admin_territory_agent_path(territory_id: current_territory.id, agent_id: @agent.id)
+                | Changer le service de cet agent
 
           = f.simple_fields_for @agent_role do |ff|
             - # rubocop:disable Rails/OutputSafety
