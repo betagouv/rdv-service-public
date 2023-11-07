@@ -9,17 +9,18 @@ class Admin::Territories::InvitationsDeviseController < Devise::InvitationsContr
   # Dette technique : ce controller pourrait sans doute reprendre la logique et le service object
   # utilisés dans Admin::AgentsController
   def create
-    agent = Agent.find_by(email: invite_params[:email].downcase)
+    agent = Agent.find_by(email: permitted_params[:email].downcase)
     if agent.nil?
       # Authorize against a dummy Agent
-      authorize(Agent.new(invite_params))
+      authorize(Agent.new(permitted_params))
       agent = invite_resource # invite_resource creates the new Agent in DB and sends the invitation.
     else
       agent.save(context: :invite) # Specify a different validation context to bypass last_name/first_name presence
       # Warn if the service isn’t the one that was requested
-      service = Service.find(invite_params[:service_id])
-      # TODO: handle multi service?
-      flash[:error] = I18n.t "activerecord.warnings.models.agent_role.different_service", service: service.name, agent_service: agent.services.first.name if agent.services.first != service
+      services = Service.where(id: permitted_params[:service_ids])
+      if agent.services.sort != services.sort
+        flash[:error] = I18n.t "activerecord.warnings.models.agent_role.different_services", services: services.map(&:short_name), agent_services: agent.services_short_names
+      end
     end
 
     if agent.errors.empty?
@@ -60,8 +61,12 @@ class Admin::Territories::InvitationsDeviseController < Devise::InvitationsContr
   def invite_params
     super.merge(
       # the omniauth uid _is_ the email, always. note: this may be better suited in a hook in agent.rb
-      uid: params[:email],
+      uid: permitted_params[:email],
       allow_blank_name: true
-    )
+    ).merge(permitted_params)
+  end
+
+  def permitted_params
+    params.require(:admin_agent).permit(:email, service_ids: [])
   end
 end
