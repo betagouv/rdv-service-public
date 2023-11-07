@@ -169,7 +169,7 @@ Rails.application.routes.draw do
             post :send_reminder_manually
           end
           collection do
-            post :rdvs_users_export
+            post :participations_export
             post :export
           end
         end

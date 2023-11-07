@@ -53,21 +53,21 @@
             .col-lg-4
               .px-1
                 - %i[seen excused revoked noshow].each do |temporal_status|
-                  - count = RdvsUser.where(rdv: @stats.rdvs).status(temporal_status).count
+                  - count = Participation.where(rdv: @stats.rdvs).status(temporal_status).count
                   = render "stats/rdv_counter_without_link", \
                     temporal_status: temporal_status, \
                     element: "Usager".pluralize(count), \
                     count: count
             .col-lg-4
               .px-1
-                - count = RdvsUser.where(rdv: @stats.rdvs).joins(:rdv).status(:unknown_past).count
+                - count = Participation.where(rdv: @stats.rdvs).joins(:rdv).status(:unknown_past).count
                 = render "stats/rdv_counter_without_link", \
                   temporal_status: :unknown_past, \
                   element: "Usager".pluralize(count), \
                   count: count
             .col-lg-4
               .px-1
-                - count = RdvsUser.where(rdv: @stats.rdvs).joins(:rdv).status(:unknown_future).count
+                - count = Participation.where(rdv: @stats.rdvs).joins(:rdv).status(:unknown_future).count
                 = render "stats/rdv_counter_without_link", \
                   element: "Usager".pluralize(count), \
                   temporal_status: :unknown_future, \
@@ -76,7 +76,7 @@
           .row
             .col-lg-4
               .px-1
-                - count = RdvsUser.where(rdv: @stats.rdvs).count
+                - count = Participation.where(rdv: @stats.rdvs).count
                 = render "stats/rdv_counter_without_link", \
                   element: "Usager".pluralize(count), \
                   label: "Tous", \
@@ -129,7 +129,7 @@
           = self_anchor "rdvs-status"
             h2.card-title RDV par statut de participation
           - colors = %w[#fa5c7c #02a8b5 #39afd1 #0acf97 #ffbc00]
-          = column_chart rdvs_stats_path(by_rdv_users_status: true, territory: @territory), stacked: :percent, max: 100, suffix: "%", colors: colors
+          = column_chart rdvs_stats_path(by_participations_status: true, territory: @territory), stacked: :percent, max: 100, suffix: "%", colors: colors
 
       .card.mb-5
         .card-header

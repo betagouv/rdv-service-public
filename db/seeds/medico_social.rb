@@ -703,7 +703,7 @@ rdv_ids = results.flat_map(&:values) # [1, 2, ...]
 agent_rdv_attributes = rdv_ids.map { |id| { agent_id: agent_org_paris_nord_pmi_martine.id, rdv_id: id } }
 AgentsRdv.insert_all!(agent_rdv_attributes)
 rdv_user_attributes = rdv_ids.map { |id| { user_id: user_org_paris_nord_josephine.id, rdv_id: id, send_lifecycle_notifications: true, send_reminder_notification: true, created_by: :agent } }
-RdvsUser.insert_all!(rdv_user_attributes)
+Participation.insert_all!(rdv_user_attributes)
 events = %w[new_creneau_available rdv_cancelled rdv_created rdv_date_updated rdv_upcoming_reminder]
 receipts_attributes = rdv_ids.map do |id|
   { rdv_id: id, organisation_id: org_paris_nord.id, event: events.sample, channel: Receipt.channels.values.sample, result: Receipt.results.values.sample, created_at: now, updated_at: now }

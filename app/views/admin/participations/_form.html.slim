@@ -1,0 +1,22 @@
+/ Component: the form inputs for a participation
+
+- participation = form.object
+- element_id = "participations-form-#{participation.user.id}"
+
+div id=element_id
+  = form.hidden_field :user_id
+  h6
+    i.fa.fa-user-alt.mr-1
+    = render "admin/users/identity", user: participation.user
+    - if participation.rdv.persisted?
+      = render "common/destroy_button", form: form, id: element_id
+  .ml-3
+    = render "admin/users/notifications_preferences", user: participation.user.user_to_notify
+    - if participation.user.user_to_notify.email.present? || participation.user.user_to_notify.phone_number.present?
+      h6= t("admin.participations.notifications_overrides")
+      = form.input :send_lifecycle_notifications, wrapper: false
+      - if current_organisation.rdv_insertion?
+        span.text-muted.font-14= participation.rdv.motif.human_attribute_value(:visibility_type, context: :hint_checkbox)
+      = form.input :send_reminder_notification, wrapper: false
+      - if current_organisation.rdv_insertion?
+        span.text-muted.font-14= participation.rdv.motif.human_attribute_value(:visibility_type, context: :hint_checkbox)

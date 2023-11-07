@@ -30,7 +30,7 @@ class PrescripteurRdvWizardController < ApplicationController
     @prescripteur = Prescripteur.new(prescripteur_attributes)
 
     @prescripteur.validate
-    # On veut valider uniquement les attributs qui sont sur le formulaire, pas l'association avec le RdvUser
+    # On veut valider uniquement les attributs qui sont sur le formulaire, pas l'association avec le Participation
     valid_prescripteur_form = prescripteur_attributes.keys.none? { |key| @prescripteur.errors[key].present? }
 
     if valid_prescripteur_form

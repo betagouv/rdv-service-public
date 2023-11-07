@@ -13,8 +13,8 @@ module Ants
       User.before_commit do |user|
         Ants::AppointmentSerializerAndListener.mark_for_sync(user.rdvs) if user.saved_change_to_ants_pre_demande_number?
       end
-      RdvsUser.before_commit do |rdv_user|
-        Ants::AppointmentSerializerAndListener.mark_for_sync([rdv_user.rdv], obsolete_application_id: rdv_user.user.ants_pre_demande_number)
+      Participation.before_commit do |participation|
+        Ants::AppointmentSerializerAndListener.mark_for_sync([participation.rdv], obsolete_application_id: participation.user.ants_pre_demande_number)
       end
       Lieu.before_commit do |lieu|
         Ants::AppointmentSerializerAndListener.mark_for_sync(lieu.rdvs) if lieu.saved_change_to_name?
@@ -26,8 +26,8 @@ module Ants
       User.after_commit do |user|
         Ants::AppointmentSerializerAndListener.enqueue_sync_for_marked_record(user.rdvs) if user.saved_change_to_ants_pre_demande_number?
       end
-      RdvsUser.after_commit do |rdv_user|
-        Ants::AppointmentSerializerAndListener.enqueue_sync_for_marked_record([rdv_user.rdv])
+      Participation.after_commit do |participation|
+        Ants::AppointmentSerializerAndListener.enqueue_sync_for_marked_record([participation.rdv])
       end
       Lieu.after_commit do |lieu|
         Ants::AppointmentSerializerAndListener.enqueue_sync_for_marked_record(lieu.rdvs) if lieu.saved_change_to_name?

@@ -46,7 +46,7 @@ FactoryBot.define do
       transient { with_users { false } }
     end
     after(:build) do |rdv, evaluator|
-      if evaluator.with_users && rdv.users.blank? && rdv.rdvs_users.blank?
+      if evaluator.with_users && rdv.users.blank? && rdv.participations.blank?
         rdv.users = [build(:user, organisations: [rdv.organisation])]
       end
     end
