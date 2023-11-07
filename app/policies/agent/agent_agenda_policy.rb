@@ -4,7 +4,7 @@ class Agent::AgentAgendaPolicy < ApplicationPolicy
   def show?
     agent_role_in_record_organisation.present? && (
       record.agent_id == current_agent.id ||
-      record.agent.colleague_with?(current_agent) ||
+      record.agent.confrere_with?(current_agent) ||
       agent_role_in_record_organisation.can_access_others_planning?
     )
   end

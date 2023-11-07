@@ -109,11 +109,11 @@ class Agent < ApplicationRecord
     service_ids.to_set == other_agent.service_ids.to_set
   end
 
-  def colleague_with?(other_agent)
+  def confrere_with?(other_agent)
     service_ids.to_set.intersection(other_agent.service_ids.to_set).present?
   end
 
-  def colleagues
+  def confreres
     Agent.in_any_of_these_services(services)
   end
 
