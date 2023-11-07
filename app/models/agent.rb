@@ -231,7 +231,7 @@ class Agent < ApplicationRecord
     "#{first_name} #{last_name}"
   end
 
-  def secretariat?
+  def secretaire?
     services.any?(&:secretariat?)
   end
 

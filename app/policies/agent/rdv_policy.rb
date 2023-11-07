@@ -14,7 +14,7 @@ class Agent::RdvPolicy < DefaultAgentPolicy
   def self.explain(organisation, agent)
     explainations = if agent.admin_in_organisation?(organisation)
                       "En tant qu'administrateur de l'organisation, vous voyez les RDV de toute l'organisation #{organisation.name}."
-                    elsif agent.secretariat?
+                    elsif agent.secretaire?
                       "En tant que membre du service secrétariat, vous voyez les RDV de toute l'organisation #{organisation.name}."
                     else
                       "En tant qu'agent, vous voyez uniquement les RDV de vos services ayant lieu dans l'organisation #{organisation.name}."
