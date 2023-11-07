@@ -53,14 +53,6 @@ class DefaultAgentPolicy < ApplicationPolicy
     end
   end
 
-  def same_service?
-    if @record.respond_to?(:service)
-      @record.service.in?(current_agent.services)
-    else
-      raise "used by #{@record.class.name}"
-    end
-  end
-
   def same_agent?
     if @record.is_a? Agent
       @record.id == current_agent.id

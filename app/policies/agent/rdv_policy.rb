@@ -23,6 +23,12 @@ class Agent::RdvPolicy < DefaultAgentPolicy
     explainations
   end
 
+  private
+
+  def same_service?
+    @record.motif.service.in?(current_agent.services)
+  end
+
   class Scope < Scope
     def resolve
       organisation_scope = scope.where(organisation: current_agent.organisations)

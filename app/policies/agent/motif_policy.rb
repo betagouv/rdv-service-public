@@ -3,6 +3,12 @@ class Agent::MotifPolicy < Agent::AdminPolicy
     admin_and_same_org? || same_agent_or_has_access?
   end
 
+  private
+
+  def same_service?
+    @record.service.in?(current_agent.services)
+  end
+
   class Scope < Scope
     def resolve
       if context.can_access_others_planning?
