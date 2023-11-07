@@ -105,23 +105,6 @@ class Agent < ApplicationRecord
 
   delegate :name, to: :domain, prefix: true
 
-  # TODO: delete when code migration is done
-  # def service
-  #   services.first
-  # end
-  #
-  # def service=(service)
-  #   raise "ah OK" if agent_services.present?
-  #
-  #   agent_services.build(service: service)
-  # end
-  #
-  # delegate :id, to: :service, prefix: true
-  #
-  # def service_id=(id)
-  #   self.service = Service.find(id)
-  # end
-
   def same_services_as?(other_agent)
     service_ids.to_set == other_agent.service_ids.to_set
   end
