@@ -53,7 +53,7 @@ class AdminCreatesAgent
     services = Service.where(id: service_ids)
 
     if agent.services.to_set != services.to_set
-      I18n.t("activerecord.warnings.models.agent_role.different_services", services: services.map(&:short_name), agent_services: agent.services_short_names)
+      I18n.t("activerecord.warnings.models.agent_role.different_services", services: services.map(&:short_name).join(", "), agent_services: agent.services_short_names)
     end
   end
 
