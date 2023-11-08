@@ -41,12 +41,12 @@ Afin de pouvoir retrouver un RDV à partir de l'e-mail de réponse, il fallait s
 Il était possible de stocker le token dans :
 
     un Rdv
-    un RdvsUser
+    une Participation
     un Receipt
 
 J'ai fait le choix de stocker le token dans Rdv pour le moment, principalement car les mailers n'ont pas accès aux RdvsUsers et au Receipts, et qu'il était donc difficile de générer l'adresse de ReplyTo depuis les mailers.
 
-Je me suis aussi dit que si une personne était ajoutée par erreur à un RDV puis supprimée juste ensuite, elle allait recevoir un mail de notification pour la création, et il était alors préférable qu'elle puisse répondre, ce qui aurait été impossible si le token était stocké dans un RdvsUser.
+Je me suis aussi dit que si une personne était ajoutée par erreur à un RDV puis supprimée juste ensuite, elle allait recevoir un mail de notification pour la création, et il était alors préférable qu'elle puisse répondre, ce qui aurait été impossible si le token était stocké dans une Participation.
 
 Je me dis aussi que si on change d'avis (par exemple stocker le token dans les Receipts), la migration sera simple.
 

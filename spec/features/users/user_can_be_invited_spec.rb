@@ -210,8 +210,8 @@ describe "User can be invited" do
     end
 
     context "when this is not an invitation to take rdv" do
-      let!(:rdvs_user) { create(:rdvs_user, user: user) }
-      let!(:invitation_token) { rdvs_user.new_raw_invitation_token }
+      let!(:participation) { create(:participation, user: user) }
+      let!(:invitation_token) { participation.new_raw_invitation_token }
 
       it "does not show the motifs that can be booked through invitation only" do
         visit prendre_rdv_path(

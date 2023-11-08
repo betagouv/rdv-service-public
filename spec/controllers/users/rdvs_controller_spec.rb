@@ -49,7 +49,7 @@ RSpec.describe Users::RdvsController, type: :controller do
         expect(Rdv.count).to eq(1)
         expect(response).to redirect_to users_rdv_path(Rdv.last, invitation_token: token)
         expect(user.rdvs.last.created_by_user?).to be(true)
-        expect(user.rdvs_users.last.created_by_user?).to be(true)
+        expect(user.participations.last.created_by_user?).to be(true)
       end
 
       context "when the motif is by phone and lieu is missing" do
@@ -60,7 +60,7 @@ RSpec.describe Users::RdvsController, type: :controller do
           expect(Rdv.count).to eq(1)
           expect(response).to redirect_to users_rdv_path(Rdv.last, invitation_token: token)
           expect(user.rdvs.last.created_by_user?).to be(true)
-          expect(user.rdvs_users.last.created_by_user?).to be(true)
+          expect(user.participations.last.created_by_user?).to be(true)
         end
       end
     end
@@ -84,7 +84,7 @@ RSpec.describe Users::RdvsController, type: :controller do
       let(:token) { "12345" }
       let(:rdv) { create(:rdv, starts_at: 5.hours.from_now) }
 
-      before { allow_any_instance_of(RdvsUser).to receive(:new_raw_invitation_token).and_return(token) }
+      before { allow_any_instance_of(Participation).to receive(:new_raw_invitation_token).and_return(token) }
 
       it "calls update_and_notify function" do
         sign_in rdv.users.first

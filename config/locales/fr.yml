@@ -104,14 +104,14 @@ fr:
     export_mailer:
       rdv_export:
         description: Vous trouverez en pièce jointe l’export des RDVs que vous avez demandé.
-      rdvs_users_export:
+      participations_export:
         description: Vous trouverez en pièce jointe l’export des RDVs par usager que vous avez demandé.
   mailers:
     agents:
       export_mailer:
         rdv_export:
           subject: Export des RDVs du %{date}
-        full_rdvs_user_export:
+        full_participation_export:
           subject: Export des RDVs par usager du %{date}
   date:
     helpers:

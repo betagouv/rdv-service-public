@@ -65,7 +65,7 @@ RSpec.describe "prescripteur can add a user to a RDV collectif" do
       phone_number: "0611223344",
       organisations: [organisation]
     )
-    expect(rdv_collectif.rdvs_users.first.prescripteur).to have_attributes(
+    expect(rdv_collectif.participations.first.prescripteur).to have_attributes(
       first_name: "Alex",
       last_name: "Prescripteur",
       email: "alex@prescripteur.fr",
@@ -102,8 +102,8 @@ RSpec.describe "prescripteur can add a user to a RDV collectif" do
       fill_in "Téléphone", with: "0611223344"
 
       # On simule que toutes les places sont prises
-      create(:rdvs_user, rdv: rdv_collectif)
-      create(:rdvs_user, rdv: rdv_collectif)
+      create(:participation, rdv: rdv_collectif)
+      create(:participation, rdv: rdv_collectif)
       click_on "Confirmer le rendez-vous"
       expect(page).to have_content("Ce créneau n'est plus disponible. Veuillez en choisir un autre.")
 

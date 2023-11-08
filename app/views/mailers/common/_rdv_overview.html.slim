@@ -12,7 +12,7 @@
       span.title
         = "Usager".pluralize(rdv.users_count)
         |  :
-      span.float-right= rdv.rdvs_users.not_cancelled.map(&:full_name).sort.to_sentence
+      span.float-right= rdv.participations.not_cancelled.map(&:full_name).sort.to_sentence
     .clear
   div.row-result
     span.title Motif :

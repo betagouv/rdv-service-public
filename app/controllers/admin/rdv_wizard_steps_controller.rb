@@ -6,7 +6,7 @@ class Admin::RdvWizardStepsController < AgentAuthController
   PERMITTED_PARAMS = [
     :motif_id, :duration_in_min, :starts_at, :lieu_id, :context, :service_id,
     :organisation_id, :ignore_benign_errors,
-    { agent_ids: [], user_ids: [], rdvs_users_attributes: {}, lieu_attributes: Rdv::ACCEPTED_NESTED_LIEU_ATTRIBUTES },
+    { agent_ids: [], user_ids: [], participations_attributes: {}, lieu_attributes: Rdv::ACCEPTED_NESTED_LIEU_ATTRIBUTES },
   ].freeze
 
   def new

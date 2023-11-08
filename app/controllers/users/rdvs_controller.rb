@@ -10,7 +10,7 @@ class Users::RdvsController < UserAuthController
 
   def index
     authorize Rdv
-    @rdvs = policy_scope(Rdv).includes(:motif, :rdvs_users, :users).user_with_relatives(current_user.id).for_domain(current_domain)
+    @rdvs = policy_scope(Rdv).includes(:motif, :participations, :users).user_with_relatives(current_user.id).for_domain(current_domain)
     @rdvs = params[:past].present? ? @rdvs.past : @rdvs.future
     @rdvs = @rdvs.order(starts_at: :desc).page(params[:page])
   end
@@ -40,7 +40,7 @@ class Users::RdvsController < UserAuthController
       notifier = Notifiers::RdvCreated.new(@rdv, current_user)
       notifier.perform
       set_user_name_initials_verified
-      redirect_to users_rdv_path(@rdv, invitation_token: notifier.rdv_users_tokens_by_user_id[current_user.id]), notice: t(".rdv_confirmed")
+      redirect_to users_rdv_path(@rdv, invitation_token: notifier.participations_tokens_by_user_id[current_user.id]), notice: t(".rdv_confirmed")
     else
       # TODO: cette liste de paramètres devrait ressembler a SearchController#search_params, mais sans certains paramètres de choix du wizard de créneaux
       query = {
@@ -62,7 +62,7 @@ class Users::RdvsController < UserAuthController
       notifier = Notifiers::RdvUpdated.new(@rdv, current_user)
       notifier.perform
       flash[:success] = "Votre RDV a bien été modifié"
-      redirect_to users_rdv_path(@rdv, invitation_token: notifier.rdv_users_tokens_by_user_id[current_user.id])
+      redirect_to users_rdv_path(@rdv, invitation_token: notifier.participations_tokens_by_user_id[current_user.id])
     else
       flash[:error] = "Le RDV n'a pas pu être modifié"
       redirect_to creneaux_users_rdv_path(@rdv)
@@ -75,7 +75,7 @@ class Users::RdvsController < UserAuthController
     else
       flash[:error] = "Impossible d'annuler le RDV."
     end
-    redirect_to users_rdv_path(@rdv, invitation_token: @rdv.rdv_user_token(current_user.id))
+    redirect_to users_rdv_path(@rdv, invitation_token: @rdv.participation_token(current_user.id))
   end
 
   def creneaux
