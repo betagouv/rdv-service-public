@@ -103,6 +103,7 @@ class Rdv < ApplicationRecord
   scope :collectif_and_available_for_reservation, -> { collectif.with_remaining_seats.future.not_revoked }
   scope :bookable_by_everyone, -> { joins(:motif).merge(Motif.bookable_by_everyone) }
   scope :bookable_by_everyone_or_bookable_by_invited_users, -> { joins(:motif).merge(Motif.bookable_by_everyone_or_bookable_by_invited_users) }
+  scope :bookable_by_everyone_or_agents_and_prescripteurs_or_invited_users, -> { joins(:motif).merge(Motif.bookable_by_everyone_or_agents_and_prescripteurs_or_invited_users) }
   scope :with_remaining_seats, -> { where("users_count < max_participants_count OR max_participants_count IS NULL") }
   scope :for_domain, lambda { |domain|
     if domain == Domain::RDV_AIDE_NUMERIQUE

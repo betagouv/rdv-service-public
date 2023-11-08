@@ -76,6 +76,7 @@ class Motif < ApplicationRecord
   }
   scope :bookable_by_everyone, -> { where(bookable_by: %i[everyone]) }
   scope :bookable_by_everyone_or_bookable_by_invited_users, -> { where(bookable_by: %i[everyone agents_and_prescripteurs_and_invited_users]) }
+  scope :bookable_by_everyone_or_agents_and_prescripteurs_or_invited_users, -> { where(bookable_by: %i[everyone agents_and_prescripteurs agents_and_prescripteurs_and_invited_users]) }
   scope :not_bookable_by_everyone_or_not_bookable_by_invited_users, -> { where.not(bookable_by: %i[everyone agents_and_prescripteurs_and_invited_users]) }
   scope :by_phone, -> { Motif.phone } # default scope created by enum
   scope :for_secretariat, -> { where(for_secretariat: true) }
