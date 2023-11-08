@@ -70,7 +70,7 @@ describe "territory admin can manage agents", type: :feature do
       create(:plage_ouverture, agent: edited_agent, motifs: [create(:motif, service: service_b)])
       unselect service_b.name, from: "Services"
       expect { click_on "Modifier les services" }.not_to change { edited_agent.reload.services.to_set }
-      expect(page).to have_content("L'agent a toujours des plages d'ouverture pour le service : B")
+      expect(page).to have_content("Le retrait du service n'a pu aboutir car l'agent a toujours des plages d'ouverture actives sur le service : B")
     end
 
     it "forbids removing last service" do

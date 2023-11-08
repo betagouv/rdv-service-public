@@ -21,7 +21,7 @@ class AdminChangesAgentServices
   def removed_services_dont_have_plages
     removed_services.each do |removed_service|
       if @agent.plage_ouvertures.any? { |plage| plage.motifs.any? { |motif| motif.service == removed_service } }
-        errors.add(:service_ids, "L'agent a toujours des plages d'ouverture pour le service : #{removed_service.short_name}")
+        errors.add(:service_ids, "Le retrait du service n'a pu aboutir car l'agent a toujours des plages d'ouverture actives sur le service : #{removed_service.short_name}")
       end
     end
   end
