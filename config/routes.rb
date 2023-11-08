@@ -121,6 +121,7 @@ Rails.application.routes.draw do
           resources :agents, only: %i[index update edit] do
             member do
               put :territory_admin
+              patch :services
             end
           end
           resources :teams

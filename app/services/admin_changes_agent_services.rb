@@ -1,0 +1,25 @@
+class AdminChangesAgentServices
+  include ActiveModel::Model
+
+  def initialize(agent, new_service_ids)
+    @agent = agent
+    @old_services = agent.services.to_a
+    @new_services = Service.where(id: new_service_ids)
+  end
+
+  validate :removed_services_dont_have_plages
+
+  private
+
+  def removed_services_dont_have_plages
+    removed_services.each do |removed_service|
+      if @agent.plage_ouvertures.any? { |plage| plage.motifs.any? { |motif| motif.service == removed_service } }
+        errors.add(:service_ids, "L'agent a toujours des plages d'ouverture pour le service : #{removed_service.short_name}")
+      end
+    end
+  end
+
+  def removed_services
+    @old_services.to_set.difference(@new_services.to_set)
+  end
+end

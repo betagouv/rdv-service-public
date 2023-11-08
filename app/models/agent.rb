@@ -49,7 +49,7 @@ class Agent < ApplicationRecord
   }, _prefix: true
 
   # Relations
-  has_many :agent_services, dependent: :delete_all
+  has_many :agent_services, dependent: :destroy
   has_many :agent_territorial_access_rights, dependent: :destroy
   has_many :plage_ouvertures, dependent: :destroy
   has_many :absences, dependent: :destroy

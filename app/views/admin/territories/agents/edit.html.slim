@@ -5,17 +5,8 @@
     .card.m-2.rounded
       h2.card-header
         = t(".agent_services_legend")
-      - agent_services_with_plages = @agent.plage_ouvertures.reduce([]) { |acc, plage| acc + plage.motifs }.map(&:service).uniq
-      - if agent_services_with_plages.any?
-        .alert.alert-warning.m-2
-          div
-            strong Cette fonctionnalité est expérimentale. 🧪 Soyez sûr⋅e que vous savez ce que vous faîtes.
-          div L'agent a des plages d'ouvertures dans les services suivants :
-          ul
-            - agent_services_with_plages.each do |service|
-              li= service.name
-          | Veillez à ne pas lui retirer ces services pour ne pas créer d'incohérences.
-      = simple_form_for @agent, url: admin_territory_agent_path(current_territory, @agent) do |f|
+      .alert.alert-info.m-2 ✨ Nouvelle fonctionnalité : attribuer plusieurs services à un agent
+      = simple_form_for @agent, url: services_admin_territory_agent_path(current_territory, @agent) do |f|
         .card-body
           = f.input :service_ids, collection: Service.used_by_agents_of_territory(current_territory),
                 label: t(".services"),

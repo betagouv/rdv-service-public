@@ -21,12 +21,16 @@
           = render "model_errors", model: @agent
           - allowed_to_change_services = policy([:configuration, current_territory]).allow_to_manage_access_rights?
 
-          = f.association :services, collection: @services, disabled: true, input_html: { class: "select2-input" }, hint: allowed_to_change_services ? nil : "Le changement de service est réservé aux admins de territoire"
+          = f.association :services, collection: @services, disabled: true, input_html: { class: "select2-input" }, wrapper_html: { class: "mb-0" }, hint: allowed_to_change_services ? nil : "Le changement de service est réservé aux admins de territoire"
           - if allowed_to_change_services
-            .alert.alert-warning
-              p 🧪 Expérimental : Le changement de service est désormais possible pour les admins de territoire.
-              a.btn.btn-warning href=edit_admin_territory_agent_path(territory_id: current_territory.id, agent_id: @agent.id)
-                | Changer le service de cet agent sur l'admin de territoire
+            span.small.text-muted
+              | Vous pouvez désormais attribuer plusieurs services à un agent, via votre interface de Configuration - Admin de territoire.&nbsp;
+              = link_to "Accéder à la configuration des agents", edit_admin_territory_agent_path(territory_id: current_territory.id, agent_id: @agent.id)
+          - else
+            span.small.text-muted
+              | En tant qu’agent, vous pouvez désormais être rattaché à plusieurs services d’une même organisation. Pour cela, contacter un agent admin du territoire.
+
+          hr
 
           = f.simple_fields_for @agent_role do |ff|
             - # rubocop:disable Rails/OutputSafety
