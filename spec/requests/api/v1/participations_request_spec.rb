@@ -4,7 +4,7 @@ describe "RDVs Users authentified API", swagger_doc: "v1/api.json" do
   with_examples
 
   path "api/v1/rdvs_users/{id}/" do
-    put "DEPRECIE rdvs_users est remplacé par participations, Mettre à jour une participation" do
+    patch "DEPRECIE rdvs_users est remplacé par participations, Mettre à jour une participation" do
       with_authentication
 
       tags "RDV"
