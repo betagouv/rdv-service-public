@@ -17,7 +17,7 @@ class Admin::Territories::InvitationsDeviseController < Devise::InvitationsContr
     else
       agent.save(context: :invite) # Specify a different validation context to bypass last_name/first_name presence
       # Warn if the service isn’t the one that was requested
-      flash[:notice] = AdminCreatesAgent.check_agent_service(agent, permitted_params[:service_ids])
+      flash[:alert] = AdminCreatesAgent.check_agent_service(agent, permitted_params[:service_ids])
     end
 
     if agent.errors.empty?

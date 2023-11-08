@@ -35,7 +35,7 @@ class Admin::AgentsController < AgentAuthController
 
     if @agent.valid?
       flash[:notice] = create_agent.confirmation_message
-      flash[:error] = create_agent.warning_message
+      flash[:alert] = create_agent.warning_message
       redirect_to_index_path_for(@agent)
     else
       render_new
