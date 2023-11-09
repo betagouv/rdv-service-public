@@ -109,7 +109,6 @@ RSpec.describe "prescripteur can add a user to a RDV collectif" do
 
       # Dans ce cas, retour à l'étape de choix d'un RDV collectif pour ce motif
       click_on "S'inscrire" # On s'inscrit à l'autre RDV collectif, le seul restant de la liste
-      click_on "Je suis un prescripteur qui oriente un bénéficiaire"
 
       # On constate que le formulaire de prescripteur est pré-rempli
       expect(page).to have_field("Votre prénom", with: "Alex")
