@@ -51,8 +51,11 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
     )
   end
 
-  def record_not_found(_)
-    head :not_found
+  def record_not_found(exception)
+    render(
+      status: :not_found,
+      json: { success: false, errors: [exception.to_s] }
+    )
   end
 
   def record_invalid(exception)
