@@ -1,6 +1,6 @@
 class Admin::Territories::AgentsController < Admin::Territories::BaseController
-  before_action :set_agent, only: %i[edit update territory_admin services]
-  before_action :authorize_agent, only: %i[edit update territory_admin services]
+  before_action :set_agent, only: %i[edit update territory_admin update_services]
+  before_action :authorize_agent, only: %i[edit update territory_admin update_services]
 
   def index
     @agents = find_agents(params[:q]).page(params[:page])
@@ -44,7 +44,7 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
     )
   end
 
-  def services
+  def update_services
     service_ids = params[:agent][:service_ids].compact_blank
     form_validator = AdminChangesAgentServices.new(@agent, service_ids)
     if form_validator.valid? && @agent.update(service_ids: service_ids)

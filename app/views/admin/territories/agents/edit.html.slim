@@ -6,7 +6,7 @@
       h2.card-header
         = t(".agent_services_legend")
       .alert.alert-info.m-2 ✨ Nouvelle fonctionnalité : attribuer plusieurs services à un agent
-      = simple_form_for @agent, url: services_admin_territory_agent_path(current_territory, @agent) do |f|
+      = simple_form_for @agent, url: update_services_admin_territory_agent_path(current_territory, @agent) do |f|
         .card-body
           = f.input :service_ids, collection: Service.used_by_agents_of_territory(current_territory),
                 label: t(".services"),
