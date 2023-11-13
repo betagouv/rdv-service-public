@@ -22,7 +22,7 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
   def edit; end
 
   def update
-    if @agent.update(agent_params)
+    if @agent.update(agent_update_params)
       flash[:success] = "L'agent a été mis à jour"
       redirect_to edit_admin_territory_agent_path(current_territory, @agent.id)
     else
@@ -66,7 +66,7 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
     authorize @agent
   end
 
-  def agent_params
-    params.require(:agent).permit(team_ids: [], service_ids: [])
+  def agent_update_params
+    params.require(:agent).permit(team_ids: [])
   end
 end
