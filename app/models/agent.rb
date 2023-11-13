@@ -105,10 +105,6 @@ class Agent < ApplicationRecord
 
   delegate :name, to: :domain, prefix: true
 
-  def exactly_same_services_as?(other_agent)
-    service_ids.to_set == other_agent.service_ids.to_set
-  end
-
   def confrere_of?(other_agent)
     service_ids.to_set.intersection(other_agent.service_ids.to_set).present?
   end

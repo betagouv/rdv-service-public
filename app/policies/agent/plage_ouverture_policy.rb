@@ -12,7 +12,7 @@ class Agent::PlageOuverturePolicy < DefaultAgentPolicy
   private
 
   def same_service?
-    @record.agent.exactly_same_services_as?(current_agent)
+    @record.agent.confrere_of?(current_agent)
   end
 
   class DepartementScope < Scope

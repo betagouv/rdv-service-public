@@ -15,13 +15,15 @@ class AdminCreatesAgent
         add_agent_to_organisation
         @warning_message = self.class.check_agent_service(@agent, @agent_params[:service_ids])
       elsif @access_level == "intervenant"
-        @agent = Agent.create(
+        @agent = Agent.new(
           agent_and_role_params.merge(
             rdv_notifications_level: "none",
             plage_ouverture_notification_level: "none",
             absence_notification_level: "none"
           )
         )
+        @agent.services = Service.where(id: @agent_params[:service_ids])
+        @agent.save
       else
         @agent = Agent.invite!(agent_and_role_params.merge(allow_blank_name: true), @current_agent)
       end

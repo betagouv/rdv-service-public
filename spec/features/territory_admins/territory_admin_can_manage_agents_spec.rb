@@ -61,7 +61,7 @@ describe "territory admin can manage agents", type: :feature do
     it "allows adding and removing services" do
       select service_c.name, from: "Services"
       unselect service_b.name, from: "Services"
-      expect { click_on "Modifier les services" }.to change { edited_agent.reload.services.to_set }
+      expect { click_on "Enregistrer les services" }.to change { edited_agent.reload.services.to_set }
         .from([service_a, service_b].to_set)
         .to([service_a, service_c].to_set)
     end
@@ -69,14 +69,14 @@ describe "territory admin can manage agents", type: :feature do
     it "forbids removing a service that still have plages" do
       create(:plage_ouverture, agent: edited_agent, motifs: [create(:motif, service: service_b)])
       unselect service_b.name, from: "Services"
-      expect { click_on "Modifier les services" }.not_to change { edited_agent.reload.services.to_set }
+      expect { click_on "Enregistrer les services" }.not_to change { edited_agent.reload.services.to_set }
       expect(page).to have_content("Le retrait du service n'a pu aboutir car l'agent a toujours des plages d'ouverture actives sur le service : B")
     end
 
     it "forbids removing last service" do
       unselect service_a.name, from: "Services"
       unselect service_b.name, from: "Services"
-      expect { click_on "Modifier les services" }.not_to change { edited_agent.reload.services.to_set }
+      expect { click_on "Enregistrer les services" }.not_to change { edited_agent.reload.services.to_set }
       expect(page).to have_content("Un agent doit avoir au moins un service")
     end
   end
