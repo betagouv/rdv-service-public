@@ -9,7 +9,7 @@ RSpec.describe "Step 2 of the rdv wizard" do
       step: 2,
     }
   end
-  let!(:user) { create(:user, organisations: [organisation], first_name: "François", last_name: "Fictif", phone_number_formatted: "+33611223344", email: nil) }
+  let!(:user) { create(:user, organisations: [organisation], first_name: "François", last_name: "Fictif", phone_number: "06.11.223344", email: nil, birth_date: Date.new(1990, 1, 1)) }
   let!(:user_from_other_organisation) { create(:user, organisations: [other_organisation], first_name: "Francis", last_name: "Factice", phone_number_formatted: nil, email: "francis@factice.cool") }
   let(:territory) { create(:territory) }
   let(:organisation) { create(:organisation, territory: territory) }
@@ -27,7 +27,7 @@ RSpec.describe "Step 2 of the rdv wizard" do
 
     find(".select2-search__field").send_keys("Franc")
 
-    expect(page).to have_content("FICTIF François")
+    expect(page).to have_content("FICTIF François - 06 11 22 33 44 - 01/01/1990")
     expect(page).to have_content("Usagers des autres organisations")
     expect(page).to have_content("FACTICE Francis")
 
