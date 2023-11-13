@@ -27,7 +27,7 @@ RSpec.describe "Step 2 of the rdv wizard" do
 
     find(".select2-search__field").send_keys("Franc")
 
-    expect(page).to have_content("FICTIF François - 06 11 22 33 44 - 01/01/1990")
+    expect(page).to have_content("FICTIF François - 01/01/1990 - 06 11 22 33 44")
     expect(page).to have_content("Usagers des autres organisations")
     expect(page).to have_content("FACTICE Francis")
 
