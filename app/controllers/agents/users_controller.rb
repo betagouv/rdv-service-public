@@ -12,7 +12,7 @@ class Agents::UsersController < AgentAuthController
       return head :forbidden
     end
 
-    user_scope = User.where.not(id: params[:exclude_ids]).search_by_text(params[:term])
+    user_scope = UserSearchParser.new(params[:term]).scope.where.not(id: params[:exclude_ids])
 
     users_from_organisation = user_scope.joins(:user_profiles).where(user_profiles: { organisation_id: params[:organisation_id] }).limit(MAX_RESULTS)
 
@@ -43,6 +43,57 @@ class Agents::UsersController < AgentAuthController
     end
 
     render json: { results: results }
+  end
+
+  class UserSearchParser
+    def initialize(prompt)
+      @prompt = prompt.squish
+    end
+
+    def scope
+      @terms = @prompt.split.map { Term.new(_1) }
+      scope = User.all
+      scope = User.search_by_text(text_search) if text_search
+      scope = scope.where(birth_date: date_terms.last.date) if date_terms.any?
+      scope
+    end
+
+    private
+
+    def text_search
+      text_terms = @terms.select(&:text?)
+      return unless text_terms.any?
+
+      text_terms.map(&:str).join(" ")
+    end
+
+    def date_terms
+      @terms.select(&:date?)
+    end
+
+    class Term
+      def initialize(str)
+        @str = str
+      end
+
+      attr_reader :str
+
+      def date
+        return unless @str =~ %r{[0-3][0-9]/[0-1][0-9]/[0-9]{4}}
+
+        Date.strptime(@str, "%d/%m/%Y")
+      rescue Date::Error
+        nil
+      end
+
+      def date?
+        !date.nil?
+      end
+
+      def text?
+        !date?
+      end
+    end
   end
 
   private
