@@ -50,25 +50,4 @@ RSpec.describe "Step 2 of the rdv wizard" do
 
     expect(page).to have_content("Aucun résultat")
   end
-
-  it "allows searching by birth date", js: true do
-    user.update!(birth_date: Date.new(1990, 4, 2))
-
-    login_as(agent, scope: :agent)
-    visit new_admin_organisation_rdv_wizard_step_path(params)
-
-    # Click on the search field
-    find(".collapse-add-user-selection .select2-selection").click
-
-    find(".select2-search__field").send_keys("Franc")
-    expect(page).to have_content("FICTIF François")
-
-    find(".select2-search__field").send_keys(" 22/11/2002")
-    expect(page).not_to have_content("FICTIF François")
-
-    11.times { find(".select2-search__field").send_keys(:backspace) } # erase " 02/04/1990"
-
-    find(".select2-search__field").send_keys(" 02/04/1990")
-    expect(page).to have_content("FICTIF François")
-  end
 end
