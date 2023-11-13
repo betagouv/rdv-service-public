@@ -115,6 +115,28 @@ describe "Agent can create a Rdv with wizard" do
       expect(page).to have_css("*", text: "14:15", visible: :all)
     end
 
+    describe "with a user from outside the organisation" do
+      before { create(:agent_territorial_access_right, agent: agent, territory: territory) }
+
+      let(:other_organisation) { create(:organisation, territory: territory) }
+
+      let!(:user_from_other_organisation) { create(:user, organisations: [other_organisation]) }
+
+      it "creates the rdv and adds the user to the organisation", js: true do
+        step1
+
+        select_user(user_from_other_organisation)
+
+        click_button("Continuer")
+
+        step3(:enabled)
+        step4
+
+        expect(user_from_other_organisation.rdvs.count).to eq(1)
+        expect(user_from_other_organisation.reload.organisations).to match_array([organisation, other_organisation])
+      end
+    end
+
     describe "sending webhook upon creation" do
       let!(:webhook_endpoint) { create(:webhook_endpoint, organisation: organisation, target_url: "https://example.com") }
 
