@@ -361,7 +361,7 @@ agent_org_paris_nord_pmi_martine = Agent.new(
   first_name: "Martine",
   last_name: "Validay",
   password: "lapinlapin",
-  service_ids: [service_pmi.id],
+  services: [service_pmi],
   invitation_accepted_at: 10.days.ago,
   roles_attributes: [{ organisation: org_paris_nord, access_level: AgentRole::ACCESS_LEVEL_ADMIN }],
   agent_territorial_access_rights_attributes: [{
@@ -382,7 +382,7 @@ agent_org_paris_nord_pmi_marco = Agent.new(
   first_name: "Marco",
   last_name: "Durand",
   password: "lapinlapin",
-  service_ids: [service_pmi.id],
+  services: [service_pmi],
   invitation_accepted_at: 10.days.ago,
   roles_attributes: [{ organisation: org_paris_nord, access_level: AgentRole::ACCESS_LEVEL_BASIC }],
   agent_territorial_access_rights_attributes: [{
@@ -402,7 +402,7 @@ agent_org_paris_nord_social_polo = Agent.new(
   first_name: "Polo",
   last_name: "Durant",
   password: "lapinlapin",
-  service_ids: [service_social.id],
+  services: [service_social],
   invitation_accepted_at: 10.days.ago,
   roles_attributes: [{ organisation: org_paris_nord, access_level: AgentRole::ACCESS_LEVEL_BASIC }],
   agent_territorial_access_rights_attributes: [{
@@ -422,7 +422,7 @@ org_arques_pmi_maya = Agent.new(
   first_name: "Maya",
   last_name: "Patrick",
   password: "lapinlapin",
-  service_ids: [service_pmi.id],
+  services: [service_pmi],
   invitation_accepted_at: 10.days.ago,
   roles_attributes: Organisation.where(territory: territory62).pluck(:id).map { { organisation_id: _1, access_level: AgentRole::ACCESS_LEVEL_ADMIN } },
   agent_territorial_access_rights_attributes: [{
@@ -442,7 +442,7 @@ agent_org_bapaume_pmi_bruno = Agent.new(
   first_name: "Bruno",
   last_name: "Frangi",
   password: "lapinlapin",
-  service_ids: [service_pmi.id],
+  services: [service_pmi],
   invitation_accepted_at: 10.days.ago,
   roles_attributes: [{ organisation: org_bapaume, access_level: AgentRole::ACCESS_LEVEL_ADMIN }],
   agent_territorial_access_rights_attributes: [{
@@ -463,7 +463,7 @@ agent_org_bapaume_pmi_gina = Agent.new(
   first_name: "Gina",
   last_name: "Leone",
   password: "lapinlapin",
-  service_ids: [service_pmi.id],
+  services: [service_pmi],
   invitation_accepted_at: 10.days.ago,
   roles_attributes: [{ organisation: org_bapaume, access_level: AgentRole::ACCESS_LEVEL_ADMIN }],
   agent_territorial_access_rights_attributes: [{

@@ -106,7 +106,7 @@ class Agent < ApplicationRecord
   delegate :name, to: :domain, prefix: true
 
   def confrere_of?(other_agent)
-    service_ids.to_set.intersection(other_agent.service_ids.to_set).present?
+    services.to_set.intersection(other_agent.services.to_set).present?
   end
 
   def confreres
