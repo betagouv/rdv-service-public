@@ -332,6 +332,30 @@ user_org_paris_nord_jean.skip_confirmation!
 user_org_paris_nord_jean.save!
 user_org_paris_nord_jean.profile_for(org_paris_nord).update!(logement: 2)
 
+user_org_arques = User.new(
+  first_name: "Francis",
+  last_name: "Factice",
+  password: "lapinlapin",
+  phone_number: "0611223344",
+  organisation_ids: [org_arques.id],
+  created_through: "user_sign_up"
+)
+
+user_org_arques.skip_confirmation!
+user_org_arques.save!
+
+user_org_bapaume = User.new(
+  first_name: "François",
+  last_name: "Factice",
+  password: "lapinlapin",
+  email: "francois@factice.cool",
+  organisation_ids: [org_bapaume.id],
+  created_through: "user_sign_up"
+)
+
+user_org_bapaume.skip_confirmation!
+user_org_bapaume.save!
+
 # Insert a lot of users and add them to the paris_nord organisation
 # rubocop:disable Rails/SkipsModelValidations
 now = Time.zone.now
