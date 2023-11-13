@@ -2,7 +2,6 @@ FactoryBot.define do
   sequence(:agent_email) { |n| "agent_#{n}@lapin.fr" }
 
   factory :agent do
-    service { association(:service) }
     email { generate(:agent_email) }
     uid { email }
     first_name { Faker::Name.first_name }
@@ -10,6 +9,19 @@ FactoryBot.define do
     password { "correcthorse" }
     confirmed_at { Time.zone.parse("2020-07-30 10:30").in_time_zone }
     invitation_accepted_at { Time.zone.parse("2020-07-30 10:30").in_time_zone }
+
+    transient do
+      service { build(:service) }
+    end
+    after(:build) do |agent, evaluator|
+      if agent.agent_services.empty? && agent.services.empty?
+        agent.services = if evaluator.service
+                           [evaluator.service]
+                         else
+                           [build(:service)]
+                         end
+      end
+    end
 
     transient do
       basic_role_in_organisations { [] }
@@ -56,10 +68,10 @@ FactoryBot.define do
       confirmed_at { nil }
     end
     trait :secretaire do
-      service { Service.find_by(name: Service::SECRETARIAT) || build(:service, :secretariat) }
+      services { [Service.find_by(name: Service::SECRETARIAT) || build(:service, :secretariat)] }
     end
     trait :cnfs do
-      service { Service.find_by(name: Service::CONSEILLER_NUMERIQUE) || build(:service, :conseiller_numerique) }
+      services { [Service.find_by(name: Service::CONSEILLER_NUMERIQUE) || build(:service, :conseiller_numerique)] }
     end
     trait :intervenant do
       email { nil }

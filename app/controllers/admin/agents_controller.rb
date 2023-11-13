@@ -3,7 +3,7 @@ class Admin::AgentsController < AgentAuthController
 
   def index
     @agents = policy_scope(Agent)
-      .includes(:service, :roles, :organisations)
+      .includes(:services, :roles, :organisations)
       .active
 
     @agents = @agents.joins(:organisations).where(organisations: { id: current_organisation.id }) if current_organisation
@@ -35,7 +35,7 @@ class Admin::AgentsController < AgentAuthController
 
     if @agent.valid?
       flash[:notice] = create_agent.confirmation_message
-      flash[:error] = create_agent.warning_message
+      flash[:alert] = create_agent.warning_message
       redirect_to_index_path_for(@agent)
     else
       render_new
@@ -74,14 +74,14 @@ class Admin::AgentsController < AgentAuthController
     @agent = policy_scope(Agent).find(params[:id])
     authorize(@agent)
 
-    removal_service = AgentRemoval.new(@agent, current_organisation)
+    agent_removal = AgentRemoval.new(@agent, current_organisation)
 
-    if removal_service.remove!
-      flash[:notice] = removal_service.confirmation_message
+    if agent_removal.remove!
+      flash[:notice] = agent_removal.confirmation_message
 
       redirect_to_index_path_for(@agent)
     else
-      redirect_to edit_admin_organisation_agent_path(current_organisation, @agent), flash: { error: removal_service.error_message }
+      redirect_to edit_admin_organisation_agent_path(current_organisation, @agent), flash: { error: agent_removal.error_message }
     end
   end
 
@@ -96,6 +96,7 @@ class Admin::AgentsController < AgentAuthController
   end
 
   def render_edit
+    @services = services.order(:name)
     @agent_role = @agent.roles.find { |r| r.organisation == current_organisation }
     @agent_removal_presenter = AgentRemovalPresenter.new(@agent, current_organisation)
     @roles = access_levels_collection
@@ -137,7 +138,7 @@ class Admin::AgentsController < AgentAuthController
   end
 
   def create_agent_params
-    params.require(:agent).permit(:email, :service_id, :last_name)
+    params.require(:agent).permit(:email, :last_name, service_ids: [])
   end
 
   def update_agent_params

@@ -7,7 +7,7 @@ RSpec.describe "prescripteur can add a user to a RDV collectif" do
   let!(:lieu) { create(:lieu, organisation: organisation, name: "Bureau") }
   let!(:agent) { create(:agent, :cnfs, admin_role_in_organisations: [organisation], rdv_notifications_level: "all") }
   let!(:motif_collectif) do
-    create(:motif, :collectif, organisation: organisation, service: agent.service, instruction_for_rdv: "Instructions après confirmation")
+    create(:motif, :collectif, organisation: organisation, service: agent.services.first, instruction_for_rdv: "Instructions après confirmation")
   end
   let!(:rdv_collectif) do
     create(

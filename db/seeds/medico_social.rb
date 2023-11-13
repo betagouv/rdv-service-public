@@ -74,7 +74,7 @@ Organisation.set_callback(:create, :after, :notify_admin_organisation_created)
 
 service_pmi = Service.create!(name: "PMI (Protection Maternelle Infantile)", short_name: "PMI")
 service_social = Service.create!(name: "Service social", short_name: "Service Social")
-service_secretariat = Service.create!(name: "Secrétariat", short_name: "Secrétariat")
+service_secretariat = Service.create!(name: Service::SECRETARIAT, short_name: "Secrétariat")
 _service_nouveau = Service.create!(name: "Médico-social", short_name: "Médico-social")
 
 # MOTIFS org_paris_nord
@@ -385,7 +385,7 @@ agent_org_paris_nord_pmi_martine = Agent.new(
   first_name: "Martine",
   last_name: "Validay",
   password: "lapinlapin",
-  service_id: service_pmi.id,
+  services: [service_pmi],
   invitation_accepted_at: 10.days.ago,
   roles_attributes: [{ organisation: org_paris_nord, access_level: AgentRole::ACCESS_LEVEL_ADMIN }],
   agent_territorial_access_rights_attributes: [{
@@ -406,7 +406,7 @@ agent_org_paris_nord_pmi_marco = Agent.new(
   first_name: "Marco",
   last_name: "Durand",
   password: "lapinlapin",
-  service_id: service_pmi.id,
+  services: [service_pmi],
   invitation_accepted_at: 10.days.ago,
   roles_attributes: [{ organisation: org_paris_nord, access_level: AgentRole::ACCESS_LEVEL_BASIC }],
   agent_territorial_access_rights_attributes: [{
@@ -426,7 +426,7 @@ agent_org_paris_nord_social_polo = Agent.new(
   first_name: "Polo",
   last_name: "Durant",
   password: "lapinlapin",
-  service_id: service_social.id,
+  services: [service_social],
   invitation_accepted_at: 10.days.ago,
   roles_attributes: [{ organisation: org_paris_nord, access_level: AgentRole::ACCESS_LEVEL_BASIC }],
   agent_territorial_access_rights_attributes: [{
@@ -446,7 +446,7 @@ org_arques_pmi_maya = Agent.new(
   first_name: "Maya",
   last_name: "Patrick",
   password: "lapinlapin",
-  service_id: service_pmi.id,
+  services: [service_pmi],
   invitation_accepted_at: 10.days.ago,
   roles_attributes: Organisation.where(territory: territory62).pluck(:id).map { { organisation_id: _1, access_level: AgentRole::ACCESS_LEVEL_ADMIN } },
   agent_territorial_access_rights_attributes: [{
@@ -466,7 +466,7 @@ agent_org_bapaume_pmi_bruno = Agent.new(
   first_name: "Bruno",
   last_name: "Frangi",
   password: "lapinlapin",
-  service_id: service_pmi.id,
+  services: [service_pmi],
   invitation_accepted_at: 10.days.ago,
   roles_attributes: [{ organisation: org_bapaume, access_level: AgentRole::ACCESS_LEVEL_ADMIN }],
   agent_territorial_access_rights_attributes: [{
@@ -487,7 +487,7 @@ agent_org_bapaume_pmi_gina = Agent.new(
   first_name: "Gina",
   last_name: "Leone",
   password: "lapinlapin",
-  service_id: service_pmi.id,
+  services: [service_pmi],
   invitation_accepted_at: 10.days.ago,
   roles_attributes: [{ organisation: org_bapaume, access_level: AgentRole::ACCESS_LEVEL_ADMIN }],
   agent_territorial_access_rights_attributes: [{
@@ -511,13 +511,14 @@ agents_attributes = 1_000.times.map do |i|
     last_name: "last_name_#{i}",
     email: "email_#{i}@test.com",
     uid: "email_#{i}@test.com",
-    service_id: service_social.id,
   }
 end
 results = Agent.insert_all!(agents_attributes, returning: Arel.sql("id")) # [{"id"=>1}, {"id"=>2}, ...]
 agent_ids = results.flat_map(&:values) # [1, 2, ...]
 agent_role_attributes = agent_ids.map { |id| { agent_id: id, organisation_id: org_paris_nord.id } }
 AgentRole.insert_all!(agent_role_attributes)
+agent_service_attributes = agent_ids.map { |id| { agent_id: id, service_id: service_social.id } }
+AgentService.insert_all!(agent_service_attributes)
 
 agent_territorial_access_rights_attributes = agent_ids.map { |id| { agent_id: id, territory_id: territory75.id, created_at: Time.zone.now, updated_at: Time.zone.now } }
 AgentTerritorialAccessRight.insert_all!(agent_territorial_access_rights_attributes)

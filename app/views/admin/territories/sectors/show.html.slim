@@ -101,7 +101,8 @@
         - @sector.attributions.level_agent.to_a.group_by(&:organisation).each do |organisation, all_attributions|
           div.mb-1= "Organisation #{organisation.name} :"
           .pl-2.py-1.border-left
-            - all_attributions.group_by { _1.agent.service }.each do |service, attributions|
+            - services_of_attributed_agents = all_attributions.map(&:agent).map(&:services).flatten.uniq
+            - services_of_attributed_agents.each do |service|
               span> Service #{service.short_name}
               span.text-muted.ml-1
                 - service_motifs = Motif.sectorisation_level_agent.where(organisation: organisation, service: service)
@@ -112,7 +113,8 @@
                   motifs: service_motifs.map(&:name).to_sentence.truncate(100) \
                 )
               ul.pl-3.mb-3
-                - attributions.each do |attribution|
+                - attributions_for_this_service = all_attributions.select { |a| a.agent.services.include?(service) }
+                - attributions_for_this_service.each do |attribution|
                   li.mb-1
                     span>= attribution.agent.full_name
                     span.ml-2>= link_to "Retirer", admin_territory_sector_attribution_path(current_territory, @sector, attribution), method: :delete

@@ -42,7 +42,7 @@ module SuperAdmins
         email: resource_params[:agent_email],
         first_name: resource_params[:agent_first_name],
         last_name: resource_params[:agent_last_name],
-        service: service,
+        services: [service],
         password: SecureRandom.hex,
         roles_attributes: [{ organisation: organisation, access_level: AgentRole::ACCESS_LEVEL_ADMIN }],
         invited_by: current_super_admin

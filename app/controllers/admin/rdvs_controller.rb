@@ -20,7 +20,7 @@ class Admin::RdvsController < AgentAuthController
         :agents_rdvs, :organisation, :lieu, :motif,
         {
           participations: [:prescripteur, { user: :user_profiles }],
-          agents: :service,
+          agents: :services,
           users: %i[responsible organisations user_profiles],
         },
       ]

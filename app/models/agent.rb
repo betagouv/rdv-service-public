@@ -3,7 +3,7 @@ class SoftDeleteError < StandardError; end
 class Agent < ApplicationRecord
   # Mixins
   has_paper_trail(
-    only: %w[email first_name last_name starts_at service_id invitation_sent_at invitation_accepted_at]
+    only: %w[email first_name last_name starts_at invitation_sent_at invitation_accepted_at]
   )
 
   include Outlook::Connectable
@@ -49,7 +49,7 @@ class Agent < ApplicationRecord
   }, _prefix: true
 
   # Relations
-  belongs_to :service
+  has_many :agent_services, dependent: :destroy
   has_many :agent_territorial_access_rights, dependent: :destroy
   has_many :plage_ouvertures, dependent: :destroy
   has_many :absences, dependent: :destroy
@@ -63,9 +63,10 @@ class Agent < ApplicationRecord
   accepts_nested_attributes_for :roles, :agent_territorial_access_rights
 
   # Through relations
+  has_many :services, through: :agent_services
   has_many :teams, through: :agent_teams
   has_many :lieux, through: :plage_ouvertures
-  has_many :motifs, through: :service
+  has_many :motifs, through: :services
   has_many :rdvs, dependent: :destroy, through: :agents_rdvs
   has_many :territories, through: :territorial_roles
   has_many :organisations_of_territorial_roles, source: :organisations, through: :territories
@@ -83,7 +84,7 @@ class Agent < ApplicationRecord
   # * it validates :email (the invite_key) specifically with Devise.email_regexp.
   validates :first_name, presence: true, unless: -> { allow_blank_name || is_an_intervenant? }
   validates :last_name, presence: true, unless: -> { allow_blank_name }
-  validate :service_cannot_be_changed
+  validates :agent_services, presence: true
 
   # Hooks
 
@@ -93,39 +94,39 @@ class Agent < ApplicationRecord
     # soit des agents normaux qui ont reçu et accepté leur invitation
     where("invitation_sent_at IS NULL OR invitation_accepted_at IS NOT NULL")
   }
-  scope :intervenants, lambda {
-    where(id: AgentRole.where(access_level: "intervenant").select(:agent_id))
-  }
-  scope :not_intervenants, lambda {
-    where.not(id: AgentRole.where(access_level: "intervenant").select(:agent_id))
-  }
   scope :active, -> { where(deleted_at: nil) }
   scope :order_by_last_name, -> { order(Arel.sql("LOWER(last_name)")) }
-  scope :secretariat, -> { joins(:service).where(services: { name: "Secrétariat" }) }
-  scope :can_perform_motif, lambda { |motif|
-    motif.for_secretariat ? joins(:service).where(service: motif.service).or(secretariat) : where(service: motif.service)
-  }
-  scope :available_referents_for, lambda { |user|
-    where.not(id: [user.referent_agents.map(&:id)])
-  }
-  scope :in_orgs, lambda { |organisations|
-    joins(:roles).where(agent_roles: { organisations: organisations })
+  scope :secretariat, -> { joins(:services).where(services: { name: Service::SECRETARIAT }) }
+  scope :in_any_of_these_services, lambda { |services|
+    joins(:agent_services).where(agent_services: { service_id: services.map(&:id) })
   }
 
   ## -
 
   delegate :name, to: :domain, prefix: true
 
+  def confrere_of?(other_agent)
+    services.to_set.intersection(other_agent.services.to_set).present?
+  end
+
+  def confreres
+    Agent.in_any_of_these_services(services)
+  end
+
   def remember_me # Override from Devise::rememberable to enable it by default
     super.nil? ? true : super
   end
 
   def reverse_full_name_and_service
-    service.present? ? "#{reverse_full_name} (#{service.short_name})" : full_name
+    services.present? ? "#{reverse_full_name} (#{services_short_names})" : full_name
   end
 
   def full_name_and_service
-    service.present? ? "#{full_name} (#{service.short_name})" : full_name
+    services.present? ? "#{full_name} (#{services_short_names})" : full_name
+  end
+
+  def services_short_names
+    services.map(&:short_name).join(", ")
   end
 
   def complete?
@@ -161,12 +162,6 @@ class Agent < ApplicationRecord
 
   def name_for_paper_trail
     "[Agent] #{full_name}"
-  end
-
-  def service_cannot_be_changed
-    return if new_record? || !service_id_changed?
-
-    errors.add(:service_id, "changement interdit")
   end
 
   def role_in_organisation(organisation)
@@ -232,10 +227,16 @@ class Agent < ApplicationRecord
     "#{first_name} #{last_name}"
   end
 
+  def secretaire?
+    services.any?(&:secretariat?)
+  end
+
   # This is the main toggle to enable or disable features for Conseillers Numériques (cnfs)
   # TODO: As the usage of this toggle grows, we might need to rethink it, and see if these changes
   # should be done via configuration, or something else
-  delegate :conseiller_numerique?, to: :service
+  def conseiller_numerique?
+    services.any?(&:conseiller_numerique?)
+  end
 
   def domain
     @domain ||= if organisations.where(verticale: :rdv_aide_numerique).any?

@@ -12,7 +12,8 @@ class Service < ApplicationRecord
   MAIRIE = "Mairie".freeze
 
   # Relations
-  has_many :agents, dependent: :nullify
+  has_many :agent_services, dependent: :restrict_with_error
+  has_many :agents, through: :agent_services
   has_many :motifs, dependent: :restrict_with_error
 
   # Validations
@@ -26,8 +27,10 @@ class Service < ApplicationRecord
 
   ## -
 
-  def self.all_for_territory(territory)
-    where(agents: Agent.joins(:organisations).merge(territory.organisations))
+  # Retourne les services des agents des orgas du territoire
+  def self.used_by_agents_of_territory(territory)
+    agents_of_territory = Agent.joins(:organisations).merge(territory.organisations)
+    joins(:agent_services).where(agent_services: { agents: agents_of_territory }).distinct
   end
 
   def secretariat?

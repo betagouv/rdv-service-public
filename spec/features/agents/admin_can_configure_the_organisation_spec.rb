@@ -80,6 +80,7 @@ describe "Admin can configure the organisation" do
 
     click_link "Ajouter un agent", match: :first
     fill_in "Email", with: "jean@paul.com"
+    select(pmi.name, from: "Services")
     click_button "Envoyer une invitation"
 
     expect_page_title("Invitations en cours pour Organisation n°1")
@@ -96,6 +97,7 @@ describe "Admin can configure the organisation" do
       click_link "Agents"
       click_link "Ajouter un agent", match: :first
       fill_in "Email", with: "jean@paul.com"
+      select(pmi.name, from: "Services")
       click_button "Envoyer une invitation"
 
       open_email("jean@paul.com")
@@ -111,6 +113,7 @@ describe "Admin can configure the organisation" do
       click_link "Agents"
       click_link "Ajouter un agent", match: :first
       fill_in "Email", with: "jean@paul.com"
+      select(pmi.name, from: "Services")
       click_button "Envoyer une invitation"
 
       open_email("jean@paul.com")

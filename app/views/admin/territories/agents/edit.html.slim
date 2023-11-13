@@ -1,6 +1,29 @@
 = territory_navigation(t(".agent_title", name: @agent.full_name), [link_to(t(".territory_agents_title"), admin_territory_agents_path(current_territory))])
 
+h1
+  = @agent.full_name
+
 .container-fluid
+  - if policy([:configuration, current_territory]).allow_to_manage_access_rights?
+    .card.m-2.rounded
+      h2.card-header
+        = t(".agent_services_legend")
+      = Sentry.capture_message("Il est temps de retirer le bandeau sur les agents multi-services, ce n'est plus nouveau") if Time.zone.now > Date.new(2024, 3, 1)
+      .alert.alert-info.m-2 ✨ Nouvelle fonctionnalité : Vous pouvez désormais attribuer plusieurs services à un agent
+      = simple_form_for @agent, url: update_services_admin_territory_agent_path(current_territory, @agent) do |f|
+        .card-body
+          = f.input :service_ids, collection: Service.used_by_agents_of_territory(current_territory),
+                label: t(".services"),
+                label_method: :name,
+                input_html: { \
+                  multiple: true, \
+                  class: "select2-input",\
+                }
+        .card-footer
+          .row
+            .col.text-right
+              = f.submit class: "btn btn-primary", value: "Enregistrer les services"
+
   - if policy([:configuration, current_territory]).allow_to_manage_access_rights?
     .card.m-2.rounded
       h2.card-header

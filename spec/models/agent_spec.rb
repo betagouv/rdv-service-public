@@ -68,20 +68,6 @@ describe Agent, type: :model do
     end
   end
 
-  describe "#available_referents_for" do
-    it "returns empty array without agents" do
-      user = build(:user, referent_agents: [])
-      expect(described_class.available_referents_for(user)).to eq([])
-    end
-
-    it "returns agent that not already referents array without agents" do
-      agent = create(:agent)
-      already_referent = create(:agent)
-      user = create(:user, referent_agents: [already_referent])
-      expect(described_class.available_referents_for(user)).to eq([agent])
-    end
-  end
-
   describe "#update_unknown_past_rdv_count!" do
     it "update with 0 if no past RDV" do
       agent = create(:agent)

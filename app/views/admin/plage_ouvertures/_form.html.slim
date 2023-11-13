@@ -15,7 +15,11 @@
               "allow-clear": true, \
             }, \
           }
-      = f.association :motifs, collection: plage_ouverture.available_motifs, label_method: -> { motif_name_with_location_type_and_badges(_1) }, as: :check_boxes
+      - motifs_by_services = plage_ouverture.available_motifs.group_by(&:service)
+      - motifs_by_services.each do |service, motifs|
+        - extra_options = motifs_by_services.size > 1 ? { label: "Motifs de #{service.name}", required: false } : {}
+        / Le "required: false" permet de ne pas afficher la petite astérisque, mais le champ reste obligatoire
+        = f.association(:motifs, collection: motifs, label_method: -> { motif_name_with_location_type_and_badges(_1) }, as: :check_boxes, **extra_options)
 
       hr
 
