@@ -96,7 +96,7 @@ class Admin::AgentsController < AgentAuthController
   end
 
   def render_edit
-    @services = services.order(:name)
+    @services = @agent.services.order(:name) # les services sont en lecture seule en édition
     @agent_role = @agent.roles.find { |r| r.organisation == current_organisation }
     @agent_removal_presenter = AgentRemovalPresenter.new(@agent, current_organisation)
     @roles = access_levels_collection
