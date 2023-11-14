@@ -88,7 +88,7 @@ class Admin::AgentsController < AgentAuthController
   private
 
   def render_new
-    @services = services.order(:name)
+    @services = current_territory.services.order(:name)
     @roles = access_levels_collection
     @agent_role = AgentRole.new
 
@@ -110,10 +110,6 @@ class Admin::AgentsController < AgentAuthController
     else
       redirect_to admin_organisation_agents_path(current_organisation)
     end
-  end
-
-  def services
-    Agent::ServicePolicy::AdminScope.new(pundit_user, Service).resolve
   end
 
   def index_params
