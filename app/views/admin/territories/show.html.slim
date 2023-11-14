@@ -65,6 +65,13 @@
           | Motifs
         p Gérer les options de configuration des motifs
 
+    .col.col-md-4.p-2.rounded.settings-box
+      = link_to edit_admin_territory_service_fields_path(current_territory) do
+        h2.fw-bold.mb-0
+          i.fa.fa-calendar>
+          | Services
+        p Activer ou désactiver la liste des services des agents
+
   / Ce lien est la manière principale de sortir de la configuration pour retourner à l'écran métier, donc on le garde à la fin de la liste
   .col.col-md-4.p-2.rounded.settings-box
     = link_to admin_organisations_path do
