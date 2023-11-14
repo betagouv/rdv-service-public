@@ -1,4 +1,4 @@
-- bleu_ecume = "#2F4077"
+- bleu_ecume = "#4E68BB"
 - team_meeting_url = "https://meet.brevo.com/-1918"
 .fr-py-12w[style="background-color:  #F4F6FE"]
   .fr-container.fr-grid-row.fr-grid-row--center
@@ -27,16 +27,17 @@
       .fr-col-md-5.fr-pt-4w
         h3 Une solution conventionnée par l’ANTS
 
-        p  RDV Service Public permet de répondre aux exigences techniques de l’ANTS (raccordement, numéro de pré-demande, gestion des doublons, principe de déterritorialisation).
-        p En dotant votre commune de RDV Service Public, vous devenez éligible à la subvention de l’ANTS.
+        p RDV Service Public répond aux exigences techniques de l’ANTS (raccordement, numéro de pré-demande, gestion des doublons, principe de déterritorialisation).
+
+        p Vous pouvez choisir le branchement ou non de votre commune au moteur de recherche national de l’ANTS.
 
     .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
       .fr-col-md-5
         h3 Une solution publique et souveraine
 
-        p En utilisant RDV Service Public, vous entrez dans la communauté des utilisateurs et utilisatrices des services numériques développés par l’Etat, pour répondre aux besoins des agents publics et des collectivités territoriales.
+        p RDV Service Public est une solution numérique développée par l’État, au sein de l’Incubateur de Territoires de l’Agence Nationale de la Cohésion des Territoires.
 
-        p Vous choisissez ainsi une solution publique et souveraine, développée par l’Incubateur des Territoires de l’Agence Nationale de la Cohésion des Territoires.
+        p Vous entrez dans la communauté des utilisateurs et utilisatrices des services numériques publics et participez au développement de la souveraineté numérique de l’État.
 
       .fr-col-md-5
         = dsfr_image_tag "rdv_mairie/image_2.svg", "Un cercle de mains autour d'une ampoule", class: "fr-ratio-16x9"
@@ -46,7 +47,9 @@
       .fr-col-md-5
         h3 Une solution gratuite
 
-        p RDV Service Public est aujourd’hui mis à disposition gratuitement des collectivités dotées d’un Dispositif de recueil (DR) et ne disposant pas d’un outil de gestion et de prise de rendez-vous.
+        p RDV Service Public est mis à disposition gratuitement des collectivités qui sont dotées d’un dispositif de recueil (DR).
+
+        p Vous bénéficiez d’un accompagnement individualisé pour la prise en main de l’outil et d’une équipe support à votre disposition.
 
 .fr-py-12w[style="background-color:  #F4F6FE"]
   .fr-container
@@ -57,35 +60,36 @@
         = dsfr_image_tag "rdv_mairie/fonctionnalites1.svg", "Un personnage montre un écran qui affiche un menu de choix de créneaux", class: "fr-ratio-3x2"
         h3
           = "Faciliter "
-          span[style="color: #000091"] la prise de rendez-vous
+          span[style="color: #{bleu_ecume}"] la prise de rendez-vous
           = " en mairie"
-        p La mairie rend accessible ses disponibilités en ligne. Les usagers peuvent planifier des rendez-vous d’information téléphonique ou des rendez-vous au guichet.
+        p Vous choissisez de rendre accessible vos disponibilités en ligne, tant sur le site internet de votre commune que sur le moteur de recherche national de l’ANTS.
       .fr-col-md-5
         = dsfr_image_tag "rdv_mairie/fonctionnalites2.svg", "Un personnage montre un écran qui affiche un agenda", class: "fr-ratio-3x2"
         h3
           = "Simplifier "
-          span[style="color: #000091"] la gestion de rendez-vous
+          span[style="color: #{bleu_ecume}"] la gestion de rendez-vous
           = " de vos services"
 
-        p Les agents mettent à disposition de leurs collègues leurs disponibilités. Un agent peut planifier des rendez-vous dans les agendas des collègues.
+        p Vous disposez d’un accès collectif à la solution. Chaque agent de votre mairie peut consulter, modifier ou planfier des rendez-vous.
       .fr-col-md-5
         = dsfr_image_tag "rdv_mairie/fonctionnalites3.svg", "Deux mains tiennent un smartphone qui affiche une icône de notification", class: "fr-ratio-3x2"
-        h3 Envoyer des notifications de rappel aux usagers
-        p Des SMS et mail de notifications sont envoyés à chaque planification de rendez-vous. Les usagers peuvent modifier ou annuler le rendez-vous depuis cette notification.
+        h3 Envoyer des notifications de rappel
+        p Vous envoyez automatiquement des SMS et des mails de notifications à chaque planification de rendez-vous. Les usagers peuvent modifier ou annuler le rendez-vous depuis cette notification.
       .fr-col-md-5
         = dsfr_image_tag "rdv_mairie/fonctionnalites4.svg", "Deux personnages regardent un agenda", class: "fr-ratio-3x2"
         h3 Faire de la prescription
-        p Les services publics locaux de votre territoire peuvent planifier un rendez-vous directement dans les disponibilités de vos agents pour accompagner les parcours des usagers.
 
-.fr-py-12w[style="background-color:  #{bleu_ecume}; color: white"]
+        p Vous pouvez rendre accessible les disponiblités de votre mairie aux acteurs de votre territoire (association, espace France service). Ils pourront planifier des rendez-vous pour le compte de l’usager.
+
+.fr-py-12w
   .fr-container
     .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
       .fr-col-md-5[style="text-align: center"]
-        h2[style="color: white"] Comment l’utiliser ?
+        h2 Comment l’utiliser ?
         p
-          | Notre équipe est à votre entière disposition pour organiser un temps de formation avec les agents de votre mairie.
+          | Nous vous invitons à planifier un rendez-vous avec notre équipe.
           br
-          |Vous pouvez planifier un rendez-vous :
+          | Nous prendrons le temps nécessaire à la présentation de l’outil, à la formation de vos agents ainsi qu’à la création de votre espace RDV Service Public.
         = link_to("Prendre RDV avec l’équipe", team_meeting_url, class: ["fr-btn fr-mb-4w"])
 
 .fr-py-12w[style="background-color:  #F4F6FE"]
@@ -100,15 +104,9 @@
           = external_link_to("RDV Service Public", "https://beta.gouv.fr/startups/rdv-services-publics.html")
           | , solution numérique incubée par l’
           = external_link_to("Incubateur des Territoires", "https://incubateur.anct.gouv.fr/")
-          = " et sponsorisée par le Programme Société Numérique de l’"
+          = " et sponsorisée par lepProgramme Société Numérique de l’"
           = external_link_to("Agence Nationale de la Cohésion des Territoires", "https://agence-cohesion-territoires.gouv.fr/")
           | .
-        p
-          = "Nous développons une "
-          b
-            | solution de gestion et de prise de rendez-vous interne à l’État
-          = ", pour tous les services publics, simple à utiliser et simple à déployer."
-        p
-          | Suite aux annonces récentes de la Première Ministre pour diviser par deux le temps d’attente pour obtenir un titre d’identité, notre solution s’ouvre à toutes les mairies proposant un Dispositif de Recueil (DR) et ne disposant pas d’une solution de gestion et de prise de rendez-vous.
-        p
-          | Les plages de disponibilités concernant les titres sécurisés (carte nationale d’identité, passeport) seront automatiquement publiées sur le site de l’ANTS grâce à un raccordement au moteur de recherche de l’ANTS.
+        p Nous suivons l’approche #{external_link_to("beta.gouv.fr", "https://beta.gouv.fr/")} qui place l’expérience utilisateur au coeur de la conception produit."
+
+        p Nous développons une solution de gestion et de prise de rendez-vous simple à utiliser, simple à déployer, libre et open-source pour tous les services publics.
