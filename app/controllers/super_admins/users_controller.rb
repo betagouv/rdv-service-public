@@ -1,5 +1,7 @@
 module SuperAdmins
   class UsersController < SuperAdmins::ApplicationController
+    include SuperAdmins::PaperTrailConcern
+
     def sign_in_as
       user = User.find(params[:id])
       if sign_in_as_allowed?

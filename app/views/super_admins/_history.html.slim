@@ -20,4 +20,4 @@
               td=change.first.to_s
               td=change.last.to_s
               td=l version.created_at
-              td= version.whodunnit
+              td=link_to version.whodunnit, super_admins_url(version.whodunnit)
