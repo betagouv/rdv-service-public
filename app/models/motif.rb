@@ -146,10 +146,6 @@ class Motif < ApplicationRecord
     for_secretariat ? [service, Service.secretariat.first] : [service]
   end
 
-  def secretariat?
-    for_secretariat?
-  end
-
   def visible_and_notified?
     visibility_type == VISIBLE_AND_NOTIFIED
   end
