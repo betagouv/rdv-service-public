@@ -35,7 +35,7 @@ class SectorAttribution < ApplicationRecord
       .where(organisation: organisation)
       .includes(:agent)
       .to_a
-      .group_by { _1.agent.service_id }
+      .group_by { _1.agent.services.first.id }
       .transform_values do |attributions|
         {
           sectors_count: attributions.pluck(:sector_id).uniq.count,
