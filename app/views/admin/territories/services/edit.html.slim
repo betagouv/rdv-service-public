@@ -1,0 +1,16 @@
+= territory_navigation("Services")
+
+.row.justify-content-center
+  .col-md-6
+    .card
+      .card-body
+        h1.card-title Services
+        p.text-muted.font-14 Vous pouvez activer ou désactiver les services dont font partie les agents de votre territoire.
+
+        = simple_form_for current_territory, url: admin_territory_services_path(current_territory) do |f|
+          = render "model_errors", model: current_territory
+
+          = f.association :territory_services, collection: Service.all, label: "", as: :check_boxes
+
+          .text-right
+            = f.button :submit

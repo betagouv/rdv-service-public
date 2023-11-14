@@ -1,4 +1,8 @@
 class Admin::Territories::ServicesController < Admin::Territories::BaseController
+  def edit
+    authorize current_territory
+  end
+
   def update
     authorize current_territory
     current_territory.update(territory_services_params)
