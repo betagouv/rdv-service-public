@@ -42,6 +42,8 @@ RSpec.describe Admin::AgentsController, type: :controller do
                        invitation_accepted_at: nil, service: create(:service, :conseiller_numerique))
       end
 
+      before { create(:service, :secretariat) }
+
       it "only allows inviting agents for the secretariat" do
         get :new, params: { organisation_id: organisation.id }
         expect(response).not_to have_content("Admin")
