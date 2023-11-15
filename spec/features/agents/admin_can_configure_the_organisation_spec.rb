@@ -1,14 +1,14 @@
 describe "Admin can configure the organisation" do
   let!(:organisation) { create(:organisation) }
-  let!(:pmi) { create(:service, name: "PMI") }
-  let!(:service_social) { create(:service, name: "Service social") }
+  let!(:pmi) { create(:service, name: "PMI", territories: [organisation.territory]) }
+  let!(:service_social) { create(:service, name: "Service social", territories: [organisation.territory]) }
   let!(:agent_admin) { create(:agent, first_name: "Jeanne", last_name: "Dupont", email: "jeanne.dupont@love.fr", service: pmi, admin_role_in_organisations: [organisation]) }
   let!(:agent_user) { create(:agent, first_name: "Tony", last_name: "Patrick", email: "tony@patrick.fr", service: pmi, basic_role_in_organisations: [organisation], invitation_accepted_at: nil) }
   let!(:other_agent_user) { create(:agent, first_name: "JP", last_name: "Dupond", email: "jp@dupond.fr", service: service_social, basic_role_in_organisations: [organisation]) }
   let!(:motif) { create(:motif, name: "Motif 1", service: pmi, organisation: organisation) }
   let!(:user) { create(:user, organisations: [organisation]) }
   let!(:lieu) { create(:lieu, organisation: organisation) }
-  let!(:secretariat) { create(:service, :secretariat) }
+  let!(:secretariat) { create(:service, :secretariat, territories: [organisation.territory]) }
   let(:le_nouveau_motif) { build(:motif, name: "Motif 2", service: pmi, organisation: organisation) }
   let(:la_nouvelle_org) { build(:organisation) }
 
