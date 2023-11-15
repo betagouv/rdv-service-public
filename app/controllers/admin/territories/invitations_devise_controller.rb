@@ -1,6 +1,6 @@
 class Admin::Territories::InvitationsDeviseController < Devise::InvitationsController
   def new
-    @services = current_territory.services.order(:name)
+    @services = current_territory.services
     self.resource = resource_class.new(territories: [current_territory])
     #  authorize(resource)
     render :new, layout: "application_configuration"
