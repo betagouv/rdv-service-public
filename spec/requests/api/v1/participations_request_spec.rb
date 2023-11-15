@@ -3,23 +3,23 @@ require "swagger_helper"
 describe "RDVs Users authentified API", swagger_doc: "v1/api.json" do
   with_examples
 
-  path "api/v1/rdvs_users/{id}/" do
-    patch "DEPRECIE rdvs_users est remplacé par participations, Mettre à jour une participation" do
+  path "api/v1/participations/{id}/" do
+    patch "Mettre à jour une participation" do
       with_authentication
 
       tags "RDV"
       produces "application/json"
-      operationId "putRdvsUsers"
-      description "DEPRECIE, la route change pour api/v1/participations/{id}/, Permet de modifier une participation à un rdv. Seul le champ `status` est modifiable."
+      operationId "putParticipations"
+      description "Permet de modifier une participation à un rdv. Seul le champ `status` est modifiable."
 
       parameter name: :id, in: :path, type: :string, description: "Identifiant de la participation", example: "20"
       parameter(
-        name: :rdvs_user,
+        name: :participation,
         in: :query,
         schema: {
           type: :object,
           properties: {
-            rdvs_user: {
+            participation: {
               type: :object,
               properties: {
                 status: { type: :string },
@@ -29,7 +29,7 @@ describe "RDVs Users authentified API", swagger_doc: "v1/api.json" do
             },
           },
         },
-        required: %w[rdvs_user]
+        required: %w[participation]
       )
 
       response 200, "updates participation status", document: false do
@@ -41,12 +41,12 @@ describe "RDVs Users authentified API", swagger_doc: "v1/api.json" do
         let(:uid) { access_admin_agent["uid"].to_s }
         let(:client) { access_admin_agent["client"].to_s }
         let(:user) { build(:user, first_name: "Jean") }
-        let!(:participation) { create(:participation, status: "seen", user: user, rdv: rdv) }
+        let!(:participation_object) { create(:participation, status: "seen", user: user, rdv: rdv) }
         let!(:territorial_role) { AgentTerritorialRole.create(territory: organisation.territory, agent: admin_agent) }
         let!(:rdv) { create(:rdv, organisation: organisation, agents: [admin_agent]) }
-        let(:id) { participation.id }
+        let(:participation) { { participation: { status: status } } }
+        let(:id) { participation_object.id }
         let(:status) { "seen" }
-        let(:rdvs_user) { { participation: { status: status } } }
 
         run_test!
 
