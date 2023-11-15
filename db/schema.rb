@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_08_103223) do
+ActiveRecord::Schema[7.0].define(version: 2023_11_15_161308) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -150,8 +150,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_08_103223) do
   end
 
   create_table "agent_services", force: :cascade do |t|
-    t.bigint "agent_id"
-    t.bigint "service_id"
+    t.bigint "agent_id", null: false
+    t.bigint "service_id", null: false
     t.datetime "created_at", null: false
     t.index ["agent_id", "service_id"], name: "index_agent_services_on_agent_id_and_service_id", unique: true
     t.index ["agent_id"], name: "index_agent_services_on_agent_id"
@@ -364,15 +364,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_08_103223) do
   end
 
   create_table "motifs", force: :cascade do |t|
-    t.string "name"
-    t.string "color"
+    t.string "name", null: false
+    t.string "color", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "default_duration_in_min", default: 30, null: false
     t.bigint "organisation_id", null: false
     t.boolean "legacy_bookable_publicly", default: false, null: false
-    t.integer "min_public_booking_delay", default: 1800
-    t.integer "max_public_booking_delay", default: 7889238
+    t.integer "min_public_booking_delay", default: 1800, null: false
+    t.integer "max_public_booking_delay", default: 7889238, null: false
     t.datetime "deleted_at"
     t.bigint "service_id", null: false
     t.text "restriction_for_rdv"
@@ -410,7 +410,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_08_103223) do
   end
 
   create_table "organisations", force: :cascade do |t|
-    t.string "name"
+    t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "departement"
@@ -457,7 +457,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_08_103223) do
 
   create_table "plage_ouvertures", force: :cascade do |t|
     t.bigint "agent_id", null: false
-    t.string "title"
+    t.string "title", null: false
     t.bigint "organisation_id", null: false
     t.date "first_day", null: false
     t.time "start_time", null: false
@@ -524,7 +524,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_08_103223) do
 
   create_table "receipts", force: :cascade do |t|
     t.bigint "rdv_id"
-    t.bigint "user_id"
+    t.bigint "user_id", null: false
     t.string "event", null: false
     t.enum "channel", null: false, enum_type: "receipts_channel"
     t.enum "result", null: false, enum_type: "receipts_result"
@@ -578,10 +578,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_08_103223) do
   end
 
   create_table "services", force: :cascade do |t|
-    t.string "name"
+    t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "short_name"
+    t.string "short_name", null: false
     t.enum "verticale", enum_type: "verticale"
     t.index "lower((name)::text)", name: "index_services_on_lower_name", unique: true
     t.index "lower((short_name)::text)", name: "index_services_on_lower_short_name", unique: true
@@ -637,8 +637,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_08_103223) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string "first_name"
-    t.string "last_name"
+    t.string "first_name", null: false
+    t.string "last_name", null: false
     t.string "email"
     t.string "address"
     t.string "phone_number"
@@ -679,7 +679,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_08_103223) do
     t.string "post_code"
     t.string "city_name"
     t.enum "invited_through", default: "devise_email", enum_type: "user_invited_through"
-    t.enum "created_through", default: "unknown", enum_type: "user_created_through"
+    t.enum "created_through", default: "unknown", null: false, enum_type: "user_created_through"
     t.string "case_number"
     t.string "address_details"
     t.integer "logement"
@@ -716,7 +716,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_08_103223) do
 
   create_table "webhook_endpoints", force: :cascade do |t|
     t.string "target_url", null: false
-    t.string "secret"
+    t.string "secret", null: false
     t.bigint "organisation_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -726,9 +726,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_08_103223) do
   end
 
   create_table "zones", force: :cascade do |t|
-    t.string "level"
-    t.string "city_name"
-    t.string "city_code"
+    t.string "level", null: false
+    t.string "city_name", null: false
+    t.string "city_code", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "sector_id", null: false

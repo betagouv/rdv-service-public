@@ -731,7 +731,7 @@ rdv_user_attributes = rdv_ids.map { |id| { user_id: user_org_paris_nord_josephin
 Participation.insert_all!(rdv_user_attributes)
 events = %w[new_creneau_available rdv_cancelled rdv_created rdv_date_updated rdv_upcoming_reminder]
 receipts_attributes = rdv_ids.map do |id|
-  { rdv_id: id, organisation_id: org_paris_nord.id, event: events.sample, channel: Receipt.channels.values.sample, result: Receipt.results.values.sample, created_at: now, updated_at: now }
+  { rdv_id: id, user_id: user_org_paris_nord_josephine.id, organisation_id: org_paris_nord.id, event: events.sample, channel: Receipt.channels.values.sample, result: Receipt.results.values.sample, created_at: now, updated_at: now }
 end
 Receipt.insert_all!(receipts_attributes)
 # rubocop:enable Rails/SkipsModelValidations
