@@ -6,7 +6,6 @@ class AddVariousNotNullConstraints < ActiveRecord::Migration[7.0]
     change_column_null :webhook_endpoints, :secret, false
     change_column_null :services, :name, false
     change_column_null :services, :short_name, false
-    change_column_null :receipts, :user_id, false
     change_column_null :plage_ouvertures, :title, false
     change_column_null :organisations, :name, false
     change_column_null :motifs, :name, false
