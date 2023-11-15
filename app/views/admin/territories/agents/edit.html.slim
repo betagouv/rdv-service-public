@@ -12,7 +12,7 @@ h1
       .alert.alert-info.m-2 ✨ Nouvelle fonctionnalité : Vous pouvez désormais attribuer plusieurs services à un agent
       = simple_form_for @agent, url: update_services_admin_territory_agent_path(current_territory, @agent) do |f|
         .card-body
-          = f.input :service_ids, collection: Service.used_by_agents_of_territory(current_territory),
+          = f.input :service_ids, collection: current_territory.services,
                 label: t(".services"),
                 label_method: :name,
                 input_html: { \
