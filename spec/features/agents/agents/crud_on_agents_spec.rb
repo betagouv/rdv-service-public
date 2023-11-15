@@ -7,12 +7,14 @@ RSpec.describe "Agents can be managed by organisation admins" do
   let(:organisation_admin) { create(:agent, service: pmi, admin_role_in_organisations: [organisation1, organisation2]) }
   let(:territory_admin) { create(:agent, service: pmi, admin_role_in_organisations: [organisation1, organisation2]) }
 
-  context "inviting an agent in an existing service" do
-    before do
-      login_as(organisation_admin, scope: :agent)
-      visit admin_organisation_agents_path(organisation1)
-    end
+  around { |example| perform_enqueued_jobs { example.run } }
 
+  before do
+    login_as(organisation_admin, scope: :agent)
+    visit admin_organisation_agents_path(organisation1)
+  end
+
+  context "inviting an agent in an existing service" do
     it "allows adding an agent in two different organisations" do
       click_link("Ajouter un agent", match: :first)
       fill_in("Email", with: "bob@test.com")
@@ -31,8 +33,6 @@ RSpec.describe "Agents can be managed by organisation admins" do
     end
 
     describe "invitation email domains" do
-      around { |example| perform_enqueued_jobs { example.run } }
-
       context "when the organisation is using rdv_aide_numerique verticale" do
         let!(:organisation1) { create(:organisation, territory: territory, verticale: :rdv_aide_numerique) }
 
@@ -64,5 +64,37 @@ RSpec.describe "Agents can be managed by organisation admins" do
         end
       end
     end
+  end
+
+  it "CRUD on agents" do
+    create(:agent, first_name: "Tony", last_name: "Patrick", email: "tony@patrick.fr", service: pmi, basic_role_in_organisations: [organisation1], invitation_accepted_at: nil)
+
+    click_link "Agents"
+    expect_page_title("Agents de Organisation n°1")
+
+    click_link "PATRICK Tony"
+    expect_page_title("Modifier le niveau de permission de l'agent Tony PATRICK")
+    choose "Administrateur"
+    click_button("Enregistrer")
+
+    expect_page_title("Agents de Organisation n°1")
+    expect(page).to have_content("Administrateur", count: 2)
+
+    click_link "PATRICK Tony"
+    click_link("Supprimer le compte")
+
+    expect_page_title("Agents de Organisation n°1")
+    expect(page).to have_no_content("Tony PATRICK")
+
+    click_link "Ajouter un agent", match: :first
+    fill_in "Email", with: "jean@paul.com"
+    select(pmi.name, from: "Services")
+    click_button "Envoyer une invitation"
+
+    expect_page_title("Invitations en cours pour Organisation n°1")
+    expect(page).to have_content("jean@paul.com")
+
+    open_email("jean@paul.com")
+    expect(current_email.subject).to eq "Vous avez été invité sur RDV Solidarités"
   end
 end
