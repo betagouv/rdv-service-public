@@ -23,7 +23,6 @@ class Service < ApplicationRecord
 
   # Scopes
   scope :ordered_by_name, -> { order(Arel.sql("unaccent(LOWER(name))")) }
-  scope :in_verticale, ->(verticale) { where(verticale: [verticale, nil]) }
 
   ## -
 
