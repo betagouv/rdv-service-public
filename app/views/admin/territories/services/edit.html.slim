@@ -10,7 +10,7 @@
         = simple_form_for current_territory, url: admin_territory_services_path(current_territory) do |f|
           = render "model_errors", model: current_territory
 
-          = f.association :services, collection: Service.all, label: "", as: :check_boxes
+          = f.association :services, collection: Service.all.sort_by {|s| I18n.transliterate(s.name).downcase }, label: "", as: :check_boxes
 
           .text-right
             = f.button :submit
