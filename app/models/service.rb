@@ -15,6 +15,8 @@ class Service < ApplicationRecord
   has_many :agent_services, dependent: :restrict_with_error
   has_many :agents, through: :agent_services
   has_many :motifs, dependent: :restrict_with_error
+  has_many :territory_services, dependent: :restrict_with_error
+  has_many :territories, through: :territory_services
 
   # Validations
   validates :name, :short_name, presence: true, uniqueness: { case_sensitive: false }
