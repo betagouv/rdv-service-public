@@ -88,7 +88,7 @@ class Admin::AgentsController < AgentAuthController
   private
 
   def render_new
-    @services = current_territory.services.ordered_by_name
+    @services = current_territory.services
     @roles = access_levels_collection
     @agent_role = AgentRole.new
 
@@ -96,7 +96,7 @@ class Admin::AgentsController < AgentAuthController
   end
 
   def render_edit
-    @services = @agent.services.ordered_by_name # les services sont en lecture seule en édition
+    @services = @agent.services # les services sont en lecture seule en édition
     @agent_role = @agent.roles.find { |r| r.organisation == current_organisation }
     @agent_removal_presenter = AgentRemovalPresenter.new(@agent, current_organisation)
     @roles = access_levels_collection

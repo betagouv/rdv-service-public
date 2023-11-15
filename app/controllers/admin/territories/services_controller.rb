@@ -22,7 +22,7 @@ class Admin::Territories::ServicesController < Admin::Territories::BaseControlle
   end
 
   def format_for_checkboxes(services)
-    services.ordered_by_name.map do |service|
+    services.map do |service|
       label = service.name
 
       agents_count = service.agents.active.merge(current_territory.organisations_agents).count

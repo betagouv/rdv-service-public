@@ -22,7 +22,7 @@ class Service < ApplicationRecord
   validates :name, :short_name, presence: true, uniqueness: { case_sensitive: false }
 
   # Scopes
-  scope :ordered_by_name, -> { order(Arel.sql("unaccent(LOWER(name))")) }
+  default_scope { order(Arel.sql("unaccent(LOWER(name))")) }
 
   ## -
 

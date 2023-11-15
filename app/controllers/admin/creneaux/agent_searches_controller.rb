@@ -16,7 +16,7 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
       redirect_to admin_organisation_slots_path(current_organisation, creneaux_search_params)
     else
       @motifs = policy_scope(Motif).active.ordered_by_name
-      @services = Service.where(id: @motifs.pluck(:service_id).uniq).ordered_by_name
+      @services = Service.where(id: @motifs.pluck(:service_id).uniq)
       @form.service_id = @services.first.id if @services.count == 1
       @teams = current_organisation.territory.teams
       @agents = policy_scope(Agent)
