@@ -7,7 +7,7 @@ describe "Admin can configure the organisation" do
   let!(:motif) { create(:motif, name: "Motif 1", service: pmi, organisation: organisation) }
   let!(:user) { create(:user, organisations: [organisation]) }
   let!(:lieu) { create(:lieu, organisation: organisation) }
-  let!(:secretariat) { create(:service, :secretariat, territories: [organisation.territory]) }
+  let!(:secretariat) { create(:service, :secretariat) }
   let(:le_nouveau_motif) { build(:motif, name: "Motif 2", service: pmi, organisation: organisation) }
   let(:la_nouvelle_org) { build(:organisation) }
 
