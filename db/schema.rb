@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_17_125305) do
+ActiveRecord::Schema[7.0].define(version: 2023_11_08_103223) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -149,6 +149,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_17_125305) do
     t.index ["organisation_id"], name: "index_agent_roles_on_organisation_id"
   end
 
+  create_table "agent_services", force: :cascade do |t|
+    t.bigint "agent_id"
+    t.bigint "service_id"
+    t.datetime "created_at", null: false
+    t.index ["agent_id", "service_id"], name: "index_agent_services_on_agent_id_and_service_id", unique: true
+    t.index ["agent_id"], name: "index_agent_services_on_agent_id"
+    t.index ["service_id"], name: "index_agent_services_on_service_id"
+  end
+
   create_table "agent_teams", force: :cascade do |t|
     t.bigint "team_id", null: false
     t.bigint "agent_id", null: false
@@ -203,7 +212,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_17_125305) do
     t.bigint "invited_by_id"
     t.integer "invitations_count", default: 0
     t.datetime "deleted_at"
-    t.bigint "service_id", null: false
     t.string "email_original"
     t.string "provider", default: "email", null: false
     t.string "uid", default: ""
@@ -238,7 +246,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_17_125305) do
     t.index ["invited_by_type", "invited_by_id"], name: "index_agents_on_invited_by_type_and_invited_by_id"
     t.index ["last_name"], name: "index_agents_on_last_name"
     t.index ["reset_password_token"], name: "index_agents_on_reset_password_token", unique: true
-    t.index ["service_id"], name: "index_agents_on_service_id"
     t.index ["uid", "provider"], name: "index_agents_on_uid_and_provider", unique: true, where: "(uid IS NOT NULL)"
   end
 
@@ -422,6 +429,32 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_17_125305) do
     t.index ["territory_id"], name: "index_organisations_on_territory_id"
   end
 
+  create_table "participations", force: :cascade do |t|
+    t.bigint "rdv_id", null: false
+    t.bigint "user_id", null: false
+    t.boolean "send_lifecycle_notifications", null: false
+    t.boolean "send_reminder_notification", null: false
+    t.string "invitation_token"
+    t.datetime "invitation_created_at"
+    t.datetime "invitation_sent_at"
+    t.datetime "invitation_accepted_at"
+    t.integer "invitation_limit"
+    t.string "invited_by_type"
+    t.bigint "invited_by_id"
+    t.integer "invitations_count", default: 0
+    t.enum "status", default: "unknown", null: false, enum_type: "rdv_status"
+    t.enum "created_by", null: false, enum_type: "created_by"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["invitation_token"], name: "index_participations_on_invitation_token", unique: true
+    t.index ["invited_by_id"], name: "index_participations_on_invited_by_id"
+    t.index ["invited_by_type", "invited_by_id"], name: "index_participations_on_invited_by"
+    t.index ["rdv_id", "user_id"], name: "index_participations_on_rdv_id_and_user_id", unique: true
+    t.index ["rdv_id"], name: "index_participations_on_rdv_id"
+    t.index ["status"], name: "index_participations_on_status"
+    t.index ["user_id"], name: "index_participations_on_user_id"
+  end
+
   create_table "plage_ouvertures", force: :cascade do |t|
     t.bigint "agent_id", null: false
     t.string "title"
@@ -446,7 +479,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_17_125305) do
   end
 
   create_table "prescripteurs", force: :cascade do |t|
-    t.bigint "rdvs_user_id", null: false
+    t.bigint "participation_id", null: false
     t.string "first_name", null: false
     t.string "last_name", null: false
     t.string "email", null: false
@@ -454,7 +487,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_17_125305) do
     t.string "phone_number_formatted"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["rdvs_user_id"], name: "index_prescripteurs_on_rdvs_user_id", unique: true
+    t.index ["participation_id"], name: "index_prescripteurs_on_participation_id", unique: true
   end
 
   create_table "rdvs", force: :cascade do |t|
@@ -487,32 +520,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_17_125305) do
     t.index ["updated_at"], name: "index_rdvs_on_updated_at"
     t.index ["users_count"], name: "index_rdvs_on_users_count"
     t.index ["uuid"], name: "index_rdvs_on_uuid"
-  end
-
-  create_table "rdvs_users", force: :cascade do |t|
-    t.bigint "rdv_id", null: false
-    t.bigint "user_id", null: false
-    t.boolean "send_lifecycle_notifications", null: false
-    t.boolean "send_reminder_notification", null: false
-    t.string "invitation_token"
-    t.datetime "invitation_created_at"
-    t.datetime "invitation_sent_at"
-    t.datetime "invitation_accepted_at"
-    t.integer "invitation_limit"
-    t.string "invited_by_type"
-    t.bigint "invited_by_id"
-    t.integer "invitations_count", default: 0
-    t.enum "status", default: "unknown", null: false, enum_type: "rdv_status"
-    t.enum "created_by", null: false, enum_type: "created_by"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["invitation_token"], name: "index_rdvs_users_on_invitation_token", unique: true
-    t.index ["invited_by_id"], name: "index_rdvs_users_on_invited_by_id"
-    t.index ["invited_by_type", "invited_by_id"], name: "index_rdvs_users_on_invited_by"
-    t.index ["rdv_id", "user_id"], name: "index_rdvs_users_on_rdv_id_and_user_id", unique: true
-    t.index ["rdv_id"], name: "index_rdvs_users_on_rdv_id"
-    t.index ["status"], name: "index_rdvs_users_on_status"
-    t.index ["user_id"], name: "index_rdvs_users_on_user_id"
   end
 
   create_table "receipts", force: :cascade do |t|
@@ -733,13 +740,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_17_125305) do
   add_foreign_key "absences", "agents"
   add_foreign_key "agent_roles", "agents"
   add_foreign_key "agent_roles", "organisations"
+  add_foreign_key "agent_services", "agents"
+  add_foreign_key "agent_services", "services"
   add_foreign_key "agent_teams", "agents"
   add_foreign_key "agent_teams", "teams"
   add_foreign_key "agent_territorial_access_rights", "agents"
   add_foreign_key "agent_territorial_access_rights", "territories"
   add_foreign_key "agent_territorial_roles", "agents"
   add_foreign_key "agent_territorial_roles", "territories"
-  add_foreign_key "agents", "services"
   add_foreign_key "agents_rdvs", "agents"
   add_foreign_key "agents_rdvs", "rdvs"
   add_foreign_key "file_attentes", "rdvs"
@@ -753,15 +761,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_17_125305) do
   add_foreign_key "motifs_plage_ouvertures", "motifs"
   add_foreign_key "motifs_plage_ouvertures", "plage_ouvertures"
   add_foreign_key "organisations", "territories"
+  add_foreign_key "participations", "rdvs"
+  add_foreign_key "participations", "users"
   add_foreign_key "plage_ouvertures", "agents"
   add_foreign_key "plage_ouvertures", "lieux"
   add_foreign_key "plage_ouvertures", "organisations"
-  add_foreign_key "prescripteurs", "rdvs_users"
+  add_foreign_key "prescripteurs", "participations"
   add_foreign_key "rdvs", "lieux"
   add_foreign_key "rdvs", "motifs"
   add_foreign_key "rdvs", "organisations"
-  add_foreign_key "rdvs_users", "rdvs"
-  add_foreign_key "rdvs_users", "users"
   add_foreign_key "receipts", "organisations"
   add_foreign_key "receipts", "rdvs"
   add_foreign_key "receipts", "users"

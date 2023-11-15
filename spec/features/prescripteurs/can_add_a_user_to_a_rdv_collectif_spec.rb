@@ -7,7 +7,7 @@ RSpec.describe "prescripteur can add a user to a RDV collectif" do
   let!(:lieu) { create(:lieu, organisation: organisation, name: "Bureau") }
   let!(:agent) { create(:agent, :cnfs, admin_role_in_organisations: [organisation], rdv_notifications_level: "all") }
   let!(:motif_collectif) do
-    create(:motif, :collectif, organisation: organisation, service: agent.service, instruction_for_rdv: "Instructions après confirmation")
+    create(:motif, :collectif, organisation: organisation, service: agent.services.first, instruction_for_rdv: "Instructions après confirmation")
   end
   let!(:rdv_collectif) do
     create(
@@ -65,7 +65,7 @@ RSpec.describe "prescripteur can add a user to a RDV collectif" do
       phone_number: "0611223344",
       organisations: [organisation]
     )
-    expect(rdv_collectif.rdvs_users.first.prescripteur).to have_attributes(
+    expect(rdv_collectif.participations.first.prescripteur).to have_attributes(
       first_name: "Alex",
       last_name: "Prescripteur",
       email: "alex@prescripteur.fr",
@@ -102,14 +102,13 @@ RSpec.describe "prescripteur can add a user to a RDV collectif" do
       fill_in "Téléphone", with: "0611223344"
 
       # On simule que toutes les places sont prises
-      create(:rdvs_user, rdv: rdv_collectif)
-      create(:rdvs_user, rdv: rdv_collectif)
+      create(:participation, rdv: rdv_collectif)
+      create(:participation, rdv: rdv_collectif)
       click_on "Confirmer le rendez-vous"
       expect(page).to have_content("Ce créneau n'est plus disponible. Veuillez en choisir un autre.")
 
       # Dans ce cas, retour à l'étape de choix d'un RDV collectif pour ce motif
       click_on "S'inscrire" # On s'inscrit à l'autre RDV collectif, le seul restant de la liste
-      click_on "Je suis un prescripteur qui oriente un bénéficiaire"
 
       # On constate que le formulaire de prescripteur est pré-rempli
       expect(page).to have_field("Votre prénom", with: "Alex")

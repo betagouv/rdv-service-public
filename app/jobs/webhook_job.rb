@@ -11,7 +11,7 @@ class WebhookJob < ApplicationJob
   def perform(payload, webhook_endpoint_id)
     webhook_endpoint = WebhookEndpoint.find(webhook_endpoint_id)
 
-    return if Rails.env.development? && !webhook_endpoint.target_url =~ /localhost/
+    return if Rails.env.development? && webhook_endpoint.target_url !~ /localhost/
 
     request = Typhoeus::Request.new(
       webhook_endpoint.target_url,

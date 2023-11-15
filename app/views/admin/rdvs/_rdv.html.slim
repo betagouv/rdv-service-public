@@ -41,7 +41,7 @@
             .card.light-gray-card
               .card-body.p-2
                 .mb-1
-                  = render "admin/rdvs_users/user_details", user: user
+                  = render "admin/participations/user_details", user: user
 
   div class=("users-details collapse show")
     hr.my-0.mx-3
@@ -50,8 +50,8 @@
         .d-none.d-sm-block
           = render "admin/rdvs/users_table", rdv: rdv, agent: local_assigns[:agent]
         .d-md-none.d-print-none
-          - rdv.rdvs_users.sort_by { _1.user.last_name.downcase }.each do |rdvs_user|
-            = render "admin/rdvs_users/user_card", rdvs_user: rdvs_user, agent: local_assigns[:agent]
+          - rdv.participations.sort_by { _1.user.last_name.downcase }.each do |participation|
+            = render "admin/participations/user_card", participation: participation, agent: local_assigns[:agent]
       - else
         p Il n'y a pas encore de participant pour ce RDV
 

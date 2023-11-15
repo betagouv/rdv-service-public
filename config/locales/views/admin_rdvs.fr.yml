@@ -10,7 +10,7 @@ fr:
       delete:
         details: En tant qu’administrateur, vous pouvez aussi complètement supprimer ce rendez-vous de la base de données. Aucune notification ne sera alors envoyée.
         confirm: Voulez-vous vraiment supprimer ce rendez-vous ?
-    rdvs_users:
+    participations:
       notifications_summary:
         all: "Notif. activées"
         lifecycle_only: "Notif. de changements seulement"

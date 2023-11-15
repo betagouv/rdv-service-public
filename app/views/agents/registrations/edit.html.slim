@@ -12,8 +12,7 @@
 
   = f.input :first_name, placeholder: "Prénom"
   = f.input :last_name, placeholder: "Nom"
-  = f.association :service, collection: [resource.service], hint: "Vous ne pouvez pas changer de service, cela créerait des incohérences. Si vous voulez vraiment réaliser cette opération, il faut supprimer votre compte et vous faire réinviter, ou bien vous créer un deuxième compte avec une autre adresse email.", disabled: true
-
+  = f.association :services, collection: resource.services, disabled: true, input_html: { class: "select2-input" }, hint: "Vous ne pouvez pas changer de service, cela créerait des incohérences. Si vous voulez vraiment réaliser cette opération, il faut supprimer votre compte et vous faire réinviter, ou bien vous créer un deuxième compte avec une autre adresse email."
   = f.input :current_password, placeholder: "Votre mot de passe actuel", required: true, autocomplete: "off"
   .form-text.text-muted.mb-2
     | Renseignez votre mot de passe actuel pour tout changement.

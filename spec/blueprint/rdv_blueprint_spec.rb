@@ -34,14 +34,25 @@ describe RdvBlueprint do
     end
   end
 
-  describe "rdvs_users contains user" do
+  describe "rdvs_users contains user (DEPRECATED)" do
     let(:user) { build(:user, first_name: "Jean") }
-    let(:rdv) { build(:rdv, rdvs_users: [rdvs_user]) }
-    let(:rdvs_user) { build(:rdvs_user, status: "seen", user: user) }
+    let(:rdv) { build(:rdv, participations: [participation]) }
+    let(:participation) { build(:participation, status: "seen", user: user) }
 
     it do
       expect(json.dig("rdv", "rdvs_users").first["status"]).to eq "seen"
       expect(json.dig("rdv", "rdvs_users").first["user"]["first_name"]).to eq "Jean"
+    end
+  end
+
+  describe "participations contains user" do
+    let(:user) { build(:user, first_name: "Jean") }
+    let(:rdv) { build(:rdv, participations: [participation]) }
+    let(:participation) { build(:participation, status: "seen", user: user) }
+
+    it do
+      expect(json.dig("rdv", "participations").first["status"]).to eq "seen"
+      expect(json.dig("rdv", "participations").first["user"]["first_name"]).to eq "Jean"
     end
   end
 end

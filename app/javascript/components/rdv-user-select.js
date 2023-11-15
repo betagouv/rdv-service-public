@@ -1,5 +1,5 @@
 // See also AgentsHelper::planning_agent_select
-class RdvUserSelect {
+class ParticipationSelect {
   constructor() {
     this.$select = $(".js-rdv-user-select")
     if (!this.$select) return
@@ -21,4 +21,4 @@ class RdvUserSelect {
   }
 }
 
-export { RdvUserSelect }
+export { ParticipationSelect }

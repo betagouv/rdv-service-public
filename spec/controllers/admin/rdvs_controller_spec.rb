@@ -200,12 +200,12 @@ describe Admin::RdvsController, type: :controller do
     end
   end
 
-  describe "POST #rdvs_users_export" do
+  describe "POST #participations_export" do
     context "agent with rights" do
       let!(:access_rights) { create(:agent_territorial_access_right, agent: agent, territory: territory, allow_to_download_metrics: true) }
 
       it "redirect to index" do
-        post :rdvs_users_export, params: { organisation_id: organisation.id }
+        post :participations_export, params: { organisation_id: organisation.id }
         expect(response).to redirect_to(admin_organisation_rdvs_path)
       end
 
@@ -221,8 +221,8 @@ describe Admin::RdvsController, type: :controller do
         }
 
         expect do
-          post :rdvs_users_export, params: { organisation_id: organisation.id }.merge(params)
-        end.to have_enqueued_job(RdvsUsersExportJob).with(agent: agent, organisation_ids: [organisation.id], options: params.stringify_keys)
+          post :participations_export, params: { organisation_id: organisation.id }.merge(params)
+        end.to have_enqueued_job(ParticipationsExportJob).with(agent: agent, organisation_ids: [organisation.id], options: params.stringify_keys)
       end
 
       context "when passing scoped_organisation_id param to which agent not belong" do
@@ -234,7 +234,7 @@ describe Admin::RdvsController, type: :controller do
           }
 
           expect do
-            post :rdvs_users_export, params: params
+            post :participations_export, params: params
           end.not_to have_enqueued_mail
 
           expect(response).to have_http_status(:redirect) # Pundit redirects when authorization fails

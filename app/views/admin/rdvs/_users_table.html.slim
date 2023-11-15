@@ -11,5 +11,5 @@
         - if rdv.collectif?
           th.text-right Participation
     tbody id="rdv-users-list"
-      - rdv.rdvs_users.sort_by { _1.user.last_name.downcase }.each do |rdvs_user|
-        = render "admin/rdvs_users/user_row", rdvs_user: rdvs_user, agent: agent
+      - rdv.participations.sort_by { _1.user.last_name.downcase }.each do |participation|
+        = render "admin/participations/user_row", participation: participation, agent: agent

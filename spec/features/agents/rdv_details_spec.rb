@@ -24,7 +24,7 @@ describe "Agent can see RDV details correctly" do
     end
 
     it "displays the prescripteur when present" do
-      create(:prescripteur, rdvs_user: rdv.rdvs_users.last, first_name: "Jean", last_name: "Valjean")
+      create(:prescripteur, participation: rdv.participations.last, first_name: "Jean", last_name: "Valjean")
       visit admin_organisation_rdvs_path(organisation)
       expect(page).to have_content("Rendez-vous pris par Jean VALJEAN")
     end
@@ -41,7 +41,7 @@ describe "Agent can see RDV details correctly" do
       let(:user2) { create(:user, :with_no_email, :with_no_phone_number) }
 
       before do
-        create(:rdvs_user, user: user2, rdv: rdv)
+        create(:participation, user: user2, rdv: rdv)
       end
 
       it "User_count is correct" do
@@ -62,28 +62,28 @@ describe "Agent can see RDV details correctly" do
       end
 
       it "User's rdv all notifications are disabled" do
-        first_rdv_users = rdv.rdvs_users.first
-        first_rdv_users.send_lifecycle_notifications = false
-        first_rdv_users.send_reminder_notification = false
-        first_rdv_users.save
+        first_participations = rdv.participations.first
+        first_participations.send_lifecycle_notifications = false
+        first_participations.send_reminder_notification = false
+        first_participations.save
         visit admin_organisation_rdv_path(organisation, rdv)
-        expect(page).to have_text(I18n.t("admin.rdvs_users.notifications_summary.none"))
+        expect(page).to have_text(I18n.t("admin.participations.notifications_summary.none"))
       end
 
       it "User's rdv lifecycle notifications are disabled" do
-        first_rdv_users = rdv.rdvs_users.first
-        first_rdv_users.send_lifecycle_notifications = false
-        first_rdv_users.save
+        first_participations = rdv.participations.first
+        first_participations.send_lifecycle_notifications = false
+        first_participations.save
         visit admin_organisation_rdv_path(organisation, rdv)
-        expect(page).to have_text(I18n.t("admin.rdvs_users.notifications_summary.lifecycle_off"))
+        expect(page).to have_text(I18n.t("admin.participations.notifications_summary.lifecycle_off"))
       end
 
       it "User's rdv reminder notifications are disabled" do
-        first_rdv_users = rdv.rdvs_users.first
-        first_rdv_users.send_reminder_notification = false
-        first_rdv_users.save
+        first_participations = rdv.participations.first
+        first_participations.send_reminder_notification = false
+        first_participations.save
         visit admin_organisation_rdv_path(organisation, rdv)
-        expect(page).to have_text(I18n.t("admin.rdvs_users.notifications_summary.reminder_off"))
+        expect(page).to have_text(I18n.t("admin.participations.notifications_summary.reminder_off"))
       end
     end
 

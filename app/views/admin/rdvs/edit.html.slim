@@ -80,8 +80,8 @@
               = f.input :max_participants_count, input_html: { min: 1 }
             .form-group
               = "#{User.model_name.human.pluralize} :"
-              = f.fields_for :rdvs_users, @rdv.rdvs_users do |rdv_user_form|
-                = render "admin/rdvs_users/form", form: rdv_user_form
+              = f.fields_for :participations, @rdv.participations do |participation_form|
+                = render "admin/participations/form", form: participation_form
 
             .form-group
               = select_tag :status,
@@ -92,7 +92,7 @@
                       data: { \
                 width: "auto", \
                 "scroll-to-bottom": params[:add_user].present?, \
-                "select-options": { ajax: { url: search_admin_organisation_users_path(current_organisation, exclude_ids: @rdv.rdvs_users.map(&:user_id)), dataType: "json", delay: 250 } }, \
+                "select-options": { ajax: { url: search_admin_organisation_users_path(current_organisation, exclude_ids: @rdv.participations.map(&:user_id)), dataType: "json", delay: 250 } }, \
                }
               span.small.text-muted
               | L'usager n'existe pas ?&nbsp;

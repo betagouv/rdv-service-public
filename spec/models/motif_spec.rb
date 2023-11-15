@@ -83,15 +83,15 @@ describe Motif, type: :model do
     end
   end
 
-  describe "secretariat?" do
+  describe "for_secretariat?" do
     it "return true if motif for_secretariat" do
       motif = build(:motif, for_secretariat: true, organisation: organisation)
-      expect(motif.secretariat?).to be true
+      expect(motif.for_secretariat?).to be true
     end
 
     it "return false if motif for_secretariat" do
       motif = build(:motif, for_secretariat: false, organisation: organisation)
-      expect(motif.secretariat?).to be false
+      expect(motif.for_secretariat?).to be false
     end
   end
 

@@ -15,7 +15,7 @@ fr:
               must_be_positive: doit être supérieur à 0
             lieu:
               must_not_be_disabled: "doit être un lieu ouvert de l’organisation, ou un lieu ponctuel."
-        rdvs_user:
+        participation:
           attributes:
             status:
               status_cannot_be_changed_if_rdv_status_is_revoked: "ne peut être modifié si le rendez vous est annulé par le service"
@@ -26,7 +26,7 @@ fr:
         motif: Motif
         user_ids: Usagers
         users: Usagers
-        rdvs_users: Participations
+        participations: Participations
         agents: Agents
         agent_ids: Agents
         location: Lieu

@@ -55,7 +55,7 @@ class User < ApplicationRecord
 
   # Relations
   has_many :user_profiles, dependent: :restrict_with_error
-  has_many :rdvs_users, dependent: :destroy
+  has_many :participations, dependent: :destroy
   has_many :referent_assignations, dependent: :destroy
   belongs_to :responsible, class_name: "User", optional: true
   has_many :relatives, foreign_key: "responsible_id", class_name: "User", inverse_of: :responsible, dependent: :nullify
@@ -66,9 +66,10 @@ class User < ApplicationRecord
   # we specify dependent: :destroy because by default user_profiles and referent_assignations
   # will be deleted (dependent: :delete) and we need to destroy to trigger the callbacks on both models
   has_many :organisations, through: :user_profiles, dependent: :destroy
+  has_many :territories, through: :organisations
   has_many :referent_agents, through: :referent_assignations, source: :agent, dependent: :destroy, class_name: "Agent"
   has_many :webhook_endpoints, through: :organisations
-  has_many :rdvs, through: :rdvs_users
+  has_many :rdvs, through: :participations
 
   accepts_nested_attributes_for :user_profiles
 
@@ -159,7 +160,7 @@ class User < ApplicationRecord
 
   def participation_for(rdv)
     # We use find because it can be only one member by family in collective rdv
-    rdv.rdvs_users.to_a.find { |participation| participation.user_id.in?(self_and_relatives_and_responsible.map(&:id)) }
+    rdv.participations.to_a.find { |participation| participation.user_id.in?(self_and_relatives_and_responsible.map(&:id)) }
   end
 
   def deleted_email

@@ -13,11 +13,11 @@
           th Qui
       tbody
         - resource.versions.reverse_order.each  do |version|
-
+          - whodunnit_agent_or_user_url = whodunnit_agent_or_user_url(version.whodunnit)
           - version.changeset.except("updated_at").each do |property,change|
             tr
               td=property
               td=change.first.to_s
               td=change.last.to_s
               td=l version.created_at
-              td= version.whodunnit
+              td=link_to version.whodunnit, whodunnit_agent_or_user_url

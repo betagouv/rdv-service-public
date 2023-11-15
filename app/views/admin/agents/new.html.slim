@@ -9,7 +9,7 @@
       .card-body.js_agent_role_form
         = simple_form_for [:admin, @agent], url: admin_organisation_agents_path(current_organisation, @agent), html: { method: :post } do |f|
           = render "devise/shared/error_messages", resource: @agent
-          = f.association :service, collection: @services, include_blank: false, hint: "Attention, le service d'un agent est définitif, il ne pourra pas changer de service par la suite. Si un agent appartient à deux services il faut pour l'instant lui créer deux comptes avec deux emails différents."
+          = f.association :services, collection: @services, include_blank: false, input_html: { class: "select2-input" }
           - # rubocop:disable Rails/OutputSafety
           = f.simple_fields_for @agent_role do |ff|
             = ff.input :access_level, \

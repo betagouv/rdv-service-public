@@ -317,7 +317,7 @@ describe User, type: :model do
     it "return false when rdv for self" do
       rdv = create(:rdv, organisation: organisation)
       user = create(:user, organisations: [organisation])
-      create(:rdvs_user, user: user, rdv: rdv)
+      create(:participation, user: user, rdv: rdv)
       expect(user.can_be_soft_deleted_from_organisation?(organisation)).to be false
     end
 
@@ -325,7 +325,7 @@ describe User, type: :model do
       rdv = create(:rdv, organisation: organisation)
       responsible = create(:user, organisations: [organisation])
       relative = create(:user, responsible: responsible, organisations: [organisation])
-      create(:rdvs_user, user: relative, rdv: rdv)
+      create(:participation, user: relative, rdv: rdv)
       expect(relative.can_be_soft_deleted_from_organisation?(organisation)).to be false
     end
   end
