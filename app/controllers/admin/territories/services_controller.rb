@@ -2,8 +2,8 @@ class Admin::Territories::ServicesController < Admin::Territories::BaseControlle
   def edit
     authorize current_territory
 
-    activated_services = sort_and_format(current_territory.services)
-    other_services = sort_and_format(Service.where.not(id: current_territory.service_ids))
+    activated_services = format_for_checkboxes(current_territory.services)
+    other_services = format_for_checkboxes(Service.where.not(id: current_territory.service_ids))
 
     @services = activated_services + other_services
   end
@@ -21,8 +21,8 @@ class Admin::Territories::ServicesController < Admin::Territories::BaseControlle
     params.require(:territory).permit(service_ids: [])
   end
 
-  def sort_and_format(services)
-    services.sort_by { |s| I18n.transliterate(s.name).downcase }.map do |service|
+  def format_for_checkboxes(services)
+    services.ordered_by_name.map do |service|
       label = service.name
 
       agents_count = service.agents.active.merge(current_territory.organisations_agents).count
