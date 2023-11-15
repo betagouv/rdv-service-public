@@ -20,7 +20,7 @@ class Territory < ApplicationRecord
   has_many :sectors, dependent: :destroy
   has_many :roles, class_name: "AgentTerritorialRole", dependent: :delete_all
   has_many :agent_territorial_access_rights, dependent: :destroy
-  has_many :territory_services
+  has_many :territory_services, dependent: :destroy
   has_and_belongs_to_many :motif_categories
 
   # Through relations
