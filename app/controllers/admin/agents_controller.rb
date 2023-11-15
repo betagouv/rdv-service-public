@@ -3,7 +3,7 @@ class Admin::AgentsController < AgentAuthController
 
   def index
     if params[:scope] == "all"
-      @agents = current_organisation.agents.includes(:service, :roles, :organisations).active
+      @agents = current_organisation.agents.includes(:services, :roles, :organisations).active
       policy_scope(@agents)
     else
       @agents = policy_scope(Agent)
