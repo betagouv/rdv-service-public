@@ -232,3 +232,6 @@ RSpec/ScatteredSetup:
 RSpec/FilePath:
   CustomTransform:
     SfrMail2SmsMailer: sfr_mail_2_sms_mailer
+
+Style/NumericPredicate:
+  Enabled: false

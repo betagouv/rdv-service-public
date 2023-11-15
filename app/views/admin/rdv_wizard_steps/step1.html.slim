@@ -10,7 +10,7 @@
       lieu_attributes: @rdv.nested_lieu_attributes
 
     = f.input :service_id, \
-      collection: @services.ordered_by_name, \
+      collection: @services, \
       input_html: { \
         class: "select2-input js-service-filter", \
         data: { \

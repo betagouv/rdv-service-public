@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_08_103223) do
+ActiveRecord::Schema[7.0].define(version: 2023_11_14_140404) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -628,6 +628,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_08_103223) do
     t.index ["departement_number"], name: "index_territories_on_departement_number", unique: true, where: "((departement_number)::text <> ''::text)"
   end
 
+  create_table "territory_services", force: :cascade do |t|
+    t.bigint "territory_id"
+    t.bigint "service_id"
+    t.datetime "created_at", null: false
+    t.index ["service_id"], name: "index_territory_services_on_service_id"
+    t.index ["territory_id", "service_id"], name: "index_territory_services_on_territory_id_and_service_id", unique: true
+    t.index ["territory_id"], name: "index_territory_services_on_territory_id"
+  end
+
   create_table "user_profiles", force: :cascade do |t|
     t.bigint "organisation_id", null: false
     t.bigint "user_id", null: false
@@ -780,6 +789,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_08_103223) do
   add_foreign_key "sector_attributions", "sectors"
   add_foreign_key "sectors", "territories"
   add_foreign_key "teams", "territories"
+  add_foreign_key "territory_services", "services"
+  add_foreign_key "territory_services", "territories"
   add_foreign_key "user_profiles", "organisations"
   add_foreign_key "user_profiles", "users"
   add_foreign_key "users", "users", column: "responsible_id"
