@@ -20,8 +20,6 @@ class Service < ApplicationRecord
   validates :name, :short_name, presence: true, uniqueness: { case_sensitive: false }
 
   # Scopes
-  scope :with_motifs, -> { where.not(name: SECRETARIAT) }
-  scope :secretariat, -> { where(name: SECRETARIAT) }
   scope :ordered_by_name, -> { order(Arel.sql("unaccent(LOWER(name))")) }
   scope :in_verticale, ->(verticale) { where(verticale: [verticale, nil]) }
 
@@ -31,6 +29,10 @@ class Service < ApplicationRecord
   def self.used_by_agents_of_territory(territory)
     agents_of_territory = Agent.joins(:organisations).merge(territory.organisations)
     joins(:agent_services).where(agent_services: { agents: agents_of_territory }).distinct
+  end
+
+  def self.secretariat
+    find_by!(name: SECRETARIAT)
   end
 
   def secretariat?

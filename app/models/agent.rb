@@ -96,7 +96,6 @@ class Agent < ApplicationRecord
   }
   scope :active, -> { where(deleted_at: nil) }
   scope :order_by_last_name, -> { order(Arel.sql("LOWER(last_name)")) }
-  scope :secretariat, -> { joins(:services).where(services: { name: Service::SECRETARIAT }) }
   scope :in_any_of_these_services, lambda { |services|
     joins(:agent_services).where(agent_services: { service_id: services.map(&:id) })
   }
