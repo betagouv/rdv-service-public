@@ -1,8 +1,9 @@
 RSpec.describe "Agent can create another agent" do
   let(:territory) { create(:territory) }
+  let(:service) { create(:service, territories: [territory]) }
   let(:organisation1) { create(:organisation, territory: territory) }
   let(:organisation2) { create(:organisation, territory: territory) }
-  let(:agent) { create(:agent, admin_role_in_organisations: [organisation1, organisation2]) }
+  let(:agent) { create(:agent, service: service, admin_role_in_organisations: [organisation1, organisation2]) }
 
   before { login_as(agent, scope: :agent) }
 
