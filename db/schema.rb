@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_14_140404) do
+ActiveRecord::Schema[7.0].define(version: 2023_11_15_160456) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -223,8 +223,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_14_140404) do
     t.boolean "display_cancelled_rdv", default: true
     t.enum "plage_ouverture_notification_level", default: "all", enum_type: "agents_plage_ouverture_notification_level"
     t.enum "absence_notification_level", default: "all", enum_type: "agents_absence_notification_level"
-    t.string "external_id"
-    t.string "calendar_uid"
+    t.string "external_id", comment: "The agent's unique and immutable id in the system managing them and adding them to our application"
+    t.string "calendar_uid", comment: "the uid used for the url of the agent's ics calendar"
     t.integer "sign_in_count", default: 0, null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
@@ -420,7 +420,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_14_140404) do
     t.string "website"
     t.string "email"
     t.bigint "territory_id", null: false
-    t.string "external_id"
+    t.string "external_id", comment: "The organisation's unique and immutable id in the system managing them and adding them to our application"
     t.enum "verticale", default: "rdv_solidarites", null: false, enum_type: "verticale"
     t.index ["external_id", "territory_id"], name: "index_organisations_on_external_id_and_territory_id", unique: true
     t.index ["human_id", "territory_id"], name: "index_organisations_on_human_id_and_territory_id", unique: true, where: "((human_id)::text <> ''::text)"
@@ -582,7 +582,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_14_140404) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "short_name"
-    t.enum "verticale", enum_type: "verticale"
     t.index "lower((name)::text)", name: "index_services_on_lower_name", unique: true
     t.index "lower((short_name)::text)", name: "index_services_on_lower_short_name", unique: true
     t.index ["name"], name: "index_services_on_name"
