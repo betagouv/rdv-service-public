@@ -23,17 +23,9 @@ class User < ApplicationRecord
   include TextSearch
   include UncommonPasswordConcern
 
-  def self.search_against
+  def self.search_options
     {
-      last_name: "A",
-      first_name: "B",
-      birth_name: "C",
-
-      # Ces champs sont moins pondérés car on ne veut leur
-      # donner de l'importance que si le match est très proche ou exact.
-      email: "D",
-      phone_number_formatted: "D",
-      id: "D",
+      using: { tsearch: { prefix: true, any_word: true, tsvector_column: "searchable" } },
     }
   end
 
