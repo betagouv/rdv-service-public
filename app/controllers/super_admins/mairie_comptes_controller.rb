@@ -32,7 +32,7 @@ module SuperAdmins
     def create_organisation
       Organisation.create!(
         name: resource_params[:name],
-        territory: Territory.find_by(name: "Mairies"),
+        territory: Territory.mairies,
         verticale: :rdv_mairie
       )
     end

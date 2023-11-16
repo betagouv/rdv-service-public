@@ -71,6 +71,10 @@ class Territory < ApplicationRecord
     enable_logement_field: :logement,
   }.merge(SOCIAL_FIELD_TOGGLES).freeze
 
+  def self.mairies
+    find_by(name: "Mairies")
+  end
+
   def any_social_field_enabled?
     attributes.slice(SOCIAL_FIELD_TOGGLES.keys).values.any?
   end
