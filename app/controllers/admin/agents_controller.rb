@@ -117,20 +117,11 @@ class Admin::AgentsController < AgentAuthController
   end
 
   def access_levels_collection
-    if activate_intervenants_feature? && @agent != current_agent && @agent.organisations.count < 2
+    if @agent != current_agent && @agent.organisations.count < 2
       AgentRole::ACCESS_LEVELS_WITH_INTERVENANT
     else
       AgentRole::ACCESS_LEVELS
     end
-  end
-
-  def activate_intervenants_feature?
-    # For CDAD Expe
-    current_organisation.territory_id.in?([59, 147, 148]) ||
-      Rails.env.development? ||
-      Rails.env.test? ||
-      ENV["RDV_SOLIDARITES_INSTANCE_NAME"] == "DEMO" ||
-      ENV["IS_REVIEW_APP"] == "true"
   end
 
   def create_agent_params
