@@ -12,12 +12,17 @@ class Agent < ApplicationRecord
   include WebhookDeliverable
   include FullNameConcern
   include TextSearch
-  def self.search_against
+  def self.search_options
     {
-      last_name: "A",
-      first_name: "B",
-      email: "D",
-      id: "D",
+      against:
+        {
+          last_name: "A",
+          first_name: "B",
+          email: "D",
+          id: "D",
+        },
+      ignoring: :accents,
+      using: { tsearch: { prefix: true, any_word: true } },
     }
   end
 
