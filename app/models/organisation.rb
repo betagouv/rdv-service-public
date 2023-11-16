@@ -11,7 +11,7 @@ class Organisation < ApplicationRecord
   belongs_to :territory
   has_many :lieux, dependent: :destroy
   has_many :motifs, dependent: :destroy
-  has_many :rdvs, dependent: :destroy
+  has_many :rdvs, dependent: :restrict_with_error
   has_many :webhook_endpoints, dependent: :destroy
   has_many :sector_attributions, dependent: :destroy
   has_many :plage_ouvertures, dependent: :destroy
