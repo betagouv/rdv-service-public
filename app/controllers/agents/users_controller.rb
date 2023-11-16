@@ -14,9 +14,9 @@ class Agents::UsersController < AgentAuthController
 
     user_scope = User.where.not(id: params[:exclude_ids]).search_by_text(params[:term])
 
-    users_from_organisation = user_scope.joins(:user_profiles).where(user_profiles: { organisation_id: params[:organisation_id] }).limit(MAX_RESULTS)
+    users_from_organisation = user_scope.joins(:user_profiles).where(user_profiles: { organisation_id: params[:organisation_id] }).limit(MAX_RESULTS).to_a
 
-    results_count = users_from_organisation.count
+    results_count = users_from_organisation.size
 
     users_from_territory = if results_count < MAX_RESULTS
                              user_scope.joins(:territories).where(territories: { id: current_agent.agent_territorial_access_rights.select(:territory_id) })
