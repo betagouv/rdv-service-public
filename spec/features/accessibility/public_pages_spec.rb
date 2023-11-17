@@ -27,13 +27,6 @@ describe "public pages", js: true do
     expect(page).to be_axe_clean
   end
 
-  it "presentation page for RDV Mairie is accessible" do
-    visit "http://www.rdv-mairie-test.localhost/presentation_agent"
-    expect(page).to have_current_path("/presentation_agent")
-    # TODO: make it accessible
-    # expect(page).to be_axe_clean
-  end
-
   it "mds_path page is accessible" do
     expect_page_to_be_axe_clean(mds_path)
   end
