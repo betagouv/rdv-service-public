@@ -118,4 +118,5 @@ Rails.application.configure do
   config.hosts << "www.rdv-solidarites.localhost" # http://rdv-solidarites.localhost:3000/
   config.hosts << "www.rdv-aide-numerique.localhost" # http://rdv-aide-numerique.localhost:3000/
   config.hosts << "www.rdv-mairie.localhost" # http://rdv-mairie.localhost:3000/
+  config.hosts << "app.rdv-insertion.localhost" # http://app.rdv-insertion.localhost:3000/
 end

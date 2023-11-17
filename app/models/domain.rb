@@ -68,7 +68,7 @@ class Domain
       public_logo_path: "/logo_rdv_service_public.png",
       dark_logo_path: "logos/logo_sombre_rdv_service_public.svg",
       name: "RDV Service Public",
-      presentation_for_agents_template_name: "presentation_for_mairie",
+      presentation_for_agents_template_name: nil,
       address_selection_template_name: "search/address_selection/rdv_mairie",
       search_banner_template_name: "search/banners/rdv_mairie",
       online_reservation_with_public_link: true,
@@ -79,6 +79,25 @@ class Domain
       france_connect_enabled: true,
       support_email: "support@rdv-service-public.fr",
       secretariat_email: "secretariat-auto@rdv-service-public.fr"
+    ),
+
+    RDV_INSERTION = new(
+      id: "RDV_INSERTION",
+      logo_path: "logos/logo_rdv_insertion.svg",
+      public_logo_path: "/logo_rdv_insertion.png",
+      dark_logo_path: "logos/logo_sombre_rdv_insertion.svg",
+      name: "RDV Insertion",
+      presentation_for_agents_template_name: nil,
+      address_selection_template_name: "search/address_selection/rdv_solidarites",
+      search_banner_template_name: "search/banners/rdv_solidarites",
+      online_reservation_with_public_link: false,
+      can_sync_to_outlook: false,
+      sms_sender_name: "RDV INSERTION",
+      documentation_url: "https://rdvs.notion.site/RDV-Mairie-b831caa05dd7416bb489f06f7468903a",
+      faq_url: "https://rdvs.notion.site/FAQ-RDV-Mairie-6baf4af187a14e42beafe56b7005d199",
+      france_connect_enabled: true,
+      support_email: "support@rdv-insertion.fr",
+      secretariat_email: "secretariat-auto@rdv-insertion.fr"
     ),
   ].freeze
 
@@ -94,12 +113,14 @@ class Domain
           RDV_SOLIDARITES => "demo.rdv-solidarites.fr",
           RDV_AIDE_NUMERIQUE => "demo.rdv-aide-numerique.fr",
           RDV_MAIRIE => "demo.rdv.anct.gouv.fr",
+          RDV_INSERTION => "app.rdv-insertion-demo.fr",
         }.fetch(self)
       else
         {
           RDV_SOLIDARITES => "www.rdv-solidarites.fr",
           RDV_AIDE_NUMERIQUE => "www.rdv-aide-numerique.fr",
           RDV_MAIRIE => "rdv.anct.gouv.fr",
+          RDV_INSERTION => "app.rdv-insertion.fr",
         }.fetch(self)
       end
     when :development
@@ -107,12 +128,14 @@ class Domain
         RDV_SOLIDARITES => "www.rdv-solidarites.localhost",
         RDV_AIDE_NUMERIQUE => "www.rdv-aide-numerique.localhost",
         RDV_MAIRIE => "www.rdv-mairie.localhost",
+        RDV_INSERTION => "app.rdv-insertion.localhost",
       }.fetch(self)
     when :test
       {
         RDV_SOLIDARITES => "www.rdv-solidarites-test.localhost",
         RDV_AIDE_NUMERIQUE => "www.rdv-aide-numerique-test.localhost",
         RDV_MAIRIE => "www.rdv-mairie-test.localhost",
+        RDV_INSERTION => "app.rdv-insertion-test.localhost",
       }.fetch(self)
     else
       raise "Rails.env not recognized: #{Rails.env.inspect}"

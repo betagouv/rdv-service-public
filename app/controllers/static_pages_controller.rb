@@ -14,7 +14,11 @@ class StaticPagesController < ApplicationController
   end
 
   def presentation_for_agents
-    render current_domain.presentation_for_agents_template_name
+    if current_domain.presentation_for_agents_template_name.present?
+      render current_domain.presentation_for_agents_template_name
+    else
+      redirect_to new_agent_session_path
+    end
   end
 
   def microsoft_domain_verification
