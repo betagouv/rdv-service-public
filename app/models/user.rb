@@ -23,17 +23,9 @@ class User < ApplicationRecord
   include TextSearch
   include UncommonPasswordConcern
 
-  def self.search_against
+  def self.search_options
     {
-      last_name: "A",
-      first_name: "B",
-      birth_name: "C",
-
-      # Ces champs sont moins pondérés car on ne veut leur
-      # donner de l'importance que si le match est très proche ou exact.
-      email: "D",
-      phone_number_formatted: "D",
-      id: "D",
+      using: { tsearch: { prefix: true, any_word: true, tsvector_column: "searchable" } },
     }
   end
 
@@ -66,6 +58,7 @@ class User < ApplicationRecord
   # we specify dependent: :destroy because by default user_profiles and referent_assignations
   # will be deleted (dependent: :delete) and we need to destroy to trigger the callbacks on both models
   has_many :organisations, through: :user_profiles, dependent: :destroy
+  has_many :territories, through: :organisations
   has_many :referent_agents, through: :referent_assignations, source: :agent, dependent: :destroy, class_name: "Agent"
   has_many :webhook_endpoints, through: :organisations
   has_many :rdvs, through: :participations
@@ -92,6 +85,11 @@ class User < ApplicationRecord
   # Hooks
   before_save :set_email_to_null_if_blank
   # voir Ants::AppointmentSerializerAndListener pour d'autres callbacks
+  before_save do
+    self.unaccented_last_name = last_name.presence && I18n.transliterate(last_name).downcase
+    self.unaccented_first_name = first_name.presence && I18n.transliterate(first_name).downcase
+    self.unaccented_birth_name = birth_name.presence && I18n.transliterate(birth_name).downcase
+  end
 
   # Scopes
   default_scope { where(deleted_at: nil) }

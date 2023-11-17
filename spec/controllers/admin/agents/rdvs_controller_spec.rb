@@ -15,7 +15,7 @@ describe Admin::Agents::RdvsController, type: :controller do
       it "assigns rdvs of given agent" do
         now = Time.zone.parse("2020-12-23 15h00")
         travel_to(now)
-        given_agent = create(:agent, basic_role_in_organisations: [organisation], service: agent.service)
+        given_agent = create(:agent, basic_role_in_organisations: [organisation], service: agent.services.first)
         create(:rdv, agents: [agent])
         rdv = create(:rdv, agents: [given_agent], organisation: organisation, starts_at: now + 3.days)
         rdv_from_other_organisation = create(:rdv, agents: [given_agent], organisation: other_organisation, starts_at: now + 4.days)

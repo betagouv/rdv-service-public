@@ -27,7 +27,7 @@ describe "User can be invited" do
   let!(:organisation) { create(:organisation, territory: territory26) }
   let!(:motif_category) { create(:motif_category, short_name: "rsa_orientation") }
   let!(:motif) do
-    create(:motif, name: "RSA orientation sur site", bookable_by: "agents_and_prescripteurs_and_invited_users", organisation:, service: agent.service, motif_category:)
+    create(:motif, name: "RSA orientation sur site", bookable_by: "agents_and_prescripteurs_and_invited_users", organisation:, service: agent.services.first, motif_category:)
   end
   let!(:lieu) { create(:lieu, organisation: organisation) }
   let!(:lieu2) { create(:lieu, organisation: organisation) }
@@ -120,7 +120,7 @@ describe "User can be invited" do
           max_public_booking_delay: 7.days,
           bookable_by: "agents_and_prescripteurs_and_invited_users",
           organisation:,
-          service: agent.service,
+          service: agent.services.first,
           motif_category:
         )
       end
@@ -141,7 +141,7 @@ describe "User can be invited" do
   describe "in motifs selection page" do
     let!(:geo_search) { instance_double(Users::GeoSearch, available_motifs: Motif.where(id: [motif.id, motif2.id])) }
     let!(:motif2) do
-      create(:motif, name: "RSA orientation telephone", bookable_by: "everyone", organisation: organisation2, service: agent.service, motif_category:, location_type: "phone")
+      create(:motif, name: "RSA orientation telephone", bookable_by: "everyone", organisation: organisation2, service: agent.services.first, motif_category:, location_type: "phone")
     end
     let!(:plage_ouverture2) { create(:plage_ouverture, motifs: [motif2], organisation: organisation2) }
 
@@ -226,7 +226,7 @@ describe "User can be invited" do
 
     context "when the motif is a phone motif" do
       let!(:motif) do
-        create(:motif, name: "RSA orientation telephone", bookable_by: "everyone", organisation: organisation, service: agent.service, motif_category:, location_type: "phone")
+        create(:motif, name: "RSA orientation telephone", bookable_by: "everyone", organisation: organisation, service: agent.services.first, motif_category:, location_type: "phone")
       end
 
       it "shows the geo search available organisation to take a rdv", js: true do
@@ -267,11 +267,12 @@ describe "User can be invited" do
   describe "when no motifs are found through geo search" do
     let!(:geo_search) { instance_double(Users::GeoSearch, available_motifs: Motif.none) }
     let!(:second_motif) do
-      create(:motif, name: "RSA orientation telephone", bookable_by: "agents_and_prescripteurs_and_invited_users", organisation: organisation2, service: agent.service, motif_category:)
+      create(:motif, name: "RSA orientation telephone", bookable_by: "agents_and_prescripteurs_and_invited_users", organisation: organisation2, service: agent.services.first, motif_category:)
     end
     let!(:second_plage_ouverture) { create(:plage_ouverture, motifs: [second_motif], organisation: organisation2) }
     let!(:collectif_motif) do
-      create(:motif, name: "RSA orientation collectif", collectif: true, bookable_by: "agents_and_prescripteurs_and_invited_users", organisation: organisation, service: agent.service, motif_category:)
+      create(:motif, name: "RSA orientation collectif", collectif: true, bookable_by: "agents_and_prescripteurs_and_invited_users", organisation: organisation, service: agent.services.first,
+                     motif_category:)
     end
     let!(:collectif_rdv) { create(:rdv, motif: collectif_motif, starts_at: 1.week.from_now, max_participants_count: 10) }
 

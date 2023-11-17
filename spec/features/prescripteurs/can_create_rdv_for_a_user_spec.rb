@@ -7,7 +7,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
   let!(:agent) { create(:agent, :cnfs, admin_role_in_organisations: [organisation], rdv_notifications_level: "all") }
   let(:bookable_by) { "everyone" }
   let!(:motif) do
-    create(:motif, organisation: organisation, service: agent.service, bookable_by: bookable_by, instruction_for_rdv: "Instructions après confirmation")
+    create(:motif, organisation: organisation, service: agent.services.first, bookable_by: bookable_by, instruction_for_rdv: "Instructions après confirmation")
   end
   let!(:lieu) { create(:lieu, organisation: organisation, name: "Bureau") }
   let!(:plage_ouverture) { create(:plage_ouverture, organisation: organisation, agent: agent, motifs: [motif], lieu: lieu) }

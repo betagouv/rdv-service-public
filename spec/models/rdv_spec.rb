@@ -430,8 +430,8 @@ describe Rdv, type: :model do
     it "returns rdv for motif when given" do
       organisation = create(:organisation)
       admin = create(:agent, admin_role_in_organisations: [organisation])
-      motif = create(:motif, organisation: organisation, service: admin.service)
-      autre_motif = create(:motif, organisation: organisation, service: admin.service)
+      motif = create(:motif, organisation: organisation, service: admin.services.first)
+      autre_motif = create(:motif, organisation: organisation, service: admin.services.first)
       rdv = create(:rdv, motif: motif, organisation: organisation, agents: [admin])
       create(:rdv, motif: autre_motif, organisation: organisation, agents: [admin])
 

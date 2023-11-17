@@ -29,7 +29,7 @@ class OrganisationsController < ApplicationController
     params.require(:organisation)
       .permit(
         :name,
-        agent_roles_attributes: [:access_level, { agent_attributes: %i[email service_id] }],
+        agent_roles_attributes: [:access_level, { agent_attributes: [:email, { service_ids: [] }] }],
         territory_attributes: [:departement_number]
       )
   end

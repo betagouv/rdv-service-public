@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_03_141758) do
+ActiveRecord::Schema[7.0].define(version: 2023_11_16_160522) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -149,6 +149,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_03_141758) do
     t.index ["organisation_id"], name: "index_agent_roles_on_organisation_id"
   end
 
+  create_table "agent_services", force: :cascade do |t|
+    t.bigint "agent_id"
+    t.bigint "service_id"
+    t.datetime "created_at", null: false
+    t.index ["agent_id", "service_id"], name: "index_agent_services_on_agent_id_and_service_id", unique: true
+    t.index ["agent_id"], name: "index_agent_services_on_agent_id"
+    t.index ["service_id"], name: "index_agent_services_on_service_id"
+  end
+
   create_table "agent_teams", force: :cascade do |t|
     t.bigint "team_id", null: false
     t.bigint "agent_id", null: false
@@ -203,7 +212,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_03_141758) do
     t.bigint "invited_by_id"
     t.integer "invitations_count", default: 0
     t.datetime "deleted_at"
-    t.bigint "service_id", null: false
     t.string "email_original"
     t.string "provider", default: "email", null: false
     t.string "uid", default: ""
@@ -238,7 +246,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_03_141758) do
     t.index ["invited_by_type", "invited_by_id"], name: "index_agents_on_invited_by_type_and_invited_by_id"
     t.index ["last_name"], name: "index_agents_on_last_name"
     t.index ["reset_password_token"], name: "index_agents_on_reset_password_token", unique: true
-    t.index ["service_id"], name: "index_agents_on_service_id"
     t.index ["uid", "provider"], name: "index_agents_on_uid_and_provider", unique: true, where: "(uid IS NOT NULL)"
   end
 
@@ -621,6 +628,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_03_141758) do
     t.index ["departement_number"], name: "index_territories_on_departement_number", unique: true, where: "((departement_number)::text <> ''::text)"
   end
 
+  create_table "territory_services", force: :cascade do |t|
+    t.bigint "territory_id"
+    t.bigint "service_id"
+    t.datetime "created_at", null: false
+    t.index ["service_id"], name: "index_territory_services_on_service_id"
+    t.index ["territory_id", "service_id"], name: "index_territory_services_on_territory_id_and_service_id", unique: true
+    t.index ["territory_id"], name: "index_territory_services_on_territory_id"
+  end
+
   create_table "user_profiles", force: :cascade do |t|
     t.bigint "organisation_id", null: false
     t.bigint "user_id", null: false
@@ -679,6 +695,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_03_141758) do
     t.text "notes"
     t.string "ants_pre_demande_number"
     t.string "rdv_invitation_token"
+    t.text "unaccented_last_name"
+    t.text "unaccented_first_name"
+    t.text "unaccented_birth_name"
+    t.virtual "searchable", type: :tsvector, as: "(((((setweight(to_tsvector('simple'::regconfig, COALESCE(unaccented_last_name, ''::text)), 'A'::\"char\") || setweight(to_tsvector('simple'::regconfig, COALESCE(unaccented_first_name, ''::text)), 'B'::\"char\")) || setweight(to_tsvector('simple'::regconfig, COALESCE(unaccented_birth_name, ''::text)), 'C'::\"char\")) || setweight(to_tsvector('simple'::regconfig, COALESCE((email)::text, ''::text)), 'D'::\"char\")) || setweight(to_tsvector('simple'::regconfig, COALESCE((phone_number_formatted)::text, ''::text)), 'D'::\"char\")) || setweight(to_tsvector('simple'::regconfig, COALESCE((id)::text, ''::text)), 'D'::\"char\"))", stored: true
     t.index ["birth_date"], name: "index_users_on_birth_date"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["created_through"], name: "index_users_on_created_through"
@@ -693,6 +713,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_03_141758) do
     t.index ["rdv_invitation_token"], name: "index_users_on_rdv_invitation_token", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["responsible_id"], name: "index_users_on_responsible_id"
+    t.index ["searchable"], name: "index_users_searchable", using: :gin
   end
 
   create_table "versions", force: :cascade do |t|
@@ -733,13 +754,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_03_141758) do
   add_foreign_key "absences", "agents"
   add_foreign_key "agent_roles", "agents"
   add_foreign_key "agent_roles", "organisations"
+  add_foreign_key "agent_services", "agents"
+  add_foreign_key "agent_services", "services"
   add_foreign_key "agent_teams", "agents"
   add_foreign_key "agent_teams", "teams"
   add_foreign_key "agent_territorial_access_rights", "agents"
   add_foreign_key "agent_territorial_access_rights", "territories"
   add_foreign_key "agent_territorial_roles", "agents"
   add_foreign_key "agent_territorial_roles", "territories"
-  add_foreign_key "agents", "services"
   add_foreign_key "agents_rdvs", "agents"
   add_foreign_key "agents_rdvs", "rdvs"
   add_foreign_key "file_attentes", "rdvs"
@@ -772,6 +794,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_03_141758) do
   add_foreign_key "sector_attributions", "sectors"
   add_foreign_key "sectors", "territories"
   add_foreign_key "teams", "territories"
+  add_foreign_key "territory_services", "services"
+  add_foreign_key "territory_services", "territories"
   add_foreign_key "user_profiles", "organisations"
   add_foreign_key "user_profiles", "users"
   add_foreign_key "users", "users", column: "responsible_id"

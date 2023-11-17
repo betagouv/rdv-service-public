@@ -4,6 +4,7 @@ class WebhookJob < ApplicationJob
   TIMEOUT = 10
 
   queue_as :webhook
+  discard_on(ActiveRecord::RecordNotFound) { |_job, error| Sentry.capture_exception(error) }
 
   # Pour éviter de fuiter des données personnelles dans les logs
   self.log_arguments = false
@@ -11,7 +12,7 @@ class WebhookJob < ApplicationJob
   def perform(payload, webhook_endpoint_id)
     webhook_endpoint = WebhookEndpoint.find(webhook_endpoint_id)
 
-    return if Rails.env.development? && !webhook_endpoint.target_url =~ /localhost/
+    return if Rails.env.development? && webhook_endpoint.target_url !~ /localhost/
 
     request = Typhoeus::Request.new(
       webhook_endpoint.target_url,
