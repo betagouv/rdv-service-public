@@ -74,18 +74,21 @@ describe User, type: :model do
       expect(user).to have_attributes(
         first_name: "Usager supprimé",
         last_name: "Usager supprimé",
-        address: "valeur anonymisée"
+        address: "[valeur anonymisée]"
       )
       expect(user.deleted_at).to be_within(5.seconds).of(Time.zone.now)
     end
 
-    it "anonymizes rdvs and receipts" do
+    it "anonymizes rdvs and receipts and deletes versions" do
       rdv = create(:rdv)
-      receipt = create(:receipt, user: rdv.users.first, rdv: rdv)
-      rdv.users.first.soft_delete
+      user = rdv.users.first
 
-      expect(receipt.reload.sms_phone_number).to eq "valeur anonymisée"
-      expect(rdv.reload.context).to eq "valeur anonymisée"
+      receipt = create(:receipt, user: user, rdv: rdv)
+      user.soft_delete
+
+      expect(receipt.reload.sms_phone_number).to eq "[valeur anonymisée]"
+      expect(rdv.reload.context).to eq "[valeur anonymisée]"
+      expect(user.versions).to be_empty
     end
 
     it "is hidden user by default" do

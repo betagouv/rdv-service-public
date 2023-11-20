@@ -287,6 +287,7 @@ class User < ApplicationRecord
     anonymize_personal_data_columns!
     receipts.each(&:anonymize_personal_data_columns!)
     rdvs.each(&:anonymize_personal_data_columns!)
+    versions.destroy_all
     update_columns(
       first_name: "Usager supprimé",
       last_name: "Usager supprimé",
