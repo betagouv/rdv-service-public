@@ -15,7 +15,7 @@ module Anonymizable
 
   def anonymous_value(column)
     if column.type.in?(%i[string text])
-      "valeur anonymisée"
+      "[valeur anonymisée]"
     end
   end
 end
