@@ -223,8 +223,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_15_160456) do
     t.boolean "display_cancelled_rdv", default: true
     t.enum "plage_ouverture_notification_level", default: "all", enum_type: "agents_plage_ouverture_notification_level"
     t.enum "absence_notification_level", default: "all", enum_type: "agents_absence_notification_level"
-    t.string "external_id", comment: "The agent's unique and immutable id in the system managing them and adding them to our application"
-    t.string "calendar_uid", comment: "the uid used for the url of the agent's ics calendar"
+    t.string "external_id"
+    t.string "calendar_uid"
     t.integer "sign_in_count", default: 0, null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
@@ -420,7 +420,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_15_160456) do
     t.string "website"
     t.string "email"
     t.bigint "territory_id", null: false
-    t.string "external_id", comment: "The organisation's unique and immutable id in the system managing them and adding them to our application"
+    t.string "external_id"
     t.enum "verticale", default: "rdv_solidarites", null: false, enum_type: "verticale"
     t.index ["external_id", "territory_id"], name: "index_organisations_on_external_id_and_territory_id", unique: true
     t.index ["human_id", "territory_id"], name: "index_organisations_on_human_id_and_territory_id", unique: true, where: "((human_id)::text <> ''::text)"
