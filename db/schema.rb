@@ -682,6 +682,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_20_094146) do
     t.boolean "notify_by_sms", default: true
     t.boolean "notify_by_email", default: true
     t.datetime "last_sign_in_at"
+    t.string "franceconnect_openid_sub"
     t.boolean "logged_once_with_franceconnect"
     t.string "city_code"
     t.string "post_code"
@@ -700,7 +701,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_20_094146) do
     t.index ["created_through"], name: "index_users_on_created_through"
     t.index ["email"], name: "index_users_on_email", unique: true, where: "(email IS NOT NULL)"
     t.index ["first_name"], name: "index_users_on_first_name"
-    t.index ["franceconnect_openid_sub"], name: "index_users_on_franceconnect_openid_sub"
     t.index ["invitation_token"], name: "index_users_on_invitation_token", unique: true
     t.index ["invitations_count"], name: "index_users_on_invitations_count"
     t.index ["invited_by_id"], name: "index_users_on_invited_by_id"
