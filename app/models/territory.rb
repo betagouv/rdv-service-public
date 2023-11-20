@@ -1,4 +1,5 @@
 class Territory < ApplicationRecord
+  MAIRIES_NAME = "Mairies"
   # Mixins
   include PhoneNumberValidation::HasPhoneNumber
 
@@ -37,6 +38,11 @@ class Territory < ApplicationRecord
   validates :departement_number, length: { maximum: 3 }, if: -> { departement_number.present? }
   validates :name, presence: true, if: -> { persisted? }
   validates :departement_number, uniqueness: true, allow_blank: true
+  validate do
+    if name_was == MAIRIES_NAME
+      errors.add(:name, "Le nom de ce territoire permet de le brancher au moteur de recherche de l'ANTS et ne peut pas être changé")
+    end
+  end
 
   # Hooks
   before_create :fill_name_for_departements
@@ -72,7 +78,7 @@ class Territory < ApplicationRecord
   }.merge(SOCIAL_FIELD_TOGGLES).freeze
 
   def self.mairies
-    find_by(name: "Mairies")
+    find_by(name: MAIRIES_NAME)
   end
 
   def any_social_field_enabled?

@@ -8,4 +8,8 @@ FactoryBot.define do
     sms_provider { "netsize" }
     sms_configuration { "a_key" }
   end
+
+  trait :mairies do
+    name { Territory::MAIRIES_NAME }
+  end
 end

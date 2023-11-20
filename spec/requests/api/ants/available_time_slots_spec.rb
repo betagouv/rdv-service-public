@@ -8,7 +8,7 @@ describe "ANTS API: availableTimeSlots" do
   let(:lieu2) do
     create(:lieu, organisation: organisation2)
   end
-  let(:mairies_territory) { create(:territory, name: "Mairies") }
+  let(:mairies_territory) { create(:territory, :mairies) }
   let(:organisation) { create(:organisation, territory: mairies_territory) }
   let(:organisation2) { create(:organisation, territory: mairies_territory) }
   let(:motif) { create(:motif, organisation: organisation, default_duration_in_min: 30, motif_category: cni_motif_category) }

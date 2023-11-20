@@ -23,7 +23,7 @@ describe "ANTS API: getManagedMeetingPoints" do
              longitude: 4.0348016639327,
              latitude: 60.549140395451)
     end
-    let(:organisation) { create(:organisation, territory: create(:territory, name: "Mairies")) }
+    let(:organisation) { create(:organisation, territory: create(:territory, :mairies)) }
 
     it "returns a list of lieux" do
       get "/api/ants/getManagedMeetingPoints", headers: { "X-HUB-RDV-AUTH-TOKEN" => "" }
