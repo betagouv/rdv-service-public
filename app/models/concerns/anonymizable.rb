@@ -8,7 +8,7 @@ module Anonymizable
       [column.name, anonymous_value(column)]
     end
 
-    update_columns(anonymized_attributes)
+    update_columns(anonymized_attributes) # rubocop:disable Rails/SkipsModelValidations
   end
 
   private

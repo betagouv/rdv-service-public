@@ -73,9 +73,19 @@ describe User, type: :model do
       expect(user.email).to end_with("deleted.rdv-solidarites.fr")
       expect(user).to have_attributes(
         first_name: "Usager supprimé",
-        last_name: "Usager supprimé"
+        last_name: "Usager supprimé",
+        address: "valeur anonymisée"
       )
       expect(user.deleted_at).to be_within(5.seconds).of(Time.zone.now)
+    end
+
+    it "anonymizes rdvs and receipts" do
+      rdv = create(:rdv)
+      receipt = create(:receipt, user: rdv.users.first, rdv: rdv)
+      rdv.users.first.soft_delete
+
+      expect(receipt.reload.sms_phone_number).to eq "valeur anonymisée"
+      expect(rdv.reload.context).to eq "valeur anonymisée"
     end
 
     it "keep original email in an other attribute" do
