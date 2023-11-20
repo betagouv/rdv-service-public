@@ -369,8 +369,6 @@ users_attributes = 10_000.times.map do |i|
     phone_number: (format "+336%08d", i),
     phone_number_formatted: (format "+336%08d", i),
     created_through: "user_sign_up",
-    unaccented_first_name: "first_name_#{i}",
-    unaccented_last_name: "last_name_#{i}",
   }
 end
 results = User.insert_all!(users_attributes, returning: Arel.sql("id")) # [{"id"=>1}, {"id"=>2}, ...]
