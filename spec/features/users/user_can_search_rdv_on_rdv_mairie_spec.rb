@@ -2,7 +2,7 @@ describe "User can search rdv on rdv mairie" do
   include_context "rdv_mairie_api_authentication"
 
   let(:now) { Time.zone.parse("2021-12-13 8:00") }
-  let!(:territory) { create(:territory, :mairies) }
+  let!(:territory) { create(:territory, :mairies, departement_number: "MA") }
   let!(:organisation) { create(:organisation, :with_contact, territory: territory) }
   let(:service) { create(:service) }
   let!(:cni_motif) do
