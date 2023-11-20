@@ -582,7 +582,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_20_094146) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "short_name"
-    t.enum "verticale", enum_type: "verticale"
     t.index "lower((name)::text)", name: "index_services_on_lower_name", unique: true
     t.index "lower((short_name)::text)", name: "index_services_on_lower_short_name", unique: true
     t.index ["name"], name: "index_services_on_name"
@@ -701,6 +700,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_20_094146) do
     t.index ["created_through"], name: "index_users_on_created_through"
     t.index ["email"], name: "index_users_on_email", unique: true, where: "(email IS NOT NULL)"
     t.index ["first_name"], name: "index_users_on_first_name"
+    t.index ["franceconnect_openid_sub"], name: "index_users_on_franceconnect_openid_sub", where: "(franceconnect_openid_sub IS NOT NULL)"
     t.index ["invitation_token"], name: "index_users_on_invitation_token", unique: true
     t.index ["invitations_count"], name: "index_users_on_invitations_count"
     t.index ["invited_by_id"], name: "index_users_on_invited_by_id"

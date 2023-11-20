@@ -8,8 +8,9 @@ describe "ANTS API: availableTimeSlots" do
   let(:lieu2) do
     create(:lieu, organisation: organisation2)
   end
-  let(:organisation) { create(:organisation, verticale: :rdv_mairie) }
-  let(:organisation2) { create(:organisation, verticale: :rdv_mairie) }
+  let(:mairies_territory) { create(:territory, :mairies) }
+  let(:organisation) { create(:organisation, territory: mairies_territory) }
+  let(:organisation2) { create(:organisation, territory: mairies_territory) }
   let(:motif) { create(:motif, organisation: organisation, default_duration_in_min: 30, motif_category: cni_motif_category) }
   let(:motif2) { create(:motif, organisation: organisation2, default_duration_in_min: 30, motif_category: cni_motif_category) }
   let!(:cni_motif_category) { create(:motif_category, name: Api::Ants::EditorController::CNI_MOTIF_CATEGORY_NAME) }
