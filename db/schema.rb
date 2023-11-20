@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_20_094146) do
+ActiveRecord::Schema[7.0].define(version: 2023_11_20_141913) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -676,7 +676,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_20_094146) do
     t.bigint "responsible_id"
     t.datetime "deleted_at"
     t.string "birth_name"
-    t.string "email_original"
     t.string "phone_number_formatted"
     t.boolean "notify_by_sms", default: true
     t.boolean "notify_by_email", default: true

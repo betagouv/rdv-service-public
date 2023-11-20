@@ -88,12 +88,6 @@ describe User, type: :model do
       expect(rdv.reload.context).to eq "valeur anonymisée"
     end
 
-    it "keep original email in an other attribute" do
-      user = create(:user, email: "jean@valjean.fr")
-      user.soft_delete
-      expect(user.email_original).to eq("jean@valjean.fr")
-    end
-
     it "is hidden user by default" do
       user = create(:user)
       user.soft_delete

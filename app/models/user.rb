@@ -291,7 +291,6 @@ class User < ApplicationRecord
       first_name: "Usager supprimé",
       last_name: "Usager supprimé",
       deleted_at: Time.zone.now,
-      email_original: email,
       email: deleted_email
     )
   end
