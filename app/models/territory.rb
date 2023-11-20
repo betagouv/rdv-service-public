@@ -18,7 +18,7 @@ class Territory < ApplicationRecord
   # Relations
   has_many :teams, dependent: :destroy
   has_many :organisations, dependent: :destroy
-  has_many :sectors, dependent: :destroy
+  has_many :sectors, dependent: :restrict_with_error
   has_many :roles, class_name: "AgentTerritorialRole", dependent: :delete_all
   has_many :agent_territorial_access_rights, dependent: :destroy
   has_many :territory_services, dependent: :destroy
