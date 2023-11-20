@@ -25,7 +25,7 @@ class User < ApplicationRecord
 
   def self.search_options
     {
-      using: { tsearch: { prefix: true, any_word: true, tsvector_column: "searchable" } },
+      using: { tsearch: { prefix: true, any_word: true, tsvector_column: "text_search_terms" } },
     }
   end
 
