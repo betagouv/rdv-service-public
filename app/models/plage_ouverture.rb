@@ -10,10 +10,15 @@ class PlageOuverture < ApplicationRecord
   include EnsuresRealisticDate
 
   include TextSearch
-  def self.search_against
+  def self.search_options
     {
-      title: "A",
-      id: "D",
+      against:
+        {
+          title: "A",
+          id: "D",
+        },
+      ignoring: :accents,
+      using: { tsearch: { prefix: true, any_word: true } },
     }
   end
 
