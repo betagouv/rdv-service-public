@@ -1,5 +1,5 @@
 class Territory < ApplicationRecord
-  MAIRIES_NAME = "Mairies"
+  MAIRIES_NAME = "Mairies".freeze
   # Mixins
   include PhoneNumberValidation::HasPhoneNumber
 
