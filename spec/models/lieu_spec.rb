@@ -138,7 +138,9 @@ describe Lieu, type: :model do
         before do
           create(:rdv, :collectif, motif: motif, lieu: lieu) # valid rdv
           create(:rdv, :collectif, motif: motif, status: :revoked)
-          # create(:rdv, :collectif, motif: motif, max_participants_count: 3, users_count: 3) # fully booked
+          create(:rdv, :collectif, motif: motif, max_participants_count: 3).tap do |rdv|
+            rdv.update_columns(users_count: 3) # fully booked
+          end
           create(:rdv, :collectif, motif: motif, starts_at: 3.days.ago) # in the past
         end
 
