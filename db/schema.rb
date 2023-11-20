@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_16_160522) do
+ActiveRecord::Schema[7.0].define(version: 2023_11_20_094146) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -682,7 +682,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_16_160522) do
     t.boolean "notify_by_sms", default: true
     t.boolean "notify_by_email", default: true
     t.datetime "last_sign_in_at"
-    t.string "franceconnect_openid_sub"
     t.boolean "logged_once_with_franceconnect"
     t.string "city_code"
     t.string "post_code"
@@ -695,15 +694,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_16_160522) do
     t.text "notes"
     t.string "ants_pre_demande_number"
     t.string "rdv_invitation_token"
-    t.text "unaccented_last_name"
-    t.text "unaccented_first_name"
-    t.text "unaccented_birth_name"
-    t.virtual "searchable", type: :tsvector, as: "(((((setweight(to_tsvector('simple'::regconfig, COALESCE(unaccented_last_name, ''::text)), 'A'::\"char\") || setweight(to_tsvector('simple'::regconfig, COALESCE(unaccented_first_name, ''::text)), 'B'::\"char\")) || setweight(to_tsvector('simple'::regconfig, COALESCE(unaccented_birth_name, ''::text)), 'C'::\"char\")) || setweight(to_tsvector('simple'::regconfig, COALESCE((email)::text, ''::text)), 'D'::\"char\")) || setweight(to_tsvector('simple'::regconfig, COALESCE((phone_number_formatted)::text, ''::text)), 'D'::\"char\")) || setweight(to_tsvector('simple'::regconfig, COALESCE((id)::text, ''::text)), 'D'::\"char\"))", stored: true
+    t.virtual "text_search_terms", type: :tsvector, as: "(((((setweight(to_tsvector('simple'::regconfig, translate(lower((COALESCE(last_name, ''::character varying))::text), 'àâäéèêëïîôöùûüÿç'::text, 'aaaeeeeiioouuuyc'::text)), 'A'::\"char\") || setweight(to_tsvector('simple'::regconfig, translate(lower((COALESCE(first_name, ''::character varying))::text), 'àâäéèêëïîôöùûüÿç'::text, 'aaaeeeeiioouuuyc'::text)), 'B'::\"char\")) || setweight(to_tsvector('simple'::regconfig, translate(lower((COALESCE(birth_name, ''::character varying))::text), 'àâäéèêëïîôöùûüÿç'::text, 'aaaeeeeiioouuuyc'::text)), 'C'::\"char\")) || setweight(to_tsvector('simple'::regconfig, (COALESCE(email, ''::character varying))::text), 'D'::\"char\")) || setweight(to_tsvector('simple'::regconfig, (COALESCE(phone_number_formatted, ''::character varying))::text), 'D'::\"char\")) || setweight(to_tsvector('simple'::regconfig, COALESCE((id)::text, ''::text)), 'D'::\"char\"))", stored: true
     t.index ["birth_date"], name: "index_users_on_birth_date"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["created_through"], name: "index_users_on_created_through"
     t.index ["email"], name: "index_users_on_email", unique: true, where: "(email IS NOT NULL)"
     t.index ["first_name"], name: "index_users_on_first_name"
+    t.index ["franceconnect_openid_sub"], name: "index_users_on_franceconnect_openid_sub"
     t.index ["invitation_token"], name: "index_users_on_invitation_token", unique: true
     t.index ["invitations_count"], name: "index_users_on_invitations_count"
     t.index ["invited_by_id"], name: "index_users_on_invited_by_id"
@@ -713,7 +710,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_16_160522) do
     t.index ["rdv_invitation_token"], name: "index_users_on_rdv_invitation_token", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["responsible_id"], name: "index_users_on_responsible_id"
-    t.index ["searchable"], name: "index_users_searchable", using: :gin
+    t.index ["text_search_terms"], name: "index_users_text_search_terms", using: :gin
   end
 
   create_table "versions", force: :cascade do |t|
