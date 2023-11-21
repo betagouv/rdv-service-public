@@ -13,6 +13,7 @@ class Rdv < ApplicationRecord
   include IcalHelpers::Ics
   include Payloads::Rdv
   include Ants::AppointmentSerializerAndListener
+  include Anonymizable
 
   # Attributes
   auto_strip_attributes :name
@@ -371,6 +372,10 @@ class Rdv < ApplicationRecord
 
   def revoked!
     update!(cancelled_at: Time.zone.now, status: "revoked")
+  end
+
+  def self.personal_data_column_names
+    %w[context]
   end
 
   private

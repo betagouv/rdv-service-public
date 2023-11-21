@@ -67,25 +67,31 @@ describe User, type: :model do
   end
 
   describe "#soft_delete" do
-    it "change email to a « deleted.rdv-solidarites.fr » domain" do
-      user = create(:user, email: "jean@valjean.fr")
+    it "change email to a « deleted.rdv-solidarites.fr » domain and anonymises other attributes" do
+      user = create(:user, email: "jean@valjean.fr", first_name: "Jean", last_name: "Valjean")
       user.soft_delete
       expect(user.email).to end_with("deleted.rdv-solidarites.fr")
-    end
-
-    it "keep original email in an other attribute" do
-      user = create(:user, email: "jean@valjean.fr")
-      user.soft_delete
-      expect(user.email_original).to eq("jean@valjean.fr")
-    end
-
-    it "set deleted_at to now" do
-      user = create(:user)
-      user.soft_delete
+      expect(user).to have_attributes(
+        first_name: "Usager supprimé",
+        last_name: "Usager supprimé",
+        address: "[valeur anonymisée]"
+      )
       expect(user.deleted_at).to be_within(5.seconds).of(Time.zone.now)
     end
 
-    it "hidden user by default" do
+    it "anonymizes rdvs and receipts and deletes versions" do
+      rdv = create(:rdv)
+      user = rdv.users.first
+
+      receipt = create(:receipt, user: user, rdv: rdv)
+      user.soft_delete
+
+      expect(receipt.reload.sms_phone_number).to eq "[valeur anonymisée]"
+      expect(rdv.reload.context).to eq "[valeur anonymisée]"
+      expect(user.versions).to be_empty
+    end
+
+    it "is hidden user by default" do
       user = create(:user)
       user.soft_delete
       expect(described_class.all).to be_empty
