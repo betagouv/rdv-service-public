@@ -39,10 +39,10 @@ describe Agents::AbsenceMailer, type: :mailer do
 
           it "works" do
             mail = described_class.with(absence: absence).send("absence_#{action}")
-            expect(mail.subject).to start_with("RDV Solidarités - Indisponibilité")
-            expect(mail.html_part.body.to_s).to include(%(src="/logo_solidarites.png))
-            expect(mail.html_part.body.to_s).to include("Voir sur RDV Solidarités") unless action == :destroyed
-            expect(mail.html_part.body.to_s).to include(%(href="http://www.rdv-solidarites-test.localhost/))
+            expect(mail.subject).to start_with("RDV Insertion - Indisponibilité")
+            expect(mail.html_part.body.to_s).to include(%(src="/logo_rdv_insertion.png))
+            expect(mail.html_part.body.to_s).to include("Voir sur RDV Insertion") unless action == :destroyed
+            expect(mail.html_part.body.to_s).to include(%(href="http://app.rdv-insertion-test.localhost/))
           end
         end
 

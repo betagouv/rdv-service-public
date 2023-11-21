@@ -31,8 +31,8 @@ describe CustomDeviseMailer, "#domain" do
     context "in a RDV Insertion organisation" do
       let!(:organisation) { create(:organisation, verticale: :rdv_insertion) }
 
-      it "uses RDV_SOLIDARITES" do
-        expect_to_use_domain(Domain::RDV_SOLIDARITES)
+      it "uses RDV_INSERTION" do
+        expect_to_use_domain(Domain::RDV_INSERTION)
       end
     end
 
@@ -91,7 +91,7 @@ describe CustomDeviseMailer, "#domain" do
     let!(:old_rdv2) { create(:rdv, organisation: old_domain_organisation2, created_at: 4.months.ago, users: [user]) }
 
     it "uses the domain of the most recently created rdv" do
-      expect_to_use_domain(Domain::RDV_SOLIDARITES)
+      expect_to_use_domain(Domain::RDV_INSERTION)
     end
   end
 end

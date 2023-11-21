@@ -59,7 +59,7 @@ RSpec.describe "Agents can be managed by organisation admins" do
           click_button "Envoyer une invitation"
 
           open_email("jean@paul.com")
-          expect(current_email.subject).to eq "Vous avez été invité sur RDV Solidarités"
+          expect(current_email.subject).to eq "Vous avez été invité sur RDV Insertion"
         end
       end
     end
