@@ -51,6 +51,15 @@
 
         p Vous bénéficiez d’un accompagnement individualisé pour la prise en main de l’outil et d’une équipe support à votre disposition.
 
+.fr-py-12w[style="background-color:  #DEE5FD"]
+  .fr-container
+    .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
+      .fr-col-md-10[style="text-align: center"]
+        b
+          = Rdv.joins(:organisation).where(organisations: { territory_id: Territory.mairies&.id }).count
+          = " rendez-vous déjà pris".upcase
+        br
+        = " VIA NOTRE SOLUTION"
 .fr-py-12w[style="background-color:  #F4F6FE"]
   .fr-container
     .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
