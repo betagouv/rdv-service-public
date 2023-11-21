@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class AddNotificationPreferencesToAgent < ActiveRecord::Migration[6.1]
   def change
     create_enum :agents_plage_ouverture_notification_level, %i[all none]

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require "administrate/base_dashboard"
 
 class TerritoryDashboard < Administrate::BaseDashboard
@@ -13,6 +11,8 @@ class TerritoryDashboard < Administrate::BaseDashboard
     id: Field::Number,
     departement_number: Field::String,
     name: Field::String,
+    admin_agents: Field::HasMany,
+    roles: Field::HasMany,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
   }.freeze
@@ -33,6 +33,7 @@ class TerritoryDashboard < Administrate::BaseDashboard
   SHOW_PAGE_ATTRIBUTES = %i[
     id
     name
+    roles
     departement_number
     created_at
     updated_at
@@ -43,6 +44,7 @@ class TerritoryDashboard < Administrate::BaseDashboard
   # on the model's form (`new` and `edit`) pages.
   FORM_ATTRIBUTES = %i[
     name
+    admin_agents
     departement_number
   ].freeze
 

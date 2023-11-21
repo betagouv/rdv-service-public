@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 Domain = Struct.new(
   :id,
   :name,

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe "Step 4 of the rdv wizard" do
   let(:motif) { create(:motif, :by_phone) }
   let(:organisation) { motif.organisation }

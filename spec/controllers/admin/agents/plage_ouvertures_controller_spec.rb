@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe Admin::Agents::PlageOuverturesController, type: :controller do
   describe "GET index" do
     context "with a signed in agent" do
@@ -16,7 +14,7 @@ describe Admin::Agents::PlageOuverturesController, type: :controller do
       end
 
       it "call Admin::Occurrence to assigns `plage_ouvertures_occurrences`" do
-        given_agent = create(:agent, basic_role_in_organisations: [organisation], service: agent.service)
+        given_agent = create(:agent, basic_role_in_organisations: [organisation], service: agent.services.first)
 
         first_day = Time.zone.parse("20190815 10h30")
         travel_to(first_day - 2.days)

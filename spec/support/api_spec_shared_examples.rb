@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module ApiSpecSharedExamples
   shared_context "an endpoint that returns 401 - unauthorized" do
     response 401, "Renvoie 'unauthorized' quand l'authentification est impossible" do

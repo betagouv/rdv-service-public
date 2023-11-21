@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe Absence, type: :model do
   it_behaves_like "recurrence"
 

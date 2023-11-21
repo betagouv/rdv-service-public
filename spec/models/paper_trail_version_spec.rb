@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe "PaperTrail::Version" do
   describe "changes" do
     it "can read changes" do

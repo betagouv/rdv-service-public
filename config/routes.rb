@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 Rails.application.routes.draw do
   mount Rswag::Ui::Engine => '/api-docs'
   mount Rswag::Api::Engine => '/api-docs'
@@ -105,6 +103,12 @@ Rails.application.routes.draw do
         resource :webcal_sync, only: %i[show update], controller: :webcal_sync
         resource :outlook_sync, only: %i[show destroy], controller: :outlook_sync
       end
+
+      resources :users, only: [] do
+        collection do
+          get "search"
+        end
+      end
     end
     get "omniauth/microsoft_graph/callback" => "omniauth_callbacks#microsoft_graph"
   end
@@ -123,6 +127,7 @@ Rails.application.routes.draw do
           resources :agents, only: %i[index update edit] do
             member do
               put :territory_admin
+              patch :update_services
             end
           end
           resources :teams
@@ -133,6 +138,7 @@ Rails.application.routes.draw do
           resource :sms_configuration, only: %i[show edit update]
           resources :zone_imports, only: %i[new create]
           resources :zones, only: [:index] # exports only
+          resource :services, only: %i[edit update]
           resource :sectorization, only: [:show]
           resources :sectors do
             resources :zones
@@ -171,7 +177,7 @@ Rails.application.routes.draw do
             post :send_reminder_manually
           end
           collection do
-            post :rdvs_users_export
+            post :participations_export
             post :export
           end
         end

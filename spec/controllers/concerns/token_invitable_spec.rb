@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe TokenInvitable, type: :controller do
   controller(ApplicationController) do
     include TokenInvitable

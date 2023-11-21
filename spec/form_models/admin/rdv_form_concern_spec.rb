@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe Admin::RdvFormConcern, type: :form do
   subject(:form) { dummy_form_class.new(rdv, agent_author) }
 

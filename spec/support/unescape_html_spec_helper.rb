@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module UnescapeHtmlSpecHelper
   def unescape_html(text)
     CGI.unescapeHTML(text)

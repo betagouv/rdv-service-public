@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require "administrate/base_dashboard"
 
 class LieuDashboard < Administrate::BaseDashboard
@@ -13,7 +11,7 @@ class LieuDashboard < Administrate::BaseDashboard
     id: Field::Number,
     name: Field::String,
     versions: Field::HasMany,
-    organisation: Field::BelongsTo,
+    organisation: Field::BelongsTo.with_options(order: { id: :asc }),
     plage_ouvertures: Field::HasMany,
     rdvs: Field::HasMany,
     motifs: Field::HasMany,

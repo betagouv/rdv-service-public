@@ -1,9 +1,8 @@
-# frozen_string_literal: true
-
 module Lapin
   module Range
     class << self
       def reduce_range_to_delay(motif, date_range)
+        return motif.booking_delay_range if date_range.nil?
         return nil unless motif.booking_delay_range.overlaps?(date_range)
 
         start_range = [motif.start_booking_delay, date_range.begin].max

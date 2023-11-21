@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe "Users::Participants", type: :request do
   include Rails.application.routes.url_helpers
 
@@ -86,10 +84,10 @@ RSpec.describe "Users::Participants", type: :request do
   end
 
   describe "Participation update (if excused)" do
-    let(:rdv_user1) { create(:rdvs_user, rdv: rdv, user: user) }
+    let(:participation1) { create(:participation, rdv: rdv, user: user) }
 
     it "display notice" do
-      rdv_user1.update!(status: "excused")
+      participation1.update!(status: "excused")
       expect(rdv.reload.users).to match_array([user])
       post users_rdv_participations_path(rdv, user_id: user.id)
       expect(flash[:notice]).to eq("Participation confirmée")

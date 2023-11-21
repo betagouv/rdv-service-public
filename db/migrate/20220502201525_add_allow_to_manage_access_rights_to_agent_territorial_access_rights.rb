@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class AddAllowToManageAccessRightsToAgentTerritorialAccessRights < ActiveRecord::Migration[6.1]
   def change
     add_column :agent_territorial_access_rights, :allow_to_manage_access_rights, :boolean, default: false, null: false

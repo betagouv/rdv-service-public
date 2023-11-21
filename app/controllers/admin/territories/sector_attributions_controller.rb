@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Admin::Territories::SectorAttributionsController < Admin::Territories::BaseController
   before_action :set_sector
 
@@ -46,6 +44,7 @@ class Admin::Territories::SectorAttributionsController < Admin::Territories::Bas
     @available_agents = policy_scope(Agent)
       .merge(@sector_attribution.organisation.agents)
       .where.not(id: existing_agent_attributions.pluck(:agent_id))
+      .includes(:services)
   end
 
   def excluded_organisation_ids

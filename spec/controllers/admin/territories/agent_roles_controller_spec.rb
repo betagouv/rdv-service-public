@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe Admin::Territories::AgentRolesController, type: :controller do
   describe "POST #update" do
     it "redirect to territorial agent edit on success" do

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # Pour fonctionner, ce module utilise les champs
 #
 # - `expired_cached (bool)`

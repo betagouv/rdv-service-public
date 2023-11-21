@@ -1,11 +1,9 @@
-# frozen_string_literal: true
-
 class Admin::Organisations::StatsController < AgentAuthController
   before_action :set_organisation
 
   def index
     @stats = Stat.new(
-      rdvs: policy_scope(Rdv).where(organisation: current_organisation),
+      rdvs: rdv_scope,
       agents: policy_scope(Agent)
         .joins(:organisations).where(organisations: { id: current_organisation.id }),
       users: policy_scope(User)
@@ -14,7 +12,7 @@ class Admin::Organisations::StatsController < AgentAuthController
 
   def rdvs
     skip_authorization
-    stats = Stat.new(rdvs: policy_scope(Rdv))
+    stats = Stat.new(rdvs: rdv_scope)
     stats = if params[:by_service].present?
               stats.rdvs_group_by_service
             elsif params[:by_location_type].present?
@@ -28,5 +26,11 @@ class Admin::Organisations::StatsController < AgentAuthController
   def users
     skip_authorization
     render json: Stat.new(users: policy_scope(User)).users_group_by_week
+  end
+
+  private
+
+  def rdv_scope
+    policy_scope(Rdv).where(organisation: current_organisation)
   end
 end

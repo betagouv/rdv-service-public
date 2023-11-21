@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
@@ -55,8 +53,6 @@ gem "activerecord-postgres_enum"
 gem "redis", "< 5.0"
 # A drop-in replacement for e.g. MemCacheStore to store Rails sessions (and Rails sessions only) in Redis.
 gem "redis-session-store", "0.11.4"
-# Ruby wrapper for hiredis (protocol serialization/deserialization and blocking I/O)
-gem "hiredis"
 
 # Devise / auth
 # Flexible authentication solution for Rails with Warden

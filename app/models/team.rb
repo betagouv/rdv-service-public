@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Team < ApplicationRecord
   # Mixins
   has_paper_trail(
@@ -8,10 +6,15 @@ class Team < ApplicationRecord
   )
 
   include TextSearch
-  def self.search_against
+  def self.search_options
     {
-      name: "A",
-      id: "D",
+      against:
+        {
+          name: "A",
+          id: "D",
+        },
+      ignoring: :accents,
+      using: { tsearch: { prefix: true, any_word: true } },
     }
   end
 

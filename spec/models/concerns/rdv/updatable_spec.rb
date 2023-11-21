@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe Rdv::Updatable, type: :concern do
   before do
     stub_netsize_ok
@@ -70,8 +68,8 @@ RSpec.describe Rdv::Updatable, type: :concern do
       end
 
       it "doesnt notify already cancelled participations" do
-        rdv_co.rdvs_users.where(user: user_co1).first.update!(status: "excused")
-        rdv_co.rdvs_users.reload
+        rdv_co.participations.where(user: user_co1).first.update!(status: "excused")
+        rdv_co.participations.reload
         rdv_co.update_and_notify(agent, status: "revoked")
         expect_no_notifications_for_user(user_co1)
         expect_notifications_sent_for(rdv_co, user_co2, :rdv_cancelled)
@@ -152,9 +150,9 @@ RSpec.describe Rdv::Updatable, type: :concern do
     describe "for a rdv collectif" do
       let(:attributes) do
         {
-          rdvs_users_attributes: {
-            0 => { user_id: user_staying.id, send_lifecycle_notifications: 1, id: rdv.rdvs_users.find_by(user_id: user_staying.id).id, _destroy: false },
-            1 => { user_id: user_removed.id, send_lifecycle_notifications: 1, id: rdv.rdvs_users.find_by(user_id: user_removed.id).id, _destroy: true  },
+          participations_attributes: {
+            0 => { user_id: user_staying.id, send_lifecycle_notifications: 1, id: rdv.participations.find_by(user_id: user_staying.id).id, _destroy: false },
+            1 => { user_id: user_removed.id, send_lifecycle_notifications: 1, id: rdv.participations.find_by(user_id: user_removed.id).id, _destroy: true  },
             2 => { user_id: user_added.id, send_lifecycle_notifications: 1 },
           },
         }
@@ -274,19 +272,19 @@ RSpec.describe Rdv::Updatable, type: :concern do
 
   describe "#change_participation_statuses on RDV.status change for collective rdv" do
     let(:rdv_co) { create(:rdv, :collectif, agents: [agent]) }
-    let!(:rdvs_user1) { create(:rdvs_user, rdv: rdv_co) }
-    let!(:rdvs_user2) { create(:rdvs_user, rdv: rdv_co) }
-    let!(:rdvs_user_excused) { create(:rdvs_user, rdv: rdv_co, status: "excused") }
-    let!(:rdvs_user_noshow) { create(:rdvs_user, rdv: rdv_co, status: "noshow") }
+    let!(:participation1) { create(:participation, rdv: rdv_co) }
+    let!(:participation2) { create(:participation, rdv: rdv_co) }
+    let!(:participation_excused) { create(:participation, rdv: rdv_co, status: "excused") }
+    let!(:participation_noshow) { create(:participation, rdv: rdv_co, status: "noshow") }
 
     context "when the status changed and is now seen" do
       it "updates participations statuses" do
         rdv_co.update_and_notify(agent, status: "seen")
         rdv_co.reload
-        expect(rdvs_user1.reload.status).to eq("seen")
-        expect(rdvs_user2.reload.status).to eq("seen")
-        expect(rdvs_user_excused.reload.status).to eq("excused")
-        expect(rdvs_user_noshow.reload.status).to eq("noshow")
+        expect(participation1.reload.status).to eq("seen")
+        expect(participation2.reload.status).to eq("seen")
+        expect(participation_excused.reload.status).to eq("excused")
+        expect(participation_noshow.reload.status).to eq("noshow")
       end
     end
 
@@ -294,9 +292,9 @@ RSpec.describe Rdv::Updatable, type: :concern do
       it "updates participations statuses" do
         rdv_co.update_and_notify(agent, status: "revoked")
         rdv_co.reload
-        expect(rdvs_user1.reload.status).to eq("revoked")
-        expect(rdvs_user2.reload.status).to eq("revoked")
-        expect(rdvs_user_excused.reload.status).to eq("excused")
+        expect(participation1.reload.status).to eq("revoked")
+        expect(participation2.reload.status).to eq("revoked")
+        expect(participation_excused.reload.status).to eq("excused")
       end
     end
 
@@ -304,7 +302,7 @@ RSpec.describe Rdv::Updatable, type: :concern do
       it "updates (reset to unknown) all participations statuses" do
         rdv_co.update!(status: "revoked")
         rdv_co.update_and_notify(agent, status: "unknown")
-        expect(rdv_co.rdvs_users.reload.map(&:status)).to all(include("unknown"))
+        expect(rdv_co.participations.reload.map(&:status)).to all(include("unknown"))
       end
     end
 
@@ -313,8 +311,8 @@ RSpec.describe Rdv::Updatable, type: :concern do
         rdv_co.update_and_notify(agent, status: "noshow")
         expect(rdv_co).not_to be_valid
         expect(rdv_co.reload.status).to eq("unknown")
-        expect(rdvs_user1.reload.status).to eq("unknown")
-        expect(rdvs_user2.reload.status).to eq("unknown")
+        expect(participation1.reload.status).to eq("unknown")
+        expect(participation2.reload.status).to eq("unknown")
       end
     end
 
@@ -323,22 +321,22 @@ RSpec.describe Rdv::Updatable, type: :concern do
         rdv_co.update_and_notify(agent, status: "excused")
         expect(rdv_co).not_to be_valid
         expect(rdv_co.reload.status).to eq("unknown")
-        expect(rdvs_user1.reload.status).to eq("unknown")
-        expect(rdvs_user2.reload.status).to eq("unknown")
+        expect(participation1.reload.status).to eq("unknown")
+        expect(participation2.reload.status).to eq("unknown")
       end
     end
   end
 
   describe "#change_participation_statuses on RDV.status change (individual rdvs)" do
     let(:rdv) { create(:rdv, agents: [agent]) }
-    let!(:rdvs_user1) { create(:rdvs_user, rdv: rdv) }
-    let!(:rdvs_user2) { create(:rdvs_user, rdv: rdv) }
-    let!(:rdvs_user_excused) { create(:rdvs_user, rdv: rdv) }
-    let!(:rdvs_user_noshow) { create(:rdvs_user, rdv: rdv) }
+    let!(:participation1) { create(:participation, rdv: rdv) }
+    let!(:participation2) { create(:participation, rdv: rdv) }
+    let!(:participation_excused) { create(:participation, rdv: rdv) }
+    let!(:participation_noshow) { create(:participation, rdv: rdv) }
 
     before do
-      rdvs_user_excused.update!(status: "excused")
-      rdvs_user_noshow.update!(status: "noshow")
+      participation_excused.update!(status: "excused")
+      participation_noshow.update!(status: "noshow")
     end
 
     context "when the status changed and is now seen" do
@@ -346,8 +344,8 @@ RSpec.describe Rdv::Updatable, type: :concern do
         rdv.update_and_notify(agent, status: "seen")
         rdv.reload
         expect(rdv.status).to eq("seen")
-        expect(rdvs_user1.reload.status).to eq("seen")
-        expect(rdvs_user2.reload.status).to eq("seen")
+        expect(participation1.reload.status).to eq("seen")
+        expect(participation2.reload.status).to eq("seen")
       end
     end
 
@@ -356,8 +354,8 @@ RSpec.describe Rdv::Updatable, type: :concern do
         rdv.update_and_notify(agent, status: "revoked")
         rdv.reload
         expect(rdv.status).to eq("revoked")
-        expect(rdvs_user1.reload.status).to eq("revoked")
-        expect(rdvs_user2.reload.status).to eq("revoked")
+        expect(participation1.reload.status).to eq("revoked")
+        expect(participation2.reload.status).to eq("revoked")
       end
     end
 
@@ -366,8 +364,8 @@ RSpec.describe Rdv::Updatable, type: :concern do
         rdv.update_and_notify(agent, status: "noshow")
         rdv.reload
         expect(rdv.status).to eq("noshow")
-        expect(rdvs_user1.reload.status).to eq("noshow")
-        expect(rdvs_user2.reload.status).to eq("noshow")
+        expect(participation1.reload.status).to eq("noshow")
+        expect(participation2.reload.status).to eq("noshow")
       end
     end
 
@@ -376,8 +374,8 @@ RSpec.describe Rdv::Updatable, type: :concern do
         rdv.update_and_notify(agent, status: "excused")
         rdv.reload
         expect(rdv.status).to eq("excused")
-        expect(rdvs_user1.reload.status).to eq("excused")
-        expect(rdvs_user2.reload.status).to eq("excused")
+        expect(participation1.reload.status).to eq("excused")
+        expect(participation2.reload.status).to eq("excused")
       end
     end
 
@@ -385,7 +383,7 @@ RSpec.describe Rdv::Updatable, type: :concern do
       it "updates (reset to unknown) all participations statuses" do
         rdv.update!(status: "revoked")
         rdv.update_and_notify(agent, status: "unknown")
-        expect(rdv.rdvs_users.reload.map(&:status)).to all(include("unknown"))
+        expect(rdv.participations.reload.map(&:status)).to all(include("unknown"))
       end
     end
   end

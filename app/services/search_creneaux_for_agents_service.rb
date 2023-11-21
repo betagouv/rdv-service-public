@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class SearchCreneauxForAgentsService < SearchCreneauxForAgentsBase
   def perform
     lieux.map { build_result(_1) }.compact # NOTE: LOOP 1 over lieux.

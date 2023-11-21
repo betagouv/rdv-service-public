@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Configuration::TeamPolicy
   def initialize(context, team)
     @current_agent = context.agent

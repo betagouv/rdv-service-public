@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # rubocop:disable all
 
 # This is an override of the default concern : DeviseTokenAuth::Concerns::UserOmniauthCallbacks

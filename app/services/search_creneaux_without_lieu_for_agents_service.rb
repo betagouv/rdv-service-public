@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class SearchCreneauxWithoutLieuForAgentsService < SearchCreneauxForAgentsBase
   def perform
     # utiliser les ids des agents pour ne pas faire de requêtes supplémentaire

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # La phrase du nom de la classe indique le contexte et l'action métier réalisés par ce service object en PORO
 class AdminUpdatesAgent
   def initialize(agent:, organisation:, new_access_level:, agent_params:, inviting_agent:)
@@ -34,6 +32,7 @@ class AdminUpdatesAgent
 
   def turn_intervenant_into_agent_with_account
     assign_agent_and_role_attributes
+    set_agent_notifications_levels_to_default
     if @agent.save
       @agent.confirm
       @agent.invite!(@inviting_agent)
@@ -60,6 +59,7 @@ class AdminUpdatesAgent
     end
 
     reset_agent_email_and_password
+    set_agent_notifications_levels_to_none
     reset_agent_invitation_fields
     @agent.assign_attributes(first_name: nil)
     @agent.assign_attributes(roles_attributes: {
@@ -69,6 +69,18 @@ class AdminUpdatesAgent
     if @agent.save
       @confirmation_message = I18n.t("activerecord.notice.models.agent_role.updated")
     end
+  end
+
+  def set_agent_notifications_levels_to_none
+    @agent.rdv_notifications_level = "none"
+    @agent.plage_ouverture_notification_level = "none"
+    @agent.absence_notification_level = "none"
+  end
+
+  def set_agent_notifications_levels_to_default
+    @agent.rdv_notifications_level = "others"
+    @agent.plage_ouverture_notification_level = "all"
+    @agent.absence_notification_level = "all"
   end
 
   def reset_agent_email_and_password

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class ReferentAssignation < ApplicationRecord
   # Mixins
   has_paper_trail

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Agents::PlageOuvertureMailer < ApplicationMailer
   helper MotifsHelper
   helper PlageOuverturesHelper

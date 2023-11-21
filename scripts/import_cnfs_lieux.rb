@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # Usage : download locally the list of permanences in tmp/permanences.json then run :
 # scalingo --app production-rdv-solidarites  --region osc-secnum-fr1  run --file tmp/permanences.json "rails runner scripts/import_cnfs_lieux.rb"
 

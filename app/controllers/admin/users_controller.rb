@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Admin::UsersController < AgentAuthController
   respond_to :html, :json
 
@@ -72,8 +70,8 @@ class Admin::UsersController < AgentAuthController
 
   def show
     authorize(@user)
-    @rdvs_users = @user.rdvs_users.where(rdvs: policy_scope(Rdv).merge(@user.rdvs))
-    @referent_assignations = @user.referent_assignations.includes(agent: :service)
+    @participations = @user.participations.where(rdvs: policy_scope(Rdv).merge(@user.rdvs))
+    @referent_agents = policy_scope(@user.referent_agents).includes(:services)
     respond_modal_with @user if from_modal?
   end
 

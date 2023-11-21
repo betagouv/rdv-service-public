@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require "icalendar/tzinfo"
 
 module IcalHelpers
@@ -7,7 +5,7 @@ module IcalHelpers
   # d'empêcher la collision (certes improbable) avec des événements
   # d'autres plateformes. Il est important de ne pas modifier cette
   # constante car cel ferait changer les UIDs (et un ID ne doit pas changer).
-  ICS_UID_SUFFIX = "RDV Solidarités"
+  ICS_UID_SUFFIX = "RDV Solidarités".freeze
 
   module Ics
     def to_ical(*args)

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # rails runner scripts/export_cnfs_agents.rb
 
 require "csv"
@@ -88,7 +86,7 @@ class ExportCnfsAgents
   end
 
   def agents
-    @agents ||= Agent.where(service_id: Service.find_by_name(Service::CONSEILLER_NUMERIQUE))
+    @agents ||= Agent.in_any_of_these_services([Service.find_by_name(Service::CONSEILLER_NUMERIQUE)])
   end
 end
 

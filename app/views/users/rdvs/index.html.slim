@@ -34,7 +34,7 @@
           .card-body
             = agent.full_name_and_service
           .card-footer.text-right
-            = render "prendre_rdv_button", text: "Prendre un RDV de suivi", link: prendre_rdv_path(referent_ids: [agent.id], departement: agent.agent_territorial_access_rights.first.territory.departement_number, service_id: agent.service_id)
+            = render "prendre_rdv_button", text: "Prendre un RDV de suivi", link: prendre_rdv_path(referent_ids: [agent.id], departement: agent.agent_territorial_access_rights.first.territory.departement_number, service_id: agent.services.first.id)
     - else
       | Vous n'avez pas de référents
 

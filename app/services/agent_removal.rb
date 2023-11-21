@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class AgentRemoval
   def initialize(agent, organisation)
     @agent = agent

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class DeleteLibelleMotif < ActiveRecord::Migration[6.0]
   def change
     drop_table :motif_libelles do

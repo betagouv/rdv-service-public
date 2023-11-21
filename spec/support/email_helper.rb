@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 def email_sent_to(recipient)
   emails_sent_to(recipient).first
 end

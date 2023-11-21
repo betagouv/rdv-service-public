@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe FullNameConcern do
   let(:marie) { build :user, first_name: "Marie", last_name: "Curie", birth_name: "Skłodowska" }
   let(:pierre) { build :user, first_name: "Pierre", last_name: "Curie", birth_name: "" }
@@ -18,6 +16,12 @@ describe FullNameConcern do
 
       it { is_expected.to eq "Pierre CURIE" }
     end
+
+    context "when birth name is the same" do
+      let(:person) { build :user, first_name: "Pierre", last_name: "Curie", birth_name: "curie" }
+
+      it { is_expected.to eq "Pierre CURIE" }
+    end
   end
 
   describe "reverse_full_name" do
@@ -31,6 +35,12 @@ describe FullNameConcern do
 
     context "without birth_name" do
       let(:person) { pierre }
+
+      it { is_expected.to eq "CURIE Pierre" }
+    end
+
+    context "when birth name is the same" do
+      let(:person) { build :user, first_name: "Pierre", last_name: "Curie", birth_name: "curie" }
 
       it { is_expected.to eq "CURIE Pierre" }
     end

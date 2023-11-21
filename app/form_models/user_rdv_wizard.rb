@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module UserRdvWizard
   # cf https://medium.com/@nicolasblanco/developing-a-wizard-or-multi-steps-forms-in-rails-d2f3b7c692ce
 
@@ -18,7 +16,7 @@ module UserRdvWizard
       @attributes = attributes.to_h.symbolize_keys
       rdv_defaults = { user_ids: [user&.id] }
       if attributes[:rdv_collectif_id].present?
-        @rdv = Rdv.collectif.bookable_by_everyone_or_bookable_by_invited_users.find(attributes[:rdv_collectif_id])
+        @rdv = Rdv.collectif.bookable_by_everyone_or_agents_and_prescripteurs_or_invited_users.find(attributes[:rdv_collectif_id])
       else
         @rdv = Rdv.new(
           rdv_defaults
@@ -63,7 +61,7 @@ module UserRdvWizard
       }.merge(
         @attributes.slice(
           :where, :departement, :lieu_id, :latitude, :longitude, :city_code, :street_ban_id,
-          :address, :organisation_ids, :motif_search_terms, :public_link_organisation_id, :user_selected_organisation_id,
+          :address, :organisation_ids, :public_link_organisation_id, :user_selected_organisation_id,
           :referent_ids, :external_organisation_ids, :duration
         )
       )

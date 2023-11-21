@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module DeprecatedPathHelper
   def agent_path?
     request.path =~ /(agents|admin)/ || (request.path == "/" && current_agent.present?)

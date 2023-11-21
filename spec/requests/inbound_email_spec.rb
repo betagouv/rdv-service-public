@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe "Handling an email reply from a user" do
   subject(:receive_sendinblue_callback) do
     post "/inbound_emails/sendinblue?password=#{password_param}",

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe TextSearch, type: :concern do
   # Tester les methods du concerns sans un objet des modèles...
   # Peut-être difficile sans activerecord ?

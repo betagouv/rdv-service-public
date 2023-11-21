@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe Admin::RdvsCollectifsController, type: :controller do
   let(:motif) { create(:motif, :collectif) }
   let(:organisation) { motif.organisation }

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class AgentAgenda
   attr_reader :organisation, :agent
 

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # Cette classe sert principalement à gérer l'état transitoire pendant qu'on expérimente avec les prescripteurs
 # dans le Var (83). On espère pouvoir la supprimer une fois que la réservation par prescripteurs sera ouverte
 # plus largement (voir la PR https://github.com/betagouv/rdv-solidarites.fr/pull/3391)
@@ -26,7 +24,8 @@ class Admin::PrescripteurExperimentMotifPresenter < SimpleDelegator
   end
 
   def show_bookable_by_prescripteur?
-    organisation.territory.departement_number.in?(%w[12 80 83]) || Rails.env.development?
+    organisation.territory.departement_number.in?(%w[12 80 83]) || Rails.env.development? ||
+      (organisation.territory.departement_number == "08" && ENV["RDV_SOLIDARITES_INSTANCE_NAME"] == "DEMO")
   end
 
   def min_public_booking_delay_hint

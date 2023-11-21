@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Motif < ApplicationRecord
   # Mixins
   has_paper_trail
@@ -15,15 +13,15 @@ class Motif < ApplicationRecord
   auto_strip_attributes :name, :color
 
   # TODO: make it an enum
-  VISIBLE_AND_NOTIFIED = "visible_and_notified"
-  VISIBLE_AND_NOT_NOTIFIED = "visible_and_not_notified"
-  INVISIBLE = "invisible"
+  VISIBLE_AND_NOTIFIED = "visible_and_notified".freeze
+  VISIBLE_AND_NOT_NOTIFIED = "visible_and_not_notified".freeze
+  INVISIBLE = "invisible".freeze
   VISIBILITY_TYPES = [VISIBLE_AND_NOTIFIED, VISIBLE_AND_NOT_NOTIFIED, INVISIBLE].freeze
 
   # TODO: make it an enum
-  SECTORISATION_LEVEL_AGENT = "agent"
-  SECTORISATION_LEVEL_ORGANISATION = "organisation"
-  SECTORISATION_LEVEL_DEPARTEMENT = "departement"
+  SECTORISATION_LEVEL_AGENT = "agent".freeze
+  SECTORISATION_LEVEL_ORGANISATION = "organisation".freeze
+  SECTORISATION_LEVEL_DEPARTEMENT = "departement".freeze
   SECTORISATION_TYPES = [SECTORISATION_LEVEL_AGENT, SECTORISATION_LEVEL_ORGANISATION, SECTORISATION_LEVEL_DEPARTEMENT].freeze
 
   enum location_type: { public_office: "public_office", phone: "phone", home: "home" }
@@ -42,9 +40,14 @@ class Motif < ApplicationRecord
   has_many :motifs_plage_ouvertures, dependent: :delete_all
 
   # Through relations
-  has_many :lieux, through: :plage_ouvertures
   has_many :webhook_endpoints, through: :organisation
   has_many :plage_ouvertures, -> { distinct }, through: :motifs_plage_ouvertures
+  has_many :lieux_through_po, through: :plage_ouvertures, source: :lieu
+  has_many :lieux_through_rdvs, through: :rdvs, source: :lieu
+
+  def lieux
+    collectif? ? lieux_through_rdvs : lieux_through_po
+  end
 
   # Delegates
   delegate :service_social?, to: :service
@@ -71,6 +74,7 @@ class Motif < ApplicationRecord
   }
   scope :bookable_by_everyone, -> { where(bookable_by: %i[everyone]) }
   scope :bookable_by_everyone_or_bookable_by_invited_users, -> { where(bookable_by: %i[everyone agents_and_prescripteurs_and_invited_users]) }
+  scope :bookable_by_everyone_or_agents_and_prescripteurs_or_invited_users, -> { where(bookable_by: %i[everyone agents_and_prescripteurs agents_and_prescripteurs_and_invited_users]) }
   scope :not_bookable_by_everyone_or_not_bookable_by_invited_users, -> { where.not(bookable_by: %i[everyone agents_and_prescripteurs_and_invited_users]) }
   scope :by_phone, -> { Motif.phone } # default scope created by enum
   scope :for_secretariat, -> { where(for_secretariat: true) }
@@ -86,10 +90,10 @@ class Motif < ApplicationRecord
   scope :available_motifs_for_organisation_and_agent, lambda { |organisation, agent|
     available_motifs = if agent.admin_in_organisation?(organisation)
                          all
-                       elsif agent.service.secretariat?
+                       elsif agent.secretaire?
                          for_secretariat
                        else
-                         where(service: agent.service)
+                         where(service: agent.services)
                        end
     available_motifs.where(organisation_id: organisation.id).active.ordered_by_name
   }
@@ -114,6 +118,7 @@ class Motif < ApplicationRecord
     joins(:motif_category)
       .where(motif_category: { short_name: motif_category_short_name })
   }
+  scope :requires_ants_predemande_number, -> { joins(:motif_category).merge(MotifCategory.requires_ants_predemande_number) }
 
   ## -
 
@@ -122,7 +127,7 @@ class Motif < ApplicationRecord
   end
 
   def soft_delete
-    rdvs.unscope(where: :deleted_at).any? ? update_attribute(:deleted_at, Time.zone.now) : destroy
+    rdvs.any? ? update_attribute(:deleted_at, Time.zone.now) : destroy
   end
 
   def authorized_agents
@@ -131,16 +136,12 @@ class Motif < ApplicationRecord
       .where(organisations: { id: organisation.id })
       .complete
       .active
-      .where(service: authorized_services)
+      .in_any_of_these_services(authorized_services)
       .order_by_last_name
   end
 
   def authorized_services
-    for_secretariat ? [service, Service.secretariat.first] : [service]
-  end
-
-  def secretariat?
-    for_secretariat?
+    for_secretariat ? [service, Service.secretariat] : [service]
   end
 
   def visible_and_notified?
@@ -222,6 +223,10 @@ class Motif < ApplicationRecord
 
   def bookable_outside_of_organisation?
     bookable_by != "agents"
+  end
+
+  def requires_ants_predemande_number?
+    motif_category&.requires_ants_predemande_number?
   end
 
   private

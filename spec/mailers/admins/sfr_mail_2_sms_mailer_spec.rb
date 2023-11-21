@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe Admins::SfrMail2SmsMailer, type: :mailer do
   describe "#send_sms" do
     it "sends the email correctly" do

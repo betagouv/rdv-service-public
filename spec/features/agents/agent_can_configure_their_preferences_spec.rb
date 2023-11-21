@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe "Agent can configure their preferences" do
   let!(:agent) do
     create(

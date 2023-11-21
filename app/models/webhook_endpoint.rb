@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class WebhookEndpoint < ApplicationRecord
   # Mixins
   has_paper_trail
@@ -15,12 +13,14 @@ class WebhookEndpoint < ApplicationRecord
   ].freeze
 
   def trigger_for_all_subscribed_resources
-    subscriptions.each do |subscription|
-      if subscription == "organisation"
-        trigger_for(organisation)
-      else
-        records = organisation.send(subscription.pluralize)
-        records.find_each { |record| trigger_for(record) }
+    transaction do
+      subscriptions.each do |subscription|
+        if subscription == "organisation"
+          trigger_for(organisation)
+        else
+          records = organisation.send(subscription.pluralize)
+          records.find_each { |record| trigger_for(record) }
+        end
       end
     end
   end

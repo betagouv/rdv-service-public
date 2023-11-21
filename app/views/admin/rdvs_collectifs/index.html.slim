@@ -31,7 +31,7 @@
 .row.justify-content-center.pb-3
   .col-md-8
     - if @rdvs.any?
-      = render(partial: "admin/rdvs_collectifs/rdv", collection: @rdvs.includes(:organisation, :users, :lieu, :motif, agents: :service))
+      = render(partial: "admin/rdvs_collectifs/rdv", collection: @rdvs.includes(:organisation, :users, :lieu, :motif, agents: :services))
       .d-flex.justify-content-center= paginate @rdvs, theme: "twitter-bootstrap-4"
     - else
       .card

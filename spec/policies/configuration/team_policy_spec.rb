@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe Configuration::TeamPolicy, type: :policy do
   %i[new? destroy? edit? update?].each do |action|
     describe "##{action}" do

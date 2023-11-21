@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe Notifiers::RdvUpdated, type: :service do
   subject { described_class.perform_with(rdv, agent1) }
 
@@ -26,11 +24,11 @@ describe Notifiers::RdvUpdated, type: :service do
       expect_no_notifications_for(rdv, agent1, :rdv_updated)
     end
 
-    it "rdv_users_tokens_by_user_id attribute outputs the tokens" do
+    it "participations_tokens_by_user_id attribute outputs the tokens" do
       allow(Devise.token_generator).to receive(:generate).and_return("t0k3n")
       notifier = described_class.new(rdv, agent1)
       notifier.perform
-      expect(notifier.rdv_users_tokens_by_user_id).to eq({ user1.id => "t0k3n", user2.id => "t0k3n" })
+      expect(notifier.participations_tokens_by_user_id).to eq({ user1.id => "t0k3n", user2.id => "t0k3n" })
     end
   end
 
@@ -47,7 +45,7 @@ describe Notifiers::RdvUpdated, type: :service do
     end
 
     it "doesnt send email if user participation is excused" do
-      rdv.rdvs_users.where(user: user1).update(status: "excused")
+      rdv.participations.where(user: user1).update(status: "excused")
       subject
 
       expect_notifications_sent_for(rdv, user2, :rdv_updated)
@@ -56,7 +54,7 @@ describe Notifiers::RdvUpdated, type: :service do
     end
 
     it "doesnt send email if user participation is revoked" do
-      rdv.rdvs_users.where(user: user1).update(status: "revoked")
+      rdv.participations.where(user: user1).update(status: "revoked")
       subject
 
       expect_notifications_sent_for(rdv, user2, :rdv_updated)

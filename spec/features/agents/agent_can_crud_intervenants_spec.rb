@@ -1,8 +1,6 @@
-# frozen_string_literal: true
-
 describe "Agent can CRUD intervenants" do
   let(:organisation) { create(:organisation) }
-  let!(:service) { create(:service, name: "CDAD") }
+  let!(:service) { create(:service, name: "CDAD", territories: [organisation.territory]) }
   let!(:agent_admin) { create(:agent, service: service, admin_role_in_organisations: [organisation], email: "admin@example.com", first_name: "Francis", last_name: "Admin") }
   let!(:agent_intervenant1) { create(:agent, :intervenant, last_name: "intervenant1", organisations: [organisation]) }
   let!(:agent_intervenant2) { create(:agent, :intervenant, last_name: "intervenant2", organisations: [organisation]) }
@@ -16,11 +14,17 @@ describe "Agent can CRUD intervenants" do
     # Create an intervenant
     click_link "Ajouter un agent", match: :first
     expect_page_title("Ajouter un agent")
+    select(service.name, from: "Services")
     find("label", text: "Intervenant").click
     fill_in "Nom", with: "Avocat 1"
     click_button("Ajouter l'intervenant")
     expect_page_title("Agents de Organisation n°1")
     expect(page).to have_content("AVOCAT 1")
+    expect(Agent.last).to have_attributes(
+      plage_ouverture_notification_level: "none",
+      rdv_notifications_level: "none",
+      absence_notification_level: "none"
+    )
 
     # Change their last name
     click_link "INTERVENANT1"
@@ -50,7 +54,10 @@ describe "Agent can CRUD intervenants" do
 
     expect(Agent.last).to have_attributes(
       email: "ancien_intervenant1@invitation.com",
-      uid: "ancien_intervenant1@invitation.com"
+      uid: "ancien_intervenant1@invitation.com",
+      plage_ouverture_notification_level: "all",
+      rdv_notifications_level: "others",
+      absence_notification_level: "all"
     )
 
     expect_page_title("Invitations en cours pour Organisation n°1")
@@ -86,7 +93,10 @@ describe "Agent can CRUD intervenants" do
       invitation_created_at: nil,
       invitation_sent_at: nil,
       invited_by_id: nil,
-      invited_by_type: nil
+      invited_by_type: nil,
+      plage_ouverture_notification_level: "none",
+      rdv_notifications_level: "none",
+      absence_notification_level: "none"
     )
 
     # On vérifie que nos factories correspondent à la réalité

@@ -1,7 +1,11 @@
-# frozen_string_literal: true
-
 class CronJob < ApplicationJob
   queue_as :cron
+
+  private
+
+  def hard_timeout
+    1.hour
+  end
 
   class FileAttenteJob < CronJob
     def perform
@@ -39,10 +43,14 @@ class CronJob < ApplicationJob
   class DestroyOldRdvsAndInactiveAccountsJob < CronJob
     def perform
       two_years_ago = 2.years.ago
-      Rdv.unscoped.where(starts_at: ..two_years_ago).each do |rdv|
+
+      Receipt.where(created_at: ..two_years_ago).destroy_all
+
+      Rdv.where(starts_at: ..two_years_ago).each do |rdv|
         rdv.skip_webhooks = true
         rdv.destroy
       end
+
       # La suppression d'utilisateurs inactifs a besoin que les vieux rdv soient supprimés
       # On utilise la même date limite pour éviter une race condition liée au temps d'exécution du premier job
       DestroyInactiveUsers.perform_later(two_years_ago)
@@ -53,7 +61,7 @@ class CronJob < ApplicationJob
 
   class DestroyInactiveUsers < CronJob
     def perform(date_limit)
-      old_users_without_rdvs = User.where("users.created_at < ?", date_limit).left_outer_joins(:rdvs_users).where(rdvs_users: { id: nil })
+      old_users_without_rdvs = User.where("users.created_at < ?", date_limit).left_outer_joins(:participations).where(participations: { id: nil })
 
       old_users_without_rdvs_or_relatives = old_users_without_rdvs.joins("left outer join users as relatives on users.id = relatives.responsible_id").where(relatives: { id: nil })
 

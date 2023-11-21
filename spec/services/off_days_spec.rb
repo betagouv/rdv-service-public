@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe OffDays, type: :service do
   it "is up to date" do
     # Il faut ajouter de nouveaux jours fériés si cette spec échoue

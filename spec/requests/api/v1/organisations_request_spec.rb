@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require "swagger_helper"
 
 describe "Organisations API", swagger_doc: "v1/api.json" do

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Admin::Territories::MotifCategoriesController < Admin::Territories::BaseController
   def update
     authorize current_territory

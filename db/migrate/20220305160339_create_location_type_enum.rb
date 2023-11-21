@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class CreateLocationTypeEnum < ActiveRecord::Migration[6.1]
   def change
     remove_index :motifs, %i[name organisation_id location_type service_id],

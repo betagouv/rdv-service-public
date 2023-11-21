@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module ConfigurationHelper
   def territory_navigation(title = nil, previous_links = [])
     tag.nav class: "border-bottom configuration-title border-bottom pb-2 configuration-title mb-2" do

@@ -1,6 +1,4 @@
-# frozen_string_literal: true
-
-json.cache! [@plage_ouverture_occurrences, :all_occurrences_for, date_range_params], expires_in: 8.hours do
+json.cache! [@plage_ouverture_occurrences, :all_occurrences_for, date_range_params, @organisation.id], expires_in: 8.hours do
   json.array! @plage_ouverture_occurrences do |plage_ouverture, occurrence|
     json.title plage_ouverture.title
     json.start occurrence.starts_at.as_json

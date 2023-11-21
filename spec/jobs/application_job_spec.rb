@@ -1,5 +1,3 @@
-# frozen_string_literal: false
-
 describe ApplicationJob, type: :job do
   describe "error logging" do
     let(:job_class) do
@@ -25,20 +23,16 @@ describe ApplicationJob, type: :job do
     end
 
     let(:exports_timeout_job_class) do
-      stub_const "ExportsTimeoutJob", Class.new(described_class)
+      stub_const "ExportsTimeoutJob", Class.new(ExportJob)
       ExportsTimeoutJob.class_eval do
-        queue_as :exports
-
         def perform; end
       end
       ExportsTimeoutJob
     end
 
     let(:cron_timeout_job_class) do
-      stub_const "CronTimeoutJob", Class.new(described_class)
+      stub_const "CronTimeoutJob", Class.new(CronJob)
       CronTimeoutJob.class_eval do
-        queue_as :cron
-
         def perform; end
       end
       CronTimeoutJob
@@ -73,7 +67,7 @@ describe ApplicationJob, type: :job do
     end
 
     it "reports exports job timeout to Sentry for exports queue" do
-      allow(Timeout).to receive(:timeout).with(1.hour).and_raise(Timeout::Error)
+      allow(Timeout).to receive(:timeout).with(5.minutes).and_raise(Timeout::Error)
 
       exports_timeout_job_class.perform_later
       enqueued_job_id = enqueued_jobs.last["job_id"]

@@ -6,7 +6,7 @@ fr:
       bookable_by_invited_users: "En ligne sur invitation"
       phone: "Par tél."
       home: "À domicile"
-      secretariat: "Secrétariat"
+      for_secretariat: "Secrétariat"
       follow_up: "Suivi"
       sectorisation_level_agent: "Sectorisé à l'agent"
       sectorisation_level_organisation: "Sectorisé à l'organisation"

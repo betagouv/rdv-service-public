@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Organisation < ApplicationRecord
   # Mixins
   has_paper_trail
@@ -18,7 +16,7 @@ class Organisation < ApplicationRecord
   belongs_to :territory
   has_many :lieux, dependent: :destroy
   has_many :motifs, dependent: :destroy
-  has_many :rdvs, dependent: :destroy
+  has_many :rdvs, dependent: :restrict_with_error
   has_many :webhook_endpoints, dependent: :destroy
   has_many :sector_attributions, dependent: :destroy
   has_many :plage_ouvertures, dependent: :destroy
@@ -32,7 +30,7 @@ class Organisation < ApplicationRecord
   has_many :users, through: :user_profiles, dependent: :destroy
   has_many :agents, through: :agent_roles, dependent: :destroy
   has_many :referent_assignations, through: :users
-  has_many :receipts, through: :rdvs
+  has_many :receipts, dependent: :destroy
 
   accepts_nested_attributes_for :agent_roles
   accepts_nested_attributes_for :territory

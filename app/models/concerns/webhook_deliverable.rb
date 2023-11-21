@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # Hooks into :after_commit (:create and :update) and :around_destroy
 # to create jobs for webhooks.
 # The receiver must have a corresponding `<class>Blueprint` class.

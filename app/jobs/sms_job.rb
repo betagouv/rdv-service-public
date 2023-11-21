@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class SmsJob < ApplicationJob
   queue_as :sms
 

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe Motif, type: :model do
   let(:secretariat) { create(:service, :secretariat) }
   let(:motif) { create(:motif, organisation: organisation) }
@@ -46,18 +44,6 @@ describe Motif, type: :model do
 
       expect(described_class.all).to eq [motif_with_rdv]
       expect(motif_with_rdv.reload.deleted_at).to eq(now)
-    end
-
-    context "when the motif only has a soft deleted rdv" do
-      before do
-        rdv = create(:rdv, motif: motif)
-        rdv.soft_delete
-      end
-
-      it "soft deletes the motif" do
-        motif.soft_delete
-        expect(motif.deleted_at).not_to be_nil
-      end
     end
   end
 
@@ -125,15 +111,15 @@ describe Motif, type: :model do
     end
   end
 
-  describe "secretariat?" do
+  describe "for_secretariat?" do
     it "return true if motif for_secretariat" do
       motif = build(:motif, for_secretariat: true, organisation: organisation)
-      expect(motif.secretariat?).to be true
+      expect(motif.for_secretariat?).to be true
     end
 
     it "return false if motif for_secretariat" do
       motif = build(:motif, for_secretariat: false, organisation: organisation)
-      expect(motif.secretariat?).to be false
+      expect(motif.for_secretariat?).to be false
     end
   end
 

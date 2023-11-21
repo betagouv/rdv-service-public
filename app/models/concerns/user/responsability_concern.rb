@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module User::ResponsabilityConcern
   extend ActiveSupport::Concern
 
@@ -7,6 +5,7 @@ module User::ResponsabilityConcern
     before_save :set_organisation_ids_from_responsible, if: :responsible_id_changed?
     accepts_nested_attributes_for :responsible
     validate :cannot_be_responsible_of_self
+    validate :cannot_be_responsible_for_my_responsible
   end
 
   delegate(
@@ -60,5 +59,11 @@ module User::ResponsabilityConcern
 
   def cannot_be_responsible_of_self
     errors.add(:responsible_id, "ne peut pas être l'usager lui même") if responsible_id.present? && responsible_id == id
+  end
+
+  def cannot_be_responsible_for_my_responsible
+    if responsible&.responsible == self
+      errors.add(:base, "L'usager⋅e ne peut être responsable de son propre responsable")
+    end
   end
 end

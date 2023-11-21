@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe Admin::Agents::AbsencesController, type: :controller do
   describe "GET index" do
     context "with a signed in agent" do
@@ -21,7 +19,7 @@ describe Admin::Agents::AbsencesController, type: :controller do
       end
 
       it "call Admin::Occurrence to assigns `absence_occurrences`" do
-        given_agent = create(:agent, basic_role_in_organisations: [organisation], service: agent.service)
+        given_agent = create(:agent, basic_role_in_organisations: [organisation], service: agent.services.first)
 
         first_day = Date.new(2019, 8, 15)
         create(:absence, agent: agent, first_day: first_day)

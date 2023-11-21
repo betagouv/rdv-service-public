@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe SlotBuilder::BusyTime, type: :service do
   let(:monday) { Time.zone.parse("20211025 10:00") }
   let(:range) { Time.zone.parse("2021-10-26 8:00")..Time.zone.parse("2021-10-29 12:00") }

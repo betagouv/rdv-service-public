@@ -7,6 +7,8 @@ fr:
         role: Rôle
         rdvs: Rendez-vous
         service: Service
+        services: Services
+        territories: Admin de Territoires
         rdv_notifications_level: Notifications de RDV
         display_saturdays: Affichage des samedis sur le calendrier
         display_cancelled_rdv: Affichage des rendez-vous annulés
@@ -47,6 +49,8 @@ fr:
             password_confirmation:
               format: "%{message}"
               confirmation: "Le nouveau mot de passe et la confirmation ne concordent pas"
+            service_ids:
+              format: "%{message}"
         agent/roles/agent:
           attributes:
             password:

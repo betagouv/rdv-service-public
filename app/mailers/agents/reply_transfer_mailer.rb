@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Agents::ReplyTransferMailer < ApplicationMailer
   include DateHelper
   include ActionView::Helpers::TextHelper

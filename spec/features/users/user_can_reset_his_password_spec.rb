@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe "User resets his password spec" do
   let!(:user) { create(:user) }
 

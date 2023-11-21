@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe "Agent can create a Rdv with wizard" do
   include UsersHelper
 
@@ -117,6 +115,28 @@ describe "Agent can create a Rdv with wizard" do
       expect(page).to have_css("*", text: "14:15", visible: :all)
     end
 
+    describe "with a user from outside the organisation" do
+      before { create(:agent_territorial_access_right, agent: agent, territory: territory) }
+
+      let(:other_organisation) { create(:organisation, territory: territory) }
+
+      let!(:user_from_other_organisation) { create(:user, organisations: [other_organisation]) }
+
+      it "creates the rdv and adds the user to the organisation", js: true do
+        step1
+
+        select_user(user_from_other_organisation)
+
+        click_button("Continuer")
+
+        step3(:enabled)
+        step4
+
+        expect(user_from_other_organisation.rdvs.count).to eq(1)
+        expect(user_from_other_organisation.reload.organisations).to match_array([organisation, other_organisation])
+      end
+    end
+
     describe "sending webhook upon creation" do
       let!(:webhook_endpoint) { create(:webhook_endpoint, organisation: organisation, target_url: "https://example.com") }
 
@@ -170,7 +190,7 @@ describe "Agent can create a Rdv with wizard" do
       expect(rdv.duration_in_min).to eq(35)
       expect(rdv.starts_at).to eq(Time.zone.local(2019, 10, 11, 14, 15))
       expect(rdv.created_by_agent?).to be(true)
-      expect(rdv.rdvs_users.first.created_by_agent?).to be(true)
+      expect(rdv.participations.first.created_by_agent?).to be(true)
       expect(rdv.context).to eq("RDV très spécial")
 
       expect(page).to have_current_path(admin_organisation_agent_agenda_path(organisation, agent, date: rdv.starts_at.to_date, selected_event_id: rdv.id))

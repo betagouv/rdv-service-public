@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe Rdv, type: :model do
   describe "#starts_at_is_plausible" do
     let(:now) { Time.zone.parse("2021-05-03 14h00") }
@@ -227,14 +225,6 @@ describe Rdv, type: :model do
     end
   end
 
-  describe "#destroy" do
-    let!(:rdv) { create(:rdv) }
-
-    it "works" do
-      expect { rdv.destroy }.to change(described_class, :count).by(-1)
-    end
-  end
-
   describe "#temporal_status" do
     it "return status when not unknown" do
       rdv = build(:rdv, status: "seen")
@@ -440,8 +430,8 @@ describe Rdv, type: :model do
     it "returns rdv for motif when given" do
       organisation = create(:organisation)
       admin = create(:agent, admin_role_in_organisations: [organisation])
-      motif = create(:motif, organisation: organisation, service: admin.service)
-      autre_motif = create(:motif, organisation: organisation, service: admin.service)
+      motif = create(:motif, organisation: organisation, service: admin.services.first)
+      autre_motif = create(:motif, organisation: organisation, service: admin.services.first)
       rdv = create(:rdv, motif: motif, organisation: organisation, agents: [admin])
       create(:rdv, motif: autre_motif, organisation: organisation, agents: [admin])
 
@@ -672,45 +662,17 @@ describe Rdv, type: :model do
     end
   end
 
-  describe "#soft_delete" do
-    it "set deleted_at with current time" do
-      now = Time.zone.parse("2022-08-30 11:45:00")
-      rdv = create(:rdv)
-      travel_to(now)
-      expect do
-        rdv.soft_delete
-      end.to change(rdv, :deleted_at).from(nil).to(now)
-    end
-
-    it "hide soft_deleted rdv" do
-      rdv = create(:rdv)
-      rdv.soft_delete
-      expect(described_class.all).to be_empty
-    end
-
-    it "hide soft_deleted rdv of one user" do
-      rdv = create(:rdv)
-      user = rdv.users.first
-      rdv.soft_delete
-      expect(user.rdvs).to be_empty
-    end
-
-    it "allows finding soft_deleted rdv using `unscoped`" do
-      rdv = create(:rdv)
-      rdv.soft_delete
-      expect(described_class.unscoped.all).to eq([rdv])
-    end
-
+  describe "#destroy" do
     it "dont call update webhook" do
       rdv = create(:rdv)
       expect(rdv).not_to receive(:generate_payload_and_send_webhook)
-      expect(rdv.soft_delete).to eq(true)
+      rdv.destroy
     end
 
     it "calls destroy webhook" do
       rdv = create(:rdv)
       expect(rdv).to receive(:generate_payload_and_send_webhook_for_destroy)
-      rdv.soft_delete
+      rdv.destroy
     end
   end
 
@@ -735,7 +697,7 @@ describe Rdv, type: :model do
     end
   end
 
-  describe "#update_rdv_status_from_participation" do
+  describe "#update_rdv_status_from_participation for collective rdv" do
     let(:agent) { create :agent }
     let!(:user1) { create(:user) }
     let!(:user2) { create(:user) }
@@ -744,10 +706,10 @@ describe Rdv, type: :model do
     let(:rdv) { create :rdv, :collectif, starts_at: Time.zone.tomorrow, agents: [agent], users: [user1, user2, user3, user4] }
 
     it "updated as seen if one participation is seen" do
-      rdv.rdvs_users.first.update(status: "seen")
-      rdv.rdvs_users.second.update(status: "noshow")
-      rdv.rdvs_users.third.update(status: "excused")
-      rdv.rdvs_users.last.update(status: "noshow")
+      rdv.participations.first.update(status: "seen")
+      rdv.participations.second.update(status: "noshow")
+      rdv.participations.third.update(status: "excused")
+      rdv.participations.last.update(status: "noshow")
       rdv.update_rdv_status_from_participation
       expect(rdv.status).to eq("seen")
     end
@@ -755,28 +717,64 @@ describe Rdv, type: :model do
     it "updated as revoked if none seen or unknown participation and rdv is in the past" do
       rdv.starts_at = Time.zone.yesterday
       rdv.save
-      rdv.rdvs_users.first.update(status: "noshow")
-      rdv.rdvs_users.second.update(status: "noshow")
-      rdv.rdvs_users.third.update(status: "excused")
-      rdv.rdvs_users.last.update(status: "excused")
+      rdv.participations.first.update(status: "noshow")
+      rdv.participations.second.update(status: "noshow")
+      rdv.participations.third.update(status: "excused")
+      rdv.participations.last.update(status: "excused")
       rdv.update_rdv_status_from_participation
       expect(rdv.status).to eq("revoked")
     end
 
     it "stay unknown if none seen or unknown participation and rdv is in the future" do
-      rdv.rdvs_users.first.update(status: "noshow")
-      rdv.rdvs_users.second.update(status: "noshow")
-      rdv.rdvs_users.third.update(status: "excused")
-      rdv.rdvs_users.last.update(status: "excused")
+      rdv.participations.first.update(status: "noshow")
+      rdv.participations.second.update(status: "noshow")
+      rdv.participations.third.update(status: "excused")
+      rdv.participations.last.update(status: "excused")
       rdv.update_rdv_status_from_participation
       expect(rdv.status).to eq("unknown")
     end
 
     it "stay unknown if one participation is unknown" do
-      rdv.rdvs_users.first.update(status: "noshow")
-      rdv.rdvs_users.second.update(status: "excused")
-      rdv.rdvs_users.third.update(status: "excused")
-      rdv.rdvs_users.last.update(status: "unknown")
+      rdv.participations.first.update(status: "noshow")
+      rdv.participations.second.update(status: "excused")
+      rdv.participations.third.update(status: "excused")
+      rdv.participations.last.update(status: "unknown")
+      rdv.update_rdv_status_from_participation
+      expect(rdv.status).to eq("unknown")
+    end
+  end
+
+  describe "#update_rdv_status_from_participation for individual rdv (participation can be changed with api)" do
+    let(:agent) { create :agent }
+    let!(:user1) { create(:user) }
+    let(:rdv) { create :rdv, starts_at: Time.zone.tomorrow, agents: [agent], users: [user1] }
+
+    it "updated as seen if one participation is seen" do
+      rdv.participations.first.update(status: "seen")
+      rdv.update_rdv_status_from_participation
+      expect(rdv.status).to eq("seen")
+    end
+
+    it "updated as excused if one participation is excused" do
+      rdv.participations.first.update(status: "excused")
+      rdv.update_rdv_status_from_participation
+      expect(rdv.status).to eq("excused")
+    end
+
+    it "updated as revoked if one participation is revoked" do
+      rdv.participations.first.update(status: "revoked")
+      rdv.update_rdv_status_from_participation
+      expect(rdv.status).to eq("revoked")
+    end
+
+    it "updated as noshow if one participation is noshow" do
+      rdv.participations.first.update(status: "noshow")
+      rdv.update_rdv_status_from_participation
+      expect(rdv.status).to eq("noshow")
+    end
+
+    it "updated as unknown if one participation is unknown" do
+      rdv.participations.first.update(status: "unknown")
       rdv.update_rdv_status_from_participation
       expect(rdv.status).to eq("unknown")
     end

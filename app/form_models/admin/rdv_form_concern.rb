@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module Admin::RdvFormConcern
   extend ActiveSupport::Concern
   include ActionView::Helpers::DateHelper
@@ -43,8 +41,8 @@ module Admin::RdvFormConcern
     suspicious_rdvs = suspicious_rdvs.select do |existing_rdv|
       participants_of_existing_rdv = Set.new(existing_rdv.users + existing_rdv.agents)
       # Not using `rdv.users` because it does a db call, which returns an empty array because `rdv` is not persisted.
-      # Using rdv_users/agents_rdvs is safe because they are built from the nested attributes.
-      participants_of_current_rdv = Set.new(rdv.rdvs_users.map(&:user) + rdv.agents_rdvs.map(&:agent))
+      # Using participations/agents_rdvs is safe because they are built from the nested attributes.
+      participants_of_current_rdv = Set.new(rdv.participations.map(&:user) + rdv.agents_rdvs.map(&:agent))
       participants_of_existing_rdv == participants_of_current_rdv
     end
     errors.add(:base, :duplicate) if suspicious_rdvs.any?
@@ -99,7 +97,7 @@ module Admin::RdvFormConcern
   def warn_rdv_duplicate_suspected
     return if ignore_benign_errors
 
-    rdv.rdvs_users.map(&:user).each do |user|
+    rdv.participations.map(&:user).each do |user|
       suspicious_rdvs = Rdv
         .on_day(rdv.starts_at)
         .with_user(user)

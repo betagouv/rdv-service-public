@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe "agents page", js: true do
   it "login is accessible" do
     path = new_agent_session_path

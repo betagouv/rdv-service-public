@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # Utilisé uniquement au niveau du SuperAdmin, afin de faciliter la création d'accès pour les Mairies
 class MairieCompte
   include ActiveModel::Model
@@ -9,7 +7,7 @@ class MairieCompte
   # Utilisé par Administrate afin de récupérer la liste des objets (ou ressources)
   # Nécessaire parce que la classe n'hérite pas de ActiveRecord::Base
   def self.default_scoped
-    Lieu.joins(:organisation).where(organisations: { verticale: :rdv_mairie })
+    Lieu.joins(:organisation).where(organisations: { territory_id: Territory.mairies&.id })
   end
 
   # Cette méthode est nécessaire pour que Administrate affiche le bouton de création d'une nouvelle resource

@@ -1,10 +1,8 @@
-# frozen_string_literal: true
-
 class Stat
   include ActiveModel::Model
   attr_accessor :agents, :organisations, :users, :rdvs, :receipts
 
-  DEFAULT_FORMAT = "%d/%m/%Y"
+  DEFAULT_FORMAT = "%d/%m/%Y".freeze
 
   delegate :active, to: :users, prefix: true
 
@@ -61,8 +59,8 @@ class Stat
     end
   end
 
-  def rdvs_group_by_rdv_users_status
-    res = RdvsUser
+  def rdvs_group_by_participations_status
+    res = Participation
       .joins(:rdv)
       .where(rdv: rdvs)
       .where("rdvs.starts_at < ?", Time.zone.today)

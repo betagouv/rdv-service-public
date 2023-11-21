@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Configuration::Admin::SectorisationTestFormPolicy
   class Scope
     def initialize(_context, scope)

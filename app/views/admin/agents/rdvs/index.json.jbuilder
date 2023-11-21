@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 json.array! @rdvs do |rdv|
   json.title rdv_title_in_agenda(rdv)
   json.id rdv.id

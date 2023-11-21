@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module AntsApi
   class Appointment
     class ApiRequestError < StandardError; end
@@ -57,8 +55,8 @@ module AntsApi
         Appointment.new(application_id: application_id, **appointment_data.symbolize_keys) if appointment_data
       end
 
-      def first(application_id:)
-        appointment_data = load_appointments(application_id).first
+      def first(application_id:, timeout: nil)
+        appointment_data = load_appointments(application_id, timeout: timeout).first
         Appointment.new(application_id: application_id, **appointment_data.symbolize_keys) if appointment_data
       end
 
@@ -80,12 +78,13 @@ module AntsApi
 
       private
 
-      def load_appointments(application_id)
+      def load_appointments(application_id, timeout: nil)
         response_body = request do
           Typhoeus.get(
             "#{ENV['ANTS_RDV_API_URL']}/status",
             params: { application_ids: application_id },
-            headers: headers
+            headers: headers,
+            timeout: timeout
           )
         end
 

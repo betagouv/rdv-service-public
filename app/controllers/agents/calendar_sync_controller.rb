@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Agents::CalendarSyncController < AgentAuthController
   include Admin::AuthenticatedControllerConcern
 

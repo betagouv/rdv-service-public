@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe UserNotificationsHelper do
   describe "#user_notifiable_by_sms_text" do
     it "allow SMS notifications" do

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe Notifiers::RdvCreated, type: :service do
   subject { described_class.perform_with(rdv, user1) }
 
@@ -45,11 +43,11 @@ describe Notifiers::RdvCreated, type: :service do
       subject
     end
 
-    it "rdv_users_tokens_by_user_id attribute outputs the tokens for matching users" do
+    it "participations_tokens_by_user_id attribute outputs the tokens for matching users" do
       # keep this stubbing test as its important to check matching token and users
       notifier = described_class.new(rdv, user1)
       notifier.perform
-      expect(notifier.rdv_users_tokens_by_user_id).to eq({ user1.id => token1, user2.id => token2 })
+      expect(notifier.participations_tokens_by_user_id).to eq({ user1.id => token1, user2.id => token2 })
     end
   end
 

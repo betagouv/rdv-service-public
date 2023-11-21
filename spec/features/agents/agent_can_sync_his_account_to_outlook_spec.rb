@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe "Agent can sync his account to outlook" do
   let!(:organisation) { create(:organisation) }
   let!(:admin_agent) { create(:agent, admin_role_in_organisations: [organisation]) }

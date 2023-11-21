@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module ApiSpecMacros
   def with_examples
     after do |example|

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class AddInvitedThroughToUsersChangeCreatedThroughToEnumAndAddIndex < ActiveRecord::Migration[6.0]
   def change
     create_enum :user_invited_through, %w[devise_email external]

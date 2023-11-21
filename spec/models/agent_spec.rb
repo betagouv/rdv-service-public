@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe Agent, type: :model do
   describe "#soft_delete" do
     context "with remaining organisations attached" do
@@ -67,20 +65,6 @@ describe Agent, type: :model do
       agent.password = "123"
       agent.validate
       expect(agent.errors.count).to eq(1)
-    end
-  end
-
-  describe "#available_referents_for" do
-    it "returns empty array without agents" do
-      user = build(:user, referent_agents: [])
-      expect(described_class.available_referents_for(user)).to eq([])
-    end
-
-    it "returns agent that not already referents array without agents" do
-      agent = create(:agent)
-      already_referent = create(:agent)
-      user = create(:user, referent_agents: [already_referent])
-      expect(described_class.available_referents_for(user)).to eq([agent])
     end
   end
 

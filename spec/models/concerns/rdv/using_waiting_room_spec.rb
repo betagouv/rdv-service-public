@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe Rdv::UsingWaitingRoom do
   it "Reset all `user_in_waiting_room` keys in redis" do
     list_rdv = create_list(:rdv, 3)

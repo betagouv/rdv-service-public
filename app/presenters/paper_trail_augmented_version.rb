@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class PaperTrailAugmentedVersion
   # PaperTrailAugmentedVersion is a presenter for PaperTrail::Version, that adds support for changes on additional “virtual attributes”.
   # TODO: We probably should customize PaperTrail (see https://github.com/paper-trail-gem/paper_trail#6c-custom-object-changes) instead of this.

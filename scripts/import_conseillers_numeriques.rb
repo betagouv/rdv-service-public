@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # Usage:
 # - télécharger le fichier de tous les cnfs depuis https://coop.conseiller-numerique.gouv.fr/accueil
 # - mettre le fichier export_cnfs.csv dans tmp

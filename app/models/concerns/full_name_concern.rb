@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module FullNameConcern
   extend ActiveSupport::Concern
   # Relies on the attributes of the receiver:
@@ -9,7 +7,7 @@ module FullNameConcern
   def full_name
     names = [first_name,
              last_name&.upcase,
-             ("(#{birth_name})" if defined?(birth_name) && birth_name.present?),]
+             ("(#{birth_name})" if show_birth_name?),]
 
     names.compact.join(" ")
   end
@@ -17,7 +15,7 @@ module FullNameConcern
   # Curie (Skłodowska) Marie
   def reverse_full_name
     names = [last_name&.upcase,
-             ("(#{birth_name})" if defined?(birth_name) && birth_name.present?),
+             ("(#{birth_name})" if show_birth_name?),
              first_name,]
 
     names.compact.join(" ")
@@ -30,5 +28,11 @@ module FullNameConcern
     else
       last_name
     end
+  end
+
+  private
+
+  def show_birth_name?
+    defined?(birth_name) && birth_name.present? && birth_name&.upcase != last_name&.upcase
   end
 end

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require "swagger_helper"
 
 describe "RDV authentified API", swagger_doc: "v1/api.json" do
@@ -54,7 +52,7 @@ describe "RDV authentified API", swagger_doc: "v1/api.json" do
         run_test!
 
         it "returns policy scoped RDVs" do
-          expect(JSON.parse(response.body)["rdvs"].pluck("id")).to contain_exactly(rdv.id)
+          expect(response.parsed_body["rdvs"].pluck("id")).to contain_exactly(rdv.id)
         end
       end
 
@@ -63,7 +61,7 @@ describe "RDV authentified API", swagger_doc: "v1/api.json" do
 
         run_test!
 
-        it { expect(JSON.parse(response.body)["rdvs"]).to eq([]) }
+        it { expect(response.parsed_body["rdvs"]).to eq([]) }
       end
 
       context "with starts_after and starts_before params" do
@@ -76,7 +74,7 @@ describe "RDV authentified API", swagger_doc: "v1/api.json" do
 
           run_test!
 
-          it { expect(JSON.parse(response.body)["rdvs"].pluck("id")).to contain_exactly(rdv2020.id) }
+          it { expect(response.parsed_body["rdvs"].pluck("id")).to contain_exactly(rdv2020.id) }
         end
 
         response 200, "returns policy scoped RDVs filtered with starts_after only", document: false do
@@ -84,7 +82,7 @@ describe "RDV authentified API", swagger_doc: "v1/api.json" do
 
           run_test!
 
-          it { expect(JSON.parse(response.body)["rdvs"].pluck("id")).to contain_exactly(rdv2020.id, rdv2021.id, rdv.id) }
+          it { expect(response.parsed_body["rdvs"].pluck("id")).to contain_exactly(rdv2020.id, rdv2021.id, rdv.id) }
         end
 
         response 200, "returns policy scoped RDVs filtered with starts_before only", document: false do
@@ -92,7 +90,7 @@ describe "RDV authentified API", swagger_doc: "v1/api.json" do
 
           run_test!
 
-          it { expect(JSON.parse(response.body)["rdvs"].pluck("id")).to contain_exactly(rdv2020.id) }
+          it { expect(response.parsed_body["rdvs"].pluck("id")).to contain_exactly(rdv2020.id) }
         end
 
         response 200, "also works with time params", document: false do
@@ -100,7 +98,7 @@ describe "RDV authentified API", swagger_doc: "v1/api.json" do
 
           run_test!
 
-          it { expect(JSON.parse(response.body)["rdvs"].pluck("id")).to contain_exactly(rdv2020.id) }
+          it { expect(response.parsed_body["rdvs"].pluck("id")).to contain_exactly(rdv2020.id) }
         end
 
         response 200, "also works with time params (with another standard)", document: false do
@@ -108,7 +106,7 @@ describe "RDV authentified API", swagger_doc: "v1/api.json" do
 
           run_test!
 
-          it { expect(JSON.parse(response.body)["rdvs"].pluck("id")).to be_empty }
+          it { expect(response.parsed_body["rdvs"].pluck("id")).to be_empty }
         end
       end
 
@@ -121,7 +119,7 @@ describe "RDV authentified API", swagger_doc: "v1/api.json" do
 
         run_test!
 
-        it { expect(JSON.parse(response.body)["rdvs"].pluck("id")).to contain_exactly(rdv.id, rdv3.id) }
+        it { expect(response.parsed_body["rdvs"].pluck("id")).to contain_exactly(rdv.id, rdv3.id) }
       end
 
       it_behaves_like "an endpoint that returns 401 - unauthorized"

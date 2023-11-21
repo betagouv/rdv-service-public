@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe Configuration::AgentTerritorialAccessRightPolicy, type: :policy do
   describe "#update?" do
     it "returns false with agent without admin access to this territory" do

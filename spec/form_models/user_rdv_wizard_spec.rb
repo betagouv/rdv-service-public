@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe UserRdvWizard do
   let!(:organisation) { create(:organisation) }
   let!(:user) { create(:user) }
@@ -109,6 +107,18 @@ describe UserRdvWizard do
           rdv_wizard = UserRdvWizard::Step1.new(user, attributes)
           rdv_wizard.valid?
           expect(rdv_wizard.errors.full_messages.join(", ")).to eq("Aucun usager n’a de numéro de téléphone renseigné alors que le rendez-vous est téléphonique.")
+        end
+      end
+    end
+
+    context "Rdv collectif" do
+      context "bookable by agents and prescripteurs" do
+        let(:motif) { create(:motif, :at_public_office, organisation: organisation, bookable_by: :agents_and_prescripteurs, collectif: true) }
+        let!(:rdv) { create(:rdv, motif: motif, organisation: organisation) }
+        let(:attributes) { { rdv_collectif_id: rdv.id } }
+
+        it "finds the Rdv" do
+          expect(UserRdvWizard::Step1.new(user_for_rdv, attributes).rdv).to eq(rdv)
         end
       end
     end

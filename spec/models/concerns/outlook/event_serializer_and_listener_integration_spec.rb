@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # Ce fichier teste l'intégration de la chaine d'appels depuis les modifications des objets activerecord
 # jusqu'à l'appel http à l'api Outlook
 RSpec.describe Outlook::EventSerializerAndListener do
@@ -24,10 +22,6 @@ RSpec.describe Outlook::EventSerializerAndListener do
   end
   let(:expected_description) do
     <<~HTML
-      Participants:
-      <ul><li>First LAST</li></ul>
-      <br />
-
       Plus d'infos sur <a href="http://www.rdv-solidarites-test.localhost/admin/organisations/#{organisation.id}/rdvs/#{rdv.id}">RDV Solidarités</a>:
       <br />
 
@@ -215,24 +209,6 @@ RSpec.describe Outlook::EventSerializerAndListener do
         expect do
           rdv.update!(cancelled_at: Time.zone.now, status: "revoked")
         end.not_to have_enqueued_job(Outlook::SyncEventJob)
-      end
-    end
-
-    context "is soft_deleted and exists in outlook" do
-      let(:agent) { create(:agent, microsoft_graph_token: nil) }
-      let(:rdv) { create(:rdv, motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30) }
-      let!(:agents_rdv) { create(:agents_rdv, rdv: rdv, agent: agent, outlook_id: "abc") }
-
-      before do
-        stub_request(:delete, "https://graph.microsoft.com/v1.0/me/Events/abc").to_return(status: 204, body: "", headers: {})
-        agent.update!(microsoft_graph_token: :token)
-      end
-
-      it "destroys the Outlook Event" do
-        rdv.reload.update!(deleted_at: Time.zone.now)
-
-        expect(a_request(:delete, "https://graph.microsoft.com/v1.0/me/Events/abc")).to have_been_made.once
-        expect(agents_rdv.reload.outlook_id).to eq(nil)
       end
     end
   end

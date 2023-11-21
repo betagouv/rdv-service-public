@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class AddEnableCaseNumberToTerritory < ActiveRecord::Migration[6.1]
   def change
     add_column :territories, :enable_case_number, :boolean, default: false

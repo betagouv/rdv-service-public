@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Lieu < ApplicationRecord
   # Mixins
   has_paper_trail
@@ -51,7 +49,7 @@ class Lieu < ApplicationRecord
       .pluck(:lieu_id)
     rdv_collectif_lieu_ids = Rdv.collectif_and_available_for_reservation.where(motif_id: motifs.pluck(:id)).distinct.pluck(:lieu_id)
 
-    enabled.where(id: plage_ouverture_lieu_ids + rdv_collectif_lieu_ids)
+    where.not(availability: :disabled).where(id: plage_ouverture_lieu_ids + rdv_collectif_lieu_ids)
   }
 
   scope :ordered_by_name, -> { order(Arel.sql("unaccent(LOWER(name))")) }

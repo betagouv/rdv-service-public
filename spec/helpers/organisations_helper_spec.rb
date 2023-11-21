@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe OrganisationsHelper do
   let(:organisation) { create(:organisation, created_at: 21.days.ago) }
 

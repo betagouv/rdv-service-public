@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe "can search users" do
   context "when user is visible only in organisation" do
     it "can't see user that match search query from other organsiation" do

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module SuperAdmins
   class SessionsController < ApplicationController
     def destroy

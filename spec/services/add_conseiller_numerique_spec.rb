@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe AddConseillerNumerique do
   let!(:territory) { create(:territory, name: "Conseillers Numériques") }
   let(:params) do

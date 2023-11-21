@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Admin::Territories::SectorisationTestsController < Admin::Territories::BaseController
   def search
     @sectorisation_test_form = policy_scope(Admin::SectorisationTestForm.new(current_territory: current_territory, **sectorisation_test_params))

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module Outlook
   class ApiClient
     class ApiError < StandardError; end
@@ -30,8 +28,8 @@ module Outlook
 
     private
 
-    USER_AGENT = "RDVSolidarites"
-    BASE_URL = "https://graph.microsoft.com/v1.0"
+    USER_AGENT = "RDVSolidarites".freeze
+    BASE_URL = "https://graph.microsoft.com/v1.0".freeze
 
     # https://docs.microsoft.com/en-us/graph/use-the-api?view=graph-rest-1.0
     # method (string): The HTTP method to use for the API call.

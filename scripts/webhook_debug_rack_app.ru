@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # rackup scripts/webhook_debug_rack_app.ru
 # ngrok http 9292
 

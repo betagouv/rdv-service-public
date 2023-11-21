@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe AgentRole, type: :model do
   describe "#can_access_others_planning?" do
     subject { agent_role.can_access_others_planning? }

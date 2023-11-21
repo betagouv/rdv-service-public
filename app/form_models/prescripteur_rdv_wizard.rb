@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class PrescripteurRdvWizard < UserRdvWizard::Base
   attr_accessor :prescripteur
 
@@ -36,7 +34,7 @@ class PrescripteurRdvWizard < UserRdvWizard::Base
       lieu: lieu,
       organisation: motif.organisation,
       agents: [creneau.agent],
-      rdvs_users: [participation]
+      participations: [participation]
     )
     rdv.save!
 
@@ -48,7 +46,7 @@ class PrescripteurRdvWizard < UserRdvWizard::Base
   end
 
   def participation
-    @participation ||= RdvsUser.new(rdv: @rdv, user: @user, prescripteur: @prescripteur, created_by: :prescripteur)
+    @participation ||= Participation.new(rdv: @rdv, user: @user, prescripteur: @prescripteur, created_by: :prescripteur)
   end
 
   def find_or_create_user

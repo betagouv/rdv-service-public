@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class SearchController < ApplicationController
   include TokenInvitable
 
@@ -7,7 +5,11 @@ class SearchController < ApplicationController
   after_action :allow_iframe
 
   def search_rdv
-    @context = SearchContext.new(user: current_user, query_params: query_params, through_invitation: invitation?)
+    @context = if invitation?
+                 WebInvitationSearchContext.new(user: current_user, query_params: query_params)
+               else
+                 WebSearchContext.new(user: current_user, query_params: query_params)
+               end
     if current_domain == Domain::RDV_MAIRIE && request.path == "/"
       render "dsfr/rdv_mairie/homepage", layout: "application_dsfr"
     end
@@ -78,7 +80,7 @@ class SearchController < ApplicationController
   def search_params
     params.permit(
       :latitude, :longitude, :address, :city_code, :departement, :street_ban_id,
-      :service_id, :lieu_id, :date, :motif_search_terms, :motif_name_with_location_type, :motif_category_short_name,
+      :service_id, :lieu_id, :date, :motif_name_with_location_type, :motif_category_short_name,
       :motif_id, :public_link_organisation_id, :user_selected_organisation_id, :prescripteur,
       organisation_ids: [], referent_ids: [], external_organisation_ids: []
     )

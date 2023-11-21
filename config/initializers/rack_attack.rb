@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Rack::Attack
   throttle("requests by ip", limit: Rails.configuration.x.rack_attack.limit, period: 60) do |request|
     public_api_controllers = %w[public_link]

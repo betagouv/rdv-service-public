@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require "rails_helper"
 
 RSpec.describe Outlook::SyncEventJob do
@@ -61,22 +59,6 @@ RSpec.describe Outlook::SyncEventJob do
       before do
         agents_rdv.update!(outlook_id: "stubbed_outlook_event_id")
         rdv.update!(status: Rdv::CANCELLED_STATUSES.first)
-        # On set le token ici pour éviter de déclencher les callbacks activerecord au moment de la création des agents_rdvs
-        agent.update!(microsoft_graph_token: "token")
-      end
-
-      it "deletes it and removes the event_id" do
-        expect(client_double).to receive(:delete_event!).with("stubbed_outlook_event_id")
-        described_class.perform_now(agents_rdv.id, agents_rdv.outlook_id, agents_rdv.agent)
-
-        expect(agents_rdv.reload.outlook_id).to be_nil
-      end
-    end
-
-    context "because the rdv is soft-deleted" do
-      before do
-        agents_rdv.update!(outlook_id: "stubbed_outlook_event_id")
-        rdv.soft_delete
         # On set le token ici pour éviter de déclencher les callbacks activerecord au moment de la création des agents_rdvs
         agent.update!(microsoft_graph_token: "token")
       end

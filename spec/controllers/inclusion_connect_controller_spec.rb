@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe InclusionConnectController, type: :controller do
   let(:base_url) { "https://test.inclusion.connect.fr" }
 
@@ -17,7 +15,7 @@ describe InclusionConnectController, type: :controller do
 
       stub_token_request.to_return(status: 200, body: { access_token: "zekfjzeklfjl", expires_in: now + 1.week, scopes: "openid" }.to_json, headers: {})
 
-      stub_request(:get, "#{base_url}/userinfo?schema=openid").with(
+      stub_request(:get, "#{base_url}/userinfo/?schema=openid").with(
         headers: {
           "Expect" => "",
           "Authorization" => "Bearer zekfjzeklfjl",
@@ -95,7 +93,7 @@ describe InclusionConnectController, type: :controller do
 
       stub_token_request.to_return(status: 200, body: { access_token: "zekfjzeklfjl", expires_in: "", scopes: "openid" }.to_json, headers: {})
 
-      stub_request(:get, "#{base_url}/userinfo?schema=openid").with(
+      stub_request(:get, "#{base_url}/userinfo/?schema=openid").with(
         headers: {
           "Expect" => "",
           "Authorization" => "Bearer zekfjzeklfjl",
@@ -128,7 +126,7 @@ describe InclusionConnectController, type: :controller do
   end
 
   def stub_token_request
-    stub_request(:post, "#{base_url}/token").with(
+    stub_request(:post, "#{base_url}/token/").with(
       body: {
         "client_id" => "truc",
         "client_secret" => "truc secret",

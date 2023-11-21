@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class DefaultAgentPolicy < ApplicationPolicy
   alias context pundit_user
   # define current_agent and current_organisation
@@ -52,16 +50,6 @@ class DefaultAgentPolicy < ApplicationPolicy
       @record.organisation_ids.include?(current_organisation.id)
     else
       false
-    end
-  end
-
-  def same_service?
-    if @record.is_a?(Agent) || @record.is_a?(Motif)
-      @record.service_id == current_agent.service_id
-    elsif @record.respond_to?(:agent_id)
-      @record.agent.service_id == current_agent.service_id
-    elsif @record.respond_to?(:agent_ids)
-      Agent.where(id: @record.agent_ids).pluck(:service_id).uniq == [current_agent.service_id]
     end
   end
 

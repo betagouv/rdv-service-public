@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require "administrate/base_dashboard"
 
 class AgentDashboard < Administrate::BaseDashboard
@@ -16,7 +14,9 @@ class AgentDashboard < Administrate::BaseDashboard
     last_name: Field::String,
     organisations: Field::HasMany,
     roles: Field::HasMany,
-    service: Field::BelongsTo,
+    territories: Field::HasMany,
+    territorial_roles: Field::HasMany,
+    services: Field::HasMany,
     invitation_sent_at: Field::DateTime,
     deleted_at: Field::DateTime,
     created_at: Field::DateTime,
@@ -44,7 +44,8 @@ class AgentDashboard < Administrate::BaseDashboard
     last_name
     organisations
     roles
-    service
+    territorial_roles
+    services
     invitation_sent_at
     created_at
     deleted_at
@@ -59,7 +60,8 @@ class AgentDashboard < Administrate::BaseDashboard
     first_name
     last_name
     organisations
-    service
+    services
+    territories
     deleted_at
   ].freeze
 

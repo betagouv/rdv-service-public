@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 territory_cnfs = Territory.create!(
   departement_number: "CN",
   name: "Conseillers Numériques",
@@ -57,7 +55,7 @@ agent_cnfs = Agent.new(
   first_name: "Camille",
   last_name: "Clavier",
   password: "lapinlapin",
-  service_id: service_cnfs.id,
+  services: [service_cnfs],
   invitation_accepted_at: 1.day.ago,
   roles_attributes: [{ organisation: org_cnfs, access_level: AgentRole::ACCESS_LEVEL_ADMIN }],
   agent_territorial_access_rights_attributes: [{

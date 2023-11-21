@@ -1,10 +1,8 @@
-# frozen_string_literal: true
-
 require "openssl"
 
 class CustomDeviseTokenGenerator < Devise::TokenGenerator
   def generate(klass, column)
-    klass.in?([User, RdvsUser]) && column == :invitation_token ? generate_short_token : super
+    klass.in?([User, Participation]) && column == :invitation_token ? generate_short_token : super
   end
 
   def generate_short_token

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class AddCategoryFieldToMotifs < ActiveRecord::Migration[6.1]
   def change
     create_enum :motif_category, %i[rsa_orientation rsa_accompagnement rsa_orientation_on_phone_platform]

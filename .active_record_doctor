@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 ActiveRecordDoctor.configure do
   # Global settings affect all detectors.
   global :ignore_tables, [

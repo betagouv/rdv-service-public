@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe "CRUD zone pour la sectorisation", type: :request do
   include Rails.application.routes.url_helpers
 

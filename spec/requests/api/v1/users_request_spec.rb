@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require "swagger_helper"
 
 describe "Users API", swagger_doc: "v1/api.json" do
@@ -200,58 +198,6 @@ describe "Users API", swagger_doc: "v1/api.json" do
       it_behaves_like "an endpoint that returns 422 - unprocessable_entity", "email is taken", false do
         let!(:existing_user) { create(:user, email: "jean@jacques.fr") }
         let(:email) { existing_user.email }
-      end
-    end
-  end
-
-  path "/api/v1/users/{user_id}/invite" do
-    get "Récupérer l'invitation d'un usager·ère" do
-      with_authentication
-
-      tags "User", "Invitation"
-      produces "application/json"
-      operationId "getUserInvitation"
-      description "Renvoie l'URL d'invitation d'un·e usager·ère"
-
-      parameter name: :user_id, in: :path, type: :integer, description: "ID de l'usager·ère", example: 123
-
-      let(:auth_headers) { api_auth_headers_for_agent(agent) }
-      let(:"access-token") { auth_headers["access-token"].to_s }
-      let(:uid) { auth_headers["uid"].to_s }
-      let(:client) { auth_headers["client"].to_s }
-
-      let!(:user_id) { user.id }
-
-      response 200, "Renvoie l'URL d'invitation de l'usager·ère" do
-        let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [organisation], email: "jean@jacques.fr") }
-
-        run_test!
-
-        schema "$ref" => "#/components/schemas/invitation"
-
-        it { expect(parsed_response_body["invitation_url"]).to start_with("http://www.example.com/users/invitation/accept?invitation_token=") }
-
-        it { expect(user.reload.invitation_due_at).to eq(user.invitation_created_at + User.invite_for) }
-
-        it { expect(user.reload.invited_through).to eq("external") }
-      end
-
-      response 200, "when the user doesn't have an email", document: false do
-        let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", email: nil, organisations: [organisation]) }
-
-        schema "$ref" => "#/components/schemas/invitation"
-
-        run_test!
-
-        it { expect(user.reload.invitation_due_at).to eq(user.invitation_created_at + User.invite_for) }
-      end
-
-      it_behaves_like "an endpoint that returns 401 - unauthorized" do
-        let!(:user) { instance_double(User, id: "123") }
-      end
-
-      it_behaves_like "an endpoint that returns 403 - forbidden", "l'usager·ère est lié·e à une autre organisation" do
-        let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [create(:organisation)]) }
       end
     end
   end

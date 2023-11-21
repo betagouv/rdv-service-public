@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe Outlook::ApiClient do
   let(:organisation) { create(:organisation) }
   let(:motif) { create(:motif, name: "Super Motif", location_type: :phone) }
@@ -85,6 +83,20 @@ describe Outlook::ApiClient do
 
         expect(Rails.logger).to have_received(:error).with("Outlook error while deleting event: The specified object was not found in the store")
         expect(sentry_events).to be_empty
+      end
+    end
+
+    context "when the request times out" do
+      before do
+        stub_request(:post, "https://graph.microsoft.com/v1.0/me/Events").to_timeout
+      end
+
+      stub_sentry_events
+
+      it "raises an exception" do
+        expect do
+          described_class.new(agent).create_event!(expected_body)
+        end.to raise_error(Typhoeus::Errors::TimeoutError)
       end
     end
   end

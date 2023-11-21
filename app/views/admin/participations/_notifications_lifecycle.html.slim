@@ -1,0 +1,24 @@
+- user_to_notify = participation.user.user_to_notify
+- any_notifs = (user_to_notify.notifiable_by_email? || user_to_notify.notifiable_by_sms?)
+- if any_notifs
+  - if !participation.send_lifecycle_notifications && !participation.send_reminder_notification
+    span.mr-1
+      i.fa.fa-times-circle.text-danger.mr-2
+      strong = t("admin.participations.notifications_summary.none")
+    - if current_organisation.rdv_insertion?
+      br
+      span.text-muted.font-14= participation.rdv.motif.human_attribute_value(:visibility_type, context: :hint_rdv_insertion)
+  - elsif !participation.send_lifecycle_notifications
+    span.mr-1
+      i.fa.fa-times-circle.text-danger.mr-2
+      strong = t("admin.participations.notifications_summary.lifecycle_off")
+    - if current_organisation.rdv_insertion?
+      br
+      span.text-muted.font-14= participation.rdv.motif.human_attribute_value(:visibility_type, context: :hint_rdv_insertion)
+  - elsif !participation.send_reminder_notification
+    span.mr-1
+      i.fa.fa-times-circle.text-danger.mr-2
+      strong = t("admin.participations.notifications_summary.reminder_off")
+    - if current_organisation.rdv_insertion?
+      br
+      span.text-muted.font-14= participation.rdv.motif.human_attribute_value(:visibility_type, context: :hint_rdv_insertion)

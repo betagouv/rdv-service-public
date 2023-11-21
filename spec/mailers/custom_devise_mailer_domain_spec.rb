@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe CustomDeviseMailer, "#domain" do
   subject(:sent_email) { described_class.reset_password_instructions(user, "t0k3n") }
 

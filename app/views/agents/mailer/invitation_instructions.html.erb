@@ -3,7 +3,7 @@
 
 <p><%= t("devise.mailer.invitation_instructions.hello", email: @resource.email) %></p>
 
-<p><%= t("devise.mailer.invitation_instructions_for_agents.body", inviter: inviter_name, service: @resource.service.name, domain_name: domain.name) %></p>
+<p><%= t("devise.mailer.invitation_instructions_for_agents.body", inviter: inviter_name, service: @resource.services_short_names, domain_name: domain.name) %></p>
 
 <p><%= link_to t("devise.mailer.invitation_instructions_for_agents.accept"), accept_invitation_url(@resource, invitation_token: @token) %></p>
 
