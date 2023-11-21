@@ -58,7 +58,7 @@ class Agent < ApplicationRecord
   has_many :agent_territorial_access_rights, dependent: :destroy
   has_many :plage_ouvertures, dependent: :destroy
   has_many :absences, dependent: :destroy
-  has_many :agents_rdvs, dependent: :destroy
+  has_many :agents_rdvs, dependent: :restrict_with_error
   has_many :roles, class_name: "AgentRole", dependent: :destroy
   has_many :territorial_roles, class_name: "AgentTerritorialRole", dependent: :destroy
   has_many :sector_attributions, dependent: :destroy
@@ -72,7 +72,7 @@ class Agent < ApplicationRecord
   has_many :teams, through: :agent_teams
   has_many :lieux, through: :plage_ouvertures
   has_many :motifs, through: :services
-  has_many :rdvs, dependent: :destroy, through: :agents_rdvs
+  has_many :rdvs, dependent: :restrict_with_error, through: :agents_rdvs
   has_many :territories, through: :territorial_roles
   has_many :organisations_of_territorial_roles, source: :organisations, through: :territories
   # we specify dependent: :destroy because by default it will be deleted (dependent: :delete)
