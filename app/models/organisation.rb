@@ -91,6 +91,8 @@ class Organisation < ApplicationRecord
       Domain::RDV_AIDE_NUMERIQUE
     when :rdv_mairie
       Domain::RDV_MAIRIE
+    when :rdv_insertion
+      Domain::RDV_INSERTION
     else
       Domain::RDV_SOLIDARITES
     end

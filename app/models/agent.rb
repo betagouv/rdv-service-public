@@ -247,6 +247,8 @@ class Agent < ApplicationRecord
                   Domain::RDV_AIDE_NUMERIQUE
                 elsif organisations.where(verticale: :rdv_mairie).any?
                   Domain::RDV_MAIRIE
+                elsif organisations.where(verticale: :rdv_insertion).any?
+                  Domain::RDV_INSERTION
                 else
                   Domain::RDV_SOLIDARITES
                 end
