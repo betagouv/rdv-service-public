@@ -169,10 +169,10 @@ RSpec.describe Users::RdvMailer, type: :mailer do
 
         it "works" do
           mail = described_class.with(rdv: rdv, user: rdv.users.first, token: "12345").send(action)
-          expect(mail[:from].to_s).to eq(%("RDV Solidarités" <support@rdv-solidarites.fr>))
-          expect(mail.html_part.body.to_s).to include(%(src="/logo_solidarites.png))
-          expect(mail.html_part.body.to_s).to include(%(href="http://www.rdv-solidarites-test.localhost))
-          expect(mail.html_part.body.to_s).to include(%(L’équipe RDV Solidarités))
+          expect(mail[:from].to_s).to eq("RDV Insertion <support@rdv-insertion.fr>")
+          expect(mail.html_part.body.to_s).to include(%(src="/logo_rdv_insertion.png))
+          expect(mail.html_part.body.to_s).to include(%(href="http://app.rdv-insertion-test.localhost))
+          expect(mail.html_part.body.to_s).to include(%(L’équipe RDV Insertion))
         end
       end
 
