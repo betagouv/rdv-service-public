@@ -92,7 +92,7 @@ class Domain
       search_banner_template_name: "search/banners/rdv_solidarites",
       online_reservation_with_public_link: false,
       can_sync_to_outlook: false,
-      sms_sender_name: "RdvI",
+      sms_sender_name: "RdvInsert",
       documentation_url: "https://rdvs.notion.site/RDV-Mairie-b831caa05dd7416bb489f06f7468903a",
       faq_url: "https://rdvs.notion.site/FAQ-RDV-Mairie-6baf4af187a14e42beafe56b7005d199",
       france_connect_enabled: true,
