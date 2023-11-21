@@ -1,7 +1,4 @@
 class Service < ApplicationRecord
-  # Mixins
-  include HasVerticale
-
   # Attributes
   auto_strip_attributes :name, :short_name
 

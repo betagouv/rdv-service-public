@@ -2,16 +2,21 @@ class Organisation < ApplicationRecord
   # Mixins
   has_paper_trail
   include WebhookDeliverable
-  include HasVerticale
 
   # Attributes
   auto_strip_attributes :email, :name
+  enum verticale: {
+    rdv_insertion: "rdv_insertion",
+    rdv_solidarites: "rdv_solidarites",
+    rdv_aide_numerique: "rdv_aide_numerique",
+    rdv_mairie: "rdv_mairie",
+  }
 
   # Relations
   belongs_to :territory
   has_many :lieux, dependent: :destroy
   has_many :motifs, dependent: :destroy
-  has_many :rdvs, dependent: :destroy
+  has_many :rdvs, dependent: :restrict_with_error
   has_many :webhook_endpoints, dependent: :destroy
   has_many :sector_attributions, dependent: :destroy
   has_many :plage_ouvertures, dependent: :destroy

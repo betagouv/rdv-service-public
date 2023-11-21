@@ -25,7 +25,7 @@ class User < ApplicationRecord
 
   def self.search_options
     {
-      using: { tsearch: { prefix: true, any_word: true, tsvector_column: "searchable" } },
+      using: { tsearch: { prefix: true, any_word: true, tsvector_column: "text_search_terms" } },
     }
   end
 
@@ -85,11 +85,6 @@ class User < ApplicationRecord
   # Hooks
   before_save :set_email_to_null_if_blank
   # voir Ants::AppointmentSerializerAndListener pour d'autres callbacks
-  before_save do
-    self.unaccented_last_name = last_name.presence && I18n.transliterate(last_name).downcase
-    self.unaccented_first_name = first_name.presence && I18n.transliterate(first_name).downcase
-    self.unaccented_birth_name = birth_name.presence && I18n.transliterate(birth_name).downcase
-  end
 
   # Scopes
   default_scope { where(deleted_at: nil) }
