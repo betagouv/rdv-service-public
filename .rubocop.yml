@@ -125,7 +125,7 @@ RSpec/AnyInstance:
     - spec/controllers/admin/users_controller_spec.rb
     - spec/controllers/admin/referent_assignations_controller_spec.rb
     - spec/controllers/users/rdvs_controller_spec.rb
-    - spec/features/users/user_can_be_invited_spec.rb
+    - spec/features/users/online_booking/with_invitation_spec.rb
 
 RSpec/DescribedClass:
   Exclude:
