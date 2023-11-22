@@ -3,7 +3,7 @@ class Admin::RdvsController < AgentAuthController
 
   respond_to :html, :json
 
-  before_action :set_rdv, :set_optional_agent, except: %i[index create export rdvs_users_export]
+  before_action :set_rdv, :set_optional_agent, except: %i[index create export participations_export]
 
   def index
     set_scoped_organisations
@@ -19,8 +19,8 @@ class Admin::RdvsController < AgentAuthController
       [
         :agents_rdvs, :organisation, :lieu, :motif,
         {
-          rdvs_users: [:prescripteur, { user: :user_profiles }],
-          agents: :service,
+          participations: [:prescripteur, { user: :user_profiles }],
+          agents: :services,
           users: %i[responsible organisations user_profiles],
         },
       ]
@@ -44,11 +44,11 @@ class Admin::RdvsController < AgentAuthController
     redirect_to admin_organisation_rdvs_path(organisation_id: current_organisation.id)
   end
 
-  def rdvs_users_export
+  def participations_export
     skip_authorization # RDV will be scoped in SendExportJob
     set_scoped_organisations
 
-    RdvsUsersExportJob.perform_later(
+    ParticipationsExportJob.perform_later(
       agent: current_agent,
       organisation_ids: @scoped_organisations.ids,
       options: parsed_params
@@ -65,7 +65,7 @@ class Admin::RdvsController < AgentAuthController
   def edit
     add_user_ids = params[:add_user].to_a + params[:user_ids].to_a
     users_to_add = User.where(id: add_user_ids)
-    users_to_add.ids.each { @rdv.rdvs_users.build(user_id: _1) }
+    users_to_add.ids.each { @rdv.participations.build(user_id: _1) }
 
     @rdv_form = Admin::EditRdvForm.new(@rdv, pundit_user)
     authorize(@rdv_form.rdv)
@@ -149,7 +149,7 @@ class Admin::RdvsController < AgentAuthController
     allowed_params = params.require(:rdv).permit(:motif_id, :status, :lieu_id, :duration_in_min, :starts_at, :context, :ignore_benign_errors, :max_participants_count, :name,
                                                  agent_ids: [],
                                                  user_ids: [],
-                                                 rdvs_users_attributes: %i[user_id send_lifecycle_notifications send_reminder_notification id _destroy],
+                                                 participations_attributes: %i[user_id send_lifecycle_notifications send_reminder_notification id _destroy],
                                                  lieu_attributes: %i[name address latitude longitude id])
 
     # Quand un lieu ponctuel est saisi, il faut faire en sorte qu'il soit créé dans l'organisation courante.

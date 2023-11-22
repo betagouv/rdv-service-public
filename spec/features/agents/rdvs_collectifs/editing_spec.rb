@@ -17,7 +17,7 @@ describe "Agent can edit a Rdv collectif" do
   end
 
   before do
-    create(:rdvs_user, user: user, rdv: rdv, send_lifecycle_notifications: true)
+    create(:participation, user: user, rdv: rdv, send_lifecycle_notifications: true)
   end
 
   # js: true is necessary for the lieu selection
@@ -31,6 +31,6 @@ describe "Agent can edit a Rdv collectif" do
       expect(page).to have_content("Atelier Collectif") # to wait for the request to complete before checking sent emails
     end.not_to change { ActionMailer::Base.deliveries.size }
 
-    expect(rdv.reload.rdvs_users.first.send_lifecycle_notifications).to be false
+    expect(rdv.reload.participations.first.send_lifecycle_notifications).to be false
   end
 end

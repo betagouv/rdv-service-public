@@ -44,7 +44,7 @@ all_cdad_agent = Agent.new(
   first_name: "Secre",
   last_name: "Tariat",
   password: "lapinlapin",
-  service_id: service_cdad.id,
+  services: [service_cdad],
   invitation_accepted_at: 10.days.ago,
   roles_attributes: [
     { organisation: org_cdad1, access_level: AgentRole::ACCESS_LEVEL_ADMIN },
@@ -64,7 +64,7 @@ cdad1_agent = Agent.new(
   first_name: "Basic",
   last_name: "CDAD1",
   password: "lapinlapin",
-  service_id: service_cdad.id,
+  services: [service_cdad],
   invitation_accepted_at: 10.days.ago,
   roles_attributes: [
     { organisation: org_cdad1, access_level: AgentRole::ACCESS_LEVEL_BASIC },
@@ -83,7 +83,7 @@ cdad1_admin = Agent.new(
   first_name: "Admin",
   last_name: "CDAD1",
   password: "lapinlapin",
-  service_id: service_cdad.id,
+  services: [service_cdad],
   invitation_accepted_at: 10.days.ago,
   roles_attributes: [
     { organisation: org_cdad1, access_level: AgentRole::ACCESS_LEVEL_ADMIN },
@@ -102,7 +102,7 @@ cdad2_agent = Agent.new(
   first_name: "Basic",
   last_name: "CDAD2",
   password: "lapinlapin",
-  service_id: service_cdad.id,
+  services: [service_cdad],
   invitation_accepted_at: 10.days.ago,
   roles_attributes: [
     { organisation: org_cdad2, access_level: AgentRole::ACCESS_LEVEL_BASIC },
@@ -121,7 +121,7 @@ cdad2_admin = Agent.new(
   first_name: "Admin",
   last_name: "CDAD2",
   password: "lapinlapin",
-  service_id: service_cdad.id,
+  services: [service_cdad],
   invitation_accepted_at: 10.days.ago,
   roles_attributes: [
     { organisation: org_cdad2, access_level: AgentRole::ACCESS_LEVEL_ADMIN },
@@ -137,7 +137,7 @@ cdad2_admin.territorial_roles.create!(territory: territory_gironde)
 
 cdad_intervenant1 = Agent.new(
   last_name: "Avocat 1",
-  service_id: service_cdad.id,
+  services: [service_cdad],
   roles_attributes: [
     { organisation: org_cdad1, access_level: AgentRole::ACCESS_LEVEL_INTERVENANT },
   ],
@@ -149,7 +149,7 @@ cdad_intervenant1.save!
 
 cdad_intervenant2 = Agent.new(
   last_name: "Avocat 2",
-  service_id: service_cdad.id,
+  services: [service_cdad],
   roles_attributes: [
     { organisation: org_cdad1, access_level: AgentRole::ACCESS_LEVEL_INTERVENANT },
   ],
@@ -161,7 +161,7 @@ cdad_intervenant2.save!
 
 cdad_intervenant3 = Agent.new(
   last_name: "Avocat 3",
-  service_id: service_cdad.id,
+  services: [service_cdad],
   roles_attributes: [
     { organisation: org_cdad2, access_level: AgentRole::ACCESS_LEVEL_INTERVENANT },
   ],

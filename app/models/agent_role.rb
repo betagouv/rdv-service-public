@@ -53,7 +53,7 @@ class AgentRole < ApplicationRecord
   ## -
 
   def can_access_others_planning?
-    admin? || agent.service.secretariat?
+    admin? || agent.secretaire?
   end
 
   private

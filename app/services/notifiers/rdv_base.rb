@@ -1,6 +1,6 @@
 class Notifiers::RdvBase < ::BaseService
   include DateHelper
-  attr_reader :rdv_users_tokens_by_user_id
+  attr_reader :participations_tokens_by_user_id
 
   # Base class for Rdv notifiers.
   # Subclasses implement the notify_* methods:
@@ -13,8 +13,8 @@ class Notifiers::RdvBase < ::BaseService
   def initialize(rdv, author, users = nil)
     @rdv = rdv
     @author = author
-    @users = users || rdvs_users_to_notify.map(&:user)
-    @rdv_users_tokens_by_user_id = {}
+    @users = users || participations_to_notify.map(&:user)
+    @participations_tokens_by_user_id = {}
   end
 
   def perform
@@ -48,14 +48,14 @@ class Notifiers::RdvBase < ::BaseService
 
   def generate_invitation_tokens
     # Prevent token generation to trigger a webhook notification,
-    # because generating the RdvsUser tokens does not change any of the
+    # because generating the Participation tokens does not change any of the
     # attributes or associations of the Rdv.
     @rdv.skip_webhooks = true
 
-    @rdv.rdvs_users.each do |rdv_user|
-      participant = rdv_user.user
+    @rdv.participations.each do |participation|
+      participant = participation.user
       user_to_notify = participant.user_to_notify
-      @rdv_users_tokens_by_user_id[user_to_notify.id] = rdv_user.new_raw_invitation_token
+      @participations_tokens_by_user_id[user_to_notify.id] = participation.new_raw_invitation_token
     end
 
     @rdv.skip_webhooks = false
@@ -64,7 +64,7 @@ class Notifiers::RdvBase < ::BaseService
   ## Configured Mailers
   #
   def user_mailer(user)
-    Users::RdvMailer.with(rdv: @rdv, user: user, token: @rdv_users_tokens_by_user_id[user.id])
+    Users::RdvMailer.with(rdv: @rdv, user: user, token: @participations_tokens_by_user_id[user.id])
   end
 
   def agent_mailer(agent)

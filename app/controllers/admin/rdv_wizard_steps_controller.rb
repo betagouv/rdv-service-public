@@ -6,7 +6,7 @@ class Admin::RdvWizardStepsController < AgentAuthController
   PERMITTED_PARAMS = [
     :motif_id, :duration_in_min, :starts_at, :lieu_id, :context, :service_id,
     :organisation_id, :ignore_benign_errors,
-    { agent_ids: [], user_ids: [], rdvs_users_attributes: {}, lieu_attributes: Rdv::ACCEPTED_NESTED_LIEU_ATTRIBUTES },
+    { agent_ids: [], user_ids: [], participations_attributes: {}, lieu_attributes: Rdv::ACCEPTED_NESTED_LIEU_ATTRIBUTES },
   ].freeze
 
   def new
@@ -66,7 +66,7 @@ class Admin::RdvWizardStepsController < AgentAuthController
 
   def set_services_and_motifs
     @motifs = policy_scope(Motif).available_motifs_for_organisation_and_agent(current_organisation, @agent)
-    @services = policy_scope(Service).where(id: @motifs.pluck(:service_id).uniq)
+    @services = Service.where(id: @motifs.pluck(:service_id).uniq)
     @rdv_wizard.service_id = @services.first.id if @services.count == 1
   end
 

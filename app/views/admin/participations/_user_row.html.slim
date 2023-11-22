@@ -1,0 +1,19 @@
+tr
+  td
+    = render "admin/users/identity", user: participation.user
+    - if participation.user.birth_date
+        .participation_birthdate.small
+          i.fas.fa-calendar-day.mr-1
+          = "Né(e) le #{I18n.l(participation.user.birth_date)}"
+  - if participation.rdv.requires_ants_predemande_number?
+    td
+      = participation.user.ants_pre_demande_number
+  td
+    = render "admin/participations/notifications_email", participation: participation
+  td
+    = render "admin/participations/notifications_sms", participation: participation
+  td
+    = render "admin/participations/notifications_lifecycle", participation: participation
+  - if participation.rdv.collectif?
+    td
+      = render "admin/participations/participation_status_dropdown", participation: participation, agent: agent

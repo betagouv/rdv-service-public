@@ -1,0 +1,26 @@
+.dropdown.text-right
+  = participation_status_dropdown_toggle(participation)
+  .dropdown-menu
+    - case participation.temporal_status
+    - when "unknown_future"
+      = render "admin/participations/participation_status_dropdown_item", participation: participation, agent: agent, status: "excused", remote: true
+
+    - when "unknown_today"
+      = render "admin/participations/participation_status_dropdown_item", participation: participation, agent: agent, status: "seen", remote: true
+      - if participation.rdv.in_the_past?
+        = render "admin/participations/participation_status_dropdown_item", participation: participation, agent: agent, status: "noshow", remote: true
+      .dropdown-divider
+      = render "admin/participations/participation_status_dropdown_item", participation: participation, agent: agent, status: "excused", remote: true
+
+    - when "unknown_past"
+      = render "admin/participations/participation_status_dropdown_item", participation: participation, agent: agent, status: "seen", remote: true
+      = render "admin/participations/participation_status_dropdown_item", participation: participation, agent: agent, status: "noshow", remote: true
+      .dropdown-divider
+      = render "admin/participations/participation_status_dropdown_item", participation: participation, agent: agent, status: "excused", remote: true
+
+    - else
+      = render "admin/participations/participation_status_dropdown_item", participation: participation, agent: agent, status: "unknown", remote: true
+
+    - if policy([:agent, participation.rdv]).destroy?
+      .dropdown-divider
+      = participation_delete_dropdown_item(participation, agent)

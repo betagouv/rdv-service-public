@@ -22,18 +22,11 @@ class User < ApplicationRecord
   include WebhookDeliverable
   include TextSearch
   include UncommonPasswordConcern
+  include Anonymizable
 
-  def self.search_against
+  def self.search_options
     {
-      last_name: "A",
-      first_name: "B",
-      birth_name: "C",
-
-      # Ces champs sont moins pondérés car on ne veut leur
-      # donner de l'importance que si le match est très proche ou exact.
-      email: "D",
-      phone_number_formatted: "D",
-      id: "D",
+      using: { tsearch: { prefix: true, any_word: true, tsvector_column: "text_search_terms" } },
     }
   end
 
@@ -55,7 +48,7 @@ class User < ApplicationRecord
 
   # Relations
   has_many :user_profiles, dependent: :restrict_with_error
-  has_many :rdvs_users, dependent: :destroy
+  has_many :participations, dependent: :destroy
   has_many :referent_assignations, dependent: :destroy
   belongs_to :responsible, class_name: "User", optional: true
   has_many :relatives, foreign_key: "responsible_id", class_name: "User", inverse_of: :responsible, dependent: :nullify
@@ -66,9 +59,10 @@ class User < ApplicationRecord
   # we specify dependent: :destroy because by default user_profiles and referent_assignations
   # will be deleted (dependent: :delete) and we need to destroy to trigger the callbacks on both models
   has_many :organisations, through: :user_profiles, dependent: :destroy
+  has_many :territories, through: :organisations
   has_many :referent_agents, through: :referent_assignations, source: :agent, dependent: :destroy, class_name: "Agent"
   has_many :webhook_endpoints, through: :organisations
-  has_many :rdvs, through: :rdvs_users
+  has_many :rdvs, through: :participations
 
   accepts_nested_attributes_for :user_profiles
 
@@ -159,7 +153,7 @@ class User < ApplicationRecord
 
   def participation_for(rdv)
     # We use find because it can be only one member by family in collective rdv
-    rdv.rdvs_users.to_a.find { |participation| participation.user_id.in?(self_and_relatives_and_responsible.map(&:id)) }
+    rdv.participations.to_a.find { |participation| participation.user_id.in?(self_and_relatives_and_responsible.map(&:id)) }
   end
 
   def deleted_email
@@ -236,6 +230,13 @@ class User < ApplicationRecord
     self.rdv_invitation_token = generate_rdv_invitation_token
   end
 
+  def self.personal_data_column_names
+    %w[first_name last_name birth_name address birth_date unconfirmed_email
+       caisse_affiliation affiliation_number family_situation number_of_children
+       family_situation number_of_children phone_number_formatted franceconnect_openid_sub
+       city_code post_code city_name case_number address_details logement notes ants_pre_demande_number]
+  end
+
   protected
 
   def generate_rdv_invitation_token
@@ -283,6 +284,15 @@ class User < ApplicationRecord
     end
     return save! if organisations.any? # only actually mark deleted when no orgas left
 
-    update_columns(deleted_at: Time.zone.now, email_original: email, email: deleted_email)
+    anonymize_personal_data_columns!
+    receipts.each(&:anonymize_personal_data_columns!)
+    rdvs.each(&:anonymize_personal_data_columns!)
+    versions.destroy_all
+    update_columns(
+      first_name: "Usager supprimé",
+      last_name: "Usager supprimé",
+      deleted_at: Time.zone.now,
+      email: deleted_email
+    )
   end
 end

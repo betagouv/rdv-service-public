@@ -4,7 +4,7 @@ describe "Agents can configure online booking" do
 
   context "motif individuel" do
     let!(:motif) do
-      create(:motif, organisation: organisation, service: agent.service, bookable_by: :agents, collectif: false, name: "Motif individuel")
+      create(:motif, organisation: organisation, service: agent.services.first, bookable_by: :agents, collectif: false, name: "Motif individuel")
     end
 
     it "displays the motif's status" do
@@ -53,7 +53,7 @@ describe "Agents can configure online booking" do
 
   context "motif collectif" do
     let!(:motif) do
-      create(:motif, organisation: organisation, service: agent.service, collectif: true, name: "Motif collectif")
+      create(:motif, organisation: organisation, service: agent.services.first, collectif: true, name: "Motif collectif")
     end
 
     it "displays the motif's status" do

@@ -61,7 +61,7 @@ class CronJob < ApplicationJob
 
   class DestroyInactiveUsers < CronJob
     def perform(date_limit)
-      old_users_without_rdvs = User.where("users.created_at < ?", date_limit).left_outer_joins(:rdvs_users).where(rdvs_users: { id: nil })
+      old_users_without_rdvs = User.where("users.created_at < ?", date_limit).left_outer_joins(:participations).where(participations: { id: nil })
 
       old_users_without_rdvs_or_relatives = old_users_without_rdvs.joins("left outer join users as relatives on users.id = relatives.responsible_id").where(relatives: { id: nil })
 

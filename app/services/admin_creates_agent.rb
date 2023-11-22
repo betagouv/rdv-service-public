@@ -13,7 +13,7 @@ class AdminCreatesAgent
 
       if @agent
         add_agent_to_organisation
-        check_agent_service
+        @warning_message = self.class.check_agent_service(@agent, @agent_params[:service_ids])
       elsif @access_level == "intervenant"
         @agent = Agent.create(
           agent_and_role_params.merge(
@@ -48,6 +48,15 @@ class AdminCreatesAgent
     end
   end
 
+  # @return [String, nil] the error message if requested services don't match curent services of the agent
+  def self.check_agent_service(agent, service_ids)
+    services = Service.where(id: service_ids)
+
+    if agent.services.to_set != services.to_set
+      I18n.t("activerecord.warnings.models.agent_role.different_services", services: services.map(&:short_name).join(", "), agent_services: agent.services_short_names)
+    end
+  end
+
   private
 
   def agent_and_role_params
@@ -73,14 +82,5 @@ class AdminCreatesAgent
         access_level: @access_level,
       ]
     )
-  end
-
-  def check_agent_service
-    # Warn if the service isn’t the one that was requested
-    service = Service.find(@agent_params[:service_id])
-
-    if @agent.service != service
-      @warning_message = I18n.t("activerecord.warnings.models.agent_role.different_service", service: service.name, agent_service: @agent.service.name)
-    end
   end
 end

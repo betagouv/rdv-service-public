@@ -119,4 +119,13 @@ describe Territory, type: :model do
       expect(territory.waiting_room_enabled?).to eq(true)
     end
   end
+
+  describe "Mairies" do
+    let(:mairies_territory) { create(:territory, :mairies) }
+
+    it "doesn't allow changing the name of a territory with a specific meaning" do
+      expect(mairies_territory.update(name: "new name")).to be_falsey
+      expect(mairies_territory.reload.name).to eq Territory::MAIRIES_NAME
+    end
+  end
 end
