@@ -6,7 +6,6 @@
     - if @form.users.any?
       h6.card-subtitle.mb-2.text-center = t(".search_for_slots_subtitle", users_fullname: @form.users.map(&:full_name).join(" ,"))
   .card-body
-    h5.card-title Configuration des filtres
     = simple_form_for(@form, as: "", url: admin_organisation_agent_searches_path(current_organisation), method: :get) do |f|
       - @form.user_ids.each do |user_id|
         = hidden_field_tag "user_ids[]", user_id
