@@ -104,7 +104,7 @@ class Motif < ApplicationRecord
       match_data = name_with_location_type&.match(/(.*)-#{location_type}$/)
       match_data ? [match_data[1], location_type] : nil
     end.compact.first
-    where("REGEXP_REPLACE(LOWER(UNACCENT(name)), '[^0-9a-z]+', '_', 'g') = ?", name).where(location_type: location_type)
+    where("REGEXP_REPLACE(LOWER(UNACCENT(motifs.name)), '[^0-9a-z]+', '_', 'g') = ?", name).where(location_type: location_type)
   }
   scope :sectorisation_level_departement, -> { where(sectorisation_level: SECTORISATION_LEVEL_DEPARTEMENT) }
   scope :sectorisation_level_organisation, -> { where(sectorisation_level: SECTORISATION_LEVEL_ORGANISATION) }
