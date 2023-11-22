@@ -57,7 +57,8 @@
       .fr-col-md-10
         .flex.flex--center[style="color: #4E68BB"]
           h5.fr-pr-2w.fr-display--lg.fr-mb-0[style="color: #4E68BB"]
-            = Rdv.joins(:organisation).where(organisations: { territory_id: Territory.mairies&.id }).count
+            - rdv_count = Rails.cache.fetch( "rdv_mairies_homepage_rdv_count", expires_in: 1.hour){ Rdv.count }
+            = number_with_delimiter(rdv_count, delimiter: " ")
 
           .fr-text--lead.fr-mb-0
             b  = "rendez-vous déjà pris".upcase
