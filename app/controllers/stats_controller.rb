@@ -18,8 +18,8 @@ class StatsController < ApplicationController
                   stats.rdvs_group_by_type
                 elsif params[:by_status].present?
                   stats.rdvs_group_by_status
-                elsif params[:by_rdv_users_status].present?
-                  stats.rdvs_group_by_rdv_users_status
+                elsif params[:by_participations_status].present?
+                  stats.rdvs_group_by_participations_status
                 else
                   stats.rdvs_group_by_week_fr
                 end

@@ -84,7 +84,6 @@ X-Runtime: 0.194743< Transfer-Encoding: chunked
     "last_name":"VALIDAY",
     "first_name":"Martine",
     "uid":"martine@demo.rdv-solidarites.fr",
-    "email_original":null,
     "allow_password_change":false
   }
 }
@@ -176,6 +175,7 @@ En cas d'erreur reconnue par le système (par exemple erreur 422), les champs su
 Le statut du RDV (status) est un statut général. **Il n'est pas représentatif des statuts individuels des usagers.**
 
 **Chaque participant au RDV a son propre statut de participation porté par l'association `rdvs_users` du RDV.**
+**ATTENTION `rdvs_users` est déprécié au profit de l'association `participations`.**
 
 Pour les RDV avec l'attribut collectif à false les statuts du/des participants et du RDV seront tous identiques. (dans l'exemple suivant : `seen`)
 
@@ -189,6 +189,26 @@ Il est conseillé malgrés tout d'utiliser les statuts des participants (dans `r
       "collectif": false,
       "status": "seen",
       "rdvs_users": [
+        {
+          "id": 8,
+          "status": "seen",
+          "user": {
+            "id": 10,
+            "first_name": "Tristan",
+            "last_name": "LEROUX",
+          }
+        },
+        {
+          "id": 9,
+          "status": "seen",
+          "user": {
+            "id": 11,
+            "first_name": "Marie",
+            "last_name": "LEROUX",
+          }
+        }
+      ],
+      "participations": [
         {
           "id": 8,
           "status": "seen",
@@ -231,6 +251,35 @@ Ici, le RDV a un status `seen` mais les 3 participants ont des status de partici
       "collectif": true,
       "status": "seen",
       "rdvs_users": [
+        {
+          "id": 8,
+          "status": "seen",
+          "user": {
+            "id": 10,
+            "first_name": "Tristan",
+            "last_name": "LEROUX",
+          }
+        },
+        {
+          "id": 9,
+          "status": "noshow",
+          "user": {
+            "id": 11,
+            "first_name": "Roger",
+            "last_name": "LAPIN",
+          }
+        },
+        {
+          "id": 7,
+          "status": "excused",
+          "user": {
+            "id": 12,
+            "first_name": "Marie",
+            "last_name": "DUPONT",
+          }
+        },
+      ],
+      "participations": [
         {
           "id": 8,
           "status": "seen",

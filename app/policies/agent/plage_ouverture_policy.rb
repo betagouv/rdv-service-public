@@ -4,9 +4,15 @@ class Agent::PlageOuverturePolicy < DefaultAgentPolicy
       if context.can_access_others_planning?
         scope.where(organisation: current_organisation)
       else
-        scope.joins(:agent).where(organisation: current_organisation, agents: { service: current_agent.service })
+        scope.joins(:agent).where(organisation: current_organisation).merge(current_agent.confreres)
       end
     end
+  end
+
+  private
+
+  def same_service?
+    @record.agent.confrere_of?(current_agent)
   end
 
   class DepartementScope < Scope
@@ -16,7 +22,7 @@ class Agent::PlageOuverturePolicy < DefaultAgentPolicy
       else
         scope.joins(:agent)
           .where(organisation: current_agent.organisations)
-          .where(agents: { service: current_agent.service })
+          .merge(current_agent.confreres)
       end
     end
   end

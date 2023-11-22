@@ -11,13 +11,13 @@ class Agents::ExportMailer < ApplicationMailer
     )
   end
 
-  def rdvs_users_export(agent, file_name, xls_string)
+  def participations_export(agent, file_name, xls_string)
     @agent = agent
     add_zip_as_attachment(file_name: file_name, file_content: xls_string)
 
     mail(
       to: agent.email,
-      subject: I18n.t("mailers.agents.export_mailer.full_rdvs_user_export.subject", date: I18n.l(Time.zone.now))
+      subject: I18n.t("mailers.agents.export_mailer.full_participation_export.subject", date: I18n.l(Time.zone.now))
     )
   end
 

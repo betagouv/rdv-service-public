@@ -1,0 +1,19 @@
+.col-12
+  .card.light-gray-card
+    .card-body.p-2
+      .mb-1
+        = render "admin/users/identity", user: participation.user
+      - notes = participation.user.notes
+      - if current_territory.enable_notes_field? && notes.present?
+        .participation_notes
+          i.fa.fa-info-circle.text-primary-blue.mr-2
+          = simple_format(notes, {}, wrapper_tag: :span)
+      div
+        = render "admin/participations/notifications_email", participation: participation
+      div
+        = render "admin/participations/notifications_sms", participation: participation
+      div
+      = render "admin/participations/notifications_lifecycle", participation: participation
+      - if participation.rdv.collectif?
+        div
+        = render "admin/participations/participation_status_dropdown", participation: participation, agent: agent

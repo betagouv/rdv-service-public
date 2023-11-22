@@ -1,6 +1,6 @@
 class Notifiers::RdvUpdated < Notifiers::RdvBase
-  def rdvs_users_to_notify
-    @rdv.rdvs_users.not_cancelled.where(send_lifecycle_notifications: true)
+  def participations_to_notify
+    @rdv.participations.not_cancelled.where(send_lifecycle_notifications: true)
   end
 
   def notify_user_by_mail(user)
@@ -10,7 +10,7 @@ class Notifiers::RdvUpdated < Notifiers::RdvBase
   end
 
   def notify_user_by_sms(user)
-    Users::RdvSms.rdv_updated(@rdv, user, @rdv_users_tokens_by_user_id[user.id]).deliver_later
+    Users::RdvSms.rdv_updated(@rdv, user, @participations_tokens_by_user_id[user.id]).deliver_later
   end
 
   def notify_agent(agent)

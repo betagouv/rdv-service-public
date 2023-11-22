@@ -59,8 +59,8 @@ class Stat
     end
   end
 
-  def rdvs_group_by_rdv_users_status
-    res = RdvsUser
+  def rdvs_group_by_participations_status
+    res = Participation
       .joins(:rdv)
       .where(rdv: rdvs)
       .where("rdvs.starts_at < ?", Time.zone.today)

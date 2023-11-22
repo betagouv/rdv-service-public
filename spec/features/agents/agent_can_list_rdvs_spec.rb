@@ -7,12 +7,12 @@ describe "Agent can list RDVs" do
   end
 
   describe "RDV visibility within organisation" do
-    let!(:agent_from_same_service) { create(:agent, organisations: [organisation], service: current_agent.service) }
+    let!(:agent_from_same_service) { create(:agent, organisations: [organisation], service: current_agent.services.first) }
     let!(:agent_from_other_service) { create(:agent, organisations: [organisation]) }
 
     before do
       [current_agent, agent_from_same_service, agent_from_other_service].each do |agent|
-        create(:rdv, organisation: organisation, agents: [agent], motif: create(:motif, service: agent.service))
+        create(:rdv, organisation: organisation, agents: [agent], motif: create(:motif, service: agent.services.first))
       end
     end
 

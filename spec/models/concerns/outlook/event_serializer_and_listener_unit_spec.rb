@@ -39,11 +39,11 @@ RSpec.describe Outlook::EventSerializerAndListener do
 
       it "queues a sync job for each change" do
         allow(Outlook::SyncEventJob).to receive(:perform_later)
-        participation = create(:rdvs_user, rdv: rdv)
+        participation = create(:participation, rdv: rdv)
 
         expect(Outlook::SyncEventJob).to have_received(:perform_later)
 
-        participation.update!(status: RdvsUser::CANCELLED_STATUSES.first)
+        participation.update!(status: Participation::CANCELLED_STATUSES.first)
         expect(Outlook::SyncEventJob).to have_received(:perform_later).twice
 
         participation.destroy
@@ -74,7 +74,7 @@ RSpec.describe Outlook::EventSerializerAndListener do
 
           ActiveRecord::Base.transaction do
             rdv.update!(starts_at: rdv.starts_at + 1.hour)
-            create(:rdvs_user, rdv: rdv)
+            create(:participation, rdv: rdv)
             expect(Outlook::SyncEventJob).not_to have_received(:perform_later)
           end
 

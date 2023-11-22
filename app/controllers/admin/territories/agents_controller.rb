@@ -1,6 +1,6 @@
 class Admin::Territories::AgentsController < Admin::Territories::BaseController
-  before_action :set_agent, only: %i[edit update territory_admin]
-  before_action :authorize_agent, only: %i[edit update territory_admin]
+  before_action :set_agent, only: %i[edit update territory_admin update_services]
+  before_action :authorize_agent, only: %i[edit update territory_admin update_services]
 
   def index
     @agents = find_agents(params[:q]).page(params[:page])
@@ -22,8 +22,9 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
   def edit; end
 
   def update
-    if @agent.update(agent_params)
-      redirect_to admin_territory_agents_path(current_territory)
+    if @agent.update(agent_update_params)
+      flash[:success] = "L'agent a été mis à jour"
+      redirect_to edit_admin_territory_agent_path(current_territory, @agent.id)
     else
       render :edit
     end
@@ -43,6 +44,18 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
     )
   end
 
+  def update_services
+    service_ids = params[:agent][:service_ids].compact_blank
+    form_validator = AdminChangesAgentServices.new(@agent, service_ids)
+    if form_validator.valid? && @agent.update(service_ids: service_ids)
+      flash[:success] = "Les services de l'agent on été modifiés"
+      redirect_to edit_admin_territory_agent_path(current_territory, @agent.id)
+    else
+      @agent.errors.copy!(form_validator.errors)
+      render :edit
+    end
+  end
+
   private
 
   def set_agent
@@ -53,7 +66,7 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
     authorize @agent
   end
 
-  def agent_params
+  def agent_update_params
     params.require(:agent).permit(team_ids: [])
   end
 end

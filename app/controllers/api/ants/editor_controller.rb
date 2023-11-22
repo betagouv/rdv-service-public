@@ -30,7 +30,7 @@ class Api::Ants::EditorController < Api::Ants::BaseController
   private
 
   def lieux
-    Lieu.joins(:organisation).where(organisations: { verticale: :rdv_mairie })
+    Lieu.joins(:organisation).where(organisations: { territory_id: Territory.mairies&.id })
   end
 
   def time_slots(lieu, reason)

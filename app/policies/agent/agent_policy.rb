@@ -32,7 +32,7 @@ class Agent::AgentPolicy < ApplicationPolicy
     admin_in_record_organisation? && record != current_agent
   end
 
-  def rdvs_users_export?
+  def participations_export?
     current_territory = context&.organisation&.territory
     access_rights = current_agent.access_rights_for_territory(current_territory)
     access_rights&.allow_to_download_metrics?
@@ -42,7 +42,7 @@ class Agent::AgentPolicy < ApplicationPolicy
     include CurrentAgentInPolicyConcern
 
     def resolve
-      if current_agent.service.secretariat?
+      if current_agent.secretaire?
         scope.where(id: AgentRole.where(organisation_id: current_agent.organisations).select(:agent_id))
       else
         agents_of_territories_i_admin = scope.joins(:organisations).merge(current_agent.organisations_of_territorial_roles)
@@ -50,7 +50,7 @@ class Agent::AgentPolicy < ApplicationPolicy
         agents_of_orgs_i_admin = scope.joins(:organisations).merge(current_agent.admin_orgs)
 
         agents_of_orgs_i_basic_same_service = scope.joins(:organisations).merge(current_agent.basic_orgs)
-          .where(service: current_agent.service)
+          .merge(current_agent.confreres)
 
         scope.where_id_in_subqueries([agents_of_territories_i_admin, agents_of_orgs_i_admin, agents_of_orgs_i_basic_same_service])
       end

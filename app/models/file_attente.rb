@@ -58,6 +58,6 @@ class FileAttente < ApplicationRecord
   end
 
   def invitation_token_for(rdv, user)
-    RdvsUser.find_by(rdv: rdv, user: user)&.new_raw_invitation_token
+    Participation.find_by(rdv: rdv, user: user)&.new_raw_invitation_token
   end
 end
