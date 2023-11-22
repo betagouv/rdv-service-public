@@ -140,32 +140,6 @@ describe Motif, type: :model do
     end
   end
 
-  describe "search_by_name_with_location_type" do
-    context "some matching motif name + type" do
-      subject { described_class.search_by_name_with_location_type("Rappel PMI-phone") }
-
-      let!(:motif) { create(:motif, name: "Rappel PMI", location_type: :phone) }
-
-      it { is_expected.to include(motif) }
-    end
-
-    context "no matching motif name" do
-      subject { described_class.search_by_name_with_location_type("Rappel PMI-phone") }
-
-      let!(:motif) { create(:motif, name: "Rien a voir", location_type: :phone) }
-
-      it { is_expected.to be_empty }
-    end
-
-    context "nil param" do
-      subject { described_class.search_by_name_with_location_type(nil) }
-
-      let!(:motif) { create(:motif, name: "Rappel PMI", location_type: :phone) }
-
-      it { is_expected.to be_empty }
-    end
-  end
-
   describe "motif de rdv collectif" do
     subject(:motif) { build(:motif, collectif: true, location_type: :home) }
 

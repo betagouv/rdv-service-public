@@ -48,10 +48,15 @@ class WebSearchContext < SearchContext
     motifs = motifs.where(organisations: { external_id: @external_organisation_ids.compact }) if @external_organisation_ids.present?
 
     # dupliqué de WebInvitationSearchContext
-    motifs = motifs.search_by_name_with_location_type(@motif_name_with_location_type) if @motif_name_with_location_type.present?
     motifs = motifs.where(service: service) if @service_id.present?
     motifs = motifs.where(organisation_id: organisation_id) if organisation_id.present?
     motifs = motifs.where(id: @motif_id) if @motif_id.present?
+    if @motif_name_with_location_type.present?
+      motifs = motifs.select do |motif|
+        motif.name_with_location_type == @motif_name_with_location_type
+      end
+      motifs = Motif.where(id: motifs.map(&:id)) # turn it back into an AR scope
+    end
     motifs
   end
 
