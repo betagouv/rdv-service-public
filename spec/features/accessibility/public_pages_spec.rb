@@ -21,7 +21,7 @@ describe "public pages", js: true do
     # expect(page).to be_axe_clean
   end
 
-  xit "home page for RDV Mairie is accessible" do
+  it "home page for RDV Mairie is accessible" do
     visit "http://www.rdv-mairie-test.localhost/"
     expect(page).to have_current_path("/")
     expect(page).to be_axe_clean
