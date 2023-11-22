@@ -5,7 +5,7 @@ RSpec.describe "Motif selection" do
 
   context "when two motifs have slightly different names because of understandable human error" do
     let!(:motif) { create(:motif, name: "RDV Intégration direct' emploi", organisation: organisation, service: service) }
-    let!(:autre_motif) { create(:motif, name: "RDV intégration direct'emploi", organisation: autre_organisation, service: service) }
+    let!(:autre_motif) { create(:motif, name: "RDV integration direct'emploi", organisation: autre_organisation, service: service) }
     let(:encore_autre_motif) { create(:motif, name: "Vaccination", organisation: organisation, service: service) }
     let(:organisation) { create(:organisation) }
     let(:autre_organisation) { create(:organisation, territory: organisation.territory) }

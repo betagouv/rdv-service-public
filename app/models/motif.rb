@@ -144,7 +144,7 @@ class Motif < ApplicationRecord
   end
 
   def name_with_location_type
-    "#{name.downcase.gsub(/\W+/, '_')}-#{location_type}"
+    "#{I18n.transliterate(name).downcase.gsub(/\W+/, '_')}-#{location_type}"
   end
 
   def sectorisation_level_agent?
