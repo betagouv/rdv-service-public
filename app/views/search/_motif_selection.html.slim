@@ -24,6 +24,5 @@ section.bg-light.p-4
               | vos rendez-vous
       - context.unique_motifs_by_name_and_location_type.each do |motif|
         .card.mb-3
-          - # TODO: and change here
           = link_to(prendre_rdv_path(context.query_params.merge(motif_name_with_location_type: motif.name_with_location_type))) do
             = render "motif_selection_card", motif: motif
