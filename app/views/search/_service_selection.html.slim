@@ -1,20 +1,23 @@
 section.bg-light.p-4
   .container
-    h2.font-weight-bold Sélectionnez le service avec qui vous voulez prendre un RDV :
-    - unless context.invitation?
-      .card
-        .m-2
-          | Pour prendre un RDV avec un de vos agents référent, allez sur la page de
-          span>
-          = link_to users_rdvs_path do
-            i.far.fa-calendar
+    - if context.unique_motifs_by_name_and_location_type.empty?
+      = render "nothing_to_show", context: context
+    - else
+      h2.font-weight-bold Sélectionnez le service avec qui vous voulez prendre un RDV :
+      - unless context.invitation?
+        .card
+          .m-2
+            | Pour prendre un RDV avec un de vos agents référent, allez sur la page de
             span>
-            | vos rendez-vous
+            = link_to users_rdvs_path do
+              i.far.fa-calendar
+              span>
+              | vos rendez-vous
 
-    - context.services.each do |service|
-      .card.mb-3
-        = link_to prendre_rdv_path(context.query_params.merge(service_id: service.id)) do
-          .card-body
-            .row
-              .col-md
-                h3.card-title.mb-3.mt-0.text-success.font-weight-bold= service.name
+      - context.services.each do |service|
+        .card.mb-3
+          = link_to prendre_rdv_path(context.query_params.merge(service_id: service.id)) do
+            .card-body
+              .row
+                .col-md
+                  h3.card-title.mb-3.mt-0.text-success.font-weight-bold= service.name

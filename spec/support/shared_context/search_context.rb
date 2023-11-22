@@ -53,14 +53,6 @@ RSpec.shared_examples "SearchContext" do
         expect(subject.current_step).to eq(:lieu_selection)
       end
     end
-
-    context "when there is no creneau" do
-      let!(:query_params) { { address: address, departement: departement_number, city_code: city_code } }
-
-      it "current step is nothing to show" do
-        expect(subject.current_step).to eq(:nothing_to_show)
-      end
-    end
   end
 
   describe "#matching_motifs" do

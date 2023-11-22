@@ -1,22 +1,20 @@
-section.bg-light.p-4
-  .container
-    .card
-      .card-body
-        - if context.follow_up?
-          - if context.referent_agents.empty?
-            .font-weight-bold L'agent avec qui vous voulez prendre rendez-vous ne vous est pas assigné comme référent.
-          - else
-            .mb-3.font-weight-bold Votre référent n'a pas de créneaux disponibles. Voulez-vous prendre rendez-vous avec un autre agent ?
-            .float-left
-              = render "users/rdvs/prendre_rdv_button"
-        - elsif context.invitation?
-          .font-weight-bold Malheureusement, aucun créneau correspondant à votre invitation n'a été trouvé.
-          .font-weight-bold.mb-2 Toutes nos excuses pour cela.
-          = mail_to current_domain.support_email,
-            subject: "[Problème Invitation]",
-            class: "btn btn-primary" do
-            span>
-              i.fa.fa-envelope
-            | Envoyer une demande à l'équipe technique
-        - else
-          .font-weight-bold Malheureusement, aucun créneau correspondant à votre recherche n'a été trouvé.
+.card
+  .card-body
+    - if context.follow_up?
+      - if context.referent_agents.empty?
+        .font-weight-bold L'agent avec qui vous voulez prendre rendez-vous ne vous est pas assigné comme référent.
+      - else
+        .mb-3.font-weight-bold Votre référent n'a pas de créneaux disponibles. Voulez-vous prendre rendez-vous avec un autre agent ?
+        .float-left
+          = render "users/rdvs/prendre_rdv_button"
+    - elsif context.invitation?
+      .font-weight-bold Malheureusement, aucun créneau correspondant à votre invitation n'a été trouvé.
+      .font-weight-bold.mb-2 Toutes nos excuses pour cela.
+      = mail_to current_domain.support_email,
+        subject: "[Problème Invitation]",
+        class: "btn btn-primary" do
+        span>
+          i.fa.fa-envelope
+        | Envoyer une demande à l'équipe technique
+    - else
+      .font-weight-bold Malheureusement, aucun créneau correspondant à votre recherche n'a été trouvé.
