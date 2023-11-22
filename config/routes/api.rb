@@ -16,9 +16,6 @@ namespace :api do
       resources :rdvs, only: %i[index]
     end
     resources :participations, only: %i[update]
-    # add alias for participations with rdvs_users name
-    # to keep compatibility with old API call ParticipationController#update
-    patch "rdvs_users/:id", to: "participations#update"
     # Doesn't need authentication
     resources :public_links, only: [:index]
   end
