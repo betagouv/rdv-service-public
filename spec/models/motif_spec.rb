@@ -146,9 +146,7 @@ describe Motif, type: :model do
 
       let!(:motif) { create(:motif, name: "Rappel PMI", location_type: :phone) }
 
-      it do
-        expect(subject).to include(motif)
-      end
+      it { expect(subject).to include(motif) }
     end
 
     context "no matching motif name" do
