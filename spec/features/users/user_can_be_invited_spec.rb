@@ -144,7 +144,6 @@ describe "User can be invited" do
     let!(:motif2) do
       create(:motif, name: "RSA orientation telephone", bookable_by: "everyone", organisation: organisation2, service: agent.services.first, motif_category:, location_type: "phone")
     end
-    let!(:plage_ouverture2) { create(:plage_ouverture, :daily, first_day: now - 1.month, motifs: [motif2], organisation: organisation2) }
 
     before do
       travel_to(now)

@@ -28,10 +28,10 @@ RSpec.describe SearchController, type: :controller do
   let!(:motif3) { create(:motif, name: "RSA orientation 3", service: service, organisation: other_org) }
   let!(:motif4) { create(:motif, name: "Motif numéro 4", service: service, organisation: other_org) }
 
-  let!(:plage_ouverture) { create(:plage_ouverture, :daily, motifs: [motif], lieu: lieu, organisation: organisation, first_day: now) }
-  let!(:plage_ouverture2) { create(:plage_ouverture, :daily, motifs: [motif2], lieu: lieu2, organisation: organisation, first_day: now) }
-  let!(:plage_ouverture3) { create(:plage_ouverture, :daily, motifs: [motif3], lieu: lieu, organisation: other_org, first_day: now) }
-  let!(:plage_ouverture4) { create(:plage_ouverture, :daily, motifs: [motif4], lieu: lieu2, organisation: other_org, first_day: now) }
+  let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, organisation: organisation) }
+  let!(:plage_ouverture2) { create(:plage_ouverture, motifs: [motif2], lieu: lieu2, organisation: organisation) }
+  let!(:plage_ouverture3) { create(:plage_ouverture, motifs: [motif3], lieu: lieu, organisation: other_org) }
+  let!(:plage_ouverture4) { create(:plage_ouverture, motifs: [motif4], lieu: lieu2, organisation: other_org) }
 
   let!(:lieu) { create(:lieu, name: "Lieu numéro 1", organisation: organisation) }
   let!(:lieu2) { create(:lieu, name: "Lieu numéro 2", organisation: organisation) }
@@ -110,7 +110,6 @@ RSpec.describe SearchController, type: :controller do
             get :search_rdv, params: {
               address: address, departement: departement_number, city_code: city_code, motif_category_short_name: "rsa_orientation",
             }
-
             expect(subject).to include("RSA orientation 1")
             expect(subject).not_to include("RSA orientation 2")
           end

@@ -45,8 +45,6 @@ RSpec.shared_examples "SearchContext" do
     end
 
     context "with a motif and an address" do
-      let!(:lieu) { create(:lieu, organisation: organisation) }
-      let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, organisation: organisation) }
       let!(:query_params) { { address: address, departement: departement_number, city_code: city_code } }
 
       it "current step is lieu selection" do
