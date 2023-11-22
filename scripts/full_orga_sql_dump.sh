@@ -75,10 +75,10 @@ psql $SOURCE_DB_URL -c "COPY (
   WHERE rdvs.organisation_id=$ORGANISATION_ID
 ) TO '$OUTPUT_PATH/rdv_events.csv' CSV HEADER;"
 psql $SOURCE_DB_URL -c "COPY (
-  SELECT rdvs_users.* FROM rdvs_users
-  LEFT JOIN rdvs ON rdvs.id = rdvs_users.rdv_id
+  SELECT participations.* FROM participations
+  LEFT JOIN rdvs ON rdvs.id = participations.rdv_id
   WHERE rdvs.organisation_id=$ORGANISATION_ID
-) TO '$OUTPUT_PATH/rdvs_users.csv' CSV HEADER;"
+) TO '$OUTPUT_PATH/participations.csv' CSV HEADER;"
 psql $SOURCE_DB_URL -c "COPY (
   SELECT * FROM users WHERE id IN (
     (
@@ -118,7 +118,7 @@ psql $TEMP_DB_URL -c "COPY agents_rdvs FROM '$OUTPUT_PATH/agents_rdvs.csv' CSV H
 psql $TEMP_DB_URL -c "COPY agents_users FROM '$OUTPUT_PATH/agents_users.csv' CSV HEADER;"
 psql $TEMP_DB_URL -c "COPY motifs_plage_ouvertures FROM '$OUTPUT_PATH/motifs_plage_ouvertures.csv' CSV HEADER;"
 psql $TEMP_DB_URL -c "COPY rdv_events FROM '$OUTPUT_PATH/rdv_events.csv' CSV HEADER;"
-psql $TEMP_DB_URL -c "COPY rdvs_users FROM '$OUTPUT_PATH/rdvs_users.csv' CSV HEADER;"
+psql $TEMP_DB_URL -c "COPY participations FROM '$OUTPUT_PATH/participations.csv' CSV HEADER;"
 psql $TEMP_DB_URL -c "COPY users FROM '$OUTPUT_PATH/users.csv' CSV HEADER;"
 psql $TEMP_DB_URL -c "COPY file_attentes FROM '$OUTPUT_PATH/file_attentes.csv' CSV HEADER;"
 
