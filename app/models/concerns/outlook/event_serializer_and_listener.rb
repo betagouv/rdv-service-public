@@ -105,15 +105,7 @@ module Outlook
       show_link = url_helpers.admin_organisation_rdv_url(rdv.organisation, rdv.id, host: agent.domain.host_name)
       edit_link = url_helpers.edit_admin_organisation_rdv_url(rdv.organisation, rdv.id, host: agent.domain.host_name)
 
-      participants_list = rdv.participations.not_cancelled.map do |participation|
-        "<li>#{participation.user.full_name}</li>"
-      end.join
-
       <<~HTML
-        Participants:
-        <ul>#{participants_list}</ul>
-        <br />
-
         Plus d'infos sur <a href="#{show_link}">#{agent.domain_name}</a>:
         <br />
 

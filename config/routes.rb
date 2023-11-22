@@ -138,6 +138,7 @@ Rails.application.routes.draw do
           resource :sms_configuration, only: %i[show edit update]
           resources :zone_imports, only: %i[new create]
           resources :zones, only: [:index] # exports only
+          resource :services, only: %i[edit update]
           resource :sectorization, only: [:show]
           resources :sectors do
             resources :zones

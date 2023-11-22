@@ -3,8 +3,8 @@ module TextSearch
   # Full Text Search support, using pg_search (https://github.com/Casecommons/pg_search).
   # See https://github.com/betagouv/rdv-solidarites.fr/pull/2791.
   #
-  # Models including this concern need to have a :search_against class method returning
-  # a configuration that will be used for the "against:" parameter of pg_search.
+  # Models including this concern need to have a :search_options class method returning
+  # a configuration that will be used for the parameter of pg_search.
   #
   # This module has three roles:
   # 1. Declaring the base configuration for pg_search
@@ -25,12 +25,10 @@ module TextSearch
 
     pg_search_scope :full_text_search, lambda { |query|
       {
-        against: search_against,
         using: { tsearch: { prefix: true, any_word: true } },
-        ignoring: :accents,
         order_within_rank: "#{table_name}.updated_at desc",
         query: query,
-      }
+      }.merge(search_options)
     }
   end
 

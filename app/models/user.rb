@@ -22,18 +22,11 @@ class User < ApplicationRecord
   include WebhookDeliverable
   include TextSearch
   include UncommonPasswordConcern
+  include Anonymizable
 
-  def self.search_against
+  def self.search_options
     {
-      last_name: "A",
-      first_name: "B",
-      birth_name: "C",
-
-      # Ces champs sont moins pondérés car on ne veut leur
-      # donner de l'importance que si le match est très proche ou exact.
-      email: "D",
-      phone_number_formatted: "D",
-      id: "D",
+      using: { tsearch: { prefix: true, any_word: true, tsvector_column: "text_search_terms" } },
     }
   end
 
@@ -237,6 +230,13 @@ class User < ApplicationRecord
     self.rdv_invitation_token = generate_rdv_invitation_token
   end
 
+  def self.personal_data_column_names
+    %w[first_name last_name birth_name address birth_date unconfirmed_email
+       caisse_affiliation affiliation_number family_situation number_of_children
+       family_situation number_of_children phone_number_formatted franceconnect_openid_sub
+       city_code post_code city_name case_number address_details logement notes ants_pre_demande_number]
+  end
+
   protected
 
   def generate_rdv_invitation_token
@@ -284,6 +284,15 @@ class User < ApplicationRecord
     end
     return save! if organisations.any? # only actually mark deleted when no orgas left
 
-    update_columns(deleted_at: Time.zone.now, email_original: email, email: deleted_email)
+    anonymize_personal_data_columns!
+    receipts.each(&:anonymize_personal_data_columns!)
+    rdvs.each(&:anonymize_personal_data_columns!)
+    versions.destroy_all
+    update_columns(
+      first_name: "Usager supprimé",
+      last_name: "Usager supprimé",
+      deleted_at: Time.zone.now,
+      email: deleted_email
+    )
   end
 end

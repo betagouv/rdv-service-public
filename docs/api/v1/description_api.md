@@ -84,7 +84,6 @@ X-Runtime: 0.194743< Transfer-Encoding: chunked
     "last_name":"VALIDAY",
     "first_name":"Martine",
     "uid":"martine@demo.rdv-solidarites.fr",
-    "email_original":null,
     "allow_password_change":false
   }
 }

@@ -1,7 +1,4 @@
 class Service < ApplicationRecord
-  # Mixins
-  include HasVerticale
-
   # Attributes
   auto_strip_attributes :name, :short_name
 
@@ -15,22 +12,19 @@ class Service < ApplicationRecord
   has_many :agent_services, dependent: :restrict_with_error
   has_many :agents, through: :agent_services
   has_many :motifs, dependent: :restrict_with_error
+  has_many :territory_services, dependent: :restrict_with_error
+  has_many :territories, through: :territory_services
 
   # Validations
   validates :name, :short_name, presence: true, uniqueness: { case_sensitive: false }
 
   # Scopes
-  scope :with_motifs, -> { where.not(name: SECRETARIAT) }
-  scope :secretariat, -> { where(name: SECRETARIAT) }
-  scope :ordered_by_name, -> { order(Arel.sql("unaccent(LOWER(name))")) }
-  scope :in_verticale, ->(verticale) { where(verticale: [verticale, nil]) }
+  default_scope { order(Arel.sql("unaccent(LOWER(name))")) }
 
   ## -
 
-  # Retourne les services des agents des orgas du territoire
-  def self.used_by_agents_of_territory(territory)
-    agents_of_territory = Agent.joins(:organisations).merge(territory.organisations)
-    joins(:agent_services).where(agent_services: { agents: agents_of_territory }).distinct
+  def self.secretariat
+    find_by!(name: SECRETARIAT)
   end
 
   def secretariat?

@@ -55,12 +55,12 @@ describe Lieu, type: :model do
 
   context "with motif" do
     let!(:motif) { create(:motif, name: "Vaccination", bookable_by: bookable_by, organisation: organisation) }
-    let!(:plage_ouverture) { create(:plage_ouverture, :daily, motifs: [motif], lieu: lieu, organisation: organisation) }
     let!(:lieu) { create(:lieu) }
 
     describe ".for_motif" do
       subject { described_class.for_motif(motif) }
 
+      let!(:plage_ouverture) { create(:plage_ouverture, :daily, motifs: [motif], lieu: lieu, organisation: organisation) }
       let(:bookable_by) { :agents }
 
       before { freeze_time }
@@ -133,15 +133,25 @@ describe Lieu, type: :model do
       end
 
       context "for a motif collectif" do
+        let!(:motif) { create(:motif, collectif: true) }
+
         before do
-          create(:rdv, :collectif, lieu: lieu) # valid rdv
-          create(:rdv, :collectif, status: :revoked) # valid rdv
-          create(:rdv, :collectif, max_participants_count: 3, users_count: 3) # fully booked
-          create(:rdv, :collectif, starts_at: 3.days.ago) # in the past
+          create(:rdv, :collectif, motif: motif, lieu: lieu) # valid rdv
+          create(:rdv, :collectif, motif: motif, status: :revoked)
+          create(:rdv, :collectif, motif: motif, max_participants_count: 3).tap do |rdv| # fully booked
+            rdv.update_columns(users_count: 3) # rubocop:disable Rails/SkipsModelValidations
+          end
+          create(:rdv, :collectif, motif: motif, starts_at: 3.days.ago) # in the past
         end
 
         it "only returns lieux with a rdv that is available for reservation" do
-          expect(subject).to eq([lieu])
+          expect(subject).to match_array([lieu])
+        end
+
+        context "for a single use lieu" do
+          let!(:lieu) { create(:lieu, availability: :single_use) }
+
+          it { is_expected.to match_array([lieu]) }
         end
       end
     end

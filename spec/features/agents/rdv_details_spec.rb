@@ -139,6 +139,7 @@ describe "Agent can see RDV details correctly" do
     let(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
 
     it "does not display the link to the agenda" do
+      rdv.agents.first.rdvs.destroy_all
       rdv.agents.first.destroy!
       visit admin_organisation_rdv_path(organisation, rdv)
       expect(page).not_to have_content("voir dans l'agenda")

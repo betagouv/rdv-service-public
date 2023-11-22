@@ -88,7 +88,7 @@ class Admin::AgentsController < AgentAuthController
   private
 
   def render_new
-    @services = services.order(:name)
+    @services = current_territory.services
     @roles = access_levels_collection
     @agent_role = AgentRole.new
 
@@ -96,7 +96,7 @@ class Admin::AgentsController < AgentAuthController
   end
 
   def render_edit
-    @services = @agent.services.order(:name) # les services sont en lecture seule en édition
+    @services = @agent.services # les services sont en lecture seule en édition
     @agent_role = @agent.roles.find { |r| r.organisation == current_organisation }
     @agent_removal_presenter = AgentRemovalPresenter.new(@agent, current_organisation)
     @roles = access_levels_collection
@@ -112,29 +112,16 @@ class Admin::AgentsController < AgentAuthController
     end
   end
 
-  def services
-    Agent::ServicePolicy::AdminScope.new(pundit_user, Service).resolve
-  end
-
   def index_params
     @index_params ||= params.permit(:term, :intervenant_term)
   end
 
   def access_levels_collection
-    if activate_intervenants_feature? && @agent != current_agent && @agent.organisations.count < 2
+    if @agent != current_agent && @agent.organisations.count < 2
       AgentRole::ACCESS_LEVELS_WITH_INTERVENANT
     else
       AgentRole::ACCESS_LEVELS
     end
-  end
-
-  def activate_intervenants_feature?
-    # For CDAD Expe
-    current_organisation.territory_id.in?([59, 147, 148]) ||
-      Rails.env.development? ||
-      Rails.env.test? ||
-      ENV["RDV_SOLIDARITES_INSTANCE_NAME"] == "DEMO" ||
-      ENV["IS_REVIEW_APP"] == "true"
   end
 
   def create_agent_params
