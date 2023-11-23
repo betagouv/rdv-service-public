@@ -167,7 +167,7 @@ describe SlotBuilder, type: :service do
                                               recurrence: Montrose.every(:week, starts: first_day - 1.day))
 
       plage_ouvertures = described_class.plage_ouvertures_for(motif, lieu, date_range, [])
-      expect(plage_ouvertures.sort).to eq([matching_po, recurring_po].sort)
+      expect(plage_ouvertures).to contain_exactly(matching_po, recurring_po)
     end
 
     it "returns without recurrence PO that start in range" do
