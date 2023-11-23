@@ -1,4 +1,4 @@
-describe "User can search for creneaux" do
+describe "User can select a creneau" do
   let(:now) { Time.zone.parse("2021-12-13 8:00") }
 
   let!(:territory92) { create(:territory, departement_number: "92") }

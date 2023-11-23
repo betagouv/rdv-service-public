@@ -99,12 +99,12 @@ class Motif < ApplicationRecord
                        end
     available_motifs.where(organisation_id: organisation.id).active.ordered_by_name
   }
-  scope :search_by_name_with_location_type, lambda { |name_with_location_type|
+  scope :search_by_name_with_location_type, lambda { |name_with_location_type| # This should match the implementation of #name_with_location_type
     name, location_type = Motif.location_types.keys.map do |location_type|
       match_data = name_with_location_type&.match(/(.*)-#{location_type}$/)
       match_data ? [match_data[1], location_type] : nil
     end.compact.first
-    where(name: name, location_type: location_type)
+    where("REGEXP_REPLACE(LOWER(UNACCENT(motifs.name)), '[^0-9a-z]+', '_', 'g') = ?", name).where(location_type: location_type)
   }
   scope :sectorisation_level_departement, -> { where(sectorisation_level: SECTORISATION_LEVEL_DEPARTEMENT) }
   scope :sectorisation_level_organisation, -> { where(sectorisation_level: SECTORISATION_LEVEL_ORGANISATION) }
@@ -151,7 +151,7 @@ class Motif < ApplicationRecord
   end
 
   def name_with_location_type
-    "#{name}-#{location_type}"
+    "#{I18n.transliterate(name).downcase.gsub(/\W+/, '_')}-#{location_type}"
   end
 
   def sectorisation_level_agent?

@@ -42,7 +42,7 @@ module Users::CreneauxWizardConcern
   end
 
   def unique_motifs_by_name_and_location_type
-    @unique_motifs_by_name_and_location_type ||= matching_motifs.uniq { [_1.name, _1.location_type] }
+    @unique_motifs_by_name_and_location_type ||= matching_motifs.uniq(&:name_with_location_type)
   end
 
   # next availability by organisation for motifs without lieu
