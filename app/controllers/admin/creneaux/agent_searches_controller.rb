@@ -5,7 +5,6 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
 
   helper_method :motif_selected?
 
-  # rubocop:disable Metrics/PerceivedComplexity
   def index
     # nécessaire pour le `else`
     # et pour le cas où nous sommes sur un
@@ -17,7 +16,6 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
       redirect_to admin_organisation_slots_path(current_organisation, creneaux_search_params)
     else
       @motifs = Motif.active.where(organisation: current_agent.organisations).includes(:service).sort_by { _1.service.short_name }
-      @unique_motifs_by_four_criteria ||= @motifs.uniq { [_1.name_slug, _1.location_type, _1.service_id, _1.collectif?] }
       @services = Service.where(id: @motifs.pluck(:service_id).uniq)
       @form.service_id = @services.first.id if @services.count == 1
       @teams = current_organisation.territory.teams
@@ -27,12 +25,11 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
       @lieux = policy_scope(Lieu).enabled.ordered_by_name
     end
   end
-  # rubocop:enable Metrics/PerceivedComplexity
 
   private
 
   def motif_selected?
-    @form.motif_criteria
+    @form.motif_criteria.present?
   end
 
   def only_one_lieu?

@@ -166,6 +166,10 @@ class Motif < ApplicationRecord
     [motif.name_slug, motif.location_type, motif.service_id, motif.collectif.inspect].join("-")
   end
 
+  def four_criteria_slug
+    self.class.four_criteria_slug(self)
+  end
+
   def self.criteria_hash_from_slug(slug)
     name_slug, location_type, service_id, collectif_str = slug.split("-")
     {

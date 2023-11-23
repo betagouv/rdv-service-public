@@ -27,7 +27,7 @@
             required: true, \
             label: "Motif", \
             include_blank: true, \
-            collection: @unique_motifs_by_four_criteria, \
+            collection: @motifs.uniq(&:four_criteria_slug), \
             as: :select, \
             label_method: -> { [_1.service.short_name, motif_name_and_location_type(_1), (_1.collectif ? "Collectif" : "Individuel")].join(" - ") }, \
             value_method: -> { Motif.four_criteria_slug(_1) }, \
