@@ -14,7 +14,7 @@ class Motif < ApplicationRecord
   # Attributes
   auto_strip_attributes :name, :color
 
-  NAME_SLUG_REGEXP = "[^0-9a-z]+".freeze
+  NAME_SLUG_REGEXP = /[^0-9a-z]+/
 
   # TODO: make it an enum
   VISIBLE_AND_NOTIFIED = "visible_and_notified".freeze
@@ -107,7 +107,7 @@ class Motif < ApplicationRecord
       match_data = name_with_location_type&.match(/(.*)-#{location_type}$/)
       match_data ? [match_data[1], location_type] : nil
     end.compact.first
-    where(%{REGEXP_REPLACE(LOWER(UNACCENT(motifs.name)), '#{NAME_SLUG_REGEXP}', '_', 'g') = ?}, slug_name)
+    where(%{REGEXP_REPLACE(LOWER(UNACCENT(motifs.name)), '#{NAME_SLUG_REGEXP.source}', '_', 'g') = ?}, slug_name)
       .where(location_type: location_type)
   }
   scope :sectorisation_level_departement, -> { where(sectorisation_level: SECTORISATION_LEVEL_DEPARTEMENT) }
@@ -156,7 +156,7 @@ class Motif < ApplicationRecord
 
   # This should match the implementation of .search_by_name_with_location_type
   def name_with_location_type
-    "#{I18n.transliterate(name).downcase.gsub(/#{NAME_SLUG_REGEXP}/, '_')}-#{location_type}"
+    "#{I18n.transliterate(name).downcase.gsub(NAME_SLUG_REGEXP, '_')}-#{location_type}"
   end
 
   def sectorisation_level_agent?
