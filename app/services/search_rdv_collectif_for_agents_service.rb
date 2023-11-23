@@ -24,7 +24,7 @@ class SearchRdvCollectifForAgentsService
 
   def rdvs_scope
     rdvs = Rdv.where(organisation: @form.organisation).collectif
-      .where(motif: @form.motif).with_remaining_seats
+      .where(motif: @form.motifs).with_remaining_seats
       .where("starts_at > ?", @form.from_date)
 
     if @form.lieu_ids.present?

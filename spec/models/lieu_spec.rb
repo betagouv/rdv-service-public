@@ -57,8 +57,8 @@ describe Lieu, type: :model do
     let!(:motif) { create(:motif, name: "Vaccination", bookable_by: bookable_by, organisation: organisation) }
     let!(:lieu) { create(:lieu) }
 
-    describe ".for_motif" do
-      subject { described_class.for_motif(motif) }
+    describe ".for_motifs" do
+      subject { described_class.for_motifs([motif]) }
 
       let!(:plage_ouverture) { create(:plage_ouverture, :daily, motifs: [motif], lieu: lieu, organisation: organisation) }
       let(:bookable_by) { :agents }

@@ -18,7 +18,7 @@ describe Admin::SlotsController, type: :controller do
       get :index, params: {
         organisation_id: organisation.id,
         service_id: agent.services.first.id,
-        motif_id: motif.id,
+        motif_criteria: { name_slug: motif.name_slug },
         from_date: from_date,
         agent_ids: agent_ids,
         lieu_id: lieu,
@@ -40,7 +40,7 @@ describe Admin::SlotsController, type: :controller do
           expect do
             get :index, params: {
               organisation_id: organisation.id,
-              motif_id: motif.id,
+              motif_criteria: { name_slug: motif.name_slug },
             }
           end.not_to raise_error
           expect(response.body).to include(I18n.t("admin.slots.index.no_slot_available", motif_name: motif.name))

@@ -162,6 +162,20 @@ class Motif < ApplicationRecord
     I18n.transliterate(name).downcase.gsub(/[^0-9a-z]+/, "_")
   end
 
+  def self.four_criteria_slug(motif)
+    [motif.name_slug, motif.location_type, motif.service_id, motif.collectif.inspect].join("-")
+  end
+
+  def self.criteria_hash_from_slug(slug)
+    name_slug, location_type, service_id, collectif_str = slug.split("-")
+    {
+      name_slug: name_slug,
+      location_type: location_type,
+      service_id: service_id.to_i,
+      collectif: collectif_str == "true",
+    }
+  end
+
   def name_with_location_type
     "#{name_slug}-#{location_type}"
   end

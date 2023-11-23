@@ -30,18 +30,10 @@ module CreneauxHelper
   end
 
   def build_agent_creneaux_search_form(organisation, params)
-    motif_criteria = case params[:motif_criteria]
-                     when nil
-                       nil
-                     when String
-                       params[:motif_criteria]
-                     else
-                       params[:motif_criteria].to_json
-                     end
     AgentCreneauxSearchForm.new(
       organisation_id: organisation.id,
       service_id: params[:service_id],
-      motif_criteria_json: motif_criteria,
+      motif_criteria: params[:motif_criteria],
       from_date: params[:from_date],
       context: params[:context].presence,
       user_ids: params.fetch(:user_ids, []).compact_blank,

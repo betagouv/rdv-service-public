@@ -27,11 +27,11 @@ class Lieu < ApplicationRecord
   validate :cant_change_availibility_single_use
 
   # Scopes
-  scope :for_motif, lambda { |motif|
+  scope :for_motifs, lambda { |motifs|
     lieux_ids = PlageOuverture
       .where.not("recurrence IS ? AND first_day < ?", nil, Time.zone.today)
       .joins(:motifs)
-      .where(motifs: { id: motif.id, deleted_at: nil })
+      .where(motifs: { id: motifs.map(&:id), deleted_at: nil })
       .map(&:lieu_id)
       .uniq
     enabled.where(id: lieux_ids)
