@@ -8,7 +8,7 @@ describe SearchCreneauxWithoutLieuForAgentsService, type: :service do
       instance_double(
         AgentCreneauxSearchForm,
         organisation: organisation,
-        motif: motif,
+        motifs: [motif],
         service: motif.service,
         agent_ids: [],
         team_ids: [],
@@ -21,7 +21,7 @@ describe SearchCreneauxWithoutLieuForAgentsService, type: :service do
     let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], first_day: Date.new(2022, 10, 25), lieu: nil, organisation: organisation) }
 
     it "has results" do
-      expect(described_class.perform_with(form).creneaux).to be_any
+      expect(described_class.perform_with(form).creneaux).not_to be_empty
     end
   end
 end

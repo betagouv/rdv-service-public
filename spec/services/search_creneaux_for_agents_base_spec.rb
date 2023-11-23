@@ -6,7 +6,7 @@ describe SearchCreneauxForAgentsBase, type: :service do
       instance_double(
         AgentCreneauxSearchForm,
         organisation: organisation,
-        motif: motif,
+        motif_criteria: { name_slug: motif.name_slug },
         service: motif.service,
         agent_ids: agents.map(&:id),
         team_ids: teams.map(&:id),

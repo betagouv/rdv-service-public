@@ -26,13 +26,13 @@ RSpec.describe "Admin::Organisations::OnlineBookings", type: :request do
 
         params = {
           from_date: "2022-10-17",
-          motif_id: motif.id,
+          motif_criteria: { name_slug: motif.name_slug },
           commit: true,
         }
 
         get admin_organisation_agent_searches_path(organisation, params)
 
-        expect(response).to redirect_to(admin_organisation_slots_path(organisation, from_date: "2022-10-17", motif_id: motif.id))
+        expect(response).to redirect_to(admin_organisation_slots_path(organisation, from_date: "2022-10-17", motif_criteria: { name_slug: motif.name_slug }))
       end
     end
   end
