@@ -23,15 +23,10 @@ module Anonymizable
     end
 
     def anonymous_value(column)
-      case column.type.to_sym
-      when :string, :text
+      if column.type.in?(%i[string text])
         "[valeur anonymisée]"
-      when :date
-        column.null ? nil : Date.new(1900, 1, 1)
-      when :integer
-        column.null ? nil : 0
       else
-        raise "Don't know how to anonymize column #{column.name} (#{column.type})"
+        column.default
       end
     end
   end
