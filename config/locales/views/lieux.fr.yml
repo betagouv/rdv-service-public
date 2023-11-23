@@ -2,7 +2,6 @@ fr:
   search:
     lieu_selection:
       lieu_available:
-        zero: Nous n'avons pas trouvé de créneaux pour votre motif.
         one: 1 lieu est disponible
         other: "%{count} lieux sont disponibles"
       select_lieu: "Sélectionnez un lieu de RDV :"
@@ -25,4 +24,3 @@ fr:
       choose_motif: "Choisissez un motif"
       choose_this_motif: "Choisir ce motif"
       motif_not_in_list: "Le motif que vous cherchez n'est pas dans la liste ?"
-

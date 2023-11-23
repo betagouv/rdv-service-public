@@ -28,7 +28,7 @@ describe "User can search for creneaux" do
 
       find("h3", text: motif.name).click
 
-      expect(page).to have_content("Nous n'avons pas trouvé de créneaux pour votre motif")
+      expect(page).to have_content("Malheureusement, aucun créneau correspondant à votre recherche n'a été trouvé.")
     end
   end
 
