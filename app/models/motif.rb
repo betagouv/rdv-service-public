@@ -101,7 +101,8 @@ class Motif < ApplicationRecord
                        end
     available_motifs.where(organisation_id: organisation.id).active.ordered_by_name
   }
-  scope :search_by_name_with_location_type, lambda { |name_with_location_type| # This should match the implementation of #name_with_location_type
+  # This should match the implementation of #name_with_location_type
+  scope :search_by_name_with_location_type, lambda { |name_with_location_type|
     slug_name, location_type = Motif.location_types.keys.map do |location_type|
       match_data = name_with_location_type&.match(/(.*)-#{location_type}$/)
       match_data ? [match_data[1], location_type] : nil
@@ -153,6 +154,7 @@ class Motif < ApplicationRecord
     visibility_type == VISIBLE_AND_NOTIFIED
   end
 
+  # This should match the implementation of .search_by_name_with_location_type
   def name_with_location_type
     "#{I18n.transliterate(name).downcase.gsub(/#{NAME_SLUG_REGEXP}/, '_')}-#{location_type}"
   end
