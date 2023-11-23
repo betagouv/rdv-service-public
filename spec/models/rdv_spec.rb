@@ -322,7 +322,7 @@ describe Rdv, type: :model do
           rdv_that_ongoing,
         ]
 
-        expect(described_class.ongoing(time_margin: 1.hour).sort).to eq(expected_rdvs.sort)
+        expect(described_class.ongoing(time_margin: 1.hour)).to match_array(expected_rdvs)
       end
     end
   end

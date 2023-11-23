@@ -12,7 +12,7 @@ describe Admin::ReferentAssignationsController, type: :controller do
       get :index, params: { organisation_id: organisation.id, user_id: user.id }
 
       expect(response).to be_successful
-      expect(assigns(:agents).sort).to eq([agent, lea].sort)
+      expect(assigns(:agents)).to contain_exactly(agent, lea)
       expect(assigns(:referents)).to eq([])
     end
 

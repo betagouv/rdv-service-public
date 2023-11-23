@@ -1,15 +1,6 @@
 section.bg-light.p-4
   .container
-    .card.card-hoverable
-      .card-body
-        = link_to path_to_motif_selection(params), class: "d-block stretched-link" do
-          .row
-            .col-auto.align-self-center
-              i.fa.fa-chevron-left
-            .col
-              h2.pb-1.mb-1
-                = motif_name_and_location_type(context.first_matching_motif)
-              = context.service.name
+    = render "selected_motif_recap", context: context
     - if context.lieu.present?
       .card.card-hoverable
         .card-body
