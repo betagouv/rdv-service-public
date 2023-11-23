@@ -62,7 +62,7 @@ describe User, type: :model do
     it "when user is responsible" do
       responsive = create(:user, organisations: [create(:organisation), create(:organisation)])
       relative = create(:user, responsible: responsive)
-      expect(relative.organisations.sort).to eq(responsive.organisations.sort)
+      expect(relative.organisations).to match_array(responsive.organisations)
     end
   end
 

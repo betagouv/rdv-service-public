@@ -20,7 +20,7 @@ describe Admin::Agents::RdvsController, type: :controller do
         rdv = create(:rdv, agents: [given_agent], organisation: organisation, starts_at: now + 3.days)
         rdv_from_other_organisation = create(:rdv, agents: [given_agent], organisation: other_organisation, starts_at: now + 4.days)
         get :index, params: { agent_id: given_agent.id, organisation_id: organisation.id, format: :json }
-        expect(assigns(:rdvs).sort).to eq([rdv, rdv_from_other_organisation].sort)
+        expect(assigns(:rdvs)).to contain_exactly(rdv, rdv_from_other_organisation)
         travel_back
       end
 
