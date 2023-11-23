@@ -21,8 +21,8 @@ class Admin::SlotsController < AgentAuthController
   private
 
   def search_result
-    if @form.motif.requires_lieu?
-      if @form.motif.individuel?
+    if @form.first_motif_matching_criteria.requires_lieu?
+      if @form.first_motif_matching_criteria.individuel?
         SearchCreneauxForAgentsService.perform_with(@form).first
       else
         SearchRdvCollectifForAgentsService.new(@form).slot_search

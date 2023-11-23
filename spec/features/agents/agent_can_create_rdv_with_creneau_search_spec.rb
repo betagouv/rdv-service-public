@@ -150,4 +150,23 @@ describe "Agent can create a Rdv with creneau search" do
       it_behaves_like "book a rdv without a lieu"
     end
   end
+
+  context "when secretaire searches for creneau in several organisations" do
+    let!(:org1) { create(:organisation) }
+    let!(:agent_org1) { create(:agent, basic_role_in_organisations: [org1]) }
+    let!(:motif_aide_aux_victimes_org1) { create(:motif, :by_phone, organisation: org1, name: "Aide aux victimes") }
+    let!(:plage_org1) { create(:plage_ouverture, organisation: org1, agent: agent_org1, motifs: [motif_aide_aux_victimes_org1]) }
+
+    let!(:org2) { create(:organisation) }
+    let!(:motif_aide_aux_victimes_org2) { create(:motif, :by_phone, organisation: org2, name: "Aide aux victimes") }
+    let!(:other_motif_org2) { create(:motif, :by_phone, organisation: org2, name: "Autre motif") }
+
+    let!(:agent) { create(:agent, :secretaire, basic_role_in_organisations: [org1, org2]) }
+
+    it "displays creneaux from all organisations" do
+      visit admin_organisation_agent_searches_path(org1)
+      expect(page).to have_content("Trouver un RDV")
+      expect(page).to have_select("Motif", options: ["", "Aide aux victimes (Par téléphone)"])
+    end
+  end
 end

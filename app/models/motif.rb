@@ -100,11 +100,11 @@ class Motif < ApplicationRecord
     available_motifs.where(organisation_id: organisation.id).active.ordered_by_name
   }
   scope :search_by_name_with_location_type, lambda { |name_with_location_type| # This should match the implementation of #name_with_location_type
-    name, location_type = Motif.location_types.keys.map do |location_type|
-      match_data = name_with_location_type&.match(/(.*)-#{location_type}$/)
-      match_data ? [match_data[1], location_type] : nil
-    end.compact.first
-    where("REGEXP_REPLACE(LOWER(UNACCENT(motifs.name)), '[^0-9a-z]+', '_', 'g') = ?", name).where(location_type: location_type)
+    name, location_type = split_name_and_location_type(name_with_location_type)
+    with_name_slug(name).where(location_type: location_type)
+  }
+  scope :with_name_slug, lambda { |name_slug|
+    where("REGEXP_REPLACE(LOWER(UNACCENT(motifs.name)), '[^0-9a-z]+', '_', 'g') = ?", name_slug)
   }
   scope :sectorisation_level_departement, -> { where(sectorisation_level: SECTORISATION_LEVEL_DEPARTEMENT) }
   scope :sectorisation_level_organisation, -> { where(sectorisation_level: SECTORISATION_LEVEL_ORGANISATION) }
@@ -123,6 +123,14 @@ class Motif < ApplicationRecord
   scope :requires_ants_predemande_number, -> { joins(:motif_category).merge(MotifCategory.requires_ants_predemande_number) }
 
   ## -
+
+  #  @return [Array] Un tableau de 2 elements : [name_slug, location_type]
+  def self.split_name_and_location_type(name_slug_and_location_type)
+    Motif.location_types.keys.map do |location_type|
+      match_data = name_slug_and_location_type&.match(/(.*)-#{location_type}$/)
+      match_data ? [match_data[1], location_type] : nil
+    end.compact.first
+  end
 
   def to_s
     name
@@ -150,8 +158,12 @@ class Motif < ApplicationRecord
     visibility_type == VISIBLE_AND_NOTIFIED
   end
 
+  def name_slug
+    I18n.transliterate(name).downcase.gsub(/[^0-9a-z]+/, "_")
+  end
+
   def name_with_location_type
-    "#{I18n.transliterate(name).downcase.gsub(/\W+/, '_')}-#{location_type}"
+    "#{name_slug}-#{location_type}"
   end
 
   def sectorisation_level_agent?

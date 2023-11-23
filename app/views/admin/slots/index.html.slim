@@ -3,11 +3,11 @@
     .card-header
      .d-flex.justify-content-between.flex-wrap
        span
-         h3= t(".available_slots_title_html", motif: "#{@form.motif.name.downcase} (#{@form.motif.service.short_name})")
-         - if @form.motif.requires_lieu?
+         h3= t(".available_slots_title_html", motif: "#{@form.first_motif_matching_criteria.name.downcase} (#{@form.first_motif_matching_criteria.service.short_name})")
+         - if @form.first_motif_matching_criteria.requires_lieu?
            = t(".place_informations_html", place_name: @search_result.lieu.name, place_address: @search_result.lieu.address)
          - else
-           = t(@form.motif.location_type)
+           = t(@form.first_motif_matching_criteria.location_type)
        span
          / lien très utilisé pour la duplication de RDV
          / il permet de reprendre un RDV, éventuellement pour un autre motif
@@ -15,14 +15,14 @@
          = link_to t(".place_index"), admin_organisation_agent_searches_path(current_organisation, creneaux_search_params(@form)), class: "btn btn-outline-primary m-2"
 
     .card-body
-      - if @form.motif.individuel?
+      - if @form.first_motif_matching_criteria.individuel?
         = render "/admin/slots/slots", \
           lieu: @search_result.lieu, \
           creneaux: @search_result.creneaux, \
           form: @form, \
           next_availability: @search_result.next_availability
 
-  - if  @form.motif.collectif?
+  - if  @form.first_motif_matching_criteria.collectif?
     .row.justify-content-center.pb-3
       .col-md-8
         - @search_result.creneaux.each do |search_result|

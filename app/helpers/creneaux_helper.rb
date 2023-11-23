@@ -19,7 +19,7 @@ module CreneauxHelper
   def creneaux_search_params(form)
     {
       service_id: form.service_id,
-      motif_id: form.motif_id,
+      motif_criteria: form.motif_criteria,
       from_date: form.from_date,
       agent_ids: form.agent_ids,
       team_ids: form.team_ids,
@@ -30,10 +30,18 @@ module CreneauxHelper
   end
 
   def build_agent_creneaux_search_form(organisation, params)
+    motif_criteria = case params[:motif_criteria]
+                     when nil
+                       nil
+                     when String
+                       params[:motif_criteria]
+                     else
+                       params[:motif_criteria].to_json
+                     end
     AgentCreneauxSearchForm.new(
       organisation_id: organisation.id,
       service_id: params[:service_id],
-      motif_id: params[:motif_id],
+      motif_criteria_json: motif_criteria,
       from_date: params[:from_date],
       context: params[:context].presence,
       user_ids: params.fetch(:user_ids, []).compact_blank,

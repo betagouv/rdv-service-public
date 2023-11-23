@@ -23,16 +23,16 @@
               }, \
             }
         .col-md-4
-          = f.input :motif_id, \
+          = f.input :motif_criteria, \
             required: true, \
             include_blank: true, \
-            collection: @motifs.includes(:service).to_a.group_by { _1.service.name }, \
-            as: :grouped_select, \
-            group_method: :last,
-            label_method: -> { motif_name_and_location_type(_1) }, \
+            collection: @unique_motifs_by_four_criteria, \
+            as: :select, \
+            label_method: -> { [_1.service.short_name, motif_name_and_location_type(_1),(_1.collectif ? "Collectif" : "Individuel")].join(" - ") }, \
+            value_method: -> { { name_slug: _1.name_slug, location_type: _1.location_type, service_id: _1.service_id, collectif: _1.collectif }.to_json }, \
             input_html: { \
               data: { placeholder: "Sélectionnez un motif" }, \
-              class: "js-filtered-motifs", \
+              class: "js-filtered-motifs2", \
             }
         .col-md-4
           - input_html = { data: { "min-date": Time.zone.today.strftime("%d/%m/%Y") } } # prevent from selecting past dates
