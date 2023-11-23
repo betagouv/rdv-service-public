@@ -100,8 +100,8 @@ class Motif < ApplicationRecord
     available_motifs.where(organisation_id: organisation.id).active.ordered_by_name
   }
   scope :search_by_name_with_location_type, lambda { |name_with_location_type| # This should match the implementation of #name_with_location_type
-    name, location_type = split_name_and_location_type(name_with_location_type)
-    with_name_slug(name).where(location_type: location_type)
+    name_slug, location_type = split_name_slug_and_location_type(name_with_location_type)
+    with_name_slug(name_slug).where(location_type: location_type)
   }
   scope :with_name_slug, lambda { |name_slug|
     where("REGEXP_REPLACE(LOWER(UNACCENT(motifs.name)), '[^0-9a-z]+', '_', 'g') = ?", name_slug)
@@ -125,7 +125,7 @@ class Motif < ApplicationRecord
   ## -
 
   #  @return [Array] Un tableau de 2 elements : [name_slug, location_type]
-  def self.split_name_and_location_type(name_slug_and_location_type)
+  def self.split_name_slug_and_location_type(name_slug_and_location_type)
     Motif.location_types.keys.map do |location_type|
       match_data = name_slug_and_location_type&.match(/(.*)-#{location_type}$/)
       match_data ? [match_data[1], location_type] : nil
