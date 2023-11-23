@@ -1,4 +1,3 @@
-/ TODO redirect to this page directly from controler
 .card
   .card-body
     - if context.follow_up?
@@ -9,7 +8,8 @@
         .float-left
           = render "users/rdvs/prendre_rdv_button"
     - elsif context.invitation?
-      .font-weight-bold Un problème semble s'être produit pour votre invitation. Toutes nos excuses pour cela.
+      .font-weight-bold Malheureusement, aucun créneau correspondant à votre invitation n'a été trouvé.
+      .font-weight-bold.mb-2 Toutes nos excuses pour cela.
       = mail_to current_domain.support_email,
         subject: "[Problème Invitation]",
         class: "btn btn-primary" do
