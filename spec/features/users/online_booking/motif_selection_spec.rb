@@ -16,10 +16,10 @@ RSpec.describe "Motif selection" do
 
     let(:lieu) { create(:lieu, organisation: organisation, name: "Premier lieu") }
     let(:autre_lieu) { create(:lieu, organisation: autre_organisation, name: "Deuxième lieu") }
-    let(:encore_autre_lieu) { create(:lieu, organisation: organisation, name: "Troisème lieu") }
+    let(:encore_autre_lieu) { create(:lieu, organisation: organisation, name: "Troisième lieu") }
     let(:service) { create(:service) }
 
-    it "displays only one motif and then allows to choose betwen the two different lieux" do
+    it "displays only one motif and then allows to choose between the two different lieux" do
       visit prendre_rdv_path(service_id: service.id, departement: organisation.territory.departement_number)
       expect(page).to have_content(motif.name)
       expect(page).not_to have_content(autre_motif.name)
