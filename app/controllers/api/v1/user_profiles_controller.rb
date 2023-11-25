@@ -1,11 +1,12 @@
 class Api::V1::UserProfilesController < Api::V1::AgentAuthBaseController
   def create
-    user_profile = UserProfile.new(user_profile_params)
-    authorize(user_profile)
-    user_profile.save!
-    render_record user_profile
-  rescue ArgumentError => e
-    render_error :unprocessable_entity, { success: false, errors: {}, error_messages: [e] }
+    if user_profiles_params[:organisation_ids].present?
+      create_user_profiles
+    else
+      create_user_profile(user_profiles_params)
+    end
+    user = User.find(user_profiles_params[:user_id])
+    render_record user, agent_context: pundit_user
   end
 
   def destroy
@@ -28,7 +29,19 @@ class Api::V1::UserProfilesController < Api::V1::AgentAuthBaseController
 
   private
 
-  def user_profile_params
-    params.permit(:organisation_id, :user_id, :logement, :notes)
+  def create_user_profiles
+    user_profiles_params[:organisation_ids].each do |organisation_id|
+      create_user_profile(user_profiles_params.except(:organisation_ids).merge(organisation_id: organisation_id))
+    end
+  end
+
+  def create_user_profile(user_profile_attributes)
+    user_profile = UserProfile.new(user_profile_attributes)
+    authorize(user_profile)
+    user_profile.save
+  end
+
+  def user_profiles_params
+    params.permit(:organisation_id, :user_id, :logement, :notes, organisation_ids: []).to_h.symbolize_keys
   end
 end
