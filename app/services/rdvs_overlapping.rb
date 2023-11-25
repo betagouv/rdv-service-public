@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class RdvsOverlapping
   delegate :starts_at, :ends_at, :duration_in_min, to: :rdv
   attr_reader :rdv

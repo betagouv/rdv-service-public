@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # This specs checks that the ICS attachments are added correctly.
 # It was after a bug was discovered: several copies of the ICS file were present.
 describe IcsMultipartAttached, type: :mailer do

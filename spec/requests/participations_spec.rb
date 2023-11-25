@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe "Participations", type: :request do
   let(:service) { create(:service) }
   let(:organisation) { create(:organisation) }
@@ -11,16 +9,16 @@ RSpec.describe "Participations", type: :request do
 
   before do
     login_as(agent, scope: :agent)
-    create(:rdvs_user, user: user1, rdv: rdv)
-    create(:rdvs_user, user: user2, rdv: rdv)
+    create(:participation, user: user1, rdv: rdv)
+    create(:participation, user: user2, rdv: rdv)
   end
 
   describe "update" do
     it "returns status ok on remote put" do
       put(
-        admin_organisation_rdv_participation_path(rdv.organisation, rdv, rdv.rdvs_users.first),
+        admin_organisation_rdv_participation_path(rdv.organisation, rdv, rdv.participations.first),
         xhr: true,
-        params: { rdvs_user: { status: "seen" } }
+        params: { participation: { status: "seen" } }
       )
       expect(response).to have_http_status(:success)
     end
@@ -29,7 +27,7 @@ RSpec.describe "Participations", type: :request do
   describe "destroy" do
     it "returns http redirect and notif" do
       delete(
-        admin_organisation_rdv_participation_path(rdv.organisation, rdv, rdv.rdvs_users.first)
+        admin_organisation_rdv_participation_path(rdv.organisation, rdv, rdv.participations.first)
       )
       expect(response).to redirect_to(admin_organisation_rdv_path(organisation, rdv))
       expect(flash[:notice]).to eq("La participation de l'usager au rdv a été supprimée.")

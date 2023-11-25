@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe Agent::CustomDeviseTokenAuthUserOmniauthCallbacks, type: :concern do
   context "Verifying gem devise_token_auth change in user_omniauth_callbacks file." do
     it "user_omniauth_callbacks.rb digest must not change" do

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe "User can change rdv participant" do
   let(:rdv) { create(:rdv) }
   let(:user) { rdv.users.first }

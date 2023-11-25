@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module PhoneNumberValidation
   # See issue #1471. We want to allow:
   # * international (e164) phone numbers
@@ -55,6 +53,10 @@ module PhoneNumberValidation
       # overrides getter to make sure value is synced with phone_number
       format_phone_number
       super
+    end
+
+    def humanized_phone_number
+      Phonelib.parse(phone_number_formatted).national
     end
   end
 end

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module Rdv::Updatable
   extend ActiveSupport::Concern
 
@@ -11,14 +9,14 @@ module Rdv::Updatable
   def save_and_notify(author)
     Rdv.transaction do
       self.updated_at = Time.zone.now
-      previous_participations = rdvs_users.select(&:persisted?)
+      previous_participations = participations.select(&:persisted?)
       set_created_by_for_new_participations(author)
 
       if status_changed? && valid?
         self.cancelled_at = status.in?(%w[excused revoked noshow]) ? Time.zone.now : nil
         change_participation_statuses
         # Reload is needed after .persisted? method call.
-        rdvs_users.reload
+        participations.reload
       end
 
       if save
@@ -30,9 +28,9 @@ module Rdv::Updatable
     end
   end
 
-  def rdv_user_token(user_id)
+  def participation_token(user_id)
     # For user invited with tokens, nil default for not invited users
-    @notifier&.rdv_users_tokens_by_user_id&.fetch(user_id, nil)
+    @notifier&.participations_tokens_by_user_id&.fetch(user_id, nil)
   end
 
   def notify!(author, previous_participations)
@@ -47,7 +45,7 @@ module Rdv::Updatable
 
     @notifier&.perform
 
-    if collectif? && previous_participations.sort != rdvs_users.sort
+    if collectif? && previous_participations.sort != participations.sort
       Notifiers::RdvCollectifParticipations.perform_with(self, author, previous_participations)
     end
   end
@@ -89,20 +87,20 @@ module Rdv::Updatable
     case status
     when "unknown"
       # Setting to unknown means resetting the rdv status by agents and reset ALL participations statuses
-      rdvs_users.each { _1.update!(status: status) }
+      participations.each { _1.update!(status: status) }
     when "revoked", "excused"
       # When rdv status is revoked/excused, not cancelled participations are updated to revoked/excused
       # Collectives RDV status cannot be excused (validations)
-      rdvs_users.not_cancelled.each { _1.update!(status: status) }
+      participations.not_cancelled.each { _1.update!(status: status) }
     when "seen", "noshow"
       # When rdv status is seen/noshow, unknowns participations statuses are updated to seen/noshow
       # Collectives RDV status cannot be noshow (validations)
-      rdvs_users.unknown.each { _1.update!(status: status) }
+      participations.unknown.each { _1.update!(status: status) }
     end
   end
 
   def set_created_by_for_new_participations(author) # rubocop:disable Naming/AccessorMethodName
     creator = author.class.model_name.singular
-    rdvs_users.select(&:new_record?).each { |rdvs_user| rdvs_user.created_by = creator }
+    participations.select(&:new_record?).each { |participation| participation.created_by = creator }
   end
 end

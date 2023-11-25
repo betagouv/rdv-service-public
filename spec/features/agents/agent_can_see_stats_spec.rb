@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe "Agent can see stats" do
   let!(:territory1) { create(:territory) }
   let!(:organisation1a) { create(:organisation, territory: territory1) }

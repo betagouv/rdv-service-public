@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Api::V1::AgentsController < Api::V1::AgentAuthBaseController
   def index
     agents = policy_scope(Agent).distinct

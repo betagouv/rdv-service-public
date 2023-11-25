@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class DuplicateUsersFinderService < BaseService
   def initialize(user, organisation = nil)
     # TODO: Remove organisation from the parameters
@@ -31,12 +29,22 @@ class DuplicateUsersFinderService < BaseService
       return unless user.birth_date.present? && user.first_name.present? && user.last_name.present?
 
       duplicates = users_in_scope(user, organisation)
-        .where(birth_date: user.birth_date) # index this
-        .where(User.arel_table[:first_name].matches(user.first_name))
-        .where(User.arel_table[:last_name].matches(user.last_name))
+        .where(birth_date: user.birth_date)
+        .merge(match_on_names(user.first_name, user.last_name))
       return unless duplicates.exists?
 
       OpenStruct.new(severity: :warning, attributes: %i[first_name last_name birth_date], user: most_relevant_user(duplicates))
+    end
+
+    def find_duplicate_based_on_names_and_phone(user)
+      return unless user.phone_number_formatted.present? && user.first_name.present? && user.last_name.present?
+
+      duplicates = users_in_scope(user, nil)
+        .where(phone_number_formatted: user.phone_number_formatted)
+        .merge(match_on_names(user.first_name, user.last_name))
+      return unless duplicates.exists?
+
+      most_relevant_user(duplicates)
     end
 
     def find_duplicate_based_on_phone_number(user, organisation)
@@ -50,6 +58,14 @@ class DuplicateUsersFinderService < BaseService
     end
 
     private
+
+    def match_on_names(first_name, last_name)
+      User.where(
+        "unaccent(lower(first_name)) = ?", I18n.transliterate(first_name.downcase.strip)
+      ).where(
+        "unaccent(lower(last_name)) = ?", I18n.transliterate(last_name.downcase.strip)
+      )
+    end
 
     def users_in_scope(user, organisation)
       u = User.all

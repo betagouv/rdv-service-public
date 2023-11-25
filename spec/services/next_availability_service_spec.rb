@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe NextAvailabilityService, type: :service do
   let(:today) { Date.new(2021, 3, 18) }
   let(:now) { Time.zone.parse("20210318 8:23") }

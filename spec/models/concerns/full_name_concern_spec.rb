@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe FullNameConcern do
   let(:marie) { build :user, first_name: "Marie", last_name: "Curie", birth_name: "Skłodowska" }
   let(:pierre) { build :user, first_name: "Pierre", last_name: "Curie", birth_name: "" }

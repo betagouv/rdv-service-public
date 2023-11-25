@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe CronJob::ReminderJob, type: :job do
   subject(:perform_now) { described_class.perform_now }
 

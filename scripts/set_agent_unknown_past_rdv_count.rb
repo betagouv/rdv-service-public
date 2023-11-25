@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # See AddUnknowPastRdvCountToAgents
 # Set the initial values for Agent.unknow_past_rdv_count
 

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class CustomDeviseFailure < Devise::FailureApp
   # redirection
   def route(scope)

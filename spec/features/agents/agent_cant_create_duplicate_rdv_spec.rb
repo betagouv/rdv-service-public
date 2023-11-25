@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe "Agent can't create duplicate RDV" do
   let!(:organisation) { create(:organisation) }
   let!(:service) { create(:service) }

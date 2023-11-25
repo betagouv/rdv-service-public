@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module PaperTrailHelper
   def paper_trail_change_value(property_name, value)
     # TODO: use human_attribute_value instead of these custom helpers
@@ -42,16 +40,16 @@ module PaperTrailHelper
     ::Service.find_by(id: value)&.name
   end
 
-  def paper_trail__rdvs_users(values)
+  def paper_trail__participations(values)
     values.map do |value|
       user = User.find_by(id: value["user_id"])
       next if user.nil?
 
       name = user.full_name
-      lifecycle = RdvsUser.human_attribute_value(:send_lifecycle_notifications, value["send_lifecycle_notifications"])
-      reminder = RdvsUser.human_attribute_value(:send_reminder_notification, value["send_reminder_notification"])
-      status = RdvsUser.human_attribute_value(:status, value["status"])
-      created_by = RdvsUser.human_attribute_value(:created_by, value["created_by"])
+      lifecycle = Participation.human_attribute_value(:send_lifecycle_notifications, value["send_lifecycle_notifications"])
+      reminder = Participation.human_attribute_value(:send_reminder_notification, value["send_reminder_notification"])
+      status = Participation.human_attribute_value(:status, value["status"])
+      created_by = Participation.human_attribute_value(:created_by, value["created_by"])
 
       "#{name} (#{created_by}): #{lifecycle}, #{reminder} - Statut : #{status}"
     end.compact.join("\n")

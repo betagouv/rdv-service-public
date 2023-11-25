@@ -1,9 +1,7 @@
-# frozen_string_literal: true
-
 class Rdv < ApplicationRecord
   # Mixins
   has_paper_trail(
-    only: %w[user_ids agent_ids status starts_at ends_at lieu_id notes context rdvs_users],
+    only: %w[user_ids agent_ids status starts_at ends_at lieu_id notes context participations],
     meta: { virtual_attributes: :virtual_attributes_for_paper_trail }
   )
 
@@ -15,6 +13,7 @@ class Rdv < ApplicationRecord
   include IcalHelpers::Ics
   include Payloads::Rdv
   include Ants::AppointmentSerializerAndListener
+  include Anonymizable
 
   # Attributes
   auto_strip_attributes :name
@@ -40,10 +39,10 @@ class Rdv < ApplicationRecord
   has_many :agents_rdvs, inverse_of: :rdv, dependent: :destroy
   # https://stackoverflow.com/questions/30629680/rails-isnt-running-destroy-callbacks-for-has-many-through-join-model/30629704
   # https://github.com/rails/rails/issues/7618
-  has_many :rdvs_users, validate: false, inverse_of: :rdv, dependent: :destroy, class_name: "RdvsUser"
+  has_many :participations, validate: false, inverse_of: :rdv, dependent: :destroy, class_name: "Participation"
   has_many :receipts, dependent: :nullify
 
-  accepts_nested_attributes_for :rdvs_users, allow_destroy: true
+  accepts_nested_attributes_for :participations, allow_destroy: true
   accepts_nested_attributes_for :lieu
   ACCEPTED_NESTED_LIEU_ATTRIBUTES = %w[name address latitude longitude].freeze
   def nested_lieu_attributes
@@ -52,13 +51,13 @@ class Rdv < ApplicationRecord
 
   # Through relations
   has_many :agents, through: :agents_rdvs, dependent: :destroy
-  has_many :users, through: :rdvs_users, validate: false
+  has_many :users, through: :participations, validate: false
   has_many :webhook_endpoints, through: :organisation
   has_one :territory, through: :organisation
 
   # Delegates
   delegate :home?, :phone?, :public_office?, :bookable_by_everyone?,
-           :bookable_by_everyone_or_bookable_by_invited_users?, :service_social?, :follow_up?, :service, :collectif?, :collectif, :individuel?, to: :motif
+           :bookable_by_everyone_or_bookable_by_invited_users?, :service_social?, :follow_up?, :service, :collectif?, :collectif, :individuel?, :requires_ants_predemande_number?, to: :motif
 
   # Validations
   validates :starts_at, :ends_at, :agents, presence: true
@@ -67,7 +66,7 @@ class Rdv < ApplicationRecord
   validate :duration_is_plausible
   validates :max_participants_count, numericality: { greater_than: 0, allow_nil: true }
 
-  validates :rdvs_users, presence: true, unless: :collectif?
+  validates :participations, presence: true, unless: :collectif?
   validates :status, inclusion: { in: COLLECTIVE_RDV_STATUSES }, if: :collectif?
 
   # Hooks
@@ -87,9 +86,9 @@ class Rdv < ApplicationRecord
   scope :on_day, ->(day) { where(starts_at: day.all_day) }
   scope :day_after_tomorrow, -> { on_day(Time.zone.tomorrow + 1.day) }
   scope :for_today, -> { on_day(Time.zone.today) }
-  scope :user_with_relatives, ->(responsible_id) { joins(:users).includes(:rdvs_users, :users).where(users: { id: [responsible_id, User.find(responsible_id).relatives.pluck(:id)].flatten }) }
+  scope :user_with_relatives, ->(responsible_id) { joins(:users).includes(:participations, :users).where(users: { id: [responsible_id, User.find(responsible_id).relatives.pluck(:id)].flatten }) }
   scope :with_user, ->(user) { with_user_id(user.id) }
-  scope :with_user_id, ->(user_id) { joins(:users).where(rdvs_users: { user_id: user_id }) }
+  scope :with_user_id, ->(user_id) { joins(:users).where(participations: { user_id: user_id }) }
   scope :status, lambda { |status|
     case status.to_s
     when "unknown_past"
@@ -105,6 +104,7 @@ class Rdv < ApplicationRecord
   scope :collectif_and_available_for_reservation, -> { collectif.with_remaining_seats.future.not_revoked }
   scope :bookable_by_everyone, -> { joins(:motif).merge(Motif.bookable_by_everyone) }
   scope :bookable_by_everyone_or_bookable_by_invited_users, -> { joins(:motif).merge(Motif.bookable_by_everyone_or_bookable_by_invited_users) }
+  scope :bookable_by_everyone_or_agents_and_prescripteurs_or_invited_users, -> { joins(:motif).merge(Motif.bookable_by_everyone_or_agents_and_prescripteurs_or_invited_users) }
   scope :with_remaining_seats, -> { where("users_count < max_participants_count OR max_participants_count IS NULL") }
   scope :for_domain, lambda { |domain|
     if domain == Domain::RDV_AIDE_NUMERIQUE
@@ -113,6 +113,8 @@ class Rdv < ApplicationRecord
       joins(:organisation).where.not(organisations: { verticale: :rdv_aide_numerique })
     end
   }
+  scope :requires_ants_predemande_number, -> { joins(:motif).merge(Motif.requires_ants_predemande_number) }
+
   # Delegations
   delegate :domain, to: :organisation
   delegate :name, to: :motif, prefix: true
@@ -338,12 +340,12 @@ class Rdv < ApplicationRecord
   end
 
   def update_users_count
-    users_count = rdvs_users.not_cancelled.count
+    users_count = participations.not_cancelled.count
     update_column(:users_count, users_count)
   end
 
   def update_rdv_status_from_participation
-    return seen! if rdvs_users.any?(&:seen?)
+    return seen! if participations.any?(&:seen?)
 
     if collectif?
       update_collective_rdv_status
@@ -372,18 +374,22 @@ class Rdv < ApplicationRecord
     update!(cancelled_at: Time.zone.now, status: "revoked")
   end
 
+  def self.personal_data_column_names
+    %w[context]
+  end
+
   private
 
   def update_collective_rdv_status
-    revoked! if rdvs_users.none?(&:unknown?) && in_the_past?
+    revoked! if participations.none?(&:unknown?) && in_the_past?
   end
 
   def update_individual_rdv_status
-    if rdvs_users.all?(&:excused?)
+    if participations.all?(&:excused?)
       excused!
-    elsif rdvs_users.all?(&:revoked?)
+    elsif participations.all?(&:revoked?)
       revoked!
-    elsif rdvs_users.all?(&:noshow?)
+    elsif participations.all?(&:noshow?)
       noshow!
     else
       unknown!
@@ -414,8 +420,8 @@ class Rdv < ApplicationRecord
     {
       user_ids: users.ids,
       agent_ids: agents.ids,
-      rdvs_users: rdvs_users.map do |rdvs_user|
-        rdvs_user.slice(
+      participations: participations.map do |participation|
+        participation.slice(
           :user_id,
           :send_lifecycle_notifications,
           :send_reminder_notification,
@@ -437,6 +443,6 @@ class Rdv < ApplicationRecord
   end
 
   def set_created_by_for_participations
-    rdvs_users.each { |rdvs_user| rdvs_user.created_by = created_by }
+    participations.each { |participation| participation.created_by = created_by }
   end
 end

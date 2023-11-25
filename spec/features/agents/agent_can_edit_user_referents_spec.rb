@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe "Agent can edit a user's referents" do
   let!(:current_org) { create(:organisation) }
   let!(:another_org_i_admin) { create(:organisation) }

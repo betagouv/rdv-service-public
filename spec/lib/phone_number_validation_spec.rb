@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe PhoneNumberValidation do
   describe "parsed_number" do
     it "prevents malformed numbers" do

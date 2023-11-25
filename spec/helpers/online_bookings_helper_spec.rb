@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe OnlineBookingsHelper do
   describe "#motifs_checkbox_text" do
     context "when there is no motifs" do

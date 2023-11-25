@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module SearchContextHelper
   def path_to_motif_selection(params)
     prendre_rdv_path(

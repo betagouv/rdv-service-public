@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe Admin::Territories::InvitationsDeviseController, type: :controller do
   render_views
 
@@ -30,9 +28,9 @@ RSpec.describe Admin::Territories::InvitationsDeviseController, type: :controlle
         sign_in agent
         request.env["devise.mapping"] = Devise.mappings[:agent]
         params = { territory_id: territory.id,
-                   agent: {
+                   admin_agent: {
                      email: "hacker@renard.com",
-                     service_id: service.id,
+                     service_ids: [service.id],
                    }, }
         expect do
           post :create, params: params
@@ -53,7 +51,7 @@ RSpec.describe Admin::Territories::InvitationsDeviseController, type: :controlle
 
         request.env["devise.mapping"] = Devise.mappings[:agent]
         params = { territory_id: territory.id,
-                   agent: {
+                   admin_agent: {
                      email: "hacker@renard.com",
                      service_id: service.id,
                    }, }

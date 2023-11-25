@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class OffDays
   # https://www.service-public.fr/particuliers/vosdroits/F2405
   JOURS_FERIES = [

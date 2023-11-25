@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module FullNameConcern
   extend ActiveSupport::Concern
   # Relies on the attributes of the receiver:

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe Admin::Territories::MotifFieldsController, type: :controller do
   describe "#edit" do
     it "responds success" do

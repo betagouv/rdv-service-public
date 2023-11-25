@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require "swagger_helper"
 
 describe "Absence authentified API", swagger_doc: "v1/api.json" do
@@ -19,7 +17,7 @@ describe "Absence authentified API", swagger_doc: "v1/api.json" do
       let!(:organisation2) { create(:organisation) }
       let!(:organisation3) { create(:organisation) }
       let!(:agent) { create(:agent, basic_role_in_organisations: [organisation1, organisation2]) }
-      let!(:agent1) { create(:agent, basic_role_in_organisations: [organisation1], service: agent.service) }
+      let!(:agent1) { create(:agent, basic_role_in_organisations: [organisation1], service: agent.services.first) }
       let!(:agent2) { create(:agent, basic_role_in_organisations: [organisation2]) }
       let!(:agent3) { create(:agent, basic_role_in_organisations: [organisation3]) }
       let!(:absence1) { create(:absence, agent: agent1) }

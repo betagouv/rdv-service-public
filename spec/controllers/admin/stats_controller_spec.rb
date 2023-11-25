@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe Admin::StatsController, type: :controller do
   describe "#rdvs" do
     it "returns sucess" do

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class InclusionConnectController < ApplicationController
   before_action :log_params_to_sentry
 

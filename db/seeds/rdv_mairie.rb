@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # Territories
 territory_val_doise = Territory.create!(
   departement_number: "95",
@@ -43,7 +41,7 @@ agent_mairie_de_sannois = Agent.new(
   first_name: "Alain",
   last_name: "Mairie",
   password: "lapinlapin",
-  service_id: service_titres.id,
+  services: [service_titres],
   invitation_accepted_at: 10.days.ago,
   roles_attributes: [
     { organisation: org_mairie_de_sannois, access_level: AgentRole::ACCESS_LEVEL_ADMIN },

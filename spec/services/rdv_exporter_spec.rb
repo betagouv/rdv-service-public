@@ -1,60 +1,47 @@
-# frozen_string_literal: true
-
 describe RdvExporter, type: :service do
-  describe "#export" do
-    it "return a string" do
-      expect(described_class.export(Rdv.none)).to be_kind_of(String)
+  describe "#xls_string_from_rdvs_rows" do
+    # rubocop:disable RSpec/ExampleLength
+    it "return export with header" do
+      rdv = create(:rdv, created_at: Time.zone.parse("2023-01-01"), agents: [create(:agent, email: "agent@mail.com")])
+      rdv_row = described_class.row_array_from(rdv)
+      xls_string = described_class.xls_string_from_rdvs_rows([rdv_row])
+
+      header_row, first_data_row = Spreadsheet.open(StringIO.new(xls_string)).worksheets.first.rows
+
+      # Les lettres sont les noms de colonnes Excel.
+      # Il est important de toujours ajouter les nouvelles colonnes
+      # à la fin pour ne pas gêner les SI des départements,
+      # qui se basent parfois sur la position et non le libellé.
+      expect(header_row).to eq(
+        [
+          "année", # A
+          "date prise rdv", # B
+          "heure prise rdv", # C
+          "origine", # D
+          "date rdv", # E
+          "heure rdv", # F
+          "service", # G
+          "motif", # H
+          "contexte", # I
+          "statut", # J
+          "lieu", # K
+          "professionnel.le(s)", # L
+          "usager(s)", # M
+          "commune du premier responsable", # N
+          "au moins un usager mineur ?", # O
+          "résultat des notifications", # P
+          "Organisation", # Q
+          "date naissance", # R
+          "code postal du premier responsable", # S
+          "créé par", # T
+          "email(s) professionnel.le(s)", # U
+        ]
+      )
+
+      expect(first_data_row.first).to eq(2023)
+      expect(first_data_row.last).to eq("agent@mail.com")
     end
-  end
-
-  describe "#extract_string_from" do
-    it "workbook return a string" do
-      book = Spreadsheet::Workbook.new
-      book.create_worksheet.row(0).concat([])
-      expect(described_class.extract_string_from(book)).to be_kind_of(String)
-    end
-  end
-
-  describe "#build_excel_workbook_from" do
-    context "empty array" do
-      it "return a Speadsheet::Workbook" do
-        expect(described_class.build_excel_workbook_from(Rdv.none)).to be_kind_of(Spreadsheet::Workbook)
-      end
-
-      it "return an header" do
-        sheet = described_class.build_excel_workbook_from(Rdv.none).worksheet(0)
-
-        # Les lettres sont les noms de colonnes Excel.
-        # Il est important de toujours ajouter les nouvelles colonnes
-        # à la fin pour ne pas gêner les SI des départements,
-        # qui se basent parfois sur la position et non le libellé.
-        expect(sheet.row(0)).to eq(
-          [
-            "année", # A
-            "date prise rdv", # B
-            "heure prise rdv", # C
-            "origine", # D
-            "date rdv", # E
-            "heure rdv", # F
-            "service", # G
-            "motif", # H
-            "contexte", # I
-            "statut", # J
-            "lieu", # K
-            "professionnel.le(s)", # L
-            "usager(s)", # M
-            "commune du premier responsable", # N
-            "au moins un usager mineur ?", # O
-            "résultat des notifications", # P
-            "Organisation", # Q
-            "date naissance", # R
-            "code postal du premier responsable", # S
-            "créé par", # T
-            "email(s) professionnel.le(s)", # U
-          ]
-        )
-      end
-    end
+    # rubocop:enable RSpec/ExampleLength
   end
 
   describe "#row_array_from rdv" do

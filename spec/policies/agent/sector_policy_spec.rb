@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe Agent::SectorPolicy, type: :policy do
   subject { described_class }
 

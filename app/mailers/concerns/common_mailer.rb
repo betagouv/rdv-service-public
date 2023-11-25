@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # Ce concern permet d'inclure des comportements à la fois dans
 # ApplicationMailer et dans CustomDeviseMailer, qui ont toutes
 # deux des classe mères.

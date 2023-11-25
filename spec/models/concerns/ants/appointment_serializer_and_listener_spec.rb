@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe Ants::AppointmentSerializerAndListener do
   include_context "rdv_mairie_api_authentication"
   let(:organisation) { create(:organisation, verticale: :rdv_mairie) }
@@ -146,18 +144,18 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
     end
   end
 
-  describe "RdvUser callbacks" do
+  describe "Participation callbacks" do
     before do
       rdv.save
       user.reload
-      rdv.rdvs_users.reload
+      rdv.participations.reload
       stub_status_endpoint
     end
 
     describe "after_commit: Removing user participation" do
       it "deletes appointment" do
         perform_enqueued_jobs do
-          user.rdvs_users.first.destroy
+          user.participations.first.destroy
         end
       end
     end

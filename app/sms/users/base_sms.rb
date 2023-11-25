@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # Base class for all Sms sent to Users
 class Users::BaseSms < ApplicationSms
   def initialize(rdv, user, token)

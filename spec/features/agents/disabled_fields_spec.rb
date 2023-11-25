@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe "some fields that are specific to a certain domain can be disabled and hidden from the interface" do
   let!(:organisation) { create(:organisation, territory: territory) }
   let!(:service) { create(:service) }

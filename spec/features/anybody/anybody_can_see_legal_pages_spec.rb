@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe "Anybody can see legal pages" do
   it "displays legal mention" do
     visit root_path

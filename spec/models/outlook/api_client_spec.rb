@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe Outlook::ApiClient do
   let(:organisation) { create(:organisation) }
   let(:motif) { create(:motif, name: "Super Motif", location_type: :phone) }

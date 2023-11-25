@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe "prescripteur can create RDV for a user" do
   before do
     travel_to(Time.zone.parse("2022-11-07 15:00"))
@@ -9,7 +7,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
   let!(:agent) { create(:agent, :cnfs, admin_role_in_organisations: [organisation], rdv_notifications_level: "all") }
   let(:bookable_by) { "everyone" }
   let!(:motif) do
-    create(:motif, organisation: organisation, service: agent.service, bookable_by: bookable_by, instruction_for_rdv: "Instructions après confirmation")
+    create(:motif, organisation: organisation, service: agent.services.first, bookable_by: bookable_by, instruction_for_rdv: "Instructions après confirmation")
   end
   let!(:lieu) { create(:lieu, organisation: organisation, name: "Bureau") }
   let!(:plage_ouverture) { create(:plage_ouverture, organisation: organisation, agent: agent, motifs: [motif], lieu: lieu) }
@@ -68,9 +66,9 @@ RSpec.describe "prescripteur can create RDV for a user" do
     created_rdv = Rdv.last
     expect(created_rdv.agents).to eq([agent])
 
-    expect(created_rdv.rdvs_users.size).to eq(1)
+    expect(created_rdv.participations.size).to eq(1)
 
-    created_participation = created_rdv.rdvs_users.first
+    created_participation = created_rdv.participations.first
     created_user = created_participation.user
 
     expect(created_user).to have_attributes(
@@ -86,7 +84,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
       phone_number: "0611223344"
     )
     expect(created_rdv.created_by_prescripteur?).to be(true)
-    expect(created_rdv.rdvs_users.first.created_by_prescripteur?).to be(true)
+    expect(created_rdv.participations.first.created_by_prescripteur?).to be(true)
 
     perform_enqueued_jobs(queue: "mailers")
     expect(email_sent_to(agent.email).subject).to include("Nouveau RDV ajouté sur votre agenda RDV Solidarités")

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # The purpose of this script is to merge the data of 2 agents together.
 # The source agent data will be merged into the destination agent data
 # The script updates data from the following tables:

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe Users::RdvWizardStepsController, type: :controller do
   describe "#new" do
     let!(:organisation) { create(:organisation) }

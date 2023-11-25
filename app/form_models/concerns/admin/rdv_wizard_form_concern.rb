@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module Admin::RdvWizardFormConcern
   extend ActiveSupport::Concern
 
@@ -29,7 +27,7 @@ module Admin::RdvWizardFormConcern
       @agent_author = agent_author
       @rdv = ::Rdv.new(rdv_defaults.merge(rdv_attributes))
       @rdv.duration_in_min ||= @rdv.motif.default_duration_in_min if @rdv.motif.present?
-      @rdv.rdvs_users.each(&:set_default_notifications_flags)
+      @rdv.participations.each(&:set_default_notifications_flags)
       @service_id = attributes.to_h.symbolize_keys[:service_id]
     end
   end
@@ -39,7 +37,7 @@ module Admin::RdvWizardFormConcern
       motif_id: rdv.motif&.id,
       duration_in_min: rdv.duration_in_min,
       starts_at: rdv.starts_at&.to_s,
-      user_ids: rdv.rdvs_users&.map(&:user_id),
+      user_ids: rdv.participations&.map(&:user_id),
       agent_ids: rdv.agents&.map(&:id),
       context: rdv.context,
       service_id: service_id,

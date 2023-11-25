@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require "rails_helper"
 
 RSpec.configure do |config|
@@ -72,6 +70,10 @@ RSpec.configure do |config|
               motif: { "$ref" => "#/components/schemas/motif" },
               name: { type: "string", nullable: true },
               organisation: { "$ref" => "#/components/schemas/organisation" },
+              participations: {
+                type: "array",
+                items: { "$ref" => "#/components/schemas/participation" },
+              },
               rdvs_users: {
                 type: "array",
                 items: { "$ref" => "#/components/schemas/rdvs_user" },
@@ -85,8 +87,8 @@ RSpec.configure do |config|
               users_count: { type: "integer" },
               uuid: { type: "string" },
             },
-            required: %w[id address agents cancelled_at collectif context created_by duration_in_min lieu max_participants_count motif name organisation rdvs_users starts_at status users
-                         users_count uuid],
+            required: %w[id address agents cancelled_at collectif context created_by duration_in_min lieu max_participants_count motif name organisation rdvs_users participations starts_at status
+                         users users_count uuid],
           },
           agents: {
             type: "object",
@@ -355,6 +357,17 @@ RSpec.configure do |config|
             required: %w[id name short_name],
           },
           rdvs_user: {
+            type: "object",
+            properties: {
+              send_lifecycle_notifications: { type: "boolean" },
+              send_reminder_notification: { type: "boolean" },
+              status: { type: "string", enum: %w[unknown seen excused revoked noshow] },
+              user: { "$ref" => "#/components/schemas/user" },
+              created_by: { type: "string", enum: %w[agent user prescripteur] },
+            },
+            required: %w[send_lifecycle_notifications send_reminder_notification status user],
+          },
+          participation: {
             type: "object",
             properties: {
               send_lifecycle_notifications: { type: "boolean" },

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class FixRdvCancelledAtValues < ActiveRecord::Migration[6.0]
   def change
     up_only do

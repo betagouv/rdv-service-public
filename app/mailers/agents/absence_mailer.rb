@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Agents::AbsenceMailer < ApplicationMailer
   helper PlageOuverturesHelper
 

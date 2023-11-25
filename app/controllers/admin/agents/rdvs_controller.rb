@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Admin::Agents::RdvsController < ApplicationController
   include Admin::AuthenticatedControllerConcern
   respond_to :json
@@ -9,7 +7,7 @@ class Admin::Agents::RdvsController < ApplicationController
     @organisation = Organisation.find(params[:organisation_id])
     @rdvs = custom_policy
       .merge(agent.rdvs)
-      .includes(%i[organisation lieu motif users rdvs_users])
+      .includes(%i[organisation lieu motif users participations])
     @rdvs = @rdvs.where(starts_at: date_range_params) if date_range_params.present?
     @rdvs = @rdvs.where(status: Rdv::NOT_CANCELLED_STATUSES) unless current_agent.display_cancelled_rdv
   end

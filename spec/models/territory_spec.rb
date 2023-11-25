@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe Territory, type: :model do
   it "have a valid factory" do
     expect(build(:territory)).to be_valid
@@ -119,6 +117,15 @@ describe Territory, type: :model do
     it "returns true when agenda rdv color notification selected" do
       territory = build(:territory, enable_waiting_room_mail_field: false, enable_waiting_room_color_field: true)
       expect(territory.waiting_room_enabled?).to eq(true)
+    end
+  end
+
+  describe "Mairies" do
+    let(:mairies_territory) { create(:territory, :mairies) }
+
+    it "doesn't allow changing the name of a territory with a specific meaning" do
+      expect(mairies_territory.update(name: "new name")).to be_falsey
+      expect(mairies_territory.reload.name).to eq Territory::MAIRIES_NAME
     end
   end
 end

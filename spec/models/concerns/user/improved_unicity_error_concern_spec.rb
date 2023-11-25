@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe User::ImprovedUnicityErrorConcern do
   context "email is not yet taken" do
     let(:user) { build(:user) }

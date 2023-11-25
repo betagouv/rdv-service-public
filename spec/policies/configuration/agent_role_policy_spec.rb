@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe Configuration::AgentRolePolicy, type: :policy do
   subject { described_class }
 

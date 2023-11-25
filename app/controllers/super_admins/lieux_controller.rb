@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module SuperAdmins
   class LieuxController < SuperAdmins::ApplicationController
     # On modifie cette action pour pouvoir mettre une valeur par défaut en availability

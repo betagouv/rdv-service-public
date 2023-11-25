@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Configuration::WebhookEndpointPolicy
   def initialize(context, agent)
     @current_agent = context.agent

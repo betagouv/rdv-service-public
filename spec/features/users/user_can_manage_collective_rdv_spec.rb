@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe "Adding a user to a collective RDV" do
   include Rails.application.routes.url_helpers
 
@@ -75,7 +73,7 @@ RSpec.describe "Adding a user to a collective RDV" do
 
   def expect_webhooks_for(user)
     expect(WebMock).to(have_requested(:post, "https://example.com/").with do |req|
-      JSON.parse(req.body)["data"]["rdvs_users"].map { |rdvs_user| rdvs_user["user"]["id"] == user.id }
+      JSON.parse(req.body)["data"]["participations"].map { |participation| participation["user"]["id"] == user.id }
     end.at_least_once)
   end
 
@@ -161,19 +159,21 @@ RSpec.describe "Adding a user to a collective RDV" do
         rdv.status = "revoked"
         rdv.save
         select_motif
-        expect(page).to have_content("Un problème semble s'être produit pour votre invitation. Toutes nos excuses pour cela.")
+        expect(page).to have_content("Malheureusement, aucun créneau correspondant à votre invitation n'a été trouvé.")
+        expect(page).to have_content("Toutes nos excuses pour cela.")
 
         rdv2.max_participants_count = 2
-        create(:rdvs_user, rdv: rdv2)
-        create(:rdvs_user, rdv: rdv2)
+        create(:participation, rdv: rdv2)
+        create(:participation, rdv: rdv2)
         rdv2.save
         visit root_path(params)
-        expect(page).to have_content("Un problème semble s'être produit pour votre invitation. Toutes nos excuses pour cela.")
+        expect(page).to have_content("Malheureusement, aucun créneau correspondant à votre invitation n'a été trouvé.")
+        expect(page).to have_content("Toutes nos excuses pour cela.")
       end
 
       it "correctly display message of participation already existing" do
         params.merge!(invitation_token: invitation_token)
-        create(:rdvs_user, rdv: rdv, user: user)
+        create(:participation, rdv: rdv, user: user)
         visit root_path(params)
         select_motif
         select_lieu
@@ -182,7 +182,7 @@ RSpec.describe "Adding a user to a collective RDV" do
 
       it "change existing excused participation for re registering process and display confirmation message" do
         params.merge!(invitation_token: invitation_token)
-        create(:rdvs_user, rdv: rdv, user: user, status: "excused")
+        create(:participation, rdv: rdv, user: user, status: "excused")
 
         visit root_path(params)
         select_motif
@@ -197,19 +197,19 @@ RSpec.describe "Adding a user to a collective RDV" do
         params.merge!(invitation_token: invitation_token)
         visit root_path(params)
 
-        create(:rdvs_user, rdv: rdv, user: user, status: "excused")
+        create(:participation, rdv: rdv, user: user, status: "excused")
 
-        visit users_rdv_path(rdv, invitation_token: rdv.rdv_user_token(user.id))
+        visit users_rdv_path(rdv, invitation_token: rdv.participation_token(user.id))
         fill_in(:letter0, with: "I")
         fill_in(:letter1, with: "N")
         fill_in(:letter2, with: "V")
 
         expect(page).to have_content("Annulé")
-        create(:rdvs_user, rdv: rdv2, user: user, status: "revoked")
+        create(:participation, rdv: rdv2, user: user, status: "revoked")
         rdv2.status = "revoked"
         rdv2.save
 
-        visit users_rdv_path(rdv2, invitation_token: rdv2.rdv_user_token(user.id))
+        visit users_rdv_path(rdv2, invitation_token: rdv2.participation_token(user.id))
         expect(page).to have_content("Annulé")
       end
 
@@ -228,11 +228,11 @@ RSpec.describe "Adding a user to a collective RDV" do
         params.merge!(invitation_token: invitation_token)
         visit root_path(params)
 
-        participation = create(:rdvs_user, rdv: rdv, user: user, status: "unknown")
+        participation = create(:participation, rdv: rdv, user: user, status: "unknown")
 
         stub_request(:post, "https://example.com/")
 
-        visit users_rdv_path(rdv, invitation_token: rdv.rdv_user_token(user.id))
+        visit users_rdv_path(rdv, invitation_token: rdv.participation_token(user.id))
         fill_in(:letter0, with: "I")
         fill_in(:letter1, with: "N")
         fill_in(:letter2, with: "V")
@@ -250,13 +250,13 @@ RSpec.describe "Adding a user to a collective RDV" do
         params.merge!(invitation_token: invitation_token)
         visit root_path(params)
 
-        participation = create(:rdvs_user, rdv: rdv, user: user, status: "unknown")
+        participation = create(:participation, rdv: rdv, user: user, status: "unknown")
         participation.send_lifecycle_notifications = false
         participation.save
 
         stub_request(:post, "https://example.com/")
 
-        visit users_rdv_path(rdv, invitation_token: rdv.rdv_user_token(user.id))
+        visit users_rdv_path(rdv, invitation_token: rdv.participation_token(user.id))
         fill_in(:letter0, with: "I")
         fill_in(:letter1, with: "N")
         fill_in(:letter2, with: "V")
@@ -270,8 +270,8 @@ RSpec.describe "Adding a user to a collective RDV" do
       end
 
       it "works with other participants (and do not notify others users)" do
-        create(:rdvs_user, rdv: rdv, user: other_user1, status: "excused")
-        create(:rdvs_user, rdv: rdv, user: other_user2, status: "unknown")
+        create(:participation, rdv: rdv, user: other_user1, status: "excused")
+        create(:participation, rdv: rdv, user: other_user2, status: "unknown")
 
         params.merge!(invitation_token: invitation_token)
 
@@ -302,8 +302,8 @@ RSpec.describe "Adding a user to a collective RDV" do
           click_button("Continuer")
 
           rdv.update!(max_participants_count: 2)
-          create(:rdvs_user, rdv: rdv)
-          create(:rdvs_user, rdv: rdv)
+          create(:participation, rdv: rdv)
+          create(:participation, rdv: rdv)
 
           click_button("Continuer")
           expect(page).to have_content("Ce créneau n'est plus disponible")
@@ -317,20 +317,20 @@ RSpec.describe "Adding a user to a collective RDV" do
         rdv.status = "revoked"
         rdv.save
         select_motif
-        expect(page).to have_content("La prise de rendez-vous n'est pas disponible pour ce département.")
+        expect(page).to have_content("Malheureusement, aucun créneau correspondant à votre recherche n'a été trouvé.")
 
         rdv2.max_participants_count = 2
-        create(:rdvs_user, rdv: rdv2)
-        create(:rdvs_user, rdv: rdv2)
+        create(:participation, rdv: rdv2)
+        create(:participation, rdv: rdv2)
         rdv2.save
         visit root_path(params)
-        expect(page).to have_content("La prise de rendez-vous n'est pas disponible pour ce département.")
+        expect(page).to have_content("Malheureusement, aucun créneau correspondant à votre recherche n'a été trouvé.")
       end
 
       it "correctly display message of participation already existing" do
         login_as(user, scope: :user)
 
-        create(:rdvs_user, rdv: rdv, user: user)
+        create(:participation, rdv: rdv, user: user)
         visit root_path(params)
         select_motif
         select_lieu
@@ -340,7 +340,7 @@ RSpec.describe "Adding a user to a collective RDV" do
       it "change existing excused participation for re registering process and display confirmation message" do
         login_as(user, scope: :user)
 
-        create(:rdvs_user, rdv: rdv, user: user, status: "excused")
+        create(:participation, rdv: rdv, user: user, status: "excused")
 
         visit root_path(params)
         select_motif
@@ -356,12 +356,12 @@ RSpec.describe "Adding a user to a collective RDV" do
         login_as(user, scope: :user)
         visit root_path(params)
 
-        create(:rdvs_user, rdv: rdv, user: user, status: "excused")
+        create(:participation, rdv: rdv, user: user, status: "excused")
 
         visit users_rdv_path(rdv)
 
         expect(page).to have_content("Annulé")
-        create(:rdvs_user, rdv: rdv2, user: user, status: "revoked")
+        create(:participation, rdv: rdv2, user: user, status: "revoked")
         rdv2.status = "revoked"
         rdv2.save
 
@@ -384,7 +384,7 @@ RSpec.describe "Adding a user to a collective RDV" do
         login_as(user, scope: :user)
         visit root_path(params)
 
-        participation = create(:rdvs_user, rdv: rdv, user: user, status: "unknown")
+        participation = create(:participation, rdv: rdv, user: user, status: "unknown")
 
         stub_request(:post, "https://example.com/")
 
@@ -402,7 +402,7 @@ RSpec.describe "Adding a user to a collective RDV" do
         login_as(user, scope: :user)
         visit root_path(params)
 
-        participation = create(:rdvs_user, rdv: rdv, user: user, status: "unknown")
+        participation = create(:participation, rdv: rdv, user: user, status: "unknown")
         participation.send_lifecycle_notifications = false
         participation.save
 
@@ -418,8 +418,8 @@ RSpec.describe "Adding a user to a collective RDV" do
       end
 
       it "works with other participants (and do not notify others users)" do
-        create(:rdvs_user, rdv: rdv, user: other_user1, status: "excused")
-        create(:rdvs_user, rdv: rdv, user: other_user2, status: "unknown")
+        create(:participation, rdv: rdv, user: other_user1, status: "excused")
+        create(:participation, rdv: rdv, user: other_user2, status: "unknown")
 
         login_as(user, scope: :user)
         visit root_path(params)

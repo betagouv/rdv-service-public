@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # See https://www.bigbinary.com/blog/rails-5-2-allows-mailers-to-use-custom-active-job-class
 class CustomMailerDeliveryJob < ActionMailer::MailDeliveryJob
   include DefaultJobBehaviour

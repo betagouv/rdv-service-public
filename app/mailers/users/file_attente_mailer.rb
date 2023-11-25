@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Users::FileAttenteMailer < ApplicationMailer
   before_action do
     @rdv = params[:rdv]

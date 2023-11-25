@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module RdvsHelper
   include ActionView::Helpers::DateHelper
 
@@ -93,11 +91,11 @@ module RdvsHelper
   end
 
   def cancel_rdv_to_not_notify?(rdv, status)
-    Rdv::CANCELLED_STATUSES.include?(status) && rdv.rdvs_users.select(&:send_lifecycle_notifications?).empty?
+    Rdv::CANCELLED_STATUSES.include?(status) && rdv.participations.select(&:send_lifecycle_notifications?).empty?
   end
 
   def cancel_rdv_to_notify?(rdv, status)
-    Rdv::CANCELLED_STATUSES.include?(status) && rdv.rdvs_users.select(&:send_lifecycle_notifications?).any?
+    Rdv::CANCELLED_STATUSES.include?(status) && rdv.participations.select(&:send_lifecycle_notifications?).any?
   end
 
   def reset_futur_rdv?(rdv, status)

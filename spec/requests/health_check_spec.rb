@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 #
 # Cet endpoint a été ajouté lors de la migration de Scalingo vers OVH.
 # En effet, la nouvelle stack a besoin d'un endpoint de health check pour

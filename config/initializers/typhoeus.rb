@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 DEFAULT_TYPHOEUS_TIMEOUT = 15
 class Typhoeus::Errors::TimeoutError < Typhoeus::Errors::TyphoeusError; end
 

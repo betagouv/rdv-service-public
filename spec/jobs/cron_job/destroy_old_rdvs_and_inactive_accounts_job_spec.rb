@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe CronJob::DestroyOldRdvsAndInactiveAccountsJob do
   let!(:organisation) { create(:organisation) }
   let!(:webhook_endpoint) do

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe SearchCreneauxForAgentsService, type: :service do
   describe "lieux" do
     subject { described_class.new(form).lieux }

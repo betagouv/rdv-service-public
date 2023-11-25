@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe AgentRemoval, type: :service do
   context "agent belongs to single organisation, with a few absences and plages ouvertures" do
     # orgs must have at least one admin

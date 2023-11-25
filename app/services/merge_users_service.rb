@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class MergeUsersService < BaseService
   def initialize(user_target, user_to_merge, attributes_to_merge, organisation)
     @user_target = user_target
@@ -57,11 +55,11 @@ class MergeUsersService < BaseService
                     end
 
     rdvs_to_merge.each do |rdv|
-      rdv.rdvs_users.where(user: @user_to_merge).each do |rdv_user|
-        if rdv.rdvs_users.where(user_id: @user_target).any?
-          rdv_user.destroy!
+      rdv.participations.where(user: @user_to_merge).each do |participation|
+        if rdv.participations.where(user_id: @user_target).any?
+          participation.destroy!
         else
-          rdv_user.update!(user: @user_target)
+          participation.update!(user: @user_target)
         end
       end
     end

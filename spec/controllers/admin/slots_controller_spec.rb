@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe Admin::SlotsController, type: :controller do
   let(:organisation) { create(:organisation) }
 
@@ -19,7 +17,7 @@ describe Admin::SlotsController, type: :controller do
 
       get :index, params: {
         organisation_id: organisation.id,
-        service_id: agent.service_id,
+        service_id: agent.services.first.id,
         motif_id: motif.id,
         from_date: from_date,
         agent_ids: agent_ids,

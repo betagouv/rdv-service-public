@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe SmsJob do
   describe "phone number validation" do
     subject(:perform) do

@@ -1,5 +1,3 @@
-# frozen_string_literal: false
-
 describe ApplicationJob, type: :job do
   describe "error logging" do
     let(:job_class) do
@@ -69,7 +67,7 @@ describe ApplicationJob, type: :job do
     end
 
     it "reports exports job timeout to Sentry for exports queue" do
-      allow(Timeout).to receive(:timeout).with(1.hour).and_raise(Timeout::Error)
+      allow(Timeout).to receive(:timeout).with(5.minutes).and_raise(Timeout::Error)
 
       exports_timeout_job_class.perform_later
       enqueued_job_id = enqueued_jobs.last["job_id"]

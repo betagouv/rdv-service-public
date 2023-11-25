@@ -1,8 +1,12 @@
-# frozen_string_literal: true
-
 class Agent::MotifPolicy < Agent::AdminPolicy
   def show?
     admin_and_same_org? || same_agent_or_has_access?
+  end
+
+  private
+
+  def same_service?
+    @record.service.in?(current_agent.services)
   end
 
   class Scope < Scope
@@ -10,7 +14,7 @@ class Agent::MotifPolicy < Agent::AdminPolicy
       if context.can_access_others_planning?
         scope.where(organisation: current_organisation)
       else
-        scope.where(organisation: current_organisation, service: current_agent.service)
+        scope.where(organisation: current_organisation, service: current_agent.services)
       end
     end
   end

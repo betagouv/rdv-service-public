@@ -1,14 +1,12 @@
-# frozen_string_literal: true
-
 class AgentRole < ApplicationRecord
   include WebhookDeliverable
 
   has_paper_trail
 
   # Attributes
-  ACCESS_LEVEL_BASIC = "basic"
-  ACCESS_LEVEL_ADMIN = "admin"
-  ACCESS_LEVEL_INTERVENANT = "intervenant"
+  ACCESS_LEVEL_BASIC = "basic".freeze
+  ACCESS_LEVEL_ADMIN = "admin".freeze
+  ACCESS_LEVEL_INTERVENANT = "intervenant".freeze
   ACCESS_LEVELS = [ACCESS_LEVEL_BASIC, ACCESS_LEVEL_ADMIN].freeze
   ACCESS_LEVELS_WITH_INTERVENANT = [ACCESS_LEVEL_BASIC, ACCESS_LEVEL_ADMIN, ACCESS_LEVEL_INTERVENANT].freeze
 
@@ -55,7 +53,7 @@ class AgentRole < ApplicationRecord
   ## -
 
   def can_access_others_planning?
-    admin? || agent.service.secretariat?
+    admin? || agent.secretaire?
   end
 
   private

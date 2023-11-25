@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 CSS_COLOR_NAMES = {
   "aliceblue" => "#f0f8ff",
   "antiquewhite" => "#faebd7",

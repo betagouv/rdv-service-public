@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module Lapin
   class SmsPreviewController < ApplicationController
     KNOWN_SMS_ACTIONS = {

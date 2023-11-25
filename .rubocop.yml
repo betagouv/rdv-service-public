@@ -45,6 +45,7 @@ Metrics/BlockLength:
     - "config/initializers/*"
     - "config/environments/*"
     - "config/routes.rb"
+    - "config/routes/api.rb"
 
 Metrics/CyclomaticComplexity:
   Max: 8 # default is 7
@@ -124,7 +125,7 @@ RSpec/AnyInstance:
     - spec/controllers/admin/users_controller_spec.rb
     - spec/controllers/admin/referent_assignations_controller_spec.rb
     - spec/controllers/users/rdvs_controller_spec.rb
-    - spec/features/users/user_can_be_invited_spec.rb
+    - spec/features/users/online_booking/with_invitation_spec.rb
 
 RSpec/DescribedClass:
   Exclude:
@@ -152,6 +153,7 @@ RSpec/MultipleDescribes:
 RSpec/VariableName:
   Exclude:
     - "spec/requests/api/v1/**/*"
+    - "spec/requests/api/rdvinsertion/**/*"
     - "spec/support/api_spec_shared_examples.rb"
 
 RSpec/MultipleExpectations:
@@ -193,9 +195,7 @@ Style/Documentation:
   Enabled: false
 
 Style/FrozenStringLiteralComment:
-  Exclude:
-    - "config/**/*"
-    - "config.ru"
+  EnforcedStyle: never
 
 Style/GuardClause:
   Enabled: false
@@ -232,3 +232,6 @@ RSpec/ScatteredSetup:
 RSpec/FilePath:
   CustomTransform:
     SfrMail2SmsMailer: sfr_mail_2_sms_mailer
+
+Style/NumericPredicate:
+  Enabled: false

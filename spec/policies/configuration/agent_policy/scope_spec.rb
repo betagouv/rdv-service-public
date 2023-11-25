@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe Configuration::AgentPolicy::Scope, type: :policy do
   it "returns agents of same territory and same organisation and same service" do
     territory = create(:territory)

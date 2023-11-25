@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe Configuration::ZonePolicy, type: :policy do
   %i[new? create? destroy?].each do |action|
     describe "##{action}" do

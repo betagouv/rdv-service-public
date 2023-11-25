@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module SlotBuilder
   class << self
     # méthode publique

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe "Agent can see rdvs in their calendar", js: true do
   context "for a rdv collectif" do
     it "shows the number of participants and the max number of participants" do
@@ -11,7 +9,7 @@ describe "Agent can see rdvs in their calendar", js: true do
       # Create a RDV this week, monday at 14:00, so that it will show on the calendar
       starts_at = Time.zone.now.beginning_of_week.change({ hour: 14 })
 
-      motif = create(:motif, :collectif, organisation: organisation, service: agent.service, name: "Atelier collectif")
+      motif = create(:motif, :collectif, organisation: organisation, service: agent.services.first, name: "Atelier collectif")
       create(
         :rdv,
         agents: [agent],

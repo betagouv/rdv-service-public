@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # Ce fichier teste l'intégration de la chaine d'appels depuis les modifications des objets activerecord
 # jusqu'à l'appel http à l'api Outlook
 RSpec.describe Outlook::EventSerializerAndListener do
@@ -24,10 +22,6 @@ RSpec.describe Outlook::EventSerializerAndListener do
   end
   let(:expected_description) do
     <<~HTML
-      Participants:
-      <ul><li>First LAST</li></ul>
-      <br />
-
       Plus d'infos sur <a href="http://www.rdv-solidarites-test.localhost/admin/organisations/#{organisation.id}/rdvs/#{rdv.id}">RDV Solidarités</a>:
       <br />
 

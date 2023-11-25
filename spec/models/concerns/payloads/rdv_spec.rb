@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe Payloads::Rdv, type: :service do
   describe "#payload" do
     %i[name ical_uid summary ends_at sequence description address].each do |key|

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # Ce concern a la responsabilité de faire la sérialisation qui permet de générer le json envoyé
 # à Outlook pour représenter un AgentsRdv sous la forme d'un event.
 # La connaissance du graphe d'objet qui sert à faire cette sérialisation permet de savoir sur quelles
@@ -29,10 +27,10 @@ module Outlook
       #
       # On ajoute l'attribut :needs_sync_to_outlook et des callbacks en deux temps pour enqueuer exactement un job
       # par transaction, peu importe le nombre d'objets changés.
-      # Par exemple, si on a une transaction qui crée un AgentsRdv, un Rdv et un RdvsUser (typiquement à la création d'un rdv),
+      # Par exemple, si on a une transaction qui crée un AgentsRdv, un Rdv et un Participation (typiquement à la création d'un rdv),
       # le système utilisé ici enqueuera un seul job.
       #
-      # Par ailleurs, si un seul des trois objets est modifié (par exemple un RdvUser qui change d'état), on aura toujours
+      # Par ailleurs, si un seul des trois objets est modifié (par exemple un Participation qui change d'état), on aura toujours
       # un job qui sera envoyé.
 
       # before_commit: On parcourt le graphe des objets pour marquer tous les agents_rdvs qui ont besoin
@@ -43,8 +41,8 @@ module Outlook
       Rdv.before_commit do |rdv|
         Outlook::EventSerializerAndListener.mark_for_sync(rdv.agents_rdvs)
       end
-      RdvsUser.before_commit do |rdvs_user|
-        Outlook::EventSerializerAndListener.mark_for_sync(rdvs_user.rdv.agents_rdvs)
+      Participation.before_commit do |participation|
+        Outlook::EventSerializerAndListener.mark_for_sync(participation.rdv.agents_rdvs)
       end
 
       # after_commit: On trouve tous les agents_rdvs qui ont été marqués, on enqueue les jobs, et on
@@ -55,8 +53,8 @@ module Outlook
       Rdv.after_commit do |rdv|
         Outlook::EventSerializerAndListener.enqueue_sync_for_marked_records(rdv.agents_rdvs)
       end
-      RdvsUser.after_commit do |rdvs_user|
-        Outlook::EventSerializerAndListener.enqueue_sync_for_marked_records(rdvs_user.rdv.agents_rdvs)
+      Participation.after_commit do |participation|
+        Outlook::EventSerializerAndListener.enqueue_sync_for_marked_records(participation.rdv.agents_rdvs)
       end
     end
 
@@ -107,15 +105,7 @@ module Outlook
       show_link = url_helpers.admin_organisation_rdv_url(rdv.organisation, rdv.id, host: agent.domain.host_name)
       edit_link = url_helpers.edit_admin_organisation_rdv_url(rdv.organisation, rdv.id, host: agent.domain.host_name)
 
-      participants_list = rdv.rdvs_users.not_cancelled.map do |rdv_user|
-        "<li>#{rdv_user.user.full_name}</li>"
-      end.join
-
       <<~HTML
-        Participants:
-        <ul>#{participants_list}</ul>
-        <br />
-
         Plus d'infos sur <a href="#{show_link}">#{agent.domain_name}</a>:
         <br />
 

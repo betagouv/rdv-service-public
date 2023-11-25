@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class TransferEmailReplyJob < ApplicationJob
   queue_as :mailers
 

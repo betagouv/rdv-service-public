@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Users::GeoSearch
   def initialize(departement:, city_code: nil, street_ban_id: nil)
     @departement = departement

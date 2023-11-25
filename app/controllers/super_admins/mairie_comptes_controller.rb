@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module SuperAdmins
   class MairieComptesController < SuperAdmins::ApplicationController
     include GeoCoding
@@ -34,7 +32,7 @@ module SuperAdmins
     def create_organisation
       Organisation.create!(
         name: resource_params[:name],
-        territory: Territory.find_by(name: "Mairies"),
+        territory: Territory.mairies,
         verticale: :rdv_mairie
       )
     end
@@ -44,7 +42,7 @@ module SuperAdmins
         email: resource_params[:agent_email],
         first_name: resource_params[:agent_first_name],
         last_name: resource_params[:agent_last_name],
-        service: service,
+        services: [service],
         password: SecureRandom.hex,
         roles_attributes: [{ organisation: organisation, access_level: AgentRole::ACCESS_LEVEL_ADMIN }],
         invited_by: current_super_admin

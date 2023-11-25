@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe GeoCoding do
   include described_class
 

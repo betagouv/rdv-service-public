@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Notifiers::RdvCancelled < Notifiers::RdvBase
   def notify_user_by_mail(user)
     return unless notify_cancellation?
@@ -12,7 +10,7 @@ class Notifiers::RdvCancelled < Notifiers::RdvBase
     return unless @author.is_a? Agent
     return unless notify_cancellation?
 
-    Users::RdvSms.rdv_cancelled(@rdv, user, @rdv_users_tokens_by_user_id[user.id]).deliver_later
+    Users::RdvSms.rdv_cancelled(@rdv, user, @participations_tokens_by_user_id[user.id]).deliver_later
   end
 
   protected
@@ -25,8 +23,8 @@ class Notifiers::RdvCancelled < Notifiers::RdvBase
     @rdv.status.in?(Rdv::CANCELLED_STATUSES)
   end
 
-  def rdvs_users_to_notify
-    @rdv.rdvs_users.where(send_lifecycle_notifications: true)
+  def participations_to_notify
+    @rdv.participations.where(send_lifecycle_notifications: true)
   end
 
   def notify_agent(agent)

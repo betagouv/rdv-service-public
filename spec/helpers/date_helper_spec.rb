@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe DateHelper do
   describe "#relative_date" do
     # def relative_date(date, fallback_format = :short)

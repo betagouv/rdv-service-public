@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # TODO: supprimer ce context, nous devrions pouvoir utiliser l'organisation de l'objet sur lequel on vérifier l'accès
 class AgentOrganisationContext
   attr_reader :agent, :organisation, :agent_role

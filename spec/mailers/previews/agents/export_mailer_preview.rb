@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Agents::ExportMailerPreview < ActionMailer::Preview
   def rdv_export
     agent = Agent.first
@@ -10,9 +8,9 @@ class Agents::ExportMailerPreview < ActionMailer::Preview
     Agents::ExportMailer.rdv_export(agent, agent.organisations.first, options)
   end
 
-  def rdvs_users_export
+  def participations_export
     agent = Agent.first
     territory = Territory.first
-    Agents::ExportMailer.rdvs_users_export(agent, territory)
+    Agents::ExportMailer.participations_export(agent, territory)
   end
 end

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Admin::RdvsCollectifsController < AgentAuthController
   include RdvsHelper
 
@@ -49,7 +47,7 @@ class Admin::RdvsCollectifsController < AgentAuthController
 
     @add_user_ids = params[:add_user].to_a + params[:user_ids].to_a
     users_to_add = User.where(id: @add_user_ids)
-    @rdv_users_to_add = users_to_add.ids.map { @rdv.rdvs_users.build(user_id: _1) }
+    @participations_to_add = users_to_add.ids.map { @rdv.participations.build(user_id: _1) }
   end
 
   def update
@@ -84,7 +82,7 @@ class Admin::RdvsCollectifsController < AgentAuthController
   def update_users_params
     params.require(:rdv).permit(
       user_ids: [],
-      rdvs_users_attributes: %i[user_id send_lifecycle_notifications send_reminder_notification id _destroy]
+      participations_attributes: %i[user_id send_lifecycle_notifications send_reminder_notification id _destroy]
     )
   end
 end

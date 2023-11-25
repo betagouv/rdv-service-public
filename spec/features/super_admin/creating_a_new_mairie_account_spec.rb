@@ -1,11 +1,9 @@
-# frozen_string_literal: true
-
 describe "Creating a new account for a mairie", js: true do
   let(:super_admin) { create :super_admin }
   let!(:cni_motif_category) { create(:motif_category, name: Api::Ants::EditorController::CNI_MOTIF_CATEGORY_NAME) }
   let!(:passport_motif_category) { create(:motif_category, name: Api::Ants::EditorController::PASSPORT_MOTIF_CATEGORY_NAME) }
   let!(:cni_passport_motif_category) { create(:motif_category, name: Api::Ants::EditorController::CNI_AND_PASSPORT_MOTIF_CATEGORY_NAME) }
-  let!(:territory) { create(:territory, name: "Mairies") }
+  let!(:territory) { create(:territory, :mairies) }
   let!(:service) { create(:service, name: "Mairie") }
 
   let(:autocomplete_response) do

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe Agents::AbsenceMailer, type: :mailer do
   { created: "créée", updated: "modifiée", destroyed: "supprimée" }.each do |action, verb|
     context "when #{action}" do

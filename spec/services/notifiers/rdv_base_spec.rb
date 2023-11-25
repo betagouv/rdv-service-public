@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class TestService < Notifiers::RdvBase
   def notify_user_by_mail(user); end
 
@@ -7,8 +5,8 @@ class TestService < Notifiers::RdvBase
 
   def notify_agent(agent); end
 
-  def rdvs_users_to_notify
-    @rdv.rdvs_users.where(send_reminder_notification: true)
+  def participations_to_notify
+    @rdv.participations.where(send_reminder_notification: true)
   end
 end
 

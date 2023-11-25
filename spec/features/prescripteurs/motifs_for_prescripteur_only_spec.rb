@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe "motifs for prescripteurs only", js: true do
   let(:organisation) { create(:organisation, territory: territory, name: "MDS du quartier") }
   let(:lieu) { create(:lieu, organisation: organisation, name: "Bureau") }

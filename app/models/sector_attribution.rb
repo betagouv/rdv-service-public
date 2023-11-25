@@ -1,10 +1,8 @@
-# frozen_string_literal: true
-
 class SectorAttribution < ApplicationRecord
   # Attributes
   # TODO: make it an enum
-  LEVEL_ORGANISATION = "organisation"
-  LEVEL_AGENT = "agent"
+  LEVEL_ORGANISATION = "organisation".freeze
+  LEVEL_AGENT = "agent".freeze
   LEVELS = [LEVEL_ORGANISATION, LEVEL_AGENT].freeze
 
   # Relations
@@ -37,7 +35,7 @@ class SectorAttribution < ApplicationRecord
       .where(organisation: organisation)
       .includes(:agent)
       .to_a
-      .group_by { _1.agent.service_id }
+      .group_by { _1.agent.services.first.id }
       .transform_values do |attributions|
         {
           sectors_count: attributions.pluck(:sector_id).uniq.count,

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe PaperTrailHelper do
   describe "#paper_trail_change_value" do
     it "returns N/A when nil value" do

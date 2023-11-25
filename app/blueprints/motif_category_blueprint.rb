@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class MotifCategoryBlueprint < Blueprinter::Base
   identifier :id
 

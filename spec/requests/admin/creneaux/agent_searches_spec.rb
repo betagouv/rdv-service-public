@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe "Admin::Organisations::OnlineBookings", type: :request do
   include Rails.application.routes.url_helpers
 

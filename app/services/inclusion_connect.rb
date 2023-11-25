@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module InclusionConnect
   IC_CLIENT_ID = ENV["INCLUSION_CONNECT_CLIENT_ID"]
   IC_CLIENT_SECRET = ENV["INCLUSION_CONNECT_CLIENT_SECRET"]
@@ -16,7 +14,7 @@ module InclusionConnect
         nonce: Digest::SHA1.hexdigest("Something to check when it come back ?"),
         from: "community",
       }
-      "#{IC_BASE_URL}/auth?#{query.to_query}"
+      "#{IC_BASE_URL}/authorize/?#{query.to_query}"
     end
 
     def agent(code, inclusion_connect_callback_url)
@@ -37,7 +35,7 @@ module InclusionConnect
         grant_type: "authorization_code",
         redirect_uri: inclusion_connect_callback_url,
       }
-      uri = URI("#{IC_BASE_URL}/token")
+      uri = URI("#{IC_BASE_URL}/token/")
 
       res = Typhoeus.post(
         uri,
@@ -51,7 +49,7 @@ module InclusionConnect
     end
 
     def get_user_info(token)
-      uri = URI("#{IC_BASE_URL}/userinfo")
+      uri = URI("#{IC_BASE_URL}/userinfo/")
       uri.query = URI.encode_www_form({ schema: "openid" })
 
       res = Typhoeus.get(uri, headers: { "Authorization" => "Bearer #{token}" })

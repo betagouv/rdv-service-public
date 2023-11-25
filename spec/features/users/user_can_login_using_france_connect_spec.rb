@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe "User can login using FranceConnect" do
   before do
     mock_france_connect_profile = {

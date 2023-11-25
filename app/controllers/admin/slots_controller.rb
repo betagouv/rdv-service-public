@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Admin::SlotsController < AgentAuthController
   def index
     @form = helpers.build_agent_creneaux_search_form(current_organisation, params)
@@ -12,9 +10,7 @@ class Admin::SlotsController < AgentAuthController
     @search_result = search_result
 
     @motifs = policy_scope(Motif).active.ordered_by_name
-    @services = policy_scope(Service)
-      .where(id: @motifs.pluck(:service_id).uniq)
-      .ordered_by_name
+    @services = Service.where(id: @motifs.pluck(:service_id).uniq)
     @form.service_id = @services.first.id if @services.count == 1
     @agents = policy_scope(Agent)
       .joins(:organisations).where(organisations: { id: current_organisation.id })

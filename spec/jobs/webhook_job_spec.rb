@@ -1,5 +1,3 @@
-# frozen_string_literal: false
-
 describe WebhookJob, type: :job do
   stub_sentry_events
 

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require "administrate/base_dashboard"
 
 class ServiceDashboard < Administrate::BaseDashboard
@@ -48,7 +46,6 @@ class ServiceDashboard < Administrate::BaseDashboard
   FORM_ATTRIBUTES = %i[
     name
     short_name
-    motifs
   ].freeze
 
   def display_resource(service)

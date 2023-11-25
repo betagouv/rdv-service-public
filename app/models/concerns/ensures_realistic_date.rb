@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # Ce check a été ajouté pour éviter d'inexplicables saisies
 # accidentelles, par exemple 1922 au lieu de 2022.
 # Voir : https://github.com/betagouv/rdv-solidarites.fr/issues/2914

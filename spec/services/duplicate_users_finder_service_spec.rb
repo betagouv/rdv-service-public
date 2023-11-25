@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe DuplicateUsersFinderService, type: :service do
   let(:user) { build(:user, first_name: "Mathieu", last_name: "Lapin", email: "lapin@beta.fr", birth_date: "21/10/2000", phone_number: "0658032518") }
 
@@ -121,6 +119,32 @@ describe DuplicateUsersFinderService, type: :service do
       let!(:duplicated_user) { create(:user, phone_number: "0658032518", organisations: []) }
 
       it { is_expected.to be_empty }
+    end
+  end
+
+  describe ".find_duplicate_based_on_names_and_phone" do
+    subject { described_class.find_duplicate_based_on_names_and_phone(user) }
+
+    context "there is no other user" do
+      it { is_expected.to be_nil }
+    end
+
+    context "there is a duplicate" do
+      let!(:duplicated_user) { create(:user, first_name: "Mathieu", last_name: "Lapin", phone_number: "0658032518") }
+
+      it { is_expected.to eq(duplicated_user) }
+
+      context "but soft deleted" do
+        before { duplicated_user.soft_delete }
+
+        it { is_expected.to be_nil }
+      end
+    end
+
+    context "there is a duplicate with accent and whitespaces" do
+      let!(:duplicated_user) { create(:user, first_name: "Mathiéu  ", last_name: " Lapïn ", phone_number: "0658032518") }
+
+      it { is_expected.to eq(duplicated_user) }
     end
   end
 end

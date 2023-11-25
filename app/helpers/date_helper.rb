@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module DateHelper
   def relative_date(date, fallback_format = :short)
     return if date.nil?

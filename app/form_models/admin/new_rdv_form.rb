@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Admin::NewRdvForm
   include ActiveModel::Model
   include Admin::RdvFormConcern

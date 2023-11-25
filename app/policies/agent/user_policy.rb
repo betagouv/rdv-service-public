@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Agent::UserPolicy < DefaultAgentPolicy
   def show?
     same_org? && not_deleted?
@@ -15,8 +13,6 @@ class Agent::UserPolicy < DefaultAgentPolicy
   def invite?
     same_org? && not_deleted?
   end
-
-  alias invite_get? invite?
 
   def rdv_invitation_token?
     same_org? && not_deleted?

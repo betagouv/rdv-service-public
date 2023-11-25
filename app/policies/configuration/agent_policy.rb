@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Configuration::AgentPolicy
   def initialize(context, agent)
     @current_agent = context.agent
@@ -23,6 +21,7 @@ class Configuration::AgentPolicy
   alias edit? territorial_admin_or_allowed_to_manage_agent_part?
   alias update? territorial_admin_or_allowed_to_manage_agent_part?
   alias territory_admin? territorial_admin_or_allowed_to_manage_agent_part?
+  alias update_services? territorial_admin_or_allowed_to_manage_agent_part?
 
   def create?
     territorial_admin? || @access_rights&.allow_to_invite_agents?
@@ -37,10 +36,10 @@ class Configuration::AgentPolicy
     def resolve
       scope = Agent.includes(:agent_territorial_access_rights).where("agent_territorial_access_rights.territory": @current_territory)
       unless @current_agent.territorial_admin_in?(@current_territory)
-        scope = scope.includes(:organisations) \
+        scope = scope.includes(:organisations)
           .where(organisations: @current_agent.organisations)
-          .includes(:service) \
-          .where(service: @current_agent.service)
+          .where(services: @current_agent.services)
+          .includes(:services)
       end
       scope
     end

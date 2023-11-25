@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe Admin::MotifsController, type: :controller do
   render_views
 
@@ -22,7 +20,7 @@ RSpec.describe Admin::MotifsController, type: :controller do
         bla_motif = create(:motif, name: "Bla", organisation: organisation)
         get :index, params: { organisation_id: organisation.id, search: "bla" }
         expect(assigns(:motifs)).to eq([bla_motif])
-        expect(assigns(:unfiltered_motifs).sort).to eq([bla_motif, motif].sort)
+        expect(assigns(:unfiltered_motifs)).to contain_exactly(bla_motif, motif)
       end
     end
   end

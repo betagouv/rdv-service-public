@@ -33,8 +33,7 @@
             div
               = Motif.human_attribute_name("service")
             div
-              - available_services = Service.all_for_territory(current_territory)
-              - options = options_from_collection_for_select(available_services.sort, :id, :short_name, params[:service_filter])
+              - options = options_from_collection_for_select(current_territory.services, :id, :short_name, params[:service_filter])
               = select_tag("service_filter", options, include_blank: "Tous", class: "js-submit-on-change select2-input")
           th
             div

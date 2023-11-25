@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe Motif, type: :model do
   let(:secretariat) { create(:service, :secretariat) }
   let(:motif) { create(:motif, organisation: organisation) }
@@ -113,15 +111,15 @@ describe Motif, type: :model do
     end
   end
 
-  describe "secretariat?" do
+  describe "for_secretariat?" do
     it "return true if motif for_secretariat" do
       motif = build(:motif, for_secretariat: true, organisation: organisation)
-      expect(motif.secretariat?).to be true
+      expect(motif.for_secretariat?).to be true
     end
 
     it "return false if motif for_secretariat" do
       motif = build(:motif, for_secretariat: false, organisation: organisation)
-      expect(motif.secretariat?).to be false
+      expect(motif.for_secretariat?).to be false
     end
   end
 
@@ -144,7 +142,7 @@ describe Motif, type: :model do
 
   describe "search_by_name_with_location_type" do
     context "some matching motif name + type" do
-      subject { described_class.search_by_name_with_location_type("Rappel PMI-phone") }
+      subject { described_class.search_by_name_with_location_type(motif.name_with_location_type) }
 
       let!(:motif) { create(:motif, name: "Rappel PMI", location_type: :phone) }
 

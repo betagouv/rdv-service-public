@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Admin::Territories::AgentTerritorialAccessRightsController < Admin::Territories::BaseController
   def update
     agent = Agent.find(params[:id])

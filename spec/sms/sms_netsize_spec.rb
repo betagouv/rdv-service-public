@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe "using netsize to send an SMS" do
   let(:territory) { create(:territory, sms_provider: "netsize") }
   let(:organisation) { create(:organisation, territory: territory) }

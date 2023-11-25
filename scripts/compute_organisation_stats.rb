@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # rails runner scripts/compute_organisation_stats.rb organisation_id
 
 org = Organisation.find(ARGV[0])
