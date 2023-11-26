@@ -11,6 +11,17 @@ describe WebhookDeliverable, type: :concern do
   end
   let!(:rdv) { create(:rdv, organisation: organisation) }
 
+  after do
+    clear_enqueued_jobs
+  end
+
+  RSpec::Matchers.define :json_payload_with_meta do |key, value|
+    match do |actual|
+      content = ActiveSupport::JSON.decode(actual)
+      content["meta"][key] == value
+    end
+  end
+
   describe "#send_web_hook" do
     context "when the webhook endpoint is triggered by the model changes" do
       context "on creation" do
