@@ -3845,6 +3845,175 @@
         }
       }
     },
+    "/api/v1/user_profiles/create_many": {
+      "post": {
+        "summary": "Ajouter un utilisateur à une ou plusieurs organisations",
+        "security": [
+          {
+            "access_token": [
+
+            ],
+            "uid": [
+
+            ],
+            "client": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "access-token",
+            "in": "header",
+            "description": "Token d'accès (authentification)",
+            "example": "SFYBngO55ImjD1HOcv-ivQ",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "client",
+            "in": "header",
+            "description": "Clé client d'accès (authentification)",
+            "example": "Z6EihQAY9NWsZByfZ47i_Q",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "uid",
+            "in": "header",
+            "description": "Identifiant d'accès (authentification)",
+            "example": "martine@demo.rdv-solidarites.fr",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "organisation_ids[]",
+            "in": "query",
+            "description": "ID des organisations",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": "[1, 2]"
+          },
+          {
+            "name": "user_id",
+            "in": "query",
+            "description": "ID de l'utilisateur",
+            "example": 12,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "tags": [
+          "UserProfiles"
+        ],
+        "operationId": "createUserProfiles",
+        "description": "Ajoute un utilisateur à une ou plusieurs organisations",
+        "responses": {
+          "200": {
+            "description": "Ajouter un utilisateur à une ou plusieurs organisations et renvoie l'utilisateur",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "user": {
+                        "id": 131,
+                        "address": "20 avenue de Ségur, Paris",
+                        "address_details": null,
+                        "affiliation_number": "39012093812038",
+                        "birth_date": "1985-07-20",
+                        "birth_name": null,
+                        "caisse_affiliation": "caf",
+                        "case_number": null,
+                        "created_at": "2023-11-03 16:27:23 +0100",
+                        "email": "usager_1@lapin.fr",
+                        "family_situation": "divorced",
+                        "first_name": "Adalbéron",
+                        "invitation_accepted_at": null,
+                        "invitation_created_at": null,
+                        "last_name": "BESSON",
+                        "logement": "locataire",
+                        "notes": "Super note",
+                        "notify_by_email": true,
+                        "notify_by_sms": true,
+                        "number_of_children": 12,
+                        "phone_number": "7 36 97 11 83",
+                        "phone_number_formatted": "+33736971183",
+                        "responsible": null,
+                        "responsible_id": null,
+                        "user_profiles": [
+                          {
+                            "organisation": {
+                              "id": 317,
+                              "email": null,
+                              "name": "Organisation n°1",
+                              "phone_number": null,
+                              "verticale": "rdv_solidarites"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/user_with_root"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Renvoie 'unauthorized' quand l'authentification est impossible",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "errors": [
+                        "Vous devez vous connecter ou vous inscrire pour continuer."
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_authentication"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Renvoie 'unprocessable_entity' quand l'utilisateur est inconnu",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "success": false,
+                      "errors": {},
+                      "error_messages": [
+                        "L'id d'usager est inconnu"
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/error_unprocessable_entity"
+                }
+
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/users/{user_id}": {
       "get": {
         "summary": "Récupérer un·e usager·ère",

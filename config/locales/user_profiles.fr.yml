@@ -1,0 +1,6 @@
+fr:
+  user_profiles:
+    create_many:
+      no_organisation_ids: Vous devez sélectionner au moins une organisation
+      no_user_id: Vous devez sélectionner un usager
+      unknown_user_id: L'id d'usager est inconnu
