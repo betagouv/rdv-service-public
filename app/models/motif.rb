@@ -136,6 +136,16 @@ class Motif < ApplicationRecord
     rdvs.any? ? update_attribute(:deleted_at, Time.zone.now) : destroy
   end
 
+  def authorized_agents
+    Agent
+      .joins(:organisations)
+      .where(organisations: { id: organisation.id })
+      .complete
+      .active
+      .in_any_of_these_services(authorized_services)
+      .order_by_last_name
+  end
+
   def authorized_services
     for_secretariat ? [service, Service.secretariat] : [service]
   end
