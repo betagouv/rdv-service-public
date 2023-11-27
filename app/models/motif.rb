@@ -161,7 +161,7 @@ class Motif < ApplicationRecord
   end
 
   def name_slug
-    "#{I18n.transliterate(name).downcase.gsub(NAME_SLUG_REGEXP, '_')}-#{location_type}"
+    I18n.transliterate(name).downcase.gsub(NAME_SLUG_REGEXP, "_").to_s
   end
 
   # This should match the implementation of .search_by_name_with_location_type
@@ -169,8 +169,10 @@ class Motif < ApplicationRecord
     "#{name_slug}-#{location_type}"
   end
 
+  SLUG_SEPARATOR = "---".freeze
+
   def self.four_criteria_slug(motif)
-    [motif.name_slug, motif.location_type, motif.service_id, motif.collectif.inspect].join("-")
+    [motif.name_slug, motif.location_type, motif.service_id, motif.collectif.inspect].join(SLUG_SEPARATOR)
   end
 
   def four_criteria_slug
@@ -178,7 +180,7 @@ class Motif < ApplicationRecord
   end
 
   def self.criteria_hash_from_slug(slug)
-    name_slug, location_type, service_id, collectif_str = slug.split("-")
+    name_slug, location_type, service_id, collectif_str = slug.split(SLUG_SEPARATOR)
     {
       name_slug: name_slug,
       location_type: location_type,
