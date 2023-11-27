@@ -51,14 +51,9 @@ class PrescripteurRdvWizard < UserRdvWizard::Base
 
   def find_or_create_user
     user_from_params = User.new(@user_attributes)
+    duplicate = DuplicateUsersFinderService.find_duplicate_based_on_names_and_phone(user_from_params)
 
-    @user = User.where(
-      "unaccent(lower(first_name)) = unaccent((lower(?)))", user_from_params.first_name
-    ).where(
-      "unaccent(lower(last_name)) = unaccent((lower(?)))", user_from_params.last_name
-    ).find_by(
-      phone_number_formatted: user_from_params.phone_number_formatted
-    ) || user_from_params
+    @user = duplicate || user_from_params
 
     @user.skip_confirmation_notification! # Désactivation du mail Devise de confirmation de compte
     @user.created_through = "prescripteur"

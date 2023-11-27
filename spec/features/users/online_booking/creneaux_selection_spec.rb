@@ -1,4 +1,4 @@
-describe "User can search for creneaux" do
+describe "User can select a creneau" do
   let(:now) { Time.zone.parse("2021-12-13 8:00") }
 
   let!(:territory92) { create(:territory, departement_number: "92") }
@@ -28,7 +28,7 @@ describe "User can search for creneaux" do
 
       find("h3", text: motif.name).click
 
-      expect(page).to have_content("Nous n'avons pas trouvé de créneaux pour votre motif")
+      expect(page).to have_content("Malheureusement, aucun créneau correspondant à votre recherche n'a été trouvé.")
     end
   end
 

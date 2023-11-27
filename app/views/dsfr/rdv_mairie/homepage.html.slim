@@ -51,6 +51,19 @@
 
         p Vous bénéficiez d’un accompagnement individualisé pour la prise en main de l’outil et d’une équipe support à votre disposition.
 
+.fr-py-7w[style="background-color:  #DEE5FD"]
+  .fr-container
+    .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
+      .fr-col-md-10
+        .flex.flex--center[style="color: #2F4077"]
+          h4.fr-pr-2w.fr-display--lg.fr-mb-0[style="color: #2F4077"]
+            - rdv_count = Rails.cache.fetch("rdv_mairies_homepage_rdv_count", expires_in: 1.hour) { Rdv.count }
+            = number_with_delimiter(rdv_count, delimiter: " ")
+
+          .fr-text--lead.fr-mb-0
+            b  = "rendez-vous déjà pris".upcase
+            br
+            = "sur RDV Service Public".upcase
 .fr-py-12w[style="background-color:  #F4F6FE"]
   .fr-container
     .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
@@ -93,6 +106,37 @@
           | Nous prendrons le temps nécessaire à la présentation de l’outil, à la formation de vos agents ainsi qu’à la création de votre espace RDV Service Public.
         = link_to("Prendre RDV avec l’équipe", team_meeting_url, class: ["fr-btn fr-mb-4w"])
 
+.fr-py-12w[style="background-color:  #DEE5FD"]
+  .fr-container
+    .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
+      .fr-col-md-12
+        h2 Ce que nos utilisateurs en pensent
+    .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
+      .fr-col-md-4
+        p
+          ="« RDV Service Public est très simple à utiliser. "
+          b= "Le rappel par SMS"
+          = " est un plus qui est apprécié par les usagers. De manière générale, on est très satisfaites du logiciel. »"
+        b[style="color: #2F4077"] Mairie de Chomérac (07)
+        p.fr-pt-4w
+          = "« Dès la démonstration, l’outil avait l’air d’être plutôt bien fait. Ce fut très simple de notre côté. Très vite, j’ai mis "
+          b= "des plages d’ouverture"
+          = " pour voir si la prise de rdv en ligne fonctionnait. L’expérience avec l’outil est plutôt bonne. Il est assez intuitif pour nous. »"
+        b[style="color: #2F4077"] Mairie de Saint-Romain-de-Colbosc (76)
+      .fr-col-md-4
+        p
+          = "« Il est facile à utiliser, il est "
+          b = "adapté à notre fonctionnement"
+          = " et l’outil est pertinent. Même les personnes qui ne sont pas forcément à l’aise avec le numérique trouvent l’outil simple. »"
+        b[style="color: #2F4077"] Mairie de Morcenx-la-nouvelle (40)
+        p.fr-pt-4w
+          = "« Notre mairie le recommande aux autres mairies. Nous voulions "
+          b= "désengorger les appels"
+          = ". C’est fait : nous avons beaucoup moins d’appels à l’accueil et l’intégration de RDV Service public s’est faite facilement. Il est simple à utiliser. »"
+        b[style="color: #2F4077"] Mairie de Wavignie (60)
+      .fr-col-md-4
+        = dsfr_image_tag "rdv_mairie/image_4.svg", "Un personnage tient un crayon devant un écran", class: "fr-ratio-1x1"
+
 .fr-py-12w[style="background-color:  #F4F6FE"]
   .fr-container
     .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
@@ -108,6 +152,6 @@
           = " et sponsorisée par le Programme Société Numérique de l’"
           = external_link_to("Agence Nationale de la Cohésion des Territoires", "https://agence-cohesion-territoires.gouv.fr/")
           | .
-        p Nous suivons l’approche #{external_link_to("beta.gouv.fr", "https://beta.gouv.fr/")} qui place l’expérience utilisateur au coeur de la conception produit."
+        p Nous suivons l’approche #{external_link_to("beta.gouv.fr", "https://beta.gouv.fr/")} qui place l’expérience utilisateur au coeur de la conception produit.
 
         p Nous développons une solution de gestion et de prise de rendez-vous simple à utiliser, simple à déployer, libre et open-source pour tous les services publics.
