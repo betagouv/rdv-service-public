@@ -1,6 +1,14 @@
 class Agent::MotifPolicy < ApplicationPolicy
+  def new?
+    update?
+  end
+
   def create?
-    admin_of_the_motif_organisation?
+    update?
+  end
+
+  def edit?
+    update?
   end
 
   def update?
@@ -8,11 +16,11 @@ class Agent::MotifPolicy < ApplicationPolicy
   end
 
   def destroy?
-    admin_of_the_motif_organisation?
+    update?
   end
 
   def versions?
-    admin_of_the_motif_organisation?
+    update?
   end
 
   def show?
@@ -34,10 +42,10 @@ class Agent::MotifPolicy < ApplicationPolicy
   class Scope < ApplicationPolicy::Scope
     def resolve
       if pundit_user.secretaire?
-        scope.where(organisation_id: agent.organisation_ids)
+        scope.where(organisation_id: pundit_user.organisation_ids)
       else
-        scope.where(organisation_id: agent.roles.where.not(access_level: :admin).organisation_ids, service: pundit_user.services)
-          .or(scope.where(organisation_id: agent.roles.where(access_level: :admin).organisation_ids))
+        scope.where(organisation_id: pundit_user.roles.where.not(access_level: :admin).pluck("organisation_id"), service: pundit_user.services)
+          .or(scope.where(organisation_id: pundit_user.roles.where(access_level: :admin).pluck("organisation_id")))
       end
     end
   end

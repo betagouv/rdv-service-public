@@ -5,8 +5,7 @@ class Admin::MotifsController < AgentAuthController
   before_action :set_motif, only: %i[show edit update destroy]
 
   def index
-    @unfiltered_motifs = Agent::MotifPolicy::Scope.apply(current_agent, Motif)
-      .where(organisation: current_organisation).active
+    @unfiltered_motifs = policy_scope(Motif).where(organisation: current_organisation).active
     @motifs = params[:search].present? ? @unfiltered_motifs.search_by_text(params[:search]) : @unfiltered_motifs.ordered_by_name
     @motifs = filtered(@motifs, params)
     @motifs = @motifs.includes(:organisation).includes(:service).page(params[:page])
@@ -27,6 +26,7 @@ class Admin::MotifsController < AgentAuthController
 
   def show
     authorize(@motif)
+    @motif_policy = Agent::MotifPolicy.new(current_agent, @motif)
   end
 
   def create
@@ -62,6 +62,10 @@ class Admin::MotifsController < AgentAuthController
   end
 
   private
+
+  def pundit_user
+    current_agent
+  end
 
   def filtered(motifs, params)
     motifs = online_filtered(motifs, params[:online_filter]) if params[:online_filter].present?

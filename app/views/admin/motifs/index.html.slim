@@ -3,6 +3,7 @@
 - content_for :title do
   | Vos motifs
 
+- # TODO: replace current_agent_can? by explicit method calls
 - if current_agent_can?(:create, Motif)
   - content_for :breadcrumb do
     = link_to "Créer un motif", new_admin_organisation_motif_path(current_organisation), class:"btn btn-outline-primary"

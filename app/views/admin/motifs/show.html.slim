@@ -1,4 +1,3 @@
-- motif_policy = policy([:agent, @motif])
 - content_for(:menu_item) { "menu-motifs" }
 
 .row.justify-content-center
@@ -84,14 +83,14 @@
           @motif.custom_cancel_warning_message, \
           hint: Motif.human_attribute_name(:custom_cancel_warning_message_hint)
 
-      - if motif_policy.edit? || motif_policy.destroy?
+      - if @motif_policy.edit? || @motif_policy.destroy?
         .card-footer
           .d-flex.justify-content-end
-            - if motif_policy.destroy?
+            - if @motif_policy.destroy?
               div.mr-2= link_to "Supprimer", admin_organisation_motif_path(current_organisation, @motif), method: :delete, data: { confirm: "Confirmez-vous la suppression de ce motif ?"}, class: "btn btn-danger w-100"
-            - if motif_policy.edit?
+            - if @motif_policy.edit?
               div= link_to "Éditer", edit_admin_organisation_motif_path(current_organisation, @motif), class: "btn btn-primary w-100"
 
 .row.justify-content-center
   .col-md-8
-    = render "admin/versions/resource_versions_row", policy_scope: :agent, resource: @motif
+    = render "admin/versions/resource_versions_row", resource_policy: @motif_policy, resource: @motif
