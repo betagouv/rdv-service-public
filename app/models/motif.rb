@@ -14,6 +14,8 @@ class Motif < ApplicationRecord
   # Attributes
   auto_strip_attributes :name, :color
 
+  NAME_SLUG_REGEXP = /[^0-9a-z]+/
+
   # TODO: make it an enum
   VISIBLE_AND_NOTIFIED = "visible_and_notified".freeze
   VISIBLE_AND_NOT_NOTIFIED = "visible_and_not_notified".freeze
@@ -104,7 +106,7 @@ class Motif < ApplicationRecord
     with_name_slug(name_slug).where(location_type: location_type)
   }
   scope :with_name_slug, lambda { |name_slug|
-    where("REGEXP_REPLACE(LOWER(UNACCENT(motifs.name)), '[^0-9a-z]+', '_', 'g') = ?", name_slug)
+    where(%{REGEXP_REPLACE(LOWER(UNACCENT(motifs.name)), '#{NAME_SLUG_REGEXP.source}', '_', 'g') = ?}, name_slug)
   }
   scope :sectorisation_level_departement, -> { where(sectorisation_level: SECTORISATION_LEVEL_DEPARTEMENT) }
   scope :sectorisation_level_organisation, -> { where(sectorisation_level: SECTORISATION_LEVEL_ORGANISATION) }
@@ -159,7 +161,12 @@ class Motif < ApplicationRecord
   end
 
   def name_slug
-    I18n.transliterate(name).downcase.gsub(/[^0-9a-z]+/, "_")
+    "#{I18n.transliterate(name).downcase.gsub(NAME_SLUG_REGEXP, '_')}-#{location_type}"
+  end
+
+  # This should match the implementation of .search_by_name_with_location_type
+  def name_with_location_type
+    "#{name_slug}-#{location_type}"
   end
 
   def self.four_criteria_slug(motif)
@@ -178,10 +185,6 @@ class Motif < ApplicationRecord
       service_id: service_id.to_i,
       collectif: collectif_str == "true",
     }
-  end
-
-  def name_with_location_type
-    "#{name_slug}-#{location_type}"
   end
 
   def sectorisation_level_agent?
