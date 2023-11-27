@@ -2,7 +2,8 @@ class Admin::RdvsCollectifsController < AgentAuthController
   include RdvsHelper
 
   def index
-    @motifs = policy_scope(Motif).available_motifs_for_organisation_and_agent(current_organisation, current_agent).collectif
+    # TODO: not sure if available_motifs_for_organisation_and_agent is correct here
+    @motifs = Agent::MotifPolicy::Scope.apply(current_agent, Motif).available_motifs_for_organisation_and_agent(current_organisation, current_agent).collectif
 
     @rdvs = policy_scope(Rdv).where(organisation: current_organisation).collectif
     @rdvs = @rdvs.order(starts_at: :asc).page(params[:page])
@@ -13,7 +14,7 @@ class Admin::RdvsCollectifsController < AgentAuthController
   end
 
   def new
-    motif = policy_scope(Motif).find(params[:motif_id])
+    motif = Agent::MotifPolicy::Scope.apply(current_agent, Motif).find(params[:motif_id]) # TODO: this might need a available_motifs_for_organisation_and_agent(current_organisation, current_agent)
     @rdv_form = Admin::NewRdvForm.new(pundit_user, organisation: current_organisation, motif: motif, duration_in_min: motif.default_duration_in_min)
     @rdv = @rdv_form.rdv
 
@@ -24,7 +25,7 @@ class Admin::RdvsCollectifsController < AgentAuthController
       @rdv.assign_attributes(new_rdv_attributes)
       @rdv.agents = duplicated_rdv.agents
     end
-    authorize(@rdv)
+    authorize(@rdv) # TODO: est-ce qu'il faut une règle sur le type de motif dans le rdv policy ?
   end
 
   def create

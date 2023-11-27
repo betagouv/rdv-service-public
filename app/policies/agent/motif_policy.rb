@@ -16,7 +16,7 @@ class Agent::MotifPolicy < ApplicationPolicy
   end
 
   def show?
-    admin_of_the_motif_organisation? || @record.service.in?(current_agent.services)
+    admin_of_the_motif_organisation? || @record.service.in?(pundit_user.services)
   end
 
   private
@@ -28,15 +28,15 @@ class Agent::MotifPolicy < ApplicationPolicy
   end
 
   def agent_role_in_motif_organisation
-    @agent_role_in_motif_organisation ||= current_agent.roles.find_by(organisation_id: @record.organisation_id)
+    @agent_role_in_motif_organisation ||= pundit_user.roles.find_by(organisation_id: @record.organisation_id)
   end
 
-  class Scope < Scope
+  class Scope < ApplicationPolicy::Scope
     def resolve
-      if current_agent.secretaire?
+      if pundit_user.secretaire?
         scope.where(organisation_id: agent.organisation_ids)
       else
-        scope.where(organisation_id: agent.roles.where.not(access_level: :admin).organisation_ids, service: current_agent.services)
+        scope.where(organisation_id: agent.roles.where.not(access_level: :admin).organisation_ids, service: pundit_user.services)
           .or(scope.where(organisation_id: agent.roles.where(access_level: :admin).organisation_ids))
       end
     end
