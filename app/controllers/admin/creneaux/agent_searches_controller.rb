@@ -47,7 +47,10 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
   end
 
   def set_form
-    @form = helpers.build_agent_creneaux_search_form(current_organisation, params)
+    organisations = params[:organisations].blank? ? [current_organisation] : Organisation.where(id: params[:organisations])
+    raise "t'as pas le droit" unless policy_scope(Organisation).to_set.superset?(organisations.to_set)
+
+    @form = helpers.build_agent_creneaux_search_form(organisations, params)
   end
 
   def set_search_results

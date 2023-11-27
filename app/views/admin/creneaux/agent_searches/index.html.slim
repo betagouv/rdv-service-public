@@ -13,6 +13,19 @@
         = hidden_field_tag :context, @form.context
       .row
         .col-md-4
+          = f.input :organisations, \
+            collection: policy_scope(Organisation), \
+            selected: @form.organisations.map(&:id), \
+            input_html: { \
+              multiple: true, \
+              class: "select2-input", \
+              data: { \
+                placeholder: "Sélectionnez vos organisations", \
+                "select-options": { disableSearch: true }, \
+              }, \
+            }
+      .row
+        .col-md-4
           = f.input :service_id, \
             collection: @services, \
             input_html: { \

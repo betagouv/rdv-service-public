@@ -19,6 +19,7 @@ module CreneauxHelper
   def creneaux_search_params(form)
     {
       service_id: form.service_id,
+      organisations: form.organisations.map(&:id),
       motif_criteria: form.motif_criteria,
       from_date: form.from_date,
       agent_ids: form.agent_ids,
@@ -29,9 +30,9 @@ module CreneauxHelper
     }
   end
 
-  def build_agent_creneaux_search_form(organisation, params)
+  def build_agent_creneaux_search_form(organisations, params)
     AgentCreneauxSearchForm.new(
-      organisation_id: organisation.id,
+      organisations: organisations,
       service_id: params[:service_id],
       motif_criteria: params[:motif_criteria],
       from_date: params[:from_date],

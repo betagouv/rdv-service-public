@@ -19,6 +19,7 @@ class SearchRdvCollectifForAgentsService
   private
 
   def lieux
+    # TODO: organisation devient organisations
     @form.organisation.lieux.joins(:rdvs).merge(rdvs_scope).distinct
   end
 

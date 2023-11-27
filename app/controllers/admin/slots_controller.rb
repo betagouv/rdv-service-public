@@ -1,6 +1,9 @@
 class Admin::SlotsController < AgentAuthController
   def index
-    @form = helpers.build_agent_creneaux_search_form(current_organisation, params)
+    organisations = params[:organisations].blank? ? [current_organisation] : Organisation.where(id: params[:organisations])
+    raise "t'as pas le droit" unless policy_scope(Organisation).to_set.superset?(organisations.to_set)
+
+    @form = helpers.build_agent_creneaux_search_form(organisations, params)
 
     # Dans ce cadre là, nous n'avons qu'un lieu, et donc une structure en résultat de l'appel à ce service.
     # TODO reprendre le service pour le sortir du format `background_job` et proposer 2 méthodes publiques

@@ -27,6 +27,7 @@ class Team < ApplicationRecord
 
   # Through relations
   has_many :agents, through: :agent_teams
+  has_many :organisations, through: :territory
 
   # Validations
   validates :name, presence: true, uniqueness: { scope: :territory }

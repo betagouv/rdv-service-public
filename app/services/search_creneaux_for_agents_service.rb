@@ -23,7 +23,7 @@ class SearchCreneauxForAgentsService < SearchCreneauxForAgentsBase
 
     return @lieux unless @lieux.nil?
 
-    @lieux = @form.organisation.lieux
+    @lieux = Lieu.where(organisation: @form.organisations)
     @lieux = \
       if @form.lieu_ids.present?
         @lieux.where(id: @form.lieu_ids)

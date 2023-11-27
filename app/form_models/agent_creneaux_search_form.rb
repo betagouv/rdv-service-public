@@ -1,14 +1,10 @@
 class AgentCreneauxSearchForm
   include ActiveModel::Model
 
-  attr_accessor :organisation_id, :service_id, :motif_criteria, :agent_ids, :team_ids, :user_ids, :lieu_ids, :context
+  attr_accessor :organisations, :service_id, :motif_criteria, :agent_ids, :team_ids, :user_ids, :lieu_ids, :context
   attr_writer :from_date
 
-  validates :organisation_id, :motif_criteria, presence: true
-
-  def organisation
-    Organisation.find_by(id: organisation_id)
-  end
+  validates :organisations, :motif_criteria, presence: true
 
   def service
     Service.find_by(id: service_id)
@@ -21,6 +17,7 @@ class AgentCreneauxSearchForm
   def motifs
     non_name_criteria = motif_criteria_hash.slice(:location_type, :service_id, :collectif)
     @motifs ||= Motif.active
+      .where(organisation: organisations)
       .where(non_name_criteria)
       .with_name_slug(motif_criteria_hash[:name_slug])
   end
@@ -30,11 +27,11 @@ class AgentCreneauxSearchForm
   end
 
   def users
-    organisation.users.where(id: user_ids)
+    User.where(id: user_ids, organisations: organisations)
   end
 
   def teams
-    organisation.territory.teams.where(id: team_ids)
+    Team.where(id: team_ids, organisations: organisations)
   end
 
   def date_range
