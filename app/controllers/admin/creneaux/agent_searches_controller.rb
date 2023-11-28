@@ -29,7 +29,7 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
   private
 
   def motif_selected?
-    @form.motif_criteria.present?
+    @form.motif_typology_slug.present?
   end
 
   def only_one_lieu?

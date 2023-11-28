@@ -3,6 +3,7 @@ class Motif < ApplicationRecord
   has_paper_trail
 
   include WebhookDeliverable
+  include Motif::Typology
 
   include PgSearch::Model
 
@@ -167,26 +168,6 @@ class Motif < ApplicationRecord
   # This should match the implementation of .search_by_name_with_location_type
   def name_with_location_type
     "#{name_slug}-#{location_type}"
-  end
-
-  SLUG_SEPARATOR = "---".freeze
-
-  def self.four_criteria_slug(motif)
-    [motif.name_slug, motif.location_type, motif.service_id, motif.collectif.inspect].join(SLUG_SEPARATOR)
-  end
-
-  def four_criteria_slug
-    self.class.four_criteria_slug(self)
-  end
-
-  def self.criteria_hash_from_slug(slug)
-    name_slug, location_type, service_id, collectif_str = slug.split(SLUG_SEPARATOR)
-    {
-      name_slug: name_slug,
-      location_type: location_type,
-      service_id: service_id.to_i,
-      collectif: collectif_str == "true",
-    }
   end
 
   def sectorisation_level_agent?

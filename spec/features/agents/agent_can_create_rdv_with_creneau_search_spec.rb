@@ -14,7 +14,7 @@ describe "Agent can create a Rdv with creneau search" do
     it "displays lieux and allow filtering on lieux" do
       visit admin_organisation_agent_searches_path(organisation)
       expect(page).to have_content("Trouver un RDV")
-      select(motif.name, from: "motif_criteria")
+      select(motif.name, from: "motif_typology_slug")
       click_button("Afficher les créneaux")
 
       # Display results for both lieux
@@ -78,7 +78,7 @@ describe "Agent can create a Rdv with creneau search" do
       travel_to(Date.new(2023, 5, 9))
       visit admin_organisation_agent_searches_path(organisation)
       expect(page).to have_content("Trouver un RDV")
-      select(motif.name, from: "motif_criteria")
+      select(motif.name, from: "motif_typology_slug")
       click_button("Afficher les créneaux")
 
       creneaux_labels = all("a.creneau").map(&:text)
@@ -98,7 +98,7 @@ describe "Agent can create a Rdv with creneau search" do
     it "displays a slot for each time of the day, without duplicate times" do
       visit admin_organisation_agent_searches_path(organisation)
       expect(page).to have_content("Trouver un RDV")
-      select(motif.name, from: "motif_criteria")
+      select(motif.name, from: "motif_typology_slug")
       click_button("Afficher les créneaux")
 
       creneaux_labels = all("a.creneau").map(&:text)
@@ -113,7 +113,7 @@ describe "Agent can create a Rdv with creneau search" do
     it "still allows the agent to book a rdv, because the booking delays should only apply to agents" do
       visit admin_organisation_agent_searches_path(organisation)
       expect(page).to have_content("Trouver un RDV")
-      select(motif.name, from: "motif_criteria")
+      select(motif.name, from: "motif_typology_slug")
       click_button("Afficher les créneaux")
 
       # Display results
@@ -130,7 +130,7 @@ describe "Agent can create a Rdv with creneau search" do
       it "allows the agent to book a rdv" do
         visit admin_organisation_agent_searches_path(organisation)
         expect(page).to have_content("Trouver un RDV")
-        select(motif.name, from: "motif_criteria")
+        select(motif.name, from: "motif_typology_slug")
         click_button("Afficher les créneaux")
 
         find(".creneau", match: :first).click

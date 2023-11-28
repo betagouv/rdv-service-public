@@ -1,17 +1,17 @@
 class AgentCreneauxSearchForm
   include ActiveModel::Model
 
-  attr_accessor :organisations, :service_id, :motif_criteria, :agent_ids, :team_ids, :user_ids, :lieu_ids, :context
+  attr_accessor :organisations, :service_id, :motif_typology_slug, :agent_ids, :team_ids, :user_ids, :lieu_ids, :context
   attr_writer :from_date
 
-  validates :organisations, :motif_criteria, presence: true
+  validates :organisations, :motif_typology_slug, presence: true
 
   def service
     Service.find_by(id: service_id)
   end
 
   def motif_criteria_hash
-    Motif.criteria_hash_from_slug(motif_criteria)
+    Motif.typology_hash_from_slug(motif_typology_slug)
   end
 
   def motifs

@@ -20,7 +20,7 @@ module CreneauxHelper
     {
       service_id: form.service_id,
       organisations: form.organisations.map(&:id),
-      motif_criteria: form.motif_criteria,
+      motif_typology_slug: form.motif_typology_slug,
       from_date: form.from_date,
       agent_ids: form.agent_ids,
       team_ids: form.team_ids,
@@ -34,7 +34,7 @@ module CreneauxHelper
     AgentCreneauxSearchForm.new(
       organisations: organisations,
       service_id: params[:service_id],
-      motif_criteria: params[:motif_criteria],
+      motif_typology_slug: params[:motif_typology_slug],
       from_date: params[:from_date],
       context: params[:context].presence,
       user_ids: params.fetch(:user_ids, []).compact_blank,
