@@ -43,7 +43,7 @@
             collection: @motifs.uniq(&:typology_slug).group_by { _1.service.name }, \
             as: :grouped_select, \
             group_method: :last, \
-            label_method: -> { [_1.service.short_name, motif_name_and_location_type(_1), (_1.collectif ? "Collectif" : "Individuel")].join(" - ") }, \
+            label_method: -> { [motif_name_and_location_type(_1), (_1.collectif ? "Collectif" : nil)].compact.join(" - ") }, \
             value_method: -> { Motif.typology_slug(_1) }, \
             input_html: { \
               data: { placeholder: "Sélectionnez un motif" }, \
