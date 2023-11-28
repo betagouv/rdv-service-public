@@ -1,6 +1,4 @@
 class Api::V1::UserProfilesController < Api::V1::AgentAuthBaseController
-  before_action :validate_params, only: :upsert_many
-
   def create
     user_profile = UserProfile.new(user_profile_params)
     authorize(user_profile)
