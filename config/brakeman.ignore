@@ -117,13 +117,13 @@
     {
       "warning_type": "Dynamic Render Path",
       "warning_code": 15,
-      "fingerprint": "dbc547a8dd5fb563f0985da5f12c7151422fe71c4868cbcd0b98ca2da76037c3",
+      "fingerprint": "eb506d328b83df32612498e9b12e59e4d8ac5141325ab5d62ac8b7579af4b391",
       "check_name": "Render",
       "message": "Render path contains parameter value",
       "file": "app/views/admin/motifs/index.html.slim",
       "line": 49,
       "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code": "render(action => filtered((policy_scope(Motif).where(:organisation => current_organisation).active.search_by_text(params[:search]) or policy_scope(Motif).where(:organisation => current_organisation).active.ordered_by_name), params).includes(:organisation).includes(:service).page(params[:page]), {})",
+      "code": "render(action => filtered((policy_scope(Motif, :policy_scope_class => (Agent::MotifPolicy::Scope)).where(:organisation => current_organisation).active.search_by_text(params[:search]) or policy_scope(Motif, :policy_scope_class => (Agent::MotifPolicy::Scope)).where(:organisation => current_organisation).active.ordered_by_name), params).includes(:organisation).includes(:service).page(params[:page]), {})",
       "render_path": [
         {
           "type": "controller",
@@ -151,13 +151,13 @@
     {
       "warning_type": "Dynamic Render Path",
       "warning_code": 15,
-      "fingerprint": "dbc547a8dd5fb563f0985da5f12c7151422fe71c4868cbcd0b98ca2da76037c3",
+      "fingerprint": "eb506d328b83df32612498e9b12e59e4d8ac5141325ab5d62ac8b7579af4b391",
       "check_name": "Render",
       "message": "Render path contains parameter value",
       "file": "app/views/admin/motifs/index.html.slim",
       "line": 75,
       "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code": "render(action => filtered((policy_scope(Motif).where(:organisation => current_organisation).active.search_by_text(params[:search]) or policy_scope(Motif).where(:organisation => current_organisation).active.ordered_by_name), params).includes(:organisation).includes(:service).page(params[:page]), {})",
+      "code": "render(action => filtered((policy_scope(Motif, :policy_scope_class => (Agent::MotifPolicy::Scope)).where(:organisation => current_organisation).active.search_by_text(params[:search]) or policy_scope(Motif, :policy_scope_class => (Agent::MotifPolicy::Scope)).where(:organisation => current_organisation).active.ordered_by_name), params).includes(:organisation).includes(:service).page(params[:page]), {})",
       "render_path": [
         {
           "type": "controller",
@@ -183,6 +183,6 @@
       "note": ""
     }
   ],
-  "updated": "2023-11-28 11:33:49 +0100",
+  "updated": "2023-11-28 18:59:06 +0100",
   "brakeman_version": "5.3.1"
 }
