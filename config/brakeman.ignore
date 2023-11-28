@@ -7,7 +7,7 @@
       "check_name": "Render",
       "message": "Render path contains parameter value",
       "file": "app/views/admin/plage_ouvertures/index.html.slim",
-      "line": 36,
+      "line": 53,
       "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
       "code": "render(action => policy_scope(PlageOuverture).includes(:lieu, :organisation, :motifs, :agent).where(:agent_id => filter_params[:agent_id]).order(:updated_at => :desc).where(:expired_cached => (filter_params[:current_tab] == \"expired\")).page(filter_params[:page]).search_by_text(params[:search]), {})",
       "render_path": [
@@ -15,7 +15,7 @@
           "type": "controller",
           "class": "Admin::PlageOuverturesController",
           "method": "index",
-          "line": 24,
+          "line": 22,
           "file": "app/controllers/admin/plage_ouvertures_controller.rb",
           "rendered": {
             "name": "admin/plage_ouvertures/index",
@@ -29,6 +29,9 @@
       },
       "user_input": "params[:search]",
       "confidence": "Weak",
+      "cwe_id": [
+        22
+      ],
       "note": ""
     },
     {
@@ -46,7 +49,7 @@
           "type": "controller",
           "class": "Admin::LieuxController",
           "method": "index",
-          "line": 8,
+          "line": 6,
           "file": "app/controllers/admin/lieux_controller.rb",
           "rendered": {
             "name": "admin/lieux/index",
@@ -60,6 +63,9 @@
       },
       "user_input": "params[:page]",
       "confidence": "Weak",
+      "cwe_id": [
+        22
+      ],
       "note": ""
     },
     {
@@ -69,7 +75,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/mailers/concerns/common_mailer.rb",
-      "line": 24,
+      "line": 22,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "mail.from(\"\\\"#{domain.name}\\\" <#{default_from}>\")",
       "render_path": null,
@@ -80,6 +86,32 @@
       },
       "user_input": "domain.name",
       "confidence": "Weak",
+      "cwe_id": [
+        89
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "d1e6e4a81767101794274351f3382bc6b83bf095f421e5470f4f83c9a785634a",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/models/motif.rb",
+      "line": 110,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "where(\"REGEXP_REPLACE(LOWER(UNACCENT(motifs.name)), '#{/[^0-9a-z]+/.source}', '_', 'g') = ?\", slug_name)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Motif",
+        "method": "search_by_name_with_location_type"
+      },
+      "user_input": "/[^0-9a-z]+/.source",
+      "confidence": "Medium",
+      "cwe_id": [
+        89
+      ],
       "note": ""
     },
     {
@@ -89,7 +121,7 @@
       "check_name": "Render",
       "message": "Render path contains parameter value",
       "file": "app/views/admin/motifs/index.html.slim",
-      "line": 50,
+      "line": 49,
       "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
       "code": "render(action => filtered((policy_scope(Motif).active.search_by_text(params[:search]) or policy_scope(Motif).active.ordered_by_name), params).includes(:organisation).includes(:service).page(params[:page]), {})",
       "render_path": [
@@ -97,7 +129,7 @@
           "type": "controller",
           "class": "Admin::MotifsController",
           "method": "index",
-          "line": 18,
+          "line": 16,
           "file": "app/controllers/admin/motifs_controller.rb",
           "rendered": {
             "name": "admin/motifs/index",
@@ -111,6 +143,9 @@
       },
       "user_input": "params[:page]",
       "confidence": "Weak",
+      "cwe_id": [
+        22
+      ],
       "note": ""
     },
     {
@@ -120,7 +155,7 @@
       "check_name": "Render",
       "message": "Render path contains parameter value",
       "file": "app/views/admin/motifs/index.html.slim",
-      "line": 76,
+      "line": 75,
       "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
       "code": "render(action => filtered((policy_scope(Motif).active.search_by_text(params[:search]) or policy_scope(Motif).active.ordered_by_name), params).includes(:organisation).includes(:service).page(params[:page]), {})",
       "render_path": [
@@ -128,7 +163,7 @@
           "type": "controller",
           "class": "Admin::MotifsController",
           "method": "index",
-          "line": 18,
+          "line": 16,
           "file": "app/controllers/admin/motifs_controller.rb",
           "rendered": {
             "name": "admin/motifs/index",
@@ -142,9 +177,12 @@
       },
       "user_input": "params[:page]",
       "confidence": "Weak",
+      "cwe_id": [
+        22
+      ],
       "note": ""
     }
   ],
-  "updated": "2022-09-05 14:47:19 +0200",
-  "brakeman_version": "5.2.0"
+  "updated": "2023-11-23 18:29:41 +0100",
+  "brakeman_version": "5.3.1"
 }
