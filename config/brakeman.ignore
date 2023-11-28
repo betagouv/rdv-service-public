@@ -94,18 +94,18 @@
     {
       "warning_type": "SQL Injection",
       "warning_code": 0,
-      "fingerprint": "d1e6e4a81767101794274351f3382bc6b83bf095f421e5470f4f83c9a785634a",
+      "fingerprint": "a6e88f79d7e6fc65b6c90d3ea29585896d424304c64a94400d2b2b4a80aed8c8",
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/motif.rb",
       "line": 110,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "where(\"REGEXP_REPLACE(LOWER(UNACCENT(motifs.name)), '#{/[^0-9a-z]+/.source}', '_', 'g') = ?\", slug_name)",
+      "code": "where(\"REGEXP_REPLACE(LOWER(UNACCENT(motifs.name)), '#{/[^0-9a-z]+/.source}', '_', 'g') = ?\", name_slug)",
       "render_path": null,
       "location": {
         "type": "method",
         "class": "Motif",
-        "method": "search_by_name_with_location_type"
+        "method": "with_name_slug"
       },
       "user_input": "/[^0-9a-z]+/.source",
       "confidence": "Medium",
@@ -183,6 +183,6 @@
       "note": ""
     }
   ],
-  "updated": "2023-11-23 18:29:41 +0100",
+  "updated": "2023-11-28 08:28:13 +0100",
   "brakeman_version": "5.3.1"
 }
