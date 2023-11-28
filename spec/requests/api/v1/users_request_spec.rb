@@ -306,6 +306,7 @@ describe "Users API", swagger_doc: "v1/api.json" do
       description "Crée un·e usager·ère"
 
       parameter name: "organisation_ids[]", in: :query, schema: { type: :array, items: { type: :string } }, description: "ID des organisations", example: "[123]"
+      parameter name: "referent_agent_ids[]", in: :query, schema: { type: :array, items: { type: :string } }, description: "ID des agents référents", example: "[123]"
       parameter name: "first_name", in: :query, type: :string, description: "Prénom", example: "Johnny"
       parameter name: "last_name", in: :query, type: :string, description: "Nom", example: "Silverhand"
       parameter name: "birth_name", in: :query, type: :string, description: "Nom de naissance", example: "Fripouille", required: false
@@ -327,6 +328,7 @@ describe "Users API", swagger_doc: "v1/api.json" do
       let(:client) { auth_headers["client"].to_s }
 
       let(:"organisation_ids[]") { [organisation.id] }
+      let(:"referent_agent_ids[]") { [agent.id] }
 
       response 200, "Crée et renvoie un·e usager·ère" do
         let(:first_name) { "Johnny" }
@@ -357,6 +359,7 @@ describe "Users API", swagger_doc: "v1/api.json" do
         it "creates user with expected attributes" do
           expect(User.count).to eq(user_count_before + 1)
           expect(created_user.organisations).to contain_exactly(organisation)
+          expect(created_user.referent_agents).to contain_exactly(agent)
           expect(created_user).to have_attributes(
             first_name:,
             last_name:,

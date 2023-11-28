@@ -6,7 +6,7 @@ class Api::V1::ReferentAssignationsController < Api::V1::AgentAuthBaseController
     render_record referent_assignation
   end
 
-  def upsert_many
+  def create_many
     create_referent_assignations
     user = User.find(referent_assignations_params[:user_id])
     render_record user, agent_context: pundit_user

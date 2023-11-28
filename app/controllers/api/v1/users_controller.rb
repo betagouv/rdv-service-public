@@ -61,6 +61,6 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
 
     attrs -= User::FranceconnectFrozenFieldsConcern::FROZEN_FIELDS if @user&.logged_once_with_franceconnect?
 
-    params.permit(attrs, organisation_ids: [], referent_ids: [])
+    params.permit(attrs, organisation_ids: [], referent_agent_ids: [])
   end
 end

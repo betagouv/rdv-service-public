@@ -8,10 +8,10 @@ namespace :api do
       post :rdv_invitation_token, to: 'users#rdv_invitation_token', on: :member
     end
     resource :user_profiles, only: %i[create destroy] do
-      post :upsert_many, on: :collection
+      post :create_many, on: :collection
     end
     resource :referent_assignations, only: %i[create destroy] do
-      post :upsert_many, on: :collection
+      post :create_many, on: :collection
     end
     resources :organisations, only: %i[index show update] do
       resources :webhook_endpoints, only: %i[index create update]

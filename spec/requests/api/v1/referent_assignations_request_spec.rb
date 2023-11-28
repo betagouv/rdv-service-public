@@ -114,7 +114,7 @@ describe "Referent Assignation authentified API", swagger_doc: "v1/api.json" do
     end
   end
 
-  path "/api/v1/referent_assignations/upsert_many" do
+  path "/api/v1/referent_assignations/create_many" do
     post "Ajouter un ou plusieurs référents à un utilisateur" do
       with_authentication
 

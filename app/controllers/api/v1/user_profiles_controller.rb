@@ -8,7 +8,7 @@ class Api::V1::UserProfilesController < Api::V1::AgentAuthBaseController
     render_error :unprocessable_entity, { success: false, errors: {}, error_messages: [e] }
   end
 
-  def upsert_many
+  def create_many
     create_user_profiles
     user = User.find(user_profiles_params[:user_id])
     render_record user, agent_context: pundit_user
