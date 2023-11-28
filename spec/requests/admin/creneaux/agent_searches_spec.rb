@@ -32,7 +32,7 @@ RSpec.describe "Admin::Organisations::OnlineBookings", type: :request do
 
         get admin_organisation_agent_searches_path(organisation, params)
 
-        expect(response).to redirect_to(admin_organisation_slots_path(organisation, from_date: "2022-10-17", motif_typology_slug: motif.typology_slug))
+        expect(response).to redirect_to(admin_organisation_slots_path(organisation, from_date: "2022-10-17", motif_typology_slug: motif.typology_slug, organisations: [organisation.id]))
       end
     end
   end

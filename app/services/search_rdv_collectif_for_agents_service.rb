@@ -11,7 +11,7 @@ class SearchRdvCollectifForAgentsService
 
   def slot_search
     OpenStruct.new(
-      lieu: @form.organisation.lieux.find(@form.lieu_ids.first),
+      lieu: Lieu.where(organisation: @form.organisations).find(@form.lieu_ids.first),
       creneaux: rdvs
     )
   end
@@ -19,12 +19,11 @@ class SearchRdvCollectifForAgentsService
   private
 
   def lieux
-    # TODO: organisation devient organisations
-    @form.organisation.lieux.joins(:rdvs).merge(rdvs_scope).distinct
+    Lieu.where(organisation: @form.organisations).joins(:rdvs).merge(rdvs_scope).distinct
   end
 
   def rdvs_scope
-    rdvs = Rdv.where(organisation: @form.organisation).collectif
+    rdvs = Rdv.where(organisation: @form.organisations).collectif
       .where(motif: @form.motifs).with_remaining_seats
       .where("starts_at > ?", @form.from_date)
 

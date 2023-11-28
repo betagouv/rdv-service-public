@@ -7,7 +7,7 @@ describe SearchCreneauxWithoutLieuForAgentsService, type: :service do
     let(:form) do
       instance_double(
         AgentCreneauxSearchForm,
-        organisation: organisation,
+        organisations: [organisation],
         motifs: [motif],
         service: motif.service,
         agent_ids: [],
