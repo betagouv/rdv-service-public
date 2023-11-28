@@ -21,6 +21,7 @@ class AgentAuthController < ApplicationController
 
   def policy_scope(scope, policy_scope_class: nil)
     if policy_scope_class
+      # TODO: ajouter une deprecation ici
       super([:agent, scope])
     else
       super(scope, policy_scope_class: policy_scope_class)
