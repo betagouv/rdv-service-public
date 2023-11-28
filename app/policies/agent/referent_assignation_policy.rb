@@ -4,7 +4,6 @@ class Agent::ReferentAssignationPolicy < DefaultAgentPolicy
   def create?
     same_agent_territory? && same_user_org?
   end
-  alias create_many? create?
   alias destroy? create?
 
   protected
@@ -15,11 +14,5 @@ class Agent::ReferentAssignationPolicy < DefaultAgentPolicy
 
   def same_user_org?
     (@record.user.organisation_ids & current_agent.organisation_ids).any?
-  end
-
-  class Scope < Scope
-    def resolve
-      scope.where(agent_id: Organisation.where(id: current_agent.organisation_ids).flat_map(&:agents).uniq)
-    end
   end
 end

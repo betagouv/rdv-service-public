@@ -2,7 +2,6 @@ class Agent::UserProfilePolicy < DefaultAgentPolicy
   def create?
     same_territory?
   end
-  alias create_many? create?
 
   def destroy?
     current_agent.organisation_ids.include?(@record.organisation_id)
