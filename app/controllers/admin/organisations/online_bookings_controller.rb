@@ -5,7 +5,7 @@ class Admin::Organisations::OnlineBookingsController < AgentAuthController
     authorize(@organisation)
 
     @motifs = Agent::MotifPolicy::Scope.apply(current_agent, Motif)
-      .available_motifs_for_organisation_and_agent(current_organisation, current_agent) # this should probably be replaced by a filter on the current organisation
+      .available_motifs_for_organisation_and_agent(current_organisation, current_agent)
       .active
       .includes(:organisation)
       .includes(:service)
