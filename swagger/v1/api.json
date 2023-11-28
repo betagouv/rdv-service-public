@@ -3845,7 +3845,7 @@
         }
       }
     },
-    "/api/v1/user_profiles/create_many": {
+    "/api/v1/user_profiles/upsert_many": {
       "post": {
         "summary": "Ajouter un utilisateur à une ou plusieurs organisations",
         "security": [

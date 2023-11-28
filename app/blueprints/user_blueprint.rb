@@ -8,6 +8,12 @@ class UserBlueprint < Blueprinter::Base
 
   association :responsible, blueprint: UserBlueprint
 
+  association :referent_assignations, blueprint: ReferentAssignationBlueprint, view: :without_user do |user, options|
+    next if options[:agent_context].blank?
+
+    Agent::ReferentAssignationPolicy::Scope.new(options[:agent_context], user.referent_assignations).resolve
+  end
+
   association :user_profiles, blueprint: UserProfileBlueprint, view: :without_user do |user, options|
     next if options[:agent_context].blank?
 

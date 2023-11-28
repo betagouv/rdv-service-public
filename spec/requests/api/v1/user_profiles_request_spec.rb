@@ -128,7 +128,7 @@ describe "User Profile authentified API", swagger_doc: "v1/api.json" do
     end
   end
 
-  path "/api/v1/user_profiles/create_many" do
+  path "/api/v1/user_profiles/upsert_many" do
     post "Ajouter un utilisateur à une ou plusieurs organisations" do
       with_authentication
 
