@@ -6,6 +6,11 @@ class Admin::AgentsController < AgentAuthController
       .includes(:services, :roles, :organisations)
       .active
 
+    if params[:scope] == "agents_i_can_add_to_rdv"
+      @agents = current_organisation.agents.includes(:service, :roles, :organisations).active
+      policy_scope(@agents)
+    end
+
     @agents = @agents.joins(:organisations).where(organisations: { id: current_organisation.id }) if current_organisation
     @invited_agents_count = @agents.invitation_not_accepted.where.not(invitation_sent_at: nil).created_by_invite.count
 
