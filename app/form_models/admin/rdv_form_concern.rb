@@ -124,7 +124,7 @@ module Admin::RdvFormConcern
       next unless suspicious_rdvs.any?
 
       user_path = admin_organisation_user_path(rdv.organisation, user)
-      translate("activemodel.warnings.models.rdv.attributes.base.overlapping_absence", user_path: user_path, user_name: user.full_name)
+      add_benign_error(translate("activemodel.warnings.models.rdv.attributes.base.rdv_duplicate_suspected_html", user_path: user_path, user_name: user.full_name))
     end
   end
 
