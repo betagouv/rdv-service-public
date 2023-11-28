@@ -1,33 +1,21 @@
 class Agent::MotifPolicy < ApplicationPolicy
-  def new?
-    update?
-  end
-
-  def create?
-    update?
-  end
-
-  def edit?
-    update?
-  end
-
   def update?
     admin_of_the_motif_organisation?
   end
 
-  def destroy?
-    update?
-  end
-
-  def versions?
-    update?
-  end
+  alias new? update?
+  alias create? update?
+  alias edit? update?
+  alias destroy? update?
+  alias versions? update?
 
   def show?
-    admin_of_the_motif_organisation? || @record.service.in?(pundit_user.services)
+    admin_of_the_motif_organisation? || @record.service.in?(current_agent.services)
   end
 
   private
+
+  alias current_agent pundit_user
 
   def admin_of_the_motif_organisation?
     return unless agent_role_in_motif_organisation
@@ -36,17 +24,19 @@ class Agent::MotifPolicy < ApplicationPolicy
   end
 
   def agent_role_in_motif_organisation
-    @agent_role_in_motif_organisation ||= pundit_user.roles.find_by(organisation_id: @record.organisation_id)
+    @agent_role_in_motif_organisation ||= current_agent.roles.find_by(organisation_id: @record.organisation_id)
   end
 
   class Scope < ApplicationPolicy::Scope
     def resolve
-      if pundit_user.secretaire?
-        scope.where(organisation_id: pundit_user.organisation_ids)
+      if current_agent.secretaire?
+        scope.where(organisation_id: current_agent.organisation_ids)
       else
-        scope.where(organisation_id: pundit_user.roles.where.not(access_level: :admin).pluck("organisation_id"), service: pundit_user.services)
-          .or(scope.where(organisation_id: pundit_user.roles.where(access_level: :admin).pluck("organisation_id")))
+        scope.where(organisation_id: current_agent.roles.where.not(access_level: :admin).pluck("organisation_id"), service: pundit_user.services)
+          .or(scope.where(organisation_id: current_agent.roles.where(access_level: :admin).pluck("organisation_id")))
       end
     end
+
+    alias current_agent pundit_user
   end
 end
