@@ -138,25 +138,17 @@ describe "Referent Assignation authentified API", swagger_doc: "v1/api.json" do
       let(:uid) { auth_headers["uid"].to_s }
       let(:client) { auth_headers["client"].to_s }
 
-      response 200, "Ajouter un utilisateur à une ou plusieurs organisations et renvoie l'utilisateur" do
+      response 200, "Ajouter un utilisateur à une ou plusieurs organisations" do
         let(:"agent_ids[]") { [agent1.id, agent2.id] }
         let(:user_id) { user.id }
-
-        let(:updated_user) do
-          User.find_by(id: parsed_response_body.dig("user", "id"))
-        end
-
-        schema "$ref" => "#/components/schemas/user_with_root"
 
         run_test!
 
         it { change(ReferentAssignation, :count).by(1) } # other_organisation is not in the same territory
 
-        it { expect(updated_user).to eq(user) }
+        it { expect(user.reload.referent_agents).to include(agent1) }
 
-        it { expect(updated_user.reload.referent_agents).to include(agent1) }
-
-        it { expect(updated_user.reload.referent_agents).not_to include(agent2) }
+        it { expect(user.reload.referent_agents).not_to include(agent2) }
       end
 
       it_behaves_like "an endpoint that returns 401 - unauthorized" do
@@ -164,7 +156,7 @@ describe "Referent Assignation authentified API", swagger_doc: "v1/api.json" do
         let(:user_id) { user.id }
       end
 
-      it_behaves_like "an endpoint that returns 422 - unprocessable_entity", "l'utilisateur n'a pas pu être synchronisé avec ses organisations", true do
+      it_behaves_like "an endpoint that returns 404 - not found", "l'utilisateur n'a pas été trouvé" do
         let(:"agent_ids[]") { [agent1.id, agent2.id] }
         let(:user_id) { User.last.id + 1 }
       end
