@@ -19,8 +19,12 @@ class AgentAuthController < ApplicationController
     record.class.module_parent == Agent ? super(record, *args) : super([:agent, record], *args)
   end
 
-  def policy_scope(clasz, policy_scope_class: nil)
-    super([:agent, clasz], policy_scope_class: policy_scope_class)
+  def policy_scope(scope, policy_scope_class: nil)
+    if policy_scope_class
+      super([:agent, scope])
+    else
+      super(scope, policy_scope_class: policy_scope_class)
+    end
   end
 
   def set_organisation
