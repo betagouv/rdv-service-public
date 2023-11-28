@@ -5,7 +5,7 @@ class Admin::MotifsController < AgentAuthController
   before_action :set_motif, only: %i[show edit update destroy]
 
   def index
-    @unfiltered_motifs = policy_scope(Motif).where(organisation: current_organisation).active
+    @unfiltered_motifs = policy_scope(Motif, policy_scope_class: Agent::MotifPolicy).where(organisation: current_organisation).active
     @motifs = params[:search].present? ? @unfiltered_motifs.search_by_text(params[:search]) : @unfiltered_motifs.ordered_by_name
     @motifs = filtered(@motifs, params)
     @motifs = @motifs.includes(:organisation).includes(:service).page(params[:page])
