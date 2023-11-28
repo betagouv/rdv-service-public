@@ -1,6 +1,6 @@
 class Api::V1::MotifsController < Api::V1::AgentAuthBaseController
   def index
-    motifs = Agent::MotifPolicy::Scope.apply(current_agent, Motif).where(organisation: current_organisation)
+    motifs = policy_scope(Motif, policy_scope_class: Agent::MotifPolicy).where(organisation: current_organisation)
     motifs = motifs.active(params[:active].to_b) unless params[:active].nil?
 
     if params.key?(:bookable_publicly)
@@ -16,5 +16,11 @@ class Api::V1::MotifsController < Api::V1::AgentAuthBaseController
     motifs = motifs.with_motif_category_short_name(@params[:motif_category_short_name]) if params[:motif_category_short_name].present?
 
     render_collection(motifs.order(:id))
+  end
+
+  private
+
+  def pundit_user
+    current_agent
   end
 end

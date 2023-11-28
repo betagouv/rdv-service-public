@@ -19,12 +19,13 @@ class AgentAuthController < ApplicationController
     record.class.module_parent == Agent ? super(record, *args) : super([:agent, record], *args)
   end
 
+  # L'usage recommandé est de passer explicitement une policy_scope_class pour savoir quelle policy est utilisé
+  # A terme, on voudra forcer l'argument policy_scope_class
   def policy_scope(scope, policy_scope_class: nil)
     if policy_scope_class
-      # TODO: ajouter une deprecation ici
-      super([:agent, scope])
-    else
       super(scope, policy_scope_class: policy_scope_class)
+    else
+      super([:agent, scope])
     end
   end
 
