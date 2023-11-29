@@ -17,11 +17,5 @@ section.bg-light.p-4
         .card.mb-3
           = link_to(prendre_rdv_path(context.query_params.merge(motif_name_with_location_type: motif.name_with_location_type))) do
             = render "motif_selection_card", motif: motif
-    - unless context.invitation?
-      .card
-        .m-2
-          | Pour prendre un RDV de suivi avec un de vos agents référent,
-          span>
-          = link_to new_user_session_path do
-            | connectez-vous
+    = render "referent_booking_card", context: context
 
