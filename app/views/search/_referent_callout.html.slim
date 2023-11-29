@@ -1,0 +1,10 @@
+- unless context.invitation?
+  .card
+    .m-2
+      | Pour prendre un RDV avec un de vos agents référent, allez sur la page de
+      span>
+      = link_to users_rdvs_path do
+        i.far.fa-calendar
+        span>
+        | vos rendez-vous
+
