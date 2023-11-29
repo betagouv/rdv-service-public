@@ -43,8 +43,10 @@ module WebhookDeliverable
   end
 
   included do
-    # this attribute is used in some cases to explicitly disable webhooks callbacks
+    # skip_webhooks is used in some cases to explicitly disable webhooks callbacks
     # See: https://stackoverflow.com/a/38998807/2864020
+    # webhook_reason is used to give information on the trigger of the webhook (e.g. "rgpd" or "user")
+    # See: https://github.com/betagouv/rdv-service-public/pull/3825
     attr_accessor :skip_webhooks, :webhook_reason
 
     after_commit on: :create, unless: :skip_webhooks do

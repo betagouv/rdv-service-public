@@ -66,13 +66,14 @@ class CronJob < ApplicationJob
       old_users_without_rdvs_or_relatives = old_users_without_rdvs.joins("left outer join users as relatives on users.id = relatives.responsible_id").where(relatives: { id: nil })
 
       old_users_without_rdvs_or_relatives.find_each do |user|
+        # les referent_assignations sont détruites par le dependent: :destroy, ici il suffit donc de les flagger
+        user.referent_assignations.each { |referent_assignation| referent_assignation.webhook_reason = "rgpd" }
         user.user_profiles.each do |profile|
           profile.webhook_reason = "rgpd"
           profile.destroy
         end
         user.reload
-        user.webhook_reason = "rgpd"
-        user.destroy
+        user.destroy # l'utilisateur n'a plus d'orgnisation liée, donc aucun webhook ne sera envoyé
       end
     end
   end
