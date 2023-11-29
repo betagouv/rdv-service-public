@@ -3,13 +3,8 @@ class Api::Rdvinsertion::UserProfilesController < Api::V1::AgentAuthBaseControll
 
   def create_many
     @organisations.each do |organisation|
-      user_profile =
-        UserProfile.find_or_initialize_by(user: @user, organisation: organisation)
-      begin
-        user_profile.save! if user_profile.new_record?
-      rescue Pundit::NotAuthorizedError
-        next # we don't want to block the whole request if some organisations are not authorized
-      end
+      user_profile = UserProfile.find_or_initialize_by(user: @user, organisation: organisation)
+      user_profile.save! if user_profile.new_record?
     end
     head :ok
   end

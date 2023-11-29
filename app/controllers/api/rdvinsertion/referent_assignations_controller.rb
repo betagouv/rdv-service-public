@@ -3,13 +3,8 @@ class Api::Rdvinsertion::ReferentAssignationsController < Api::V1::AgentAuthBase
 
   def create_many
     @agents.each do |agent|
-      referent_assignation =
-        ReferentAssignation.find_or_initialize_by(user: @user, agent: agent)
-      begin
-        referent_assignation.save! if referent_assignation.new_record?
-      rescue Pundit::NotAuthorizedError
-        next # we don't want to block the whole request if some assignations are not authorized
-      end
+      referent_assignation = ReferentAssignation.find_or_initialize_by(user: @user, agent: agent)
+      referent_assignation.save! if referent_assignation.new_record?
     end
     head :ok
   end
