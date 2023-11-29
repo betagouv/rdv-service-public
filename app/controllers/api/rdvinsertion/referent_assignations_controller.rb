@@ -2,10 +2,7 @@ class Api::Rdvinsertion::ReferentAssignationsController < Api::V1::AgentAuthBase
   before_action :set_user, :set_agents, only: %i[create_many]
 
   def create_many
-    @agents.each do |agent|
-      referent_assignation = ReferentAssignation.find_or_initialize_by(user: @user, agent: agent)
-      referent_assignation.save! if referent_assignation.new_record?
-    end
+    @agents.each { |agent| ReferentAssignation.find_or_create_by!(user: @user, agent: agent) }
     head :ok
   end
 
@@ -23,6 +20,6 @@ class Api::Rdvinsertion::ReferentAssignationsController < Api::V1::AgentAuthBase
   end
 
   def referent_assignations_params
-    params.permit(:user_id, agent_ids: []).to_h.symbolize_keys
+    params.permit(:user_id, agent_ids: [])
   end
 end

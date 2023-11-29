@@ -2,10 +2,7 @@ class Api::Rdvinsertion::UserProfilesController < Api::V1::AgentAuthBaseControll
   before_action :set_user, :set_organisations, only: %i[create_many]
 
   def create_many
-    @organisations.each do |organisation|
-      user_profile = UserProfile.find_or_initialize_by(user: @user, organisation: organisation)
-      user_profile.save! if user_profile.new_record?
-    end
+    @organisations.each { |organisation| UserProfile.find_or_create_by!(user: @user, organisation: organisation) }
     head :ok
   end
 
@@ -22,6 +19,6 @@ class Api::Rdvinsertion::UserProfilesController < Api::V1::AgentAuthBaseControll
   end
 
   def user_profiles_params
-    params.permit(:user_id, organisation_ids: []).to_h.symbolize_keys
+    params.permit(:user_id, organisation_ids: [])
   end
 end
