@@ -20,4 +20,8 @@ class Receipt < ApplicationRecord
   def self.personal_data_column_names
     %w[sms_phone_number email_address content]
   end
+
+  def self.non_personal_data_column_names
+    %w[id created_at updated_at error_message event organisation_id rdv_id user_id result sms_count sms_provider channel]
+  end
 end
