@@ -32,8 +32,8 @@ class Agent::MotifPolicy < ApplicationPolicy
       if current_agent.secretaire?
         scope.where(organisation_id: current_agent.organisation_ids)
       else
-        scope.where(organisation_id: current_agent.roles.where.not(access_level: :admin).pluck("organisation_id"), service: pundit_user.services)
-          .or(scope.where(organisation_id: current_agent.roles.where(access_level: :admin).pluck("organisation_id")))
+        scope.where(organisation_id: current_agent.roles.where.not(access_level: :admin).pluck(:organisation_id), service: pundit_user.services)
+          .or(scope.where(organisation_id: current_agent.roles.where(access_level: :admin).pluck(:organisation_id)))
       end
     end
 
