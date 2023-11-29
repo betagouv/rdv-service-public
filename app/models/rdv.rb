@@ -389,7 +389,9 @@ class Rdv < ApplicationRecord
   end
 
   def self.non_personal_data_column_names
-    %w[id starts_at organisation_id created_at updated_at cancelled_at motif_id sequence uuid, old_location created_by]
+    %w[id starts_at organisation_id created_at updated_at cancelled_at motif_id uuid
+       sequence # TODO: supprimer cette colonne
+       lieu_id old_location created_by ends_at name max_participants_count users_count status]
   end
 
   private

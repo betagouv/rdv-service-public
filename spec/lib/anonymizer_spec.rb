@@ -7,7 +7,7 @@ RSpec.describe Anonymizer do
   it "anonymizes all the data" do
     described_class.anonymize_all_data!
 
-    expect(user.reload.full_name).to eq "asdf"
-    expect(prescripteur.reload.full_name).to eq "asdf"
+    expect(user.reload.full_name).to eq "[valeur anonymisée] [VALEUR ANONYMISÉE]"
+    expect(prescripteur.reload.full_name).to eq "[valeur anonymisée] [VALEUR ANONYMISÉE]"
   end
 end
