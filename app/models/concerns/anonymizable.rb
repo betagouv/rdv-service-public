@@ -15,10 +15,15 @@ module Anonymizable
       []
     end
 
-    def anonymize_all!(scope)
+    def anonymize_all!
       raise "L'anonymisation en masse est désactivée en production pour éviter les catastrophes" if Rails.env.production?
 
-      scope.update_all(anonymized_attributes) # rubocop:disable Rails/SkipsModelValidations
+      unidentified_column_names = columns.map(&:name) - personal_data_column_names.map(&:to_s) - non_personal_data_column_names.map(&:to_s)
+      if unidentified_column_names.present?
+        raise "Les colonnes #{unidentified_column_names.join(', ')} de la table #{table_name} n'ont pas été classées comme des données personnelles ou non"
+      end
+
+      unscoped.update_all(anonymized_attributes) # rubocop:disable Rails/SkipsModelValidations
     end
 
     def anonymized_attributes
@@ -28,7 +33,7 @@ module Anonymizable
 
       personal_data_columns.to_h do |column|
         [column.name, anonymous_value(column)]
-      end
+      end.symbolize_keys
     end
 
     def anonymous_value(column)

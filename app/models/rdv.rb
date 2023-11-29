@@ -388,6 +388,10 @@ class Rdv < ApplicationRecord
     %w[context]
   end
 
+  def self.non_personal_data_column_names
+    %w[id starts_at organisation_id created_at updated_at cancelled_at motif_id sequence uuid, old_location created_by]
+  end
+
   private
 
   def update_collective_rdv_status
