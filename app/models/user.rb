@@ -231,10 +231,19 @@ class User < ApplicationRecord
   end
 
   def self.personal_data_column_names
-    %w[first_name last_name birth_name address birth_date unconfirmed_email
+    %w[first_name last_name birth_name address birth_date email unconfirmed_email
        caisse_affiliation affiliation_number family_situation number_of_children
-       family_situation number_of_children phone_number_formatted franceconnect_openid_sub
-       city_code post_code city_name case_number address_details logement notes ants_pre_demande_number]
+       phone_number phone_number_formatted franceconnect_openid_sub encrypted_password
+       city_code post_code city_name case_number address_details logement notes ants_pre_demande_number
+       confirmation_token reset_password_token text_search_terms invitation_token last_sign_in_at remember_created_at
+       rdv_invitation_token]
+  end
+
+  def self.non_personal_data_column_names
+    # la colonne id permet de garder l'intégrité des données même si elles sont anonymisées, c'est pour ça qu'on la garde dans cette liste
+    %w[id confirmed_at confirmation_sent_at created_at updated_at created_through invitation_accepted_at invitation_created_at
+       deleted_at invitation_limit reset_password_sent_at responsible_id invitation_sent_at invitations_count invited_by_id invited_by_type
+       invited_through notify_by_email notify_by_sms logged_once_with_franceconnect]
   end
 
   protected

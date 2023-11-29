@@ -343,4 +343,10 @@ describe User, type: :model do
       expect { parent.update!(responsible: child) }.to raise_error(ActiveRecord::RecordInvalid, /L'usager⋅e ne peut être responsable de son propre responsable/)
     end
   end
+
+  describe "anonymization" do
+    it "lists all the columns that need to be anonymized" do
+      expect(described_class.personal_data_column_names + described_class.non_personal_data_column_names).to match_array(described_class.columns.map(&:name))
+    end
+  end
 end

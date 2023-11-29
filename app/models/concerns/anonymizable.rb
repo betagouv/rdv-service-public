@@ -6,6 +6,15 @@ module Anonymizable
   end
 
   class_methods do
+    def personal_data_column_names
+      raise "This method should be implemented to list all the columns that need to be anonymized"
+    end
+
+    # Liste des données qui ne seront pas anonymisées
+    def non_personal_data_column_names
+      []
+    end
+
     def anonymize_all!(scope)
       raise "L'anonymisation en masse est désactivée en production pour éviter les catastrophes" if Rails.env.production?
 
