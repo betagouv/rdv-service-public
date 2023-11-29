@@ -4,7 +4,6 @@ class Agent::ReferentAssignationPolicy < DefaultAgentPolicy
   def create?
     same_agent_territory? && same_user_org?
   end
-  alias create_many? create?
   alias destroy? create?
 
   protected

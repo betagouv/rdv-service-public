@@ -7,12 +7,8 @@ namespace :api do
     resources :users, only: %i[create index show update] do
       post :rdv_invitation_token, to: 'users#rdv_invitation_token', on: :member
     end
-    resource :user_profiles, only: %i[create destroy] do
-      post :create_many, on: :collection
-    end
-    resource :referent_assignations, only: %i[create destroy] do
-      post :create_many, on: :collection
-    end
+    resource :user_profiles, only: %i[create destroy]
+    resource :referent_assignations, only: %i[create destroy]
     resources :organisations, only: %i[index show update] do
       resources :webhook_endpoints, only: %i[index create update]
       resources :users, only: %i[index show]
@@ -33,6 +29,12 @@ namespace :api do
   namespace :rdvinsertion do
     resources :invitations, only: [] do
       get 'creneau_availability', to: 'invitations#creneau_availability', on: :collection
+    end
+    resource :user_profiles, only: [] do
+      post :create_many, on: :collection
+    end
+    resource :referent_assignations, only: [] do
+      post :create_many, on: :collection
     end
   end
 end
