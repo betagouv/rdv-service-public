@@ -32,6 +32,7 @@ class Agent < ApplicationRecord
   include DeviseTokenAuth::Concerns::ConfirmableSupport
   include Agent::CustomDeviseTokenAuthUserOmniauthCallbacks
   include UncommonPasswordConcern
+  include Anonymizable
 
   # Attributes
   auto_strip_attributes :email, :first_name, :last_name
@@ -250,5 +251,31 @@ class Agent < ApplicationRecord
                 else
                   Domain::RDV_SOLIDARITES
                 end
+  end
+
+  def self.personal_data_column_names
+    %w[first_name last_name
+       email encrypted_password reset_password_token
+       unconfirmed_email
+       invitation_token
+       email_original
+       remember_created_at]
+  end
+
+  def self.non_personal_data_column_names
+    %w[id
+
+       reset_password_sent_at
+       confirmed_at
+       confirmation_sent_at
+       invitation_created_at
+       invitation_sent_at
+       invitation_accepted_at
+       invitation_limit
+       invited_by_type
+       invited_by_id
+       invitations_count
+       deleted_at
+       created_at updated_at]
   end
 end
