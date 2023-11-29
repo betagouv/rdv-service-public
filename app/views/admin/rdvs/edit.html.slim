@@ -56,18 +56,13 @@
             - elsif @rdv_form.motif.home?
               = f.input :address, label: "Lieu (RDV à domicile)", disabled: true
             = f.association :agents,
-              collection: @rdv_form.agents,
+              collection: @rdv_form.authorized_agents.includes(:services),
               label_method: :full_name_and_service,
                     input_html: { \
                       multiple: true,
                       class: "select2-input",
                       data: { \
                         "select-options": { \
-                          ajax: { \
-                            url: admin_organisation_agents_path(current_organisation, scope: "agents_i_can_add_to_rdv"),
-                            dataType: "json", \
-                            delay: 250, \
-                          }, \
                           maximumSelectionLength: Rdv::MAX_AGENTS_COUNT, \
                         }, \
                       }, \

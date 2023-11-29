@@ -17,6 +17,7 @@ fr:
               must_not_be_disabled: "doit être un lieu ouvert de l’organisation, ou un lieu ponctuel."
             agents:
               too_long: "Vous ne pouvez ajouter que 4 agents maximum"
+              format: "%{message}"
         participation:
           attributes:
             status:
