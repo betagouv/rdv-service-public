@@ -85,7 +85,7 @@ class Admin::MotifsController < AgentAuthController
   end
 
   def set_motif
-    @motif = Agent::MotifPolicy::Scope.apply(current_agent, Motif)
+    @motif = policy_scope(Motif, policy_scope_class: Agent::MotifPolicy::Scope)
       .where(organisation: current_organisation)
       .find(params[:id])
   end
