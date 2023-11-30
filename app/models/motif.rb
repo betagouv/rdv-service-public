@@ -140,6 +140,7 @@ class Motif < ApplicationRecord
     Agent
       .joins(:organisations)
       .where(organisations: { id: organisation.id })
+      .includes(:services)
       .complete
       .active
       .order_by_last_name
