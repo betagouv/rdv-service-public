@@ -146,10 +146,6 @@ class Motif < ApplicationRecord
       .order_by_last_name
   end
 
-  def authorized_services
-    for_secretariat ? [service, Service.secretariat] : [service]
-  end
-
   def visible_and_notified?
     visibility_type == VISIBLE_AND_NOTIFIED
   end
