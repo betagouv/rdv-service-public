@@ -95,7 +95,7 @@ fr:
         rdv:
           attributes:
             base:
-              overlapping_absence: "%{agent_name} a enregistré une indisponibilité pendant la période du RDV"
+              overlapping_absence: "%{agent_name} n'est pas disponible pendant la période du RDV"
               overlapping_plage_ouverture:
                 in_scope:
                   in_current_organisation_html: "%{agent_name} a <a href='%{path}'>une plage d'ouverture</a> à %{lieu_name} %{occurrence_text}"
