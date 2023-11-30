@@ -10,7 +10,10 @@ class Agent::MotifPolicy < ApplicationPolicy
   alias versions? update?
 
   def show?
-    current_agent.secretaire? || admin_of_the_motif_organisation? || @record.service.in?(current_agent.services)
+    return unless agent_role_in_motif_organisation
+
+    current_agent.secretaire? || admin_of_the_motif_organisation? ||
+      @record.service.in?(current_agent.services)
   end
 
   private
