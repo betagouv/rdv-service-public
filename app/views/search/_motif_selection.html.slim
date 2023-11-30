@@ -18,4 +18,3 @@ section.bg-light.p-4
           = link_to(prendre_rdv_path(context.query_params.merge(motif_name_with_location_type: motif.name_with_location_type))) do
             = render "motif_selection_card", motif: motif
     = render "referent_booking_card", context: context
-
