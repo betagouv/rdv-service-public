@@ -1,3 +1,4 @@
+# rubocop:disable RSpec/PredicateMatcher
 describe Agent::MotifPolicy do
   subject { described_class }
 
@@ -55,8 +56,10 @@ describe Agent::MotifPolicy do
   end
 
   context "for an organisation admin" do
+    let(:agent) { create(:agent, basic_role_in_organisations: [motif.organisation], service: create(:service)) }
   end
 
   context "for the admin of a different organisation" do
   end
 end
+# rubocop:enable RSpec/PredicateMatcher
