@@ -69,7 +69,6 @@ class Rdv < ApplicationRecord
 
   validates :participations, presence: true, unless: :collectif?
   validates :status, inclusion: { in: COLLECTIVE_RDV_STATUSES }, if: :collectif?
-  validates :agents, length: { maximum: MAX_AGENTS_COUNT }
 
   # Hooks
   after_save :associate_users_with_organisation

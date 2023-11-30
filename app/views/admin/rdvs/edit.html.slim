@@ -58,15 +58,7 @@
             = f.association :agents,
               collection: @rdv_form.authorized_agents.includes(:services),
               label_method: :full_name_and_service,
-                    input_html: { \
-                      multiple: true,
-                      class: "select2-input",
-                      data: { \
-                        "select-options": { \
-                          maximumSelectionLength: Rdv::MAX_AGENTS_COUNT, \
-                        }, \
-                      }, \
-                    }
+              input_html: { multiple: true, class: "select2-input" }
 
             - if @rdv_form.motif.collectif?
               = f.input :name, wrapper_html: { class: "mb-1" }

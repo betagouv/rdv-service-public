@@ -779,17 +779,4 @@ describe Rdv, type: :model do
       expect(rdv.status).to eq("unknown")
     end
   end
-
-  describe "agents count validation" do
-    let!(:user1) { create(:user) }
-    let!(:agents) do
-      5.times.map { create(:agent) }
-    end
-    let(:rdv) { build(:rdv, starts_at: Time.zone.tomorrow, agents: agents, users: [user1]) }
-
-    it "validates that agents count does not exceed MAX AGENTS COUNT" do
-      expect(rdv).to be_invalid
-      expect(rdv.errors.messages).to eq({ agents: ["Vous ne pouvez ajouter que #{Rdv::MAX_AGENTS_COUNT} agents maximum"] })
-    end
-  end
 end

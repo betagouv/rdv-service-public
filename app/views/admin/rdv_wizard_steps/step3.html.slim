@@ -35,5 +35,5 @@ ruby:
         = f.input :address, label: "Lieu (RDV à domicile)",  disabled: true, hint: "L'adresse utilisée est celle de #{@rdv.user_for_home_rdv.full_name}"
       - elsif @rdv.phone?
         = f.input :address, label: "Lieu (RDV téléphonique)",  disabled: true, hint: "Il n'y a pas d'adresse car le RDV est téléphonique"
-      = f.association :agents, collection: @rdv.motif.authorized_agents.includes(:services), label_method: :reverse_full_name_and_service, input_html: { multiple: true, class: "select2-input", data: { "select-options": { maximumSelectionLength: Rdv::MAX_AGENTS_COUNT } } }
+      = f.association :agents, collection: @rdv.motif.authorized_agents.includes(:services), label_method: :reverse_full_name_and_service, input_html: { multiple: true, class: "select2-input" }
       = render "actions", rdv_wizard_form: @rdv_wizard, submit_value: "Continuer", f: f
