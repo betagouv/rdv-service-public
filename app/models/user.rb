@@ -230,12 +230,37 @@ class User < ApplicationRecord
   end
 
   def self.anonymized_column_names
-    %w[first_name last_name birth_name address birth_date email unconfirmed_email
-       caisse_affiliation affiliation_number family_situation number_of_children
-       phone_number phone_number_formatted franceconnect_openid_sub encrypted_password
-       city_code post_code city_name case_number address_details logement notes ants_pre_demande_number
-       confirmation_token reset_password_token invitation_token last_sign_in_at remember_created_at
-       rdv_invitation_token]
+    %w[
+      first_name
+      last_name
+      birth_name
+      birth_date
+      email
+      unconfirmed_email
+      address
+      address_details
+      caisse_affiliation
+      affiliation_number
+      family_situation
+      number_of_children
+      phone_number
+      phone_number_formatted
+      city_code
+      post_code
+      city_name
+      case_number
+      logement
+      notes
+      ants_pre_demande_number
+      franceconnect_openid_sub
+      encrypted_password
+      confirmation_token
+      reset_password_token
+      invitation_token
+      last_sign_in_at
+      remember_created_at
+      rdv_invitation_token
+    ]
   end
 
   def self.non_anonymized_column_names

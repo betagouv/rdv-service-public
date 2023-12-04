@@ -255,23 +255,23 @@ class Agent < ApplicationRecord
   def self.anonymized_column_names
     %w[first_name last_name
        email
-       uid
-       encrypted_password
-       reset_password_token
-       unconfirmed_email
-       confirmation_token
-       invitation_token
        email_original
-       tokens
+       encrypted_password
+       unconfirmed_email
+       cnfs_secondary_email
+       uid
        external_id
        calendar_uid
        current_sign_in_at
        last_sign_in_at
        current_sign_in_ip
        last_sign_in_ip
+       reset_password_token
+       confirmation_token
+       invitation_token
+       tokens
        microsoft_graph_token
        refresh_microsoft_graph_token
-       cnfs_secondary_email
        remember_created_at]
   end
 

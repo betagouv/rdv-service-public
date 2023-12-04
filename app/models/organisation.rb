@@ -115,4 +115,12 @@ class Organisation < ApplicationRecord
     # Blank, Valid Phone, 4 digits phone (organisations only)
     phone_number.blank? || Phonelib.parse(phone_number).valid? || phone_number.match(/^\d{4}$/)
   end
+
+  def self.anonymized_column_names
+    %w[email phone_number]
+  end
+
+  def self.non_anonymized_column_names
+    %w[id created_at updated_at name departement horaires human_id website territory_id external_id verticale]
+  end
 end

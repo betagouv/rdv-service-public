@@ -4,6 +4,7 @@ class Anonymizer
     anonymize_table!(Prescripteur)
     anonymize_table!(Agent)
     anonymize_table!(SuperAdmin)
+    anonymize_table!(Organisation)
   end
 
   def self.anonymize_user_data!
