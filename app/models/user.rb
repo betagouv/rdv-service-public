@@ -297,9 +297,9 @@ class User < ApplicationRecord
     end
     return save! if organisations.any? # only actually mark deleted when no orgas left
 
-    anonymize_personal_data_columns!
-    receipts.each(&:anonymize_personal_data_columns!)
-    rdvs.each(&:anonymize_personal_data_columns!)
+    anonymize_columns!
+    receipts.each(&:anonymize_columns!)
+    rdvs.each(&:anonymize_columns!)
     versions.destroy_all
     update_columns(
       first_name: "Usager supprimé",

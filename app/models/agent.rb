@@ -256,12 +256,23 @@ class Agent < ApplicationRecord
   def self.anonymized_column_names
     %w[first_name last_name
        email
+       uid
        encrypted_password
        reset_password_token
        unconfirmed_email
        confirmation_token
        invitation_token
        email_original
+       tokens
+       external_id
+       calendar_uid
+       current_sign_in_at
+       last_sign_in_at
+       current_sign_in_ip
+       last_sign_in_ip
+       microsoft_graph_token
+       refresh_microsoft_graph_token
+       cnfs_secondary_email
        remember_created_at]
   end
 
@@ -277,7 +288,22 @@ class Agent < ApplicationRecord
        invited_by_type
        invited_by_id
        invitations_count
+       provider
+       rdv_notifications_level
+       allow_password_change
+       unknown_past_rdv_count
+       display_saturdays
+       display_cancelled_rdv
+       plage_ouverture_notification_level
+       absence_notification_level
+       sign_in_count
+       outlook_disconnect_in_progress
+       account_deletion_warning_sent_at
        deleted_at
        created_at updated_at]
+  end
+
+  def self.anonymized_attributes
+    super.merge(calendar_uid: nil, confirmation_token: nil, email: nil, external_id: nil, invitation_token: nil, reset_password_token: nil)
   end
 end

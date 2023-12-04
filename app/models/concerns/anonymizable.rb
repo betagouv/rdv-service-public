@@ -1,7 +1,7 @@
 module Anonymizable
   extend ActiveSupport::Concern
 
-  def anonymize_personal_data_columns!
+  def anonymize_columns!
     update_columns(self.class.anonymized_attributes) # rubocop:disable Rails/SkipsModelValidations
   end
 
@@ -20,7 +20,7 @@ module Anonymizable
 
       unidentified_column_names = columns.map(&:name) - anonymized_column_names.map(&:to_s) - non_anonymized_column_names.map(&:to_s)
       if unidentified_column_names.present?
-        raise "Les colonnes #{unidentified_column_names.join(', ')} de la table #{table_name} n'ont pas été classées comme des données personnelles ou non"
+        raise "Les règles d'anonymisation pour les colonnes #{unidentified_column_names.join(', ')} de la table #{table_name} n'ont pas été définies"
       end
 
       unscoped.update_all(anonymized_attributes) # rubocop:disable Rails/SkipsModelValidations
