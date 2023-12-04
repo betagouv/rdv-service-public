@@ -5,8 +5,12 @@ class Anonymizer
       Lieu, Participation, PlageOuverture, WebhookEndpoint,
     ]
 
-    # TODO: raise an error if models.map(&:table_name).sort != ActiveRecord::Base.connection.tables.sort
-
+    tables_without_anonymization_rules = ActiveRecord::Base.connection.tables - models.map(&:table_name)
+    # TODO: uncomment this
+    # if tables_without_anonymization_rules.any?
+    #   raise "Les règles d'anonymisation ne sont pas définitions pour les tables #{tables_without_anonymization_rules.join(' ')}"
+    # end
+    #
     models.each do |model_class|
       anonymize_table!(model_class)
     end
@@ -75,7 +79,7 @@ class Anonymizer
   def anonymous_value(column)
     if column.type.in?(%i[string text])
       if column_has_unicity_constraint?(column)
-        Arel.sql("'[valeur unique anonymisée ' || id || ']'")
+        Arel.sql("CASE WHEN #{column.name} IS NULL THEN NULL ELSE '[valeur unique anonymisée ' || id || ']' END")
       else
         "[valeur anonymisée]"
       end

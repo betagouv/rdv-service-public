@@ -137,5 +137,56 @@ class AnonymizerRules
       anonymized_column_names: %w[secret],
       non_anonymized_column_names: %w[id created_at updated_at target_url organisation_id subscriptions],
     },
+
+    # Tables sans données personnelles
+    agent_roles: {
+      anonymized_column_names: %w[],
+      non_anonymized_column_names: %w[],
+    },
+    agents_rdvs: {
+      anonymized_column_names: %w[],
+      non_anonymized_column_names: %w[],
+    },
+    agent_te: {
+      anonymized_column_names: %w[],
+      non_anonymized_column_names: %w[],
+    },
+    agent_roles: {
+      anonymized_column_names: %w[],
+      non_anonymized_column_names: %w[],
+    },
+    agent_roles: {
+      anonymized_column_names: %w[],
+      non_anonymized_column_names: %w[],
+    },
+    agent_roles: {
+      anonymized_column_names: %w[],
+      non_anonymized_column_names: %w[],
+    },
+    agent_roles: {
+      anonymized_column_names: %w[],
+      non_anonymized_column_names: %w[],
+    },
+    agent_roles: {
+      anonymized_column_names: %w[],
+      non_anonymized_column_names: %w[],
+    },
+    agent_roles: {
+      anonymized_column_names: %w[],
+      non_anonymized_column_names: %w[],
+    },
+    agent_roles: {
+      anonymized_column_names: %w[],
+      non_anonymized_column_names: %w[],
+    },
+    agent_roles: {
+      anonymized_column_names: %w[],
+      non_anonymized_column_names: %w[],
+    },
+    agent_roles: {
+      anonymized_column_names: %w[],
+      non_anonymized_column_names: %w[],
+    },
+
   }.with_indifferent_access.freeze
 end

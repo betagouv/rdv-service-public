@@ -1,5 +1,6 @@
 RSpec.describe Anonymizer do
-  let!(:user) { create(:user) }
+  let!(:user_without_email) { create(:user, email: nil) }
+  let!(:user_with_email) { create(:user, email: "user@example.com") }
   let!(:prescripteur) { create(:prescripteur) }
   let!(:agent) { create(:agent, email: "agent@example.com") }
   let!(:absence) { create(:absence, title: "rdv perso avec mon médecin") }
@@ -10,7 +11,11 @@ RSpec.describe Anonymizer do
   it "anonymizes all the data" do
     described_class.anonymize_all_data!
 
-    expect(user.reload.full_name).to eq "[valeur anonymisée] [VALEUR ANONYMISÉE]"
+    expect(user_without_email.reload.full_name).to eq "[valeur anonymisée] [VALEUR ANONYMISÉE]"
+
+    expect(user_without_email.reload.email).to be_nil
+    expect(user_with_email.reload.email).to eq "[valeur unique anonymisée #{user_with_email.id}]"
+
     expect(prescripteur.reload.full_name).to eq "[valeur anonymisée] [VALEUR ANONYMISÉE]"
     expect(agent.reload.full_name).to eq "[valeur anonymisée] [VALEUR ANONYMISÉE]"
     expect(agent.reload.email).to eq "[valeur unique anonymisée #{agent.id}]"
