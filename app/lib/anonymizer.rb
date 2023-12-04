@@ -60,7 +60,7 @@ class Anonymizer
 
   def anonymous_value(column)
     if column.type.in?(%i[string text])
-      if column.name.in?(columns_with_unicity_constraint_names)
+      if column_has_unicity_constraint?(column)
         Arel.sql("'[valeur unique anonymisée ' || id || ']'")
       else
         "[valeur anonymisée]"
@@ -70,9 +70,10 @@ class Anonymizer
     end
   end
 
-  def columns_with_unicity_constraint_names
-    @model_class.connection.indexes(@model_class.table_name).select(&:unique).map do |index|
-      index.columns.first
-    end.uniq.compact
+  def column_has_unicity_constraint?(column)
+    @model_class.connection.indexes(@model_class.table_name).select(&:unique).find do |index|
+      # il se peut que la deuxième colonne de l'index n'ai pas de contrainte d'unicité
+      index.columns.first == column.name
+    end
   end
 end
