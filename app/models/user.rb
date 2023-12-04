@@ -229,51 +229,6 @@ class User < ApplicationRecord
     self.rdv_invitation_token = generate_rdv_invitation_token
   end
 
-  def self.anonymized_column_names
-    %w[
-      first_name
-      last_name
-      birth_name
-      birth_date
-      email
-      unconfirmed_email
-      address
-      address_details
-      caisse_affiliation
-      affiliation_number
-      family_situation
-      number_of_children
-      phone_number
-      phone_number_formatted
-      city_code
-      post_code
-      city_name
-      case_number
-      logement
-      notes
-      ants_pre_demande_number
-      franceconnect_openid_sub
-      encrypted_password
-      confirmation_token
-      reset_password_token
-      invitation_token
-      last_sign_in_at
-      remember_created_at
-      rdv_invitation_token
-    ]
-  end
-
-  def self.non_anonymized_column_names
-    %w[id confirmed_at confirmation_sent_at created_at updated_at created_through invitation_accepted_at invitation_created_at
-       text_search_terms
-       deleted_at invitation_limit reset_password_sent_at responsible_id invitation_sent_at invitations_count invited_by_id invited_by_type
-       invited_through notify_by_email notify_by_sms logged_once_with_franceconnect]
-  end
-
-  def self.anonymized_attributes
-    super.merge(confirmation_token: nil, email: nil, invitation_token: nil, rdv_invitation_token: nil, reset_password_token: nil)
-  end
-
   protected
 
   def generate_rdv_invitation_token

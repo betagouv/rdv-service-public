@@ -383,15 +383,6 @@ class Rdv < ApplicationRecord
     update!(cancelled_at: Time.zone.now, status: "revoked")
   end
 
-  def self.anonymized_column_names
-    %w[context]
-  end
-
-  def self.non_anonymized_column_names
-    %w[id starts_at organisation_id created_at updated_at cancelled_at motif_id uuid
-       lieu_id old_location created_by ends_at name max_participants_count users_count status]
-  end
-
   private
 
   def update_collective_rdv_status

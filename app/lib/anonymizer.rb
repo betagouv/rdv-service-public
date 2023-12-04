@@ -33,7 +33,7 @@ class Anonymizer
   def anonymize_table!
     raise "L'anonymisation en masse est désactivée en production pour éviter les catastrophes" if Rails.env.production?
 
-    unidentified_column_names = @model_class.columns.map(&:name) - @model_class.anonymized_column_names.map(&:to_s) - @model_class.non_anonymized_column_names.map(&:to_s)
+    unidentified_column_names = @model_class.columns.map(&:name) - anonymized_column_names.map(&:to_s) - non_anonymized_column_names.map(&:to_s)
     if unidentified_column_names.present?
       raise "Les règles d'anonymisation pour les colonnes #{unidentified_column_names.join(', ')} de la table #{@model_class.table_name} n'ont pas été définies"
     end
@@ -42,6 +42,14 @@ class Anonymizer
   end
 
   private
+
+  def anonymized_column_names
+    AnonymizerRules::RULES[@model_class.table_name][:anonymized_column_names]
+  end
+
+  def non_anonymized_column_names
+    AnonymizerRules::RULES[@model_class.table_name][:non_anonymized_column_names]
+  end
 
   def anonymize_in_scope(scope)
     scope.update_all(anonymized_attributes) # rubocop:disable Rails/SkipsModelValidations
@@ -55,7 +63,7 @@ class Anonymizer
 
   def anonymized_columns
     @model_class.columns.select do |column|
-      column.name.in?(@model_class.anonymized_column_names)
+      column.name.in?(anonymized_column_names)
     end
   end
 
