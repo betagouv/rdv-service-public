@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Anonymizer
   def self.anonymize_all_data!
     anonymize_user_data!

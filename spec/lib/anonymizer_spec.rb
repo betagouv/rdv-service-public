@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 RSpec.describe Anonymizer do
   let!(:user) { create(:user) }
   let!(:prescripteur) { create(:prescripteur) }
