@@ -15,8 +15,8 @@ class AgentAuthController < ApplicationController
   end
   helper_method :pundit_user
 
-  def authorize(record, *args)
-    record.class.module_parent == Agent ? super(record, *args) : super([:agent, record], *args)
+  def authorize(record, *args, **kwargs)
+    record.class.module_parent == Agent ? super(record, *args, **kwargs) : super([:agent, record], *args, **kwargs)
   end
 
   # L'usage recommandé est de passer explicitement une policy_scope_class pour savoir quelle policy est utilisé

@@ -20,7 +20,7 @@ ruby:
         .form-group data=controller_data
           = f.label :lieu, required: true
           fieldset
-            = f.association :lieu, collection: policy_scope(Lieu).enabled.ordered_by_name, label_method: :full_name,
+            = f.association :lieu, collection: Agent::LieuPolicy::Scope.apply(current_agent, Lieu).where(organisation: current_organisation).enabled.ordered_by_name, label_method: :full_name,
               label: false,  include_blank: true,  required: false,
               input_html: { class: "select2-input", data: { "rdv-lieu-target": "existing_lieu_select", placeholder: ""} }
             small.form-text.text-muted data={"rdv-lieu-target": "new_lieu_link"}

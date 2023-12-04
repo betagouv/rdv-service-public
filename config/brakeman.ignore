@@ -37,19 +37,19 @@
     {
       "warning_type": "Dynamic Render Path",
       "warning_code": 15,
-      "fingerprint": "253fb23796f450035d59f12ca8151252ff031720911399d551baf7b0bdbc52fe",
+      "fingerprint": "34dfd19c65f9b449c009ccf4b4d8960b9f34ec2cff3c184f0d4ed66ea10715f6",
       "check_name": "Render",
       "message": "Render path contains parameter value",
       "file": "app/views/admin/lieux/index.html.slim",
       "line": 22,
       "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code": "render(action => policy_scope(Lieu).not_single_use.ordered_by_name.page(params[:page]), {})",
+      "code": "render(action => policy_scope(Lieu, :policy_scope_class => (Agent::LieuPolicy::Scope)).where(:organisation => current_organisation).not_single_use.ordered_by_name.page(params[:page]), {})",
       "render_path": [
         {
           "type": "controller",
           "class": "Admin::LieuxController",
           "method": "index",
-          "line": 6,
+          "line": 11,
           "file": "app/controllers/admin/lieux_controller.rb",
           "rendered": {
             "name": "admin/lieux/index",
@@ -183,6 +183,6 @@
       "note": ""
     }
   ],
-  "updated": "2023-11-28 18:59:06 +0100",
+  "updated": "2023-12-04 18:59:41 +0100",
   "brakeman_version": "5.3.1"
 }

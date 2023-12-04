@@ -1,27 +1,25 @@
 class Agent::AdminPolicy < DefaultAgentPolicy
   def show?
-    admin_and_same_org?
+    admin_of_record_organisation?
   end
 
   def create?
-    admin_and_same_org?
+    admin_of_record_organisation?
   end
 
   def update?
-    admin_and_same_org?
+    admin_of_record_organisation?
   end
 
   def destroy?
-    admin_and_same_org?
+    admin_of_record_organisation?
   end
 
   def versions?
-    admin_and_same_org?
+    admin_of_record_organisation?
   end
 
-  class Scope < Scope
-    def resolve
-      scope.where(organisation_id: current_organisation.id)
-    end
+  def admin_of_record_organisation?
+    current_agent.admin_orgs.include?(@record.organisation)
   end
 end
