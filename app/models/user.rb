@@ -230,7 +230,7 @@ class User < ApplicationRecord
     self.rdv_invitation_token = generate_rdv_invitation_token
   end
 
-  def self.personal_data_column_names
+  def self.anonymized_column_names
     %w[first_name last_name birth_name address birth_date email unconfirmed_email
        caisse_affiliation affiliation_number family_situation number_of_children
        phone_number phone_number_formatted franceconnect_openid_sub encrypted_password
@@ -239,10 +239,9 @@ class User < ApplicationRecord
        rdv_invitation_token]
   end
 
-  def self.non_personal_data_column_names
-    # la colonne id permet de garder l'intégrité des données même si elles sont anonymisées, c'est pour ça qu'on la garde dans cette liste
+  def self.non_anonymized_column_names
     %w[id confirmed_at confirmation_sent_at created_at updated_at created_through invitation_accepted_at invitation_created_at
-       text_search_terms # Cette colonne est une colonne générée qui sera modifiée par la db quand les colonnes dont elle dépend seront anonymisées
+       text_search_terms
        deleted_at invitation_limit reset_password_sent_at responsible_id invitation_sent_at invitations_count invited_by_id invited_by_type
        invited_through notify_by_email notify_by_sms logged_once_with_franceconnect]
   end

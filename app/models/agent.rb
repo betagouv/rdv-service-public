@@ -253,7 +253,7 @@ class Agent < ApplicationRecord
                 end
   end
 
-  def self.personal_data_column_names
+  def self.anonymized_column_names
     %w[first_name last_name
        email encrypted_password reset_password_token
        unconfirmed_email
@@ -262,9 +262,8 @@ class Agent < ApplicationRecord
        remember_created_at]
   end
 
-  def self.non_personal_data_column_names
+  def self.non_anonymized_column_names
     %w[id
-
        reset_password_sent_at
        confirmed_at
        confirmation_sent_at
