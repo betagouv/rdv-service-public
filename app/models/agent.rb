@@ -255,8 +255,11 @@ class Agent < ApplicationRecord
 
   def self.anonymized_column_names
     %w[first_name last_name
-       email encrypted_password reset_password_token
+       email
+       encrypted_password
+       reset_password_token
        unconfirmed_email
+       confirmation_token
        invitation_token
        email_original
        remember_created_at]
