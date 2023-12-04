@@ -89,14 +89,14 @@ class AnonymizerRules
       ],
     },
     rdvs: {
-      anonymized_column_names: %w[context],
+      anonymized_column_names: %w[context name],
       non_anonymized_column_names: %w[
         id starts_at organisation_id created_at updated_at cancelled_at motif_id uuid
-        lieu_id old_location created_by ends_at name max_participants_count users_count status
+        lieu_id old_location created_by ends_at max_participants_count users_count status
       ],
     },
     receipts: {
-      anonymized_column_names: %w[sms_phone_number email_address content],
+      anonymized_column_names: %w[sms_phone_number email_address content error_message],
       non_anonymized_column_names: %w[
         id created_at updated_at error_message event organisation_id
         rdv_id user_id result sms_count sms_provider channel
@@ -115,6 +115,27 @@ class AnonymizerRules
     organisations: {
       anonymized_column_names: %w[email phone_number],
       non_anonymized_column_names: %w[id created_at updated_at name departement horaires human_id website territory_id external_id verticale],
+    },
+    absences: {
+      anonymized_column_names: %w[title],
+      non_anonymized_column_names: %w[id created_at updated_at agent_id recurrence first_day start_time end_day end_time expired_cached recurrence_ends_at],
+    },
+    lieux: {
+      anonymized_column_names: %w[phone_number phone_number_formatted],
+      non_anonymized_column_names: %w[id created_at updated_at name organisation_id old_address latitude longitude old_enabled availability address],
+    },
+    participations: {
+      anonymized_column_names: %w[invitation_token],
+      non_anonymized_column_names: %w[id created_at updated_at rdv_id user_id send_lifecycle_notifications send_reminder_notification invitation_created_at invitation_sent_at invitation_accepted_at
+                                      invitation_limit invited_by_type invited_by_id invitations_count status created_by],
+    },
+    plage_ouvertures: {
+      anonymized_column_names: %w[title],
+      non_anonymized_column_names: %w[id created_at updated_at agent_id organisation_id first_day start_time end_time recurrence lieu_id expired_cached recurrence_ends_at],
+    },
+    webhook_endpoints: {
+      anonymized_column_names: %w[secret],
+      non_anonymized_column_names: %w[id created_at updated_at target_url organisation_id subscriptions],
     },
   }.with_indifferent_access.freeze
 end

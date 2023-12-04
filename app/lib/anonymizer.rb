@@ -1,10 +1,15 @@
 class Anonymizer
   def self.anonymize_all_data!
-    anonymize_user_data!
-    anonymize_table!(Prescripteur)
-    anonymize_table!(Agent)
-    anonymize_table!(SuperAdmin)
-    anonymize_table!(Organisation)
+    models = [
+      User, Receipt, Rdv, Prescripteur, Agent, SuperAdmin, Organisation, Absence,
+      Lieu, Participation, PlageOuverture, WebhookEndpoint,
+    ]
+
+    # TODO: raise an error if models.map(&:table_name).sort != ActiveRecord::Base.connection.tables.sort
+
+    models.each do |model_class|
+      anonymize_table!(model_class)
+    end
   end
 
   def self.anonymize_user_data!
@@ -35,7 +40,7 @@ class Anonymizer
 
     unidentified_column_names = @model_class.columns.map(&:name) - anonymized_column_names.map(&:to_s) - non_anonymized_column_names.map(&:to_s)
     if unidentified_column_names.present?
-      raise "Les règles d'anonymisation pour les colonnes #{unidentified_column_names.join(', ')} de la table #{@model_class.table_name} n'ont pas été définies"
+      raise "Les règles d'anonymisation pour les colonnes #{unidentified_column_names.join(' ')} de la table #{@model_class.table_name} n'ont pas été définies"
     end
 
     anonymize_in_scope(@model_class.unscoped)
