@@ -13,7 +13,6 @@ class Rdv < ApplicationRecord
   include IcalHelpers::Ics
   include Payloads::Rdv
   include Ants::AppointmentSerializerAndListener
-  include Anonymizable
 
   # Attributes
   auto_strip_attributes :name

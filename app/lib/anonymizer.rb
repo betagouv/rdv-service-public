@@ -19,7 +19,7 @@ class Anonymizer
   end
 
   def self.anonymize_record!(record)
-    new(record.class).anonymize_record!
+    new(record.class).anonymize_record!(record)
   end
 
   def initialize(model_class)
@@ -28,6 +28,7 @@ class Anonymizer
 
   def anonymize_record!(record)
     anonymize_in_scope(@model_class.where(id: record.id))
+    record.reload
   end
 
   def anonymize_table!
@@ -44,9 +45,7 @@ class Anonymizer
   private
 
   def anonymize_in_scope(scope)
-    @model_class.transaction do
-      scope.update_all(anonymized_attributes) # rubocop:disable Rails/SkipsModelValidations
-    end
+    scope.update_all(anonymized_attributes) # rubocop:disable Rails/SkipsModelValidations
   end
 
   def anonymized_attributes

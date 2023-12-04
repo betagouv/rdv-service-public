@@ -1,7 +1,6 @@
 class SuperAdmin < ApplicationRecord
   # Mixins
   include DeviseInvitable::Inviter
-  include Anonymizable
 
   devise :authenticatable
 

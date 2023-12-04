@@ -32,7 +32,6 @@ class Agent < ApplicationRecord
   include DeviseTokenAuth::Concerns::ConfirmableSupport
   include Agent::CustomDeviseTokenAuthUserOmniauthCallbacks
   include UncommonPasswordConcern
-  include Anonymizable
 
   # Attributes
   auto_strip_attributes :email, :first_name, :last_name
@@ -301,9 +300,5 @@ class Agent < ApplicationRecord
        account_deletion_warning_sent_at
        deleted_at
        created_at updated_at]
-  end
-
-  def self.anonymized_attributes
-    super.merge(calendar_uid: nil, confirmation_token: nil, email: nil, external_id: nil, invitation_token: nil, reset_password_token: nil)
   end
 end

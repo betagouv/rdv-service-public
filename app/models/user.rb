@@ -22,7 +22,6 @@ class User < ApplicationRecord
   include WebhookDeliverable
   include TextSearch
   include UncommonPasswordConcern
-  include Anonymizable
 
   def self.search_options
     {

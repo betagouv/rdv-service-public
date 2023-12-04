@@ -1,5 +1,4 @@
 class Receipt < ApplicationRecord
-  include Anonymizable
   # Attributes
   enum result: { processed: "processed", sent: "sent", delivered: "delivered", failure: "failure" }
   enum channel: { sms: "sms", mail: "mail", webhook: "webhook" }, _prefix: :channel
