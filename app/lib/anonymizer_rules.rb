@@ -1,4 +1,6 @@
 class AnonymizerRules
+  TRUNCATED_TABLES = %w[versions good_jobs good_job_settings good_job_batches good_job_processes].freeze
+
   RULES = {
     users: {
       anonymized_column_names: %w[
@@ -135,56 +137,53 @@ class AnonymizerRules
       anonymized_column_names: %w[secret],
       non_anonymized_column_names: %w[created_at updated_at target_url organisation_id subscriptions],
     },
+    territories: {
+      anonymized_column_names: %w[sms_configuration],
+      non_anonymized_column_names: %w[departement_number name phone_number phone_number_formatted created_at updated_at sms_provider has_own_sms_provider enable_notes_field
+                                      enable_caisse_affiliation_field enable_affiliation_number_field enable_family_situation_field enable_number_of_children_field enable_logement_field enable_case_number enable_address_details enable_context_field enable_waiting_room_mail_field enable_waiting_room_color_field visible_users_throughout_the_territory],
+    },
 
     # Tables sans données personnelles
-    agent_roles: {
-      anonymized_column_names: %w[],
-      non_anonymized_column_names: %w[],
+    agent_roles: { non_anonymized_column_names: %w[access_level] },
+    agents_rdvs: { non_anonymized_column_names: %w[outlook_id outlook_create_in_progress] },
+    agent_territorial_access_rights: {
+      non_anonymized_column_names: %w[allow_to_manage_teams created_at updated_at allow_to_manage_access_rights allow_to_invite_agents allow_to_download_metrics],
     },
-    agents_rdvs: {
-      anonymized_column_names: %w[],
-      non_anonymized_column_names: %w[],
+    teams: { non_anonymized_column_names: %w[name created_at updated_at] },
+    motifs: {
+      non_anonymized_column_names: %w[
+        name color created_at updated_at default_duration_in_min legacy_bookable_publicly
+        min_public_booking_delay max_public_booking_delay deleted_at bookable_by
+        restriction_for_rdv instruction_for_rdv for_secretariat old_location_type follow_up
+        visibility_type sectorisation_level custom_cancel_warning_message collectif location_type
+        rdvs_editable_by_user rdvs_cancellable_by_user
+      ],
     },
-    agent_te: {
-      anonymized_column_names: %w[],
-      non_anonymized_column_names: %w[],
+    services: { non_anonymized_column_names: %w[name created_at updated_at short_name] },
+    zones: {
+      non_anonymized_column_names: %w[
+        level city_name city_code created_at updated_at street_name street_ban_id
+      ],
     },
-    agent_roles: {
-      anonymized_column_names: %w[],
-      non_anonymized_column_names: %w[],
+    ar_internal_metadata: {
+      non_anonymized_column_names: %w[value created_at updated_at],
     },
-    agent_roles: {
-      anonymized_column_names: %w[],
-      non_anonymized_column_names: %w[],
+    territory_services: { non_anonymized_column_names: %w[created_at] },
+    agent_services: { non_anonymized_column_names: %w[created_at] },
+    agent_teams: {
+      non_anonymized_column_names: %w[created_at updated_at],
     },
-    agent_roles: {
-      anonymized_column_names: %w[],
-      non_anonymized_column_names: %w[],
+    sectors: {
+      non_anonymized_column_names: %w[departement name human_id created_at updated_at],
     },
-    agent_roles: {
-      anonymized_column_names: %w[],
-      non_anonymized_column_names: %w[],
+    motif_categories: {
+      non_anonymized_column_names: %w[name short_name created_at updated_at],
     },
-    agent_roles: {
-      anonymized_column_names: %w[],
-      non_anonymized_column_names: %w[],
+    sector_attributions: {
+      non_anonymized_column_names: %w[level],
     },
-    agent_roles: {
-      anonymized_column_names: %w[],
-      non_anonymized_column_names: %w[],
+    file_attentes: {
+      non_anonymized_column_names: %w[created_at updated_at notifications_sent last_creneau_sent_at],
     },
-    agent_roles: {
-      anonymized_column_names: %w[],
-      non_anonymized_column_names: %w[],
-    },
-    agent_roles: {
-      anonymized_column_names: %w[],
-      non_anonymized_column_names: %w[],
-    },
-    agent_roles: {
-      anonymized_column_names: %w[],
-      non_anonymized_column_names: %w[],
-    },
-
   }.with_indifferent_access.freeze
 end

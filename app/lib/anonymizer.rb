@@ -2,7 +2,8 @@ class Anonymizer
   def self.anonymize_all_data!
     models = [
       User, Receipt, Rdv, Prescripteur, Agent, SuperAdmin, Organisation, Absence,
-      Lieu, Participation, PlageOuverture, WebhookEndpoint,
+      Lieu, Participation, PlageOuverture, WebhookEndpoint, Territory,
+      AgentRole, AgentsRdv, AgentTerritorialAccessRight, AgentTerritorialRole,
     ]
 
     ActiveRecord::Base.connection.tables.each do |table_name|
@@ -39,11 +40,22 @@ class Anonymizer
   def anonymize_table!
     raise "L'anonymisation en masse est désactivée en production pour éviter les catastrophes" if Rails.env.production?
 
+    if @table_name.in?(AnonymizerRules::TRUNCATED_TABLES)
+      db_connection.execute("TRUNCATE #{@table_name}")
+      return
+    end
+
     if unidentified_column_names.present?
       raise "Les règles d'anonymisation pour les colonnes #{unidentified_column_names.join(' ')} de la table #{@table_name} n'ont pas été définies"
     end
 
-    @model_class.unscoped.update_all(anonymized_attributes) # rubocop:disable Rails/SkipsModelValidations
+    if anonymized_attributes.present?
+      if @model_class.nil?
+        raise "Pas de modèle trouvé pour la table #{@table_name}"
+      end
+
+      @model_class.unscoped.update_all(anonymized_attributes) # rubocop:disable Rails/SkipsModelValidations
+    end
   end
 
   private
@@ -85,7 +97,7 @@ class Anonymizer
   def anonymous_value(column)
     if column.type.in?(%i[string text])
       if column_has_unicity_constraint?(column)
-        Arel.sql("CASE WHEN ? IS NULL THEN NULL ELSE '[valeur unique anonymisée ' || id || ']' END", column.name)
+        Arel.sql("CASE WHEN #{column.name} IS NULL THEN NULL ELSE '[valeur unique anonymisée ' || id || ']' END")
       else
         "[valeur anonymisée]"
       end
