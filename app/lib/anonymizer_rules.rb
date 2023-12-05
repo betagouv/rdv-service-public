@@ -139,8 +139,13 @@ class AnonymizerRules
     },
     territories: {
       anonymized_column_names: %w[sms_configuration],
-      non_anonymized_column_names: %w[departement_number name phone_number phone_number_formatted created_at updated_at sms_provider has_own_sms_provider enable_notes_field
-                                      enable_caisse_affiliation_field enable_affiliation_number_field enable_family_situation_field enable_number_of_children_field enable_logement_field enable_case_number enable_address_details enable_context_field enable_waiting_room_mail_field enable_waiting_room_color_field visible_users_throughout_the_territory],
+      non_anonymized_column_names: %w[
+        departement_number name phone_number phone_number_formatted created_at updated_at sms_provider has_own_sms_provider enable_notes_field
+        enable_caisse_affiliation_field enable_affiliation_number_field enable_family_situation_field
+        enable_number_of_children_field enable_logement_field enable_case_number enable_address_details
+        enable_context_field enable_waiting_room_mail_field enable_waiting_room_color_field
+        visible_users_throughout_the_territory
+      ],
     },
 
     # Tables sans données personnelles
