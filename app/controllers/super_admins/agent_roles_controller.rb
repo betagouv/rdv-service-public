@@ -1,21 +1,13 @@
 module SuperAdmins
   class AgentRolesController < SuperAdmins::ApplicationController
-    # To customize the behavior of this controller,
-    # you can overwrite any of the RESTful actions. For example:
-    #
-    # def index
-    #   super
-    #   @resources = Agent.
-    #     page(params[:page]).
-    #     per(10)
-    # end
+    def destroy
+      if requested_resource.destroy
+        flash[:notice] = translate_with_resource("destroy.success")
+      else
+        flash[:error] = requested_resource.errors.full_messages.join("<br/>")
+      end
 
-    # Define a custom finder by overriding the `find_resource` method:
-    # def find_resource(param)
-    #   Agent.find_by!(slug: param)
-    # end
-
-    # See https://administrate-prototype.herokuapp.com/customizing_controller_actions
-    # for more information
+      redirect_to(after_resource_created_path(requested_resource.agent), notice: flash[:notice])
+    end
   end
 end
