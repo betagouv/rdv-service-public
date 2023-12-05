@@ -224,17 +224,17 @@ WebhookEndpoint.create!(
   target_url: "http://localhost:8000/rdv_solidarites_webhooks",
   secret: "rdv-solidarites",
   organisation_id: org_drome1.id,
-  subscriptions: %w[rdv user user_profile organisation motif lieu agent agent_role referent_assignation]
+  subscriptions: %w[rdv user user_profile organisation motif lieu agent agent_role referent_assignation prescripteur]
 )
 WebhookEndpoint.create!(
   target_url: "http://localhost:8000/rdv_solidarites_webhooks",
   secret: "rdv-solidarites",
   organisation_id: org_drome2.id,
-  subscriptions: %w[rdv user user_profile organisation motif lieu agent agent_role referent_assignation]
+  subscriptions: %w[rdv user user_profile organisation motif lieu agent agent_role referent_assignation prescripteur]
 )
 WebhookEndpoint.create!(
   target_url: "http://localhost:8000/rdv_solidarites_webhooks",
   secret: "rdv-solidarites",
   organisation_id: org_yonne.id,
-  subscriptions: %w[rdv user user_profile organisation motif lieu agent agent_role referent_assignation]
+  subscriptions: %w[rdv user user_profile organisation motif lieu agent agent_role referent_assignation prescripteur]
 )
