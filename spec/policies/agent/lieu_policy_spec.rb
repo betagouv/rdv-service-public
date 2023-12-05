@@ -59,5 +59,21 @@ describe Agent::LieuPolicy do
       expect(policy.versions?).to be_truthy
     end
   end
+
+  describe Agent::LieuPolicy::Scope do
+    subject(:scope) { described_class.apply(agent, Lieu) }
+
+    let!(:basic_org) { create(:organisation) }
+    let!(:admin_org) { create(:organisation) }
+    let!(:other_org) { create(:organisation) }
+    let!(:agent) { create(:agent, basic_role_in_organisations: [basic_org], admin_role_in_organisations: [admin_org]) }
+    let!(:lieu_in_basic_org) { create(:lieu, organisation: basic_org) }
+    let!(:lieu_in_admin_org) { create(:lieu, organisation: admin_org) }
+    let!(:lieu_in_other_org) { create(:lieu, organisation: other_org) }
+
+    it "includes lieux of organisations when agent is basic or admin" do
+      expect(scope).to contain_exactly(lieu_in_basic_org, lieu_in_admin_org)
+    end
+  end
 end
 # rubocop:enable RSpec/PredicateMatcher

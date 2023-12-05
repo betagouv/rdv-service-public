@@ -30,14 +30,11 @@ class Admin::LieuxController < AgentAuthController
   end
 
   def edit
-    @lieu = policy_scope(Lieu, policy_scope_class: Agent::LieuPolicy::Scope).where(organisation: current_organisation).find(params[:id])
-    authorize(@lieu, policy_class: Agent::LieuPolicy)
-    @lieux_policy = Agent::LieuPolicy.new(current_agent, @lieu)
+    set_and_authorize_lieu
   end
 
   def update
-    @lieu = Lieu.find(params[:id])
-    authorize(@lieu, policy_class: Agent::LieuPolicy)
+    set_and_authorize_lieu
     if @lieu.update(lieu_params)
       flash[:notice] = "Le lieu a été modifié."
       redirect_to admin_organisation_lieux_path(@lieu.organisation)
@@ -47,8 +44,7 @@ class Admin::LieuxController < AgentAuthController
   end
 
   def destroy
-    @lieu = Lieu.find(params[:id])
-    authorize(@lieu, policy_class: Agent::LieuPolicy)
+    set_and_authorize_lieu
     if @lieu.destroy
       flash[:notice] = "Le lieu a été supprimé."
       redirect_to admin_organisation_lieux_path(@lieu.organisation)
@@ -58,6 +54,12 @@ class Admin::LieuxController < AgentAuthController
   end
 
   private
+
+  def set_and_authorize_lieu
+    @lieu = Lieu.find(params[:id])
+    authorize(@lieu, policy_class: Agent::LieuPolicy)
+    @lieu_policy = Agent::LieuPolicy.new(current_agent, @lieu)
+  end
 
   def pundit_user
     current_agent
