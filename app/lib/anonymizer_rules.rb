@@ -33,7 +33,7 @@ class AnonymizerRules
         rdv_invitation_token
       ],
       non_anonymized_column_names: %w[
-        id confirmed_at confirmation_sent_at created_at updated_at created_through invitation_accepted_at invitation_created_at
+        confirmed_at confirmation_sent_at created_at updated_at created_through invitation_accepted_at invitation_created_at
         text_search_terms deleted_at invitation_limit reset_password_sent_at invitation_sent_at
         invitations_count invited_by_id invited_by_type invited_through notify_by_email notify_by_sms logged_once_with_franceconnect
       ],
@@ -62,7 +62,6 @@ class AnonymizerRules
         remember_created_at
       ],
       non_anonymized_column_names: %w[
-        id
         reset_password_sent_at
         confirmed_at
         confirmation_sent_at
@@ -91,50 +90,50 @@ class AnonymizerRules
     rdvs: {
       anonymized_column_names: %w[context name],
       non_anonymized_column_names: %w[
-        id starts_at organisation_id created_at updated_at cancelled_at motif_id uuid
+        starts_at organisation_id created_at updated_at cancelled_at motif_id uuid
         lieu_id old_location created_by ends_at max_participants_count users_count status
       ],
     },
     receipts: {
       anonymized_column_names: %w[sms_phone_number email_address content error_message],
       non_anonymized_column_names: %w[
-        id created_at updated_at error_message event result sms_count sms_provider channel
+        created_at updated_at error_message event result sms_count sms_provider channel
       ],
     },
     prescripteurs: {
       anonymized_column_names: %w[
         first_name last_name email phone_number phone_number_formatted
       ],
-      non_anonymized_column_names: %w[id created_at updated_at],
+      non_anonymized_column_names: %w[created_at updated_at],
     },
     super_admins: {
       anonymized_column_names: %w[email],
-      non_anonymized_column_names: %w[id created_at updated_at],
+      non_anonymized_column_names: %w[created_at updated_at],
     },
     organisations: {
       anonymized_column_names: %w[email phone_number],
-      non_anonymized_column_names: %w[id created_at updated_at name departement horaires human_id website external_id verticale],
+      non_anonymized_column_names: %w[created_at updated_at name departement horaires human_id website external_id verticale],
     },
     absences: {
       anonymized_column_names: %w[title],
-      non_anonymized_column_names: %w[id created_at updated_at recurrence first_day start_time end_day end_time expired_cached recurrence_ends_at],
+      non_anonymized_column_names: %w[created_at updated_at recurrence first_day start_time end_day end_time expired_cached recurrence_ends_at],
     },
     lieux: {
       anonymized_column_names: %w[phone_number phone_number_formatted],
-      non_anonymized_column_names: %w[id created_at updated_at name old_address latitude longitude old_enabled availability address],
+      non_anonymized_column_names: %w[created_at updated_at name old_address latitude longitude old_enabled availability address],
     },
     participations: {
       anonymized_column_names: %w[invitation_token],
-      non_anonymized_column_names: %w[id created_at updated_at send_lifecycle_notifications send_reminder_notification invitation_created_at invitation_sent_at invitation_accepted_at
+      non_anonymized_column_names: %w[created_at updated_at send_lifecycle_notifications send_reminder_notification invitation_created_at invitation_sent_at invitation_accepted_at
                                       invitation_limit invited_by_type invited_by_id invitations_count status created_by],
     },
     plage_ouvertures: {
       anonymized_column_names: %w[title],
-      non_anonymized_column_names: %w[id created_at updated_at organisation_id first_day start_time end_time recurrence expired_cached recurrence_ends_at],
+      non_anonymized_column_names: %w[created_at updated_at organisation_id first_day start_time end_time recurrence expired_cached recurrence_ends_at],
     },
     webhook_endpoints: {
       anonymized_column_names: %w[secret],
-      non_anonymized_column_names: %w[id created_at updated_at target_url organisation_id subscriptions],
+      non_anonymized_column_names: %w[created_at updated_at target_url organisation_id subscriptions],
     },
 
     # Tables sans données personnelles
