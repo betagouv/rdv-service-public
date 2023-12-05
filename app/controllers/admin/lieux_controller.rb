@@ -32,6 +32,7 @@ class Admin::LieuxController < AgentAuthController
   def edit
     @lieu = policy_scope(Lieu, policy_scope_class: Agent::LieuPolicy::Scope).where(organisation: current_organisation).find(params[:id])
     authorize(@lieu, policy_class: Agent::LieuPolicy)
+    @lieux_policy = Agent::LieuPolicy.new(current_agent, @lieu)
   end
 
   def update
