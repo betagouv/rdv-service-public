@@ -21,6 +21,12 @@ class Agent::LieuPolicy < Agent::AdminPolicy
     admin_of_record_organisation?
   end
 
+  private
+
+  def admin_of_record_organisation?
+    current_agent.admin_orgs.include?(@record.organisation)
+  end
+
   class Scope < Scope
     alias current_agent pundit_user
 
