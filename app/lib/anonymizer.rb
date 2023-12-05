@@ -10,7 +10,7 @@ class Anonymizer
     # if tables_without_anonymization_rules.any?
     #   raise "Les règles d'anonymisation ne sont pas définitions pour les tables #{tables_without_anonymization_rules.join(' ')}"
     # end
-    #
+
     models.each do |model_class|
       anonymize_table!(model_class)
     end
@@ -42,7 +42,7 @@ class Anonymizer
   def anonymize_table!
     raise "L'anonymisation en masse est désactivée en production pour éviter les catastrophes" if Rails.env.production?
 
-    unidentified_column_names = @model_class.columns.map(&:name) - anonymized_column_names.map(&:to_s) - non_anonymized_column_names.map(&:to_s)
+    unidentified_column_names = @model_class.columns.map(&:name) - foreign_key_column_names - anonymized_column_names.map(&:to_s) - non_anonymized_column_names.map(&:to_s)
     if unidentified_column_names.present?
       raise "Les règles d'anonymisation pour les colonnes #{unidentified_column_names.join(' ')} de la table #{@model_class.table_name} n'ont pas été définies"
     end
@@ -51,6 +51,12 @@ class Anonymizer
   end
 
   private
+
+  def foreign_key_column_names
+    @model_class.connection.foreign_keys(@model_class.table_name).map do |key|
+      key.options[:column]
+    end
+  end
 
   def anonymized_column_names
     AnonymizerRules::RULES[@model_class.table_name][:anonymized_column_names]
