@@ -1,4 +1,3 @@
-# rubocop:disable RSpec/PredicateMatcher
 describe Agent::LieuPolicy do
   subject(:policy) { described_class.new(agent, lieu) }
 
@@ -8,13 +7,13 @@ describe Agent::LieuPolicy do
     let(:agent) { create(:agent, basic_role_in_organisations: [lieu.organisation]) }
 
     it "does not allow any write operation on lieu" do
-      expect(policy.new?).to be_falsey
-      expect(policy.create?).to be_falsey
-      expect(policy.edit?).to be_falsey
-      expect(policy.update?).to be_falsey
-      expect(policy.destroy?).to be_falsey
+      expect(policy.new?).to be(false)
+      expect(policy.create?).to be(false)
+      expect(policy.edit?).to be(false)
+      expect(policy.update?).to be(false)
+      expect(policy.destroy?).to be(false)
 
-      expect(policy.versions?).to be_falsey
+      expect(policy.versions?).to be(false)
     end
   end
 
@@ -22,13 +21,13 @@ describe Agent::LieuPolicy do
     let(:agent) { create(:agent, admin_role_in_organisations: [create(:organisation)]) }
 
     it "does not allow any write operation on lieu" do
-      expect(policy.new?).to be_falsey
-      expect(policy.create?).to be_falsey
-      expect(policy.edit?).to be_falsey
-      expect(policy.update?).to be_falsey
-      expect(policy.destroy?).to be_falsey
+      expect(policy.new?).to be(false)
+      expect(policy.create?).to be(false)
+      expect(policy.edit?).to be(false)
+      expect(policy.update?).to be(false)
+      expect(policy.destroy?).to be(false)
 
-      expect(policy.versions?).to be_falsey
+      expect(policy.versions?).to be(false)
     end
   end
 
@@ -36,13 +35,13 @@ describe Agent::LieuPolicy do
     let(:agent) { create(:agent, :secretaire, basic_role_in_organisations: [lieu.organisation]) }
 
     it "does not allow any write operation on lieu" do
-      expect(policy.new?).to be_falsey
-      expect(policy.create?).to be_falsey
-      expect(policy.edit?).to be_falsey
-      expect(policy.update?).to be_falsey
-      expect(policy.destroy?).to be_falsey
+      expect(policy.new?).to be(false)
+      expect(policy.create?).to be(false)
+      expect(policy.edit?).to be(false)
+      expect(policy.update?).to be(false)
+      expect(policy.destroy?).to be(false)
 
-      expect(policy.versions?).to be_falsey
+      expect(policy.versions?).to be(false)
     end
   end
 
@@ -50,13 +49,13 @@ describe Agent::LieuPolicy do
     let(:agent) { create(:agent, admin_role_in_organisations: [lieu.organisation]) }
 
     it "allows creating, updating and destroying the lieu, plus seeing the versions" do
-      expect(policy.new?).to be_truthy
-      expect(policy.create?).to be_truthy
-      expect(policy.edit?).to be_truthy
-      expect(policy.update?).to be_truthy
-      expect(policy.destroy?).to be_truthy
+      expect(policy.new?).to be(true)
+      expect(policy.create?).to be(true)
+      expect(policy.edit?).to be(true)
+      expect(policy.update?).to be(true)
+      expect(policy.destroy?).to be(true)
 
-      expect(policy.versions?).to be_truthy
+      expect(policy.versions?).to be(true)
     end
   end
 
@@ -76,4 +75,3 @@ describe Agent::LieuPolicy do
     end
   end
 end
-# rubocop:enable RSpec/PredicateMatcher
