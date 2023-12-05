@@ -1,7 +1,6 @@
 class Prescripteur < ApplicationRecord
   include FullNameConcern
   include PhoneNumberValidation::HasPhoneNumber
-  include WebhookDeliverable
 
   belongs_to :participation
   has_one :rdv, through: :participation
