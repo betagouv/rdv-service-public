@@ -42,7 +42,6 @@ class AgentDashboard < Administrate::BaseDashboard
     email
     first_name
     last_name
-    organisations
     roles
     territorial_roles
     services
