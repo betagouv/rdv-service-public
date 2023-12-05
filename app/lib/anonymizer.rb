@@ -1,16 +1,7 @@
 class Anonymizer
   def self.anonymize_all_data!
-    models = [
-      User, Receipt, Rdv, Prescripteur, Agent, SuperAdmin, Organisation, Absence,
-      Lieu, Participation, PlageOuverture, WebhookEndpoint, Territory,
-      AgentRole, AgentsRdv, AgentTerritorialAccessRight, AgentTerritorialRole,
-    ]
-
     ActiveRecord::Base.connection.tables.each do |table_name|
-      model_class = models.find do |model|
-        model.table_name == table_name
-      end
-      anonymize_table!(model_class, table_name)
+      anonymize_table!(table_name)
     end
   end
 
@@ -20,17 +11,16 @@ class Anonymizer
     anonymize_table!(Rdv)
   end
 
-  def self.anonymize_table!(model_class, table_name)
-    new(model_class, table_name).anonymize_table!
+  def self.anonymize_table!(table_name)
+    new(table_name).anonymize_table!
   end
 
   def self.anonymize_record!(record)
     new(record.class).anonymize_record!(record)
   end
 
-  def initialize(model_class, table_name = nil)
-    @model_class = model_class
-    @table_name = table_name || model_class.table_name
+  def initialize(table_name)
+    @table_name = table_name
   end
 
   def anonymize_record!(record)
@@ -41,7 +31,7 @@ class Anonymizer
     raise "L'anonymisation en masse est désactivée en production pour éviter les catastrophes" if Rails.env.production?
 
     if @table_name.in?(AnonymizerRules::TRUNCATED_TABLES)
-      db_connection.execute("TRUNCATE #{@table_name.sanitize_sql}")
+      db_connection.execute("TRUNCATE #{@table_name}")
       return
     end
 
@@ -49,13 +39,15 @@ class Anonymizer
       raise "Les règles d'anonymisation pour les colonnes #{unidentified_column_names.join(' ')} de la table #{@table_name} n'ont pas été définies"
     end
 
-    if anonymized_attributes.present?
-      if @model_class.nil?
-        raise "Pas de modèle trouvé pour la table #{@table_name}"
-      end
+    return if anonymized_attributes.blank?
 
-      @model_class.unscoped.update_all(anonymized_attributes) # rubocop:disable Rails/SkipsModelValidations
+    model_class = AnonymizerRules::RULES.dig(@table_name, "class_name")&.constantize
+
+    if model_class.nil?
+      raise "Pas de modèle trouvé pour la table #{@table_name}"
     end
+
+    model_class.unscoped.update_all(anonymized_attributes) # rubocop:disable Rails/SkipsModelValidations
   end
 
   private
@@ -101,9 +93,9 @@ class Anonymizer
   def anonymous_value(column)
     if column.type.in?(%i[string text])
       if column_has_unicity_constraint?(column)
-        Arel.sql("CASE WHEN #{column.name.sanitize_sql} IS NULL THEN NULL ELSE '[valeur unique anonymisée ' || id || ']' END")
+        Arel.sql("CASE WHEN #{column.name} IS NULL THEN NULL ELSE '[valeur unique anonymisée ' || id || ']' END")
       else
-        "[valeur anonymisée]"
+        Arel.sql("CASE WHEN #{column.name} IS NULL THEN NULL ELSE '[valeur anonymisée]' END")
       end
     else
       column.default

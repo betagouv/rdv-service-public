@@ -3,6 +3,7 @@ class AnonymizerRules
 
   RULES = {
     users: {
+      class_name: "User",
       anonymized_column_names: %w[
         first_name
         last_name
@@ -41,6 +42,7 @@ class AnonymizerRules
       ],
     },
     agents: {
+      class_name: "Agent",
       anonymized_column_names: %w[
         first_name last_name
         email
@@ -90,6 +92,7 @@ class AnonymizerRules
       ],
     },
     rdvs: {
+      class_name: "Rdv",
       anonymized_column_names: %w[context name],
       non_anonymized_column_names: %w[
         starts_at organisation_id created_at updated_at cancelled_at motif_id uuid
@@ -97,47 +100,57 @@ class AnonymizerRules
       ],
     },
     receipts: {
+      class_name: "Receipt",
       anonymized_column_names: %w[sms_phone_number email_address content error_message],
       non_anonymized_column_names: %w[
         created_at updated_at error_message event result sms_count sms_provider channel
       ],
     },
     prescripteurs: {
+      class_name: "Prescripteur",
       anonymized_column_names: %w[
         first_name last_name email phone_number phone_number_formatted
       ],
       non_anonymized_column_names: %w[created_at updated_at],
     },
     super_admins: {
+      class_name: "SuperAdmin",
       anonymized_column_names: %w[email],
       non_anonymized_column_names: %w[created_at updated_at],
     },
     organisations: {
+      class_name: "Organisation",
       anonymized_column_names: %w[email phone_number],
       non_anonymized_column_names: %w[created_at updated_at name departement horaires human_id website external_id verticale],
     },
     absences: {
+      class_name: "Absence",
       anonymized_column_names: %w[title],
       non_anonymized_column_names: %w[created_at updated_at recurrence first_day start_time end_day end_time expired_cached recurrence_ends_at],
     },
     lieux: {
+      class_name: "Lieu",
       anonymized_column_names: %w[phone_number phone_number_formatted],
       non_anonymized_column_names: %w[created_at updated_at name old_address latitude longitude old_enabled availability address],
     },
     participations: {
+      class_name: "Participation",
       anonymized_column_names: %w[invitation_token],
       non_anonymized_column_names: %w[created_at updated_at send_lifecycle_notifications send_reminder_notification invitation_created_at invitation_sent_at invitation_accepted_at
                                       invitation_limit invited_by_type invited_by_id invitations_count status created_by],
     },
     plage_ouvertures: {
+      class_name: "PlageOuverture",
       anonymized_column_names: %w[title],
       non_anonymized_column_names: %w[created_at updated_at organisation_id first_day start_time end_time recurrence expired_cached recurrence_ends_at],
     },
     webhook_endpoints: {
+      class_name: "WebhookEndpoint",
       anonymized_column_names: %w[secret],
       non_anonymized_column_names: %w[created_at updated_at target_url organisation_id subscriptions],
     },
     territories: {
+      class_name: "Territory",
       anonymized_column_names: %w[sms_configuration],
       non_anonymized_column_names: %w[
         departement_number name phone_number phone_number_formatted created_at updated_at sms_provider has_own_sms_provider enable_notes_field
