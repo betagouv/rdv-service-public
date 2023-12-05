@@ -140,14 +140,10 @@ class Motif < ApplicationRecord
     Agent
       .joins(:organisations)
       .where(organisations: { id: organisation.id })
+      .includes(:services)
       .complete
       .active
-      .in_any_of_these_services(authorized_services)
       .order_by_last_name
-  end
-
-  def authorized_services
-    for_secretariat ? [service, Service.secretariat] : [service]
   end
 
   def visible_and_notified?
