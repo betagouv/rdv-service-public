@@ -41,7 +41,7 @@ class Anonymizer
     raise "L'anonymisation en masse est désactivée en production pour éviter les catastrophes" if Rails.env.production?
 
     if @table_name.in?(AnonymizerRules::TRUNCATED_TABLES)
-      db_connection.execute("TRUNCATE #{@table_name}")
+      db_connection.execute("TRUNCATE #{@table_name.sanitize_sql}")
       return
     end
 
@@ -101,7 +101,7 @@ class Anonymizer
   def anonymous_value(column)
     if column.type.in?(%i[string text])
       if column_has_unicity_constraint?(column)
-        Arel.sql("CASE WHEN #{column.name} IS NULL THEN NULL ELSE '[valeur unique anonymisée ' || id || ']' END")
+        Arel.sql("CASE WHEN #{column.name.sanitize_sql} IS NULL THEN NULL ELSE '[valeur unique anonymisée ' || id || ']' END")
       else
         "[valeur anonymisée]"
       end
