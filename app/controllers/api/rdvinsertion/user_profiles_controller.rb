@@ -1,4 +1,4 @@
-class Api::Rdvinsertion::UserProfilesController < Api::V1::AgentAuthBaseController
+class Api::Rdvinsertion::UserProfilesController < Api::Rdvinsertion::AgentAuthBaseController
   before_action :set_user, :set_organisations, only: %i[create_many]
 
   def create_many

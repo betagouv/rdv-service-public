@@ -1,4 +1,4 @@
-class Api::Rdvinsertion::ReferentAssignationsController < Api::V1::AgentAuthBaseController
+class Api::Rdvinsertion::ReferentAssignationsController < Api::Rdvinsertion::AgentAuthBaseController
   before_action :set_user, :set_agents, only: %i[create_many]
 
   def create_many
