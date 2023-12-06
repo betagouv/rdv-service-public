@@ -44,7 +44,7 @@
             as: :grouped_select, \
             group_method: :last, \
             label_method: -> { [motif_name_and_location_type(_1), (_1.collectif ? "Collectif" : nil)].compact.join(" - ") }, \
-            value_method: -> { Motif.typology_slug(_1) }, \
+            value_method: :typology_slug, \
             input_html: { \
               data: { placeholder: "Sélectionnez un motif" }, \
               class: "js-filtered-motifs", \

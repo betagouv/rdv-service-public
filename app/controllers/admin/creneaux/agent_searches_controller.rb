@@ -57,7 +57,7 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
     return unless (params[:commit].present? || request.format.js?) && @form.valid?
 
     # Un RDV collectif peut-il avoir lieu à domicile ou au téléphone ?
-    @search_results = if @form.motifs.first.individuel?
+    @search_results = if @form.first_motif_matching_criteria.individuel?
                         search_creneaux_service
                       else
                         SearchRdvCollectifForAgentsService.new(@form).lieu_search
