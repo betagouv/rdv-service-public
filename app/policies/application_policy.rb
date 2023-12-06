@@ -14,6 +14,10 @@ class ApplicationPolicy
       @scope = scope
     end
 
+    def self.apply(pundit_user, scope)
+      new(pundit_user, scope).resolve
+    end
+
     def in_scope?(object)
       return false if object&.id.blank?
 

@@ -40,7 +40,7 @@
             required: true, \
             label: "Motif", \
             include_blank: true, \
-            collection: @motifs.uniq(&:typology_slug).group_by { _1.service.name }, \
+            collection: @motifs.ordered_by_name.includes(:service).uniq(&:typology_slug).group_by { _1.service.name }, \
             as: :grouped_select, \
             group_method: :last, \
             label_method: -> { [motif_name_and_location_type(_1), (_1.collectif ? "Collectif" : nil)].compact.join(" - ") }, \

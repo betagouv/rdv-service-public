@@ -19,7 +19,7 @@
             .col-md-6 data={ "controller": "past-date-alert" }
               = datetime_input(f, :starts_at, input_html: { data: { "past-date-alert-target": "date-input" } })
             .col-md-6= f.input :duration_in_min, as: :integer
-          = f.association :agents, collection: @rdv.motif.authorized_agents.includes(:services), label_method: :reverse_full_name_and_service, input_html: { multiple: true, class: "select2-input" }
+          = f.association :agents, collection: @rdv.motif.authorized_agents, label_method: :reverse_full_name_and_service, input_html: { multiple: true, class: "select2-input" }
           = f.input :name, wrapper_html: { class: "mb-1" }
           p
             span.font-14.font-weight-bold= "Avertissement : "
