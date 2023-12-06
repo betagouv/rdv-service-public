@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 # Inspiré par https://doc.scalingo.com/platform/databases/duplicate
 
 archive_name="backup.tar.gz"
