@@ -65,4 +65,11 @@ describe UsersHelper, type: :helper do
       expect(full_name_and_birthdate(user)).to eq("James BOND - 21/12/1950 - 70 ans")
     end
   end
+
+  describe "partially_hidden_reverse_full_name_and_notification_coordinates" do
+    it "hides most of the personal data while allowing verification" do
+      user = build(:user, birth_date: Date.new(1950, 12, 21), first_name: "Francis", last_name: "Factice", phone_number: "0611223344", email: "francis@factice.com")
+      expect(described_class.partially_hidden_reverse_full_name_and_notification_coordinates(user)).to eq("FACTICE Francis - 21/12/**** - 06******44 - f******s@factice.com")
+    end
+  end
 end

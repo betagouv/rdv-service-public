@@ -31,14 +31,24 @@ class Agents::UsersController < AgentAuthController
     if users_from_organisation.any?
       results << {
         text: nil,
-        children: serialize(users_from_organisation),
+        children: users_from_organisation.map do |user|
+          {
+            id: user.id,
+            text: UsersHelper.reverse_full_name_and_notification_coordinates(user),
+          }
+        end,
       }
     end
 
     if users_from_territory.any?
       results << {
         text: "Usagers des autres organisations",
-        children: serialize(users_from_territory),
+        children: users_from_territory.map do |user|
+          {
+            id: user.id,
+            text: UsersHelper.partially_hidden_reverse_full_name_and_notification_coordinates(user),
+          }
+        end,
       }
     end
 
@@ -52,12 +62,5 @@ class Agents::UsersController < AgentAuthController
     (cnfs_and_mairies_territory_ids & current_agent.organisations.pluck(:territory_id)).any? # & does an array overlap here
   end
 
-  def serialize(users)
-    users.map do |user|
-      {
-        id: user.id,
-        text: UsersHelper.reverse_full_name_and_notification_coordinates(user),
-      }
-    end
-  end
+  def serialize(users); end
 end
