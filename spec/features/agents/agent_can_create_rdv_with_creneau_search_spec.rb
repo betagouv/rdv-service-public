@@ -31,20 +31,20 @@ describe "Agent can create a Rdv with creneau search" do
     end
   end
 
-  context "when there is only one option for lieu, service and motif selector" do
+  context "when there is only one option for lieu, service and motif selector", js: true do
     let!(:motif) { create(:motif, service: agent.services.first, organisation: organisation) }
     let!(:plage_ouverture) { create(:plage_ouverture, :daily, motifs: [motif], agent: agent, organisation: organisation) }
 
-    xit "automatically select the option", js: true do
+    it "automatically select the option" do
       visit admin_organisation_agent_searches_path(organisation)
       expect(page).to have_content("Trouver un RDV")
       expect(page).to have_select("lieu_ids", selected: plage_ouverture.lieu_name)
-      expect(page).to have_select("motif_id", selected: "Motif 1 (Sur place)")
+      expect(page).to have_select("motif_typology_slug", selected: "Motif 1 (Sur place)")
       expect(page).to have_select("service_id", selected: agent.services.first.name)
     end
   end
 
-  context "when there is more than one option for lieux, services and motifs selector" do
+  context "when there is more than one option for lieux, services and motifs selector", js: true do
     let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
     let!(:lieu) { create(:lieu, organisation: organisation) }
     let!(:motif) { create(:motif, service: agent.services.first, organisation: organisation) }
@@ -54,11 +54,11 @@ describe "Agent can create a Rdv with creneau search" do
     let!(:another_lieu) { create(:lieu, organisation: organisation) }
     let!(:another_motif) { create(:motif, service: another_service, organisation: organisation) }
 
-    xit "doesnt automatically select options", js: true do
+    it "doesnt automatically select options" do
       visit admin_organisation_agent_searches_path(organisation)
       expect(page).to have_content("Trouver un RDV")
       expect(page).to have_select("lieu_ids", selected: [])
-      expect(page).to have_select("motif_id", selected: "")
+      expect(page).to have_select("motif_typology_slug", selected: "")
       expect(page).to have_select("service_id", selected: "")
     end
   end
