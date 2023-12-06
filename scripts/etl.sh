@@ -6,20 +6,20 @@ archive_name="backup.tar.gz"
 install-scalingo-cli
 
 # Install additional tools to interact with the database:
-dbclient-fetcher "${DUPLICATE_ADDON_KIND}"
+dbclient-fetcher PostgreSQL
 
-# Login to Scalingo, using the token stored in `DUPLICATE_API_TOKEN`:
-scalingo login --api-token "${DUPLICATE_API_TOKEN}"
+# Login to Scalingo, using the token from the env variable
+# This token has been set by an individuel member of the team.
+scalingo login --api-token "${SCALINGO_API_TOKEN}"
 
 # Retrieve the addon id:
-addon_id="$( scalingo --app "${DUPLICATE_SOURCE_APP}" addons \
-             | grep "${DUPLICATE_ADDON_KIND}" \
+addon_id="$( scalingo --region osc-secnum-fr1 --app -rdv-solidarites addons \
+             | grep "PostgreSQL" \
              | cut -d "|" -f 3 \
              | tr -d " " )"
 
 # Download the latest backup available for the specified addon:
-scalingo --app "${DUPLICATE_SOURCE_APP}" --addon "${addon_id}" \
-    backups-download --output "${archive_name}"
+scalingo --app demo-rdv-solidarites --addon "PostgreSQL" backups-download --output "${archive_name}"
 
 # Get the name of the backup file:
 backup_file_name="$( tar --list --file="${archive_name}" \
