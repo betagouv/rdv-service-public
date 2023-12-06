@@ -3,6 +3,74 @@
     {
       "warning_type": "Dynamic Render Path",
       "warning_code": 15,
+      "fingerprint": "1ab9c37442a647f829faee7435271f2f288c1c1d682190f2bee55ae236f0514c",
+      "check_name": "Render",
+      "message": "Render path contains parameter value",
+      "file": "app/views/admin/motifs/index.html.slim",
+      "line": 49,
+      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(action => filtered((policy_scope(current_organisation.motifs, :policy_scope_class => (Agent::MotifPolicy::Scope)).active.search_by_text(params[:search]) or policy_scope(current_organisation.motifs, :policy_scope_class => (Agent::MotifPolicy::Scope)).active.ordered_by_name), params).includes(:organisation).includes(:service).page(params[:page]), {})",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "Admin::MotifsController",
+          "method": "index",
+          "line": 18,
+          "file": "app/controllers/admin/motifs_controller.rb",
+          "rendered": {
+            "name": "admin/motifs/index",
+            "file": "app/views/admin/motifs/index.html.slim"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "admin/motifs/index"
+      },
+      "user_input": "params[:page]",
+      "confidence": "Weak",
+      "cwe_id": [
+        22
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "1ab9c37442a647f829faee7435271f2f288c1c1d682190f2bee55ae236f0514c",
+      "check_name": "Render",
+      "message": "Render path contains parameter value",
+      "file": "app/views/admin/motifs/index.html.slim",
+      "line": 75,
+      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(action => filtered((policy_scope(current_organisation.motifs, :policy_scope_class => (Agent::MotifPolicy::Scope)).active.search_by_text(params[:search]) or policy_scope(current_organisation.motifs, :policy_scope_class => (Agent::MotifPolicy::Scope)).active.ordered_by_name), params).includes(:organisation).includes(:service).page(params[:page]), {})",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "Admin::MotifsController",
+          "method": "index",
+          "line": 18,
+          "file": "app/controllers/admin/motifs_controller.rb",
+          "rendered": {
+            "name": "admin/motifs/index",
+            "file": "app/views/admin/motifs/index.html.slim"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "admin/motifs/index"
+      },
+      "user_input": "params[:page]",
+      "confidence": "Weak",
+      "cwe_id": [
+        22
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
       "fingerprint": "2355405acc689e021f5b074103ed57c71e0b53346937c2a247ee732bb991ea03",
       "check_name": "Render",
       "message": "Render path contains parameter value",
@@ -113,76 +181,8 @@
         89
       ],
       "note": ""
-    },
-    {
-      "warning_type": "Dynamic Render Path",
-      "warning_code": 15,
-      "fingerprint": "eb506d328b83df32612498e9b12e59e4d8ac5141325ab5d62ac8b7579af4b391",
-      "check_name": "Render",
-      "message": "Render path contains parameter value",
-      "file": "app/views/admin/motifs/index.html.slim",
-      "line": 49,
-      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code": "render(action => filtered((policy_scope(Motif, :policy_scope_class => (Agent::MotifPolicy::Scope)).where(:organisation => current_organisation).active.search_by_text(params[:search]) or policy_scope(Motif, :policy_scope_class => (Agent::MotifPolicy::Scope)).where(:organisation => current_organisation).active.ordered_by_name), params).includes(:organisation).includes(:service).page(params[:page]), {})",
-      "render_path": [
-        {
-          "type": "controller",
-          "class": "Admin::MotifsController",
-          "method": "index",
-          "line": 18,
-          "file": "app/controllers/admin/motifs_controller.rb",
-          "rendered": {
-            "name": "admin/motifs/index",
-            "file": "app/views/admin/motifs/index.html.slim"
-          }
-        }
-      ],
-      "location": {
-        "type": "template",
-        "template": "admin/motifs/index"
-      },
-      "user_input": "params[:page]",
-      "confidence": "Weak",
-      "cwe_id": [
-        22
-      ],
-      "note": ""
-    },
-    {
-      "warning_type": "Dynamic Render Path",
-      "warning_code": 15,
-      "fingerprint": "eb506d328b83df32612498e9b12e59e4d8ac5141325ab5d62ac8b7579af4b391",
-      "check_name": "Render",
-      "message": "Render path contains parameter value",
-      "file": "app/views/admin/motifs/index.html.slim",
-      "line": 75,
-      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code": "render(action => filtered((policy_scope(Motif, :policy_scope_class => (Agent::MotifPolicy::Scope)).where(:organisation => current_organisation).active.search_by_text(params[:search]) or policy_scope(Motif, :policy_scope_class => (Agent::MotifPolicy::Scope)).where(:organisation => current_organisation).active.ordered_by_name), params).includes(:organisation).includes(:service).page(params[:page]), {})",
-      "render_path": [
-        {
-          "type": "controller",
-          "class": "Admin::MotifsController",
-          "method": "index",
-          "line": 18,
-          "file": "app/controllers/admin/motifs_controller.rb",
-          "rendered": {
-            "name": "admin/motifs/index",
-            "file": "app/views/admin/motifs/index.html.slim"
-          }
-        }
-      ],
-      "location": {
-        "type": "template",
-        "template": "admin/motifs/index"
-      },
-      "user_input": "params[:page]",
-      "confidence": "Weak",
-      "cwe_id": [
-        22
-      ],
-      "note": ""
     }
   ],
-  "updated": "2023-12-04 18:59:41 +0100",
+  "updated": "2023-12-06 15:18:09 +0100",
   "brakeman_version": "5.3.1"
 }
