@@ -10,6 +10,7 @@ module Admin::RdvFormConcern
     delegate(*::Rdv.attribute_names, to: :rdv)
     delegate :motif, :organisation, :agents, :users, to: :rdv
     delegate :overlapping_plages_ouvertures, :overlapping_plages_ouvertures?, to: :rdv
+    delegate :overlapping_absences, :overlapping_absences?, to: :rdv
     delegate :rdvs_ending_shortly_before, :rdvs_ending_shortly_before?, to: :rdv_start_coherence
     delegate :rdvs_overlapping_rdv, :rdvs_overlapping_rdv?, to: :rdvs_overlapping
 
@@ -20,6 +21,7 @@ module Admin::RdvFormConcern
 
     delegate :ignore_benign_errors, :ignore_benign_errors=, :add_benign_error, :benign_errors, :not_benign_errors, :errors_are_all_benign?, to: :rdv
     validate :warn_overlapping_plage_ouverture
+    validate :warn_overlapping_absence
     validate :warn_rdvs_ending_shortly_before
     validate :warn_rdvs_overlapping_rdv
     validate :warn_rdv_duplicate_suspected
@@ -62,6 +64,21 @@ module Admin::RdvFormConcern
     overlapping_plages_ouvertures
       .map { PlageOuverturePresenter.new(_1, agent_context) }
       .each { add_benign_error(_1.overlaps_rdv_error_message) }
+  end
+
+  def warn_overlapping_absence
+    return if ignore_benign_errors
+
+    return unless overlapping_absences?
+
+    overlapping_absences.each do |absence|
+      add_benign_error(
+        translate(
+          "activemodel.warnings.models.rdv.attributes.base.overlapping_absence",
+          agent_name: absence.agent.full_name
+        )
+      )
+    end
   end
 
   def warn_rdvs_ending_shortly_before
