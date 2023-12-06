@@ -2,4 +2,8 @@ export RDV_SOLIDARITES_VERSION=v1.`date +"%y%m%d%H%M"`
 if [[ -z "${CONTAINER_VERSION}" ]]; then
   export CONTAINER_VERSION=`git rev-parse HEAD`
 fi
+if [[  "${ETL}" ]]; then
+  # no need to start the web servers on the ETL app
+  exit 0
+fi
 bundle exec puma
