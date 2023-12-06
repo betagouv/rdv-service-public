@@ -50,8 +50,8 @@ class Admin::Territories::InvitationsDeviseController < Devise::InvitationsContr
   end
   helper_method :policy_scope
 
-  def authorize(*args, **kwargs)
-    super([:configuration, *args], **kwargs)
+  def authorize(record, *args, **kwargs)
+    super([:configuration, record], *args, **kwargs)
   end
 
   # invite_params is called by Devise::InvitationsController#invite_resource
