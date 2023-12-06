@@ -80,10 +80,10 @@ describe User, type: :model do
     end
 
     it "anonymizes rdvs and receipts and deletes versions" do
-      rdv = create(:rdv)
+      rdv = create(:rdv, context: "des détails sur le rdv")
       user = rdv.users.first
 
-      receipt = create(:receipt, user: user, rdv: rdv)
+      receipt = create(:receipt, user: user, rdv: rdv, sms_phone_number: "0611111111")
       user.soft_delete
 
       expect(receipt.reload.sms_phone_number).to eq "[valeur anonymisée]"
