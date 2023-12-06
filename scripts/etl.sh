@@ -39,6 +39,8 @@ tar --extract --verbose --file="${archive_name}" --directory="/app/"
 # this could also be done by deleting and re-creating the pg role used by metabase around this operation
 
 # Load the dump into the database
+# TODO: try speeding up the process by using the --jobs option
+# TODO: find out if --no-privileges could also be a good option
 pg_restore --clean --if-exists --no-owner --no-privileges --dbname "${DATABASE_URL}" /app/*.pgsql
 
 
