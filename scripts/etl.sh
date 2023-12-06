@@ -12,7 +12,7 @@ dbclient-fetcher pgsql
 
 # Login to Scalingo, using the token from the env variable
 # This token has been set by an individuel member of the team.
-scalingo login --api-token "${SCALINGO_API_TOKEN}"
+scalingo login
 
 # Retrieve the addon id:
 addon_id="$( scalingo --region osc-secnum-fr1 --app production-rdv-solidarites addons \
