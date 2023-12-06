@@ -17,7 +17,7 @@ class Admin::SlotsController < AgentAuthController
     @agents = policy_scope(Agent)
       .joins(:organisations).where(organisations: { id: current_organisation.id })
       .complete.active.order_by_last_name
-    @lieux = Agent::LieuPolicy::Scope.apply(current_agent, Lieu).where(organisation: current_organisation).enabled.ordered_by_name
+    @lieux = Agent::LieuPolicy::Scope.apply(current_agent, current_organisation.lieux).enabled.ordered_by_name
   end
 
   private
