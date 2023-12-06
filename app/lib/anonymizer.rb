@@ -28,7 +28,9 @@ class Anonymizer
   end
 
   def anonymize_table!
-    raise "L'anonymisation en masse est désactivée en production pour éviter les catastrophes" if Rails.env.production?
+    if Rails.env.production? && !ENV["ETL"] == "true"
+      raise "L'anonymisation en masse est désactivée en production pour éviter les catastrophes"
+    end
 
     if @table_name.in?(AnonymizerRules::TRUNCATED_TABLES)
       db_connection.execute("TRUNCATE #{ActiveRecord::Base.sanitize_sql(@table_name)}")
