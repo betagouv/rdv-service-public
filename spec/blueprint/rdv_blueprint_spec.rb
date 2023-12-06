@@ -45,14 +45,16 @@ describe RdvBlueprint do
     end
   end
 
-  describe "participations contains user" do
+  describe "participations contains relevant associations" do
     let(:user) { build(:user, first_name: "Jean") }
+    let(:prescripteur) { build(:prescripteur, first_name: "Michael") }
     let(:rdv) { build(:rdv, participations: [participation]) }
-    let(:participation) { build(:participation, status: "seen", user: user) }
+    let(:participation) { build(:participation, status: "seen", user:, prescripteur:) }
 
     it do
       expect(json.dig("rdv", "participations").first["status"]).to eq "seen"
       expect(json.dig("rdv", "participations").first["user"]["first_name"]).to eq "Jean"
+      expect(json.dig("rdv", "participations").first["prescripteur"]["first_name"]).to eq "Michael"
     end
   end
 end
