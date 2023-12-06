@@ -3,8 +3,8 @@ class Admin::Organisations::SetupChecklistsController < AgentAuthController
 
   def show
     authorize(@organisation)
-    @lieux = policy_scope(Lieu)
-    @motifs = Agent::MotifPolicy::Scope.apply(current_agent, Motif).where(organisation: current_organisation)
+    @lieux = Agent::LieuPolicy::Scope.apply(current_agent, current_organisation.lieux)
+    @motifs = Agent::MotifPolicy::Scope.apply(current_agent, current_organisation.motifs)
 
     if current_agent.conseiller_numerique?
       render "show_conseiller_numerique"
