@@ -7,6 +7,7 @@
 module SuperAdmins
   class ApplicationController < Administrate::ApplicationController
     include DomainDetection
+    include Pundit
 
     helper all_helpers_from_path "app/helpers"
 
@@ -20,6 +21,28 @@ module SuperAdmins
     before_action :set_sentry_context
 
     helper_method :sign_in_as_allowed?
+
+    # Pundit configuration for Administrate
+    def policy_scope(scope)
+      super([:super_admin, scope])
+    end
+
+    def authorize(record, query = nil)
+      super([:super_admin, record], query)
+    end
+
+    def scoped_resource
+      policy_scope super
+    end
+
+    def authorize_resource(resource)
+      authorize resource
+    end
+
+    def authorized_action?(resource, action)
+      Pundit.policy!(current_super_admin, [:super_admin, resource]).send("#{action}?".to_sym)
+    end
+    # End Pundit configuration for Administrate
 
     private
 
