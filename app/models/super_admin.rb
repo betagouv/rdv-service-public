@@ -1,12 +1,17 @@
 class SuperAdmin < ApplicationRecord
   # Mixins
   include DeviseInvitable::Inviter
+  include FullNameConcern
+
+  # Validations
+  validates :first_name, presence: true
+  validates :last_name, presence: true
 
   devise :authenticatable
 
-  ## -
+  def name_for_paper_trail(impersonated: nil)
+    return "[Admin] #{full_name}" if impersonated.blank?
 
-  def full_name
-    "Équipe de RDV Service Public"
+    "[Admin] #{full_name} pour #{impersonated.full_name}"
   end
 end
