@@ -4,7 +4,7 @@ describe "Admin can configure the organisation" do
     agent = create(:agent, organisations: [organisation])
     plage_ouverture = create(:plage_ouverture, agent: agent, organisation: organisation)
 
-    login_as agent
+    login_as(agent, scope: :agent)
 
     visit admin_organisation_agent_plage_ouvertures_path(organisation, agent)
 
