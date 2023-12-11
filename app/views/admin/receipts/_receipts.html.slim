@@ -7,5 +7,6 @@
   .collapse.hide#receipts-collapse
     .card-body
       = render "admin/receipts/receipts_table", receipts: rdv.receipts.most_recent_first
-    .card-footer
-      = link_to t("admin.receipts.send_reminder_manually"), send_reminder_manually_admin_organisation_rdv_path(current_organisation, @rdv), method: :post, class: "btn btn-link"
+    - if rdv.starts_at > Time.zone.now
+      .card-footer
+        = link_to t("admin.receipts.send_reminder_manually"), send_reminder_manually_admin_organisation_rdv_path(current_organisation, @rdv), method: :post, class: "btn btn-link"
