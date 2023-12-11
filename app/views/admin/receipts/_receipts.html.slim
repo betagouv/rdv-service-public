@@ -1,11 +1,11 @@
-table.table.table-sm
-  thead
-    tr
-      th= Receipt.human_attribute_name(:event)
-      th= Receipt.human_attribute_name(:user)
-      th= Receipt.human_attribute_name(:content)
-      th= Receipt.human_attribute_name(:result)
-  tbody
-    - receipts.each do |receipt|
-      - cache(receipt, expires_in: 7.days) do
-        = render partial: "admin/receipts/receipt", locals: { receipt: receipt }
+.card
+  .card-header
+    button.btn.btn-link data-toggle="collapse" data-target="#receipts-collapse"
+      h5.header
+        i.fa.fa-comment-dots.mr-1
+        = Receipt.model_name.human(count: 2)
+  .collapse.hide#receipts-collapse
+    .card-body
+      = render "admin/receipts/receipts_table", receipts: rdv.receipts.most_recent_first
+    .card-footer
+      = link_to t("admin.receipts.send_reminder_manually"), send_reminder_manually_admin_organisation_rdv_path(current_organisation, @rdv), method: :post, class: "btn btn-link"
