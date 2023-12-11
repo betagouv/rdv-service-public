@@ -2,7 +2,7 @@ class Admin::AgentsController < AgentAuthController
   respond_to :html, :json
 
   def index
-    @agents = policy_scope(Agent)
+    @agents = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope)
       .includes(:services, :roles, :organisations)
       .active
 
@@ -16,13 +16,13 @@ class Admin::AgentsController < AgentAuthController
 
   def new
     @agent = Agent.new(organisations: [current_organisation])
-    authorize(@agent)
+    authorize(@agent, policy_class: Agent::AgentPolicy)
 
     render_new
   end
 
   def create
-    authorize(Agent.new(organisations: [current_organisation]))
+    authorize(Agent.new(organisations: [current_organisation]), policy_class: Agent::AgentPolicy)
 
     create_agent = AdminCreatesAgent.new(
       agent_params: create_agent_params,
@@ -44,14 +44,14 @@ class Admin::AgentsController < AgentAuthController
 
   def edit
     @agent = Agent.find(params[:id])
-    authorize(@agent)
+    authorize(@agent, policy_class: Agent::AgentPolicy)
 
     render_edit
   end
 
   def update
     @agent = Agent.find(params[:id])
-    authorize(@agent)
+    authorize(@agent, policy_class: Agent::AgentPolicy)
 
     update_agent = AdminUpdatesAgent.new(
       agent: @agent,
@@ -72,7 +72,7 @@ class Admin::AgentsController < AgentAuthController
 
   def destroy
     @agent = policy_scope(Agent).find(params[:id])
-    authorize(@agent)
+    authorize(@agent, policy_class: Agent::AgentPolicy)
 
     agent_removal = AgentRemoval.new(@agent, current_organisation)
 
@@ -130,5 +130,9 @@ class Admin::AgentsController < AgentAuthController
 
   def update_agent_params
     params.require(:agent).permit(:email, :last_name, :first_name)
+  end
+
+  def pundit_user
+    current_agent
   end
 end

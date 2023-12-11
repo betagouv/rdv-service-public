@@ -3,7 +3,7 @@ class Admin::AgentIntervenantsController < AgentAuthController
 
   def update
     @agent = Agent.find(params[:id])
-    authorize(@agent)
+    authorize(@agent, policy_class: Agent::AgentPolicy)
 
     agent_role = @agent.roles.find_by(organisation: current_organisation)
 
@@ -15,5 +15,11 @@ class Admin::AgentIntervenantsController < AgentAuthController
       flash[:error] = @agent.errors.full_messages.uniq.join(", ")
       redirect_to edit_admin_organisation_agent_path(current_organisation, @agent)
     end
+  end
+
+  private
+
+  def pundit_user
+    current_agent
   end
 end
