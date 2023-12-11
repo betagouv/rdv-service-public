@@ -1,6 +1,6 @@
 class Admin::AgentAgendasController < AgentAuthController
   def show
-    @agent = policy_scope(Agent).find(params[:id])
+    @agent = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope).find(params[:id])
     authorize(AgentAgenda.new(agent: @agent, organisation: current_organisation))
     @status = params[:status]
     @organisation = current_organisation
