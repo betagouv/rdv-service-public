@@ -25,13 +25,6 @@ org_paris_nord = Organisation.create!(
   territory: territory75
 )
 
-org_paris_sud = Organisation.create!(
-  name: "MDS Paris Sud",
-  phone_number: "0123456789",
-  human_id: "paris-sud",
-  territory: territory75
-)
-
 human_id_map = [
   { human_id: "1030", name: "MDS Arques" },
   { human_id: "1031", name: "MDS Arras Nord" },
@@ -338,21 +331,6 @@ user_org_paris_nord_jean = User.new(
 user_org_paris_nord_jean.skip_confirmation!
 user_org_paris_nord_jean.save!
 user_org_paris_nord_jean.profile_for(org_paris_nord).update!(logement: 2)
-
-user_org_paris_sud = User.new(
-  first_name: "Francis",
-  last_name: "Factice",
-  email: "francis.factice@demo.rdv-solidarites.fr",
-  birth_date: Date.parse("10/01/1973"),
-  password: "lapinlapin",
-  phone_number: "0101010103",
-  organisation_ids: [org_paris_sud.id],
-  created_through: "user_sign_up"
-)
-
-user_org_paris_sud.skip_confirmation!
-user_org_paris_sud.save!
-user_org_paris_sud.profile_for(org_paris_sud).update!(logement: 2)
 
 user_org_arques = User.new(
   first_name: "Francis",
