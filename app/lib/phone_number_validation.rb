@@ -60,7 +60,7 @@ module PhoneNumberValidation
     end
 
     def partially_hidden_phone_number
-      humanized_phone_number.gsub(" ", "").tap { |number| number[-8..-3] = "******" }
+      humanized_phone_number&.gsub(" ", "")&.tap { |number| number[-8..-3] = "******" }
     end
   end
 end

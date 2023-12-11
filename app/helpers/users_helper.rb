@@ -58,8 +58,12 @@ module UsersHelper
   end
 
   def self.partially_hidden_reverse_full_name_and_notification_coordinates(user)
-    username, domain = user.email.split("@")
-    partially_hidden_email = "#{username[0]}******#{username[-1]}@#{domain}"
+    if user.email.present?
+      username, domain = user.email&.split("@")
+      partially_hidden_email = "#{username[0]}******#{username[-1]}@#{domain}"
+    else
+      partially_hidden_email = nil
+    end
     [
       user.reverse_full_name,
       user.birth_date && I18n.l(user.birth_date, format: "%d/%m/****"),
