@@ -1,7 +1,7 @@
-describe Agent::AgentPolicy, type: :policy do
+describe Agent::AgentPolicy do
   subject { described_class }
 
-  let(:pundit_context) { AgentContext.new(agent) }
+  let(:pundit_context) { agent }
   let!(:organisation) { create(:organisation) }
   let!(:organisation2) { create(:organisation) }
 

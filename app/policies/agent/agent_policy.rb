@@ -1,5 +1,5 @@
 class Agent::AgentPolicy < ApplicationPolicy
-  include CurrentAgentInPolicyConcern
+  alias current_agent pundit_user
 
   def current_agent_or_admin_in_record_organisation?
     current_agent? || admin_in_record_organisation?
@@ -38,8 +38,8 @@ class Agent::AgentPolicy < ApplicationPolicy
     access_rights&.allow_to_download_metrics?
   end
 
-  class Scope < Scope
-    include CurrentAgentInPolicyConcern
+  class Scope < ApplicationPolicy::Scope
+    alias current_agent pundit_user
 
     def resolve
       if current_agent.secretaire?

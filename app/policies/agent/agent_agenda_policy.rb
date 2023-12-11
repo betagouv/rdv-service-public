@@ -1,5 +1,5 @@
 class Agent::AgentAgendaPolicy < ApplicationPolicy
-  include CurrentAgentInPolicyConcern
+  alias current_agent pundit_user
 
   def show?
     agent_role_in_record_organisation.present? && (

@@ -9,15 +9,15 @@ class Admin::SlotsController < AgentAuthController
     # À terme, ça pourrait également être un calcul plus réduit. Dans le cas de la recherche sur plusieurs lieux, nous avons besoin de connaitre la prochaine dispo, pas TOUTES les dispo
     @search_result = search_result
 
-    @motifs = Agent::MotifPolicy::Scope.apply(current_agent, Motif)
-      .where(organisation: current_organisation)
+    @motifs = policy_scope(current_organisation.motifs, policy_scope_class: Agent::MotifPolicy::Scope)
       .active.ordered_by_name
     @services = Service.where(id: @motifs.pluck(:service_id).uniq)
     @form.service_id = @services.first.id if @services.count == 1
-    @agents = policy_scope(Agent)
+    @agents = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope)
       .joins(:organisations).where(organisations: { id: current_organisation.id })
       .complete.active.order_by_last_name
-    @lieux = Agent::LieuPolicy::Scope.apply(current_agent, current_organisation.lieux).enabled.ordered_by_name
+    @lieux = policy_scope(current_organisation.lieux, policy_scope_class: Agent::LieuPolicy::Scope)
+      .enabled.ordered_by_name
   end
 
   private
@@ -32,5 +32,9 @@ class Admin::SlotsController < AgentAuthController
     else
       SearchCreneauxWithoutLieuForAgentsService.perform_with(@form)
     end
+  end
+
+  def pundit_user
+    current_agent
   end
 end
