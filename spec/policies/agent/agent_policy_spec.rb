@@ -68,7 +68,7 @@ end
 
 describe Agent::AgentPolicy::Scope, type: :policy do
   describe "#resolve?" do
-    subject { described_class.new(AgentContext.new(agent), Agent).resolve }
+    subject { described_class.new(agent, Agent).resolve }
 
     context "regular agent" do
       let!(:services) { create_list(:service, 2) }
