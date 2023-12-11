@@ -75,7 +75,8 @@ Organisation.set_callback(:create, :after, :notify_admin_organisation_created)
 service_pmi = Service.create!(name: "PMI (Protection Maternelle Infantile)", short_name: "PMI")
 service_social = Service.create!(name: "Service social", short_name: "Service Social")
 service_secretariat = Service.create!(name: Service::SECRETARIAT, short_name: "Secrétariat")
-_service_nouveau = Service.create!(name: "Médico-social", short_name: "Médico-social")
+territory62.services << [service_pmi, service_social, service_secretariat]
+territory75.services << [service_pmi, service_social, service_secretariat]
 
 # MOTIFS org_paris_nord
 

@@ -18,6 +18,8 @@ org_mairie_de_sannois = Organisation.create!(
 # Service
 service_titres = Service.create!(name: "Service Titres Sécurisés", short_name: "STS")
 
+territory_val_doise.services << service_titres
+
 MotifCategory.create!(name: "Carte d'identité disponible sur le site de l'ANTS", short_name: "CNI")
 MotifCategory.create!(name: "Passeport disponible sur le site de l'ANTS", short_name: "PASSPORT")
 MotifCategory.create!(name: "Carte d'identité et passeport disponible sur le site de l'ANTS", short_name: "CNI-PASSPORT")
