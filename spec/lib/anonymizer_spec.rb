@@ -1,6 +1,7 @@
 RSpec.describe Anonymizer do
+  let!(:user_with_email) { create(:user, email: "user@example.com") }
+
   context "general case" do
-    let!(:user_with_email) { create(:user, email: "user@example.com") }
     let!(:prescripteur) { create(:prescripteur) }
     let!(:agent) { create(:agent, email: "agent@example.com") }
     let!(:absence) { create(:absence, title: "rdv perso avec mon médecin") }
