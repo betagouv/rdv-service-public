@@ -10,8 +10,8 @@ install-scalingo-cli
 # Install additional tools to interact with the database:
 dbclient-fetcher pgsql
 
-# Login to Scalingo, using the token from the env variable
-# This token has been set by an individuel member of the team.
+# Cette commande nécessite un login par un membre de l'équipe
+# On préfère faire un login à chaque rafraichissement des données plutôt que de laisser un token scalingo en variable d'env
 scalingo login
 
 # Retrieve the addon id:
@@ -23,29 +23,29 @@ addon_id="$( scalingo --region osc-secnum-fr1 --app production-rdv-solidarites a
 # Download the latest backup available for the specified addon:
 scalingo  --region osc-secnum-fr1 --app production-rdv-solidarites --addon "${addon_id}" backups-download --output "${archive_name}"
 
-# Get the name of the backup file:
-backup_file_name="$( tar --list --file="${archive_name}" \
-                     | tail -n 1 \
-                     | cut -d "/" -f 1 )"
-
 # Extract the archive containing the downloaded backup:
 tar --extract --verbose --file="${archive_name}" --directory="/app/"
 
-# Delete the archive (not really necessary since the file system of the one-off container will be deleted anyways)
-# rm backup.tar.gz
-
 # TODO: block connections from the outside before loading the dump to the database
+# The postgres role used by the rails app doesn't have the necessary permissions to create a new role
 # this could be done by only authorizing the pg role used by metabase to access a pg schema other than public, and changing the schema name when the anonymization is done
 # this could also be done by deleting and re-creating the pg role used by metabase around this operation
 
+# cette commande échoue puisqu'on n'a pas les permissions nécessaires pour créer le rôle.
+# Pour le moment, il faut encore supprimer et recréer le rôle via l'interface scalingo
+echo "DROP ROLE rdv_service_public_metabase;\n" | bundle exec rails dbconsole
+
 # Load the dump into the database
 # TODO: try speeding up the process by using the --jobs option
-# TODO: find out if --no-privileges could also be a good option
-pg_restore --clean --if-exists --no-owner --no-privileges --dbname "${DATABASE_URL}" /app/*.pgsql
 
+# voir https://stackoverflow.com/questions/37038193/exclude-table-during-pg-restore pour l'explication des tables à exclure
+# TODO: réutiliser AnonymizerRules::TRUNCATED_TABLES ici
+# C'est compliqué à écrire en bash, et il vaudrait mieux utiliser du ruby pour ce genre de logique
+# tables_to_exclude="$(bundle exec rails runner \"puts AnonymizerRules::TRUNCATED_TABLES.join\(\'\|\'\)\") | tail -n1"
+time pg_restore --clean --if-exists --no-owner --no-privileges --jobs=2 --dbname "${DATABASE_URL}" -L <(pg_restore -l /app/*.pgsql | grep -vE 'TABLE DATA public (versions|good_jobs|good_job_settings|good_job_batches|good_job_processes)') /app/*.pgsql
 
-# Delete the dump (not really necessary since the file system of the one-off container will be deleted anyways)
-# rm /app/*.pgsql
 
 bundle exec rails runner scripts/anonymize_database.rb
 
+# Il faut qu'on trouve une manière d'automatiser la création de role
+echo "CREATE ROLE rdv_service_public_metabase PASSWORD '${METABASE_DB_ROLE_PASSWORD}';\n" | bundle exec rails dbconsole
