@@ -69,6 +69,4 @@ class Agents::UsersController < AgentAuthController
     cnfs_and_mairies_territory_ids = [Territory.mairies&.id, Territory.find_by(departement_number: "CN")&.id].compact
     (cnfs_and_mairies_territory_ids & current_agent.organisations.pluck(:territory_id)).any? # & does an array overlap here
   end
-
-  def serialize(users); end
 end
