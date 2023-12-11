@@ -27,6 +27,8 @@ RSpec.describe Anonymizer do
   it "doesn't overwrite null values, so that we can still get information from them" do
     user_without_email = create(:user, email: nil)
 
+    described_class.anonymize_all_data!
+
     expect(user_without_email.reload.email).to be_nil
     expect(user_with_email.reload.email).to eq "[valeur unique anonymisée #{user_with_email.id}]"
   end
