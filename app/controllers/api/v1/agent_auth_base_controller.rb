@@ -18,10 +18,6 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
       end
   end
 
-  def policy_scope(clasz)
-    super([:agent, clasz])
-  end
-
   def authorize(record, *args)
     super([:agent, record], *args)
   end
@@ -70,6 +66,16 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
   end
 
   private
+
+  # L'usage recommandé est de passer explicitement une policy_scope_class pour savoir quelle policy est utilisé
+  # A terme, on voudra forcer l'argument policy_scope_class
+  def policy_scope(scope, policy_scope_class: nil)
+    if policy_scope_class
+      super(scope, policy_scope_class: policy_scope_class)
+    else
+      super([:agent, scope])
+    end
+  end
 
   def authenticate_agent
     if request.headers.include?("X-Agent-Auth-Signature")

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_20_141913) do
+ActiveRecord::Schema[7.0].define(version: 2023_11_29_111050) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -497,7 +497,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_20_141913) do
     t.datetime "updated_at", null: false
     t.datetime "cancelled_at"
     t.bigint "motif_id", null: false
-    t.integer "sequence", default: 0, null: false
     t.uuid "uuid", default: -> { "uuid_generate_v4()" }, null: false
     t.string "old_location"
     t.integer "created_by", default: 0

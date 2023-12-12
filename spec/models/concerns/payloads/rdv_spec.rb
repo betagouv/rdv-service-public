@@ -1,6 +1,6 @@
 describe Payloads::Rdv, type: :service do
   describe "#payload" do
-    %i[name ical_uid summary ends_at sequence description address].each do |key|
+    %i[name ical_uid summary ends_at description address].each do |key|
       it "return an hash with key #{key}" do
         user = build(:user)
         rdv = build(:rdv, users: [user])
@@ -29,13 +29,6 @@ describe Payloads::Rdv, type: :service do
       let(:rdv) { build(:rdv, users: [user], starts_at: Time.zone.parse("20201123 15h50"), duration_in_min: 10) }
 
       it { expect(rdv.payload[:ends_at]).to eq(starts_at + 10.minutes) }
-    end
-
-    describe ":sequence" do
-      let(:user) { build(:user) }
-      let(:rdv) { build(:rdv, users: [user], sequence: 1) }
-
-      it { expect(rdv.payload[:sequence]).to eq(1) }
     end
 
     describe ":description" do
