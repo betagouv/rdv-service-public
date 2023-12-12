@@ -5,7 +5,7 @@ describe "Referent Assignation authentified API", swagger_doc: "v1/api.json" do
 
   path "/api/rdvinsertion/referent_assignations/create_many" do
     post "Ajouter un ou plusieurs référents à un utilisateur" do
-      with_authentication
+      with_shared_secret_authentication
 
       tags "ReferentAssignations"
       produces "application/json"
@@ -21,10 +21,16 @@ describe "Referent Assignation authentified API", swagger_doc: "v1/api.json" do
       let!(:user) { create(:user, organisations: [organisation]) }
       let!(:agent1) { create(:agent, basic_role_in_organisations: [organisation]) }
       let!(:agent2) { create(:agent, basic_role_in_organisations: [other_organisation]) }
-      let(:auth_headers) { api_auth_headers_for_agent(agent1) }
-      let(:"access-token") { auth_headers["access-token"].to_s }
+      let!(:shared_secret) { "S3cr3T" }
+      let(:auth_headers) { api_auth_headers_with_shared_secret(agent1, shared_secret) }
       let(:uid) { auth_headers["uid"].to_s }
-      let(:client) { auth_headers["client"].to_s }
+      let(:"X-Agent-Auth-Signature") { auth_headers["X-Agent-Auth-Signature"].to_s }
+
+      before do
+        allow(Agent).to receive(:find_by).and_return(agent1)
+        allow(ENV).to receive(:fetch).with("SHARED_SECRET_FOR_AGENTS_AUTH").and_return(shared_secret)
+        allow(ActiveSupport::SecurityUtils).to receive(:secure_compare).and_return(true)
+      end
 
       response 200, "Ajouter un utilisateur à une ou plusieurs organisations" do
         let(:"agent_ids[]") { [agent1.id, agent2.id] }
@@ -32,7 +38,7 @@ describe "Referent Assignation authentified API", swagger_doc: "v1/api.json" do
 
         run_test!
 
-        it { change(ReferentAssignation, :count).by(1) } # other_organisation is not in the same territory
+        it { change(ReferentAssignation, :count).by(1) } # other_organisation is not rdv-insertion
 
         it { expect(user.reload.referent_agents).to include(agent1) }
 
@@ -42,6 +48,10 @@ describe "Referent Assignation authentified API", swagger_doc: "v1/api.json" do
       it_behaves_like "an endpoint that returns 401 - unauthorized" do
         let(:"agent_ids[]") { [agent1.id, agent2.id] }
         let(:user_id) { user.id }
+
+        before do
+          allow(ActiveSupport::SecurityUtils).to receive(:secure_compare).and_return(false)
+        end
       end
 
       it_behaves_like "an endpoint that returns 404 - not found", "l'utilisateur n'a pas été trouvé" do

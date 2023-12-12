@@ -125,7 +125,7 @@ RSpec.describe "API auth", type: :request do
           "X-Agent-Auth-Signature": encrypted_payload,
         }
       )
-      expect(response).to have_http_status(:ok)
+      expect(response.status).to eq(200)
       expect(parsed_response_body["absences"].count).to eq(1)
     end
   end
