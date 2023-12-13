@@ -29,7 +29,7 @@ class Anonymizer
   end
 
   def anonymize_table!
-    if Rails.env.production? && !ENV["ETL"] == "true"
+    if Rails.env.production? && ENV["ETL"].blank?
       raise "L'anonymisation en masse est désactivée en production pour éviter les catastrophes"
     end
 
