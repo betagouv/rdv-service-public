@@ -236,5 +236,5 @@ RSpec/FilePath:
 Style/NumericPredicate:
   Enabled: false
 
-Style/Literals:
+Style/NumericLiterals:
   Enabled: false
