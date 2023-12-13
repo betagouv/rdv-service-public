@@ -12,9 +12,11 @@ DUMP_NAME=$1
 # import
 bundle exec rails db:drop db:create
 pg_restore --clean --if-exists --no-owner --no-privileges --no-comments --dbname lapin_development "$DUMP_NAME"
+
+rm -f "$DUMP_NAME"
+
 bundle exec rails db:environment:set
 
 bundle exec rails runner scripts/anonymize_database.rb
 
 
-rm -f "$DUMP_NAME"
