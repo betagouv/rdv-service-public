@@ -20,7 +20,7 @@ RSpec.describe "Search", type: :request do
       let(:user) { create(:user, organisations: [organisation], referent_agents: [agent]) }
 
       before do
-        login_as(user)
+        login_as(user, scope: :user)
       end
 
       context "with agent_id params" do
