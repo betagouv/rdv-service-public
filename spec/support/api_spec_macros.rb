@@ -23,6 +23,13 @@ module ApiSpecMacros
     parameter name: "uid", in: :header, type: :string, description: "Identifiant d'accès (authentification)", example: "martine@demo.rdv-solidarites.fr"
   end
 
+  def with_shared_secret_authentication
+    security [{ uid: [], "X-Agent-Auth-Signature": [] }]
+
+    parameter name: "uid", in: :header, type: :string, description: "Identifiant d'accès (authentification)", example: "martine@demo.rdv-solidarites.fr"
+    parameter name: "X-Agent-Auth-Signature", in: :header, type: :string, description: "payload crypté par le SHARED_SECRET_FOR_AGENTS_AUTH", example: "SFYBngO55ImjD1HOcv"
+  end
+
   def with_pagination
     parameter name: "page", in: :query, type: :integer, description: "La page souhaitée", example: "1", required: false
   end

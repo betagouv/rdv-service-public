@@ -24,6 +24,7 @@ org_cdad2 = Organisation.create!(
 
 # Service
 service_cdad = Service.create!(name: "CDAD (Conseils Départementaux de l’Accès au Droit)", short_name: "CDAD")
+territory_gironde.services << service_cdad
 
 # Motifs
 motif1_cdad1 = Motif.create!(

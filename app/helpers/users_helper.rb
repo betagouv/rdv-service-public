@@ -57,6 +57,21 @@ module UsersHelper
     user.reverse_full_name + birth_date_and_age_if_exist(user)
   end
 
+  def self.partially_hidden_reverse_full_name_and_notification_coordinates(user)
+    if user.email.present?
+      username, domain = user.email&.split("@")
+      partially_hidden_email = "#{username[0]}******#{username[-1]}@#{domain}"
+    else
+      partially_hidden_email = nil
+    end
+    [
+      user.reverse_full_name,
+      user.birth_date && I18n.l(user.birth_date, format: "%d/%m/****"),
+      user.partially_hidden_phone_number,
+      partially_hidden_email,
+    ].compact.join(" - ")
+  end
+
   def self.reverse_full_name_and_notification_coordinates(user)
     [user.reverse_full_name, user.birth_date && I18n.l(user.birth_date), user.humanized_phone_number, user.email].compact.join(" - ")
   end

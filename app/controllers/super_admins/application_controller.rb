@@ -24,9 +24,9 @@ module SuperAdmins
     private
 
     def user_for_paper_trail
-      return "SuperAdmin" if current_super_admin.nil?
+      return "Local SuperAdmin" if current_super_admin.nil?
 
-      "[SuperAdmin] #{current_super_admin.email}"
+      current_super_admin.name_for_paper_trail
     end
 
     def authenticate_super_admin!

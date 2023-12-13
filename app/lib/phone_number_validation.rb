@@ -58,5 +58,9 @@ module PhoneNumberValidation
     def humanized_phone_number
       Phonelib.parse(phone_number_formatted).national
     end
+
+    def partially_hidden_phone_number
+      humanized_phone_number&.gsub(" ", "")&.tap { |number| number[-8..-3] = "******" }
+    end
   end
 end
