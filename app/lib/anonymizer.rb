@@ -28,7 +28,8 @@ class Anonymizer
     record.reload
   end
 
-  def anonymize_table!
+  # rubocop:disable Metrics/CyclomaticComplexity
+  def anonymize_table! # rubocop:disable Metrics/PerceivedComplexity
     if Rails.env.production? && ENV["ETL"].blank?
       raise "L'anonymisation en masse est désactivée en production pour éviter les catastrophes"
     end
@@ -57,6 +58,7 @@ class Anonymizer
 
     model_class.unscoped.update_all(anonymized_attributes) # rubocop:disable Rails/SkipsModelValidations
   end
+  # rubocop:enable Metrics/CyclomaticComplexity
 
   private
 
