@@ -3,7 +3,7 @@
 - content_for :title do
   | Vos motifs
 
-- if current_agent_can?(:create, Motif)
+- if @motif_policy.create?
   - content_for :breadcrumb do
     = link_to "Créer un motif", new_admin_organisation_motif_path(current_organisation), class:"btn btn-outline-primary"
 
@@ -42,7 +42,7 @@
               - options = options_for_select(Motif.location_types.map{|l| [Motif.human_attribute_value(:location_type, l[0]), l[1]] }, params[:location_type_filter])
               = select_tag("location_type_filter", options, include_blank: "Tous", class: "js-submit-on-change select2-input")
           th= Motif.human_attribute_name(:default_duration)
-          - if current_agent_can?(:edit, Motif) || current_agent_can?(:destroy, Motif)
+          - if @motif_policy.edit? || @motif_policy.destroy?
             th Actions
       tbody
         - if @motifs.any?
@@ -62,13 +62,13 @@
                   span.fa-stack.fa-4x
                     i.fa.fa-circle.fa-stack-2x.text-primary
                     i.far.fa-calendar.fa-stack-1x.text-white
-                  - if current_agent_can?(:create, Motif)
+                  - if @motif_policy.create?
                     .text-center.m-3
                       = link_to "Créer un motif", new_admin_organisation_motif_path(current_organisation), class: "btn btn-primary"
 
     - if @motifs.any?
       .d-flex.justify-content-center
         = paginate @motifs, theme: "twitter-bootstrap-4"
-      - if current_agent_can?(:create, Motif)
+      - if @motif_policy.create?
         .text-center.m-3
           = link_to "Créer un motif", new_admin_organisation_motif_path(current_organisation), class: "btn btn-primary"

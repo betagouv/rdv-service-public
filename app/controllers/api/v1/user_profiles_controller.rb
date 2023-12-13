@@ -29,6 +29,6 @@ class Api::V1::UserProfilesController < Api::V1::AgentAuthBaseController
   private
 
   def user_profile_params
-    params.permit(:organisation_id, :user_id, :logement, :notes)
+    params.permit(:organisation_id, :user_id)
   end
 end

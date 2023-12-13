@@ -10,6 +10,8 @@ class SuperAdminDashboard < Administrate::BaseDashboard
   ATTRIBUTE_TYPES = {
     id: Field::Number,
     email: Field::String,
+    first_name: Field::String,
+    last_name: Field::String,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
   }.freeze
@@ -22,6 +24,8 @@ class SuperAdminDashboard < Administrate::BaseDashboard
   COLLECTION_ATTRIBUTES = %i[
     id
     email
+    first_name
+    last_name
     created_at
     updated_at
   ].freeze
@@ -31,6 +35,8 @@ class SuperAdminDashboard < Administrate::BaseDashboard
   SHOW_PAGE_ATTRIBUTES = %i[
     id
     email
+    first_name
+    last_name
     created_at
     updated_at
   ].freeze
@@ -38,8 +44,10 @@ class SuperAdminDashboard < Administrate::BaseDashboard
   # FORM_ATTRIBUTES
   # an array of attributes that will be displayed
   # on the model's form (`new` and `edit`) pages.
-  FORM_ATTRIBUTES = [
-    :email,
+  FORM_ATTRIBUTES = %i[
+    email
+    first_name
+    last_name
   ].freeze
 
   # Overwrite this method to customize how super admins are displayed

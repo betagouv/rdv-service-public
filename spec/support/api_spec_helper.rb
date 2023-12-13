@@ -5,7 +5,13 @@ module ApiSpecHelper
     token = DeviseTokenAuth::TokenFactory.create
     agent_with_token_auth.tokens[token.client] = { token: token.token_hash, expiry: token.expiry }
     save_without_validating_roles(agent_with_token_auth)
-    agent_with_token_auth.build_auth_header(token.token, token.client)
+    agent_with_token_auth.build_auth_headers(token.token, token.client)
+  end
+
+  def api_auth_headers_with_shared_secret(agent, shared_secret)
+    payload = { id: agent.id, first_name: agent.first_name, last_name: agent.last_name, email: agent.email }
+    encrypted_payload = OpenSSL::HMAC.hexdigest("SHA256", shared_secret, payload.to_json)
+    { uid: agent.email, "X-Agent-Auth-Signature": encrypted_payload }
   end
 
   def parsed_response_body

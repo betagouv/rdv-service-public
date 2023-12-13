@@ -106,12 +106,12 @@ RSpec.describe "Agents can be managed by organisation admins" do
     end
 
     it "requires the territory admin to activate the new service" do
-      login_as(organisation_admin)
+      login_as(organisation_admin, scope: :agent)
       visit new_admin_organisation_agent_path(organisation1)
       expect(page).not_to(have_content("CSS"))
       logout
 
-      login_as(territory_admin)
+      login_as(territory_admin, scope: :agent)
       visit admin_territory_path(territory.id)
       click_link("Services")
       check("CSS")
@@ -119,7 +119,7 @@ RSpec.describe "Agents can be managed by organisation admins" do
       expect(page).to have_content("Configuration enregistrée")
       logout
 
-      login_as(organisation_admin)
+      login_as(organisation_admin, scope: :agent)
 
       visit new_admin_organisation_agent_path(organisation1)
       fill_in "Email", with: "jean@paul.com"
