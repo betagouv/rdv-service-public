@@ -7,7 +7,7 @@ ruby "3.2.2"
 gem "dotenv-rails" # dotenv should always be loaded before rails
 
 # Full-stack web application framework.
-gem "rails", "~> 7.0.6"
+gem "rails", "~> 7.1.0"
 # Rack-based asset packaging system
 gem "sprockets-rails"
 # Puma is a simple, fast, threaded, and highly parallel HTTP 1.1 server for Ruby/Rack applications
@@ -46,7 +46,7 @@ gem "bootstrap4-kaminari-views"
 gem "administrate"
 # TODO: migrate columns to json before upgrading to v13 (https://github.com/paper-trail-gem/paper_trail/blob/master/doc/pt_13_yaml_safe_load.md)
 # Track changes to your models.
-gem "paper_trail", "< 13.0"
+gem "paper_trail"
 # Integrate PostgreSQL's enum data type into ActiveRecord's schema and migrations.
 gem "activerecord-postgres_enum"
 # A Ruby client library for Redis
@@ -72,7 +72,7 @@ gem "omniauth-rails_csrf_protection"
 # OO authorization for Rails
 gem "pundit"
 # Token based authentication for rails. Uses Devise + OmniAuth.
-gem "devise_token_auth"
+gem "devise_token_auth", git: "https://github.com/lynndylanhurley/devise_token_auth"
 # List of frequently used passwords
 gem "common_french_passwords"
 
