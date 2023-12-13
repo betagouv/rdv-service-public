@@ -91,7 +91,7 @@ class Anonymizer
 
   def anonymous_value(column)
     if column.type.in?(%i[string text])
-      if column_has_unicity_constraint?(column)
+      if column_has_uniqueness_constraint?(column)
         Arel.sql("CASE WHEN #{ActiveRecord::Base.sanitize_sql(column.name)} IS NULL THEN NULL ELSE '[valeur unique anonymisée ' || id || ']' END")
       else
         Arel.sql("CASE WHEN #{ActiveRecord::Base.sanitize_sql(column.name)} IS NULL THEN NULL ELSE '[valeur anonymisée]' END")
@@ -101,8 +101,8 @@ class Anonymizer
     end
   end
 
-  def column_has_unicity_constraint?(column)
-    db_connection.indexes(@table_name).select(&:unique).find do |index|
+  def column_has_uniqueness_constraint?(column)
+    db_connection.indexes(@table_name).select(&:unique).any? do |index|
       # il se peut que la deuxième colonne de l'index n'ai pas de contrainte d'unicité
       index.columns.first == column.name
     end
