@@ -61,21 +61,10 @@ class Anonymizer
   private
 
   def unidentified_column_names
-    @unidentified_column_names ||= non_key_column_names - anonymized_column_names.map(&:to_s) - non_anonymized_column_names.map(&:to_s)
-  end
-
-  def non_key_column_names
-    db_connection.columns(@table_name).map(&:name) - foreign_key_column_names - primary_key_column_name
-  end
-
-  def foreign_key_column_names
-    db_connection.foreign_keys(@table_name).map do |key|
-      key.options[:column]
-    end
-  end
-
-  def primary_key_column_name
-    db_connection.primary_keys(@table_name)
+    all_columns = db_connection.columns(@table_name).map(&:name)
+    primary_key_columns = db_connection.primary_keys(@table_name)
+    foreign_key_columns = db_connection.foreign_keys(@table_name).map { |key| key.options[:column] }
+    all_columns - primary_key_columns - foreign_key_columns - anonymized_column_names - non_anonymized_column_names
   end
 
   def anonymized_column_names
