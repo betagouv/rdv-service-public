@@ -167,7 +167,6 @@ lieu_org_drome2_valence = Lieu.create!(
 lieu_org_yonne = Lieu.create!(
   name: "PE Avallon",
   organisation: org_yonne,
-  old_address: "3 Rue Joubert, Auxerre, 89000, 89, Yonne, Bourgogne-Franche-Comté",
   latitude: 47.796413,
   longitude: 3.572016,
   availability: :enabled,
