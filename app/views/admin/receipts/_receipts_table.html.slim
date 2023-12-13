@@ -1,0 +1,11 @@
+table.table.table-sm
+  thead
+    tr
+      th= Receipt.human_attribute_name(:event)
+      th= Receipt.human_attribute_name(:user)
+      th= Receipt.human_attribute_name(:content)
+      th= Receipt.human_attribute_name(:result)
+  tbody
+    - receipts.each do |receipt|
+      - cache(receipt, expires_in: 7.days) do
+        = render partial: "admin/receipts/receipt_row", locals: { receipt: receipt }
