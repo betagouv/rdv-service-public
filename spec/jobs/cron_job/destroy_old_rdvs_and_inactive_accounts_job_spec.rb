@@ -8,7 +8,11 @@ describe CronJob::DestroyOldRdvsAndInactiveAccountsJob do
 
     user_without_rdv_created_25_months_ago = travel_to(25.months.ago) { create(:user) }
     user_without_rdv_but_with_invitation_created_25_months_ago = travel_to(25.months.ago) { create(:user).tap(&:assign_rdv_invitation_token) }
-    user_without_rdv_but_with_invitation_created_23_months_ago = travel_to(25.months.ago) { create(:user).tap(&:assign_rdv_invitation_token) }
+    user_without_rdv_but_with_invitation_created_23_months_ago = travel_to(25.months.ago) { create(:user) }
+    travel_to(23.months.ago) do
+      user_without_rdv_but_with_invitation_created_23_months_ago.assign_rdv_invitation_token
+      user_without_rdv_but_with_invitation_created_23_months_ago.save!
+    end
 
     user_created_25_months_ago_with_a_relative_that_has_a_rdv = travel_to(25.months.ago) { create(:user) }
     relative = create(:user, responsible: user_created_25_months_ago_with_a_relative_that_has_a_rdv)
