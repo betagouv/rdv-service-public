@@ -6,9 +6,9 @@ class Anonymizer
   end
 
   def self.anonymize_user_data!
-    anonymize_table!(User)
-    anonymize_table!(Receipt)
-    anonymize_table!(Rdv)
+    anonymize_table!("users")
+    anonymize_table!("receipts")
+    anonymize_table!("rdvs")
   end
 
   def self.anonymize_table!(table_name)
