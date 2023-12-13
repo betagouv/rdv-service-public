@@ -32,6 +32,12 @@ class Anonymizer
     if Rails.env.production? && ENV["ETL"].blank?
       raise "L'anonymisation en masse est désactivée en production pour éviter les catastrophes"
     end
+    # Sanity checks supplémentaires
+    # Ces variables d'envs n'ont rien à voir avec l'ETL, et ne devraient donc pas être présentes
+    if ENV["RACK_ENV"].present? || ENV["DEFAULT_SMS_PROVIDER"].present?
+      raise "Attention, il semble que vous êtes en train d'anonymiser des données d'une appli web"
+    end
+    if ENV[""]
 
     if @table_name.in?(AnonymizerRules::TRUNCATED_TABLES)
       db_connection.execute("TRUNCATE #{ActiveRecord::Base.sanitize_sql(@table_name)}")
