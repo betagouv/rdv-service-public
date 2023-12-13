@@ -37,7 +37,6 @@ class Anonymizer
     if ENV["RACK_ENV"].present? || ENV["DEFAULT_SMS_PROVIDER"].present?
       raise "Attention, il semble que vous êtes en train d'anonymiser des données d'une appli web"
     end
-    if ENV[""]
 
     if @table_name.in?(AnonymizerRules::TRUNCATED_TABLES)
       db_connection.execute("TRUNCATE #{ActiveRecord::Base.sanitize_sql(@table_name)}")
