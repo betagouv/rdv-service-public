@@ -44,6 +44,8 @@ org_yonne = Organisation.create!(
 
 # Service
 service_rsa = Service.create!(name: "Service RSA", short_name: "RSA")
+territory_drome.services << service_rsa
+territory_yonne.services << service_rsa
 
 # MOTIFS Drome
 motif1_drome1 = Motif.create!(
