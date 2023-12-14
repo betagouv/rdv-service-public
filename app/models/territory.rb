@@ -95,6 +95,10 @@ class Territory < ApplicationRecord
     end
   end
 
+  def any_effective_sector?
+    sectors.joins(:zones).joins(:attributions).any?
+  end
+
   private
 
   def fill_name_for_departements

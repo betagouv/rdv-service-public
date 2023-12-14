@@ -73,4 +73,28 @@ describe "Agents can configure online booking" do
       expect(page).to have_content("1 rendez-vous avec des places disponibles")
     end
   end
+
+  describe "displaying public link section" do
+    context "when territory has no sector" do
+      it "link is displayed" do
+        login_as(agent, scope: :agent)
+        visit admin_organisation_online_booking_path(organisation)
+        expect(page).to have_css("#booking_link")
+      end
+    end
+
+    context "when territory has sectors" do
+      before do
+        sector = create(:sector, territory: organisation.territory)
+        create(:zone, sector: sector)
+        create(:sector_attribution, sector: sector, agent: agent)
+      end
+
+      it "link is not displayed" do
+        login_as(agent, scope: :agent)
+        visit admin_organisation_online_booking_path(organisation)
+        expect(page).not_to have_css("#booking_link")
+      end
+    end
+  end
 end

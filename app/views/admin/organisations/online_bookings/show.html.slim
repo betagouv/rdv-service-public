@@ -9,16 +9,17 @@
 
     p La réservation en ligne peut être configurée pour chaque motif de rendez-vous.
 
-    p Une fois qu'elle est activée, vous pouvez envoyer ce lien à vos usagers pour qu'ils prennent rendez-vous :
+    - unless current_territory.any_effective_sector?
+      p Une fois qu'elle est activée, vous pouvez envoyer ce lien à vos usagers pour qu'ils prennent rendez-vous :
 
-    form data={ "controller": "clipboard" }
-      .d-flex
-        .flex-grow-1
-          = text_field_tag :booking_link, booking_link, readonly: true, class: "form-control", data: { "clipboard-target": "input-to-copy" }
-        .flex-grow-0
-          = button_tag class: "ml-2 btn btn-primary", data: { "clipboard-target": "copy-button" }
-            i.fa.fa-copy.mr-1
-            | copier
+      form data={ "controller": "clipboard" }
+        .d-flex
+          .flex-grow-1
+            = text_field_tag :booking_link, booking_link, readonly: true, class: "form-control", data: { "clipboard-target": "input-to-copy" }
+          .flex-grow-0
+            = button_tag class: "ml-2 btn btn-primary", data: { "clipboard-target": "copy-button" }
+              i.fa.fa-copy.mr-1
+              | copier
 
 ul.list-group.my-1
   - @motifs.each do |motif|
