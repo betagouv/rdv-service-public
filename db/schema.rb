@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_12_07_155659) do
+ActiveRecord::Schema[7.0].define(version: 2023_12_14_104204) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -335,12 +335,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_07_155659) do
     t.bigint "organisation_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "old_address"
     t.float "latitude"
     t.float "longitude"
     t.string "phone_number"
     t.string "phone_number_formatted"
-    t.boolean "old_enabled", default: true, null: false
     t.enum "availability", null: false, enum_type: "lieu_availability"
     t.string "address", null: false
     t.index ["availability"], name: "index_lieux_on_availability"
@@ -370,7 +368,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_07_155659) do
     t.datetime "updated_at", null: false
     t.integer "default_duration_in_min", default: 30, null: false
     t.bigint "organisation_id", null: false
-    t.boolean "legacy_bookable_publicly", default: false, null: false
     t.integer "min_public_booking_delay", default: 1800
     t.integer "max_public_booking_delay", default: 7889238
     t.datetime "deleted_at"
@@ -378,7 +375,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_07_155659) do
     t.text "restriction_for_rdv"
     t.text "instruction_for_rdv"
     t.boolean "for_secretariat", default: false
-    t.integer "old_location_type", default: 0, null: false
     t.boolean "follow_up", default: false
     t.string "visibility_type", default: "visible_and_notified", null: false
     t.string "sectorisation_level", default: "departement"
@@ -392,7 +388,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_07_155659) do
     t.index "to_tsvector('simple'::regconfig, (COALESCE(name, (''::text)::character varying))::text)", name: "index_motifs_name_vector", using: :gin
     t.index ["collectif"], name: "index_motifs_on_collectif"
     t.index ["deleted_at"], name: "index_motifs_on_deleted_at"
-    t.index ["legacy_bookable_publicly"], name: "index_motifs_on_legacy_bookable_publicly"
     t.index ["location_type"], name: "index_motifs_on_location_type"
     t.index ["motif_category_id"], name: "index_motifs_on_motif_category_id"
     t.index ["name", "organisation_id", "location_type", "service_id"], name: "index_motifs_on_name_scoped", unique: true, where: "(deleted_at IS NULL)"
@@ -498,7 +493,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_07_155659) do
     t.datetime "cancelled_at"
     t.bigint "motif_id", null: false
     t.uuid "uuid", default: -> { "uuid_generate_v4()" }, null: false
-    t.string "old_location"
     t.integer "created_by", default: 0
     t.text "context"
     t.bigint "lieu_id"
