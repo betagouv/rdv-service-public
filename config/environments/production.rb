@@ -65,14 +65,14 @@ Rails.application.configure do
   # config.active_job.queue_name_prefix = "lapin_production"
   config.active_job.queue_adapter = :good_job
 
-  config.default_url_options = { host: ENV["HOST"].sub(%r{^https?://}, "") }
+  config.default_url_options = { host: ENV["HOST"]&.sub(%r{^https?://}, "") }
   config.action_mailer.perform_caching = false
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   # config.action_mailer.raise_delivery_errors = false
 
-  config.action_mailer.default_url_options = { protocol: "https", host: ENV["HOST"].sub(%r{^https?://}, ""), utm_source: "rdv-solidarites", utm_medium: "email", utm_campaign: "auto" }
+  config.action_mailer.default_url_options = { protocol: "https", host: ENV["HOST"]&.sub(%r{^https?://}, ""), utm_source: "rdv-solidarites", utm_medium: "email", utm_campaign: "auto" }
   config.action_mailer.asset_host = ENV["HOST"]
 
   if ENV["DISABLE_SENDING_EMAILS"]

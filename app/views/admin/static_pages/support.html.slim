@@ -28,6 +28,14 @@
             i.fa.fa-envelope
           | Envoyer une demande à l'équipe technique
 
+    .card
+      .card-header
+        h5.card-title
+          span> État des serveurs
+          i.fa.fa-signal
+      .card-body
+        = render "admin/static_pages/instatus_iframe"
+
   .col-md-6
     .card
       .card-header

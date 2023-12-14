@@ -6,6 +6,7 @@ territory_cnfs = Territory.create!(
 )
 
 service_cnfs = Service.create!(name: Service::CONSEILLER_NUMERIQUE, short_name: Service::CONSEILLER_NUMERIQUE)
+territory_cnfs.services << service_cnfs
 
 org_cnfs = Organisation.create!(
   name: "Mediathèque Paris Nord",
