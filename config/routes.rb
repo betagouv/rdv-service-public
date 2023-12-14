@@ -32,9 +32,7 @@ Rails.application.routes.draw do
     resources :motifs
     resources :lieux
     resources :territories
-    resources :users do
-      get "sign_in_as", on: :member
-    end
+    resources :users
     resources :mairie_comptes
     root to: "agents#index"
 

@@ -1,8 +1,4 @@
 class SuperAdmin::UserPolicy < ApplicationPolicy
-  def sign_in_as?
-    true
-  end
-
   def index?
     true
   end
