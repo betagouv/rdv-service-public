@@ -57,11 +57,12 @@ class Anonymizer
     end
 
     anonymized_columns.each do |column|
+      scope = model_class.unscoped.where.not(column.name => nil)
       if column.type.in?(%i[string text])
-        model_class.unscoped.where.not(column.name => nil).where.not(column.name => "").update_all(column.name => anonymous_value(column)) # rubocop:disable Rails/SkipsModelValidations
-      else
-        model_class.unscoped.where.not(column.name => nil).update_all(column.name => anonymous_value(column)) # rubocop:disable Rails/SkipsModelValidations
+        scope = scope.where.not(column.name => "")
       end
+
+      scope.update_all(column.name => anonymous_value(column)) # rubocop:disable Rails/SkipsModelValidations
     end
   end
   # rubocop:enable Metrics/CyclomaticComplexity
