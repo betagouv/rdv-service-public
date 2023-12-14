@@ -18,12 +18,10 @@ class LieuDashboard < Administrate::BaseDashboard
     agents: Field::HasMany,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
-    old_address: Field::String,
     latitude: Field::Number.with_options(decimals: 6),
     longitude: Field::Number.with_options(decimals: 6),
     phone_number: Field::String,
     phone_number_formatted: Field::String,
-    old_enabled: Field::Boolean,
     availability: Field::Select.with_options(searchable: false, collection: ->(field) { field.resource.class.send(field.attribute.to_s.pluralize).keys }),
     address: Field::String,
   }.freeze
