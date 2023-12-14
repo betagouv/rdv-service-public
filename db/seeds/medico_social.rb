@@ -298,7 +298,7 @@ user_org_paris_nord_patricia = User.new(
 
 user_org_paris_nord_patricia.skip_confirmation!
 user_org_paris_nord_patricia.save!
-user_org_paris_nord_patricia.profile_for(org_paris_nord).update!(logement: 2)
+user_org_paris_nord_patricia.update!(logement: 2)
 
 user_org_paris_nord_josephine = User.new(
   first_name: "Joséphine",
@@ -323,7 +323,7 @@ user_org_paris_nord_lea = User.new(
 
 user_org_paris_nord_lea.skip_confirmation!
 user_org_paris_nord_lea.save!
-user_org_paris_nord_lea.profile_for(org_paris_nord).update!(logement: 2)
+user_org_paris_nord_lea.update!(logement: 2)
 
 user_org_paris_nord_jean = User.new(
   first_name: "Jean",
@@ -338,7 +338,7 @@ user_org_paris_nord_jean = User.new(
 
 user_org_paris_nord_jean.skip_confirmation!
 user_org_paris_nord_jean.save!
-user_org_paris_nord_jean.profile_for(org_paris_nord).update!(logement: 2)
+user_org_paris_nord_jean.update!(logement: 2)
 
 user_org_paris_sud = User.new(
   first_name: "Francis",
@@ -353,7 +353,7 @@ user_org_paris_sud = User.new(
 
 user_org_paris_sud.skip_confirmation!
 user_org_paris_sud.save!
-user_org_paris_sud.profile_for(org_paris_sud).update!(logement: 2)
+user_org_paris_sud.update!(logement: 2)
 
 user_org_arques = User.new(
   first_name: "Francis",
