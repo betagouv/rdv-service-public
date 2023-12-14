@@ -115,7 +115,7 @@ class AnonymizerRules
     },
     super_admins: {
       class_name: "SuperAdmin",
-      anonymized_column_names: %w[email],
+      anonymized_column_names: %w[email first_name last_name],
       non_anonymized_column_names: %w[created_at updated_at],
     },
     organisations: {

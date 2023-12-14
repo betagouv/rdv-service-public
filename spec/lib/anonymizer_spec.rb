@@ -1,6 +1,14 @@
 RSpec.describe Anonymizer do
   let!(:user_with_email) { create(:user, email: "user@example.com") }
 
+  around do |example|
+    rack_env = ENV.delete("RACK_ENV")
+
+    example.run
+
+    ENV["RACK_ENV"] = rack_env
+  end
+
   context "general case" do
     let!(:prescripteur) { create(:prescripteur) }
     let!(:agent) { create(:agent, email: "agent@example.com") }
