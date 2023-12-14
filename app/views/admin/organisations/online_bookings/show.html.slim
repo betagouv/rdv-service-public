@@ -9,7 +9,7 @@
 
     p La réservation en ligne peut être configurée pour chaque motif de rendez-vous.
 
-    - unless current_territory.any_effective_sector?
+    - unless current_territory.sectorized?
       p Une fois qu'elle est activée, vous pouvez envoyer ce lien à vos usagers pour qu'ils prennent rendez-vous :
 
       form data={ "controller": "clipboard" }

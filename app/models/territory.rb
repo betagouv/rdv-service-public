@@ -95,7 +95,7 @@ class Territory < ApplicationRecord
     end
   end
 
-  def any_effective_sector?
+  def sectorized?
     sectors.joins(:zones).joins(:attributions).any?
   end
 
