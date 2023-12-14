@@ -48,7 +48,7 @@ class Anonymizer
       raise "Les règles d'anonymisation pour les colonnes #{unidentified_column_names.join(' ')} de la table #{@table_name} n'ont pas été définies"
     end
 
-    return if anonymized_attributes.blank?
+    return if anonymized_columns.blank?
 
     model_class = AnonymizerRules::RULES.dig(@table_name, "class_name")&.constantize
 
@@ -56,7 +56,13 @@ class Anonymizer
       raise "Pas de modèle trouvé pour la table #{@table_name}"
     end
 
-    model_class.unscoped.update_all(anonymized_attributes) # rubocop:disable Rails/SkipsModelValidations
+    anonymized_columns.each do |column|
+      if column.type.in?(%i[string text])
+        model_class.unscoped.where.not(column.name => nil).where.not(column.name => "").update_all(column.name => anonymous_value(column)) # rubocop:disable Rails/SkipsModelValidations
+      else
+        model_class.unscoped.where.not(column.name => nil).update_all(column.name => anonymous_value(column)) # rubocop:disable Rails/SkipsModelValidations
+      end
+    end
   end
   # rubocop:enable Metrics/CyclomaticComplexity
 
@@ -92,9 +98,9 @@ class Anonymizer
   def anonymous_value(column)
     if column.type.in?(%i[string text])
       if column_has_uniqueness_constraint?(column)
-        Arel.sql("CASE WHEN #{ActiveRecord::Base.sanitize_sql(column.name)} IS NULL THEN NULL ELSE '[valeur unique anonymisée ' || id || ']' END")
+        Arel.sql("'[valeur unique anonymisée ' || id || ']'")
       else
-        Arel.sql("CASE WHEN #{ActiveRecord::Base.sanitize_sql(column.name)} IS NULL THEN NULL ELSE '[valeur anonymisée]' END")
+        "[valeur anonymisée]"
       end
     else
       column.default
