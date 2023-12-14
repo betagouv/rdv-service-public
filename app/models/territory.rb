@@ -96,7 +96,7 @@ class Territory < ApplicationRecord
   end
 
   def sectorized?
-    sectors.joins(:zones).joins(:attributions).any?
+    sectors.joins(:zones).any?
   end
 
   private
