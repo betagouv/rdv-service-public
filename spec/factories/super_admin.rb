@@ -3,5 +3,8 @@ FactoryBot.define do
 
   factory :super_admin do
     email { generate(:super_admin_email) }
+    role { :super_admin }
+    first_name { "Super" }
+    last_name { "Admin" }
   end
 end
