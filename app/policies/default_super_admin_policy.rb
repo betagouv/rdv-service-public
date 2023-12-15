@@ -31,11 +31,11 @@ class DefaultSuperAdminPolicy < ApplicationPolicy
     false
   end
 
-  class Scope < Scope
-    alias current_super_admin pundit_user
-    delegate :support_member?, to: :current_super_admin
-    delegate :super_admin_member?, to: :current_super_admin
+  def team_member?
+    support_member? || super_admin_member?
+  end
 
+  class Scope < Scope
     def resolve
       # No filter for team members (for now)
       scope.all

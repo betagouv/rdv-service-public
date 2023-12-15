@@ -31,6 +31,7 @@ class OrganisationDashboard < Administrate::BaseDashboard
   COLLECTION_ATTRIBUTES = %i[
     id
     name
+    verticale
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES

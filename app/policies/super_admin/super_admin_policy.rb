@@ -1,37 +1,15 @@
-class SuperAdmin::SuperAdminPolicy < ApplicationPolicy
-  def index?
-    true
-  end
+class SuperAdmin::SuperAdminPolicy < DefaultSuperAdminPolicy
+  alias index? team_member?
+  alias show? team_member?
+  alias new? team_member?
+  alias create? privileges_for_record?
+  alias edit? privileges_for_record?
+  alias update? privileges_for_record?
+  alias destroy? privileges_for_record?
 
-  def show?
-    true
-  end
+  private
 
-  # TODO : Disable create, new, edit, update, destroy for SuperAdmin Policy.
-  # This is critical for security and has to be done by a dev
-  def create?
-    true
-  end
-
-  def new?
-    true
-  end
-
-  def edit?
-    true
-  end
-
-  def update?
-    true
-  end
-
-  def destroy?
-    true
-  end
-
-  class Scope < Scope
-    def resolve
-      scope.all
-    end
+  def privileges_for_record?
+    super_admin_member? || (record.support_member? && support_member?)
   end
 end

@@ -1,35 +1,9 @@
-class SuperAdmin::LieuPolicy < ApplicationPolicy
-  def index?
-    true
-  end
-
-  def show?
-    true
-  end
-
-  def create?
-    true
-  end
-
-  def new?
-    true
-  end
-
-  def edit?
-    true
-  end
-
-  def update?
-    true
-  end
-
-  def destroy?
-    true
-  end
-
-  class Scope < Scope
-    def resolve
-      scope.all
-    end
-  end
+class SuperAdmin::LieuPolicy < DefaultSuperAdminPolicy
+  alias index? team_member?
+  alias show? team_member?
+  alias create? super_admin_member?
+  alias new? super_admin_member?
+  alias edit? super_admin_member?
+  alias update? super_admin_member?
+  alias destroy? super_admin_member?
 end

@@ -25,7 +25,7 @@ Rails.application.routes.draw do
       post :invite, on: :member
       resources :migrations, only: %i[new create]
     end
-    resources :agent_roles, except: %i[index]
+    resources :agent_roles, only: %i[show edit update destroy]
     resources :agent_services, only: %i[show destroy]
     resources :user_profiles, only: %i[destroy]
     resources :super_admins
@@ -35,7 +35,7 @@ Rails.application.routes.draw do
     resources :lieux
     resources :territories
     resources :users
-    resources :mairie_comptes
+    resources :mairie_comptes, only: %i[index new create]
     root to: "agents#index"
 
     authenticate :super_admin do
