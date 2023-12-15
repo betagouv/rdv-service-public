@@ -11,6 +11,8 @@ class SuperAdminDashboard < Administrate::BaseDashboard
     id: Field::Number,
     email: Field::String,
     role: EnumField,
+    first_name: Field::String,
+    last_name: Field::String,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
   }.freeze
@@ -24,6 +26,8 @@ class SuperAdminDashboard < Administrate::BaseDashboard
     id
     email
     role
+    first_name
+    last_name
     created_at
     updated_at
   ].freeze
@@ -34,6 +38,8 @@ class SuperAdminDashboard < Administrate::BaseDashboard
     id
     email
     role
+    first_name
+    last_name
     created_at
     updated_at
   ].freeze
@@ -44,6 +50,8 @@ class SuperAdminDashboard < Administrate::BaseDashboard
   FORM_ATTRIBUTES = %i[
     email
     role
+    first_name
+    last_name
   ].freeze
 
   # Overwrite this method to customize how super admins are displayed

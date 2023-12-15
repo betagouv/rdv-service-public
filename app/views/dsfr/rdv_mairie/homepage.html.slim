@@ -8,9 +8,12 @@
         br
         = "et la prise de "
         span[style="color: #{bleu_ecume}"] rendez-vous en ligne
-      b Une solution publique de gestion et de prise de rendez-vous pour les mairies
+      b.fr-text--lg Une solution publique de gestion et de prise de rendez-vous pour les mairies
       ul.fr-pt-4w.fr-btns-group.fr-btns-group--inline.fr-btns-group--center
         li= link_to("Prendre RDV avec l’équipe", team_meeting_url, class: "fr-btn ")
+      i.fr-text--sm
+        = "Pour prendre RDV avec une mairie pour l’obtention d’une carte d’identité ou d’un passeport, "
+        = dsfr_link_to("cliquez ici", "https://rendezvouspasseport.ants.gouv.fr/")
 
 .fr-py-12w
   .fr-container.fr-grid-row.fr-grid-row--center

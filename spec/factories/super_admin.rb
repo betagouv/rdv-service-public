@@ -4,7 +4,7 @@ FactoryBot.define do
   factory :super_admin do
     email { generate(:super_admin_email) }
     role { :super_admin }
-    first_name { "Super" }
-    last_name { "Admin" }
+    first_name { Faker::Name.first_name }
+    last_name { Faker::Name.last_name }
   end
 end
