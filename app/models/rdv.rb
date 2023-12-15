@@ -1,4 +1,6 @@
 class Rdv < ApplicationRecord
+  self.ignored_columns = %w[old_location]
+
   # Mixins
   has_paper_trail(
     only: %w[user_ids agent_ids status starts_at ends_at lieu_id notes context participations],
@@ -13,7 +15,6 @@ class Rdv < ApplicationRecord
   include IcalHelpers::Ics
   include Payloads::Rdv
   include Ants::AppointmentSerializerAndListener
-  include Anonymizable
 
   # Attributes
   auto_strip_attributes :name
@@ -382,10 +383,6 @@ class Rdv < ApplicationRecord
 
   def revoked!
     update!(cancelled_at: Time.zone.now, status: "revoked")
-  end
-
-  def self.personal_data_column_names
-    %w[context]
   end
 
   private

@@ -16,6 +16,7 @@ class OrganisationDashboard < Administrate::BaseDashboard
     lieux: Field::HasMany,
     horaires: Field::String,
     phone_number: Field::String,
+    email: Field::String,
     human_id: Field::String,
     territory: Field::BelongsTo,
     verticale: EnumField,
@@ -42,6 +43,7 @@ class OrganisationDashboard < Administrate::BaseDashboard
     horaires
     phone_number
     agent_roles
+    email
     motifs
     lieux
     human_id
@@ -57,6 +59,7 @@ class OrganisationDashboard < Administrate::BaseDashboard
     name
     horaires
     phone_number
+    email
     verticale
     human_id
     territory

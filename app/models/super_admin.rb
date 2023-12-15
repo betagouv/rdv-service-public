@@ -1,17 +1,23 @@
 class SuperAdmin < ApplicationRecord
   # Mixins
   include DeviseInvitable::Inviter
+  include FullNameConcern
 
-  devise :authenticatable
-
-  ## -
-
+  # Validations
+  validates :first_name, presence: true
+  validates :last_name, presence: true
+  validates :email, presence: true
+  
   enum role: {
     super_admin: "super_admin",
     support: "support",
   }, _suffix: "member"
 
-  def full_name
-    "Équipe de RDV Service Public"
+  devise :authenticatable
+
+  def name_for_paper_trail(impersonated: nil)
+    return "[Admin] #{full_name}" if impersonated.blank?
+
+    "[Admin] #{full_name} pour #{impersonated.full_name}"
   end
 end

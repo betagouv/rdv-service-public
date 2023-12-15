@@ -29,17 +29,11 @@ class Agents::UsersController < AgentAuthController
     results = []
 
     if users_from_organisation.any?
-      results << {
-        text: nil,
-        children: serialize(users_from_organisation),
-      }
+      results << formatted_users_from_organisation(users_from_organisation)
     end
 
     if users_from_territory.any?
-      results << {
-        text: "Usagers des autres organisations",
-        children: serialize(users_from_territory),
-      }
+      results << formatted_users_from_territory(users_from_territory)
     end
 
     render json: { results: results }
@@ -47,17 +41,32 @@ class Agents::UsersController < AgentAuthController
 
   private
 
+  def formatted_users_from_organisation(users)
+    {
+      text: nil,
+      children: users.map do |user|
+        {
+          id: user.id,
+          text: UsersHelper.reverse_full_name_and_notification_coordinates(user),
+        }
+      end,
+    }
+  end
+
+  def formatted_users_from_territory(users)
+    {
+      text: "Usagers des autres organisations",
+      children: users.map do |user|
+        {
+          id: user.id,
+          text: UsersHelper.partially_hidden_reverse_full_name_and_notification_coordinates(user),
+        }
+      end,
+    }
+  end
+
   def agent_in_cnfs_or_mairies_territories?
     cnfs_and_mairies_territory_ids = [Territory.mairies&.id, Territory.find_by(departement_number: "CN")&.id].compact
     (cnfs_and_mairies_territory_ids & current_agent.organisations.pluck(:territory_id)).any? # & does an array overlap here
-  end
-
-  def serialize(users)
-    users.map do |user|
-      {
-        id: user.id,
-        text: UsersHelper.reverse_full_name_and_notification_coordinates(user),
-      }
-    end
   end
 end
