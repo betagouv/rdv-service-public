@@ -3,15 +3,16 @@ class SuperAdmin < ApplicationRecord
   include DeviseInvitable::Inviter
   include FullNameConcern
 
-  # Validations
-  validates :first_name, presence: true
-  validates :last_name, presence: true
-  validates :email, presence: true
-  
+  # Attributes
   enum role: {
     super_admin: "super_admin",
     support: "support",
   }, _suffix: "member"
+
+  # Validations
+  validates :first_name, presence: true
+  validates :last_name, presence: true
+  validates :email, presence: true
 
   devise :authenticatable
 
