@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_29_111050) do
+ActiveRecord::Schema[7.0].define(version: 2023_12_15_151534) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -85,6 +85,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_29_111050) do
     "sent",
     "delivered",
     "failure",
+  ], force: :cascade
+
+  create_enum :role, [
+    "super_admin",
+    "support",
   ], force: :cascade
 
   create_enum :sms_provider, [
@@ -590,6 +595,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_29_111050) do
     t.string "email", default: "", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "first_name"
+    t.string "last_name"
+    t.enum "role", default: "support", null: false, enum_type: "role"
   end
 
   create_table "teams", force: :cascade do |t|
