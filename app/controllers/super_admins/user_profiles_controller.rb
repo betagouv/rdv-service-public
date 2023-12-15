@@ -1,13 +1,7 @@
 module SuperAdmins
   class UserProfilesController < SuperAdmins::ApplicationController
-    def destroy
-      if requested_resource.destroy
-        flash[:notice] = translate_with_resource("destroy.success")
-      else
-        flash[:error] = requested_resource.errors.full_messages.join("<br/>")
-      end
-
-      redirect_to(request.referer, notice: flash[:notice])
+    def after_resource_destroyed_path(requested_resource)
+      [namespace, requested_resource.user]
     end
   end
 end
