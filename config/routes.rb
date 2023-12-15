@@ -26,6 +26,8 @@ Rails.application.routes.draw do
       resources :migrations, only: %i[new create]
     end
     resources :agent_roles, except: %i[index]
+    resources :agent_services, only: %i[show destroy]
+    resources :user_profiles, only: %i[destroy]
     resources :super_admins
     resources :organisations
     resources :services

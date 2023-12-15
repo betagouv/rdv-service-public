@@ -1,5 +1,5 @@
 module SuperAdmins
-  class AgentRolesController < SuperAdmins::ApplicationController
+  class AgentServicesController < SuperAdmins::ApplicationController
     def destroy
       if requested_resource.destroy
         flash[:notice] = translate_with_resource("destroy.success")
