@@ -1,7 +1,7 @@
 Anonymizer.anonymize_all_data!
 
 # Sanity checks
-if User.where.not(first_name: "[valeur anonymisée]").any?
+if User.where.not(last_name: "[valeur anonymisée]").any?
   raise "Certains usagers n'ont pas été anonymisés !"
 end
 
