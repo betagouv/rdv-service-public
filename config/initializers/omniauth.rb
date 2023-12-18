@@ -3,8 +3,19 @@ require "omniauth/strategies/franceconnect"
 Rails.application.config.middleware.use OmniAuth::Builder do
   provider :github, ENV.fetch("GITHUB_APP_ID", nil), ENV.fetch("GITHUB_APP_SECRET", nil), scope: "user:email"
 
-  provider :microsoft_graph, ENV.fetch("AZURE_APPLICATION_CLIENT_ID", nil), ENV.fetch("AZURE_APPLICATION_CLIENT_SECRET", nil),
-           scope: %w[offline_access openid email profile User.Read Calendars.ReadWrite]
+  if Domain::RDV_SOLIDARITES.azure_application_client_id
+    provider(:microsoft_graph,
+             Domain::RDV_SOLIDARITES.azure_application_client_id,
+             Domain::RDV_SOLIDARITES.azure_application_client_secret,
+             scope: %w[offline_access openid email profile User.Read Calendars.ReadWrite])
+  end
+
+  if Domain::RDV_AIDE_NUMERIQUE.azure_application_client_id
+    provider(:microsoft_graph,
+             Domain::RDV_AIDE_NUMERIQUE.azure_application_client_id,
+             Domain::RDV_AIDE_NUMERIQUE.azure_application_client_secret,
+             scope: %w[offline_access openid email profile User.Read Calendars.ReadWrite])
+  end
 
   provider(
     :franceconnect,

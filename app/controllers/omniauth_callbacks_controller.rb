@@ -32,7 +32,7 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
   end
 
   def microsoft_graph
-    if current_agent.update(microsoft_graph_token: microsoft_graph_token, refresh_microsoft_graph_token: refresh_microsoft_graph_token)
+    if current_agent.update(microsoft_graph_token: microsoft_graph_token, refresh_microsoft_graph_token: refresh_microsoft_graph_token, domain_for_microsoft_app: current_domain.id)
       Outlook::MassCreateEventJob.perform_later(current_agent)
       flash[:notice] = "Votre compte Outlook a bien été connecté"
     else

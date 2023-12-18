@@ -12,7 +12,7 @@ module Outlook
       rescue Outlook::ApiClient::ApiError
         nil
       end
-      agent.update!(microsoft_graph_token: nil, refresh_microsoft_graph_token: nil, outlook_disconnect_in_progress: false)
+      agent.update!(microsoft_graph_token: nil, refresh_microsoft_graph_token: nil, outlook_disconnect_in_progress: false, domain_for_microsoft_app: nil)
     end
 
     private

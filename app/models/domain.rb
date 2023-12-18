@@ -15,6 +15,8 @@ Domain = Struct.new(
   :documentation_url,
   :support_email,
   :secretariat_email,
+  :azure_application_client_id,
+  :azure_application_client_secret,
   keyword_init: true
 )
 
@@ -36,11 +38,13 @@ class Domain
       faq_url: "https://rdv-solidarites.notion.site/F-A-Q-M-dico-social-aaf94709c0ea448b8eb9d93f548acdb9",
       france_connect_enabled: true,
       support_email: "support@rdv-solidarites.fr",
-      secretariat_email: "secretariat-auto@rdv-solidarites.fr"
+      secretariat_email: "secretariat-auto@rdv-solidarites.fr",
       # secretariat_email est utilisé comme adresse de "Reply-To" pour les e-mails
       # qui contiennent des ICS. Lorsque l'événement ICS est acceptée par le
       # client mail / calendrier, ce client mail envoie un accusé de réception
       # à cette adresse (ex: "Accepted: RDV Consultation médicale ").
+      azure_application_client_id: ENV.fetch("RDVS_AZURE_APPLICATION_CLIENT_ID", nil),
+      azure_application_client_secret: ENV.fetch("RDVS_AZURE_APPLICATION_CLIENT_SECRET", nil)
     ),
 
     RDV_AIDE_NUMERIQUE = new(
@@ -59,7 +63,9 @@ class Domain
       faq_url: "https://rdvs.notion.site/FAQ-CNFS-c55933f66f054aaba60fe4799851000e",
       france_connect_enabled: false,
       support_email: "support@rdv-aide-numerique.fr",
-      secretariat_email: "secretariat-auto@rdv-solidarites.fr"
+      secretariat_email: "secretariat-auto@rdv-solidarites.fr",
+      azure_application_client_id: ENV.fetch("RDVAN_AZURE_APPLICATION_CLIENT_ID", nil),
+      azure_application_client_secret: ENV.fetch("RDVAN_AZURE_APPLICATION_CLIENT_SECRET", nil)
     ),
 
     RDV_MAIRIE = new(
@@ -78,7 +84,9 @@ class Domain
       faq_url: "https://rdvs.notion.site/FAQ-RDV-Mairie-6baf4af187a14e42beafe56b7005d199",
       france_connect_enabled: true,
       support_email: "support@rdv-service-public.fr",
-      secretariat_email: "secretariat-auto@rdv-service-public.fr"
+      secretariat_email: "secretariat-auto@rdv-service-public.fr",
+      azure_application_client_id: nil,
+      azure_application_client_secret: nil
     ),
   ].freeze
 
