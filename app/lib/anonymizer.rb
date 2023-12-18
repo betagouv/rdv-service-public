@@ -35,7 +35,7 @@ class Anonymizer
     end
     # Sanity checks supplémentaires
     # Ces variables d'envs n'ont rien à voir avec l'ETL, et ne devraient donc pas être présentes
-    if ENV["DEFAULT_SMS_PROVIDER"].present?
+    if ENV["HOST"].present? || ENV["DEFAULT_SMS_PROVIDER"].present?
       raise "Attention, il semble que vous êtes en train d'anonymiser des données d'une appli web"
     end
 
