@@ -46,11 +46,11 @@ RSpec.describe Anonymizer do
     let!(:rdv_with_blank_context) { create(:rdv, context: "") }
     let!(:rdv_with_null_context) { create(:rdv, context: nil) }
 
-    it "doesn't anonymize empty and null values, so we can know if a field is used or not" do
+    it "turns blank strings into null to avoid confusion when non-tech people use the data in metabase" do
       described_class.anonymize_all_data!
 
       expect(rdv_with_context.reload.context).to eq "[valeur anonymisée]"
-      expect(rdv_with_blank_context.reload.context).to eq ""
+      expect(rdv_with_blank_context.reload.context).to be_nil
       expect(rdv_with_null_context.reload.context).to be_nil
     end
   end
