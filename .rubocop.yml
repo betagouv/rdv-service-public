@@ -235,3 +235,9 @@ RSpec/FilePath:
 
 Style/NumericPredicate:
   Enabled: false
+
+Style/NumericLiterals:
+  Enabled: false
+
+Rails/UnusedIgnoredColumns:
+  Enabled: false
