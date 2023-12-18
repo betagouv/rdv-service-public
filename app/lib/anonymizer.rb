@@ -56,20 +56,22 @@ class Anonymizer
       raise "Pas de modèle trouvé pour la table #{@table_name}"
     end
 
-    anonymized_columns.each do |column|
-      ActiveRecord::Encryption.without_encryption do # The columns may be encrypted, but we still want to overwrite the anonymized value
-        scope = model_class.unscoped.where.not(column.name => nil)
-        if column.type.in?(%i[string text])
-          scope = scope.where.not(column.name => "")
-        end
-
-        scope.update_all(column.name => anonymous_value(column)) # rubocop:disable Rails/SkipsModelValidations
-      end
-    end
+    anonymized_columns.each { |column| anonymize_column(column, model_class) }
   end
   # rubocop:enable Metrics/CyclomaticComplexity
 
   private
+
+  def anonymize_column(column, model_class)
+    ActiveRecord::Encryption.without_encryption do # The columns may be encrypted, but we still want to overwrite the anonymized value
+      scope = model_class.unscoped.where.not(column.name => nil)
+      if column.type.in?(%i[string text])
+        scope = scope.where.not(column.name => "")
+      end
+
+      scope.update_all(column.name => anonymous_value(column)) # rubocop:disable Rails/SkipsModelValidations
+    end
+  end
 
   def unidentified_column_names
     all_columns = db_connection.columns(@table_name).map(&:name)
