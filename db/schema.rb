@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_12_14_155817) do
+ActiveRecord::Schema[7.0].define(version: 2023_12_19_151419) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -219,8 +219,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_14_155817) do
     t.boolean "allow_password_change", default: false
     t.enum "rdv_notifications_level", default: "others", enum_type: "agents_rdv_notifications_level"
     t.integer "unknown_past_rdv_count", default: 0
-    t.boolean "display_saturdays", default: false
-    t.boolean "display_cancelled_rdv", default: true
+    t.boolean "display_saturdays", default: false, comment: "Indique si l'agent veut que les samedis s'affichent quand il consulte un calendrier (pas forcément le sien). Cela n'affecte pas ce que voient les autres agents. Modifiable par le bouton en bas de la vue calendrier.\n"
+    t.boolean "display_cancelled_rdv", default: true, comment: "Indique si l'agent veut que les rdv annulés s'affichent quand il consulte un calendrier (pas forcément le sien). Cela n'affecte pas ce que voient les autres agents. Modifiable par le bouton en bas de la vue calendrier\n"
     t.enum "plage_ouverture_notification_level", default: "all", enum_type: "agents_plage_ouverture_notification_level"
     t.enum "absence_notification_level", default: "all", enum_type: "agents_absence_notification_level"
     t.string "external_id", comment: "The agent's unique and immutable id in the system managing them and adding them to our application"
@@ -234,7 +234,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_14_155817) do
     t.text "refresh_microsoft_graph_token"
     t.string "cnfs_secondary_email"
     t.boolean "outlook_disconnect_in_progress", default: false, null: false
-    t.datetime "account_deletion_warning_sent_at"
+    t.datetime "account_deletion_warning_sent_at", comment: "Quand le compte de l'agent est inactif depuis bientôt deux ans, on lui envoie un mail qui le prévient que sont compte sera bientôt supprimé, et qu'il doit se connecter à nouveau s'il souhaite conserver son compte. On enregistre la date d'envoi de cet email ici pour s'assure qu'on lui laisse un délai d'au moins un mois pour réagir.\n"
     t.index ["account_deletion_warning_sent_at"], name: "index_agents_on_account_deletion_warning_sent_at"
     t.index ["calendar_uid"], name: "index_agents_on_calendar_uid", unique: true
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true
@@ -339,7 +339,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_14_155817) do
     t.float "longitude"
     t.string "phone_number"
     t.string "phone_number_formatted"
-    t.enum "availability", null: false, enum_type: "lieu_availability"
+    t.enum "availability", null: false, comment: "Permet de savoir si le lieu est un lieu normal (enabled), un lieu ponctuel qui sera utilisé pour un seul rdv (single_use), ou un lieu supprimé par soft-delete (disabled). Dans la plupart des cas on s'intéresse uniquement aux lieux enabled\n", enum_type: "lieu_availability"
     t.string "address", null: false
     t.index ["availability"], name: "index_lieux_on_availability"
     t.index ["name"], name: "index_lieux_on_name"
@@ -348,7 +348,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_14_155817) do
 
   create_table "motif_categories", force: :cascade do |t|
     t.string "name", null: false
-    t.string "short_name", null: false
+    t.string "short_name", null: false, comment: "Le nom \"technique\" de la catégorie de motif, qui permet de l'identifier dans les paramètres de formulaires\"\n"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_motif_categories_on_name", unique: true
@@ -368,20 +368,20 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_14_155817) do
     t.datetime "updated_at", null: false
     t.integer "default_duration_in_min", default: 30, null: false
     t.bigint "organisation_id", null: false
-    t.integer "min_public_booking_delay", default: 1800
-    t.integer "max_public_booking_delay", default: 7889238
-    t.datetime "deleted_at"
+    t.integer "min_public_booking_delay", default: 1800, comment: "Permet de savoir combien de secondes il y aura au minimum entre la prise de rdv par un usager ou un prescripteur et le début du rdv. Par exemple si la valeur est 1800, et qu'il est 10h, le premier rdv qui pourra être pris (s'il y a une plage d'ouverture libre) sera à 10h30, puisque 1800 = 30 x 60. Cela permet à l'agent d'être prévenu suffisamment à l'avance.\n"
+    t.integer "max_public_booking_delay", default: 7889238, comment: "Permet de savoir combien de temps à l'avance il est possible de prendre rdv pour un usager ou un prescripteur. Le délai est mesuré en secondes. Cela évite que des gens prennent des rdv dans trop longtemps, et évite aux agents de s'engager à assurer des rdv alors qu'ils ne connaissent pas leur emploi du temps suffisamment à l'avance.\n"
+    t.datetime "deleted_at", comment: "Permet de savoir à quelle date le motif a été soft-deleted\n"
     t.bigint "service_id", null: false
-    t.text "restriction_for_rdv"
-    t.text "instruction_for_rdv"
-    t.boolean "for_secretariat", default: false
-    t.boolean "follow_up", default: false
-    t.string "visibility_type", default: "visible_and_notified", null: false
-    t.string "sectorisation_level", default: "departement"
-    t.text "custom_cancel_warning_message"
-    t.boolean "collectif", default: false
-    t.enum "location_type", default: "public_office", null: false, enum_type: "location_type"
-    t.boolean "rdvs_editable_by_user", default: true
+    t.text "restriction_for_rdv", comment: "Instructions à accepter avant la prise du rendez-vous par l'usager\n"
+    t.text "instruction_for_rdv", comment: "Indications affichées à l'usager après la confirmation du rendez-vous. Apparait dans le mail de confirmation pour l'usager.\n"
+    t.boolean "for_secretariat", default: false, comment: "Permet aux agents du secrétariat d'assurer des rdv pour ce motif\n"
+    t.boolean "follow_up", default: false, comment: "Indique s'il s'agit d'un motif de suivi. Si c'est le cas, le rdv pourra uniquement être assuré par un agent référent de l'usager.\n"
+    t.string "visibility_type", default: "visible_and_notified", null: false, comment: "Niveau de visibilité du motif pour l'usager. Cette option permet de cacher des rdvs sensibles pour assurer la sécurité d'un usager dont des proches pourraient consulter le téléphone ou le compte RDV Solidarités.\n"
+    t.string "sectorisation_level", default: "departement", comment: "Indique à quel point la sectorisation restreint la prise de rdv des usagers pour ce motif. Le niveau \"departement\" indique qu'il n'y a pas de restriction.\n"
+    t.text "custom_cancel_warning_message", comment: "Message d'avertissement montré à l'usager en cas d'annulation\n"
+    t.boolean "collectif", default: false, comment: "Indique s'il s'agit d'un rdv collectif ou individuel. Un rdv considéré comme individuel peut quand même avoir plusieurs participants, par exemple un parent et son enfant qui renouvellent tous les deux leur carte d'indentité en même temps. Un rdv collectif sera ouvert à plusieurs participants qui ne se connaissent pas entre eux.\n"
+    t.enum "location_type", default: "public_office", null: false, comment: "Là où le rdv aura lieu : \"public_office\" pour \"Sur place\" (généralement dans les bureaux de l'organisation), \"phone\" pour au téléphone (l'agent appelle l'usager), \"home\" pour le domicile de l'usager\n", enum_type: "location_type"
+    t.boolean "rdvs_editable_by_user", default: true, comment: "Indique si on autorise aux usagers de changer la date du rdv via l'interface web\n"
     t.boolean "rdvs_cancellable_by_user", default: true
     t.bigint "motif_category_id"
     t.enum "bookable_by", default: "agents", null: false, enum_type: "bookable_by"
