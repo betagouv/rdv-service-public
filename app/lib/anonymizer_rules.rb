@@ -87,6 +87,7 @@ class AnonymizerRules
         sign_in_count
         outlook_disconnect_in_progress
         account_deletion_warning_sent_at
+        domain_for_microsoft_app
         deleted_at
         created_at updated_at
       ],
