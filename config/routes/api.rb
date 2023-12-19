@@ -36,6 +36,7 @@ namespace :api do
     resource :referent_assignations, only: [] do
       post :create_many, on: :collection
     end
+    resources :motif_categories, only: %i[create]
   end
 end
 

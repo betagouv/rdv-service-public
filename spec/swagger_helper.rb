@@ -356,6 +356,13 @@ RSpec.configure do |config|
             },
             required: %w[id name short_name],
           },
+          motif_category_with_root: {
+            type: "object",
+            properties: {
+              motif_category: { "$ref" => "#/components/schemas/motif_category" },
+            },
+            required: %w[motif_category],
+          },
           rdvs_user: {
             type: "object",
             properties: {
