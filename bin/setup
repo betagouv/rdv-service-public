@@ -30,4 +30,5 @@ FileUtils.chdir APP_ROOT do
 
   puts "\n== Restarting application server =="
   system! "bin/rails restart"
+  # TODO: add the instructions for creating `config/credentials/development.key` from passbolt?
 end
