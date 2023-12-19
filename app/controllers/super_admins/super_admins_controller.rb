@@ -14,7 +14,7 @@ module SuperAdmins
     end
 
     def privilege_escalation?
-      current_super_admin.support_member? && resource_params[:role] == "super_admin"
+      current_super_admin.support_member? && resource_params[:role] == "legacy_admin"
     end
   end
 end
