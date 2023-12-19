@@ -11,6 +11,7 @@ class OrganisationDashboard < Administrate::BaseDashboard
     id: Field::Number,
     name: Field::String,
     agents: Field::HasMany,
+    agent_roles: Field::HasMany,
     motifs: Field::HasMany,
     lieux: Field::HasMany,
     horaires: Field::String,
@@ -31,6 +32,7 @@ class OrganisationDashboard < Administrate::BaseDashboard
   COLLECTION_ATTRIBUTES = %i[
     id
     name
+    verticale
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
@@ -40,8 +42,8 @@ class OrganisationDashboard < Administrate::BaseDashboard
     name
     horaires
     phone_number
+    agent_roles
     email
-    agents
     motifs
     lieux
     human_id

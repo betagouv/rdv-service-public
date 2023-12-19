@@ -12,6 +12,7 @@ class ServiceDashboard < Administrate::BaseDashboard
     name: Field::String,
     short_name: Field::String,
     agents: Field::HasMany,
+    agent_services: Field::HasMany,
     motifs: Field::HasMany,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
@@ -34,7 +35,7 @@ class ServiceDashboard < Administrate::BaseDashboard
     id
     name
     short_name
-    agents
+    agent_services
     motifs
     created_at
     updated_at
