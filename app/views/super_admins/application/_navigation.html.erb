@@ -19,5 +19,5 @@ as defined by the routes in the `admin/` namespace
     ) if accessible_action?(model_from_resource(resource), :index) %>
   <% end %>
   <hr />
-  <%= link_to "Good Job", super_admins_good_job_path, class: "navigation__link" %>
+  <%= link_to "Good Job", super_admins_good_job_path, class: "navigation__link" if current_super_admin.super_admin_member?%>
 </nav>
