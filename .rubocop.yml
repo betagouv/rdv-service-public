@@ -239,3 +239,6 @@ Style/NumericPredicate:
 
 Style/NumericLiterals:
   Enabled: false
+
+Rails/UnusedIgnoredColumns:
+  Enabled: false

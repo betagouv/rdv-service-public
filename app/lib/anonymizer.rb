@@ -35,7 +35,7 @@ class Anonymizer
     end
     # Sanity checks supplémentaires
     # Ces variables d'envs n'ont rien à voir avec l'ETL, et ne devraient donc pas être présentes
-    if ENV["RACK_ENV"].present? || ENV["DEFAULT_SMS_PROVIDER"].present?
+    if ENV["HOST"].present? || ENV["DEFAULT_SMS_PROVIDER"].present?
       raise "Attention, il semble que vous êtes en train d'anonymiser des données d'une appli web"
     end
 
@@ -48,7 +48,7 @@ class Anonymizer
       raise "Les règles d'anonymisation pour les colonnes #{unidentified_column_names.join(' ')} de la table #{@table_name} n'ont pas été définies"
     end
 
-    return if anonymized_attributes.blank?
+    return if anonymized_columns.blank?
 
     model_class = AnonymizerRules::RULES.dig(@table_name, "class_name")&.constantize
 
@@ -56,11 +56,24 @@ class Anonymizer
       raise "Pas de modèle trouvé pour la table #{@table_name}"
     end
 
-    model_class.unscoped.update_all(anonymized_attributes) # rubocop:disable Rails/SkipsModelValidations
+    anonymized_columns.each { |column| anonymize_column(column, model_class) }
   end
   # rubocop:enable Metrics/CyclomaticComplexity
 
   private
+
+  def anonymize_column(column, model_class)
+    ActiveRecord::Encryption.without_encryption do # The columns may be encrypted, but we still want to overwrite the anonymized value
+      scope = model_class.unscoped.where.not(column.name => nil)
+
+      if column.type.in?(%i[string text])
+        # Pour limiter la confusion lors de l'exploitation des données, on transforme les chaines vides en null
+        scope.where(column.name => "").update_all(column.name => nil) # rubocop:disable Rails/SkipsModelValidations
+      end
+
+      scope.update_all(column.name => anonymous_value(column)) # rubocop:disable Rails/SkipsModelValidations
+    end
+  end
 
   def unidentified_column_names
     all_columns = db_connection.columns(@table_name).map(&:name)
@@ -92,9 +105,9 @@ class Anonymizer
   def anonymous_value(column)
     if column.type.in?(%i[string text])
       if column_has_uniqueness_constraint?(column)
-        Arel.sql("CASE WHEN #{ActiveRecord::Base.sanitize_sql(column.name)} IS NULL THEN NULL ELSE '[valeur unique anonymisée ' || id || ']' END")
+        Arel.sql("'[valeur unique anonymisée ' || id || ']'")
       else
-        Arel.sql("CASE WHEN #{ActiveRecord::Base.sanitize_sql(column.name)} IS NULL THEN NULL ELSE '[valeur anonymisée]' END")
+        "[valeur anonymisée]"
       end
     else
       column.default
