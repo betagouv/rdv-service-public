@@ -88,7 +88,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_15_151534) do
   ], force: :cascade
 
   create_enum :role, [
-    "super_admin",
+    "legacy_admin",
     "support",
   ], force: :cascade
 

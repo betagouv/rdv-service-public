@@ -5,7 +5,7 @@ class SuperAdmin < ApplicationRecord
 
   # Attributes
   enum role: {
-    super_admin: "super_admin",
+    legacy_admin: "legacy_admin",
     support: "support",
   }, _suffix: "member"
 

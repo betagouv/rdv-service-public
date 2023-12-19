@@ -1,5 +1,5 @@
 class SuperAdmin::MairieComptePolicy < DefaultSuperAdminPolicy
-  alias index? super_admin_member?
-  alias new? super_admin_member?
-  alias create? super_admin_member?
+  alias index? team_member?
+  alias new? team_member?
+  alias create? team_member?
 end

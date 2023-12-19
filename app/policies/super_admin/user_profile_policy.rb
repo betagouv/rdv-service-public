@@ -1,3 +1,3 @@
 class SuperAdmin::UserProfilePolicy < DefaultSuperAdminPolicy
-  alias destroy? super_admin_member?
+  alias destroy? legacy_admin_member?
 end

@@ -1,7 +1,7 @@
 class DefaultSuperAdminPolicy < ApplicationPolicy
   alias current_super_admin pundit_user
   delegate :support_member?, to: :current_super_admin
-  delegate :super_admin_member?, to: :current_super_admin
+  delegate :legacy_admin_member?, to: :current_super_admin
 
   def index?
     false
@@ -32,7 +32,7 @@ class DefaultSuperAdminPolicy < ApplicationPolicy
   end
 
   def team_member?
-    support_member? || super_admin_member?
+    support_member? || legacy_admin_member?
   end
 
   class Scope < Scope

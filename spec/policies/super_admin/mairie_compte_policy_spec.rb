@@ -13,6 +13,7 @@ describe SuperAdmin::MairieComptePolicy, type: :policy do
   context "permitted actions for support" do
     let!(:pundit_context) { create(:super_admin, :support) }
 
-    it_behaves_like "not permit actions", :mairie_compte, :index?, :new?, :create?, :show?, :edit?, :update?, :destroy?
+    it_behaves_like "permit actions", :mairie_compte, :index?, :new?, :create?
+    it_behaves_like "not permit actions", :mairie_compte, :show?, :edit?, :update?, :destroy?
   end
 end

@@ -12,7 +12,7 @@ describe SuperAdmin::LieuPolicy, type: :policy do
   context "permitted actions for support" do
     let!(:pundit_context) { create(:super_admin, :support) }
 
-    it_behaves_like "permit actions", :lieu, :index?, :show?
-    it_behaves_like "not permit actions", :lieu, :new?, :create?, :edit?, :update?, :destroy?
+    it_behaves_like "permit actions", :lieu, :index?, :show?, :edit?, :update?
+    it_behaves_like "not permit actions", :lieu, :new?, :create?, :destroy?
   end
 end

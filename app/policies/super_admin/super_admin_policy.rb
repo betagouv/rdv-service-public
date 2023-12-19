@@ -1,6 +1,6 @@
 class SuperAdmin::SuperAdminPolicy < DefaultSuperAdminPolicy
   def privileges_for_record?
-    super_admin_member? || (record.support_member? && support_member?)
+    legacy_admin_member? || (record.support_member? && support_member?)
   end
 
   alias index? team_member?
