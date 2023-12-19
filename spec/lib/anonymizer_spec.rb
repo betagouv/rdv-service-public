@@ -2,11 +2,11 @@ RSpec.describe Anonymizer do
   let!(:user_with_email) { create(:user, email: "user@example.com") }
 
   around do |example|
-    rack_env = ENV.delete("RACK_ENV")
+    host = ENV.delete("HOST")
 
     example.run
 
-    ENV["RACK_ENV"] = rack_env
+    ENV["HOST"] = host
   end
 
   context "general case" do
@@ -39,5 +39,19 @@ RSpec.describe Anonymizer do
 
     expect(user_without_email.reload.email).to be_nil
     expect(user_with_email.reload.email).to eq "[valeur unique anonymisée #{user_with_email.id}]"
+  end
+
+  describe "null and empty values" do
+    let!(:rdv_with_context) { create(:rdv, context: "Des infos sensisbles sur le rdv") }
+    let!(:rdv_with_blank_context) { create(:rdv, context: "") }
+    let!(:rdv_with_null_context) { create(:rdv, context: nil) }
+
+    it "turns blank strings into null to avoid confusion when non-tech people use the data in metabase" do
+      described_class.anonymize_all_data!
+
+      expect(rdv_with_context.reload.context).to eq "[valeur anonymisée]"
+      expect(rdv_with_blank_context.reload.context).to be_nil
+      expect(rdv_with_null_context.reload.context).to be_nil
+    end
   end
 end
