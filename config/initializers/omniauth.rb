@@ -10,12 +10,13 @@ Rails.application.config.middleware.use OmniAuth::Builder do
              scope: %w[offline_access openid email profile User.Read Calendars.ReadWrite])
   end
 
-  if Domain::RDV_AIDE_NUMERIQUE.azure_application_client_id
-    provider(:microsoft_graph,
-             Domain::RDV_AIDE_NUMERIQUE.azure_application_client_id,
-             Domain::RDV_AIDE_NUMERIQUE.azure_application_client_secret,
-             scope: %w[offline_access openid email profile User.Read Calendars.ReadWrite])
-  end
+  # TODO : have two different names for the different oauth providers
+  # if Domain::RDV_AIDE_NUMERIQUE.azure_application_client_id
+  #   provider(:microsoft_graph,
+  #            Domain::RDV_AIDE_NUMERIQUE.azure_application_client_id,
+  #            Domain::RDV_AIDE_NUMERIQUE.azure_application_client_secret,
+  #            scope: %w[offline_access openid email profile User.Read Calendars.ReadWrite])
+  # end
 
   provider(
     :franceconnect,
