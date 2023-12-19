@@ -15,7 +15,7 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
       skip_policy_scope # TODO: improve pundit checks for creneaux
       redirect_to admin_organisation_slots_path(current_organisation, creneaux_search_params)
     else
-      @motifs = Agent::MotifPolicy::Scope.apply(current_agent, Motif).active
+      @motifs = Agent::MotifPolicy::Scope.apply(current_agent, Motif).active.where(organisation: selected_orgs)
       @services = Service.where(id: @motifs.pluck(:service_id).uniq)
       @form.service_id = @services.first.id if @services.count == 1
       @teams = current_organisation.territory.teams
@@ -47,10 +47,15 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
   end
 
   def set_form
-    organisations = params[:organisations].blank? ? [current_organisation] : Organisation.where(id: params[:organisations])
-    raise "t'as pas le droit" unless policy_scope(Organisation).to_set.superset?(organisations.to_set)
+    @form = helpers.build_agent_creneaux_search_form(selected_orgs, params)
+  end
 
-    @form = helpers.build_agent_creneaux_search_form(organisations, params)
+  def selected_orgs
+    if params[:organisations].present?
+      policy_scope(Organisation).where(id: params[:organisations])
+    else
+      [current_organisation]
+    end
   end
 
   def set_search_results

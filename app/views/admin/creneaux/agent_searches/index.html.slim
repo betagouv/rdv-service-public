@@ -7,10 +7,6 @@
       h6.card-subtitle.mb-2.text-center = t(".search_for_slots_subtitle", users_fullname: @form.users.map(&:full_name).join(" ,"))
   .card-body
     = simple_form_for(@form, as: "", url: admin_organisation_agent_searches_path(current_organisation), method: :get) do |f|
-      - @form.user_ids.each do |user_id|
-        = hidden_field_tag "user_ids[]", user_id
-      - if @form.context.present?
-        = hidden_field_tag :context, @form.context
       .row
         .col-md-4
           = f.input :organisations, \
@@ -24,6 +20,14 @@
                 "select-options": { disableSearch: true }, \
               }, \
             }
+        .col-md-4
+          = f.submit "Sélectionner ces orgas", class: "btn btn-outline-primary", data: { disable_with: "Récupération des créneaux..." }
+
+    = simple_form_for(@form, as: "", url: admin_organisation_agent_searches_path(current_organisation), method: :get) do |f|
+      - @form.user_ids.each do |user_id|
+        = hidden_field_tag "user_ids[]", user_id
+      - if @form.context.present?
+        = hidden_field_tag :context, @form.context
       .row
         .col-md-4
           = f.input :service_id, \
