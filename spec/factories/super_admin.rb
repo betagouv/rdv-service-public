@@ -6,5 +6,9 @@ FactoryBot.define do
     role { :super_admin }
     first_name { Faker::Name.first_name }
     last_name { Faker::Name.last_name }
+
+    trait :support do
+      role { :support }
+    end
   end
 end
