@@ -1,15 +1,14 @@
-section.bg-light.p-4
-  .container
-    - if context.unique_motifs_by_name_and_location_type.empty?
-      = render "nothing_to_show", context: context
-    - else
-      h2.font-weight-bold Sélectionnez le service avec qui vous voulez prendre un RDV :
-      - unless context.invitation?
-      - context.services.each do |service|
-        .card.mb-3
-          = link_to prendre_rdv_path(context.query_params.merge(service_id: service.id)) do
-            .card-body
-              .row
-                .col-md
-                  h3.card-title.mb-3.mt-0.text-success.font-weight-bold= service.name
-    = render "referent_booking_card", context: context
+.container
+  - if context.unique_motifs_by_name_and_location_type.empty?
+    = render "nothing_to_show", context: context
+  - else
+    h2.font-weight-bold Sélectionnez le service avec qui vous voulez prendre un RDV :
+    - unless context.invitation?
+    - context.services.each do |service|
+      .card.mb-3
+        = link_to prendre_rdv_path(context.query_params.merge(service_id: service.id)) do
+          .card-body
+            .row
+              .col-md
+                h3.card-title.mb-3.mt-0.text-success.font-weight-bold= service.name
+  = render "referent_booking_card", context: context
