@@ -24,7 +24,7 @@ class AgentPrescripteurRdvWizard
     if query_params[:rdv_collectif_id].present?
       @rdv = Rdv.collectif.bookable_by_everyone_or_agents_and_prescripteurs_or_invited_users.find(query_params[:rdv_collectif_id])
     else
-      @rdv = Rdv.new(query_params.slice(:starts_at, :user_ids, :motif_id))
+      @rdv = Rdv.new(query_params.slice(:starts_at, :user_ids, :motif_id, :lieu_id))
       @rdv.participations.map(&:set_default_notifications_flags)
       @rdv.duration_in_min = @rdv.motif&.default_duration_in_min
       @rdv.organisation = motif.organisation
