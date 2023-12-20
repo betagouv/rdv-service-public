@@ -159,11 +159,6 @@ Rails.application.routes.draw do
         resources :absences, only: [:index]
       end
 
-      resource :prescription, only: [], controller: "prescription" do
-        get "search_creneau"
-        get "recapitulatif"
-      end
-
       resources :organisations do
         resources :plage_ouvertures, except: %i[index new]
         resources :agent_searches, only: :index, module: "creneaux"
@@ -229,6 +224,10 @@ Rails.application.routes.draw do
           get :create
         end
         get "support", to: "static_pages#support"
+        resource :prescription, only: [], controller: "prescription" do
+          get "search_creneau"
+          get "recapitulatif"
+        end
       end
     end
   end

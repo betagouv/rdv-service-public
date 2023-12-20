@@ -6,7 +6,7 @@ class SearchController < ApplicationController
 
   def search_rdv
     if current_agent
-      redirect_to search_creneau_admin_prescription_path(agent_search_params)
+      redirect_to search_creneau_admin_organisation_prescription_path(session[:organisation_id], agent_search_params)
     end
     @context = if invitation?
                  WebInvitationSearchContext.new(user: current_user, query_params: query_params)
