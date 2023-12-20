@@ -1,6 +1,6 @@
 section.bg-light.p-4
   .container
-    = render "selected_motif_recap", context: context
+    = render "search/selected_motif_recap", context: context
     - if context.lieu.present?
       .card.card-hoverable
         .card-body
@@ -31,7 +31,7 @@ section.bg-light.p-4
           - context.available_collective_rdvs.includes(:agents_rdvs, :agents, :motif).each do |rdv|
             = render "rdv_collectif", rdv: rdv
         - elsif context.unique_motifs_by_name_and_location_type.present?
-          = render "creneaux", lieu: context.lieu, creneaux: context.creneaux, date_range: context.date_range, departement: context.departement, address: context.address, max_public_booking_delay: context.max_public_booking_delay, city_code: context.city_code, next_availability: context.next_availability, query_params: context.query_params, context: context
+          = render "search/creneaux", lieu: context.lieu, creneaux: context.creneaux, date_range: context.date_range, departement: context.departement, address: context.address, max_public_booking_delay: context.max_public_booking_delay, city_code: context.city_code, next_availability: context.next_availability, query_params: context.query_params, context: context
         - else
           .alert.alert-warning
             = "Le motif "

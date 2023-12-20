@@ -5,6 +5,9 @@ class SearchController < ApplicationController
   after_action :allow_iframe
 
   def search_rdv
+    if current_agent
+      redirect_to admin_organisation_prescription_path({ organisation_id: current_agent.organisations.first.id }.merge(search_params))
+    end
     @context = if invitation?
                  WebInvitationSearchContext.new(user: current_user, query_params: query_params)
                else

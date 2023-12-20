@@ -1,6 +1,6 @@
 section.bg-light.p-4
   .container
-    = render "selected_motif_recap", context: context
+    = render "search/selected_motif_recap", context: context
     - if context.shown_lieux.empty?
       = render "nothing_to_show", context: context
     - else
