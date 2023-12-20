@@ -9,6 +9,20 @@ class Admin::PrescriptionController < AgentAuthController
     @rdv_wizard = AgentPrescripteurRdvWizard.new(query_params: search_params)
   end
 
+  def create_rdv
+    skip_authorization
+
+    @rdv_wizard = AgentPrescripteurRdvWizard.new(query_params: search_params)
+
+    rdv = @rdv_wizard.create_rdv!
+    redirect_to confirmation_admin_organisation_prescription_path(rdv_id: rdv.id)
+  end
+
+  def confirmation
+    skip_authorization # TODO: remove this
+    @rdv = Rdv.find(params[:rdv_id])
+  end
+
   private
 
   # TODO: factorize with app/controllers/search_controller.rb

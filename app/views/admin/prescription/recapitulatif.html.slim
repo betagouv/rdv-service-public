@@ -1,1 +1,15 @@
-= render "users/rdv_wizard_steps/rdv_wizard_summary", rdv_wizard: @rdv_wizard
+
+main.container
+  .row.justify-content-center
+    .col-lg-7.col-md-10.col-sm-11
+      .card
+        .card-body
+          h3
+            Récapitulatif
+
+          = render "users/rdv_wizard_steps/rdv_wizard_summary", rdv_wizard: @rdv_wizard
+
+          - @rdv_wizard.rdv.users.each do |user|
+            = user.full_name
+
+          = button_to("Confirmer le rdv", create_rdv_admin_organisation_prescription_path(@rdv_wizard.query_params), method: :post)

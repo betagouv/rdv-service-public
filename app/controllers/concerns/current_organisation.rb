@@ -12,6 +12,6 @@ module CurrentOrganisation
   end
 
   def set_current_organisation
-    Current.organisation ||= Organisation.find(session[:organisation_id])
+    Current.organisation ||= Organisation.find_by(id: session[:organisation_id])
   end
 end

@@ -227,6 +227,8 @@ Rails.application.routes.draw do
         resource :prescription, only: [], controller: "prescription" do
           get "search_creneau"
           get "recapitulatif"
+          post "create_rdv"
+          get "confirmation"
         end
       end
     end
