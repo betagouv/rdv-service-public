@@ -4,8 +4,8 @@ class AgentPrescriptionSearchContext < WebSearchContext
     query_params[:user_ids] = [user.id]
   end
 
-  def wizard_after_creneau_selection_path(params)
+  def wizard_after_creneau_selection_path(creneau_params)
     url_helpers = Rails.application.routes.url_helpers
-    url_helpers.recapitulatif_admin_prescription_path(params)
+    url_helpers.recapitulatif_admin_prescription_path(creneau_params.merge(query_params))
   end
 end
