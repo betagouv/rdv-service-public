@@ -144,11 +144,18 @@ class Agent < ApplicationRecord
   end
 
   def soft_delete
-    still_has_attached_resources = organisations.any? || plage_ouvertures.any? { |r| !r.destroyed? } || absences.any? { |r| !r.destroyed? }
+    raise SoftDeleteError, "agent still has attached orgs: #{organisations.ids.inspect}" if organisations.any?
 
-    raise SoftDeleteError, "agent still has attached resources" if still_has_attached_resources
-
+    # L'agent n'a plus d'orga, on supprime ses relations
+    absences.destroy_all
+    plage_ouvertures.destroy_all
+    agent_services.destroy_all
+    agent_territorial_access_rights.destroy_all
+    territorial_roles.destroy_all
+    agent_teams.destroy_all
+    referent_assignations.destroy_all
     sector_attributions.destroy_all
+
     update_columns(deleted_at: Time.zone.now, email_original: email, email: deleted_email, uid: deleted_email)
   end
 
