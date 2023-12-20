@@ -6,7 +6,7 @@ class SearchController < ApplicationController
 
   def search_rdv
     if current_agent
-      redirect_to admin_organisation_prescription_path({ organisation_id: current_agent.organisations.first.id }.merge(search_params))
+      redirect_to search_creneau_admin_prescription_path(agent_search_params)
     end
     @context = if invitation?
                  WebInvitationSearchContext.new(user: current_user, query_params: query_params)
@@ -86,6 +86,18 @@ class SearchController < ApplicationController
       :service_id, :lieu_id, :date, :motif_name_with_location_type, :motif_category_short_name,
       :motif_id, :public_link_organisation_id, :user_selected_organisation_id, :prescripteur,
       organisation_ids: [], referent_ids: [], external_organisation_ids: []
+    )
+  end
+
+  # TODO: faire moins horrible
+  def agent_search_params
+    params.permit(
+      :latitude, :longitude, :address, :city_code, :departement, :street_ban_id,
+      :service_id, :lieu_id, :date, :motif_name_with_location_type, :motif_category_short_name,
+      :motif_id, :public_link_organisation_id, :user_selected_organisation_id, :prescripteur,
+      organisation_ids: [], referent_ids: [], external_organisation_ids: [],
+      # nouveau truc
+      user_ids: []
     )
   end
 end

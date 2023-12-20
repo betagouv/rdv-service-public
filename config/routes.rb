@@ -159,13 +159,17 @@ Rails.application.routes.draw do
         resources :absences, only: [:index]
       end
 
+      resource :prescription, only: [], controller: "prescription" do
+        get "search_creneau"
+        get "recapitulatif"
+      end
+
       resources :organisations do
         resources :plage_ouvertures, except: %i[index new]
         resources :agent_searches, only: :index, module: "creneaux"
         resources :slots, only: :index
         resources :lieux, except: :show
         resources :motifs
-        get "prescription" => "prescription#search_creneau"
         resources :rdvs_collectifs, only: %i[index new create edit update] do
           collection do
             resources :motifs, only: [:index], as: :rdvs_collectif_motifs, controller: "rdvs_collectifs/motifs"
