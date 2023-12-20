@@ -146,7 +146,6 @@ class Agent < ApplicationRecord
   def soft_delete
     raise SoftDeleteError, "agent still has attached orgs: #{organisations.ids.inspect}" if organisations.any?
 
-    # L'agent n'a plus d'orga, on supprime ses relations
     absences.destroy_all
     plage_ouvertures.destroy_all
     agent_services.destroy_all
