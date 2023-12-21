@@ -52,7 +52,7 @@ describe AgentRemoval, type: :service do
       expect(agent).not_to receive(:soft_delete)
       service = described_class.new(agent, organisation)
       expect(service).to be_invalid
-      expect { service.remove! }.to raise_error
+      expect { service.remove! }.to raise_error(StandardError)
       expect(agent.organisations).to include(organisation)
     end
   end
