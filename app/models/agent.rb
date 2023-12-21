@@ -146,16 +146,18 @@ class Agent < ApplicationRecord
   def soft_delete
     raise SoftDeleteError, "agent still has attached orgs: #{organisations.ids.inspect}" if organisations.any?
 
-    absences.destroy_all
-    plage_ouvertures.destroy_all
-    agent_services.destroy_all
-    agent_territorial_access_rights.destroy_all
-    territorial_roles.destroy_all
-    agent_teams.destroy_all
-    referent_assignations.destroy_all
-    sector_attributions.destroy_all
+    transaction do
+      absences.destroy_all
+      plage_ouvertures.destroy_all
+      agent_services.destroy_all
+      agent_territorial_access_rights.destroy_all
+      territorial_roles.destroy_all
+      agent_teams.destroy_all
+      referent_assignations.destroy_all
+      sector_attributions.destroy_all
 
-    update_columns(deleted_at: Time.zone.now, email_original: email, email: deleted_email, uid: deleted_email)
+      update_columns(deleted_at: Time.zone.now, email_original: email, email: deleted_email, uid: deleted_email)
+    end
   end
 
   def deleted_email
