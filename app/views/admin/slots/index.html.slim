@@ -28,12 +28,7 @@
         - @search_result.creneaux.each do |search_result|
           = render "admin/rdvs_collectifs/rdv", rdv: search_result
 
-  - if @form.user_ids.any?
-    #creneaux
-      p
-        | Vous pouvez aussi élargir votre recherche aux créneaux ouverts au public ou à la prescription dans d'autres organisations.
-      p
-        = link_to("Élargir votre recherche", search_creneau_admin_organisation_prescription_path(user_ids: @form.user_ids, departement: current_territory.departement_number), class: "btn btn-outline-primary")
+  = render "admin/slots/prescription_cta"
 
 - else
   = render partial: "admin/slots/no_slot_available"

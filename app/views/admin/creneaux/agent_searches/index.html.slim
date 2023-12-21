@@ -79,11 +79,12 @@
   .text-center
     - if @search_results&.any?
       .container
-        h3.font-weight-bold Résultats de votre recherche
-        p.font-weight-bold= t(".available_places_with_slots", count: @search_results.length)
+        h3.font-weight-bold= t(".available_places_with_slots", count: @search_results.length)
         - @search_results.each do |search_result|
           = render "lieu_search_results", search_result: search_result
+        = render "admin/slots/prescription_cta"
     - elsif motif_selected? && params[:commit].present?
       = render partial: "admin/slots/no_slot_available"
     - else
       .text-muted= t(".choose_filter_and_refresh")
+      = render "admin/slots/prescription_cta"
