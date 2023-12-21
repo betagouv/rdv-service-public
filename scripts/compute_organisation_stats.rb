@@ -32,7 +32,7 @@ def percentage(count, total)
   "#{(count / total.to_f).round(2) * 100} %"
 end
 
-puts "Cacul des statistiques pour l'organisation #{org.name} (#{org.departement})"
+puts "Cacul des statistiques pour l'organisation #{org.name} (#{org.territory.name})"
 puts
 
 puts "#{org.users.count} usagers au total pour cette organisation."
