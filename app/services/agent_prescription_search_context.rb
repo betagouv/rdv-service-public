@@ -17,4 +17,6 @@ class AgentPrescriptionSearchContext < WebSearchContext
     url_helpers = Rails.application.routes.url_helpers
     url_helpers.recapitulatif_admin_organisation_prescription_path(Current.organisation, creneau_params.merge(query_params))
   end
+
+  attr_reader :user
 end
