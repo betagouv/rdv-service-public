@@ -89,15 +89,7 @@ class SearchController < ApplicationController
     )
   end
 
-  # TODO: faire moins horrible
   def agent_search_params
-    params.permit(
-      :latitude, :longitude, :address, :city_code, :departement, :street_ban_id,
-      :service_id, :lieu_id, :date, :motif_name_with_location_type, :motif_category_short_name,
-      :motif_id, :public_link_organisation_id, :user_selected_organisation_id, :prescripteur,
-      organisation_ids: [], referent_ids: [], external_organisation_ids: [],
-      # nouveau truc
-      user_ids: []
-    )
+    params.permit(AgentPrescriptionSearchContext::STRONG_PARAMS_LIST)
   end
 end
