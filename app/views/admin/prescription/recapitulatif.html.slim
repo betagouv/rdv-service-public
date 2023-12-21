@@ -1,6 +1,6 @@
 
 main.container
-  .row.justify-content-center
+  .row.justify-content-center.mt-5
     .col-lg-7.col-md-10.col-sm-11
       .card
         .card-body
@@ -9,8 +9,14 @@ main.container
 
           = render "users/rdv_wizard_steps/rdv_wizard_summary", rdv_wizard: @rdv_wizard
 
-          - @rdv_wizard.rdv.users.each do |user|
-            = user.full_name
+          ul.list-group.list-group-flush[style="border-top: 1px solid #e3eaef;"]
+            - @rdv_wizard.rdv.users.each do |user|
+              li.list-group-item
+                .row
+                  .col
+                    i.fa.fa-check.fa-fw.mr-1.text-success
+                    | Usager :&nbsp;
+                    = user.full_name
 
           .row
             .col.text-right
