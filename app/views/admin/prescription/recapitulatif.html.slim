@@ -12,4 +12,6 @@ main.container
           - @rdv_wizard.rdv.users.each do |user|
             = user.full_name
 
-          = button_to("Confirmer le rdv", create_rdv_admin_organisation_prescription_path(@rdv_wizard.query_params), method: :post)
+          .row
+            .col.text-right
+              = button_to("Confirmer le rdv", create_rdv_admin_organisation_prescription_path(@rdv_wizard.query_params), method: :post, class: "btn btn-primary")
