@@ -1,5 +1,6 @@
 class AgentAuthController < ApplicationController
   include Admin::AuthenticatedControllerConcern
+  include CurrentOrganisation
 
   layout "application_agent"
 

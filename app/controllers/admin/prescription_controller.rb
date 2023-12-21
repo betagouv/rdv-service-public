@@ -39,7 +39,6 @@ class Admin::PrescriptionController < AgentAuthController
   end
 
   def user
-    # TODO: add the appropriate policy_scope
-    @user ||= User.find(params[:user_ids].first)
+    @user ||= policy_scope(User, policy_scope_class: Agent::UserPolicy::Scope).find(params[:user_ids].first)
   end
 end
