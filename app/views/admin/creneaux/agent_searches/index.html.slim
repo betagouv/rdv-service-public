@@ -1,12 +1,11 @@
 - content_for(:menu_item) { "menu-agendas" }
 
-.card
+.card.mt-2
   .card-header
-    h3.text-center = t(".search_for_slots_title")
+    h3 = t(".search_for_slots_title")
     - if @form.users.any?
-       h6.card-subtitle.mb-2.text-center = t(".search_for_slots_subtitle", users_fullname: @form.users.map(&:full_name).join(" ,"))
+      h6.card-subtitle.mb-2 = t(".search_for_slots_subtitle", users_fullname: @form.users.map(&:full_name).join(" ,"))
   .card-body
-    h5.card-title Configuration des filtres
     = simple_form_for(@form, as: "", url: admin_organisation_agent_searches_path(current_organisation), method: :get) do |f|
       - @form.user_ids.each do |user_id|
         = hidden_field_tag "user_ids[]", user_id
