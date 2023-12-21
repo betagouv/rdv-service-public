@@ -27,7 +27,9 @@ tr id="agent_#{agent.id}"
       - if policy([:agent, agent]).edit?
         div.mr-3= link_to edit_admin_organisation_agent_path(current_organisation, agent), title: t("helpers.edit") do
           i.fa.fa-edit
-      - if policy([:agent, agent]).destroy?
+
+      / pour se supprimer soi-même, passer par la page "Compte", car par ici ça pose des soucis de session
+      - if policy([:agent, agent]).destroy? && agent != current_agent
         - agent_removal_presenter = AgentRemovalPresenter.new(agent, current_organisation)
         - path = admin_organisation_agent_path(current_organisation, agent)
         = link_to path,
