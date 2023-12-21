@@ -7,6 +7,11 @@ class Admin::PrescriptionController < AgentAuthController
   def recapitulatif
     skip_authorization
     @rdv_wizard = AgentPrescripteurRdvWizard.new(query_params: search_params)
+
+    unless @rdv_wizard.creneau
+      flash[:error] = "Ce créneau n'est plus disponible. Veuillez en sélectionner un autre."
+      redirect_to(search_creneau_admin_organisation_prescription_path(params[:organisation_id], @rdv_wizard.params_to_selections))
+    end
   end
 
   def create_rdv
