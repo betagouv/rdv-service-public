@@ -2,7 +2,15 @@ module PaperTrailHelper
   def paper_trail_change_value(property_name, value)
     # TODO: use human_attribute_value instead of these custom helpers
     return "N/A" if value.blank?
-    return I18n.l(value, format: :dense) if value.is_a? Time
+
+    if property_name.ends_with?("_at")
+      value = Time.zone.parse(value)
+    elsif property_name.ends_with?("_day") || property_name.ends_with?("_date")
+      value = Date.parse(value)
+    end
+
+    return I18n.l(value, format: :dense) if value.is_a?(Time)
+    return I18n.l(value, format: :long) if value.is_a?(Date)
 
     property_helper = "paper_trail__#{property_name}"
     if respond_to?(property_helper, true)
