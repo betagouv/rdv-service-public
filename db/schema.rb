@@ -722,7 +722,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_23_090635) do
     t.datetime "created_at"
     t.text "old_object_changes"
     t.json "virtual_attributes"
-    t.boolean "migrated_to_json", default: true, null: false
     t.jsonb "object"
     t.jsonb "object_changes"
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
