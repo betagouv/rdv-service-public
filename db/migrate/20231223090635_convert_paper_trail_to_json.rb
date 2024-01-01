@@ -4,7 +4,7 @@
 # ::ActiveRecord.use_yaml_unsafe_load = true
 # permitted_classes = [Time, Date, ActiveRecord::Type::Time::Value]
 #
-# not_migrated_versions = PaperTrail::Version.where.not(old_object: nil).or(PaperTrail::Version.where.not(old_object_changes: nil))
+# not_migrated_versions = PaperTrail::Version.where("old_object IS NOT NULL OR old_object_changes IS NOT NULL")
 #
 # not_migrated_versions.find_in_batches(batch_size: 10000) do |batch|
 #   update_hash = batch.map do |version|
@@ -20,9 +20,11 @@
 #     }
 #   end
 #
-#   break if update_hash.empty?
-#
-#   PaperTrail::Version.upsert_all(update_hash, update_only: %i[object object_changes old_object old_object_changes], record_timestamps: false)
+#   PaperTrail::Version.upsert_all(
+#     update_hash,
+#     update_only: %i[object object_changes old_object old_object_changes],
+#     record_timestamps: false
+#   )
 # end
 #
 class ConvertPaperTrailToJson < ActiveRecord::Migration[7.0]
