@@ -12,7 +12,7 @@ describe SuperAdmin::OrganisationPolicy, type: :policy do
   context "permitted actions for support" do
     let!(:pundit_context) { create(:super_admin, :support) }
 
-    it_behaves_like "permit actions", :organisation, :index?, :show?
-    it_behaves_like "not permit actions", :organisation, :new?, :create?, :edit?, :update?, :destroy?
+    it_behaves_like "permit actions", :organisation, :index?, :show?, :new?, :create?, :edit?, :update?
+    it_behaves_like "not permit actions", :organisation, :destroy?
   end
 end
