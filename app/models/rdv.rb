@@ -197,7 +197,7 @@ class Rdv < ApplicationRecord
 
   def editable_by_user?
     !cancelled? && !collectif? && motif.rdvs_editable_by_user? && starts_at > 2.days.from_now &&
-      motif.bookable_by_everyone_or_bookable_by_invited_users? && !created_by_agent?
+      motif.bookable_by_everyone_or_bookable_by_invited_users? && !created_by.is_a?(Agent)
   end
 
   def available_to_file_attente?
@@ -452,6 +452,6 @@ class Rdv < ApplicationRecord
   end
 
   def set_created_by_for_participations
-    participations.each { |participation| participation.created_by = created_by }
+    participations.each { |participation| participation.created_by ||= created_by }
   end
 end

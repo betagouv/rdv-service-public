@@ -8,40 +8,39 @@ main.container
           h3
             i.fa.fa-check-circle
             = " Rendez-vous confirmé"
-          - rdv = @prescripteur.rdv
           ul.list-group.list-group-flush
             li.list-group-item
               .fa.fa-calendar>
-              = rdv_title(rdv)
-              = rdv_tag(rdv)
+              = rdv_title(@rdv)
+              = rdv_tag(@rdv)
 
-            - if rdv.public_office?
+            - if @rdv.public_office?
               li.list-group-item
                 .fa.fa-map-marker-alt>
-                = human_location(rdv)
-                - if rdv.lieu&.phone_number
+                = human_location(@rdv)
+                - if @rdv.lieu&.phone_number
                   span>
                   span.fa.fa-phone>
-                  = link_to rdv.lieu.phone_number, "tel:#{rdv.lieu.phone_number_formatted}"
+                  = link_to @rdv.lieu.phone_number, "tel:#{@rdv.lieu.phone_number_formatted}"
 
-            - elsif rdv.phone?
+            - elsif @rdv.phone?
               li.list-group-item
                 .fa.fa-phone>
                 | RDV Téléphonique
 
             li.list-group-item
               .fa.fa-user>
-              = @prescripteur.user.full_name
-              = " (#{@prescripteur.user.phone_number})" if @prescripteur.user.phone_number.present?
+              = @user.full_name
+              = " (#{@user.phone_number})" if @user.phone_number.present?
             li.list-group-item
               i.fa.fa-info-circle>
-              = rdv.motif.name
-            - if rdv.motif.instruction_for_rdv.present?
+              = @rdv.motif.name
+            - if @rdv.motif.instruction_for_rdv.present?
               li.list-group-item
                 i.fa.fa-exclamation-triangle>
                 strong Informations supplémentaires :
                 .pl-3.pt-1
-                  = instruction_for_rdv_to_html(rdv.motif)
+                  = instruction_for_rdv_to_html(@rdv.motif)
             li.list-group-item
               = "Besoin de déplacer le rendez-vous ou de corriger un détail ? "
               =< mail_to(current_domain.support_email, "Contactez-nous", target: "_blank")
@@ -49,4 +48,4 @@ main.container
               = "Vous pouvez aussi "
               = mail_to(current_domain.support_email, "nous écrire",target: "_blank")
               = " pour nous donner votre avis sur la prise de rendez-vous."
-          .mt-4.text-center= link_to "Retour à l'accueil", prendre_rdv_prescripteur_path(rdv.territory.departement_number)
+          .mt-4.text-center= link_to "Retour à l'accueil", prendre_rdv_prescripteur_path(@rdv.territory.departement_number)
