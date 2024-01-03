@@ -668,7 +668,7 @@ Rdv.create!(
   agent_ids: [agent_org_paris_nord_pmi_martine.id],
   user_ids: [user_org_paris_nord_patricia.id],
   context: "Visite de courtoisie",
-  created_by: :agent
+  created_by: agent_org_paris_nord_pmi_martine
 )
 Rdv.create!(
   starts_at: Time.zone.today + 4.days + 15.hours,
@@ -679,7 +679,7 @@ Rdv.create!(
   agent_ids: [agent_org_paris_nord_pmi_martine.id],
   user_ids: [user_org_paris_nord_josephine.id],
   context: "Suivi vaccins",
-  created_by: :agent
+  created_by: agent_org_paris_nord_pmi_martine
 )
 Rdv.create!(
   starts_at: Time.zone.today + 5.days + 11.hours,
@@ -690,7 +690,7 @@ Rdv.create!(
   agent_ids: [agent_org_paris_nord_pmi_martine.id],
   user_ids: [user_org_paris_nord_josephine.id],
   context: "Visite à domicile",
-  created_by: :agent
+  created_by: agent_org_paris_nord_pmi_martine
 )
 
 Rdv.create!(
@@ -702,7 +702,7 @@ Rdv.create!(
   agent_ids: [agent_org_paris_nord_pmi_martine.id],
   user_ids: [user_org_paris_nord_josephine.id],
   context: "Visite à domicile",
-  created_by: :agent
+  created_by: agent_org_paris_nord_pmi_martine
 )
 
 10.times do |i|
@@ -750,7 +750,9 @@ results = Rdv.insert_all!(rdv_attributes, returning: Arel.sql("id")) # [{"id"=>1
 rdv_ids = results.flat_map(&:values) # [1, 2, ...]
 agent_rdv_attributes = rdv_ids.map { |id| { agent_id: agent_org_paris_nord_pmi_martine.id, rdv_id: id } }
 AgentsRdv.insert_all!(agent_rdv_attributes)
-participations_attributes = rdv_ids.map { |id| { user_id: user_org_paris_nord_josephine.id, rdv_id: id, send_lifecycle_notifications: true, send_reminder_notification: true, created_by: :agent } }
+participations_attributes = rdv_ids.map do |id|
+  { user_id: user_org_paris_nord_josephine.id, rdv_id: id, send_lifecycle_notifications: true, send_reminder_notification: true, created_by: agent_org_paris_nord_pmi_martine }
+end
 Participation.insert_all!(participations_attributes)
 events = %w[new_creneau_available rdv_cancelled rdv_created rdv_date_updated rdv_upcoming_reminder]
 receipts_attributes = rdv_ids.map do |id|

@@ -63,6 +63,7 @@ RSpec.configure do |config|
               collectif: { type: "boolean" },
               context: { type: "string", nullable: true },
               created_by: { type: "string", enum: %w[agent user file_attente prescripteur] },
+              created_by_type: { type: "string", enum: %w[Agent User FileAttente Prescripteur] },
               duration_in_min: { type: "integer" },
               ends_at: { type: "string" },
               lieu: { "$ref" => "#/components/schemas/lieu" },
@@ -87,7 +88,7 @@ RSpec.configure do |config|
               users_count: { type: "integer" },
               uuid: { type: "string" },
             },
-            required: %w[id address agents cancelled_at collectif context created_by duration_in_min lieu max_participants_count motif name organisation rdvs_users participations starts_at status
+            required: %w[id address agents cancelled_at collectif context created_by created_by_type duration_in_min lieu max_participants_count motif name organisation rdvs_users participations starts_at status
                          users users_count uuid],
           },
           agents: {
@@ -364,6 +365,7 @@ RSpec.configure do |config|
               status: { type: "string", enum: %w[unknown seen excused revoked noshow] },
               user: { "$ref" => "#/components/schemas/user" },
               created_by: { type: "string", enum: %w[agent user prescripteur] },
+              created_by_type: { type: "string", enum: %w[Agent User Prescripteur] },
             },
             required: %w[send_lifecycle_notifications send_reminder_notification status user],
           },
@@ -375,8 +377,9 @@ RSpec.configure do |config|
               status: { type: "string", enum: %w[unknown seen excused revoked noshow] },
               user: { "$ref" => "#/components/schemas/user" },
               created_by: { type: "string", enum: %w[agent user prescripteur] },
+              created_by_type: { type: "string", enum: %w[Agent User Prescripteur] },
             },
-            required: %w[send_lifecycle_notifications send_reminder_notification status user],
+            required: %w[send_lifecycle_notifications send_reminder_notification status user created_by],
           },
           public_links: {
             type: "object",
