@@ -39,10 +39,10 @@ fr:
         name: Intitulé
         mail_to_agent: Envoyer un mail de notification à l'agent
         change_rdv_color: Modifier la couleur du rdv dans l'agenda
-      rdv/created_by:
-        agent: "Créé par un agent"
-        user: "RDV Pris sur internet"
-        file_attente: "RDV en file d'attente"
+      rdv/created_by_type:
+        Agent: "Créé par un agent"
+        User: "RDV Pris sur internet"
+        FileAttente: "RDV en file d'attente"
       rdv/statuses:
         unknown: État indéterminé
         seen: Rendez-vous honoré

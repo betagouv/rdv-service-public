@@ -435,7 +435,7 @@ class Rdv < ApplicationRecord
           :send_lifecycle_notifications,
           :send_reminder_notification,
           :status,
-          :created_by
+          :created_by_type
         )
       end,
     }

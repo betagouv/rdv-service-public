@@ -122,7 +122,7 @@ module RdvsHelper
   private
 
   def rdv_individuel_title_for_agent(rdv)
-    (rdv.created_by_user? ? "@ " : "") +
+    (rdv.created_by.is_a?(User) ? "@ " : "") +
       rdv.users&.map(&:full_name)&.to_sentence +
       (rdv.motif.home? ? " 🏠" : "") +
       (rdv.motif.phone? ? " ☎️" : "")

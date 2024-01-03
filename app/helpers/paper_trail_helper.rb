@@ -49,9 +49,9 @@ module PaperTrailHelper
       lifecycle = Participation.human_attribute_value(:send_lifecycle_notifications, value["send_lifecycle_notifications"])
       reminder = Participation.human_attribute_value(:send_reminder_notification, value["send_reminder_notification"])
       status = Participation.human_attribute_value(:status, value["status"])
-      created_by = Participation.human_attribute_value(:created_by, value["created_by"])
+      created_by_type = Participation.human_attribute_value(:created_by_type, value["created_by_type"].downcase)
 
-      "#{name} (#{created_by}): #{lifecycle}, #{reminder} - Statut : #{status}"
+      "#{name} (#{created_by_type}): #{lifecycle}, #{reminder} - Statut : #{status}"
     end.compact.join("\n")
   end
 end
