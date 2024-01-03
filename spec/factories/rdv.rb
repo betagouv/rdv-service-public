@@ -50,5 +50,15 @@ FactoryBot.define do
         rdv.users = [build(:user, organisations: [rdv.organisation])]
       end
     end
+
+    after(:build) do |rdv|
+      if rdv.created_by.blank?
+        rdv.created_by = rdv.agents.first
+      end
+    end
+
+    after(:build) do |rdv|
+      rdv.participations.each { |participation| participation.created_by ||= rdv.created_by }
+    end
   end
 end

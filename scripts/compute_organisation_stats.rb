@@ -1,4 +1,5 @@
 # rails runner scripts/compute_organisation_stats.rb organisation_id
+# Is this script still in use ? If yes adapt created_by behavior
 
 org = Organisation.find(ARGV[0])
 # We take only users that were created before 26 days ago to have significant stats
