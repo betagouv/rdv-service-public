@@ -90,6 +90,7 @@ PlageOuverture.create!(
     lieu: cnfs_lieu,
     organisation_id: org_cnfs.id,
     agent_ids: [agent_cnfs.id],
+    created_by: agent_cnfs,
     users_count: 0,
     user_ids: []
   )

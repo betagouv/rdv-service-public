@@ -713,6 +713,7 @@ Rdv.create!(
     lieu: lieu_org_paris_nord_bd_aubervilliers,
     organisation_id: org_paris_nord.id,
     agent_ids: [agent_org_paris_nord_pmi_marco.id],
+    created_by: agent_org_paris_nord_pmi_marco,
     users_count: 0,
     user_ids: []
   )
@@ -724,6 +725,7 @@ Rdv.create!(
     lieu: lieu_org_paris_nord_bolivar,
     organisation_id: org_paris_nord.id,
     agent_ids: [agent_org_paris_nord_social_polo.id],
+    created_by: agent_org_paris_nord_social_polo,
     users_count: 0,
     user_ids: []
   )
@@ -751,7 +753,7 @@ rdv_ids = results.flat_map(&:values) # [1, 2, ...]
 agent_rdv_attributes = rdv_ids.map { |id| { agent_id: agent_org_paris_nord_pmi_martine.id, rdv_id: id } }
 AgentsRdv.insert_all!(agent_rdv_attributes)
 participations_attributes = rdv_ids.map do |id|
-  { user_id: user_org_paris_nord_josephine.id, rdv_id: id, send_lifecycle_notifications: true, send_reminder_notification: true, created_by: agent_org_paris_nord_pmi_martine }
+  { user_id: user_org_paris_nord_josephine.id, rdv_id: id, send_lifecycle_notifications: true, send_reminder_notification: true }
 end
 Participation.insert_all!(participations_attributes)
 events = %w[new_creneau_available rdv_cancelled rdv_created rdv_date_updated rdv_upcoming_reminder]
