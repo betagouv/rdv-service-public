@@ -2,10 +2,9 @@ class Prescripteur < ApplicationRecord
   include FullNameConcern
   include PhoneNumberValidation::HasPhoneNumber
 
-  belongs_to :participation
-  has_one :rdv, through: :participation
-  has_one :user, through: :participation
+  has_many :participations, as: :created_by, dependent: :restrict_with_error
+  has_many :rdvs, through: :participations
+  has_many :users, through: :participations
 
-  validates :participation_id, uniqueness: true
   validates :first_name, :last_name, :email, presence: true
 end

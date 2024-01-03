@@ -16,7 +16,6 @@ class Participation < ApplicationRecord
   # Relations
   belongs_to :rdv, touch: true, inverse_of: :participations, optional: true
   belongs_to :user, -> { unscope(where: :deleted_at) }, inverse_of: :participations, optional: true
-  has_one :prescripteur, dependent: :destroy
 
   # Delegates
   delegate :full_name, to: :user
