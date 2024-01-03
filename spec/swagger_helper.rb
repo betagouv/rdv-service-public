@@ -88,8 +88,8 @@ RSpec.configure do |config|
               users_count: { type: "integer" },
               uuid: { type: "string" },
             },
-            required: %w[id address agents cancelled_at collectif context created_by created_by_type duration_in_min lieu max_participants_count motif name organisation rdvs_users participations starts_at status
-                         users users_count uuid],
+            required: %w[id address agents cancelled_at collectif context created_by created_by_type duration_in_min lieu max_participants_count motif
+                         name organisation rdvs_users participations starts_at status users users_count uuid],
           },
           agents: {
             type: "object",
