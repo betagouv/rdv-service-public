@@ -78,10 +78,10 @@ class UpdateCreatedByIdAndTypeInRdvs < ActiveRecord::Migration[7.0]
       execute <<-SQL.squish
         UPDATE rdvs
         SET created_by = CASE
-          WHEN created_by_type = 'Agent' THEN 'agent'
-          WHEN created_by_type = 'User' THEN 'user'
-          WHEN created_by_type = 'Prescripteur' THEN 'prescripteur'
-          WHEN created_by_type = 'FileAttente' THEN 'file_attente'
+          WHEN created_by_type = 'Agent' THEN 0
+          WHEN created_by_type = 'User' THEN 1
+          WHEN created_by_type = 'FileAttente' THEN 2
+          WHEN created_by_type = 'Prescripteur' THEN 3
         END
       SQL
     end

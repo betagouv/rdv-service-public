@@ -54,9 +54,9 @@ class UpdateCreatedByIdAndTypeInParticipations < ActiveRecord::Migration[7.0]
       execute <<-SQL.squish
         UPDATE participations
         SET created_by = CASE
-          WHEN created_by_type = 'Agent' THEN 'agent'
-          WHEN created_by_type = 'User' THEN 'user'
-          WHEN created_by_type = 'Prescripteur' THEN 'prescripteur'
+          WHEN created_by_type = 'Agent' THEN (CAST('agent' AS created_by))
+          WHEN created_by_type = 'User' THEN (CAST('user' AS created_by))
+          WHEN created_by_type = 'Prescripteur' THEN (CAST('prescripteur' AS created_by))
         END
       SQL
     end

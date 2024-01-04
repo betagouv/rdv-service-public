@@ -4,6 +4,6 @@ class RemoveOldCreatedByFromRdvs < ActiveRecord::Migration[7.0]
   end
 
   def down
-    add_column :rdvs, :created_by, :created_by
+    add_column :rdvs, :created_by, :integer, default: 0
   end
 end
