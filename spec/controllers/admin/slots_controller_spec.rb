@@ -43,7 +43,7 @@ describe Admin::SlotsController, type: :controller do
               motif_id: motif.id,
             }
           end.not_to raise_error
-          expect(response.body).to include("Aucun créneau disponible dans l'organisation")
+          expect(unescaped_response_body).to include("Aucun créneau disponible dans l'organisation #{organisation.name} pour les filtres sélectionnés.")
         end
       end
     end
