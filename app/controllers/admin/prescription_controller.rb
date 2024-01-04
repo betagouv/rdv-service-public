@@ -1,12 +1,13 @@
 class Admin::PrescriptionController < AgentAuthController
   def search_creneau
-    skip_authorization
+    authorize(user, :show?)
     @context = AgentPrescriptionSearchContext.new(user: user, query_params: search_context_params.merge(prescripteur: true))
   end
 
   def recapitulatif
-    skip_authorization
+    authorize(user, :show?)
     @rdv_wizard = AgentPrescripteurRdvWizard.new(query_params: wizard_params)
+    authorize(@rdv_wizard.rdv.motif, :bookable?)
 
     unless @rdv_wizard.creneau
       flash[:error] = "Ce créneau n'est plus disponible. Veuillez en sélectionner un autre."
@@ -15,17 +16,17 @@ class Admin::PrescriptionController < AgentAuthController
   end
 
   def create_rdv
-    skip_authorization
-
+    authorize(user, :show?)
     @rdv_wizard = AgentPrescripteurRdvWizard.new(query_params: wizard_params)
+    authorize(@rdv_wizard.rdv.motif, :bookable?)
 
     rdv = @rdv_wizard.create_rdv!
     redirect_to confirmation_admin_organisation_prescription_path(rdv_id: rdv.id)
   end
 
   def confirmation
-    skip_authorization # TODO: remove this
     @rdv = Rdv.find(params[:rdv_id])
+    authorize(@rdv)
   end
 
   private

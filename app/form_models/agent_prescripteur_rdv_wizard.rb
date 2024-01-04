@@ -6,7 +6,6 @@ class AgentPrescripteurRdvWizard
   end
 
   def motif
-    # TODO : add policy scope Motif visible par l'agent current si ouvert à la prescription
     @motif ||= rdv.motif
   end
 
