@@ -5,7 +5,8 @@ class SearchController < ApplicationController
   after_action :allow_iframe
 
   def search_rdv
-    if current_agent
+    # TODO : public_link_organisation_id has to work if agent is logged in ?
+    if current_agent && query_params[:public_link_organisation_id].nil?
       redirect_to search_creneau_admin_organisation_prescription_path(session[:organisation_id], agent_search_params)
     end
     @context = if invitation?
