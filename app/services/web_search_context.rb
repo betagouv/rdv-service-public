@@ -13,12 +13,13 @@ class WebSearchContext < SearchContext
     @user_selected_organisation_id = query_params[:user_selected_organisation_id]
     @external_organisation_ids = query_params[:external_organisation_ids]
     @motif_id = query_params[:motif_id]
-    @motif_category_short_name = query_params[:motif_category_short_name]
     @motif_name_with_location_type = query_params[:motif_name_with_location_type]
     @service_id = query_params[:service_id]
     @lieu_id = query_params[:lieu_id]
     @referent_ids = query_params[:referent_ids]
     @prescripteur = query_params[:prescripteur]
+    @motif_category_short_name = query_params[:motif_category_short_name]
+    @organisation_ids = query_params[:organisation_ids]
   end
 
   def invitation?

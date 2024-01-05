@@ -50,6 +50,8 @@ class SearchContext
     motifs = motifs.where(follow_up: follow_up?)
     motifs = motifs.with_availability_for_lieux([lieu.id]) if lieu.present?
     motifs = motifs.with_availability_for_agents(referent_agents.map(&:id)) if follow_up?
+    # TODO: filter motif_category_short_name here ?
+    # TODO filter organisation_ids here ?
     motifs
   end
 

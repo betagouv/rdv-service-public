@@ -8,6 +8,14 @@ class AgentPrescriptionSearchContext < WebSearchContext
       user_ids: [], },
   ].freeze
 
+  def filter_motifs(available_motifs)
+    motifs = super
+    # this in search_context.rb ?
+    motifs = motifs.with_motif_category_short_name(@motif_category_short_name) if @motif_category_short_name.present?
+    motifs = motifs.where(organisation_id: @organisation_ids) if @organisation_ids.present?
+    motifs
+  end
+
   def initialize(user:, query_params: {})
     super
     query_params[:user_ids] = [user.id]
