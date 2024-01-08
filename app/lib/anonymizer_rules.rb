@@ -1,5 +1,5 @@
 class AnonymizerRules
-  TRUNCATED_TABLES = %w[versions good_jobs good_job_settings good_job_batches good_job_processes].freeze
+  TRUNCATED_TABLES = %i[versions good_jobs good_job_settings good_job_batches good_job_processes].freeze
 
   RULES = {
     users: {
@@ -203,5 +203,5 @@ class AnonymizerRules
     file_attentes: {
       non_anonymized_column_names: %w[created_at updated_at notifications_sent last_creneau_sent_at],
     },
-  }.with_indifferent_access.freeze
+  }.freeze
 end
