@@ -1,30 +1,28 @@
-#!/usr/bin/env bash
-set -e
 # Inspiré par https://doc.scalingo.com/platform/databases/duplicate
 
-archive_name="backup.tar.gz"
-
 # Install the Scalingo CLI tool in the container:
-install-scalingo-cli
+puts `install-scalingo-cli`
 
 # Install additional tools to interact with the database:
-dbclient-fetcher pgsql
+puts `dbclient-fetcher pgsql`
 
 # Cette commande nécessite un login par un membre de l'équipe
 # On préfère faire un login à chaque rafraichissement des données plutôt que de laisser un token scalingo en variable d'env
-scalingo login
+puts `scalingo login`
 
 # Retrieve the addon id:
-addon_id="$( scalingo --region osc-secnum-fr1 --app production-rdv-solidarites addons \
-             | grep "PostgreSQL" \
-             | cut -d "|" -f 3 \
-             | tr -d " " )"
+addon_in = `scalingo --region osc-secnum-fr1 --app production-rdv-solidarites addons`
+  .each_line
+  .find { _1 =~ /PostgreSQL/ }
+  .split("|")[2]
+  .strip
 
 # Download the latest backup available for the specified addon:
-scalingo  --region osc-secnum-fr1 --app production-rdv-solidarites --addon "${addon_id}" backups-download --output "${archive_name}"
+archive_name = "backup.tar.gz"
+puts `scalingo  --region osc-secnum-fr1 --app production-rdv-solidarites --addon "#{addon_in}" backups-download --output "#{archive_name}"`
 
 # Extract the archive containing the downloaded backup:
-tar --extract --verbose --file="${archive_name}" --directory="/app/"
+puts `tar --extract --verbose --file="#{archive_name}" --directory="/app/"`
 
 # TODO: block connections from the outside before loading the dump to the database
 # The postgres role used by the rails app doesn't have the necessary permissions to create a new role
@@ -33,7 +31,8 @@ tar --extract --verbose --file="${archive_name}" --directory="/app/"
 
 # cette commande échoue puisqu'on n'a pas les permissions nécessaires pour créer le rôle.
 # Pour le moment, il faut encore supprimer et recréer le rôle via l'interface scalingo
-echo "DROP ROLE rdv_service_public_metabase;\n" | bundle exec rails dbconsole
+puts "DROP ROLE rdv_service_public_metabase;\n"
+`bundle exec rails dbconsole`
 
 # Load the dump into the database
 # TODO: try speeding up the process by using the --jobs option
@@ -42,10 +41,11 @@ echo "DROP ROLE rdv_service_public_metabase;\n" | bundle exec rails dbconsole
 # TODO: réutiliser AnonymizerRules::TRUNCATED_TABLES ici
 # C'est compliqué à écrire en bash, et il vaudrait mieux utiliser du ruby pour ce genre de logique
 # tables_to_exclude="$(bundle exec rails runner \"puts AnonymizerRules::TRUNCATED_TABLES.join\(\'\|\'\)\") | tail -n1"
-time pg_restore --clean --if-exists --no-owner --no-privileges --jobs=2 --dbname "${DATABASE_URL}" -L <(pg_restore -l /app/*.pgsql | grep -vE 'TABLE DATA public (versions|good_jobs|good_job_settings|good_job_batches|good_job_processes)') /app/*.pgsql
+`time pg_restore --clean --if-exists --no-owner --no-privileges --jobs=2 --dbname "#{ENV["DATABASE_URL"]}" \
+  -L <(pg_restore -l /app/*.pgsql | grep -vE 'TABLE DATA public (versions|good_jobs|good_job_settings|good_job_batches|good_job_processes)') /app/*.pgsql`
 
-
-bundle exec rails runner scripts/anonymize_database.rb
+puts `bundle exec rails runner scripts/anonymize_database.rb`
 
 # Il faut qu'on trouve une manière d'automatiser la création de role
-echo "CREATE ROLE rdv_service_public_metabase PASSWORD '${METABASE_DB_ROLE_PASSWORD}';\n" | bundle exec rails dbconsole
+puts "CREATE ROLE rdv_service_public_metabase PASSWORD '${METABASE_DB_ROLE_PASSWORD}';\n"
+`bundle exec rails dbconsole`
