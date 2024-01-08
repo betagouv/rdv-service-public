@@ -14,7 +14,7 @@ module CsvOrXlsReader
       when :xls
         extend XlsImporter
       else
-        raise FileFormatError, "unsupported format: #{@extension}"
+        raise FileFormatError, "Le format #{@extension} n'est pas géré. Veuillez utiliser un fichier .csv ou .xls (pas de .xlsx)"
       end
     end
   end
