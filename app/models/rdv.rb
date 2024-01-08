@@ -1,6 +1,4 @@
 class Rdv < ApplicationRecord
-  self.ignored_columns = %w[old_location]
-
   # Mixins
   has_paper_trail(
     only: %w[user_ids agent_ids status starts_at ends_at lieu_id notes context participations],

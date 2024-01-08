@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_12_23_090635) do
+ActiveRecord::Schema[7.0].define(version: 2024_01_08_190123) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -413,17 +413,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_23_090635) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "departement"
     t.text "horaires"
     t.string "phone_number"
-    t.string "human_id", default: "", null: false
     t.string "website"
     t.string "email"
     t.bigint "territory_id", null: false
     t.string "external_id", comment: "The organisation's unique and immutable id in the system managing them and adding them to our application"
     t.enum "verticale", default: "rdv_solidarites", null: false, enum_type: "verticale"
     t.index ["external_id", "territory_id"], name: "index_organisations_on_external_id_and_territory_id", unique: true
-    t.index ["human_id", "territory_id"], name: "index_organisations_on_human_id_and_territory_id", unique: true, where: "((human_id)::text <> ''::text)"
     t.index ["name", "territory_id"], name: "index_organisations_on_name_and_territory_id", unique: true
     t.index ["name"], name: "index_organisations_on_name"
     t.index ["territory_id"], name: "index_organisations_on_territory_id"
@@ -563,13 +560,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_23_090635) do
   end
 
   create_table "sectors", force: :cascade do |t|
-    t.string "departement"
     t.string "name", null: false
     t.string "human_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "territory_id", null: false
-    t.index ["departement"], name: "index_sectors_on_departement"
     t.index ["human_id", "territory_id"], name: "index_sectors_on_human_id_and_territory_id", unique: true
     t.index ["human_id"], name: "index_sectors_on_human_id"
     t.index ["territory_id"], name: "index_sectors_on_territory_id"
