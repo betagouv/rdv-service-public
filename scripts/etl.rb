@@ -1,51 +1,65 @@
 # Inspiré par https://doc.scalingo.com/platform/databases/duplicate
 
-# Install the Scalingo CLI tool in the container:
-puts `install-scalingo-cli`
+$stdout.sync = true
 
-# Install additional tools to interact with the database:
-puts `dbclient-fetcher pgsql`
+ETL_PG_ROLE_NAME = "rdv_service_public_metabase".freeze
+ARCHIVE_NAME = "backup.tar.gz".freeze
+TRUNCATED_TABLES = AnonymizerRules::TRUNCATED_TABLES.join("|").freeze
 
-# Cette commande nécessite un login par un membre de l'équipe
-# On préfère faire un login à chaque rafraichissement des données plutôt que de laisser un token scalingo en variable d'env
-puts `scalingo login`
+def load_latest_dump_in_etl
+  # Install the Scalingo CLI tool in the container:
+  puts_and_run "install-scalingo-cli"
 
-# Retrieve the addon id:
-addon_in = `scalingo --region osc-secnum-fr1 --app production-rdv-solidarites addons`
-  .each_line
-  .find { _1 =~ /PostgreSQL/ }
-  .split("|")[2]
-  .strip
+  # Install additional tools to interact with the database:
+  puts_and_run "dbclient-fetcher pgsql"
 
-# Download the latest backup available for the specified addon:
-archive_name = "backup.tar.gz"
-puts `scalingo  --region osc-secnum-fr1 --app production-rdv-solidarites --addon "#{addon_in}" backups-download --output "#{archive_name}"`
+  # Cette commande nécessite un login par un membre de l'équipe
+  # On préfère faire un login à chaque rafraichissement des données plutôt que de laisser un token scalingo en variable d'env
+  puts_and_run "scalingo login"
 
-# Extract the archive containing the downloaded backup:
-puts `tar --extract --verbose --file="#{archive_name}" --directory="/app/"`
+  # Retrieve the production Postgres addon id:
+  prod_addon_id = postgres_addon_id(app_name: "production-rdv-solidarites")
 
-# TODO: block connections from the outside before loading the dump to the database
-# The postgres role used by the rails app doesn't have the necessary permissions to create a new role
-# this could be done by only authorizing the pg role used by metabase to access a pg schema other than public, and changing the schema name when the anonymization is done
-# this could also be done by deleting and re-creating the pg role used by metabase around this operation
+  # Download the latest backup available for the specified addon:
+  puts_and_run %(scalingo  --region osc-secnum-fr1 --app production-rdv-solidarites --addon "#{prod_addon_id}" backups-download --output "#{ARCHIVE_NAME}")
 
-# cette commande échoue puisqu'on n'a pas les permissions nécessaires pour créer le rôle.
-# Pour le moment, il faut encore supprimer et recréer le rôle via l'interface scalingo
-puts "DROP ROLE rdv_service_public_metabase;\n"
-`bundle exec rails dbconsole`
+  # Extract the archive containing the downloaded backup:
+  puts_and_run %(tar --extract --verbose --file="#{ARCHIVE_NAME}" --directory="/app/")
 
-# Load the dump into the database
-# TODO: try speeding up the process by using the --jobs option
+  # Retrieve the ETL Postgres addon id:
+  etl_addon_id = postgres_addon_id(app_name: "rdv-service-public-etl")
 
-# voir https://stackoverflow.com/questions/37038193/exclude-table-during-pg-restore pour l'explication des tables à exclure
-# TODO: réutiliser AnonymizerRules::TRUNCATED_TABLES ici
-# C'est compliqué à écrire en bash, et il vaudrait mieux utiliser du ruby pour ce genre de logique
-# tables_to_exclude="$(bundle exec rails runner \"puts AnonymizerRules::TRUNCATED_TABLES.join\(\'\|\'\)\") | tail -n1"
-`time pg_restore --clean --if-exists --no-owner --no-privileges --jobs=2 --dbname "#{ENV["DATABASE_URL"]}" \
-  -L <(pg_restore -l /app/*.pgsql | grep -vE 'TABLE DATA public (versions|good_jobs|good_job_settings|good_job_batches|good_job_processes)') /app/*.pgsql`
+  # Delete Postgres role (aka "role") name "rdv_service_public_metabase"
+  puts_and_run %(scalingo database-delete-user --region osc-secnum-fr1 --app rdv-service-public-etl --addon #{etl_addon_id} #{ETL_PG_ROLE_NAME})
 
-puts `bundle exec rails runner scripts/anonymize_database.rb`
+  # TODO: block connections from the outside before loading the dump to the database
 
-# Il faut qu'on trouve une manière d'automatiser la création de role
-puts "CREATE ROLE rdv_service_public_metabase PASSWORD '${METABASE_DB_ROLE_PASSWORD}';\n"
-`bundle exec rails dbconsole`
+  # Load the dump into the database
+  # TODO: try speeding up the process by using the --jobs option
+
+  # voir https://stackoverflow.com/questions/37038193/exclude-table-during-pg-restore pour l'explication des tables à exclure
+  puts_and_run(%(time pg_restore --clean --if-exists --no-owner --no-privileges --jobs=2 --dbname "#{ENV['DATABASE_URL']}" -L <(pg_restore -l /app/*.pgsql | grep -vE 'TABLE DATA public (#{TRUNCATED_TABLES})') /app/*.pgsql))
+
+  puts_and_run %(bundle exec rails runner scripts/anonymize_database.rb)
+
+  # Add role to Postgres
+
+  puts "Re-création du role Postgres #{ETL_PG_ROLE_NAME}..."
+  puts "Merci de copier le mot de passe stocké dans METABASE_DB_ROLE_PASSWORD: #{ENV('METABASE_DB_ROLE_PASSWORD')}"
+  puts_and_run %(scalingo database-create-user --region osc-secnum-fr1 --app rdv-service-public-etl --addon #{etl_addon_id} --read-only #{ETL_PG_ROLE_NAME})
+end
+
+def puts_and_run(command)
+  puts "> #{command}"
+  `#{command}`
+end
+
+def postgres_addon_id(app_name:)
+  `scalingo --region osc-secnum-fr1 --app #{app_name} addons`
+    .each_line
+    .find { _1 =~ /PostgreSQL/ }
+    .split("|")[2]
+    .strip
+end
+
+load_latest_dump_in_etl
