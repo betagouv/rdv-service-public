@@ -1,6 +1,8 @@
 require "csv"
 
 module CsvOrXlsReader
+  class FileFormatError < StandardError; end
+
   class Importer
     def initialize(form_file)
       @form_file = form_file
@@ -12,7 +14,7 @@ module CsvOrXlsReader
       when :xls
         extend XlsImporter
       else
-        raise "unsupported format: #{@extension}"
+        raise FileFormatError, "unsupported format: #{@extension}"
       end
     end
   end
