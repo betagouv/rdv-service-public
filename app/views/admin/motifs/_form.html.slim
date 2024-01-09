@@ -79,25 +79,22 @@
 
   .card#bookable_by_section
     .card-body
-      h5.card-title= Motif.human_attribute_name("bookable_by_title")
+      h5.card-title= Motif.human_attribute_name("bookable_by")
 
       p.text-muted.font-14= Motif.human_attribute_name("bookable_by_hint")
-
-      - presenter = Admin::PrescripteurExperimentMotifPresenter.new(@motif)
 
       .form-row
         .col-md-12
           = label_tag do
             = f.radio_button(:bookable_by, :agents)
-            span.ml-1= presenter.bookable_by_label(:agents)
+            span.ml-1= I18n.t("activerecord.attributes.motif/bookable_by/hint.agents", organisation_name: @motif.organisation.name)
             p.text-muted.font-14= "Les agents peuvent ajouter des rendez-vous à l'agenda de leurs collègues"
 
-      - if presenter.show_bookable_by_prescripteur?
         .form-row
           .col-md-12
             = label_tag do
               = f.radio_button(:bookable_by, :agents_and_prescripteurs)
-              span.ml-1= presenter.bookable_by_label(:agents_and_prescripteurs)
+              span.ml-1= I18n.t("activerecord.attributes.motif/bookable_by/hint.agents_and_prescripteurs")
               p.text-muted.font-14
                 = "Les prescripteurs sont des agents d'une autre organisation du service public, qui orientent des usagers vers le service dont ils ont besoin."
                 br
@@ -108,14 +105,14 @@
           .col-md-12
             = label_tag do
               = f.radio_button(:bookable_by, :agents_and_prescripteurs_and_invited_users)
-              span.ml-1= presenter.bookable_by_label(:agents_and_prescripteurs_and_invited_users)
+              span.ml-1= I18n.t("activerecord.attributes.motif/bookable_by/hint.agents_and_prescripteurs_and_invited_users")
               p.text-muted.font-14= "Les usagers avec une invitation envoyée par RDV-Insertion pourront prendre rendez-vous"
 
       .form-row
         .col-md-12
           = label_tag do
             = f.radio_button(:bookable_by, :everyone)
-            span.ml-1= presenter.bookable_by_label(:everyone)
+            span.ml-1= I18n.t("activerecord.attributes.motif/bookable_by/hint.everyone")
             p.text-muted.font-14= "Les usagers pourront aussi prendre rendez-vous en ligne sur les plages d'ouverture définies par les agents de #{@motif.organisation.name}"
 
       .form-row.js-rdvs-editable

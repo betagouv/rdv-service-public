@@ -1,5 +1,5 @@
 class Rdv < ApplicationRecord
-  self.ignored_columns = %w[old_location created_by]
+  self.ignored_columns = %w[created_by]
 
   # Mixins
   has_paper_trail(

@@ -76,8 +76,8 @@ module ApplicationHelper
     # HACK: avoids including a full-blown gem like `browser`
   end
 
-  def human_id(organisation_or_sector)
-    tag.span(organisation_or_sector.human_id, class: "badge badge-light text-monospace")
+  def human_id(sector)
+    tag.span(sector.human_id, class: "badge badge-light text-monospace")
   end
 
   def aligned_flex_row(fa_icon_name, &block)

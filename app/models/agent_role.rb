@@ -1,7 +1,7 @@
 class AgentRole < ApplicationRecord
-  include WebhookDeliverable
-
+  # Mixins
   has_paper_trail
+  include WebhookDeliverable
 
   # Attributes
   ACCESS_LEVEL_BASIC = "basic".freeze
