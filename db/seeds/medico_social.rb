@@ -21,7 +21,12 @@ Organisation.skip_callback(:create, :after, :notify_admin_organisation_created)
 org_paris_nord = Organisation.create!(
   name: "MDS Paris Nord",
   phone_number: "0123456789",
-  human_id: "paris-nord",
+  territory: territory75
+)
+
+org_paris_sud = Organisation.create!(
+  name: "MDS Paris Sud",
+  phone_number: "0123456789",
   territory: territory75
 )
 
@@ -51,14 +56,14 @@ human_id_map = [
   { human_id: "1054", name: "MDS St Omer" },
   { human_id: "1055", name: "MDS St Pol sur Ternoise" },
 ].to_h do |attributes|
-  organisation = Organisation.create!(phone_number: "0123456789", territory: territory62, human_id: attributes[:human_id], name: attributes[:name])
+  organisation = Organisation.create!(phone_number: "0123456789", territory: territory62, name: attributes[:name])
   sector = Sector.create!(name: "Secteur de #{attributes[:name][4..]}", human_id: attributes[:human_id], territory: territory62)
   sector.attributions.create!(organisation: organisation, level: SectorAttribution::LEVEL_ORGANISATION)
   [attributes[:human_id], { organisation: organisation, sector: sector }]
 end
 
 # Bapaume is created without the organisation-level attribution
-org_bapaume = Organisation.create!(phone_number: "0123456789", territory: territory62, human_id: "1034-nord", name: "MDS Bapaume")
+org_bapaume = Organisation.create!(phone_number: "0123456789", territory: territory62, name: "MDS Bapaume")
 sector_bapaume_nord = Sector.create!(name: "Bapaume Nord", human_id: "1034-nord", territory: territory62)
 sector_bapaume_sud = Sector.create!(name: "Bapaume Sud", human_id: "1034-sud", territory: territory62)
 sector_bapaume_fallback = Sector.create!(name: "Bapaume Entier", human_id: "1034-fallback", territory: territory62)
@@ -75,7 +80,8 @@ Organisation.set_callback(:create, :after, :notify_admin_organisation_created)
 service_pmi = Service.create!(name: "PMI (Protection Maternelle Infantile)", short_name: "PMI")
 service_social = Service.create!(name: "Service social", short_name: "Service Social")
 service_secretariat = Service.create!(name: Service::SECRETARIAT, short_name: "Secrétariat")
-_service_nouveau = Service.create!(name: "Médico-social", short_name: "Médico-social")
+territory62.services << [service_pmi, service_social, service_secretariat]
+territory75.services << [service_pmi, service_social, service_secretariat]
 
 # MOTIFS org_paris_nord
 
@@ -331,6 +337,21 @@ user_org_paris_nord_jean = User.new(
 user_org_paris_nord_jean.skip_confirmation!
 user_org_paris_nord_jean.save!
 user_org_paris_nord_jean.profile_for(org_paris_nord).update!(logement: 2)
+
+user_org_paris_sud = User.new(
+  first_name: "Francis",
+  last_name: "Factice",
+  email: "francis.factice@demo.rdv-solidarites.fr",
+  birth_date: Date.parse("10/01/1973"),
+  password: "lapinlapin",
+  phone_number: "0101010103",
+  organisation_ids: [org_paris_sud.id],
+  created_through: "user_sign_up"
+)
+
+user_org_paris_sud.skip_confirmation!
+user_org_paris_sud.save!
+user_org_paris_sud.profile_for(org_paris_sud).update!(logement: 2)
 
 user_org_arques = User.new(
   first_name: "Francis",

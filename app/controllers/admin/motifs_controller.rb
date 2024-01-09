@@ -5,7 +5,7 @@ class Admin::MotifsController < AgentAuthController
   before_action :set_motif, only: %i[show edit update destroy]
 
   def index
-    @unfiltered_motifs = policy_scope(Motif).active
+    @unfiltered_motifs = policy_scope(current_organisation.motifs, policy_scope_class: Agent::MotifPolicy::Scope).active
     @motifs = params[:search].present? ? @unfiltered_motifs.search_by_text(params[:search]) : @unfiltered_motifs.ordered_by_name
     @motifs = filtered(@motifs, params)
     @motifs = @motifs.includes(:organisation).includes(:service).page(params[:page])
@@ -13,10 +13,12 @@ class Admin::MotifsController < AgentAuthController
     @sectors_attributed_to_organisation_count = Sector.attributed_to_organisation(current_organisation).count
     @sectorisation_level_agent_counts_by_service = SectorAttribution.level_agent_grouped_by_service(current_organisation)
     @display_sectorisation_level = current_organisation.motifs.active.where.not(sectorisation_level: Motif::SECTORISATION_LEVEL_DEPARTEMENT).any?
+
+    @motif_policy = Agent::MotifPolicy.new(current_agent, Motif.new(organisation: current_organisation))
   end
 
   def new
-    @motif = Motif.new(organisation_id: current_organisation.id)
+    @motif = Motif.new(organisation: current_organisation)
     authorize(@motif)
   end
 
@@ -26,6 +28,7 @@ class Admin::MotifsController < AgentAuthController
 
   def show
     authorize(@motif)
+    @motif_policy = Agent::MotifPolicy.new(current_agent, @motif)
   end
 
   def create
@@ -62,6 +65,10 @@ class Admin::MotifsController < AgentAuthController
 
   private
 
+  def pundit_user
+    current_agent
+  end
+
   def filtered(motifs, params)
     motifs = online_filtered(motifs, params[:online_filter]) if params[:online_filter].present?
     motifs = motifs.where(service_id: params[:service_filter]) if params[:service_filter].present?
@@ -78,7 +85,8 @@ class Admin::MotifsController < AgentAuthController
   end
 
   def set_motif
-    @motif = policy_scope(Motif).find(params[:id])
+    @motif = policy_scope(current_organisation.motifs, policy_scope_class: Agent::MotifPolicy::Scope)
+      .find(params[:id])
   end
 
   def motif_params

@@ -150,7 +150,7 @@ fr:
     - samedi
     formats:
       default: "%d/%m/%Y"
-      long: "%d %B %Y"
+      long: "%e %B %Y"
       short: "%-d %b"
       human: "%A %d %B %Y"
     month_names:
@@ -262,6 +262,17 @@ fr:
       agent:
         territories:  "Admin de Territoires"
         territorial_roles: "Admin de Territoires"
+        services: "Services de l'agent"
+        agent_services: "Services de l'agent"
+        roles: "Rôles dans les organisations"
+        first_name: "Prénom"
+        last_name: "Nom"
+      user:
+        user_profiles: "Organisations de l'usager"
+      organisation:
+        agent_roles: "Rôles des agents"
+      service:
+        agent_services: "Agents du service"
       territory:
         roles: "Admins du Territoire"
         admin_agents: "Admins du Territoire"

@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.2.2"
+ruby "3.3.0"
 
 # Autoload dotenv in Rails.
 gem "dotenv-rails" # dotenv should always be loaded before rails
@@ -38,6 +38,8 @@ gem "rack-attack"
 gem "pg"
 # PgSearch builds Active Record named scopes that take advantage of PostgreSQL's full text search
 gem "pg_search"
+# Strong Migrations catches unsafe migrations in development
+gem "strong_migrations"
 # A pagination engine plugin for Rails 4+ and other modern frameworks
 gem "kaminari"
 # Bootstrap 4 styling for Kaminari gem

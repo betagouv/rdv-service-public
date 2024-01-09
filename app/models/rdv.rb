@@ -13,7 +13,6 @@ class Rdv < ApplicationRecord
   include IcalHelpers::Ics
   include Payloads::Rdv
   include Ants::AppointmentSerializerAndListener
-  include Anonymizable
 
   # Attributes
   auto_strip_attributes :name
@@ -236,6 +235,16 @@ class Rdv < ApplicationRecord
     overlapping_plages_ouvertures.any?
   end
 
+  def overlapping_absences
+    return [] if starts_at.blank? || ends_at.blank? || past? || errors.present?
+
+    @overlapping_absences ||= Absence.where(agent: agent_ids).overlapping_range(starts_at..ends_at)
+  end
+
+  def overlapping_absences?
+    overlapping_absences.any?
+  end
+
   def phone_number
     return lieu.phone_number if lieu&.phone_number.present?
     return organisation.phone_number if organisation&.phone_number.present?
@@ -372,10 +381,6 @@ class Rdv < ApplicationRecord
 
   def revoked!
     update!(cancelled_at: Time.zone.now, status: "revoked")
-  end
-
-  def self.personal_data_column_names
-    %w[context]
   end
 
   private

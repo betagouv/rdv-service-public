@@ -74,7 +74,7 @@ class Domain
       online_reservation_with_public_link: true,
       can_sync_to_outlook: false,
       sms_sender_name: "RDV S.P.",
-      documentation_url: "https://rdvs.notion.site/RDV-Mairie-b831caa05dd7416bb489f06f7468903a",
+      documentation_url: "https://rdvs.notion.site/RDV-Service-Public-ab27fed1634741e0a1537fcb0d1d5a24",
       faq_url: "https://rdvs.notion.site/FAQ-RDV-Mairie-6baf4af187a14e42beafe56b7005d199",
       france_connect_enabled: true,
       support_email: "support@rdv-service-public.fr",

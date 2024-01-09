@@ -110,6 +110,7 @@ Rails/LexicallyScopedActionFilter:
     - 'app/controllers/user_auth_controller.rb'
     - 'app/controllers/agents/sessions_controller.rb'
     - 'app/controllers/agent_auth_controller.rb'
+    - 'app/controllers/super_admins/super_admins_controller.rb'
 
 Rails/ActiveRecordCallbacksOrder:
   Enabled: false
@@ -234,4 +235,10 @@ RSpec/FilePath:
     SfrMail2SmsMailer: sfr_mail_2_sms_mailer
 
 Style/NumericPredicate:
+  Enabled: false
+
+Style/NumericLiterals:
+  Enabled: false
+
+Rails/UnusedIgnoredColumns:
   Enabled: false

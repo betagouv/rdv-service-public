@@ -1,4 +1,4 @@
-- nb_rdv = policy_scope(Rdv).for_today.merge(lieu.rdvs).count
+- nb_rdv = Agent::RdvPolicy::Scope.apply(AgentOrganisationContext.new(current_agent, current_organisation), Rdv).for_today.merge(lieu.rdvs).count
 tr id="lieu_#{lieu.id}"
   td
     = lieu.name
@@ -7,13 +7,13 @@ tr id="lieu_#{lieu.id}"
   td= lieu.phone_number
   td= link_to nb_rdv > 0 ? nb_rdv : "aucun", admin_organisation_rdvs_path(current_organisation, lieu_id: lieu.id, start: Time.zone.now.beginning_of_day, end: Time.zone.now.end_of_day )
   td
-    - if policy([:agent, lieu]).edit? || policy([:agent, lieu]).destroy?
+    - if @lieux_policy.edit? || @lieux_policy.destroy?
       .d-flex
-        - if policy([:agent, lieu]).edit?
+        - if @lieux_policy.edit?
           div.mr-3= link_to edit_admin_organisation_lieu_path(current_organisation, lieu),
                   title: t("helpers.edit") do
             i.fa.fa-edit
-        - if policy([:agent, lieu]).destroy?
+        - if @lieux_policy.destroy?
           div= link_to admin_organisation_lieu_path(current_organisation, lieu),
                   title: t("helpers.delete"),
                   method: :delete,

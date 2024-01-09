@@ -16,7 +16,7 @@ module AdminHelper
   end
 
   # Build a dummy model linked the current_organisation to fetch its policy.
-  # eg. current_agent_can?(:create, Lieu)
+  # eg. current_agent_can?(:create, Agent)
   def current_agent_can?(action, klass)
     if klass.reflections.include?("organisations")
       # klass has_many :organisations

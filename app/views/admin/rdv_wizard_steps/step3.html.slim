@@ -20,7 +20,7 @@ ruby:
         .form-group data=controller_data
           = f.label :lieu, required: true
           fieldset
-            = f.association :lieu, collection: policy_scope(Lieu).enabled.ordered_by_name, label_method: :full_name,
+            = f.association :lieu, collection: Agent::LieuPolicy::Scope.apply(current_agent, current_organisation.lieux).enabled.ordered_by_name, label_method: :full_name,
               label: false,  include_blank: true,  required: false,
               input_html: { class: "select2-input", data: { "rdv-lieu-target": "existing_lieu_select", placeholder: ""} }
             small.form-text.text-muted data={"rdv-lieu-target": "new_lieu_link"}
@@ -35,5 +35,5 @@ ruby:
         = f.input :address, label: "Lieu (RDV à domicile)",  disabled: true, hint: "L'adresse utilisée est celle de #{@rdv.user_for_home_rdv.full_name}"
       - elsif @rdv.phone?
         = f.input :address, label: "Lieu (RDV téléphonique)",  disabled: true, hint: "Il n'y a pas d'adresse car le RDV est téléphonique"
-      = f.association :agents, collection: @rdv.motif.authorized_agents.includes(:services), label_method: :reverse_full_name_and_service, input_html: { multiple: true, class: "select2-input" }
+      = f.association :agents, collection: @rdv.motif.authorized_agents, label_method: :reverse_full_name_and_service, input_html: { multiple: true, class: "select2-input" }
       = render "actions", rdv_wizard_form: @rdv_wizard, submit_value: "Continuer", f: f

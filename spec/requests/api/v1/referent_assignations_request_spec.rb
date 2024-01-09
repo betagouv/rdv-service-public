@@ -37,6 +37,8 @@ describe "Referent Assignation authentified API", swagger_doc: "v1/api.json" do
         it { expect(parsed_response_body.dig("referent_assignation", "user", "id")).to eq(user_id) }
 
         it { expect(parsed_response_body.dig("referent_assignation", "agent", "id")).to eq(agent_id) }
+
+        it { expect(user.reload.referent_agents).to include(referent) }
       end
 
       it_behaves_like "an endpoint that returns 403 - forbidden", "l'agent.e n'a pas accès à l'organisation de l'utilisateur" do
@@ -86,6 +88,8 @@ describe "Referent Assignation authentified API", swagger_doc: "v1/api.json" do
         run_test!
 
         it { change(ReferentAssignation, :count).by(-1) }
+
+        it { expect(user.reload.referent_agents).not_to include(referent) }
       end
 
       it_behaves_like "an endpoint that returns 403 - forbidden", "l'agent.e n'a pas accès à l'organisation de l'utilisateur" do
