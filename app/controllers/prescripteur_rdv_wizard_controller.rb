@@ -77,8 +77,6 @@ class PrescripteurRdvWizardController < ApplicationController
   def confirmation
     @step_title = @step_titles[3]
     @prescripteur = Prescripteur.find(session[:prescripteur_id])
-    @rdv = @prescripteur.participations.last.rdv
-    @user = @prescripteur.participations.last.user
   end
 
   private

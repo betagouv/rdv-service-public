@@ -59,8 +59,8 @@ RSpec.describe Users::RdvsController, type: :controller do
         it "creates the rdv" do
           expect(Rdv.count).to eq(1)
           expect(response).to redirect_to users_rdv_path(Rdv.last, invitation_token: token)
-          expect(user.rdvs.last.created_by.is_a?(User)).to be(true)
-          expect(user.participations.last.created_by.is_a?(User)).to be(true)
+          expect(user.rdvs.last.created_by).to eq(user)
+          expect(user.participations.last.created_by).to eq(user)
         end
       end
     end

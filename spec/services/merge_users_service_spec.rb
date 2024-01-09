@@ -249,7 +249,7 @@ describe MergeUsersService, type: :service do
 
     it "change users associated with the prescripteur" do
       perform
-      expect(prescripteur.users).to eq([user_target])
+      expect(prescripteur.user).to eq(user_target)
     end
   end
 
