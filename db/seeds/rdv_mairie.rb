@@ -10,7 +10,6 @@ territory_val_doise = Territory.create!(
 org_mairie_de_sannois = Organisation.create!(
   name: "Mairie de Sannois",
   phone_number: "0475796991",
-  human_id: "mairie-de-sannois",
   territory: territory_val_doise,
   verticale: :rdv_mairie
 )

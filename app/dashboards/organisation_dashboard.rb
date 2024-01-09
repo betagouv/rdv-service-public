@@ -17,7 +17,6 @@ class OrganisationDashboard < Administrate::BaseDashboard
     horaires: Field::String,
     phone_number: Field::String,
     email: Field::String,
-    human_id: Field::String,
     territory: Field::BelongsTo,
     verticale: EnumField,
     created_at: Field::DateTime,
@@ -46,7 +45,6 @@ class OrganisationDashboard < Administrate::BaseDashboard
     email
     motifs
     lieux
-    human_id
     verticale
     created_at
     updated_at
@@ -61,7 +59,6 @@ class OrganisationDashboard < Administrate::BaseDashboard
     phone_number
     email
     verticale
-    human_id
     territory
   ].freeze
 

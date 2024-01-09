@@ -1,4 +1,5 @@
 class Organisation < ApplicationRecord
+  self.ignored_columns = %w[human_id departement]
   # Mixins
   has_paper_trail
   include WebhookDeliverable
@@ -42,15 +43,6 @@ class Organisation < ApplicationRecord
   validates :name, presence: true, uniqueness: { scope: :territory }
   validates :external_id, uniqueness: { scope: :territory, allow_nil: true }
   validate :validate_organisation_phone_number
-  validates(
-    :human_id,
-    format: {
-      with: /\A[a-z0-9_\-]{3,99}\z/,
-      message: :human_id_error,
-      if: -> { human_id.present? },
-    }
-  )
-  validates :human_id, uniqueness: { scope: :territory }, if: -> { human_id.present? }
 
   # Hooks
   after_create :notify_admin_organisation_created
