@@ -1,4 +1,4 @@
-- if rdv.created_by.is_a?(User)
+- if rdv.created_by_user?
   p.card-text
     i.fa.fa-fw.fa-at.text-primary-blue>
     | RDV pris sur Internet
@@ -40,7 +40,7 @@
       => "Agent".pluralize(rdv.agents.size)
     = agents_to_sentence(rdv.agents)
 
-- rdv.participations.where(created_by_type: "Prescripteur").each do |participation|
+- rdv.participations.select(&:created_by_prescripteur?).each do |participation|
   - prescripteur = participation.created_by
   .d-flex.card-text.mt-1
     div.mr-1

@@ -234,8 +234,8 @@ describe MergeUsersService, type: :service do
     let(:user_target) { create(:user, organisations: [organisation]) }
     let(:user_to_merge) { create(:user, organisations: [organisation], created_through: :prescripteur) }
     let(:prescripteur) { create(:prescripteur) }
-    let!(:participation) { build(:participation, user: user_to_merge, created_by: prescripteur) }
-    let!(:rdv) { build(:rdv, organisation: organisation, participations: [participation]) }
+    let!(:participation) { build(:participation, user: user_to_merge) }
+    let!(:rdv) { build(:rdv, organisation: organisation, participations: [participation], created_by: prescripteur) }
 
     before do
       participation.valid?

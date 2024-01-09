@@ -6,9 +6,7 @@ class Participation < ApplicationRecord
 
   include Participation::StatusChangeable
   include Participation::Creatable
-
-  # Polymorphic associations
-  belongs_to :created_by, polymorphic: true
+  include CreatedByConcern
 
   # Attributes
   enum status: { unknown: "unknown", seen: "seen", excused: "excused", revoked: "revoked", noshow: "noshow" }

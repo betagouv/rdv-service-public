@@ -2,20 +2,18 @@ class RdvBlueprint < Blueprinter::Base
   identifier :id
 
   fields :uuid, :status, :starts_at, :ends_at, :duration_in_min, :address, :context, :cancelled_at,
-         :max_participants_count, :users_count, :name, :collectif, :created_by_type
+         :max_participants_count, :users_count, :name, :collectif, :created_by_type, :created_by_id
 
   # Retrocompatibilité avec l'ancien format de l'API pour created_by
   field :created_by do |rdv, _options|
-    case rdv.created_by
-    when Agent
-      "agent"
-    when User
-      "user"
-    when Prescripteur
-      "prescripteur"
-    when FileAttente
-      "file_attente"
-    end
+    created_by_type_map = {
+      "Agent" => "agent",
+      "User" => "user",
+      "Prescripteur" => "prescripteur",
+      "FileAttente" => "file_attente",
+    }
+
+    created_by_type_map[rdv.created_by_type]
   end
 
   association :organisation, blueprint: OrganisationBlueprint

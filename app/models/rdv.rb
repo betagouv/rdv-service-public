@@ -15,9 +15,7 @@ class Rdv < ApplicationRecord
   include IcalHelpers::Ics
   include Payloads::Rdv
   include Ants::AppointmentSerializerAndListener
-
-  # Polymorphic associations
-  belongs_to :created_by, polymorphic: true
+  include CreatedByConcern
 
   # Attributes
   auto_strip_attributes :name
@@ -197,7 +195,7 @@ class Rdv < ApplicationRecord
 
   def editable_by_user?
     !cancelled? && !collectif? && motif.rdvs_editable_by_user? && starts_at > 2.days.from_now &&
-      motif.bookable_by_everyone_or_bookable_by_invited_users? && !created_by.is_a?(Agent)
+      motif.bookable_by_everyone_or_bookable_by_invited_users? && !created_by_agent?
   end
 
   def available_to_file_attente?
@@ -435,7 +433,8 @@ class Rdv < ApplicationRecord
           :send_lifecycle_notifications,
           :send_reminder_notification,
           :status,
-          :created_by_type
+          :created_by_type,
+          :created_by_id
         )
       end,
     }
@@ -452,6 +451,6 @@ class Rdv < ApplicationRecord
   end
 
   def set_created_by_for_participations
-    participations.each { |participation| participation.created_by ||= created_by }
+    participations.each { |participation| participation.created_by = created_by }
   end
 end
