@@ -30,7 +30,6 @@ class Admin::RdvsCollectifsController < AgentAuthController
   def create
     @rdv_form = Admin::NewRdvForm.new(pundit_user, create_params.merge(organisation: current_organisation))
     @rdv = @rdv_form.rdv
-    @rdv.created_by = current_agent
 
     authorize(@rdv, :new?)
     if @rdv_form.save

@@ -22,6 +22,7 @@ module Admin::RdvWizardFormConcern
         agent_ids: [agent_author.id],
         organisation_id: organisation.id,
         starts_at: Time.zone.now,
+        created_by: agent_author,
       }
       @organisation = organisation
       @agent_author = agent_author
