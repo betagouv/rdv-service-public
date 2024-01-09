@@ -587,7 +587,7 @@ GEM
       activemodel (>= 3.0.0)
       public_suffix
     version_gem (1.1.3)
-    view_component (2.82.0)
+    view_component (2.83.0)
       activesupport (>= 5.2.0, < 8.0)
       concurrent-ruby (~> 1.0)
       method_source (~> 1.0)
