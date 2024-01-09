@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_01_03_102631) do
+ActiveRecord::Schema[7.0].define(version: 2024_01_02_172408) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -46,6 +46,12 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_03_102631) do
     "agents_and_prescripteurs",
     "everyone",
     "agents_and_prescripteurs_and_invited_users",
+  ], force: :cascade
+
+  create_enum :created_by, [
+    "agent",
+    "user",
+    "prescripteur",
   ], force: :cascade
 
   create_enum :lieu_availability, [
@@ -441,6 +447,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_03_102631) do
     t.datetime "updated_at", null: false
     t.integer "created_by_id"
     t.string "created_by_type"
+    t.enum "created_by", enum_type: "created_by"
     t.index ["created_by_type", "created_by_id"], name: "index_participations_on_created_by_type_and_created_by_id"
     t.index ["invitation_token"], name: "index_participations_on_invitation_token", unique: true
     t.index ["invited_by_id"], name: "index_participations_on_invited_by_id"
@@ -482,6 +489,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_03_102631) do
     t.string "phone_number_formatted"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "participation_id"
   end
 
   create_table "rdvs", force: :cascade do |t|
@@ -499,6 +507,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_03_102631) do
     t.integer "max_participants_count"
     t.integer "users_count", default: 0
     t.enum "status", default: "unknown", null: false, enum_type: "rdv_status"
+    t.integer "created_by", default: 0
     t.integer "created_by_id"
     t.string "created_by_type"
     t.index "tsrange(starts_at, ends_at, '[)'::text)", name: "index_rdvs_on_tsrange_starts_at_ends_at", using: :gist

@@ -1,4 +1,6 @@
 class Participation < ApplicationRecord
+  self.ignored_columns = %w[created_by]
+
   # Mixins
   devise :invitable
 
