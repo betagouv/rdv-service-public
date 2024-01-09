@@ -18,22 +18,8 @@ module PaperTrailHelper
 
   private
 
-  def paper_trail__recurrence(value)
-    # NOTE: We can't use the display methods in plage_ouverture_helper because they need the whole plage_ouverture,
-    # and we only have the attribute value here.
-    value.to_hash.to_s
-  end
-
-  def paper_trail__user_ids(value)
-    ::User.where(id: value).order_by_last_name.map(&:full_name).join(", ")
-  end
-
   def paper_trail__status(value)
     ::Rdv.human_attribute_value(:status, value)
-  end
-
-  def paper_trail__agent_ids(value)
-    ::Agent.where(id: value).order_by_last_name.map(&:full_name).join(", ")
   end
 
   def paper_trail__lieu_id(value)
