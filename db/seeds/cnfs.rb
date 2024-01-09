@@ -11,7 +11,6 @@ territory_cnfs.services << service_cnfs
 org_cnfs = Organisation.create!(
   name: "Mediathèque Paris Nord",
   phone_number: "0123456789",
-  human_id: "mediatheque-paris-nord",
   territory: territory_cnfs,
   external_id: "666",
   verticale: :rdv_aide_numerique

@@ -1,4 +1,7 @@
 class Service < ApplicationRecord
+  # Mixins
+  has_paper_trail
+
   # Attributes
   auto_strip_attributes :name, :short_name
 

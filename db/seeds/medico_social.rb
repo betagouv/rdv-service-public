@@ -21,14 +21,12 @@ Organisation.skip_callback(:create, :after, :notify_admin_organisation_created)
 org_paris_nord = Organisation.create!(
   name: "MDS Paris Nord",
   phone_number: "0123456789",
-  human_id: "paris-nord",
   territory: territory75
 )
 
 org_paris_sud = Organisation.create!(
   name: "MDS Paris Sud",
   phone_number: "0123456789",
-  human_id: "paris-sud",
   territory: territory75
 )
 
@@ -58,14 +56,14 @@ human_id_map = [
   { human_id: "1054", name: "MDS St Omer" },
   { human_id: "1055", name: "MDS St Pol sur Ternoise" },
 ].to_h do |attributes|
-  organisation = Organisation.create!(phone_number: "0123456789", territory: territory62, human_id: attributes[:human_id], name: attributes[:name])
+  organisation = Organisation.create!(phone_number: "0123456789", territory: territory62, name: attributes[:name])
   sector = Sector.create!(name: "Secteur de #{attributes[:name][4..]}", human_id: attributes[:human_id], territory: territory62)
   sector.attributions.create!(organisation: organisation, level: SectorAttribution::LEVEL_ORGANISATION)
   [attributes[:human_id], { organisation: organisation, sector: sector }]
 end
 
 # Bapaume is created without the organisation-level attribution
-org_bapaume = Organisation.create!(phone_number: "0123456789", territory: territory62, human_id: "1034-nord", name: "MDS Bapaume")
+org_bapaume = Organisation.create!(phone_number: "0123456789", territory: territory62, name: "MDS Bapaume")
 sector_bapaume_nord = Sector.create!(name: "Bapaume Nord", human_id: "1034-nord", territory: territory62)
 sector_bapaume_sud = Sector.create!(name: "Bapaume Sud", human_id: "1034-sud", territory: territory62)
 sector_bapaume_fallback = Sector.create!(name: "Bapaume Entier", human_id: "1034-fallback", territory: territory62)
