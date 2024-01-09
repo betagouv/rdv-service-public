@@ -38,8 +38,8 @@ h1 {
   color: white;
 }
 
-h2{
-  font-size: 2rem;
+h2 {
+  font-size: $h2-font-size;
   color: $primary;
   font-weight: bold;
   padding-bottom: 1rem;
