@@ -479,7 +479,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_08_190123) do
   end
 
   create_table "prescripteurs", force: :cascade do |t|
-    t.bigint "participation_id", null: false
+    t.bigint "participation_id"
     t.string "first_name", null: false
     t.string "last_name", null: false
     t.string "email", null: false
