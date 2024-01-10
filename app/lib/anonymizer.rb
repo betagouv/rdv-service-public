@@ -20,7 +20,7 @@ class Anonymizer
   end
 
   def initialize(table_name)
-    @table_name = table_name.to_sym
+    @table_name = table_name
   end
 
   def anonymize_record!(record)
