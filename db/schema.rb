@@ -440,7 +440,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_10_142710) do
     t.bigint "invited_by_id"
     t.integer "invitations_count", default: 0
     t.enum "status", default: "unknown", null: false, enum_type: "rdv_status"
-    t.enum "old_created_by", enum_type: "created_by"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "created_by_id"
@@ -496,7 +495,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_10_142710) do
     t.datetime "cancelled_at"
     t.bigint "motif_id", null: false
     t.uuid "uuid", default: -> { "uuid_generate_v4()" }, null: false
-    t.integer "old_created_by", default: 0
     t.text "context"
     t.bigint "lieu_id"
     t.datetime "ends_at", null: false

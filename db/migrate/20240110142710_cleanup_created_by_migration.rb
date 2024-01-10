@@ -4,9 +4,8 @@ class CleanupCreatedByMigration < ActiveRecord::Migration[7.0]
       change_column_null :rdvs, :created_by_type, false
       change_column_null :participations, :created_by_type, false
 
-      remove_index :rdvs, :created_by
-      rename_column :rdvs, :created_by, :old_created_by
-      rename_column :participations, :created_by, :old_created_by
+      remove_column :rdvs, :created_by, :integer, index: true
+      remove_column :participations, :created_by, :created_by
 
       reversible do |direction|
         direction.up do
