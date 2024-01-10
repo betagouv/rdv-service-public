@@ -1,7 +1,5 @@
 FactoryBot.define do
   factory :prescripteur do
-    association(:participation)
-
     first_name { Faker::Name.first_name }
     last_name { Faker::Name.last_name.upcase }
     email { Faker::Internet.email }

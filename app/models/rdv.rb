@@ -1,4 +1,6 @@
 class Rdv < ApplicationRecord
+  self.ignored_columns = %w[created_by]
+
   # Mixins
   has_paper_trail(
     only: %w[user_ids agent_ids status starts_at ends_at lieu_id notes context participations],
@@ -13,6 +15,7 @@ class Rdv < ApplicationRecord
   include IcalHelpers::Ics
   include Payloads::Rdv
   include Ants::AppointmentSerializerAndListener
+  include CreatedByConcern
 
   # Attributes
   auto_strip_attributes :name
@@ -28,7 +31,6 @@ class Rdv < ApplicationRecord
   CANCELLED_STATUSES = %w[excused revoked].freeze
   COLLECTIVE_RDV_STATUSES = %w[unknown seen revoked].freeze
   RDV_STATUSES_TO_NOTIFY = %w[unknown excused revoked].freeze
-  enum created_by: { agent: 0, user: 1, file_attente: 2, prescripteur: 3 }, _prefix: :created_by
 
   # Relations
   belongs_to :organisation
@@ -431,7 +433,8 @@ class Rdv < ApplicationRecord
           :send_lifecycle_notifications,
           :send_reminder_notification,
           :status,
-          :created_by
+          :created_by_type,
+          :created_by_id
         )
       end,
     }

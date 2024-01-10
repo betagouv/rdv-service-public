@@ -440,9 +440,12 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_08_190123) do
     t.bigint "invited_by_id"
     t.integer "invitations_count", default: 0
     t.enum "status", default: "unknown", null: false, enum_type: "rdv_status"
-    t.enum "created_by", null: false, enum_type: "created_by"
+    t.enum "created_by", enum_type: "created_by"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "created_by_id"
+    t.string "created_by_type"
+    t.index ["created_by_type", "created_by_id"], name: "index_participations_on_created_by_type_and_created_by_id"
     t.index ["invitation_token"], name: "index_participations_on_invitation_token", unique: true
     t.index ["invited_by_id"], name: "index_participations_on_invited_by_id"
     t.index ["invited_by_type", "invited_by_id"], name: "index_participations_on_invited_by"
@@ -476,7 +479,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_08_190123) do
   end
 
   create_table "prescripteurs", force: :cascade do |t|
-    t.bigint "participation_id", null: false
+    t.bigint "participation_id"
     t.string "first_name", null: false
     t.string "last_name", null: false
     t.string "email", null: false
@@ -503,8 +506,11 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_08_190123) do
     t.integer "max_participants_count"
     t.integer "users_count", default: 0
     t.enum "status", default: "unknown", null: false, enum_type: "rdv_status"
+    t.integer "created_by_id"
+    t.string "created_by_type"
     t.index "tsrange(starts_at, ends_at, '[)'::text)", name: "index_rdvs_on_tsrange_starts_at_ends_at", using: :gist
     t.index ["created_by"], name: "index_rdvs_on_created_by"
+    t.index ["created_by_type", "created_by_id"], name: "index_rdvs_on_created_by_type_and_created_by_id"
     t.index ["ends_at"], name: "index_rdvs_on_ends_at"
     t.index ["lieu_id"], name: "index_rdvs_on_lieu_id"
     t.index ["max_participants_count"], name: "index_rdvs_on_max_participants_count"

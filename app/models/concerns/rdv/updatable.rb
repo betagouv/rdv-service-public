@@ -100,7 +100,6 @@ module Rdv::Updatable
   end
 
   def set_created_by_for_new_participations(author) # rubocop:disable Naming/AccessorMethodName
-    creator = author.class.model_name.singular
-    participations.select(&:new_record?).each { |participation| participation.created_by = creator }
+    participations.select(&:new_record?).each { |participation| participation.created_by = author }
   end
 end
