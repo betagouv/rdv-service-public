@@ -21,7 +21,6 @@ class InvitationSearchContext < SearchContext
   def filter_motifs(available_motifs)
     motifs = super
     motifs = motifs.bookable_by_everyone_or_bookable_by_invited_users
-    # This in search_context.rb ?
     motifs = motifs.with_motif_category_short_name(@motif_category_short_name) if @motif_category_short_name.present?
     motifs = motifs.where(organisation_id: @organisation_ids) if @organisation_ids.present?
     motifs

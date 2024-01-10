@@ -11,11 +11,6 @@ class Agent::RdvPolicy < DefaultAgentPolicy
     admin_and_same_org?
   end
 
-  def confirmation?
-    # TODO: check created_by when merged : @record.created_by == current_agent
-    true
-  end
-
   def self.explain(organisation, agent)
     explainations = if agent.admin_in_organisation?(organisation)
                       "En tant qu'administrateur de l'organisation, vous voyez les RDV de toute l'organisation #{organisation.name}."

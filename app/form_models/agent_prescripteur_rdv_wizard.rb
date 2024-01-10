@@ -1,10 +1,11 @@
 class AgentPrescripteurRdvWizard
   attr_reader :query_params
 
-  def initialize(agent_prescripteur:, user:, query_params: {})
+  def initialize(agent:, user:, current_domain:, query_params: {})
     @query_params = query_params
-    @agent_prescripteur = agent_prescripteur
+    @agent = agent
     @user = user
+    @domain = current_domain
   end
 
   def motif
@@ -28,7 +29,7 @@ class AgentPrescripteurRdvWizard
       end
     end
 
-    # TODO : PrescripteurMailer.rdv_created(participation, @domain.id).deliver_later
+    PrescripteurMailer.rdv_created(participation, @domain.id).deliver_later
   end
 
   def rdv
@@ -40,7 +41,7 @@ class AgentPrescripteurRdvWizard
   end
 
   def participation
-    @participation ||= Participation.new(rdv: @rdv, user: @user, created_by: :prescripteur) # TODO : created_by = @agent_prescripteur
+    @participation ||= Participation.new(rdv: @rdv, user: @user, created_by: @agent)
   end
 
   def creneau
@@ -57,7 +58,7 @@ class AgentPrescripteurRdvWizard
 
   def create_rdv!
     rdv.assign_attributes(
-      created_by: :prescripteur, # TODO : rdv.created_by = @agent_prescripteur
+      created_by: @agent,
       organisation: motif.organisation,
       agents: [creneau.agent],
       duration_in_min: motif&.default_duration_in_min
@@ -65,11 +66,12 @@ class AgentPrescripteurRdvWizard
     rdv.participations.map(&:set_default_notifications_flags)
     rdv.save!
 
-    Notifiers::RdvCreated.perform_with(rdv, @agent_prescripteur)
+    @participation = rdv.participations.first
+    Notifiers::RdvCreated.perform_with(rdv, @agent)
   end
 
   def create_participation!
-    participation.create_and_notify!(@agent_prescripteur)
+    participation.create_and_notify!(@agent)
   end
 
   def lieu

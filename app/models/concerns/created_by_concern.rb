@@ -16,4 +16,10 @@ module CreatedByConcern
   def created_by_prescripteur?
     created_by_type == "Prescripteur"
   end
+
+  def prescription?
+    return true if created_by_prescripteur?
+
+    organisation.in?(created_by.organisations) if created_by_agent?
+  end
 end

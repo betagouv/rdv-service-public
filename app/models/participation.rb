@@ -19,6 +19,7 @@ class Participation < ApplicationRecord
 
   # Delegates
   delegate :full_name, to: :user
+  delegate :organisation, to: :rdv
 
   # Validations
   # Uniqueness validation doesn’t work with nested_attributes, see https://github.com/rails/rails/issues/4568

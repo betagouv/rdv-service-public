@@ -6,7 +6,7 @@ class Admin::PrescriptionController < AgentAuthController
 
   def recapitulatif
     authorize(user, :show?)
-    @rdv_wizard = AgentPrescripteurRdvWizard.new(agent_prescripteur: current_agent, user: user, query_params: wizard_params)
+    @rdv_wizard = AgentPrescripteurRdvWizard.new(agent: current_agent, user: user, query_params: wizard_params, current_domain: current_domain)
     authorize(@rdv_wizard.rdv.motif, :bookable?)
 
     unless @rdv_wizard.creneau
@@ -17,16 +17,17 @@ class Admin::PrescriptionController < AgentAuthController
 
   def create_rdv
     authorize(user, :show?)
-    @rdv_wizard = AgentPrescripteurRdvWizard.new(agent_prescripteur: current_agent, user: user, query_params: wizard_params)
+    @rdv_wizard = AgentPrescripteurRdvWizard.new(agent: current_agent, user: user, query_params: wizard_params, current_domain: current_domain)
     authorize(@rdv_wizard.rdv.motif, :bookable?)
 
     @rdv_wizard.create!
-    redirect_to confirmation_admin_organisation_prescription_path(rdv_id: @rdv_wizard.rdv.id)
+    redirect_to confirmation_admin_organisation_prescription_path(participation_id: @rdv_wizard.participation.id)
   end
 
   def confirmation
-    @rdv = Rdv.find(params[:rdv_id])
-    authorize(@rdv)
+    participation = Participation.find(params[:participation_id])
+    @rdv = participation.rdv
+    authorize(participation, :show?)
   end
 
   private
