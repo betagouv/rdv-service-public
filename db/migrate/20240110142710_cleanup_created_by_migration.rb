@@ -1,6 +1,7 @@
 class CleanupCreatedByMigration < ActiveRecord::Migration[7.0]
   def change
     safety_assured do
+      # See https://github.com/ankane/strong_migrations#setting-not-null-on-an-existing-column
       add_check_constraint :rdvs, "created_by_type IS NOT NULL", name: "rdvs_created_by_type_null", validate: false
       add_check_constraint :participations, "created_by_type IS NOT NULL", name: "participations_created_by_type_null", validate: false
 
