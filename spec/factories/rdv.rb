@@ -52,12 +52,7 @@ FactoryBot.define do
     end
 
     after(:build) do |rdv|
-      if rdv.created_by.blank?
-        rdv.created_by = rdv.agents.first
-      end
-    end
-
-    after(:build) do |rdv|
+      rdv.created_by ||= rdv.agents.first
       rdv.participations.each { |participation| participation.created_by ||= rdv.created_by }
     end
   end
