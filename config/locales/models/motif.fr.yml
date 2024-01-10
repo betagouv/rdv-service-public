@@ -8,7 +8,7 @@ fr:
         service: Service
         collectif: Nombre de participants
         color: Couleur
-        bookable_by_title: Réservation en ligne
+        bookable_by: Réservation en ligne
         bookable_by_hint: Vous pouvez décider de qui peut prendre RDV pour ce motif
         visibility_type: Visibilité usager
         custom_cancel_warning_message: Message d’avertissement en cas d’annulation
@@ -31,8 +31,10 @@ fr:
         default_duration: Durée par défaut
         min_public_booking_delay: Délai minimum de réservation
         min_public_booking_delay_short: Délai minimum
+        min_public_booking_delay_hint: "Les premiers créneaux proposés aux usagers et aux prescripteurs ne commenceront pas avant ce délai minimum"
         max_public_booking_delay: Délai maximum de réservation
         max_public_booking_delay_short: Délai maximum
+        max_public_booking_delay_hint: "Les derniers créneaux proposés aux usagers et aux prescripteurs n'iront pas au delà de ce délai maximum"
         restriction_for_rdv: Instructions à accepter avant la prise du rendez-vous
         restriction_for_rdv_hint: Instructions à accepter avant la prise du rendez-vous
         restriction_for_rdv_short: Instructions avant
@@ -80,6 +82,11 @@ fr:
         public_office: Le RDV aura lieu au lieu sélectionné (MDS...)
         phone: L'usager sera notifié que le RDV se passera par téléphone, au numéro indiqué dans son profil
         home: L'usager sera notifié que le RDV aura lieu à l'adresse remplie dans son profil
+      motif/bookable_by/hint:
+        agents: "Uniquement les agents de %{organisation_name}"
+        agents_and_prescripteurs: "Ouvert aux agents et aux prescripteurs"
+        agents_and_prescripteurs_and_invited_users: "Ouvert aux agents, aux prescripteurs et aux usagers avec une invitation"
+        everyone: "Ouvert aux agents, aux prescripteurs et aux usagers"
     errors:
       models:
         motif:

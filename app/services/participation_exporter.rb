@@ -73,7 +73,7 @@ module ParticipationExporter
       rdv.created_at.year,
       I18n.l(rdv.created_at.to_date),
       I18n.l(rdv.created_at, format: :time_only),
-      rdv.human_attribute_value(:created_by),
+      Rdv.human_attribute_value(:created_by_type, rdv.created_by_type),
       I18n.l(rdv.starts_at.to_date),
       I18n.l(rdv.starts_at, format: :time_only),
       rdv.motif.service.name,

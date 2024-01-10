@@ -7,6 +7,7 @@ class Admin::NewRdvForm
   def initialize(agent_context, attributes = {})
     @agent_context = agent_context
     @rdv = Rdv.new(attributes)
+    @rdv.created_by = agent_context.agent
   end
 
   def valid?

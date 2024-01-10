@@ -40,8 +40,8 @@
       => "Agent".pluralize(rdv.agents.size)
     = agents_to_sentence(rdv.agents)
 
-- rdv.participations.select(&:prescripteur).each do |participation|
-  - prescripteur = participation.prescripteur
+- rdv.participations.select(&:created_by_prescripteur?).each do |participation|
+  - prescripteur = participation.created_by
   .d-flex.card-text.mt-1
     div.mr-1
       i.fa-solid.fa-user-plus.text-primary-blue

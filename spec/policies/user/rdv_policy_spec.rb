@@ -23,7 +23,7 @@ describe User::RdvPolicy, type: :policy do
   let(:relative) do
     create(:user, :relative, responsible: user, first_name: "Petit", last_name: "Bébé")
   end
-  let!(:rdv) { create(:rdv, organisation: organisation, agents: [agent], motif: motif, users: [user], created_by: "user") }
+  let!(:rdv) { create(:rdv, organisation: organisation, agents: [agent], motif: motif, users: [user], created_by: user) }
 
   context "Rdv belongs to user" do
     it_behaves_like "permit actions", :rdv, :show?, :index?, :new?, :edit?, :update?, :create?, :creneaux?, :cancel?
@@ -31,14 +31,14 @@ describe User::RdvPolicy, type: :policy do
   end
 
   context "Rdv belongs to user for a relative" do
-    let(:rdv) { create(:rdv, organisation: organisation, agents: [agent], motif: motif, users: [relative], created_by: "user") }
+    let(:rdv) { create(:rdv, organisation: organisation, agents: [agent], motif: motif, users: [relative], created_by: user) }
 
     it_behaves_like "permit actions", :rdv, :show?, :index?, :new?, :edit?, :update?, :create?, :creneaux?, :cancel?
     it_behaves_like "included in scope"
   end
 
   context "Rdv belongs to another user" do
-    let(:rdv) { create(:rdv, organisation: organisation, agents: [agent], motif: motif, users: [user2], created_by: "user") }
+    let(:rdv) { create(:rdv, organisation: organisation, agents: [agent], motif: motif, users: [user2], created_by: user) }
 
     it_behaves_like "permit actions", :rdv, :index?
     it_behaves_like "not permit actions", :rdv, :show?, :new?, :edit?, :update?, :create?, :creneaux?, :cancel?

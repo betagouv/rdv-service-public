@@ -1,10 +1,7 @@
 class Motif < ApplicationRecord
-  self.ignored_columns = %w[legacy_bookable_publicly old_location_type]
   # Mixins
   has_paper_trail
-
   include WebhookDeliverable
-
   include PgSearch::Model
 
   pg_search_scope(:search_by_text,

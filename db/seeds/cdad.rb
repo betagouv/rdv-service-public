@@ -10,14 +10,12 @@ territory_gironde = Territory.create!(
 org_cdad1 = Organisation.create!(
   name: "CDAD 1",
   phone_number: "0475796991",
-  human_id: "cdad-1",
   territory: territory_gironde,
   verticale: :rdv_solidarites
 )
 org_cdad2 = Organisation.create!(
   name: "CDAD 2",
   phone_number: "0475796992",
-  human_id: "cdad-2",
   territory: territory_gironde,
   verticale: :rdv_solidarites
 )

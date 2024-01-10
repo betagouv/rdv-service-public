@@ -96,7 +96,7 @@ class AnonymizerRules
       anonymized_column_names: %w[context name],
       non_anonymized_column_names: %w[
         starts_at organisation_id created_at updated_at cancelled_at motif_id uuid
-        lieu_id old_location created_by ends_at max_participants_count users_count status
+        lieu_id old_location created_by created_by_id created_by_type ends_at max_participants_count users_count status
       ],
     },
     receipts: {
@@ -111,7 +111,7 @@ class AnonymizerRules
       anonymized_column_names: %w[
         first_name last_name email phone_number phone_number_formatted
       ],
-      non_anonymized_column_names: %w[created_at updated_at],
+      non_anonymized_column_names: %w[created_at updated_at participation_id],
     },
     super_admins: {
       class_name: "SuperAdmin",
@@ -137,7 +137,7 @@ class AnonymizerRules
       class_name: "Participation",
       anonymized_column_names: %w[invitation_token],
       non_anonymized_column_names: %w[created_at updated_at send_lifecycle_notifications send_reminder_notification invitation_created_at invitation_sent_at invitation_accepted_at
-                                      invitation_limit invited_by_type invited_by_id invitations_count status created_by],
+                                      invitation_limit invited_by_type invited_by_id invitations_count status created_by created_by_id created_by_type],
     },
     plage_ouvertures: {
       class_name: "PlageOuverture",

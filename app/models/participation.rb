@@ -1,20 +1,21 @@
 class Participation < ApplicationRecord
+  self.ignored_columns = %w[created_by]
+
   # Mixins
   devise :invitable
 
   include Participation::StatusChangeable
   include Participation::Creatable
+  include CreatedByConcern
 
   # Attributes
   enum status: { unknown: "unknown", seen: "seen", excused: "excused", revoked: "revoked", noshow: "noshow" }
-  enum created_by: { agent: "agent", user: "user", prescripteur: "prescripteur" }, _prefix: :created_by
   NOT_CANCELLED_STATUSES = %w[unknown seen noshow].freeze
   CANCELLED_STATUSES = %w[excused revoked].freeze
 
   # Relations
   belongs_to :rdv, touch: true, inverse_of: :participations, optional: true
   belongs_to :user, -> { unscope(where: :deleted_at) }, inverse_of: :participations, optional: true
-  has_one :prescripteur, dependent: :destroy
 
   # Delegates
   delegate :full_name, to: :user

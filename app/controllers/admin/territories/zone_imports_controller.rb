@@ -17,6 +17,9 @@ class Admin::Territories::ZoneImportsController < Admin::Territories::BaseContro
     else
       render :new
     end
+  rescue CsvOrXlsReader::FileFormatError => e
+    flash.now[:error] = e.message
+    render :new
   end
 
   private

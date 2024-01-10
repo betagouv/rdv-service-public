@@ -230,20 +230,26 @@ describe MergeUsersService, type: :service do
     end
   end
 
-  context "when one of the users was created by a prescripteur" do
-    let(:user1) { create(:user) }
-    let(:user2) { create(:user, created_through: :prescripteur) }
-    let(:rdv) { create(:rdv, organisation: organisation) }
+  context "when the participation was created by a prescripteur" do
+    let(:user_target) { create(:user, organisations: [organisation]) }
+    let(:user_to_merge) { create(:user, organisations: [organisation], created_through: :prescripteur) }
     let(:prescripteur) { create(:prescripteur) }
+    let!(:participation) { build(:participation, user: user_to_merge) }
+    let!(:rdv) { build(:rdv, organisation: organisation, participations: [participation], created_by: prescripteur) }
 
     before do
-      create(:participation, rdv: rdv, user: user2, prescripteur: prescripteur)
+      participation.valid?
+      rdv.save!
     end
 
-    it "changes the prescripteur to the target user" do
-      expect do
-        described_class.perform_with(user1, user2, attributes_to_merge, organisation)
-      end.to change { prescripteur.reload.user }.from(user2).to(user1)
+    it "change user of the participation" do
+      perform
+      expect(rdv.participations.first.reload.user).to eq(user_target)
+    end
+
+    it "change users associated with the prescripteur" do
+      perform
+      expect(prescripteur.user).to eq(user_target)
     end
   end
 

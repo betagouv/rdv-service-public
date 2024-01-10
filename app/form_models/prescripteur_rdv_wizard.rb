@@ -30,7 +30,7 @@ class PrescripteurRdvWizard < UserRdvWizard::Base
 
   def create_rdv!
     rdv.assign_attributes(
-      created_by: :prescripteur,
+      created_by: @prescripteur,
       lieu: lieu,
       organisation: motif.organisation,
       agents: [creneau.agent],
@@ -46,7 +46,7 @@ class PrescripteurRdvWizard < UserRdvWizard::Base
   end
 
   def participation
-    @participation ||= Participation.new(rdv: @rdv, user: @user, prescripteur: @prescripteur, created_by: :prescripteur)
+    @participation ||= Participation.new(rdv: @rdv, user: @user, created_by: @prescripteur)
   end
 
   def find_or_create_user
