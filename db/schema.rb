@@ -443,7 +443,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_10_142710) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "created_by_id"
-    t.string "created_by_type", null: false
+    t.string "created_by_type"
     t.index ["created_by_type", "created_by_id"], name: "index_participations_on_created_by_type_and_created_by_id"
     t.index ["invitation_token"], name: "index_participations_on_invitation_token", unique: true
     t.index ["invited_by_id"], name: "index_participations_on_invited_by_id"
@@ -452,6 +452,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_10_142710) do
     t.index ["rdv_id"], name: "index_participations_on_rdv_id"
     t.index ["status"], name: "index_participations_on_status"
     t.index ["user_id"], name: "index_participations_on_user_id"
+    t.check_constraint "created_by_type IS NOT NULL", name: "participations_created_by_type_null"
   end
 
   create_table "plage_ouvertures", force: :cascade do |t|
@@ -503,7 +504,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_10_142710) do
     t.integer "users_count", default: 0
     t.enum "status", default: "unknown", null: false, enum_type: "rdv_status"
     t.integer "created_by_id"
-    t.string "created_by_type", null: false
+    t.string "created_by_type"
     t.index "tsrange(starts_at, ends_at, '[)'::text)", name: "index_rdvs_on_tsrange_starts_at_ends_at", using: :gist
     t.index ["created_by_type", "created_by_id"], name: "index_rdvs_on_created_by_type_and_created_by_id"
     t.index ["ends_at"], name: "index_rdvs_on_ends_at"
@@ -516,6 +517,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_10_142710) do
     t.index ["updated_at"], name: "index_rdvs_on_updated_at"
     t.index ["users_count"], name: "index_rdvs_on_users_count"
     t.index ["uuid"], name: "index_rdvs_on_uuid"
+    t.check_constraint "created_by_type IS NOT NULL", name: "rdvs_created_by_type_null"
   end
 
   create_table "receipts", force: :cascade do |t|
