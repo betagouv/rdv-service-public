@@ -1,4 +1,4 @@
-- if @form.user_ids.any?
+- if @form.user_ids.any? && show_agent_prescription_feature?
   .text-center.mt-2.mb-4
     p.text-muted
       = "Vous pouvez aussi "
