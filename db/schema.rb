@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_01_08_190123) do
+ActiveRecord::Schema[7.0].define(version: 2024_01_10_163312) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -440,11 +440,10 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_08_190123) do
     t.bigint "invited_by_id"
     t.integer "invitations_count", default: 0
     t.enum "status", default: "unknown", null: false, enum_type: "rdv_status"
-    t.enum "created_by", enum_type: "created_by"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "created_by_id"
-    t.string "created_by_type"
+    t.string "created_by_type", null: false
     t.index ["created_by_type", "created_by_id"], name: "index_participations_on_created_by_type_and_created_by_id"
     t.index ["invitation_token"], name: "index_participations_on_invitation_token", unique: true
     t.index ["invited_by_id"], name: "index_participations_on_invited_by_id"
@@ -479,7 +478,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_08_190123) do
   end
 
   create_table "prescripteurs", force: :cascade do |t|
-    t.bigint "participation_id"
     t.string "first_name", null: false
     t.string "last_name", null: false
     t.string "email", null: false
@@ -487,7 +485,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_08_190123) do
     t.string "phone_number_formatted"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["participation_id"], name: "index_prescripteurs_on_participation_id", unique: true
   end
 
   create_table "rdvs", force: :cascade do |t|
@@ -498,7 +495,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_08_190123) do
     t.datetime "cancelled_at"
     t.bigint "motif_id", null: false
     t.uuid "uuid", default: -> { "uuid_generate_v4()" }, null: false
-    t.integer "created_by", default: 0
     t.text "context"
     t.bigint "lieu_id"
     t.datetime "ends_at", null: false
@@ -507,9 +503,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_08_190123) do
     t.integer "users_count", default: 0
     t.enum "status", default: "unknown", null: false, enum_type: "rdv_status"
     t.integer "created_by_id"
-    t.string "created_by_type"
+    t.string "created_by_type", null: false
     t.index "tsrange(starts_at, ends_at, '[)'::text)", name: "index_rdvs_on_tsrange_starts_at_ends_at", using: :gist
-    t.index ["created_by"], name: "index_rdvs_on_created_by"
     t.index ["created_by_type", "created_by_id"], name: "index_rdvs_on_created_by_type_and_created_by_id"
     t.index ["ends_at"], name: "index_rdvs_on_ends_at"
     t.index ["lieu_id"], name: "index_rdvs_on_lieu_id"
@@ -780,7 +775,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_08_190123) do
   add_foreign_key "plage_ouvertures", "agents"
   add_foreign_key "plage_ouvertures", "lieux"
   add_foreign_key "plage_ouvertures", "organisations"
-  add_foreign_key "prescripteurs", "participations"
   add_foreign_key "rdvs", "lieux"
   add_foreign_key "rdvs", "motifs"
   add_foreign_key "rdvs", "organisations"
