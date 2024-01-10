@@ -174,9 +174,8 @@ describe Outlook::ApiClient do
           .to_return(status: 500, body: { error: "Unknwon error" }.to_json, headers: {})
       end
 
-      it "notifies Sentry" do
-        expect(Sentry).to receive(:capture_message)
-        described_class.new(agent).create_event!(expected_body)
+      it "raises an error" do
+        expect { described_class.new(agent).create_event!(expected_body) }.to raise_error("Error refreshing Microsoft Graph Token")
       end
     end
   end
