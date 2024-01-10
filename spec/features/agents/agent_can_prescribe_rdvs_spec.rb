@@ -1,6 +1,6 @@
 describe "Agents can prescribe rdvs for a selected user" do
   let(:now) { Time.zone.parse("2024-01-05 16h00") }
-  let!(:territory) { create(:territory) }
+  let!(:territory) { create(:territory, departement_number: "83") }
   let!(:organisation1) { create(:organisation, territory: territory) }
   let!(:organisation2) { create(:organisation, territory: territory) }
   let!(:agent) { create(:agent, admin_role_in_organisations: [organisation1]) }
@@ -53,7 +53,7 @@ describe "Agents can prescribe rdvs for a selected user" do
     expect(Rdv.last.motif).to eq(motif1)
     expect(Rdv.last.lieu).to eq(lieu1)
     expect(Rdv.last.starts_at).to eq(Time.zone.parse("2024-02-05 11:00"))
-    expect(Rdv.last.created_by).to eq("prescripteur")
-    expect(Rdv.last.participations.last.created_by).to eq("prescripteur")
+    expect(Rdv.last.created_by).to eq(agent)
+    expect(Rdv.last.participations.last.created_by).to eq(agent)
   end
 end

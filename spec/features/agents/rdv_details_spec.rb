@@ -136,7 +136,7 @@ describe "Agent can see RDV details correctly" do
   # Ce test a été ajouté suite à un crash de l'affichage de la page RDV
   # lorsque l'agent du RDV avait été hard deleted depuis le SuperAdmin.
   context "when agent has been hard deleted" do
-    let(:rdv) { create(:rdv, organisation: organisation) }
+    let(:rdv) { create(:rdv, organisation: organisation, created_by: agent) }
     let(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
 
     it "does not display the link to the agenda" do
