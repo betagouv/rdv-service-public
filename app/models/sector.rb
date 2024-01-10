@@ -1,6 +1,4 @@
 class Sector < ApplicationRecord
-  self.ignored_columns = %w[departement]
-
   # Attributes
   auto_strip_attributes :name
 
