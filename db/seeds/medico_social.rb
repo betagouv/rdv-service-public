@@ -743,6 +743,8 @@ rdv_attributes = 1000.times.flat_map do |i|
       lieu_id: lieu_org_paris_nord_bd_aubervilliers.id,
       organisation_id: org_paris_nord.id,
       context: "Context #{day} #{hour}",
+      created_by_type: "Agent",
+      created_by_id: agent_org_paris_nord_pmi_martine.id,
     }
   end
 end
@@ -751,7 +753,13 @@ rdv_ids = results.flat_map(&:values) # [1, 2, ...]
 agent_rdv_attributes = rdv_ids.map { |id| { agent_id: agent_org_paris_nord_pmi_martine.id, rdv_id: id } }
 AgentsRdv.insert_all!(agent_rdv_attributes)
 participations_attributes = rdv_ids.map do |id|
-  { user_id: user_org_paris_nord_josephine.id, rdv_id: id, send_lifecycle_notifications: true, send_reminder_notification: true }
+  {
+    user_id: user_org_paris_nord_josephine.id,
+    rdv_id: id, send_lifecycle_notifications: true,
+    send_reminder_notification: true,
+    created_by_type: "Agent",
+    created_by_id: agent_org_paris_nord_pmi_martine.id,
+  }
 end
 Participation.insert_all!(participations_attributes)
 events = %w[new_creneau_available rdv_cancelled rdv_created rdv_date_updated rdv_upcoming_reminder]
