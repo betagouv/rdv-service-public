@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_01_10_163312) do
+ActiveRecord::Schema[7.0].define(version: 2024_01_11_075716) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -46,12 +46,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_10_163312) do
     "agents_and_prescripteurs",
     "everyone",
     "agents_and_prescripteurs_and_invited_users",
-  ], force: :cascade
-
-  create_enum :created_by, [
-    "agent",
-    "user",
-    "prescripteur",
   ], force: :cascade
 
   create_enum :lieu_availability, [
