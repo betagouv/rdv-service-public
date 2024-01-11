@@ -40,15 +40,15 @@
       => "Agent".pluralize(rdv.agents.size)
     = agents_to_sentence(rdv.agents)
 
-- rdv.participations.select(&:created_by_prescripteur?).each do |participation|
-  - prescripteur = participation.created_by
+- rdv.participations.select(&:prescription?).each do |participation|
+  - author = participation.created_by
   .d-flex.card-text.mt-1
     div.mr-1
       i.fa-solid.fa-user-plus.text-primary-blue
     div
       ' Rendez-vous pris par
       a href="#prescripteur-explanation#{participation.id}" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseExample"
-        = prescripteur.full_name
+        = author.full_name
   .collapse.alert-info.p-2.m-2 id="prescripteur-explanation#{participation.id}"
     p
       ' La réservation a été faite par un prescripteur qui ne participera pas au rendez-vous (agent d'accueil, conseiller).
@@ -56,13 +56,13 @@
       ' Ce rendez-vous a été pris sur un créneau ouvert au public.
     p.mb-0
       ' Si vous pensez qu'il y a eu une erreur lors de la prise de rendez-vous, vous pouvez contacter
-      strong => prescripteur.full_name
-      - if prescripteur.phone_number.present?
+      strong => author.full_name
+      - if author.is_a?(Prescripteur) && author.phone_number.present?
         ' au
-        strong => phone_to(prescripteur.phone_number)
+        strong => phone_to(author.phone_number)
         ' ou
       ' à l'adresse
-      strong = mail_to(prescripteur.email)
+      strong = mail_to(author.email)
       | .
 
 - if rdv.public_office? && rdv.overlapping_plages_ouvertures?

@@ -1,8 +1,8 @@
 section.bg-light.p-4
   .container
-    = render "selected_motif_recap", context: context
+    = render "search/selected_motif_recap", context: context
     - if context.shown_lieux.empty?
-      = render "nothing_to_show", context: context
+      = render "search/nothing_to_show", context: context
     - else
       h3.font-weight-bold = t(".select_lieu")
       p = t(".lieu_available", count: context.shown_lieux.count)
