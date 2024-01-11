@@ -18,7 +18,7 @@ module CreatedByConcern
   end
 
   def created_by_external_agent?
-    created_by_agent? && !organisation.in?(created_by.organisations)
+    created_by_agent? && created_by && !organisation.in?(created_by.organisations)
   end
 
   def prescription?
