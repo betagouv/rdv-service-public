@@ -19,12 +19,12 @@ fr:
         sectorisation_level_hint: Seules les recherches des usagers sont concernées par ces règles de sectorisation. Elles n'ont donc pas d'effet si le motif n'est pas réservable en ligne.
         location_type: Type de RDV
         for_secretariat: Motif accessible au secrétariat
-        for_secretariat_label: Le RDV pourra être effectué par le service secrétariat
+        for_secretariat_label: Autoriser les agents du service Secrétariat à assurer ces RDV
         for_secretariat_short: RDV Secrétariat
-        for_secretariat_hint: Les membres du service Secrétariat pourront poser des RDV dans leur agenda et configurer les plages d'ouverture avec ce motif
-        follow_up: Ce motif est réservé uniquement aux usagers bénéficiant d'un accompagnement
+        for_secretariat_hint: En plus des agents du service de ce motif, les agents du service Secrétariat pourront aussi assurer ces RDV et ouvrir des plages d'ouverture dans leur agenda avec ce motif
+        follow_up: Limiter ces RDV aux usagers bénéficiant d'un suivi par un référent
         follow_up_short: RDV de suivi
-        follow_up_warning: Ne cochez cette case que si vous savez ce que vous faîtes
+        follow_up_warning: Les motifs pour RDV de suivi ne sont pas visible lors de la réservation en ligne par les usagers sans compte et sans référent. Les usagers avec un référent pourront prendre rdv depuis leur espace personnel.
         follow_up_hint: Ce motif est réservé uniquement aux usagers bénéficiant d'un accompagnement
         default_duration_in_min: Durée par défaut en minutes
         default_duration_in_min_short: Durée par défaut
