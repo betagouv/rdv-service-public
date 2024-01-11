@@ -89,7 +89,7 @@ RSpec.configure do |config|
               users_count: { type: "integer" },
               uuid: { type: "string" },
             },
-            required: %w[id address agents cancelled_at collectif context created_by duration_in_min lieu max_participants_count motif
+            required: %w[id address agents cancelled_at collectif context created_by_type duration_in_min lieu max_participants_count motif
                          name organisation rdvs_users participations starts_at status users users_count uuid],
           },
           agents: {
@@ -382,7 +382,7 @@ RSpec.configure do |config|
               created_by_type: { type: "string", enum: %w[Agent User Prescripteur] },
               created_by_id: { type: "integer" },
             },
-            required: %w[send_lifecycle_notifications send_reminder_notification status user created_by],
+            required: %w[send_lifecycle_notifications send_reminder_notification status user created_by_type],
           },
           public_links: {
             type: "object",
