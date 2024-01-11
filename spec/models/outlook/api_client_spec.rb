@@ -38,17 +38,9 @@ describe Outlook::ApiClient do
   let(:rdv) { create(:rdv, users: [user], motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [agent]) }
   let(:agents_rdv) { rdv.agents_rdvs.first }
 
-  around do |example|
-    client_id = ENV.delete("AZURE_APPLICATION_CLIENT_ID")
-    ENV["AZURE_APPLICATION_CLIENT_ID"] = "fake_client_id"
-
-    client_secret = ENV.delete("AZURE_APPLICATION_CLIENT_SECRET")
-    ENV["AZURE_APPLICATION_CLIENT_SECRET"] = "fake_client_secret"
-
-    example.run
-
-    ENV["AZURE_APPLICATION_CLIENT_ID"] = client_id
-    ENV["AZURE_APPLICATION_CLIENT_SECRET"] = client_secret
+  before do
+    allow(ENV).to receive(:fetch).with("AZURE_APPLICATION_CLIENT_ID", nil).and_return("fake_client_id")
+    allow(ENV).to receive(:fetch).with("AZURE_APPLICATION_CLIENT_SECRET", nil).and_return("fake_client_secret")
   end
 
   context "when a call fails" do
