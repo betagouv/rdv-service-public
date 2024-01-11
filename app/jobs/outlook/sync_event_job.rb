@@ -3,7 +3,9 @@ module Outlook
     queue_as :outlook_sync
     good_job_control_concurrency_with(
       perform_limit: 1,
-      key: -> { "Outlook::SyncEventJob-#{arguments.first}-#{arguments.last.id}" }
+      # Pour limiter les risque d'une race condition de deux création d'event en même temps
+      # on limite les exécutions concurrentes à un job pour un agents_rdv.
+      key: -> { "Outlook::SyncEventJob-#{arguments.first}" }
     )
 
     def self.perform_later_for(agents_rdv)
