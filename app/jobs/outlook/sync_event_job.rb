@@ -1,6 +1,8 @@
 module Outlook
   class SyncEventJob < ApplicationJob
     queue_as :outlook_sync
+
+    include GoodJob::ActiveJobExtensions::Concurrency
     good_job_control_concurrency_with(
       perform_limit: 1,
       # Pour limiter les risque d'une race condition de deux création d'event en même temps
