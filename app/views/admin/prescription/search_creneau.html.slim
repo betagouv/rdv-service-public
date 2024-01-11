@@ -1,3 +1,9 @@
 h1 Prescription
 h6.card-subtitle.mb-2 = t("admin.creneaux.agent_searches.index.search_for_slots_subtitle", users_fullname: @context.user.full_name)
+span.small.text-muted
+ | Une sectorisation est appliquée sur l'adresse de l'usager :
+ = @context.user.address
+p.small.text-muted
+  = "Pensez à vérifier que l'adresse de l'usager est bien renseignée dans sa fiche. "
+  = link_to("Changer son addresse", edit_admin_organisation_user_path(current_organisation, @context.user))
 = render partial: @context.to_partial_path, locals: { context: @context }

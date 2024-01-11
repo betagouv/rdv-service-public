@@ -3,7 +3,7 @@ class Admin::PrescriptionController < AgentAuthController
 
   def search_creneau
     authorize(user, :show?)
-    @context = AgentPrescriptionSearchContext.new(user: user, query_params: augmented_params)
+    @context = AgentPrescriptionSearchContext.new(user: user, query_params: augmented_params, current_organisation: current_organisation)
   end
 
   def recapitulatif
@@ -18,6 +18,7 @@ class Admin::PrescriptionController < AgentAuthController
   end
 
   def create_rdv
+    # TODO: Autoriser sur la participation (vérifier que le current_agent accéde au user et au motif)
     authorize(user, :show?)
     @rdv_wizard = AgentPrescripteurRdvWizard.new(agent: current_agent, user: user, query_params: wizard_params, current_domain: current_domain)
     authorize(@rdv_wizard.rdv.motif, :bookable?)
@@ -53,6 +54,7 @@ class Admin::PrescriptionController < AgentAuthController
   end
 
   def wizard_params
+    # Ces parametres permettent de passer du choix de creneau au wizard (create et recapitulatif)
     params.permit(%i[starts_at rdv_collectif_id] + AgentPrescriptionSearchContext::STRONG_PARAMS_LIST)
   end
 
