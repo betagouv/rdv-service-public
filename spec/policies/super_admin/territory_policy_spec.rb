@@ -12,7 +12,7 @@ describe SuperAdmin::TerritoryPolicy, type: :policy do
   context "permitted actions for support" do
     let!(:pundit_context) { create(:super_admin, :support) }
 
-    it_behaves_like "permit actions", :territory, :index?, :show?
-    it_behaves_like "not permit actions", :territory, :new?, :create?, :edit?, :update?, :destroy?
+    it_behaves_like "permit actions", :territory, :index?, :show?, :new?, :create?, :edit?, :update?
+    it_behaves_like "not permit actions", :territory, :destroy?
   end
 end
