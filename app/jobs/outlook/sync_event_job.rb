@@ -1,6 +1,10 @@
 module Outlook
   class SyncEventJob < ApplicationJob
     queue_as :outlook_sync
+    good_job_control_concurrency_with(
+      perform_limit: 1,
+      key: -> { "Outlook::SyncEventJob-#{arguments.first}-#{arguments.last.id}" }
+    )
 
     def self.perform_later_for(agents_rdv)
       if agents_rdv.outlook_id.nil? && !agents_rdv.destroyed?
