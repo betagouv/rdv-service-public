@@ -5,7 +5,8 @@
     "build": "webpack --config webpack.config.js"
   },
   "engines": {
-    "node": "18.14.1"
+    "node": "18.14.1",
+    "yarv": "1.22.19"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.1.1",
