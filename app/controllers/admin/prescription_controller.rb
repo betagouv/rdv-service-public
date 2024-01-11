@@ -1,7 +1,9 @@
 class Admin::PrescriptionController < AgentAuthController
+  include GeoCoding
+
   def search_creneau
     authorize(user, :show?)
-    @context = AgentPrescriptionSearchContext.new(user: user, query_params: search_context_params.merge(prescripteur: true))
+    @context = AgentPrescriptionSearchContext.new(user: user, query_params: augmented_params)
   end
 
   def recapitulatif
@@ -31,6 +33,20 @@ class Admin::PrescriptionController < AgentAuthController
   end
 
   private
+
+  def augmented_params
+    params = search_context_params.merge(prescripteur: true)
+    geolocation_results = get_geolocation_results(user.address, params[:departement])
+
+    if geolocation_results.present?
+      params.merge!(
+        city_code: geolocation_results[:city_code],
+        street_ban_id: geolocation_results[:street_ban_id]
+      )
+    end
+
+    params
+  end
 
   def search_context_params
     params.permit(AgentPrescriptionSearchContext::STRONG_PARAMS_LIST)

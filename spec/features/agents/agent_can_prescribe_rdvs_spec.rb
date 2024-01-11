@@ -16,6 +16,13 @@ describe "Agents can prescribe rdvs for a selected user" do
   let!(:plage_ouverture3) { create(:plage_ouverture, :daily, first_day: (now + 1.month).to_date, motifs: [motif2], lieu: lieu_org2, organisation: organisation2) }
   let!(:plage_ouverture4) { create(:plage_ouverture, :daily, first_day: (now + 1.month).to_date, motifs: [motif3], lieu: lieu_org2, organisation: organisation2) }
 
+  before do
+    stub_request(
+      :get,
+      "https://api-adresse.data.gouv.fr/search/?q=20%20avenue%20de%20S%C3%A9gur,%20Paris"
+    ).to_return(status: 200, body: file_fixture("geocode_result.json").read, headers: {})
+  end
+
   it "works, happy path", js: true do
     login_as(agent, scope: :agent)
     visit admin_organisation_agent_searches_path(organisation1, user_ids: [user.id])
