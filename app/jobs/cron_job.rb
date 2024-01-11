@@ -133,4 +133,20 @@ class CronJob < ApplicationJob
       Rdv.reset_user_in_waiting_room!
     end
   end
+
+  class WarnAboutExpiringAzureAppSecrets < CronJob
+    def perform
+      application_key_expiration_date = Date.new(2025, 1, 10)
+      key_refresh_url = "https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationMenuBlade/~/Credentials/appId/ad7b4a46-0051-47b6-bf31-713aa849e5d4/isMSAApp~/true"
+
+      if 2.months.from_now > application_key_expiration_date
+        Sentry.capture_message <<~ERROR
+          Le secret de client de l'application d'oauth Microsoft expire dans moins de 2 mois.
+          Pour que la synchro Outlook continue de fonctionner, vous générez un nouveau secret via #{key_refresh_url}
+          Les identifiants pour se connecter sont dans Passbolt sous le nom "Compte Dev pour Oauth Microsoft".
+          Vous devrez ensuite mettre la valeur du secret dans la variable d'env AZURE_APPLICATION_CLIENT_SECRET, et mettre à jour la date de cet avertissement.
+        ERROR
+      end
+    end
+  end
 end
