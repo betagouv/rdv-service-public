@@ -1,6 +1,4 @@
 class Prescripteur < ApplicationRecord
-  self.ignored_columns = %w[participation_id]
-
   include FullNameConcern
   include PhoneNumberValidation::HasPhoneNumber
 

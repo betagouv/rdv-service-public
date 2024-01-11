@@ -1,5 +1,4 @@
 class Organisation < ApplicationRecord
-  self.ignored_columns = %w[human_id departement]
   # Mixins
   has_paper_trail
   include WebhookDeliverable
