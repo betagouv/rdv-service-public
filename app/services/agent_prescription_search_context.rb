@@ -4,7 +4,8 @@ class AgentPrescriptionSearchContext < WebSearchContext
     :service_id, :lieu_id, :date, :motif_name_with_location_type, :motif_category_short_name,
     :motif_id, :user_selected_organisation_id, :prescripteur,
     { # Parametre supplémentaire qui n'apparait pas dans le WebSearchContext
-      user_ids: [], },
+      user_ids: [],
+    },
   ].freeze
 
   def initialize(user:, current_organisation:, query_params: {})
