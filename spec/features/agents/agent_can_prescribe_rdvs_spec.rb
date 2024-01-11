@@ -16,7 +16,7 @@ describe "Agents can prescribe rdvs for a selected user" do
   let!(:plage_ouverture3) { create(:plage_ouverture, :daily, first_day: (now + 1.month).to_date, motifs: [motif2], lieu: lieu_org2, organisation: organisation2) }
   let!(:plage_ouverture4) { create(:plage_ouverture, :daily, first_day: (now + 1.month).to_date, motifs: [motif3], lieu: lieu_org2, organisation: organisation2) }
 
-  it "works, happy path", js: true do
+  it "works, happy path" do
     login_as(agent, scope: :agent)
     visit admin_organisation_agent_searches_path(organisation1, user_ids: [user.id])
     click_link "élargir votre recherche"
@@ -26,12 +26,12 @@ describe "Agents can prescribe rdvs for a selected user" do
     expect(page).to have_content("Sélectionnez le service avec qui vous voulez prendre un RDV")
     expect(page).to have_content(motif1.service.name)
     expect(page).to have_content(motif2.service.name)
-    find("h3", text: motif1.service.name).click
+    find("h3", text: motif1.service.name).ancestor("a").click
     # Select Motif
     expect(page).to have_content("Sélectionnez le motif de votre RDV")
     expect(page).to have_content(motif1.name)
     expect(page).to have_content(motif2.name)
-    find("h3", text: motif1.name).click
+    find("h3", text: motif1.name).ancestor("a").click
     # Select Lieu
     expect(page).to have_content(lieu1.name)
     expect(page).to have_content(lieu2.name)
