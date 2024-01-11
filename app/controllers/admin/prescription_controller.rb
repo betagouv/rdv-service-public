@@ -3,6 +3,7 @@ class Admin::PrescriptionController < AgentAuthController
 
   def search_creneau
     authorize(user, :show?)
+    session[:agent_prescripteur_organisation_id] = params[:organisation_id]
     @context = AgentPrescriptionSearchContext.new(user: user, query_params: augmented_params, current_organisation: current_organisation)
   end
 

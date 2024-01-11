@@ -7,7 +7,7 @@ class SearchController < ApplicationController
   def search_rdv
     # TODO : public_link_organisation_id has to work if agent is logged in ?
     if current_agent && query_params[:public_link_organisation_id].nil?
-      redirect_to search_creneau_admin_organisation_prescription_path(session[:organisation_id], agent_search_params)
+      redirect_to search_creneau_admin_organisation_prescription_path(session[:agent_prescripteur_organisation_id], agent_search_params)
     end
     @context = if invitation?
                  WebInvitationSearchContext.new(user: current_user, query_params: query_params)
