@@ -12,7 +12,7 @@ dbclient-fetcher pgsql
 
 # Cette commande nécessite un login par un membre de l'équipe
 # On préfère faire un login à chaque rafraichissement des données plutôt que de laisser un token scalingo en variable d'env
-scalingo login
+scalingo login --password-only
 
 # Retrieve the production addon id:
 prod_addon_id="$( scalingo --region osc-secnum-fr1 --app production-rdv-solidarites addons \
