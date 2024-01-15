@@ -56,7 +56,7 @@ describe "ANTS API: availableTimeSlots" do
     )
   end
 
-  context "there's more than 1 participant" do
+  context "when there's more than 1 participant" do
     let(:participants_count) { 2 }
 
     it "returns slots with a duration matching the number of participants" do
@@ -81,14 +81,22 @@ describe "ANTS API: availableTimeSlots" do
     end
   end
 
-  context "Responds with an Error" do
+  context 'when the "reason" param is invalid' do
+    it "adds crumb with request details to Sentry" do
+      invalid_reason = "no"
+      get "/api/ants/availableTimeSlots?meeting_point_ids=#{lieu1.id}&meeting_point_ids=#{lieu2.id}&start_date=2022-11-01&end_date=2022-11-02&documents_number=1&reason=#{invalid_reason}"
+
+      expect(response).to have_http_status(:bad_request)
+      expect(sentry_events.last.message).to eq('ANTS provided invalid reason: "no"')
+    end
+  end
+
+  context "when a 500 occurs (example: no MotifCategory in DB)" do
     before do
-      # Delete motifs and motifs category to create an error
-      organisation.motifs.destroy_all
-      MotifCategory.destroy_all
+      allow(Users::CreneauxSearch).to receive(:new).and_raise(NoMethodError)
     end
 
-    xit "adds crumb with request details to Sentry" do
+    it "adds crumb with request details to Sentry" do
       expect do
         get "/api/ants/availableTimeSlots?meeting_point_ids=#{lieu1.id}&meeting_point_ids=#{lieu2.id}&start_date=2022-11-01&end_date=2022-11-02&documents_number=1&reason=CNI"
       end.to raise_error(NoMethodError)
