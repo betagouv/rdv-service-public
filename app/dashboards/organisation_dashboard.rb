@@ -11,12 +11,12 @@ class OrganisationDashboard < Administrate::BaseDashboard
     id: Field::Number,
     name: Field::String,
     agents: Field::HasMany,
+    agent_roles: Field::HasMany,
     motifs: Field::HasMany,
     lieux: Field::HasMany,
     horaires: Field::String,
     phone_number: Field::String,
     email: Field::String,
-    human_id: Field::String,
     territory: Field::BelongsTo,
     verticale: EnumField,
     created_at: Field::DateTime,
@@ -31,6 +31,7 @@ class OrganisationDashboard < Administrate::BaseDashboard
   COLLECTION_ATTRIBUTES = %i[
     id
     name
+    verticale
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
@@ -40,11 +41,10 @@ class OrganisationDashboard < Administrate::BaseDashboard
     name
     horaires
     phone_number
+    agent_roles
     email
-    agents
     motifs
     lieux
-    human_id
     verticale
     created_at
     updated_at
@@ -59,7 +59,6 @@ class OrganisationDashboard < Administrate::BaseDashboard
     phone_number
     email
     verticale
-    human_id
     territory
   ].freeze
 

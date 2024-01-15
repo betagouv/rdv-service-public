@@ -110,6 +110,7 @@ Rails/LexicallyScopedActionFilter:
     - 'app/controllers/user_auth_controller.rb'
     - 'app/controllers/agents/sessions_controller.rb'
     - 'app/controllers/agent_auth_controller.rb'
+    - 'app/controllers/super_admins/super_admins_controller.rb'
 
 Rails/ActiveRecordCallbacksOrder:
   Enabled: false

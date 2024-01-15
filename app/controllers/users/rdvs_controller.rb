@@ -141,7 +141,7 @@ class Users::RdvsController < UserAuthController
       motif: creneau.motif,
       lieu_id: creneau.lieu&.id,
       users: [user_for_rdv],
-      created_by: :user
+      created_by: current_user
     )
   end
 

@@ -53,7 +53,7 @@ Ces choix techniques sont aussi influencés par la culture de la communauté Rub
 
 ### Matrice des flux
 
-#### Application Scalingo
+#### Applications métier sur Scalingo
 
 | Source           | Destination       | Protocole | Port | Localisation      | Interne/URL Externe |
 |------------------|-------------------|-----------|------|-------------------|---------------------|
@@ -72,6 +72,8 @@ Ces choix techniques sont aussi influencés par la culture de la communauté Rub
 | N8n        | Mattermost  | HTTPS     | 443  | Paris/SecNumCloud, France | mattermost.incubateur.net                       |
 | App Rails  | Skylight    | HTTPS     | 443  | Ashburn, Virginia,    USA | skylight.io                                     |
 | Navigateur | Matomo      | HTTPS     | 443  | France                    | stats.data.gouv.fr                              |
+| Extension PostgreSQL de l'app Rails | Appli ETL sur Scalingo | | | Paris/SecNumCloud | https://dashboard.scalingo.com/apps/osc-secnum-fr1/rdv-service-public-etl |
+| Appli ETL sur Scalingo | Metabase | TCP/IP avec SSL | 30204 | Paris/SecNumCloud | https://rdv-service-public-metabase.osc-secnum-fr1.scalingo.io |
 
 #### Services externes
 
@@ -231,6 +233,40 @@ C4Container
     Rel(user, oauth_github, "HTTPS redirect")
 ```
 
+#### Échanges entre l'app et Metabase
+
+Notre équipe utilise Metabase pour comprendre l'utilisation de l'application par les différents. Metabase pointe vers une copie anonymisée de la base de production.
+Cette copie anonymisée est gérée par une application Scalingo d'ETL (Extract Transform Load). Cette appli n'a pas de serveur web, mais juste un job qui est lancé périodiquement. Ce job télécharge un backup de la base de données de production, exécute un script d'anonymisation pour supprimer les données personnelles ou sensibles.
+Le serveur web Metabase est hébergé sur une application Scalingo.
+
+```mermaid
+C4Container
+    Person(user, "Utilisateur⋅ice Metabase", "membre de l'équipe")
+
+    Container_Boundary(metabase_app, "Application Scalingo pour Metabase") {
+        System(metabase_web, "Metabase", "Serveur web")
+    }
+
+    Rel(user, metabase_web, "HTTPS")
+
+    Container_Boundary(etl_app, "Application Scalingo pour l'ETL") {
+        System(job_etl, "Job d'ETL", "Copie et anonymisation")
+        ContainerDb(postgres_etl, "PostgreSQL", "Données métier anonymisées")
+    }
+
+    Rel(job_etl, postgres_etl, "TCP avec SSL")
+    Rel(metabase_web, postgres_etl, "TCP avec SSL")
+
+    Container_Boundary(production_app, "Application Scalingo pour la production") {
+        Container(web_app, "Ruby on Rails", "Application web + API JSON")
+        ContainerDb(postgres, "PostgreSQL", "Données métier")
+        ContainerDb(backups, "Backups PostgreSQL", "Données métier")
+    }
+
+    Rel(web_app, postgres, "TCP")
+    Rel(job_etl, backups, "TCP")
+```
+
 ### Schéma des données
 
 Lancer `make generate_db_diagram` pour obtenir un SVG de l'état actuel des tables Postgres. Le fichier `db/schema.rb` donne aussi une description des tables via un DSL Ruby.
@@ -245,11 +281,13 @@ https://github.com/betagouv/rdv-solidarites.fr/blob/f12411c0760be1316aae571bb35c
 Les serveurs (applicatif et base de données) sont gérés par Scalingo. Scalingo ne fournit pas de système de rôle : soit
 on a accès à une app, soit on ne l'a pas.
 
-Nous avons actuellement 3 apps Scalingo :
+Nous avons actuellement 5 apps Scalingo, les trois premières pour le métier, les deux autres pour le tooling :
 
 - `osc-secnum-fr1/production-rdv-solidarites`
 - `osc-secnum-fr1/production-rdv-mairie`
 - `osc-secnum-fr1/demo-rdv-solidarites`
+- `osc-secnum-fr1/rdv-service-public-etl`
+- `osc-secnum-fr1/rdv-service-public-metabase`
 
 Le fait d'avoir accès à une app Scalingo donne les droits suivants :
 

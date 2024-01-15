@@ -1,21 +1,20 @@
 module SuperAdmins
   class SuperAdminsController < SuperAdmins::ApplicationController
-    # To customize the behavior of this controller,
-    # you can overwrite any of the RESTful actions. For example:
-    #
-    # def index
-    #   super
-    #   @resources = SuperAdmin.
-    #     page(params[:page]).
-    #     per(10)
-    # end
+    before_action :check_privilege_escalation, only: %i[update]
 
-    # Define a custom finder by overriding the `find_resource` method:
-    # def find_resource(param)
-    #   SuperAdmin.find_by!(slug: param)
-    # end
+    def check_privilege_escalation
+      return not_authorized_to_update if privilege_escalation?
+    end
 
-    # See https://administrate-prototype.herokuapp.com/customizing_controller_actions
-    # for more information
+    private
+
+    def not_authorized_to_update
+      flash[:error] = "Vous n'êtes pas autorisé à modifier le role de super_admin"
+      redirect_to(request.referer)
+    end
+
+    def privilege_escalation?
+      current_super_admin.support_member? && resource_params[:role] == "legacy_admin"
+    end
   end
 end

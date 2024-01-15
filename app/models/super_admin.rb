@@ -1,7 +1,14 @@
 class SuperAdmin < ApplicationRecord
   # Mixins
+  has_paper_trail
   include DeviseInvitable::Inviter
   include FullNameConcern
+
+  # Attributes
+  enum role: {
+    legacy_admin: "legacy_admin",
+    support: "support",
+  }, _suffix: "member"
 
   # Validations
   validates :first_name, presence: true
