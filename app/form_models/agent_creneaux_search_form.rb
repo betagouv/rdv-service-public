@@ -27,7 +27,7 @@ class AgentCreneauxSearchForm
   end
 
   def users
-    User.where(id: user_ids, organisations: organisations)
+    User.joins(:user_profiles).where(id: user_ids, user_profiles: { organisations: organisations })
   end
 
   def teams

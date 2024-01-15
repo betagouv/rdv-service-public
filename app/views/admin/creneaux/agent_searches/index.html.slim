@@ -6,28 +6,31 @@
     - if @form.users.any?
       h6.card-subtitle.mb-2 = t(".search_for_slots_subtitle", users_fullname: @form.users.map(&:full_name).join(" ,"))
   .card-body
-    = simple_form_for(@form, as: "", url: admin_organisation_agent_searches_path(current_organisation), method: :get) do |f|
-      .row
-        .col-md-4
-          = f.input :organisations, \
-            collection: policy_scope(Organisation), \
-            selected: @form.organisations.map(&:id), \
-            input_html: { \
-              multiple: true, \
-              class: "select2-input", \
-              data: { \
-                placeholder: "Sélectionnez vos organisations", \
-                "select-options": { disableSearch: true }, \
-              }, \
-            }
-        .col-md-4
-          = f.submit "Sélectionner ces orgas", class: "btn btn-outline-primary", data: { disable_with: "Récupération des créneaux..." }
+    - if current_agent.organisations.size > 1
+      = simple_form_for(@form, as: "", url: admin_organisation_agent_searches_path(current_organisation), method: :get) do |f|
+        .row.align-items-center
+          .col-md-4
+            = f.input :organisations, \
+              collection: policy_scope(Organisation), \
+              selected: @form.organisations.map(&:id), \
+              input_html: { \
+                multiple: true, \
+                class: "select2-input", \
+                data: { \
+                  placeholder: "Sélectionnez vos organisations", \
+                  "select-options": { disableSearch: true }, \
+                }, \
+              }
+          .col-md-4
+            = f.submit "Sélectionner ces organisations", class: "btn btn-outline-primary", data: { disable_with: "Récupération des créneaux..." }
 
     = simple_form_for(@form, as: "", url: admin_organisation_agent_searches_path(current_organisation), method: :get) do |f|
       - @form.user_ids.each do |user_id|
         = hidden_field_tag "user_ids[]", user_id
       - if @form.context.present?
         = hidden_field_tag :context, @form.context
+      - params.fetch(:organisations, []).compact.each do |org_id|
+        = hidden_field_tag "organisations[]", org_id
       .row
         .col-md-4
           = f.input :service_id, \
