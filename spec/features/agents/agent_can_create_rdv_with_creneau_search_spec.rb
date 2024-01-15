@@ -152,21 +152,40 @@ describe "Agent can create a Rdv with creneau search" do
   end
 
   context "when secretaire searches for creneau in several organisations" do
+    before do
+      travel_to(Time.zone.parse("2024-01-08 09:00:00"))
+    end
+
+    let!(:service_avocat) { create(:service, name: "Avocat") }
+    let!(:agent) { create(:agent, :secretaire, basic_role_in_organisations: [org1, org2]) } # nous sommes secrétaire
+    let!(:agent_org1) { create(:agent, first_name: "Christine", last_name: "Un", basic_role_in_organisations: [org1]) }
+    let!(:agent_org2) { create(:agent, first_name: "Alberto", last_name: "Deux", basic_role_in_organisations: [org2]) }
+
     let!(:org1) { create(:organisation) }
-    let!(:agent_org1) { create(:agent, basic_role_in_organisations: [org1]) }
-    let!(:motif_aide_aux_victimes_org1) { create(:motif, :by_phone, organisation: org1, name: "Aide aux victimes") }
-    let!(:plage_org1) { create(:plage_ouverture, organisation: org1, agent: agent_org1, motifs: [motif_aide_aux_victimes_org1]) }
-
     let!(:org2) { create(:organisation) }
-    let!(:motif_aide_aux_victimes_org2) { create(:motif, :by_phone, organisation: org2, name: "Aide aux victimes") }
-    let!(:other_motif_org2) { create(:motif, :by_phone, organisation: org2, name: "Autre motif") }
 
-    let!(:agent) { create(:agent, :secretaire, basic_role_in_organisations: [org1, org2]) }
+    let!(:motif_aide_aux_victimes_org1) { create(:motif, :by_phone, organisation: org1, name: "Aide aux victimes", service: service_avocat) }
+    let!(:motif_aide_aux_victimes_org2) { create(:motif, :by_phone, organisation: org2, name: "Aide aux victimes", service: service_avocat) }
+    let!(:autre_motif_org1) { create(:motif, :by_phone, organisation: org1, name: "Autre motif") }
 
-    xit "displays creneaux from all organisations" do
+    let!(:plage_org1) { create(:plage_ouverture, organisation: org1, agent: agent_org1, motifs: [motif_aide_aux_victimes_org1], first_day: Time.zone.tomorrow) }
+    let!(:plage_org2) { create(:plage_ouverture, organisation: org2, agent: agent_org2, motifs: [motif_aide_aux_victimes_org2], first_day: Time.zone.tomorrow) }
+
+    it "displays creneaux from all organisations" do
       visit admin_organisation_agent_searches_path(org1)
-      expect(page).to have_content("Trouver un RDV")
-      expect(page).to have_select("Motif", options: ["", "Aide aux victimes (Par téléphone)"])
+      select(org1.name, from: "Organisations")
+      select(org2.name, from: "Organisations")
+      click_on "Sélectionner ces organisations"
+      expect(page).to have_select("Motif", options: ["", "Aide aux victimes (Par téléphone)", "Autre motif (Par téléphone)"])
+      select("Aide aux victimes (Par téléphone)", from: "Motif")
+      click_on "Afficher les créneaux"
+      expect(page).to have_content("08:00C. UN") # créneau de l'agent 1 dans l'orga 1
+      expect(page).to have_content("08:00A. DEUX") # créneau de l'agent 2 dans l'orga 2
+
+      # on crée un RDV dans l'orga 2 alors qu'on est dans l'orga 1
+      click_on "08:00A. DEUX"
+      # On est bien redirigé vers l'orga 2 pour le formulaire
+      expect(page).to have_current_path("/admin/organisations/#{org2.id}/rdv_wizard_step/new", ignore_query: true)
     end
   end
 end
