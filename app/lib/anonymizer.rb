@@ -66,7 +66,7 @@ class Anonymizer
     ActiveRecord::Encryption.without_encryption do # The columns may be encrypted, but we still want to overwrite the anonymized value
       scope = model_class.unscoped.where.not(column.name => nil)
 
-      if column.type.in?(%i[string text]) && column.nil? # On vérifie que la colonne est nullable
+      if column.type.in?(%i[string text]) && column.null # On vérifie que la colonne est nullable
         # Pour limiter la confusion lors de l'exploitation des données, on transforme les chaines vides en null
         scope.where(column.name => "").update_all(column.name => nil) # rubocop:disable Rails/SkipsModelValidations
       end
