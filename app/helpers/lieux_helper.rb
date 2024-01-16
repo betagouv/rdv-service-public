@@ -20,4 +20,8 @@ module LieuxHelper
       concat content_tag(:small, lieu.address)
     end
   end
+
+  def lieu_name_and_organisation(lieu)
+    "#{lieu.name} - #{lieu.organisation.name}"
+  end
 end

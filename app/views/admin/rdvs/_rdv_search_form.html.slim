@@ -50,14 +50,14 @@
               wrapper: "horizontal_form"
       = f.input :lieu_id, collection: @lieux,
               label: "Lieu",
-              label_method: :name,
+              label_method: -> { lieu_name_and_organisation(_1) },
               prompt: "Tous",
               input_html: { class: "select2-input" },
               wrapper: "horizontal_form"
     .col-md-6
       = f.input :motif_id, collection: @motifs,
             label: "Motifs",
-            label_method: :name,
+            label_method: -> { motif_name_and_service(_1) },
             prompt: "Tous",
             input_html: { class: "select2-input" },
             wrapper: "horizontal_form"
