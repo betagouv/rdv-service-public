@@ -88,6 +88,7 @@ describe "ANTS API: availableTimeSlots" do
 
       expect(response).to have_http_status(:bad_request)
       expect(sentry_events.last.message).to eq('ANTS provided invalid reason: "no"')
+      expect(response.body).to eq('{"error":{"code":400,"message":"Invalid reason param"}}')
     end
   end
 
