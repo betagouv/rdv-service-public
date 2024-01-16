@@ -92,7 +92,7 @@ describe "ANTS API: availableTimeSlots" do
     end
   end
 
-  context "when a 500 occurs (example: no MotifCategory in DB)" do
+  context "when a 500 occurs" do
     before do
       allow(Users::CreneauxSearch).to receive(:new).and_raise(NoMethodError)
     end
