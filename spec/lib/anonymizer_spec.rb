@@ -16,6 +16,7 @@ RSpec.describe Anonymizer do
     let!(:super_admin) { SuperAdmin.create!(email: "admin@example.com", first_name: "Francis", last_name: "Factice") }
     let!(:organisation) { create(:organisation, email: "email_perso_de_cnfs_alors_que_ce_champs_est_prevu_pour_une_adresse_mail_generique@example") }
     let!(:lieu) { create(:lieu, phone_number: "06 11 22 33 44", phone_number_formatted: "+33611223344") }
+    let!(:user_without_password) { create(:user, encrypted_password: "") }
 
     it "anonymizes all the data" do
       described_class.anonymize_all_data!
