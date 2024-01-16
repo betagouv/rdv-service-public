@@ -363,6 +363,26 @@ RSpec.configure do |config|
             },
             required: %w[motif_category],
           },
+          territory: {
+            type: "object",
+            properties: {
+              id: { type: "integer" },
+              departement_number: { type: "string" },
+              name: { type: "string" },
+              motif_categories: {
+                type: "array",
+                items: { "$ref" => "#/components/schemas/motif_category" },
+              },
+            },
+            required: %w[id departement_number name],
+          },
+          territory_with_root: {
+            type: "object",
+            properties: {
+              territory: { "$ref" => "#/components/schemas/territory" },
+            },
+            required: %w[territory],
+          },
           rdvs_user: {
             type: "object",
             properties: {

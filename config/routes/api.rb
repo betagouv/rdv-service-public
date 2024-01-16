@@ -37,6 +37,7 @@ namespace :api do
       post :create_many, on: :collection
     end
     resources :motif_categories, only: %i[create]
+    resources :motif_category_territories, only: %i[create]
   end
 end
 
