@@ -1,38 +1,37 @@
-section.bg-light.p-4
-  .container
-    = render "search/selected_motif_recap", context: context
-    - if context.shown_lieux.empty?
-      = render "search/nothing_to_show", context: context
-    - else
-      h3.font-weight-bold = t(".select_lieu")
-      p = t(".lieu_available", count: context.shown_lieux.count)
-      - context.next_availability_by_lieux.each do |lieu, next_availability|
-        .card.mb-3 class=("card-hoverable" if next_availability)
-          .card-body
-            .row
-              .col-md
-                h4.card-title.mb-3.mt-0.text-success.font-weight-bold= lieu.name
-                .card-subtitle= lieu.address
-                .card-subtitle= context.service.name
-              .col-md.align-self-center.pt-3.pt-md-0.position-static
-                - motif = next_availability.motif
-                - if motif.restriction_for_rdv.blank?
-                  = link_to prendre_rdv_path(context.query_params.merge(lieu_id: lieu.id, date: next_availability.starts_at)), class: "d-block stretched-link" do
-                    .row
-                      .col
-                        = t(".next_availability")
-                        br
-                        strong= l(next_availability.starts_at, format: :human)
-                      .col-auto.align-self-center
-                          i.fa.fa-chevron-right
-                - else
-                  = link_to prendre_rdv_path(context.query_params.merge(lieu_id: lieu.id, date: next_availability.starts_at)), class: "d-block stretched-link", "data-turbolinks": false, data: { toggle: "modal", target: "#js-rdv-restriction-motif#{lieu.id}" } do
-                    .row
-                      .col
-                        = t(".next_availability")
-                        br
-                        strong= l(next_availability.starts_at, format: :human)
-                      .col-auto.align-self-center
-                          i.fa.fa-chevron-right
-                  = render "/common/modal", id: "js-rdv-restriction-motif#{lieu.id}" , title: "À lire avant de prendre un rendez-vous", confirm_path: prendre_rdv_path(context.query_params.merge(lieu_id: lieu.id, date: next_availability.starts_at)) do
-                    = restriction_for_rdv_to_html(motif)
+.container
+  = render "search/selected_motif_recap", context: context
+  - if context.shown_lieux.empty?
+    = render "search/nothing_to_show", context: context
+  - else
+    h3.font-weight-bold = t(".select_lieu")
+    p = t(".lieu_available", count: context.shown_lieux.count)
+    - context.next_availability_by_lieux.each do |lieu, next_availability|
+      .card.mb-3 class=("card-hoverable" if next_availability)
+        .card-body
+          .row
+            .col-md
+              h4.card-title.mb-3.mt-0.text-success.font-weight-bold= lieu.name
+              .card-subtitle= lieu.address
+              .card-subtitle= context.service.name
+            .col-md.align-self-center.pt-3.pt-md-0.position-static
+              - motif = next_availability.motif
+              - if motif.restriction_for_rdv.blank?
+                = link_to prendre_rdv_path(context.query_params.merge(lieu_id: lieu.id, date: next_availability.starts_at)), class: "d-block stretched-link" do
+                  .row
+                    .col
+                      = t(".next_availability")
+                      br
+                      strong= l(next_availability.starts_at, format: :human)
+                    .col-auto.align-self-center
+                        i.fa.fa-chevron-right
+              - else
+                = link_to prendre_rdv_path(context.query_params.merge(lieu_id: lieu.id, date: next_availability.starts_at)), class: "d-block stretched-link", "data-turbolinks": false, data: { toggle: "modal", target: "#js-rdv-restriction-motif#{lieu.id}" } do
+                  .row
+                    .col
+                      = t(".next_availability")
+                      br
+                      strong= l(next_availability.starts_at, format: :human)
+                    .col-auto.align-self-center
+                        i.fa.fa-chevron-right
+                = render "/common/modal", id: "js-rdv-restriction-motif#{lieu.id}" , title: "À lire avant de prendre un rendez-vous", confirm_path: prendre_rdv_path(context.query_params.merge(lieu_id: lieu.id, date: next_availability.starts_at)) do
+                  = restriction_for_rdv_to_html(motif)
