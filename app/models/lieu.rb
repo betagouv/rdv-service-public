@@ -1,6 +1,4 @@
 class Lieu < ApplicationRecord
-  self.ignored_columns = %w[old_address old_enabled]
-
   # Mixins
   has_paper_trail
   include PhoneNumberValidation::HasPhoneNumber

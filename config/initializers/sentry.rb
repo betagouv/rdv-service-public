@@ -7,7 +7,10 @@ Sentry.init do |config|
   # Dans le contexte des jobs, on a besoin de savoir s'il y a cette erreur
   # Par ailleurs, on préfère mettre une règle dans Sentry pour ignorer ces erreurs en dessous d'un
   # certain volume plutôt que de les rendre complètement invisibles.
-  config.excluded_exceptions -= ['ActiveRecord::RecordNotFound']
+  config.excluded_exceptions -= [
+    'ActiveRecord::RecordNotFound',
+    'GoodJob::ActiveJobExtensions::Concurrency::ConcurrencyExceededError', # Ces erreurs permettent de lancer de retry https://github.com/bensheldon/good_job?tab=readme-ov-file#how-concurrency-controls-work
+  ]
 
   # Most 4xx errors are excluded by default.
   # See Sentry::Configuration::IGNORE_DEFAULT

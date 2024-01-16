@@ -12,28 +12,29 @@ dbclient-fetcher pgsql
 
 # Cette commande nécessite un login par un membre de l'équipe
 # On préfère faire un login à chaque rafraichissement des données plutôt que de laisser un token scalingo en variable d'env
-scalingo login
+scalingo login --password-only
 
-# Retrieve the addon id:
-addon_id="$( scalingo --region osc-secnum-fr1 --app production-rdv-solidarites addons \
-             | grep "PostgreSQL" \
-             | cut -d "|" -f 3 \
-             | tr -d " " )"
+# Retrieve the production addon id:
+prod_addon_id="$( scalingo --region osc-secnum-fr1 --app production-rdv-solidarites addons \
+                 | grep "PostgreSQL" \
+                 | cut -d "|" -f 3 \
+                 | tr -d " " )"
 
 # Download the latest backup available for the specified addon:
-scalingo  --region osc-secnum-fr1 --app production-rdv-solidarites --addon "${addon_id}" backups-download --output "${archive_name}"
+scalingo  --region osc-secnum-fr1 --app production-rdv-solidarites --addon "${prod_addon_id}" backups-download --output "${archive_name}"
 
 # Extract the archive containing the downloaded backup:
 tar --extract --verbose --file="${archive_name}" --directory="/app/"
 
 # TODO: block connections from the outside before loading the dump to the database
-# The postgres role used by the rails app doesn't have the necessary permissions to create a new role
-# this could be done by only authorizing the pg role used by metabase to access a pg schema other than public, and changing the schema name when the anonymization is done
-# this could also be done by deleting and re-creating the pg role used by metabase around this operation
 
-# cette commande échoue puisqu'on n'a pas les permissions nécessaires pour créer le rôle.
-# Pour le moment, il faut encore supprimer et recréer le rôle via l'interface scalingo
-echo "DROP ROLE rdv_service_public_metabase;\n" | bundle exec rails dbconsole
+etl_addon_id="$( scalingo --region osc-secnum-fr1 --app rdv-service-public-etl addons \
+                 | grep "PostgreSQL" \
+                 | cut -d "|" -f 3 \
+                 | tr -d " " )"
+
+# Delete Postgres role dedicated to metabase and called "rdv_service_public_metabase"
+scalingo database-delete-user --region osc-secnum-fr1 --app rdv-service-public-etl --addon "${etl_addon_id}" rdv_service_public_metabase
 
 # Load the dump into the database
 # TODO: try speeding up the process by using the --jobs option
@@ -47,5 +48,6 @@ time pg_restore --clean --if-exists --no-owner --no-privileges --jobs=2 --dbname
 
 bundle exec rails runner scripts/anonymize_database.rb
 
-# Il faut qu'on trouve une manière d'automatiser la création de role
-echo "CREATE ROLE rdv_service_public_metabase PASSWORD '${METABASE_DB_ROLE_PASSWORD}';\n" | bundle exec rails dbconsole
+echo "Re-création du role Postgres rdv_service_public_metabase"
+echo "Merci de copier/coller le mot de passe stocké dans METABASE_DB_ROLE_PASSWORD: ${METABASE_DB_ROLE_PASSWORD}"
+scalingo database-create-user --region osc-secnum-fr1 --app rdv-service-public-etl --addon "${etl_addon_id}" --read-only rdv_service_public_metabase

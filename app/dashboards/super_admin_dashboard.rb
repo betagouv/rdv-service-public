@@ -10,6 +10,7 @@ class SuperAdminDashboard < Administrate::BaseDashboard
   ATTRIBUTE_TYPES = {
     id: Field::Number,
     email: Field::String,
+    role: EnumField,
     first_name: Field::String,
     last_name: Field::String,
     created_at: Field::DateTime,
@@ -24,6 +25,7 @@ class SuperAdminDashboard < Administrate::BaseDashboard
   COLLECTION_ATTRIBUTES = %i[
     id
     email
+    role
     first_name
     last_name
     created_at
@@ -35,6 +37,7 @@ class SuperAdminDashboard < Administrate::BaseDashboard
   SHOW_PAGE_ATTRIBUTES = %i[
     id
     email
+    role
     first_name
     last_name
     created_at
@@ -46,6 +49,7 @@ class SuperAdminDashboard < Administrate::BaseDashboard
   # on the model's form (`new` and `edit`) pages.
   FORM_ATTRIBUTES = %i[
     email
+    role
     first_name
     last_name
   ].freeze

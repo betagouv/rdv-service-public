@@ -15,6 +15,11 @@ RSpec.describe PrescripteurRdvWizard do
         last_name: "Boubakar",
         phone_number: "06 11 22 33 44",
       },
+      prescripteur: {
+        first_name: "Pres",
+        last_name: "Cripteur",
+        email: "pres@gmail.com",
+      },
       departement: "62",
       city_code: "62100",
     }

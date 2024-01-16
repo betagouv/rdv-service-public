@@ -7,10 +7,10 @@ fr:
         send_lifecycle_notifications: Notifications de création et modification
         send_reminder_notification: Notification de rappel
         status: Statut
-      participation/created_by:
-        agent: "Inscription faite par un agent"
-        user: "Inscription faite par un usager"
-        prescripteur: "Inscription faite par un prescripteur"
+      participation/created_by_types:
+        Agent: "Inscription faite par un agent"
+        User: "Inscription faite par un usager"
+        Prescripteur: "Inscription faite par un prescripteur"
       participation/send_lifecycle_notifications:
         true: Notifications de création et modification activées
         false: Notifications de création et modification désactivées

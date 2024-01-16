@@ -17,6 +17,7 @@ class AgentDashboard < Administrate::BaseDashboard
     territories: Field::HasMany,
     territorial_roles: Field::HasMany,
     services: Field::HasMany,
+    agent_services: Field::HasMany,
     invitation_sent_at: Field::DateTime,
     deleted_at: Field::DateTime,
     created_at: Field::DateTime,
@@ -42,10 +43,9 @@ class AgentDashboard < Administrate::BaseDashboard
     email
     first_name
     last_name
-    organisations
     roles
+    agent_services
     territorial_roles
-    services
     invitation_sent_at
     created_at
     deleted_at

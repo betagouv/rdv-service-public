@@ -5,6 +5,6 @@ FactoryBot.define do
     send_lifecycle_notifications { nil }
     send_reminder_notification { nil }
     status { "unknown" }
-    created_by { :agent }
+    created_by { rdv.agents.first }
   end
 end

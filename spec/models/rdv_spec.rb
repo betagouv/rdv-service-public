@@ -91,7 +91,8 @@ describe Rdv, type: :model do
 
   describe "#editable_by_user?" do
     let(:now) { Time.zone.parse("2021-05-03 14h00") }
-    let(:rdv) { build :rdv, starts_at: starts_at, motif: motif, created_by: "user" }
+    let(:user) { create(:user) }
+    let(:rdv) { build :rdv, starts_at: starts_at, motif: motif, created_by: user }
     let(:starts_at) { now + 3.days }
     let(:motif) { build(:motif, rdvs_editable_by_user: true) }
 
@@ -108,7 +109,7 @@ describe Rdv, type: :model do
     end
 
     context "when it is already cancelled" do
-      let(:rdv) { build(:rdv, status: "excused", starts_at: starts_at, motif: motif, created_by: "user") }
+      let(:rdv) { build(:rdv, status: "excused", starts_at: starts_at, motif: motif, created_by: user) }
 
       it { expect(rdv.editable_by_user?).to eq(false) }
     end
@@ -132,7 +133,8 @@ describe Rdv, type: :model do
     end
 
     context "when the rdv is created by an agent" do
-      let(:rdv) { build(:rdv, created_by: "agent", starts_at: starts_at, motif: motif) }
+      let(:agent) { create(:agent) }
+      let(:rdv) { build(:rdv, created_by: agent, starts_at: starts_at, motif: motif) }
 
       it { expect(rdv.editable_by_user?).to eq(false) }
     end

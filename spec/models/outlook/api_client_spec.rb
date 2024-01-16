@@ -1,11 +1,5 @@
 describe Outlook::ApiClient do
   let(:organisation) { create(:organisation) }
-  let(:motif) { create(:motif, name: "Super Motif", location_type: :phone) }
-  let(:agent) { create(:agent, microsoft_graph_token: "token", refresh_microsoft_graph_token: "refresh_token") }
-  let(:user) { create(:user, email: "user@example.fr", first_name: "First", last_name: "Last", organisations: [organisation]) }
-  let(:rdv) { create(:rdv, users: [user], motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [agent]) }
-  let(:agents_rdv) { rdv.agents_rdvs.first }
-
   let(:expected_body) do
     {
       subject: "Super Motif",
@@ -37,6 +31,16 @@ describe Outlook::ApiClient do
       attendees: [],
       transactionId: "agents_rdv-#{agents_rdv.id}",
     }
+  end
+  let(:motif) { create(:motif, name: "Super Motif", location_type: :phone) }
+  let(:agent) { create(:agent, microsoft_graph_token: "token", refresh_microsoft_graph_token: "refresh_token") }
+  let(:user) { create(:user, email: "user@example.fr", first_name: "First", last_name: "Last", organisations: [organisation]) }
+  let(:rdv) { create(:rdv, users: [user], motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [agent]) }
+  let(:agents_rdv) { rdv.agents_rdvs.first }
+
+  before do
+    allow(ENV).to receive(:fetch).with("AZURE_APPLICATION_CLIENT_ID", nil).and_return("fake_client_id")
+    allow(ENV).to receive(:fetch).with("AZURE_APPLICATION_CLIENT_SECRET", nil).and_return("fake_client_secret")
   end
 
   context "when a call fails" do
@@ -128,25 +132,43 @@ describe Outlook::ApiClient do
       stub_request(:post, "https://graph.microsoft.com/v1.0/me/Events")
         .with(body: expected_body, headers: expected_headers)
         .to_return(status: 401, body: { error: "wrong token" }.to_json, headers: {})
-
-      stub_request(:post, "https://login.microsoftonline.com/common/oauth2/v2.0/token")
-        .with(
-          body: { "client_id" => nil, "client_secret" => nil, "grant_type" => "refresh_token", "refresh_token" => "refresh_token" }
-        )
-        .to_return(status: 200, body: { access_token: "abc" }.to_json, headers: {})
-
-      stub_request(:post, "https://graph.microsoft.com/v1.0/me/Events")
-        .with(body: expected_body, headers: expected_updated_headers)
-        .to_return(status: 200, body: { id: "event_id" }.to_json, headers: {})
     end
 
-    it "refreshes it and retries, and saves the refresh token on the agent" do
-      described_class.new(agent).create_event!(expected_body)
+    context "when the token refresh works" do
+      before do
+        stub_request(:post, "https://login.microsoftonline.com/common/oauth2/v2.0/token")
+          .with(
+            body: { "client_id" => "fake_client_id", "client_secret" => "fake_client_secret", "grant_type" => "refresh_token", "refresh_token" => "refresh_token" }
+          )
+          .to_return(status: 200, body: { access_token: "abc" }.to_json, headers: {})
 
-      expect(a_request(:post,
-                       "https://graph.microsoft.com/v1.0/me/Events").with(body: expected_body)).to have_been_made.twice
+        stub_request(:post, "https://graph.microsoft.com/v1.0/me/Events")
+          .with(body: expected_body, headers: expected_updated_headers)
+          .to_return(status: 200, body: { id: "event_id" }.to_json, headers: {})
+      end
 
-      expect(agent.reload.microsoft_graph_token).to eq("abc")
+      it "refreshes it and retries, and saves the refresh token on the agent" do
+        described_class.new(agent).create_event!(expected_body)
+
+        expect(a_request(:post,
+                         "https://graph.microsoft.com/v1.0/me/Events").with(body: expected_body)).to have_been_made.twice
+
+        expect(agent.reload.microsoft_graph_token).to eq("abc")
+      end
+    end
+
+    context "when the token refresh fails" do
+      before do
+        stub_request(:post, "https://login.microsoftonline.com/common/oauth2/v2.0/token")
+          .with(
+            body: { "client_id" => "fake_client_id", "client_secret" => "fake_client_secret", "grant_type" => "refresh_token", "refresh_token" => "refresh_token" }
+          )
+          .to_return(status: 500, body: { error: "Unknwon error" }.to_json, headers: {})
+      end
+
+      it "raises an error" do
+        expect { described_class.new(agent).create_event!(expected_body) }.to raise_error("Error refreshing Microsoft Graph Token")
+      end
     end
   end
 end

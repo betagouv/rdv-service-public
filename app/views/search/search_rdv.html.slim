@@ -1,3 +1,8 @@
 = render "banner", context: @context
 
-= render @context, context: @context
+/ Adress selection partials have multiple sections
+- if @context.current_step == :address_selection
+  = render @context, context: @context
+- else
+  section.bg-light.p-4
+    = render @context, context: @context

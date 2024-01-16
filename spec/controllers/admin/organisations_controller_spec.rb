@@ -62,7 +62,7 @@ describe Admin::OrganisationsController, type: :controller do
 
     context "valid params BUT agent does not have role in territory" do
       let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
-      let(:organisation_params) { { name: "MDS Test", departement: "33" } }
+      let(:organisation_params) { { name: "MDS Test" } }
 
       it { is_expected.not_to be_successful }
 

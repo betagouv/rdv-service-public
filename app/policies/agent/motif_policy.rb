@@ -16,6 +16,10 @@ class Agent::MotifPolicy < ApplicationPolicy
       @record.service.in?(current_agent.services)
   end
 
+  def bookable?
+    @record.bookable_outside_of_organisation?
+  end
+
   private
 
   alias current_agent pundit_user

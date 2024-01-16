@@ -25,17 +25,17 @@ Rails.application.routes.draw do
       post :invite, on: :member
       resources :migrations, only: %i[new create]
     end
-    resources :agent_roles, except: %i[index]
+    resources :agent_roles, only: %i[show edit update destroy]
+    resources :agent_services, only: %i[show destroy]
+    resources :user_profiles, only: %i[destroy]
     resources :super_admins
     resources :organisations
     resources :services
     resources :motifs
     resources :lieux
     resources :territories
-    resources :users do
-      get "sign_in_as", on: :member
-    end
-    resources :mairie_comptes
+    resources :users
+    resources :mairie_comptes, only: %i[index new create]
     root to: "agents#index"
 
     authenticate :super_admin do
@@ -224,6 +224,12 @@ Rails.application.routes.draw do
           get :create
         end
         get "support", to: "static_pages#support"
+        resource :prescription, only: [], controller: "prescription" do
+          get "search_creneau"
+          get "recapitulatif"
+          post "create_rdv"
+          get "confirmation"
+        end
       end
     end
   end

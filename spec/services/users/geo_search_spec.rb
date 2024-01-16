@@ -279,7 +279,7 @@ describe Users::GeoSearch, type: :service_model do
       let!(:plage_ouverture_agent) { create(:plage_ouverture, motifs: [motif_agent], organisation: organisation2, agent: agent) }
       let!(:plage_ouverture_departement) { create(:plage_ouverture, motifs: [motif_departement], organisation: organisation3) }
 
-      let!(:sector_organisation) { create(:sector, territory: territory62, name: "Arques 1", human_id: "arques-1") }
+      let!(:sector_organisation) { create(:sector, territory: territory62, name: "Arques 1") }
       let!(:zone_organisation) { create(:zone, level: "city", city_code: "62100", city_name: "Arques", sector: sector_organisation) }
       let!(:attribution_organisation) { create(:sector_attribution, :level_organisation, sector: sector_organisation, organisation: organisation1) }
 

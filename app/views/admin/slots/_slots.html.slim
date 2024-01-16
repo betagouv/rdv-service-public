@@ -1,7 +1,7 @@
 - search_params = lieu.present? ? creneaux_search_params(form).merge(lieu_ids: [lieu.id]) : creneaux_search_params(form)
 
 div id="creneaux-lieu-#{lieu&.id}"
-  .row
+  .row.position-relative[style="min-height: 200px"]
     - if form.date_range.begin > Time.zone.today
       - previous_from_date = form.date_range.begin - 7.days
       .col-auto.d-flex.align-items-center
