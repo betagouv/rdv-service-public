@@ -1,6 +1,8 @@
 RSpec.describe "API auth", type: :request do
   # inspired by https://devise-token-auth.gitbook.io/devise-token-auth/usage/testing
 
+  stub_sentry_events
+
   let!(:organisation) { create(:organisation) }
   let!(:agent) { create(:agent, password: "correcthorse", admin_role_in_organisations: [organisation]) }
   let!(:absence) { create(:absence, agent: agent) }
@@ -87,10 +89,6 @@ RSpec.describe "API auth", type: :request do
     end
 
     it "log sentry and return error when shared secret is invalid" do
-      # We try to use stub_sentry_events helper here and check last_sentry_event.message without success.
-      # Executing this test only is sucessfull but it fails on the CI
-      # In the authenticate_agent_with_shared_secret method it seems there is a bug that cause Sentry.capture_message(...) to be nil
-      expect(Sentry).to receive(:capture_message)
       get(
         api_v1_absences_path,
         headers: {
@@ -98,12 +96,12 @@ RSpec.describe "API auth", type: :request do
           "X-Agent-Auth-Signature": "BAD_PAYLOAD",
         }
       )
+      expect(sentry_events.last.message).to eq "API authentication agent was called with an invalid signature !"
       expect(response).to have_http_status(:unauthorized)
       expect(parsed_response_body).to eq({ "errors" => ["Vous devez vous connecter ou vous inscrire pour continuer."] })
     end
 
     it "log sentry and return error when shared secret is nil" do
-      expect(Sentry).to receive(:capture_message)
       get(
         api_v1_absences_path,
         headers: {
@@ -111,12 +109,12 @@ RSpec.describe "API auth", type: :request do
           "X-Agent-Auth-Signature": nil,
         }
       )
+      expect(sentry_events.last.message).to be_present
       expect(response).to have_http_status(:unauthorized)
       expect(parsed_response_body).to eq({ "errors" => ["Vous devez vous connecter ou vous inscrire pour continuer."] })
     end
 
     it "query is correctly processed with the agent authorizations when shared secret is valid" do
-      expect(Sentry).not_to receive(:capture_message)
       encrypted_payload = OpenSSL::HMAC.hexdigest("SHA256", "S3cr3T", payload.to_json)
       get(
         api_v1_absences_path,
@@ -126,6 +124,7 @@ RSpec.describe "API auth", type: :request do
         }
       )
       expect(response.status).to eq(200)
+      expect(sentry_events).to be_empty
       expect(parsed_response_body["absences"].count).to eq(1)
     end
   end

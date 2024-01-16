@@ -111,6 +111,8 @@ describe InclusionConnectController, type: :controller do
       expect(sentry_events.last.breadcrumbs.compact.map(&:message).uniq).to eq(["HTTP request", "HTTP response"])
     end
 
+    stub_sentry_events
+
     it "call sentry about authentification failure" do
       stub_const("InclusionConnect::IC_CLIENT_ID", "truc")
       stub_const("InclusionConnect::IC_CLIENT_SECRET", "truc secret")
@@ -120,8 +122,9 @@ describe InclusionConnectController, type: :controller do
 
       session[:ic_state] = "a state"
 
-      expect(Sentry).to receive(:capture_message).with("Failed to authentify agent with inclusionConnect")
       get :callback, params: { state: "a state", session_state: "a state", code: "klzefklzejlf" }
+
+      expect(sentry_events.last.message).to eq("Failed to authentify agent with inclusionConnect")
     end
   end
 

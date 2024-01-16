@@ -219,10 +219,12 @@ RSpec.describe "prescripteur can create RDV for a user" do
   end
 
   context "when going directly to a prescripteur form without having selected a creneau" do
+    stub_sentry_events
+
     it "redirects to the homepage with an error message" do
-      expect(Sentry).to receive(:capture_message)
       visit "http://www.rdv-solidarites-test.localhost/prescripteur/new_prescripteur"
       expect(page).to have_content("Nous n'avons pas trouvé le créneau pour lequel vous souhaitiez prendre rendez-vous.")
+      expect(sentry_events.last.message).to eq "Prescripteur sans infos de creneau. Voir https://github.com/betagouv/rdv-solidarites.fr/issues/3420"
     end
   end
 end
