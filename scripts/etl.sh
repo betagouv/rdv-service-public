@@ -33,12 +33,17 @@ etl_addon_id="$( scalingo --region osc-secnum-fr1 --app rdv-service-public-etl a
                  | cut -d "|" -f 3 \
                  | tr -d " " )"
 
+echo "Suppression du role postgres."
 # Delete Postgres role dedicated to metabase and called "rdv_service_public_metabase"
 scalingo database-delete-user --region osc-secnum-fr1 --app rdv-service-public-etl --addon "${etl_addon_id}" rdv_service_public_metabase
+echo "La base de données n'est plus accessible par metabase"
 
-# Load the dump into the database
+
+echo "Upgrade du Postgres d'ETL pour avoir plus de RAM"
+scalingo --region osc-secnum-fr1 --app rdv-service-public-etl addons-upgrade "${etl_addon_id}"  postgresql-starter-8192
+
+echo "Chargement du dump..."
 # TODO: try speeding up the process by using the --jobs option
-
 # voir https://stackoverflow.com/questions/37038193/exclude-table-during-pg-restore pour l'explication des tables à exclure
 # TODO: réutiliser AnonymizerRules::TRUNCATED_TABLES ici
 # C'est compliqué à écrire en bash, et il vaudrait mieux utiliser du ruby pour ce genre de logique
@@ -46,7 +51,11 @@ scalingo database-delete-user --region osc-secnum-fr1 --app rdv-service-public-e
 time pg_restore --clean --if-exists --no-owner --no-privileges --jobs=2 --dbname "${DATABASE_URL}" -L <(pg_restore -l /app/*.pgsql | grep -vE 'TABLE DATA public (versions|good_jobs|good_job_settings|good_job_batches|good_job_processes)') /app/*.pgsql
 
 
-bundle exec rails runner scripts/anonymize_database.rb
+echo "Anonymisation de la base"
+time bundle exec rails runner scripts/anonymize_database.rb
+
+echo "Downgrade du Postgres d'ETL pour revenir a la normale"
+scalingo --region osc-secnum-fr1 --app rdv-service-public-etl addons-upgrade "${etl_addon_id}" postgresql-starter-512
 
 echo "Re-création du role Postgres rdv_service_public_metabase"
 echo "Merci de copier/coller le mot de passe stocké dans METABASE_DB_ROLE_PASSWORD: ${METABASE_DB_ROLE_PASSWORD}"
