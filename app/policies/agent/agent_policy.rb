@@ -28,7 +28,8 @@ class Agent::AgentPolicy < ApplicationPolicy
   alias toggle_displays? current_agent?
 
   def destroy?
-    admin_in_record_organisation? || record == current_agent
+    # Even admins cannot destroy themselves
+    admin_in_record_organisation? && record != current_agent
   end
 
   def participations_export?
