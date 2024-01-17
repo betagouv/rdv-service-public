@@ -96,9 +96,9 @@ RSpec.describe "API auth", type: :request do
           "X-Agent-Auth-Signature": "BAD_PAYLOAD",
         }
       )
+      expect(sentry_events.last.message).to eq "API authentication agent was called with an invalid signature !"
       expect(response).to have_http_status(:unauthorized)
       expect(parsed_response_body).to eq({ "errors" => ["Vous devez vous connecter ou vous inscrire pour continuer."] })
-      expect(sentry_events.last.message).to eq "API authentication agent was called with an invalid signature !"
     end
 
     it "log sentry and return error when shared secret is nil" do
@@ -109,9 +109,9 @@ RSpec.describe "API auth", type: :request do
           "X-Agent-Auth-Signature": nil,
         }
       )
+      expect(sentry_events.last.message).to be_present
       expect(response).to have_http_status(:unauthorized)
       expect(parsed_response_body).to eq({ "errors" => ["Vous devez vous connecter ou vous inscrire pour continuer."] })
-      expect(sentry_events.last.message).to be_present
     end
 
     it "query is correctly processed with the agent authorizations when shared secret is valid" do
