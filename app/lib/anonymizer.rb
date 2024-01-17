@@ -71,11 +71,6 @@ class Anonymizer
         scope.where(column.name => "").update_all(column.name => nil) # rubocop:disable Rails/SkipsModelValidations
       end
 
-      # Il se peut que le script ai déjà tourné et fait une anonymisation partielle
-      # Dans ce cas on veut éviter de refaire des écritures inutiles pour qu'il puisse s'exécuter plus rapidement
-      unless column_has_uniqueness_constraint?(column)
-        scope = scope.where.not(column.name => anonymous_value(column))
-      end
       scope.update_all(column.name => anonymous_value(column)) # rubocop:disable Rails/SkipsModelValidations
     end
   end
