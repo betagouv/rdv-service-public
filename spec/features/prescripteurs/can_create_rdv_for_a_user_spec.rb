@@ -224,6 +224,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
     it "redirects to the homepage with an error message" do
       visit "http://www.rdv-solidarites-test.localhost/prescripteur/new_prescripteur"
       expect(page).to have_content("Nous n'avons pas trouvé le créneau pour lequel vous souhaitiez prendre rendez-vous.")
+      sleep 1
       expect(sentry_events.last.message).to eq "Prescripteur sans infos de creneau. Voir https://github.com/betagouv/rdv-solidarites.fr/issues/3420"
     end
   end
