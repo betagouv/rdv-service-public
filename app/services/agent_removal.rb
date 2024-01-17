@@ -1,31 +1,31 @@
 class AgentRemoval
+  include ActiveModel::Validations
+
+  validate :no_upcoming_rdv
+
   def initialize(agent, organisation)
     @agent = agent
     @organisation = organisation
   end
 
   def remove!
-    return false if upcoming_rdvs?
+    raise errors.full_messages.join if invalid?
 
     Agent.transaction do
       @agent.roles.find_by(organisation: @organisation).destroy!
-      @agent.absences.each(&:destroy!) if should_soft_delete?
       @agent.plage_ouvertures.where(organisation: @organisation).each(&:destroy!)
       @agent.soft_delete if should_soft_delete?
-      true
     end
   end
 
-  def upcoming_rdvs?
-    @upcoming_rdvs ||= @agent.rdvs.where(organisation: @organisation).future.not_cancelled.any?
+  def no_upcoming_rdv
+    if @agent.rdvs.where(organisation: @organisation).future.not_cancelled.any?
+      errors.add(:base, I18n.t("admin.territories.agent_roles.destroy.cannot_delete_because_of_rdvs", agent_name: @agent.full_name, org_name: @organisation.name))
+    end
   end
 
   def should_soft_delete?
     (@agent.organisations - [@organisation]).empty?
-  end
-
-  def error_message
-    I18n.t("admin.territories.agent_roles.destroy.cannot_delete_because_of_rdvs") if upcoming_rdvs?
   end
 
   def confirmation_message

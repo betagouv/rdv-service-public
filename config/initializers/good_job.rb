@@ -60,5 +60,9 @@ Rails.application.configure do
       cron: "every day at 23:00 Europe/Paris",
       class: "CronJob::DestroyOldVersions",
     },
+    warn_about_expiring_azure_app_secrets: {
+      cron: "every day at 10:00 Europe/Paris",
+      class: "CronJob::WarnAboutExpiringAzureAppSecrets",
+    },
   }
 end

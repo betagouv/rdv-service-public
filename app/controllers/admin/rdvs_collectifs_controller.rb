@@ -47,7 +47,7 @@ class Admin::RdvsCollectifsController < AgentAuthController
 
     @add_user_ids = params[:add_user].to_a + params[:user_ids].to_a
     users_to_add = User.where(id: @add_user_ids)
-    @participations_to_add = users_to_add.ids.map { @rdv.participations.build(user_id: _1) }
+    @participations_to_add = users_to_add.ids.map { @rdv.participations.build(user_id: _1, created_by: current_agent) }
   end
 
   def update

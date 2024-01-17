@@ -21,14 +21,12 @@ Organisation.skip_callback(:create, :after, :notify_admin_organisation_created)
 org_paris_nord = Organisation.create!(
   name: "MDS Paris Nord",
   phone_number: "0123456789",
-  human_id: "paris-nord",
   territory: territory75
 )
 
 org_paris_sud = Organisation.create!(
   name: "MDS Paris Sud",
   phone_number: "0123456789",
-  human_id: "paris-sud",
   territory: territory75
 )
 
@@ -58,14 +56,14 @@ human_id_map = [
   { human_id: "1054", name: "MDS St Omer" },
   { human_id: "1055", name: "MDS St Pol sur Ternoise" },
 ].to_h do |attributes|
-  organisation = Organisation.create!(phone_number: "0123456789", territory: territory62, human_id: attributes[:human_id], name: attributes[:name])
+  organisation = Organisation.create!(phone_number: "0123456789", territory: territory62, name: attributes[:name])
   sector = Sector.create!(name: "Secteur de #{attributes[:name][4..]}", human_id: attributes[:human_id], territory: territory62)
   sector.attributions.create!(organisation: organisation, level: SectorAttribution::LEVEL_ORGANISATION)
   [attributes[:human_id], { organisation: organisation, sector: sector }]
 end
 
 # Bapaume is created without the organisation-level attribution
-org_bapaume = Organisation.create!(phone_number: "0123456789", territory: territory62, human_id: "1034-nord", name: "MDS Bapaume")
+org_bapaume = Organisation.create!(phone_number: "0123456789", territory: territory62, name: "MDS Bapaume")
 sector_bapaume_nord = Sector.create!(name: "Bapaume Nord", human_id: "1034-nord", territory: territory62)
 sector_bapaume_sud = Sector.create!(name: "Bapaume Sud", human_id: "1034-sud", territory: territory62)
 sector_bapaume_fallback = Sector.create!(name: "Bapaume Entier", human_id: "1034-fallback", territory: territory62)
@@ -668,7 +666,7 @@ Rdv.create!(
   agent_ids: [agent_org_paris_nord_pmi_martine.id],
   user_ids: [user_org_paris_nord_patricia.id],
   context: "Visite de courtoisie",
-  created_by: :agent
+  created_by: agent_org_paris_nord_pmi_martine
 )
 Rdv.create!(
   starts_at: Time.zone.today + 4.days + 15.hours,
@@ -679,7 +677,7 @@ Rdv.create!(
   agent_ids: [agent_org_paris_nord_pmi_martine.id],
   user_ids: [user_org_paris_nord_josephine.id],
   context: "Suivi vaccins",
-  created_by: :agent
+  created_by: agent_org_paris_nord_pmi_martine
 )
 Rdv.create!(
   starts_at: Time.zone.today + 5.days + 11.hours,
@@ -690,7 +688,7 @@ Rdv.create!(
   agent_ids: [agent_org_paris_nord_pmi_martine.id],
   user_ids: [user_org_paris_nord_josephine.id],
   context: "Visite à domicile",
-  created_by: :agent
+  created_by: agent_org_paris_nord_pmi_martine
 )
 
 Rdv.create!(
@@ -702,7 +700,7 @@ Rdv.create!(
   agent_ids: [agent_org_paris_nord_pmi_martine.id],
   user_ids: [user_org_paris_nord_josephine.id],
   context: "Visite à domicile",
-  created_by: :agent
+  created_by: agent_org_paris_nord_pmi_martine
 )
 
 10.times do |i|
@@ -713,6 +711,7 @@ Rdv.create!(
     lieu: lieu_org_paris_nord_bd_aubervilliers,
     organisation_id: org_paris_nord.id,
     agent_ids: [agent_org_paris_nord_pmi_marco.id],
+    created_by: agent_org_paris_nord_pmi_marco,
     users_count: 0,
     user_ids: []
   )
@@ -724,6 +723,7 @@ Rdv.create!(
     lieu: lieu_org_paris_nord_bolivar,
     organisation_id: org_paris_nord.id,
     agent_ids: [agent_org_paris_nord_social_polo.id],
+    created_by: agent_org_paris_nord_social_polo,
     users_count: 0,
     user_ids: []
   )
@@ -743,6 +743,8 @@ rdv_attributes = 1000.times.flat_map do |i|
       lieu_id: lieu_org_paris_nord_bd_aubervilliers.id,
       organisation_id: org_paris_nord.id,
       context: "Context #{day} #{hour}",
+      created_by_type: "Agent",
+      created_by_id: agent_org_paris_nord_pmi_martine.id,
     }
   end
 end
@@ -750,7 +752,15 @@ results = Rdv.insert_all!(rdv_attributes, returning: Arel.sql("id")) # [{"id"=>1
 rdv_ids = results.flat_map(&:values) # [1, 2, ...]
 agent_rdv_attributes = rdv_ids.map { |id| { agent_id: agent_org_paris_nord_pmi_martine.id, rdv_id: id } }
 AgentsRdv.insert_all!(agent_rdv_attributes)
-participations_attributes = rdv_ids.map { |id| { user_id: user_org_paris_nord_josephine.id, rdv_id: id, send_lifecycle_notifications: true, send_reminder_notification: true, created_by: :agent } }
+participations_attributes = rdv_ids.map do |id|
+  {
+    user_id: user_org_paris_nord_josephine.id,
+    rdv_id: id, send_lifecycle_notifications: true,
+    send_reminder_notification: true,
+    created_by_type: "Agent",
+    created_by_id: agent_org_paris_nord_pmi_martine.id,
+  }
+end
 Participation.insert_all!(participations_attributes)
 events = %w[new_creneau_available rdv_cancelled rdv_created rdv_date_updated rdv_upcoming_reminder]
 receipts_attributes = rdv_ids.map do |id|

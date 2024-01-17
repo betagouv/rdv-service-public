@@ -43,3 +43,9 @@
 @import "./components/zones_map";
 @import "./components/creneaux";
 @import "./components/rdv_solidarites_instance_name";
+
+.page-title-box {
+  h1.page-title {
+    line-height: 1.5;
+  }
+}

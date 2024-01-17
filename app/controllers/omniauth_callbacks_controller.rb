@@ -15,7 +15,10 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
     email = request.env["omniauth.auth"]["info"]["email"]
 
     # Automatically create the first SuperAdmin in development
-    SuperAdmin.create!(email: email) if Rails.env.development? && SuperAdmin.none?
+    if Rails.env.development? && SuperAdmin.none?
+      first_name, last_name = request.env["omniauth.auth"]["info"]["name"].split
+      SuperAdmin.create!(email: email, first_name: first_name, last_name: last_name, role: :legacy_admin)
+    end
 
     super_admin = SuperAdmin.find_by(email: email)
     if super_admin.present?

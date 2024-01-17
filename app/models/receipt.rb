@@ -1,5 +1,4 @@
 class Receipt < ApplicationRecord
-  include Anonymizable
   # Attributes
   enum result: { processed: "processed", sent: "sent", delivered: "delivered", failure: "failure" }
   enum channel: { sms: "sms", mail: "mail", webhook: "webhook" }, _prefix: :channel
@@ -16,8 +15,4 @@ class Receipt < ApplicationRecord
 
   # Callbacks
   before_validation { self.organisation = rdv.organisation }
-
-  def self.personal_data_column_names
-    %w[sms_phone_number email_address content]
-  end
 end

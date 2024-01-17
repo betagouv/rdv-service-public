@@ -23,6 +23,7 @@ class AgentRoleDashboard < Administrate::BaseDashboard
   # Feel free to add, remove, or rearrange items.
   COLLECTION_ATTRIBUTES = %i[
     access_level
+    agent
     organisation
   ].freeze
 

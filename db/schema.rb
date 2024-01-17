@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_12_07_155659) do
+ActiveRecord::Schema[7.0].define(version: 2024_01_17_133500) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -48,12 +48,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_07_155659) do
     "agents_and_prescripteurs_and_invited_users",
   ], force: :cascade
 
-  create_enum :created_by, [
-    "agent",
-    "user",
-    "prescripteur",
-  ], force: :cascade
-
   create_enum :lieu_availability, [
     "enabled",
     "disabled",
@@ -85,6 +79,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_07_155659) do
     "sent",
     "delivered",
     "failure",
+  ], force: :cascade
+
+  create_enum :role, [
+    "legacy_admin",
+    "support",
   ], force: :cascade
 
   create_enum :sms_provider, [
@@ -219,12 +218,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_07_155659) do
     t.boolean "allow_password_change", default: false
     t.enum "rdv_notifications_level", default: "others", enum_type: "agents_rdv_notifications_level"
     t.integer "unknown_past_rdv_count", default: 0
-    t.boolean "display_saturdays", default: false
-    t.boolean "display_cancelled_rdv", default: true
+    t.boolean "display_saturdays", default: false, comment: "Indique si l'agent veut que les samedis s'affichent quand il consulte un calendrier (pas forcément le sien). Cela n'affecte pas ce que voient les autres agents. Modifiable par le bouton en bas de la vue calendrier.\n"
+    t.boolean "display_cancelled_rdv", default: true, comment: "Indique si l'agent veut que les rdv annulés s'affichent quand il consulte un calendrier (pas forcément le sien). Cela n'affecte pas ce que voient les autres agents. Modifiable par le bouton en bas de la vue calendrier\n"
     t.enum "plage_ouverture_notification_level", default: "all", enum_type: "agents_plage_ouverture_notification_level"
     t.enum "absence_notification_level", default: "all", enum_type: "agents_absence_notification_level"
-    t.string "external_id"
-    t.string "calendar_uid"
+    t.string "external_id", comment: "The agent's unique and immutable id in the system managing them and adding them to our application"
+    t.string "calendar_uid", comment: "the uid used for the url of the agent's ics calendar"
     t.integer "sign_in_count", default: 0, null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
@@ -234,7 +233,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_07_155659) do
     t.text "refresh_microsoft_graph_token"
     t.string "cnfs_secondary_email"
     t.boolean "outlook_disconnect_in_progress", default: false, null: false
-    t.datetime "account_deletion_warning_sent_at"
+    t.datetime "account_deletion_warning_sent_at", comment: "Quand le compte de l'agent est inactif depuis bientôt deux ans, on lui envoie un mail qui le prévient que sont compte sera bientôt supprimé, et qu'il doit se connecter à nouveau s'il souhaite conserver son compte. On enregistre la date d'envoi de cet email ici pour s'assure qu'on lui laisse un délai d'au moins un mois pour réagir.\n"
     t.index ["account_deletion_warning_sent_at"], name: "index_agents_on_account_deletion_warning_sent_at"
     t.index ["calendar_uid"], name: "index_agents_on_calendar_uid", unique: true
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true
@@ -335,13 +334,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_07_155659) do
     t.bigint "organisation_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "old_address"
     t.float "latitude"
     t.float "longitude"
     t.string "phone_number"
     t.string "phone_number_formatted"
-    t.boolean "old_enabled", default: true, null: false
-    t.enum "availability", null: false, enum_type: "lieu_availability"
+    t.enum "availability", null: false, comment: "Permet de savoir si le lieu est un lieu normal (enabled), un lieu ponctuel qui sera utilisé pour un seul rdv (single_use), ou un lieu supprimé par soft-delete (disabled). Dans la plupart des cas on s'intéresse uniquement aux lieux enabled\n", enum_type: "lieu_availability"
     t.string "address", null: false
     t.index ["availability"], name: "index_lieux_on_availability"
     t.index ["name"], name: "index_lieux_on_name"
@@ -350,7 +347,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_07_155659) do
 
   create_table "motif_categories", force: :cascade do |t|
     t.string "name", null: false
-    t.string "short_name", null: false
+    t.string "short_name", null: false, comment: "Le nom \"technique\" de la catégorie de motif, qui permet de l'identifier dans les paramètres de formulaires\"\n"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_motif_categories_on_name", unique: true
@@ -370,29 +367,26 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_07_155659) do
     t.datetime "updated_at", null: false
     t.integer "default_duration_in_min", default: 30, null: false
     t.bigint "organisation_id", null: false
-    t.boolean "legacy_bookable_publicly", default: false, null: false
-    t.integer "min_public_booking_delay", default: 1800
-    t.integer "max_public_booking_delay", default: 7889238
-    t.datetime "deleted_at"
+    t.integer "min_public_booking_delay", default: 1800, comment: "Permet de savoir combien de secondes il y aura au minimum entre la prise de rdv par un usager ou un prescripteur et le début du rdv. Par exemple si la valeur est 1800, et qu'il est 10h, le premier rdv qui pourra être pris (s'il y a une plage d'ouverture libre) sera à 10h30, puisque 1800 = 30 x 60. Cela permet à l'agent d'être prévenu suffisamment à l'avance.\n"
+    t.integer "max_public_booking_delay", default: 7889238, comment: "Permet de savoir combien de temps à l'avance il est possible de prendre rdv pour un usager ou un prescripteur. Le délai est mesuré en secondes. Cela évite que des gens prennent des rdv dans trop longtemps, et évite aux agents de s'engager à assurer des rdv alors qu'ils ne connaissent pas leur emploi du temps suffisamment à l'avance.\n"
+    t.datetime "deleted_at", comment: "Permet de savoir à quelle date le motif a été soft-deleted\n"
     t.bigint "service_id", null: false
-    t.text "restriction_for_rdv"
-    t.text "instruction_for_rdv"
-    t.boolean "for_secretariat", default: false
-    t.integer "old_location_type", default: 0, null: false
-    t.boolean "follow_up", default: false
-    t.string "visibility_type", default: "visible_and_notified", null: false
-    t.string "sectorisation_level", default: "departement"
-    t.text "custom_cancel_warning_message"
-    t.boolean "collectif", default: false
-    t.enum "location_type", default: "public_office", null: false, enum_type: "location_type"
-    t.boolean "rdvs_editable_by_user", default: true
+    t.text "restriction_for_rdv", comment: "Instructions à accepter avant la prise du rendez-vous par l'usager\n"
+    t.text "instruction_for_rdv", comment: "Indications affichées à l'usager après la confirmation du rendez-vous. Apparait dans le mail de confirmation pour l'usager.\n"
+    t.boolean "for_secretariat", default: false, comment: "Permet aux agents du secrétariat d'assurer des rdv pour ce motif\n"
+    t.boolean "follow_up", default: false, comment: "Indique s'il s'agit d'un motif de suivi. Si c'est le cas, le rdv pourra uniquement être assuré par un agent référent de l'usager.\n"
+    t.string "visibility_type", default: "visible_and_notified", null: false, comment: "Niveau de visibilité du motif pour l'usager. Cette option permet de cacher des rdvs sensibles pour assurer la sécurité d'un usager dont des proches pourraient consulter le téléphone ou le compte RDV Solidarités.\n"
+    t.string "sectorisation_level", default: "departement", comment: "Indique à quel point la sectorisation restreint la prise de rdv des usagers pour ce motif. Le niveau \"departement\" indique qu'il n'y a pas de restriction.\n"
+    t.text "custom_cancel_warning_message", comment: "Message d'avertissement montré à l'usager en cas d'annulation\n"
+    t.boolean "collectif", default: false, comment: "Indique s'il s'agit d'un rdv collectif ou individuel. Un rdv considéré comme individuel peut quand même avoir plusieurs participants, par exemple un parent et son enfant qui renouvellent tous les deux leur carte d'indentité en même temps. Un rdv collectif sera ouvert à plusieurs participants qui ne se connaissent pas entre eux.\n"
+    t.enum "location_type", default: "public_office", null: false, comment: "Là où le rdv aura lieu : \"public_office\" pour \"Sur place\" (généralement dans les bureaux de l'organisation), \"phone\" pour au téléphone (l'agent appelle l'usager), \"home\" pour le domicile de l'usager\n", enum_type: "location_type"
+    t.boolean "rdvs_editable_by_user", default: true, comment: "Indique si on autorise aux usagers de changer la date du rdv via l'interface web\n"
     t.boolean "rdvs_cancellable_by_user", default: true
     t.bigint "motif_category_id"
     t.enum "bookable_by", default: "agents", null: false, enum_type: "bookable_by"
     t.index "to_tsvector('simple'::regconfig, (COALESCE(name, (''::text)::character varying))::text)", name: "index_motifs_name_vector", using: :gin
     t.index ["collectif"], name: "index_motifs_on_collectif"
     t.index ["deleted_at"], name: "index_motifs_on_deleted_at"
-    t.index ["legacy_bookable_publicly"], name: "index_motifs_on_legacy_bookable_publicly"
     t.index ["location_type"], name: "index_motifs_on_location_type"
     t.index ["motif_category_id"], name: "index_motifs_on_motif_category_id"
     t.index ["name", "organisation_id", "location_type", "service_id"], name: "index_motifs_on_name_scoped", unique: true, where: "(deleted_at IS NULL)"
@@ -413,17 +407,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_07_155659) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "departement"
     t.text "horaires"
     t.string "phone_number"
-    t.string "human_id", default: "", null: false
     t.string "website"
     t.string "email"
     t.bigint "territory_id", null: false
-    t.string "external_id"
+    t.string "external_id", comment: "The organisation's unique and immutable id in the system managing them and adding them to our application"
     t.enum "verticale", default: "rdv_solidarites", null: false, enum_type: "verticale"
     t.index ["external_id", "territory_id"], name: "index_organisations_on_external_id_and_territory_id", unique: true
-    t.index ["human_id", "territory_id"], name: "index_organisations_on_human_id_and_territory_id", unique: true, where: "((human_id)::text <> ''::text)"
     t.index ["name", "territory_id"], name: "index_organisations_on_name_and_territory_id", unique: true
     t.index ["name"], name: "index_organisations_on_name"
     t.index ["territory_id"], name: "index_organisations_on_territory_id"
@@ -443,9 +434,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_07_155659) do
     t.bigint "invited_by_id"
     t.integer "invitations_count", default: 0
     t.enum "status", default: "unknown", null: false, enum_type: "rdv_status"
-    t.enum "created_by", null: false, enum_type: "created_by"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "created_by_id"
+    t.string "created_by_type", null: false
+    t.index ["created_by_type", "created_by_id"], name: "index_participations_on_created_by_type_and_created_by_id"
     t.index ["invitation_token"], name: "index_participations_on_invitation_token", unique: true
     t.index ["invited_by_id"], name: "index_participations_on_invited_by_id"
     t.index ["invited_by_type", "invited_by_id"], name: "index_participations_on_invited_by"
@@ -479,7 +472,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_07_155659) do
   end
 
   create_table "prescripteurs", force: :cascade do |t|
-    t.bigint "participation_id", null: false
     t.string "first_name", null: false
     t.string "last_name", null: false
     t.string "email", null: false
@@ -487,7 +479,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_07_155659) do
     t.string "phone_number_formatted"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["participation_id"], name: "index_prescripteurs_on_participation_id", unique: true
   end
 
   create_table "rdvs", force: :cascade do |t|
@@ -498,8 +489,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_07_155659) do
     t.datetime "cancelled_at"
     t.bigint "motif_id", null: false
     t.uuid "uuid", default: -> { "uuid_generate_v4()" }, null: false
-    t.string "old_location"
-    t.integer "created_by", default: 0
     t.text "context"
     t.bigint "lieu_id"
     t.datetime "ends_at", null: false
@@ -507,8 +496,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_07_155659) do
     t.integer "max_participants_count"
     t.integer "users_count", default: 0
     t.enum "status", default: "unknown", null: false, enum_type: "rdv_status"
+    t.integer "created_by_id"
+    t.string "created_by_type", null: false
     t.index "tsrange(starts_at, ends_at, '[)'::text)", name: "index_rdvs_on_tsrange_starts_at_ends_at", using: :gist
-    t.index ["created_by"], name: "index_rdvs_on_created_by"
+    t.index ["created_by_type", "created_by_id"], name: "index_rdvs_on_created_by_type_and_created_by_id"
     t.index ["ends_at"], name: "index_rdvs_on_ends_at"
     t.index ["lieu_id"], name: "index_rdvs_on_lieu_id"
     t.index ["max_participants_count"], name: "index_rdvs_on_max_participants_count"
@@ -564,13 +555,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_07_155659) do
   end
 
   create_table "sectors", force: :cascade do |t|
-    t.string "departement"
     t.string "name", null: false
     t.string "human_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "territory_id", null: false
-    t.index ["departement"], name: "index_sectors_on_departement"
     t.index ["human_id", "territory_id"], name: "index_sectors_on_human_id_and_territory_id", unique: true
     t.index ["human_id"], name: "index_sectors_on_human_id"
     t.index ["territory_id"], name: "index_sectors_on_territory_id"
@@ -590,8 +579,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_07_155659) do
     t.string "email", default: "", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "first_name"
-    t.string "last_name"
+    t.string "first_name", null: false
+    t.string "last_name", null: false
+    t.enum "role", default: "support", null: false, enum_type: "role"
   end
 
   create_table "teams", force: :cascade do |t|
@@ -718,10 +708,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_07_155659) do
     t.bigint "item_id", null: false
     t.string "event", null: false
     t.string "whodunnit"
-    t.text "object"
+    t.text "old_object"
     t.datetime "created_at"
-    t.text "object_changes"
+    t.text "old_object_changes"
     t.json "virtual_attributes"
+    t.jsonb "object"
+    t.jsonb "object_changes"
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
 
@@ -777,7 +769,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_07_155659) do
   add_foreign_key "plage_ouvertures", "agents"
   add_foreign_key "plage_ouvertures", "lieux"
   add_foreign_key "plage_ouvertures", "organisations"
-  add_foreign_key "prescripteurs", "participations"
   add_foreign_key "rdvs", "lieux"
   add_foreign_key "rdvs", "motifs"
   add_foreign_key "rdvs", "organisations"

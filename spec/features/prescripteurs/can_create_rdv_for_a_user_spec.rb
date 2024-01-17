@@ -77,7 +77,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
       phone_number: "0611223344",
       organisation_ids: [organisation.id]
     )
-    expect(created_participation.prescripteur).to have_attributes(
+    expect(created_participation.created_by).to have_attributes(
       first_name: "Alex",
       last_name: "Prescripteur",
       email: "alex@prescripteur.fr",

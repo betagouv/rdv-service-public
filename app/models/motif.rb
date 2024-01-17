@@ -1,9 +1,7 @@
 class Motif < ApplicationRecord
   # Mixins
   has_paper_trail
-
   include WebhookDeliverable
-
   include PgSearch::Model
 
   pg_search_scope(:search_by_text,

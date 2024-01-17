@@ -69,6 +69,7 @@ describe User, type: :model do
   describe "#soft_delete" do
     it "change email to a « deleted.rdv-solidarites.fr » domain and anonymises other attributes" do
       user = create(:user, email: "jean@valjean.fr", first_name: "Jean", last_name: "Valjean")
+      other_user = create(:user, email: "other_user@test.com")
       user.soft_delete
       expect(user.email).to end_with("deleted.rdv-solidarites.fr")
       expect(user).to have_attributes(
@@ -77,13 +78,16 @@ describe User, type: :model do
         address: "[valeur anonymisée]"
       )
       expect(user.deleted_at).to be_within(5.seconds).of(Time.zone.now)
+
+      # on n'anonymise pas un autre utilisateur
+      expect(other_user.reload.email).to eq("other_user@test.com")
     end
 
     it "anonymizes rdvs and receipts and deletes versions" do
-      rdv = create(:rdv)
+      rdv = create(:rdv, context: "des détails sur le rdv")
       user = rdv.users.first
 
-      receipt = create(:receipt, user: user, rdv: rdv)
+      receipt = create(:receipt, user: user, rdv: rdv, sms_phone_number: "0611111111")
       user.soft_delete
 
       expect(receipt.reload.sms_phone_number).to eq "[valeur anonymisée]"

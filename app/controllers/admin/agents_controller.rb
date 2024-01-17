@@ -76,12 +76,13 @@ class Admin::AgentsController < AgentAuthController
 
     agent_removal = AgentRemoval.new(@agent, current_organisation)
 
-    if agent_removal.remove!
+    if agent_removal.valid?
+      agent_removal.remove!
       flash[:notice] = agent_removal.confirmation_message
 
       redirect_to_index_path_for(@agent)
     else
-      redirect_to edit_admin_organisation_agent_path(current_organisation, @agent), flash: { error: agent_removal.error_message }
+      redirect_to edit_admin_organisation_agent_path(current_organisation, @agent), flash: { error: agent_removal.errors.full_messages.join }
     end
   end
 

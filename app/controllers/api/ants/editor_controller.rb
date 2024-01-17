@@ -27,6 +27,12 @@ class Api::Ants::EditorController < Api::Ants::BaseController
     CNI_AND_PASSPORT_MOTIF_CATEGORY_NAME = "Carte d'identité et passeport disponible sur le site de l'ANTS".freeze,
   ].freeze
 
+  ANTS_MOTIF_CATEGORY_IDS_TO_NAMES = {
+    "CNI" => CNI_MOTIF_CATEGORY_NAME,
+    "PASSPORT" => PASSPORT_MOTIF_CATEGORY_NAME,
+    "CNI-PASSPORT" => CNI_AND_PASSPORT_MOTIF_CATEGORY_NAME,
+  }.freeze
+
   private
 
   def lieux
@@ -70,12 +76,7 @@ class Api::Ants::EditorController < Api::Ants::BaseController
   end
 
   def reason_to_motif_category_id(reason)
-    motif_category_name = {
-      "CNI" => CNI_MOTIF_CATEGORY_NAME,
-      "PASSPORT" => PASSPORT_MOTIF_CATEGORY_NAME,
-      "CNI-PASSPORT" => CNI_AND_PASSPORT_MOTIF_CATEGORY_NAME,
-    }[reason]
-
+    motif_category_name = ANTS_MOTIF_CATEGORY_IDS_TO_NAMES[reason]
     MotifCategory.find_by(name: motif_category_name).id
   end
 
@@ -107,5 +108,10 @@ class Api::Ants::EditorController < Api::Ants::BaseController
     params.require(:start_date)
     params.require(:end_date)
     params.require(:reason)
+
+    unless params[:reason].in?(ANTS_MOTIF_CATEGORY_IDS_TO_NAMES.keys)
+      Sentry.capture_message("ANTS provided invalid reason: #{params[:reason].inspect}")
+      render status: :bad_request, json: { error: { code: 400, message: "Invalid reason param" } }
+    end
   end
 end
