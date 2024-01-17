@@ -7,6 +7,10 @@ class Agents::OutlookSyncController < AgentAuthController
     authorize current_agent
   end
 
+  def admin; end
+
+  def agent; end
+
   def destroy
     authorize current_agent, :current_agent_or_admin_in_record_organisation?
     current_agent.update!(outlook_disconnect_in_progress: true)

@@ -9,6 +9,13 @@ module Outlook
 
       encrypts :microsoft_graph_token
       encrypts :refresh_microsoft_graph_token
+
+      def outlook_domain_connected?
+        return if email.blank?
+
+        email_domain = email.split("@").last
+        self.class.connected_to_outlook.where("email ILIKE ?", "%@#{email_domain}").any?
+      end
     end
   end
 end

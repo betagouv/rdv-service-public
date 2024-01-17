@@ -101,7 +101,10 @@ Rails.application.routes.draw do
       end
       resource :calendar_sync, only: %i[show], controller: :calendar_sync do
         resource :webcal_sync, only: %i[show update], controller: :webcal_sync
-        resource :outlook_sync, only: %i[show destroy], controller: :outlook_sync
+        resource :outlook_sync, only: %i[show destroy], controller: :outlook_sync do
+          get "admin"
+          get "agent"
+        end
       end
 
       resources :users, only: [] do
