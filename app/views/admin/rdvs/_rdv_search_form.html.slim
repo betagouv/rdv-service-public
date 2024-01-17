@@ -52,14 +52,14 @@
               label: "Lieu",
               label_method: -> { lieu_name_and_organisation(_1) },
               prompt: "Tous",
-              input_html: { class: "select2-input" },
+              input_html: { class: "select2-input", multiple: true },
               wrapper: "horizontal_form"
     .col-md-6
       = f.input :motif_id, collection: @motifs,
             label: "Motifs",
             label_method: -> { motif_name_and_service(_1) },
             prompt: "Tous",
-            input_html: { class: "select2-input" },
+            input_html: { class: "select2-input", multiple: true },
             wrapper: "horizontal_form"
       - temporal_statuses = Rdv.statuses.keys - ["unknown"] + ["unknown_past", "unknown_future"]
       = f.input :status, collection: temporal_statuses,
