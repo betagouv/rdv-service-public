@@ -11,19 +11,17 @@
 
   p Vous pouvez envoyer automatiquement vos rendez-vous dans Outlook en vous connectant à votre compte grâce au bouton ci-dessous.
 
-  div.text-center
-    = link_to "/omniauth/microsoft_graph?login_hint=#{current_agent.email}", class: "mb-4", method: :post do
-      = image_tag("sign_in_with_microsoft.svg", alt: "S'identifier avec Microsoft")
-
   p Tous vos rendez-vous de #{current_domain.name} seront copiés automatiquement au fur et à mesure de leur création (ou modification).
   p Pour plus d'informations sur cette fonctionnalité, #{link_to("consultez la FAQ", current_domain.faq_url, target: :blank)}.
+
+  = render "microsoft_login_cta"
 - else
 
   p La synchronisation avec Outlook n'a pas encore été activée pour votre organisation.
 
   p Il faut qu'un administrateur de votre compte Outlook (généralement quelqu'un du Service Informatique de votre organisation) approuve la connexion entre Outlook et #{current_domain.name}.
 
-  p Est-ce que vous êtes administrateur de votre compte Outlook ?
+  p Etes-vous administrateur de votre organisation Outlook ?
 
   .d-flex.justify-content-center
     .btn-group.center

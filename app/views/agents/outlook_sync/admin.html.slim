@@ -1,1 +1,10 @@
-- content_for :title, t(".title")
+- content_for :title, t("agents.outlook_sync.show.title")
+
+p Sur l'écran suivant, vous allez pouvoir donner les autorisations nécessaire à #{current_domain.name} pour ajouter des rendez-vous dans des calendriers Outlook
+
+
+p En cas de doute, nous vous invitons à nous contacter via #{mail_to(current_domain.support_email)}
+
+= render "microsoft_login_cta"
+
+= link_to "retour", agents_calendar_sync_outlook_sync_path, class: "btn btn-link float-left"

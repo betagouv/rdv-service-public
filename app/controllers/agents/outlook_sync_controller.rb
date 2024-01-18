@@ -7,9 +7,13 @@ class Agents::OutlookSyncController < AgentAuthController
     authorize current_agent
   end
 
-  def admin; end
+  def admin
+    authorize(current_agent, :show?)
+  end
 
-  def agent; end
+  def agent
+    authorize(current_agent, :show?)
+  end
 
   def destroy
     authorize current_agent, :current_agent_or_admin_in_record_organisation?
