@@ -26,10 +26,15 @@ class WebhookJob < ApplicationJob
     )
 
     request.on_failure do |response|
-      if response.timed_out?
-        raise OutgoingWebhookError, "HTTP Timeout, URL: #{webhook_endpoint.target_url}"
-      elsif !WebhookJob.false_negative_from_drome?(response.body)
-        raise OutgoingWebhookError, "HTTP #{response.code}, URL: #{webhook_endpoint.target_url}"
+      Sentry.with_scope do |scope|
+        # Cela permet d'avoir une issue Sentry séparée pour chaque URL et statut HTTP
+        scope.set_fingerprint(["OutgoingWebhookError", webhook_endpoint.target_url, response.code.to_s])
+
+        if response.timed_out?
+          raise OutgoingWebhookError, "HTTP Timeout, URL: #{webhook_endpoint.target_url}"
+        elsif !WebhookJob.false_negative_from_drome?(response.body)
+          raise OutgoingWebhookError, "HTTP #{response.code}, URL: #{webhook_endpoint.target_url}"
+        end
       end
     end
 
