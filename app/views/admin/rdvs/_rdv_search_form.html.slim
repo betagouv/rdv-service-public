@@ -49,17 +49,20 @@
               },
               wrapper: "horizontal_form"
       = f.input :lieu_id, collection: @lieux,
-              label: "Lieu",
-              label_method: -> { lieu_name_and_organisation(_1) },
               prompt: "Tous",
+              label: "Lieu",
+              label_method: :name,
               input_html: { class: "select2-input", multiple: true },
               wrapper: "horizontal_form"
     .col-md-6
-      = f.input :motif_id, collection: @motifs,
-            label: "Motifs",
-            label_method: -> { motif_name_and_service(_1) },
+      = f.input :motif_id,
             prompt: "Tous",
-            input_html: { class: "select2-input", multiple: true },
+            label: "Motifs",
+            collection: @motifs.includes(:service).to_a.group_by { _1.service.name },
+            as: :grouped_select,
+            group_method: :last,
+            label_method: :name,
+            input_html: { class: "js-filtered-motifs select2-input", multiple: true },
             wrapper: "horizontal_form"
       - temporal_statuses = Rdv.statuses.keys - ["unknown"] + ["unknown_past", "unknown_future"]
       = f.input :status, collection: temporal_statuses,
