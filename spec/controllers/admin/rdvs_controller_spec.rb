@@ -174,7 +174,7 @@ describe Admin::RdvsController, type: :controller do
         organisation_id: organisation.id.to_s,
         agent_id: "",
         user_id: "",
-        lieu_id: "",
+        lieu_id: [""],
         status: "",
       }
 
@@ -216,7 +216,7 @@ describe Admin::RdvsController, type: :controller do
           organisation_id: organisation.id.to_s,
           agent_id: "",
           user_id: "",
-          lieu_id: "",
+          lieu_id: [""],
           status: "",
         }
 
