@@ -19,7 +19,7 @@
 
   p La synchronisation avec Outlook n'a pas encore été activée pour votre organisation.
 
-  p Il faut qu'un administrateur de votre compte Outlook (généralement quelqu'un du Service Informatique de votre organisation) approuve la connexion entre Outlook et #{current_domain.name}.
+  p Un administrateur de votre organisation Outlook (généralement quelqu'un du service informatique) doit connecter son compte Outlook à #{current_domain.name} pour permettre aux autres agents d'activer la synchronisation.
 
   p Etes-vous administrateur de votre organisation Outlook ?
 
@@ -28,4 +28,4 @@
       = link_to "Oui", admin_agents_calendar_sync_outlook_sync_path, class: "btn btn-outline-primary mr-4"
       = link_to "Non", admin_agents_calendar_sync_outlook_sync_path, class: "btn btn-outline-primary"
 
-= link_to "retour", agents_calendar_sync_path, class: "btn btn-link float-left"
+= link_to "retour", agents_calendar_sync_path, class: "btn btn-link float-left pl-0"
