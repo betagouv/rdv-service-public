@@ -1,7 +1,7 @@
 class Agents::PreferencesController < AgentAuthController
   include Admin::AuthenticatedControllerConcern
 
-  layout "agent_settings"
+  layout "registration"
 
   def disable_cnfs_online_booking_banner
     skip_authorization

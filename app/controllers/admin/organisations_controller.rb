@@ -12,7 +12,7 @@ class Admin::OrganisationsController < AgentAuthController
       .includes(organisation: :territory)
       .order("organisations.name")
       .to_a.group_by { _1.organisation.territory }
-    render layout: "agent_settings"
+    render layout: "registration"
   end
 
   def show
@@ -37,7 +37,7 @@ class Admin::OrganisationsController < AgentAuthController
   def new
     @organisation = Organisation.new(territory: Territory.find(params[:territory_id]))
     authorize(@organisation)
-    render :new, layout: "agent_settings"
+    render :new, layout: "registration"
   end
 
   def create
@@ -49,7 +49,7 @@ class Admin::OrganisationsController < AgentAuthController
     if @organisation.save
       redirect_to organisation_home_path(@organisation, current_agent), flash: { success: "Organisation créée !" }
     else
-      render :new, layout: "agent_settings"
+      render :new, layout: "registration"
     end
   end
 

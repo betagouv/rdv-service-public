@@ -1,7 +1,7 @@
 class Agents::CalendarSyncController < AgentAuthController
   include Admin::AuthenticatedControllerConcern
 
-  layout "agent_settings"
+  layout "registration"
 
   def show
     authorize current_agent
