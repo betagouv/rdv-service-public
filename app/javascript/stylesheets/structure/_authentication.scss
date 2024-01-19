@@ -15,11 +15,14 @@ body.authentication-bg {
 .auth-fluid {
   position: relative;
   display: flex;
-  align-items: stretch;
+  align-items: center;
   min-height: 100vh;
   flex-direction: row;
   align-items: stretch;
   background-size: cover;
+  .auth-fluid--agent-settings {
+    align-items: stretch;
+  }
 
   .auth-fluid-form-box {
     max-width: 960px;
