@@ -39,6 +39,25 @@ Capybara.configure do |config|
   config.always_include_port = true
 end
 
+RSpec.configure do |config|
+  config.after(:each, js: true) do |example|
+    next unless example.exception # only write logs for failed tests
+
+    FileUtils.mkdir_p "tmp/capybara"
+    %i[browser driver].each do |source|
+      errors = Capybara.page.driver.browser.logs.get(source)
+      fp = "tmp/capybara/chrome.#{example.full_description.parameterize}.#{source}.log"
+      File.open(fp, "w") do |f|
+        f << "// empty logs" if errors.empty?
+        errors.each do |e|
+          f << "#{e.timestamp} [#{e.level}]: #{e.message}"
+        end
+        f << "\n"
+      end
+    end
+  end
+end
+
 def expect_page_to_be_axe_clean(path)
   visit path
   expect(page).to have_current_path(path)
