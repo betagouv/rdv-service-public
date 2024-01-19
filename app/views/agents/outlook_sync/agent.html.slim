@@ -1,0 +1,11 @@
+- content_for :title, t("agents.outlook_sync.show.title")
+
+p Pour utiliser la synchronisation Outlook, vous devez :
+
+ul
+  li Créer un compte sur #{current_domain.name} pour votre administrateur Outlook
+  li Demander à votre administrateur Outlook d'autorisation la connexion avec #{current_domain.name} via #{link_to(agents_calendar_sync_outlook_sync_url, agents_calendar_sync_outlook_sync_url)}
+
+p Si vous souhaitez plus d'information, vous pouvez nous contacter via #{mail_to(current_domain.support_email)}
+
+= link_to "retour", agents_calendar_sync_outlook_sync_path, class: "btn btn-link float-left pl-0"

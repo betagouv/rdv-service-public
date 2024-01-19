@@ -3,13 +3,30 @@
 p Sur l'écran suivant, vous allez pouvoir vous connecter à votre compte Microsoft puis donner les autorisations nécessaire à #{current_domain.name} pour ajouter des rendez-vous dans des calendriers Outlook.
 
 p
+  a href="#outlook-en-savoir-plus" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapse"
+    = "En savoir plus sur les autorisations"
+  .collapse.alert-info.p-2.m-2 id="outlook-en-savoir-plus"
+    p
+      | Vous allez devoir valider trois autorisations pour l'application RDV Service Public :
+    ul
+      li
+        b Conserver l'accès aux données auxquelles vous donnez accès :
+        |  Cette autorisation permet de mettre à jour les rendez-vous dans les calendriers Outlook même quand les agents ne sont pas en ligne sur #{current_domain.name}.
+          Elle est nécessaire pour pouvoir faire les mises à jour en temps réel lorsqu'un rendez-vous est modifié par le secrétariat ou annulé par un usager par exemple.
+          Si vous ne souhaitez fermer l'accès à vous données et arrêter la synchronisation, vous pouvez toujours le faire depuis ce menu dans #{current_domain.name} ou Outlook.
+      li.mt-2
+        b Activer la connexion et lire le profil utilisateur :
+        |  Cette autorisation permet de vérifier la correspondance entre les comptes #{current_domain.name} et Outlook.
+
+      li.mt-2
+        b Avoir un accès total à des calendriers utilisateur :
+        |  Cette autorisation est nécessaire pour pouvoir ajouter des évènements dans les calendriers Outlook.
+      p.mt-4 Vous pouvez révoquer toutes ces autorisations à tout moment depuis #{link_to("votre espace d'administration Outlook", "https://myapps.microsoft.com", target: :blank)} si vous voulez arrêter d'utiliser la synchronisation Outlook au sein de votre organisation.
+      p Si vous souhaitez plus d'information, vous pouvez nous contacter via #{mail_to(current_domain.support_email)}
+
+p
   = "Afin de permettre à tous les agents de votre organisation d'activer la synchronisation, "
   b vous devez impérativement cocher la case "Consentement pour le compte de votre organisation".
-
-/ TODO: make this link work
-p = link_to("En savoir plus sur les autorisations demandées", "#")
-
-p Si vous souhaitez plus d'information, vous pouvez nous contacter via #{mail_to(current_domain.support_email)}
 
 = render "microsoft_login_cta"
 
