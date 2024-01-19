@@ -1,11 +1,9 @@
+/ Ce layout sert à la fois aux vues liées à Devise, et aux préférences des agents, puisque l'édition du profil agent utilise un controller Devise.
+/ Si on évitait ce couplage, on pourrait séparer ce layout en deux layouts différents avec une meilleure sémantique
 doctype html
 html lang="fr"
   head
-    meta content=("text/html; charset=UTF-8") http-equiv="Content-Type"
-    meta name="viewport" content="width=device-width, initial-scale=1.0"
-    title #{current_domain.name}
-    = csrf_meta_tags
-    = csp_meta_tag
+    = render "common/meta"
     = render "common/env"
     = stylesheet_link_tag    "application", media: "all", "data-turbolinks-track": "reload"
     = javascript_include_tag "application", "data-turbolinks-track": "reload"
@@ -41,17 +39,12 @@ html lang="fr"
                 h4.mb-3 Prenez RDV en ligne avec votre département !
 
         .auth-fluid-form-box
-          .align-items-center.d-flex.h-100
+          / Permet de centrer les formulaire de login, et d'aligner en haut de l'écran les formulaires de préférences
+          div class="#{current_agent.present? ? "" : "align-items-center d-flex h-100"}"
             .p-3.flex-grow-1
               = render "layouts/flash"
               .row
                 .col-md-10.offset-md-1
-                  - if agent_path? && current_agent&.nil?
-                    .mb-4.text-center
-                      h3 Espace reservé aux agents
-                      p
-                        | Vous êtes un particulier ?
-                        = link_to "Cliquez-ici", request.path.gsub("agents", "users")
                   - if content_for :title
                     .text-center.m-auto
                       h1.card-title.text-dark-50.text-center.mt-0.font-weight-bold.mb-4
