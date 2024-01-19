@@ -26,15 +26,13 @@ class WebhookJob < ApplicationJob
     )
 
     request.on_failure do |response|
-      Sentry.with_scope do |scope|
-        # Cela permet d'avoir une issue Sentry séparée pour chaque URL et statut HTTP
-        scope.set_fingerprint(["OutgoingWebhookError", webhook_endpoint.target_url, response.code.to_s])
+      # Cela permet d'identifier singulièrement l'erreur selon l'URL et le code HTTP de la réponse
+      @sentry_event_fingerprint = ["OutgoingWebhookError", webhook_endpoint.target_url, response.code.to_s]
 
-        if response.timed_out?
-          raise OutgoingWebhookError, "HTTP Timeout, URL: #{webhook_endpoint.target_url}"
-        elsif !WebhookJob.false_negative_from_drome?(response.body)
-          raise OutgoingWebhookError, "HTTP #{response.code}, URL: #{webhook_endpoint.target_url}"
-        end
+      if response.timed_out?
+        raise OutgoingWebhookError, "HTTP Timeout, URL: #{webhook_endpoint.target_url}"
+      elsif !WebhookJob.false_negative_from_drome?(response.body)
+        raise OutgoingWebhookError, "HTTP #{response.code}, URL: #{webhook_endpoint.target_url}"
       end
     end
 
@@ -47,6 +45,10 @@ class WebhookJob < ApplicationJob
     # - un premier avertissement assez rapide s'il y a un problème (4e essai)
     # - une notification pour le dernier essai, avant que le job passe en "abandonnés"
     executions == 4 || executions >= 10 || executions == MAX_ATTEMPTS
+  end
+
+  def sentry_fingerprint
+    @sentry_event_fingerprint
   end
 
   # La réponse de la Drôme est en JSON
