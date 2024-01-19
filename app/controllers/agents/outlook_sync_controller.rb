@@ -1,7 +1,7 @@
 class Agents::OutlookSyncController < AgentAuthController
   include Admin::AuthenticatedControllerConcern
 
-  layout "registration"
+  layout "agent_settings"
 
   def show
     authorize current_agent

@@ -1,0 +1,51 @@
+doctype html
+html lang="fr"
+  head
+    meta content=("text/html; charset=UTF-8") http-equiv="Content-Type"
+    meta name="viewport" content="width=device-width, initial-scale=1.0"
+    title #{current_domain.name}
+    = csrf_meta_tags
+    = csp_meta_tag
+    = render "common/env"
+    = stylesheet_link_tag    "application", media: "all", "data-turbolinks-track": "reload"
+    = javascript_include_tag "application", "data-turbolinks-track": "reload"
+  main
+    body.auth-fluid-pages.pb-0.agents
+      = render "layouts/rdv_solidarites_instance_name"
+      .auth-fluid
+        .auth-fluid-left.text-center
+          .p-2
+            = link_logo
+          .align-items-center.d-flex.mt-lg-4
+            .p-lg-3.flex-grow-1
+              .d-none.d-lg-block= image_tag "welcome/agent.svg", class: "agent-profile mx-auto mb-4", alt: "Le portrait d'un agent"
+              p.agent-name
+                i.far.fa-id-card>
+                = current_agent.full_name_and_service
+              .d-flex.flex-row.justify-content-center
+                ul.list-unstyled.text-left.text-white
+                  li
+                    h4= link_to "Votre compte", edit_agent_registration_path
+                  li
+                    h4= link_to t("agents.preferences.show.title"), agents_preferences_path
+                  li
+                    h4= link_to "Synchronisation d'agenda", agents_calendar_sync_path
+                  li
+                    h4= link_to "Vos organisations", admin_organisations_path
+                  li
+                    h4= link_to "Se déconnecter", destroy_agent_session_path, method: :delete
+
+        .auth-fluid-form-box.auth-fluid-form-box--top
+          .align-items-center.h-100
+            .p-3.flex-grow-1
+              = render "layouts/flash"
+              .row
+                .col-md-10.offset-md-1
+                  - if content_for :title
+                    .text-center.m-auto
+                      h1.card-title.text-dark-50.text-center.mt-0.font-weight-bold.mb-4
+                        = content_for :title
+                  = yield
+                  - if content_for :footer
+                    .mt-3.text-center
+                      = yield :footer
