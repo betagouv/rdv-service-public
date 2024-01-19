@@ -38,7 +38,7 @@ html lang="fr"
                 h4.mb-3 Prenez RDV en ligne avec votre département !
 
         .auth-fluid-form-box
-          .align-items-center.d-flex.h-100
+          div class="#{current_agent.present? ? "" : "align-items-center d-flex h-100"}"
             .p-3.flex-grow-1
               = render "layouts/flash"
               .row
