@@ -1,8 +1,15 @@
 - content_for :title, t("agents.outlook_sync.show.title")
 
-p Sur l'écran suivant, vous allez pouvoir donner les autorisations nécessaire à #{current_domain.name} pour ajouter des rendez-vous dans des calendriers Outlook
+p Sur l'écran suivant, vous allez pouvoir vous connecter à votre compte Microsoft puis donner les autorisations nécessaire à #{current_domain.name} pour ajouter des rendez-vous dans des calendriers Outlook.
 
-p En cas de doute, nous vous invitons à nous contacter via #{mail_to(current_domain.support_email)}
+p
+  = "Afin de permettre à tous les agents de votre organisation d'activer la synchronisation, "
+  b vous devez impérativement cocher la case "Consentement pour le compte de votre organisation".
+
+- # TODO: make this link work
+p = link_to("en savoir plus sur les autorisations demandées", "#")
+
+p Si vous souhaitez plus d'information, vous pouvez nous contacter via #{mail_to(current_domain.support_email)}
 
 = render "microsoft_login_cta"
 

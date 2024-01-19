@@ -5,7 +5,7 @@
   = simple_form_for [:admin, @organisation] do |f|
     = f.input :name, label: "Nom de votre organisation", placeholder: "Maison départementale des solidarités de Beaupréau-en-Mauges"
     = f.association :territory, \
-      label: "Département", \
+      label: "Territoire", \
       collection: policy_scope(Territory), \
       include_blank: false, \
       label_method: -> { _1.to_s }

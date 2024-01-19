@@ -4,7 +4,7 @@
 class Agents::MotDePassesController < AgentAuthController
   include Admin::AuthenticatedControllerConcern
 
-  layout "registration"
+  layout "agent_settings"
 
   def edit
     authorize current_agent

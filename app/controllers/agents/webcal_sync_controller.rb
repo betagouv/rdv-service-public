@@ -1,7 +1,7 @@
 class Agents::WebcalSyncController < AgentAuthController
   include Admin::AuthenticatedControllerConcern
 
-  layout "registration"
+  layout "agent_settings"
 
   def show
     current_agent.update!(calendar_uid: new_calendar_uid) if current_agent.calendar_uid.nil?
