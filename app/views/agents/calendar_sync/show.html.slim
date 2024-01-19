@@ -6,8 +6,8 @@ div.d-flex.justify-content-center.align-items-center.flex-wrap
   - if Rails.env.development? || ENV["RDV_SOLIDARITES_INSTANCE_NAME"] == "DEMO" || current_domain.can_sync_to_outlook
     div.card.w-100
       div.card-body
-        h5.card-title Connexion Outlook
-        p Vos rendez-vous seront synchronisés automatiquement et en temps réel dans votre agenda Outlook.
+        h5.card-title Outlook
+        p Consultez vos rendez-vous de #{current_domain.name} directement dans votre calendrier Outlook
         div.text-center
           = link_to "Connecter mon compte Outlook", agents_calendar_sync_outlook_sync_path, class: "btn btn-primary m-2"
 
