@@ -24,10 +24,12 @@ describe "Agent can sync his account to outlook" do
   it "syncs the account" do
     login_as(agent, scope: :agent)
     visit agents_calendar_sync_outlook_sync_path
+    click_on "Oui"
+    expect(page).to have_content "Sur l'écran suivant, vous allez pouvoir vous connecter à votre compte Microsoft"
 
     expect(client_double).to receive(:create_event!)
     perform_enqueued_jobs do
-      find(:xpath, "//a/img[@alt=\"S'identifier avec Microsoft\"]").find(:xpath, "..").click
+      find(:xpath, "//a/img[@alt=\"Se connecter avec Microsoft\"]").find(:xpath, "..").click
 
       expect(agent.reload.microsoft_graph_token).to eq("super_token")
       expect(agent.reload.refresh_microsoft_graph_token).to eq("super_refresh_token")
