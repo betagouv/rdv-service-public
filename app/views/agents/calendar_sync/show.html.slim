@@ -3,7 +3,7 @@
 p Vous pouvez voir vos rendez-vous de #{current_domain.name} dans votre agenda externe, comme Outlook ou Google Calendar.
 
 div.d-flex.justify-content-center.align-items-center.flex-wrap
-  - if current_domain.can_sync_to_outlook
+  - if Rails.env.development? || ENV["RDV_SOLIDARITES_INSTANCE_NAME"] == "DEMO" || current_domain.can_sync_to_outlook
     div.card.w-100
       div.card-body
         h5.card-title Connexion Outlook

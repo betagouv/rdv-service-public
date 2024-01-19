@@ -30,7 +30,7 @@ class Domain
       address_selection_template_name: "search/address_selection/rdv_solidarites",
       search_banner_template_name: "search/banners/rdv_solidarites",
       online_reservation_with_public_link: false,
-      can_sync_to_outlook: true, # TODO: set this back to false
+      can_sync_to_outlook: false,
       sms_sender_name: "RdvSoli",
       documentation_url: "https://rdvs.notion.site/RDV-Solidarit-s-94176a1507814d19aeaaf6e678ffcbed",
       faq_url: "https://rdv-solidarites.notion.site/F-A-Q-M-dico-social-aaf94709c0ea448b8eb9d93f548acdb9",
