@@ -12,6 +12,7 @@ class AddConseillerNumerique
   end
 
   def initialize(conseiller_numerique_attributes)
+    Sentry.add_breadcrumb(Sentry::Breadcrumb.new(message: "AddConseillerNumerique params", data: conseiller_numerique_attributes))
     structure_attributes = conseiller_numerique_attributes.delete(:structure)
     @conseiller_numerique = ConseillerNumerique.new(conseiller_numerique_attributes)
     @structure = Structure.new(structure_attributes)
@@ -61,7 +62,7 @@ class AddConseillerNumerique
       password: SecureRandom.hex,
       roles_attributes: [{ organisation: organisation, access_level: AgentRole::ACCESS_LEVEL_ADMIN }]
     ).tap do |agent|
-      AgentTerritorialAccessRight.create!(agent: agent, territory: territory)
+      agent.agent_territorial_access_rights.find_or_create_by!(territory: territory)
     end
   end
 
