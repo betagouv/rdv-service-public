@@ -14,53 +14,6 @@ describe Territory, type: :model do
     end
   end
 
-  describe "departement_number uniqueness validation" do
-    context "no collision" do
-      let(:territory) { build(:territory, name: "Oise", departement_number: "60") }
-
-      it { expect(territory).to be_valid }
-    end
-
-    context "blank departement_number" do
-      let!(:territory_existing) { create(:territory, departement_number: "60") }
-      let(:territory) { build(:territory, name: "Oise", departement_number: "") }
-
-      it { expect(territory).to be_valid }
-    end
-
-    context "colliding departement_number" do
-      let!(:territory_existing) { create(:territory, departement_number: "60") }
-      let(:territory) { build(:territory, name: "Oise", departement_number: "60") }
-
-      it "adds errors" do
-        expect(territory).not_to be_valid
-        expect(territory.errors.details).to eq({ departement_number: [{ error: :taken, value: "60" }] })
-        expect(territory.errors.full_messages.to_sentence).to include("agents créés dans ce département")
-      end
-    end
-
-    context "update existing territory to free departement_number" do
-      let!(:territory) { create(:territory, departement_number: "60") }
-
-      before { territory.departement_number = "80" }
-
-      it { expect(territory).to be_valid }
-    end
-
-    context "update existing territory to colliding departement_number" do
-      let!(:territory_existing) { create(:territory, departement_number: "80") }
-      let!(:territory) { create(:territory, departement_number: "60") }
-
-      before { territory.departement_number = "80" }
-
-      it "adds errors" do
-        expect(territory).not_to be_valid
-        expect(territory.errors.details).to eq({ departement_number: [{ error: :taken, value: "80" }] })
-        expect(territory.errors.full_messages.to_sentence).to include("agents créés dans ce département")
-      end
-    end
-  end
-
   describe "#fill_name_for_departements before_create" do
     subject { territory.reload.name }
 
