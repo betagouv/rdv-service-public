@@ -14,6 +14,10 @@ dbclient-fetcher pgsql
 # On préfère faire un login à chaque rafraichissement des données plutôt que de laisser un token scalingo en variable d'env
 scalingo login --password-only
 
+echo "Upgrade du Postgres d'ETL pour avoir plus de RAM"
+# On fait cette opération avant de télécharger le dump pour que le provisionnement du nouveau plan ai le temps de se finir avant le pg_restore
+scalingo --region osc-secnum-fr1 --app rdv-service-public-etl addons-upgrade "${etl_addon_id}"  postgresql-starter-8192
+
 # Retrieve the production addon id:
 prod_addon_id="$( scalingo --region osc-secnum-fr1 --app production-rdv-solidarites addons \
                  | grep "PostgreSQL" \
@@ -26,21 +30,16 @@ scalingo  --region osc-secnum-fr1 --app production-rdv-solidarites --addon "${pr
 # Extract the archive containing the downloaded backup:
 tar --extract --verbose --file="${archive_name}" --directory="/app/"
 
-# TODO: block connections from the outside before loading the dump to the database
+echo "Suppression du role postgres utilisé par metabase"
+scalingo database-delete-user --region osc-secnum-fr1 --app rdv-service-public-etl --addon "${etl_addon_id}" rdv_service_public_metabase
+echo "La base de données n'est plus accessible par metabase"
+
 
 etl_addon_id="$( scalingo --region osc-secnum-fr1 --app rdv-service-public-etl addons \
                  | grep "PostgreSQL" \
                  | cut -d "|" -f 3 \
                  | tr -d " " )"
 
-echo "Suppression du role postgres."
-# Delete Postgres role dedicated to metabase and called "rdv_service_public_metabase"
-scalingo database-delete-user --region osc-secnum-fr1 --app rdv-service-public-etl --addon "${etl_addon_id}" rdv_service_public_metabase
-echo "La base de données n'est plus accessible par metabase"
-
-
-echo "Upgrade du Postgres d'ETL pour avoir plus de RAM"
-scalingo --region osc-secnum-fr1 --app rdv-service-public-etl addons-upgrade "${etl_addon_id}"  postgresql-starter-8192
 
 echo "Chargement du dump..."
 # TODO: try speeding up the process by using the --jobs option
@@ -54,9 +53,12 @@ time pg_restore --clean --if-exists --no-owner --no-privileges --jobs=2 --dbname
 echo "Anonymisation de la base"
 time bundle exec rails runner scripts/anonymize_database.rb
 
-echo "Downgrade du Postgres d'ETL pour revenir a la normale"
-scalingo --region osc-secnum-fr1 --app rdv-service-public-etl addons-upgrade "${etl_addon_id}" postgresql-starter-512
-
 echo "Re-création du role Postgres rdv_service_public_metabase"
 echo "Merci de copier/coller le mot de passe stocké dans METABASE_DB_ROLE_PASSWORD: ${METABASE_DB_ROLE_PASSWORD}"
 scalingo database-create-user --region osc-secnum-fr1 --app rdv-service-public-etl --addon "${etl_addon_id}" --read-only rdv_service_public_metabase
+
+# On fait cette opération après la création du user, puisqu'elle cause un peu de downtime sur la db
+echo "Downgrade du Postgres d'ETL pour revenir a la normale"
+scalingo --region osc-secnum-fr1 --app rdv-service-public-etl addons-upgrade "${etl_addon_id}" postgresql-starter-512
+
+
