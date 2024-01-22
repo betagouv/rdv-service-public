@@ -13,7 +13,7 @@ DUMP_NAME=$1
 bundle exec rails db:drop db:create
 
 # import dump
-pg_restore --clean --if-exists --no-owner --no-privileges --dbname lapin_development "$DUMP_NAME" -L <(pg_restore -l "$DUMP_NAME" | grep -vE 'TABLE DATA public (versions|good_jobs|good_job_settings|good_job_batches|good_job_processes)')
+pg_restore --clean --if-exists --no-owner --no-privileges --dbname lapin_development "$DUMP_NAME" --jobs 4 -L <(pg_restore -l "$DUMP_NAME" | grep -vE 'TABLE DATA public (versions|good_jobs|good_job_settings|good_job_batches|good_job_processes)')
 
 rm -f "$DUMP_NAME"
 
