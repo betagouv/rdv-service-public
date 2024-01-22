@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_01_17_133500) do
+ActiveRecord::Schema[7.0].define(version: 2024_01_22_082202) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -615,7 +615,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_17_133500) do
     t.boolean "enable_waiting_room_mail_field", default: false
     t.boolean "enable_waiting_room_color_field", default: false
     t.boolean "visible_users_throughout_the_territory", default: false
-    t.index ["departement_number"], name: "index_territories_on_departement_number", unique: true, where: "((departement_number)::text <> ''::text)"
+    t.index ["departement_number"], name: "index_territories_on_departement_number", where: "((departement_number)::text <> ''::text)"
   end
 
   create_table "territory_services", force: :cascade do |t|

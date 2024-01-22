@@ -101,5 +101,6 @@ RSpec.configure do |config|
     FactoryBot.rewind_sequences
     Rails.cache.clear
     Warden.test_reset!
+    WebMock.reset!
   end
 end
