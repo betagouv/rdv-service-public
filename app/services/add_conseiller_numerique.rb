@@ -12,7 +12,6 @@ class AddConseillerNumerique
   end
 
   def initialize(conseiller_numerique_attributes)
-    Sentry.add_breadcrumb(Sentry::Breadcrumb.new(message: "AddConseillerNumerique params", data: conseiller_numerique_attributes))
     structure_attributes = conseiller_numerique_attributes.delete(:structure)
     @conseiller_numerique = ConseillerNumerique.new(conseiller_numerique_attributes)
     @structure = Structure.new(structure_attributes)
