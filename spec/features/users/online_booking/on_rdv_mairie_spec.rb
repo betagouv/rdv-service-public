@@ -3,7 +3,7 @@ describe "User can search rdv on rdv mairie" do
 
   let(:now) { Time.zone.parse("2021-12-13 8:00") }
   let!(:territory) { create(:territory, :mairies, departement_number: "MA") }
-  let!(:organisation) { create(:organisation, :with_contact, territory: territory) }
+  let!(:organisation) { create(:organisation, :with_contact, territory: territory, name: "Mairie de Wavignies") }
   let(:service) { create(:service) }
   let!(:cni_motif) do
     create(:motif, name: "Carte d'identité", organisation: organisation, restriction_for_rdv: nil, service: service, motif_category: cni_motif_category, default_duration_in_min: 25)
@@ -128,5 +128,13 @@ describe "User can search rdv on rdv mairie" do
 
     click_link("Confirmer mon RDV")
     expect(page).to have_content("Votre rendez vous a été confirmé.")
+  end
+
+  it "displays the organisation name for a public link and a generic name otherwise" do
+    visit prendre_rdv_url
+    expect(page).to have_content "Prenez rendez-vous avec votre mairie"
+
+    visit public_link_to_org_url(organisation_id: organisation.id)
+    expect(page).to have_content "Prenez rendez-vous avec Mairie de Wavignies"
   end
 end
