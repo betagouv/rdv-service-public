@@ -2,13 +2,13 @@
   - if current_agent.multiple_organisations_access?
     .row
       .col-md-6
-        - selected = @scoped_organisations.one? ? @scoped_organisations.first.id : 0
         = f.input :scoped_organisation_id, collection: current_agent.organisations.map {[_1.name, _1.id]}.unshift(["Toutes", 0]), \
+                selected: @selected_organisations_ids, \
                 label: "Organisation", \
-                selected: selected,\
                 input_html: { \
                   class: "select2-input", \
                   onchange: "this.form.submit()", \
+                  multiple: true, \
                 }, \
                 wrapper: "horizontal_form"
     hr
@@ -65,7 +65,7 @@
             as: :grouped_select,
             group_method: :last,
             label_method: :name,
-            input_html: { class: "js-filtered-motifs select2-input", multiple: true },
+            input_html: { class: "select2-input", multiple: true },
             wrapper: "horizontal_form"
       - temporal_statuses = Rdv.statuses.keys - ["unknown"] + ["unknown_past", "unknown_future"]
       = f.input :status, collection: temporal_statuses,

@@ -188,7 +188,7 @@ describe Admin::RdvsController, type: :controller do
         other_organisation = create(:organisation)
         params = {
           organisation_id: organisation.id,
-          scoped_organisation_id: other_organisation.id,
+          scoped_organisation_id: [other_organisation.id],
         }
 
         expect do
@@ -230,7 +230,7 @@ describe Admin::RdvsController, type: :controller do
           other_organisation = create(:organisation)
           params = {
             organisation_id: organisation.id,
-            scoped_organisation_id: other_organisation.id,
+            scoped_organisation_id: [other_organisation.id],
           }
 
           expect do

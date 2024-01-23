@@ -116,15 +116,18 @@ class Admin::RdvsController < AgentAuthController
   private
 
   def set_scoped_organisations
-    @scoped_organisations = if params[:scoped_organisation_id].blank?
+    @selected_organisations_ids = params[:scoped_organisation_id]&.compact_blank
+    @scoped_organisations = if @selected_organisations_ids.blank?
                               # l'agent n'a pas accès au filtre d'organisations ou a réinitialisé la page
+                              # Nous sélectionnons par défaut l'organisation courante
+                              @selected_organisations_ids = [current_organisation.id]
                               policy_scope(Organisation).where(id: current_organisation.id)
-                            elsif params[:scoped_organisation_id] == "0"
+                            elsif @selected_organisations_ids == ["0"]
                               # l'agent a sélectionné 'Toutes'
                               policy_scope(Organisation)
                             else
-                              # l'agent a sélectionné une organisation spécifique
-                              policy_scope(Organisation).where(id: parsed_params["scoped_organisation_id"])
+                              # l'agent a sélectionné une ou plusieurs organisations spécifiques
+                              policy_scope(Organisation).where(id: @selected_organisations_ids)
                             end
 
     # An empty scope means the agent tried to access a foreign organisation
@@ -163,8 +166,8 @@ class Admin::RdvsController < AgentAuthController
   end
 
   def parsed_params
-    params.permit(:organisation_id, :agent_id, :user_id, :status, :start, :end, :scoped_organisation_id,
-                  lieu_attributes: %i[name address latitude longitude], motif_id: [], lieu_id: []).to_hash.to_h do |param_name, param_value|
+    params.permit(:organisation_id, :agent_id, :user_id, :status, :start, :end,
+                  lieu_attributes: %i[name address latitude longitude], motif_id: [], lieu_id: [], scoped_organisation_id: []).to_hash.to_h do |param_name, param_value|
       case param_name
       when "start", "end"
         [param_name, parse_date_from_params(param_value)]
