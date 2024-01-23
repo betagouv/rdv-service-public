@@ -113,6 +113,20 @@ class User < ApplicationRecord
     self_and_relatives.each { _1.do_soft_delete(organisation) }
   end
 
+  def delete_devise_account
+    update!(
+      encrypted_password: "",
+      last_sign_in_at: nil,
+      confirmed_at: nil,
+      confirmation_token: nil,
+      confirmation_sent_at: nil,
+      logged_once_with_franceconnect: false,
+      franceconnect_openid_sub: nil,
+      reset_password_token: nil,
+      reset_password_sent_at: nil
+    )
+  end
+
   def available_users_for_rdv
     User.where(responsible_id: id).or(User.where(id: id)).order("responsible_id DESC NULLS FIRST", first_name: :asc)
   end

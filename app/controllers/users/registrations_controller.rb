@@ -12,8 +12,12 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   def destroy
     authorize([:user, resource])
-    resource.webhook_reason = "user"
-    resource.soft_delete
+    if resource.organisations.none? { |org| org.verticale == "rdv_insertion" }
+      resource.soft_delete
+    else
+      resource.organisations.reject { |org| org.verticale == "rdv_insertion" }.each { |org| resource.soft_delete(org) }
+      resource.delete_devise_account
+    end
     Devise.sign_out_all_scopes ? sign_out : sign_out(resource_name)
     set_flash_message! :notice, :destroyed
     yield resource if block_given?
