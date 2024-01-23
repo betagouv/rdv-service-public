@@ -48,9 +48,12 @@
                 }, \
               },
               wrapper: "horizontal_form"
-      = f.input :lieu_id, collection: @lieux,
+      = f.input :lieu_id,
               prompt: "Tous",
               label: "Lieu",
+              collection: @lieux.includes(:organisation).to_a.group_by { _1.organisation.name },
+              as: :grouped_select,
+              group_method: :last,
               label_method: :name,
               input_html: { class: "select2-input", multiple: true },
               wrapper: "horizontal_form"
