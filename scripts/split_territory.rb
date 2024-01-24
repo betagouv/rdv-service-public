@@ -1,5 +1,11 @@
 # Example:
 # load "scripts/split_territory.rb"; SplitTerritory.new(4, 530, "Drôme Insertion").split!
+
+class MotifCategoriesTerritory < ApplicationRecord
+  belongs_to :motif_category
+  belongs_to :territory
+end
+
 class SplitTerritory
   def initialize(territory_id, main_territory_admin_id, new_territory_name)
     @territory_id = territory_id
