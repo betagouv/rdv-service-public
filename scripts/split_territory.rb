@@ -1,19 +1,21 @@
 class SplitTerritory
-  def initialize(territory_id, main_territory_admin_id)
+  def initialize(territory_id, main_territory_admin_id, new_territory_name)
     @territory_id = territory_id
     @main_territory_admin_id = main_territory_admin_id
+    @new_territory_name = new_territory_name
   end
 
   def split!
-    territory_attributes = old_territory.attributes
     Territory.transaction do
       puts "Création du nouveau territoire"
-      @new_territory = Territory.create(territory_attributes)
+      @new_territory = old_territory.dup
+      @new_territory.name = @new_territory_name
+      @new_territory.save!
 
       move_organisations
 
       move_or_duplicate_agent_territorial_roles
-      move_territorial_access_rights
+      move_or_duplicate_agent_territorial_access_rights
 
       move_or_duplicate_motif_categories_territories
       move_or_duplicate_territory_services
@@ -26,7 +28,7 @@ class SplitTerritory
 
   private
 
-  attr_reader :new_territory
+  attr_reader :new_territory, :main_territory_admin_id
 
   def move_organisations
     puts "Déplacement des organisations :"
@@ -41,7 +43,7 @@ class SplitTerritory
   end
 
   def move_or_duplicate_agent_territorial_access_rights
-    AgentTerritorialAccessRights.where(territory_id: @territory_id).find_each do |_agent_territorial_access_right|
+    AgentTerritorialAccessRight.where(territory_id: @territory_id).find_each do |agent_territorial_access_right|
       territory_ids_from_agent_organisations = agent_territorial_access_right.agent.organisations.pluck(:territory_id)
 
       agent_in_new_territory = territory_ids_from_agent_organisations.include?(new_territory.id)
@@ -50,16 +52,17 @@ class SplitTerritory
       if agent_in_new_territory
         if agent_in_old_territory
           puts "Création de nouveaux AgentTerritorialAccessRights pour #{agent_territorial_access_right.agent.email}"
-          AgentTerritorialAccessRights.create!(agent_territorial_role.attributes.merge(territory_id: new_territory.id))
+          new_access_right = agent_territorial_access_right.dup
+          new_access_right.update!(territory_id: new_territory.id)
         else
           puts "Changement de territoire pour #{agent_territorial_access_right.agent.email}"
-          agent_territorial_role.update!(territory: new_territory)
+          agent_territorial_access_right.update!(territory: new_territory)
         end
       end
     end
   end
 
-  def move_territorial_access_roles
+  def move_or_duplicate_agent_territorial_roles
     puts "Déplacement des Admins de territoires"
     AgentTerritorialRole.where(territory: old_territory).each do |agent_territorial_role|
       agent = agent_territorial_role.agent
@@ -81,7 +84,8 @@ class SplitTerritory
   end
 
   def move_or_duplicate_motif_categories_territories
-    MotifCategoriesTerritory.where(territory: old_territory).find_each do |motif_categories_territory|
+    puts "Déplacement ou création des catégories de motifs"
+    MotifCategoriesTerritory.where(territory: old_territory).each do |motif_categories_territory|
       present_in_old_territory = motif_category_present_in_territory?(motif_categories_territory.motif_category_id, old_territory)
       present_in_new_territory = motif_category_present_in_territory?(motif_categories_territory.motif_category_id, new_territory)
 
