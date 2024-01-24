@@ -33,18 +33,24 @@ class SplitTerritory
   attr_reader :new_territory, :main_territory_admin_id
 
   def move_organisations
-    puts "Déplacement des organisations :"
-    organisations_to_change = old_territory.organisations.where.not(
+    puts "\n\nDéplacement des organisations suivantes dans le nouveau territoire :"
+    organisations_to_change = old_territory.organisations.order("name asc").where.not(
       id: AgentRole.where(agent_id: main_territory_admin_id).select(:organisation_id)
     )
 
     organisations_to_change.each do |organisation|
-      puts organisation.name
-      organisation.update(territory_id: new_territory.id)
+      puts "- #{organisation.name}"
+      organisation.update!(territory_id: new_territory.id)
+    end
+
+    puts "\nLes organisations suivantes restent dans le territoire actuel"
+    old_territory.organisations.reload.order("name asc").each do |org|
+      puts "- #{org.name}"
     end
   end
 
   def move_or_duplicate_agent_territorial_access_rights
+    puts "\n\n## Déplacement des Agents\n"
     AgentTerritorialAccessRight.where(territory_id: @territory_id).find_each do |agent_territorial_access_right|
       territory_ids_from_agent_organisations = agent_territorial_access_right.agent.organisations.pluck(:territory_id)
 
@@ -62,10 +68,12 @@ class SplitTerritory
         end
       end
     end
+
+    puts "#{AgentTerritorialAccessRight.where(territory: new_territory).count} agents dans le nouveau territoire"
   end
 
   def move_or_duplicate_agent_territorial_roles
-    puts "Déplacement des Admins de territoires"
+    puts "\n\n## Déplacement des Admins de territoires"
     AgentTerritorialRole.where(territory: old_territory).each do |agent_territorial_role|
       agent = agent_territorial_role.agent
       territory_ids_from_agent_organisations = agent.organisations.pluck(:territory_id)
@@ -86,17 +94,21 @@ class SplitTerritory
   end
 
   def move_or_duplicate_motif_categories_territories
-    puts "Déplacement ou création des catégories de motifs"
+    puts "\n\n## Déplacement ou création des catégories de motifs\n"
     MotifCategoriesTerritory.where(territory: old_territory).each do |motif_categories_territory|
       present_in_old_territory = motif_category_present_in_territory?(motif_categories_territory.motif_category_id, old_territory)
       present_in_new_territory = motif_category_present_in_territory?(motif_categories_territory.motif_category_id, new_territory)
 
-      if present_in_new_territory
-        if present_in_old_territory
-          MotifCategoriesTerritory.create!(territory: new_territory, motif_category: motif_categories_territory.motif_category)
-        else
-          motif_categories_territory.update!(territory: new_territory)
-        end
+      next unless present_in_new_territory
+
+      if present_in_old_territory
+        puts "Ajout de la catégorie de motifs #{motif_categories_territory.motif_category.name} au nouveau territoire"
+        MotifCategoriesTerritory.create!(territory: new_territory, motif_category: motif_categories_territory.motif_category)
+      else
+        puts "Déplacement de la catégorie de motifs #{motif_categories_territory.motif_category.name} dans le nouveau territoire"
+        # Cette table n'ayant pas d'id, on est obligés de passer par un update_all plutôt qu'un simple update sur le record
+        MotifCategoriesTerritory.where(territory_id: old_territory.id, motif_category_id: motif_categories_territory.motif_category_id).update_all(territory_id: new_territory.id)
+
       end
     end
   end
