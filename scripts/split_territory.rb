@@ -1,5 +1,5 @@
 # Example:
-# load "scripts/split_territory.rb"; SplitTerritory.new(4, 530, "Drôme Insertion").split!
+# load "scripts/split_territory.rb"; SplitTerritory.new(4, 530, "Drôme Insertion", dry_run: true).split!
 
 class MotifCategoriesTerritory < ApplicationRecord
   belongs_to :motif_category
@@ -7,15 +7,16 @@ class MotifCategoriesTerritory < ApplicationRecord
 end
 
 class SplitTerritory
-  def initialize(territory_id, main_territory_admin_id, new_territory_name)
+  def initialize(territory_id, main_territory_admin_id, new_territory_name, dry_run: true)
     @territory_id = territory_id
     @main_territory_admin_id = main_territory_admin_id
     @new_territory_name = new_territory_name
+    @dry_run = dry_run
   end
 
   def split!
     Territory.transaction do
-      puts "Création du nouveau territoire"
+      puts "# Création du nouveau territoire #{@new_territory_name}"
       @new_territory = old_territory.dup
       @new_territory.name = @new_territory_name
       @new_territory.save!
@@ -30,7 +31,9 @@ class SplitTerritory
 
       move_sectors
       move_teams
-      raise "rolling back transaction for dry run"
+      if @dry_run
+        raise "rolling back transaction for dry run"
+      end
     end
   end
 
@@ -39,7 +42,7 @@ class SplitTerritory
   attr_reader :new_territory, :main_territory_admin_id
 
   def move_organisations
-    puts "\n\nDéplacement des organisations suivantes dans le nouveau territoire :"
+    puts "\n\n## Déplacement des organisations suivantes dans le nouveau territoire :"
     organisations_to_change = old_territory.organisations.order("name asc").where.not(
       id: AgentRole.where(agent_id: main_territory_admin_id).select(:organisation_id)
     )
