@@ -116,8 +116,7 @@ class SplitTerritory
       else
         puts "Déplacement de la catégorie de motifs #{motif_categories_territory.motif_category.name} dans le nouveau territoire"
         # Cette table n'ayant pas d'id, on est obligés de passer par un update_all plutôt qu'un simple update sur le record
-        MotifCategoriesTerritory.where(territory_id: old_territory.id, motif_category_id: motif_categories_territory.motif_category_id).update_all(territory_id: new_territory.id)
-
+        MotifCategoriesTerritory.where(territory_id: old_territory.id, motif_category_id: motif_categories_territory.motif_category_id).update_all(territory_id: new_territory.id) # rubocop:disable Rails/SkipsModelValidations
       end
     end
   end
