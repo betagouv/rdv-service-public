@@ -1,3 +1,5 @@
+# Example:
+# load "scripts/split_territory.rb"; SplitTerritory.new(4, 530, "Drôme Insertion").split!
 class SplitTerritory
   def initialize(territory_id, main_territory_admin_id, new_territory_name)
     @territory_id = territory_id
@@ -129,10 +131,10 @@ class SplitTerritory
 
   def move_sectors
     old_territory.sectors.each do |sector|
-      territory_ids = sector.organisations.pluck(:territory_id).uniq + sectors.attributions.joins(agent: :organisations).pluck("organisations.territory_id").uniq
+      territory_ids = [sector.organisations.pluck(:territory_id).uniq + sector.attributions.joins(agent: :organisations).pluck("organisations.territory_id").uniq].uniq
 
       if territory_ids.count > 1
-        raise "Shared sectors can't be handled"
+        raise "Shared sector #{sector.id} can't be handled"
       end
 
       if territory_ids == [new_territory.id]
