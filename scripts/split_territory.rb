@@ -43,11 +43,9 @@ class SplitTerritory
 
   def move_organisations
     puts "\n\n## Déplacement des organisations suivantes dans le nouveau territoire :"
-    organisations_to_change = @old_territory.organisations.order("name asc").where.not(
-      id: AgentRole.where(agent_id: @main_territory_admin_id).select(:organisation_id)
-    )
+    organisations_to_change = old_territory.organisations - @main_territory_admin.organisations
 
-    organisations_to_change.each do |organisation|
+    organisations_to_change.order("name asc").each do |organisation|
       puts "- #{organisation.name}"
       organisation.update!(territory_id: @new_territory.id)
     end
