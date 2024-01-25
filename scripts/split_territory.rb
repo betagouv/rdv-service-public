@@ -1,6 +1,7 @@
 # Example:
 # load "scripts/split_territory.rb"; SplitTerritory.new(4, 530, "Drôme Insertion", dry_run: true).split!
 
+# TODO: ajouter commentaire pour expliquer qu'il faut que l'admin de territoire soit admin des orgas
 class MotifCategoriesTerritory < ApplicationRecord
   belongs_to :motif_category
   belongs_to :territory
@@ -151,6 +152,7 @@ class SplitTerritory
 
   def move_sectors
     old_territory.sectors.each do |sector|
+      # TODO: split this
       territory_ids = [sector.organisations.pluck(:territory_id).uniq + sector.attributions.joins(agent: :organisations).pluck("organisations.territory_id").uniq].uniq
 
       if territory_ids.count > 1
