@@ -59,18 +59,19 @@ class SplitTerritory
   def move_or_duplicate_agent_territorial_access_rights
     puts "\n\n## Déplacement des Agents\n"
     AgentTerritorialAccessRight.where(territory_id: @old_territory_id).find_each do |agent_territorial_access_right|
-      territory_ids_from_agent_organisations = agent_territorial_access_right.agent.organisations.pluck(:territory_id)
+      agent = agent_territorial_access_right.agent
+      territory_ids_from_agent_organisations = agent.organisations.pluck(:territory_id)
 
       agent_in_new_territory = territory_ids_from_agent_organisations.include?(@new_territory.id)
       agent_in_old_territory = territory_ids_from_agent_organisations.include?(@old_territory.id)
 
       if agent_in_new_territory
         if agent_in_old_territory
-          puts "Création de nouveaux AgentTerritorialAccessRights pour #{agent_territorial_access_right.agent.email}"
+          puts "Création de nouveaux AgentTerritorialAccessRights pour #{agent.email}"
           new_access_right = agent_territorial_access_right.dup
           new_access_right.update!(territory_id: @new_territory.id)
         else
-          puts "Changement de territoire pour #{agent_territorial_access_right.agent.email}"
+          puts "Changement de territoire pour #{agent.email}"
           agent_territorial_access_right.update!(territory: @new_territory)
         end
       end
@@ -103,8 +104,8 @@ class SplitTerritory
   def move_or_duplicate_motif_categories_territories
     puts "\n\n## Déplacement ou création des catégories de motifs\n"
     MotifCategoriesTerritory.where(territory: @old_territory).each do |motif_categories_territory|
-      present_in_old_territory = motif_category_present_in_territory?(motif_categories_territory.motif_category_id, @old_territory)
-      present_in_new_territory = motif_category_present_in_territory?(motif_categories_territory.motif_category_id, @new_territory)
+      present_in_old_territory = motif_category_used_in_territory_motifs?(motif_categories_territory.motif_category_id, @old_territory)
+      present_in_new_territory = motif_category_used_in_territory_motifs?(motif_categories_territory.motif_category_id, @new_territory)
 
       next unless present_in_new_territory
 
@@ -119,7 +120,7 @@ class SplitTerritory
     end
   end
 
-  def motif_category_present_in_territory?(motif_category_id, territory)
+  def motif_category_used_in_territory_motifs?(motif_category_id, territory)
     Motif.joins(:organisation).where(
       motif_category_id: motif_category_id
     ).where(
