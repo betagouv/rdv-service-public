@@ -21,20 +21,15 @@ html lang="fr"
                 p.lead.mb-3 Terminé l'agenda papier, moins de temps perdu.
               - elsif agent_path? && current_agent.present?
                 p.agent-name
-                  i.far.fa-id-card>
                   = current_agent.full_name_and_service
                 .d-flex.flex-row.justify-content-center
                   ul.list-unstyled.text-left.text-white
-                    li
-                      h4= link_to "Votre compte", edit_agent_registration_path
-                    li
-                      h4= link_to t("agents.preferences.show.title"), agents_preferences_path
-                    li
-                      h4= link_to "Synchronisation d'agenda", agents_calendar_sync_path
-                    li
-                      h4= link_to "Vos organisations", admin_organisations_path
-                    li
-                      h4= link_to "Se déconnecter", destroy_agent_session_path, method: :delete
+                    - @current_agent_settings_menu_entry = :compte
+                    - agent_settings_menu_entries.each do |entry|
+                      li.m-2.mt-3.mb-3 class="#{:active_entry if @current_agent_settings_menu_entry == entry[0]}"
+                        = link_to entry[1], entry[2]
+                    li.m-2.mt-3.mb-3
+                      = link_to "Se déconnecter", destroy_agent_session_path, method: :delete
               - else
                 h4.mb-3 Prenez RDV en ligne avec votre département !
 

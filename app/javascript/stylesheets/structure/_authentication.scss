@@ -41,6 +41,14 @@ body.authentication-bg {
       color: $white;
     }
 
+    .active_entry {
+      font-weight: 700;
+      &::before {
+        content: "● ";
+        margin-right: 10px;
+      }
+    }
+
     body.agents & {
       background-color: $blue;
       color: $white;
@@ -64,7 +72,7 @@ body.authentication-bg {
 @include media-breakpoint-up(lg) {
   .auth-fluid {
     .auth-fluid-left {
-      padding: 6rem 3rem;
+      padding: 6rem 3rem 0rem 3rem;
     }
   }
 }
