@@ -66,7 +66,7 @@ describe InclusionConnectController, type: :controller do
       expect(flash[:error]).to eq("Nous n'avons pas pu vous authentifier. Contacter le support à l'adresse <support@rdv-solidarites.fr> si le problème persiste.")
 
       # HTTP request is sent to Sentry as breadcrumbs
-      expect(sentry_events.last.breadcrumbs.compact.map(&:message)).to include("HTTP request", "HTTP response")
+      expect(sentry_events.last.breadcrumbs.compact.map(&:message)).to eq(["HTTP request", "HTTP response"])
     end
 
     it "returns an error if token request doesn't contains token" do
@@ -83,7 +83,7 @@ describe InclusionConnectController, type: :controller do
       expect(flash[:error]).to eq("Nous n'avons pas pu vous authentifier. Contacter le support à l'adresse <support@rdv-solidarites.fr> si le problème persiste.")
 
       # HTTP request is sent to Sentry as breadcrumbs
-      expect(sentry_events.last.breadcrumbs.compact.map(&:message)).to include("HTTP request", "HTTP response")
+      expect(sentry_events.last.breadcrumbs.compact.map(&:message)).to eq(["HTTP request", "HTTP response"])
     end
 
     it "returns an error if userinfo request doesnt work" do
@@ -108,7 +108,7 @@ describe InclusionConnectController, type: :controller do
       expect(flash[:error]).to eq("Nous n'avons pas pu vous authentifier. Contacter le support à l'adresse <support@rdv-solidarites.fr> si le problème persiste.")
 
       # HTTP request is sent to Sentry as breadcrumbs
-      expect(sentry_events.last.breadcrumbs.compact.map(&:message).uniq).to include("HTTP request", "HTTP response")
+      expect(sentry_events.last.breadcrumbs.compact.map(&:message).uniq).to eq(["HTTP request", "HTTP response"])
     end
 
     it "call sentry about authentification failure" do
