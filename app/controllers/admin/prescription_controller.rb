@@ -2,14 +2,19 @@ class Admin::PrescriptionController < AgentAuthController
   include GeoCoding
 
   def search_creneau
-    authorize(user, :show?)
+    skip_authorization
     session[:agent_prescripteur_organisation_id] = params[:organisation_id]
     @context = AgentPrescriptionSearchContext.new(user: user, query_params: augmented_params, current_organisation: current_organisation)
   end
 
+  def user_selection
+    skip_authorization
+    @rdv_wizard = AgentPrescripteurRdvWizard.new(agent: current_agent, query_params: wizard_params, current_domain: current_domain)
+  end
+
   def recapitulatif
     authorize(user, :show?)
-    @rdv_wizard = AgentPrescripteurRdvWizard.new(agent: current_agent, user: user, query_params: wizard_params, current_domain: current_domain)
+    @rdv_wizard = AgentPrescripteurRdvWizard.new(agent: current_agent, query_params: wizard_params, current_domain: current_domain)
     authorize(@rdv_wizard.rdv.motif, :bookable?)
 
     unless @rdv_wizard.creneau
@@ -21,7 +26,7 @@ class Admin::PrescriptionController < AgentAuthController
   def create_rdv
     # TODO: Autoriser sur la participation (vérifier que le current_agent accéde au user et au motif)
     authorize(user, :show?)
-    @rdv_wizard = AgentPrescripteurRdvWizard.new(agent: current_agent, user: user, query_params: wizard_params, current_domain: current_domain)
+    @rdv_wizard = AgentPrescripteurRdvWizard.new(agent: current_agent, query_params: wizard_params, current_domain: current_domain)
     authorize(@rdv_wizard.rdv.motif, :bookable?)
 
     @rdv_wizard.create!
@@ -38,7 +43,10 @@ class Admin::PrescriptionController < AgentAuthController
 
   def augmented_params
     params = search_context_params.merge(prescripteur: true)
-    geolocation_results = get_geolocation_results(user.address, params[:departement])
+
+    if user
+      geolocation_results = get_geolocation_results(user.address, params[:departement])
+    end
 
     if geolocation_results.present?
       params.merge!(
@@ -55,11 +63,13 @@ class Admin::PrescriptionController < AgentAuthController
   end
 
   def wizard_params
-    # Ces parametres permettent de passer du choix de creneau au wizard (create et recapitulatif)
+    # Ces paramètres permettent de passer du choix de creneau au wizard (create et récapitulatif)
     params.permit(%i[starts_at rdv_collectif_id] + AgentPrescriptionSearchContext::STRONG_PARAMS_LIST)
   end
 
   def user
-    @user ||= policy_scope(User, policy_scope_class: Agent::UserPolicy::Scope).find(params[:user_ids].first)
+    return if params[:user_ids].blank?
+
+    @user ||= policy_scope(User, policy_scope_class: Agent::UserPolicy::Scope).find_by_id(params[:user_ids].first)
   end
 end

@@ -226,6 +226,7 @@ Rails.application.routes.draw do
         get "support", to: "static_pages#support"
         resource :prescription, only: [], controller: "prescription" do
           get "search_creneau"
+          get "user_selection"
           get "recapitulatif"
           post "create_rdv"
           get "confirmation"

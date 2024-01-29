@@ -1,10 +1,9 @@
 class AgentPrescripteurRdvWizard
   attr_reader :query_params
 
-  def initialize(agent:, user:, current_domain:, query_params: {})
+  def initialize(agent:, current_domain:, query_params: {})
     @query_params = query_params
     @agent = agent
-    @user = user
     @domain = current_domain
   end
 
@@ -29,7 +28,7 @@ class AgentPrescripteurRdvWizard
       end
     end
 
-    PrescripteurMailer.rdv_created(participation, @domain.id).deliver_later
+    PrescripteurMailer.rdv_created(participation, @domain.id).deliver_later unless @rdv.agents == [@agent]
   end
 
   def rdv
@@ -40,18 +39,28 @@ class AgentPrescripteurRdvWizard
              end
   end
 
+  def participations
+    return @rdv.participations if @rdv.participations.present?
+
+    @rdv.participations = users.map { Participation.new(rdv: @rdv, user: _1, created_by: @agent) }
+  end
+
   def participation
-    @participation ||= Participation.new(rdv: @rdv, user: @user, created_by: @agent)
+    participations.first
   end
 
   def creneau
     @creneau ||= Users::CreneauSearch.creneau_for(
-      user: @user,
+      user: users&.first,
       motif: motif,
       lieu: lieu,
       starts_at: rdv.starts_at,
       geo_search: geo_search
     )
+  end
+
+  def users
+    query_params[:user_ids]&.compact_blank&.map { User.find(_1) }
   end
 
   private

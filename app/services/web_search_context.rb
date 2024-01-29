@@ -2,6 +2,8 @@ class WebSearchContext < SearchContext
   include Users::CreneauxWizardConcern
   attr_reader :errors, :query_params, :address, :city_code, :street_ban_id, :latitude, :longitude
 
+  #  @param user [User, nil]
+  #  @param query_params [Hash]
   def initialize(user:, query_params: {})
     super
     @latitude = query_params[:latitude]
