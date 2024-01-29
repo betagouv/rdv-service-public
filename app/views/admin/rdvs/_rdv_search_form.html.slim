@@ -49,7 +49,6 @@
               },
               wrapper: "horizontal_form"
       = f.input :lieu_id,
-              prompt: "Tous",
               label: "Lieu",
               collection: @lieux.includes(:organisation).to_a.group_by { _1.organisation.name },
               as: :grouped_select,
@@ -59,7 +58,6 @@
               wrapper: "horizontal_form"
     .col-md-6
       = f.input :motif_id,
-            prompt: "Tous",
             label: "Motifs",
             collection: @motifs.includes(:service).to_a.group_by { _1.service.name },
             as: :grouped_select,

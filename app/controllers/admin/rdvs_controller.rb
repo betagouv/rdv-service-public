@@ -28,7 +28,7 @@ class Admin::RdvsController < AgentAuthController
 
     @form = Admin::RdvSearchForm.new(parsed_params)
     @lieux = Lieu.joins(:organisation).where(organisations: { id: @scoped_organisations.select(:id) }).enabled.order(:name)
-    @motifs = Motif.joins(:organisation).where(organisations: { id: @scoped_organisations.select(:id) })
+    @motifs = Motif.joins(:organisation).where(organisations: { id: @scoped_organisations.select(:id) }).order(:name)
   end
 
   def export
@@ -122,8 +122,9 @@ class Admin::RdvsController < AgentAuthController
                               # Nous sélectionnons par défaut l'organisation courante
                               @selected_organisations_ids = [current_organisation.id]
                               policy_scope(Organisation).where(id: current_organisation.id)
-                            elsif @selected_organisations_ids == ["0"]
-                              # l'agent a sélectionné 'Toutes'
+                            elsif @selected_organisations_ids.include?("0")
+                              # l'agent a sélectionné 'Toutes' parmi les options
+                              @selected_organisations_ids = ["0"]
                               policy_scope(Organisation)
                             else
                               # l'agent a sélectionné une ou plusieurs organisations spécifiques
