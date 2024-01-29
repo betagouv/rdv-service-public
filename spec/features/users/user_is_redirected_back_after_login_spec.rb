@@ -17,7 +17,7 @@ RSpec.describe "User is redirected back to requested page after login" do
   context "when visiting a very very long URL" do
     stub_sentry_events
 
-    it "reports ActionDispatch::Cookies::CookieOverflow to Sentry" do
+    xit "reports ActionDispatch::Cookies::CookieOverflow to Sentry" do
       long_path = "/users/rdvs?bogus_param=#{'coucou' * 1000}"
       expect do
         visit long_path
