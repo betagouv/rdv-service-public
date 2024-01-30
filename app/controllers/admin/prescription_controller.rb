@@ -41,7 +41,7 @@ class Admin::PrescriptionController < AgentAuthController
   end
 
   def set_rdv_wizard
-    @rdv_wizard = AgentPrescripteurRdvWizard.new(agent: current_agent, query_params: wizard_params, current_domain: current_domain)
+    @rdv_wizard = AgentPrescripteurRdvWizard.new(query_params: wizard_params, agent_prescripteur: current_agent, domain: current_domain, current_organisation: current_organisation)
   end
 
   def redirect_if_creneau_gone

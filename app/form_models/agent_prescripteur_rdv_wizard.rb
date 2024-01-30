@@ -1,10 +1,11 @@
 class AgentPrescripteurRdvWizard
   attr_reader :query_params
 
-  def initialize(agent:, current_domain:, query_params: {})
+  def initialize(query_params:, agent_prescripteur:, domain:, current_organisation:)
     @query_params = query_params
-    @agent = agent
-    @domain = current_domain
+    @agent_prescripteur = agent_prescripteur
+    @domain = domain
+    @current_organisation = current_organisation
   end
 
   def motif
@@ -26,9 +27,11 @@ class AgentPrescripteurRdvWizard
       else
         create_rdv!
       end
-    end
 
-    PrescripteurMailer.rdv_created(participation, @domain.id).deliver_later unless @rdv.agents == [@agent]
+      cleanup_local_user_profile
+
+      PrescripteurMailer.rdv_created(participation, @domain.id).deliver_later unless @rdv.agents == [@agent_prescripteur]
+    end
   end
 
   def rdv
@@ -42,7 +45,7 @@ class AgentPrescripteurRdvWizard
   def participations
     return @rdv.participations if @rdv.participations.present?
 
-    @rdv.participations = users.map { Participation.new(rdv: @rdv, user: _1, created_by: @agent) }
+    @rdv.participations = users.map { Participation.new(rdv: @rdv, user: _1, created_by: @agent_prescripteur) }
   end
 
   def participation
@@ -67,7 +70,7 @@ class AgentPrescripteurRdvWizard
 
   def create_rdv!
     rdv.assign_attributes(
-      created_by: @agent,
+      created_by: @agent_prescripteur,
       organisation: motif.organisation,
       agents: [creneau.agent],
       duration_in_min: motif&.default_duration_in_min
@@ -76,11 +79,18 @@ class AgentPrescripteurRdvWizard
     rdv.save!
 
     @participation = rdv.participations.first
-    Notifiers::RdvCreated.perform_with(rdv, @agent)
+    Notifiers::RdvCreated.perform_with(rdv, @agent_prescripteur)
   end
 
   def create_participation!
-    participation.create_and_notify!(@agent)
+    participation.create_and_notify!(@agent_prescripteur)
+  end
+
+  def cleanup_local_user_profile
+    rdv_participant = @rdv.users.first
+    if rdv_participant.rdvs.where(organisation: @current_organisation).none?
+      rdv_participant.soft_delete(@current_organisation)
+    end
   end
 
   def lieu

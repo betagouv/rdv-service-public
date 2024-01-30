@@ -84,6 +84,34 @@ describe "agent_mdss can prescribe rdvs" do
     end
   end
 
+  context "when creating a user along the way" do
+    it "creates the RDV without keeping the user in the current organisation", js: true do
+      login_as(agent_mds, scope: :agent)
+      visit root_path
+      within(".left-side-menu") { click_on "Trouver un RDV" }
+      click_link "élargir votre recherche"
+      # Select Service
+      find("h3", text: motif_mds.service.name).ancestor("a").click
+      # Select Motif
+      find("h3", text: motif_insertion.name).ancestor("a").click
+      # Select Lieu
+      find(".card-title", text: /#{mission_locale_paris_nord.name}/).ancestor(".card").find("a.stretched-link").click
+      # Select créneau
+      first(:link, "11:00").click
+      # Display User selection
+      click_on "Créer un usager"
+      fill_in :user_first_name, with: "Jean-Paul"
+      fill_in :user_last_name, with: "Orvoir"
+      click_on "Créer usager"
+      click_on "Continuer"
+      # Display Récapitulatif
+      click_button "Confirmer le rdv"
+      # Display Confirmation
+      expect(Rdv.count).to eq(1)
+      expect(Rdv.last.users.first.organisations).to eq([org_insertion])
+    end
+  end
+
   describe "when starting from a user profile" do
     let!(:user) { create(:user, organisations: [org_mds]) }
 
