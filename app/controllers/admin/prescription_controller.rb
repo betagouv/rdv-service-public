@@ -1,32 +1,27 @@
 class Admin::PrescriptionController < AgentAuthController
   include GeoCoding
 
+  before_action :set_search_context, only: %i[search_creneau]
+  before_action :set_rdv_wizard, only: %i[user_selection recapitulatif create_rdv]
+  before_action :redirect_if_creneau_gone, only: %i[user_selection recapitulatif create_rdv]
+
   def search_creneau
     skip_authorization
     session[:agent_prescripteur_organisation_id] = params[:organisation_id]
-    @context = AgentPrescriptionSearchContext.new(user: user, query_params: augmented_params, current_organisation: current_organisation)
   end
 
   def user_selection
     skip_authorization
-    @rdv_wizard = AgentPrescripteurRdvWizard.new(agent: current_agent, query_params: wizard_params, current_domain: current_domain)
   end
 
   def recapitulatif
     authorize(user, :show?)
-    @rdv_wizard = AgentPrescripteurRdvWizard.new(agent: current_agent, query_params: wizard_params, current_domain: current_domain)
     authorize(@rdv_wizard.rdv.motif, :bookable?)
-
-    unless @rdv_wizard.creneau
-      flash[:error] = "Ce créneau n'est plus disponible. Veuillez en sélectionner un autre."
-      redirect_to(search_creneau_admin_organisation_prescription_path(params[:organisation_id], @rdv_wizard.params_to_selections))
-    end
   end
 
   def create_rdv
     # TODO: Autoriser sur la participation (vérifier que le current_agent accéde au user et au motif)
     authorize(user, :show?)
-    @rdv_wizard = AgentPrescripteurRdvWizard.new(agent: current_agent, query_params: wizard_params, current_domain: current_domain)
     authorize(@rdv_wizard.rdv.motif, :bookable?)
 
     @rdv_wizard.create!
@@ -40,6 +35,21 @@ class Admin::PrescriptionController < AgentAuthController
   end
 
   private
+
+  def set_search_context
+    @context = AgentPrescriptionSearchContext.new(user: user, query_params: augmented_params, current_organisation: current_organisation)
+  end
+
+  def set_rdv_wizard
+    @rdv_wizard = AgentPrescripteurRdvWizard.new(agent: current_agent, query_params: wizard_params, current_domain: current_domain)
+  end
+
+  def redirect_if_creneau_gone
+    unless @rdv_wizard.creneau
+      flash[:error] = "Ce créneau n'est plus disponible. Veuillez en sélectionner un autre."
+      redirect_to(search_creneau_admin_organisation_prescription_path(params[:organisation_id], @rdv_wizard.params_to_selections))
+    end
+  end
 
   def augmented_params
     params = search_context_params.merge(prescripteur: true)
