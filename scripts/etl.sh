@@ -50,7 +50,11 @@ time pg_restore --clean --if-exists --no-owner --no-privileges --jobs=4 --dbname
 
 
 echo "Anonymisation de la base"
-time bundle exec rails runner scripts/anonymize_database.rb
+bundle "exec rails runner scripts/anonymize_database.rb"&
+bundle "exec rails runner scripts/anonymize_database.rb"&
+bundle "exec rails runner scripts/anonymize_database.rb"&
+bundle "exec rails runner scripts/anonymize_database.rb"&
+time wait
 
 echo "Re-création du role Postgres rdv_service_public_metabase"
 echo "Merci de copier/coller le mot de passe stocké dans METABASE_DB_ROLE_PASSWORD: ${METABASE_DB_ROLE_PASSWORD}"
