@@ -150,17 +150,19 @@ class SplitTerritory
   end
 
   def move_sectors
+    puts "\n\n## Déplacement des secteurs"
     @old_territory.sectors.each do |sector|
       territory_ids_from_organisation_attributions = sector.organisations.pluck(:territory_id).uniq
       territory_ids_from_agent_attributions = sector.attributions.joins(agent: :organisations).pluck("organisations.territory_id").uniq
 
-      territory_ids = [territory_ids_from_organisation_attributions + territory_ids_from_agent_attributions].uniq
+      territory_ids = (territory_ids_from_organisation_attributions + territory_ids_from_agent_attributions).uniq
 
       if territory_ids.count > 1
         raise "Shared sector #{sector.id} can't be handled"
       end
 
       if territory_ids == [@new_territory.id]
+        puts "Déplacement du secteur #{sector.id} dans le nouveau territoire"
         sector.update!(territory: @new_territory)
       end
     end
