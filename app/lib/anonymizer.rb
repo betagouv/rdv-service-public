@@ -1,3 +1,4 @@
+ActiveRecord::Base.logger = Logger.new(STDOUT)
 class Anonymizer
   def self.anonymize_all_data!
     ActiveRecord::Base.connection.tables.shuffle.each do |table_name|
@@ -68,14 +69,16 @@ class Anonymizer
     end
 
     ActiveRecord::Encryption.without_encryption do # The columns may be encrypted, but we still want to overwrite the anonymized value
-      scope = model_class.unscoped.where.not(column.name => nil)
+      model_class.lock("SHARE UPDATE EXCLUSIVE") do
+        scope = model_class.unscoped.where.not(column.name => nil).lock("FOR UPDATE NOWAIT")
 
-      if column.type.in?(%i[string text]) && column.null # On vérifie que la colonne est nullable
-        # Pour limiter la confusion lors de l'exploitation des données, on transforme les chaines vides en null
-        scope.where(column.name => "").update_all(column.name => nil) # rubocop:disable Rails/SkipsModelValidations
+        if column.type.in?(%i[string text]) && column.null # On vérifie que la colonne est nullable
+          # Pour limiter la confusion lors de l'exploitation des données, on transforme les chaines vides en null
+          scope.where(column.name => "").update_all(column.name => nil) # rubocop:disable Rails/SkipsModelValidations
+        end
+
+        scope.update_all(column.name => anonymous_value(column)) # rubocop:disable Rails/SkipsModelValidations
       end
-
-      scope.update_all(column.name => anonymous_value(column)) # rubocop:disable Rails/SkipsModelValidations
     end
   end
 
