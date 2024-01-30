@@ -48,7 +48,7 @@ class SplitTerritory
 
     organisations_to_change.sort_by(&:name).each do |organisation|
       puts "- #{organisation.name}"
-      organisation.update!(territory_id: @new_territory.id)
+      organisation.update_columns(territory_id: @new_territory.id)
     end
 
     puts "\nLes organisations suivantes restent dans le territoire actuel"
