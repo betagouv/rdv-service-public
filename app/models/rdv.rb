@@ -265,6 +265,7 @@ class Rdv < ApplicationRecord
     rdvs = joins(:organisation).where(organisations: { id: organisation_ids })
     options.each do |key, value|
       next if value.blank?
+      next if value.is_a?(Array) && value.compact_blank.empty?
 
       rdvs = send("search_for_#{key}", rdvs, value) if respond_to?("search_for_#{key}")
     end
