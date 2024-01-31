@@ -28,7 +28,7 @@ class AgentPrescripteurRdvWizard
         create_rdv!
       end
 
-      PrescripteurMailer.rdv_created(participation, @domain.id).deliver_later unless @rdv.agents == [@agent_prescripteur]
+      PrescripteurMailer.rdv_created(participation, @domain.id).deliver_later
     end
   end
 
