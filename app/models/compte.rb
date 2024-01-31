@@ -27,6 +27,16 @@ class Compte
                                    roles_attributes: [{ organisation: organisation, access_level: AgentRole::ACCESS_LEVEL_ADMIN }]
                                  ))
 
+      Motif.create!(
+        organisation: organisation,
+        name: "Mon premier motif",
+        color: "#99CC99",
+        location_type: :public_office,
+        default_duration_in_min: 30,
+        bookable_by: :agents,
+        service: agent.services.first
+      )
+
       AgentTerritorialRole.create!(agent: agent, territory: territory)
       AgentTerritorialAccessRight.create!(
         agent: agent, territory: territory,

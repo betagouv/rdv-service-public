@@ -59,5 +59,10 @@ describe "Creating a new account for a new project, other than a mairie", js: tr
       latitude: 48.880505,
       longitude: 2.429639
     )
+
+    new_motif = new_organisation.motifs.first
+    expect(new_motif).to have_attributes(
+      name: "Mon premier motif"
+    )
   end
 end
