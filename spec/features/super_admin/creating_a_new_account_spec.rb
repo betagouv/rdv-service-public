@@ -42,5 +42,15 @@ describe "Creating a new account for a new project, other than a mairie", js: tr
     expect(new_territory).to have_attributes(
       name: "France Rénov"
     )
+
+    new_organisation = new_territory.organisations.first
+    expect(new_organisation).to have_attributes(
+      name: "Agence de Romainville"
+    )
+
+    new_lieu = new_organisation.lieux.first
+    expect(new_lieu).to have_attributes(
+      name: "Agence de Romainville"
+    )
   end
 end

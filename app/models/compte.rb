@@ -4,18 +4,6 @@ class Compte
 
   attr_accessor :territory, :organisation, :lieu, :agent
 
-  # Utilisé par Administrate afin de récupérer la liste des objets (ou ressources)
-  # Nécessaire parce que la classe n'hérite pas de ActiveRecord::Base
-  def self.default_scoped
-    Territory.none
-  end
-
-  # Cette méthode est nécessaire pour que Administrate affiche le bouton de création d'une nouvelle resource
-  # Autrement, #to_s génère une valeurs sous la forme "Compte#11111" qui ne match avec aucune route
-  def to_s
-    "compte"
-  end
-
   def initialize(attributes)
     @attributes = attributes
   end
@@ -23,12 +11,12 @@ class Compte
   def save
     self.territory = Territory.new(@attributes[:territory])
     self.organisation = Organisation.new(@attributes[:organisation].merge(territory: territory))
-    self.lieu = Lieu.new(@attributes[:lieu].merge(organisation: organisation))
+    self.lieu = Lieu.new(@attributes[:lieu].merge(organisation: organisation, name: organisation.name))
 
     ActiveRecord::Base.transaction do
       territory.save!
       organisation.save!
-      lieu.save
+      lieu.save!
 
       self.agent = Agent.invite!(@attributes[:agent].merge(
                                    password: SecureRandom.hex,
@@ -43,5 +31,17 @@ class Compte
         allow_to_download_metrics: true
       )
     end
+  end
+
+  # Utilisé par Administrate afin de récupérer la liste des objets (ou ressources)
+  # Nécessaire parce que la classe n'hérite pas de ActiveRecord::Base
+  def self.default_scoped
+    Territory.none
+  end
+
+  # Cette méthode est nécessaire pour que Administrate affiche le bouton de création d'une nouvelle resource
+  # Autrement, #to_s génère une valeurs sous la forme "Compte#11111" qui ne match avec aucune route
+  def to_s
+    "compte"
   end
 end
