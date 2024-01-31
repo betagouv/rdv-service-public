@@ -1,13 +1,15 @@
 class Admin::PrescriptionController < AgentAuthController
-  include GeoCoding
-
   before_action :set_rdv_wizard, only: %i[user_selection recapitulatif create_rdv]
   before_action :redirect_if_creneau_unavailable, only: %i[user_selection recapitulatif create_rdv]
 
   def search_creneau
     skip_authorization
     session[:agent_prescripteur_organisation_id] = params[:organisation_id]
-    @context = AgentPrescriptionSearchContext.new(user: user, query_params: augmented_params, current_organisation: current_organisation)
+    @context = AgentPrescriptionSearchContext.new(
+      user: user,
+      query_params: search_context_params.merge(prescripteur: true),
+      current_organisation: current_organisation
+    )
   end
 
   def user_selection
@@ -45,23 +47,6 @@ class Admin::PrescriptionController < AgentAuthController
       flash[:error] = "Ce créneau n'est plus disponible. Veuillez en sélectionner un autre."
       redirect_to(search_creneau_admin_organisation_prescription_path(params[:organisation_id], @rdv_wizard.params_to_selections))
     end
-  end
-
-  def augmented_params
-    params = search_context_params.merge(prescripteur: true)
-
-    if user
-      geolocation_results = get_geolocation_results(user.address, params[:departement])
-    end
-
-    if geolocation_results.present?
-      params.merge!(
-        city_code: geolocation_results[:city_code],
-        street_ban_id: geolocation_results[:street_ban_id]
-      )
-    end
-
-    params
   end
 
   def search_context_params

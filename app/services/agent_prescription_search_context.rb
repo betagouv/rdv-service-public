@@ -1,4 +1,6 @@
 class AgentPrescriptionSearchContext < WebSearchContext
+  include GeoCoding
+
   STRONG_PARAMS_LIST = [
     :latitude, :longitude, :address, :city_code, :departement, :street_ban_id,
     :service_id, :lieu_id, :date, :motif_name_with_location_type, :motif_category_short_name,
@@ -14,9 +16,10 @@ class AgentPrescriptionSearchContext < WebSearchContext
   def initialize(user:, current_organisation:, query_params: {})
     super(user: user, query_params: query_params)
     @current_organisation = current_organisation
-    @user = user
     query_params[:user_ids] = [@user.id] if @user
   end
+
+  attr_reader :user
 
   def wizard_after_creneau_selection_path(creneau_params)
     url_helpers = Rails.application.routes.url_helpers
@@ -27,5 +30,23 @@ class AgentPrescriptionSearchContext < WebSearchContext
     end
   end
 
-  attr_reader :user
+  def city_code
+    geolocation_results[:street_ban_id] if geolocation_results
+  end
+
+  def street_ban_id
+    geolocation_results[:city_code] if geolocation_results
+  end
+
+  def address
+    @user&.address
+  end
+
+  private
+
+  def geolocation_results
+    return unless address
+
+    @geolocation_results ||= get_geolocation_results(address, departement)
+  end
 end
