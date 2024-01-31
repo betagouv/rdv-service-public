@@ -3,7 +3,7 @@ class Admin::PrescriptionController < AgentAuthController
 
   before_action :set_search_context, only: %i[search_creneau]
   before_action :set_rdv_wizard, only: %i[user_selection recapitulatif create_rdv]
-  before_action :redirect_if_creneau_gone, only: %i[user_selection recapitulatif create_rdv]
+  before_action :redirect_if_creneau_unavailable, only: %i[user_selection recapitulatif create_rdv]
 
   def search_creneau
     skip_authorization
@@ -44,7 +44,7 @@ class Admin::PrescriptionController < AgentAuthController
     @rdv_wizard = AgentPrescripteurRdvWizard.new(query_params: wizard_params, agent_prescripteur: current_agent, domain: current_domain, current_organisation: current_organisation)
   end
 
-  def redirect_if_creneau_gone
+  def redirect_if_creneau_unavailable
     unless @rdv_wizard.creneau
       flash[:error] = "Ce créneau n'est plus disponible. Veuillez en sélectionner un autre."
       redirect_to(search_creneau_admin_organisation_prescription_path(params[:organisation_id], @rdv_wizard.params_to_selections))
