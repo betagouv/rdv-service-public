@@ -78,8 +78,9 @@ class Admin::PrescriptionController < AgentAuthController
   end
 
   def user
-    return if params[:user_ids].blank?
+    user_ids = Array(params[:user_ids]).compact_blank
+    return if user_ids.empty?
 
-    @user ||= policy_scope(User, policy_scope_class: Agent::UserPolicy::Scope).find_by_id(params[:user_ids].first)
+    @user ||= policy_scope(User, policy_scope_class: Agent::UserPolicy::Scope).find_by_id(user_ids.first)
   end
 end

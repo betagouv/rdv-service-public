@@ -29,10 +29,11 @@ h1 Nouveau RDV par prescription
                        }
             span.small.text-muted
               | L'usager n'existe pas ?&nbsp;
+              - return_url = url_for(@rdv_wizard.query_params.except(:user_ids))
               = link_to \
                 "Créer un usager", \
                 new_admin_organisation_user_path( \
-                  current_organisation, modal: true, return_location: request.url, role: default_service_selection_from(@rdv_wizard.rdv.motif.service) \
+                  current_organisation, modal: true, return_location: return_url, role: default_service_selection_from(@rdv_wizard.rdv.motif.service) \
                     ), \
                 data: { modal: true }
           .form-group

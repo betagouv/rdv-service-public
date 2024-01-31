@@ -11,9 +11,11 @@ main.container
             li.list-group-item
               .row
                 .col
-                    i.fa.fa-check.fa-fw.mr-1.text-success
-                    | Usager :&nbsp;
-                    = @rdv_wizard.participation.user.full_name
+                  i.fa.fa-check.fa-fw.mr-1.text-success
+                  | Usager :&nbsp;
+                  = @rdv_wizard.participation.user.full_name
+                .col-auto
+                  = link_to "modifier", user_selection_admin_organisation_prescription_path(@rdv_wizard.params_to_selections)
 
           .row
             .col.text-right
