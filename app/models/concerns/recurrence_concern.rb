@@ -14,6 +14,22 @@ module RecurrenceConcern
 
     scope :exceptionnelles, -> { where(recurrence: nil) }
     scope :regulieres, -> { where.not(recurrence: nil) }
+    scope :overlapping_range, lambda { |range|
+      in_range(range).select do |model|
+        # We lock the timezone in UTC for time ranges comparison to avoid errors when
+        # recurrence has been serialized in a speficic timezone and deserialized in another
+        range = (change_zone_to_utc(range.first)..change_zone_to_utc(range.last))
+        model.occurrences_for(range).any? do |occurence|
+          range.overlaps?(change_zone_to_utc(occurence.starts_at)..change_zone_to_utc(occurence.ends_at))
+        end
+      end
+    }
+
+    # Change time zone to UTC without converting the time value
+    # It means we change 01/01/2024 08:00 CEST +1 to 01/01/2024 08:00 UTC
+    def self.change_zone_to_utc(time)
+      time.strftime("%F %T.%N").in_time_zone("UTC")
+    end
   end
 
   def starts_at
