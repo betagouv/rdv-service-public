@@ -80,6 +80,10 @@ class Territory < ApplicationRecord
     find_by(name: MAIRIES_NAME)
   end
 
+  def sectorized?
+    sectors.joins(:attributions).any?
+  end
+
   def any_social_field_enabled?
     attributes.slice(SOCIAL_FIELD_TOGGLES.keys).values.any?
   end
