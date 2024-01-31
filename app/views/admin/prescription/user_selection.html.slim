@@ -7,15 +7,9 @@ h1 Nouveau RDV par prescription
 
         hr.my-0.pb-3
         h3.card-title Pour quel usager prenez-vous RDV ?
-        = form_with(url: recapitulatif_admin_organisation_prescription_path(organisation_id: current_organisation.id, **@rdv_wizard.query_params), html: { method: :get }) do |f|
+        = form_with(url: recapitulatif_admin_organisation_prescription_path(organisation_id: current_organisation.id), html: { method: :get }) do |f|
 
-          / Hidden fields
-          - @rdv_wizard.query_params.except(:user_ids).each do |param_name, param_value|
-            - if param_value.is_a?(Array)
-              - param_value.each do |value|
-                input type="hidden" name="#{param_name}[]" value=value multiple=true
-            - else
-              input type="hidden" name=param_name value=param_value
+          = render "admin/prescription/hidden_fields", attributes_to_hide: @rdv_wizard.query_params.except(:user_ids)
 
           .form-row.grid-align-center.mb-3
             .flex-grow-1.pr-3
