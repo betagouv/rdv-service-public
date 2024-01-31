@@ -1,0 +1,41 @@
+= content_for(:title) do
+  = "Ouverture d'un nouveau compte"
+
+header.main-content__header
+  h1.main-content__page-title
+    = content_for(:title)
+
+  div
+    = link_to t("administrate.actions.back"), :back, class: "button"
+
+section.main-content__body
+  p
+    | Ce formulaire vous permet de créer un territoire, une organisation, et un lieu pour un agent qui en sera admin (généralement la personne référente du projet).
+  p
+    | Un motif d'example "Mon premier motif" sera créé.
+  = simple_form_for([namespace, page.resource], html: { class: "form" }) do |f|
+    - if page.resource.errors.any?
+      #error_explanation
+        h2
+          = t("administrate.form.errors", pluralized_errors: pluralize(page.resource.errors.count, t("administrate.form.error")), resource_name: display_resource_name(page.resource_name, singular: true))
+        ul
+          - page.resource.errors.full_messages.each do |message|
+            li.flash-error
+              = message
+    = f.simple_fields_for :territory do |ff|
+      = ff.input :name, label: "Nom du territoire"
+      = ff.input :departement_number, label: "Numéro du département", hint: "Si ce projet est sur plusieurs départements, mettez juste les initiales du projet, par exemple CN pour Conseillers Numériques"
+
+    = f.simple_fields_for :organisation do |ff|
+      = ff.input :name, label: "Nom de la première organisation et du premier lieu"
+
+    = f.simple_fields_for :lieu do |ff|
+      = ff.input :address, label: "Adresse du premier lieu", hint: ""
+
+    h4 Admin de territoire
+    = f.simple_fields_for :agent do |ff|
+      = ff.input :first_name, label: "Prénom"
+      = ff.input :last_name, label: "Nom"
+      = ff.input :email, label: "Adresse mail", hint: "Une invitation sera envoyée automatiquement"
+
+    = f.submit

@@ -36,6 +36,7 @@ Rails.application.routes.draw do
     resources :territories
     resources :users
     resources :mairie_comptes, only: %i[index new create]
+    resources :comptes, only: %i[index new create]
     root to: "agents#index"
 
     authenticate :super_admin do
