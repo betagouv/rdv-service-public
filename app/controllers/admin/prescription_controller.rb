@@ -1,13 +1,13 @@
 class Admin::PrescriptionController < AgentAuthController
   include GeoCoding
 
-  before_action :set_search_context, only: %i[search_creneau]
   before_action :set_rdv_wizard, only: %i[user_selection recapitulatif create_rdv]
   before_action :redirect_if_creneau_unavailable, only: %i[user_selection recapitulatif create_rdv]
 
   def search_creneau
     skip_authorization
     session[:agent_prescripteur_organisation_id] = params[:organisation_id]
+    @context = AgentPrescriptionSearchContext.new(user: user, query_params: augmented_params, current_organisation: current_organisation)
   end
 
   def user_selection
@@ -35,10 +35,6 @@ class Admin::PrescriptionController < AgentAuthController
   end
 
   private
-
-  def set_search_context
-    @context = AgentPrescriptionSearchContext.new(user: user, query_params: augmented_params, current_organisation: current_organisation)
-  end
 
   def set_rdv_wizard
     @rdv_wizard = AgentPrescripteurRdvWizard.new(query_params: wizard_params, agent_prescripteur: current_agent, domain: current_domain, current_organisation: current_organisation)
