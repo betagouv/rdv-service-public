@@ -22,9 +22,14 @@ describe "Creating a new account for a new project, other than a mairie", js: tr
     click_link "Création compte"
 
     fill_in("Nom du territoire", with: "France Rénov")
-    fill_in("Numéro du département", with: "FR")
     fill_in("Nom de la première organisation", with: "Agence de Romainville")
     fill_in("Adresse du premier lieu", with: "Place de la mairie, Romainville, 93230")
+
+    # Fake autocomplete
+    page.execute_script("document.querySelector('#compte_lieu_latitude').value = '48.880505'")
+    page.execute_script("document.querySelector('#compte_lieu_longitude').value = '2.429639'")
+
+    fill_in("Numéro du département", with: "FR")
 
     expect(page).to have_content("Admin de territoire")
 
@@ -50,7 +55,9 @@ describe "Creating a new account for a new project, other than a mairie", js: tr
 
     new_lieu = new_organisation.lieux.first
     expect(new_lieu).to have_attributes(
-      name: "Agence de Romainville"
+      name: "Agence de Romainville",
+      latitude: 48.880505,
+      longitude: 2.429639
     )
   end
 end

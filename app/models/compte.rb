@@ -11,7 +11,11 @@ class Compte
   def save
     self.territory = Territory.new(@attributes[:territory])
     self.organisation = Organisation.new(@attributes[:organisation].merge(territory: territory))
-    self.lieu = Lieu.new(@attributes[:lieu].merge(organisation: organisation, name: organisation.name))
+    self.lieu = Lieu.new(@attributes[:lieu].merge(
+                           organisation: organisation,
+                           name: organisation.name,
+                           availability: :enabled
+                         ))
 
     ActiveRecord::Base.transaction do
       territory.save!

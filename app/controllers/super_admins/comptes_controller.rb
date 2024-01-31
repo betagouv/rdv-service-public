@@ -24,7 +24,7 @@ module SuperAdmins
       params.require(:compte).permit(
         territory: %i[name departement_number],
         organisation: :name,
-        lieu: :address,
+        lieu: %i[address latitude longitude],
         agent: %i[first_name last_name email service_ids]
       )
     end

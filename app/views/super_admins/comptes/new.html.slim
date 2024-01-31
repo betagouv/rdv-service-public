@@ -30,7 +30,9 @@ section.main-content__body
       = ff.input :name, label: "Nom de la première organisation et du premier lieu"
 
     = f.simple_fields_for :lieu do |ff|
-      = ff.input :address, label: "Adresse du premier lieu", hint: ""
+      = ff.input :address, label: "Adresse du premier lieu", hint: "", input_html: { class: "places-js-container"}
+      = ff.input :latitude, as: :hidden
+      = ff.input :longitude, as: :hidden
 
     h4 Admin de territoire
     = f.simple_fields_for :agent do |ff|
