@@ -32,7 +32,11 @@ describe "agent_mdss can prescribe rdvs" do
   end
 
   describe 'using "Trouver un RDV"' do
-    let!(:existing_user) { create(:user, first_name: "Francis", last_name: "FACTICE", organisations: [org_mds]) }
+    let!(:existing_user) do
+      create(:user, first_name: "Francis", last_name: "FACTICE", organisations: [org_mds]).tap do |user|
+        create(:rdv, users: [user], organisation: org_mds)
+      end
+    end
 
     it "works (happy path)", js: true do
       login_as(agent_mds, scope: :agent)
@@ -68,10 +72,9 @@ describe "agent_mdss can prescribe rdvs" do
       expect(page).to have_content("Lieu : #{mission_locale_paris_nord.name}")
       expect(page).to have_content("Date du rendez-vous :")
       expect(page).to have_content("Usager : Francis FACTICE")
-      click_button "Confirmer le rdv"
+      expect { click_button "Confirmer le rdv" }.to change(Rdv, :count).by(1)
       # Display Confirmation
       expect(page).to have_content("Rendez-vous confirmé")
-      expect(Rdv.count).to eq(1)
       created_rdv = Rdv.last
       expect(created_rdv.users.first).to eq(existing_user)
       expect(created_rdv.users.first.organisations).to match_array([org_mds, org_insertion])
