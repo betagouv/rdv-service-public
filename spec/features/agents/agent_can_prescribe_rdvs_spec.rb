@@ -1,4 +1,4 @@
-describe "agent_mdss can prescribe rdvs" do
+describe "agents can prescribe rdvs" do
   before do
     travel_to(now)
     stub_request(
@@ -32,8 +32,9 @@ describe "agent_mdss can prescribe rdvs" do
   end
 
   describe 'using "Trouver un RDV"' do
+    let(:other_org) { create(:organisation) }
     let!(:existing_user) do
-      create(:user, first_name: "Francis", last_name: "FACTICE", organisations: [org_mds]).tap do |user|
+      create(:user, first_name: "Francis", last_name: "FACTICE", organisations: [other_org]).tap do |user|
         create(:rdv, users: [user], organisation: org_mds)
       end
     end
@@ -77,7 +78,8 @@ describe "agent_mdss can prescribe rdvs" do
       expect(page).to have_content("Rendez-vous confirmé")
       created_rdv = Rdv.last
       expect(created_rdv.users.first).to eq(existing_user)
-      expect(created_rdv.users.first.organisations).to match_array([org_mds, org_insertion])
+      # User ends up in current org, distant org, and other orgs she was already in
+      expect(created_rdv.users.first.organisations).to match_array([other_org, org_mds, org_insertion])
       expect(created_rdv.organisation).to eq(org_insertion)
       expect(created_rdv.motif).to eq(motif_insertion)
       expect(created_rdv.lieu).to eq(mission_locale_paris_nord)
@@ -88,7 +90,7 @@ describe "agent_mdss can prescribe rdvs" do
   end
 
   context "when creating a user along the way" do
-    it "creates the RDV without keeping the user in the current organisation", js: true do
+    it "leaves the user both in local and distant organisation", js: true do
       login_as(agent_mds, scope: :agent)
       visit root_path
       within(".left-side-menu") { click_on "Trouver un RDV" }
@@ -107,11 +109,8 @@ describe "agent_mdss can prescribe rdvs" do
       fill_in :user_last_name, with: "Orvoir"
       click_on "Créer usager"
       click_on "Continuer"
-      # Display Récapitulatif
-      click_button "Confirmer le rdv"
-      # Display Confirmation
-      expect(Rdv.count).to eq(1)
-      expect(Rdv.last.users.first.organisations).to eq([org_insertion])
+      expect { click_button "Confirmer le rdv" }.to change(Rdv, :count).by(1)
+      expect(Rdv.last.users.first.organisations).to match_array([org_mds, org_insertion])
     end
   end
 
@@ -136,10 +135,9 @@ describe "agent_mdss can prescribe rdvs" do
       # Select créneau
       first(:link, "11:00").click
       # Display Récapitulatif
-      click_button "Confirmer le rdv"
+      expect { click_button "Confirmer le rdv" }.to change(Rdv, :count).by(1)
       # Display Confirmation
       expect(page).to have_content("Rendez-vous confirmé")
-      expect(Rdv.count).to eq(1)
       expect(Rdv.last.users.first).to eq(user)
     end
   end

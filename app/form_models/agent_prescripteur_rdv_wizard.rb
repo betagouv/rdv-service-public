@@ -28,8 +28,6 @@ class AgentPrescripteurRdvWizard
         create_rdv!
       end
 
-      cleanup_local_user_profile
-
       PrescripteurMailer.rdv_created(participation, @domain.id).deliver_later unless @rdv.agents == [@agent_prescripteur]
     end
   end
@@ -84,13 +82,6 @@ class AgentPrescripteurRdvWizard
 
   def create_participation!
     participation.create_and_notify!(@agent_prescripteur)
-  end
-
-  def cleanup_local_user_profile
-    rdv_participant = @rdv.users.first
-    if rdv_participant.rdvs.where(organisation: @current_organisation).none?
-      rdv_participant.soft_delete(@current_organisation)
-    end
   end
 
   def lieu
