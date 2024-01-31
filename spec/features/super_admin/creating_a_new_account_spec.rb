@@ -22,18 +22,19 @@ describe "Creating a new account for a new project, other than a mairie", js: tr
     click_link "Création compte"
 
     fill_in("Nom du territoire", with: "France Rénov")
+    fill_in("Numéro du département", with: "FR")
     fill_in("Nom de la première organisation", with: "Agence de Romainville")
     fill_in("Adresse du premier lieu", with: "Place de la mairie, Romainville, 93230")
 
     expect(page).to have_content("Admin de territoire")
 
     fill_in("Prénom", with: "Francis")
-    fill_in("Nom", with: "Factice")
-    fill_in("Email", with: "francis@factice.org")
+    fill_in(:compte_agent_last_name, with: "Factice") # Plusieurs champs ont le label "Nom", donc on utilise le name de l'input
+    fill_in("Adresse mail", with: "francis@factice.org")
     select("Urbanisme", from: "Service")
 
     click_button("Enregistrer")
-    expect(page).to have_content("Mairie compte a été correctement créé(e).")
+    expect(page).to have_content("Le nouveau compte a été créé, et une invitation a été envoyée à francis@factice.org")
     # TODO: lister les services à activer dans le territoire ?
     expect(Organisation.count).to eq(1)
 

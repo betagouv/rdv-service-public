@@ -37,5 +37,6 @@ section.main-content__body
       = ff.input :first_name, label: "Prénom"
       = ff.input :last_name, label: "Nom"
       = ff.input :email, label: "Adresse mail", hint: "Une invitation sera envoyée automatiquement"
+      = ff.input :service_ids, label: "Service", collection: Service.all, hint: "Si nécessaire, vous pouvez #{link_to('créer un nouveau service', new_super_admins_service_path, target: :blank)}".html_safe
 
     = f.submit
