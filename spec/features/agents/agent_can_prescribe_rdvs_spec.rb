@@ -107,6 +107,39 @@ describe "agents can prescribe rdvs" do
       expect { click_button "Confirmer le rdv" }.to change(Rdv, :count).by(1)
       expect(Rdv.last.users.first.organisations).to match_array([org_mds, org_insertion])
     end
+
+    # Cette spec a été ajoutée suite à un bug qui faisait qu'on si on
+    # revenait à l'étape de sélection usager et qu'on en créait un nouveau,
+    # il n'était pas validé car le `user_ids` de l'ancien restant dans l'URL.
+    it "allows going back to change the user", js: true do
+      login_as(agent_mds, scope: :agent)
+      visit root_path
+      within(".left-side-menu") { click_on "Trouver un RDV" }
+      click_link "élargir votre recherche"
+      # Select Service
+      find("h3", text: motif_mds.service.name).ancestor("a").click
+      # Select Motif
+      find("h3", text: motif_insertion.name).ancestor("a").click
+      # Select Lieu
+      find(".card-title", text: /#{mission_locale_paris_nord.name}/).ancestor(".card").find("a.stretched-link").click
+      # Select créneau
+      first(:link, "11:00").click
+      # Display User selection
+      click_on "Créer un usager"
+      fill_in :user_first_name, with: "Jean-Paul"
+      fill_in :user_last_name, with: "Orvoir"
+      click_on "Créer usager"
+      click_on "Continuer"
+      # go back to user selection
+      page.all("a").find { _1.text == "modifier" && _1[:href].include?("user_selection") }.click
+      click_on "Créer un usager"
+      fill_in :user_first_name, with: "Jean-Pierre"
+      fill_in :user_last_name, with: "Bonjour"
+      click_on "Créer usager"
+      click_on "Continuer"
+      expect { click_button "Confirmer le rdv" }.to change(Rdv, :count).by(1)
+      expect(Rdv.last.users.first.full_name).to eq("Jean-Pierre BONJOUR")
+    end
   end
 
   describe "when starting from a user profile" do
