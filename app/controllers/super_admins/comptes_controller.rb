@@ -2,13 +2,12 @@ module SuperAdmins
   class ComptesController < SuperAdmins::ApplicationController
     def create
       compte_params[:agent][:invited_by] = current_super_admin
-      resource = Compte.new(compte_params)
-      authorize_resource(resource)
+      compte = Compte.new(compte_params)
+      authorize_resource(compte)
 
-      if resource.save
-        yield(resource) if block_given?
+      if compte.save
         redirect_to(
-          after_resource_created_path(resource),
+          super_admins_agent_path(compte.agent),
           notice: "Le nouveau compte a été créé, et une invitation a été envoyée à #{compte_params.dig(:agent, :email)}"
         )
       else
