@@ -27,8 +27,8 @@ RSpec.describe "Handling an email reply from a user" do
     end
 
     it "warns Sentry" do
-      expect(Sentry).to receive(:capture_message).with("Sendinblue inbound controller was called without valid password")
       receive_sendinblue_callback
+      expect(sentry_events.last.message).to eq("Sendinblue inbound controller was called without valid password")
     end
   end
 end

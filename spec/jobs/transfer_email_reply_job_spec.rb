@@ -49,8 +49,6 @@ RSpec.describe TransferEmailReplyJob do
   context "when reply token does not match any in DB" do
     let(:rdv_uuid) { "6df62597-632e-4be1-a273-708ab58e4765" }
 
-    stub_sentry_events
-
     it "sends a notification email to the default mailbox, containing the user reply" do
       expect { perform_job }.to change { ActionMailer::Base.deliveries.size }.by(1)
       transferred_email = ActionMailer::Base.deliveries.last
