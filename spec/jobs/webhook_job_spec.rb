@@ -1,6 +1,4 @@
 describe WebhookJob, type: :job do
-  stub_sentry_events
-
   describe "#perform" do
     let(:payload) { "{}" }
     let(:webhook_endpoint) { create(:webhook_endpoint, secret: "bla", target_url: "https://example.com/rdv-s-endpoint") }
@@ -25,10 +23,6 @@ describe WebhookJob, type: :job do
       # retry again, the error is logged
       perform_enqueued_jobs
       expect(sentry_events.last.exception.values.last.type).to eq("OutgoingWebhookError")
-
-      # reset sentry stubs
-      # teardown_sentry_test
-      # setup_sentry_test
 
       # retry again, no more errors
       5.times { perform_enqueued_jobs }

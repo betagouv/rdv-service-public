@@ -4,8 +4,6 @@ describe "using netsize to send an SMS" do
   let(:user) { create(:user, phone_number: "+33601020304") }
   let(:rdv) { create(:rdv, organisation: organisation, users: [user]) }
 
-  stub_sentry_events
-
   it "calls netsize API, sends nothing to Sentry, enqueues nothing" do
     stub_netsize_ok
 
