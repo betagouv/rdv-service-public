@@ -7,7 +7,7 @@ class Admin::PrescriptionController < AgentAuthController
     session[:agent_prescripteur_organisation_id] = params[:organisation_id]
     @context = AgentPrescriptionSearchContext.new(
       user: user,
-      query_params: search_context_params.merge(prescripteur: true),
+      query_params: search_context_params.merge(prescripteur: Prescripteur::INTERNE),
       current_organisation: current_organisation
     )
   end
