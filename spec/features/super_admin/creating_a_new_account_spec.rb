@@ -41,7 +41,7 @@ describe "Creating a new account for a new project, other than a mairie", js: tr
     click_button("Enregistrer")
     expect(page).to have_content("Le nouveau compte a été créé, et une invitation a été envoyée à francis@factice.org")
 
-    expect(page).to have_content("Francis Factice")
+    expect(page).to have_content("Francis FACTICE")
     expect(Organisation.count).to eq(1)
 
     new_territory = Territory.last
