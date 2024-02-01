@@ -16,7 +16,7 @@ main.container
                   | Usager :&nbsp;
                   = @rdv_wizard.participation.user.full_name
                 .col-auto
-                  = link_to "modifier", user_selection_admin_organisation_prescription_path(@rdv_wizard.params_to_selections)
+                  = link_to "modifier", user_selection_admin_organisation_prescription_path(@rdv_wizard.query_params)
 
           .row.mt-2
             .col.text-right
