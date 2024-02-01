@@ -64,15 +64,12 @@ module Users::CreneauxWizardConcern
     @services ||= matching_motifs.includes(:service).map(&:service).uniq.sort_by(&:name)
   end
 
-  def lieux
-    @lieux ||= \
-      Lieu
-        .with_open_slots_for_motifs(matching_motifs)
-        .includes(:organisation)
-        .sort_by { |lieu| lieu.distance(@latitude.to_f, @longitude.to_f) }
-  end
-
   def next_availability_by_lieux
+    lieux = Lieu
+      .with_open_slots_for_motifs(matching_motifs)
+      .includes(:organisation)
+      .sort_by { |lieu| lieu.distance(@latitude.to_f, @longitude.to_f) }
+
     @next_availability_by_lieux ||= lieux.index_with do |lieu|
       creneaux_search_for(
         lieu, date_range, matching_motifs.where(organisation: lieu.organisation).first
