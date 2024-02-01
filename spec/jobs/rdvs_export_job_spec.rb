@@ -1,6 +1,4 @@
 describe RdvsExportJob do
-  stub_sentry_events
-
   describe "#rdv_export" do
     it "has an attachment file name which contains the current date without org ID when more than one orga" do
       organisation = create(:organisation)

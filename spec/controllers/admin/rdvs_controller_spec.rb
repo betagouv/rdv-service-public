@@ -174,7 +174,7 @@ describe Admin::RdvsController, type: :controller do
         organisation_id: organisation.id.to_s,
         agent_id: "",
         user_id: "",
-        lieu_id: "",
+        lieu_id: [""],
         status: "",
       }
 
@@ -188,7 +188,7 @@ describe Admin::RdvsController, type: :controller do
         other_organisation = create(:organisation)
         params = {
           organisation_id: organisation.id,
-          scoped_organisation_id: other_organisation.id,
+          scoped_organisation_id: [other_organisation.id],
         }
 
         expect do
@@ -216,7 +216,7 @@ describe Admin::RdvsController, type: :controller do
           organisation_id: organisation.id.to_s,
           agent_id: "",
           user_id: "",
-          lieu_id: "",
+          lieu_id: [""],
           status: "",
         }
 
@@ -230,7 +230,7 @@ describe Admin::RdvsController, type: :controller do
           other_organisation = create(:organisation)
           params = {
             organisation_id: organisation.id,
-            scoped_organisation_id: other_organisation.id,
+            scoped_organisation_id: [other_organisation.id],
           }
 
           expect do

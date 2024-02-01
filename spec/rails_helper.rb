@@ -96,6 +96,9 @@ RSpec.configure do |config|
     end
   end
 
+  config.before { setup_sentry_test }
+  config.after { teardown_sentry_test }
+
   config.after do
     ActionMailer::Base.deliveries.clear
     FactoryBot.rewind_sequences

@@ -38,8 +38,6 @@ describe ApplicationJob, type: :job do
       CronTimeoutJob
     end
 
-    stub_sentry_events
-
     it "reports job metadata to Sentry" do
       job_class.perform_later(123, _some_kw_arg: 456)
       enqueued_job_id = enqueued_jobs.last["job_id"]
