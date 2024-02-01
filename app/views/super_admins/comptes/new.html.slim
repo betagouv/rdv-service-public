@@ -14,14 +14,6 @@ section.main-content__body
   p
     | Un motif d'exemple "Mon premier motif" sera créé.
   = simple_form_for([namespace, page.resource], html: { class: "form" }) do |f|
-    - if page.resource.errors.any?
-      #error_explanation
-        h2
-          = t("administrate.form.errors", pluralized_errors: pluralize(page.resource.errors.count, t("administrate.form.error")), resource_name: display_resource_name(page.resource_name, singular: true))
-        ul
-          - page.resource.errors.full_messages.each do |message|
-            li.flash-error
-              = message
     = f.simple_fields_for :territory do |ff|
       = ff.input :name, label: "Nom du territoire"
 
