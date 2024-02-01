@@ -1,6 +1,4 @@
 class Admin::OrganisationsController < AgentAuthController
-  include OrganisationsHelper
-
   respond_to :html, :json
 
   before_action :set_organisation, except: :index
