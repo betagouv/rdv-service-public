@@ -48,9 +48,9 @@ describe "Creating a new account for a new project, other than a mairie", js: tr
       name: "France Rénov"
     )
 
-    new_agent = new_territory.agents.first
+    new_agent = new_territory.admin_agents.first
 
-    exect(new_territory.services).to eq new_agent.services
+    expect(new_territory.services).to eq new_agent.services
 
     new_organisation = new_territory.organisations.first
     expect(new_organisation).to have_attributes(
