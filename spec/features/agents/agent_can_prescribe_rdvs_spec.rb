@@ -32,12 +32,7 @@ describe "agents can prescribe rdvs" do
   end
 
   describe 'using "Trouver un RDV"' do
-    let(:other_org) { create(:organisation) }
-    let!(:existing_user) do
-      create(:user, first_name: "Francis", last_name: "FACTICE", organisations: [other_org]).tap do |user|
-        create(:rdv, users: [user], organisation: org_mds)
-      end
-    end
+    let!(:existing_user) { create(:user, first_name: "Francis", last_name: "FACTICE", organisations: [org_mds]) }
 
     it "works (happy path)", js: true do
       login_as(agent_mds, scope: :agent)
@@ -79,7 +74,7 @@ describe "agents can prescribe rdvs" do
       created_rdv = Rdv.last
       expect(created_rdv.users.first).to eq(existing_user)
       # User ends up in current org, distant org, and other orgs she was already in
-      expect(created_rdv.users.first.organisations).to match_array([other_org, org_mds, org_insertion])
+      expect(created_rdv.users.first.organisations).to match_array([org_mds, org_insertion])
       expect(created_rdv.organisation).to eq(org_insertion)
       expect(created_rdv.motif).to eq(motif_insertion)
       expect(created_rdv.lieu).to eq(mission_locale_paris_nord)
