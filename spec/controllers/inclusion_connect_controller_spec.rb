@@ -118,8 +118,8 @@ describe InclusionConnectController, type: :controller do
 
       session[:ic_state] = "a state"
 
-      expect(Sentry).to receive(:capture_message).with("Failed to authentify agent with inclusionConnect")
       get :callback, params: { state: "a state", session_state: "a state", code: "klzefklzejlf" }
+      expect(sentry_events.last.message).to eq("Failed to authentify agent with inclusionConnect")
     end
   end
 
