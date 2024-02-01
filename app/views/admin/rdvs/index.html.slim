@@ -32,8 +32,6 @@
         li.breadcrumb-item.active RDVs #{ Rdv.human_attribute_value(:status, @form.status, disable_cast: true)&.downcase }
 
 .card.border-info
-  .card-header.border-white
-    h2.mb-0 Filtrer les rendez-vous
   .card-body
     = render "rdv_search_form", form: @form
 
