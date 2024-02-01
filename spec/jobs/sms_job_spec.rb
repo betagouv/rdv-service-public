@@ -30,8 +30,6 @@ describe SmsJob do
   end
 
   describe "error logging" do
-    stub_sentry_events
-
     it "only sends error to Sentry after 3rd error" do
       described_class.perform_later(
         sender_name: "RdvSoli",

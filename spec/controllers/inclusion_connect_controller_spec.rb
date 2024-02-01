@@ -1,8 +1,6 @@
 describe InclusionConnectController, type: :controller do
   let(:base_url) { "https://test.inclusion.connect.fr" }
 
-  stub_sentry_events
-
   describe "#callback" do
     it "update first_name and last_name of agent" do
       now = Time.zone.parse("2022-08-22 11h34")

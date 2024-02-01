@@ -1,6 +1,4 @@
 describe ParticipationsExportJob do
-  stub_sentry_events
-
   describe "#participations_export" do
     it "has an attachment which contains the current date" do
       organisation = create(:organisation)
