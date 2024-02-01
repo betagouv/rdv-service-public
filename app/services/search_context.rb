@@ -1,6 +1,4 @@
 class SearchContext
-  #  @param user [User, nil]
-  #  @param query_params [Hash]
   def initialize(user:, query_params: {})
     @user = user
     @query_params = query_params

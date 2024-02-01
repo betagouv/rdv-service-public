@@ -8,9 +8,6 @@ class AgentPrescriptionSearchContext < WebSearchContext
     },
   ].freeze
 
-  #  @param user [User, nil]
-  #  @param current_organisation [Organisation]
-  #  @param query_params [Hash]
   def initialize(user:, current_organisation:, query_params: {})
     super(user: user, query_params: query_params)
     @current_organisation = current_organisation
