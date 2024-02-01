@@ -1,6 +1,4 @@
 class AgentPrescriptionSearchContext < WebSearchContext
-  include GeoCoding
-
   STRONG_PARAMS_LIST = [
     :latitude, :longitude, :address, :city_code, :departement, :street_ban_id,
     :service_id, :lieu_id, :date, :motif_name_with_location_type, :motif_category_short_name,
@@ -46,6 +44,6 @@ class AgentPrescriptionSearchContext < WebSearchContext
   def geolocation_results
     return unless address
 
-    @geolocation_results ||= get_geolocation_results(address, departement)
+    @geolocation_results ||= GeoCoding.new.get_geolocation_results(address, departement)
   end
 end
