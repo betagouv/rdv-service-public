@@ -16,7 +16,6 @@ class AgentPrescriptionSearchContext < WebSearchContext
   def initialize(user:, current_organisation:, query_params: {})
     super(user: user, query_params: query_params)
     @current_organisation = current_organisation
-    query_params[:user_ids] = [@user.id] if @user
   end
 
   attr_reader :user
