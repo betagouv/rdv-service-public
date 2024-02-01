@@ -28,6 +28,7 @@ class Territory < ApplicationRecord
   has_many :organisations_agents, -> { distinct }, through: :organisations, source: :agents
   has_many :admin_agents, through: :roles, source: :agent
   has_many :zones, through: :sectors
+  has_many :motifs, through: :organisations
   has_many :rdvs, through: :organisations
   has_many :receipts, through: :organisations
   has_many :user_profiles, through: :organisations
@@ -81,7 +82,8 @@ class Territory < ApplicationRecord
   end
 
   def sectorized?
-    sectors.joins(:attributions).any?
+    sectors.joins(:attributions).any? &&
+      motifs.active.where.not(sectorisation_level: Motif::SECTORISATION_LEVEL_DEPARTEMENT).any?
   end
 
   def any_social_field_enabled?
