@@ -11,6 +11,13 @@ class Anonymizer
     anonymize_table!("rdvs")
   end
 
+  def self.anonymize_for_development_purpose!
+    anonymize_user_data!
+    AnonymizerRules::TRUNCATED_TABLES.each do |table_name|
+      anonymize_table!(table_name)
+    end
+  end
+
   def self.anonymize_table!(table_name)
     new(table_name).anonymize_table!
   end
