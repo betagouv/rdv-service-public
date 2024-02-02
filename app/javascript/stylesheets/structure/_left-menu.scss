@@ -20,12 +20,6 @@
       color: $menu-item-hover;
       text-decoration: none;
     }
-
-    &.active {
-      &::before {
-        content: "● ";
-      }
-    }
   }
 
   .menu-arrow {
