@@ -47,15 +47,6 @@ module AgentsHelper
     }[content_for(:menu_item)]
   end
 
-  def agent_settings_menu_entries
-    [
-      [:compte, "Votre compte", edit_agent_registration_path],
-      [:notifications, t("agents.preferences.show.title"), agents_preferences_path],
-      [:synchronisation, "Synchronisation d'agenda", agents_calendar_sync_path],
-      [:organisations, "Vos organisations", admin_organisations_path],
-    ]
-  end
-
   def planning_agent_select(agent, path_helper_name)
     # See also planning-agent-select.js
     # path_helper_name lets us build the path of the current subsection (Agenda, PlageOuverture, Absence)

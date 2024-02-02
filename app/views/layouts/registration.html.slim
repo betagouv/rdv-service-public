@@ -24,15 +24,7 @@ html lang="fr"
               - if agent_path? && current_agent.nil?
                 p.lead.mb-3 Terminé l'agenda papier, moins de temps perdu.
               - elsif agent_path? && current_agent.present?
-                .d-flex.flex-row.justify-content-center
-                  div.text-left.text-white
-                    h3 = current_agent.full_name
-                    ul.list-unstyled
-                      - agent_settings_menu_entries.each do |entry|
-                        li.mt-3.mb-3 class="sidemenu__item #{"sidemenu__item--active" if @current_agent_settings_menu_entry == entry[0]}"
-                          = link_to entry[1], entry[2]
-                      li.mt-3.mb-3.sidemenu__item
-                        = link_to "Se déconnecter", destroy_agent_session_path, method: :delete
+                = render "agents/preferences_menu"
               - else
                 h4.mb-3 Prenez RDV en ligne avec votre département !
 

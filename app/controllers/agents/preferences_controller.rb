@@ -3,7 +3,7 @@ class Agents::PreferencesController < AgentAuthController
 
   layout "registration"
 
-  before_action { @current_agent_settings_menu_entry = :notifications }
+  before_action { @active_agent_preferences_menu_item = :notifications }
 
   def disable_cnfs_online_booking_banner
     skip_authorization
