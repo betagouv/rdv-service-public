@@ -21,7 +21,7 @@ fr:
     invitations:
       send_instructions: "L'utilisateur %{email} a été invité"
       invitation_token_invalid: "Votre invitation n'est pas valide."
-      updated: "Votre mot de passe a correctement été enregistré. Votre connexion est désormais active."
+      updated: "Votre mot de passe a été enregistré et votre compte est activé."
       updated_not_active: "Votre mot de passe a été enregistré."
       no_invitations_remaining: "Aucune invitation restante."
       invitation_removed: "Votre invitation a été annulée."
