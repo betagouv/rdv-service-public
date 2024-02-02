@@ -28,7 +28,6 @@ html lang="fr"
                   div.text-left.text-white
                     h3 = current_agent.full_name
                     ul.list-unstyled
-                      - @current_agent_settings_menu_entry = :compte
                       - agent_settings_menu_entries.each do |entry|
                         li.mt-3.mb-3 class="sidemenu__item #{"sidemenu__item--active" if @current_agent_settings_menu_entry == entry[0]}"
                           = link_to entry[1], entry[2]

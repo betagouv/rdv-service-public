@@ -3,6 +3,8 @@ class Agents::CalendarSyncController < AgentAuthController
 
   layout "registration"
 
+  before_action { @current_agent_settings_menu_entry = :synchronisation }
+
   def show
     authorize current_agent
   end

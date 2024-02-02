@@ -37,9 +37,19 @@ body.authentication-bg {
 
     .sidemenu__item {
       padding: 0 1rem;
+      a {
+        color: $menu-item;
+      }
+
     }
     .sidemenu__item--active {
-      border-left: 2px solid $white;
+      margin-left: -2px;
+      border-left-width: 2px;
+      border-left-style: solid;
+      border-left-color: $white;
+      a {
+        color: $white;
+      }
     }
 
     body.agents & {
