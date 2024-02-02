@@ -1,8 +1,6 @@
 describe InclusionConnectController, type: :controller do
   let(:base_url) { "https://test.inclusion.connect.fr" }
 
-  stub_sentry_events
-
   describe "#callback" do
     it "update first_name and last_name of agent" do
       now = Time.zone.parse("2022-08-22 11h34")
@@ -120,8 +118,8 @@ describe InclusionConnectController, type: :controller do
 
       session[:ic_state] = "a state"
 
-      expect(Sentry).to receive(:capture_message).with("Failed to authentify agent with inclusionConnect")
       get :callback, params: { state: "a state", session_state: "a state", code: "klzefklzejlf" }
+      expect(sentry_events.last.message).to eq("Failed to authentify agent with inclusionConnect")
     end
   end
 
