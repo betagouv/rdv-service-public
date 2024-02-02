@@ -11,7 +11,7 @@ html lang="fr"
     body.auth-fluid-pages.pb-0 class="#{agents_or_users_body_class}"
       = render "layouts/rdv_solidarites_instance_name"
       .auth-fluid.row
-        .auth-fluid-left.text-center
+        .auth-fluid-left.text-center.col-4
           .p-2
             = link_logo
           .align-items-center.d-flex.mt-lg-4
@@ -33,7 +33,7 @@ html lang="fr"
               - else
                 h4.mb-3 Prenez RDV en ligne avec votre département !
 
-        .auth-fluid-form-box
+        .auth-fluid-form-box.col-8
           / Permet de centrer les formulaire de login, et d'aligner en haut de l'écran les formulaires de préférences
           div class="#{current_agent.present? ? "" : "align-items-center d-flex h-100"}"
             .p-3.flex-grow-1
