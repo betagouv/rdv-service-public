@@ -11,29 +11,33 @@ html lang="fr"
     body.auth-fluid-pages.pb-0 class="#{agents_or_users_body_class}"
       = render "layouts/rdv_solidarites_instance_name"
       .auth-fluid.row
-        .auth-fluid-left.text-center.col-4
+        .auth-fluid-left.text-center.col-xs-12.col-md-4 class="#{"auth-fluid-left--agent-preferences" if current_agent}"
           .p-2
             = link_logo
+          - if current_agent.present?
+            = link_to(root_path, class: "pt-1") do
+              i.fa.fa-arrow-left
+              = " Retour à l'accueil"
           .align-items-center.d-flex.mt-lg-4
             .p-lg-3.flex-grow-1
               .d-none.d-lg-block= image_tag "welcome/agent.svg", class: "agent-profile mx-auto mb-4", alt: "Portrait d'un agent"
               - if agent_path? && current_agent.nil?
                 p.lead.mb-3 Terminé l'agenda papier, moins de temps perdu.
               - elsif agent_path? && current_agent.present?
-                p.agent-name
-                  = current_agent.full_name_and_service
                 .d-flex.flex-row.justify-content-center
-                  ul.list-unstyled.text-left.text-white
-                    - @current_agent_settings_menu_entry = :compte
-                    - agent_settings_menu_entries.each do |entry|
-                      li.m-2.mt-3.mb-3 class="#{:active_entry if @current_agent_settings_menu_entry == entry[0]}"
-                        = link_to entry[1], entry[2]
-                    li.m-2.mt-3.mb-3
-                      = link_to "Se déconnecter", destroy_agent_session_path, method: :delete
+                  div.text-left.text-white
+                    h3 = current_agent.full_name
+                    ul.list-unstyled
+                      - @current_agent_settings_menu_entry = :compte
+                      - agent_settings_menu_entries.each do |entry|
+                        li.mt-3.mb-3 class="sidemenu__item #{"sidemenu__item--active" if @current_agent_settings_menu_entry == entry[0]}"
+                          = link_to entry[1], entry[2]
+                      li.mt-3.mb-3.sidemenu__item
+                        = link_to "Se déconnecter", destroy_agent_session_path, method: :delete
               - else
                 h4.mb-3 Prenez RDV en ligne avec votre département !
 
-        .auth-fluid-form-box.col-8
+        .auth-fluid-form-box.col-xs-12.col-md-8
           / Permet de centrer les formulaire de login, et d'aligner en haut de l'écran les formulaires de préférences
           div class="#{current_agent.present? ? "" : "align-items-center d-flex h-100"}"
             .p-3.flex-grow-1
