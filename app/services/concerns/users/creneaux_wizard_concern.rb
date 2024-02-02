@@ -64,21 +64,31 @@ module Users::CreneauxWizardConcern
     @services ||= matching_motifs.includes(:service).map(&:service).uniq.sort_by(&:name)
   end
 
+  LieuAvailability = Struct.new(:lieu, :next_availability)
+
   def next_availability_by_lieux
+    return @next_availability_by_lieux if @next_availability_by_lieux
+
     lieux = Lieu
       .with_open_slots_for_motifs(matching_motifs)
       .includes(:organisation)
-      .sort_by { |lieu| lieu.distance(@latitude.to_f, @longitude.to_f) }
 
-    @next_availability_by_lieux ||= lieux.index_with do |lieu|
-      creneaux_search_for(
-        lieu, date_range, matching_motifs.where(organisation: lieu.organisation).first
-      ).next_availability
-    end.compact
+    @next_availability_by_lieux = lieux.map do |lieu|
+      next_availability = creneaux_search_for(lieu, date_range, matching_motifs.where(organisation: lieu.organisation).first).next_availability
+      LieuAvailability.new(lieu, next_availability)
+    end
+
+    @next_availability_by_lieux.select!(&:next_availability)
+
+    if @latitude && @longitude
+      @next_availability_by_lieux.sort_by! { _1.lieu.distance(@latitude.to_f, @longitude.to_f) }
+    else
+      @next_availability_by_lieux.sort_by!(&:next_availability)
+    end
   end
 
   def shown_lieux
-    next_availability_by_lieux.keys
+    next_availability_by_lieux.map(&:lieu)
   end
 
   def next_availability
