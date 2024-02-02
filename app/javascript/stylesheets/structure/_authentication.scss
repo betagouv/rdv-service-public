@@ -39,6 +39,12 @@ body.authentication-bg {
       padding: 0 1rem;
       a {
         color: $menu-item;
+        transition: all 0.4s;
+
+        &:focus,
+        &:hover {
+          color: $white;
+        }
       }
 
     }
