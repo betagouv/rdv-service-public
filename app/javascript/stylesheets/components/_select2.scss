@@ -19,3 +19,11 @@
   padding-top: 18px;
   font-size: initial;
 }
+
+.select2-container--default {
+  border-radius: 0;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+  border-radius: 0;
+}
