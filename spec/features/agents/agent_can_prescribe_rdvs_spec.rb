@@ -17,6 +17,7 @@ describe "Agents can prescribe rdvs for a selected user" do
   let!(:plage_ouverture4) { create(:plage_ouverture, :daily, first_day: (now + 1.month).to_date, motifs: [motif3], lieu: lieu_org2, organisation: organisation2) }
 
   before do
+    travel_to(now)
     stub_request(
       :get,
       "https://api-adresse.data.gouv.fr/search/?q=20%20avenue%20de%20S%C3%A9gur,%20Paris"
