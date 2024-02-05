@@ -34,6 +34,10 @@
   margin: 2px;
 }
 
+.select2-dropdown {
+  border-radius: 0;
+}
+
 // Border radius overrides
 // C'est trop compliqué d'utiliser le fichier src plutôt que le dist à cause d'incohérence d'unités entre les px et rem (et de certains calculs sans unités)
 // Le plus simple pour avoir des border-radius de 0 est donc de mettre des override pour toutes les règles de border-radius dans le fichier node_modules/select2-bootstrap4-theme/dist/select2-bootstrap4.css
