@@ -1,6 +1,4 @@
 describe GeoCoding do
-  include described_class
-
   describe "#find_geo_coordinates" do
     before do
       stub_request(
@@ -10,7 +8,7 @@ describe GeoCoding do
     end
 
     it "returns the coordinates" do
-      expect(find_geo_coordinates("03 Rue Lambert, Paris, 75018")).to eq([2.372095, 48.88393])
+      expect(described_class.new.find_geo_coordinates("03 Rue Lambert, Paris, 75018")).to eq([2.372095, 48.88393])
     end
   end
 end
