@@ -45,14 +45,11 @@ module Users::CreneauxWizardConcern
     @unique_motifs_by_name_and_location_type ||= matching_motifs.uniq(&:name_with_location_type)
   end
 
-  # next availability by organisation for motifs without lieu
+  # Retourne une liste d'organisations et leur prochaine dispo, ordonnées par date de prochaine dispo
   def next_availability_by_motifs_organisations
-    @_next_availability_by_org ||= matching_motifs.map do |motif|
+    @_next_availability_by_org ||= matching_motifs.to_h do |motif|
       [motif.organisation, creneaux_search_for(nil, date_range, motif).next_availability]
-    end
-
-    # sort by next availability
-    @_next_availability_by_org.select(&:last).sort_by(&:last)
+    end.compact.sort_by(&:last).to_h
   end
 
   def service
@@ -67,31 +64,25 @@ module Users::CreneauxWizardConcern
     @services ||= matching_motifs.includes(:service).map(&:service).uniq.sort_by(&:name)
   end
 
-  LieuAvailability = Struct.new(:lieu, :next_availability)
-
   def next_availability_by_lieux
     return @next_availability_by_lieux if @next_availability_by_lieux
 
-    lieux = Lieu
-      .with_open_slots_for_motifs(matching_motifs)
-      .includes(:organisation)
-
-    @next_availability_by_lieux = lieux.map do |lieu|
+    next_availability_by_lieux = Lieu.with_open_slots_for_motifs(matching_motifs).includes(:organisation).to_h do |lieu|
       next_availability = creneaux_search_for(lieu, date_range, matching_motifs.where(organisation: lieu.organisation).first).next_availability
-      LieuAvailability.new(lieu, next_availability)
-    end
-
-    @next_availability_by_lieux.select!(&:next_availability)
+      [lieu, next_availability]
+    end.compact
 
     if @latitude && @longitude
-      @next_availability_by_lieux.sort_by! { _1.lieu.distance(@latitude.to_f, @longitude.to_f) }
+      next_availability_by_lieux.sort_by! { |lieu, _| lieu.distance(@latitude.to_f, @longitude.to_f) }
     else
-      @next_availability_by_lieux.sort_by!(&:next_availability)
+      next_availability_by_lieux.sort_by! { |_, next_availability| next_availability }
     end
+
+    @next_availability_by_lieux = next_availability_by_lieux.to_h
   end
 
   def shown_lieux
-    next_availability_by_lieux.map(&:lieu)
+    next_availability_by_lieux.keys
   end
 
   def next_availability

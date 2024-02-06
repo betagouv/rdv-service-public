@@ -5,9 +5,7 @@
   - else
     h3.font-weight-bold = t(".select_lieu")
     p = t(".lieu_available", count: context.shown_lieux.count)
-    - context.next_availability_by_lieux.each do |lieu_next_availability|
-      - lieu = lieu_next_availability.lieu
-      - next_availability = lieu_next_availability.next_availability
+    - context.next_availability_by_lieux.each do |lieu, next_availability|
       .card.mb-3 class=("card-hoverable" if next_availability)
         .card-body
           .row
