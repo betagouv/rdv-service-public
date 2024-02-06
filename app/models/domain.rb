@@ -15,6 +15,7 @@ Domain = Struct.new(
   :documentation_url,
   :support_email,
   :secretariat_email,
+  :verticale,
   keyword_init: true
 )
 
@@ -36,6 +37,7 @@ class Domain
       faq_url: "https://rdv-solidarites.notion.site/F-A-Q-M-dico-social-aaf94709c0ea448b8eb9d93f548acdb9",
       france_connect_enabled: true,
       support_email: "support@rdv-solidarites.fr",
+      verticale: :rdv_solidarites,
       secretariat_email: "secretariat-auto@rdv-solidarites.fr"
       # secretariat_email est utilisé comme adresse de "Reply-To" pour les e-mails
       # qui contiennent des ICS. Lorsque l'événement ICS est acceptée par le
@@ -59,6 +61,7 @@ class Domain
       faq_url: "https://rdvs.notion.site/FAQ-CNFS-c55933f66f054aaba60fe4799851000e",
       france_connect_enabled: false,
       support_email: "support@rdv-aide-numerique.fr",
+      verticale: :rdv_aide_numerique,
       secretariat_email: "secretariat-auto@rdv-solidarites.fr"
     ),
 
@@ -78,6 +81,7 @@ class Domain
       faq_url: "https://rdvs.notion.site/FAQ-RDV-Mairie-6baf4af187a14e42beafe56b7005d199",
       france_connect_enabled: true,
       support_email: "support@rdv-service-public.fr",
+      verticale: :rdv_mairie,
       secretariat_email: "secretariat-auto@rdv-service-public.fr"
     ),
   ].freeze
