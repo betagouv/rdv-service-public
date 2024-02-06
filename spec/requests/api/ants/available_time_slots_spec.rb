@@ -1,6 +1,5 @@
 describe "ANTS API: availableTimeSlots" do
   include_context "rdv_mairie_api_authentication"
-  stub_sentry_events
 
   let(:lieu1) do
     create(:lieu, organisation: organisation)
@@ -82,7 +81,7 @@ describe "ANTS API: availableTimeSlots" do
   end
 
   context 'when the "reason" param is invalid' do
-    xit "adds crumb with request details to Sentry" do
+    it "adds crumb with request details to Sentry" do
       invalid_reason = "no"
       get "/api/ants/availableTimeSlots?meeting_point_ids=#{lieu1.id}&meeting_point_ids=#{lieu2.id}&start_date=2022-11-01&end_date=2022-11-02&documents_number=1&reason=#{invalid_reason}"
 
@@ -97,7 +96,7 @@ describe "ANTS API: availableTimeSlots" do
       allow(Users::CreneauxSearch).to receive(:new).and_raise(NoMethodError)
     end
 
-    xit "adds crumb with request details to Sentry" do
+    it "adds crumb with request details to Sentry" do
       expect do
         get "/api/ants/availableTimeSlots?meeting_point_ids=#{lieu1.id}&meeting_point_ids=#{lieu2.id}&start_date=2022-11-01&end_date=2022-11-02&documents_number=1&reason=CNI"
       end.to raise_error(NoMethodError)
