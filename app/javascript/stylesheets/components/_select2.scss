@@ -36,6 +36,7 @@
 
 .select2-dropdown {
   border-radius: 0;
+  background-color: $input-bg;
 }
 
 // Border radius overrides
@@ -76,4 +77,25 @@
 
 .select2-container--bootstrap4 .select2-selection--multiple.input-lg .select2-selection__choice, .input-group-lg .select2-container--bootstrap4 .select2-selection--multiple .select2-selection__choice, .form-group-lg .select2-container--bootstrap4 .select2-selection--multiple .select2-selection__choice {
   border-radius: 0;
+}
+
+
+// Background color overrides
+// même fonctionnement que pour les border radius
+// on remplace les background-color: #fff; par background-color: $input-bg;
+
+.select2-container--bootstrap4 .select2-selection {
+  background-color: $input-bg;
+}
+
+.select2-container--bootstrap4 .select2-search--dropdown .select2-search__field {
+  background-color: $input-bg;
+}
+
+.select2-container--bootstrap4 .select2-selection {
+  background-color: $input-bg;
+}
+
+.select2-container--bootstrap4 .select2-search--dropdown .select2-search__field {
+  background-color: $input-bg;
 }
