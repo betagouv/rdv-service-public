@@ -15,12 +15,11 @@ html lang="fr"
           .p-2
             = link_logo
           - if current_agent.present?
-            = link_to(root_path, class: "pt-1") do
+            = link_to(root_path, class: "pt-1 pb-4") do
               i.fa.fa-arrow-left
               = " Retour à l'accueil"
-          .align-items-center.d-flex.mt-lg-4
-            .p-lg-3.flex-grow-1
-              .d-none.d-lg-block= image_tag "welcome/agent.svg", class: "agent-profile mx-auto mb-4", alt: "Portrait d'un agent"
+          .align-items-center.d-flex.mt-2.mt-lg-4
+            .p-1.p-lg-3.flex-grow-1.mt-lg-4
               - if agent_path? && current_agent.nil?
                 p.lead.mb-3 Terminé l'agenda papier, moins de temps perdu.
               - elsif agent_path? && current_agent.present?
