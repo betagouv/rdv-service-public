@@ -16,7 +16,7 @@ describe "Creating a new account for a new project, other than a mairie", js: tr
 
   it "creates a new organisation" do
     login_as(super_admin, scope: :super_admin)
-    visit super_admins_root_path
+    visit super_admins_root_url(host: "http://www.rdv-mairie-test.localhost")
 
     click_link "Comptes"
     click_link "Création compte"
@@ -68,6 +68,14 @@ describe "Creating a new account for a new project, other than a mairie", js: tr
     new_motif = new_organisation.motifs.first
     expect(new_motif).to have_attributes(
       name: "Mon premier motif"
+    )
+
+    perform_enqueued_jobs
+    invitation_email = ActionMailer::Base.deliveries.last
+
+    expect(invitation_email).to have_attributes(
+      subject: "Vous avez été invité sur RDV Service Public",
+      reply_to: ["support@rdv-service-public.fr"]
     )
   end
 end
