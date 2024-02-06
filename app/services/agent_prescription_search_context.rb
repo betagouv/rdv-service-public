@@ -25,11 +25,11 @@ class AgentPrescriptionSearchContext < WebSearchContext
   end
 
   def city_code
-    geolocation_results[:street_ban_id] if geolocation_results
+    geolocation_results[:city_code] if geolocation_results
   end
 
   def street_ban_id
-    geolocation_results[:city_code] if geolocation_results
+    geolocation_results[:street_ban_id] if geolocation_results
   end
 
   def address
