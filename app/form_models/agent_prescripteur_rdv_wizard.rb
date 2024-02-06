@@ -1,11 +1,11 @@
 class AgentPrescripteurRdvWizard
   attr_reader :query_params
 
-  def initialize(agent:, user:, current_domain:, query_params: {})
+  def initialize(query_params:, agent_prescripteur:, domain:, current_organisation:)
     @query_params = query_params
-    @agent = agent
-    @user = user
-    @domain = current_domain
+    @agent_prescripteur = agent_prescripteur
+    @domain = domain
+    @current_organisation = current_organisation
   end
 
   def motif
@@ -27,9 +27,9 @@ class AgentPrescripteurRdvWizard
       else
         create_rdv!
       end
-    end
 
-    PrescripteurMailer.rdv_created(participation, @domain.id).deliver_later
+      PrescripteurMailer.rdv_created(participation, @domain.id).deliver_later
+    end
   end
 
   def rdv
@@ -40,13 +40,19 @@ class AgentPrescripteurRdvWizard
              end
   end
 
+  def participations
+    return @rdv.participations if @rdv.participations.present?
+
+    @rdv.participations = users.map { Participation.new(rdv: @rdv, user: _1, created_by: @agent_prescripteur) }
+  end
+
   def participation
-    @participation ||= Participation.new(rdv: @rdv, user: @user, created_by: @agent)
+    participations.first
   end
 
   def creneau
     @creneau ||= Users::CreneauSearch.creneau_for(
-      user: @user,
+      user: users&.first,
       motif: motif,
       lieu: lieu,
       starts_at: rdv.starts_at,
@@ -54,11 +60,15 @@ class AgentPrescripteurRdvWizard
     )
   end
 
+  def users
+    query_params[:user_ids]&.compact_blank&.map { User.find(_1) }
+  end
+
   private
 
   def create_rdv!
     rdv.assign_attributes(
-      created_by: @agent,
+      created_by: @agent_prescripteur,
       organisation: motif.organisation,
       agents: [creneau.agent],
       duration_in_min: motif&.default_duration_in_min
@@ -67,11 +77,11 @@ class AgentPrescripteurRdvWizard
     rdv.save!
 
     @participation = rdv.participations.first
-    Notifiers::RdvCreated.perform_with(rdv, @agent)
+    Notifiers::RdvCreated.perform_with(rdv, @agent_prescripteur)
   end
 
   def create_participation!
-    participation.create_and_notify!(@agent)
+    participation.create_and_notify!(@agent_prescripteur)
   end
 
   def lieu

@@ -33,9 +33,10 @@ Rails.application.routes.draw do
     resources :services
     resources :motifs
     resources :lieux
-    resources :territories
+    resources :territories, except: %i[new create]
     resources :users
     resources :mairie_comptes, only: %i[index new create]
+    resources :comptes, only: %i[index new create]
     root to: "agents#index"
 
     authenticate :super_admin do
@@ -226,6 +227,7 @@ Rails.application.routes.draw do
         get "support", to: "static_pages#support"
         resource :prescription, only: [], controller: "prescription" do
           get "search_creneau"
+          get "user_selection"
           get "recapitulatif"
           post "create_rdv"
           get "confirmation"
