@@ -2,7 +2,7 @@ module SuperAdmins
   class ComptesController < SuperAdmins::ApplicationController
     def create
       compte_params[:agent][:invited_by] = current_super_admin
-      compte = Compte.new(compte_params)
+      compte = Compte.new(compte_params, current_domain)
       authorize_resource(compte)
 
       if compte.save

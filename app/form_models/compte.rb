@@ -4,13 +4,17 @@ class Compte
 
   attr_accessor :territory, :organisation, :lieu, :agent
 
-  def initialize(attributes)
+  def initialize(attributes, current_domain = nil)
     @attributes = attributes
+    @current_domain = current_domain
   end
 
   def save
     self.territory = Territory.new(@attributes[:territory])
-    self.organisation = Organisation.new(@attributes[:organisation].merge(territory: territory))
+    self.organisation = Organisation.new(@attributes[:organisation].merge(
+                                           territory: territory,
+                                           verticale: @current_domain&.verticale
+                                         ))
     self.lieu = Lieu.new(@attributes[:lieu].merge(
                            organisation: organisation,
                            name: organisation.name,
