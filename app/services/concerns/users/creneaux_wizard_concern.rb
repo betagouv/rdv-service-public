@@ -47,9 +47,12 @@ module Users::CreneauxWizardConcern
 
   # next availability by organisation for motifs without lieu
   def next_availability_by_motifs_organisations
-    @next_availability_by_motifs_organisations ||= matching_motifs.to_h do |motif|
+    @_next_availability_by_org ||= matching_motifs.map do |motif|
       [motif.organisation, creneaux_search_for(nil, date_range, motif).next_availability]
-    end.compact
+    end
+
+    # sort by next availability
+    @_next_availability_by_org.select(&:last).sort_by(&:last)
   end
 
   def service
