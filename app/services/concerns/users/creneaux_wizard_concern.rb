@@ -47,7 +47,7 @@ module Users::CreneauxWizardConcern
 
   # Retourne une liste d'organisations et leur prochaine dispo, ordonnées par date de prochaine dispo
   def next_availability_by_motifs_organisations
-    @_next_availability_by_org ||= matching_motifs.to_h do |motif|
+    @next_availability_by_org ||= matching_motifs.to_h do |motif|
       [motif.organisation, creneaux_search_for(nil, date_range, motif).next_availability]
     end.compact.sort_by(&:last).to_h
   end
@@ -72,13 +72,13 @@ module Users::CreneauxWizardConcern
       [lieu, next_availability]
     end.compact
 
-    if @latitude && @longitude
-      next_availability_by_lieux.sort_by! { |lieu, _| lieu.distance(@latitude.to_f, @longitude.to_f) }
-    else
-      next_availability_by_lieux.sort_by! { |_, next_availability| next_availability }
-    end
+    sort_order = if @latitude && @longitude
+                   proc { |lieu, _| lieu.distance(@latitude.to_f, @longitude.to_f) }
+                 else
+                   proc { |_, next_availability| next_availability }
+                 end
 
-    @next_availability_by_lieux = next_availability_by_lieux.to_h
+    @next_availability_by_lieux = next_availability_by_lieux.sort_by(&sort_order).to_h
   end
 
   def shown_lieux
