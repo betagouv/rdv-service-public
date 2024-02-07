@@ -1,6 +1,4 @@
 class Admin::OrganisationsController < AgentAuthController
-  include OrganisationsHelper
-
   respond_to :html, :json
 
   before_action :set_organisation, except: :index
@@ -12,6 +10,7 @@ class Admin::OrganisationsController < AgentAuthController
       .includes(organisation: :territory)
       .order("organisations.name")
       .to_a.group_by { _1.organisation.territory }
+    @active_agent_preferences_menu_item = :organisations
     render layout: "registration"
   end
 
@@ -47,7 +46,7 @@ class Admin::OrganisationsController < AgentAuthController
     )
     authorize(@organisation)
     if @organisation.save
-      redirect_to organisation_home_path(@organisation, current_agent), flash: { success: "Organisation créée !" }
+      redirect_to admin_organisation_agent_agenda_path(@organisation, current_agent), flash: { success: "Organisation créée !" }
     else
       render :new, layout: "registration"
     end
@@ -75,6 +74,6 @@ class Admin::OrganisationsController < AgentAuthController
   def follow_unique
     return if params[:follow_unique].blank? || policy_scope(Organisation).count != 1
 
-    redirect_to organisation_home_path(policy_scope(Organisation).first, current_agent)
+    redirect_to admin_organisation_agent_agenda_path(policy_scope(Organisation).first, current_agent)
   end
 end
