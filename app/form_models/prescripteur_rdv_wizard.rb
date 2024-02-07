@@ -46,7 +46,7 @@ class PrescripteurRdvWizard < UserRdvWizard::Base
   end
 
   def participation
-    @participation ||= Participation.new(rdv: @rdv, user: @user, created_by: @prescripteur)
+    @participation ||= Participation.new(rdv: @rdv, user: @user, created_by: @prescripteur, prescription: true)
   end
 
   def find_or_create_user

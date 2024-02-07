@@ -43,7 +43,7 @@ class AgentPrescripteurRdvWizard
   def participations
     return @rdv.participations if @rdv.participations.present?
 
-    @rdv.participations = users.map { Participation.new(rdv: @rdv, user: _1, created_by: @agent_prescripteur) }
+    @rdv.participations = users.map { Participation.new(rdv: @rdv, user: _1, created_by: @agent_prescripteur, prescription: true) }
   end
 
   def participation

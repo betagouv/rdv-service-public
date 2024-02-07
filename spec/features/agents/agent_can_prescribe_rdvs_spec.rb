@@ -81,6 +81,7 @@ describe "agents can prescribe rdvs" do
       expect(created_rdv.starts_at).to eq(Time.zone.parse("2024-02-05 11:00"))
       expect(created_rdv.created_by).to eq(agent_mds)
       expect(created_rdv.participations.last.created_by).to eq(agent_mds)
+      expect(created_rdv.participations.last.prescription).to eq(true)
     end
   end
 
