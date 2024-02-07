@@ -81,7 +81,7 @@ describe Admin::OrganisationsController, type: :controller do
         expect(response).to redirect_to(admin_organisation_path(organisation))
       end
 
-      { phone_number: "01 23 45 56 78", website: "http://www.pasdecalais.fr", email: "vaneecke.elodie@pasdecalais.fr" }.each do |attribute, value|
+      { phone_number: "01 23 45 56 78", website: "http://www.pasdecalais.fr", email: "francis@factice.org" }.each do |attribute, value|
         it "updates #{attribute}" do
           params = {}
           params[attribute] = value
