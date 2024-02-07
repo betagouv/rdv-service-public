@@ -36,6 +36,7 @@ class Admin::OrganisationsController < AgentAuthController
   def new
     @organisation = Organisation.new(territory: Territory.find(params[:territory_id]))
     authorize(@organisation)
+    @active_agent_preferences_menu_item = :organisations
     render :new, layout: "registration"
   end
 
@@ -46,8 +47,10 @@ class Admin::OrganisationsController < AgentAuthController
     )
     authorize(@organisation)
     if @organisation.save
-      redirect_to admin_organisation_agent_agenda_path(@organisation, current_agent), flash: { success: "Organisation créée !" }
+      redirect_to admin_organisation_path(@organisation),
+                  flash: { success: "Organisation enregistrée ! Vous pouvez maintenant lui ajouter des motifs et des lieux de rendez-vous, puis inviter des agents à la rejoindre" }
     else
+      @active_agent_preferences_menu_item = :organisations
       render :new, layout: "registration"
     end
   end
