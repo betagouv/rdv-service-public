@@ -59,6 +59,11 @@ class AgentPrescripteurRdvWizard
   end
 
   def user
+    user_ids = Array(query_params[:user_ids]).compact_blank
+    users = User.where(id: user_ids)
+    if users.count > 1
+      Sentry.capture_message("AgentPrescripteurRdvWizard a plusieurs user_ids: #{user_ids.inspect}", fingerprint: "several_user_ids")
+    end
     users.first
   end
 
