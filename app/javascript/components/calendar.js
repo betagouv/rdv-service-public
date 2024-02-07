@@ -40,9 +40,22 @@ class CalendarRdvSolidarites {
     this.setRefetchInterval()
   }
 
+  refreshDelay = 20000
+  lastRefresh = 0
+  refreshEventsIfNeeded = () => {
+    if (this.lastRefresh + this.refreshDelay < Date.now()) {
+      this.fullCalendarInstance.refetchEvents();
+      this.lastRefresh = Date.now();
+    }
+  };
+
   setRefetchInterval = () => {
     if (this.refreshCalendarInterval) return
-    this.refreshCalendarInterval = setInterval(() => this.fullCalendarInstance.refetchEvents(), 60000)
+    this.refreshCalendarInterval = setInterval(() => {
+      if (document.visibilityState === "visible") {
+        this.refreshEventsIfNeeded();
+      }
+    }, 200)
   }
 
   clearRefetchInterval = () => {
