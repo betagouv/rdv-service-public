@@ -12,6 +12,7 @@ class Admin::OrganisationsController < AgentAuthController
       .includes(organisation: :territory)
       .order("organisations.name")
       .to_a.group_by { _1.organisation.territory }
+    @active_agent_preferences_menu_item = :organisations
     render layout: "registration"
   end
 
