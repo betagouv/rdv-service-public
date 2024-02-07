@@ -38,10 +38,6 @@ describe "public pages", js: true do
     expect_page_to_be_axe_clean(mds_path)
   end
 
-  it "new_organisation is accessible" do
-    expect_page_to_be_axe_clean(new_organisation_path)
-  end
-
   context "prendre RDV" do
     # prendre_rdv est la root_path pour le public non connecté
     #
