@@ -13,7 +13,7 @@
       ul.list-group.list-group-flush
         - agent_roles.each do |agent_role|
           li.list-group-item
-            span>= link_to agent_role.organisation.name, admin_organisation_agent_agenda_path(organisation, agent)
+            span>= link_to agent_role.organisation.name, admin_organisation_agent_agenda_path(agent_role.organisation, agent_role.agent)
             - if agent_role.admin?
               i.fa.fa-user-cog.text-muted[title="Vous administrez cette organisation"]
       - if policy([:agent, Organisation.new(territory: territory)]).new?

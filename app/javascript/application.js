@@ -2,7 +2,6 @@ require("@rails/ujs").start()
 require("turbolinks").start()
 import { Datetimepicker } from './components/datetimepicker';
 import { PlacesInputs } from './components/places-inputs.js'
-import './components/analytic.js';
 import { Modal } from './components/modal';
 import { ShowHidePassword } from './components/show-hide-password.js';
 import { NameInitialsForm } from './components/name-initials-form';
