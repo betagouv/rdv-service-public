@@ -137,7 +137,7 @@ class AnonymizerRules
       class_name: "Participation",
       anonymized_column_names: %w[invitation_token],
       non_anonymized_column_names: %w[created_at updated_at send_lifecycle_notifications send_reminder_notification invitation_created_at invitation_sent_at invitation_accepted_at
-                                      invitation_limit invited_by_type invited_by_id invitations_count status created_by_id created_by_type prescription],
+                                      invitation_limit invited_by_type invited_by_id invitations_count status created_by_id created_by_type created_by_agent_prescripteur],
     },
     plage_ouvertures: {
       class_name: "PlageOuverture",

@@ -408,7 +408,7 @@ RSpec.configure do |config|
               created_by: { type: "string", enum: %w[agent user prescripteur] },
               created_by_type: { type: "string", enum: %w[Agent User Prescripteur] },
               created_by_id: { type: "integer" },
-              prescription: { type: "boolean" },
+              created_by_agent_prescripteur: { type: "boolean" },
             },
             required: %w[send_lifecycle_notifications send_reminder_notification status user created_by_type],
           },

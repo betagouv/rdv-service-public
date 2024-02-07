@@ -83,7 +83,7 @@ describe "agents can prescribe rdvs" do
       expect(created_rdv.starts_at).to eq(Time.zone.parse("2024-02-05 11:00"))
       expect(created_rdv.created_by).to eq(agent_mds)
       expect(created_rdv.participations.last.created_by).to eq(agent_mds)
-      expect(created_rdv.participations.last.prescription).to eq(true)
+      expect(created_rdv.participations.last.created_by_agent_prescripteur).to eq(true)
     end
 
     it "works for a collective rdv", js: true do
@@ -112,7 +112,7 @@ describe "agents can prescribe rdvs" do
       expect(page).to have_content("Date du rendez-vous :")
       expect(page).to have_content("Usager : Francis FACTICE")
       expect { click_button "Confirmer le rdv" }.to change(Rdv.last.reload.participations, :count).by(1)
-      expect(Rdv.last.participations.where(user: existing_user).first.prescription).to eq(true)
+      expect(Rdv.last.participations.where(user: existing_user).first.created_by_agent_prescripteur).to eq(true)
     end
   end
 
@@ -138,7 +138,7 @@ describe "agents can prescribe rdvs" do
       click_on "Continuer"
       expect { click_button "Confirmer le rdv" }.to change(Rdv, :count).by(1)
       expect(Rdv.last.users.first.organisations).to match_array([org_mds, org_insertion])
-      expect(Rdv.last.participations.first.prescription).to eq(true)
+      expect(Rdv.last.participations.first.created_by_agent_prescripteur).to eq(true)
     end
 
     # Cette spec a été ajoutée suite à un bug qui faisait qu'on si on
@@ -172,7 +172,7 @@ describe "agents can prescribe rdvs" do
       click_on "Continuer"
       expect { click_button "Confirmer le rdv" }.to change(Rdv, :count).by(1)
       expect(Rdv.last.users.first.full_name).to eq("Jean-Pierre BONJOUR")
-      expect(Rdv.last.participations.first.prescription).to eq(true)
+      expect(Rdv.last.participations.first.created_by_agent_prescripteur).to eq(true)
     end
   end
 
@@ -201,7 +201,7 @@ describe "agents can prescribe rdvs" do
       # Display Confirmation
       expect(page).to have_content("Rendez-vous confirmé")
       expect(Rdv.last.users.first).to eq(user)
-      expect(Rdv.last.participations.first.prescription).to eq(true)
+      expect(Rdv.last.participations.first.created_by_agent_prescripteur).to eq(true)
     end
   end
 end

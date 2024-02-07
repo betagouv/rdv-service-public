@@ -98,6 +98,6 @@ class Participation < ApplicationRecord
   end
 
   def prescription?
-    created_by_prescripteur? || prescription
+    created_by_prescripteur? || created_by_agent_prescripteur?
   end
 end

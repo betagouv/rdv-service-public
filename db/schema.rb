@@ -438,7 +438,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_07_093459) do
     t.datetime "updated_at", null: false
     t.integer "created_by_id"
     t.string "created_by_type", null: false
-    t.boolean "prescription", default: false, null: false
+    t.boolean "created_by_agent_prescripteur", default: false, null: false
     t.index ["created_by_type", "created_by_id"], name: "index_participations_on_created_by_type_and_created_by_id"
     t.index ["invitation_token"], name: "index_participations_on_invitation_token", unique: true
     t.index ["invited_by_id"], name: "index_participations_on_invited_by_id"

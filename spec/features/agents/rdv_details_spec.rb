@@ -31,7 +31,7 @@ describe "Agent can see RDV details correctly" do
     end
 
     it "displays the agent prescripteur when present" do
-      rdv.participations.last.update!(created_by: agent, prescription: true)
+      rdv.participations.last.update!(created_by: agent, created_by_agent_prescripteur: true)
       visit admin_organisation_rdvs_path(organisation)
       expect(page).to have_content("Rendez-vous pris par Bruce WAYNE")
     end

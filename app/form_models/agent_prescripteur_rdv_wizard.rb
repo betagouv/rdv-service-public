@@ -41,7 +41,7 @@ class AgentPrescripteurRdvWizard
   end
 
   def participation
-    @participation ||= Participation.new(rdv: @rdv, user: user, created_by: @agent_prescripteur, prescription: true)
+    @participation ||= Participation.new(rdv: @rdv, user: user, created_by: @agent_prescripteur, created_by_agent_prescripteur: true)
   end
 
   def creneau

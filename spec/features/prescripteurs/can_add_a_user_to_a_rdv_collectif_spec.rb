@@ -71,7 +71,6 @@ RSpec.describe "prescripteur can add a user to a RDV collectif" do
       email: "alex@prescripteur.fr",
       phone_number: "0611223344"
     )
-    expect(rdv_collectif.participations.first.prescription).to eq(true)
 
     perform_enqueued_jobs(queue: "mailers")
     expect(email_sent_to(agent.email).subject).to include("Nouvelle participation au RDV collectif sur votre agenda RDV Solidarités")
