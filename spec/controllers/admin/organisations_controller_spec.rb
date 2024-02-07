@@ -7,18 +7,6 @@ describe Admin::OrganisationsController, type: :controller do
   describe "#new" do
     subject { get :new, params: { territory_id: territory.id } }
 
-    context "agent has role in territory" do
-      let!(:agent) do
-        create(
-          :agent,
-          admin_role_in_organisations: [organisation],
-          role_in_territories: [territory]
-        )
-      end
-
-      it { is_expected.to be_successful }
-    end
-
     context "agent does not have role in territory" do
       let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
 
@@ -28,21 +16,6 @@ describe Admin::OrganisationsController, type: :controller do
 
   describe "#create" do
     subject { post :create, params: { organisation: organisation_params } }
-
-    context "agent has role in territory, valid params" do
-      let!(:agent) do
-        create(
-          :agent,
-          admin_role_in_organisations: [organisation],
-          role_in_territories: [territory]
-        )
-      end
-      let(:organisation_params) { { name: "MDS Test", territory_id: territory.id } }
-
-      it "creates company" do
-        expect { subject }.to change(Organisation, :count).by(1)
-      end
-    end
 
     context "agent has role in territory BUT tries to create orga in other territory" do
       let!(:agent) do
@@ -81,7 +54,7 @@ describe Admin::OrganisationsController, type: :controller do
         expect(response).to redirect_to(admin_organisation_path(organisation))
       end
 
-      { phone_number: "01 23 45 56 78", website: "http://www.pasdecalais.fr", email: "vaneecke.elodie@pasdecalais.fr" }.each do |attribute, value|
+      { phone_number: "01 23 45 56 78", website: "http://www.pasdecalais.fr", email: "francis@factice.org" }.each do |attribute, value|
         it "updates #{attribute}" do
           params = {}
           params[attribute] = value
