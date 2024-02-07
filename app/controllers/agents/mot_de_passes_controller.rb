@@ -5,6 +5,7 @@ class Agents::MotDePassesController < AgentAuthController
   include Admin::AuthenticatedControllerConcern
 
   layout "registration"
+  before_action { @active_agent_preferences_menu_item = :compte }
 
   def edit
     authorize current_agent

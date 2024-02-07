@@ -183,7 +183,6 @@ Rails.application.routes.draw do
           end
         end
         scope module: "organisations" do
-          resource :setup_checklist, only: [:show]
           resource :online_booking, only: [:show]
           resources :stats, only: :index do
             collection do
