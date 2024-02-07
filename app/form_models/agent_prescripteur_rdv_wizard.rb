@@ -36,18 +36,12 @@ class AgentPrescripteurRdvWizard
     @rdv ||= if query_params[:rdv_collectif_id].present?
                Rdv.collectif.bookable_by_everyone_or_agents_and_prescripteurs_or_invited_users.find(query_params[:rdv_collectif_id])
              else
-               Rdv.new(query_params.slice(:starts_at, :user_ids, :motif_id, :lieu_id))
+               Rdv.new(query_params.slice(:starts_at, :motif_id, :lieu_id))
              end
   end
 
   def participation
-    return @participation if @participation.present?
-
-    if @rdv.collectif?
-      Participation.new(rdv: @rdv, user: user, created_by: @agent_prescripteur, prescription: true)
-    else
-      rdv.participations.first
-    end
+    @participation ||= Participation.new(rdv: @rdv, user: user, created_by: @agent_prescripteur, prescription: true)
   end
 
   def creneau
@@ -77,21 +71,15 @@ class AgentPrescripteurRdvWizard
       agents: [creneau.agent],
       duration_in_min: motif&.default_duration_in_min
     )
-    rdv.participations.each do |participation|
-      participation.prescription = true
-      participation.created_by = @agent_prescripteur
-      participation.set_default_notifications_flags
-    end
+    rdv.participations = [participation]
 
     rdv.save!
 
-    @participation = rdv.participations.first
     Notifiers::RdvCreated.perform_with(rdv, @agent_prescripteur)
   end
 
   def create_participation!
     participation.create_and_notify!(@agent_prescripteur)
-    @participation = rdv.participations.where(user: user).first
   end
 
   def lieu
