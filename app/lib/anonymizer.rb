@@ -9,6 +9,9 @@ class Anonymizer
     anonymize_table!("users")
     anonymize_table!("receipts")
     anonymize_table!("rdvs")
+    AnonymizerRules::TRUNCATED_TABLES.each do |table_name|
+      anonymize_table!(table_name)
+    end
   end
 
   def self.anonymize_table!(table_name)
