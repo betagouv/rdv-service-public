@@ -14,4 +14,6 @@ div.text-center
   = simple_form_for(current_agent, url: agents_calendar_sync_webcal_sync_path) do |f|
     = f.submit "Réinitialiser mon lien de synchronisation", class: "btn btn-secondary", data: { confirm: "Attention, si vous réinitialisez votre lien de synchronisation, vous devrez entrer le nouveau lien dans votre agenda externe" }
 
-= link_to "Retour aux méthodes de synchronisation calendrier", agents_calendar_sync_path, class: "float-right mt-3"
+= link_to agents_calendar_sync_path, class: "mt-5" do
+  i.fa.fa-arrow-left
+  = " Retour à la synchronisation d'agenda"

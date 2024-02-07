@@ -2,6 +2,7 @@ class Agents::WebcalSyncController < AgentAuthController
   include Admin::AuthenticatedControllerConcern
 
   layout "registration"
+  before_action { @active_agent_preferences_menu_item = :synchronisation }
 
   def show
     current_agent.update!(calendar_uid: new_calendar_uid) if current_agent.calendar_uid.nil?
