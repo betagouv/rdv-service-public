@@ -59,7 +59,7 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
   private
 
   def set_agent
-    @agent = Agent.find(params[:id])
+    @agent = Agent.active.find(params[:id])
   end
 
   def authorize_agent
