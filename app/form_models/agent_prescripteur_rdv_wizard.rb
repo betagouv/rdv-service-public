@@ -36,18 +36,12 @@ class AgentPrescripteurRdvWizard
     @rdv ||= if query_params[:rdv_collectif_id].present?
                Rdv.collectif.bookable_by_everyone_or_agents_and_prescripteurs_or_invited_users.find(query_params[:rdv_collectif_id])
              else
-               Rdv.new(query_params.slice(:starts_at, :user_ids, :motif_id, :lieu_id))
+               Rdv.new(query_params.slice(:starts_at, :motif_id, :lieu_id))
              end
   end
 
-  def participations
-    return @rdv.participations if @rdv.participations.present?
-
-    @rdv.participations = users.map { Participation.new(rdv: @rdv, user: _1, created_by: @agent_prescripteur) }
-  end
-
   def participation
-    participations.first
+    @participation ||= Participation.new(rdv: @rdv, user: user, created_by: @agent_prescripteur, created_by_agent_prescripteur: true)
   end
 
   def creneau
@@ -64,6 +58,15 @@ class AgentPrescripteurRdvWizard
     query_params[:user_ids]&.compact_blank&.map { User.find(_1) }
   end
 
+  def user
+    user_ids = Array(query_params[:user_ids]).compact_blank
+    users = User.where(id: user_ids)
+    if users.count > 1
+      Sentry.capture_message("AgentPrescripteurRdvWizard a plusieurs user_ids: #{user_ids.inspect}", fingerprint: "several_user_ids")
+    end
+    users.first
+  end
+
   private
 
   def create_rdv!
@@ -73,10 +76,10 @@ class AgentPrescripteurRdvWizard
       agents: [creneau.agent],
       duration_in_min: motif&.default_duration_in_min
     )
-    rdv.participations.map(&:set_default_notifications_flags)
+    rdv.participations = [participation]
+
     rdv.save!
 
-    @participation = rdv.participations.first
     Notifiers::RdvCreated.perform_with(rdv, @agent_prescripteur)
   end
 

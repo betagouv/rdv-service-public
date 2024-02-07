@@ -30,6 +30,12 @@ describe "Agent can see RDV details correctly" do
       expect(page).to have_content("Rendez-vous pris par Jean VALJEAN")
     end
 
+    it "displays the agent prescripteur when present" do
+      rdv.participations.last.update!(created_by: agent, created_by_agent_prescripteur: true)
+      visit admin_organisation_rdvs_path(organisation)
+      expect(page).to have_content("Rendez-vous pris par Bruce WAYNE")
+    end
+
     it "Allows showing RDVs data and correctly displays user notifications and notif info" do
       visit admin_organisation_rdv_path(organisation, rdv)
       expect(page).to have_text("Contenu")

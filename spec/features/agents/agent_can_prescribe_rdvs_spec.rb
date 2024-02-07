@@ -18,10 +18,12 @@ describe "agents can prescribe rdvs" do
   let!(:motif_mds) { create(:motif, organisation: org_mds, service: agent_mds.services.first) }
   let!(:motif_insertion) { create(:motif, organisation: org_insertion, service: agent_mds.services.first) }
   let!(:motif_autre_service) { create(:motif, organisation: org_insertion) }
+  let!(:motif_collectif) { create(:motif, :collectif, organisation: org_mds) }
 
   let!(:mds_paris_nord) { create(:lieu, organisation: org_mds) }
   let!(:mission_locale_paris_nord) { create(:lieu, organisation: org_insertion) }
   let!(:mission_locale_paris_sud) { create(:lieu, organisation: org_insertion) }
+  let!(:collective_rdv) { create(:rdv, :collectif, organisation: org_mds, starts_at: now + 1.day, motif: motif_collectif, lieu: mds_paris_nord, created_by: agent_mds) }
 
   before do
     next_month = (now + 1.month).to_date
@@ -81,6 +83,36 @@ describe "agents can prescribe rdvs" do
       expect(created_rdv.starts_at).to eq(Time.zone.parse("2024-02-05 11:00"))
       expect(created_rdv.created_by).to eq(agent_mds)
       expect(created_rdv.participations.last.created_by).to eq(agent_mds)
+      expect(created_rdv.participations.last.created_by_agent_prescripteur).to eq(true)
+    end
+
+    it "works for a collective rdv", js: true do
+      login_as(agent_mds, scope: :agent)
+      visit root_path
+      within(".left-side-menu") { click_on "Trouver un RDV" }
+      click_link "élargir votre recherche"
+      expect(page).to have_content("Nouveau RDV par prescription")
+      # Select Service
+      expect(page).to have_content("Sélectionnez le service avec qui vous voulez prendre un RDV")
+      expect(page).to have_content(motif_collectif.service.name)
+      find("h3", text: motif_collectif.service.name).ancestor("a").click
+      # Select Lieu
+      find(".card-title", text: /#{mds_paris_nord.name}/).ancestor(".card").find("a.stretched-link").click
+      # Select créneau
+      first(:link, "S'inscrire").click
+      # Display User selection
+      find(".select2-selection[aria-labelledby=select2-user_ids_-container]").click
+      find(".select2-search__field").send_keys("francis")
+      expect(page).to have_content("FACTICE Francis")
+      first(".select2-results ul.select2-results__options li").click
+      click_on "Continuer"
+      # Display Récapitulatif
+      expect(page).to have_content("Motif : #{motif_collectif.name}")
+      expect(page).to have_content("Lieu : #{mds_paris_nord.name}")
+      expect(page).to have_content("Date du rendez-vous :")
+      expect(page).to have_content("Usager : Francis FACTICE")
+      expect { click_button "Confirmer le rdv" }.to change(Rdv.last.reload.participations, :count).by(1)
+      expect(Rdv.last.participations.where(user: existing_user).first.created_by_agent_prescripteur).to eq(true)
     end
   end
 
@@ -106,6 +138,7 @@ describe "agents can prescribe rdvs" do
       click_on "Continuer"
       expect { click_button "Confirmer le rdv" }.to change(Rdv, :count).by(1)
       expect(Rdv.last.users.first.organisations).to match_array([org_mds, org_insertion])
+      expect(Rdv.last.participations.first.created_by_agent_prescripteur).to eq(true)
     end
 
     # Cette spec a été ajoutée suite à un bug qui faisait qu'on si on
@@ -139,6 +172,7 @@ describe "agents can prescribe rdvs" do
       click_on "Continuer"
       expect { click_button "Confirmer le rdv" }.to change(Rdv, :count).by(1)
       expect(Rdv.last.users.first.full_name).to eq("Jean-Pierre BONJOUR")
+      expect(Rdv.last.participations.first.created_by_agent_prescripteur).to eq(true)
     end
   end
 
@@ -167,6 +201,7 @@ describe "agents can prescribe rdvs" do
       # Display Confirmation
       expect(page).to have_content("Rendez-vous confirmé")
       expect(Rdv.last.users.first).to eq(user)
+      expect(Rdv.last.participations.first.created_by_agent_prescripteur).to eq(true)
     end
   end
 end
