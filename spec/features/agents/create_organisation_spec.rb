@@ -19,9 +19,13 @@ RSpec.describe "Organisations" do
     expect(page).to have_content("MDS de Paris Sud")
     click_link "Ajouter une organisation"
 
-    expect(page).to have_content("adsdf")
-
     fill_in "Nom", with: "MDS Paris Est"
     click_button "Enregistrer"
+    expect(page).to have_content("Organisation enregistrée")
+    expect(Organisation.last).to have_attributes(
+      name: "MDS Paris Est",
+      territory: territory,
+      agents: [agent]
+    )
   end
 end
