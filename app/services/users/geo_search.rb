@@ -17,19 +17,18 @@ class Users::GeoSearch
     @most_relevant_organisations ||= Organisation.attributed_to_sectors(sectors: matching_sectors, most_relevant: true)
   end
 
-  def attributed_agents_by_organisation
-    @attributed_agents_by_organisation ||= matching_sectors
+  memoize def attributed_agents_by_organisation
+    matching_sectors
       .map { |sector| sector.attributions.level_agent.includes(:agent).to_a }
       .flatten
       .group_by(&:organisation)
       .transform_values { |attributions| attributions.map(&:agent) }
   end
 
-  def matching_zones
+  memoize def matching_zones
     return nil if @city_code.nil?
 
-    @matching_zones ||= \
-      matching_zones_streets_arel.any? ? matching_zones_streets_arel : matching_zones_cities_arel
+    matching_zones_streets_arel.any? ? matching_zones_streets_arel : matching_zones_cities_arel
   end
 
   def matching_sectors
@@ -99,14 +98,13 @@ class Users::GeoSearch
       .where(organisations: { id: attributed_organisations.pluck(:id) })
   end
 
-  def available_motifs_from_attributed_agents_arel
-    @available_motifs_from_attributed_agents_arel ||= \
-      # Pour pouvoir utilser le `or` de la méthode `available_motifs_arels` il faut avoir des
-      # requête avec les mêmes jointures, donc cette requête supplémentaire est nécessaire
-      Motif.where(
-        id: (available_collective_motifs_from_attributed_agents_arel +
-            available_individual_motifs_from_attributed_agents_arel).flat_map(&:ids)
-      )
+  memoize def available_motifs_from_attributed_agents_arel
+    # Pour pouvoir utilser le `or` de la méthode `available_motifs_arels` il faut avoir des
+    # requête avec les mêmes jointures, donc cette requête supplémentaire est nécessaire
+    Motif.where(
+      id: (available_collective_motifs_from_attributed_agents_arel +
+          available_individual_motifs_from_attributed_agents_arel).flat_map(&:ids)
+    )
   end
 
   def available_motifs_base
@@ -128,8 +126,8 @@ class Users::GeoSearch
     @individual_and_collectifs_motifs_ids ||= individual_motifs.select(:id).ids + collective_motifs.select(:id).ids
   end
 
-  def available_individual_motifs_from_attributed_agents_arel
-    @available_individual_motifs_from_attributed_agents_arel ||= attributed_agents_by_organisation
+  memoize def available_individual_motifs_from_attributed_agents_arel
+    attributed_agents_by_organisation
       .map do |organisation, agents|
         agents.map { available_individual_motifs_from_attributed_agent_arel(_1, organisation) }
       end.flatten(1)
@@ -144,8 +142,8 @@ class Users::GeoSearch
       )
   end
 
-  def available_collective_motifs_from_attributed_agents_arel
-    @available_collective_motifs_from_attributed_agents_arel ||= attributed_agents_by_organisation
+  memoize def available_collective_motifs_from_attributed_agents_arel
+    attributed_agents_by_organisation
       .map do |organisation, agents|
         agents.map { available_collective_motifs_from_attributed_agent_arel(_1, organisation) }
       end.flatten(1)

@@ -41,10 +41,10 @@ class ApplicationController < ActionController::Base
     }.compact
   end
 
-  def current_prescripteur
+  memoize def current_prescripteur
     return nil unless session[:autocomplete_prescripteur_attributes]
 
-    @current_prescripteur ||= Prescripteur.new(session[:autocomplete_prescripteur_attributes])
+    Prescripteur.new(session[:autocomplete_prescripteur_attributes])
   end
 
   # By default, Sentry does not log request URL and params because they could

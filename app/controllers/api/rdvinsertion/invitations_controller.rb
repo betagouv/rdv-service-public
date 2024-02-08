@@ -32,8 +32,8 @@ class Api::Rdvinsertion::InvitationsController < Api::V1::AgentAuthBaseControlle
     ).creneaux.any?
   end
 
-  def invitation_search_context
-    @invitation_search_context ||= InvitationSearchContext.new(
+  memoize def invitation_search_context
+    InvitationSearchContext.new(
       user: user,
       query_params: invitation_link_hash
     )

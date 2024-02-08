@@ -8,11 +8,10 @@ class RdvStartCoherence
     @rdv = rdv
   end
 
-  def rdvs_ending_shortly_before
+  memoize def rdvs_ending_shortly_before
     return [] if rdvs_ending_right_before?
 
-    @rdvs_ending_shortly_before ||= all_rdvs_ending_before
-      .select { _1.ends_at <= starts_at - THRESHOLD }
+    all_rdvs_ending_before.select { _1.ends_at <= starts_at - THRESHOLD }
   end
 
   def rdvs_ending_shortly_before?
@@ -30,13 +29,13 @@ class RdvStartCoherence
     rdvs_ending_right_before.any?
   end
 
-  def all_rdvs_ending_before
+  memoize def all_rdvs_ending_before
     return Rdv.none if starts_at.blank? || duration_in_min.blank?
 
     agents = rdv.agents
     agents = agents.to_a if rdv.new_record?
 
-    @all_rdvs_ending_before ||= Rdv
+    Rdv
       .not_cancelled
       .future
       .joins(:agents).where(agents: agents)

@@ -36,9 +36,8 @@ module Users::CreneauxWizardConcern
     end
   end
 
-  def user_selected_organisation
-    @user_selected_organisation ||= \
-      @user_selected_organisation_id.present? ? Organisation.find(@user_selected_organisation_id) : nil
+  memoize def user_selected_organisation
+    @user_selected_organisation_id.present? ? Organisation.find(@user_selected_organisation_id) : nil
   end
 
   def unique_motifs_by_name_and_location_type
@@ -64,16 +63,15 @@ module Users::CreneauxWizardConcern
     @services ||= matching_motifs.includes(:service).map(&:service).uniq.sort_by(&:name)
   end
 
-  def lieux
-    @lieux ||= \
-      Lieu
-        .with_open_slots_for_motifs(matching_motifs)
-        .includes(:organisation)
-        .sort_by { |lieu| lieu.distance(@latitude.to_f, @longitude.to_f) }
+  memoize def lieux
+    Lieu
+      .with_open_slots_for_motifs(matching_motifs)
+      .includes(:organisation)
+      .sort_by { |lieu| lieu.distance(@latitude.to_f, @longitude.to_f) }
   end
 
-  def next_availability_by_lieux
-    @next_availability_by_lieux ||= lieux.index_with do |lieu|
+  memoize def next_availability_by_lieux
+    lieux.index_with do |lieu|
       creneaux_search_for(
         lieu, date_range, matching_motifs.where(organisation: lieu.organisation).first
       ).next_availability

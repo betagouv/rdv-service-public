@@ -61,12 +61,12 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
                       end
   end
 
-  def search_creneaux_service
-    @search_creneaux_service ||= if requires_lieu?
-                                   SearchCreneauxForAgentsService.perform_with(@form)
-                                 else
-                                   SearchCreneauxWithoutLieuForAgentsService.perform_with(@form)
-                                 end
+  memoize def search_creneaux_service
+    if requires_lieu?
+      SearchCreneauxForAgentsService.perform_with(@form)
+    else
+      SearchCreneauxWithoutLieuForAgentsService.perform_with(@form)
+    end
   end
 
   def creneaux_search_params

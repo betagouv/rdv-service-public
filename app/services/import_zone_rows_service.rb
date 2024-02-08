@@ -101,8 +101,8 @@ class ImportZoneRowsService < BaseService
     @result[:counts][row_import_result.key][row_import_result.zone.sector.human_id] += 1
   end
 
-  def sectors_by_human_id
-    @sectors_by_human_id ||= Sector
+  memoize def sectors_by_human_id
+    Sector
       .where(territory: @territory, human_id: @rows.pluck("sector_id"))
       .map { [_1.human_id, _1] }
       .to_h

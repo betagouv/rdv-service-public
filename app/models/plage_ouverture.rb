@@ -83,9 +83,8 @@ class PlageOuverture < ApplicationRecord
     overlapping_plages_ouvertures_candidates.any? { overlaps?(_1) }
   end
 
-  def overlapping_plages_ouvertures
-    @overlapping_plages_ouvertures ||= overlapping_plages_ouvertures_candidates
-      .select { overlaps?(_1) }
+  memoize def overlapping_plages_ouvertures
+    overlapping_plages_ouvertures_candidates.select { overlaps?(_1) }
   end
 
   def covers_date?(date)

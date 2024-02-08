@@ -9,10 +9,10 @@ module AdminHelper
     tag.span(value.presence || "N/A", class: value.blank? ? "text-muted" : "")
   end
 
-  def current_agent_role
+  memoize def current_agent_role
     return nil if current_agent.nil? || current_organisation.nil?
 
-    @current_agent_role ||= current_agent.roles.find_by(organisation: current_organisation)
+    current_agent.roles.find_by(organisation: current_organisation)
   end
 
   # Build a dummy model linked the current_organisation to fetch its policy.
