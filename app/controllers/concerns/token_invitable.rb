@@ -2,6 +2,7 @@
 # If valid the invitation token and params will be stored in the session. The user will then be signed in through the invitation in session.
 # If the token is linked to a Participation, it will also be linked to a rdv.
 module TokenInvitable
+  include Memery
   extend ActiveSupport::Concern
 
   included do
