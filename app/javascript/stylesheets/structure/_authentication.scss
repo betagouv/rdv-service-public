@@ -4,41 +4,58 @@ body.authentication-bg {
   background: linear-gradient(to right, lighten($primary, 30%), lighten($secondary, 30%));
 }
 
-.agent-name{
-  font-size: 1.5rem;
-}
-
 .logout-icon {
   width: 140px;
 }
 
 .auth-fluid {
-  position: relative;
-  display: flex;
-  align-items: center;
   min-height: 100vh;
-  flex-direction: row;
-  align-items: stretch;
   background-size: cover;
 
   .auth-fluid-form-box {
-    max-width: 960px;
-    border-radius: 0;
     z-index: 2;
     padding: 3rem 2rem;
     background-color: $white;
-    position: relative;
-    width: 100%;
+
+    @include media-breakpoint-down(md) {
+      min-height: 100vh;
+      padding: 1rem;
+    }
   }
 
   .auth-fluid-left {
-    flex: 1;
-    position: relative;
     color: $white;
     background-color: $primary;
 
+    @include media-breakpoint-up(lg) {
+      padding: 6rem 3rem 0rem 3rem;
+    }
+
     a {
       color: $white;
+    }
+
+    .sidemenu__item {
+      padding: 0 1rem;
+      a {
+        color: $menu-item;
+        transition: all 0.4s;
+
+        &:focus,
+        &:hover {
+          color: $white;
+        }
+      }
+
+    }
+    .sidemenu__item--active {
+      margin-left: -2px;
+      border-left-width: 2px;
+      border-left-style: solid;
+      border-left-color: $white;
+      a {
+        color: $white;
+      }
     }
 
     body.agents & {
@@ -50,6 +67,11 @@ body.authentication-bg {
       }
     }
   }
+  .auth-fluid-left--agent-preferences {
+    @include media-breakpoint-up(lg) {
+      padding: 3rem 2rem 0rem 2rem;
+    }
+  }
 }
 
 .toggle-password{
@@ -59,26 +81,6 @@ body.authentication-bg {
   position: relative;
   z-index: 2;
   cursor: pointer;
-}
-
-@include media-breakpoint-up(lg) {
-  .auth-fluid {
-    .auth-fluid-left {
-      padding: 6rem 3rem;
-    }
-  }
-}
-
-@include media-breakpoint-down(md) {
-  .auth-fluid {
-    display: block;
-
-    .auth-fluid-form-box {
-      max-width: 100%;
-      min-height: 100vh;
-      padding: 1rem;
-    }
-  }
 }
 
 .france-connect-link {

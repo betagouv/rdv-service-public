@@ -63,7 +63,7 @@ Ces choix techniques sont aussi influencés par la culture de la communauté Rub
 | App Rails        | Postgres Scalingo | TCP       | 5432 | Paris/SecNumCloud | Interne             |
 | App Rails        | Redis Scalingo    | TCP       | 6379 | Paris/SecNumCloud | Interne             |
 
-#### Tooling (error monitoring, APM, analytics)
+#### Tooling (error monitoring, APM)
 
 | Source     | Destination | Protocole | Port | Localisation              | Interne/URL Externe                             |
 |------------|-------------|-----------|------|---------------------------|-------------------------------------------------|
@@ -71,7 +71,6 @@ Ces choix techniques sont aussi influencés par la culture de la communauté Rub
 | Sentry     | N8n         | HTTPS     | 443  |                           | n8n.inclusion-numerique.incubateur.anct.gouv.fr |
 | N8n        | Mattermost  | HTTPS     | 443  | Paris/SecNumCloud, France | mattermost.incubateur.net                       |
 | App Rails  | Skylight    | HTTPS     | 443  | Ashburn, Virginia,    USA | skylight.io                                     |
-| Navigateur | Matomo      | HTTPS     | 443  | France                    | stats.data.gouv.fr                              |
 | Extension PostgreSQL de l'app Rails | Appli ETL sur Scalingo | | | Paris/SecNumCloud | https://dashboard.scalingo.com/apps/osc-secnum-fr1/rdv-service-public-etl |
 | Appli ETL sur Scalingo | Metabase | TCP/IP avec SSL | 30204 | Paris/SecNumCloud | https://rdv-service-public-metabase.osc-secnum-fr1.scalingo.io |
 
@@ -194,7 +193,6 @@ C4Container
 
     System_Ext(sentry, "Sentry", "Error monitoring")
     System_Ext(skylight, "Skylight", "APM")
-    System_Ext(matomo, "Matomo", "Analytics")
 
     System_Ext(brevo, "Brevo", "Emails transactionnels")
     System_Ext(api_microsoft, "API Microsoft", "Synchro Outlook")
@@ -204,7 +202,6 @@ C4Container
 
     Rel(web_app, sentry, "HTTPS")
     Rel(web_app, skylight, "HTTPS")
-    Rel(web_app, matomo, "HTTPS")
     Rel(web_app, brevo, "SMTP")
     Rel(web_app, api_microsoft, "HTTPS")
     Rel(web_app, netsize, "HTTPS")

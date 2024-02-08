@@ -1,13 +1,4 @@
 fr:
-  organisations:
-    new:
-      create_service_now: Créez et paramétrez votre service en moins de 5 minutes pour accepter des RDVs en ligne dès aujourd'hui !
-      organisation_name: Nom de votre organisation
-      manage_rdvs_in_your_region: Gérez les rendez-vous de votre département
-      example_address_organisation: Maison départementale des solidarités de Beaupréau-en-Mauges
-      example_departement_organisation: "49"
-      your_email: Votre email
-      example_email_organisation: benoit.goulli@departement.fr
   activerecord:
     models:
       organisation: Organisation
