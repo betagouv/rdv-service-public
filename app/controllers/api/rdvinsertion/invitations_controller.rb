@@ -9,7 +9,7 @@ class Api::Rdvinsertion::InvitationsController < Api::V1::AgentAuthBaseControlle
 
   private
 
-  memoize defdef user
+  memoize def user
     Invitation.new(invitation_link_hash).user
   end
 
@@ -39,7 +39,7 @@ class Api::Rdvinsertion::InvitationsController < Api::V1::AgentAuthBaseControlle
     )
   end
 
-memoize def invitation_link_hash
+  memoize def invitation_link_hash
     invitation_link_params.to_h.deep_symbolize_keys
   end
 

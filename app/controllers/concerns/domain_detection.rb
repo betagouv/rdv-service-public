@@ -1,4 +1,5 @@
 module DomainDetection
+  include Memery
   extend ActiveSupport::Concern
 
   included do

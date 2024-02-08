@@ -1,4 +1,6 @@
 module AdminHelper
+  include Memery
+
   def collapsible_form_fields_for_warnings(model, &block)
     tag.div(class: %w[form-collapsable-fields-wrapper collapse js-collapse-warning-confirmation] +
         (model.errors_are_all_benign? ? [] : ["show"]),
