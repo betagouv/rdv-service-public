@@ -9,8 +9,8 @@ class Api::Rdvinsertion::InvitationsController < Api::V1::AgentAuthBaseControlle
 
   private
 
-  def user
-    @user ||= Invitation.new(invitation_link_hash).user
+  memoize defdef user
+    Invitation.new(invitation_link_hash).user
   end
 
   def creneau_available?
@@ -39,8 +39,8 @@ class Api::Rdvinsertion::InvitationsController < Api::V1::AgentAuthBaseControlle
     )
   end
 
-  def invitation_link_hash
-    @invitation_link_hash ||= invitation_link_params.to_h.deep_symbolize_keys
+memoize def invitation_link_hash
+    invitation_link_params.to_h.deep_symbolize_keys
   end
 
   def invitation_link_params

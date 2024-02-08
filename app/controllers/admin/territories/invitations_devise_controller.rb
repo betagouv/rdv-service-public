@@ -40,8 +40,8 @@ class Admin::Territories::InvitationsDeviseController < Devise::InvitationsContr
     AgentTerritorialContext.new(current_agent, current_territory)
   end
 
-  def current_territory
-    @current_territory ||= Territory.find(params[:territory_id])
+  memoize def current_territory
+    Territory.find(params[:territory_id])
   end
   helper_method :current_territory
 

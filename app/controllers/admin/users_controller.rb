@@ -176,11 +176,11 @@ class Admin::UsersController < AgentAuthController
   end
 
   def index_params
-    @index_params ||= params.permit(:organisation_id, :agent_id, :search)
+    params.permit(:organisation_id, :agent_id, :search)
   end
 
   def search_params
-    @search_params ||= params.permit(:term)
+    params.permit(:term)
   end
 
   def set_user

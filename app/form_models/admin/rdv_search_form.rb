@@ -3,24 +3,24 @@ class Admin::RdvSearchForm
 
   attr_accessor :organisation_id, :start, :end, :agent_id, :user_id, :lieu_id, :status, :motif_id, :scoped_organisation_id
 
-  def organisation
+  memoize def organisation
     if scoped_organisation_id.present?
-      @organisation ||= Organisation.find(scoped_organisation_id)
+      Organisation.find(scoped_organisation_id)
     elsif organisation_id.present?
-      @organisation ||= Organisation.find(organisation_id)
+      Organisation.find(organisation_id)
     end
   end
 
-  def agent
-    @agent ||= Agent.find(agent_id) if agent_id.present?
+  memoize def agent
+    Agent.find(agent_id) if agent_id.present?
   end
 
-  def user
-    @user ||= User.find(user_id) if user_id.present?
+  memoize def user
+    User.find(user_id) if user_id.present?
   end
 
-  def lieu
-    @lieu ||= Lieu.find(lieu_id) if lieu_id.present?
+  memoize def lieu
+    Lieu.find(lieu_id) if lieu_id.present?
   end
 
   def to_query

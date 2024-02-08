@@ -56,7 +56,7 @@ module TokenInvitable
     redirect_to root_path
   end
 
-  def invitation
-    @invitation ||= (session[:invitation].present? ? Invitation.new(session[:invitation]) : nil)
+  memoize def invitation
+    (session[:invitation].present? ? Invitation.new(session[:invitation]) : nil)
   end
 end

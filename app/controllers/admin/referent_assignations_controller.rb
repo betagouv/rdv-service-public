@@ -35,6 +35,6 @@ class Admin::ReferentAssignationsController < AgentAuthController
   private
 
   def index_params
-    @index_params ||= params.permit(:user_id, :search)
+    params.permit(:user_id, :search)
   end
 end

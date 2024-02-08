@@ -164,11 +164,11 @@ module Admin::RdvFormConcern
       .transform_values(&:last)
   end
 
-  def rdvs_overlapping
-    @rdvs_overlapping ||= RdvsOverlapping.new(rdv)
+  memoize def rdvs_overlapping
+    RdvsOverlapping.new(rdv)
   end
 
-  def rdv_start_coherence
-    @rdv_start_coherence ||= RdvStartCoherence.new(rdv)
+  memoize def rdv_start_coherence
+    RdvStartCoherence.new(rdv)
   end
 end
