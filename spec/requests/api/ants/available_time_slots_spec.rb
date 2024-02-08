@@ -19,6 +19,12 @@ describe "ANTS API: availableTimeSlots" do
     create(:plage_ouverture, lieu: lieu1, first_day: Date.new(2022, 11, 1),
                              start_time: Tod::TimeOfDay(9), end_time: Tod::TimeOfDay(10),
                              organisation: organisation, motifs: [motif])
+
+    # Une deuxième plage d'ouverture identique pour vérifier qu'il n'y a pas de doublon
+    create(:plage_ouverture, lieu: lieu1, first_day: Date.new(2022, 11, 1),
+                             start_time: Tod::TimeOfDay(9), end_time: Tod::TimeOfDay(10),
+                             organisation: organisation, motifs: [motif])
+
     create(:plage_ouverture, lieu: lieu2, first_day: Date.new(2022, 11, 2),
                              start_time: Tod::TimeOfDay(12), end_time: Tod::TimeOfDay(13),
                              organisation: organisation2, motifs: [motif2])
