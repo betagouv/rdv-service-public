@@ -118,11 +118,11 @@ class ImportZoneRowsService < BaseService
   end
 
   def rows_cities
-    @rows_cities ||= @rows.select { row_level(_1) == Zone::LEVEL_CITY }
+    @rows.select { row_level(_1) == Zone::LEVEL_CITY }
   end
 
   def rows_streets
-    @rows_streets ||= @rows.select { row_level(_1) == Zone::LEVEL_STREET }
+    @rows.select { row_level(_1) == Zone::LEVEL_STREET }
   end
 
   def row_level(row)

@@ -20,9 +20,8 @@ class RdvStartCoherence
 
   private
 
-  def rdvs_ending_right_before
-    @rdvs_ending_right_before ||= all_rdvs_ending_before
-      .select { _1.ends_at > starts_at - THRESHOLD }
+  memoize def rdvs_ending_right_before
+    all_rdvs_ending_before.select { _1.ends_at > starts_at - THRESHOLD }
   end
 
   def rdvs_ending_right_before?

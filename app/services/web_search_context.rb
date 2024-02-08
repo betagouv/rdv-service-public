@@ -29,8 +29,8 @@ class WebSearchContext < SearchContext
     @prescripteur
   end
 
-  def departement
-    @departement ||= (@query_params[:departement] || public_link_organisation&.departement_number)
+  memoize def departement
+    (@query_params[:departement] || public_link_organisation&.departement_number)
   end
 
   def organisation_id
@@ -64,7 +64,7 @@ class WebSearchContext < SearchContext
 
   attr_reader :referent_ids, :lieu_id
 
-  def matching_motifs
-    @matching_motifs ||= filter_motifs(geo_search.available_motifs)
+  memoize def matching_motifs
+    filter_motifs(geo_search.available_motifs)
   end
 end

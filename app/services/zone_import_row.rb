@@ -82,8 +82,8 @@ class ZoneImportRow
     @row["street_name"].present? || @row["street_code"].present? ? Zone::LEVEL_STREET : Zone::LEVEL_CITY
   end
 
-  def zone
-    @zone ||= build_zone
+  memoize def zone
+    build_zone
   end
 
   def build_zone

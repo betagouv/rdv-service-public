@@ -74,12 +74,12 @@ class PlageOuvertureOverlap
     po1.start_time < po2.end_time && po1.end_time > po2.start_time
   end
 
-  def po1_occurrences_dates
-    @po1_occurrences_dates ||= po1.occurrences_for(occurrences_date_range).map(&:to_date)
+  memoize def po1_occurrences_dates
+    po1.occurrences_for(occurrences_date_range).map(&:to_date)
   end
 
-  def po2_occurrences_dates
-    @po2_occurrences_dates ||= po2.occurrences_for(occurrences_date_range).map(&:to_date)
+  memoize def po2_occurrences_dates
+    po2.occurrences_for(occurrences_date_range).map(&:to_date)
   end
 
   memoize def occurrences_date_range

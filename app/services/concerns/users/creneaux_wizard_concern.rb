@@ -60,8 +60,8 @@ module Users::CreneauxWizardConcern
     end
   end
 
-  def services
-    @services ||= matching_motifs.includes(:service).map(&:service).uniq.sort_by(&:name)
+  memoize def services
+    matching_motifs.includes(:service).map(&:service).uniq.sort_by(&:name)
   end
 
   memoize def lieux
@@ -83,8 +83,8 @@ module Users::CreneauxWizardConcern
     next_availability_by_lieux.keys
   end
 
-  def next_availability
-    @next_availability ||= creneaux.empty? ? creneaux_search.next_availability : nil
+  memoize def next_availability
+    creneaux.empty? ? creneaux_search.next_availability : nil
   end
 
   def max_public_booking_delay
