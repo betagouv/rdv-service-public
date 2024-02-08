@@ -288,6 +288,8 @@ GEM
       net-smtp
     marcel (1.0.2)
     matrix (0.4.2)
+    memery (1.5.0)
+      ruby2_keywords (~> 0.0.2)
     method_source (1.0.0)
     mini_mime (1.1.5)
     mini_portile2 (2.8.5)
@@ -658,6 +660,7 @@ DEPENDENCIES
   listen
   lograge
   mail
+  memery
   montrose
   omniauth-github
   omniauth-microsoft_graph

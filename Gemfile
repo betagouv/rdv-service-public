@@ -145,6 +145,8 @@ gem "icalendar", "~> 2.5"
 # Tame Rails' multi-line logging into a single line per request
 gem "lograge"
 
+gem "memery"
+
 group :development, :test do
   # Identify database issues before they hit production.
   gem "active_record_doctor"
