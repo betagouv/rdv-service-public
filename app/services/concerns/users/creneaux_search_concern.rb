@@ -13,7 +13,7 @@ module Users::CreneauxSearchConcern
     reduced_date_range = Lapin::Range.reduce_range_to_delay(motif, date_range) # réduit le range en fonction du délay
     return [] if reduced_date_range.blank?
 
-    SlotBuilder.available_slots(motif, @lieu, reduced_date_range, attributed_agents)
+    SlotBuilder.available_slots(motif, @lieu, reduced_date_range, attributed_agents, @creneau_duration_in_min)
   end
 
   def available_collective_rdvs
