@@ -9,15 +9,16 @@
       user_ids: @rdv.user_ids, agent_ids: @rdv.agent_ids,
       lieu_attributes: @rdv.nested_lieu_attributes
 
-    = f.input :service_id, \
-      collection: @services, \
-      input_html: { \
-        class: "select2-input js-service-filter", \
-        data: { \
-          placeholder: "Sélectionnez un service pour filtrer les motifs", \
-          "select-options": { disableSearch: true }, \
-        }, \
-      }
+    - if @services.count > 1
+      = f.input :service_id, \
+        collection: @services, \
+        input_html: { \
+          class: "select2-input js-service-filter", \
+          data: { \
+            placeholder: "Sélectionnez un service pour filtrer les motifs", \
+            "select-options": { disableSearch: true }, \
+          }, \
+        }
     = f.input :motif_id, \
       required: true, \
       include_blank: true, \
