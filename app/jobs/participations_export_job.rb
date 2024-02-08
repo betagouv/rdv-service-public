@@ -21,6 +21,6 @@ class ParticipationsExportJob < ExportJob
   private
 
   def file_name
-    @file_name ||= "export-rdvs-user-#{Time.zone.now.strftime('%Y-%m-%d')}.xls"
+    "export-rdvs-user-#{Time.zone.now.strftime('%Y-%m-%d')}.xls"
   end
 end

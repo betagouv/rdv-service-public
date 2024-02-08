@@ -145,9 +145,8 @@ class User < ApplicationRecord
     relative? ? responsible : self
   end
 
-  def profile_for(organisation)
-    @profiles ||= user_profiles.index_by(&:organisation_id)
-    @profiles[organisation.id]
+  memoize def profile_for(organisation)
+    user_profiles.index_by(&:organisation_id)[organisation.id]
   end
 
   def participation_for(rdv)

@@ -222,10 +222,10 @@ class Rdv < ApplicationRecord
   # Il y a une vérification de scope dans l'appelant (pourquoi ?)
   # et utilisation du nom et du lieu
   #
-  def overlapping_plages_ouvertures
+  memoize def overlapping_plages_ouvertures
     return [] if starts_at.blank? || ends_at.blank? || lieu.blank? || past? || errors.present?
 
-    @overlapping_plages_ouvertures ||= PlageOuverture
+    PlageOuverture
       .where(agent: agent_ids)
       .where.not(lieu: lieu)
       .overlapping_range(starts_at..ends_at)
@@ -235,10 +235,10 @@ class Rdv < ApplicationRecord
     overlapping_plages_ouvertures.any?
   end
 
-  def overlapping_absences
+  memoize def overlapping_absences
     return [] if starts_at.blank? || ends_at.blank? || past? || errors.present?
 
-    @overlapping_absences ||= Absence.where(agent: agent_ids).overlapping_range(starts_at..ends_at)
+    Absence.where(agent: agent_ids).overlapping_range(starts_at..ends_at)
   end
 
   def overlapping_absences?

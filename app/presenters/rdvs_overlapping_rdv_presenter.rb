@@ -17,8 +17,8 @@ class RdvsOverlappingRdvPresenter
 
   private
 
-  def in_scope?
-    @in_scope ||= Agent::RdvPolicy::DepartementScope.new(agent_context, Rdv).in_scope?(rdv)
+  memoize def in_scope?
+    Agent::RdvPolicy::DepartementScope.new(agent_context, Rdv).in_scope?(rdv)
   end
 
   def i18n_key

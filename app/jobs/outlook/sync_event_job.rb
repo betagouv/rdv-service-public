@@ -35,8 +35,8 @@ module Outlook
 
     private
 
-    def agents_rdv
-      @agents_rdv ||= AgentsRdv.find_by_id(@agents_rdv_id)
+    memoize def agents_rdv
+      AgentsRdv.find_by_id(@agents_rdv_id)
     end
 
     def event_should_be_in_outlook?
@@ -71,7 +71,7 @@ module Outlook
     delegate :rdv, to: :agents_rdv
 
     def api_client
-      @api_client ||= Outlook::ApiClient.new(@agent)
+      Outlook::ApiClient.new(@agent)
     end
   end
 end

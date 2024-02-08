@@ -1,5 +1,6 @@
 module Users::CreneauxWizardConcern
   extend ActiveSupport::Concern
+  include Memery
 
   # *** Method that outputs the next step for the user to complete its rdv journey ***
   # *** It is used in #to_partial_path to render the matching partial view ***
@@ -40,23 +41,23 @@ module Users::CreneauxWizardConcern
     @user_selected_organisation_id.present? ? Organisation.find(@user_selected_organisation_id) : nil
   end
 
-  def unique_motifs_by_name_and_location_type
-    @unique_motifs_by_name_and_location_type ||= matching_motifs.uniq(&:name_with_location_type)
+  memoize def unique_motifs_by_name_and_location_type
+    matching_motifs.uniq(&:name_with_location_type)
   end
 
   # next availability by organisation for motifs without lieu
-  def next_availability_by_motifs_organisations
-    @next_availability_by_motifs_organisations ||= matching_motifs.to_h do |motif|
+  memoize def next_availability_by_motifs_organisations
+    matching_motifs.to_h do |motif|
       [motif.organisation, creneaux_search_for(nil, date_range, motif).next_availability]
     end.compact
   end
 
-  def service
-    @service ||= if @service_id.present?
-                   Service.find(@service_id)
-                 elsif services.count == 1
-                   services.first
-                 end
+  memoize def service
+    if @service_id.present?
+      Service.find(@service_id)
+    elsif services.count == 1
+      services.first
+    end
   end
 
   def services

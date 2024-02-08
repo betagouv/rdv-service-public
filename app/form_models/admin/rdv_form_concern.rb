@@ -3,6 +3,7 @@ module Admin::RdvFormConcern
   include ActionView::Helpers::DateHelper
   include ActionView::Helpers::TranslationHelper # allows getting a SafeBuffer instead of a String when using #translate (which a direct call to I18n.t doesn't do)
   include Rails.application.routes.url_helpers
+  include Memery
 
   included do
     attr_accessor :rdv

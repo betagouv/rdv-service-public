@@ -134,11 +134,11 @@ class AddConseillerNumerique
     adresse_api_response.dig("features", 0, "properties", "city")
   end
 
-  def adresse_api_response
+  memoize def adresse_api_response
     zipcode_regex = /\d{5}/
     zipcode = @structure.address[zipcode_regex]
 
-    @adresse_api_response ||= Faraday.get(
+    Faraday.get(
       "https://api-adresse.data.gouv.fr/search/",
       q: @structure.address,
       postcode: zipcode
@@ -146,11 +146,11 @@ class AddConseillerNumerique
     JSON.parse(@adresse_api_response.body)
   end
 
-  def territory
-    @territory ||= Territory.find_by(name: "Conseillers Numériques")
+  memoize def territory
+    Territory.find_by(name: "Conseillers Numériques")
   end
 
-  def service
-    @service ||= Service.find_by(name: Service::CONSEILLER_NUMERIQUE)
+  memoize def service
+    Service.find_by(name: Service::CONSEILLER_NUMERIQUE)
   end
 end
