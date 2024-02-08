@@ -22,7 +22,7 @@ class AgentPrescripteurRdvWizard
 
   def create!
     ActiveRecord::Base.transaction do
-      if @rdv.collectif?
+      if rdv.collectif?
         create_participation!
       else
         create_rdv!
@@ -41,7 +41,7 @@ class AgentPrescripteurRdvWizard
   end
 
   memoize def participation
-    Participation.new(rdv: @rdv, user: user, created_by: @agent_prescripteur, created_by_agent_prescripteur: true)
+    Participation.new(rdv: rdv, user: user, created_by: @agent_prescripteur, created_by_agent_prescripteur: true)
   end
 
   memoize def creneau
