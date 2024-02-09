@@ -1,4 +1,4 @@
-describe Admin::ParticipationPresenter do
+RSpec.describe Admin::ParticipationPresenter do
   let(:organisation) { create(:organisation) }
   let(:user) { create(:user, organisations: [organisation]) }
 

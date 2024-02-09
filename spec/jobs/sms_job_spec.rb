@@ -1,4 +1,4 @@
-describe SmsJob do
+RSpec.describe SmsJob do
   describe "phone number validation" do
     subject(:perform) do
       described_class.new.perform(

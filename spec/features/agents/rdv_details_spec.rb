@@ -1,4 +1,4 @@
-describe "Agent can see RDV details correctly" do
+RSpec.describe "Agent can see RDV details correctly" do
   before do
     travel_to(Time.zone.local(2022, 4, 4))
     login_as(agent, scope: :agent)

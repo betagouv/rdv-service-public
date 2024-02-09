@@ -1,4 +1,4 @@
-describe "Anybody can see legal pages" do
+RSpec.describe "Anybody can see legal pages" do
   it "displays legal mention" do
     visit root_path
     expect(page).to have_content("Mentions Légales")

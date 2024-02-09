@@ -1,4 +1,4 @@
-describe "agents can prescribe rdvs" do
+RSpec.describe "agents can prescribe rdvs" do
   before do
     travel_to(now)
     stub_request(

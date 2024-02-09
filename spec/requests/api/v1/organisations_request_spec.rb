@@ -1,6 +1,6 @@
 require "swagger_helper"
 
-describe "Organisations API", swagger_doc: "v1/api.json" do
+RSpec.describe "Organisations API", swagger_doc: "v1/api.json" do
   with_examples
 
   path "/api/v1/organisations" do

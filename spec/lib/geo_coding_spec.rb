@@ -1,4 +1,4 @@
-describe GeoCoding do
+RSpec.describe GeoCoding do
   describe "#find_geo_coordinates" do
     before do
       stub_request(

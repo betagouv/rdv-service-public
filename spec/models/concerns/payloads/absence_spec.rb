@@ -1,4 +1,4 @@
-describe Payloads::Absence do
+RSpec.describe Payloads::Absence do
   describe "#payload" do
     %i[name starts_at recurrence ical_uid ends_at].each do |key|
       it "return an hash with key #{key}" do

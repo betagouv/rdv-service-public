@@ -1,4 +1,4 @@
-describe "Admin can configure the organisation" do
+RSpec.describe "Admin can configure the organisation" do
   let!(:organisation) { create(:organisation) }
   let!(:pmi) { create(:service, name: "PMI", territories: [organisation.territory]) }
   let!(:service_social) { create(:service, name: "Service social", territories: [organisation.territory]) }

@@ -1,4 +1,4 @@
-describe Users::RegistrationForm, type: :form_model do
+RSpec.describe Users::RegistrationForm, type: :form_model do
   let(:attributes) do
     {
       first_name: "jean",

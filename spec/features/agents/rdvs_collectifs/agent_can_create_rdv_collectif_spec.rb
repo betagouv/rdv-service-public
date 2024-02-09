@@ -1,4 +1,4 @@
-describe "Agent can create a Rdv collectif from the agenda" do
+RSpec.describe "Agent can create a Rdv collectif from the agenda" do
   include UsersHelper
 
   let!(:organisation) { create(:organisation) }

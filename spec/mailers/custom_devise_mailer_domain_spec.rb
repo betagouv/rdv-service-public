@@ -1,4 +1,4 @@
-describe CustomDeviseMailer, "#domain" do
+RSpec.describe CustomDeviseMailer, "#domain" do
   subject(:sent_email) { described_class.reset_password_instructions(user, "t0k3n") }
 
   def expect_to_use_domain(domain)

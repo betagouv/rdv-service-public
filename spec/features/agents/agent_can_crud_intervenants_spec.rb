@@ -1,4 +1,4 @@
-describe "Agent can CRUD intervenants" do
+RSpec.describe "Agent can CRUD intervenants" do
   let(:organisation) { create(:organisation) }
   let!(:service) { create(:service, name: "CDAD", territories: [organisation.territory]) }
   let!(:agent_admin) { create(:agent, service: service, admin_role_in_organisations: [organisation], email: "admin@example.com", first_name: "Francis", last_name: "Admin") }
