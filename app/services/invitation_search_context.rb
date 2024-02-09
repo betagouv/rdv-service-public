@@ -27,13 +27,12 @@ class InvitationSearchContext < SearchContext
   end
 
   # We use matching_motifs in API so we need to keep it public
-  def matching_motifs
+  memoize def matching_motifs
     # we retrieve the geolocalised matching motifs, if there are none we fallback
     # on the matching motifs for the organisations passed in the query_params
-    @matching_motifs ||=
-      filter_motifs(geo_search.available_motifs).presence || filter_motifs(
-        Motif.available_for_booking.where(organisation_id: @organisation_ids).joins(:organisation)
-      )
+    filter_motifs(geo_search.available_motifs).presence || filter_motifs(
+      Motif.available_for_booking.where(organisation_id: @organisation_ids).joins(:organisation)
+    )
   end
 
   private

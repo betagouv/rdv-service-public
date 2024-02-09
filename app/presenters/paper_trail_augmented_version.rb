@@ -23,17 +23,19 @@ class PaperTrailAugmentedVersion
   IGNORED_ATTRIBUTES = %w[id updated_at encrypted_password].freeze
 
   # territory est le territoire dans lequel on est en train de faire l'affichage
-  memoize def changes(territory = nil)
-    c = @version.changeset.except(*IGNORED_ATTRIBUTES).to_h
-    c = c.filter { |_attribute, change| change.first.present? || change.last.present? }
-    c = c.merge(virtual_changes)
-    allowed_attributes = @version.item.class.paper_trail_options[:only]
-    c = c.slice(*allowed_attributes) if allowed_attributes.present?
+  def changes(territory = nil)
+    @changes ||= begin
+      c = @version.changeset.except(*IGNORED_ATTRIBUTES).to_h
+      c = c.filter { |_attribute, change| change.first.present? || change.last.present? }
+      c = c.merge(virtual_changes)
+      allowed_attributes = @version.item.class.paper_trail_options[:only]
+      c = c.slice(*allowed_attributes) if allowed_attributes.present?
 
-    if territory
-      c = c.select { |attribute, _| enabled_field?(attribute, territory) }
+      if territory
+        c = c.select { |attribute, _| enabled_field?(attribute, territory) }
+      end
+      c
     end
-    c
   end
 
   def changes?

@@ -1,16 +1,13 @@
 class AgentPrescripteurRdvWizard
   attr_reader :query_params
 
-  def initialize(query_params:, agent_prescripteur:, domain:, current_organisation:)
+  def initialize(query_params:, agent_prescripteur:, domain:)
     @query_params = query_params
     @agent_prescripteur = agent_prescripteur
     @domain = domain
-    @current_organisation = current_organisation
   end
 
-  def motif
-    rdv.motif
-  end
+  delegate :motif, to: :rdv
 
   def invitation?
     false

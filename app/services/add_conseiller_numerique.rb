@@ -138,12 +138,12 @@ class AddConseillerNumerique
     zipcode_regex = /\d{5}/
     zipcode = @structure.address[zipcode_regex]
 
-    Faraday.get(
+    adresse_api_response = Faraday.get(
       "https://api-adresse.data.gouv.fr/search/",
       q: @structure.address,
       postcode: zipcode
     )
-    JSON.parse(@adresse_api_response.body)
+    JSON.parse(adresse_api_response.body)
   end
 
   memoize def territory
