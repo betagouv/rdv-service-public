@@ -31,4 +31,32 @@ describe SmsJob do
       expect(sentry_events.last.exception.values.last.value).to eq("erreur inattendue (RuntimeError)")
     end
   end
+
+  describe "arguments delegation" do
+    it "works with :provider and :api_key" do
+      expect(SmsSender).to receive(:perform_with).with("RdvSoli", "0611223344", "test", "netsize", "fake_key", {})
+      described_class.perform_later(
+        sender_name: "RdvSoli",
+        phone_number: "0611223344",
+        content: "test",
+        provider: "netsize",
+        api_key: "fake_key",
+        receipt_params: {}
+      )
+      perform_enqueued_jobs
+    end
+
+    it "works with :territory_id" do
+      territory = create(:territory)
+      expect(SmsSender).to receive(:perform_with).with("RdvSoli", "0611223344", "test", territory.sms_provider, territory.sms_configuration, {})
+      described_class.perform_later(
+        sender_name: "RdvSoli",
+        phone_number: "0611223344",
+        content: "test",
+        territory_id: territory.id,
+        receipt_params: {}
+      )
+      perform_enqueued_jobs
+    end
+  end
 end
