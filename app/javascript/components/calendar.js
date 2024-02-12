@@ -23,9 +23,12 @@ class CalendarRdvSolidarites {
     document.addEventListener('turbolinks:before-render', this.clearRefetchInterval);
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'visible') {
+        // when agent comes back to tab, refresh immediately
+        this.fullCalendarInstance.refetchEvents();
+
         this.setRefetchInterval();
       } else if (this.refreshCalendarInterval) {
-        this.clearRefetchInterval()
+        this.clearRefetchInterval();
       }
     })
     document.addEventListener("turbolinks:before-cache", () => {
