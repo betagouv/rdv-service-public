@@ -1,0 +1,17 @@
+.card.rdv-card
+  .row
+    div style="background: #{rdv.motif.color}; width: 20px"
+    div
+      .card-header.border-white
+        h5.header
+          = rdv_interval_and_duration(rdv, :time_only_with_column)
+      .card-body.border-white
+        .div
+          strong
+            = rdv.users.first
+        = agents_to_sentence(rdv.agents)
+        | &nbsp &middot &nbsp
+        = rdv.motif_name
+        | &nbsp &middot &nbsp
+        i.fa.fa-user>
+        = "#{rdv.participations.count} #{'participant'.pluralize(rdv.participations.count)}"
