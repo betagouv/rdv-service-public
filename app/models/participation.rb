@@ -96,4 +96,8 @@ class Participation < ApplicationRecord
     invite! { |rdv_u| rdv_u.skip_invitation = true }
     raw_invitation_token
   end
+
+  def prescription?
+    created_by_prescripteur? || created_by_agent_prescripteur?
+  end
 end

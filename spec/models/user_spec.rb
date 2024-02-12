@@ -1,4 +1,4 @@
-describe User, type: :model do
+RSpec.describe User, type: :model do
   describe "#add_organisation" do
     subject do
       user.add_organisation(organisation)

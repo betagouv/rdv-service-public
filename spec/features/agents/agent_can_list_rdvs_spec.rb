@@ -1,4 +1,4 @@
-describe "Agent can list RDVs" do
+RSpec.describe "Agent can list RDVs" do
   let!(:organisation) { create(:organisation) }
   let!(:current_agent) { create(:agent, organisations: [organisation]) }
 

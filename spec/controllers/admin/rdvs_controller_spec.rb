@@ -1,4 +1,4 @@
-describe Admin::RdvsController, type: :controller do
+RSpec.describe Admin::RdvsController, type: :controller do
   let(:now) { Time.zone.parse("19/07/2019 15:00") }
   let!(:organisation) { create(:organisation) }
   let!(:territory) { organisation.territory }

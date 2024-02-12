@@ -1,4 +1,4 @@
-describe "Agent can search plage ouverture" do
+RSpec.describe "Agent can search plage ouverture" do
   let(:organisation) { create(:organisation) }
   let(:agent) { create(:agent, organisations: [organisation]) }
   let!(:perm_enfance) { create(:plage_ouverture, title: "Permanence Enfance en cours", agent: agent, organisation: organisation) }

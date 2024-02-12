@@ -1,4 +1,4 @@
-describe Admin::Agents::AbsencesController, type: :controller do
+RSpec.describe Admin::Agents::AbsencesController, type: :controller do
   describe "GET index" do
     context "with a signed in agent" do
       let(:organisation) { create(:organisation) }

@@ -1,12 +1,15 @@
 .text-center.m-auto
-  h4.text-dark-50.text-center.mt-0.font-weight-bold.mb-4 Créer une organisation
+  h4.text-dark-50.text-center.mt-0.font-weight-bold.mb-4 Ajouter une organisation
 
   = render "model_errors", model: @organisation
-  = simple_form_for [:admin, @organisation] do |f|
-    = f.input :name, label: "Nom de votre organisation", placeholder: "Maison départementale des solidarités de Beaupréau-en-Mauges"
-    = f.association :territory, \
-      label: "Territoire", \
-      collection: policy_scope(Territory), \
-      include_blank: false, \
-      label_method: -> { _1.to_s }
-    = f.submit value: "Créer", class: "btn btn-primary"
+
+  .card
+    .card-body
+      = simple_form_for [:admin, @organisation] do |f|
+        = f.input :name, label: "Nom de votre organisation", placeholder: "Maison départementale des solidarités de Beaupréau-en-Mauges"
+        = f.association :territory, \
+          label: "Territoire", \
+          collection: policy_scope(Territory), \
+          include_blank: false, \
+          label_method: -> { _1.to_s }
+        = f.submit value: "Enregistrer", class: "btn btn-primary"

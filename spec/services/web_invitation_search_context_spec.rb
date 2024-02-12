@@ -1,4 +1,4 @@
-describe WebInvitationSearchContext, type: :service do
+RSpec.describe WebInvitationSearchContext, type: :service do
   subject { described_class.new(user: user, query_params: query_params) }
 
   include_context "SearchContext"

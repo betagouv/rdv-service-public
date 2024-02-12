@@ -1,4 +1,4 @@
-describe AbsencesHelper do
+RSpec.describe AbsencesHelper do
   describe "#absence_tag" do
     it "return En cours when absence is today" do
       today = Time.zone.parse("2020-12-24 13:56")

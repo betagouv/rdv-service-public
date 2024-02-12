@@ -1,4 +1,4 @@
-describe RdvsOverlapping, type: :service do
+RSpec.describe RdvsOverlapping, type: :service do
   describe "#rdvs_overlapping_rdv" do
     it "return rdvs that end during rdv" do
       now = Time.zone.parse("2020-12-23 12h40")

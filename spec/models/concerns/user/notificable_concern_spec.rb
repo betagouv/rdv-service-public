@@ -1,4 +1,4 @@
-describe User::NotificableConcern do
+RSpec.describe User::NotificableConcern do
   describe "#notifiable_by_email?" do
     subject { user.notifiable_by_email? }
 

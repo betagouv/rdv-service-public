@@ -1,4 +1,4 @@
-describe Admin::RdvsCollectifsController, type: :controller do
+RSpec.describe Admin::RdvsCollectifsController, type: :controller do
   let(:motif) { create(:motif, :collectif) }
   let(:organisation) { motif.organisation }
   let(:agent) { create(:agent, :secretaire, basic_role_in_organisations: [organisation]) }

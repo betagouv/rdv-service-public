@@ -116,8 +116,6 @@ Rails.application.routes.draw do
 
   get "/calendrier/:id", controller: :ics_calendar, action: :show, as: :ics_calendar
 
-  resources :organisations, only: %i[new create]
-
   authenticate :agent do
     namespace "admin" do
       resources :territories, only: %i[edit update show] do

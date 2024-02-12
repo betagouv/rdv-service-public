@@ -1,4 +1,4 @@
-describe WebhookEndpoint, type: :model do
+RSpec.describe WebhookEndpoint, type: :model do
   describe "target_url validation" do
     subject { webhook_endpoint.valid? }
 

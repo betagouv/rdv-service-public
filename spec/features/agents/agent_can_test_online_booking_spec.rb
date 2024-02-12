@@ -1,4 +1,4 @@
-describe "Agents can try the user-facing online booking pages" do
+RSpec.describe "Agents can try the user-facing online booking pages" do
   let!(:organisation) { create(:organisation) }
   let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
 

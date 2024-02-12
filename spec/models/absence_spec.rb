@@ -1,4 +1,4 @@
-describe Absence, type: :model do
+RSpec.describe Absence, type: :model do
   it_behaves_like "recurrence"
 
   describe "title mandatory" do
