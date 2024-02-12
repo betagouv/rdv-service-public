@@ -26,7 +26,7 @@ RSpec.describe Anonymizer do
       expect(prescripteur.reload.full_name).to eq "[valeur anonymisée] [VALEUR ANONYMISÉE]"
       expect(agent.reload.full_name).to eq "[valeur anonymisée] [VALEUR ANONYMISÉE]"
       expect(agent.reload.email).to eq "email_anonymise_#{agent.id}@exemple.fr"
-      expect(super_admin.reload.email).to eq "email_anonymise_#{agent.id}@exemple.fr"
+      expect(super_admin.reload.email).to eq "email_anonymise_#{super_admin.id}@exemple.fr"
       expect(organisation.reload.email).to eq "email_anonymise_#{organisation.id}@exemple.fr"
       expect(absence.reload.title).to eq "[valeur anonymisée]"
       expect(lieu.reload.phone_number).to eq "[valeur anonymisée]"
