@@ -7,11 +7,17 @@
           = rdv_interval_and_duration(rdv, :time_only_with_column)
       .card-body.border-white
         .div
-          strong
-            = rdv.users.first
+          - if rdv.users.present?
+            strong
+              = rdv.users.first
+          - else
+            p Il n'y a pas encore de participant pour ce RDV
         = agents_to_sentence(rdv.agents)
         | &nbsp &middot &nbsp
         = rdv.motif_name
         | &nbsp &middot &nbsp
-        i.fa.fa-user>
-        = "#{rdv.participations.count} #{'participant'.pluralize(rdv.participations.count)}"
+        - if rdv.users.size > 1
+          i.fa.fa-users>
+        - else
+          i.fa.fa-user>
+        = "#{rdv.users.count} #{'participant'.pluralize(rdv.users.count)}"
