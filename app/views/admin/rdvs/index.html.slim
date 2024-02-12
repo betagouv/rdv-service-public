@@ -45,7 +45,7 @@
           span> Exporter les #{@rdvs.total_count} RDVs en XLS
           i.fa.fa-download>
 
-        .btn.btn-sm.btn-link.d-print-none role="button" onclick="window.print();return false;"
+        .btn.btn-sm.btn-link.d-print-none.print-btn role="button" data-target="#printable-area"
           span> Imprimer
           i.fa.fa-print>
 
@@ -61,8 +61,9 @@
   .row.justify-content-center.pb-3
     .col-md-8
       .d-flex.justify-content-center= paginate @rdvs, theme: "twitter-bootstrap-4"
-      = render(partial: "rdv", collection: @rdvs_in_page, locals: { agent: nil })
-      .d-flex.justify-content-center= paginate @rdvs, theme: "twitter-bootstrap-4"
+      #printable-area
+        = render(partial: "rdv", collection: @rdvs_in_page, locals: { agent: nil })
+        .d-flex.justify-content-center= paginate @rdvs, theme: "twitter-bootstrap-4"
 - else
   .row.justify-content-center.pb-3
     .col-md-8
