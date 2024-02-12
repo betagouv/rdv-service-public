@@ -1,4 +1,4 @@
-describe SearchCreneauxForAgentsBase, type: :service do
+RSpec.describe SearchCreneauxForAgentsBase, type: :service do
   describe "#all_agents" do
     subject { described_class.new(form).all_agents }
 

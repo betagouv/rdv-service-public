@@ -1,4 +1,4 @@
-describe RdvEndingShortlyBeforePresenter, type: :presenter do
+RSpec.describe RdvEndingShortlyBeforePresenter, type: :presenter do
   let(:presenter) { described_class.new(rdv: rdv, agent: agent, rdv_context: rdv_context, agent_context: agent_context) }
 
   describe "#warning_message" do

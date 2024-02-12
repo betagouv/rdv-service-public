@@ -1,6 +1,6 @@
 require "swagger_helper"
 
-describe "Users API", swagger_doc: "v1/api.json" do
+RSpec.describe "Users API", swagger_doc: "v1/api.json" do
   with_examples
 
   let(:organisation) { create(:organisation) }

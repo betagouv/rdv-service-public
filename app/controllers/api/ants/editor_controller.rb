@@ -52,7 +52,7 @@ class Api::Ants::EditorController < Api::Ants::BaseController
             duration: rdv_duration(motif)
           ),
         }
-      end
+      end.uniq
     end.flatten
   end
 

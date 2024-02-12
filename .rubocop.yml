@@ -88,10 +88,6 @@ Rails/FilePath:
 Rails/HasAndBelongsToMany:
   Enabled: false
 
-Rails/RakeEnvironment:
-  Exclude:
-    - 'lib/tasks/matomo.rake'
-
 Rails/SkipsModelValidations:
   Exclude:
     - 'scripts/agent_et_motif_changent_de_service.rb'

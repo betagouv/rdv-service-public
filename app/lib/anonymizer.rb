@@ -9,6 +9,9 @@ class Anonymizer
     anonymize_table!("users")
     anonymize_table!("receipts")
     anonymize_table!("rdvs")
+    AnonymizerRules::TRUNCATED_TABLES.each do |table_name|
+      anonymize_table!(table_name)
+    end
   end
 
   def self.anonymize_table!(table_name)
@@ -104,7 +107,9 @@ class Anonymizer
 
   def anonymous_value(column)
     if column.type.in?(%i[string text])
-      if column_has_uniqueness_constraint?(column)
+      if column.name.include?("email")
+        Arel.sql("'email_anonymise_' || id || '@exemple.fr'")
+      elsif column_has_uniqueness_constraint?(column)
         Arel.sql("'[valeur unique anonymisée ' || id || ']'")
       else
         "[valeur anonymisée]"

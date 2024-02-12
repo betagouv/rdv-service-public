@@ -1,4 +1,4 @@
-describe Payloads::PlageOuverture do
+RSpec.describe Payloads::PlageOuverture do
   describe "#payload" do
     %i[name starts_at recurrence ical_uid ends_at].each do |key|
       it "return an hash with key #{key}" do

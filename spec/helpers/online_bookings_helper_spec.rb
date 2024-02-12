@@ -1,4 +1,4 @@
-describe OnlineBookingsHelper do
+RSpec.describe OnlineBookingsHelper do
   describe "#motifs_checkbox_text" do
     context "when there is no motifs" do
       it { expect(motifs_checkbox_text([])).to match(/Ouvrir un motif à la réservation en ligne/) }

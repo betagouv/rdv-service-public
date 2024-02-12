@@ -1,6 +1,6 @@
 require "swagger_helper"
 
-describe "User Profile authentified API", swagger_doc: "v1/api.json" do
+RSpec.describe "User Profile authentified API", swagger_doc: "v1/api.json" do
   with_examples
 
   path "/api/rdvinsertion/user_profiles/create_many" do

@@ -1,4 +1,4 @@
-describe SuperAdmin, type: :model do
+RSpec.describe SuperAdmin, type: :model do
   let(:super_admin) { create(:super_admin) }
 
   describe "validations" do

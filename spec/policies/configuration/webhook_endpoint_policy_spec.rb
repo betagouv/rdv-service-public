@@ -1,4 +1,4 @@
-describe Configuration::WebhookEndpointPolicy, type: :policy do
+RSpec.describe Configuration::WebhookEndpointPolicy, type: :policy do
   %i[display? new? create? edit? update? destroy?].each do |action|
     describe "##{action}" do
       it "returns false with agent without admin access to this territory" do

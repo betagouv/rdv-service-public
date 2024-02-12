@@ -13,7 +13,6 @@ Ce service est soutenu par un consortium de plusieurs départements et l'[incuba
 ## Statistiques
 
 - [Statistiques de RDV](https://www.rdv-solidarites.fr/stats)
-- [Statistiques de trafic](https://stats.data.gouv.fr/index.php?module=CoreHome&action=index&idSite=123&period=range&date=previous30#?idSite=123&period=range&date=previous30&segment=&category=General_Visitors&subcategory=General_Overview)
 
 ## Licence
 

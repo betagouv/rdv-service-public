@@ -1,4 +1,4 @@
-describe "User can see RDV instructions" do
+RSpec.describe "User can see RDV instructions" do
   it "can see RDV inscrution on RDV page" do
     motif = create(:motif, restriction_for_rdv: "Pensez à prendre votre carnet de santé")
     rdv = create(:rdv, motif: motif)

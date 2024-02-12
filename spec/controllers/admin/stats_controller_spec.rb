@@ -1,4 +1,4 @@
-describe Admin::StatsController, type: :controller do
+RSpec.describe Admin::StatsController, type: :controller do
   describe "#rdvs" do
     it "returns sucess" do
       organisation = create(:organisation)

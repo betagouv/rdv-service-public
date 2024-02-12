@@ -1,4 +1,4 @@
-describe "Prise de rdv avec sectorisations pour deux territoires dans le même département" do
+RSpec.describe "Prise de rdv avec sectorisations pour deux territoires dans le même département" do
   let!(:territory_medico_social) { create(:territory, name: "Drome social", departement_number: "26") }
   let!(:territory_insertion) { create(:territory, name: "Drome insertion", departement_number: "26") }
 

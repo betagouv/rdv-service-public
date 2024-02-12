@@ -1,4 +1,4 @@
-describe RdvsHelper do
+RSpec.describe RdvsHelper do
   include ActionView::Helpers::DateHelper
 
   let(:motif) { build(:motif, name: "Consultation normale") }

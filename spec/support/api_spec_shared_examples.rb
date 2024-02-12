@@ -1,5 +1,5 @@
 module ApiSpecSharedExamples
-  shared_context "an endpoint that returns 401 - unauthorized" do
+  RSpec.shared_context "an endpoint that returns 401 - unauthorized" do
     response 401, "Renvoie 'unauthorized' quand l'authentification est impossible" do
       let(:"access-token") { "false" }
 
@@ -9,7 +9,7 @@ module ApiSpecSharedExamples
     end
   end
 
-  shared_context "an endpoint that returns 403 - forbidden" do |details|
+  RSpec.shared_context "an endpoint that returns 403 - forbidden" do |details|
     response 403, "Renvoie 'forbidden' quand #{details}" do
       schema "$ref" => "#/components/schemas/error_forbidden"
 
@@ -17,7 +17,7 @@ module ApiSpecSharedExamples
     end
   end
 
-  shared_context "an endpoint that returns 404 - not found" do |details|
+  RSpec.shared_context "an endpoint that returns 404 - not found" do |details|
     response 404, "Renvoie 'not_found' quand #{details}" do
       schema "$ref" => "#/components/schemas/error_not_found"
 
@@ -25,7 +25,7 @@ module ApiSpecSharedExamples
     end
   end
 
-  shared_context "an endpoint that returns 422 - unprocessable_entity" do |details, document|
+  RSpec.shared_context "an endpoint that returns 422 - unprocessable_entity" do |details, document|
     response 422, "Renvoie 'unprocessable_entity' quand #{details}", document: document do
       schema "$ref" => "#/components/schemas/error_unprocessable_entity"
 
@@ -33,7 +33,7 @@ module ApiSpecSharedExamples
     end
   end
 
-  shared_context "an endpoint that returns 429 - too_many_requests" do |method, path|
+  RSpec.shared_context "an endpoint that returns 429 - too_many_requests" do |method, path|
     response 429, "Renvoie 'too_many_requests' quand la limite d'appels est atteinte" do
       schema "$ref" => "#/components/schemas/error_too_many_request"
 
@@ -49,7 +49,7 @@ module ApiSpecSharedExamples
     end
   end
 
-  shared_context "rdv_mairie_api_authentication", :rdv_mairie_api_authentication do
+  RSpec.shared_context "rdv_mairie_api_authentication", :rdv_mairie_api_authentication do
     before do
       ENV["ANTS_RDV_API_URL"] = "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api"
       ENV["ANTS_RDV_OPT_AUTH_TOKEN"] = "fake-token"

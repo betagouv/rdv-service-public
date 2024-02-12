@@ -1,4 +1,4 @@
-describe PlageOuverture, type: :model do
+RSpec.describe PlageOuverture, type: :model do
   let!(:organisation) { create(:organisation) }
 
   describe "#end_after_start" do

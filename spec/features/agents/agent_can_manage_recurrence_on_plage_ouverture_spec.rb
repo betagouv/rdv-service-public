@@ -1,4 +1,4 @@
-describe "Agent can manage recurrence on plage d'ouverture" do
+RSpec.describe "Agent can manage recurrence on plage d'ouverture" do
   let!(:organisation) { create(:organisation) }
   let!(:service) { create(:service) }
   let!(:agent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }

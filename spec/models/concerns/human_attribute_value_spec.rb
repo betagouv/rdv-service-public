@@ -20,7 +20,7 @@ class DemoThing
   end
 end
 
-describe HumanAttributeValue do
+RSpec.describe HumanAttributeValue do
   describe "#human_attribute_value" do
     subject { DemoThing.human_attribute_value(attr_name, value, options) }
 

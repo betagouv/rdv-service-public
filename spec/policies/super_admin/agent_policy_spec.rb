@@ -1,4 +1,4 @@
-describe SuperAdmin::AgentPolicy, type: :policy do
+RSpec.describe SuperAdmin::AgentPolicy, type: :policy do
   subject { described_class }
 
   let!(:super_admin) { create(:super_admin) }

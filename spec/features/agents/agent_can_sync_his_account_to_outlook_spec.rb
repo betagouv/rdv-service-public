@@ -1,4 +1,4 @@
-describe "Agent can sync his account to outlook" do
+RSpec.describe "Agent can sync his account to outlook" do
   let!(:organisation) { create(:organisation) }
   let!(:admin_agent) { create(:agent, admin_role_in_organisations: [organisation]) }
   let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }

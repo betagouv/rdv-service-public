@@ -1,4 +1,4 @@
-describe UsersHelper, type: :helper do
+RSpec.describe UsersHelper, type: :helper do
   describe "#age" do
     it "return 4 ans when born 4 years ago" do
       user = build(:user, birth_date: 4.years.ago)

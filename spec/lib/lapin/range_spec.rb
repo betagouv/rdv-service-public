@@ -1,4 +1,4 @@
-describe Lapin::Range do
+RSpec.describe Lapin::Range do
   describe "#ensure_date_range_with_time" do
     subject { described_class.ensure_date_range_with_time(date_range) }
 

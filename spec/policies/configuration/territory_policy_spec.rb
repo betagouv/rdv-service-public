@@ -1,4 +1,4 @@
-describe Configuration::TerritoryPolicy, type: :policy do
+RSpec.describe Configuration::TerritoryPolicy, type: :policy do
   subject { described_class }
 
   let(:territory) { create(:territory) }

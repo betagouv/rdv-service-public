@@ -17,7 +17,6 @@ territory62 = Territory.create!(
 
 # ORGANISATIONS & SECTORS
 
-Organisation.skip_callback(:create, :after, :notify_admin_organisation_created)
 org_paris_nord = Organisation.create!(
   name: "MDS Paris Nord",
   phone_number: "0123456789",
@@ -72,8 +71,6 @@ human_id_map["1034-nord"] = { organisation: org_bapaume, sector: sector_bapaume_
 human_id_map["1034-sud"] = { organisation: org_bapaume, sector: sector_bapaume_sud }
 human_id_map["1034-fallback"] = { organisation: org_bapaume, sector: sector_bapaume_fallback }
 org_arques = human_id_map["1030"][:organisation]
-
-Organisation.set_callback(:create, :after, :notify_admin_organisation_created)
 
 # SERVICES
 

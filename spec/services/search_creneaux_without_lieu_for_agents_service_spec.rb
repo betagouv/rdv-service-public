@@ -1,4 +1,4 @@
-describe SearchCreneauxWithoutLieuForAgentsService, type: :service do
+RSpec.describe SearchCreneauxWithoutLieuForAgentsService, type: :service do
   describe "creneaux" do
     before do
       travel_to(Time.zone.local(2022, 10, 15, 10, 0, 0))

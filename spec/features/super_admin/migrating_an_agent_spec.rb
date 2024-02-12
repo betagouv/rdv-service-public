@@ -1,4 +1,4 @@
-describe "Migrating an agent from one organisation to another" do
+RSpec.describe "Migrating an agent from one organisation to another" do
   let(:super_admin) { create :super_admin }
   let!(:old_organisation) { create :organisation }
   let!(:new_organisation) { create :organisation, territory: old_organisation.territory }

@@ -1,4 +1,4 @@
-describe MotifsHelper do
+RSpec.describe MotifsHelper do
   describe "#motif_badges" do
     it "affiche le badge Secrétariat pour un motif `secretariat`" do
       motif = build(:motif, bookable_by: :agents, for_secretariat: true)

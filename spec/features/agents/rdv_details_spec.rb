@@ -1,4 +1,4 @@
-describe "Agent can see RDV details correctly" do
+RSpec.describe "Agent can see RDV details correctly" do
   before do
     travel_to(Time.zone.local(2022, 4, 4))
     login_as(agent, scope: :agent)
@@ -28,6 +28,12 @@ describe "Agent can see RDV details correctly" do
       rdv.participations.last.update!(created_by: prescripteur)
       visit admin_organisation_rdvs_path(organisation)
       expect(page).to have_content("Rendez-vous pris par Jean VALJEAN")
+    end
+
+    it "displays the agent prescripteur when present" do
+      rdv.participations.last.update!(created_by: agent, created_by_agent_prescripteur: true)
+      visit admin_organisation_rdvs_path(organisation)
+      expect(page).to have_content("Rendez-vous pris par Bruce WAYNE")
     end
 
     it "Allows showing RDVs data and correctly displays user notifications and notif info" do

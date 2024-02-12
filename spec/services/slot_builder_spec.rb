@@ -1,4 +1,4 @@
-describe SlotBuilder, type: :service do
+RSpec.describe SlotBuilder, type: :service do
   let(:friday) { Time.zone.parse("20210430 8:00") }
   let(:organisation) { create(:organisation) }
   let(:lieu) { create(:lieu, organisation: organisation) }

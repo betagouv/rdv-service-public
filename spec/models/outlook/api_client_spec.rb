@@ -1,4 +1,4 @@
-describe Outlook::ApiClient do
+RSpec.describe Outlook::ApiClient do
   let(:organisation) { create(:organisation) }
   let(:expected_body) do
     {
