@@ -16,6 +16,11 @@ scalingo login --password-only
 
 echo "Upgrade du Postgres d'ETL pour avoir plus de RAM"
 # On fait cette opération avant de télécharger le dump pour que le provisionnement du nouveau plan ai le temps de se finir avant le pg_restore
+etl_addon_id="$( scalingo --region osc-secnum-fr1 --app rdv-service-public-etl addons \
+| grep "PostgreSQL" \
+  | cut -d "|" -f 3 \
+  | tr -d " " )"
+
 scalingo --region osc-secnum-fr1 --app rdv-service-public-etl addons-upgrade "${etl_addon_id}"  postgresql-starter-8192
 
 # Retrieve the production addon id:
@@ -34,11 +39,6 @@ echo "Suppression du role postgres utilisé par metabase"
 scalingo database-delete-user --region osc-secnum-fr1 --app rdv-service-public-etl --addon "${etl_addon_id}" rdv_service_public_metabase
 echo "La base de données n'est plus accessible par metabase"
 
-
-etl_addon_id="$( scalingo --region osc-secnum-fr1 --app rdv-service-public-etl addons \
-                 | grep "PostgreSQL" \
-                 | cut -d "|" -f 3 \
-                 | tr -d " " )"
 
 
 echo "Chargement du dump..."
