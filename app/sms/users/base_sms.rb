@@ -17,29 +17,12 @@ class Users::BaseSms < ApplicationSms
       sender_name: @rdv.domain.sms_sender_name,
       phone_number: @user.phone_number_formatted,
       content: content,
-      provider: provider,
-      api_key: api_key,
+      territory_id: @rdv.territory.id,
       receipt_params: @receipt_params
     )
   end
 
   private
-
-  def provider
-    if Rails.env.development? && ENV["DEVELOPMENT_FORCE_SMS_PROVIDER"].present?
-      return ENV["DEVELOPMENT_FORCE_SMS_PROVIDER"]
-    end
-
-    @rdv.organisation&.territory&.sms_provider || ENV["DEFAULT_SMS_PROVIDER"].presence || :debug_logger
-  end
-
-  def api_key
-    if Rails.env.development? && ENV["DEVELOPMENT_FORCE_SMS_PROVIDER_KEY"].present?
-      return ENV["DEVELOPMENT_FORCE_SMS_PROVIDER_KEY"]
-    end
-
-    @rdv.organisation&.territory&.sms_configuration || ENV["DEFAULT_SMS_PROVIDER_KEY"]
-  end
 
   def domain_host
     @rdv.domain.host_name
