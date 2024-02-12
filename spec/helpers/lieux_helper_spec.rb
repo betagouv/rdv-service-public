@@ -1,4 +1,4 @@
-describe LieuxHelper do
+RSpec.describe LieuxHelper do
   describe ".lieu_tag" do
     context "when the lieu is nil" do
       it { expect(lieu_tag(nil)).to be_nil }

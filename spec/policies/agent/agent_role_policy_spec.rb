@@ -1,4 +1,4 @@
-describe Agent::AgentRolePolicy, type: :policy do
+RSpec.describe Agent::AgentRolePolicy, type: :policy do
   subject { described_class }
 
   let(:pundit_context) { AgentContext.new(agent) }
@@ -38,7 +38,7 @@ describe Agent::AgentRolePolicy, type: :policy do
   end
 end
 
-describe Agent::AgentRolePolicy::Scope, type: :policy do
+RSpec.describe Agent::AgentRolePolicy::Scope, type: :policy do
   describe "#resolve?" do
     subject { described_class.new(AgentContext.new(agent), AgentRole).resolve }
 

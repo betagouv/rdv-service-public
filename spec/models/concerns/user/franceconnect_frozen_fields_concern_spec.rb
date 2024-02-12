@@ -1,4 +1,4 @@
-describe User::FranceconnectFrozenFieldsConcern do
+RSpec.describe User::FranceconnectFrozenFieldsConcern do
   context "never logged with FC" do
     let!(:user) { create(:user, first_name: "Jean", birth_name: "DUPONT", logged_once_with_franceconnect: false) }
 

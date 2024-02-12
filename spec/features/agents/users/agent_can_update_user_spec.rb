@@ -1,4 +1,4 @@
-describe "Agent can update user" do
+RSpec.describe "Agent can update user" do
   let!(:organisation) { create(:organisation) }
   let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
   let!(:user) do

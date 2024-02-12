@@ -1,4 +1,4 @@
-describe Agent::AgentAgendaPolicy, type: :policy do
+RSpec.describe Agent::AgentAgendaPolicy, type: :policy do
   subject { described_class }
 
   let(:pundit_context) { AgentContext.new(agent) }

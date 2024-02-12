@@ -1,4 +1,4 @@
-describe "Agent can delete user" do
+RSpec.describe "Agent can delete user" do
   let!(:organisation) { create(:organisation, territory: territory) }
   let!(:territory) { create(:territory, enable_logement_field: true) }
   let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }

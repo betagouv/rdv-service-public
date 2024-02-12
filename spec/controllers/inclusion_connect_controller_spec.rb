@@ -1,4 +1,4 @@
-describe InclusionConnectController, type: :controller do
+RSpec.describe InclusionConnectController, type: :controller do
   let(:base_url) { "https://test.inclusion.connect.fr" }
 
   describe "#callback" do

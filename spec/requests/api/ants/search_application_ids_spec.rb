@@ -1,4 +1,4 @@
-describe "ANTS API: searchApplicationIds" do
+RSpec.describe "ANTS API: searchApplicationIds" do
   include_context "rdv_mairie_api_authentication"
 
   context "with the wrong authentication header" do

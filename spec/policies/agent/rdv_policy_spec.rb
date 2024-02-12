@@ -1,4 +1,4 @@
-describe Agent::RdvPolicy, type: :policy do
+RSpec.describe Agent::RdvPolicy, type: :policy do
   subject { described_class }
 
   shared_examples "included in scope" do

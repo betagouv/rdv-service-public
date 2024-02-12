@@ -1,4 +1,4 @@
-describe Configuration::ZonePolicy, type: :policy do
+RSpec.describe Configuration::ZonePolicy, type: :policy do
   %i[new? create? destroy?].each do |action|
     describe "##{action}" do
       it "returns false with agent without admin access to this territory" do

@@ -1,4 +1,4 @@
-describe Admin::Territories::AgentRolesController, type: :controller do
+RSpec.describe Admin::Territories::AgentRolesController, type: :controller do
   # Le territoire doit avoir au moins un agent admin de territoire restant
   let!(:territory) { create(:territory).tap { |t| t.roles.create!(agent: create(:agent)) } }
 

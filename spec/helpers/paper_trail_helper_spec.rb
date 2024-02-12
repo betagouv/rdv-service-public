@@ -1,4 +1,4 @@
-describe PaperTrailHelper do
+RSpec.describe PaperTrailHelper do
   describe "#paper_trail_change_value" do
     it "returns N/A when nil value" do
       expect(helper.paper_trail_change_value("some_value", nil)).to eq("N/A")

@@ -1,4 +1,4 @@
-describe "Agent can create user" do
+RSpec.describe "Agent can create user" do
   include_context "rdv_mairie_api_authentication"
 
   let!(:organisation) { create(:organisation, name: "Mairie de Romainville") }

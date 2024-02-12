@@ -1,4 +1,4 @@
-describe UpsertUserForFranceconnectService, type: :service do
+RSpec.describe UpsertUserForFranceconnectService, type: :service do
   let(:omniauth_info) do
     OpenStruct.new(email: "jeanne@longo.fr",
                    given_name: "jeanne",

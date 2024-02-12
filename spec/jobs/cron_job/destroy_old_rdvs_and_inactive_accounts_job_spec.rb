@@ -1,4 +1,4 @@
-describe CronJob::DestroyOldRdvsAndInactiveAccountsJob do
+RSpec.describe CronJob::DestroyOldRdvsAndInactiveAccountsJob do
   let!(:organisation) { create(:organisation) }
   let!(:webhook_endpoint) do
     create(

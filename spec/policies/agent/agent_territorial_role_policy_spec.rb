@@ -1,4 +1,4 @@
-describe Agent::AgentTerritorialRolePolicy, type: :policy do
+RSpec.describe Agent::AgentTerritorialRolePolicy, type: :policy do
   subject { described_class }
 
   let!(:territory) { create(:territory) }
@@ -23,7 +23,7 @@ describe Agent::AgentTerritorialRolePolicy, type: :policy do
   end
 end
 
-describe Agent::AgentTerritorialRolePolicy::Scope, type: :policy do
+RSpec.describe Agent::AgentTerritorialRolePolicy::Scope, type: :policy do
   describe "#resolve?" do
     subject do
       described_class

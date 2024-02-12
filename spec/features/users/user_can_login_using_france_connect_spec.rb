@@ -1,4 +1,4 @@
-describe "User can login using FranceConnect" do
+RSpec.describe "User can login using FranceConnect" do
   before do
     mock_france_connect_profile = {
       sub: "12345",

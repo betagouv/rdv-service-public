@@ -1,4 +1,4 @@
-describe TokenInvitable, type: :controller do
+RSpec.describe TokenInvitable, type: :controller do
   controller(ApplicationController) do
     include TokenInvitable
 

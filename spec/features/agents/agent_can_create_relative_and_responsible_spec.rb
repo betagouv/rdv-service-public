@@ -1,4 +1,4 @@
-describe "Admin can configure the organisation" do
+RSpec.describe "Admin can configure the organisation" do
   let(:organisation) { create(:organisation) }
   let(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
 

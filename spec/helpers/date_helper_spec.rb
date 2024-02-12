@@ -1,4 +1,4 @@
-describe DateHelper do
+RSpec.describe DateHelper do
   describe "#relative_date" do
     # def relative_date(date, fallback_format = :short)
     it "returns 23 déc." do

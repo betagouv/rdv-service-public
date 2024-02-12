@@ -1,4 +1,4 @@
-describe "Admin can configure the territory", type: :feature do
+RSpec.describe "Admin can configure the territory", type: :feature do
   context "with admin agent" do
     it "update territory phone number", type: :feature do
       territory = create(:territory, phone_number: nil)

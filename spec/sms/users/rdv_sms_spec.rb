@@ -1,4 +1,4 @@
-describe Users::RdvSms, type: :service do
+RSpec.describe Users::RdvSms, type: :service do
   describe "#rdv_created" do
     context "with a basic rdv" do
       subject { described_class.rdv_created(rdv, user, token).content }

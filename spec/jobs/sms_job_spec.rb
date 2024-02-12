@@ -1,4 +1,4 @@
-describe SmsJob do
+RSpec.describe SmsJob do
   describe "error logging" do
     it "only sends error to Sentry after 3rd error" do
       allow(SmsSender).to receive(:perform_with).and_raise("erreur inattendue")

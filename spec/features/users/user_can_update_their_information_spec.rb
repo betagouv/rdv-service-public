@@ -1,4 +1,4 @@
-describe "User can update their information" do
+RSpec.describe "User can update their information" do
   let!(:organisation) { create(:organisation, territory: territory) }
   let(:user) { create(:user, organisations: [organisation]) }
 

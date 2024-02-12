@@ -1,4 +1,4 @@
-describe ParticipationsExportJob do
+RSpec.describe ParticipationsExportJob do
   describe "#participations_export" do
     it "has an attachment which contains the current date" do
       organisation = create(:organisation)

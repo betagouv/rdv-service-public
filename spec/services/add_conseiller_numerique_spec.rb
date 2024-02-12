@@ -1,4 +1,4 @@
-describe AddConseillerNumerique do
+RSpec.describe AddConseillerNumerique do
   let!(:territory) { create(:territory, name: "Conseillers Numériques") }
   let(:params) do
     {

@@ -10,7 +10,7 @@ class TestService < Notifiers::RdvBase
   end
 end
 
-describe Notifiers::RdvBase, type: :service do
+RSpec.describe Notifiers::RdvBase, type: :service do
   let(:service) { TestService.new(rdv, author) }
 
   describe "user notifications" do

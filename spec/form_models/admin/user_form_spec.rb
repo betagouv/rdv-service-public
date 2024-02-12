@@ -1,4 +1,4 @@
-describe Admin::UserForm, type: :form do
+RSpec.describe Admin::UserForm, type: :form do
   subject { described_class.new(user, view_locals: { current_organisation: organisation }) }
 
   let!(:organisation) { create(:organisation) }
