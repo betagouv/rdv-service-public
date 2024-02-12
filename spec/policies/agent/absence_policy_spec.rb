@@ -1,4 +1,4 @@
-describe Agent::AbsencePolicy, type: :policy do
+RSpec.describe Agent::AbsencePolicy, type: :policy do
   subject { described_class }
 
   let(:pundit_context) { AgentContext.new(agent) }
@@ -41,7 +41,7 @@ describe Agent::AbsencePolicy, type: :policy do
   end
 end
 
-describe Agent::AbsencePolicy::Scope, type: :policy do
+RSpec.describe Agent::AbsencePolicy::Scope, type: :policy do
   describe "#resolve?" do
     subject(:scope) { described_class.new(AgentContext.new(current_agent), Absence).resolve }
 

@@ -1,4 +1,4 @@
-describe Notifiers::RdvUpcomingReminder, type: :service do
+RSpec.describe Notifiers::RdvUpcomingReminder, type: :service do
   subject { described_class.perform_with(rdv, nil) }
 
   let!(:rdv) { create(:rdv, starts_at: 2.days.from_now, users: [user1, user2]) }

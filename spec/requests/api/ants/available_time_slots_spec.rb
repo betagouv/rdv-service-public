@@ -1,4 +1,4 @@
-describe "ANTS API: availableTimeSlots" do
+RSpec.describe "ANTS API: availableTimeSlots" do
   include_context "rdv_mairie_api_authentication"
 
   let(:lieu1) do

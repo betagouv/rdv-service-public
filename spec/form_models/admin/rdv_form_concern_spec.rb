@@ -1,4 +1,4 @@
-describe Admin::RdvFormConcern, type: :form do
+RSpec.describe Admin::RdvFormConcern, type: :form do
   subject(:form) { dummy_form_class.new(rdv, agent_author) }
 
   let(:dummy_form_class) do

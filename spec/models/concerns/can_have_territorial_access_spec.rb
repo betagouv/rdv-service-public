@@ -1,4 +1,4 @@
-describe CanHaveTerritorialAccess, type: :concern do
+RSpec.describe CanHaveTerritorialAccess, type: :concern do
   describe "#territorial_admin!" do
     it "update agent territorial admin access to true" do
       territory = create(:territory)

@@ -1,4 +1,4 @@
-describe "Agents can configure online booking" do
+RSpec.describe "Agents can configure online booking" do
   let!(:organisation) { create(:organisation) }
   let!(:agent) { create(:agent, :cnfs, admin_role_in_organisations: [organisation]) }
 

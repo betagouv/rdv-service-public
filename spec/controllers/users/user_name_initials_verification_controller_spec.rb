@@ -1,4 +1,4 @@
-describe Users::UserNameInitialsVerificationController, type: :controller do
+RSpec.describe Users::UserNameInitialsVerificationController, type: :controller do
   render_views
   let!(:user) { create(:user, last_name: "Dylan") }
 

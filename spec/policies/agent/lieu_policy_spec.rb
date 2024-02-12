@@ -1,4 +1,4 @@
-describe Agent::LieuPolicy do
+RSpec.describe Agent::LieuPolicy do
   subject(:policy) { described_class.new(agent, lieu) }
 
   let!(:lieu) { create(:lieu) }

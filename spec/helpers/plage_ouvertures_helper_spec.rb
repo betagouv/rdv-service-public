@@ -1,4 +1,4 @@
-describe PlageOuverturesHelper do
+RSpec.describe PlageOuverturesHelper do
   let(:now) { Time.zone.parse("2021-12-23 09:00") }
 
   before do

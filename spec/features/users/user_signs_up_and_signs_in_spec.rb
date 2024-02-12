@@ -1,4 +1,4 @@
-describe "User signs up and signs in" do
+RSpec.describe "User signs up and signs in" do
   around { |example| perform_enqueued_jobs { example.run } }
 
   context "for regular new user" do

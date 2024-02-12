@@ -1,4 +1,4 @@
-describe "Agent can CRUD motifs" do
+RSpec.describe "Agent can CRUD motifs" do
   let(:organisation) { create(:organisation) }
   let!(:service) { create(:service, name: "PMI", territories: [organisation.territory]) }
   let!(:motif) { create(:motif, name: "Suivi bonjour", service: service, organisation: organisation) }

@@ -1,4 +1,4 @@
-describe SmsSender, type: :service do
+RSpec.describe SmsSender, type: :service do
   let(:rdv) { create(:rdv) }
   let(:user) { create(:user) }
   let(:receipt_params) { { event: "rdv_created", rdv: rdv, user: user } }

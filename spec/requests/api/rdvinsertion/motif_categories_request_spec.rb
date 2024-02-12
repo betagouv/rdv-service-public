@@ -1,6 +1,6 @@
 require "swagger_helper"
 
-describe "Motif Category API", swagger_doc: "v1/api.json" do
+RSpec.describe "Motif Category API", swagger_doc: "v1/api.json" do
   with_examples
 
   path "/api/rdvinsertion/motif_categories/" do

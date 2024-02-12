@@ -1,4 +1,4 @@
-describe "User can change rdv participant" do
+RSpec.describe "User can change rdv participant" do
   let(:rdv) { create(:rdv) }
   let(:user) { rdv.users.first }
   let!(:child) { create(:user, first_name: "Petit", last_name: "BEBE", responsible_id: user.id) }

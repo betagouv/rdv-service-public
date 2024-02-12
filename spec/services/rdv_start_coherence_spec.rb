@@ -1,4 +1,4 @@
-describe RdvStartCoherence, type: :service do
+RSpec.describe RdvStartCoherence, type: :service do
   describe "#rdvs_ending_shortly_before" do
     subject { described_class.new(rdv).rdvs_ending_shortly_before }
 

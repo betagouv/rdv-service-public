@@ -1,4 +1,4 @@
-describe Users::RdvWizardStepsController, type: :controller do
+RSpec.describe Users::RdvWizardStepsController, type: :controller do
   describe "#new" do
     let!(:organisation) { create(:organisation) }
     let!(:user) { create(:user) }

@@ -1,4 +1,4 @@
-describe Motif, type: :model do
+RSpec.describe Motif, type: :model do
   let(:secretariat) { create(:service, :secretariat) }
   let(:motif) { create(:motif, organisation: organisation) }
   let!(:organisation) { create(:organisation) }
