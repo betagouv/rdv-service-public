@@ -18,14 +18,17 @@ echo "Upgrade du Postgres d'ETL pour avoir plus de RAM"
 # On fait cette opération avant de télécharger le dump pour que le provisionnement du nouveau plan ai le temps de se finir avant le pg_restore
 scalingo --region osc-secnum-fr1 --app rdv-service-public-etl addons-upgrade "${etl_addon_id}"  postgresql-starter-8192
 
+# Default to RDVS or use the first argument as the app name:
+app_name="${1:-production-rdv-solidarites}"
+
 # Retrieve the production addon id:
-prod_addon_id="$( scalingo --region osc-secnum-fr1 --app production-rdv-solidarites addons \
+prod_addon_id="$( scalingo --region osc-secnum-fr1 --app "${app_name}" addons \
                  | grep "PostgreSQL" \
                  | cut -d "|" -f 3 \
                  | tr -d " " )"
 
 # Download the latest backup available for the specified addon:
-scalingo  --region osc-secnum-fr1 --app production-rdv-solidarites --addon "${prod_addon_id}" backups-download --output "${archive_name}"
+scalingo  --region osc-secnum-fr1 --app "${app_name}" --addon "${prod_addon_id}" backups-download --output "${archive_name}"
 
 # Extract the archive containing the downloaded backup:
 tar --extract --verbose --file="${archive_name}" --directory="/app/"
@@ -50,7 +53,7 @@ time pg_restore --clean --if-exists --no-owner --no-privileges --jobs=4 --dbname
 
 
 echo "Anonymisation de la base"
-time bundle exec rails runner scripts/anonymize_database.rb
+time bundle exec rails runner scripts/anonymize_database.rb "${app_name}"
 
 echo "Re-création du role Postgres rdv_service_public_metabase"
 echo "Merci de copier/coller le mot de passe stocké dans METABASE_DB_ROLE_PASSWORD: ${METABASE_DB_ROLE_PASSWORD}"

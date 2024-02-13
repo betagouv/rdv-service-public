@@ -1,4 +1,4 @@
-class AnonymizerRules
+class Anonymizer::Rules::RdvInsertion
   TRUNCATED_TABLES = %w[versions good_jobs good_job_settings good_job_batches good_job_processes].freeze
 
   RULES = {

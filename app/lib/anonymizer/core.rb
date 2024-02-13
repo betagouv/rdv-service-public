@@ -1,7 +1,14 @@
-class Anonymizer
-  def self.anonymize_all_data!
+class Anonymizer::Core
+  attr_reader :table_name, :rules
+
+  RULES = {
+    "rdv-insertion-prod" => Anonymizer::Rules::RdvInsertion,
+    "production-rdv-solidarites" => Anonymizer::Rules::RdvServicePublic,
+  }.freeze
+
+  def self.anonymize_all_data!(service)
     ActiveRecord::Base.connection.tables.each do |table_name|
-      anonymize_table!(table_name)
+      anonymize_table!(table_name, service)
     end
   end
 
@@ -9,21 +16,22 @@ class Anonymizer
     anonymize_table!("users")
     anonymize_table!("receipts")
     anonymize_table!("rdvs")
-    AnonymizerRules::TRUNCATED_TABLES.each do |table_name|
+    Anonymizer::Rules::RdvServicePublic::TRUNCATED_TABLES.each do |table_name|
       anonymize_table!(table_name)
     end
   end
 
-  def self.anonymize_table!(table_name)
-    new(table_name).anonymize_table!
+  def self.anonymize_table!(table_name, service)
+    new(table_name, RULES[service]).anonymize_table!
   end
 
   def self.anonymize_record!(record)
     new(record.class.table_name).anonymize_record!(record)
   end
 
-  def initialize(table_name)
+  def initialize(table_name, rules = nil)
     @table_name = table_name
+    @rules = rules
   end
 
   def anonymize_record!(record)
@@ -42,55 +50,45 @@ class Anonymizer
       raise "Attention, il semble que vous êtes en train d'anonymiser des données d'une appli web"
     end
 
-    if @table_name.in?(AnonymizerRules::TRUNCATED_TABLES)
-      db_connection.execute("TRUNCATE #{ActiveRecord::Base.sanitize_sql(@table_name)}")
+    if table_name.in?(rules::TRUNCATED_TABLES)
+      db_connection.execute("TRUNCATE #{ActiveRecord::Base.sanitize_sql(table_name)}")
       return
     end
 
     if unidentified_column_names.present?
-      raise "Les règles d'anonymisation pour les colonnes #{unidentified_column_names.join(' ')} de la table #{@table_name} n'ont pas été définies"
+      raise "Les règles d'anonymisation pour les colonnes #{unidentified_column_names.join(' ')} de la table #{table_name} n'ont pas été définies"
     end
 
     return if anonymized_columns.blank?
 
-    model_class = AnonymizerRules::RULES.dig(@table_name, "class_name")&.constantize
-
-    if model_class.nil?
-      raise "Pas de modèle trouvé pour la table #{@table_name}"
-    end
-
-    anonymized_columns.each { |column| anonymize_column(column, model_class) }
+    anonymized_columns.each { |column| anonymize_column(column, table_name) }
   end
   # rubocop:enable Metrics/CyclomaticComplexity
 
   private
 
-  def anonymize_column(column, model_class)
-    ActiveRecord::Encryption.without_encryption do # The columns may be encrypted, but we still want to overwrite the anonymized value
-      scope = model_class.unscoped.where.not(column.name => nil)
-
-      if column.type.in?(%i[string text]) && column.null # On vérifie que la colonne est nullable
-        # Pour limiter la confusion lors de l'exploitation des données, on transforme les chaines vides en null
-        scope.where(column.name => "").update_all(column.name => nil) # rubocop:disable Rails/SkipsModelValidations
-      end
-
-      scope.update_all(column.name => anonymous_value(column)) # rubocop:disable Rails/SkipsModelValidations
+  def anonymize_column(column, table)
+    if column.type.in?(%i[string text]) && column.null # On vérifie que la colonne est nullable
+      # Pour limiter la confusion lors de l'exploitation des données, on transforme les chaines vides en null
+      db_connection.execute("UPDATE #{table} SET #{column} = NULL WHERE #{column} = ''")
     end
+
+    db_connection.execute("UPDATE #{table} SET #{column} = #{anonymous_value(column)} WHERE #{column} IS NOT NULL")
   end
 
   def unidentified_column_names
-    all_columns = db_connection.columns(@table_name).map(&:name)
-    primary_key_columns = db_connection.primary_keys(@table_name)
-    foreign_key_columns = db_connection.foreign_keys(@table_name).map { |key| key.options[:column] }
+    all_columns = db_connection.columns(table_name).map(&:name)
+    primary_key_columns = db_connection.primary_keys(table_name)
+    foreign_key_columns = db_connection.foreign_keys(table_name).map { |key| key.options[:column] }
     all_columns - primary_key_columns - foreign_key_columns - anonymized_column_names - non_anonymized_column_names
   end
 
   def anonymized_column_names
-    AnonymizerRules::RULES.dig(@table_name, :anonymized_column_names) || []
+    rules::RULES.dig(table_name, :anonymized_column_names) || []
   end
 
   def non_anonymized_column_names
-    AnonymizerRules::RULES.dig(@table_name, :non_anonymized_column_names) || []
+    rules::RULES.dig(table_name, :non_anonymized_column_names) || []
   end
 
   def anonymized_attributes
@@ -100,7 +98,7 @@ class Anonymizer
   end
 
   def anonymized_columns
-    db_connection.columns(@table_name).select do |column|
+    db_connection.columns(table_name).select do |column|
       column.name.in?(anonymized_column_names)
     end
   end
@@ -120,7 +118,7 @@ class Anonymizer
   end
 
   def column_has_uniqueness_constraint?(column)
-    db_connection.indexes(@table_name).select(&:unique).any? do |index|
+    db_connection.indexes(table_name).select(&:unique).any? do |index|
       # il se peut que la deuxième colonne de l'index n'ai pas de contrainte d'unicité
       index.columns.first == column.name
     end
