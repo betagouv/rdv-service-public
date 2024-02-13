@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_02_13_134755) do
+ActiveRecord::Schema[7.0].define(version: 2024_02_13_140717) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -668,7 +668,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_13_134755) do
     t.string "phone_number_formatted"
     t.boolean "notify_by_sms", default: true
     t.boolean "notify_by_email", default: true
-    t.datetime "last_sign_in_at"
     t.string "franceconnect_openid_sub"
     t.boolean "logged_once_with_franceconnect"
     t.string "city_code"
