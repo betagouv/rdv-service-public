@@ -31,7 +31,6 @@ class AnonymizerRules
         confirmation_token
         reset_password_token
         invitation_token
-        last_sign_in_at
         remember_created_at
         rdv_invitation_token
       ],
