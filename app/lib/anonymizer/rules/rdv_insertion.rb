@@ -1,207 +1,501 @@
 class Anonymizer::Rules::RdvInsertion
-  TRUNCATED_TABLES = %w[versions good_jobs good_job_settings good_job_batches good_job_processes].freeze
+  TRUNCATED_TABLES = %w[
+    active_storage_attachments
+    active_storage_blobs
+    active_storage_variant_records
+    agent_roles
+    schema_migrations
+    ar_internal_metadata
+  ].freeze
 
   RULES = {
-    users: {
-      class_name: "User",
-      anonymized_column_names: %w[
-        first_name
-        last_name
-        birth_name
-        birth_date
-        email
-        unconfirmed_email
-        address
-        address_details
-        caisse_affiliation
-        affiliation_number
-        family_situation
-        number_of_children
-        phone_number
-        phone_number_formatted
-        city_code
-        post_code
-        city_name
-        case_number
-        logement
-        notes
-        ants_pre_demande_number
-        franceconnect_openid_sub
-        encrypted_password
-        confirmation_token
-        reset_password_token
-        invitation_token
-        last_sign_in_at
-        remember_created_at
-        rdv_invitation_token
-      ],
-      non_anonymized_column_names: %w[
-        confirmed_at confirmation_sent_at created_at updated_at created_through invitation_accepted_at invitation_created_at
-        text_search_terms deleted_at invitation_limit reset_password_sent_at invitation_sent_at
-        invitations_count invited_by_id invited_by_type invited_through notify_by_email notify_by_sms logged_once_with_franceconnect
-      ],
-    },
     agents: {
       class_name: "Agent",
       anonymized_column_names: %w[
-        first_name last_name
         email
-        email_original
-        encrypted_password
-        unconfirmed_email
-        cnfs_secondary_email
-        uid
-        external_id
-        calendar_uid
-        current_sign_in_at
-        last_sign_in_at
-        current_sign_in_ip
-        last_sign_in_ip
-        reset_password_token
-        confirmation_token
-        invitation_token
-        tokens
-        microsoft_graph_token
-        refresh_microsoft_graph_token
-        remember_created_at
+        first_name
+        last_name
       ],
       non_anonymized_column_names: %w[
-        reset_password_sent_at
-        confirmed_at
-        confirmation_sent_at
-        invitation_created_at
-        invitation_sent_at
-        invitation_accepted_at
-        invitation_limit
-        invited_by_type
-        invited_by_id
-        invitations_count
-        provider
-        rdv_notifications_level
-        allow_password_change
-        unknown_past_rdv_count
-        display_saturdays
-        display_cancelled_rdv
-        plage_ouverture_notification_level
-        absence_notification_level
-        sign_in_count
-        outlook_disconnect_in_progress
-        account_deletion_warning_sent_at
+        super_admin
+        last_sign_in_at
+        created_at
+        updated_at
+        last_webhook_update_received_at
+        rdv_solidarites_agent_id
+      ],
+    },
+    agents_rdvs: {
+      class_name: "AgentRdv",
+      anonymized_column_names: %w[],
+      non_anonymized_column_names: %w[
+        created_at
+        updated_at
+        agent_id
+        rdv_id
+      ],
+    },
+    archives: {
+      class_name: "Archive",
+      anonymized_column_names: %w[
+        archiving_reason
+      ],
+      non_anonymized_column_names: %w[
+        created_at
+        updated_at
+        user_id
+        department_id
+      ],
+    },
+    configurations: {
+      class_name: "Configuration",
+      anonymized_column_names: %w[
+        template_rdv_title_override
+        template_rdv_title_by_phone_override
+        template_user_designation_override
+        template_rdv_purpose_override
+        phone_number
+      ],
+      non_anonymized_column_names: %w[
+        number_of_days_between_periodic_invites
+        day_of_the_month_periodic_invites
+        position
+        department_position
+        created_at
+        updated_at
+        invitation_formats
+        convene_user
+        number_of_days_before_action_required
+        invite_to_user_organisations_only
+        rdv_with_referents
+        motif_category_id
+        file_configuration_id
+        organisation_id
+      ],
+    },
+    departments: {
+      class_name: "Department",
+      anonymized_column_names: %w[
+        name
+        phone_number
+        email
+        region
+        pronoun
+        capital
+      ],
+      non_anonymized_column_names: %w[
+        created_at
+        updated_at
+        display_in_stats
+        carnet_de_bord_deploiement_id
+      ],
+    },
+    file_configurations: {
+      class_name: "FileConfiguration",
+      anonymized_column_names: %w[
+        sheet_name
+        title_column
+        first_name_column
+        last_name_column
+        role_column
+        email_column
+        phone_number_column
+        birth_date_column
+        birth_name_column
+        address_first_field_column
+        address_second_field_column
+        address_third_field_column
+        address_fourth_field_column
+        address_fifth_field_column
+        affiliation_number_column
+        pole_emploi_id_column
+        nir_column
+        department_internal_id_column
+        rights_opening_date_column
+        organisation_search_terms_column
+        referent_email_column
+        tags_column
+      ],
+      non_anonymized_column_names: %w[
+        created_at
+        updated_at
+      ],
+    },
+    invitations: {
+      class_name: "Invitation",
+      anonymized_column_names: %w[
+        link
+        help_phone_number
+        rdv_solidarites_token
+      ],
+      non_anonymized_column_names: %w[
+        format
+        sent_at
+        user_id
+        created_at
+        updated_at
+        clicked
+        department_id
+        rdv_solidarites_lieu_id
+        rdv_context_id
+        valid_until
+        reminder
+        uuid
+        rdv_with_referents
+      ],
+    },
+    invitations_organisations: {
+      class_name: "InvitationOrganisation",
+      anonymized_column_names: %w[],
+      non_anonymized_column_names: %w[
+        organisation_id
+        invitation_id
+      ],
+    },
+    lieux: {
+      class_name: "Lieu",
+      anonymized_column_names: %w[
+        name
+        address
+        phone_number
+      ],
+      non_anonymized_column_names: %w[
+        created_at
+        updated_at
+        rdv_solidarites_lieu_id
+        organisation_id
+        last_webhook_update_received_at
+      ],
+    },
+    messages_configurations: {
+      class_name: "MessagesConfiguration",
+      anonymized_column_names: %w[
+        sender_city
+        direction_names
+        letter_sender_name
+        signature_lines
+        help_address
+        sms_sender_name
+      ],
+      non_anonymized_column_names: %w[
+        created_at
+        updated_at
+        display_europe_logos
+        display_department_logo
+        display_pole_emploi_logo
+        organisation_id
+      ],
+    },
+    motif_categories: {
+      class_name: "MotifCategory",
+      anonymized_column_names: %w[
+        short_name
+        name
+      ],
+      non_anonymized_column_names: %w[
+        template_id
+        rdv_solidarites_motif_category_id
+        created_at
+        updated_at
+        optional_rdv_subscription
+        leads_to_orientation
+      ],
+    },
+    motifs: {
+      class_name: "Motif",
+      anonymized_column_names: %w[
+        name
+        instruction_for_rdv
+      ],
+      non_anonymized_column_names: %w[
+        rdv_solidarites_service_id
+        rdv_solidarites_motif_id
+        reservable_online
         deleted_at
-        created_at updated_at
+        collectif
+        location_type
+        last_webhook_update_received_at
+        organisation_id
+        created_at
+        updated_at
+        follow_up
+        motif_category_id
+      ],
+    },
+    notifications: {
+      class_name: "Notification",
+      anonymized_column_names: %w[
+        event
+      ],
+      non_anonymized_column_names: %w[
+        sent_at
+        created_at
+        updated_at
+        rdv_solidarites_rdv_id
+        format
+        participation_id
+      ],
+    },
+    organisations_webhook_endpoints: {
+      class_name: "OrganisationsWebhookEndpoint",
+      anonymized_column_names: %w[
+      ],
+      non_anonymized_column_names: %w[
+        organisation_id
+        webhook_endpoint_id
+      ],
+    },
+    orientations: {
+      class_name: "Orientation",
+      anonymized_column_names: %w[
+        orientation_type
+      ],
+      non_anonymized_column_names: %w[
+        user_id
+        organisation_id
+        agent_id
+        starts_at
+        ends_at
+        created_at
+        updated_at
+      ],
+    },
+    parcours_documents: {
+      class_name: "ParcoursDocument",
+      anonymized_column_names: %w[
+      ],
+      non_anonymized_column_names: %w[
+        department_id
+        user_id
+        agent_id
+        type
+        created_at
+        updated_at
+      ],
+    },
+    participations: {
+      class_name: "Participation",
+      anonymized_column_names: %w[
+      ],
+      non_anonymized_column_names: %w[
+        user_id
+        rdv_id
+        status
+        rdv_solidarites_participation_id
+        created_at
+        updated_at
+        rdv_context_id
+        created_by
+        convocable
+      ],
+    },
+    rdv_contexts: {
+      class_name: "RdvContext",
+      anonymized_column_names: %w[
+      ],
+      non_anonymized_column_names: %w[
+        status
+        user_id
+        created_at
+        updated_at
+        motif_category_id
+        closed_at
+      ],
+    },
+    users: {
+      class_name: "User",
+      anonymized_column_names: %w[
+        affiliation_number
+        first_name
+        last_name
+        address
+        phone_number
+        email
+        title
+        birth_date
+        birth_name
+        nir
+        pole_emploi_id
+        carnet_de_bord_carnet_id
+      ],
+      non_anonymized_column_names: %w[
+        rights_opening_date
+        rdv_solidarites_user_id
+        department_internal_id
+        uid
+        role
+        created_at
+        updated_at
+        deleted_at
+        last_webhook_update_received_at
+        created_through
       ],
     },
     rdvs: {
       class_name: "Rdv",
-      anonymized_column_names: %w[context name],
-      non_anonymized_column_names: %w[
-        starts_at organisation_id created_at updated_at cancelled_at motif_id uuid
-        lieu_id old_location created_by_id created_by_type ends_at max_participants_count users_count status
-      ],
-    },
-    receipts: {
-      class_name: "Receipt",
-      anonymized_column_names: %w[sms_phone_number email_address content error_message],
-      non_anonymized_column_names: %w[
-        created_at updated_at error_message event result sms_count sms_provider channel
-      ],
-    },
-    prescripteurs: {
-      class_name: "Prescripteur",
       anonymized_column_names: %w[
-        first_name last_name email phone_number phone_number_formatted
+        context
+        address
       ],
-      non_anonymized_column_names: %w[created_at updated_at participation_id],
+      non_anonymized_column_names: %w[
+        rdv_solidarites_rdv_id
+        starts_at
+        duration_in_min
+        cancelled_at
+        uuid
+        created_by
+        status
+        created_at
+        updated_at
+        organisation_id
+        last_webhook_update_received_at
+        motif_id
+        lieu_id
+        users_count
+        max_participants_count
+      ],
     },
-    super_admins: {
-      class_name: "SuperAdmin",
-      anonymized_column_names: %w[email first_name last_name],
-      non_anonymized_column_names: %w[created_at updated_at role],
+    referent_assignations: {
+      class_name: "ReferentAssignation",
+      anonymized_column_names: %w[
+      ],
+      non_anonymized_column_names: %w[
+        agent_id
+        user_id
+      ],
+    },
+    stats: {
+      class_name: "Stat",
+      anonymized_column_names: %w[],
+      non_anonymized_column_names: %w[
+        users_count
+        users_count_grouped_by_month
+        rdvs_count
+        rdvs_count_grouped_by_month
+        sent_invitations_count
+        sent_invitations_count_grouped_by_month
+        average_time_between_invitation_and_rdv_in_days
+        average_time_between_invitation_and_rdv_in_days_by_month
+        rate_of_users_oriented_in_less_than_30_days
+        rate_of_users_oriented_in_less_than_30_days_by_month
+        agents_count
+        created_at
+        updated_at
+        rate_of_autonomous_users
+        rate_of_autonomous_users_grouped_by_month
+        statable_type
+        statable_id
+        rate_of_no_show_for_convocations
+        rate_of_no_show_for_convocations_grouped_by_month
+        rate_of_no_show_for_invitations
+        rate_of_no_show_for_invitations_grouped_by_month
+        rate_of_users_oriented
+        rate_of_users_oriented_grouped_by_month
+        users_with_rdv_count
+      ],
+    },
+    tag_organisations: {
+      class_name: "TagOrganisation",
+      anonymized_column_names: %w[],
+      non_anonymized_column_names: %w[
+        organisation_id
+        tag_id
+        created_at
+        updated_at
+      ],
+    },
+    tag_users: {
+      class_name: "TagUser",
+      anonymized_column_names: %w[],
+      non_anonymized_column_names: %w[
+        user_id
+        tag_id
+        created_at
+        updated_at
+      ],
+    },
+    tags: {
+      class_name: "Tag",
+      anonymized_column_names: %w[
+        value
+      ],
+      non_anonymized_column_names: %w[
+        created_at
+        updated_at
+      ],
+    },
+    templates: {
+      class_name: "Template",
+      anonymized_column_names: %w[
+        rdv_title
+        rdv_title_by_phone
+        rdv_purpose
+        user_designation
+        rdv_subject
+        custom_sentence
+        punishable_warning
+      ],
+      non_anonymized_column_names: %w[
+        model
+        display_mandatory_warning
+        created_at
+        updated_at
+      ],
     },
     organisations: {
       class_name: "Organisation",
-      anonymized_column_names: %w[email phone_number],
-      non_anonymized_column_names: %w[created_at updated_at name departement horaires human_id website external_id verticale],
+      anonymized_column_names: %w[
+        name
+        phone_number
+        email
+        slug
+        logo_filename
+        safir_code
+      ],
+      non_anonymized_column_names: %w[
+        rdv_solidarites_organisation_id
+        created_at
+        updated_at
+        department_id
+        last_webhook_update_received_at
+        independent_from_cd
+      ],
     },
-    absences: {
-      class_name: "Absence",
-      anonymized_column_names: %w[title],
-      non_anonymized_column_names: %w[created_at updated_at recurrence first_day start_time end_day end_time expired_cached recurrence_ends_at],
-    },
-    lieux: {
-      class_name: "Lieu",
-      anonymized_column_names: %w[phone_number phone_number_formatted],
-      non_anonymized_column_names: %w[created_at updated_at name old_address latitude longitude old_enabled availability address],
-    },
-    participations: {
-      class_name: "Participation",
-      anonymized_column_names: %w[invitation_token],
-      non_anonymized_column_names: %w[created_at updated_at send_lifecycle_notifications send_reminder_notification invitation_created_at invitation_sent_at invitation_accepted_at
-                                      invitation_limit invited_by_type invited_by_id invitations_count status created_by_id created_by_type created_by_agent_prescripteur],
-    },
-    plage_ouvertures: {
-      class_name: "PlageOuverture",
-      anonymized_column_names: %w[title],
-      non_anonymized_column_names: %w[created_at updated_at organisation_id first_day start_time end_time recurrence expired_cached recurrence_ends_at],
+    users_organisations: {
+      class_name: "UserOrganisation",
+      anonymized_column_names: %w[],
+      non_anonymized_column_names: %w[
+        user_id
+        organisation_id
+        created_at
+        updated_at
+      ],
     },
     webhook_endpoints: {
       class_name: "WebhookEndpoint",
-      anonymized_column_names: %w[secret],
-      non_anonymized_column_names: %w[created_at updated_at target_url organisation_id subscriptions],
-    },
-    territories: {
-      class_name: "Territory",
-      anonymized_column_names: %w[sms_configuration],
+      anonymized_column_names: %w[
+        url
+        secret
+        signature_type
+      ],
       non_anonymized_column_names: %w[
-        departement_number name phone_number phone_number_formatted created_at updated_at sms_provider has_own_sms_provider enable_notes_field
-        enable_caisse_affiliation_field enable_affiliation_number_field enable_family_situation_field
-        enable_number_of_children_field enable_logement_field enable_case_number enable_address_details
-        enable_context_field enable_waiting_room_mail_field enable_waiting_room_color_field
-        visible_users_throughout_the_territory
+        created_at
+        updated_at
+        subscriptions
       ],
     },
-
-    # Tables sans données personnelles
-    agent_roles: { non_anonymized_column_names: %w[access_level] },
-    agents_rdvs: { non_anonymized_column_names: %w[outlook_id outlook_create_in_progress] },
-    agent_territorial_access_rights: {
-      non_anonymized_column_names: %w[allow_to_manage_teams created_at updated_at allow_to_manage_access_rights allow_to_invite_agents allow_to_download_metrics],
-    },
-    teams: { non_anonymized_column_names: %w[name created_at updated_at] },
-    motifs: {
-      non_anonymized_column_names: %w[
-        name color created_at updated_at default_duration_in_min legacy_bookable_publicly
-        min_public_booking_delay max_public_booking_delay deleted_at bookable_by
-        restriction_for_rdv instruction_for_rdv for_secretariat old_location_type follow_up
-        visibility_type sectorisation_level custom_cancel_warning_message collectif location_type
-        rdvs_editable_by_user rdvs_cancellable_by_user
+    webhook_receipts: {
+      class_name: "WebhookReceipt",
+      anonymized_column_names: %w[
       ],
-    },
-    services: { non_anonymized_column_names: %w[name created_at updated_at short_name] },
-    zones: {
       non_anonymized_column_names: %w[
-        level city_name city_code created_at updated_at street_name street_ban_id
+        resource_id
+        webhook_endpoint_id
+        timestamp
+        created_at
+        updated_at
+        resource_model
       ],
-    },
-    ar_internal_metadata: {
-      non_anonymized_column_names: %w[value created_at updated_at],
-    },
-    territory_services: { non_anonymized_column_names: %w[created_at] },
-    agent_services: { non_anonymized_column_names: %w[created_at] },
-    agent_teams: {
-      non_anonymized_column_names: %w[created_at updated_at],
-    },
-    sectors: {
-      non_anonymized_column_names: %w[departement name human_id created_at updated_at],
-    },
-    motif_categories: {
-      non_anonymized_column_names: %w[name short_name created_at updated_at],
-    },
-    sector_attributions: {
-      non_anonymized_column_names: %w[level],
-    },
-    file_attentes: {
-      non_anonymized_column_names: %w[created_at updated_at notifications_sent last_creneau_sent_at],
-    },
+    }
   }.with_indifferent_access.freeze
 end
