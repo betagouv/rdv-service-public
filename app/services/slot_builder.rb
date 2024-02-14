@@ -1,11 +1,11 @@
 module SlotBuilder
   class << self
     # méthode publique
-    def available_slots(motif, lieu, date_range, agents = [], creneau_duration_in_min = nil)
+    def available_slots(motif, lieu, date_range, agents = [])
       datetime_range = Lapin::Range.ensure_date_range_with_time(date_range)
       plage_ouvertures = plage_ouvertures_for(motif, lieu, datetime_range, agents)
       free_times_po = free_times_from(plage_ouvertures, datetime_range) # dépendances implicite à Rdv, Absence et OffDays
-      slots_for(free_times_po, motif, creneau_duration_in_min)
+      slots_for(free_times_po, motif)
     end
 
     def plage_ouvertures_for(motif, lieu, datetime_range, agents)
@@ -68,20 +68,19 @@ module SlotBuilder
       return busy_time.ends_at..range.end if range.cover?(busy_time.ends_at)
     end
 
-    def slots_for(plage_ouverture_free_times, motif, creneau_duration_in_min)
+    def slots_for(plage_ouverture_free_times, motif)
       slots = []
       plage_ouverture_free_times.each do |plage_ouverture, free_times|
         free_times.each do |free_time|
-          slots += calculate_slots(free_time, motif, plage_ouverture, creneau_duration_in_min)
+          slots += calculate_slots(free_time, motif, plage_ouverture)
         end
       end
       slots
     end
 
-    def calculate_slots(free_time, motif, plage_ouverture, creneau_duration_in_min)
+    def calculate_slots(free_time, motif, plage_ouverture)
       possible_slot_start = earliest_possible_slot_start(free_time)
-      creneau_duration = (creneau_duration_in_min || motif.default_duration_in_min).minutes
-      last_possible_slot_start = free_time.end - creneau_duration
+      last_possible_slot_start = free_time.end - motif.default_duration_in_min.minutes
 
       slots = []
 
@@ -92,7 +91,7 @@ module SlotBuilder
           lieu_id: plage_ouverture.lieu_id,
           agent: plage_ouverture.agent
         )
-        possible_slot_start += creneau_duration
+        possible_slot_start += motif.default_duration_in_min.minutes
       end
       slots
     end
