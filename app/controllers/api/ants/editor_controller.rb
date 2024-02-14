@@ -57,7 +57,7 @@ class Api::Ants::EditorController < Api::Ants::BaseController
   end
 
   def creneaux(lieu, motif)
-    motif.default_duration_in_min = rdv_duration(motif)
+    motif.reload.default_duration_in_min = rdv_duration(motif)
 
     Users::CreneauxSearch.new(
       lieu: lieu,
@@ -100,7 +100,7 @@ class Api::Ants::EditorController < Api::Ants::BaseController
     users_count = params.fetch(:documents_number, 1).to_i
     # Le reload permet d'eviter des side-effects du fait que nous modifions motif#reload.default_duration_in_min en memoire
     # Voir la méthode #creneaux plus haut
-    motif.reload.default_duration_in_min * users_count
+    motif.default_duration_in_min * users_count
   end
 
   def check_required_params!
