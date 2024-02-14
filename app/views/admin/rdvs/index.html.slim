@@ -59,13 +59,13 @@
       label.custom-control-label for="show-users-details-switch" Afficher plus de détails usagers
 
   .row.justify-content-center.pb-3
-    .col-md-8
+    .col-md-12.col-lg-8
       .d-flex.justify-content-center= paginate @rdvs, theme: "twitter-bootstrap-4"
       = render(partial: "rdv", collection: @rdvs_in_page, locals: { agent: nil })
       .d-flex.justify-content-center= paginate @rdvs, theme: "twitter-bootstrap-4"
 - else
   .row.justify-content-center.pb-3
-    .col-md-8
+    .col-md-12.col-lg-8
       .card
         .card-body
           .row.justify-content-md-center
