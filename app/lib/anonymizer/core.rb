@@ -77,7 +77,7 @@ class Anonymizer::Core
       db_connection.execute("UPDATE #{table} SET #{column.name} = NULL WHERE #{column.name} = ''")
     end
 
-    db_connection.execute("UPDATE #{table} SET #{column.name} = #{ActiveRecord::Base.sanitize_sql(anonymous_value(column))} WHERE #{column.name} IS NOT NULL")
+    db_connection.execute("UPDATE #{table} SET #{column.name} = #{anonymous_value(column, quote_value: true)} WHERE #{column.name} IS NOT NULL")
   end
 
   def unidentified_column_names
@@ -107,17 +107,17 @@ class Anonymizer::Core
     end
   end
 
-  def anonymous_value(column)
+  def anonymous_value(column, quote_value: false)
     if column.type.in?(%i[string text])
       if column.name.include?("email")
         Arel.sql("'email_anonymise_' || id || '@exemple.fr'")
       elsif column_has_uniqueness_constraint?(column)
         Arel.sql("'[valeur unique anonymisée ' || id || ']'")
       else
-        "'[valeur anonymisée]'"
+        quote_value ? db_connection.quote("[valeur anonymisée]") : "[valeur anonymisée]"
       end
     else
-      db_connection.quote(column.default)
+      quote_value ? db_connection.quote(column.default) : column.default
     end
   end
 
