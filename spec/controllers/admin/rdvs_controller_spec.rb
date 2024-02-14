@@ -174,7 +174,7 @@ RSpec.describe Admin::RdvsController, type: :controller do
         organisation_id: organisation.id.to_s,
         agent_id: "",
         user_id: "",
-        lieu_id: [""],
+        lieu_ids: [""],
         status: "",
       }
 
@@ -216,7 +216,7 @@ RSpec.describe Admin::RdvsController, type: :controller do
           organisation_id: organisation.id.to_s,
           agent_id: "",
           user_id: "",
-          lieu_id: [""],
+          lieu_ids: [""],
           status: "",
         }
 

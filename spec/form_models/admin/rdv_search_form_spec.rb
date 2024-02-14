@@ -12,7 +12,7 @@ RSpec.describe Admin::RdvSearchForm do
         start: nil,
         end: nil,
         organisation_id: organisation.id,
-        lieu_ids:[lieu.id],
+        lieu_ids: [lieu.id],
         motif_ids: [motif.id],
         status: nil,
         user_id: nil,
