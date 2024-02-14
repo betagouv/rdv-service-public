@@ -51,7 +51,10 @@ time pg_restore --clean --if-exists --no-owner --no-privileges --jobs=4 --dbname
 echo "Anonymisation de la base"
 time bundle exec rails runner scripts/anonymize_database.rb "${app_name}"
 
-echo "Renommage du schema vers '${app_name}'"
+echo "Suppression de l'ancien schema '${app_name}'"
+psql "${DATABASE_URL}" -c "DROP SCHEMA IF EXISTS ${app_name} CASCADE;"
+
+echo "Renommage du nouveau schema vers '${app_name}'"
 psql "${DATABASE_URL}" -c "ALTER SCHEMA public RENAME TO ${app_name};"
 
 echo "Re-création du role Postgres rdv_service_public_metabase"
