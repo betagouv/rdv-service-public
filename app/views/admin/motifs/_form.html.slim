@@ -2,6 +2,24 @@
 
   = render "model_errors", model: motif
 
+  ul#motif_tabs.nav.nav-tabs
+    li.nav-item[role="presentation"]
+      button#tab_section_generale.nav-link.active[data-toggle="tab" data-target="#section_generale" type="button" role="tab" aria-controls="home" aria-selected="true"]
+        | Général
+    li.nav-item[role="presentation"]
+      button#tab_resa_en_ligne.nav-link[data-toggle="tab" data-target="#resa_en_ligne" type="button" role="tab" aria-controls="home" aria-selected="false"]
+        | Réservation en ligne
+    li.nav-item[role="presentation"]
+      button#tab_notifs_et_instructions.nav-link[data-toggle="tab" data-target="#notifs_et_instructions" type="button" role="tab" aria-controls="home" aria-selected="false"]
+        | Notifications et instructions
+  .tab-content
+    #section_generale.tab-pane.fade.show.active[role="tabpanel" aria-labelledby="tab_section_generale"]
+      | aa
+    #resa_en_ligne.tab-pane.fade[role="tabpanel" aria-labelledby="tab_resa_en_ligne"]
+      | bb
+    #notifs_et_instructions.tab-pane.fade[role="tabpanel" aria-labelledby="tab_notifs_et_instructions"]
+      | cc
+
   .card
     .card-body
       h5.card-title Configuration générale
