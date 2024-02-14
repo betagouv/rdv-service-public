@@ -6,7 +6,7 @@ class Anonymizer::Core
     "production-rdv-solidarites" => Anonymizer::Rules::RdvServicePublic,
   }.freeze
 
-  def self.anonymize_all_data!(service)
+  def self.anonymize_all_data!(service = "production-rdv-solidarites")
     ActiveRecord::Base.connection.tables.each do |table_name|
       anonymize_table!(table_name, service)
     end
@@ -33,7 +33,7 @@ class Anonymizer::Core
     new(record.class.table_name).anonymize_record!(record)
   end
 
-  def initialize(table_name, rules = nil)
+  def initialize(table_name, rules = Anonymizer::Rules::RdvServicePublic)
     @table_name = table_name
     @rules = rules
   end
@@ -74,10 +74,10 @@ class Anonymizer::Core
   def anonymize_column(column, table)
     if column.type.in?(%i[string text]) && column.null # On vérifie que la colonne est nullable
       # Pour limiter la confusion lors de l'exploitation des données, on transforme les chaines vides en null
-      db_connection.execute("UPDATE #{table} SET #{column} = NULL WHERE #{column} = ''")
+      db_connection.execute("UPDATE #{table} SET #{column.name} = NULL WHERE #{column.name} = ''")
     end
 
-    db_connection.execute("UPDATE #{table} SET #{column} = #{anonymous_value(column)} WHERE #{column} IS NOT NULL")
+    db_connection.execute("UPDATE #{table} SET #{column.name} = #{ActiveRecord::Base.sanitize_sql(anonymous_value(column))} WHERE #{column.name} IS NOT NULL")
   end
 
   def unidentified_column_names
@@ -114,10 +114,10 @@ class Anonymizer::Core
       elsif column_has_uniqueness_constraint?(column)
         Arel.sql("'[valeur unique anonymisée ' || id || ']'")
       else
-        "[valeur anonymisée]"
+        "'[valeur anonymisée]'"
       end
     else
-      column.default
+      db_connection.quote(column.default)
     end
   end
 

@@ -1,4 +1,4 @@
-RSpec.describe Anonymizer do
+RSpec.describe Anonymizer::Core do
   let!(:user_with_email) { create(:user, email: "user@example.com") }
 
   around do |example|
