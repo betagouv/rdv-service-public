@@ -38,9 +38,6 @@
   - if @rdvs.total_count > 0
     .card-footer
       div.d-flex.justify-content-end.align-items-center
-        = link_to admin_organisation_rdvs_path(current_organisation, start: Time.zone.today, end: Time.zone.today), class: "btn btn-sm btn-link d-print-none", method: :get do
-          span> Afficher les RDVs du jour
-          i.fa.fa-calendar>
         = button_to participations_export_admin_organisation_rdvs_path(**@form.to_query), method: :post, class: "btn btn-sm btn-link d-print-none", disable_with: "..." do
           span> Exporter les RDVs par usager en XLS
           i.fa.fa-download>
@@ -79,7 +76,12 @@
                 i.fa.fa-circle.fa-stack-2x.text-primary
                 i.far.fa-calendar.fa-stack-1x.text-white
 
-.hidden#printable
-  .row.justify-content-center.pb-3
-    .col-md-8
-      = render(partial: "admin/rdvs/print/rdv", collection: @rdvs_in_page)
+.hidden#printable.px-20
+  h1
+    | Agenda de #{@current_agent.full_name}
+    .mt-2
+      = current_organisation.name
+
+  h3.mt-4
+    = I18n.l(Time.zone.today, format: :human).capitalize
+  = render(partial: "admin/rdvs/print/rdv", collection: @rdvs_in_page)
