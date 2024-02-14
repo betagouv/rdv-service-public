@@ -12,6 +12,10 @@ class Anonymizer::Core
     end
   end
 
+  def self.truncated_tables(service)
+    RULES[service]::TRUNCATED_TABLES.join("|")
+  end
+
   def self.anonymize_user_data!
     anonymize_table!("users")
     anonymize_table!("receipts")
