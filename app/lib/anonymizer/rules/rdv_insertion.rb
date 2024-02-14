@@ -11,41 +11,17 @@ class Anonymizer::Rules::RdvInsertion
   RULES = {
     agents: {
       class_name: "Agent",
-      anonymized_column_names: %w[
-        email
-        first_name
-        last_name
-      ],
-      non_anonymized_column_names: %w[
-        super_admin
-        last_sign_in_at
-        created_at
-        updated_at
-        last_webhook_update_received_at
-        rdv_solidarites_agent_id
-      ],
+      anonymized_column_names: %w[email first_name last_name],
+      non_anonymized_column_names: %w[super_admin last_sign_in_at created_at updated_at last_webhook_update_received_at rdv_solidarites_agent_id],
     },
     agents_rdvs: {
       class_name: "AgentRdv",
-      anonymized_column_names: %w[],
-      non_anonymized_column_names: %w[
-        created_at
-        updated_at
-        agent_id
-        rdv_id
-      ],
+      non_anonymized_column_names: %w[created_at updated_at agent_id rdv_id],
     },
     archives: {
       class_name: "Archive",
-      anonymized_column_names: %w[
-        archiving_reason
-      ],
-      non_anonymized_column_names: %w[
-        created_at
-        updated_at
-        user_id
-        department_id
-      ],
+      anonymized_column_names: %w[archiving_reason],
+      non_anonymized_column_names: %w[created_at updated_at user_id department_id],
     },
     configurations: {
       class_name: "Configuration",
@@ -75,20 +51,8 @@ class Anonymizer::Rules::RdvInsertion
     },
     departments: {
       class_name: "Department",
-      anonymized_column_names: %w[
-        name
-        phone_number
-        email
-        region
-        pronoun
-        capital
-      ],
-      non_anonymized_column_names: %w[
-        created_at
-        updated_at
-        display_in_stats
-        carnet_de_bord_deploiement_id
-      ],
+      anonymized_column_names: %w[name phone_number email region pronoun capital],
+      non_anonymized_column_names: %w[created_at updated_at display_in_stats carnet_de_bord_deploiement_id],
     },
     file_configurations: {
       class_name: "FileConfiguration",
@@ -116,18 +80,11 @@ class Anonymizer::Rules::RdvInsertion
         referent_email_column
         tags_column
       ],
-      non_anonymized_column_names: %w[
-        created_at
-        updated_at
-      ],
+      non_anonymized_column_names: %w[created_at updated_at],
     },
     invitations: {
       class_name: "Invitation",
-      anonymized_column_names: %w[
-        link
-        help_phone_number
-        rdv_solidarites_token
-      ],
+      anonymized_column_names: %w[link help_phone_number rdv_solidarites_token],
       non_anonymized_column_names: %w[
         format
         sent_at
@@ -146,37 +103,16 @@ class Anonymizer::Rules::RdvInsertion
     },
     invitations_organisations: {
       class_name: "InvitationOrganisation",
-      anonymized_column_names: %w[],
-      non_anonymized_column_names: %w[
-        organisation_id
-        invitation_id
-      ],
+      non_anonymized_column_names: %w[organisation_id invitation_id],
     },
     lieux: {
       class_name: "Lieu",
-      anonymized_column_names: %w[
-        name
-        address
-        phone_number
-      ],
-      non_anonymized_column_names: %w[
-        created_at
-        updated_at
-        rdv_solidarites_lieu_id
-        organisation_id
-        last_webhook_update_received_at
-      ],
+      anonymized_column_names: %w[name address phone_number],
+      non_anonymized_column_names: %w[created_at updated_at rdv_solidarites_lieu_id organisation_id last_webhook_update_received_at],
     },
     messages_configurations: {
       class_name: "MessagesConfiguration",
-      anonymized_column_names: %w[
-        sender_city
-        direction_names
-        letter_sender_name
-        signature_lines
-        help_address
-        sms_sender_name
-      ],
+      anonymized_column_names: %w[sender_city direction_names letter_sender_name signature_lines help_address sms_sender_name],
       non_anonymized_column_names: %w[
         created_at
         updated_at
@@ -188,10 +124,7 @@ class Anonymizer::Rules::RdvInsertion
     },
     motif_categories: {
       class_name: "MotifCategory",
-      anonymized_column_names: %w[
-        short_name
-        name
-      ],
+      anonymized_column_names: %w[short_name name],
       non_anonymized_column_names: %w[
         template_id
         rdv_solidarites_motif_category_id
@@ -203,10 +136,7 @@ class Anonymizer::Rules::RdvInsertion
     },
     motifs: {
       class_name: "Motif",
-      anonymized_column_names: %w[
-        name
-        instruction_for_rdv
-      ],
+      anonymized_column_names: %w[name instruction_for_rdv],
       non_anonymized_column_names: %w[
         rdv_solidarites_service_id
         rdv_solidarites_motif_id
@@ -224,9 +154,7 @@ class Anonymizer::Rules::RdvInsertion
     },
     notifications: {
       class_name: "Notification",
-      anonymized_column_names: %w[
-        event
-      ],
+      anonymized_column_names: %w[event],
       non_anonymized_column_names: %w[
         sent_at
         created_at
@@ -238,45 +166,19 @@ class Anonymizer::Rules::RdvInsertion
     },
     organisations_webhook_endpoints: {
       class_name: "OrganisationsWebhookEndpoint",
-      anonymized_column_names: %w[
-      ],
-      non_anonymized_column_names: %w[
-        organisation_id
-        webhook_endpoint_id
-      ],
+      non_anonymized_column_names: %w[organisation_id webhook_endpoint_id],
     },
     orientations: {
       class_name: "Orientation",
-      anonymized_column_names: %w[
-        orientation_type
-      ],
-      non_anonymized_column_names: %w[
-        user_id
-        organisation_id
-        agent_id
-        starts_at
-        ends_at
-        created_at
-        updated_at
-      ],
+      anonymized_column_names: %w[orientation_type],
+      non_anonymized_column_names: %w[user_id organisation_id agent_id starts_at ends_at created_at updated_at],
     },
     parcours_documents: {
       class_name: "ParcoursDocument",
-      anonymized_column_names: %w[
-      ],
-      non_anonymized_column_names: %w[
-        department_id
-        user_id
-        agent_id
-        type
-        created_at
-        updated_at
-      ],
+      non_anonymized_column_names: %w[department_id user_id agent_id type created_at updated_at],
     },
     participations: {
       class_name: "Participation",
-      anonymized_column_names: %w[
-      ],
       non_anonymized_column_names: %w[
         user_id
         rdv_id
@@ -291,8 +193,6 @@ class Anonymizer::Rules::RdvInsertion
     },
     rdv_contexts: {
       class_name: "RdvContext",
-      anonymized_column_names: %w[
-      ],
       non_anonymized_column_names: %w[
         status
         user_id
@@ -333,10 +233,7 @@ class Anonymizer::Rules::RdvInsertion
     },
     rdvs: {
       class_name: "Rdv",
-      anonymized_column_names: %w[
-        context
-        address
-      ],
+      anonymized_column_names: %w[context address],
       non_anonymized_column_names: %w[
         rdv_solidarites_rdv_id
         starts_at
@@ -357,16 +254,10 @@ class Anonymizer::Rules::RdvInsertion
     },
     referent_assignations: {
       class_name: "ReferentAssignation",
-      anonymized_column_names: %w[
-      ],
-      non_anonymized_column_names: %w[
-        agent_id
-        user_id
-      ],
+      non_anonymized_column_names: %w[agent_id user_id],
     },
     stats: {
       class_name: "Stat",
-      anonymized_column_names: %w[],
       non_anonymized_column_names: %w[
         users_count
         users_count_grouped_by_month
@@ -396,62 +287,25 @@ class Anonymizer::Rules::RdvInsertion
     },
     tag_organisations: {
       class_name: "TagOrganisation",
-      anonymized_column_names: %w[],
-      non_anonymized_column_names: %w[
-        organisation_id
-        tag_id
-        created_at
-        updated_at
-      ],
+      non_anonymized_column_names: %w[organisation_id tag_id created_at updated_at],
     },
     tag_users: {
       class_name: "TagUser",
-      anonymized_column_names: %w[],
-      non_anonymized_column_names: %w[
-        user_id
-        tag_id
-        created_at
-        updated_at
-      ],
+      non_anonymized_column_names: %w[user_id tag_id created_at updated_at],
     },
     tags: {
       class_name: "Tag",
-      anonymized_column_names: %w[
-        value
-      ],
-      non_anonymized_column_names: %w[
-        created_at
-        updated_at
-      ],
+      anonymized_column_names: %w[value],
+      non_anonymized_column_names: %w[created_at updated_at],
     },
     templates: {
       class_name: "Template",
-      anonymized_column_names: %w[
-        rdv_title
-        rdv_title_by_phone
-        rdv_purpose
-        user_designation
-        rdv_subject
-        custom_sentence
-        punishable_warning
-      ],
-      non_anonymized_column_names: %w[
-        model
-        display_mandatory_warning
-        created_at
-        updated_at
-      ],
+      anonymized_column_names: %w[rdv_title rdv_title_by_phone rdv_purpose user_designation rdv_subject custom_sentence punishable_warning],
+      non_anonymized_column_names: %w[model display_mandatory_warning created_at updated_at],
     },
     organisations: {
       class_name: "Organisation",
-      anonymized_column_names: %w[
-        name
-        phone_number
-        email
-        slug
-        logo_filename
-        safir_code
-      ],
+      anonymized_column_names: %w[name phone_number email slug logo_filename safir_code],
       non_anonymized_column_names: %w[
         rdv_solidarites_organisation_id
         created_at
@@ -463,39 +317,16 @@ class Anonymizer::Rules::RdvInsertion
     },
     users_organisations: {
       class_name: "UserOrganisation",
-      anonymized_column_names: %w[],
-      non_anonymized_column_names: %w[
-        user_id
-        organisation_id
-        created_at
-        updated_at
-      ],
+      non_anonymized_column_names: %w[user_id organisation_id created_at updated_at],
     },
     webhook_endpoints: {
       class_name: "WebhookEndpoint",
-      anonymized_column_names: %w[
-        url
-        secret
-        signature_type
-      ],
-      non_anonymized_column_names: %w[
-        created_at
-        updated_at
-        subscriptions
-      ],
+      anonymized_column_names: %w[url secret signature_type],
+      non_anonymized_column_names: %w[created_at updated_at subscriptions],
     },
     webhook_receipts: {
       class_name: "WebhookReceipt",
-      anonymized_column_names: %w[
-      ],
-      non_anonymized_column_names: %w[
-        resource_id
-        webhook_endpoint_id
-        timestamp
-        created_at
-        updated_at
-        resource_model
-      ],
-    }
+      non_anonymized_column_names: %w[resource_id webhook_endpoint_id timestamp created_at updated_at resource_model],
+    },
   }.with_indifferent_access.freeze
 end
