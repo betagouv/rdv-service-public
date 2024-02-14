@@ -2,7 +2,7 @@
   - if current_agent.multiple_organisations_access?
     .row
       .col-md-6
-        = f.input :scoped_organisation_id, collection: current_agent.organisations.map {[_1.name, _1.id]}.unshift(["Toutes", 0]), \
+        = f.input :scoped_organisation_ids, collection: current_agent.organisations.map {[_1.name, _1.id]}.unshift(["Toutes", 0]), \
                 selected: @selected_organisations_ids, \
                 label: "Organisation", \
                 input_html: { \
@@ -48,7 +48,7 @@
                 }, \
               },
               wrapper: "horizontal_form"
-      = f.input :lieu_id,
+      = f.input :lieu_ids,
               label: "Lieu",
               collection: @lieux.includes(:organisation).to_a.group_by { _1.organisation.name },
               as: :grouped_select,
@@ -57,7 +57,7 @@
               input_html: { class: "select2-input", multiple: true },
               wrapper: "horizontal_form"
     .col-md-6
-      = f.input :motif_id,
+      = f.input :motif_ids,
             label: "Motifs",
             collection: @motifs.includes(:service).to_a.group_by { _1.service.name },
             as: :grouped_select,

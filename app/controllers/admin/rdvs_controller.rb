@@ -10,7 +10,7 @@ class Admin::RdvsController < AgentAuthController
     @breadcrumb_page = params[:breadcrumb_page]
 
     order = { starts_at: :asc }
-    @rdvs = policy_scope(Rdv).search_for(@scoped_organisations, parsed_params)
+    @rdvs = policy_scope(Rdv).search_for(@scoped_organisations, search_params)
       .order(order).page(params[:page]).per(10)
 
     # On fait cette requête en deux temps pour éviter de faire un `order` et un `include` sur le même scope,
@@ -116,7 +116,7 @@ class Admin::RdvsController < AgentAuthController
   private
 
   def set_scoped_organisations
-    @selected_organisations_ids = params[:scoped_organisation_id]&.compact_blank
+    @selected_organisations_ids = params[:scoped_organisation_ids]&.compact_blank
     @scoped_organisations = if @selected_organisations_ids.blank?
                               # l'agent n'a pas accès au filtre d'organisations ou a réinitialisé la page
                               # Nous sélectionnons par défaut l'organisation courante
@@ -168,7 +168,7 @@ class Admin::RdvsController < AgentAuthController
 
   def parsed_params
     params.permit(:organisation_id, :agent_id, :user_id, :status, :start, :end,
-                  lieu_attributes: %i[name address latitude longitude], motif_id: [], lieu_id: [], scoped_organisation_id: []).to_hash.to_h do |param_name, param_value|
+                  lieu_attributes: %i[name address latitude longitude], motif_ids: [], lieu_ids: [], scoped_organisation_ids: []).to_hash.to_h do |param_name, param_value|
       case param_name
       when "start", "end"
         [param_name, parse_date_from_params(param_value)]
@@ -176,6 +176,14 @@ class Admin::RdvsController < AgentAuthController
         [param_name, param_value]
       end
     end
+  end
+
+  def search_params
+    search_params = parsed_params
+    search_params["motif_id"] = parsed_params["motif_ids"]
+    search_params["lieu_id"] = parsed_params["lieu_ids"]
+    search_params["scoped_organisation_id"] = parsed_params["scoped_organisation_ids"]
+    search_params
   end
 
   def rdv_success_flash
