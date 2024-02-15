@@ -71,7 +71,6 @@ class Motif < ApplicationRecord
   validate :unused_motif, if: :location_type_changed?
 
   # Scopes
-  default_scope { order(Arel.sql("unaccent(LOWER(motifs.name))")) }
   scope :active, lambda { |active = true|
     active ? where(deleted_at: nil) : where.not(deleted_at: nil)
   }
@@ -81,6 +80,7 @@ class Motif < ApplicationRecord
   scope :not_bookable_by_everyone_or_not_bookable_by_invited_users, -> { where.not(bookable_by: %i[everyone agents_and_prescripteurs_and_invited_users]) }
   scope :by_phone, -> { Motif.phone } # default scope created by enum
   scope :for_secretariat, -> { where(for_secretariat: true) }
+  scope :ordered_by_name, -> { order(Arel.sql("unaccent(LOWER(motifs.name))")) }
   scope :available_for_booking, lambda {
     where_id_in_subqueries(
       [
@@ -97,7 +97,7 @@ class Motif < ApplicationRecord
                        else
                          where(service: agent.services)
                        end
-    available_motifs.where(organisation_id: organisation.id).active
+    available_motifs.where(organisation_id: organisation.id).active.ordered_by_name
   }
   # This should match the implementation of #name_with_location_type
   scope :search_by_name_with_location_type, lambda { |name_with_location_type|
