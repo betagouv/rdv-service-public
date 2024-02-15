@@ -67,6 +67,10 @@ module RdvsHelper
     "#{l(rdv.starts_at, format: format)} (#{rdv.duration_in_min} minutes)"
   end
 
+  def rdv_interval(rdv, format)
+    "#{l(rdv.starts_at, format: format)} - #{l(rdv.starts_at + rdv.duration_in_min.minutes, format: format)}"
+  end
+
   def individual_rdv_status_dropdown_toggle(rdv)
     tag.div(data: { toggle: "dropdown" },
             class: "dropdown-toggle btn rdv-status-#{rdv.temporal_status}") do
