@@ -27,8 +27,8 @@ class Admin::RdvsController < AgentAuthController
     )
 
     @form = Admin::RdvSearchForm.new(parsed_params)
-    @lieux = Lieu.joins(:organisation).where(organisations: { id: @scoped_organisations.select(:id) }).enabled.order(:name)
-    @motifs = Motif.joins(:organisation).where(organisations: { id: @scoped_organisations.select(:id) }).order(:name)
+    @lieux = Lieu.joins(:organisation).where(organisations: { id: @scoped_organisations.select(:id) }).enabled.ordered_by_name
+    @motifs = Motif.joins(:organisation).where(organisations: { id: @scoped_organisations.select(:id) }).ordered_by_name
   end
 
   def export
