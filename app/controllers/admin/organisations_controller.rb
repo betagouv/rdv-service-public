@@ -43,6 +43,7 @@ class Admin::OrganisationsController < AgentAuthController
   def create
     @organisation = Organisation.new(
       agent_roles_attributes: [{ agent: current_agent, access_level: AgentRole::ACCESS_LEVEL_ADMIN }],
+      verticale: current_domain.verticale,
       **new_organisation_params
     )
     authorize(@organisation)
