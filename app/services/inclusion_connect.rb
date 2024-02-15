@@ -11,7 +11,6 @@ module InclusionConnect
         redirect_uri: inclusion_connect_callback_url,
         scope: "openid email profile",
         state: ic_state,
-        nonce: Digest::SHA1.hexdigest("Something to check when it come back ?"),
         from: "community",
       }
       "#{IC_BASE_URL}/authorize/?#{query.to_query}"
@@ -60,6 +59,7 @@ module InclusionConnect
     end
 
     def get_and_update_agent(user_info)
+      # found_by_sub = Agent.find_by(inclusion_connect_open_id_sub: user_info["sub"])
       agent = Agent.find_by(email: user_info["email"])
       return if agent.blank?
 
