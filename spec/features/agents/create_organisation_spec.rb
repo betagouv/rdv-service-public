@@ -14,7 +14,7 @@ RSpec.describe "Organisations" do
   before { login_as(agent, scope: :agent) }
 
   it "shows the list of organisations when an agent with multiple organisations logs in" do
-    visit root_path
+    visit "http://www.rdv-mairie-test.localhost/"
     expect(page).to have_content("MDS de Paris Nord")
     expect(page).to have_content("MDS de Paris Sud")
     click_link "Ajouter une organisation"
@@ -25,7 +25,8 @@ RSpec.describe "Organisations" do
     expect(Organisation.last).to have_attributes(
       name: "MDS Paris Est",
       territory: territory,
-      agents: [agent]
+      agents: [agent],
+      verticale: "rdv_mairie"
     )
   end
 end
