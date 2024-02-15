@@ -41,7 +41,7 @@ class Users::GeoSearch
   end
 
   def available_motifs
-    @available_motifs ||= available_motifs_arels.reduce(:or).ordered_by_name
+    @available_motifs ||= available_motifs_arels.reduce(:or)
   end
 
   def attributions_count

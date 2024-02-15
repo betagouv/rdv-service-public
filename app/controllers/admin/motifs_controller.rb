@@ -6,7 +6,7 @@ class Admin::MotifsController < AgentAuthController
 
   def index
     @unfiltered_motifs = policy_scope(current_organisation.motifs, policy_scope_class: Agent::MotifPolicy::Scope).active
-    @motifs = params[:search].present? ? @unfiltered_motifs.search_by_text(params[:search]) : @unfiltered_motifs.ordered_by_name
+    @motifs = params[:search].present? ? @unfiltered_motifs.search_by_text(params[:search]) : @unfiltered_motifs
     @motifs = filtered(@motifs, params)
     @motifs = @motifs.includes(:organisation).includes(:service).page(params[:page])
 

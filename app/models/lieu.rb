@@ -26,6 +26,8 @@ class Lieu < ApplicationRecord
   validate :cant_change_availibility_single_use
 
   # Scopes
+  default_scope { order(Arel.sql("unaccent(LOWER(lieux.name))")) }
+
   scope :for_motif, lambda { |motif|
     lieux_ids = PlageOuverture
       .where.not("recurrence IS ? AND first_day < ?", nil, Time.zone.today)
@@ -50,8 +52,6 @@ class Lieu < ApplicationRecord
 
     where.not(availability: :disabled).where(id: plage_ouverture_lieu_ids + rdv_collectif_lieu_ids)
   }
-
-  scope :ordered_by_name, -> { order(Arel.sql("unaccent(LOWER(name))")) }
 
   ## -
   alias enabled enabled?

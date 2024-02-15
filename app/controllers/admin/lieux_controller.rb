@@ -5,7 +5,6 @@ class Admin::LieuxController < AgentAuthController
     @lieux = policy_scope(Lieu, policy_scope_class: Agent::LieuPolicy::Scope)
       .where(organisation: current_organisation)
       .not_single_use
-      .ordered_by_name
       .page(params[:page])
     @lieux_policy = Agent::LieuPolicy.new(current_agent, Lieu.new(organisation: current_organisation))
   end

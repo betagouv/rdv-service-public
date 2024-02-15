@@ -29,7 +29,6 @@ class SearchCreneauxForAgentsService < SearchCreneauxForAgentsBase
 
     @lieux = @lieux.where(id: PlageOuverture.where(agent_id: all_agents).select(:lieu_id)) if all_agents.present?
 
-    @lieux = @lieux.ordered_by_name
     @lieux
   end
 end
