@@ -9,7 +9,7 @@ RSpec.describe InclusionConnectController, type: :controller do
 
   describe "#callback" do
     it "update first_name and last_name of agent" do
-      now = Time.zone.parse("2022-08-22 11h34")
+      now = Time.zone.now
       travel_to(now)
       agent = create(:agent, :invitation_not_accepted, first_name: nil, last_name: nil, allow_blank_name: true, email: "bob@demo.rdv-solidarites.fr")
 
@@ -17,7 +17,6 @@ RSpec.describe InclusionConnectController, type: :controller do
 
       stub_request(:get, "#{base_url}/userinfo/?schema=openid").with(
         headers: {
-          "Expect" => "",
           "Authorization" => "Bearer zekfjzeklfjl",
           "User-Agent" => "Typhoeus - https://github.com/typhoeus/typhoeus",
         }
@@ -83,7 +82,6 @@ RSpec.describe InclusionConnectController, type: :controller do
 
       stub_request(:get, "#{base_url}/userinfo/?schema=openid").with(
         headers: {
-          "Expect" => "",
           "Authorization" => "Bearer zekfjzeklfjl",
           "User-Agent" => "Typhoeus - https://github.com/typhoeus/typhoeus",
         }
@@ -119,7 +117,6 @@ RSpec.describe InclusionConnectController, type: :controller do
         "redirect_uri" => inclusion_connect_callback_url,
       },
       headers: {
-        "Expect" => "",
         "User-Agent" => "Typhoeus - https://github.com/typhoeus/typhoeus",
         "Content-Type" => "application/x-www-form-urlencoded",
       }
