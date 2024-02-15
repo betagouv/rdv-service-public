@@ -274,6 +274,8 @@ class User < ApplicationRecord
     Anonymizer.anonymize_record!(self)
     receipts.each { |r| Anonymizer.anonymize_record!(r) }
     rdvs.each { |r| Anonymizer.anonymize_record!(r) }
+    file_attentes.destroy_all
+    referent_assignations.destroy_all
     versions.destroy_all
     update_columns(
       first_name: "Usager supprimé",

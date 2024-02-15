@@ -95,6 +95,17 @@ RSpec.describe User, type: :model do
       expect(user.versions).to be_empty
     end
 
+    it "deletes file_attentes and referent_assignations" do
+      user = create(:user)
+      file_attente = create(:file_attente, user: user)
+      referent_assignation = create(:referent_assignation, user: user)
+
+      user.soft_delete
+
+      expect { file_attente.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      expect { referent_assignation.reload }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+
     it "is hidden user by default" do
       user = create(:user)
       user.soft_delete
