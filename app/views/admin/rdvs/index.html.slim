@@ -1,82 +1,83 @@
-- content_for :title do
-  | Liste des RDV
+.main-content
+  - content_for :title do
+    | Liste des RDV
 
-- content_for(:menu_item) { "menu-rdvs-list" }
+  - content_for(:menu_item) { "menu-rdvs-list" }
 
-- content_for :breadcrumb do
-  - if @breadcrumb_page == "agenda" && @form.agent.present?
-    ol.breadcrumb.m-0
-      li.breadcrumb-item
-        = link_to "Agenda de #{@form.agent.full_name}", admin_organisation_agent_agenda_path(current_organisation, @form.agent, date: @form.start)
-      li.breadcrumb-item.active Liste des RDV
+  - content_for :breadcrumb do
+    - if @breadcrumb_page == "agenda" && @form.agent.present?
+      ol.breadcrumb.m-0
+        li.breadcrumb-item
+          = link_to "Agenda de #{@form.agent.full_name}", admin_organisation_agent_agenda_path(current_organisation, @form.agent, date: @form.start)
+        li.breadcrumb-item.active Liste des RDV
 
-  - if @breadcrumb_page == "agent_stats" && @form.agent == current_agent
-    ol.breadcrumb.m-0
-      li.breadcrumb-item
-        = link_to "Vos statistiques", admin_organisation_agent_stats_path(current_organisation, current_agent)
-      li.breadcrumb-item.active RDVs #{ Rdv.human_attribute_value(:status, @form.status, disable_cast: true)&.downcase }
-
-  - if @breadcrumb_page == "user" && @form.user.present?
-    ol.breadcrumb.m-0
-      li.breadcrumb-item
-        = link_to "Vos usagers", admin_organisation_users_path(current_organisation), class: "text-white"
-      li.breadcrumb-item
-        = link_to @form.user.full_name, admin_organisation_user_path(current_organisation, @form.user)
-      li.breadcrumb-item.active RDVs #{ Rdv.human_attribute_value(:status, @form.status, disable_cast: true)&.downcase }
-
-  - if @breadcrumb_page == "organisation_stats"
-    ol.breadcrumb.m-0
-      li.breadcrumb-item
-        = link_to "Statistiques de l'organisation", admin_organisation_stats_path(current_organisation), class: "text-white"
-      - if @form.status.present?
+    - if @breadcrumb_page == "agent_stats" && @form.agent == current_agent
+      ol.breadcrumb.m-0
+        li.breadcrumb-item
+          = link_to "Vos statistiques", admin_organisation_agent_stats_path(current_organisation, current_agent)
         li.breadcrumb-item.active RDVs #{ Rdv.human_attribute_value(:status, @form.status, disable_cast: true)&.downcase }
 
-.card.border-info
-  .card-body
-    = render "rdv_search_form", form: @form
+    - if @breadcrumb_page == "user" && @form.user.present?
+      ol.breadcrumb.m-0
+        li.breadcrumb-item
+          = link_to "Vos usagers", admin_organisation_users_path(current_organisation), class: "text-white"
+        li.breadcrumb-item
+          = link_to @form.user.full_name, admin_organisation_user_path(current_organisation, @form.user)
+        li.breadcrumb-item.active RDVs #{ Rdv.human_attribute_value(:status, @form.status, disable_cast: true)&.downcase }
+
+    - if @breadcrumb_page == "organisation_stats"
+      ol.breadcrumb.m-0
+        li.breadcrumb-item
+          = link_to "Statistiques de l'organisation", admin_organisation_stats_path(current_organisation), class: "text-white"
+        - if @form.status.present?
+          li.breadcrumb-item.active RDVs #{ Rdv.human_attribute_value(:status, @form.status, disable_cast: true)&.downcase }
+
+  .card.border-info
+    .card-body
+      = render "rdv_search_form", form: @form
+
+    - if @rdvs.total_count > 0
+      .card-footer
+        div.d-flex.justify-content-end.align-items-center
+          = button_to participations_export_admin_organisation_rdvs_path(**@form.to_query), method: :post, class: "btn btn-sm btn-link d-print-none", disable_with: "..." do
+            span> Exporter les RDVs par usager en XLS
+            i.fa.fa-download>
+          = button_to export_admin_organisation_rdvs_path(**@form.to_query), method: :post, class: "btn btn-sm btn-link d-print-none", disable_with: "..." do
+            span> Exporter les #{@rdvs.total_count} RDVs en XLS
+            i.fa.fa-download>
+
+          .btn.btn-sm.btn-link.d-print-none role="button" onclick="window.print();return;"
+            span> Imprimer
+            i.fa.fa-print>
+
+  = render "admin/rdvs/rdv_visibility"
 
   - if @rdvs.total_count > 0
-    .card-footer
-      div.d-flex.justify-content-end.align-items-center
-        = button_to participations_export_admin_organisation_rdvs_path(**@form.to_query), method: :post, class: "btn btn-sm btn-link d-print-none", disable_with: "..." do
-          span> Exporter les RDVs par usager en XLS
-          i.fa.fa-download>
-        = button_to export_admin_organisation_rdvs_path(**@form.to_query), method: :post, class: "btn btn-sm btn-link d-print-none", disable_with: "..." do
-          span> Exporter les #{@rdvs.total_count} RDVs en XLS
-          i.fa.fa-download>
+    .mb-2
+      h4>= "#{@rdvs.total_count} rendez-vous"
+      .custom-control.custom-switch
+        input.custom-control-input[type="checkbox" id="show-users-details-switch" data-toggle="collapse" data-target=".users-details"]
+        label.custom-control-label for="show-users-details-switch" Afficher plus de détails usagers
 
-        .btn.btn-sm.btn-link.d-print-none role="button" onclick="window.print();return;"
-          span> Imprimer
-          i.fa.fa-print>
+    .row.justify-content-center.pb-3
+      .col-md-12.col-lg-8
+        .d-flex.justify-content-center= paginate @rdvs, theme: "twitter-bootstrap-4"
+        = render(partial: "rdv", collection: @rdvs_in_page, locals: { agent: nil })
+        .d-flex.justify-content-center= paginate @rdvs, theme: "twitter-bootstrap-4"
+  - else
+    .row.justify-content-center.pb-3
+      .col-md-12.col-lg-8
+        .card
+          .card-body
+            .row.justify-content-md-center
+              .col-md-6.text-center.my-5
+                p.mb-2.lead
+                  | Aucun RDV
+                span.fa-stack.fa-4x
+                  i.fa.fa-circle.fa-stack-2x.text-primary
+                  i.far.fa-calendar.fa-stack-1x.text-white
 
-= render "admin/rdvs/rdv_visibility"
-
-- if @rdvs.total_count > 0
-  .mb-2
-    h4>= "#{@rdvs.total_count} rendez-vous"
-    .custom-control.custom-switch
-      input.custom-control-input[type="checkbox" id="show-users-details-switch" data-toggle="collapse" data-target=".users-details"]
-      label.custom-control-label for="show-users-details-switch" Afficher plus de détails usagers
-
-  .row.justify-content-center.pb-3
-    .col-md-12.col-lg-8
-      .d-flex.justify-content-center= paginate @rdvs, theme: "twitter-bootstrap-4"
-      = render(partial: "rdv", collection: @rdvs_in_page, locals: { agent: nil })
-      .d-flex.justify-content-center= paginate @rdvs, theme: "twitter-bootstrap-4"
-- else
-  .row.justify-content-center.pb-3
-    .col-md-12.col-lg-8
-      .card
-        .card-body
-          .row.justify-content-md-center
-            .col-md-6.text-center.my-5
-              p.mb-2.lead
-                | Aucun RDV
-              span.fa-stack.fa-4x
-                i.fa.fa-circle.fa-stack-2x.text-primary
-                i.far.fa-calendar.fa-stack-1x.text-white
-
-.hidden#printable.px-20
+.printable.px-20
   h1
     - if @form.agent
       | Agenda de #{@form.agent.full_name}
