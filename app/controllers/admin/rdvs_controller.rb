@@ -10,7 +10,7 @@ class Admin::RdvsController < AgentAuthController
     @breadcrumb_page = params[:breadcrumb_page]
 
     order = { starts_at: :asc }
-    @rdvs = policy_scope(Rdv).search_for(@scoped_organisations, search_params)
+    @rdvs = policy_scope(Rdv).search_for(@scoped_organisations, parsed_params)
       .order(order).page(params[:page]).per(10)
 
     # On fait cette requête en deux temps pour éviter de faire un `order` et un `include` sur le même scope,
@@ -176,14 +176,6 @@ class Admin::RdvsController < AgentAuthController
         [param_name, param_value]
       end
     end
-  end
-
-  def search_params
-    search_params = parsed_params
-    search_params["motif_id"] = parsed_params["motif_ids"]
-    search_params["lieu_id"] = parsed_params["lieu_ids"]
-    search_params["scoped_organisation_id"] = parsed_params["scoped_organisation_ids"]
-    search_params
   end
 
   def rdv_success_flash

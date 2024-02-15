@@ -263,41 +263,17 @@ class Rdv < ApplicationRecord
     organisation_ids = [organisations.id] if organisations.is_a?(Organisation)
     organisation_ids ||= organisations.ids
     rdvs = joins(:organisation).where(organisations: { id: organisation_ids })
-    options.each do |key, value|
-      next if value.blank?
-      next if value.is_a?(Array) && value.compact_blank.empty?
+    options = options.with_indifferent_access.select { |_, value| Array(value).compact_blank.present? }
 
-      rdvs = send("search_for_#{key}", rdvs, value) if respond_to?("search_for_#{key}")
-    end
+    rdvs = rdvs.joins(:lieu).where(lieux: { id: options[:lieu_ids] }) if options[:lieu_ids]
+    rdvs = rdvs.joins(:motif).where(motifs: { id: options[:motif_ids] }) if options[:motif_ids]
+    rdvs = rdvs.joins(:agents).where(agents: { id: options[:agent_id] }) if options[:agent_id]
+    rdvs = rdvs.with_user_id(options[:user_id]) if options[:user_id]
+    rdvs = rdvs.status(options[:status]) if options[:status]
+    rdvs = rdvs.where("DATE(starts_at) >= ?", options[:start]) if options[:start]
+    rdvs = rdvs.where("DATE(starts_at) <= ?", options[:end]) if options[:end]
+
     rdvs
-  end
-
-  def self.search_for_lieu_id(rdvs, lieu_id)
-    rdvs.joins(:lieu).where(lieux: { id: lieu_id })
-  end
-
-  def self.search_for_motif_id(rdvs, motif_id)
-    rdvs.joins(:motif).where(motifs: { id: motif_id })
-  end
-
-  def self.search_for_agent_id(rdvs, agent_id)
-    rdvs.joins(:agents).where(agents: { id: agent_id })
-  end
-
-  def self.search_for_user_id(rdvs, user_id)
-    rdvs.with_user_id(user_id)
-  end
-
-  def self.search_for_status(rdvs, status)
-    rdvs.status(status)
-  end
-
-  def self.search_for_start(rdvs, start_at)
-    rdvs.where("DATE(starts_at) >= ?", start_at)
-  end
-
-  def self.search_for_end(rdvs, end_at)
-    rdvs.where("DATE(starts_at) <= ?", end_at)
   end
 
   def reschedule_max_date
