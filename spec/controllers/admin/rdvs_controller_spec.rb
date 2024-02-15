@@ -175,7 +175,9 @@ RSpec.describe Admin::RdvsController, type: :controller do
         agent_id: "",
         user_id: "",
         lieu_ids: [""],
+        motif_ids: [""],
         status: "",
+        scoped_organisation_ids: [organisation.id.to_s],
       }
 
       expect do
@@ -216,8 +218,10 @@ RSpec.describe Admin::RdvsController, type: :controller do
           organisation_id: organisation.id.to_s,
           agent_id: "",
           user_id: "",
-          lieu_ids: [""],
           status: "",
+          motif_ids: [""],
+          lieu_ids: [""],
+          scoped_organisation_ids: [""],
         }
 
         expect do

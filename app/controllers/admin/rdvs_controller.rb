@@ -4,6 +4,14 @@ class Admin::RdvsController < AgentAuthController
   respond_to :html, :json
 
   before_action :set_rdv, :set_optional_agent, except: %i[index create export participations_export]
+  # Ce mécanisme temporaire est mis en place afin d'assurer une rétro-compatibilité du fait
+  # du changement de noms (ou ajout des s) aux paramètres motif_id, lieu_id et scoped_organisation_id
+  # Pour plus de contexte, voir https://github.com/betagouv/rdv-service-public/pull/4054#discussion_r1489720373
+  before_action do
+    params[:motif_ids] ||= Array(params[:motif_id])
+    params[:lieu_ids] ||= Array(params[:lieu_id])
+    params[:scoped_organisation_ids] ||= Array(params[:scoped_organisation_id])
+  end
 
   def index
     set_scoped_organisations
