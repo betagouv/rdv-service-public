@@ -78,7 +78,7 @@
 
 .hidden#printable.px-20
   h1
-    | Agenda de #{@form.agent.full_name}
+    | Agenda de #{(@form.agent || current_agent).full_name}
     .mt-2
       = current_organisation.name
 
