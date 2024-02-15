@@ -68,8 +68,6 @@ module RdvsHelper
   end
 
   def rdv_interval(rdv, format)
-    return l(rdv.starts_at, format: format) if rdv.duration_in_min.blank?
-
     "#{l(rdv.starts_at, format: format)} - #{l(rdv.starts_at + rdv.duration_in_min.minutes, format: format)}"
   end
 
