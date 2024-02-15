@@ -18,7 +18,7 @@ RSpec.describe "Agent can see RDV details correctly" do
 
     it "Allows listing RDVs and redirect to show" do
       visit admin_organisation_rdvs_path(organisation)
-      expect(page).to have_text("Liste des RDVs")
+      expect(page).to have_text("Liste des RDV")
       click_link("Le jeudi 07 avril 2022")
       expect(page).to have_text("Renseignements")
       expect(page).to have_text("Bruce WAYNE")
