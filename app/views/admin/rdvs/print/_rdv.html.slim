@@ -20,7 +20,7 @@
                 i.fa.fa-users>
               - else
                 i.fa.fa-user>
-              = "#{rdv.users.count} #{'participant'.pluralize(rdv.users.count)}"
+              = "#{rdv.users.size} #{'participant'.pluralize(rdv.users.size)}"
           - else
             p Il n'y a pas encore de participant pour ce RDV
         .mt-2
