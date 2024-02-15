@@ -1,13 +1,12 @@
 // Used for printing a specific Area of the webpage
 class Print {
 
-  print(element) {
+  prepareBeforePrint() {
+    let element = document.querySelector("#printable");
     document.body.innerHTML = element.innerHTML;
-    window.print();
-    this.resetPage();
   }
 
-  resetPage() {
+  resetAfterPrint() {
     document.body.innerHTML = this.originalPageHTML; // Ceci permet de rapidement réinitialiser la page au cas où le rechargement prendrait trop de temps
     window.location.reload(); // Recharger la page nous permet de reconnecter tous les events listeners
   }
@@ -15,12 +14,13 @@ class Print {
   constructor() {
     this.originalPageHTML = document.body.innerHTML;
 
-    document.querySelectorAll('.print-btn').forEach(elt =>
-      elt.addEventListener("click", evt => {
-        this.print(document.querySelector(elt.dataset.target));
-        return;
-      })
-    )
+    window.addEventListener("beforeprint", () => {
+      this.prepareBeforePrint();
+    })
+
+    window.addEventListener("afterprint", () => {
+      this.resetAfterPrint();
+    })
   }
 
 }

@@ -425,7 +425,7 @@ RSpec.describe Rdv, type: :model do
       rdv = create(:rdv, lieu: lieu, organisation: organisation, agents: [admin])
       create(:rdv, lieu: create(:lieu), organisation: organisation, agents: [admin])
 
-      options = { "lieu_ids" => [lieu.id]}
+      options = { "lieu_ids" => [lieu.id] }
       expect(described_class.search_for(organisation, options)).to eq([rdv])
     end
 
