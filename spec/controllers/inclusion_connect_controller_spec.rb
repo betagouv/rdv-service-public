@@ -7,6 +7,25 @@ RSpec.describe InclusionConnectController, type: :controller do
     stub_const("InclusionConnect::IC_BASE_URL", base_url)
   end
 
+  describe "#auth" do
+    it "redirects to InclusionConnect" do
+      get :auth
+      expect(response).to redirect_to(start_with("#{base_url}/authorize/?"))
+
+      redirect_url = response.headers["Location"]
+      redirect_url_query_params = Rack::Utils.parse_query(URI.parse(redirect_url).query)
+      expected_params = {
+        client_id: "truc",
+        from: "community",
+        redirect_uri: inclusion_connect_callback_url,
+        response_type: "code",
+        scope: "openid email profile",
+        state: be_a_kind_of(String),
+      }
+      expect(redirect_url_query_params.symbolize_keys).to match(expected_params)
+    end
+  end
+
   describe "#callback" do
     it "update first_name and last_name of agent" do
       now = Time.zone.now
