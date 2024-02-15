@@ -45,7 +45,7 @@
           span> Exporter les #{@rdvs.total_count} RDVs en XLS
           i.fa.fa-download>
 
-        .btn.btn-sm.btn-link.d-print-none role="button" onclick="window.print();return false;"
+        .btn.btn-sm.btn-link.d-print-none role="button" onclick="window.print();return;"
           span> Imprimer
           i.fa.fa-print>
 
@@ -75,3 +75,16 @@
               span.fa-stack.fa-4x
                 i.fa.fa-circle.fa-stack-2x.text-primary
                 i.far.fa-calendar.fa-stack-1x.text-white
+
+.hidden#printable.px-20
+  h1
+    - if @form.agent
+      | Agenda de #{@form.agent.full_name}
+    - else
+      | Agenda de l'organisation
+    .mt-2
+      = current_organisation.name
+
+  h3.mt-4
+    = I18n.l(Time.zone.today, format: :human).capitalize
+  = render(partial: "admin/rdvs/print/rdv", collection: @rdvs_in_page)
