@@ -97,7 +97,7 @@ class Api::Ants::EditorController < Api::Ants::BaseController
     params.require(:reason)
 
     unless params[:reason].in?(ANTS_MOTIF_CATEGORY_IDS_TO_NAMES.keys)
-      Sentry.capture_message("ANTS provided invalid reason: #{params[:reason].inspect}")
+      Sentry.capture_message("ANTS provided invalid reason: #{params[:reason].inspect}", fingerprint: ["ants_invalid_reason"])
       render status: :bad_request, json: { error: { code: 400, message: "Invalid reason param" } }
     end
   end
