@@ -3,7 +3,7 @@ class InclusionConnectController < ApplicationController
 
   def auth
     session[:ic_state] = Digest::SHA1.hexdigest("InclusionConnect - #{SecureRandom.hex(13)}")
-    redirect_to InclusionConnect.auth_path(session[:ic_state], inclusion_connect_callback_url), allow_other_host: true
+    redirect_to InclusionConnect.auth_path(session[:ic_state], inclusion_connect_callback_url, login_hint: params[:login_hint]), allow_other_host: true
   end
 
   def callback
