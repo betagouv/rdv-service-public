@@ -16,14 +16,18 @@ module InclusionConnect
       "#{IC_BASE_URL}/authorize/?#{query.to_query}"
     end
 
-    def agent(code, inclusion_connect_callback_url)
+    def authenticate_and_find_agent(code, inclusion_connect_callback_url)
       token = get_token(code, inclusion_connect_callback_url)
-      return false if token.blank?
+      return if token.blank?
 
       user_info = get_user_info(token)
-      return false if user_info.blank?
+      return if user_info.blank?
 
-      get_and_update_agent(user_info)
+      agent = find_agent(user_info)
+      return unless agent
+
+      update_agent(agent, user_info)
+      agent
     end
 
     def get_token(code, inclusion_connect_callback_url)
@@ -58,19 +62,20 @@ module InclusionConnect
       JSON.parse(res.body)
     end
 
-    def get_and_update_agent(user_info)
-      # found_by_sub = Agent.find_by(inclusion_connect_open_id_sub: user_info["sub"])
-      agent = Agent.find_by(email: user_info["email"])
-      return if agent.blank?
+    def update_agent(agent, user_info)
+      agent.inclusion_connect_open_id_sub ||= user_info["sub"]
+      agent.first_name ||= user_info["given_name"]
+      agent.last_name ||= user_info["family_name"]
 
-      agent.update!(
-        first_name: user_info["given_name"],
-        last_name: user_info["family_name"],
-        confirmed_at: Time.zone.now,
-        last_sign_in_at: Time.zone.now,
-        invitation_accepted_at: agent.invitation_accepted_at || Time.zone.now
-      )
-      agent
+      agent.invitation_accepted_at ||= Time.zone.now
+      agent.confirmed_at ||= Time.zone.now
+
+      agent.last_sign_in_at = Time.zone.now
+      agent.save!
+    end
+
+    def find_agent(user_info)
+      Agent.find_by(inclusion_connect_open_id_sub: user_info["sub"]) || Agent.find_by(email: user_info["email"])
     end
   end
 end
