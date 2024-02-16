@@ -17,7 +17,7 @@ module RecurrenceConcern
     scope :overlapping_range, lambda { |range|
       # model is either plage_ouverture or absence
       in_range(range).select do |model|
-        model.occurrences_for(range).any? { range.overlaps?(_1.starts_at.._1.ends_at) }
+        model.occurrences_for(range).any? { _1.overlapping_range?(range) }
       end
     }
   end
