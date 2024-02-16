@@ -1,4 +1,4 @@
-.main-content
+.web-content
   - content_for :title do
     | Liste des RDV
 
@@ -77,7 +77,7 @@
                   i.fa.fa-circle.fa-stack-2x.text-primary
                   i.far.fa-calendar.fa-stack-1x.text-white
 
-.printable.px-20
+.print-content.px-20
   h1
     - if @form.agent
       | Agenda de #{@form.agent.full_name}

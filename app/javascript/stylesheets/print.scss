@@ -2,7 +2,7 @@
 // print.scss
 //
 
-.printable {
+.print-content {
   display: none;
 }
 
@@ -10,10 +10,10 @@
   .left-side-menu,
   .footer,
   .page-title,
-  .main-content {
+  .web-content {
     display: none;
   }
-  .printable {
+  .print-content {
     display: block;
   }
   .card-body,
