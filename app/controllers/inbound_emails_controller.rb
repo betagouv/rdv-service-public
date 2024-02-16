@@ -14,7 +14,7 @@ class InboundEmailsController < ActionController::Base
   def authenticate_sendinblue
     return if ActiveSupport::SecurityUtils.secure_compare(ENV["SENDINBLUE_INBOUND_PASSWORD"], params[:password])
 
-    Sentry.capture_message("Sendinblue inbound controller was called without valid password")
+    Sentry.capture_message("Sendinblue inbound controller was called without valid password", fingerprint: ["sib_inbound_pw_invalid"])
     head :unauthorized
   end
 end
