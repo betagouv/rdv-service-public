@@ -39,11 +39,6 @@ class Absence < ApplicationRecord
 
     not_recurring_start_in_range.or(recurring_in_range)
   }
-  scope :overlapping_range, lambda { |range|
-    in_range(range).select do |absence|
-      absence.occurrences_for(range).any? { range.overlaps?(_1.starts_at.._1.ends_at) }
-    end
-  }
 
   # Delegations
   delegate :domain, to: :agent
