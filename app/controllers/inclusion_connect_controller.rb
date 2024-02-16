@@ -18,7 +18,6 @@ class InclusionConnectController < ApplicationController
 
     if agent
       bypass_sign_in agent, scope: :agent
-      session[:connected_with_inclusionconnect] = true
       redirect_to root_path
     else
       flash[:error] = "Nous n'avons pas pu vous authentifier. Contacter le support à l'adresse <#{current_domain.support_email}> si le problème persiste."
