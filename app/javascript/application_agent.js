@@ -26,7 +26,6 @@ import { Select2Inputs } from './components/select2-inputs'
 import { PlanningAgentSelect } from './components/planning-agent-select'
 import { ParticipationSelect } from './components/rdv-user-select'
 import { DestroyButton } from './components/destroy-button'
-import { Print } from './components/print'
 import './components/calendar'
 import './components/browser-detection'
 
@@ -103,5 +102,4 @@ $(document).on('turbolinks:load', function() {
 
   new DestroyButton()
 
-  new Print()
 })

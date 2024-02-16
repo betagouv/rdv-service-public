@@ -2,10 +2,19 @@
 // print.scss
 //
 
+.print-content {
+  display: none;
+}
+
 @media print {
   .left-side-menu,
-  .footer {
-      display: none;
+  .footer,
+  .page-title,
+  .web-content {
+    display: none;
+  }
+  .print-content {
+    display: block;
   }
   .card-body,
   .content-page,
