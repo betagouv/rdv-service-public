@@ -13,8 +13,7 @@ class Configuration::TerritoryPolicy
     territorial_admin? ||
       allow_to_manage_teams? ||
       allow_to_manage_access_rights? ||
-      allow_to_invite_agents? ||
-      allow_to_download_metrics?
+      allow_to_invite_agents?
   end
 
   def allow_to_manage_access_rights?
@@ -27,10 +26,6 @@ class Configuration::TerritoryPolicy
 
   def allow_to_manage_teams?
     @access_rights&.allow_to_manage_teams?
-  end
-
-  def allow_to_download_metrics?
-    @access_rights&.allow_to_download_metrics?
   end
 
   alias display_user_fields_configuration? territorial_admin?
