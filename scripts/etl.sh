@@ -43,19 +43,28 @@ etl_addon_id="$( scalingo --region osc-secnum-fr1 --app rdv-service-public-etl a
                  | cut -d "|" -f 3 \
                  | tr -d " " )"
 
+tables_to_exclude="$(bundle exec rails runner scripts/anonymizer_truncated_tables.rb ${app_name})"
+# On enlève des logs écrits par des gems (dont Skylight) pour garder uniquement les noms de tables
+tables_to_exclude=$(echo "${tables_to_exclude}" | rev | cut -d' ' -f1 | rev)
 
 echo "Chargement du dump..."
-tables_to_exclude="$(bundle exec rails runner scripts/anonymizer_truncated_tables.rb ${app_name})"
 time pg_restore --clean --if-exists --no-owner --no-privileges --jobs=4 --dbname "${DATABASE_URL}" -L <(pg_restore -l /app/*.pgsql | grep -vE "TABLE DATA public ($tables_to_exclude)") /app/*.pgsql
 
 echo "Anonymisation de la base"
 time bundle exec rails runner scripts/anonymize_database.rb "${app_name}"
 
 echo "Suppression de l'ancien schema '${app_name}'"
-psql "${DATABASE_URL}" -c "DROP SCHEMA IF EXISTS ${app_name} CASCADE;"
+psql "${DATABASE_URL}" -c "DROP SCHEMA IF EXISTS \"${app_name}\" CASCADE;"
 
 echo "Renommage du nouveau schema vers '${app_name}'"
-psql "${DATABASE_URL}" -c "ALTER SCHEMA public RENAME TO ${app_name};"
+psql "${DATABASE_URL}" -c "CREATE SCHEMA \"${app_name}\";"
+
+all_tables=$(psql "${DATABASE_URL}" -t -c "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public';")
+
+# On bouge les tables vers le nouveau schema
+for table in ${all_tables}; do
+  echo "ALTER TABLE ${table} SET SCHEMA \"${app_name}\";"
+done
 
 echo "Re-création du role Postgres rdv_service_public_metabase"
 echo "Merci de copier/coller le mot de passe stocké dans METABASE_DB_ROLE_PASSWORD: ${METABASE_DB_ROLE_PASSWORD}"
