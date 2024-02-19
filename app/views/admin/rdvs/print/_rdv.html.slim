@@ -1,0 +1,27 @@
+.row
+  .col-md-2.col-sm-2.text-right
+    hr.mt-0
+    .lead.font-weight-bold
+      = rdv_interval(rdv, :time_only)
+    - if rdv.duration_in_min
+      div
+        = "(#{rdv.duration_in_min} minutes)"
+  .col-md-10.col-sm-10
+    .card.rdv-card
+      .card-body style="border-left: 8px solid #{rdv.motif.color}"
+        div
+          = rdv.motif_name
+        .mt-2
+          - if rdv.users.present?
+            .font-weight-bold.lead
+              = rdv.users.first
+            div
+              - if rdv.users.size > 1
+                i.fa.fa-users>
+              - else
+                i.fa.fa-user>
+              = "#{rdv.users.size} #{'participant'.pluralize(rdv.users.size)}"
+          - else
+            p Il n'y a pas encore de participant pour ce RDV
+        .mt-2
+          = agents_to_sentence(rdv.agents)

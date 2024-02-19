@@ -48,7 +48,7 @@ module Ants
 
     def self.mark_for_sync(rdvs, obsolete_application_id: nil)
       rdvs.each do |rdv|
-        next unless rdv.organisation.rdv_mairie?
+        next unless rdv.requires_ants_predemande_number?
 
         rdv.assign_attributes(needs_sync_to_ants: true)
         rdv.assign_attributes(obsolete_application_id: obsolete_application_id) if obsolete_application_id

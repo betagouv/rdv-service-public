@@ -3,7 +3,8 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
   let(:organisation) { create(:organisation, verticale: :rdv_mairie) }
   let(:user) { create(:user, ants_pre_demande_number: "A123456789", organisations: [organisation]) }
   let(:lieu) { create(:lieu, organisation: organisation, name: "Lieu1") }
-  let(:rdv) { build(:rdv, users: [user], lieu: lieu, organisation: organisation, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
+  let(:motif_passeport) { create(:motif, motif_category: create(:motif_category, :passeport)) }
+  let(:rdv) { build(:rdv, motif: motif_passeport, users: [user], lieu: lieu, organisation: organisation, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
   let(:ants_api_headers) do
     {
       "Accept" => "application/json",

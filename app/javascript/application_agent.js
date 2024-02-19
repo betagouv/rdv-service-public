@@ -101,4 +101,5 @@ $(document).on('turbolinks:load', function() {
   new ParticipationSelect()
 
   new DestroyButton()
+
 })
