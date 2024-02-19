@@ -3,7 +3,7 @@ class InclusionConnect
   IC_CLIENT_SECRET = ENV["INCLUSION_CONNECT_CLIENT_SECRET"]
   IC_BASE_URL = ENV["INCLUSION_CONNECT_BASE_URL"]
 
-  def self.auth_path(ic_state, inclusion_connect_callback_url)
+  def self.auth_path(ic_state, inclusion_connect_callback_url, login_hint: nil)
     query = {
       response_type: "code",
       client_id: IC_CLIENT_ID,
@@ -11,6 +11,7 @@ class InclusionConnect
       scope: "openid email profile",
       state: ic_state,
       from: "community",
+      login_hint: login_hint,
     }
     "#{IC_BASE_URL}/authorize/?#{query.to_query}"
   end
