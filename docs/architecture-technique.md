@@ -25,7 +25,7 @@
 | Organisme                  | Nom                   | Rôle                   | Activité  |
 |----------------------------|-----------------------|------------------------|-----------|
 | RDV Services Publics       | François Ferrandis    | Lead tech              | Rédaction |
-| RDV Services Publics       | Victor Mours          | Lead tech              | Relecture |
+| RDV Services Publics       | Victor Mours          | Lead tech              | Relecture + Rédaction |
 | RDV Services Publics       | Mehdi Karouch Idrissi | Product Manager        | Relecture |
 | ANCT                       | Amélie Naquet         | Cheffe de projet SoNum | Relecture |
 | Incubateur des territoires | Charles Capelli       | Consultant SSI         | Relecture |
@@ -46,7 +46,7 @@ Le projet est un monolithe Ruby on Rails avec une base Postgres pour les donnée
 sessions. L'infrastructure est entièrement gérée par Scalingo en PaaS.
 
 Le projet ne contient que très peu de Javascript (petites touches de vanilla JS, pas de framework front) et le HTML est
-généré côté serveur. C'est Bootstrap qui est utilisé coté CSS / composants.
+généré côté serveur. Coté CSS / composants, c'est principalement Bootstrap qui est utilisé, avec un usage grandissant du Design System de l'état (DSFR) pour les interfaces usager.
 
 Ces choix reflètent un désir de simplicité avant tout, afin de rester agiles et se concentrer sur la valeur métier.
 Ces choix techniques sont aussi influencés par la culture de la communauté Ruby.
@@ -99,11 +99,11 @@ utilisent RDV Insertion utilisent ces webhooks.
 
 ### Inventaire des dépendances
 
-| Nom de l’applicatif | Service          | Version  | Commentaires                                                    |
-|---------------------|------------------|----------|-----------------------------------------------------------------|
-| Serveur web         | Rails @ Scalingo | Rails 7  | Voir ci-dessous pour le détail des librairies                   |
-| BDD métier          | PostgreSQL       | `13.7.0` | Stockage des données métier, voir [db/schema.rb](/db/schema.rb) |
-| BDD technique       | Redis            | `7.0.10` | Stockage des sessions et du cache                               |
+| Nom de l’applicatif | Service          | Version   | Commentaires                                                    |
+|---------------------|------------------|-----------|-----------------------------------------------------------------|
+| Serveur web         | Rails @ Scalingo | Rails 7   | Voir ci-dessous pour le détail des librairies                   |
+| BDD métier          | PostgreSQL       | `13.9.0`  | Stockage des données métier, voir [db/schema.rb](/db/schema.rb) |
+| BDD technique       | Redis            | `7.2.3`   | Stockage des sessions et du cache                               |
 
 La liste des librairies Ruby est disponible dans :
 - [Gemfile](/Gemfile) pour la liste des dépendances directes et la description de la fonctionnalité de chacune des gems
@@ -332,7 +332,7 @@ fermeture / merge d'une PR.
 
 #### Détection de fuite de secrets
 
-Nous utilisons GitGuardian sur notre dépôt GitHub afin de détecter les fuites de secrets dans le code.
+Nous avons activé la fonctionnalité "Secret scanning" de GitHub sur notre dépôt. Ce système envoie des alertes et bloque le push si des secrets sont détectés dans un commit.
 
 Nous ne disposons pas d'autre système automatisé de détection de fuite de secrets.
 
@@ -344,9 +344,10 @@ L'application a 3 types d'utilisateurs :
 - super admin
 Pour visualiser, modifier ou annuler un RDV, l'usager peut soit cliquer sur un lien fourni en notification mail ou SMS et entrer les trois premières lettres de son nom de famille.
 
-Les comptes utilisateurs ont une contrainte d'unicite sur les emails mais ce n'est pas le cas des profils sans emails créés par les agents.
+Les comptes utilisateurs ont une contrainte d'unicité sur les emails mais ce n'est pas le cas des profils sans emails créés par les agents.
 
 Les sessions sont déconnectées automatiquement.
+
 #### Les usager⋅es
 
 Les usager⋅es prennent RDV avec les agents. Iels peuvent voir leurs RDVs, annuler ou modifier des RDVs futurs, et
@@ -359,7 +360,7 @@ La connexion à un profil usager est faite par email + mot de passe. Les mots de
 (en utilisant Devise qui utilise Bcrypt). Une connexion via FranceConnect est aussi proposée : un compte est alors
 créé ou relié si l'e-mail existe déjà dans notre base usagers.
 
-Note : Il n'y a aucune contrainte sur la complexité ou la longueur du mot de passe choisi.
+Un mot de passe doit avoir une longueur d'**au moins 10 caractères** et ne pas faire partie des 20 000 mots de passe les plus utilisés par des francophones (https://github.com/francois-ferrandis/common_french_passwords).
 
 #### Les agents
 
@@ -379,7 +380,7 @@ La connexion à un profil agent est faite par email + mot de passe. Les mots de 
 (en utilisant une Devise qui utilise Bcrypt). Une connexion via InclusionConnect est aussi proposée : un compte est alors
 créé ou relié si l'e-mail existe déjà dans notre base agents.
 
-Note : Il n'y a aucune contrainte sur la complexité ou la longueur du mot de passe choisi.
+Un mot de passe doit avoir une longueur d'**au moins 10 caractères** et ne pas faire partie des 20 000 mots de passe les plus utilisés par des francophones (https://github.com/francois-ferrandis/common_french_passwords).
 
 #### Les super admins
 
@@ -390,7 +391,7 @@ Afin de s'y connecter, il faut utiliser l'OAuth de GitHub. L'adresse e-mail alor
 présente dans une table `super_admins`, où les entrées sont crées et supprimées à la main lors de l'arrivée et
 du départ de membres de l'équipe;
 
-Tous les membres de l'équipe faisant partie de l'organisation betagouv sur Github, ils utilisent une authentification à 2 facteurs.
+Tous les membres de l'équipe faisant partie de [l'organisation `betagouv` sur Github](https://github.com/betagouv), ils utilisent une authentification à 2 facteurs.
 
 ### Traçabilité des erreurs et des actions utilisateurs
 
@@ -433,7 +434,7 @@ Nous n'avons en revanche pas de système permettant de savoir quel profil a eu a
 
 Nous utilisons Sentry afin d'être informé⋅es sur les nouvelles erreurs, et le volume des erreurs existantes.
 Nous sommes alerté⋅es en cas de nouvelles erreurs ou volume inhabituel, en direct sur notre outil de
-communication principal Mattermost.
+communication principal Mattermost. Nous utilisons l'instance Sentry de l'incubateur beta.gouv (sentry.incubateur.net).
 
 Notre hébergeur Scalingo propose aussi un système d'alerting déclenché selon des métriques diverses, mais
 celui-ci n'est pas utilisé actuellement car sa calibration est difficile.
@@ -455,6 +456,12 @@ ici : [2023-04-24-politique-maj-gems.md](/docs/decisions/2023-04-24-politique-ma
 Afin d'être prévenus lors de la publication d'une CVE, nous utilisons Dependabot sur notre dépôt GitHub.
 Une alerte e-mail est envoyée aux devs qui watchent le dépôt (et nous faisons en sorte de le watch à travers
 notre procédure d'onboarding).
+
+### Détection des vulnérabilités
+
+Nous utilisons la librairie ruby `brakeman` qui scanne le code afin de trouver des mauvaises pratiques de sécurité.
+
+Nous avons également activé CodeQL sur notre dépot GitHub. Cet outil permet de détecter les vulnérabilités via une analyse statique du code.
 
 ### Intégrité
 
@@ -493,4 +500,3 @@ Voici les suppressions automatiques mises en place :
 - Suppression des logs PaperTrail (auditing) de plus de 2 ans
 - Suppression des usagers inactifs pendant au moins 2 ans (pas de rdv dans les 2 dernières années, et compte créé depuis plus de 2 ans)
 - Suppression des agents inactifs pendant au moins 2 ans (pas de rdv dans les 2 dernières années, et compte créé depuis plus de 2 ans, pas de connexion depuis 2 ans)
-
