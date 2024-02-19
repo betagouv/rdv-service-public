@@ -4,7 +4,7 @@ module InclusionConnect
   IC_BASE_URL = ENV["INCLUSION_CONNECT_BASE_URL"]
 
   class << self
-    def auth_path(ic_state, inclusion_connect_callback_url)
+    def auth_path(ic_state, inclusion_connect_callback_url, login_hint: nil)
       query = {
         response_type: "code",
         client_id: IC_CLIENT_ID,
@@ -13,6 +13,7 @@ module InclusionConnect
         state: ic_state,
         nonce: Digest::SHA1.hexdigest("Something to check when it come back ?"),
         from: "community",
+        login_hint: login_hint,
       }
       "#{IC_BASE_URL}/authorize/?#{query.to_query}"
     end
