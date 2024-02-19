@@ -12,7 +12,7 @@ class InclusionConnect
       state: ic_state,
       from: "community",
       login_hint: login_hint,
-    }
+    }.compact_blank
     "#{IC_BASE_URL}/authorize/?#{query.to_query}"
   end
 
