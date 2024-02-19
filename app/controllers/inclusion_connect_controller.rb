@@ -14,7 +14,7 @@ class InclusionConnectController < ApplicationController
       redirect_to new_agent_session_path and return
     end
 
-    agent = InclusionConnect.authenticate_and_find_agent(params[:code], inclusion_connect_callback_url)
+    agent = InclusionConnect.new.authenticate_and_find_agent(params[:code], inclusion_connect_callback_url)
 
     if agent
       bypass_sign_in agent, scope: :agent
