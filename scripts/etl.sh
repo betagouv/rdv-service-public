@@ -44,13 +44,12 @@ echo "Suppression du role postgres utilisé par metabase"
 scalingo database-delete-user --region osc-secnum-fr1 --app rdv-service-public-etl --addon "${etl_addon_id}" rdv_service_public_metabase
 echo "La base de données n'est plus accessible par metabase"
 
-tables_to_exclude="$(bundle exec rails runner scripts/anonymizer_truncated_tables.rb ${app_name})"
-# On enlève des logs écrits par des gems (dont Skylight) pour garder uniquement les noms de tables
-tables_to_exclude=$(echo "${tables_to_exclude}" | rev | cut -d' ' -f1 | rev)
+# On fait un tail -n1 pour enlever des logs écrits par des gems (dont Skylight) pour garder uniquement les noms de tables
+tables_to_exclude="$(bundle exec rails runner scripts/anonymizer_truncated_tables.rb | tail -n1)"
 
 echo "Chargement du dump..."
 # voir https://stackoverflow.com/questions/37038193/exclude-table-during-pg-restore pour l'explication des tables à exclure
-time pg_restore --clean --if-exists --no-owner --no-privileges --jobs=4 --dbname "${DATABASE_URL}" -L <(pg_restore -l /app/*.pgsql | grep -vE "TABLE DATA public ($tables_to_exclude)") /app/*.pgsql
+time pg_restore --clean --if-exists --no-owner --no-privileges --jobs=4 --dbname "${DATABASE_URL}" -L <(pg_restore -l /app/*.pgsql | grep -vE "TABLE DATA public (${tables_to_exclude})") /app/*.pgsql
 
 
 echo "Anonymisation de la base"
