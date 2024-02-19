@@ -44,7 +44,6 @@ RSpec.describe InclusionConnectController, type: :controller do
         stub_request(:get, "#{base_url}/userinfo/?schema=openid").with(
           headers: {
             "Authorization" => "Bearer zekfjzeklfjl",
-            "User-Agent" => "Typhoeus - https://github.com/typhoeus/typhoeus",
           }
         ).to_return(status: 200, body: user_info.to_json, headers: {})
 
@@ -58,7 +57,7 @@ RSpec.describe InclusionConnectController, type: :controller do
           # On aurait envie d'utiliser une feature spec et vérifier le contenu de la page, mais
           # les feature specs ne permettent pas de manipuler la session pour y écrire le ic_state.
           expect(response).to redirect_to("/agents/sign_in")
-          expect(request.session[:flash]["flashes"]["error"]).to include("Nous n'avons pas pu vous authentifier")
+          expect(flash[:error]).to eq("Nous n'avons pas pu vous authentifier. Contacter le support à l'adresse <support@rdv-solidarites.fr> si le problème persiste.")
         end
       end
 
@@ -160,7 +159,6 @@ RSpec.describe InclusionConnectController, type: :controller do
       stub_request(:get, "#{base_url}/userinfo/?schema=openid").with(
         headers: {
           "Authorization" => "Bearer zekfjzeklfjl",
-          "User-Agent" => "Typhoeus - https://github.com/typhoeus/typhoeus",
         }
       ).to_return(status: 500, body: "", headers: {})
 
@@ -194,7 +192,6 @@ RSpec.describe InclusionConnectController, type: :controller do
         "redirect_uri" => inclusion_connect_callback_url,
       },
       headers: {
-        "User-Agent" => "Typhoeus - https://github.com/typhoeus/typhoeus",
         "Content-Type" => "application/x-www-form-urlencoded",
       }
     )
