@@ -49,7 +49,7 @@ tables_to_exclude="$(bundle exec rails runner scripts/anonymizer_truncated_table
 
 echo "Chargement du dump..."
 # voir https://stackoverflow.com/questions/37038193/exclude-table-during-pg-restore pour l'explication des tables à exclure
-time pg_restore --clean --if-exists --no-owner --no-privileges --jobs=4 --dbname "${DATABASE_URL}" -L <(pg_restore -l /app/*.pgsql | grep -vE "TABLE DATA public (${tables_to_exclude})") /app/*.pgsql
+time pg_restore --clean --if-exists --no-owner --no-privileges --jobs=4 --dbname "${DATABASE_URL}" -L <(pg_restore -l /app/*.pgsql | grep -vE "TABLE DATA public (versions|good_jobs|good_job_settings|good_job_batches|good_job_processes)") /app/*.pgsql
 
 
 echo "Anonymisation de la base"
