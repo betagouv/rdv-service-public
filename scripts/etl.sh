@@ -58,7 +58,7 @@ time bundle exec rails runner scripts/anonymize_database.rb
 echo "Suppression de l'ancien schema '${app_name}'"
 psql "${DATABASE_URL}" -c "DROP SCHEMA IF EXISTS \"${app_name}\" CASCADE;"
 
-echo "Renommage du nouveau schema vers '${app_name}'"
+echo "Création du nouveau schema vers '${app_name}'"
 psql "${DATABASE_URL}" -c "CREATE SCHEMA \"${app_name}\";"
 
 all_tables=$(psql "${DATABASE_URL}" -t -c "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public';")
@@ -68,9 +68,18 @@ for table in ${all_tables}; do
   psql "${DATABASE_URL}" -c "ALTER TABLE ${table} SET SCHEMA \"${app_name}\";"
 done
 
+all_types=$(psql  "${DATABASE_URL}" -t -c "\dT" |cut -d "|" -f 2)
+
+for data_type in ${all_types}; do
+  psql "${DATABASE_URL}" -c "ALTER TYPE ${data_type} SET SCHEMA \"${app_name}\";"
+done
+
 echo "Re-création du role Postgres rdv_service_public_metabase"
 echo "Merci de copier/coller le mot de passe stocké dans METABASE_DB_ROLE_PASSWORD: ${METABASE_DB_ROLE_PASSWORD}"
 scalingo database-create-user --region osc-secnum-fr1 --app rdv-service-public-etl --addon "${etl_addon_id}" --read-only rdv_service_public_metabase
+
+psql "${DATABASE_URL}" -c 'GRANT USAGE ON SCHEMA \'${app_name}\' TO "rdv_service_public_metabase";'
+psql "${DATABASE_URL}" -c 'GRANT SELECT ON ALL TABLES IN SCHEMA \'${app_name}\' TO "rdv_service_public_metabase";'
 
 # On fait cette opération après la création du user, puisqu'elle cause un peu de downtime sur la db
 echo "Downgrade du Postgres d'ETL pour revenir a la normale"
