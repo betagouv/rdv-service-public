@@ -45,7 +45,7 @@ RSpec.describe "agents can prescribe rdvs" do
       # Select Service
       expect(page).to have_content("Sélectionnez le service avec qui vous voulez prendre un RDV")
       expect(page).to have_content(motif_mds.service.name)
-      expect(page).to have_content(motif_autre_service.service.name)
+      expect(page).not_to have_content(motif_autre_service.service.name)
       find("h3", text: motif_mds.service.name).ancestor("a").click
       # Select Motif
       expect(page).to have_content("Sélectionnez le motif de votre RDV")
