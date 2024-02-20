@@ -1,5 +1,5 @@
 # Usage : scalingo --app=rdv-service-public-etl --region=osc-secnum-fr1 run "bash"
-# puis ./scripts/etl.sh demo-rdv-solidarites
+# puis ./scripts/etl.sh production-rdv-mairie
 #
 #!/usr/bin/env bash
 set -ex
@@ -71,6 +71,9 @@ all_types=$(psql  "${DATABASE_URL}" -t -c "\dT" |cut -d "|" -f 2)
 for data_type in ${all_types}; do
   psql "${DATABASE_URL}" -c "ALTER TYPE ${data_type} SET SCHEMA \"${app_name}\";"
 done
+
+# On recharge le schema pour éviter d'avoir des soucis de chargement de données
+time pg_restore --schema-only --clean --if-exists --no-owner --no-privileges --jobs=4 --dbname "${DATABASE_URL}" -L <(pg_restore -l /app/*.pgsql | grep -vE "TABLE DATA public (versions|good_jobs|good_job_settings|good_job_batches|good_job_processes)") /app/*.pgsql
 
 echo "Re-création du role Postgres rdv_service_public_metabase"
 echo "Merci de copier/coller le mot de passe stocké dans METABASE_DB_ROLE_PASSWORD: ${METABASE_DB_ROLE_PASSWORD}"
