@@ -9,21 +9,23 @@ RSpec.describe "agents can prescribe rdvs" do
 
   let(:now) { Time.zone.parse("2024-01-05 16h00") }
   let!(:territory) { create(:territory, departement_number: "83") }
+
+  let!(:service_rsa) { create(:service, name: "Service RSA") }
+  let!(:service_autre) { create(:service, name: "Service autre") }
+
   let!(:org_mds) { create(:organisation, territory: territory) }
   let!(:org_insertion) { create(:organisation, territory: territory) }
 
-  let!(:agent_mds) { create(:agent, admin_role_in_organisations: [org_mds]) }
-  let!(:agent_insertion) { create(:agent, admin_role_in_organisations: [org_insertion]) }
+  let!(:agent_mds) { create(:agent, admin_role_in_organisations: [org_mds], services: [service_rsa]) }
+  let!(:agent_insertion) { create(:agent, admin_role_in_organisations: [org_insertion], services: [service_rsa, service_autre]) }
 
-  let!(:motif_mds) { create(:motif, organisation: org_mds, service: agent_mds.services.first) }
-  let!(:motif_insertion) { create(:motif, organisation: org_insertion, service: agent_mds.services.first) }
-  let!(:motif_autre_service) { create(:motif, organisation: org_insertion) }
-  let!(:motif_collectif) { create(:motif, :collectif, organisation: org_mds) }
+  let!(:motif_mds) { create(:motif, organisation: org_mds, service: service_rsa) }
+  let!(:motif_insertion) { create(:motif, organisation: org_insertion, service: service_rsa) }
+  let!(:motif_autre_service) { create(:motif, organisation: org_insertion, service: service_autre) }
 
   let!(:mds_paris_nord) { create(:lieu, organisation: org_mds) }
   let!(:mission_locale_paris_nord) { create(:lieu, organisation: org_insertion) }
   let!(:mission_locale_paris_sud) { create(:lieu, organisation: org_insertion) }
-  let!(:collective_rdv) { create(:rdv, :collectif, organisation: org_mds, starts_at: now + 1.day, motif: motif_collectif, lieu: mds_paris_nord, created_by: agent_mds) }
 
   before do
     next_month = (now + 1.month).to_date
@@ -86,37 +88,42 @@ RSpec.describe "agents can prescribe rdvs" do
       expect(created_rdv.participations.last.created_by_agent_prescripteur).to eq(true)
     end
 
-    it "works for a collective rdv", js: true do
-      login_as(agent_mds, scope: :agent)
-      visit root_path
-      within(".left-side-menu") { click_on "Trouver un RDV" }
-      click_link "élargir votre recherche"
-      expect(page).to have_content("Nouveau RDV par prescription")
-      # Select Service
-      expect(page).to have_content("Sélectionnez le service avec qui vous voulez prendre un RDV")
-      expect(page).to have_content(motif_collectif.service.name)
-      find("h3", text: motif_collectif.service.name).ancestor("a").click
-      # Select Lieu
-      find(".card-title", text: /#{mds_paris_nord.name}/).ancestor(".card").find("a.stretched-link").click
-      # Select créneau
-      first(:link, "S'inscrire").click
-      # Display User selection
-      find(".select2-selection[aria-labelledby=select2-user_ids_-container]").click
-      find(".select2-search__field").send_keys("francis")
-      expect(page).to have_content("FACTICE Francis")
-      first(".select2-results ul.select2-results__options li").click
-      click_on "Continuer"
-      # Display Récapitulatif
-      expect(page).to have_content("Motif : #{motif_collectif.name}")
-      expect(page).to have_content("Lieu : #{mds_paris_nord.name}")
-      expect(page).to have_content("Date du rendez-vous :")
-      expect(page).to have_content("Usager : Francis FACTICE")
-      expect { click_button "Confirmer le rdv" }.to change(Rdv.last.reload.participations, :count).by(1)
-      expect(Rdv.last.participations.where(user: existing_user).first.created_by_agent_prescripteur).to eq(true)
+    describe "for a collective rdv" do
+      let!(:motif_collectif) { create(:motif, :collectif, organisation: org_mds) }
+      let!(:collective_rdv) { create(:rdv, :collectif, organisation: org_mds, starts_at: now + 1.day, motif: motif_collectif, lieu: mds_paris_nord, created_by: agent_mds) }
+
+      it "works", js: true do
+        login_as(agent_mds, scope: :agent)
+        visit root_path
+        within(".left-side-menu") { click_on "Trouver un RDV" }
+        click_link "élargir votre recherche"
+        expect(page).to have_content("Nouveau RDV par prescription")
+        # Select Service
+        expect(page).to have_content("Sélectionnez le service avec qui vous voulez prendre un RDV")
+        expect(page).to have_content(motif_collectif.service.name)
+        find("h3", text: motif_collectif.service.name).ancestor("a").click
+        # Select Lieu
+        find(".card-title", text: /#{mds_paris_nord.name}/).ancestor(".card").find("a.stretched-link").click
+        # Select créneau
+        first(:link, "S'inscrire").click
+        # Display User selection
+        find(".select2-selection[aria-labelledby=select2-user_ids_-container]").click
+        find(".select2-search__field").send_keys("francis")
+        expect(page).to have_content("FACTICE Francis")
+        first(".select2-results ul.select2-results__options li").click
+        click_on "Continuer"
+        # Display Récapitulatif
+        expect(page).to have_content("Motif : #{motif_collectif.name}")
+        expect(page).to have_content("Lieu : #{mds_paris_nord.name}")
+        expect(page).to have_content("Date du rendez-vous :")
+        expect(page).to have_content("Usager : Francis FACTICE")
+        expect { click_button "Confirmer le rdv" }.to change(Rdv.last.reload.participations, :count).by(1)
+        expect(Rdv.last.participations.where(user: existing_user).first.created_by_agent_prescripteur).to eq(true)
+      end
     end
   end
 
-  context "when creating a user along the way" do
+  describe "creating a user along the way" do
     it "leaves the user both in local and distant organisation", js: true do
       login_as(agent_mds, scope: :agent)
       visit root_path
@@ -176,7 +183,7 @@ RSpec.describe "agents can prescribe rdvs" do
     end
   end
 
-  describe "when starting from a user profile" do
+  describe "starting from a user profile" do
     let!(:user) { create(:user, organisations: [org_mds]) }
 
     it "pre-fills the user" do
