@@ -2,7 +2,7 @@
 # puis ./scripts/etl.sh demo-rdv-solidarites
 #
 #!/usr/bin/env bash
-set -e
+set -ex
 # Inspiré par https://doc.scalingo.com/platform/databases/duplicate
 
 archive_name="backup.tar.gz"
@@ -44,8 +44,9 @@ echo "Suppression du role postgres utilisé par metabase"
 scalingo database-delete-user --region osc-secnum-fr1 --app rdv-service-public-etl --addon "${etl_addon_id}" rdv_service_public_metabase
 echo "La base de données n'est plus accessible par metabase"
 
-# On fait un tail -n1 pour enlever des logs écrits par des gems (dont Skylight) pour garder uniquement les noms de tables
-tables_to_exclude="$(bundle exec rails runner scripts/anonymizer_truncated_tables.rb | tail -n1)"
+echo "Suppression de l'ancien schema '${app_name}'"
+psql "${DATABASE_URL}" -c "DROP SCHEMA IF EXISTS \"${app_name}\" CASCADE;"
+
 
 echo "Chargement du dump..."
 # voir https://stackoverflow.com/questions/37038193/exclude-table-during-pg-restore pour l'explication des tables à exclure
@@ -54,9 +55,6 @@ time pg_restore --clean --if-exists --no-owner --no-privileges --jobs=4 --dbname
 
 echo "Anonymisation de la base"
 time bundle exec rails runner scripts/anonymize_database.rb
-
-echo "Suppression de l'ancien schema '${app_name}'"
-psql "${DATABASE_URL}" -c "DROP SCHEMA IF EXISTS \"${app_name}\" CASCADE;"
 
 echo "Création du nouveau schema vers '${app_name}'"
 psql "${DATABASE_URL}" -c "CREATE SCHEMA \"${app_name}\";"
@@ -78,8 +76,8 @@ echo "Re-création du role Postgres rdv_service_public_metabase"
 echo "Merci de copier/coller le mot de passe stocké dans METABASE_DB_ROLE_PASSWORD: ${METABASE_DB_ROLE_PASSWORD}"
 scalingo database-create-user --region osc-secnum-fr1 --app rdv-service-public-etl --addon "${etl_addon_id}" --read-only rdv_service_public_metabase
 
-psql "${DATABASE_URL}" -c 'GRANT USAGE ON SCHEMA \'${app_name}\' TO "rdv_service_public_metabase";'
-psql "${DATABASE_URL}" -c 'GRANT SELECT ON ALL TABLES IN SCHEMA \'${app_name}\' TO "rdv_service_public_metabase";'
+psql "${DATABASE_URL}" -c "GRANT USAGE ON SCHEMA \"${app_name}\" TO \"rdv_service_public_metabase\";"
+psql "${DATABASE_URL}" -c "GRANT SELECT ON ALL TABLES IN SCHEMA \"${app_name}\" TO \"rdv_service_public_metabase\";"
 
 # On fait cette opération après la création du user, puisqu'elle cause un peu de downtime sur la db
 echo "Downgrade du Postgres d'ETL pour revenir a la normale"
