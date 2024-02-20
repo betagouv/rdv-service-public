@@ -2,7 +2,7 @@
 # puis ./scripts/etl.sh production-rdv-mairie
 #
 #!/usr/bin/env bash
-set -ex
+set -e
 # Inspiré par https://doc.scalingo.com/platform/databases/duplicate
 
 archive_name="backup.tar.gz"
@@ -50,7 +50,8 @@ psql "${DATABASE_URL}" -c "DROP SCHEMA IF EXISTS \"${app_name}\" CASCADE;"
 
 echo "Chargement du dump..."
 # voir https://stackoverflow.com/questions/37038193/exclude-table-during-pg-restore pour l'explication des tables à exclure
-time pg_restore --clean --if-exists --no-owner --no-privileges --jobs=4 --dbname "${DATABASE_URL}" -L <(pg_restore -l /app/*.pgsql | grep -vE "TABLE DATA public (versions|good_jobs|good_job_settings|good_job_batches|good_job_processes)") /app/*.pgsql
+# on ne reset pas les extensions parce qu'on ne peut pas les supprimer : elles sont dans le schema public, mais les tables des autres schemas en dépendent (pour uuid-ossp)
+time pg_restore --clean --if-exists --no-owner --no-privileges --jobs=4 --dbname "${DATABASE_URL}" -L <(pg_restore -l /app/*.pgsql | grep -vE "TABLE DATA public (versions|good_jobs|good_job_settings|good_job_batches|good_job_processes)" | grep -v EXTENSION) /app/*.pgsql
 
 
 echo "Anonymisation de la base"
@@ -73,7 +74,7 @@ for data_type in ${all_types}; do
 done
 
 # On recharge le schema pour éviter d'avoir des soucis de chargement de données
-time pg_restore --schema-only --clean --if-exists --no-owner --no-privileges --jobs=4 --dbname "${DATABASE_URL}" -L <(pg_restore -l /app/*.pgsql | grep -vE "TABLE DATA public (versions|good_jobs|good_job_settings|good_job_batches|good_job_processes)") /app/*.pgsql
+time pg_restore --schema-only --clean --if-exists --no-owner --no-privileges --jobs=4 --dbname "${DATABASE_URL}" -L <(pg_restore -l /app/*.pgsql | grep -vE "TABLE DATA public (versions|good_jobs|good_job_settings|good_job_batches|good_job_processes)"  | grep -v EXTENSION) /app/*.pgsql
 
 echo "Re-création du role Postgres rdv_service_public_metabase"
 echo "Merci de copier/coller le mot de passe stocké dans METABASE_DB_ROLE_PASSWORD: ${METABASE_DB_ROLE_PASSWORD}"
