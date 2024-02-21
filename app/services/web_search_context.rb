@@ -37,6 +37,7 @@ class WebSearchContext < SearchContext
     @public_link_organisation_id || @user_selected_organisation_id
   end
 
+  # rubocop:disable Metrics/PerceivedComplexity
   def filter_motifs(available_motifs)
     motifs = super
     motifs = if prescripteur?
@@ -55,6 +56,7 @@ class WebSearchContext < SearchContext
     motifs = motifs.where(id: @motif_id) if @motif_id.present?
     motifs
   end
+  # rubocop:enable Metrics/PerceivedComplexity
 
   # TODO : move this to a specific search context https://github.com/betagouv/rdv-solidarites.fr/pull/3827#discussion_r1351988739
   def public_link_organisation
