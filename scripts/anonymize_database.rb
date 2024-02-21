@@ -1,6 +1,6 @@
 Anonymizer::Core.anonymize_all_data!(ARGV[0])
 
-if ARGV[0] == "production-rdv-solidarites"
+if ARGV[0] == "productionrdvsolidarites"
   # Sanity checks
   if User.where.not(last_name: "[valeur anonymisée]").any?
     raise "Certains usagers n'ont pas été anonymisés !"
