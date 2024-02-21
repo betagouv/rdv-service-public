@@ -84,7 +84,7 @@ RSpec.describe "agents can prescribe rdvs" do
     end
 
     describe "for a collective rdv" do
-      let!(:motif_collectif) { create(:motif, :collectif, organisation: org_mds) }
+      let!(:motif_collectif) { create(:motif, :collectif, organisation: org_mds, service: service_rsa) }
       let!(:collective_rdv) { create(:rdv, :collectif, organisation: org_mds, starts_at: now + 1.day, motif: motif_collectif, lieu: mds_paris_nord, created_by: agent_mds) }
 
       it "works", js: true do
@@ -92,7 +92,12 @@ RSpec.describe "agents can prescribe rdvs" do
         visit root_path
         within(".left-side-menu") { click_on "Trouver un RDV" }
         click_link "élargir votre recherche"
+        # Select Motif
         expect(page).to have_content("Nouveau RDV par prescription")
+        expect(page).to have_content("Sélectionnez le motif de votre RDV")
+        expect(page).to have_content(motif_mds.name)
+        expect(page).to have_content(motif_collectif.name)
+        find("h3", text: motif_collectif.name).ancestor("a").click
         # Select Lieu
         find(".card-title", text: /#{mds_paris_nord.name}/).ancestor(".card").find("a.stretched-link").click
         # Select créneau
