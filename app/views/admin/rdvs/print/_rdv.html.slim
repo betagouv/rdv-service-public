@@ -7,35 +7,37 @@
       div
         = "(#{rdv.duration_in_min} minutes)"
   .col-md-10.col-sm-10
-    .card.rdv-card
-      .card-body style="border-left: 8px solid #{rdv.motif.color}"
-        div
+    .card.rdv-card.rounded-0 style="border-left: 8px solid #{rdv.motif.color}"
+      .d-flex
+        .flex-grow-1.lead.pl-3.pt-2
           = rdv.motif_name
-        .mt-2
-          - rdv.participations.each do |participation|
-            ruby:
-              user = participation.user
-              phone_number = user.user_to_notify&.phone_number
-              email = user.user_to_notify&.email
-            span.font-weight-bold.lead
-              = user
-            - if user.birth_date
-              span.mx-1
-                = "(né(e) le #{I18n.l(participation.user.birth_date)})"
-            | &nbsp - &nbsp
+        .rdv-status.px-2.py-2 class="rdv-status-#{rdv.status}"
+          = rdv.human_attribute_value(:status).upcase
+      .card-body
+        - rdv.participations.each do |participation|
+          ruby:
+            user = participation.user
+            phone_number = user.user_to_notify&.phone_number
+            email = user.user_to_notify&.email
+          span.font-weight-bold.lead
+            = user
+          - if user.birth_date
             span.mx-1
-              - if email
-                = email
-              - else
-                span.font-weight-light.font-italic
-                  | Email non renseigné
-            | &nbsp - &nbsp
-            span.mx-1
-              - if phone_number
-                = phone_number
-              - else
-                span.font-weight-light.font-italic
-                  | Téléphone non renseigné
+              = "(né(e) le #{I18n.l(participation.user.birth_date)})"
+          | &nbsp - &nbsp
+          span.mx-1
+            - if email
+              = email
+            - else
+              span.font-weight-light.font-italic
+                | Email non renseigné
+          | &nbsp - &nbsp
+          span.mx-1
+            - if phone_number
+              = phone_number
+            - else
+              span.font-weight-light.font-italic
+                | Téléphone non renseigné
         .mt-2
           | Contexte :
           | &nbsp
