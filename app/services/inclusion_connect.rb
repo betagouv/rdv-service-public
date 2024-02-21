@@ -83,7 +83,7 @@ class InclusionConnect
     if found_by_sub && found_by_email && found_by_sub != found_by_email
       Sentry.add_breadcrumb(Sentry::Breadcrumb.new(message: "Found agent with sub", data: { sub: user_info["sub"], agent_id: found_by_sub.id }))
       Sentry.add_breadcrumb(Sentry::Breadcrumb.new(message: "Found agent with email", data: { email: user_info["email"], agent_id: found_by_email.id }))
-      Sentry.capture_message("InclusionConnect sub and email mismatch")
+      Sentry.capture_message("InclusionConnect sub and email mismatch", fingerprint: "ic_agent_sub_email_mismatch")
     end
 
     found_by_sub || found_by_email
