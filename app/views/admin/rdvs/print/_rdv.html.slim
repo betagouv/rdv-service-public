@@ -12,16 +12,42 @@
         div
           = rdv.motif_name
         .mt-2
-          - if rdv.users.present?
-            .font-weight-bold.lead
-              = rdv.users.first
-            div
-              - if rdv.users.size > 1
-                i.fa.fa-users>
+          - rdv.participations.each do |participation|
+            ruby:
+              user = participation.user
+              phone_number = user.user_to_notify&.phone_number
+              email = user.user_to_notify&.email
+            span.font-weight-bold.lead
+              = user
+            - if user.birth_date
+              span.mx-1
+                = "(né(e) le #{I18n.l(participation.user.birth_date)})"
+            | &nbsp - &nbsp
+            span.mx-1
+              - if email
+                = email
               - else
-                i.fa.fa-user>
-              = "#{rdv.users.size} #{'participant'.pluralize(rdv.users.size)}"
-          - else
-            p Il n'y a pas encore de participant pour ce RDV
+                span.font-weight-light.font-italic
+                  | Email non renseigné
+            | &nbsp - &nbsp
+            span.mx-1
+              - if phone_number
+                = phone_number
+              - else
+                span.font-weight-light.font-italic
+                  | Téléphone non renseigné
         .mt-2
+          | Contexte :
+          | &nbsp
+          - if rdv.context
+            = rdv.context
+          - else
+            span.font-weight-light.font-italic
+              | Pas de contexte renseigné
+        .mt-2
+          i.fa.fa-map-marker-alt>
+          = rdv.lieu.name
+        .mt-2
+          | Agent :
+          | &nbsp
           = agents_to_sentence(rdv.agents)
