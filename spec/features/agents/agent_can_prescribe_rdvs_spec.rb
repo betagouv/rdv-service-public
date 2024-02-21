@@ -44,11 +44,6 @@ RSpec.describe "agents can prescribe rdvs" do
       within(".left-side-menu") { click_on "Trouver un RDV" }
       click_link "élargir votre recherche"
       expect(page).to have_content("Nouveau RDV par prescription")
-      # Select Service
-      expect(page).to have_content("Sélectionnez le service avec qui vous voulez prendre un RDV")
-      expect(page).to have_content(motif_mds.service.name)
-      expect(page).not_to have_content(motif_autre_service.service.name)
-      find("h3", text: motif_mds.service.name).ancestor("a").click
       # Select Motif
       expect(page).to have_content("Sélectionnez le motif de votre RDV")
       expect(page).to have_content(motif_mds.name)
@@ -98,10 +93,6 @@ RSpec.describe "agents can prescribe rdvs" do
         within(".left-side-menu") { click_on "Trouver un RDV" }
         click_link "élargir votre recherche"
         expect(page).to have_content("Nouveau RDV par prescription")
-        # Select Service
-        expect(page).to have_content("Sélectionnez le service avec qui vous voulez prendre un RDV")
-        expect(page).to have_content(motif_collectif.service.name)
-        find("h3", text: motif_collectif.service.name).ancestor("a").click
         # Select Lieu
         find(".card-title", text: /#{mds_paris_nord.name}/).ancestor(".card").find("a.stretched-link").click
         # Select créneau
@@ -129,8 +120,6 @@ RSpec.describe "agents can prescribe rdvs" do
       visit root_path
       within(".left-side-menu") { click_on "Trouver un RDV" }
       click_link "élargir votre recherche"
-      # Select Service
-      find("h3", text: motif_mds.service.name).ancestor("a").click
       # Select Motif
       find("h3", text: motif_insertion.name).ancestor("a").click
       # Select Lieu
@@ -156,8 +145,6 @@ RSpec.describe "agents can prescribe rdvs" do
       visit root_path
       within(".left-side-menu") { click_on "Trouver un RDV" }
       click_link "élargir votre recherche"
-      # Select Service
-      find("h3", text: motif_mds.service.name).ancestor("a").click
       # Select Motif
       find("h3", text: motif_insertion.name).ancestor("a").click
       # Select Lieu
@@ -193,8 +180,6 @@ RSpec.describe "agents can prescribe rdvs" do
       click_link "élargir votre recherche"
       expect(page).to have_content("Nouveau RDV par prescription")
       expect(page).to have_content("pour #{user.full_name}")
-      # Select Service
-      find("h3", text: motif_mds.service.name).ancestor("a").click
       # Select Motif
       expect(page).to have_content("Sélectionnez le motif de votre RDV")
       find("h3", text: motif_mds.name).ancestor("a").click
