@@ -6,7 +6,7 @@
           .col-auto.align-self-center
             i.fa.fa-chevron-left
           .col
-            h2.pb-1.mb-1 = context.service.name
+            h2.pb-1.mb-1 = context.selected_service.name
 .container
   - if context.unique_motifs_by_name_and_location_type.empty?
     = render "search/nothing_to_show", context: context

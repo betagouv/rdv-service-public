@@ -4,7 +4,7 @@
   - else
     h2.font-weight-bold Sélectionnez le service avec qui vous voulez prendre un RDV :
     - unless context.invitation?
-    - context.services.each do |service|
+    - context.services_of_motifs.each do |service|
       .card.mb-3
         = link_to prendre_rdv_path(context.query_params.merge(service_id: service.id)) do
           .card-body
