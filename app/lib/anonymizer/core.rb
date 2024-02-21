@@ -7,13 +7,17 @@ class Anonymizer::Core
   }.freeze
 
   def self.anonymize_all_data!(service = "production-rdv-solidarites")
-    ActiveRecord::Base.connection.tables.each do |table_name|
+    all_tables(service).each do |table_name|
       anonymize_table!(table_name, service)
     end
   end
 
   def self.truncated_tables(service)
     RULES[service]::TRUNCATED_TABLES.join("|")
+  end
+
+  def self.all_tables(service)
+    RULES[service]::RULES.keys
   end
 
   def self.anonymize_user_data!
@@ -74,7 +78,8 @@ class Anonymizer::Core
   def anonymize_column(column, table)
     if column.type.in?(%i[string text]) && column.null # On vérifie que la colonne est nullable
       # Pour limiter la confusion lors de l'exploitation des données, on transforme les chaines vides en null
-      db_connection.execute("UPDATE #{table} SET #{column.name} = NULL WHERE #{column.name} = ''")
+      value = column.array ? "{}" : ""
+      db_connection.execute("UPDATE #{table} SET #{column.name} = NULL WHERE #{column.name} = '#{value}'")
     end
 
     db_connection.execute("UPDATE #{table} SET #{column.name} = #{anonymous_value(column, quote_value: true)} WHERE #{column.name} IS NOT NULL")
@@ -109,15 +114,21 @@ class Anonymizer::Core
 
   def anonymous_value(column, quote_value: false)
     if column.type.in?(%i[string text])
-      if column.name.include?("email")
-        Arel.sql("'email_anonymise_' || id || '@exemple.fr'")
-      elsif column_has_uniqueness_constraint?(column)
-        Arel.sql("'[valeur unique anonymisée ' || id || ']'")
-      else
-        quote_value ? db_connection.quote("[valeur anonymisée]") : "[valeur anonymisée]"
-      end
+      anonymous_text_value(column, quote_value)
     else
       quote_value ? db_connection.quote(column.default) : column.default
+    end
+  end
+
+  def anonymous_text_value(column, quote_value)
+    if column.array
+      Arel.sql("'{valeur anonymisée}'")
+    elsif column.name.include?("email")
+      Arel.sql("'email_anonymise_' || id || '@exemple.fr'")
+    elsif column_has_uniqueness_constraint?(column)
+      Arel.sql("'[valeur unique anonymisée ' || id || ']'")
+    else
+      quote_value ? db_connection.quote("[valeur anonymisée]") : "[valeur anonymisée]"
     end
   end
 

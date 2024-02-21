@@ -46,7 +46,7 @@ class Anonymizer::Rules::RdvInsertion
       ],
     },
     departments: {
-      anonymized_column_names: %w[name phone_number email region pronoun capital],
+      anonymized_column_names: %w[name number phone_number email region pronoun capital],
       non_anonymized_column_names: %w[created_at updated_at display_in_stats carnet_de_bord_deploiement_id],
     },
     file_configurations: {
@@ -73,6 +73,7 @@ class Anonymizer::Rules::RdvInsertion
         organisation_search_terms_column
         referent_email_column
         tags_column
+        france_travail_id_column
       ],
       non_anonymized_column_names: %w[created_at updated_at],
     },
@@ -106,6 +107,7 @@ class Anonymizer::Rules::RdvInsertion
       non_anonymized_column_names: %w[
         created_at
         updated_at
+        display_france_travail_logo
         display_europe_logos
         display_department_logo
         display_pole_emploi_logo
@@ -196,6 +198,7 @@ class Anonymizer::Rules::RdvInsertion
         birth_date
         birth_name
         nir
+        france_travail_id
         pole_emploi_id
         carnet_de_bord_carnet_id
       ],
@@ -261,6 +264,7 @@ class Anonymizer::Rules::RdvInsertion
         rate_of_users_oriented
         rate_of_users_oriented_grouped_by_month
         users_with_rdv_count
+        users_with_rdv_count_grouped_by_month
       ],
     },
     tag_organisations: {
