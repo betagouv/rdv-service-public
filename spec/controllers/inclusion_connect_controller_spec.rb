@@ -109,6 +109,21 @@ RSpec.describe InclusionConnectController, type: :controller do
           expect(response).to redirect_to(root_path)
         end
       end
+
+      context "email and sub match two different agents" do
+        let!(:agent_with_sub) { create(:agent, :invitation_not_accepted, inclusion_connect_open_id_sub: "12345678-90ab-cdef-1234-567890abcdef") }
+        let!(:agent_with_email) { create(:agent, :invitation_not_accepted, email: "bob@demo.rdv-solidarites.fr") }
+
+        it "warns Sentry" do
+          get :callback, params: { state: ic_state, session_state: ic_state, code: "klzefklzejlf" }
+
+          breadcrumbs = sentry_events.last.breadcrumbs.compact
+          expect(breadcrumbs).to include(
+            have_attributes(message: "Found agent with sub", data: { sub: "12345678-90ab-cdef-1234-567890abcdef", agent_id: agent_with_sub.id }),
+            have_attributes(message: "Found agent with email", data: { email: "bob@demo.rdv-solidarites.fr", agent_id: agent_with_email.id })
+          )
+        end
+      end
     end
 
     it "returns an error if state doesn't match" do
