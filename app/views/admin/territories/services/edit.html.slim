@@ -13,7 +13,7 @@
           = f.association :services, collection: @services, label: "", as: :check_boxes, label_method: :first, value_method: :second
 
           p.text-muted.font-14
-            | Si vous avez besoin d'un service qui n'apparaît pas dans cette liste, contactez-nous via
+            = "Si vous avez besoin d'un service qui n'apparaît pas dans cette liste, contactez-nous via "
             = mail_to(current_domain.support_email, current_domain.support_email)
             | .
 
