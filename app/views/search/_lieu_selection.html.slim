@@ -12,7 +12,7 @@
             .col-md
               h4.card-title.mb-3.mt-0.text-success.font-weight-bold= lieu.name
               .card-subtitle= lieu.address
-              .card-subtitle= context.selected_service.name
+              .card-subtitle= context.service.name
             .col-md.align-self-center.pt-3.pt-md-0.position-static
               - motif = next_availability.motif
               - if motif.restriction_for_rdv.blank?

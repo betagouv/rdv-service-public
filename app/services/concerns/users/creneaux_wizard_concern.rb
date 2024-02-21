@@ -6,7 +6,7 @@ module Users::CreneauxWizardConcern
   def current_step
     if departement.blank?
       :address_selection
-    elsif !selected_service
+    elsif !service_selected?
       :service_selection
     elsif !motif_name_and_type_selected?
       :motif_selection
@@ -52,12 +52,16 @@ module Users::CreneauxWizardConcern
     end.compact.sort_by(&:last).to_h
   end
 
-  def selected_service
-    Service.find(@service_id) if @service_id
+  def service
+    @service ||= if @service_id.present?
+                   Service.find(@service_id)
+                 elsif services.count == 1
+                   services.first
+                 end
   end
 
-  def services_of_motifs
-    @services_of_motifs ||= matching_motifs.includes(:service).map(&:service).uniq.sort_by(&:name)
+  def services
+    @services ||= matching_motifs.includes(:service).map(&:service).uniq.sort_by(&:name)
   end
 
   def next_availability_by_lieux
@@ -97,6 +101,10 @@ module Users::CreneauxWizardConcern
 
   def motif_name_and_type_selected?
     unique_motifs_by_name_and_location_type.length == 1
+  end
+
+  def service_selected?
+    service.present?
   end
 
   def requires_lieu_selection?
