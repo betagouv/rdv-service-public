@@ -136,7 +136,7 @@ RSpec.describe "Agents can be managed by organisation admins" do
       click_link("Services")
       check("CSS")
       click_button("Enregistrer")
-      expect(page).to have_content("Configuration enregistrée")
+      expect(page).to have_content("Liste des services disponibles mise à jour")
       logout
 
       login_as(organisation_admin, scope: :agent)
