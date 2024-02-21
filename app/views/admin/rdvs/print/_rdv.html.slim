@@ -39,7 +39,7 @@
         .mt-2
           | Contexte :
           | &nbsp
-          - if rdv.context
+          - if rdv.context.present?
             = rdv.context
           - else
             span.font-weight-light.font-italic

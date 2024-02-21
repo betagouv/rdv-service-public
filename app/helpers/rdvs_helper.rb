@@ -123,6 +123,15 @@ module RdvsHelper
     "#{rdv.users_count} / #{rdv.max_participants_count}"
   end
 
+  def rdv_list_period
+    return nil unless valid_date?(params[:start]) && valid_date?(params[:end])
+
+    [
+      I18n.l(Date.parse(params[:start]), format: :human).capitalize,
+      I18n.l(Date.parse(params[:end]), format: :human).capitalize,
+    ].uniq.join(" - ")
+  end
+
   private
 
   def rdv_individuel_title_for_agent(rdv)
@@ -130,5 +139,9 @@ module RdvsHelper
       rdv.users&.map(&:full_name)&.to_sentence +
       (rdv.motif.home? ? " 🏠" : "") +
       (rdv.motif.phone? ? " ☎️" : "")
+  end
+
+  def valid_date?(date)
+    date.present? && date != "__/__/____"
   end
 end
