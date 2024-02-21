@@ -1,7 +1,6 @@
 nav
   .left-side-menu
-    .d-flex.logo-and-hamburger.align-items-center.px-2.py-3
-      = link_logo
+    .d-flex.logo-and-hamburger.align-items-center.p-2
       div.d-md-none
         a.d-flex.align-items-center data-toggle="collapse" href="#menu-agent"
           span> Menu
@@ -23,13 +22,9 @@ nav
           ]
             .d-flex.justify-content-between.w-100
               div.d-flex.align-items-center
-                div.mr-2.small
-                  / small hack because this icon is wider than the others
-                  i.far.fa-id-card
                 div.d-flex.flex-column
-                  span.h5.mb-1= current_agent.first_name&.capitalize
-                  span= current_agent.services_short_names
                   span= current_organisation.name
+                  span= current_agent.services_short_names
               div.d-flex.align-items-center
                 i.fa.fa-angle-right.menu-arrow.mt-1
           ul.list-unstyled.ml-3.left-submenu-account.collapse[

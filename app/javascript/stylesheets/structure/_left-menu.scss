@@ -1,5 +1,4 @@
 .content-page {
-  margin-left: $leftbar-width;
   overflow: hidden;
   min-height: 80vh;
 }
@@ -58,9 +57,6 @@
   .left-side-menu {
     width: $leftbar-width;
     z-index: 10;
-    bottom: 0;
-    position: fixed;
-    top: 0;
     overflow-y: auto;
     overflow-x: hidden;
 

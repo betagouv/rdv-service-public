@@ -4,9 +4,8 @@ html lang="fr"
     = yield :html_head_prepend
     = render "common/head_agent"
   body
-    .wrapper
-      = render "layouts/rdv_solidarites_instance_name"
-      = render "layouts/degraded_service", message: ENV["DEGRADED_SERVICE_MESSAGE_AGENTS"]
+    = render "layouts/agent_main_header"
+    .d-flex
       = render "layouts/left_menu"
       main
         .content-page
