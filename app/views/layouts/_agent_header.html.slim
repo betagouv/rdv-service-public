@@ -11,3 +11,7 @@ header.header.bg-white.mb-4
         ul.navbar-nav.ml-auto.align-items-start.align-items-lg-center
           li.list-inline-item
             = link_to current_agent.full_name, edit_agent_registration_path, class: "btn text-primary-blue link-dsfr"
+          li.list-inline-item
+            = link_to destroy_agent_session_path, method: :delete, class: "btn text-primary-blue link-dsfr" do
+              i.fa.fa-sign-out-alt>
+              span> Se déconnecter
