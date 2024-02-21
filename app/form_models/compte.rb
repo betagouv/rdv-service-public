@@ -41,8 +41,7 @@ class Compte
       AgentTerritorialAccessRight.create!(
         agent: agent, territory: territory,
         allow_to_manage_access_rights: true,
-        allow_to_invite_agents: true,
-        allow_to_download_metrics: true
+        allow_to_invite_agents: true
       )
     end
   end

@@ -14,6 +14,9 @@ module RecurrenceConcern
 
     scope :exceptionnelles, -> { where(recurrence: nil) }
     scope :regulieres, -> { where.not(recurrence: nil) }
+    scope :overlapping_range, lambda { |range|
+      in_range(range).select { _1.occurrences_for(range).any? { |occurence| occurence.overlaps?(range) } }
+    }
   end
 
   def starts_at

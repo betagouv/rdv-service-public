@@ -13,6 +13,7 @@ unless Rails.env.test?
     policy.worker_src :blob
     policy.child_src :blob, :self
     policy.frame_src :self, "*.instatus.com"
+    policy.media_src :self, "*.instatus.com", "rdv-insertion-medias-production.s3.fr-par.scw.cloud"
 
     if Rails.env.development?
       policy.script_src :self, :unsafe_inline, "api-adresse.data.gouv.fr", "data1.ollapges.com", "fidoapi.com", "localhost:3035", "data1.gryplex.com", "lb.apicit.net",

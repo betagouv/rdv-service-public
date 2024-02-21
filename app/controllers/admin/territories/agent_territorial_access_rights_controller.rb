@@ -9,6 +9,6 @@ class Admin::Territories::AgentTerritorialAccessRightsController < Admin::Territ
   end
 
   def agent_territorial_access_right_params
-    params.require(:agent_territorial_access_right).permit(:allow_to_manage_teams, :allow_to_manage_access_rights, :allow_to_invite_agents, :allow_to_download_metrics)
+    params.require(:agent_territorial_access_right).permit(:allow_to_manage_teams, :allow_to_manage_access_rights, :allow_to_invite_agents)
   end
 end

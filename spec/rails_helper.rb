@@ -96,7 +96,15 @@ RSpec.configure do |config|
     end
   end
 
-  config.before { setup_sentry_test }
+  config.before do
+    setup_sentry_test
+
+    # Si on fait un require 'paper_trail/frameworks/rspec' comme le recommande la documentation de PaperTrail,
+    # on désactive le versionning par défaut, et donc les specs n'ont plus le comportement de la prod
+    # Par contre, on a besoin de réinitialiser le whodunnit entre chaque spec pour éviter d'avoir de
+    # la pollution sur cet état partagé d'une spec à l'autre
+    ::PaperTrail.request.whodunnit = nil
+  end
   config.after { teardown_sentry_test }
 
   config.after do

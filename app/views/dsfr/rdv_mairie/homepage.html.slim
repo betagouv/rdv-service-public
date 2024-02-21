@@ -1,19 +1,22 @@
 - bleu_ecume = "#4E68BB"
 - team_meeting_url = "https://meet.brevo.com/rdv-sp/-mairie-presentation-de-la-solution"
 .fr-py-12w[style="background-color:  #F4F6FE"]
-  .fr-container.fr-grid-row.fr-grid-row--center
-    .fr-col-md-8[style="text-align: center"]
-      h1
-        | Facilitez la gestion
-        br
-        = "et la prise de "
-        span[style="color: #{bleu_ecume}"] rendez-vous en ligne
-      b.fr-text--lg Une solution publique de gestion et de prise de rendez-vous pour les mairies
-      ul.fr-pt-4w.fr-btns-group.fr-btns-group--inline.fr-btns-group--center
-        li= link_to("Prendre RDV avec l’équipe", team_meeting_url, class: "fr-btn ")
-      i.fr-text--sm
-        = "Pour prendre RDV avec une mairie pour l’obtention d’une carte d’identité ou d’un passeport, "
-        = dsfr_link_to("cliquez ici", "https://rendezvouspasseport.ants.gouv.fr/")
+  .fr-container
+    .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
+      .fr-col-md-6
+        h1
+          ' Facilitez la gestion et la prise de
+          span[style="color: #{bleu_ecume}"] rendez-vous en ligne
+        b.fr-text--lg Une solution publique de gestion et de prise de rendez-vous pour les mairies
+        ul.fr-pt-4w.fr-btns-group.fr-btns-group--inline
+          li= link_to("Prendre RDV avec l’équipe", team_meeting_url, class: "fr-btn ")
+        i.fr-text--sm
+          = "Pour prendre RDV avec une mairie pour l’obtention d’une carte d’identité ou d’un passeport, "
+          = dsfr_link_to("cliquez ici", "https://rendezvouspasseport.ants.gouv.fr/")
+
+      .fr-col-md-6
+        video[controls width="600" poster=asset_path("rdv_mairie/landing_page_video_thumbnail.webp") style="cursor: pointer"]
+          source[src="https://rdv-insertion-medias-production.s3.fr-par.scw.cloud/assets/landing_page_video.mp4"]
 
 .fr-py-12w
   .fr-container.fr-grid-row.fr-grid-row--center
@@ -64,7 +67,7 @@
             = number_with_delimiter(rdv_count, delimiter: " ")
 
           .fr-text--lead.fr-mb-0
-            b  = "rendez-vous déjà pris".upcase
+            b = "rendez-vous déjà pris".upcase
             br
             = "sur RDV Service Public".upcase
 .fr-py-12w[style="background-color:  #F4F6FE"]
@@ -117,7 +120,7 @@
     .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
       .fr-col-md-4
         p
-          ="« RDV Service Public est très simple à utiliser. "
+          = "« RDV Service Public est très simple à utiliser. "
           b= "Le rappel par SMS"
           = " est un plus qui est apprécié par les usagers. De manière générale, on est très satisfaites du logiciel. »"
         b[style="color: #2F4077"] Mairie de Chomérac (07)
