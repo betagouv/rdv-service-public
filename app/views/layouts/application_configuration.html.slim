@@ -9,6 +9,7 @@ html lang="fr"
     main.container-fluid
 
       .container.px-4#icon-grid
+        = content_for(:breadcrumbs)
         = render "layouts/flash"
         = yield
 
