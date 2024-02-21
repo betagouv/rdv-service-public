@@ -21,7 +21,7 @@ RSpec.describe "Agents can be managed by organisation admins" do
     it "allows adding an agent in two different organisations" do
       click_link("Ajouter un agent", match: :first)
       fill_in("Email", with: "bob@test.com")
-      select(pmi.name, from: "Services")
+      check(pmi.name)
       click_button("Envoyer une invitation")
       expect(Agent.count).to eq(2)
 
@@ -43,7 +43,7 @@ RSpec.describe "Agents can be managed by organisation admins" do
           click_link "Agents"
           click_link "Ajouter un agent", match: :first
           fill_in "Email", with: "jean@paul.com"
-          select(pmi.name, from: "Services")
+          check(pmi.name)
           click_button "Envoyer une invitation"
 
           open_email("jean@paul.com")
@@ -59,7 +59,7 @@ RSpec.describe "Agents can be managed by organisation admins" do
           click_link "Agents"
           click_link "Ajouter un agent", match: :first
           fill_in "Email", with: "jean@paul.com"
-          select(pmi.name, from: "Services")
+          check(pmi.name)
           click_button "Envoyer une invitation"
 
           open_email("jean@paul.com")
@@ -90,7 +90,7 @@ RSpec.describe "Agents can be managed by organisation admins" do
 
       click_link "Ajouter un agent", match: :first
       fill_in "Email", with: "jean@paul.com"
-      select(pmi.name, from: "Services")
+      check(pmi.name)
       click_button "Envoyer une invitation"
 
       expect_page_title("Invitations en cours pour Organisation n°1")
@@ -136,14 +136,14 @@ RSpec.describe "Agents can be managed by organisation admins" do
       click_link("Services")
       check("CSS")
       click_button("Enregistrer")
-      expect(page).to have_content("Configuration enregistrée")
+      expect(page).to have_content("Liste des services disponibles mise à jour")
       logout
 
       login_as(organisation_admin, scope: :agent)
 
       visit new_admin_organisation_agent_path(organisation1)
       fill_in "Email", with: "jean@paul.com"
-      select("CSS", from: "Services")
+      check("CSS")
       click_button "Envoyer une invitation"
 
       expect(Agent.last.services.first).to eq(new_service)
