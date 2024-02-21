@@ -50,6 +50,7 @@ class WebSearchContext < SearchContext
     # dupliqué de WebInvitationSearchContext
     motifs = motifs.search_by_name_with_location_type(@motif_name_with_location_type) if @motif_name_with_location_type.present?
     motifs = motifs.where(service: service) if @service_id.present?
+    motifs = motifs.where(service: @agent_services) if @agent_services.present?
     motifs = motifs.where(organisation_id: organisation_id) if organisation_id.present?
     motifs = motifs.where(id: @motif_id) if @motif_id.present?
     motifs

@@ -8,9 +8,10 @@ class AgentPrescriptionSearchContext < WebSearchContext
     },
   ].freeze
 
-  def initialize(user:, current_organisation:, query_params: {})
+  def initialize(user:, current_organisation:, query_params: {}, agent_services:)
     super(user: user, query_params: query_params)
     @current_organisation = current_organisation
+    @agent_services = agent_services
   end
 
   attr_reader :user
