@@ -9,17 +9,6 @@
       .card-body.js_agent_role_form
         = simple_form_for [:admin, @agent], url: admin_organisation_agents_path(current_organisation, @agent), html: { method: :post } do |f|
           = render "devise/shared/error_messages", resource: @agent
-          label Services
-          .text-muted.form-text
-            | Le service correspond généralement à un ensemble d’agents qui exercent une profession similaire ou identique (exemple : le service PMI, le service RSA). Chaque agent est obligatoirement rattaché à au moins un service et a donc accès aux plannings des agents de ce même service : il peut alors y ajouter, modifier ou supprimer des rendez-vous pour ses collègues ou pour lui-même.
-            br
-            | Sélectionnez ci-dessous le ou les services auquel votre agent sera rattaché.  :
-          = f.association :services, collection: @services, include_blank: false, as: :check_boxes, label: ""
-          - if policy([:agent, current_territory]).edit?
-            small.form-text.text-muted.mb-4
-              = "Si le service dont vous avez besoin n'apparaît pas dans cette liste, vous pouvez "
-              = link_to("activer des services supplémentaires", edit_admin_territory_services_path(current_territory, redirect_to_organisation_id: current_organisation.id))
-
           - # rubocop:disable Rails/OutputSafety
           = f.simple_fields_for @agent_role do |ff|
             = ff.input :access_level, \
@@ -39,3 +28,14 @@
             = f.input :last_name, input_html: { autocomplete: "off"}, label: "Nom"
             .text-right
               = f.button :submit, "Ajouter l'intervenant"
+
+          label Services
+          .text-muted.form-text
+            | Le service correspond généralement à un ensemble d’agents qui exercent une profession similaire ou identique (exemple : le service PMI, le service RSA). Chaque agent est obligatoirement rattaché à au moins un service et a donc accès aux plannings des agents de ce même service : il peut alors y ajouter, modifier ou supprimer des rendez-vous pour ses collègues ou pour lui-même.
+            br
+            | Sélectionnez ci-dessous le ou les services auquel votre agent sera rattaché.  :
+          = f.association :services, collection: @services, include_blank: false, as: :check_boxes, label: ""
+          - if policy([:agent, current_territory]).edit?
+            small.form-text.text-muted.mb-4
+              = "Si le service dont vous avez besoin n'apparaît pas dans cette liste, vous pouvez "
+              = link_to("activer des services supplémentaires", edit_admin_territory_services_path(current_territory, redirect_to_organisation_id: current_organisation.id))
