@@ -2,10 +2,11 @@
 set -e
 # Inspiré par https://doc.scalingo.com/platform/databases/duplicate
 
-if [ "$#" -ne 2 ]; then
-    echo "Usage ./scripts/etl.sh <app> <env>"
+if [ "$#" -lt 2 ]; then
+    echo "Usage ./scripts/etl.sh <app> <env> <schema optionnel>"
     echo "<app> choisir parmis: rdvi, rdvsp"
     echo "<env> choisir parmis: demo, prod"
+    echo "<schema> sera par défaut le nom de l'app, mais peut être surchargé ici"
     exit 1
 fi
 
@@ -18,11 +19,10 @@ available_apps["rdvsp_prod"]="production-rdv-solidarites"
 
 app=$1
 env=$2
-
-schema_name=$app
+schema_name="${3:-$app}"
 database=${available_apps["${app}_${env}"]}
 
-read -p "Le process va maintenant importer <${schema_name}> avec l'env <${env}>, voulez-vous continuer ? (O/n): " answer
+read -p "Le process va maintenant importer <${app}> avec l'env <${env}> dans le schema <${schema_name}>, voulez-vous continuer ? (O/n): " answer
 
 if [[ ! "$answer" =~ ^[Oo]$ ]]; then
   echo "Process annulé."
@@ -60,7 +60,7 @@ prod_addon_id="$( scalingo --region osc-secnum-fr1 --app "${database}" addons \
 scalingo  --region osc-secnum-fr1 --app "${database}" --addon "${prod_addon_id}" backups-download --output "${archive_name}"
 
 # Extract the archive containing the downloaded backup:
-tar --extract --verbose --file="${archive_name}" --directory="/app/"
+tar --extract --verbose --file="${archive_name}" --directory="/app/" 2>/dev/null
 
 echo "Suppression du role postgres utilisé par metabase"
 scalingo database-delete-user --region osc-secnum-fr1 --app rdv-service-public-etl --addon "${etl_addon_id}" rdv_service_public_metabase
@@ -70,9 +70,10 @@ echo "Chargement du dump..."
 pg_restore -O -x -f raw.sql *.pgsql
 sed -i "s/public/${schema_name}/g" raw.sql
 
-psql "${DATABASE_URL}" -c "DROP SCHEMA IF EXISTS \"${schema_name}\" CASCADE;"
-
-psql "${DATABASE_URL}" -c "CREATE SCHEMA \"${schema_name}\";"
+if [[ "$schema_name" != "public" ]]; then
+  psql "${DATABASE_URL}" -c "DROP SCHEMA IF EXISTS \"${schema_name}\" CASCADE;"
+  psql "${DATABASE_URL}" -c "CREATE SCHEMA \"${schema_name}\";"
+fi
 
 psql  -v ON_ERROR_STOP=1 "${DATABASE_URL}" < /app/raw.sql
 
