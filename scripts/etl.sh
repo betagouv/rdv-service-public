@@ -46,10 +46,6 @@ etl_addon_id="$( scalingo --region osc-secnum-fr1 --app rdv-service-public-etl a
   | cut -d "|" -f 3 \
   | tr -d " " )"
 
-echo "Upgrade du Postgres d'ETL pour avoir plus de RAM"
-# On fait cette opération avant de télécharger le dump pour que le provisionnement du nouveau plan ai le temps de se finir avant le pg_restore
-scalingo --region osc-secnum-fr1 --app rdv-service-public-etl addons-upgrade "${etl_addon_id}"  postgresql-starter-8192
-
 # Retrieve the production addon id:
 prod_addon_id="$( scalingo --region osc-secnum-fr1 --app "${database}" addons \
                  | grep "PostgreSQL" \
@@ -82,12 +78,12 @@ psql  -v ON_ERROR_STOP=0 "${DATABASE_URL}" < /app/raw.sql
 echo "Anonymisation de la base"
 time bundle exec rails runner scripts/anonymize_database.rb "${app}" "${schema_name}"
 
+psql "${DATABASE_URL}" -c "GRANT USAGE ON SCHEMA ${schema_name} TO rdv_service_public_metabase;"
+psql "${DATABASE_URL}" -c "GRANT SELECT ON ALL TABLES IN SCHEMA ${schema_name} TO rdv_service_public_metabase;"
+
 echo "Re-création du role Postgres rdv_service_public_metabase"
 echo "Merci de copier/coller le mot de passe stocké dans METABASE_DB_ROLE_PASSWORD: ${METABASE_DB_ROLE_PASSWORD}"
 scalingo database-create-user --region osc-secnum-fr1 --app rdv-service-public-etl --addon "${etl_addon_id}" --read-only rdv_service_public_metabase
 
-# On fait cette opération après la création du user, puisqu'elle cause un peu de downtime sur la db
-echo "Downgrade du Postgres d'ETL pour revenir a la normale"
-scalingo --region osc-secnum-fr1 --app rdv-service-public-etl addons-upgrade "${etl_addon_id}" postgresql-starter-512
 
 

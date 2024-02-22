@@ -265,6 +265,8 @@ class Anonymizer::Rules::RdvInsertion
         rate_of_users_oriented_grouped_by_month
         users_with_rdv_count
         users_with_rdv_count_grouped_by_month
+        rate_of_users_oriented_in_less_than_15_days
+        rate_of_users_oriented_in_less_than_15_days_by_month
       ],
     },
     tag_organisations: {
