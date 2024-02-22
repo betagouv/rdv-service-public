@@ -1,14 +1,14 @@
 class Anonymizer::Core
-  attr_reader :table_name, :rules
+  attr_reader :table_name, :rules, :table_name_without_schema
 
   RULES = {
     "rdvi" => Anonymizer::Rules::RdvInsertion,
     "rdvsp" => Anonymizer::Rules::RdvServicePublic,
   }.freeze
 
-  def self.anonymize_all_data!(service = "rdvsp")
+  def self.anonymize_all_data!(service: "rdvsp", schema: service)
     all_tables(service).each do |table_name|
-      anonymize_table!("#{service}.#{table_name}", service)
+      anonymize_table!("#{schema}.#{table_name}", service)
     end
   end
 
@@ -40,6 +40,7 @@ class Anonymizer::Core
   def initialize(table_name, rules = Anonymizer::Rules::RdvServicePublic)
     @table_name = table_name
     @rules = rules
+    @table_name_without_schema = table_name.split(".").last
   end
 
   def anonymize_record!(record)
@@ -58,7 +59,7 @@ class Anonymizer::Core
       raise "Attention, il semble que vous êtes en train d'anonymiser des données d'une appli web"
     end
 
-    if table_name.in?(rules::TRUNCATED_TABLES)
+    if table_name_without_schema.in?(rules::TRUNCATED_TABLES)
       db_connection.execute("TRUNCATE #{ActiveRecord::Base.sanitize_sql(table_name)}")
       return
     end
@@ -93,11 +94,11 @@ class Anonymizer::Core
   end
 
   def anonymized_column_names
-    rules::RULES.dig(table_name, :anonymized_column_names) || []
+    rules::RULES.dig(table_name_without_schema, :anonymized_column_names) || []
   end
 
   def non_anonymized_column_names
-    rules::RULES.dig(table_name, :non_anonymized_column_names) || []
+    rules::RULES.dig(table_name_without_schema, :non_anonymized_column_names) || []
   end
 
   def anonymized_attributes
