@@ -11,7 +11,7 @@
       .d-flex
         .flex-grow-1.lead.pl-3.pt-2
           = rdv.motif_name
-        .rdv-status.px-2.py-2 class="rdv-status-#{rdv.status}"
+        .rdv-status.px-2.py-2 class="rdv-status-#{rdv.status}" id="rdv-#{rdv.id}-status"
           = rdv.human_attribute_value(:status).upcase
       .card-body
         - rdv.participations.each do |participation|
@@ -19,25 +19,26 @@
             user = participation.user
             phone_number = user.user_to_notify&.phone_number
             email = user.user_to_notify&.email
-          span.font-weight-bold.lead
-            = user
-          - if user.birth_date
+          div
+            span.font-weight-bold.lead
+              = user
+            - if user.birth_date
+              span.mx-1
+                = "(né(e) le #{I18n.l(participation.user.birth_date)})"
+            | &nbsp - &nbsp
             span.mx-1
-              = "(né(e) le #{I18n.l(participation.user.birth_date)})"
-          | &nbsp - &nbsp
-          span.mx-1
-            - if email
-              = email
-            - else
-              span.font-weight-light.font-italic
-                | Email non renseigné
-          | &nbsp - &nbsp
-          span.mx-1
-            - if phone_number
-              = phone_number
-            - else
-              span.font-weight-light.font-italic
-                | Téléphone non renseigné
+              - if email.present?
+                = email
+              - else
+                span.font-weight-light.font-italic
+                  | Email non renseigné
+            | &nbsp - &nbsp
+            span.mx-1
+              - if phone_number.present?
+                = phone_number
+              - else
+                span.font-weight-light.font-italic
+                  | Téléphone non renseigné
         .mt-2
           | Contexte :
           | &nbsp
@@ -50,6 +51,6 @@
           i.fa.fa-map-marker-alt>
           = rdv.lieu.name
         .mt-2
-          | Agent :
+          | Agent(s) :
           | &nbsp
           = agents_to_sentence(rdv.agents)
