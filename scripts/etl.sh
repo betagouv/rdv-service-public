@@ -78,7 +78,7 @@ fi
 psql  -v ON_ERROR_STOP=1 "${DATABASE_URL}" < /app/raw.sql
 
 echo "Anonymisation de la base"
-time bundle exec rails runner scripts/anonymize_database.rb "${schema_name}"
+time bundle exec rails runner scripts/anonymize_database.rb "${app}" "${schema_name}"
 
 echo "Re-création du role Postgres rdv_service_public_metabase"
 echo "Merci de copier/coller le mot de passe stocké dans METABASE_DB_ROLE_PASSWORD: ${METABASE_DB_ROLE_PASSWORD}"
