@@ -2,6 +2,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
   layout :user_devise_layout
 
   include CanHaveRdvWizardContext
+
+  before_action :set_rdv_insertion_organisations, only: %i[edit destroy] # rubocop:disable Rails/LexicallyScopedActionFilter
   after_action :allow_iframe
 
   def create
@@ -12,11 +14,12 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   def destroy
     authorize([:user, resource])
-    if resource.organisations.none? { |org| org.verticale == "rdv_insertion" }
+    # users from rdv-insertion have to be monitored wether they want it or not, so we don't allow them to destroy themselves
+    if @rdv_insertion_organisations.empty?
       resource.soft_delete
     else
-      resource.organisations.reject { |org| org.verticale == "rdv_insertion" }.each { |org| resource.soft_delete(org) }
-      resource.delete_devise_account
+      non_rdv_insertion_organisations.each { |org| resource.soft_delete(org) }
+      resource.delete_credentials_and_access_informations
     end
     Devise.sign_out_all_scopes ? sign_out : sign_out(resource_name)
     set_flash_message! :notice, :destroyed
@@ -29,6 +32,14 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   private
+
+  def set_rdv_insertion_organisations
+    @rdv_insertion_organisations = resource.organisations - non_rdv_insertion_organisations
+  end
+
+  def non_rdv_insertion_organisations
+    @non_rdv_insertion_organisations = resource.organisations.reject { |org| org.verticale == "rdv_insertion" }
+  end
 
   def build_resource(hash = {})
     form = Users::RegistrationForm.new(hash)
