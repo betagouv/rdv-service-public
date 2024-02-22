@@ -39,14 +39,15 @@
               - else
                 span.font-weight-light.font-italic.text-muted
                   | Téléphone non renseigné
-        .mt-2
-          | Contexte :
-          | &nbsp
-          - if rdv.context.present?
-            = rdv.context
-          - else
-            span.font-weight-light.font-italic.text-muted
-              | Pas de contexte renseigné
+        - if current_organisation.territory.enable_context_field
+          .mt-2
+            | Contexte :
+            | &nbsp
+            - if rdv.context.present?
+              = rdv.context
+            - else
+              span.font-weight-light.font-italic.text-muted
+                | Pas de contexte renseigné
         .mt-2
           i.fa.fa-map-marker-alt>
           = rdv.lieu.name
