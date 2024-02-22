@@ -73,9 +73,11 @@ sed -i "s/public/${schema_name}/g" raw.sql
 if [[ "$schema_name" != "public" ]]; then
   psql "${DATABASE_URL}" -c "DROP SCHEMA IF EXISTS \"${schema_name}\" CASCADE;"
   psql "${DATABASE_URL}" -c "CREATE SCHEMA \"${schema_name}\";"
+else
+  psql  -v ON_ERROR_STOP=0 "${DATABASE_URL}" < /app/scripts/clean_public_schema.sql
 fi
 
-psql  -v ON_ERROR_STOP=1 "${DATABASE_URL}" < /app/raw.sql
+psql  -v ON_ERROR_STOP=0 "${DATABASE_URL}" < /app/raw.sql
 
 echo "Anonymisation de la base"
 time bundle exec rails runner scripts/anonymize_database.rb "${app}" "${schema_name}"
