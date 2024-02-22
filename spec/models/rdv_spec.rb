@@ -403,7 +403,7 @@ RSpec.describe Rdv, type: :model do
       rdv = create(:rdv, organisation: organisation, agents: [admin])
       create(:rdv, organisation: other_organisation, agents: [admin])
 
-      options = { lieu_id: "" }
+      options = { lieu_ids: "" }
       expect(described_class.search_for(organisation, options)).to eq([rdv])
     end
 
@@ -425,7 +425,7 @@ RSpec.describe Rdv, type: :model do
       rdv = create(:rdv, lieu: lieu, organisation: organisation, agents: [admin])
       create(:rdv, lieu: create(:lieu), organisation: organisation, agents: [admin])
 
-      options = { "lieu_id" => lieu.id }
+      options = { "lieu_ids" => [lieu.id] }
       expect(described_class.search_for(organisation, options)).to eq([rdv])
     end
 
@@ -437,7 +437,7 @@ RSpec.describe Rdv, type: :model do
       rdv = create(:rdv, motif: motif, organisation: organisation, agents: [admin])
       create(:rdv, motif: autre_motif, organisation: organisation, agents: [admin])
 
-      options = { "motif_id" => motif.id }
+      options = { "motif_ids" => [motif.id] }
       expect(described_class.search_for(organisation, options)).to eq([rdv])
     end
 
@@ -779,6 +779,42 @@ RSpec.describe Rdv, type: :model do
       rdv.participations.first.update(status: "unknown")
       rdv.update_rdv_status_from_participation
       expect(rdv.status).to eq("unknown")
+    end
+  end
+
+  describe "#overlapping_absences" do
+    subject { rdv.overlapping_absences }
+
+    let(:agent) { create(:agent) }
+    let(:now) { Time.zone.parse("2021-05-03 09h00") }
+    let(:rdv) { create(:rdv, starts_at: now, ends_at: now + 1.hour, agents: [agent]) }
+    let!(:absence) do
+      create(
+        :absence,
+        agent: agent,
+        first_day: now.to_date,
+        start_time: Tod::TimeOfDay.new(9),
+        end_time: Tod::TimeOfDay.new(10),
+        recurrence: Montrose.every(:week, on: ["monday"], starts: Time.zone.parse("20210503 00:00"), until: nil)
+      )
+    end
+
+    before { travel_to now }
+
+    it "returns absence overlapping rdv" do
+      expect(subject).to match_array([absence])
+    end
+
+    context "rdv interval is consecutive to absence interval: Absence for 08h-09h and Rdv for 09h-10h" do
+      before do
+        absence.start_time = Tod::TimeOfDay.new(9)
+        absence.start_time = Tod::TimeOfDay.new(10)
+        absence.save!
+      end
+
+      it "does not find any overlapping absence" do
+        expect(subject).to be_empty
+      end
     end
   end
 end

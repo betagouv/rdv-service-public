@@ -63,7 +63,6 @@ agent_cnfs = Agent.new(
     allow_to_manage_teams: false,
     allow_to_manage_access_rights: false,
     allow_to_invite_agents: false,
-    allow_to_download_metrics: false,
   }]
 )
 agent_cnfs.skip_confirmation!

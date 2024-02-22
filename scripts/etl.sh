@@ -66,11 +66,6 @@ echo "Suppression du role postgres utilisé par metabase"
 scalingo database-delete-user --region osc-secnum-fr1 --app rdv-service-public-etl --addon "${etl_addon_id}" rdv_service_public_metabase
 echo "La base de données n'est plus accessible par metabase"
 
-etl_addon_id="$( scalingo --region osc-secnum-fr1 --app rdv-service-public-etl addons \
-                 | grep "PostgreSQL" \
-                 | cut -d "|" -f 3 \
-                 | tr -d " " )"
-
 echo "Chargement du dump..."
 pg_restore -O -x -f raw.sql "${archive_name}"
 sed -i "s/public/${schema_name}/g" raw.sql

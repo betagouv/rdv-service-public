@@ -1,7 +1,7 @@
 - content_for(:title) { "Ajouter un participant" }
 
 .row.justify-content-md-center
-  .col-md-8
+  .col-md-12.col-lg-8
     = simple_form_for(@rdv, url: admin_organisation_rdvs_collectif_path(current_organisation), method: :put) do |f|
       .card
         .card-header

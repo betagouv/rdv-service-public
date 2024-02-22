@@ -174,8 +174,10 @@ RSpec.describe Admin::RdvsController, type: :controller do
         organisation_id: organisation.id.to_s,
         agent_id: "",
         user_id: "",
-        lieu_id: [""],
+        lieu_ids: [""],
+        motif_ids: [""],
         status: "",
+        scoped_organisation_ids: [organisation.id.to_s],
       }
 
       expect do
@@ -201,44 +203,42 @@ RSpec.describe Admin::RdvsController, type: :controller do
   end
 
   describe "POST #participations_export" do
-    context "agent with rights" do
-      let!(:access_rights) { create(:agent_territorial_access_right, agent: agent, territory: territory, allow_to_download_metrics: true) }
+    it "redirect to index" do
+      post :participations_export, params: { organisation_id: organisation.id }
+      expect(response).to redirect_to(admin_organisation_rdvs_path)
+    end
 
-      it "redirect to index" do
-        post :participations_export, params: { organisation_id: organisation.id }
-        expect(response).to redirect_to(admin_organisation_rdvs_path)
-      end
+    it "sends export email" do
+      params = {
+        start: nil,
+        end: nil,
+        organisation_id: organisation.id.to_s,
+        agent_id: "",
+        user_id: "",
+        status: "",
+        motif_ids: [""],
+        lieu_ids: [""],
+        scoped_organisation_ids: [""],
+      }
 
-      it "sends export email" do
+      expect do
+        post :participations_export, params: { organisation_id: organisation.id }.merge(params)
+      end.to have_enqueued_job(ParticipationsExportJob).with(agent: agent, organisation_ids: [organisation.id], options: params.stringify_keys)
+    end
+
+    context "when passing scoped_organisation_id param to which agent not belong" do
+      it "does not enqueue e-mail" do
+        other_organisation = create(:organisation)
         params = {
-          start: nil,
-          end: nil,
-          organisation_id: organisation.id.to_s,
-          agent_id: "",
-          user_id: "",
-          lieu_id: [""],
-          status: "",
+          organisation_id: organisation.id,
+          scoped_organisation_id: [other_organisation.id],
         }
 
         expect do
-          post :participations_export, params: { organisation_id: organisation.id }.merge(params)
-        end.to have_enqueued_job(ParticipationsExportJob).with(agent: agent, organisation_ids: [organisation.id], options: params.stringify_keys)
-      end
+          post :participations_export, params: params
+        end.not_to have_enqueued_mail
 
-      context "when passing scoped_organisation_id param to which agent not belong" do
-        it "does not enqueue e-mail" do
-          other_organisation = create(:organisation)
-          params = {
-            organisation_id: organisation.id,
-            scoped_organisation_id: [other_organisation.id],
-          }
-
-          expect do
-            post :participations_export, params: params
-          end.not_to have_enqueued_mail
-
-          expect(response).to have_http_status(:redirect) # Pundit redirects when authorization fails
-        end
+        expect(response).to have_http_status(:redirect) # Pundit redirects when authorization fails
       end
     end
   end

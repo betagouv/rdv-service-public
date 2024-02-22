@@ -4,7 +4,7 @@
   = t("agents.create_cta")
 
 .row.justify-content-center
-  .col-md-6
+  .col-md-12.col-lg-8
     .card
       .card-body.js_agent_role_form
         = simple_form_for [:admin, @agent], url: admin_organisation_agents_path(current_organisation, @agent), html: { method: :post } do |f|
