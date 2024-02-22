@@ -3,7 +3,7 @@ fr:
   admin:
     organisations:
       index:
-        configuration: Configuration
+        configuration: Espace Admin
         create: Créer
     rdvs:
       message:
