@@ -60,7 +60,7 @@ class Anonymizer::Core
     end
 
     if table_name_without_schema.in?(rules::TRUNCATED_TABLES)
-      db_connection.execute("TRUNCATE #{ActiveRecord::Base.sanitize_sql(table_name)}")
+      db_connection.execute("TRUNCATE #{ActiveRecord::Base.sanitize_sql(table_name)} CASCADE")
       return
     end
 
