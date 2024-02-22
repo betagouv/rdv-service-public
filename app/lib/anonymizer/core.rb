@@ -2,11 +2,11 @@ class Anonymizer::Core
   attr_reader :table_name, :rules
 
   RULES = {
-    "rdvinsertionprod" => Anonymizer::Rules::RdvInsertion,
-    "productionrdvsolidarites" => Anonymizer::Rules::RdvServicePublic,
+    "rdvi" => Anonymizer::Rules::RdvInsertion,
+    "rdvsp" => Anonymizer::Rules::RdvServicePublic,
   }.freeze
 
-  def self.anonymize_all_data!(service = "productionrdvsolidarites")
+  def self.anonymize_all_data!(service = "rdvsp")
     all_tables(service).each do |table_name|
       anonymize_table!("#{service}.#{table_name}", service)
     end

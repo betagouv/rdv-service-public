@@ -2,6 +2,33 @@
 set -e
 # Inspiré par https://doc.scalingo.com/platform/databases/duplicate
 
+if [ "$#" -ne 2 ]; then
+    echo "Usage ./scripts/etl.sh <app> <env>"
+    echo "<app> choisir parmis: rdvi, rdvsp"
+    echo "<env> choisir parmis: demo, prod"
+    exit 1
+fi
+
+declare -A available_apps
+
+available_apps["rdvi_demo"]="rdv-insertion-demo"
+available_apps["rdvi_prod"]="rdv-insertion-prod"
+available_apps["rdvsp_demo"]="demo-rdv-solidarites"
+available_apps["rdvsp_prod"]="production-rdv-solidarites"
+
+app=$1
+env=$2
+
+schema_name=$app
+database=${available_apps["${app}_${env}"]}
+
+read -p "Le process va maintenant importer <${schema_name}> avec l'env <${env}>, voulez-vous continuer ? (O/n): " answer
+
+if [[ ! "$answer" =~ ^[Oo]$ ]]; then
+  echo "Process annulé."
+  exit 0
+fi
+
 archive_name="backup.tar.gz"
 
 # Install the Scalingo CLI tool in the container:
@@ -23,17 +50,14 @@ echo "Upgrade du Postgres d'ETL pour avoir plus de RAM"
 # On fait cette opération avant de télécharger le dump pour que le provisionnement du nouveau plan ai le temps de se finir avant le pg_restore
 scalingo --region osc-secnum-fr1 --app rdv-service-public-etl addons-upgrade "${etl_addon_id}"  postgresql-starter-8192
 
-# Default to RDVS or use the first argument as the app name:
-app_name="${1:-production-rdv-solidarites}"
-
 # Retrieve the production addon id:
-prod_addon_id="$( scalingo --region osc-secnum-fr1 --app "${app_name}" addons \
+prod_addon_id="$( scalingo --region osc-secnum-fr1 --app "${database}" addons \
                  | grep "PostgreSQL" \
                  | cut -d "|" -f 3 \
                  | tr -d " " )"
 
 # Download the latest backup available for the specified addon:
-scalingo  --region osc-secnum-fr1 --app "${app_name}" --addon "${prod_addon_id}" backups-download --output "${archive_name}"
+scalingo  --region osc-secnum-fr1 --app "${database}" --addon "${prod_addon_id}" backups-download --output "${archive_name}"
 
 # Extract the archive containing the downloaded backup:
 tar --extract --verbose --file="${archive_name}" --directory="/app/"
@@ -46,12 +70,6 @@ etl_addon_id="$( scalingo --region osc-secnum-fr1 --app rdv-service-public-etl a
                  | grep "PostgreSQL" \
                  | cut -d "|" -f 3 \
                  | tr -d " " )"
-
-tables_to_exclude="$(bundle exec rails runner scripts/anonymizer_truncated_tables.rb ${app_name})"
-# On enlève des logs écrits par des gems (dont Skylight) pour garder uniquement les noms de tables
-tables_to_exclude=$(echo "${tables_to_exclude}" | rev | cut -d' ' -f1 | rev)
-
-schema_name=$(echo "$app_name" | sed 's/-//g')
 
 echo "Chargement du dump..."
 pg_restore -O -x -f raw.sql "${archive_name}"
