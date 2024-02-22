@@ -1,4 +1,4 @@
-Anonymizer::Core.anonymize_all_data!(ARGV[0])
+Anonymizer::Core.anonymize_all_data!(service: ARGV[0])
 
 if ARGV[0] == "rdvsp"
   # Sanity checks

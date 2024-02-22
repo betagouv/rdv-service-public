@@ -67,7 +67,7 @@ scalingo database-delete-user --region osc-secnum-fr1 --app rdv-service-public-e
 echo "La base de données n'est plus accessible par metabase"
 
 echo "Chargement du dump..."
-pg_restore -O -x -f raw.sql "${archive_name}"
+pg_restore -O -x -f raw.sql *.pgsql
 sed -i "s/public/${schema_name}/g" raw.sql
 
 psql "${DATABASE_URL}" -c "DROP SCHEMA IF EXISTS \"${schema_name}\" CASCADE;"
