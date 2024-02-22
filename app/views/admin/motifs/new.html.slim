@@ -9,6 +9,6 @@
       = link_to "Vos motifs", admin_organisation_motifs_path(current_organisation)
     li.breadcrumb-item.active Nouveau un motif
 
-.row.justify-content-center
-  .col-md-12.col-lg-8
+.row
+  .col-md-12
     = render "form", motif: @motif

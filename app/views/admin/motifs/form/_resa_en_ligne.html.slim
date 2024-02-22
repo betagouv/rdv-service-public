@@ -1,0 +1,92 @@
+.card#bookable_by_section
+  .card-body
+    h5.card-title= Motif.human_attribute_name("bookable_by")
+
+    p.text-muted.font-14= Motif.human_attribute_name("bookable_by_hint")
+
+    .form-row
+      .col-md-12
+        = label_tag do
+          = f.radio_button(:bookable_by, :agents)
+          span.ml-1= I18n.t("activerecord.attributes.motif/bookable_by/hint.agents", organisation_name: @motif.organisation.name)
+          p.text-muted.font-14= "Les agents peuvent ajouter des rendez-vous à l'agenda de leurs collègues"
+
+      .form-row
+        .col-md-12
+          = label_tag do
+            = f.radio_button(:bookable_by, :agents_and_prescripteurs)
+            span.ml-1= I18n.t("activerecord.attributes.motif/bookable_by/hint.agents_and_prescripteurs")
+            p.text-muted.font-14
+              = "Les prescripteurs sont des agents d'une autre organisation du service public, qui orientent des usagers vers le service dont ils ont besoin."
+              br
+              = "Ils pourront prendre rendez-vous uniquement sur les plages d'ouvertures définies par les agents de #{@motif.organisation.name}"
+
+    - if current_organisation.rdv_insertion?
+      .form-row
+        .col-md-12
+          = label_tag do
+            = f.radio_button(:bookable_by, :agents_and_prescripteurs_and_invited_users)
+            span.ml-1= I18n.t("activerecord.attributes.motif/bookable_by/hint.agents_and_prescripteurs_and_invited_users")
+            p.text-muted.font-14= "Les usagers avec une invitation envoyée par RDV-Insertion pourront prendre rendez-vous"
+
+    .form-row
+      .col-md-12
+        = label_tag do
+          = f.radio_button(:bookable_by, :everyone)
+          span.ml-1= I18n.t("activerecord.attributes.motif/bookable_by/hint.everyone")
+          p.text-muted.font-14= "Les usagers pourront aussi prendre rendez-vous en ligne sur les plages d'ouverture définies par les agents de #{@motif.organisation.name}"
+
+    .form-row.js-rdvs-editable
+      .col-md-4= f.input :min_public_booking_delay, collection: min_max_delay_options
+      .col-md-4= f.input :max_public_booking_delay, collection: min_max_delay_options
+
+    .js-rdvs-editable
+      = f.input(:rdvs_editable_by_user)
+      p.text-muted.font-14= Motif.human_attribute_name("rdvs_editable_by_user_hint")
+
+.card
+  .card-body
+    h5.card-title= Motif.human_attribute_name("follow_up_short")
+    p.text-muted.font-14= Motif.human_attribute_name("follow_up_warning")
+    = f.input :follow_up
+
+- unless current_domain.online_reservation_with_public_link
+  .card.js-sectorisation-card
+    .card-body
+      h5.card-title.mb-2= Motif.human_attribute_name("sectorisation_level_title")
+      .text-muted.mb-3
+        span>= Motif.human_attribute_name("sectorisation_level_hint")
+        = link_to "https://doc.rdv-solidarites.fr/guide-utilisation/pour-un-territoire/sectorisation-geographique/" do
+          span> Documentation sur la sectorisation
+          i.fa.fa-external-link-alt>
+      .mb-2
+        = label_tag do
+          = f.radio_button(:sectorisation_level, Motif::SECTORISATION_LEVEL_DEPARTEMENT)
+          span.ml-1= Motif.human_attribute_value(:sectorisation_level, Motif::SECTORISATION_LEVEL_DEPARTEMENT, context: :hint)
+        = label_tag do
+          = f.radio_button(:sectorisation_level, Motif::SECTORISATION_LEVEL_ORGANISATION)
+          span.ml-1= Motif.human_attribute_value(:sectorisation_level, Motif::SECTORISATION_LEVEL_ORGANISATION, context: :hint)
+          .text-muted.font-14.my-1.ml-3
+            - sectors_attributed_to_orga = Sector.attributed_to_organisation(current_organisation)
+            = t("motifs.form.sectorisation_level.sectors_attributed_to_orga", count: sectors_attributed_to_orga.count, sectors: sectors_attributed_to_orga.map(&:name).to_sentence.truncate(100), organisation: current_organisation.name)
+        = label_tag do
+          = f.radio_button(:sectorisation_level, Motif::SECTORISATION_LEVEL_AGENT)
+          span.ml-1= Motif.human_attribute_value(:sectorisation_level, Motif::SECTORISATION_LEVEL_AGENT, context: :hint)
+          - if motif.service.present?
+            - attributions_group = SectorAttribution.level_agent_grouped_by_service(current_organisation).fetch(motif.service_id, {agents_count: 0, attributions: []})
+            .text-muted.font-14.my-1.ml-3
+              = t( \
+                "motifs.form.sectorisation_level.sectors_attributed_to_agents", \
+                count: attributions_group[:agents_count], \
+                service: motif.service.name, \
+                sectors_count_human: t("motifs.index.sectorisation_level_organisation", count: attributions_group[:sectors_count]), \
+                sectors: attributions_group[:attributions].map { "#{_1.agent.full_name} -> #{_1.sector.name}" }.to_sentence.truncate(100) \
+              )
+      - if current_agent.territorial_admin_in?(current_organisation.territory)
+        = link_to "Configuration des secteurs", admin_territory_sectors_path(current_organisation.territory)
+
+.card
+  .card-body
+    h5.card-title= Motif.human_attribute_name("for_secretariat_short")
+    p.text-muted.font-14= Motif.human_attribute_name("for_secretariat_hint")
+    = f.input :for_secretariat, label: Motif.human_attribute_name("for_secretariat_label")
