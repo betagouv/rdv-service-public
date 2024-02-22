@@ -46,12 +46,6 @@ nav
                 i.fa.fa-sign-out
                 span Se déconnecter
 
-        - if show_checklist?(current_organisation, current_agent)
-          li.side-nav-item.mb-4.pl-3.pr-2
-            = active_link_to admin_organisation_setup_checklist_path(current_organisation)
-              i.far.fa-calendar>
-              span.ml-1 Premiers pas
-
         li.side-nav-item.mb-4.pl-3.pr-2
           a[
             data-toggle="collapse"

@@ -53,8 +53,6 @@ gem "paper_trail", "< 13.0"
 gem "activerecord-postgres_enum"
 # A Ruby client library for Redis
 gem "redis", "< 5.0"
-# A drop-in replacement for e.g. MemCacheStore to store Rails sessions (and Rails sessions only) in Redis.
-gem "redis-session-store", "0.11.4"
 
 # Devise / auth
 # Flexible authentication solution for Rails with Warden

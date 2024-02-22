@@ -1,4 +1,4 @@
-describe Admin::LieuxController, type: :controller do
+RSpec.describe Admin::LieuxController, type: :controller do
   render_views
 
   let!(:organisation) { create(:organisation) }

@@ -5,8 +5,6 @@ RSpec.describe CustomMailerDeliveryJob do
     end
   end
 
-  stub_sentry_events
-
   it "discards job when deserialization fails because if ActiveRecord::RecordNotFound" do
     absence = create(:absence)
     mailer.a_sample_email(absence).deliver_later

@@ -1,4 +1,4 @@
-describe "Agents can export their calendar to other tools, such as Outlook or Google calendar" do
+RSpec.describe "Agents can export their calendar to other tools, such as Outlook or Google calendar" do
   it "allows resetting the link and shows the agent's name in the link to make it clear that it's their info" do
     uid = "37b24280-7015-4a8a-b752-907e33171106"
     allow(SecureRandom).to receive(:uuid).and_return(uid)

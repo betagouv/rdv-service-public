@@ -1,4 +1,4 @@
-describe RdvBlueprint do
+RSpec.describe RdvBlueprint do
   subject(:json) { JSON.parse(rendered) }
 
   let(:rendered) { described_class.render(rdv, { root: :rdv }) }

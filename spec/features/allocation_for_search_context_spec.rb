@@ -1,4 +1,4 @@
-describe "Allocation For Search Context" do
+RSpec.describe "Allocation For Search Context" do
   it "stay under 5500" do
     departement_number = "75"
     address = "20 avenue de Ségur 75007 Paris"

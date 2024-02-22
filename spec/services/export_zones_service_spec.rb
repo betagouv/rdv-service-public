@@ -1,4 +1,4 @@
-describe ExportZonesService, type: :service do
+RSpec.describe ExportZonesService, type: :service do
   describe "#perform" do
     subject { described_class.new(territory.zones).perform }
 

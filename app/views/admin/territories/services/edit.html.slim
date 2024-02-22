@@ -5,12 +5,17 @@
     .card
       .card-body
         h1.card-title Services
-        p.text-muted.font-14 Vous pouvez activer ou désactiver les services auxquels vos agents peuvent être affectés.
+        p Vous pouvez activer ou désactiver les services auxquels vos agents peuvent être affectés.
 
-        = simple_form_for current_territory, url: admin_territory_services_path(current_territory) do |f|
+        = simple_form_for current_territory, url: admin_territory_services_path(current_territory, redirect_to_organisation_id: params[:redirect_to_organisation_id]) do |f|
           = render "model_errors", model: current_territory
 
           = f.association :services, collection: @services, label: "", as: :check_boxes, label_method: :first, value_method: :second
+
+          p.text-muted.font-14
+            = "Si vous avez besoin d'un service qui n'apparaît pas dans cette liste, contactez-nous via "
+            = mail_to(current_domain.support_email, current_domain.support_email)
+            | .
 
           .text-right
             = f.button :submit

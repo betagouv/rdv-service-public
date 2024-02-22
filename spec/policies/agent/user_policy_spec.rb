@@ -1,4 +1,4 @@
-describe Agent::UserPolicy, type: :policy do
+RSpec.describe Agent::UserPolicy, type: :policy do
   subject { described_class }
 
   describe "creating user is always allowed" do

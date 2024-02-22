@@ -10,6 +10,10 @@ RSpec.describe "Agents can be managed by organisation admins" do
 
   context "inviting an agent in an existing service" do
     before do
+      stub_const("InclusionConnect::IC_CLIENT_ID", "truc")
+      stub_const("InclusionConnect::IC_CLIENT_SECRET", "truc secret")
+      stub_const("InclusionConnect::IC_BASE_URL", "https://test.inclusion.connect.fr")
+
       login_as(organisation_admin, scope: :agent)
       visit admin_organisation_agents_path(organisation1)
     end
@@ -92,8 +96,24 @@ RSpec.describe "Agents can be managed by organisation admins" do
       expect_page_title("Invitations en cours pour Organisation n°1")
       expect(page).to have_content("jean@paul.com")
 
+      click_on "Se déconnecter"
       open_email("jean@paul.com")
       expect(current_email.subject).to eq "Vous avez été invité sur RDV Solidarités"
+
+      # On évite que l'agent se connecte à InclusionConnect avec
+      # une adresse e-mail qui n'est pas celle de l'invitation
+      current_email.click_link("Accepter l'invitation")
+
+      begin
+        find("a.btn-inclusion-connect").click
+      rescue ActionController::RoutingError
+        # Capybara essaye de suivre une redirection vers https://test.inclusion.connect.fr/authorize
+        # ce qui n'est pas possible dans l'env de test (il ignore le host et il cherche /authorize dans nos routes).
+      end
+
+      expect(page.current_url).to start_with("https://test.inclusion.connect.fr/authorize/?")
+      redirect_url_query_params = Rack::Utils.parse_query(URI.parse(page.current_url).query)
+      expect(redirect_url_query_params["login_hint"]).to eq("jean@paul.com")
     end
   end
 

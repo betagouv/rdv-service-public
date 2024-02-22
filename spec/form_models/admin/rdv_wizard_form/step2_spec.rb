@@ -1,4 +1,4 @@
-describe Admin::RdvWizardForm::Step2 do
+RSpec.describe Admin::RdvWizardForm::Step2 do
   let(:organisation) { build(:organisation) }
   let!(:agent) { create(:agent) }
   let!(:user) { create(:user) }

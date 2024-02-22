@@ -1,4 +1,4 @@
-describe Users::CreneauSearch do
+RSpec.describe Users::CreneauSearch do
   let(:organisation) { create(:organisation) }
   let(:user) { create(:user) }
   let(:motif) { create(:motif, name: "Coucou", location_type: :home, organisation: organisation) }

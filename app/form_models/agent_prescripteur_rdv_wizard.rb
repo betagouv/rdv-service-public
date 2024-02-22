@@ -1,11 +1,11 @@
 class AgentPrescripteurRdvWizard
   attr_reader :query_params
 
-  def initialize(agent:, user:, current_domain:, query_params: {})
+  def initialize(query_params:, agent_prescripteur:, domain:, current_organisation:)
     @query_params = query_params
-    @agent = agent
-    @user = user
-    @domain = current_domain
+    @agent_prescripteur = agent_prescripteur
+    @domain = domain
+    @current_organisation = current_organisation
   end
 
   def motif
@@ -27,26 +27,26 @@ class AgentPrescripteurRdvWizard
       else
         create_rdv!
       end
-    end
 
-    PrescripteurMailer.rdv_created(participation, @domain.id).deliver_later
+      PrescripteurMailer.rdv_created(participation, @domain.id).deliver_later
+    end
   end
 
   def rdv
     @rdv ||= if query_params[:rdv_collectif_id].present?
                Rdv.collectif.bookable_by_everyone_or_agents_and_prescripteurs_or_invited_users.find(query_params[:rdv_collectif_id])
              else
-               Rdv.new(query_params.slice(:starts_at, :user_ids, :motif_id, :lieu_id))
+               Rdv.new(query_params.slice(:starts_at, :motif_id, :lieu_id))
              end
   end
 
   def participation
-    @participation ||= Participation.new(rdv: @rdv, user: @user, created_by: @agent)
+    @participation ||= Participation.new(rdv: @rdv, user: user, created_by: @agent_prescripteur, created_by_agent_prescripteur: true)
   end
 
   def creneau
     @creneau ||= Users::CreneauSearch.creneau_for(
-      user: @user,
+      user: users&.first,
       motif: motif,
       lieu: lieu,
       starts_at: rdv.starts_at,
@@ -54,24 +54,37 @@ class AgentPrescripteurRdvWizard
     )
   end
 
+  def users
+    query_params[:user_ids]&.compact_blank&.map { User.find(_1) }
+  end
+
+  def user
+    user_ids = Array(query_params[:user_ids]).compact_blank
+    users = User.where(id: user_ids)
+    if users.count > 1
+      Sentry.capture_message("AgentPrescripteurRdvWizard a plusieurs user_ids: #{user_ids.inspect}", fingerprint: ["several_user_ids"])
+    end
+    users.first
+  end
+
   private
 
   def create_rdv!
     rdv.assign_attributes(
-      created_by: @agent,
+      created_by: @agent_prescripteur,
       organisation: motif.organisation,
       agents: [creneau.agent],
       duration_in_min: motif&.default_duration_in_min
     )
-    rdv.participations.map(&:set_default_notifications_flags)
+    rdv.participations = [participation]
+
     rdv.save!
 
-    @participation = rdv.participations.first
-    Notifiers::RdvCreated.perform_with(rdv, @agent)
+    Notifiers::RdvCreated.perform_with(rdv, @agent_prescripteur)
   end
 
   def create_participation!
-    participation.create_and_notify!(@agent)
+    participation.create_and_notify!(@agent_prescripteur)
   end
 
   def lieu

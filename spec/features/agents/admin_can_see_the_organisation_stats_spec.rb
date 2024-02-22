@@ -1,4 +1,4 @@
-describe "Admin can configure the organisation" do
+RSpec.describe "Admin can configure the organisation" do
   it "displays all the stats" do
     organisation = create(:organisation)
     agent_admin = create(:agent, admin_role_in_organisations: [organisation])

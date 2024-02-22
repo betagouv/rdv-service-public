@@ -1,4 +1,4 @@
-describe ImportZoneRowsService, type: :service do
+RSpec.describe ImportZoneRowsService, type: :service do
   # TODO: this spec should mock ZoneImportRow calls and tests should be moved
 
   let!(:territory62) { create(:territory, departement_number: "62") }

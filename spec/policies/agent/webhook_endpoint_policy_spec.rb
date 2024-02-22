@@ -1,4 +1,4 @@
-describe Agent::WebhookEndpointPolicy, type: :policy do
+RSpec.describe Agent::WebhookEndpointPolicy, type: :policy do
   subject { described_class }
 
   let(:pundit_context) { AgentContext.new(agent) }
@@ -19,7 +19,7 @@ describe Agent::WebhookEndpointPolicy, type: :policy do
   end
 end
 
-describe Agent::WebhookEndpointPolicy::Scope, type: :policy do
+RSpec.describe Agent::WebhookEndpointPolicy::Scope, type: :policy do
   describe "#resolve?" do
     let(:organisation) { create(:organisation) }
 

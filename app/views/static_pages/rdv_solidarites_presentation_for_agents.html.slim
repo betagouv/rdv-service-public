@@ -1,3 +1,4 @@
+- generic_team_meeting_url = "https://meet.brevo.com/-1918/-rencontre-temps-dechanges"
 section.py-5.text-white.bg-primary
   .container
     .row
@@ -37,11 +38,8 @@ section.py-5.bg-lightturquoise.text-primary
 
         .text-dark.text-center.mt-5
           p.lead Vous souhaitez en savoir plus ?
-          .row.d-flex.justify-content-center
-            .col-md-3.p-2.px-3.p-md-0
-              = link_to "Contactez-nous", contact_path(anchor: "tech-support"), class: "btn btn-tertiary"
-            .col-md-3.p-2.px-3.p-md-0
-              = link_to "Testez l’outil", "https://demo.rdv-solidarites.fr#{new_organisation_path}", class: "btn btn-tertiary"
+          .p-2.px-3.p-md-0
+            = link_to "Contactez-nous", generic_team_meeting_url, class: "btn btn-primary"
 
 section.bg-white.py-5
   .container
@@ -84,22 +82,18 @@ section.bg-lightturquoise.py-5
             li RDV téléphonique
             li Visite à domicile
             li Suivi avec des référents
-            li RDV collectif (à venir)
+            li RDV collectif
       .col-md-6
         .p-6.m-auto
           h3.mb-3 Adapté à vos contraintes opérationnelles
           ul
             li Multi-sites
             li Utilisable en itinérance
-            li Sectorisation (en cours)
+            li Sectorisation
             li Notifications vers des systèmes d'informations externes
 
     .row
       .col-md-12.text-center.mt-5
         p.lead Vous y pensez pour votre Maison des Solidarités ?
-        .col-md-9.m-auto
-          .row.d-flex.justify-content-center
-            .col-md-3.p-2.px-3.p-md-0
-              = link_to "Contactez-nous", contact_path(anchor: "tech-support"), class: "btn btn-tertiary"
-            .col-md-3.p-2.px-3.p-md-0
-              = link_to "Testez l’outil", "https://demo.rdv-solidarites.fr#{new_organisation_path}", class: "btn btn-tertiary"
+        .p-2.px-3.p-md-0
+          = link_to "Contactez-nous", generic_team_meeting_url, class: "btn btn-primary"

@@ -1,4 +1,4 @@
-describe AntsApi::Appointment, type: :service do
+RSpec.describe AntsApi::Appointment, type: :service do
   include_context "rdv_mairie_api_authentication"
 
   describe "#request" do

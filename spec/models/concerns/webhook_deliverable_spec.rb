@@ -1,4 +1,4 @@
-describe WebhookDeliverable, type: :concern do
+RSpec.describe WebhookDeliverable, type: :concern do
   include ActiveJob::TestHelper
 
   let!(:organisation) { create(:organisation) }

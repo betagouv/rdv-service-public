@@ -31,7 +31,6 @@ class AnonymizerRules
         confirmation_token
         reset_password_token
         invitation_token
-        last_sign_in_at
         remember_created_at
         rdv_invitation_token
       ],
@@ -55,8 +54,6 @@ class AnonymizerRules
         calendar_uid
         current_sign_in_at
         last_sign_in_at
-        current_sign_in_ip
-        last_sign_in_ip
         reset_password_token
         confirmation_token
         invitation_token
@@ -64,6 +61,7 @@ class AnonymizerRules
         microsoft_graph_token
         refresh_microsoft_graph_token
         remember_created_at
+        inclusion_connect_open_id_sub
       ],
       non_anonymized_column_names: %w[
         reset_password_sent_at
@@ -84,7 +82,6 @@ class AnonymizerRules
         display_cancelled_rdv
         plage_ouverture_notification_level
         absence_notification_level
-        sign_in_count
         outlook_disconnect_in_progress
         account_deletion_warning_sent_at
         deleted_at
@@ -137,7 +134,7 @@ class AnonymizerRules
       class_name: "Participation",
       anonymized_column_names: %w[invitation_token],
       non_anonymized_column_names: %w[created_at updated_at send_lifecycle_notifications send_reminder_notification invitation_created_at invitation_sent_at invitation_accepted_at
-                                      invitation_limit invited_by_type invited_by_id invitations_count status created_by_id created_by_type],
+                                      invitation_limit invited_by_type invited_by_id invitations_count status created_by_id created_by_type created_by_agent_prescripteur],
     },
     plage_ouvertures: {
       class_name: "PlageOuverture",

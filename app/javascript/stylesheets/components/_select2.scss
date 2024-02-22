@@ -19,3 +19,91 @@
   padding-top: 18px;
   font-size: initial;
 }
+
+.select2-container--bootstrap4 .select2-results > .select2-results__options {
+    max-height: 360px;
+}
+
+// Alignement des valeurs dans le multiselect
+.select2-container--bootstrap4 .select2-selection--multiple .select2-selection__rendered {
+  padding: 2px;
+}
+
+.select2-container--bootstrap4 .select2-selection--multiple .select2-search--inline .select2-search__field {
+  padding: 4px;
+}
+
+.select2-container--bootstrap4 .select2-selection--multiple .select2-selection__choice {
+  padding: 4px;
+  margin: 2px;
+}
+
+.select2-dropdown {
+  border-radius: 0;
+  background-color: $input-bg;
+}
+
+// Border radius overrides
+// C'est trop compliqué d'utiliser le fichier src plutôt que le dist à cause d'incohérence d'unités entre les px et rem (et de certains calculs sans unités)
+// Le plus simple pour avoir des border-radius de 0 est donc de mettre des override pour toutes les règles de border-radius dans le fichier node_modules/select2-bootstrap4-theme/dist/select2-bootstrap4.css
+
+.select2-container--bootstrap4 .select2-selection {
+  border-radius: 0;
+}
+
+.select2-container--bootstrap4 .select2-selection.form-control {
+  border-radius: 0;
+}
+
+.select2-container--bootstrap4 .select2-search--dropdown .select2-search__field {
+  border-radius: 0;
+}
+
+.select2-container--bootstrap4 .select2-selection--multiple .select2-selection__choice {
+  border-radius: 0;
+}
+
+.select2-container--bootstrap4 .select2-selection--single.input-sm, .input-group-sm .select2-container--bootstrap4 .select2-selection--single, .form-group-sm .select2-container--bootstrap4 .select2-selection--single {
+  border-radius: 0;
+}
+
+.select2-container--bootstrap4 .select2-selection--multiple.input-sm, .input-group-sm .select2-container--bootstrap4 .select2-selection--multiple, .form-group-sm .select2-container--bootstrap4 .select2-selection--multiple {
+  border-radius: 0;
+}
+
+.select2-container--bootstrap4 .select2-selection--single.input-lg, .input-group-lg .select2-container--bootstrap4 .select2-selection--single, .form-group-lg .select2-container--bootstrap4 .select2-selection--single {
+  border-radius: 0;
+}
+
+.select2-container--bootstrap4 .select2-selection--multiple.input-lg, .input-group-lg .select2-container--bootstrap4 .select2-selection--multiple, .form-group-lg .select2-container--bootstrap4 .select2-selection--multiple {
+  border-radius: 0;
+}
+
+.select2-container--bootstrap4 .select2-selection--multiple.input-lg .select2-selection__choice, .input-group-lg .select2-container--bootstrap4 .select2-selection--multiple .select2-selection__choice, .form-group-lg .select2-container--bootstrap4 .select2-selection--multiple .select2-selection__choice {
+  border-radius: 0;
+}
+
+
+// Background color overrides
+// même fonctionnement que pour les border radius
+// on remplace les background-color: #fff; par background-color: $input-bg;
+
+.select2-container--bootstrap4 .select2-selection {
+  background-color: $input-bg;
+}
+
+.select2-container--bootstrap4 .select2-search--dropdown .select2-search__field {
+  background-color: $input-bg;
+}
+
+.select2-container--bootstrap4 .select2-selection {
+  background-color: $input-bg;
+}
+
+.select2-container--bootstrap4 .select2-search--dropdown .select2-search__field {
+  background-color: $input-bg;
+}
+
+.select2-container--bootstrap4 .select2-results .select2-results__options--nested > .select2-results__option {
+  padding-left: 32px;
+}

@@ -1,4 +1,4 @@
-describe Agent::SectorAttributionPolicy, type: :policy do
+RSpec.describe Agent::SectorAttributionPolicy, type: :policy do
   subject { described_class }
 
   let!(:territory) { create(:territory) }
@@ -28,7 +28,7 @@ describe Agent::SectorAttributionPolicy, type: :policy do
   end
 end
 
-describe Agent::SectorAttributionPolicy::Scope, type: :policy do
+RSpec.describe Agent::SectorAttributionPolicy::Scope, type: :policy do
   describe "#resolve?" do
     subject do
       described_class.new(AgentContext.new(agent), SectorAttribution).resolve

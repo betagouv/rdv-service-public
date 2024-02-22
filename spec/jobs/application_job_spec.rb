@@ -1,4 +1,4 @@
-describe ApplicationJob, type: :job do
+RSpec.describe ApplicationJob, type: :job do
   describe "error logging" do
     let(:job_class) do
       stub_const "MyJob", Class.new(described_class)
@@ -37,8 +37,6 @@ describe ApplicationJob, type: :job do
       end
       CronTimeoutJob
     end
-
-    stub_sentry_events
 
     it "reports job metadata to Sentry" do
       job_class.perform_later(123, _some_kw_arg: 456)

@@ -1,4 +1,4 @@
-describe "Agent can create a Rdv with creneau search" do
+RSpec.describe "Agent can create a Rdv with creneau search" do
   include UsersHelper
 
   before { login_as(agent, scope: :agent) }

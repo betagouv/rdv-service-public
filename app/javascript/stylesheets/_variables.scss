@@ -259,6 +259,8 @@ $btn-border-radius-sm:        0;
 
 // Forms
 
+$input-bg:  #f9f9f9;
+$input-focus-bg: $input-bg;
 $input-padding-y:                       $input-btn-padding-y;
 $input-padding-x:                       $input-btn-padding-x;
 $input-line-height:                     $input-btn-line-height;
@@ -274,12 +276,15 @@ $input-line-height-lg:                  $input-btn-line-height-lg;
 $input-color:                           $body-color;
 $input-border-width:                    1px;
 $input-border-color:                    $gray-300;
-$input-border-radius:                   0.25rem;
+$input-border-radius:                   0;
+$input-border-radius-sm:                $input-border-radius;
+$input-border-radius-md:                $input-border-radius;
+$input-border-radius-lg:                $input-border-radius;
 
 $input-focus-box-shadow:                none;
 $input-focus-border-color:              darken($input-border-color,10%);
 
-$input-placeholder-color:               $gray-500;
+$input-placeholder-color:               #6c747c;
 
 $input-height-border:                   $input-border-width * 2;
 
@@ -301,6 +306,7 @@ $custom-select-height:              $input-height;
 $custom-control-indicator-checked-color:        $primary;
 $custom-control-indicator-checked-bg:           $primary;
 
+$border-radius: 0px;
 $custom-select-border-width:        $input-border-width;
 $custom-select-border-color:        $input-border-color;
 $custom-select-border-radius:       $border-radius;
@@ -373,7 +379,7 @@ $card-cap-bg:                       $white;
 
 // Tooltips
 
-$tooltip-border-radius:             0.2rem;
+$tooltip-border-radius:             $border-radius;
 $tooltip-padding-y:                 .4rem;
 $tooltip-padding-x:                 .8rem;
 
@@ -395,7 +401,7 @@ $badge-font-weight:                 $font-weight-bold;
 // Modals
 
 $modal-content-border-color:        transparent;
-$modal-content-border-radius:       0.2rem;
+$modal-content-border-radius:       $border-radius;
 $modal-content-border-width:        0;
 $modal-backdrop-bg:                 $gray-900;
 $modal-backdrop-opacity:            .7;

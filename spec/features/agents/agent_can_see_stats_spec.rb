@@ -1,4 +1,4 @@
-describe "Agent can see stats" do
+RSpec.describe "Agent can see stats" do
   let!(:territory1) { create(:territory) }
   let!(:organisation1a) { create(:organisation, territory: territory1) }
   let!(:organisation1b) { create(:organisation, territory: territory1) }

@@ -1,6 +1,6 @@
 # This specs checks that the ICS attachments are added correctly.
 # It was after a bug was discovered: several copies of the ICS file were present.
-describe IcsMultipartAttached, type: :mailer do
+RSpec.describe IcsMultipartAttached, type: :mailer do
   let(:agent) { create(:agent, email: "bob@demo.rdv-solidarites.fr") }
   let(:plage_ouverture) { create :plage_ouverture, agent: agent }
 

@@ -1,27 +1,29 @@
 class Admin::PrescriptionController < AgentAuthController
-  include GeoCoding
+  before_action :set_rdv_wizard, only: %i[user_selection recapitulatif create_rdv]
+  before_action :redirect_if_creneau_unavailable, only: %i[user_selection recapitulatif create_rdv]
 
   def search_creneau
-    authorize(user, :show?)
+    skip_authorization
     session[:agent_prescripteur_organisation_id] = params[:organisation_id]
-    @context = AgentPrescriptionSearchContext.new(user: user, query_params: augmented_params, current_organisation: current_organisation)
+    @context = AgentPrescriptionSearchContext.new(
+      user: user,
+      query_params: search_context_params.merge(prescripteur: Prescripteur::INTERNE),
+      current_organisation: current_organisation
+    )
+  end
+
+  def user_selection
+    skip_authorization
   end
 
   def recapitulatif
     authorize(user, :show?)
-    @rdv_wizard = AgentPrescripteurRdvWizard.new(agent: current_agent, user: user, query_params: wizard_params, current_domain: current_domain)
     authorize(@rdv_wizard.rdv.motif, :bookable?)
-
-    unless @rdv_wizard.creneau
-      flash[:error] = "Ce créneau n'est plus disponible. Veuillez en sélectionner un autre."
-      redirect_to(search_creneau_admin_organisation_prescription_path(params[:organisation_id], @rdv_wizard.params_to_selections))
-    end
   end
 
   def create_rdv
     # TODO: Autoriser sur la participation (vérifier que le current_agent accéde au user et au motif)
     authorize(user, :show?)
-    @rdv_wizard = AgentPrescripteurRdvWizard.new(agent: current_agent, user: user, query_params: wizard_params, current_domain: current_domain)
     authorize(@rdv_wizard.rdv.motif, :bookable?)
 
     @rdv_wizard.create!
@@ -36,18 +38,15 @@ class Admin::PrescriptionController < AgentAuthController
 
   private
 
-  def augmented_params
-    params = search_context_params.merge(prescripteur: true)
-    geolocation_results = get_geolocation_results(user.address, params[:departement])
+  def set_rdv_wizard
+    @rdv_wizard = AgentPrescripteurRdvWizard.new(query_params: wizard_params, agent_prescripteur: current_agent, domain: current_domain, current_organisation: current_organisation)
+  end
 
-    if geolocation_results.present?
-      params.merge!(
-        city_code: geolocation_results[:city_code],
-        street_ban_id: geolocation_results[:street_ban_id]
-      )
+  def redirect_if_creneau_unavailable
+    unless @rdv_wizard.creneau
+      flash[:error] = "Ce créneau n'est plus disponible. Veuillez en sélectionner un autre."
+      redirect_to(search_creneau_admin_organisation_prescription_path(params[:organisation_id], @rdv_wizard.params_to_selections))
     end
-
-    params
   end
 
   def search_context_params
@@ -55,11 +54,14 @@ class Admin::PrescriptionController < AgentAuthController
   end
 
   def wizard_params
-    # Ces parametres permettent de passer du choix de creneau au wizard (create et recapitulatif)
+    # Ces paramètres permettent de passer du choix de creneau au wizard (create et récapitulatif)
     params.permit(%i[starts_at rdv_collectif_id] + AgentPrescriptionSearchContext::STRONG_PARAMS_LIST)
   end
 
   def user
-    @user ||= policy_scope(User, policy_scope_class: Agent::UserPolicy::Scope).find(params[:user_ids].first)
+    user_ids = Array(params[:user_ids]).compact_blank
+    return if user_ids.empty?
+
+    @user ||= policy_scope(User, policy_scope_class: Agent::UserPolicy::Scope).find_by_id(user_ids.first)
   end
 end
