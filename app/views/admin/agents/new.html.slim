@@ -11,12 +11,9 @@
           = render "devise/shared/error_messages", resource: @agent
           label Services
           .text-muted.form-text
-            | Pour quel service est-ce que cet agent travaille ?
+            | Le service correspond généralement à un ensemble d’agents qui exercent une profession similaire ou identique (exemple : le service PMI, le service RSA). Chaque agent est obligatoirement rattaché à au moins un service et a donc accès aux plannings des agents de ce même service : il peut alors y ajouter, modifier ou supprimer des rendez-vous pour ses collègues ou pour lui-même.
             br
-            | Les agents basiques peuvent uniquement consulter les agendas de leurs collègues du même services.
-            br
-            | Les agents du secrétariat peuvent voir les agenda de tous les autres agents de l'organisation.
-
+            | Sélectionnez ci-dessous le ou les services auquel votre agent sera rattaché.  :
           = f.association :services, collection: @services, include_blank: false, as: :check_boxes, label: ""
           - if policy([:agent, current_territory]).edit?
             small.form-text.text-muted.mb-4
