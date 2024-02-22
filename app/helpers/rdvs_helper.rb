@@ -72,13 +72,18 @@ module RdvsHelper
   end
 
   def dates_interval
-    return nil unless valid_date?(params[:start]) && valid_date?(params[:end])
+    return nil if no_date_filters?
 
-    [
-      I18n.l(Date.parse(params[:start]), format: :human).capitalize,
-      I18n.l(Date.parse(params[:end]), format: :human).capitalize,
-    ].uniq.join(" - ")
+    if valid_date?(params[:start]) && !valid_date?(params[:end])
+      dates_interval_from(params[:start])
+    elsif valid_date?(params[:end]) && !valid_date?(params[:start])
+      dates_interval_until(params[:end])
+    else
+      # Both Dates are valid
+      [format_date(params[:start]), format_date(params[:end])].uniq.join(" - ")
+    end
   end
+
 
   def individual_rdv_status_dropdown_toggle(rdv)
     tag.div(data: { toggle: "dropdown" },
@@ -143,5 +148,21 @@ module RdvsHelper
 
   def valid_date?(date)
     date.present? && date != "__/__/____"
+  end
+
+  def no_date_filters?
+    !valid_date?(params[:start]) && !valid_date?(params[:end])
+  end
+
+  def dates_interval_from(date)
+    "A partir du #{format_date(date)}"
+  end
+
+  def dates_interval_until(date)
+    "Jusqu'au #{format_date(date)}"
+  end
+
+  def format_date(date)
+    I18n.l(Date.parse(date), format: :human).capitalize
   end
 end
