@@ -71,6 +71,15 @@ module RdvsHelper
     "#{l(rdv.starts_at, format: format)} - #{l(rdv.starts_at + rdv.duration_in_min.minutes, format: format)}"
   end
 
+  def dates_interval
+    return nil unless valid_date?(params[:start]) && valid_date?(params[:end])
+
+    [
+      I18n.l(Date.parse(params[:start]), format: :human).capitalize,
+      I18n.l(Date.parse(params[:end]), format: :human).capitalize,
+    ].uniq.join(" - ")
+  end
+
   def individual_rdv_status_dropdown_toggle(rdv)
     tag.div(data: { toggle: "dropdown" },
             class: "dropdown-toggle btn rdv-status-#{rdv.temporal_status}") do
@@ -121,15 +130,6 @@ module RdvsHelper
     return rdv.users_count.to_s if rdv.max_participants_count.blank?
 
     "#{rdv.users_count} / #{rdv.max_participants_count}"
-  end
-
-  def rdv_list_period
-    return nil unless valid_date?(params[:start]) && valid_date?(params[:end])
-
-    [
-      I18n.l(Date.parse(params[:start]), format: :human).capitalize,
-      I18n.l(Date.parse(params[:end]), format: :human).capitalize,
-    ].uniq.join(" - ")
   end
 
   private
