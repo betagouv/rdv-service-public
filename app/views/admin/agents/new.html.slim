@@ -9,7 +9,15 @@
       .card-body.js_agent_role_form
         = simple_form_for [:admin, @agent], url: admin_organisation_agents_path(current_organisation, @agent), html: { method: :post } do |f|
           = render "devise/shared/error_messages", resource: @agent
-          = f.association :services, collection: @services, include_blank: false, as: :check_boxes
+          label Services
+          .text-muted.form-text
+            | Pour quel service est-ce que cet agent travaille ?
+            br
+            | Les agents basiques peuvent uniquement consulter les agendas de leurs collègues du même services.
+            br
+            | Les agents du secrétariat peuvent voir les agenda de tous les autres agents de l'organisation.
+
+          = f.association :services, collection: @services, include_blank: false, as: :check_boxes, label: ""
           - if policy([:agent, current_territory]).edit?
             small.form-text.text-muted.mb-4
               = "Si le service dont vous avez besoin n'apparaît pas dans cette liste, vous pouvez "
