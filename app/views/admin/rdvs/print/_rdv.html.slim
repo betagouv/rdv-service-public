@@ -30,14 +30,14 @@
               - if email.present?
                 = email
               - else
-                span.font-weight-light.font-italic
+                span.font-weight-light.font-italic.text-muted
                   | Email non renseigné
             | &nbsp - &nbsp
             span.mx-1
               - if phone_number.present?
                 = phone_number
               - else
-                span.font-weight-light.font-italic
+                span.font-weight-light.font-italic.text-muted
                   | Téléphone non renseigné
         .mt-2
           | Contexte :
@@ -45,7 +45,7 @@
           - if rdv.context.present?
             = rdv.context
           - else
-            span.font-weight-light.font-italic
+            span.font-weight-light.font-italic.text-muted
               | Pas de contexte renseigné
         .mt-2
           i.fa.fa-map-marker-alt>
