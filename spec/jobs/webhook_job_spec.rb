@@ -62,7 +62,7 @@ RSpec.describe WebhookJob, type: :job do
       stub_request(:post, "https://example.com/rdv-s-endpoint").and_return({ status: 200, body: "<html><title>Request Rejected</title><body>...</body><html>" })
       described_class.perform_later(payload, webhook_endpoint.id)
       4.times { perform_enqueued_jobs } # On ne loggue vers Sentry qu'au 4ème retry
-      expect(sentry_events.last.exception.values.last.type).to eq("OutgoingWebhookError")
+      expect(sentry_events.last.message).to eq("HTML response in webhook")
     end
   end
 
