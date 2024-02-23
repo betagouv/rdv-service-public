@@ -36,6 +36,15 @@ class WebhookJob < ApplicationJob
       end
     end
 
+    # Le WAF du Pas-de-Calais bloque certaines requêtes et
+    # renvoie une réponse en HTML avec un statut 200.
+    request.on_success do |response|
+      if response.body.include?("<html>")
+        @sentry_event_fingerprint = ["OutgoingWebhookError HTML", webhook_endpoint.target_url, response.code.to_s]
+        raise OutgoingWebhookError, "HTTP #{response.code} with HTML body, URL: #{webhook_endpoint.target_url}"
+      end
+    end
+
     request.run
   end
 
