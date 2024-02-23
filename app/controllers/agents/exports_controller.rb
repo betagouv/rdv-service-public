@@ -15,7 +15,7 @@ class Agents::ExportsController < AgentAuthController
   def show
     export = Export.find(params[:id])
     authorize(export)
-    send_data Base64.decode64(export.content), filename: export.file_name
+    send_data Base64.decode64(export.content), filename: export.file_name, type: "application/vnd.ms-excel"
   end
 
   private
