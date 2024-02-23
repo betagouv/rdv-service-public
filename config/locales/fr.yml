@@ -103,8 +103,6 @@ fr:
     export_mailer:
       rdv_export:
         description: Vous trouverez en pièce jointe l’export des RDVs que vous avez demandé.
-      participations_export:
-        description: Vous trouverez en pièce jointe l’export des RDVs par usager que vous avez demandé.
   mailers:
     agents:
       export_mailer:

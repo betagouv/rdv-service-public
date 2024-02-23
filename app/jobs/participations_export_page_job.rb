@@ -1,5 +1,7 @@
 class ParticipationsExportPageJob < ExportJob
-  def perform(participations_ids, page_index, redis_key)
+  def perform(participations_ids, page_index, export_id)
+    redis_key = redis_key(export_id)
+
     rows = ParticipationExporter.rows_from_participations(Participation.where(id: participations_ids).order(id: :desc))
 
     redis_connection = Redis.new(url: Rails.configuration.x.redis_url)

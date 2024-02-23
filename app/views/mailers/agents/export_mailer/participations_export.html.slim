@@ -1,6 +1,12 @@
 div
   p = t("mailers.common.hello")
 
-  p = t(".description")
+  p
+    | Votre export est prêt et disponible ici :
+    = link_to("Télécharger", agents_export_url(@export.id))
+
+  p
+    | Retrouvez tous vos exports ici :
+    = link_to("Liste des exports", agents_exports_url)
 
   p = t("mailers.common.farewell_html", domain_name: domain.name)

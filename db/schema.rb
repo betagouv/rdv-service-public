@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_02_22_091749) do
+ActiveRecord::Schema[7.0].define(version: 2024_02_23_134146) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -254,6 +254,19 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_22_091749) do
     t.index ["agent_id", "rdv_id"], name: "index_agents_rdvs_on_agent_id_and_rdv_id", unique: true
     t.index ["agent_id"], name: "index_agents_rdvs_on_agent_id"
     t.index ["rdv_id"], name: "index_agents_rdvs_on_rdv_id"
+  end
+
+  create_table "exports", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "expires_at", null: false
+    t.integer "agent_id", null: false
+    t.string "file_name", null: false
+    t.text "content"
+    t.jsonb "organisation_ids", null: false
+    t.jsonb "options"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["agent_id"], name: "index_exports_on_agent_id"
+    t.index ["expires_at"], name: "index_exports_on_expires_at"
   end
 
   create_table "file_attentes", force: :cascade do |t|
@@ -751,6 +764,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_22_091749) do
   add_foreign_key "agent_territorial_roles", "territories"
   add_foreign_key "agents_rdvs", "agents"
   add_foreign_key "agents_rdvs", "rdvs"
+  add_foreign_key "exports", "agents"
   add_foreign_key "file_attentes", "rdvs"
   add_foreign_key "file_attentes", "users"
   add_foreign_key "lieux", "organisations"
