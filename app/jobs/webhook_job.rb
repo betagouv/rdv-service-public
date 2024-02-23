@@ -41,7 +41,7 @@ class WebhookJob < ApplicationJob
     request.on_success do |response|
       if response.body.include?("<html>")
         fingerprint = ["OutgoingWebhookError HTML", webhook_endpoint.target_url, response.code.to_s]
-        Sentry.capture_message("HTML response in webhook", fingerprint: fingerprint)
+        Sentry.capture_message("HTML body in HTTP #{response.code} response in webhook to [#{webhook_endpoint.target_url}]", fingerprint: fingerprint)
       end
     end
 
