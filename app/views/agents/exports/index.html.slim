@@ -23,4 +23,4 @@ table.table
           = l(export.expires_at, format: :dense)
           br
           = "(dans #{distance_of_time_in_words_to_now(export.expires_at)})"
-        td = link_to("Télécharger", agents_export_path(export.id))
+        td = link_to("Télécharger", agents_export_path(export.id), target: "_blank")
