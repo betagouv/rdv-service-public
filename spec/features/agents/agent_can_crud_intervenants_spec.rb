@@ -17,7 +17,7 @@ RSpec.describe "Agent can CRUD intervenants" do
     check(service.name)
     find("label", text: "Intervenant").click
     fill_in "Nom", with: "Avocat 1"
-    click_button("Ajouter l'intervenant")
+    click_button("Enregistrer")
     expect_page_title("Agents de Organisation n°1")
     expect(page).to have_content("AVOCAT 1")
     expect(Agent.last).to have_attributes(
