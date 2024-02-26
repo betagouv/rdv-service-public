@@ -10,7 +10,7 @@
     | Agenda de #{@agent.full_name_and_service}
 
 - content_for :breadcrumb do
-  = render "layouts/rdv_a_renseigner", agent: current_agent, organisation: defined?(current_organisation) ? current_organisation : nil
+  = render "layouts/rdv_a_renseigner", agent: current_agent, organisation: current_organisation
 
 .card
   .card-body.pt-0

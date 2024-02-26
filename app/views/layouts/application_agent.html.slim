@@ -11,7 +11,7 @@ html lang="fr"
         .content-page
           .content
             = content_for(:cnfs_online_booking_banner)
-            - if !@hide_rdv_a_renseigner_in_main_layout
+            - unless @hide_rdv_a_renseigner_in_main_layout
               = render "layouts/rdv_a_renseigner", agent: current_agent, organisation: defined?(current_organisation) ? current_organisation : nil
             .container-fluid
               - if content_for :title

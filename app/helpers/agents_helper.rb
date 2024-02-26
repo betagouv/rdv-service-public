@@ -77,4 +77,12 @@ module AgentsHelper
 
     !current_agent.roles.access_level_admin.exists?(organisation_id: current_organisation.id)
   end
+
+  def current_organisation_in_left_menu(&block)
+    if current_agent.organisations.count > 1
+      link_to(".left-submenu-account", html: { "data-toggle" => :collapse }, &block)
+    else
+      tag.div(&block)
+    end
+  end
 end

@@ -15,22 +15,17 @@ nav
           .d-flex.justify-content-center
             = link_to "Trouver un RDV", search_rdv_slot_url_with(@user), class: "btn bg-white align-bottom text-dark"
         li.side-nav-item.connected-agent.mb-1.pl-3.pr-2.py-2
-          a[
-            data-toggle="collapse"
-            href=".left-submenu-account"
-            aria-expanded=(menu_top_level_item == "account" ? "true" : "false")
-          ]
-            .d-flex.justify-content-between.w-100
+          = current_organisation_in_left_menu do
+            .d-flex.justify-content-between.w-100.text-white
               div.d-flex.align-items-center
                 div.d-flex.flex-column
                   h4= current_organisation.name
                   - if navigation_scoped_by_agent_services?(current_agent, current_organisation)
                     span= current_agent.services_short_names
-              div.d-flex.align-items-center
-                i.fa.fa-angle-right.menu-arrow.mt-1
-          ul.list-unstyled.ml-3.left-submenu-account.collapse[
-            class=("show" if menu_top_level_item == "account")
-          ]
+              - if current_agent.organisations.count > 1
+                div.d-flex.align-items-center
+                  i.fa.fa-angle-right.menu-arrow.mt-1
+          ul.list-unstyled.ml-3.left-submenu-account.collapse
             li.my-2
               = link_to "Changer d'organisation", admin_organisations_path
 
