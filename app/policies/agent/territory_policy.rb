@@ -3,7 +3,7 @@ class Agent::TerritoryPolicy < ApplicationPolicy
   delegate :agent, to: :context, prefix: :current # defines current_agent
 
   def agent_has_role_in_record_territory?
-    current_agent.territorial_roles.find_by(territory_id: record.id).present?
+    current_agent.territorial_roles.exists?(territory_id: record.id)
   end
 
   alias show? agent_has_role_in_record_territory?
