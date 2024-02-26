@@ -42,6 +42,8 @@ nav
             li.my-2
               = active_link_to "Vos statistiques", admin_organisation_agent_stats_path(current_organisation, current_agent)
             li.my-2
+              = active_link_to "Vos exports", agents_exports_path
+            li.my-2
               = link_to destroy_agent_session_path, method: :delete do
                 i.fa.fa-sign-out
                 span Se déconnecter

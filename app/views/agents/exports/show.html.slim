@@ -8,7 +8,7 @@
       strong = distance_of_time_in_words_to_now(@export.expires_at)
     p.card-text
       dl
-        dt Organisation(s)
+        dt = "Organisation".pluralize(@export.organisation_ids.size)
         dd = Organisation.where(id: @export.organisation_ids).pluck(:name).sort.join(", ")
 
         dt Filtres

@@ -25,9 +25,8 @@ class Export < ApplicationRecord
   end
 
   def store_content(content)
-    encoded_content = Base64.encode64(content)
-
     redis_connection = Redis.new(url: Rails.configuration.x.redis_url)
+    encoded_content = Base64.encode64(content)
     redis_connection.set(content_redis_key, encoded_content)
     redis_connection.expire(content_redis_key, (expires_at - Time.zone.now).seconds.to_i)
   ensure
@@ -37,6 +36,6 @@ class Export < ApplicationRecord
   private
 
   def content_redis_key
-    "export-file-#{id}"
+    "Export#content_redis_key-#{id}"
   end
 end
