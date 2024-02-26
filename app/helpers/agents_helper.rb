@@ -37,12 +37,9 @@ module AgentsHelper
       "menu-lieux" => "settings",
       "menu-motifs" => "settings",
       "menu-organisation" => "settings",
-      "menu-organisation-stats" => "settings",
       "menu-online-booking" => "settings",
-      "menu-stats" => "account",
-      "men-department-sectors" => "",
-      "men-department-zones" => "",
-      "men-department-zone-imports" => "",
+      "menu-organisation-stats" => "stats",
+      "menu-stats" => "stats",
     }[content_for(:menu_item)]
   end
 

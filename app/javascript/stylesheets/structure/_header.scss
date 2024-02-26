@@ -28,20 +28,20 @@ header {
     justify-content: space-between;
     align-items: center;
     flex-grow: inherit;
+    @media (max-height: 800px) {
+      padding: 0;
+
+      .logo-dsfr {
+        width: 8rem;
+        padding: 0.7rem;
+      }
+    }
+
 
     .link-connect {
         font-size: .875rem;
         font-weight: 500;
     }
-}
-
-.navbar-dsfr--compact {
-  padding: 0;
-
-  .logo-dsfr {
-    width: 8rem;
-    padding: 0.7rem;
-  }
 }
 
 .logo-dsfr {
