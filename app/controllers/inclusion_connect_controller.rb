@@ -7,17 +7,17 @@ class InclusionConnectController < ApplicationController
   end
 
   def callback
-    if params[:state] != session[:ic_state]
-      Sentry.capture_message("InclusionConnect states do not match", extra: { params_state: params[:state], session_ic_state: session[:ic_state] }, fingerprint: ["ic_state_mismatch"])
+    ic_state = session.delete(:ic_state)
+    if ic_state.blank? || params[:state] != ic_state
+      Sentry.capture_message("InclusionConnect states do not match", extra: { params_state: params[:state], session_ic_state: ic_state }, fingerprint: ["ic_state_mismatch"])
       flash[:error] = "Nous n'avons pas pu vous authentifier. Contacter le support à l'adresse <#{current_domain.support_email}> si le problème persiste."
       redirect_to new_agent_session_path and return
     end
 
-    agent = InclusionConnect.agent(params[:code], inclusion_connect_callback_url)
+    agent = InclusionConnect.new.authenticate_and_find_agent(params[:code], inclusion_connect_callback_url)
 
     if agent
       bypass_sign_in agent, scope: :agent
-      session[:connected_with_inclusionconnect] = true
       redirect_to root_path
     else
       flash[:error] = "Nous n'avons pas pu vous authentifier. Contacter le support à l'adresse <#{current_domain.support_email}> si le problème persiste."

@@ -87,5 +87,5 @@
       = current_organisation.name
 
   h3.mt-4
-    = I18n.l(Time.zone.today, format: :human).capitalize
+    = dates_interval
   = render(partial: "admin/rdvs/print/rdv", collection: @rdvs_in_page)
