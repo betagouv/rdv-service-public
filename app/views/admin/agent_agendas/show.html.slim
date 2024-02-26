@@ -10,7 +10,7 @@
     | Agenda de #{@agent.full_name_and_service}
 
 - content_for :breadcrumb do
-  = link_to "Trouver un RDV", admin_organisation_agent_searches_path(@organisation), class: "btn btn-outline-primary align-bottom"
+  = render "layouts/rdv_a_renseigner", agent: current_agent, organisation: defined?(current_organisation) ? current_organisation : nil
 
 .card
   .card-body.pt-0
