@@ -14,15 +14,13 @@
             label.big-label Niveau de permissions
             .text-muted.form-text
               | Quel type d'agent souhaitez-vous ajouter ?
-            - # rubocop:disable Rails/OutputSafety
             = ff.input :access_level,
               collection: @roles,
-              label_method: -> { AgentRole.human_attribute_value(:access_level, _1, context: :explanation).html_safe },
+              label_method: -> { access_level_label(_1) },
               hint: ("Les agents peuvent avoir des permissions différentes sur chaque organisation." if @current_territory.organisations.count > 1),
               as: :radio_buttons,
               label: "",
               html: { class: "mt-4" }
-          - # rubocop:enable Rails/OutputSafety
 
           .js_agent_role_form__agent_with_account_fields
             = f.input :email, placeholder: "a.dupond@departement.fr", input_html: { autocomplete: "off"}, label_html: { class: "big-label mt-3" }, hint: "Une invitation sera envoyée automatiquement à cette adresse"
