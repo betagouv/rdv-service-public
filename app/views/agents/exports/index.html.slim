@@ -1,22 +1,24 @@
 - content_for :title, t(".title")
 
-table.table
+table.table.table-sm
   thead
     tr
-      th
+      th Nom du fichier
       th Création
-      th Expiration
-      th Télécharger
+      th
   tbody
     - @exports.each do |export|
       tr
-        td
-          = link_to(export.file_name, agents_export_path(export.id))
-        td
+        td.align-middle
+          = export.file_name
+        td.align-middle
           = relative_date_and_time(export.created_at)
-        td
-          = relative_date_and_time(export.expires_at)
-        td
-          - unless export.expired?
-            = link_to agents_export_download_path(export.id), target: "_blank" do
-              i.fa.fa-download
+        td.align-middle
+          .d-flex
+            = link_to agents_export_path(export.id), class: "btn btn-link btn-sm", style: "white-space: nowrap" do
+              i.fa.fa-eye.mr-1
+              | Voir les détails
+            - unless export.expired?
+              = link_to agents_export_download_path(export.id), class: "btn btn-link btn-sm", style: "white-space: nowrap", target: "_blank" do
+                i.fa.fa-download.mr-1
+                | Télécharger

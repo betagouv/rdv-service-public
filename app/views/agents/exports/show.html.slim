@@ -19,5 +19,7 @@
               dt = key
               dd = value
 
-        dt Télécharger
-        dd = link_to(@export.file_name, agents_export_download_path(@export.id), target: "_blank")
+    .text-right
+      = link_to(agents_export_download_path(@export.id), class: "btn btn-primary", target: "_blank") do
+        i.fa.fa-download.mr-1
+        | Télécharger
