@@ -4,9 +4,11 @@
 - content_for(:menu_item) { "menu-organisation-stats" }
 
 - content_for :title do
-  div.mb-0.pb-0 Statistiques #{current_organisation.name}
+  div.mb-0.pb-0 Statistiques de #{current_organisation.name}
 
-.card.mb-5
+= link_to("voir vos statistiques personnelles", admin_organisation_agent_stats_path(current_organisation, current_agent), class: "mb-4")
+
+.card.mb-5.mt-4
   .card-body
     = render "stats/rdv_counters_with_links", rdvs: @stats.rdvs, breadcrumb_page: "organisation_stats"
     p.text-muted.mt-2 Les exports se font dorénavant uniquement depuis les listes de RDVs, suivez les liens ci-dessus pour y accéder
