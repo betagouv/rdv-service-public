@@ -4,7 +4,7 @@ class ExportJob < ApplicationJob
   private
 
   def redis_key(export_id)
-    "ParticipationsExportJob-#{export_id}"
+    "ExportJob-#{export_id}"
   end
 
   def hard_timeout

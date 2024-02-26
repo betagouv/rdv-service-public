@@ -48,6 +48,11 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_23_134146) do
     "agents_and_prescripteurs_and_invited_users",
   ], force: :cascade
 
+  create_enum :export_type, [
+    "rdv_export",
+    "participations_export",
+  ], force: :cascade
+
   create_enum :lieu_availability, [
     "enabled",
     "disabled",
@@ -257,10 +262,10 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_23_134146) do
   end
 
   create_table "exports", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.enum "export_type", null: false, enum_type: "export_type"
     t.datetime "expires_at", null: false
     t.integer "agent_id", null: false
     t.string "file_name", null: false
-    t.text "content"
     t.jsonb "organisation_ids", null: false
     t.jsonb "options"
     t.datetime "created_at", null: false

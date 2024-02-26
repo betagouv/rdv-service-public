@@ -7,15 +7,19 @@ class Agents::ExportsController < AgentAuthController
 
   def index
     @exports = policy_scope(Export)
-      .available
+      .recent
       .order(created_at: :desc)
-      .select(Export.column_names - ["content"]) # Don't load large content from DB when we don't need it
   end
 
   def show
-    export = Export.find(params[:id])
+    @export = Export.find(params[:id])
+    authorize(@export)
+  end
+
+  def download
+    export = Export.find(params[:export_id])
     authorize(export)
-    send_data Base64.decode64(export.content), filename: export.file_name, type: "application/vnd.ms-excel"
+    send_data export.load_content, filename: export.file_name, type: "application/vnd.ms-excel"
   end
 
   private

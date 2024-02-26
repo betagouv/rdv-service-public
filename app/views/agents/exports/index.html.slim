@@ -3,24 +3,17 @@
 table.table
   thead
     tr
-      th Demandé le
-      th Organisations
-      th Filtres
-      th Expire le
       th
+      th Demandé le
+      th Expire le
   tbody
     - @exports.each do |export|
       tr
-        td = l(export.created_at, format: :dense)
-        td = Organisation.where(id: export.organisation_ids).pluck(:name).sort.join(", ")
         td
-          dl
-            - export.options.except("organisation_id").each do |key, value|
-              - next if Array(value).compact_blank.empty?
-              dt = key
-              dd = value
+          = link_to(export.file_name, agents_export_path(export.id))
+        td
+          = l(export.created_at, format: :dense)
         td
           = l(export.expires_at, format: :dense)
           br
           = "(dans #{distance_of_time_in_words_to_now(export.expires_at)})"
-        td = link_to("Télécharger", agents_export_path(export.id), target: "_blank")

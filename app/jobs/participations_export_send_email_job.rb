@@ -18,10 +18,9 @@ class ParticipationsExportSendEmailJob < ExportJob
 
     xls_string = ParticipationExporter.xls_string_from_participations_rows(rdvs_rows)
 
-    export.update!(content: Base64.encode64(xls_string))
+    export.store_content(xls_string)
 
-    # Using #deliver_now because we don't want to enqueue a job with a huge payload
-    Agents::ExportMailer.participations_export(export.id).deliver_now
+    Agents::ExportMailer.participations_export(export.id).deliver_later
 
     redis_connection.del(redis_key)
   ensure

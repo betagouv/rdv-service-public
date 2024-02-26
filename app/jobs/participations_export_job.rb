@@ -7,11 +7,11 @@ class ParticipationsExportJob < ExportJob
     participations = Participation.where(rdv_id: rdvs.select(:id)).order(id: :desc)
 
     export = Export.create!(
+      export_type: Export.export_types[:participations_export],
       agent_id: agent.id,
       file_name: file_name,
       organisation_ids: organisation_ids,
-      options: options,
-      expires_at: 2.days.from_now
+      options: options
     )
 
     batch = GoodJob::Batch.new(export_id: export.id)

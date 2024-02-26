@@ -1,0 +1,23 @@
+.card
+  .card-body
+    h5.card-title
+      ' Export du
+      = l(@export.created_at, format: :dense)
+    h6.card-subtitle.bt-2.text-muted
+      ' Cet export expirera dans
+      strong = distance_of_time_in_words_to_now(@export.expires_at)
+    p.card-text
+      dl
+        dt Organisation(s)
+        dd = Organisation.where(id: @export.organisation_ids).pluck(:name).sort.join(", ")
+
+        dt Filtres
+        dd.ml-3
+          dl
+            - @export.options.except("organisation_id").each do |key, value|
+              - next if Array(value).compact_blank.empty?
+              dt = key
+              dd = value
+
+        dt Télécharger
+        dd = link_to(@export.file_name, agents_export_download_path(@export.id), target: "_blank")

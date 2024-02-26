@@ -1,9 +1,9 @@
 class RdvsExportSendEmailJob < ExportJob
   def perform(batch, _params)
-    agent = Agent.find(batch.properties[:agent_id])
+    export = Export.find(batch.properties[:export_id])
 
     redis_connection = Redis.new(url: Rails.configuration.x.redis_url)
-    redis_key = batch.properties[:redis_key]
+    redis_key = redis_key(export.id)
 
     pages = redis_connection.hgetall(redis_key)
 
@@ -18,8 +18,9 @@ class RdvsExportSendEmailJob < ExportJob
 
     xls_string = RdvExporter.xls_string_from_rdvs_rows(rdvs_rows)
 
-    # Using #deliver_now because we don't want to enqueue a job with a huge payload
-    Agents::ExportMailer.rdv_export(agent, batch.properties[:file_name], xls_string).deliver_now
+    export.store_content(xls_string)
+
+    Agents::ExportMailer.rdv_export(export.id).deliver_later
 
     redis_connection.del(redis_key)
   ensure

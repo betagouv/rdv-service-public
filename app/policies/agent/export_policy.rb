@@ -5,6 +5,8 @@ class Agent::ExportPolicy < ApplicationPolicy
     record.agent == current_agent
   end
 
+  alias download? show?
+
   class Scope < Scope
     alias current_agent pundit_user
 

@@ -109,7 +109,9 @@ Rails.application.routes.draw do
           get "search"
         end
       end
-      resources :exports, only: %i[index show]
+      resources :exports, only: %i[index show] do
+        get :download
+      end
     end
     get "omniauth/microsoft_graph/callback" => "omniauth_callbacks#microsoft_graph"
   end
