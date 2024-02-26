@@ -33,9 +33,13 @@ RSpec.describe RdvsExportJob do
       described_class.perform_now(agent: agent, organisation_ids: [organisation.id], options: {})
 
       # Perform batch of jobs and callback job
+      expect { perform_enqueued_jobs }.to have_enqueued_mail
+      # Deliver email
       perform_enqueued_jobs
 
-      expect_zipped_attached_xls(expected_file_name: "export-rdv-2022-09-14-org-#{organisation.id.to_s.rjust(6, '0')}.xls")
+      expected_file_name = "export-rdv-2022-09-14-org-#{organisation.id.to_s.rjust(6, '0')}.xls"
+      email = email_sent_to(agent.email)
+      expect(email.html_part.body.to_s).to include(expected_file_name)
     end
 
     it "prevents agent from exporting an org in which she does not belong" do
