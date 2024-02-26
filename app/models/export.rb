@@ -1,4 +1,6 @@
 class Export < ApplicationRecord
+  EXPIRATION_DELAY = 6.hours
+
   # Relations
   belongs_to :agent
 
@@ -6,7 +8,7 @@ class Export < ApplicationRecord
   validates :expires_at, presence: true
 
   # Hooks
-  before_validation { self.expires_at ||= 6.hours.from_now }
+  before_validation { self.expires_at ||= EXPIRATION_DELAY.from_now }
 
   # Scopes
   scope :recent, -> { where("created_at > ?", 2.weeks.ago) }
@@ -16,18 +18,22 @@ class Export < ApplicationRecord
     participations_export: :participations_export,
   }
 
+  def expired?
+    expires_at <= Time.zone.now
+  end
+
   def load_content
     redis_connection = Redis.new(url: Rails.configuration.x.redis_url)
-    encoded_content = redis_connection.get(content_redis_key)
-    Base64.decode64(encoded_content)
+    gzipped_file = redis_connection.get(content_redis_key)
+    ActiveSupport::Gzip.decompress(gzipped_file)
   ensure
     redis_connection&.close
   end
 
   def store_content(content)
     redis_connection = Redis.new(url: Rails.configuration.x.redis_url)
-    encoded_content = Base64.encode64(content)
-    redis_connection.set(content_redis_key, encoded_content)
+    gzipped_file = ActiveSupport::Gzip.compress(content)
+    redis_connection.set(content_redis_key, gzipped_file)
     redis_connection.expire(content_redis_key, (expires_at - Time.zone.now).seconds.to_i)
   ensure
     redis_connection&.close

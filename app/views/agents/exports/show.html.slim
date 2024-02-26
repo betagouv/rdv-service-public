@@ -4,8 +4,8 @@
       ' Export du
       = l(@export.created_at, format: :dense)
     h6.card-subtitle.bt-2.text-muted
-      ' Cet export expirera dans
-      strong = distance_of_time_in_words_to_now(@export.expires_at)
+      ' Cet export expirera
+      strong = "#{relative_date(@export.expires_at.to_date)} à #{l(@export.expires_at, format: :time_only)}"
     p.card-text
       dl
         dt = "Organisation".pluralize(@export.organisation_ids.size)
