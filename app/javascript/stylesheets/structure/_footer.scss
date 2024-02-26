@@ -38,6 +38,10 @@ footer.main-footer {
   border-top: 1px solid rgba($gray-600, 0.2);
   padding: 19px 30px 20px;
   color: $gray-600;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 100%
 }
 
 body.users .footer {left: 0;}
