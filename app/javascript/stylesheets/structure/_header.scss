@@ -35,6 +35,15 @@ header {
     }
 }
 
+.navbar-dsfr--compact {
+  padding: 0;
+
+  .logo-dsfr {
+    width: 8rem;
+    padding: 0.7rem;
+  }
+}
+
 .logo-dsfr {
     max-height: 3.3rem;
     padding: 0.3rem;

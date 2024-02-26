@@ -200,7 +200,7 @@ group :development do
   # Entity-relationship diagram for your Rails models.
   gem "rails-erd" # Keeps docs/domain_model.svg up-to-date. See .erdconfig
   # Profiles loading speed for rack applications.
-  gem "rack-mini-profiler"
+  # gem "rack-mini-profiler"
 end
 
 group :test do

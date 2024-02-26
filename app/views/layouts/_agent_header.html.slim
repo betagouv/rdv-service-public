@@ -3,7 +3,7 @@ header.header.bg-white.mb-4
   = render "layouts/degraded_service", message: ENV["DEGRADED_SERVICE_MESSAGE_USERS"]
 
   .container
-    nav.navbar.navbar-expand-lg.bg-transparent.navbar-dsfr title="navigation"
+    nav.navbar.navbar-expand-lg.bg-transparent.navbar-dsfr.navbar-dsfr--compact title="navigation"
       = link_to root_path, class: "header-brand" do
         = image_tag current_domain.dark_logo_path, alt: current_domain.name, class: "logo-dsfr"
       button.navbar-toggler.navbar-toggler-right aria-controls="navbarSupportedContent" aria-expanded="false" aria-label=("Toggle navigation") data-target="#navbarSupportedContent" data-toggle="collapse" type="button"
