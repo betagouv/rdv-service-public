@@ -26,7 +26,6 @@ module RdvExporter
   ].freeze
 
   def self.xls_string_from_rdvs_rows(rdvs_rows)
-    Spreadsheet.client_encoding = "UTF-8"
     workbook = Spreadsheet::Workbook.new
     sheet = workbook.create_worksheet
     sheet.row(0).concat(HEADER)

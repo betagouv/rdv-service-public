@@ -6,7 +6,7 @@ class Agents::ExportMailer < ApplicationMailer
 
     mail(
       to: @export.agent.email,
-      subject: I18n.t("mailers.agents.export_mailer.rdv_export.subject", date: I18n.l(Time.zone.now))
+      subject: I18n.t("mailers.agents.export_mailer.rdv_export.subject", date: I18n.l(Time.zone.now, format: :dense))
     )
   end
 
@@ -15,7 +15,7 @@ class Agents::ExportMailer < ApplicationMailer
 
     mail(
       to: @export.agent.email,
-      subject: I18n.t("mailers.agents.export_mailer.full_participation_export.subject", date: I18n.l(Time.zone.now))
+      subject: I18n.t("mailers.agents.export_mailer.full_participation_export.subject", date: I18n.l(Time.zone.now, format: :dense))
     )
   end
 
