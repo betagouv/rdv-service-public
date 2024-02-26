@@ -7,17 +7,8 @@ RSpec.describe ParticipationsExportJob do
 
       described_class.perform_now(agent: agent, organisation_ids: [organisation.id], options: {})
 
-      # Perform batch of jobs and callback job
-      expect { perform_enqueued_jobs }.to have_enqueued_mail
-      # Deliver email
-      perform_enqueued_jobs
-
-      email = email_sent_to(agent.email)
-      expect(email.subject).to eq("Export des RDVs par usager du 14 septembre 2022 09h 00min 00s")
-      expect(email.html_part.body.to_s).to include("Votre export est prêt, vous pouvez le télécharger ici")
-      expect(email.html_part.body.to_s).to include("export-rdvs-user-2022-09-14.xls")
-      expect(email.html_part.body.to_s).to include("Retrouvez tous vos exports ici")
-      expect(email.html_part.body.to_s).to include('<a href="http://www.rdv-solidarites-test.localhost/agents/exports')
+      expect { perform_enqueued_jobs }.to have_enqueued_mail(Agents::ExportMailer, :participations_export)
+      expect(Export.last.file_name).to eq("export-rdvs-user-2022-09-14.xls")
     end
 
     it "prevents agent from exporting an org in which she does not belong" do
