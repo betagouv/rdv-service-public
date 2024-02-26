@@ -17,5 +17,9 @@
             = mail_to(current_domain.support_email, current_domain.support_email)
             | .
 
-          .text-right
-            = f.button :submit
+          .row.align-items-center.mt-3
+            - if params[:redirect_to_organisation_id]
+              .col.text-left
+                = link_to("Annuler", new_admin_organisation_agent_path(params[:redirect_to_organisation_id]))
+            .col.text-right
+              = f.button :submit

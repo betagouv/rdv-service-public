@@ -11,7 +11,7 @@
           = render "devise/shared/error_messages", resource: @agent
           = f.simple_fields_for @agent_role do |ff|
 
-            label.card-title Niveau de permissions
+            label.big-label Niveau de permissions
             .text-muted.form-text
               | Quel type d'agent souhaitez-vous ajouter ?
             - # rubocop:disable Rails/OutputSafety
@@ -25,12 +25,12 @@
           - # rubocop:enable Rails/OutputSafety
 
           .js_agent_role_form__agent_with_account_fields
-            = f.input :email, placeholder: "a.dupond@departement.fr", input_html: { autocomplete: "off"}, label_html: { class: "card-title mt-3" }, hint: "Une invitation sera envoyée automatiquement à cette adresse"
+            = f.input :email, placeholder: "a.dupond@departement.fr", input_html: { autocomplete: "off"}, label_html: { class: "big-label mt-3" }, hint: "Une invitation sera envoyée automatiquement à cette adresse"
 
           .js_agent_role_form__intervenant_fields
-            = f.input :last_name, input_html: { autocomplete: "off"}, label: "Nom", label_html: { class: "card-title mt-3" }
+            = f.input :last_name, input_html: { autocomplete: "off"}, label: "Nom", label_html: { class: "big-label mt-3" }
 
-          label.card-title.mt-3 Services
+          label.big-label.mt-3 Services
           .text-muted.form-text
             | Pour quel service est-ce que cet agent travaille ?
           = f.association :services, collection: @services, include_blank: false, as: :check_boxes, label: ""
