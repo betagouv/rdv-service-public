@@ -36,12 +36,8 @@ footer.main-footer {
 // only used for agents
 .footer {
   border-top: 1px solid rgba($gray-600, 0.2);
-  bottom: 0;
   padding: 19px 30px 20px;
-  position: absolute;
-  right: 0;
   color: $gray-600;
-  left: $leftbar-width;
 }
 
 body.users .footer {left: 0;}
