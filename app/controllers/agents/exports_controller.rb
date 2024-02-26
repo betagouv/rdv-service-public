@@ -1,6 +1,4 @@
 class Agents::ExportsController < AgentAuthController
-  include Admin::AuthenticatedControllerConcern
-
   layout "registration"
 
   before_action { @active_agent_preferences_menu_item = :exports }
