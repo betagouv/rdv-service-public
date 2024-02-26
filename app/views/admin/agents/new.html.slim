@@ -15,10 +15,10 @@
             .text-muted.form-text
               | Quel type d'agent souhaitez-vous ajouter ?
             - # rubocop:disable Rails/OutputSafety
-            = ff.input :access_level, \
-              collection: @roles, \
-              label_method: -> { AgentRole.human_attribute_value(:access_level, _1, context: :explanation).html_safe }, \
-              hint: ("Les agents peuvent avoir des permissions différentes sur chaque organisation." if @current_territory.organisations.count > 1), \
+            = ff.input :access_level,
+              collection: @roles,
+              label_method: -> { AgentRole.human_attribute_value(:access_level, _1, context: :explanation).html_safe },
+              hint: ("Les agents peuvent avoir des permissions différentes sur chaque organisation." if @current_territory.organisations.count > 1),
               as: :radio_buttons,
               label: "",
               html: { class: "mt-4" }
