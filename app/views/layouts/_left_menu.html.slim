@@ -1,7 +1,7 @@
 nav
   .left-side-menu
-    .d-flex.logo-and-hamburger.align-items-center.p-2
-      div.d-md-none
+    .d-flex.logo-and-hamburger.align-items-center
+      div.d-md-none.p-2
         a.d-flex.align-items-center data-toggle="collapse" href="#menu-agent"
           span> Menu
           span.h3.ml-1
@@ -11,10 +11,10 @@ nav
     - else
 
       ul.side-nav.list-unstyled#menu-agent.pb-3.mb-0
-        li.side-nav-item.mb-2.ml-3.pr-2
+        li.side-nav-item.p-2
           .d-flex.justify-content-center
             = link_to "Trouver un RDV", search_rdv_slot_url_with(@user), class: "btn bg-white align-bottom text-dark"
-        li.side-nav-item.connected-agent.mb-3.pl-3.pr-2.py-2
+        li.side-nav-item.connected-agent.mb-1.pl-3.pr-2.py-2
           a[
             data-toggle="collapse"
             href=".left-submenu-account"
