@@ -16,7 +16,6 @@ class Admin::Territories::ServicesController < Admin::Territories::BaseControlle
     if params[:redirect_to_organisation_id].present?
       redirect_to new_admin_organisation_agent_path(params[:redirect_to_organisation_id])
     else
-      flash[:alert] = "Liste des services disponibles mise à jour"
       redirect_to edit_admin_territory_services_path(current_territory)
     end
   end
