@@ -6,7 +6,8 @@
 - content_for :title do
   div.mb-0.pb-0 Statistiques de #{current_organisation.name}
 
-= link_to("voir vos statistiques personnelles", admin_organisation_agent_stats_path(current_organisation, current_agent), class: "mb-4")
+- content_for :breadcrumb do
+  = link_to("Voir vos statistiques personnelles", admin_organisation_agent_stats_path(current_organisation, current_agent), class: "mb-4")
 
 .card.mb-5.mt-4
   .card-body

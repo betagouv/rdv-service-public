@@ -1,10 +1,10 @@
 header.header.bg-white
-  /= render "layouts/rdv_solidarites_instance_name"
+  = render "layouts/rdv_solidarites_instance_name"
   = render "layouts/degraded_service", message: ENV["DEGRADED_SERVICE_MESSAGE_USERS"]
 
   nav.navbar.navbar-expand-lg.bg-transparent.navbar-dsfr title="navigation"
     = link_to root_path, class: "header-brand ml-4" do
-      = image_tag current_domain.dark_logo_path, alt: current_domain.name, class: "logo-dsfr"
+      = image_tag current_domain.dark_logo_path, alt: current_domain.name, class: "logo-dsfr logo-dsfr--compactable"
     button.navbar-toggler.navbar-toggler-right aria-controls="navbarSupportedContent" aria-expanded="false" aria-label=("Toggle navigation") data-target="#navbarSupportedContent" data-toggle="collapse" type="button"
       i.fa.fa-bars.text-primary-blue
     #navbarSupportedContent.collapse.navbar-collapse

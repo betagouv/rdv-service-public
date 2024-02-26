@@ -15,13 +15,11 @@ html lang="fr"
               = render "layouts/rdv_a_renseigner", agent: current_agent, organisation: defined?(current_organisation) ? current_organisation : nil
             .container-fluid
               - if content_for :title
-                .row.justify-content-md-center
-                  div.col-md-12
-                    .page-title-box
-                      - if content_for :breadcrumb
-                        .page-title-right
-                          = yield :breadcrumb
-                      h1.page-title= yield :title
+                  .page-title-box
+                    h1.page-title= yield :title
+                    - if content_for :breadcrumb
+                      .page-title-right
+                        = yield :breadcrumb
               = render "layouts/flash"
               = yield
 
