@@ -4,7 +4,7 @@ table.table
   thead
     tr
       th
-      th Demandé le
+      th Création
       th Expiration
       th Télécharger
   tbody
@@ -13,9 +13,9 @@ table.table
         td
           = link_to(export.file_name, agents_export_path(export.id))
         td
-          = l(export.created_at, format: :dense)
+          = relative_date_and_time(export.created_at)
         td
-          = "#{relative_date(export.expires_at.to_date)} à #{l(export.expires_at, format: :time_only)}"
+          = relative_date_and_time(export.expires_at)
         td
           - unless export.expired?
             = link_to agents_export_download_path(export.id), target: "_blank" do

@@ -12,6 +12,10 @@ module DateHelper
     end
   end
 
+  def relative_date_and_time(datetime)
+    "#{relative_date(datetime.to_date)} à #{l(datetime, format: :time_only)}"
+  end
+
   # true if the passed date (or time) is today or tomorrow
   def soon_date?(date)
     return false unless date.respond_to?(:to_date)
