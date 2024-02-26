@@ -1,3 +1,12 @@
+.content-and-left-menu-wrapper {
+  display: flex;
+  flex-direction: column;
+
+  @include media-breakpoint-up(sm) {
+    flex-direction: row;
+  }
+}
+
 .content-page {
   overflow: hidden;
   min-height: 100vh;
@@ -6,7 +15,9 @@
 .left-side-menu {
   background: $bg-leftbar;
   scrollbar-width: thin;
-  height: 100vh;
+  @include media-breakpoint-up(sm) {
+    height: 100vh;
+  }
 
   a {
     color: $menu-item;
