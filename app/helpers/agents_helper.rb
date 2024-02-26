@@ -71,4 +71,10 @@ module AgentsHelper
       }
     )
   end
+
+  def navigation_scoped_by_agent_services?(current_agent, current_organisation)
+    return false if current_agent.secretaire?
+
+    !current_agent.roles.access_level_admin.exists?(organisation_id: current_organisation.id)
+  end
 end
