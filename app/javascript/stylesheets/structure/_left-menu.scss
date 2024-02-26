@@ -9,15 +9,16 @@
 
 .content-page {
   overflow: hidden;
-  min-height: 100vh;
+  min-height: calc(100vh - 76px); // taille du footer
+  padding-bottom: 76px; //idem
 }
 
+.left-side-menu-wrapper {
+  background: $bg-leftbar;
+}
 .left-side-menu {
   background: $bg-leftbar;
   scrollbar-width: thin;
-  @include media-breakpoint-up(sm) {
-    height: 100vh;
-  }
 
   a {
     color: $menu-item;
