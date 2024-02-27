@@ -16,10 +16,6 @@
               = ". "
               = link_to "En savoir plus", domaines_path
           li.mb-2
-            = link_to image_tag("logos/logo-incub-territoire.svg", size: "80x70", alt:"incubateur.anct.gouv.fr"), "https://incubateur.anct.gouv.fr/", title: "Aller sur le site de l'incubateur des territoires"
-          li.mb-2
-            = link_to image_tag("logos/logo-beta-gouv-fr.svg", size: "150x25", alt:"beta.gouv.fr"), "https://beta.gouv.fr/", title: "Aller sur le site beta.gouv.fr"
-          li.mb-2
             = image_tag "logos/republique-francaise-logo.svg", size: "105x90", alt:""
     .col-6.col-md
       h2 À propos
@@ -52,3 +48,11 @@
           span> C.G.U.
         li.mb-1 = link_to politique_de_confidentialite_path do
           span> Politique de confidentialité
+  hr
+  .fr-footer__partners
+    h3.fr-footer__partners-title Nos partenaires
+    .fr-footer__partners-logos
+      .fr-footer__partners-main
+        = link_to(image_tag("logos/logo-beta-gouv-fr.svg", alt: "Logo de BetaGouv", size: "150x25"), "https://beta.gouv.fr/", class: "fr-footer__partners-link" )
+        = link_to(image_tag("logos/logo_anct.png", alt: "Logo de l'ANCT", style: "height: 5.625rem"), "https://agence-cohesion-territoires.gouv.fr/", class: "fr-footer__partners-link" )
+        = link_to(image_tag("logos/logo_dinum.svg", alt: "Logo de la Dinum", style: "height: 5.625rem"), "https://www.numerique.gouv.fr/dinum/", class: "fr-footer__partners-link" )
