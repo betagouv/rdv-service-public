@@ -1,14 +1,13 @@
 .page-title-box {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  padding-top: 12px;
 
   .page-title {
     margin: 0;
     line-height: 85px;
   }
   .page-title-right {
-    margin-top: 12px;
     margin-bottom: 12px;
   }
 
