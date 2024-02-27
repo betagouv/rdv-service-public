@@ -33,6 +33,14 @@ RSpec.describe Admin::RdvsController, type: :controller do
 
       expect(assigns(:form)).not_to be_nil
     end
+
+    context "with invalid dates" do
+      it "respond success" do
+        get(:index, params: { organisation_id: organisation.id, agent_id: agent.id, start: "invalid_date", end: "__/__/____" })
+
+        expect(response).to be_successful
+      end
+    end
   end
 
   describe "GET #edit" do
