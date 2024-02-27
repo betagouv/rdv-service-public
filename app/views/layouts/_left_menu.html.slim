@@ -58,29 +58,28 @@ nav.left-side-menu-wrapper
             li.my-2
               = active_link_to "RDV collectifs", admin_organisation_rdvs_collectifs_path(current_organisation)
 
-        - menu_item_padding = "side-menu__item"
         li.side-nav-item
-          = active_link_to(admin_organisation_users_path(current_organisation), class: menu_item_padding)
+          = active_link_to(admin_organisation_users_path(current_organisation), class: "side-menu__item")
             i.fa.fa-user>
             span.ml-1 Usagers
 
         li.side-nav-item
-          = active_link_to(admin_organisation_rdvs_path(current_organisation), class: menu_item_padding)
+          = active_link_to(admin_organisation_rdvs_path(current_organisation), class: "side-menu__item")
             i.fa.fa-list>
             span.ml-1 Liste des RDV
 
         li.side-nav-item
-          = active_link_to(admin_organisation_stats_path(current_organisation), class: menu_item_padding)
+          = active_link_to(admin_organisation_stats_path(current_organisation), class: "side-menu__item")
             i.fa.fa-chart-bar>
             span.ml-1 Statistiques
 
         - unless current_agent_role.admin?
           li.side-nav-item.mb-4.pl-3.pr-2
-            = active_link_to admin_organisation_lieux_path(current_organisation), class: menu_item_padding
+            = active_link_to admin_organisation_lieux_path(current_organisation), class: "side-menu__item"
               i.fa.fa-building>
               span.ml-1 Lieux
           li.side-nav-item.mb-4.pl-3.pr-2
-            = active_link_to admin_organisation_motifs_path(current_organisation), class: menu_item_padding
+            = active_link_to admin_organisation_motifs_path(current_organisation), class: "side-menu__item"
               i.fa.fa-paste>
               span.ml-1 Motifs
 
@@ -90,7 +89,7 @@ nav.left-side-menu-wrapper
               data-toggle="collapse"
               href=".left-submenu-settings"
               aria-expanded=(menu_top_level_item == "settings" ? "true" : "false")
-              class=menu_item_padding
+              class="side-menu__item"
             ]
               .d-flex.justify-content-between
                 div
@@ -119,6 +118,6 @@ nav.left-side-menu-wrapper
                   i.fa.fa-cog>
                   = t(".configuration")
         li.side-nav-item
-          = active_link_to admin_organisation_support_path(current_organisation), class: menu_item_padding
+          = active_link_to admin_organisation_support_path(current_organisation), class: "side-menu__item"
             i.fa.fa-question-circle>
             span.ml-1 Support
