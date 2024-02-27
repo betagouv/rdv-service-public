@@ -9,8 +9,13 @@
 
 .content-page {
   overflow: hidden;
-  min-height: calc(100vh - 76px); // taille du footer
-  padding-bottom: 76px; //idem
+  min-height: calc(100vh - 73px); // taille du header, arrondie au supérieur
+  padding-bottom: 73px; //idem
+
+  @media (max-height: 800px) {
+    min-height: calc(100vh - 49px); // taille du header
+    padding-bottom: 49px; //idem
+  }
 }
 
 .left-side-menu-wrapper {
