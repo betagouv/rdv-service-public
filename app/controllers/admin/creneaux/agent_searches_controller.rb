@@ -52,9 +52,12 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
 
   def set_search_results
     return unless (params[:commit].present? || request.format.js?) && @form.valid?
+    # Dans le cas où @form.motif_id est présent, mais le motif correspondent n'existe plus
+    # Erreur sentry: https://sentry.incubateur.net/organizations/betagouv/issues/87286/?project=74
+    return if @form.motif.blank?
 
     # Un RDV collectif peut-il avoir lieu à domicile ou au téléphone ?
-    @search_results = if motif_selected? && @form.motif.individuel?
+    @search_results = if @form.motif.individuel?
                         search_creneaux_service
                       else
                         SearchRdvCollectifForAgentsService.new(@form).lieu_search
