@@ -25,9 +25,9 @@ nav.left-side-menu-wrapper
               - if current_agent.organisations.count > 1
                 div.d-flex.align-items-center
                   i.fa.fa-angle-down.menu-arrow.mt-1
-            ul.list-unstyled.pl-2.left-submenu-account.collapse
-              li.my-2
-                = link_to "Changer d'organisation", admin_organisations_path
+            ul.list-unstyled.left-submenu-account.collapse
+              li
+                = link_to "Changer d'organisation", admin_organisations_path, class: "p-2"
 
         li.side-nav-item
           a.side-menu__item[
@@ -41,22 +41,22 @@ nav.left-side-menu-wrapper
                 span.ml-1 Planning
               div
                 i.fa.fa-angle-down.menu-arrow.mt-1
-          ul.list-unstyled.ml-4.pl-2.pr-2.left-submenu-planning.collapse[
+          ul.list-unstyled.ml-4.pr-2.left-submenu-planning.collapse[
             class=("show" if menu_top_level_item == "planning")
           ]
             - agent_for_left_menu = @agent&.persisted? ? @agent : current_agent
             - path_helper_name = content_for(:menu_agent_select_path_helper_name) || :admin_organisation_agent_agenda_path
             li
-              form.my-2
+              form.my-2.pl-2
                 = planning_agent_select(agent_for_left_menu, path_helper_name)
-            li.my-2
-              = active_link_to "Agenda", admin_organisation_agent_agenda_path(current_organisation, agent_for_left_menu)
-            li.my-2
-              = active_link_to "Plages d'ouverture", admin_organisation_agent_plage_ouvertures_path(current_organisation, agent_for_left_menu)
-            li.my-2
-              = active_link_to t(".busy_times"), admin_organisation_agent_absences_path(current_organisation, agent_for_left_menu)
-            li.my-2
-              = active_link_to "RDV collectifs", admin_organisation_rdvs_collectifs_path(current_organisation)
+            li
+              = active_link_to "Agenda", admin_organisation_agent_agenda_path(current_organisation, agent_for_left_menu), class: "side-menu__sub-item"
+            li
+              = active_link_to "Plages d'ouverture", admin_organisation_agent_plage_ouvertures_path(current_organisation, agent_for_left_menu), class: "side-menu__sub-item"
+            li
+              = active_link_to t(".busy_times"), admin_organisation_agent_absences_path(current_organisation, agent_for_left_menu), class: "side-menu__sub-item"
+            li
+              = active_link_to "RDV collectifs", admin_organisation_rdvs_collectifs_path(current_organisation), class: "side-menu__sub-item"
 
         li.side-nav-item
           = active_link_to(admin_organisation_users_path(current_organisation), class: "side-menu__item")
