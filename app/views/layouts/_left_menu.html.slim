@@ -24,7 +24,7 @@ nav.left-side-menu-wrapper
                     span= current_agent.services_short_names
               - if current_agent.organisations.count > 1
                 div.d-flex.align-items-center
-                  i.fa.fa-angle-right.menu-arrow.mt-1
+                  i.fa.fa-angle-down.menu-arrow.mt-1
             ul.list-unstyled.ml-3.left-submenu-account.collapse
               li.my-2
                 = link_to "Changer d'organisation", admin_organisations_path
@@ -40,7 +40,7 @@ nav.left-side-menu-wrapper
                 i.far.fa-clock>
                 span.ml-1 Planning
               div
-                i.fa.fa-angle-right.menu-arrow.mt-1
+                i.fa.fa-angle-down.menu-arrow.mt-1
           ul.list-unstyled.ml-3.left-submenu-planning.collapse[
             class=("show" if menu_top_level_item == "planning")
           ]
@@ -95,7 +95,7 @@ nav.left-side-menu-wrapper
                   i.fa.fa-cog>
                   span.ml-1 Paramètres
                 div
-                  i.fa.fa-angle-right.menu-arrow.mt-1
+                  i.fa.fa-angle-down.menu-arrow.mt-1
             ul.list-unstyled.ml-3.left-submenu-settings.collapse[
               class=("show" if menu_top_level_item == "settings")
             ]

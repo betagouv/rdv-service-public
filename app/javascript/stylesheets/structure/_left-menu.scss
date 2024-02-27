@@ -27,7 +27,9 @@
 
   a {
     color: $menu-item;
-    transition: all 0.4s;
+    transition: all 0.2s;
+    display: block;
+    width: 100%; //permet d'augmenter la surface du lien pour le rendre plus facilement clickable
 
     &:hover,
     &:focus,
@@ -37,14 +39,18 @@
       color: $menu-item-hover;
       text-decoration: none;
     }
+
+    &:hover {
+      background-color: lighten($bg-leftbar, 10%);
+    }
   }
 
   .menu-arrow {
-    transition: transform .15s
+    transition: transform .4s
   }
 
   [aria-expanded=true] .menu-arrow {
-    transform: rotate(90deg);
+    transform: rotate(-180deg);
   }
 
   .badge{
