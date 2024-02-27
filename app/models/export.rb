@@ -18,6 +18,10 @@ class Export < ApplicationRecord
     participations_export: :participations_export,
   }
 
+  def to_s
+    "Export du #{I18n.l(created_at.to_date)}"
+  end
+
   def expired?
     expires_at <= Time.zone.now
   end

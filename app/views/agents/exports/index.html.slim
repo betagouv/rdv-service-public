@@ -1,26 +1,28 @@
 - content_for :title, t(".title")
 
-= link_to("Retour à la liste des exports", agents_exports_path)
-
-table.table.table-sm
-  thead
-    tr
-      th Nom du fichier
-      th Création
-      th
-  tbody
-    - @exports.each do |export|
+- if @exports.any?
+  table.table.table-sm
+    thead
       tr
-        td.align-middle
-          = export.file_name
-        td.align-middle
-          = relative_date_and_time(export.created_at)
-        td.align-middle
-          .d-flex
-            = link_to agents_export_path(export.id), class: "btn btn-link btn-sm", style: "white-space: nowrap" do
-              i.fa.fa-eye.mr-1
-              | Voir les détails
-            - unless export.expired?
-              = link_to agents_export_download_path(export.id), class: "btn btn-link btn-sm", style: "white-space: nowrap", target: "_blank" do
-                i.fa.fa-download.mr-1
-                | Télécharger
+        th Nom du fichier
+        th Création
+        th
+    tbody
+      - @exports.each do |export|
+        tr
+          td.align-middle
+            = export.file_name
+          td.align-middle
+            = relative_date_and_time(export.created_at)
+          td.align-middle
+            .d-flex
+              = link_to agents_export_path(export.id), class: "btn btn-link btn-sm", style: "white-space: nowrap" do
+                i.fa.fa-eye.mr-1
+                | Voir les détails
+              - unless export.expired?
+                = link_to agents_export_download_path(export.id), class: "btn btn-link btn-sm", style: "white-space: nowrap", target: "_blank" do
+                  i.fa.fa-download.mr-1
+                  | Télécharger
+
+- else
+  .text-center.py-2 Vous n'avez aucun export

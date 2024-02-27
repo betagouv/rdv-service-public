@@ -21,3 +21,5 @@ fr:
     exports:
       index:
         title: Vos exports
+      show:
+        title: Votre export
