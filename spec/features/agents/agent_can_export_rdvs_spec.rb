@@ -26,7 +26,7 @@ RSpec.describe "agent can export RDVs" do
     expected_file_name = "export-rdv-2022-09-14-org-#{organisation.id.to_s.rjust(6, '0')}.xls"
     current_email.click_link(expected_file_name)
     expect(page).to have_current_path("/agents/exports/#{export.id}")
-    click_on expected_file_name
+    click_on "Télécharger"
     book = Spreadsheet.open(StringIO.new(page.body))
     expect(book.worksheets[0].row(0)[11]).to eq("professionnel.le(s)")
     expect(book.worksheets[0].row(1)[11]).to eq(rdv.agents.first.full_name)
@@ -49,7 +49,7 @@ RSpec.describe "agent can export RDVs" do
 
     current_email.click_link("export-rdvs-user-2022-09-14.xls")
     expect(page).to have_current_path("/agents/exports/#{export.id}")
-    click_on "export-rdvs-user-2022-09-14.xls"
+    click_on "Télécharger"
     book = Spreadsheet.open(StringIO.new(page.body))
     expect(book.worksheets[0].row(0)[1]).to eq("rdv_id")
     expect(book.worksheets[0].row(1)[1]).to eq(rdv.id)
