@@ -85,4 +85,8 @@ module AgentsHelper
       tag.div(&block)
     end
   end
+
+  def access_level_label(access_level)
+    AgentRole.human_attribute_value(:access_level, access_level, context: :explanation).html_safe # rubocop:disable Rails/OutputSafety
+  end
 end

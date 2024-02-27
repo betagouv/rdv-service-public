@@ -9,22 +9,33 @@
       .card-body.js_agent_role_form
         = simple_form_for [:admin, @agent], url: admin_organisation_agents_path(current_organisation, @agent), html: { method: :post } do |f|
           = render "devise/shared/error_messages", resource: @agent
-          = f.association :services, collection: @services, include_blank: false, input_html: { class: "select2-input" }
-          - # rubocop:disable Rails/OutputSafety
           = f.simple_fields_for @agent_role do |ff|
-            = ff.input :access_level, \
-              collection: @roles, \
-              label_method: -> { AgentRole.human_attribute_value(:access_level, _1, context: :explanation).html_safe }, \
-              hint: "Les agents peuvent avoir des permissions différentes sur chaque organisation.", \
-              as: :radio_buttons
-          - # rubocop:enable Rails/OutputSafety
+
+            label.big-label Niveau de permissions
+            .text-muted.form-text
+              | Quel type d'agent souhaitez-vous ajouter ?
+            = ff.input :access_level,
+              collection: @roles,
+              label_method: -> { access_level_label(_1) },
+              hint: ("Les agents peuvent avoir des permissions différentes sur chaque organisation." if @current_territory.organisations.count > 1),
+              as: :radio_buttons,
+              label: "",
+              html: { class: "mt-4" }
 
           .js_agent_role_form__agent_with_account_fields
-            = f.input :email, placeholder: "jean.dupond@departement.fr", input_html: { autocomplete: "off"}
-            .text-right
-              = f.button :submit, "Envoyer une invitation"
+            = f.input :email, placeholder: "a.dupond@departement.fr", input_html: { autocomplete: "off"}, label_html: { class: "big-label mt-3" }, hint: "Une invitation sera envoyée automatiquement à cette adresse"
 
           .js_agent_role_form__intervenant_fields
-            = f.input :last_name, input_html: { autocomplete: "off"}, label: "Nom"
-            .text-right
-              = f.button :submit, "Ajouter l'intervenant"
+            = f.input :last_name, input_html: { autocomplete: "off"}, label: "Nom", label_html: { class: "big-label mt-3" }
+
+          label.big-label.mt-3 Services
+          .text-muted.form-text
+            | Pour quel service est-ce que cet agent travaille ?
+          = f.association :services, collection: @services, include_blank: false, as: :check_boxes, label: ""
+          - if policy([:agent, current_territory]).edit?
+            small.form-text.text-muted.mb-4
+              = "Si le service dont vous avez besoin n'apparaît pas dans cette liste, vous pouvez "
+              = link_to("activer des services supplémentaires", edit_admin_territory_services_path(current_territory, redirect_to_organisation_id: current_organisation.id))
+
+          .text-right
+            = f.button :submit, "Enregistrer"
