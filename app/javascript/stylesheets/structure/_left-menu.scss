@@ -28,8 +28,20 @@
   a {
     color: $menu-item;
     transition: all 0.2s;
-    display: block;
-    width: 100%; //permet d'augmenter la surface du lien pour le rendre plus facilement clickable
+
+    &.side-menu__item {
+      display: block;
+      width: 100%; //permet d'augmenter la surface du lien pour le rendre plus facilement clickable
+      padding: 20px 12px 20px 24px;
+
+      &:hover {
+        background-color: lighten($bg-leftbar, 5%);
+      }
+
+      &[aria-expanded="true"] {
+        margin-bottom: -12px;
+      }
+    }
 
     &:hover,
     &:focus,
@@ -40,9 +52,6 @@
       text-decoration: none;
     }
 
-    &:hover {
-      background-color: lighten($bg-leftbar, 10%);
-    }
   }
 
   .menu-arrow {
