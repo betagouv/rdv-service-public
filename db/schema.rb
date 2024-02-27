@@ -263,6 +263,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_23_134146) do
 
   create_table "exports", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.enum "export_type", null: false, enum_type: "export_type"
+    t.datetime "computed_at"
     t.datetime "expires_at", null: false
     t.integer "agent_id", null: false
     t.string "file_name", null: false

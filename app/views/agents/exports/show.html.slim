@@ -5,27 +5,35 @@
   | Retour à la liste des exports
 
 .card
-  .card-body
+  .card-header
     h5.card-title
       ' Export du
       = l(@export.created_at, format: :dense)
-    h6.card-subtitle.bt-2.text-muted
-      ' Cet export expirera
-      strong = "#{relative_date(@export.expires_at.to_date)} à #{l(@export.expires_at, format: :time_only)}"
-    p.card-text
-      dl
-        dt = "Organisation".pluralize(@export.organisation_ids.size)
-        dd = Organisation.where(id: @export.organisation_ids).pluck(:name).sort.join(", ")
+      span.ml-2
+        = render partial: "agents/exports/export_badge", locals: { export: @export }
+  .card-body
+    .row
+      .col
+        dl
+          dt = "Organisation".pluralize(@export.organisation_ids.size)
+          dd
+            ul
+              - Organisation.where(id: @export.organisation_ids).sort.each do |organisation|
+                li = organisation.name
 
-        dt Filtres
-        dd.ml-3
-          dl
-            - @export.options.except("organisation_id").each do |key, value|
-              - next if Array(value).compact_blank.empty?
-              dt = key
-              dd = value
+          - options = @export.options.except("organisation_id").compact_blank
+          dt Filtres
+          - if options.present?
+            dd.ml-3
+              dl
+                - options.each do |key, value|
+                  - next if Array(value).compact_blank.empty?
+                  dt = key
+                  dd = value
+          - else
+            dd N/A
 
-    .text-right
-      = link_to(agents_export_download_path(@export.id), class: "btn btn-primary", target: "_blank") do
-        i.fa.fa-download.mr-1
-        | Télécharger
+      .col
+        = link_to(agents_export_download_path(@export.id), class: "btn btn-primary", target: "_blank") do
+          i.fa.fa-download.mr-1
+          | Télécharger

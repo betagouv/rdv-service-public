@@ -4,6 +4,7 @@ class CreateExports < ActiveRecord::Migration[7.0]
 
     create_table :exports, id: :uuid do |t|
       t.enum :export_type, enum_type: :export_type, null: false
+      t.datetime :computed_at
       t.datetime :expires_at, null: false
       t.integer :agent_id, null: false
       t.string :file_name, null: false

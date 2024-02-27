@@ -1,6 +1,10 @@
 class Export < ApplicationRecord
   EXPIRATION_DELAY = 6.hours
 
+  STATUS_PENDING = :pending
+  STATUS_EXPIRED = :expired
+  STATUS_AVAILABLE = :available
+
   # Relations
   belongs_to :agent
 
@@ -19,11 +23,33 @@ class Export < ApplicationRecord
   }
 
   def to_s
-    "Export du #{I18n.l(created_at.to_date)}"
+    type = case export_type
+           when self.class.export_types[:rdv_export]
+             "de RDV"
+           when self.class.export_types[:participations_export]
+             "de RDV par usager"
+           else
+             raise "oh no"
+           end
+    "Export #{type} du #{I18n.l(created_at, format: :dense)}"
   end
 
   def expired?
     expires_at <= Time.zone.now
+  end
+
+  def available?
+    computed_at && !expired?
+  end
+
+  def status
+    if expired?
+      STATUS_EXPIRED
+    elsif computed_at
+      STATUS_AVAILABLE
+    else
+      STATUS_PENDING
+    end
   end
 
   def load_content
@@ -35,10 +61,13 @@ class Export < ApplicationRecord
   end
 
   def store_content(content)
-    redis_connection = Redis.new(url: Rails.configuration.x.redis_url)
-    gzipped_file = Zlib.deflate(content)
-    redis_connection.set(content_redis_key, gzipped_file)
-    redis_connection.expire(content_redis_key, (expires_at - Time.zone.now).seconds.to_i)
+    transaction do
+      update!(computed_at: Time.zone.now)
+      redis_connection = Redis.new(url: Rails.configuration.x.redis_url)
+      gzipped_file = Zlib.deflate(content)
+      redis_connection.set(content_redis_key, gzipped_file)
+      redis_connection.expire(content_redis_key, (expires_at - Time.zone.now).seconds.to_i)
+    end
   ensure
     redis_connection&.close
   end
