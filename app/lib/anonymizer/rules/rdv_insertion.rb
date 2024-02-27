@@ -3,7 +3,6 @@ class Anonymizer::Rules::RdvInsertion
     active_storage_attachments
     active_storage_blobs
     active_storage_variant_records
-    agent_roles
     schema_migrations
     ar_internal_metadata
   ].freeze
@@ -12,6 +11,18 @@ class Anonymizer::Rules::RdvInsertion
     agents: {
       anonymized_column_names: %w[email first_name last_name],
       non_anonymized_column_names: %w[super_admin last_sign_in_at created_at updated_at last_webhook_update_received_at rdv_solidarites_agent_id],
+    },
+    agent_roles: {
+      anonymized_column_names: %w[],
+      non_anonymized_column_names: %w[
+        access_level
+        agent_id
+        organisation_id
+        rdv_solidarites_agent_role_id
+        created_at
+        updated_at
+        last_webhook_update_received_at
+      ],
     },
     agents_rdvs: {
       non_anonymized_column_names: %w[created_at updated_at agent_id rdv_id],
@@ -46,8 +57,8 @@ class Anonymizer::Rules::RdvInsertion
       ],
     },
     departments: {
-      anonymized_column_names: %w[name number phone_number email region pronoun capital],
-      non_anonymized_column_names: %w[created_at updated_at display_in_stats carnet_de_bord_deploiement_id],
+      anonymized_column_names: %w[phone_number email],
+      non_anonymized_column_names: %w[name number region pronoun capital created_at updated_at display_in_stats carnet_de_bord_deploiement_id],
     },
     file_configurations: {
       anonymized_column_names: %w[
@@ -103,7 +114,7 @@ class Anonymizer::Rules::RdvInsertion
       non_anonymized_column_names: %w[created_at updated_at rdv_solidarites_lieu_id organisation_id last_webhook_update_received_at],
     },
     messages_configurations: {
-      anonymized_column_names: %w[sender_city direction_names letter_sender_name signature_lines help_address sms_sender_name],
+      anonymized_column_names: %w[sender_city direction_names letter_sender_name signature_lines help_address],
       non_anonymized_column_names: %w[
         created_at
         updated_at
@@ -111,12 +122,15 @@ class Anonymizer::Rules::RdvInsertion
         display_europe_logos
         display_department_logo
         display_pole_emploi_logo
+        sms_sender_name
         organisation_id
       ],
     },
     motif_categories: {
-      anonymized_column_names: %w[short_name name],
+      anonymized_column_names: %w[],
       non_anonymized_column_names: %w[
+        short_name
+        name
         template_id
         rdv_solidarites_motif_category_id
         created_at
@@ -126,8 +140,9 @@ class Anonymizer::Rules::RdvInsertion
       ],
     },
     motifs: {
-      anonymized_column_names: %w[name instruction_for_rdv],
+      anonymized_column_names: %w[instruction_for_rdv],
       non_anonymized_column_names: %w[
+        name
         rdv_solidarites_service_id
         rdv_solidarites_motif_id
         reservable_online
@@ -157,8 +172,8 @@ class Anonymizer::Rules::RdvInsertion
       non_anonymized_column_names: %w[organisation_id webhook_endpoint_id],
     },
     orientations: {
-      anonymized_column_names: %w[orientation_type],
-      non_anonymized_column_names: %w[user_id organisation_id agent_id starts_at ends_at created_at updated_at],
+      anonymized_column_names: %w[],
+      non_anonymized_column_names: %w[orientation_type user_id organisation_id agent_id starts_at ends_at created_at updated_at],
     },
     parcours_documents: {
       non_anonymized_column_names: %w[department_id user_id agent_id type created_at updated_at],
@@ -276,16 +291,30 @@ class Anonymizer::Rules::RdvInsertion
       non_anonymized_column_names: %w[user_id tag_id created_at updated_at],
     },
     tags: {
-      anonymized_column_names: %w[value],
-      non_anonymized_column_names: %w[created_at updated_at],
+      anonymized_column_names: %w[],
+      non_anonymized_column_names: %w[value created_at updated_at],
     },
     templates: {
-      anonymized_column_names: %w[rdv_title rdv_title_by_phone rdv_purpose user_designation rdv_subject custom_sentence punishable_warning],
-      non_anonymized_column_names: %w[model display_mandatory_warning created_at updated_at],
+      anonymized_column_names: %w[],
+      non_anonymized_column_names: %w[
+        rdv_title
+        rdv_title_by_phone
+        rdv_purpose
+        user_designation
+        rdv_subject
+        custom_sentence
+        punishable_warning
+        model
+        display_mandatory_warning
+        created_at
+        updated_at
+      ],
     },
     organisations: {
-      anonymized_column_names: %w[name phone_number email slug logo_filename safir_code],
+      anonymized_column_names: %w[phone_number email logo_filename safir_code],
       non_anonymized_column_names: %w[
+        name
+        slug
         rdv_solidarites_organisation_id
         created_at
         updated_at
