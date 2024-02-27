@@ -48,7 +48,7 @@ class Admin::RdvsController < AgentAuthController
       organisation_ids: @scoped_organisations.ids,
       options: parsed_params
     )
-    flash[:notice] = t("layouts.flash.confirm_export_queued_html", agent_email: current_agent.email, support_email: current_domain.support_email)
+    flash[:notice] = t("layouts.flash.confirm_export_queued_html", exports_list_path: agents_exports_path)
     redirect_to admin_organisation_rdvs_path(organisation_id: current_organisation.id)
   end
 
@@ -61,7 +61,7 @@ class Admin::RdvsController < AgentAuthController
       organisation_ids: @scoped_organisations.ids,
       options: parsed_params
     )
-    flash[:notice] = t("layouts.flash.confirm_export_queued_html", agent_email: current_agent.email, support_email: current_domain.support_email)
+    flash[:notice] = t("layouts.flash.confirm_export_queued_html", exports_list_path: agents_exports_path)
     redirect_to admin_organisation_rdvs_path(organisation_id: current_organisation.id)
   end
 

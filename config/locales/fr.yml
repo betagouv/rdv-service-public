@@ -290,7 +290,7 @@ fr:
       update: Enregistrer
   layouts:
     flash:
-      confirm_export_queued_html: "Votre export est en cours de création : il sera envoyé à %{agent_email} dès qu'il sera prêt.<br />Il est possible que votre boîte mail ne permette pas qu'on lui envoie des fichiers trop lourds. Si vous ne recevez pas l'export dans les minutes qui viennent, essayez d'exporter moins de rendez-vous à la fois en les filtrant sur une période plus courte.<br />Pour plus d'aide, vous pouvez aussi nous contacter à l'adresse %{support_email}."
+      confirm_export_queued_html: 'Votre export est en cours de création : il sera bientôt disponible dans la <a href="%{exports_list_path}">liste de vos exports</a>.'
     currency:
       format:
         delimiter: " "
