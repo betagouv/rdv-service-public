@@ -1,6 +1,11 @@
 - content_for :title, t(".title")
 
 - if @exports.any?
+  .row.mt-2
+    .col-md-12
+      .alert.alert-info.fade.show
+        = "Vos exports sont conservés ici pendant #{Export::EXPIRATION_DELAY.in_hours.to_i} heures.".html_safe
+
   table.table.table-sm
     thead
       tr
