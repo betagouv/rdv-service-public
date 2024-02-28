@@ -107,5 +107,5 @@ $(document).on('turbolinks:load', function() {
   setTimeout(()=> {
     console.log("hiding tooltip")
     $(".agent-account-link").tooltip("hide")
-  }, 3000)
+  }, 5000)
 })

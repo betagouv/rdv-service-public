@@ -43,10 +43,6 @@
         border-left-style: solid;
         border-left-color: $white;
       }
-
-      &[aria-expanded="true"] {
-        margin-bottom: -12px;
-      }
     }
 
     &.side-menu__sub-item {
