@@ -13,13 +13,13 @@ html lang="fr"
           - unless @hide_rdv_a_renseigner_in_main_layout
             = render "layouts/rdv_a_renseigner", agent: current_agent, organisation: defined?(current_organisation) ? current_organisation : nil
           .container-fluid
+            = render "layouts/flash"
             - if content_for :title
                 .page-title-box
                   h1.page-title.pb-2= yield :title
                   - if content_for :breadcrumb
                     .page-title-right
                       = yield :breadcrumb
-            = render "layouts/flash"
             = yield
 
         = render "layouts/agent_footer"
