@@ -444,6 +444,8 @@ GEM
     rb-inotify (0.10.1)
       ffi (~> 1.0)
     redis (4.8.1)
+    redis-namespace (1.11.0)
+      redis (>= 4)
     regexp_parser (2.8.2)
     request_store (1.5.1)
       rack (>= 1.4)
@@ -678,6 +680,7 @@ DEPENDENCIES
   rails-erd
   rails_autolink
   redis (< 5.0)
+  redis-namespace
   rspec-rails
   rspec_junit_formatter
   rswag-api

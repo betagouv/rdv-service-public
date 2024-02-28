@@ -35,6 +35,8 @@ Rails.application.configure do
     url: "redis://localhost:6379",
     namespace: "test:cache#{ENV['TEST_ENV_NUMBER']}",
   }
+  # Used for direct access to Redis
+  config.x.redis_namespace = "test:direct:#{ENV['TEST_ENV_NUMBER']}"
 
   # Raise exceptions instead of rendering exception templates.
   config.action_dispatch.show_exceptions = false

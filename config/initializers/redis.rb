@@ -2,9 +2,10 @@ raise "Prevent monkey patch" if Redis.respond_to?(:with_connection)
 
 class Redis
   def self.with_connection
-    connection = new(url: Rails.configuration.x.redis_url)
-    yield(connection)
+    redis_connection = new(url: Rails.configuration.x.redis_url)
+    redis_connection = Redis::Namespace.new(Rails.configuration.x.redis_namespace, redis: redis_connection) if Rails.configuration.x.redis_namespace
+    yield(redis_connection)
   ensure
-    connection&.close
+    redis_connection&.close
   end
 end
