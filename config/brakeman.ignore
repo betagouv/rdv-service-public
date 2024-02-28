@@ -139,6 +139,29 @@
     {
       "warning_type": "SQL Injection",
       "warning_code": 0,
+      "fingerprint": "7d5ee6ec647efa631b75f0672c73619c8487943c697579da22036c282890aa78",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/mailers/application_mailer.rb",
+      "line": 21,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "mail.from(\"\\\"#{domain.name}\\\" <#{default_from}>\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "ApplicationMailer",
+        "method": "set_default_from_with_display_name"
+      },
+      "user_input": "domain.name",
+      "confidence": "Weak",
+      "cwe_id": [
+        89
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
       "fingerprint": "d1e6e4a81767101794274351f3382bc6b83bf095f421e5470f4f83c9a785634a",
       "check_name": "SQL",
       "message": "Possible SQL injection",
@@ -160,6 +183,6 @@
       "note": ""
     }
   ],
-  "updated": "2024-02-28 16:14:59 +0100",
+  "updated": "2024-02-28 16:17:49 +0100",
   "brakeman_version": "5.3.1"
 }
