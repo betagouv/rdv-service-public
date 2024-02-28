@@ -6,5 +6,5 @@ class ApplicationMailer < ActionMailer::Base
 
   append_view_path Rails.root.join("app/views/mailers")
 
-  self.delivery_job = CustomMailerDeliveryJob
+  self.delivery_job = ApplicationMailerDeliveryJob
 end
