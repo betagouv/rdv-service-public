@@ -20,5 +20,7 @@ module CanHaveRdvWizardContext
     end
 
     @rdv_wizard = rdv_wizard
+  rescue StandardError => e
+    Sentry.capture_exception(e)
   end
 end
