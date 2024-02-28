@@ -149,7 +149,7 @@
       "render_path": null,
       "location": {
         "type": "method",
-        "class": "CommonMailer",
+        "class": "ApplicationMailer",
         "method": "set_default_from_with_display_name"
       },
       "user_input": "domain.name",
