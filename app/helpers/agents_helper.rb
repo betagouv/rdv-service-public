@@ -82,7 +82,7 @@ module AgentsHelper
     if current_agent.organisations.count > 1
       link_to(".left-submenu-account", "data-toggle" => :collapse, "aria-expanded" => "false", class: "side-menu__item", &block)
     else
-      tag.div(&block)
+      tag.div(class: "pt-2 pr-2 pb-2 pl-3", &block)
     end
   end
 

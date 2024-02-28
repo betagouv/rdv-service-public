@@ -17,9 +17,11 @@ nav.left-side-menu-wrapper
         li.current-organisation title="Vous pouvez accéder à votre compte en cliquant sur votre nom en haut à droite de la page"
           = current_organisation_in_left_menu do
             .d-flex.justify-content-between.w-100.text-white
-              h4= current_organisation.name
-              - if navigation_scoped_by_agent_services?(current_agent, current_organisation)
-                span= current_agent.services_short_names
+              div.d-flex.align-items-center
+                div.d-flex.flex-column
+                  h4= current_organisation.name
+                  - if navigation_scoped_by_agent_services?(current_agent, current_organisation)
+                    span= current_agent.services_short_names
               - if current_agent.organisations.count > 1
                 div.d-flex.align-items-center
                   i.fa.fa-angle-down.menu-arrow.mt-1
