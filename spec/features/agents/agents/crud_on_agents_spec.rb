@@ -21,14 +21,14 @@ RSpec.describe "Agents can be managed by organisation admins" do
     it "allows adding an agent in two different organisations" do
       click_link("Ajouter un agent", match: :first)
       fill_in("Email", with: "bob@test.com")
-      select(pmi.name, from: "Services")
-      click_button("Envoyer une invitation")
+      check(pmi.name)
+      click_button("Enregistrer")
       expect(Agent.count).to eq(2)
 
       visit admin_organisation_agents_path(organisation2)
       click_link("Ajouter un agent", match: :first)
       fill_in("Email", with: "bob@test.com")
-      click_button("Envoyer une invitation")
+      click_button("Enregistrer")
       expect(Agent.count).to eq(2)
 
       expect(page).to have_content("Invitations en cours")
@@ -43,8 +43,8 @@ RSpec.describe "Agents can be managed by organisation admins" do
           click_link "Agents"
           click_link "Ajouter un agent", match: :first
           fill_in "Email", with: "jean@paul.com"
-          select(pmi.name, from: "Services")
-          click_button "Envoyer une invitation"
+          check(pmi.name)
+          click_button "Enregistrer"
 
           open_email("jean@paul.com")
           expect(current_email.subject).to eq "Vous avez été invité sur RDV Aide Numérique"
@@ -59,8 +59,8 @@ RSpec.describe "Agents can be managed by organisation admins" do
           click_link "Agents"
           click_link "Ajouter un agent", match: :first
           fill_in "Email", with: "jean@paul.com"
-          select(pmi.name, from: "Services")
-          click_button "Envoyer une invitation"
+          check(pmi.name)
+          click_button "Enregistrer"
 
           open_email("jean@paul.com")
           expect(current_email.subject).to eq "Vous avez été invité sur RDV Solidarités"
@@ -90,8 +90,8 @@ RSpec.describe "Agents can be managed by organisation admins" do
 
       click_link "Ajouter un agent", match: :first
       fill_in "Email", with: "jean@paul.com"
-      select(pmi.name, from: "Services")
-      click_button "Envoyer une invitation"
+      check(pmi.name)
+      click_button "Enregistrer"
 
       expect_page_title("Invitations en cours pour Organisation n°1")
       expect(page).to have_content("jean@paul.com")
@@ -118,33 +118,26 @@ RSpec.describe "Agents can be managed by organisation admins" do
   end
 
   describe "adding an agent to a new service" do
-    let(:territory_admin) { create(:agent, service: pmi, role_in_territories: [territory]) }
     let!(:new_service) { create(:service, name: "CSS", territories: []) }
 
     before do
-      create(:agent_territorial_access_right, agent: territory_admin, territory: territory)
+      create(:agent_territorial_role, agent: organisation_admin, territory: territory)
     end
 
     it "requires the territory admin to activate the new service" do
       login_as(organisation_admin, scope: :agent)
       visit new_admin_organisation_agent_path(organisation1)
       expect(page).not_to(have_content("CSS"))
-      logout
 
-      login_as(territory_admin, scope: :agent)
-      visit admin_territory_path(territory.id)
-      click_link("Services")
+      click_link("activer des services supplémentaires")
+
       check("CSS")
       click_button("Enregistrer")
-      expect(page).to have_content("Configuration enregistrée")
-      logout
+      expect(page).to have_content("Liste des services disponibles mise à jour")
 
-      login_as(organisation_admin, scope: :agent)
-
-      visit new_admin_organisation_agent_path(organisation1)
       fill_in "Email", with: "jean@paul.com"
-      select("CSS", from: "Services")
-      click_button "Envoyer une invitation"
+      check("CSS")
+      click_button "Enregistrer"
 
       expect(Agent.last.services.first).to eq(new_service)
     end
