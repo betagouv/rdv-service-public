@@ -14,7 +14,7 @@ nav.left-side-menu-wrapper
         li.p-2
           .d-flex.justify-content-center
             = link_to "Trouver un RDV", search_rdv_slot_url_with(@user), class: "btn bg-white align-bottom text-dark"
-        li.current-organisation title="Vous pouvez accéder à votre compte en cliquant sur votre nom en haut à droite de la page"
+        li.current-organisation
           = current_organisation_in_left_menu do
             .d-flex.justify-content-between.w-100.text-white
               div.d-flex.align-items-center
