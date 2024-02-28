@@ -80,7 +80,7 @@ module AgentsHelper
 
   def current_organisation_in_left_menu(&block)
     if current_agent.organisations.count > 1
-      link_to(".left-submenu-account", "data-toggle" => :collapse, "aria-expanded" => "false", &block)
+      link_to(".left-submenu-account", "data-toggle" => :collapse, "aria-expanded" => "false", class: "side-menu__item", &block)
     else
       tag.div(&block)
     end

@@ -11,25 +11,21 @@ nav.left-side-menu-wrapper
     - else
 
       ul.side-nav.list-unstyled#menu-agent.pb-3.mb-0
-        li.side-nav-item.p-2
+        li.p-2
           .d-flex.justify-content-center
             = link_to "Trouver un RDV", search_rdv_slot_url_with(@user), class: "btn bg-white align-bottom text-dark"
-        li.side-nav-item.connected-agent.pb-1.pl-3.pr-2.py-2
+        li.current-organisation title="Vous pouvez accéder à votre compte en cliquant sur votre nom en haut à droite de la page"
           = current_organisation_in_left_menu do
             .d-flex.justify-content-between.w-100.text-white
-              div.d-flex.align-items-center
-                div.d-flex.flex-column
-                  h4= current_organisation.name
-                  - if navigation_scoped_by_agent_services?(current_agent, current_organisation)
-                    span= current_agent.services_short_names
+              h4= current_organisation.name
+              - if navigation_scoped_by_agent_services?(current_agent, current_organisation)
+                span= current_agent.services_short_names
               - if current_agent.organisations.count > 1
                 div.d-flex.align-items-center
                   i.fa.fa-angle-down.menu-arrow.mt-1
-            ul.list-unstyled.left-submenu-account.collapse
-              li
-                = link_to "Changer d'organisation", admin_organisations_path, class: "p-2"
+          = render "layouts/left_menu/organisation_switcher"
 
-        li.side-nav-item
+        li
           a.side-menu__item[
             data-toggle="collapse"
             href=".left-submenu-planning"
@@ -58,33 +54,33 @@ nav.left-side-menu-wrapper
             li
               = active_link_to "RDV collectifs", admin_organisation_rdvs_collectifs_path(current_organisation), class: "side-menu__sub-item"
 
-        li.side-nav-item
+        li
           = active_link_to(admin_organisation_users_path(current_organisation), class: "side-menu__item")
             i.fa.fa-user>
             span.ml-1 Usagers
 
-        li.side-nav-item
+        li
           = active_link_to(admin_organisation_rdvs_path(current_organisation), class: "side-menu__item")
             i.fa.fa-list>
             span.ml-1 Liste des RDV
 
-        li.side-nav-item
+        li
           = active_link_to(admin_organisation_stats_path(current_organisation), class: "side-menu__item")
             i.fa.fa-chart-bar>
             span.ml-1 Statistiques
 
         - unless current_agent_role.admin?
-          li.side-nav-item
+          li
             = active_link_to admin_organisation_lieux_path(current_organisation), class: "side-menu__item"
               i.fa.fa-building>
               span.ml-1 Lieux
-          li.side-nav-item
+          li
             = active_link_to admin_organisation_motifs_path(current_organisation), class: "side-menu__item"
               i.fa.fa-paste>
               span.ml-1 Motifs
 
         - if current_agent_role.admin?
-          li.side-nav-item
+          li
             a[
               data-toggle="collapse"
               href=".left-submenu-settings"
@@ -117,7 +113,7 @@ nav.left-side-menu-wrapper
                 = link_to admin_territory_path(current_organisation.territory), class: "side-menu__sub-item" do
                   i.fa.fa-cog>
                   = t(".configuration")
-        li.side-nav-item
+        li
           = active_link_to admin_organisation_support_path(current_organisation), class: "side-menu__item"
             i.fa.fa-question-circle>
             span.ml-1 Support
