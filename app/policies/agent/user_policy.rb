@@ -31,7 +31,7 @@ class Agent::UserPolicy < DefaultAgentPolicy
   end
 
   def prescribe?
-    (@record.territories & current_agent.organisations_territories).present?
+    (@record.territory_ids & current_agent.organisations_territory_ids).present?
   end
 
   class Scope < Scope

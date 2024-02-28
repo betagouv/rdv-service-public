@@ -21,7 +21,7 @@ class Agents::UsersController < AgentAuthController
     users_from_territory = if agent_in_cnfs_or_mairies_territories? || results_count >= MAX_RESULTS
                              []
                            else
-                             user_scope.joins(:territories).where(territories: current_agent.organisations_territories)
+                             user_scope.joins(:territories).where(territories: current_agent.organisations_territory_ids)
                                .where.not(id: users_from_organisation.map(&:id))
                                .limit(MAX_RESULTS - results_count).to_a
                            end

@@ -77,7 +77,6 @@ class Agent < ApplicationRecord
   has_many :motifs, through: :services
   has_many :rdvs, dependent: :restrict_with_error, through: :agents_rdvs
   has_many :territories, through: :territorial_roles
-  has_many :organisations_territories, through: :organisations, source: :territory
   has_many :organisations_of_territorial_roles, source: :organisations, through: :territories
   # we specify dependent: :destroy because by default it will be deleted (dependent: :delete)
   # and we need to destroy to trigger the callbacks on the model
@@ -210,6 +209,10 @@ class Agent < ApplicationRecord
 
   def access_rights_for_territory(territory)
     agent_territorial_access_rights.find_by(territory: territory)
+  end
+
+  def organisations_territory_ids
+    organisations.distinct(:territory_id).pluck(:territory_id)
   end
 
   def update_unknown_past_rdv_count!
