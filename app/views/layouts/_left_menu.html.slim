@@ -74,11 +74,11 @@ nav.left-side-menu-wrapper
             span.ml-1 Statistiques
 
         - unless current_agent_role.admin?
-          li.side-nav-item.mb-4.pl-3.pr-2
+          li.side-nav-item
             = active_link_to admin_organisation_lieux_path(current_organisation), class: "side-menu__item"
               i.fa.fa-building>
               span.ml-1 Lieux
-          li.side-nav-item.mb-4.pl-3.pr-2
+          li.side-nav-item
             = active_link_to admin_organisation_motifs_path(current_organisation), class: "side-menu__item"
               i.fa.fa-paste>
               span.ml-1 Motifs
