@@ -9,7 +9,7 @@
 
 .content-page {
   overflow: hidden;
-  min-height: calc(100vh - 73px); // taille du header, arrondie au supérieur
+  min-height: calc(100vh - 73px); // 73px correspond à la taille du header, arrondie au supérieur
   padding-bottom: 73px; //idem
 
   @media (max-height: 800px) {
