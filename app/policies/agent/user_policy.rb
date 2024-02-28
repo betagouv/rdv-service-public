@@ -30,6 +30,10 @@ class Agent::UserPolicy < DefaultAgentPolicy
     admin_and_same_org? && not_deleted?
   end
 
+  def prescribe?
+    (@record.territories & current_agent.organisations_territories).present?
+  end
+
   class Scope < Scope
     def resolve
       organisation_ids = if current_organisation.present? && current_organisation.territory.visible_users_throughout_the_territory

@@ -21,6 +21,12 @@ FactoryBot.define do
                            [build(:service)]
                          end
       end
+
+      if agent.agent_territorial_access_rights.empty?
+        agent.organisations.each do |organisation|
+          agent.agent_territorial_access_rights.build(territory_id: organisation.territory_id)
+        end
+      end
     end
 
     transient do

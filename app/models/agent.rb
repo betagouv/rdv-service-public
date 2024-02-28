@@ -77,6 +77,7 @@ class Agent < ApplicationRecord
   has_many :motifs, through: :services
   has_many :rdvs, dependent: :restrict_with_error, through: :agents_rdvs
   has_many :territories, through: :territorial_roles
+  has_many :organisations_territories, through: :organisations, source: :territory
   has_many :organisations_of_territorial_roles, source: :organisations, through: :territories
   # we specify dependent: :destroy because by default it will be deleted (dependent: :delete)
   # and we need to destroy to trigger the callbacks on the model

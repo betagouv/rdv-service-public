@@ -204,4 +204,47 @@ RSpec.describe "agents can prescribe rdvs" do
       expect(Rdv.last.participations.first.created_by_agent_prescripteur).to eq(true)
     end
   end
+
+  describe "when using a user from another organisation in the same territory" do
+    let!(:organisation_mystere) { create(:organisation, territory: territory) }
+    let!(:user_in_organisation_mystere) do
+      create(
+        :user,
+        first_name: "Miss",
+        last_name: "Terre",
+        email: "miss_terre@example.com",
+        phone_number: "0611223344",
+        organisations: [organisation_mystere]
+      )
+    end
+
+    it "truncates personal info while searching, also add the user to destination organisation", js: true do
+      login_as(agent_mds, scope: :agent)
+      visit root_path
+      within(".left-side-menu") { click_on "Trouver un RDV" }
+      click_link "élargir votre recherche"
+      # Select Service
+      find("h3", text: motif_mds.service.name).ancestor("a").click
+      # Select Motif
+      find("h3", text: motif_insertion.name).ancestor("a").click
+      # Select Lieu
+      find(".card-title", text: /#{mission_locale_paris_nord.name}/).ancestor(".card").find("a.stretched-link").click
+      # Select créneau
+      first(:link, "11:00").click
+      # Display User selection
+      find(".select2-selection[aria-labelledby=select2-user_ids_-container]").click
+      find(".select2-search__field").send_keys("terre")
+      expect(page).to have_content("TERRE Miss - 20/07/**** - 06******44 - m******e@example.com")
+      first(".select2-results ul.select2-results__options li").click
+      click_on "Continuer"
+      # Display Récapitulatif
+      expect { click_button "Confirmer le rdv" }.to change(Rdv, :count).by(1)
+      # Display Confirmation
+      expect(page).to have_content("Rendez-vous confirmé")
+      created_rdv = Rdv.last
+      expect(created_rdv.users.first).to eq(user_in_organisation_mystere)
+      # User ends up in distant org, and other orgs she was already in
+      expect(created_rdv.users.first.organisations).to match_array([organisation_mystere, org_insertion])
+    end
+  end
 end
