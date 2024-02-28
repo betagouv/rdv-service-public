@@ -32,7 +32,7 @@ module Users::CreneauxSearchConcern
   end
 
   def retrieve_attributed_agents
-    return referent_agents if motif.follow_up?
+    return @user.referent_agents if motif.follow_up?
     return geo_attributed_agents if @geo_search.present? && motif.sectorisation_level_agent?
 
     []
@@ -40,9 +40,5 @@ module Users::CreneauxSearchConcern
 
   def geo_attributed_agents
     @geo_search.attributed_agents_by_organisation[@motif.organisation].presence || []
-  end
-
-  def referent_agents
-    @user&.referent_agents || []
   end
 end
