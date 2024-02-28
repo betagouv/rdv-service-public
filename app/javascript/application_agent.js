@@ -102,4 +102,10 @@ $(document).on('turbolinks:load', function() {
 
   new DestroyButton()
 
+  // TODO: clean this up before real review
+  $(".agent-account-link").tooltip("show")
+  setTimeout(()=> {
+    console.log("hiding tooltip")
+    $(".agent-account-link").tooltip("hide")
+  }, 3000)
 })

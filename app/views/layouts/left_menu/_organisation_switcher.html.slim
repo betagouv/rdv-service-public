@@ -6,5 +6,3 @@ ul.list-unstyled.left-submenu-account.collapse
     - current_agent.organisations.where.not(id: current_organisation.id).each do |organisation|
       li
         = link_to organisation.name, admin_organisation_agent_agenda_path(organisation, current_agent), class: "side-menu__sub-item pl-4"
-
-

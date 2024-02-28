@@ -10,7 +10,7 @@ header.header.bg-white
     #navbarSupportedContent.collapse.navbar-collapse
       ul.navbar-nav.ml-auto.align-items-start.align-items-lg-center
         li.list-inline-item
-          = link_to current_agent.full_name, edit_agent_registration_path, class: "btn text-primary-blue link-dsfr"
+          = link_to current_agent.full_name, edit_agent_registration_path, class: "btn text-primary-blue link-dsfr agent-account-link", title: "Votre compte est maintenant accessible via ce lien"
         li.list-inline-item
           = link_to destroy_agent_session_path, method: :delete, class: "btn text-primary-blue link-dsfr" do
             i.fa.fa-sign-out-alt>
