@@ -38,6 +38,12 @@
         background-color: lighten($bg-leftbar, 5%);
       }
 
+      &.active {
+        border-left-width: 2px;
+        border-left-style: solid;
+        border-left-color: $white;
+      }
+
       &[aria-expanded="true"] {
         margin-bottom: -12px;
       }
@@ -50,6 +56,12 @@
 
       &:hover {
         background-color: lighten($bg-leftbar, 5%);
+      }
+
+      &.active {
+        border-left-width: 2px;
+        border-left-style: solid;
+        border-left-color: $white;
       }
     }
 
