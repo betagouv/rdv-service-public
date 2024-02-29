@@ -21,12 +21,6 @@ FactoryBot.define do
                            [build(:service)]
                          end
       end
-
-      if agent.agent_territorial_access_rights.empty?
-        agent.organisations.each do |organisation|
-          agent.agent_territorial_access_rights.build(territory_id: organisation.territory_id)
-        end
-      end
     end
 
     transient do
@@ -62,6 +56,13 @@ FactoryBot.define do
 
     trait :with_basic_org do
       basic_role_in_organisations { [build(:organisation)] }
+    end
+    trait :with_territory_access_rights do
+      agent_territorial_access_rights do
+        organisations.map(&:territory_id).uniq.map do |territory_id|
+          build(:agent_territorial_access_rights, agent: self, territory_id: territory_id)
+        end
+      end
     end
     trait :not_confirmed do
       confirmed_at { nil }

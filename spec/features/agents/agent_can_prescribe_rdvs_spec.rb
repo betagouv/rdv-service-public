@@ -12,8 +12,8 @@ RSpec.describe "agents can prescribe rdvs" do
   let!(:org_mds) { create(:organisation, territory: territory) }
   let!(:org_insertion) { create(:organisation, territory: territory) }
 
-  let!(:agent_mds) { create(:agent, admin_role_in_organisations: [org_mds]) }
-  let!(:agent_insertion) { create(:agent, admin_role_in_organisations: [org_insertion]) }
+  let!(:agent_mds) { create(:agent, :with_territory_access_rights, admin_role_in_organisations: [org_mds]) }
+  let!(:agent_insertion) { create(:agent, :with_territory_access_rights, admin_role_in_organisations: [org_insertion]) }
 
   let!(:motif_mds) { create(:motif, organisation: org_mds, service: agent_mds.services.first) }
   let!(:motif_insertion) { create(:motif, organisation: org_insertion, service: agent_mds.services.first) }
