@@ -146,7 +146,9 @@ module RdvsHelper
   end
 
   def valid_date?(date)
-    date.present? && date != "__/__/____"
+    Date.parse(date.to_s)
+  rescue Date::Error
+    false
   end
 
   def no_date_filters?
