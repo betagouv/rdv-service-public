@@ -20,8 +20,8 @@ bootstrap_cdn = "*.bootstrapcdn.com"
 
 Rails.application.config.content_security_policy do |policy|
   policy.default_src :self
-  policy.font_src    :self
-  policy.object_src  :none
+  policy.font_src :self, :data # :data est nécessaire pour charger les icônes fullcalendar
+  policy.object_src :none
   policy.worker_src :blob
   policy.child_src :blob, :self
   policy.frame_src :self, in_status
