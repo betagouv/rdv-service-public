@@ -1,4 +1,4 @@
-RSpec.describe CustomMailerDeliveryJob do
+RSpec.describe ApplicationMailerDeliveryJob do
   mailer = Class.new(ApplicationMailer) do
     def a_sample_email(absence)
       mail(body: "Voici l'info: #{absence}")
@@ -16,7 +16,7 @@ RSpec.describe CustomMailerDeliveryJob do
   it "logs to sentry and retries job when hitting a ActiveJob::DeserializationError error that is not a RecordNotFound" do
     absence = create(:absence)
     mailer.a_sample_email(absence).deliver_later
-    expect(enqueued_jobs.last["job_class"]).to eq("CustomMailerDeliveryJob")
+    expect(enqueued_jobs.last["job_class"]).to eq("ApplicationMailerDeliveryJob")
     expect(enqueued_jobs.last["executions"]).to eq(0)
     expect(sentry_events).to be_empty
 
@@ -29,7 +29,7 @@ RSpec.describe CustomMailerDeliveryJob do
     expect(sentry_events.last.exception.values.last.value).to eq("Error while trying to deserialize arguments: No connection pool for 'ActiveRecord::Base' found. (ActiveJob::DeserializationError)")
 
     # It re-enqueues the job
-    expect(enqueued_jobs.last["job_class"]).to eq("CustomMailerDeliveryJob")
+    expect(enqueued_jobs.last["job_class"]).to eq("ApplicationMailerDeliveryJob")
     expect(enqueued_jobs.last["executions"]).to eq(1)
     expect(enqueued_jobs.last[:args][1]).to eq("a_sample_email")
     expect(enqueued_jobs.last[:args][3]["args"]).to eq([{ "_aj_globalid" => "gid://lapin/Absence/#{absence.id}" }])

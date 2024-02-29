@@ -148,9 +148,9 @@ class Admin::RdvsController < AgentAuthController
   end
 
   def parse_date_from_params(date_param)
-    return nil if date_param.blank? || date_param == "__/__/____"
-
     Date.parse(date_param)
+  rescue Date::Error
+    nil
   end
 
   def set_rdv

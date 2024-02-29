@@ -2,10 +2,9 @@ class ParticipationsExportSendEmailJob < ExportJob
   def perform(batch, _params)
     export = Export.find(batch.properties[:export_id])
 
-    redis_connection = Redis.new(url: Rails.configuration.x.redis_url)
     redis_key = redis_key(export.id)
 
-    pages = redis_connection.hgetall(redis_key)
+    pages = Redis.with_connection { |redis| redis.hgetall(redis_key) }
 
     page_numbers = pages.keys.map(&:to_i).sort
 
@@ -22,8 +21,6 @@ class ParticipationsExportSendEmailJob < ExportJob
 
     Agents::ExportMailer.participations_export(export.id).deliver_later
 
-    redis_connection.del(redis_key)
-  ensure
-    redis_connection&.close
+    Redis.with_connection { |redis| redis.del(redis_key) }
   end
 end

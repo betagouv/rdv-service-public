@@ -1,7 +1,6 @@
 class CustomDeviseMailer < Devise::Mailer
   self.deliver_later_queue_name = :devise
 
-  include CommonMailer
   include Devise::Controllers::UrlHelpers # Optional. eg. `confirmation_url`
 
   helper :application

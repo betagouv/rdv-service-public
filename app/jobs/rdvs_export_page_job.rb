@@ -4,10 +4,9 @@ class RdvsExportPageJob < ExportJob
 
     rows = RdvExporter.rows_from_rdvs(Rdv.where(id: rdv_ids).order(starts_at: :desc))
 
-    redis_connection = Redis.new(url: Rails.configuration.x.redis_url)
-    redis_connection.hset(redis_key, page_index, rows.to_json)
-    redis_connection.expire(redis_key, 1.week)
-  ensure
-    redis_connection&.close
+    Redis.with_connection do |redis|
+      redis.hset(redis_key, page_index, rows.to_json)
+      redis.expire(redis_key, 1.week)
+    end
   end
 end
