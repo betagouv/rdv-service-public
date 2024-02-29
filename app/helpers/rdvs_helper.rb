@@ -146,8 +146,11 @@ module RdvsHelper
   end
 
   def valid_date?(date)
+    return false if date.blank? || date.to_s.include?("__/__/____")
+
     Date.parse(date.to_s)
   rescue Date::Error
+    Sentry.capture_message("invalid date: #{date.inspect}", fingerprint: ["invalid date"])
     false
   end
 
