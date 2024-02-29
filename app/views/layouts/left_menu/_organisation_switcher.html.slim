@@ -1,5 +1,5 @@
 ul.list-unstyled.left-submenu-account.collapse
-  - if current_agent.organisations.count > 5
+  - if current_agent.organisations.count > 10
     li
       = link_to "Changer d'organisation", admin_organisations_path, class: "side-menu__sub-item pl-4"
   - else
