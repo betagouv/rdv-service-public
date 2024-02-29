@@ -1,5 +1,5 @@
 # See https://www.bigbinary.com/blog/rails-5-2-allows-mailers-to-use-custom-active-job-class
-class CustomMailerDeliveryJob < ActionMailer::MailDeliveryJob
+class ApplicationMailerDeliveryJob < ActionMailer::MailDeliveryJob
   include DefaultJobBehaviour
 
   # Only discard DeserializationError if it is caused by a ActiveRecord::RecordNotFound.
