@@ -1,4 +1,4 @@
-describe PhoneNumberValidation do
+RSpec.describe PhoneNumberValidation do
   describe "parsed_number" do
     it "prevents malformed numbers" do
       expect(described_class.parsed_number("wrong value")).to be_nil

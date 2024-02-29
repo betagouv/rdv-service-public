@@ -1,7 +1,7 @@
 - content_for(:menu_item) { "menu-motifs" }
 
 .row.justify-content-center
-  .col-md-8
+  .col-md-12.col-lg-8
     .card.mt-2
       .card-header
         h3.text-center Motif #{@motif.name} (#{@motif.service.short_name})
@@ -95,5 +95,5 @@
               div= link_to "Éditer", edit_admin_organisation_motif_path(current_organisation, @motif), class: "btn btn-primary w-100"
 
 .row.justify-content-center
-  .col-md-8
+  .col-md-12.col-lg-8
     = render "admin/versions/resource_versions_row", resource_policy: @motif_policy, resource: @motif

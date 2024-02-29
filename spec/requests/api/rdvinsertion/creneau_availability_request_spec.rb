@@ -1,6 +1,6 @@
 require "swagger_helper"
 
-describe "Available Creneaux Count for Invitation", swagger_doc: "v1/api.json" do
+RSpec.describe "Available Creneaux Count for Invitation", swagger_doc: "v1/api.json" do
   with_examples
 
   before do

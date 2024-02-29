@@ -1,4 +1,4 @@
-describe ApplicationJob, type: :job do
+RSpec.describe ApplicationJob, type: :job do
   describe "error logging" do
     let(:job_class) do
       stub_const "MyJob", Class.new(described_class)

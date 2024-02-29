@@ -10,4 +10,3 @@ fr:
           hint_allow_to_manage_teams: "Créer, supprimer, modifier toutes les équipes du territoires"
           hint_allow_to_manage_access_rights: "Modifier les droits d'accès de tous les agents du territoire"
           hint_allow_to_invite_agents: "Inviter d'autre personne sur le territoire, les affecter ou retirer de chacune des organisations du territoire"
-          hint_allow_to_download_metrics: "Recevoir par mail un fichier contenant tous les rendez-vous par usager sur plusieurs organisations"

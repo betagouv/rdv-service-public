@@ -1,4 +1,4 @@
-describe Configuration::SectorPolicy, type: :policy do
+RSpec.describe Configuration::SectorPolicy, type: :policy do
   %i[display? edit? show? update?].each do |action|
     describe "##{action}" do
       it "returns false with agent without admin access to this territory" do

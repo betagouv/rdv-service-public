@@ -7,7 +7,7 @@ ruby "3.3.0"
 gem "dotenv-rails" # dotenv should always be loaded before rails
 
 # Full-stack web application framework.
-gem "rails", "~> 7.0.6"
+gem "rails", "~> 7.0.8"
 # Rack-based asset packaging system
 gem "sprockets-rails"
 # Puma is a simple, fast, threaded, and highly parallel HTTP 1.1 server for Ruby/Rack applications
@@ -53,8 +53,6 @@ gem "paper_trail", "< 13.0"
 gem "activerecord-postgres_enum"
 # A Ruby client library for Redis
 gem "redis", "< 5.0"
-# A drop-in replacement for e.g. MemCacheStore to store Rails sessions (and Rails sessions only) in Redis.
-gem "redis-session-store", "0.11.4"
 
 # Devise / auth
 # Flexible authentication solution for Rails with Warden

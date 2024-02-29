@@ -78,15 +78,14 @@ Rails.application.configure do
   if ENV["DISABLE_SENDING_EMAILS"]
     config.action_mailer.delivery_method = :file
   else
-    config.action_mailer.smtp_settings = {
-      address: "smtp-relay.sendinblue.com",
-      port: "587",
-      authentication: :plain,
-      user_name: ENV["SENDINBLUE_USERNAME"],
-      password: ENV["SENDINBLUE_PASSWORD"],
-      domain: "rdv-solidarites.fr",
-    }
     config.action_mailer.delivery_method = :smtp
+    config.action_mailer.smtp_settings = {
+      address: ENV.fetch("SMTP_ADDRESS"),
+      port: ENV.fetch("SMTP_PORT"),
+      authentication: :plain,
+      user_name: ENV.fetch("SMTP_USERNAME"),
+      password: ENV.fetch("SMTP_PASSWORD"),
+    }
   end
 
   config.action_mailer.show_previews = ENV["IS_REVIEW_APP"] == "true"

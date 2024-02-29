@@ -1,4 +1,4 @@
-describe Agents::AbsenceMailer, type: :mailer do
+RSpec.describe Agents::AbsenceMailer, type: :mailer do
   { created: "créée", updated: "modifiée", destroyed: "supprimée" }.each do |action, verb|
     context "when #{action}" do
       let(:agent) { create(:agent, email: "bob@demo.rdv-solidarites.fr", basic_role_in_organisations: [create(:organisation)]) }

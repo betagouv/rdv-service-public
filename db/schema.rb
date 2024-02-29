@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_02_07_093459) do
+ActiveRecord::Schema[7.0].define(version: 2024_02_22_091749) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -174,7 +174,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_07_093459) do
     t.datetime "updated_at", null: false
     t.boolean "allow_to_manage_access_rights", default: false, null: false
     t.boolean "allow_to_invite_agents", default: false, null: false
-    t.boolean "allow_to_download_metrics", default: false, null: false
     t.index ["agent_id", "territory_id"], name: "index_agent_territorial_access_rights_unique_agent_territory", unique: true
     t.index ["agent_id"], name: "index_agent_territorial_access_rights_on_agent_id"
     t.index ["territory_id"], name: "index_agent_territorial_access_rights_on_territory_id"
@@ -224,21 +223,20 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_07_093459) do
     t.enum "absence_notification_level", default: "all", enum_type: "agents_absence_notification_level"
     t.string "external_id", comment: "The agent's unique and immutable id in the system managing them and adding them to our application"
     t.string "calendar_uid", comment: "the uid used for the url of the agent's ics calendar"
-    t.integer "sign_in_count", default: 0, null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
-    t.string "current_sign_in_ip"
-    t.string "last_sign_in_ip"
     t.text "microsoft_graph_token"
     t.text "refresh_microsoft_graph_token"
     t.string "cnfs_secondary_email"
     t.boolean "outlook_disconnect_in_progress", default: false, null: false
     t.datetime "account_deletion_warning_sent_at", comment: "Quand le compte de l'agent est inactif depuis bientôt deux ans, on lui envoie un mail qui le prévient que sont compte sera bientôt supprimé, et qu'il doit se connecter à nouveau s'il souhaite conserver son compte. On enregistre la date d'envoi de cet email ici pour s'assure qu'on lui laisse un délai d'au moins un mois pour réagir.\n"
+    t.string "inclusion_connect_open_id_sub"
     t.index ["account_deletion_warning_sent_at"], name: "index_agents_on_account_deletion_warning_sent_at"
     t.index ["calendar_uid"], name: "index_agents_on_calendar_uid", unique: true
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true
     t.index ["email"], name: "index_agents_on_email", unique: true, where: "(email IS NOT NULL)"
     t.index ["external_id"], name: "index_agents_on_external_id", unique: true
+    t.index ["inclusion_connect_open_id_sub"], name: "index_agents_on_inclusion_connect_open_id_sub", unique: true, where: "(inclusion_connect_open_id_sub IS NOT NULL)"
     t.index ["invitation_token"], name: "index_agents_on_invitation_token", unique: true
     t.index ["invitations_count"], name: "index_agents_on_invitations_count"
     t.index ["invited_by_id"], name: "index_agents_on_invited_by_id"
@@ -671,7 +669,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_07_093459) do
     t.string "phone_number_formatted"
     t.boolean "notify_by_sms", default: true
     t.boolean "notify_by_email", default: true
-    t.datetime "last_sign_in_at"
     t.string "franceconnect_openid_sub"
     t.boolean "logged_once_with_franceconnect"
     t.string "city_code"

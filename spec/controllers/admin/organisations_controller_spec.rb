@@ -1,4 +1,4 @@
-describe Admin::OrganisationsController, type: :controller do
+RSpec.describe Admin::OrganisationsController, type: :controller do
   let!(:territory) { create(:territory) }
   let!(:organisation) { create(:organisation, territory: territory) }
 

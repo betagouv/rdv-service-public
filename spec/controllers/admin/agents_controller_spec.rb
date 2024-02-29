@@ -207,7 +207,7 @@ RSpec.describe Admin::AgentsController, type: :controller do
       it "does not create a new agent and renders the form" do
         expect { subject }.not_to change(Agent, :count)
         expect(response.body).to have_content("Email n'est pas valide")
-        expect(response.body).to have_content("Les agents peuvent avoir des permissions différentes sur chaque organisation.")
+        expect(response.body).to have_content("Ajouter un agent")
       end
     end
 

@@ -67,6 +67,23 @@ module RdvsHelper
     "#{l(rdv.starts_at, format: format)} (#{rdv.duration_in_min} minutes)"
   end
 
+  def rdv_interval(rdv, format)
+    "#{l(rdv.starts_at, format: format)} - #{l(rdv.starts_at + rdv.duration_in_min.minutes, format: format)}"
+  end
+
+  def dates_interval
+    return nil if no_date_filters?
+
+    if valid_date?(params[:start]) && !valid_date?(params[:end])
+      dates_interval_from(params[:start])
+    elsif valid_date?(params[:end]) && !valid_date?(params[:start])
+      dates_interval_until(params[:end])
+    else
+      # Both Dates are valid
+      [format_date(params[:start]), format_date(params[:end])].uniq.join(" - ")
+    end
+  end
+
   def individual_rdv_status_dropdown_toggle(rdv)
     tag.div(data: { toggle: "dropdown" },
             class: "dropdown-toggle btn rdv-status-#{rdv.temporal_status}") do
@@ -126,5 +143,25 @@ module RdvsHelper
       rdv.users&.map(&:full_name)&.to_sentence +
       (rdv.motif.home? ? " 🏠" : "") +
       (rdv.motif.phone? ? " ☎️" : "")
+  end
+
+  def valid_date?(date)
+    date.present? && date != "__/__/____"
+  end
+
+  def no_date_filters?
+    !valid_date?(params[:start]) && !valid_date?(params[:end])
+  end
+
+  def dates_interval_from(date)
+    "A partir du #{format_date(date)}"
+  end
+
+  def dates_interval_until(date)
+    "Jusqu'au #{format_date(date)}"
+  end
+
+  def format_date(date)
+    I18n.l(Date.parse(date), format: :human).capitalize
   end
 end

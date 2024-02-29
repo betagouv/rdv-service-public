@@ -2,6 +2,7 @@ class PrescripteurRdvWizard < UserRdvWizard::Base
   attr_accessor :prescripteur
 
   def initialize(attributes, domain)
+    attributes = attributes.deep_symbolize_keys
     super(nil, attributes)
     @prescripteur = Prescripteur.new(attributes[:prescripteur]) if attributes[:prescripteur].present?
     @user_attributes = attributes[:user]

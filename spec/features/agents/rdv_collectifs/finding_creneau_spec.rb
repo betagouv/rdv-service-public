@@ -1,4 +1,4 @@
-describe "Agent can find a creneau for a rdv collectif" do
+RSpec.describe "Agent can find a creneau for a rdv collectif" do
   let(:agent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }
   let!(:motif) do
     create(:motif, :collectif, name: "Atelier participatif", organisation: organisation, service: service)

@@ -1,4 +1,4 @@
-describe Admin::Territories::SectorisationTestsController, type: :controller do
+RSpec.describe Admin::Territories::SectorisationTestsController, type: :controller do
   let(:territory) { create(:territory, departement_number: "62") }
   let(:organisation) { create(:organisation, territory: territory) }
   let(:agent) { create(:agent, admin_role_in_organisations: [organisation], role_in_territories: [territory]) }

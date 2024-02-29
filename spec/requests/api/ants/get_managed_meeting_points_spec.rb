@@ -1,4 +1,4 @@
-describe "ANTS API: getManagedMeetingPoints" do
+RSpec.describe "ANTS API: getManagedMeetingPoints" do
   include_context "rdv_mairie_api_authentication"
 
   context "with the wrong authentication header" do

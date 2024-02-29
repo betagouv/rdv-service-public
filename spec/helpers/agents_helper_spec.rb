@@ -1,4 +1,4 @@
-describe AgentsHelper do
+RSpec.describe AgentsHelper do
   describe "#build_link_to_rdv_wizard_params" do
     it "step 2 par défaut" do
       creneau = Creneau.new

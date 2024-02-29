@@ -16,7 +16,6 @@ fr:
         allow_to_manage_teams: Autorisé à créer, supprimer, modifier des équipes
         allow_to_manage_access_rights: Autorisé à gérer les droits d'accès
         allow_to_invite_agents: Autorisé à inviter et affecter des agents sur des organisations
-        allow_to_download_metrics: Autorisé à télécharger les rendez-vous par usager sur plusieurs organisations
       agent/rdv_notifications_levels:
         all: À chaque modification
         others: Uniquement les modifications faites par un usager (ou par un autre agent)

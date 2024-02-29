@@ -45,11 +45,11 @@ module Users::CreneauxWizardConcern
     matching_motifs.uniq(&:name_with_location_type)
   end
 
-  # next availability by organisation for motifs without lieu
+  # Retourne une liste d'organisations et leur prochaine dispo, ordonnées par date de prochaine dispo
   memoize def next_availability_by_motifs_organisations
     matching_motifs.to_h do |motif|
       [motif.organisation, creneaux_search_for(nil, date_range, motif).next_availability]
-    end.compact
+    end.compact.sort_by(&:last).to_h
   end
 
   memoize def service
@@ -64,19 +64,19 @@ module Users::CreneauxWizardConcern
     matching_motifs.includes(:service).map(&:service).uniq.sort_by(&:name)
   end
 
-  memoize def lieux
-    Lieu
-      .with_open_slots_for_motifs(matching_motifs)
-      .includes(:organisation)
-      .sort_by { |lieu| lieu.distance(@latitude.to_f, @longitude.to_f) }
-  end
-
   memoize def next_availability_by_lieux
-    lieux.index_with do |lieu|
-      creneaux_search_for(
-        lieu, date_range, matching_motifs.where(organisation: lieu.organisation).first
-      ).next_availability
+    next_availability_by_lieux = Lieu.with_open_slots_for_motifs(matching_motifs).includes(:organisation).to_h do |lieu|
+      next_availability = creneaux_search_for(lieu, date_range, matching_motifs.where(organisation: lieu.organisation).first).next_availability
+      [lieu, next_availability]
     end.compact
+
+    sort_order = if @latitude && @longitude
+                   proc { |lieu, _| lieu.distance(@latitude.to_f, @longitude.to_f) }
+                 else
+                   proc { |_, next_availability| next_availability }
+                 end
+
+    next_availability_by_lieux.sort_by(&sort_order).to_h
   end
 
   def shown_lieux

@@ -1,4 +1,4 @@
-describe Admin::Territories::TeamsController, type: :controller do
+RSpec.describe Admin::Territories::TeamsController, type: :controller do
   let(:territory) { create(:territory, departement_number: "62") }
   let(:organisation) { create(:organisation, territory: territory) }
 

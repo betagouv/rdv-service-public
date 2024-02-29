@@ -11,8 +11,13 @@ class Admin::Territories::ServicesController < Admin::Territories::BaseControlle
   def update
     authorize current_territory
     current_territory.update(services_params)
-    flash[:alert] = "Configuration enregistrée"
-    redirect_to edit_admin_territory_services_path(current_territory)
+    flash[:alert] = "Liste des services disponibles mise à jour"
+
+    if params[:redirect_to_organisation_id].present?
+      redirect_to new_admin_organisation_agent_path(params[:redirect_to_organisation_id])
+    else
+      redirect_to edit_admin_territory_services_path(current_territory)
+    end
   end
 
   private

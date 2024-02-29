@@ -1,4 +1,4 @@
-describe "agents page", js: true do
+RSpec.describe "agents page", js: true do
   it "login is accessible" do
     path = new_agent_session_path
     expect_page_to_be_axe_clean(path)

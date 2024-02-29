@@ -169,8 +169,16 @@ class SplitTerritory
   end
 
   def move_teams
-    if @old_territory.teams.any? # false pour la plupart des territoires, dont la Drome
-      raise "This script doesn't have the logic to move teams yet!"
+    puts "\n\n## Déplacement des équipes"
+    @old_territory.teams.each do |team|
+      territory_ids = team.agents.map(&:agent_territorial_access_rights).flatten.map(&:territory_id).uniq
+
+      if territory_ids.count > 1
+        raise "L'équipe #{team.id} est partagée entre les deux territoires"
+      elsif territory_ids == [@new_territory.id]
+        puts "Déplacement de l'équipe #{team.id} dans le nouveau territoire"
+        team.update!(territory: @new_territory)
+      end
     end
   end
 end

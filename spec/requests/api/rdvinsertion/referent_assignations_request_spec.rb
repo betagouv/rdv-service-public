@@ -1,6 +1,6 @@
 require "swagger_helper"
 
-describe "Referent Assignation authentified API", swagger_doc: "v1/api.json" do
+RSpec.describe "Referent Assignation authentified API", swagger_doc: "v1/api.json" do
   with_examples
 
   path "/api/rdvinsertion/referent_assignations/create_many" do

@@ -1,4 +1,4 @@
-describe AddConseillerNumerique do
+RSpec.describe AddConseillerNumerique do
   let!(:territory) { create(:territory, name: "Conseillers Numériques") }
   let(:params) do
     {
@@ -80,8 +80,7 @@ describe AddConseillerNumerique do
             territory: territory,
             allow_to_manage_teams: false,
             allow_to_manage_access_rights: false,
-            allow_to_invite_agents: false,
-            allow_to_download_metrics: false
+            allow_to_invite_agents: false
           )
         end
       end

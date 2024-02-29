@@ -1,4 +1,4 @@
-describe PlageOuverturePresenter, type: :presenter do
+RSpec.describe PlageOuverturePresenter, type: :presenter do
   describe "#overlaps_rdv_error_message" do
     subject { presenter.overlaps_rdv_error_message }
 

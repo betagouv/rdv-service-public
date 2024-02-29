@@ -1,4 +1,4 @@
-describe "User can search for rdvs" do
+RSpec.describe "User can search for rdvs" do
   let(:now) { Time.zone.parse("2021-12-13 8:00") }
 
   around { |example| perform_enqueued_jobs { example.run } }

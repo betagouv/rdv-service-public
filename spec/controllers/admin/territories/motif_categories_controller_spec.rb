@@ -1,4 +1,4 @@
-describe Admin::Territories::MotifCategoriesController, type: :controller do
+RSpec.describe Admin::Territories::MotifCategoriesController, type: :controller do
   describe "#update" do
     it "responds redirect" do
       territory = create(:territory)

@@ -41,24 +41,13 @@ class Api::Ants::EditorController < Api::Ants::BaseController
 
   def time_slots(lieu, reason)
     motifs(lieu, reason).map do |motif|
-      creneaux(lieu, motif).map do |creneau|
-        {
-          datetime: creneau.starts_at.strftime("%Y-%m-%dT%H:%MZ"),
-          callback_url: creneaux_url(
-            starts_at: creneau.starts_at.strftime("%Y-%m-%d %H:%M"),
-            lieu_id: lieu.id,
-            motif_id: motif.id,
-            public_link_organisation_id: lieu.organisation.id,
-            duration: rdv_duration(motif)
-          ),
-        }
-      end.uniq
+      motif.default_duration_in_min = rdv_duration(motif)
+      motif_creneaux = creneaux(lieu, motif)
+      motif_creneaux.map { |creneau| time_slot_data(creneau) }.uniq
     end.flatten
   end
 
   def creneaux(lieu, motif)
-    motif.default_duration_in_min = rdv_duration(motif)
-
     Users::CreneauxSearch.new(
       lieu: lieu,
       user: @current_user,
@@ -98,9 +87,7 @@ class Api::Ants::EditorController < Api::Ants::BaseController
   # Cela permet de rechercher des créneaux d'une durée adaptée au nombre de participants au Rdv
   def rdv_duration(motif)
     users_count = params.fetch(:documents_number, 1).to_i
-    # Le reload permet d'eviter des side-effects du fait que nous modifions motif#reload.default_duration_in_min en memoire
-    # Voir la méthode #creneaux plus haut
-    motif.reload.default_duration_in_min * users_count
+    motif.default_duration_in_min * users_count
   end
 
   def check_required_params!
@@ -110,8 +97,25 @@ class Api::Ants::EditorController < Api::Ants::BaseController
     params.require(:reason)
 
     unless params[:reason].in?(ANTS_MOTIF_CATEGORY_IDS_TO_NAMES.keys)
-      Sentry.capture_message("ANTS provided invalid reason: #{params[:reason].inspect}")
+      Sentry.capture_message("ANTS provided invalid reason: #{params[:reason].inspect}", fingerprint: ["ants_invalid_reason"])
       render status: :bad_request, json: { error: { code: 400, message: "Invalid reason param" } }
     end
+  end
+
+  def time_slot_data(creneau)
+    {
+      datetime: creneau.starts_at.strftime("%Y-%m-%dT%H:%MZ"),
+      callback_url: time_slot_url(creneau),
+    }
+  end
+
+  def time_slot_url(creneau)
+    creneaux_url(
+      starts_at: creneau.starts_at.strftime("%Y-%m-%d %H:%M"),
+      lieu_id: creneau.lieu.id,
+      motif_id: creneau.motif.id,
+      public_link_organisation_id: creneau.lieu.organisation.id,
+      duration: creneau.motif.default_duration_in_min
+    )
   end
 end

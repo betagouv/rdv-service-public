@@ -1,4 +1,4 @@
-describe Team, type: :model do
+RSpec.describe Team, type: :model do
   describe "validation" do
     it "invalid without name" do
       expect(build(:team, name: "")).to be_invalid

@@ -1,6 +1,6 @@
 require "swagger_helper"
 
-describe "WebhookEndpoints API", swagger_doc: "v1/api.json" do
+RSpec.describe "WebhookEndpoints API", swagger_doc: "v1/api.json" do
   with_examples
 
   path "api/v1/organisations/{organisation_id}/webhook_endpoints" do

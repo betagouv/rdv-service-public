@@ -79,7 +79,7 @@ module ParticipationExporter
       rdv.motif.service.name,
       rdv.motif_name,
       rdv.context,
-      Rdv.human_attribute_value(:status, rdv.temporal_status, disable_cast: true),
+      Rdv.human_attribute_value(:status, participation.temporal_status, disable_cast: true),
       rdv.address_without_personal_information || "",
       rdv.agents.map(&:full_name).join(", "),
       user.user_to_notify.city_name,

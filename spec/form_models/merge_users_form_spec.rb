@@ -1,4 +1,4 @@
-describe MergeUsersForm, type: :form do
+RSpec.describe MergeUsersForm, type: :form do
   let(:organisation) { create(:organisation) }
 
   it "is valid when no franceConnected user" do

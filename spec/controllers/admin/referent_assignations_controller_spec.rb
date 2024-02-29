@@ -1,4 +1,4 @@
-describe Admin::ReferentAssignationsController, type: :controller do
+RSpec.describe Admin::ReferentAssignationsController, type: :controller do
   describe "#index" do
     it "assigns available agents and respond success" do
       organisation = create(:organisation)
