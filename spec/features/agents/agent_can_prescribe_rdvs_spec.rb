@@ -214,6 +214,7 @@ RSpec.describe "agents can prescribe rdvs" do
         last_name: "Terre",
         email: "miss_terre@example.com",
         phone_number: "0611223344",
+        birth_date: Date.parse("1985-07-20"),
         organisations: [organisation_mystere]
       )
     end
@@ -238,6 +239,8 @@ RSpec.describe "agents can prescribe rdvs" do
       first(".select2-results ul.select2-results__options li").click
       click_on "Continuer"
       # Display Récapitulatif
+      # les infos de l'usager sont affichées dans le recap
+      expect(page).to have_content("Usager : TERRE Miss - 20/07/1985 - 06 11 22 33 44 - miss_terre@example.com")
       expect { click_button "Confirmer le rdv" }.to change(Rdv, :count).by(1)
       # Display Confirmation
       expect(page).to have_content("Rendez-vous confirmé")
