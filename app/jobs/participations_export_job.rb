@@ -7,7 +7,7 @@ class ParticipationsExportJob < ExportJob
     participations = Participation.where(rdv_id: rdvs.select(:id)).order(id: :desc)
 
     export = Export.create!(
-      export_type: Export.export_types[:participations_export],
+      export_type: Export::PARTICIPATIONS_EXPORT,
       agent_id: agent.id,
       file_name: file_name,
       organisation_ids: organisation_ids,

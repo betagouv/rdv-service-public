@@ -5,11 +5,14 @@ class Export < ApplicationRecord
   STATUS_EXPIRED = :expired
   STATUS_AVAILABLE = :available
 
+  RDV_EXPORT = :rdv_export
+  PARTICIPATIONS_EXPORT = :participations_export
+
   # Relations
   belongs_to :agent
 
   # Validations
-  validates :expires_at, presence: true
+  validates :expires_at, :file_name, presence: true
 
   # Hooks
   before_validation { self.expires_at ||= EXPIRATION_DELAY.from_now }
@@ -18,18 +21,16 @@ class Export < ApplicationRecord
   scope :recent, -> { where("created_at > ?", 2.weeks.ago) }
 
   enum export_type: {
-    rdv_export: :rdv_export,
-    participations_export: :participations_export,
+    RDV_EXPORT => RDV_EXPORT,
+    PARTICIPATIONS_EXPORT => PARTICIPATIONS_EXPORT,
   }
 
   def to_s
-    type = case export_type
-           when self.class.export_types[:rdv_export]
+    type = case export_type.to_sym
+           when RDV_EXPORT
              "de RDV"
-           when self.class.export_types[:participations_export]
+           when PARTICIPATIONS_EXPORT
              "de RDV par usager"
-           else
-             raise "oh no"
            end
     "Export #{type} du #{I18n.l(created_at, format: :dense)}"
   end
@@ -40,6 +41,10 @@ class Export < ApplicationRecord
 
   def available?
     computed_at && !expired?
+  end
+
+  def computed?
+    !!computed_at
   end
 
   def status

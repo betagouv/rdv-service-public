@@ -6,7 +6,7 @@ class RdvsExportJob < ExportJob
     rdvs = Rdv.search_for(organisations, options).order(starts_at: :desc)
 
     export = Export.create!(
-      export_type: Export.export_types[:rdv_export],
+      export_type: Export::RDV_EXPORT,
       agent_id: agent.id,
       file_name: file_name(organisations),
       organisation_ids: organisation_ids,
