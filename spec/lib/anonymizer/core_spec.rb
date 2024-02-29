@@ -1,4 +1,4 @@
-RSpec.describe Anonymizer do
+RSpec.describe Anonymizer::Core do
   let!(:user_with_email) { create(:user, email: "user@example.com") }
 
   around do |example|
@@ -19,7 +19,7 @@ RSpec.describe Anonymizer do
     let!(:user_without_password) { create(:user, encrypted_password: "") }
 
     it "anonymizes all the data" do
-      described_class.anonymize_all_data!
+      described_class.anonymize_all_data!(service: "rdvsp", schema: "public")
 
       expect(user_with_email.reload.full_name).to eq "[valeur anonymisée] [VALEUR ANONYMISÉE]"
 
@@ -36,7 +36,7 @@ RSpec.describe Anonymizer do
   it "doesn't overwrite null values, so that we can still get information from them" do
     user_without_email = create(:user, email: nil)
 
-    described_class.anonymize_all_data!
+    described_class.anonymize_all_data!(service: "rdvsp", schema: "public")
 
     expect(user_without_email.reload.email).to be_nil
     expect(user_with_email.reload.email).to eq "email_anonymise_#{user_with_email.id}@exemple.fr"
@@ -48,7 +48,7 @@ RSpec.describe Anonymizer do
     let!(:rdv_with_null_context) { create(:rdv, context: nil) }
 
     it "turns blank strings into null to avoid confusion when non-tech people use the data in metabase" do
-      described_class.anonymize_all_data!
+      described_class.anonymize_all_data!(service: "rdvsp", schema: "public")
 
       expect(rdv_with_context.reload.context).to eq "[valeur anonymisée]"
       expect(rdv_with_blank_context.reload.context).to be_nil

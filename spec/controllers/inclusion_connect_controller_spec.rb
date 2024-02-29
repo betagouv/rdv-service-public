@@ -57,7 +57,7 @@ RSpec.describe InclusionConnectController, type: :controller do
           # On aurait envie d'utiliser une feature spec et vérifier le contenu de la page, mais
           # les feature specs ne permettent pas de manipuler la session pour y écrire le ic_state.
           expect(response).to redirect_to("/agents/sign_in")
-          expect(flash[:error]).to eq("Nous n'avons pas pu vous authentifier. Contacter le support à l'adresse <support@rdv-solidarites.fr> si le problème persiste.")
+          expect(flash[:error]).to include("Nous n'avons pas pu vous authentifier. Contactez le support à l'adresse")
         end
       end
 
@@ -130,7 +130,7 @@ RSpec.describe InclusionConnectController, type: :controller do
       session[:ic_state] = "AZEERT"
       get :callback, params: { state: "zefjzelkf", session_state: "zfjzerklfjz", code: "klzefklzejlf" }
       expect(response).to redirect_to(new_agent_session_path)
-      expect(flash[:error]).to eq("Nous n'avons pas pu vous authentifier. Contacter le support à l'adresse <support@rdv-solidarites.fr> si le problème persiste.")
+      expect(flash[:error]).to include("Nous n'avons pas pu vous authentifier. Contactez le support à l'adresse")
 
       # Error message is sent to Sentry
       expect(sentry_events.last.message).to include("InclusionConnect states do not match")
@@ -149,7 +149,7 @@ RSpec.describe InclusionConnectController, type: :controller do
       session[:ic_state] = "a state"
       get :callback, params: { state: "a state", session_state: "a state", code: "klzefklzejlf" }
       expect(response).to redirect_to(new_agent_session_path)
-      expect(flash[:error]).to eq("Nous n'avons pas pu vous authentifier. Contacter le support à l'adresse <support@rdv-solidarites.fr> si le problème persiste.")
+      expect(flash[:error]).to include("Nous n'avons pas pu vous authentifier. Contactez le support à l'adresse")
 
       # HTTP request is sent to Sentry as breadcrumbs
       expect(sentry_events.last.breadcrumbs.compact.map(&:message)).to eq(["HTTP request", "HTTP response"])
@@ -162,7 +162,7 @@ RSpec.describe InclusionConnectController, type: :controller do
       get :callback, params: { state: "a state", session_state: "a state", code: "klzefklzejlf" }
 
       expect(response).to redirect_to(new_agent_session_path)
-      expect(flash[:error]).to eq("Nous n'avons pas pu vous authentifier. Contacter le support à l'adresse <support@rdv-solidarites.fr> si le problème persiste.")
+      expect(flash[:error]).to include("Nous n'avons pas pu vous authentifier. Contactez le support à l'adresse")
 
       # HTTP request is sent to Sentry as breadcrumbs
       expect(sentry_events.last.breadcrumbs.compact.map(&:message)).to eq(["HTTP request", "HTTP response"])
@@ -181,7 +181,7 @@ RSpec.describe InclusionConnectController, type: :controller do
       get :callback, params: { state: "a state", session_state: "a state", code: "klzefklzejlf" }
 
       expect(response).to redirect_to(new_agent_session_path)
-      expect(flash[:error]).to eq("Nous n'avons pas pu vous authentifier. Contacter le support à l'adresse <support@rdv-solidarites.fr> si le problème persiste.")
+      expect(flash[:error]).to include("Nous n'avons pas pu vous authentifier. Contactez le support à l'adresse")
 
       # HTTP request is sent to Sentry as breadcrumbs
       expect(sentry_events.last.breadcrumbs.compact.map(&:message).uniq).to eq(["HTTP request", "HTTP response"])
