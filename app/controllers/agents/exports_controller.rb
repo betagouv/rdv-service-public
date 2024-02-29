@@ -17,7 +17,7 @@ class Agents::ExportsController < AgentAuthController
   def download
     export = Export.find(params[:export_id])
     authorize(export)
-    send_data export.load_content, filename: export.file_name, type: "application/vnd.ms-excel"
+    send_data export.load_file, filename: export.file_name, type: "application/vnd.ms-excel"
   end
 
   private

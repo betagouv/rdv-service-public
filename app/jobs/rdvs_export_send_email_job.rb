@@ -17,7 +17,7 @@ class RdvsExportSendEmailJob < ExportJob
 
     xls_string = RdvExporter.xls_string_from_rdvs_rows(rdvs_rows)
 
-    export.store_content(xls_string)
+    export.store_file(xls_string)
 
     Agents::ExportMailer.rdv_export(export.id).deliver_later
 

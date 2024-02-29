@@ -17,7 +17,7 @@ class ParticipationsExportSendEmailJob < ExportJob
 
     xls_string = ParticipationExporter.xls_string_from_participations_rows(rdvs_rows)
 
-    export.store_content(xls_string)
+    export.store_file(xls_string)
 
     Agents::ExportMailer.participations_export(export.id).deliver_later
 

@@ -52,19 +52,19 @@ class Export < ApplicationRecord
     end
   end
 
-  def load_content
+  def load_file
     Redis.with_connection do |redis|
-      gzipped_file = redis.get(content_redis_key)
-      Zlib.inflate(gzipped_file)
+      compressed_file = redis.get(content_redis_key)
+      Zlib.inflate(compressed_file)
     end
   end
 
-  def store_content(content)
+  def store_file(content)
     transaction do
       update!(computed_at: Time.zone.now)
       Redis.with_connection do |redis|
-        gzipped_file = Zlib.deflate(content)
-        redis.set(content_redis_key, gzipped_file)
+        compressed_file = Zlib.deflate(content)
+        redis.set(content_redis_key, compressed_file)
         redis.expire(content_redis_key, (expires_at - Time.zone.now).seconds.to_i)
       end
     end
