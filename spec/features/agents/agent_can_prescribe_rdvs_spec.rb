@@ -69,7 +69,7 @@ RSpec.describe "agents can prescribe rdvs" do
       expect(page).to have_content("Motif : #{motif_insertion.name}")
       expect(page).to have_content("Lieu : #{mission_locale_paris_nord.name}")
       expect(page).to have_content("Date du rendez-vous :")
-      expect(page).to have_content("Usager : Francis FACTICE")
+      expect(page).to have_content("Usager : FACTICE Francis")
       expect { click_button "Confirmer le rdv" }.to change(Rdv, :count).by(1)
       # Display Confirmation
       expect(page).to have_content("Rendez-vous confirmé")
@@ -110,7 +110,7 @@ RSpec.describe "agents can prescribe rdvs" do
       expect(page).to have_content("Motif : #{motif_collectif.name}")
       expect(page).to have_content("Lieu : #{mds_paris_nord.name}")
       expect(page).to have_content("Date du rendez-vous :")
-      expect(page).to have_content("Usager : Francis FACTICE")
+      expect(page).to have_content("Usager : FACTICE Francis")
       expect { click_button "Confirmer le rdv" }.to change(Rdv.last.reload.participations, :count).by(1)
       expect(Rdv.last.participations.where(user: existing_user).first.created_by_agent_prescripteur).to eq(true)
     end
