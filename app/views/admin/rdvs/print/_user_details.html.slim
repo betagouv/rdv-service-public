@@ -1,0 +1,10 @@
+div= object_attribute_tag(user, :address)
+- if current_territory.enable_notes_field?
+  div= object_attribute_tag(user, :notes)
+- if current_territory.enable_logement_field
+  div= object_attribute_tag(user, :logement)
+- Territory::SOCIAL_FIELD_TOGGLES.each do |toggle, field_name|
+  - if current_territory.attributes.with_indifferent_access[toggle]
+    div
+      = object_attribute_tag(user, field_name)
+hr
