@@ -17,7 +17,7 @@
             = ff.input :access_level,
               collection: @roles,
               label_method: -> { access_level_label(_1) },
-              hint: ("Les agents peuvent avoir des permissions différentes sur chaque organisation." if @current_territory.organisations.count > 1),
+              hint: ("Les agents peuvent avoir des permissions différentes sur chaque organisation." if current_territory.organisations.count > 1),
               as: :radio_buttons,
               label: "",
               html: { class: "mt-4" }
