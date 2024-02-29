@@ -16,6 +16,7 @@ available_apps["rdvi_demo"]="rdv-insertion-demo"
 available_apps["rdvi_prod"]="rdv-insertion-prod"
 available_apps["rdvsp_demo"]="demo-rdv-solidarites"
 available_apps["rdvsp_prod"]="production-rdv-solidarites"
+available_apps["rdvsp_mairie_prod"]="production-rdv-mairie"
 
 app=$1
 env=$2
