@@ -262,4 +262,8 @@ class Agent < ApplicationRecord
                   Domain::RDV_SOLIDARITES
                 end
   end
+
+  def read_only_profile_infos?
+    inclusion_connect_open_id_sub.present?
+  end
 end
