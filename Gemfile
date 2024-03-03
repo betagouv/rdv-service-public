@@ -7,7 +7,7 @@ ruby "3.3.0"
 gem "dotenv-rails" # dotenv should always be loaded before rails
 
 # Full-stack web application framework.
-gem "rails", "~> 7.0.6"
+gem "rails", "~> 7.0.8"
 # Rack-based asset packaging system
 gem "sprockets-rails"
 # Puma is a simple, fast, threaded, and highly parallel HTTP 1.1 server for Ruby/Rack applications

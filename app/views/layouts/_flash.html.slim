@@ -5,4 +5,4 @@
         .d-print-none.alert.alert-dismissible.fade.show class=alert_class_for(type)
           a.close(href="#" data-dismiss="alert" aria-label='Close')
             i.fa.fa-times
-          = flash[type]
+          = sanitize(flash[type], tags: %w[a br strong em], scrubber: :prune)

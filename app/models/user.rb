@@ -108,6 +108,17 @@ class User < ApplicationRecord
     self_and_relatives.each { _1.do_soft_delete(organisation) }
   end
 
+  def delete_credentials_and_access_informations
+    update!(
+      encrypted_password: "",
+      confirmed_at: nil,
+      logged_once_with_franceconnect: false,
+      franceconnect_openid_sub: nil,
+      reset_password_token: nil,
+      reset_password_sent_at: nil
+    )
+  end
+
   def available_users_for_rdv
     User.where(responsible_id: id).or(User.where(id: id)).order("responsible_id DESC NULLS FIRST", first_name: :asc)
   end
@@ -271,9 +282,9 @@ class User < ApplicationRecord
     end
     return save! if organisations.any? # only actually mark deleted when no orgas left
 
-    Anonymizer.anonymize_record!(self)
-    receipts.each { |r| Anonymizer.anonymize_record!(r) }
-    rdvs.each { |r| Anonymizer.anonymize_record!(r) }
+    Anonymizer::Core.anonymize_record!(self)
+    receipts.each { |r| Anonymizer::Core.anonymize_record!(r) }
+    rdvs.each { |r| Anonymizer::Core.anonymize_record!(r) }
     versions.destroy_all
     update_columns(
       first_name: "Usager supprimé",
