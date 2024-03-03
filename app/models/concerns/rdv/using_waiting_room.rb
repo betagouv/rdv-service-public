@@ -7,13 +7,13 @@ module Rdv::UsingWaitingRoom
 
   def user_in_waiting_room?
     Redis.with_connection do |redis|
-      status == "unknown" && redis.lpos(REDIS_WAITING_ROOM_KEY, id).present?
+      status == "unknown" && redis.sismember(REDIS_WAITING_ROOM_KEY, id)
     end
   end
 
   def set_user_in_waiting_room!
     Redis.with_connection do |redis|
-      redis.lpush(REDIS_WAITING_ROOM_KEY, id)
+      redis.sadd(REDIS_WAITING_ROOM_KEY, id)
     end
   end
 
