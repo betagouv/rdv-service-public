@@ -53,6 +53,7 @@ gem "paper_trail", "< 13.0"
 gem "activerecord-postgres_enum"
 # A Ruby client library for Redis
 gem "redis", "< 5.0"
+# Adds a Redis::Namespace class which can be used to namespace calls to Redis.
 gem "redis-namespace"
 
 # Devise / auth
