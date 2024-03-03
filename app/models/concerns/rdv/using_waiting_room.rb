@@ -3,7 +3,7 @@ require "redis"
 module Rdv::UsingWaitingRoom
   extend ActiveSupport::Concern
 
-  REDIS_WAITING_ROOM_KEY = "#{Rails.env}:user_in_waiting_room_rdv_id".freeze
+  REDIS_WAITING_ROOM_KEY = "#{Rails.env}:users_in_waiting_room".freeze
 
   def user_in_waiting_room?
     Redis.with_connection do |redis|
