@@ -103,11 +103,6 @@ jobs:
         uses: zhulik/redis-action@1.1.0
       - name: Install JS dependencies
         run: yarn install
-      - name: Rails assets cache
-        uses: actions/cache@v3
-        with:
-          path: tmp/cache
-          key: ${{ GITHUB_REF_NAME }}-assets-cache
       - name: Precompile assets
         run: RAILS_ENV=test bundle exec rake assets:precompile
       - name: Prepare runtime log cache key
