@@ -4,18 +4,14 @@ html lang="fr"
     = yield :html_head_prepend
     = render "common/head_agent"
   body
-    = render "layouts/rdv_solidarites_instance_name"
-    = render "layouts/degraded_service", message: ENV["DEGRADED_SERVICE_MESSAGE_USERS"]
+    = render "layouts/agent_header"
 
-    header.container.px-8.mb-2.mt-1.text-center
-        h1.m-2 #{current_domain.name} - #{current_territory.name}
-
-    main.container-fluid
+    main.container-fluid.mt-4
 
       .container.px-4#icon-grid
+        = content_for(:breadcrumbs)
         = render "layouts/flash"
         = yield
 
     #modal-holder
-    footer.main-footer
-      = render "common/footer_users"
+    = render "layouts/agent_footer"

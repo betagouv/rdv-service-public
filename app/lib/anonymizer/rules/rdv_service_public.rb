@@ -1,4 +1,4 @@
-class AnonymizerRules
+class Anonymizer::Rules::RdvServicePublic
   TRUNCATED_TABLES = %w[versions good_jobs good_job_settings good_job_batches good_job_processes].freeze
 
   RULES = {
@@ -61,6 +61,7 @@ class AnonymizerRules
         microsoft_graph_token
         refresh_microsoft_graph_token
         remember_created_at
+        inclusion_connect_open_id_sub
       ],
       non_anonymized_column_names: %w[
         reset_password_sent_at
