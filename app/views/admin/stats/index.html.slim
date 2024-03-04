@@ -4,9 +4,9 @@
 - content_for(:menu_item) { "menu-stats" }
 
 - content_for :title do
-  span> Statistiques #{current_agent.full_name}
+  span> Statistiques de #{current_agent.full_name}
 
-.card.mb-5
+.card.mb-5.mt-4
   .card-body
     = render "stats/rdv_counters_with_links", rdvs: @stats.rdvs, breadcrumb_page: "agent_stats", agent_id: current_agent.id
 
