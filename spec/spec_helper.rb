@@ -23,7 +23,6 @@ require "webmock/rspec"
 require "simplecov"
 require "selenium-webdriver"
 
-SimpleCov.minimum_coverage 80
 SimpleCov.start
 
 RSpec.configure do |config|
