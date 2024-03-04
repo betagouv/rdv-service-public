@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class CreateGoodJobExecutions < ActiveRecord::Migration[7.0]
   def change
     reversible do |dir|
@@ -24,12 +22,10 @@ class CreateGoodJobExecutions < ActiveRecord::Migration[7.0]
       t.index [:active_job_id, :created_at], name: :index_good_job_executions_on_active_job_id_and_created_at
     end
 
-    safety_assured do
-      change_table :good_jobs do |t|
-        t.boolean :is_discrete
-        t.integer :executions_count
-        t.text :job_class
-      end
+    change_table :good_jobs do |t|
+      t.boolean :is_discrete
+      t.integer :executions_count
+      t.text :job_class
     end
   end
 end

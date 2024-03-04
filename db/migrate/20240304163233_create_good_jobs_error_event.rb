@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class CreateGoodJobsErrorEvent < ActiveRecord::Migration[7.0]
   def change
     reversible do |dir|
