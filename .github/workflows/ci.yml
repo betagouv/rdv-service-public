@@ -103,6 +103,14 @@ jobs:
         uses: zhulik/redis-action@1.1.0
       - name: Install JS dependencies
         run: yarn install
+      - uses: actions/cache@v3
+        with:
+          # cache directory
+          path: node_modules/.cache/webpack/
+          key: ${{ GITHUB_REF_NAME }}-webpack-build
+          # fallback to use "main" branch cache
+          restore-keys: |
+            main-webpack-build
       - name: Precompile assets
         run: RAILS_ENV=test bundle exec rake assets:precompile
       - name: Prepare runtime log cache key
