@@ -14,7 +14,7 @@ module CanHaveRdvWizardContext
     parsed_params = Rack::Utils.parse_nested_query(parsed_uri.query).to_h.symbolize_keys
     rdv_wizard = UserRdvWizard::Step1.new(nil, parsed_params)
     # L'usager doit être connecté afin de voir les créneaux pour un motif de Follow Up
-    return if rdv_wizard.motif.follow_up?
+    return if rdv_wizard.motif&.follow_up?
 
     if rdv_wizard.creneau.blank?
       session.delete(:user_return_to)
