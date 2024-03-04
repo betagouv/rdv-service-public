@@ -59,6 +59,8 @@ module Lapin
       **redis_settings,
     }
 
+    config.x.redis_namespace = "app"
+
     config.session_store :cookie_store, key: "_rdv_sp_session"
 
     # Devise layout
