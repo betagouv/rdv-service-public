@@ -1,16 +1,65 @@
-.content-page {
-  margin-left: $leftbar-width;
-  overflow: hidden;
-  min-height: 80vh;
+.content-and-left-menu-wrapper {
+  display: flex;
+  flex-direction: column;
+
+  @include media-breakpoint-up(sm) {
+    flex-direction: row;
+  }
 }
 
+.content-page {
+  overflow: hidden;
+  min-height: calc(100vh - 73px); // 73px correspond à la taille du header, arrondie au supérieur
+  padding-bottom: 73px; //idem
+
+  @media (max-height: 800px) {
+    min-height: calc(100vh - 49px); // taille du header
+    padding-bottom: 49px; //idem
+  }
+}
+
+.left-side-menu-wrapper {
+  background: $bg-leftbar;
+}
 .left-side-menu {
   background: $bg-leftbar;
   scrollbar-width: thin;
 
   a {
     color: $menu-item;
-    transition: all 0.4s;
+    transition: all 0.2s;
+
+    &.side-menu__item {
+      display: block;
+      width: 100%; //permet d'augmenter la surface du lien pour le rendre plus facilement clickable
+      padding: 20px 12px 20px 24px;
+
+      &:hover {
+        background-color: lighten($bg-leftbar, 5%);
+      }
+
+      &.active {
+        border-left-width: 2px;
+        border-left-style: solid;
+        border-left-color: $white;
+      }
+    }
+
+    &.side-menu__sub-item {
+      display: block;
+      width: 100%; //permet d'augmenter la surface du lien pour le rendre plus facilement clickable
+      padding: 6px 12px;
+
+      &:hover {
+        background-color: lighten($bg-leftbar, 5%);
+      }
+
+      &.active {
+        border-left-width: 2px;
+        border-left-style: solid;
+        border-left-color: $white;
+      }
+    }
 
     &:hover,
     &:focus,
@@ -23,18 +72,18 @@
   }
 
   .menu-arrow {
-    transition: transform .15s
+    transition: transform .4s
   }
 
   [aria-expanded=true] .menu-arrow {
-    transform: rotate(90deg);
+    transform: rotate(-180deg);
   }
 
   .badge{
     margin-top: 4px;
   }
 
-  .side-nav-item.connected-agent {
+  .current-organisation {
     background-color: lighten($bg-leftbar, 10%);
   }
 
@@ -59,7 +108,7 @@
     width: $leftbar-width;
     z-index: 10;
     bottom: 0;
-    position: fixed;
+    position: sticky;
     top: 0;
     overflow-y: auto;
     overflow-x: hidden;

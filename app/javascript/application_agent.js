@@ -26,6 +26,8 @@ import { Select2Inputs } from './components/select2-inputs'
 import { PlanningAgentSelect } from './components/planning-agent-select'
 import { ParticipationSelect } from './components/rdv-user-select'
 import { DestroyButton } from './components/destroy-button'
+import { Tooltips } from './components/tooltips'
+import { HeaderTooltip } from './components/header_tooltip'
 import './components/calendar'
 import './components/browser-detection'
 
@@ -101,4 +103,7 @@ $(document).on('turbolinks:load', function() {
   new ParticipationSelect()
 
   new DestroyButton()
+
+  Tooltips()
+  HeaderTooltip()
 })

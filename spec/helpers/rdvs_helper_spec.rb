@@ -178,4 +178,46 @@ RSpec.describe RdvsHelper do
       end
     end
   end
+
+  describe "#dates_interval" do
+    context "when start and end are both valid" do
+      let(:params) { { start: "01/01/2024", end: "01/02/2024" } }
+
+      it "displays date interval" do
+        expect(dates_interval).to eq("Lundi 01 janvier 2024 - Jeudi 01 février 2024")
+      end
+    end
+
+    context "when start and end are both valid and the same" do
+      let(:params) { { start: "01/01/2024", end: "01/01/2024" } }
+
+      it "displays only one date" do
+        expect(dates_interval).to eq("Lundi 01 janvier 2024")
+      end
+    end
+
+    context "when only start is valid and end is invalid" do
+      let(:params) { { start: "01/01/2024", end: "invalid_date" } }
+
+      it "displays only one date" do
+        expect(dates_interval).to eq("A partir du Lundi 01 janvier 2024")
+      end
+    end
+
+    context "when only end is valid and start is invalid" do
+      let(:params) { { start: "invalid_date", end: "01/02/2024" } }
+
+      it "displays only one date" do
+        expect(dates_interval).to eq("Jusqu'au Jeudi 01 février 2024")
+      end
+    end
+
+    context "when start and end are both invalid" do
+      let(:params) { { start: "invalid_date", end: "invalid_date" } }
+
+      it "displays nothing" do
+        expect(dates_interval).to eq(nil)
+      end
+    end
+  end
 end

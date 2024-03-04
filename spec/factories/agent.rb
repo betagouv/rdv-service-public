@@ -61,7 +61,7 @@ FactoryBot.define do
       confirmed_at { nil }
     end
     trait :invitation_not_accepted do
-      invitation_token { "blah" }
+      sequence(:invitation_token) { |n| "invitation-t0k3n-#{n}" }
       invitation_created_at { 2.days.ago }
       invitation_sent_at { 2.days.ago }
       invitation_accepted_at { nil }
