@@ -1,6 +1,8 @@
 class SoftDeleteError < StandardError; end
 
 class Agent < ApplicationRecord
+  self.ignored_columns = ["current_sign_in_at"]
+
   # Mixins
   has_paper_trail(
     only: %w[email first_name last_name starts_at invitation_sent_at invitation_accepted_at]
@@ -30,7 +32,7 @@ class Agent < ApplicationRecord
          :recoverable, :rememberable, :validatable, :confirmable, :async, validate_on_invite: true
 
   # HACK : Ces accesseurs permettent d'utiliser Devise::Models::Trackable mais sans persister les valeurs en base
-  attr_accessor :current_sign_in_ip, :last_sign_in_ip, :sign_in_count
+  attr_accessor :current_sign_in_ip, :last_sign_in_ip, :sign_in_count, :current_sign_in_at
 
   include DeviseTokenAuth::Concerns::ConfirmableSupport
   include Agent::CustomDeviseTokenAuthUserOmniauthCallbacks
