@@ -123,7 +123,7 @@ jobs:
           POSTGRES_USER: lapin_test
           POSTGRES_PASSWORD: lapin_test
           POSTGRES_DB: lapin_test
-  test_features:
+  test_features_for_agents_only:
     name: Feature Tests
     runs-on: ubuntu-latest
     services:
@@ -168,7 +168,60 @@ jobs:
           POSTGRES_PASSWORD: lapin_test
           POSTGRES_DB: lapin_test
       - name: Run specs
-        run: bundle exec rspec spec/features
+        run: bundle exec rspec spec/features/agents
+        env:
+          HOST: http://example.com
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+          POSTGRES_USER: lapin_test
+          POSTGRES_PASSWORD: lapin_test
+          POSTGRES_DB: lapin_test
+  test_features_for_other_cases:
+    name: Feature Tests
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: lapin_test
+          POSTGRES_PASSWORD: lapin_test
+          POSTGRES_DB: lapin_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports: ["5432:5432"]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: szenius/set-timezone@v1.0
+        with:
+          timezoneLinux: "Europe/Paris"
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.14.1
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.3.0
+          bundler-cache: true
+      - name: Set up Redis
+        uses: zhulik/redis-action@1.1.0
+      - name: Install JS dependencies
+        run: yarn install
+      - name: Precompile assets
+        run: RAILS_ENV=test bundle exec rake assets:precompile
+      - name: Setup tests
+        run: RAILS_ENV=test bundle exec rake db:create db:test:prepare
+        env:
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+          POSTGRES_USER: lapin_test
+          POSTGRES_PASSWORD: lapin_test
+          POSTGRES_DB: lapin_test
+      - name: Run specs
+        run: bundle exec rspec spec/features --exclude-pattern="spec/features/agents/**/*.rb"
         env:
           HOST: http://example.com
           POSTGRES_HOST: localhost
