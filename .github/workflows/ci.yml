@@ -103,8 +103,20 @@ jobs:
         uses: zhulik/redis-action@1.1.0
       - name: Install JS dependencies
         run: yarn install
+      - name: Rails assets cache
+        uses: actions/cache@v3
+        with:
+          path: tmp/cache
+          key: ${{ GITHUB_REF_NAME }}-assets-cache
       - name: Precompile assets
         run: RAILS_ENV=test bundle exec rake assets:precompile
+      - name: Prepare runtime log cache key
+        run: ls spec/**/*.rb > tmp/spec_files.txt
+      - name: Cache parallel test runtime log
+        uses: actions/cache@v3
+        with:
+          key: ${{ hashFiles('tmp/spec_files.txt') }}
+          path: tmp/parallel_runtime_rspec.log
       - name: Setup parallel tests
         run: RAILS_ENV=test bundle exec rake parallel:drop parallel:create parallel:load_schema
         env:
@@ -123,8 +135,8 @@ jobs:
           POSTGRES_USER: lapin_test
           POSTGRES_PASSWORD: lapin_test
           POSTGRES_DB: lapin_test
-  test_features:
-    name: Feature Tests
+  test_features_for_agents_only:
+    name: Feature Tests for agents
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -168,7 +180,60 @@ jobs:
           POSTGRES_PASSWORD: lapin_test
           POSTGRES_DB: lapin_test
       - name: Run specs
-        run: bundle exec rspec spec/features
+        run: bundle exec rspec spec/features/agents
+        env:
+          HOST: http://example.com
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+          POSTGRES_USER: lapin_test
+          POSTGRES_PASSWORD: lapin_test
+          POSTGRES_DB: lapin_test
+  test_features_for_other_cases:
+    name: Feature Tests for other cases
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: lapin_test
+          POSTGRES_PASSWORD: lapin_test
+          POSTGRES_DB: lapin_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports: ["5432:5432"]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: szenius/set-timezone@v1.0
+        with:
+          timezoneLinux: "Europe/Paris"
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.14.1
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.3.0
+          bundler-cache: true
+      - name: Set up Redis
+        uses: zhulik/redis-action@1.1.0
+      - name: Install JS dependencies
+        run: yarn install
+      - name: Precompile assets
+        run: RAILS_ENV=test bundle exec rake assets:precompile
+      - name: Setup tests
+        run: RAILS_ENV=test bundle exec rake db:create db:test:prepare
+        env:
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+          POSTGRES_USER: lapin_test
+          POSTGRES_PASSWORD: lapin_test
+          POSTGRES_DB: lapin_test
+      - name: Run specs
+        run: bundle exec rspec spec/features --exclude-pattern="spec/features/agents/**/*.rb"
         env:
           HOST: http://example.com
           POSTGRES_HOST: localhost
