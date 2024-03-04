@@ -7,7 +7,7 @@ L’objectif de ce service numérique public est de réduire le nombre de rendez
 
 Ce service est soutenu par un consortium de plusieurs départements et l'[incubateur des territoires de l'ANCT](https://incubateur.anct.gouv.fr/).
 
-- En production sur [rdv-solidarites.fr/](https://www.rdv-solidarites.fr/) et rdv.anct.gouv.fr
+- En production sur [rdv-solidarites.fr/](https://www.rdv-solidarites.fr/)
 - En démo sur [demo.rdv-solidarites.fr/](https://demo.rdv-solidarites.fr/)
 
 ## Statistiques
