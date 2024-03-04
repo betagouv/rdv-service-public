@@ -105,11 +105,13 @@ jobs:
         run: yarn install
       - name: Precompile assets
         run: RAILS_ENV=test bundle exec rake assets:precompile
-      - name: Download parallel test runtime log
-        continue-on-error: true
-        uses: actions/download-artifact@v4
+      - name: Prepare runtime log cache key
+        run: ls spec/**/*.rb > tmp/spec_files.txt
+      - name: Cache parallel test runtime log
+        uses: actions/cache@v3
         with:
-          name: parallel_test_runtime_log
+          key: ${{ hashFiles('tmp/spec_files.txt') }}
+          path: tmp/parallel_runtime_rspec.log
       - name: Setup parallel tests
         run: RAILS_ENV=test bundle exec rake parallel:drop parallel:create parallel:load_schema
         env:
@@ -128,11 +130,6 @@ jobs:
           POSTGRES_USER: lapin_test
           POSTGRES_PASSWORD: lapin_test
           POSTGRES_DB: lapin_test
-      - name: Upload parallel test runtime log
-        uses: actions/upload-artifact@v4
-        with:
-          name: parallel_test_runtime_log
-          path: tmp/parallel_runtime_rspec.log
   test_features_for_agents_only:
     name: Feature Tests for agents
     runs-on: ubuntu-latest
