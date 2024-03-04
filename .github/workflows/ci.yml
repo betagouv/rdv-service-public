@@ -87,7 +87,7 @@ jobs:
         ports: ["5432:5432"]
     steps:
       - uses: actions/checkout@v4
-      - uses: szenius/set-timezone@v1.0
+      - uses: WitherZuo/set-timezone@v1.0.0
         with:
           timezoneLinux: "Europe/Paris"
       - name: Set up Node.js
@@ -141,7 +141,7 @@ jobs:
         ports: ["5432:5432"]
     steps:
       - uses: actions/checkout@v4
-      - uses: szenius/set-timezone@v1.0
+      - uses: WitherZuo/set-timezone@v1.0.0
         with:
           timezoneLinux: "Europe/Paris"
       - name: Set up Node.js
