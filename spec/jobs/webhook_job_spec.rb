@@ -37,7 +37,7 @@ RSpec.describe WebhookJob, type: :job do
       described_class.perform_later(payload, webhook_endpoint.id)
 
       perform_enqueued_jobs
-      expect(enqueued_jobs.first["priority"]).to eq(-20)
+      expect(enqueued_jobs.first["priority"]).to eq(20)
     end
 
     it "retries on timeout" do
