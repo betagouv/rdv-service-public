@@ -20,7 +20,6 @@ require "capybara/email/rspec"
 require "capybara-screenshot/rspec"
 require "pundit/rspec"
 require "webmock/rspec"
-require "simplecov"
 require "selenium-webdriver"
 
 RSpec.configure do |config|
