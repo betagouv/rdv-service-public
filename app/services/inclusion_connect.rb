@@ -73,16 +73,18 @@ class InclusionConnect
   end
 
   def update_basic_info(agent)
-    agent.assign_attributes({
-                              inclusion_connect_open_id_sub: agent.inclusion_connect_open_id_sub || @user_info["sub"],
-                              first_name: @user_info["given_name"],
-                              last_name: @user_info["family_name"],
-                              invitation_accepted_at: agent.invitation_accepted_at || Time.zone.now,
-                              # Setting the token to nil to disable old invitations links
-                              invitation_token: nil,
-                              confirmed_at: agent.confirmed_at || Time.zone.now,
-                              last_sign_in_at: Time.zone.now,
-                            })
+    agent.assign_attributes(
+      {
+        inclusion_connect_open_id_sub: agent.inclusion_connect_open_id_sub || @user_info["sub"],
+        first_name: @user_info["given_name"],
+        last_name: @user_info["family_name"],
+        invitation_accepted_at: agent.invitation_accepted_at || Time.zone.now,
+        # Setting the token to nil to disable old invitations links
+        invitation_token: nil,
+        confirmed_at: agent.confirmed_at || Time.zone.now,
+        last_sign_in_at: Time.zone.now,
+      }
+    )
     agent.save! if agent.changed?
   end
 
