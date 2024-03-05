@@ -31,29 +31,6 @@ body.authentication-bg {
       padding: 6rem 3rem 0rem 3rem;
     }
 
-    .sidemenu__item {
-      padding: 0 1rem;
-      a {
-        color: $menu-item;
-        transition: all 0.4s;
-
-        &:focus,
-        &:hover {
-          color: $white;
-        }
-      }
-
-    }
-    .sidemenu__item--active {
-      margin-left: -2px;
-      border-left-width: 2px;
-      border-left-style: solid;
-      border-left-color: $white;
-      a {
-        color: $white;
-      }
-    }
-
     body.agents & {
       background-color: $blue;
       color: $white;
