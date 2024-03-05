@@ -8,7 +8,7 @@ class ParticipationsExportJob < ExportJob
 
     export = Export.create!(
       export_type: Export::PARTICIPATIONS_EXPORT,
-      agent_id: agent.id,
+      agent: agent,
       file_name: file_name,
       organisation_ids: organisation_ids,
       options: options

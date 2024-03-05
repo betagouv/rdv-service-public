@@ -35,16 +35,8 @@ class Export < ApplicationRecord
     "Export #{type} du #{I18n.l(created_at, format: :dense)}"
   end
 
-  def expired?
-    expires_at <= Time.zone.now
-  end
-
   def available?
     computed_at && !expired?
-  end
-
-  def computed?
-    !!computed_at
   end
 
   def status
@@ -76,6 +68,10 @@ class Export < ApplicationRecord
   end
 
   private
+
+  def expired?
+    expires_at <= Time.zone.now
+  end
 
   def content_redis_key
     "Export#content_redis_key-#{id}"
