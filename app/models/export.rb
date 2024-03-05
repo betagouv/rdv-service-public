@@ -20,7 +20,7 @@ class Export < ApplicationRecord
   validates :expires_at, :file_name, presence: true
 
   # Hooks
-  before_validation { self.expires_at ||= EXPIRATION_DELAY.from_now }
+  after_initialize { self.expires_at ||= EXPIRATION_DELAY.from_now }
 
   # Scopes
   scope :recent, -> { where("created_at > ?", 2.weeks.ago) }
@@ -49,9 +49,13 @@ class Export < ApplicationRecord
     end
   end
 
+  class FileNotFoundError < StandardError; end
+
   def load_file
     Redis.with_connection do |redis|
       compressed_file = redis.get(content_redis_key)
+      raise FileNotFoundError, "Can't find file at key #{content_redis_key.inspect}" unless compressed_file
+
       Zlib.inflate(compressed_file)
     end
   end
