@@ -1,8 +1,8 @@
 RSpec.describe Export do
   describe "#expires_at" do
-    it "is set upon creation" do
+    it "is set upon build" do
       export = build(:export)
-      expect { export.save! }.to change(export, :expires_at).from(nil).to(be_within(1.second).of(6.hours.from_now))
+      expect(export.expires_at).to be_within(1.second).of(6.hours.from_now)
     end
   end
 
