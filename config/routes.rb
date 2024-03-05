@@ -109,7 +109,7 @@ Rails.application.routes.draw do
           get "search"
         end
       end
-      resources :exports, only: %i[index show] do
+      resources :exports, only: %i[index] do
         get :download
       end
     end

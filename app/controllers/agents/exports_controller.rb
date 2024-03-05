@@ -9,11 +9,6 @@ class Agents::ExportsController < AgentAuthController
       .order(created_at: :desc)
   end
 
-  def show
-    @export = Export.find(params[:id])
-    authorize(@export)
-  end
-
   def download
     export = Export.find(params[:export_id])
     authorize(export)
