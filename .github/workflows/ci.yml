@@ -107,10 +107,10 @@ jobs:
         run: RAILS_ENV=test bundle exec rake assets:precompile
       - name: Prepare runtime log cache key
         run: ls spec/**/*.rb > tmp/spec_files.txt
-      - name: Cache parallel test runtime log
+      - name: Cache parallel test unit spec runtime log
         uses: actions/cache@v3
         with:
-          key: ${{ hashFiles('tmp/spec_files.txt') }}
+          key: unit-spec-runtime-log-${{ hashFiles('tmp/spec_files.txt') }}
           path: tmp/parallel_runtime_rspec.log
       - name: Setup parallel tests
         run: RAILS_ENV=test bundle exec rake parallel:drop parallel:create parallel:load_schema
@@ -166,6 +166,13 @@ jobs:
         run: yarn install
       - name: Precompile assets
         run: RAILS_ENV=test bundle exec rake assets:precompile
+      - name: Prepare runtime log cache key
+        run: ls spec/features/**/*.rb > tmp/feature_spec_files.txt
+      - name: Cache parallel test unit spec runtime log
+        uses: actions/cache@v3
+        with:
+          key: feature-spec-runtime-log-${{ hashFiles('tmp/feature_spec_files.txt') }}
+          path: tmp/parallel_runtime_rspec.log
       - name: Setup parallel tests
         run: RAILS_ENV=test bundle exec rake parallel:drop parallel:create parallel:load_schema
         env:
