@@ -19,7 +19,7 @@ RSpec.describe "Agent can CRUD motifs" do
       click_link "Éditer"
 
       expect_page_title("Modifier le motif")
-      fill_in "Nom", with: "Suivi bonsoir"
+      fill_in "Intitulé du motif", with: "Suivi bonsoir"
       click_button("Enregistrer")
 
       expect(page).to have_content("Suivi bonsoir")
@@ -29,10 +29,10 @@ RSpec.describe "Agent can CRUD motifs" do
       expect(page).to have_content("Vous n'avez pas encore créé de motif.")
       click_link "Créer un motif", match: :first
 
-      expect_page_title("Nouveau motif")
+      expect_page_title("Création d’un nouveau motif")
       find("#motif_service_id").find(:option, service.name).select_option
-      fill_in "Nom", with: "Suivi bonne nuit"
-      fill_in "Couleur", with: "#000"
+      fill_in "Intitulé du motif", with: "Suivi bonne nuit"
+      fill_in "Couleur associée", with: "#000"
       click_button "Enregistrer"
 
       expect_page_title("Vos motifs")
