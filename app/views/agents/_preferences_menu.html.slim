@@ -12,7 +12,7 @@ ruby:
     ul.list-unstyled
       - menu_items.each do |item|
         li
-          = link_to(item[2], class: "px-1 py-2 side-menu__item #{"active" if @active_agent_preferences_menu_item == item[0]}") do
+          = link_to(item[2], class: "px-1 py-2 side-menu__item #{'active' if @active_agent_preferences_menu_item == item[0]}") do
             span.ml-1 = item[1]
       li
         = link_to destroy_agent_session_path, method: :delete, class: "px-1 py-2 side-menu__item" do
