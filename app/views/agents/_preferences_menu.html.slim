@@ -11,7 +11,8 @@ ruby:
     h3 = current_agent.full_name
     ul.list-unstyled
       - menu_items.each do |item|
-        li.mt-3.mb-3 class="sidemenu__item #{"sidemenu__item--active" if @active_agent_preferences_menu_item == item[0]}"
-          = link_to item[1], item[2]
+        li class="side-menu__item #{"active" if @active_agent_preferences_menu_item == item[0]}"
+          = link_to item[2] do
+            span.ml-1 = item[1]
       li.mt-3.mb-3.sidemenu__item
         = link_to "Se déconnecter", destroy_agent_session_path, method: :delete
