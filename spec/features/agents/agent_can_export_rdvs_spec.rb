@@ -8,6 +8,21 @@ RSpec.describe "agent can export RDVs" do
     login_as(agent, scope: :agent)
   end
 
+  it "displays export list" do
+    visit admin_organisation_rdvs_url(organisation, agent)
+    click_on "Exporter les 1 RDVs en XLS"
+    perform_enqueued_jobs
+
+    login_as(agent, scope: :agent)
+    visit agents_exports_path
+    expect(page).to have_content("En création")
+
+    perform_enqueued_jobs
+    visit agents_exports_path
+    expect(page).not_to have_content("En création")
+    expect(page).to have_content("Télécharger")
+  end
+
   it "exports by RDV" do
     visit admin_organisation_rdvs_url(organisation, agent)
     perform_enqueued_jobs do
