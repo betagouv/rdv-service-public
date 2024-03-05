@@ -101,10 +101,15 @@ jobs:
           bundler-cache: true
       - name: Set up Redis
         uses: zhulik/redis-action@1.1.0
+      - name: Cache js dependencies
+        uses: actions/cache@v3
+        with:
+          key: node_modules-${{ hashFiles('yarn.lock') }}
+          path: node_modules
       - name: Install JS dependencies
         run: yarn install
       - name: Precompile assets
-        run: RAILS_ENV=test bundle exec rake assets:precompile
+        run: yarn run build
       - name: Prepare runtime log cache key
         run: ls spec/**/*.rb > tmp/spec_files.txt
       - name: Cache parallel test unit spec runtime log
