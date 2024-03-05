@@ -111,6 +111,7 @@ RSpec.configure do |config|
     ActionMailer::Base.deliveries.clear
     FactoryBot.rewind_sequences
     Rails.cache.clear
+    Redis.with_connection { |redis| redis.del(redis.keys("*")) } # clears custom redis usages
     Warden.test_reset!
     WebMock.reset!
   end

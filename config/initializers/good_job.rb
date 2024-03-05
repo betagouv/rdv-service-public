@@ -9,6 +9,9 @@ Rails.application.configure do
   config.good_job.max_threads = 5
   config.good_job.shutdown_timeout = 25 # seconds
 
+  # See https://github.com/bensheldon/good_job/pull/883
+  config.good_job.smaller_number_is_higher_priority = true
+
   # Enable cron in this process; e.g. only run on the first Scalingo worker process
   config.good_job.enable_cron = ENV["CONTAINER"] == "jobs-1"
   # To locally run GoodJob with cron enabled, run: `GOOD_JOB_ENABLE_CRON=1 bundle exec good_job start`

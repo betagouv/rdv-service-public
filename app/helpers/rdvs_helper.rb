@@ -146,7 +146,12 @@ module RdvsHelper
   end
 
   def valid_date?(date)
-    date.present? && date != "__/__/____"
+    return false if date.blank? || date.to_s.include?("__/__/____")
+
+    Date.parse(date.to_s)
+  rescue Date::Error
+    Sentry.capture_message("invalid date: #{date.inspect}", fingerprint: ["invalid date"])
+    false
   end
 
   def no_date_filters?
