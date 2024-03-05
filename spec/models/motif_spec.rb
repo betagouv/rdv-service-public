@@ -22,7 +22,7 @@ RSpec.describe Motif, type: :model do
     it do
       expect(subject).not_to be_valid
       expect(subject.errors.details).to eq({ name: [{ error: :taken, value: "name" }] })
-      expect(subject.errors.full_messages.to_sentence).to eq "Nom est déjà utilisé pour un motif avec le même type de RDV."
+      expect(subject.errors.full_messages.to_sentence).to eq "Intitulé du motif est déjà utilisé pour un motif avec le même type de RDV."
     end
   end
 
