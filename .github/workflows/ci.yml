@@ -8,7 +8,7 @@ jobs:
     name: Ruby linter
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -19,7 +19,7 @@ jobs:
     name: Slim Linter
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -30,7 +30,7 @@ jobs:
     name: Security Checker
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -54,7 +54,7 @@ jobs:
           --health-retries 5
         ports: ["5432:5432"]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -86,12 +86,12 @@ jobs:
           --health-retries 5
         ports: ["5432:5432"]
     steps:
-      - uses: actions/checkout@v3
-      - uses: szenius/set-timezone@v1.0
+      - uses: actions/checkout@v4
+      - uses: WitherZuo/set-timezone@v1.0.0
         with:
           timezoneLinux: "Europe/Paris"
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 18.14.1
       - name: Set up Ruby
@@ -140,12 +140,12 @@ jobs:
           --health-retries 5
         ports: ["5432:5432"]
     steps:
-      - uses: actions/checkout@v3
-      - uses: szenius/set-timezone@v1.0
+      - uses: actions/checkout@v4
+      - uses: WitherZuo/set-timezone@v1.0.0
         with:
           timezoneLinux: "Europe/Paris"
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 18.14.1
       - name: Set up Ruby

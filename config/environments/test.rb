@@ -36,6 +36,8 @@ Rails.application.configure do
     namespace: "test:cache#{ENV['TEST_ENV_NUMBER']}",
   }
 
+  config.x.redis_namespace = "test:app:#{ENV['TEST_ENV_NUMBER']}"
+
   # Raise exceptions instead of rendering exception templates.
   config.action_dispatch.show_exceptions = false
 

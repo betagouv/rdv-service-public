@@ -101,7 +101,7 @@ module ApplicationHelper
     value ||= object.human_attribute_value(attribute_name)
 
     tag.strong(tag.span(name) + tag.span(" : ")) +
-      tag.span(value.presence || "N/A", class: class_names("text-muted": value.blank?))
+      tag.span(value.presence || "Non renseigné", class: class_names("text-muted": value.blank?))
   end
 
   def admin_link_to_if_permitted(organisation, object, name = object.to_s)

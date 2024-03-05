@@ -39,6 +39,11 @@
               - else
                 span.font-weight-light.font-italic.text-muted
                   | Téléphone non renseigné
+          .users-details.collapse
+            - if user.responsible.present?
+              div.mb-2
+                = "proche de #{user.responsible}"
+            = render "admin/rdvs/print/user_details", user: user
         - if current_organisation.territory.enable_context_field
           .mt-2
             | Contexte :

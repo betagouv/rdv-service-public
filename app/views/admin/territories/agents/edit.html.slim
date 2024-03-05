@@ -8,8 +8,6 @@ h1
     .card.m-2.rounded
       h2.card-header
         = t(".agent_services_legend")
-      = Sentry.capture_message("Il est temps de retirer le bandeau sur les agents multi-services, ce n'est plus nouveau", fingerprint: ["bandeau_agents_multi_services"]) if Time.zone.now > Date.new(2024, 3, 1)
-      .alert.alert-info.m-2 ✨ Nouvelle fonctionnalité : Vous pouvez désormais attribuer plusieurs services à un agent
       = simple_form_for @agent, url: update_services_admin_territory_agent_path(current_territory, @agent) do |f|
         .card-body
           = f.input :service_ids, collection: current_territory.services,
