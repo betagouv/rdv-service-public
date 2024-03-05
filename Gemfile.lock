@@ -176,7 +176,6 @@ GEM
       devise (> 3.5.2, < 5)
       rails (>= 4.2.0, < 7.1)
     diff-lcs (1.5.0)
-    docile (1.4.0)
     dotenv (2.8.1)
     dotenv-rails (2.8.1)
       dotenv (= 2.8.1)
@@ -355,7 +354,7 @@ GEM
       activerecord (>= 5.2)
       request_store (~> 1.1)
     parallel (1.22.1)
-    parallel_tests (4.0.0)
+    parallel_tests (4.5.1)
       parallel
     parser (3.3.0.5)
       ast (~> 2.4.1)
@@ -531,12 +530,6 @@ GEM
     simple_form (5.1.0)
       actionpack (>= 5.2)
       activemodel (>= 5.2)
-    simplecov (0.21.2)
-      docile (~> 1.1)
-      simplecov-html (~> 0.11)
-      simplecov_json_formatter (~> 0.1)
-    simplecov-html (0.12.3)
-    simplecov_json_formatter (0.1.4)
     skylight (6.0.1)
       activesupport (>= 5.2.0)
     slim (4.1.0)
@@ -695,7 +688,6 @@ DEPENDENCIES
   sentry-ruby
   sib-api-v3-sdk
   simple_form (~> 5.0)
-  simplecov
   skylight
   slim
   slim_lint
