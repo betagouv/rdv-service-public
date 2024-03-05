@@ -7,12 +7,13 @@ ruby:
     ]
 
 .d-flex.flex-row.justify-content-center
-  div.text-left.text-white
+  div.text-left.text-white.left-side-menu
     h3 = current_agent.full_name
     ul.list-unstyled
       - menu_items.each do |item|
-        li class="side-menu__item #{"active" if @active_agent_preferences_menu_item == item[0]}"
-          = link_to item[2] do
+        li
+          = link_to(item[2], class: "px-1 py-2 side-menu__item #{"active" if @active_agent_preferences_menu_item == item[0]}") do
             span.ml-1 = item[1]
-      li.mt-3.mb-3.sidemenu__item
-        = link_to "Se déconnecter", destroy_agent_session_path, method: :delete
+      li
+        = link_to destroy_agent_session_path, method: :delete, class: "px-1 py-2 side-menu__item" do
+          span.ml-1 = "Se déconnecter"
