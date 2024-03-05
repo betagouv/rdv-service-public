@@ -1,16 +1,11 @@
+p
+  ' Vous avez la possibilité de créer un motif dans sa configuration principale uniquement, si vous
+  ' souhaitez un paramétrage simplifié. Sinon, vous pouvez accéder aux autres onglets pour un paramétrage plus avancé.
+
 .card
   .card-body
-    h5.card-title Configuration générale
     .form-row
-      .col-md-6
-        = f.association :service, collection: current_territory.services, input_html: { \
-          class: "select2-input", \
-          data: { \
-            placeholder: "Sélectionnez un service", \
-            "select-options": { disableSearch: true }, \
-          }, \
-        }
-      .col-md-6
+      .col-md-12
         / Nous voulons que l'autocomplete ne propose que les noms des motifs en base,
         / pas celles de l'historique de saisie du navigateur, d'où le autocomplete="off".
         = f.input :name, input_html: { list: "motif_names", autocomplete: "off" }
@@ -18,8 +13,17 @@
           - Motif.where(organisation_id: current_agent.organisations).map(&:name).uniq.each do |org_name|
             option= org_name
     .form-row
-      .col-md-4= f.input :default_duration_in_min
-      .col-md-4= f.input :color, as: "color"
+      .col-md-12
+        = f.association :service, collection: current_territory.services, input_html: { \
+          class: "select2-input", \
+          data: { \
+            placeholder: "Sélectionnez un service", \
+            "select-options": { disableSearch: true }, \
+          }, \
+        }
+    .form-row
+      .col-md-6= f.input :default_duration_in_min
+      .col-md-6= f.input :color, as: "color"
 
 - if current_organisation.territory.motif_categories.present?
   .card
@@ -32,24 +36,12 @@
 
 .card
   .card-body
-    h5.card-title= Motif.human_attribute_name("location_type")
-    - if motif.rdvs.empty?
-      - %i[public_office phone home].each do |value|
-        = label_tag do
-          = f.radio_button(:location_type, value)
-          span.ml-1= Motif.human_attribute_value(:location_type, value)
-          p.text-muted.font-14= Motif.human_attribute_value(:location_type, value, context: :hint)
-    - else
-      p.alert.alert-warning Ce motif est déjà utilisé dans au moins un RDV, il n'est pas possible de changer le type
-      - %i[public_office phone home].each do |value|
-        = label_tag do
-          = f.radio_button(:location_type, value, disabled: true)
-          span.text-muted.ml-1= Motif.human_attribute_value(:location_type, value)
-          p.text-muted.font-14= Motif.human_attribute_value(:location_type, value, context: :hint)
+    p Choisissez le format du rendez-vous :
+    = render partial: "admin/motifs/form/location_types", locals: { f: f, disabled: motif.rdvs.any? }
 
 .card
   .card-body
-    h5.card-title= Motif.human_attribute_name(:collectif)
+    p Choisissez le nombre de participants :
 
     = label_tag do
       = f.radio_button(:collectif, false)

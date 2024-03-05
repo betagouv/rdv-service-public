@@ -22,3 +22,10 @@
           = render "admin/motifs/form/resa_en_ligne", f: f, motif: motif
         #notifs_et_instructions.tab-pane.fade[role="tabpanel" aria-labelledby="tab_notifs_et_instructions"]
           = render "admin/motifs/form/notifs_et_instructions", f: f, motif: motif
+
+      .row.mb-5
+        - if motif.persisted?
+          .col.text-left
+            = link_to "Supprimer", admin_organisation_motif_path(motif.organisation, motif), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de ce motif ?"}
+        .col.text-right
+          = f.button :submit
