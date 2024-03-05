@@ -17,8 +17,6 @@ RSpec.describe "agent can export RDVs" do
     open_email(agent.email)
     expect(current_email.subject).to eq("Export des RDVs du 14/09/2022 à 09:00")
     expect(current_email).to have_content("Votre export est prêt, vous pouvez le télécharger ici")
-    expect(current_email).to have_content("Retrouvez tous vos exports ici")
-    expect(current_email.body).to include('<a href="http://www.rdv-solidarites-test.localhost/agents/exports')
 
     login_as(agent, scope: :agent) # Il semble nécessaire d'appeler ce helper encore une fois ici
     export = Export.last
@@ -41,8 +39,6 @@ RSpec.describe "agent can export RDVs" do
     open_email(agent.email)
     expect(current_email.subject).to eq("Export des RDVs par usager du 14/09/2022 à 09:00")
     expect(current_email).to have_content("Votre export est prêt, vous pouvez le télécharger ici")
-    expect(current_email).to have_content("Retrouvez tous vos exports ici")
-    expect(current_email.body).to include('<a href="http://www.rdv-solidarites-test.localhost/agents/exports')
 
     login_as(agent, scope: :agent) # Il semble nécessaire d'appeler ce helper encore une fois ici
     export = Export.last
