@@ -1,19 +1,15 @@
 - content_for :title, @export.to_s
 
+
+
 = link_to(agents_exports_path, class: "pt-1 pb-4") do
   i.fa.fa-arrow-left.mr-1
   | Retour à la liste des exports
 
 .card
-  .card-header
-    h5.card-title
-      ' Export du
-      = l(@export.created_at, format: :dense)
-      span.ml-2
-        = render partial: "agents/exports/export_badge", locals: { export: @export }
   .card-body
     .row
-      .col
+      .col-lg-8
         dl
           dt = "Organisation".pluralize(@export.organisation_ids.size)
           dd
@@ -33,7 +29,11 @@
           - else
             dd N/A
 
-      .col
-        = link_to(agents_export_download_path(@export.id), class: "btn btn-primary", target: "_blank") do
-          i.fa.fa-download.mr-1
-          | Télécharger
+      .col-lg-4.d-flex.flex-column.align-items-end
+        .flex-grow-1
+        - if @export.available?
+          = link_to(agents_export_download_path(@export.id), class: "btn btn-primary", target: "_blank") do
+            i.fa.fa-download.mr-1
+            | Télécharger
+        - else
+          = render partial: "agents/exports/export_badge", locals: { export: @export }

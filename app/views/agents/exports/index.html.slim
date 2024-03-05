@@ -7,32 +7,26 @@
         ' Vous trouverez ci-dessous les exports réalisés au cours de ces deux dernières semaines.
         => "Les liens de téléchargement ne sont valables que pour une durée de #{Export::EXPIRATION_DELAY.in_hours.to_i}h."
         ' Si le lien a expiré, vous pouvez générer un nouvel export à partir de la
-        = link_to("liste des rendez-vous", "")
+        = link_to("liste des rendez-vous", admin_organisation_rdvs_path(organisation_id: @exports.first.organisation_ids.first))
         | .
 
   table.table.table-sm
-    thead
-      tr
-        th Nom du fichier
-        th Création
-        th
     tbody
       - @exports.each do |export|
         tr
           td.align-middle
-            = export.file_name
-            = render partial: "agents/exports/export_badge", locals: { export: export }
-          td.align-middle
-            = relative_date_and_time(export.created_at)
+            = export.to_s
           td.align-middle
             .d-flex
               = link_to agents_export_path(export.id), class: "btn btn-link btn-sm", style: "white-space: nowrap" do
                 i.fa.fa-eye.mr-1
                 | Voir les détails
-              - unless export.expired?
+              - if export.available?
                 = link_to agents_export_download_path(export.id), class: "btn btn-link btn-sm", style: "white-space: nowrap", target: "_blank" do
                   i.fa.fa-download.mr-1
                   | Télécharger
+              - else
+                .d-block= render partial: "agents/exports/export_badge", locals: { export: export }
 
 - else
   .text-center.py-2 Vous n'avez aucun export

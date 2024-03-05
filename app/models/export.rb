@@ -5,8 +5,13 @@ class Export < ApplicationRecord
   STATUS_EXPIRED = :expired
   STATUS_AVAILABLE = :available
 
-  RDV_EXPORT = :rdv_export
-  PARTICIPATIONS_EXPORT = :participations_export
+  RDV_EXPORT = "rdv_export".freeze
+  PARTICIPATIONS_EXPORT = "participations_export".freeze
+
+  enum export_type: {
+    RDV_EXPORT => RDV_EXPORT,
+    PARTICIPATIONS_EXPORT => PARTICIPATIONS_EXPORT,
+  }
 
   # Relations
   belongs_to :agent
@@ -20,13 +25,8 @@ class Export < ApplicationRecord
   # Scopes
   scope :recent, -> { where("created_at > ?", 2.weeks.ago) }
 
-  enum export_type: {
-    RDV_EXPORT => RDV_EXPORT,
-    PARTICIPATIONS_EXPORT => PARTICIPATIONS_EXPORT,
-  }
-
   def to_s
-    type = case export_type.to_sym
+    type = case export_type
            when RDV_EXPORT
              "de RDV"
            when PARTICIPATIONS_EXPORT
