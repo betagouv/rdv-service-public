@@ -170,13 +170,13 @@ jobs:
         run: yarn run build
       - name: Prepare runtime log cache key
         run: ls spec/features/**/*.rb > tmp/feature_spec_files.txt
-      - name: Cache parallel test unit spec runtime log
+      - name: Cache parallel test feature spec runtime log
         uses: actions/cache@v3
         with:
           key: feature-spec-runtime-log-${{ hashFiles('tmp/feature_spec_files.txt') }}
           path: tmp/parallel_runtime_rspec.log
         # By setting up and running in the same call, we save the app boot time
-      - name: Setup parallel tests and run spec
+      - name: Setup parallel tests and run feature specs
         run: RAILS_ENV=test bundle exec rake parallel:drop parallel:create parallel:load_schema parallel:spec[spec/features]
         env:
           HOST: http://example.com
