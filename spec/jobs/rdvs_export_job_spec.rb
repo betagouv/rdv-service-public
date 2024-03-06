@@ -28,9 +28,9 @@ RSpec.describe RdvsExportJob do
       # Deliver email
       perform_enqueued_jobs
 
-      expected_file_name = "export-rdv-2022-09-14-org-#{organisation.id.to_s.rjust(6, '0')}.xls"
+      expect(Export.last.file_name).to eq("export-rdv-2022-09-14-org-#{organisation.id.to_s.rjust(6, '0')}.xls")
       email = email_sent_to(agent.email)
-      expect(email.html_part.body.to_s).to include(expected_file_name)
+      expect(email.html_part.body.to_s).to include("Votre export est prêt")
     end
 
     it "prevents agent from exporting an org in which she does not belong" do
