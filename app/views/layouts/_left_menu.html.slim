@@ -106,9 +106,7 @@ nav.left-side-menu-wrapper
               li
                 = active_link_to "Lieux", admin_organisation_lieux_path(current_organisation), class: "side-menu__sub-item"
               li
-                = active_link_to "Agents", admin_organisation_agents_path(current_organisation), class: "side-menu__sub-item"
-              li
-                = active_link_to "Invitations", admin_organisation_invitations_path(current_organisation), class: "side-menu__sub-item"
+                = active_link_to "Agents", admin_organisation_agents_path(current_organisation), class: "side-menu__sub-item #{'active' if @active_agents_menu }"
               li
                 = active_link_to "Motifs", admin_organisation_motifs_path(current_organisation), class: "side-menu__sub-item"
               - if current_agent.territorial_admin_in?(current_organisation.territory)
