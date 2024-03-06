@@ -11,7 +11,7 @@ gem "rails", "~> 7.0.8"
 # Rack-based asset packaging system
 gem "sprockets-rails"
 # Puma is a simple, fast, threaded, and highly parallel HTTP 1.1 server for Ruby/Rack applications
-gem "puma", "< 6.0" # Lock < 6.O until Puma stops returning HTTP 501 on PROPFIND requests: https://github.com/puma/puma/issues/3014
+gem "puma"
 # Bundle and transpile JavaScript in Rails with esbuild, rollup.js, or Webpack.
 gem "jsbundling-rails"
 # Turbolinks makes navigating your web application faster
