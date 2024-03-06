@@ -1,5 +1,6 @@
 class Admin::InvitationsController < AgentAuthController
   def index
+    @active_agents_menu = true
     @invited_agents = policy_scope(Agent)
       .joins(:organisations).where(organisations: { id: current_organisation.id })
       .invitation_not_accepted.where.not(invitation_sent_at: nil)
