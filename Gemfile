@@ -53,6 +53,8 @@ gem "paper_trail", "< 13.0"
 gem "activerecord-postgres_enum"
 # A Ruby client library for Redis
 gem "redis", "< 5.0"
+# Adds a Redis::Namespace class which can be used to namespace calls to Redis.
+gem "redis-namespace"
 
 # Devise / auth
 # Flexible authentication solution for Rails with Warden
@@ -78,7 +80,7 @@ gem "common_french_passwords"
 
 # Jobs
 # A multithreaded, Postgres-based ActiveJob backend for Ruby on Rails
-gem "good_job", "3.12.8"
+gem "good_job"
 # A toolkit to create and control daemons in different ways
 gem "daemons"
 
@@ -172,8 +174,6 @@ group :development, :test do
   gem "faker"
   # Run Test::Unit / RSpec / Cucumber / Spinach in parallel
   gem "parallel_tests"
-  # Code coverage for Ruby
-  gem "simplecov", require: false
   # Slim template linting tool
   gem "slim_lint", require: false
   # Axe API utility methods

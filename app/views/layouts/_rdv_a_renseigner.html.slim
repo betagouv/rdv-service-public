@@ -2,7 +2,7 @@
     && !agent.conseiller_numerique? # See https://github.com/betagouv/rdv-solidarites.fr/issues/2245
   = link_to admin_organisation_rdvs_path(organisation, status: "unknown_past", agent_id: agent.id)
     .navbar.alert-warning.p-2
-      div
+      div.mr-4
         .fa.fa-exclamation-triangle.alert-link>
         span.ml-1.alert-link = t(".unknown_past_rdv_count", count: agent.unknown_past_rdv_count )
         - if agent.organisations.size > 1
