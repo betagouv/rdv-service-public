@@ -8,7 +8,7 @@ html lang="fr"
     .content-and-left-menu-wrapper
       = render "layouts/left_menu"
       main.content-page[style="flex-grow: 1;"]
-        .content
+        .content.mb-4
           = content_for(:cnfs_online_booking_banner)
           - unless @hide_rdv_a_renseigner_in_main_layout
             = render "layouts/rdv_a_renseigner", agent: current_agent, organisation: defined?(current_organisation) ? current_organisation : nil
