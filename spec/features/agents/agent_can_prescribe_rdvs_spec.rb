@@ -162,6 +162,7 @@ RSpec.describe "agents can prescribe rdvs" do
       click_on "Créer un usager"
       fill_in :user_first_name, with: "Jean-Paul"
       fill_in :user_last_name, with: "Orvoir"
+      expect(page).to have_content("Jean-Paul")
       click_on "Créer usager"
       click_on "Continuer"
       # go back to user selection
