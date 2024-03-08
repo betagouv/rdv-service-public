@@ -8,10 +8,10 @@ class AgentPrescriptionSearchContext < WebSearchContext
     },
   ].freeze
 
-  def initialize(user:, current_organisation:, agent_services:, query_params: {})
+  def initialize(user:, current_organisation:, agent_prescripteur:, query_params: {})
     super(user: user, query_params: query_params)
     @current_organisation = current_organisation
-    @agent_services = agent_services
+    @agent_prescripteur = agent_prescripteur
   end
 
   attr_reader :user
@@ -35,6 +35,15 @@ class AgentPrescriptionSearchContext < WebSearchContext
 
   def address
     @user&.address
+  end
+
+  def services
+    services = super
+    if @agent_prescripteur && !@agent_prescripteur.secretaire?
+      (services & @agent_prescripteur.services)
+    else
+      services
+    end
   end
 
   private

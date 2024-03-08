@@ -9,7 +9,7 @@ class Admin::PrescriptionController < AgentAuthController
       user: user,
       query_params: search_context_params.merge(prescripteur: Prescripteur::INTERNE),
       current_organisation: current_organisation,
-      agent_services: current_agent.services
+      agent_prescripteur: current_agent
     )
   end
 
