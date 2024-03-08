@@ -217,4 +217,7 @@ group :test do
   gem "database_cleaner"
   # Library for stubbing HTTP requests in Ruby.
   gem "webmock"
+
+  # Dépendence indirecte de axe-core-api
+  gem "axiom-types", git: "https://github.com/francois-ferrandis/axiom-types.git", ref: "f75b18b"
 end

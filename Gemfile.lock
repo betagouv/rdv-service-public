@@ -1,4 +1,15 @@
 GIT
+  remote: https://github.com/francois-ferrandis/axiom-types.git
+  revision: f75b18be7481e81131878bdfba096acb7150303a
+  ref: f75b18b
+  specs:
+    axiom-types (0.1.1)
+      bigdecimal (~> 1.2, >= 1.2.7)
+      descendants_tracker (~> 0.0, >= 0.0.4)
+      ice_nine (~> 0.11, >= 0.11.0)
+      thread_safe (~> 0.3, >= 0.3.1)
+
+GIT
   remote: https://github.com/nahi/httpclient.git
   revision: d57cc6d5ffee1b566b5c189fe6dc8cc89570b812
   ref: d57cc6d
@@ -103,16 +114,13 @@ GEM
       axe-core-api
       dumb_delegator
       virtus
-    axiom-types (0.1.1)
-      descendants_tracker (~> 0.0.4)
-      ice_nine (~> 0.11.0)
-      thread_safe (~> 0.3, >= 0.3.1)
     base64 (0.2.0)
     bcrypt (3.1.20)
     better_errors (2.9.1)
       coderay (>= 1.0.0)
       erubi (>= 1.0.0)
       rack (>= 0.9.0)
+    bigdecimal (1.4.4)
     bindata (2.5.0)
     binding_of_caller (1.0.0)
       debug_inspector (>= 0.0.1)
@@ -625,6 +633,7 @@ DEPENDENCIES
   auto_strip_attributes
   axe-core-api (= 4.3.2)
   axe-core-rspec (= 4.3.2)
+  axiom-types!
   better_errors
   binding_of_caller
   blueprinter
