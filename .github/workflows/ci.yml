@@ -61,7 +61,7 @@ jobs:
           ruby-version: 3.3.0
           bundler-cache: true
       - name: Run active_record_doctor:missing_foreign_keys
-        run: RAILS_ENV=test bundle exec rails active_record_doctor:missing_foreign_keys
+        run: bundle exec rails active_record_doctor:missing_foreign_keys
         env:
           HOST: http://example.com
           POSTGRES_HOST: localhost
