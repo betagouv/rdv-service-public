@@ -1,5 +1,6 @@
 module Users::CreneauxSearchConcern
   extend ActiveSupport::Concern
+  include Memery
 
   def next_availability
     return available_collective_rdvs.first if motif.collectif?
@@ -16,7 +17,7 @@ module Users::CreneauxSearchConcern
     SlotBuilder.available_slots(motif, @lieu, reduced_date_range, attributed_agents)
   end
 
-  def available_collective_rdvs
+  memoize def available_collective_rdvs
     rdvs = Rdv.collectif_and_available_for_reservation
       .where(motif: motif, lieu: @lieu, starts_at: @motif.start_booking_delay..@motif.end_booking_delay)
       .order(:starts_at)
@@ -27,8 +28,8 @@ module Users::CreneauxSearchConcern
 
   protected
 
-  def attributed_agents
-    @attributed_agents ||= retrieve_attributed_agents
+  memoize def attributed_agents
+    retrieve_attributed_agents
   end
 
   def retrieve_attributed_agents

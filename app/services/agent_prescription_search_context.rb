@@ -38,9 +38,9 @@ class AgentPrescriptionSearchContext < WebSearchContext
 
   private
 
-  def geolocation_results
+  memoize def geolocation_results
     return unless address
 
-    @geolocation_results ||= GeoCoding.new.get_geolocation_results(address, departement)
+    GeoCoding.new.get_geolocation_results(address, departement)
   end
 end

@@ -50,22 +50,22 @@ class LieuImporter
   end
 
   def adresse_api_response
-    @adresse_api_response ||= Rails.cache.fetch("api-adresse:#{full_address}:#{@permanence.code_postal}") do
+    adresse_api_response = Rails.cache.fetch("api-adresse:#{full_address}:#{@permanence.code_postal}") do
       Faraday.get(
         "https://api-adresse.data.gouv.fr/search/",
         q: full_address,
         postcode: @permanence.code_postal
       )
     end
-    JSON.parse(@adresse_api_response.body)
+    JSON.parse(adresse_api_response.body)
   end
 
   def full_address
     "#{@permanence.adresse}, #{@permanence.commune} #{@permanence.code_postal}"
   end
 
-  def organisation
-    @organisation ||= Organisation.find_by(external_id: @permanence.structureId)
+  memoize def organisation
+    Organisation.find_by(external_id: @permanence.structureId)
   end
 end
 

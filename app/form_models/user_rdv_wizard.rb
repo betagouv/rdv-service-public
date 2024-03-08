@@ -1,4 +1,6 @@
 module UserRdvWizard
+  include Memery
+
   # cf https://medium.com/@nicolasblanco/developing-a-wizard-or-multi-steps-forms-in-rails-d2f3b7c692ce
 
   STEPS = %w[step1 step2 step3].freeze
@@ -38,11 +40,11 @@ module UserRdvWizard
       @attributes
     end
 
-    def creneau
+    memoize def creneau
       motif = @rdv.motif
       motif.default_duration_in_min = @attributes[:duration].to_i if @attributes[:duration]
 
-      @creneau ||= Users::CreneauSearch.creneau_for(
+      Users::CreneauSearch.creneau_for(
         user: @user,
         motif: motif,
         lieu: lieu,
@@ -51,8 +53,8 @@ module UserRdvWizard
       )
     end
 
-    def geo_search
-      @geo_search ||= Users::GeoSearch.new(**@attributes.slice(:departement, :city_code, :street_ban_id))
+    memoize def geo_search
+      Users::GeoSearch.new(**@attributes.slice(:departement, :city_code, :street_ban_id))
     end
 
     def to_query
@@ -79,8 +81,8 @@ module UserRdvWizard
 
     private
 
-    def lieu
-      @lieu ||= @attributes[:lieu_id].present? ? Lieu.find(@attributes[:lieu_id]) : nil
+    memoize def lieu
+      @attributes[:lieu_id].present? ? Lieu.find(@attributes[:lieu_id]) : nil
     end
   end
 

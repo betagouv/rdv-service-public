@@ -23,17 +23,15 @@ module Lapin
 
     private
 
-    def mock_params
-      @mock_params ||= begin
-        params.permit(:show_relatives, :show_agent, :location_type, :phone_number)
+    memoize def mock_params
+      params.permit(:show_relatives, :show_agent, :location_type, :phone_number)
 
-        params[:show_relatives] = params[:show_relatives].to_b
-        params[:show_agent] = params[:show_agent].to_b
-        params[:location_type] = "public_office" unless params[:location_type].in? Motif.location_types.keys
-        params[:phone_number] ||= "+33 1 99 00 12 34"
+      params[:show_relatives] = params[:show_relatives].to_b
+      params[:show_agent] = params[:show_agent].to_b
+      params[:location_type] = "public_office" unless params[:location_type].in? Motif.location_types.keys
+      params[:phone_number] ||= "+33 1 99 00 12 34"
 
-        params
-      end
+      params
     end
 
     def mock_data

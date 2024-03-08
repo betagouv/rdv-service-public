@@ -8,21 +8,20 @@ class SearchContext
     Users::GeoSearch.new(departement: departement, city_code: city_code, street_ban_id: street_ban_id)
   end
 
-  def lieu
-    @lieu ||= lieu_id.blank? ? nil : Lieu.find(lieu_id)
+  memoize def lieu
+    lieu_id.blank? ? nil : Lieu.find(lieu_id)
   end
 
   def start_date
     Time.zone.today
   end
 
-  def creneaux
-    @creneaux ||= creneaux_search.creneaux
-      .uniq(&:starts_at) # On n'affiche qu'un créneau par horaire, même si plusieurs agents sont dispos
+  memoize def creneaux
+    creneaux_search.creneaux.uniq(&:starts_at) # On n'affiche qu'un créneau par horaire, même si plusieurs agents sont dispos
   end
 
-  def available_collective_rdvs
-    @available_collective_rdvs ||= creneaux_search.available_collective_rdvs
+  memoize def available_collective_rdvs
+    creneaux_search.available_collective_rdvs
   end
 
   def creneaux_search
@@ -33,8 +32,8 @@ class SearchContext
     matching_motifs.first
   end
 
-  def referent_agents
-    @referent_agents ||= retrieve_referent_agents
+  memoize def referent_agents
+    retrieve_referent_agents
   end
 
   def follow_up?

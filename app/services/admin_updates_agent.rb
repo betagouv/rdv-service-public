@@ -99,7 +99,7 @@ class AdminUpdatesAgent
     @agent.invited_by_type = nil
   end
 
-  def agent_role
-    @agent_role ||= @agent.roles.find_by(organisation: @organisation)
+  memoize def agent_role
+    @agent.roles.find_by(organisation: @organisation)
   end
 end

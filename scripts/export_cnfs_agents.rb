@@ -85,8 +85,8 @@ class ExportCnfsAgents
     end
   end
 
-  def agents
-    @agents ||= Agent.in_any_of_these_services([Service.find_by_name(Service::CONSEILLER_NUMERIQUE)])
+  memoize def agents
+    Agent.in_any_of_these_services([Service.find_by_name(Service::CONSEILLER_NUMERIQUE)])
   end
 end
 

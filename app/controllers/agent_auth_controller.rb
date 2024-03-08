@@ -11,7 +11,7 @@ class AgentAuthController < ApplicationController
   private
 
   def pundit_user
-    @pundit_user ||= AgentOrganisationContext.new(current_agent, current_organisation)
+    AgentOrganisationContext.new(current_agent, current_organisation)
   end
   helper_method :pundit_user
 
@@ -33,12 +33,12 @@ class AgentAuthController < ApplicationController
     @organisation = current_organisation
   end
 
-  def current_organisation
-    @current_organisation ||= current_agent.organisations.find(params[:organisation_id])
+  memoize def current_organisation
+    current_agent.organisations.find(params[:organisation_id])
   end
 
-  def current_territory
-    @current_territory ||= current_organisation.territory
+  memoize def current_territory
+    current_organisation.territory
   end
 
   def from_modal?

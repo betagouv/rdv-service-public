@@ -61,10 +61,10 @@ class TransferEmailReplyJob < ApplicationJob
   end
 
   # @return [Mail::Message]
-  def source_mail
+  memoize def source_mail
     payload = @sendinblue_hash
 
-    @source_mail ||= Mail.new do
+    Mail.new do
       headers payload[:Headers]
       subject payload[:Subject]
 

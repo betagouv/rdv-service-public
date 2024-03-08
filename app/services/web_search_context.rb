@@ -29,8 +29,8 @@ class WebSearchContext < SearchContext
     @prescripteur
   end
 
-  def departement
-    @departement ||= (@query_params[:departement] || public_link_organisation&.departement_number)
+  memoize def departement
+    (@query_params[:departement] || public_link_organisation&.departement_number)
   end
 
   def organisation_id
@@ -56,16 +56,15 @@ class WebSearchContext < SearchContext
   end
 
   # TODO : move this to a specific search context https://github.com/betagouv/rdv-solidarites.fr/pull/3827#discussion_r1351988739
-  def public_link_organisation
-    @public_link_organisation ||= \
-      @public_link_organisation_id.present? ? Organisation.find(@public_link_organisation_id) : nil
+  memoize def public_link_organisation
+    @public_link_organisation_id.present? ? Organisation.find(@public_link_organisation_id) : nil
   end
 
   private
 
   attr_reader :referent_ids, :lieu_id
 
-  def matching_motifs
-    @matching_motifs ||= filter_motifs(geo_search.available_motifs)
+  memoize def matching_motifs
+    filter_motifs(geo_search.available_motifs)
   end
 end

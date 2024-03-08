@@ -9,13 +9,12 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
     AgentOrganisationContext.new(current_agent, current_organisation)
   end
 
-  def current_organisation
-    @current_organisation ||=
-      if params[:organisation_id].blank?
-        nil
-      else
-        current_agent.organisations.find_by(id: params[:organisation_id])
-      end
+  memoize def current_organisation
+    if params[:organisation_id].blank?
+      nil
+    else
+      current_agent.organisations.find_by(id: params[:organisation_id])
+    end
   end
 
   def authorize(record, *args)

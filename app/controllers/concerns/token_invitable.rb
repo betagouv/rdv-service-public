@@ -2,6 +2,7 @@
 # If valid the invitation token and params will be stored in the session. The user will then be signed in through the invitation in session.
 # If the token is linked to a Participation, it will also be linked to a rdv.
 module TokenInvitable
+  include Memery
   extend ActiveSupport::Concern
 
   included do
@@ -56,7 +57,7 @@ module TokenInvitable
     redirect_to root_path
   end
 
-  def invitation
-    @invitation ||= (session[:invitation].present? ? Invitation.new(session[:invitation]) : nil)
+  memoize def invitation
+    (session[:invitation].present? ? Invitation.new(session[:invitation]) : nil)
   end
 end

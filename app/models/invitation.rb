@@ -41,12 +41,12 @@ class Invitation
     expires_at.blank? || expires_at < Time.zone.now
   end
 
-  def user_by_rdv_invitation_token
-    @user_by_rdv_invitation_token ||= token.present? ? User.find_by(rdv_invitation_token: token) : nil
+  memoize def user_by_rdv_invitation_token
+    token.present? ? User.find_by(rdv_invitation_token: token) : nil
   end
 
-  def participation_by_invitation_token
+  memoize def participation_by_invitation_token
     # find_by_invitation_token is a method added by the devise_invitable gem
-    @participation_by_invitation_token ||= token.present? ? Participation.find_by_invitation_token(token, true) : nil
+    token.present? ? Participation.find_by_invitation_token(token, true) : nil
   end
 end

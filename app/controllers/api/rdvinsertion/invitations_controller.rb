@@ -9,8 +9,8 @@ class Api::Rdvinsertion::InvitationsController < Api::V1::AgentAuthBaseControlle
 
   private
 
-  def user
-    @user ||= Invitation.new(invitation_link_hash).user
+  memoize def user
+    Invitation.new(invitation_link_hash).user
   end
 
   def creneau_available?
@@ -32,15 +32,15 @@ class Api::Rdvinsertion::InvitationsController < Api::V1::AgentAuthBaseControlle
     ).creneaux.any?
   end
 
-  def invitation_search_context
-    @invitation_search_context ||= InvitationSearchContext.new(
+  memoize def invitation_search_context
+    InvitationSearchContext.new(
       user: user,
       query_params: invitation_link_hash
     )
   end
 
-  def invitation_link_hash
-    @invitation_link_hash ||= invitation_link_params.to_h.deep_symbolize_keys
+  memoize def invitation_link_hash
+    invitation_link_params.to_h.deep_symbolize_keys
   end
 
   def invitation_link_params

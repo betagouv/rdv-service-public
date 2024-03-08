@@ -30,12 +30,12 @@ class Users::ParticipationsController < UserAuthController
             end
   end
 
-  def existing_participation
-    @existing_participation ||= policy_scope(Participation).where(rdv: @rdv, user: @user.self_and_relatives_and_responsible).first
+  memoize def existing_participation
+    policy_scope(Participation).where(rdv: @rdv, user: @user.self_and_relatives_and_responsible).first
   end
 
-  def new_participation
-    @new_participation ||= Participation.new(rdv: @rdv, user: @user, created_by: current_user)
+  memoize def new_participation
+    Participation.new(rdv: @rdv, user: @user, created_by: current_user)
   end
 
   def add_participation

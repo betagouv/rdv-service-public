@@ -1,16 +1,13 @@
 class AgentPrescripteurRdvWizard
   attr_reader :query_params
 
-  def initialize(query_params:, agent_prescripteur:, domain:, current_organisation:)
+  def initialize(query_params:, agent_prescripteur:, domain:)
     @query_params = query_params
     @agent_prescripteur = agent_prescripteur
     @domain = domain
-    @current_organisation = current_organisation
   end
 
-  def motif
-    @motif ||= rdv.motif
-  end
+  delegate :motif, to: :rdv
 
   def invitation?
     false
@@ -22,7 +19,7 @@ class AgentPrescripteurRdvWizard
 
   def create!
     ActiveRecord::Base.transaction do
-      if @rdv.collectif?
+      if rdv.collectif?
         create_participation!
       else
         create_rdv!
@@ -32,20 +29,20 @@ class AgentPrescripteurRdvWizard
     end
   end
 
-  def rdv
-    @rdv ||= if query_params[:rdv_collectif_id].present?
-               Rdv.collectif.bookable_by_everyone_or_agents_and_prescripteurs_or_invited_users.find(query_params[:rdv_collectif_id])
-             else
-               Rdv.new(query_params.slice(:starts_at, :motif_id, :lieu_id))
-             end
+  memoize def rdv
+    if query_params[:rdv_collectif_id].present?
+      Rdv.collectif.bookable_by_everyone_or_agents_and_prescripteurs_or_invited_users.find(query_params[:rdv_collectif_id])
+    else
+      Rdv.new(query_params.slice(:starts_at, :motif_id, :lieu_id))
+    end
   end
 
-  def participation
-    @participation ||= Participation.new(rdv: @rdv, user: user, created_by: @agent_prescripteur, created_by_agent_prescripteur: true)
+  memoize def participation
+    Participation.new(rdv: rdv, user: user, created_by: @agent_prescripteur, created_by_agent_prescripteur: true)
   end
 
-  def creneau
-    @creneau ||= Users::CreneauSearch.creneau_for(
+  memoize def creneau
+    Users::CreneauSearch.creneau_for(
       user: users&.first,
       motif: motif,
       lieu: lieu,
@@ -87,12 +84,12 @@ class AgentPrescripteurRdvWizard
     participation.create_and_notify!(@agent_prescripteur)
   end
 
-  def lieu
-    @lieu ||= Lieu.find_by(id: query_params[:lieu_id])
+  memoize def lieu
+    Lieu.find_by(id: query_params[:lieu_id])
   end
 
-  def geo_search
-    @geo_search ||= Users::GeoSearch.new(
+  memoize def geo_search
+    Users::GeoSearch.new(
       departement: query_params[:departement],
       city_code: query_params[:city_code],
       street_ban_id: query_params[:street_ban_id]

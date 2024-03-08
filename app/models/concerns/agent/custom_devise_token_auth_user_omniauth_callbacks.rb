@@ -5,6 +5,7 @@
 # Add `&& !is_an_intervenant?` condition to the included validations
 module Agent::CustomDeviseTokenAuthUserOmniauthCallbacks
   extend ActiveSupport::Concern
+  include Memery
 
   included do
     validates :email, presence: true, if: lambda { uid_and_provider_defined? && email_provider? && !is_an_intervenant? }
@@ -19,11 +20,11 @@ module Agent::CustomDeviseTokenAuthUserOmniauthCallbacks
     before_create :sync_uid
   end
 
-  def is_an_intervenant?
+  memoize def is_an_intervenant?
     # Intervenant is an agent with no email and only one role in one organisation (validation in AgentRole model)
     # TODO: Avoir une réflexion globale sur l'authentification des agents et des users.
     # TODO: Penser à la mise en place de nouveaux models UserAccount et AgentAccount
-    @is_an_intervenant ||= roles.present? && roles.one? && roles.first.access_level == "intervenant"
+    roles.present? && roles.one? && roles.first.access_level == "intervenant"
   end
 
   protected

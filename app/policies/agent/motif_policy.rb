@@ -30,8 +30,8 @@ class Agent::MotifPolicy < ApplicationPolicy
     agent_role_in_motif_organisation.access_level == AgentRole::ACCESS_LEVEL_ADMIN
   end
 
-  def agent_role_in_motif_organisation
-    @agent_role_in_motif_organisation ||= current_agent.roles.find_by(organisation_id: @record.organisation_id)
+  memoize def agent_role_in_motif_organisation
+    current_agent.roles.find_by(organisation_id: @record.organisation_id)
   end
 
   class Scope < ApplicationPolicy::Scope

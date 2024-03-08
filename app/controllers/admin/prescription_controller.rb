@@ -39,7 +39,7 @@ class Admin::PrescriptionController < AgentAuthController
   private
 
   def set_rdv_wizard
-    @rdv_wizard = AgentPrescripteurRdvWizard.new(query_params: wizard_params, agent_prescripteur: current_agent, domain: current_domain, current_organisation: current_organisation)
+    @rdv_wizard = AgentPrescripteurRdvWizard.new(query_params: wizard_params, agent_prescripteur: current_agent, domain: current_domain)
   end
 
   def redirect_if_creneau_unavailable
@@ -58,10 +58,10 @@ class Admin::PrescriptionController < AgentAuthController
     params.permit(%i[starts_at rdv_collectif_id] + AgentPrescriptionSearchContext::STRONG_PARAMS_LIST)
   end
 
-  def user
+  memoize def user
     user_ids = Array(params[:user_ids]).compact_blank
     return if user_ids.empty?
 
-    @user ||= policy_scope(User, policy_scope_class: Agent::UserPolicy::Scope).find_by_id(user_ids.first)
+    policy_scope(User, policy_scope_class: Agent::UserPolicy::Scope).find_by_id(user_ids.first)
   end
 end

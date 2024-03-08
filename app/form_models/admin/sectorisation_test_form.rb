@@ -33,10 +33,10 @@ class Admin::SectorisationTestForm
     errors.add(:base, "Vous ne pouvez pas tester la sectorisation du #{departement}")
   end
 
-  def geo_search
+  memoize def geo_search
     return nil unless valid?
 
-    @geo_search ||= Users::GeoSearch.new(
+    Users::GeoSearch.new(
       departement: departement,
       city_code: city_code,
       **(street_ban_id.present? ? { street_ban_id: street_ban_id } : {})

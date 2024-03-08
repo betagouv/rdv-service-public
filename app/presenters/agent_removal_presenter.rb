@@ -37,7 +37,7 @@ class AgentRemovalPresenter
 
   private
 
-  def agent_removal_service
-    @agent_removal_service ||= AgentRemoval.new(agent, organisation)
+  memoize def agent_removal_service
+    AgentRemoval.new(agent, organisation)
   end
 end

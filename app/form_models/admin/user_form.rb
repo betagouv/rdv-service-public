@@ -33,8 +33,8 @@ class Admin::UserForm
 
   private
 
-  def duplicate_results
-    @duplicate_results ||= DuplicateUsersFinderService.perform_with(user)
+  memoize def duplicate_results
+    DuplicateUsersFinderService.perform_with(user)
   end
 
   def validate_duplicates

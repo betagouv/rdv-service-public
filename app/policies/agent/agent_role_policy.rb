@@ -11,9 +11,8 @@ class Agent::AgentRolePolicy < ApplicationPolicy
 
   private
 
-  def agent_role_in_record_organisation
-    @agent_role_in_record_organisation ||= \
-      current_agent.roles.find_by(organisation_id: record.organisation_id)
+  memoize def agent_role_in_record_organisation
+    current_agent.roles.find_by(organisation_id: record.organisation_id)
   end
 
   class Scope < Scope

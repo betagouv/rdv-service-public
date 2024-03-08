@@ -53,8 +53,8 @@ module Ants
       end
     end
 
-    def users
-      @users ||= User.where(id: @rdv_attributes[:users_ids])
+    memoize def users
+      User.where(id: @rdv_attributes[:users_ids])
     end
 
     def rdv_cancelled_or_deleted?

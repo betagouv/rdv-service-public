@@ -18,6 +18,6 @@ class Admin::InvitationsController < AgentAuthController
   private
 
   def index_params
-    @index_params ||= params.permit(:search)
+    params.permit(:search)
   end
 end

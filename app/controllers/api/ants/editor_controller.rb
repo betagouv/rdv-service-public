@@ -56,8 +56,8 @@ class Api::Ants::EditorController < Api::Ants::BaseController
     ).creneaux
   end
 
-  def date_range
-    @date_range ||= (Date.parse(params[:start_date])..Date.parse(params[:end_date]))
+  memoize def date_range
+    (Date.parse(params[:start_date])..Date.parse(params[:end_date]))
   end
 
   def motifs(lieu, reason)
