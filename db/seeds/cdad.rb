@@ -40,8 +40,8 @@ motif1_cdad1 = Motif.create!(
 all_cdad_agent = Agent.new(
   email: "secretariat@cdad.fr",
   uid: "secretariat@cdad.fr",
-  first_name: "Secre",
-  last_name: "Tariat",
+  first_name: "Maxime",
+  last_name: "Secrétariat",
   password: "lapinlapin",
   services: [service_cdad],
   invitation_accepted_at: 10.days.ago,

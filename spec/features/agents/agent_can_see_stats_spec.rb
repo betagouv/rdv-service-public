@@ -21,11 +21,11 @@ RSpec.describe "Agent can see stats" do
     before do
       login_as(agent1, scope: :agent)
       visit admin_organisation_agent_agenda_path(organisation1a, agent1)
+      click_link "Statistiques"
     end
 
     it "displays correct stats for organisation1a" do
-      click_link "Statistiques"
-      expect(page).to have_content("Statistiques #{organisation1a.name}")
+      expect(page).to have_content("Statistiques de #{organisation1a.name}")
       # rdv2
       expect(page).to have_content("À venir\n1")
       # rdv1 & rdv2
@@ -33,8 +33,8 @@ RSpec.describe "Agent can see stats" do
     end
 
     it "displays correct stats for agent1" do
-      click_link "Vos statistiques"
-      expect(page).to have_content("Statistiques #{agent1.full_name}")
+      click_link "Voir vos statistiques personnelles"
+      expect(page).to have_content("Statistiques de #{agent1.full_name}")
       # rdv3 & rdv4
       expect(page).to have_content("À venir\n2")
       # rdv1, rdv3 & rdv4
@@ -46,18 +46,18 @@ RSpec.describe "Agent can see stats" do
     before do
       login_as(agent2, scope: :agent)
       visit authenticated_agent_root_path
+      click_link "Statistiques"
     end
 
     it "displays correct stats for organisation2" do
-      click_link "Statistiques"
-      expect(page).to have_content("Statistiques #{organisation2.name}")
+      expect(page).to have_content("Statistiques de #{organisation2.name}")
       # rdv6
       expect(page).to have_content("RDV créés (1)")
     end
 
     it "displays correct stats for agent2" do
-      click_link "Vos statistiques"
-      expect(page).to have_content("Statistiques #{agent2.full_name}")
+      click_link "Voir vos statistiques personnelles"
+      expect(page).to have_content("Statistiques de #{agent2.full_name}")
       # rdv2, rdv5 & rdv6
       expect(page).to have_content("RDV créés (3)")
     end

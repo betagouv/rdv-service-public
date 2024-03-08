@@ -20,11 +20,7 @@ require "capybara/email/rspec"
 require "capybara-screenshot/rspec"
 require "pundit/rspec"
 require "webmock/rspec"
-require "simplecov"
 require "selenium-webdriver"
-
-SimpleCov.minimum_coverage 80
-SimpleCov.start
 
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate

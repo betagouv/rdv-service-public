@@ -135,6 +135,7 @@ RSpec.describe "agents can prescribe rdvs" do
       fill_in :user_first_name, with: "Jean-Paul"
       fill_in :user_last_name, with: "Orvoir"
       click_on "Créer usager"
+      expect(page).to have_content("Jean-Paul")
       click_on "Continuer"
       expect { click_button "Confirmer le rdv" }.to change(Rdv, :count).by(1)
       expect(Rdv.last.users.first.organisations).to match_array([org_mds, org_insertion])
@@ -162,6 +163,7 @@ RSpec.describe "agents can prescribe rdvs" do
       fill_in :user_first_name, with: "Jean-Paul"
       fill_in :user_last_name, with: "Orvoir"
       click_on "Créer usager"
+      expect(page).to have_content("Jean-Paul")
       click_on "Continuer"
       # go back to user selection
       page.all("a").find { _1.text == "modifier" && _1[:href].include?("user_selection") }.click
