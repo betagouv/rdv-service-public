@@ -1,3 +1,10 @@
+GIT
+  remote: https://github.com/nahi/httpclient.git
+  revision: d57cc6d5ffee1b566b5c189fe6dc8cc89570b812
+  ref: d57cc6d
+  specs:
+    httpclient (2.8.3)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -220,7 +227,6 @@ GEM
     html-attributes-utils (1.0.2)
       activesupport (>= 6.1.4.4)
     htmlentities (4.3.4)
-    httpclient (2.8.3)
     i18n (1.14.1)
       concurrent-ruby (~> 1.0)
     icalendar (2.8.0)
@@ -644,6 +650,7 @@ DEPENDENCIES
   faker
   good_job
   groupdate (~> 6.1)
+  httpclient!
   icalendar (~> 2.5)
   jbuilder
   jsbundling-rails

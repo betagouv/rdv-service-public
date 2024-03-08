@@ -145,6 +145,9 @@ gem "icalendar", "~> 2.5"
 # Tame Rails' multi-line logging into a single line per request
 gem "lograge"
 
+# TODO: retirer cette ligne quand une nouvelle version de httpclient est released
+gem "httpclient", git: "https://github.com/nahi/httpclient.git", ref: "d57cc6d"
+
 group :development, :test do
   # Identify database issues before they hit production.
   gem "active_record_doctor"
