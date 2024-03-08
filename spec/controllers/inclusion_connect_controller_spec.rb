@@ -57,7 +57,7 @@ RSpec.describe InclusionConnectController, type: :controller do
           # On aurait envie d'utiliser une feature spec et vérifier le contenu de la page, mais
           # les feature specs ne permettent pas de manipuler la session pour y écrire le ic_state.
           expect(response).to redirect_to("/agents/sign_in")
-          expect(flash[:error]).to eq("Nous n'avons pas pu vous authentifier. Contacter le support à l'adresse <support@rdv-solidarites.fr> si le problème persiste.")
+          expect(flash[:error]).to include("Nous n'avons pas pu vous authentifier. Contactez le support à l'adresse")
         end
       end
 
@@ -85,12 +85,12 @@ RSpec.describe InclusionConnectController, type: :controller do
         end
 
         context "when agent already has names" do
-          it "does not update the names" do
+          it "update the names" do
             agent = create(:agent, first_name: "Francis", last_name: "Factice", email: "bob@demo.rdv-solidarites.fr")
             get :callback, params: { state: ic_state, session_state: ic_state, code: "klzefklzejlf" }
             expect(agent.reload).to have_attributes(
-              first_name: "Francis",
-              last_name: "Factice"
+              first_name: "Bob",
+              last_name: "Eponge"
             )
           end
         end
@@ -126,11 +126,48 @@ RSpec.describe InclusionConnectController, type: :controller do
       end
     end
 
+    describe "with a francetravail domain" do
+      before do
+        stub_token_request.to_return(status: 200, body: { access_token: "zekfjzeklfjl", expires_in: now + 1.week, scopes: "openid" }.to_json, headers: {})
+
+        user_info = {
+          given_name: "Bob",
+          family_name: "Eponge",
+          email: "bob@francetravail.fr",
+          sub: "12345678-90ab-cdef-1234-567890abcdef",
+        }
+
+        stub_request(:get, "#{base_url}/userinfo/?schema=openid").with(
+          headers: {
+            "Authorization" => "Bearer zekfjzeklfjl",
+          }
+        ).to_return(status: 200, body: user_info.to_json, headers: {})
+
+        session[:ic_state] = ic_state
+      end
+
+      context "The migration to francetravail is done but the agent has not logged in during the migration process" do
+        it "search @pole-emploi.fr saves the sub and update email" do
+          agent = create(:agent, :invitation_not_accepted, email: "bob@pole-emploi.fr")
+          get :callback, params: { state: ic_state, session_state: ic_state, code: "klzefklzejlf" }
+          expect(agent.reload).to have_attributes(
+            id: agent.id,
+            email: "bob@francetravail.fr",
+            uid: "bob@francetravail.fr",
+            inclusion_connect_open_id_sub: "12345678-90ab-cdef-1234-567890abcdef",
+            confirmed_at: be_within(10.seconds).of(now),
+            invitation_accepted_at: be_within(10.seconds).of(now),
+            last_sign_in_at: be_within(10.seconds).of(now)
+          )
+        end
+      end
+    end
+
     it "returns an error if state doesn't match" do
       session[:ic_state] = "AZEERT"
       get :callback, params: { state: "zefjzelkf", session_state: "zfjzerklfjz", code: "klzefklzejlf" }
       expect(response).to redirect_to(new_agent_session_path)
-      expect(flash[:error]).to eq("Nous n'avons pas pu vous authentifier. Contacter le support à l'adresse <support@rdv-solidarites.fr> si le problème persiste.")
+      expect(flash[:error]).to include("Nous n'avons pas pu vous authentifier. Contactez le support à l'adresse")
 
       # Error message is sent to Sentry
       expect(sentry_events.last.message).to include("InclusionConnect states do not match")
@@ -149,7 +186,7 @@ RSpec.describe InclusionConnectController, type: :controller do
       session[:ic_state] = "a state"
       get :callback, params: { state: "a state", session_state: "a state", code: "klzefklzejlf" }
       expect(response).to redirect_to(new_agent_session_path)
-      expect(flash[:error]).to eq("Nous n'avons pas pu vous authentifier. Contacter le support à l'adresse <support@rdv-solidarites.fr> si le problème persiste.")
+      expect(flash[:error]).to include("Nous n'avons pas pu vous authentifier. Contactez le support à l'adresse")
 
       # HTTP request is sent to Sentry as breadcrumbs
       expect(sentry_events.last.breadcrumbs.compact.map(&:message)).to eq(["HTTP request", "HTTP response"])
@@ -162,7 +199,7 @@ RSpec.describe InclusionConnectController, type: :controller do
       get :callback, params: { state: "a state", session_state: "a state", code: "klzefklzejlf" }
 
       expect(response).to redirect_to(new_agent_session_path)
-      expect(flash[:error]).to eq("Nous n'avons pas pu vous authentifier. Contacter le support à l'adresse <support@rdv-solidarites.fr> si le problème persiste.")
+      expect(flash[:error]).to include("Nous n'avons pas pu vous authentifier. Contactez le support à l'adresse")
 
       # HTTP request is sent to Sentry as breadcrumbs
       expect(sentry_events.last.breadcrumbs.compact.map(&:message)).to eq(["HTTP request", "HTTP response"])
@@ -181,7 +218,7 @@ RSpec.describe InclusionConnectController, type: :controller do
       get :callback, params: { state: "a state", session_state: "a state", code: "klzefklzejlf" }
 
       expect(response).to redirect_to(new_agent_session_path)
-      expect(flash[:error]).to eq("Nous n'avons pas pu vous authentifier. Contacter le support à l'adresse <support@rdv-solidarites.fr> si le problème persiste.")
+      expect(flash[:error]).to include("Nous n'avons pas pu vous authentifier. Contactez le support à l'adresse")
 
       # HTTP request is sent to Sentry as breadcrumbs
       expect(sentry_events.last.breadcrumbs.compact.map(&:message).uniq).to eq(["HTTP request", "HTTP response"])

@@ -1,5 +1,6 @@
 class Admin::AgentAgendasController < AgentAuthController
   def show
+    @hide_rdv_a_renseigner_in_main_layout = true
     @agent = policy_scope(Agent).find(params[:id])
     authorize(AgentAgenda.new(agent: @agent, organisation: current_organisation))
     @status = params[:status]

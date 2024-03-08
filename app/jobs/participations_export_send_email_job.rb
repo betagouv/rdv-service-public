@@ -2,10 +2,9 @@ class ParticipationsExportSendEmailJob < ExportJob
   def perform(batch, _params)
     agent = Agent.find(batch.properties[:agent_id])
 
-    redis_connection = Redis.new(url: Rails.configuration.x.redis_url)
     redis_key = batch.properties[:redis_key]
 
-    pages = redis_connection.hgetall(redis_key)
+    pages = Redis.with_connection { |redis| redis.hgetall(redis_key) }
 
     page_numbers = pages.keys.map(&:to_i).sort
 
@@ -21,8 +20,6 @@ class ParticipationsExportSendEmailJob < ExportJob
     # Using #deliver_now because we don't want to enqueue a job with a huge payload
     Agents::ExportMailer.participations_export(agent, batch.properties[:file_name], xls_string).deliver_now
 
-    redis_connection.del(redis_key)
-  ensure
-    redis_connection&.close
+    Redis.with_connection { |redis| redis.del(redis_key) }
   end
 end

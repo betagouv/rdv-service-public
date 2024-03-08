@@ -37,7 +37,7 @@ RSpec.describe WebhookJob, type: :job do
       described_class.perform_later(payload, webhook_endpoint.id)
 
       perform_enqueued_jobs
-      expect(enqueued_jobs.first["priority"]).to eq(-20)
+      expect(enqueued_jobs.first["priority"]).to eq(20)
     end
 
     it "retries on timeout" do
@@ -54,6 +54,15 @@ RSpec.describe WebhookJob, type: :job do
 
       4.times { perform_enqueued_jobs } # On ne loggue vers Sentry qu'au 4ème retry
       expect(sentry_events.last.fingerprint).to eq(["OutgoingWebhookError", "https://example.com/rdv-s-endpoint", "500"])
+    end
+
+    # Le WAF du Pas-de-Calais bloque certaines requêtes et
+    # renvoie une réponse en HTML avec un statut 200.
+    it "detects WAF blockage that returns a 200" do
+      stub_request(:post, "https://example.com/rdv-s-endpoint").and_return({ status: 200, body: "<html><title>Request Rejected</title><body>...</body><html>" })
+      described_class.perform_later(payload, webhook_endpoint.id)
+      4.times { perform_enqueued_jobs } # On ne loggue vers Sentry qu'au 4ème retry
+      expect(sentry_events.last.message).to eq("HTML body in HTTP 200 response in webhook to [https://example.com/rdv-s-endpoint]")
     end
   end
 
