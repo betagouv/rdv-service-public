@@ -31,7 +31,7 @@ class Agent::UserPolicy < DefaultAgentPolicy
   end
 
   def prescribe?
-    (@record.territory_ids & current_agent.organisations_territory_ids).present?
+    ExtendedScope.new(pundit_user, User.where(id: @record.id)).exists?
   end
 
   class Scope < Scope
@@ -43,6 +43,18 @@ class Agent::UserPolicy < DefaultAgentPolicy
                          end
 
       scope.where(id: UserProfile.where("user_profiles.organisation_id": organisation_ids).distinct.select(:user_id))
+    end
+  end
+
+  # Cette scope est utilisée lors des recherches usager tronquées sur tout le territoire
+  class ExtendedScope < Scope
+    def resolve
+      scope.joins(:territories).where(territories: current_agent.organisations_territory_ids)
+    end
+
+    def agent_in_cnfs_or_mairies_territories?
+      cnfs_and_mairies_territory_ids = [Territory.mairies&.id, Territory.find_by(departement_number: "CN")&.id].compact
+      (cnfs_and_mairies_territory_ids & current_agent.organisations.pluck(:territory_id)).any? # & does an array overlap here
     end
   end
 

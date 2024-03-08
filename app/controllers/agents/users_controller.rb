@@ -12,16 +12,19 @@ class Agents::UsersController < AgentAuthController
       return head :forbidden
     end
 
+    extended_scope = Agent::UserPolicy::ExtendedScope.new(pundit_user, User.all).resolve
+    current_org_scope = Agent::UserPolicy::Scope.new(pundit_user, User.all).resolve
+
     user_scope = User.where.not(id: params[:exclude_ids]).search_by_text(params[:term])
 
-    users_from_organisation = user_scope.joins(:user_profiles).where(user_profiles: { organisation_id: params[:organisation_id] }).limit(MAX_RESULTS).to_a
+    users_from_organisation = user_scope.merge(current_org_scope).to_a
 
     results_count = users_from_organisation.size
 
-    users_from_territory = if agent_in_cnfs_or_mairies_territories? || results_count >= MAX_RESULTS
+    users_from_territory = if results_count >= MAX_RESULTS
                              []
                            else
-                             user_scope.joins(:territories).where(territories: current_agent.organisations_territory_ids)
+                             user_scope.merge(extended_scope)
                                .where.not(id: users_from_organisation.map(&:id))
                                .limit(MAX_RESULTS - results_count).to_a
                            end
@@ -63,10 +66,5 @@ class Agents::UsersController < AgentAuthController
         }
       end,
     }
-  end
-
-  def agent_in_cnfs_or_mairies_territories?
-    cnfs_and_mairies_territory_ids = [Territory.mairies&.id, Territory.find_by(departement_number: "CN")&.id].compact
-    (cnfs_and_mairies_territory_ids & current_agent.organisations.pluck(:territory_id)).any? # & does an array overlap here
   end
 end

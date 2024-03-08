@@ -214,7 +214,7 @@ class Agent < ApplicationRecord
   end
 
   def organisations_territory_ids
-    organisations.distinct(:territory_id).pluck(:territory_id)
+    organisations.distinct(:territory_id).select(:territory_id)
   end
 
   def update_unknown_past_rdv_count!
