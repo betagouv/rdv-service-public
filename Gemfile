@@ -145,50 +145,16 @@ gem "icalendar", "~> 2.5"
 # Tame Rails' multi-line logging into a single line per request
 gem "lograge"
 
-group :development, :test do
+group :development do
   # Identify database issues before they hit production.
   gem "active_record_doctor"
-  # Ruby fast debugger - base + CLI
-  gem "byebug", platforms: %i[mri mingw x64_mingw] # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  # Security vulnerability scanner for Ruby on Rails.
-  gem "brakeman", require: false
-  # Automatic Ruby code style checking tool.
-  gem "rubocop", "1.24.1", require: false
-  # Code style checking for RSpec files
-  gem "rubocop-rspec", "2.7.0"
-  # Automatic Rails code style checking tool.
-  gem "rubocop-rails", "2.13.1"
-  # RSpec for Rails
-  gem "rspec-rails"
-  # RSpec JUnit XML formatter
-  gem "rspec_junit_formatter", require: false
-  # Extracting `assigns` and `assert_template` from ActionDispatch.
-  gem "rails-controller-testing"
-  # factory_bot provides a framework and DSL for defining and using model instance factories.
-  gem "factory_bot"
   # help to kill N+1 queries and unused eager loading.
   gem "bullet"
-  # Easily generate fake data
-  gem "faker"
-  # Run Test::Unit / RSpec / Cucumber / Spinach in parallel
-  gem "parallel_tests"
-  # Slim template linting tool
-  gem "slim_lint", require: false
-  # Axe API utility methods
-  gem "axe-core-api", "4.3.2" # Fixed to 4.3.2 because recent versions of axe are more strict
-  # RSpec custom matchers for Axe
-  gem "axe-core-rspec", "4.3.2"
-  # Selenium is a browser automation tool for automated testing of webapps and more
-  gem "selenium-webdriver"
-  # Rails application preloader
-  gem "spring", require: false
-  # rspec command for spring
-  gem "spring-commands-rspec"
-  # An OpenAPI-based (formerly called Swagger) DSL for rspec-rails & accompanying rake task for generating OpenAPI specification files
-  gem "rswag-specs"
-end
-
-group :development do
+  # Ruby fast debugger - base + CLI
+  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
+  gem "byebug", platforms: %i[mri mingw x64_mingw]
+  # Security vulnerability scanner for Ruby on Rails.
+  gem "brakeman", require: false
   # Listen to file modifications
   gem "listen" # Needed for ActiveSupport::EventedFileUpdateChecker. See config/environment/development.rb
   # Better error page for Rails and other Rack apps
@@ -201,9 +167,31 @@ group :development do
   gem "rails-erd" # Keeps docs/domain_model.svg up-to-date. See .erdconfig
   # Profiles loading speed for rack applications.
   gem "rack-mini-profiler"
+
+  # Automatic Ruby code style checking tool.
+  gem "rubocop", "1.24.1", require: false
+  # Code style checking for RSpec files
+  gem "rubocop-rspec", "2.7.0"
+  # Automatic Rails code style checking tool.
+  gem "rubocop-rails", "2.13.1"
+
+  # Slim template linting tool
+  gem "slim_lint", require: false
+
+  # Rails application preloader
+  gem "spring", require: false
 end
 
 group :test do
+  # RSpec for Rails
+  gem "rspec-rails"
+  # RSpec JUnit XML formatter
+  gem "rspec_junit_formatter", require: false
+
+  # Axe API utility methods
+  gem "axe-core-api", "4.3.2" # Fixed to 4.3.2 because recent versions of axe are more strict
+  # RSpec custom matchers for Axe
+  gem "axe-core-rspec", "4.3.2"
   # Capybara aims to simplify the process of integration testing Rack applications, such as Rails, Sinatra or Merb
   gem "capybara"
   # Test your ActionMailer and Mailer messages in Capybara
@@ -212,6 +200,20 @@ group :test do
   gem "capybara-screenshot"
   # Strategies for cleaning databases. Can be used to ensure a clean slate for testing.
   gem "database_cleaner"
+  # factory_bot provides a framework and DSL for defining and using model instance factories.
+  gem "factory_bot"
+  # Easily generate fake data
+  gem "faker"
+  # Run Test::Unit / RSpec / Cucumber / Spinach in parallel
+  gem "parallel_tests"
+  # Extracting `assigns` and `assert_template` from ActionDispatch.
+  gem "rails-controller-testing"
+  # Selenium is a browser automation tool for automated testing of webapps and more
+  gem "selenium-webdriver"
+  # rspec command for spring
+  gem "spring-commands-rspec"
+  # An OpenAPI-based (formerly called Swagger) DSL for rspec-rails & accompanying rake task for generating OpenAPI specification files
+  gem "rswag-specs"
   # Library for stubbing HTTP requests in Ruby.
   gem "webmock"
 end
