@@ -172,8 +172,6 @@ group :development, :test do
   gem "faker"
   # Run Test::Unit / RSpec / Cucumber / Spinach in parallel
   gem "parallel_tests"
-  # Code coverage for Ruby
-  gem "simplecov", require: false
   # Slim template linting tool
   gem "slim_lint", require: false
   # Axe API utility methods
