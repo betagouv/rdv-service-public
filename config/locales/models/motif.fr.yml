@@ -4,11 +4,11 @@ fr:
       motif: Motif
     attributes:
       motif:
-        name: Intitulé du motif
+        name: Nom
         organisation: Organisation
-        service: Service associé
+        service: Service
         collectif: Nombre de participants
-        color: Couleur associée
+        color: Couleur
         bookable_by: Réservation en ligne
         bookable_by_hint: Vous pouvez décider de qui peut prendre RDV pour ce motif
         visibility_type: Visibilité usager
@@ -27,7 +27,7 @@ fr:
         follow_up_short: RDV de suivi
         follow_up_warning: Les motifs pour RDV de suivi ne sont pas visible lors de la réservation en ligne par les usagers sans compte et sans référent. Les usagers avec un référent pourront prendre rdv depuis leur espace personnel.
         follow_up_hint: Ce motif est réservé uniquement aux usagers bénéficiant d'un accompagnement
-        default_duration_in_min: Durée du RDV (en minutes)
+        default_duration_in_min: Durée par défaut en minutes
         default_duration_in_min_short: Durée par défaut
         default_duration: Durée par défaut
         min_public_booking_delay: Délai minimum de réservation
@@ -45,8 +45,8 @@ fr:
         rdvs_editable_by_user: RDVs modifiables
         rdvs_editable_by_user_hint: L'horaire du RDV peut être changé par l'usager au plus tard 2 jours avant le début du RDV
       motif/collectifs:
-        true: Atelier collectif
-        false: Consultation individuelle / famille
+        true: RDV collectif
+        false: RDV individuel
       motif/collectifs/hint:
         true: Le rendez-vous est destiné à plusieurs usagers. Chaque participants est notifié individuellement.
         false: Le rendez-vous est réservé pour un usager en particulier. Cet usager peut être accompagné (parent, tuteur, traducteur, …) pour la consultation individuelle.

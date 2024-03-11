@@ -5,6 +5,5 @@
   = label_tag do
     = f.radio_button(:location_type, value, disabled: disabled)
     span.ml-1 class=(disabled ? "text-muted" : "")
-      ' Rendez-vous
-      strong= Motif.human_attribute_value(:location_type, value).downcase
-    p.text-muted.font-14= Motif.human_attribute_value(:location_type, value, context: :hint)
+      = Motif.human_attribute_value(:location_type, value)
+    p.text-muted.font-14.mt-1= Motif.human_attribute_value(:location_type, value, context: :hint)
