@@ -36,7 +36,7 @@ class Export < ApplicationRecord
   end
 
   def available?
-    computed_at && !expired?
+    status == STATUS_AVAILABLE
   end
 
   def status
