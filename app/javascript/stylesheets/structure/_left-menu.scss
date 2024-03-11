@@ -110,6 +110,7 @@
     bottom: 0;
     position: sticky;
     top: 0;
+    max-height: 100vh; // pour permettre de scroller dans le menu
     overflow-y: auto;
     overflow-x: hidden;
 

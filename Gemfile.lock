@@ -143,12 +143,12 @@ GEM
       descendants_tracker (~> 0.0.1)
     common_french_passwords (0.0.1)
     concurrent-ruby (1.2.3)
+    connection_pool (2.4.1)
     crack (0.4.5)
       rexml
     crass (1.0.6)
     css_parser (1.16.0)
       addressable
-    daemons (1.4.1)
     database_cleaner (2.0.2)
       database_cleaner-active_record (>= 2, < 3)
     database_cleaner-active_record (2.0.1)
@@ -373,7 +373,7 @@ GEM
       net-smtp
       premailer (~> 1.7, >= 1.7.9)
     public_suffix (5.0.4)
-    puma (5.6.8)
+    puma (6.4.2)
       nio4r (~> 2.0)
     pundit (2.2.0)
       activesupport (>= 3.0.0)
@@ -443,7 +443,10 @@ GEM
     rb-fsevent (0.11.2)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
-    redis (4.8.1)
+    redis (5.1.0)
+      redis-client (>= 0.17.0)
+    redis-client (0.21.0)
+      connection_pool
     redis-namespace (1.11.0)
       redis (>= 4)
     regexp_parser (2.8.2)
@@ -632,7 +635,6 @@ DEPENDENCIES
   capybara-screenshot
   chartkick (~> 5.0.1)
   common_french_passwords
-  daemons
   database_cleaner
   devise
   devise-async
@@ -663,7 +665,7 @@ DEPENDENCIES
   pg_search
   phonelib
   premailer-rails
-  puma (< 6.0)
+  puma
   pundit
   rack-attack
   rack-cors
@@ -672,7 +674,7 @@ DEPENDENCIES
   rails-controller-testing
   rails-erd
   rails_autolink
-  redis (< 5.0)
+  redis
   redis-namespace
   rspec-rails
   rspec_junit_formatter
