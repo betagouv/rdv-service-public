@@ -1,0 +1,17 @@
+= simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f|
+  = render "devise/shared/error_messages", resource: resource
+  = f.input :email, value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email), placeholder: "nom.prenom@email.com"
+  - if devise_mapping.confirmable? && resource.pending_reconfirmation?
+    .form-text.text-muted
+      | En attente de confirmation pour #{resource.unconfirmed_email}
+
+  = f.input :password, disabled: true, input_html: { value: "**********" }
+  = link_to("Changer de mot de passe", edit_agent_mot_de_passes_path, class: "mb-2")
+
+  = f.input :first_name, placeholder: "Prénom"
+  = f.input :last_name, placeholder: "Nom"
+  = f.association :services, collection: resource.services, disabled: true, input_html: { class: "select2-input" }
+  = f.input :current_password, placeholder: "Votre mot de passe actuel", required: true, autocomplete: "off"
+  .form-text.text-muted.mb-2
+    | Renseignez votre mot de passe actuel pour tout changement.
+  .text-right= f.submit "Modifier", class: "btn btn-primary"
