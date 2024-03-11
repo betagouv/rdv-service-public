@@ -42,26 +42,32 @@ ruby:
         i.fa.fa-plus-circle
         span.ml-1= t("helpers.add")
     .pl-2.mt-2.collapse.collapse-add-user-selection.no-transition class=(show_add_user ? "show" : "")
-      = label_tag :user_search, "Rechercher un usager", {class: "form-control-label string optional"}
-      div.form-row.grid-align-center
-        .flex-grow-1.pr-4
-          = select_tag :status,
-          options_for_select([]),
-          required: false,
-          class: "select2-input js-new-rdv-users-select",
-          data: { \
-            width: :style,
-            "select-options": { ajax: { url: search_agents_users_path(exclude_ids: @rdv.users.map(&:id), organisation_id: @rdv.organisation_id), dataType: "json", delay: 250}, placeholder: "Nom, prénom, téléphone, ou email" }, \
-          }
+      - if current_organisation.users.any?
+        = label_tag :user_search, "Rechercher un usager", {class: "form-control-label string optional"}
+        div.form-row.grid-align-center
+          .flex-grow-1.pr-4
+            = select_tag :status,
+            options_for_select([]),
+            required: false,
+            class: "select2-input js-new-rdv-users-select",
+            data: { \
+              width: :style,
+              "select-options": { ajax: { url: search_agents_users_path(exclude_ids: @rdv.users.map(&:id), organisation_id: @rdv.organisation_id), dataType: "json", delay: 250}, placeholder: "Nom, prénom, téléphone, ou email" }, \
+            }
 
-        span.small.text-muted
-          | L'usager n'existe pas ?&nbsp;
-          = link_to \
-            "Créer un usager", \
+          span.small.text-muted
+            | L'usager n'existe pas ?&nbsp;
+            = link_to("Créer un usager", new_admin_organisation_user_path( \
+                  current_organisation, modal: true, return_location: modals_return_location, role: default_service_selection_from(@rdv.motif.service) \
+                  ),
+              data: { modal: true })
+      - else
+        = link_to \
+          "Créer un usager", \
             new_admin_organisation_user_path( \
-                current_organisation, modal: true, return_location: modals_return_location, role: default_service_selection_from(@rdv.motif.service) \
+              current_organisation, modal: true, return_location: modals_return_location, role: default_service_selection_from(@rdv.motif.service) \
                 ), \
-            data: { modal: true }
+              data: { modal: true }, class: "btn btn-primary"
 
     - if current_organisation.territory.enable_context_field
       .mt-3= f.input :context, as: :text, label: Rdv.human_attribute_name(:context), input_html: { rows: 4 }
