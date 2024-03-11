@@ -46,7 +46,6 @@ gem "kaminari"
 gem "bootstrap4-kaminari-views"
 # A Rails engine for creating super-flexible admin dashboards
 gem "administrate"
-# TODO: migrate columns to json before upgrading to v13 (https://github.com/paper-trail-gem/paper_trail/blob/master/doc/pt_13_yaml_safe_load.md)
 # Track changes to your models.
 gem "paper_trail", "< 13.0"
 # Integrate PostgreSQL's enum data type into ActiveRecord's schema and migrations.
@@ -81,8 +80,6 @@ gem "common_french_passwords"
 # Jobs
 # A multithreaded, Postgres-based ActiveJob backend for Ruby on Rails
 gem "good_job"
-# A toolkit to create and control daemons in different ways
-gem "daemons"
 
 # JSON serialization and queries
 
@@ -145,11 +142,18 @@ gem "icalendar", "~> 2.5"
 # Tame Rails' multi-line logging into a single line per request
 gem "lograge"
 
-group :development, :test do
+group :development do
+  #  Hot reload
+
+  # Rails application preloader
+  gem "spring", require: false
+  # Listen to file modifications
+  gem "listen" # Needed for ActiveSupport::EventedFileUpdateChecker. See config/environment/development.rb
+
+  # Linters
+
   # Identify database issues before they hit production.
   gem "active_record_doctor"
-  # Ruby fast debugger - base + CLI
-  gem "byebug", platforms: %i[mri mingw x64_mingw] # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   # Security vulnerability scanner for Ruby on Rails.
   gem "brakeman", require: false
   # Automatic Ruby code style checking tool.
@@ -158,60 +162,76 @@ group :development, :test do
   gem "rubocop-rspec", "2.7.0"
   # Automatic Rails code style checking tool.
   gem "rubocop-rails", "2.13.1"
+  # Slim template linting tool
+  gem "slim_lint", require: false
+
+  #  Debug
+
+  # help to kill N+1 queries and unused eager loading.
+  gem "bullet"
+  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
+  gem "byebug", platforms: %i[mri mingw x64_mingw]
+  # Better error page for Rails and other Rack apps
+  gem "better_errors"
+  # Retrieve the binding of a method's caller, or further up the stack.
+  gem "binding_of_caller" # Enable the REPL in better_errors
+  # Profiles loading speed for rack applications.
+  gem "rack-mini-profiler"
+
+  # Other
+
+  # Gives letter_opener an interface for browsing sent emails
+  gem "letter_opener_web" # Saves sent emails and serves them on /letter_opener
+  # Entity-relationship diagram for your Rails models.
+  gem "rails-erd" # Keeps docs/domain_model.svg up-to-date. See .erdconfig
+end
+
+group :test do
+  # Rspec
+
+  # Run Test::Unit / RSpec / Cucumber / Spinach in parallel
+  gem "parallel_tests"
   # RSpec for Rails
   gem "rspec-rails"
   # RSpec JUnit XML formatter
   gem "rspec_junit_formatter", require: false
   # Extracting `assigns` and `assert_template` from ActionDispatch.
   gem "rails-controller-testing"
-  # factory_bot provides a framework and DSL for defining and using model instance factories.
-  gem "factory_bot"
-  # help to kill N+1 queries and unused eager loading.
-  gem "bullet"
-  # Easily generate fake data
-  gem "faker"
-  # Run Test::Unit / RSpec / Cucumber / Spinach in parallel
-  gem "parallel_tests"
-  # Slim template linting tool
-  gem "slim_lint", require: false
+  # An OpenAPI-based (formerly called Swagger) DSL for rspec-rails & accompanying rake task for generating OpenAPI specification files
+  gem "rswag-specs"
+  # rspec command for spring
+  gem "spring-commands-rspec"
+
+  # Accessibility
+
   # Axe API utility methods
   gem "axe-core-api", "4.3.2" # Fixed to 4.3.2 because recent versions of axe are more strict
   # RSpec custom matchers for Axe
   gem "axe-core-rspec", "4.3.2"
-  # Selenium is a browser automation tool for automated testing of webapps and more
-  gem "selenium-webdriver"
-  # Rails application preloader
-  gem "spring", require: false
-  # rspec command for spring
-  gem "spring-commands-rspec"
-  # An OpenAPI-based (formerly called Swagger) DSL for rspec-rails & accompanying rake task for generating OpenAPI specification files
-  gem "rswag-specs"
-end
 
-group :development do
-  # Listen to file modifications
-  gem "listen" # Needed for ActiveSupport::EventedFileUpdateChecker. See config/environment/development.rb
-  # Better error page for Rails and other Rack apps
-  gem "better_errors"
-  # Retrieve the binding of a method's caller, or further up the stack.
-  gem "binding_of_caller" # Enable the REPL in better_errors
-  # Gives letter_opener an interface for browsing sent emails
-  gem "letter_opener_web" # Saves sent emails and serves them on /letter_opener
-  # Entity-relationship diagram for your Rails models.
-  gem "rails-erd" # Keeps docs/domain_model.svg up-to-date. See .erdconfig
-  # Profiles loading speed for rack applications.
-  gem "rack-mini-profiler"
-end
+  # Web browser simulation
 
-group :test do
   # Capybara aims to simplify the process of integration testing Rack applications, such as Rails, Sinatra or Merb
   gem "capybara"
   # Test your ActionMailer and Mailer messages in Capybara
   gem "capybara-email"
   # Automatically create snapshots when Cucumber steps fail with Capybara and Rails
   gem "capybara-screenshot"
+  # Selenium is a browser automation tool for automated testing of webapps and more
+  gem "selenium-webdriver"
+
   # Strategies for cleaning databases. Can be used to ensure a clean slate for testing.
   gem "database_cleaner"
+
+  # Factories
+
+  # factory_bot provides a framework and DSL for defining and using model instance factories.
+  gem "factory_bot"
+  # Easily generate fake data
+  gem "faker"
+
+  # Stubbing
+
   # Library for stubbing HTTP requests in Ruby.
   gem "webmock"
 end
