@@ -10,8 +10,10 @@ fr:
         collectif: Nombre de participants
         color: Couleur
         bookable_by: Réservation en ligne
-        bookable_by_hint: Vous pouvez décider de qui peut prendre RDV pour ce motif
+        bookable_by_hint: "Définissez quel utilisateur peut prendre rendez-vous pour ce motif :"
         visibility_type: Visibilité usager
+        booking_delay: Délai de réservation
+        booking_delay_hint: "Vous pouvez définir une “fenêtre de réservation” pour la prise d’un rendez-vous : il s’agit du délai maximum et minimum possible, entre le moment où l’usager prend rendez-vous, et le rendez-vous en lui même."
         custom_cancel_warning_message: Message d’avertissement en cas d’annulation
         custom_cancel_warning_message_hint: Ce message sera affiché à l'usager au moment où il lui sera demandé de confirmer l’annulation de son RDV. Si l’annulation du rendez-vous a des conséquences particulières pour l’usager, vous pouvez lui indiquer dans ce message. Cela peut être le cas, par exemple, pour une convocation pour l’ouverture de droits sociaux.
         default_cancel_warning_message: Voulez-vous vraiment annuler ce RDV ?
@@ -43,7 +45,7 @@ fr:
         instruction_for_rdv_hint: Indications affichées après la confirmation du rendez-vous
         instruction_for_rdv_short: Indications après
         rdvs_editable_by_user: RDVs modifiables
-        rdvs_editable_by_user_hint: L'horaire du RDV peut être changé par l'usager au plus tard 2 jours avant le début du RDV
+        rdvs_editable_by_user_hint: L’horaire et la date du rendez-vous peut être changé par l’usager au plus tard 48h avant le rendez-vous.
       motif/collectifs:
         true: RDV collectif
         false: RDV individuel
@@ -83,11 +85,16 @@ fr:
         public_office: L’usager est notifié que le RDV aura lieu à une des adresses associées à votre structure.
         phone: L’usager est notifié que le RDV aura lieu par téléphone, au numéro indiqué sur la fiche de l’usager.
         home: L’usager est notifié que le RDV se déroule à l’adresse renseigné dans sa fiche usager.
+      motif/bookable_by/radio_label_html:
+        agents: Créneaux <strong>fermés</strong> à la réservation en ligne
+        agents_and_prescripteurs: Créneaux <strong>partiellement ouverts</strong> à la réservation en ligne
+        agents_and_prescripteurs_and_invited_users: Créneaux <strong>ouverts</strong> à la réservation en ligne via une invitation
+        everyone: Créneaux <strong>ouverts</strong> à la réservation en ligne
       motif/bookable_by/hint:
-        agents: "Uniquement les agents de %{organisation_name}"
-        agents_and_prescripteurs: "Ouvert aux agents et aux prescripteurs"
-        agents_and_prescripteurs_and_invited_users: "Ouvert aux agents, aux prescripteurs et aux usagers avec une invitation"
-        everyone: "Ouvert aux agents, aux prescripteurs et aux usagers"
+        agents: Seuls vous et les agents de votre structure peuvent ajouter des rendez-vous à votre agenda.
+        agents_and_prescripteurs: Les agents et prescripteurs d’autres structures peuvent ajouter des rendez-vous à votre agenda.
+        agents_and_prescripteurs_and_invited_users: Les agents, prescripteurs, et usagers peuvent ajouter des rendez-vous dans votre agenda.
+        everyone: Les agents, prescripteurs, et usagers peuvent ajouter des rendez-vous dans votre agenda.
     errors:
       models:
         motif:

@@ -40,9 +40,23 @@ class MotifForm {
 
   toggleOnlineSubFields() {
     const enabled = !this.bookableByAgentsButton.checked
-    document.querySelectorAll(".js-rdvs-editable").forEach(rdvEditableElement =>
-      rdvEditableElement.classList.toggle('hidden', !enabled)
-    )
+    document.querySelectorAll(".js-optional-section").forEach(optionalSection => {
+      if(optionalSection.dataset.disabled == "false") {
+        optionalSection.classList.add('disabled-card');
+        optionalSection.querySelectorAll("select, input").forEach(input => {
+          console.log(input)
+          input.disabled = true;
+        });
+        optionalSection.dataset.disabled = "true";
+      }
+      else {
+        optionalSection.classList.remove('disabled-card');
+        optionalSection.querySelectorAll("select, input").forEach(input => {
+          input.disabled = false;
+        });
+        optionalSection.dataset.disabled = "false";
+      }
+    });
   }
 
   toggleRdvsEditable() {
