@@ -26,13 +26,7 @@ class Export < ApplicationRecord
   scope :recent, -> { where("created_at > ?", 2.weeks.ago) }
 
   def to_s
-    type = case export_type
-           when RDV_EXPORT
-             "de RDV"
-           when PARTICIPATIONS_EXPORT
-             "de RDV par usager"
-           end
-    "Export #{type} du #{I18n.l(created_at, format: :dense)}"
+    "#{I18n.t("export_type.#{export_type}")} du #{I18n.l(created_at, format: :dense)}"
   end
 
   def available?
