@@ -62,16 +62,25 @@ ruby:
                   ),
               data: { modal: true })
       - else
-        = link_to \
-          "Créer un usager", \
-            new_admin_organisation_user_path( \
-              current_organisation, modal: true, return_location: modals_return_location, role: default_service_selection_from(@rdv.motif.service) \
-                ), \
-              data: { modal: true }, class: "btn btn-primary"
+         .row.d-flex.justify-content-center-
+          = link_to \
+            "Créer un usager", \
+              new_admin_organisation_user_path( \
+                current_organisation, modal: true, return_location: modals_return_location, role: default_service_selection_from(@rdv.motif.service) \
+                  ), \
+                data: { modal: true }, class: "btn btn-primary"
 
     - if current_organisation.territory.enable_context_field
       .mt-3= f.input :context, as: :text, label: Rdv.human_attribute_name(:context), input_html: { rows: 4 }
 
-    = render "actions", rdv_wizard_form: @rdv_wizard, submit_value: "Continuer", f: f
+    .row.align-items-center.mt-3
+      .col.text-left
+        = link_to(@rdv_wizard.previous_step_path) do
+          i.fa.fa-arrow-left
+          = " Revenir en arrière"
+
+      - if @rdv_wizard.users.any?
+        .col.text-right
+          = f.button :submit, "Continuer"
 
 input type="hidden" name="js-canonical-path" value=modals_return_location
