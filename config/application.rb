@@ -39,19 +39,27 @@ module Lapin
     config.action_mailer.preview_path = Rails.root.join("spec/mailers/previews")
     config.active_model.i18n_customize_full_message = true
 
+    config.x.redis_url = ENV.fetch("REDIS_URL") { "redis://localhost:6379" }
+
     config.active_support.cache_format_version = 7.0
 
-    config.x.redis_app_namespace = Rails.env.test? ? "test:app:#{ENV['TEST_ENV_NUMBER']}" : "app"
-    config.x.redis_settings = {
-      url: ENV.fetch("REDIS_URL") { "redis://localhost:6379" },
+    # Both cache and sessions are stored in the same Redis database:
+    # - cache keys are prefixed with "cache:"
+    # - session keys are prefixed with "session:"
+    redis_settings = {
       connect_timeout: 30, # Defaults to 20 seconds
       read_timeout: 1, # Defaults to 1 second
       write_timeout: 1, # Defaults to 1 second
       reconnect_attempts: 1, # Defaults to 0
     }
 
-    redis_cache_namespace = Rails.env.test? ? "test:cache#{ENV['TEST_ENV_NUMBER']}" : "cache"
-    config.cache_store = :redis_cache_store, config.x.redis_settings.merge({ namespace: redis_cache_namespace })
+    config.cache_store = :redis_cache_store, {
+      url: config.x.redis_url,
+      namespace: "cache",
+      **redis_settings,
+    }
+
+    config.x.redis_namespace = "app"
 
     config.session_store :cookie_store, key: "_rdv_sp_session"
 
