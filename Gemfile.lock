@@ -4,6 +4,8 @@ GIT
   ref: d57cc6d
   specs:
     httpclient (2.8.3)
+      mutex_m
+      webrick
 
 GIT
   remote: https://github.com/rdv-solidarites/axiom-types.git
@@ -307,6 +309,7 @@ GEM
       activesupport (>= 5.2, < 8)
     msgpack (1.7.2)
     multi_xml (0.6.0)
+    mutex_m (0.2.0)
     net-http (0.4.1)
       uri
     net-imap (0.4.10)
@@ -613,6 +616,7 @@ GEM
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
+    webrick (1.8.1)
     websocket (1.2.10)
     websocket-driver (0.7.6)
       websocket-extensions (>= 0.1.0)
