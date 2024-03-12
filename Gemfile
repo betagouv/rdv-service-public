@@ -239,5 +239,5 @@ group :test do
   gem "webmock"
 
   # Dépendence indirecte de axe-core-api
-  gem "axiom-types", git: "https://github.com/francois-ferrandis/axiom-types.git", ref: "f75b18b"
+  gem "axiom-types", git: "https://github.com/rdv-solidarites/axiom-types.git", ref: "b9b204c"
 end

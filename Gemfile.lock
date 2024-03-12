@@ -1,20 +1,20 @@
 GIT
-  remote: https://github.com/francois-ferrandis/axiom-types.git
-  revision: f75b18be7481e81131878bdfba096acb7150303a
-  ref: f75b18b
-  specs:
-    axiom-types (0.1.1)
-      bigdecimal (~> 1.2, >= 1.2.7)
-      descendants_tracker (~> 0.0, >= 0.0.4)
-      ice_nine (~> 0.11, >= 0.11.0)
-      thread_safe (~> 0.3, >= 0.3.1)
-
-GIT
   remote: https://github.com/nahi/httpclient.git
   revision: d57cc6d5ffee1b566b5c189fe6dc8cc89570b812
   ref: d57cc6d
   specs:
     httpclient (2.8.3)
+
+GIT
+  remote: https://github.com/rdv-solidarites/axiom-types.git
+  revision: b9b204cebda7af20feea40c6c3e2dadb5766480f
+  ref: b9b204c
+  specs:
+    axiom-types (0.1.1)
+      bigdecimal (>= 1.2.7)
+      descendants_tracker (~> 0.0, >= 0.0.4)
+      ice_nine (~> 0.11, >= 0.11.0)
+      thread_safe (~> 0.3, >= 0.3.1)
 
 GEM
   remote: https://rubygems.org/
@@ -120,7 +120,7 @@ GEM
       coderay (>= 1.0.0)
       erubi (>= 1.0.0)
       rack (>= 0.9.0)
-    bigdecimal (1.4.4)
+    bigdecimal (3.1.6)
     bindata (2.5.0)
     binding_of_caller (1.0.0)
       debug_inspector (>= 0.0.1)
