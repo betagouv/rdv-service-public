@@ -8,7 +8,7 @@ p
       .col-md-12
         / Nous voulons que l'autocomplete ne propose que les noms des motifs en base,
         / pas celles de l'historique de saisie du navigateur, d'où le autocomplete="off".
-        = f.input :name, label: "Intitulé du motif", input_html: { list: "motif_names", autocomplete: "off" }
+        = f.input :name, label: "Intitulé du motif", input_html: { list: "motif_names", autocomplete: "off" }, placeholder: "Saisissez le nom du motif"
         datalist#motif_names
           - Motif.where(organisation_id: current_agent.organisations).map(&:name).uniq.each do |org_name|
             option= org_name
@@ -17,7 +17,7 @@ p
         = f.association :service, label: "Service associé", collection: current_territory.services, input_html: { \
           class: "select2-input", \
           data: { \
-            placeholder: "Sélectionnez un service", \
+            placeholder: "Sélectionnez le service auquel le motif sera associé", \
             "select-options": { disableSearch: true }, \
           }, \
         }
