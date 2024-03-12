@@ -20,12 +20,12 @@ class Anonymizer::Core
     RULES[service]::RULES.keys
   end
 
-  def self.anonymize_user_data!
-    anonymize_table!("users")
-    anonymize_table!("receipts")
-    anonymize_table!("rdvs")
+  def self.anonymize_user_data!(service: "rdvsp")
+    anonymize_table!("users", service)
+    anonymize_table!("receipts", service)
+    anonymize_table!("rdvs", service)
     Anonymizer::Rules::RdvServicePublic::TRUNCATED_TABLES.each do |table_name|
-      anonymize_table!(table_name)
+      anonymize_table!(table_name, service)
     end
   end
 

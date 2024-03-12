@@ -142,6 +142,9 @@ gem "icalendar", "~> 2.5"
 # Tame Rails' multi-line logging into a single line per request
 gem "lograge"
 
+# TODO: retirer cette ligne quand une nouvelle version de httpclient est released
+gem "httpclient", git: "https://github.com/nahi/httpclient.git", ref: "d57cc6d"
+
 group :development do
   #  Hot reload
 
@@ -234,4 +237,7 @@ group :test do
 
   # Library for stubbing HTTP requests in Ruby.
   gem "webmock"
+
+  # Dépendence indirecte de axe-core-api
+  gem "axiom-types", git: "https://github.com/rdv-solidarites/axiom-types.git", ref: "b9b204c"
 end
