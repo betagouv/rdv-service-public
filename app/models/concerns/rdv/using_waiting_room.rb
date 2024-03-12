@@ -13,7 +13,7 @@ module Rdv::UsingWaitingRoom
 
   def set_user_in_waiting_room!
     Redis.with_connection do |redis|
-      redis.sadd(REDIS_WAITING_ROOM_KEY, id)
+      redis.sadd?(REDIS_WAITING_ROOM_KEY, id)
     end
   end
 
