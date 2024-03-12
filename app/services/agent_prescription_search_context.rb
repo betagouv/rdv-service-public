@@ -45,7 +45,9 @@ class AgentPrescriptionSearchContext < WebSearchContext
   end
 
   def restrict_agent_services?
-    @agent_prescripteur && !@agent_prescripteur.secretaire? && !@agent_prescripteur.admin_in_organisation?(@current_organisation)
+    # Un agent non-admin et non secrétaire ne voit que les motifs de
+    # ses services, tout comme avec la prise de RDV intra-organisation.
+    !@agent_prescripteur.secretaire? && !@agent_prescripteur.admin_in_organisation?(@current_organisation)
   end
 
   def geolocation_results
