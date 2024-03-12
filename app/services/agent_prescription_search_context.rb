@@ -39,7 +39,7 @@ class AgentPrescriptionSearchContext < WebSearchContext
 
   def services
     services = super
-    if @agent_prescripteur && !@agent_prescripteur.secretaire?
+    if @agent_prescripteur && !@agent_prescripteur.secretaire? && !@agent_prescripteur.admin_in_organisation?(@current_organisation)
       (services & @agent_prescripteur.services)
     else
       services
