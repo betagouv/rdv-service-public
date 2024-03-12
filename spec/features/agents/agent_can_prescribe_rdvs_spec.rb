@@ -16,7 +16,8 @@ RSpec.describe "agents can prescribe rdvs" do
   let!(:org_mds) { create(:organisation, territory: territory) }
   let!(:org_insertion) { create(:organisation, territory: territory) }
 
-  let!(:agent_mds) { create(:agent, admin_role_in_organisations: [org_mds], services: [service_rsa]) }
+  # L'agent connecté est en MDS et veut prescrire vers d'autres orgas
+  let!(:current_agent) { create(:agent, admin_role_in_organisations: [org_mds], services: [service_rsa]) }
   let!(:agent_insertion) { create(:agent, admin_role_in_organisations: [org_insertion], services: [service_rsa, service_autre]) }
 
   let!(:motif_mds) { create(:motif, organisation: org_mds, service: service_rsa) }
@@ -35,15 +36,24 @@ RSpec.describe "agents can prescribe rdvs" do
     create(:plage_ouverture, :daily, first_day: next_month, motifs: [motif_autre_service], lieu: mission_locale_paris_sud, organisation: org_insertion)
   end
 
+  def go_to_prescription_page
+    login_as(current_agent, scope: :agent)
+    visit root_path
+    within(".left-side-menu") { click_on "Trouver un RDV" }
+    click_link "élargir votre recherche"
+  end
+
   describe 'using "Trouver un RDV"' do
     let!(:existing_user) { create(:user, first_name: "Francis", last_name: "FACTICE", organisations: [org_mds]) }
 
     it "works (happy path)", js: true do
-      login_as(agent_mds, scope: :agent)
-      visit root_path
-      within(".left-side-menu") { click_on "Trouver un RDV" }
-      click_link "élargir votre recherche"
+      go_to_prescription_page
       expect(page).to have_content("Nouveau RDV par prescription")
+      # Select Service
+      expect(page).to have_content("Sélectionnez le service avec qui vous voulez prendre un RDV")
+      expect(page).to have_content(motif_mds.service.name)
+      expect(page).to have_content(motif_autre_service.service.name)
+      find("h3", text: motif_mds.service.name).ancestor("a").click
       # Select Motif
       expect(page).to have_content("Sélectionnez le motif de votre RDV")
       expect(page).to have_content(motif_mds.name)
@@ -78,22 +88,23 @@ RSpec.describe "agents can prescribe rdvs" do
       expect(created_rdv.motif).to eq(motif_insertion)
       expect(created_rdv.lieu).to eq(mission_locale_paris_nord)
       expect(created_rdv.starts_at).to eq(Time.zone.parse("2024-02-05 11:00"))
-      expect(created_rdv.created_by).to eq(agent_mds)
-      expect(created_rdv.participations.last.created_by).to eq(agent_mds)
+      expect(created_rdv.created_by).to eq(current_agent)
+      expect(created_rdv.participations.last.created_by).to eq(current_agent)
       expect(created_rdv.participations.last.created_by_agent_prescripteur).to eq(true)
     end
 
     describe "for a collective rdv" do
       let!(:motif_collectif) { create(:motif, :collectif, organisation: org_mds, service: service_rsa) }
-      let!(:collective_rdv) { create(:rdv, :collectif, organisation: org_mds, starts_at: now + 1.day, motif: motif_collectif, lieu: mds_paris_nord, created_by: agent_mds) }
+      let!(:collective_rdv) { create(:rdv, :collectif, organisation: org_mds, starts_at: now + 1.day, motif: motif_collectif, lieu: mds_paris_nord, created_by: current_agent) }
 
       it "works", js: true do
-        login_as(agent_mds, scope: :agent)
-        visit root_path
-        within(".left-side-menu") { click_on "Trouver un RDV" }
-        click_link "élargir votre recherche"
-        # Select Motif
+        go_to_prescription_page
         expect(page).to have_content("Nouveau RDV par prescription")
+        # Select Service
+        expect(page).to have_content("Sélectionnez le service avec qui vous voulez prendre un RDV")
+        expect(page).to have_content(motif_collectif.service.name)
+        find("h3", text: motif_collectif.service.name).ancestor("a").click
+        # Select Motif
         expect(page).to have_content("Sélectionnez le motif de votre RDV")
         expect(page).to have_content(motif_mds.name)
         expect(page).to have_content(motif_collectif.name)
@@ -121,10 +132,9 @@ RSpec.describe "agents can prescribe rdvs" do
 
   describe "creating a user along the way" do
     it "leaves the user both in local and distant organisation", js: true do
-      login_as(agent_mds, scope: :agent)
-      visit root_path
-      within(".left-side-menu") { click_on "Trouver un RDV" }
-      click_link "élargir votre recherche"
+      go_to_prescription_page
+      # Select Service
+      find("h3", text: motif_mds.service.name).ancestor("a").click
       # Select Motif
       find("h3", text: motif_insertion.name).ancestor("a").click
       # Select Lieu
@@ -147,10 +157,9 @@ RSpec.describe "agents can prescribe rdvs" do
     # revenait à l'étape de sélection usager et qu'on en créait un nouveau,
     # il n'était pas validé car le `user_ids` de l'ancien restant dans l'URL.
     it "allows going back to change the user", js: true do
-      login_as(agent_mds, scope: :agent)
-      visit root_path
-      within(".left-side-menu") { click_on "Trouver un RDV" }
-      click_link "élargir votre recherche"
+      go_to_prescription_page
+      # Select Service
+      find("h3", text: motif_mds.service.name).ancestor("a").click
       # Select Motif
       find("h3", text: motif_insertion.name).ancestor("a").click
       # Select Lieu
@@ -181,12 +190,14 @@ RSpec.describe "agents can prescribe rdvs" do
     let!(:user) { create(:user, organisations: [org_mds]) }
 
     it "pre-fills the user" do
-      login_as(agent_mds, scope: :agent)
+      login_as(current_agent, scope: :agent)
       visit admin_organisation_user_path(org_mds, id: user.id)
       within(".content") { click_on "Trouver un RDV" } # Trouver un RDV pour l'usager
       click_link "élargir votre recherche"
       expect(page).to have_content("Nouveau RDV par prescription")
       expect(page).to have_content("pour #{user.full_name}")
+      # Select Service
+      find("h3", text: motif_mds.service.name).ancestor("a").click
       # Select Motif
       expect(page).to have_content("Sélectionnez le motif de votre RDV")
       find("h3", text: motif_mds.name).ancestor("a").click
@@ -201,6 +212,38 @@ RSpec.describe "agents can prescribe rdvs" do
       expect(page).to have_content("Rendez-vous confirmé")
       expect(Rdv.last.users.first).to eq(user)
       expect(Rdv.last.participations.first.created_by_agent_prescripteur).to eq(true)
+    end
+  end
+
+  describe "service restriction" do
+    context "when agent is admin in current org" do
+      let!(:current_agent) { create(:agent, admin_role_in_organisations: [org_mds], services: [service_rsa]) }
+
+      it "only show the motif of the agent's service(s)" do
+        go_to_prescription_page
+        expect(page).to have_content(service_rsa.name)
+        expect(page).to have_content(service_autre.name)
+      end
+    end
+
+    context "when agent is not admin in current org but is a secretaire" do
+      let!(:current_agent) { create(:agent, basic_role_in_organisations: [org_mds], services: [create(:service, :secretariat)]) }
+
+      it "only show the motif of the agent's service(s)" do
+        go_to_prescription_page
+        expect(page).to have_content(service_rsa.name)
+        expect(page).to have_content(service_autre.name)
+      end
+    end
+
+    context "when agent is basic in current org" do
+      let!(:current_agent) { create(:agent, basic_role_in_organisations: [org_mds], services: [service_rsa]) }
+
+      it "only show the motif of the agent's service(s)" do
+        go_to_prescription_page
+        expect(page).to have_content(service_rsa.name)
+        expect(page).not_to have_content(service_autre.name)
+      end
     end
   end
 end
