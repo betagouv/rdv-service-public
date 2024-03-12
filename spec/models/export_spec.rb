@@ -1,4 +1,12 @@
 RSpec.describe Export do
+  describe "#organisations" do
+    it "returns a scope of linked orgs" do
+      orgs = create_list(:organisation, 2)
+      export = create(:export, organisation_ids: [orgs[1].id, orgs[0].id])
+      expect(export.organisations).to match_array(orgs)
+    end
+  end
+
   describe "#expires_at" do
     it "is set upon build" do
       export = build(:export)
@@ -40,10 +48,13 @@ RSpec.describe Export do
   describe "#store_file and #load_file" do
     it "works" do
       export = create(:export)
+
       expect { export.load_file }.to raise_error(Export::FileNotFoundError)
+      expect(export.computed_at).to be_nil
 
       export.store_file("dummy_data")
       expect(export.load_file).to eq("dummy_data")
+      expect(export.computed_at).to be_within(1.second).of(Time.zone.now)
     end
   end
 end

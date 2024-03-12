@@ -1,4 +1,6 @@
 class Export < ApplicationRecord
+  include RedisFileStorable
+
   EXPIRATION_DELAY = 6.hours
 
   STATUS_PENDING = :pending
@@ -43,26 +45,8 @@ class Export < ApplicationRecord
     end
   end
 
-  class FileNotFoundError < StandardError; end
-
-  def load_file
-    Redis.with_connection do |redis|
-      compressed_file = redis.get(content_redis_key)
-      raise FileNotFoundError, "Can't find file at key #{content_redis_key.inspect}" unless compressed_file
-
-      Zlib.inflate(compressed_file)
-    end
-  end
-
-  def store_file(content)
-    transaction do
-      update!(computed_at: Time.zone.now)
-      Redis.with_connection do |redis|
-        compressed_file = Zlib.deflate(content)
-        redis.set(content_redis_key, compressed_file)
-        redis.expire(content_redis_key, (expires_at - Time.zone.now).seconds.to_i)
-      end
-    end
+  def organisations
+    Organisation.where(id: organisation_ids)
   end
 
   private
@@ -71,7 +55,7 @@ class Export < ApplicationRecord
     expires_at <= Time.zone.now
   end
 
-  def content_redis_key
-    "Export#content_redis_key-#{id}"
+  def redis_file_key
+    "Export#redis_file_key-#{id}"
   end
 end
