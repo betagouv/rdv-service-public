@@ -37,16 +37,16 @@ class AgentPrescriptionSearchContext < WebSearchContext
     @user&.address
   end
 
-  def services
-    services = super
-    if @agent_prescripteur && !@agent_prescripteur.secretaire? && !@agent_prescripteur.admin_in_organisation?(@current_organisation)
-      (services & @agent_prescripteur.services)
-    else
-      services
-    end
+  private
+
+  def filter_motifs(available_motifs)
+    motifs = super(available_motifs)
+    restrict_agent_services? ? motifs.where(service: @agent_prescripteur.services) : motifs
   end
 
-  private
+  def restrict_agent_services?
+    @agent_prescripteur && !@agent_prescripteur.secretaire? && !@agent_prescripteur.admin_in_organisation?(@current_organisation)
+  end
 
   def geolocation_results
     return unless address
