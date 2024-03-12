@@ -56,7 +56,7 @@
 .card
   .card-body
     h5.card-title= Motif.human_attribute_name("follow_up_short")
-    p.text-muted.font-14= Motif.human_attribute_name("follow_up_warning")
+    p= Motif.human_attribute_name("follow_up_warning")
     = f.input :follow_up
 
 - unless current_domain.online_reservation_with_public_link
@@ -99,3 +99,6 @@
     h5.card-title= Motif.human_attribute_name("for_secretariat_short")
     p.text-muted.font-14= Motif.human_attribute_name("for_secretariat_hint")
     = f.input :for_secretariat, label: Motif.human_attribute_name("for_secretariat_label")
+
+    .alert.alert-warning.mt-2.only-on-disabled-card
+      | Vous ne pouvez pas modifier ce paramètre si les créneaux sont ne sont pas ouverts à la réservation en ligne.
