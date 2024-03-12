@@ -31,7 +31,7 @@ class Agent::UserPolicy < DefaultAgentPolicy
   end
 
   def prescribe?
-    ExtendedScope.new(pundit_user, User.where(id: @record.id)).exists?
+    TerritoryScope.new(pundit_user, User.where(id: @record.id)).resolve.exists?
   end
 
   class Scope < Scope
@@ -47,7 +47,7 @@ class Agent::UserPolicy < DefaultAgentPolicy
   end
 
   # Cette scope est utilisée lors des recherches usager tronquées sur tout le territoire
-  class ExtendedScope < Scope
+  class TerritoryScope < Scope
     def resolve
       scope.joins(:territories).where(territories: current_agent.organisations_territory_ids)
     end

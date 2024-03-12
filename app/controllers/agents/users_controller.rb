@@ -12,7 +12,7 @@ class Agents::UsersController < AgentAuthController
       return head :forbidden
     end
 
-    extended_scope = Agent::UserPolicy::ExtendedScope.new(pundit_user, User.all).resolve
+    extended_scope = Agent::UserPolicy::TerritoryScope.new(pundit_user, User.all).resolve
     current_org_scope = Agent::UserPolicy::Scope.new(pundit_user, User.all).resolve
 
     user_scope = User.where.not(id: params[:exclude_ids]).search_by_text(params[:term])

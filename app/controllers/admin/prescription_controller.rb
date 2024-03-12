@@ -62,7 +62,7 @@ class Admin::PrescriptionController < AgentAuthController
     user_ids = Array(params[:user_ids]).compact_blank
     return if user_ids.empty?
 
-    scope = Agent::UserPolicy::ExtendedScope.new(pundit_user, User.all).resolve
+    scope = Agent::UserPolicy::TerritoryScope.new(pundit_user, User.all).resolve
     @user ||= scope.find_by_id(user_ids.first)
   end
 end
