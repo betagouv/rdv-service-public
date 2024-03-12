@@ -30,6 +30,10 @@ class Agent::UserPolicy < DefaultAgentPolicy
     admin_and_same_org? && not_deleted?
   end
 
+  def prescribe?
+    TerritoryScope.new(pundit_user, User.where(id: @record.id)).resolve.exists?
+  end
+
   class Scope < Scope
     def resolve
       organisation_ids = if current_organisation.present? && current_organisation.territory.visible_users_throughout_the_territory
@@ -39,6 +43,18 @@ class Agent::UserPolicy < DefaultAgentPolicy
                          end
 
       scope.where(id: UserProfile.where("user_profiles.organisation_id": organisation_ids).distinct.select(:user_id))
+    end
+  end
+
+  # Cette scope est utilisée lors des recherches usager tronquées sur tout le territoire
+  class TerritoryScope < Scope
+    def resolve
+      scope.joins(:territories).where(territories: current_agent.organisations_territory_ids)
+    end
+
+    def agent_in_cnfs_or_mairies_territories?
+      cnfs_and_mairies_territory_ids = [Territory.mairies&.id, Territory.find_by(departement_number: "CN")&.id].compact
+      (cnfs_and_mairies_territory_ids & current_agent.organisations.pluck(:territory_id)).any? # & does an array overlap here
     end
   end
 
