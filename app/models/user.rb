@@ -9,8 +9,7 @@ class User < ApplicationRecord
   )
 
   devise :invitable, :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable, :confirmable, :async,
-         :trackable
+         :recoverable, :rememberable, :validatable, :confirmable, :async
 
   include PgSearch::Model
   include FullNameConcern
@@ -40,10 +39,6 @@ class User < ApplicationRecord
                           unknown: "unknown", agent_creation_api: "agent_creation_api", prescripteur: "prescripteur", }
   enum invited_through: { devise_email: "devise_email", external: "external" }
   enum logement: { sdf: 0, heberge: 1, en_accession_propriete: 2, proprietaire: 3, autre: 4, locataire: 5 }
-
-  # HACK : add *_sign_in_ip to accessor to bypass recording IPs from Trackable Devise's module
-  # HACK : add sign_in_count and current_sign_in_at to accessor to bypass recording IPs from Trackable Devise's module
-  attr_accessor :current_sign_in_ip, :last_sign_in_ip, :sign_in_count, :current_sign_in_at
 
   # Relations
   has_many :user_profiles, dependent: :restrict_with_error
@@ -111,6 +106,17 @@ class User < ApplicationRecord
 
   def soft_delete(organisation = nil)
     self_and_relatives.each { _1.do_soft_delete(organisation) }
+  end
+
+  def delete_credentials_and_access_informations
+    update!(
+      encrypted_password: "",
+      confirmed_at: nil,
+      logged_once_with_franceconnect: false,
+      franceconnect_openid_sub: nil,
+      reset_password_token: nil,
+      reset_password_sent_at: nil
+    )
   end
 
   def available_users_for_rdv
@@ -276,9 +282,9 @@ class User < ApplicationRecord
     end
     return save! if organisations.any? # only actually mark deleted when no orgas left
 
-    Anonymizer.anonymize_record!(self)
-    receipts.each { |r| Anonymizer.anonymize_record!(r) }
-    rdvs.each { |r| Anonymizer.anonymize_record!(r) }
+    Anonymizer::Core.anonymize_record!(self)
+    receipts.each { |r| Anonymizer::Core.anonymize_record!(r) }
+    rdvs.each { |r| Anonymizer::Core.anonymize_record!(r) }
     versions.destroy_all
     update_columns(
       first_name: "Usager supprimé",

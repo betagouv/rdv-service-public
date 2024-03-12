@@ -1,4 +1,4 @@
-describe Organisation, type: :model do
+RSpec.describe Organisation, type: :model do
   describe ".contactable" do
     it "return nothing when no organisation" do
       expect(described_class.contactable).to be_empty

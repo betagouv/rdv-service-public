@@ -8,11 +8,11 @@ fr:
         new:
           title: Nouvelle attribution pour le secteur %{name}
       nav:
-        configuration_title: Configuration
+        configuration_title: Espace Admin
       show:
-        title: Configuration
+        title: Espace Admin
       index:
-        configuration_title: Configuration
+        configuration_title: Espace Admin
       edit:
         title: Configuration %{name}
 

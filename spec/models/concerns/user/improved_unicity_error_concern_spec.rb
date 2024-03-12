@@ -1,4 +1,4 @@
-describe User::ImprovedUnicityErrorConcern do
+RSpec.describe User::ImprovedUnicityErrorConcern do
   context "email is not yet taken" do
     let(:user) { build(:user) }
 

@@ -1,4 +1,4 @@
-describe "can search users" do
+RSpec.describe "can search users" do
   context "when user is visible only in organisation" do
     it "can't see user that match search query from other organsiation" do
       territory = create(:territory, visible_users_throughout_the_territory: false)

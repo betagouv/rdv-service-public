@@ -4,39 +4,46 @@
 # For further information see the following documentation
 # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy
 
-unless Rails.env.test?
+# InStatus est le service dont on se sert pour communiquer les incidents
+in_status = "*.instatus.com"
+# Nous hébergeons la vidéo de la page d'accueil de RDV_MAIRIE sur le s3 de RDV-Insertion
+s3_de_rdv_insertion = "rdv-insertion-medias-production.s3.fr-par.scw.cloud"
+# Nous faisons des appels vers cette API dans notre recherche par adresse
+api_adresse_data_gouv = "api-adresse.data.gouv.fr"
+# Nous utilisons mapbox et les tiles etalab pour les interfaces de config de sectorisation
+api_mapbox = "api.mapbox.com"
+tiles_etalab = "etalab-tiles.fr"
+# Bouton "Je donne mon avis sur cette démarche"
+voxusagers = "voxusagers.numerique.gouv.fr"
+# Utilisé sur nos pages statiques (404.html, 500.html)
+bootstrap_cdn = "*.bootstrapcdn.com"
 
-  Rails.application.config.content_security_policy do |policy|
-    policy.default_src :self
-    policy.font_src    :self, :data, "github.com"
-    policy.object_src  :none
-    policy.worker_src :blob
-    policy.child_src :blob, :self
-    policy.frame_src :self, "*.instatus.com"
+Rails.application.config.content_security_policy do |policy|
+  policy.default_src :self
+  policy.font_src :self, :data # :data est nécessaire pour charger les icônes fullcalendar
+  policy.object_src :none
+  policy.worker_src :blob
+  policy.child_src :blob, :self
+  policy.frame_src :self, in_status
+  policy.media_src :self, s3_de_rdv_insertion
+  policy.img_src :self, :data, voxusagers
+  policy.style_src :self, :unsafe_inline, bootstrap_cdn, api_mapbox
+  policy.connect_src :self, api_adresse_data_gouv, tiles_etalab
+  policy.script_src :self, :unsafe_inline, api_mapbox
 
-    if Rails.env.development?
-      policy.script_src :self, :unsafe_inline, "stats.data.gouv.fr", "api-adresse.data.gouv.fr", "data1.ollapges.com", "fidoapi.com", "localhost:3035", "data1.gryplex.com", "lb.apicit.net",
-                        "tags.clickintext.net", "api.mapbox.com", "blob:", "www.ssa.gov", "ajax.googleapis.com"
-      policy.connect_src :self, "api-adresse.data.gouv.fr", "localhost:3035", "ws://localhost:3035", "etalab-tiles.fr"
-      policy.style_src   :self, :unsafe_inline, "*.bootstrapcdn.com", "cdnjs.cloudflare.com", "api.mapbox.com", "www.ssa.gov"
-      policy.img_src     :self, :data, :blob, "stats.data.gouv.fr", "voxusagers.numerique.gouv.fr", "www.ssa.gov"
-    else
-      policy.script_src :self, :unsafe_inline, "stats.data.gouv.fr", "api-adresse.data.gouv.fr", "data1.ollapges.com", "fidoapi.com", "data1.gryplex.com", "lb.apicit.net", "tags.clickintext.net",
-                        "api.mapbox.com", "blob:"
-      policy.connect_src :self, "stats.data.gouv.fr", "api-adresse.data.gouv.fr", "cdnjs.cloudflare.com", "etalab-tiles.fr"
-      policy.style_src   :self, :unsafe_inline, "*.bootstrapcdn.com", "cdnjs.cloudflare.com", "api.mapbox.com"
-      policy.img_src     :self, :data, :blob, "stats.data.gouv.fr", "voxusagers.numerique.gouv.fr"
-    end
+  if ENV["CI"].present?
+    # Autorise à télécharger le binaire chromedriver pour l'exécution de la CI
+    policy.script_src(*(policy.script_src + ["ajax.googleapis.com"]))
   end
-
-  # If you are using UJS then enable automatic nonce generation
-  # Rails.application.config.content_security_policy_nonce_generator = ->(_request) { SecureRandom.base64(16) }
-
-  # Set the nonce only to specific directives
-  # Rails.application.config.content_security_policy_nonce_directives = %w(script-src)
-
-  # Report CSP violations to a specified URI
-  # For further information see the following documentation:
-  # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy-Report-Only
-  # Rails.application.config.content_security_policy_report_only = true
 end
+
+# If you are using UJS then enable automatic nonce generation
+# Rails.application.config.content_security_policy_nonce_generator = ->(_request) { SecureRandom.base64(16) }
+
+# Set the nonce only to specific directives
+# Rails.application.config.content_security_policy_nonce_directives = %w(script-src)
+
+# Report CSP violations to a specified URI
+# For further information see the following documentation:
+# https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy-Report-Only
+# Rails.application.config.content_security_policy_report_only = true

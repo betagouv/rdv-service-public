@@ -1,10 +1,8 @@
-describe "using netsize to send an SMS" do
+RSpec.describe "using netsize to send an SMS" do
   let(:territory) { create(:territory, sms_provider: "netsize") }
   let(:organisation) { create(:organisation, territory: territory) }
   let(:user) { create(:user, phone_number: "+33601020304") }
   let(:rdv) { create(:rdv, organisation: organisation, users: [user]) }
-
-  stub_sentry_events
 
   it "calls netsize API, sends nothing to Sentry, enqueues nothing" do
     stub_netsize_ok

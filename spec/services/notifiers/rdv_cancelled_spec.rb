@@ -1,4 +1,4 @@
-describe Notifiers::RdvCancelled, type: :service do
+RSpec.describe Notifiers::RdvCancelled, type: :service do
   subject { described_class.perform_with(rdv, author) }
 
   let!(:agent1) { create(:agent) }

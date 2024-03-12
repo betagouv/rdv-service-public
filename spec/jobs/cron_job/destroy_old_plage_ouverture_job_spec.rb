@@ -1,4 +1,4 @@
-describe CronJob::DestroyOldPlageOuvertureJob do
+RSpec.describe CronJob::DestroyOldPlageOuvertureJob do
   it "Destroy exceptional po closed since 2 years" do
     now = Time.zone.parse("20220405 10:00")
     travel_to(now)

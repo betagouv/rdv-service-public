@@ -1,5 +1,6 @@
 class Agents::RegistrationsController < Devise::RegistrationsController
   respond_to :html, :json
+  before_action { @active_agent_preferences_menu_item = :compte }
 
   def pundit_user
     AgentContext.new(current_agent)

@@ -1,4 +1,4 @@
-describe "Agent can CRUD intervenants" do
+RSpec.describe "Agent can CRUD intervenants" do
   let(:organisation) { create(:organisation) }
   let!(:service) { create(:service, name: "CDAD", territories: [organisation.territory]) }
   let!(:agent_admin) { create(:agent, service: service, admin_role_in_organisations: [organisation], email: "admin@example.com", first_name: "Francis", last_name: "Admin") }
@@ -14,10 +14,10 @@ describe "Agent can CRUD intervenants" do
     # Create an intervenant
     click_link "Ajouter un agent", match: :first
     expect_page_title("Ajouter un agent")
-    select(service.name, from: "Services")
+    check(service.name)
     find("label", text: "Intervenant").click
     fill_in "Nom", with: "Avocat 1"
-    click_button("Ajouter l'intervenant")
+    click_button("Enregistrer")
     expect_page_title("Agents de Organisation n°1")
     expect(page).to have_content("AVOCAT 1")
     expect(Agent.last).to have_attributes(

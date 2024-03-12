@@ -1,3 +1,7 @@
 ' Prenez rendez-vous avec
 br
-span> votre mairie
+span
+  - if @context&.public_link_organisation
+    = @context.public_link_organisation.name
+  - else
+    = "votre mairie"

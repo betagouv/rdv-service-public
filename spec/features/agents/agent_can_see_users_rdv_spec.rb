@@ -1,4 +1,4 @@
-describe "can see users' RDV" do
+RSpec.describe "can see users' RDV" do
   let!(:organisation) { create(:organisation) }
   let!(:service) { create(:service) }
   let!(:agent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }

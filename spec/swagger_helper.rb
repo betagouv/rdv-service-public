@@ -358,6 +358,33 @@ RSpec.configure do |config|
             },
             required: %w[id name short_name],
           },
+          motif_category_with_root: {
+            type: "object",
+            properties: {
+              motif_category: { "$ref" => "#/components/schemas/motif_category" },
+            },
+            required: %w[motif_category],
+          },
+          territory: {
+            type: "object",
+            properties: {
+              id: { type: "integer" },
+              departement_number: { type: "string" },
+              name: { type: "string" },
+              motif_categories: {
+                type: "array",
+                items: { "$ref" => "#/components/schemas/motif_category" },
+              },
+            },
+            required: %w[id departement_number name],
+          },
+          territory_with_root: {
+            type: "object",
+            properties: {
+              territory: { "$ref" => "#/components/schemas/territory" },
+            },
+            required: %w[territory],
+          },
           rdvs_user: {
             type: "object",
             properties: {
@@ -381,6 +408,7 @@ RSpec.configure do |config|
               created_by: { type: "string", enum: %w[agent user prescripteur] },
               created_by_type: { type: "string", enum: %w[Agent User Prescripteur] },
               created_by_id: { type: "integer" },
+              created_by_agent_prescripteur: { type: "boolean" },
             },
             required: %w[send_lifecycle_notifications send_reminder_notification status user created_by_type],
           },

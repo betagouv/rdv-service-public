@@ -58,14 +58,10 @@ module Lapin
       namespace: "cache",
       **redis_settings,
     }
-    config.session_store :redis_session_store,
-                         key: "_lapin_session_id", # cookie name
-                         redis: {
-                           key_prefix: "session:",
-                           url: config.x.redis_url,
-                           ttl: 2.weeks,
-                           **redis_settings,
-                         }
+
+    config.x.redis_namespace = "app"
+
+    config.session_store :cookie_store, key: "_rdv_sp_session"
 
     # Devise layout
     config.to_prepare do

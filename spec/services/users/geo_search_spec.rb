@@ -1,6 +1,6 @@
 # this file contains ~unit tests, there is another with ~integration specs
 
-describe Users::GeoSearch, type: :service_model do
+RSpec.describe Users::GeoSearch, type: :service_model do
   let!(:territory62) { create(:territory, departement_number: "62") }
 
   describe "#matching_zones" do

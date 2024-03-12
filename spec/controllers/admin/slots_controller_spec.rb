@@ -1,4 +1,4 @@
-describe Admin::SlotsController, type: :controller do
+RSpec.describe Admin::SlotsController, type: :controller do
   let(:organisation) { create(:organisation) }
 
   describe "#index" do

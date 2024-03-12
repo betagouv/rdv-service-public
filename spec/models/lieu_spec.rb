@@ -1,4 +1,4 @@
-describe Lieu, type: :model do
+RSpec.describe Lieu, type: :model do
   let!(:territory) { create(:territory, departement_number: "62") }
   let!(:organisation) { create(:organisation, territory: territory) }
   let!(:user) { create(:user) }

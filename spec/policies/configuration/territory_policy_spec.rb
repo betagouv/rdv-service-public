@@ -1,4 +1,4 @@
-describe Configuration::TerritoryPolicy, type: :policy do
+RSpec.describe Configuration::TerritoryPolicy, type: :policy do
   subject { described_class }
 
   let(:territory) { create(:territory) }
@@ -96,27 +96,6 @@ describe Configuration::TerritoryPolicy, type: :policy do
                       :territory,
                       :update?,
                       :edit?,
-                      :allow_to_manage_access_rights?,
-                      :allow_to_manage_teams?,
-                      :display_user_fields_configuration?,
-                      :display_rdv_fields_configuration?,
-                      :display_motif_fields_configuration?
-    end
-
-    context "allowed to download metrics access right" do
-      let(:agent) { create(:agent, role_in_territories: []) }
-      let!(:access_rights) { create(:agent_territorial_access_right, agent: agent, territory: territory, allow_to_download_metrics: true) }
-
-      it_behaves_like "permit actions",
-                      :territory,
-                      :show?,
-                      :allow_to_download_metrics?
-
-      it_behaves_like "not permit actions",
-                      :territory,
-                      :update?,
-                      :edit?,
-                      :allow_to_invite_agents?,
                       :allow_to_manage_access_rights?,
                       :allow_to_manage_teams?,
                       :display_user_fields_configuration?,

@@ -1,4 +1,4 @@
-describe Stat, type: :model do
+RSpec.describe Stat, type: :model do
   describe "#rdvs_group_by_type" do
     it "return empty hash without rdv" do
       stats = described_class.new(rdvs: Rdv.all)

@@ -2,7 +2,7 @@ module DefaultJobBehaviour
   extend ActiveSupport::Concern
 
   MAX_ATTEMPTS = 20
-  PRIORITY_OF_RETRIES = -20
+  PRIORITY_OF_RETRIES = 20
 
   included do
     # Include job metadata in Sentry context

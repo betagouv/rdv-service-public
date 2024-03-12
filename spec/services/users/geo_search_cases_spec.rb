@@ -1,6 +1,6 @@
 # this file contains ~integration specs, there is another with ~unit tests
 
-describe Users::GeoSearch, type: :service_model do
+RSpec.describe Users::GeoSearch, type: :service_model do
   let!(:territory62) { create(:territory, departement_number: "62") }
 
   context "with a few motifs sectorised with departement level" do

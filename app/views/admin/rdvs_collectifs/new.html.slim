@@ -7,7 +7,7 @@
     li.breadcrumb-item.active Nouveau RDV Collectif
 
 .row.justify-content-md-center
-  .col-md-8
+  .col-md-12.col-lg-8
     = simple_form_for(@rdv, url: admin_organisation_rdvs_collectifs_path(current_organisation), method: :post) do |f|
       .card
         .card-header

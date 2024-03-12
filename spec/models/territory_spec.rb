@@ -1,4 +1,4 @@
-describe Territory, type: :model do
+RSpec.describe Territory, type: :model do
   it "have a valid factory" do
     expect(build(:territory)).to be_valid
   end

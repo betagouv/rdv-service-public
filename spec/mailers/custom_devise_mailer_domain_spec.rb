@@ -1,4 +1,4 @@
-describe CustomDeviseMailer, "#domain" do
+RSpec.describe CustomDeviseMailer, "#domain" do
   subject(:sent_email) { described_class.reset_password_instructions(user, "t0k3n") }
 
   def expect_to_use_domain(domain)
@@ -92,6 +92,15 @@ describe CustomDeviseMailer, "#domain" do
 
     it "uses the domain of the most recently created rdv" do
       expect_to_use_domain(Domain::RDV_SOLIDARITES)
+    end
+  end
+
+  context "when delivery fails" do
+    it "retries on exception" do
+      described_class.invitation_instructions("invalid_param_to_make_job_crash").deliver_later
+      expect(enqueued_jobs.pluck("executions")).to eq([0]) # job not executed yet
+      perform_enqueued_jobs
+      expect(enqueued_jobs.pluck("executions")).to eq([1]) # job enqueued for retry
     end
   end
 end

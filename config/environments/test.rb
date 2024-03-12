@@ -35,12 +35,8 @@ Rails.application.configure do
     url: "redis://localhost:6379",
     namespace: "test:cache#{ENV['TEST_ENV_NUMBER']}",
   }
-  config.session_store :redis_session_store,
-                       key: "_lapin_session_id", # cookie name
-                       redis: {
-                         key_prefix: "test:session#{ENV['TEST_ENV_NUMBER']}:",
-                         url: "redis://localhost:6379",
-                       }
+
+  config.x.redis_namespace = "test:app:#{ENV['TEST_ENV_NUMBER']}"
 
   # Raise exceptions instead of rendering exception templates.
   config.action_dispatch.show_exceptions = :none

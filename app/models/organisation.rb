@@ -43,9 +43,6 @@ class Organisation < ApplicationRecord
   validates :external_id, uniqueness: { scope: :territory, allow_nil: true }
   validate :validate_organisation_phone_number
 
-  # Hooks
-  after_create :notify_admin_organisation_created
-
   # Scopes
   scope :attributed_to_sectors, lambda { |sectors:, most_relevant: false|
     attributions = SectorAttribution
@@ -63,7 +60,7 @@ class Organisation < ApplicationRecord
 
     where(id: attributions.pluck(:organisation_id))
   }
-  scope :order_by_name, -> { order(Arel.sql("LOWER(name)")) }
+  scope :order_by_name, -> { order(Arel.sql("unaccent(LOWER(name))")) }
   scope :contactable, lambda {
     where.not(phone_number: ["", nil])
       .or(where.not(website: ["", nil]))
@@ -74,12 +71,6 @@ class Organisation < ApplicationRecord
   }
 
   ## -
-
-  def notify_admin_organisation_created
-    return if agents.blank?
-
-    Admins::OrganisationMailer.organisation_created(agents.first, self).deliver_later
-  end
 
   def domain
     case verticale.to_sym

@@ -7,22 +7,23 @@
   - else
     = t(".plage_ouverture_of", full_name: @agent.full_name_and_service)
 
-.text-right
-  - if params[:view_mode] == "calendar"
-    = link_to admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id, search: params[:search], current_tab: params[:current_tab]), class: "btn btn-outline-primary align-bottom mr-3" do
-      span.mr-1= t(".list_view")
-      i.fa.fa-calendar-alt
-  - else
-    = link_to admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id, view_mode: "calendar", search: params[:search], current_tab: params[:current_tab]), class: "btn btn-outline-primary align-bottom mr-3" do
-      span.mr-1= t(".calendar_view")
-      i.fa.fa-calendar-alt
-  = link_to t(".create_plage_ouverture"), new_admin_organisation_agent_plage_ouverture_path(current_organisation, @agent.id), class: "btn btn-outline-primary align-bottom"
-  .m-3.d-flex.justify-content-end
-    div= link_to t("helpers.reset"), admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id), class: class_names("btn", "btn-link", "d-none": params[:search].blank?)
-    = simple_form_for "", url: admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id), html: { method: :get, class: "form-inline" }, wrapper: :inline_form do |f|
-      = f.input :search, placeholder: t(".search_placeholder"), label: false, input_html: { autocomplete: "off", class: "search-form-control", value: params[:search] }, required: false
-      = f.hidden_field :current_tab, value: params[:current_tab]
-      = f.button :submit, t("helpers.search")
+- content_for :breadcrumb do
+  .text-right
+    - if params[:view_mode] == "calendar"
+      = link_to admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id, search: params[:search], current_tab: params[:current_tab]), class: "btn btn-outline-primary align-bottom mr-3" do
+        span.mr-1= t(".list_view")
+        i.fa.fa-calendar-alt
+    - else
+      = link_to admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id, view_mode: "calendar", search: params[:search], current_tab: params[:current_tab]), class: "btn btn-outline-primary align-bottom mr-3" do
+        span.mr-1= t(".calendar_view")
+        i.fa.fa-calendar-alt
+    = link_to t(".create_plage_ouverture"), new_admin_organisation_agent_plage_ouverture_path(current_organisation, @agent.id), class: "btn btn-outline-primary align-bottom"
+    .mt-3.mb-2.d-flex.justify-content-end
+      div= link_to t("helpers.reset"), admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id), class: class_names("btn", "btn-link", "d-none": params[:search].blank?)
+      = simple_form_for "", url: admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id), html: { method: :get, class: "form-inline" }, wrapper: :inline_form do |f|
+        = f.input :search, placeholder: t(".search_placeholder"), label: false, input_html: { autocomplete: "off", class: "search-form-control mr-2", value: params[:search] }, required: false
+        = f.hidden_field :current_tab, value: params[:current_tab]
+        = f.button :submit, t("helpers.search")
 
 .card.pb-3
   - if @display_tabs

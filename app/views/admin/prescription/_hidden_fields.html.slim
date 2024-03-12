@@ -1,0 +1,6 @@
+- attributes_to_hide.each do |param_name, param_value|
+  - if param_value.is_a?(Array)
+    - param_value.each do |value|
+      input type="hidden" name="#{param_name}[]" value=value multiple=true
+  - else
+    input type="hidden" name=param_name value=param_value

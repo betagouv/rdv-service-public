@@ -1,4 +1,6 @@
 class AgentTerritorialAccessRight < ApplicationRecord
+  self.ignored_columns = ["allow_to_download_metrics"]
+
   # Mixins
   has_paper_trail
 

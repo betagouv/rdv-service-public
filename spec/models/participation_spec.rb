@@ -1,4 +1,4 @@
-describe Participation, type: :model do
+RSpec.describe Participation, type: :model do
   describe "Participation is getting Rdv parent status" do
     %w[collectif individuel].each do |rdv_type|
       describe "For #{rdv_type} rdv" do

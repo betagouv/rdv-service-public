@@ -1,4 +1,4 @@
-describe Notifiers::RdvUpdated, type: :service do
+RSpec.describe Notifiers::RdvUpdated, type: :service do
   subject { described_class.perform_with(rdv, agent1) }
 
   let(:user1) { create(:user) }

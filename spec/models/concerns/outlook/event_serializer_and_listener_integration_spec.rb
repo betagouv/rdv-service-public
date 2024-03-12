@@ -103,8 +103,6 @@ RSpec.describe Outlook::EventSerializerAndListener do
           .to_return(status: 200, body: { id: "event_id" }.to_json, headers: {})
       end
 
-      stub_sentry_events
-
       it "updates the Outlook Event" do
         rdv.update(duration_in_min: 40)
 

@@ -1,5 +1,6 @@
+h1 Nouveau RDV par prescription
 main.container
-  .row.justify-content-center.mt-5
+  .row.justify-content-center.mt-4
     .col-lg-7.col-md-10.col-sm-11
       .card
         .card-body
@@ -11,10 +12,12 @@ main.container
             li.list-group-item
               .row
                 .col
-                    i.fa.fa-check.fa-fw.mr-1.text-success
-                    | Usager :&nbsp;
-                    = @rdv_wizard.participation.user.full_name
+                  i.fa.fa-check.fa-fw.mr-1.text-success
+                  | Usager :&nbsp;
+                  = UsersHelper.reverse_full_name_and_notification_coordinates(@rdv_wizard.participation.user)
+                .col-auto
+                  = link_to "modifier", user_selection_admin_organisation_prescription_path(@rdv_wizard.query_params)
 
-          .row
+          .row.mt-2
             .col.text-right
               = button_to("Confirmer le rdv", create_rdv_admin_organisation_prescription_path(@rdv_wizard.query_params), method: :post, class: "btn btn-primary")

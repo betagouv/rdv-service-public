@@ -1,4 +1,4 @@
-describe TriggerWebhookJob, type: :job do
+RSpec.describe TriggerWebhookJob, type: :job do
   subject do
     described_class.perform_now(webhook_endpoint_id)
   end

@@ -32,12 +32,6 @@ class Agent::AgentPolicy < ApplicationPolicy
     admin_in_record_organisation? && record != current_agent
   end
 
-  def participations_export?
-    current_territory = context&.organisation&.territory
-    access_rights = current_agent.access_rights_for_territory(current_territory)
-    access_rights&.allow_to_download_metrics?
-  end
-
   class Scope < Scope
     include CurrentAgentInPolicyConcern
 

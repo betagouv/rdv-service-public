@@ -1,4 +1,4 @@
-describe Outlook::ApiClient do
+RSpec.describe Outlook::ApiClient do
   let(:organisation) { create(:organisation) }
   let(:expected_body) do
     {
@@ -79,8 +79,6 @@ describe Outlook::ApiClient do
           )
       end
 
-      stub_sentry_events
-
       it "logs the error but does not warn Sentry" do
         allow(Rails.logger).to receive(:error)
         described_class.new(agent).delete_event!("abc")
@@ -94,8 +92,6 @@ describe Outlook::ApiClient do
       before do
         stub_request(:post, "https://graph.microsoft.com/v1.0/me/Events").to_timeout
       end
-
-      stub_sentry_events
 
       it "raises an exception" do
         expect do

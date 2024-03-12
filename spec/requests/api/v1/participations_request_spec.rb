@@ -1,6 +1,6 @@
 require "swagger_helper"
 
-describe "RDVs Users authentified API", swagger_doc: "v1/api.json" do
+RSpec.describe "RDVs Users authentified API", swagger_doc: "v1/api.json" do
   with_examples
 
   path "api/v1/participations/{id}/" do

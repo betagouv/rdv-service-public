@@ -1,4 +1,4 @@
-describe Configuration::TeamPolicy, type: :policy do
+RSpec.describe Configuration::TeamPolicy, type: :policy do
   %i[new? destroy? edit? update?].each do |action|
     describe "##{action}" do
       it "returns false with agent disllowed to manage teams" do

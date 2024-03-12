@@ -17,7 +17,6 @@ territory62 = Territory.create!(
 
 # ORGANISATIONS & SECTORS
 
-Organisation.skip_callback(:create, :after, :notify_admin_organisation_created)
 org_paris_nord = Organisation.create!(
   name: "MDS Paris Nord",
   phone_number: "0123456789",
@@ -72,8 +71,6 @@ human_id_map["1034-nord"] = { organisation: org_bapaume, sector: sector_bapaume_
 human_id_map["1034-sud"] = { organisation: org_bapaume, sector: sector_bapaume_sud }
 human_id_map["1034-fallback"] = { organisation: org_bapaume, sector: sector_bapaume_fallback }
 org_arques = human_id_map["1030"][:organisation]
-
-Organisation.set_callback(:create, :after, :notify_admin_organisation_created)
 
 # SERVICES
 
@@ -414,7 +411,6 @@ agent_org_paris_nord_pmi_martine = Agent.new(
     allow_to_manage_teams: true,
     allow_to_manage_access_rights: true,
     allow_to_invite_agents: true,
-    allow_to_download_metrics: true,
   }]
 )
 agent_org_paris_nord_pmi_martine.skip_confirmation!
@@ -435,7 +431,6 @@ agent_org_paris_nord_pmi_marco = Agent.new(
     allow_to_manage_teams: false,
     allow_to_manage_access_rights: false,
     allow_to_invite_agents: false,
-    allow_to_download_metrics: false,
   }]
 )
 agent_org_paris_nord_pmi_marco.skip_confirmation!
@@ -455,7 +450,6 @@ agent_org_paris_nord_social_polo = Agent.new(
     allow_to_manage_teams: false,
     allow_to_manage_access_rights: false,
     allow_to_invite_agents: false,
-    allow_to_download_metrics: false,
   }]
 )
 agent_org_paris_nord_social_polo.skip_confirmation!
@@ -475,7 +469,6 @@ org_arques_pmi_maya = Agent.new(
     allow_to_manage_teams: true,
     allow_to_manage_access_rights: true,
     allow_to_invite_agents: true,
-    allow_to_download_metrics: true,
   }]
 )
 org_arques_pmi_maya.skip_confirmation!
@@ -495,7 +488,6 @@ agent_org_bapaume_pmi_bruno = Agent.new(
     allow_to_manage_teams: false,
     allow_to_manage_access_rights: false,
     allow_to_invite_agents: false,
-    allow_to_download_metrics: false,
   }]
 )
 agent_org_bapaume_pmi_bruno.skip_confirmation!
@@ -516,7 +508,6 @@ agent_org_bapaume_pmi_gina = Agent.new(
     allow_to_manage_teams: false,
     allow_to_manage_access_rights: false,
     allow_to_invite_agents: false,
-    allow_to_download_metrics: false,
   }]
 )
 agent_org_bapaume_pmi_gina.skip_confirmation!
