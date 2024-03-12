@@ -163,7 +163,6 @@ GEM
     crass (1.0.6)
     css_parser (1.16.0)
       addressable
-    daemons (1.4.1)
     database_cleaner (2.0.2)
       database_cleaner-active_record (>= 2, < 3)
     database_cleaner-active_record (2.0.1)
@@ -387,7 +386,7 @@ GEM
       net-smtp
       premailer (~> 1.7, >= 1.7.9)
     public_suffix (5.0.4)
-    puma (5.6.8)
+    puma (6.4.2)
       nio4r (~> 2.0)
     pundit (2.2.0)
       activesupport (>= 3.0.0)
@@ -647,7 +646,6 @@ DEPENDENCIES
   capybara-screenshot
   chartkick (~> 5.0.1)
   common_french_passwords
-  daemons
   database_cleaner
   devise
   devise-async
@@ -679,7 +677,7 @@ DEPENDENCIES
   pg_search
   phonelib
   premailer-rails
-  puma (< 6.0)
+  puma
   pundit
   rack-attack
   rack-cors
