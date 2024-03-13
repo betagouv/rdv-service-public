@@ -1,4 +1,4 @@
-= simple_form_for [:admin, motif.organisation, motif] do |f|
+= simple_form_for [:admin, motif.organisation, motif], html: { "data-controller": "motif-form" } do |f|
 
   = render "model_errors", model: motif
 
@@ -13,7 +13,7 @@
       button#tab_notifs_et_instructions.nav-link[data-toggle="tab" data-target="#notifs_et_instructions" type="button" role="tab" aria-controls="home" aria-selected="false"]
         | Notifications et instructions
 
-  .row.justify-content-center [data-controller="motif-form"]
+  .row.justify-content-center
     .col-md-12.col-lg-8
       .tab-content.mt-4
         #configuration_principale.tab-pane.fade.show.active[role="tabpanel" aria-labelledby="tab_configuration_principale"]
