@@ -18,12 +18,12 @@ RSpec.describe "motifs for invitation only" do
       expect(page).not_to have_content("Délai minimum de réservation")
       expect(page).not_to have_content("Ouvert aux agents, aux prescripteurs et aux usagers avec une invitation")
 
-      choose("Ouvert aux agents et aux prescripteurs")
-      expect(page).to have_content("Délai minimum de réservation")
+      choose("Seuls vous et les agents de votre structure peuvent ajouter des rendez-vous à votre agenda.")
+      expect(page).to have_content("Délai minimum avant le RDV")
 
       click_button("Enregistrer")
 
-      expect(page).to have_content("Ouvert aux agents et aux prescripteurs")
+      expect(page).to have_content("Seuls vous et les agents de votre structure peuvent ajouter des rendez-vous à votre agenda")
     end
   end
 
@@ -35,12 +35,12 @@ RSpec.describe "motifs for invitation only" do
       visit edit_admin_organisation_motif_path(organisation, motif)
       click_on "Réservation en ligne"
 
-      choose("Ouvert aux agents, aux prescripteurs et aux usagers avec une invitation")
-      expect(page).to have_content("Délai minimum de réservation")
+      choose("Créneaux ouverts à la réservation en ligne via une invitation")
+      expect(page).to have_content("Délai minimum avant le RDV")
 
       click_button("Enregistrer")
 
-      expect(page).to have_content("Ouvert aux agents, aux prescripteurs et aux usagers avec une invitation")
+      expect(page).to have_content("Les agents, prescripteurs, et usagers peuvent ajouter des rendez-vous dans votre agenda.")
     end
   end
 end
