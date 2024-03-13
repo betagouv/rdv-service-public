@@ -103,10 +103,15 @@ RSpec.describe "User can search for rdvs" do
 
   describe "follow up rdvs" do
     let!(:user) { create(:user, referent_agents: [agent]) }
-    let!(:agent) { create(:agent) }
+    let!(:agent) do
+      create(:agent, basic_role_in_organisations: [organisation], services:).tap do |agent|
+        create(:agent_territorial_access_right, territory: organisation.territory, agent: agent)
+      end
+    end
     let!(:agent2) { create(:agent) }
     let!(:organisation) { create(:organisation, territory: create(:territory, departement_number: "92")) }
     let!(:service) { create(:service) }
+    let!(:other_service) { create(:service) }
     let!(:lieu) { create(:lieu, organisation: organisation) }
 
     ## follow up motif linked to referent
@@ -114,7 +119,7 @@ RSpec.describe "User can search for rdvs" do
       create(
         :motif,
         name: "RSA Suivi", follow_up: true,
-        organisation: organisation, service: service, restriction_for_rdv: "Instructions pour le RDV"
+        organisation: organisation, service: other_service, restriction_for_rdv: "Instructions pour le RDV"
       )
     end
 
@@ -176,6 +181,7 @@ RSpec.describe "User can search for rdvs" do
     before { login_as(user, scope: :user) }
 
     it "shows only the follow up motifs related to the agent", js: true do
+      visit users_rdvs_path
       visit root_path(referent_ids: [agent.id], departement: "92", service_id: service.id)
 
       ### Motif selection
