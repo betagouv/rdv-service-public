@@ -6,7 +6,7 @@ class CustomDeviseMailer < Devise::Mailer
   helper :application
   default template_path: "devise/mailer"
 
-  def invitation_instructions(record, token, opts = {}) # rubocop:disable Metrics/PerceivedComplexity
+  def invitation_instructions(record, token, opts = {})
     @token = token
     @user_params = opts[:user_params] || {}
     if record.is_a?(Agent) && record.conseiller_numerique? && record.invited_by.nil?
@@ -14,7 +14,7 @@ class CustomDeviseMailer < Devise::Mailer
       opts[:cc] = record.cnfs_secondary_email if record.cnfs_secondary_email.present?
       devise_mail(record, :invitation_instructions_cnfs, opts)
     else
-      opts[:reply_to] = record.invited_by&.email || default_from
+      opts[:reply_to] = record.invited_by&.email
       opts[:subject] = I18n.t("devise.mailer.invitation_instructions.subject", domain_name: record.domain.name)
       devise_mail(record, :invitation_instructions, opts)
     end
