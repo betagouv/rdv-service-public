@@ -187,7 +187,12 @@ RSpec.describe InclusionConnectController, type: :controller do
         it "search @francetravail.fr saves the sub" do
           agent = create(:agent, :invitation_not_accepted, email: "bob@francetravail.fr")
           get :callback, params: { state: ic_state, session_state: ic_state, code: "klzefklzejlf" }
-          expect(agent.reload.inclusion_connect_open_id_sub).to eq("12345678-90ab-cdef-1234-567890abcdef")
+          expect(agent.reload).to have_attributes(
+            id: agent.id,
+            email: "bob@pole-emploi.fr",
+            uid: "bob@pole-emploi.fr",
+            inclusion_connect_open_id_sub: "12345678-90ab-cdef-1234-567890abcdef",
+          )
         end
       end
     end
