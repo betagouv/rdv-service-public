@@ -1,3 +1,23 @@
+GIT
+  remote: https://github.com/nahi/httpclient.git
+  revision: d57cc6d5ffee1b566b5c189fe6dc8cc89570b812
+  ref: d57cc6d
+  specs:
+    httpclient (2.8.3)
+      mutex_m
+      webrick
+
+GIT
+  remote: https://github.com/rdv-solidarites/axiom-types.git
+  revision: b9b204cebda7af20feea40c6c3e2dadb5766480f
+  ref: b9b204c
+  specs:
+    axiom-types (0.1.1)
+      bigdecimal (>= 1.2.7)
+      descendants_tracker (~> 0.0, >= 0.0.4)
+      ice_nine (~> 0.11, >= 0.11.0)
+      thread_safe (~> 0.3, >= 0.3.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -96,16 +116,13 @@ GEM
       axe-core-api
       dumb_delegator
       virtus
-    axiom-types (0.1.1)
-      descendants_tracker (~> 0.0.4)
-      ice_nine (~> 0.11.0)
-      thread_safe (~> 0.3, >= 0.3.1)
     base64 (0.2.0)
     bcrypt (3.1.20)
     better_errors (2.9.1)
       coderay (>= 1.0.0)
       erubi (>= 1.0.0)
       rack (>= 0.9.0)
+    bigdecimal (3.1.6)
     bindata (2.5.0)
     binding_of_caller (1.0.0)
       debug_inspector (>= 0.0.1)
@@ -219,7 +236,6 @@ GEM
     html-attributes-utils (1.0.2)
       activesupport (>= 6.1.4.4)
     htmlentities (4.3.4)
-    httpclient (2.8.3)
     i18n (1.14.1)
       concurrent-ruby (~> 1.0)
     icalendar (2.8.0)
@@ -293,6 +309,7 @@ GEM
       activesupport (>= 5.2, < 8)
     msgpack (1.7.2)
     multi_xml (0.6.0)
+    mutex_m (0.2.0)
     net-http (0.4.1)
       uri
     net-imap (0.4.10)
@@ -599,6 +616,7 @@ GEM
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
+    webrick (1.8.1)
     websocket (1.2.10)
     websocket-driver (0.7.6)
       websocket-extensions (>= 0.1.0)
@@ -618,6 +636,7 @@ DEPENDENCIES
   auto_strip_attributes
   axe-core-api (= 4.3.2)
   axe-core-rspec (= 4.3.2)
+  axiom-types!
   better_errors
   binding_of_caller
   blueprinter
@@ -642,6 +661,7 @@ DEPENDENCIES
   faker
   good_job
   groupdate (~> 6.1)
+  httpclient!
   icalendar (~> 2.5)
   jbuilder
   jsbundling-rails
