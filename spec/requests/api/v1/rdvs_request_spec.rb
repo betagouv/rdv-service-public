@@ -63,6 +63,7 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
         run_test!
 
         it { expect(response.parsed_body["rdvs"]).to eq([]) }
+        it { expect(ApiCall.count).to eq(1) }
       end
 
       context "with starts_after and starts_before params" do

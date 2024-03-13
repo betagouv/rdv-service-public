@@ -52,6 +52,7 @@ RSpec.describe "RDVs Users authentified API", swagger_doc: "v1/api.json" do
 
         it do
           expect(response.parsed_body["rdv"]["status"]).to eq(status)
+          expect(ApiCall.count).to eq(1)
         end
       end
     end

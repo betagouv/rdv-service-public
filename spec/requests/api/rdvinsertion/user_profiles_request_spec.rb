@@ -44,6 +44,7 @@ RSpec.describe "User Profile authentified API", swagger_doc: "v1/api.json" do
         it { expect(user.reload.organisations).to include(organisation1) }
         it { expect(user.reload.organisations).to include(organisation2) }
         it { expect(user.reload.organisations).not_to include(organisation3) }
+        it { expect(ApiCall.count).to eq(1) }
       end
 
       it_behaves_like "an endpoint that returns 401 - unauthorized" do

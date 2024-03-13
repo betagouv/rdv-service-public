@@ -67,6 +67,8 @@ RSpec.describe "Public links API", swagger_doc: "v1/api.json" do
         run_test!
 
         it { expect(parsed_response_body).to match_array(expected_body) }
+        # No ApiCall log for public links
+        it { expect(ApiCall.count).to eq(0) }
       end
 
       response 400, "Retourne 'bad_request' quand le territory est manquant" do

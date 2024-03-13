@@ -43,6 +43,8 @@ RSpec.describe "Referent Assignation authentified API", swagger_doc: "v1/api.jso
         it { expect(user.reload.referent_agents).to include(agent1) }
 
         it { expect(user.reload.referent_agents).not_to include(agent2) }
+
+        it { expect(ApiCall.count).to eq(1) }
       end
 
       it_behaves_like "an endpoint that returns 401 - unauthorized" do

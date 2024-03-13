@@ -42,6 +42,7 @@ RSpec.describe "Motif Category API", swagger_doc: "v1/api.json" do
         it { expect(MotifCategory.last.short_name).to eq(short_name) }
         it { expect(parsed_response_body["motif_category"]["name"]).to match(name) }
         it { expect(parsed_response_body["motif_category"]["short_name"]).to match(short_name) }
+        it { expect(ApiCall.count).to eq(1) }
       end
 
       it_behaves_like "an endpoint that returns 401 - unauthorized" do

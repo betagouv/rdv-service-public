@@ -42,6 +42,7 @@ RSpec.describe "User Profile authentified API", swagger_doc: "v1/api.json" do
         it { expect(created_user_profile.organisation).to eq(organisation) }
 
         it { expect(created_user_profile.user).to eq(user) }
+        it { expect(ApiCall.count).to eq(1) }
       end
 
       it_behaves_like "an endpoint that returns 403 - forbidden", "l'agent·e n'a pas accès à l'organisation" do

@@ -34,6 +34,8 @@ RSpec.describe "Organisations API", swagger_doc: "v1/api.json" do
         it { expect(response).to be_paginated(current_page: 1, next_page: nil, prev_page: nil, total_count: 5, total_pages: 1) }
 
         it { expect(parsed_response_body[:organisations]).to match(OrganisationBlueprint.render_as_hash(organisations)) }
+
+        it { expect(ApiCall.count).to eq(1) }
       end
 
       response 200, "Retourne des Organisations, filtrées par secteur géographique", document: false do

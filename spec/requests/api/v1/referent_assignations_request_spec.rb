@@ -39,6 +39,7 @@ RSpec.describe "Referent Assignation authentified API", swagger_doc: "v1/api.jso
         it { expect(parsed_response_body.dig("referent_assignation", "agent", "id")).to eq(agent_id) }
 
         it { expect(user.reload.referent_agents).to include(referent) }
+        it { expect(ApiCall.count).to eq(1) }
       end
 
       it_behaves_like "an endpoint that returns 403 - forbidden", "l'agent.e n'a pas accès à l'organisation de l'utilisateur" do

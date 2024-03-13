@@ -35,6 +35,7 @@ RSpec.describe "Agents API", swagger_doc: "v1/api.json" do
         run_test!
 
         it { expect(parsed_response_body["agents"].pluck("id")).to match_array([agent.id]) }
+        it { expect(ApiCall.count).to eq(1) }
       end
 
       response 200, "policy scoped agents", document: false do

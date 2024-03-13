@@ -35,6 +35,7 @@ RSpec.describe "WebhookEndpoints API", swagger_doc: "v1/api.json" do
         it { expect(response).to be_paginated(current_page: 1, next_page: nil, prev_page: nil, total_count: 5, total_pages: 1) }
 
         it { expect(parsed_response_body[:webhook_endpoints]).to match(WebhookEndpointBlueprint.render_as_hash(webhook_endpoints)) }
+        it { expect(ApiCall.count).to eq(1) }
       end
 
       response 200, "Retourne des WebhooksEndpoints, filtrés par target_url" do

@@ -38,6 +38,7 @@ RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
           run_test!
 
           it { expect(parsed_response_body[:motifs]).to eq(MotifBlueprint.render_as_json([motif])) }
+          it { expect(ApiCall.count).to eq(1) }
         end
 
         response 200, "Renvoie les motifs liés à la bonne organisation" do

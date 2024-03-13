@@ -32,6 +32,7 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
         run_test!
 
         it { expect(parsed_response_body[:user][:id]).to eq(user.id) }
+        it { expect(ApiCall.count).to eq(1) }
       end
 
       response 200, "authorized user ID also belongs to other organisation", document: false do

@@ -117,6 +117,7 @@ RSpec.describe "Available Creneaux Count for Invitation", swagger_doc: "v1/api.j
 
         it "Quand il n'y a pas de params" do
           expect(parsed_response_body["creneau_availability"]).to be_falsey
+          expect(ApiCall.count).to eq(1)
         end
 
         context "Si le lieu n'existe pas" do
@@ -125,6 +126,7 @@ RSpec.describe "Available Creneaux Count for Invitation", swagger_doc: "v1/api.j
           it do
             expect(parsed_response_body["creneau_availability"]).to be_falsey
             expect(parsed_response_body["error"]).to eq("Couldn't find Lieu with 'id'=666")
+            expect(ApiCall.count).to eq(1)
           end
         end
 

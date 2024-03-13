@@ -29,6 +29,7 @@ RSpec.describe "paginated requests", type: :request do
 
           it "is correctly paginated" do
             expect(response).to be_paginated(current_page: 1, next_page: 2, prev_page: nil, total_count: 7, total_pages: 3)
+            expect(ApiCall.count).to eq(1)
           end
         end
       end
