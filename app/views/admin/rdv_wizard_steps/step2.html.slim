@@ -82,7 +82,8 @@ ruby:
           i.fa.fa-arrow-left
           = " Revenir en arrière"
 
-      .col.text-right
-        = f.button :submit, "Continuer", disabled: !@rdv_wizard.users.any?
+      - if @rdv_wizard.users.any?
+        .col.text-right
+            = f.button :submit, "Continuer"
 
 input type="hidden" name="js-canonical-path" value=modals_return_location
