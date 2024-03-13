@@ -17,8 +17,8 @@ RSpec.describe "agents can prescribe rdvs" do
   let!(:org_insertion) { create(:organisation, territory: territory) }
 
   # L'agent connecté est en MDS et veut prescrire vers d'autres orgas
-  let!(:current_agent) { create(:agent, admin_role_in_organisations: [org_mds], services: [service_rsa]) }
-  let!(:agent_insertion) { create(:agent, admin_role_in_organisations: [org_insertion], services: [service_rsa, service_autre]) }
+  let!(:current_agent) { create(:agent, :with_territory_access_rights, admin_role_in_organisations: [org_mds], services: [service_rsa]) }
+  let!(:agent_insertion) { create(:agent, :with_territory_access_rights, admin_role_in_organisations: [org_insertion], services: [service_rsa, service_autre]) }
 
   let!(:motif_mds) { create(:motif, organisation: org_mds, service: service_rsa) }
   let!(:motif_insertion) { create(:motif, organisation: org_insertion, service: service_rsa) }
@@ -76,7 +76,7 @@ RSpec.describe "agents can prescribe rdvs" do
       expect(page).to have_content("Motif : #{motif_insertion.name}")
       expect(page).to have_content("Lieu : #{mission_locale_paris_nord.name}")
       expect(page).to have_content("Date du rendez-vous :")
-      expect(page).to have_content("Usager : Francis FACTICE")
+      expect(page).to have_content("Usager : FACTICE Francis")
       expect { click_button "Confirmer le rdv" }.to change(Rdv, :count).by(1)
       # Display Confirmation
       expect(page).to have_content("Rendez-vous confirmé")
@@ -123,7 +123,7 @@ RSpec.describe "agents can prescribe rdvs" do
         expect(page).to have_content("Motif : #{motif_collectif.name}")
         expect(page).to have_content("Lieu : #{mds_paris_nord.name}")
         expect(page).to have_content("Date du rendez-vous :")
-        expect(page).to have_content("Usager : Francis FACTICE")
+        expect(page).to have_content("Usager : FACTICE Francis")
         expect { click_button "Confirmer le rdv" }.to change(Rdv.last.reload.participations, :count).by(1)
         expect(Rdv.last.participations.where(user: existing_user).first.created_by_agent_prescripteur).to eq(true)
       end
@@ -179,6 +179,7 @@ RSpec.describe "agents can prescribe rdvs" do
       fill_in :user_first_name, with: "Jean-Pierre"
       fill_in :user_last_name, with: "Bonjour"
       click_on "Créer usager"
+      expect(page).to have_content("BONJOUR Jean-Pierre")
       click_on "Continuer"
       expect { click_button "Confirmer le rdv" }.to change(Rdv, :count).by(1)
       expect(Rdv.last.users.first.full_name).to eq("Jean-Pierre BONJOUR")
@@ -212,6 +213,52 @@ RSpec.describe "agents can prescribe rdvs" do
       expect(page).to have_content("Rendez-vous confirmé")
       expect(Rdv.last.users.first).to eq(user)
       expect(Rdv.last.participations.first.created_by_agent_prescripteur).to eq(true)
+    end
+  end
+
+  describe "when using a user from another organisation in the same territory" do
+    let!(:organisation_mystere) { create(:organisation, territory: territory) }
+    let!(:user_in_organisation_mystere) do
+      create(
+        :user,
+        first_name: "Miss",
+        last_name: "Terre",
+        email: "miss_terre@example.com",
+        phone_number: "0611223344",
+        birth_date: Date.parse("1985-07-20"),
+        organisations: [organisation_mystere]
+      )
+    end
+
+    it "truncates personal info while searching, also add the user to destination organisation", js: true do
+      login_as(current_agent, scope: :agent)
+      visit root_path
+      within(".left-side-menu") { click_on "Trouver un RDV" }
+      click_link "élargir votre recherche"
+      # Select Service
+      find("h3", text: motif_mds.service.name).ancestor("a").click
+      # Select Motif
+      find("h3", text: motif_insertion.name).ancestor("a").click
+      # Select Lieu
+      find(".card-title", text: /#{mission_locale_paris_nord.name}/).ancestor(".card").find("a.stretched-link").click
+      # Select créneau
+      first(:link, "11:00").click
+      # Display User selection
+      find(".select2-selection[aria-labelledby=select2-user_ids_-container]").click
+      find(".select2-search__field").send_keys("terre")
+      expect(page).to have_content("TERRE Miss - 20/07/**** - 06******44 - m******e@example.com")
+      first(".select2-results ul.select2-results__options li").click
+      click_on "Continuer"
+      # Display Récapitulatif
+      # les infos de l'usager sont affichées dans le recap
+      expect(page).to have_content("Usager : TERRE Miss - 20/07/1985 - 06 11 22 33 44 - miss_terre@example.com")
+      expect { click_button "Confirmer le rdv" }.to change(Rdv, :count).by(1)
+      # Display Confirmation
+      expect(page).to have_content("Rendez-vous confirmé")
+      created_rdv = Rdv.last
+      expect(created_rdv.users.first).to eq(user_in_organisation_mystere)
+      # User ends up in distant org, and other orgs she was already in
+      expect(created_rdv.users.first.organisations).to match_array([organisation_mystere, org_insertion])
     end
   end
 
