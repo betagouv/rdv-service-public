@@ -1,10 +1,9 @@
 .card
-  .card-body
-    h5.card-title= Motif.human_attribute_name("visibility_type")
+  .card-body.pt-4
     - %i[visible_and_notified visible_and_not_notified invisible].each do |value|
       = label_tag do
         = f.radio_button(:visibility_type, value)
-        span.ml-1= Motif.human_attribute_value(:visibility_type, value)
+        span.ml-1= sanitize(Motif.human_attribute_value(:visibility_type, value, context: :html))
         p
           span.text-muted.font-14= Motif.human_attribute_value(:visibility_type, value, context: :hint)
           - if current_organisation.rdv_insertion?
@@ -13,13 +12,31 @@
 
 .card
   .card-body
-    h5.card-title Instructions
-    p.text-muted.font-14 Ces instructions sont affichées à l'usager avant et après sa prise de RDV. Laissez ces champs vides si vous ne souhaitez pas donner d'instructions.
-    = f.input :restriction_for_rdv, input_html: {rows: 6}
-    = f.input :instruction_for_rdv, input_html: {rows: 6}
-
-.card
-  .card-body
-    h5.card-title= Motif.human_attribute_name("custom_cancel_warning_message")
-    p.text-muted.font-14= Motif.human_attribute_name("custom_cancel_warning_message_hint")
-    = f.input :custom_cancel_warning_message, input_html: {rows: 6}, label: false
+    p.mb-2 Vous pouvez paramétrer des messages par défaut, qui s’afficheront avant la prise de rendez-vous, après la confirmation du rendez-vous, et/ou en cas d’annulation du rendez-vous.
+    .mt-3
+      = f.input :restriction_for_rdv,
+              label: sanitize("Instructions à accepter <strong>avant</strong> la prise du RDV"),
+              placeholder: "Laisser vide si vous ne souhaitez pas donner d’instruction.",
+              input_html: { rows: 5 },
+              wrapper_html: { class: "mb-1" }
+      = link_to "#" do
+        span> Voir un exemple
+        i.fa.fa-external-link-alt>
+    .mt-3
+      = f.input :instruction_for_rdv,
+              label: sanitize("Instructions affichées <strong>après</strong> la prise du RDV"),
+              placeholder: "Laisser vide si vous ne souhaitez pas donner d’instruction.",
+              input_html: { rows: 5 },
+              wrapper_html: { class: "mb-1" }
+      = link_to "#" do
+        span> Voir un exemple
+        i.fa.fa-external-link-alt>
+    .mt-3
+      = f.input :custom_cancel_warning_message,
+              label: sanitize("Message d’avertissement </strong>en cas d’annulation</strong>"),
+              placeholder: "Laisser vide si vous ne souhaitez pas afficher de messager d’avertissement.",
+              input_html: { rows: 5 },
+              wrapper_html: { class: "mb-1" }
+      = link_to "#" do
+        span> Voir un exemple
+        i.fa.fa-external-link-alt>

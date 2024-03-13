@@ -36,8 +36,7 @@
           p.text-muted.font-14.mt-1
             = I18n.t("activerecord.attributes.motif/bookable_by/hint.everyone")
 
-
-.card.__________________________
+.card
   .card-body
     h5.card-title= Motif.human_attribute_name("booking_delay")
     p= Motif.human_attribute_name("booking_delay_hint")
@@ -81,10 +80,10 @@
   .card.js-sectorisation-card
     .card-body
       h5.card-title.mb-2= Motif.human_attribute_name("sectorisation_level_title")
-      .text-muted.mb-3
+      .mb-3
         span>= Motif.human_attribute_name("sectorisation_level_hint")
         = link_to "https://doc.rdv-solidarites.fr/guide-utilisation/pour-un-territoire/sectorisation-geographique/" do
-          span> Documentation sur la sectorisation
+          span> Voir la documentation concernant la sectorisation
           i.fa.fa-external-link-alt>
       .mb-2
         = label_tag do
@@ -93,7 +92,7 @@
         = label_tag do
           = f.radio_button(:sectorisation_level, Motif::SECTORISATION_LEVEL_ORGANISATION)
           span.ml-1= Motif.human_attribute_value(:sectorisation_level, Motif::SECTORISATION_LEVEL_ORGANISATION, context: :hint)
-          .text-muted.font-14.my-1.ml-3
+          .text-muted.font-14.my-1
             - sectors_attributed_to_orga = Sector.attributed_to_organisation(current_organisation)
             = t("motifs.form.sectorisation_level.sectors_attributed_to_orga", count: sectors_attributed_to_orga.count, sectors: sectors_attributed_to_orga.map(&:name).to_sentence.truncate(100), organisation: current_organisation.name)
         = label_tag do

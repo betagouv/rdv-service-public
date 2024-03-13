@@ -52,14 +52,14 @@ fr:
       motif/collectifs/hint:
         true: Le rendez-vous est destiné à plusieurs usagers. Chaque participants est notifié individuellement.
         false: Le rendez-vous est réservé pour un usager en particulier. Cet usager peut être accompagné (parent, tuteur, traducteur, …) pour la consultation individuelle.
-      motif/visibility_types:
-        visible_and_notified: Visible et notifié
-        visible_and_not_notified: Visible et non notifié
-        invisible: Invisible
+      motif/visibility_types/html:
+        visible_and_notified: RDV <strong>visible</strong> et <strong>notifié</strong>
+        visible_and_not_notified: RDV <strong>visible</strong> et <strong>non notifié</strong>
+        invisible: RDV <strong>non visible</strong>
       motif/visibility_types/hint:
-        visible_and_notified: Le RDV sera visible dans la liste des RDVs côté usager, l'usager sera notifié par SMS et/ou email
-        visible_and_not_notified: Le RDV sera visible dans la liste des RDVs côté usager, l'usager ne recevra aucune notification (ni SMS ni email)
-        invisible: Le RDV sera invisible dans la liste des RDVs côté usager, l'usager ne recevra aucune notification (ni SMS ni email)
+        visible_and_notified: L’usager sera notifié de la création et modification du rendez-vous par SMS et/ou e-mail. Ce dernier sera visible dans son espace personnel.
+        visible_and_not_notified: L’usager ne sera pas notifié du rendez-vous, mais il sera visible dans son espace personnel.
+        invisible: Le rendez-vous ne sera pas visible dans l’espace personnel de l’usager, et il ne recevra aucune notification.
       motif/visibility_types/hint_rdv_insertion:
         visible_and_notified: ""
         visible_and_not_notified: "Les notifications peuvent être envoyées d'une application externe (ex : Motif de Convocation avec RDV-Insertion)"
