@@ -191,7 +191,7 @@ RSpec.describe InclusionConnectController, type: :controller do
             id: agent.id,
             email: "bob@pole-emploi.fr",
             uid: "bob@pole-emploi.fr",
-            inclusion_connect_open_id_sub: "12345678-90ab-cdef-1234-567890abcdef",
+            inclusion_connect_open_id_sub: "12345678-90ab-cdef-1234-567890abcdef"
           )
         end
       end
