@@ -75,7 +75,7 @@ RSpec.describe "Creating a new account for a new project, other than a mairie", 
 
     expect(invitation_email).to have_attributes(
       subject: "Vous avez été invité sur RDV Service Public",
-      reply_to: ["support@rdv-service-public.fr"]
+      from: ["support@rdv-service-public.fr"]
     )
   end
 end
