@@ -104,14 +104,14 @@ RSpec.describe "User can search for rdvs" do
   describe "follow up rdvs" do
     let!(:user) { create(:user, referent_agents: [agent]) }
     let!(:agent) do
-      create(:agent, basic_role_in_organisations: [organisation], services:).tap do |agent|
+      create(:agent, basic_role_in_organisations: [organisation], services: [service_social, service_insertion]).tap do |agent|
         create(:agent_territorial_access_right, territory: organisation.territory, agent: agent)
       end
     end
     let!(:agent2) { create(:agent) }
     let!(:organisation) { create(:organisation, territory: create(:territory, departement_number: "92")) }
-    let!(:service) { create(:service) }
-    let!(:other_service) { create(:service) }
+    let!(:service_social) { create(:service, name: "Service Social") }
+    let!(:service_insertion) { create(:service, name: "Service Insertion") }
     let!(:lieu) { create(:lieu, organisation: organisation) }
 
     ## follow up motif linked to referent
@@ -119,7 +119,7 @@ RSpec.describe "User can search for rdvs" do
       create(
         :motif,
         name: "RSA Suivi", follow_up: true,
-        organisation: organisation, service: other_service, restriction_for_rdv: "Instructions pour le RDV"
+        organisation: organisation, service: service_insertion, restriction_for_rdv: "Instructions pour le RDV"
       )
     end
 
@@ -128,7 +128,7 @@ RSpec.describe "User can search for rdvs" do
       create(
         :motif,
         name: "RSA suivi téléphonique", follow_up: true, organisation: organisation,
-        restriction_for_rdv: nil, service: service
+        restriction_for_rdv: nil, service: service_insertion
       )
     end
 
@@ -137,7 +137,7 @@ RSpec.describe "User can search for rdvs" do
       create(
         :motif,
         name: "RSA Orientation", follow_up: false, organisation: organisation,
-        restriction_for_rdv: nil, service: service
+        restriction_for_rdv: nil, service: service_social
       )
     end
 
@@ -174,15 +174,20 @@ RSpec.describe "User can search for rdvs" do
 
     ## Collectif follow up motif linked to referent
     let!(:collectif_motif) do
-      create(:motif, follow_up: true, restriction_for_rdv: nil, collectif: true, organisation: organisation, service: service)
+      create(:motif, follow_up: true, restriction_for_rdv: nil, collectif: true, organisation: organisation, service: service_social)
     end
-    let!(:collectif_rdv) { create(:rdv, motif: collectif_motif, agents: [agent], starts_at: 2.days.from_now) }
+    let!(:collectif_rdv) { create(:rdv, motif: collectif_motif, agents: [agent], lieu: lieu, organisation: organisation, starts_at: 2.days.from_now) }
 
     before { login_as(user, scope: :user) }
 
     it "shows only the follow up motifs related to the agent", js: true do
       visit users_rdvs_path
-      visit root_path(referent_ids: [agent.id], departement: "92", service_id: service.id)
+      click_link "Prendre un RDV de suivi"
+
+      expect(page).to have_content("Service Social")
+      expect(page).to have_content("Service Insertion")
+
+      click_link "Service Insertion"
 
       ### Motif selection
       expect(page).to have_content(motif1.name)
@@ -222,7 +227,7 @@ RSpec.describe "User can search for rdvs" do
 
     context "when the agent is not the referent" do
       it "shows an error message" do
-        visit root_path(referent_ids: [agent2.id], departement: "92", service_id: service.id)
+        visit root_path(referent_ids: [agent2.id], departement: "92", service_id: service_social.id)
 
         expect(page).not_to have_content(motif1.name)
         expect(page).not_to have_content(collectif_motif.name)
@@ -238,7 +243,7 @@ RSpec.describe "User can search for rdvs" do
       let!(:agent3) { create(:agent) }
 
       it "shows an error message" do
-        visit root_path(referent_ids: [agent3.id], departement: "92", service_id: service.id)
+        visit root_path(referent_ids: [agent3.id], departement: "92", service_id: service_social.id)
 
         expect(page).to have_content("Votre référent n'a pas de créneaux disponibles")
       end
