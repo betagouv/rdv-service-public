@@ -182,6 +182,8 @@ RSpec.describe "User can search for rdvs" do
       expect(page).to have_content(motif1.name)
       expect(page).to have_content(collectif_motif.name)
 
+      expect(page).not_to have_content "Pour prendre un RDV avec un de vos agents référent" # Le CTA pour prendre un rdv de suivi ne s'affiche pas
+
       expect(page).not_to have_content(motif2.name)
       expect(page).not_to have_content(motif3.name)
 
