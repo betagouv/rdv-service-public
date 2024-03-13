@@ -43,21 +43,9 @@
         border-left-style: solid;
         border-left-color: $white;
       }
-    }
 
-    &.side-menu__sub-item {
-      display: block;
-      width: 100%; //permet d'augmenter la surface du lien pour le rendre plus facilement clickable
-      padding: 6px 12px;
-
-      &:hover {
-        background-color: lighten($bg-leftbar, 5%);
-      }
-
-      &.active {
-        border-left-width: 2px;
-        border-left-style: solid;
-        border-left-color: $white;
+      &.side-menu__item--small {
+        padding: 6px 12px;
       }
     }
 
@@ -110,6 +98,7 @@
     bottom: 0;
     position: sticky;
     top: 0;
+    max-height: 100vh; // pour permettre de scroller dans le menu
     overflow-y: auto;
     overflow-x: hidden;
 

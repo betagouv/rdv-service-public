@@ -213,6 +213,10 @@ class Agent < ApplicationRecord
     agent_territorial_access_rights.find_by(territory: territory)
   end
 
+  def organisations_territory_ids
+    organisations.distinct(:territory_id).select(:territory_id)
+  end
+
   def update_unknown_past_rdv_count!
     update_column(:unknown_past_rdv_count, rdvs.status(:unknown_past).count) if persisted?
   end
@@ -263,5 +267,9 @@ class Agent < ApplicationRecord
                 else
                   Domain::RDV_SOLIDARITES
                 end
+  end
+
+  def read_only_profile_infos?
+    inclusion_connect_open_id_sub.present?
   end
 end
