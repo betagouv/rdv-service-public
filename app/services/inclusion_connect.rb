@@ -109,6 +109,8 @@ class InclusionConnect
   end
 
   def found_by_email
+    return if user_info["email"].nil?
+
     return @found_by_email if defined?(@found_by_email)
 
     @found_by_email = Agent.find_by(email: user_info["email"])
@@ -127,6 +129,8 @@ class InclusionConnect
   end
 
   def found_by_sub
+    return if user_info["sub"].nil?
+
     @found_by_sub ||= Agent.find_by(inclusion_connect_open_id_sub: user_info["sub"])
   end
 
