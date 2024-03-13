@@ -124,23 +124,21 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
       method: request.method,
       path: request.fullpath,
       host: request.host,
-      headers: request.headers.to_h.select { |k, _v| k.start_with?("HTTP_") },
+      headers: request.headers.to_h.transform_values { |value| value.is_a?(String) ? value : value.inspect },
     }
 
-    begin
-      ApiCall.create!(
-        raw_http: raw_http,
-        controller_name: controller_name,
-        action_name: action_name,
-        agent_id: current_agent.id
-      )
-    rescue StandardError => e
-      Sentry.capture_exception(e, extra: {
-                                 raw_http: raw_http,
-                                 controller_name: controller_name,
-                                 action_name: action_name,
-                                 agent_id: current_agent&.id,
-                               })
-    end
+    ApiCall.create!(
+      raw_http: raw_http,
+      controller_name: controller_name,
+      action_name: action_name,
+      agent_id: current_agent.id
+    )
+  rescue StandardError => e
+    Sentry.capture_exception(e, extra: {
+                               raw_http: raw_http,
+                               controller_name: controller_name,
+                               action_name: action_name,
+                               agent_id: current_agent&.id,
+                             })
   end
 end

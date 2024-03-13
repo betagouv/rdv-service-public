@@ -35,7 +35,13 @@ RSpec.describe "Organisations API", swagger_doc: "v1/api.json" do
 
         it { expect(parsed_response_body[:organisations]).to match(OrganisationBlueprint.render_as_hash(organisations)) }
 
-        it { expect(ApiCall.count).to eq(1) }
+        it "logs the API call" do
+          expect(ApiCall.first.attributes.symbolize_keys).to include(
+            controller_name: "organisations",
+            action_name: "index",
+            agent_id: agent.id
+          )
+        end
       end
 
       response 200, "Retourne des Organisations, filtrées par secteur géographique", document: false do

@@ -117,7 +117,17 @@ RSpec.describe "Available Creneaux Count for Invitation", swagger_doc: "v1/api.j
 
         it "Quand il n'y a pas de params" do
           expect(parsed_response_body["creneau_availability"]).to be_falsey
-          expect(ApiCall.count).to eq(1)
+        end
+
+        it "logs the API call" do
+          expect(ApiCall.first.attributes.symbolize_keys).to include(
+            controller_name: "invitations",
+            action_name: "creneau_availability",
+            agent_id: agent.id
+          )
+          expect(ApiCall.first.raw_http["method"]).to eq("GET")
+          expect(ApiCall.first.raw_http["headers"]).to include("HTTP_ACCEPT")
+          expect(ApiCall.first.raw_http["headers"]["HTTP_ACCEPT"]).to eq("application/json")
         end
 
         context "Si le lieu n'existe pas" do
@@ -126,7 +136,6 @@ RSpec.describe "Available Creneaux Count for Invitation", swagger_doc: "v1/api.j
           it do
             expect(parsed_response_body["creneau_availability"]).to be_falsey
             expect(parsed_response_body["error"]).to eq("Couldn't find Lieu with 'id'=666")
-            expect(ApiCall.count).to eq(1)
           end
         end
 
@@ -176,6 +185,17 @@ RSpec.describe "Available Creneaux Count for Invitation", swagger_doc: "v1/api.j
           let!(:"organisation_ids[]") { [organisation1.id] }
 
           it { expect(parsed_response_body["creneau_availability"]).to be_truthy }
+
+          it "logs the API call" do
+            expect(ApiCall.first.attributes.symbolize_keys).to include(
+              controller_name: "invitations",
+              action_name: "creneau_availability",
+              agent_id: agent.id
+            )
+            expect(ApiCall.first.raw_http["method"]).to eq("GET")
+            expect(ApiCall.first.raw_http["headers"]).to include("HTTP_ACCEPT")
+            expect(ApiCall.first.raw_http["headers"]["HTTP_ACCEPT"]).to eq("application/json")
+          end
         end
 
         context "Avec le params organisation_ids[]" do

@@ -92,7 +92,16 @@ RSpec.describe "Absence authentified API", swagger_doc: "v1/api.json" do
 
         it { expect(created_absence.end_time).to eq(Tod::TimeOfDay.new(15, 0)) }
 
-        it { expect(ApiCall.count).to eq(1) }
+        it "logs the API call" do
+          expect(ApiCall.first.attributes.symbolize_keys).to include(
+            controller_name: "absences",
+            action_name: "create",
+            agent_id: agent.id
+          )
+          expect(ApiCall.first.raw_http["method"]).to eq("POST")
+          expect(ApiCall.first.raw_http["headers"]).to include("HTTP_ACCEPT")
+          expect(ApiCall.first.raw_http["headers"]["HTTP_ACCEPT"]).to eq("application/json")
+        end
       end
 
       response 200, "Crée et renvoie une absence quand c'est l'email de l'agent qu'on utilise", document: false do
