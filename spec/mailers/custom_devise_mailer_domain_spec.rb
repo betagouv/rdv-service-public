@@ -103,4 +103,16 @@ RSpec.describe CustomDeviseMailer, "#domain" do
       expect(enqueued_jobs.pluck("executions")).to eq([1]) # job enqueued for retry
     end
   end
+
+  context "for agent" do
+    subject(:sent_email) { described_class.reset_password_instructions(agent, "t0k3n") }
+
+    let(:inviter) { create(:agent) }
+    let(:agent) { create(:agent, invited_by: inviter) }
+
+    it "doesn't override the reply-to address" do
+      perform_enqueued_jobs
+      expect(sent_email.reply_to).to eq Domain::RDV_SOLIDARITES.support_email
+    end
+  end
 end
