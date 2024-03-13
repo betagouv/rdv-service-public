@@ -25,15 +25,6 @@ p
       .col-md-6= f.input :default_duration_in_min, label: "Durée du RDV (en minutes)"
       .col-md-6= f.input :color, as: "color", label: "Couleur associée"
 
-- if current_organisation.territory.motif_categories.present?
-  .card
-    .card-body
-      h5.card-title= MotifCategory.model_name.human
-      p.text-muted.font-14.mt-1= MotifCategory.human_attribute_name("category_hint")
-      .form-row
-        .col-md-12
-          = f.association :motif_category, collection: current_territory.motif_categories, include_blank: "Aucune", label: false
-
 .card
   .card-body
     p Choisissez le format du rendez-vous :

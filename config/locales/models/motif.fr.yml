@@ -24,7 +24,7 @@ fr:
         for_secretariat: Motif accessible au secrétariat
         for_secretariat_label: Autoriser les agents du service Secrétariat à assurer ces RDV
         for_secretariat_short: RDV Secrétariat
-        for_secretariat_hint: En plus des agents du service de ce motif, les agents du service Secrétariat pourront aussi assurer ces RDV et ouvrir des plages d'ouverture dans leur agenda avec ce motif
+        for_secretariat_hint: En plus du service sélectionné pour ce motif, les agents du service « Secrétariat » peuvent partager leurs disponibilités et assurer les rendez-vous de ce motif.
         follow_up: Autoriser ces rendez-vous seulement aux usagers bénéficiant d'un suivi par un référent
         follow_up_short: RDV de suivi
         follow_up_warning: Les rendez-vous de suivi sont réservés aux usagers ayant un agent référent associé sur la fiche usager. Ces rendez-vous de suivi ne sont pas visibles lors de la réservation en ligne pour les usagers sans compte et sans référent. Seuls les usagers avec un référent pourront prendre rendez-vous depuis leur espace personnel.
