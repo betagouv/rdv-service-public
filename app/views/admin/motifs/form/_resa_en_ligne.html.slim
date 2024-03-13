@@ -6,7 +6,7 @@
     .form-row
       .col-md-12
         = label_tag do
-          = f.radio_button(:bookable_by, :agents)
+          = f.radio_button(:bookable_by, :agents, "data-action": "change->motif-form#refreshSecto", "data-motif-form-target": "bookableByRadios")
           span.ml-1= sanitize(I18n.t("activerecord.attributes.motif/bookable_by/radio_label_html.agents"))
           p.text-muted.font-14.mt-1
             = I18n.t("activerecord.attributes.motif/bookable_by/hint.agents")
@@ -14,7 +14,7 @@
       .form-row
         .col-md-12
           = label_tag do
-            = f.radio_button(:bookable_by, :agents_and_prescripteurs)
+            = f.radio_button(:bookable_by, :agents_and_prescripteurs, "data-action": "change->motif-form#refreshSecto", "data-motif-form-target": "bookableByRadios")
             span.ml-1= sanitize(I18n.t("activerecord.attributes.motif/bookable_by/radio_label_html.agents_and_prescripteurs"))
             p.text-muted.font-14.mt-1
               = I18n.t("activerecord.attributes.motif/bookable_by/hint.agents_and_prescripteurs")
@@ -23,7 +23,7 @@
       .form-row
         .col-md-12
           = label_tag do
-            = f.radio_button(:bookable_by, :agents_and_prescripteurs_and_invited_users)
+            = f.radio_button(:bookable_by, :agents_and_prescripteurs_and_invited_users, "data-action": "change->motif-form#refreshSecto", "data-motif-form-target": "bookableByRadios")
             span.ml-1= sanitize(I18n.t("activerecord.attributes.motif/bookable_by/radio_label_html.agents_and_prescripteurs_and_invited_users"))
             p.text-muted.font-14.mt-1
               = I18n.t("activerecord.attributes.motif/bookable_by/hint.agents_and_prescripteurs_and_invited_users")
@@ -32,7 +32,7 @@
       .col-md-12
         = label_tag do
           = f.radio_button(:bookable_by, :everyone)
-          span.ml-1= sanitize(I18n.t("activerecord.attributes.motif/bookable_by/radio_label_html.everyone"))
+          span.ml-1= sanitize(I18n.t("activerecord.attributes.motif/bookable_by/radio_label_html.everyone"), "data-action": "change->motif-form#refreshSecto", "data-motif-form-target": "bookableByRadios")
           p.text-muted.font-14.mt-1
             = I18n.t("activerecord.attributes.motif/bookable_by/hint.everyone")
 
@@ -56,15 +56,15 @@
   .card-body
     h5.card-title= Motif.human_attribute_name("follow_up_short")
     p.mb-3= Motif.human_attribute_name("follow_up_warning")
-    = f.input :follow_up
+    = f.input :follow_up, input_html: { "data-action": "change->motif-form#refreshSecretariat", "data-motif-form-target": "followUpCheckbox" }
 
-.card
+.card[data-motif-form-target="secretariatSection"]
   .card-body
     h5.card-title= Motif.human_attribute_name("for_secretariat_short")
     p.mb-3= Motif.human_attribute_name("for_secretariat_hint")
-    = f.input :for_secretariat, label: Motif.human_attribute_name("for_secretariat_label")
+    = f.input :for_secretariat, label: Motif.human_attribute_name("for_secretariat_label"), input_html: { "data-motif-form-target": "secretariatCheckbox" }
 
-    .alert.alert-warning.mt-2.only-on-disabled-card
+    .alert.alert-warning.mt-2
       | Vous ne pouvez pas modifier ce paramètre si les créneaux sont ne sont pas ouverts à la réservation en ligne.
 
 - if current_organisation.territory.motif_categories.present?
@@ -77,7 +77,7 @@
           = f.association :motif_category, collection: current_territory.motif_categories, include_blank: "Aucune", label: false
 
 - unless current_domain.online_reservation_with_public_link
-  .card.js-sectorisation-card
+  .card [data-motif-form-target="sectoSection"]
     .card-body
       h5.card-title.mb-2= Motif.human_attribute_name("sectorisation_level_title")
       .mb-3

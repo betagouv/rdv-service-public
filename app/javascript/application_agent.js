@@ -14,7 +14,6 @@ import { RdvWizardStep2 } from './components/rdv_wizard_step2.js'
 import { RdvLieu } from './components/rdv_lieu.js'
 import { PastDateAlert } from './components/past-date-alert.js'
 import { Clipboard } from './components/clipboard.js'
-import { MotifForm } from './components/motif-form.js'
 import { ZonesMap } from './components/zones-map.js'
 import { AgentUserForm } from './components/agent-user-form.js'
 import { AgentRoleForm } from './components/agent-role-form.js'
@@ -78,8 +77,6 @@ $(document).on('turbolinks:load', function() {
   new PlacesInputs()
 
   new Datetimepicker()
-
-  new MotifForm()
 
   new SubmitOnChange()
 
