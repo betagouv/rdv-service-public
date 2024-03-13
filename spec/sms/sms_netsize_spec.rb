@@ -42,7 +42,7 @@ RSpec.describe "using netsize to send an SMS" do
 
     breadcrumbs = sentry_events.last.breadcrumbs.compact
     expect(breadcrumbs[0]).to have_attributes(message: "HTTP request")
-    expect(breadcrumbs[1]).to have_attributes(message: "HTTP response", data: { body: "", code: 0, headers: {}, return_code: :operation_timedout })
+    expect(breadcrumbs[1]).to have_attributes(message: "HTTP response", data: { body: "", code: 0, headers: {} })
   end
 
   it "warns Sentry when netsize responds with an HTTP error" do
@@ -53,7 +53,7 @@ RSpec.describe "using netsize to send an SMS" do
 
     breadcrumbs = sentry_events.last.breadcrumbs.compact
     expect(breadcrumbs[0]).to have_attributes(message: "HTTP request")
-    expect(breadcrumbs[1]).to have_attributes(message: "HTTP response", data: { body: "", code: 500, headers: {}, return_code: nil })
+    expect(breadcrumbs[1]).to have_attributes(message: "HTTP response", data: { body: "", code: 500, headers: {} })
   end
 
   it "warns Sentry when netsize responds with a business error" do
@@ -69,6 +69,6 @@ RSpec.describe "using netsize to send an SMS" do
 
     breadcrumbs = sentry_events.last.breadcrumbs.compact
     expect(breadcrumbs[0]).to have_attributes(message: "HTTP request")
-    expect(breadcrumbs[1]).to have_attributes(message: "HTTP response", data: { body: stubbed_body, code: 200, headers: {}, return_code: nil })
+    expect(breadcrumbs[1]).to have_attributes(message: "HTTP response", data: { body: stubbed_body, code: 200, headers: {} })
   end
 end

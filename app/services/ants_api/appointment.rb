@@ -69,7 +69,7 @@ module AntsApi
 
       def request(&block)
         response = block.call
-        unless response.success?
+        if response.failure?
           raise(ApiRequestError, "code:#{response.response_code}, body:#{response.response_body}")
         end
 

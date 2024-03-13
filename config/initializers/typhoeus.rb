@@ -43,9 +43,8 @@ Typhoeus.on_complete do |response|
     message: "HTTP response",
     data: {
       code: response.code,
-      headers: response.headers.to_h,
+      headers: response.headers,
       body: response.body,
-      return_code: response.return_code,
     }
   )
   Sentry.add_breadcrumb(crumb)
