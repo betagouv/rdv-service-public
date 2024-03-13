@@ -62,7 +62,10 @@ ruby:
                   ),
               data: { modal: true })
       - else
-         .row.d-flex.justify-content-center-
+        .row.d-flex.justify-content-center
+          p
+            | Vous n'avez pas d'usager pour le moment, vous pouvez en créer un dès a présent :
+        .row.d-flex.justify-content-center
           = link_to \
             "Créer un usager", \
               new_admin_organisation_user_path( \
@@ -79,8 +82,7 @@ ruby:
           i.fa.fa-arrow-left
           = " Revenir en arrière"
 
-      - if @rdv_wizard.users.any?
-        .col.text-right
-          = f.button :submit, "Continuer"
+      .col.text-right
+        = f.button :submit, "Continuer", disabled: !@rdv_wizard.users.any?
 
 input type="hidden" name="js-canonical-path" value=modals_return_location
