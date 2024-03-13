@@ -266,6 +266,32 @@ RSpec.describe InclusionConnectController, type: :controller do
       get :callback, params: { state: "a state", session_state: "a state", code: "klzefklzejlf" }
       expect(sentry_events.last.message).to eq("Failed to authenticate agent with InclusionConnect")
     end
+
+    context "call sentry about nil sub" do
+      before do
+        stub_token_request.to_return(status: 200, body: { access_token: "zekfjzeklfjl", expires_in: now + 1.week, scopes: "openid" }.to_json, headers: {})
+
+        user_info = {
+          given_name: "Bob",
+          family_name: "Eponge",
+          email: nil,
+          sub: nil,
+        }
+
+        stub_request(:get, "#{base_url}/userinfo/?schema=openid").with(
+          headers: {
+            "Authorization" => "Bearer zekfjzeklfjl",
+          }
+        ).to_return(status: 200, body: user_info.to_json, headers: {})
+
+        session[:ic_state] = ic_state
+      end
+
+      it do
+        get :callback, params: { state: ic_state, session_state: ic_state, code: "klzefklzejlf" }
+        expect(sentry_events.map(&:message)).to include("InclusionConnect sub is nil", "InclusionConnect email is nil", "Failed to authenticate agent with InclusionConnect")
+      end
+    end
   end
 
   def stub_token_request

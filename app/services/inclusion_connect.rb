@@ -109,8 +109,7 @@ class InclusionConnect
   end
 
   def found_by_email
-    return if user_info["email"].nil?
-
+    return if user_info["email"].nil? && Sentry.capture_message("InclusionConnect email is nil", extra: user_info, fingerprint: "ic_email_nil")
     return @found_by_email if defined?(@found_by_email)
 
     @found_by_email = Agent.find_by(email: user_info["email"])
@@ -129,7 +128,7 @@ class InclusionConnect
   end
 
   def found_by_sub
-    return if user_info["sub"].nil?
+    return if user_info["sub"].nil? && Sentry.capture_message("InclusionConnect sub is nil", extra: user_info, fingerprint: "ic_sub_nil")
 
     @found_by_sub ||= Agent.find_by(inclusion_connect_open_id_sub: user_info["sub"])
   end
