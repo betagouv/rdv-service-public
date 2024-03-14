@@ -265,9 +265,12 @@ RSpec.describe InclusionConnectController, type: :controller do
 
       get :callback, params: { state: "a state", session_state: "a state", code: "klzefklzejlf" }
       expect(sentry_events.last.message).to eq("Failed to authenticate agent with InclusionConnect")
+
+      expect(response).to redirect_to(new_agent_session_path)
+      expect(flash[:error]).to include("Nous n'avons pas pu vous authentifier. Contactez le support à l'adresse")
     end
 
-    context "call sentry about nil sub" do
+    context "call sentry about nil sub and email" do
       before do
         stub_token_request.to_return(status: 200, body: { access_token: "zekfjzeklfjl", expires_in: now + 1.week, scopes: "openid" }.to_json, headers: {})
 
@@ -290,6 +293,9 @@ RSpec.describe InclusionConnectController, type: :controller do
       it do
         get :callback, params: { state: ic_state, session_state: ic_state, code: "klzefklzejlf" }
         expect(sentry_events.map(&:message)).to include("InclusionConnect sub is nil", "InclusionConnect email is nil", "Failed to authenticate agent with InclusionConnect")
+
+        expect(response).to redirect_to(new_agent_session_path)
+        expect(flash[:error]).to include("Nous n'avons pas pu vous authentifier. Contactez le support à l'adresse")
       end
     end
   end
