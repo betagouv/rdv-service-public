@@ -34,7 +34,9 @@ class FileAttente < ApplicationRecord
 
   def send_notification
     rdv.users.map(&:user_to_notify).uniq.each do |user|
-      invitation_token = invitation_token_for(rdv, user) if user.notifiable_by_sms? || user.notifiable_by_email?
+      next unless user.notifiable_by_sms? || user.notifiable_by_email?
+
+      invitation_token = invitation_token_for(rdv, user)
 
       if user.notifiable_by_sms?
         Users::FileAttenteSms.new_creneau_available(rdv, user, invitation_token).deliver_later
@@ -43,15 +45,14 @@ class FileAttente < ApplicationRecord
       if user.notifiable_by_email?
         Users::FileAttenteMailer.with(rdv: rdv, user: user, token: invitation_token).new_creneau_available.deliver_later
 
-        params = {
+        Receipt.create!(
           rdv: rdv,
           user: user,
           event: :new_creneau_available,
           channel: :mail,
           result: :processed,
-          email_address: user.email,
-        }
-        Receipt.create!(params)
+          email_address: user.email
+        )
       end
 
       update!(notifications_sent: notifications_sent + 1, last_creneau_sent_at: Time.zone.now)
