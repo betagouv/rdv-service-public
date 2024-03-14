@@ -49,7 +49,9 @@ module Ants
       users.each do |user|
         existing_appointment(user)&.delete
 
-        AntsApi::Appointment.new(application_id: user.ants_pre_demande_number, **@appointment_data).create
+        if user.ants_pre_demande_number.present? # Les usagers créés par les agent
+          AntsApi::Appointment.new(application_id: user.ants_pre_demande_number, **@appointment_data).create
+        end
       end
     end
 
