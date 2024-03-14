@@ -128,6 +128,12 @@ class CronJob < ApplicationJob
     end
   end
 
+  class DestroyOldApiCalls < CronJob
+    def perform
+      ApiCall.where("received_at < ?", 1.year.ago).delete_all
+    end
+  end
+
   class DestroyRedisWaitingRoomKeys < CronJob
     def perform
       Rdv.reset_user_in_waiting_room!
