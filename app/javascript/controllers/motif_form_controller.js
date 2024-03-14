@@ -17,23 +17,38 @@ export default class extends Controller {
   }
 
   refreshSecto() {
-    if(this.bookableBy !== "agents" && !this.followUpCheckbox.checked) {
-      this.sectoSectionTarget.classList.remove("disabled-card")
+    if(this.sectoShouldBeEnabled()) {
+      this.enableSection(this.sectoSectionTarget)
     }
     else {
-      this.sectoSectionTarget.classList.add("disabled-card")
+      this.disableSection(this.sectoSectionTarget)
     }
   }
   refreshSecretariat() {
-    if(this.locationType !== "home" && !this.followUpCheckbox.checked) {
-      this.secretariatSectionTarget.classList.remove("disabled-card")
-      this.secretariatCheckbox.disabled = false
+    if(this.secretariatShouldBeEnabled()) {
+      this.enableSection(this.secretariatSectionTarget)
     }
     else {
-      this.secretariatSectionTarget.classList.add("disabled-card")
-      this.secretariatCheckbox.disabled = true
+      this.disableSection(this.secretariatSectionTarget)
       this.secretariatCheckbox.checked = false
     }
+  }
+
+  sectoShouldBeEnabled() {
+    return this.bookableBy !== "agents" && !this.followUpCheckbox.checked
+  }
+
+  secretariatShouldBeEnabled() {
+    return this.locationType !== "home" && !this.followUpCheckbox.checked
+  }
+
+  enableSection(sectionRoot) {
+    sectionRoot.classList.remove("disabled-card")
+    sectionRoot.querySelectorAll("input, select").forEach(i => i.disabled = false)
+  }
+  disableSection(sectionRoot) {
+    sectionRoot.classList.add("disabled-card")
+    sectionRoot.querySelectorAll("input, select").forEach(i => i.disabled = true)
   }
 
   get locationType() {
