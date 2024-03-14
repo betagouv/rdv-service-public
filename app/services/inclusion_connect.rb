@@ -71,7 +71,7 @@ class InclusionConnect
     return handle_agent_mismatch if agent_mismatch?
 
     update_basic_info
-    update_email_and_uid(matching_agent) if matching_agent.email != user_info["email"]
+    update_email(matching_agent) if matching_agent.email != user_info["email"]
   end
 
   def update_basic_info
@@ -90,8 +90,10 @@ class InclusionConnect
     matching_agent.save! if matching_agent.changed?
   end
 
-  def update_email_and_uid(agent)
-    agent.update_columns(email: user_info["email"], uid: user_info["email"]) # rubocop:disable Rails/SkipsModelValidations
+  def update_email(agent)
+    agent.email = user_info["email"]
+    agent.skip_reconfirmation!
+    agent.save!
   end
 
   def matching_agent
