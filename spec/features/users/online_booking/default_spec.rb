@@ -137,7 +137,7 @@ RSpec.describe "User can search for rdvs" do
       create(
         :motif,
         name: "RSA Orientation", follow_up: false, organisation: organisation,
-        restriction_for_rdv: nil, service: service_social
+        restriction_for_rdv: nil, service: service_insertion
       )
     end
 
@@ -174,7 +174,7 @@ RSpec.describe "User can search for rdvs" do
 
     ## Collectif follow up motif linked to referent
     let!(:collectif_motif) do
-      create(:motif, follow_up: true, restriction_for_rdv: nil, collectif: true, organisation: organisation, service: service_social)
+      create(:motif, follow_up: true, restriction_for_rdv: nil, collectif: true, organisation: organisation, service: service_insertion)
     end
     let!(:collectif_rdv) { create(:rdv, motif: collectif_motif, agents: [agent], lieu: lieu, organisation: organisation, starts_at: 2.days.from_now) }
 
@@ -183,11 +183,6 @@ RSpec.describe "User can search for rdvs" do
     it "shows only the follow up motifs related to the agent", js: true do
       visit users_rdvs_path
       click_link "Prendre un RDV de suivi"
-
-      expect(page).to have_content("Service Social")
-      expect(page).to have_content("Service Insertion")
-
-      click_link "Service Insertion"
 
       ### Motif selection
       expect(page).to have_content(motif1.name)
