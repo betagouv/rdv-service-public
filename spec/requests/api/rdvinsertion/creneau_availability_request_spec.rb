@@ -2,9 +2,10 @@ require "swagger_helper"
 
 RSpec.describe "Available Creneaux Count for Invitation", swagger_doc: "v1/api.json" do
   with_examples
+  let!(:now) { Time.zone.parse("2023-10-23 16:00") }
 
   before do
-    travel_to(Time.zone.parse("2023-10-23 16:00"))
+    travel_to(now)
   end
 
   path "/api/rdvinsertion/invitations/creneau_availability" do
@@ -123,7 +124,8 @@ RSpec.describe "Available Creneaux Count for Invitation", swagger_doc: "v1/api.j
           expect(ApiCall.first.attributes.symbolize_keys).to include(
             controller_name: "invitations",
             action_name: "creneau_availability",
-            agent_id: agent.id
+            agent_id: agent.id,
+            received_at: now
           )
           expect(ApiCall.first.raw_http["method"]).to eq("GET")
           expect(ApiCall.first.raw_http["headers"]).to include("HTTP_ACCEPT")
@@ -190,7 +192,8 @@ RSpec.describe "Available Creneaux Count for Invitation", swagger_doc: "v1/api.j
             expect(ApiCall.first.attributes.symbolize_keys).to include(
               controller_name: "invitations",
               action_name: "creneau_availability",
-              agent_id: agent.id
+              agent_id: agent.id,
+              received_at: now
             )
             expect(ApiCall.first.raw_http["method"]).to eq("GET")
             expect(ApiCall.first.raw_http["headers"]).to include("HTTP_ACCEPT")

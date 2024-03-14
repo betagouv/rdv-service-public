@@ -96,7 +96,8 @@ RSpec.describe "Absence authentified API", swagger_doc: "v1/api.json" do
           expect(ApiCall.first.attributes.symbolize_keys).to include(
             controller_name: "absences",
             action_name: "create",
-            agent_id: agent.id
+            agent_id: agent.id,
+            received_at: be_within(10.seconds).of(Time.zone.now)
           )
           expect(ApiCall.first.raw_http["method"]).to eq("POST")
           expect(ApiCall.first.raw_http["headers"]).to include("HTTP_ACCEPT")

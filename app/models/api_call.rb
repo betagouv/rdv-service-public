@@ -6,6 +6,6 @@ class ApiCall < ApplicationRecord
   private
 
   def set_received_at
-    self.received_at ||= Time.current
+    self.received_at ||= Time.zone.now
   end
 end

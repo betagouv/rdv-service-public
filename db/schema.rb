@@ -257,7 +257,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_12_141447) do
   end
 
   create_table "api_calls", force: :cascade do |t|
-    t.time "received_at", null: false
+    t.datetime "received_at", null: false
     t.jsonb "raw_http", null: false
     t.string "controller_name", null: false
     t.string "action_name", null: false
