@@ -1,4 +1,5 @@
 class AddVariousNotNullConstraints < ActiveRecord::Migration[7.0]
+  # rubocop:disable Metrics/MethodLength
   def change
     reversible do |direction|
       direction.up do
@@ -31,4 +32,5 @@ class AddVariousNotNullConstraints < ActiveRecord::Migration[7.0]
       change_column_null :users, :created_through, false
     end
   end
+  # rubocop:enable Metrics/MethodLength
 end
