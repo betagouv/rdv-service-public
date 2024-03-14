@@ -533,7 +533,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_14_101308) do
 
   create_table "receipts", force: :cascade do |t|
     t.bigint "rdv_id"
-    t.bigint "user_id"
+    t.bigint "user_id", null: false
     t.string "event", null: false
     t.enum "channel", null: false, enum_type: "receipts_channel"
     t.enum "result", null: false, enum_type: "receipts_result"
@@ -638,8 +638,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_14_101308) do
   end
 
   create_table "territory_services", force: :cascade do |t|
-    t.bigint "territory_id"
-    t.bigint "service_id"
+    t.bigint "territory_id", null: false
+    t.bigint "service_id", null: false
     t.datetime "created_at", null: false
     t.index ["service_id"], name: "index_territory_services_on_service_id"
     t.index ["territory_id", "service_id"], name: "index_territory_services_on_territory_id_and_service_id", unique: true

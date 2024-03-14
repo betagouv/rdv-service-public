@@ -2,11 +2,16 @@ class AddVariousNotNullConstraints < ActiveRecord::Migration[7.0]
   def change
     reversible do |direction|
       direction.up do
+        # Nous avons en base 135 938 / 5 105 235 receipts dans ce cas, tous
+        # avant le 12 avril 2022, on peut donc les virer.
         Receipt.where(user_id: nil).delete_all
       end
     end
 
     safety_assured do
+      change_column_null :receipts, :user_id, false
+      change_column_null :territory_services, :territory_id, false
+      change_column_null :territory_services, :service_id, false
       change_column_null :zones, :level, false
       change_column_null :zones, :city_name, false
       change_column_null :zones, :city_code, false
@@ -27,4 +32,3 @@ class AddVariousNotNullConstraints < ActiveRecord::Migration[7.0]
     end
   end
 end
-
