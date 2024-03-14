@@ -58,8 +58,8 @@ module Ants
     def valid_pre_demande_number?(user)
       form = Admin::UserForm.new(user)
       form.validate
-      # require "byebug"
-      # byebug
+      require "byebug"
+      byebug
       true
     end
 
