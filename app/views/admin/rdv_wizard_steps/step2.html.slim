@@ -82,7 +82,7 @@ ruby:
           i.fa.fa-arrow-left
           = " Revenir en arrière"
 
-      - if @rdv_wizard.users.any?
+      - if (@rdv_wizard.validate || @rdv_wizard.errors[:users].empty?)
         .col.text-right
             = f.button :submit, "Continuer"
 
