@@ -10,7 +10,8 @@
   .left-side-menu,
   .footer,
   .page-title,
-  .web-content {
+  .web-content,
+  .header {
     display: none;
   }
   .print-content {
@@ -22,6 +23,7 @@
   body {
     padding: 0;
     margin: 0 !important;
+    font-family: "Marianne";
   }
   .card.rdv-card {
     border-radius: 0 !important;
@@ -29,6 +31,6 @@
     background-color: inherit;
   }
   b, strong {
-    font-family: initial; // fix unreadable bold font in FF print
+    font-family: "Marianne"; // fix unreadable bold font in FF print
   }
 }
