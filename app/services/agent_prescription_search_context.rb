@@ -8,9 +8,10 @@ class AgentPrescriptionSearchContext < WebSearchContext
     },
   ].freeze
 
-  def initialize(user:, current_organisation:, query_params: {})
+  def initialize(user:, current_organisation:, agent_prescripteur:, query_params: {})
     super(user: user, query_params: query_params)
     @current_organisation = current_organisation
+    @agent_prescripteur = agent_prescripteur
   end
 
   attr_reader :user
@@ -37,6 +38,17 @@ class AgentPrescriptionSearchContext < WebSearchContext
   end
 
   private
+
+  def filter_motifs(available_motifs)
+    motifs = super(available_motifs)
+    restrict_agent_services? ? motifs.where(service: @agent_prescripteur.services) : motifs
+  end
+
+  def restrict_agent_services?
+    # Un agent non-admin et non secrétaire ne voit que les motifs de
+    # ses services, tout comme avec la prise de RDV intra-organisation.
+    !@agent_prescripteur.secretaire? && !@agent_prescripteur.admin_in_organisation?(@current_organisation)
+  end
 
   def geolocation_results
     return unless address

@@ -44,9 +44,9 @@ jobs:
       postgres:
         image: postgres
         env:
-          POSTGRES_USER: lapin_test
-          POSTGRES_PASSWORD: lapin_test
-          POSTGRES_DB: lapin_test
+          POSTGRES_USER: lapin_development
+          POSTGRES_PASSWORD: lapin_development
+          POSTGRES_DB: lapin_development
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -61,14 +61,14 @@ jobs:
           ruby-version: 3.3.0
           bundler-cache: true
       - name: Run active_record_doctor:missing_foreign_keys
-        run: RAILS_ENV=test bundle exec rails active_record_doctor:missing_foreign_keys
+        run: bundle exec rails active_record_doctor:missing_foreign_keys
         env:
           HOST: http://example.com
           POSTGRES_HOST: localhost
           POSTGRES_PORT: 5432
-          POSTGRES_USER: lapin_test
-          POSTGRES_PASSWORD: lapin_test
-          POSTGRES_DB: lapin_test
+          POSTGRES_USER: lapin_development
+          POSTGRES_PASSWORD: lapin_development
+          POSTGRES_DB: lapin_development
   test_unit:
     name: Unit Tests
     runs-on: ubuntu-latest

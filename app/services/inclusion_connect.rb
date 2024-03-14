@@ -97,12 +97,6 @@ class InclusionConnect
   def matching_agent
     return @matching_agent if defined?(@matching_agent)
 
-    # Dans le cas ou la migration vers francetravail a été faite mais que son email pole-emploi.fr est encore dans la base
-    # Enlever cette condition après la migration
-    if user_info["email"].split("@").last == "francetravail.fr" && found_by_email.nil? && found_by_sub.nil?
-      @found_by_email = Agent.find_by(email: user_info["email"].gsub("francetravail.fr", "pole-emploi.fr"))
-    end
-
     handle_agent_mismatch if agent_mismatch?
 
     @matching_agent = found_by_sub || found_by_email
@@ -115,7 +109,21 @@ class InclusionConnect
   end
 
   def found_by_email
-    @found_by_email ||= Agent.find_by(email: user_info["email"])
+    return @found_by_email if defined?(@found_by_email)
+
+    @found_by_email = Agent.find_by(email: user_info["email"])
+
+    unless @found_by_email
+      # Les domaines francetravail.fr et pole-emploi.fr sont équivalents
+      # Enlever cette condition après la dernière vague de migration le 12 avril
+      name, domain = user_info["email"].split("@")
+      if domain.in?(["francetravail.fr", "pole-emploi.fr"])
+        acceptable_emails = ["#{name}@francetravail.fr", "#{name}@pole-emploi.fr"]
+        @found_by_email = Agent.find_by(email: acceptable_emails)
+      end
+    end
+
+    @found_by_email
   end
 
   def found_by_sub
