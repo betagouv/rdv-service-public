@@ -200,10 +200,5 @@ class Anonymizer::Rules::RdvServicePublic
     file_attentes: {
       non_anonymized_column_names: %w[created_at updated_at notifications_sent last_creneau_sent_at],
     },
-    api_calls: {
-      class_name: "ApiCall",
-      anonymized_column_names: %w[raw_http],
-      non_anonymized_column_names: %w[received_at controller_name action_name agent_id],
-    },
   }.with_indifferent_access.freeze
 end
