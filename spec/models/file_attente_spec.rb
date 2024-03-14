@@ -8,7 +8,7 @@ RSpec.describe FileAttente, type: :model do
   end
 
   describe "#send_notifications" do
-    subject do
+    subject(:send_notifications) do
       described_class.send_notifications
       file_attente.reload
     end
@@ -53,6 +53,11 @@ RSpec.describe FileAttente, type: :model do
       end
 
       context "when the user can be notified by sms but not by email" do
+        let!(:user) { create(:user, notify_by_email: false) }
+
+        it "sends an sms and updates the file_attente" do
+          expect { send_notifications }.to change(file_attente, :last_creneau_sent_at).from(nil).to(now)
+        end
       end
     end
 
