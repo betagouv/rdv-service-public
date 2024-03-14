@@ -54,7 +54,7 @@ class MergeUsersService < BaseService
                       @user_to_merge.rdvs.where(organisation: @organisation)
                     end
 
-    rdvs_to_merge.each do |rdv|
+    rdvs_to_merge.distinct.each do |rdv|
       rdv.participations.where(user: @user_to_merge).each do |participation|
         if rdv.participations.where(user_id: @user_target).any?
           participation.destroy!
@@ -79,7 +79,7 @@ class MergeUsersService < BaseService
                                 @user_to_merge.file_attentes.joins(:rdv).where(rdv: { organisation: @organisation })
                               end
 
-    files_attentes_to_merge.each do |file_attente_to_merge|
+    files_attentes_to_merge.distinct.each do |file_attente_to_merge|
       file_attente_target = @user_target.file_attentes.find_by(rdv: file_attente_to_merge.rdv)
       if file_attente_target
         file_attente_to_merge.destroy
