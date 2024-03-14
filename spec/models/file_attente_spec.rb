@@ -51,6 +51,9 @@ RSpec.describe FileAttente, type: :model do
         expect(Users::FileAttenteMailer).to receive(:with).with({ rdv: rdv, user: user, token: token })
         subject
       end
+
+      context "when the user can be notified by sms but not by email" do
+      end
     end
 
     context "without availabilities before rdv" do
