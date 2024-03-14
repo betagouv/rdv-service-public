@@ -72,7 +72,7 @@ module RdvsHelper
   end
 
   def dates_interval
-    return nil if no_date_filters? || params[:start] == params[:end]
+    return nil if no_date_filters?
 
     if valid_date?(params[:start]) && !valid_date?(params[:end])
       dates_interval_from(params[:start])

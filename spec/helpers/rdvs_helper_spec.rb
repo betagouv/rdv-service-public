@@ -188,14 +188,6 @@ RSpec.describe RdvsHelper do
       end
     end
 
-    context "when start and end are both valid and the same" do
-      let(:params) { { start: "01/01/2024", end: "01/01/2024" } }
-
-      it "displays nothing" do
-        expect(dates_interval).to be_nil
-      end
-    end
-
     context "when only start is valid and end is invalid" do
       let(:params) { { start: "01/01/2024", end: "invalid_date" } }
 

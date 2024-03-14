@@ -87,7 +87,7 @@
       = current_organisation.name
 
   h3.mt-4
-    = dates_interval
+    = dates_interval unless params[:start] == params[:end]
   - rdvs_collection = @rdvs_in_page.group_by { |rdv| rdv.starts_at.to_date }
   - rdvs_collection.each do |date, rdvs|
     h3.mt-4
