@@ -49,7 +49,7 @@ class MergeUsersService < BaseService
 
   def merge_rdvs
     rdvs_to_merge = if users_visible_through_territory?
-                      @user_to_merge.rdvs.joins(:territory).where(territory: @organisation.territory)
+                      @user_to_merge.rdvs.where(organisation: Organisation.where(territory: @organisation.territory))
                     else
                       @user_to_merge.rdvs.where(organisation: @organisation)
                     end
@@ -74,7 +74,7 @@ class MergeUsersService < BaseService
 
   def merge_file_attentes
     files_attentes_to_merge = if users_visible_through_territory?
-                                @user_to_merge.file_attentes.joins(rdv: { organisation: :territories }).where(rdv: { organisations: { territories: @organisation.territory } })
+                                @user_to_merge.file_attentes.joins(:rdv).where(rdv: @organisation.territory.rdvs)
                               else
                                 @user_to_merge.file_attentes.joins(:rdv).where(rdv: { organisation: @organisation })
                               end
