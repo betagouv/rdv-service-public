@@ -28,10 +28,10 @@ RSpec.describe "ANTS API: availableTimeSlots" do
 
     create(:plage_ouverture, lieu: lieu2, first_day: Date.new(2022, 11, 2),
                              start_time: Tod::TimeOfDay(12), end_time: Tod::TimeOfDay(13),
-                             organisation: organisation2, motifs: [motif2])
+                             organisation: organisation2, motifs: [motif2, motif3])
   end
 
-  it "returns an ordered list of slots because the ANTS side doesn't reorder them" do
+  it "returns an ordered list of slots without duplicates because the ANTS side doesn't reorder them" do
     create(:plage_ouverture, lieu: lieu2, first_day: Date.new(2022, 11, 2),
                              start_time: Tod::TimeOfDay("12:15"), end_time: Tod::TimeOfDay("13:15"),
                              organisation: organisation2, motifs: [motif3])

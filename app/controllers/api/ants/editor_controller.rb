@@ -44,7 +44,9 @@ class Api::Ants::EditorController < Api::Ants::BaseController
       motif.default_duration_in_min = rdv_duration(motif)
       motif_creneaux = creneaux(lieu, motif)
       motif_creneaux.map { |creneau| time_slot_data(creneau) }.uniq
-    end.flatten.sort_by do |creneau| # rubocop:disable Style/MultilineBlockChain
+    end.flatten.uniq do |creneau| # rubocop:disable Style/MultilineBlockChain
+      creneau[:datetime]
+    end.sort_by do |creneau| # rubocop:disable Style/MultilineBlockChain
       creneau[:datetime]
     end
   end
