@@ -1,4 +1,4 @@
-describe User, type: :model do
+RSpec.describe User, type: :model do
   describe "#add_organisation" do
     subject do
       user.add_organisation(organisation)
@@ -62,30 +62,40 @@ describe User, type: :model do
     it "when user is responsible" do
       responsive = create(:user, organisations: [create(:organisation), create(:organisation)])
       relative = create(:user, responsible: responsive)
-      expect(relative.organisations.sort).to eq(responsive.organisations.sort)
+      expect(relative.organisations).to match_array(responsive.organisations)
     end
   end
 
   describe "#soft_delete" do
-    it "change email to a « deleted.rdv-solidarites.fr » domain" do
-      user = create(:user, email: "jean@valjean.fr")
+    it "change email to a « deleted.rdv-solidarites.fr » domain and anonymises other attributes" do
+      user = create(:user, email: "jean@valjean.fr", first_name: "Jean", last_name: "Valjean")
+      other_user = create(:user, email: "other_user@test.com")
       user.soft_delete
       expect(user.email).to end_with("deleted.rdv-solidarites.fr")
-    end
-
-    it "keep original email in an other attribute" do
-      user = create(:user, email: "jean@valjean.fr")
-      user.soft_delete
-      expect(user.email_original).to eq("jean@valjean.fr")
-    end
-
-    it "set deleted_at to now" do
-      user = create(:user)
-      user.soft_delete
+      expect(user).to have_attributes(
+        first_name: "Usager supprimé",
+        last_name: "Usager supprimé",
+        address: "[valeur anonymisée]"
+      )
       expect(user.deleted_at).to be_within(5.seconds).of(Time.zone.now)
+
+      # on n'anonymise pas un autre utilisateur
+      expect(other_user.reload.email).to eq("other_user@test.com")
     end
 
-    it "hidden user by default" do
+    it "anonymizes rdvs and receipts and deletes versions" do
+      rdv = create(:rdv, context: "des détails sur le rdv")
+      user = rdv.users.first
+
+      receipt = create(:receipt, user: user, rdv: rdv, sms_phone_number: "0611111111")
+      user.soft_delete
+
+      expect(receipt.reload.sms_phone_number).to eq "[valeur anonymisée]"
+      expect(rdv.reload.context).to eq "[valeur anonymisée]"
+      expect(user.versions).to be_empty
+    end
+
+    it "is hidden user by default" do
       user = create(:user)
       user.soft_delete
       expect(described_class.all).to be_empty

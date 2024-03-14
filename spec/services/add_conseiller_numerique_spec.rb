@@ -1,4 +1,4 @@
-describe AddConseillerNumerique do
+RSpec.describe AddConseillerNumerique do
   let!(:territory) { create(:territory, name: "Conseillers Numériques") }
   let(:params) do
     {
@@ -48,7 +48,7 @@ describe AddConseillerNumerique do
       perform_enqueued_jobs
       invitation_email = ActionMailer::Base.deliveries.last
 
-      expect(invitation_email).to have_attributes(to: ["exemple@conseiller-numerique.fr"], reply_to: ["support@rdv-aide-numerique.fr"])
+      expect(invitation_email).to have_attributes(to: ["exemple@conseiller-numerique.fr"], from: ["support@rdv-aide-numerique.fr"])
     end
   end
 
@@ -80,9 +80,19 @@ describe AddConseillerNumerique do
             territory: territory,
             allow_to_manage_teams: false,
             allow_to_manage_access_rights: false,
-            allow_to_invite_agents: false,
-            allow_to_download_metrics: false
+            allow_to_invite_agents: false
           )
+        end
+      end
+
+      context "and their organisation's external_id changed" do
+        let!(:old_organisation) { create(:organisation, external_id: "019283") } # this ID is not the provided one
+        let!(:agent) { create(:agent, external_id: "exemple@conseiller-numerique.fr", admin_role_in_organisations: [old_organisation]) }
+
+        it "adds the agent to the new org" do
+          expect(agent.organisations).to eq([old_organisation])
+          described_class.process!(params)
+          expect(agent.organisations.reload).to match_array([old_organisation, Organisation.find_by(external_id: "123456")])
         end
       end
     end

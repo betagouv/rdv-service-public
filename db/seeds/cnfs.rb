@@ -6,11 +6,11 @@ territory_cnfs = Territory.create!(
 )
 
 service_cnfs = Service.create!(name: Service::CONSEILLER_NUMERIQUE, short_name: Service::CONSEILLER_NUMERIQUE)
+territory_cnfs.services << service_cnfs
 
 org_cnfs = Organisation.create!(
   name: "Mediathèque Paris Nord",
   phone_number: "0123456789",
-  human_id: "mediatheque-paris-nord",
   territory: territory_cnfs,
   external_id: "666",
   verticale: :rdv_aide_numerique
@@ -63,7 +63,6 @@ agent_cnfs = Agent.new(
     allow_to_manage_teams: false,
     allow_to_manage_access_rights: false,
     allow_to_invite_agents: false,
-    allow_to_download_metrics: false,
   }]
 )
 agent_cnfs.skip_confirmation!
@@ -89,6 +88,7 @@ PlageOuverture.create!(
     lieu: cnfs_lieu,
     organisation_id: org_cnfs.id,
     agent_ids: [agent_cnfs.id],
+    created_by: agent_cnfs,
     users_count: 0,
     user_ids: []
   )

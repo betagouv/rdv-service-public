@@ -1,4 +1,4 @@
-describe CsvOrXlsReader::Importer do
+RSpec.describe CsvOrXlsReader::Importer do
   subject { described_class.new(form_file).rows }
 
   let(:form_file) { double }

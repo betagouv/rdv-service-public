@@ -1,4 +1,4 @@
-describe SlotBuilder, type: :service do
+RSpec.describe SlotBuilder, type: :service do
   let(:friday) { Time.zone.parse("20210430 8:00") }
   let(:organisation) { create(:organisation) }
   let(:lieu) { create(:lieu, organisation: organisation) }
@@ -112,7 +112,7 @@ describe SlotBuilder, type: :service do
 
       plage_ouvertures = described_class.plage_ouvertures_for(motif, nil, date_range, [])
 
-      expect(plage_ouvertures).to match([matching_po1, matching_po2])
+      expect(plage_ouvertures).to contain_exactly(matching_po1, matching_po2)
     end
 
     it "returns all plage_ouverture for the range" do
@@ -121,7 +121,7 @@ describe SlotBuilder, type: :service do
 
       plage_ouvertures = described_class.plage_ouvertures_for(motif, lieu, date_range, [])
 
-      expect(plage_ouvertures).to eq([matching_po, other_matching_po])
+      expect(plage_ouvertures).to contain_exactly(matching_po, other_matching_po)
     end
 
     it "returns only without recurrence PO where first_day is in range" do
@@ -167,7 +167,7 @@ describe SlotBuilder, type: :service do
                                               recurrence: Montrose.every(:week, starts: first_day - 1.day))
 
       plage_ouvertures = described_class.plage_ouvertures_for(motif, lieu, date_range, [])
-      expect(plage_ouvertures.sort).to eq([matching_po, recurring_po].sort)
+      expect(plage_ouvertures).to contain_exactly(matching_po, recurring_po)
     end
 
     it "returns without recurrence PO that start in range" do

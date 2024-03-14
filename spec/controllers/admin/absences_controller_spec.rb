@@ -1,4 +1,4 @@
-describe Admin::AbsencesController, type: :controller do
+RSpec.describe Admin::AbsencesController, type: :controller do
   render_views
 
   let!(:organisation) { create(:organisation) }
@@ -27,7 +27,7 @@ describe Admin::AbsencesController, type: :controller do
                                  end_day: today + 1.month + 3.days)
 
         get :index, params: { organisation_id: organisation.id, agent_id: agent.id }
-        expect(assigns(:absences).sort).to eq([absence_juin, absence_juillet].sort)
+        expect(assigns(:absences)).to contain_exactly(absence_juin, absence_juillet)
       end
     end
 

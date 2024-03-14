@@ -14,7 +14,7 @@ RSpec.describe "CRUDS teams configuration", type: :request do
       get admin_territory_teams_path(territory)
 
       expect(response).to be_successful
-      expect(assigns(:teams).sort).to eq(teams.sort)
+      expect(assigns(:teams)).to match_array(teams)
     end
 
     it "returns searched teams" do

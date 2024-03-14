@@ -1,6 +1,4 @@
-describe WebhookJob, type: :job do
-  stub_sentry_events
-
+RSpec.describe WebhookJob, type: :job do
   describe "#perform" do
     let(:payload) { "{}" }
     let(:webhook_endpoint) { create(:webhook_endpoint, secret: "bla", target_url: "https://example.com/rdv-s-endpoint") }
@@ -26,10 +24,6 @@ describe WebhookJob, type: :job do
       perform_enqueued_jobs
       expect(sentry_events.last.exception.values.last.type).to eq("OutgoingWebhookError")
 
-      # reset sentry stubs
-      # teardown_sentry_test
-      # setup_sentry_test
-
       # retry again, no more errors
       5.times { perform_enqueued_jobs }
 
@@ -43,7 +37,7 @@ describe WebhookJob, type: :job do
       described_class.perform_later(payload, webhook_endpoint.id)
 
       perform_enqueued_jobs
-      expect(enqueued_jobs.first["priority"]).to eq(-20)
+      expect(enqueued_jobs.first["priority"]).to eq(20)
     end
 
     it "retries on timeout" do
@@ -52,6 +46,23 @@ describe WebhookJob, type: :job do
 
       perform_enqueued_jobs
       expect(enqueued_jobs.first["executions"]).to eq(1)
+    end
+
+    it "fingerprints the error by URL and HTTP status" do
+      stub_request(:post, "https://example.com/rdv-s-endpoint").and_return({ status: 500, body: "ERROR" })
+      described_class.perform_later(payload, webhook_endpoint.id)
+
+      4.times { perform_enqueued_jobs } # On ne loggue vers Sentry qu'au 4ème retry
+      expect(sentry_events.last.fingerprint).to eq(["OutgoingWebhookError", "https://example.com/rdv-s-endpoint", "500"])
+    end
+
+    # Le WAF du Pas-de-Calais bloque certaines requêtes et
+    # renvoie une réponse en HTML avec un statut 200.
+    it "detects WAF blockage that returns a 200" do
+      stub_request(:post, "https://example.com/rdv-s-endpoint").and_return({ status: 200, body: "<html><title>Request Rejected</title><body>...</body><html>" })
+      described_class.perform_later(payload, webhook_endpoint.id)
+      4.times { perform_enqueued_jobs } # On ne loggue vers Sentry qu'au 4ème retry
+      expect(sentry_events.last.message).to eq("HTML body in HTTP 200 response in webhook to [https://example.com/rdv-s-endpoint]")
     end
   end
 

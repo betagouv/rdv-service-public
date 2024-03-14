@@ -65,8 +65,8 @@ class Admin::RdvWizardStepsController < AgentAuthController
   end
 
   def set_services_and_motifs
-    @motifs = policy_scope(Motif).available_motifs_for_organisation_and_agent(current_organisation, @agent)
-    @services = policy_scope(Service).where(id: @motifs.pluck(:service_id).uniq)
+    @motifs = Agent::MotifPolicy::Scope.apply(current_agent, Motif).available_motifs_for_organisation_and_agent(current_organisation, @agent)
+    @services = Service.where(id: @motifs.pluck(:service_id).uniq)
     @rdv_wizard.service_id = @services.first.id if @services.count == 1
   end
 

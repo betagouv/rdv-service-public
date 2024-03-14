@@ -2,7 +2,7 @@ WebMock.disable_net_connect!(allow: [
                                "127.0.0.1",
                                "localhost",
                                "www.rdv-solidarites-test.localhost",
-                               "chromedriver.storage.googleapis.com", # Autorise Chromedrive storage pour l'execution de la CI
+                               "chromedriver.storage.googleapis.com", # Autorise à télécharger le binaire chromedriver pour l'exécution de la CI
                              ])
 
 Capybara.register_driver :selenium do |app|
@@ -39,26 +39,9 @@ Capybara.configure do |config|
   config.always_include_port = true
 end
 
-RSpec.configure do |config|
-  config.after(:each, js: true) do |example|
-    next unless example.exception # only write logs for failed tests
-
-    FileUtils.mkdir_p "tmp/capybara"
-    %i[browser driver].each do |source|
-      errors = Capybara.page.driver.browser.logs.get(source)
-      fp = "tmp/capybara/chrome.#{example.full_description.parameterize}.#{source}.log"
-      File.open(fp, "w") do |f|
-        f << "// empty logs" if errors.empty?
-        errors.each do |e|
-          f << "#{e.timestamp} [#{e.level}]: #{e.message}"
-        end
-        f << "\n"
-      end
-    end
-  end
-end
-
 def expect_page_to_be_axe_clean(path)
+  visit path # TODO: supprimer en même temps que app/javascript/components/header_tooltip.js
+  # Le premier visit permet d'afficher le tooltip du header, et faire qu'il n'apparaisse pas la deuxieme fois
   visit path
   expect(page).to have_current_path(path)
   expect(page).to be_axe_clean

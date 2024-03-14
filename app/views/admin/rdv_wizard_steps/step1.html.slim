@@ -9,16 +9,18 @@
       user_ids: @rdv.user_ids, agent_ids: @rdv.agent_ids,
       lieu_attributes: @rdv.nested_lieu_attributes
 
-    = f.input :service_id, \
-      collection: @services.ordered_by_name, \
-      input_html: { \
-        class: "select2-input js-service-filter", \
-        data: { \
-          placeholder: "Sélectionnez un service pour filtrer les motifs", \
-          "select-options": { disableSearch: true }, \
-        }, \
-      }
+    - if @services.count > 1
+      = f.input :service_id, \
+        collection: @services, \
+        input_html: { \
+          class: "select2-input js-service-filter", \
+          data: { \
+            placeholder: "Sélectionnez un service pour filtrer les motifs", \
+            "select-options": { disableSearch: true }, \
+          }, \
+        }
     = f.input :motif_id, \
+      label: "Motif du rendez-vous", \
       required: true, \
       include_blank: true, \
       collection: @motifs.includes(:service).to_a.group_by { _1.service.name }, \
@@ -27,7 +29,7 @@
       label_method: -> { motif_name_with_location_and_group_type(_1) }, \
       input_html: { \
         data: { placeholder: "Sélectionnez un motif" },
-        class: "js-filtered-motifs", \
+        class: @services.count > 1 ? "js-filtered-motifs" : "select2-input", \
       }
 
     = render "actions", rdv_wizard_form: @rdv_wizard, submit_value: "Continuer", f: f

@@ -2,6 +2,13 @@ L'API de RDV-Solidarités vous permet de lire des données dans notre base depui
 
 Toutes les fonctionnalités de RDV-Solidarités ne sont pas encore disponibles via l’API. Contactez-nous si vous avez besoin de fonctionnalités qui ne sont pas encore présentes.
 
+# Dépréciations
+
+**ATTENTION l'association `rdvs_users` des `rdvs` est dépréciée au profit de l'association `participations`.**
+
+**ATTENTION le champ `created_by` des `rdvs` et des `participations` est déprécié au profit du champ `created_by_type`.**
+
+
 # Requêtes
 
 L'API adhère aux principes REST :
@@ -84,7 +91,6 @@ X-Runtime: 0.194743< Transfer-Encoding: chunked
     "last_name":"VALIDAY",
     "first_name":"Martine",
     "uid":"martine@demo.rdv-solidarites.fr",
-    "email_original":null,
     "allow_password_change":false
   }
 }
@@ -175,12 +181,11 @@ En cas d'erreur reconnue par le système (par exemple erreur 422), les champs su
 
 Le statut du RDV (status) est un statut général. **Il n'est pas représentatif des statuts individuels des usagers.**
 
-**Chaque participant au RDV a son propre statut de participation porté par l'association `rdvs_users` du RDV.**
-**ATTENTION `rdvs_users` est déprécié au profit de l'association `participations`.**
+**Chaque participant au RDV a son propre statut de participation porté par l'association `participations` du RDV.**
 
 Pour les RDV avec l'attribut collectif à false les statuts du/des participants et du RDV seront tous identiques. (dans l'exemple suivant : `seen`)
 
-Il est conseillé malgrés tout d'utiliser les statuts des participants (dans `rdvs_users`) quelque soit le type de rdv.
+Il est conseillé malgrés tout d'utiliser les statuts des participants (dans `participations`) quelque soit le type de rdv.
 
 ```rb
 {
@@ -189,7 +194,7 @@ Il est conseillé malgrés tout d'utiliser les statuts des participants (dans `r
       "id": 8,
       "collectif": false,
       "status": "seen",
-      "rdvs_users": [
+      "participations": [
         {
           "id": 8,
           "status": "seen",
@@ -251,7 +256,7 @@ Ici, le RDV a un status `seen` mais les 3 participants ont des status de partici
       "id": 8,
       "collectif": true,
       "status": "seen",
-      "rdvs_users": [
+      "participations": [
         {
           "id": 8,
           "status": "seen",

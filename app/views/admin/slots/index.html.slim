@@ -24,10 +24,11 @@
 
   - if  @form.motif.collectif?
     .row.justify-content-center.pb-3
-      .col-md-8
+      .col-md-12.col-lg-8
         - @search_result.creneaux.each do |search_result|
           = render "admin/rdvs_collectifs/rdv", rdv: search_result
 
+  = render "admin/slots/prescription_cta"
+
 - else
-  .text-center.mt-2
-    = t(".no_slot_available", motif_name: @form.motif.name)
+  = render partial: "admin/slots/no_slot_available"

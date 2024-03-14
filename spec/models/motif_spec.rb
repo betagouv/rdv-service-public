@@ -1,4 +1,4 @@
-describe Motif, type: :model do
+RSpec.describe Motif, type: :model do
   let(:secretariat) { create(:service, :secretariat) }
   let(:motif) { create(:motif, organisation: organisation) }
   let!(:organisation) { create(:organisation) }
@@ -95,7 +95,7 @@ describe Motif, type: :model do
     let!(:intervenant_pmi) { create(:agent, :intervenant, intervenant_role_in_organisations: [org1], service: service_pmi) }
     let!(:motif) { create(:motif, service: service_pmi, organisation: org1) }
 
-    it { is_expected.to match_array([agent_pmi1, agent_pmi2, intervenant_pmi]) }
+    it { is_expected.to match_array([agent_pmi1, agent_pmi2, intervenant_pmi, agent_secretariat1]) }
 
     context "motif is available for secretariat" do
       let!(:motif) { create(:motif, service: service_pmi, organisation: org1, for_secretariat: true) }
@@ -142,7 +142,7 @@ describe Motif, type: :model do
 
   describe "search_by_name_with_location_type" do
     context "some matching motif name + type" do
-      subject { described_class.search_by_name_with_location_type("Rappel PMI-phone") }
+      subject { described_class.search_by_name_with_location_type(motif.name_with_location_type) }
 
       let!(:motif) { create(:motif, name: "Rappel PMI", location_type: :phone) }
 

@@ -7,7 +7,8 @@ AllCops:
     - "vendor/bundle/**/*"
     - "bin/*"
     - "node_modules/**/*"
-    - 'db/schema.rb'
+    - "db/schema.rb"
+    - "db/migrate/*good_job*.rb"
   NewCops: enable
   TargetRubyVersion: 3.1.2
 
@@ -88,10 +89,6 @@ Rails/FilePath:
 Rails/HasAndBelongsToMany:
   Enabled: false
 
-Rails/RakeEnvironment:
-  Exclude:
-    - 'lib/tasks/matomo.rake'
-
 Rails/SkipsModelValidations:
   Exclude:
     - 'scripts/agent_et_motif_changent_de_service.rb'
@@ -110,6 +107,7 @@ Rails/LexicallyScopedActionFilter:
     - 'app/controllers/user_auth_controller.rb'
     - 'app/controllers/agents/sessions_controller.rb'
     - 'app/controllers/agent_auth_controller.rb'
+    - 'app/controllers/super_admins/super_admins_controller.rb'
 
 Rails/ActiveRecordCallbacksOrder:
   Enabled: false
@@ -125,7 +123,7 @@ RSpec/AnyInstance:
     - spec/controllers/admin/users_controller_spec.rb
     - spec/controllers/admin/referent_assignations_controller_spec.rb
     - spec/controllers/users/rdvs_controller_spec.rb
-    - spec/features/users/user_can_be_invited_spec.rb
+    - spec/features/users/online_booking/with_invitation_spec.rb
 
 RSpec/DescribedClass:
   Exclude:
@@ -232,3 +230,12 @@ RSpec/ScatteredSetup:
 RSpec/FilePath:
   CustomTransform:
     SfrMail2SmsMailer: sfr_mail_2_sms_mailer
+
+Style/NumericPredicate:
+  Enabled: false
+
+Style/NumericLiterals:
+  Enabled: false
+
+Rails/UnusedIgnoredColumns:
+  Enabled: false

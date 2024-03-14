@@ -1,4 +1,4 @@
-describe Agent, type: :model do
+RSpec.describe Agent, type: :model do
   describe "#soft_delete" do
     context "with remaining organisations attached" do
       let(:organisation) { create(:organisation) }
@@ -39,10 +39,30 @@ describe Agent, type: :model do
       expect(agent.uid).to eq("agent_#{agent.id}@deleted.rdv-solidarites.fr")
     end
 
-    it "delete sector attributions" do
+    it "delete associations" do
+      territory = create(:territory)
+      create(:agent_territorial_role, territory: territory, agent: create(:agent)) # le territoire doit avoir au moins un admin
       agent = create(:agent, basic_role_in_organisations: [])
+
+      create(:absence, agent: agent)
+      create(:plage_ouverture, agent: agent)
+      agent.services << create(:service)
+      create(:agent_territorial_access_right, agent: agent)
+      create(:agent_territorial_role, agent: agent, territory: territory)
+      agent.teams << create(:team)
+      create(:referent_assignation, agent: agent)
       create(:sector_attribution, agent: agent)
+
       agent.soft_delete
+      agent.reload
+
+      expect(agent.absences).to be_empty
+      expect(agent.plage_ouvertures).to be_empty
+      expect(agent.services).to be_empty
+      expect(agent.agent_territorial_access_rights).to be_empty
+      expect(agent.territorial_roles).to be_empty
+      expect(agent.teams).to be_empty
+      expect(agent.referent_assignations).to be_empty
       expect(agent.sector_attributions).to be_empty
     end
   end

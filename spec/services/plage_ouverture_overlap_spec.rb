@@ -1,4 +1,4 @@
-describe PlageOuvertureOverlap do
+RSpec.describe PlageOuvertureOverlap do
   let(:organisation) { build(:organisation) }
   let(:agent) { build(:agent, organisations: [organisation]) }
   let(:monday) { Date.new(2021, 9, 20) }

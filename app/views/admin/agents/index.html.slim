@@ -32,7 +32,7 @@
         .text-center= page_entries_info @agents
 
     - if current_agent_can?(:create, Agent)
-      .m-3.d-flex.justify-content-center
+      .m-3.d-flex.justify-content-center.align-items-center
         = link_to t("agents.create_cta"), new_admin_organisation_agent_path(current_organisation), class: "btn btn-primary"
         - if @invited_agents_count > 0
           = link_to "Voir les #{@invited_agents_count} invitations en attente", admin_organisation_invitations_path(current_organisation), class: "btn btn-link"

@@ -20,7 +20,7 @@ RSpec.describe "Search", type: :request do
       let(:user) { create(:user, organisations: [organisation], referent_agents: [agent]) }
 
       before do
-        login_as(user)
+        login_as(user, scope: :user)
       end
 
       context "with agent_id params" do
@@ -45,9 +45,9 @@ RSpec.describe "Search", type: :request do
         expect(response.body).to include("Sélectionnez le service avec qui vous voulez prendre un RDV")
       end
 
-      it "show link to user's RDV list and follower's agents" do
+      it "shows a hint to help find a rdv with a referent agent in case the user is looking for the service of a follow_up motifs" do
         get root_path(departement: "75", city_code: "75056", latitude: "48.859", longitude: "2.347", address: "Paris 75001")
-        expect(response.body).to include(users_rdvs_path)
+        expect(response.body).to include("Pour prendre un RDV de suivi avec un de vos agents référent")
       end
     end
 
@@ -63,9 +63,9 @@ RSpec.describe "Search", type: :request do
         expect(response.body).to include("Sélectionnez le motif de votre RDV")
       end
 
-      it "show link to user's RDV list and follower's agents" do
+      it "shows a hint to help find a rdv with a referent agent in case the user is looking for follow_up motifs" do
         get root_path(departement: "75", city_code: "75056", latitude: "48.859", longitude: "2.347", address: "Paris 75001")
-        expect(response.body).to include(users_rdvs_path)
+        expect(response.body).to include("Pour prendre un RDV de suivi avec un de vos agents référent")
       end
     end
   end

@@ -1,4 +1,4 @@
-describe "Agent can duplicate a Rdv collectif" do
+RSpec.describe "Agent can duplicate a Rdv collectif" do
   let!(:organisation) { create(:organisation) }
   let!(:service) { create(:service) }
   let!(:agent) { create(:agent, first_name: "Alain", last_name: "Tiptop", service: service, admin_role_in_organisations: [organisation]) }

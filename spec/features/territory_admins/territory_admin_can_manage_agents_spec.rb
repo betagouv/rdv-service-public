@@ -1,4 +1,4 @@
-describe "territory admin can manage agents", type: :feature do
+RSpec.describe "territory admin can manage agents", type: :feature do
   let(:territory) { create(:territory, departement_number: "62") }
   let(:organisation) { create(:organisation, territory: territory) }
 
@@ -42,9 +42,9 @@ describe "territory admin can manage agents", type: :feature do
   end
 
   describe "changing agent service" do
-    let(:service_a) { create(:service, name: "A") }
-    let(:service_b) { create(:service, name: "B") }
-    let(:service_c) { create(:service, name: "C") }
+    let(:service_a) { create(:service, name: "A", territories: [territory]) }
+    let(:service_b) { create(:service, name: "B", territories: [territory]) }
+    let(:service_c) { create(:service, name: "C", territories: [territory]) }
     let!(:edited_agent) { create(:agent, admin_role_in_organisations: [organisation], services: [service_a, service_b]) }
 
     before do

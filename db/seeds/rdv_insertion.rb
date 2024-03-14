@@ -23,27 +23,26 @@ territory_yonne = Territory.create!(
 org_drome1 = Organisation.create!(
   name: "Plateforme mutualisée d'orientation",
   phone_number: "0475796991",
-  human_id: "plateforme-mutualisee-orientation-drome",
   territory: territory_drome,
   verticale: :rdv_insertion
 )
 org_drome2 = Organisation.create!(
   name: "PLIE Valence",
   phone_number: "0101010102",
-  human_id: "plie-valence",
   territory: territory_drome,
   verticale: :rdv_insertion
 )
 org_yonne = Organisation.create!(
   name: "UT Avallon",
   phone_number: "0303030303",
-  human_id: "ut-avallon",
   territory: territory_yonne,
   verticale: :rdv_insertion
 )
 
 # Service
 service_rsa = Service.create!(name: "Service RSA", short_name: "RSA")
+territory_drome.services << service_rsa
+territory_yonne.services << service_rsa
 
 # MOTIFS Drome
 motif1_drome1 = Motif.create!(
@@ -165,7 +164,6 @@ lieu_org_drome2_valence = Lieu.create!(
 lieu_org_yonne = Lieu.create!(
   name: "PE Avallon",
   organisation: org_yonne,
-  old_address: "3 Rue Joubert, Auxerre, 89000, 89, Yonne, Bourgogne-Franche-Comté",
   latitude: 47.796413,
   longitude: 3.572016,
   availability: :enabled,

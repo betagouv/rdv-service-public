@@ -1,4 +1,4 @@
-describe RdvsHelper do
+RSpec.describe RdvsHelper do
   include ActionView::Helpers::DateHelper
 
   let(:motif) { build(:motif, name: "Consultation normale") }
@@ -34,7 +34,7 @@ describe RdvsHelper do
     end
 
     context "created by user (bookabled by everyone (default))" do
-      let(:rdv) { build(:rdv, users: [user], motif: motif, created_by: :user) }
+      let(:rdv) { build(:rdv, users: [user], motif: motif, created_by: user) }
 
       it { is_expected.to eq "@ Marie DENIS" }
     end
@@ -175,6 +175,48 @@ describe RdvsHelper do
       it "returns users count and max participants" do
         rdv = build(:rdv, motif: build(:motif, collectif: true), users: [build(:user)], users_count: 1, max_participants_count: 3)
         expect(show_participants_count(rdv)).to eq("1 / 3")
+      end
+    end
+  end
+
+  describe "#dates_interval" do
+    context "when start and end are both valid" do
+      let(:params) { { start: "01/01/2024", end: "01/02/2024" } }
+
+      it "displays date interval" do
+        expect(dates_interval).to eq("Lundi 01 janvier 2024 - Jeudi 01 février 2024")
+      end
+    end
+
+    context "when start and end are both valid and the same" do
+      let(:params) { { start: "01/01/2024", end: "01/01/2024" } }
+
+      it "displays only one date" do
+        expect(dates_interval).to eq("Lundi 01 janvier 2024")
+      end
+    end
+
+    context "when only start is valid and end is invalid" do
+      let(:params) { { start: "01/01/2024", end: "invalid_date" } }
+
+      it "displays only one date" do
+        expect(dates_interval).to eq("A partir du Lundi 01 janvier 2024")
+      end
+    end
+
+    context "when only end is valid and start is invalid" do
+      let(:params) { { start: "invalid_date", end: "01/02/2024" } }
+
+      it "displays only one date" do
+        expect(dates_interval).to eq("Jusqu'au Jeudi 01 février 2024")
+      end
+    end
+
+    context "when start and end are both invalid" do
+      let(:params) { { start: "invalid_date", end: "invalid_date" } }
+
+      it "displays nothing" do
+        expect(dates_interval).to eq(nil)
       end
     end
   end

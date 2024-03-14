@@ -9,7 +9,6 @@ import { Menu } from './components/menu'
 import { Modal } from './components/modal'
 import { ServiceFilterForMotifsSelects } from './components/service-filter-for-motifs-selects'
 import { SubmitOnChange } from './components/submit-on-change'
-import './components/analytic.js'
 import { PlacesInputs } from './components/places-inputs.js'
 import { RdvWizardStep2 } from './components/rdv_wizard_step2.js'
 import { RdvLieu } from './components/rdv_lieu.js'
@@ -27,6 +26,8 @@ import { Select2Inputs } from './components/select2-inputs'
 import { PlanningAgentSelect } from './components/planning-agent-select'
 import { ParticipationSelect } from './components/rdv-user-select'
 import { DestroyButton } from './components/destroy-button'
+import { Tooltips } from './components/tooltips'
+import { HeaderTooltip } from './components/header_tooltip'
 import './components/calendar'
 import './components/browser-detection'
 
@@ -102,4 +103,7 @@ $(document).on('turbolinks:load', function() {
   new ParticipationSelect()
 
   new DestroyButton()
+
+  Tooltips()
+  HeaderTooltip()
 })

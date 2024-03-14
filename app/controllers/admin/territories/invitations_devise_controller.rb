@@ -1,6 +1,6 @@
 class Admin::Territories::InvitationsDeviseController < Devise::InvitationsController
   def new
-    @services = Service.all.order(:name)
+    @services = current_territory.services
     self.resource = resource_class.new(territories: [current_territory])
     #  authorize(resource)
     render :new, layout: "application_configuration"
@@ -50,8 +50,8 @@ class Admin::Territories::InvitationsDeviseController < Devise::InvitationsContr
   end
   helper_method :policy_scope
 
-  def authorize(*args, **kwargs)
-    super([:configuration, *args], **kwargs)
+  def authorize(record, *args, **kwargs)
+    super([:configuration, record], *args, **kwargs)
   end
 
   # invite_params is called by Devise::InvitationsController#invite_resource

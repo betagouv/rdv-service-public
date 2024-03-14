@@ -1,6 +1,8 @@
 class SoftDeleteError < StandardError; end
 
 class Agent < ApplicationRecord
+  self.ignored_columns = ["current_sign_in_at"]
+
   # Mixins
   has_paper_trail(
     only: %w[email first_name last_name starts_at invitation_sent_at invitation_accepted_at]
@@ -12,17 +14,25 @@ class Agent < ApplicationRecord
   include WebhookDeliverable
   include FullNameConcern
   include TextSearch
-  def self.search_against
+  def self.search_options
     {
-      last_name: "A",
-      first_name: "B",
-      email: "D",
-      id: "D",
+      against:
+        {
+          last_name: "A",
+          first_name: "B",
+          email: "D",
+          id: "D",
+        },
+      ignoring: :accents,
+      using: { tsearch: { prefix: true, any_word: true } },
     }
   end
 
   devise :invitable, :database_authenticatable, :trackable,
          :recoverable, :rememberable, :validatable, :confirmable, :async, validate_on_invite: true
+
+  # HACK : Ces accesseurs permettent d'utiliser Devise::Models::Trackable mais sans persister les valeurs en base
+  attr_accessor :current_sign_in_ip, :last_sign_in_ip, :sign_in_count, :current_sign_in_at
 
   include DeviseTokenAuth::Concerns::ConfirmableSupport
   include Agent::CustomDeviseTokenAuthUserOmniauthCallbacks
@@ -53,7 +63,7 @@ class Agent < ApplicationRecord
   has_many :agent_territorial_access_rights, dependent: :destroy
   has_many :plage_ouvertures, dependent: :destroy
   has_many :absences, dependent: :destroy
-  has_many :agents_rdvs, dependent: :destroy
+  has_many :agents_rdvs, dependent: :restrict_with_error
   has_many :roles, class_name: "AgentRole", dependent: :destroy
   has_many :territorial_roles, class_name: "AgentTerritorialRole", dependent: :destroy
   has_many :sector_attributions, dependent: :destroy
@@ -67,7 +77,7 @@ class Agent < ApplicationRecord
   has_many :teams, through: :agent_teams
   has_many :lieux, through: :plage_ouvertures
   has_many :motifs, through: :services
-  has_many :rdvs, dependent: :destroy, through: :agents_rdvs
+  has_many :rdvs, dependent: :restrict_with_error, through: :agents_rdvs
   has_many :territories, through: :territorial_roles
   has_many :organisations_of_territorial_roles, source: :organisations, through: :territories
   # we specify dependent: :destroy because by default it will be deleted (dependent: :delete)
@@ -139,12 +149,20 @@ class Agent < ApplicationRecord
   end
 
   def soft_delete
-    still_has_attached_resources = organisations.any? || plage_ouvertures.any? { |r| !r.destroyed? } || absences.any? { |r| !r.destroyed? }
+    raise SoftDeleteError, "agent still has attached orgs: #{organisations.ids.inspect}" if organisations.any?
 
-    raise SoftDeleteError, "agent still has attached resources" if still_has_attached_resources
+    transaction do
+      absences.destroy_all
+      plage_ouvertures.destroy_all
+      agent_services.destroy_all
+      agent_territorial_access_rights.destroy_all
+      territorial_roles.destroy_all
+      agent_teams.destroy_all
+      referent_assignations.destroy_all
+      sector_attributions.destroy_all
 
-    sector_attributions.destroy_all
-    update_columns(deleted_at: Time.zone.now, email_original: email, email: deleted_email, uid: deleted_email)
+      update_columns(deleted_at: Time.zone.now, email_original: email, email: deleted_email, uid: deleted_email)
+    end
   end
 
   def deleted_email
@@ -193,6 +211,10 @@ class Agent < ApplicationRecord
 
   def access_rights_for_territory(territory)
     agent_territorial_access_rights.find_by(territory: territory)
+  end
+
+  def organisations_territory_ids
+    organisations.distinct(:territory_id).select(:territory_id)
   end
 
   def update_unknown_past_rdv_count!
@@ -245,5 +267,9 @@ class Agent < ApplicationRecord
                 else
                   Domain::RDV_SOLIDARITES
                 end
+  end
+
+  def read_only_profile_infos?
+    inclusion_connect_open_id_sub.present?
   end
 end

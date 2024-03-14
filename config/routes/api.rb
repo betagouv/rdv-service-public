@@ -16,9 +16,6 @@ namespace :api do
       resources :rdvs, only: %i[index]
     end
     resources :participations, only: %i[update]
-    # add alias for participations with rdvs_users name
-    # to keep compatibility with old API call ParticipationController#update
-    patch "rdvs_users/:id", to: "participations#update"
     # Doesn't need authentication
     resources :public_links, only: [:index]
   end
@@ -33,6 +30,14 @@ namespace :api do
     resources :invitations, only: [] do
       get 'creneau_availability', to: 'invitations#creneau_availability', on: :collection
     end
+    resource :user_profiles, only: [] do
+      post :create_many, on: :collection
+    end
+    resource :referent_assignations, only: [] do
+      post :create_many, on: :collection
+    end
+    resources :motif_categories, only: %i[create]
+    resources :motif_category_territories, only: %i[create]
   end
 end
 

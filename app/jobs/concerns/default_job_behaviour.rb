@@ -2,7 +2,7 @@ module DefaultJobBehaviour
   extend ActiveSupport::Concern
 
   MAX_ATTEMPTS = 20
-  PRIORITY_OF_RETRIES = -20
+  PRIORITY_OF_RETRIES = 20
 
   included do
     # Include job metadata in Sentry context
@@ -13,8 +13,9 @@ module DefaultJobBehaviour
         Timeout.timeout(hard_timeout) do
           block.call
         end
-
       rescue StandardError => e
+        # Setting the fingerprint after the error occurs, allow us to capture failure responses and error codes
+        scope.set_fingerprint(sentry_fingerprint) if sentry_fingerprint.present?
         Sentry.capture_exception(e) if log_failure_to_sentry?(e)
         raise # will be caught by the retry mechanism
       end
@@ -42,5 +43,9 @@ module DefaultJobBehaviour
 
   def hard_timeout
     30.seconds
+  end
+
+  def sentry_fingerprint
+    []
   end
 end

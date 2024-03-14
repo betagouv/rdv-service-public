@@ -24,6 +24,8 @@
 @import "./components/rdv_status";
 @import "./components/rdv_solidarites_instance_name";
 @import "./components/lieux";
+@import "./components/alert";
+@import "./components/select2";
 
 // Structure
 @import "./structure/general";
@@ -31,6 +33,7 @@
 @import "./structure/footer";
 @import "./structure/page-head";
 @import "./structure/authentication";
+@import "./structure/left-menu";
 
 h1 {
   font-size: 3rem;
@@ -38,10 +41,10 @@ h1 {
   color: white;
 }
 
-h2{
+h2 {
+  font-size: $h2-font-size;
   color: $primary;
   font-weight: bold;
-  font-size: 2rem;
   padding-bottom: 1rem;
 }
 

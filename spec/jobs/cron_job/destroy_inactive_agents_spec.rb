@@ -1,4 +1,6 @@
-describe CronJob::DestroyInactiveAgents do
+RSpec.describe CronJob::DestroyInactiveAgents do
+  before { travel_to Date.new(2024, 1, 1) }
+
   it "warns and deletes old agents" do
     # agents that will not be modified
     agent_created_12_months_ago_with_warning = travel_to(12.months.ago) { create(:agent, account_deletion_warning_sent_at: Time.zone.now) }

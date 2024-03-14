@@ -19,7 +19,7 @@
   | Modifier le RDV
 
 .row.justify-content-center
-  .col-md-8
+  .col-md-12.col-lg-8
     .card
       .card-body
         = simple_form_for([:admin, @rdv_form.organisation, @rdv]) do |f|
@@ -41,7 +41,7 @@
               .form-group data=controller_data
                 = f.label :lieu, required: true
                 fieldset
-                  = f.association :lieu, collection: policy_scope(Lieu).enabled.ordered_by_name, label_method: :full_name,
+                  = f.association :lieu, collection: Agent::LieuPolicy::Scope.apply(current_agent, current_organisation.lieux).enabled.ordered_by_name, label_method: :full_name,
                     label: false,  include_blank: true,  required: false,
                     input_html: { class: "select2-input", data: { "rdv-lieu-target": "existing_lieu_select", placeholder: ""} }
                   small.form-text.text-muted data={"rdv-lieu-target": "new_lieu_link"}
@@ -56,20 +56,9 @@
             - elsif @rdv_form.motif.home?
               = f.input :address, label: "Lieu (RDV à domicile)", disabled: true
             = f.association :agents,
-              collection: @rdv_form.agents,
+              collection: @rdv_form.motif.authorized_agents,
               label_method: :full_name_and_service,
-                    input_html: { \
-                      multiple: true,
-                      class: "select2-input",
-                      data: { \
-                        "select-options": { \
-                          ajax: { \
-                            url: admin_organisation_agents_path(current_organisation),
-                            dataType: "json", delay: 250, \
-                          }, \
-                        }, \
-                      }, \
-                    }
+              input_html: { multiple: true, class: "select2-input" }
 
             - if @rdv_form.motif.collectif?
               = f.input :name, wrapper_html: { class: "mb-1" }

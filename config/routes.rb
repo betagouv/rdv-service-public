@@ -25,17 +25,18 @@ Rails.application.routes.draw do
       post :invite, on: :member
       resources :migrations, only: %i[new create]
     end
-    resources :agent_roles, except: %i[index]
+    resources :agent_roles, only: %i[show edit update destroy]
+    resources :agent_services, only: %i[show destroy]
+    resources :user_profiles, only: %i[destroy]
     resources :super_admins
     resources :organisations
     resources :services
     resources :motifs
     resources :lieux
-    resources :territories
-    resources :users do
-      get "sign_in_as", on: :member
-    end
-    resources :mairie_comptes
+    resources :territories, except: %i[new create]
+    resources :users
+    resources :mairie_comptes, only: %i[index new create]
+    resources :comptes, only: %i[index new create]
     root to: "agents#index"
 
     authenticate :super_admin do
@@ -115,8 +116,6 @@ Rails.application.routes.draw do
 
   get "/calendrier/:id", controller: :ics_calendar, action: :show, as: :ics_calendar
 
-  resources :organisations, only: %i[new create]
-
   authenticate :agent do
     namespace "admin" do
       resources :territories, only: %i[edit update show] do
@@ -138,6 +137,7 @@ Rails.application.routes.draw do
           resource :sms_configuration, only: %i[show edit update]
           resources :zone_imports, only: %i[new create]
           resources :zones, only: [:index] # exports only
+          resource :services, only: %i[edit update]
           resource :sectorization, only: [:show]
           resources :sectors do
             resources :zones
@@ -181,7 +181,6 @@ Rails.application.routes.draw do
           end
         end
         scope module: "organisations" do
-          resource :setup_checklist, only: [:show]
           resource :online_booking, only: [:show]
           resources :stats, only: :index do
             collection do
@@ -223,6 +222,13 @@ Rails.application.routes.draw do
           get :create
         end
         get "support", to: "static_pages#support"
+        resource :prescription, only: [], controller: "prescription" do
+          get "search_creneau"
+          get "user_selection"
+          get "recapitulatif"
+          post "create_rdv"
+          get "confirmation"
+        end
       end
     end
   end

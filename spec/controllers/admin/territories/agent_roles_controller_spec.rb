@@ -1,7 +1,9 @@
-describe Admin::Territories::AgentRolesController, type: :controller do
+RSpec.describe Admin::Territories::AgentRolesController, type: :controller do
+  # Le territoire doit avoir au moins un agent admin de territoire restant
+  let!(:territory) { create(:territory).tap { |t| t.roles.create!(agent: create(:agent)) } }
+
   describe "POST #update" do
     it "redirect to territorial agent edit on success" do
-      territory = create(:territory)
       agent = create(:agent, role_in_territories: [territory])
       create(:agent_territorial_access_right, allow_to_manage_teams: true, agent: agent)
       agent_role = create(:agent_role, agent: agent, access_level: "basic")
@@ -12,7 +14,6 @@ describe Admin::Territories::AgentRolesController, type: :controller do
     end
 
     it "changes role" do
-      territory = create(:territory)
       agent = create(:agent, role_in_territories: [territory])
       create(:agent_territorial_access_right, allow_to_manage_teams: true, agent: agent)
       agent_role = create(:agent_role, agent: agent, access_level: "basic")
@@ -26,7 +27,6 @@ describe Admin::Territories::AgentRolesController, type: :controller do
 
   describe "POST #create" do
     it "redirect to territorial agent edit on creation success" do
-      territory = create(:territory)
       organisation = create(:organisation, territory: territory)
       agent = create(:agent, role_in_territories: [territory])
       create(:agent_territorial_access_right, allow_to_manage_teams: true, agent: agent)
@@ -40,7 +40,6 @@ describe Admin::Territories::AgentRolesController, type: :controller do
 
   describe "#destoy" do
     it "redirect to territorial_agent_edit on success if agent has another organisation" do
-      territory = create(:territory)
       organisation = create(:organisation, territory: territory)
       organisation2 = create(:organisation, territory: territory)
       agent = create(:agent, role_in_territories: [territory])
@@ -59,7 +58,6 @@ describe Admin::Territories::AgentRolesController, type: :controller do
     end
 
     it "redirect to territorial_agent_edit on success if it the last organisation" do
-      territory = create(:territory)
       organisation = create(:organisation, territory: territory)
       agent = create(:agent, role_in_territories: [territory])
       create(:agent_territorial_access_right, territory: territory, agent: agent)
@@ -76,7 +74,6 @@ describe Admin::Territories::AgentRolesController, type: :controller do
     end
 
     it "destroy agent_role" do
-      territory = create(:territory)
       organisation = create(:organisation, territory: territory)
       agent = create(:agent, role_in_territories: [territory])
       create(:agent_territorial_access_right, territory: territory, agent: agent)

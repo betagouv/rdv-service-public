@@ -1,4 +1,4 @@
-describe Expiration, type: :concern do
+RSpec.describe Expiration, type: :concern do
   shared_examples "#expired?" do
     def build(factory, params)
       # Absence has a :end_day attribute, but not PlageOuverture

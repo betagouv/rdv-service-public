@@ -1,9 +1,8 @@
-describe "Admin can configure the organisation" do
+RSpec.describe "Admin can configure the organisation" do
   let!(:organisation) { create(:organisation) }
-  let!(:pmi) { create(:service, name: "PMI") }
-  let!(:service_social) { create(:service, name: "Service social") }
+  let!(:pmi) { create(:service, name: "PMI", territories: [organisation.territory]) }
+  let!(:service_social) { create(:service, name: "Service social", territories: [organisation.territory]) }
   let!(:agent_admin) { create(:agent, first_name: "Jeanne", last_name: "Dupont", email: "jeanne.dupont@love.fr", service: pmi, admin_role_in_organisations: [organisation]) }
-  let!(:agent_user) { create(:agent, first_name: "Tony", last_name: "Patrick", email: "tony@patrick.fr", service: pmi, basic_role_in_organisations: [organisation], invitation_accepted_at: nil) }
   let!(:other_agent_user) { create(:agent, first_name: "JP", last_name: "Dupond", email: "jp@dupond.fr", service: service_social, basic_role_in_organisations: [organisation]) }
   let!(:motif) { create(:motif, name: "Motif 1", service: pmi, organisation: organisation) }
   let!(:user) { create(:user, organisations: [organisation]) }
@@ -11,8 +10,6 @@ describe "Admin can configure the organisation" do
   let!(:secretariat) { create(:service, :secretariat) }
   let(:le_nouveau_motif) { build(:motif, name: "Motif 2", service: pmi, organisation: organisation) }
   let(:la_nouvelle_org) { build(:organisation) }
-
-  around { |example| perform_enqueued_jobs { example.run } }
 
   before do
     login_as(agent_admin, scope: :agent)
@@ -57,67 +54,6 @@ describe "Admin can configure the organisation" do
     le_nouveau_lieu = Lieu.find_by(name: "Un autre nouveau lieu")
     within("#lieu_#{le_nouveau_lieu.id}") do
       click_link "Modifier"
-    end
-  end
-
-  it "CRUD on agents" do
-    click_link "Agents"
-    expect_page_title("Agents de Organisation n°1")
-
-    click_link "PATRICK Tony"
-    expect_page_title("Modifier le niveau de permission de l'agent Tony PATRICK")
-    choose "Administrateur"
-    click_button("Enregistrer")
-
-    expect_page_title("Agents de Organisation n°1")
-    expect(page).to have_content("Administrateur", count: 2)
-
-    click_link "PATRICK Tony"
-    click_link("Supprimer le compte")
-
-    expect_page_title("Agents de Organisation n°1")
-    expect(page).to have_no_content("Tony PATRICK")
-
-    click_link "Ajouter un agent", match: :first
-    fill_in "Email", with: "jean@paul.com"
-    select(pmi.name, from: "Services")
-    click_button "Envoyer une invitation"
-
-    expect_page_title("Invitations en cours pour Organisation n°1")
-    expect(page).to have_content("jean@paul.com")
-
-    open_email("jean@paul.com")
-    expect(current_email.subject).to eq "Vous avez été invité sur RDV Solidarités"
-  end
-
-  context "when the organisation is using rdv_aide_numerique verticale" do
-    let!(:organisation) { create(:organisation, verticale: :rdv_aide_numerique) }
-
-    it "allows inviting agents on the correct domain" do
-      click_link "Agents"
-      click_link "Ajouter un agent", match: :first
-      fill_in "Email", with: "jean@paul.com"
-      select(pmi.name, from: "Services")
-      click_button "Envoyer une invitation"
-
-      open_email("jean@paul.com")
-      expect(current_email.subject).to eq "Vous avez été invité sur RDV Aide Numérique"
-      expect(current_email.body).to include "rejoindre RDV Aide Numérique"
-    end
-  end
-
-  context "when the organisation is using rdv_insertion verticale" do
-    let!(:organisation) { create(:organisation, verticale: :rdv_insertion) }
-
-    it "allows inviting agents on the correct domain" do
-      click_link "Agents"
-      click_link "Ajouter un agent", match: :first
-      fill_in "Email", with: "jean@paul.com"
-      select(pmi.name, from: "Services")
-      click_button "Envoyer une invitation"
-
-      open_email("jean@paul.com")
-      expect(current_email.subject).to eq "Vous avez été invité sur RDV Solidarités"
     end
   end
 

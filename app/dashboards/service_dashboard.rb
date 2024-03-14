@@ -12,8 +12,8 @@ class ServiceDashboard < Administrate::BaseDashboard
     name: Field::String,
     short_name: Field::String,
     agents: Field::HasMany,
+    agent_services: Field::HasMany,
     motifs: Field::HasMany,
-    verticale: EnumField,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
   }.freeze
@@ -35,8 +35,7 @@ class ServiceDashboard < Administrate::BaseDashboard
     id
     name
     short_name
-    agents
-    verticale
+    agent_services
     motifs
     created_at
     updated_at
@@ -48,7 +47,6 @@ class ServiceDashboard < Administrate::BaseDashboard
   FORM_ATTRIBUTES = %i[
     name
     short_name
-    verticale
   ].freeze
 
   def display_resource(service)

@@ -3,20 +3,25 @@ require "redis"
 module Rdv::UsingWaitingRoom
   extend ActiveSupport::Concern
 
-  REDIS_FOR_WAITING_ROOMS = Redis.new(url: Rails.configuration.x.redis_url)
-  REDIS_WAITING_ROOM_KEY = "#{Rails.env}:user_in_waiting_room_rdv_id".freeze
+  REDIS_WAITING_ROOM_KEY = "#{Rails.env}:users_in_waiting_room".freeze
 
   def user_in_waiting_room?
-    status == "unknown" && REDIS_FOR_WAITING_ROOMS.lpos(REDIS_WAITING_ROOM_KEY, id).present?
+    Redis.with_connection do |redis|
+      status == "unknown" && redis.sismember(REDIS_WAITING_ROOM_KEY, id)
+    end
   end
 
   def set_user_in_waiting_room!
-    REDIS_FOR_WAITING_ROOMS.lpush(REDIS_WAITING_ROOM_KEY, id)
+    Redis.with_connection do |redis|
+      redis.sadd?(REDIS_WAITING_ROOM_KEY, id)
+    end
   end
 
   class_methods do
     def reset_user_in_waiting_room!
-      REDIS_FOR_WAITING_ROOMS.del(REDIS_WAITING_ROOM_KEY)
+      Redis.with_connection do |redis|
+        redis.del(REDIS_WAITING_ROOM_KEY)
+      end
     end
   end
 end

@@ -8,7 +8,7 @@
 # check est interne au réseau Kubernetes (le HTTPS en géré à l'extérieur).
 # Nous avons donc défini une config.ssl_options qui exclut cette route.
 #
-describe "/health_check" do
+RSpec.describe "/health_check" do
   it "returns HTTP 200" do
     get "/health_check"
     expect(response).to have_http_status(:ok)

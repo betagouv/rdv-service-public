@@ -1,6 +1,4 @@
 class Admin::OrganisationsController < AgentAuthController
-  include OrganisationsHelper
-
   respond_to :html, :json
 
   before_action :set_organisation, except: :index
@@ -12,6 +10,7 @@ class Admin::OrganisationsController < AgentAuthController
       .includes(organisation: :territory)
       .order("organisations.name")
       .to_a.group_by { _1.organisation.territory }
+    @active_agent_preferences_menu_item = :organisations
     render layout: "registration"
   end
 
@@ -37,18 +36,22 @@ class Admin::OrganisationsController < AgentAuthController
   def new
     @organisation = Organisation.new(territory: Territory.find(params[:territory_id]))
     authorize(@organisation)
+    @active_agent_preferences_menu_item = :organisations
     render :new, layout: "registration"
   end
 
   def create
     @organisation = Organisation.new(
       agent_roles_attributes: [{ agent: current_agent, access_level: AgentRole::ACCESS_LEVEL_ADMIN }],
+      verticale: current_domain.verticale,
       **new_organisation_params
     )
     authorize(@organisation)
     if @organisation.save
-      redirect_to organisation_home_path(@organisation, current_agent), flash: { success: "Organisation créée !" }
+      redirect_to admin_organisation_path(@organisation),
+                  flash: { success: "Organisation enregistrée ! Vous pouvez maintenant lui ajouter des motifs et des lieux de rendez-vous, puis inviter des agents à la rejoindre" }
     else
+      @active_agent_preferences_menu_item = :organisations
       render :new, layout: "registration"
     end
   end
@@ -65,7 +68,7 @@ class Admin::OrganisationsController < AgentAuthController
   end
 
   def organisation_params
-    params.require(:organisation).permit(:name, :horaires, :phone_number, :website, :email, :human_id)
+    params.require(:organisation).permit(:name, :horaires, :phone_number, :website, :email)
   end
 
   def new_organisation_params
@@ -75,6 +78,6 @@ class Admin::OrganisationsController < AgentAuthController
   def follow_unique
     return if params[:follow_unique].blank? || policy_scope(Organisation).count != 1
 
-    redirect_to organisation_home_path(policy_scope(Organisation).first, current_agent)
+    redirect_to admin_organisation_agent_agenda_path(policy_scope(Organisation).first, current_agent)
   end
 end

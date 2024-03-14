@@ -1,4 +1,4 @@
-describe "Agent can CRUD plage d'ouverture" do
+RSpec.describe "Agent can CRUD plage d'ouverture" do
   let!(:organisation) { create(:organisation) }
   let!(:service) { create(:service, name: "PMI") }
   let!(:motif) { create(:motif, name: "Suivi bonjour", service: service, organisation: organisation) }

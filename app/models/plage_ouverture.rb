@@ -10,10 +10,15 @@ class PlageOuverture < ApplicationRecord
   include EnsuresRealisticDate
 
   include TextSearch
-  def self.search_against
+  def self.search_options
     {
-      title: "A",
-      id: "D",
+      against:
+        {
+          title: "A",
+          id: "D",
+        },
+      ignoring: :accents,
+      using: { tsearch: { prefix: true, any_word: true } },
     }
   end
 
@@ -47,11 +52,6 @@ class PlageOuverture < ApplicationRecord
     recurring_in_range = where.not(recurrence: nil).where("tsrange(first_day, recurrence_ends_at, '[]') && tsrange(?, ?)", range.begin, range.end)
 
     not_recurring_start_in_range.or(recurring_in_range)
-  }
-  scope :overlapping_range, lambda { |range|
-    in_range(range).select do |plage_ouverture|
-      plage_ouverture.occurrences_for(range).any? { range.overlaps?(_1.starts_at.._1.ends_at) }
-    end
   }
   scope :bookable_by_everyone, -> { joins(:motifs).merge(Motif.bookable_by_everyone) }
   scope :bookable_by_everyone_or_bookable_by_invited_users, -> { joins(:motifs).merge(Motif.bookable_by_everyone_or_bookable_by_invited_users) }

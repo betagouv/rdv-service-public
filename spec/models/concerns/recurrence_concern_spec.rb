@@ -1,4 +1,4 @@
-describe RecurrenceConcern do
+RSpec.describe RecurrenceConcern do
   shared_examples "#set_recurrence_ends_at" do
     it "set to ends of day of last occurrence" do
       first_day = Date.new(2019, 8, 15)

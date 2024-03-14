@@ -25,8 +25,6 @@ RSpec.describe Outlook::SyncEventJob do
     end
 
     context "when the call to the api fails" do
-      stub_sentry_events
-
       it "retries the job, notifies the error monitoring, and does not update the outlook_id" do
         allow(client_double).to receive(:create_event!).and_raise("Outlook api error!")
         expect do

@@ -3,7 +3,7 @@ fr:
   admin:
     organisations:
       index:
-        configuration: Configuration
+        configuration: Espace Admin
         create: Créer
     rdvs:
       message:
@@ -34,7 +34,6 @@ fr:
         place_index: Revenir aux filtres
         available_slots_title_html: Créneaux disponibles pour <strong>%{motif}</strong>
         place_informations_html: <strong>%{place_name}</strong> <small>au %{place_address}</small>
-        no_slot_available: Aucun créneau n’est disponible pour le motif « %{motif_name} » selon les critères sélectionnés.
     creneaux:
       agent_searches:
         index:
@@ -74,7 +73,7 @@ fr:
           territory_teams_title: Modifier une équipe
       agent_roles:
         destroy:
-          cannot_delete_because_of_rdvs: Impossible de retirer cet agent car il a des RDVs à venir dans cette organisation. Veuillez les supprimer ou les réaffecter avant de retirer cet agent.
+          cannot_delete_because_of_rdvs: Impossible de retirer l'agent %{agent_name} de %{org_name} car il a des RDVs à venir dans cette organisation. Veuillez les supprimer ou les réaffecter avant de retirer cet agent.
           invitation_deleted: L’invitation a été supprimée.
           agent_deleted: Le compte agent a été supprimé.
           agent_removed_from_org: L’agent a été retiré de l’organisation.
@@ -150,7 +149,7 @@ fr:
     - samedi
     formats:
       default: "%d/%m/%Y"
-      long: "%d %B %Y"
+      long: "%e %B %Y"
       short: "%-d %b"
       human: "%A %d %B %Y"
     month_names:
@@ -262,6 +261,17 @@ fr:
       agent:
         territories:  "Admin de Territoires"
         territorial_roles: "Admin de Territoires"
+        services: "Services de l'agent"
+        agent_services: "Services de l'agent"
+        roles: "Rôles dans les organisations"
+        first_name: "Prénom"
+        last_name: "Nom"
+      user:
+        user_profiles: "Organisations de l'usager"
+      organisation:
+        agent_roles: "Rôles des agents"
+      service:
+        agent_services: "Agents du service"
       territory:
         roles: "Admins du Territoire"
         admin_agents: "Admins du Territoire"

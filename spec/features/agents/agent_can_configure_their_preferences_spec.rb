@@ -1,4 +1,4 @@
-describe "Agent can configure their preferences" do
+RSpec.describe "Agent can configure their preferences" do
   let!(:agent) do
     create(
       :agent,

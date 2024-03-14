@@ -12,34 +12,31 @@ class Agents::UsersController < AgentAuthController
       return head :forbidden
     end
 
+    extended_scope = Agent::UserPolicy::TerritoryScope.new(pundit_user, User.all).resolve
+    current_org_scope = Agent::UserPolicy::Scope.new(pundit_user, User.all).resolve
+
     user_scope = User.where.not(id: params[:exclude_ids]).search_by_text(params[:term])
 
-    users_from_organisation = user_scope.joins(:user_profiles).where(user_profiles: { organisation_id: params[:organisation_id] }).limit(MAX_RESULTS)
+    users_from_organisation = user_scope.merge(current_org_scope).to_a
 
-    results_count = users_from_organisation.count
+    results_count = users_from_organisation.size
 
-    users_from_territory = if results_count < MAX_RESULTS
-                             user_scope.joins(:territories).where(territories: { id: current_agent.agent_territorial_access_rights.select(:territory_id) })
-                               .where.not(id: users_from_organisation.select(:id))
-                               .limit(MAX_RESULTS - results_count)
-                           else
+    users_from_territory = if results_count >= MAX_RESULTS
                              []
+                           else
+                             user_scope.merge(extended_scope)
+                               .where.not(id: users_from_organisation.map(&:id))
+                               .limit(MAX_RESULTS - results_count).to_a
                            end
 
     results = []
 
     if users_from_organisation.any?
-      results << {
-        text: nil,
-        children: serialize(users_from_organisation),
-      }
+      results << formatted_users_from_organisation(users_from_organisation)
     end
 
     if users_from_territory.any?
-      results << {
-        text: "Usagers des autres organisations",
-        children: serialize(users_from_territory),
-      }
+      results << formatted_users_from_territory(users_from_territory)
     end
 
     render json: { results: results }
@@ -47,12 +44,27 @@ class Agents::UsersController < AgentAuthController
 
   private
 
-  def serialize(users)
-    users.map do |user|
-      {
-        id: user.id,
-        text: UsersHelper.reverse_full_name_and_notification_coordinates(user),
-      }
-    end
+  def formatted_users_from_organisation(users)
+    {
+      text: nil,
+      children: users.map do |user|
+        {
+          id: user.id,
+          text: UsersHelper.reverse_full_name_and_notification_coordinates(user),
+        }
+      end,
+    }
+  end
+
+  def formatted_users_from_territory(users)
+    {
+      text: "Usagers des autres organisations",
+      children: users.map do |user|
+        {
+          id: user.id,
+          text: UsersHelper.partially_hidden_reverse_full_name_and_notification_coordinates(user),
+        }
+      end,
+    }
   end
 end

@@ -4,9 +4,8 @@
   | Votre organisation
 
 .row.justify-content-center
-  .col-md-8
+  .col-md-12.col-lg-8
     .card
-      h4.card-header Informations générales
       .card-body
         ul.list-unstyled
           li.mb-2
@@ -27,5 +26,5 @@
         .text-right= link_to "Modifier", edit_admin_organisation_path(@organisation), class: "btn btn-primary"
 
 .row.justify-content-center
-  .col-md-8
-    = render "admin/versions/resource_versions_row", policy_scope: :agent, resource: @organisation
+  .col-md-12.col-lg-8
+    = render "admin/versions/resource_versions_row", resource_policy: policy([:agent, @organisation]), resource: @organisation

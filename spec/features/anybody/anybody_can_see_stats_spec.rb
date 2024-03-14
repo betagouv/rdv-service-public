@@ -1,4 +1,4 @@
-describe "Anybody can see stats" do
+RSpec.describe "Anybody can see stats" do
   it "displays all the stats" do
     visit root_path
     click_link "Statistiques"

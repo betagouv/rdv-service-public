@@ -1,4 +1,4 @@
-describe "Agent can create a Rdv with wizard" do
+RSpec.describe "Agent can create a Rdv with wizard" do
   include UsersHelper
 
   let(:territory) { create(:territory, enable_context_field: true) }

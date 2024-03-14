@@ -5,5 +5,9 @@ FactoryBot.define do
   factory :motif_category do
     name { generate(:name) }
     short_name { generate(:short_name) }
+
+    trait :passeport do
+      name { Api::Ants::EditorController::PASSPORT_MOTIF_CATEGORY_NAME }
+    end
   end
 end

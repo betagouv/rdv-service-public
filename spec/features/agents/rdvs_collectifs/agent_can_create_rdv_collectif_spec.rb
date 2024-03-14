@@ -1,4 +1,4 @@
-describe "Agent can create a Rdv collectif from the agenda" do
+RSpec.describe "Agent can create a Rdv collectif from the agenda" do
   include UsersHelper
 
   let!(:organisation) { create(:organisation) }
@@ -12,7 +12,7 @@ describe "Agent can create a Rdv collectif from the agenda" do
 
   let!(:lieu) { create(:lieu, organisation: organisation) }
 
-  let(:now) { Time.zone.parse("20220123 13:00") }
+  let(:now) { Time.zone.parse("2024-01-21 13:00") }
 
   before do
     stub_netsize_ok

@@ -1,4 +1,4 @@
-describe UserNotificationsHelper do
+RSpec.describe UserNotificationsHelper do
   describe "#user_notifiable_by_sms_text" do
     it "allow SMS notifications" do
       user = build(:user, phone_number: "06 65 87 89 53")

@@ -15,7 +15,10 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
     email = request.env["omniauth.auth"]["info"]["email"]
 
     # Automatically create the first SuperAdmin in development
-    SuperAdmin.create!(email: email) if Rails.env.development? && SuperAdmin.none?
+    if Rails.env.development? && SuperAdmin.none?
+      first_name, last_name = request.env["omniauth.auth"]["info"]["name"].split
+      SuperAdmin.create!(email: email, first_name: first_name, last_name: last_name, role: :legacy_admin)
+    end
 
     super_admin = SuperAdmin.find_by(email: email)
     if super_admin.present?
@@ -34,7 +37,7 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
       flash[:notice] = "Votre compte Outlook a bien été connecté"
     else
       flash[:alert] = "Votre compte Outlook n'a pas pu être connecté"
-      Sentry.capture_message("Microsoft Graph OmniAuth failed for #{microsoft_graph_email}: #{request.env}")
+      Sentry.capture_message("Microsoft Graph OmniAuth failed for #{microsoft_graph_email}: #{request.env}", fingerprint: ["ms_graph_omniauth_failure"])
     end
     redirect_to agents_calendar_sync_outlook_sync_path
   end

@@ -18,10 +18,6 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
       end
   end
 
-  def policy_scope(clasz)
-    super([:agent, clasz])
-  end
-
   def authorize(record, *args)
     super([:agent, record], *args)
   end
@@ -71,6 +67,16 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
 
   private
 
+  # L'usage recommandé est de passer explicitement une policy_scope_class pour savoir quelle policy est utilisé
+  # A terme, on voudra forcer l'argument policy_scope_class
+  def policy_scope(scope, policy_scope_class: nil)
+    if policy_scope_class
+      super(scope, policy_scope_class: policy_scope_class)
+    else
+      super([:agent, scope])
+    end
+  end
+
   def authenticate_agent
     if request.headers.include?("X-Agent-Auth-Signature")
       # Bypass DeviseTokenAuth
@@ -85,7 +91,7 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
     if shared_secret_is_valid?
       @current_agent = Agent.find_by(email: request.headers["uid"])
     else
-      Sentry.capture_message("API authentication agent was called with an invalid signature !")
+      Sentry.capture_message("API authentication agent was called with an invalid signature !", fingerprint: ["api_agent_invalid_sig"])
       render(
         status: :unauthorized,
         json: {
@@ -107,7 +113,9 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
       email: agent.email,
     }
 
-    OpenSSL::HMAC.hexdigest("SHA256", ENV.fetch("SHARED_SECRET_FOR_AGENTS_AUTH"), payload.to_json) ==
+    ActiveSupport::SecurityUtils.secure_compare(
+      OpenSSL::HMAC.hexdigest("SHA256", ENV.fetch("SHARED_SECRET_FOR_AGENTS_AUTH"), payload.to_json),
       request.headers["X-Agent-Auth-Signature"]
+    )
   end
 end

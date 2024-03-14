@@ -1,4 +1,4 @@
-describe Configuration::AgentTerritorialAccessRightPolicy, type: :policy do
+RSpec.describe Configuration::AgentTerritorialAccessRightPolicy, type: :policy do
   describe "#update?" do
     it "returns false with agent without admin access to this territory" do
       territory = create(:territory)

@@ -4,15 +4,15 @@ RSpec.configure do |config|
   # Specify a root folder where Swagger JSON files are generated
   # NOTE: If you're using the rswag-api to serve API descriptions, you'll need
   # to ensure that it's configured to serve Swagger from the same folder
-  config.swagger_root = Rails.root.join("swagger").to_s
+  config.openapi_root = Rails.root.join("swagger").to_s
 
   # Define one or more Swagger documents and provide global metadata for each one
   # When you run the 'rswag:specs:swaggerize' rake task, the complete Swagger will
-  # be generated at the provided relative path under swagger_root
+  # be generated at the provided relative path under openapi_root
   # By default, the operations defined in spec files are added to the first
   # document below. You can override this behavior by adding a swagger_doc tag to the
   # the root example_group in your specs, e.g. describe '...', swagger_doc: 'v2/swagger.json'
-  config.swagger_docs = {
+  config.openapi_specs = {
     "v1/api.json" => {
       openapi: "3.0.1",
       info: {
@@ -63,6 +63,8 @@ RSpec.configure do |config|
               collectif: { type: "boolean" },
               context: { type: "string", nullable: true },
               created_by: { type: "string", enum: %w[agent user file_attente prescripteur] },
+              created_by_type: { type: "string", enum: %w[Agent User FileAttente Prescripteur] },
+              created_by_id: { type: "integer" },
               duration_in_min: { type: "integer" },
               ends_at: { type: "string" },
               lieu: { "$ref" => "#/components/schemas/lieu" },
@@ -87,8 +89,8 @@ RSpec.configure do |config|
               users_count: { type: "integer" },
               uuid: { type: "string" },
             },
-            required: %w[id address agents cancelled_at collectif context created_by duration_in_min lieu max_participants_count motif name organisation rdvs_users participations starts_at status
-                         users users_count uuid],
+            required: %w[id address agents cancelled_at collectif context created_by_type duration_in_min lieu max_participants_count motif
+                         name organisation rdvs_users participations starts_at status users users_count uuid],
           },
           agents: {
             type: "object",
@@ -356,6 +358,33 @@ RSpec.configure do |config|
             },
             required: %w[id name short_name],
           },
+          motif_category_with_root: {
+            type: "object",
+            properties: {
+              motif_category: { "$ref" => "#/components/schemas/motif_category" },
+            },
+            required: %w[motif_category],
+          },
+          territory: {
+            type: "object",
+            properties: {
+              id: { type: "integer" },
+              departement_number: { type: "string" },
+              name: { type: "string" },
+              motif_categories: {
+                type: "array",
+                items: { "$ref" => "#/components/schemas/motif_category" },
+              },
+            },
+            required: %w[id departement_number name],
+          },
+          territory_with_root: {
+            type: "object",
+            properties: {
+              territory: { "$ref" => "#/components/schemas/territory" },
+            },
+            required: %w[territory],
+          },
           rdvs_user: {
             type: "object",
             properties: {
@@ -364,6 +393,8 @@ RSpec.configure do |config|
               status: { type: "string", enum: %w[unknown seen excused revoked noshow] },
               user: { "$ref" => "#/components/schemas/user" },
               created_by: { type: "string", enum: %w[agent user prescripteur] },
+              created_by_type: { type: "string", enum: %w[Agent User Prescripteur] },
+              created_by_id: { type: "integer" },
             },
             required: %w[send_lifecycle_notifications send_reminder_notification status user],
           },
@@ -375,8 +406,11 @@ RSpec.configure do |config|
               status: { type: "string", enum: %w[unknown seen excused revoked noshow] },
               user: { "$ref" => "#/components/schemas/user" },
               created_by: { type: "string", enum: %w[agent user prescripteur] },
+              created_by_type: { type: "string", enum: %w[Agent User Prescripteur] },
+              created_by_id: { type: "integer" },
+              created_by_agent_prescripteur: { type: "boolean" },
             },
-            required: %w[send_lifecycle_notifications send_reminder_notification status user],
+            required: %w[send_lifecycle_notifications send_reminder_notification status user created_by_type],
           },
           public_links: {
             type: "object",
@@ -555,8 +589,8 @@ RSpec.configure do |config|
   }
 
   # Specify the format of the output Swagger file when running 'rswag:specs:swaggerize'.
-  # The swagger_docs configuration option has the filename including format in
+  # The openapi_specs configuration option has the filename including format in
   # the key, this may want to be changed to avoid putting yaml in json files.
   # Defaults to json. Accepts ':json' and ':yaml'.
-  config.swagger_format = :json
+  config.openapi_format = :json
 end

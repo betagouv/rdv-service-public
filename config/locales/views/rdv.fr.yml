@@ -4,5 +4,6 @@ fr:
       rdv_details:
         empty_context: Pas de contexte renseigné
     receipts:
-      send_reminder_manually: Envoyer maintenant une nouvelle notification
+      send_reminder_manually: Envoyer une notification de rappel maintenant
+      cant_send_reminder_manually: L'envoi d'une nouvelle notification de rappel n'est pas possible quand le rendez-vous a déjà eu lieu
       reminder_manually_sent: Notification envoyée.

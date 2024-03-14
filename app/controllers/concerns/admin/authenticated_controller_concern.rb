@@ -21,7 +21,11 @@ module Admin::AuthenticatedControllerConcern
   protected
 
   def user_for_paper_trail
-    current_agent.name_for_paper_trail
+    if current_super_admin.present?
+      current_super_admin.name_for_paper_trail(impersonated: current_agent)
+    else
+      current_agent.name_for_paper_trail
+    end
   end
 
   def agent_not_authorized(exception)

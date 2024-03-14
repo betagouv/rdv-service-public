@@ -1,7 +1,7 @@
 .text-center.w-75.m-auto
-  h4.text-dark-50.text-center.mt-0.font-weight-bold  Inscription
+  h1.text-dark.mt-0.font-weight-bold.mb-4 Inscription
 
-  = render "common/inclusionconnect_button"
+  = render "common/inclusionconnect_button", locals: { login_hint: resource.email }
 
   = simple_form_for resource, as: resource_name, url: invitation_path(resource_name), html: { method: :put, class: "text-left" } do |f|
     p.text-muted.text-center.mb-4 Complétez vos informations.

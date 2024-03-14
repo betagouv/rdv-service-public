@@ -14,7 +14,7 @@
   = render "admin/agent_intervenants/name_form", agent_intervenant: @agent
 
 .row.justify-content-center
-  .col-md-8
+  .col-md-12.col-lg-8
     .card
       .card-body.js_agent_role_form
         = simple_form_for [:admin, current_organisation, @agent] do |f|
@@ -69,5 +69,5 @@
                   = f.button :submit, data: { confirm: "Cet agent ne pourra plus se connecter à son compter. Êtes vous sûr de vouloir continuer ?" }
 
 .row.justify-content-center
-  .col-md-8
-    = render "admin/versions/resource_versions_row", policy_scope: :agent, resource: @agent
+  .col-md-12.col-lg-8
+    = render "admin/versions/resource_versions_row", resource_policy: policy([:agent, @agent]), resource: @agent

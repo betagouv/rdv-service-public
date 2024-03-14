@@ -1,8 +1,7 @@
-- motif_policy = policy([:agent, @motif])
 - content_for(:menu_item) { "menu-motifs" }
 
 .row.justify-content-center
-  .col-md-8
+  .col-md-12.col-lg-8
     .card.mt-2
       .card-header
         h3.text-center Motif #{@motif.name} (#{@motif.service.short_name})
@@ -36,18 +35,21 @@
           hint: Motif.human_attribute_name(:for_secretariat_hint)
         hr
 
-        - presenter = Admin::PrescripteurExperimentMotifPresenter.new(@motif)
-
-        .mb-2= motif_attribute_row(Motif.human_attribute_name(:bookable_by_title), presenter.bookable_by_label)
+          .mb-2= motif_attribute_row \
+          Motif.human_attribute_name(:bookable_by), \
+          I18n.t("activerecord.attributes.motif/bookable_by/hint.#{@motif.bookable_by}", \
+          organisation_name: @motif.organisation.name \
+          )
         - if @motif.bookable_outside_of_organisation?
-          = motif_attribute_row(Motif.human_attribute_name(:min_public_booking_delay_short),
-              @motif.bookable_outside_of_organisation? &&  min_max_delay_int_to_human(@motif.min_public_booking_delay),
-              hint: presenter.min_public_booking_delay_hint)
+          = motif_attribute_row \
+            Motif.human_attribute_name(:min_public_booking_delay_short), \
+            @motif.bookable_outside_of_organisation? && min_max_delay_int_to_human(@motif.min_public_booking_delay), \
+            hint: Motif.human_attribute_name("min_public_booking_delay_hint")
           = motif_attribute_row \
             Motif.human_attribute_name(:max_public_booking_delay_short), \
             @motif.bookable_outside_of_organisation? && \
               min_max_delay_int_to_human(@motif.max_public_booking_delay), \
-            hint: presenter.max_public_booking_delay_hint
+            hint: Motif.human_attribute_name("max_public_booking_delay_hint")
           = motif_attribute_row \
             Motif.human_attribute_name(:rdvs_editable_by_user), \
             motif_option_activated(@motif, :rdvs_editable_by_user), \
@@ -84,14 +86,14 @@
           @motif.custom_cancel_warning_message, \
           hint: Motif.human_attribute_name(:custom_cancel_warning_message_hint)
 
-      - if motif_policy.edit? || motif_policy.destroy?
+      - if @motif_policy.edit? || @motif_policy.destroy?
         .card-footer
           .d-flex.justify-content-end
-            - if motif_policy.destroy?
+            - if @motif_policy.destroy?
               div.mr-2= link_to "Supprimer", admin_organisation_motif_path(current_organisation, @motif), method: :delete, data: { confirm: "Confirmez-vous la suppression de ce motif ?"}, class: "btn btn-danger w-100"
-            - if motif_policy.edit?
+            - if @motif_policy.edit?
               div= link_to "Éditer", edit_admin_organisation_motif_path(current_organisation, @motif), class: "btn btn-primary w-100"
 
 .row.justify-content-center
-  .col-md-8
-    = render "admin/versions/resource_versions_row", policy_scope: :agent, resource: @motif
+  .col-md-12.col-lg-8
+    = render "admin/versions/resource_versions_row", resource_policy: @motif_policy, resource: @motif

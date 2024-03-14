@@ -1,4 +1,4 @@
-describe Configuration::AgentPolicy::Scope, type: :policy do
+RSpec.describe Configuration::AgentPolicy::Scope, type: :policy do
   it "returns agents of same territory and same organisation and same service" do
     territory = create(:territory)
     service = create(:service)

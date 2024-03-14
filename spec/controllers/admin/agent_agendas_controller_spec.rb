@@ -1,4 +1,4 @@
-describe Admin::AgentAgendasController, type: :controller do
+RSpec.describe Admin::AgentAgendasController, type: :controller do
   let(:organisation) { create(:organisation) }
   let(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
 

@@ -1,6 +1,5 @@
-describe "ANTS API: availableTimeSlots" do
+RSpec.describe "ANTS API: availableTimeSlots" do
   include_context "rdv_mairie_api_authentication"
-  stub_sentry_events
 
   let(:lieu1) do
     create(:lieu, organisation: organisation)
@@ -8,8 +7,9 @@ describe "ANTS API: availableTimeSlots" do
   let(:lieu2) do
     create(:lieu, organisation: organisation2)
   end
-  let(:organisation) { create(:organisation, verticale: :rdv_mairie) }
-  let(:organisation2) { create(:organisation, verticale: :rdv_mairie) }
+  let(:mairies_territory) { create(:territory, :mairies) }
+  let(:organisation) { create(:organisation, territory: mairies_territory) }
+  let(:organisation2) { create(:organisation, territory: mairies_territory) }
   let(:motif) { create(:motif, organisation: organisation, default_duration_in_min: 30, motif_category: cni_motif_category) }
   let(:motif2) { create(:motif, organisation: organisation2, default_duration_in_min: 30, motif_category: cni_motif_category) }
   let!(:cni_motif_category) { create(:motif_category, name: Api::Ants::EditorController::CNI_MOTIF_CATEGORY_NAME) }
@@ -19,6 +19,12 @@ describe "ANTS API: availableTimeSlots" do
     create(:plage_ouverture, lieu: lieu1, first_day: Date.new(2022, 11, 1),
                              start_time: Tod::TimeOfDay(9), end_time: Tod::TimeOfDay(10),
                              organisation: organisation, motifs: [motif])
+
+    # Une deuxième plage d'ouverture identique pour vérifier qu'il n'y a pas de doublon
+    create(:plage_ouverture, lieu: lieu1, first_day: Date.new(2022, 11, 1),
+                             start_time: Tod::TimeOfDay(9), end_time: Tod::TimeOfDay(10),
+                             organisation: organisation, motifs: [motif])
+
     create(:plage_ouverture, lieu: lieu2, first_day: Date.new(2022, 11, 2),
                              start_time: Tod::TimeOfDay(12), end_time: Tod::TimeOfDay(13),
                              organisation: organisation2, motifs: [motif2])
@@ -55,7 +61,7 @@ describe "ANTS API: availableTimeSlots" do
     )
   end
 
-  context "there's more than 1 participant" do
+  context "when there's more than 1 participant" do
     let(:participants_count) { 2 }
 
     it "returns slots with a duration matching the number of participants" do
@@ -80,14 +86,23 @@ describe "ANTS API: availableTimeSlots" do
     end
   end
 
-  context "Responds with an Error" do
+  context 'when the "reason" param is invalid' do
+    it "adds crumb with request details to Sentry" do
+      invalid_reason = "no"
+      get "/api/ants/availableTimeSlots?meeting_point_ids=#{lieu1.id}&meeting_point_ids=#{lieu2.id}&start_date=2022-11-01&end_date=2022-11-02&documents_number=1&reason=#{invalid_reason}"
+
+      expect(response).to have_http_status(:bad_request)
+      expect(sentry_events.last.message).to eq('ANTS provided invalid reason: "no"')
+      expect(response.body).to eq('{"error":{"code":400,"message":"Invalid reason param"}}')
+    end
+  end
+
+  context "when a 500 occurs" do
     before do
-      # Delete motifs and motifs category to create an error
-      organisation.motifs.destroy_all
-      MotifCategory.destroy_all
+      allow(Users::CreneauxSearch).to receive(:new).and_raise(NoMethodError)
     end
 
-    xit "adds crumb with request details to Sentry" do
+    it "adds crumb with request details to Sentry" do
       expect do
         get "/api/ants/availableTimeSlots?meeting_point_ids=#{lieu1.id}&meeting_point_ids=#{lieu2.id}&start_date=2022-11-01&end_date=2022-11-02&documents_number=1&reason=CNI"
       end.to raise_error(NoMethodError)

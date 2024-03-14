@@ -13,6 +13,7 @@ class Rdv < ApplicationRecord
   include IcalHelpers::Ics
   include Payloads::Rdv
   include Ants::AppointmentSerializerAndListener
+  include CreatedByConcern
 
   # Attributes
   auto_strip_attributes :name
@@ -28,7 +29,6 @@ class Rdv < ApplicationRecord
   CANCELLED_STATUSES = %w[excused revoked].freeze
   COLLECTIVE_RDV_STATUSES = %w[unknown seen revoked].freeze
   RDV_STATUSES_TO_NOTIFY = %w[unknown excused revoked].freeze
-  enum created_by: { agent: 0, user: 1, file_attente: 2, prescripteur: 3 }, _prefix: :created_by
 
   # Relations
   belongs_to :organisation
@@ -235,6 +235,16 @@ class Rdv < ApplicationRecord
     overlapping_plages_ouvertures.any?
   end
 
+  def overlapping_absences
+    return [] if starts_at.blank? || ends_at.blank? || past? || errors.present?
+
+    @overlapping_absences ||= Absence.where(agent: agent_ids).overlapping_range(starts_at..ends_at)
+  end
+
+  def overlapping_absences?
+    overlapping_absences.any?
+  end
+
   def phone_number
     return lieu.phone_number if lieu&.phone_number.present?
     return organisation.phone_number if organisation&.phone_number.present?
@@ -249,45 +259,24 @@ class Rdv < ApplicationRecord
     ""
   end
 
+  # rubocop:disable Metrics/CyclomaticComplexity
+  # rubocop:disable Metrics/PerceivedComplexity
   def self.search_for(organisations, options)
-    organisation_ids = [organisations.id] if organisations.is_a?(Organisation)
-    organisation_ids ||= organisations.ids
-    rdvs = joins(:organisation).where(organisations: { id: organisation_ids })
-    options.each do |key, value|
-      next if value.blank?
+    rdvs = joins(:organisation).where(organisations: organisations)
+    options = options.with_indifferent_access.select { |_, value| Array(value).compact_blank.present? }
 
-      rdvs = send("search_for_#{key}", rdvs, value) if respond_to?("search_for_#{key}")
-    end
+    rdvs = rdvs.joins(:lieu).where(lieux: { id: options[:lieu_ids] }) if options[:lieu_ids]
+    rdvs = rdvs.joins(:motif).where(motifs: { id: options[:motif_ids] }) if options[:motif_ids]
+    rdvs = rdvs.joins(:agents).where(agents: { id: options[:agent_id] }) if options[:agent_id]
+    rdvs = rdvs.with_user_id(options[:user_id]) if options[:user_id]
+    rdvs = rdvs.status(options[:status]) if options[:status]
+    rdvs = rdvs.where("DATE(starts_at) >= ?", options[:start]) if options[:start]
+    rdvs = rdvs.where("DATE(ends_at) <= ?", options[:end]) if options[:end]
+
     rdvs
   end
-
-  def self.search_for_lieu_id(rdvs, lieu_id)
-    rdvs.joins(:lieu).where(lieux: { id: lieu_id })
-  end
-
-  def self.search_for_motif_id(rdvs, motif_id)
-    rdvs.joins(:motif).where(motifs: { id: motif_id })
-  end
-
-  def self.search_for_agent_id(rdvs, agent_id)
-    rdvs.joins(:agents).where(agents: { id: agent_id })
-  end
-
-  def self.search_for_user_id(rdvs, user_id)
-    rdvs.with_user_id(user_id)
-  end
-
-  def self.search_for_status(rdvs, status)
-    rdvs.status(status)
-  end
-
-  def self.search_for_start(rdvs, start_at)
-    rdvs.where("DATE(starts_at) >= ?", start_at)
-  end
-
-  def self.search_for_end(rdvs, end_at)
-    rdvs.where("DATE(starts_at) <= ?", end_at)
-  end
+  # rubocop:enable Metrics/CyclomaticComplexity
+  # rubocop:enable Metrics/PerceivedComplexity
 
   def reschedule_max_date
     Time.zone.now + motif.max_public_booking_delay
@@ -421,7 +410,8 @@ class Rdv < ApplicationRecord
           :send_lifecycle_notifications,
           :send_reminder_notification,
           :status,
-          :created_by
+          :created_by_type,
+          :created_by_id
         )
       end,
     }

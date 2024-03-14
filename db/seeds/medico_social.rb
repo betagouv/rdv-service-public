@@ -17,11 +17,15 @@ territory62 = Territory.create!(
 
 # ORGANISATIONS & SECTORS
 
-Organisation.skip_callback(:create, :after, :notify_admin_organisation_created)
 org_paris_nord = Organisation.create!(
   name: "MDS Paris Nord",
   phone_number: "0123456789",
-  human_id: "paris-nord",
+  territory: territory75
+)
+
+org_paris_sud = Organisation.create!(
+  name: "MDS Paris Sud",
+  phone_number: "0123456789",
   territory: territory75
 )
 
@@ -51,14 +55,14 @@ human_id_map = [
   { human_id: "1054", name: "MDS St Omer" },
   { human_id: "1055", name: "MDS St Pol sur Ternoise" },
 ].to_h do |attributes|
-  organisation = Organisation.create!(phone_number: "0123456789", territory: territory62, human_id: attributes[:human_id], name: attributes[:name])
+  organisation = Organisation.create!(phone_number: "0123456789", territory: territory62, name: attributes[:name])
   sector = Sector.create!(name: "Secteur de #{attributes[:name][4..]}", human_id: attributes[:human_id], territory: territory62)
   sector.attributions.create!(organisation: organisation, level: SectorAttribution::LEVEL_ORGANISATION)
   [attributes[:human_id], { organisation: organisation, sector: sector }]
 end
 
 # Bapaume is created without the organisation-level attribution
-org_bapaume = Organisation.create!(phone_number: "0123456789", territory: territory62, human_id: "1034-nord", name: "MDS Bapaume")
+org_bapaume = Organisation.create!(phone_number: "0123456789", territory: territory62, name: "MDS Bapaume")
 sector_bapaume_nord = Sector.create!(name: "Bapaume Nord", human_id: "1034-nord", territory: territory62)
 sector_bapaume_sud = Sector.create!(name: "Bapaume Sud", human_id: "1034-sud", territory: territory62)
 sector_bapaume_fallback = Sector.create!(name: "Bapaume Entier", human_id: "1034-fallback", territory: territory62)
@@ -68,14 +72,13 @@ human_id_map["1034-sud"] = { organisation: org_bapaume, sector: sector_bapaume_s
 human_id_map["1034-fallback"] = { organisation: org_bapaume, sector: sector_bapaume_fallback }
 org_arques = human_id_map["1030"][:organisation]
 
-Organisation.set_callback(:create, :after, :notify_admin_organisation_created)
-
 # SERVICES
 
 service_pmi = Service.create!(name: "PMI (Protection Maternelle Infantile)", short_name: "PMI")
 service_social = Service.create!(name: "Service social", short_name: "Service Social")
 service_secretariat = Service.create!(name: Service::SECRETARIAT, short_name: "Secrétariat")
-_service_nouveau = Service.create!(name: "Médico-social", short_name: "Médico-social")
+territory62.services << [service_pmi, service_social, service_secretariat]
+territory75.services << [service_pmi, service_social, service_secretariat]
 
 # MOTIFS org_paris_nord
 
@@ -332,6 +335,21 @@ user_org_paris_nord_jean.skip_confirmation!
 user_org_paris_nord_jean.save!
 user_org_paris_nord_jean.profile_for(org_paris_nord).update!(logement: 2)
 
+user_org_paris_sud = User.new(
+  first_name: "Francis",
+  last_name: "Factice",
+  email: "francis.factice@demo.rdv-solidarites.fr",
+  birth_date: Date.parse("10/01/1973"),
+  password: "lapinlapin",
+  phone_number: "0101010103",
+  organisation_ids: [org_paris_sud.id],
+  created_through: "user_sign_up"
+)
+
+user_org_paris_sud.skip_confirmation!
+user_org_paris_sud.save!
+user_org_paris_sud.profile_for(org_paris_sud).update!(logement: 2)
+
 user_org_arques = User.new(
   first_name: "Francis",
   last_name: "Factice",
@@ -393,7 +411,6 @@ agent_org_paris_nord_pmi_martine = Agent.new(
     allow_to_manage_teams: true,
     allow_to_manage_access_rights: true,
     allow_to_invite_agents: true,
-    allow_to_download_metrics: true,
   }]
 )
 agent_org_paris_nord_pmi_martine.skip_confirmation!
@@ -414,7 +431,6 @@ agent_org_paris_nord_pmi_marco = Agent.new(
     allow_to_manage_teams: false,
     allow_to_manage_access_rights: false,
     allow_to_invite_agents: false,
-    allow_to_download_metrics: false,
   }]
 )
 agent_org_paris_nord_pmi_marco.skip_confirmation!
@@ -434,7 +450,6 @@ agent_org_paris_nord_social_polo = Agent.new(
     allow_to_manage_teams: false,
     allow_to_manage_access_rights: false,
     allow_to_invite_agents: false,
-    allow_to_download_metrics: false,
   }]
 )
 agent_org_paris_nord_social_polo.skip_confirmation!
@@ -454,7 +469,6 @@ org_arques_pmi_maya = Agent.new(
     allow_to_manage_teams: true,
     allow_to_manage_access_rights: true,
     allow_to_invite_agents: true,
-    allow_to_download_metrics: true,
   }]
 )
 org_arques_pmi_maya.skip_confirmation!
@@ -474,7 +488,6 @@ agent_org_bapaume_pmi_bruno = Agent.new(
     allow_to_manage_teams: false,
     allow_to_manage_access_rights: false,
     allow_to_invite_agents: false,
-    allow_to_download_metrics: false,
   }]
 )
 agent_org_bapaume_pmi_bruno.skip_confirmation!
@@ -495,7 +508,6 @@ agent_org_bapaume_pmi_gina = Agent.new(
     allow_to_manage_teams: false,
     allow_to_manage_access_rights: false,
     allow_to_invite_agents: false,
-    allow_to_download_metrics: false,
   }]
 )
 agent_org_bapaume_pmi_gina.skip_confirmation!
@@ -645,7 +657,7 @@ Rdv.create!(
   agent_ids: [agent_org_paris_nord_pmi_martine.id],
   user_ids: [user_org_paris_nord_patricia.id],
   context: "Visite de courtoisie",
-  created_by: :agent
+  created_by: agent_org_paris_nord_pmi_martine
 )
 Rdv.create!(
   starts_at: Time.zone.today + 4.days + 15.hours,
@@ -656,7 +668,7 @@ Rdv.create!(
   agent_ids: [agent_org_paris_nord_pmi_martine.id],
   user_ids: [user_org_paris_nord_josephine.id],
   context: "Suivi vaccins",
-  created_by: :agent
+  created_by: agent_org_paris_nord_pmi_martine
 )
 Rdv.create!(
   starts_at: Time.zone.today + 5.days + 11.hours,
@@ -667,7 +679,7 @@ Rdv.create!(
   agent_ids: [agent_org_paris_nord_pmi_martine.id],
   user_ids: [user_org_paris_nord_josephine.id],
   context: "Visite à domicile",
-  created_by: :agent
+  created_by: agent_org_paris_nord_pmi_martine
 )
 
 Rdv.create!(
@@ -679,7 +691,7 @@ Rdv.create!(
   agent_ids: [agent_org_paris_nord_pmi_martine.id],
   user_ids: [user_org_paris_nord_josephine.id],
   context: "Visite à domicile",
-  created_by: :agent
+  created_by: agent_org_paris_nord_pmi_martine
 )
 
 10.times do |i|
@@ -690,6 +702,7 @@ Rdv.create!(
     lieu: lieu_org_paris_nord_bd_aubervilliers,
     organisation_id: org_paris_nord.id,
     agent_ids: [agent_org_paris_nord_pmi_marco.id],
+    created_by: agent_org_paris_nord_pmi_marco,
     users_count: 0,
     user_ids: []
   )
@@ -701,6 +714,7 @@ Rdv.create!(
     lieu: lieu_org_paris_nord_bolivar,
     organisation_id: org_paris_nord.id,
     agent_ids: [agent_org_paris_nord_social_polo.id],
+    created_by: agent_org_paris_nord_social_polo,
     users_count: 0,
     user_ids: []
   )
@@ -720,6 +734,8 @@ rdv_attributes = 1000.times.flat_map do |i|
       lieu_id: lieu_org_paris_nord_bd_aubervilliers.id,
       organisation_id: org_paris_nord.id,
       context: "Context #{day} #{hour}",
+      created_by_type: "Agent",
+      created_by_id: agent_org_paris_nord_pmi_martine.id,
     }
   end
 end
@@ -727,8 +743,16 @@ results = Rdv.insert_all!(rdv_attributes, returning: Arel.sql("id")) # [{"id"=>1
 rdv_ids = results.flat_map(&:values) # [1, 2, ...]
 agent_rdv_attributes = rdv_ids.map { |id| { agent_id: agent_org_paris_nord_pmi_martine.id, rdv_id: id } }
 AgentsRdv.insert_all!(agent_rdv_attributes)
-rdv_user_attributes = rdv_ids.map { |id| { user_id: user_org_paris_nord_josephine.id, rdv_id: id, send_lifecycle_notifications: true, send_reminder_notification: true, created_by: :agent } }
-Participation.insert_all!(rdv_user_attributes)
+participations_attributes = rdv_ids.map do |id|
+  {
+    user_id: user_org_paris_nord_josephine.id,
+    rdv_id: id, send_lifecycle_notifications: true,
+    send_reminder_notification: true,
+    created_by_type: "Agent",
+    created_by_id: agent_org_paris_nord_pmi_martine.id,
+  }
+end
+Participation.insert_all!(participations_attributes)
 events = %w[new_creneau_available rdv_cancelled rdv_created rdv_date_updated rdv_upcoming_reminder]
 receipts_attributes = rdv_ids.map do |id|
   { rdv_id: id, user_id: user_org_paris_nord_josephine.id, organisation_id: org_paris_nord.id, event: events.sample, channel: Receipt.channels.values.sample, result: Receipt.results.values.sample, created_at: now, updated_at: now }
