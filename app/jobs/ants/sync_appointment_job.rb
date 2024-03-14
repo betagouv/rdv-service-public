@@ -49,10 +49,18 @@ module Ants
       users.each do |user|
         existing_appointment(user)&.delete
 
-        if user.ants_pre_demande_number.present? # Les usagers créés par les agent
+        if valid_pre_demande_number?(user)
           AntsApi::Appointment.new(application_id: user.ants_pre_demande_number, **@appointment_data).create
         end
       end
+    end
+
+    def valid_pre_demande_number?(user)
+      form = Admin::UserForm.new(user)
+      form.validate
+      # require "byebug"
+      # byebug
+      true
     end
 
     def users
