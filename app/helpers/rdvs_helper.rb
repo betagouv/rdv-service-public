@@ -72,7 +72,7 @@ module RdvsHelper
   end
 
   def dates_interval
-    return nil if no_date_filters?
+    return nil if no_date_filters? || params[:start] == params[:end]
 
     if valid_date?(params[:start]) && !valid_date?(params[:end])
       dates_interval_from(params[:start])
@@ -80,7 +80,7 @@ module RdvsHelper
       dates_interval_until(params[:end])
     else
       # Both Dates are valid
-      [format_date(params[:start]), format_date(params[:end])].uniq.join(" - ")
+      [format_date(params[:start]), format_date(params[:end])].join(" - ")
     end
   end
 
