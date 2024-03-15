@@ -161,7 +161,13 @@ class Agent < ApplicationRecord
       referent_assignations.destroy_all
       sector_attributions.destroy_all
 
-      update_columns(deleted_at: Time.zone.now, email_original: email, email: deleted_email, uid: deleted_email)
+      update_columns(
+        deleted_at: Time.zone.now,
+        email_original: email,
+        email: deleted_email,
+        uid: deleted_email,
+        inclusion_connect_open_id_sub: "deleted_#{inclusion_connect_open_id_sub}"
+      )
     end
   end
 
