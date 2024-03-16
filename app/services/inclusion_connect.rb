@@ -71,7 +71,7 @@ class InclusionConnect
     return handle_agent_mismatch if agent_mismatch?
 
     update_basic_info
-    update_email_and_uid(matching_agent) if matching_agent.email != user_info["email"]
+    update_email(matching_agent) if matching_agent.email != user_info["email"]
   end
 
   def update_basic_info
@@ -90,8 +90,10 @@ class InclusionConnect
     matching_agent.save! if matching_agent.changed?
   end
 
-  def update_email_and_uid(agent)
-    agent.update_columns(email: user_info["email"], uid: user_info["email"]) # rubocop:disable Rails/SkipsModelValidations
+  def update_email(agent)
+    agent.email = user_info["email"]
+    agent.skip_reconfirmation!
+    agent.save!
   end
 
   def matching_agent
@@ -109,6 +111,8 @@ class InclusionConnect
   end
 
   def found_by_email
+    return log_and_exit("email") if user_info["email"].nil?
+
     return @found_by_email if defined?(@found_by_email)
 
     @found_by_email = Agent.find_by(email: user_info["email"])
@@ -127,7 +131,17 @@ class InclusionConnect
   end
 
   def found_by_sub
+    return log_and_exit("sub") if user_info["sub"].nil?
+
+    return if user_info["sub"].nil? && Sentry.capture_message("InclusionConnect sub is nil", extra: user_info, fingerprint: "ic_sub_nil")
+
     @found_by_sub ||= Agent.find_by(inclusion_connect_open_id_sub: user_info["sub"])
+  end
+
+  def log_and_exit(field)
+    # should not happen
+    Sentry.capture_message("InclusionConnect #{field} is nil", extra: user_info, fingerprint: "ic_#{field}_nil")
+    nil
   end
 
   def agent_mismatch?

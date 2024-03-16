@@ -46,7 +46,9 @@ module Ants
     end
 
     def create_or_update_appointments
-      users.each do |user|
+      users.select do |user|
+        user.ants_pre_demande_number.present? # Les agents peuvent créer un rdv sans préciser le numéro de pré-demande ANTS
+      end.each do |user|
         existing_appointment(user)&.delete
 
         AntsApi::Appointment.new(application_id: user.ants_pre_demande_number, **@appointment_data).create
