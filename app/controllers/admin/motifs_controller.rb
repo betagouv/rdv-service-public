@@ -24,7 +24,9 @@ class Admin::MotifsController < AgentAuthController
 
   def duplicate
     authorize(@motif)
-    redirect_to new_admin_organisation_motif_path(organisation_id: current_organisation, **@motif.attributes.symbolize_keys.slice(*FORM_ATTRIBUTES))
+    new_motif_attrs = @motif.attributes.symbolize_keys.slice(*FORM_ATTRIBUTES)
+      .merge(duplicated_from_motif_id: @motif.id)
+    redirect_to new_admin_organisation_motif_path(organisation_id: current_organisation, **new_motif_attrs)
   end
 
   def edit
@@ -91,6 +93,7 @@ class Admin::MotifsController < AgentAuthController
     collectif
     sectorisation_level
     rdvs_editable_by_user
+    duplicated_from_motif_id
   ].freeze
 
   def pundit_user

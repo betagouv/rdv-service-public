@@ -2,8 +2,8 @@
 
   = render "model_errors", model: motif
 
-  / Ce select sert principalement lors de la duplication d'un motif
-  - if motif.new_record? && current_agent.multiple_organisations_access?
+  = f.hidden_field :duplicated_from_motif_id
+  - if motif.duplicated_from_motif && motif.new_record? && current_agent.multiple_organisations_access?
     .card
       .card-body
         = f.association :organisation, label: "Créer le motif dans cette organisation", collection: current_agent.organisations, input_html: { class: "select2-input" }
