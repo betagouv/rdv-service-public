@@ -11,7 +11,7 @@ RSpec.describe PrescripteurRdvWizard do
       motif_id: motif.id,
       lieu_id: lieu.id,
       user: {
-        first_name: "Léa",
+        first_name: "Lea",
         last_name: "Boubakar",
         phone_number: "06 11 22 33 44",
       },
@@ -48,7 +48,7 @@ RSpec.describe PrescripteurRdvWizard do
       email_to_agent = emails.find { |email| email.to == [agent.email] }
 
       expect(email_to_agent.html_part.to_s).not_to include("La participation de Pres CRIPTEUR au RDV collectif")
-      expect(email_to_agent.html_part.to_s).to include("La participation de Léa BOUBAKAR au RDV collectif")
+      expect(email_to_agent.html_part.to_s).to include("La participation de Lea BOUBAKAR au RDV collectif")
     end
   end
 
@@ -68,8 +68,8 @@ RSpec.describe PrescripteurRdvWizard do
   context "when the existing users have a different first name, last name or phone number" do
     before do
       create(:user, first_name: "Leo", last_name: "BOUBAKAR", phone_number: "0611223344")
-      create(:user, first_name: "Léa", last_name: "BOUBAKA", phone_number: "0611223344")
-      create(:user, first_name: "Léa", last_name: "BOUBAKAR", phone_number: "0688889999")
+      create(:user, first_name: "Lea", last_name: "BOUBAKA", phone_number: "0611223344")
+      create(:user, first_name: "Lea", last_name: "BOUBAKAR", phone_number: "0688889999")
     end
 
     it "creates a new user" do
