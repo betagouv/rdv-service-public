@@ -24,7 +24,7 @@ class Admin::MotifsController < AgentAuthController
 
   def duplicate
     authorize(@motif)
-    redirect_to new_admin_organisation_motif_path(current_organisation, **@motif.attributes.symbolize_keys.slice(*form_attrs))
+    redirect_to new_admin_organisation_motif_path(organisation_id: current_organisation, **@motif.attributes.symbolize_keys.slice(*form_attrs))
   end
 
   def edit
