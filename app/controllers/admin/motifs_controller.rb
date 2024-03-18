@@ -18,7 +18,7 @@ class Admin::MotifsController < AgentAuthController
   end
 
   def new
-    @motif = Motif.new(params.permit(*form_attrs).merge(organisation: current_organisation))
+    @motif = Motif.new(params.permit(*form_attrs))
     authorize(@motif)
   end
 
