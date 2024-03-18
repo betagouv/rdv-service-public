@@ -38,14 +38,12 @@ RSpec.describe PrescripteurRdvWizard do
       stub_netsize_ok
     end
 
-    it "notifies the agent, the user and the prescripteur" do
-      wizard = described_class.new(attributes, Domain::ALL.first)
-      wizard.create!
+    it "notifies the agent with the proper name" do
+      described_class.new(attributes, Domain::ALL.first).create!
 
       perform_enqueued_jobs
 
-      emails = ActionMailer::Base.deliveries
-      email_to_agent = emails.find { |email| email.to == [agent.email] }
+      email_to_agent = ActionMailer::Base.deliveries.find { |email| email.to == [agent.email] }
 
       expect(email_to_agent.html_part.to_s).not_to include("La participation de Pres CRIPTEUR au RDV collectif")
       expect(email_to_agent.html_part.to_s).to include("La participation de Lea BOUBAKAR au RDV collectif")
