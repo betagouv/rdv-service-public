@@ -4,7 +4,7 @@ FactoryBot.define do
   factory :motif do
     organisation { association(:organisation) }
     service { association(:service) }
-    # motif_category { association(:motif_category) }
+    motif_category { association(:motif_category) }
 
     name { generate(:motif_name) }
     default_duration_in_min { 45 }

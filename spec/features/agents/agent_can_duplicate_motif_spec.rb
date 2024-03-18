@@ -1,5 +1,6 @@
 RSpec.describe "agent can duplicate motif" do
-  let(:organisation) { create(:organisation) }
+  let(:territory) { create(:territory).tap { _1.motif_categories << create(:motif_category, name: "Cat de motif") } }
+  let(:organisation) { create(:organisation, territory: territory) }
   let(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
   let(:motif_service) { create(:service, name: "Service du motif à dupliquer") }
 
@@ -7,6 +8,7 @@ RSpec.describe "agent can duplicate motif" do
     create(
       :motif,
       organisation: organisation,
+      motif_category: territory.motif_categories.first,
       service: motif_service,
       name: "Motif à créer 18 fois",
       default_duration_in_min: 28,
@@ -46,7 +48,7 @@ RSpec.describe "agent can duplicate motif" do
   end
 
   context "when agent is in multiple organisations" do
-    let(:other_organisation) { create(:organisation, name: "Mon autre orga", territory: organisation.territory) }
+    let(:other_organisation) { create(:organisation, name: "Mon autre orga", territory: territory) }
 
     before do
       agent.roles.create!(organisation: other_organisation, access_level: AgentRole::ACCESS_LEVEL_ADMIN)
