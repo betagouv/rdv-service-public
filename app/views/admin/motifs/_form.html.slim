@@ -6,7 +6,8 @@
   - if motif.duplicated_from_motif && motif.new_record? && current_agent.multiple_organisations_access?
     .card
       .card-body
-        = f.association :organisation, label: "Créer le motif dans cette organisation", collection: current_agent.organisations, input_html: { class: "select2-input" }
+        - permitted_organisations = current_agent.organisations.select { Agent::MotifPolicy.agent_can_manage_motifs?(_1, current_agent) }
+        = f.association :organisation, label: "Créer le motif dans cette organisation", collection: permitted_organisations, input_html: { class: "select2-input" }
 
   .card
     .card-body
