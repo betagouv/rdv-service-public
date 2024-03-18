@@ -60,6 +60,18 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
             expect(WebMock).not_to have_requested(:any, %r{\.ants\.gouv\.fr/api})
           end
         end
+
+        context "and the rdv is cancelled" do
+          before { rdv.status = "excused" }
+
+          it "doesn't send a request to the appointment ANTS api" do
+            perform_enqueued_jobs do
+              rdv.save!
+
+              expect(WebMock).not_to have_requested(:any, %r{\.ants\.gouv\.fr/api})
+            end
+          end
+        end
       end
     end
 
