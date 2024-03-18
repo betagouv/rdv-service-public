@@ -27,6 +27,7 @@ MotifCategory.create!(name: "Carte d'identité et passeport disponible sur le si
 motif_passeport = Motif.create!(
   name: "Passeport",
   color: "#00ffff",
+  motif_category: MotifCategory.find_by!(short_name: "PASSPORT"),
   default_duration_in_min: 30,
   organisation: org_mairie_de_sannois,
   bookable_by: :everyone,
