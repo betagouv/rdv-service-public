@@ -37,8 +37,8 @@ class Admin::MotifsController < AgentAuthController
   end
 
   def create
-    @motif = Motif.new(params.require(:motif).permit(*form_attrs))
-    @motif.organisation = @organisation
+    @motif = Motif.new(organisation: @organisation)
+    @motif.assign_attributes(params.require(:motif).permit(*form_attrs))
     authorize(@motif)
     if @motif.save
       flash[:notice] = "Motif créé."
@@ -98,6 +98,7 @@ class Admin::MotifsController < AgentAuthController
     %i[
       name
       service_id
+      organisation_id
       color
       motif_category_id
       default_duration_in_min

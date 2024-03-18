@@ -1,11 +1,10 @@
 RSpec.describe "agent can duplicate motif" do
-  it "works" do
-    organisation = create(:organisation)
-    agent = create(:agent, admin_role_in_organisations: [organisation])
-    motif_service = create(:service, name: "Service du motif à dupliquer")
-    organisation.territory.services << motif_service
+  let(:organisation) { create(:organisation) }
+  let(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
+  let(:motif_service) { create(:service, name: "Service du motif à dupliquer") }
 
-    existing_motif = create(
+  let(:existing_motif) do
+    create(
       :motif,
       organisation: organisation,
       service: motif_service,
@@ -24,7 +23,13 @@ RSpec.describe "agent can duplicate motif" do
       instruction_for_rdv: "Venez très très très tôt",
       custom_cancel_warning_message: "Êtes-vous sûr d'être certain ?"
     )
+  end
 
+  before do
+    organisation.territory.services << motif_service
+  end
+
+  it "works" do
     login_as(agent, scope: :agent)
     visit admin_organisation_motif_path(organisation, existing_motif)
     click_on "Dupliquer"
@@ -38,5 +43,32 @@ RSpec.describe "agent can duplicate motif" do
       location_type: "home"
     )
     expect(Motif.last).to have_attributes(expected_attributes)
+  end
+
+  context "when agent is in multiple organisations" do
+    let(:other_organisation) { create(:organisation, name: "Mon autre orga", territory: organisation.territory) }
+
+    before do
+      agent.roles.create!(organisation: other_organisation, access_level: AgentRole::ACCESS_LEVEL_ADMIN)
+    end
+
+    it "allows duplicating in another organisation" do
+      login_as(agent, scope: :agent)
+      visit admin_organisation_motif_path(organisation, existing_motif)
+      click_on "Dupliquer"
+      select "Mon autre orga", from: :motif_organisation_id
+      expect { click_on "Enregistrer" }.to change(Motif, :count).by(1)
+
+      expected_attributes = existing_motif.attributes.symbolize_keys.merge(
+        id: be_a(Integer),
+        created_at: be_within(1.second).of(Time.zone.now),
+        updated_at: be_within(1.second).of(Time.zone.now),
+        organisation_id: other_organisation.id
+      )
+      expect(Motif.last).to have_attributes(expected_attributes)
+
+      # Rediriger vers la liste des motifs de l'autre orga
+      expect(page).to have_current_path("/admin/organisations/#{other_organisation.id}/motifs")
+    end
   end
 end

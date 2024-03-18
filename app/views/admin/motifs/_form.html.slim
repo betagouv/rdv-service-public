@@ -2,6 +2,12 @@
 
   = render "model_errors", model: motif
 
+  / Permettre de choisir l'organisation dans laquelle on duplique un motif
+  - if params[:name].present? && motif.new_record? && current_agent.multiple_organisations_access?
+    .card
+      .card-body
+        = f.association :organisation, label: "Créer le motif dans cette organisation", collection: current_agent.organisations, input_html: { class: "select2-input" }
+
   .card
     .card-body
       h5.card-title Configuration générale
