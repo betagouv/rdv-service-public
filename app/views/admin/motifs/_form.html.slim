@@ -57,6 +57,12 @@
               = f.radio_button(:location_type, value, disabled: true)
               span.text-muted.ml-1= Motif.human_attribute_value(:location_type, value)
               p.text-muted.font-14= Motif.human_attribute_value(:location_type, value, context: :hint)
+        - if motif.persisted?
+          p.text-muted.font-14
+            i.fa.fa-circle-info.mr-1
+            ' Pour permettre plusieurs types de rendez-vous, vous pouvez
+            = link_to("dupliquer ce motif", duplicate_admin_organisation_motif_path(current_organisation, motif))
+            | .
 
   .card
     .card-body
