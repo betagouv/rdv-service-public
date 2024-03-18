@@ -18,13 +18,13 @@ class Admin::MotifsController < AgentAuthController
   end
 
   def new
-    @motif = Motif.new(params.permit(*form_attrs))
+    @motif = Motif.new(params.permit(*FORM_ATTRIBUTES))
     authorize(@motif)
   end
 
   def duplicate
     authorize(@motif)
-    redirect_to new_admin_organisation_motif_path(organisation_id: current_organisation, **@motif.attributes.symbolize_keys.slice(*form_attrs))
+    redirect_to new_admin_organisation_motif_path(organisation_id: current_organisation, **@motif.attributes.symbolize_keys.slice(*FORM_ATTRIBUTES))
   end
 
   def edit
@@ -38,7 +38,7 @@ class Admin::MotifsController < AgentAuthController
 
   def create
     @motif = Motif.new
-    @motif.assign_attributes(params.require(:motif).permit(*form_attrs))
+    @motif.assign_attributes(params.require(:motif).permit(*FORM_ATTRIBUTES))
     @motif.organisation ||= current_organisation
     authorize(@motif)
     if @motif.save
@@ -51,7 +51,7 @@ class Admin::MotifsController < AgentAuthController
 
   def update
     authorize(@motif)
-    if @motif.update(params.require(:motif).permit(*form_attrs))
+    if @motif.update(params.require(:motif).permit(*FORM_ATTRIBUTES))
       flash[:notice] = "Le motif a été modifié."
       redirect_to admin_organisation_motif_path(@motif.organisation, @motif)
     else
@@ -70,6 +70,28 @@ class Admin::MotifsController < AgentAuthController
   end
 
   private
+
+  FORM_ATTRIBUTES = %i[
+    name
+    service_id
+    organisation_id
+    color
+    motif_category_id
+    default_duration_in_min
+    bookable_by
+    location_type
+    max_public_booking_delay
+    min_public_booking_delay
+    visibility_type
+    restriction_for_rdv
+    instruction_for_rdv
+    custom_cancel_warning_message
+    for_secretariat
+    follow_up
+    collectif
+    sectorisation_level
+    rdvs_editable_by_user
+  ].freeze
 
   def pundit_user
     current_agent
@@ -94,29 +116,4 @@ class Admin::MotifsController < AgentAuthController
     @motif = policy_scope(current_organisation.motifs, policy_scope_class: Agent::MotifPolicy::Scope)
       .find(params[:id])
   end
-
-  def form_attrs
-    %i[
-      name
-      service_id
-      organisation_id
-      color
-      motif_category_id
-      default_duration_in_min
-      bookable_by
-      location_type
-      max_public_booking_delay
-      min_public_booking_delay
-      visibility_type
-      restriction_for_rdv
-      instruction_for_rdv
-      custom_cancel_warning_message
-      for_secretariat
-      follow_up
-      collectif
-      sectorisation_level
-      rdvs_editable_by_user
-    ]
-  end
-  helper_method :form_attrs
 end
