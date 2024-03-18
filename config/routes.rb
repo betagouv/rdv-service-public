@@ -163,7 +163,11 @@ Rails.application.routes.draw do
         resources :agent_searches, only: :index, module: "creneaux"
         resources :slots, only: :index
         resources :lieux, except: :show
-        resources :motifs
+        resources :motifs do
+          member do
+            get :duplicate
+          end
+        end
         resources :rdvs_collectifs, only: %i[index new create edit update] do
           collection do
             resources :motifs, only: [:index], as: :rdvs_collectif_motifs, controller: "rdvs_collectifs/motifs"

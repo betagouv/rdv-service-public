@@ -4,6 +4,7 @@ class Agent::MotifPolicy < ApplicationPolicy
   end
 
   alias new? update?
+  alias duplicate? new?
   alias create? update?
   alias edit? update?
   alias destroy? update?

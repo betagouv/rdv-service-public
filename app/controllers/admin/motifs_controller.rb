@@ -2,7 +2,7 @@ class Admin::MotifsController < AgentAuthController
   respond_to :html, :json
 
   before_action :set_organisation, only: %i[new create]
-  before_action :set_motif, only: %i[show edit update destroy]
+  before_action :set_motif, only: %i[show edit update destroy duplicate]
 
   def index
     @unfiltered_motifs = policy_scope(current_organisation.motifs, policy_scope_class: Agent::MotifPolicy::Scope).active
@@ -18,8 +18,13 @@ class Admin::MotifsController < AgentAuthController
   end
 
   def new
-    @motif = Motif.new(organisation: current_organisation)
+    @motif = Motif.new(params.permit(*form_attrs).merge(organisation: current_organisation))
     authorize(@motif)
+  end
+
+  def duplicate
+    authorize(@motif)
+    redirect_to new_admin_organisation_motif_path(current_organisation, **@motif.attributes.symbolize_keys.slice(*form_attrs))
   end
 
   def edit
@@ -32,7 +37,7 @@ class Admin::MotifsController < AgentAuthController
   end
 
   def create
-    @motif = Motif.new(motif_params)
+    @motif = Motif.new(params.require(:motif).permit(*form_attrs))
     @motif.organisation = @organisation
     authorize(@motif)
     if @motif.save
@@ -45,7 +50,7 @@ class Admin::MotifsController < AgentAuthController
 
   def update
     authorize(@motif)
-    if @motif.update(motif_params)
+    if @motif.update(params.require(:motif).permit(*form_attrs))
       flash[:notice] = "Le motif a été modifié."
       redirect_to admin_organisation_motif_path(@motif.organisation, @motif)
     else
@@ -89,23 +94,27 @@ class Admin::MotifsController < AgentAuthController
       .find(params[:id])
   end
 
-  def motif_params
-    params.require(:motif)
-      .permit(:name, :service_id,
-              :color, :motif_category_id,
-              :default_duration_in_min,
-              :bookable_by,
-              :location_type,
-              :max_public_booking_delay,
-              :min_public_booking_delay,
-              :visibility_type,
-              :restriction_for_rdv,
-              :instruction_for_rdv,
-              :custom_cancel_warning_message,
-              :for_secretariat,
-              :follow_up,
-              :collectif,
-              :sectorisation_level,
-              :rdvs_editable_by_user)
+  def form_attrs
+    %i[
+      name
+      service_id
+      color
+      motif_category_id
+      default_duration_in_min
+      bookable_by
+      location_type
+      max_public_booking_delay
+      min_public_booking_delay
+      visibility_type
+      restriction_for_rdv
+      instruction_for_rdv
+      custom_cancel_warning_message
+      for_secretariat
+      follow_up
+      collectif
+      sectorisation_level
+      rdvs_editable_by_user
+    ]
   end
+  helper_method :form_attrs
 end
