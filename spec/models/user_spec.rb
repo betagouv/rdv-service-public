@@ -348,4 +348,14 @@ RSpec.describe User, type: :model do
       expect { parent.update!(responsible: child) }.to raise_error(ActiveRecord::RecordInvalid, /L'usager⋅e ne peut être responsable de son propre responsable/)
     end
   end
+
+  describe "#ants_pre_demande_number" do
+    it "accepts lowercase letters, but normalizes them to uppercase" do
+      user = create(:user)
+      user.ants_pre_demande_number = "abcde12345"
+      expect(user).to be_valid
+      user.save
+      expect(user.reload.ants_pre_demande_number).to eq "ABCDE12345"
+    end
+  end
 end
