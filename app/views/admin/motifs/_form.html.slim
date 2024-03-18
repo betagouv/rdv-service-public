@@ -109,7 +109,7 @@
             span.ml-1= I18n.t("activerecord.attributes.motif/bookable_by/hint.everyone")
             p.text-muted.font-14= "Les usagers pourront aussi prendre rendez-vous en ligne sur les plages d'ouverture définies par les agents de #{@motif.organisation.name}"
 
-      .form-row
+      .form-row.js-rdvs-editable
         .col-md-4= f.input :min_public_booking_delay, collection: min_max_delay_options
         .col-md-4= f.input :max_public_booking_delay, collection: min_max_delay_options
 
