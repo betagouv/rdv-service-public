@@ -27,6 +27,31 @@ RSpec.describe PrescripteurRdvWizard do
 
   before { travel_to(first_day.beginning_of_day) }
 
+  context "for a rdv collectif" do
+    let(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+
+    before do
+      motif.update!(collectif: true)
+      rdv = create(:rdv, motif: motif, agents: [agent])
+      attributes["rdv_collectif_id"] = rdv.id
+
+      stub_netsize_ok
+    end
+
+    it "notifies the agent, the user and the prescripteur" do
+      wizard = described_class.new(attributes, Domain::ALL.first)
+      wizard.create!
+
+      perform_enqueued_jobs
+
+      emails = ActionMailer::Base.deliveries
+      email_to_agent = emails.find { |email| email.to == [agent.email] }
+
+      expect(email_to_agent.html_part.to_s).not_to include("La participation de Pres CRIPTEUR au RDV collectif")
+      expect(email_to_agent.html_part.to_s).to include("La participation de Léa BOUBAKAR au RDV collectif")
+    end
+  end
+
   context "when the user already exists but with different case or accents in their name" do
     let!(:user) do
       create(:user, first_name: "Lea", last_name: "BOUBAKAR", phone_number: "0611223344")

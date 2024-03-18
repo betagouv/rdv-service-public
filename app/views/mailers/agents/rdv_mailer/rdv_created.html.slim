@@ -4,7 +4,7 @@ div
     - date = relative_date(@rdv.starts_at)
     - author = @author&.full_name
     - if @rdv.collectif?
-      = t(".created_participation_at_date_by_user", date: date , author: author)
+      = t(".created_participation_at_date_by_user", date: date , user: author)
     - else
       = t(".created_at_date_by_user", date: date , author: author)
 
