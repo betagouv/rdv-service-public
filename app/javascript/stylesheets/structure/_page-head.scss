@@ -1,11 +1,14 @@
 .page-title-box {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 12px;
+
   .page-title {
     margin: 0;
     line-height: 85px;
   }
   .page-title-right {
-    float: right;
-    margin-top: 25px;
+    margin-bottom: 12px;
   }
 
   .breadcrumb {

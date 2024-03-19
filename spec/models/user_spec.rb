@@ -1,4 +1,4 @@
-describe User, type: :model do
+RSpec.describe User, type: :model do
   describe "#add_organisation" do
     subject do
       user.add_organisation(organisation)
@@ -69,6 +69,7 @@ describe User, type: :model do
   describe "#soft_delete" do
     it "change email to a « deleted.rdv-solidarites.fr » domain and anonymises other attributes" do
       user = create(:user, email: "jean@valjean.fr", first_name: "Jean", last_name: "Valjean")
+      other_user = create(:user, email: "other_user@test.com")
       user.soft_delete
       expect(user.email).to end_with("deleted.rdv-solidarites.fr")
       expect(user).to have_attributes(
@@ -77,13 +78,16 @@ describe User, type: :model do
         address: "[valeur anonymisée]"
       )
       expect(user.deleted_at).to be_within(5.seconds).of(Time.zone.now)
+
+      # on n'anonymise pas un autre utilisateur
+      expect(other_user.reload.email).to eq("other_user@test.com")
     end
 
     it "anonymizes rdvs and receipts and deletes versions" do
-      rdv = create(:rdv)
+      rdv = create(:rdv, context: "des détails sur le rdv")
       user = rdv.users.first
 
-      receipt = create(:receipt, user: user, rdv: rdv)
+      receipt = create(:receipt, user: user, rdv: rdv, sms_phone_number: "0611111111")
       user.soft_delete
 
       expect(receipt.reload.sms_phone_number).to eq "[valeur anonymisée]"
@@ -269,9 +273,10 @@ describe User, type: :model do
   # cf https://github.com/heartcombo/devise/wiki/How-To:-Email-only-sign-up
   describe "#set_reset_password_token" do
     it "returns the plaintext token" do
-      potential_token = subject.send(:set_reset_password_token)
-      potential_token_digest = Devise.token_generator.digest(subject, :reset_password_token, potential_token)
-      actual_token_digest = subject.reset_password_token
+      user = build(:user)
+      potential_token = user.send(:set_reset_password_token)
+      potential_token_digest = Devise.token_generator.digest(user, :reset_password_token, potential_token)
+      actual_token_digest = user.reset_password_token
       expect(potential_token_digest).to eql(actual_token_digest)
     end
   end
@@ -341,6 +346,16 @@ describe User, type: :model do
       parent = create(:user)
       child = create(:user, responsible: parent)
       expect { parent.update!(responsible: child) }.to raise_error(ActiveRecord::RecordInvalid, /L'usager⋅e ne peut être responsable de son propre responsable/)
+    end
+  end
+
+  describe "#ants_pre_demande_number" do
+    it "accepts lowercase letters, but normalizes them to uppercase" do
+      user = create(:user)
+      user.ants_pre_demande_number = "abcde12345"
+      expect(user).to be_valid
+      user.save
+      expect(user.reload.ants_pre_demande_number).to eq "ABCDE12345"
     end
   end
 end

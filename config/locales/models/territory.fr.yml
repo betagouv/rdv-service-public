@@ -8,11 +8,3 @@ fr:
         departement_number: Département
         sms_configuration: "Clef d’API / Mot de passe"
         sms_provider: "Fournisseur pour l’envoi de SMS"
-        visible_users_throughout_the_territory: Usagers visible sur tout le territoire
-    errors:
-      models:
-        territory:
-          attributes:
-            departement_number:
-              taken: "Il y a déjà des organisations et des agents créés dans ce département, veuillez entrer en contact avec eux"
-              format: "%{message}"

@@ -11,7 +11,7 @@ class Stat
   end
 
   def rdvs_group_by_week
-    rdvs.group(:created_by).group_by_week("rdvs.created_at", format: DEFAULT_FORMAT).count
+    rdvs.group(:created_by_type).group_by_week("rdvs.created_at", format: DEFAULT_FORMAT).count
   end
 
   def rdvs_group_by_type
@@ -28,10 +28,10 @@ class Stat
 
   def rdvs_group_by_week_fr
     new_keys = {
-      agent: "Agent (#{rdvs.created_by_agent.count})",
-      user: "Usager (#{rdvs.created_by_user.count})",
-      file_attente: "File d'attente (#{rdvs.created_by_file_attente.count})",
-      prescripteur: "Prescripteur (#{rdvs.created_by_prescripteur.count})",
+      Agent: "Agent (#{rdvs.where(created_by_type: 'Agent').count})",
+      User: "Usager (#{rdvs.where(created_by_type: 'User').count})",
+      FileAttente: "File d'attente (#{rdvs.where(created_by_type: 'FileAttente').count})",
+      Prescripteur: "Prescripteur (#{rdvs.where(created_by_type: 'Prescripteur').count})",
     }
     rdvs_group_by_week.transform_keys { |key| [new_keys[key[0].to_sym], key[1]] }
   end

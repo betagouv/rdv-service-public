@@ -53,6 +53,7 @@ module SearchContextHelper
       external_organisation_ids: params[:external_organisation_ids],
       prescripteur: params[:prescripteur],
       duration: params[:duration],
+      user_ids: params[:user_ids],
     }
   end
 end

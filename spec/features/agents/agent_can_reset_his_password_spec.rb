@@ -1,4 +1,4 @@
-describe "Agent resets his password spec" do
+RSpec.describe "Agent resets his password spec" do
   let!(:agent) { create(:agent) }
 
   around { |example| perform_enqueued_jobs { example.run } }

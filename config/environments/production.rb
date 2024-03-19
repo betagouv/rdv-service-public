@@ -65,28 +65,27 @@ Rails.application.configure do
   # config.active_job.queue_name_prefix = "lapin_production"
   config.active_job.queue_adapter = :good_job
 
-  config.default_url_options = { host: ENV["HOST"].sub(%r{^https?://}, "") }
+  config.default_url_options = { host: ENV["HOST"]&.sub(%r{^https?://}, "") }
   config.action_mailer.perform_caching = false
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   # config.action_mailer.raise_delivery_errors = false
 
-  config.action_mailer.default_url_options = { protocol: "https", host: ENV["HOST"].sub(%r{^https?://}, ""), utm_source: "rdv-solidarites", utm_medium: "email", utm_campaign: "auto" }
+  config.action_mailer.default_url_options = { protocol: "https", host: ENV["HOST"]&.sub(%r{^https?://}, ""), utm_source: "rdv-solidarites", utm_medium: "email", utm_campaign: "auto" }
   config.action_mailer.asset_host = ENV["HOST"]
 
   if ENV["DISABLE_SENDING_EMAILS"]
     config.action_mailer.delivery_method = :file
   else
-    config.action_mailer.smtp_settings = {
-      address: "smtp-relay.sendinblue.com",
-      port: "587",
-      authentication: :plain,
-      user_name: ENV["SENDINBLUE_USERNAME"],
-      password: ENV["SENDINBLUE_PASSWORD"],
-      domain: "rdv-solidarites.fr",
-    }
     config.action_mailer.delivery_method = :smtp
+    config.action_mailer.smtp_settings = {
+      address: ENV.fetch("SMTP_ADDRESS"),
+      port: ENV.fetch("SMTP_PORT"),
+      authentication: :plain,
+      user_name: ENV.fetch("SMTP_USERNAME"),
+      password: ENV.fetch("SMTP_PASSWORD"),
+    }
   end
 
   config.action_mailer.show_previews = ENV["IS_REVIEW_APP"] == "true"

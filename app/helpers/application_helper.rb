@@ -76,8 +76,8 @@ module ApplicationHelper
     # HACK: avoids including a full-blown gem like `browser`
   end
 
-  def human_id(organisation_or_sector)
-    tag.span(organisation_or_sector.human_id, class: "badge badge-light text-monospace")
+  def human_id(sector)
+    tag.span(sector.human_id, class: "badge badge-light text-monospace")
   end
 
   def aligned_flex_row(fa_icon_name, &block)
@@ -101,7 +101,7 @@ module ApplicationHelper
     value ||= object.human_attribute_value(attribute_name)
 
     tag.strong(tag.span(name) + tag.span(" : ")) +
-      tag.span(value.presence || "N/A", class: class_names("text-muted": value.blank?))
+      tag.span(value.presence || "Non renseigné", class: class_names("text-muted": value.blank?))
   end
 
   def admin_link_to_if_permitted(organisation, object, name = object.to_s)

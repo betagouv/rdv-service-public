@@ -1,4 +1,4 @@
-describe Admin::Creneaux::AgentSearchesController, type: :controller do
+RSpec.describe Admin::Creneaux::AgentSearchesController, type: :controller do
   context "with a secretaire signed_in" do
     let(:organisation) { create(:organisation) }
     let(:agent) { create(:agent, :secretaire, basic_role_in_organisations: [organisation]) }

@@ -25,6 +25,12 @@ module MotifsHelper
     safe_join(only.select { motif.send("#{_1}?") }.map { build_badge_tag_for(_1) })
   end
 
+  def motif_name_with_location_type_and_status(motif)
+    return motif_name_and_location_type(motif) if motif.deleted_at.blank?
+
+    "#{motif_name_and_location_type(motif)} (supprimé)"
+  end
+
   def build_badge_tag_for(badge_name)
     tag.span(I18n.t("motifs.badges.#{badge_name}"), class: "badge badge-motif-#{badge_name}")
   end

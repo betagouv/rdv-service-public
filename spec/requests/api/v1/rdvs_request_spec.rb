@@ -1,6 +1,6 @@
 require "swagger_helper"
 
-describe "RDV authentified API", swagger_doc: "v1/api.json" do
+RSpec.describe "RDV authentified API", swagger_doc: "v1/api.json" do
   with_examples
 
   path "/api/v1/organisations/{organisation_id}/rdvs" do
@@ -53,6 +53,7 @@ describe "RDV authentified API", swagger_doc: "v1/api.json" do
 
         it "returns policy scoped RDVs" do
           expect(response.parsed_body["rdvs"].pluck("id")).to contain_exactly(rdv.id)
+          expect(response.parsed_body["rdvs"].pluck("created_by")).to contain_exactly("agent")
         end
       end
 

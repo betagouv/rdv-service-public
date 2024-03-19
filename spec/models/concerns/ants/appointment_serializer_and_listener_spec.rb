@@ -3,7 +3,8 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
   let(:organisation) { create(:organisation, verticale: :rdv_mairie) }
   let(:user) { create(:user, ants_pre_demande_number: "A123456789", organisations: [organisation]) }
   let(:lieu) { create(:lieu, organisation: organisation, name: "Lieu1") }
-  let(:rdv) { build(:rdv, users: [user], lieu: lieu, organisation: organisation, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
+  let(:motif_passeport) { create(:motif, motif_category: create(:motif_category, :passeport)) }
+  let(:rdv) { build(:rdv, motif: motif_passeport, users: [user], lieu: lieu, organisation: organisation, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
   let(:ants_api_headers) do
     {
       "Accept" => "application/json",
@@ -46,6 +47,30 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
             :post,
             "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/appointments?application_id=A123456789&appointment_date=2020-04-20%2008:00:00&management_url=http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}&meeting_point=Lieu1"
           ).with(headers: ants_api_headers)
+        end
+      end
+
+      context "when the user is created by an agent who didn't fill in the pre_demande_number" do
+        let(:user) { create(:user, ants_pre_demande_number: "", organisations: [organisation]) }
+
+        it "doesn't send a request to the appointment ANTS api" do
+          perform_enqueued_jobs do
+            rdv.save!
+
+            expect(WebMock).not_to have_requested(:any, %r{\.ants\.gouv\.fr/api})
+          end
+        end
+
+        context "and the rdv is cancelled" do
+          before { rdv.status = "excused" }
+
+          it "doesn't send a request to the appointment ANTS api" do
+            perform_enqueued_jobs do
+              rdv.save!
+
+              expect(WebMock).not_to have_requested(:any, %r{\.ants\.gouv\.fr/api})
+            end
+          end
         end
       end
     end

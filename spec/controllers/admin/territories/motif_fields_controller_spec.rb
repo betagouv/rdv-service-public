@@ -1,4 +1,4 @@
-describe Admin::Territories::MotifFieldsController, type: :controller do
+RSpec.describe Admin::Territories::MotifFieldsController, type: :controller do
   describe "#edit" do
     it "responds success" do
       territory = create(:territory)

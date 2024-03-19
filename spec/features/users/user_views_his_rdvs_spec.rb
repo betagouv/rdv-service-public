@@ -1,4 +1,4 @@
-describe "User views his rdv" do
+RSpec.describe "User views his rdv" do
   let!(:organisation) { create(:organisation) }
   let(:user) { create(:user, organisations: [organisation]) }
 

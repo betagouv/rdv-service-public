@@ -1,4 +1,4 @@
-describe "public pages", js: true do
+RSpec.describe "public pages", js: true do
   it "accessibility_path page is accessible" do
     expect_page_to_be_axe_clean(accessibility_path)
   end
@@ -36,10 +36,6 @@ describe "public pages", js: true do
 
   it "mds_path page is accessible" do
     expect_page_to_be_axe_clean(mds_path)
-  end
-
-  it "new_organisation is accessible" do
-    expect_page_to_be_axe_clean(new_organisation_path)
   end
 
   context "prendre RDV" do

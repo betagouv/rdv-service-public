@@ -4,6 +4,14 @@ class Admin::RdvsController < AgentAuthController
   respond_to :html, :json
 
   before_action :set_rdv, :set_optional_agent, except: %i[index create export participations_export]
+  # Ce mécanisme temporaire est mis en place afin d'assurer une rétro-compatibilité du fait
+  # du changement de noms (ou ajout des s) aux paramètres motif_id, lieu_id et scoped_organisation_id
+  # Pour plus de contexte, voir https://github.com/betagouv/rdv-service-public/pull/4054#discussion_r1489720373
+  before_action do
+    params[:motif_ids] ||= Array(params[:motif_id])
+    params[:lieu_ids] ||= Array(params[:lieu_id])
+    params[:scoped_organisation_ids] ||= Array(params[:scoped_organisation_id])
+  end
 
   def index
     set_scoped_organisations
@@ -19,7 +27,7 @@ class Admin::RdvsController < AgentAuthController
       [
         :agents_rdvs, :organisation, :lieu, :motif,
         {
-          participations: [:prescripteur, { user: :user_profiles }],
+          participations: [{ user: :user_profiles }],
           agents: :services,
           users: %i[responsible organisations user_profiles],
         },
@@ -27,8 +35,8 @@ class Admin::RdvsController < AgentAuthController
     )
 
     @form = Admin::RdvSearchForm.new(parsed_params)
-    @lieux = Lieu.joins(:organisation).where(organisations: { id: @scoped_organisations.select(:id) }).enabled.order(:name)
-    @motifs = Motif.joins(:organisation).where(organisations: { id: @scoped_organisations.select(:id) })
+    @lieux = Lieu.joins(:organisation).where(organisations: { id: @scoped_organisations.select(:id) }).enabled.ordered_by_name
+    @motifs = Motif.joins(:organisation).where(organisations: { id: @scoped_organisations.select(:id) }).ordered_by_name
   end
 
   def export
@@ -116,15 +124,19 @@ class Admin::RdvsController < AgentAuthController
   private
 
   def set_scoped_organisations
-    @scoped_organisations = if params[:scoped_organisation_id].blank?
+    @selected_organisations_ids = params[:scoped_organisation_ids]&.compact_blank
+    @scoped_organisations = if @selected_organisations_ids.blank?
                               # l'agent n'a pas accès au filtre d'organisations ou a réinitialisé la page
+                              # Nous sélectionnons par défaut l'organisation courante
+                              @selected_organisations_ids = [current_organisation.id]
                               policy_scope(Organisation).where(id: current_organisation.id)
-                            elsif params[:scoped_organisation_id] == "0"
-                              # l'agent a sélectionné 'Toutes'
+                            elsif @selected_organisations_ids.include?("0")
+                              # l'agent a sélectionné 'Toutes' parmi les options
+                              @selected_organisations_ids = ["0"]
                               policy_scope(Organisation)
                             else
-                              # l'agent a sélectionné une organisation spécifique
-                              policy_scope(Organisation).where(id: parsed_params["scoped_organisation_id"])
+                              # l'agent a sélectionné une ou plusieurs organisations spécifiques
+                              policy_scope(Organisation).where(id: @selected_organisations_ids)
                             end
 
     # An empty scope means the agent tried to access a foreign organisation
@@ -136,9 +148,9 @@ class Admin::RdvsController < AgentAuthController
   end
 
   def parse_date_from_params(date_param)
-    return nil if date_param.blank? || date_param == "__/__/____"
-
     Date.parse(date_param)
+  rescue Date::Error
+    nil
   end
 
   def set_rdv
@@ -163,8 +175,8 @@ class Admin::RdvsController < AgentAuthController
   end
 
   def parsed_params
-    params.permit(:organisation_id, :agent_id, :user_id, :lieu_id, :motif_id, :status, :start, :end, :scoped_organisation_id,
-                  lieu_attributes: %i[name address latitude longitude]).to_hash.to_h do |param_name, param_value|
+    params.permit(:organisation_id, :agent_id, :user_id, :status, :start, :end,
+                  lieu_attributes: %i[name address latitude longitude], motif_ids: [], lieu_ids: [], scoped_organisation_ids: []).to_hash.to_h do |param_name, param_value|
       case param_name
       when "start", "end"
         [param_name, parse_date_from_params(param_value)]

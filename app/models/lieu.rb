@@ -8,7 +8,6 @@ class Lieu < ApplicationRecord
   auto_strip_attributes :name
   enum availability: { enabled: "enabled", disabled: "disabled", single_use: "single_use" }
 
-  # TODO: supprimer cet attribut `:enabled` si bien lié au champ `old_enabled` (cf `schema.rb`)
   attribute :enabled, :boolean
 
   # Relations
@@ -52,7 +51,7 @@ class Lieu < ApplicationRecord
     where.not(availability: :disabled).where(id: plage_ouverture_lieu_ids + rdv_collectif_lieu_ids)
   }
 
-  scope :ordered_by_name, -> { order(Arel.sql("unaccent(LOWER(name))")) }
+  scope :ordered_by_name, -> { order(Arel.sql("unaccent(LOWER(lieux.name))")) }
 
   ## -
   alias enabled enabled?

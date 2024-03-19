@@ -44,9 +44,7 @@ users_to_delete.delete_all
 # Partie 3 : Anonymisation des données restantes
 # -------------------------------
 
-User.anonymize_all!(User.unscoped)
-Receipt.anonymize_all!(Receipt.all)
-Rdv.anonymize_all!(Rdv.all)
+Anonymizer::Core.anonymize_user_data!
 
 # -------------------------------
 # Épilogue : suppression des jobs et versions

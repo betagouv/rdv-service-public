@@ -39,7 +39,7 @@ class ExportCnfsAgents
       "agents.email",
       "agents.first_name",
       "agents.last_name"
-    ).where(rdvs: { created_by: [Rdv.created_by["user"], Rdv.created_by["prescripteur"]] })
+    ).where(rdvs: { created_by_type: %w[User Prescripteur] })
   end
 
   def agents_who_activated_their_count_recently(interval: 30.days.ago)

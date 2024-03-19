@@ -28,6 +28,7 @@ class Territory < ApplicationRecord
   has_many :organisations_agents, -> { distinct }, through: :organisations, source: :agents
   has_many :admin_agents, through: :roles, source: :agent
   has_many :zones, through: :sectors
+  has_many :motifs, through: :organisations
   has_many :rdvs, through: :organisations
   has_many :receipts, through: :organisations
   has_many :user_profiles, through: :organisations
@@ -37,7 +38,6 @@ class Territory < ApplicationRecord
   # Validations
   validates :departement_number, length: { maximum: 3 }, if: -> { departement_number.present? }
   validates :name, presence: true, if: -> { persisted? }
-  validates :departement_number, uniqueness: true, allow_blank: true
   validate do
     if name_was == MAIRIES_NAME
       errors.add(:name, "Le nom de ce territoire permet de le brancher au moteur de recherche de l'ANTS et ne peut pas être changé")
@@ -79,6 +79,11 @@ class Territory < ApplicationRecord
 
   def self.mairies
     find_by(name: MAIRIES_NAME)
+  end
+
+  def sectorized?
+    sectors.joins(:attributions).any? &&
+      motifs.active.where.not(sectorisation_level: Motif::SECTORISATION_LEVEL_DEPARTEMENT).any?
   end
 
   def any_social_field_enabled?

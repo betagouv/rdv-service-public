@@ -1,5 +1,5 @@
 .row.justify-content-center
-  .col-md-8
+  .col-md-12.col-lg-8
     .card
       .card-body
         = simple_form_for [:admin, current_organisation,  agent_intervenant], url: admin_organisation_agent_intervenant_path(current_organisation, agent_intervenant), html: { method: :put, class: "form-inline full-width-inline-form" }, wrapper: :inline_form do |f|

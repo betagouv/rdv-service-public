@@ -8,7 +8,7 @@ fr:
         service: Service
         collectif: Nombre de participants
         color: Couleur
-        bookable_by_title: Réservation en ligne
+        bookable_by: Réservation en ligne
         bookable_by_hint: Vous pouvez décider de qui peut prendre RDV pour ce motif
         visibility_type: Visibilité usager
         custom_cancel_warning_message: Message d’avertissement en cas d’annulation
@@ -19,20 +19,22 @@ fr:
         sectorisation_level_hint: Seules les recherches des usagers sont concernées par ces règles de sectorisation. Elles n'ont donc pas d'effet si le motif n'est pas réservable en ligne.
         location_type: Type de RDV
         for_secretariat: Motif accessible au secrétariat
-        for_secretariat_label: Le RDV pourra être effectué par le service secrétariat
+        for_secretariat_label: Autoriser les agents du service Secrétariat à assurer ces RDV
         for_secretariat_short: RDV Secrétariat
-        for_secretariat_hint: Les membres du service Secrétariat pourront poser des RDV dans leur agenda et configurer les plages d'ouverture avec ce motif
-        follow_up: Ce motif est réservé uniquement aux usagers bénéficiant d'un accompagnement
+        for_secretariat_hint: En plus des agents du service de ce motif, les agents du service Secrétariat pourront aussi assurer ces RDV et ouvrir des plages d'ouverture dans leur agenda avec ce motif
+        follow_up: Limiter ces RDV aux usagers bénéficiant d'un suivi par un référent
         follow_up_short: RDV de suivi
-        follow_up_warning: Ne cochez cette case que si vous savez ce que vous faîtes
+        follow_up_warning: Les motifs pour RDV de suivi ne sont pas visible lors de la réservation en ligne par les usagers sans compte et sans référent. Les usagers avec un référent pourront prendre rdv depuis leur espace personnel.
         follow_up_hint: Ce motif est réservé uniquement aux usagers bénéficiant d'un accompagnement
         default_duration_in_min: Durée par défaut en minutes
         default_duration_in_min_short: Durée par défaut
         default_duration: Durée par défaut
         min_public_booking_delay: Délai minimum de réservation
         min_public_booking_delay_short: Délai minimum
+        min_public_booking_delay_hint: "Les premiers créneaux proposés aux usagers et aux prescripteurs ne commenceront pas avant ce délai minimum"
         max_public_booking_delay: Délai maximum de réservation
         max_public_booking_delay_short: Délai maximum
+        max_public_booking_delay_hint: "Les derniers créneaux proposés aux usagers et aux prescripteurs n'iront pas au delà de ce délai maximum"
         restriction_for_rdv: Instructions à accepter avant la prise du rendez-vous
         restriction_for_rdv_hint: Instructions à accepter avant la prise du rendez-vous
         restriction_for_rdv_short: Instructions avant
@@ -80,6 +82,11 @@ fr:
         public_office: Le RDV aura lieu au lieu sélectionné (MDS...)
         phone: L'usager sera notifié que le RDV se passera par téléphone, au numéro indiqué dans son profil
         home: L'usager sera notifié que le RDV aura lieu à l'adresse remplie dans son profil
+      motif/bookable_by/hint:
+        agents: "Uniquement les agents de %{organisation_name}"
+        agents_and_prescripteurs: "Ouvert aux agents et aux prescripteurs"
+        agents_and_prescripteurs_and_invited_users: "Ouvert aux agents, aux prescripteurs et aux usagers avec une invitation"
+        everyone: "Ouvert aux agents, aux prescripteurs et aux usagers"
     errors:
       models:
         motif:

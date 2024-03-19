@@ -3,5 +3,4 @@ fr:
     creneaux:
       agent_searches:
         index:
-          no_slot_available: Aucun créneau n’est disponible pour le motif « %{motif_name} » selon les critères sélectionnés.
           choose_filter_and_refresh: Selectionnez des filtres et rafraichissez les résultats

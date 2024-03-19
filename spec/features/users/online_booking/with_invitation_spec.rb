@@ -1,4 +1,4 @@
-describe "User can be invited" do
+RSpec.describe "User can be invited" do
   around { |example| perform_enqueued_jobs { example.run } }
 
   # needed for encrypted cookies

@@ -1,4 +1,4 @@
-describe CronJob::UpdateExpirationsJob, type: :job do
+RSpec.describe CronJob::UpdateExpirationsJob, type: :job do
   let(:now) { Time.zone.parse("20211015 8:50") }
 
   before do

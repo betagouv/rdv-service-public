@@ -1,6 +1,11 @@
-describe "Agent can list RDVs" do
+RSpec.describe "Agent can list RDVs" do
   let!(:organisation) { create(:organisation) }
   let!(:current_agent) { create(:agent, organisations: [organisation]) }
+  let!(:user) { create(:user) }
+
+  def user_profile_path(user)
+    admin_organisation_user_path(organisation_id: organisation.id, id: user.id)
+  end
 
   before do
     login_as(current_agent, scope: :agent)
@@ -25,7 +30,7 @@ describe "Agent can list RDVs" do
   end
 
   context "when a RDV user is soft deleted" do
-    let!(:active_user) { create(:user) }
+    let(:active_user) { user }
     let!(:deleted_user) { create(:user) }
 
     before do
@@ -39,13 +44,25 @@ describe "Agent can list RDVs" do
       visit admin_organisation_rdvs_url(organisation, current_agent)
 
       # Active user has a link to her profile
-      path_to_active_user_profile = admin_organisation_user_path(organisation_id: organisation.id, id: active_user.id)
-      expect(page).to have_link(active_user.full_name, href: path_to_active_user_profile)
+      expect(page).to have_link(active_user.full_name, href: user_profile_path(active_user))
 
       # Deleted user has a link to her profile
-      path_to_deleted_user_profile = admin_organisation_user_path(organisation_id: organisation.id, id: deleted_user.id)
       expect(page).to have_content("#{deleted_user}Supprimé")
-      expect(page.body).not_to include(path_to_deleted_user_profile)
+      expect(page.body).not_to include(user_profile_path(deleted_user))
+    end
+  end
+
+  context "when a RDV is by_phone with no lieu" do
+    before do
+      create(:rdv, :by_phone, lieu: nil, organisation: organisation, agents: [current_agent], users: [user])
+    end
+
+    it "displays RDVs list with no error" do
+      visit admin_organisation_rdvs_url(organisation, current_agent)
+
+      expect(page).to have_content("RDV téléphonique")
+      expect(page).to have_content(current_agent.first_name)
+      expect(page).to have_link(user.full_name, href: user_profile_path(user))
     end
   end
 end

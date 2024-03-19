@@ -1,4 +1,4 @@
-describe Territory, type: :model do
+RSpec.describe Territory, type: :model do
   it "have a valid factory" do
     expect(build(:territory)).to be_valid
   end
@@ -11,53 +11,6 @@ describe Territory, type: :model do
       let!(:agent) { create(:agent, basic_role_in_organisations: [organisation1, organisation2]) }
 
       it { expect(territory.organisations_agents.count).to eq(1) }
-    end
-  end
-
-  describe "departement_number uniqueness validation" do
-    context "no collision" do
-      let(:territory) { build(:territory, name: "Oise", departement_number: "60") }
-
-      it { expect(territory).to be_valid }
-    end
-
-    context "blank departement_number" do
-      let!(:territory_existing) { create(:territory, departement_number: "60") }
-      let(:territory) { build(:territory, name: "Oise", departement_number: "") }
-
-      it { expect(territory).to be_valid }
-    end
-
-    context "colliding departement_number" do
-      let!(:territory_existing) { create(:territory, departement_number: "60") }
-      let(:territory) { build(:territory, name: "Oise", departement_number: "60") }
-
-      it "adds errors" do
-        expect(territory).not_to be_valid
-        expect(territory.errors.details).to eq({ departement_number: [{ error: :taken, value: "60" }] })
-        expect(territory.errors.full_messages.to_sentence).to include("agents créés dans ce département")
-      end
-    end
-
-    context "update existing territory to free departement_number" do
-      let!(:territory) { create(:territory, departement_number: "60") }
-
-      before { territory.departement_number = "80" }
-
-      it { expect(territory).to be_valid }
-    end
-
-    context "update existing territory to colliding departement_number" do
-      let!(:territory_existing) { create(:territory, departement_number: "80") }
-      let!(:territory) { create(:territory, departement_number: "60") }
-
-      before { territory.departement_number = "80" }
-
-      it "adds errors" do
-        expect(territory).not_to be_valid
-        expect(territory.errors.details).to eq({ departement_number: [{ error: :taken, value: "80" }] })
-        expect(territory.errors.full_messages.to_sentence).to include("agents créés dans ce département")
-      end
     end
   end
 

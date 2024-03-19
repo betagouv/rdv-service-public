@@ -2,10 +2,20 @@
 // print.scss
 //
 
+.print-content {
+  display: none;
+}
+
 @media print {
   .left-side-menu,
-  .footer {
-      display: none;
+  .footer,
+  .page-title,
+  .web-content,
+  .header {
+    display: none;
+  }
+  .print-content {
+    display: block;
   }
   .card-body,
   .content-page,
@@ -13,15 +23,14 @@
   body {
     padding: 0;
     margin: 0 !important;
-  }
-  .card {
-    border-radius: 0 !important;
+    font-family: "Marianne";
   }
   .card.rdv-card {
-    border-bottom: 1px solid #000;
-    border-top: 1px solid #000;
+    border-radius: 0 !important;
+    border: 1px solid #DDDDDD;
+    background-color: inherit;
   }
   b, strong {
-    font-family: initial; // fix unreadable bold font in FF print
+    font-family: "Marianne"; // fix unreadable bold font in FF print
   }
 }

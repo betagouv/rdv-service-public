@@ -1,4 +1,4 @@
-describe "Agent can see RDV details correctly" do
+RSpec.describe "Agent can see RDV details correctly" do
   before do
     travel_to(Time.zone.local(2022, 4, 4))
     login_as(agent, scope: :agent)
@@ -14,6 +14,7 @@ describe "Agent can see RDV details correctly" do
     let(:motif) { create(:motif, service: service, name: "Renseignements") }
     let(:rdv) { create(:rdv, agents: [agent], users: [user], motif: motif, organisation: organisation, starts_at: starts_at) }
     let!(:receipt) { create(:receipt, rdv: rdv, result: :sent, content: "Vous avez rendez-vous!") }
+    let(:prescripteur) { create(:prescripteur, first_name: "Jean", last_name: "Valjean") }
 
     it "Allows listing RDVs and redirect to show" do
       visit admin_organisation_rdvs_path(organisation)
@@ -24,9 +25,15 @@ describe "Agent can see RDV details correctly" do
     end
 
     it "displays the prescripteur when present" do
-      create(:prescripteur, participation: rdv.participations.last, first_name: "Jean", last_name: "Valjean")
+      rdv.participations.last.update!(created_by: prescripteur)
       visit admin_organisation_rdvs_path(organisation)
       expect(page).to have_content("Rendez-vous pris par Jean VALJEAN")
+    end
+
+    it "displays the agent prescripteur when present" do
+      rdv.participations.last.update!(created_by: agent, created_by_agent_prescripteur: true)
+      visit admin_organisation_rdvs_path(organisation)
+      expect(page).to have_content("Rendez-vous pris par Bruce WAYNE")
     end
 
     it "Allows showing RDVs data and correctly displays user notifications and notif info" do
@@ -135,7 +142,7 @@ describe "Agent can see RDV details correctly" do
   # Ce test a été ajouté suite à un crash de l'affichage de la page RDV
   # lorsque l'agent du RDV avait été hard deleted depuis le SuperAdmin.
   context "when agent has been hard deleted" do
-    let(:rdv) { create(:rdv, organisation: organisation) }
+    let(:rdv) { create(:rdv, organisation: organisation, created_by: agent) }
     let(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
 
     it "does not display the link to the agenda" do

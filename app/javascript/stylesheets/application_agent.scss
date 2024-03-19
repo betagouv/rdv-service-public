@@ -17,6 +17,7 @@
 
 // Structure
 @import "./structure/general";
+@import "./structure/header";
 @import "./structure/left-menu";
 @import "./structure/footer";
 @import "./structure/page-head";
@@ -43,3 +44,10 @@
 @import "./components/zones_map";
 @import "./components/creneaux";
 @import "./components/rdv_solidarites_instance_name";
+@import "./components/alert";
+
+.page-title-box {
+  h1.page-title {
+    line-height: 1.5;
+  }
+}

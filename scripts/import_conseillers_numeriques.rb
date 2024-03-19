@@ -15,18 +15,24 @@ conseillers_numeriques.each do |conseiller_numerique|
   agent = Agent.find_by(external_id: external_id)
   next if agent&.deleted_at?
 
-  AddConseillerNumerique.process!({
-    external_id: external_id,
-    email: conseiller_numerique["Email @conseiller-numerique.fr"],
-    secondary_email: conseiller_numerique["Email"],
-    first_name: conseiller_numerique["Prénom"],
-    last_name: conseiller_numerique["Nom"],
-    structure: {
-      external_id: conseiller_numerique["Id long de la structure"],
-      name: conseiller_numerique["Nom de la structure"],
-      address: conseiller_numerique["Adresse de la structure"],
-    },
-  }.with_indifferent_access)
-rescue StandardError => e
-  Sentry.capture_exception(e)
+  Sentry.with_scope do |scope|
+    processed_params = {
+      external_id: external_id,
+      email: conseiller_numerique["Email @conseiller-numerique.fr"],
+      secondary_email: conseiller_numerique["Email"],
+      first_name: conseiller_numerique["Prénom"],
+      last_name: conseiller_numerique["Nom"],
+      structure: {
+        external_id: conseiller_numerique["Id long de la structure"],
+        name: conseiller_numerique["Nom de la structure"],
+        address: conseiller_numerique["Adresse de la structure"],
+      },
+    }.with_indifferent_access
+
+    scope.set_context("Import CNFS", { processed_params: processed_params })
+
+    AddConseillerNumerique.process!(processed_params)
+  rescue StandardError => e
+    Sentry.capture_exception(e)
+  end
 end

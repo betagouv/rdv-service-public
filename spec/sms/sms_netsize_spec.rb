@@ -1,10 +1,8 @@
-describe "using netsize to send an SMS" do
+RSpec.describe "using netsize to send an SMS" do
   let(:territory) { create(:territory, sms_provider: "netsize") }
   let(:organisation) { create(:organisation, territory: territory) }
   let(:user) { create(:user, phone_number: "+33601020304") }
   let(:rdv) { create(:rdv, organisation: organisation, users: [user]) }
-
-  stub_sentry_events
 
   it "calls netsize API, sends nothing to Sentry, enqueues nothing" do
     stub_netsize_ok
@@ -44,7 +42,7 @@ describe "using netsize to send an SMS" do
 
     breadcrumbs = sentry_events.last.breadcrumbs.compact
     expect(breadcrumbs[0]).to have_attributes(message: "HTTP request")
-    expect(breadcrumbs[1]).to have_attributes(message: "HTTP response", data: { body: "", code: 0, headers: {} })
+    expect(breadcrumbs[1]).to have_attributes(message: "HTTP response", data: { body: "", code: 0, headers: {}, return_code: :operation_timedout })
   end
 
   it "warns Sentry when netsize responds with an HTTP error" do
@@ -55,7 +53,7 @@ describe "using netsize to send an SMS" do
 
     breadcrumbs = sentry_events.last.breadcrumbs.compact
     expect(breadcrumbs[0]).to have_attributes(message: "HTTP request")
-    expect(breadcrumbs[1]).to have_attributes(message: "HTTP response", data: { body: "", code: 500, headers: {} })
+    expect(breadcrumbs[1]).to have_attributes(message: "HTTP response", data: { body: "", code: 500, headers: {}, return_code: nil })
   end
 
   it "warns Sentry when netsize responds with a business error" do
@@ -71,6 +69,6 @@ describe "using netsize to send an SMS" do
 
     breadcrumbs = sentry_events.last.breadcrumbs.compact
     expect(breadcrumbs[0]).to have_attributes(message: "HTTP request")
-    expect(breadcrumbs[1]).to have_attributes(message: "HTTP response", data: { body: stubbed_body, code: 200, headers: {} })
+    expect(breadcrumbs[1]).to have_attributes(message: "HTTP response", data: { body: stubbed_body, code: 200, headers: {}, return_code: nil })
   end
 end

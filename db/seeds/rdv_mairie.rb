@@ -10,7 +10,6 @@ territory_val_doise = Territory.create!(
 org_mairie_de_sannois = Organisation.create!(
   name: "Mairie de Sannois",
   phone_number: "0475796991",
-  human_id: "mairie-de-sannois",
   territory: territory_val_doise,
   verticale: :rdv_mairie
 )
@@ -28,6 +27,7 @@ MotifCategory.create!(name: "Carte d'identité et passeport disponible sur le si
 motif_passeport = Motif.create!(
   name: "Passeport",
   color: "#00ffff",
+  motif_category: MotifCategory.find_by!(short_name: "PASSPORT"),
   default_duration_in_min: 30,
   organisation: org_mairie_de_sannois,
   bookable_by: :everyone,

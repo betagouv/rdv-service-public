@@ -1,20 +1,19 @@
-section.bg-light.p-4
-  .container
-    .card
-      .card-body
-        = link_to path_to_service_selection(params), class: "d-block stretched-link" do
-          .row
-            .col-auto.align-self-center
-              i.fa.fa-chevron-left
-            .col
-              h2.pb-1.mb-1 = context.service.name
-  .container
-    - if context.unique_motifs_by_name_and_location_type.empty?
-      = render "nothing_to_show", context: context
-    - else
-      h2.font-weight-bold Sélectionnez le motif de votre RDV :
-      - context.unique_motifs_by_name_and_location_type.each do |motif|
-        .card.mb-3
-          = link_to(prendre_rdv_path(context.query_params.merge(motif_name_with_location_type: motif.name_with_location_type))) do
-            = render "motif_selection_card", motif: motif
-    = render "referent_booking_card", context: context
+.container
+  .card
+    .card-body
+      = link_to path_to_service_selection(params), class: "d-block stretched-link" do
+        .row
+          .col-auto.align-self-center
+            i.fa.fa-chevron-left
+          .col
+            h2.pb-1.mb-1 = context.service.name
+.container
+  - if context.unique_motifs_by_name_and_location_type.empty?
+    = render "search/nothing_to_show", context: context
+  - else
+    h2.font-weight-bold Sélectionnez le motif de votre RDV :
+    - context.unique_motifs_by_name_and_location_type.each do |motif|
+      .card.mb-3
+        = link_to(prendre_rdv_path(context.query_params.merge(motif_name_with_location_type: motif.name_with_location_type))) do
+          = render "search/motif_selection_card", motif: motif
+  = render "search/referent_booking_card", context: context

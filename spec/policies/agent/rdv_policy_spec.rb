@@ -1,21 +1,5 @@
-describe Agent::RdvPolicy, type: :policy do
+RSpec.describe Agent::RdvPolicy, type: :policy do
   subject { described_class }
-
-  shared_examples "permit actions" do |*actions|
-    actions.each do |action|
-      permissions action do
-        it { is_expected.to permit(pundit_context, rdv) }
-      end
-    end
-  end
-
-  shared_examples "not permit actions" do |*actions|
-    actions.each do |action|
-      permissions action do
-        it { is_expected.not_to permit(pundit_context, rdv) }
-      end
-    end
-  end
 
   shared_examples "included in scope" do
     it "is included in scope" do
@@ -49,8 +33,8 @@ describe Agent::RdvPolicy, type: :policy do
     let(:rdv) { create(:rdv, organisation: organisation, agents: [agent], motif: motif) }
     let(:pundit_context) { AgentOrganisationContext.new(agent, organisation) }
 
-    it_behaves_like "permit actions", :show?, :edit?, :update?
-    it_behaves_like "not permit actions", :destroy?
+    it_behaves_like "permit actions", :rdv, :show?, :edit?, :update?
+    it_behaves_like "not permit actions", :rdv, :destroy?
     it_behaves_like "included in scope"
   end
 
@@ -63,15 +47,15 @@ describe Agent::RdvPolicy, type: :policy do
     let(:agent) { create(:agent, basic_role_in_organisations: [organisation], service: service_agent) }
     let(:pundit_context) { AgentOrganisationContext.new(agent, organisation) }
 
-    it_behaves_like "not permit actions", :show?, :edit?, :update?, :destroy?
+    it_behaves_like "not permit actions", :rdv, :show?, :edit?, :update?, :destroy?
     it_behaves_like "not included in scope"
     it_behaves_like "not included in departement scope"
 
     context "for secretariat" do
       let(:service_agent) { build(:service, :secretariat) }
 
-      it_behaves_like "permit actions", :show?, :edit?, :update?
-      it_behaves_like "not permit actions", :destroy?
+      it_behaves_like "permit actions", :rdv, :show?, :edit?, :update?
+      it_behaves_like "not permit actions", :rdv, :destroy?
       it_behaves_like "included in scope"
       it_behaves_like "included in departement scope"
     end
@@ -79,7 +63,7 @@ describe Agent::RdvPolicy, type: :policy do
     context "for admin" do
       let(:agent) { create(:agent, admin_role_in_organisations: [organisation], service: service_agent) }
 
-      it_behaves_like "permit actions", :show?, :edit?, :update?, :destroy?
+      it_behaves_like "permit actions", :rdv, :show?, :edit?, :update?, :destroy?
       it_behaves_like "included in scope"
       it_behaves_like "included in departement scope"
     end
@@ -87,8 +71,8 @@ describe Agent::RdvPolicy, type: :policy do
     context "except if the rdv concerns the connected agent" do
       let(:rdv) { create(:rdv, motif: motif, organisation: organisation, agents: [agent]) }
 
-      it_behaves_like "permit actions", :show?, :edit?, :update?
-      it_behaves_like "not permit actions", :destroy?
+      it_behaves_like "permit actions", :rdv, :show?, :edit?, :update?
+      it_behaves_like "not permit actions", :rdv, :destroy?
       it_behaves_like "included in scope"
       it_behaves_like "included in departement scope"
     end
@@ -102,8 +86,8 @@ describe Agent::RdvPolicy, type: :policy do
     let(:rdv) { create(:rdv, agents: [agents[0]], motif: motif, organisation: organisation) }
     let(:pundit_context) { AgentOrganisationContext.new(agents[1], organisation) }
 
-    it_behaves_like "permit actions", :show?, :edit?, :update?
-    it_behaves_like "not permit actions", :destroy?
+    it_behaves_like "permit actions", :rdv, :show?, :edit?, :update?
+    it_behaves_like "not permit actions", :rdv, :destroy?
     it_behaves_like "included in scope"
   end
 
@@ -117,20 +101,20 @@ describe Agent::RdvPolicy, type: :policy do
     let(:rdv) { create(:rdv, agents: [agent1], motif: motif1, organisation: organisation1) }
     let(:pundit_context) { AgentOrganisationContext.new(agent2, organisation2) }
 
-    it_behaves_like "not permit actions", :show?, :edit?, :update?, :destroy?
+    it_behaves_like "not permit actions", :rdv, :show?, :edit?, :update?, :destroy?
     it_behaves_like "not included in scope"
 
     context "for secretariat" do
       let(:agent2) { create(:agent, basic_role_in_organisations: [organisation2], service: create(:service, :secretariat)) }
 
-      it_behaves_like "not permit actions", :show?, :edit?, :update?, :destroy?
+      it_behaves_like "not permit actions", :rdv, :show?, :edit?, :update?, :destroy?
       it_behaves_like "not included in scope"
     end
 
     context "for admin" do
       let(:agent2) { create(:agent, admin_role_in_organisations: [organisation2], service: service) }
 
-      it_behaves_like "not permit actions", :show?, :edit?, :update?, :destroy?
+      it_behaves_like "not permit actions", :rdv, :show?, :edit?, :update?, :destroy?
       it_behaves_like "not included in scope"
     end
   end

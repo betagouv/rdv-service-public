@@ -1,4 +1,4 @@
-shared_examples_for "recurrence" do
+RSpec.shared_examples_for "recurrence" do
   let(:model) { described_class }
   let(:model_symbol) { model.to_s.underscore.to_sym }
 

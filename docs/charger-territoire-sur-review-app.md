@@ -2,7 +2,7 @@
 
 # 1. Préparer les données en local
 
-Télécharger un dump de prod depuis Scalingo, puis le charger en local : 
+Télécharger un dump de prod depuis Scalingo, puis le charger en local :
 
 ```bash
  ./scripts/db_dump_load.sh nom_du_dump.pgsql
@@ -28,14 +28,14 @@ scalingo --app $REVIEW_APP_NAME --region osc-secnum-fr1 pgsql-console
 puis supprimer les tables du schema public :
 
 ```sql
-DO $$ 
-DECLARE 
-   tabname RECORD; 
-BEGIN 
-   FOR tabname IN (SELECT tablename FROM pg_tables WHERE schemaname = 'public') 
-   LOOP 
-      EXECUTE 'DROP TABLE IF EXISTS ' || tabname.tablename || ' CASCADE'; 
-   END LOOP; 
+DO $$
+DECLARE
+   tabname RECORD;
+BEGIN
+   FOR tabname IN (SELECT tablename FROM pg_tables WHERE schemaname = 'public')
+   LOOP
+      EXECUTE 'DROP TABLE IF EXISTS ' || tabname.tablename || ' CASCADE';
+   END LOOP;
 END $$;
 ```
 
@@ -43,7 +43,7 @@ Nous allons maintenant dumper les données locales :
 
 ```bash
 LOCAL_DATABASE_URL=postgresql://postgres:mot_de_passe_local@localhost/lapin_development
-pg_dump --clean --if-exists --format c --dbname $LOCAL_DATABASE_URL --no-owner --no-privileges --no-comments --exclude-schema 'information_schema' --exclude-schema '^pg_*' --file tmp/dump.pgsql
+pg_dump --clean --if-exists --format c --dbname $LOCAL_DATABASE_URL --no-owner --no-privileges --exclude-schema 'information_schema' --exclude-schema '^pg_*' --file tmp/dump.pgsql
 ```
 
 Afin de charger ce dump sur la review app, il faut rendre la DB de la review app accessible depuis internet. Pour ce faire :
@@ -57,7 +57,7 @@ Nous allons alors pouvoir restaurer la base locale vers la DB distante en fourni
 
 ```bash
 REVIEW_APP_DB_URL=url_trouvee_dans_les_variables_denv_de_la_review_app
-pg_restore --clean --if-exists --no-owner --no-privileges --no-comments --dbname $REVIEW_APP_DB_URL tmp/dump.pgsql
+pg_restore --clean --if-exists --no-owner --no-privileges --dbname $REVIEW_APP_DB_URL tmp/dump.pgsql
 ```
 
 La base locale est désormais copiée sur la review app !

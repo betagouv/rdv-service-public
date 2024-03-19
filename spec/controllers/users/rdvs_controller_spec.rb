@@ -48,8 +48,8 @@ RSpec.describe Users::RdvsController, type: :controller do
       it "creates rdv" do
         expect(Rdv.count).to eq(1)
         expect(response).to redirect_to users_rdv_path(Rdv.last, invitation_token: token)
-        expect(user.rdvs.last.created_by_user?).to be(true)
-        expect(user.participations.last.created_by_user?).to be(true)
+        expect(user.rdvs.last.created_by).to eq(user)
+        expect(user.participations.last.created_by).to eq(user)
       end
 
       context "when the motif is by phone and lieu is missing" do
@@ -59,8 +59,8 @@ RSpec.describe Users::RdvsController, type: :controller do
         it "creates the rdv" do
           expect(Rdv.count).to eq(1)
           expect(response).to redirect_to users_rdv_path(Rdv.last, invitation_token: token)
-          expect(user.rdvs.last.created_by_user?).to be(true)
-          expect(user.participations.last.created_by_user?).to be(true)
+          expect(user.rdvs.last.created_by).to eq(user)
+          expect(user.participations.last.created_by).to eq(user)
         end
       end
     end
@@ -145,8 +145,10 @@ RSpec.describe Users::RdvsController, type: :controller do
   describe "GET #show" do
     let(:user) { create(:user) }
     let(:user2) { create(:user) }
-    let(:rdv) { create(:rdv, users: [user], motif: motif, starts_at: starts_at, created_by: "user") }
-    let(:rdv2) { create(:rdv, users: [user2], motif: create(:motif, :by_phone), lieu: nil, starts_at: starts_at, created_by: "user") }
+    let(:organisation) { create(:organisation) }
+    let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+    let(:rdv) { create(:rdv, users: [user], motif: motif, starts_at: starts_at, created_by: user) }
+    let(:rdv2) { create(:rdv, users: [user2], motif: create(:motif, :by_phone), lieu: nil, starts_at: starts_at, created_by: user) }
     let(:starts_at) { Time.zone.parse("2020-10-20 10h30") }
     let(:motif) { build(:motif, rdvs_editable_by_user: true, rdvs_cancellable_by_user: true) }
 
@@ -172,7 +174,7 @@ RSpec.describe Users::RdvsController, type: :controller do
     end
 
     context "when the motif is by phone and lieu is missing" do
-      let(:rdv) { create(:rdv, users: [user], motif: create(:motif, :by_phone), lieu: nil, starts_at: starts_at, created_by: "user") }
+      let(:rdv) { create(:rdv, users: [user], motif: create(:motif, :by_phone), lieu: nil, starts_at: starts_at, created_by: user) }
 
       it "shows the rdv" do
         get :show, params: { id: rdv.id }
@@ -207,7 +209,7 @@ RSpec.describe Users::RdvsController, type: :controller do
     end
 
     context "when the rdv is created by an agent" do
-      let(:rdv) { create(:rdv, users: [user], motif: motif, starts_at: starts_at, created_by: "agent") }
+      let(:rdv) { create(:rdv, users: [user], motif: motif, starts_at: starts_at, created_by: agent) }
 
       it "does show link to edit" do
         get :show, params: { id: rdv.id }
@@ -388,7 +390,7 @@ RSpec.describe Users::RdvsController, type: :controller do
     let!(:lieu) { create(:lieu, address: "10 rue de la Ferronerie 44100 Nantes", organisation: organisation) }
     let!(:motif) { create(:motif, organisation: organisation, max_public_booking_delay: 2.weeks.to_i) }
     let!(:user) { create(:user) }
-    let(:rdv) { create(:rdv, users: [user], starts_at: 5.days.from_now, lieu: lieu, motif: motif, organisation: organisation, created_by: "user") }
+    let(:rdv) { create(:rdv, users: [user], starts_at: 5.days.from_now, lieu: lieu, motif: motif, organisation: organisation, created_by: user) }
 
     before do
       travel_to(now)
@@ -455,7 +457,7 @@ RSpec.describe Users::RdvsController, type: :controller do
     let!(:lieu) { create(:lieu, address: "10 rue de la Ferronerie 44100 Nantes", organisation: organisation) }
     let!(:motif) { create(:motif, organisation: organisation) }
     let!(:user) { create(:user) }
-    let(:rdv) { create(:rdv, users: [user], starts_at: 5.days.from_now, lieu: lieu, motif: motif, organisation: organisation, created_by: "user") }
+    let(:rdv) { create(:rdv, users: [user], starts_at: 5.days.from_now, lieu: lieu, motif: motif, organisation: organisation, created_by: user) }
     let(:returned_creneau) { Creneau.new }
 
     before do
@@ -491,7 +493,7 @@ RSpec.describe Users::RdvsController, type: :controller do
     end
 
     context "when the rdv is created by an agent" do
-      let(:rdv) { create(:rdv, users: [user], starts_at: 5.days.from_now, lieu: lieu, motif: motif, organisation: organisation, created_by: "agent") }
+      let(:rdv) { create(:rdv, users: [user], starts_at: 5.days.from_now, lieu: lieu, motif: motif, organisation: organisation, created_by: agent) }
 
       it "is not authorized" do
         subject
@@ -509,7 +511,7 @@ RSpec.describe Users::RdvsController, type: :controller do
     let(:motif) { create(:motif, organisation: organisation) }
     let(:lieu) { create(:lieu, address: "10 rue de la Ferronerie 44100 Nantes", organisation: organisation) }
     let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
-    let(:rdv) { create(:rdv, users: [user], starts_at: 5.days.from_now, lieu: lieu, motif: motif, organisation: organisation, created_by: "user") }
+    let(:rdv) { create(:rdv, users: [user], starts_at: 5.days.from_now, lieu: lieu, motif: motif, organisation: organisation, created_by: user) }
     let(:token) { "12345" }
 
     before do

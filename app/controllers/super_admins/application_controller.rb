@@ -7,6 +7,8 @@
 module SuperAdmins
   class ApplicationController < Administrate::ApplicationController
     include DomainDetection
+    include Administrate::Punditize
+    rescue_from Pundit::NotAuthorizedError, with: :super_admin_not_authorized
 
     helper all_helpers_from_path "app/helpers"
 
@@ -18,15 +20,32 @@ module SuperAdmins
     end
     before_action :set_paper_trail_whodunnit
     before_action :set_sentry_context
+    after_action :verify_authorized
 
     helper_method :sign_in_as_allowed?
 
+    # Pundit configuration for Administrate
+    def policy_namespace
+      [:super_admin]
+    end
+
+    def pundit_user
+      current_super_admin
+    end
+    # End Pundit configuration for Administrate
+
     private
 
-    def user_for_paper_trail
-      return "SuperAdmin" if current_super_admin.nil?
+    def super_admin_not_authorized(exception)
+      policy_name = exception.policy.class.to_s.underscore
+      flash[:error] = t "#{policy_name}.#{exception.query}", scope: "pundit", default: :default
+      redirect_to(request.referer || super_admins_root_path)
+    end
 
-      "[SuperAdmin] #{current_super_admin.email}"
+    def user_for_paper_trail
+      return "Local SuperAdmin" if current_super_admin.nil?
+
+      current_super_admin.name_for_paper_trail
     end
 
     def authenticate_super_admin!

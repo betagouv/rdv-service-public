@@ -40,7 +40,6 @@ RSpec.configure do |config|
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   # config.fixture_path = "#{::Rails.root}/spec/fixtures"
   config.include PageSpecHelper
-  config.include SigninSpecHelper
   config.include UnescapeHtmlSpecHelper
   config.include Select2SpecHelper
   config.include ApiSpecHelper, type: :request
@@ -96,10 +95,23 @@ RSpec.configure do |config|
     end
   end
 
+  config.before do
+    setup_sentry_test
+
+    # Si on fait un require 'paper_trail/frameworks/rspec' comme le recommande la documentation de PaperTrail,
+    # on désactive le versionning par défaut, et donc les specs n'ont plus le comportement de la prod
+    # Par contre, on a besoin de réinitialiser le whodunnit entre chaque spec pour éviter d'avoir de
+    # la pollution sur cet état partagé d'une spec à l'autre
+    ::PaperTrail.request.whodunnit = nil
+  end
+  config.after { teardown_sentry_test }
+
   config.after do
     ActionMailer::Base.deliveries.clear
     FactoryBot.rewind_sequences
     Rails.cache.clear
+    Redis.with_connection { |redis| redis.del(redis.keys("*")) } # clears custom redis usages
     Warden.test_reset!
+    WebMock.reset!
   end
 end

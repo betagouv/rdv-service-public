@@ -1,4 +1,4 @@
-describe RdvExporter, type: :service do
+RSpec.describe RdvExporter, type: :service do
   describe "#xls_string_from_rdvs_rows" do
     # rubocop:disable RSpec/ExampleLength
     it "return export with header" do
@@ -67,13 +67,16 @@ describe RdvExporter, type: :service do
     end
 
     describe "origine" do
+      let(:agent) { create(:agent) }
+      let(:user) { create(:user) }
+
       it "return « Créé par un agent » when rdv created by an agent" do
-        rdv = build(:rdv, :with_fake_timestamps, created_by: :agent)
+        rdv = build(:rdv, :with_fake_timestamps, created_by: agent)
         expect(described_class.row_array_from(rdv)[3]).to eq("Créé par un agent")
       end
 
       it "return « RDV pris sur internet » when rdv taken by user" do
-        rdv = build(:rdv, :with_fake_timestamps, created_by: :user)
+        rdv = build(:rdv, :with_fake_timestamps, created_by: user)
         expect(described_class.row_array_from(rdv)[3]).to eq("RDV Pris sur internet")
       end
     end
@@ -250,8 +253,10 @@ describe RdvExporter, type: :service do
   end
 
   describe "créé par" do
+    let(:agent) { create(:agent) }
+
     it "return the agent name when rdv created by an agent" do
-      rdv = create(:rdv, created_by: :agent)
+      rdv = create(:rdv, created_by: agent)
       rdv.versions.first.update!(whodunnit: "agent 008")
       expect(described_class.row_array_from(rdv)[19]).to eq("agent 008")
     end

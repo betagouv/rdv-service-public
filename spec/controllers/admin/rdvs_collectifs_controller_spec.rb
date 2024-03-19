@@ -1,4 +1,4 @@
-describe Admin::RdvsCollectifsController, type: :controller do
+RSpec.describe Admin::RdvsCollectifsController, type: :controller do
   let(:motif) { create(:motif, :collectif) }
   let(:organisation) { motif.organisation }
   let(:agent) { create(:agent, :secretaire, basic_role_in_organisations: [organisation]) }
@@ -38,6 +38,15 @@ describe Admin::RdvsCollectifsController, type: :controller do
       it "shows a benign error" do
         expect { create_request }.not_to change(Rdv, :count)
         expect(response.body).to include("Ce rendez-vous a une date située dans le passé")
+      end
+    end
+
+    context "when the rdv is created by an agent" do
+      let(:agent) { create(:agent, :secretaire, basic_role_in_organisations: [organisation]) }
+
+      it "creates the rdv with the agent as created_by" do
+        expect { create_request }.to change(Rdv, :count).by(1)
+        expect(Rdv.last.created_by).to eq(agent)
       end
     end
   end

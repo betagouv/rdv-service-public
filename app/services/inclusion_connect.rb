@@ -1,76 +1,150 @@
-module InclusionConnect
+class InclusionConnect
   IC_CLIENT_ID = ENV["INCLUSION_CONNECT_CLIENT_ID"]
   IC_CLIENT_SECRET = ENV["INCLUSION_CONNECT_CLIENT_SECRET"]
   IC_BASE_URL = ENV["INCLUSION_CONNECT_BASE_URL"]
 
-  class << self
-    def auth_path(ic_state, inclusion_connect_callback_url)
-      query = {
-        response_type: "code",
-        client_id: IC_CLIENT_ID,
-        redirect_uri: inclusion_connect_callback_url,
-        scope: "openid email profile",
-        state: ic_state,
-        nonce: Digest::SHA1.hexdigest("Something to check when it come back ?"),
-        from: "community",
-      }
-      "#{IC_BASE_URL}/authorize/?#{query.to_query}"
-    end
+  def self.auth_path(ic_state, inclusion_connect_callback_url, login_hint: nil)
+    query = {
+      response_type: "code",
+      client_id: IC_CLIENT_ID,
+      redirect_uri: inclusion_connect_callback_url,
+      scope: "openid email profile",
+      state: ic_state,
+      from: "community",
+      login_hint: login_hint,
+    }.compact_blank
+    "#{IC_BASE_URL}/authorize/?#{query.to_query}"
+  end
 
-    def agent(code, inclusion_connect_callback_url)
-      token = get_token(code, inclusion_connect_callback_url)
-      return false if token.blank?
+  def initialize(code, inclusion_connect_callback_url)
+    @code = code
+    @inclusion_connect_callback_url = inclusion_connect_callback_url
+  end
 
-      user_info = get_user_info(token)
-      return false if user_info.blank?
+  def authenticate_and_find_agent
+    return if token.blank?
 
-      get_and_update_agent(user_info)
-    end
+    return if user_info.blank?
 
-    def get_token(code, inclusion_connect_callback_url)
-      data = {
-        client_id: IC_CLIENT_ID,
-        client_secret: IC_CLIENT_SECRET,
-        code: code,
-        grant_type: "authorization_code",
-        redirect_uri: inclusion_connect_callback_url,
-      }
-      uri = URI("#{IC_BASE_URL}/token/")
+    return unless matching_agent
 
-      res = Typhoeus.post(
-        uri,
-        body: data,
-        headers: { "Content-Type" => "application/x-www-form-urlencoded" }
-      )
+    update_agent
+    matching_agent
+  end
 
-      return false unless res.success?
+  private
 
-      JSON.parse(res.body)["access_token"]
-    end
+  def token
+    return @token if defined?(@token)
 
-    def get_user_info(token)
-      uri = URI("#{IC_BASE_URL}/userinfo/")
-      uri.query = URI.encode_www_form({ schema: "openid" })
+    data = {
+      client_id: IC_CLIENT_ID,
+      client_secret: IC_CLIENT_SECRET,
+      code: @code,
+      grant_type: "authorization_code",
+      redirect_uri: @inclusion_connect_callback_url,
+    }
+    uri = URI("#{IC_BASE_URL}/token/")
 
-      res = Typhoeus.get(uri, headers: { "Authorization" => "Bearer #{token}" })
+    res = Typhoeus.post(
+      uri,
+      body: data,
+      headers: { "Content-Type" => "application/x-www-form-urlencoded" }
+    )
 
-      return false unless res.success?
+    @token = res.success? ? JSON.parse(res.body)["access_token"] : false
+  end
 
-      JSON.parse(res.body)
-    end
+  def user_info
+    return @user_info if defined?(@user_info)
 
-    def get_and_update_agent(user_info)
-      agent = Agent.find_by(email: user_info["email"])
-      return if agent.blank?
+    uri = URI("#{IC_BASE_URL}/userinfo/")
+    uri.query = URI.encode_www_form({ schema: "openid" })
 
-      agent.update!(
+    res = Typhoeus.get(uri, headers: { "Authorization" => "Bearer #{token}" })
+
+    @user_info = res.success? ? JSON.parse(res.body) : nil
+  end
+
+  def update_agent
+    # We dont want to update one of the agents if we have a mismatch
+    return handle_agent_mismatch if agent_mismatch?
+
+    update_basic_info
+    update_email(matching_agent) if matching_agent.email != user_info["email"]
+  end
+
+  def update_basic_info
+    matching_agent.assign_attributes(
+      {
+        inclusion_connect_open_id_sub: matching_agent.inclusion_connect_open_id_sub || user_info["sub"],
         first_name: user_info["given_name"],
         last_name: user_info["family_name"],
-        confirmed_at: Time.zone.now,
+        invitation_accepted_at: matching_agent.invitation_accepted_at || Time.zone.now,
+        # Setting the token to nil to disable old invitations links
+        invitation_token: nil,
+        confirmed_at: matching_agent.confirmed_at || Time.zone.now,
         last_sign_in_at: Time.zone.now,
-        invitation_accepted_at: agent.invitation_accepted_at || Time.zone.now
-      )
-      agent
+      }
+    )
+    matching_agent.save! if matching_agent.changed?
+  end
+
+  def update_email(agent)
+    agent.email = user_info["email"]
+    agent.skip_reconfirmation!
+    agent.save!
+  end
+
+  def matching_agent
+    return @matching_agent if defined?(@matching_agent)
+
+    handle_agent_mismatch if agent_mismatch?
+
+    @matching_agent = found_by_sub || found_by_email
+  end
+
+  def handle_agent_mismatch
+    Sentry.add_breadcrumb(Sentry::Breadcrumb.new(message: "Found agent with sub", data: { sub: user_info["sub"], agent_id: found_by_sub.id }))
+    Sentry.add_breadcrumb(Sentry::Breadcrumb.new(message: "Found agent with email", data: { email: user_info["email"], agent_id: found_by_email.id }))
+    Sentry.capture_message("InclusionConnect sub and email mismatch", fingerprint: "ic_agent_sub_email_mismatch")
+  end
+
+  def found_by_email
+    return log_and_exit("email") if user_info["email"].nil?
+
+    return @found_by_email if defined?(@found_by_email)
+
+    @found_by_email = Agent.active.find_by(email: user_info["email"])
+
+    unless @found_by_email
+      # Les domaines francetravail.fr et pole-emploi.fr sont équivalents
+      # Enlever cette condition après la dernière vague de migration le 12 avril
+      name, domain = user_info["email"].split("@")
+      if domain.in?(["francetravail.fr", "pole-emploi.fr"])
+        acceptable_emails = ["#{name}@francetravail.fr", "#{name}@pole-emploi.fr"]
+        @found_by_email = Agent.active.find_by(email: acceptable_emails)
+      end
     end
+
+    @found_by_email
+  end
+
+  def found_by_sub
+    return log_and_exit("sub") if user_info["sub"].nil?
+
+    return if user_info["sub"].nil? && Sentry.capture_message("InclusionConnect sub is nil", extra: user_info, fingerprint: "ic_sub_nil")
+
+    @found_by_sub ||= Agent.active.find_by(inclusion_connect_open_id_sub: user_info["sub"])
+  end
+
+  def log_and_exit(field)
+    # should not happen
+    Sentry.capture_message("InclusionConnect #{field} is nil", extra: user_info, fingerprint: "ic_#{field}_nil")
+    nil
+  end
+
+  def agent_mismatch?
+    found_by_sub && found_by_email && found_by_sub != found_by_email
   end
 end

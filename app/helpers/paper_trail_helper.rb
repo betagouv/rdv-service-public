@@ -2,34 +2,24 @@ module PaperTrailHelper
   def paper_trail_change_value(property_name, value)
     # TODO: use human_attribute_value instead of these custom helpers
     return "N/A" if value.blank?
-    return I18n.l(value, format: :dense) if value.is_a? Time
 
-    property_helper = "paper_trail__#{property_name}"
-    if respond_to?(property_helper, true)
-      send(property_helper, value)
-    else
-      value.to_s
+    if respond_to?("paper_trail__#{property_name}", true)
+      return send("paper_trail__#{property_name}", value)
     end
+
+    if property_name.ends_with?("_at")
+      return I18n.l(Time.zone.parse(value), format: :dense)
+    elsif property_name.ends_with?("_day") || property_name.ends_with?("_date")
+      return I18n.l(Date.parse(value), format: :long)
+    end
+
+    value.to_s
   end
 
   private
 
-  def paper_trail__recurrence(value)
-    # NOTE: We can't use the display methods in plage_ouverture_helper because they need the whole plage_ouverture,
-    # and we only have the attribute value here.
-    value.to_hash.to_s
-  end
-
-  def paper_trail__user_ids(value)
-    ::User.where(id: value).order_by_last_name.map(&:full_name).join(", ")
-  end
-
   def paper_trail__status(value)
     ::Rdv.human_attribute_value(:status, value)
-  end
-
-  def paper_trail__agent_ids(value)
-    ::Agent.where(id: value).order_by_last_name.map(&:full_name).join(", ")
   end
 
   def paper_trail__lieu_id(value)
@@ -49,9 +39,9 @@ module PaperTrailHelper
       lifecycle = Participation.human_attribute_value(:send_lifecycle_notifications, value["send_lifecycle_notifications"])
       reminder = Participation.human_attribute_value(:send_reminder_notification, value["send_reminder_notification"])
       status = Participation.human_attribute_value(:status, value["status"])
-      created_by = Participation.human_attribute_value(:created_by, value["created_by"])
+      created_by_type = Participation.human_attribute_value(:created_by_type, value["created_by_type"])
 
-      "#{name} (#{created_by}): #{lifecycle}, #{reminder} - Statut : #{status}"
+      "#{name} (#{created_by_type}): #{lifecycle}, #{reminder} - Statut : #{status}"
     end.compact.join("\n")
   end
 end

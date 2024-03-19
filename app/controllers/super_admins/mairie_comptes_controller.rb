@@ -1,7 +1,5 @@
 module SuperAdmins
   class MairieComptesController < SuperAdmins::ApplicationController
-    include GeoCoding
-
     def create
       resource = resource_class.new(resource_params)
       authorize_resource(resource)
@@ -69,7 +67,7 @@ module SuperAdmins
     end
 
     def create_lieu(organisation)
-      longitude, latitude = find_geo_coordinates(resource_params[:address])
+      longitude, latitude = GeoCoding.new.find_geo_coordinates(resource_params[:address])
 
       Lieu.create(
         name: resource_params[:name],

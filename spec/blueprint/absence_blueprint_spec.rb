@@ -1,4 +1,4 @@
-describe AbsenceBlueprint do
+RSpec.describe AbsenceBlueprint do
   describe "#render" do
     it "contains an agent" do
       absence = build(:absence, agent: build(:agent, email: "bob@example.com", first_name: "Bob", last_name: "Henri"))
@@ -8,6 +8,7 @@ describe AbsenceBlueprint do
                                                          "first_name" => "Bob",
                                                          "last_name" => "Henri",
                                                          "id" => nil,
+                                                         "inclusion_connect_open_id_sub" => nil,
                                                        })
     end
 

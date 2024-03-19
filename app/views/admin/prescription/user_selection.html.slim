@@ -1,0 +1,36 @@
+h1 Nouveau RDV par prescription
+main.container
+  .row.justify-content-center.mt-4
+    .col-lg-8.col-md-10.col-sm-11
+      .card
+        .card-body
+          = render "users/rdv_wizard_steps/rdv_wizard_summary", rdv_wizard: @rdv_wizard
+
+          hr.my-0.pb-3
+          h3.card-title Pour quel usager prenez-vous RDV ?
+          = form_with(url: recapitulatif_admin_organisation_prescription_path(organisation_id: current_organisation.id), html: { method: :get }) do |f|
+
+            = render "admin/prescription/hidden_fields", attributes_to_hide: @rdv_wizard.query_params.except(:user_ids)
+
+            .form-row.grid-align-center.mb-3
+              .flex-grow-1.pr-3
+                = select_tag :"user_ids[]",
+                        options_for_select(@rdv_wizard.users&.map { [UsersHelper.reverse_full_name_and_notification_coordinates(_1), _1.id] } || []),
+                        required: true,
+                        class: "select2-input",
+                        data: { \
+                                width: "auto", \
+                                "select-options": { ajax: { url: search_admin_organisation_users_path(current_organisation), dataType: "json", delay: 250 } }, \
+                        }
+              span.small.text-muted
+                | L'usager n'existe pas ?&nbsp;
+                - return_url = url_for(@rdv_wizard.query_params.except(:user_ids))
+                = link_to \
+                        "Créer un usager", \
+                        new_admin_organisation_user_path(\
+                                current_organisation, modal: true, return_location: return_url, role: default_service_selection_from(@rdv_wizard.rdv.motif.service) \
+                        ), \
+                        data: { modal: true }
+            .form-group
+              .float-right
+                = submit_tag "Continuer", class: "btn btn-primary"

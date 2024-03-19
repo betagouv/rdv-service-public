@@ -1,5 +1,5 @@
 # rubocop:disable RSpec/PredicateMatcher
-describe Agent::MotifPolicy do
+RSpec.describe Agent::MotifPolicy do
   subject { described_class }
 
   let!(:motif) { create(:motif) }

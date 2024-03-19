@@ -1,4 +1,4 @@
-# RDV-Solidarités
+# RDV Service Public
 
 [![View performance data on Skylight](https://badges.skylight.io/status/RgR7i58P67xN.svg)](https://oss.skylight.io/app/applications/RgR7i58P67xN)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
@@ -13,7 +13,6 @@ Ce service est soutenu par un consortium de plusieurs départements et l'[incuba
 ## Statistiques
 
 - [Statistiques de RDV](https://www.rdv-solidarites.fr/stats)
-- [Statistiques de trafic](https://stats.data.gouv.fr/index.php?module=CoreHome&action=index&idSite=123&period=range&date=previous30#?idSite=123&period=range&date=previous30&segment=&category=General_Visitors&subcategory=General_Overview)
 
 ## Licence
 

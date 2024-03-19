@@ -9,8 +9,7 @@ class User < ApplicationRecord
   )
 
   devise :invitable, :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable, :confirmable, :async,
-         :trackable
+         :recoverable, :rememberable, :validatable, :confirmable, :async
 
   include PgSearch::Model
   include FullNameConcern
@@ -22,7 +21,6 @@ class User < ApplicationRecord
   include WebhookDeliverable
   include TextSearch
   include UncommonPasswordConcern
-  include Anonymizable
 
   def self.search_options
     {
@@ -41,10 +39,6 @@ class User < ApplicationRecord
                           unknown: "unknown", agent_creation_api: "agent_creation_api", prescripteur: "prescripteur", }
   enum invited_through: { devise_email: "devise_email", external: "external" }
   enum logement: { sdf: 0, heberge: 1, en_accession_propriete: 2, proprietaire: 3, autre: 4, locataire: 5 }
-
-  # HACK : add *_sign_in_ip to accessor to bypass recording IPs from Trackable Devise's module
-  # HACK : add sign_in_count and current_sign_in_at to accessor to bypass recording IPs from Trackable Devise's module
-  attr_accessor :current_sign_in_ip, :last_sign_in_ip, :sign_in_count, :current_sign_in_at
 
   # Relations
   has_many :user_profiles, dependent: :restrict_with_error
@@ -86,6 +80,7 @@ class User < ApplicationRecord
   # Hooks
   before_save :set_email_to_null_if_blank
   # voir Ants::AppointmentSerializerAndListener pour d'autres callbacks
+  before_save -> { ants_pre_demande_number.upcase! }, if: -> { ants_pre_demande_number.present? }
 
   # Scopes
   default_scope { where(deleted_at: nil) }
@@ -112,6 +107,17 @@ class User < ApplicationRecord
 
   def soft_delete(organisation = nil)
     self_and_relatives.each { _1.do_soft_delete(organisation) }
+  end
+
+  def delete_credentials_and_access_informations
+    update!(
+      encrypted_password: "",
+      confirmed_at: nil,
+      logged_once_with_franceconnect: false,
+      franceconnect_openid_sub: nil,
+      reset_password_token: nil,
+      reset_password_sent_at: nil
+    )
   end
 
   def available_users_for_rdv
@@ -231,13 +237,6 @@ class User < ApplicationRecord
     self.rdv_invitation_token = generate_rdv_invitation_token
   end
 
-  def self.personal_data_column_names
-    %w[first_name last_name birth_name address birth_date unconfirmed_email
-       caisse_affiliation affiliation_number family_situation number_of_children
-       family_situation number_of_children phone_number_formatted franceconnect_openid_sub
-       city_code post_code city_name case_number address_details logement notes ants_pre_demande_number]
-  end
-
   protected
 
   def generate_rdv_invitation_token
@@ -285,9 +284,9 @@ class User < ApplicationRecord
     end
     return save! if organisations.any? # only actually mark deleted when no orgas left
 
-    anonymize_personal_data_columns!
-    receipts.each(&:anonymize_personal_data_columns!)
-    rdvs.each(&:anonymize_personal_data_columns!)
+    Anonymizer::Core.anonymize_record!(self)
+    receipts.each { |r| Anonymizer::Core.anonymize_record!(r) }
+    rdvs.each { |r| Anonymizer::Core.anonymize_record!(r) }
     versions.destroy_all
     update_columns(
       first_name: "Usager supprimé",
