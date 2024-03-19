@@ -124,6 +124,22 @@ RSpec.describe InclusionConnectController, type: :controller do
           )
         end
       end
+
+      context "email and sub match two different agents but one is deleted" do
+        let!(:agent_with_sub) { create(:agent, :invitation_not_accepted, inclusion_connect_open_id_sub: "12345678-90ab-cdef-1234-567890abcdef") }
+        let!(:agent_with_email) { create(:agent, :invitation_not_accepted, email: "bob@demo.rdv-solidarites.fr") }
+
+        it "update agent and log in" do
+          agent_with_sub.soft_delete
+          get :callback, params: { state: ic_state, session_state: ic_state, code: "klzefklzejlf" }
+          expect(agent_with_email.reload).to have_attributes(
+            last_sign_in_at: be_within(10.seconds).of(now),
+            inclusion_connect_open_id_sub: "12345678-90ab-cdef-1234-567890abcdef"
+          )
+
+          expect(response).to redirect_to(root_path)
+        end
+      end
     end
 
     describe "with a francetravail.fr domain" do
