@@ -23,7 +23,7 @@ class Admin::TerritoriesController < Admin::Territories::BaseController
   private
 
   def territory_params
-    params.require(:territory).permit(:name, :phone_number, :visible_users_throughout_the_territory)
+    params.require(:territory).permit(:name, :phone_number)
   end
 
   def set_territory_with_id

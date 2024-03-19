@@ -2,11 +2,11 @@ div
   p Bonjour,
   p
     - date = relative_date(@rdv.starts_at)
-    - author = @author&.full_name
+    - user = (@user || @author)&.full_name
     - if @rdv.collectif?
-      = t(".created_participation_at_date_by_user", date: date , author: author)
+      = t(".created_participation_at_date_by_user", date: date , user: user)
     - else
-      = t(".created_at_date_by_user", date: date , author: author)
+      = t(".created_at_date_by_user", date: date)
 
     = render "mailers/common/rdv_overview", rdv: @rdv, for_role: :agent
 
