@@ -56,10 +56,20 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
         it "doesn't send a request to the appointment ANTS api" do
           perform_enqueued_jobs do
             rdv.save!
-            expect(WebMock).not_to have_requested(
-              :post,
-              "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/appointments?application_id=&appointment_date=2020-04-20%2008:00:00&management_url=http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}&meeting_point=Lieu1"
-            ).with(headers: ants_api_headers)
+
+            expect(WebMock).not_to have_requested(:any, %r{\.ants\.gouv\.fr/api})
+          end
+        end
+
+        context "and the rdv is cancelled" do
+          before { rdv.status = "excused" }
+
+          it "doesn't send a request to the appointment ANTS api" do
+            perform_enqueued_jobs do
+              rdv.save!
+
+              expect(WebMock).not_to have_requested(:any, %r{\.ants\.gouv\.fr/api})
+            end
           end
         end
       end
