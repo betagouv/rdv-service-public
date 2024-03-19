@@ -1,15 +1,13 @@
 - content_for(:menu_item) { "menu-motifs" }
 
-- if @motif.duplicated_from_motif
-  - content_for :title, %(Duplication du motif "#{@motif.duplicated_from_motif}")
-- else
-  - content_for :title, "Nouveau motif"
+- page_title = @motif.duplicated_from_motif ? %(Duplication du motif "#{@motif.duplicated_from_motif}") : "Nouveau motif"
+- content_for :title, page_title
 
 - content_for :breadcrumb do
   ol.breadcrumb.m-0
     li.breadcrumb-item
       = link_to "Vos motifs", admin_organisation_motifs_path(current_organisation)
-    li.breadcrumb-item.active Nouveau un motif
+    li.breadcrumb-item.active Nouveau motif
 
 .row.justify-content-center
   .col-md-12.col-lg-8
