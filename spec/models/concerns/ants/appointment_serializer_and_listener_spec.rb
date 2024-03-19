@@ -49,6 +49,30 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
           ).with(headers: ants_api_headers)
         end
       end
+
+      context "when the user is created by an agent who didn't fill in the pre_demande_number" do
+        let(:user) { create(:user, ants_pre_demande_number: "", organisations: [organisation]) }
+
+        it "doesn't send a request to the appointment ANTS api" do
+          perform_enqueued_jobs do
+            rdv.save!
+
+            expect(WebMock).not_to have_requested(:any, %r{\.ants\.gouv\.fr/api})
+          end
+        end
+
+        context "and the rdv is cancelled" do
+          before { rdv.status = "excused" }
+
+          it "doesn't send a request to the appointment ANTS api" do
+            perform_enqueued_jobs do
+              rdv.save!
+
+              expect(WebMock).not_to have_requested(:any, %r{\.ants\.gouv\.fr/api})
+            end
+          end
+        end
+      end
     end
 
     describe "after_commit on_destroy" do
