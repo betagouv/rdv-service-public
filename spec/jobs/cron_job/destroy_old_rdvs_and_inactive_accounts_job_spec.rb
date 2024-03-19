@@ -44,7 +44,6 @@ RSpec.describe CronJob::DestroyOldRdvsAndInactiveAccountsJob do
                                     ])
 
     expect(User.all).not_to include(user_without_rdv_created_25_months_ago)
-
   end
 
   it "only destroys inactive users without active invitation (RDV-Insertion)" do
@@ -64,7 +63,6 @@ RSpec.describe CronJob::DestroyOldRdvsAndInactiveAccountsJob do
                                     ])
 
     expect(User.all).not_to include(user_without_rdv_created_25_months_ago_invited_25_months_ago)
-
   end
 
   it "calls the webhooks" do
