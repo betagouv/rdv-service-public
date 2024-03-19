@@ -233,7 +233,6 @@ class User < ApplicationRecord
   end
 
   def assign_rdv_invitation_token
-    self.rdv_invitation_token_created_at = Time.zone.now
     self.rdv_invitation_token = generate_rdv_invitation_token
   end
 
