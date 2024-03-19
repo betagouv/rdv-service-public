@@ -166,7 +166,7 @@ class Agent < ApplicationRecord
         email_original: email,
         email: deleted_email,
         uid: deleted_email,
-        inclusion_connect_open_id_sub: "deleted_#{inclusion_connect_open_id_sub}"
+        inclusion_connect_open_id_sub: ("deleted_#{inclusion_connect_open_id_sub}" if inclusion_connect_open_id_sub.present?)
       )
     end
   end
