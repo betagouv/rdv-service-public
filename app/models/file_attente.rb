@@ -1,4 +1,6 @@
 class FileAttente < ApplicationRecord
+  has_paper_trail
+
   # Constants
   NO_MORE_NOTIFICATIONS = 7.days
   MAX_NOTIFICATIONS = 3
