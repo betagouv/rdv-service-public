@@ -1,5 +1,7 @@
 class Territory < ApplicationRecord
   MAIRIES_NAME = "Mairies".freeze
+  CN_DEPARTEMENT_NUMBER = "CN".freeze
+
   # Mixins
   include PhoneNumberValidation::HasPhoneNumber
 
@@ -79,6 +81,14 @@ class Territory < ApplicationRecord
 
   def self.mairies
     find_by(name: MAIRIES_NAME)
+  end
+
+  def mairies?
+    name == MAIRIES_NAME
+  end
+
+  def cn?
+    departement_number == CN_DEPARTEMENT_NUMBER
   end
 
   def sectorized?

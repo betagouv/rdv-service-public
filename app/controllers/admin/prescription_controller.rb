@@ -18,13 +18,13 @@ class Admin::PrescriptionController < AgentAuthController
   end
 
   def recapitulatif
-    authorize(user, :show?)
+    authorize(user, :prescribe?)
     authorize(@rdv_wizard.rdv.motif, :bookable?)
   end
 
   def create_rdv
     # TODO: Autoriser sur la participation (vérifier que le current_agent accéde au user et au motif)
-    authorize(user, :show?)
+    authorize(user, :prescribe?)
     authorize(@rdv_wizard.rdv.motif, :bookable?)
 
     @rdv_wizard.create!
@@ -63,6 +63,7 @@ class Admin::PrescriptionController < AgentAuthController
     user_ids = Array(params[:user_ids]).compact_blank
     return if user_ids.empty?
 
-    @user ||= policy_scope(User, policy_scope_class: Agent::UserPolicy::Scope).find_by_id(user_ids.first)
+    scope = Agent::UserPolicy::TerritoryScope.new(pundit_user, User.all).resolve
+    @user ||= scope.find_by_id(user_ids.first)
   end
 end
