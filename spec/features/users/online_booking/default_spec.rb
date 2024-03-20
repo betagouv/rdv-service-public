@@ -1,5 +1,19 @@
 RSpec.describe "User can search for rdvs" do
   let(:now) { Time.zone.parse("2021-12-13 8:00") }
+  let(:creneau_choice_path) do
+    prendre_rdv_path(
+      address: "79 Rue de Plaisance, 92250 La Garenne-Colombes",
+      city_code: "",
+      departement: 92,
+      date: "2022-01-13 08:00:00 +0100",
+      latitude: "",
+      lieu_id: lieu.id,
+      longitude: "",
+      motif_name_with_location_type: "vaccination-public_office",
+      service_id: service.id,
+      street_ban_id: ""
+    )
+  end
 
   around { |example| perform_enqueued_jobs { example.run } }
 
@@ -8,7 +22,7 @@ RSpec.describe "User can search for rdvs" do
     stub_netsize_ok
   end
 
-  describe "default" do
+  describe "default", js: true do
     let!(:territory92) { create(:territory, departement_number: "92") }
     let!(:organisation) { create(:organisation, :with_contact, territory: territory92) }
     let(:service) { create(:service) }
@@ -22,7 +36,7 @@ RSpec.describe "User can search for rdvs" do
     let!(:lieu2) { create(:lieu, organisation: organisation) }
     let!(:plage_ouverture2) { create(:plage_ouverture, :daily, first_day: now + 1.month, motifs: [motif], lieu: lieu2, organisation: organisation) }
 
-    it "default", js: true do
+    it "default" do
       visit root_path
       execute_search
       choose_service(motif.service)
@@ -33,6 +47,27 @@ RSpec.describe "User can search for rdvs" do
       continue_to_rdv(motif)
       add_relative
       confirm_rdv(motif, lieu)
+    end
+
+    describe "On RDV Service Public" do
+      around do |example|
+        previous_app_host = Capybara.app_host
+        Capybara.app_host = "http://#{Domain::RDV_MAIRIE.host_name}"
+
+        example.run
+
+        Capybara.app_host = previous_app_host
+      end
+
+      it "doesn't require an ANTS predemande number for a relative" do
+        visit creneau_choice_path
+        choose_creneau
+        sign_up
+        click_button("Continuer")
+
+        add_relative(birth_date: false)
+        confirm_rdv(motif, lieu)
+      end
     end
   end
 
@@ -348,6 +383,7 @@ RSpec.describe "User can search for rdvs" do
   end
 
   def choose_creneau
+    expect(page).to have_current_path(creneau_choice_path) # Cet expect permet de vérifier que les tests qui se basent sur ce path pour éviter des étapes intermédiaires sont corrects
     first(:link, "11:00").click
   end
 
@@ -385,12 +421,12 @@ RSpec.describe "User can search for rdvs" do
     expect(page).to have_content("Michel LAPIN (Lapinou)")
   end
 
-  def add_relative
+  def add_relative(birth_date: true)
     click_link("Ajouter un proche")
     expect(page).to have_selector("h1", text: "Ajouter un proche")
     fill_in("Prénom", with: "Mathieu")
     fill_in("Nom", with: "Lapin")
-    fill_in("Date de naissance", with: Date.yesterday)
+    fill_in("Date de naissance", with: Date.yesterday) if birth_date
     click_button("Enregistrer")
     expect(page).to have_content("Mathieu LAPIN")
 
