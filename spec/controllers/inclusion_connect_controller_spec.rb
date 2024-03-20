@@ -57,7 +57,9 @@ RSpec.describe InclusionConnectController, type: :controller do
           # On aurait envie d'utiliser une feature spec et vérifier le contenu de la page, mais
           # les feature specs ne permettent pas de manipuler la session pour y écrire le ic_state.
           expect(response).to redirect_to("/agents/sign_in")
-          expect(flash[:error]).to include("Nous n'avons pas pu vous authentifier. Contactez le support à l'adresse")
+          expect(flash[:error]).to include(
+            "Aucun agent RDV Solidarités n'existe pour l'email inclusion connect suivant : bob@demo.rdv-solidarites.fr. Nous n'avons pas pu vous authentifier. Contactez le support à l'adresse"
+          )
         end
       end
 
@@ -280,7 +282,7 @@ RSpec.describe InclusionConnectController, type: :controller do
       session[:ic_state] = "a state"
 
       get :callback, params: { state: "a state", session_state: "a state", code: "klzefklzejlf" }
-      expect(sentry_events.last.message).to eq("Failed to authenticate agent with InclusionConnect")
+      expect(sentry_events.last.message).to eq("Failed to authenticate agent with InclusionConnect - Api error")
 
       expect(response).to redirect_to(new_agent_session_path)
       expect(flash[:error]).to include("Nous n'avons pas pu vous authentifier. Contactez le support à l'adresse")
@@ -308,7 +310,7 @@ RSpec.describe InclusionConnectController, type: :controller do
 
       it do
         get :callback, params: { state: ic_state, session_state: ic_state, code: "klzefklzejlf" }
-        expect(sentry_events.map(&:message)).to include("InclusionConnect sub is nil", "InclusionConnect email is nil", "Failed to authenticate agent with InclusionConnect")
+        expect(sentry_events.map(&:message)).to include("InclusionConnect sub is nil", "InclusionConnect email is nil", "Failed to authenticate agent with InclusionConnect - Agent not found")
 
         expect(response).to redirect_to(new_agent_session_path)
         expect(flash[:error]).to include("Nous n'avons pas pu vous authentifier. Contactez le support à l'adresse")
