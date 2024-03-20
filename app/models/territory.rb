@@ -83,6 +83,14 @@ class Territory < ApplicationRecord
     find_by(name: MAIRIES_NAME)
   end
 
+  def mairies?
+    name == MAIRIES_NAME
+  end
+
+  def cn?
+    departement_number == CN_DEPARTEMENT_NUMBER
+  end
+
   def sectorized?
     sectors.joins(:attributions).any? &&
       motifs.active.where.not(sectorisation_level: Motif::SECTORISATION_LEVEL_DEPARTEMENT).any?

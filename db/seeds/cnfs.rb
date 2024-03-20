@@ -1,5 +1,5 @@
 territory_cnfs = Territory.create!(
-  departement_number: "CN",
+  departement_number: Territory::CN_DEPARTEMENT_NUMBER,
   name: "Conseillers Numériques",
   sms_provider: "netsize",
   sms_configuration: "login:pwd"
