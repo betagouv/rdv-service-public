@@ -29,7 +29,7 @@ RSpec.describe "User can search for rdvs" do
       choose_motif(motif)
       choose_lieu(lieu)
 
-      expect(page).to have_current_path(creneau_choice_path) # Cet expect permet de vérifier que les tests qui se basent sur ce path pour éviter des étapes intermédiaires sont corrects
+      expect(page).to have_current_path(path_for_creneau_choice) # Cet expect permet de vérifier que les tests qui se basent sur ce path pour éviter des étapes intermédiaires sont corrects
 
       choose_creneau
       sign_up
@@ -39,17 +39,8 @@ RSpec.describe "User can search for rdvs" do
     end
 
     describe "On RDV Service Public" do
-      around do |example|
-        previous_app_host = Capybara.app_host
-        Capybara.app_host = "http://#{Domain::RDV_MAIRIE.host_name}"
-
-        example.run
-
-        Capybara.app_host = previous_app_host
-      end
-
       it "doesn't require an ANTS predemande number for a relative", js: true do
-        visit creneau_choice_path
+        visit "http://www.rdv-mairie-test.localhost/#{path_for_creneau_choice}"
         choose_creneau
         sign_up
         click_button("Continuer")
@@ -437,7 +428,7 @@ RSpec.describe "User can search for rdvs" do
     expect(page).to have_selector("h1", text: title)
   end
 
-  def creneau_choice_path
+  def path_for_creneau_choice
     prendre_rdv_path(
       address: "79 Rue de Plaisance, 92250 La Garenne-Colombes",
       city_code: "",
