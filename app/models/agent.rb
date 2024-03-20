@@ -219,8 +219,8 @@ class Agent < ApplicationRecord
     agent_territorial_access_rights.find_by(territory: territory)
   end
 
-  def organisations_territory_ids
-    organisations.distinct(:territory_id).select(:territory_id)
+  def organisations_territories
+    Territory.joins(:organisations).where(organisations: organisations)
   end
 
   def update_unknown_past_rdv_count!

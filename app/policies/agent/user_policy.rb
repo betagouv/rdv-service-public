@@ -46,15 +46,19 @@ class Agent::UserPolicy < DefaultAgentPolicy
     end
   end
 
-  # Cette scope est utilisée lors des recherches usager tronquées sur tout le territoire
+  # Scope utilisée lors des recherches usager sur tout le territoire (avec résultats tronqués)
   class TerritoryScope < Scope
     def resolve
-      scope.joins(:territories).where(territories: current_agent.organisations_territory_ids)
+      if agent_in_cnfs_or_mairies_territories?
+        super
+      else
+        scope.joins(:territories).where(territories: current_agent.organisations_territories)
+      end
     end
 
     def agent_in_cnfs_or_mairies_territories?
       cnfs_and_mairies_territory_ids = [Territory.mairies&.id, Territory.find_by(departement_number: "CN")&.id].compact
-      (cnfs_and_mairies_territory_ids & current_agent.organisations.pluck(:territory_id)).any? # & does an array overlap here
+      current_agent.organisations_territories.where(id: cnfs_and_mairies_territory_ids).any?
     end
   end
 
