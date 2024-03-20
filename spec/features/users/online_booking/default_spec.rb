@@ -8,7 +8,7 @@ RSpec.describe "User can search for rdvs" do
     stub_netsize_ok
   end
 
-  describe "default", js: true do
+  describe "default" do
     let!(:territory92) { create(:territory, departement_number: "92") }
     let!(:organisation) { create(:organisation, :with_contact, territory: territory92) }
     let(:service) { create(:service) }
@@ -22,7 +22,7 @@ RSpec.describe "User can search for rdvs" do
     let!(:lieu2) { create(:lieu, organisation: organisation) }
     let!(:plage_ouverture2) { create(:plage_ouverture, :daily, first_day: now + 1.month, motifs: [motif], lieu: lieu2, organisation: organisation) }
 
-    it "default" do
+    it "default", js: true do
       visit root_path
       execute_search
       choose_service(motif.service)
@@ -48,7 +48,7 @@ RSpec.describe "User can search for rdvs" do
         Capybara.app_host = previous_app_host
       end
 
-      it "doesn't require an ANTS predemande number for a relative" do
+      it "doesn't require an ANTS predemande number for a relative", js: true do
         visit creneau_choice_path
         choose_creneau
         sign_up
