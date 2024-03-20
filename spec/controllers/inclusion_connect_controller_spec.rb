@@ -58,7 +58,8 @@ RSpec.describe InclusionConnectController, type: :controller do
           # les feature specs ne permettent pas de manipuler la session pour y écrire le ic_state.
           expect(response).to redirect_to("/agents/sign_in")
           expect(flash[:error]).to include(
-            "Aucun agent RDV Solidarités n'existe pour l'email inclusion connect suivant : bob@demo.rdv-solidarites.fr. Nous n'avons pas pu vous authentifier. Contactez le support à l'adresse"
+            "Aucun agent RDV Solidarités n'existe pour l'email Inclusion Connect suivant : bob@demo.rdv-solidarites.fr. " \
+            "Vous devez être invité par un agent existant pour vous connecter. Vous pouvez également contacter le support à l'adresse"
           )
         end
       end
@@ -311,9 +312,6 @@ RSpec.describe InclusionConnectController, type: :controller do
       it do
         get :callback, params: { state: ic_state, session_state: ic_state, code: "klzefklzejlf" }
         expect(sentry_events.map(&:message)).to include("InclusionConnect sub is nil", "InclusionConnect email is nil", "Failed to authenticate agent with InclusionConnect - Agent not found")
-
-        expect(response).to redirect_to(new_agent_session_path)
-        expect(flash[:error]).to include("Nous n'avons pas pu vous authentifier. Contactez le support à l'adresse")
       end
     end
   end

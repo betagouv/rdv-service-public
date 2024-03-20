@@ -25,7 +25,8 @@ class InclusionConnectController < ApplicationController
       redirect_to new_agent_session_path
     end
   rescue InclusionConnect::AgentNotFoundError => e
-    flash[:error] = error_message.prepend("Aucun agent #{current_domain.name} n'existe pour l'email inclusion connect suivant : #{e.message}. ")
+    flash[:error] = "Aucun agent #{current_domain.name} n'existe pour l'email Inclusion Connect suivant : #{e.message}. Vous devez être invité par un agent existant pour vous connecter. " \
+                    "Vous pouvez également contacter le support à l'adresse <a href='mailto:#{current_domain.support_email}'>#{current_domain.support_email}</a> si le problème persiste."
     Sentry.capture_message("Failed to authenticate agent with InclusionConnect - Agent not found", extra: { exception_message: e.message }, fingerprint: ["ic_agent_not_found"])
     redirect_to new_agent_session_path
   rescue InclusionConnect::ApiRequestError => e
