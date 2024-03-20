@@ -58,8 +58,8 @@ RSpec.describe InclusionConnectController, type: :controller do
           # les feature specs ne permettent pas de manipuler la session pour y écrire le ic_state.
           expect(response).to redirect_to("/agents/sign_in")
           expect(flash[:error]).to include(
-            "Il n'y a pas de compte agent pour l'adresse mail bob@demo.rdv-solidarites.fr. " \
-            "Vous devez utiliser Inclusion Connect avec l'adresse mail à laquelle vous avez reçu votre invitation sur RDV Solidarités. Vous pouvez également contacter le support à l'adresse"
+            "Il n'y a pas de compte agent pour l'adresse mail bob@demo.rdv-solidarites.fr.<br />" \
+            "Vous devez utiliser Inclusion Connect avec l'adresse mail à laquelle vous avez reçu votre invitation sur RDV Solidarités.<br />Vous pouvez également contacter le support à l'adresse"
           )
         end
       end
