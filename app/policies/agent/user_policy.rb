@@ -30,6 +30,10 @@ class Agent::UserPolicy < DefaultAgentPolicy
     admin_and_same_org? && not_deleted?
   end
 
+  def prescribe?
+    TerritoryScope.new(pundit_user, User.where(id: @record.id)).resolve.exists?
+  end
+
   class Scope < Scope
     def resolve
       organisation_ids = if current_organisation.present? && current_organisation.territory.visible_users_throughout_the_territory
@@ -39,6 +43,19 @@ class Agent::UserPolicy < DefaultAgentPolicy
                          end
 
       scope.where(id: UserProfile.where("user_profiles.organisation_id": organisation_ids).distinct.select(:user_id))
+    end
+  end
+
+  # Scope utilisée lors des recherches usager sur tout le territoire (avec résultats tronqués)
+  class TerritoryScope < Scope
+    def resolve
+      # On a un seul territoire pour tous les CNFS, idem pour les mairies,
+      # on veut donc *pas* décloisonner la recherche sur tout le territoire.
+      if current_organisation.territory.mairies? || current_organisation.territory.cn?
+        super
+      else
+        scope.joins(:territories).where(territories: current_organisation.territory)
+      end
     end
   end
 

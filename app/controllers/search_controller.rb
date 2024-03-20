@@ -46,7 +46,7 @@ class SearchController < ApplicationController
 
   def resin
     redirect_to prendre_rdv_path(
-      departement: "CN",
+      departement: Territory::CN_DEPARTEMENT_NUMBER,
       service_id: Service.find_by(name: Service::CONSEILLER_NUMERIQUE)&.id,
       motif_name_with_location_type: "accompagnement_individuel-public_office",
       external_organisation_ids: params[:external_organisation_ids].split(","),
