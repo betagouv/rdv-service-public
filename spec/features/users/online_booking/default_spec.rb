@@ -1,19 +1,5 @@
 RSpec.describe "User can search for rdvs" do
   let(:now) { Time.zone.parse("2021-12-13 8:00") }
-  let(:creneau_choice_path) do
-    prendre_rdv_path(
-      address: "79 Rue de Plaisance, 92250 La Garenne-Colombes",
-      city_code: "",
-      departement: 92,
-      date: "2022-01-13 08:00:00 +0100",
-      latitude: "",
-      lieu_id: lieu.id,
-      longitude: "",
-      motif_name_with_location_type: "vaccination-public_office",
-      service_id: service.id,
-      street_ban_id: ""
-    )
-  end
 
   around { |example| perform_enqueued_jobs { example.run } }
 
@@ -42,6 +28,9 @@ RSpec.describe "User can search for rdvs" do
       choose_service(motif.service)
       choose_motif(motif)
       choose_lieu(lieu)
+
+      expect(page).to have_current_path(creneau_choice_path) # Cet expect permet de vérifier que les tests qui se basent sur ce path pour éviter des étapes intermédiaires sont corrects
+
       choose_creneau
       sign_up
       continue_to_rdv(motif)
@@ -383,7 +372,6 @@ RSpec.describe "User can search for rdvs" do
   end
 
   def choose_creneau
-    expect(page).to have_current_path(creneau_choice_path) # Cet expect permet de vérifier que les tests qui se basent sur ce path pour éviter des étapes intermédiaires sont corrects
     first(:link, "11:00").click
   end
 
@@ -447,5 +435,20 @@ RSpec.describe "User can search for rdvs" do
 
   def expect_page_h1(title)
     expect(page).to have_selector("h1", text: title)
+  end
+
+  def creneau_choice_path
+    prendre_rdv_path(
+      address: "79 Rue de Plaisance, 92250 La Garenne-Colombes",
+      city_code: "",
+      departement: 92,
+      date: "2022-01-13 08:00:00 +0100",
+      latitude: "",
+      lieu_id: lieu&.id,
+      longitude: "",
+      motif_name_with_location_type: "vaccination-public_office",
+      service_id: service.id,
+      street_ban_id: ""
+    )
   end
 end
