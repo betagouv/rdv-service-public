@@ -34,9 +34,20 @@ class InvitationSearchContext < SearchContext
       filter_motifs(geo_search.available_motifs).presence || filter_motifs(
         Motif.available_for_booking.where(organisation_id: @organisation_ids).joins(:organisation)
       )
+
+    @matching_motifs = @matching_motifs.where(id: @matching_motifs.select { |motif| creneau_available?(motif) }.map(&:id))
   end
 
   private
+
+  def creneau_available?(motif)
+    one_month_range = Time.zone.now..(Time.zone.now + 1.month)
+    if motif.phone?
+      creneaux_search_for(nil, date_range, motif).creneaux.any?
+    else
+      motif.lieux.any? { |lieu| creneaux_search_for(lieu, one_month_range, motif).creneaux.any? }
+    end
+  end
 
   attr_reader :referent_ids, :lieu_id
 end
