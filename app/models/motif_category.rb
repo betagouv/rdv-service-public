@@ -1,4 +1,6 @@
 class MotifCategory < ApplicationRecord
+  has_paper_trail
+
   # Relations
   has_many :motifs, dependent: :nullify
   has_and_belongs_to_many :territories

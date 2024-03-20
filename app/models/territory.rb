@@ -1,4 +1,6 @@
 class Territory < ApplicationRecord
+  has_paper_trail
+
   MAIRIES_NAME = "Mairies".freeze
   CN_DEPARTEMENT_NUMBER = "CN".freeze
 
