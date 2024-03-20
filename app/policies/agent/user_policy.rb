@@ -52,13 +52,13 @@ class Agent::UserPolicy < DefaultAgentPolicy
       if agent_in_cnfs_or_mairies_territories?
         super
       else
-        scope.joins(:territories).where(territories: current_agent.organisations_territories)
+        scope.joins(:territories).where(territories: current_organisation.territory)
       end
     end
 
     def agent_in_cnfs_or_mairies_territories?
-      cnfs_and_mairies_territory_ids = [Territory.mairies&.id, Territory.find_by(departement_number: "CN")&.id].compact
-      current_agent.organisations_territories.where(id: cnfs_and_mairies_territory_ids).any?
+      current_organisation.territory.name == Territory::MAIRIES_NAME ||
+        current_organisation.territory.departement_number == Territory::CN_DEPARTEMENT_NUMBER
     end
   end
 

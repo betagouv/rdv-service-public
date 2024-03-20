@@ -219,10 +219,6 @@ class Agent < ApplicationRecord
     agent_territorial_access_rights.find_by(territory: territory)
   end
 
-  def organisations_territories
-    Territory.joins(:organisations).where(organisations: organisations)
-  end
-
   def update_unknown_past_rdv_count!
     update_column(:unknown_past_rdv_count, rdvs.status(:unknown_past).count) if persisted?
   end
