@@ -114,6 +114,8 @@ class Users::GeoSearch
   end
 
   def individual_motifs
+    # Le join sur `motifs_plage_ouvertures` permet de filtrer en enlevant les motfis qui n'ont pas de plage d'ouverture
+    # Mais les plages d'ouvertures ne sont pas forcément active (dans le passé par exemple), cela méne donc dans certains cas à afficher des motifs sans créneaux
     @individual_motifs ||= Motif.active.where.not(bookable_by: :agents).individuel.joins(:motifs_plage_ouvertures)
       .joins(organisation: :territory).where(territories: { departement_number: @departement }).distinct
   end
