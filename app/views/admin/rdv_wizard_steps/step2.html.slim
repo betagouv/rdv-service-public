@@ -31,7 +31,7 @@ ruby:
             i.fa.fa-minus-circle
           div.ml-2
             = link_to edit_admin_organisation_user_path( \
-                current_organisation, user, modal: true, return_location: modals_return_location, role: default_service_selection_from(user) \
+                current_organisation, user, modal: true, return_location: modals_return_location, role: default_service_selection_from(user), ants_pre_demande_number_required: @rdv.requires_ants_predemande_number? \
               ), \
               data: { modal: "true" }, title: t("helpers.edit")
               i.fa.fa-edit
@@ -58,7 +58,7 @@ ruby:
           span.small.text-muted
             | L'usager n'existe pas ?&nbsp;
             = link_to("Créer un usager", new_admin_organisation_user_path( \
-                  current_organisation, modal: true, return_location: modals_return_location, role: default_service_selection_from(@rdv.motif.service) \
+              current_organisation, modal: true, return_location: modals_return_location, role: default_service_selection_from(@rdv.motif.service), ants_pre_demande_number_required: @rdv.requires_ants_predemande_number? \
                   ),
               data: { modal: true })
       - else
@@ -69,7 +69,7 @@ ruby:
           = link_to \
             "Créer un usager", \
               new_admin_organisation_user_path( \
-                current_organisation, modal: true, return_location: modals_return_location, role: default_service_selection_from(@rdv.motif.service) \
+                current_organisation, modal: true, return_location: modals_return_location, role: default_service_selection_from(@rdv.motif.service), ants_pre_demande_number_required: @rdv.requires_ants_predemande_number? \
                   ), \
                 data: { modal: true }, class: "btn btn-primary"
 
