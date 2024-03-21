@@ -1,6 +1,7 @@
 module AntsApi
   class Appointment
     class ApiRequestError < StandardError; end
+    class InvalidApplicationError < StandardError; end
 
     attr_reader :application_id, :meeting_point, :appointment_date, :management_url
 
@@ -88,7 +89,20 @@ module AntsApi
           )
         end
 
-        response_body.fetch(application_id, {}).fetch("appointments", [])
+        appointment = response_body.fetch(application_id)
+
+        case appointment.fetch("status")
+        when "validated", "declared"
+          response_body.fetch(application_id, {}).fetch("appointments", [])
+        when "consumed"
+          raise InvalidApplicationError, "Ce numéro de pré-demande ANTS correspond à un dossier déjà instruit"
+        when "unknown"
+          raise InvalidApplicationError, "Ce numéro de pré-demande ANTS est inconnu"
+        when "expired"
+          raise InvalidApplicationError, "Ce numéro de pré-demande ANTS a expiré"
+        else
+          raise InvalidApplicationError, "Ce numéro de pré-demande ANTS est invalide"
+        end
       end
     end
   end

@@ -4,14 +4,12 @@ module User::Ants
   def self.validate_ants_pre_demande_number(user:, ants_pre_demande_number:, ignore_benign_errors:)
     return if ignore_benign_errors || ants_pre_demande_number.blank?
 
-    appointment = find_appointment(ants_pre_demande_number)
+    appointment = AntsApi::Appointment.first(application_id: ants_pre_demande_number, timeout: 4)
     return if appointment.nil?
 
     user.add_benign_error(warning_message(appointment))
-  end
-
-  def self.find_appointment(application_id)
-    AntsApi::Appointment.first(application_id: application_id, timeout: 4)
+  rescue AntsApi::Appointment::InvalidApplicationError => e
+    user.errors.add(:base, e.message)
   rescue AntsApi::Appointment::ApiRequestError, Typhoeus::Errors::TimeoutError => e
     # Si l'api de l'ANTS renvoie une erreur ou un timeout, on ne veut pas bloquer la prise de rendez-vous
     # pour l'usager, donc on considère le numéro comme valide.
