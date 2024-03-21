@@ -77,9 +77,7 @@
               | L'usager n'existe pas ?&nbsp;
               = link_to \
                 "Créer un usager", \
-                new_admin_organisation_user_path( \
-                  current_organisation, modal: true, return_location: edit_admin_organisation_rdvs_collectif_path(current_organisation, @rdv, add_user: @add_user_ids), role: default_service_selection_from(@rdv.motif.service), ants_pre_demande_number_required: @rdv.requires_ants_predemande_number? \
-                    ), \
+                path_for_new_user_modal(current_organisation, @rdv, return_location: return_location: edit_admin_organisation_rdvs_collectif_path(current_organisation, @rdv, add_user: @add_user_ids))), \
                 data: { modal: true }
 
           .text-right

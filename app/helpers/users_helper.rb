@@ -184,4 +184,14 @@ module UsersHelper
 
     user.send(attribute)
   end
+
+  def path_for_new_user_modal(organisation, rdv, return_location:)
+    new_admin_organisation_user_path(
+      organisation,
+      modal: true,
+      return_location: return_location,
+      role: default_service_selection_from(rdv.motif.service),
+      ants_pre_demande_number_required: rdv.requires_ants_predemande_number?
+    )
+  end
 end
