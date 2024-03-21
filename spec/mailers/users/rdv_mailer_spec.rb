@@ -33,8 +33,8 @@ RSpec.describe Users::RdvMailer, type: :mailer do
   describe "#rdv_updated" do
     let(:previous_starting_time) { 2.days.from_now }
     let(:new_starting_time) { 3.days.from_now }
-    let(:new_lieu) { create(:lieu, name: "Stade de France", address: "rue du Stade, Paris, 75016") }
-    let(:previous_lieu) { create(:lieu, name: "MJC Aix", address: "rue du Previous, Paris, 75016") }
+    let(:new_lieu) { create(:lieu, name: "Stade de France", address: "rue du Stade") }
+    let(:previous_lieu) { create(:lieu, name: "MJC Aix", address: "rue du Previous") }
     let(:rdv) { create(:rdv, lieu: new_lieu, starts_at: new_starting_time) }
     let(:user) { rdv.users.first }
     let(:token) { "12345" }

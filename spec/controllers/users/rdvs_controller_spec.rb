@@ -72,7 +72,7 @@ RSpec.describe Users::RdvsController, type: :controller do
         expect(Rdv.count).to eq(0)
         expect(response).to redirect_to prendre_rdv_path(
           departement: "12", service: motif.service_id, motif_name_with_location_type: motif.name_with_location_type,
-          address: "1 rue de la, ville, 12345", organisation_ids: [organisation.id], city_code: "12100"
+          address: "1 rue de la, ville 12345", organisation_ids: [organisation.id], city_code: "12100"
         )
         expect(flash[:error]).to eq "Ce créneau n’est plus disponible. Veuillez en sélectionner un autre."
       end
@@ -387,7 +387,7 @@ RSpec.describe Users::RdvsController, type: :controller do
     let(:organisation) { create(:organisation) }
     let(:now) { Time.zone.parse("01/01/2019 10:00") }
     let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
-    let!(:lieu) { create(:lieu, address: "10 rue de la Ferronerie, Nantes, 44100", organisation: organisation) }
+    let!(:lieu) { create(:lieu, address: "10 rue de la Ferronerie 44100 Nantes", organisation: organisation) }
     let!(:motif) { create(:motif, organisation: organisation, max_public_booking_delay: 2.weeks.to_i) }
     let!(:user) { create(:user) }
     let(:rdv) { create(:rdv, users: [user], starts_at: 5.days.from_now, lieu: lieu, motif: motif, organisation: organisation, created_by: user) }
@@ -454,7 +454,7 @@ RSpec.describe Users::RdvsController, type: :controller do
     let(:starts_at) { 3.days.from_now }
     let(:now) { Time.zone.parse("01/01/2019 10:00") }
     let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
-    let!(:lieu) { create(:lieu, address: "10 rue de la Ferronerie, Nantes, 44100", organisation: organisation) }
+    let!(:lieu) { create(:lieu, address: "10 rue de la Ferronerie 44100 Nantes", organisation: organisation) }
     let!(:motif) { create(:motif, organisation: organisation) }
     let!(:user) { create(:user) }
     let(:rdv) { create(:rdv, users: [user], starts_at: 5.days.from_now, lieu: lieu, motif: motif, organisation: organisation, created_by: user) }
@@ -509,7 +509,7 @@ RSpec.describe Users::RdvsController, type: :controller do
     let(:starts_at) { 3.days.from_now }
     let(:user) { create(:user) }
     let(:motif) { create(:motif, organisation: organisation) }
-    let(:lieu) { create(:lieu, address: "10 rue de la Ferronerie, Nantes, 44100", organisation: organisation) }
+    let(:lieu) { create(:lieu, address: "10 rue de la Ferronerie 44100 Nantes", organisation: organisation) }
     let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
     let(:rdv) { create(:rdv, users: [user], starts_at: 5.days.from_now, lieu: lieu, motif: motif, organisation: organisation, created_by: user) }
     let(:token) { "12345" }

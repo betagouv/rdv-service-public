@@ -58,7 +58,7 @@ RSpec.describe Payloads::Rdv, type: :service do
       end
 
       context "without a phone motif" do
-        let(:rdv) { build(:rdv, users: [user], motif: build(:motif, :public_office), lieu: build(:lieu, address: "17 rue de l'adresse, Paris, 75016")) }
+        let(:rdv) { build(:rdv, users: [user], motif: build(:motif, :public_office), lieu: build(:lieu, address: "17 rue de l'adresse")) }
 
         it { expect(rdv.payload[:address]).to eq("17 rue de l'adresse") }
       end

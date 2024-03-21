@@ -1,6 +1,6 @@
 FactoryBot.define do
   sequence(:lieu_name) { |n| "Lieu n°#{n}" }
-  sequence(:address) { |n| "#{n} rue de l'adresse, Ville, 12345" }
+  sequence(:address) { |n| "#{n} rue de l'adresse 12345 Ville" }
 
   factory :lieu do
     organisation

@@ -136,9 +136,9 @@ RSpec.describe RdvExporter, type: :service do
       end
 
       it "return « lieu name and adresse » when rdv in place" do
-        lieu = build(:lieu, name: "Centre ville", address: "3 place de la république, Hennebont, 56700")
+        lieu = build(:lieu, name: "Centre ville", address: "3 place de la république 56700 Hennebont")
         rdv = build(:rdv, :with_fake_timestamps, lieu: lieu)
-        expect(described_class.row_array_from(rdv)[10]).to eq("Centre ville (3 place de la république, Hennebont, 56700)")
+        expect(described_class.row_array_from(rdv)[10]).to eq("Centre ville (3 place de la république 56700 Hennebont)")
       end
     end
 

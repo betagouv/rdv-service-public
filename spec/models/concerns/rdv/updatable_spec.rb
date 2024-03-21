@@ -227,7 +227,7 @@ RSpec.describe Rdv::Updatable, type: :concern do
       end
 
       it "returns true when single_use lieu adress is updated" do
-        lieu = create(:lieu, availability: "single_use", address: "2 place de la gare, Paris, 75016")
+        lieu = create(:lieu, availability: "single_use", address: "2 place de la gare")
         rdv.update!(lieu: lieu)
         rdv.reload
         rdv.update(lieu_attributes: { address: "derrière l'arbre", id: lieu.id })

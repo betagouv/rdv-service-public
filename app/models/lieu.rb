@@ -22,14 +22,6 @@ class Lieu < ApplicationRecord
 
   # Validations
   validates :name, :address, :availability, presence: true
-  validates(
-    :address,
-    format: {
-      with: /\A.+,\s.+,\s\d{5}\z/,
-      message: "Le format correct est : 139 Rue de Bercy, Paris, 75012",
-      if: -> { address.present? },
-    }
-  )
   validate :longitude_and_latitude_must_be_present
   validate :cant_change_availibility_single_use
 

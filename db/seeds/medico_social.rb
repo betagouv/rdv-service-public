@@ -221,7 +221,7 @@ lieu_org_paris_nord_bolivar = Lieu.create!(
   name: "MDS Bolivar",
   organisation: org_paris_nord,
   availability: :enabled,
-  address: "126 Avenue Simon Bolivar, Paris, 75019",
+  address: "126 Avenue Simon Bolivar, 75019, Paris",
   latitude: 48.8809263,
   longitude: 2.3739077
 )
@@ -229,7 +229,7 @@ lieu_org_paris_nord_bd_aubervilliers = Lieu.create!(
   name: "MDS Bd Aubervilliers",
   organisation: org_paris_nord,
   availability: :enabled,
-  address: "18 Boulevard d'Aubervilliers, Paris, 75019",
+  address: "18 Boulevard d'Aubervilliers, 75019 Paris",
   latitude: 48.8882196,
   longitude: 2.3650464
 )
@@ -237,7 +237,7 @@ lieu_arques_nord = Lieu.create!(
   name: "Maison Arques Nord",
   organisation: org_arques,
   availability: :enabled,
-  address: "10 rue du marechal leclerc, Arques, 62410",
+  address: "10 rue du marechal leclerc, 62410 Arques",
   latitude: 50.7406,
   longitude: 2.3103
 )
@@ -245,7 +245,7 @@ lieu_bapaume_est = Lieu.create!(
   name: "MJC Bapaume Est",
   organisation: org_bapaume,
   availability: :enabled,
-  address: "10 rue emile delot, Arques, 62450",
+  address: "10 rue emile delot, 62450 Arques",
   latitude: 50.1026,
   longitude: 2.8486
 )

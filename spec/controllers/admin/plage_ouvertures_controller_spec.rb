@@ -5,7 +5,7 @@ RSpec.describe Admin::PlageOuverturesController, type: :controller do
   let!(:service) { create(:service) }
   let!(:agent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }
   let!(:motif) { create(:motif, organisation: organisation, service: service) }
-  let!(:lieu1) { create(:lieu, organisation: organisation, name: "MDS Sud", address: "10 rue Belsunce, Paris, 75016") }
+  let!(:lieu1) { create(:lieu, organisation: organisation, name: "MDS Sud", address: "10 rue Belsunce") }
 
   shared_examples "agent can CRUD plage ouverture" do
     describe "GET #show" do
