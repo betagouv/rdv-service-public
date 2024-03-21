@@ -194,4 +194,14 @@ module UsersHelper
       ants_pre_demande_number_required: rdv.requires_ants_predemande_number?
     )
   end
+
+  def path_for_edit_user_modal(organisation, rdv, return_location:)
+    edit_admin_organisation_user_path(
+      organisation,
+      modal: true,
+      return_location: return_location,
+      role: default_service_selection_from(rdv.motif.service),
+      ants_pre_demande_number_required: rdv.requires_ants_predemande_number?
+    )
+  end
 end

@@ -15,7 +15,9 @@ div id=element_id
         = user
     div.ml-2
       = link_to edit_admin_organisation_user_path( \
-          current_organisation, user, modal: true, return_location: modals_return_location, role: default_service_selection_from(user) \
+
+  def path_for_edit_user_modal(current_organisation, rdv, return_location:  modals_return_location)
+          current_organisation, user, modal: true, return_location:, role: default_service_selection_from(user) \
         ), \
         data: { modal: "true" }, title: t("helpers.edit")
         i.fa.fa-edit
