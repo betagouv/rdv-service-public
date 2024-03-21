@@ -7,23 +7,20 @@ module User::Ants
     appointment = find_appointment(ants_pre_demande_number)
     return if appointment.nil?
 
-    user.add_benign_error(warning_message(appointment))
-  end
-
-  def self.find_appointment(application_id)
-    AntsApi::Appointment.first(application_id: application_id, timeout: 4)
-  rescue AntsApi::Appointment::ApiRequestError, Typhoeus::Errors::TimeoutError => e
-    # Si l'api de l'ANTS renvoie une erreur ou un timeout, on ne veut pas bloquer la prise de rendez-vous
-    # pour l'usager, donc on considère le numéro comme valide.
-    Sentry.capture_exception(e)
-    nil
-  end
-
-  def self.warning_message(appointment)
-    translate(
+    warning_message = translate(
       "activerecord.warnings.models.user.ants_pre_demande_number_already_used_html",
       management_url: appointment.management_url,
       meeting_point: appointment.meeting_point
     )
+    user.add_benign_error(warning_message)
+  end
+
+  def self.find_appointment(application_id)
+    AntsApi::Appointment.first(application_id: application_id, timeout: 4)
+  rescue AntsApi::ApiRequestError, Typhoeus::Errors::TimeoutError => e
+    # Si l'api de l'ANTS renvoie une erreur ou un timeout, on ne veut pas bloquer la prise de rendez-vous
+    # pour l'usager, donc on considère le numéro comme valide.
+    Sentry.capture_exception(e)
+    nil
   end
 end

@@ -73,14 +73,14 @@ class User < ApplicationRecord
       if: -> { ants_pre_demande_number.present? },
     }
   )
-  validates :ants_pre_demande_number, length: { is: 10 }, if: -> { ants_pre_demande_number.present? }
+  validates :ants_pre_demande_number, format: { with: /\A[A-Z0-9]{10}\z/ }, if: -> { ants_pre_demande_number.present? }
 
   validate :birth_date_validity
 
   # Hooks
-  before_save :set_email_to_null_if_blank
   # voir Ants::AppointmentSerializerAndListener pour d'autres callbacks
-  before_save -> { ants_pre_demande_number.upcase! }, if: -> { ants_pre_demande_number.present? }
+  before_validation -> { self.ants_pre_demande_number = ants_pre_demande_number.upcase.strip }, if: -> { ants_pre_demande_number.present? }
+  before_save :set_email_to_null_if_blank
 
   # Scopes
   default_scope { where(deleted_at: nil) }
