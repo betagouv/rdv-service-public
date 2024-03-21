@@ -6,7 +6,7 @@ module Ants
         rdv_attributes: {
           id: rdv.id,
           status: rdv.status,
-          users_ids: rdv.users.map(&:id),
+          users_ids: rdv.users.ids,
           obsolete_application_id: rdv.obsolete_application_id,
         },
         appointment_data: rdv.serialize_for_ants_api
