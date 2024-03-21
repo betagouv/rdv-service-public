@@ -35,7 +35,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
             {
               management_url: "https://gerer-rdv.com",
               meeting_point: "Mairie de Sannois",
-              appointment_date: "01/01/2030",
+              appointment_date: "2023-04-03T08:45:00",
             },
           ],
         },
