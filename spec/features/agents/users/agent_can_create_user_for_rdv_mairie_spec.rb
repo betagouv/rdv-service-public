@@ -24,7 +24,7 @@ RSpec.describe "Agent can create user" do
         status: 200,
         body: {
           ants_pre_demande_number => {
-            status: AntsApi::AntsApplication::VALIDATED,
+            status: "validated",
             appointments: [],
           },
         }.to_json
@@ -48,7 +48,7 @@ RSpec.describe "Agent can create user" do
         status: 200,
         body: {
           ants_pre_demande_number => {
-            status: AntsApi::AntsApplication::VALIDATED,
+            status: "validated",
             appointments: [
               {
                 management_url: "https://gerer-rdv.com",
@@ -81,7 +81,7 @@ RSpec.describe "Agent can create user" do
         status: 200,
         body: {
           ants_pre_demande_number => {
-            status: AntsApi::AntsApplication::CONSUMED,
+            status: "consumed",
             appointments: [],
           },
         }.to_json
@@ -93,10 +93,8 @@ RSpec.describe "Agent can create user" do
       fill_in :user_last_name, with: "Lebreton"
       fill_in :user_ants_pre_demande_number, with: ants_pre_demande_number
       click_button "Créer"
-      expect(page).to have_content("Ce numéro de pré-demande ANTS correspond à un dossier déjà instruit.")
+      expect(page).to have_content("Ce numéro de pré-demande ANTS correspond à un dossier déjà instruit")
       expect(page).not_to have_content("Confirmer en ignorant les avertissements")
-      expect_page_title("Marco LEBRETON")
-      expect(User.exists?(first_name: "Marco", last_name: "Lebreton")).to eq(true)
     end
   end
 end

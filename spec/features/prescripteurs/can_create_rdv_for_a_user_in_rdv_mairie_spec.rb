@@ -46,7 +46,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
     before do
       stub_request(:get, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status}).to_return(
         status: 200,
-        body: { ants_pre_demande_number => { status: AntsApi::AntsApplication::VALIDATED, appointments: [] } }.to_json
+        body: { ants_pre_demande_number => { status: "validated", appointments: [] } }.to_json
       )
     end
 
@@ -69,7 +69,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
         status: 200,
         body: {
           ants_pre_demande_number => {
-            status: AntsApi::AntsApplication::VALIDATED,
+            status: "validated",
             appointments: [
               {
                 management_url: "https://gerer-rdv.com",
@@ -104,7 +104,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
     before do
       stub_request(:get, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status}).to_return(
         status: 200,
-        body: { ants_pre_demande_number => { status: AntsApi::AntsApplication::CONSUMED, appointments: [] } }.to_json
+        body: { ants_pre_demande_number => { status: "consumed", appointments: [] } }.to_json
       )
     end
 
@@ -115,7 +115,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
       fill_up_prescripteur_and_user
       click_on "Confirmer le rendez-vous"
 
-      expect(page).to have_content("Ce numéro de pré-demande ANTS correspond à un dossier déjà instruit.")
+      expect(page).to have_content("Ce numéro de pré-demande ANTS correspond à un dossier déjà instruit")
       expect(page).not_to have_content("Confirmer en ignorant les avertissements")
     end
   end
