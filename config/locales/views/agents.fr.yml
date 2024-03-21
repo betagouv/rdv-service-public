@@ -18,3 +18,6 @@ fr:
         technical_email_explanation: Les emails de notification sont envoyés avec un fichier .ics qui vous permet de synchroniser votre calendrier (Outlook, zimbra, etc.) avec RDV Solidarités.
       update:
         done: Préférences de notifications mises à jour.
+    exports:
+      index:
+        title: Vos exports

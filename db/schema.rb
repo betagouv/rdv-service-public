@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_03_14_101308) do
+ActiveRecord::Schema[7.0].define(version: 2024_03_21_114146) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -46,6 +46,11 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_14_101308) do
     "agents_and_prescripteurs",
     "everyone",
     "agents_and_prescripteurs_and_invited_users",
+  ], force: :cascade
+
+  create_enum :export_type, [
+    "rdv_export",
+    "participations_export",
   ], force: :cascade
 
   create_enum :lieu_availability, [
@@ -254,6 +259,20 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_14_101308) do
     t.index ["agent_id", "rdv_id"], name: "index_agents_rdvs_on_agent_id_and_rdv_id", unique: true
     t.index ["agent_id"], name: "index_agents_rdvs_on_agent_id"
     t.index ["rdv_id"], name: "index_agents_rdvs_on_rdv_id"
+  end
+
+  create_table "exports", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.enum "export_type", null: false, enum_type: "export_type"
+    t.datetime "computed_at"
+    t.datetime "expires_at", null: false
+    t.integer "agent_id", null: false
+    t.string "file_name", null: false
+    t.jsonb "organisation_ids", null: false
+    t.jsonb "options"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["agent_id"], name: "index_exports_on_agent_id"
+    t.index ["expires_at"], name: "index_exports_on_expires_at"
   end
 
   create_table "file_attentes", force: :cascade do |t|
@@ -771,6 +790,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_14_101308) do
   add_foreign_key "agent_territorial_roles", "territories"
   add_foreign_key "agents_rdvs", "agents"
   add_foreign_key "agents_rdvs", "rdvs"
+  add_foreign_key "exports", "agents"
   add_foreign_key "file_attentes", "rdvs"
   add_foreign_key "file_attentes", "users"
   add_foreign_key "lieux", "organisations"
