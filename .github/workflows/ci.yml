@@ -69,6 +69,15 @@ jobs:
           POSTGRES_USER: lapin_development
           POSTGRES_PASSWORD: lapin_development
           POSTGRES_DB: lapin_development
+      - name: Run active_record_doctor:missing_non_null_constraint
+        run: bundle exec rails active_record_doctor:missing_non_null_constraint
+        env:
+          HOST: http://example.com
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+          POSTGRES_USER: lapin_development
+          POSTGRES_PASSWORD: lapin_development
+          POSTGRES_DB: lapin_development
   test_unit:
     name: Unit Tests
     runs-on: ubuntu-latest

@@ -63,10 +63,6 @@ Rails.application.configure do
       cron: "every day at 23:00 Europe/Paris",
       class: "CronJob::DestroyOldVersions",
     },
-    destroy_old_api_calls: {
-      cron: "every day at 23:30 Europe/Paris",
-      class: "CronJob::DestroyOldApiCalls",
-    },
     warn_about_expiring_azure_app_secrets: {
       cron: "every day at 10:00 Europe/Paris",
       class: "CronJob::WarnAboutExpiringAzureAppSecrets",

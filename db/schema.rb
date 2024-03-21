@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_03_14_144146) do
+ActiveRecord::Schema[7.0].define(version: 2024_03_21_114146) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -154,8 +154,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_14_144146) do
   end
 
   create_table "agent_services", force: :cascade do |t|
-    t.bigint "agent_id"
-    t.bigint "service_id"
+    t.bigint "agent_id", null: false
+    t.bigint "service_id", null: false
     t.datetime "created_at", null: false
     t.index ["agent_id", "service_id"], name: "index_agent_services_on_agent_id_and_service_id", unique: true
     t.index ["agent_id"], name: "index_agent_services_on_agent_id"
@@ -259,14 +259,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_14_144146) do
     t.index ["agent_id", "rdv_id"], name: "index_agents_rdvs_on_agent_id_and_rdv_id", unique: true
     t.index ["agent_id"], name: "index_agents_rdvs_on_agent_id"
     t.index ["rdv_id"], name: "index_agents_rdvs_on_rdv_id"
-  end
-
-  create_table "api_calls", force: :cascade do |t|
-    t.datetime "received_at", null: false
-    t.jsonb "raw_http", null: false
-    t.string "controller_name", null: false
-    t.string "action_name", null: false
-    t.bigint "agent_id", null: false
   end
 
   create_table "exports", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -406,14 +398,14 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_14_144146) do
   end
 
   create_table "motifs", force: :cascade do |t|
-    t.string "name"
-    t.string "color"
+    t.string "name", null: false
+    t.string "color", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "default_duration_in_min", default: 30, null: false
     t.bigint "organisation_id", null: false
-    t.integer "min_public_booking_delay", default: 1800, comment: "Permet de savoir combien de secondes il y aura au minimum entre la prise de rdv par un usager ou un prescripteur et le début du rdv. Par exemple si la valeur est 1800, et qu'il est 10h, le premier rdv qui pourra être pris (s'il y a une plage d'ouverture libre) sera à 10h30, puisque 1800 = 30 x 60. Cela permet à l'agent d'être prévenu suffisamment à l'avance.\n"
-    t.integer "max_public_booking_delay", default: 7889238, comment: "Permet de savoir combien de temps à l'avance il est possible de prendre rdv pour un usager ou un prescripteur. Le délai est mesuré en secondes. Cela évite que des gens prennent des rdv dans trop longtemps, et évite aux agents de s'engager à assurer des rdv alors qu'ils ne connaissent pas leur emploi du temps suffisamment à l'avance.\n"
+    t.integer "min_public_booking_delay", default: 1800, null: false, comment: "Permet de savoir combien de secondes il y aura au minimum entre la prise de rdv par un usager ou un prescripteur et le début du rdv. Par exemple si la valeur est 1800, et qu'il est 10h, le premier rdv qui pourra être pris (s'il y a une plage d'ouverture libre) sera à 10h30, puisque 1800 = 30 x 60. Cela permet à l'agent d'être prévenu suffisamment à l'avance.\n"
+    t.integer "max_public_booking_delay", default: 7889238, null: false, comment: "Permet de savoir combien de temps à l'avance il est possible de prendre rdv pour un usager ou un prescripteur. Le délai est mesuré en secondes. Cela évite que des gens prennent des rdv dans trop longtemps, et évite aux agents de s'engager à assurer des rdv alors qu'ils ne connaissent pas leur emploi du temps suffisamment à l'avance.\n"
     t.datetime "deleted_at", comment: "Permet de savoir à quelle date le motif a été soft-deleted\n"
     t.bigint "service_id", null: false
     t.text "restriction_for_rdv", comment: "Instructions à accepter avant la prise du rendez-vous par l'usager\n"
@@ -449,7 +441,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_14_144146) do
   end
 
   create_table "organisations", force: :cascade do |t|
-    t.string "name"
+    t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "horaires"
@@ -496,7 +488,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_14_144146) do
 
   create_table "plage_ouvertures", force: :cascade do |t|
     t.bigint "agent_id", null: false
-    t.string "title"
+    t.string "title", null: false
     t.bigint "organisation_id", null: false
     t.date "first_day", null: false
     t.time "start_time", null: false
@@ -560,7 +552,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_14_144146) do
 
   create_table "receipts", force: :cascade do |t|
     t.bigint "rdv_id"
-    t.bigint "user_id"
+    t.bigint "user_id", null: false
     t.string "event", null: false
     t.enum "channel", null: false, enum_type: "receipts_channel"
     t.enum "result", null: false, enum_type: "receipts_result"
@@ -612,10 +604,10 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_14_144146) do
   end
 
   create_table "services", force: :cascade do |t|
-    t.string "name"
+    t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "short_name"
+    t.string "short_name", null: false
     t.index "lower((name)::text)", name: "index_services_on_lower_name", unique: true
     t.index "lower((short_name)::text)", name: "index_services_on_lower_short_name", unique: true
     t.index ["name"], name: "index_services_on_name"
@@ -665,8 +657,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_14_144146) do
   end
 
   create_table "territory_services", force: :cascade do |t|
-    t.bigint "territory_id"
-    t.bigint "service_id"
+    t.bigint "territory_id", null: false
+    t.bigint "service_id", null: false
     t.datetime "created_at", null: false
     t.index ["service_id"], name: "index_territory_services_on_service_id"
     t.index ["territory_id", "service_id"], name: "index_territory_services_on_territory_id_and_service_id", unique: true
@@ -682,8 +674,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_14_144146) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string "first_name"
-    t.string "last_name"
+    t.string "first_name", null: false
+    t.string "last_name", null: false
     t.string "email"
     t.string "address"
     t.string "phone_number"
@@ -722,7 +714,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_14_144146) do
     t.string "post_code"
     t.string "city_name"
     t.enum "invited_through", default: "devise_email", enum_type: "user_invited_through"
-    t.enum "created_through", default: "unknown", enum_type: "user_created_through"
+    t.enum "created_through", default: "unknown", null: false, enum_type: "user_created_through"
     t.string "case_number"
     t.string "address_details"
     t.integer "logement"
@@ -764,7 +756,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_14_144146) do
 
   create_table "webhook_endpoints", force: :cascade do |t|
     t.string "target_url", null: false
-    t.string "secret"
+    t.string "secret", null: false
     t.bigint "organisation_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -774,9 +766,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_14_144146) do
   end
 
   create_table "zones", force: :cascade do |t|
-    t.string "level"
-    t.string "city_name"
-    t.string "city_code"
+    t.string "level", null: false
+    t.string "city_name", null: false
+    t.string "city_code", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "sector_id", null: false
@@ -798,7 +790,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_14_144146) do
   add_foreign_key "agent_territorial_roles", "territories"
   add_foreign_key "agents_rdvs", "agents"
   add_foreign_key "agents_rdvs", "rdvs"
-  add_foreign_key "api_calls", "agents"
   add_foreign_key "exports", "agents"
   add_foreign_key "file_attentes", "rdvs"
   add_foreign_key "file_attentes", "users"

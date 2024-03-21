@@ -28,11 +28,26 @@ RSpec.describe "User can search for rdvs" do
       choose_service(motif.service)
       choose_motif(motif)
       choose_lieu(lieu)
+
+      expect(page).to have_current_path(path_for_creneau_choice) # Cet expect permet de vérifier que les tests qui se basent sur ce path pour éviter des étapes intermédiaires sont corrects
+
       choose_creneau
       sign_up
       continue_to_rdv(motif)
       add_relative
       confirm_rdv(motif, lieu)
+    end
+
+    describe "On RDV Service Public" do
+      it "doesn't require an ANTS predemande number for a relative", js: true do
+        visit "http://www.rdv-mairie-test.localhost/#{path_for_creneau_choice}"
+        choose_creneau
+        sign_up
+        click_button("Continuer")
+
+        add_relative(birth_date: false)
+        confirm_rdv(motif, lieu)
+      end
     end
   end
 
@@ -385,12 +400,12 @@ RSpec.describe "User can search for rdvs" do
     expect(page).to have_content("Michel LAPIN (Lapinou)")
   end
 
-  def add_relative
+  def add_relative(birth_date: true)
     click_link("Ajouter un proche")
     expect(page).to have_selector("h1", text: "Ajouter un proche")
     fill_in("Prénom", with: "Mathieu")
     fill_in("Nom", with: "Lapin")
-    fill_in("Date de naissance", with: Date.yesterday)
+    fill_in("Date de naissance", with: Date.yesterday) if birth_date
     click_button("Enregistrer")
     expect(page).to have_content("Mathieu LAPIN")
 
@@ -411,5 +426,20 @@ RSpec.describe "User can search for rdvs" do
 
   def expect_page_h1(title)
     expect(page).to have_selector("h1", text: title)
+  end
+
+  def path_for_creneau_choice
+    prendre_rdv_path(
+      address: "79 Rue de Plaisance, 92250 La Garenne-Colombes",
+      city_code: "",
+      departement: 92,
+      date: "2022-01-13 08:00:00 +0100",
+      latitude: "",
+      lieu_id: lieu&.id,
+      longitude: "",
+      motif_name_with_location_type: "vaccination-public_office",
+      service_id: service.id,
+      street_ban_id: ""
+    )
   end
 end

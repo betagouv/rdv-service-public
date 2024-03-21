@@ -1,4 +1,7 @@
 class InclusionConnect
+  class AgentNotFoundError < StandardError; end
+  class ApiRequestError < StandardError; end
+
   IC_CLIENT_ID = ENV["INCLUSION_CONNECT_CLIENT_ID"]
   IC_CLIENT_SECRET = ENV["INCLUSION_CONNECT_CLIENT_SECRET"]
   IC_BASE_URL = ENV["INCLUSION_CONNECT_BASE_URL"]
@@ -46,13 +49,15 @@ class InclusionConnect
     }
     uri = URI("#{IC_BASE_URL}/token/")
 
-    res = Typhoeus.post(
+    response = Typhoeus.post(
       uri,
       body: data,
       headers: { "Content-Type" => "application/x-www-form-urlencoded" }
     )
 
-    @token = res.success? ? JSON.parse(res.body)["access_token"] : false
+    handle_response_error(response)
+
+    @token = JSON.parse(response.body)["access_token"]
   end
 
   def user_info
@@ -61,9 +66,11 @@ class InclusionConnect
     uri = URI("#{IC_BASE_URL}/userinfo/")
     uri.query = URI.encode_www_form({ schema: "openid" })
 
-    res = Typhoeus.get(uri, headers: { "Authorization" => "Bearer #{token}" })
+    response = Typhoeus.get(uri, headers: { "Authorization" => "Bearer #{token}" })
 
-    @user_info = res.success? ? JSON.parse(res.body) : nil
+    handle_response_error(response)
+
+    @user_info = JSON.parse(response.body)
   end
 
   def update_agent
@@ -71,7 +78,7 @@ class InclusionConnect
     return handle_agent_mismatch if agent_mismatch?
 
     update_basic_info
-    update_email_and_uid(matching_agent) if matching_agent.email != user_info["email"]
+    update_email(matching_agent) if matching_agent.email != user_info["email"]
   end
 
   def update_basic_info
@@ -90,8 +97,10 @@ class InclusionConnect
     matching_agent.save! if matching_agent.changed?
   end
 
-  def update_email_and_uid(agent)
-    agent.update_columns(email: user_info["email"], uid: user_info["email"]) # rubocop:disable Rails/SkipsModelValidations
+  def update_email(agent)
+    agent.email = user_info["email"]
+    agent.skip_reconfirmation!
+    agent.save!
   end
 
   def matching_agent
@@ -100,6 +109,9 @@ class InclusionConnect
     handle_agent_mismatch if agent_mismatch?
 
     @matching_agent = found_by_sub || found_by_email
+    raise InclusionConnect::AgentNotFoundError, user_info["email"].to_s if @matching_agent.nil?
+
+    @matching_agent
   end
 
   def handle_agent_mismatch
@@ -113,7 +125,7 @@ class InclusionConnect
 
     return @found_by_email if defined?(@found_by_email)
 
-    @found_by_email = Agent.find_by(email: user_info["email"])
+    @found_by_email = Agent.active.find_by(email: user_info["email"])
 
     unless @found_by_email
       # Les domaines francetravail.fr et pole-emploi.fr sont équivalents
@@ -121,7 +133,7 @@ class InclusionConnect
       name, domain = user_info["email"].split("@")
       if domain.in?(["francetravail.fr", "pole-emploi.fr"])
         acceptable_emails = ["#{name}@francetravail.fr", "#{name}@pole-emploi.fr"]
-        @found_by_email = Agent.find_by(email: acceptable_emails)
+        @found_by_email = Agent.active.find_by(email: acceptable_emails)
       end
     end
 
@@ -133,7 +145,7 @@ class InclusionConnect
 
     return if user_info["sub"].nil? && Sentry.capture_message("InclusionConnect sub is nil", extra: user_info, fingerprint: "ic_sub_nil")
 
-    @found_by_sub ||= Agent.find_by(inclusion_connect_open_id_sub: user_info["sub"])
+    @found_by_sub ||= Agent.active.find_by(inclusion_connect_open_id_sub: user_info["sub"])
   end
 
   def log_and_exit(field)
@@ -144,5 +156,11 @@ class InclusionConnect
 
   def agent_mismatch?
     found_by_sub && found_by_email && found_by_sub != found_by_email
+  end
+
+  def handle_response_error(response)
+    unless response.success?
+      raise(InclusionConnect::ApiRequestError, "code:#{response.response_code}, body:#{response.response_body}")
+    end
   end
 end
