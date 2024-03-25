@@ -30,7 +30,7 @@ ruby:
           div.ml-2= link_to remove_user_path, title: t("helpers.remove")
             i.fa.fa-minus-circle
           div.ml-2
-            = link_to(path_for_edit_user_modal(current_organisation, @rdv, return_location:  modals_return_location)), data: { modal: "true" }, title: t("helpers.edit")
+            = link_to(path_for_edit_user_modal(current_organisation, @rdv, return_location:  modals_return_location), data: { modal: "true" }, title: t("helpers.edit"))
               i.fa.fa-edit
 
     - show_add_user = @rdv.users.empty?
