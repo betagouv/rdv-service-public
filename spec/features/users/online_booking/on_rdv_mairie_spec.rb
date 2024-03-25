@@ -31,6 +31,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
       status: 200,
       body: {
         ants_pre_demande_number => {
+          status: "validated",
           appointments: [
             {
               management_url: "https://gerer-rdv.com",
