@@ -12,6 +12,32 @@ RSpec.describe ApplicationJob, type: :job do
       MyJob
     end
 
+    let(:timeout_job_class) do
+      stub_const "TimeoutJob", Class.new(described_class)
+      TimeoutJob.class_eval do
+        queue_as :custom_queue
+
+        def perform; end
+      end
+      TimeoutJob
+    end
+
+    let(:exports_timeout_job_class) do
+      stub_const "ExportsTimeoutJob", Class.new(ExportJob)
+      ExportsTimeoutJob.class_eval do
+        def perform; end
+      end
+      ExportsTimeoutJob
+    end
+
+    let(:cron_timeout_job_class) do
+      stub_const "CronTimeoutJob", Class.new(CronJob)
+      CronTimeoutJob.class_eval do
+        def perform; end
+      end
+      CronTimeoutJob
+    end
+
     it "reports job metadata to Sentry" do
       job_class.perform_later(123, _some_kw_arg: 456)
       enqueued_job_id = enqueued_jobs.last["job_id"]
@@ -25,28 +51,43 @@ RSpec.describe ApplicationJob, type: :job do
       expect(sentry_events.last.exception.values.first.type).to eq("RuntimeError")
     end
 
-    it "reports job timeout to Sentry" do
-      stub_const "JobThatShouldFinishQuickly", Class.new(described_class)
-      JobThatShouldFinishQuickly.class_eval do
-        queue_as :custom_queue
+    it "reports job timeout to Sentry for custom_queue" do
+      allow(Timeout).to receive(:timeout).with(30.seconds).and_raise(Timeout::Error)
 
-        def perform(_arg1, _arg2)
-          sleep 0.2
-        end
-
-        def log_long_run_to_sentry_after
-          0.1.seconds
-        end
-      end
-
-      JobThatShouldFinishQuickly.perform_later("arg1", "arg2")
+      timeout_job_class.perform_later
       enqueued_job_id = enqueued_jobs.last["job_id"]
       expect { perform_enqueued_jobs }.to change(sentry_events, :size).by(1)
 
       expect(sentry_events.last.contexts[:job][:job_id]).to eq(enqueued_job_id)
       expect(sentry_events.last.contexts[:job][:queue_name]).to eq("custom_queue")
-      expect(sentry_events.last.contexts[:job][:arguments]).to eq(["arg1", "arg2"])
-      expect(sentry_events.last.message).to eq("Long running job: JobThatShouldFinishQuickly")
+      expect(sentry_events.last.exception.values.first.value).to match("Timeout::Error (Timeout::Error)")
+      expect(sentry_events.last.exception.values.first.type).to eq("Timeout::Error")
+    end
+
+    it "reports exports job timeout to Sentry for exports queue" do
+      allow(Timeout).to receive(:timeout).with(5.minutes).and_raise(Timeout::Error)
+
+      exports_timeout_job_class.perform_later
+      enqueued_job_id = enqueued_jobs.last["job_id"]
+      expect { perform_enqueued_jobs }.to change(sentry_events, :size).by(1)
+
+      expect(sentry_events.last.contexts[:job][:job_id]).to eq(enqueued_job_id)
+      expect(sentry_events.last.contexts[:job][:queue_name]).to eq("exports")
+      expect(sentry_events.last.exception.values.first.value).to match("Timeout::Error (Timeout::Error)")
+      expect(sentry_events.last.exception.values.first.type).to eq("Timeout::Error")
+    end
+
+    it "reports cron job timeout to Sentry for cron queue" do
+      allow(Timeout).to receive(:timeout).with(1.hour).and_raise(Timeout::Error)
+
+      cron_timeout_job_class.perform_later
+      enqueued_job_id = enqueued_jobs.last["job_id"]
+      expect { perform_enqueued_jobs }.to change(sentry_events, :size).by(1)
+
+      expect(sentry_events.last.contexts[:job][:job_id]).to eq(enqueued_job_id)
+      expect(sentry_events.last.contexts[:job][:queue_name]).to eq("cron")
+      expect(sentry_events.last.exception.values.first.value).to match("Timeout::Error (Timeout::Error)")
+      expect(sentry_events.last.exception.values.first.type).to eq("Timeout::Error")
     end
   end
 end
