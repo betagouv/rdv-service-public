@@ -6,22 +6,17 @@ module User::Ants
 
     application_hash = AntsApi::Appointment.status(application_id: ants_pre_demande_number, timeout: 4)
 
-    case application_hash["status"]
-    when "validated"
+    status = application_hash["status"]
+
+    if status == "validated"
 
       if application_hash["appointments"].any?
         appointment = OpenStruct.new(application_hash["appointments"].first)
         user.add_benign_error(warning_message(appointment)) unless ignore_benign_errors
       end
 
-    when "consumed"
-      user.errors.add(:base, "Ce numéro de pré-demande ANTS correspond à un dossier déjà instruit")
-    when "unknown"
-      user.errors.add(:base, "Ce numéro de pré-demande ANTS est inconnu")
-    when "expired"
-      user.errors.add(:base, "Ce numéro de pré-demande ANTS a expiré")
     else
-      user.errors.add(:base, "Ce numéro de pré-demande ANTS est invalide")
+      user.errors.add(:base, error_message(application_hash["status"]))
     end
   rescue AntsApi::Appointment::ApiRequestError, Typhoeus::Errors::TimeoutError => e
     # Si l'api de l'ANTS renvoie une erreur ou un timeout, on ne veut pas bloquer la prise de rendez-vous
@@ -36,5 +31,18 @@ module User::Ants
       management_url: appointment.management_url,
       meeting_point: appointment.meeting_point
     )
+  end
+
+  def self.error_message(status)
+    case status
+    when "consumed"
+      user.errors.add(:base, "Ce numéro de pré-demande ANTS correspond à un dossier déjà instruit")
+    when "unknown"
+      user.errors.add(:base, "Ce numéro de pré-demande ANTS est inconnu")
+    when "expired"
+      user.errors.add(:base, "Ce numéro de pré-demande ANTS a expiré")
+    else
+      user.errors.add(:base, "Ce numéro de pré-demande ANTS est invalide")
+    end
   end
 end
