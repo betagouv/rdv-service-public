@@ -3,7 +3,7 @@ RSpec.describe "agents can prescribe rdvs" do
     travel_to(now)
     stub_request(
       :get,
-      "https://api-adresse.data.gouv.fr/search/?q=20%20avenue%20de%20S%C3%A9gur,%20Paris"
+      "https://api-adresse.data.gouv.fr/search/?q=20%20avenue%20de%20S%C3%A9gur,%20Paris,%2075012"
     ).to_return(status: 200, body: file_fixture("geocode_result.json").read, headers: {})
   end
 

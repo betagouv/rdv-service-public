@@ -179,7 +179,7 @@ lieu1_bordeaux = Lieu.create!(
   availability: :enabled,
   phone_number: "05.47.33.91.17",
   phone_number_formatted: "+33547339117",
-  address: "30 rue des Frères Bonie, 33000 BORDEAUX"
+  address: "30 rue des Frères Bonie, BORDEAUX, 33000"
 )
 Lieu.create!(
   name: "Point-justice de LANGON",
@@ -189,7 +189,7 @@ Lieu.create!(
   availability: :enabled,
   phone_number: "05.57.36.25.54",
   phone_number_formatted: "+330557362554",
-  address: "Résidence de l'Horloge, Place de l'horloge, 33210 LANGON"
+  address: "Résidence de l'Horloge, Place de l'horloge, LANGON, 33210"
 )
 
 ## Plages d'Ouvertures

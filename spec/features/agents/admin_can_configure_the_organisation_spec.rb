@@ -45,7 +45,7 @@ RSpec.describe "Admin can configure the organisation" do
 
     expect_page_title("Nouveau lieu")
     fill_in "Nom", with: "Un autre nouveau lieu"
-    fill_in "Adresse", with: "3 Place de la Gare, Strasbourg, 67000, 67, Bas-Rhin, Grand Est"
+    fill_in "Adresse", with: "3 Place de la Gare, Strasbourg, 67000"
     first("input#lieu_latitude", visible: false).set(48.583844)
     first("input#lieu_longitude", visible: false).set(7.735253)
     click_button "Enregistrer"

@@ -3,6 +3,7 @@ class Lieu < ApplicationRecord
   has_paper_trail
   include PhoneNumberValidation::HasPhoneNumber
   include WebhookDeliverable
+  include AddressConcern
 
   # Attributes
   auto_strip_attributes :name
