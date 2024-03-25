@@ -77,7 +77,7 @@
               | L'usager n'existe pas ?&nbsp;
               = link_to \
                 "Créer un usager", \
-                path_for_new_user_modal(current_organisation, @rdv, return_location: return_location: edit_admin_organisation_rdvs_collectif_path(current_organisation, @rdv, add_user: @add_user_ids)), \
+                path_for_new_user_modal(current_organisation, @rdv, return_location: edit_admin_organisation_rdvs_collectif_path(current_organisation, @rdv, add_user: @add_user_ids)), \
                 data: { modal: true }
 
           .text-right
