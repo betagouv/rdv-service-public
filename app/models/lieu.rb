@@ -3,6 +3,7 @@ class Lieu < ApplicationRecord
   has_paper_trail
   include PhoneNumberValidation::HasPhoneNumber
   include WebhookDeliverable
+  include AddressConcern
 
   # Attributes
   auto_strip_attributes :name
@@ -22,13 +23,6 @@ class Lieu < ApplicationRecord
 
   # Validations
   validates :name, :address, :availability, presence: true
-  validates(
-    :address,
-    format: {
-      with: /\A.+,\s.+,\s\d{5}\z/,
-      message: "Le format correct est : 139 Rue de Bercy, Paris, 75012",
-    }
-  )
   validate :longitude_and_latitude_must_be_present
   validate :cant_change_availibility_single_use
 
