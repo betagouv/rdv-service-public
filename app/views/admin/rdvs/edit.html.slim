@@ -85,7 +85,7 @@
                }
               span.small.text-muted
               | L'usager n'existe pas ?&nbsp;
-              = link_to("Créer un usager", path_for_new_user_modal(organisation, @rdv, return_location: request.url), data: { modal: true })
+              = link_to("Créer un usager", path_for_new_user_modal(current_organisation, @rdv, return_location: request.url), data: { modal: true })
 
             .text-right
               = link_to t("helpers.back"), admin_organisation_rdv_path(current_organisation, @rdv), class: "btn btn-link"
