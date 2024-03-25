@@ -54,6 +54,8 @@ gem "activerecord-postgres_enum"
 gem "redis", "< 5.0"
 # Adds a Redis::Namespace class which can be used to namespace calls to Redis.
 gem "redis-namespace"
+# Generic connection pooling for Ruby
+gem "connection_pool"
 
 # Devise / auth
 # Flexible authentication solution for Rails with Warden

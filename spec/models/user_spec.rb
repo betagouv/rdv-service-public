@@ -358,4 +358,28 @@ RSpec.describe User, type: :model do
       expect(user.reload.ants_pre_demande_number).to eq "ABCDE12345"
     end
   end
+
+  describe "validations" do
+    describe "#address" do
+      context "address in wrong format" do
+        let(:user) { build :user, address: "139 Rue de Bercy, 75012 Paris" }
+
+        it "validates format with error" do
+          user.valid?
+
+          expect(user.errors.full_messages).to eq(["Adresse Le format correct est : 139 Rue de Bercy, Paris, 75012"])
+        end
+      end
+
+      context "address in correct format" do
+        let(:user) { build :user, address: "139 Rue de Bercy, Paris, 75012" }
+
+        it "validates format successfully" do
+          user.valid?
+
+          expect(user.errors).to be_empty
+        end
+      end
+    end
+  end
 end

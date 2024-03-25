@@ -56,7 +56,7 @@ RSpec.describe Admin::Agents::PlageOuverturesController, type: :controller do
               "url" => "/admin/organisations/#{organisation.id}/plage_ouvertures/#{plage_ouverture.id}",
               "extendedProps" => {
                 "organisationName" => organisation.name,
-                "location" => "1 rue de l'adresse 12345 Ville",
+                "location" => "1 rue de l'adresse, Ville, 12345",
                 "lieu" => plage_ouverture.lieu.name,
               },
             },
