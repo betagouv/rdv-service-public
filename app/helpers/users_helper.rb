@@ -169,13 +169,6 @@ module UsersHelper
     }[email_tld]
   end
 
-  def default_service_selection_from(source)
-    return :relative if source.respond_to?(:pmi?) && source.pmi?
-    return :relative if source.respond_to?(:relative?) && source.relative?
-
-    :responsible
-  end
-
   def user_merge_attribute_value(user, attribute)
     return birth_date_and_age(user) if attribute == :birth_date
     return user.responsible&.full_name if attribute == :responsible_id
@@ -190,7 +183,7 @@ module UsersHelper
       organisation,
       modal: true,
       return_location: return_location,
-      role: default_service_selection_from(rdv.motif.service),
+      role: rdv.motif.service&.pmi? ? :relative : :responsible,
       ants_pre_demande_number_required: rdv.requires_ants_predemande_number?
     )
   end
@@ -201,7 +194,7 @@ module UsersHelper
       user,
       modal: true,
       return_location: return_location,
-      role: default_service_selection_from(user),
+      role: user.relative? ? :relative : :responsible,
       ants_pre_demande_number_required: rdv.requires_ants_predemande_number?
     )
   end
