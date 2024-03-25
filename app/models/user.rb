@@ -21,6 +21,7 @@ class User < ApplicationRecord
   include WebhookDeliverable
   include TextSearch
   include UncommonPasswordConcern
+  include AddressConcern
 
   def self.search_options
     {
@@ -80,6 +81,7 @@ class User < ApplicationRecord
   # Hooks
   before_save :set_email_to_null_if_blank
   # voir Ants::AppointmentSerializerAndListener pour d'autres callbacks
+  before_save -> { ants_pre_demande_number.upcase! }, if: -> { ants_pre_demande_number.present? }
 
   # Scopes
   default_scope { where(deleted_at: nil) }

@@ -28,11 +28,26 @@ RSpec.describe "User can search for rdvs" do
       choose_service(motif.service)
       choose_motif(motif)
       choose_lieu(lieu)
+
+      expect(page).to have_current_path(path_for_creneau_choice) # Cet expect permet de vérifier que les tests qui se basent sur ce path pour éviter des étapes intermédiaires sont corrects
+
       choose_creneau
       sign_up
       continue_to_rdv(motif)
       add_relative
       confirm_rdv(motif, lieu)
+    end
+
+    describe "On RDV Service Public" do
+      it "doesn't require an ANTS predemande number for a relative", js: true do
+        visit "http://www.rdv-mairie-test.localhost/#{path_for_creneau_choice}"
+        choose_creneau
+        sign_up
+        click_button("Continuer")
+
+        add_relative(birth_date: false)
+        confirm_rdv(motif, lieu)
+      end
     end
   end
 
@@ -103,10 +118,15 @@ RSpec.describe "User can search for rdvs" do
 
   describe "follow up rdvs" do
     let!(:user) { create(:user, referent_agents: [agent]) }
-    let!(:agent) { create(:agent) }
+    let!(:agent) do
+      create(:agent, basic_role_in_organisations: [organisation], services: [service_social, service_insertion]).tap do |agent|
+        create(:agent_territorial_access_right, territory: organisation.territory, agent: agent)
+      end
+    end
     let!(:agent2) { create(:agent) }
     let!(:organisation) { create(:organisation, territory: create(:territory, departement_number: "92")) }
-    let!(:service) { create(:service) }
+    let!(:service_social) { create(:service, name: "Service Social") }
+    let!(:service_insertion) { create(:service, name: "Service Insertion") }
     let!(:lieu) { create(:lieu, organisation: organisation) }
 
     ## follow up motif linked to referent
@@ -114,7 +134,7 @@ RSpec.describe "User can search for rdvs" do
       create(
         :motif,
         name: "RSA Suivi", follow_up: true,
-        organisation: organisation, service: service, restriction_for_rdv: "Instructions pour le RDV"
+        organisation: organisation, service: service_insertion, restriction_for_rdv: "Instructions pour le RDV"
       )
     end
 
@@ -123,7 +143,7 @@ RSpec.describe "User can search for rdvs" do
       create(
         :motif,
         name: "RSA suivi téléphonique", follow_up: true, organisation: organisation,
-        restriction_for_rdv: nil, service: service
+        restriction_for_rdv: nil, service: service_insertion
       )
     end
 
@@ -132,7 +152,7 @@ RSpec.describe "User can search for rdvs" do
       create(
         :motif,
         name: "RSA Orientation", follow_up: false, organisation: organisation,
-        restriction_for_rdv: nil, service: service
+        restriction_for_rdv: nil, service: service_insertion
       )
     end
 
@@ -169,18 +189,21 @@ RSpec.describe "User can search for rdvs" do
 
     ## Collectif follow up motif linked to referent
     let!(:collectif_motif) do
-      create(:motif, follow_up: true, restriction_for_rdv: nil, collectif: true, organisation: organisation, service: service)
+      create(:motif, follow_up: true, restriction_for_rdv: nil, collectif: true, organisation: organisation, service: service_insertion)
     end
-    let!(:collectif_rdv) { create(:rdv, motif: collectif_motif, agents: [agent], starts_at: 2.days.from_now) }
+    let!(:collectif_rdv) { create(:rdv, motif: collectif_motif, agents: [agent], lieu: lieu, organisation: organisation, starts_at: 2.days.from_now) }
 
     before { login_as(user, scope: :user) }
 
     it "shows only the follow up motifs related to the agent", js: true do
-      visit root_path(referent_ids: [agent.id], departement: "92", service_id: service.id)
+      visit users_rdvs_path
+      click_link "Prendre un RDV de suivi"
 
       ### Motif selection
       expect(page).to have_content(motif1.name)
       expect(page).to have_content(collectif_motif.name)
+
+      expect(page).not_to have_content "Pour prendre un RDV avec un de vos agents référent" # Le CTA pour prendre un rdv de suivi ne s'affiche pas
 
       expect(page).not_to have_content(motif2.name)
       expect(page).not_to have_content(motif3.name)
@@ -214,7 +237,7 @@ RSpec.describe "User can search for rdvs" do
 
     context "when the agent is not the referent" do
       it "shows an error message" do
-        visit root_path(referent_ids: [agent2.id], departement: "92", service_id: service.id)
+        visit root_path(referent_ids: [agent2.id], departement: "92", service_id: service_social.id)
 
         expect(page).not_to have_content(motif1.name)
         expect(page).not_to have_content(collectif_motif.name)
@@ -230,7 +253,7 @@ RSpec.describe "User can search for rdvs" do
       let!(:agent3) { create(:agent) }
 
       it "shows an error message" do
-        visit root_path(referent_ids: [agent3.id], departement: "92", service_id: service.id)
+        visit root_path(referent_ids: [agent3.id], departement: "92", service_id: service_social.id)
 
         expect(page).to have_content("Votre référent n'a pas de créneaux disponibles")
       end
@@ -377,12 +400,12 @@ RSpec.describe "User can search for rdvs" do
     expect(page).to have_content("Michel LAPIN (Lapinou)")
   end
 
-  def add_relative
+  def add_relative(birth_date: true)
     click_link("Ajouter un proche")
     expect(page).to have_selector("h1", text: "Ajouter un proche")
     fill_in("Prénom", with: "Mathieu")
     fill_in("Nom", with: "Lapin")
-    fill_in("Date de naissance", with: Date.yesterday)
+    fill_in("Date de naissance", with: Date.yesterday) if birth_date
     click_button("Enregistrer")
     expect(page).to have_content("Mathieu LAPIN")
 
@@ -403,5 +426,20 @@ RSpec.describe "User can search for rdvs" do
 
   def expect_page_h1(title)
     expect(page).to have_selector("h1", text: title)
+  end
+
+  def path_for_creneau_choice
+    prendre_rdv_path(
+      address: "79 Rue de Plaisance, 92250 La Garenne-Colombes",
+      city_code: "",
+      departement: 92,
+      date: "2022-01-13 08:00:00 +0100",
+      latitude: "",
+      lieu_id: lieu&.id,
+      longitude: "",
+      motif_name_with_location_type: "vaccination-public_office",
+      service_id: service.id,
+      street_ban_id: ""
+    )
   end
 end

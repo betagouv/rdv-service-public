@@ -273,9 +273,10 @@ RSpec.describe User, type: :model do
   # cf https://github.com/heartcombo/devise/wiki/How-To:-Email-only-sign-up
   describe "#set_reset_password_token" do
     it "returns the plaintext token" do
-      potential_token = subject.send(:set_reset_password_token)
-      potential_token_digest = Devise.token_generator.digest(subject, :reset_password_token, potential_token)
-      actual_token_digest = subject.reset_password_token
+      user = build(:user)
+      potential_token = user.send(:set_reset_password_token)
+      potential_token_digest = Devise.token_generator.digest(user, :reset_password_token, potential_token)
+      actual_token_digest = user.reset_password_token
       expect(potential_token_digest).to eql(actual_token_digest)
     end
   end
@@ -345,6 +346,40 @@ RSpec.describe User, type: :model do
       parent = create(:user)
       child = create(:user, responsible: parent)
       expect { parent.update!(responsible: child) }.to raise_error(ActiveRecord::RecordInvalid, /L'usager⋅e ne peut être responsable de son propre responsable/)
+    end
+  end
+
+  describe "#ants_pre_demande_number" do
+    it "accepts lowercase letters, but normalizes them to uppercase" do
+      user = create(:user)
+      user.ants_pre_demande_number = "abcde12345"
+      expect(user).to be_valid
+      user.save
+      expect(user.reload.ants_pre_demande_number).to eq "ABCDE12345"
+    end
+  end
+
+  describe "validations" do
+    describe "#address" do
+      context "address in wrong format" do
+        let(:user) { build :user, address: "139 Rue de Bercy, 75012 Paris" }
+
+        it "validates format with error" do
+          user.valid?
+
+          expect(user.errors.full_messages).to eq(["Adresse Le format correct est : 139 Rue de Bercy, Paris, 75012"])
+        end
+      end
+
+      context "address in correct format" do
+        let(:user) { build :user, address: "139 Rue de Bercy, Paris, 75012" }
+
+        it "validates format successfully" do
+          user.valid?
+
+          expect(user.errors).to be_empty
+        end
+      end
     end
   end
 end

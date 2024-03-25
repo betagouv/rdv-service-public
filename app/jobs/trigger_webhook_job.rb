@@ -7,10 +7,4 @@ class TriggerWebhookJob < ApplicationJob
     @webhook_endpoint = WebhookEndpoint.find(webhook_endpoint_id)
     @webhook_endpoint.trigger_for_all_subscribed_resources
   end
-
-  private
-
-  def hard_timeout
-    10.minutes
-  end
 end

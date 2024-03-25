@@ -19,6 +19,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
       status: 200,
       body: {
         user.ants_pre_demande_number => {
+          status: "validated",
           appointments: [
             {
               management_url: Rails.application.routes.url_helpers.users_rdv_url(rdv, host: organisation.domain.host_name),
@@ -33,9 +34,18 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
 
   before do
     travel_to(Time.zone.parse("01/01/2020"))
-    stub_request(:post, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/appointments/*}).to_return(status: 200, body: "{}".to_json)
-    stub_request(:delete, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/appointments/*})
-    stub_request(:get, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status})
+    stub_request(:post, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/appointments/*}).to_return(
+      status: 200,
+      body: { success: true }.to_json
+    )
+    stub_request(:delete, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/appointments/*}).to_return(
+      status: 200,
+      body: { rowcount: 1 }.to_json
+    )
+    stub_request(:get, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status}).to_return(
+      status: 200,
+      body: { user.ants_pre_demande_number => { status: "validated", appointments: [] } }.to_json
+    )
   end
 
   describe "RDV callbacks" do
@@ -47,6 +57,30 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
             :post,
             "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/appointments?application_id=A123456789&appointment_date=2020-04-20%2008:00:00&management_url=http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}&meeting_point=Lieu1"
           ).with(headers: ants_api_headers)
+        end
+      end
+
+      context "when the user is created by an agent who didn't fill in the pre_demande_number" do
+        let(:user) { create(:user, ants_pre_demande_number: "", organisations: [organisation]) }
+
+        it "doesn't send a request to the appointment ANTS api" do
+          perform_enqueued_jobs do
+            rdv.save!
+
+            expect(WebMock).not_to have_requested(:any, %r{\.ants\.gouv\.fr/api})
+          end
+        end
+
+        context "and the rdv is cancelled" do
+          before { rdv.status = "excused" }
+
+          it "doesn't send a request to the appointment ANTS api" do
+            perform_enqueued_jobs do
+              rdv.save!
+
+              expect(WebMock).not_to have_requested(:any, %r{\.ants\.gouv\.fr/api})
+            end
+          end
         end
       end
     end
@@ -108,11 +142,18 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
   end
 
   describe "User callbacks" do
-    let(:create_appointment_stub) { stub_request(:post, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/appointments\?application_id=AABBCCDDEE*}) }
+    let!(:create_appointment_stub) do
+      stub_request(:post, %r{https://int\.api-coordination\.rendezvouspasseport\.ants\.gouv\.fr/api/appointment.*AABBCCDDEE.*})
+    end
 
     before do
       rdv.save
       user.reload
+
+      stub_request(:get, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status}).to_return(
+        status: 200,
+        body: { "AABBCCDDEE" => { status: "validated", appointments: [] } }.to_json
+      )
     end
 
     describe "after_commit: Changing the value of ants_pre_demande_number" do

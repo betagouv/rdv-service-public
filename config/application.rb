@@ -43,9 +43,6 @@ module Lapin
 
     config.active_support.cache_format_version = 7.0
 
-    # Both cache and sessions are stored in the same Redis database:
-    # - cache keys are prefixed with "cache:"
-    # - session keys are prefixed with "session:"
     redis_settings = {
       connect_timeout: 30, # Defaults to 20 seconds
       read_timeout: 1, # Defaults to 1 second
@@ -58,6 +55,8 @@ module Lapin
       namespace: "cache",
       **redis_settings,
     }
+
+    config.x.redis_namespace = "app"
 
     config.session_store :cookie_store, key: "_rdv_sp_session"
 

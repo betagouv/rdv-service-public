@@ -1,12 +1,6 @@
 class CronJob < ApplicationJob
   queue_as :cron
 
-  private
-
-  def hard_timeout
-    1.hour
-  end
-
   class FileAttenteJob < CronJob
     def perform
       FileAttente.send_notifications

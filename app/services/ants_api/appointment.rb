@@ -60,25 +60,7 @@ module AntsApi
         Appointment.new(application_id: application_id, **appointment_data.symbolize_keys) if appointment_data
       end
 
-      def headers
-        {
-          "Accept" => "application/json",
-          "x-rdv-opt-auth-token" => ENV["ANTS_RDV_OPT_AUTH_TOKEN"],
-        }
-      end
-
-      def request(&block)
-        response = block.call
-        if response.failure?
-          raise(ApiRequestError, "code:#{response.response_code}, body:#{response.response_body}")
-        end
-
-        response.body.empty? ? {} : JSON.parse(response.body)
-      end
-
-      private
-
-      def load_appointments(application_id, timeout: nil)
+      def status(application_id:, timeout: nil)
         response_body = request do
           Typhoeus.get(
             "#{ENV['ANTS_RDV_API_URL']}/status",
@@ -88,7 +70,29 @@ module AntsApi
           )
         end
 
-        response_body.fetch(application_id, {}).fetch("appointments", [])
+        response_body.fetch(application_id)
+      end
+
+      def headers
+        {
+          "Accept" => "application/json",
+          "x-rdv-opt-auth-token" => ENV["ANTS_RDV_OPT_AUTH_TOKEN"],
+        }
+      end
+
+      def request(&block)
+        response = block.call
+        unless response.success?
+          raise(ApiRequestError, "code:#{response.response_code}, body:#{response.response_body}")
+        end
+
+        response.body.empty? ? {} : JSON.parse(response.body)
+      end
+
+      private
+
+      def load_appointments(application_id, timeout: nil)
+        status(application_id: application_id, timeout: timeout).fetch("appointments")
       end
     end
   end

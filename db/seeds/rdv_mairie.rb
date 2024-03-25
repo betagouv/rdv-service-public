@@ -27,6 +27,7 @@ MotifCategory.create!(name: "Carte d'identité et passeport disponible sur le si
 motif_passeport = Motif.create!(
   name: "Passeport",
   color: "#00ffff",
+  motif_category: MotifCategory.find_by!(short_name: "PASSPORT"),
   default_duration_in_min: 30,
   organisation: org_mairie_de_sannois,
   bookable_by: :everyone,
@@ -64,7 +65,7 @@ lieu_mairie_de_sannois = Lieu.create!(
   availability: :enabled,
   phone_number: "04.75.79.69.91",
   phone_number_formatted: "+33475796991",
-  address: "15 Place du Général Leclerc, 26400, Sannois"
+  address: "15 Place du Général Leclerc, Sannois, 26400"
 )
 
 ## Plages d'Ouvertures

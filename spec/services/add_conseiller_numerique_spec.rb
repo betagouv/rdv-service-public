@@ -10,7 +10,7 @@ RSpec.describe AddConseillerNumerique do
       structure: {
         external_id: "123456",
         name: "France Service 19e",
-        address: "16 quai de la Loire, 75019 Paris",
+        address: "16 quai de la Loire, Paris, 75019",
       },
     }
   end
@@ -19,7 +19,7 @@ RSpec.describe AddConseillerNumerique do
     create(:service, :conseiller_numerique)
     stub_request(
       :get,
-      "https://api-adresse.data.gouv.fr/search/?postcode=75019&q=16%20quai%20de%20la%20Loire,%2075019%20Paris"
+      "https://api-adresse.data.gouv.fr/search/?postcode=75019&q=16%20quai%20de%20la%20Loire,%20Paris,%2075019"
     ).to_return(status: 200, body: file_fixture("geocode_result.json").read, headers: {})
   end
 
@@ -48,7 +48,7 @@ RSpec.describe AddConseillerNumerique do
       perform_enqueued_jobs
       invitation_email = ActionMailer::Base.deliveries.last
 
-      expect(invitation_email).to have_attributes(to: ["exemple@conseiller-numerique.fr"], reply_to: ["support@rdv-aide-numerique.fr"])
+      expect(invitation_email).to have_attributes(to: ["exemple@conseiller-numerique.fr"], from: ["support@rdv-aide-numerique.fr"])
     end
   end
 

@@ -57,7 +57,10 @@ RSpec.describe InclusionConnectController, type: :controller do
           # On aurait envie d'utiliser une feature spec et vérifier le contenu de la page, mais
           # les feature specs ne permettent pas de manipuler la session pour y écrire le ic_state.
           expect(response).to redirect_to("/agents/sign_in")
-          expect(flash[:error]).to include("Nous n'avons pas pu vous authentifier. Contactez le support à l'adresse")
+          expect(flash[:error]).to include(
+            "Il n'y a pas de compte agent pour l'adresse mail bob@demo.rdv-solidarites.fr.<br />" \
+            "Vous devez utiliser Inclusion Connect avec l'adresse mail à laquelle vous avez reçu votre invitation sur RDV Solidarités.<br />Vous pouvez également contacter le support à l'adresse"
+          )
         end
       end
 
@@ -85,12 +88,12 @@ RSpec.describe InclusionConnectController, type: :controller do
         end
 
         context "when agent already has names" do
-          it "does not update the names" do
+          it "update the names" do
             agent = create(:agent, first_name: "Francis", last_name: "Factice", email: "bob@demo.rdv-solidarites.fr")
             get :callback, params: { state: ic_state, session_state: ic_state, code: "klzefklzejlf" }
             expect(agent.reload).to have_attributes(
-              first_name: "Francis",
-              last_name: "Factice"
+              first_name: "Bob",
+              last_name: "Eponge"
             )
           end
         end
@@ -121,6 +124,93 @@ RSpec.describe InclusionConnectController, type: :controller do
           expect(breadcrumbs).to include(
             have_attributes(message: "Found agent with sub", data: { sub: "12345678-90ab-cdef-1234-567890abcdef", agent_id: agent_with_sub.id }),
             have_attributes(message: "Found agent with email", data: { email: "bob@demo.rdv-solidarites.fr", agent_id: agent_with_email.id })
+          )
+        end
+      end
+
+      context "email and sub match two different agents but one is deleted" do
+        let!(:agent_with_sub) { create(:agent, :invitation_not_accepted, inclusion_connect_open_id_sub: "12345678-90ab-cdef-1234-567890abcdef") }
+        let!(:agent_with_email) { create(:agent, :invitation_not_accepted, email: "bob@demo.rdv-solidarites.fr") }
+
+        it "update agent and log in" do
+          agent_with_sub.soft_delete
+          get :callback, params: { state: ic_state, session_state: ic_state, code: "klzefklzejlf" }
+          expect(agent_with_email.reload).to have_attributes(
+            last_sign_in_at: be_within(10.seconds).of(now),
+            inclusion_connect_open_id_sub: "12345678-90ab-cdef-1234-567890abcdef"
+          )
+
+          expect(response).to redirect_to(root_path)
+        end
+      end
+    end
+
+    describe "with a francetravail.fr domain" do
+      before do
+        stub_token_request.to_return(status: 200, body: { access_token: "zekfjzeklfjl", expires_in: now + 1.week, scopes: "openid" }.to_json, headers: {})
+
+        user_info = {
+          given_name: "Bob",
+          family_name: "Eponge",
+          email: "bob@francetravail.fr",
+          sub: "12345678-90ab-cdef-1234-567890abcdef",
+        }
+
+        stub_request(:get, "#{base_url}/userinfo/?schema=openid").with(
+          headers: {
+            "Authorization" => "Bearer zekfjzeklfjl",
+          }
+        ).to_return(status: 200, body: user_info.to_json, headers: {})
+
+        session[:ic_state] = ic_state
+      end
+
+      context "The migration to francetravail.fr is done but the agent has not logged in during the migration process" do
+        it "search @pole-emploi.fr saves the sub and update email" do
+          agent = create(:agent, :invitation_not_accepted, email: "bob@pole-emploi.fr")
+          get :callback, params: { state: ic_state, session_state: ic_state, code: "klzefklzejlf" }
+          expect(agent.reload).to have_attributes(
+            id: agent.id,
+            email: "bob@francetravail.fr",
+            uid: "bob@francetravail.fr",
+            inclusion_connect_open_id_sub: "12345678-90ab-cdef-1234-567890abcdef",
+            confirmed_at: be_within(10.seconds).of(now),
+            invitation_accepted_at: be_within(10.seconds).of(now),
+            last_sign_in_at: be_within(10.seconds).of(now)
+          )
+        end
+      end
+    end
+
+    describe "with a pole-emploi.fr domain" do
+      before do
+        stub_token_request.to_return(status: 200, body: { access_token: "zekfjzeklfjl", expires_in: now + 1.week, scopes: "openid" }.to_json, headers: {})
+
+        user_info = {
+          given_name: "Bob",
+          family_name: "Eponge",
+          email: "bob@pole-emploi.fr",
+          sub: "12345678-90ab-cdef-1234-567890abcdef",
+        }
+
+        stub_request(:get, "#{base_url}/userinfo/?schema=openid").with(
+          headers: {
+            "Authorization" => "Bearer zekfjzeklfjl",
+          }
+        ).to_return(status: 200, body: user_info.to_json, headers: {})
+
+        session[:ic_state] = ic_state
+      end
+
+      context "The migration to francetravail.fr is done but the agent has not logged in during the migration process" do
+        it "search @francetravail.fr saves the sub" do
+          agent = create(:agent, :invitation_not_accepted, email: "bob@francetravail.fr")
+          get :callback, params: { state: ic_state, session_state: ic_state, code: "klzefklzejlf" }
+          expect(agent.reload).to have_attributes(
+            id: agent.id,
+            email: "bob@pole-emploi.fr",
+            uid: "bob@pole-emploi.fr",
+            inclusion_connect_open_id_sub: "12345678-90ab-cdef-1234-567890abcdef"
           )
         end
       end
@@ -193,7 +283,36 @@ RSpec.describe InclusionConnectController, type: :controller do
       session[:ic_state] = "a state"
 
       get :callback, params: { state: "a state", session_state: "a state", code: "klzefklzejlf" }
-      expect(sentry_events.last.message).to eq("Failed to authenticate agent with InclusionConnect")
+      expect(sentry_events.last.message).to eq("Failed to authenticate agent with InclusionConnect - Api error")
+
+      expect(response).to redirect_to(new_agent_session_path)
+      expect(flash[:error]).to include("Nous n'avons pas pu vous authentifier. Contactez le support à l'adresse")
+    end
+
+    context "call sentry about nil sub and email" do
+      before do
+        stub_token_request.to_return(status: 200, body: { access_token: "zekfjzeklfjl", expires_in: now + 1.week, scopes: "openid" }.to_json, headers: {})
+
+        user_info = {
+          given_name: "Bob",
+          family_name: "Eponge",
+          email: nil,
+          sub: nil,
+        }
+
+        stub_request(:get, "#{base_url}/userinfo/?schema=openid").with(
+          headers: {
+            "Authorization" => "Bearer zekfjzeklfjl",
+          }
+        ).to_return(status: 200, body: user_info.to_json, headers: {})
+
+        session[:ic_state] = ic_state
+      end
+
+      it do
+        get :callback, params: { state: ic_state, session_state: ic_state, code: "klzefklzejlf" }
+        expect(sentry_events.map(&:message)).to include("InclusionConnect sub is nil", "InclusionConnect email is nil", "Failed to authenticate agent with InclusionConnect - Agent not found")
+      end
     end
   end
 
