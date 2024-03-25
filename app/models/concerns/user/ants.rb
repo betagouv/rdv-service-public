@@ -2,14 +2,27 @@ module User::Ants
   extend ActionView::Helpers::TranslationHelper # allows getting a SafeBuffer instead of a String when using #translate (which a direct call to I18n.t doesn't do)
 
   def self.validate_ants_pre_demande_number(user:, ants_pre_demande_number:, ignore_benign_errors:)
-    return if ignore_benign_errors || ants_pre_demande_number.blank?
+    return if ants_pre_demande_number.blank?
 
-    appointment = AntsApi::Appointment.first(application_id: ants_pre_demande_number, timeout: 4)
-    return if appointment.nil?
+    application_hash = AntsApi::Appointment.status(application_id: ants_pre_demande_number, timeout: 4)
 
-    user.add_benign_error(warning_message(appointment))
-  rescue AntsApi::Appointment::InvalidApplicationError => e
-    user.errors.add(:base, e.message)
+    case application_hash["status"]
+    when "validated"
+
+      if application_hash["appointments"].any?
+        appointment = OpenStruct.new(application_hash["appointments"].first)
+        user.add_benign_error(warning_message(appointment)) unless ignore_benign_errors
+      end
+
+    when "consumed"
+      user.errors.add(:base, "Ce numéro de pré-demande ANTS correspond à un dossier déjà instruit")
+    when "unknown"
+      user.errors.add(:base, "Ce numéro de pré-demande ANTS est inconnu")
+    when "expired"
+      user.errors.add(:base, "Ce numéro de pré-demande ANTS a expiré")
+    else
+      user.errors.add(:base, "Ce numéro de pré-demande ANTS est invalide")
+    end
   rescue AntsApi::Appointment::ApiRequestError, Typhoeus::Errors::TimeoutError => e
     # Si l'api de l'ANTS renvoie une erreur ou un timeout, on ne veut pas bloquer la prise de rendez-vous
     # pour l'usager, donc on considère le numéro comme valide.
