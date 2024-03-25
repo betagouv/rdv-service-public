@@ -9,7 +9,9 @@ module DefaultJobBehaviour
     around_perform do |_job, block|
       Sentry.with_scope do |scope|
         scope.set_context(:job, { job_id: job_id, queue_name: queue_name, arguments: arguments })
-        block.call
+
+        warn_sentry = -> { Sentry.capture_message("Long running job: #{self.class}", fingerprint: "long_job_#{self.class}") }
+        TimeoutHelper.long_running_block_warn(after: log_long_run_to_sentry_after, callback: warn_sentry, &block)
       rescue StandardError => e
         # Setting the fingerprint after the error occurs, allow us to capture failure responses and error codes
         scope.set_fingerprint(sentry_fingerprint) if sentry_fingerprint.present?
@@ -36,6 +38,10 @@ module DefaultJobBehaviour
 
   def log_failure_to_sentry?(_exception)
     true
+  end
+
+  def log_long_run_to_sentry_after
+    30.seconds
   end
 
   def sentry_fingerprint

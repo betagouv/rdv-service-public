@@ -1,6 +1,12 @@
 class CronJob < ApplicationJob
   queue_as :cron
 
+  private
+
+  def log_long_run_to_sentry_after
+    1.hour
+  end
+
   class FileAttenteJob < CronJob
     def perform
       FileAttente.send_notifications
