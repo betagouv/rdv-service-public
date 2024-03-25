@@ -37,15 +37,11 @@ module Ants
 
         obsolete_appointment&.delete
       end
-    rescue AntsApi::Appointment::InvalidApplicationError => e
-      Rails.logger.warn("Can't delete ANTS appointment for application #{@rdv_attributes[:obsolete_application_id]}: #{e}")
     end
 
     def delete_appointments
       users.each do |user|
         existing_appointment(user)&.delete
-      rescue AntsApi::Appointment::InvalidApplicationError => e
-        Rails.logger.warn("Can't delete ANTS appointment for application #{user.ants_pre_demande_number}: #{e}")
       end
     end
 
@@ -54,8 +50,6 @@ module Ants
         existing_appointment(user)&.delete
 
         AntsApi::Appointment.new(application_id: user.ants_pre_demande_number, **@appointment_data).create
-      rescue AntsApi::Appointment::InvalidApplicationError => e
-        Rails.logger.warn("Can't delete ANTS appointment for application #{user.ants_pre_demande_number}: #{e}")
       end
     end
 

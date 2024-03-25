@@ -1,7 +1,6 @@
 module AntsApi
   class Appointment
     class ApiRequestError < StandardError; end
-    class InvalidApplicationError < StandardError; end
 
     attr_reader :application_id, :meeting_point, :appointment_date, :management_url
 
