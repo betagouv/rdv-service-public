@@ -45,7 +45,7 @@ RSpec.describe ApplicationJob, type: :job do
 
       expect(sentry_events.last.contexts[:job][:job_id]).to eq(enqueued_job_id)
       expect(sentry_events.last.contexts[:job][:queue_name]).to eq("custom_queue")
-      expect(sentry_events.last.contexts[:job][:arguments]).to eq(%w[arg1 arg2])
+      expect(sentry_events.last.contexts[:job][:arguments]).to eq(["arg1", "arg2"])
       expect(sentry_events.last.message).to eq("Long running job: JobThatShouldFinishQuickly")
     end
   end
