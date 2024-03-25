@@ -93,29 +93,7 @@ module AntsApi
       private
 
       def load_appointments(application_id, timeout: nil)
-        response_body = request do
-          Typhoeus.get(
-            "#{ENV['ANTS_RDV_API_URL']}/status",
-            params: { application_ids: application_id },
-            headers: headers,
-            timeout: timeout
-          )
-        end
-
-        appointment = response_body.fetch(application_id)
-
-        case appointment.fetch("status")
-        when "validated", "declared"
-          response_body.fetch(application_id, {}).fetch("appointments", [])
-        when "consumed"
-          raise InvalidApplicationError, "Ce numéro de pré-demande ANTS correspond à un dossier déjà instruit"
-        when "unknown"
-          raise InvalidApplicationError, "Ce numéro de pré-demande ANTS est inconnu"
-        when "expired"
-          raise InvalidApplicationError, "Ce numéro de pré-demande ANTS a expiré"
-        else
-          raise InvalidApplicationError, "Ce numéro de pré-demande ANTS est invalide"
-        end
+        status(application_id: application_id, timeout: timeout).fetch("appointments")
       end
     end
   end
