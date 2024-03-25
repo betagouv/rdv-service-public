@@ -200,5 +200,8 @@ class Anonymizer::Rules::RdvServicePublic
     file_attentes: {
       non_anonymized_column_names: %w[created_at updated_at notifications_sent last_creneau_sent_at],
     },
+    exports: {
+      non_anonymized_column_names: %w[export_type computed_at expires_at agent_id file_name organisation_ids options created_at updated_at],
+    },
   }.with_indifferent_access.freeze
 end
