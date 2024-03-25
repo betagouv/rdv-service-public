@@ -24,8 +24,10 @@ RSpec.describe ApplicationJob, type: :job do
       expect(sentry_events.last.exception.values.first.value).to match("Something unexpected happened (RuntimeError)")
       expect(sentry_events.last.exception.values.first.type).to eq("RuntimeError")
     end
+  end
 
-    it "reports job timeout to Sentry" do
+  describe "long job monitoring" do
+    let(:job_class) do
       stub_const "JobThatShouldFinishQuickly", Class.new(described_class)
       JobThatShouldFinishQuickly.class_eval do
         queue_as :custom_queue
@@ -38,15 +40,19 @@ RSpec.describe ApplicationJob, type: :job do
           0.1.seconds
         end
       end
+      JobThatShouldFinishQuickly
+    end
 
-      JobThatShouldFinishQuickly.perform_later("arg1", "arg2")
+    it "reports long jobs to Sentry" do
+      job_class.perform_later("value1", "value2")
       enqueued_job_id = enqueued_jobs.last["job_id"]
       expect { perform_enqueued_jobs }.to change(sentry_events, :size).by(1)
 
       expect(sentry_events.last.contexts[:job][:job_id]).to eq(enqueued_job_id)
       expect(sentry_events.last.contexts[:job][:queue_name]).to eq("custom_queue")
-      expect(sentry_events.last.contexts[:job][:arguments]).to eq(%w[arg1 arg2])
+      expect(sentry_events.last.contexts[:job][:arguments]).to eq(%w[value1 value2])
       expect(sentry_events.last.message).to eq("Long running job: JobThatShouldFinishQuickly")
+      expect(sentry_events.last.fingerprint).to eq("long_job_JobThatShouldFinishQuickly")
     end
   end
 end
