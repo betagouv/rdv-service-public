@@ -36,7 +36,7 @@
         .col-md-6= f.input :first_name, **input_opts[:relative]
         .col-md-6= f.input :last_name, **input_opts[:relative]
       - if params[:ants_pre_demande_number_required].to_b
-        = f.input :ants_pre_demande_number, **input_opts, hint: t("simple_form.hints.agent.ants_pre_demande_number_html"), input_html: {style: "text-transform: uppercase;"}
+        = f.input :ants_pre_demande_number, **input_opts[:relative], hint: t("simple_form.hints.agent.ants_pre_demande_number_html"), input_html: {style: "text-transform: uppercase;"}
       - unless current_domain == Domain::RDV_MAIRIE
         = date_input(f, :birth_date, **input_opts[:relative])
       - if current_territory.enable_notes_field?
