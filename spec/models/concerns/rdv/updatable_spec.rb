@@ -230,7 +230,7 @@ RSpec.describe Rdv::Updatable, type: :concern do
         lieu = create(:lieu, availability: "single_use", address: "2 place de la gare, Paris, 75016")
         rdv.update!(lieu: lieu)
         rdv.reload
-        rdv.update(lieu_attributes: { address: "derrière l'arbre", id: lieu.id })
+        rdv.update(lieu_attributes: { address: "1 place de l'arbre, Paris, 75016", id: lieu.id })
         expect(rdv.lieu_changed?).to be(true)
       end
     end

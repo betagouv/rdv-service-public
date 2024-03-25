@@ -76,12 +76,12 @@ RSpec.describe Agents::RdvMailer, type: :mailer do
       mail = described_class.with(rdv: rdv, agent: agent, author: agent)
         .rdv_updated(starts_at: previous_starting_time, lieu_id: previous_lieu.id)
 
-      previous_details = "Un de vos RDV qui devait avoir lieu le 26 août à 09:00 à l&#39;adresse MJC Aix (rue du Previous) a été modifié"
+      previous_details = "Un de vos RDV qui devait avoir lieu le 26 août à 09:00 à l&#39;adresse MJC Aix (rue du Previous, Paris, 75016) a été modifié"
       expect(mail.html_part.body.to_s).to include(previous_details)
 
       # new details
       expect(mail.html_part.body.to_s).to include("samedi 27 août 2022 à 09h00")
-      expect(mail.html_part.body.to_s).to include("Stade de France (rue du Stade)")
+      expect(mail.html_part.body.to_s).to include("Stade de France (rue du Stade, Paris, 75016)")
     end
 
     it "works when no lieu_id is passed" do
