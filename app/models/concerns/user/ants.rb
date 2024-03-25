@@ -36,13 +36,13 @@ module User::Ants
   def self.error_message(status)
     case status
     when "consumed"
-      user.errors.add(:base, "Ce numéro de pré-demande ANTS correspond à un dossier déjà instruit")
+      "Ce numéro de pré-demande ANTS correspond à un dossier déjà instruit"
     when "unknown"
-      user.errors.add(:base, "Ce numéro de pré-demande ANTS est inconnu")
+      "Ce numéro de pré-demande ANTS est inconnu"
     when "expired"
-      user.errors.add(:base, "Ce numéro de pré-demande ANTS a expiré")
+      "Ce numéro de pré-demande ANTS a expiré"
     else
-      user.errors.add(:base, "Ce numéro de pré-demande ANTS est invalide")
+      "Ce numéro de pré-demande ANTS est invalide"
     end
   end
 end
