@@ -12,7 +12,7 @@ RSpec.describe ParticipationExporter, type: :service do
         motif: build(:motif, name: "Consultation", service: build(:service, name: "PMI")),
         organisation: create(:organisation, name: "MDS Paris"),
         agents: [create(:agent, email: "agent@mail.com", first_name: "Francis", last_name: "Factice")],
-        users: [create(:user, first_name: "Gaston", last_name: "Bidon", birth_date: Date.new(2000, 1, 1))]
+        users: [create(:user, first_name: "Gaston", last_name: "Bidon", birth_date: Date.new(2000, 1, 1), address: nil)]
       )
       participation_row = described_class.row_array_from(rdv.participations.first)
       xls_string = described_class.xls_string_from_participations_rows([participation_row])

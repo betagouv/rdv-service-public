@@ -227,7 +227,7 @@ RSpec.describe RdvExporter, type: :service do
 
   describe "code postal du premier responsable" do
     it "return 92320 (Chatillon's postal code) when first responsable leave there" do
-      first_major = create(:user, birth_date: Date.new(2002, 3, 12), address: "Rue Jean Jaurès, 92320 Châtillon")
+      first_major = create(:user, birth_date: Date.new(2002, 3, 12), address: "Rue Jean Jaurès, Châtillon, 92320")
       minor = create(:user, birth_date: Date.new(2016, 5, 30), responsible_id: first_major.id)
       other_major = create(:user, birth_date: Date.new(2002, 3, 12))
       other_minor = create(:user, birth_date: Date.new(2016, 5, 30), responsible_id: other_major.id)
@@ -236,7 +236,7 @@ RSpec.describe RdvExporter, type: :service do
     end
 
     it "return responsible's postal code for relative" do
-      first_major = create(:user, birth_date: Date.new(2002, 3, 12), address: "Rue Jean Jaurès, 92320 Châtillon")
+      first_major = create(:user, birth_date: Date.new(2002, 3, 12), address: "Rue Jean Jaurès, Châtillon, 92320")
       minor = create(:user, birth_date: Date.new(2016, 5, 30), responsible_id: first_major.id)
       rdv = create(:rdv, created_at: Time.zone.local(2020, 3, 23, 9, 54, 33), users: [minor])
       expect(described_class.row_array_from(rdv)[18]).to eq("92320")
@@ -245,7 +245,7 @@ RSpec.describe RdvExporter, type: :service do
     it "return second responsible postal code when first does not have one" do
       major = create(:user, birth_date: Date.new(2002, 3, 12), address: nil)
       minor = create(:user, birth_date: Date.new(2016, 5, 30), responsible_id: major.id)
-      other_major = create(:user, birth_date: Date.new(2002, 3, 12), address: "Rue Jean Jaurès, 92320 Châtillon")
+      other_major = create(:user, birth_date: Date.new(2002, 3, 12), address: "Rue Jean Jaurès, Châtillon, 92320")
       other_minor = create(:user, birth_date: Date.new(2016, 5, 30), responsible_id: other_major.id)
       rdv = create(:rdv, created_at: Time.zone.local(2020, 3, 23, 9, 54, 33), users: [minor, other_minor, major, other_major])
       expect(described_class.row_array_from(rdv)[18]).to eq("92320")
