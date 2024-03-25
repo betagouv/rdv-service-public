@@ -1,11 +1,14 @@
-raise "Prevent monkey patch" if Redis.respond_to?(:with_connection)
+raise "Prevent monkey patch chaos" if Redis.respond_to?(:with_connection)
 
 class Redis
-  def self.with_connection
+  raise "Prevent monkey patch chaos" if const_defined?(:CONNECTION_POOL)
+
+  CONNECTION_POOL = ConnectionPool.new(size: ENV.fetch("RAILS_MAX_THREADS", 5), timeout: 5) do
     redis_connection = new(url: Rails.configuration.x.redis_url)
-    redis_connection = Redis::Namespace.new(Rails.configuration.x.redis_namespace, redis: redis_connection)
-    yield(redis_connection)
-  ensure
-    redis_connection&.close
+    Redis::Namespace.new(Rails.configuration.x.redis_namespace, redis: redis_connection)
+  end
+
+  def self.with_connection(&block)
+    CONNECTION_POOL.with(&block)
   end
 end
