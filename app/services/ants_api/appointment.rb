@@ -60,6 +60,19 @@ module AntsApi
         Appointment.new(application_id: application_id, **appointment_data.symbolize_keys) if appointment_data
       end
 
+      def status(application_id:, timeout: nil)
+        response_body = request do
+          Typhoeus.get(
+            "#{ENV['ANTS_RDV_API_URL']}/status",
+            params: { application_ids: application_id },
+            headers: headers,
+            timeout: timeout
+          )
+        end
+
+        response_body.fetch(application_id)
+      end
+
       def headers
         {
           "Accept" => "application/json",
@@ -79,16 +92,7 @@ module AntsApi
       private
 
       def load_appointments(application_id, timeout: nil)
-        response_body = request do
-          Typhoeus.get(
-            "#{ENV['ANTS_RDV_API_URL']}/status",
-            params: { application_ids: application_id },
-            headers: headers,
-            timeout: timeout
-          )
-        end
-
-        response_body.fetch(application_id, {}).fetch("appointments", [])
+        status(application_id: application_id, timeout: timeout).fetch("appointments")
       end
     end
   end

@@ -19,6 +19,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
       status: 200,
       body: {
         user.ants_pre_demande_number => {
+          status: "validated",
           appointments: [
             {
               management_url: Rails.application.routes.url_helpers.users_rdv_url(rdv, host: organisation.domain.host_name),
@@ -33,9 +34,18 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
 
   before do
     travel_to(Time.zone.parse("01/01/2020"))
-    stub_request(:post, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/appointments/*}).to_return(status: 200, body: "{}".to_json)
-    stub_request(:delete, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/appointments/*})
-    stub_request(:get, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status})
+    stub_request(:post, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/appointments/*}).to_return(
+      status: 200,
+      body: { success: true }.to_json
+    )
+    stub_request(:delete, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/appointments/*}).to_return(
+      status: 200,
+      body: { rowcount: 1 }.to_json
+    )
+    stub_request(:get, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status}).to_return(
+      status: 200,
+      body: { user.ants_pre_demande_number => { status: "validated", appointments: [] } }.to_json
+    )
   end
 
   describe "RDV callbacks" do
@@ -132,11 +142,18 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
   end
 
   describe "User callbacks" do
-    let(:create_appointment_stub) { stub_request(:post, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/appointments\?application_id=AABBCCDDEE*}) }
+    let!(:create_appointment_stub) do
+      stub_request(:post, %r{https://int\.api-coordination\.rendezvouspasseport\.ants\.gouv\.fr/api/appointment.*AABBCCDDEE.*})
+    end
 
     before do
       rdv.save
       user.reload
+
+      stub_request(:get, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status}).to_return(
+        status: 200,
+        body: { "AABBCCDDEE" => { status: "validated", appointments: [] } }.to_json
+      )
     end
 
     describe "after_commit: Changing the value of ants_pre_demande_number" do
