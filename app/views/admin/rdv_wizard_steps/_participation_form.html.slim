@@ -14,12 +14,7 @@ div id=element_id
       - else
         = user
     div.ml-2
-      = link_to edit_admin_organisation_user_path( \
-
-  def path_for_edit_user_modal(current_organisation, rdv, return_location:  modals_return_location)
-          current_organisation, user, modal: true, return_location:, role: default_service_selection_from(user) \
-        ), \
-        data: { modal: "true" }, title: t("helpers.edit")
+      = link_to(path_for_edit_user_modal(current_organisation, user, participation.rdv, return_location:  modals_return_location), data: { modal: "true" }, title: t("helpers.edit"))
         i.fa.fa-edit
   .ml-3
     = render "admin/users/notifications_preferences", user: user.user_to_notify
