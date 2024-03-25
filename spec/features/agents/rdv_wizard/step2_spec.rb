@@ -61,25 +61,28 @@ RSpec.describe "Step 2 of the rdv wizard" do
     let!(:cni_motif_category) { create(:motif_category, name: Api::Ants::EditorController::CNI_MOTIF_CATEGORY_NAME) }
     let(:ants_pre_demande_number) { "1122334455" }
 
-    context "ants_pre_demander number is not used" do
+    before { click_link "Créer un usager" }
+
+    context "ants_pre_demander number is validated and has no appointment declared yet" do
       before do
         stub_request(:get, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status}).to_return(
           status: 200,
-          body: { ants_pre_demande_number => { appointments: [] } }.to_json
+          body: {
+            ants_pre_demande_number => {
+              status: "validated",
+              appointments: [],
+            },
+          }.to_json
         )
       end
 
-      it "creates user with no warning", js: true do
-        click_link "Créer un usager"
+      it "creates user with no warning" do
         fill_in :user_first_name, with: "Marco"
         fill_in :user_last_name, with: "Lebreton"
         fill_in :user_ants_pre_demande_number, with: ants_pre_demande_number
         click_button "Créer"
-        expect(page).not_to have_content(
-          "Ce numéro de pré-demande ANTS est déjà utilisé pour un RDV auprès de Mairie de Sannois. Veuillez annuler ce RDV avant d'en prendre un nouveau"
-        )
-
-        expect(page).to have_content("LEBRETON Marco")
+        expect(page).not_to have_content("déjà utilisé")
+        expect(page).to have_content "LEBRETON Marco"
 
         expect(User.last).to have_attributes(
           first_name: "Marco",
@@ -89,17 +92,18 @@ RSpec.describe "Step 2 of the rdv wizard" do
       end
     end
 
-    context "ants_pre_demander is already used" do
+    context "ants_pre_demander number is validated but already has appointments" do
       before do
         stub_request(:get, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status}).to_return(
           status: 200,
           body: {
             ants_pre_demande_number => {
+              status: "validated",
               appointments: [
                 {
                   management_url: "https://gerer-rdv.com",
                   meeting_point: "Mairie de Sannois",
-                  appointment_date: "01/01/2030",
+                  appointment_date: "2023-04-03T08:45:00",
                 },
               ],
             },
@@ -107,8 +111,7 @@ RSpec.describe "Step 2 of the rdv wizard" do
         )
       end
 
-      it "creates user with a warning", js: true do
-        click_link "Créer un usager"
+      it "displays a warning but allows user creation" do
         fill_in :user_first_name, with: "Marco"
         fill_in :user_last_name, with: "Lebreton"
         fill_in :user_ants_pre_demande_number, with: ants_pre_demande_number
@@ -117,13 +120,36 @@ RSpec.describe "Step 2 of the rdv wizard" do
           "Ce numéro de pré-demande ANTS est déjà utilisé pour un RDV auprès de Mairie de Sannois. Veuillez annuler ce RDV avant d'en prendre un nouveau"
         )
         click_button("Confirmer en ignorant les avertissements")
-        expect(page).to have_content("LEBRETON Marco")
+        expect(page).to have_content "LEBRETON Marco"
 
         expect(User.last).to have_attributes(
           first_name: "Marco",
           last_name: "Lebreton",
           ants_pre_demande_number: ants_pre_demande_number
         )
+      end
+    end
+
+    context "ants_pre_demander number is consumed (dossier déjà envoyé et instruit en préfecture)" do
+      before do
+        stub_request(:get, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status}).to_return(
+          status: 200,
+          body: {
+            ants_pre_demande_number => {
+              status: "consumed",
+              appointments: [],
+            },
+          }.to_json
+        )
+      end
+
+      it "prevents agent from creating the user / RDV" do
+        fill_in :user_first_name, with: "Marco"
+        fill_in :user_last_name, with: "Lebreton"
+        fill_in :user_ants_pre_demande_number, with: ants_pre_demande_number
+        click_button "Créer"
+        expect(page).to have_content("Ce numéro de pré-demande ANTS correspond à un dossier déjà instruit")
+        expect(page).not_to have_content("Confirmer en ignorant les avertissements")
       end
     end
   end
