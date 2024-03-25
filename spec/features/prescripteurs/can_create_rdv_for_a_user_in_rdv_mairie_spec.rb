@@ -22,31 +22,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
     JSON.parse(page.html)
   end
 
-  before do
-    default_url_options[:host] = "http://www.rdv-mairie-test.localhost"
-    travel_to(now)
-    create(:plage_ouverture, :no_recurrence, first_day: now, motifs: [passport_motif], lieu: lieu, organisation: organisation, start_time: Tod::TimeOfDay(9), end_time: Tod::TimeOfDay.new(10))
-
-    stub_request(:get, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status}).to_return(
-      status: 200,
-      body: {
-        ants_pre_demande_number => {
-          appointments: [
-            {
-              management_url: "https://gerer-rdv.com",
-              meeting_point: "Mairie de Sannois",
-              appointment_date: "01/01/2030",
-            },
-          ],
-        },
-      }.to_json
-    )
-  end
-
-  it "allows booking a rdv through the full lifecycle of api calls" do
-    visit creneaux_url
-    click_on "Je suis un prescripteur qui oriente un bénéficiaire"
-
+  def fill_up_prescripteur_and_user
     fill_in "Votre prénom", with: "Alex"
     fill_in "Votre nom", with: "Prescripteur"
     fill_in "Votre email professionnel", with: "alex@prescripteur.fr"
@@ -57,18 +33,91 @@ RSpec.describe "prescripteur can create RDV for a user" do
     fill_in "Prénom", with: "Patricia"
     fill_in "Nom", with: "Duroy"
     fill_in "Téléphone", with: "0611223344"
-    fill_in "Numéro de pré-demande ANTS", with: "1122334455"
-    click_on "Confirmer le rendez-vous"
+    fill_in "Numéro de pré-demande ANTS", with: ants_pre_demande_number
+  end
 
-    expect(page).to have_content(
-      "Ce numéro de pré-demande ANTS est déjà utilisé pour un RDV auprès de Mairie de Sannois. Veuillez annuler ce RDV avant d'en prendre un nouveau"
-    )
-    expect do
-      click_button("Confirmer en ignorant les avertissements")
-    end.to change { User.exists?(ants_pre_demande_number: ants_pre_demande_number) }.from(false).to(true)
+  before do
+    default_url_options[:host] = "http://www.rdv-mairie-test.localhost"
+    travel_to(now)
+    create(:plage_ouverture, :no_recurrence, first_day: now, motifs: [passport_motif], lieu: lieu, organisation: organisation, start_time: Tod::TimeOfDay(9), end_time: Tod::TimeOfDay.new(10))
+  end
 
-    expect(page).to have_content("Rendez-vous confirmé")
-    expect(page).to have_content("Patricia DUROY")
+  context "success scenario (ants_pre_demander number is validated and has no appointment declared yet)" do
+    before do
+      stub_request(:get, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status}).to_return(
+        status: 200,
+        body: { ants_pre_demande_number => { status: "validated", appointments: [] } }.to_json
+      )
+    end
+
+    it "allows booking a rdv for the given ants_pre_demander" do
+      visit creneaux_url
+      click_on "Je suis un prescripteur qui oriente un bénéficiaire"
+
+      fill_up_prescripteur_and_user
+      click_on "Confirmer le rendez-vous"
+
+      expect(page).to have_content("Rendez-vous confirmé")
+      expect(page).to have_content("Patricia DUROY")
+      expect(enqueued_jobs.pluck("job_class")).to include("Ants::SyncAppointmentJob", "SmsJob")
+    end
+  end
+
+  context "ants_pre_demander number is validated but already has appointments" do
+    before do
+      stub_request(:get, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status}).to_return(
+        status: 200,
+        body: {
+          ants_pre_demande_number => {
+            status: "validated",
+            appointments: [
+              {
+                management_url: "https://gerer-rdv.com",
+                meeting_point: "Mairie de Sannois",
+                appointment_date: "2023-04-03T08:45:00",
+              },
+            ],
+          },
+        }.to_json
+      )
+    end
+
+    it "show a warning but allows creating the user and RDV" do
+      visit creneaux_url
+      click_on "Je suis un prescripteur qui oriente un bénéficiaire"
+
+      fill_up_prescripteur_and_user
+      click_on "Confirmer le rendez-vous"
+
+      expect(page).to have_content("Ce numéro de pré-demande ANTS est déjà utilisé pour un RDV auprès de Mairie de Sannois. Veuillez annuler ce RDV avant d'en prendre un nouveau")
+      expect do
+        click_button("Confirmer en ignorant les avertissements")
+      end.to change { User.exists?(ants_pre_demande_number: ants_pre_demande_number) }.from(false).to(true)
+
+      expect(page).to have_content("Rendez-vous confirmé")
+      expect(page).to have_content("Patricia DUROY")
+      expect(enqueued_jobs.pluck("job_class")).to include("Ants::SyncAppointmentJob", "SmsJob")
+    end
+  end
+
+  context "ants_pre_demander number is consumed (dossier déjà envoyé et instruit en préfecture)" do
+    before do
+      stub_request(:get, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status}).to_return(
+        status: 200,
+        body: { ants_pre_demande_number => { status: "consumed", appointments: [] } }.to_json
+      )
+    end
+
+    it "prevents from creating the user / RDV" do
+      visit creneaux_url
+      click_on "Je suis un prescripteur qui oriente un bénéficiaire"
+
+      fill_up_prescripteur_and_user
+      click_on "Confirmer le rendez-vous"
+
+      expect(page).to have_content("Ce numéro de pré-demande ANTS correspond à un dossier déjà instruit")
+      expect(page).not_to have_content("Confirmer en ignorant les avertissements")
+    end
   end
 
   def creneaux_url
