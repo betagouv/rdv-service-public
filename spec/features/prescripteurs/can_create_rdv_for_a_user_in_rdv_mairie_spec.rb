@@ -120,6 +120,46 @@ RSpec.describe "prescripteur can create RDV for a user" do
     end
   end
 
+  context "quand le prescripteur saisit un numéro de pré-demande invalide" do
+    before do
+      invalid_application_id_response = <<~JSON
+        {
+          "detail": [
+            {
+              "loc": [
+                "query",
+                "application_ids",
+                0
+              ],
+              "msg": "string does not match regex \\"^([A-Z0-9]{10}\\"",
+              "type": "value_error.str.regex",
+              "ctx": {
+                "pattern": "^[A-Z0-9]{10}$"
+              }
+            }
+          ]
+        }
+      JSON
+      stub_request(:get, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status}).to_return(
+        status: 422,
+        body: invalid_application_id_response
+      )
+    end
+
+    let(:ants_pre_demande_number) { "AABB" } # Numéro trop court
+
+    it "affiche un message d'erreur pour le signaler" do
+      visit creneaux_url
+      click_on "Je suis un prescripteur qui oriente un bénéficiaire"
+
+      fill_up_prescripteur_and_user
+      click_on "Confirmer le rendez-vous"
+
+      expect(page).to have_content("Ce numéro de pré-demande ANTS correspond à un dossier déjà instruit")
+      expect(page).not_to have_content("Confirmer en ignorant les avertissements")
+    end
+  end
+
   def creneaux_url
     visit api_ants_availableTimeSlots_url(
       meeting_point_ids: lieu.id.to_s,
