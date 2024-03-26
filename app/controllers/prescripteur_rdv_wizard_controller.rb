@@ -59,9 +59,7 @@ class PrescripteurRdvWizardController < ApplicationController
     @beneficiaire = BeneficiaireForm.new(beneficiaire_params)
 
     if @beneficiaire.valid?
-      session[:rdv_wizard_attributes][:user] = beneficiaire_params
-
-      rdv_wizard = PrescripteurRdvWizard.new(session[:rdv_wizard_attributes], current_domain)
+      rdv_wizard = PrescripteurRdvWizard.new(session[:rdv_wizard_attributes], @beneficiaire.user, current_domain)
       rdv_wizard.create!
 
       session[:prescripteur_id] = rdv_wizard.prescripteur.id
@@ -90,7 +88,7 @@ class PrescripteurRdvWizardController < ApplicationController
   end
 
   def set_rdv_wizard
-    @rdv_wizard = PrescripteurRdvWizard.new(session[:rdv_wizard_attributes], current_domain)
+    @rdv_wizard = PrescripteurRdvWizard.new(session[:rdv_wizard_attributes], nil, current_domain)
   end
 
   def redirect_if_creneau_unavailable

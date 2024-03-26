@@ -22,13 +22,15 @@ RSpec.describe "prescripteur can create RDV for a user" do
     JSON.parse(page.html)
   end
 
-  def fill_up_prescripteur_and_user
+  def fill_up_prescripteur
     fill_in "Votre prénom", with: "Alex"
     fill_in "Votre nom", with: "Prescripteur"
     fill_in "Votre email professionnel", with: "alex@prescripteur.fr"
     fill_in "Votre numéro de téléphone", with: "0611223344"
     click_on "Continuer"
+  end
 
+  def fill_up_user(ants_pre_demande_number:)
     expect(page).to have_content("Prescripteur : Alex PRESCRIPTEUR")
     fill_in "Prénom", with: "Patricia"
     fill_in "Nom", with: "Duroy"
@@ -54,7 +56,8 @@ RSpec.describe "prescripteur can create RDV for a user" do
       visit creneaux_url
       click_on "Je suis un prescripteur qui oriente un bénéficiaire"
 
-      fill_up_prescripteur_and_user
+      fill_up_prescripteur
+      fill_up_user(ants_pre_demande_number: ants_pre_demande_number)
       click_on "Confirmer le rendez-vous"
 
       expect(page).to have_content("Rendez-vous confirmé")
@@ -86,7 +89,8 @@ RSpec.describe "prescripteur can create RDV for a user" do
       visit creneaux_url
       click_on "Je suis un prescripteur qui oriente un bénéficiaire"
 
-      fill_up_prescripteur_and_user
+      fill_up_prescripteur
+      fill_up_user(ants_pre_demande_number: ants_pre_demande_number)
       click_on "Confirmer le rendez-vous"
 
       expect(page).to have_content("Ce numéro de pré-demande ANTS est déjà utilisé pour un RDV auprès de Mairie de Sannois. Veuillez annuler ce RDV avant d'en prendre un nouveau")
@@ -112,7 +116,8 @@ RSpec.describe "prescripteur can create RDV for a user" do
       visit creneaux_url
       click_on "Je suis un prescripteur qui oriente un bénéficiaire"
 
-      fill_up_prescripteur_and_user
+      fill_up_prescripteur
+      fill_up_user(ants_pre_demande_number: ants_pre_demande_number)
       click_on "Confirmer le rendez-vous"
 
       expect(page).to have_content("Ce numéro de pré-demande ANTS correspond à un dossier déjà instruit")
@@ -121,42 +126,27 @@ RSpec.describe "prescripteur can create RDV for a user" do
   end
 
   context "quand le prescripteur saisit un numéro de pré-demande invalide" do
-    before do
-      invalid_application_id_response = <<~JSON
-        {
-          "detail": [
-            {
-              "loc": [
-                "query",
-                "application_ids",
-                0
-              ],
-              "msg": "string does not match regex \\"^([A-Z0-9]{10}\\"",
-              "type": "value_error.str.regex",
-              "ctx": {
-                "pattern": "^[A-Z0-9]{10}$"
-              }
-            }
-          ]
-        }
-      JSON
-      stub_request(:get, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status}).to_return(
-        status: 422,
-        body: invalid_application_id_response
-      )
-    end
-
     let(:ants_pre_demande_number) { "AABB" } # Numéro trop court
 
     it "affiche un message d'erreur pour le signaler" do
       visit creneaux_url
       click_on "Je suis un prescripteur qui oriente un bénéficiaire"
 
-      fill_up_prescripteur_and_user
+      fill_up_prescripteur
+      fill_up_user(ants_pre_demande_number: "AABB")
+      # mock_ants_status_invalid_application_id(application_id: "AABB")
       click_on "Confirmer le rendez-vous"
 
-      expect(page).to have_content("Ce numéro de pré-demande ANTS correspond à un dossier déjà instruit")
+      expect(page).to have_content("ne fait pas la bonne longueur (doit comporter 10 caractères)")
       expect(page).not_to have_content("Confirmer en ignorant les avertissements")
+      expect(WebMock).not_to have_requested(:any, %r{int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status})
+
+      fill_in "Numéro de pré-demande ANTS", with: "AABBCCDDEE"
+      mock_ants_status(application_id: "AABBCCDDEE")
+      click_on "Confirmer le rendez-vous"
+      expect(page).to have_content("Rendez-vous confirmé")
+      expect(Rdv.last.users.first.ants_pre_demande_number).to eq("AABBCCDDEE")
+      expect(WebMock).to have_requested(:get, %r{int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status})
     end
   end
 
