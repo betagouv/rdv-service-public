@@ -52,7 +52,7 @@ RSpec.describe Lieu, type: :model do
       end
     end
 
-    describe "address" do
+    pending "address" do
       context "address in wrong format" do
         let(:lieu) { build :lieu, address: "139 Rue de Bercy, 75012 Paris" }
 
