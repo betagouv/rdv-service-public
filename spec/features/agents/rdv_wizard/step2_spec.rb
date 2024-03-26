@@ -1,4 +1,6 @@
 RSpec.describe "Step 2 of the rdv wizard" do
+  include_context "rdv_mairie_api_authentication"
+
   let(:motif) { create(:motif, :by_phone, organisation: organisation) }
   let(:params) do
     {
