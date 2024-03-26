@@ -15,6 +15,7 @@ RSpec.describe "Step 2 of the rdv wizard" do
   let(:organisation) { create(:organisation, territory: territory) }
   let(:other_organisation) { create(:organisation, territory: territory) }
   let(:agent) { create(:agent, service: motif.service, basic_role_in_organisations: [organisation]) }
+  let(:cni_motif_category) { create(:motif_category, name: Api::Ants::EditorController::CNI_MOTIF_CATEGORY_NAME) }
 
   before do
     create(:agent_territorial_access_right, agent: agent, territory: territory)
@@ -58,7 +59,6 @@ RSpec.describe "Step 2 of the rdv wizard" do
       create(:motif, name: "Carte d'identité", organisation: organisation, restriction_for_rdv: nil, motif_category: cni_motif_category, default_duration_in_min: 25)
     end
 
-    let!(:cni_motif_category) { create(:motif_category, name: Api::Ants::EditorController::CNI_MOTIF_CATEGORY_NAME) }
     let(:ants_pre_demande_number) { "1122334455" }
 
     before { click_link "Créer un usager" }
@@ -150,6 +150,21 @@ RSpec.describe "Step 2 of the rdv wizard" do
         click_button "Créer"
         expect(page).to have_content("Ce numéro de pré-demande ANTS correspond à un dossier déjà instruit")
         expect(page).not_to have_content("Confirmer en ignorant les avertissements")
+      end
+    end
+
+    context "the rdv motif is not related to ANTS, but there is another motif for ANTS in the organisation" do
+      let(:motif) do
+        create(:motif, name: "Permis de construire", organisation: organisation, motif_category: nil)
+      end
+
+      before do
+        create(:motif, name: "Carte d'identité", organisation: organisation, restriction_for_rdv: nil, motif_category: cni_motif_category, default_duration_in_min: 25)
+      end
+
+      it "doesn't ask for the ants number", js: true do
+        expect(page).to have_content("Prénom")
+        expect(page).not_to have_content("ANTS")
       end
     end
   end
