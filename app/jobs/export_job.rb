@@ -3,7 +3,7 @@ class ExportJob < ApplicationJob
 
   private
 
-  def hard_timeout
-    5.minutes
+  def redis_key(export_id)
+    "ExportJob-#{export_id}"
   end
 end

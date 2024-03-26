@@ -104,11 +104,13 @@ Rails.application.routes.draw do
         resource :webcal_sync, only: %i[show update], controller: :webcal_sync
         resource :outlook_sync, only: %i[show destroy], controller: :outlook_sync
       end
-
       resources :users, only: [] do
         collection do
           get "search"
         end
+      end
+      resources :exports, only: %i[index] do
+        get :download
       end
     end
     get "omniauth/microsoft_graph/callback" => "omniauth_callbacks#microsoft_graph"

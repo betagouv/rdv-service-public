@@ -44,7 +44,7 @@ RSpec.describe "Agent can organize a rdv collectif", js: true do
     else
       click_link("Définir un lieu ponctuel.")
       fill_in :rdv_lieu_attributes_name, with: "Café de la gare"
-      fill_in "Adresse", with: "3 Place de la Gare, Strasbourg, 67000, 67, Bas-Rhin, Grand Est"
+      fill_in "Adresse", with: "3 Place de la Gare, Strasbourg, 67000"
       page.execute_script("document.querySelector('input#rdv_lieu_attributes_latitude').value = '48.583844'")
       page.execute_script("document.querySelector('input#rdv_lieu_attributes_longitude').value = 7.735253")
     end
