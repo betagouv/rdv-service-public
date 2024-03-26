@@ -9,7 +9,7 @@ require "csv"
 conseillers_numeriques = CSV.read("/tmp/uploads/embauches.csv", headers: true, col_sep: ";", liberal_parsing: true)
 
 conseillers_numeriques.each do |conseiller_numerique|
-  next if conseiller_numerique["email professionnel"].blank?
+  next if conseiller_numerique["email professionnel"].blank? || conseiller_numerique["Compte activé"]&.strip != "oui"
 
   external_id = "conseiller-numerique-#{conseiller_numerique['ID conseiller']}"
 
