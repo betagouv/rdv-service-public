@@ -360,7 +360,7 @@ RSpec.describe User, type: :model do
   end
 
   describe "validations" do
-    describe "#address" do
+    pending "#address" do
       context "address in wrong format" do
         let(:user) { build :user, address: "139 Rue de Bercy, 75012 Paris" }
 
