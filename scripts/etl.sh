@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Exemple d'usage : scalingo --app=rdv-service-public-etl --region=osc-secnum-fr1 run ./scripts/etl.sh rdvsp prod
 set -e
 # Inspiré par https://doc.scalingo.com/platform/databases/duplicate
 
@@ -85,6 +86,3 @@ psql "${DATABASE_URL}" -c "GRANT SELECT ON ALL TABLES IN SCHEMA ${schema_name} T
 echo "Re-création du role Postgres rdv_service_public_metabase"
 echo "Merci de copier/coller le mot de passe stocké dans METABASE_DB_ROLE_PASSWORD: ${METABASE_DB_ROLE_PASSWORD}"
 scalingo database-create-user --region osc-secnum-fr1 --app rdv-service-public-etl --addon "${etl_addon_id}" --read-only rdv_service_public_metabase
-
-
-
