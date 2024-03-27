@@ -164,7 +164,7 @@ RSpec.describe "Step 2 of the rdv wizard" do
         create(:motif, name: "Carte d'identité", organisation: organisation, restriction_for_rdv: nil, motif_category: cni_motif_category, default_duration_in_min: 25)
       end
 
-      it "doesn't ask for the ants number", js: true do
+      it "doesn't ask for the ants number" do
         expect(page).to have_content("Prénom")
         expect(page).not_to have_content("ANTS")
       end
