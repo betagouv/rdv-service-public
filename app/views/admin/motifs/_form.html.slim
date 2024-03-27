@@ -2,6 +2,13 @@
 
   = render "model_errors", model: motif
 
+  = f.hidden_field :duplicated_from_motif_id
+  - permitted_organisations = current_agent.organisations.select { Agent::MotifPolicy.agent_can_manage_motifs?(_1, current_agent) }
+  - if motif.duplicated_from_motif && motif.new_record? && permitted_organisations.any?
+    .card
+      .card-body
+        = f.association :organisation, label: "Créer le motif dans cette organisation", collection: permitted_organisations, input_html: { class: "select2-input" }
+
   .card
     .card-body
       h5.card-title Configuration générale
@@ -51,6 +58,12 @@
               = f.radio_button(:location_type, value, disabled: true)
               span.text-muted.ml-1= Motif.human_attribute_value(:location_type, value)
               p.text-muted.font-14= Motif.human_attribute_value(:location_type, value, context: :hint)
+        - if motif.persisted?
+          p.text-muted.font-14
+            i.fa.fa-circle-info.mr-1
+            ' Pour permettre plusieurs types de rendez-vous, vous pouvez
+            = link_to("dupliquer ce motif", duplicate_admin_organisation_motif_path(current_organisation, motif))
+            | .
 
   .card
     .card-body

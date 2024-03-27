@@ -230,6 +230,12 @@ class Motif < ApplicationRecord
     motif_category&.requires_ants_predemande_number?
   end
 
+  attr_accessor :duplicated_from_motif_id
+
+  def duplicated_from_motif
+    Motif.find_by(id: duplicated_from_motif_id) if duplicated_from_motif_id
+  end
+
   private
 
   def booking_delay_validation
