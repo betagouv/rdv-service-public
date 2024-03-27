@@ -20,9 +20,9 @@ RSpec.describe User::FranceconnectFrozenFieldsConcern do
     end
 
     it "allows change to non-frozen field" do
-      res = user.update(address: "10 rue du Havre, Paris")
+      res = user.update(address: "10 rue du Havre, Paris, 75016")
       expect(res).to be_truthy
-      expect(user.reload.address).to eq("10 rue du Havre, Paris")
+      expect(user.reload.address).to eq("10 rue du Havre, Paris, 75016")
     end
   end
 

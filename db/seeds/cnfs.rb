@@ -46,7 +46,7 @@ cnfs_lieu = Lieu.create!(
   longitude: 4.919825,
   availability: :enabled,
   phone_number: "01 53 24 69 70",
-  address: "8 Rue Léon Schwartzenberg, 75010 Paris"
+  address: "8 Rue Léon Schwartzenberg, Paris, 75010"
 )
 
 agent_cnfs = Agent.new(
