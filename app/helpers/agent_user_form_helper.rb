@@ -1,9 +1,9 @@
 module AgentUserFormHelper
   def agent_user_form_url(user)
     if user.persisted?
-      admin_organisation_user_path(current_organisation, user)
+      admin_organisation_user_path(current_organisation, user, ants_pre_demande_number_required: params[:ants_pre_demande_number_required].to_b)
     else
-      admin_organisation_users_path(current_organisation)
+      admin_organisation_users_path(current_organisation, ants_pre_demande_number_required: params[:ants_pre_demande_number_required].to_b)
     end
   end
 
