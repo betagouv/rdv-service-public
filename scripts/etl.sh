@@ -91,6 +91,7 @@ echo "Re-création du role Postgres rdv_service_public_metabase"
 echo "Merci de copier/coller le mot de passe stocké dans METABASE_DB_ROLE_PASSWORD: ${METABASE_DB_ROLE_PASSWORD}"
 scalingo database-create-user --region osc-secnum-fr1 --app rdv-service-public-etl --addon "${etl_addon_id}" --read-only rdv_service_public_metabase
 
+# Il faut donner les droits à tous les schemas ici
 psql "${DATABASE_URL}" -c "GRANT USAGE ON SCHEMA ${schema_name} TO rdv_service_public_metabase;"
 psql "${DATABASE_URL}" -c "GRANT SELECT ON ALL TABLES IN SCHEMA ${schema_name} TO rdv_service_public_metabase;"
 
