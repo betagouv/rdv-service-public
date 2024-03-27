@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # Exemple d'usage : scalingo --app=rdv-service-public-etl --region=osc-secnum-fr1 run ./scripts/etl.sh rdvsp prod public
+# Exemple d'usage : scalingo --app=rdv-service-public-etl --region=osc-secnum-fr1 run ./scripts/etl.sh rdvsp_mairie prod rdv_anct_gouv_fr
 set -e
 # Inspiré par https://doc.scalingo.com/platform/databases/duplicate
 
@@ -69,7 +70,7 @@ echo "Chargement du dump..."
 if [[ "$schema_name" != "public" ]]; then
 
   pg_restore --no-owner --no-privileges --file=raw.sql *.pgsql
-  sed -i "s/public/${schema_name}/g" raw.sql
+  sed -i "s/ public/ ${schema_name}/g" raw.sql
   psql "${DATABASE_URL}" -c "DROP SCHEMA IF EXISTS \"${schema_name}\" CASCADE;"
   psql "${DATABASE_URL}" -c "CREATE SCHEMA \"${schema_name}\";"
 
