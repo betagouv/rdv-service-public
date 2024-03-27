@@ -69,8 +69,11 @@ echo "Chargement du dump..."
 
 if [[ "$schema_name" != "public" ]]; then
 
-  pg_restore --no-owner --no-privileges --file=raw.sql *.pgsql
+  pg_restore --no-owner --no-privileges --file=raw.sql -L <(pg_restore -l /app/*.pgsql | grep -vE 'TABLE DATA public (versions|good_jobs|good_job_settings|good_job_batches|good_job_processes)') *.pgsql
   sed -i "s/ public/ ${schema_name}/g" raw.sql
+  sed -i "s/::public/::${schema_name}/g" raw.sql
+  sed -i "s/${schema_name}.uuid_generate_v4/public.uuid_generate_v4/g" raw.sql
+
   psql "${DATABASE_URL}" -c "DROP SCHEMA IF EXISTS \"${schema_name}\" CASCADE;"
   psql "${DATABASE_URL}" -c "CREATE SCHEMA \"${schema_name}\";"
 
@@ -84,9 +87,10 @@ fi
 echo "Anonymisation de la base"
 time bundle exec rails runner scripts/anonymize_database.rb "${app}" "${schema_name}"
 
-psql "${DATABASE_URL}" -c "GRANT USAGE ON SCHEMA ${schema_name} TO rdv_service_public_metabase;"
-psql "${DATABASE_URL}" -c "GRANT SELECT ON ALL TABLES IN SCHEMA ${schema_name} TO rdv_service_public_metabase;"
-
 echo "Re-création du role Postgres rdv_service_public_metabase"
 echo "Merci de copier/coller le mot de passe stocké dans METABASE_DB_ROLE_PASSWORD: ${METABASE_DB_ROLE_PASSWORD}"
 scalingo database-create-user --region osc-secnum-fr1 --app rdv-service-public-etl --addon "${etl_addon_id}" --read-only rdv_service_public_metabase
+
+psql "${DATABASE_URL}" -c "GRANT USAGE ON SCHEMA ${schema_name} TO rdv_service_public_metabase;"
+psql "${DATABASE_URL}" -c "GRANT SELECT ON ALL TABLES IN SCHEMA ${schema_name} TO rdv_service_public_metabase;"
+
