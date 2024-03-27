@@ -65,17 +65,20 @@ scalingo database-delete-user --region osc-secnum-fr1 --app rdv-service-public-e
 echo "La base de données n'est plus accessible par metabase"
 
 echo "Chargement du dump..."
-pg_restore --no-owner --no-privileges --file=raw.sql *.pgsql
 
 if [[ "$schema_name" != "public" ]]; then
+
+  pg_restore --no-owner --no-privileges --file=raw.sql *.pgsql
   sed -i "s/public/${schema_name}/g" raw.sql
   psql "${DATABASE_URL}" -c "DROP SCHEMA IF EXISTS \"${schema_name}\" CASCADE;"
   psql "${DATABASE_URL}" -c "CREATE SCHEMA \"${schema_name}\";"
+
+  psql  -v ON_ERROR_STOP=0 "${DATABASE_URL}" < /app/raw.sql
 else
-  psql  -v ON_ERROR_STOP=0 "${DATABASE_URL}" < /app/scripts/clean_public_schema.sql
+  time pg_restore --clean --if-exists --no-owner --no-privileges --jobs=4 --dbname "${DATABASE_URL}" -L <(pg_restore -l /app/*.pgsql | grep -vE 'TABLE DATA public (versions|good_jobs|good_job_settings|good_job_batches|good_job_processes)') /app/*.pgsql
+
 fi
 
-psql  -v ON_ERROR_STOP=0 "${DATABASE_URL}" < /app/raw.sql
 
 echo "Anonymisation de la base"
 time bundle exec rails runner scripts/anonymize_database.rb "${app}" "${schema_name}"
