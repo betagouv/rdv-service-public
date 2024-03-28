@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_03_21_114146) do
+ActiveRecord::Schema[7.0].define(version: 2024_03_28_122622) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -474,7 +474,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_21_114146) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "created_by_id"
-    t.string "created_by_type", null: false
+    t.string "created_by_type"
     t.boolean "created_by_agent_prescripteur", default: false, null: false
     t.index ["created_by_type", "created_by_id"], name: "index_participations_on_created_by_type_and_created_by_id"
     t.index ["invitation_token"], name: "index_participations_on_invitation_token", unique: true
