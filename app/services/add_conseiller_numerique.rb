@@ -98,7 +98,7 @@ class AddConseillerNumerique
       color: "#99CC99",
       default_duration_in_min: 60,
       location_type: :public_office,
-      organisation: organisation,
+      organisations: [organisation],
       service: service
     )
 
@@ -108,7 +108,7 @@ class AddConseillerNumerique
       default_duration_in_min: 120,
       location_type: :public_office,
       collectif: true,
-      organisation: organisation,
+      organisations: [organisation],
       service: service
     )
   end

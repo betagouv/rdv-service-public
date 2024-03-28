@@ -59,8 +59,7 @@ class Motif < ApplicationRecord
   # Validation
   validates :visibility_type, inclusion: { in: VISIBILITY_TYPES }
   validates :sectorisation_level, inclusion: { in: SECTORISATION_TYPES }
-  # validates :name, presence: true, uniqueness: { scope: %i[organisation location_type service],
-  #                                                conditions: -> { where(deleted_at: nil) }, }
+  validates :name, presence: true
 
   validates :color, :default_duration_in_min, :min_public_booking_delay, :max_public_booking_delay, presence: true
   validates :min_public_booking_delay, numericality: { greater_than_or_equal_to: 30.minutes, less_than_or_equal_to: 1.year.minutes }
@@ -138,7 +137,7 @@ class Motif < ApplicationRecord
   def authorized_agents
     Agent
       .joins(:organisations)
-      .where(organisations: { id: organisation.id })
+      .where(organisations: organisations)
       .includes(:services)
       .complete
       .active

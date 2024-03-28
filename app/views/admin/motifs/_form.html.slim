@@ -1,4 +1,4 @@
-= simple_form_for [:admin, motif.organisation, motif] do |f|
+= simple_form_for [:admin, current_organisation, motif] do |f|
 
   = render "model_errors", model: motif
 
@@ -102,7 +102,7 @@
           = label_tag do
             = f.radio_button(:bookable_by, :everyone)
             span.ml-1= I18n.t("activerecord.attributes.motif/bookable_by/hint.everyone")
-            p.text-muted.font-14= "Les usagers pourront aussi prendre rendez-vous en ligne sur les plages d'ouverture définies par les agents de #{@motif.organisation.name}"
+            p.text-muted.font-14= "Les usagers pourront aussi prendre rendez-vous en ligne sur les plages d'ouverture définies par les agents de #{@motif.organisations.map(&:name)}"
 
       .form-row.js-rdvs-editable
         .col-md-6= f.input :min_public_booking_delay, collection: min_max_delay_options
@@ -188,6 +188,6 @@
   .row.mb-5
     - if motif.persisted?
       .col.text-left
-        = link_to "Supprimer", admin_organisation_motif_path(motif.organisation, motif), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de ce motif ?"}
+        = link_to "Supprimer", admin_organisation_motif_path(current_organisation, motif), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de ce motif ?"}
     .col.text-right
       = f.button :submit

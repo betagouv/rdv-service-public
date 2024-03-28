@@ -10,7 +10,8 @@ class Admin::SlotsController < AgentAuthController
     @search_result = search_result
 
     @motifs = Agent::MotifPolicy::Scope.apply(current_agent, Motif)
-      .where(organisation: current_organisation)
+      .joins(:organisations)
+      .where(organisations: current_organisation)
       .active.ordered_by_name
     @services = Service.where(id: @motifs.pluck(:service_id).uniq)
     @form.service_id = @services.first.id if @services.count == 1

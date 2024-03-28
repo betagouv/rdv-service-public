@@ -16,7 +16,7 @@ class Admin::MotifsController < AgentAuthController
   end
 
   def new
-    @motif = Motif.new(organisation: current_organisation)
+    @motif = Motif.new
     authorize(@motif)
   end
 
@@ -31,11 +31,11 @@ class Admin::MotifsController < AgentAuthController
 
   def create
     @motif = Motif.new(motif_params)
-    @motif.organisation = @organisation
+    @motif.organisations << @organisation
     authorize(@motif)
     if @motif.save
       flash[:notice] = "Motif créé."
-      redirect_to admin_organisation_motifs_path(@motif.organisation)
+      redirect_to admin_organisation_motifs_path(current_organisation)
     else
       render :new
     end
@@ -45,7 +45,7 @@ class Admin::MotifsController < AgentAuthController
     authorize(@motif)
     if @motif.update(motif_params)
       flash[:notice] = "Le motif a été modifié."
-      redirect_to admin_organisation_motif_path(@motif.organisation, @motif)
+      redirect_to admin_organisation_motif_path(current_organisation, @motif)
     else
       render :edit
     end
@@ -55,7 +55,7 @@ class Admin::MotifsController < AgentAuthController
     authorize(@motif)
     if @motif.soft_delete
       flash[:notice] = "Le motif a été supprimé."
-      redirect_to admin_organisation_motifs_path(@motif.organisation)
+      redirect_to admin_organisation_motifs_path(current_organisation)
     else
       render :show
     end

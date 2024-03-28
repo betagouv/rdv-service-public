@@ -3,7 +3,7 @@ RSpec.describe Admin::MotifsController, type: :controller do
 
   let!(:organisation) { create(:organisation) }
   let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
-  let!(:motif) { create(:motif, organisation_id: organisation.id) }
+  let!(:motif) { create(:motif, organisation: organisation) }
 
   before do
     sign_in agent

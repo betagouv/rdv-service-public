@@ -39,6 +39,8 @@ module Users::CreneauxSearchConcern
   end
 
   def geo_attributed_agents
-    @geo_search.attributed_agents_by_organisation[@motif.organisation].presence || []
+    @geo_search.attributed_agents_by_organisation.slice(*@motif.organisations).reduce([]) do |acc, (_organisation, attributed_agents)|
+      acc + attributed_agents
+    end
   end
 end

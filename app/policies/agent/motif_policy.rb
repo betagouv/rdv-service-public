@@ -3,7 +3,10 @@ class Agent::MotifPolicy < ApplicationPolicy
     admin_of_the_motif_organisation?
   end
 
-  alias new? update?
+  def new?
+    true
+  end
+
   alias create? update?
   alias edit? update?
   alias destroy? update?
