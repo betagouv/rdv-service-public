@@ -10,3 +10,4 @@
         = cache([resource, resource.class.paper_trail_options[:only]], expires_in: 7.days) do
           - versions = PaperTrailAugmentedVersion.for_resource(resource)
           = render "admin/versions/versions", versions: versions.reverse
+        p = "Cet historique affiche uniquement les changements des 6 derniers mois."

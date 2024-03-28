@@ -117,8 +117,11 @@ class CronJob < ApplicationJob
 
   class DestroyOldVersions < CronJob
     def perform
-      # Versions are used in RDV exports, and RDVs are currently kept for 2 years.
-      PaperTrail::Version.where("created_at < ?", 2.years.ago).delete_all
+      # voir https://www.cnil.fr/fr/la-cnil-publie-une-recommandation-relative-aux-mesures-de-journalisation
+      PaperTrail::Version.where("created_at < ?", 6.months.ago).where.not(event: :create, item_type: "Rdv").delete_all
+
+      # Les versions qui permettent de connaitre les authors sont conservées plus longtemps, voir Rdv::AuthoredConcern
+      PaperTrail::Version.where(event: :create, item_type: "Rdv").where("created_at < ?", 2.years.ago).delete_all
     end
   end
 
