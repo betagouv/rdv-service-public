@@ -4,7 +4,7 @@ class Agent::MotifPolicy < ApplicationPolicy
   end
 
   def new?
-    true
+    current_agent.admin_orgs.any?
   end
 
   alias create? update?

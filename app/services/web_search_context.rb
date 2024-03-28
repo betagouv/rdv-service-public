@@ -45,12 +45,12 @@ class WebSearchContext < SearchContext
                motifs.bookable_by_everyone
              end
 
-    motifs = motifs.where(organisations: { external_id: @external_organisation_ids.compact }) if @external_organisation_ids.present?
+    motifs = motifs.joins(:organisations).where(organisations: { external_id: @external_organisation_ids.compact }) if @external_organisation_ids.present?
 
     # dupliqué de WebInvitationSearchContext
     motifs = motifs.search_by_name_with_location_type(@motif_name_with_location_type) if @motif_name_with_location_type.present?
     motifs = motifs.where(service: service) if @service_id.present?
-    motifs = motifs.where(organisation_id: organisation_id) if organisation_id.present?
+    motifs = motifs.joins(:organisations).where(organisations: organisation_id) if organisation_id.present?
     motifs = motifs.where(id: @motif_id) if @motif_id.present?
     motifs
   end

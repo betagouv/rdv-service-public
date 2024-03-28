@@ -47,9 +47,14 @@ module Users::CreneauxWizardConcern
 
   # Retourne une liste d'organisations et leur prochaine dispo, ordonnées par date de prochaine dispo
   def next_availability_by_motifs_organisations
-    @next_availability_by_motifs_organisations ||= matching_motifs.to_h do |motif|
-      [motif.organisation, creneaux_search_for(nil, date_range, motif).next_availability]
-    end.compact.sort_by(&:last).to_h
+    return @next_availability_by_motifs_organisations if defined?(@next_availability_by_motifs_organisations)
+
+    next_availabilities_by_motifs_organisations = matching_motifs.each_with_object(Hash.new([])) do |motif, hash|
+      motif.organisations.each do |organisation|
+        hash[organisation] += [creneaux_search_for(nil, date_range, motif).next_availability]
+      end
+    end
+    @next_availability_by_motifs_organisations = next_availabilities_by_motifs_organisations.transform_values(&:max)
   end
 
   def service

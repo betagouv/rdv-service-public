@@ -72,7 +72,8 @@ class AgentPrescripteurRdvWizard
   def create_rdv!
     rdv.assign_attributes(
       created_by: @agent_prescripteur,
-      organisation: motif.organisation,
+      # TODO: passer l'orga en contexte lors du parcours de pris de RDV
+      organisation: motif.organisations.first,
       agents: [creneau.agent],
       duration_in_min: motif&.default_duration_in_min
     )

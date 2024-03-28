@@ -1,6 +1,6 @@
 RSpec.describe Admin::RdvWizardStepsController, type: :controller do
-  let(:motif) { create(:motif) }
-  let(:organisation) { motif.organisation }
+  let(:organisation) { create(:organisation) }
+  let(:motif) { create(:motif, organisation: organisation) }
   let(:agent) { create(:agent, :secretaire, basic_role_in_organisations: [organisation]) }
   let(:user) { create(:user) }
 

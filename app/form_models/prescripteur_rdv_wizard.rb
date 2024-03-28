@@ -33,7 +33,8 @@ class PrescripteurRdvWizard < UserRdvWizard::Base
     rdv.assign_attributes(
       created_by: @prescripteur,
       lieu: lieu,
-      organisation: motif.organisation,
+      # TODO: passer l'orga en contexte lors du parcours de pris de RDV
+      organisation: motif.organisations.first,
       agents: [creneau.agent],
       participations: [participation]
     )
@@ -58,6 +59,7 @@ class PrescripteurRdvWizard < UserRdvWizard::Base
 
     @user.skip_confirmation_notification! # Désactivation du mail Devise de confirmation de compte
     @user.created_through = "prescripteur"
-    @user.user_profiles.find_or_initialize_by(organisation_id: rdv.motif.organisation_id).save!
+    # TODO: passer l'orga en contexte lors du parcours de pris de RDV
+    @user.user_profiles.find_or_initialize_by(organisation_id: rdv.motif.organisations.first.id).save!
   end
 end

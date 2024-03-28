@@ -99,7 +99,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
     fill_in :search_where, with: "21 rue des Ardennes, 75019 Paris"
 
     # fake address autocomplete
-    page.execute_script("document.querySelector('#search_departement').value = '#{motif.organisation.territory.departement_number}'")
+    page.execute_script("document.querySelector('#search_departement').value = '#{organisation.territory.departement_number}'")
     page.execute_script("document.querySelector('#search_submit').disabled = false")
 
     click_on("Rechercher")
@@ -159,7 +159,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
 
       expect(UserProfile.last).to have_attributes(
         user: user,
-        organisation: motif.organisation
+        organisation: organisation
       )
     end
 

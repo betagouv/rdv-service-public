@@ -1,6 +1,6 @@
 RSpec.describe "Step 4 of the rdv wizard" do
-  let(:motif) { create(:motif, :by_phone) }
-  let(:organisation) { motif.organisation }
+  let(:organisation) { create(:organisation) }
+  let(:motif) { create(:motif, :by_phone, organisation: organisation) }
   let(:agent) { create(:agent, service: motif.service, basic_role_in_organisations: [organisation]) }
 
   let(:params) do
