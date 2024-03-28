@@ -54,8 +54,9 @@ class Users::GeoSearch
 
   def available_motifs_from_attributed_organisation(organisation)
     available_motifs_base
+      .joins(:organisations)
       .sectorisation_level_organisation
-      .where(organisation_id: organisation.id)
+      .where(organisations: organisation.id)
       .distinct
   end
 
@@ -110,17 +111,17 @@ class Users::GeoSearch
   end
 
   def available_motifs_base
-    @available_motifs_base ||= Motif.where(id: individual_and_collectifs_motifs_ids).joins(:organisation)
+    @available_motifs_base ||= Motif.where(id: individual_and_collectifs_motifs_ids).joins(:organisations)
   end
 
   def individual_motifs
     @individual_motifs ||= Motif.active.where.not(bookable_by: :agents).individuel.joins(:motifs_plage_ouvertures)
-      .joins(organisation: :territory).where(territories: { departement_number: @departement }).distinct
+      .joins(organisations: :territory).where(territories: { departement_number: @departement }).distinct
   end
 
   def collective_motifs
     @collective_motifs ||= Motif.active.where.not(bookable_by: :agents).collectif
-      .joins(organisation: :territory).where(territories: { departement_number: @departement })
+      .joins(organisations: :territory).where(territories: { departement_number: @departement })
       .joins(:rdvs).merge(Rdv.collectif_and_available_for_reservation).distinct
   end
 
@@ -138,8 +139,9 @@ class Users::GeoSearch
   def available_individual_motifs_from_attributed_agent_arel(agent, organisation)
     individual_motifs.sectorisation_level_agent
       .joins(:plage_ouvertures)
+      .joins(:organisations)
       .where(
-        organisation_id: organisation.id,
+        organisations: organisation.id,
         plage_ouvertures: { agent_id: agent.id }
       )
   end
@@ -153,7 +155,8 @@ class Users::GeoSearch
 
   def available_collective_motifs_from_attributed_agent_arel(agent, organisation)
     collective_motifs.sectorisation_level_agent
-      .where(organisation_id: organisation.id)
+      .joins(:organisations)
+      .where(organisations: organisation.id)
       .joins(rdvs: :agents)
       .where(rdvs: { agents: { id: agent.id } })
   end

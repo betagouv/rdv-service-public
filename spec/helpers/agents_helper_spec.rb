@@ -69,7 +69,7 @@ RSpec.describe AgentsHelper do
           duration_in_min: creneau.motif.default_duration_in_min,
           lieu_id: nil,
           motif_id: creneau.motif.id,
-          organisation_id: creneau.motif.organisation.id,
+          organisation_id: creneau.motif.organisations.first.id,
           starts_at: nil,
           step: 2,
         }

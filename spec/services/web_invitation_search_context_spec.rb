@@ -8,7 +8,7 @@ RSpec.describe WebInvitationSearchContext, type: :service do
       context "when one of the motif does not belong to the preselected orgs" do
         let!(:other_org) { create(:organisation) }
 
-        before { motif2.update! organisation: other_org }
+        before { motif2.update!(organisations: [other_org]) }
 
         it "returns only the matching motif from the preselected orgs" do
           expect(subject.send(:matching_motifs)).to eq([motif])

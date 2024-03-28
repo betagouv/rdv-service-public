@@ -22,7 +22,7 @@ class InvitationSearchContext < SearchContext
     motifs = super
     motifs = motifs.bookable_by_everyone_or_bookable_by_invited_users
     motifs = motifs.with_motif_category_short_name(@motif_category_short_name) if @motif_category_short_name.present?
-    motifs = motifs.where(organisation_id: @organisation_ids) if @organisation_ids.present?
+    motifs = motifs.joins(:organisations).where(organisations: @organisation_ids) if @organisation_ids.present?
     motifs
   end
 
@@ -32,7 +32,7 @@ class InvitationSearchContext < SearchContext
     # on the matching motifs for the organisations passed in the query_params
     @matching_motifs ||=
       filter_motifs(geo_search.available_motifs).presence || filter_motifs(
-        Motif.available_for_booking.where(organisation_id: @organisation_ids).joins(:organisation)
+        Motif.available_for_booking.joins(:organisations).where(organisations: @organisation_ids)
       )
   end
 

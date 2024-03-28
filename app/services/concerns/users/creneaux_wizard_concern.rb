@@ -68,7 +68,7 @@ module Users::CreneauxWizardConcern
     return @next_availability_by_lieux if @next_availability_by_lieux
 
     next_availability_by_lieux = Lieu.with_open_slots_for_motifs(matching_motifs).includes(:organisation).to_h do |lieu|
-      next_availability = creneaux_search_for(lieu, date_range, matching_motifs.where(organisation: lieu.organisation).first).next_availability
+      next_availability = creneaux_search_for(lieu, date_range, matching_motifs.joins(:organisations).where(organisations: lieu.organisation).first).next_availability
       [lieu, next_availability]
     end.compact
 
