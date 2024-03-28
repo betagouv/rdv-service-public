@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_03_21_114146) do
+ActiveRecord::Schema[7.0].define(version: 2024_03_28_070825) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -403,7 +403,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_21_114146) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "default_duration_in_min", default: 30, null: false
-    t.bigint "organisation_id", null: false
     t.integer "min_public_booking_delay", default: 1800, null: false, comment: "Permet de savoir combien de secondes il y aura au minimum entre la prise de rdv par un usager ou un prescripteur et le début du rdv. Par exemple si la valeur est 1800, et qu'il est 10h, le premier rdv qui pourra être pris (s'il y a une plage d'ouverture libre) sera à 10h30, puisque 1800 = 30 x 60. Cela permet à l'agent d'être prévenu suffisamment à l'avance.\n"
     t.integer "max_public_booking_delay", default: 7889238, null: false, comment: "Permet de savoir combien de temps à l'avance il est possible de prendre rdv pour un usager ou un prescripteur. Le délai est mesuré en secondes. Cela évite que des gens prennent des rdv dans trop longtemps, et évite aux agents de s'engager à assurer des rdv alors qu'ils ne connaissent pas leur emploi du temps suffisamment à l'avance.\n"
     t.datetime "deleted_at", comment: "Permet de savoir à quelle date le motif a été soft-deleted\n"
@@ -426,9 +425,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_21_114146) do
     t.index ["deleted_at"], name: "index_motifs_on_deleted_at"
     t.index ["location_type"], name: "index_motifs_on_location_type"
     t.index ["motif_category_id"], name: "index_motifs_on_motif_category_id"
-    t.index ["name", "organisation_id", "location_type", "service_id"], name: "index_motifs_on_name_scoped", unique: true, where: "(deleted_at IS NULL)"
     t.index ["name"], name: "index_motifs_on_name"
-    t.index ["organisation_id"], name: "index_motifs_on_organisation_id"
     t.index ["service_id"], name: "index_motifs_on_service_id"
     t.index ["visibility_type"], name: "index_motifs_on_visibility_type"
   end
@@ -438,6 +435,15 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_21_114146) do
     t.bigint "plage_ouverture_id", null: false
     t.index ["motif_id"], name: "index_motifs_plage_ouvertures_on_motif_id"
     t.index ["plage_ouverture_id"], name: "index_motifs_plage_ouvertures_on_plage_ouverture_id"
+  end
+
+  create_table "organisation_motifs", force: :cascade do |t|
+    t.bigint "organisation_id"
+    t.bigint "motif_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["motif_id"], name: "index_organisation_motifs_on_motif_id"
+    t.index ["organisation_id"], name: "index_organisation_motifs_on_organisation_id"
   end
 
   create_table "organisations", force: :cascade do |t|
@@ -797,10 +803,11 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_21_114146) do
   add_foreign_key "motif_categories_territories", "motif_categories"
   add_foreign_key "motif_categories_territories", "territories"
   add_foreign_key "motifs", "motif_categories"
-  add_foreign_key "motifs", "organisations"
   add_foreign_key "motifs", "services"
   add_foreign_key "motifs_plage_ouvertures", "motifs"
   add_foreign_key "motifs_plage_ouvertures", "plage_ouvertures"
+  add_foreign_key "organisation_motifs", "motifs"
+  add_foreign_key "organisation_motifs", "organisations"
   add_foreign_key "organisations", "territories"
   add_foreign_key "participations", "rdvs"
   add_foreign_key "participations", "users"

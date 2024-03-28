@@ -36,9 +36,9 @@ FactoryBot.define do
       if plage_ouverture.motifs.empty?
         plage_ouverture.motifs << (
           if plage_ouverture.lieu
-            build(:motif, organisation: plage_ouverture.organisation)
+            build(:motif, organisations: [plage_ouverture.organisation])
           else
-            build(:motif, :by_phone, organisation: plage_ouverture.organisation)
+            build(:motif, :by_phone, organisations: [plage_ouverture.organisation])
           end
         )
       end

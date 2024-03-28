@@ -2,7 +2,7 @@ tr
   td.pr-0.text-right
     span.badge.badge-pill.ml-0.mr-2 style="background: #{motif.color};" &nbsp;
   td
-    = link_to motif.name, admin_organisation_motif_path(motif.organisation, motif)
+    = link_to motif.name, admin_organisation_motif_path(current_organisation, motif)
     = motif_badges(motif, only: %i[for_secretariat follow_up collectif])
   td
     = motif_badges(motif, only: %i[bookable_by_everyone bookable_by_invited_users])

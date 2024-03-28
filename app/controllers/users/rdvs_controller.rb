@@ -137,7 +137,7 @@ class Users::RdvsController < UserAuthController
       agents: [creneau.agent],
       duration_in_min: creneau.duration_in_min,
       starts_at: creneau.starts_at,
-      organisation: creneau.motif.organisation,
+      organisation: creneau.motif.organisations.first, # TODO: think about that
       motif: creneau.motif,
       lieu_id: creneau.lieu&.id,
       users: [user_for_rdv],

@@ -35,14 +35,15 @@ class Motif < ApplicationRecord
   }
 
   # Relations
-  belongs_to :organisation
   belongs_to :service
   belongs_to :motif_category, optional: true
+  has_many :organisation_motifs, dependent: :delete_all
   has_many :rdvs, dependent: :restrict_with_exception
   has_many :motifs_plage_ouvertures, dependent: :delete_all
 
   # Through relations
-  has_many :webhook_endpoints, through: :organisation
+  has_many :organisations, through: :organisation_motifs
+  has_many :webhook_endpoints, through: :organisations
   has_many :plage_ouvertures, -> { distinct }, through: :motifs_plage_ouvertures
   has_many :lieux_through_po, through: :plage_ouvertures, source: :lieu
   has_many :lieux_through_rdvs, through: :rdvs, source: :lieu
@@ -58,8 +59,8 @@ class Motif < ApplicationRecord
   # Validation
   validates :visibility_type, inclusion: { in: VISIBILITY_TYPES }
   validates :sectorisation_level, inclusion: { in: SECTORISATION_TYPES }
-  validates :name, presence: true, uniqueness: { scope: %i[organisation location_type service],
-                                                 conditions: -> { where(deleted_at: nil) }, }
+  # validates :name, presence: true, uniqueness: { scope: %i[organisation location_type service],
+  #                                                conditions: -> { where(deleted_at: nil) }, }
 
   validates :color, :default_duration_in_min, :min_public_booking_delay, :max_public_booking_delay, presence: true
   validates :min_public_booking_delay, numericality: { greater_than_or_equal_to: 30.minutes, less_than_or_equal_to: 1.year.minutes }
@@ -84,7 +85,7 @@ class Motif < ApplicationRecord
   scope :available_for_booking, lambda {
     where_id_in_subqueries(
       [
-        individuel.active.bookable_by_everyone_or_bookable_by_invited_users.joins(:organisation, :plage_ouvertures).select(:id),
+        individuel.active.bookable_by_everyone_or_bookable_by_invited_users.joins(:organisations, :plage_ouvertures).select(:id),
         Rdv.collectif_and_available_for_reservation.select(:motif_id),
       ]
     )
@@ -97,7 +98,7 @@ class Motif < ApplicationRecord
                        else
                          where(service: agent.services)
                        end
-    available_motifs.where(organisation_id: organisation.id).active.ordered_by_name
+    available_motifs.joins(:organisations).where(organisations: organisation.id).active.ordered_by_name
   }
   # This should match the implementation of #name_with_location_type
   scope :search_by_name_with_location_type, lambda { |name_with_location_type|

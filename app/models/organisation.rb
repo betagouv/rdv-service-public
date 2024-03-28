@@ -15,7 +15,7 @@ class Organisation < ApplicationRecord
   # Relations
   belongs_to :territory
   has_many :lieux, dependent: :destroy
-  has_many :motifs, dependent: :destroy
+  has_many :organisation_motifs, dependent: :destroy
   has_many :rdvs, dependent: :restrict_with_error
   has_many :webhook_endpoints, dependent: :destroy
   has_many :sector_attributions, dependent: :destroy
@@ -24,6 +24,7 @@ class Organisation < ApplicationRecord
   has_many :user_profiles, dependent: :restrict_with_error
 
   # Through relations
+  has_many :motifs, through: :organisation_motifs
   has_many :sectors, through: :sector_attributions
   # we specify dependent: :destroy because by default it will be deleted (dependent: :delete)
   # and we need to destroy to trigger the callbacks on the model

@@ -8,13 +8,11 @@ class Admin::MotifsController < AgentAuthController
     @unfiltered_motifs = policy_scope(current_organisation.motifs, policy_scope_class: Agent::MotifPolicy::Scope).active
     @motifs = params[:search].present? ? @unfiltered_motifs.search_by_text(params[:search]) : @unfiltered_motifs.ordered_by_name
     @motifs = filtered(@motifs, params)
-    @motifs = @motifs.includes(:organisation).includes(:service).page(params[:page])
+    @motifs = @motifs.includes(:organisations).includes(:service).page(params[:page])
 
     @sectors_attributed_to_organisation_count = Sector.attributed_to_organisation(current_organisation).count
     @sectorisation_level_agent_counts_by_service = SectorAttribution.level_agent_grouped_by_service(current_organisation)
     @display_sectorisation_level = current_organisation.motifs.active.where.not(sectorisation_level: Motif::SECTORISATION_LEVEL_DEPARTEMENT).any?
-
-    @motif_policy = Agent::MotifPolicy.new(current_agent, Motif.new(organisation: current_organisation))
   end
 
   def new

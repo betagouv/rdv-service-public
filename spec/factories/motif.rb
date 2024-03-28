@@ -2,7 +2,19 @@ FactoryBot.define do
   sequence(:motif_name) { |n| "Motif #{n}" }
 
   factory :motif do
-    organisation { association(:organisation) }
+    transient do
+      organisation { build(:organisation) }
+    end
+    after(:build) do |motif, evaluator|
+      if motif.organisation_motifs.empty? && motif.organisations.empty?
+        motif.organisations = if evaluator.organisation
+                                [evaluator.organisation]
+                              else
+                                [build(:organisation)]
+                              end
+      end
+    end
+
     service { association(:service) }
     motif_category { association(:motif_category) }
 

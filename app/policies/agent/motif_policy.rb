@@ -31,16 +31,17 @@ class Agent::MotifPolicy < ApplicationPolicy
   end
 
   def agent_role_in_motif_organisation
-    @agent_role_in_motif_organisation ||= current_agent.roles.find_by(organisation_id: @record.organisation_id)
+    @agent_role_in_motif_organisation ||= current_agent.roles.find_by(organisation_id: @record.organisation_ids)
   end
 
   class Scope < ApplicationPolicy::Scope
     def resolve
       if current_agent.secretaire?
-        scope.where(organisation_id: current_agent.organisation_ids)
+        scope.joins(:organisations).where(organisations: current_agent.organisation_ids)
       else
-        scope.where(organisation: current_agent.basic_orgs, service: current_agent.services)
-          .or(scope.where(organisation: current_agent.admin_orgs))
+        return scope
+        scope.joins(:organisations).where(organisations: current_agent.basic_orgs, service: current_agent.services)
+          .or(scope.joins(:organisations).where(organisations: current_agent.admin_orgs))
       end
     end
 
