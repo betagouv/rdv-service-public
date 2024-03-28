@@ -39,13 +39,7 @@ class Agent::MotifPolicy < ApplicationPolicy
 
   class Scope < ApplicationPolicy::Scope
     def resolve
-      if current_agent.secretaire?
-        scope.joins(:organisations).where(organisations: current_agent.organisation_ids)
-      else
-        return scope
-        scope.joins(:organisations).where(organisations: current_agent.basic_orgs, service: current_agent.services)
-          .or(scope.joins(:organisations).where(organisations: current_agent.admin_orgs))
-      end
+      scope.joins(:organisations).where(organisations: current_agent.organisation_ids)
     end
 
     alias current_agent pundit_user

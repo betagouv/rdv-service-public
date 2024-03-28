@@ -108,13 +108,15 @@ RSpec.describe AddConseillerNumerique do
     end
   end
 end
+
 render(
   action =>
     filtered(
       (
         policy_scope(
           current_organisation.motifs,
-          :policy_scope_class => (Agent::MotifPolicy::Scope)).active.search_by_text(params[:search]) or policy_scope(current_organisation.motifs, :policy_scope_class => (Agent::MotifPolicy::Scope))
+          :policy_scope_class => Agent::MotifPolicy::Scope
+        ).active.search_by_text(params[:search]) or policy_scope(current_organisation.motifs, :policy_scope_class => Agent::MotifPolicy::Scope)
                                                                                                           .active.ordered_by_name
       ), params
     ).includes(:organisations).includes(:service).page(params[:page])
