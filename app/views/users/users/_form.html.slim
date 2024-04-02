@@ -1,6 +1,7 @@
-- form_url = local_assigns[:rdv_wizard].present? ? users_rdv_wizard_step_path(step: 1, **@rdv_wizard.to_query.except(:rdv)) : users_informations_path
-- form_method = local_assigns[:rdv_wizard].present? ? "post" : "patch"
-- territories = Territory.joins(organisations: :user_profiles).where(user_profiles: { user_id: user.id }).to_a
+ruby:
+  form_url = local_assigns[:rdv_wizard].present? ? users_rdv_wizard_step_path(step: 1, **@rdv_wizard.to_query.except(:rdv)) : users_informations_path
+  form_method = local_assigns[:rdv_wizard].present? ? "post" : "patch"
+  territories = Territory.joins(organisations: :user_profiles).where(user_profiles: { user_id: user.id }).to_a
 
 = simple_form_for user, url: form_url, method: form_method  do |f|
   = render "model_errors", model: user, f: f
