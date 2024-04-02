@@ -30,7 +30,7 @@ ruby:
   div= f.input :notify_by_sms
   - unless current_user.only_invited? || current_domain == Domain::RDV_MAIRIE
     - address_value = rdv_wizard.present? && user.address.nil? ? rdv_wizard.to_query[:where] : user.address
-    = f.input :address, input_html: {value: address_value, class: "places-js-container" }
+    = f.input :address, input_html: {value: address_value, class: "places-js-container" }, required: rdv_wizard&.motif&.home?
 
   - if territories.map(&:enable_address_details).any?
     = f.input :address_details, input_html: {class: "places-js-container" }
