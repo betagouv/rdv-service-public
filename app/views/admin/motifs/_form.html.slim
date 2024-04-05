@@ -7,7 +7,7 @@
       h5.card-title Configuration générale
       .form-row
         .col-md-6
-          = f.association :service, collection: current_territory.services, input_html: { \
+          = f.association :service, collection: current_territory.services.reject(&:secretariat?), input_html: { \
             class: "select2-input", \
             data: { \
               placeholder: "Sélectionnez un service", \
@@ -22,8 +22,8 @@
             - Motif.where(organisation_id: current_agent.organisations).map(&:name).uniq.each do |org_name|
               option= org_name
       .form-row
-        .col-md-4= f.input :default_duration_in_min
-        .col-md-4= f.input :color, as: "color"
+        .col-md-6= f.input :default_duration_in_min
+        .col-md-6= f.input :color, as: "color"
 
   - if current_organisation.territory.motif_categories.present?
     .card
@@ -37,19 +37,20 @@
   .card
     .card-body
       h5.card-title= Motif.human_attribute_name("location_type")
-      - if motif.rdvs.empty?
-        - %i[public_office phone home].each do |value|
-          = label_tag do
-            = f.radio_button(:location_type, value)
-            span.ml-1= Motif.human_attribute_value(:location_type, value)
-            p.text-muted.font-14= Motif.human_attribute_value(:location_type, value, context: :hint)
-      - else
-        p.alert.alert-warning Ce motif est déjà utilisé dans au moins un RDV, il n'est pas possible de changer le type
-        - %i[public_office phone home].each do |value|
-          = label_tag do
-            = f.radio_button(:location_type, value, disabled: true)
-            span.text-muted.ml-1= Motif.human_attribute_value(:location_type, value)
-            p.text-muted.font-14= Motif.human_attribute_value(:location_type, value, context: :hint)
+      .mt-3.d-flex.flex-column
+        - if motif.rdvs.empty?
+          - %i[public_office phone home].each do |value|
+            = label_tag do
+              = f.radio_button(:location_type, value)
+              span.ml-1= Motif.human_attribute_value(:location_type, value)
+              p.text-muted.font-14= Motif.human_attribute_value(:location_type, value, context: :hint)
+        - else
+          p.alert.alert-warning Ce motif est déjà utilisé dans au moins un RDV, il n'est pas possible de changer le type
+          - %i[public_office phone home].each do |value|
+            = label_tag do
+              = f.radio_button(:location_type, value, disabled: true)
+              span.text-muted.ml-1= Motif.human_attribute_value(:location_type, value)
+              p.text-muted.font-14= Motif.human_attribute_value(:location_type, value, context: :hint)
 
   .card
     .card-body
@@ -104,8 +105,8 @@
             p.text-muted.font-14= "Les usagers pourront aussi prendre rendez-vous en ligne sur les plages d'ouverture définies par les agents de #{@motif.organisation.name}"
 
       .form-row.js-rdvs-editable
-        .col-md-4= f.input :min_public_booking_delay, collection: min_max_delay_options
-        .col-md-4= f.input :max_public_booking_delay, collection: min_max_delay_options
+        .col-md-6= f.input :min_public_booking_delay, collection: min_max_delay_options
+        .col-md-6= f.input :max_public_booking_delay, collection: min_max_delay_options
 
       .js-rdvs-editable
         = f.input(:rdvs_editable_by_user)

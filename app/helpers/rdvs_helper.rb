@@ -80,7 +80,7 @@ module RdvsHelper
       dates_interval_until(params[:end])
     else
       # Both Dates are valid
-      [format_date(params[:start]), format_date(params[:end])].uniq.join(" - ")
+      [format_date(params[:start]), format_date(params[:end])].join(" - ")
     end
   end
 

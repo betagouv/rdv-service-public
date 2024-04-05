@@ -7,7 +7,6 @@ class ExportZonesService
   end
 
   def perform
-    Spreadsheet.client_encoding = "UTF-8"
     workbook = Spreadsheet::Workbook.new
     sheet = workbook.create_worksheet
     sheet.row(0).concat(HEADER)

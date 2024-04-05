@@ -23,11 +23,5 @@ RSpec.describe "Edit territory", type: :request do
       put admin_territory_path(territory), params: { territory: { phone_number: "0101010101" } }
       expect(territory.reload.phone_number).to eq("0101010101")
     end
-
-    it "set user visibility to whole territory" do
-      expect(territory.reload.visible_users_throughout_the_territory).to eq(false)
-      put admin_territory_path(territory), params: { territory: { visible_users_throughout_the_territory: true } }
-      expect(territory.reload.visible_users_throughout_the_territory).to eq(true)
-    end
   end
 end

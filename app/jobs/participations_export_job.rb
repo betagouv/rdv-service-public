@@ -6,12 +6,19 @@ class ParticipationsExportJob < ExportJob
     rdvs = Rdv.search_for(organisations, options)
     participations = Participation.where(rdv_id: rdvs.select(:id)).order(id: :desc)
 
-    redis_key = "ParticipationsExportJob-#{SecureRandom.uuid}"
-    batch = GoodJob::Batch.new(redis_key: redis_key, file_name: file_name, agent_id: agent.id)
+    export = Export.create!(
+      export_type: Export::PARTICIPATIONS_EXPORT,
+      agent: agent,
+      file_name: file_name,
+      organisation_ids: organisation_ids,
+      options: options
+    )
+
+    batch = GoodJob::Batch.new(export_id: export.id)
 
     batch.add do
       participations.ids.each_slice(200).to_a.each_with_index do |participations_batch, page_index|
-        ParticipationsExportPageJob.perform_later(participations_batch, page_index, redis_key)
+        ParticipationsExportPageJob.perform_later(participations_batch, page_index, export.id)
       end
     end
 

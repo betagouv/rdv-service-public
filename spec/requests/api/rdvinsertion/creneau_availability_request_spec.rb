@@ -104,9 +104,9 @@ RSpec.describe "Available Creneaux Count for Invitation", swagger_doc: "v1/api.j
       let!(:plage_ouverture_follow_up) { create(:plage_ouverture, agent: agent, motifs: [motif_follow_up], lieu: lieu2, organisation: organisation1) }
       let!(:plage_ouverture_with_secto) { create(:plage_ouverture, motifs: [motif_with_secto], lieu: lieu, organisation: org_with_secto) }
 
-      let!(:lieu) { create(:lieu, name: "Bordeaux Centre", address: "Place de la bourse, 33000 Bordeaux", organisation: organisation1) }
-      let!(:lieu2) { create(:lieu, name: "Bruges", address: "3 Rue Gabriel Fauré, 33520 Bruges", organisation: organisation1) }
-      let!(:lieu3) { create(:lieu, name: "Loin de Bordeaux", address: "7 Av. du Commandant l'Herminier, 33740 Arès", organisation: other_org_without_po) }
+      let!(:lieu) { create(:lieu, name: "Bordeaux Centre", address: "Place de la bourse, Bordeaux, 33000", organisation: organisation1) }
+      let!(:lieu2) { create(:lieu, name: "Bruges", address: "3 Rue Gabriel Fauré, Bruges, 33520", organisation: organisation1) }
+      let!(:lieu3) { create(:lieu, name: "Loin de Bordeaux", address: "7 Av. du Commandant l'Herminier, Arès, 33740", organisation: other_org_without_po) }
 
       let(:auth_headers) { api_auth_headers_for_agent(agent) }
       let(:"access-token") { auth_headers["access-token"].to_s }

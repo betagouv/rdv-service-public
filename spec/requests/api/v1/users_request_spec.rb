@@ -78,7 +78,7 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
       parameter name: "birth_date", in: :query, type: :string, description: "Date de naissance", example: "1976-10-01", required: false
       parameter name: "email", in: :query, type: :string, description: "Email", example: "johnny@77.com", required: false
       parameter name: "phone_number", in: :query, type: :string, description: "Numéro de téléphone", example: "33600008012", required: false
-      parameter name: "address", in: :query, type: :string, description: "Adresse", example: "10 rue du Havre, Paris", required: false
+      parameter name: "address", in: :query, type: :string, description: "Adresse", example: "10 rue du Havre, Paris, 75016", required: false
       parameter name: "caisse_affiliation", in: :query, type: :string, description: "Caisse d'affiliation", example: "caf", required: false
       parameter name: "affiliation_number", in: :query, type: :string, description: "Numéro d'affiliation", example: "101010", required: false
       parameter name: "family_situation", in: :query, type: :string, description: "Situation familiale", example: "single", required: false
@@ -106,7 +106,7 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
         let(:birth_date) { "1976-10-01" }
         let(:email) { "jean@jacques.fr" }
         let(:phone_number) { "33600008012" }
-        let(:address) { "10 rue du Havre, Paris" }
+        let(:address) { "10 rue du Havre, Paris, 75016" }
         let(:caisse_affiliation) { "caf" }
         let(:affiliation_number) { "101010" }
         let(:family_situation) { "single" }
@@ -179,7 +179,7 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
         end
 
         let(:first_name) { "Alain" }
-        let(:address) { "10 rue du Havre, Paris" }
+        let(:address) { "10 rue du Havre, Paris, 75016" }
 
         schema "$ref" => "#/components/schemas/user_with_root"
 
@@ -321,7 +321,7 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
       parameter name: "birth_date", in: :query, type: :string, description: "Date de naissance", example: "1976-10-01", required: false
       parameter name: "email", in: :query, type: :string, description: "Email", example: "johnny@77.com", required: false
       parameter name: "phone_number", in: :query, type: :string, description: "Numéro de téléphone", example: "33600008012", required: false
-      parameter name: "address", in: :query, type: :string, description: "Adresse", example: "10 rue du Havre, Paris", required: false
+      parameter name: "address", in: :query, type: :string, description: "Adresse", example: "10 rue du Havre, Paris, 75016", required: false
       parameter name: "caisse_affiliation", in: :query, type: :string, description: "Caisse d'affiliation", example: "caf", required: false
       parameter name: "affiliation_number", in: :query, type: :string, description: "Numéro d'affiliation", example: "101010", required: false
       parameter name: "family_situation", in: :query, type: :string, description: "Situation familiale", example: "single", required: false
@@ -345,7 +345,7 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
         let(:birth_date) { "1976-10-01" }
         let(:email) { "jean@jacques.fr" }
         let(:phone_number) { "33600008012" }
-        let(:address) { "10 rue du Havre, Paris" }
+        let(:address) { "10 rue du Havre, Paris, 75016" }
         let(:caisse_affiliation) { "caf" }
         let(:affiliation_number) { "101010" }
         let(:family_situation) { "single" }

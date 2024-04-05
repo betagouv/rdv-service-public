@@ -11,7 +11,7 @@ RSpec.describe "User can be invited" do
   let(:now) { Time.zone.parse("2021-12-13 10:30") }
   let!(:user) do
     create(:user, first_name: "john", last_name: "doe", email: "johndoe@gmail.com",
-                  phone_number: "0682605955", address: "26 avenue de la resistance",
+                  phone_number: "0682605955", address: "26 avenue de la resistance, Paris, 75016",
                   birth_date: Date.new(1988, 12, 20),
                   organisations: [organisation])
   end
@@ -49,7 +49,7 @@ RSpec.describe "User can be invited" do
     it "shows the available lieux to take a rdv", js: true do
       visit prendre_rdv_path(
         departement: departement_number, city_code: city_code, invitation_token: invitation_token,
-        address: "16 rue de la résistance", motif_category_short_name: "rsa_orientation"
+        address: "16 rue de la résistance, Paris, 75016", motif_category_short_name: "rsa_orientation"
       )
 
       # Lieu selection
@@ -128,7 +128,7 @@ RSpec.describe "User can be invited" do
       it "does not show the lieux" do
         visit prendre_rdv_path(
           departement: departement_number, city_code: city_code, invitation_token: invitation_token,
-          address: "16 rue de la résistance", motif_category_short_name: "rsa_orientation"
+          address: "16 rue de la résistance, Paris, 75016", motif_category_short_name: "rsa_orientation"
         )
 
         expect(page).not_to have_content(lieu.name)
@@ -155,7 +155,7 @@ RSpec.describe "User can be invited" do
 
       visit prendre_rdv_path(
         departement: departement_number, city_code: city_code, invitation_token: invitation_token,
-        address: "16 rue de la résistance", motif_category_short_name: "rsa_orientation"
+        address: "16 rue de la résistance, Paris, 75016", motif_category_short_name: "rsa_orientation"
       )
 
       # Motif selection
@@ -200,7 +200,7 @@ RSpec.describe "User can be invited" do
       it "shows the available motifs for the preselected orgs" do
         visit prendre_rdv_path(
           departement: departement_number, city_code: city_code, invitation_token: invitation_token,
-          address: "16 rue de la résistance", motif_category_short_name: "rsa_orientation", organisation_ids: [organisation.id]
+          address: "16 rue de la résistance, Paris, 75016", motif_category_short_name: "rsa_orientation", organisation_ids: [organisation.id]
         )
 
         # It directly selects the first motif and goes to lieu selection
@@ -216,7 +216,7 @@ RSpec.describe "User can be invited" do
       it "does not show the motifs that can be booked through invitation only" do
         visit prendre_rdv_path(
           departement: departement_number, city_code: city_code, invitation_token: invitation_token,
-          address: "16 rue de la résistance", motif_category_short_name: "rsa_orientation"
+          address: "16 rue de la résistance, Paris, 75016", motif_category_short_name: "rsa_orientation"
         )
 
         expect(page).to have_content(motif2.name)
@@ -232,7 +232,7 @@ RSpec.describe "User can be invited" do
       it "shows the geo search available organisation to take a rdv", js: true do
         visit prendre_rdv_path(
           departement: departement_number, city_code: city_code, invitation_token: invitation_token,
-          address: "16 rue de la résistance", motif_category_short_name: "rsa_orientation"
+          address: "16 rue de la résistance, Paris, 75016", motif_category_short_name: "rsa_orientation"
         )
 
         # Organisation selection
@@ -282,7 +282,7 @@ RSpec.describe "User can be invited" do
 
       visit prendre_rdv_path(
         departement: departement_number, city_code: city_code, invitation_token: invitation_token,
-        address: "16 rue de la résistance", motif_category_short_name: "rsa_orientation",
+        address: "16 rue de la résistance, Paris, 75016", motif_category_short_name: "rsa_orientation",
         organisation_ids: [organisation.id, organisation2.id]
       )
     end
@@ -299,7 +299,7 @@ RSpec.describe "User can be invited" do
     it "priorize the session invitation attributes to the url attributes" do
       visit prendre_rdv_path(
         departement: departement_number, city_code: city_code, invitation_token: invitation_token,
-        address: "16 rue de la résistance", lieu_id: lieu.id
+        address: "16 rue de la résistance, Paris, 75016", lieu_id: lieu.id
       )
 
       expect(page).to have_content(lieu.name)
@@ -307,7 +307,7 @@ RSpec.describe "User can be invited" do
 
       visit prendre_rdv_path(
         departement: departement_number, city_code: city_code,
-        address: "16 rue de la résistance", lieu_id: lieu2.id
+        address: "16 rue de la résistance, Paris, 75016", lieu_id: lieu2.id
       )
 
       expect(page).to have_content(lieu.name)
