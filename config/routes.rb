@@ -154,7 +154,7 @@ Rails.application.routes.draw do
 
       # Routes pour les ressources du calendrier.
       # TODO trouver un meilleur nom pour éviter la nécessité de ce commentaire :)
-      resources :agents, only: %i[], module: :agents do
+      namespace :agenda do
         resources :plage_ouvertures, only: [:index]
         resources :rdvs, only: [:index]
         resources :absences, only: [:index]

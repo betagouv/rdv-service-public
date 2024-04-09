@@ -1,4 +1,4 @@
-class Admin::Agents::RdvsController < ApplicationController
+class Admin::Agenda::RdvsController < ApplicationController
   include Admin::AuthenticatedControllerConcern
   respond_to :json
 

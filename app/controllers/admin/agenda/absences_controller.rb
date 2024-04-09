@@ -1,4 +1,4 @@
-class Admin::Agents::AbsencesController < ApplicationController
+class Admin::Agenda::AbsencesController < ApplicationController
   include Admin::AuthenticatedControllerConcern
   respond_to :json
 

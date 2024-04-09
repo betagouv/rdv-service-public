@@ -1,4 +1,4 @@
-class Admin::Agents::PlageOuverturesController < ApplicationController
+class Admin::Agenda::PlageOuverturesController < ApplicationController
   include Admin::AuthenticatedControllerConcern
   respond_to :json
 
