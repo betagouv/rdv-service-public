@@ -1,7 +1,4 @@
-class Admin::Agenda::PlageOuverturesController < ApplicationController
-  include Admin::AuthenticatedControllerConcern
-  respond_to :json
-
+class Admin::Agenda::PlageOuverturesController < Admin::Agenda::FullCalendarController
   def index
     @agent = Agent.find(params[:agent_id])
     @organisation = Organisation.find(params[:organisation_id])
@@ -21,16 +18,5 @@ class Admin::Agenda::PlageOuverturesController < ApplicationController
     context = AgentOrganisationContext.new(current_agent, @organisation)
     Agent::PlageOuverturePolicy::DepartementScope.new(context, PlageOuverture)
       .resolve
-  end
-
-  def date_range_params
-    start_param = Date.parse(params[:start])
-    end_param = Date.parse(params[:end])
-    start_param..end_param
-  end
-  helper_method :date_range_params
-
-  def pundit_user
-    AgentContext.new(current_agent)
   end
 end

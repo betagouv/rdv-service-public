@@ -1,7 +1,4 @@
-class Admin::Agenda::RdvsController < ApplicationController
-  include Admin::AuthenticatedControllerConcern
-  respond_to :json
-
+class Admin::Agenda::RdvsController < Admin::Agenda::FullCalendarController
   def index
     agent = Agent.find(params[:agent_id])
     @organisation = Organisation.find(params[:organisation_id])
@@ -19,17 +16,5 @@ class Admin::Agenda::RdvsController < ApplicationController
     context = AgentOrganisationContext.new(current_agent, @organisation)
     Agent::RdvPolicy::DepartementScope.new(context, Rdv)
       .resolve
-  end
-
-  def pundit_user
-    AgentContext.new(current_agent)
-  end
-
-  def date_range_params
-    return unless params[:start].present? && params[:end].present?
-
-    start_param = Time.zone.parse(params[:start])
-    end_param = Time.zone.parse(params[:end])
-    start_param..end_param
   end
 end
