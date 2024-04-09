@@ -18,7 +18,7 @@ class SmsSender < BaseService
       content,
     ].compact
       .join("\n")
-      .tr("áâãëẽêíïîĩóôõúûũçÀÁÂÃÈËẼÊÌÍÏÎĨÒÓÔÕÙÚÛŨ", "aaaeeeiiiiooouuucAAAAEEEEIIIIIOOOOUUUU")
+      .tr("áâãçëẽêíïîĩóôõúûũÀÁÂÃÇÈËẼÊÌÍÏÎĨÒÓÔÕÙÚÛŨ", "aaaceeeiiiiooouuuAAAACEEEEIIIIIOOOOUUUU")
       .gsub("œ", "oe")
   end
 
