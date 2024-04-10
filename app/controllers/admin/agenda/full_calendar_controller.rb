@@ -4,10 +4,14 @@ class Admin::Agenda::FullCalendarController < ApplicationController
 
   private
 
+  def time_range_params
+    start_time = params.require(:start)
+    end_time = params.require(:end)
+    Time.zone.parse(start_time)..Time.zone.parse(end_time)
+  end
+
   def date_range_params
-    start_param = Date.parse(params[:start])
-    end_param = Date.parse(params[:end])
-    start_param..end_param
+    (time_range_params.begin.to_date)..(time_range_params.end.to_date)
   end
   helper_method :date_range_params
 

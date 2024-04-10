@@ -5,7 +5,7 @@ class Admin::Agenda::RdvsController < Admin::Agenda::FullCalendarController
     @rdvs = custom_policy
       .merge(agent.rdvs)
       .includes(%i[organisation lieu motif users participations])
-    @rdvs = @rdvs.where(starts_at: date_range_params) if date_range_params.present?
+    @rdvs = @rdvs.where(starts_at: time_range_params)
     @rdvs = @rdvs.where(status: Rdv::NOT_CANCELLED_STATUSES) unless current_agent.display_cancelled_rdv
   end
 
@@ -16,11 +16,5 @@ class Admin::Agenda::RdvsController < Admin::Agenda::FullCalendarController
     context = AgentOrganisationContext.new(current_agent, @organisation)
     Agent::RdvPolicy::DepartementScope.new(context, Rdv)
       .resolve
-  end
-
-  def date_range_params
-    start_param = Time.zone.parse(params[:start])
-    end_param = Time.zone.parse(params[:end])
-    start_param..end_param
   end
 end
