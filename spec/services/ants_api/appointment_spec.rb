@@ -25,7 +25,7 @@ RSpec.describe AntsApi::Appointment, type: :service do
   describe "#create" do
     context "when creation is successful" do
       before do
-        stub_request(:post, "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/appointments?application_id=XXXX&appointment_date=2023-04-03T08:45:00&management_url=https://gerer-rdv.com&meeting_point=Mairie%20de%20Sannois").to_return(
+        stub_request(:post, "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/appointments?application_id=XXXX&appointment_date=2023-04-03T08:45:00&management_url=https://gerer-rdv.com&meeting_point=Mairie%20de%20Sannois&meeting_point_id=123456").to_return(
           status: 200,
           body: <<~JSON
             {
@@ -36,7 +36,7 @@ RSpec.describe AntsApi::Appointment, type: :service do
       end
 
       it "returns request body" do
-        appointment = described_class.new(application_id: "XXXX", management_url: "https://gerer-rdv.com", meeting_point: "Mairie de Sannois", appointment_date: "2023-04-03T08:45:00")
+        appointment = described_class.new(application_id: "XXXX", management_url: "https://gerer-rdv.com", meeting_point_id: "123456", meeting_point: "Mairie de Sannois", appointment_date: "2023-04-03T08:45:00")
         expect(appointment.create).to eq({ "success" => true })
       end
     end
