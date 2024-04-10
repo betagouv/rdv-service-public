@@ -9,7 +9,11 @@ RSpec.describe Admin::Agenda::RdvsController, type: :controller do
       end: "2024-04-13T00:00:00", # FullCalendar utilise cette valeur pour indiquer "jusqu'au vendredi 12 inclus"
     }
   end
-  let(:now) { Time.zone.parse("2024-04-08 15:00:00") }
+  let(:aujourdhui_lundi_15h) { Time.zone.parse("2024-04-08 15:00:00") }
+  let(:mercredi_15h) { Time.zone.parse("2024-04-10 15:00:00") }
+  let(:samedi_15h) { Time.zone.parse("2024-04-13 15:00:00") }
+  let(:mardi_en_huit_15h) { Time.zone.parse("2024-04-16 15:00:00") }
+  let(:vendredi_dernier_15h) { Time.zone.parse("2024-04-05 15:00:00") }
 
   let(:organisation) { create(:organisation) }
   let(:other_organisation) { create(:organisation) }
@@ -23,11 +27,11 @@ RSpec.describe Admin::Agenda::RdvsController, type: :controller do
   end
 
   it "returns rdvs of given agent across organisations" do
-    travel_to(now)
+    travel_to(aujourdhui_lundi_15h)
     given_agent = create(:agent, basic_role_in_organisations: [organisation], service: agent.services.first)
     create(:rdv, agents: [agent])
-    rdv = create(:rdv, agents: [given_agent], organisation: organisation, starts_at: now + 3.days)
-    rdv_from_other_organisation = create(:rdv, agents: [given_agent], organisation: other_organisation, starts_at: now + 4.days)
+    rdv = create(:rdv, agents: [given_agent], organisation: organisation, starts_at: mercredi_15h)
+    rdv_from_other_organisation = create(:rdv, agents: [given_agent], organisation: other_organisation, starts_at: mercredi_15h)
     get :index, params: fullcalendar_time_range_params.merge(agent_id: given_agent.id, organisation_id: organisation.id, format: :json)
 
     returns_rdvs = JSON.parse(response.body)
@@ -38,13 +42,13 @@ RSpec.describe Admin::Agenda::RdvsController, type: :controller do
   end
 
   it "returns rdvs of given agent from start to end" do
-    travel_to(now - 2.days)
-    create(:rdv, agents: [agent], organisation: organisation, starts_at: now - 1.day)
-    rdv = create(:rdv, agents: [agent], organisation: organisation, starts_at: now + 2.days)
-    create(:rdv, agents: [agent], organisation: organisation, starts_at: now + 8.days)
-    travel_to(now)
+    travel_to(aujourdhui_lundi_15h)
+    create(:rdv, agents: [agent], organisation: organisation, starts_at: vendredi_dernier_15h)
+    rdv = create(:rdv, agents: [agent], organisation: organisation, starts_at: mercredi_15h)
+    create(:rdv, agents: [agent], organisation: organisation, starts_at: samedi_15h)
+    create(:rdv, agents: [agent], organisation: organisation, starts_at: mardi_en_huit_15h)
 
-    get :index, params: fullcalendar_time_range_params.merge(agent_id: agent.id, organisation_id: organisation.id, start: now, end: now + 7.days, format: :json)
+    get :index, params: fullcalendar_time_range_params.merge(agent_id: agent.id, organisation_id: organisation.id, format: :json)
     expect(JSON.parse(response.body).pluck("id")).to eq([rdv.id])
   end
 end
