@@ -261,6 +261,14 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_21_114146) do
     t.index ["rdv_id"], name: "index_agents_rdvs_on_rdv_id"
   end
 
+  create_table "api_calls", force: :cascade do |t|
+    t.datetime "received_at", null: false
+    t.jsonb "raw_http", null: false
+    t.string "controller_name", null: false
+    t.string "action_name", null: false
+    t.bigint "agent_id", null: false
+  end
+
   create_table "exports", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.enum "export_type", null: false, enum_type: "export_type"
     t.datetime "computed_at"
@@ -790,6 +798,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_21_114146) do
   add_foreign_key "agent_territorial_roles", "territories"
   add_foreign_key "agents_rdvs", "agents"
   add_foreign_key "agents_rdvs", "rdvs"
+  add_foreign_key "api_calls", "agents"
   add_foreign_key "exports", "agents"
   add_foreign_key "file_attentes", "rdvs"
   add_foreign_key "file_attentes", "users"
