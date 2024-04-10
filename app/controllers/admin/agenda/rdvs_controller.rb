@@ -17,4 +17,10 @@ class Admin::Agenda::RdvsController < Admin::Agenda::FullCalendarController
     Agent::RdvPolicy::DepartementScope.new(context, Rdv)
       .resolve
   end
+
+  def date_range_params
+    start_param = Time.zone.parse(params[:start])
+    end_param = Time.zone.parse(params[:end])
+    start_param..end_param
+  end
 end
