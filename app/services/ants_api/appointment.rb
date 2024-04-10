@@ -2,19 +2,20 @@ module AntsApi
   class Appointment
     class ApiRequestError < StandardError; end
 
-    attr_reader :application_id, :meeting_point, :appointment_date, :management_url
+    attr_reader :application_id, :meeting_point_id, :meeting_point, :appointment_date, :management_url
 
-    def initialize(application_id:, meeting_point:, appointment_date:, management_url:, editor_comment: nil)
+    def initialize(application_id:, meeting_point:, appointment_date:, management_url:, meeting_point_id: nil)
       @application_id = application_id
+      @meeting_point_id = meeting_point_id
       @meeting_point = meeting_point
       @appointment_date = appointment_date
       @management_url = management_url
-      @editor_comment = editor_comment
     end
 
     def to_request_params
       {
         application_id: application_id,
+        meeting_point_id: meeting_point_id,
         meeting_point: meeting_point,
         appointment_date: appointment_date,
         management_url: management_url,
