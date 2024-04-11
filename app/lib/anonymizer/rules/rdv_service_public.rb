@@ -38,6 +38,7 @@ class Anonymizer::Rules::RdvServicePublic
         confirmed_at confirmation_sent_at created_at updated_at created_through invitation_accepted_at invitation_created_at
         text_search_terms deleted_at invitation_limit reset_password_sent_at invitation_sent_at
         invitations_count invited_by_id invited_by_type invited_through notify_by_email notify_by_sms logged_once_with_franceconnect
+        rdv_invitation_token_updated_at
       ],
     },
     agents: {
