@@ -2,13 +2,20 @@ module AntsApi
   class Appointment
     class ApiRequestError < StandardError; end
 
+    # Voir la liste des attributs sur la doc API :
+    # https://api-coordination.rendezvouspasseport.ants.gouv.fr/docs
     def initialize(application_id:, appointment_data:)
       @application_id = application_id
+
       appointment_data = appointment_data.with_indifferent_access
+
+      # required attrs
+      @appointment_date = appointment_data.fetch(:appointment_date)
+      @management_url = appointment_data.fetch(:management_url)
+      @meeting_point = appointment_data.fetch(:meeting_point)
+
+      # optional attrs
       @meeting_point_id = appointment_data[:meeting_point_id]
-      @meeting_point = appointment_data[:meeting_point]
-      @appointment_date = appointment_data[:appointment_date]
-      @management_url = appointment_data[:management_url]
     end
 
     def to_request_params
