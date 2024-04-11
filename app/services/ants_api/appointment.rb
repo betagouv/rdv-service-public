@@ -2,12 +2,13 @@ module AntsApi
   class Appointment
     class ApiRequestError < StandardError; end
 
-    def initialize(application_id:, meeting_point:, appointment_date:, management_url:, meeting_point_id: nil)
+    def initialize(application_id:, appointment_data:)
       @application_id = application_id
-      @meeting_point_id = meeting_point_id
-      @meeting_point = meeting_point
-      @appointment_date = appointment_date
-      @management_url = management_url
+      appointment_data = appointment_data.with_indifferent_access
+      @meeting_point_id = appointment_data[:meeting_point_id]
+      @meeting_point = appointment_data[:meeting_point]
+      @appointment_date = appointment_data[:appointment_date]
+      @management_url = appointment_data[:management_url]
     end
 
     def to_request_params
@@ -51,12 +52,12 @@ module AntsApi
         appointment_data = load_appointments(application_id).find do |appointment|
           appointment["management_url"] == management_url
         end
-        Appointment.new(application_id: application_id, **appointment_data.symbolize_keys) if appointment_data
+        Appointment.new(application_id: application_id, appointment_data: appointment_data) if appointment_data
       end
 
       def first(application_id:, timeout: nil)
         appointment_data = load_appointments(application_id, timeout: timeout).first
-        Appointment.new(application_id: application_id, **appointment_data.symbolize_keys) if appointment_data
+        Appointment.new(application_id: application_id, appointment_data: appointment_data) if appointment_data
       end
 
       def status(application_id:, timeout: nil)

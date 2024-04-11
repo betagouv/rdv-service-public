@@ -49,7 +49,7 @@ module Ants
       users.each do |user|
         existing_appointment(user)&.delete
 
-        AntsApi::Appointment.new(application_id: user.ants_pre_demande_number, **@appointment_data).create
+        AntsApi::Appointment.new(application_id: user.ants_pre_demande_number, appointment_data: @appointment_data).create
       end
     end
 

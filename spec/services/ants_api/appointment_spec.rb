@@ -38,10 +38,12 @@ RSpec.describe AntsApi::Appointment, type: :service do
       it "returns request body" do
         appointment = described_class.new(
           application_id: "XXXX",
-          management_url: "https://gerer-rdv.com",
-          meeting_point_id: "123456",
-          meeting_point: "Mairie de Sannois",
-          appointment_date: "2023-04-03T08:45:00"
+          appointment_data: {
+            management_url: "https://gerer-rdv.com",
+            meeting_point_id: "123456",
+            meeting_point: "Mairie de Sannois",
+            appointment_date: "2023-04-03T08:45:00",
+          }
         )
         expect(appointment.create).to eq({ "success" => true })
       end
