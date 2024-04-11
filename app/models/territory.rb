@@ -1,5 +1,9 @@
 class Territory < ApplicationRecord
+  has_paper_trail
+
   MAIRIES_NAME = "Mairies".freeze
+  CN_DEPARTEMENT_NUMBER = "CN".freeze
+
   # Mixins
   include PhoneNumberValidation::HasPhoneNumber
 
@@ -39,7 +43,7 @@ class Territory < ApplicationRecord
   validates :departement_number, length: { maximum: 3 }, if: -> { departement_number.present? }
   validates :name, presence: true, if: -> { persisted? }
   validate do
-    if name_was == MAIRIES_NAME
+    if name_changed? && name_was == MAIRIES_NAME
       errors.add(:name, "Le nom de ce territoire permet de le brancher au moteur de recherche de l'ANTS et ne peut pas être changé")
     end
   end
@@ -79,6 +83,14 @@ class Territory < ApplicationRecord
 
   def self.mairies
     find_by(name: MAIRIES_NAME)
+  end
+
+  def mairies?
+    name == MAIRIES_NAME
+  end
+
+  def cn?
+    departement_number == CN_DEPARTEMENT_NUMBER
   end
 
   def sectorized?

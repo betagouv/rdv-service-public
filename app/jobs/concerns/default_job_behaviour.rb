@@ -9,10 +9,7 @@ module DefaultJobBehaviour
     around_perform do |_job, block|
       Sentry.with_scope do |scope|
         scope.set_context(:job, { job_id: job_id, queue_name: queue_name, arguments: arguments })
-
-        Timeout.timeout(hard_timeout) do
-          block.call
-        end
+        block.call
       rescue StandardError => e
         # Setting the fingerprint after the error occurs, allow us to capture failure responses and error codes
         scope.set_fingerprint(sentry_fingerprint) if sentry_fingerprint.present?
@@ -39,10 +36,6 @@ module DefaultJobBehaviour
 
   def log_failure_to_sentry?(_exception)
     true
-  end
-
-  def hard_timeout
-    30.seconds
   end
 
   def sentry_fingerprint

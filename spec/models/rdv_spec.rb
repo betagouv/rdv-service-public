@@ -203,25 +203,25 @@ RSpec.describe Rdv, type: :model do
     end
 
     it "return mds address for a public_office rdv" do
-      lieu = build(:lieu, address: "16 rue de l'adresse 12345 Ville", name: "PMI centre ville")
+      lieu = build(:lieu, address: "16 rue de l'adresse, Ville, 12345", name: "PMI centre ville")
       rdv = build(:rdv, motif: build(:motif, :at_public_office), lieu: lieu)
-      expect(rdv.address_without_personal_information).to eq("PMI centre ville (16 rue de l'adresse 12345 Ville)")
+      expect(rdv.address_without_personal_information).to eq("PMI centre ville (16 rue de l'adresse, Ville, 12345)")
     end
 
     it "indicates a lieu is single_use" do
-      lieu = build(:lieu, address: "16 rue de l'adresse 12345 Ville", name: "Café de la gare", availability: :single_use)
+      lieu = build(:lieu, address: "16 rue de l'adresse, Ville, 12345", name: "Café de la gare", availability: :single_use)
       rdv = build(:rdv, motif: build(:motif, :at_public_office), lieu: lieu)
-      expect(rdv.address_without_personal_information).to eq("Café de la gare (16 rue de l'adresse 12345 Ville) (Ponctuel)")
+      expect(rdv.address_without_personal_information).to eq("Café de la gare (16 rue de l'adresse, Ville, 12345) (Ponctuel)")
     end
 
     it "return only city for a at_home rdv" do
-      user = build(:user, address: "3 rue de l'église 75020 Paris", post_code: "75020", city_name: "Paris")
+      user = build(:user, address: "3 rue de l'église, Paris, 75020", post_code: "75020", city_name: "Paris")
       rdv = build(:rdv, motif: build(:motif, :at_home), users: [user])
       expect(rdv.address_without_personal_information).to eq("À domicile (75020 Paris)")
     end
 
     it "return nothing for a at_home rdv if city is blank" do
-      user = build(:user, address: "3 rue de l'église 75020 Paris")
+      user = build(:user, address: "3 rue de l'église, Paris, 75020")
       rdv = build(:rdv, motif: build(:motif, :at_home), users: [user])
       expect(rdv.address_without_personal_information).to eq("À domicile")
     end

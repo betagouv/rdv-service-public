@@ -14,11 +14,5 @@ module Outlook
       end
       agent.update!(microsoft_graph_token: nil, refresh_microsoft_graph_token: nil, outlook_disconnect_in_progress: false)
     end
-
-    private
-
-    def hard_timeout
-      20.minutes
-    end
   end
 end

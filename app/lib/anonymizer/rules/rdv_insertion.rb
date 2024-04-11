@@ -10,7 +10,7 @@ class Anonymizer::Rules::RdvInsertion
   RULES = {
     agents: {
       anonymized_column_names: %w[email first_name last_name],
-      non_anonymized_column_names: %w[super_admin last_sign_in_at created_at updated_at last_webhook_update_received_at rdv_solidarites_agent_id],
+      non_anonymized_column_names: %w[super_admin last_sign_in_at created_at updated_at last_webhook_update_received_at rdv_solidarites_agent_id inclusion_connect_open_id_sub],
     },
     agent_roles: {
       anonymized_column_names: %w[],
@@ -56,6 +56,19 @@ class Anonymizer::Rules::RdvInsertion
         organisation_id
       ],
     },
+    csv_exports: {
+      anonymized_column_names: %w[],
+      non_anonymized_column_names: %w[
+        agent_id
+        created_at
+        updated_at
+        structure_id
+        structure_type
+        motif_category_id
+        purged_at
+        kind
+      ],
+    },
     departments: {
       anonymized_column_names: %w[phone_number email],
       non_anonymized_column_names: %w[name number region pronoun capital created_at updated_at display_in_stats carnet_de_bord_deploiement_id],
@@ -92,7 +105,6 @@ class Anonymizer::Rules::RdvInsertion
       anonymized_column_names: %w[link help_phone_number rdv_solidarites_token],
       non_anonymized_column_names: %w[
         format
-        sent_at
         user_id
         created_at
         updated_at
@@ -176,7 +188,7 @@ class Anonymizer::Rules::RdvInsertion
       non_anonymized_column_names: %w[orientation_type user_id organisation_id agent_id starts_at ends_at created_at updated_at],
     },
     parcours_documents: {
-      non_anonymized_column_names: %w[department_id user_id agent_id type created_at updated_at],
+      non_anonymized_column_names: %w[department_id user_id agent_id type created_at updated_at document_date],
     },
     participations: {
       non_anonymized_column_names: %w[
@@ -184,6 +196,7 @@ class Anonymizer::Rules::RdvInsertion
         rdv_id
         status
         rdv_solidarites_participation_id
+        rdv_solidarites_agent_prescripteur_id
         created_at
         updated_at
         rdv_context_id
@@ -222,6 +235,7 @@ class Anonymizer::Rules::RdvInsertion
         rdv_solidarites_user_id
         department_internal_id
         uid
+        old_rdv_solidarites_user_id
         role
         created_at
         updated_at

@@ -54,7 +54,7 @@
                     = t(".existing_lieu_hint_html")
 
             - elsif @rdv_form.motif.home?
-              = f.input :address, label: "Lieu (RDV à domicile)", disabled: true
+              = f.input :address, label: "Lieu (RDV à domicile)", disabled: true, input_html: { class: "places-js-container" }
             = f.association :agents,
               collection: @rdv_form.motif.authorized_agents,
               label_method: :full_name_and_service,
