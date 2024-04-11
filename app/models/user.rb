@@ -65,17 +65,9 @@ class User < ApplicationRecord
   # Validations
   validates :last_name, :first_name, :created_through, presence: true
   validates :number_of_children, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
-  validates(
-    :ants_pre_demande_number,
-    format: {
-      with: /\A[A-Za-z0-9]+\z/,
-      message: "Seulement des nombres et lettres",
-      if: -> { ants_pre_demande_number.present? },
-    }
-  )
-  validates :ants_pre_demande_number, length: { is: 10 }, if: -> { ants_pre_demande_number.present? }
 
   validate :birth_date_validity
+  validate :ants_pre_demande_number_format, if: -> { ants_pre_demande_number.present? }
 
   # Hooks
   before_save :set_email_to_null_if_blank
@@ -293,5 +285,11 @@ class User < ApplicationRecord
       deleted_at: Time.zone.now,
       email: deleted_email
     )
+  end
+
+  def ants_pre_demande_number_format
+    unless Ants.valid_pre_demande_number?(ants_pre_demande_number)
+      errors.add(:ants_pre_demande_number, "doit comporter 10 chiffres et lettres")
+    end
   end
 end

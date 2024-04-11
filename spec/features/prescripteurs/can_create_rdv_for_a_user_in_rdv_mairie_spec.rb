@@ -150,6 +150,21 @@ RSpec.describe "prescripteur can create RDV for a user" do
     end
   end
 
+  context "ants_pre_demander number is invalid (too short)" do
+    let(:ants_pre_demande_number) { "123" }
+
+    it "prevents from creating the user / RDV" do
+      visit creneaux_url
+      click_on "Je suis un prescripteur qui oriente un bénéficiaire"
+
+      fill_up_prescripteur_and_user
+      click_on "Confirmer le rendez-vous"
+
+      expect(page).to have_content("Numéro de pré-demande doit comporter 10 chiffres et lettres")
+      expect(page).not_to have_content("Confirmer en ignorant les avertissements")
+    end
+  end
+
   def creneaux_url
     visit api_ants_availableTimeSlots_url(
       meeting_point_ids: lieu.id.to_s,
