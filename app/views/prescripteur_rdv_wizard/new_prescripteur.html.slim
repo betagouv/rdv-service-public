@@ -7,6 +7,18 @@ main.container
         = render "users/rdv_wizard_steps/rdv_wizard_summary", rdv_wizard: @rdv_wizard if @rdv_wizard.present?
         .card-body
           h3 Vos coordonnées de prescripteur
+          / TODO : Valider le wording, l'emplacement et le style du message. Est ce qu'on l'affiche pour les prescripteur non connectés pour les inviter à se créer un compte ?
+          - if @current_agent.present?
+            .alert.alert-success
+              p.mb-0
+                i.fa.fa-exclamation-triangle>
+                | Nouvelle fonctionnalité : Vous êtes agent et vous avez un compte sur RDV Solidarités ? Connectez vous pour bénéficier de la prescription interne (réduction doublons usagers...).
+              p.mb-0
+              span> Pour en savoir plus consultez
+              = link_to "https://rdvs.notion.site/Prescription-f1c857697c68421d91592ae88364c05d", target: "_blank" do
+                span> la documentation
+                i.fa.fa-external-link-alt>
+
           p
             = "Ces informations permettront à l'agent qui assure le rendez-vous de savoir qui l'a planifié, "
             = "et de vous contacter s'il y a une erreur sur le type de rendez-vous."
