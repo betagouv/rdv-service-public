@@ -29,6 +29,7 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
   end
 
   def rdv_invitation_token
+    @user.rdv_invitation_token_updated_at = Time.zone.now
     assign_rdv_invitation_token if @user.rdv_invitation_token.nil?
     render json: { invitation_token: @user.rdv_invitation_token }
   end
