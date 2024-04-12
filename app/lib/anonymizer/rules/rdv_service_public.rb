@@ -38,6 +38,7 @@ class Anonymizer::Rules::RdvServicePublic
         confirmed_at confirmation_sent_at created_at updated_at created_through invitation_accepted_at invitation_created_at
         text_search_terms deleted_at invitation_limit reset_password_sent_at invitation_sent_at
         invitations_count invited_by_id invited_by_type invited_through notify_by_email notify_by_sms logged_once_with_franceconnect
+        rdv_invitation_token_updated_at
       ],
     },
     agents: {
@@ -199,6 +200,11 @@ class Anonymizer::Rules::RdvServicePublic
     },
     file_attentes: {
       non_anonymized_column_names: %w[created_at updated_at notifications_sent last_creneau_sent_at],
+    },
+    api_calls: {
+      class_name: "ApiCall",
+      anonymized_column_names: %w[raw_http],
+      non_anonymized_column_names: %w[received_at controller_name action_name agent_id],
     },
     exports: {
       non_anonymized_column_names: %w[export_type computed_at expires_at agent_id file_name organisation_ids options created_at updated_at],
