@@ -119,8 +119,6 @@ jobs:
         run: yarn install
       - name: Precompile assets
         run: yarn run build
-      - name: Simulate Scalingo slug build
-        run: cat .slugignore | grep -v spec | xargs rm -r
       - name: Prepare runtime log cache key
         run: ls spec/**/*.rb > tmp/spec_files.txt
       - name: Cache parallel test unit spec runtime log
@@ -179,8 +177,6 @@ jobs:
         run: yarn install
       - name: Precompile assets
         run: yarn run build
-      - name: Simulate Scalingo slug build
-        run: cat .slugignore | grep -v spec | xargs rm -r
       - name: Prepare runtime log cache key
         run: ls spec/features/**/*.rb > tmp/feature_spec_files.txt
       - name: Cache parallel test feature spec runtime log
