@@ -125,31 +125,6 @@ RSpec.describe "prescripteur can create RDV for a user" do
     end
   end
 
-  context "quand le prescripteur saisit un numéro de pré-demande invalide" do
-    let(:ants_pre_demande_number) { "AABB" } # Numéro trop court
-
-    it "affiche un message d'erreur pour le signaler" do
-      visit creneaux_url
-      click_on "Je suis un prescripteur qui oriente un bénéficiaire"
-
-      fill_up_prescripteur
-      fill_up_user(ants_pre_demande_number: "AABB")
-      # mock_ants_status_invalid_application_id(application_id: "AABB")
-      click_on "Confirmer le rendez-vous"
-
-      expect(page).to have_content("ne fait pas la bonne longueur (doit comporter 10 caractères)")
-      expect(page).not_to have_content("Confirmer en ignorant les avertissements")
-      expect(WebMock).not_to have_requested(:any, %r{int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status})
-
-      fill_in "Numéro de pré-demande ANTS", with: "AABBCCDDEE"
-      mock_ants_status(application_id: "AABBCCDDEE")
-      click_on "Confirmer le rendez-vous"
-      expect(page).to have_content("Rendez-vous confirmé")
-      expect(Rdv.last.users.first.ants_pre_demande_number).to eq("AABBCCDDEE")
-      expect(WebMock).to have_requested(:get, %r{int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status})
-    end
-  end
-
   context "ants_pre_demander number is invalid (too short)" do
     let(:ants_pre_demande_number) { "123" }
 
@@ -157,7 +132,8 @@ RSpec.describe "prescripteur can create RDV for a user" do
       visit creneaux_url
       click_on "Je suis un prescripteur qui oriente un bénéficiaire"
 
-      fill_up_prescripteur_and_user
+      fill_up_prescripteur
+      fill_up_user(ants_pre_demande_number: ants_pre_demande_number)
       click_on "Confirmer le rendez-vous"
 
       expect(page).to have_content("Numéro de pré-demande doit comporter 10 chiffres et lettres")

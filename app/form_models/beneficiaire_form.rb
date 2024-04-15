@@ -13,30 +13,14 @@ class BeneficiaireForm
   attr_accessor(*ATTRIBUTES)
 
   validates_presence_of :first_name, :last_name
-  validate :user_is_valid
   validate :warn_no_contact_information
   validate :validate_phone_number
-
-  def user
-    return @user if defined?(@user)
-
-    user_from_params = User.new(**ATTRIBUTES.map { [_1, send(_1)] }.to_h)
-    duplicate = DuplicateUsersFinderService.find_duplicate_based_on_names_and_phone(user_from_params)
-    @user = duplicate || user_from_params
-  end
-
-  private
-
-  def user_is_valid
-    if user.invalid?
-      errors.merge!(user.errors)
-    else
-      User::Ants.validate_ants_pre_demande_number(
-        user: self,
-        ants_pre_demande_number: ants_pre_demande_number,
-        ignore_benign_errors: ignore_benign_errors
-      )
-    end
+  validate do
+    User::Ants.validate_ants_pre_demande_number(
+      user: self,
+      ants_pre_demande_number: ants_pre_demande_number,
+      ignore_benign_errors: ignore_benign_errors
+    )
   end
 
   def warn_no_contact_information

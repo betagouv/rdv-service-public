@@ -1,17 +1,17 @@
 class PrescripteurRdvWizard < UserRdvWizard::Base
   attr_accessor :prescripteur
 
-  def initialize(attributes, user, domain)
+  def initialize(attributes, domain)
     attributes = attributes.deep_symbolize_keys
     super(nil, attributes)
     @prescripteur = Prescripteur.new(attributes[:prescripteur]) if attributes[:prescripteur].present?
-    @user = user
+    @user_attributes = attributes[:user]
     @domain = domain
   end
 
   def create!
     ActiveRecord::Base.transaction do
-      save_user!
+      find_or_create_user
 
       if @rdv.collectif?
         create_participation!
@@ -50,10 +50,14 @@ class PrescripteurRdvWizard < UserRdvWizard::Base
     @participation ||= Participation.new(rdv: @rdv, user: @user, created_by: @prescripteur)
   end
 
-  def save_user!
+  def find_or_create_user
+    user_from_params = User.new(@user_attributes)
+    duplicate = DuplicateUsersFinderService.find_duplicate_based_on_names_and_phone(user_from_params)
+
+    @user = duplicate || user_from_params
+
     @user.skip_confirmation_notification! # Désactivation du mail Devise de confirmation de compte
-    @user.created_through ||= "prescripteur"
-    @user.save!
-    @user.user_profiles.find_or_create_by!(organisation_id: rdv.motif.organisation_id)
+    @user.created_through = "prescripteur"
+    @user.user_profiles.find_or_initialize_by(organisation_id: rdv.motif.organisation_id).save!
   end
 end
