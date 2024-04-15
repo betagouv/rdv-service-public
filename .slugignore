@@ -1,5 +1,5 @@
 spec
 docs
-tmp/cache
-node_modules
-.cache/yarn
+/tmp/cache
+/node_modules
+/.cache/yarn
