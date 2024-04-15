@@ -261,6 +261,14 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_10_082337) do
     t.index ["rdv_id"], name: "index_agents_rdvs_on_rdv_id"
   end
 
+  create_table "api_calls", force: :cascade do |t|
+    t.datetime "received_at", null: false
+    t.jsonb "raw_http", null: false
+    t.string "controller_name", null: false
+    t.string "action_name", null: false
+    t.bigint "agent_id", null: false
+  end
+
   create_table "exports", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.enum "export_type", null: false, enum_type: "export_type"
     t.datetime "computed_at"
@@ -722,6 +730,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_10_082337) do
     t.string "ants_pre_demande_number"
     t.string "rdv_invitation_token"
     t.virtual "text_search_terms", type: :tsvector, as: "(((((setweight(to_tsvector('simple'::regconfig, translate(lower((COALESCE(last_name, ''::character varying))::text), 'àâäéèêëïîôöùûüÿç'::text, 'aaaeeeeiioouuuyc'::text)), 'A'::\"char\") || setweight(to_tsvector('simple'::regconfig, translate(lower((COALESCE(first_name, ''::character varying))::text), 'àâäéèêëïîôöùûüÿç'::text, 'aaaeeeeiioouuuyc'::text)), 'B'::\"char\")) || setweight(to_tsvector('simple'::regconfig, translate(lower((COALESCE(birth_name, ''::character varying))::text), 'àâäéèêëïîôöùûüÿç'::text, 'aaaeeeeiioouuuyc'::text)), 'C'::\"char\")) || setweight(to_tsvector('simple'::regconfig, (COALESCE(email, ''::character varying))::text), 'D'::\"char\")) || setweight(to_tsvector('simple'::regconfig, (COALESCE(phone_number_formatted, ''::character varying))::text), 'D'::\"char\")) || setweight(to_tsvector('simple'::regconfig, COALESCE((id)::text, ''::text)), 'D'::\"char\"))", stored: true
+    t.datetime "rdv_invitation_token_updated_at"
     t.index ["birth_date"], name: "index_users_on_birth_date"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["created_through"], name: "index_users_on_created_through"
@@ -790,6 +799,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_10_082337) do
   add_foreign_key "agent_territorial_roles", "territories"
   add_foreign_key "agents_rdvs", "agents"
   add_foreign_key "agents_rdvs", "rdvs"
+  add_foreign_key "api_calls", "agents"
   add_foreign_key "exports", "agents"
   add_foreign_key "file_attentes", "rdvs"
   add_foreign_key "file_attentes", "users"
