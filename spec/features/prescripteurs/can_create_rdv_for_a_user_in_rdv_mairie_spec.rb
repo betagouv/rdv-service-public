@@ -119,6 +119,26 @@ RSpec.describe "prescripteur can create RDV for a user" do
     end
   end
 
+  context "ANTS responds with an unexpected error" do
+    before do
+      stub_request(:get, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status}).to_return(
+        status: 500,
+        body: "Internal Server Error"
+      )
+    end
+
+    it "prevents from creating the user / RDV" do
+      visit creneaux_url
+      click_on "Je suis un prescripteur qui oriente un bénéficiaire"
+
+      fill_up_prescripteur_and_user
+      click_on "Confirmer le rendez-vous"
+
+      expect(page).to have_content("Erreur inattendue lors de la validation du numéro de pré-demande, merci de réessayer dans 30 secondes")
+      expect(page).not_to have_content("Confirmer en ignorant les avertissements")
+    end
+  end
+
   context "ants_pre_demander number is invalid (too short)" do
     let(:ants_pre_demande_number) { "123" }
 
