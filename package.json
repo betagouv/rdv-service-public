@@ -2,7 +2,7 @@
   "name": "lapin",
   "private": true,
   "scripts": {
-    "build": "webpack --config webpack.config.js; cp -r node_modules/@gouvfr/dsfr/dist/fonts/ public/fonts; cp -r node_modules/@gouvfr/dsfr/dist/icons/ public/icons;"
+    "build": "webpack --config webpack.config.js; cp -r node_modules/@gouvfr/dsfr/dist/fonts/*.(woff|woff2) public/fonts; cp -r node_modules/@gouvfr/dsfr/dist/icons/**/*.svg public/icons;"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.1.1",
