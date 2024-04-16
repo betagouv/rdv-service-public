@@ -317,9 +317,11 @@ Rails.application.routes.draw do
 
   post "/inbound_emails/sendinblue", controller: :inbound_emails, action: :sendinblue
 
-  # This route redirects anything to rdv-insertion so that rdv-insertion
+  # This route redirects invitations to rdv-insertion so that rdv-insertion
   # can use rdvs domain name in their emails
-  get "/rdvi/*rest", to: "api/rdvinsertion/redirects#create"
+  get '/i/r/:uuid', to: redirect { |path_params, _|
+    "#{ENV['RDV_INSERTION_HOST']}/r/#{path_params[:uuid]}"
+  }
 
   if Rails.env.development?
     namespace :lapin do
