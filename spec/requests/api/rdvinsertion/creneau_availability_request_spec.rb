@@ -129,6 +129,7 @@ RSpec.describe "Available Creneaux Count for Invitation", swagger_doc: "v1/api.j
           )
           expect(ApiCall.first.raw_http["method"]).to eq("GET")
           expect(ApiCall.first.raw_http["headers"]).to include("HTTP_ACCEPT")
+          expect(ApiCall.first.raw_http["headers"]).not_to include("rack.session.options")
           expect(ApiCall.first.raw_http["headers"]["HTTP_ACCEPT"]).to eq("application/json")
         end
 
