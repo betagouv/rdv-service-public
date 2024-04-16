@@ -2,19 +2,20 @@
 
 - content_for(:title, "Invitations en cours pour #{current_organisation.name}")
 
-- if current_agent_can?(:create, Agent)
-  - content_for :breadcrumb do
+
+- content_for :breadcrumb do
+  = link_to "Retour à la liste des agents", admin_organisation_agents_path(current_organisation), class:"mr-2"
+  - if current_agent_can?(:create, Agent)
     = link_to "Inviter un agent", new_admin_organisation_agent_path(current_organisation), class:"btn btn-outline-primary"
+
 
 = simple_form_for "", url: admin_organisation_invitations_path(current_organisation), html: { method: :get, class: "form-inline" }, wrapper: :inline_form do |f|
   .container-fluid.bg-white.rounded
-    .m-3.d-flex.justify-content-between
-      = link_to "Retour à la liste des agents", admin_organisation_agents_path(current_organisation)
+    .m-3.d-flex.justify-content-end
       - search = params[:search].blank? ? "d-none" : ""
-      div
-        = link_to t("helpers.reset"), admin_organisation_invitations_path(current_organisation), class: "btn btn-link #{search}"
-        = f.input :search, placeholder: "Email", label: false, input_html: { autocomplete: "off", class: "search-form-control", value: params[:search] }, required: false
-        = f.button :submit, t("helpers.search")
+      div= link_to t("helpers.reset"), admin_organisation_invitations_path(current_organisation), class: "btn btn-link #{search}"
+      = f.input :search, placeholder: "Email", label: false, input_html: { autocomplete: "off", class: "search-form-control", value: params[:search] }, required: false
+      = f.button :submit, t("helpers.search")
     table.table
       thead
         tr
