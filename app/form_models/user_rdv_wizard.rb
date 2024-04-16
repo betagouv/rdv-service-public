@@ -86,13 +86,6 @@ module UserRdvWizard
 
   class Step1 < Base
     validate :phone_number_present_for_motif_by_phone
-    validate do
-      User::Ants.validate_ants_pre_demande_number(
-        user: @user,
-        ants_pre_demande_number: @user_attributes[:ants_pre_demande_number],
-        ignore_benign_errors: @user_attributes[:ignore_benign_errors]
-      )
-    end
 
     def phone_number_present_for_motif_by_phone
       errors.add(:phone_number, :missing_for_phone_motif) if rdv.motif.phone? && @user_attributes[:phone_number].blank?

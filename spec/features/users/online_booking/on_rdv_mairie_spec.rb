@@ -185,4 +185,28 @@ RSpec.describe "User can search rdv on rdv mairie" do
       expect(page).not_to have_content("Confirmer en ignorant les avertissements")
     end
   end
+
+  context "ANTS responds with an unexpected error" do
+    before do
+      stub_request(:get, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status}).to_return(
+        status: 500,
+        body: "Internal Server Error"
+      )
+    end
+
+    it "detects wrong format without calling ANTS API an warns user" do
+      time = Time.zone.now.change(hour: 9, min: 0)
+      creneaux_url = creneaux_url(starts_at: time.strftime("%Y-%m-%d %H:%M"), lieu_id: lieu.id, motif_id: passport_motif.id, public_link_organisation_id: organisation.id, duration: 50)
+      visit creneaux_url
+
+      fill_in("user_email", with: user.email)
+      fill_in("password", with: user.password)
+      click_button("Se connecter")
+
+      fill_in("user_ants_pre_demande_number", with: "5544332211")
+      click_button("Continuer")
+      expect(page).to have_content("Erreur inattendue lors de la validation du numéro de pré-demande, merci de réessayer dans 30 secondes")
+      expect(page).not_to have_content("Confirmer en ignorant les avertissements")
+    end
+  end
 end

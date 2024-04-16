@@ -67,7 +67,34 @@ class User < ApplicationRecord
   validates :number_of_children, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
 
   validate :birth_date_validity
-  validate :ants_pre_demande_number_format, if: -> { ants_pre_demande_number.present? }
+  validate :validate_ants_pre_demande_number, if: -> { ants_pre_demande_number.present? }
+
+  def validate_ants_pre_demande_number
+    unless Ants.valid_pre_demande_number?(ants_pre_demande_number)
+      errors.add(:ants_pre_demande_number, "doit comporter 10 chiffres et lettres")
+      return
+    end
+
+    application_hash = AntsApi::Appointment.status(application_id: ants_pre_demande_number, timeout: 4)
+
+    status = application_hash["status"]
+
+    if status == "validated"
+
+      if application_hash["appointments"].any?
+        appointment = OpenStruct.new(application_hash["appointments"].first)
+        add_benign_error(Ants.warning_message(appointment)) unless ignore_benign_errors
+      end
+
+    else
+      errors.add(:base, Ants.error_message(application_hash["status"]))
+    end
+  rescue AntsApi::Appointment::ApiRequestError, Typhoeus::Errors::TimeoutError => e
+    # Si l'API de l'ANTS est fiable, donc si elle renvoie une erreur ou un timeout,
+    # on préfère bloquer la réservation et logguer l'erreur.
+    errors.add(:base, "Erreur inattendue lors de la validation du numéro de pré-demande, merci de réessayer dans 30 secondes")
+    Sentry.capture_exception(e)
+  end
 
   # Hooks
   before_save :set_email_to_null_if_blank
@@ -285,11 +312,5 @@ class User < ApplicationRecord
       deleted_at: Time.zone.now,
       email: deleted_email
     )
-  end
-
-  def ants_pre_demande_number_format
-    unless Ants.valid_pre_demande_number?(ants_pre_demande_number)
-      errors.add(:ants_pre_demande_number, "doit comporter 10 chiffres et lettres")
-    end
   end
 end
