@@ -42,6 +42,14 @@ RSpec.describe "Motif Category API", swagger_doc: "v1/api.json" do
         it { expect(MotifCategory.last.short_name).to eq(short_name) }
         it { expect(parsed_response_body["motif_category"]["name"]).to match(name) }
         it { expect(parsed_response_body["motif_category"]["short_name"]).to match(short_name) }
+
+        it "logs the API call" do
+          expect(ApiCall.first.attributes.symbolize_keys).to include(
+            controller_name: "motif_categories",
+            action_name: "create",
+            agent_id: agent.id
+          )
+        end
       end
 
       it_behaves_like "an endpoint that returns 401 - unauthorized" do

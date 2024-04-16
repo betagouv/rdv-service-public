@@ -160,6 +160,7 @@ GEM
       descendants_tracker (~> 0.0.1)
     common_french_passwords (0.0.1)
     concurrent-ruby (1.2.3)
+    connection_pool (2.4.1)
     crack (0.4.5)
       rexml
     crass (1.0.6)
@@ -650,6 +651,7 @@ DEPENDENCIES
   capybara-screenshot
   chartkick (~> 5.0.1)
   common_french_passwords
+  connection_pool
   database_cleaner
   devise
   devise-async

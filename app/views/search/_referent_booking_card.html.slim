@@ -1,4 +1,4 @@
-- unless context.invitation? || current_agent
+- unless context.invitation? || current_agent || context.follow_up?
   - if current_user
     - if current_user.referent_agents.any?
       .card

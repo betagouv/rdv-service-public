@@ -110,6 +110,7 @@ RSpec.configure do |config|
               email: { type: "string" },
               first_name: { type: "string", nullable: true },
               last_name: { type: "string", nullable: true },
+              inclusion_connect_open_id_sub: { type: "string", nullable: true },
             },
             required: %w[id email first_name last_name],
           },

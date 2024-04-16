@@ -1,3 +1,9 @@
 ---
 # The authentication token for the application.
 authentication: <%= ENV['SKYLIGHT_AUTHENTICATION_KEY'] || '' %>
+ignored_endpoints:
+  - ActionDispatch::Static
+  - ActionDispatch::Routing::RouteSet
+  - ActionDispatch::SSL
+deploy:
+  git_sha: <%= ENV['SOURCE_VERSION'] || '' %>

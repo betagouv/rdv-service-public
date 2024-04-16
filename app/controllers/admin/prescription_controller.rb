@@ -8,7 +8,8 @@ class Admin::PrescriptionController < AgentAuthController
     @context = AgentPrescriptionSearchContext.new(
       user: user,
       query_params: search_context_params.merge(prescripteur: Prescripteur::INTERNE),
-      current_organisation: current_organisation
+      current_organisation: current_organisation,
+      agent_prescripteur: current_agent
     )
   end
 
