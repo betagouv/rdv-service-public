@@ -124,7 +124,8 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
       method: request.method,
       path: request.fullpath,
       host: request.host,
-      headers: request.headers.to_h.transform_values { |value| value.is_a?(String) ? value : value.inspect },
+      # We only keep headers that are uppercase (convention for HTTP headers)
+      headers: request.headers.select { |key, _| key == key.upcase }.to_h.transform_values { |value| value.is_a?(String) ? value : value.inspect },
     }
 
     ApiCall.create!(
