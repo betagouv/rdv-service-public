@@ -1,20 +1,18 @@
 .recurrence-select.recurrence-select--weekly.js-recurrence-container data-controller="recurrence"
   .row
-    .col
+    .col-5
       = date_input(f, :first_day, input_html: { id: "recurrence-source", data: { target: "recurrence.firstDay", action: "recurrence#updateRecurrence" }, class: "js-recurrence-first-day js-recurrence-input"} )
+    .col-5
+      div
+        p &nbsp
+      .custom-control.custom-switch
+        input.custom-control-input[type="checkbox" id="show-recurrence-form-switch" data-toggle="collapse" data-target=".recurrence-form" class="js-recurrence-toggle js-recurrence-input"]
+        label.custom-control-label for="show-recurrence-form-switch" Répéter
+
     - if defined?(model.end_day)
       .col
         = date_input(f, :end_day)
-
-  .row
-    .col = f.input :start_time, as: :select, collection: every_5_minutes_of_the_day, selected: model.start_time&.strftime("%H:%M"), include_blank: false
-    .col = f.input :end_time,   as: :select, collection: every_5_minutes_of_the_day, selected: model.end_time&.strftime("%H:%M"),   include_blank: false
-
-  = f.input :recurrence, as: :hidden, input_html: { value: model.recurrence ? model.recurrence.as_json.to_json : "", "data-target": "recurrence.recurrenceComputed", class: "js-recurrence-computed" }
-
   = simple_fields_for :recurrence do |n|
-    = n.input :has_recurrence, as: :boolean, label: "Répéter...", input_html: { data: { target: "recurrence.hasRecurrence", action: "recurrence#updateRecurrence" }, class: "js-recurrence-toggle js-recurrence-input" }
-
     .all-select
       .form-group
         .form-inline
@@ -23,10 +21,44 @@
           = n.input_field :every, as: :select, collection: { semaine: "week", mois: "month" }, include_blank: false, class: "custom-select js-recurrence-every js-recurrence-input", data: { target: "recurrence.every", action: "recurrence#updateRecurrence" }
 
       .weekly-select
-        = n.input :on, as: :check_boxes, label: "Répéter les", collection: { Lundi: "monday", Mardi: "tuesday", Mercredi: "wednesday", Jeudi: "thursday", Vendredi: "friday", Samedi: "saturday" }, include_blank: false, input_html: { data: { target: "recurrence.on", action: "recurrence#updateRecurrence" }, class: "js-recurrence-on js-recurrence-input" }
+        .custom-control.custom-checkbox.js-recurrence-on.js-recurrence-input
+          .form-group
+            - days = { Lundi: "monday", Mardi: "tuesday", Mercredi: "wednesday", Jeudi: "thursday", Vendredi: "friday", Samedi: "saturday" }
+            - days.each do |day, value|
+              .row
+                .col
+                  = n.check_box :on, { multiple: true, class: "form-check-input" }, value, false
+                  = n.label value, day, class: "form-check-label", for: "recurrence_on_#{value}"
+                .col = f.input :start_time, as: :select, collection: every_5_minutes_of_the_day, selected: model.start_time&.strftime("%H:%M"), include_blank: false, label: false
+                .col = f.input :end_time,   as: :select, collection: every_5_minutes_of_the_day, selected: model.end_time&.strftime("%H:%M"),   include_blank: false, label: false
 
       .monthly-select.form-group
         span.js-recurrence-monthly data-target="recurrence.monthly" Tous les X du mois
 
       .until-select
-        = date_input(n, :until, required: false, label: "Finir la répétition le (si aucune laisser vide)", input_html: { id: "recurrence-until", data: { target: "recurrence.until", action: "recurrence#updateRecurrence" }, class: "js-recurrence-until js-recurrence-input" } )
+        = date_input(n, :until, required: false, label: "Arrêter la répétition", input_html: { id: "recurrence-until", data: { target: "recurrence.until", action: "recurrence#updateRecurrence" }, class: "js-recurrence-until js-recurrence-input" } )
+
+  .row
+    .col-5 = f.input :start_time, as: :select, collection: every_5_minutes_of_the_day, selected: model.start_time&.strftime("%H:%M"), include_blank: false
+    .col-5 = f.input :end_time,   as: :select, collection: every_5_minutes_of_the_day, selected: model.end_time&.strftime("%H:%M"),   include_blank: false
+    .col-2
+      .mt-3.py-1
+        span.btn.btn-primary[data-toggle="collapse" data-target=".creneau-1"]
+          i.fa.fa-plus>
+  .row.collapse.creneau-1
+    .col-5 = f.input :start_time, as: :select, collection: every_5_minutes_of_the_day, selected: model.start_time&.strftime("%H:%M"), include_blank: false, label: "Reprend à"
+    .col-5 = f.input :end_time,   as: :select, collection: every_5_minutes_of_the_day, selected: model.end_time&.strftime("%H:%M"),   include_blank: false
+    .col-2
+      .mt-3.py-1
+        span.btn.btn-primary[data-toggle="collapse" data-target=".creneau-2"]
+          i.fa.fa-plus>
+
+  .row.collapse.creneau-2
+    .col-5 = f.input :start_time, as: :select, collection: every_5_minutes_of_the_day, selected: model.start_time&.strftime("%H:%M"), include_blank: false, label: "Reprend à"
+    .col-5 = f.input :end_time,   as: :select, collection: every_5_minutes_of_the_day, selected: model.end_time&.strftime("%H:%M"),   include_blank: false
+    .col-2
+      .mt-3.py-1
+        span.btn.btn-primary[data-toggle="collapse" data-target=".creneau-3"]
+          i.fa.fa-plus>
+
+  = f.input :recurrence, as: :hidden, input_html: { value: model.recurrence ? model.recurrence.as_json.to_json : "", "data-target": "recurrence.recurrenceComputed", class: "js-recurrence-computed" }

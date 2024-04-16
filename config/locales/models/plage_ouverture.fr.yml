@@ -4,10 +4,10 @@ fr:
       plage_ouverture: Plage d'ouverture
     attributes:
       plage_ouverture:
-        title: Description
-        first_day: Premier jour
+        title: Nom
+        first_day: Date de début
         start_time: Commence à
-        end_time: Termine à
+        end_time: S'arrête à
         recurrence: Répéter
         lieu: Lieu
     errors:
