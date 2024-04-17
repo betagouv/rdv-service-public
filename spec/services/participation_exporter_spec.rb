@@ -69,7 +69,7 @@ RSpec.describe ParticipationExporter, type: :service do
           "MDS Paris",
           "01/01/2000",
           nil,
-          nil,
+          "Dans le cadre du RGPD, cette information n'est plus conservée au delà d'un an.",
           "agent@mail.com",
         ]
       )
