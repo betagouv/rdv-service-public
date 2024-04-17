@@ -15,6 +15,7 @@ RSpec.describe "Agent can edit user" do
     expect_page_title("Nouvel usager")
   end
 
-  context "the organisation has "
-
+  context "the organisation has motifs for ants" do
+    it "allows editing the ants number"
+  end
 end
