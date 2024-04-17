@@ -13,15 +13,12 @@ export default class extends Controller {
   connect() {
     this.refreshSections()
     this.refreshSubmitButton()
-    this.element.querySelectorAll(":required").forEach(requiredElement => {
-      requiredElement.addEventListener("change", () => {
-        this.refreshSubmitButton()
-      })
-    })
-  }
+    this.setupSubmitButtonEvents()
 
-  refreshSubmitButton() {
-    this.element.querySelector("input[type=submit]").disabled = !this.element.checkValidity();
+    // Permet de pointer vers l'onglet de résa en ligne via un lien avec ancre
+    if(window.location.hash === "#tab_resa_en_ligne") {
+      this.element.querySelector("button#tab_resa_en_ligne").click();
+    }
   }
 
   refreshSections() {
@@ -77,6 +74,18 @@ export default class extends Controller {
     sectionRoot.querySelector(".js-reasons-for-disabled-section").classList.remove("hidden")
     sectionRoot.querySelectorAll(".js-uncheck-on-section-disable").forEach(box => box.checked = false)
     sectionRoot.classList.add("disabled-card")
+  }
+
+  setupSubmitButtonEvents() {
+    this.element.querySelectorAll(":required").forEach(requiredElement => {
+      requiredElement.addEventListener("change", () => {
+        this.refreshSubmitButton()
+      })
+    })
+  }
+
+  refreshSubmitButton() {
+    this.element.querySelector("input[type=submit]").disabled = !this.element.checkValidity();
   }
 
   get locationType() {
