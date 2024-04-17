@@ -213,7 +213,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
         body: {
           user.ants_pre_demande_number => {
             status: "consumed",
-            appointments: []
+            appointments: [],
           },
         }.to_json
       )
