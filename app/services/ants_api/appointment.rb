@@ -2,6 +2,8 @@ module AntsApi
   class Appointment
     class ApiRequestError < StandardError; end
 
+    CONSUMED = "consumed".freeze
+
     # Voir la liste des attributs sur la doc API :
     # https://api-coordination.rendezvouspasseport.ants.gouv.fr/docs
     def initialize(application_id:, appointment_data:)
@@ -48,6 +50,10 @@ module AntsApi
       end
     end
 
+    def syncable?
+      self.class.status(application_id: @application_id)["status"] != CONSUMED
+    end
+
     private
 
     def request(&block)
@@ -55,18 +61,6 @@ module AntsApi
     end
 
     class << self
-      def find_by(application_id:, management_url:)
-        appointment_data = load_appointments(application_id).find do |appointment|
-          appointment["management_url"] == management_url
-        end
-        Appointment.new(application_id: application_id, appointment_data: appointment_data) if appointment_data
-      end
-
-      def first(application_id:, timeout: nil)
-        appointment_data = load_appointments(application_id, timeout: timeout).first
-        Appointment.new(application_id: application_id, appointment_data: appointment_data) if appointment_data
-      end
-
       def status(application_id:, timeout: nil)
         response_body = request do
           Typhoeus.get(
@@ -94,12 +88,6 @@ module AntsApi
         end
 
         response.body.empty? ? {} : JSON.parse(response.body)
-      end
-
-      private
-
-      def load_appointments(application_id, timeout: nil)
-        status(application_id: application_id, timeout: timeout).fetch("appointments")
       end
     end
   end

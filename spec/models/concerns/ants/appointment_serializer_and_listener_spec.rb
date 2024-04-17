@@ -205,4 +205,44 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
       end
     end
   end
+
+  context "ANTS application ID is consumed" do
+    before do
+      stub_request(:get, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status}).to_return(
+        status: 200,
+        body: {
+          user.ants_pre_demande_number => {
+            status: "consumed",
+            appointments: []
+          },
+        }.to_json
+      )
+    end
+
+    let(:rdv) do
+      create(
+        :rdv,
+        motif: motif_passeport,
+        users: [user],
+        lieu: lieu,
+        organisation: organisation,
+        starts_at: Time.zone.parse("2020-04-20 08:00:00")
+      )
+    end
+
+    describe "after_commit on_update" do
+      describe "Rdv is cancelled" do
+        it "does not sync with ANTS" do
+          perform_enqueued_jobs do
+            rdv.excused!
+
+            expect(WebMock).not_to have_requested(
+              :post,
+              %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/appointments}
+            ).with(headers: ants_api_headers)
+          end
+        end
+      end
+    end
+  end
 end

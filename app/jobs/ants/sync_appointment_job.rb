@@ -8,10 +8,16 @@ module Ants
 
       delete_obsolete_appointment
 
-      # L'API de l'ANTS ne fournit pas d'endpoint pour la mise à jour d'un RDV, mais en fournit pour la création et la suppression
-      # Pour donc maintenir à jour les infos des RDVs chez l'ANTS, nous sommes obligés de supprimer, et de re-créer les RDVs
-      appointments.each(&:delete)
-      appointments.each(&:create) unless rdv_cancelled_or_deleted?
+      if rdv_cancelled_or_deleted?
+        appointments.each(&:delete)
+      else
+        # L'API de l'ANTS ne fournit pas d'endpoint pour la mise à jour d'un RDV, mais en fournit pour la création et la suppression
+        # Pour donc maintenir à jour les infos des RDVs chez l'ANTS, nous sommes obligés de supprimer, et de re-créer les RDVs
+        # Toutefois, les RDVs chez l'ANTS avec un status 'consumed', ne sont plus modifiables.
+        syncable_appointments = appointments.select(&:syncable?)
+        syncable_appointments.each(&:delete)
+        syncable_appointments.each(&:create)
+      end
     end
 
     private
