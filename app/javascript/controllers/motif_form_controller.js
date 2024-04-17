@@ -31,11 +31,7 @@ export default class extends Controller {
   }
 
   reasonsToDisableBookingDelay() {
-    const reasons = []
-    if(this.bookableBy === "agents") {
-      reasons.push("les créneaux sont ne sont pas ouverts à la réservation en ligne")
-    }
-    return reasons
+    return this.bookableBy === "agents" ? ["les créneaux sont ne sont pas ouverts à la réservation en ligne"] : []
   }
 
   reasonsToDisableSecto() {
