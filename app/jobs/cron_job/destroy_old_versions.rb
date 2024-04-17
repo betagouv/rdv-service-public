@@ -10,7 +10,7 @@ class CronJob::DestroyOldVersions < CronJob
     Motif
     Plage_ouverture
     Territory_service
-  ]
+  ].freeze
 
   def perform
     delete_old_versions_with_personal_information
