@@ -11,8 +11,17 @@ export default class extends Controller {
   ]
 
   connect() {
-    document.querySelector('#tab_resa_en_ligne').click();
     this.refreshSections()
+    this.refreshSubmitButton()
+    this.element.querySelectorAll(":required").forEach(requiredElement => {
+      requiredElement.addEventListener("change", () => {
+        this.refreshSubmitButton()
+      })
+    })
+  }
+
+  refreshSubmitButton() {
+    this.element.querySelector("input[type=submit]").disabled = !this.element.checkValidity();
   }
 
   refreshSections() {
