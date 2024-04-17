@@ -1,7 +1,7 @@
 RSpec.describe AntsApi::Appointment, type: :service do
   include_context "rdv_mairie_api_authentication"
 
-  describe ".find_by" do
+  describe "#status" do
     context "when credentials are incorrect" do
       before do
         stub_request(:get, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status}).to_return(
@@ -16,7 +16,7 @@ RSpec.describe AntsApi::Appointment, type: :service do
 
       it "raises an error" do
         expect do
-          described_class.find_by(application_id: "1122334455", management_url: "https://rdv-solidarites.fr")
+          described_class.status(application_id: "1122334455")
         end.to raise_error(AntsApi::Appointment::ApiRequestError, "code:401, body:{\n  \"detail\": \"X-RDV-OPT-AUTH-TOKEN header invalid\"\n}\n")
       end
     end
