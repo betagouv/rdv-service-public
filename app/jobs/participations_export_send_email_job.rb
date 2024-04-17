@@ -1,8 +1,8 @@
 class ParticipationsExportSendEmailJob < ExportJob
   def perform(batch, _params)
-    agent = Agent.find(batch.properties[:agent_id])
+    export = Export.find(batch.properties[:export_id])
 
-    redis_key = batch.properties[:redis_key]
+    redis_key = redis_key(export.id)
 
     pages = Redis.with_connection { |redis| redis.hgetall(redis_key) }
 
@@ -17,8 +17,9 @@ class ParticipationsExportSendEmailJob < ExportJob
 
     xls_string = ParticipationExporter.xls_string_from_participations_rows(rdvs_rows)
 
-    # Using #deliver_now because we don't want to enqueue a job with a huge payload
-    Agents::ExportMailer.participations_export(agent, batch.properties[:file_name], xls_string).deliver_now
+    export.store_file(xls_string)
+
+    Agents::ExportMailer.participations_export(export.id).deliver_later
 
     Redis.with_connection { |redis| redis.del(redis_key) }
   end

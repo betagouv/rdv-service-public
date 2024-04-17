@@ -104,11 +104,13 @@ Rails.application.routes.draw do
         resource :webcal_sync, only: %i[show update], controller: :webcal_sync
         resource :outlook_sync, only: %i[show destroy], controller: :outlook_sync
       end
-
       resources :users, only: [] do
         collection do
           get "search"
         end
+      end
+      resources :exports, only: %i[index] do
+        get :download
       end
     end
     get "omniauth/microsoft_graph/callback" => "omniauth_callbacks#microsoft_graph"
@@ -314,6 +316,12 @@ Rails.application.routes.draw do
   # rubocop:enable Style/FormatStringToken
 
   post "/inbound_emails/sendinblue", controller: :inbound_emails, action: :sendinblue
+
+  # This route redirects invitations to rdv-insertion so that rdv-insertion
+  # can use rdvs domain name in their emails
+  get '/i/r/:uuid', to: redirect { |path_params, _|
+    "#{ENV['RDV_INSERTION_HOST']}/r/#{path_params[:uuid]}"
+  }
 
   if Rails.env.development?
     namespace :lapin do

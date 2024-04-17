@@ -25,6 +25,13 @@ RSpec.describe Agent, type: :model do
       expect(agent.email_original).to eq("karim@le64.fr")
     end
 
+    it "prepend deleted_ to inclusion_connect_open_id_sub" do
+      agent = create(:agent, email: "karim@le64.fr", inclusion_connect_open_id_sub: "123456", organisations: [])
+      create(:rdv, agents: [agent])
+      agent.soft_delete
+      expect(agent.inclusion_connect_open_id_sub).to eq("deleted_123456")
+    end
+
     it "update mail with a unique value" do
       agent = create(:agent, basic_role_in_organisations: [])
       create(:rdv, agents: [agent])

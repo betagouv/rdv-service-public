@@ -2,22 +2,29 @@ module AntsApi
   class Appointment
     class ApiRequestError < StandardError; end
 
-    attr_reader :application_id, :meeting_point, :appointment_date, :management_url
-
-    def initialize(application_id:, meeting_point:, appointment_date:, management_url:, editor_comment: nil)
+    # Voir la liste des attributs sur la doc API :
+    # https://api-coordination.rendezvouspasseport.ants.gouv.fr/docs
+    def initialize(application_id:, appointment_data:)
       @application_id = application_id
-      @meeting_point = meeting_point
-      @appointment_date = appointment_date
-      @management_url = management_url
-      @editor_comment = editor_comment
+
+      appointment_data = appointment_data.with_indifferent_access
+
+      # required attrs
+      @appointment_date = appointment_data.fetch(:appointment_date)
+      @management_url = appointment_data.fetch(:management_url)
+      @meeting_point = appointment_data.fetch(:meeting_point)
+
+      # optional attrs
+      @meeting_point_id = appointment_data[:meeting_point_id]
     end
 
     def to_request_params
       {
-        application_id: application_id,
-        meeting_point: meeting_point,
-        appointment_date: appointment_date,
-        management_url: management_url,
+        application_id: @application_id,
+        meeting_point_id: @meeting_point_id,
+        meeting_point: @meeting_point,
+        appointment_date: @appointment_date,
+        management_url: @management_url,
       }
     end
 
@@ -52,12 +59,25 @@ module AntsApi
         appointment_data = load_appointments(application_id).find do |appointment|
           appointment["management_url"] == management_url
         end
-        Appointment.new(application_id: application_id, **appointment_data.symbolize_keys) if appointment_data
+        Appointment.new(application_id: application_id, appointment_data: appointment_data) if appointment_data
       end
 
       def first(application_id:, timeout: nil)
         appointment_data = load_appointments(application_id, timeout: timeout).first
-        Appointment.new(application_id: application_id, **appointment_data.symbolize_keys) if appointment_data
+        Appointment.new(application_id: application_id, appointment_data: appointment_data) if appointment_data
+      end
+
+      def status(application_id:, timeout: nil)
+        response_body = request do
+          Typhoeus.get(
+            "#{ENV['ANTS_RDV_API_URL']}/status",
+            params: { application_ids: application_id },
+            headers: headers,
+            timeout: timeout
+          )
+        end
+
+        response_body.fetch(application_id)
       end
 
       def headers
@@ -69,7 +89,7 @@ module AntsApi
 
       def request(&block)
         response = block.call
-        if response.failure?
+        unless response.success?
           raise(ApiRequestError, "code:#{response.response_code}, body:#{response.response_body}")
         end
 
@@ -79,16 +99,7 @@ module AntsApi
       private
 
       def load_appointments(application_id, timeout: nil)
-        response_body = request do
-          Typhoeus.get(
-            "#{ENV['ANTS_RDV_API_URL']}/status",
-            params: { application_ids: application_id },
-            headers: headers,
-            timeout: timeout
-          )
-        end
-
-        response_body.fetch(application_id, {}).fetch("appointments", [])
+        status(application_id: application_id, timeout: timeout).fetch("appointments")
       end
     end
   end

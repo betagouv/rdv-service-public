@@ -1,5 +1,7 @@
 .row.align-items-center.mt-3
   .col.text-left
-    = link_to "Revenir en arrière", rdv_wizard_form.previous_step_path, class: "btn btn-outline-primary"
+    = link_to(rdv_wizard_form.previous_step_path) do
+      i.fa.fa-arrow-left
+      = " Revenir en arrière"
   .col.text-right
     = f.button :submit, submit_value

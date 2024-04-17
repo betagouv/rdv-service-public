@@ -13,6 +13,9 @@ class Agents::RdvMailer < ApplicationMailer
   def rdv_created
     self.ics_payload = @rdv.payload(:create, @agent)
     subject = if @rdv.collectif?
+                if @author.is_a?(Prescripteur)
+                  @user = @author.user
+                end
                 t("agents.rdv_mailer.rdv_created.title_participation", domain_name: domain.name, date: relative_date(@rdv.starts_at))
               else
                 t("agents.rdv_mailer.rdv_created.title", domain_name: domain.name, date: relative_date(@rdv.starts_at))

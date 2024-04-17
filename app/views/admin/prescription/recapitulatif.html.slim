@@ -14,7 +14,7 @@ main.container
                 .col
                   i.fa.fa-check.fa-fw.mr-1.text-success
                   | Usager :&nbsp;
-                  = @rdv_wizard.participation.user.full_name
+                  = UsersHelper.reverse_full_name_and_notification_coordinates(@rdv_wizard.participation.user)
                 .col-auto
                   = link_to "modifier", user_selection_admin_organisation_prescription_path(@rdv_wizard.query_params)
 

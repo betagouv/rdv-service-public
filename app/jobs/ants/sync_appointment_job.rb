@@ -49,12 +49,14 @@ module Ants
       users.each do |user|
         existing_appointment(user)&.delete
 
-        AntsApi::Appointment.new(application_id: user.ants_pre_demande_number, **@appointment_data).create
+        AntsApi::Appointment.new(application_id: user.ants_pre_demande_number, appointment_data: @appointment_data).create
       end
     end
 
     def users
-      @users ||= User.where(id: @rdv_attributes[:users_ids])
+      @users ||= User.where(id: @rdv_attributes[:users_ids]).select do |user|
+        user.ants_pre_demande_number.present? # Les agents peuvent créer un rdv sans préciser le numéro de pré-demande ANTS
+      end
     end
 
     def rdv_cancelled_or_deleted?

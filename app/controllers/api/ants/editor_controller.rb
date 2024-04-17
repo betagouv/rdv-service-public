@@ -40,11 +40,13 @@ class Api::Ants::EditorController < Api::Ants::BaseController
   end
 
   def time_slots(lieu, reason)
-    motifs(lieu, reason).map do |motif|
+    creneaux = motifs(lieu, reason).map do |motif|
       motif.default_duration_in_min = rdv_duration(motif)
       motif_creneaux = creneaux(lieu, motif)
       motif_creneaux.map { |creneau| time_slot_data(creneau) }.uniq
-    end.flatten
+    end
+
+    creneaux.flatten.uniq { _1[:datetime] }.sort_by { _1[:datetime] }
   end
 
   def creneaux(lieu, motif)
