@@ -116,13 +116,6 @@ class CronJob < ApplicationJob
     end
   end
 
-  class DestroyOldVersions < CronJob
-    def perform
-      # Versions are used in RDV exports, and RDVs are currently kept for 2 years.
-      PaperTrail::Version.where("created_at < ?", 2.years.ago).delete_all
-    end
-  end
-
   class DestroyOldApiCalls < CronJob
     def perform
       ApiCall.where("received_at < ?", 1.year.ago).delete_all
