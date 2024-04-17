@@ -3,7 +3,7 @@
 
 - %i[public_office phone home].each do |value|
   = label_tag do
-    = f.radio_button(:location_type, value, disabled: disabled, "data-action": "change->motif-form#refreshSecretariat", "data-motif-form-target": "locationTypeRadios")
+    = f.radio_button(:location_type, value, disabled: disabled, "data-action": "change->motif-form#refreshSections", "data-motif-form-target": "locationTypeRadios")
     span.ml-1 class=(disabled ? "text-muted" : "")
       = Motif.human_attribute_value(:location_type, value)
     p.text-muted.font-14.mt-1= Motif.human_attribute_value(:location_type, value, context: :hint)

@@ -4,51 +4,73 @@ export default class extends Controller {
   static targets = [
     "locationTypeRadios",
     "bookableByRadios",
+    "bookingDelaySection",
     "sectoSection",
     "secretariatSection",
-    "secretariatCheckbox",
     "followUpCheckbox"
   ]
 
   connect() {
-    // document.querySelector('#tab_resa_en_ligne').click();
-    this.refreshSecto()
-    this.refreshSecretariat()
+    document.querySelector('#tab_resa_en_ligne').click();
+    this.refreshSections()
   }
 
-  refreshSecto() {
-    if(this.sectoShouldBeEnabled()) {
-      this.enableSection(this.sectoSectionTarget)
+  refreshSections() {
+    this.refreshSection(this.bookingDelaySectionTarget, this.reasonsToDisableBookingDelay())
+    this.refreshSection(this.sectoSectionTarget, this.reasonsToDisableSecto())
+    this.refreshSection(this.secretariatSectionTarget, this.reasonsToDisableSecretariat())
+  }
+
+  refreshSection(section, reasons) {
+    if(reasons.length === 0) {
+      this.enableSection(section)
     }
     else {
-      this.disableSection(this.sectoSectionTarget)
-    }
-  }
-  refreshSecretariat() {
-    if(this.secretariatShouldBeEnabled()) {
-      this.enableSection(this.secretariatSectionTarget)
-    }
-    else {
-      this.disableSection(this.secretariatSectionTarget)
-      this.secretariatCheckbox.checked = false
+      this.disableSection(section, reasons)
     }
   }
 
-  sectoShouldBeEnabled() {
-    return this.bookableBy !== "agents" && !this.followUpCheckbox.checked
+  reasonsToDisableBookingDelay() {
+    const reasons = []
+    if(this.bookableBy === "agents") {
+      reasons.push("les créneaux sont ne sont pas ouverts à la réservation en ligne")
+    }
+    return reasons
   }
 
-  secretariatShouldBeEnabled() {
-    return this.locationType !== "home" && !this.followUpCheckbox.checked
+  reasonsToDisableSecto() {
+    const reasons = []
+    if(this.bookableBy === "agents") {
+      reasons.push("les créneaux sont ne sont pas ouverts à la réservation en ligne")
+    }
+    if(this.followUpCheckbox.checked) {
+      reasons.push(`l'option "RDV de suivi" est cochée`)
+    }
+    return reasons
+  }
+
+  reasonsToDisableSecretariat() {
+    const reasons = []
+    if(this.locationType === "home") {
+      reasons.push("le RDV est à domicile")
+    }
+    if(this.followUpCheckbox.checked) {
+      reasons.push(`l'option "RDV de suivi" est cochée`)
+    }
+    return reasons
   }
 
   enableSection(sectionRoot) {
-    sectionRoot.classList.remove("disabled-card")
     sectionRoot.querySelectorAll("input, select").forEach(i => i.disabled = false)
+    sectionRoot.querySelector(".js-reasons-for-disabled-section").classList.add("hidden")
+    sectionRoot.classList.remove("disabled-card")
   }
-  disableSection(sectionRoot) {
-    sectionRoot.classList.add("disabled-card")
+  disableSection(sectionRoot, reasons) {
     sectionRoot.querySelectorAll("input, select").forEach(i => i.disabled = true)
+    sectionRoot.querySelector(".js-reasons-for-disabled-section").innerText = `Vous ne pouvez pas modifier ce paramètre si ${reasons.join(" ou ")}.`;
+    sectionRoot.querySelector(".js-reasons-for-disabled-section").classList.remove("hidden")
+    sectionRoot.querySelectorAll(".js-uncheck-on-section-disable").forEach(box => box.checked = false)
+    sectionRoot.classList.add("disabled-card")
   }
 
   get locationType() {
@@ -56,9 +78,6 @@ export default class extends Controller {
   }
   get bookableBy() {
     return this.bookableByRadiosTargets.find(radio => radio.checked).value
-  }
-  get secretariatCheckbox() {
-    return this.secretariatCheckboxTarget
   }
   get followUpCheckbox() {
     return this.followUpCheckboxTarget

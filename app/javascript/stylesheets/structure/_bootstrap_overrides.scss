@@ -3,14 +3,6 @@
   border: 1px solid $card-border-color !important;
 }
 
-.only-on-disabled-card {
-  display: none;
-}
-
 .disabled-card * {
   color: $gray-600 !important;
-
-  .only-on-disabled-card {
-    display: block;
-  }
 }
