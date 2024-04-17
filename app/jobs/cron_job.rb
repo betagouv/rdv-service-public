@@ -116,6 +116,12 @@ class CronJob < ApplicationJob
     end
   end
 
+  class CronJob::AnonymizeOldReceipts < CronJob
+    def perform
+      Anonymizer::Core.anonymize_records_in_scope!(Receipt.where("created_at < ?", 6.months.ago))
+    end
+  end
+
   class DestroyOldApiCalls < CronJob
     def perform
       ApiCall.where("received_at < ?", 1.year.ago).delete_all

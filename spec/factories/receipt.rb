@@ -5,6 +5,9 @@ FactoryBot.define do
     event { :rdv_created }
     channel { :sms }
     result { :processed }
+    sms_count { 2 }
+    sms_phone_number { "0600001111" }
+    content { "Atelier collectif, mardi 20/02 à 16h00. Mairie de Romainville (7 Rue de Paris, Romainville, 93230). Infos et annulation: https://demo.rdv-solidarites.fr/r/asdfasd/ / 0100001111" }
     created_at { Time.zone.now }
     updated_at { Time.zone.now }
   end
