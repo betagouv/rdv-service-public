@@ -63,6 +63,7 @@ export default class extends Controller {
   enableSection(sectionRoot) {
     sectionRoot.querySelectorAll("input, select").forEach(i => i.disabled = false)
     sectionRoot.querySelector(".js-reasons-for-disabled-section").classList.add("hidden")
+    sectionRoot.querySelectorAll(".js-check-on-section-enable").forEach(box => box.checked = true)
     sectionRoot.classList.remove("disabled-card")
   }
   disableSection(sectionRoot, reasons) {
