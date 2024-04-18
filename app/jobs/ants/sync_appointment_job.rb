@@ -2,8 +2,9 @@ module Ants
   class SyncAppointmentJob < ApplicationJob
     def perform(rdv_attributes:, appointment_data:)
       @rdv_attributes = rdv_attributes
+      @rdv = Rdv.find_by(id: @rdv_attributes[:id])
       # Si le RDV n'est pas supprimé on essaie à nouveau d'extraire les appointment_data, afin d'avoir les données les plus fraiches possibles
-      @appointment_data = serialize_rdv_to_appointment || appointment_data
+      @appointment_data = @rdv.present? ? serialize_rdv_to_appointment : appointment_data
 
       delete_obsolete_appointment
 
@@ -28,7 +29,7 @@ module Ants
     end
 
     def rdv_cancelled_or_deleted?
-      Rdv::CANCELLED_STATUSES.include?(@rdv_attributes[:status]) || !Rdv.exists?(id: @rdv_attributes[:id])
+      @rdv.nil? || @rdv_attributes[:status].in?(Rdv::CANCELLED_STATUSES)
     end
 
     def delete_appointments
@@ -55,10 +56,6 @@ module Ants
       @users ||= User.where(id: @rdv_attributes[:users_ids]).select do |user|
         user.ants_pre_demande_number.present? # Les agents peuvent créer un rdv sans préciser le numéro de pré-demande ANTS
       end
-    end
-
-    def serialize_rdv_to_appointment
-      Rdv.find_by(id: @rdv_attributes[:id])&.serialize_for_ants_api
     end
 
     class << self
