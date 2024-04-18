@@ -7,12 +7,16 @@ main.container
         = render "users/rdv_wizard_steps/rdv_wizard_summary", rdv_wizard: @rdv_wizard if @rdv_wizard.present?
         .card-body
           h3 Vos coordonnées de prescripteur
-          / TODO : Valider le wording, l'emplacement et le style du message. Est ce qu'on l'affiche pour les prescripteur non connectés pour les inviter à se créer un compte ?
-          - if @current_agent.present?
+          - if show_agent_prescription_incitation?
             .alert.alert-success
               p.mb-0
-                i.fa.fa-exclamation-triangle>
-                | Nouvelle fonctionnalité : Vous êtes agent et vous avez un compte sur RDV Solidarités ? Connectez vous pour bénéficier de la prescription interne (réduction doublons usagers...).
+                i.fas.fa-lightbulb>
+                span> Nouvelle fonctionnalité : Pour ne pas avoir à remplir ce formulaire pour chaque nouveau rendez-vous et réduire les doublons, vous pouvez utilisez la prescription dans l'espace agent
+                - unless @rdv_wizard.motif.organisation.territory.sectorized?
+                  / TODO: faire sauter ce unless une fois que nous avons implémenté la saisie d'adresse dans la prescription interne sans usager selectionnée
+                  = link_to user_selection_admin_organisation_prescription_path(@rdv_wizard.motif.organisation, session[:rdv_wizard_attributes]) do
+                    span> en cliquant ici.
+
               p.mb-0
               span> Pour en savoir plus consultez
               = link_to "https://rdvs.notion.site/Prescription-f1c857697c68421d91592ae88364c05d", target: "_blank" do

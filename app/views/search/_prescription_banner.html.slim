@@ -1,11 +1,11 @@
-- if @current_agent.present? && params[:prescripteur].present?
-  section.bg-lightblue.p-1
+- if show_agent_prescription_incitation? && params[:prescripteur].present?
+  section.bg-dsfr-blue-ecume-975.p-1
     .container
       .row
         .col-lg-12.mt-4.mb-3
           .row
             .col-lg-7
-              h2.text-header-black.mb-1.pb-0  Nouvelle fonctionnalité :
+              h2.text-dsfr-grey-50.mb-1.pb-0  Nouvelle fonctionnalité :
               h2.text-header-blue.mb-2.pb-0  la prescription interne
 
               .
