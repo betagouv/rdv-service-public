@@ -2,7 +2,7 @@ module AntsApi
   class Appointment
     class ApiRequestError < StandardError; end
 
-    CONSUMED = "consumed".freeze
+    VALIDATED = "validated".freeze
 
     # Voir la liste des attributs sur la doc API :
     # https://api-coordination.rendezvouspasseport.ants.gouv.fr/docs
@@ -51,7 +51,7 @@ module AntsApi
     end
 
     def syncable?
-      self.class.status(application_id: @application_id)["status"] != CONSUMED
+      self.class.status(application_id: @application_id)["status"] == VALIDATED
     end
 
     private
