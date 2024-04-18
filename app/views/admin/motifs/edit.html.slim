@@ -1,7 +1,7 @@
 - content_for(:menu_item) { "menu-motifs" }
 
 - content_for :title do
-  | Modifier le motif "#{@motif.name}" (#{@motif.service.short_name})
+  | Modifier le motif "#{@motif.name}" (#{@motif.service&.short_name})
 
 - content_for :breadcrumb do
   ol.breadcrumb.m-0
