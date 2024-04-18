@@ -47,6 +47,8 @@ coverage/
 !/app/assets/builds/.keep
 
 /public/assets/*
+/public/fonts/*
+/public/icons/*
 
 # Postgres dumps
 **/20*.tar.gz

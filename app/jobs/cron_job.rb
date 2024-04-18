@@ -56,6 +56,7 @@ class CronJob < ApplicationJob
   class DestroyInactiveUsers < CronJob
     def perform(date_limit)
       old_users_without_rdvs = User.where("users.created_at < ?", date_limit).left_outer_joins(:participations).where(participations: { id: nil })
+        .where("users.rdv_invitation_token_updated_at is null or users.rdv_invitation_token_updated_at < ?", date_limit)
 
       old_users_without_rdvs_or_relatives = old_users_without_rdvs.joins("left outer join users as relatives on users.id = relatives.responsible_id").where(relatives: { id: nil })
 
@@ -119,6 +120,12 @@ class CronJob < ApplicationJob
     def perform
       # Versions are used in RDV exports, and RDVs are currently kept for 2 years.
       PaperTrail::Version.where("created_at < ?", 2.years.ago).delete_all
+    end
+  end
+
+  class DestroyOldApiCalls < CronJob
+    def perform
+      ApiCall.where("received_at < ?", 1.year.ago).delete_all
     end
   end
 
