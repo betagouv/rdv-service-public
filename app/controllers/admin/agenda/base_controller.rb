@@ -1,4 +1,4 @@
-class Admin::Agenda::FullCalendarController < ApplicationController
+class Admin::Agenda::BaseController < ApplicationController
   include Admin::AuthenticatedControllerConcern
   respond_to :json
 
