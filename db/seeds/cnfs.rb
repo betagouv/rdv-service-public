@@ -54,7 +54,7 @@ agent_cnfs = Agent.new(
   uid: "camille-clavier@demo.rdv-solidarites.fr",
   first_name: "Camille",
   last_name: "Clavier",
-  password: "lapinlapin",
+  password: "rdvservicepublic",
   services: [service_cnfs],
   invitation_accepted_at: 1.day.ago,
   roles_attributes: [{ organisation: org_cnfs, access_level: AgentRole::ACCESS_LEVEL_ADMIN }],
