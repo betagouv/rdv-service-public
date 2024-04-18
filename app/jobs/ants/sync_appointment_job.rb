@@ -1,22 +1,16 @@
 module Ants
   class SyncAppointmentJob < ApplicationJob
     def perform(rdv_attributes:, appointment_data:)
-      rdv = Rdv.find_by(id: rdv_attributes[:id])
       @rdv_attributes = rdv_attributes
-      @appointment_data = appointment_data
-      @appointment_data = rdv.serialize_for_ants_api if rdv.present? # On rafraîchit les données du RDV au cas où elles auraient changé pendant le temps de latence pour l'exéuction du job
+      # Si le RDV n'est pas supprimé on essaie à nouveau d'extraire les appointment_data, afin d'avoir les données les plus fraiches possibles
+      @appointment_data = serialize_rdv_to_appointment || appointment_data
 
       delete_obsolete_appointment
 
       if rdv_cancelled_or_deleted?
-        appointments.each(&:delete)
+        delete_appointments
       else
-        # L'API de l'ANTS ne fournit pas d'endpoint pour la mise à jour d'un RDV, mais en fournit pour la création et la suppression
-        # Pour donc maintenir à jour les infos des RDVs chez l'ANTS, nous sommes obligés de supprimer, et de re-créer les RDVs
-        # Toutefois, les RDVs chez l'ANTS avec un status 'consumed', ne sont plus modifiables.
-        syncable_appointments = appointments.select(&:syncable?)
-        syncable_appointments.each(&:delete)
-        syncable_appointments.each(&:create)
+        sync_appointments
       end
     end
 
@@ -37,6 +31,20 @@ module Ants
       Rdv::CANCELLED_STATUSES.include?(@rdv_attributes[:status]) || !Rdv.exists?(id: @rdv_attributes[:id])
     end
 
+    def delete_appointments
+      appointments.each(&:delete)
+    end
+
+    def sync_appointments
+      # L'API de l'ANTS ne fournit pas d'endpoint pour la mise à jour d'un RDV, mais en fournit pour la création et la suppression
+      # Pour donc maintenir à jour les infos des RDVs chez l'ANTS, nous sommes obligés de supprimer, et de re-créer les RDVs
+      # Toutefois, les RDVs chez l'ANTS avec un status 'consumed', ne sont plus modifiables.
+      appointments.select(&:syncable?).each do |appointment|
+        appointment.delete
+        appointment.create
+      end
+    end
+
     def appointments
       @appointments = users.map do |user|
         AntsApi::Appointment.new(application_id: user.ants_pre_demande_number, appointment_data: @appointment_data)
@@ -49,9 +57,13 @@ module Ants
       end
     end
 
+    def serialize_rdv_to_appointment
+      Rdv.find_by(id: @rdv_attributes[:id])&.serialize_for_ants_api
+    end
+
     class << self
       def perform_later_for(rdv)
-        # On passe les attributes du RDV au lieu de l'objet active record, au cas où e dernier serait supprimé
+        # On passe les attributes du RDV au lieu de l'objet active record, au cas où ce dernier serait supprimé
         perform_later(rdv_attributes: rdv_attributes(rdv), appointment_data: rdv.serialize_for_ants_api)
       end
 
