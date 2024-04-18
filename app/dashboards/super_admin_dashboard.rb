@@ -34,25 +34,12 @@ class SuperAdminDashboard < Administrate::BaseDashboard
 
   # SHOW_PAGE_ATTRIBUTES
   # an array of attributes that will be displayed on the model's show page.
-  SHOW_PAGE_ATTRIBUTES = %i[
-    id
-    email
-    role
-    first_name
-    last_name
-    created_at
-    updated_at
-  ].freeze
+  SHOW_PAGE_ATTRIBUTES = %i[].freeze
 
   # FORM_ATTRIBUTES
   # an array of attributes that will be displayed
   # on the model's form (`new` and `edit`) pages.
-  FORM_ATTRIBUTES = %i[
-    email
-    role
-    first_name
-    last_name
-  ].freeze
+  FORM_ATTRIBUTES = %i[].freeze
 
   # Overwrite this method to customize how super admins are displayed
   # across all pages of the super_admin dashboard.
