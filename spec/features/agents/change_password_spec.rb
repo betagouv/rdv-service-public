@@ -24,7 +24,7 @@ RSpec.describe "Agents can change their passwords" do
 
     expect { click_button "Enregistrer" }.not_to change { agent.reload.encrypted_password }
 
-    expect(page).to have_content "Pour assurer la sécurité de votre compte, votre mot de passe doit faire au moins 10 caractères"
+    expect(page).to have_content "Pour assurer la sécurité de votre compte, votre mot de passe doit faire au moins 12 caractères"
 
     fill_in "Nouveau mot de passe", with: "1234567890"
     fill_in "Confirmation du mot de passe", with: "1234567890"
