@@ -14,7 +14,7 @@ p
             option= org_name
     .form-row
       .col-md-12
-        = f.association :service, label: fake_required_label("Service associé").html_safe, collection: current_territory.services.reject(&:secretariat?), required: false, input_html: { \
+        = f.association :service, label: fake_required_label("Service associé"), collection: current_territory.services.reject(&:secretariat?), required: false, input_html: { \
           class: "select2-input", \
           data: { \
             placeholder: "Sélectionnez le service auquel le motif sera associé", \
