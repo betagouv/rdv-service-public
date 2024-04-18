@@ -4,7 +4,7 @@ module Ants
       @rdv_attributes = rdv_attributes
       @rdv = Rdv.find_by(id: @rdv_attributes[:id])
       # Si le RDV n'est pas supprimé on essaie à nouveau d'extraire les appointment_data, afin d'avoir les données les plus fraiches possibles
-      @appointment_data = @rdv.present? ? serialize_rdv_to_appointment : appointment_data
+      @appointment_data = @rdv.present? ? @rdv.serialize_for_ants_api : appointment_data
 
       delete_obsolete_appointment
 
