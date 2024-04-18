@@ -8,8 +8,8 @@ class CronJob::DestroyOldVersions < CronJob
     Team
     MotifCategory
     Motif
-    Plage_ouverture
-    Territory_service
+    PlageOuverture
+    TerritoryService
   ].freeze
 
   def perform
