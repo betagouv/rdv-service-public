@@ -112,7 +112,7 @@ agent_orgs_rdv_insertion = Agent.new(
   uid: "alain.sertion@rdv-insertion-demo.fr",
   first_name: "Alain",
   last_name: "Sertion",
-  password: "rdvservicepublic",
+  password: "rdvservicepublictest",
   invitation_accepted_at: 10.days.ago,
   roles_attributes: [
     { organisation: org_drome1, access_level: AgentRole::ACCESS_LEVEL_ADMIN },

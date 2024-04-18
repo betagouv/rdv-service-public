@@ -42,7 +42,7 @@ agent_mairie_de_sannois = Agent.new(
   uid: "alain.mairie@rdv-mairie-demo.fr",
   first_name: "Alain",
   last_name: "Mairie",
-  password: "rdvservicepublic",
+  password: "rdvservicepublictest",
   services: [service_titres],
   invitation_accepted_at: 10.days.ago,
   roles_attributes: [

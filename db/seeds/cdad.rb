@@ -42,7 +42,7 @@ all_cdad_agent = Agent.new(
   uid: "secretariat@cdad.fr",
   first_name: "Maxime",
   last_name: "Secrétariat",
-  password: "rdvservicepublic",
+  password: "rdvservicepublictest",
   services: [service_cdad],
   invitation_accepted_at: 10.days.ago,
   roles_attributes: [
@@ -62,7 +62,7 @@ cdad1_agent = Agent.new(
   uid: "cdad1@cdad.fr",
   first_name: "Basic",
   last_name: "CDAD1",
-  password: "rdvservicepublic",
+  password: "rdvservicepublictest",
   services: [service_cdad],
   invitation_accepted_at: 10.days.ago,
   roles_attributes: [
@@ -81,7 +81,7 @@ cdad1_admin = Agent.new(
   uid: "cdad1_admin@cdad.fr",
   first_name: "Admin",
   last_name: "CDAD1",
-  password: "rdvservicepublic",
+  password: "rdvservicepublictest",
   services: [service_cdad],
   invitation_accepted_at: 10.days.ago,
   roles_attributes: [
@@ -100,7 +100,7 @@ cdad2_agent = Agent.new(
   uid: "cdad2@cdad.fr",
   first_name: "Basic",
   last_name: "CDAD2",
-  password: "rdvservicepublic",
+  password: "rdvservicepublictest",
   services: [service_cdad],
   invitation_accepted_at: 10.days.ago,
   roles_attributes: [
@@ -119,7 +119,7 @@ cdad2_admin = Agent.new(
   uid: "cdad2_admin@cdad.fr",
   first_name: "Admin",
   last_name: "CDAD2",
-  password: "rdvservicepublic",
+  password: "rdvservicepublictest",
   services: [service_cdad],
   invitation_accepted_at: 10.days.ago,
   roles_attributes: [
