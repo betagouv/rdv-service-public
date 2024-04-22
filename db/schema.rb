@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_03_21_114146) do
+ActiveRecord::Schema[7.0].define(version: 2024_04_10_082337) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -647,7 +647,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_21_114146) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.enum "sms_provider", enum_type: "sms_provider"
-    t.json "sms_configuration"
+    t.string "sms_configuration"
     t.boolean "has_own_sms_provider", default: false
     t.boolean "enable_notes_field", default: false
     t.boolean "enable_caisse_affiliation_field", default: false
