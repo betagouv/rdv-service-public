@@ -1,6 +1,6 @@
 RSpec.describe "Agents can change their passwords" do
   let!(:organisation) { create(:organisation) }
-  let!(:agent) { create(:agent, basic_role_in_organisations: [organisation], password: "lapinlapin") }
+  let!(:agent) { create(:agent, basic_role_in_organisations: [organisation], password: "rdvservicepublic") }
   let!(:admin_agent) { create(:agent, admin_role_in_organisations: [organisation]) } # Organisation needs at least one admin
 
   before do
@@ -12,7 +12,7 @@ RSpec.describe "Agents can change their passwords" do
   it "checks for password confirmation, length and complexity" do
     fill_in "Nouveau mot de passe", with: "unmotdepasse"
     fill_in "Confirmation du mot de passe", with: "unautremotdepasse"
-    fill_in "Mot de passe actuel", with: "lapinlapin"
+    fill_in "Mot de passe actuel", with: "rdvservicepublic"
 
     expect { click_button "Enregistrer" }.not_to change { agent.reload.encrypted_password }
 
@@ -20,15 +20,15 @@ RSpec.describe "Agents can change their passwords" do
 
     fill_in "Nouveau mot de passe", with: "tropcourt"
     fill_in "Confirmation du mot de passe", with: "tropcourt"
-    fill_in "Mot de passe actuel", with: "lapinlapin"
+    fill_in "Mot de passe actuel", with: "rdvservicepublic"
 
     expect { click_button "Enregistrer" }.not_to change { agent.reload.encrypted_password }
 
-    expect(page).to have_content "Pour assurer la sécurité de votre compte, votre mot de passe doit faire au moins 10 caractères"
+    expect(page).to have_content "Pour assurer la sécurité de votre compte, votre mot de passe doit faire au moins 12 caractères"
 
-    fill_in "Nouveau mot de passe", with: "1234567890"
-    fill_in "Confirmation du mot de passe", with: "1234567890"
-    fill_in "Mot de passe actuel", with: "lapinlapin"
+    fill_in "Nouveau mot de passe", with: "q1w2e3r4t5y6"
+    fill_in "Confirmation du mot de passe", with: "q1w2e3r4t5y6"
+    fill_in "Mot de passe actuel", with: "rdvservicepublic"
 
     expect { click_button "Enregistrer" }.not_to change { agent.reload.encrypted_password }
 
@@ -36,7 +36,7 @@ RSpec.describe "Agents can change their passwords" do
 
     fill_in "Nouveau mot de passe", with: "correcthorsebattery"
     fill_in "Confirmation du mot de passe", with: "correcthorsebattery"
-    fill_in "Mot de passe actuel", with: "lapinlapin"
+    fill_in "Mot de passe actuel", with: "rdvservicepublic"
 
     expect { click_button "Enregistrer" }.to change { agent.reload.encrypted_password }
 
