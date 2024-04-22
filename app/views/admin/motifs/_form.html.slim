@@ -46,7 +46,7 @@
               p.text-muted.font-14= Motif.human_attribute_value(:location_type, value, context: :hint)
         - else
           p.alert.alert-warning Ce motif est déjà utilisé dans au moins un RDV, il n'est pas possible de changer le type
-          - %i[public_office phone home].each do |value|
+          - Motif.location_types.each_key.each do |value|
             = label_tag do
               = f.radio_button(:location_type, value, disabled: true)
               span.text-muted.ml-1= Motif.human_attribute_value(:location_type, value)
