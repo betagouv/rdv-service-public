@@ -8,7 +8,7 @@ p
       .col-md-12
         / Nous voulons que l'autocomplete ne propose que les noms des motifs en base,
         / pas celles de l'historique de saisie du navigateur, d'où le autocomplete="off".
-        = f.input :name, label: fake_required_label("Intitulé du motif"), input_html: { list: "motif_names", autocomplete: "off" }, placeholder: "Saisissez le nom du motif", required: false
+        = f.input :name, label: fake_required_label("Nom"), input_html: { list: "motif_names", autocomplete: "off" }, placeholder: "Saisissez le nom du motif", required: false
         datalist#motif_names
           - Motif.where(organisation_id: current_agent.organisations).map(&:name).uniq.each do |org_name|
             option= org_name
