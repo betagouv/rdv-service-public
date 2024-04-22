@@ -20,15 +20,7 @@ RSpec.describe "Agent can create user" do
 
   context "ants_pre_demander number is validated and has no appointment declared yet" do
     before do
-      stub_request(:get, "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status?application_ids=1122334455").to_return(
-        status: 200,
-        body: {
-          ants_pre_demande_number => {
-            status: "validated",
-            appointments: [],
-          },
-        }.to_json
-      )
+      stub_ants_status("1122334455")
     end
 
     it "creates user with no warning" do
@@ -44,21 +36,13 @@ RSpec.describe "Agent can create user" do
 
   context "ants_pre_demander number is validated but already has appointments" do
     before do
-      stub_request(:get, "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status?application_ids=1122334455").to_return(
-        status: 200,
-        body: {
-          ants_pre_demande_number => {
-            status: "validated",
-            appointments: [
-              {
-                management_url: "https://gerer-rdv.com",
-                meeting_point: "Mairie de Sannois",
-                appointment_date: "2023-04-03T08:45:00",
-              },
-            ],
-          },
-        }.to_json
-      )
+      stub_ants_status("1122334455", appointments: [
+                    {
+                      management_url: "https://gerer-rdv.com",
+                      meeting_point: "Mairie de Sannois",
+                      appointment_date: "2023-04-03T08:45:00",
+                    },
+                  ])
     end
 
     it "displays a warning but allows user creation" do
@@ -77,15 +61,7 @@ RSpec.describe "Agent can create user" do
 
   context "ants_pre_demander number is consumed (dossier déjà envoyé et instruit en préfecture)" do
     before do
-      stub_request(:get, "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status?application_ids=1122334455").to_return(
-        status: 200,
-        body: {
-          ants_pre_demande_number => {
-            status: "consumed",
-            appointments: [],
-          },
-        }.to_json
-      )
+      stub_ants_status("1122334455", status: "consumed")
     end
 
     it "prevents agent from creating the user / RDV" do
