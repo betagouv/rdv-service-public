@@ -1,5 +1,9 @@
 module User::Ants
+  extend ActionView::Helpers::TranslationHelper # allows getting a SafeBuffer instead of a String when using #translate (which a direct call to I18n.t doesn't do)
+
   def self.validate_ants_pre_demande_number(user:, ants_pre_demande_number:, ignore_benign_errors:)
+    return if ants_pre_demande_number.blank?
+
     unless ants_pre_demande_number.match?(/\A[A-Za-z0-9]{10}\z/)
       user.errors.add(:ants_pre_demande_number, :invalid_format)
       return
@@ -12,13 +16,8 @@ module User::Ants
     if status == "validated"
 
       if application_hash["appointments"].any?
-        appointment = application_hash["appointments"].first
-        warning_message = I18n.t(
-          "activerecord.warnings.models.user.ants_pre_demande_number_already_used_html",
-          management_url: appointment["management_url"],
-          meeting_point: appointment["meeting_point"]
-        ).html_safe # rubocop:disable Rails/OutputSafety
-        user.add_benign_error(warning_message) unless ignore_benign_errors
+        appointment = OpenStruct.new(application_hash["appointments"].first)
+        user.add_benign_error(warning_message(appointment)) unless ignore_benign_errors
       end
 
     else
@@ -29,5 +28,13 @@ module User::Ants
     # on préfère bloquer la réservation et logguer l'erreur.
     user.errors.add(:ants_pre_demande_number, :unexpected_api_error)
     Sentry.capture_exception(e)
+  end
+
+  def self.warning_message(appointment)
+    translate(
+      "activerecord.warnings.models.user.ants_pre_demande_number_already_used_html",
+      management_url: appointment.management_url,
+      meeting_point: appointment.meeting_point
+    )
   end
 end
