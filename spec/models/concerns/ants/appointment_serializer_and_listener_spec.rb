@@ -71,9 +71,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
 
     describe "after_commit on_destroy" do
       it "deletes appointment on ANTS" do
-        stub_ants_status("A123456789")
         stub_ants_delete("A123456789")
-
         rdv.save!
         stub_ants_status_with_appointments
 
@@ -89,7 +87,6 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
 
     describe "after_commit on_update" do
       before do
-        stub_ants_status("A123456789")
         rdv.save!
         stub_ants_status_with_appointments
       end
@@ -135,7 +132,6 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
 
     describe "after_commit: Changing the value of ants_pre_demande_number" do
       it "creates appointment with new ants_pre_demande_number" do
-        stub_ants_status("A123456789")
         rdv.save!
         user.reload
 
@@ -155,7 +151,6 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
     end
 
     before do
-      stub_ants_status("A123456789")
       rdv.save!
       lieu.reload
     end
@@ -163,6 +158,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
     describe "after_commit: Changing the name of the lieu" do
       it "triggers a sync with ANTS" do
         perform_enqueued_jobs do
+          stub_ants_status("A123456789")
           lieu.update(name: "Nouveau Lieu")
 
           expect(create_appointment_stub).to have_been_requested.at_least_once

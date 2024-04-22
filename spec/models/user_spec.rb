@@ -355,7 +355,6 @@ RSpec.describe User, type: :model do
     it "accepts lowercase letters, but normalizes them to uppercase" do
       user = create(:user)
       user.ants_pre_demande_number = "abcde12345"
-      stub_ants_status("ABCDE12345")
       expect(user).to be_valid
       user.save
       expect(user.reload.ants_pre_demande_number).to eq "ABCDE12345"

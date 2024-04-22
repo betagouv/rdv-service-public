@@ -17,7 +17,6 @@ class User < ApplicationRecord
   include User::NotificableConcern
   include User::ImprovedUnicityErrorConcern
   include User::DeviseInvitableWithDomain
-  include User::HasAntsNumber
   include PhoneNumberValidation::HasPhoneNumber
   include WebhookDeliverable
   include TextSearch
@@ -71,6 +70,8 @@ class User < ApplicationRecord
 
   # Hooks
   before_save :set_email_to_null_if_blank
+  # voir Ants::AppointmentSerializerAndListener pour d'autres callbacks
+  before_validation -> { ants_pre_demande_number.upcase! }, if: -> { ants_pre_demande_number.present? }
 
   # Scopes
   default_scope { where(deleted_at: nil) }
