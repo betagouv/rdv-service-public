@@ -4,6 +4,21 @@ module AntsApi
 
     attr_reader :application_id, :meeting_point, :appointment_date, :management_url
 
+    VALIDATED = "validated".freeze
+
+    CONSUMED = "consumed".freeze
+    DECLARED = "declared".freeze
+    UNKNOWN = "unknown".freeze
+    EXPIRED = "expired".freeze
+
+    # https://api-coordination.rendezvouspasseport.ants.gouv.fr/docs#/Application%20Ids%20-%20%C3%A9diteurs/get_status_api_status_get
+    ERROR_STATUSES = {
+      CONSUMED => "correspond à un dossier déjà instruit",
+      DECLARED => "n'est pas officiellement reconnu par l'ANTS",
+      UNKNOWN => "n'est pas reconnu par l'ANTS",
+      EXPIRED => "correspond à un dossier expiré",
+    }.freeze
+
     def initialize(application_id:, meeting_point:, appointment_date:, management_url:, editor_comment: nil)
       @application_id = application_id
       @meeting_point = meeting_point

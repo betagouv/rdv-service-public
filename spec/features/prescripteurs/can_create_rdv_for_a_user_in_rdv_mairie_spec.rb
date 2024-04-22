@@ -114,7 +114,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
       fill_up_prescripteur_and_user
       click_on "Confirmer le rendez-vous"
 
-      expect(page).to have_content("Ce numéro de pré-demande ANTS correspond à un dossier déjà instruit")
+      expect(page).to have_content("Numéro de pré-demande ANTS correspond à un dossier déjà instruit")
       expect(page).not_to have_content("Confirmer en ignorant les avertissements")
     end
   end

@@ -93,7 +93,7 @@ RSpec.describe "Agent can create user" do
       fill_in :user_last_name, with: "Lebreton"
       fill_in :user_ants_pre_demande_number, with: ants_pre_demande_number
       click_button "Créer"
-      expect(page).to have_content("Ce numéro de pré-demande ANTS correspond à un dossier déjà instruit")
+      expect(page).to have_content("Numéro de pré-demande ANTS correspond à un dossier déjà instruit")
       expect(page).not_to have_content("Confirmer en ignorant les avertissements")
     end
   end
