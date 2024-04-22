@@ -106,9 +106,7 @@ nav.left-side-menu-wrapper
               li
                 = active_link_to "Lieux", admin_organisation_lieux_path(current_organisation), class: "side-menu__item side-menu__item--small"
               li
-                = active_link_to "Agents", admin_organisation_agents_path(current_organisation), class: "side-menu__item side-menu__item--small"
-              li
-                = active_link_to "Invitations", admin_organisation_invitations_path(current_organisation), class: "side-menu__item side-menu__item--small"
+                = active_link_to "Agents", admin_organisation_agents_path(current_organisation), active: [["admin/agents", "admin/invitations"], []], class: "side-menu__item side-menu__item--small"
               li
                 = active_link_to "Motifs", admin_organisation_motifs_path(current_organisation), class: "side-menu__item side-menu__item--small"
               - if current_agent.territorial_admin_in?(current_organisation.territory)

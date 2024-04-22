@@ -360,7 +360,7 @@ La connexion à un profil usager est faite par email + mot de passe. Les mots de
 (en utilisant Devise qui utilise Bcrypt). Une connexion via FranceConnect est aussi proposée : un compte est alors
 créé ou relié si l'e-mail existe déjà dans notre base usagers.
 
-Un mot de passe doit avoir une longueur d'**au moins 10 caractères** et ne pas faire partie des 20 000 mots de passe les plus utilisés par des francophones (https://github.com/francois-ferrandis/common_french_passwords).
+Un mot de passe doit avoir une longueur d'**au moins 12 caractères** et ne pas faire partie des 20 000 mots de passe les plus utilisés par des francophones (https://github.com/francois-ferrandis/common_french_passwords).
 
 #### Les agents
 
@@ -380,7 +380,7 @@ La connexion à un profil agent est faite par email + mot de passe. Les mots de 
 (en utilisant une Devise qui utilise Bcrypt). Une connexion via InclusionConnect est aussi proposée : un compte est alors
 créé ou relié si l'e-mail existe déjà dans notre base agents.
 
-Un mot de passe doit avoir une longueur d'**au moins 10 caractères** et ne pas faire partie des 20 000 mots de passe les plus utilisés par des francophones (https://github.com/francois-ferrandis/common_french_passwords).
+Un mot de passe doit avoir une longueur d'**au moins 12 caractères** et ne pas faire partie des 20 000 mots de passe les plus utilisés par des francophones (https://github.com/francois-ferrandis/common_french_passwords).
 
 #### Les super admins
 

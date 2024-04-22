@@ -24,6 +24,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
                        {
                          management_url: Rails.application.routes.url_helpers.users_rdv_url(rdv, host: organisation.domain.host_name),
                          meeting_point: rdv.lieu.name,
+                         meeting_point_id: rdv.lieu.id,
                          appointment_date: rdv.starts_at.strftime("%Y-%m-%d %H:%M:%S"),
                        },
                      ])
@@ -39,8 +40,10 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
           rdv.save!
           expect(WebMock).to have_requested(
             :post,
-            "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/appointments?application_id=A123456789&appointment_date=2020-04-20%2008:00:00&management_url=http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}&meeting_point=Lieu1"
-          ).with(headers: ants_api_headers)
+            "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/appointments?application_id=A123456789&appointment_date=2020-04-20%2008:00:00&management_url=http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}&meeting_point=#{rdv.lieu.name}&meeting_point_id=#{rdv.lieu.id}"
+          ).with(
+            headers: ants_api_headers
+          )
         end
       end
 
@@ -79,7 +82,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
           rdv.destroy
           expect(WebMock).to have_requested(
             :delete,
-            "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/appointments?application_id=A123456789&appointment_date=2020-04-20%2008:00:00&meeting_point=Lieu1"
+            "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/appointments?application_id=A123456789&appointment_date=2020-04-20%2008:00:00&meeting_point=#{rdv.lieu.name}&meeting_point_id=#{rdv.lieu.id}"
           ).with(headers: ants_api_headers).at_least_once
         end
       end
@@ -99,7 +102,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
 
             expect(WebMock).to have_requested(
               :delete,
-              "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/appointments?application_id=A123456789&appointment_date=2020-04-20%2008:00:00&meeting_point=Lieu1"
+              "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/appointments?application_id=A123456789&appointment_date=2020-04-20%2008:00:00&meeting_point=#{rdv.lieu.name}&meeting_point_id=#{rdv.lieu.id}"
             ).with(headers: ants_api_headers).at_least_once
           end
         end
@@ -117,7 +120,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
             rdv.seen!
             expect(WebMock).to have_requested(
               :post,
-              "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/appointments?application_id=A123456789&appointment_date=2020-04-20%2008:00:00&management_url=http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}&meeting_point=Lieu1"
+              "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/appointments?application_id=A123456789&appointment_date=2020-04-20%2008:00:00&management_url=http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}&meeting_point=#{rdv.lieu.name}&meeting_point_id=#{rdv.lieu.id}"
             ).with(headers: ants_api_headers)
           end
         end
