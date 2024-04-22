@@ -44,7 +44,7 @@ class Admin::AbsencesController < AgentAuthController
       flash[:notice] = t(".busy_time_created")
       redirect_to admin_organisation_agent_absences_path(current_organisation, @absence.agent_id)
     else
-      render :edit
+      render :new
     end
   end
 
