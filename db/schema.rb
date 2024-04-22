@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_03_21_114146) do
+ActiveRecord::Schema[7.0].define(version: 2024_04_22_141306) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -63,6 +63,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_21_114146) do
     "public_office",
     "home",
     "phone",
+    "visio",
   ], force: :cascade
 
   create_enum :rdv_status, [

@@ -39,7 +39,7 @@
       h5.card-title= Motif.human_attribute_name("location_type")
       .mt-3.d-flex.flex-column
         - if motif.rdvs.empty?
-          - %i[public_office phone home].each do |value|
+          - Motif.location_types.keys.each do |value|
             = label_tag do
               = f.radio_button(:location_type, value)
               span.ml-1= Motif.human_attribute_value(:location_type, value)

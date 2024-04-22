@@ -362,6 +362,12 @@ class Rdv < ApplicationRecord
     update!(cancelled_at: Time.zone.now, status: "revoked")
   end
 
+  def visio_url
+    return nil unless motif.visio?
+
+    "https://webconf.numerique.gouv.fr/#{domain.id.downcase}#{uuid}".gsub(/[-_]/, "")
+  end
+
   private
 
   def update_collective_rdv_status

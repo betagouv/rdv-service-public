@@ -31,6 +31,9 @@
         = human_location(rdv)
       - elsif rdv.public_office?
         = human_location(rdv)
+      - elsif rdv.motif.visio?
+        = "Par webconférence "
+        = link_to("démarrer la webconférence", rdv.visio_url, tarket: :blank)
 
 .d-flex.card-text
   div.mr-1
