@@ -38,7 +38,7 @@ module User::HasAntsNumber
   rescue AntsApi::Appointment::ApiRequestError, Typhoeus::Errors::TimeoutError => e
     # Si l'API de l'ANTS est fiable, donc si elle renvoie une erreur ou un timeout,
     # on préfère bloquer la réservation et logguer l'erreur.
-    errors.add(:base, "Erreur inattendue lors de la validation du numéro de pré-demande, merci de réessayer dans 30 secondes")
+    errors.add(:ants_pre_demande_number, :unexpected_api_error)
     Sentry.capture_exception(e)
   end
 end

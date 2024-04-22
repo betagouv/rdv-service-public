@@ -134,7 +134,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
       fill_up_prescripteur_and_user
       click_on "Confirmer le rendez-vous"
 
-      expect(page).to have_content("Erreur inattendue lors de la validation du numéro de pré-demande, merci de réessayer dans 30 secondes")
+      expect(page).to have_content("Numéro de pré-demande ANTS n'a pas pu être validé à cause d'une erreur inattendue. Merci de réessayer dans 30 secondes.")
       expect(page).not_to have_content("Confirmer en ignorant les avertissements")
     end
   end

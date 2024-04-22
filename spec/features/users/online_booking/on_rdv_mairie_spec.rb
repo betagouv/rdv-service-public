@@ -205,7 +205,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
 
       fill_in("user_ants_pre_demande_number", with: "5544332211")
       click_button("Continuer")
-      expect(page).to have_content("Erreur inattendue lors de la validation du numéro de pré-demande, merci de réessayer dans 30 secondes")
+      expect(page).to have_content("Numéro de pré-demande ANTS n'a pas pu être validé à cause d'une erreur inattendue. Merci de réessayer dans 30 secondes.")
       expect(page).not_to have_content("Confirmer en ignorant les avertissements")
     end
   end
