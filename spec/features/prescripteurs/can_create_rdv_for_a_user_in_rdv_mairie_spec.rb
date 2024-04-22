@@ -43,7 +43,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
 
   context "success scenario (ants_pre_demander number is validated and has no appointment declared yet)" do
     before do
-      stub_request(:get, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status}).to_return(
+      stub_request(:get, "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status?application_ids=1122334455").to_return(
         status: 200,
         body: { ants_pre_demande_number => { status: "validated", appointments: [] } }.to_json
       )
@@ -64,7 +64,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
 
   context "ants_pre_demander number is validated but already has appointments" do
     before do
-      stub_request(:get, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status}).to_return(
+      stub_request(:get, "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status?application_ids=1122334455").to_return(
         status: 200,
         body: {
           ants_pre_demande_number => {
@@ -101,7 +101,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
 
   context "ants_pre_demander number is consumed (dossier déjà envoyé et instruit en préfecture)" do
     before do
-      stub_request(:get, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status}).to_return(
+      stub_request(:get, "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status?application_ids=1122334455").to_return(
         status: 200,
         body: { ants_pre_demande_number => { status: "consumed", appointments: [] } }.to_json
       )
@@ -121,7 +121,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
 
   context "ANTS responds with an unexpected error" do
     before do
-      stub_request(:get, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status}).to_return(
+      stub_request(:get, "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status?application_ids=1122334455").to_return(
         status: 500,
         body: "Internal Server Error"
       )

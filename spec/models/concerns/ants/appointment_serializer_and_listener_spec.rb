@@ -1,10 +1,6 @@
 RSpec.describe Ants::AppointmentSerializerAndListener do
   include_context "rdv_mairie_api_authentication"
 
-  before do
-    travel_to(Time.zone.parse("01/01/2020"))
-  end
-
   let(:organisation) { create(:organisation, verticale: :rdv_mairie) }
   let(:user) { create(:user, ants_pre_demande_number: "A123456789", organisations: [organisation]) }
   let(:lieu) { create(:lieu, organisation: organisation, name: "Lieu1") }

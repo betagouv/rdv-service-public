@@ -37,15 +37,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
     end
 
     before do
-      stub_request(:get, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status.*application_ids=1122334455}).to_return(
-        status: 200,
-        body: {
-          "1122334455" => {
-            status: "validated",
-            appointments: appointments,
-          },
-        }.to_json
-      )
+      stub_ants_status("1122334455", appointments: appointments)
     end
 
     it "allows booking a rdv through the full lifecycle of api calls" do
@@ -122,24 +114,8 @@ RSpec.describe "User can search rdv on rdv mairie" do
     let(:appointments) { [] }
 
     before do
-      stub_request(:get, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status.*application_ids=1122334455}).to_return(
-        status: 200,
-        body: {
-          "1122334455" => {
-            status: "validated",
-            appointments: appointments,
-          },
-        }.to_json
-      )
-      stub_request(:get, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status.*application_ids=5544332211}).to_return(
-        status: 200,
-        body: {
-          "5544332211" => {
-            status: "validated",
-            appointments: [],
-          },
-        }.to_json
-      )
+      stub_ants_status("1122334455", appointments: appointments)
+      stub_ants_status("5544332211", appointments: [])
     end
 
     it "can add a relative with their ants_pre_demande_number", js: true do
@@ -188,7 +164,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
 
   context "ANTS responds with an unexpected error" do
     before do
-      stub_request(:get, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status}).to_return(
+      stub_request(:get, "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status?application_ids=5544332211").to_return(
         status: 500,
         body: "Internal Server Error"
       )
