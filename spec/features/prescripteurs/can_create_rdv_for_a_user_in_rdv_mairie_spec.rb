@@ -149,7 +149,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
       fill_up_prescripteur_and_user
       click_on "Confirmer le rendez-vous"
 
-      expect(page).to have_content("Numéro de pré-demande doit comporter 10 chiffres et lettres")
+      expect(page).to have_content("Numéro de pré-demande ANTS doit comporter 10 chiffres et lettres")
       expect(page).not_to have_content("Confirmer en ignorant les avertissements")
     end
   end

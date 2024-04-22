@@ -15,6 +15,14 @@ class BeneficiaireForm
   validates_presence_of :first_name, :last_name
   validate :warn_no_contact_information
   validate :validate_phone_number
+  validate :validate_user
+
+  def validate_user
+    user = User.new(first_name:, last_name:, phone_number:, ignore_benign_errors:, ants_pre_demande_number:, created_through: "prescripteur")
+    if user.invalid?
+      errors.merge!(user)
+    end
+  end
 
   def warn_no_contact_information
     return if ignore_benign_errors

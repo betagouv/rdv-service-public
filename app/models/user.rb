@@ -71,7 +71,7 @@ class User < ApplicationRecord
 
   def validate_ants_pre_demande_number
     unless Ants.valid_pre_demande_number?(ants_pre_demande_number)
-      errors.add(:ants_pre_demande_number, "doit comporter 10 chiffres et lettres")
+      errors.add(:ants_pre_demande_number, :invalid_format)
       return
     end
 
