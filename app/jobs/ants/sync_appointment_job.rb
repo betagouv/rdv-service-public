@@ -1,5 +1,23 @@
 module Ants
   class SyncAppointmentJob < ApplicationJob
+    class << self
+      def perform_later_for(rdv)
+        # On passe les attributes du RDV au lieu de l'objet active record, au cas où ce dernier serait supprimé
+        perform_later(rdv_attributes: rdv_attributes(rdv), appointment_data: rdv.serialize_for_ants_api)
+      end
+
+      private
+
+      def rdv_attributes(rdv)
+        {
+          id: rdv.id,
+          status: rdv.status,
+          users_ids: rdv.users.ids,
+          obsolete_application_id: rdv.obsolete_application_id,
+        }
+      end
+    end
+
     def perform(rdv_attributes:, appointment_data:)
       @rdv_attributes = rdv_attributes
       @rdv = Rdv.find_by(id: @rdv_attributes[:id])
@@ -55,24 +73,6 @@ module Ants
     def users
       @users ||= User.where(id: @rdv_attributes[:users_ids]).select do |user|
         user.ants_pre_demande_number.present? # Les agents peuvent créer un rdv sans préciser le numéro de pré-demande ANTS
-      end
-    end
-
-    class << self
-      def perform_later_for(rdv)
-        # On passe les attributes du RDV au lieu de l'objet active record, au cas où ce dernier serait supprimé
-        perform_later(rdv_attributes: rdv_attributes(rdv), appointment_data: rdv.serialize_for_ants_api)
-      end
-
-      private
-
-      def rdv_attributes(rdv)
-        {
-          id: rdv.id,
-          status: rdv.status,
-          users_ids: rdv.users.ids,
-          obsolete_application_id: rdv.obsolete_application_id,
-        }
       end
     end
   end
