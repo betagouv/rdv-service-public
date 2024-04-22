@@ -2,8 +2,6 @@ class AntsApi
   # Voir la liste des attributs sur la doc API :
   # https://api-coordination.rendezvouspasseport.ants.gouv.fr/docs
 
-  VALIDATED = "validated".freeze
-
   class ApiRequestError < StandardError; end
 
   class << self
@@ -40,6 +38,24 @@ class AntsApi
       )
     end
 
+    def find(application_id:, management_url:)
+      load_appointments(application_id).find do |data|
+        data["management_url"] == management_url
+      end
+    end
+
+    def find_and_delete(application_id:, management_url:)
+      data = find(application_id: application_id, management_url: management_url)
+      return if data.blank?
+
+      delete(
+        application_id: application_id,
+        meeting_point: data["meeting_point"],
+        meeting_point_id: data["meeting_point_id"],
+        appointment_date: data["appointment_date"],
+      )
+    end
+
     private
 
     def request(method, resource, params:, timeout: nil)
@@ -59,6 +75,10 @@ class AntsApi
       end
 
       response.body.empty? ? {} : JSON.parse(response.body)
+    end
+
+    def load_appointments(application_id)
+      status(application_id: application_id).fetch("appointments")
     end
   end
 end

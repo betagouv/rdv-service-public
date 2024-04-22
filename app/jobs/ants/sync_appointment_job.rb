@@ -38,11 +38,9 @@ module Ants
     def delete_obsolete_appointment
       return if @rdv_attributes[:obsolete_application_id].blank?
 
-      AntsApi.delete(
+      AntsApi.find_and_delete(
         application_id: @rdv_attributes[:obsolete_application_id],
-        appointment_date: @appointment_data[:appointment_date],
-        meeting_point: @appointment_data[:meeting_point],
-        meeting_point_id: @appointment_data[:meeting_point_id]
+        management_url: @appointment_data[:management_url]
       )
     end
 
@@ -52,11 +50,9 @@ module Ants
 
     def delete_appointments
       users.each do |user|
-        AntsApi.delete(
+        AntsApi.find_and_delete(
           application_id: user.ants_pre_demande_number,
-          appointment_date: @appointment_data[:appointment_date],
-          meeting_point: @appointment_data[:meeting_point],
-          meeting_point_id: @appointment_data[:meeting_point_id]
+          management_url: @appointment_data[:management_url],
         )
       end
     end
