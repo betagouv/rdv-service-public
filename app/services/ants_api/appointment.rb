@@ -2,8 +2,6 @@ module AntsApi
   class Appointment
     class ApiRequestError < StandardError; end
 
-    attr_reader :application_id, :meeting_point, :appointment_date, :management_url
-
     VALIDATED = "validated".freeze
 
     CONSUMED = "consumed".freeze
