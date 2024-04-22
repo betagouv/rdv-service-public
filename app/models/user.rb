@@ -67,7 +67,7 @@ class User < ApplicationRecord
   validates :number_of_children, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
 
   validate :birth_date_validity
-  validate :validate_ants_pre_demande_number, if: -> { ants_pre_demande_number.present? }
+  validate :validate_ants_pre_demande_number, if: -> { ants_pre_demande_number.present? && ants_pre_demande_number_changed? }
 
   def validate_ants_pre_demande_number
     unless Ants.valid_pre_demande_number?(ants_pre_demande_number)

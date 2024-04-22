@@ -86,7 +86,7 @@ module AntsApi
           raise(ApiRequestError, "code:#{response.response_code}, body:#{response.response_body}")
         end
 
-        response.body.empty? ? {} : JSON.parse(response.body)
+        JSON.parse(response.body)
       end
 
       private
