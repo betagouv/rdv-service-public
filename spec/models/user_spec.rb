@@ -350,8 +350,6 @@ RSpec.describe User, type: :model do
   end
 
   describe "#ants_pre_demande_number" do
-    include_context "rdv_mairie_api_authentication"
-
     it "accepts lowercase letters, but normalizes them to uppercase" do
       user = create(:user)
       user.ants_pre_demande_number = "abcde12345"
