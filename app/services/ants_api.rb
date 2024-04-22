@@ -52,7 +52,7 @@ class AntsApi
         application_id: application_id,
         meeting_point: data["meeting_point"],
         meeting_point_id: data["meeting_point_id"],
-        appointment_date: data["appointment_date"],
+        appointment_date: data["appointment_date"]
       )
     end
 

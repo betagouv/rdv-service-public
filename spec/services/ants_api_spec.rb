@@ -1,4 +1,4 @@
-RSpec.describe AntsApi::Appointment, type: :service do
+RSpec.describe AntsApi, type: :service do
   include_context "rdv_mairie_api_authentication"
 
   describe "#status" do
@@ -17,7 +17,7 @@ RSpec.describe AntsApi::Appointment, type: :service do
       it "raises an error" do
         expect do
           described_class.status(application_id: "1122334455")
-        end.to raise_error(AntsApi::Appointment::ApiRequestError, "code:401, body:{\n  \"detail\": \"X-RDV-OPT-AUTH-TOKEN header invalid\"\n}\n")
+        end.to raise_error(AntsApi::ApiRequestError, "code:401, body:{\n  \"detail\": \"X-RDV-OPT-AUTH-TOKEN header invalid\"\n}\n")
       end
     end
   end
@@ -36,16 +36,14 @@ RSpec.describe AntsApi::Appointment, type: :service do
       end
 
       it "returns request body" do
-        appointment = described_class.new(
+        result = described_class.create(
           application_id: "XXXX",
-          appointment_data: {
-            management_url: "https://gerer-rdv.com",
-            meeting_point_id: "123456",
-            meeting_point: "Mairie de Sannois",
-            appointment_date: "2023-04-03T08:45:00",
-          }
+          management_url: "https://gerer-rdv.com",
+          meeting_point_id: "123456",
+          meeting_point: "Mairie de Sannois",
+          appointment_date: "2023-04-03T08:45:00"
         )
-        expect(appointment.create).to eq({ "success" => true })
+        expect(result).to eq({ "success" => true })
       end
     end
   end

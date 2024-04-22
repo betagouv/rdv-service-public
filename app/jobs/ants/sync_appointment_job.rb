@@ -52,7 +52,7 @@ module Ants
       users.each do |user|
         AntsApi.find_and_delete(
           application_id: user.ants_pre_demande_number,
-          management_url: @appointment_data[:management_url],
+          management_url: @appointment_data[:management_url]
         )
       end
     end
