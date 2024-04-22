@@ -16,14 +16,17 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
   end
 
   def stub_ants_status_with_appointments
-    stub_ants_status("A123456789", appointments: [
-                       {
-                         management_url: Rails.application.routes.url_helpers.users_rdv_url(rdv, host: organisation.domain.host_name),
-                         meeting_point: rdv.lieu.name,
-                         meeting_point_id: rdv.lieu.id,
-                         appointment_date: rdv.starts_at.strftime("%Y-%m-%d %H:%M:%S"),
-                       },
-                     ])
+    stub_ants_status(
+      "A123456789",
+      appointments: [
+        {
+          management_url: Rails.application.routes.url_helpers.users_rdv_url(rdv, host: organisation.domain.host_name),
+          meeting_point: rdv.lieu.name,
+          meeting_point_id: rdv.lieu.id,
+          appointment_date: rdv.starts_at.strftime("%Y-%m-%d %H:%M:%S"),
+        },
+      ]
+    )
   end
 
   describe "RDV callbacks" do

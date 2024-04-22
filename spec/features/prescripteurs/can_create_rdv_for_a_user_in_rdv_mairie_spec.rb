@@ -61,13 +61,16 @@ RSpec.describe "prescripteur can create RDV for a user" do
 
   context "ants_pre_demander number is validated but already has appointments" do
     before do
-      stub_ants_status("1122334455", appointments: [
-                    {
-                      management_url: "https://gerer-rdv.com",
-                      meeting_point: "Mairie de Sannois",
-                      appointment_date: "2023-04-03T08:45:00",
-                    },
-                  ])
+      stub_ants_status(
+        "1122334455",
+        appointments: [
+          {
+            management_url: "https://gerer-rdv.com",
+            meeting_point: "Mairie de Sannois",
+            appointment_date: "2023-04-03T08:45:00",
+          },
+        ]
+      )
     end
 
     it "show a warning but allows creating the user and RDV" do
