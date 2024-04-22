@@ -43,6 +43,11 @@
       span.title Ceci est un rendez-vous à domicile à l'adresse :
       div.alignright
         = rdv.address_complete
+  - elsif rdv.motif.visio?
+    div.row-result
+      span.title = "RDV par webconférence "
+      div.alignright
+        = link_to("rejoindre la webconférence", rdv.visio_url, tarket: :blank)
   - else
     div.row-result
       span.title Adresse :
