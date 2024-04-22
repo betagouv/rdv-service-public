@@ -38,12 +38,12 @@ module Ants
     def delete_obsolete_appointment
       return if @rdv_attributes[:obsolete_application_id].blank?
 
-      obsolete_appointment = AntsApi::Appointment.new(
+      AntsApi.delete(
         application_id: @rdv_attributes[:obsolete_application_id],
-        appointment_data: @appointment_data
+        appointment_date: @appointment_data[:appointment_date],
+        meeting_point: @appointment_data[:meeting_point],
+        meeting_point_id: @appointment_data[:meeting_point_id]
       )
-
-      obsolete_appointment.delete
     end
 
     def rdv_cancelled_or_deleted?
@@ -51,29 +51,38 @@ module Ants
     end
 
     def delete_appointments
-      appointments.each(&:delete)
+      users.each do |user|
+        AntsApi.delete(
+          application_id: user.ants_pre_demande_number,
+          appointment_date: @appointment_data[:appointment_date],
+          meeting_point: @appointment_data[:meeting_point],
+          meeting_point_id: @appointment_data[:meeting_point_id]
+        )
+      end
     end
 
     def sync_appointments
       # L'API de l'ANTS ne fournit pas d'endpoint pour la mise à jour d'un RDV, mais en fournit pour la création et la suppression
       # Pour donc maintenir à jour les infos des RDVs chez l'ANTS, nous sommes obligés de supprimer, et de re-créer les RDVs
       # Toutefois, les RDVs chez l'ANTS avec un status 'consumed', ne sont plus modifiables.
-      appointments.select(&:syncable?).each do |appointment|
-        appointment.delete
-        appointment.create
-      end
+      delete_appointments
+      create_appointments
     end
 
-    def appointments
-      @appointments = users.map do |user|
-        AntsApi::Appointment.new(application_id: user.ants_pre_demande_number, appointment_data: @appointment_data)
+    def create_appointments
+      users.each do |user|
+        AntsApi.create(
+          application_id: user.ants_pre_demande_number,
+          management_url: @appointment_data[:management_url],
+          appointment_date: @appointment_data[:appointment_date],
+          meeting_point: @appointment_data[:meeting_point],
+          meeting_point_id: @appointment_data[:meeting_point_id]
+        )
       end
     end
 
     def users
-      @users ||= User.where(id: @rdv_attributes[:users_ids]).select do |user|
-        user.ants_pre_demande_number.present? # Les agents peuvent créer un rdv sans préciser le numéro de pré-demande ANTS
-      end
+      @users ||= User.where(id: @rdv_attributes[:users_ids]).select(&:syncable_with_ants?)
     end
   end
 end

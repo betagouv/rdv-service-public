@@ -4,7 +4,7 @@ module User::Ants
   def self.validate_ants_pre_demande_number(user:, ants_pre_demande_number:, ignore_benign_errors:)
     return if ants_pre_demande_number.blank?
 
-    application_hash = AntsApi::Appointment.status(application_id: ants_pre_demande_number, timeout: 4)
+    application_hash = AntsApi.status(application_id: ants_pre_demande_number, timeout: 4)
 
     status = application_hash["status"]
 
@@ -44,5 +44,12 @@ module User::Ants
     else
       "Ce numéro de pré-demande ANTS est invalide"
     end
+  end
+
+  def syncable_with_ants?
+    return if ants_pre_demande_number.blank?
+
+    status = AntsApi.status(application_id: ants_pre_demande_number, timeout: 4)["status"]
+    status == "validated"
   end
 end
