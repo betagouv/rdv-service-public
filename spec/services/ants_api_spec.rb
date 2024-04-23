@@ -1,7 +1,7 @@
 RSpec.describe AntsApi, type: :service do
   include_context "rdv_mairie_api_authentication"
 
-  describe "#status" do
+  describe ".status" do
     context "when credentials are incorrect" do
       before do
         stub_request(:get, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status}).to_return(
@@ -22,7 +22,7 @@ RSpec.describe AntsApi, type: :service do
     end
   end
 
-  describe "#create" do
+  describe ".create" do
     context "when creation is successful" do
       before do
         stub_request(:post, "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/appointments?application_id=XXXX&appointment_date=2023-04-03T08:45:00&management_url=https://gerer-rdv.com&meeting_point=Mairie%20de%20Sannois&meeting_point_id=123456").to_return(
