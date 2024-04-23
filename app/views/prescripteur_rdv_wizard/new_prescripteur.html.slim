@@ -14,7 +14,7 @@ main.container
                 span> Nouvelle fonctionnalité : Pour ne pas avoir à remplir ce formulaire pour chaque nouveau rendez-vous et réduire les doublons, vous pouvez utilisez la prescription dans l'espace agent
                 - unless @rdv_wizard.motif.organisation.territory.sectorized?
                   / TODO: faire sauter ce unless une fois que nous avons implémenté la saisie d'adresse dans la prescription interne sans usager selectionnée
-                  = link_to user_selection_admin_organisation_prescription_path(@rdv_wizard.motif.organisation, session[:rdv_wizard_attributes]) do
+                  = link_to user_selection_admin_organisation_prescription_path(@rdv_wizard.motif.organisation, session[:rdv_wizard_attributes].merge(prescripteur: 'interne')) do
                     span> en cliquant ici.
 
               p.mb-0
