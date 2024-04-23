@@ -18,7 +18,7 @@ module User::Ants
     else
       user.errors.add(:base, error_message(application_hash["status"]))
     end
-  rescue AntsApi::Appointment::ApiRequestError, Typhoeus::Errors::TimeoutError => e
+  rescue AntsApi::ApiRequestError, Typhoeus::Errors::TimeoutError => e
     # Si l'api de l'ANTS renvoie une erreur ou un timeout, on ne veut pas bloquer la prise de rendez-vous
     # pour l'usager, donc on considère le numéro comme valide.
     Sentry.capture_exception(e)
