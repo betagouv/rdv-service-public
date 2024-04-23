@@ -9,7 +9,7 @@ module User::Ants
       return
     end
 
-    application_hash = AntsApi::Appointment.status(application_id: ants_pre_demande_number, timeout: 4)
+    application_hash = AntsApi.status(application_id: ants_pre_demande_number, timeout: 4)
 
     status = application_hash["status"]
 
@@ -23,7 +23,7 @@ module User::Ants
     else
       user.errors.add(:ants_pre_demande_number, AntsApi::Appointment::ERROR_STATUSES.fetch(status))
     end
-  rescue AntsApi::Appointment::ApiRequestError, Typhoeus::Errors::TimeoutError => e
+  rescue AntsApi::ApiRequestError, Typhoeus::Errors::TimeoutError => e
     # Si l'API de l'ANTS est fiable, donc si elle renvoie une erreur ou un timeout,
     # on préfère bloquer la réservation et logguer l'erreur.
     user.errors.add(:ants_pre_demande_number, :unexpected_api_error)
@@ -36,5 +36,12 @@ module User::Ants
       management_url: appointment.management_url,
       meeting_point: appointment.meeting_point
     )
+  end
+
+  def syncable_with_ants?
+    return if ants_pre_demande_number.blank?
+
+    status = AntsApi.status(application_id: ants_pre_demande_number, timeout: 4)["status"]
+    status == "validated"
   end
 end

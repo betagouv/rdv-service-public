@@ -21,6 +21,7 @@ class User < ApplicationRecord
   include WebhookDeliverable
   include TextSearch
   include UncommonPasswordConcern
+  include User::Ants
 
   def self.search_options
     {
