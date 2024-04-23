@@ -51,28 +51,6 @@ RSpec.describe Lieu, type: :model do
         it { is_expected.to be_empty }
       end
     end
-
-    describe "address" do
-      context "address in wrong format" do
-        let(:lieu) { build :lieu, address: "139 Rue de Bercy, 75012 Paris" }
-
-        it "validates format with error" do
-          lieu.valid?
-
-          expect(lieu.errors.full_messages).to eq(["Adresse Le format correct est : 139 Rue de Bercy, Paris, 75012"])
-        end
-      end
-
-      context "address in correct format" do
-        let(:lieu) { build :lieu, address: "139 Rue de Bercy, Paris, 75012" }
-
-        it "validates format successfully" do
-          lieu.valid?
-
-          expect(lieu.errors).to be_empty
-        end
-      end
-    end
   end
 
   context "with motif" do

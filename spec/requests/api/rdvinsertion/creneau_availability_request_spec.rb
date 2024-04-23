@@ -2,9 +2,10 @@ require "swagger_helper"
 
 RSpec.describe "Available Creneaux Count for Invitation", swagger_doc: "v1/api.json" do
   with_examples
+  let!(:now) { Time.zone.parse("2023-10-23 16:00") }
 
   before do
-    travel_to(Time.zone.parse("2023-10-23 16:00"))
+    travel_to(now)
   end
 
   path "/api/rdvinsertion/invitations/creneau_availability" do
@@ -119,6 +120,19 @@ RSpec.describe "Available Creneaux Count for Invitation", swagger_doc: "v1/api.j
           expect(parsed_response_body["creneau_availability"]).to be_falsey
         end
 
+        it "logs the API call" do
+          expect(ApiCall.first.attributes.symbolize_keys).to include(
+            controller_name: "invitations",
+            action_name: "creneau_availability",
+            agent_id: agent.id,
+            received_at: now
+          )
+          expect(ApiCall.first.raw_http["method"]).to eq("GET")
+          expect(ApiCall.first.raw_http["headers"]).to include("HTTP_ACCEPT")
+          expect(ApiCall.first.raw_http["headers"]).not_to include("rack.session.options")
+          expect(ApiCall.first.raw_http["headers"]["HTTP_ACCEPT"]).to eq("application/json")
+        end
+
         context "Si le lieu n'existe pas" do
           let!(:lieu_id) { "666" }
 
@@ -174,6 +188,18 @@ RSpec.describe "Available Creneaux Count for Invitation", swagger_doc: "v1/api.j
           let!(:"organisation_ids[]") { [organisation1.id] }
 
           it { expect(parsed_response_body["creneau_availability"]).to be_truthy }
+
+          it "logs the API call" do
+            expect(ApiCall.first.attributes.symbolize_keys).to include(
+              controller_name: "invitations",
+              action_name: "creneau_availability",
+              agent_id: agent.id,
+              received_at: now
+            )
+            expect(ApiCall.first.raw_http["method"]).to eq("GET")
+            expect(ApiCall.first.raw_http["headers"]).to include("HTTP_ACCEPT")
+            expect(ApiCall.first.raw_http["headers"]["HTTP_ACCEPT"]).to eq("application/json")
+          end
         end
 
         context "Avec le params organisation_ids[]" do

@@ -46,6 +46,25 @@ RSpec.describe CronJob::DestroyOldRdvsAndInactiveAccountsJob do
     expect(User.all).not_to include(user_without_rdv_created_25_months_ago)
   end
 
+  it "only destroys inactive users without active invitation (RDV-Insertion)" do
+    user_without_rdv_created_25_months_ago_invited_25_months_ago =
+      create(:user, rdv_invitation_token: "123456", rdv_invitation_token_updated_at: 25.months.ago, created_at: 25.months.ago)
+    user_without_rdv_created_23_months_ago_invited_23_months_ago =
+      create(:user, rdv_invitation_token: "654321", rdv_invitation_token_updated_at: 23.months.ago, created_at: 23.months.ago)
+    user_without_rdv_created_25_months_ago_invited_recently =
+      create(:user, rdv_invitation_token: "987654", rdv_invitation_token_updated_at: 1.month.ago, created_at: 25.months.ago)
+
+    described_class.new.perform
+    perform_enqueued_jobs # to perform the DestroyInactiveUsers job
+
+    expect(User.all).to match_array([
+                                      user_without_rdv_created_23_months_ago_invited_23_months_ago,
+                                      user_without_rdv_created_25_months_ago_invited_recently,
+                                    ])
+
+    expect(User.all).not_to include(user_without_rdv_created_25_months_ago_invited_25_months_ago)
+  end
+
   it "calls the webhooks" do
     travel_to(25.months.ago) { create(:rdv, organisation: organisation, starts_at: Time.zone.today.change(hour: 16)) }
     expect do

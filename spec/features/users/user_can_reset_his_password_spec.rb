@@ -15,7 +15,7 @@ RSpec.describe "User resets his password spec" do
     current_email.click_link("Changer")
     expect(page).to have_content("Définir mon mot de passe")
 
-    fill_in "password", with: "1234567890"
+    fill_in "password", with: "q1w2e3r4t5y6"
     expect { click_on "Enregistrer" }.not_to change { user.reload.encrypted_password }
     expect(page).to have_content("Ce mot de passe fait partie d'une liste de mots de passe fréquemment utilisés")
 

@@ -40,7 +40,7 @@ RSpec.describe "agents can prescribe rdvs" do
     login_as(current_agent, scope: :agent)
     visit root_path
     within(".left-side-menu") { click_on "Trouver un RDV" }
-    click_link "élargir votre recherche"
+    click_link "Élargir la recherche"
   end
 
   describe 'using "Trouver un RDV"' do
@@ -194,7 +194,7 @@ RSpec.describe "agents can prescribe rdvs" do
       login_as(current_agent, scope: :agent)
       visit admin_organisation_user_path(org_mds, id: user.id)
       within(".content") { click_on "Trouver un RDV" } # Trouver un RDV pour l'usager
-      click_link "élargir votre recherche"
+      click_link "Élargir la recherche"
       expect(page).to have_content("Nouveau RDV par prescription")
       expect(page).to have_content("pour #{user.full_name}")
       # Select Service
@@ -234,7 +234,7 @@ RSpec.describe "agents can prescribe rdvs" do
       login_as(current_agent, scope: :agent)
       visit root_path
       within(".left-side-menu") { click_on "Trouver un RDV" }
-      click_link "élargir votre recherche"
+      click_link "Élargir la recherche"
       # Select Service
       find("h3", text: motif_mds.service.name).ancestor("a").click
       # Select Motif
