@@ -1,6 +1,6 @@
 class Participation < ApplicationRecord
   # Mixins
-  devise :invitable
+  devise :invitable, invite_for: 12.weeks
 
   include Participation::StatusChangeable
   include Participation::Creatable

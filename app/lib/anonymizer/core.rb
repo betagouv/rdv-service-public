@@ -48,6 +48,14 @@ class Anonymizer::Core
     record.reload
   end
 
+  def self.anonymize_records_in_scope!(scope)
+    new(scope.table_name).anonymize_records_in_scope!(scope)
+  end
+
+  def anonymize_records_in_scope!(scope)
+    scope.update_all(anonymized_attributes) # rubocop:disable Rails/SkipsModelValidations
+  end
+
   # rubocop:disable Metrics/CyclomaticComplexity
   def anonymize_table! # rubocop:disable Metrics/PerceivedComplexity
     if Rails.env.production? && ENV["ETL"].blank?
