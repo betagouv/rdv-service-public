@@ -8,7 +8,7 @@ main.container
         .card-body
           h3 Vos coordonnées de prescripteur
           - territory = @rdv_wizard.motif.organisation.territory
-          - if current_agent_can_prescribe_in_territory?(territory)
+          - if current_agent.territories.include?(territory)
             .alert.alert-success
               p.mb-0
                 i.fas.fa-lightbulb>
@@ -16,7 +16,7 @@ main.container
                 - unless territory.sectorized?
                   / TODO: faire sauter ce unless une fois que nous avons implémenté la saisie d'adresse dans la prescription interne sans usager selectionnée
                   = link_to user_selection_admin_organisation_prescription_path( \
-                      current_agent_first_organisation_in_territory(territory), session[:rdv_wizard_attributes].merge(prescripteur: "interne") \
+                      current_agent.organisations.find_by(territory: territory), session[:rdv_wizard_attributes].merge(prescripteur: "interne") \
                     ) do
                     span> en cliquant ici.
 
