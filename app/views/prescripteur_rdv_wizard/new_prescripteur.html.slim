@@ -8,7 +8,7 @@ main.container
         .card-body
           h3 Vos coordonnées de prescripteur
           - territory = @rdv_wizard.motif.organisation.territory
-          - if current_agent.territories.include?(territory)
+          - if current_agent.present? && current_agent.territories.include?(territory)
             .alert.alert-success
               p.mb-0
                 i.fas.fa-lightbulb>
