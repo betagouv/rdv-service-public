@@ -7,17 +7,22 @@ main.container
         = render "users/rdv_wizard_steps/rdv_wizard_summary", rdv_wizard: @rdv_wizard if @rdv_wizard.present?
         .card-body
           h3 Vos coordonnées de prescripteur
-          - if show_agent_prescription_incitation?
+          / Incitation à l'utilisation de la prescription interne
+          - if @rdv_wizard.present? && show_agent_prescription_incitation?
+            - territory = @rdv_wizard.motif.organisation.territory
             .alert.alert-success
               p.mb-0
                 i.fas.fa-lightbulb>
-                span> Nouvelle fonctionnalité : Pour ne pas avoir à remplir ce formulaire pour chaque nouveau rendez-vous et réduire les doublons, vous pouvez utiliser la prescription dans l'espace agent
-                - unless @rdv_wizard.motif.organisation.territory.sectorized?
-                  / TODO: faire sauter ce unless une fois que nous avons implémenté la saisie d'adresse dans la prescription interne sans usager selectionnée
+                | Nouvelle fonctionnalité : Pour ne pas avoir à remplir ce formulaire pour chaque nouveau rendez-vous et réduire les doublons, vous pouvez utiliser la prescription dans l'espace agent
+                / TODO: faire sauter ce unless une fois que nous avons implémenté la saisie d'adresse dans la prescription interne sans usager selectionnée
+                - if !territory.sectorized?
+                  / Le lien de prescription interne redirige vers la premiére organisation de l'agent dans le même territoire
                   = link_to user_selection_admin_organisation_prescription_path( \
-                      @rdv_wizard.motif.organisation, session[:rdv_wizard_attributes].merge(prescripteur: "interne") \
+                      current_agent.organisations.find_by(territory: territory), session[:rdv_wizard_attributes].merge(prescripteur: "interne") \
                     ) do
-                    span> en cliquant ici.
+                    | &nbsp;en cliquant ici.
+                - else
+                  | .
 
               p.mb-0
               span> Pour en savoir plus consultez
