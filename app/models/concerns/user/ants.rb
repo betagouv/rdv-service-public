@@ -4,7 +4,9 @@ module User::Ants
   def self.validate_ants_pre_demande_number(user:, ants_pre_demande_number:, ignore_benign_errors:)
     return if ants_pre_demande_number.blank?
 
-    unless ants_pre_demande_number.match?(/\A[A-Za-z0-9]{10}\z/)
+    ants_pre_demande_number = ants_pre_demande_number.upcase
+
+    unless ants_pre_demande_number.match?(/\A[A-Z0-9]{10}\z/)
       user.errors.add(:ants_pre_demande_number, :invalid_format)
       return
     end

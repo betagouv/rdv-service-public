@@ -71,8 +71,6 @@ class User < ApplicationRecord
 
   # Hooks
   before_save :set_email_to_null_if_blank
-  # voir Ants::AppointmentSerializerAndListener pour d'autres callbacks
-  before_validation -> { ants_pre_demande_number.upcase! }, if: -> { ants_pre_demande_number.present? }
 
   # Scopes
   default_scope { where(deleted_at: nil) }
@@ -226,6 +224,10 @@ class User < ApplicationRecord
 
   def assign_rdv_invitation_token
     self.rdv_invitation_token = generate_rdv_invitation_token
+  end
+
+  def ants_pre_demande_number=(value)
+    super(value&.upcase)
   end
 
   protected

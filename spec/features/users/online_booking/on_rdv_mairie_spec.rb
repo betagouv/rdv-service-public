@@ -162,6 +162,27 @@ RSpec.describe "User can search rdv on rdv mairie" do
     end
   end
 
+  context "when using a pre-demande number in lowercase" do
+    let!(:call_to_status_with_upcased_number) { stub_ants_status("ABCD1234EF", appointments: []) }
+
+    it "considers it as uppercase when calling ANTS API and saving it in user" do
+      time = Time.zone.now.change(hour: 9, min: 0)
+      creneaux_url = creneaux_url(starts_at: time.strftime("%Y-%m-%d %H:%M"), lieu_id: lieu.id, motif_id: passport_motif.id, public_link_organisation_id: organisation.id, duration: 50)
+      visit creneaux_url
+
+      fill_in("user_email", with: user.email)
+      fill_in("password", with: user.password)
+      click_button("Se connecter")
+
+      fill_in("user_ants_pre_demande_number", with: "abcd1234ef")
+      click_button("Continuer")
+      click_button("Continuer")
+      expect { click_link("Confirmer mon RDV") }.to change(Rdv, :count).by(1)
+      expect(user.reload.ants_pre_demande_number).to eq("ABCD1234EF")
+      expect(call_to_status_with_upcased_number).to have_been_requested.at_least_once
+    end
+  end
+
   context "ANTS responds with an unexpected error" do
     before do
       stub_request(:get, "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status?application_ids=5544332211").to_return(
