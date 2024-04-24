@@ -335,7 +335,7 @@ fermeture / merge d'une PR.
 
 Nous avons activé la fonctionnalité "Secret scanning" de GitHub sur notre dépôt. Ce système envoie des alertes et bloque le push si des secrets sont détectés dans un commit.
 
-Nous ne disposons pas d'autre système automatisé de détection de fuite de secrets.
+GitGuardian, qui fait de la détection automatisée de fuites de secrets est aussi activé parmis les Github actions de la CI.
 
 ### Authentification, contrôle d’accès, habilitations et profils
 
