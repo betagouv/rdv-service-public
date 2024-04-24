@@ -2,7 +2,7 @@
 
 > Ce dossier a pour but de présenter l’architecture technique du SI. Il n’est par conséquent ni un dossier d’installation, ni un dossier d’exploitation ou un dossier de spécifications fonctionnelles.
 
-**Nom du projet :** RDV Services Publics
+**Nom du projet :** RDV Service Public
 
 **Dépôt de code :** https://github.com/betagouv/rdv-solidarites.fr
 
@@ -24,9 +24,9 @@
 
 | Organisme                  | Nom                   | Rôle                   | Activité  |
 |----------------------------|-----------------------|------------------------|-----------|
-| RDV Services Publics       | François Ferrandis    | Lead tech              | Rédaction |
-| RDV Services Publics       | Victor Mours          | Lead tech              | Relecture + Rédaction |
-| RDV Services Publics       | Mehdi Karouch Idrissi | Product Manager        | Relecture |
+| RDV Service Public         | François Ferrandis    | Lead tech              | Rédaction |
+| RDV Service Public         | Victor Mours          | Lead tech              | Relecture + Rédaction |
+| RDV Service Public         | Mehdi Karouch Idrissi | Product Manager        | Relecture |
 | ANCT                       | Amélie Naquet         | Cheffe de projet SoNum | Relecture |
 | Incubateur des territoires | Charles Capelli       | Consultant SSI         | Relecture |
 
@@ -36,7 +36,7 @@ Outil de prise de RDV pour le service public. Il permet aux agents de gérer leu
 
 Il est open source, bien que toutes les instances soient gérées par l'équipe.
 
-Plus d'infos sur la fiche beta : https://beta.gouv.fr/startups/rdv-services-publics.html
+Plus d'infos sur la fiche beta : https://beta.gouv.fr/startups/rdv-service-public.html
 
 ## Architecture
 
@@ -278,12 +278,13 @@ https://github.com/betagouv/rdv-solidarites.fr/blob/f12411c0760be1316aae571bb35c
 Les serveurs (applicatif et base de données) sont gérés par Scalingo. Scalingo ne fournit pas de système de rôle : soit
 on a accès à une app, soit on ne l'a pas.
 
-Nous avons actuellement 5 apps Scalingo, les trois premières pour le métier, les deux autres pour le tooling :
+Nous avons actuellement 6 apps Scalingo, les trois premières pour le métier, les trois autres pour le tooling :
 
 - `osc-secnum-fr1/production-rdv-solidarites`
 - `osc-secnum-fr1/production-rdv-mairie`
 - `osc-secnum-fr1/demo-rdv-solidarites`
 - `osc-secnum-fr1/rdv-service-public-etl`
+- `osc-secnum-fr1/rdv-service-public-etl-staging`
 - `osc-secnum-fr1/rdv-service-public-metabase`
 
 Le fait d'avoir accès à une app Scalingo donne les droits suivants :
