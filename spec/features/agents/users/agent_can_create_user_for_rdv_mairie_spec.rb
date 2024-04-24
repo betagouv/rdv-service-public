@@ -34,6 +34,19 @@ RSpec.describe "Agent can create user" do
     end
   end
 
+  context "when using a pre-demande number in lowercase" do
+    let!(:call_to_status_with_upcased_number) { stub_ants_status("ABCD1234EF", appointments: []) }
+
+    it "considers it as uppercase when calling ANTS API and saving it in user" do
+      fill_in :user_first_name, with: "Marco"
+      fill_in :user_last_name, with: "Lebreton"
+      fill_in :user_ants_pre_demande_number, with: "abcd1234ef"
+      expect { click_button "Créer" }.to change(User, :count).by(1)
+      expect(User.last.ants_pre_demande_number).to eq("ABCD1234EF")
+      expect(call_to_status_with_upcased_number).to have_been_requested.at_least_once
+    end
+  end
+
   context "ants_pre_demander number is validated but already has appointments" do
     before do
       stub_ants_status(

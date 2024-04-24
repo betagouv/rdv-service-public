@@ -59,6 +59,21 @@ RSpec.describe "prescripteur can create RDV for a user" do
     end
   end
 
+  context "when using a pre-demande number in lowercase" do
+    let(:ants_pre_demande_number) { "abcd1234ef" }
+    let!(:call_to_status_with_upcased_number) { stub_ants_status("ABCD1234EF", appointments: []) }
+
+    it "considers it as uppercase when calling ANTS API and saving it in user" do
+      visit creneaux_url
+      click_on "Je suis un prescripteur qui oriente un bénéficiaire"
+
+      fill_up_prescripteur_and_user
+      expect { click_on "Confirmer le rendez-vous" }.to change(User, :count).by(1)
+      expect(User.last.ants_pre_demande_number).to eq("ABCD1234EF")
+      expect(call_to_status_with_upcased_number).to have_been_requested.at_least_once
+    end
+  end
+
   context "ants_pre_demander number is validated but already has appointments" do
     before do
       stub_ants_status(
