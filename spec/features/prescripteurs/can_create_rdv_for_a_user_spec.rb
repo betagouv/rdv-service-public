@@ -244,13 +244,13 @@ RSpec.describe "prescripteur can create RDV for a user" do
                                    " nouveau rendez-vous et réduire les doublons, vous pouvez utiliser la prescription dans l'espace agent")
       expect(page).to have_link("en cliquant ici")
       click_on "en cliquant ici"
-      expect(page).to have_current_path("/admin/organisations/2/prescription/user_selection", ignore_query: true)
+      expect(page).to have_current_path("/admin/organisations/#{agent_prescripteur.organisations.find_by(territory: territory).id}/prescription/user_selection", ignore_query: true)
       expect(page).to have_content(lieu.name)
       expect(page).to have_content("08h00")
       expect(page).to have_content(motif.name)
     end
 
-    it "doesn't display internal prescription incitation when the agent doesn't belongs to a territory with opened motifs", js: true do
+    it "doesn't display internal prescription incitation when the agent doesn't belongs to a territory with opened motifs" do
       organisation.motifs.destroy_all
       visit "http://www.rdv-solidarites-test.localhost/prendre_rdv_prescripteur"
       expect(page).not_to have_content("Nouvelle fonctionnalité :\nla prescription dans l'espace agent")
@@ -267,7 +267,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
         click_on "Prochaine disponibilité le", match: :first
         click_on "08:00"
         expect(page).to have_content("Nouvelle fonctionnalité : Pour ne pas avoir à remplir ce formulaire pour chaque" \
-                                     " nouveau rendez-vous et réduire les doublons, vous pouvez utiliser la prescription dans l'espace agent")
+                                     " nouveau rendez-vous et réduire les doublons, vous pouvez utiliser la prescription dans l'espace agent.")
         expect(page).not_to have_link("en cliquant ici")
       end
     end
