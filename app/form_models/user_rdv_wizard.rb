@@ -92,6 +92,7 @@ module UserRdvWizard
         ants_pre_demande_number: @user_attributes[:ants_pre_demande_number],
         ignore_benign_errors: @user_attributes[:ignore_benign_errors]
       )
+      errors.merge!(@user)
     end
 
     def phone_number_present_for_motif_by_phone

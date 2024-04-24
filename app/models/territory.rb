@@ -98,6 +98,10 @@ class Territory < ApplicationRecord
       motifs.active.where.not(sectorisation_level: Motif::SECTORISATION_LEVEL_DEPARTEMENT).any?
   end
 
+  def any_motifs_opened_for_prescription?
+    motifs.bookable_by_everyone_or_agents_and_prescripteurs_or_invited_users.exists?
+  end
+
   def any_social_field_enabled?
     attributes.slice(SOCIAL_FIELD_TOGGLES.keys).values.any?
   end

@@ -84,6 +84,7 @@ class Agent < ApplicationRecord
   # and we need to destroy to trigger the callbacks on the model
   has_many :users, through: :referent_assignations, dependent: :destroy
   has_many :organisations, through: :roles, dependent: :destroy
+  has_many :territories_through_organisations, source: :territory, through: :organisations
   has_many :webhook_endpoints, through: :organisations
 
   attr_accessor :allow_blank_name
