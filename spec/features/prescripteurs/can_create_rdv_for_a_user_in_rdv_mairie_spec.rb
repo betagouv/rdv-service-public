@@ -28,7 +28,6 @@ RSpec.describe "prescripteur can create RDV for a user" do
     fill_in "Votre email professionnel", with: "alex@prescripteur.fr"
     fill_in "Votre numéro de téléphone", with: "0611223344"
     click_on "Continuer"
-
     expect(page).to have_content("Prescripteur : Alex PRESCRIPTEUR")
     fill_in "Prénom", with: "Patricia"
     fill_in "Nom", with: "Duroy"
@@ -44,10 +43,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
 
   context "success scenario (ants_pre_demander number is validated and has no appointment declared yet)" do
     before do
-      stub_request(:get, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status}).to_return(
-        status: 200,
-        body: { ants_pre_demande_number => { status: "validated", appointments: [] } }.to_json
-      )
+      stub_ants_status("1122334455")
     end
 
     it "allows booking a rdv for the given ants_pre_demander" do
@@ -65,20 +61,15 @@ RSpec.describe "prescripteur can create RDV for a user" do
 
   context "ants_pre_demander number is validated but already has appointments" do
     before do
-      stub_request(:get, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status}).to_return(
-        status: 200,
-        body: {
-          ants_pre_demande_number => {
-            status: "validated",
-            appointments: [
-              {
-                management_url: "https://gerer-rdv.com",
-                meeting_point: "Mairie de Sannois",
-                appointment_date: "2023-04-03T08:45:00",
-              },
-            ],
+      stub_ants_status(
+        "1122334455",
+        appointments: [
+          {
+            management_url: "https://gerer-rdv.com",
+            meeting_point: "Mairie de Sannois",
+            appointment_date: "2023-04-03T08:45:00",
           },
-        }.to_json
+        ]
       )
     end
 
@@ -102,9 +93,26 @@ RSpec.describe "prescripteur can create RDV for a user" do
 
   context "ants_pre_demander number is consumed (dossier déjà envoyé et instruit en préfecture)" do
     before do
-      stub_request(:get, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status}).to_return(
-        status: 200,
-        body: { ants_pre_demande_number => { status: "consumed", appointments: [] } }.to_json
+      stub_ants_status("1122334455", status: "consumed")
+    end
+
+    it "prevents from creating the user / RDV" do
+      visit creneaux_url
+      click_on "Je suis un prescripteur qui oriente un bénéficiaire"
+
+      fill_up_prescripteur_and_user
+      click_on "Confirmer le rendez-vous"
+
+      expect(page).to have_content("Numéro de pré-demande ANTS correspond à un dossier déjà instruit")
+      expect(page).not_to have_content("Confirmer en ignorant les avertissements")
+    end
+  end
+
+  context "ANTS responds with an unexpected error" do
+    before do
+      stub_request(:get, "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status?application_ids=1122334455").to_return(
+        status: 500,
+        body: "Internal Server Error"
       )
     end
 
@@ -115,7 +123,22 @@ RSpec.describe "prescripteur can create RDV for a user" do
       fill_up_prescripteur_and_user
       click_on "Confirmer le rendez-vous"
 
-      expect(page).to have_content("Ce numéro de pré-demande ANTS correspond à un dossier déjà instruit")
+      expect(page).to have_content("Numéro de pré-demande ANTS n'a pas pu être validé à cause d'une erreur inattendue. Merci de réessayer dans 30 secondes.")
+      expect(page).not_to have_content("Confirmer en ignorant les avertissements")
+    end
+  end
+
+  context "ants_pre_demander number is invalid (too short)" do
+    let(:ants_pre_demande_number) { "123" }
+
+    it "prevents from creating the user / RDV" do
+      visit creneaux_url
+      click_on "Je suis un prescripteur qui oriente un bénéficiaire"
+
+      fill_up_prescripteur_and_user
+      click_on "Confirmer le rendez-vous"
+
+      expect(page).to have_content("Numéro de pré-demande ANTS doit comporter 10 chiffres et lettres")
       expect(page).not_to have_content("Confirmer en ignorant les avertissements")
     end
   end

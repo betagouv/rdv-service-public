@@ -20,15 +20,7 @@ RSpec.describe "Agent can create user" do
 
   context "ants_pre_demander number is validated and has no appointment declared yet" do
     before do
-      stub_request(:get, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status}).to_return(
-        status: 200,
-        body: {
-          ants_pre_demande_number => {
-            status: "validated",
-            appointments: [],
-          },
-        }.to_json
-      )
+      stub_ants_status("1122334455")
     end
 
     it "creates user with no warning" do
@@ -44,20 +36,15 @@ RSpec.describe "Agent can create user" do
 
   context "ants_pre_demander number is validated but already has appointments" do
     before do
-      stub_request(:get, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status}).to_return(
-        status: 200,
-        body: {
-          ants_pre_demande_number => {
-            status: "validated",
-            appointments: [
-              {
-                management_url: "https://gerer-rdv.com",
-                meeting_point: "Mairie de Sannois",
-                appointment_date: "2023-04-03T08:45:00",
-              },
-            ],
+      stub_ants_status(
+        "1122334455",
+        appointments: [
+          {
+            management_url: "https://gerer-rdv.com",
+            meeting_point: "Mairie de Sannois",
+            appointment_date: "2023-04-03T08:45:00",
           },
-        }.to_json
+        ]
       )
     end
 
@@ -77,15 +64,7 @@ RSpec.describe "Agent can create user" do
 
   context "ants_pre_demander number is consumed (dossier déjà envoyé et instruit en préfecture)" do
     before do
-      stub_request(:get, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status}).to_return(
-        status: 200,
-        body: {
-          ants_pre_demande_number => {
-            status: "consumed",
-            appointments: [],
-          },
-        }.to_json
-      )
+      stub_ants_status("1122334455", status: "consumed")
     end
 
     it "prevents agent from creating the user / RDV" do
@@ -93,7 +72,7 @@ RSpec.describe "Agent can create user" do
       fill_in :user_last_name, with: "Lebreton"
       fill_in :user_ants_pre_demande_number, with: ants_pre_demande_number
       click_button "Créer"
-      expect(page).to have_content("Ce numéro de pré-demande ANTS correspond à un dossier déjà instruit")
+      expect(page).to have_content("Numéro de pré-demande ANTS correspond à un dossier déjà instruit")
       expect(page).not_to have_content("Confirmer en ignorant les avertissements")
     end
   end

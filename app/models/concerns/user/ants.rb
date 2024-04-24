@@ -4,6 +4,11 @@ module User::Ants
   def self.validate_ants_pre_demande_number(user:, ants_pre_demande_number:, ignore_benign_errors:)
     return if ants_pre_demande_number.blank?
 
+    unless ants_pre_demande_number.match?(/\A[A-Za-z0-9]{10}\z/)
+      user.errors.add(:ants_pre_demande_number, :invalid_format)
+      return
+    end
+
     application_hash = AntsApi.status(application_id: ants_pre_demande_number, timeout: 4)
 
     status = application_hash["status"]
@@ -16,13 +21,13 @@ module User::Ants
       end
 
     else
-      user.errors.add(:base, error_message(application_hash["status"]))
+      user.errors.add(:ants_pre_demande_number, AntsApi::ERROR_STATUSES.fetch(status))
     end
   rescue AntsApi::ApiRequestError, Typhoeus::Errors::TimeoutError => e
-    # Si l'api de l'ANTS renvoie une erreur ou un timeout, on ne veut pas bloquer la prise de rendez-vous
-    # pour l'usager, donc on considère le numéro comme valide.
+    # Si l'API de l'ANTS est fiable, donc si elle renvoie une erreur ou un timeout,
+    # on préfère bloquer la réservation et logguer l'erreur.
+    user.errors.add(:ants_pre_demande_number, :unexpected_api_error)
     Sentry.capture_exception(e)
-    nil
   end
 
   def self.warning_message(appointment)
@@ -31,19 +36,6 @@ module User::Ants
       management_url: appointment.management_url,
       meeting_point: appointment.meeting_point
     )
-  end
-
-  def self.error_message(status)
-    case status
-    when "consumed"
-      "Ce numéro de pré-demande ANTS correspond à un dossier déjà instruit"
-    when "unknown"
-      "Ce numéro de pré-demande ANTS est inconnu"
-    when "expired"
-      "Ce numéro de pré-demande ANTS a expiré"
-    else
-      "Ce numéro de pré-demande ANTS est invalide"
-    end
   end
 
   def syncable_with_ants?

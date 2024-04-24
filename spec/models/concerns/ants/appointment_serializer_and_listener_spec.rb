@@ -1,5 +1,6 @@
 RSpec.describe Ants::AppointmentSerializerAndListener do
   include_context "rdv_mairie_api_authentication"
+
   let(:organisation) { create(:organisation, verticale: :rdv_mairie) }
   let(:user) { create(:user, ants_pre_demande_number: "A123456789", organisations: [organisation]) }
   let(:lieu) { create(:lieu, organisation: organisation, name: "Lieu1") }
@@ -14,46 +15,28 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
     }
   end
 
-  def stub_status_endpoint
-    stub_request(:get, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status}).to_return(
-      status: 200,
-      body: {
-        user.ants_pre_demande_number => {
-          status: "validated",
-          appointments: [
-            {
-              management_url: Rails.application.routes.url_helpers.users_rdv_url(rdv, host: organisation.domain.host_name),
-              meeting_point_id: rdv.lieu.id.to_s,
-              meeting_point: rdv.lieu.name,
-              appointment_date: rdv.starts_at.strftime("%Y-%m-%d %H:%M:%S"),
-            },
-          ],
+  def stub_ants_status_with_appointments
+    stub_ants_status(
+      "A123456789",
+      appointments: [
+        {
+          management_url: Rails.application.routes.url_helpers.users_rdv_url(rdv, host: organisation.domain.host_name),
+          meeting_point: rdv.lieu.name,
+          meeting_point_id: rdv.lieu.id,
+          appointment_date: rdv.starts_at.strftime("%Y-%m-%d %H:%M:%S"),
         },
-      }.to_json
-    )
-  end
-
-  before do
-    travel_to(Time.zone.parse("01/01/2020"))
-    stub_request(:post, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/appointments/*}).to_return(
-      status: 200,
-      body: { success: true }.to_json
-    )
-    stub_request(:delete, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/appointments/*}).to_return(
-      status: 200,
-      body: { rowcount: 1 }.to_json
-    )
-    stub_request(:get, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status}).to_return(
-      status: 200,
-      body: { user.ants_pre_demande_number => { status: "validated", appointments: [] } }.to_json
+      ]
     )
   end
 
   describe "RDV callbacks" do
     describe "after_commit on_create" do
       it "creates appointment on ANTS" do
+        stub_ants_status("A123456789")
+        stub_ants_create("A123456789")
+
         perform_enqueued_jobs do
-          rdv.save
+          rdv.save!
           expect(WebMock).to have_requested(
             :post,
             "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/appointments?application_id=A123456789&appointment_date=2020-04-20%2008:00:00&management_url=http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}&meeting_point=#{rdv.lieu.name}&meeting_point_id=#{rdv.lieu.id}"
@@ -89,13 +72,11 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
     end
 
     describe "after_commit on_destroy" do
-      before do
-        rdv.save
-
-        stub_status_endpoint
-      end
-
       it "deletes appointment on ANTS" do
+        stub_ants_delete("A123456789")
+        rdv.save!
+        stub_ants_status_with_appointments
+
         perform_enqueued_jobs do
           rdv.destroy
           expect(WebMock).to have_requested(
@@ -108,14 +89,14 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
 
     describe "after_commit on_update" do
       before do
-        rdv.save
-
-        stub_status_endpoint
+        rdv.save!
+        stub_ants_status_with_appointments
       end
 
       describe "Rdv is cancelled" do
         it "deletes appointment on ANTS" do
           perform_enqueued_jobs do
+            stub_ants_delete("A123456789")
             rdv.excused!
 
             expect(WebMock).to have_requested(
@@ -133,6 +114,8 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
 
         it "creates appointment" do
           perform_enqueued_jobs do
+            stub_ants_delete("A123456789")
+            stub_ants_create("A123456789")
             rdv.seen!
             expect(WebMock).to have_requested(
               :post,
@@ -146,22 +129,16 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
 
   describe "User callbacks" do
     let!(:create_appointment_stub) do
-      stub_request(:post, %r{https://int\.api-coordination\.rendezvouspasseport\.ants\.gouv\.fr/api/appointment.*AABBCCDDEE.*})
-    end
-
-    before do
-      rdv.save
-      user.reload
-
-      stub_request(:get, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status}).to_return(
-        status: 200,
-        body: { "AABBCCDDEE" => { status: "validated", appointments: [] } }.to_json
-      )
+      stub_ants_create("AABBCCDDEE")
     end
 
     describe "after_commit: Changing the value of ants_pre_demande_number" do
       it "creates appointment with new ants_pre_demande_number" do
+        rdv.save!
+        user.reload
+
         perform_enqueued_jobs do
+          stub_ants_status("AABBCCDDEE")
           user.update(ants_pre_demande_number: "AABBCCDDEE")
 
           expect(create_appointment_stub).to have_been_requested.at_least_once
@@ -171,16 +148,19 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
   end
 
   describe "Lieu callbacks" do
-    let(:create_appointment_stub) { stub_request(:post, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/appointments/*}) }
+    let!(:create_appointment_stub) do
+      stub_ants_create("A123456789")
+    end
 
     before do
-      rdv.save
+      rdv.save!
       lieu.reload
     end
 
     describe "after_commit: Changing the name of the lieu" do
       it "triggers a sync with ANTS" do
         perform_enqueued_jobs do
+          stub_ants_status("A123456789")
           lieu.update(name: "Nouveau Lieu")
 
           expect(create_appointment_stub).to have_been_requested.at_least_once
@@ -191,15 +171,17 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
 
   describe "Participation callbacks" do
     before do
-      rdv.save
+      stub_ants_status("A123456789")
+      rdv.save!
       user.reload
       rdv.participations.reload
-      stub_status_endpoint
+      stub_ants_status_with_appointments
     end
 
     describe "after_commit: Removing user participation" do
       it "deletes appointment" do
         perform_enqueued_jobs do
+          stub_ants_delete("A123456789")
           user.participations.first.destroy
         end
       end
