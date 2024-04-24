@@ -21,7 +21,7 @@ module User::Ants
       end
 
     else
-      user.errors.add(:ants_pre_demande_number, AntsApi::Appointment::ERROR_STATUSES.fetch(status))
+      user.errors.add(:ants_pre_demande_number, AntsApi::ERROR_STATUSES.fetch(status))
     end
   rescue AntsApi::ApiRequestError, Typhoeus::Errors::TimeoutError => e
     # Si l'API de l'ANTS est fiable, donc si elle renvoie une erreur ou un timeout,
