@@ -16,7 +16,6 @@ RSpec.describe "User can search rdv on rdv mairie" do
   let!(:passport_motif_category) { create(:motif_category, name: Api::Ants::EditorController::PASSPORT_MOTIF_CATEGORY_NAME) }
   let!(:lieu) { create(:lieu, organisation: organisation, name: "Mairie de Sannois", address: "15 Place du Général Leclerc, Sannois, 95110") }
   let(:user) { create(:user, email: "jeanmairie@example.com") }
-  let(:ants_pre_demande_number) { "1122334455" }
 
   def json_response
     JSON.parse(page.html)
@@ -26,25 +25,19 @@ RSpec.describe "User can search rdv on rdv mairie" do
     default_url_options[:host] = "http://www.rdv-mairie-test.localhost"
     travel_to(now)
     create(:plage_ouverture, :no_recurrence, first_day: now, motifs: [passport_motif], lieu: lieu, organisation: organisation, start_time: Tod::TimeOfDay(9), end_time: Tod::TimeOfDay.new(10))
-
-    stub_request(:get, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status.*application_ids=#{ants_pre_demande_number}}).to_return(
-      status: 200,
-      body: {
-        ants_pre_demande_number => {
-          status: "validated",
-          appointments: appointments,
-        },
-      }.to_json
-    )
   end
 
-  context "when an appointment has already been booking for this pre-demande number" do
+  context "when an appointment has already been booked for this pre-demande number" do
     let(:appointments) do
       [{
         management_url: "https://gerer-rdv.com",
         meeting_point: "Mairie de Sannois",
         appointment_date: "2023-04-03T08:45:00",
       }]
+    end
+
+    before do
+      stub_ants_status("1122334455", appointments: appointments)
     end
 
     it "allows booking a rdv through the full lifecycle of api calls" do
@@ -105,7 +98,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
       click_button("Continuer")
       click_link("Confirmer mon RDV")
       expect(page).to have_content("Votre rendez vous a été confirmé.")
-      expect(user.reload.ants_pre_demande_number).to eq(ants_pre_demande_number)
+      expect(user.reload.ants_pre_demande_number).to eq("1122334455")
     end
 
     it "displays the organisation name for a public link and a generic name otherwise" do
@@ -121,19 +114,12 @@ RSpec.describe "User can search rdv on rdv mairie" do
     let(:appointments) { [] }
 
     before do
-      stub_request(:get, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status.*application_ids=5544332211}).to_return(
-        status: 200,
-        body: {
-          "5544332211" => {
-            status: "validated",
-            appointments: [],
-          },
-        }.to_json
-      )
+      stub_ants_status("1122334455", appointments: appointments)
+      stub_ants_status("5544332211", appointments: [])
     end
 
     it "can add a relative with their ants_pre_demande_number", js: true do
-      time = Time.zone.now.change(hour: 9, min: 0o0)
+      time = Time.zone.now.change(hour: 9, min: 0)
       creneaux_url = creneaux_url(starts_at: time.strftime("%Y-%m-%d %H:%M"), lieu_id: lieu.id, motif_id: passport_motif.id, public_link_organisation_id: organisation.id, duration: 50)
       visit creneaux_url
 
@@ -141,7 +127,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
       fill_in("password", with: user.password)
       click_button("Se connecter")
 
-      fill_in("user_ants_pre_demande_number", with: ants_pre_demande_number)
+      fill_in("user_ants_pre_demande_number", with: "1122334455")
       click_button("Continuer")
 
       click_link("Ajouter un proche")
@@ -156,6 +142,47 @@ RSpec.describe "User can search rdv on rdv mairie" do
 
       click_link("Confirmer mon RDV")
       expect(page).to have_content("Votre rendez vous a été confirmé.")
+    end
+  end
+
+  context "when using a pre-demande number with invalid format (too short)" do
+    it "detects wrong format without calling ANTS API an warns user" do
+      time = Time.zone.now.change(hour: 9, min: 0)
+      creneaux_url = creneaux_url(starts_at: time.strftime("%Y-%m-%d %H:%M"), lieu_id: lieu.id, motif_id: passport_motif.id, public_link_organisation_id: organisation.id, duration: 50)
+      visit creneaux_url
+
+      fill_in("user_email", with: user.email)
+      fill_in("password", with: user.password)
+      click_button("Se connecter")
+
+      fill_in("user_ants_pre_demande_number", with: "1234ABC")
+      click_button("Continuer")
+      expect(page).to have_content("Numéro de pré-demande ANTS doit comporter 10 chiffres et lettres")
+      expect(page).not_to have_content("Confirmer en ignorant les avertissements")
+    end
+  end
+
+  context "ANTS responds with an unexpected error" do
+    before do
+      stub_request(:get, "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status?application_ids=5544332211").to_return(
+        status: 500,
+        body: "Internal Server Error"
+      )
+    end
+
+    it "detects wrong format without calling ANTS API an warns user" do
+      time = Time.zone.now.change(hour: 9, min: 0)
+      creneaux_url = creneaux_url(starts_at: time.strftime("%Y-%m-%d %H:%M"), lieu_id: lieu.id, motif_id: passport_motif.id, public_link_organisation_id: organisation.id, duration: 50)
+      visit creneaux_url
+
+      fill_in("user_email", with: user.email)
+      fill_in("password", with: user.password)
+      click_button("Se connecter")
+
+      fill_in("user_ants_pre_demande_number", with: "5544332211")
+      click_button("Continuer")
+      expect(page).to have_content("Numéro de pré-demande ANTS n'a pas pu être validé à cause d'une erreur inattendue. Merci de réessayer dans 30 secondes.")
+      expect(page).not_to have_content("Confirmer en ignorant les avertissements")
     end
   end
 end

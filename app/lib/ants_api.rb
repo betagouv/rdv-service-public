@@ -4,6 +4,21 @@ class AntsApi
 
   class ApiRequestError < StandardError; end
 
+  VALIDATED = "validated".freeze
+
+  CONSUMED = "consumed".freeze
+  DECLARED = "declared".freeze
+  UNKNOWN = "unknown".freeze
+  EXPIRED = "expired".freeze
+
+  # https://api-coordination.rendezvouspasseport.ants.gouv.fr/docs#/Application%20Ids%20-%20%C3%A9diteurs/get_status_api_status_get
+  ERROR_STATUSES = {
+    CONSUMED => "correspond à un dossier déjà instruit",
+    DECLARED => "n'est pas officiellement reconnu par l'ANTS",
+    UNKNOWN => "n'est pas reconnu par l'ANTS",
+    EXPIRED => "correspond à un dossier expiré",
+  }.freeze
+
   class << self
     def status(application_id:, timeout: nil)
       response_body = request(:get, "status", params: { application_ids: application_id }, timeout: timeout)
@@ -74,7 +89,7 @@ class AntsApi
         raise(ApiRequestError, "code:#{response.response_code}, body:#{response.response_body}")
       end
 
-      response.body.empty? ? {} : JSON.parse(response.body)
+      JSON.parse(response.body)
     end
 
     def load_appointments(application_id)
