@@ -10,7 +10,7 @@ class User < ApplicationRecord
     ]
   )
 
-  devise :invitable, :database_authenticatable, :registerable,
+  devise :invitable, :database_authenticatable, :registerable, :timeoutable,
          :recoverable, :validatable, :confirmable, :async
 
   include PgSearch::Model
@@ -226,6 +226,10 @@ class User < ApplicationRecord
 
   def ants_pre_demande_number=(value)
     super(value&.upcase)
+  end
+
+  def timeout_in
+    30.minutes
   end
 
   protected
