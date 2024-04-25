@@ -15,14 +15,14 @@ On affiche ici une seule des applications métier Scalingo, mais le schéma est 
 La base de données métier principale
 
 Durée de conservation des données personnelles : jusqu'à 2 ans
-Base légale de traitement : fonctionnement de l'application
+Justification du traitement : fonctionnement de l'application
 
 ### Redis
 
 La base de données no-sql pour certaines données métiers et le cache
 
 Durée de conservation des données personnelles : jusqu'à 7 jours
-Base légale de traitement : fonctionnement de l'application
+Justification du traitement : fonctionnement de l'application
 
 ### Logs applicatifs
 
@@ -30,7 +30,7 @@ Les logs de l'application, qui indiquent chaque requête http (journalisation), 
 Voir https://www.cnil.fr/fr/la-cnil-publie-une-recommandation-relative-aux-mesures-de-journalisation,
 
 Durée de conservation des données personnelles : 1 an. voir https://doc.scalingo.com/platform/app/logs#log-retention
-Base légale de traitement : débuggage, traçabilité des accès si nécessaire, surveillance du bon fonctionnement de l'application
+Justification du traitement : débuggage, traçabilité des accès si nécessaire, surveillance du bon fonctionnement de l'application
 
 ### Backups Postgres
 
@@ -38,21 +38,37 @@ Des dumps périodiques de la base de données principale faits automatiquement p
 Leur usage est encadrés conformément à notre documentation : https://github.com/betagouv/rdv-service-public/blob/production/docs/4-notes-techniques.md#r%C3%A8gles-dutilisation
 
 Durée de conservation des données personnelles: 12 mois pour les backups automatiques, ❌ pas de date d'expiration pour les backups manuels
-Base légale de traitement : débuggage, investigations sur les performances, et le cas échéant rétablissement du servie après incident majeur
+Justification du traitement : débuggage, investigations sur les performances, et le cas échéant rétablissement du servie après incident majeur
 
 ### DB Postgres d'ETL
 
 Une base de données dans laquel on télécharge un dump de la production, qu'on anonymise immédiatement avant de le rendre accessible depuis notre metabase (le metabase n'a donc jamais accès à des données personnelles)
 
 Durée de conservation des données personnelles: le temps nécessaire à l'exécution du script d'anonymisation, environ 2 heures.
-Base légale de traitement : investigations sur l'usage du produit
+Justification du traitement : investigations sur l'usage du produit
 
 ### SI des partenaires
 
 On envoie des informations sur les rdv par des webhooks, et les SI de nos partenaires peuvent utiliser notre API pour consulter et écrire des données métier.
 
 Durée de conservation des données personnelles: ❌ inconnue. A indiquer dans nos conventions ?
-Base légale de traitement : ❌ à clarifier
+Justification du traitement : ❌ à clarifier
+
+### Sentry
+
+Serveur de monitoring d'erreur hébergé par la Dinum à l'adresse https://sentry.incubateur.net. Données personnelles accessibles uniquement par l'équipe technique.
+
+Durée de conservation des données personnelles: 3 mois
+Justification du traitement : Débuggage et support
+
+### Brevo
+
+Envoi d'emails transactionnels, notamment pour les confirmations et rappels de RDV. Accessibles aux membres de l'équipe betagouv.
+
+Durée de conservation des données personnelles: 6 mois (voir https://app-smtp.brevo.com/retention-logs)
+Justification du traitement : fonctionnement de l'application et support utilisateurs
+
+
 
 ### Informations complémentaires
 
