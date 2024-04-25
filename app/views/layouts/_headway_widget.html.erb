@@ -14,6 +14,13 @@
       },
       footer: "Voir tout ↗️"
     },
+    callbacks: {
+      onWidgetReady: function(widget) {
+        // Ne pas afficher le conteneur du badge avant que le widget soit chargé
+        // pour éviter le mouvement bref de l'élément au chargement.
+        document.querySelector("#HW_badge_cont").style.display = "block"
+      },
+    },
   };
 </script>
 <script async src="https://cdn.headwayapp.co/widget.js"></script>
