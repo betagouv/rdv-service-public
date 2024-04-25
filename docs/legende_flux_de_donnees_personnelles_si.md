@@ -68,7 +68,12 @@ Envoi d'emails transactionnels, notamment pour les confirmations et rappels de R
 Durée de conservation des données personnelles: 6 mois (voir https://app-smtp.brevo.com/retention-logs)
 Justification du traitement : fonctionnement de l'application et support utilisateurs
 
+### Link Mobility (anciennement Netsize)
 
+Envoi de sms transactionnels  notamment pour les confirmations et rappels de RDV.
+
+Durée de conservation des données personnelles: ❌ à investiguer
+Justification du traitement : fonctionnement de l'application et support utilisateurs
 
 ### Informations complémentaires
 
