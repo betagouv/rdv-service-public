@@ -12,7 +12,7 @@ RSpec.describe "Agent session expiration" do
     expect(page).to have_content("Se connecter")
   end
 
-  it "is done 14 days after last visit" do
+  it "is done on sunday evening of the week after last visit" do
     login_time = Time.zone.parse("2024-01-01 12:00")
     travel_to(login_time)
     visit new_agent_session_path
@@ -21,16 +21,13 @@ RSpec.describe "Agent session expiration" do
     click_on "Se connecter"
     expect_to_be_logged_in
 
-    last_visit_time = login_time + 3.days
-    travel_to(last_visit_time)
+    travel_to(Time.zone.parse("2024-01-10 12:00")) # 10 days after last visit
     expect_to_be_logged_in
 
-    last_visit_time += 13.days + 22.hours
-    travel_to(last_visit_time)
+    travel_to(Time.zone.parse("2024-01-24 11:55")) # almost 14 days after last visit
     expect_to_be_logged_in
 
-    last_visit_time += 14.days + 10.seconds
-    travel_to(last_visit_time)
+    travel_to(Time.zone.parse("2024-02-07 12:00")) # 14 days and 5 minutes after last visit
     expect_to_be_logged_out
   end
 end
