@@ -107,6 +107,6 @@ class ApplicationController < ActionController::Base
   end
 
   def page_number
-    params[:page].presence&.to_i
+    params[:page].presence&.to_i || 1
   end
 end
