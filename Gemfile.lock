@@ -252,7 +252,6 @@ GEM
       thor (>= 0.14, < 2.0)
     jsbundling-rails (1.2.1)
       railties (>= 6.0.0)
-    json (2.6.3)
     json-jwt (1.16.6)
       activesupport (>= 4.2)
       aes_key_wrap
@@ -541,10 +540,6 @@ GEM
       sentry-ruby (~> 5.16.1)
     sentry-ruby (5.16.1)
       concurrent-ruby (~> 1.0, >= 1.0.2)
-    sib-api-v3-sdk (9.0.0)
-      addressable (~> 2.3, >= 2.3.0)
-      json (~> 2.1, >= 2.1.0)
-      typhoeus (~> 1.0, >= 1.0.1)
     simple_form (5.1.0)
       actionpack (>= 5.2)
       activemodel (>= 5.2)
@@ -707,7 +702,6 @@ DEPENDENCIES
   selenium-webdriver
   sentry-rails
   sentry-ruby
-  sib-api-v3-sdk
   simple_form (~> 5.0)
   skylight
   slim
