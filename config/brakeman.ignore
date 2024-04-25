@@ -158,29 +158,6 @@
         89
       ],
       "note": ""
-    },
-    {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "d1e6e4a81767101794274351f3382bc6b83bf095f421e5470f4f83c9a785634a",
-      "check_name": "SQL",
-      "message": "Possible SQL injection",
-      "file": "app/models/motif.rb",
-      "line": 108,
-      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "where(\"REGEXP_REPLACE(LOWER(UNACCENT(motifs.name)), '#{/[^0-9a-z]+/.source}', '_', 'g') = ?\", slug_name)",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "Motif",
-        "method": "search_by_name_with_location_type"
-      },
-      "user_input": "/[^0-9a-z]+/.source",
-      "confidence": "Medium",
-      "cwe_id": [
-        89
-      ],
-      "note": ""
     }
   ],
   "updated": "2024-02-28 16:17:49 +0100",
