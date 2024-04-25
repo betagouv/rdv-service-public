@@ -4,8 +4,10 @@ html lang="fr"
     = yield :html_head_prepend
     = render "common/head_agent"
   body
-    = render "layouts/headway_widget" # doit être dans <body> et pas dans <head>
     = render "layouts/agent_header"
+    / doit être dans <body> et pas dans <head>
+    = render "layouts/headway_widget"
+
     .content-and-left-menu-wrapper
       = render "layouts/left_menu"
       main.content-page[style="flex-grow: 1;"]
