@@ -9,7 +9,7 @@ RSpec.describe "Agent session expiration" do
 
   def expect_to_be_logged_out
     visit agents_preferences_path
-    expect(page).to have_content("Se connecter")
+    expect(page).to have_content("Entrez votre email et votre mot de passe")
   end
 
   it "is done on sunday evening of the week after last visit" do
