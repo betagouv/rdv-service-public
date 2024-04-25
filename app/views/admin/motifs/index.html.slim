@@ -46,7 +46,8 @@
             th Actions
       tbody
         - if @motifs.any?
-          = render @motifs
+          - @motifs.each do |motif|
+            = render partial: "admin/motifs/motif", locals: { motif: motif }
           .d-flex.justify-content-center
             = paginate @motifs, theme: "twitter-bootstrap-4"
         - else

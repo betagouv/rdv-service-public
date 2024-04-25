@@ -105,4 +105,8 @@ class ApplicationController < ActionController::Base
   def allow_iframe
     response.headers.except! "X-Frame-Options"
   end
+
+  def page_number
+    params[:page].presence&.to_i
+  end
 end

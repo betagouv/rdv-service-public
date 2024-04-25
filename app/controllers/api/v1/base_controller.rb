@@ -38,6 +38,6 @@ class Api::V1::BaseController < ActionController::Base
   end
 
   def page
-    @page ||= params[:page]&.to_i || 1
+    @page ||= page_number || 1
   end
 end

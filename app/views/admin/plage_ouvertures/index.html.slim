@@ -51,7 +51,8 @@
             th = t(".dates")
             th = t("helpers.actions")
         tbody
-          = render @plage_ouvertures
+          - @plage_ouvertures.each do |plage_ouverture|
+            = render partial: "admin/plage_ouvertures/plage_ouverture", locals: { plage_ouverture: plage_ouverture }
       .d-flex.justify-content-center
         = paginate @plage_ouvertures, theme: "twitter-bootstrap-4"
   - else
