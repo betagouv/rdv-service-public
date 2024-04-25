@@ -4,6 +4,7 @@ html lang="fr"
     = yield :html_head_prepend
     = render "common/head_agent"
   body
+    = render "layouts/headway_widget" # doit être dans <body> et pas dans <head>
     = render "layouts/agent_header"
     .content-and-left-menu-wrapper
       = render "layouts/left_menu"
@@ -15,11 +16,11 @@ html lang="fr"
           .container-fluid
             = render "layouts/flash"
             - if content_for :title
-                .page-title-box
-                  h1.page-title.pb-2= yield :title
-                  - if content_for :breadcrumb
-                    .page-title-right
-                      = yield :breadcrumb
+              .page-title-box
+                h1.page-title.pb-2= yield :title
+                - if content_for :breadcrumb
+                  .page-title-right
+                    = yield :breadcrumb
             = yield
 
         = render "layouts/agent_footer"
