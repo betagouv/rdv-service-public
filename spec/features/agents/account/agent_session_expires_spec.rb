@@ -12,7 +12,7 @@ RSpec.describe "Agent session expiration" do
     expect(page).to have_content("Entrez votre email et votre mot de passe")
   end
 
-  it "is done on sunday evening of the week after last visit" do
+  it "is done 14 days after last visit" do
     login_time = Time.zone.parse("2024-01-01 12:00")
     travel_to(login_time)
     visit new_agent_session_path
