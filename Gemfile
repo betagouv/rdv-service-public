@@ -124,8 +124,6 @@ gem "dsfr-view-components"
 
 # Easily create styled HTML emails in Rails.
 gem "premailer-rails" # Mail formatting
-# SendinBlue API V3 Ruby Gem
-gem "sib-api-v3-sdk" # SendInBlue (SMS)
 # The Spreadsheet Library is designed to read and write Spreadsheet Documents
 gem "spreadsheet" # Excel export
 # If string, numeric, symbol and nil values wanna be a boolean value, they can with the new #to_b method (and more).
