@@ -13,6 +13,8 @@ class User < ApplicationRecord
   devise :invitable, :database_authenticatable, :registerable, :timeoutable,
          :recoverable, :validatable, :confirmable, :async
 
+  def timeout_in = 30.minutes # Used by Devise's :timeoutable
+
   include PgSearch::Model
   include FullNameConcern
   include User::FranceconnectFrozenFieldsConcern
@@ -226,10 +228,6 @@ class User < ApplicationRecord
 
   def ants_pre_demande_number=(value)
     super(value&.upcase)
-  end
-
-  def timeout_in
-    30.minutes
   end
 
   protected

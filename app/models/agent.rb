@@ -31,6 +31,8 @@ class Agent < ApplicationRecord
   devise :invitable, :database_authenticatable, :trackable, :timeoutable,
          :recoverable, :validatable, :confirmable, :async, validate_on_invite: true
 
+  def timeout_in = 14.days # Used by Devise's :timeoutable
+
   # HACK : Ces accesseurs permettent d'utiliser Devise::Models::Trackable mais sans persister les valeurs en base
   attr_accessor :current_sign_in_ip, :last_sign_in_ip, :sign_in_count, :current_sign_in_at
 
@@ -270,10 +272,5 @@ class Agent < ApplicationRecord
 
   def read_only_profile_infos?
     inclusion_connect_open_id_sub.present?
-  end
-
-  # Used by Devise's :timeoutable
-  def timeout_in
-    14.days
   end
 end
