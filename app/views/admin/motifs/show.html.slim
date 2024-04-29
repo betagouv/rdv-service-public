@@ -22,7 +22,7 @@
           div
             = "#{@motif.human_attribute_value(:collectif)} #{@motif.human_attribute_value(:location_type).downcase}"
           div.text-muted
-            = @motif.human_attribute_value(:location_type, context: :hint)
+            = simple_format(@motif.human_attribute_value(:location_type, context: :hint), {}, wrapper_tag: "span")
         hr
 
         = motif_attribute_row \
