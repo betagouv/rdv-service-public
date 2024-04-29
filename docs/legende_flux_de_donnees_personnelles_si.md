@@ -70,10 +70,15 @@ Justification du traitement : fonctionnement de l'application et support utilisa
 
 ### Link Mobility (anciennement Netsize)
 
-Envoi de sms transactionnels  notamment pour les confirmations et rappels de RDV.
+Envoi de sms transactionnels notamment pour les confirmations et rappels de RDV.
 
 Durée de conservation des données personnelles: ❌ à investiguer
 Justification du traitement : fonctionnement de l'application et support utilisateurs
+
+### SFR Mail2SMS
+
+Envoi de sms transactionnels pour les conseils départementaux des Hauts-de-Seine et du Pas-de-Calais
+
 
 ### Informations complémentaires
 
