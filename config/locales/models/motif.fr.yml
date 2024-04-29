@@ -89,12 +89,13 @@ fr:
         agents: >
           Créneaux accessibles aux <strong>agents</strong> de l’organisation
         agents_and_prescripteurs: >
-          Créneaux accessibles aux <strong>agents et aux prescripteurs</strong> de l’organisation
+          Créneaux accessibles aux <strong>agents</strong> de l’organisation et aux prescripteurs</strong>
         agents_and_prescripteurs_and_invited_users: >
-          Créneaux accessibles aux <strong>agents, aux prescripteurs et aux usagers</strong> de
-          l’organisation <strong>via une invitation</strong>
+          Créneaux accessibles aux <strong>agents</strong> de l’organisation, aux <strong>prescripteurs</strong>
+          et aux <strong>usagers</strong> via <strong>une invitation</strong>
         everyone: >
-          Créneaux accessibles aux <strong>agents, aux prescripteurs et aux usagers</strong> de l’organisation
+          Créneaux accessibles aux <strong>agents</strong> de l’organisation, aux <strong>prescripteurs</strong>
+          et aux <strong>usagers</strong>
       motif/bookable_by/hint:
         agents: >
           Seuls vous et les agents de votre organisation peuvent ajouter des rendez-vous à votre agenda.
