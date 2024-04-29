@@ -12,7 +12,7 @@ class Users::RdvsController < UserAuthController
     authorize Rdv
     @rdvs = policy_scope(Rdv).includes(:motif, :participations, :users).user_with_relatives(current_user.id).for_domain(current_domain)
     @rdvs = params[:past].present? ? @rdvs.past : @rdvs.future
-    @rdvs = @rdvs.order(starts_at: :desc).page(params[:page])
+    @rdvs = @rdvs.order(starts_at: :desc).page(page_number)
   end
 
   def create
