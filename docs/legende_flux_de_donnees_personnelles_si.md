@@ -72,17 +72,24 @@ Justification du traitement : fonctionnement de l'application et support utilisa
 
 Envoi de sms transactionnels notamment pour les confirmations et rappels de RDV.
 
-Durée de conservation des données personnelles: ❌ à investiguer
+Durée de conservation des données personnelles: ❌ à clarifier
 Justification du traitement : fonctionnement de l'application et support utilisateurs
 
 ### SFR Mail2SMS
 
 Envoi de sms transactionnels pour les conseils départementaux des Hauts-de-Seine et du Pas-de-Calais
 
+Durée de conservation des données personnelles: ❌ à clarifier
+Justification du traitement : fonctionnement de l'application
+
+### Clever Technologies
+
+Envoi de sms transactionnels pour le conseil départemental de la Seine-et-Marne
+
+Durée de conservation des données personnelles: ❌ à clarifier
+Justification du traitement : fonctionnement de l'application
 
 ### Informations complémentaires
 
 L'équipe technique a accès à tous les stockage de données dans Scalingo à des fins de débuggage.
-
-
 
