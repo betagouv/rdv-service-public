@@ -36,10 +36,10 @@ p
 
     = label_tag do
       = f.radio_button(:collectif, false)
-      span.ml-1= "Consultation individuelle"
+      span.ml-1= Motif.human_attribute_value(:collectif, false)
       p.text-muted.font-14.mt-1= Motif.human_attribute_value(:collectif, false, context: :hint)
 
     = label_tag do
       = f.radio_button(:collectif, true)
-      span.ml-1= "Atelier collectif"
+      span.ml-1= Motif.human_attribute_value(:collectif, true)
       p.text-muted.font-14.mt-1= Motif.human_attribute_value(:collectif, true, context: :hint)
