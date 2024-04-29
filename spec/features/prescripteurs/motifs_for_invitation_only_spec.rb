@@ -18,7 +18,7 @@ RSpec.describe "motifs for invitation only" do
       expect(page).not_to have_content("Ouvert aux agents, aux prescripteurs et aux usagers avec une invitation")
 
       expect(page).to have_field("Délai minimum avant le RDV", disabled: true)
-      choose("Créneaux partiellement ouverts à la réservation en ligne")
+      choose("Créneaux accessibles aux agents de l’organisation et aux prescripteurs")
       expect(page).to have_field("Délai minimum avant le RDV", disabled: false)
 
       expect { click_button("Enregistrer") }.to change { motif.reload.bookable_by }.to("agents_and_prescripteurs")
