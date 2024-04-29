@@ -8,6 +8,6 @@ module FeatureHelper
   end
 
   def show_agent_prescription_incitation?
-    current_agent.present? && current_agent.territories.any?(&:any_motifs_opened_for_prescription?)
+    current_agent.present? && current_agent.territories_through_organisations.any?(&:any_motifs_opened_for_prescription?)
   end
 end

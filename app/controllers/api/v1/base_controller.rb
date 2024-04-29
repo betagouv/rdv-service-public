@@ -22,7 +22,7 @@ class Api::V1::BaseController < ActionController::Base
   end
 
   def render_collection(objects, root: nil, blueprint_klass: nil)
-    objects = objects.page(page).per(PAGINATE_PER)
+    objects = objects.page(page_number).per(PAGINATE_PER)
     meta = {
       current_page: objects.current_page,
       next_page: objects.next_page,
@@ -37,7 +37,7 @@ class Api::V1::BaseController < ActionController::Base
     render json: blueprint_klass.render(objects, root: root, meta: meta)
   end
 
-  def page
-    @page ||= params[:page]&.to_i || 1
+  def page_number
+    params[:page].presence&.to_i || 1
   end
 end

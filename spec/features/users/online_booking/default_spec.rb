@@ -346,7 +346,7 @@ RSpec.describe "User can search for rdvs" do
     expect_page_h1("Prenez rendez-vous en ligne\navec votre département")
     fill_in("search_where", with: "79 Rue de Plaisance, 92250 La Garenne-Colombes")
 
-    # fake algolia autocomplete to pass on Circle ci
+    find("#search_departement", visible: :all) # permet d'attendre que l'élément soit dans le DOM
     page.execute_script("document.querySelector('#search_departement').value = '92'")
     page.execute_script("document.querySelector('#search_submit').disabled = false")
 

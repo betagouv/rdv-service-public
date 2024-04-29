@@ -1,8 +1,6 @@
 class SoftDeleteError < StandardError; end
 
 class Agent < ApplicationRecord
-  self.ignored_columns = ["current_sign_in_at"]
-
   # Mixins
   has_paper_trail(
     only: %w[email first_name last_name starts_at invitation_sent_at invitation_accepted_at]
@@ -84,6 +82,7 @@ class Agent < ApplicationRecord
   # and we need to destroy to trigger the callbacks on the model
   has_many :users, through: :referent_assignations, dependent: :destroy
   has_many :organisations, through: :roles, dependent: :destroy
+  has_many :territories_through_organisations, source: :territory, through: :organisations
   has_many :webhook_endpoints, through: :organisations
 
   attr_accessor :allow_blank_name

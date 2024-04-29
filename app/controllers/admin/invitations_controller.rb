@@ -4,7 +4,7 @@ class Admin::InvitationsController < AgentAuthController
       .joins(:organisations).where(organisations: { id: current_organisation.id })
       .invitation_not_accepted.where.not(invitation_sent_at: nil)
       .created_by_invite
-      .page(params[:page])
+      .page(page_number)
     @invited_agents = index_params[:search].present? ? @invited_agents.search_by_text(index_params[:search]) : @invited_agents.order(invitation_sent_at: :desc)
   end
 

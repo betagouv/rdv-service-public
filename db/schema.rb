@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_04_10_082337) do
+ActiveRecord::Schema[7.0].define(version: 2024_04_25_132948) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -228,7 +228,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_10_082337) do
     t.enum "absence_notification_level", default: "all", enum_type: "agents_absence_notification_level"
     t.string "external_id", comment: "The agent's unique and immutable id in the system managing them and adding them to our application"
     t.string "calendar_uid", comment: "the uid used for the url of the agent's ics calendar"
-    t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.text "microsoft_graph_token"
     t.text "refresh_microsoft_graph_token"
