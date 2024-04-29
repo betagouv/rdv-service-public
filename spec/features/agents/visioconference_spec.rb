@@ -41,6 +41,7 @@ RSpec.describe "Les agents peuvent organiser des rdv par visioconférence" do
     fill_in "Email", with: "francis@factice.org"
     click_button "Enregistrer"
 
+    expect(page).to have_content "francis@factice.org" # pour attendre la requête ajax d'enregistrement de l'usager
     click_button "Continuer"
     expect(page).to have_content "Commence à"
   end
