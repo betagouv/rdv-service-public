@@ -146,6 +146,7 @@ gem "lograge"
 gem "httpclient", git: "https://github.com/nahi/httpclient.git", ref: "d57cc6d"
 
 # gems qui vont être intégrées à ruy 3.4.0, à supprimer quand on upgrade depuis 3.3.1
+gem "bigdecimal"
 gem "csv"
 gem "drb"
 gem "observer"
