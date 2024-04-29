@@ -5,7 +5,7 @@ class Admin::ReferentAssignationsController < AgentAuthController
     @referents = policy_scope(@user.referent_agents).distinct.order(:last_name)
     @agents = policy_scope(Agent).merge(current_organisation.agents)
     @agents = @agents.search_by_text(index_params[:search]) if index_params[:search].present?
-    @agents = @agents.page(params[:page])
+    @agents = @agents.page(page_number)
   end
 
   def create

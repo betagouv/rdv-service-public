@@ -51,7 +51,7 @@
             th = t(".dates")
             th = t("helpers.actions")
         tbody
-          = render @plage_ouvertures
+          = render partial: "admin/plage_ouvertures/plage_ouverture", collection: @plage_ouvertures, as: :plage_ouverture
       .d-flex.justify-content-center
         = paginate @plage_ouvertures, theme: "twitter-bootstrap-4"
   - else
