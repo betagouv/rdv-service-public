@@ -32,7 +32,7 @@ RSpec.describe "motifs for invitation only" do
       visit edit_admin_organisation_motif_path(organisation, motif)
       click_on "Réservation en ligne"
 
-      choose("Créneaux ouverts à la réservation en ligne via une invitation")
+      choose("Créneaux accessibles aux agents de l’organisation, aux prescripteurs et aux usagers via une invitation")
       expect(page).to have_content("Délai minimum avant le RDV")
 
       expect { click_button("Enregistrer") }.to change { motif.reload.bookable_by }.to("agents_and_prescripteurs_and_invited_users")
