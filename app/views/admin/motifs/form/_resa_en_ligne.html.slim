@@ -9,7 +9,7 @@
           = f.radio_button(:bookable_by, :agents, "data-action": "change->motif-form#refreshSections", "data-motif-form-target": "bookableByRadios")
           span.ml-1= sanitize(I18n.t("activerecord.attributes.motif/bookable_by/radio_label_html.agents"))
           p.text-muted.font-14.mt-1
-            = I18n.t("activerecord.attributes.motif/bookable_by/hint.agents")
+            = sanitize(I18n.t("activerecord.attributes.motif/bookable_by/hint.agents"))
 
       .form-row
         .col-md-12
@@ -17,7 +17,7 @@
             = f.radio_button(:bookable_by, :agents_and_prescripteurs, "data-action": "change->motif-form#refreshSections", "data-motif-form-target": "bookableByRadios")
             span.ml-1= sanitize(I18n.t("activerecord.attributes.motif/bookable_by/radio_label_html.agents_and_prescripteurs"))
             p.text-muted.font-14.mt-1
-              = I18n.t("activerecord.attributes.motif/bookable_by/hint.agents_and_prescripteurs")
+              = sanitize(I18n.t("activerecord.attributes.motif/bookable_by/hint.agents_and_prescripteurs"))
 
     - if current_organisation.rdv_insertion?
       .form-row
@@ -26,7 +26,7 @@
             = f.radio_button(:bookable_by, :agents_and_prescripteurs_and_invited_users, "data-action": "change->motif-form#refreshSections", "data-motif-form-target": "bookableByRadios")
             span.ml-1= sanitize(I18n.t("activerecord.attributes.motif/bookable_by/radio_label_html.agents_and_prescripteurs_and_invited_users"))
             p.text-muted.font-14.mt-1
-              = I18n.t("activerecord.attributes.motif/bookable_by/hint.agents_and_prescripteurs_and_invited_users")
+              = sanitize(I18n.t("activerecord.attributes.motif/bookable_by/hint.agents_and_prescripteurs_and_invited_users"))
 
     .form-row
       .col-md-12
@@ -34,7 +34,7 @@
           = f.radio_button(:bookable_by, :everyone, "data-action": "change->motif-form#refreshSections", "data-motif-form-target": "bookableByRadios")
           span.ml-1= sanitize(I18n.t("activerecord.attributes.motif/bookable_by/radio_label_html.everyone"))
           p.text-muted.font-14.mt-1
-            = I18n.t("activerecord.attributes.motif/bookable_by/hint.everyone")
+            = sanitize(I18n.t("activerecord.attributes.motif/bookable_by/hint.everyone"))
 
 .card [data-motif-form-target="bookingDelaySection"]
   .card-body
