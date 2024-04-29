@@ -8,7 +8,7 @@ class Admin::Territories::SectorsController < Admin::Territories::BaseController
       .includes(:attributions)
       .order_by_name
     @sectors = @sectors.where(attributions: { organisation: params[:organisation_id] }) if params[:organisation_id].present?
-    @sectors = @sectors.page(params[:page]) unless params[:view] == "map"
+    @sectors = @sectors.page(page_number) unless params[:view] == "map"
     render :index_map if params[:view] == "map"
   end
 
@@ -32,7 +32,7 @@ class Admin::Territories::SectorsController < Admin::Territories::BaseController
   end
 
   def show
-    @zones = @sector.zones.order(updated_at: :desc).page(params[:page])
+    @zones = @sector.zones.order(updated_at: :desc).page(page_number)
   end
 
   def edit; end

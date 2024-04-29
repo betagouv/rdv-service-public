@@ -3,12 +3,6 @@ class Agents::PreferencesController < AgentAuthController
 
   before_action { @active_agent_preferences_menu_item = :notifications }
 
-  def disable_cnfs_online_booking_banner
-    skip_authorization
-    cookies.permanent[:disable_cnfs_online_booking_banner] = true
-    redirect_back_or_to(root_path)
-  end
-
   def show
     @agent = current_agent
     authorize @agent
