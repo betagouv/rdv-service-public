@@ -102,7 +102,7 @@ RSpec.describe "Admin can configure the organisation" do
     select(service_social.name, from: :motif_service_id)
     fill_in :motif_name, with: "truc"
     fill_in "Couleur associée", with: le_nouveau_motif.color
-    click_button "Enregistrer"
+    click_button "Créer le motif"
     expect(page).to have_link("truc")
   end
 end

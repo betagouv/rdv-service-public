@@ -32,7 +32,7 @@ RSpec.describe "Agent can CRUD motifs" do
     find("#motif_service_id").find(:option, service.name).select_option
     fill_in "Nom", with: "Suivi bonne nuit"
     fill_in "Couleur associée", with: "#000"
-    click_button "Enregistrer"
+    click_button "Créer le motif"
 
     expect_page_title("Vos motifs")
     expect(page).to have_content("Suivi bonne nuit")
@@ -41,7 +41,7 @@ RSpec.describe "Agent can CRUD motifs" do
   describe "new" do
     it "displays errors when name and service are missing" do
       visit new_admin_organisation_motif_path(organisation_id: organisation.id)
-      click_on "Enregistrer"
+      click_on "Créer le motif"
       expect(page).to have_content("Nom doit être rempli(e)")
       expect(page).to have_content("Service doit exister")
     end
