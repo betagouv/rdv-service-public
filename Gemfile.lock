@@ -167,6 +167,7 @@ GEM
     crass (1.0.6)
     css_parser (1.16.0)
       addressable
+    csv (3.3.0)
     database_cleaner (2.0.2)
       database_cleaner-active_record (>= 2, < 3)
     database_cleaner-active_record (2.0.1)
@@ -198,6 +199,7 @@ GEM
     dotenv-rails (2.8.1)
       dotenv (= 2.8.1)
       railties (>= 3.2)
+    drb (2.2.1)
     dsfr-view-components (0.5.0)
       html-attributes-utils (~> 1)
       pagy (~> 6)
@@ -253,7 +255,6 @@ GEM
       thor (>= 0.14, < 2.0)
     jsbundling-rails (1.2.1)
       railties (>= 6.0.0)
-    json (2.6.3)
     json-jwt (1.16.6)
       activesupport (>= 4.2)
       aes_key_wrap
@@ -334,6 +335,7 @@ GEM
       rack (>= 1.2, < 4)
       snaky_hash (~> 2.0)
       version_gem (~> 1.1)
+    observer (0.1.2)
     omniauth (2.1.2)
       hashie (>= 3.4.6)
       rack (>= 2.2.3)
@@ -542,10 +544,6 @@ GEM
       sentry-ruby (~> 5.16.1)
     sentry-ruby (5.16.1)
       concurrent-ruby (~> 1.0, >= 1.0.2)
-    sib-api-v3-sdk (9.0.0)
-      addressable (~> 2.3, >= 2.3.0)
-      json (~> 2.1, >= 2.1.0)
-      typhoeus (~> 1.0, >= 1.0.1)
     simple_form (5.1.0)
       actionpack (>= 5.2)
       activemodel (>= 5.2)
@@ -654,12 +652,14 @@ DEPENDENCIES
   chartkick (~> 5.0.1)
   common_french_passwords
   connection_pool
+  csv
   database_cleaner
   devise
   devise-async
   devise_invitable
   devise_token_auth
   dotenv-rails
+  drb
   dsfr-view-components
   factory_bot
   faker
@@ -675,6 +675,7 @@ DEPENDENCIES
   lograge
   mail
   montrose
+  observer
   omniauth-github
   omniauth-microsoft_graph
   omniauth-rails_csrf_protection
@@ -708,7 +709,6 @@ DEPENDENCIES
   selenium-webdriver
   sentry-rails
   sentry-ruby
-  sib-api-v3-sdk
   simple_form (~> 5.0)
   skylight
   slim
@@ -725,7 +725,7 @@ DEPENDENCIES
   webmock
 
 RUBY VERSION
-   ruby 3.3.0p0
+   ruby 3.3.1p55
 
 BUNDLED WITH
-   2.5.3
+   2.5.9
