@@ -365,6 +365,7 @@ class Rdv < ApplicationRecord
   def visio_url
     return nil unless motif.visio?
 
+    # Jitsi n'autorise pas les - et _ dans les liens de visio
     "https://webconf.numerique.gouv.fr/#{domain.id.downcase}#{uuid}".gsub(/[-_]/, "")
   end
 
