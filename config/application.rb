@@ -58,6 +58,8 @@ module Lapin
 
     config.x.redis_namespace = "app"
 
+    # Avec cette configuration, on crée un cookie sans date d'expiration.
+    # L'expiration est gérée avec le module Timeoutable de Devise.
     config.session_store :cookie_store, key: "_rdv_sp_session"
 
     # Devise layout
