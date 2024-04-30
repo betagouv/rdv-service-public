@@ -1,9 +1,9 @@
 - if disabled
   p.alert.alert-warning Ce motif est déjà utilisé dans au moins un RDV, il n'est pas possible de changer le type
 
-- %i[public_office phone home].each do |value|
+- Motif.location_types.each_key.each do |value|
   = label_tag do
     = f.radio_button(:location_type, value, disabled: disabled, "data-action": "change->motif-form#refreshSections", "data-motif-form-target": "locationTypeRadios")
     span.ml-1 class=(disabled ? "text-muted" : "")
       = Motif.human_attribute_value(:location_type, value)
-    p.text-muted.font-14.mt-1= Motif.human_attribute_value(:location_type, value, context: :hint)
+    p.text-muted.font-14= sanitize(Motif.human_attribute_value(:location_type, value, context: :hint), scrubber: :prune)

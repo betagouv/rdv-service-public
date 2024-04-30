@@ -21,6 +21,14 @@
   p.card-text
     i.fa.fa-fw.fa-phone.text-primary-blue>
     | RDV téléphonique
+- elsif rdv.motif.visio?
+  p.card-text
+    i.fa.fa-video-camera.text-primary-blue>
+    = "Par visioconférence "
+    - if current_agent.in?(rdv.agents)
+      = link_to(rdv.visio_url, target: :_blank) do
+        = "démarrer la visioconférence "
+        i.fa.fa-external-link[aria-hidden="true"]
 - else
   .d-flex.card-text.mb-1
     div.mr-1
@@ -31,7 +39,6 @@
         = human_location(rdv)
       - elsif rdv.public_office?
         = human_location(rdv)
-
 .d-flex.card-text
   div.mr-1
     i.fa.fa-fw.fa-user.text-primary-blue>
