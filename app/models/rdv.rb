@@ -362,6 +362,13 @@ class Rdv < ApplicationRecord
     update!(cancelled_at: Time.zone.now, status: "revoked")
   end
 
+  def visio_url
+    return nil unless motif.visio?
+
+    # Jitsi n'autorise pas les - et _ dans les liens de visio
+    "https://webconf.numerique.gouv.fr/RdvServicePublic#{uuid}".gsub(/[-_]/, "")
+  end
+
   private
 
   def update_collective_rdv_status

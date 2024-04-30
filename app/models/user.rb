@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  self.ignored_columns = [:remember_created_at]
+
   # Mixins
   has_paper_trail(
     only: %w[
@@ -8,8 +10,10 @@ class User < ApplicationRecord
     ]
   )
 
-  devise :invitable, :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable, :confirmable, :async
+  devise :invitable, :database_authenticatable, :registerable, :timeoutable,
+         :recoverable, :validatable, :confirmable, :async
+
+  def timeout_in = 30.minutes # Used by Devise's :timeoutable
 
   include PgSearch::Model
   include FullNameConcern
@@ -80,10 +84,6 @@ class User < ApplicationRecord
   scope :relative, -> { where.not(responsible_id: nil) }
 
   ## -
-
-  def remember_me # Override from Devise::rememberable to enable it by default
-    super.nil? ? true : super
-  end
 
   def to_s
     full_name

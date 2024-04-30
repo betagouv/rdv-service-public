@@ -152,4 +152,29 @@ RSpec.describe "Agent can see RDV details correctly" do
       expect(page).not_to have_content("voir dans l'agenda")
     end
   end
+
+  context "when the rdv is by visio" do
+    let(:motif) { create(:motif, service: service, location_type: :visio) }
+    let(:user) { create(:user) }
+
+    context "when the agent participates in the rdv" do
+      let(:rdv) { create(:rdv, agents: [agent], users: [user], motif: motif, organisation: organisation, starts_at: starts_at) }
+
+      it "shows the link to start the visio" do
+        visit admin_organisation_rdv_path(organisation, rdv)
+        expect(page).to have_content "démarrer la visioconférence"
+        expect(page).to have_content "Par visioconférence"
+      end
+    end
+
+    context "when the agent does not participates in the rdv" do
+      let(:rdv) { create(:rdv, agents: [create(:agent)], users: [user], motif: motif, organisation: organisation, starts_at: starts_at) }
+
+      it "does not show the link to start the visio" do
+        visit admin_organisation_rdv_path(organisation, rdv)
+        expect(page).not_to have_content "démarrer la visioconférence"
+        expect(page).to have_content "Par visioconférence"
+      end
+    end
+  end
 end
