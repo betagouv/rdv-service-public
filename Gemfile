@@ -145,7 +145,10 @@ gem "lograge"
 # TODO: retirer cette ligne quand une nouvelle version de httpclient est released
 gem "httpclient", git: "https://github.com/nahi/httpclient.git", ref: "d57cc6d"
 
-# gems qui vont être intégrées à ruy 3.4.0, à supprimer quand on upgrade depuis 3.3.1
+# Ces gems ne seront plus intégrées à Ruby en version 3.4.0 Lors de l'upgrade
+# depuis 3.3.1, on pourra vérifier si les gems qui en dépendent implicitement
+# ont ajouté dans leur gemspec une dépendance explicite.
+gem "bigdecimal"
 gem "csv"
 gem "drb"
 gem "observer"
