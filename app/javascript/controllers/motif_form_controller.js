@@ -68,7 +68,7 @@ export default class extends Controller {
   }
   disableSection(sectionRoot, reasons) {
     sectionRoot.querySelectorAll("input, select").forEach(i => i.disabled = true)
-    sectionRoot.querySelector(".js-reasons-for-disabled-section").innerText = `Vous ne pouvez pas modifier ce paramètre si ${reasons.join(" ou ")}.`;
+    sectionRoot.querySelector(".js-reasons-for-disabled-section").innerText = `Vous ne pouvez pas modifier ce paramètre car ${reasons.join(" et ")}.`;
     sectionRoot.querySelector(".js-reasons-for-disabled-section").classList.remove("hidden")
     sectionRoot.querySelectorAll(".js-uncheck-on-section-disable").forEach(box => box.checked = false)
     sectionRoot.classList.add("disabled-card")
