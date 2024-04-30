@@ -102,7 +102,7 @@ utilisent RDV Insertion utilisent ces webhooks.
 | Nom de l’applicatif | Service          | Version   | Commentaires                                                    |
 |---------------------|------------------|-----------|-----------------------------------------------------------------|
 | Serveur web         | Rails @ Scalingo | Rails 7   | Voir ci-dessous pour le détail des librairies                   |
-| BDD métier          | PostgreSQL       | `13.9.0`  | Stockage des données métier, voir [db/schema.rb](/db/schema.rb) |
+| BDD métier          | PostgreSQL       | `14.10.0` | Stockage des données métier, voir [db/schema.rb](/db/schema.rb) |
 | BDD technique       | Redis            | `7.2.3`   | Stockage des sessions et du cache                               |
 
 La liste des librairies Ruby est disponible dans :
