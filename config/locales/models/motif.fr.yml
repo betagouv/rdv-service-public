@@ -89,15 +89,13 @@ fr:
         home: L’usager est notifié que le RDV se déroule à l’adresse renseigné dans sa fiche usager.
       motif/bookable_by/radio_label_html:
         agents: >
-          Créneaux accessibles aux <strong>agents</strong> de l’organisation
+          Agents de l’organisation
         agents_and_prescripteurs: >
-          Créneaux accessibles aux <strong>agents</strong> de l’organisation et aux prescripteurs</strong>
+          Agents de l’organisation et prescripteurs
         agents_and_prescripteurs_and_invited_users: >
-          Créneaux accessibles aux <strong>agents</strong> de l’organisation, aux <strong>prescripteurs</strong>
-          et aux <strong>usagers</strong> via <strong>une invitation</strong>
+          Agents de l’organisation, prescripteurs et usagers via une invitation
         everyone: >
-          Créneaux accessibles aux <strong>agents</strong> de l’organisation, aux <strong>prescripteurs</strong>
-          et aux <strong>usagers</strong>
+          Agents de l’organisation, prescripteurs et usagers
       motif/bookable_by/hint:
         agents: >
           Seuls vous et les agents de votre organisation peuvent ajouter des rendez-vous à votre agenda.
