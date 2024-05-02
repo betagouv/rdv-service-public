@@ -26,7 +26,7 @@ class Motif < ApplicationRecord
   SECTORISATION_LEVEL_DEPARTEMENT = "departement".freeze
   SECTORISATION_TYPES = [SECTORISATION_LEVEL_AGENT, SECTORISATION_LEVEL_ORGANISATION, SECTORISATION_LEVEL_DEPARTEMENT].freeze
 
-  enum location_type: { public_office: "public_office", phone: "phone", home: "home" }
+  enum location_type: { public_office: "public_office", phone: "phone", home: "home", visio: "visio" }
   enum bookable_by: {
     agents: "agents",
     agents_and_prescripteurs: "agents_and_prescripteurs",
@@ -105,7 +105,7 @@ class Motif < ApplicationRecord
       match_data = name_with_location_type&.match(/(.*)-#{location_type}$/)
       match_data ? [match_data[1], location_type] : nil
     end.compact.first
-    where(%{REGEXP_REPLACE(LOWER(UNACCENT(motifs.name)), '#{NAME_SLUG_REGEXP.source}', '_', 'g') = ?}, slug_name)
+    where(%{REGEXP_REPLACE(LOWER(UNACCENT(motifs.name)), ?, '_', 'g') = ?}, NAME_SLUG_REGEXP.source, slug_name)
       .where(location_type: location_type)
   }
   scope :sectorisation_level_departement, -> { where(sectorisation_level: SECTORISATION_LEVEL_DEPARTEMENT) }

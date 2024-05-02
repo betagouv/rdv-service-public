@@ -53,7 +53,6 @@ class Anonymizer::Rules::RdvServicePublic
         uid
         external_id
         calendar_uid
-        current_sign_in_at
         last_sign_in_at
         reset_password_token
         confirmation_token
