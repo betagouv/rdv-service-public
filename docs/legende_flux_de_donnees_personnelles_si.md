@@ -1,4 +1,6 @@
-## Légende
+## Légende du diagramme de flux de données personnelles dans le SI
+
+[Voir le diagramme](/docs/flux_de_donnees_personnelles_si.svg)
 
 - Les flèches représentent un flux de données personnelles.  Par exemple :
     - Background workers -> Brevo : indique que des données personnelles sont envoyées à Brevo depuis les background workers
