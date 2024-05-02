@@ -4,9 +4,9 @@
 
 - Les flèches représentent un flux de données personnelles.  Par exemple :
     - Background workers -> Brevo : indique que des données personnelles sont envoyées à Brevo depuis les background workers
-    - Agents <-> Interface web : indique que les agents transactionnels des données personnelles à l'interface web, et lisent des données personnelles sur l'interface web.
-- Les cylindres représentent les stockages persistant
-- Les rectangles représentent les processus qui n'ont pas de stockage persistant de données
+    - Agents <-> Interface web : indique que les agents transmettent des données personnelles à l'interface web, et lisent des données personnelles sur l'interface web.
+- Les cylindres représentent les stockages persistant (bases de données, stockages de fichiers, etc...)
+- Les rectangles représentent les processus qui n'ont pas de stockage persistant de données (serveurs webs, jobs cron, etc...)
 
 On affiche ici une seule des applications métier Scalingo, mais le schéma est le même pour les trois (osc-secnum-fr1/production-rdv-solidarites, osc-secnum-fr1/production-rdv-mairie, osc-secnum-fr1/demo-rdv-solidarites).
 
@@ -39,7 +39,7 @@ Voir https://www.cnil.fr/fr/la-cnil-publie-une-recommandation-relative-aux-mesur
 Des dumps périodiques de la base de données principale faits automatiquement par Scalingo, ou lancés manuellement par l'équipe technique. Voir https://doc.scalingo.com/databases/postgresql/backing-up#retention-policy-for-periodic-backups
 Leur usage est encadrés conformément à notre documentation : https://github.com/betagouv/rdv-service-public/blob/production/docs/4-notes-techniques.md#r%C3%A8gles-dutilisation
 
-- Durée de conservation des données personnelles: 12 mois pour les backups automatiques, ❌ pas de date d'expiration pour les backups manuels
+- Durée de conservation des données personnelles: jusqu'à 12 mois pour les backups automatiques, ❌ pas de date d'expiration automatique pour les backups manuels
 - Justification du traitement : débuggage, investigations sur les performances, et le cas échéant rétablissement du servie après incident majeur
 
 ### DB Postgres d'ETL
@@ -53,7 +53,7 @@ Une base de données dans laquel on télécharge un dump de la production, qu'on
 
 On envoie des informations sur les rdv par des webhooks, et les SI de nos partenaires peuvent utiliser notre API pour consulter et écrire des données métier.
 
-- Durée de conservation des données personnelles: ❌ inconnue. A indiquer dans nos conventions ?
+- Durée de conservation des données personnelles: ❌ à clarifier
 - Justification du traitement : ❌ à clarifier
 
 ### Sentry
