@@ -264,6 +264,19 @@ C4Container
     Rel(job_etl, backups, "TCP")
 ```
 
+### Gestion DNS
+
+C'est **Gandi (gandi.net)** qui fournit nos noms de domaine et la gestion DNS.
+
+Nous y gérons les domaines suivants :
+- `rdv-solidarites.fr` : domaine de production historique, également utilisé pour `demo.rdv-solidarites.fr`
+- `rdv-service-public.fr` : gestion d'une boite mail support@rdv-service-public.fr
+- `rdv-aide-numerique.fr` : domaine de production de la plateforme RDV Aide Numérique (pointe sur l'instance principale)
+- `rdv-services-publics.fr` : anti phishing : redirige vers `rdv-service-public.fr`
+- `rdv-solidarite.fr` : anti phishing : redirige vers `rdv-solidarites.fr`
+- `rdv-solidarités.fr` : anti phishing : redirige vers `rdv-solidarites.fr`
+- `rdv-solidarité.fr` : anti phishing : redirige vers `rdv-solidarites.fr`
+
 ### Schéma des données
 
 Lancer `make generate_db_diagram` pour obtenir un SVG de l'état actuel des tables Postgres. Le fichier `db/schema.rb` donne aussi une description des tables via un DSL Ruby.
