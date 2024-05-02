@@ -1,9 +1,10 @@
 p
-  ' Vous avez la possibilité de créer un motif dans sa configuration principale uniquement, si vous
+  ' Vous avez la possibilité de créer ou modifier un motif dans sa configuration principale uniquement, si vous
   ' souhaitez un paramétrage simplifié. Sinon, vous pouvez accéder aux autres onglets pour un paramétrage plus avancé.
 
 .card
   .card-body
+    h5.card-title Configuration générale
     .form-row
       .col-md-12
         / Nous voulons que l'autocomplete ne propose que les noms des motifs en base,
@@ -27,11 +28,13 @@ p
 
 .card
   .card-body
-    p Choisissez le format du rendez-vous :
+    h5.card-title Type de RDV
+    p Choisissez le type du rendez-vous :
     = render partial: "admin/motifs/form/location_types", locals: { f: f, disabled: motif.rdvs.any? }
 
 .card
   .card-body
+    h5.card-title Nombre de participants
     p Choisissez le nombre de participants :
 
     = label_tag do

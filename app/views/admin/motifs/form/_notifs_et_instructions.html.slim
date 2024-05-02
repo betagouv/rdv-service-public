@@ -1,5 +1,6 @@
 .card
   .card-body.pt-4
+    h5.card-title Visibilité usager
     - %i[visible_and_notified visible_and_not_notified invisible].each do |value|
       = label_tag do
         = f.radio_button(:visibility_type, value)
@@ -12,6 +13,7 @@
 
 .card
   .card-body
+    h5.card-title Consignes à destination de l'usager
     p.mb-2 Vous pouvez paramétrer des messages par défaut, qui s’afficheront avant la prise de rendez-vous, après la confirmation du rendez-vous, et/ou en cas d’annulation du rendez-vous.
     .mt-3
       = f.input :restriction_for_rdv,

@@ -35,13 +35,13 @@ export default class extends Controller {
   }
 
   reasonsToDisableBookingDelay() {
-    return this.bookableBy === "agents" ? ["les créneaux sont ne sont pas ouverts à la réservation en ligne"] : []
+    return this.bookableBy === "agents" ? ["les créneaux ne sont pas ouverts à la réservation en ligne"] : []
   }
 
   reasonsToDisableSecto() {
     const reasons = []
     if(this.bookableBy === "agents") {
-      reasons.push("les créneaux sont ne sont pas ouverts à la réservation en ligne")
+      reasons.push("les créneaux ne sont pas ouverts à la réservation en ligne")
     }
     if(this.followUpCheckbox.checked) {
       reasons.push(`l'option "RDV de suivi" est cochée`)
