@@ -4,7 +4,7 @@
 
 **Nom du projet :** RDV Service Public
 
-**Dépôt de code :** https://github.com/betagouv/rdv-solidarites.fr
+**Dépôt de code :** https://github.com/betagouv/rdv-service-public.fr
 
 **Hébergeur :** Scalingo, Paris (région Scalingo "osc-secnum-fr1", région Outscale "cloudgouv-eu-west-1")
 
