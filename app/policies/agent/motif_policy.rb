@@ -1,39 +1,41 @@
 class Agent::MotifPolicy < ApplicationPolicy
-  def self.agent_can_manage_motifs?(organisation, agent)
-    agent.roles.find_by(organisation: organisation, access_level: AgentRole::ACCESS_LEVEL_ADMIN)
+  def self.agent_can_manage_motif?(motif, agent)
+    motif.organisation.in?(agent.admin_orgs)
   end
 
-  def self.agent_can_use_motifs?(organisation, agent)
-    agent.roles.find_by(organisation: organisation)
+  def self.agent_can_use_motif?(motif, agent)
+    return false unless motif.organisation.in?(agent.organisations)
+
+    agent.secretaire? ||
+      agent_can_manage_motif?(motif, agent) ||
+      motif.service.in?(agent.services)
   end
 
-  def agent_can_manage_motifs?
-    self.class.agent_can_manage_motifs?(@record.organisation_id, current_agent)
+  def agent_can_manage_motif?
+    self.class.agent_can_manage_motif?(motif, current_agent)
   end
 
-  def agent_can_use_motifs?
-    self.class.agent_can_use_motifs?(@record.organisation_id, current_agent)
+  def agent_can_use_motif?
+    self.class.agent_can_use_motif?(motif, current_agent)
   end
 
-  alias new? agent_can_manage_motifs?
-  alias duplicate? agent_can_manage_motifs?
-  alias create? agent_can_manage_motifs?
-  alias edit? agent_can_manage_motifs?
-  alias update? agent_can_manage_motifs?
-  alias destroy? agent_can_manage_motifs?
-  alias versions? agent_can_manage_motifs?
+  alias show? agent_can_use_motif?
+  alias new? agent_can_manage_motif?
+  alias duplicate? agent_can_manage_motif?
+  alias create? agent_can_manage_motif?
+  alias edit? agent_can_manage_motif?
+  alias update? agent_can_manage_motif?
+  alias destroy? agent_can_manage_motif?
+  alias versions? agent_can_manage_motif?
 
   alias current_agent pundit_user
 
-  def show?
-    return unless agent_can_use_motifs?
-
-    current_agent.secretaire? || agent_can_manage_motifs? ||
-      @record.service.in?(current_agent.services)
+  def bookable?
+    motif.bookable_outside_of_organisation?
   end
 
-  def bookable?
-    @record.bookable_outside_of_organisation?
+  def motif
+    @record
   end
 
   class Scope < ApplicationPolicy::Scope
