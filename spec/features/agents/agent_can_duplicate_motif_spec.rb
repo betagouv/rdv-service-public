@@ -36,7 +36,7 @@ RSpec.describe "agent can duplicate motif" do
     visit admin_organisation_motif_path(organisation, existing_motif)
     click_on "Dupliquer"
     choose :motif_location_type_home # Je veux créer le même motif mais en version à domicile
-    expect { click_on "Enregistrer" }.to change(Motif, :count).by(1)
+    expect { click_on "Créer le motif" }.to change(Motif, :count).by(1)
 
     expected_attributes = existing_motif.attributes.symbolize_keys.merge(
       id: be_a(Integer),
@@ -59,7 +59,7 @@ RSpec.describe "agent can duplicate motif" do
       visit admin_organisation_motif_path(organisation, existing_motif)
       click_on "Dupliquer"
       select "Mon autre orga", from: :motif_organisation_id
-      expect { click_on "Enregistrer" }.to change(Motif, :count).by(1)
+      expect { click_on "Créer le motif" }.to change(Motif, :count).by(1)
 
       expected_attributes = existing_motif.attributes.symbolize_keys.merge(
         id: be_a(Integer),
