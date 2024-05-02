@@ -485,7 +485,7 @@ Parmi les données que nous manipulons, les plus critiques sont :
 
 ### Flux des données personnelles dans le SI
 
-Le flux des données personnelles dans le SI est détaillé dans  [ce diagramme](docs/Flux de données personnelles dans architecture technique.svg) et [sa légende](docs/legende_flux_de_donnees_personnelles_si.md).
+Le flux des données personnelles dans le SI est détaillé dans  [ce diagramme](docs/flux_de_donnees_personnelles_si.svg) et [sa légende](docs/legende_flux_de_donnees_personnelles_si.md).
 
 ### Bonnes pratiques de sécurité au sein de l'équipe
 
