@@ -8,3 +8,10 @@
       span.ml-1 class=(disabled ? "text-muted" : "")
         = Motif.human_attribute_value(:location_type, value)
       p.text-muted.font-14= sanitize(Motif.human_attribute_value(:location_type, value, context: :hint), scrubber: :prune)
+  - motif = f.object
+  - if motif.persisted?
+    p.text-muted.font-14
+      i.fa.fa-circle-info.mr-1
+      ' Pour permettre plusieurs types de rendez-vous, vous pouvez
+      = link_to("dupliquer ce motif", duplicate_admin_organisation_motif_path(current_organisation, motif))
+      | .
