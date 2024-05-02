@@ -1,7 +1,7 @@
 - content_for(:menu_item) { "menu-motifs" }
 
-- content_for :title do
-  | Création d’un nouveau motif
+- page_title = @motif.duplicated_from_motif ? %(Duplication du motif "#{@motif.duplicated_from_motif}") : "Création d’un nouveau motif"
+- content_for :title, page_title
 
 - content_for :breadcrumb do
   ol.breadcrumb.m-0
