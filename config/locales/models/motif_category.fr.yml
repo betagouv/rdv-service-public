@@ -4,4 +4,4 @@ fr:
       motif_category: Catégorie
     attributes:
       motif_category:
-        category_hint: La catégorie n'est pas visible par les usagers. Elle peut-être utile pour filtrer les motifs proposés dans certains contextes, ou pour permettre de récupérer des motifs via l'API.
+        category_hint: La catégorie de motifs n’est pas visible par l’usager. Elle peut être utile pour filtrer les motifs proposés dans certains contextes, ou permettre d’avoir un référentiel partagé avec un système externe (API de l’ANTS pour les mairies...)

@@ -639,6 +639,7 @@ DEPENDENCIES
   axe-core-rspec (= 4.3.2)
   axiom-types!
   better_errors
+  bigdecimal
   binding_of_caller
   blueprinter
   bootsnap

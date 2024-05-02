@@ -7,6 +7,7 @@
 @import "~bootstrap/scss/bootstrap";
 @import "~select2/dist/css/select2";
 @import "~select2-bootstrap4-theme/dist/select2-bootstrap4.min";
+@import "structure/bootstrap_overrides";
 
 // Plugins
 @import '@fullcalendar/core/main';
@@ -14,6 +15,7 @@
 @import '@fullcalendar/timegrid/main';
 @import '@fullcalendar/list/main';
 @import "jquery-datetimepicker/build/jquery.datetimepicker.min";
+@import "./headway";
 
 // Structure
 @import "./structure/general";

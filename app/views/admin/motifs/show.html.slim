@@ -37,7 +37,7 @@
 
           .mb-2= motif_attribute_row \
           Motif.human_attribute_name(:bookable_by), \
-          I18n.t("activerecord.attributes.motif/bookable_by/hint.#{@motif.bookable_by}", \
+          I18n.t("activerecord.attributes.motif/bookable_by/radio_label_html.#{@motif.bookable_by}", \
           organisation_name: @motif.organisation.name \
           )
         - if @motif.bookable_outside_of_organisation?
