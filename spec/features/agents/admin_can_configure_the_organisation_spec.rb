@@ -96,13 +96,13 @@ RSpec.describe "Admin can configure the organisation" do
     expect(page).to have_content("Vous n'avez pas encore créé de motif.")
 
     click_link "Créer un motif", match: :first
-    expect(page).to have_content("Nouveau motif")
+    expect(page).to have_content("Création d’un nouveau motif")
     ## Check secretariat is unavailable
     expect(page.all("select#motif_service_id option").map(&:value)).to match_array ["", pmi.id.to_s, service_social.id.to_s]
     select(service_social.name, from: :motif_service_id)
     fill_in :motif_name, with: "truc"
-    fill_in "Couleur", with: le_nouveau_motif.color
-    click_button "Enregistrer"
+    fill_in "Couleur associée", with: le_nouveau_motif.color
+    click_button "Créer le motif"
     expect(page).to have_link("truc")
   end
 end

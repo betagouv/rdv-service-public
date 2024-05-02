@@ -360,5 +360,6 @@ fr:
       datetimepicker: "%d/%m/%Y %H:%M"
     pm: pm
   public_office: "sur place"
+  visio: "par visioconférence"
   phone: "par téléphone"
   home: "à domicile"
