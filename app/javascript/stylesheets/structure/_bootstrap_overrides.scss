@@ -1,0 +1,8 @@
+.card {
+  box-shadow: none !important;
+  border: 1px solid $card-border-color !important;
+}
+
+.disabled-card * {
+  color: $gray-600 !important;
+}
