@@ -24,7 +24,7 @@
 
 | Organisme                  | Nom                   | Rôle                   | Activité  |
 |----------------------------|-----------------------|------------------------|-----------|
-| RDV Service Public         | François Ferrandis    | Lead tech              | Rédaction |
+| RDV Service Public         | François Ferrandis    | Lead tech              | Relecture + Rédaction |
 | RDV Service Public         | Victor Mours          | Lead tech              | Relecture + Rédaction |
 | RDV Service Public         | Mehdi Karouch Idrissi | Product Manager        | Relecture |
 | ANCT                       | Amélie Naquet         | Cheffe de projet SoNum | Relecture |
@@ -482,6 +482,10 @@ Parmi les données que nous manipulons, les plus critiques sont :
 - les coordonnées des usager⋅es
 - l'historique des RDVs pris par une personne ainsi que le motif de ces RDV
 - le champs "contexte", un champs texte libre où les agents peuvent saisir des informations de contexte sur un RDV
+
+### Flux des données personnelles dans le SI
+
+Le flux des données personnelles dans le SI est détaillé dans  [ce diagramme](docs/Flux de données personnelles dans architecture technique.svg) et [sa légende](docs/legende_flux_de_donnees_personnelles_si.md).
 
 ### Bonnes pratiques de sécurité au sein de l'équipe
 
