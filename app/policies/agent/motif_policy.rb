@@ -1,6 +1,6 @@
 class Agent::MotifPolicy < ApplicationPolicy
   def self.agent_can_manage_motif?(motif, agent)
-    motif.organisation.in?(agent.admin_orgs)
+    motif.organisation.in?(organisations_i_can_manage(agent))
   end
 
   def self.agent_can_use_motif?(motif, agent)
@@ -9,6 +9,10 @@ class Agent::MotifPolicy < ApplicationPolicy
     agent.secretaire? ||
       agent_can_manage_motif?(motif, agent) ||
       motif.service.in?(agent.services)
+  end
+
+  def self.organisations_i_can_manage(agent)
+    agent.admin_orgs
   end
 
   def agent_can_manage_motif?

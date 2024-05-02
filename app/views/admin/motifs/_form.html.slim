@@ -3,11 +3,11 @@
   = render "model_errors", model: motif
 
   = f.hidden_field :duplicated_from_motif_id
-  - permitted_organisations = current_agent.organisations.select { Agent::MotifPolicy.agent_can_manage_motifs?(_1, current_agent) }
-  - if motif.duplicated_from_motif && motif.new_record? && permitted_organisations.any?
+  - organisations_i_can_manage = Agent::MotifPolicy.organisations_i_can_manage(current_agent)
+  - if motif.duplicated_from_motif && motif.new_record? && organisations_i_can_manage.any?
     .card
       .card-body
-        = f.association :organisation, label: "Créer le motif dans cette organisation", collection: permitted_organisations, input_html: { class: "select2-input" }
+        = f.association :organisation, label: "Créer le motif dans cette organisation", collection: organisations_i_can_manage, input_html: { class: "select2-input" }
 
   .card
     .card-body
