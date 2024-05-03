@@ -10,11 +10,13 @@
     - elsif context.invitation?
       .font-weight-bold Malheureusement, aucun créneau correspondant à votre invitation n'a été trouvé.
       .font-weight-bold.mb-2 Toutes nos excuses pour cela.
-      = mail_to current_domain.support_email,
-        subject: "[Problème Invitation]",
+      - email = context.organisations_emails.empty? ? "support@rdv-insertion.fr" : context.organisations_emails
+      = mail_to email,
+        subject: "[Problème Invitation. Créneaux Indisponibles, motif : #{context.motif_category_name}]",
+        cc: "#{'support@rdv-insertion.fr' unless context.organisations_emails.empty?}",
         class: "btn btn-primary" do
         span>
           i.fa.fa-envelope
-        | Envoyer une demande à l'équipe technique
+        | Envoyer une demande d'ouverture de créneaux à l'organisation
     - else
       .font-weight-bold Malheureusement, aucun créneau correspondant à votre recherche n'a été trouvé.
