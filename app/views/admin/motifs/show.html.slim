@@ -65,7 +65,8 @@
         hr
 
         = motif_attribute_row(Motif.human_attribute_name(:visibility_type)) do
-          div= @motif.human_attribute_value(:visibility_type)
+          div= sanitize(@motif.human_attribute_value(:visibility_type, context: :html))
+
           div.text-muted
             = @motif.human_attribute_value(:visibility_type, context: :hint)
             - if current_organisation.rdv_insertion?
