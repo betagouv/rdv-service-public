@@ -15,5 +15,10 @@ RSpec.describe "territory admin can manage sectors" do
     click_on "Sectorisation"
     click_on "Secteurs"
     expect(page).to have_content "Secteurs"
+    click_on "Créer un nouveau secteur"
+    fill_in("Nom", with: "Secteur 2")
+    fill_in("Identifiant", with: "secteur-2")
+    click_on "Enregistrer"
+    expect(page).to have_content "Nom: Secteur 2"
   end
 end
