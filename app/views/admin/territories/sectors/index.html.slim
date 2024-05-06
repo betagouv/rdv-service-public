@@ -52,10 +52,10 @@
                   .text-muted Aucune attribution
               td
                 .d-flex
-                  - if policy([:agent, sector]).show?
+                  - if policy([:configuration, sector]).show?
                     div.mr-3= link_to admin_territory_sector_path(current_territory, sector), title: "Modifier" do
                       i.fa.fa-edit
-                  - if policy([:agent, sector]).destroy?
+                  - if policy([:configuration, sector]).destroy?
                     div= link_to admin_territory_sector_path(current_territory, sector), method: :delete, title: "Supprimer" do
                       i.fa.fa-trash-alt
       .pb-3.pr-3.pl-3
