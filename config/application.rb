@@ -60,7 +60,7 @@ module Lapin
 
     # Avec cette configuration, on crée un cookie sans date d'expiration.
     # L'expiration est gérée avec le module Timeoutable de Devise.
-    config.session_store :cookie_store, key: "_rdv_sp_session"
+    config.session_store :cookie_store, key: "_rdv_sp_session", expire_after: 2.weeks
 
     # Devise layout
     config.to_prepare do
