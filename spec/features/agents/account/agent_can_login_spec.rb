@@ -11,5 +11,6 @@ RSpec.describe "Agent can login" do
       .to(be_within(10.seconds).of(Time.zone.now))
     cookies = Capybara.current_session.driver.request.cookies
     expect(cookies.keys).to eq ["_rdv_sp_session"]
+    expect(agent.remember_created_at).to be_nil
   end
 end
