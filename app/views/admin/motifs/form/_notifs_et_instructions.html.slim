@@ -18,7 +18,7 @@
     .mt-3
       = f.input :restriction_for_rdv,
               label: sanitize("Instructions à accepter <strong>avant</strong> la prise du RDV"),
-              placeholder: "Laisser vide si vous ne souhaitez pas donner d’instruction.",
+              placeholder: "Laissez vide si vous ne souhaitez pas donner d’instruction.",
               input_html: { rows: 5 },
               wrapper_html: { class: "mb-1" }
       = link_to image_path("motif_form/restriction_for_rdv.png"), target: "_blank" do
@@ -27,7 +27,7 @@
     .mt-3
       = f.input :instruction_for_rdv,
               label: sanitize("Instructions affichées <strong>après</strong> la prise du RDV"),
-              placeholder: "Laisser vide si vous ne souhaitez pas donner d’instruction.",
+              placeholder: "Laissez vide si vous ne souhaitez pas donner d’instruction.",
               input_html: { rows: 5 },
               wrapper_html: { class: "mb-1" }
       = link_to image_path("motif_form/instruction_for_rdv.png"), target: "_blank" do
@@ -36,7 +36,7 @@
     .mt-3
       = f.input :custom_cancel_warning_message,
               label: sanitize("Message d’avertissement </strong>en cas d’annulation</strong>"),
-              placeholder: "Laisser vide si vous ne souhaitez pas afficher de messager d’avertissement.",
+              placeholder: "Laissez vide si vous ne souhaitez pas afficher de messager d’avertissement.",
               input_html: { rows: 5 },
               wrapper_html: { class: "mb-1" }
       = link_to image_path("motif_form/custom_cancel_warning_message.png"), target: "_blank" do
