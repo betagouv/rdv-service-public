@@ -84,4 +84,10 @@ Rails.application.configure do
   config.active_record.encryption.primary_key = "test"
   config.active_record.encryption.deterministic_key = "test"
   config.active_record.encryption.key_derivation_salt = "test"
+
+  # Dans l'environnement de test on ne met pas de date d'expiration des cookies, car l'heure du
+  # serveur de test et celle du navigateur sont différentes quand on utilise une spec d'intégration en
+  # js: true avec un travel_to.
+  # Quand le travel_to est dans le passé, cela fait expirer le cookie immédiatement et rend le test impossible.
+  config.session_store :cookie_store, key: "_rdv_sp_session"
 end
