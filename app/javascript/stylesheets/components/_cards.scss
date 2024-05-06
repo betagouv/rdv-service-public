@@ -1,7 +1,11 @@
 .card {
-  border: none;
-  box-shadow: $shadow;
+  border: 1px solid $card-border-color;
+  box-shadow: none;
   margin-bottom: $grid-gutter-width;
+}
+
+.disabled-card * {
+  color: $gray-600 !important;
 }
 
 // Card title / Card Header
