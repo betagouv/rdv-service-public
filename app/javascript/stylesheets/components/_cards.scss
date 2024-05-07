@@ -2,6 +2,7 @@
   border: 1px solid $card-border-color;
   box-shadow: none;
   margin-bottom: $grid-gutter-width;
+  border-radius: 0;
 }
 
 .disabled-card * {
