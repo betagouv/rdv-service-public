@@ -4,6 +4,4 @@ import './stylesheets/rdv_service_public';
 
 import DsfrNewPassword from './components/dsfr-new-password.js';
 
-document.addEventListener('turbolinks:load', function() {
-  DsfrNewPassword()
-})
+document.addEventListener('turbolinks:load', DsfrNewPassword)
