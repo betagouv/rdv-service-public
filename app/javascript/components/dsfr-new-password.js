@@ -1,3 +1,4 @@
+// voir Agent#password_complexity
 export default function DsfrNewPassword() {
   const component = document.querySelector(`[data-component="js_dsfr_new_password"]`)
   if(!component) { return }
