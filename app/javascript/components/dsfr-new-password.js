@@ -9,6 +9,8 @@ export default function DsfrNewPassword() {
 
   const atLeastOneCapitalLetterMessage = component.querySelector(`[data-component="js_dsfr_new_password__at_least_one_capital_letter_message"]`)
 
+  const atLeastOneSpecialCharacterMessage = component.querySelector(`[data-component="js_dsfr_new_password__at_least_one_special_character_message"]`)
+
   const minLength = parseInt(minLengthMessage.dataset.minLength)
 
   input.addEventListener('input', event=> {
@@ -36,5 +38,12 @@ export default function DsfrNewPassword() {
       atLeastOneCapitalLetterMessage.classList.remove("fr-message--valid")
     }
 
+    if(input.value.match(/[^A-Za-z0-9_]/g)) {
+      atLeastOneSpecialCharacterMessage.classList.remove("fr-message--info")
+      atLeastOneSpecialCharacterMessage.classList.add("fr-message--valid")
+    } else {
+      atLeastOneSpecialCharacterMessage.classList.add("fr-message--info")
+      atLeastOneSpecialCharacterMessage.classList.remove("fr-message--valid")
+    }
   })
 }
