@@ -63,6 +63,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_25_132948) do
     "public_office",
     "home",
     "phone",
+    "visio",
   ], force: :cascade
 
   create_enum :rdv_status, [

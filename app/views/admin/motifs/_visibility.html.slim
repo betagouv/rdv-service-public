@@ -3,7 +3,7 @@ h6.mb-2
   span.mr-1= t(".default_html", motif: link_to(motif.name, admin_organisation_motif_path(current_organisation, motif), target: "_blank"))
 .ml-3
   = boolean_tag(motif.visible_and_notified?) do
-    = motif.human_attribute_value(:visibility_type)
+    = sanitize(motif.human_attribute_value(:visibility_type, context: :html))
     p.mb-0
       span.text-muted.font-14= motif.human_attribute_value(:visibility_type, context: :hint)
       - if current_organisation.rdv_insertion?

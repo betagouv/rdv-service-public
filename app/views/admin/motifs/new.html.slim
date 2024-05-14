@@ -1,14 +1,14 @@
 - content_for(:menu_item) { "menu-motifs" }
 
-- content_for :title do
-  | Nouveau motif
+- page_title = @motif.duplicated_from_motif ? %(Duplication du motif "#{@motif.duplicated_from_motif}") : "Création d’un nouveau motif"
+- content_for :title, page_title
 
 - content_for :breadcrumb do
   ol.breadcrumb.m-0
     li.breadcrumb-item
       = link_to "Vos motifs", admin_organisation_motifs_path(current_organisation)
-    li.breadcrumb-item.active Nouveau un motif
+    li.breadcrumb-item.active Création d’un nouveau motif
 
-.row.justify-content-center
-  .col-md-12.col-lg-8
+.row
+  .col-md-12
     = render "form", motif: @motif

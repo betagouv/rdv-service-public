@@ -41,6 +41,10 @@ module ApplicationHelper
     )
   end
 
+  def fake_required_label(label)
+    sanitize("#{label} <abbr title=\"obligatoire\">*</abbr>")
+  end
+
   def agents_or_users_body_class
     agent_path? ? "agents" : "users"
   end
