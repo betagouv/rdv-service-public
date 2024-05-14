@@ -19,32 +19,32 @@ export default function DsfrNewPassword() {
       minLengthMessage.classList.remove("fr-message--info")
       minLengthMessage.classList.add("fr-message--valid")
     } else {
-      minLengthMessage.classList.add("fr-message--info")
       minLengthMessage.classList.remove("fr-message--valid")
+      minLengthMessage.classList.add("fr-message--info")
     }
 
     if(input.value.match(/\d/g)) {
       atLeastOneDigitMessage.classList.remove("fr-message--info")
       atLeastOneDigitMessage.classList.add("fr-message--valid")
     } else {
-      atLeastOneDigitMessage.classList.add("fr-message--info")
       atLeastOneDigitMessage.classList.remove("fr-message--valid")
+      atLeastOneDigitMessage.classList.add("fr-message--info")
     }
 
     if(input.value !== input.value.toLowerCase()) {
       atLeastOneCapitalLetterMessage.classList.remove("fr-message--info")
       atLeastOneCapitalLetterMessage.classList.add("fr-message--valid")
     } else {
-      atLeastOneCapitalLetterMessage.classList.add("fr-message--info")
       atLeastOneCapitalLetterMessage.classList.remove("fr-message--valid")
+      atLeastOneCapitalLetterMessage.classList.add("fr-message--info")
     }
 
     if(input.value.match(/[^A-Za-z0-9_]/g)) {
       atLeastOneSpecialCharacterMessage.classList.remove("fr-message--info")
       atLeastOneSpecialCharacterMessage.classList.add("fr-message--valid")
     } else {
-      atLeastOneSpecialCharacterMessage.classList.add("fr-message--info")
       atLeastOneSpecialCharacterMessage.classList.remove("fr-message--valid")
+      atLeastOneSpecialCharacterMessage.classList.add("fr-message--info")
     }
   })
 }
