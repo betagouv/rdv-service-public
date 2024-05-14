@@ -35,6 +35,8 @@ RSpec.describe "agent can duplicate motif" do
     login_as(agent, scope: :agent)
     visit admin_organisation_motif_path(organisation, existing_motif)
     click_on "Dupliquer"
+
+    expect(page).not_to have_content("Créer le motif dans cette organisation")
     choose :motif_location_type_home # Je veux créer le même motif mais en version à domicile
     expect { click_on "Créer le motif" }.to change(Motif, :count).by(1)
 
