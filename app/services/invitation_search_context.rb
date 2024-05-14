@@ -36,6 +36,17 @@ class InvitationSearchContext < SearchContext
       )
   end
 
+  def organisations_emails
+    Organisation.where(id: @organisation_ids)
+      .where.not(email: [nil, ""])
+      .pluck(:email)
+      .join(",")
+  end
+
+  def motif_category_name
+    @motif_category_short_name.present? ? MotifCategory.find_by(short_name: @motif_category_short_name)&.name : nil
+  end
+
   private
 
   attr_reader :referent_ids, :lieu_id
