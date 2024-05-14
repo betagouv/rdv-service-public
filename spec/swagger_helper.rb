@@ -76,10 +76,6 @@ RSpec.configure do |config|
                 type: "array",
                 items: { "$ref" => "#/components/schemas/participation" },
               },
-              rdvs_users: {
-                type: "array",
-                items: { "$ref" => "#/components/schemas/rdvs_user" },
-              },
               starts_at: { type: "string" },
               status: { type: "string", enum: %w[unknown seen excused revoked noshow] },
               users: {
@@ -90,7 +86,7 @@ RSpec.configure do |config|
               uuid: { type: "string" },
             },
             required: %w[id address agents cancelled_at collectif context created_by_type duration_in_min lieu max_participants_count motif
-                         name organisation rdvs_users participations starts_at status users users_count uuid],
+                         name organisation participations starts_at status users users_count uuid],
           },
           agents: {
             type: "object",
@@ -385,19 +381,6 @@ RSpec.configure do |config|
               territory: { "$ref" => "#/components/schemas/territory" },
             },
             required: %w[territory],
-          },
-          rdvs_user: {
-            type: "object",
-            properties: {
-              send_lifecycle_notifications: { type: "boolean" },
-              send_reminder_notification: { type: "boolean" },
-              status: { type: "string", enum: %w[unknown seen excused revoked noshow] },
-              user: { "$ref" => "#/components/schemas/user" },
-              created_by: { type: "string", enum: %w[agent user prescripteur] },
-              created_by_type: { type: "string", enum: %w[Agent User Prescripteur] },
-              created_by_id: { type: "integer" },
-            },
-            required: %w[send_lifecycle_notifications send_reminder_notification status user],
           },
           participation: {
             type: "object",
