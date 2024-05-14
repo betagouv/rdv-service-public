@@ -1,5 +1,5 @@
 RSpec.describe "Agent session expiration" do
-  let(:password) { Faker::Internet.password(min_length: 12) }
+  let(:password) { "CorrectH0rse!" }
   let!(:agent) { create(:agent, password: password, password_confirmation: password) }
 
   def expect_to_be_logged_in
