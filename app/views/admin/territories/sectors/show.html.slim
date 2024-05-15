@@ -60,7 +60,7 @@
                 - else
                   td.text-muted Commune entière
                 td
-                  - if policy([:agent, zone]).destroy?
+                  - if policy([:configuration, zone]).destroy?
                     = link_to "retirer", admin_territory_sector_zone_path(current_territory, @sector, zone), method: :delete
         div= paginate @zones
         .mb-2.text-center
