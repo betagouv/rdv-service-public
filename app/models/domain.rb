@@ -75,7 +75,7 @@ class Domain
       can_sync_to_outlook: false,
       sms_sender_name: "RDV S.P.",
       documentation_url: "https://rdvs.notion.site/RDV-Service-Public-ab27fed1634741e0a1537fcb0d1d5a24",
-      france_connect_enabled: false,
+      france_connect_enabled: true,
       support_email: "support@rdv-service-public.fr",
       verticale: :rdv_mairie,
       secretariat_email: "secretariat-auto@rdv-service-public.fr"
