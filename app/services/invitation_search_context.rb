@@ -36,12 +36,12 @@ class InvitationSearchContext < SearchContext
       )
   end
 
-  def organisations
-    Organisation.where(id: @organisation_ids)
+  def contactable_organisations
+    Organisation.where(id: @organisation_ids).contactable
   end
 
   def organisations_emails
-    organisations.where.not(email: [nil, ""]).pluck(:email).join(",")
+    contactable_organisations.where.not(email: [nil, ""]).pluck(:email).join(",")
   end
 
   def motif_category_name

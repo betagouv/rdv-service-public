@@ -1,22 +1,30 @@
-- if context.organisations.one?
-  p Vous pouvez contacter l'organisation pour demander l'ouverture de créneaux.
-- else
-  p Vous pouvez contacter les organisations suivantes pour leur demander d'ouvrir des créneaux.
-.row
-  - context.organisations.each do |organisation|
-    .col-12.col-md-6
-      .card
-        .card-body
-          h5.card-title #{organisation.name}
-          ul.list-unstyled
-            li.mb-2
-              strong> Téléphone :
-              | #{display_value_or_na_placeholder(organisation.humanized_phone_number)}
-            li.mb-2
-              strong> Email :
-              | #{display_value_or_na_placeholder(organisation.email)}
+- if context.contactable_organisations.present?
+  - if context.contactable_organisations.one?
+    p Vous pouvez contacter l'organisation pour demander l'ouverture de créneaux.
+  - else
+    p Vous pouvez contacter les organisations suivantes pour leur demander d'ouvrir des créneaux.
+  .row
+    - context.contactable_organisations.each do |organisation|
+      .col-12.col-md-6
+        .card
+          .card-body
+            h5.card-title #{organisation.name}
+            ul.list-unstyled
+              - if organisation.phone_number.present?
+                li.mb-2
+                  strong> Téléphone :
+                  | #{display_value_or_na_placeholder(organisation.humanized_phone_number)}
+              - if organisation.email.present?
+                li.mb-2
+                  strong> Email :
+                  | #{display_value_or_na_placeholder(organisation.email)}
+              - if organisation.website.present?
+                li.mb-2
+                  strong> Site web :
+                  = link_to organisation.website, organisation.website, target: "_blank"
 
-p Ou leur envoyer un email en cliquant sur le bouton ci-dessous.
+  p Ou leur envoyer un email en cliquant sur le bouton ci-dessous.
+
 - email = context.organisations_emails.empty? ? "support@rdv-insertion.fr" : context.organisations_emails
 = mail_to email,
   subject: "[Problème Invitation. Créneaux Indisponibles, motif : #{context.motif_category_name}]",

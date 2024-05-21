@@ -1,3 +1,4 @@
+require 'byebug'
 RSpec.describe "User can be invited" do
   around { |example| perform_enqueued_jobs { example.run } }
 
@@ -24,7 +25,7 @@ RSpec.describe "User can be invited" do
   let!(:departement_number) { "26" }
   let!(:city_code) { "26000" }
   let!(:territory26) { create(:territory, departement_number: departement_number) }
-  let!(:organisation) { create(:organisation, territory: territory26, email: "organisation@test.fr") }
+  let!(:organisation) { create(:organisation, territory: territory26, email: "organisation@test.fr", phone_number: "0101010101") }
   let!(:motif_category) { create(:motif_category, short_name: "rsa_orientation") }
   let!(:motif) do
     create(:motif, name: "RSA orientation sur site", bookable_by: "agents_and_prescripteurs_and_invited_users", organisation:, service: agent.services.first, motif_category:)
@@ -135,6 +136,7 @@ RSpec.describe "User can be invited" do
         expect(page).not_to have_content(lieu2.name)
         expect(page).to have_content("Malheureusement, aucun créneau correspondant à votre invitation n'a été trouvé.")
         expect(page).to have_content("Toutes nos excuses pour cela.")
+        expect(page).to have_content(organisation.humanized_phone_number)
         expect(page).to have_link("Envoyer une demande d'ouverture de créneaux à l'organisation")
         expect(page).to have_css("a[href*='mailto:organisation@test.fr']")
         expect(page).to have_css("a[href*='cc=support%40rdv-insertion.fr']")
