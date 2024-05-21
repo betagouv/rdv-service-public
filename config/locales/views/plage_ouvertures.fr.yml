@@ -20,3 +20,5 @@ fr:
         dates: Dates
         search_placeholder: "ex: permanence, consultation…"
         hint_delete_old: "Les plages d'ouvertures fermées depuis plus d'un an sont automatiquement supprimées."
+      form:
+        submit: Créer la plage d'ouverture

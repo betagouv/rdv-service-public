@@ -17,8 +17,4 @@
     li.breadcrumb-item.active
       = link_to truncate(@plage_ouverture.title, length: 20), admin_organisation_plage_ouverture_path(@plage_ouverture.organisation, @plage_ouverture)
 
-.row.justify-content-center
-  .col-md-6
-    .card
-      .card-body
-        = render "form", plage_ouverture: @plage_ouverture, agent: @agent
+= render "form", plage_ouverture: @plage_ouverture, agent: @agent
