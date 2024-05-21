@@ -98,6 +98,24 @@ class Agent < ApplicationRecord
   validates :first_name, presence: true, unless: -> { allow_blank_name || is_an_intervenant? }
   validates :last_name, presence: true, unless: -> { allow_blank_name }
   validates :agent_services, presence: true
+  validate :password_complexity
+
+  def password_complexity
+    # voir app/javascript/components/dsfr-new-password.js
+    return if password.blank?
+
+    unless password[/\d/]
+      errors.add :password, "Votre mot de passe doit comporter au moins un chiffre."
+    end
+
+    if password.downcase == password
+      errors.add :password, "Votre mot de passe doit comporter au moins une majuscule."
+    end
+
+    unless password[/[^A-Za-z0-9_]/]
+      errors.add :password, "Votre mot de passe doit comporter au moins un caractère spécial, par exemple un signe de ponctuation."
+    end
+  end
 
   # Hooks
 
