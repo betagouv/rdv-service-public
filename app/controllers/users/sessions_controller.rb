@@ -10,6 +10,13 @@ class Users::SessionsController < Devise::SessionsController
     if auth_options[:scope] == :user && (self.resource = Agent.find_by(email: params[:user]["email"])) && resource.valid_password?(params[:user]["password"])
       set_flash_message!(:notice, :signed_in)
       sign_in(:agent, resource)
+
+      checker = PasswordChecker.new(params[:user][:password]) # voir aussi app/controllers/agents/sessions_controller.rb
+      if checker.too_weak?
+        flash[:error] =
+          "Votre mot de passe est trop faible, vous devez le mettre à jour pour continuer d'utiliser #{current_domain.name}. <a href=\"#{edit_agent_mot_de_passes_path}\">Changer de mot de passe</a>"
+      end
+
       yield resource if block_given?
       respond_with resource, location: after_sign_in_path_for(resource)
     else
