@@ -242,3 +242,6 @@ Style/NumericLiterals:
 
 Rails/UnusedIgnoredColumns:
   Enabled: false
+
+Style/SoleNestedConditional:
+  Enabled: false

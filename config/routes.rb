@@ -97,9 +97,7 @@ Rails.application.routes.draw do
     put "agents/mot_de_passe" => "agents/mot_de_passes#update", as: "agent_mot_de_passes"
 
     namespace :agents do
-      resource :preferences, only: %i[show update] do
-        post :disable_cnfs_online_booking_banner
-      end
+      resource :preferences, only: %i[show update]
       resource :calendar_sync, only: %i[show], controller: :calendar_sync do
         resource :webcal_sync, only: %i[show update], controller: :webcal_sync
         resource :outlook_sync, only: %i[show destroy], controller: :outlook_sync
@@ -165,7 +163,11 @@ Rails.application.routes.draw do
         resources :agent_searches, only: :index, module: "creneaux"
         resources :slots, only: :index
         resources :lieux, except: :show
-        resources :motifs
+        resources :motifs do
+          member do
+            get :duplicate
+          end
+        end
         resources :rdvs_collectifs, only: %i[index new create edit update] do
           collection do
             resources :motifs, only: [:index], as: :rdvs_collectif_motifs, controller: "rdvs_collectifs/motifs"

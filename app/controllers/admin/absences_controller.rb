@@ -10,7 +10,7 @@ class Admin::AbsencesController < AgentAuthController
       .where(agent_id: filter_params[:agent_id])
       .includes(:agent)
       .by_starts_at
-      .page(filter_params[:page])
+      .page(page_number)
 
     @absences = params[:current_tab] == "expired" ? absences.expired : absences.not_expired
     @display_tabs = absences.expired.any? || params[:current_tab] == "expired"
@@ -44,7 +44,7 @@ class Admin::AbsencesController < AgentAuthController
       flash[:notice] = t(".busy_time_created")
       redirect_to admin_organisation_agent_absences_path(current_organisation, @absence.agent_id)
     else
-      render :edit
+      render :new
     end
   end
 

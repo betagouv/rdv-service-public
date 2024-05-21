@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.3.0"
+ruby "3.3.1"
 
 # Autoload dotenv in Rails.
 gem "dotenv-rails" # dotenv should always be loaded before rails
@@ -124,8 +124,6 @@ gem "dsfr-view-components"
 
 # Easily create styled HTML emails in Rails.
 gem "premailer-rails" # Mail formatting
-# SendinBlue API V3 Ruby Gem
-gem "sib-api-v3-sdk" # SendInBlue (SMS)
 # The Spreadsheet Library is designed to read and write Spreadsheet Documents
 gem "spreadsheet" # Excel export
 # If string, numeric, symbol and nil values wanna be a boolean value, they can with the new #to_b method (and more).
@@ -146,6 +144,14 @@ gem "lograge"
 
 # TODO: retirer cette ligne quand une nouvelle version de httpclient est released
 gem "httpclient", git: "https://github.com/nahi/httpclient.git", ref: "d57cc6d"
+
+# Ces gems ne seront plus intégrées à Ruby en version 3.4.0 Lors de l'upgrade
+# depuis 3.3.1, on pourra vérifier si les gems qui en dépendent implicitement
+# ont ajouté dans leur gemspec une dépendance explicite.
+gem "bigdecimal"
+gem "csv"
+gem "drb"
+gem "observer"
 
 group :development do
   #  Hot reload

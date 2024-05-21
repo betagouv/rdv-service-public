@@ -1,3 +1,5 @@
+@import "vendor/inclusion_connect_button";
+
 .flex {
   display: flex;
   align-items: center;
@@ -5,4 +7,9 @@
 
 .flex--center {
   justify-content: center;
+}
+
+// Un hack pour éviter d'afficher les astérisques de champs obligatoire dans les formulaires DSFR
+label > abbr[title="obligatoire"] {
+  display: none;
 }

@@ -2,9 +2,9 @@
 
 > Ce dossier a pour but de présenter l’architecture technique du SI. Il n’est par conséquent ni un dossier d’installation, ni un dossier d’exploitation ou un dossier de spécifications fonctionnelles.
 
-**Nom du projet :** RDV Services Publics
+**Nom du projet :** RDV Service Public
 
-**Dépôt de code :** https://github.com/betagouv/rdv-solidarites.fr
+**Dépôt de code :** https://github.com/betagouv/rdv-service-public
 
 **Hébergeur :** Scalingo, Paris (région Scalingo "osc-secnum-fr1", région Outscale "cloudgouv-eu-west-1")
 
@@ -24,9 +24,9 @@
 
 | Organisme                  | Nom                   | Rôle                   | Activité  |
 |----------------------------|-----------------------|------------------------|-----------|
-| RDV Services Publics       | François Ferrandis    | Lead tech              | Rédaction |
-| RDV Services Publics       | Victor Mours          | Lead tech              | Relecture + Rédaction |
-| RDV Services Publics       | Mehdi Karouch Idrissi | Product Manager        | Relecture |
+| RDV Service Public         | François Ferrandis    | Lead tech              | Relecture + Rédaction |
+| RDV Service Public         | Victor Mours          | Lead tech              | Relecture + Rédaction |
+| RDV Service Public         | Mehdi Karouch Idrissi | Product Manager        | Relecture |
 | ANCT                       | Amélie Naquet         | Cheffe de projet SoNum | Relecture |
 | Incubateur des territoires | Charles Capelli       | Consultant SSI         | Relecture |
 
@@ -36,7 +36,7 @@ Outil de prise de RDV pour le service public. Il permet aux agents de gérer leu
 
 Il est open source, bien que toutes les instances soient gérées par l'équipe.
 
-Plus d'infos sur la fiche beta : https://beta.gouv.fr/startups/rdv-services-publics.html
+Plus d'infos sur la fiche beta : https://beta.gouv.fr/startups/rdv-service-public.html
 
 ## Architecture
 
@@ -102,7 +102,7 @@ utilisent RDV Insertion utilisent ces webhooks.
 | Nom de l’applicatif | Service          | Version   | Commentaires                                                    |
 |---------------------|------------------|-----------|-----------------------------------------------------------------|
 | Serveur web         | Rails @ Scalingo | Rails 7   | Voir ci-dessous pour le détail des librairies                   |
-| BDD métier          | PostgreSQL       | `13.9.0`  | Stockage des données métier, voir [db/schema.rb](/db/schema.rb) |
+| BDD métier          | PostgreSQL       | `14.10.0` | Stockage des données métier, voir [db/schema.rb](/db/schema.rb) |
 | BDD technique       | Redis            | `7.2.3`   | Stockage des sessions et du cache                               |
 
 La liste des librairies Ruby est disponible dans :
@@ -264,6 +264,19 @@ C4Container
     Rel(job_etl, backups, "TCP")
 ```
 
+### Gestion DNS
+
+C'est **Gandi (gandi.net)** qui fournit nos noms de domaine et la gestion DNS.
+
+Nous y gérons les domaines suivants :
+- `rdv-solidarites.fr` : domaine de production historique, également utilisé pour `demo.rdv-solidarites.fr`
+- `rdv-service-public.fr` : gestion d'une boite mail support@rdv-service-public.fr
+- `rdv-aide-numerique.fr` : domaine de production de la plateforme RDV Aide Numérique (pointe sur l'instance principale)
+- `rdv-services-publics.fr` : anti phishing : redirige vers `rdv-service-public.fr`
+- `rdv-solidarite.fr` : anti phishing : redirige vers `rdv-solidarites.fr`
+- `rdv-solidarités.fr` : anti phishing : redirige vers `rdv-solidarites.fr`
+- `rdv-solidarité.fr` : anti phishing : redirige vers `rdv-solidarites.fr`
+
 ### Schéma des données
 
 Lancer `make generate_db_diagram` pour obtenir un SVG de l'état actuel des tables Postgres. Le fichier `db/schema.rb` donne aussi une description des tables via un DSL Ruby.
@@ -278,12 +291,13 @@ https://github.com/betagouv/rdv-solidarites.fr/blob/f12411c0760be1316aae571bb35c
 Les serveurs (applicatif et base de données) sont gérés par Scalingo. Scalingo ne fournit pas de système de rôle : soit
 on a accès à une app, soit on ne l'a pas.
 
-Nous avons actuellement 5 apps Scalingo, les trois premières pour le métier, les deux autres pour le tooling :
+Nous avons actuellement 6 apps Scalingo, les trois premières pour le métier, les trois autres pour le tooling :
 
 - `osc-secnum-fr1/production-rdv-solidarites`
 - `osc-secnum-fr1/production-rdv-mairie`
 - `osc-secnum-fr1/demo-rdv-solidarites`
 - `osc-secnum-fr1/rdv-service-public-etl`
+- `osc-secnum-fr1/rdv-service-public-etl-staging`
 - `osc-secnum-fr1/rdv-service-public-metabase`
 
 Le fait d'avoir accès à une app Scalingo donne les droits suivants :
@@ -334,7 +348,7 @@ fermeture / merge d'une PR.
 
 Nous avons activé la fonctionnalité "Secret scanning" de GitHub sur notre dépôt. Ce système envoie des alertes et bloque le push si des secrets sont détectés dans un commit.
 
-Nous ne disposons pas d'autre système automatisé de détection de fuite de secrets.
+GitGuardian, qui fait de la détection automatisée de fuites de secrets est aussi activé parmis les Github actions de la CI.
 
 ### Authentification, contrôle d’accès, habilitations et profils
 
@@ -481,6 +495,10 @@ Parmi les données que nous manipulons, les plus critiques sont :
 - les coordonnées des usager⋅es
 - l'historique des RDVs pris par une personne ainsi que le motif de ces RDV
 - le champs "contexte", un champs texte libre où les agents peuvent saisir des informations de contexte sur un RDV
+
+### Flux des données personnelles dans le SI
+
+Le flux des données personnelles dans le SI est détaillé dans  [ce diagramme](/docs/flux_de_donnees_personnelles_si.svg) et [sa légende](/docs/legende_flux_de_donnees_personnelles_si.md).
 
 ### Bonnes pratiques de sécurité au sein de l'équipe
 

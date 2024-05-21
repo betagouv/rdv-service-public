@@ -116,10 +116,9 @@ class CronJob < ApplicationJob
     end
   end
 
-  class DestroyOldVersions < CronJob
+  class AnonymizeOldReceipts < CronJob
     def perform
-      # Versions are used in RDV exports, and RDVs are currently kept for 2 years.
-      PaperTrail::Version.where("created_at < ?", 2.years.ago).delete_all
+      Anonymizer::Core.anonymize_records_in_scope!(Receipt.where("created_at < ?", 6.months.ago))
     end
   end
 

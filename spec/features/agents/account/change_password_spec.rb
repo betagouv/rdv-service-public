@@ -1,6 +1,6 @@
 RSpec.describe "Agents can change their passwords" do
   let!(:organisation) { create(:organisation) }
-  let!(:agent) { create(:agent, basic_role_in_organisations: [organisation], password: "rdvservicepublic") }
+  let!(:agent) { create(:agent, basic_role_in_organisations: [organisation], password: "Rdvservicepublic0!") }
   let!(:admin_agent) { create(:agent, admin_role_in_organisations: [organisation]) } # Organisation needs at least one admin
 
   before do
@@ -12,7 +12,7 @@ RSpec.describe "Agents can change their passwords" do
   it "checks for password confirmation, length and complexity" do
     fill_in "Nouveau mot de passe", with: "unmotdepasse"
     fill_in "Confirmation du mot de passe", with: "unautremotdepasse"
-    fill_in "Mot de passe actuel", with: "rdvservicepublic"
+    fill_in "Mot de passe actuel", with: "Rdvservicepublic0!"
 
     expect { click_button "Enregistrer" }.not_to change { agent.reload.encrypted_password }
 
@@ -20,7 +20,7 @@ RSpec.describe "Agents can change their passwords" do
 
     fill_in "Nouveau mot de passe", with: "tropcourt"
     fill_in "Confirmation du mot de passe", with: "tropcourt"
-    fill_in "Mot de passe actuel", with: "rdvservicepublic"
+    fill_in "Mot de passe actuel", with: "Rdvservicepublic0!"
 
     expect { click_button "Enregistrer" }.not_to change { agent.reload.encrypted_password }
 
@@ -28,7 +28,7 @@ RSpec.describe "Agents can change their passwords" do
 
     fill_in "Nouveau mot de passe", with: "q1w2e3r4t5y6"
     fill_in "Confirmation du mot de passe", with: "q1w2e3r4t5y6"
-    fill_in "Mot de passe actuel", with: "rdvservicepublic"
+    fill_in "Mot de passe actuel", with: "Rdvservicepublic0!"
 
     expect { click_button "Enregistrer" }.not_to change { agent.reload.encrypted_password }
 
@@ -36,7 +36,17 @@ RSpec.describe "Agents can change their passwords" do
 
     fill_in "Nouveau mot de passe", with: "correcthorsebattery"
     fill_in "Confirmation du mot de passe", with: "correcthorsebattery"
-    fill_in "Mot de passe actuel", with: "rdvservicepublic"
+    fill_in "Mot de passe actuel", with: "Rdvservicepublic0!"
+
+    expect { click_button "Enregistrer" }.not_to change { agent.reload.encrypted_password }
+
+    expect(page).to have_content "Votre mot de passe doit comporter au moins un chiffre."
+    expect(page).to have_content "Votre mot de passe doit comporter au moins une majuscule."
+    expect(page).to have_content "Votre mot de passe doit comporter au moins un caractère spécial, par exemple un signe de ponctuation."
+
+    fill_in "Nouveau mot de passe", with: "Correcth0rsebattery!"
+    fill_in "Confirmation du mot de passe", with: "Correcth0rsebattery!"
+    fill_in "Mot de passe actuel", with: "Rdvservicepublic0!"
 
     expect { click_button "Enregistrer" }.to change { agent.reload.encrypted_password }
 
