@@ -1,4 +1,3 @@
-require 'byebug'
 RSpec.describe "User can be invited" do
   around { |example| perform_enqueued_jobs { example.run } }
 
