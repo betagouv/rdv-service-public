@@ -13,8 +13,8 @@ class Users::SessionsController < Devise::SessionsController
 
       checker = PasswordChecker.new(params[:user][:password]) # voir aussi app/controllers/agents/sessions_controller.rb
       if checker.too_weak?
-        flash[:error] =
-          "Votre mot de passe est trop faible, vous devez le mettre à jour pour continuer d'utiliser #{current_domain.name}. <a href=\"#{edit_agent_mot_de_passes_path}\">Changer de mot de passe</a>"
+        flash[:notice] = nil
+        flash[:alert] = checker.error_message(current_domain.name)
       end
 
       yield resource if block_given?
