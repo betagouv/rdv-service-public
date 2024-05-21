@@ -1,6 +1,6 @@
 RSpec.describe "Agents can change their email" do
   let!(:organisation) { create(:organisation) }
-  let!(:agent) { create(:agent, basic_role_in_organisations: [organisation], password: "rdvservicepublic") }
+  let!(:agent) { create(:agent, basic_role_in_organisations: [organisation], password: "CorrectH0rse!") }
   let!(:admin_agent) { create(:agent, admin_role_in_organisations: [organisation]) } # Organisation needs at least one admin
 
   before do
@@ -11,7 +11,7 @@ RSpec.describe "Agents can change their email" do
   it "checks for password confirmation, length and complexity" do
     new_email = "nouvel-email@example.com"
     fill_in "Email", with: new_email
-    fill_in "Mot de passe actuel", with: "rdvservicepublic"
+    fill_in "Mot de passe actuel", with: "CorrectH0rse!"
 
     expect { click_button "Modifier" }.not_to change { agent.reload.email }
 

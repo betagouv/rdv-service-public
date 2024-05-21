@@ -58,7 +58,7 @@ class AddConseillerNumerique
       last_name: @conseiller_numerique.last_name,
       external_id: @conseiller_numerique.external_id,
       services: [service],
-      password: SecureRandom.hex,
+      password: SecureRandom.base64(32),
       roles_attributes: [{ organisation: organisation, access_level: AgentRole::ACCESS_LEVEL_ADMIN }]
     ).tap do |agent|
       agent.agent_territorial_access_rights.find_or_create_by!(territory: territory)

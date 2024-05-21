@@ -69,7 +69,7 @@ RSpec.describe "User signs up and signs in" do
   end
 
   context "if agent goes wrong" do
-    let!(:agent) { create(:agent, password: "correcthorse", basic_role_in_organisations: [create(:organisation)]) }
+    let!(:agent) { create(:agent, password: "c0rRecthorse!", basic_role_in_organisations: [create(:organisation)]) }
 
     it ".sign_in as user and be signed in as agent" do
       visit "http://www.rdv-solidarites-test.localhost/"
