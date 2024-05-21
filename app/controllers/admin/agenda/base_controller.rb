@@ -1,5 +1,6 @@
 class Admin::Agenda::BaseController < ApplicationController
   include Admin::AuthenticatedControllerConcern
+
   respond_to :json
 
   private
