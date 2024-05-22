@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_04_25_132948) do
+ActiveRecord::Schema[7.0].define(version: 2024_05_15_131324) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -731,6 +731,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_25_132948) do
     t.string "rdv_invitation_token"
     t.virtual "text_search_terms", type: :tsvector, as: "(((((setweight(to_tsvector('simple'::regconfig, translate(lower((COALESCE(last_name, ''::character varying))::text), 'àâäéèêëïîôöùûüÿç'::text, 'aaaeeeeiioouuuyc'::text)), 'A'::\"char\") || setweight(to_tsvector('simple'::regconfig, translate(lower((COALESCE(first_name, ''::character varying))::text), 'àâäéèêëïîôöùûüÿç'::text, 'aaaeeeeiioouuuyc'::text)), 'B'::\"char\")) || setweight(to_tsvector('simple'::regconfig, translate(lower((COALESCE(birth_name, ''::character varying))::text), 'àâäéèêëïîôöùûüÿç'::text, 'aaaeeeeiioouuuyc'::text)), 'C'::\"char\")) || setweight(to_tsvector('simple'::regconfig, (COALESCE(email, ''::character varying))::text), 'D'::\"char\")) || setweight(to_tsvector('simple'::regconfig, (COALESCE(phone_number_formatted, ''::character varying))::text), 'D'::\"char\")) || setweight(to_tsvector('simple'::regconfig, COALESCE((id)::text, ''::text)), 'D'::\"char\"))", stored: true
     t.datetime "rdv_invitation_token_updated_at"
+    t.string "contact_email"
     t.index ["birth_date"], name: "index_users_on_birth_date"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["created_through"], name: "index_users_on_created_through"

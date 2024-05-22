@@ -11,7 +11,7 @@ class Users::RdvMailer < ApplicationMailer
     @token = params[:token]
   end
 
-  default to: -> { @user.email }, reply_to: -> { TransferEmailReplyJob.reply_address_for_rdv(@rdv) }
+  default to: -> { @user.email_address }, reply_to: -> { TransferEmailReplyJob.reply_address_for_rdv(@rdv) }
 
   def rdv_created
     self.ics_payload = @rdv.payload(:create, @user)
@@ -47,7 +47,7 @@ class Users::RdvMailer < ApplicationMailer
   private
 
   def save_receipt(subject)
-    Receipt.create!(rdv: @rdv, user: @user, event: action_name, channel: :mail, result: :processed, email_address: @user.email, content: subject)
+    Receipt.create!(rdv: @rdv, user: @user, event: action_name, channel: :mail, result: :processed, email_address: @user.email_address, content: subject)
   end
 
   def domain

@@ -2,7 +2,11 @@ module User::NotificableConcern
   extend ActiveSupport::Concern
 
   def notifiable_by_email?
-    email.present? && notify_by_email?
+    email_address.present? && notify_by_email?
+  end
+
+  def email_address
+    email || contact_email
   end
 
   def notifiable_by_sms?
