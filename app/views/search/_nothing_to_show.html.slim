@@ -10,6 +10,6 @@
     - elsif context.invitation?
       .font-weight-bold Malheureusement, aucun créneau correspondant à votre invitation n'a été trouvé.
       .font-weight-bold.mb-2 Toutes nos excuses pour cela.
-      = render "search/nothing_to_show_invitation_contact", context: context
+      = render "search/nothing_to_show_invitation", context: context
     - else
       .font-weight-bold Malheureusement, aucun créneau correspondant à votre recherche n'a été trouvé.

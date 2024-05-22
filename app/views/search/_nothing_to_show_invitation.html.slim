@@ -5,25 +5,7 @@
     p Vous pouvez contacter les organisations suivantes pour leur demander d'ouvrir des créneaux.
   .row
     - context.contactable_organisations.each do |organisation|
-      .col-12.col-md-6
-        .card
-          .card-body
-            h5.card-title #{organisation.name}
-            ul.list-unstyled
-              - if organisation.phone_number.present?
-                li.mb-2
-                  strong> Téléphone :
-                  | #{phone_to(organisation.humanized_phone_number)}
-              - if organisation.email.present?
-                li.mb-2
-                  strong> Email :
-                  | #{mail_to(organisation.email)}
-              - if organisation.website.present?
-                li.mb-2
-                  strong> Site web :
-                  = link_to organisation.website, target: "_blank" do
-                    span> #{organisation.website}
-                    i.fa.fa-external-link-alt>
+      = render "nothing_to_show_contactable_organisation", organisation: organisation
 
   p Ou leur envoyer un email en cliquant sur le bouton ci-dessous.
 

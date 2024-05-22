@@ -37,7 +37,7 @@ class InvitationSearchContext < SearchContext
   end
 
   def contactable_organisations
-    Organisation.where(id: @organisation_ids).contactable
+    @contactable_organisations ||= Organisation.where(id: @organisation_ids).contactable
   end
 
   def organisations_emails
