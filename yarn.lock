@@ -40,9 +40,9 @@
     "@fullcalendar/daygrid" "~4.4.0"
 
 "@gouvfr/dsfr@^1.9.2":
-  version "1.9.2"
-  resolved "https://registry.yarnpkg.com/@gouvfr/dsfr/-/dsfr-1.9.2.tgz#b67852c4b62d1b0e0e1edbe5b6e16e4b6fc9aa41"
-  integrity sha512-uVo+z3xo2FFANa/cYdP2z21ieEXAeABKKrTE2FdKE8HXjhyh9tIcfsju8ux6nFA+pfBeOeUCwBXfOjPQD0eT5w==
+  version "1.11.2"
+  resolved "https://registry.yarnpkg.com/@gouvfr/dsfr/-/dsfr-1.11.2.tgz#aa815e458b266acd8e457bdad35b7e3ad5e6c2ab"
+  integrity sha512-S7idT4rCCw6M1pqxJS8y4nUSq/Rus+Kucoifmv0CrZD/eoBA34HWqWYzR9GIxvtAX/TQ1XC7Hz+54THtVzMeqQ==
 
 "@hotwired/stimulus-webpack-helpers@^1.0.1":
   version "1.0.1"
