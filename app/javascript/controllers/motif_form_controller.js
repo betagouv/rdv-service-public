@@ -11,7 +11,7 @@ export default class extends Controller {
   ]
 
   connect() {
-    this.refreshSections()
+    this.refreshSections(null)
 
     // Permet de pointer vers l'onglet de résa en ligne via un lien avec ancre
     if(window.location.hash === "#tab_resa_en_ligne") {
@@ -19,18 +19,19 @@ export default class extends Controller {
     }
   }
 
-  refreshSections() {
-    this.refreshSection(this.bookingDelaySectionTarget, this.reasonsToDisableBookingDelay())
-    this.refreshSection(this.sectoSectionTarget, this.reasonsToDisableSecto())
-    this.refreshSection(this.secretariatSectionTarget, this.reasonsToDisableSecretariat())
+  refreshSections(event) {
+    const resetCheckbox = !!event;
+    this.refreshSection(this.bookingDelaySectionTarget, this.reasonsToDisableBookingDelay(), resetCheckbox)
+    this.refreshSection(this.sectoSectionTarget, this.reasonsToDisableSecto(), resetCheckbox)
+    this.refreshSection(this.secretariatSectionTarget, this.reasonsToDisableSecretariat(), resetCheckbox)
   }
 
-  refreshSection(section, reasons) {
+  refreshSection(section, reasons, resetCheckbox) {
     if(reasons.length === 0) {
-      this.enableSection(section)
+      this.enableSection(section, resetCheckbox)
     }
     else {
-      this.disableSection(section, reasons)
+      this.disableSection(section, reasons, resetCheckbox)
     }
   }
 
@@ -60,17 +61,21 @@ export default class extends Controller {
     return reasons
   }
 
-  enableSection(sectionRoot) {
+  enableSection(sectionRoot, resetCheckbox) {
     sectionRoot.querySelectorAll("input, select").forEach(i => i.disabled = false)
+    if(resetCheckbox) {
+      sectionRoot.querySelectorAll(".js-check-on-section-enable").forEach(box => box.checked = true)
+    }
     sectionRoot.querySelector(".js-reasons-for-disabled-section").classList.add("hidden")
-    sectionRoot.querySelectorAll(".js-check-on-section-enable").forEach(box => box.checked = true)
     sectionRoot.classList.remove("disabled-card")
   }
-  disableSection(sectionRoot, reasons) {
+  disableSection(sectionRoot, reasons, resetCheckbox) {
     sectionRoot.querySelectorAll("input, select").forEach(i => i.disabled = true)
+    if(resetCheckbox) {
+      sectionRoot.querySelectorAll(".js-uncheck-on-section-disable").forEach(box => box.checked = false)
+    }
     sectionRoot.querySelector(".js-reasons-for-disabled-section").innerText = `Vous ne pouvez pas modifier ce paramètre car ${reasons.join(" et ")}.`;
     sectionRoot.querySelector(".js-reasons-for-disabled-section").classList.remove("hidden")
-    sectionRoot.querySelectorAll(".js-uncheck-on-section-disable").forEach(box => box.checked = false)
     sectionRoot.classList.add("disabled-card")
   }
 
