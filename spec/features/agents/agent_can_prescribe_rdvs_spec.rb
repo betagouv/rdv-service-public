@@ -253,6 +253,9 @@ RSpec.describe "agents can prescribe rdvs" do
         expect(page).to have_content(motif_mds.name)
         expect(page).not_to have_content(motif_insertion.name)
         expect(page).not_to have_content(motif_autre_service.name)
+        find(".card-title", text: /#{mds_paris_nord.name}/).ancestor(".card").find("a.stretched-link").click
+        first(:link, "11:00").click
+        expect { click_button "Confirmer le rdv" }.to change(Rdv, :count).by(1)
       end
     end
   end
