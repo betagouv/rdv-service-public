@@ -90,7 +90,7 @@ RSpec.describe "User signs up and signs in" do
       end
 
       it "shows a warning and advises to change the password" do
-        visit new_agent_session_path
+        visit new_user_session_path
         fill_in "Email", with: agent.email
         fill_in "password", with: "tropfaible"
         click_on "Se connecter"
