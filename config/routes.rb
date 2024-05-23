@@ -130,6 +130,7 @@ Rails.application.routes.draw do
             end
           end
           resources :teams
+          resources :motifs, only: %i[index]
           resource :user_fields, only: %i[edit update]
           resource :rdv_fields, only: %i[edit update]
           resource :motif_fields, only: %i[edit update]
