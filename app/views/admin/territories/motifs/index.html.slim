@@ -1,34 +1,35 @@
 = territory_navigation(t(".title"))
 
-.container
-  .card.pl-4.pr-4.pt-2.pb-3
-    h1 Filtres
-    = form_with url: admin_territory_motifs_path(current_territory), method: :get do |form|
-      .form-row
-        .form-group.col-md-4
-          label for="search"
-            | Nom
-          input[id="search" name="search" type="text" class="form-control" placeholder="Nom" value=params[:search]]
-        .form-group.col-md-4
-          label for="organisation_ids"
-            | Organisation(s)
-          select.select2-input[id="organisation_ids" name="organisation_ids" multiple data-select-options={ placeholder: "Organisation(s)" }.to_json style="width: 100%"]
-            = options_for_select(@organisations.pluck(:name, :id), params[:organisation_ids])
-        .form-group.col-md-4
-          label for="organisation_ids"
-            | Services(s)
-          select.select2-input[id="service_ids" name="service_ids" multiple data-select-options={ placeholder: "Service(s)" }.to_json style="width: 100%"]
-            = options_for_select(@services.pluck(:name, :id), params[:service_ids])
-      .form-row.justify-content-end.flex-gap-1em
-        .form-group
-          a.btn.btn-link[href=url_for({})] Réinitialiser
-        .form-group
-          button.btn.btn-primary[type="submit"] Filtrer
+.card.pl-4.pr-4.pt-2.pb-3
+  h1 Filtres
+  = form_with url: admin_territory_motifs_path(current_territory), method: :get do |form|
+    .form-row
+      .form-group.col-md-4
+        label for="search"
+          | Nom
+        input[id="search" name="search" type="text" class="form-control" placeholder="Nom" value=params[:search]]
+      .form-group.col-md-4
+        label for="organisation_ids"
+          | Organisation(s)
+        select.select2-input[id="organisation_ids" name="organisation_ids" multiple data-select-options={ placeholder: "Organisation(s)" }.to_json style="width: 100%"]
+          = options_for_select(@organisations.pluck(:name, :id), params[:organisation_ids])
+      .form-group.col-md-4
+        label for="organisation_ids"
+          | Services(s)
+        select.select2-input[id="service_ids" name="service_ids" multiple data-select-options={ placeholder: "Service(s)" }.to_json style="width: 100%"]
+          = options_for_select(@services.pluck(:name, :id), params[:service_ids])
+    .form-row.justify-content-end.flex-gap-1em
+      .form-group
+        a.btn.btn-link[href=url_for({})] Réinitialiser
+      .form-group
+        button.btn.btn-primary[type="submit"] Filtrer
 
-.container
-  .row
-    .col-12
-      table.table.table-bordered.table-hover.table-sm
+.row
+  .col-12
+    - if @motifs.count > 0
+      = paginate @motifs
+
+      table.table.table-bordered.table-hover.table-sm.mb-0
         thead.thead-light
           = form_with url: admin_territory_motifs_path(current_territory), method: :get do |form|
             tr
@@ -77,3 +78,10 @@
                       i.fa.fa-edit
                     div= link_to admin_organisation_motif_path(motif.organisation, motif), method: :delete, title: "Supprimer", data: { confirm: "Confirmez-vous la suppression de ce motif ?"} do
                       i.fa.fa-trash-alt
+
+      = paginate @motifs
+
+    - else
+      .text-center
+        p.mb-2.lead
+          | Aucun résultat
