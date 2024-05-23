@@ -108,6 +108,9 @@ fr:
           teams: Équipes
           actions: Actions
           edit_agents: Modification des équipes de l'agent
+      motifs:
+        index:
+          title: Gestion des motifs
       motif_fields:
         edit:
           title: Champs des motifs
