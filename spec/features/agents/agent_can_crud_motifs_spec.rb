@@ -6,11 +6,11 @@ RSpec.describe "Agent can CRUD motifs" do
 
   before do
     login_as(agent, scope: :agent)
-    visit authenticated_agent_root_path
-    click_link "Motifs"
   end
 
   it "works" do
+    visit authenticated_agent_root_path
+    click_link "Motifs"
     expect_page_title("Vos motifs")
     click_link motif.name
 
@@ -55,6 +55,24 @@ RSpec.describe "Agent can CRUD motifs" do
       click_on "Enregistrer"
       expect(page).to have_content("Nom doit être rempli(e)")
       expect(page).to have_content("Service doit exister")
+    end
+
+    it "ensures that secretariat and followup cannot be simultaneously checked", js: true do
+      visit edit_admin_organisation_motif_path(organisation_id: organisation.id, id: motif.id)
+      click_on "Réservation en ligne"
+      check "Autoriser les agents du service Secrétariat à assurer ces RDV"
+      click_on "Enregistrer" and motif.reload
+      expect(motif.for_secretariat).to be_truthy
+      expect(motif.follow_up).to be_falsey
+
+      click_on "Éditer"
+      click_on "Réservation en ligne"
+      check "Autoriser ces rendez-vous seulement aux usagers bénéficiant d'un suivi par un référent"
+      expect(find("#motif_for_secretariat")).to be_disabled
+      expect(find("#motif_for_secretariat")).not_to be_checked
+      click_on "Enregistrer" and motif.reload
+      expect(motif.for_secretariat).to be_falsey
+      expect(motif.follow_up).to be_truthy
     end
   end
 end
