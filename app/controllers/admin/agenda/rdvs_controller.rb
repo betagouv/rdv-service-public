@@ -1,14 +1,11 @@
-class Admin::Agents::RdvsController < ApplicationController
-  include Admin::AuthenticatedControllerConcern
-  respond_to :json
-
+class Admin::Agenda::RdvsController < Admin::Agenda::BaseController
   def index
     agent = Agent.find(params[:agent_id])
     @organisation = Organisation.find(params[:organisation_id])
     @rdvs = custom_policy
       .merge(agent.rdvs)
       .includes(%i[organisation lieu motif users participations])
-    @rdvs = @rdvs.where(starts_at: date_range_params) if date_range_params.present?
+    @rdvs = @rdvs.where(starts_at: time_range_params)
     @rdvs = @rdvs.where(status: Rdv::NOT_CANCELLED_STATUSES) unless current_agent.display_cancelled_rdv
   end
 
@@ -19,17 +16,5 @@ class Admin::Agents::RdvsController < ApplicationController
     context = AgentOrganisationContext.new(current_agent, @organisation)
     Agent::RdvPolicy::DepartementScope.new(context, Rdv)
       .resolve
-  end
-
-  def pundit_user
-    AgentContext.new(current_agent)
-  end
-
-  def date_range_params
-    return unless params[:start].present? && params[:end].present?
-
-    start_param = Time.zone.parse(params[:start])
-    end_param = Time.zone.parse(params[:end])
-    start_param..end_param
   end
 end
