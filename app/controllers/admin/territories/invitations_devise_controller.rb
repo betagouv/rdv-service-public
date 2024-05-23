@@ -1,4 +1,6 @@
 class Admin::Territories::InvitationsDeviseController < Devise::InvitationsController
+  layout "application_dsfr"
+
   def new
     @services = current_territory.services
     self.resource = resource_class.new(territories: [current_territory])

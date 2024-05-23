@@ -69,7 +69,7 @@ RSpec.describe "User signs up and signs in" do
   end
 
   context "if agent goes wrong" do
-    let!(:agent) { create(:agent, password: "correcthorse", basic_role_in_organisations: [create(:organisation)]) }
+    let!(:agent) { create(:agent, password: "c0rRecthorse!", basic_role_in_organisations: [create(:organisation)]) }
 
     it ".sign_in as user and be signed in as agent" do
       visit "http://www.rdv-solidarites-test.localhost/"
@@ -80,6 +80,22 @@ RSpec.describe "User signs up and signs in" do
         click_on "Se connecter"
       end
       expect(page).to have_current_path(admin_organisation_agent_agenda_path(agent.organisations.first, agent), ignore_query: true)
+    end
+
+    context "when the agent's password is too weak" do
+      let(:agent) do
+        build(:agent, password: "tropfaible").tap do |a|
+          a.save(validate: false)
+        end
+      end
+
+      it "shows a warning and advises to change the password" do
+        visit new_user_session_path
+        fill_in "Email", with: agent.email
+        fill_in "password", with: "tropfaible"
+        click_on "Se connecter"
+        expect(page).to have_content("Votre mot de passe est trop faible")
+      end
     end
   end
 
