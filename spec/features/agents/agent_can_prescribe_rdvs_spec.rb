@@ -3,12 +3,12 @@ RSpec.describe "agents can prescribe rdvs" do
     travel_to(now)
     stub_request(
       :get,
-      "https://api-adresse.data.gouv.fr/search/?q=20%20avenue%20de%20S%C3%A9gur,%20Paris,%2075012"
+      "https://api-adresse.data.gouv.fr/search/?q=16%20Quai%20de%20la%20Loire,%20Paris,%2075019"
     ).to_return(status: 200, body: file_fixture("geocode_result.json").read, headers: {})
   end
 
   let(:now) { Time.zone.parse("2024-01-05 16h00") }
-  let!(:territory) { create(:territory, departement_number: "83") }
+  let!(:territory) { create(:territory, departement_number: "75") }
 
   let!(:service_rsa) { create(:service, name: "Service RSA") }
   let!(:service_autre) { create(:service, name: "Service autre") }
@@ -44,7 +44,7 @@ RSpec.describe "agents can prescribe rdvs" do
   end
 
   describe 'using "Trouver un RDV"' do
-    let!(:existing_user) { create(:user, first_name: "Francis", last_name: "FACTICE", organisations: [org_mds]) }
+    let!(:existing_user) { create(:user, first_name: "Francis", last_name: "FACTICE", organisations: [org_mds], address: "16 Quai de la Loire, Paris, 75019") }
 
     it "works (happy path)", js: true do
       go_to_prescription_page
@@ -188,7 +188,7 @@ RSpec.describe "agents can prescribe rdvs" do
   end
 
   describe "starting from a user profile" do
-    let!(:user) { create(:user, organisations: [org_mds]) }
+    let!(:user) { create(:user, organisations: [org_mds], address: "16 Quai de la Loire, Paris, 75019") }
 
     it "pre-fills the user" do
       login_as(current_agent, scope: :agent)
@@ -213,6 +213,50 @@ RSpec.describe "agents can prescribe rdvs" do
       expect(page).to have_content("Rendez-vous confirmé")
       expect(Rdv.last.users.first).to eq(user)
       expect(Rdv.last.participations.first.created_by_agent_prescripteur).to eq(true)
+    end
+
+    describe "when sectorization is enabled on the user street level", js: true do
+      let!(:sector) { create(:sector, territory: territory) }
+      let!(:sector_attribution) { create(:sector_attribution, sector: sector, organisation: org_mds) }
+      let!(:zone) do
+        create(
+          :zone,
+          sector: sector,
+          level: "street",
+          street_ban_id: "75119_5732",
+          street_name: "Quai de la Loire",
+          city_name: "Paris",
+          city_code: "75119"
+        )
+      end
+      let!(:sector2) { create(:sector, territory: territory) }
+      let!(:sector_attribution2) { create(:sector_attribution, sector: sector2, organisation: org_insertion) }
+      let!(:zone2) do
+        create(
+          :zone,
+          sector: sector2,
+          level: "city",
+          city_name: "Paris",
+          city_code: "75119"
+        )
+      end
+
+      it "doesnt show city level sectorized motifs" do
+        motif_mds.update(sectorisation_level: "organisation")
+        motif_insertion.update(sectorisation_level: "organisation")
+        motif_autre_service.update(sectorisation_level: "organisation")
+
+        login_as(current_agent, scope: :agent)
+        visit admin_organisation_agent_searches_path(org_mds, user_ids: [user.id])
+        click_link "Élargir la recherche"
+        expect(page).to have_content(motif_mds.service.name)
+        expect(page).to have_content(motif_mds.name)
+        expect(page).not_to have_content(motif_insertion.name)
+        expect(page).not_to have_content(motif_autre_service.name)
+        find(".card-title", text: /#{mds_paris_nord.name}/).ancestor(".card").find("a.stretched-link").click
+        first(:link, "11:00").click
+        expect { click_button "Confirmer le rdv" }.to change(Rdv, :count).by(1)
+      end
     end
   end
 
