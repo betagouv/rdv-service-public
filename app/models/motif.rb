@@ -69,6 +69,7 @@ class Motif < ApplicationRecord
   validates :color, css_hex_color: true
   validate :not_at_home_if_collectif
   validate :unused_motif, if: :location_type_changed?
+  validate :cant_be_for_secretariat_and_follow_up
 
   # Scopes
   scope :active, lambda { |active = true|
@@ -260,5 +261,11 @@ class Motif < ApplicationRecord
     return if rdvs.empty?
 
     errors.add(:location_type, :cant_change_because_already_used)
+  end
+
+  def cant_be_for_secretariat_and_follow_up
+    if for_secretariat && follow_up
+      errors.add(:for_secretariat, :cant_be_enabled_if_follow_up)
+    end
   end
 end

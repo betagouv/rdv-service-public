@@ -13,6 +13,10 @@ RSpec.describe Motif, type: :model do
     expect(build(:motif, color: "#002233")).to be_valid
   end
 
+  it "can't be for secretariat and follow up at the same time" do
+    expect(build(:motif, for_secretariat: true, follow_up: true)).to be_invalid
+  end
+
   describe "uniqueness" do
     subject { motif.dup }
 

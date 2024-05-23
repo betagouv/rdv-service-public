@@ -61,13 +61,13 @@ export default class extends Controller {
   }
 
   enableSection(sectionRoot) {
-    sectionRoot.querySelectorAll("input, select").forEach(i => i.disabled = false)
+    sectionRoot.querySelectorAll("input:not([type=hidden]), select").forEach(i => i.disabled = false)
     sectionRoot.querySelector(".js-reasons-for-disabled-section").classList.add("hidden")
     sectionRoot.querySelectorAll(".js-check-on-section-enable").forEach(box => box.checked = true)
     sectionRoot.classList.remove("disabled-card")
   }
   disableSection(sectionRoot, reasons) {
-    sectionRoot.querySelectorAll("input, select").forEach(i => i.disabled = true)
+    sectionRoot.querySelectorAll("input:not([type=hidden]), select").forEach(i => i.disabled = true)
     sectionRoot.querySelector(".js-reasons-for-disabled-section").innerText = `Vous ne pouvez pas modifier ce paramètre car ${reasons.join(" et ")}.`;
     sectionRoot.querySelector(".js-reasons-for-disabled-section").classList.remove("hidden")
     sectionRoot.querySelectorAll(".js-uncheck-on-section-disable").forEach(box => box.checked = false)
