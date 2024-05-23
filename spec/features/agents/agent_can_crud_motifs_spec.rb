@@ -57,7 +57,7 @@ RSpec.describe "Agent can CRUD motifs" do
       expect(page).to have_content("Service doit exister")
     end
 
-    it "ensures that secretariat and followup cannot be simultaneously checked", js: true do
+    it "unchecks for_secretariat when checking followup", js: true do
       visit edit_admin_organisation_motif_path(organisation_id: organisation.id, id: motif.id)
       click_on "Réservation en ligne"
       check "Autoriser les agents du service Secrétariat à assurer ces RDV"
