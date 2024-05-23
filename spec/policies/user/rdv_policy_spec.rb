@@ -16,7 +16,7 @@ RSpec.describe User::RdvPolicy, type: :policy do
   let(:organisation) { create(:organisation) }
   let(:service) { create(:service) }
   let(:agent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }
-  let(:motif) { create(:motif, organisation: organisation, service: service, rdvs_editable_by_user: true) }
+  let(:motif) { create(:motif, organisation: organisation, service: service) }
   let(:user) { create(:user) }
   let(:user2) { create(:user) }
   let(:pundit_context) { user }

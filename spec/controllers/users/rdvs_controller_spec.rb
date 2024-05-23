@@ -6,7 +6,7 @@ RSpec.describe Users::RdvsController, type: :controller do
 
     let(:organisation) { create(:organisation) }
     let(:user) { create(:user) }
-    let(:motif) { create(:motif, organisation: organisation, rdvs_editable_by_user: true) }
+    let(:motif) { create(:motif, organisation: organisation) }
     let(:lieu) { create(:lieu, organisation: organisation) }
     let(:starts_at) { Time.zone.parse("2020-10-20 10h30") }
     let(:mock_geo_search) { instance_double(Users::GeoSearch) }
@@ -174,7 +174,7 @@ RSpec.describe Users::RdvsController, type: :controller do
     end
 
     context "when the motif is by phone and lieu is missing" do
-      let(:rdv) { create(:rdv, users: [user], motif: create(:motif, :by_phone, rdvs_editable_by_user: true), lieu: nil, starts_at: starts_at, created_by: user) }
+      let(:rdv) { create(:rdv, users: [user], motif: create(:motif, :by_phone), lieu: nil, starts_at: starts_at, created_by: user) }
 
       it "shows the rdv" do
         get :show, params: { id: rdv.id }
@@ -388,7 +388,7 @@ RSpec.describe Users::RdvsController, type: :controller do
     let(:now) { Time.zone.parse("01/01/2019 10:00") }
     let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
     let!(:lieu) { create(:lieu, address: "10 rue de la Ferronerie, Nantes, 44100", organisation: organisation) }
-    let!(:motif) { create(:motif, organisation: organisation, max_public_booking_delay: 2.weeks.to_i, rdvs_editable_by_user: true) }
+    let!(:motif) { create(:motif, organisation: organisation, max_public_booking_delay: 2.weeks.to_i) }
     let!(:user) { create(:user) }
     let(:rdv) { create(:rdv, users: [user], starts_at: 5.days.from_now, lieu: lieu, motif: motif, organisation: organisation, created_by: user) }
 
@@ -455,7 +455,7 @@ RSpec.describe Users::RdvsController, type: :controller do
     let(:now) { Time.zone.parse("01/01/2019 10:00") }
     let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
     let!(:lieu) { create(:lieu, address: "10 rue de la Ferronerie, Nantes, 44100", organisation: organisation) }
-    let!(:motif) { create(:motif, organisation: organisation, rdvs_editable_by_user: true) }
+    let!(:motif) { create(:motif, organisation: organisation) }
     let!(:user) { create(:user) }
     let(:rdv) { create(:rdv, users: [user], starts_at: 5.days.from_now, lieu: lieu, motif: motif, organisation: organisation, created_by: user) }
     let(:returned_creneau) { Creneau.new }
@@ -476,7 +476,7 @@ RSpec.describe Users::RdvsController, type: :controller do
       it { expect(response.body).to include("Confirmer le nouveau créneau") }
 
       context "when the motif is by phone and lieu is missing" do
-        let(:motif) { create(:motif, :by_phone, organisation: organisation, rdvs_editable_by_user: true) }
+        let(:motif) { create(:motif, :by_phone, organisation: organisation) }
         let(:lieu) { nil }
 
         it { expect(response.body).to include("Modification du Rendez-vous") }
@@ -508,7 +508,7 @@ RSpec.describe Users::RdvsController, type: :controller do
     let(:now) { Time.zone.parse("01/01/2019 10:00") }
     let(:starts_at) { 3.days.from_now }
     let(:user) { create(:user) }
-    let(:motif) { create(:motif, organisation: organisation, rdvs_editable_by_user: true) }
+    let(:motif) { create(:motif, organisation: organisation) }
     let(:lieu) { create(:lieu, address: "10 rue de la Ferronerie, Nantes, 44100", organisation: organisation) }
     let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
     let(:rdv) { create(:rdv, users: [user], starts_at: 5.days.from_now, lieu: lieu, motif: motif, organisation: organisation, created_by: user) }
@@ -535,7 +535,7 @@ RSpec.describe Users::RdvsController, type: :controller do
       end
 
       context "when the motif is by phone and lieu is missing" do
-        let(:motif) { create(:motif, :by_phone, organisation: organisation, rdvs_editable_by_user: true) }
+        let(:motif) { create(:motif, :by_phone, organisation: organisation) }
         let(:lieu) { nil }
 
         it "respond success and update RDV" do
