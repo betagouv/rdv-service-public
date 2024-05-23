@@ -75,7 +75,5 @@
                   .d-flex.flex-gap-1em
                     div= link_to edit_admin_organisation_motif_path(motif.organisation, motif), title: "Modifier" do
                       i.fa.fa-edit
-                    div= link_to duplicate_admin_organisation_motif_path(motif.organisation, motif), title: "Dupliquer" do
-                      i.fa.fa-copy
                     div= link_to admin_organisation_motif_path(motif.organisation, motif), method: :delete, title: "Supprimer", data: { confirm: "Confirmez-vous la suppression de ce motif ?"} do
                       i.fa.fa-trash-alt
