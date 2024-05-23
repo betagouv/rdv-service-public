@@ -1,7 +1,7 @@
 RSpec.describe "Agent can CRUD motifs" do
   let(:organisation) { create(:organisation) }
   let!(:service) { create(:service, name: "PMI", territories: [organisation.territory]) }
-  let!(:motif) { create(:motif, name: "Suivi bonjour", service: service, organisation: organisation) }
+  let!(:motif) { create(:motif, name: "Suivi bonjour", service: service, organisation: organisation, bookable_by: "agents") }
   let!(:agent) { create(:agent, service: service, admin_role_in_organisations: [organisation]) }
 
   before do
@@ -73,6 +73,46 @@ RSpec.describe "Agent can CRUD motifs" do
       click_on "Enregistrer" and motif.reload
       expect(motif.for_secretariat).to be_falsey
       expect(motif.follow_up).to be_truthy
+    end
+
+    it "automatically checks and unchecks rdvs_editable_by_user when toggling online reservation", js: true do
+      # On ouvre le motif à la résa en ligne, la case "RDVs modifiables" est cochée automatiquement
+      visit edit_admin_organisation_motif_path(organisation_id: organisation.id, id: motif.id)
+      click_on "Réservation en ligne"
+
+      # On ouvre àa la résa en ligne, la case est cochée
+      choose "Agents de l’organisation, prescripteurs et usagers"
+      expect(find("#motif_rdvs_editable_by_user")).not_to be_disabled
+      expect(find("#motif_rdvs_editable_by_user")).to be_checked
+
+      # On ferme àa la résa en ligne, la case est décochée et désactivée
+      choose "Agents de l’organisation", id: "motif_bookable_by_agents"
+      expect(find("#motif_rdvs_editable_by_user")).to be_disabled
+      expect(find("#motif_rdvs_editable_by_user")).not_to be_checked
+
+      # On ouvre àa la résa en ligne, la case est cochée
+      choose "Agents de l’organisation, prescripteurs et usagers"
+      expect(find("#motif_rdvs_editable_by_user")).not_to be_disabled
+      expect(find("#motif_rdvs_editable_by_user")).to be_checked
+
+      expect { click_on "Enregistrer" }.to change { motif.reload.bookable_by }.to("everyone")
+
+      # On décoche la case "RDVs modifiables" et on enregistre
+      click_on "Éditer"
+      click_on "Réservation en ligne"
+      uncheck "motif_rdvs_editable_by_user"
+      expect { click_on "Enregistrer" }.to change { motif.reload.rdvs_editable_by_user }.from(true).to(false)
+
+      # On revient sur le formulaire, la case est bien décochée, elle se re-coche
+      # automatiquement si on choisit une option d'ouverture en ligne
+      click_on "Éditer"
+      click_on "Réservation en ligne"
+      expect(find("#motif_rdvs_editable_by_user")).not_to be_disabled
+      expect(find("#motif_rdvs_editable_by_user")).not_to be_checked
+      choose "Agents de l’organisation", id: "motif_bookable_by_agents"
+      expect(find("#motif_rdvs_editable_by_user")).to be_disabled
+      expect(find("#motif_rdvs_editable_by_user")).not_to be_checked
+      expect { click_on "Enregistrer" }.to change { motif.reload.bookable_by }.from("everyone").to("agents")
     end
   end
 end
