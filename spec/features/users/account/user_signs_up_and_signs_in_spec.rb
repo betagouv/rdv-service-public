@@ -42,7 +42,7 @@ RSpec.describe "User signs up and signs in" do
       open_email(invited_user.email)
       current_email.click_link "Accepter l'invitation"
       expect(page).to have_content("Inscription")
-      fill_in :password, with: "correcthorse"
+      fill_in :password, with: "Rdvservicepublictest1!"
       click_on "Enregistrer"
       expect(page).to have_current_path(root_path, ignore_query: true)
       expect_flash_info(I18n.t("devise.invitations.updated"))
