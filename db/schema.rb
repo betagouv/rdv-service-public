@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_05_22_065633) do
+ActiveRecord::Schema[7.0].define(version: 2024_04_25_132948) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -425,7 +425,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_22_065633) do
     t.text "custom_cancel_warning_message", comment: "Message d'avertissement montré à l'usager en cas d'annulation\n"
     t.boolean "collectif", default: false, comment: "Indique s'il s'agit d'un rdv collectif ou individuel. Un rdv considéré comme individuel peut quand même avoir plusieurs participants, par exemple un parent et son enfant qui renouvellent tous les deux leur carte d'indentité en même temps. Un rdv collectif sera ouvert à plusieurs participants qui ne se connaissent pas entre eux.\n"
     t.enum "location_type", default: "public_office", null: false, comment: "Là où le rdv aura lieu : \"public_office\" pour \"Sur place\" (généralement dans les bureaux de l'organisation), \"phone\" pour au téléphone (l'agent appelle l'usager), \"home\" pour le domicile de l'usager\n", enum_type: "location_type"
-    t.boolean "rdvs_editable_by_user", default: false, comment: "Indique si on autorise aux usagers de changer la date du rdv via l'interface web\n"
+    t.boolean "rdvs_editable_by_user", default: true, comment: "Indique si on autorise aux usagers de changer la date du rdv via l'interface web\n"
     t.boolean "rdvs_cancellable_by_user", default: true
     t.bigint "motif_category_id"
     t.enum "bookable_by", default: "agents", null: false, enum_type: "bookable_by"
