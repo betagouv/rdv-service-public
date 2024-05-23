@@ -25,9 +25,9 @@ class Admin::Territories::BaseController < ApplicationController
     super([:configuration, record], *args)
   end
 
-  def policy_scope(record, *args)
+  def policy_scope(policy_scope_class, *args)
     # Utilisation d'un namespace `configuration` pour éviter les confusions avec les policies d'un RDV usager, d'un RDV agent ou d'un RDV en configuration.
-    super([:configuration, record], *args)
+    super([:configuration, policy_scope_class], *args)
   end
 
   private
