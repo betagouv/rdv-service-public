@@ -1,0 +1,12 @@
+- content_for :title do
+  / Cette partial est rendue lorsque l'update est invalide, il faut alors afficher
+  / le nom et service du motif tels qu'ils étaient avant la tentative de modif.
+  | Modifier le motif "#{@motif.name_was}" (#{Service.find(@motif.service_id_was).short_name})
+
+= territory_navigation(content_for(:title), [link_to("Liste des motifs", admin_territory_motifs_path(current_territory))])
+h1
+  = content_for :title
+
+.row
+  .col-md-12
+    = render "admin/motifs/form", motif: @motif, form_target: [:admin, current_territory, @motif]

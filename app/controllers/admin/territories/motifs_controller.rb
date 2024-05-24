@@ -1,4 +1,6 @@
 class Admin::Territories::MotifsController < Admin::Territories::BaseController
+  before_action :set_motif, only: %i[edit update]
+
   def index
     @organisations = current_territory.organisations
     @services = current_territory.services.reject(&:secretariat?)
@@ -18,6 +20,20 @@ class Admin::Territories::MotifsController < Admin::Territories::BaseController
     @motifs_count = @motifs.total_count
   end
 
+  def edit
+    authorize(@motif)
+  end
+
+  def update
+    authorize(@motif)
+    if @motif.update(params.require(:motif).permit(*Admin::MotifsController::FORM_ATTRIBUTES))
+      flash[:notice] = "Le motif a été modifié."
+      redirect_to admin_territory_motifs_path(current_territory)
+    else
+      render :edit
+    end
+  end
+
   private
 
   def filter_motifs(motifs)
@@ -30,6 +46,10 @@ class Admin::Territories::MotifsController < Admin::Territories::BaseController
       motifs = params[:en_ligne].to_b ? motifs.where.not(bookable_by: "agents") : motifs.where(bookable_by: "agents")
     end
     motifs
+  end
+
+  def set_motif
+    @motif = policy_scope(Motif).find(params[:id])
   end
 end
 

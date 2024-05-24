@@ -20,14 +20,14 @@ class Admin::Territories::BaseController < ApplicationController
   end
   helper_method :pundit_user
 
-  def authorize(record, *args)
+  def authorize(record, *args, **kwargs)
     # Utilisation d'un namespace `configuration` pour éviter les confusions avec les policies d'un RDV usager, d'un RDV agent ou d'un RDV en configuration.
-    super([:configuration, record], *args)
+    super([:configuration, record], *args, **kwargs)
   end
 
-  def policy_scope(policy_scope_class, *args)
+  def policy_scope(policy_scope_class, *args, **kwargs)
     # Utilisation d'un namespace `configuration` pour éviter les confusions avec les policies d'un RDV usager, d'un RDV agent ou d'un RDV en configuration.
-    super([:configuration, policy_scope_class], *args)
+    super([:configuration, policy_scope_class], *args, **kwargs)
   end
 
   private
