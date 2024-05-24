@@ -64,7 +64,7 @@
               th[scope="col"]
                 | Type
               th[scope="col"]
-                | Durée (min)
+                | Durée
               th[scope="col"]
                 | Action
         tbody
@@ -80,6 +80,7 @@
                 span.badge.badge-pill style="background: #{motif.color};" &nbsp;
               td
                 = motif.name
+                = motif_badges(motif)
               td
                 = motif.service.short_name
               td
