@@ -11,13 +11,30 @@
       .form-group.col-md-4
         label for="organisation_ids"
           | Organisation(s)
-        select.select2-input[id="organisation_ids" name="organisation_ids[]" multiple data-select-options={ placeholder: "Organisation(s)" }.to_json style="width: 100%"]
+        select.select2-input[id="organisation_ids" name="organisation_ids[]" multiple data-select-options={ placeholder: "-" }.to_json style="width: 100%"]
           = options_for_select(@organisations.pluck(:name, :id), params[:organisation_ids])
       .form-group.col-md-4
         label for="organisation_ids"
           | Services(s)
-        select.select2-input[id="service_ids" name="service_ids[]" multiple data-select-options={ placeholder: "Service(s)" }.to_json style="width: 100%"]
+        select.select2-input[id="service_ids" name="service_ids[]" multiple data-select-options={ placeholder: "-" }.to_json style="width: 100%"]
           = options_for_select(@services.pluck(:name, :id), params[:service_ids])
+    .form-row
+      .form-group.col-md-4
+        label for="location_type"
+          | Type
+        select.select2-input[id="location_type" name="location_type"  style="width: 100%"]
+          - options = Motif.location_types.map{ |l| [Motif.human_attribute_value(:location_type, l[0]), l[1]] }
+          = options_for_select(options_for_select([["-", ""]] + options, params[:location_type]))
+      .form-group.col-md-4
+        label for="collectif"
+          | Individuel / Collectif
+        select.select2-input[id="collectif" name="collectif" style="width: 100%"]
+          = options_for_select([["-", ""], ["Collectif", "true"], ["Individuel", "false"]], params[:collectif])
+      .form-group.col-md-4
+        label for="en_ligne"
+          | En ligne
+        select.select2-input[id="en_ligne" name="en_ligne" style="width: 100%"]
+          = options_for_select([["-", ""], ["Oui", "true"], ["Non", "false"]], params[:collectif])
     .form-row.justify-content-end.flex-gap-1em
       .form-group
         a.btn.btn-link[href=url_for({})] Réinitialiser
@@ -66,7 +83,10 @@
               td
                 = motif.service.short_name
               td
-                = link_to(motif.organisation.name, admin_organisation_motifs_path(organisation_id: motif.organisation.id))
+                - if admin_orgs.include?(motif.organisation)
+                  = link_to(motif.organisation.name, admin_organisation_motifs_path(organisation_id: motif.organisation.id))
+                - else
+                  = motif.organisation.name
               td
                 = Motif.human_attribute_value(:location_type, motif.location_type)
               td
