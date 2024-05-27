@@ -77,6 +77,9 @@ Rails.application.routes.draw do
     get "/users/informations", to: "users/users#edit"
     patch "users/informations", to: "users/users#update"
     resources :relatives, except: %i[index show], controller: "users/relatives"
+
+    get "users/mot_de_passe/edit" => "users/mot_de_passe#edit", as: "edit_user_mot_de_passe"
+    put "users/mot_de_passe" => "users/mot_de_passe#update", as: "user_mot_de_passe"
   end
   authenticated :user do
     get "/users/rdvs", to: "users/rdvs#index"

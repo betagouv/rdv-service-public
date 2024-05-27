@@ -13,15 +13,14 @@
       - if devise_mapping.confirmable? && resource.pending_reconfirmation?
         .form-text.text-muted.mb-2
           | En attente de confirmation pour #{resource.unconfirmed_email}
-      = f.input :password, label: "Nouveau mot de passe", autocomplete: "new-password"
-      = render "agents/mot_de_passes/new_password_hints"
-      .form-text.text-muted.mb-2
-        | Laissez ce champ vide si vous ne souhaitez pas changer votre mot de passe.
       = f.input :current_password, placeholder: "Votre mot de passe actuel", required: true, autocomplete: "current-password"
       .form-text.text-muted.mb-2
         | Renseignez votre mot de passe actuel pour tout changement.
-      .text-right= f.submit "Modifier", class: "btn btn-primary"
+      .d-flex.justify-content-between
+        = link_to("Changer de mot de passe", edit_user_mot_de_passe_path, class: "mb-2 btn btn-outline-primary")
+        = f.submit "Modifier", class: "btn btn-primary"
       .mt-5.text-center
         hr
         p.font-13 Vous souhaitez supprimer votre compte ?
         = link_to "Supprimer", user_registration_path, data:{ confirm: @rdv_insertion_organisations.blank? ? "Voulez-vous vraiment supprimer votre compte ?" : "Vous ne pourrez plus vous connecter à votre compte mais les données liées aux structures d'insertion ne seront pas supprimées. Vos données liées à d'autres structures seront bien supprimées." }, method: :delete, class: "btn btn-outline-danger btn-sm"
+

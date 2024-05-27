@@ -1,0 +1,17 @@
+.row.justify-content-md-center
+  .col-md-6
+    h1.text-dark.my-3 Changement de mot de passe
+    .card.mt-3
+      .card-body
+        = simple_form_for(current_user, url: user_mot_de_passe_path, html: { method: :put }) do |f|
+          = render "devise/shared/error_messages", resource: current_user
+
+          = f.input :password, label: "Nouveau mot de passe", autocomplete: "new-password"
+          = render "agents/mot_de_passes/new_password_hints"
+
+          = f.input :current_password, placeholder: "Votre mot de passe actuel", required: true, autocomplete: "current-password"
+
+          .d-flex.justify-content-between
+            = link_to("Retour à votre compte", edit_user_registration_path, class: "mb-2")
+            = f.submit "Enregistrer", class: "btn btn-primary"
+
