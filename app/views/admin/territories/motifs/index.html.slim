@@ -69,7 +69,7 @@
                 | Action
         tbody
           - admin_orgs = current_agent.admin_orgs.to_set
-          - @motifs.each_cons(3) do |previous_motif, motif, next_motif|
+          - @motifs.each do |motif|
             tr
               / th[scope="row"]
               /   .custom-control.custom-checkbox
@@ -78,11 +78,7 @@
               /     label.custom-control-label[for=checkbox_id]
               td
                 span.badge.badge-pill style="background: #{motif.color};" &nbsp;
-              ruby:
-                styles = []
-                styles << "border-top: none" if previous_motif && previous_motif.name_slug == motif.name_slug
-                styles << "border-bottom: none" if next_motif && next_motif.name_slug == motif.name_slug
-              td[style=styles.join(";")]
+              td
                 = motif.name
                 = motif_badges(motif)
               td
