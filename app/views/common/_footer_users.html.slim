@@ -20,7 +20,7 @@
     .col-6.col-md
       h2 À propos
       ul.list-unstyled
-        li.mb-1 = link_to "Contact", contact_path, class: "footer-links"
+        li.mb-1 = link_to "Contact", contact_path
         - if current_domain == Domain::RDV_SOLIDARITES
           li.mb-1 = link_to "Les solidarités dans votre département", mds_path
         li.mb-1 = link_to "Espace professionnel", presentation_agent_path
