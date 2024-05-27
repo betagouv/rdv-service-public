@@ -160,50 +160,110 @@ RSpec.describe "User can search rdv on rdv mairie" do
       expect(page).to have_content("Numéro de pré-demande ANTS doit comporter 10 chiffres et lettres")
       expect(page).not_to have_content("Confirmer en ignorant les avertissements")
     end
-  end
 
-  context "when using a pre-demande number in lowercase" do
-    let!(:call_to_status_with_upcased_number) { stub_ants_status("ABCD1234EF", appointments: []) }
+    context "when using a pre-demande number in lowercase" do
+      let!(:call_to_status_with_upcased_number) { stub_ants_status("ABCD1234EF", appointments: []) }
 
-    it "considers it as uppercase when calling ANTS API and saving it in user" do
-      time = Time.zone.now.change(hour: 9, min: 0)
-      creneaux_url = creneaux_url(starts_at: time.strftime("%Y-%m-%d %H:%M"), lieu_id: lieu.id, motif_id: passport_motif.id, public_link_organisation_id: organisation.id, duration: 50)
-      visit creneaux_url
+      it "considers it as uppercase when calling ANTS API and saving it in user" do
+        time = Time.zone.now.change(hour: 9, min: 0)
+        creneaux_url = creneaux_url(starts_at: time.strftime("%Y-%m-%d %H:%M"), lieu_id: lieu.id, motif_id: passport_motif.id, public_link_organisation_id: organisation.id, duration: 50)
+        visit creneaux_url
 
-      fill_in("user_email", with: user.email)
-      fill_in("password", with: user.password)
-      click_button("Se connecter")
+        fill_in("user_email", with: user.email)
+        fill_in("password", with: user.password)
+        click_button("Se connecter")
 
-      fill_in("user_ants_pre_demande_number", with: "abcd1234ef")
-      click_button("Continuer")
-      click_button("Continuer")
-      expect { click_link("Confirmer mon RDV") }.to change(Rdv, :count).by(1)
-      expect(user.reload.ants_pre_demande_number).to eq("ABCD1234EF")
-      expect(call_to_status_with_upcased_number).to have_been_requested.at_least_once
+        fill_in("user_ants_pre_demande_number", with: "abcd1234ef")
+        click_button("Continuer")
+        click_button("Continuer")
+        expect { click_link("Confirmer mon RDV") }.to change(Rdv, :count).by(1)
+        expect(user.reload.ants_pre_demande_number).to eq("ABCD1234EF")
+        expect(call_to_status_with_upcased_number).to have_been_requested.at_least_once
+      end
+    end
+
+    context "ANTS responds with an unexpected error" do
+      before do
+        stub_request(:get, "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status?application_ids=5544332211").to_return(
+          status: 500,
+          body: "Internal Server Error"
+        )
+      end
+
+      it "detects wrong format without calling ANTS API an warns user" do
+        time = Time.zone.now.change(hour: 9, min: 0)
+        creneaux_url = creneaux_url(starts_at: time.strftime("%Y-%m-%d %H:%M"), lieu_id: lieu.id, motif_id: passport_motif.id, public_link_organisation_id: organisation.id, duration: 50)
+        visit creneaux_url
+
+        fill_in("user_email", with: user.email)
+        fill_in("password", with: user.password)
+        click_button("Se connecter")
+
+        fill_in("user_ants_pre_demande_number", with: "5544332211")
+        click_button("Continuer")
+        expect(page).to have_content("Numéro de pré-demande ANTS n'a pas pu être validé à cause d'une erreur inattendue. Merci de réessayer dans 30 secondes.")
+        expect(page).not_to have_content("Confirmer en ignorant les avertissements")
+      end
     end
   end
 
-  context "ANTS responds with an unexpected error" do
-    before do
-      stub_request(:get, "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status?application_ids=5544332211").to_return(
-        status: 500,
-        body: "Internal Server Error"
-      )
+  describe "Displaying the input field for ANTS PREDEMANDE NUMBER" do
+    context "when the motif requires ants_predemande_number" do
+      it "shows input for ants_predemande_number" do
+        time = Time.zone.now.change(hour: 9, min: 0)
+        creneaux_url = creneaux_url(starts_at: time.strftime("%Y-%m-%d %H:%M"), lieu_id: lieu.id, motif_id: passport_motif.id, public_link_organisation_id: organisation.id, duration: 50)
+        visit creneaux_url
+        expect(page).to have_content("Motif : Passeport")
+
+        fill_in("user_email", with: user.email)
+        fill_in("password", with: user.password)
+        click_button("Se connecter")
+
+        expect(page).to have_field("Numéro de pré-demande ANTS")
+      end
     end
 
-    it "detects wrong format without calling ANTS API an warns user" do
-      time = Time.zone.now.change(hour: 9, min: 0)
-      creneaux_url = creneaux_url(starts_at: time.strftime("%Y-%m-%d %H:%M"), lieu_id: lieu.id, motif_id: passport_motif.id, public_link_organisation_id: organisation.id, duration: 50)
-      visit creneaux_url
+    context "when the motif does not require ants_predemande_number" do
+      let!(:retrait_motif) do
+        create(:motif, name: "Retrait", organisation: organisation, restriction_for_rdv: nil, service: service, motif_category: nil, default_duration_in_min: 25)
+      end
 
-      fill_in("user_email", with: user.email)
-      fill_in("password", with: user.password)
-      click_button("Se connecter")
+      before do
+        create(:plage_ouverture, :no_recurrence, first_day: now, motifs: [retrait_motif], lieu: lieu, organisation: organisation, start_time: Tod::TimeOfDay(15), end_time: Tod::TimeOfDay.new(16))
+      end
 
-      fill_in("user_ants_pre_demande_number", with: "5544332211")
-      click_button("Continuer")
-      expect(page).to have_content("Numéro de pré-demande ANTS n'a pas pu être validé à cause d'une erreur inattendue. Merci de réessayer dans 30 secondes.")
-      expect(page).not_to have_content("Confirmer en ignorant les avertissements")
+      it "does not show input for ants_predemande_number" do
+        time = Time.zone.now.change(hour: 15, min: 0)
+        creneaux_url = creneaux_url(starts_at: time.strftime("%Y-%m-%d %H:%M"), lieu_id: lieu.id, motif_id: retrait_motif.id, public_link_organisation_id: organisation.id, duration: 50)
+        visit creneaux_url
+        expect(page).to have_content("Motif : Retrait")
+
+        fill_in("user_email", with: user.email)
+        fill_in("password", with: user.password)
+        click_button("Se connecter")
+
+        expect(page).not_to have_field("Numéro de pré-demande ANTS")
+      end
+
+      context "user has previous rdvs requiring ants_predemande_number" do
+        before do
+          agent = create(:agent, basic_role_in_organisations: [organisation], service: service)
+          create(:rdv, motif: passport_motif, agents: [agent], users: [user], organisation: organisation)
+        end
+
+        it "does not show input for ants_predemande_number" do
+          time = Time.zone.now.change(hour: 15, min: 0)
+          creneaux_url = creneaux_url(starts_at: time.strftime("%Y-%m-%d %H:%M"), lieu_id: lieu.id, motif_id: retrait_motif.id, public_link_organisation_id: organisation.id, duration: 50)
+          visit creneaux_url
+          expect(page).to have_content("Motif : Retrait")
+
+          fill_in("user_email", with: user.email)
+          fill_in("password", with: user.password)
+          click_button("Se connecter")
+
+          expect(page).not_to have_field("Numéro de pré-demande ANTS")
+        end
+      end
     end
   end
 end
