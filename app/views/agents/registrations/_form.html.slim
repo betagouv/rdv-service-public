@@ -6,7 +6,7 @@
       | En attente de confirmation pour #{resource.unconfirmed_email}
 
   = f.input :password, disabled: true, input_html: { value: "**********" }
-  = link_to("Changer de mot de passe", edit_agent_mot_de_passes_path, class: "mb-2")
+  = link_to("Changer de mot de passe", edit_current_agent_password_path, class: "mb-2")
 
   = f.input :first_name, placeholder: "Prénom"
   = f.input :last_name, placeholder: "Nom"

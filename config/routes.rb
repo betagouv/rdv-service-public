@@ -93,8 +93,8 @@ Rails.application.routes.draw do
     put "agents" => "agents/registrations#update", as: "agent_registration"
     delete "agents" => "agents/registrations#destroy", as: "delete_agent_registration"
 
-    get "agents/mot_de_passe/edit" => "agents/mot_de_passes#edit", as: "edit_agent_mot_de_passes"
-    put "agents/mot_de_passe" => "agents/mot_de_passes#update", as: "agent_mot_de_passes"
+    get "agents/mot_de_passe/edit" => "agents/passwords#edit", as: "edit_current_agent_password"
+    put "agents/mot_de_passe" => "agents/passwords#update", as: "current_agent_password"
 
     namespace :agents do
       resource :preferences, only: %i[show update]
