@@ -1,4 +1,4 @@
-class Agents::PasswordsController < Devise::PasswordsController
+class Agents::PasswordResetsController < Devise::PasswordsController
   respond_to :html, :json
 
   def create
