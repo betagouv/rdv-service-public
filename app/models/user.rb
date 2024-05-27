@@ -24,7 +24,7 @@ class User < ApplicationRecord
   include PhoneNumberValidation::HasPhoneNumber
   include WebhookDeliverable
   include TextSearch
-  include UncommonPasswordConcern
+  include StrongPasswordConcern
   include User::Ants
 
   def self.search_options

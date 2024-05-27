@@ -11,7 +11,7 @@
   = f.input :first_name, placeholder: "Prénom"
   = f.input :last_name, placeholder: "Nom"
   = f.association :services, collection: resource.services, disabled: true, input_html: { class: "select2-input" }
-  = f.input :current_password, placeholder: "Votre mot de passe actuel", required: true, autocomplete: "off"
+  = f.input :current_password, placeholder: "Votre mot de passe actuel", required: true, autocomplete: "current-password"
   .form-text.text-muted.mb-2
     | Renseignez votre mot de passe actuel pour tout changement.
   .text-right= f.submit "Modifier", class: "btn btn-primary"
