@@ -20,6 +20,10 @@
         .col-md-12= f.input :phone_number, as: :tel
       .form-group
         = f.label :password
-        = f.password_field :password, required: true, class: "form-control", placeholder: "Choisissez votre mot de passe", id: "password"
+        = f.password_field :password, required: true, class: "form-control", id: "password", autocomplete: "new-password"
         span.fa.fa-fw.fa-eye.toggle-password role="button" tabindex="0"
+        .form-text.small.text-muted.mb-2
+          | Choisissez votre mot de passe
+
+        = render "agents/mot_de_passes/new_password_hints"
       .text-center= f.button :submit, t("devise.invitations.edit.submit_button")

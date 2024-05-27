@@ -19,7 +19,11 @@ RSpec.describe "User resets his password spec" do
     expect { click_on "Enregistrer" }.not_to change { user.reload.encrypted_password }
     expect(page).to have_content("Ce mot de passe fait partie d'une liste de mots de passe fréquemment utilisés")
 
-    fill_in "password", with: "correct horse battery staple"
+    fill_in "password", with: "pasassezfort"
+    expect { click_on "Enregistrer" }.not_to change { user.reload.encrypted_password }
+    expect(page).to have_content("Votre mot de passe doit comporter au moins un chiffre.")
+
+    fill_in "password", with: "Corr3ctHorse,"
 
     expect { click_on "Enregistrer" }.to change { user.reload.encrypted_password }
     expect(page).to have_content("Votre mot de passe a été édité avec succès")

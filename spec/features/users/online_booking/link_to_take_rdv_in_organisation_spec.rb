@@ -56,7 +56,7 @@ RSpec.describe "user can use a link that points to RDV search scoped to an organ
 
       open_email("davidnchicode@crotonmail.com")
       current_email.click_link("Confirmer mon compte")
-      fill_in "password", with: "correcthorse"
+      fill_in "password", with: "Rdvservicepublictest1!"
       click_on("Enregistrer")
 
       # Page de formulaire où l'on peut ajouter le nom de naissance, la date de naissance, le téléphone...
