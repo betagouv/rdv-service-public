@@ -34,7 +34,7 @@
         label for="en_ligne"
           | En ligne
         select.select2-input[id="en_ligne" name="en_ligne" style="width: 100%"]
-          = options_for_select([["-", ""], ["Oui", "true"], ["Non", "false"]], params[:collectif])
+          = options_for_select([["-", ""], ["Oui", "true"], ["Non", "false"]], params[:en_ligne])
     .form-row.justify-content-end.flex-gap-1em
       .form-group
         a.btn.btn-link[href=url_for({})] Réinitialiser
