@@ -39,6 +39,8 @@ module Lapin
     config.action_mailer.preview_path = Rails.root.join("spec/mailers/previews")
     config.active_model.i18n_customize_full_message = true
 
+    config.exceptions_app = routes # Pour les erreurs 400 et 500
+
     config.x.redis_url = ENV.fetch("REDIS_URL") { "redis://localhost:6379" }
 
     config.active_support.cache_format_version = 7.0
