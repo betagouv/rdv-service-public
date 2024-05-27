@@ -15,6 +15,21 @@ class Users::UsersController < UserAuthController
     end
   end
 
+  def edit_password
+    authorize(current_user, :edit?)
+  end
+
+  def update_password
+    authorize(current_user, :update?)
+    if current_user.update_with_password(user_password_params)
+      bypass_sign_in(current_user) # Devise déconnecte l'usager après un changement de mot de passe
+      flash[:notice] = "Votre mot de passe a été changé"
+      redirect_to edit_user_registration_path
+    else
+      render :edit_password
+    end
+  end
+
   private
 
   def user_params
@@ -37,5 +52,9 @@ class Users::UsersController < UserAuthController
       :address_details,
       user_profiles_attributes: %i[logement id organisation_id]
     )
+  end
+
+  def user_password_params
+    params.require(:user).permit(:password, :current_password)
   end
 end

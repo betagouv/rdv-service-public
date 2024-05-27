@@ -76,10 +76,11 @@ Rails.application.routes.draw do
   authenticate :user do
     get "/users/informations", to: "users/users#edit"
     patch "users/informations", to: "users/users#update"
-    resources :relatives, except: %i[index show], controller: "users/relatives"
 
-    get "users/mot_de_passe/edit" => "users/mot_de_passe#edit", as: "edit_user_mot_de_passe"
-    put "users/mot_de_passe" => "users/mot_de_passe#update", as: "user_mot_de_passe"
+    get "user/password/edit" => "users/users#edit_password", as: "edit_current_user_password"
+    put "user/password" => "users/users#update_password", as: "current_user_password"
+
+    resources :relatives, except: %i[index show], controller: "users/relatives"
   end
   authenticated :user do
     get "/users/rdvs", to: "users/rdvs#index"
