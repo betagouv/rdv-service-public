@@ -5,11 +5,17 @@ class Admin::Territories::MotifsController < Admin::Territories::BaseController
 
     @motifs = policy_scope(Motif)
       .active
-      .order({ name: :asc, location_type: :asc, organisation_id: :asc })
+      .order({ name: :asc, service_id: :asc, location_type: :asc, organisation_id: :asc })
       .page(page_number)
+      .per(25)
       .includes(:organisation)
 
+    if params[:search].present?
+      @motifs = @motifs.per(500)
+    end
+
     @motifs = filter_motifs(@motifs)
+    @motifs_count = @motifs.total_count
   end
 
   private

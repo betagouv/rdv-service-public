@@ -40,11 +40,13 @@
         a.btn.btn-link[href=url_for({})] Réinitialiser
       .form-group
         button.btn.btn-primary[type="submit"] Filtrer
+    .text-right
+    = "#{@motifs_count} résultats"
 
 .row
   .col-12
-    - if @motifs.count > 0
-      = paginate @motifs
+    - if @motifs_count > 0
+      = paginate @motifs, theme: "twitter-bootstrap-4"
 
       table.table.table-bordered.table-hover.table-sm.mb-0
         thead.thead-light
@@ -100,7 +102,7 @@
                     div= link_to admin_organisation_motif_path(motif.organisation, motif), method: :delete, title: "Supprimer", data: { confirm: "Confirmez-vous la suppression de ce motif ?"} do
                       i.fa.fa-trash-alt
 
-      = paginate @motifs
+      .mt-2 = paginate @motifs, theme: "twitter-bootstrap-4"
 
     - else
       .text-center
