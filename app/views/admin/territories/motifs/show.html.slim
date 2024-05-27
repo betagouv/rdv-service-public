@@ -1,0 +1,22 @@
+- content_for :title, @motif.name
+
+= territory_navigation(content_for(:title), [link_to("Liste des motifs", admin_territory_motifs_path(current_territory))])
+h1
+  = content_for :title
+
+h2.mt-4
+  ' Le motif est déjà present dans
+  = pluralize(@duplicates.size, "organisation")
+= render partial: "admin/territories/motifs/motifs_table", locals: { motifs: @duplicates }
+
+h2.mt-4 Dupliquer ce motif dans les organisations suivantes
+
+= form_with url: duplicate_admin_territory_motif_path(current_territory, @motif), method: :post do |form|
+  - @available_organisations.each do |organisation|
+    .form-row
+      label.form-group
+        input.mr-1[type="checkbox" name="organisation_ids[]" value=organisation.id]
+        = organisation.name
+  .form-row
+    .form-group
+      button.btn.btn-primary[type="submit"] Dupliquer

@@ -1,0 +1,55 @@
+table.table.table-bordered.table-hover.table-sm.mb-0
+  thead.thead-light
+    = form_with url: admin_territory_motifs_path(current_territory), method: :get do |form|
+      tr
+        / th[scope="col"]
+        /   .custom-control.custom-checkbox
+        /     input.custom-control-input[id="check_all" type="checkbox"]
+        /     label.custom-control-label[for="check_all"]
+        th[scope="col"]
+        th[scope="col"]
+          | Nom
+        th[scope="col"]
+          | Service
+        th[scope="col"]
+          | Organisation
+        th[scope="col"]
+          | Type
+        th[scope="col"]
+          | Durée
+        th[scope="col"]
+          | Action
+  tbody
+    - admin_orgs = current_agent.admin_orgs.to_set
+    - motifs.each do |motif|
+      tr
+        / th[scope="row"]
+        /   .custom-control.custom-checkbox
+        /     - checkbox_id = "checkbox_motif_#{motif.id}"
+        /     input.custom-control-input[id=checkbox_id type="checkbox" form="batch_actions"]
+        /     label.custom-control-label[for=checkbox_id]
+        td
+          span.badge.badge-pill style="background: #{motif.color};" &nbsp;
+        td
+          = motif.name
+          = motif_badges(motif)
+        td
+          = motif.service.short_name
+        td
+          - if admin_orgs.include?(motif.organisation)
+            = link_to(motif.organisation.name, admin_organisation_motifs_path(organisation_id: motif.organisation.id))
+          - else
+            = motif.organisation.name
+        td
+          = Motif.human_attribute_value(:location_type, motif.location_type)
+        td
+          = "#{motif.default_duration_in_min}"
+        td
+          - if admin_orgs.include?(motif.organisation)
+            .d-flex.flex-gap-1em
+              div= link_to admin_territory_motif_path(current_territory, motif), title: "Voir" do
+                i.fa.fa-eye
+              div= link_to edit_admin_territory_motif_path(current_territory, motif), title: "Modifier" do
+                i.fa.fa-edit
+              div= link_to admin_organisation_motif_path(motif.organisation, motif), method: :delete, title: "Supprimer", data: { confirm: "Confirmez-vous la suppression de ce motif ?"} do
+                i.fa.fa-trash-alt

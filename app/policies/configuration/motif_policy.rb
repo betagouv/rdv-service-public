@@ -1,5 +1,11 @@
 class Configuration::MotifPolicy < Agent::MotifPolicy
-  private
+  alias motif record
+
+  def agent_is_territory_admin?
+    motif.organisation.territory.in?(current_agent.territories)
+  end
+
+  alias show? agent_is_territory_admin?
 
   def current_agent
     pundit_user.agent
