@@ -31,7 +31,7 @@ class Anonymizer::Rules::RdvInsertion
       anonymized_column_names: %w[archiving_reason],
       non_anonymized_column_names: %w[created_at updated_at user_id department_id],
     },
-    configurations: {
+    category_configurations: {
       anonymized_column_names: %w[
         template_rdv_title_override
         template_rdv_title_by_phone_override
@@ -64,7 +64,7 @@ class Anonymizer::Rules::RdvInsertion
         updated_at
         structure_id
         structure_type
-        motif_category_id
+        request_params
         purged_at
         kind
       ],
@@ -111,7 +111,7 @@ class Anonymizer::Rules::RdvInsertion
         clicked
         department_id
         rdv_solidarites_lieu_id
-        rdv_context_id
+        follow_up_id
         valid_until
         reminder
         uuid
@@ -199,12 +199,12 @@ class Anonymizer::Rules::RdvInsertion
         rdv_solidarites_agent_prescripteur_id
         created_at
         updated_at
-        rdv_context_id
+        follow_up_id
         created_by
         convocable
       ],
     },
-    rdv_contexts: {
+    follow_ups: {
       non_anonymized_column_names: %w[
         status
         user_id
@@ -329,12 +329,12 @@ class Anonymizer::Rules::RdvInsertion
       non_anonymized_column_names: %w[
         name
         slug
+        organisation_type
         rdv_solidarites_organisation_id
         created_at
         updated_at
         department_id
         last_webhook_update_received_at
-        independent_from_cd
       ],
     },
     users_organisations: {
