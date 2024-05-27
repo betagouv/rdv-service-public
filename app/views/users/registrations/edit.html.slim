@@ -14,10 +14,11 @@
           - if devise_mapping.confirmable? && resource.pending_reconfirmation?
             .form-text.text-muted.mb-2
               | En attente de confirmation pour #{resource.unconfirmed_email}
-          = f.input :password, label: "Nouveau mot de passe", placeholder: "Votre nouveau mot de passe (au moins #{Devise.password_length.first} caractères)"
+          = f.input :password, label: "Nouveau mot de passe", autocomplete: "new-password"
+          = render "agents/mot_de_passes/new_password_hints"
           .form-text.text-muted.mb-2
             | Laissez ce champ vide si vous ne souhaitez pas changer votre mot de passe.
-          = f.input :current_password, placeholder: "Votre mot de passe actuel", required: true, autocomplete: "off"
+          = f.input :current_password, placeholder: "Votre mot de passe actuel", required: true, autocomplete: "current-password"
           .form-text.text-muted.mb-2
             | Renseignez votre mot de passe actuel pour tout changement.
           .text-right= f.submit "Modifier", class: "btn btn-primary"
