@@ -85,7 +85,7 @@ Rails.application.routes.draw do
   devise_for :agents, controllers: {
     invitations: "admin/territories/invitations_devise", # only using the accept route here
     sessions: "agents/sessions",
-    passwords: "agents/password_resets",
+    passwords: "agents/password_resets", # TODO: déclarer les routes à la main pour pouvoir les nommer correctement
   }
 
   devise_scope :agent do
