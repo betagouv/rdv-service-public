@@ -12,8 +12,6 @@ html lang="fr"
         - else
           = render "common/header"
 
-        = render "layouts/flash"
-
         - if content_for :breadcrumb
           .row
             .col-md-12.d-flex.justify-content-between.align-items-center
@@ -24,6 +22,7 @@ html lang="fr"
       - if content_for :main_content
         = yield :main_content
       - else
+        = render "layouts/flash"
         = yield
 
     #modal-holder
