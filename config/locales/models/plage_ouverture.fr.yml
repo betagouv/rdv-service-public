@@ -5,9 +5,9 @@ fr:
     attributes:
       plage_ouverture:
         title: Nom de la plage d'ouverture
-        first_day: Premier jour
+        first_day: Date de début
         start_time: Commence à
-        end_time: Termine à
+        end_time: S'arrête à
         recurrence: Répéter
         lieu: Lieu
     errors:

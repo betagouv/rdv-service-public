@@ -12,6 +12,30 @@ class RecurrenceForm {
     this.firstDayTarget = document.querySelector('.js-recurrence-first-day')
     this.monthlyTarget = document.querySelector('.js-recurrence-monthly')
 
+    $('.recurrence-form').on('shown.bs.collapse', function () {
+      $('.first-interval-form').collapse('hide');
+    })
+    $('.recurrence-form').on('hidden.bs.collapse', function () {
+      $('.first-interval-form').collapse('show');
+    })
+
+    $('.until-date').hide();
+    $('.until-occurences-count').hide();
+
+    $('#recurrence_until_mode').on('change', function () {
+      let until_mode = $(this).val();
+      if(until_mode === 'until_date')  {
+        $('.until-date').show();
+        $('.until-occurences-count').hide();
+      } else if(until_mode == 'until_occurences_count') {
+        $('.until-date').hide();
+        $('.until-occurences-count').show();
+      } else {
+        $('.until-date').hide();
+        $('.until-occurences-count').hide();
+      }
+    })
+
     document.querySelectorAll('.js-recurrence-input').
       forEach(i => i.addEventListener('change', this.updateRecurrence))
 
@@ -116,7 +140,7 @@ class RecurrenceForm {
     }
 
     // On force en françois puisque c'est affiché en français
-    return `Tous les ${nthWeekdayOfMonth} ${Intl.DateTimeFormat("fr", {weekday: "long"}).format(date).toLowerCase()} du mois`;
+    return `La plage d'ouverture aura lieu tous les ${nthWeekdayOfMonth} ${Intl.DateTimeFormat("fr", {weekday: "long"}).format(date).toLowerCase()} du mois`;
   }
 }
 
