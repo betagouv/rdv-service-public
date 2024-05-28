@@ -97,4 +97,8 @@ class Organisation < ApplicationRecord
     # Blank, Valid Phone, 4 digits phone (organisations only)
     phone_number.blank? || Phonelib.parse(phone_number).valid? || phone_number.match(/^\d{4}$/)
   end
+
+  def humanized_phone_number
+    Phonelib.parse(phone_number).national
+  end
 end
