@@ -1,4 +1,4 @@
-RSpec.describe Admin::Agents::PlageOuverturesController, type: :controller do
+RSpec.describe Admin::Agenda::PlageOuverturesController, type: :controller do
   describe "GET index" do
     context "with a signed in agent" do
       let(:organisation) { create(:organisation) }

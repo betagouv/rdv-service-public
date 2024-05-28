@@ -38,7 +38,7 @@ class Agent < ApplicationRecord
 
   include DeviseTokenAuth::Concerns::ConfirmableSupport
   include Agent::CustomDeviseTokenAuthUserOmniauthCallbacks
-  include UncommonPasswordConcern
+  include StrongPasswordConcern
 
   # Attributes
   auto_strip_attributes :email, :first_name, :last_name
