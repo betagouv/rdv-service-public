@@ -2,7 +2,7 @@
   = render "model_errors", model: webhook
   = f.input :organisation_id, collection: current_territory.organisations
   = f.input :target_url
-  = f.input :secret
+  = f.input :secret, input_html: { value: webhook.partially_hidden_secret, id: "secret_field" }
   .row.col-md-6
     = f.input :subscriptions, as: :check_boxes, collection: WebhookEndpoint::ALL_SUBSCRIPTIONS,
     label_method: -> { _1.classify.constantize.model_name.human }, checked: webhook.subscriptions, include_hidden: false

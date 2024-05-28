@@ -29,6 +29,7 @@ import { Tooltips } from './components/tooltips'
 import { HeaderTooltip } from './components/header_tooltip'
 import './components/calendar'
 import './components/browser-detection'
+import './components/clear-field-on-focus.js'
 
 import { Application } from "@hotwired/stimulus"
 import { definitionsFromContext } from "@hotwired/stimulus-webpack-helpers"

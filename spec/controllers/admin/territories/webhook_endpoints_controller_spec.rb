@@ -80,6 +80,24 @@ RSpec.describe Admin::Territories::WebhookEndpointsController, type: :controller
         post :update, params: { territory_id: territory.id, id: webhook.id, webhook_endpoint: { secret: nil } }
         expect(assigns(:webhook)).to eq(WebhookEndpoint.first)
       end
+
+      it "doens't update the secret if it doesn't change" do
+        webhook = create(:webhook_endpoint, organisation: organisation, secret: "123456789")
+        post :update, params: { territory_id: territory.id, id: webhook.id, webhook_endpoint: { secret: "******789" } }
+        expect(WebhookEndpoint.first.secret).to eq(webhook.secret)
+      end
+
+      it "update the secret if it change" do
+        webhook = create(:webhook_endpoint, organisation: organisation, secret: "123456789")
+        post :update, params: { territory_id: territory.id, id: webhook.id, webhook_endpoint: { secret: "987654321" } }
+        expect(WebhookEndpoint.first.secret).to eq("987654321")
+      end
+
+      it "update the target_url" do
+        webhook = create(:webhook_endpoint, organisation: organisation, target_url: "https://example.com", secret: "123")
+        post :update, params: { territory_id: territory.id, id: webhook.id, webhook_endpoint: { target_url: "https://example.org" } }
+        expect(WebhookEndpoint.first.target_url).to eq("https://example.org")
+      end
     end
   end
 
