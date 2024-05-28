@@ -42,7 +42,7 @@ RSpec.describe "User signs up and signs in" do
       open_email(invited_user.email)
       current_email.click_link "Accepter l'invitation"
       expect(page).to have_content("Inscription")
-      fill_in :password, with: "correcthorse"
+      fill_in :password, with: "Rdvservicepublictest1!"
       click_on "Enregistrer"
       expect(page).to have_current_path(root_path, ignore_query: true)
       expect_flash_info(I18n.t("devise.invitations.updated"))
@@ -80,6 +80,22 @@ RSpec.describe "User signs up and signs in" do
         click_on "Se connecter"
       end
       expect(page).to have_current_path(admin_organisation_agent_agenda_path(agent.organisations.first, agent), ignore_query: true)
+    end
+
+    context "when the agent's password is too weak" do
+      let(:agent) do
+        build(:agent, password: "tropfaible").tap do |a|
+          a.save(validate: false)
+        end
+      end
+
+      it "shows a warning and advises to change the password" do
+        visit new_user_session_path
+        fill_in "Email", with: agent.email
+        fill_in "password", with: "tropfaible"
+        click_on "Se connecter"
+        expect(page).to have_content("Votre mot de passe est trop faible")
+      end
     end
   end
 

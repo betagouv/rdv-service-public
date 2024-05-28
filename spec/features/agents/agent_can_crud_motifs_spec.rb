@@ -1,16 +1,16 @@
 RSpec.describe "Agent can CRUD motifs" do
   let(:organisation) { create(:organisation) }
   let!(:service) { create(:service, name: "PMI", territories: [organisation.territory]) }
-  let!(:motif) { create(:motif, name: "Suivi bonjour", service: service, organisation: organisation) }
+  let!(:motif) { create(:motif, name: "Suivi bonjour", service: service, organisation: organisation, bookable_by: "agents") }
   let!(:agent) { create(:agent, service: service, admin_role_in_organisations: [organisation]) }
 
   before do
     login_as(agent, scope: :agent)
-    visit authenticated_agent_root_path
-    click_link "Motifs"
   end
 
   it "works" do
+    visit authenticated_agent_root_path
+    click_link "Motifs"
     expect_page_title("Vos motifs")
     click_link motif.name
 
@@ -55,6 +55,64 @@ RSpec.describe "Agent can CRUD motifs" do
       click_on "Enregistrer"
       expect(page).to have_content("Nom doit être rempli(e)")
       expect(page).to have_content("Service doit exister")
+    end
+
+    it "unchecks for_secretariat when checking followup", js: true do
+      visit edit_admin_organisation_motif_path(organisation_id: organisation.id, id: motif.id)
+      click_on "Réservation en ligne"
+      check "Autoriser les agents du service Secrétariat à assurer ces RDV"
+      click_on "Enregistrer" and motif.reload
+      expect(motif.for_secretariat).to be_truthy
+      expect(motif.follow_up).to be_falsey
+
+      click_on "Éditer"
+      click_on "Réservation en ligne"
+      check "Autoriser ces rendez-vous seulement aux usagers bénéficiant d'un suivi par un référent"
+      expect(find("#motif_for_secretariat")).to be_disabled
+      expect(find("#motif_for_secretariat")).not_to be_checked
+      click_on "Enregistrer" and motif.reload
+      expect(motif.for_secretariat).to be_falsey
+      expect(motif.follow_up).to be_truthy
+    end
+
+    it "automatically checks and unchecks rdvs_editable_by_user when toggling online reservation", js: true do
+      # On ouvre le motif à la résa en ligne, la case "RDVs modifiables" est cochée automatiquement
+      visit edit_admin_organisation_motif_path(organisation_id: organisation.id, id: motif.id)
+      click_on "Réservation en ligne"
+
+      # On ouvre àa la résa en ligne, la case est cochée
+      choose "Agents de l’organisation, prescripteurs et usagers"
+      expect(find("#motif_rdvs_editable_by_user")).not_to be_disabled
+      expect(find("#motif_rdvs_editable_by_user")).to be_checked
+
+      # On ferme àa la résa en ligne, la case est décochée et désactivée
+      choose "Agents de l’organisation", id: "motif_bookable_by_agents"
+      expect(find("#motif_rdvs_editable_by_user")).to be_disabled
+      expect(find("#motif_rdvs_editable_by_user")).not_to be_checked
+
+      # On ouvre àa la résa en ligne, la case est cochée
+      choose "Agents de l’organisation, prescripteurs et usagers"
+      expect(find("#motif_rdvs_editable_by_user")).not_to be_disabled
+      expect(find("#motif_rdvs_editable_by_user")).to be_checked
+
+      expect { click_on "Enregistrer" }.to change { motif.reload.bookable_by }.to("everyone")
+
+      # On décoche la case "RDVs modifiables" et on enregistre
+      click_on "Éditer"
+      click_on "Réservation en ligne"
+      uncheck "motif_rdvs_editable_by_user"
+      expect { click_on "Enregistrer" }.to change { motif.reload.rdvs_editable_by_user }.from(true).to(false)
+
+      # On revient sur le formulaire, la case est bien décochée, elle se re-coche
+      # automatiquement si on choisit une option d'ouverture en ligne
+      click_on "Éditer"
+      click_on "Réservation en ligne"
+      expect(find("#motif_rdvs_editable_by_user")).not_to be_disabled
+      expect(find("#motif_rdvs_editable_by_user")).not_to be_checked
+      choose "Agents de l’organisation", id: "motif_bookable_by_agents"
+      expect(find("#motif_rdvs_editable_by_user")).to be_disabled
+      expect(find("#motif_rdvs_editable_by_user")).not_to be_checked
+      expect { click_on "Enregistrer" }.to change { motif.reload.bookable_by }.from("everyone").to("agents")
     end
   end
 end
