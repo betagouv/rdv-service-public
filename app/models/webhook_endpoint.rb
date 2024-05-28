@@ -30,7 +30,7 @@ class WebhookEndpoint < ApplicationRecord
   end
 
   def partially_hidden_secret
-    secret.gsub(/.(?=.{3})/, "*")
+    secret&.gsub(/.(?=.{3})/, "*")
   end
 
   private
