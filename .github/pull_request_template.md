@@ -12,5 +12,5 @@ Expliquer les choix techniques
 
 # Checklist
 
-- [ ] Extraire dans d'autres PRs les changements indépendants
+- [ ] Extraire dans d'autres PRs les changements indépendants, si nécessaire
 - [ ] Préparer des captures de l’interface avant et après
