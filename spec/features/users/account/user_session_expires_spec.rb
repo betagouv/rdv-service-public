@@ -16,7 +16,7 @@ RSpec.describe "Agent session expiration" do
     visit new_user_session_path
     fill_in "Email", with: user.email
     fill_in "password", with: password
-    click_on "Se connecter"
+    within("main") { click_on "Se connecter" }
     expect_to_be_logged_in
 
     travel_to(28.minutes.from_now)

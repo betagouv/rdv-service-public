@@ -93,7 +93,7 @@ RSpec.describe "User signs up and signs in" do
         visit new_user_session_path
         fill_in "Email", with: agent.email
         fill_in "password", with: "tropfaible"
-        click_on "Se connecter"
+        within("main") { click_on "Se connecter" }
         expect(page).to have_content("Votre mot de passe est trop faible")
       end
     end
