@@ -6,3 +6,9 @@ html {
 body {
   overflow-x: hidden;
 }
+
+// DSFR Overrides
+
+a[href] {
+  background-image: none;
+}
