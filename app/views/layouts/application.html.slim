@@ -13,15 +13,20 @@ html lang="fr"
           = render "common/header"
 
         = render "layouts/flash"
-        - if content_for :title
+
+        - if content_for :breadcrumb
           .row
             .col-md-12.d-flex.justify-content-between.align-items-center
-              - if content_for :breadcrumb
                 div
                   = yield :breadcrumb
 
     main class="#{ "container" if params[:controller].include?("users/") }"
-      = yield
+      - if content_for :main_content
+        = yield :main_content
+      - else
+        = yield
+
     #modal-holder
+
     footer.main-footer
       = render "common/footer_users"

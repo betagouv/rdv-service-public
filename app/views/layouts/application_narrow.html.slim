@@ -1,0 +1,9 @@
+- content_for :main_content do
+  .row
+    .col-md-8.m-auto.pt-3
+      - if content_for :title
+        h1= yield :title
+
+      = yield
+
+= render template: "layouts/application"
