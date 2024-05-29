@@ -3,7 +3,13 @@
     h1.text-dark.my-3 Votre compte
     .card.mt-3
       .card-body
+        - if current_user.logged_once_with_franceconnect?
+          .alert.alert-info.d-flex.align-items-center
+            .mr-3
+              .fa.fa-info
+                div Vous pouvez ici changer l'email et le mot de passe de votre compte #{current_domain.name}, et pas ceux de FranceConnect
         = link_to("Changer d'adresse mail", edit_user_registration_path)
+        br
         = link_to("Changer de mot de passe", edit_current_user_password_path)
         .mt-5.text-center
           hr
