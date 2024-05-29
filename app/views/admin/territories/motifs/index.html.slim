@@ -52,10 +52,6 @@
         thead.thead-light
           = form_with url: admin_territory_motifs_path(current_territory), method: :get do |form|
             tr
-              / th[scope="col"]
-              /   .custom-control.custom-checkbox
-              /     input.custom-control-input[id="check_all" type="checkbox"]
-              /     label.custom-control-label[for="check_all"]
               th[scope="col"]
               th[scope="col"]
                 | Nom
@@ -73,11 +69,6 @@
           - admin_orgs = current_agent.admin_orgs.to_set
           - @motifs.each do |motif|
             tr
-              / th[scope="row"]
-              /   .custom-control.custom-checkbox
-              /     - checkbox_id = "checkbox_motif_#{motif.id}"
-              /     input.custom-control-input[id=checkbox_id type="checkbox" form="batch_actions"]
-              /     label.custom-control-label[for=checkbox_id]
               td
                 span.badge.badge-pill style="background: #{motif.color};" &nbsp;
               td
