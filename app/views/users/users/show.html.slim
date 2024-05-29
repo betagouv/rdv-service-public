@@ -5,6 +5,9 @@
       .card-body
         = "L'adresse email de votre compte est "
         b = current_user.email
+        - if current_user.pending_reconfirmation?
+          .form-text.text-muted.mb-2
+            | En attente de confirmation pour #{current_user.unconfirmed_email}
 
         - if current_user.logged_once_with_franceconnect?
           .alert.alert-info.d-flex.align-items-center
