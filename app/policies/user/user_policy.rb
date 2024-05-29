@@ -12,6 +12,7 @@ class User::UserPolicy < ApplicationPolicy
     record.id == current_user.id || user_is_responsible?
   end
 
+  alias show? current_user_or_responsible?
   alias edit? current_user_or_responsible?
   alias update? current_user_or_responsible?
   alias destroy? current_user_or_responsible?

@@ -77,6 +77,8 @@ Rails.application.routes.draw do
     get "/users/informations", to: "users/users#edit"
     patch "users/informations", to: "users/users#update"
 
+    get "/users/account", to: "users/users#show"
+
     get "user/password/edit" => "users/users#edit_password", as: "edit_current_user_password"
     put "user/password" => "users/users#update_password", as: "current_user_password"
 

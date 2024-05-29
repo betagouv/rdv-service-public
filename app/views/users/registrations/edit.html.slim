@@ -19,7 +19,3 @@
       .d-flex.justify-content-between
         = link_to("Changer de mot de passe", edit_current_user_password_path, class: "btn btn-outline-primary")
         = f.submit "Modifier", class: "btn btn-primary"
-      .mt-5.text-center
-        hr
-        p.font-13 Vous souhaitez supprimer votre compte ?
-        = link_to "Supprimer", user_registration_path, data:{ confirm: @rdv_insertion_organisations.blank? ? "Voulez-vous vraiment supprimer votre compte ?" : "Vous ne pourrez plus vous connecter à votre compte mais les données liées aux structures d'insertion ne seront pas supprimées. Vos données liées à d'autres structures seront bien supprimées." }, method: :delete, class: "btn btn-outline-danger btn-sm"

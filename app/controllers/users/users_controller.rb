@@ -1,4 +1,8 @@
 class Users::UsersController < UserAuthController
+  def show
+    authorize(current_user)
+  end
+
   def edit
     @user = current_user
     authorize(@user)
