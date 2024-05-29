@@ -25,7 +25,7 @@
   p.card-text
     i.fa.fa-video-camera.text-primary-blue>
     = "Par visioconférence "
-    - if current_agent.in?(rdv.agents)
+    - if current_agent.in?(rdv.agents) || current_agent.secretaire?
       = link_to(rdv.visio_url, target: :_blank) do
         = "démarrer la visioconférence "
         i.fa.fa-external-link[aria-hidden="true"]
