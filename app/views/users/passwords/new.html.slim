@@ -1,23 +1,27 @@
 - content_for :title, "Mot de passe oublié ?"
 
-.card
-  .card-body
-    = form_for resource, as: resource_name, url: password_path(resource_name) do |f|
+.fr-container.fr-mt-8v.fr-mt-md-14v.fr-mb-2v.fr-mb-md-8v
+  .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
+    .fr-col-12.fr-col-md-10.fr-col-lg-8
+      h1= content_for :title
+
+  .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
+    .fr-col-12.fr-col-md-10.fr-col-lg-8
       .text-center.w-75.m-auto
-      = render "devise/shared/error_messages", resource: resource
-      .form-group
-        = f.email_field :email, autofocus: true, required: true, placeholder: "nom.prenom@email.com", class: "form-control"
-      .form-group.mb-0.text-center
-        = f.submit "Envoyer", class: "btn btn btn-primary"
+        = render "devise/shared/error_messages", resource: resource
 
-    hr
-    .text-center
-      p.text-muted
-        | Vous avez un compte ?&nbsp;
-        = link_to new_session_path(resource_name) do
-          b Se connecter
+      .fr-mb-4w
+        = form_for resource, as: resource_name, url: password_path(resource_name), builder: DsfrFormBuilder do |f|
+          = f.dsfr_email_field :email, autofocus: true, required: true, placeholder: "nom.prenom@email.com"
+          = f.submit "Envoyer", class: "fr-btn"
 
-      p.text-muted
-        | Vous n'avez pas de compte ?&nbsp;
-        = link_to new_registration_path(resource_name) do
-          b Je m'inscris
+      .text-center
+        p.text-muted
+          | Vous avez un compte ?&nbsp;
+          = link_to new_session_path(resource_name) do
+            b Se connecter
+
+        p.text-muted
+          | Vous n'avez pas de compte ?&nbsp;
+          = link_to new_registration_path(resource_name) do
+            b Je m'inscris
