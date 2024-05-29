@@ -2,8 +2,21 @@ class AgentConnectController < ApplicationController
   before_action :log_params_to_sentry
 
   def auth
-    session[:agent_connect_state] = Digest::SHA1.hexdigest("Agent Connect - #{SecureRandom.hex(13)}")
-    redirect_to AgentConnect.auth_path(session[:agent_connect_state], agent_connect_callback_url, login_hint: params[:login_hint]), allow_other_host: true
+    state = Digest::SHA1.hexdigest("Agent Connect - #{SecureRandom.base58(16)}")
+    session[:agent_connect_state] = state
+    query_params = {
+      response_type: "code",
+      client_id: AgentConnect::AGENT_CONNECT_CLIENT_ID,
+      redirect_uri: agent_connect_callback_url,
+      scope: "openid email profile",
+      state: state,
+      from: "community",
+      login_hint: params[:login_hint],
+    }.compact_blank
+
+    agent_connect_redirect_url = "#{AgentConnect::AGENT_CONNECT_BASE_URL}/api/v2/authorize/?#{query_params.to_query}"
+
+    redirect_to agent_connect_redirect_url, allow_other_host: true
   end
 
   def callback

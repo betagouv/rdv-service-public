@@ -6,19 +6,6 @@ class AgentConnect
   AGENT_CONNECT_CLIENT_SECRET = ENV["AGENT_CONNECT_CLIENT_SECRET"]
   AGENT_CONNECT_BASE_URL = ENV["AGENT_CONNECT_BASE_URL"]
 
-  def self.auth_path(agent_connect_state, agent_connect_callback_url, login_hint: nil)
-    query = {
-      response_type: "code",
-      client_id: AGENT_CONNECT_CLIENT_ID,
-      redirect_uri: agent_connect_callback_url,
-      scope: "openid email profile",
-      state: agent_connect_state,
-      from: "community",
-      login_hint: login_hint,
-    }.compact_blank
-    "#{AGENT_CONNECT_BASE_URL}/authorize/?#{query.to_query}"
-  end
-
   def initialize(code, agent_connect_callback_url)
     @code = code
     @agent_connect_callback_url = agent_connect_callback_url
