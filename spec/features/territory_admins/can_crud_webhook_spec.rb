@@ -1,6 +1,6 @@
 RSpec.describe "territory admin can crud webhooks endpoints" do
   let(:territory) { create(:territory) }
-  let(:organisation) { create(:organisation, territory: territory) }
+  let!(:organisation) { create(:organisation, territory: territory) }
   let(:agent) do
     create(:agent, role_in_territories: [territory])
   end
