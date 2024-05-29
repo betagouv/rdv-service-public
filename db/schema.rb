@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_04_25_132948) do
+ActiveRecord::Schema[7.0].define(version: 2024_05_29_155139) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -236,7 +236,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_25_132948) do
     t.boolean "outlook_disconnect_in_progress", default: false, null: false
     t.datetime "account_deletion_warning_sent_at", comment: "Quand le compte de l'agent est inactif depuis bientôt deux ans, on lui envoie un mail qui le prévient que sont compte sera bientôt supprimé, et qu'il doit se connecter à nouveau s'il souhaite conserver son compte. On enregistre la date d'envoi de cet email ici pour s'assure qu'on lui laisse un délai d'au moins un mois pour réagir.\n"
     t.string "inclusion_connect_open_id_sub"
+    t.string "agent_connect_open_id_sub"
     t.index ["account_deletion_warning_sent_at"], name: "index_agents_on_account_deletion_warning_sent_at"
+    t.index ["agent_connect_open_id_sub"], name: "index_agents_on_agent_connect_open_id_sub", unique: true, where: "(agent_connect_open_id_sub IS NOT NULL)"
     t.index ["calendar_uid"], name: "index_agents_on_calendar_uid", unique: true
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true
     t.index ["email"], name: "index_agents_on_email", unique: true, where: "(email IS NOT NULL)"
