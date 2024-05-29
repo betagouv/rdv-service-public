@@ -1,5 +1,5 @@
-RSpec.describe "territory admin can create webhooks endpoints" do
-  let(:territory) { create(:territory, departement_number: "62") }
+RSpec.describe "territory admin can crud webhooks endpoints" do
+  let(:territory) { create(:territory) }
   let(:organisation) { create(:organisation, territory: territory) }
   let(:agent) do
     create(:agent, role_in_territories: [territory])
@@ -11,7 +11,7 @@ RSpec.describe "territory admin can create webhooks endpoints" do
     visit admin_territory_path(id: territory.id)
   end
 
-  it "allows creation and edition", js: true do
+  it "works", js: true do
     # Create
     click_on "Webhook"
     click_on "Ajouter"
