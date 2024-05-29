@@ -35,7 +35,7 @@ class AgentConnectController < ApplicationController
       redirect_to root_path
     else
       flash[:error] = error_message
-      Sentry.capture_message("Failed to authenticate agent with InclusionConnect", fingerprint: ["ic_other_error"])
+      Sentry.capture_message("Failed to authenticate agent with Agent Connect", fingerprint: ["agent_connect_other_error"])
       redirect_to new_agent_session_path
     end
   rescue InclusionConnect::AgentNotFoundError => e
