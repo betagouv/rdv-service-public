@@ -252,7 +252,7 @@ Rails.application.routes.draw do
   end
   get "/.well-known/microsoft-identity-association" => "static_pages#microsoft_domain_verification", format: :json
 
-  get "/budget", to: redirect("https://pad.numerique.gouv.fr/rHMnemklQm6Sww5yVCI9ow?view#RDV-Services-Publics", status: 302)
+  get "/budget", to: redirect("https://pad.numerique.gouv.fr/rHMnemklQm6Sww5yVCI9ow?view#RDV-Service-Public", status: 302)
 
   ## Shorten urls for SMS
   get "r", to: redirect("users/rdvs", status: 301), as: "rdvs_short"
