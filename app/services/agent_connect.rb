@@ -96,7 +96,7 @@ class AgentConnect
     handle_agent_mismatch if agent_mismatch?
 
     @matching_agent = found_by_sub || found_by_email
-    raise InclusionConnect::AgentNotFoundError, user_info["email"].to_s if @matching_agent.nil?
+    raise AgentConnect::AgentNotFoundError, user_info["email"].to_s if @matching_agent.nil?
 
     @matching_agent
   end
@@ -104,7 +104,7 @@ class AgentConnect
   def handle_agent_mismatch
     Sentry.add_breadcrumb(Sentry::Breadcrumb.new(message: "Found agent with sub", data: { sub: user_info["sub"], agent_id: found_by_sub.id }))
     Sentry.add_breadcrumb(Sentry::Breadcrumb.new(message: "Found agent with email", data: { email: user_info["email"], agent_id: found_by_email.id }))
-    Sentry.capture_message("InclusionConnect sub and email mismatch", fingerprint: "ic_agent_sub_email_mismatch")
+    Sentry.capture_message("AgentConnect sub and email mismatch", fingerprint: "agent_connectagent_sub_email_mismatch")
   end
 
   def found_by_email
@@ -130,14 +130,14 @@ class AgentConnect
   def found_by_sub
     return log_and_exit("sub") if user_info["sub"].nil?
 
-    return if user_info["sub"].nil? && Sentry.capture_message("InclusionConnect sub is nil", extra: user_info, fingerprint: "ic_sub_nil")
+    return if user_info["sub"].nil? && Sentry.capture_message("AgentConnect sub is nil", extra: user_info, fingerprint: "agent_connectsub_nil")
 
     @found_by_sub ||= Agent.active.find_by(agent_connect_open_id_sub: user_info["sub"])
   end
 
   def log_and_exit(field)
     # should not happen
-    Sentry.capture_message("InclusionConnect #{field} is nil", extra: user_info, fingerprint: "ic_#{field}_nil")
+    Sentry.capture_message("AgentConnect #{field} is nil", extra: user_info, fingerprint: "agent_connect#{field}_nil")
     nil
   end
 
@@ -147,7 +147,7 @@ class AgentConnect
 
   def handle_response_error(response)
     unless response.success?
-      raise(InclusionConnect::ApiRequestError, "code:#{response.response_code}, body:#{response.response_body}")
+      raise(AgentConnect::ApiRequestError, "code:#{response.response_code}, body:#{response.response_body}")
     end
   end
 end
