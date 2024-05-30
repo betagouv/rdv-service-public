@@ -12,7 +12,7 @@
         = f.password_field :password, as: :password, label: "Mot de passe", class: "form-control", autocomplete: "new-password", required: true, id: "password"
         span.fa.fa-fw.fa-eye.toggle-password role="button" tabindex="0"
 
-        = render "agents/mot_de_passes/new_password_hints"
+        = render "common/new_password_hints"
 
       .text-center
         = f.submit "Enregistrer", class: "btn btn btn-primary"
