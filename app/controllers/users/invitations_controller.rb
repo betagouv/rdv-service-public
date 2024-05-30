@@ -1,5 +1,5 @@
 class Users::InvitationsController < Devise::InvitationsController
-  layout "user_registration"
+  layout "application_narrow"
   # rubocop:disable Rails/LexicallyScopedActionFilter
   before_action :delete_token_from_session, only: [:update]
   # rubocop:enable Rails/LexicallyScopedActionFilter

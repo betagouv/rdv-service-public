@@ -1,5 +1,5 @@
 class Users::SessionsController < Devise::SessionsController
-  layout "user_registration"
+  layout "application_narrow"
 
   include CanHaveRdvWizardContext
 
