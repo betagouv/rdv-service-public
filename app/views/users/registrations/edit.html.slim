@@ -1,15 +1,14 @@
-<<<<<<< HEAD
 - content_for :title, "Changement d'adresse email"
 
 .card.mt-3
   .card-body
-    = simple_form_for(resource, as: resource_name, url: registration_path(resource_name), remote: request.xhr?, html: { method: :put }) do |f|
+    = simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f|
       = render "devise/shared/error_messages", resource: resource
-      = f.input :email, value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email), placeholder: "nom.prenom@email.com"
+      = f.input :email, placeholder: "nom.prenom@email.com", label: "Nouvelle adresse email", input_html: { value: "" }, required: true
       = f.input :current_password, placeholder: "Votre mot de passe", required: true, autocomplete: "current-password"
       .form-text.text-muted.mb-2
         | Renseignez votre mot de passe pour changer votre adresse email.
 
-  .d-flex.justify-content-between.align-items-center
-    = link_to("Retour à votre compte", users_account_path)
-    = f.submit "Enregistrer", class: "btn btn-primary"
+    .d-flex.justify-content-between.align-items-center
+      = link_to("Retour à votre compte", users_account_path)
+      = f.submit "Enregistrer", class: "btn btn-primary"
