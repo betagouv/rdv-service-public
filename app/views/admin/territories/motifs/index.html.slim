@@ -90,7 +90,7 @@
                   .d-flex.flex-gap-1em
                     div= link_to edit_admin_organisation_motif_path(motif.organisation, motif), title: "Modifier", target: :_blank do
                       i.fa.fa-edit
-                    div= link_to admin_organisation_motif_path(motif.organisation, motif), method: :delete, title: "Supprimer", data: { confirm: "Confirmez-vous la suppression de ce motif ?"} do
+                    div= link_to admin_territory_motif_path(current_territory, motif), method: :delete, title: "Supprimer", data: { confirm: "Confirmez-vous la suppression de ce motif ?"} do
                       i.fa.fa-trash-alt
 
       .mt-2 = paginate @motifs, theme: "twitter-bootstrap-4"

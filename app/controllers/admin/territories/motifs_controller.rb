@@ -18,6 +18,14 @@ class Admin::Territories::MotifsController < Admin::Territories::BaseController
     @motifs_count = @motifs.total_count
   end
 
+  def destroy
+    motif = Motif.active.find(params[:id])
+    authorize(motif)
+    motif.soft_delete!
+    flash[:notice] = "Le motif a été supprimé."
+    redirect_back fallback_location: admin_territory_motifs_path(current_territory)
+  end
+
   private
 
   def filter_motifs(motifs)
