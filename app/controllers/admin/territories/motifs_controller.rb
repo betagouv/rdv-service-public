@@ -40,4 +40,3 @@ class Admin::Territories::MotifsController < Admin::Territories::BaseController
     motifs
   end
 end
-
