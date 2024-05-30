@@ -70,16 +70,14 @@ class AgentConnect
 
   def update_basic_info
     matching_agent.assign_attributes(
-      {
-        agent_connect_open_id_sub: matching_agent.agent_connect_open_id_sub || user_info["sub"],
-        first_name: user_info["given_name"],
-        last_name: user_info["family_name"],
-        invitation_accepted_at: matching_agent.invitation_accepted_at || Time.zone.now,
-        # Setting the token to nil to disable old invitations links
-        invitation_token: nil,
-        confirmed_at: matching_agent.confirmed_at || Time.zone.now,
-        last_sign_in_at: Time.zone.now,
-      }
+      agent_connect_open_id_sub: matching_agent.agent_connect_open_id_sub || user_info["sub"],
+      first_name: user_info["given_name"],
+      last_name: user_info["family_name"],
+      invitation_accepted_at: matching_agent.invitation_accepted_at || Time.zone.now,
+      # Setting the token to nil to disable old invitations links
+      invitation_token: nil,
+      confirmed_at: matching_agent.confirmed_at || Time.zone.now,
+      last_sign_in_at: Time.zone.now
     )
     matching_agent.save! if matching_agent.changed?
   end
@@ -104,7 +102,7 @@ class AgentConnect
   def handle_agent_mismatch
     Sentry.add_breadcrumb(Sentry::Breadcrumb.new(message: "Found agent with sub", data: { sub: user_info["sub"], agent_id: found_by_sub.id }))
     Sentry.add_breadcrumb(Sentry::Breadcrumb.new(message: "Found agent with email", data: { email: user_info["email"], agent_id: found_by_email.id }))
-    Sentry.capture_message("AgentConnect sub and email mismatch", fingerprint: "agent_connectagent_sub_email_mismatch")
+    Sentry.capture_message("AgentConnect sub and email mismatch", fingerprint: "agent_connect_agent_sub_email_mismatch")
   end
 
   def found_by_email
@@ -113,24 +111,12 @@ class AgentConnect
     return @found_by_email if defined?(@found_by_email)
 
     @found_by_email = Agent.active.find_by(email: user_info["email"])
-
-    unless @found_by_email
-      # Les domaines francetravail.fr et pole-emploi.fr sont équivalents
-      # Enlever cette condition après la dernière vague de migration le 12 avril
-      name, domain = user_info["email"].split("@")
-      if domain.in?(["francetravail.fr", "pole-emploi.fr"])
-        acceptable_emails = ["#{name}@francetravail.fr", "#{name}@pole-emploi.fr"]
-        @found_by_email = Agent.active.find_by(email: acceptable_emails)
-      end
-    end
-
-    @found_by_email
   end
 
   def found_by_sub
     return log_and_exit("sub") if user_info["sub"].nil?
 
-    return if user_info["sub"].nil? && Sentry.capture_message("AgentConnect sub is nil", extra: user_info, fingerprint: "agent_connectsub_nil")
+    return if user_info["sub"].nil? && Sentry.capture_message("AgentConnect sub is nil", extra: user_info, fingerprint: "agent_connect_sub_nil")
 
     @found_by_sub ||= Agent.active.find_by(agent_connect_open_id_sub: user_info["sub"])
   end
