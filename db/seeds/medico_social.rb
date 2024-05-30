@@ -180,9 +180,9 @@ _motif_org_paris_nord_social_collectif = Motif.create!(
 # MOTIFS organisations du 62
 
 motifs = {}
-[[:bapaume, org_bapaume], [:arques, org_arques]].each do |seed_id, org|
-  motifs[seed_id] ||= {}
-  motifs[seed_id][:pmi_rappel] = Motif.create!(
+Organisation.where(territory: territory62).each do |org|
+  motifs[org] ||= {}
+  motifs[org][:pmi_rappel] = Motif.create!(
     name: "Être rappelé par la PMI",
     color: "#10FF10",
     organisation_id: org.id,
@@ -190,7 +190,7 @@ motifs = {}
     bookable_by: :everyone,
     location_type: :phone
   )
-  motifs[seed_id][:pmi_prenatale] = Motif.create!(
+  motifs[org][:pmi_prenatale] = Motif.create!(
     name: "Consultation prénatale",
     color: "#FF1010",
     organisation_id: org.id,
@@ -492,6 +492,7 @@ org_arques_pmi_maya = Agent.new(
 )
 org_arques_pmi_maya.skip_confirmation!
 org_arques_pmi_maya.save!
+org_arques_pmi_maya.territorial_roles.create!(territory: territory62)
 
 agent_org_bapaume_pmi_bruno = Agent.new(
   email: "bruno@demo.rdv-solidarites.fr",
@@ -645,7 +646,7 @@ _plage_ouverture_org_arques_maya_tradi = PlageOuverture.create!(
   organisation_id: org_arques.id,
   agent_id: org_arques_pmi_maya.id,
   lieu_id: lieu_arques_nord.id,
-  motif_ids: [motifs[:arques][:pmi_rappel].id, motifs[:arques][:pmi_prenatale].id],
+  motif_ids: [motifs[org_arques][:pmi_rappel].id, motifs[org_arques][:pmi_prenatale].id],
   first_day: Date.tomorrow,
   start_time: Tod::TimeOfDay.new(9),
   end_time: Tod::TimeOfDay.new(15),
@@ -656,7 +657,7 @@ _plage_ouverture_org_bapaume_bruno_classique = PlageOuverture.create!(
   organisation_id: org_bapaume.id,
   agent_id: agent_org_bapaume_pmi_bruno.id,
   lieu_id: lieu_bapaume_est.id,
-  motif_ids: [motifs[:bapaume][:pmi_rappel].id, motifs[:bapaume][:pmi_prenatale].id],
+  motif_ids: [motifs[org_arques][:pmi_rappel].id, motifs[org_bapaume][:pmi_prenatale].id],
   first_day: Date.tomorrow,
   start_time: Tod::TimeOfDay.new(9),
   end_time: Tod::TimeOfDay.new(15),
@@ -669,7 +670,7 @@ _plage_ouverture_org_bapaume_bruno_classique = PlageOuverture.create!(
     organisation_id: org_bapaume.id,
     agent_id: agent_org_bapaume_pmi_gina.id,
     lieu_id: lieu_bapaume_est.id,
-    motif_ids: [motifs[:bapaume][:pmi_prenatale].id],
+    motif_ids: [motifs[org_bapaume][:pmi_prenatale].id],
     first_day: Date.tomorrow,
     start_time: Tod::TimeOfDay.new(11),
     end_time: Tod::TimeOfDay.new(18),
