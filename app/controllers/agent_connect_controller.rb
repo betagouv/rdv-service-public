@@ -31,7 +31,7 @@ class AgentConnectController < ApplicationController
       redirect_to(new_agent_session_path) and return
     end
 
-    agent = AgentConnect.new(params[:code], agent_connect_callback_url).authenticate_and_find_agent
+    agent = AgentConnect.new.authenticate_and_find_agent(params[:code], agent_connect_callback_url)
 
     if agent
       bypass_sign_in agent, scope: :agent
