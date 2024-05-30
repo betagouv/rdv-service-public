@@ -26,7 +26,8 @@ class Users::UsersController < UserAuthController
   def update_password
     authorize(current_user, :update?)
     if current_user.update_with_password(user_password_params)
-      bypass_sign_in(current_user) # Devise déconnecte l'usager après un changement de mot de passe
+      # On reconnecte l'usager ici parce que Devise le déconnecte automatiquement après un changement de mot de passe
+      bypass_sign_in(current_user)
       flash[:notice] = "Votre mot de passe a été changé"
       redirect_to edit_user_registration_path
     else
