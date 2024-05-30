@@ -14,7 +14,7 @@ class AgentConnectController < ApplicationController
       login_hint: params[:login_hint],
     }.compact_blank
 
-    agent_connect_redirect_url = "#{AgentConnect::AGENT_CONNECT_BASE_URL}/api/v2/authorize/?#{query_params.to_query}"
+    agent_connect_redirect_url = "#{AgentConnect::AGENT_CONNECT_BASE_URL}/authorize/?#{query_params.to_query}"
 
     redirect_to agent_connect_redirect_url, allow_other_host: true
   end

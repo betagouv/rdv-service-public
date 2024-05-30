@@ -12,7 +12,7 @@ class AgentConnect
   end
 
   def authenticate_and_find_agent
-    return if token.blank?
+    @token = fetch_token
 
     return if user_info.blank?
 
@@ -24,9 +24,7 @@ class AgentConnect
 
   private
 
-  def token
-    return @token if defined?(@token)
-
+  def fetch_token
     data = {
       client_id: AGENT_CONNECT_CLIENT_ID,
       client_secret: AGENT_CONNECT_CLIENT_SECRET,
@@ -34,26 +32,25 @@ class AgentConnect
       grant_type: "authorization_code",
       redirect_uri: @agent_connect_callback_url,
     }
-    uri = URI("#{AGENT_CONNECT_BASE_URL}/token/")
 
     response = Typhoeus.post(
-      uri,
+      URI("#{AGENT_CONNECT_BASE_URL}/token/"),
       body: data,
       headers: { "Content-Type" => "application/x-www-form-urlencoded" }
     )
 
     handle_response_error(response)
 
-    @token = JSON.parse(response.body)["access_token"]
+    JSON.parse(response.body)["access_token"]
   end
 
   def user_info
     return @user_info if defined?(@user_info)
 
-    uri = URI("#{IC_BASE_URL}/userinfo/")
+    uri = URI("#{AGENT_CONNECT_BASE_URL}/userinfo/")
     uri.query = URI.encode_www_form({ schema: "openid" })
 
-    response = Typhoeus.get(uri, headers: { "Authorization" => "Bearer #{token}" })
+    response = Typhoeus.get(uri, headers: { "Authorization" => "Bearer #{@token}" })
 
     handle_response_error(response)
 
@@ -65,14 +62,14 @@ class AgentConnect
     return handle_agent_mismatch if agent_mismatch?
 
     update_basic_info
-    update_email(matching_agent) if matching_agent.email != user_info["email"]
+    update_email(matching_agent) if matching_agent.email != @user_info["email"]
   end
 
   def update_basic_info
     matching_agent.assign_attributes(
-      agent_connect_open_id_sub: matching_agent.agent_connect_open_id_sub || user_info["sub"],
-      first_name: user_info["given_name"],
-      last_name: user_info["family_name"],
+      agent_connect_open_id_sub: matching_agent.agent_connect_open_id_sub || @user_info["sub"],
+      first_name: @user_info["given_name"],
+      last_name: @user_info["usual_name"],
       invitation_accepted_at: matching_agent.invitation_accepted_at || Time.zone.now,
       # Setting the token to nil to disable old invitations links
       invitation_token: nil,
@@ -83,7 +80,7 @@ class AgentConnect
   end
 
   def update_email(agent)
-    agent.email = user_info["email"]
+    agent.email = @user_info["email"]
     agent.skip_reconfirmation!
     agent.save!
   end
@@ -93,7 +90,7 @@ class AgentConnect
 
     handle_agent_mismatch if agent_mismatch?
 
-    @matching_agent = found_by_sub || found_by_email
+    @matching_agent = found_by_sub || found_by_email (serveurs webs, jobs cron, etc...)
     raise AgentConnect::AgentNotFoundError, user_info["email"].to_s if @matching_agent.nil?
 
     @matching_agent
@@ -106,25 +103,17 @@ class AgentConnect
   end
 
   def found_by_email
-    return log_and_exit("email") if user_info["email"].nil?
-
     return @found_by_email if defined?(@found_by_email)
 
     @found_by_email = Agent.active.find_by(email: user_info["email"])
   end
 
   def found_by_sub
-    return log_and_exit("sub") if user_info["sub"].nil?
+    return log_and_exit("sub") if @user_info["sub"].nil?
 
-    return if user_info["sub"].nil? && Sentry.capture_message("AgentConnect sub is nil", extra: user_info, fingerprint: "agent_connect_sub_nil")
+    return if @user_info["sub"].nil? && Sentry.capture_message("AgentConnect sub is nil", extra: @user_info, fingerprint: "agent_connect_sub_nil")
 
-    @found_by_sub ||= Agent.active.find_by(agent_connect_open_id_sub: user_info["sub"])
-  end
-
-  def log_and_exit(field)
-    # should not happen
-    Sentry.capture_message("AgentConnect #{field} is nil", extra: user_info, fingerprint: "agent_connect#{field}_nil")
-    nil
+    @found_by_sub ||= Agent.active.find_by(agent_connect_open_id_sub: @user_info["sub"])
   end
 
   def agent_mismatch?
