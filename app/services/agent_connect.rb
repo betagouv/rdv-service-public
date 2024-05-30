@@ -13,8 +13,7 @@ class AgentConnect
 
   def authenticate_and_find_agent
     @token = fetch_token
-
-    return if user_info.blank?
+    @user_info = fetch_user_info
 
     return unless matching_agent
 
@@ -44,9 +43,7 @@ class AgentConnect
     JSON.parse(response.body)["access_token"]
   end
 
-  def user_info
-    return @user_info if defined?(@user_info)
-
+  def fetch_user_info
     uri = URI("#{AGENT_CONNECT_BASE_URL}/userinfo/")
     uri.query = URI.encode_www_form({ schema: "openid" })
 
@@ -54,7 +51,7 @@ class AgentConnect
 
     handle_response_error(response)
 
-    @user_info = JSON.parse(response.body)
+    JSON.parse(response.body)
   end
 
   def update_agent
@@ -90,22 +87,22 @@ class AgentConnect
 
     handle_agent_mismatch if agent_mismatch?
 
-    @matching_agent = found_by_sub || found_by_email (serveurs webs, jobs cron, etc...)
-    raise AgentConnect::AgentNotFoundError, user_info["email"].to_s if @matching_agent.nil?
+    @matching_agent = found_by_sub || found_by_email
+    raise AgentConnect::AgentNotFoundError, @user_info["email"].to_s if @matching_agent.nil?
 
     @matching_agent
   end
 
   def handle_agent_mismatch
-    Sentry.add_breadcrumb(Sentry::Breadcrumb.new(message: "Found agent with sub", data: { sub: user_info["sub"], agent_id: found_by_sub.id }))
-    Sentry.add_breadcrumb(Sentry::Breadcrumb.new(message: "Found agent with email", data: { email: user_info["email"], agent_id: found_by_email.id }))
+    Sentry.add_breadcrumb(Sentry::Breadcrumb.new(message: "Found agent with sub", data: { sub: @user_info["sub"], agent_id: found_by_sub.id }))
+    Sentry.add_breadcrumb(Sentry::Breadcrumb.new(message: "Found agent with email", data: { email: @user_info["email"], agent_id: found_by_email.id }))
     Sentry.capture_message("AgentConnect sub and email mismatch", fingerprint: "agent_connect_agent_sub_email_mismatch")
   end
 
   def found_by_email
     return @found_by_email if defined?(@found_by_email)
 
-    @found_by_email = Agent.active.find_by(email: user_info["email"])
+    @found_by_email = Agent.active.find_by(email: @user_info["email"])
   end
 
   def found_by_sub
