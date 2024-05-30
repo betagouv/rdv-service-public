@@ -240,6 +240,7 @@ class User < ApplicationRecord
   end
 
   def password_required?
+    # TODO: bug ici : cette méthode est nécessaire pour la validation de la confirmation du mot de passe
     false # users without passwords and emails can be created by agents
   end
 
