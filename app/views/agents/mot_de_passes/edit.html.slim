@@ -3,7 +3,7 @@
 = simple_form_for(current_agent, url: agent_mot_de_passes_path, html: { method: :put }) do |f|
   = render "devise/shared/error_messages", resource: current_agent
   = f.input :password, label: "Nouveau mot de passe", autocomplete: "new-password"
-  = f.input :password_confirmation, label: "Confirmation du mot de passe", autocomplete: "new-password"
+  = f.input :password_confirmation, label: "Confirmation du nouveau mot de passe", autocomplete: "new-password"
   = render "common/new_password_hints"
 
   = f.input :current_password, hint: "Votre mot de passe actuel", required: true, autocomplete: "current-password"

@@ -60,6 +60,6 @@ class Users::UsersController < UserAuthController
   end
 
   def user_password_params
-    params.require(:user).permit(:password, :current_password)
+    params.require(:user).permit(:password, :current_password, :password_confirmation)
   end
 end
