@@ -29,7 +29,7 @@ class Users::UsersController < UserAuthController
       # On reconnecte l'usager ici parce que Devise le déconnecte automatiquement après un changement de mot de passe
       bypass_sign_in(current_user)
       flash[:notice] = "Votre mot de passe a été changé"
-      redirect_to edit_user_registration_path
+      redirect_to users_account_path
     else
       render :edit_password
     end
