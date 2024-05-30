@@ -51,11 +51,6 @@ class AgentConnect
   end
 
   def update_agent
-    update_basic_info
-    update_email(matching_agent) if matching_agent.email != @user_info["email"]
-  end
-
-  def update_basic_info
     matching_agent.assign_attributes(
       agent_connect_open_id_sub: matching_agent.agent_connect_open_id_sub || @user_info["sub"],
       first_name: @user_info["given_name"],
@@ -69,28 +64,18 @@ class AgentConnect
     matching_agent.save! if matching_agent.changed?
   end
 
-  def update_email(agent)
-    agent.email = @user_info["email"]
-    agent.skip_reconfirmation!
-    agent.save!
+  def matching_agent
+    @matching_agent ||= find_matching_agent
   end
 
-  def matching_agent
-    return @matching_agent if defined?(@matching_agent)
-
+  def find_matching_agent
     # Agent Connect recommande de faire la réconciliation sur l'email et non pas sur le sub
     # voir https://github.com/france-connect/Documentation-AgentConnect/blob/main/doc_fs/projet_fca/projet_fca_donnees.md
-    @matching_agent = Agent.active.find_by(agent_connect_open_id_sub: @user_info["sub"])
+    agent = Agent.active.find_by(agent_connect_open_id_sub: @user_info["sub"])
 
-    raise AgentConnect::AgentNotFoundError, @user_info["email"].to_s if @matching_agent.nil?
+    raise AgentConnect::AgentNotFoundError, @user_info["email"].to_s if agent.nil?
 
-    @matching_agent
-  end
-
-  def handle_agent_mismatch
-    Sentry.add_breadcrumb(Sentry::Breadcrumb.new(message: "Found agent with sub", data: { sub: @user_info["sub"], agent_id: found_by_sub.id }))
-    Sentry.add_breadcrumb(Sentry::Breadcrumb.new(message: "Found agent with email", data: { email: @user_info["email"], agent_id: found_by_email.id }))
-    Sentry.capture_message("AgentConnect sub and email mismatch", fingerprint: "agent_connect_agent_sub_email_mismatch")
+    agent
   end
 
   def handle_response_error(response)
