@@ -9,6 +9,7 @@ class AgentConnect
 
   def authenticate_and_find_agent(code, agent_connect_callback_url)
     token = fetch_token(code, agent_connect_callback_url)
+
     @user_info = fetch_user_info(token)
 
     return unless matching_agent
@@ -51,17 +52,15 @@ class AgentConnect
   end
 
   def update_agent
-    matching_agent.assign_attributes(
-      agent_connect_open_id_sub: matching_agent.agent_connect_open_id_sub || @user_info["sub"],
+    matching_agent.update!(
+      connected_with_agent_connect: true,
       first_name: @user_info["given_name"],
       last_name: @user_info["usual_name"],
       invitation_accepted_at: matching_agent.invitation_accepted_at || Time.zone.now,
-      # Setting the token to nil to disable old invitations links
-      invitation_token: nil,
       confirmed_at: matching_agent.confirmed_at || Time.zone.now,
+      invitation_token: nil, # Setting the token to nil to disable old invitations links
       last_sign_in_at: Time.zone.now
     )
-    matching_agent.save! if matching_agent.changed?
   end
 
   def matching_agent
@@ -71,7 +70,7 @@ class AgentConnect
   def find_matching_agent
     # Agent Connect recommande de faire la réconciliation sur l'email et non pas sur le sub
     # voir https://github.com/france-connect/Documentation-AgentConnect/blob/main/doc_fs/projet_fca/projet_fca_donnees.md
-    agent = Agent.active.find_by(agent_connect_open_id_sub: @user_info["sub"])
+    agent = Agent.active.find_by(email: @user_info["email"])
 
     raise AgentConnect::AgentNotFoundError, @user_info["email"].to_s if agent.nil?
 

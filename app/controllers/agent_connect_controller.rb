@@ -4,22 +4,27 @@ class AgentConnectController < ApplicationController
   def auth
     state = Digest::SHA1.hexdigest("Agent Connect - #{SecureRandom.base58(16)}")
     session[:agent_connect_state] = state
+    nonce = SecureRandom.base58(32)
+    session[:nonce] = nonce
     query_params = {
       response_type: "code",
       client_id: AgentConnect::AGENT_CONNECT_CLIENT_ID,
-      redirect_uri: agent_connect_callback_url,
-      scope: "openid email profile",
+      # redirect_uri: agent_connect_callback_url,
+      redirect_uri: "http://www.rdv-solidarites.localhost/",
+      scope: "openid email",
       state: state,
-      from: "community",
+      nonce: nonce,
+      acr_values: "eidas1",
       login_hint: params[:login_hint],
     }.compact_blank
 
-    agent_connect_redirect_url = "#{AgentConnect::AGENT_CONNECT_BASE_URL}/authorize/?#{query_params.to_query}"
+    agent_connect_redirect_url = "#{AgentConnect::AGENT_CONNECT_BASE_URL}/authorize?#{query_params.to_query}"
 
     redirect_to agent_connect_redirect_url, allow_other_host: true
   end
 
   def callback
+    # TODO: check nonce
     agent_connect_state = session.delete(:agent_connect_state)
     if agent_connect_state.blank? || params[:state] != agent_connect_state
       Sentry.capture_message(
