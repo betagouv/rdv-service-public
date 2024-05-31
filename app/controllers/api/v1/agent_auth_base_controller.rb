@@ -1,6 +1,8 @@
 class Api::V1::AgentAuthBaseController < Api::V1::BaseController
   include Pundit::Authorization
   include DeviseTokenAuth::Concerns::SetUserByToken
+  # le Json d'erreur de DeviseTokenAuth n'est pas compliant avec le module ApiException::Handler
+  # Il faudrait trouver une solution pour formatter les erreurs de DeviseTokenAuth
 
   skip_before_action :verify_authenticity_token
   before_action :authenticate_agent, :log_api_call_in_database
@@ -28,7 +30,7 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
 
   def not_authorized(exception)
     policy_name = exception.policy.class.to_s.underscore
-    # Je ne peux pas faire ca ici
+    # Je ne peux pas faire ca ici, investiguer pourquoi ?
     # raise ApiException::Forbidden, t("#{policy_name}.#{exception.query}", scope: "pundit", default: :default)
     render(
       status: :forbidden,
