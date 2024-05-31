@@ -41,7 +41,6 @@ class Api::V1::PublicLinksController < Api::V1::BaseController
   end
 
   def set_territory
-    @territory = Territory.find_by(departement_number: params[:territory])
-    render_error :not_found, not_found: :territory unless @territory
+    @territory = Territory.find_by!(departement_number: params[:territory])
   end
 end

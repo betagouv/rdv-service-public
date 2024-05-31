@@ -15,8 +15,6 @@ class Api::Rdvinsertion::ReferentAssignationsController < Api::Rdvinsertion::Age
 
   def set_user
     @user = User.find(referent_assignations_params[:user_id])
-  rescue ActiveRecord::RecordNotFound
-    render_error :not_found, not_found: :user
   end
 
   def referent_assignations_params

@@ -425,18 +425,14 @@ RSpec.configure do |config|
             },
             required: %w[current_page next_page prev_page total_pages total_count],
           },
-          errors_unprocessable_entity: {
+          standard_error: {
             type: "object",
             properties: {
-              errors: {
-                type: "object",
-              },
-              error_messages: {
-                type: "array",
-                items: { type: "string" },
-              },
+              success: { type: "boolean" },
+              message: { type: "string" },
+              detail: { type: "string" },
             },
-            required: %w[errors],
+            required: %w[success message],
           },
           error_too_many_request: {
             type: "object",
@@ -457,50 +453,6 @@ RSpec.configure do |config|
               },
             },
             required: %w[errors],
-          },
-          error_forbidden: {
-            type: "object",
-            properties: {
-              errors: {
-                type: "array",
-                items: {
-                  type: "object",
-                  properties: {
-                    base: { type: "string" },
-                  },
-                  required: %w[base],
-                },
-              },
-            },
-            required: %w[errors],
-          },
-          error_missing: {
-            type: "object",
-            properties: {
-              missing: { type: "string" },
-            },
-            required: %w[missing],
-          },
-          error_not_found: {
-            type: "object",
-            properties: {
-              not_found: { type: "string" },
-            },
-            required: %w[not_found],
-          },
-          error_unprocessable_entity: {
-            type: "object",
-            properties: {
-              success: { type: "boolean" },
-              errors: {
-                type: "object",
-              },
-              error_messages: {
-                type: "array",
-                items: { type: "string" },
-              },
-            },
-            required: %w[success errors error_messages],
           },
         },
       },

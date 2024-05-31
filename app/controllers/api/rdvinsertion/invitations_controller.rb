@@ -3,8 +3,6 @@ class Api::Rdvinsertion::InvitationsController < Api::V1::AgentAuthBaseControlle
 
   def creneau_availability
     render json: { creneau_availability: creneau_available? }
-  rescue StandardError => e
-    render json: { error: e.message }, status: :internal_server_error
   end
 
   private

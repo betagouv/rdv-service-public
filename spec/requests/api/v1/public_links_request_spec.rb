@@ -71,14 +71,9 @@ RSpec.describe "Public links API", swagger_doc: "v1/api.json" do
         it { expect(ApiCall.count).to eq(0) }
       end
 
-      response 400, "Retourne 'bad_request' quand le territory est manquant" do
+
+      it_behaves_like "an endpoint that returns 400 - missing", "le paramêtre est manquant" do
         let(:territory) { nil }
-
-        schema "$ref" => "#/components/schemas/error_missing"
-
-        run_test!
-
-        it { expect(parsed_response_body).to match(missing: "territory") }
       end
 
       it_behaves_like "an endpoint that returns 404 - not found", "le territory ne peut pas être trouvé" do

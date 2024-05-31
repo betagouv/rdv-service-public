@@ -138,7 +138,8 @@ RSpec.describe "Available Creneaux Count for Invitation", swagger_doc: "v1/api.j
 
           it do
             expect(parsed_response_body["creneau_availability"]).to be_falsey
-            expect(parsed_response_body["error"]).to eq("Couldn't find Lieu with 'id'=666")
+            expect(parsed_response_body["detail"]).to eq("Couldn't find Lieu with 'id'=666")
+            expect(parsed_response_body["success"]).to eq(false)
           end
         end
 

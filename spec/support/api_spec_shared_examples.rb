@@ -9,9 +9,17 @@ module ApiSpecSharedExamples
     end
   end
 
+  RSpec.shared_context "an endpoint that returns 400 - missing" do |details|
+    response 400, "Renvoie 'missing' quand #{details}" do
+      schema "$ref" => "#/components/schemas/standard_error"
+
+      run_test!
+    end
+  end
+
   RSpec.shared_context "an endpoint that returns 403 - forbidden" do |details|
     response 403, "Renvoie 'forbidden' quand #{details}" do
-      schema "$ref" => "#/components/schemas/error_forbidden"
+      schema "$ref" => "#/components/schemas/standard_error"
 
       run_test!
     end
@@ -19,7 +27,7 @@ module ApiSpecSharedExamples
 
   RSpec.shared_context "an endpoint that returns 404 - not found" do |details|
     response 404, "Renvoie 'not_found' quand #{details}" do
-      schema "$ref" => "#/components/schemas/error_not_found"
+      schema "$ref" => "#/components/schemas/standard_error"
 
       run_test!
     end
@@ -27,7 +35,7 @@ module ApiSpecSharedExamples
 
   RSpec.shared_context "an endpoint that returns 422 - unprocessable_entity" do |details, document|
     response 422, "Renvoie 'unprocessable_entity' quand #{details}", document: document do
-      schema "$ref" => "#/components/schemas/error_unprocessable_entity"
+      schema "$ref" => "#/components/schemas/standard_error"
 
       run_test!
     end

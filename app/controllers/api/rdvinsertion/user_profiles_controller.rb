@@ -14,8 +14,6 @@ class Api::Rdvinsertion::UserProfilesController < Api::Rdvinsertion::AgentAuthBa
 
   def set_user
     @user = User.find(user_profiles_params[:user_id])
-  rescue ActiveRecord::RecordNotFound
-    render_error :not_found, not_found: :user
   end
 
   def user_profiles_params

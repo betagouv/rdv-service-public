@@ -10,50 +10,35 @@ class Api::V1::AbsencesController < Api::V1::AgentAuthBaseController
     authorize(absence) if absence.valid?
     absence.save!
     render_record absence
-  rescue ActiveRecord::RecordNotFound
-    render_error :not_found, not_found: :agent
   end
 
   def show
-    if @absence
-      authorize(@absence)
-      render_record @absence
-    else
-      render_error :not_found, not_found: :absence
-    end
+    authorize(@absence)
+    render_record @absence
   end
 
   def update
-    if @absence
-      authorize(@absence)
-      @absence.update!(update_params)
-      render_record @absence
-    else
-      render_error :not_found, not_found: :absence
-    end
+    authorize(@absence)
+    @absence.update!(update_params)
+    render_record @absence
   end
 
   def destroy
-    if @absence
-      authorize(@absence)
-      @absence.destroy!
-      head :no_content
-    else
-      render_error :not_found, not_found: :absence
-    end
+    authorize(@absence)
+    @absence.destroy!
+    head :no_content
   end
 
   private
 
   def retrieve_absence
-    @absence = Absence.find_by(id: params[:id])
+    @absence = Absence.find(params[:id])
   end
 
   def create_params
     # Allow creating an absence for an agent identified by their email.
     if params[:agent_id].blank? && params[:agent_email].present?
       agent = Agent.find_by!(email: params[:agent_email])
-      render_error :not_found, not_found: :agent unless agent
       params[:agent_id] = agent.id
       params.delete(:agent_email)
     end

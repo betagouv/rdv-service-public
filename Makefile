@@ -23,6 +23,9 @@ test_unit:  ## Run unit tests in parallel
 test_features:  ## Run feature tests
 	bundle exec spring rspec spec/features
 
+test_api: # Run API tests
+	bundle exec spring rspec spec/requests/api
+
 autocorrect: ## Fix autocorrectable lint issues
 	bundle exec rubocop --auto-correct-all
 

@@ -4,8 +4,6 @@ class Api::V1::UserProfilesController < Api::V1::AgentAuthBaseController
     authorize(user_profile)
     user_profile.save!
     render_record user_profile
-  rescue ArgumentError => e
-    render_error :unprocessable_entity, { success: false, errors: {}, error_messages: [e] }
   end
 
   def destroy
@@ -19,10 +17,7 @@ class Api::V1::UserProfilesController < Api::V1::AgentAuthBaseController
       user.soft_delete(organisation)
       head :no_content
     else
-      render_error :unprocessable_entity, {
-        success: false, errors: {},
-        error_messages: [I18n.t("users.can_not_delete_because_has_future_rdvs")],
-      }
+      raise ApiException::UnprocessableEntity, I18n.t("users.can_not_delete_because_has_future_rdvs")
     end
   end
 

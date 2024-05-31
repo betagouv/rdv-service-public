@@ -25,42 +25,17 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
   # Rescuable exceptions
 
   rescue_from Pundit::NotAuthorizedError, with: :not_authorized
-  rescue_from ActionController::ParameterMissing, with: :parameter_missing
-  rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
-  rescue_from ActiveRecord::RecordInvalid, with: :record_invalid
 
   def not_authorized(exception)
     policy_name = exception.policy.class.to_s.underscore
+    # Je ne peux pas faire ca ici
+    # raise ApiException::Forbidden, t("#{policy_name}.#{exception.query}", scope: "pundit", default: :default)
     render(
       status: :forbidden,
       json: {
-        errors: [{ base: :forbidden }],
-        error_messages: [t("#{policy_name}.#{exception.query}", scope: "pundit", default: :default)],
-      }
-    )
-  end
-
-  def parameter_missing(exception)
-    render(
-      status: :unprocessable_entity,
-      json: { success: false, errors: [exception.to_s] }
-    )
-  end
-
-  def record_not_found(exception)
-    render(
-      status: :not_found,
-      json: { success: false, errors: [exception.to_s] }
-    )
-  end
-
-  def record_invalid(exception)
-    render(
-      status: :unprocessable_entity,
-      json: {
         success: false,
-        errors: exception.record.errors.details,
-        error_messages: exception.record.errors.map { "#{_1.attribute} #{_1.message}" },
+        message: "Unauthorized",
+        detail: t("#{policy_name}.#{exception.query}", scope: "pundit", default: :default),
       }
     )
   end
