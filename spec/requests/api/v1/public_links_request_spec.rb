@@ -71,7 +71,6 @@ RSpec.describe "Public links API", swagger_doc: "v1/api.json" do
         it { expect(ApiCall.count).to eq(0) }
       end
 
-
       it_behaves_like "an endpoint that returns 400 - missing", "le paramêtre est manquant" do
         let(:territory) { nil }
       end
