@@ -16,9 +16,7 @@ class AgentConnectController < ApplicationController
       callback_url: agent_connect_callback_url
     )
 
-    callback_client.fetch_user_info_from_code(params[:code])
-
-    if callback_client.user_email.blank?
+    unless callback_client.fetch_user_info_from_code!(params[:code])
       flash[:error] = generic_error_message
       redirect_to(new_agent_session_path) and return
     end
@@ -41,7 +39,7 @@ class AgentConnectController < ApplicationController
       bypass_sign_in agent, scope: :agent
       redirect_to root_path
     else
-      # TODO: fournir un lien de logout pour éviter de bloquer l'agent dans cet état
+      # TODO: ajouter un param pour forcer l'auth pour éviter de bloquer l'agent
       flash[:error] = "Il n'y a pas de compte agent pour l'adresse mail #{e.message}.<br />" \
                       "Vous devez utiliser Agent Connect avec l'adresse mail à laquelle vous avez reçu votre invitation sur #{current_domain.name}.<br />" \
                       "Vous pouvez également contacter le support à l'adresse <a href='mailto:#{current_domain.support_email}'>#{current_domain.support_email}</a> si le problème persiste."
