@@ -6,7 +6,7 @@ Rails.application.routes.draw do
     get "omniauth/franceconnect/callback" => "omniauth_callbacks#franceconnect"
   end
 
-  post "agent_connect/auth" => "agent_connect#auth"
+  get "agent_connect/auth" => "agent_connect#auth"
   get "agent_connect/callback" => "agent_connect#callback"
 
   get "inclusion_connect/auth" => "inclusion_connect#auth"

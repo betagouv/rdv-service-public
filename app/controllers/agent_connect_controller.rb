@@ -27,7 +27,7 @@ class AgentConnectController < ApplicationController
     agent_connect_state = session.delete(:agent_connect_state)
     if agent_connect_state.blank? || params[:state] != agent_connect_state
       Sentry.capture_message(
-        "Agent Connect states is session and params do not match",
+        "Agent Connect states in session and params do not match",
         extra: { params_state: params[:state], session_agent_connect_state: agent_connect_state },
         fingerprint: ["agent_connect_state_mismatch"]
       )
