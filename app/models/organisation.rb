@@ -103,7 +103,6 @@ class Organisation < ApplicationRecord
   end
 
   def sectorized?
-    sector_attributions.any? &&
-      motifs.active.where.not(sectorisation_level: Motif::SECTORISATION_LEVEL_DEPARTEMENT).any?
+    sector_attributions.any? && motifs.active.sectorized.any?
   end
 end
