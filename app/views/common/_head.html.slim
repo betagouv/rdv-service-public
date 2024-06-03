@@ -4,9 +4,19 @@
 = stylesheet_link_tag "@gouvfr/dsfr/dist/core/core.legacy.min.css", "data-turbo-track": "reload"
 = stylesheet_link_tag "@gouvfr/dsfr/dist/component/header/header.min.css", "data-turbo-track": "reload"
 = stylesheet_link_tag "@gouvfr/dsfr/dist/component/logo/logo.min.css", "data-turbo-track": "reload"
+= stylesheet_link_tag "@gouvfr/dsfr/dist/component/modal/modal.min.css", "data-turbo-track": "reload"
 = stylesheet_link_tag "@gouvfr/dsfr/dist/utility/icons/icons.min.css", "data-turbo-track": "reload"
 
 = stylesheet_link_tag "application", media: "all", "data-turbolinks-track": "reload"
 = javascript_include_tag "application", "data-turbolinks-track": "reload"
+
+= javascript_include_tag "@gouvfr/dsfr/dist/core/core.module.min.js", "data-turbolinks-track": "reload", type: "module"
+= javascript_include_tag "@gouvfr/dsfr/dist/core/core.nomodule.min.js", "data-turbolinks-track": "reload", nomodule: true
+
+= javascript_include_tag "@gouvfr/dsfr/dist/component/modal/modal.module.min.js", "data-turbolinks-track": "reload", type: "module"
+= javascript_include_tag "@gouvfr/dsfr/dist/component/modal/modal.nomodule.min.js", "data-turbolinks-track": "reload", nomodule: true
+
+= javascript_include_tag "@gouvfr/dsfr/dist/component/header/header.module.min.js", "data-turbolinks-track": "reload", type: "module"
+= javascript_include_tag "@gouvfr/dsfr/dist/component/header/header.nomodule.min.js", "data-turbolinks-track": "reload", nomodule: true
 
 = content_for(:charts_script)
