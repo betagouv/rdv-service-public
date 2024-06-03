@@ -11,11 +11,11 @@
 
     - if current_organisation.sectorized?
       p Cette organisation est sectorisée, les usagers peuvent prendre rendez-vous en saisissant leur adresse sur la page d'accueil :
-      = render partial: "admin/organisations/online_bookings/copy_to_clipboard", locals: { content: prendre_rdv_url }
+      = render partial: "admin/organisations/online_bookings/booking_link", locals: { booking_link: prendre_rdv_url }
     - else
       p Une fois qu'elle est activée, vous pouvez envoyer ce lien à vos usagers pour qu'ils prennent rendez-vous :
-      - org_booking_link = ublic_link_to_org_url(organisation_id: current_organisation.id, org_slug: current_organisation.slug)
-      = render partial: "admin/organisations/online_bookings/copy_to_clipboard", locals: { content: org_booking_link }
+      - org_booking_link = public_link_to_org_url(organisation_id: current_organisation.id, org_slug: current_organisation.slug)
+      = render partial: "admin/organisations/online_bookings/booking_link", locals: { booking_link: org_booking_link }
 
 ul.list-group.my-1
   - @motifs.each do |motif|
