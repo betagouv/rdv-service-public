@@ -7,8 +7,8 @@ class AgentConnectOpenIdClient
   class Auth
     def initialize(login_hint:)
       @login_hint = login_hint
-      @state = Digest::SHA1.hexdigest("Agent Connect - #{SecureRandom.base58(16)}")
-      @nonce = SecureRandom.base58(32)
+      @state = "Agent Connect State - #{SecureRandom.base58(32)}"
+      @nonce = "Agent Connect Nonce - #{SecureRandom.base58(32)}"
     end
 
     attr_reader :state, :nonce
@@ -33,15 +33,13 @@ class AgentConnectOpenIdClient
     class OpenIdFlowError < StandardError; end
     class ApiRequestError < StandardError; end
 
-    include ActiveModel::Validations
-
     def initialize(session_state:, params_state:, callback_url:)
       @session_state = session_state
       @params_state = params_state
       @callback_url = callback_url
     end
 
-    def fetch_user_info_from_code(code)
+    def fetch_user_info_from_code!(code)
       validate_state!
       validate_nonce!
 
