@@ -16,7 +16,7 @@ class AgentConnectOpenIdClient
     def redirect_url(callback_url)
       query_params = {
         response_type: "code",
-        client_id: AgentConnect::AGENT_CONNECT_CLIENT_ID,
+        client_id: AGENT_CONNECT_CLIENT_ID,
         redirect_uri: callback_url,
         scope: "openid email given_name usual_name",
         state: state,
@@ -25,7 +25,7 @@ class AgentConnectOpenIdClient
         login_hint: @login_hint,
       }.compact_blank
 
-      "#{AgentConnect::AGENT_CONNECT_BASE_URL}/authorize?#{query_params.to_query}"
+      "#{AGENT_CONNECT_BASE_URL}/authorize?#{query_params.to_query}"
     end
   end
 
