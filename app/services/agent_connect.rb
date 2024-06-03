@@ -54,7 +54,7 @@ class AgentConnect
   def update_agent
     matching_agent.update!(
       connected_with_agent_connect: true,
-      first_name: @user_info["given_name"],
+      first_name: @user_info["given_name"].split(" ").first,
       last_name: @user_info["usual_name"],
       invitation_accepted_at: matching_agent.invitation_accepted_at || Time.zone.now,
       confirmed_at: matching_agent.confirmed_at || Time.zone.now,
