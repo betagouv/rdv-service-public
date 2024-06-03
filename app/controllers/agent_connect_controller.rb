@@ -37,6 +37,7 @@ class AgentConnectController < ApplicationController
       )
 
       bypass_sign_in agent, scope: :agent
+      session[:agent_connect_id_token] = callback_client.id_token_for_logout
       redirect_to root_path
     else
       # TODO: ajouter un param pour forcer l'auth pour éviter de bloquer l'agent

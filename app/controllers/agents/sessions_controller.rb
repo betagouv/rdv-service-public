@@ -11,6 +11,24 @@ class Agents::SessionsController < Devise::SessionsController
     end
   end
 
+  def destroy
+    if session[:agent_connect_id_token]
+      sign_out(:agent) && set_flash_message!(:notice, :signed_out)
+
+      query_params = {
+        id_token_hint: session.delete(:agent_connect_id_token),
+        state: SecureRandom.base58(32),
+        post_logout_redirect_uri: "http://www.rdv-solidarites.localhost:3000/",
+        # post_logout_redirect_uri: "https://#{current_domain.host_name}/#{after_sign_out_path_for(:agent)}",
+      }
+
+      agent_connect_logout_url = "#{AGENT_CONNECT_CONFIG.end_session_endpoint}?#{query_params.to_query}"
+      redirect_to agent_connect_logout_url, allow_other_host: true
+    else
+      super
+    end
+  end
+
   private
 
   def exclude_signed_in_users

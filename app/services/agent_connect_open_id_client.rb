@@ -39,6 +39,8 @@ class AgentConnectOpenIdClient
       @callback_url = callback_url
     end
 
+    attr_reader :id_token_for_logout
+
     def fetch_user_info_from_code!(code)
       validate_state!
       validate_nonce!
@@ -104,7 +106,11 @@ class AgentConnectOpenIdClient
 
       handle_response_error(response)
 
-      JSON.parse(response.body)["access_token"]
+      response_hash = JSON.parse(response.body)
+
+      @id_token_for_logout = response_hash["id_token"]
+
+      response_hash["access_token"]
     end
 
     def fetch_user_info(token)
