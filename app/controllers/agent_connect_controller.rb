@@ -37,14 +37,8 @@ class AgentConnectController < ApplicationController
 
     agent = AgentConnect.new.authenticate_and_find_agent(params[:code], agent_connect_callback_url)
 
-    if agent
-      bypass_sign_in agent, scope: :agent
-      redirect_to root_path
-    else
-      flash[:error] = error_message
-      Sentry.capture_message("Failed to authenticate agent with Agent Connect", fingerprint: ["agent_connect_other_error"])
-      redirect_to new_agent_session_path
-    end
+    bypass_sign_in agent, scope: :agent
+    redirect_to root_path
   rescue AgentConnect::AgentNotFoundError => e
     flash[:error] = "Il n'y a pas de compte agent pour l'adresse mail #{e.message}.<br />" \
                     "Vous devez utiliser Agent Connect avec l'adresse mail à laquelle vous avez reçu votre invitation sur #{current_domain.name}.<br />" \
