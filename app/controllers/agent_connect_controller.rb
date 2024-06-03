@@ -10,7 +10,7 @@ class AgentConnectController < ApplicationController
       response_type: "code",
       client_id: AgentConnect::AGENT_CONNECT_CLIENT_ID,
       redirect_uri: agent_connect_callback_url,
-      scope: "openid email",
+      scope: "openid email given_name usual_name",
       state: state,
       nonce: nonce,
       acr_values: "eidas1",
