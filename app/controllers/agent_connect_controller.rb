@@ -9,8 +9,7 @@ class AgentConnectController < ApplicationController
     query_params = {
       response_type: "code",
       client_id: AgentConnect::AGENT_CONNECT_CLIENT_ID,
-      # redirect_uri: agent_connect_callback_url,
-      redirect_uri: "http://www.rdv-solidarites.localhost/",
+      redirect_uri: agent_connect_callback_url,
       scope: "openid email",
       state: state,
       nonce: nonce,
