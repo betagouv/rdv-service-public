@@ -85,7 +85,7 @@ RSpec.describe "Agents can configure online booking" do
       it "points to the public booking home page" do
         login_as(agent, scope: :agent)
         visit admin_organisation_online_booking_path(organisation)
-        expect(find("input#booking_link").value).to eq("http://www.rdv-solidarites-test.localhost:9887/prendre_rdv")
+        expect(find("input#booking_link").value).to eq("http://www.rdv-solidarites-test.localhost:#{Capybara.server_port}/prendre_rdv")
       end
     end
 
@@ -93,7 +93,7 @@ RSpec.describe "Agents can configure online booking" do
       it "points to the public booking home page" do
         login_as(agent, scope: :agent)
         visit admin_organisation_online_booking_path(organisation)
-        expect(find("input#booking_link").value).to eq("http://www.rdv-solidarites-test.localhost:9887/org/#{organisation.id}/#{organisation.slug}")
+        expect(find("input#booking_link").value).to eq("http://www.rdv-solidarites-test.localhost:#{Capybara.server_port}/org/#{organisation.id}/#{organisation.slug}")
       end
     end
   end
