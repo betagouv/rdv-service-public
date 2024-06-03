@@ -271,6 +271,6 @@ class Agent < ApplicationRecord
   end
 
   def read_only_profile_infos?
-    inclusion_connect_open_id_sub.present?
+    inclusion_connect_open_id_sub.present? || connected_with_agent_connect?
   end
 end
