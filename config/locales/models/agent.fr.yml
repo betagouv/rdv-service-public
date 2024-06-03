@@ -4,6 +4,7 @@ fr:
       agent: Agent
     attributes:
       agent:
+        last_name: "Nom"
         role: Rôle
         rdvs: Rendez-vous
         service: Service
