@@ -30,7 +30,7 @@ class AgentConnect
     }
 
     response = Typhoeus.post(
-      URI("#{AGENT_CONNECT_BASE_URL}/token/"),
+      URI("#{AGENT_CONNECT_BASE_URL}/token"),
       body: data,
       headers: { "Content-Type" => "application/x-www-form-urlencoded" }
     )
@@ -41,14 +41,14 @@ class AgentConnect
   end
 
   def fetch_user_info(token)
-    uri = URI("#{AGENT_CONNECT_BASE_URL}/userinfo/")
+    uri = URI("#{AGENT_CONNECT_BASE_URL}/userinfo")
     uri.query = URI.encode_www_form({ schema: "openid" })
 
     response = Typhoeus.get(uri, headers: { "Authorization" => "Bearer #{token}" })
 
     handle_response_error(response)
 
-    JSON.parse(response.body)
+    JWT.decode(response.body, nil, true, algorithms: AGENT_CONNECT_CONFIG.jwks.first["alg"], jwks: AGENT_CONNECT_CONFIG.jwks).first
   end
 
   def update_agent
