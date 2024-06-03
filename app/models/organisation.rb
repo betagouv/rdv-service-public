@@ -101,4 +101,9 @@ class Organisation < ApplicationRecord
   def humanized_phone_number
     Phonelib.parse(phone_number).national
   end
+
+  def sectorized?
+    sector_attributions.any? &&
+      motifs.active.where.not(sectorisation_level: Motif::SECTORISATION_LEVEL_DEPARTEMENT).any?
+  end
 end
