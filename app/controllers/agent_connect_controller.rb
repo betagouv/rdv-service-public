@@ -2,59 +2,57 @@ class AgentConnectController < ApplicationController
   before_action :log_params_to_sentry
 
   def auth
-    state = Digest::SHA1.hexdigest("Agent Connect - #{SecureRandom.base58(16)}")
-    session[:agent_connect_state] = state
-    nonce = SecureRandom.base58(32)
-    session[:nonce] = nonce
-    query_params = {
-      response_type: "code",
-      client_id: AgentConnect::AGENT_CONNECT_CLIENT_ID,
-      redirect_uri: agent_connect_callback_url,
-      scope: "openid email given_name usual_name",
-      state: state,
-      nonce: nonce,
-      acr_values: "eidas1",
-      login_hint: params[:login_hint],
-    }.compact_blank
+    auth_client = AgentConnectOpenIdClient::Auth.new(login_hint: params[:login_hint])
+    session[:agent_connect_state] = auth_client.state
+    session[:nonce] = auth_client.nonce
 
-    agent_connect_redirect_url = "#{AgentConnect::AGENT_CONNECT_BASE_URL}/authorize?#{query_params.to_query}"
-
-    redirect_to agent_connect_redirect_url, allow_other_host: true
+    redirect_to auth_client.redirect_url(agent_connect_callback_url), allow_other_host: true
   end
 
   def callback
-    # TODO: check nonce
-    agent_connect_state = session.delete(:agent_connect_state)
-    if agent_connect_state.blank? || params[:state] != agent_connect_state
-      Sentry.capture_message(
-        "Agent Connect states in session and params do not match",
-        extra: { params_state: params[:state], session_agent_connect_state: agent_connect_state },
-        fingerprint: ["agent_connect_state_mismatch"]
-      )
-      flash[:error] = error_message
+    callback_client = AgentConnectOpenIdClient::Callback.new(
+      session_state: session.delete(:agent_connect_state),
+      params_state: params[:state],
+      callback_url: agent_connect_callback_url
+    )
+
+    callback_client.fetch_user_info_from_code(params[:code])
+
+    if callback_client.user_email.blank?
+      flash[:error] = generic_error_message
       redirect_to(new_agent_session_path) and return
     end
 
-    agent = AgentConnect.new.authenticate_and_find_agent(params[:code], agent_connect_callback_url)
+    # Agent Connect recommande de faire la réconciliation sur l'email et non pas sur le sub
+    # voir https://github.com/france-connect/Documentation-AgentConnect/blob/main/doc_fs/projet_fca/projet_fca_donnees.md
+    agent = Agent.active.find_by(email: callback_client.user_email)
 
-    bypass_sign_in agent, scope: :agent
-    redirect_to root_path
-  rescue AgentConnect::AgentNotFoundError => e
-    flash[:error] = "Il n'y a pas de compte agent pour l'adresse mail #{e.message}.<br />" \
-                    "Vous devez utiliser Agent Connect avec l'adresse mail à laquelle vous avez reçu votre invitation sur #{current_domain.name}.<br />" \
-                    "Vous pouvez également contacter le support à l'adresse <a href='mailto:#{current_domain.support_email}'>#{current_domain.support_email}</a> si le problème persiste."
-    Sentry.capture_message("Failed to authenticate agent with Agent Connect - Agent not found", extra: { exception_message: e.message }, fingerprint: ["agent_connect_agent_not_found"])
-    redirect_to new_agent_session_path
-  rescue AgentConnect::ApiRequestError => e
-    flash[:error] = error_message
-    Sentry.capture_message("Failed to authenticate agent with Agent Connect - Api error", extra: { exception_message: e.message }, fingerprint: ["agent_connect_api_error"])
-    redirect_to new_agent_session_path
+    if agent
+      agent.update!(
+        connected_with_agent_connect: true,
+        first_name: callback_client.user_first_name,
+        last_name: callback_client.user_last_name,
+        invitation_token: nil, # Pour désactiver les anciens liens d'invitation
+        invitation_accepted_at: agent.invitation_accepted_at || Time.zone.now,
+        confirmed_at: agent.confirmed_at || Time.zone.now,
+        last_sign_in_at: Time.zone.now
+      )
+
+      bypass_sign_in agent, scope: :agent
+      redirect_to root_path
+    else
+      # TODO: fournir un lien de logout pour éviter de bloquer l'agent dans cet état
+      flash[:error] = "Il n'y a pas de compte agent pour l'adresse mail #{e.message}.<br />" \
+                      "Vous devez utiliser Agent Connect avec l'adresse mail à laquelle vous avez reçu votre invitation sur #{current_domain.name}.<br />" \
+                      "Vous pouvez également contacter le support à l'adresse <a href='mailto:#{current_domain.support_email}'>#{current_domain.support_email}</a> si le problème persiste."
+      redirect_to new_agent_session_path
+    end
   end
 
   private
 
-  def error_message
-    email = current_domain.support_email
-    %(Nous n'avons pas pu vous authentifier. Contactez le support à l'adresse <a href="mailto:#{email}">#{email}</a> si le problème persiste.)
+  def generic_error_message
+    support_email = current_domain.support_email
+    %(Nous n'avons pas pu vous authentifier. Contactez le support à l'adresse <a href="mailto:#{support_email}">#{support_email}</a> si le problème persiste.)
   end
 end
