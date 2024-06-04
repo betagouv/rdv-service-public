@@ -40,6 +40,6 @@
               plage_ouverture.persisted? ? admin_organisation_plage_ouverture_path(current_organisation, plage_ouverture) : admin_organisation_agent_plage_ouvertures_path(current_organisation, current_agent), \
               class: "btn btn-link"
           .col.text-right
-            = f.button :submit, t(".submit")
+            = f.button :submit
 - else
   | Aucun motif disponible. Vous ne pouvez pas créer de plage d'ouverture.
