@@ -124,6 +124,12 @@ scalingo --region osc-secnum-fr1 --app demo-rdv-solidarites integration-link-man
 
 Un raccourci existe pour retrouver le numéro de la PR correspondant à la branche courante automatiquement : `make review_app`
 
+Par défaut, seul un worker web est activé, si vous souhaitez que les jobs s’exécutent il faut activer un worker jobs depuis le dashboard ou avec cette commande :
+
+```sh
+scalingo --region osc-secnum-fr1 --app demo-rdv-solidarites-pr4242 scale jobs:1
+```
+
 Le fichier `scalingo.json` décrit la configuration initiale et les variables d’environnement des review apps.
 Les review apps sont détruites automatiquement à la fermeture de la PR ou après 48h sans déploiement.
 On ne peut pas empêcher une PR spécifique d’être automatiquement détruite après ces 48h.
