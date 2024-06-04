@@ -101,3 +101,13 @@ Pour le moment, il y a un système d'invitation avancé qui est utilisé par RDV
 - récupérer le token dans le mail d‘invitation de letter_opener
 - aller sur l’url du rdv en rajoutant le token en paramètre, ça donne quelque chose comme http://localhost:5000/users/rdvs/1234?invitation_token=MON_TOKEN
 
+## Montée en version des dépendances
+
+### Version de Ruby
+Pas de politique très clairement décidée mais la pratique est d’essayer de coller à la version la plus récente. Lors de la mise à jour de Ruby, il faut penser à mettre à jour la version cible de la gem `parser` dans le `Gemfile`, cf [le README de parser](https://github.com/whitequark/parser#compatibility-with-ruby-mri).
+
+### Version de Rails
+Pas de politique très clairement décidée mais la pratique est d’essayer de coller à la version la plus récente.
+
+### Versions des gems et des node modules
+Une politique de mise à jour prudente a été décidée cf [l’ADR 2023-04-24](https://github.com/betagouv/rdv-service-public/blob/production/docs/decisions/2023-04-24-politique-maj-gems.md)

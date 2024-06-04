@@ -169,6 +169,9 @@ group :development do
   gem "brakeman", require: false
   # Automatic Ruby code style checking tool.
   gem "rubocop", "1.24.1", require: false
+  # Rubocop depends on parser. https://github.com/whitequark/parser#compatibility-with-ruby-mri
+  # Mettre à jour la version de cette gem lorsqu'on met à jour Ruby (version actuelle : 3.3.1)
+  gem "parser", "3.3.1.0", require: false
   # Code style checking for RSpec files
   gem "rubocop-rspec", "2.7.0"
   # Automatic Rails code style checking tool.
