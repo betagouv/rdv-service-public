@@ -11,7 +11,8 @@
               - motifs_by_services = plage_ouverture.available_motifs.group_by(&:service)
               - motifs_by_services.each do |service, motifs|
                 - service_name = motifs_by_services.size > 1 ? "Motifs de #{service.name}" : ""
-                = p service_name
+                p
+                  = service_name
                 / Le "required: false" permet de ne pas afficher la petite astérisque, mais le champ reste obligatoire
                 - motifs.each do |motif|
                   .pl-3
