@@ -10,21 +10,27 @@
               = f.input :title, placeholder: "Saisissez le nom de la plage d’ouverture"
               - motifs_by_services = plage_ouverture.available_motifs.group_by(&:service)
               - motifs_by_services.each do |service, motifs|
-                - extra_options = motifs_by_services.size > 1 ? { label: "Motifs de #{service.name}", required: false } : {}
+                - service_name = motifs_by_services.size > 1 ? "Motifs de #{service.name}" : ""
+                = p service_name
                 / Le "required: false" permet de ne pas afficher la petite astérisque, mais le champ reste obligatoire
-                = f.association(:motifs, collection: motifs, label_method: -> { motif_name_with_location_type_and_badges(_1) }, as: :check_boxes, **extra_options)
-              = f.association :lieu,
-                collection: Agent::LieuPolicy::Scope.apply(current_agent, current_organisation.lieux).enabled.ordered_by_name,
-                label_method: :full_name,
-                hint: "Ce champ ne concerne que les motifs \"sur place\"",
-                input_html: { \
-                    class: "select2-input", \
-                    data: { \
-                      placeholder: "Sélectionnez le lieu associé a la plage d’ouverture", \
-                      "select-options": { disableSearch: true }, \
-                      "allow-clear": true, \
-                    }, \
-                  }
+                - motifs.each do |motif|
+                  .pl-3
+                    - extra_options = motif.public_office? ? { data: { toggle: "collapse", target: ".lieu-field" } } : {}
+                    = f.check_box :motif_ids, { multiple: true, class: "form-check-input", **extra_options }, motif.id, false
+                    = f.label "motif_ids_#{motif.id}", motif_name_with_location_type_and_badges(motif), class: "form-check-label"
+              .lieu-field.collapse
+                = f.association :lieu,
+                  collection: Agent::LieuPolicy::Scope.apply(current_agent, current_organisation.lieux).enabled.ordered_by_name,
+                  label_method: :full_name,
+                  hint: "Ce champ ne concerne que les motifs \"sur place\"",
+                  input_html: { \
+                      class: "select2-input", \
+                      data: { \
+                        placeholder: "Sélectionnez le lieu associé a la plage d’ouverture", \
+                        "select-options": { disableSearch: true }, \
+                        "allow-clear": true, \
+                      }, \
+                    }
 
     .row.justify-content-center
       .col-md-6
