@@ -13,7 +13,7 @@ RSpec.describe "motifs for invitation only" do
 
     specify "setting a motif as prescripteurs only from the agents form", js: true do
       visit edit_admin_organisation_motif_path(organisation, motif)
-      click_on "Réservation en ligne"
+      find("#tab_resa_en_ligne").click
 
       expect(page).not_to have_content("Ouvert aux agents, aux prescripteurs et aux usagers avec une invitation")
 
@@ -30,7 +30,7 @@ RSpec.describe "motifs for invitation only" do
 
     specify "setting a motif as prescripteurs and invited users from the agents form", js: true do
       visit edit_admin_organisation_motif_path(organisation, motif)
-      click_on "Réservation en ligne"
+      find("#tab_resa_en_ligne").click
 
       choose("Agents de l’organisation, prescripteurs et usagers via une invitation")
       expect(page).to have_content("Délai minimum avant le RDV")

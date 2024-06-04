@@ -94,8 +94,7 @@ class Territory < ApplicationRecord
   end
 
   def sectorized?
-    sectors.joins(:attributions).any? &&
-      motifs.active.where.not(sectorisation_level: Motif::SECTORISATION_LEVEL_DEPARTEMENT).any?
+    sectors.joins(:attributions).any? && motifs.active.sectorized.any?
   end
 
   def any_motifs_opened_for_prescription?

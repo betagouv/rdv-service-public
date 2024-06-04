@@ -109,6 +109,7 @@ class Motif < ApplicationRecord
     where(%{REGEXP_REPLACE(LOWER(UNACCENT(motifs.name)), ?, '_', 'g') = ?}, NAME_SLUG_REGEXP.source, slug_name)
       .where(location_type: location_type)
   }
+  scope :sectorized, -> { where(sectorisation_level: [SECTORISATION_LEVEL_ORGANISATION, SECTORISATION_LEVEL_AGENT]) }
   scope :sectorisation_level_departement, -> { where(sectorisation_level: SECTORISATION_LEVEL_DEPARTEMENT) }
   scope :sectorisation_level_organisation, -> { where(sectorisation_level: SECTORISATION_LEVEL_ORGANISATION) }
   scope :sectorisation_level_agent, -> { where(sectorisation_level: SECTORISATION_LEVEL_AGENT) }

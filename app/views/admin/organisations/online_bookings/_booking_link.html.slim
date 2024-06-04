@@ -1,0 +1,8 @@
+form data={ "controller": "clipboard" }
+  .d-flex
+    .flex-grow-1
+      = text_field_tag :booking_link, booking_link, readonly: true, class: "form-control", data: { "clipboard-target": "input-to-copy" }
+    .flex-grow-0
+      = button_tag class: "ml-2 btn btn-primary", data: { "clipboard-target": "copy-button" }
+        i.fa.fa-copy.mr-1
+        | copier
