@@ -28,7 +28,8 @@ module AgentConnectOpenIdClient
     end
 
     def user_first_name
-      @user_info["given_name"].split(" ").first # Agent Connect renvoie aussi le nom de famille après un espace
+      # Agent Connect renvoie aussi le nom de famille après un espace
+      @user_info["given_name"].split(" ").first # rubocop:disable Style/RedundantArgument
     end
 
     def user_last_name
