@@ -45,7 +45,6 @@ module.exports = {
     new webpack.ProvidePlugin({
       $: 'jquery',
       jQuery: 'jquery',
-      Holder: 'holderjs',
       Popper: ['popper.js', 'default'],
       Rails: ['@rails/ujs']
     }),

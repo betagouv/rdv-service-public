@@ -1,7 +1,6 @@
 require("@rails/ujs").start()
 require("turbolinks").start()
 import 'bootstrap'
-import 'holderjs/holder.min'
 import 'select2/dist/js/select2.full.min.js'
 import 'select2/dist/js/i18n/fr.js'
 import { Datetimepicker } from './components/datetimepicker'
@@ -65,8 +64,6 @@ $(document).on('show.bs.modal', '.modal', function(e) {
 })
 
 $(document).on('turbolinks:load', function() {
-  Holder.run()
-
   let menu = new Menu()
 
   menu.init()

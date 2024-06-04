@@ -18,8 +18,6 @@ new Modal();
 new Select2Inputs();
 
 $(document).on('turbolinks:load', function() {
-  Holder.run();
-
   new ShowHidePassword();
   new Datetimepicker();
   new PlacesInputs();
