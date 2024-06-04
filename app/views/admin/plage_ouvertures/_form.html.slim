@@ -3,7 +3,7 @@
     = render("model_errors", model: plage_ouverture, f: f)
     = collapsible_form_fields_for_warnings(plage_ouverture) do
       = f.hidden_field :agent_id
-      = f.input :title, hint: "Uniquement visible en interne", placeholder: "Ex: Permanence PMI exceptionnelle"
+      = f.input :title, placeholder: "Saisissez le nom de la plage d'ouverture"
       = f.association :lieu,
         collection: Agent::LieuPolicy::Scope.apply(current_agent, current_organisation.lieux).enabled.ordered_by_name,
         label_method: :full_name,
