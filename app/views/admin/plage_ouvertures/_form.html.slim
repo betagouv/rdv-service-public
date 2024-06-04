@@ -1,32 +1,38 @@
 - if plage_ouverture.available_motifs.any?
   = simple_form_for [:admin, plage_ouverture.organisation, plage_ouverture], html: { class: "plage-ouverture-form" } do |f|
-    = render("model_errors", model: plage_ouverture, f: f)
-    = collapsible_form_fields_for_warnings(plage_ouverture) do
-      = f.hidden_field :agent_id
-      = f.input :title, placeholder: "Saisissez le nom de la plage d'ouverture"
-      - motifs_by_services = plage_ouverture.available_motifs.group_by(&:service)
-      - motifs_by_services.each do |service, motifs|
-        .form-group
-          p Motifs de #{service.name}
-          - motifs.each do |motif|
-            .pl-3
-              = f.check_box :motif_ids, { multiple: true, class: "form-check-input #{motif.location_type}" }, motif.id, false
-              = f.label "motif_ids_#{motif.id}", motif_name_with_location_type_and_badges(motif), class: "form-check-label"
-      .collapse.lieu-field
-        = f.association :lieu,
-          collection: Agent::LieuPolicy::Scope.apply(current_agent, current_organisation.lieux).enabled.ordered_by_name,
-          label_method: :full_name,
-          input_html: { \
-              class: "select2-input", \
-              data: { \
-                placeholder: "Sélectionnez un lieu", \
-                "select-options": { disableSearch: true }, \
-                "allow-clear": true, \
-              }, \
-            }
-      hr
-
-      = render partial: "common/recurrence", locals: { f: f, model: plage_ouverture }
+    .row.justify-content-center
+      .col-md-6
+        .card
+          .card-body
+            = render("model_errors", model: plage_ouverture, f: f)
+            = collapsible_form_fields_for_warnings(plage_ouverture) do
+              = f.hidden_field :agent_id
+              = f.input :title, placeholder: "Saisissez le nom de la plage d'ouverture"
+              - motifs_by_services = plage_ouverture.available_motifs.group_by(&:service)
+              - motifs_by_services.each do |service, motifs|
+                .form-group
+                  p Motifs de #{service.name}
+                  - motifs.each do |motif|
+                    .pl-3
+                      = f.check_box :motif_ids, { multiple: true, class: "form-check-input #{motif.location_type}" }, motif.id, false
+                      = f.label "motif_ids_#{motif.id}", motif_name_with_location_type_and_badges(motif), class: "form-check-label"
+              .collapse.lieu-field
+                = f.association :lieu,
+                  collection: Agent::LieuPolicy::Scope.apply(current_agent, current_organisation.lieux).enabled.ordered_by_name,
+                  label_method: :full_name,
+                  input_html: { \
+                      class: "select2-input", \
+                      data: { \
+                        placeholder: "Sélectionnez un lieu", \
+                        "select-options": { disableSearch: true }, \
+                        "allow-clear": true, \
+                      }, \
+                    }
+    .row.justify-content-center
+      .col-md-6
+        .card
+          .card-body
+            = render partial: "common/recurrence", locals: { f: f, model: plage_ouverture }
 
     .row.justify-content-center
       .col-md-6
