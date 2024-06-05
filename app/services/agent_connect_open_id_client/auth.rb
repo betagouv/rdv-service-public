@@ -1,6 +1,6 @@
 module AgentConnectOpenIdClient
   class Auth
-    def initialize(login_hint:)
+    def initialize(login_hint: nil)
       @login_hint = login_hint
       @state = "Agent Connect State - #{SecureRandom.base58(32)}"
       @nonce = "Agent Connect Nonce - #{SecureRandom.base58(32)}"
