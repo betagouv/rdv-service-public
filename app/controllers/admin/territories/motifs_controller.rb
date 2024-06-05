@@ -21,8 +21,11 @@ class Admin::Territories::MotifsController < Admin::Territories::BaseController
   def destroy
     motif = Motif.active.find(params[:id])
     authorize(motif)
-    motif.soft_delete!
-    flash[:notice] = "Le motif a été supprimé."
+    if motif.soft_delete
+      flash[:notice] = "Le motif a été supprimé."
+    else
+      flash[:error] = "Impossible de supprimer le motif : #{motif.errors.full_messages.join(', ')}"
+    end
     redirect_back fallback_location: admin_territory_motifs_path(current_territory)
   end
 
