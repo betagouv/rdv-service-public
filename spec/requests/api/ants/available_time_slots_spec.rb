@@ -110,6 +110,15 @@ RSpec.describe "ANTS API: availableTimeSlots" do
     end
   end
 
+  context "start_date is after end_date" do
+    it "returns a bad request" do
+      get "/api/ants/availableTimeSlots?meeting_point_ids=#{lieu1.id}&start_date=2022-11-28&end_date=2022-11-24&documents_number=1&reason=CNI"
+
+      expect(response).to have_http_status(:bad_request)
+      expect(response.body).to eq('{"error":{"code":400,"message":"start_date is after end_date"}}')
+    end
+  end
+
   context "when a 500 occurs" do
     before do
       allow(Users::CreneauxSearch).to receive(:new).and_raise(NoMethodError)
