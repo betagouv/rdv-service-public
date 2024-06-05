@@ -9,16 +9,13 @@
 
     p La réservation en ligne peut être configurée pour chaque motif de rendez-vous.
 
-    p Une fois qu'elle est activée, vous pouvez envoyer ce lien à vos usagers pour qu'ils prennent rendez-vous :
-
-    form data={ "controller": "clipboard" }
-      .d-flex
-        .flex-grow-1
-          = text_field_tag :booking_link, booking_link, readonly: true, class: "form-control", data: { "clipboard-target": "input-to-copy" }
-        .flex-grow-0
-          = button_tag class: "ml-2 btn btn-primary", data: { "clipboard-target": "copy-button" }
-            i.fa.fa-copy.mr-1
-            | copier
+    - if current_organisation.sectorized?
+      p Cette organisation est sectorisée, les usagers peuvent prendre rendez-vous en saisissant leur adresse sur la page d'accueil :
+      = render partial: "admin/organisations/online_bookings/booking_link", locals: { booking_link: prendre_rdv_url }
+    - else
+      p Une fois qu'elle est activée, vous pouvez envoyer ce lien à vos usagers pour qu'ils prennent rendez-vous :
+      - org_booking_link = public_link_to_org_url(organisation_id: current_organisation.id, org_slug: current_organisation.slug)
+      = render partial: "admin/organisations/online_bookings/booking_link", locals: { booking_link: org_booking_link }
 
 ul.list-group.my-1
   - @motifs.each do |motif|
