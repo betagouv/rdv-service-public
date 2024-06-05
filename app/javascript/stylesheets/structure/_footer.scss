@@ -47,3 +47,10 @@ body.users .footer {left: 0;}
 .fr-footer__partners-title {
   font-size: 1.5rem;
 }
+
+.fr-footer__partners-main {
+  // this avoids footer to overflow on the right and thus increasing the viewport width which breaks DSFR modals
+  flex-wrap: wrap;
+  gap: 1rem;
+  background: $white;
+}
