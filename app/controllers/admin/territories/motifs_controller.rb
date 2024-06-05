@@ -7,7 +7,7 @@ class Admin::Territories::MotifsController < Admin::Territories::BaseController
       .active
       .order({ name: :asc, service_id: :asc, location_type: :asc, organisation_id: :asc })
       .page(page_number)
-      .per(25)
+      .per(100)
       .includes(:organisation)
 
     if params[:search].present?
