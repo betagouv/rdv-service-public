@@ -1,4 +1,3 @@
-
 class PlageOuverture {
   constructor() {
     this.toggleLieuSelectionField();
