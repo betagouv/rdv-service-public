@@ -26,9 +26,10 @@
         div.mt-2.d-flex
           .flex-shrink-0.mr-1.font-weight-bold Agent :
           span= @plage_ouverture.agent.full_name
-        div.mt-2.d-flex
-          .flex-shrink-0.mr-1.font-weight-bold Lieu :
-          = lieu_tag(@plage_ouverture.lieu)
+        - if @plage_ouverture.lieu
+          div.mt-2.d-flex
+            .flex-shrink-0.mr-1.font-weight-bold Lieu :
+            = lieu_tag(@plage_ouverture.lieu)
         div.mt-2.d-flex
           .flex-shrink-0.mr-1.font-weight-bold Motifs :
           ul.pl-3.mb-0

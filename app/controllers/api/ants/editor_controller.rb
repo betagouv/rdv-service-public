@@ -102,6 +102,10 @@ class Api::Ants::EditorController < Api::Ants::BaseController
       Sentry.capture_message("ANTS provided invalid reason: #{params[:reason].inspect}", fingerprint: ["ants_invalid_reason"])
       render status: :bad_request, json: { error: { code: 400, message: "Invalid reason param" } }
     end
+
+    if params[:start_date] > params[:end_date]
+      render status: :bad_request, json: { error: { code: 400, message: "start_date is after end_date" } }
+    end
   end
 
   def time_slot_data(creneau)

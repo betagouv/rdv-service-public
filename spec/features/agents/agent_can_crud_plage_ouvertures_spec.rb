@@ -22,7 +22,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       click_link "Modifier"
 
       expect_page_title("Modifier votre plage d'ouverture")
-      fill_in "Description", with: "La belle plage"
+      fill_in "Nom de la plage d'ouverture", with: "La belle plage"
       click_button("Enregistrer")
 
       expect_page_title("La belle plage")
@@ -39,10 +39,10 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       click_link "Créer une plage d'ouverture", match: :first
       expect_page_title("Nouvelle plage d'ouverture")
 
-      fill_in "Description", with: "Accueil"
+      fill_in "Nom de la plage d'ouverture", with: "Accueil"
       select(lieu.full_name, from: "plage_ouverture_lieu_id") if lieu
       check "Suivi bonjour"
-      click_button "Enregistrer"
+      click_button "Créer la plage d'ouverture"
 
       expect_page_title("Accueil")
       click_link "Modifier"
@@ -104,7 +104,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       click_link "Modifier"
 
       expect_page_title("Modifier la plage d'ouverture de Jane FAROU")
-      fill_in "Description", with: "La belle plage"
+      fill_in "Nom de la plage d'ouverture", with: "La belle plage"
       click_button("Enregistrer")
 
       expect_page_title("La belle plage")
@@ -116,10 +116,10 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       click_link "Créer une plage d'ouverture pour Jane FAROU", match: :first
 
       expect_page_title("Nouvelle plage d'ouverture")
-      fill_in "Description", with: "Accueil"
+      fill_in "Nom de la plage d'ouverture", with: "Accueil"
       select(lieu.full_name, from: "plage_ouverture_lieu_id")
       check "Suivi bonjour"
-      click_button "Enregistrer"
+      click_button "Créer la plage d'ouverture"
 
       expect_page_title("Accueil")
       click_link "Modifier"
@@ -139,7 +139,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
         click_link "Modifier"
 
         expect_page_title("Modifier la plage d'ouverture de Jane FAROU")
-        fill_in "Description", with: "La belle plage"
+        fill_in "Nom de la plage d'ouverture", with: "La belle plage"
         click_button("Enregistrer")
 
         expect_page_title("La belle plage")
@@ -151,9 +151,9 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
         click_link "Créer une plage d'ouverture pour Jane FAROU", match: :first
 
         expect_page_title("Nouvelle plage d'ouverture")
-        fill_in "Description", with: "Accueil"
+        fill_in "Nom de la plage d'ouverture", with: "Accueil"
         check "Suivi bonjour"
-        click_button "Enregistrer"
+        click_button "Créer la plage d'ouverture"
 
         expect_page_title("Accueil")
         click_link "Modifier"
