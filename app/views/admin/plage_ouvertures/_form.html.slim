@@ -16,7 +16,7 @@
                     .pl-3
                       = f.check_box :motif_ids, { multiple: true, class: "form-check-input #{motif.location_type}" }, motif.id, false
                       = f.label "motif_ids_#{motif.id}", motif_name_with_location_type_and_badges(motif), class: "form-check-label"
-              .collapse.lieu-field
+              .collapse.js-lieu-field
                 = f.association :lieu,
                   collection: Agent::LieuPolicy::Scope.apply(current_agent, current_organisation.lieux).enabled.ordered_by_name,
                   label_method: :full_name,
