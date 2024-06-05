@@ -62,8 +62,19 @@ RSpec.describe AgentConnectController, type: :controller do
       ).and_return([user_info])
     end
 
-    it "works for the default case" do
+    it "updates and logs in the agent" do
+      agent = create(:agent, email: "francis.factice@exemple.gouv.fr")
       get :callback, params: { state: state, code: code }
+
+      expect(agent.reload).to have_attributes(
+        connected_with_agent_connect: true,
+        first_name: "Francis",
+        last_name: "Factice"
+        # last_sign_in_at: be_within(10.seconds).of(now)
+      )
+    end
+
+    context "when there is no agent with the matching name" do
     end
   end
 
