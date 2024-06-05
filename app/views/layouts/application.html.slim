@@ -5,7 +5,7 @@ html lang="fr"
   body class="#{agents_or_users_body_class}"
     = render "layouts/rdv_solidarites_instance_name"
     / = render "layouts/degraded_service", message: ENV["DEGRADED_SERVICE_MESSAGE_USERS"]
-    = dsfr_header logo_text: "République<br>Française".html_safe do |header|
+    = dsfr_header logo_text: "République<br>Française".html_safe, html_attributes: { class: "container" } do |header|
       - header.with_operator_image title: "Accueil - RDV #{current_domain.name}", src: asset_path(current_domain.dark_logo_path), alt: "RDV #{current_domain.name}"
       - if current_user.present? && !current_user.only_invited?
         ruby:
