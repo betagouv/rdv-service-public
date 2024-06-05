@@ -152,14 +152,7 @@ class Motif < ApplicationRecord
 
   # This should match the implementation of .search_by_name_with_location_type
   def name_with_location_type
-    "#{name_slug}-#{location_type}"
-  end
-
-  def name_slug
-    I18n.transliterate(name)
-      .downcase
-      .gsub(NAME_SLUG_REGEXP, "_")
-      .gsub(/_$/, "")
+    "#{I18n.transliterate(name).downcase.gsub(NAME_SLUG_REGEXP, '_')}-#{location_type}"
   end
 
   def sectorisation_level_agent?
