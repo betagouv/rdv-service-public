@@ -24,6 +24,12 @@ end
 
 Capybara.javascript_driver = :selenium
 
+# Voir https://github.com/teamcapybara/capybara/blob/master/README.md#asynchronous-javascript-ajax-and-friends
+# Par défaut, les matchers Capybara attendent jusqu'à 2 secondes pour trouver le changement attendu.
+# Parfois ce temps d'attente est trop court et nous avons des flaky specs.
+# Passer ce timeout à 5 permettra peut-être de limiter ces échecs.
+Capybara.default_max_wait_time = 5
+
 Capybara.configure do |config|
   port = 9887 + ENV["TEST_ENV_NUMBER"].to_i
   config.app_host = "http://www.rdv-solidarites-test.localhost:#{port}"
