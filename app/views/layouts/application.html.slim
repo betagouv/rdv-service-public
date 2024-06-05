@@ -5,17 +5,18 @@ html lang="fr"
   body class="#{agents_or_users_body_class}"
     = render "layouts/rdv_solidarites_instance_name"
     / = render "layouts/degraded_service", message: ENV["DEGRADED_SERVICE_MESSAGE_USERS"]
-    = dsfr_header logo_text: "République<br>Française".html_safe, html_attributes: { class: "container" } do |header|
-      - header.with_operator_image title: "Accueil - RDV #{current_domain.name}", src: asset_path(current_domain.dark_logo_path), alt: "RDV #{current_domain.name}"
-      - if current_user.present? && !current_user.only_invited?
-        ruby:
-          header.with_tool_link title: "Vos rendez-vous", path: users_rdvs_path, classes: "fr-icon-calendar-fill"
-          header.with_tool_link title: "Vos informations", path: users_informations_path
-          header.with_tool_link title: "Votre compte", path: edit_user_registration_path
-          header.with_tool_link title: "Déconnexion", path: destroy_user_session_path, classes: "fr-icon-lock-fill", html_attributes: { "data-method": "delete" }
-      - elsif !stats_path?
-        - header.with_tool_link title: "Espace Agent", path: new_agent_session_path
-        - header.with_tool_link title: "Se connecter", path: new_user_session_path, classes: "fr-fi-account-fill"
+    .header-wrapper
+      = dsfr_header logo_text: "République<br>Française".html_safe, html_attributes: { class: "container" } do |header|
+        - header.with_operator_image title: "Accueil - RDV #{current_domain.name}", src: asset_path(current_domain.dark_logo_path), alt: "RDV #{current_domain.name}"
+        - if current_user.present? && !current_user.only_invited?
+          ruby:
+            header.with_tool_link title: "Vos rendez-vous", path: users_rdvs_path, classes: "fr-icon-calendar-fill"
+            header.with_tool_link title: "Vos informations", path: users_informations_path
+            header.with_tool_link title: "Votre compte", path: edit_user_registration_path
+            header.with_tool_link title: "Déconnexion", path: destroy_user_session_path, classes: "fr-icon-lock-fill", html_attributes: { "data-method": "delete" }
+        - elsif !stats_path?
+          - header.with_tool_link title: "Espace Agent", path: new_agent_session_path
+          - header.with_tool_link title: "Se connecter", path: new_user_session_path, classes: "fr-fi-account-fill"
 
     main class="#{ "container" if params[:controller].include?("users/") }"
       - if content_for :breadcrumb
