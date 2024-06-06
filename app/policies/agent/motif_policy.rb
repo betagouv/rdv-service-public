@@ -54,4 +54,10 @@ class Agent::MotifPolicy < ApplicationPolicy
 
     alias current_agent pundit_user
   end
+
+  class ManageScope < Agent::MotifPolicy::Scope
+  end
+
+  class UseScope < Agent::MotifPolicy::Scope
+  end
 end

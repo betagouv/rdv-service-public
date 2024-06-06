@@ -15,7 +15,7 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
       skip_policy_scope # TODO: improve pundit checks for creneaux
       redirect_to admin_organisation_slots_path(current_organisation, creneaux_search_params)
     else
-      @motifs = Agent::MotifPolicy::Scope.apply(current_agent, current_organisation.motifs).active.ordered_by_name
+      @motifs = Agent::MotifPolicy::UseScope.apply(current_agent, current_organisation.motifs).active.ordered_by_name
       @services = Service.where(id: @motifs.pluck(:service_id).uniq)
       @form.service_id = @services.first.id if @services.count == 1
       @teams = current_organisation.territory.teams

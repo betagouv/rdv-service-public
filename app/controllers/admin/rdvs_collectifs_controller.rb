@@ -2,7 +2,7 @@ class Admin::RdvsCollectifsController < AgentAuthController
   include RdvsHelper
 
   def index
-    @motifs = Agent::MotifPolicy::Scope.apply(current_agent, Motif).available_motifs_for_organisation_and_agent(current_organisation, current_agent).collectif
+    @motifs = Agent::MotifPolicy::UseScope.apply(current_agent, Motif).available_motifs_for_organisation_and_agent(current_organisation, current_agent).collectif
 
     @rdvs = policy_scope(Rdv).where(organisation: current_organisation).collectif
     @rdvs = @rdvs.order(starts_at: :asc).page(page_number)
@@ -13,7 +13,7 @@ class Admin::RdvsCollectifsController < AgentAuthController
   end
 
   def new
-    motif = Agent::MotifPolicy::Scope.apply(current_agent, Motif).find(params[:motif_id])
+    motif = Agent::MotifPolicy::UseScope.apply(current_agent, Motif).find(params[:motif_id])
     @rdv_form = Admin::NewRdvForm.new(pundit_user, organisation: current_organisation, motif: motif, duration_in_min: motif.default_duration_in_min)
     @rdv = @rdv_form.rdv
 

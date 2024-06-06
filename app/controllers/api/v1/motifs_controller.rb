@@ -1,6 +1,6 @@
 class Api::V1::MotifsController < Api::V1::AgentAuthBaseController
   def index
-    motifs = policy_scope(current_organisation.motifs, policy_scope_class: Agent::MotifPolicy::Scope)
+    motifs = policy_scope(current_organisation.motifs, policy_scope_class: Agent::MotifPolicy::UseScope)
     motifs = motifs.active(params[:active].to_b) unless params[:active].nil?
 
     if params.key?(:bookable_publicly)
