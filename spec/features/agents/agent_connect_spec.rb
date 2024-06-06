@@ -10,10 +10,9 @@ RSpec.describe "Agent Connect" do
 
     begin
       find(".agentconnect-button").click
-    rescue ActionController::RoutingError => e
-      # Capybara essaye de suivre une redirection vers https://test.inclusion.connect.fr/authorize
+    rescue ActionController::RoutingError
+      # Capybara essaye de suivre une redirection vers l'url d'Agent Connect
       # ce qui n'est pas possible dans l'env de test car il ignore le host et il cherche /authorize dans nos routes.
-      # On se sert de ce fonctionnement pour faire des expects sur l'erreur
     end
 
     expect(page).to have_current_path "/api/v2/authorize"
