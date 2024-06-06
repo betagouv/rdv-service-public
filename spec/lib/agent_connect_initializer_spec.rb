@@ -1,4 +1,4 @@
-RSpec.describe "Agent Connect initializer" do
+RSpec.describe "Agent Connect initializer" do # rubocop:disable RSpec/DescribeClass
   context "when Agent Connect is not accessible" do
     before do
       stub_request(:get, "https://fca.integ01.dev-agentconnect.fr/api/v2/.well-known/openid-configuration")
