@@ -6,7 +6,7 @@
 = stylesheet_link_tag "application", media: "all", "data-turbolinks-track": "reload"
 = javascript_include_tag "application", "data-turbolinks-track": "reload"
 
-= javascript_include_tag "@gouvfr/dsfr/dist/dsfr.module.min.js", "data-turbo-track": "reload", type: "module"
-= javascript_include_tag "@gouvfr/dsfr/dist/dsfr.nomodule.min.js", "data-turbo-track": "reload", nomodule: true
+= javascript_include_tag "@gouvfr/dsfr/dist/dsfr.module.min.js", "data-turbo-track": "reload", type: "module", defer: true
+= javascript_include_tag "@gouvfr/dsfr/dist/dsfr.nomodule.min.js", "data-turbo-track": "reload", nomodule: true, defer: true
 
 = content_for(:charts_script)
