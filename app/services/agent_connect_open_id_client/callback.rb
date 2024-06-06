@@ -3,17 +3,17 @@ module AgentConnectOpenIdClient
     class OpenIdFlowError < StandardError; end
     class ApiRequestError < StandardError; end
 
-    def initialize(session_state:, params_state:, callback_url:)
+    def initialize(session_state:, params_state:, callback_url:, nonce:)
       @session_state = session_state
       @params_state = params_state
       @callback_url = callback_url
+      @nonce = nonce
     end
 
     attr_reader :id_token_for_logout
 
     def fetch_user_info_from_code!(code)
       validate_state!
-      validate_nonce!
 
       token = fetch_token(code, @callback_url)
 
@@ -56,10 +56,6 @@ module AgentConnectOpenIdClient
       end
     end
 
-    def validate_nonce!
-      # TODO: check nonce here
-    end
-
     def fetch_token(code, agent_connect_callback_url)
       data = {
         client_id: AGENT_CONNECT_CLIENT_ID,
@@ -80,8 +76,18 @@ module AgentConnectOpenIdClient
       response_hash = JSON.parse(response.body)
 
       @id_token_for_logout = response_hash["id_token"]
+      validate_nonce!(@id_token_for_logout)
 
       response_hash["access_token"]
+    end
+
+    def validate_nonce!(encoded_id_token)
+      decoded_id_token = OpenIDConnect::ResponseObject::IdToken.decode(encoded_id_token, AGENT_CONNECT_CONFIG.jwks)
+      decoded_id_token.verify!(
+        issuer: AGENT_CONNECT_CONFIG.issuer,
+        client_id: AGENT_CONNECT_CLIENT_ID,
+        nonce: @nonce
+      )
     end
 
     def fetch_user_info(token)

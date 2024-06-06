@@ -13,7 +13,8 @@ class AgentConnectController < ApplicationController
     callback_client = AgentConnectOpenIdClient::Callback.new(
       session_state: session.delete(:agent_connect_state),
       params_state: params[:state],
-      callback_url: agent_connect_callback_url
+      callback_url: agent_connect_callback_url,
+      nonce: session.delete(:nonce)
     )
 
     unless callback_client.fetch_user_info_from_code!(params[:code])
