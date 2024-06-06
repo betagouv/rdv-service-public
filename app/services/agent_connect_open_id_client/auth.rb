@@ -1,7 +1,8 @@
 module AgentConnectOpenIdClient
   class Auth
-    def initialize(login_hint: nil)
+    def initialize(login_hint: nil, force_login: false)
       @login_hint = login_hint
+      @force_login = force_login
       @state = "Agent Connect State - #{SecureRandom.base58(32)}"
       @nonce = "Agent Connect Nonce - #{SecureRandom.base58(32)}"
     end
@@ -18,6 +19,7 @@ module AgentConnectOpenIdClient
         nonce: nonce,
         acr_values: "eidas1",
         login_hint: @login_hint,
+        prompt: @force_login ? "login" : nil,
       }.compact_blank
 
       "#{AGENT_CONNECT_BASE_URL}/authorize?#{query_params.to_query}"
