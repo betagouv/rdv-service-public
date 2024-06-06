@@ -1,14 +1,10 @@
 class Agent::MotifPolicy < ApplicationPolicy
   def self.agent_can_manage_motif?(motif, agent)
-    motif.organisation.in?(organisations_i_can_manage(agent))
+    motif.in?(ManageScope.motifs_i_can_manage(agent))
   end
 
   def self.agent_can_use_motif?(motif, agent)
-    return false unless motif.organisation.in?(agent.organisations)
-
-    agent.secretaire? ||
-      agent_can_manage_motif?(motif, agent) ||
-      motif.service.in?(agent.services)
+    motif.in?(UseScope.motifs_i_can_use(agent))
   end
 
   def self.organisations_i_can_manage(agent)
@@ -62,11 +58,11 @@ class Agent::MotifPolicy < ApplicationPolicy
         Motif.where(organisation: agent.organisations)
       else
         Motif.where(organisation: agent.basic_orgs, service: agent.services)
-      end
+      end.or(ManageScope.motifs_i_can_manage(agent))
     end
 
     def resolve
-      scope.merge(self.class.motifs_i_can_use(current_agent)).or(ManageScope.motifs_i_can_manage(current_agent))
+      self.class.motifs_i_can_use(current_agent).merge(scope)
     end
     alias current_agent pundit_user
   end
