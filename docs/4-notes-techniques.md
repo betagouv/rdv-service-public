@@ -135,3 +135,10 @@ Les review apps sont détruites automatiquement à la fermeture de la PR ou apr�
 On ne peut pas empêcher une PR spécifique d’être automatiquement détruite après ces 48h.
 En revanche, on peut en recréer une nouvelle sans problème.
 
+L’envoi d’email est désactivé par défaut sur les review apps.
+Pour l’activer vous pouvez utiliser cette commande :
+
+```sh
+    scalingo --region osc-secnum-fr1 --app demo-rdv-solidarites-pr4242 env-unset DISABLE_SENDING_EMAILS && \
+    scalingo --region osc-secnum-fr1 --app demo-rdv-solidarites-pr4242 restart
+```
