@@ -40,3 +40,6 @@ help: ## Display available commands
 
 .PHONY: install run lint lint_rubocop lint_brakeman test test_unit test_features autocorrect clean generate_db_diagram help
 .DEFAULT_GOAL := help
+
+review_app:
+	scalingo --region osc-secnum-fr1 --app demo-rdv-solidarites integration-link-manual-review-app `gh pr view --json number --jq '.number'`
