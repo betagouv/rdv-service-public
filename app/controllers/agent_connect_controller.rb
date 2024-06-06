@@ -40,7 +40,8 @@ class AgentConnectController < ApplicationController
       session[:agent_connect_id_token] = callback_client.id_token_for_logout
       redirect_to root_path
     else
-      # TODO: ajouter un param pour forcer l'auth pour éviter de bloquer l'agent
+      # TODO: pour forcer l'auth pour éviter de bloquer l'agent. Le paramètre `prompt: "login"` ne semble pas marcher en staging
+      # voir la branche `agent-connect-prompt-login`
       flash[:error] = "Il n'y a pas de compte agent pour l'adresse mail #{callback_client.user_email}.<br />" \
                       "Vous devez utiliser Agent Connect avec l'adresse mail à laquelle vous avez reçu votre invitation sur #{current_domain.name}.<br />" \
                       "Vous pouvez également contacter le support à l'adresse <a href='mailto:#{current_domain.support_email}'>#{current_domain.support_email}</a> si le problème persiste."
