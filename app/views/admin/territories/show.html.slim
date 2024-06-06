@@ -65,14 +65,14 @@ h1.m-2.text-center.border-bottom.pb-2 Espace Admin - #{current_territory.name}
       = link_to admin_territory_motifs_path(current_territory) do
         h2.fw-bold.mb-0
           i.fa.fa-calendar>
-          | Motifs
+          = t("admin.territories.motifs.index.title")
         p Lister, éditer, supprimer les motifs de tout le territoire
 
     .col.col-md-4.p-2.rounded.settings-box
       = link_to edit_admin_territory_motif_fields_path(current_territory) do
         h2.fw-bold.mb-0
           i.fa.fa-calendar>
-          | Configuration des motifs
+          = t("admin.territories.motif_fields.edit.card_title")
         p Gérer les options de configuration des motifs
 
     .col.col-md-4.p-2.rounded.settings-box
