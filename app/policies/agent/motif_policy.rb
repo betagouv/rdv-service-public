@@ -42,22 +42,32 @@ class Agent::MotifPolicy < ApplicationPolicy
     @record
   end
 
-  class Scope < ApplicationPolicy::Scope
-    def resolve
-      if current_agent.secretaire?
-        scope.where(organisation_id: current_agent.organisation_ids)
-      else
-        scope.where(organisation: current_agent.basic_orgs, service: current_agent.services)
-          .or(scope.where(organisation: current_agent.admin_orgs))
-      end
+  class ManageScope < Scope
+    def self.motifs_i_can_manage(agent)
+      orgs_of_territories_i_admin = Organisation.where(territory: agent.territories)
+      orgs_i_admin = Organisation.where(id: agent.roles.access_level_admin.select(:organisation_id))
+
+      Motif.where(organisation: orgs_of_territories_i_admin.or(orgs_i_admin))
     end
 
+    def resolve
+      scope.merge(self.class.motifs_i_can_manage(current_agent))
+    end
     alias current_agent pundit_user
   end
 
-  class ManageScope < Agent::MotifPolicy::Scope
-  end
+  class UseScope < Scope
+    def self.motifs_i_can_use(agent)
+      if agent.secretaire?
+        Motif.where(organisation: agent.organisations)
+      else
+        Motif.where(organisation: agent.basic_orgs, service: agent.services)
+      end
+    end
 
-  class UseScope < Agent::MotifPolicy::Scope
+    def resolve
+      scope.merge(self.class.motifs_i_can_use(current_agent)).or(ManageScope.motifs_i_can_manage(current_agent))
+    end
+    alias current_agent pundit_user
   end
 end
