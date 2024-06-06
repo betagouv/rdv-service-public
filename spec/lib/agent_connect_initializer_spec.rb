@@ -1,4 +1,4 @@
-RSpec.describe "AGENT_CONNECT_CONFIG" do
+RSpec.describe "Agent Connect initializer" do
   context "when Agent Connect is not accessible" do
     before do
       stub_request(:get, "https://fca.integ01.dev-agentconnect.fr/api/v2/.well-known/openid-configuration")
@@ -8,7 +8,7 @@ RSpec.describe "AGENT_CONNECT_CONFIG" do
     it "doesn't raise an error that would keep the application from booting up, but it sends an exception in Sentry" do
       expect(Sentry).to receive(:capture_exception)
       expect { load "#{::Rails.root}/config/initializers/agent_connect.rb" }.not_to(raise_error)
-      expect(AGENT_CONNECT_UNREACHABLE_AT_BOOT_TIME).to be true
+      expect(Rails.configuration.x.agent_connect_unreachable_at_boot_time).to be true
     end
   end
 
@@ -20,7 +20,7 @@ RSpec.describe "AGENT_CONNECT_CONFIG" do
 
     it "starts the application normally" do
       load "#{::Rails.root}/config/initializers/agent_connect.rb"
-      expect(AGENT_CONNECT_UNREACHABLE_AT_BOOT_TIME).to be false
+      expect(Rails.configuration.x.agent_connect_unreachable_at_boot_time).to be false
     end
   end
 end
