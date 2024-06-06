@@ -1,7 +1,7 @@
 module AgentConnectStubs
   extend RSpec::Mocks::ExampleMethods # pour appeler #allow et #receive dans des méthodes de module
 
-  def self.stub_callback_requests(code, user_info, _rspec_context)
+  def self.stub_callback_requests(code, user_info)
     stub_token_request(code)
 
     userinfo_encoded_response_body = "fake_userinfo_encoded_response_body"

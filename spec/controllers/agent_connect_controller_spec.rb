@@ -24,10 +24,7 @@ RSpec.describe AgentConnectController, type: :controller do
   end
 
   describe "#callback" do
-    let(:auth_client) { AgentConnectOpenIdClient::Auth.new }
-
-    let(:state) { auth_client.state }
-
+    let(:state) { AgentConnectOpenIdClient::Auth.new.state }
     let(:code) { "IDej8hpYou2rZLsDgTzZ_nMl1aXmNajpByd20dig4e8" }
 
     let(:user_info) do
@@ -43,7 +40,7 @@ RSpec.describe AgentConnectController, type: :controller do
 
     before do
       session[:agent_connect_state] = state
-      AgentConnectStubs.stub_callback_requests(code, user_info, self)
+      AgentConnectStubs.stub_callback_requests(code, user_info)
     end
 
     it "updates and logs in the agent" do
