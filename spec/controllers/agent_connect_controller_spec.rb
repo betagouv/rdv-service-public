@@ -29,11 +29,6 @@ RSpec.describe AgentConnectController, type: :controller do
     let(:state) { auth_client.state }
 
     let(:code) { "IDej8hpYou2rZLsDgTzZ_nMl1aXmNajpByd20dig4e8" }
-    let(:userinfo_encoded_response_body) { "fake_userinfo_encoded_response_body" }
-    let(:jwks_json) do
-      File.read("#{::Rails.root}/spec/fixtures/agent_connect/jwks.json")
-    end
-    let(:jwks) { JSON.parse(jwks_json) }
 
     let(:user_info) do
       {
@@ -48,18 +43,7 @@ RSpec.describe AgentConnectController, type: :controller do
 
     before do
       session[:agent_connect_state] = state
-      stub_token_request
-      stub_userinfo_request(userinfo_encoded_response_body)
-
-      stub_request(:get, "https://fca.integ01.dev-agentconnect.fr/api/v2/jwks").to_return(status: 200, body: jwks_json, headers: {})
-
-      # En enregistrant puis en rejouant une vrai requête, on a une erreur  JWT::ExpiredSignature: Signature has expired
-      # Le plus pragmatique pour cette spec semble donc d'être de stubber le JWT.decode
-      allow(JWT).to receive(:decode).with(
-        userinfo_encoded_response_body, nil, true,
-        algorithms: "ES256",
-        jwks: jwks["keys"]
-      ).and_return([user_info])
+      AgentConnectStubs.stub_callback_requests(code, user_info, self)
     end
 
     it "updates and logs in the agent" do
@@ -69,42 +53,9 @@ RSpec.describe AgentConnectController, type: :controller do
       expect(agent.reload).to have_attributes(
         connected_with_agent_connect: true,
         first_name: "Francis",
-        last_name: "Factice"
-        # last_sign_in_at: be_within(10.seconds).of(now)
+        last_name: "Factice",
+        last_sign_in_at: be_within(10.seconds).of(Time.zone.now)
       )
     end
-
-    context "when there is no agent with the matching name" do
-    end
-  end
-
-  def stub_token_request
-    stub_request(:post, "https://fca.integ01.dev-agentconnect.fr/api/v2/token").with(
-      body: {
-        "client_id" => AgentConnectOpenIdClient::AGENT_CONNECT_CLIENT_ID,
-        "client_secret" => "un faux secret de test",
-        "code" => code,
-        "grant_type" => "authorization_code",
-        "redirect_uri" => "http://test.host/agent_connect/callback",
-      },
-      headers: {
-        "Content-Type" => "application/x-www-form-urlencoded",
-      }
-    ).to_return(status: 200, body: {
-      id_token: "fake agent connect id token",
-      access_token: "fake agent connect access token",
-    }.to_json, headers: {})
-  end
-
-  def stub_userinfo_request(response_body)
-    stub_request(:get, "https://fca.integ01.dev-agentconnect.fr/api/v2/userinfo?schema=openid")
-      .with(
-        headers: {
-          "Authorization" => "Bearer fake agent connect access token",
-          "Expect" => "",
-          "User-Agent" => "Typhoeus - https://github.com/typhoeus/typhoeus",
-        }
-      )
-      .to_return(status: 200, body: response_body, headers: {})
   end
 end
