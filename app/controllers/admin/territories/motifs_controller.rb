@@ -4,6 +4,7 @@ class Admin::Territories::MotifsController < Admin::Territories::BaseController
     @services = current_territory.services.reject(&:secretariat?)
 
     @motifs = policy_scope(Motif, policy_scope_class: Agent::MotifPolicy::Scope)
+      .or(Motif.where(organisation: current_agent.organisations_of_territorial_roles)) # TODO: Déplacer dans la policy, voir PR séparée
       .active
       .order({ name: :asc, service_id: :asc, location_type: :asc, organisation_id: :asc })
       .page(page_number)
