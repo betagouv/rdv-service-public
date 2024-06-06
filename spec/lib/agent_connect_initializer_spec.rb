@@ -6,9 +6,8 @@ RSpec.describe "AGENT_CONNECT_CONFIG" do
     end
 
     it "doesn't raise an error that would keep the application from booting up, but it sends an exception in Sentry" do
-      expect do
-        load "#{::Rails.root}/config/initializers/agent_connect.rb"
-      end.not_to(raise_error(OpenIDConnect::Discovery::DiscoveryFailed))
+      expect(Sentry).to receive(:capture_exception)
+      expect { load "#{::Rails.root}/config/initializers/agent_connect.rb" }.not_to(raise_error)
       expect(AGENT_CONNECT_UNREACHABLE_AT_BOOT_TIME).to be true
     end
   end
