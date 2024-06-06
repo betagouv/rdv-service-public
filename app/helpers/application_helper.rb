@@ -117,6 +117,6 @@ module ApplicationHelper
   end
 
   def display_agent_connect_button
-    !(ENV["AGENT_CONNECT_DISABLED"] || AGENT_CONNECT_UNREACHABLE_AT_BOOT_TIME) || params[:force_agent_connect].present?
+    !(ENV["AGENT_CONNECT_DISABLED"] || Rails.configuration.x.agent_connect_unreachable_at_boot_time) || params[:force_agent_connect].present?
   end
 end
