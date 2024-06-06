@@ -12,7 +12,7 @@ module AgentConnectOpenIdClient
         post_logout_redirect_uri: post_logout_redirect_url,
       }
 
-      "#{AGENT_CONNECT_CONFIG.end_session_endpoint}?#{query_params.to_query}"
+      "#{Rails.configuration.x.agent_connect_config.end_session_endpoint}?#{query_params.to_query}"
     end
   end
 end

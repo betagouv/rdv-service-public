@@ -1,4 +1,13 @@
 RSpec.describe "Agent Connect initializer" do # rubocop:disable RSpec/DescribeClass
+  around do |example|
+    previous_base_url = ENV["AGENT_CONNECT_BASE_URL"]
+    ENV["AGENT_CONNECT_BASE_URL"] = "https://fca.integ01.dev-agentconnect.fr/api/v2"
+
+    example.run
+
+    ENV["AGENT_CONNECT_BASE_URL"] = previous_base_url
+  end
+
   context "when Agent Connect is not accessible" do
     before do
       stub_request(:get, "https://fca.integ01.dev-agentconnect.fr/api/v2/.well-known/openid-configuration")

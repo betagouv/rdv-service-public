@@ -82,9 +82,9 @@ module AgentConnectOpenIdClient
     end
 
     def validate_nonce!(encoded_id_token)
-      decoded_id_token = OpenIDConnect::ResponseObject::IdToken.decode(encoded_id_token, AGENT_CONNECT_CONFIG.jwks)
+      decoded_id_token = OpenIDConnect::ResponseObject::IdToken.decode(encoded_id_token, agent_connect_config.jwks)
       decoded_id_token.verify!(
-        issuer: AGENT_CONNECT_CONFIG.issuer,
+        issuer: agent_connect_config.issuer,
         client_id: AGENT_CONNECT_CLIENT_ID,
         nonce: @nonce
       )
@@ -98,13 +98,17 @@ module AgentConnectOpenIdClient
 
       handle_response_error(response)
 
-      JWT.decode(response.body, nil, true, algorithms: AGENT_CONNECT_CONFIG.jwks.first["alg"], jwks: AGENT_CONNECT_CONFIG.jwks).first
+      JWT.decode(response.body, nil, true, algorithms: agent_connect_config.jwks.first["alg"], jwks: agent_connect_config.jwks).first
     end
 
     def handle_response_error(response)
       unless response.success?
         raise(ApiRequestError, "code:#{response.response_code}, body:#{response.response_body}")
       end
+    end
+
+    def agent_connect_config
+      Rails.configuration.x.agent_connect_config
     end
   end
 end
