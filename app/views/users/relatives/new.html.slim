@@ -1,5 +1,5 @@
 - content_for(:title) do
-  h1 Ajouter un proche
+  h1.text-white Ajouter un proche
 
 = simple_form_for @user, url: relatives_path, remote: true, data: { modal: true } do |f|
   = render "model_errors", model: @user
