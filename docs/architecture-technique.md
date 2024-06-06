@@ -339,10 +339,7 @@ notre checklist d'onboarding un point précisant qu'il faut impérativement acti
 TOTP, Scalingo propose une procédure qui inclut la vérification de l'identité de l'utilisateur concerné par la
 transmission d'un document d'identité.
 
-Note : la fonctionnalité de review app est activée sur l'app de démo. Le fichier `scalingo.json` contient la liste des
-variables d'environnement qu'il ne faut pas hériter de l'app de démo lors de la création d'une review app. Une review
-app est automatiquement créée lors de l'ouverture d'une Pull Request Github, et automatiquement détruire lors de la
-fermeture / merge d'une PR.
+Note : les review apps sont créées manuellement et héritent de l'app de démo. Le fichier `scalingo.json` contient la liste des variables d'environnement qu'il ne faut pas hériter de l'app de démo lors de la création d'une review app. Les review apps sont automatiquement détruites lors de la fermeture d'une PR.
 
 #### Détection de fuite de secrets
 

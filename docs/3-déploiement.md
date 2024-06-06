@@ -2,10 +2,10 @@
 
 RDV-Solidarités est hébergé chez [Scalingo](https://scalingo.com/fr/datacenters), sur la region Paris / SecNumCloud.
 
-| Instance | domaine | branche | notes |
-| -------- | ------- | ------- | ----- |
-| production-rdv-solidarites | https://www.rdv-solidarites.fr | production | review apps activées |
-| demo-rdv-solidarites | https://demo.rdv-solidarites.fr | production | - |
+| Instance | domaine | branche |
+| -------- | ------- | ------- |
+| production-rdv-solidarites | https://www.rdv-solidarites.fr | production |
+| demo-rdv-solidarites | https://demo.rdv-solidarites.fr | production |
 
 Les Pull Requests sont mises en production automatiquement dès qu’elles sont mergées sur la branche `production`.
 
@@ -17,7 +17,7 @@ Les autres changements peuvent partir en production directement. C’est le cas 
 
 ⚠️ Dans les cas de refactor un peu importants, qui pourraient donc révéler des bugs en production, ou pour des migrations de données avec downtime, mieux vaut éviter de mettre en production en milieu de pic.
 
-Nos utilisateurs ont des horaires de bureau: tactiquement, 12:30 et 18:15 sont les bons créneaux pour ce genre de mise en production à surveiller.  
+Nos utilisateurs ont des horaires de bureau: tactiquement, 12:30 et 18:15 sont les bons créneaux pour ce genre de mise en production à surveiller.
 
 ### Démo aux référent·es
 
@@ -31,5 +31,5 @@ La discussion sur ces fonctionnalités se fait sur les _review apps_, et a lieu 
 
 Les environnements de démo et de production sont identiques. La démo est une plateforme servant à découvrir le service ou à faire de la formation ou tester des configurations et scénario d'usage particulier.
 
-La branche par défaut est `production` »`.
+La branche par défaut est `production`.
 
