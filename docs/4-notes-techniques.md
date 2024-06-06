@@ -27,7 +27,7 @@ Note : la librairie graphviz doit être installée ([voir guide](https://voormed
 ## Tâches récurrentes
 
 Nous utilisons la fonctionnalité de cron inclue dans GoodJob pour gérer nos tâches récurrentes.
-Les jobs récurrents sont implémentés dans `app/jobs/cron_job.rb`. 
+Les jobs récurrents sont implémentés dans `app/jobs/cron_job.rb`.
 Les horaires de ces jobs sont définis dans `config/initializers/good_job.rb`.
 
 ## Dumps de production
@@ -111,3 +111,27 @@ Pas de politique très clairement décidée mais la pratique est d’essayer de 
 
 ### Versions des gems et des node modules
 Une politique de mise à jour prudente a été décidée cf [l’ADR 2023-04-24](https://github.com/betagouv/rdv-service-public/blob/production/docs/decisions/2023-04-24-politique-maj-gems.md)
+
+## Review apps
+
+Les review apps ne sont pas créées automatiquement pour chaque PR pour économiser des ressources.
+
+La commande pour créer une review app pour la PR #4242 est
+
+```bash
+scalingo --region osc-secnum-fr1 --app demo-rdv-solidarites integration-link-manual-review-app 4242
+```
+
+Un raccourci existe pour retrouver le numéro de la PR correspondant à la branche courante automatiquement : `make review_app`
+
+Par défaut, seul un worker web est activé, si vous souhaitez que les jobs s’exécutent il faut activer un worker jobs depuis le dashboard ou avec cette commande :
+
+```sh
+scalingo --region osc-secnum-fr1 --app demo-rdv-solidarites-pr4242 scale jobs:1
+```
+
+Le fichier `scalingo.json` décrit la configuration initiale et les variables d’environnement des review apps.
+Les review apps sont détruites automatiquement à la fermeture de la PR ou après 48h sans déploiement.
+On ne peut pas empêcher une PR spécifique d’être automatiquement détruite après ces 48h.
+En revanche, on peut en recréer une nouvelle sans problème.
+
