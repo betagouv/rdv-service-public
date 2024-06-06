@@ -13,7 +13,7 @@
           - if display_inclusion_connect
             = render "common/inclusionconnect_button_dsfr", locals: { login_hint: resource.email }
 
-          p.fr-mt-3w.fr-hr-or = "ou"
+        p.fr-mt-3w.fr-hr-or = "ou"
 
       h6 Créer un compte avec email et mot de passe
       = simple_form_for resource, as: resource_name, url: invitation_path(resource_name), html: { method: :put }, wrapper: :dsfr_wrapper do |f|
