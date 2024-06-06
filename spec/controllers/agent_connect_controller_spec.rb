@@ -1,6 +1,8 @@
 RSpec.describe AgentConnectController, type: :controller do
   before do
     stub_const("AgentConnectOpenIdClient::AGENT_CONNECT_CLIENT_SECRET", "un faux secret de test")
+    stub_const("AgentConnectOpenIdClient::AGENT_CONNECT_BASE_URL", "https://fca.integ01.dev-agentconnect.fr/api/v2")
+    stub_const("AgentConnectOpenIdClient::AGENT_CONNECT_ID", "ec41582-1d60-4f11-a63b-d8abaece16aa")
   end
 
   describe "#auth" do
