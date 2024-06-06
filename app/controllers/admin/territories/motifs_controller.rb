@@ -3,7 +3,7 @@ class Admin::Territories::MotifsController < Admin::Territories::BaseController
     @organisations = current_territory.organisations
     @services = current_territory.services.reject(&:secretariat?)
 
-    @motifs = policy_scope(Motif)
+    @motifs = policy_scope(Motif, policy_scope_class: Agent::MotifPolicy::Scope)
       .active
       .order({ name: :asc, service_id: :asc, location_type: :asc, organisation_id: :asc })
       .page(page_number)
@@ -41,5 +41,9 @@ class Admin::Territories::MotifsController < Admin::Territories::BaseController
       motifs = params[:en_ligne].to_b ? motifs.where.not(bookable_by: "agents") : motifs.where(bookable_by: "agents")
     end
     motifs
+  end
+
+  def pundit_user
+    current_agent
   end
 end
