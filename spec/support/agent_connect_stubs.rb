@@ -38,6 +38,10 @@ module AgentConnectStubs
       id_token: "fake agent connect id token",
       access_token: "fake agent connect access token",
     }.to_json, headers: {})
+
+    allow(OpenIDConnect::ResponseObject::IdToken).to receive(:decode).and_return(
+      instance_double(OpenIDConnect::ResponseObject::IdToken, verify!: true)
+    )
   end
 
   def self.stub_userinfo_request(response_body)
