@@ -115,4 +115,8 @@ module ApplicationHelper
   def self_anchor(identifier, &block)
     tag.a(id: identifier, href: "##{identifier}", data: { turbolinks: false }, &block)
   end
+
+  def display_agent_connect_button
+    !(ENV["AGENT_CONNECT_DISABLED"] || AGENT_CONNECT_UNREACHABLE_AT_BOOT_TIME) || params[:force_agent_connect].present?
+  end
 end
