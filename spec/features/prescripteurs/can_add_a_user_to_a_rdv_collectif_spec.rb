@@ -90,6 +90,7 @@ RSpec.describe "prescripteur can add a user to a RDV collectif" do
     it "redirects to creneau search with error message" do
       visit "http://www.rdv-aide-numerique-test.localhost/org/#{organisation.id}"
 
+      click_on "Formation emails" # choix du motif
       click_on "Prochaine disponibilité le" # choix du lieu
       click_on "S'inscrire", match: :first # choix du RDV collectif
       click_on "Je suis un prescripteur qui oriente un bénéficiaire" # page de login
