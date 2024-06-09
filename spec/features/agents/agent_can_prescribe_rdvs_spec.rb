@@ -249,10 +249,11 @@ RSpec.describe "agents can prescribe rdvs" do
         login_as(current_agent, scope: :agent)
         visit admin_organisation_agent_searches_path(org_mds, user_ids: [user.id])
         click_link "Élargir la recherche"
-        expect(page).to have_content(motif_mds.service.name)
-        expect(page).to have_content(motif_mds.name)
         expect(page).not_to have_content(motif_insertion.name)
         expect(page).not_to have_content(motif_autre_service.name)
+        expect(page).to have_content(motif_mds.service.name)
+        expect(page).to have_content(motif_mds.name)
+        click_on motif_mds.name
         find(".card-title", text: /#{mds_paris_nord.name}/).ancestor(".card").find("a.stretched-link").click
         first(:link, "11:00").click
         expect { click_button "Confirmer le rdv" }.to change(Rdv, :count).by(1)

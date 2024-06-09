@@ -35,8 +35,8 @@ RSpec.describe "Prise de rdv avec sectorisations pour deux territoires dans le m
     page.execute_script("document.querySelector('#search_submit').disabled = false")
 
     click_button("Rechercher")
+    click_on("Rdv d'orientation") # sélection du motif
     expect(page).to have_content "2 lieux sont disponibles"
-
     expect(page).to have_content("CMS Valence")
     expect(page).to have_content("Pole Emploi Valence")
   end

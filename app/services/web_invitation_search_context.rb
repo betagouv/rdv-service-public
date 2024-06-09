@@ -39,4 +39,10 @@ class WebInvitationSearchContext < InvitationSearchContext
     # public_link_organisation is not used in web invitation context
     nil
   end
+
+  def motif_param_present?
+    @motif_id.present? ||
+      @motif_name_with_location_type.present? ||
+      @motif_category_short_name.present?
+  end
 end
