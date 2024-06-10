@@ -135,3 +135,23 @@ Les review apps sont détruites automatiquement à la fermeture de la PR ou apr�
 On ne peut pas empêcher une PR spécifique d’être automatiquement détruite après ces 48h.
 En revanche, on peut en recréer une nouvelle sans problème.
 
+## Search Contexts
+
+```mermaid
+classDiagram
+  WebSearchContext <|-- AgentPrescriptionSearchContext
+  SearchContext <|-- WebSearchContext
+  WebSearchContext *-- Users-CreneauxWizardConcern
+  InvitationSearchContext <|-- WebInvitationSearchContext
+  SearchContext <|-- InvitationSearchContext
+  WebInvitationSearchContext *-- Users-CreneauxWizardConcern
+
+  class Users-CreneauxWizardConcern {
+    + to_partial_path()
+  }
+  class SearchContext {
+    - user
+    - query_params
+    + filter_motifs()
+  }
+```

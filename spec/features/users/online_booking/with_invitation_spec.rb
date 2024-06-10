@@ -303,7 +303,8 @@ RSpec.describe "User can be invited" do
     it "priorize the session invitation attributes to the url attributes" do
       visit prendre_rdv_path(
         departement: departement_number, city_code: city_code, invitation_token: invitation_token,
-        address: "16 rue de la résistance, Paris, 75016", lieu_id: lieu.id
+        address: "16 rue de la résistance, Paris, 75016", lieu_id: lieu.id,
+        motif_category_short_name: "rsa_orientation"
       )
 
       expect(page).to have_content(lieu.name)
