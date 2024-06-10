@@ -2,15 +2,14 @@
   .row
     .col
       = date_input(f, :first_day, input_html: { id: "recurrence-source", data: { target: "recurrence.firstDay", action: "recurrence#updateRecurrence" }, class: "js-recurrence-first-day js-recurrence-input"} )
-    - if defined?(model.end_day)
-      .col
-        = date_input(f, :end_day)
+    .col
+      = date_input(f, :end_day)
 
   .row
-    .col = f.input :start_time, as: :select, collection: every_5_minutes_of_the_day, selected: model.start_time&.strftime("%H:%M"), include_blank: false
-    .col = f.input :end_time,   as: :select, collection: every_5_minutes_of_the_day, selected: model.end_time&.strftime("%H:%M"),   include_blank: false
+    .col = f.input :start_time, as: :select, collection: every_5_minutes_of_the_day, selected: absence.start_time&.strftime("%H:%M"), include_blank: false
+    .col = f.input :end_time,   as: :select, collection: every_5_minutes_of_the_day, selected: absence.end_time&.strftime("%H:%M"),   include_blank: false
 
-  = f.input :recurrence, as: :hidden, input_html: { value: model.recurrence ? model.recurrence.as_json.to_json : "", "data-target": "recurrence.recurrenceComputed", class: "js-recurrence-computed" }
+  = f.input :recurrence, as: :hidden, input_html: { value: absence.recurrence ? absence.recurrence.as_json.to_json : "", "data-target": "recurrence.recurrenceComputed", class: "js-recurrence-computed" }
 
   = simple_fields_for :recurrence do |n|
     = n.input :has_recurrence, as: :boolean, label: "Répéter...", input_html: { data: { target: "recurrence.hasRecurrence", action: "recurrence#updateRecurrence" }, class: "js-recurrence-toggle js-recurrence-input" }
