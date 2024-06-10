@@ -44,5 +44,5 @@ def expect_page_to_be_axe_clean(path)
   # Le premier visit permet d'afficher le tooltip du header, et faire qu'il n'apparaisse pas la deuxieme fois
   visit path
   expect(page).to have_current_path(path)
-  expect(page).to be_axe_clean.skipping
+  expect(page).to be_axe_clean
 end
