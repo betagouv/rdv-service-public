@@ -156,6 +156,7 @@ GEM
       launchy
     chartkick (5.0.4)
     choice (0.2.0)
+    climate_control (1.2.0)
     coderay (1.1.3)
     coercible (1.0.0)
       descendants_tracker (~> 0.0.1)
@@ -657,6 +658,7 @@ DEPENDENCIES
   capybara-email
   capybara-screenshot
   chartkick (~> 5.0.1)
+  climate_control
   common_french_passwords
   connection_pool
   csv
