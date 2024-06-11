@@ -1,6 +1,7 @@
+- content_for :title, t("devise.invitations.invitation.title")
+
 .card
   .card-body
-    h1.card-title = t("devise.invitations.invitation.title")
     p = t("devise.invitations.invitation.click_on_link_sent")
     .text-center
       - unless email_tld_infos(@email_tld).blank?

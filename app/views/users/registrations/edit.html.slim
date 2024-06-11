@@ -1,28 +1,27 @@
-.row.justify-content-md-center
-  .col-md-6
-    h1.text-dark.my-3 Votre compte
-    .card.mt-3
-      .card-body
-        - if resource.logged_once_with_franceconnect?
-          .alert.alert-info.d-flex.align-items-center
-            .mr-3
-              .fa.fa-info
-            div Vous pouvez ici changer l'email et le mot de passe de votre compte #{current_domain.name}, et pas ceux de FranceConnect
-        = simple_form_for(resource, as: resource_name, url: registration_path(resource_name), remote: request.xhr?, html: { method: :put }) do |f|
-          = render "devise/shared/error_messages", resource: resource
-          = f.input :email, value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email), placeholder: "nom.prenom@email.com"
-          - if devise_mapping.confirmable? && resource.pending_reconfirmation?
-            .form-text.text-muted.mb-2
-              | En attente de confirmation pour #{resource.unconfirmed_email}
-          = f.input :password, label: "Nouveau mot de passe", autocomplete: "new-password"
-          = render "agents/mot_de_passes/new_password_hints"
-          .form-text.text-muted.mb-2
-            | Laissez ce champ vide si vous ne souhaitez pas changer votre mot de passe.
-          = f.input :current_password, placeholder: "Votre mot de passe actuel", required: true, autocomplete: "current-password"
-          .form-text.text-muted.mb-2
-            | Renseignez votre mot de passe actuel pour tout changement.
-          .text-right= f.submit "Modifier", class: "btn btn-primary"
-          .mt-5.text-center
-            hr
-            p.font-13 Vous souhaitez supprimer votre compte ?
-            = link_to "Supprimer", user_registration_path, data:{ confirm: @rdv_insertion_organisations.blank? ? "Voulez-vous vraiment supprimer votre compte ?" : "Vous ne pourrez plus vous connecter à votre compte mais les données liées aux structures d'insertion ne seront pas supprimées. Vos données liées à d'autres structures seront bien supprimées." }, method: :delete, class: "btn btn-outline-danger btn-sm"
+- content_for :title, "Votre compte"
+
+.card
+  .card-body
+    - if resource.logged_once_with_franceconnect?
+      .alert.alert-info.d-flex.align-items-center
+        .mr-3
+          .fa.fa-info
+        div Vous pouvez ici changer l'email et le mot de passe de votre compte #{current_domain.name}, et pas ceux de FranceConnect
+    = simple_form_for(resource, as: resource_name, url: registration_path(resource_name), remote: request.xhr?, html: { method: :put }) do |f|
+      = render "devise/shared/error_messages", resource: resource
+      = f.input :email, value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email), placeholder: "nom.prenom@email.com"
+      - if devise_mapping.confirmable? && resource.pending_reconfirmation?
+        .form-text.text-muted.mb-2
+          | En attente de confirmation pour #{resource.unconfirmed_email}
+      = f.input :password, label: "Nouveau mot de passe", autocomplete: "new-password"
+      = render "agents/mot_de_passes/new_password_hints"
+      .form-text.text-muted.mb-2
+        | Laissez ce champ vide si vous ne souhaitez pas changer votre mot de passe.
+      = f.input :current_password, placeholder: "Votre mot de passe actuel", required: true, autocomplete: "current-password"
+      .form-text.text-muted.mb-2
+        | Renseignez votre mot de passe actuel pour tout changement.
+      .text-right= f.submit "Modifier", class: "btn btn-primary"
+      .mt-5.text-center
+        hr
+        p.font-13 Vous souhaitez supprimer votre compte ?
+        = link_to "Supprimer", user_registration_path, data:{ confirm: @rdv_insertion_organisations.blank? ? "Voulez-vous vraiment supprimer votre compte ?" : "Vous ne pourrez plus vous connecter à votre compte mais les données liées aux structures d'insertion ne seront pas supprimées. Vos données liées à d'autres structures seront bien supprimées." }, method: :delete, class: "btn btn-outline-danger btn-sm"

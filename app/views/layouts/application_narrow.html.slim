@@ -1,11 +1,9 @@
-- content_for :main_content do
+- content_for :container_content do
   .row
-    .col-md-8.m-auto.pt-3
+    .col-md-8.m-auto
       - if content_for :title
         h1= yield :title
-
       = render "layouts/flash"
-
       = yield
 
 = render template: "layouts/application"

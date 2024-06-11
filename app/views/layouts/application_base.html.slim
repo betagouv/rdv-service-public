@@ -1,0 +1,94 @@
+doctype html
+html lang="fr"
+  head
+    = render "common/meta"
+    = stylesheet_link_tag "@gouvfr/dsfr/dist/dsfr.min.css", "data-turbo-track": "reload"
+    = stylesheet_link_tag "@gouvfr/dsfr/dist/utility/icons/icons.min.css", "data-turbo-track": "reload"
+    = stylesheet_link_tag "application", media: "all", "data-turbolinks-track": "reload"
+    = javascript_include_tag "application", "data-turbolinks-track": "reload"
+    = javascript_include_tag "@gouvfr/dsfr/dist/dsfr.module.min.js", "data-turbo-track": "reload", type: "module", defer: true
+    = javascript_include_tag "@gouvfr/dsfr/dist/dsfr.nomodule.min.js", "data-turbo-track": "reload", nomodule: true, defer: true
+    = content_for(:charts_script)
+
+  body
+    = render "layouts/rdv_solidarites_instance_name"
+    = render "layouts/degraded_service", message: ENV["DEGRADED_SERVICE_MESSAGE_USERS"]
+    .header-wrapper
+      = dsfr_header logo_text: "République<br>Française".html_safe, html_attributes: { class: "container" } do |header|
+        - header.with_operator_image title: "Accueil - RDV #{current_domain.name}", src: asset_path(current_domain.dark_logo_path), alt: "RDV #{current_domain.name}"
+        - if current_user.present? && !current_user.only_invited?
+          ruby:
+            header.with_tool_link title: "Vos rendez-vous", path: users_rdvs_path, classes: "fr-icon-calendar-fill"
+            header.with_tool_link title: "Vos informations", path: users_informations_path
+            header.with_tool_link title: "Votre compte", path: edit_user_registration_path
+            header.with_tool_link title: "Déconnexion", path: destroy_user_session_path, classes: "fr-icon-lock-fill", html_attributes: { "data-method": "delete" }
+        - elsif !stats_path?
+          - header.with_tool_link title: "Espace Agent", path: new_agent_session_path
+          - header.with_tool_link title: "Se connecter", path: new_user_session_path, classes: "fr-fi-account-fill"
+
+    main
+      - if content_for :main_content
+        = yield :main_content
+      - else
+        = render "layouts/flash"
+        = yield
+
+    #modal-holder
+
+    footer.main-footer
+      .container
+        .row
+          .col-12.col-md
+            div
+              = link_to image_tag(current_domain.dark_logo_path, size: "250x80", alt: current_domain.name), root_path, title: "aller à l'accueil #{current_domain.name}"
+              ul.list-unstyled
+                li.mb-2
+                  - if current_domain.default?
+                    span> #{current_domain.name} est fourni par
+                    = link_to("l'Agence Nationale de la Cohésion des Territoires", "https://agence-cohesion-territoires.gouv.fr", class: "inline")
+                    = " et un consortium de départements"
+                  - else
+                    span
+                    = "#{current_domain.name} est géré par #{Domain::RDV_MAIRIE.name}, un service fourni par "
+                    = link_to("l'Agence Nationale de la Cohésion des Territoires", "https://agence-cohesion-territoires.gouv.fr", class: "inline")
+                    = ". "
+                    = link_to "En savoir plus", domaines_path
+                li.mb-2
+                  = image_tag "logos/republique-francaise-logo.svg", size: "105x90", alt:""
+          .col-6.col-md
+            h2 À propos
+            ul.list-unstyled
+              li.mb-1 = link_to "Contact", contact_path
+              - if current_domain == Domain::RDV_SOLIDARITES
+                li.mb-1 = link_to "Les solidarités dans votre département", mds_path
+              li.mb-1 = link_to "Espace professionnel", presentation_agent_path
+              li.mb-1 = link_to "Statistiques", stats_path
+              li.mb-1 = link_to "Budget", budget_path
+          .col-6.col-md
+            h2 Produit
+            ul.list-unstyled
+              li.mb-1 = link_to "Accessibilité : non conforme", accessibility_path
+              li.mb-1 = link_to current_domain.documentation_url do
+                span> Documentation utilisateur
+              li.mb-1 = link_to "Documentation technique", "https://github.com/betagouv/rdv-service-public#documentation-externe"
+              li.mb-1 = link_to "https://github.com/betagouv/rdv-service-public/commit/#{ENV['CONTAINER_VERSION']}", title: "Aller au code source de #{current_domain.name}" do
+                span>= ENV["RDV_SOLIDARITES_VERSION"]
+                i.fa.fa-external-link-alt
+              li.mb-1 = link_to "https://github.com/betagouv/rdv-service-public/" do
+                span> Code Source sur GitHub
+                i.fa.fa-external-link-alt
+          .col-6.col-md
+            h2 Informations légales
+            ul.list-unstyled
+              li.mb-1 = link_to mentions_legales_path do
+                span> Mentions Légales
+              li.mb-1 = link_to cgu_path do
+                span> C.G.U.
+              li.mb-1 = link_to politique_de_confidentialite_path do
+                span> Politique de confidentialité
+        .fr-footer__partners
+          h3.fr-footer__partners-title Nos partenaires
+          .fr-footer__partners-logos
+            .fr-footer__partners-main
+              = link_to(image_tag("logos/logo_dinum.svg", alt: "Logo de la Dinum", style: "height: 5.625rem"), "https://www.numerique.gouv.fr/dinum/", class: "fr-footer__partners-link" )
+              = link_to(image_tag("logos/logo_anct.png", alt: "Logo de l'ANCT", style: "height: 5.625rem"), "https://agence-cohesion-territoires.gouv.fr/", class: "fr-footer__partners-link" )

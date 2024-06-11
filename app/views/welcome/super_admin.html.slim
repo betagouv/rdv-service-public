@@ -1,16 +1,14 @@
-.container.py-5
-  .row.justify-content-center
-    .col-3
-      = link_to "Accéder à superadmin", "/omniauth/github", class: "btn btn-primary", method: :post
+.row.justify-content-center
+  .col-3
+    = link_to "Accéder à superadmin", "/omniauth/github", class: "btn btn-primary", method: :post
 
 - if Rails.env.development?
-  .container.py-5
-    .row.justify-content-center
-      .col-3
-        h5 Liens utiles
-        ul
-          li = link_to "Letter Opener", letter_opener_web_path
-          li = link_to "Mailer Previews", "/rails/mailers"
-          li = link_to "SMS Previews", "/lapin/sms_preview"
-          li = link_to "Routes", "/rails/info/routes"
-          li = link_to "Rails properties", "/rails/info/properties"
+  .row.justify-content-center.mt-5
+    .col-3
+      h5 Liens utiles
+      ul
+        li = link_to "Letter Opener", letter_opener_web_path
+        li = link_to "Mailer Previews", "/rails/mailers"
+        li = link_to "SMS Previews", "/lapin/sms_preview"
+        li = link_to "Routes", "/rails/info/routes"
+        li = link_to "Rails properties", "/rails/info/properties"
