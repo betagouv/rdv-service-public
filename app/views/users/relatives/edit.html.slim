@@ -1,15 +1,13 @@
-.row.justify-content-md-center.pt-3
-  .col-md-6
-    .card
-      .card-header
-        h1.card-title Modifier un proche
-      .card-body
-        = simple_form_for @user, url: relative_path(@user) do |f|
-          = render "model_errors", model: @user
-          = render "form_fields", f: f
-          .d-flex.justify-content-between
-            = link_to "Supprimer", relative_path(@user), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de ce proche ?"}
+- content_for :title, "Modifier un proche"
 
-            .d-flex.justify-content-end
-              = link_to "Annuler", users_informations_path, class: "btn btn-link"
-              = f.button :submit, class: "btn"
+.card
+  .card-body
+    = simple_form_for @user, url: relative_path(@user) do |f|
+      = render "model_errors", model: @user
+      = render "form_fields", f: f
+      .d-flex.justify-content-between
+        = link_to "Supprimer", relative_path(@user), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de ce proche ?"}
+
+        .d-flex.justify-content-end
+          = link_to "Annuler", users_informations_path, class: "btn btn-link"
+          = f.button :submit, class: "btn"

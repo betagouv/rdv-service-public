@@ -1,11 +1,11 @@
 class Users::RegistrationsController < Devise::RegistrationsController
   include CanHaveRdvWizardContext
 
-  before_action :set_rdv_insertion_organisations, only: %i[edit destroy]
+  before_action :set_rdv_insertion_organisations, only: %i[edit destroy] # rubocop:disable Rails/LexicallyScopedActionFilter
   after_action :allow_iframe
 
   layout "application"
-  layout "application_narrow", only: %i[new edit]
+  layout "application_narrow", only: %i[new edit pending]
 
   def create
     return invite_and_redirect(existing_unconfirmed_user) if existing_unconfirmed_user
@@ -30,7 +30,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   def pending
     @email_tld = params[:email_tld]
-    render layout: "application_narrow"
   end
 
   private
