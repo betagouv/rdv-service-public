@@ -1,14 +1,12 @@
-.row.mt-3.justify-content-center
-  .container
-    .row.justify-content-center.my-3
-      .col-lg-7.col-md-10.col-sm-11
-        .card
-          .card-header.text-center
-            h4 = t(".title")
-          .card-body
-            = render "form", user: current_user
-          .car-footer.text-center
-            p Par exemple :
-            p.fw-lighter.fs-6 = t(".examples.first")
-            p.fw-lighter.fs-6 = t(".examples.second")
-            p.fw-lighter.fs-6 = t(".examples.third")
+- content_for :title, "Vérification"
+
+.card
+  .card-header.text-center
+    h4 = t(".title")
+  .card-body
+    = render "form", user: current_user
+  .car-footer.text-center
+    p Par exemple :
+    p.fw-lighter.fs-6 = t(".examples.first")
+    p.fw-lighter.fs-6 = t(".examples.second")
+    p.fw-lighter.fs-6 = t(".examples.third")
