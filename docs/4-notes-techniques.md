@@ -163,3 +163,25 @@ classDiagram
     + filter_motifs()
   }
 ```
+
+## Metabase
+
+Nous utilisons Metabase pour donner à l'ensemble de l'équipe une visibilité sur nos données.
+
+Notre dossier d'architecture technique fournit une description haut niveau de notre usage de Metabase :
+[architecture-technique.md](architecture-technique.md)
+
+Le script [scripts/etl.sh](scripts/etl.sh) permet de lancer la procédure de copie du dernier backup de la prod vers la base de donnée de l'app `rdv-service-public-etl`.
+
+### Mettre à jour Metabase
+
+Nous avons utilisé le déploiement en un clic décrit dans cette doc de Scalingo :
+https://doc.scalingo.com/platform/getting-started/getting-started-with-metabase
+
+Pour mettre à jour Metabase il faut déclencher un deploy en utilisant la commande ci-dessous. 
+
+⚠️ Attention, une mise à jour de Metabase peut mal se passer et rendre notre Metabase indisponible.
+
+```bash
+scalingo --app rdv-service-public-metabase deploy https://github.com/Scalingo/metabase-scalingo/archive/refs/heads/master.tar.gz
+```
