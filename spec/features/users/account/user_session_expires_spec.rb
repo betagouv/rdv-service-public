@@ -1,4 +1,4 @@
-RSpec.describe "Agent session expiration" do
+RSpec.describe "User session expiration" do
   let(:password) { "Rdvservicepublictest1!" }
   let!(:user) { create(:user, password: password, password_confirmation: password) }
 
