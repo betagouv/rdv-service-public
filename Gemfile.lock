@@ -201,7 +201,7 @@ GEM
       dotenv (= 2.8.1)
       railties (>= 3.2)
     drb (2.2.1)
-    dsfr-view-components (0.5.0)
+    dsfr-view-components (1.5.1)
       html-attributes-utils (~> 1)
       pagy (~> 6)
       view_component (~> 2)
@@ -371,7 +371,7 @@ GEM
       validate_url
       webfinger (~> 1.2)
     orm_adapter (0.5.0)
-    pagy (6.0.4)
+    pagy (6.5.0)
     paper_trail (12.3.0)
       activerecord (>= 5.2)
       request_store (~> 1.1)

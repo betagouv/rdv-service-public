@@ -30,4 +30,17 @@ RSpec.describe "Agent session expiration" do
     travel_to(Time.zone.parse("2024-02-07 12:00")) # 14 days and 5 minutes after last visit
     expect_to_be_logged_out
   end
+
+  it "is done when the agent is deleted" do
+    visit new_agent_session_path
+    fill_in "Email", with: agent.email
+    fill_in "password", with: password
+    click_on "Se connecter"
+    expect_to_be_logged_in
+
+    agent.soft_delete
+
+    expect_to_be_logged_out
+    expect(page).to have_content("Votre compte a été supprimé !")
+  end
 end

@@ -10,7 +10,6 @@ footer {
 // only used for users
 footer.main-footer {
   padding: 3rem 0 0;
-  overflow-x: hidden;
   .brand {
     font-weight: 800;
     font-size: 1.7rem;
@@ -41,4 +40,17 @@ body.users .footer {left: 0;}
     left: 0 !important;
     text-align: center;
   }
+}
+
+// DSFR overrides
+
+.fr-footer__partners-title {
+  font-size: 1.5rem;
+}
+
+.fr-footer__partners-main {
+  // this avoids footer to overflow on the right and thus increasing the viewport width which breaks DSFR modals
+  flex-wrap: wrap;
+  gap: 1rem;
+  background: $white;
 }
