@@ -251,6 +251,9 @@ group :test do
   # Library for stubbing HTTP requests in Ruby.
   gem "webmock"
 
+  # Modify your ENV
+  gem "climate_control"
+
   # Dépendence indirecte de axe-core-api
   gem "axiom-types", git: "https://github.com/rdv-solidarites/axiom-types.git", ref: "b9b204c"
 end

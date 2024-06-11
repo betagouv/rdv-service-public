@@ -1,13 +1,7 @@
 RSpec.describe Anonymizer::Core do
   let!(:user_with_email) { create(:user, email: "user@example.com") }
 
-  around do |example|
-    host = ENV.delete("HOST")
-
-    example.run
-
-    ENV["HOST"] = host
-  end
+  stub_env_with(HOST: nil)
 
   context "general case" do
     let!(:prescripteur) { create(:prescripteur) }
@@ -53,6 +47,16 @@ RSpec.describe Anonymizer::Core do
       expect(rdv_with_context.reload.context).to eq "[valeur anonymisée]"
       expect(rdv_with_blank_context.reload.context).to be_nil
       expect(rdv_with_null_context.reload.context).to be_nil
+    end
+  end
+
+  context "when the environment looks like production" do
+    stub_env_with(HOST: "http://www.rdv-solidarites-test.localhost")
+
+    it "raises an error and quits" do
+      expect do
+        described_class.anonymize_all_data!(service: "rdvsp", schema: "public")
+      end.to raise_error(RuntimeError, "Attention, il semble que vous êtes en train d'anonymiser des données d'une appli web")
     end
   end
 end
