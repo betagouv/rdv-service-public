@@ -7,7 +7,7 @@ html lang="fr"
     = stylesheet_link_tag    "application", media: "all", "data-turbolinks-track": "reload"
     = javascript_include_tag "application", "data-turbolinks-track": "reload"
   main
-    body.auth-fluid-pages.pb-0 class="#{agents_or_users_body_class}"
+    body.pb-0
       = render "layouts/rdv_solidarites_instance_name"
       .auth-fluid.row
         .auth-fluid-left.text-center.col-xs-12.col-md-4 class="#{"auth-fluid-left--agent-preferences" if current_agent}"

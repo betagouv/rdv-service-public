@@ -33,8 +33,6 @@ footer.main-footer {
   left: $leftbar-width;
 }
 
-body.users .footer {left: 0;}
-
 @include media-breakpoint-down(sm) {
   .footer {
     left: 0 !important;

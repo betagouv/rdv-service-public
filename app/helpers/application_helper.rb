@@ -45,10 +45,6 @@ module ApplicationHelper
     sanitize("#{label} <abbr title=\"obligatoire\">*</abbr>")
   end
 
-  def agents_or_users_body_class
-    agent_path? ? "agents" : "users"
-  end
-
   def link_logo
     link_to root_path do
       image_tag current_domain.logo_path, height: 40, alt: current_domain.name, class: "d-inline logo"
