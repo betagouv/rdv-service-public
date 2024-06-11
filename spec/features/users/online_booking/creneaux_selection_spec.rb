@@ -40,7 +40,6 @@ RSpec.describe "User can select a creneau" do
     it "does not show duplicate creneaux" do
       visit public_link_to_org_path(organisation_id: organisation.id)
 
-      click_on("Vaccination (Sur place)")
       click_on("Prochaine disponibilité le") # choix du lieu
       displayed_creneaux = page.all("a", text: "08:00")
       expect(displayed_creneaux.size).to eq(1)

@@ -142,3 +142,24 @@ Pour l’activer vous pouvez utiliser cette commande :
     scalingo --region osc-secnum-fr1 --app demo-rdv-solidarites-pr4242 env-unset DISABLE_SENDING_EMAILS && \
     scalingo --region osc-secnum-fr1 --app demo-rdv-solidarites-pr4242 restart
 ```
+
+## Search Contexts
+
+```mermaid
+classDiagram
+  WebSearchContext <|-- AgentPrescriptionSearchContext
+  SearchContext <|-- WebSearchContext
+  WebSearchContext *-- Users-CreneauxWizardConcern
+  InvitationSearchContext <|-- WebInvitationSearchContext
+  SearchContext <|-- InvitationSearchContext
+  WebInvitationSearchContext *-- Users-CreneauxWizardConcern
+
+  class Users-CreneauxWizardConcern {
+    + to_partial_path()
+  }
+  class SearchContext {
+    - user
+    - query_params
+    + filter_motifs()
+  }
+```
