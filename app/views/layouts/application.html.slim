@@ -27,12 +27,6 @@ html lang="fr"
           - header.with_tool_link title: "Se connecter", path: new_user_session_path, classes: "fr-fi-account-fill"
 
     main class="#{ "container" if params[:controller].include?("users/") }"
-      - if content_for :breadcrumb
-        .row
-          .col-md-12.d-flex.justify-content-between.align-items-center
-              div
-                = yield :breadcrumb
-
       - if content_for :main_content
         = yield :main_content
       - else
