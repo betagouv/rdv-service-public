@@ -13,7 +13,7 @@ header.header.bg-white
           #js-headway-anchor.btn.text-primary-blue.link-dsfr.d-flex.justify-content-center
             | Nouveautés
         li.list-inline-item
-          = link_to current_agent.full_name, edit_agent_registration_path, class: "btn text-primary-blue link-dsfr js-header-tooltip", title: "Votre compte est maintenant accessible via ce lien"
+          = link_to current_agent.full_name, edit_agent_registration_path, class: "btn text-primary-blue link-dsfr"
         li.list-inline-item
           = link_to destroy_agent_session_path, method: :delete, class: "btn text-primary-blue link-dsfr" do
             i.fa.fa-sign-out-alt>

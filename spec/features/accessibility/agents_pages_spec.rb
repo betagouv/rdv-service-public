@@ -24,7 +24,6 @@ RSpec.describe "agents page", js: true do
 
     path = admin_organisation_agent_agenda_path(organisation, agent)
 
-    visit path # TODO: supprimer en même temps que app/javascript/components/header_tooltip.js
     visit path
     expect(page).to have_current_path(path)
     expect(page).to have_content(Rdv.last.users.last.full_name)
