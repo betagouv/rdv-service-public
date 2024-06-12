@@ -57,7 +57,7 @@ Note : nos bonnes pratiques sur les tests sont à lire ici : [Bonnes pratiques d
 
 Nous utilisons [RSpec](https://rspec.info/) pour écrire nos tests. En principe, la base de données de tests est créée automatiquement. 
 
-Les feature tests utilisent Capybara et ont besoin de Chrome (et de chromedriver) pour s’exécuter. Pour plusieurs devs sous MacOS dans l'équipe, il a fallu ajouter cette ligne à son fichier `/etc/hosts` pour pouvoir faire tourner les tests en local :
+Les feature tests utilisent Capybara et ont besoin de Firefox (et de geckodriver) pour s’exécuter. Pour plusieurs devs sous MacOS dans l'équipe, il a fallu ajouter cette ligne à son fichier `/etc/hosts` pour pouvoir faire tourner les tests en local :
 
     127.0.0.1 www.rdv-solidarites-test.localhost
 

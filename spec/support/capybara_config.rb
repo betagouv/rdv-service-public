@@ -1,24 +1,23 @@
-WebMock.disable_net_connect!(allow: [
-                               "127.0.0.1",
-                               "localhost",
-                               "www.rdv-solidarites-test.localhost",
-                               "chromedriver.storage.googleapis.com", # Autorise à télécharger le binaire chromedriver pour l'exécution de la CI
-                             ])
+require "selenium-webdriver"
 
+WebMock.disable_net_connect!(
+  allow: [
+    "127.0.0.1",
+    "localhost",
+    "www.rdv-solidarites-test.localhost",
+  ]
+)
+
+# https://www.selenium.dev/documentation/webdriver/browsers/firefox/
 Capybara.register_driver :selenium do |app|
-  chrome_bin = ENV.fetch("GOOGLE_CHROME_SHIM", nil)
-  binary = chrome_bin if chrome_bin
-  browser_options = Selenium::WebDriver::Chrome::Options.new(
-    # these args seem to reduce test flakyness
-    args: %w[headless no-sandbox disable-gpu disable-dev-shm-usage window-size=1500,1000],
-    "goog:loggingPrefs": { browser: "ALL" },
-    binary: binary
-  )
+  options = Selenium::WebDriver::Options.firefox
+  options.args << '-headless'
+  # args: %w[headless no-sandbox disable-gpu disable-dev-shm-usage window-size=1500,1000],
 
   Capybara::Selenium::Driver.new(
     app,
-    browser: :chrome,
-    options: browser_options
+    browser: :firefox,
+    options: options
   )
 end
 

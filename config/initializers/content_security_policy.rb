@@ -33,11 +33,6 @@ Rails.application.config.content_security_policy do |policy|
   policy.style_src :self, :unsafe_inline, bootstrap_cdn, api_mapbox, headway_cnd
   policy.connect_src :self, api_adresse_data_gouv, tiles_etalab
   policy.script_src :self, :unsafe_inline, api_mapbox, headway_cnd
-
-  if ENV["CI"].present?
-    # Autorise à télécharger le binaire chromedriver pour l'exécution de la CI
-    policy.script_src(*(policy.script_src + ["ajax.googleapis.com"]))
-  end
 end
 
 # If you are using UJS then enable automatic nonce generation
