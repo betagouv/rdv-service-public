@@ -26,7 +26,8 @@ RSpec.describe "Agent can manage recurrence on plage d'ouverture" do
     check("recurrence_on_thursday")
     check("recurrence_on_friday")
     check("recurrence_on_saturday")
-    fill_in("recurrence-until", with: "30/12/2019")
+    select("Arrêter le (date)", from: "recurrence[until_mode]")
+    fill_in("recurrence[until]", with: "30/12/2019")
 
     click_button("Enregistrer")
 
@@ -49,7 +50,7 @@ RSpec.describe "Agent can manage recurrence on plage d'ouverture" do
     expect_checked("recurrence_on_thursday")
     expect_checked("recurrence_on_friday")
     expect_checked("recurrence_on_saturday")
-    expect(page).to have_field("recurrence-until")
+    expect(page).to have_field("recurrence[until]")
     # expect(page).to have_field("recurrence-until", with: "30/12/2019")
     # TODO Pourquoi le champs ne contient pas la valeur ici. Quand on le fait à la main, tout va bien.
 
@@ -78,7 +79,7 @@ RSpec.describe "Agent can manage recurrence on plage d'ouverture" do
     expect(page).to have_select("recurrence_every", selected: "mois")
     expect(page).to have_select("recurrence_interval", selected: "1")
     expect(page).to have_text("Tous les 2ème mercredi du mois")
-    expect(page).to have_field("recurrence-until")
+    expect(page).to have_field("recurrence[until]")
     # expect(page).to have_field("recurrence-until", with: "30/12/2019")
     # TODO Pourquoi le champs ne contient pas la valeur ici. Quand on le fait à la main, tout va bien.
   end

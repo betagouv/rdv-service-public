@@ -28,4 +28,11 @@
         span.js-recurrence-monthly Tous les X du mois
 
       .until-select
-        = date_input(n, :until, required: false, label: "Finir la répétition le (si aucune laisser vide)", input_html: { id: "recurrence-until", data: { target: "recurrence.until", action: "recurrence#updateRecurrence" }, class: "js-recurrence-until js-recurrence-input" } )
+        .row
+          .col-6
+            = n.input :until_mode, as: :select, collection: { "Ne jamais arrêter": :never, "Arrêter le (date)": :until_date, "Arrêter au bout de (nb occurences)": :until_occurences_count }, include_blank: false, label: "Finir la répétition", input_html: { class: "js-recurrence-until-mode js-recurrence-input" }
+          .col-6
+            .js-until-date
+              = date_input(n, :until, required: false, label: "Date de l'occurence", input_html: { class: "js-recurrence-until-date js-recurrence-input" } )
+            .js-until-occurences-count
+              = n.input(:until, required: false, label: "Nombre d'occurences", collection: 1..100, input_html: { class: "js-recurrence-until-occurences-count js-recurrence-input" })

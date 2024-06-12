@@ -54,11 +54,8 @@ module PlageOuverturesHelper
   end
 
   def display_recurrence_range(plage_ouverture)
-    recurrence_hash = plage_ouverture.recurrence.to_hash
-
     range_part = "à partir du #{I18n.l(plage_ouverture.first_day, format: :human)}"
-
-    range_part = "#{range_part}, jusqu'au #{I18n.l(recurrence_hash[:until].to_date, format: :human)}" if recurrence_hash[:until].present?
+    range_part = "#{range_part}, jusqu'au #{I18n.l(plage_ouverture.recurrence_ends_at.to_date, format: :human)}" if plage_ouverture.recurrence_ends_at
     range_part
   end
 

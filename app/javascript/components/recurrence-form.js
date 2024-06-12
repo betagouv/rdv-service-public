@@ -8,9 +8,15 @@ class RecurrenceForm {
     this.intervalTarget = document.querySelector('.js-recurrence-interval')
     this.everyTarget = document.querySelector('.js-recurrence-every')
     this.onTargets = Array.from(document.querySelectorAll('.js-recurrence-on'))
-    this.untilTarget = document.querySelector('.js-recurrence-until')
+    this.untilDateTarget = document.querySelector('.js-recurrence-until-date')
+    this.untilOccurencesCountTarget = document.querySelector('.js-recurrence-until-occurences-count')
+    this.untilModeTarget = document.querySelector('.js-recurrence-until-mode')
     this.firstDayTarget = document.querySelector('.js-recurrence-first-day')
     this.monthlyTarget = document.querySelector('.js-recurrence-monthly')
+    this.untilDateInput = document.querySelector('.js-until-date')
+    this.untilOccurencesCountInput = document.querySelector('.js-until-occurences-count')
+
+    $(this.untilModeTarget).on('change', () => { this.toggleUntilInput() })
 
     document.querySelectorAll('.js-recurrence-input').
       forEach(i => i.addEventListener('change', this.updateRecurrence))
@@ -22,11 +28,10 @@ class RecurrenceForm {
       this.hasRecurrenceTarget.checked = true;
       this.everyTarget.value = model.every;
       this.intervalTarget.value = model.interval;
-      if (model.until) {
-        this.untilTarget.value = Intl.DateTimeFormat("fr").format(new Date(model.until))
-      }
     }
     if(model.every == "week") this.setOn(model);
+    if(model.until) this.untilDateTarget.value = Intl.DateTimeFormat("fr").format(new Date(model.until))
+    if(model.total) this.untilOccurencesCountTarget.value = parseInt(model.total)
     this.updateView(model);
   }
 
@@ -76,7 +81,23 @@ class RecurrenceForm {
         model.day[this.getWeekday(this.getFirstDay())] = this.getWeekdayPositionInMonth(this.getFirstDay().getDate());
       }
 
-      if (this.untilTarget.value) model.until = this.untilTarget.value;
+      switch (this.untilModeTarget.value) {
+        case "never":
+          model.until = null
+          model.total = null
+          break;
+        case "until_date":
+          model.until = this.untilDateTarget.value;
+          model.total = null;
+          break;
+        case "until_occurences_count":
+          model.total = parseInt(this.untilOccurencesCountTarget.value);
+          model.until = null;
+          break;
+        default:
+          model.until = null;
+          model.total = null;
+      }
     }
 
     this.updateView(model)
@@ -96,6 +117,13 @@ class RecurrenceForm {
     } else {
       this.element.classList.add("recurrence-select--never");
     }
+
+    if (model.until) {
+      this.untilModeTarget.value = "until_date"
+    } else if (model.total) {
+      this.untilModeTarget.value = "until_occurences_count"
+    }
+    this.toggleUntilInput();
   }
 
   getWeekday = (date) => {
@@ -117,6 +145,26 @@ class RecurrenceForm {
 
     // On force en françois puisque c'est affiché en français
     return `Tous les ${nthWeekdayOfMonth} ${Intl.DateTimeFormat("fr", {weekday: "long"}).format(date).toLowerCase()} du mois`;
+  }
+
+  toggleUntilInput = () => {
+    switch(this.untilModeTarget.value) {
+      case "never":
+        $(this.untilDateInput).hide()
+        $(this.untilOccurencesCountInput).hide()
+        break;
+      case "until_date":
+        $(this.untilOccurencesCountInput).hide()
+        $(this.untilDateInput).show()
+        break;
+      case "until_occurences_count":
+        $(this.untilDateInput).hide()
+        $(this.untilOccurencesCountInput).show()
+        break;
+      default:
+        $(this.untilDateInput).hide()
+        $(this.untilOccurencesCountInput).hide()
+    }
   }
 }
 

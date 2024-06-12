@@ -6,7 +6,8 @@ module RecurrenceConcern
     serialize :start_time, Tod::TimeOfDay
     serialize :end_time, Tod::TimeOfDay
 
-    before_save :clear_empty_recurrence, :set_recurrence_ends_at
+    before_save :clear_empty_recurrence
+    before_save :set_recurrence_ends_at, if: -> { recurrence.present? }
 
     validates :first_day, :start_time, :end_time, presence: true
     validate :recurrence_starts_matches_first_day, if: :recurring?
@@ -121,7 +122,18 @@ module RecurrenceConcern
   end
 
   def set_recurrence_ends_at
-    self.recurrence_ends_at = recurrence&.ends_at&.end_of_day
+    if recurrence.infinite?
+      self.recurrence_ends_at = nil
+      return
+    end
+
+    if recurrence.ends_at # Date de fin de la récurrence
+      self.recurrence_ends_at = recurrence.ends_at.end_of_day
+    elsif recurrence.length # Nombre d'occurences de la récurrence
+      # rubocop:disable Lint/UnreachableLoop
+      self.recurrence_ends_at = recurrence.events.reverse_each { |event| break event }.end_of_day
+      # rubocop:enable Lint/UnreachableLoop
+    end
   end
 
   def clear_empty_recurrence
