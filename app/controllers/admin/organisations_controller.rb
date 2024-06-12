@@ -11,7 +11,7 @@ class Admin::OrganisationsController < AgentAuthController
       .order("organisations.name")
       .to_a.group_by { _1.organisation.territory }
     @active_agent_preferences_menu_item = :organisations
-    render layout: "registration"
+    render layout: "application_agent_config"
   end
 
   def show
@@ -37,7 +37,7 @@ class Admin::OrganisationsController < AgentAuthController
     @organisation = Organisation.new(territory: Territory.find(params[:territory_id]))
     authorize(@organisation)
     @active_agent_preferences_menu_item = :organisations
-    render :new, layout: "registration"
+    render :new, layout: "application_agent_config"
   end
 
   def create
@@ -52,7 +52,7 @@ class Admin::OrganisationsController < AgentAuthController
                   flash: { success: "Organisation enregistrée ! Vous pouvez maintenant lui ajouter des motifs et des lieux de rendez-vous, puis inviter des agents à la rejoindre" }
     else
       @active_agent_preferences_menu_item = :organisations
-      render :new, layout: "registration"
+      render :new, layout: "application_agent_config"
     end
   end
 

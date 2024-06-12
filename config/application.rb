@@ -67,7 +67,7 @@ module Lapin
     # Devise layout
     config.to_prepare do
       [Devise::RegistrationsController, Devise::SessionsController, Devise::ConfirmationsController, Devise::PasswordsController, Devise::InvitationsController].each do |controller|
-        controller.layout "registration"
+        controller.layout "application_agent_config"
       end
     end
 
