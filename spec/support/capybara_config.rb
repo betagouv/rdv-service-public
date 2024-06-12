@@ -11,13 +11,19 @@ WebMock.disable_net_connect!(
 # https://www.selenium.dev/documentation/webdriver/browsers/firefox/
 Capybara.register_driver :selenium do |app|
   options = Selenium::WebDriver::Options.firefox
-  options.args << '-headless'
+  options.args << "-headless"
+  options.args << "--width=1500"
+  options.args << "--height=1000"
   # args: %w[headless no-sandbox disable-gpu disable-dev-shm-usage window-size=1500,1000],
+
+  service = Selenium::WebDriver::Service.firefox
+  service.log = $stdout
 
   Capybara::Selenium::Driver.new(
     app,
     browser: :firefox,
-    options: options
+    options: options,
+    service: service
   )
 end
 
