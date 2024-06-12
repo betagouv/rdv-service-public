@@ -118,7 +118,7 @@ RSpec.describe "agents can prescribe rdvs" do
         find(".select2-search__field").send_keys("francis")
         expect(page).to have_content("FACTICE Francis")
         first(".select2-results ul.select2-results__options li").click
-        click_on "Continuerr"
+        click_on "Continuer"
         # Display Récapitulatif
         expect(page).to have_content("Motif : #{motif_collectif.name}")
         expect(page).to have_content("Lieu : #{mds_paris_nord.name}")
