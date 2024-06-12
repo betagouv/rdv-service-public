@@ -9,7 +9,7 @@ class Admin::SlotsController < AgentAuthController
     # À terme, ça pourrait également être un calcul plus réduit. Dans le cas de la recherche sur plusieurs lieux, nous avons besoin de connaitre la prochaine dispo, pas TOUTES les dispo
     @search_result = search_result
 
-    @motifs = Agent::MotifPolicy::UseScope.apply(current_agent, Motif)
+    @motifs = Agent::MotifPolicy::UseScope.apply(current_agent, Motif.all)
       .where(organisation: current_organisation)
       .active.ordered_by_name
     @services = Service.where(id: @motifs.pluck(:service_id).uniq)

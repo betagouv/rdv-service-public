@@ -2,7 +2,7 @@ class Admin::RdvsCollectifsController < AgentAuthController
   include RdvsHelper
 
   def index
-    @motifs = Agent::MotifPolicy::UseScope.apply(current_agent, Motif).available_motifs_for_organisation_and_agent(current_organisation, current_agent).collectif
+    @motifs = Agent::MotifPolicy::UseScope.apply(current_agent, Motif.active).available_motifs_for_organisation_and_agent(current_organisation, current_agent).collectif
 
     @rdvs = policy_scope(Rdv).where(organisation: current_organisation).collectif
     @rdvs = @rdvs.order(starts_at: :asc).page(page_number)
