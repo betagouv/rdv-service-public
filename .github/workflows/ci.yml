@@ -194,3 +194,7 @@ jobs:
           POSTGRES_USER: lapin_test
           POSTGRES_PASSWORD: lapin_test
           POSTGRES_DB: lapin_test
+      - uses: actions/upload-artifact@v4
+        with:
+          name: artifacts-capybara
+          path: tmp/capybara
