@@ -1,6 +1,6 @@
 class Agent::MotifPolicy < ApplicationPolicy
   def self.agent_can_manage_motif?(motif, agent)
-    motif.in?(ManageScope.motifs_i_can_manage(agent))
+    motif.organisation.in?(organisations_i_can_manage(agent))
   end
 
   def self.agent_can_use_motif?(motif, agent)
