@@ -1,0 +1,38 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  main {
+    overflow-y: hidden;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 50px;
+    aside {
+      flex-grow: 0;
+      overflow: auto;
+    }
+    .screenshots-wrapper {
+      flex: 1;
+      overflow: auto;
+    }
+  }
+}
+section {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 50px;
+}
+img {
+  border: 1px solid #ccc;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding-left: 10px;
+}

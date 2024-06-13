@@ -64,3 +64,5 @@ docs/domain_model.svg
 /config/credentials/production.key
 
 /config/credentials/test.key
+
+/scripts/application_screenshots/202*

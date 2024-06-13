@@ -1,0 +1,45 @@
+doctype html
+html lang="en"
+  head
+    meta charset="UTF-8"
+    meta name="viewport" content="width=device-width, initial-scale=1.0"
+    meta http-equiv="X-UA-Compatible" content="ie=edge"
+    title
+      = "RDV Screenshots #{timestamp}"
+    link rel="stylesheet" href="style.css"
+  body
+    .container
+      header
+        h1
+          | RDV Screenshots
+          = timestamp
+      main
+        aside
+          ul
+            - viewports.each do |viewport, groups|
+              li
+                a href="##{viewport}"
+                  = viewport
+                ul
+                  - groups.each_value do |group|
+                    li
+                      a href="##{group.name}"
+                        = group.name
+                      ul
+                        - group.screenshots.each do |screenshot|
+                          li
+                            a href="##{screenshot.name}"
+                              = screenshot.name
+        .screenshots-wrapper
+          - viewports.each do |viewport, groups|
+            h2 id=viewport
+              = viewport
+            - groups.each_value do |group|
+              h3 id=group.name
+                = group.name
+              section
+                - group.screenshots.each do |screenshot|
+                  div
+                    h3 id=screenshot.name
+                      = screenshot.name
+                    img loading="lazy" src=screenshot.path
