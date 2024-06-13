@@ -1,7 +1,13 @@
 .recurrence-select.recurrence-select--weekly.js-recurrence-container data-controller="recurrence"
   .row
-    .col
+    .col-5
       = date_input(f, :first_day, input_html: { id: "recurrence-source", class: "js-recurrence-first-day js-recurrence-input"} )
+    .col-5
+      div
+        p &nbsp
+      .custom-control.custom-switch
+        input.custom-control-input[type="checkbox" id="show-recurrence-form-switch" class="js-recurrence-toggle js-recurrence-input"]
+        label.custom-control-label for="show-recurrence-form-switch" Répéter la plage
   .row
     .col = f.input :start_time, as: :select, collection: every_5_minutes_of_the_day, selected: plage_ouverture.start_time&.strftime("%H:%M"), include_blank: false
     .col = f.input :end_time,   as: :select, collection: every_5_minutes_of_the_day, selected: plage_ouverture.end_time&.strftime("%H:%M"),   include_blank: false
@@ -9,8 +15,6 @@
   = f.input :recurrence, as: :hidden, input_html: { value: plage_ouverture.recurrence ? plage_ouverture.recurrence.as_json.to_json : "", class: "js-recurrence-computed" }
 
   = simple_fields_for :recurrence do |n|
-    = n.input :has_recurrence, as: :boolean, label: "Répéter...", input_html: { class: "js-recurrence-toggle js-recurrence-input" }
-
     .all-select
       .form-group
         .form-inline
