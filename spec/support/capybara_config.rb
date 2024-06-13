@@ -33,6 +33,7 @@ Capybara.configure do |config|
   config.javascript_driver = :selenium
   config.server = :puma, { Silent: true }
   config.disable_animation = true
+  config.save_path = Rails.root.join("tmp/capybara")
 
   # This is necessary when using Selenium + custom .localhost domain.
   # See: https://stackoverflow.com/a/63973323/2864020
