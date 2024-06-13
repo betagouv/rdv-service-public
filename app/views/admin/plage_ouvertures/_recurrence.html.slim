@@ -36,4 +36,4 @@
             .js-until-date
               = date_input(n, :until, required: false, label: "Date de l'occurence", input_html: { class: "js-recurrence-until-date js-recurrence-input" } )
             .js-until-occurences-count
-              = n.input(:until, required: false, label: "Nombre d'occurences", collection: 1..100, input_html: { class: "js-recurrence-until-occurences-count js-recurrence-input" })
+              = n.input(:until, required: false, label: "Nombre d'occurences", collection: 1..10, include_blank: false, input_html: { class: "js-recurrence-until-occurences-count js-recurrence-input" })
