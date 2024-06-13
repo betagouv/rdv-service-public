@@ -21,8 +21,6 @@ RSpec.describe "Agent can organize a rdv collectif", js: true do
   def create_rdv_collectif(lieu_availability)
     # Creating a new RDV Collectif
     visit admin_organisation_rdvs_collectifs_path(organisation)
-    visit admin_organisation_rdvs_collectifs_path(organisation) # TODO: supprimer en même temps que app/javascript/components/header_tooltip.js
-    # Second visit to hide the new header tooltip
     expect(page).to have_content("Aucun RDV")
 
     click_link "Nouveau RDV Collectif"
@@ -95,7 +93,6 @@ RSpec.describe "Agent can organize a rdv collectif", js: true do
     it "shows a warning when the name is too long" do
       # Creating a new RDV Collectif
       visit admin_organisation_rdvs_collectifs_path(organisation)
-      visit admin_organisation_rdvs_collectifs_path(organisation)  # TODO: supprimer en même temps que app/javascript/components/header_tooltip.js
       expect(page).to have_content("Aucun RDV")
 
       click_link "Nouveau RDV Collectif"

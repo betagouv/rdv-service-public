@@ -1,0 +1,184 @@
+h1 {
+  font-size: 3rem;
+  font-weight: bold;
+}
+
+h2 {
+  font-size: $h2-font-size;
+  color: $primary;
+  font-weight: bold;
+  padding-bottom: 1rem;
+}
+
+@include media-breakpoint-only(xs) {
+  h1 {
+    font-size: 2rem;
+  }
+  h2 {
+    font-size: 1.5rem;
+  }
+  h3 {
+    font-size: 1.3rem;
+  }
+}
+
+
+a {
+  transition: all 0.3s;
+  display: inline-block;
+}
+
+p {
+  line-height: 1.7rem;
+}
+
+section header {
+  margin-bottom: 70px;
+}
+
+
+/* General Media Query ---------------------------------- */
+@media (max-width: 991px) {
+  h2 {
+    text-align: center;
+  }
+
+  .container {
+    max-width: 90%;
+  }
+
+  section {
+    padding: 100px 0;
+  }
+
+  .img-fluid {
+    max-width: 60%;
+  }
+
+  .content {
+    .col-lg-4{
+      order: 1;
+    }
+    .col-lg-8{
+      order: 2;
+    }
+  }
+}
+
+/*
+* ==========================================================
+*     NAVBAR
+* ==========================================================
+*/
+
+nav.navbar {
+  background: none;
+  transition: all 0.5s;
+  padding-left: 0;
+  padding-right: 0;
+
+  .navbar-brand {
+    font-weight: 800;
+    font-size: 1.7rem;
+    color: #222;
+  }
+  a.nav-link {
+    color: #333;
+    font-size: 1.1rem;
+    &:hover, &.active {
+      color: $primary;
+    }
+  }
+  .navbar-btn {
+    margin-left: 15px;
+  }
+  .navbar-toggler {
+    outline: none;
+    span {
+      width: 25px;
+      margin: 5px;
+      display: block;
+      height: 2px;
+      background: #333;
+      -webkit-transition: all 0.2s;
+      transition: all 0.2s;
+    }
+    &.active span {
+      &:first-of-type {
+        -webkit-transform: rotate(45deg) translate(10px);
+        transform: rotate(45deg) translate(10px);
+      }
+      &:last-of-type {
+        -webkit-transform: rotate(-45deg) translate(10px);
+        transform: rotate(-45deg) translate(10px);
+      }
+      &:nth-of-type(2) {
+        opacity: 0;
+      }
+    }
+  }
+}
+
+/* Navbar Mediaquery ----------------------------------- */
+@media (max-width: 1199px) {
+  nav.navbar .navbar-btn {
+    margin-left: 0;
+  }
+}
+
+
+/*
+* ==========================================================
+*     HERO SECTION
+* ==========================================================
+*/
+
+section {
+  &.hero {
+    p {
+      margin: 20px 0;
+    }
+  }
+  &.our-mission p {
+    margin: 30px 0;
+  }
+
+  &.who i {
+    font-size: 4em;
+  }
+}
+
+
+/* =========================================
+   THEMING OF BOOTSTRAP COMPONENTS
+   ========================================= */
+/*
+ * 1. NAVBAR
+ */
+
+.navbar {
+  padding: 0.5rem 1rem;
+}
+
+.navbar-brand {
+  display: inline-block;
+  padding-top: 0.3125rem;
+  padding-bottom: 0.3125rem;
+  margin-right: 1rem;
+  font-size: 1.25rem;
+}
+
+.navbar-toggler {
+  padding: 0.25rem 0.75rem;
+  font-size: 1.25rem;
+  line-height: 1;
+  border: 1px solid transparent;
+  border-radius: 50px;
+}
+
+.img-circle {
+  margin-top: -70px;
+  @include media-breakpoint-down(md) {
+    margin-top: 0;
+  }
+}

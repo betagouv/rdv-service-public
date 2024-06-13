@@ -2,7 +2,7 @@
 # et qui ne nécessite pas que l'agent soit connecté,
 # ce controller gère la modification de mot de passe pour un agent connecté, sans utiliser Devise.
 class Agents::MotDePassesController < AgentAuthController
-  layout "registration"
+  layout "application_agent_config"
   before_action { @active_agent_preferences_menu_item = :compte }
 
   def edit
