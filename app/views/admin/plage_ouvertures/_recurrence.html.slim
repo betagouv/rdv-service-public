@@ -31,7 +31,7 @@
       .until-select
         .row
           .col-6
-            = n.input :until_mode, as: :select, collection: { "Ne jamais arrêter": :never, "Arrêter le (date)": :until_date, "Arrêter au bout de (nb occurences)": :until_occurences_count }, include_blank: false, label: "Finir la répétition", input_html: { class: "js-recurrence-until-mode js-recurrence-input" }
+            = n.input :repetition_ending_mode, as: :select, collection: { "Ne jamais arrêter": :none, "Arrêter le (date)": :date, "Arrêter au bout de (nb occurences)": :occurences }, include_blank: false, label: "Finir la répétition", input_html: { class: "js-recurrence-repetition-ending-mode js-recurrence-input" }
           .col-6
             .js-until-date
               = date_input(n, :until, required: false, label: "Date de l'occurence", input_html: { class: "js-recurrence-until-date js-recurrence-input" } )

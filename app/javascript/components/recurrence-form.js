@@ -10,13 +10,13 @@ class RecurrenceForm {
     this.onTargets = Array.from(document.querySelectorAll('.js-recurrence-on'))
     this.untilDateTarget = document.querySelector('.js-recurrence-until-date')
     this.untilOccurencesCountTarget = document.querySelector('.js-recurrence-until-occurences-count')
-    this.untilModeTarget = document.querySelector('.js-recurrence-until-mode')
+    this.repetitionEndingMode = document.querySelector('.js-recurrence-repetition-ending-mode')
     this.firstDayTarget = document.querySelector('.js-recurrence-first-day')
     this.monthlyTarget = document.querySelector('.js-recurrence-monthly')
     this.untilDateInput = document.querySelector('.js-until-date')
     this.untilOccurencesCountInput = document.querySelector('.js-until-occurences-count')
 
-    $(this.untilModeTarget).on('change', () => { this.toggleUntilInput() })
+    $(this.repetitionEndingMode).on('change', () => { this.toggleUntilInput() })
 
     document.querySelectorAll('.js-recurrence-input').
       forEach(i => i.addEventListener('change', this.updateRecurrence))
@@ -81,7 +81,7 @@ class RecurrenceForm {
         model.day[this.getWeekday(this.getFirstDay())] = this.getWeekdayPositionInMonth(this.getFirstDay().getDate());
       }
 
-      switch (this.untilModeTarget.value) {
+      switch (this.repetitionEndingMode.value) {
         case "never":
           model.until = null
           model.total = null
@@ -119,9 +119,9 @@ class RecurrenceForm {
     }
 
     if (model.until) {
-      this.untilModeTarget.value = "until_date"
+      this.repetitionEndingMode.value = "date"
     } else if (model.total) {
-      this.untilModeTarget.value = "until_occurences_count"
+      this.repetitionEndingMode.value = "occurrences"
     }
     this.toggleUntilInput();
   }
@@ -148,16 +148,16 @@ class RecurrenceForm {
   }
 
   toggleUntilInput = () => {
-    switch(this.untilModeTarget.value) {
-      case "never":
+    switch(this.repetitionEndingMode.value) {
+      case "none":
         $(this.untilDateInput).hide()
         $(this.untilOccurencesCountInput).hide()
         break;
-      case "until_date":
+      case "date":
         $(this.untilOccurencesCountInput).hide()
         $(this.untilDateInput).show()
         break;
-      case "until_occurences_count":
+      case "occurences":
         $(this.untilDateInput).hide()
         $(this.untilOccurencesCountInput).show()
         break;
