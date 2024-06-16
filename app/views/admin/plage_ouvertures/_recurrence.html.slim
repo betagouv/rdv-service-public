@@ -33,7 +33,7 @@
           .col-6
             = n.input :repetition_ending_mode, as: :select, collection: { "Ne jamais arrêter": :none, "Arrêter le (date)": :date, "Arrêter au bout de (nb occurences)": :occurences }, include_blank: false, label: "Finir la répétition", input_html: { class: "js-recurrence-repetition-ending-mode js-recurrence-input" }
           .col-6
-            .js-until-date
+            .js-until-date.js-repetition-ending-input
               = date_input(n, :until, required: false, label: "Date de l'occurence", input_html: { class: "js-recurrence-until-date js-recurrence-input" } )
-            .js-until-occurences-count
+            .js-until-occurences-count.js-repetition-ending-input
               = n.input(:until, required: false, label: "Nombre d'occurences", collection: 1..10, include_blank: false, input_html: { class: "js-recurrence-until-occurences-count js-recurrence-input" })

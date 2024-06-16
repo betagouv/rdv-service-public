@@ -148,23 +148,11 @@ class RecurrenceForm {
   }
 
   toggleUntilInput = () => {
-    switch(this.repetitionEndingMode.value) {
-      case "none":
-        $(this.untilDateInput).hide()
-        $(this.untilOccurencesCountInput).hide()
-        break;
-      case "date":
-        $(this.untilOccurencesCountInput).hide()
-        $(this.untilDateInput).show()
-        break;
-      case "occurences":
-        $(this.untilDateInput).hide()
-        $(this.untilOccurencesCountInput).show()
-        break;
-      default:
-        $(this.untilDateInput).hide()
-        $(this.untilOccurencesCountInput).hide()
-    }
+    const fields = { "none": [], "date": this.untilDateInput, "occurences": this.untilOccurencesCountInput }
+    const toDisplay = $(fields[this.repetitionEndingMode.value])
+    const toHide = $(".js-repetition-ending-input").not(toDisplay)
+    $(toDisplay).show();
+    $(toHide).hide();
   }
 }
 
