@@ -85,7 +85,7 @@ class PlageOuverture < ApplicationRecord
 
   def covers_date?(date)
     if recurring?
-      recurrence.include?(date.in_time_zone)
+      schedule.include?(date.in_time_zone)
     else
       first_day == date
     end

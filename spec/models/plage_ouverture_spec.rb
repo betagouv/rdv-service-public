@@ -150,7 +150,7 @@ RSpec.describe PlageOuverture, type: :model do
       let(:plage_ouverture) do
         build(
           :plage_ouverture,
-          recurrence: Montrose.every(:week, starts: Date.new(2020, 11, 18).in_time_zone, interval: 1, on: [:wednesday]).to_json,
+          recurrence: Montrose.every(:week, starts: Date.new(2020, 11, 18).in_time_zone, interval: 1, on: [:wednesday]).to_h,
           first_day: Date.new(2020, 11, 18), # a wednesday
           start_time: Tod::TimeOfDay.new(14),
           end_time: Tod::TimeOfDay.new(18)
@@ -180,7 +180,7 @@ RSpec.describe PlageOuverture, type: :model do
       let(:plage_ouverture) do
         build(
           :plage_ouverture,
-          recurrence: Montrose.every(:week, on: [:wednesday], starts: Date.new(2020, 11, 18).in_time_zone, until: Date.new(2020, 12, 9).in_time_zone).to_json,
+          recurrence: Montrose.every(:week, on: [:wednesday], starts: Date.new(2020, 11, 18).in_time_zone, until: Date.new(2020, 12, 9).in_time_zone).to_h,
           first_day: Date.new(2020, 11, 18), # a wednesday
           start_time: Tod::TimeOfDay.new(14),
           end_time: Tod::TimeOfDay.new(18)
@@ -210,7 +210,7 @@ RSpec.describe PlageOuverture, type: :model do
       let(:plage_ouverture) do
         build(
           :plage_ouverture,
-          recurrence: Montrose.every(:week, starts: Date.new(2020, 11, 18).in_time_zone, interval: 2, on: [:wednesday]).to_json,
+          recurrence: Montrose.every(:week, starts: Date.new(2020, 11, 18).in_time_zone, interval: 2, on: [:wednesday]).to_h,
           first_day: Date.new(2020, 11, 18), # a wednesday
           start_time: Tod::TimeOfDay.new(14),
           end_time: Tod::TimeOfDay.new(18)

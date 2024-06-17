@@ -39,8 +39,8 @@ class PlageOuvertureOverlap
     return false unless po1.recurring? && po2.recurring?
 
     # both PO are weekly
-    options1 = po1.recurrence.default_options
-    options2 = po2.recurrence.default_options
+    options1 = po1.schedule.default_options
+    options2 = po2.schedule.default_options
     return false unless options1.every == :week && options2.every == :week
     return false if options1.day.nil? || options2.day.nil?
 
@@ -53,8 +53,8 @@ class PlageOuvertureOverlap
     return false unless po1.recurring? && po2.recurring?
 
     # both PO are monthly
-    options1 = po1.recurrence.default_options
-    options2 = po2.recurrence.default_options
+    options1 = po1.schedule.default_options
+    options2 = po2.schedule.default_options
     return false unless options1.every == :month && options2.every == :month
     return false if options1.day.nil? || options2.day.nil?
 

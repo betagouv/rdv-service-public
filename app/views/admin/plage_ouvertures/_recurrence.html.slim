@@ -1,39 +1,37 @@
 .recurrence-select.recurrence-select--weekly.js-recurrence-container data-controller="recurrence"
   .row
     .col-5
-      = date_input(f, :first_day, input_html: { id: "recurrence-source", class: "js-recurrence-first-day js-recurrence-input"} )
+      = date_input(f, :first_day, input_html: { id: "recurrence-source", class: "js-recurrence-first-day"} )
     .col-5
       div
         p &nbsp
-      .custom-control.custom-switch
-        input.custom-control-input[type="checkbox" id="show-recurrence-form-switch" class="js-recurrence-toggle js-recurrence-input"]
-        label.custom-control-label for="show-recurrence-form-switch" Répéter la plage
+        .custom-control.custom-switch
+          input.custom-control-input[type="checkbox" id="has-recurrence" data-toggle="collapse" data-target=".recurrence-form" checked=plage_ouverture.schedule.present?]
+          label.custom-control-label for="has-recurrence" Répéter la plage
   .row
     .col = f.input :start_time, as: :select, collection: every_5_minutes_of_the_day, selected: plage_ouverture.start_time&.strftime("%H:%M"), include_blank: false
     .col = f.input :end_time,   as: :select, collection: every_5_minutes_of_the_day, selected: plage_ouverture.end_time&.strftime("%H:%M"),   include_blank: false
 
-  = f.input :recurrence, as: :hidden, input_html: { value: plage_ouverture.recurrence ? plage_ouverture.recurrence.as_json.to_json : "", class: "js-recurrence-computed" }
-
-  = simple_fields_for :recurrence do |n|
+  .collapse.recurrence-form class=("show" if plage_ouverture.schedule)
     .all-select
       .form-group
         .form-inline
-          = n.label :interval, "Répéter tou(te)s les", class: "form-control-label mr-2"
-          = n.input_field :interval, as: :select, collection: 1..5, include_blank: false, class: "custom-select js-recurrence-interval js-recurrence-input"
-          = n.input_field :every, as: :select, collection: { semaine: "week", mois: "month" }, include_blank: false, class: "custom-select js-recurrence-every js-recurrence-input"
+          = f.label :interval, "Répéter tou(te)s les", class: "form-control-label mr-2"
+          = f.input_field :interval, as: :select, collection: 1..5, include_blank: true, class: "custom-select js-recurrence-interval"
+          = f.input_field :every, as: :select, collection: { semaine: "week", mois: "month" }, include_blank: true, class: "custom-select js-recurrence-every"
 
       .weekly-select
-        = n.input :on, as: :check_boxes, label: "Répéter les", collection: { Lundi: "monday", Mardi: "tuesday", Mercredi: "wednesday", Jeudi: "thursday", Vendredi: "friday", Samedi: "saturday" }, include_blank: false, input_html: { class: "js-recurrence-on js-recurrence-input" }
+        = f.input :on, as: :check_boxes, label: "Répéter les", collection: { Lundi: "monday", Mardi: "tuesday", Mercredi: "wednesday", Jeudi: "thursday", Vendredi: "friday", Samedi: "saturday" }, include_blank: false, input_html: { class: "js-recurrence-on" }
 
       .monthly-select.form-group
         span.js-recurrence-monthly Tous les X du mois
 
-      .until-select
+      .repetition-ending
         .row
           .col-6
-            = n.input :repetition_ending_mode, as: :select, collection: { "Ne jamais arrêter": :none, "Arrêter le (date)": :date, "Arrêter au bout de (nb occurences)": :occurences }, include_blank: false, label: "Finir la répétition", input_html: { class: "js-recurrence-repetition-ending-mode js-recurrence-input" }
+            = f.input :repetition_ending_mode, as: :select, collection: { "Ne jamais arrêter": :none, "Arrêter le (date)": :date, "Arrêter au bout de (nb occurences)": :occurences }, include_blank: false, label: "Finir la répétition", input_html: { class: "js-recurrence-repetition-ending-mode" }
           .col-6
-            .js-until-date.js-repetition-ending-input
-              = date_input(n, :until, required: false, label: "Date de l'occurence", input_html: { class: "js-recurrence-until-date js-recurrence-input" } )
-            .js-until-occurences-count.js-repetition-ending-input
-              = n.input(:until, required: false, label: "Nombre d'occurences", collection: 1..10, include_blank: false, input_html: { class: "js-recurrence-until-occurences-count js-recurrence-input" })
+            .js-until-date.js-repetition-ending-input.collapse class=("show" if plage_ouverture.repetition_ending_mode == "date")
+              = date_input(f, :until, required: false, label: "Date de l'occurence", input_html: { class: "js-recurrence-until-date" } )
+            .js-until-occurences-count.js-repetition-ending-input.collapse class=("show" if plage_ouverture.repetition_ending_mode == "occurences")
+              = f.input(:total, required: false, label: "Nombre d'occurences", collection: 1..10, include_blank: true, input_html: { class: "js-recurrence-until-occurences-count" })

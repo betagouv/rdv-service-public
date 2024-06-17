@@ -26,14 +26,14 @@ module Expiration
   end
 
   def absence_end_day_in_future?
-    recurrence.nil? && instance_of?(Absence) && end_day >= Time.zone.today
+    schedule.nil? && instance_of?(Absence) && end_day >= Time.zone.today
   end
 
   def first_day_in_future?
-    recurrence.nil? && first_day >= Time.zone.today
+    schedule.nil? && first_day >= Time.zone.today
   end
 
   def recurrence_ends_at_in_future?
-    recurrence.present? && (recurrence_ends_at.nil? || recurrence_ends_at >= Time.zone.today)
+    schedule.present? && (recurrence_ends_at.nil? || recurrence_ends_at >= Time.zone.today)
   end
 end

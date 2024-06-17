@@ -87,7 +87,8 @@ class Admin::AbsencesController < AgentAuthController
   end
 
   def absence_params
-    params.require(:absence).permit(:title, :agent_id, :first_day, :end_day, :start_time, :end_time, :recurrence)
+    params.require(:absence).permit(:title, :agent_id, :first_day, :end_day, :start_time, :end_time, :recurrence, :interval, :every, :until, :starts, :ends, :total,
+                                    :repetition_ending_mode, on: [])
   end
 
   def filter_params

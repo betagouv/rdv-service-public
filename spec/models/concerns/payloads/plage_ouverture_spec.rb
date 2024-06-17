@@ -28,9 +28,11 @@ RSpec.describe Payloads::PlageOuverture do
     end
 
     describe ":recurrence" do
-      let(:plage_ouverture) { build(:plage_ouverture, recurrence: Montrose.every(:week, starts: Date.new(2020, 11, 18), on: [:wednesday]).to_json) }
+      let(:plage_ouverture) { build(:plage_ouverture, recurrence: Montrose.every(:week, starts: Date.new(2020, 11, 18), on: [:wednesday]).to_h) }
 
-      it { expect(plage_ouverture.payload[:recurrence]).to eq("FREQ=WEEKLY;BYDAY=WE;") }
+      it "works" do
+        expect(plage_ouverture.payload[:recurrence]).to eq("FREQ=WEEKLY;BYDAY=WE;")
+      end
     end
 
     describe ":ical_uid" do

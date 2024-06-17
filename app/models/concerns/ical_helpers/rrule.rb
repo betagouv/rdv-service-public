@@ -1,26 +1,26 @@
 module IcalHelpers
   module Rrule
     def rrule
-      IcalHelpers::Rrule.from_recurrence(recurrence)
+      IcalHelpers::Rrule.from_recurrence(schedule)
     end
 
-    def self.from_recurrence(recurrence)
-      return if recurrence.blank?
+    def self.from_recurrence(schedule)
+      return if schedule.blank?
 
-      recurrence_hash = recurrence.to_hash
+      schedule_hash = schedule.to_hash
 
-      case recurrence_hash[:every]
+      case schedule_hash[:every]
       when :week
         freq = "FREQ=WEEKLY;"
-        by_day = "BYDAY=#{by_week_day(recurrence_hash[:on])};" if recurrence_hash[:on]
+        by_day = "BYDAY=#{by_week_day(schedule_hash[:on])};" if schedule_hash[:on]
       when :month
         freq = "FREQ=MONTHLY;"
-        by_day = "BYDAY=#{by_month_day(recurrence_hash[:day])};" if recurrence_hash[:day]
+        by_day = "BYDAY=#{by_month_day(schedule_hash[:day])};" if schedule_hash[:day]
       end
 
-      interval = interval_from_hash(recurrence_hash)
+      interval = interval_from_hash(schedule_hash)
 
-      until_date = until_from_hash(recurrence_hash)
+      until_date = until_from_hash(schedule_hash)
 
       "#{freq}#{interval}#{by_day}#{until_date}"
     end
@@ -29,12 +29,12 @@ module IcalHelpers
       "#{day.values.first.first}#{Date::DAYNAMES[day.keys.first][0, 2].upcase}"
     end
 
-    def self.interval_from_hash(recurrence_hash)
-      "INTERVAL=#{recurrence_hash[:interval]};" if recurrence_hash[:interval]
+    def self.interval_from_hash(schedule_hash)
+      "INTERVAL=#{schedule_hash[:interval]};" if schedule_hash[:interval]
     end
 
-    def self.until_from_hash(recurrence_hash)
-      "UNTIL=#{Icalendar::Values::DateTime.new(recurrence_hash[:until], 'tzid' => Time.zone_default.tzinfo.identifier).value_ical};" if recurrence_hash[:until]
+    def self.until_from_hash(schedule_hash)
+      "UNTIL=#{Icalendar::Values::DateTime.new(schedule_hash[:until], 'tzid' => Time.zone_default.tzinfo.identifier).value_ical};" if schedule_hash[:until]
     end
 
     def self.by_week_day(on)

@@ -13,7 +13,7 @@ tr
   td
     = lieu_tag(plage_ouverture.lieu)
   td
-    - if plage_ouverture.recurrence.present?
+    - if plage_ouverture.schedule.present?
       = sanitize(display_recurrence(plage_ouverture).join("<br/>"))
     - else
       | Le #{l(plage_ouverture.first_day, format: :human)} #{display_time_range(plage_ouverture)}

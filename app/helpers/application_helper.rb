@@ -32,13 +32,20 @@ module ApplicationHelper
       as: :string,
       label: label,
       input_html: {
-        value: form.object&.send(field)&.strftime("%d/%m/%Y"),
+        value: sanitize_date_input_value(form: form, field: field),
         data: { behaviour: "datepicker" },
         autocomplete: "off",
         placeholder: "__/__/___",
       }.deep_merge(input_html),
       **kwargs
     )
+  end
+
+  def sanitize_date_input_value(form:, field:)
+    value = form.object&.send(field)
+    return nil if value.blank? || value.to_s.starts_with?("__/__/")
+
+    value.to_date.strftime("%d/%m/%Y")
   end
 
   def fake_required_label(label)

@@ -23,7 +23,7 @@ RSpec.shared_examples_for "recurrence" do
 
     context "recurring without end date" do
       let(:first_day) { Date.new(2019, 7, 22).in_time_zone }
-      let(:model_instance) { create(model_symbol, first_day: first_day, end_time: Tod::TimeOfDay.new(12), recurrence: Montrose.every(:week, on: [:tuesday], starts: first_day)) }
+      let(:model_instance) { create(model_symbol, first_day: first_day, end_time: Tod::TimeOfDay.new(12), recurrence: Montrose.every(:week, on: [:tuesday], starts: first_day).to_h) }
 
       it { is_expected.to be_nil }
     end
@@ -31,7 +31,8 @@ RSpec.shared_examples_for "recurrence" do
     context "recurring with end date" do
       let(:first_day) { Date.new(2019, 11, 17).in_time_zone }
       let(:model_instance) do
-        create(model_symbol, first_day: first_day, end_time: Tod::TimeOfDay.new(12), recurrence: Montrose.every(:week, on: [:tuesday], starts: first_day, until: Date.new(2020, 11, 25).in_time_zone))
+        create(model_symbol, first_day: first_day, end_time: Tod::TimeOfDay.new(12),
+                             recurrence: Montrose.every(:week, on: [:tuesday], starts: first_day, until: Date.new(2020, 11, 25).in_time_zone).to_h)
       end
 
       it { is_expected.to eq(Time.zone.local(2020, 11, 25, 12)) }
@@ -120,7 +121,7 @@ RSpec.shared_examples_for "recurrence" do
         build(model_symbol, first_day: first_day,
                             start_time: Tod::TimeOfDay.new(8),
                             end_time: Tod::TimeOfDay.new(12),
-                            recurrence: Montrose.every(:day, starts: first_day, until: Date.new(2019, 8, 5)).to_json,
+                            recurrence: Montrose.every(:day, starts: first_day, until: Date.new(2019, 8, 5)).to_h,
                             recurrence_ends_at: Date.new(2019, 8, 5))
       end
       let(:date_range) { Date.new(2019, 8, 5)..Date.new(2019, 8, 11) }
@@ -153,7 +154,7 @@ RSpec.shared_examples_for "recurrence" do
                 on: [:wednesday],
                 interval: 1,
                 starts: first_day
-              ).to_json)
+              ).to_h)
       end
       let(:date_range) { Date.new(2022, 6, 1)..Date.new(2022, 6, 30) }
 

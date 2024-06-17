@@ -15,7 +15,7 @@ RSpec.describe PlageOuvertureOverlap do
       recurrence_ends_at: (recurrence ? recurrence.ends_at : nil),
       start_time: Tod::TimeOfDay.new(start_hour),
       end_time: Tod::TimeOfDay.new(end_hour),
-      **(recurrence ? { recurrence: recurrence.to_json } : {})
+      **(recurrence ? { recurrence: recurrence.to_h } : {})
     )
   end
 

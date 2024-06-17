@@ -9,7 +9,7 @@ module AbsencesHelper
 
   def an_ocurrence_after_today?(absence)
     absence.starts_at.past? &&
-      absence.recurrence.presence &&
-      absence.recurrence.lazy.map(&:to_date).any? { |d| d > Time.zone.now }
+      absence.schedule.presence &&
+      absence.schedule.lazy.map(&:to_date).any? { |d| d > Time.zone.now }
   end
 end

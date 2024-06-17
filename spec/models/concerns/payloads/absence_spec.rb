@@ -28,7 +28,7 @@ RSpec.describe Payloads::Absence do
     end
 
     describe ":recurrence" do
-      let(:absence) { build(:absence, recurrence: Montrose.every(:week, starts: Date.new(2020, 11, 18), on: [:wednesday]).to_json) }
+      let(:absence) { build(:absence, recurrence: Montrose.every(:week, starts: Date.new(2020, 11, 18), on: [:wednesday]).to_h) }
 
       it { expect(absence.payload[:recurrence]).to eq("FREQ=WEEKLY;BYDAY=WE;") }
     end

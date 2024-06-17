@@ -2,12 +2,13 @@ module RecurrenceConcern
   extend ActiveSupport::Concern
 
   included do
-    serialize :recurrence, Montrose::Recurrence
+    store :recurrence, accessors: %i[repetition_ending_mode interval every on until starts ends total day], coder: JSON
+
     serialize :start_time, Tod::TimeOfDay
     serialize :end_time, Tod::TimeOfDay
 
     before_save :clear_empty_recurrence
-    before_save :set_recurrence_ends_at, if: -> { recurrence.present? }
+    before_save :set_recurrence_ends_at, if: -> { schedule.present? }
 
     validates :first_day, :start_time, :end_time, presence: true
     validate :recurrence_starts_matches_first_day, if: :recurring?
@@ -18,6 +19,10 @@ module RecurrenceConcern
     scope :overlapping_range, lambda { |range|
       in_range(range).select { _1.occurrences_for(range).any? { |occurence| occurence.overlaps?(range) } }
     }
+  end
+
+  def schedule
+    @schedule ||= RecurrenceBuilder.create(self)
   end
 
   def starts_at
@@ -53,11 +58,11 @@ module RecurrenceConcern
   end
 
   def exceptionnelle?
-    recurrence.nil?
+    schedule.blank?
   end
 
   def recurring?
-    recurrence.present?
+    schedule.present?
   end
 
   def occurrences_for(inclusive_date_range, only_future: false)
@@ -74,14 +79,8 @@ module RecurrenceConcern
     cache_key = "earliest_future_occurrence_#{self.class.table_name}_#{id}_#{updated_at}"
 
     Rails.cache.fetch(cache_key, force: refresh, expires_in: 1.week) do
-      recurrence.starting(starts_at).until(recurrence_ends_at).lazy.select(&:future?).first
+      schedule.starting(starts_at).until(recurrence_ends_at).lazy.select(&:future?).first
     end
-  end
-
-  def recurrence_interval
-    return nil if recurrence.nil?
-
-    recurrence.to_hash[:interval] || 1 # when interval is nil, it means 1
   end
 
   class_methods do
@@ -109,7 +108,7 @@ module RecurrenceConcern
 
     if recurring?
       min_from = only_future ? (earliest_future_occurrence_time || starts_at) : starts_at
-      recurrence.starting(min_from).until(min_until).lazy.select do |occurrence_starts_at|
+      schedule.starting(min_from).until(min_until).lazy.select do |occurrence_starts_at|
         event_in_range?(occurrence_starts_at, occurrence_starts_at + duration, inclusive_datetime_range)
       end.to_a
     else
@@ -122,33 +121,33 @@ module RecurrenceConcern
   end
 
   def set_recurrence_ends_at
-    if recurrence.infinite?
+    if schedule.infinite?
       self.recurrence_ends_at = nil
       return
     end
 
-    if recurrence.ends_at # Date de fin de la récurrence
-      self.recurrence_ends_at = recurrence.ends_at.end_of_day
-    elsif recurrence.length # Nombre d'occurences de la récurrence
+    if schedule.ends_at # Date de fin de la récurrence
+      self.recurrence_ends_at = schedule.ends_at.end_of_day
+    elsif schedule.length # Nombre d'occurences de la récurrence
       # rubocop:disable Lint/UnreachableLoop
-      self.recurrence_ends_at = recurrence.events.reverse_each { |event| break event }.end_of_day
+      self.recurrence_ends_at = schedule.events.reverse_each { |event| break event }.end_of_day
       # rubocop:enable Lint/UnreachableLoop
     end
   end
 
   def clear_empty_recurrence
-    self.recurrence = nil if recurrence.present? && recurrence.to_hash == {}
+    self.recurrence = {} if schedule.to_h == {}
   end
 
   def recurrence_starts_matches_first_day
-    return true if recurrence.to_h[:starts]&.to_date == first_day
+    return true if schedule.to_h[:starts]&.to_date == first_day
 
     errors.add(:base, "Le début de la récurrence ne correspond pas au premier jour.")
   end
 
   def recurrence_ends_after_first_day
-    return true if recurrence.ends_at.nil?
-    return true if recurrence.ends_at.to_date > first_day
+    return true if schedule.ends_at.nil?
+    return true if schedule.ends_at.to_date > first_day
 
     errors.add(:base, "La fin de la récurrence doit être après le premier jour.")
   end

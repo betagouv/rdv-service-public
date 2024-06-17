@@ -64,7 +64,7 @@ class Absence < ApplicationRecord
   end
 
   def no_recurrence_for_absence_for_several_days
-    return if recurrence.blank? || end_day.blank? || first_day == end_day
+    return if schedule.blank? || end_day.blank? || first_day == end_day
 
     errors.add(:recurrence, "pas possible avec une indisponibilité de plusieurs jours")
   end

@@ -23,13 +23,14 @@ module PlageOuverturesHelper
   end
 
   def display_every(plage_ouverture)
-    recurrence_hash = plage_ouverture.recurrence.to_hash
+    recurrence_hash = plage_ouverture.schedule.to_hash
 
-    interval = "#{recurrence_hash[:interval]} " if recurrence_hash[:interval]&.>(1)
+    interval = " "
+    interval = " #{recurrence_hash[:interval]} " if recurrence_hash[:interval].to_i > 1
 
     case recurrence_hash[:every]
     when :week
-      every_part = "Toutes les #{interval} semaines"
+      every_part = "Toutes les#{interval}semaines"
 
       if recurrence_hash[:on].present?
         "#{every_part}, les #{recurrence_hash[:on].map { |d| "#{weekday_in_fr(d)}s" }.to_sentence}"
@@ -37,7 +38,7 @@ module PlageOuverturesHelper
         "#{every_part}, le #{I18n.l(plage_ouverture.first_day, format: '%A')}"
       end
     when :month
-      "Tous les #{interval} mois, #{weekday_position_in_month(recurrence_hash[:day])}"
+      "Tous les#{interval}mois, #{weekday_position_in_month(recurrence_hash[:day])}"
     end
   end
 

@@ -5,7 +5,7 @@ tr
   td
     | Du #{l(absence.starts_at, format: :human)} au #{l(absence.first_occurrence_ends_at, format: :human)}
 
-    - if absence.recurrence.present?
+    - if absence.schedule.present?
       br
       | Se répète :
       br
