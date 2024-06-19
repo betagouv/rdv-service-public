@@ -1,32 +1,31 @@
-.container.mt-3
-  .row.justify-content-center
-    .col-md-8
-      .card
-        .card-header
-          = link_to t("helpers.back"), lapin_sms_preview_index_path
-          hr
-          = form_with url: lapin_sms_preview_preview_path, method: :get do |f|
-            .form-row
-              .col.form-group
-                = f.label :location_type, Motif.human_attribute_name(:location_type)
-                = f.select :location_type, Motif.human_attribute_values(:location_type), { selected: @mock_params[:location_type] }, { class: "form-control", onchange: "this.form.submit()" }
-              .col.form-group
-                = f.label :phone_number, "Numéro du lieu"
-                = f.text_field :phone_number, value: @mock_params[:phone_number], class: "form-control"
-            .form-row
-              .col
-                .form-check.form-check-inline
-                  = f.check_box :show_relatives, checked: @mock_params[:show_relatives], class: "form-check-input", onchange: "this.form.submit()"
-                  = f.label :show_relatives, "Pour un(e) proche", class: "form-check-label"
-            .form-row
-              .col
-                .form-check.form-check-inline
-                  = f.check_box :show_agent, checked: @mock_params[:show_agent], class: "form-check-input", onchange: "this.form.submit()"
-                  = f.label :show_agent, "Suivi", class: "form-check-label"
-        .card-body
-          h5.card-title= @title
-          p= @sms.phone_number
-          .bg-light.p-1
-            code= @sms.content
-        .card-footer
-          p="#{@sms.content.length} caractères"
+.row.justify-content-center
+  .col-md-8
+    .card
+      .card-header
+        = link_to t("helpers.back"), lapin_sms_preview_index_path
+        hr
+        = form_with url: lapin_sms_preview_preview_path, method: :get do |f|
+          .form-row
+            .col.form-group
+              = f.label :location_type, Motif.human_attribute_name(:location_type)
+              = f.select :location_type, Motif.human_attribute_values(:location_type), { selected: @mock_params[:location_type] }, { class: "form-control", onchange: "this.form.submit()" }
+            .col.form-group
+              = f.label :phone_number, "Numéro du lieu"
+              = f.text_field :phone_number, value: @mock_params[:phone_number], class: "form-control"
+          .form-row
+            .col
+              .form-check.form-check-inline
+                = f.check_box :show_relatives, checked: @mock_params[:show_relatives], class: "form-check-input", onchange: "this.form.submit()"
+                = f.label :show_relatives, "Pour un(e) proche", class: "form-check-label"
+          .form-row
+            .col
+              .form-check.form-check-inline
+                = f.check_box :show_agent, checked: @mock_params[:show_agent], class: "form-check-input", onchange: "this.form.submit()"
+                = f.label :show_agent, "Suivi", class: "form-check-label"
+      .card-body
+        h5.card-title= @title
+        p= @sms.phone_number
+        .bg-light.p-1
+          code= @sms.content
+      .card-footer
+        p="#{@sms.content.length} caractères"

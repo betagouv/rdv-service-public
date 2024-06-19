@@ -1,10 +1,11 @@
 class Users::RegistrationsController < Devise::RegistrationsController
-  layout :user_devise_layout
-
   include CanHaveRdvWizardContext
 
   before_action :set_rdv_insertion_organisations, only: %i[edit destroy] # rubocop:disable Rails/LexicallyScopedActionFilter
   after_action :allow_iframe
+
+  layout "application"
+  layout "application_narrow", only: %i[new edit pending]
 
   def create
     return invite_and_redirect(existing_unconfirmed_user) if existing_unconfirmed_user
@@ -45,10 +46,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
     form = Users::RegistrationForm.new(hash)
     form.user.sign_up_domain = current_domain
     self.resource = form
-  end
-
-  def user_devise_layout
-    user_signed_in? ? "application" : "application_narrow"
   end
 
   def after_inactive_sign_up_path_for(resource)

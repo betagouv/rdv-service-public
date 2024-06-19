@@ -1,30 +1,28 @@
 - content_for :title, "Contact"
 
-.container.mt-3
-  h1.text-dark.mb-3 Contact
-  h2 Votre département
-  ul.list-group.mb-2
-    - Territory.all.where.not(phone_number: nil).each do |territory|
-      li
-        span> #{territory}
-        = link_to territory.phone_number, "tel:#{territory.phone_number_formatted}"
+h2 Votre département
+ul.list-group.mb-2
+  - Territory.all.where.not(phone_number: nil).each do |territory|
     li
-      span> Autres départements, voir
-      = link_to "l'annuaire des services publics", "https://lannuaire.service-public.fr/"
+      span> #{territory}
+      = link_to territory.phone_number, "tel:#{territory.phone_number_formatted}"
+  li
+    span> Autres départements, voir
+    = link_to "l'annuaire des services publics", "https://lannuaire.service-public.fr/"
 
-  .row#tech-support
-    .col-md-6
-      h3.mt-4
-        = mail_to current_domain.support_email,
-          subject: "[Problème Usager]",
-          body: "Code postal: \n\rNom: \n\rProblème ou Question:", class: "btn btn-primary" do
-          span>
-            i.fa.fa-envelope
-          | Contacter l'équipe technique
+.row#tech-support
+  .col-md-6
+    h3.mt-4
+      = mail_to current_domain.support_email,
+        subject: "[Problème Usager]",
+        body: "Code postal: \n\rNom: \n\rProblème ou Question:", class: "btn btn-primary" do
+        span>
+          i.fa.fa-envelope
+        | Contacter l'équipe technique
 
-      .alert.alert-warning.my-4.d-flex.align-items-center
-        i.fa.fa-exclamation-triangle>
-        .ml-2
-          b> Nous ne sommes pas travailleurs médico-sociaux,
-          span> et nous ne pouvons pas débloquer d'autres créneaux que ceux affichés,
-          | nous pouvons seulement aider avec les sujets techniques
+    .alert.alert-warning.my-4.d-flex.align-items-center
+      i.fa.fa-exclamation-triangle>
+      .ml-2
+        b> Nous ne sommes pas travailleurs médico-sociaux,
+        span> et nous ne pouvons pas débloquer d'autres créneaux que ceux affichés,
+        | nous pouvons seulement aider avec les sujets techniques

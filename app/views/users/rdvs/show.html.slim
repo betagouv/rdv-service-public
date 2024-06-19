@@ -1,6 +1,5 @@
-.row.my-3.justify-content-center
-  .col-md-6.border-bottom
-    h2.text-dark.mb-3.text-center Votre RDV
-    .card
-      .card-body
-        = render "rdv", rdv: @rdv
+- content_for :title, "Votre RDV"
+
+.card
+  .card-body
+    = render "rdv", rdv: @rdv

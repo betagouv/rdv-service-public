@@ -1,4 +1,6 @@
 class SearchController < ApplicationController
+  layout "application_base"
+
   include TokenInvitable
 
   # utilisé par le Pas-de-Calais pour prendre rdv depuis leur site : https://www.pasdecalais.fr/Solidarite-Sante/Enfance-et-famille/La-Protection-Maternelle-et-Infantile/Prendre-rendez-vous-en-ligne-en-MDS-PMI-ou-service-social
