@@ -1,6 +1,8 @@
 class Users::ParticipationsController < UserAuthController
   before_action :set_rdv, :set_user
 
+  layout "application_narrow"
+
   include TokenInvitable
 
   def index

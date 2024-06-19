@@ -27,7 +27,7 @@
               i.fa.fa-calendar.fa-stack-1x.text-white
             .text-center.mt-2
   .col-md-6
-    h1.text-dark.mb-3 Vos référents
+    h2.text-dark.mb-3 Vos référents
     - if current_user.referent_agents.any?
       - current_user.referent_agents.each do |agent|
         .card

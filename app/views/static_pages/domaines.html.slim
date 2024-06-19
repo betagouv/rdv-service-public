@@ -1,20 +1,18 @@
 - content_for :title, "RDV Solidarités et #{Domain::RDV_AIDE_NUMERIQUE.name}"
 
-.container.mt-3
-  .row.align-items-center.mb-4.content
-    .col-lg-8
-      h1.text-dark.mb-3 RDV Solidarités et #{Domain::RDV_AIDE_NUMERIQUE.name}
-      p Le site #{Domain::RDV_AIDE_NUMERIQUE.name} a été créé par l’équipe de RDV Solidarités pour permettre la prise de rendez-vous avec les Conseillers Numériques France Service et d’autres acteurs de l’inclusion numérique. C’est le même logiciel que RDV Solidarités, sous un autre nom afin d’être plus compréhensible par les usagers.
+.row.align-items-center.mb-4.content
+  .col-lg-8
+    p Le site #{Domain::RDV_AIDE_NUMERIQUE.name} a été créé par l’équipe de RDV Solidarités pour permettre la prise de rendez-vous avec les Conseillers Numériques France Service et d’autres acteurs de l’inclusion numérique. C’est le même logiciel que RDV Solidarités, sous un autre nom afin d’être plus compréhensible par les usagers.
 
-  .row.align-items-center.mb-4.content
-    .col-lg-8
-      p Les usagers qui ont un compte sur #{Domain::RDV_SOLIDARITES.name} peuvent s’en servir pour se connecter à #{Domain::RDV_AIDE_NUMERIQUE.name}, et vice-versa. Leurs rendez-vous avec les services médico-sociaux sont visibles uniquement sur RDV Solidarités, et leurs rendez-vous liés à l'aide au numérique sont visibles uniquement sur #{Domain::RDV_AIDE_NUMERIQUE.name}
+.row.align-items-center.mb-4.content
+  .col-lg-8
+    p Les usagers qui ont un compte sur #{Domain::RDV_SOLIDARITES.name} peuvent s’en servir pour se connecter à #{Domain::RDV_AIDE_NUMERIQUE.name}, et vice-versa. Leurs rendez-vous avec les services médico-sociaux sont visibles uniquement sur RDV Solidarités, et leurs rendez-vous liés à l'aide au numérique sont visibles uniquement sur #{Domain::RDV_AIDE_NUMERIQUE.name}
 
-  .row
-    .col-lg-8
-      - Domain::ALL.each do |domain|
-        p> #{domain.name} est accessible à l'adresse #{link_to(domain.host_name, "https://#{domain.host_name}")}
+.row
+  .col-lg-8
+    - Domain::ALL.each do |domain|
+      p> #{domain.name} est accessible à l'adresse #{link_to(domain.host_name, "https://#{domain.host_name}")}
 
-  .row.align-items-center.mb-4.content
-    .col-lg-8
-      p Les agents peuvent accéder à leur compte et toutes leur données indifféremment sur les deux sites.
+.row.align-items-center.mb-4.content
+  .col-lg-8
+    p Les agents peuvent accéder à leur compte et toutes leur données indifféremment sur les deux sites.

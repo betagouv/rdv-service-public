@@ -1,6 +1,7 @@
 class StaticPagesController < ApplicationController
   def mds
     redirect_to root_path unless current_domain == Domain::RDV_SOLIDARITES
+    render layout: "application_base"
   end
 
   def accessibility; end

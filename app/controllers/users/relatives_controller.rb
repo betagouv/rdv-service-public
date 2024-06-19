@@ -1,4 +1,6 @@
 class Users::RelativesController < UserAuthController
+  layout "application_narrow"
+
   respond_to :html
 
   before_action :set_user, only: %i[edit update destroy]
