@@ -3,8 +3,8 @@ module AgentConnectOpenIdClient
     def initialize(login_hint: nil, force_login: false)
       @login_hint = login_hint
       @force_login = force_login
-      @state = "Agent Connect State - #{SecureRandom.base58(32)}"
-      @nonce = "Agent Connect Nonce - #{SecureRandom.base58(32)}"
+      @state = "agent_connect_state_#{SecureRandom.base58(32)}"
+      @nonce = "agent_connect_nonce_#{SecureRandom.base58(32)}"
     end
 
     attr_reader :state, :nonce
