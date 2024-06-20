@@ -15,9 +15,10 @@ RSpec.describe "Agent Connect initializer" do # rubocop:disable RSpec/DescribeCl
     end
 
     it "doesn't raise an error that would keep the application from booting up, but it sends an exception in Sentry" do
-      expect(Sentry).to receive(:capture_exception)
       expect { load "#{::Rails.root}/config/initializers/agent_connect.rb" }.not_to(raise_error)
       expect(Rails.configuration.x.agent_connect_unreachable_at_boot_time).to be true
+
+      expect(sentry_events.last.message).to include("Agent Connect n'est pas joignable au démarrage de l'application")
     end
   end
 
