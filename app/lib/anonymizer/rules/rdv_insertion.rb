@@ -113,8 +113,8 @@ class Anonymizer::Rules::RdvInsertion
         rdv_solidarites_lieu_id
         follow_up_id
         valid_until
-        reminder
         uuid
+        trigger
         rdv_with_referents
       ],
     },
@@ -185,7 +185,11 @@ class Anonymizer::Rules::RdvInsertion
     },
     orientations: {
       anonymized_column_names: %w[],
-      non_anonymized_column_names: %w[orientation_type user_id organisation_id agent_id starts_at ends_at created_at updated_at],
+      non_anonymized_column_names: %w[orientation_type_id user_id organisation_id agent_id starts_at ends_at created_at updated_at],
+    },
+    orientation_types: {
+      anonymized_column_names: %w[],
+      non_anonymized_column_names: %w[name casf_category department_id created_at updated_at],
     },
     parcours_documents: {
       non_anonymized_column_names: %w[department_id user_id agent_id type created_at updated_at document_date],
