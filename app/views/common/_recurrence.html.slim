@@ -24,8 +24,8 @@
       .form-group
         .form-inline
           = f.label :interval, "Répéter tou(te)s les", class: "form-control-label mr-2"
-          = f.input_field :interval, as: :select, collection: 1..5, include_blank: true, class: "custom-select"
-          = f.input_field :every, as: :select, collection: { semaine: "week", mois: "month" }, include_blank: true, class: "custom-select"
+          = f.input_field :interval, as: :select, collection: 1..5, include_blank: false, class: "custom-select"
+          = f.input_field :every, as: :select, collection: { semaine: "week", mois: "month" }, include_blank: false, class: "custom-select", onchange: "$('.recurrence-select').removeClass(['recurrence-select--weekly', 'recurrence-select--monthly']).addClass(`recurrence-select--${this.value}ly`);"
 
       .weekly-select
         = f.input :on, as: :check_boxes, label: "Répéter les", collection: { Lundi: "monday", Mardi: "tuesday", Mercredi: "wednesday", Jeudi: "thursday", Vendredi: "friday", Samedi: "saturday" }, include_blank: false
