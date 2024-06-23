@@ -3,15 +3,8 @@ class RecurrenceForm {
     this.element = document.querySelector('.js-recurrence-container')
     if (!this.element) return;
 
-    this.recurrenceComputedTarget = document.querySelector('.js-recurrence-computed')
-    this.intervalTarget = document.querySelector('.js-recurrence-interval')
     this.everyTarget = document.querySelector('.js-recurrence-every')
-    this.onTargets = Array.from(document.querySelectorAll('.js-recurrence-on'))
-    this.untilDateTarget = document.querySelector('.js-recurrence-until-date')
-    this.untilOccurencesCountTarget = document.querySelector('.js-recurrence-until-occurences-count')
     this.repetitionEndingMode = document.querySelector('.js-recurrence-repetition-ending-mode')
-    this.firstDayTarget = document.querySelector('.js-recurrence-first-day')
-    this.monthlyTarget = document.querySelector('.js-recurrence-monthly')
     this.untilDateInput = document.querySelector('.js-until-date')
     this.untilOccurencesCountInput = document.querySelector('.js-until-occurences-count')
 
