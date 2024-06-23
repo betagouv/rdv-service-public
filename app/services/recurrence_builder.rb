@@ -24,9 +24,6 @@ class RecurrenceBuilder
     options[:starts] = parse_date(options[:starts] || @model.first_day)
     options[:ends] = parse_date(options[:ends])
     options[:day] = parse_collection(options[:day])
-    if options[:every] == :month
-      options[:day] ||= { @model.first_day.cwday => [week_day_position_in_month] }
-    end
 
     options.compact_blank!
   end
@@ -47,9 +44,5 @@ class RecurrenceBuilder
     return nil if value.blank?
 
     value.compact_blank
-  end
-
-  def week_day_position_in_month
-    (@model.first_day.day - 1).div(7) + 1
   end
 end

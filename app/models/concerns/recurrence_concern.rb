@@ -2,13 +2,13 @@ module RecurrenceConcern
   extend ActiveSupport::Concern
 
   included do
-    store :recurrence, accessors: %i[until_mode interval every on until starts ends total day], coder: JSON
+    store :recurrence, accessors: %i[has_recurrence until_mode interval every on until starts ends total day], coder: JSON
 
     serialize :start_time, Tod::TimeOfDay
     serialize :end_time, Tod::TimeOfDay
 
-    before_save :clear_empty_recurrence
-    before_save :set_recurrence_ends_at, if: -> { schedule.present? }
+    before_save :set_recurrence_ends_at, if: -> { recurrence.present? }
+    before_save :set_recurrence_day, if: -> { recurrence.present? }
 
     validates :first_day, :start_time, :end_time, presence: true
     validate :recurrence_starts_matches_first_day, if: :recurring?
@@ -135,10 +135,6 @@ module RecurrenceConcern
     end
   end
 
-  def clear_empty_recurrence
-    self.recurrence = {} if schedule.to_h == {}
-  end
-
   def recurrence_starts_matches_first_day
     return true if schedule.to_h[:starts]&.to_date == first_day
 
@@ -150,5 +146,15 @@ module RecurrenceConcern
     return true if schedule.ends_at.to_date > first_day
 
     errors.add(:base, "La fin de la récurrence doit être après le premier jour.")
+  end
+
+  def set_recurrence_day
+    return unless recurrence[:has_recurrence].to_b && recurrence[:every] == "month"
+
+    recurrence[:day] ||= { first_day.cwday => [week_day_position_in_month] }
+  end
+
+  def week_day_position_in_month
+    (first_day.day - 1).div(7) + 1
   end
 end

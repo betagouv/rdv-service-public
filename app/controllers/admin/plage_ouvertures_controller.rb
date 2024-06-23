@@ -61,7 +61,7 @@ class Admin::PlageOuverturesController < AgentAuthController
 
   def update
     authorize(@plage_ouverture)
-    if @plage_ouverture.update(plage_ouverture_params)
+    if @plage_ouverture.update(params_for_create_or_update)
       plage_ouverture_mailer.plage_ouverture_updated.deliver_later if @agent.plage_ouverture_notification_level == "all"
       redirect_to admin_organisation_plage_ouverture_path(@plage_ouverture.organisation, @plage_ouverture), notice: "La plage d'ouverture a été modifiée."
     else
@@ -92,12 +92,11 @@ class Admin::PlageOuverturesController < AgentAuthController
   end
 
   def build_plage_ouverture
-    @plage_ouverture = PlageOuverture.new(plage_ouverture_params)
+    @plage_ouverture = PlageOuverture.new(params_for_create_or_update)
   end
 
   def plage_ouverture_params
-    params.require(:plage_ouverture).permit(:title, :agent_id, :first_day, :start_time, :end_time, :lieu_id, :recurrence, :ignore_benign_errors, :interval, :every, :until, :starts,
-                                            :ends, :total, :until_mode, on: [], motif_ids: [])
+    params.require(:plage_ouverture).permit(:title, :agent_id, :first_day, :start_time, :end_time, :lieu_id, :recurrence, :ignore_benign_errors, motif_ids: [])
   end
 
   def filter_params
@@ -106,5 +105,14 @@ class Admin::PlageOuverturesController < AgentAuthController
 
   def plage_ouverture_mailer
     Agents::PlageOuvertureMailer.with(plage_ouverture: @plage_ouverture)
+  end
+
+  def recurrence_params
+    params.require(:plage_ouverture).permit(:has_recurrence, :interval, :every, :until, :starts, :ends, :total, until_mode: [], on: [])
+  end
+
+  def params_for_create_or_update
+    recurrence = recurrence_params[:has_recurrence].to_b ? recurrence_params : {}
+    plage_ouverture_params.merge(recurrence: recurrence)
   end
 end

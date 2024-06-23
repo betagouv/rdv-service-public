@@ -50,7 +50,7 @@ class Admin::AbsencesController < AgentAuthController
 
   def update
     authorize(@absence)
-    if @absence.update(absence_params)
+    if @absence.update(params_for_create_or_update)
       absence_mailer.absence_updated.deliver_later if @agent.absence_notification_level == "all"
       flash[:notice] = t(".busy_time_updated")
       redirect_to admin_organisation_agent_absences_path(current_organisation, @absence.agent_id)
@@ -79,7 +79,7 @@ class Admin::AbsencesController < AgentAuthController
   end
 
   def build_absence
-    @absence = Absence.new(absence_params)
+    @absence = Absence.new(params_for_create_or_update)
   end
 
   def set_agent
@@ -87,8 +87,7 @@ class Admin::AbsencesController < AgentAuthController
   end
 
   def absence_params
-    params.require(:absence).permit(:title, :agent_id, :first_day, :end_day, :start_time, :end_time, :recurrence, :interval, :every, :until, :starts, :ends, :total,
-                                    :until_mode, on: [])
+    params.require(:absence).permit(:title, :agent_id, :first_day, :end_day, :start_time, :end_time)
   end
 
   def filter_params
@@ -97,5 +96,14 @@ class Admin::AbsencesController < AgentAuthController
 
   def absence_mailer
     Agents::AbsenceMailer.with(absence: @absence)
+  end
+
+  def recurrence_params
+    params.require(:absence).permit(:has_recurrence, :interval, :every, :until, :starts, :ends, :total, until_mode: [], on: [])
+  end
+
+  def params_for_create_or_update
+    recurrence = recurrence_params[:has_recurrence].to_b ? recurrence_params : {}
+    absence_params.merge(recurrence: recurrence)
   end
 end
