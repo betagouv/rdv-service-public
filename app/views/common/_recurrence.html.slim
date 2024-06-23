@@ -33,12 +33,12 @@
       .monthly-select.form-group
         span Tous les X du mois
 
-      .repetition-ending
+      .until class=("until--#{model.until_mode || 'none'}")
         .row
           .col-6
-            = f.input :repetition_ending_mode, as: :select, collection: { "Ne jamais arrêter": :none, "Arrêter le (date)": :date, "Arrêter au bout de (nb occurences)": :occurences }, include_blank: false, label: "Finir la répétition", input_html: { class: "js-recurrence-repetition-ending-mode" }
+            = f.input :until_mode, as: :select, collection: { "Ne jamais arrêter": :none, "Arrêter le (date)": :date, "Arrêter au bout de (nb occurences)": :occurences }, include_blank: false, label: "Finir la répétition", input_html: { onchange: "$('.until').removeClass(['until--none', 'until--date', 'until--occurences']).addClass(`until--${this.value}`)" }
           .col-6
-            .js-until-date.js-repetition-ending-input.collapse class=("show" if model.repetition_ending_mode == "date")
+            .until-date-select
               = date_input(f, :until, required: false, label: "Date de l'occurence")
-            .js-until-occurences-count.js-repetition-ending-input.collapse class=("show" if model.repetition_ending_mode == "occurences")
+            .until-occurences-select
               = f.input(:total, required: false, label: "Nombre d'occurences", collection: 1..10, include_blank: true)

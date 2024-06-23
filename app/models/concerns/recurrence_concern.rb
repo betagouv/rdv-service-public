@@ -2,7 +2,7 @@ module RecurrenceConcern
   extend ActiveSupport::Concern
 
   included do
-    store :recurrence, accessors: %i[repetition_ending_mode interval every on until starts ends total day], coder: JSON
+    store :recurrence, accessors: %i[until_mode interval every on until starts ends total day], coder: JSON
 
     serialize :start_time, Tod::TimeOfDay
     serialize :end_time, Tod::TimeOfDay

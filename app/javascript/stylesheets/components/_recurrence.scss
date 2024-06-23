@@ -18,3 +18,23 @@
     }
   }
 }
+
+.until {
+  &.until--none {
+    .until-date-select, .until-occurences-select {
+      display: none;
+    }
+  }
+
+  &.until--date {
+    .until-occurences-select {
+      display: none;
+    }
+  }
+
+  &.until--occurences {
+    .until-date-select {
+      display: none;
+    }
+  }
+}
