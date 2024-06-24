@@ -110,12 +110,11 @@ fr:
     errors:
       models:
         motif:
+          cant_change_because_already_used: ne peut être modifié car le motif est utilisé pour un RDV
           attributes:
             base:
               not_at_home_if_collectif: Les RDV collectifs doivent avoir lieu sur place.
             name:
               taken: est déjà utilisé pour un motif avec le même type de RDV.
-            location_type:
-              cant_change_because_already_used: ne peut être modifié car le motif est utilisé pour un RDV
             for_secretariat:
               cant_be_enabled_if_follow_up: ne peut être activé si "RDV de suivi" est activé
