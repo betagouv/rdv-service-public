@@ -1,8 +1,25 @@
 module RecurrenceConcern
   extend ActiveSupport::Concern
 
+  DAYS = %i[
+    monday_start_time
+    monday_end_time
+    tuesday_start_time
+    tuesday_end_time
+    wednesday_start_time
+    wednesday_end_time
+    thursday_start_time
+    thursday_end_time
+    friday_start_time
+    friday_end_time
+    saturday_start_time
+    saturday_end_time
+  ].freeze
+
+  ATTRIBUTES = [:has_recurrence, :until_mode, :interval, :every, :on, :until, :starts, :ends, :total, :day, *DAYS].freeze
+
   included do
-    store :recurrence, accessors: %i[has_recurrence until_mode interval every on until starts ends total day], coder: JSON
+    store :recurrence, coder: JSON, accessors: RecurrenceConcern::ATTRIBUTES
 
     serialize :start_time, Tod::TimeOfDay
     serialize :end_time, Tod::TimeOfDay

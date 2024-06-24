@@ -1,4 +1,4 @@
-.recurrence-select class=("recurrence-select--#{model.recurrence[:every] || 'week'}ly")
+.multi-recurrences.recurrence-select class=("recurrence-select--#{model.recurrence[:every] || 'week'}ly")
   .row
     .col = date_input(f, :first_day)
     .col
@@ -19,8 +19,18 @@
           = f.input_field :every, as: :select, collection: { semaine: "week", mois: "month" }, include_blank: false, class: "custom-select", onchange: "$('.recurrence-select').removeClass(['recurrence-select--weekly', 'recurrence-select--monthly']).addClass(`recurrence-select--${this.value}ly`);"
 
       .weekly-select
-        = f.input :on, as: :check_boxes, label: "Répéter les", collection: { Lundi: "monday", Mardi: "tuesday", Mercredi: "wednesday", Jeudi: "thursday", Vendredi: "friday", Samedi: "saturday" }, include_blank: false
-
+        - days = { Lundi: "monday", Mardi: "tuesday", Mercredi: "wednesday", Jeudi: "thursday", Vendredi: "friday", Samedi: "saturday" }
+        p = "Répéter les"
+        .row
+          .col
+            = f.input :on, as: :check_boxes, label: "", collection: days, input_html: { onchange: "$(`.js-${this.value}-time`).prop('disabled', !this.checked)" }
+          .col
+            - days.each do |day, value|
+              = f.input "#{value}_start_time", as: :select, collection: every_5_minutes_of_the_day, label: false, input_html: { class: "js-#{value}-time", disabled: !value.in?(Array(model.recurrence[:on])) }
+          .col
+            - days.each do |day, value|
+              = f.input "#{value}_end_time",   as: :select, collection: every_5_minutes_of_the_day, label: false, input_html: { class: "js-#{value}-time", disabled: !value.in?(Array(model.recurrence[:on])) }
+          .col
       .monthly-select.form-group
         span Tous les X du mois
 
