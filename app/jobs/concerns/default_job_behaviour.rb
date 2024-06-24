@@ -8,7 +8,9 @@ module DefaultJobBehaviour
     # Include job metadata in Sentry context
     around_perform do |_job, block|
       Sentry.with_scope do |scope|
-        scope.set_context(:job, { job_id: job_id, queue_name: queue_name, arguments: arguments })
+        job_context = { job_id: job_id, queue_name: queue_name }
+        job_context[:arguments] = arguments if self.class.log_arguments
+        scope.set_context(:job, job_context)
         block.call
       rescue StandardError => e
         # Setting the fingerprint after the error occurs, allow us to capture failure responses and error codes
