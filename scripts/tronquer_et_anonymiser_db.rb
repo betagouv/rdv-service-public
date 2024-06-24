@@ -44,7 +44,7 @@ users_to_delete.delete_all
 # Partie 3 : Anonymisation des données restantes
 # -------------------------------
 
-Anonymizer::Core.anonymize_user_data!
+Anonymizer.anonymize_user_data!
 
 # -------------------------------
 # Épilogue : suppression des jobs et versions

@@ -1,55 +1,15 @@
-class Anonymizer::Core
-  attr_reader :table_name, :rules, :table_name_without_schema
+class Table
+  attr_reader :table_name, :table_name_without_schema
 
-  RULES = {
-    "rdvi" => Anonymizer::Rules::RdvInsertion,
-    "rdvsp" => Anonymizer::Rules::RdvServicePublic,
-  }.freeze
-
-  def self.anonymize_all_data!(service: "rdvsp", schema: service)
-    all_tables(service).each do |table_name|
-      anonymize_table!("#{schema}.#{table_name}", service)
-    end
-  end
-
-  def self.truncated_tables(service)
-    RULES[service]::TRUNCATED_TABLES.join("|")
-  end
-
-  def self.all_tables(service)
-    RULES[service]::RULES.keys
-  end
-
-  def self.anonymize_user_data!(service: "rdvsp")
-    anonymize_table!("users", service)
-    anonymize_table!("receipts", service)
-    anonymize_table!("rdvs", service)
-    Anonymizer::Rules::RdvServicePublic::TRUNCATED_TABLES.each do |table_name|
-      anonymize_table!(table_name, service)
-    end
-  end
-
-  def self.anonymize_table!(table_name, service)
-    new(table_name, RULES[service]).anonymize_table!
-  end
-
-  def self.anonymize_record!(record)
-    new(record.class.table_name).anonymize_record!(record)
-  end
-
-  def initialize(table_name, rules = Anonymizer::Rules::RdvServicePublic)
+  def initialize(table_name, config: Anonymizer.default_config)
     @table_name = table_name
-    @rules = rules
     @table_name_without_schema = table_name.split(".").last
+    @config = config
   end
 
   def anonymize_record!(record)
     record.class.where(id: record.id).update_all(anonymized_attributes) # rubocop:disable Rails/SkipsModelValidations
     record.reload
-  end
-
-  def self.anonymize_records_in_scope!(scope)
-    new(scope.table_name).anonymize_records_in_scope!(scope)
   end
 
   def anonymize_records_in_scope!(scope)
@@ -67,7 +27,7 @@ class Anonymizer::Core
       raise "Attention, il semble que vous êtes en train d'anonymiser des données d'une appli web"
     end
 
-    if table_name_without_schema.in?(rules::TRUNCATED_TABLES)
+    if table_name_without_schema.in?(config.truncated_tables)
       db_connection.execute("TRUNCATE #{ActiveRecord::Base.sanitize_sql(table_name)} CASCADE")
       return
     end
@@ -83,6 +43,8 @@ class Anonymizer::Core
   # rubocop:enable Metrics/CyclomaticComplexity
 
   private
+
+  attr_reader :config
 
   def anonymize_column(column, table)
     if column.type.in?(%i[string text]) && column.null # On vérifie que la colonne est nullable
@@ -102,11 +64,11 @@ class Anonymizer::Core
   end
 
   def anonymized_column_names
-    rules::RULES.dig(table_name_without_schema, :anonymized_column_names) || []
+    config.rules.dig(table_name_without_schema, :anonymized_column_names) || []
   end
 
   def non_anonymized_column_names
-    rules::RULES.dig(table_name_without_schema, :non_anonymized_column_names) || []
+    config.rules.dig(table_name_without_schema, :non_anonymized_column_names) || []
   end
 
   def anonymized_attributes
