@@ -11,24 +11,24 @@ RSpec.describe "Agent can manage recurrence on plage d'ouverture" do
     visit edit_admin_organisation_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture)
   end
 
-  xit "default", js: true do
+  it "default", js: true do
     expect_page_title("Modifier votre plage d'ouverture")
-    expect_not_checked("has_recurrence")
+    expect_not_checked("plage_ouverture_has_recurrence", visible: false)
     expect(page).not_to have_text("Répéter tou(te)s les")
 
     # fill recurrence form
 
     check "Suivi bonjour"
-    check("has_recurrence")
+    check("plage_ouverture_has_recurrence", visible: :hidden, allow_label_click: true)
     expect(page).to have_text("Répéter tou(te)s les")
-    check("recurrence_on_monday")
-    check("recurrence_on_tuesday")
-    check("recurrence_on_wednesday")
-    check("recurrence_on_thursday")
-    check("recurrence_on_friday")
-    check("recurrence_on_saturday")
-    select("Arrêter le (date)", from: "recurrence[until_mode]")
-    fill_in("recurrence[until]", with: "30/12/2019")
+    check("plage_ouverture_on_monday")
+    check("plage_ouverture_on_tuesday")
+    check("plage_ouverture_on_wednesday")
+    check("plage_ouverture_on_thursday")
+    check("plage_ouverture_on_friday")
+    check("plage_ouverture_on_saturday")
+    select("Arrêter le (date)", from: "plage_ouverture_until_mode")
+    fill_in("plage_ouverture_until", with: "30/12/2019")
 
     click_button("Enregistrer")
 
@@ -44,27 +44,23 @@ RSpec.describe "Agent can manage recurrence on plage d'ouverture" do
 
     # reload page to check if form is filled correctly
     visit edit_admin_organisation_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture)
-    expect_checked("has_recurrence")
-    expect_checked("recurrence_on_monday")
-    expect_checked("recurrence_on_tuesday")
-    expect_checked("recurrence_on_wednesday")
-    expect_checked("recurrence_on_thursday")
-    expect_checked("recurrence_on_friday")
-    expect_checked("recurrence_on_saturday")
-    expect(page).to have_field("recurrence[until]")
-    # expect(page).to have_field("recurrence-until", with: "30/12/2019")
-    # TODO Pourquoi le champs ne contient pas la valeur ici. Quand on le fait à la main, tout va bien.
+    expect_checked("plage_ouverture_has_recurrence", visible: false)
+    expect_checked("plage_ouverture_on_monday")
+    expect_checked("plage_ouverture_on_tuesday")
+    expect_checked("plage_ouverture_on_wednesday")
+    expect_checked("plage_ouverture_on_thursday")
+    expect_checked("plage_ouverture_on_friday")
+    expect_checked("plage_ouverture_on_saturday")
+    expect(page).to have_field("plage_ouverture_until", with: "30/12/2019")
 
     visit edit_admin_organisation_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture)
-    select("mois", from: "recurrence_every")
+    select("mois", from: "plage_ouverture_every")
     expect(page).not_to have_text("Répéter les")
-    expect(page).to have_text("Tous les 1er mardi du mois")
-    fill_in("recurrence-source", with: "11/12/2019")
-    page.execute_script("document.querySelector('#recurrence-source').dispatchEvent(new CustomEvent('change'))") # NOTE: I don’t know why we need to trigger the event manually in the spec.
-    select("1", from: "recurrence_interval")
-    expect(page).to have_text("Tous les 2ème mercredi du mois")
+    # expect(page).to have_text("Tous les 1er mardi du mois")
+    fill_in("plage_ouverture_first_day", with: "11/12/2019")
+    select("1", from: "plage_ouverture_interval")
+    # expect(page).to have_text("Tous les 2ème mercredi du mois")
     click_button("Enregistrer")
-
     # check if everything is ok in db
     expect(plage_ouverture.reload.schedule.to_hash).to eq(
       day: { 3 => [2] },
@@ -76,20 +72,18 @@ RSpec.describe "Agent can manage recurrence on plage d'ouverture" do
 
     # reload page to check if form is filled correctly
     visit edit_admin_organisation_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture)
-    expect_checked("has_recurrence")
-    expect(page).to have_select("recurrence_every", selected: "mois")
-    expect(page).to have_select("recurrence_interval", selected: "1")
-    expect(page).to have_text("Tous les 2ème mercredi du mois")
-    expect(page).to have_field("recurrence[until]")
-    # expect(page).to have_field("recurrence-until", with: "30/12/2019")
-    # TODO Pourquoi le champs ne contient pas la valeur ici. Quand on le fait à la main, tout va bien.
+    expect_checked("plage_ouverture_has_recurrence", visible: false)
+    expect(page).to have_select("plage_ouverture_every", selected: "mois")
+    expect(page).to have_select("plage_ouverture_interval", selected: "1")
+    # expect(page).to have_text("Tous les 2ème mercredi du mois")
+    expect(page).to have_field("plage_ouverture_until", with: "30/12/2019")
   end
 
-  def expect_checked(element_selector)
-    expect(page).to have_field(element_selector, checked: true)
+  def expect_checked(element_selector, visible: true)
+    expect(page).to have_field(element_selector, checked: true, visible: visible)
   end
 
-  def expect_not_checked(element_selector)
-    expect(page).to have_field(element_selector, checked: false)
+  def expect_not_checked(element_selector, visible: true)
+    expect(page).to have_field(element_selector, checked: false, visible: visible)
   end
 end

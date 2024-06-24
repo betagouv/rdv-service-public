@@ -23,7 +23,7 @@ module PlageOuverturesHelper
   end
 
   def display_every(plage_ouverture)
-    recurrence_hash = plage_ouverture.schedule.to_hash
+    recurrence_hash = plage_ouverture.schedule.to_h
 
     interval = " "
     interval = " #{recurrence_hash[:interval]} " if recurrence_hash[:interval].to_i > 1

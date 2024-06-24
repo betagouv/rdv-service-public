@@ -108,7 +108,7 @@ class Admin::PlageOuverturesController < AgentAuthController
   end
 
   def recurrence_params
-    params.require(:plage_ouverture).permit(:has_recurrence, :interval, :every, :until, :starts, :ends, :total, until_mode: [], on: [])
+    params.require(:plage_ouverture).permit(:has_recurrence, :interval, :every, :until, :starts, :ends, :total, :until_mode, on: [])
   end
 
   def params_for_create_or_update

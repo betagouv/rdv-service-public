@@ -99,7 +99,7 @@ class Admin::AbsencesController < AgentAuthController
   end
 
   def recurrence_params
-    params.require(:absence).permit(:has_recurrence, :interval, :every, :until, :starts, :ends, :total, until_mode: [], on: [])
+    params.require(:absence).permit(:has_recurrence, :interval, :every, :until, :starts, :ends, :total, :until_mode, on: [])
   end
 
   def params_for_create_or_update

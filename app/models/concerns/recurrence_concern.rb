@@ -8,7 +8,7 @@ module RecurrenceConcern
     serialize :end_time, Tod::TimeOfDay
 
     before_save :set_recurrence_ends_at, if: -> { recurrence.present? }
-    before_save :set_recurrence_day, if: -> { recurrence.present? }
+    before_save :set_data_for_monthly_recurrence, if: -> { recurrence.present? }
 
     validates :first_day, :start_time, :end_time, presence: true
     validate :recurrence_starts_matches_first_day, if: :recurring?
@@ -22,7 +22,7 @@ module RecurrenceConcern
   end
 
   def schedule
-    @schedule ||= RecurrenceBuilder.create(self)
+    RecurrenceBuilder.create(self)
   end
 
   def starts_at
@@ -148,10 +148,11 @@ module RecurrenceConcern
     errors.add(:base, "La fin de la récurrence doit être après le premier jour.")
   end
 
-  def set_recurrence_day
+  def set_data_for_monthly_recurrence
     return unless recurrence[:has_recurrence].to_b && recurrence[:every] == "month"
 
-    recurrence[:day] ||= { first_day.cwday => [week_day_position_in_month] }
+    recurrence[:on] = []
+    recurrence[:day] = { first_day.cwday => [week_day_position_in_month] }
   end
 
   def week_day_position_in_month
