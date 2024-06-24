@@ -99,12 +99,9 @@ module Users::CreneauxWizardConcern
     !first_matching_motif.requires_lieu? && user_selected_organisation.nil? && public_link_organisation.nil?
   end
 
-  def unique_motif_by_name_and_location_type?
-    unique_motifs_by_name_and_location_type.length == 1
-  end
-
   def motif_selected?
-    motif_param_present? && unique_motif_by_name_and_location_type?
+    motif_param_present? &&
+      unique_motifs_by_name_and_location_type.length == 1
   end
 
   def service_selected?
