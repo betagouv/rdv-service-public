@@ -5,7 +5,7 @@
   = f.input :title, hint:"Uniquement visible en interne", placeholder: t(".busy_time_example")
 
   hr
-  = render partial: "common/recurrence", locals: { f: f, model: absence }
+  = render partial: "recurrence", locals: { f: f, model: absence }
 
   .row
     - if absence.persisted?

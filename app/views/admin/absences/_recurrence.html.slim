@@ -1,23 +1,15 @@
 .recurrence-select class=("recurrence-select--#{model.recurrence[:every] || 'week'}ly")
   .row
     .col = date_input(f, :first_day)
-    - if defined?(model.end_day)
-      .col = date_input(f, :end_day)
-    - else
-      .col
-        p &nbsp
-        .custom-control.custom-switch
-          = f.input_field :has_recurrence, class: "custom-control-input", checked: model.schedule.present?, type: "checkbox", data: { toggle: "collapse", target: ".recurrence-form" }
-          = f.label :has_recurrence, "Répéter la plage", class: "custom-control-label"
+    .col = date_input(f, :end_day)
   .row
     .col = f.input :start_time, as: :select, collection: every_5_minutes_of_the_day, selected: model.start_time&.strftime("%H:%M"), include_blank: false
     .col = f.input :end_time,   as: :select, collection: every_5_minutes_of_the_day, selected: model.end_time&.strftime("%H:%M"),   include_blank: false
 
-  - if defined?(model.end_day)
-    div
-      .custom-control.custom-switch
-        = f.input_field :has_recurrence, class: "custom-control-input", checked: model.schedule.present?, type: "checkbox", data: { toggle: "collapse", target: ".recurrence-form" }
-        = f.label :has_recurrence, "Répéter la plage", class: "custom-control-label"
+  div
+    .custom-control.custom-switch
+      = f.input_field :has_recurrence, class: "custom-control-input", checked: model.schedule.present?, type: "checkbox", data: { toggle: "collapse", target: ".recurrence-form" }
+      = f.label :has_recurrence, "Répéter la plage", class: "custom-control-label"
 
   .collapse.recurrence-form class=("show" if model.schedule)
     .all-select

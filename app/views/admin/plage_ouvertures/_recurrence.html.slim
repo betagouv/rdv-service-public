@@ -1,0 +1,35 @@
+.recurrence-select class=("recurrence-select--#{model.recurrence[:every] || 'week'}ly")
+  .row
+    .col = date_input(f, :first_day)
+    .col
+      p &nbsp
+      .custom-control.custom-switch
+        = f.input_field :has_recurrence, class: "custom-control-input", checked: model.schedule.present?, type: "checkbox", data: { toggle: "collapse", target: ".recurrence-form" }
+        = f.label :has_recurrence, "Répéter la plage", class: "custom-control-label"
+  .row
+    .col = f.input :start_time, as: :select, collection: every_5_minutes_of_the_day, selected: model.start_time&.strftime("%H:%M"), include_blank: false
+    .col = f.input :end_time,   as: :select, collection: every_5_minutes_of_the_day, selected: model.end_time&.strftime("%H:%M"),   include_blank: false
+
+  .collapse.recurrence-form class=("show" if model.schedule)
+    .all-select
+      .form-group
+        .form-inline
+          = f.label :interval, "Répéter tou(te)s les", class: "form-control-label mr-2"
+          = f.input_field :interval, as: :select, collection: 1..5, include_blank: false, class: "custom-select"
+          = f.input_field :every, as: :select, collection: { semaine: "week", mois: "month" }, include_blank: false, class: "custom-select", onchange: "$('.recurrence-select').removeClass(['recurrence-select--weekly', 'recurrence-select--monthly']).addClass(`recurrence-select--${this.value}ly`);"
+
+      .weekly-select
+        = f.input :on, as: :check_boxes, label: "Répéter les", collection: { Lundi: "monday", Mardi: "tuesday", Mercredi: "wednesday", Jeudi: "thursday", Vendredi: "friday", Samedi: "saturday" }, include_blank: false
+
+      .monthly-select.form-group
+        span Tous les X du mois
+
+      .until class=("until--#{model.until_mode || 'none'}")
+        .row
+          .col-6
+            = f.input :until_mode, as: :select, collection: { "Ne jamais arrêter": :none, "Arrêter le (date)": :date, "Arrêter au bout de (nb occurences)": :occurences }, include_blank: false, label: "Finir la répétition", input_html: { onchange: "$('.until').removeClass(['until--none', 'until--date', 'until--occurences']).addClass(`until--${this.value}`)" }
+          .col-6
+            .until-date-select
+              = date_input(f, :until, required: false, label: "Date de l'occurence")
+            .until-occurences-select
+              = f.input(:total, required: false, label: "Nombre d'occurences", collection: 1..10, include_blank: true)
