@@ -1,3 +1,4 @@
+# voir https://github.com/france-connect/Documentation-AgentConnect/blob/main/doc_fs/technique_fca/endpoints.md
 module AgentConnectOpenIdClient
   class Callback
     class OpenIdFlowError < StandardError; end
@@ -58,15 +59,15 @@ module AgentConnectOpenIdClient
 
     def fetch_token(code, agent_connect_callback_url)
       data = {
-        client_id: AGENT_CONNECT_CLIENT_ID,
-        client_secret: AGENT_CONNECT_CLIENT_SECRET,
+        client_id: ENV["AGENT_CONNECT_CLIENT_ID"],
+        client_secret: ENV["AGENT_CONNECT_CLIENT_SECRET"],
         code: code,
         grant_type: "authorization_code",
         redirect_uri: agent_connect_callback_url,
       }
 
       response = Typhoeus.post(
-        URI("#{AGENT_CONNECT_BASE_URL}/token"),
+        URI("#{ENV['AGENT_CONNECT_BASE_URL']}/token"),
         body: data,
         headers: { "Content-Type" => "application/x-www-form-urlencoded" }
       )
@@ -85,13 +86,13 @@ module AgentConnectOpenIdClient
       decoded_id_token = OpenIDConnect::ResponseObject::IdToken.decode(encoded_id_token, agent_connect_config.jwks)
       decoded_id_token.verify!(
         issuer: agent_connect_config.issuer,
-        client_id: AGENT_CONNECT_CLIENT_ID,
+        client_id: ENV["AGENT_CONNECT_CLIENT_ID"],
         nonce: @nonce
       )
     end
 
     def fetch_user_info(token)
-      uri = URI("#{AGENT_CONNECT_BASE_URL}/userinfo")
+      uri = URI("#{ENV['AGENT_CONNECT_BASE_URL']}/userinfo")
       uri.query = URI.encode_www_form({ schema: "openid" })
 
       response = Typhoeus.get(uri, headers: { "Authorization" => "Bearer #{token}" })

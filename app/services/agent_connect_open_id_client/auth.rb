@@ -12,7 +12,7 @@ module AgentConnectOpenIdClient
     def redirect_url(callback_url)
       query_params = {
         response_type: "code",
-        client_id: AGENT_CONNECT_CLIENT_ID,
+        client_id: ENV["AGENT_CONNECT_CLIENT_ID"],
         redirect_uri: callback_url,
         scope: "openid email given_name usual_name",
         state: state,
@@ -22,7 +22,7 @@ module AgentConnectOpenIdClient
         prompt: @force_login ? "login" : nil,
       }.compact_blank
 
-      "#{AGENT_CONNECT_BASE_URL}/authorize?#{query_params.to_query}"
+      "#{ENV['AGENT_CONNECT_BASE_URL']}/authorize?#{query_params.to_query}"
     end
   end
 end
