@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
-  mount Rswag::Ui::Engine => '/api-docs'
-  mount Rswag::Api::Engine => '/api-docs'
+  mount Rswag::Ui::Engine => "/api-docs"
+  mount Rswag::Api::Engine => "/api-docs"
   ## OAUTH ##
   devise_scope :user do
     get "omniauth/franceconnect/callback" => "omniauth_callbacks#franceconnect"
@@ -284,7 +284,7 @@ Rails.application.routes.draw do
     # we rename the short parameter tkn
     params[:invitation_token] ||= params.delete(:tkn) if params[:tkn]
     params.delete(:id) # id is passed through path_params
-    params.values.any? ? "?#{params.to_query}" : ''
+    params.values.any? ? "?#{params.to_query}" : ""
   end
 
   # short public link
@@ -310,7 +310,7 @@ Rails.application.routes.draw do
 
   # rubocop:disable Style/FormatStringToken
   # temporary route after admin namespace introduction
-  get "/organisations/*rest", to: redirect('admin/organisations/%{rest}')
+  get "/organisations/*rest", to: redirect("admin/organisations/%{rest}")
   # old agenda rule was bookmarked by some agents
   get "admin/organisations/:organisation_id/agents/:agent_id", to: redirect("/admin/organisations/%{organisation_id}/agent_agendas/%{agent_id}")
   # rubocop:enable Style/FormatStringToken
@@ -319,7 +319,7 @@ Rails.application.routes.draw do
 
   # This route redirects invitations to rdv-insertion so that rdv-insertion
   # can use rdvs domain name in their emails
-  get '/i/r/:uuid', to: redirect { |path_params, _|
+  get "/i/r/:uuid", to: redirect { |path_params, _|
     "#{ENV['RDV_INSERTION_HOST']}/r/#{path_params[:uuid]}"
   }
 
