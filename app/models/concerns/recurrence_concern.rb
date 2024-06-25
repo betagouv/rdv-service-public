@@ -96,7 +96,7 @@ module RecurrenceConcern
     cache_key = "earliest_future_occurrence_#{self.class.table_name}_#{id}_#{updated_at}"
 
     Rails.cache.fetch(cache_key, force: refresh, expires_in: 1.week) do
-      schedule.starting(starts_at).until(recurrence_ends_at).lazy.select(&:future?).first
+      events(starting_date: starts_at, until_date: recurrence_ends_at).lazy.select(&:future?).first
     end
   end
 
@@ -125,7 +125,7 @@ module RecurrenceConcern
 
     if recurring?
       min_from = only_future ? (earliest_future_occurrence_time || starts_at) : starts_at
-      schedule.starting(min_from).until(min_until).lazy.select do |occurrence_starts_at|
+      events(starting_date: min_from, until_date: min_until).lazy.select do |occurrence_starts_at|
         event_in_range?(occurrence_starts_at, occurrence_starts_at + duration, inclusive_datetime_range)
       end.to_a
     else
@@ -174,5 +174,14 @@ module RecurrenceConcern
 
   def week_day_position_in_month
     (first_day.day - 1).div(7) + 1
+  end
+
+  def events(starting_date:, until_date:)
+    if schedule.is_a?(Montrose::Recurrence)
+      schedule.starting(starting_date).until(until_date).events.lazy
+    else
+      rules = schedule.rules.map { |rule| rule.merge(starts: starting_date, until: until_date) }
+      Montrose::Schedule.new(rules).events.lazy
+    end
   end
 end

@@ -16,13 +16,9 @@ class RecurrenceBuilder
   private
 
   def build_schedule
-    schedule = Montrose::Schedule.new
     days = @model.recurrence[:on].compact_blank
-    days.each do |day|
-      schedule << params_for_day_recurrence(day)
-    end
 
-    schedule
+    Montrose::Schedule.new(days.map { |day| params_for_day_recurrence(day) })
   end
 
   def build_recurrence
@@ -32,7 +28,7 @@ class RecurrenceBuilder
   def params_for_day_recurrence(day)
     options = parse_options(@model.recurrence)
     options[:on] = [day]
-    options[:during] = [@model.recurrence.fetch("#{day}_start_time"), @model.recurrence.fetch("#{day}_end_time")].join("-")
+    options[:hour] = @model.recurrence["#{day}_start_time"].to_i..@model.recurrence["#{day}_end_time"].to_i
 
     options
   end

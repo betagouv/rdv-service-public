@@ -13,6 +13,8 @@ module PlageOuverturesHelper
   end
 
   def display_recurrence(plage_ouverture)
+    return [] unless plage_ouverture.schedule.is_a?(Montrose::Recurrence)
+
     every_part = display_every(plage_ouverture)
 
     time_part = display_time_range(plage_ouverture)
