@@ -32,7 +32,7 @@ Rails.application.config.middleware.use OmniAuth::Builder do
       }
     )
 
-    Sentry.capture_exception(env['omniauth.error'])
+    Sentry.capture_exception(env["omniauth.error"])
 
     OmniauthCallbacksController.action(:failure).call(env)
   end
