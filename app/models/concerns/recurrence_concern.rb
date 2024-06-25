@@ -16,7 +16,7 @@ module RecurrenceConcern
     saturday_end_time
   ].freeze
 
-  ATTRIBUTES = [:has_recurrence, :until_mode, :interval, :every, :on, :until, :starts, :ends, :total, :day, *DAYS].freeze
+  ATTRIBUTES = [:has_recurrence, :recurrence_type, :until_mode, :interval, :every, :on, :until, :starts, :ends, :total, :day, *DAYS].freeze
 
   included do
     store :recurrence, coder: JSON, accessors: RecurrenceConcern::ATTRIBUTES
@@ -39,7 +39,7 @@ module RecurrenceConcern
   end
 
   def schedule
-    RecurrenceBuilder.create(self)
+    RecurrenceBuilder.build(self)
   end
 
   def starts_at
