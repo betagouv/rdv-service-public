@@ -33,7 +33,7 @@ RSpec.describe "Agent can manage recurrence on plage d'ouverture" do
     click_button("Enregistrer")
 
     # check if everything is ok in db
-    expect(plage_ouverture.reload.schedule.to_hash).to eq(
+    expect(plage_ouverture.reload.schedule.to_h).to match(
       day: [1, 2, 3, 4, 5, 6],
       every: :week,
       interval: 1,
@@ -62,7 +62,7 @@ RSpec.describe "Agent can manage recurrence on plage d'ouverture" do
     # expect(page).to have_text("Tous les 2ème mercredi du mois")
     click_button("Enregistrer")
     # check if everything is ok in db
-    expect(plage_ouverture.reload.schedule.to_hash).to eq(
+    expect(plage_ouverture.reload.schedule.to_h).to match(
       day: { 3 => [2] },
       every: :month,
       interval: 1,

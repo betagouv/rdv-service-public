@@ -13,8 +13,6 @@ module PlageOuverturesHelper
   end
 
   def display_recurrence(plage_ouverture)
-    return [] unless plage_ouverture.schedule.is_a?(Montrose::Recurrence)
-
     every_part = display_every(plage_ouverture)
 
     time_part = display_time_range(plage_ouverture)
@@ -25,7 +23,7 @@ module PlageOuverturesHelper
   end
 
   def display_every(plage_ouverture)
-    recurrence_hash = plage_ouverture.schedule.to_h
+    recurrence_hash = plage_ouverture.recurrence
 
     interval = " "
     interval = " #{recurrence_hash[:interval]} " if recurrence_hash[:interval].to_i > 1
