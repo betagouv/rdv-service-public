@@ -22,22 +22,17 @@ Rails.application.config.middleware.use OmniAuth::Builder do
   on_failure do |env|
     http_host = env["HTTP_HOST"]
     provider = env["omniauth.error.strategy"].class.name.demodulize
-    error_type = env["omniauth.error.type"]
-    error = env["omniauth.error"]
 
-    crumb = Sentry::Breadcrumb.new(
-      message: "Omniauth env values",
-      data: {
+    Sentry.set_context(
+      "omniauth_env",
+      {
         http_host: http_host,
         provider: provider,
-        error: error,
-        error_type: error_type,
         full_env: env.transform_values { |value| value.is_a?(String) ? value : value.inspect },
       }
     )
-    Sentry.add_breadcrumb(crumb)
 
-    Sentry.capture_message("Omniauth for #{provider} failed on #{http_host}: #{error}", fingerprint: [provider, http_host])
+    Sentry.capture_exception(env["omniauth.error"])
 
     OmniauthCallbacksController.action(:failure).call(env)
   end
