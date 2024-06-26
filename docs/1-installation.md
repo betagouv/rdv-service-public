@@ -3,7 +3,7 @@
 ## Prérequis
 
 - Déploiement:
-  - Ruby 3.3.1 (nous conseillons l’utilisation de [rbenv](https://github.com/rbenv/rbenv-installer#rbenv-installer--doctor-scripts))
+  - Ruby 3.3.3 (nous conseillons l’utilisation de [rbenv](https://github.com/rbenv/rbenv-installer#rbenv-installer--doctor-scripts))
   - PostgreSQL >= 12, l’utilisateur doit avoir les droits `superuser`. C'est nécessaire pour pouvoir activer les extensions utilisés.
 - Développement
   - [Yarn](https://yarnpkg.com/en/docs/install)
