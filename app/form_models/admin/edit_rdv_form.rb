@@ -18,8 +18,4 @@ class Admin::EditRdvForm
       false
     end
   end
-
-  def save
-    raise NotImplementedError
-  end
 end
