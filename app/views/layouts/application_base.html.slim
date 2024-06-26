@@ -37,7 +37,7 @@ html lang="fr"
 
     footer.fr-footer.main-footer.fr-pb-12w
       .fr-footer__top
-        .fr-container
+        .container
           .fr-grid-row.fr-grid-row--gutters.fr-grid-row--start
             .fr-col-12.fr-col-sm-3.fr-col-md-3
               h3.fr-footer__top-cat À propos
@@ -60,7 +60,7 @@ html lang="fr"
                 li= link_to "Documentation utilisateur", current_domain.documentation_url, class: "fr-footer__top-link", target: "_blank", rel: "noopener"
                 li= link_to "Documentation technique", "https://github.com/betagouv/rdv-service-public#documentation-externe", class: "fr-footer__top-link", target: "_blank", rel: "noopener"
 
-      .fr-container
+      .container
         .fr-footer__body
           .fr-footer__brand.fr-enlarge-link
             = link_to image_tag(current_domain.dark_logo_path, size: "250x80", alt: current_domain.name), root_path, title: "aller à l'accueil #{current_domain.name}"
