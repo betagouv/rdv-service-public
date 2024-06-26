@@ -7,22 +7,6 @@ footer {
   }
 }
 
-// only used for users
-footer.main-footer {
-  padding: 3rem 0 0;
-  .brand {
-    font-weight: 800;
-    font-size: 1.7rem;
-    color: #222;
-    margin-bottom: 20px;
-  }
-}
-@media (max-width: 991px) {
-  footer.main-footer {
-    padding: 100px 0 0;
-  }
-}
-
 // only used for agents
 .footer {
   border-top: 1px solid rgba($gray-600, 0.2);
@@ -42,13 +26,15 @@ footer.main-footer {
 
 // DSFR overrides
 
-.fr-footer__partners-title {
-  font-size: 1.5rem;
-}
-
 .fr-footer__partners-main {
   // this avoids footer to overflow on the right and thus increasing the viewport width which breaks DSFR modals
   flex-wrap: wrap;
   gap: 1rem;
   background: $white;
+}
+
+.main-footer {
+  h2, h3 {
+    text-align: left;
+  }
 }
