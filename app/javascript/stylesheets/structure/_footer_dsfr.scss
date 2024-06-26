@@ -1,0 +1,15 @@
+footer {
+  color: $blue;
+  h2, h3 {
+    text-align: left;
+    padding-bottom: 0;
+  }
+}
+
+.fr-footer__partners-main {
+  // this avoids footer to overflow on the right and thus increasing the viewport width which breaks DSFR modals
+  flex-wrap: wrap;
+  gap: 1rem;
+  background: $white;
+  padding: 1rem;
+}

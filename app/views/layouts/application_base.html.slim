@@ -40,22 +40,22 @@ html lang="fr"
         .container
           .fr-grid-row.fr-grid-row--gutters.fr-grid-row--start
             .fr-col-12.fr-col-sm-3.fr-col-md-3
-              h3.fr-footer__top-cat À propos
+              h2.fr-footer__top-cat À propos
               ul.fr-footer__top-list
                 li= link_to "Contact", contact_path, class: "fr-footer__top-link"
                 - if current_domain == Domain::RDV_SOLIDARITES
                   li= link_to "Les solidarités dans votre département", mds_path, class: "fr-footer__top-link"
             .fr-col-12.fr-col-sm-3.fr-col-md-3
-              h3.fr-footer__top-cat Agents
+              h2.fr-footer__top-cat Agents
               ul.fr-footer__top-list
                 li= link_to "Espace professionnel", presentation_agent_path, class: "fr-footer__top-link"
             .fr-col-12.fr-col-sm-3.fr-col-md-3
-              h3.fr-footer__top-cat Le Service #{current_domain.name}
+              h2.fr-footer__top-cat Le Service #{current_domain.name}
               ul.fr-footer__top-list
                 li= link_to "Statistiques", stats_path, class: "fr-footer__top-link"
                 li= link_to "Budget", budget_path, class: "fr-footer__top-link", target: "_blank", rel: "noopener"
             .fr-col-12.fr-col-sm-3.fr-col-md-3
-              h3.fr-footer__top-cat Documentation
+              h2.fr-footer__top-cat Documentation
               ul.fr-footer__top-list
                 li= link_to "Documentation utilisateur", current_domain.documentation_url, class: "fr-footer__top-link", target: "_blank", rel: "noopener"
                 li= link_to "Documentation technique", "https://github.com/betagouv/rdv-service-public#documentation-externe", class: "fr-footer__top-link", target: "_blank", rel: "noopener"
@@ -89,9 +89,9 @@ html lang="fr"
             li.fr-footer__bottom-item
                 = link_to "Mentions Légales", mentions_legales_path, class: "fr-footer__bottom-link"
             li.fr-footer__bottom-item
-              = link_to "Données personnelles", politique_de_confidentialite_path, class: "fr-footer__bottom-link"
+              = link_to "Politique de confidentialité", politique_de_confidentialite_path, class: "fr-footer__bottom-link"
             li.fr-footer__bottom-item
-              = link_to "C.G.U", cgu_path, class: "fr-footer__bottom-link"
+              = link_to "Conditions d’utilisation", cgu_path, class: "fr-footer__bottom-link"
             li.fr-footer__bottom-item
               = link_to "Code Source sur GitHub", "https://github.com/betagouv/rdv-service-public", class: "fr-footer__bottom-link", target: "_blank", rel: "noopener"
             li.fr-footer__bottom-item
