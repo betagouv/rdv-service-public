@@ -44,4 +44,11 @@ class ApplicationSms
   def deliver_later(...)
     raise "not implemented"
   end
+
+  private
+
+  # Make Rubymine happy: otherwise it would complain in method_missing when calling `new` with parameters.
+  def initialize(*_args)
+    @receipt_params = {}
+  end
 end
