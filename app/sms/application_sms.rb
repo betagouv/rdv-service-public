@@ -41,14 +41,7 @@ class ApplicationSms
     end
   end
 
-  def deliver_later(queue: :sms)
-    raise NotImplementedError
-  end
-
-  private
-
-  # Make Rubymine happy: otherwise it would complain in method_missing when calling `new` with parameters.
-  def initialize(*_args)
-    @receipt_params = {}
+  def deliver_later(...)
+    raise "not implemented"
   end
 end
