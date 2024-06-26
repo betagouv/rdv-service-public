@@ -40,7 +40,7 @@ module RecurrenceConcern
   def schedule
     return nil if every.blank?
 
-    Lapin::Schedule.new(self)
+    @schedule ||= Lapin::Schedule.new(self)
   end
 
   def starts_at
@@ -83,11 +83,16 @@ module RecurrenceConcern
     schedule.present?
   end
 
-  def occurrences_for(inclusive_date_range, only_future: false)
-    return [] if inclusive_date_range.nil?
+  def occurrences_for(date_range, only_future: false)
+    return [] if date_range.nil?
 
-    occurrence_start_at_list_for(inclusive_date_range, only_future: only_future)
-      .map { |o| Recurrence::Occurrence.new(starts_at: o, ends_at: o + duration) }
+    if schedule
+      schedule.occurences(date_range: date_range, only_future: only_future)
+    elsif event_in_range?(starts_at, first_occurrence_ends_at, range)
+      Recurrence::Occurrence.new(starts_at: starts, ends_at: starts_at + duration)
+    else
+      []
+    end
   end
 
   # @return [ActiveSupport::TimeWithZone, nil] the earliest future occurrence at the time of computation
@@ -95,9 +100,8 @@ module RecurrenceConcern
     return unless recurring?
 
     cache_key = "earliest_future_occurrence_#{self.class.table_name}_#{id}_#{updated_at}"
-
     Rails.cache.fetch(cache_key, force: refresh, expires_in: 1.week) do
-      schedule.events(starts: starts_at, until: recurrence_ends_at).lazy.select(&:future?).first
+      schedule.next_future_event
     end
   end
 
@@ -112,27 +116,6 @@ module RecurrenceConcern
   end
 
   private
-
-  # The `only_future` param was introduced to circumvent performance
-  # issues with Montrose's occurrence generation.
-  # It uses a recent occurrence as a starting point
-  # when computing future occurrences, which is faster
-  # than starting form the very first occurrence.
-  # The value of a recent occurrence is computed and cached in #earliest_future_occurrence_time.
-  # Warning: using `only_future: true` will only yield future occurrences, not past ones.
-  def occurrence_start_at_list_for(inclusive_date_range, only_future:)
-    min_until = [inclusive_date_range.end, recurrence_ends_at].compact.min.end_of_day
-    inclusive_datetime_range = (inclusive_date_range.begin)..(inclusive_date_range.end.end_of_day)
-
-    if recurring?
-      min_from = only_future ? (earliest_future_occurrence_time || starts_at) : starts_at
-      schedule.events(starts: min_from, until: min_until).lazy.select do |occurrence_starts_at|
-        event_in_range?(occurrence_starts_at, occurrence_starts_at + duration, inclusive_datetime_range)
-      end.to_a
-    else
-      event_in_range?(starts_at, first_occurrence_ends_at, inclusive_datetime_range) ? [starts_at] : []
-    end
-  end
 
   def event_in_range?(event_starts_at, event_ends_at, range)
     range.cover?(event_starts_at) || range.cover?(event_ends_at) || (event_starts_at < range.begin && range.end < event_ends_at)

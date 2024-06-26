@@ -12,12 +12,28 @@ module Lapin
       @schedule = Montrose::Schedule.new(schedule_options)
     end
 
-    def events(params = {})
-      Montrose::Schedule.new(update_rules(params)).events.lazy
-    end
-
     def to_h
       @schedule.rules.first.to_h
+    end
+
+    def occurences(date_range:, only_future: false)
+      params = {
+        starts: only_future ? (@model.earliest_future_occurrence_time || @model.starts_at) : @model.starts_at,
+        until: [date_range.end, @model.recurrence_ends_at].compact.min.end_of_day
+      }
+
+      events(params: params).filter_map do |start_time|
+        end_time = end_time_for(start_time)
+        next unless date_range.cover?(start_time) || date_range.cover?(end_time) || (start_time < date_range.begin && date_range.end < end_time)
+
+        Recurrence::Occurrence.new(starts_at: start_time, ends_at: end_time)
+      end.to_a
+    end
+
+    def next_future_event
+      events(params: { starts: @model.starts_at, until: @model.recurrence_ends_at }).each do |event|
+        break event if event.future?
+      end
     end
 
     private
@@ -31,10 +47,7 @@ module Lapin
     end
 
     def day_options(day)
-      default_options.merge(
-        on: [day],
-        hour: @model.recurrence["#{day}_start_time"].to_i..@model.recurrence["#{day}_end_time"].to_i
-      )
+      default_options.merge(on: [day], hour: hour_range(day))
     end
 
     def default_options
@@ -74,6 +87,22 @@ module Lapin
 
     def active_days
       parse_collection(@model.recurrence[:on])
+    end
+
+    def hour_range(day)
+      @model.recurrence["#{day}_start_time"].to_i..@model.recurrence["#{day}_end_time"].to_i
+    end
+
+    def end_time_for(start_time)
+      return @model.duration unless weekly_multiple_recurrence?
+
+      day = start_time.strftime("%A").downcase
+      duration = Time.parse(@model.recurrence["#{day}_end_time"]) - Time.parse(@model.recurrence["#{day}_start_time"])
+      start_time + duration
+    end
+
+    def events(params: {})
+      Montrose::Schedule.new(update_rules(params)).events.lazy
     end
   end
 end
