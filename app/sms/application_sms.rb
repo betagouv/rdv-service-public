@@ -41,8 +41,8 @@ class ApplicationSms
     end
   end
 
-  def deliver_later(queue: :sms)
-    raise NotImplementedError
+  def deliver_later(...)
+    raise "not implemented"
   end
 
   private
