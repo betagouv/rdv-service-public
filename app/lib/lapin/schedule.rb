@@ -19,7 +19,7 @@ module Lapin
     def occurences(date_range:, only_future: false)
       params = {
         starts: only_future ? (@model.earliest_future_occurrence_time || @model.starts_at) : @model.starts_at,
-        until: [date_range.end, @model.recurrence_ends_at].compact.min.end_of_day
+        until: [date_range.end, @model.recurrence_ends_at].compact.min.end_of_day,
       }
 
       events(params: params).filter_map do |start_time|
@@ -43,15 +43,15 @@ module Lapin
     end
 
     def schedule_options
-      weekly_multiple_recurrence? ? active_days.map { |day| day_options(day) } : [default_options]
+      weekly_multiple_recurrence? ? active_days.map { |day| day_options(day) } : [options]
     end
 
     def day_options(day)
-      default_options.merge(on: [day], hour: hour_range(day))
+      options.merge(on: [day], at: @model.recurrence["#{day}_start_time"])
     end
 
-    def default_options
-      @default_options ||= {
+    def options
+      @options ||= {
         every: @model.recurrence[:every],
         interval: parse_int(@model.recurrence[:interval]),
         total: parse_int(@model.recurrence[:total]),
@@ -89,15 +89,11 @@ module Lapin
       parse_collection(@model.recurrence[:on])
     end
 
-    def hour_range(day)
-      @model.recurrence["#{day}_start_time"].to_i..@model.recurrence["#{day}_end_time"].to_i
-    end
-
     def end_time_for(start_time)
       return @model.duration unless weekly_multiple_recurrence?
 
       day = start_time.strftime("%A").downcase
-      duration = Time.parse(@model.recurrence["#{day}_end_time"]) - Time.parse(@model.recurrence["#{day}_start_time"])
+      duration = Time.zone.parse(@model.recurrence["#{day}_end_time"]) - Time.zone.parse(@model.recurrence["#{day}_start_time"])
       start_time + duration
     end
 

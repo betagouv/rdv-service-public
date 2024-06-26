@@ -39,33 +39,33 @@ class PlageOuvertureOverlap
     return false unless po1.recurring? && po2.recurring?
 
     # both PO are weekly
-    options1 = po1.schedule.default_options
-    options2 = po2.schedule.default_options
-    return false unless options1.every == :week && options2.every == :week
-    return false if options1.day.nil? || options2.day.nil?
+    options1 = po1.recurrence
+    options2 = po2.recurrence
+    return false unless options1[:every] == "week" && options2[:every] == "week"
+    return false if options1[:day].nil? || options2[:day].nil?
 
     # but are on different days
     # for monthly recurrences, day is [3] for the third day of the week
-    options1.day.intersection(options2.day).empty?
+    options1[:day].intersection(options2[:day]).empty?
   end
 
   def both_monthly_but_different_days? # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     return false unless po1.recurring? && po2.recurring?
 
     # both PO are monthly
-    options1 = po1.schedule.default_options
-    options2 = po2.schedule.default_options
-    return false unless options1.every == :month && options2.every == :month
-    return false if options1.day.nil? || options2.day.nil?
+    options1 = po1.recurrence
+    options2 = po2.recurrence
+    return false unless options1[:every] == "month" && options2[:every] == "month"
+    return false if options1[:day].nil? || options2[:day].nil?
 
     # … but but are on different weeks
     # for monthly recurrences, day is {2=>[3]} for the second day of the third week of the month
-    return true if options1.day.keys.intersection(options2.day.keys).empty?
+    return true if options1[:day].keys.intersection(options2[:day].keys).empty?
 
     # … but are on the same week of the month but on different days
     # day is a hash, the key is the week number in the month, the value is the days in this week.
     # In RDVS, monthly PO are only on a single day per month
-    return true if options1.day.keys == options2.day.keys && options1.day.keys.size == 1 && options1.day.values.first.intersection(options2.day.values.first).empty?
+    return true if options1[:day].keys == options2[:day].keys && options1[:day].keys.size == 1 && options1[:day].values.first.intersection(options2[:day].values.first).empty?
 
     false
   end

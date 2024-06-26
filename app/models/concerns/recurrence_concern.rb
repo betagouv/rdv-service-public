@@ -88,8 +88,8 @@ module RecurrenceConcern
 
     if schedule
       schedule.occurences(date_range: date_range, only_future: only_future)
-    elsif event_in_range?(starts_at, first_occurrence_ends_at, range)
-      Recurrence::Occurrence.new(starts_at: starts, ends_at: starts_at + duration)
+    elsif event_in_range?(starts_at, first_occurrence_ends_at, date_range)
+      [Recurrence::Occurrence.new(starts_at: starts_at, ends_at: starts_at + duration)]
     else
       []
     end
@@ -122,7 +122,7 @@ module RecurrenceConcern
   end
 
   def set_recurrence_ends_at
-    if recurrence[:until].present?  && !recurrence[:until].starts_with?("__/") # Date de fin de la récurrence
+    if recurrence[:until].present? && !recurrence[:until].starts_with?("__/") # Date de fin de la récurrence
       self.recurrence_ends_at = recurrence[:ends_at].end_of_day
     elsif recurrence[:total].present? # Nombre d'occurences de la récurrence
       # rubocop:disable Lint/UnreachableLoop

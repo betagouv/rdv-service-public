@@ -42,7 +42,7 @@ module SlotBuilder
       occurrences.map do |occurrence|
         next if occurrence.ends_at < Time.zone.now
 
-        (plage_ouverture.start_time.on(occurrence.starts_at)..plage_ouverture.end_time.on(occurrence.ends_at))
+        (occurrence.starts_at..occurrence.ends_at)
       end.compact
     end
 
