@@ -62,6 +62,7 @@ module Ants
       # Pour donc maintenir à jour les infos des RDVs chez l'ANTS, nous sommes obligés de supprimer, et de re-créer les RDVs
       # Toutefois, les RDVs chez l'ANTS avec un status 'consumed', ne sont plus modifiables.
       delete_appointments
+      sleep 2 # cf https://github.com/betagouv/rdv-service-public/issues/4318
       create_appointments
     end
 
