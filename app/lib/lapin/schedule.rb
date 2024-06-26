@@ -1,6 +1,7 @@
 module Lapin
   class Schedule
     InvalidRecurrenceData = Class.new(StandardError)
+    attr_reader :schedule
 
     delegate :lazy, :include, :default_options, to: :schedule
 

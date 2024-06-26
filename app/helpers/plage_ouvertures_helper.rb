@@ -29,16 +29,16 @@ module PlageOuverturesHelper
     interval = " #{recurrence_hash[:interval]} " if recurrence_hash[:interval].to_i > 1
 
     case recurrence_hash[:every]
-    when :week
+    when "week"
       every_part = "Toutes les#{interval}semaines"
 
       if recurrence_hash[:on].present?
-        "#{every_part}, les #{recurrence_hash[:on].map { |d| "#{weekday_in_fr(d)}s" }.to_sentence}"
+        "#{every_part}, les #{recurrence_hash[:on].compact_blank.map { |d| "#{weekday_in_fr(d)}s" }.to_sentence}"
       else
         "#{every_part}, le #{I18n.l(plage_ouverture.first_day, format: '%A')}"
       end
-    when :month
-      "Tous les#{interval}mois, #{weekday_position_in_month(recurrence_hash[:day])}"
+    when "month"
+      "Tous les#{interval}mois, #{weekday_position_in_month(recurrence_hash[:day].compact_blank)}"
     end
   end
 
@@ -63,7 +63,7 @@ module PlageOuverturesHelper
   def weekday_position_in_month(day_option)
     nth = day_option.values.first.first
     weekday = day_option.keys.first
-    "le #{nth == 1 ? "#{nth}er" : "#{nth}ème"} #{I18n.t('date.day_names')[weekday]}"
+    "le #{nth == 1 ? "#{nth}er" : "#{nth}ème"} #{I18n.t('date.day_names')[weekday.to_i]}"
   end
 
   def weekday_in_fr(weekday)
