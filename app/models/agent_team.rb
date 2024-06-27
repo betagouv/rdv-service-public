@@ -4,4 +4,6 @@ class AgentTeam < ApplicationRecord
   # Relations
   belongs_to :agent
   belongs_to :team
+
+  validates :agent_id, uniqueness: { scope: :team_id }
 end
