@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_04_25_132948) do
+ActiveRecord::Schema[7.0].define(version: 2024_06_25_102621) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -169,6 +169,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_25_132948) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["agent_id"], name: "index_agent_teams_on_agent_id"
+    t.index ["team_id", "agent_id"], name: "index_agent_teams_primary_keys", unique: true
     t.index ["team_id"], name: "index_agent_teams_on_team_id"
   end
 
@@ -444,6 +445,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_25_132948) do
   create_table "motifs_plage_ouvertures", id: false, force: :cascade do |t|
     t.bigint "motif_id", null: false
     t.bigint "plage_ouverture_id", null: false
+    t.index ["motif_id", "plage_ouverture_id"], name: "index_motifs_plage_ouvertures_primary_keys", unique: true
     t.index ["motif_id"], name: "index_motifs_plage_ouvertures_on_motif_id"
     t.index ["plage_ouverture_id"], name: "index_motifs_plage_ouvertures_on_plage_ouverture_id"
   end
