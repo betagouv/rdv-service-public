@@ -8,10 +8,10 @@ module IcalHelpers
       return if recurrence.blank?
 
       case recurrence[:every]
-      when :week
+      when "week"
         freq = "FREQ=WEEKLY;"
         by_day = "BYDAY=#{by_week_day(recurrence[:on].compact_blank)};" if recurrence[:on]
-      when :month
+      when "month"
         freq = "FREQ=MONTHLY;"
         by_day = "BYDAY=#{by_month_day(recurrence[:day].compact_blank)};" if recurrence[:day]
       end

@@ -3,7 +3,7 @@ module Lapin
     InvalidRecurrenceData = Class.new(StandardError)
     attr_reader :schedule
 
-    delegate :lazy, :include, :default_options, to: :schedule
+    delegate :lazy, :include, to: :schedule
 
     def initialize(model)
       raise InvalidRecurrenceData if model.every.blank?
@@ -12,8 +12,23 @@ module Lapin
       @schedule = Montrose::Schedule.new(schedule_options)
     end
 
-    def to_h
-      @schedule.rules.first.to_h
+    delegate :to_h, to: :default_options
+
+    def default_options
+      @default_options ||= Montrose::Options.new(
+        every: @model.recurrence[:every],
+        interval: parse_int(@model.recurrence[:interval]),
+        total: parse_int(@model.recurrence[:total]),
+        on: active_days,
+        starts: @model.first_day,
+        until: parse_date(@model.recurrence[:until]),
+        ends: parse_date(@model.recurrence[:ends]),
+        day: parse_collection(@model.recurrence[:day])
+      )
+    end
+
+    def ends_at
+      Montrose::Recurrence.new(default_options).ends_at
     end
 
     def occurences(date_range:, only_future: false)
@@ -43,24 +58,11 @@ module Lapin
     end
 
     def schedule_options
-      weekly_multiple_recurrence? ? active_days.map { |day| day_options(day) } : [options]
+      weekly_multiple_recurrence? ? active_days.map { |day| day_options(day) } : [default_options]
     end
 
     def day_options(day)
-      options.merge(on: [day], at: @model.recurrence["#{day}_start_time"])
-    end
-
-    def options
-      @options ||= {
-        every: @model.recurrence[:every],
-        interval: parse_int(@model.recurrence[:interval]),
-        total: parse_int(@model.recurrence[:total]),
-        on: active_days,
-        starts: @model.first_day,
-        until: parse_date(@model.recurrence[:until]),
-        ends: parse_date(@model.recurrence[:ends]),
-        day: parse_collection(@model.recurrence[:day]),
-      }.compact_blank
+      default_options.merge(on: [day], at: @model.recurrence["#{day}_start_time"])
     end
 
     def parse_date(date)
@@ -90,10 +92,13 @@ module Lapin
     end
 
     def end_time_for(start_time)
-      return @model.duration unless weekly_multiple_recurrence?
+      duration = if weekly_multiple_recurrence?
+                   day = start_time.strftime("%A").downcase
+                   Time.zone.parse(@model.recurrence["#{day}_end_time"]) - Time.zone.parse(@model.recurrence["#{day}_start_time"])
+                 else
+                   @model.duration
+                 end
 
-      day = start_time.strftime("%A").downcase
-      duration = Time.zone.parse(@model.recurrence["#{day}_end_time"]) - Time.zone.parse(@model.recurrence["#{day}_start_time"])
       start_time + duration
     end
 

@@ -122,18 +122,12 @@ module RecurrenceConcern
   end
 
   def set_recurrence_ends_at
-    if recurrence[:until].present? && !recurrence[:until].starts_with?("__/") # Date de fin de la récurrence
-      self.recurrence_ends_at = recurrence[:ends_at].end_of_day
-    elsif recurrence[:total].present? # Nombre d'occurences de la récurrence
-      # rubocop:disable Lint/UnreachableLoop
-      self.recurrence_ends_at = schedule.events.reverse_each { |event| break event }.end_of_day
-      # rubocop:enable Lint/UnreachableLoop
-    end
+    self.recurrence_ends_at = schedule&.ends_at&.end_of_day
   end
 
   def recurrence_ends_after_first_day
-    return true if recurrence[:until].nil? || recurrence[:until].starts_with?("__/")
-    return true if recurrence[:until].to_date > first_day
+    return true if schedule.ends_at.nil?
+    return true if schedule.ends_at.to_date > first_day
 
     errors.add(:base, "La fin de la récurrence doit être après le premier jour.")
   end
