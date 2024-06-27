@@ -13,7 +13,7 @@ class Admin::RdvsCollectifsController < AgentAuthController
   end
 
   def new
-    motif = Agent::MotifPolicy::UseScope.apply(current_agent, Motif).find(params[:motif_id])
+    motif = Agent::MotifPolicy::UseScope.apply(current_agent, Motif.all).find(params[:motif_id])
     @rdv_form = Admin::NewRdvForm.new(pundit_user, organisation: current_organisation, motif: motif, duration_in_min: motif.default_duration_in_min)
     @rdv = @rdv_form.rdv
 
