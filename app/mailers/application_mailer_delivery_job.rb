@@ -12,10 +12,4 @@ class ApplicationMailerDeliveryJob < ActionMailer::MailDeliveryJob
       retry_job
     end
   end
-
-  # Don't log first failures to Sentry, to prevent noise
-  # on temporary unavailability of an external service.
-  def log_failure_to_sentry?(_exception)
-    executions > 2
-  end
 end
