@@ -77,6 +77,8 @@ class Users::RdvSms < Users::BaseSms
       "RDV téléphonique"
     elsif rdv.home?
       "RDV à votre domicile"
+    elsif rdv.visio?
+      "RDV par visioconférence"
     else
       rdv.address_complete
     end

@@ -190,6 +190,16 @@ RSpec.describe Users::RdvSms, type: :service do
           expect(subject).to include(rdv.address)
         end
       end
+
+      context "when rdv is by visio" do
+        let(:motif) { build(:motif, location_type: :visio) }
+
+        it do
+          expect(subject).to include("RDV par visioconférence")
+          expect(subject).to include(rdv.address)
+        end
+
+      end
     end
 
     describe "depending on phone" do
