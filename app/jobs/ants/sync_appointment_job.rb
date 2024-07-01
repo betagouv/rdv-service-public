@@ -38,10 +38,11 @@ module Ants
     def delete_obsolete_appointment
       return if @rdv_attributes[:obsolete_application_id].blank?
 
-      AntsApi.find_and_delete(
+      res = AntsApi.find_and_delete(
         application_id: @rdv_attributes[:obsolete_application_id],
         management_url: @appointment_data[:management_url]
       )
+      Sentry.set_tags("ants_appointment_deleted", res.present?)
     end
 
     def rdv_cancelled_or_deleted?
