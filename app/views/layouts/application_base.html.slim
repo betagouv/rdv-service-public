@@ -50,7 +50,7 @@ html lang="fr"
               ul.fr-footer__top-list
                 li= link_to "Espace professionnel", presentation_agent_path, class: "fr-footer__top-link"
             .fr-col-12.fr-col-sm-3.fr-col-md-3
-              h2.fr-footer__top-cat Le Service #{current_domain.name}
+              h2.fr-footer__top-cat Le service #{current_domain.name}
               ul.fr-footer__top-list
                 li= link_to "Statistiques", stats_path, class: "fr-footer__top-link"
                 li= link_to "Budget", budget_path, class: "fr-footer__top-link", target: "_blank", rel: "noopener"
@@ -63,7 +63,12 @@ html lang="fr"
       .container
         .fr-footer__body
           .fr-footer__brand.fr-enlarge-link
-            = link_to image_tag(current_domain.dark_logo_path, size: "250x80", alt: current_domain.name), root_path, title: "aller à l'accueil #{current_domain.name}"
+            p.fr-logo
+              | République
+              br
+              | Française
+            = link_to root_path, title: "aller à l'accueil #{current_domain.name}", class: "fr-footer__brand-link" do
+              = image_tag current_domain.dark_logo_path, alt: current_domain.name, class: "fr-footer__logo", width: "150"
           .fr-footer__content
             p.fr-footer__content-desc
               - if current_domain.default?
@@ -78,7 +83,7 @@ html lang="fr"
         .fr-footer__partners
           h3.fr-footer__partners-title Nos partenaires
           .fr-footer__partners-logos
-            .fr-footer__partners-main
+            .fr-footer__partners-sub
               = link_to(image_tag("logos/logo_dinum.svg", alt: "Logo de la Dinum", style: "height: 5.625rem"), "https://www.numerique.gouv.fr/dinum/", class: "fr-footer__partners-link" )
               = link_to(image_tag("logos/logo_anct.png", alt: "Logo de l'ANCT", style: "height: 5.625rem"), "https://agence-cohesion-territoires.gouv.fr/", class: "fr-footer__partners-link" )
 
