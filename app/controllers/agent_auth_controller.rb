@@ -3,6 +3,7 @@ class AgentAuthController < ApplicationController
 
   layout "application_agent"
 
+  before_action :authorize_organisation
   after_action :verify_authorized, except: :index
   after_action :verify_policy_scoped, only: :index
 
@@ -34,7 +35,7 @@ class AgentAuthController < ApplicationController
   end
 
   def current_organisation
-    @current_organisation ||= current_agent.organisations.find(params[:organisation_id])
+    @current_organisation ||= Organisation.find(params[:organisation_id])
   end
 
   def current_territory
@@ -43,5 +44,10 @@ class AgentAuthController < ApplicationController
 
   def from_modal?
     params[:modal].present?
+  end
+
+  def authorize_organisation
+    policy = Agent::OrganisationPolicy.new(AgentContext.new(current_agent), current_organisation)
+    raise Pundit::NotAuthorizedError unless policy.link_to_organisation?
   end
 end
