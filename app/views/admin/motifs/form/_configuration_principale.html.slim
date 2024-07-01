@@ -41,15 +41,19 @@ p
 
 .card
   .card-body
+    - disabled = motif.rdvs.any?
     h5.card-title Nombre de participants
     p Choisissez le nombre de participants :
 
+    - if disabled
+      p.alert.alert-warning Ce motif est déjà utilisé dans au moins un RDV, il n'est pas possible de changer le nombre de participants
+
     = label_tag do
-      = f.radio_button(:collectif, false)
+      = f.radio_button(:collectif, false, disabled: disabled)
       span.ml-1= Motif.human_attribute_value(:collectif, false)
       p.text-muted.font-14.mt-1= Motif.human_attribute_value(:collectif, false, context: :hint)
 
     = label_tag do
-      = f.radio_button(:collectif, true)
+      = f.radio_button(:collectif, true, disabled: disabled)
       span.ml-1= Motif.human_attribute_value(:collectif, true)
       p.text-muted.font-14.mt-1= Motif.human_attribute_value(:collectif, true, context: :hint)

@@ -141,7 +141,7 @@ motif_org_paris_nord_pmi_collectif = Motif.create!(
   default_duration_in_min: 60,
   location_type: :public_office
 )
-_motif_org_paris_nord_social_rappel = Motif.create!(
+motif_org_paris_nord_social_rappel = Motif.create!(
   name: "Être rappelé par la MDS",
   color: "#FF7C00",
   organisation_id: org_paris_nord.id,
@@ -149,7 +149,7 @@ _motif_org_paris_nord_social_rappel = Motif.create!(
   bookable_by: :everyone,
   location_type: :phone
 )
-_motif_org_paris_nord_social_suivi = Motif.create!(
+motif_org_paris_nord_social_suivi = Motif.create!(
   name: "Suivi RSA",
   color: "#CC7C00",
   organisation_id: org_paris_nord.id,
@@ -436,6 +436,25 @@ agent_org_paris_nord_pmi_marco = Agent.new(
 agent_org_paris_nord_pmi_marco.skip_confirmation!
 agent_org_paris_nord_pmi_marco.save!
 
+agent_org_paris_nord_pmi_elsa = Agent.new(
+  email: "Elsa@demo.rdv-solidarites.fr",
+  uid: "Elsa@demo.rdv-solidarites.fr",
+  first_name: "Elsa",
+  last_name: "Deck",
+  password: "Rdvservicepublictest1!",
+  services: [service_pmi],
+  invitation_accepted_at: 10.days.ago,
+  roles_attributes: [{ organisation: org_paris_nord, access_level: AgentRole::ACCESS_LEVEL_BASIC }],
+  agent_territorial_access_rights_attributes: [{
+    territory: territory75,
+    allow_to_manage_teams: false,
+    allow_to_manage_access_rights: false,
+    allow_to_invite_agents: false,
+  }]
+)
+agent_org_paris_nord_pmi_elsa.skip_confirmation!
+agent_org_paris_nord_pmi_elsa.save!
+
 agent_org_paris_nord_social_polo = Agent.new(
   email: "polo@demo.rdv-solidarites.fr",
   uid: "polo@demo.rdv-solidarites.fr",
@@ -609,6 +628,18 @@ _plage_ouverture_org_paris_nord_marco_perm = PlageOuverture.create!(
   end_time: Tod::TimeOfDay.new(16),
   recurrence: Montrose.every(:week, on: [:tuesday], interval: 1, starts: Date.tomorrow)
 )
+_plage_ouverture_org_paris_nord_polo_perm = PlageOuverture.create!(
+  title: "Perm. sociale",
+  organisation_id: org_paris_nord.id,
+  agent_id: agent_org_paris_nord_social_polo.id,
+  lieu_id: lieu_org_paris_nord_bd_aubervilliers.id,
+  motif_ids: [motif_org_paris_nord_social_rappel.id, motif_org_paris_nord_social_suivi.id],
+  first_day: Date.tomorrow,
+  start_time: Tod::TimeOfDay.new(14),
+  end_time: Tod::TimeOfDay.new(16),
+  recurrence: Montrose.every(:week, on: [:tuesday], interval: 1, starts: Date.tomorrow)
+)
+
 _plage_ouverture_org_arques_maya_tradi = PlageOuverture.create!(
   title: "Perm. tradi",
   organisation_id: org_arques.id,
@@ -713,8 +744,8 @@ Rdv.create!(
     motif_id: motif_org_paris_nord_pmi_collectif.id,
     lieu: lieu_org_paris_nord_bolivar,
     organisation_id: org_paris_nord.id,
-    agent_ids: [agent_org_paris_nord_social_polo.id],
-    created_by: agent_org_paris_nord_social_polo,
+    agent_ids: [agent_org_paris_nord_pmi_elsa.id],
+    created_by: agent_org_paris_nord_pmi_elsa,
     users_count: 0,
     user_ids: []
   )
