@@ -28,11 +28,15 @@ L'un des rôles de la vigie est donc de qualifier les issues Sentry :
 
 Il y a un volume d'erreur important lié à des ActiveRecord::NotFound, qui se traduisent souvent par des erreurs 404 pour les usagers.
 
-Ces erreurs sont normalement ignorées au niveau du client Sentry (dans l'appli Rails), mais on a eu des cas où cela rendait des bugs invisibles (des mails qui ne s'envoyaient pas parce qu'on ne trouvait pas de lieux de rdv). On a donc réactivé ces erreurs sur le client Sentry, pour faire le tri au niveau du serveur Sentry (via l'appli web Sentry).
+Ces erreurs sont normalement ignorées au niveau du client Sentry (dans l'appli Rails).
+On a eu des cas où cela rendait des bugs invisibles, par exemple des mails qui ne s'envoyaient pas parce qu'on ne trouvait pas le lieu.
+On ne veut en effet pas ignorer ces erreurs lorsqu’elles émanent d’un job.
 
-Ce qui nous intéresse, ce sont les erreur ActiveRecord::NotFound qui sont liée à un vrai bug et pas juste un lien obsolète. On peut donc trier sur la base de la présence du header http referer : les liens obsolètes qui sont partagés par mail ou conservés dans les favoris n'auront pas de valeur pour ce header, alors que les vraies erreurs, comme un lien cassé sur l'appli, auront notre nom de domaine dans le referer. On a ajouté la recherche sauvegardée "RecordNotFound with internal referer" dans Sentry pour chercher ce type d'erreurs.
+Côté web, on est aussi intéressés par les erreurs 404 qui sont liées à des liens cassés dans l’application.
+En revanche, les liens venant de l’extérieur qui mènent vers des 404 sont beaucoup moins intéressantes.
+Il peut s’agir de liens obsolètes qui ont été partagés par mail, ou qui sont dans les favoris de l’utilisateur.
 
-Les erreurs liées à des liens obsolètes peuvent être ignorées avec des règles du type "Ignore until this occurs again 100 times per week". Le nombre exact d'occurrences par semaine est à trouver au cas par cas. Il vaut mieux commencer avec un nombre assez bas, et augmenter au fur et à mesure, ce qui nous permettra de voir s'il y a soudainement un pic d'erreurs de ce type (ce qui pourrait révéler un vrai bug, et pas juste un bruit de fond d'erreurs liées à des liens obsolètes).
+On a configuré [sentry](https://github.com/betagouv/rdv-service-public/blob/production/config/initializers/sentry.rb) pour ignorer les erreurs `ActiveRecord::RecordNotFound` de requêtes web venant de l’extérieur.
 
 ## GoodJob
 
