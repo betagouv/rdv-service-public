@@ -98,7 +98,9 @@ RSpec.describe Admin::AgentsController, type: :controller do
       end
 
       it "rejects the change" do
-        expect { subject }.to raise_error(ActiveRecord::RecordNotFound)
+        subject
+        expect(response.status).to eq 302
+        expect(flash[:error]).to eq "Vous ne pouvez pas effectuer cette action."
         expect(Agent.last.email).not_to eq "hacker@renard.com"
       end
     end
