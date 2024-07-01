@@ -21,8 +21,9 @@ Sentry.init do |config|
   config.excluded_exceptions += ["GoodJob::ActiveJobExtensions::Concurrency::ConcurrencyExceededError"]
 
   config.before_send = lambda do |event, hint|
-    return if hint[:exception].is_a?(ActiveRecord::RecordNotFound) &&
-              event.request&.headers&.fetch("Referer", "")&.exclude?("rdv-")
+    referer = event.request&.headers&.fetch("Referer", "")
+    internal_referer = Domain::ALL.map(&:host_name).any? { referer&.include?(_1) }
+    return if hint[:exception].is_a?(ActiveRecord::RecordNotFound) && !internal_referer
 
     event
   end
