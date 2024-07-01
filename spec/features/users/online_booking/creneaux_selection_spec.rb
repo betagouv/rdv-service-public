@@ -9,14 +9,14 @@ RSpec.describe "User can select a creneau" do
   before { travel_to(now) }
 
   context "when the next creneau is after the max booking delay" do
-    let!(:motif) { create(:motif, name: "Vaccination", organisation: organisation, max_public_booking_delay: 7.days, restriction_for_rdv: nil, service: service) }
+    let!(:motif) { create(:motif, name: "RSA Orientation", organisation: organisation, max_public_booking_delay: 7.days, restriction_for_rdv: nil, service: service) }
     # Avec un seul motif on passe par le choix d'un lieu.
     # Avec deux motifs, on affiche directement la disponibilité.
     let!(:autre_motif) { create(:motif, organisation: organisation, max_public_booking_delay: 7.days, service: service) }
     let!(:plage_ouverture) { create(:plage_ouverture, :daily, first_day: now + 8.days, motifs: [motif], lieu: lieu, organisation: organisation) }
     let!(:autre_plage_ouverture) { create(:plage_ouverture, :daily, first_day: now + 8.days, motifs: [autre_motif], lieu: lieu, organisation: organisation) }
 
-    it "doesn't show a next availability date", js: true do
+    it "shows that no creneau is available", js: true do
       visit root_path
       fill_in("search_where", with: "79 Rue de Plaisance, 92250 La Garenne-Colombes")
 
@@ -30,10 +30,22 @@ RSpec.describe "User can select a creneau" do
 
       expect(page).to have_content("Malheureusement, aucun créneau correspondant à votre recherche n'a été trouvé.")
     end
+
+    context "when the user is invited" do
+      let!(:motif_category) { create(:motif_category, short_name: "rsa_orientation", motifs: [motif]) }
+      let!(:rdv_invitation_token) { SecureRandom.uuid }
+      let!(:user) { create(:user, rdv_invitation_token:) }
+
+      it "shows that no creneau is available" do
+        visit prendre_rdv_path(motif_category_short_name: "rsa_orientation", invitation_token: rdv_invitation_token, lieu_id: lieu.id, departement: "92", organisation_ids: [organisation.id])
+
+        expect(page).to have_content("Malheureusement, aucun créneau correspondant à votre invitation n'a été trouvé")
+      end
+    end
   end
 
   context "when two agents are available for the given motif" do
-    let!(:motif) { create(:motif, name: "Vaccination", organisation: organisation) }
+    let!(:motif) { create(:motif, name: "RSA Orientation", organisation: organisation) }
     let!(:plage_ouverture1) { create(:plage_ouverture, first_day: Time.zone.tomorrow, motifs: [motif], lieu: lieu, organisation: organisation) }
     let!(:plage_ouverture2) { create(:plage_ouverture, first_day: Time.zone.tomorrow, motifs: [motif], lieu: lieu, organisation: organisation) }
 
