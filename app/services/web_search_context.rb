@@ -61,6 +61,11 @@ class WebSearchContext < SearchContext
       @public_link_organisation_id.present? ? Organisation.find(@public_link_organisation_id) : nil
   end
 
+  def motif_param_present?
+    @motif_id.present? ||
+      @motif_name_with_location_type.present?
+  end
+
   private
 
   attr_reader :referent_ids, :lieu_id

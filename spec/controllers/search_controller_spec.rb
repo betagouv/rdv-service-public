@@ -157,6 +157,7 @@ RSpec.describe SearchController, type: :controller do
       it "lists the the available lieux linked to the motifs" do
         get :search_rdv, params: {
           address: address, departement: departement_number, city_code: city_code,
+          motif_name_with_location_type: motif.name_with_location_type,
         }
         expect(subject).to include("Lieu numéro 1")
         expect(subject).not_to include("Lieu numéro 2")
@@ -172,6 +173,7 @@ RSpec.describe SearchController, type: :controller do
         allow(NextAvailabilityService).to receive(:find).and_return(slot)
         get :search_rdv, params: {
           address: address, departement: departement_number, city_code: city_code,
+          motif_name_with_location_type: motif.name_with_location_type,
         }
         expect(subject).to match(/Prochaine disponibilité le(.)*lundi 05 août 2019 à 08h00/)
       end
@@ -199,6 +201,7 @@ RSpec.describe SearchController, type: :controller do
         it "returns a creneau" do
           get :search_rdv, params: {
             lieu_id: lieu.id, address: address, departement: departement_number, city_code: city_code,
+            motif_name_with_location_type: motif.name_with_location_type,
           }
           expect(subject).to include("08:00")
         end
@@ -216,6 +219,7 @@ RSpec.describe SearchController, type: :controller do
         it "returns next availability" do
           get :search_rdv, params: {
             lieu_id: lieu.id, address: address, departement: departement_number, city_code: city_code,
+            motif_name_with_location_type: motif.name_with_location_type,
           }
           expect(subject).to match(/Prochaine disponibilité le(.)*lundi 05 août 2019 à 08h00/)
         end
