@@ -7,13 +7,17 @@ Sentry.init do |config|
   # Cf https://docs.sentry.io/platforms/ruby/configuration/options/#optional-settings
   # config.excluded_exceptions += []
 
-  # Par défault, Sentry ignore les erreurs ActiveRecord::RecordNotFound pour éviter de faire remonter
-  # des erreurs en cas de visite de page obsolètes
-  # par exemple pour des ids non trouvés.
-  # Dans le contexte des jobs, on a besoin de savoir s'il y a cette erreur
-  # Par ailleurs, on préfère mettre une règle dans Sentry pour ignorer ces erreurs en dessous d'un
-  # certain volume plutôt que de les rendre complètement invisibles.
+  # cf docs/5-role-de-vigie.md
+  # et https://docs.sentry.io/platforms/ruby/guides/rails/configuration/filtering/
   config.excluded_exceptions -= ["ActiveRecord::RecordNotFound"]
+
+  config.before_send = lambda do |event, hint|
+    referer = event.request&.headers&.fetch("Referer", "")
+    internal_referer = Domain::ALL.map(&:host_name).any? { referer&.include?(_1) }
+    return if hint[:exception].is_a?(ActiveRecord::RecordNotFound) && !internal_referer
+
+    event
+  end
 
   # Ces erreurs déclenchent un retry :
   # https://github.com/bensheldon/good_job?tab=readme-ov-file#how-concurrency-controls-work
