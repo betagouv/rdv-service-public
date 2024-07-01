@@ -19,4 +19,11 @@ Sentry.init do |config|
   # https://github.com/bensheldon/good_job?tab=readme-ov-file#how-concurrency-controls-work
   # Il ne nous est pas utile de les voir dans Sentry puisqu'elles ont un rôle de contrôle de flux.
   config.excluded_exceptions += ["GoodJob::ActiveJobExtensions::Concurrency::ConcurrencyExceededError"]
+
+  config.before_send = lambda do |event, hint|
+    return if hint[:exception].is_a?(ActiveRecord::RecordNotFound) &&
+              event.request&.headers&.fetch("Referer", "")&.exclude?("rdv-")
+
+    event
+  end
 end
