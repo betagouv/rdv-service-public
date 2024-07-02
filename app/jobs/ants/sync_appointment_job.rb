@@ -1,6 +1,7 @@
 module Ants
   class SyncAppointmentJob < ApplicationJob
     # prevent concurrent jobs for the same RDV
+    include GoodJob::ActiveJobExtensions::Concurrency
     good_job_control_concurrency_with(
       perform_limit: 1,
       key: -> { "#{self.class.name}-rdv-#{arguments.last[:rdv_attributes][:id]}" }
