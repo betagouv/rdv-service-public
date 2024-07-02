@@ -49,8 +49,6 @@
       = f.input(:rdvs_editable_by_user, input_html: { class: "js-check-on-section-enable js-uncheck-on-section-disable" })
       .text-muted.font-14= Motif.human_attribute_name("rdvs_editable_by_user_hint")
 
-    .alert.alert-warning.mt-2.js-reasons-for-disabled-section
-
 .card
   .card-body
     h5.card-title= Motif.human_attribute_name("follow_up_short")
@@ -62,8 +60,6 @@
     h5.card-title= Motif.human_attribute_name("for_secretariat_short")
     p.mb-3= Motif.human_attribute_name("for_secretariat_hint")
     = f.input :for_secretariat, label: Motif.human_attribute_name("for_secretariat_label"), input_html: { class: "js-uncheck-on-section-disable" }
-
-    .alert.alert-warning.mt-2.js-reasons-for-disabled-section
 
 - if current_organisation.territory.motif_categories.present?
   .card
@@ -108,5 +104,3 @@
               )
       - if current_agent.territorial_admin_in?(current_organisation.territory)
         = link_to "Configuration des secteurs", admin_territory_sectors_path(current_organisation.territory)
-
-      .alert.alert-warning.mt-2.js-reasons-for-disabled-section
