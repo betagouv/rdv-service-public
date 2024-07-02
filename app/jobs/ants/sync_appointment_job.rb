@@ -3,7 +3,7 @@ module Ants
     # prevent concurrent jobs for the same RDV
     good_job_control_concurrency_with(
       perform_limit: 1,
-      key: "#{self.class.name}-rdv-#{arguments.last[:rdv_attributes][:id]}"
+      key: -> { "#{self.class.name}-rdv-#{arguments.last[:rdv_attributes][:id]}" }
     )
 
     class << self
