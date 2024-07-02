@@ -3,7 +3,11 @@
 
 pid = Process.spawn("bundle exec rails s")
 sleep 5 # time in seconds you need to ensure the server boots without errors
+
+homepage_accessible = system('curl -s -o /dev/null -w "%{http_code}" http://localhost:3000/ | grep 200')
+
 Process.kill("INT", pid) # send ^C, gracefully terminate the server
 
-_, status = Process.wait2(pid) # wait for the server termination and get its exit code
-exit status.exitstatus # exit from the script with the same code as the server
+_, exist_result = Process.wait2(pid) # wait for the server termination and get its exit code
+
+exit homepage_accessible ? exist_result.exitstatus : 1
