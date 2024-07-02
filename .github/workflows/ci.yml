@@ -200,7 +200,7 @@ jobs:
           name: artifacts-capybara
           path: tmp/capybara
   test_boot_without_db:
-    name: Boot without database
+    name: Boot web server without database
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -213,16 +213,13 @@ jobs:
         with:
           ruby-version: .ruby-version
           bundler-cache: true
-      - run: gem install foreman
-      - name: Set up Redis
-        uses: zhulik/redis-action@1.1.0
       - name: Cache js dependencies
         uses: actions/cache@v4
         with:
           key: node_modules-${{ hashFiles('yarn.lock') }}
           path: node_modules
       - run: yarn install
-      - run: foreman start
+      - run: bundle exec rails server -p 3000
         env:
           HOST: http://example.com
       - name: Check homepage accessible
