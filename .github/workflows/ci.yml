@@ -199,3 +199,31 @@ jobs:
         with:
           name: artifacts-capybara
           path: tmp/capybara
+  test_boot_without_db:
+    name: Boot without database
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: .ruby-version
+          bundler-cache: true
+      - run: gem install foreman
+      - name: Set up Redis
+        uses: zhulik/redis-action@1.1.0
+      - name: Cache js dependencies
+        uses: actions/cache@v4
+        with:
+          key: node_modules-${{ hashFiles('yarn.lock') }}
+          path: node_modules
+      - name: Install JS dependencies
+        run: yarn install
+      - name: Setup parallel tests and run feature specs
+        run: foreman -f Procfile
+        env:
+          HOST: http://example.com
