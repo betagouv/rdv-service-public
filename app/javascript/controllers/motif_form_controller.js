@@ -62,6 +62,7 @@ export default class extends Controller {
   }
 
   enableSection(sectionRoot, resetCheckbox) {
+    $(sectionRoot).collapse("show")
     sectionRoot.querySelectorAll("input:not([type=hidden]), select").forEach(i => i.disabled = false)
     if(resetCheckbox) {
       sectionRoot.querySelectorAll(".js-check-on-section-enable").forEach(box => box.checked = true)
@@ -70,6 +71,7 @@ export default class extends Controller {
     sectionRoot.classList.remove("disabled-card")
   }
   disableSection(sectionRoot, reasons, resetCheckbox) {
+    $(sectionRoot).collapse("hide")
     sectionRoot.querySelectorAll("input:not([type=hidden]), select").forEach(i => i.disabled = true)
     if(resetCheckbox) {
       sectionRoot.querySelectorAll(".js-uncheck-on-section-disable").forEach(box => box.checked = false)

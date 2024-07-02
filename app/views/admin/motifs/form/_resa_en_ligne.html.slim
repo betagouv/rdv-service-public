@@ -36,7 +36,7 @@
           p.text-muted.font-14.mt-1
             = sanitize(I18n.t("activerecord.attributes.motif/bookable_by/hint.everyone"))
 
-.card [data-motif-form-target="bookingDelaySection"]
+.card.collapse [data-motif-form-target="bookingDelaySection"]
   .card-body
     h5.card-title= Motif.human_attribute_name("booking_delay")
     p= Motif.human_attribute_name("booking_delay_hint")
@@ -57,7 +57,7 @@
     p.mb-3= Motif.human_attribute_name("follow_up_warning")
     = f.input :follow_up, input_html: { "data-action": "change->motif-form#refreshSections", "data-motif-form-target": "followUpCheckbox" }
 
-.card[data-motif-form-target="secretariatSection"]
+.card.collapse [data-motif-form-target="secretariatSection"]
   .card-body
     h5.card-title= Motif.human_attribute_name("for_secretariat_short")
     p.mb-3= Motif.human_attribute_name("for_secretariat_hint")
@@ -75,7 +75,7 @@
           = f.association :motif_category, collection: current_territory.motif_categories, include_blank: "Aucune", label: false
 
 - unless current_domain.online_reservation_with_public_link
-  .card [data-motif-form-target="sectoSection"]
+  .card.collapse [data-motif-form-target="sectoSection"]
     .card-body
       h5.card-title.mb-2= Motif.human_attribute_name("sectorisation_level_title")
       .mb-3
