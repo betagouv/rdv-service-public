@@ -1,4 +1,3 @@
-# app.rb
 require "rack"
 
 class SimpleRackApp
