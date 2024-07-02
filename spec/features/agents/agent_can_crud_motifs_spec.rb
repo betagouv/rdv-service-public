@@ -80,17 +80,17 @@ RSpec.describe "Agent can CRUD motifs" do
       visit edit_admin_organisation_motif_path(organisation_id: organisation.id, id: motif.id)
       find("#tab_resa_en_ligne").click
 
-      # On ouvre àa la résa en ligne, la case est cochée
+      # On ouvre à la résa en ligne, la case est cochée
       choose "Agents de l’organisation, prescripteurs et usagers"
       expect(find("#motif_rdvs_editable_by_user")).not_to be_disabled
       expect(find("#motif_rdvs_editable_by_user")).to be_checked
 
-      # On ferme àa la résa en ligne, la case est décochée et désactivée
+      # On ferme à la résa en ligne, la case est décochée et désactivée
       choose "Agents de l’organisation", id: "motif_bookable_by_agents"
       expect(find("#motif_rdvs_editable_by_user")).to be_disabled
       expect(find("#motif_rdvs_editable_by_user")).not_to be_checked
 
-      # On ouvre àa la résa en ligne, la case est cochée
+      # On ouvre à la résa en ligne, la case est cochée
       choose "Agents de l’organisation, prescripteurs et usagers"
       expect(find("#motif_rdvs_editable_by_user")).not_to be_disabled
       expect(find("#motif_rdvs_editable_by_user")).to be_checked
