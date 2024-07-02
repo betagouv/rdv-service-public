@@ -28,10 +28,10 @@ export default class extends Controller {
 
   refreshSection(section, disable, resetCheckbox) {
     if(disable) {
-      this.enableSection(section, resetCheckbox)
+      this.disableSection(section, resetCheckbox)
     }
     else {
-      this.disableSection(section, resetCheckbox)
+      this.enableSection(section, resetCheckbox)
     }
   }
 
