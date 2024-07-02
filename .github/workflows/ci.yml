@@ -220,5 +220,7 @@ jobs:
           path: node_modules
       - run: yarn install
       - run: bin/test_boot
+        env:
+          HOST: http://www.rdv-test.fr
       - name: Check homepage accessible
         run: curl -s -o /dev/null -w "%{http_code}" http://localhost:3000/ | grep 200
