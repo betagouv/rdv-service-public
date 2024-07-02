@@ -24,5 +24,7 @@ module Rdv::HardcodedAttributeNamesConcern
     created_by_type
   ].freeze
 
-  def hardcoded_attribute_names = HARDCODED_ATTRIBUTE_NAMES
+  class_methods do
+    def hardcoded_attribute_names = HARDCODED_ATTRIBUTE_NAMES
+  end
 end
