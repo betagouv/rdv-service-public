@@ -38,10 +38,11 @@ module Ants
     def delete_obsolete_appointment
       return if @rdv_attributes[:obsolete_application_id].blank?
 
-      AntsApi.find_and_delete(
+      res = AntsApi.find_and_delete(
         application_id: @rdv_attributes[:obsolete_application_id],
         management_url: @appointment_data[:management_url]
       )
+      Sentry.set_tags(ants_appointment_deleted: res.present?)
     end
 
     def rdv_cancelled_or_deleted?
@@ -62,7 +63,6 @@ module Ants
       # Pour donc maintenir à jour les infos des RDVs chez l'ANTS, nous sommes obligés de supprimer, et de re-créer les RDVs
       # Toutefois, les RDVs chez l'ANTS avec un status 'consumed', ne sont plus modifiables.
       delete_appointments
-      sleep 2 # cf https://github.com/betagouv/rdv-service-public/issues/4318
       create_appointments
     end
 
