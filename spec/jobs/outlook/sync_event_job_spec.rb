@@ -83,20 +83,6 @@ RSpec.describe Outlook::SyncEventJob do
         expect(client_double).to receive(:delete_event!).with("stubbed_outlook_event_id")
         perform_enqueued_jobs
       end
-
-      context "and it has already been deleted" do
-        xit "deletes it in the api" do
-          # Ce premier job pourrait être ajouté à la queue suite à une update sur le rdv
-          described_class.perform_later(agents_rdv.id, agents_rdv.outlook_id, agents_rdv.agent)
-          agents_rdv.delete
-          described_class.perform_later(agents_rdv.id, agents_rdv.outlook_id, agents_rdv.agent)
-
-          # Cette spec échoue : on aura ici une erreur de l'api puisque l'event n'est pas trouvé.
-          # Ce n'est peut-être pas bloquant pour une v1
-          expect(client_double).to receive(:delete_event!).with("stubbed_outlook_event_id")
-          perform_enqueued_jobs
-        end
-      end
     end
   end
 end

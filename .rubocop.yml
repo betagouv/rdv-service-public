@@ -180,6 +180,10 @@ RSpec/MessageChain:
   Exclude:
     - "spec/jobs/outlook/mass_create_event_job_spec.rb"
 
+# Pending specs always rot, please create a GitHub issue so it can rot instead
+RSpec/Pending:
+  Enabled: true
+
 Style/AsciiComments:
   Enabled: false
 
