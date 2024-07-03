@@ -143,7 +143,7 @@ class CronJob < ApplicationJob
         error_message = <<~ERROR
           Le secret de client de l'application d'oauth Microsoft expire dans moins de 2 mois.
           Pour que la synchro Outlook continue de fonctionner, vous générez un nouveau secret via #{key_refresh_url}
-          Les identifiants pour se connecter sont dans Passbolt sous le nom "Compte Dev pour Oauth Microsoft".
+          Les identifiants pour se connecter sont dans https://vaultwarden.incubateur.net/ sous le nom "Compte Dev pour Oauth Microsoft".
           Vous devrez ensuite mettre la valeur du secret dans la variable d'env AZURE_APPLICATION_CLIENT_SECRET, et mettre à jour la date de cet avertissement.
         ERROR
         Sentry.capture_message(error_message, fingerprint: ["WarnAboutExpiringAzureAppSecrets"])
