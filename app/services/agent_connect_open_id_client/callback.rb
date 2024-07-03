@@ -19,7 +19,7 @@ module AgentConnectOpenIdClient
       token = fetch_token(code, @callback_url)
 
       @user_info = fetch_user_info(token)
-    rescue OpenIdFlowError => e
+    rescue StandardError => e
       Sentry.capture_exception(e)
       nil
     end
