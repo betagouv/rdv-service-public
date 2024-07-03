@@ -8,7 +8,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
   let!(:agent) { create(:agent, :cnfs, admin_role_in_organisations: [organisation], rdv_notifications_level: "all") }
   let(:bookable_by) { "everyone" }
   let!(:motif) do
-    create(:motif, organisation: organisation, service: agent.services.first, bookable_by: bookable_by, instruction_for_rdv: "Instructions après confirmation")
+    create(:motif, organisation: organisation, service: agent.services.first, bookable_by: bookable_by, instruction_for_rdv: "Instructions après confirmation", name: "Formation emails")
   end
   let!(:lieu) { create(:lieu, organisation: organisation, name: "Bureau") }
   let!(:plage_ouverture) { create(:plage_ouverture, organisation: organisation, agent: agent, motifs: [motif], lieu: lieu) }
@@ -16,6 +16,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
   it "works" do
     visit "http://www.rdv-aide-numerique-test.localhost/org/#{organisation.id}"
 
+    click_on "Formation emails" # choix du motif
     click_on "Prochaine disponibilité le" # choix du lieu
     click_on "08:00" # choix du créneau
     click_on "Je suis un prescripteur qui oriente un bénéficiaire" # page de login
@@ -110,6 +111,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
     it "doesn't shows error messages and doesn't allow continuing" do
       visit "http://www.rdv-aide-numerique-test.localhost/org/#{organisation.id}"
 
+      click_on "Formation emails" # choix du motif
       click_on "Prochaine disponibilité le" # choix du lieu
       click_on "08:00" # choix du créneau
       click_on "Je suis un prescripteur qui oriente un bénéficiaire" # page de login
@@ -146,6 +148,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
 
       fill_address_form
 
+      click_on "Formation emails" # choix du motif
       click_on "Prochaine disponibilité le", match: :first # choix du lieu
       click_on "08:00" # choix du créneau
 
@@ -176,6 +179,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
 
         fill_address_form
 
+        click_on "Formation emails" # choix du motif
         click_on "Prochaine disponibilité le", match: :first # choix du lieu
         click_on "08:00" # choix du créneau
 
@@ -201,6 +205,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
 
       fill_address_form
 
+      click_on "Formation emails" # choix du motif
       click_on "Prochaine disponibilité le", match: :first # choix du lieu
       click_on "08:00" # choix du créneau
 
@@ -236,6 +241,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
 
       fill_address_form
 
+      click_on "Formation emails" # choix du motif
       click_on "Prochaine disponibilité le", match: :first
       click_on "08:00"
 
@@ -264,6 +270,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
       it "doesn't display internal prescription incitation link when territory is sectorized", js: true do
         visit "http://www.rdv-solidarites-test.localhost/prendre_rdv_prescripteur"
         fill_address_form
+        click_on "Formation emails" # choix du motif
         click_on "Prochaine disponibilité le", match: :first
         click_on "08:00"
         expect(page).to have_content("Nouvelle fonctionnalité : Pour ne pas avoir à remplir ce formulaire pour chaque" \
