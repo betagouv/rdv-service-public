@@ -4,3 +4,7 @@
 .btn:hover {
   color: inherit;
 }
+
+a[href] {
+  background-image: none; // pour éviter le soulignement des liens
+}
