@@ -55,6 +55,7 @@ RSpec.describe AgentConnectController, type: :controller do
         last_name: "Factice",
         last_sign_in_at: be_within(10.seconds).of(Time.zone.now)
       )
+      expect(session["agent_connect_id_token"]).to be_present
     end
 
     context "when the agent has a name with two words" do
