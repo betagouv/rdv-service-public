@@ -56,5 +56,28 @@ RSpec.describe AgentConnectController, type: :controller do
         last_sign_in_at: be_within(10.seconds).of(Time.zone.now)
       )
     end
+
+    context "when the agent has a name with two words" do
+      let(:user_info) do
+        {
+          "sub" => "ab70770d-1285-46e6-b4d0-3601b49698d4",
+          "email" => "jean.michel.factice@exemple.gouv.fr",
+          "given_name" => "Jean Michel Factice",
+          "usual_name" => "Factice",
+          "aud" => "4ec41582-1d60-4f12-a63b-d8abaace16ba",
+          "exp" => 1717595030, "iat" => 1717594970, "iss" => "https://fca.integ01.dev-agentconnect.fr/api/v2",
+        }
+      end
+
+      it "sets the proper first and last name for the agent" do
+        agent = create(:agent, email: "jean.michel.factice@exemple.gouv.fr")
+        get :callback, params: { state: state, code: code }
+
+        expect(agent.reload).to have_attributes(
+          first_name: "Jean Michel",
+          last_name: "Factice"
+        )
+      end
+    end
   end
 end
