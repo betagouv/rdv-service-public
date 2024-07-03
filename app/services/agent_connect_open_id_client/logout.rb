@@ -12,6 +12,7 @@ module AgentConnectOpenIdClient
         post_logout_redirect_uri: post_logout_redirect_url,
       }
 
+      # voir https://github.com/france-connect/Documentation-AgentConnect/blob/main/doc_fs/technique_fca/endpoints.md#logout-endpoint
       "#{Rails.configuration.x.agent_connect_config.end_session_endpoint}?#{query_params.to_query}"
     end
   end
