@@ -1,9 +1,9 @@
-.text-center.w-75.m-auto
+.text-center.m-auto
   h1.text-dark.mt-0.font-weight-bold.mb-4 Connexion à #{current_domain.name}
 
   - if display_agent_connect_button? || display_inclusion_connect_button?
     .row
-      .col-12.d-flex.justify-content-space-between.pt-4
+      .col-12.d-flex.justify-content-center.pt-4.flex-direction-column.md-flex-direction-row
         - if display_agent_connect_button?
           = render "common/agent_connect_button"
         - if display_inclusion_connect_button?
