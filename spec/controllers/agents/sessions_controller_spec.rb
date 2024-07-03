@@ -2,7 +2,7 @@ RSpec.describe Agents::SessionsController do
   let(:agent) { create(:agent) }
 
   before do
-    @request.env["devise.mapping"] = Devise.mappings[:agent]
+    @request.env["devise.mapping"] = Devise.mappings[:agent] # rubocop:disable RSpec/InstanceVariable, c'est la doc de Devise qui dit de faire ça
     sign_in agent
   end
 
