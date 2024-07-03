@@ -7,11 +7,9 @@
 
 .flex--center {
   justify-content: center;
+  flex-wrap: wrap;
 }
 
-.justify-content-center {
-  justify-content: center;
-}
 
 // Un hack pour éviter d'afficher les astérisques de champs obligatoire dans les formulaires DSFR
 label > abbr[title="obligatoire"] {
