@@ -198,7 +198,17 @@ RSpec.describe Users::RdvSms, type: :service do
           expect(subject).to include("RDV par visioconférence")
           expect(subject).to include(rdv.address)
         end
+      end
 
+      context "if we add a new location type without adding the location text" do
+        it "would raise an error in this block" do
+          Motif.location_types.each_value do |location_type|
+            motif = build(:motif, location_type: location_type)
+            rdv = build(:rdv, motif: motif, users: [user], starts_at: 5.days.from_now, id: 1)
+
+            described_class.rdv_created(rdv, user, token).content
+          end
+        end
       end
     end
 

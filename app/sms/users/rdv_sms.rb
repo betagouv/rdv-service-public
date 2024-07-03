@@ -73,14 +73,17 @@ class Users::RdvSms < Users::BaseSms
   end
 
   def rdv_location(rdv)
-    if rdv.phone?
+    case rdv.motif.location_type
+    when "public_office"
+      rdv.address_complete
+    when "phone"
       "RDV téléphonique"
-    elsif rdv.home?
+    when "home"
       "RDV à votre domicile"
-    elsif rdv.visio?
+    when "visio"
       "RDV par visioconférence"
     else
-      rdv.address_complete
+      raise "Il manque un texte de rdv_location pour #{rdv.motif.location_type}"
     end
   end
 end
