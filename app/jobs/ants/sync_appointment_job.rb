@@ -1,5 +1,12 @@
 module Ants
   class SyncAppointmentJob < ApplicationJob
+    # prevent concurrent jobs for the same RDV
+    include GoodJob::ActiveJobExtensions::Concurrency
+    good_job_control_concurrency_with(
+      perform_limit: 1,
+      key: -> { "#{self.class.name}-rdv-#{arguments.last[:rdv_attributes][:id]}" }
+    )
+
     class << self
       def perform_later_for(rdv)
         # On passe les attributes du RDV au lieu de l'objet active record, au cas où ce dernier serait supprimé
@@ -38,10 +45,11 @@ module Ants
     def delete_obsolete_appointment
       return if @rdv_attributes[:obsolete_application_id].blank?
 
-      AntsApi.find_and_delete(
+      res = AntsApi.find_and_delete(
         application_id: @rdv_attributes[:obsolete_application_id],
         management_url: @appointment_data[:management_url]
       )
+      Sentry.set_tags(ants_appointment_deleted: res.present?)
     end
 
     def rdv_cancelled_or_deleted?

@@ -32,4 +32,23 @@ RSpec.describe "Motif selection" do
       expect(page).not_to have_content(encore_autre_lieu.name)
     end
   end
+
+  context "un seul motif dans le service" do
+    let(:organisation) { create(:organisation) }
+    let(:service) { create(:service) }
+    let(:lieu) { create(:lieu, organisation: organisation, name: "MDS Centre") }
+    let!(:motif) { create(:motif, name: "premier contact", organisation: organisation, service: service) }
+    let!(:plage_ouverture) { create(:plage_ouverture, :daily, first_day: now + 1.month, motifs: [motif], lieu: lieu, organisation: organisation) }
+
+    it "le choix de motif est quand même présenté et on peut revenir depuis l’étape suivante" do
+      visit prendre_rdv_path(service_id: service.id, departement: organisation.territory.departement_number)
+      expect(page).to have_content("Sélectionnez le motif")
+      expect(page).to have_content("premier contact")
+      click_link("premier contact")
+      expect(page).to have_content("Sélectionnez un lieu de RDV")
+      expect(page).to have_content("MDS Centre")
+      click_link("premier contact") # c’est le lien retour
+      expect(page).to have_content("Sélectionnez le motif")
+    end
+  end
 end

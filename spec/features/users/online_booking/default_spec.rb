@@ -80,6 +80,10 @@ RSpec.describe "User can search for rdvs" do
         visit root_path
         execute_search
 
+        ## Motif selection
+        expect(page).to have_content(first_motif.name)
+        click_link(first_motif.name)
+
         ## Organisation selection
         expect(page).to have_content(first_organisation_with_po.name)
         expect(page).to have_content(first_organisation_with_po.phone_number)
@@ -111,6 +115,10 @@ RSpec.describe "User can search for rdvs" do
       it "can take a RDV in the available organisations", js: true do
         visit root_path
         execute_search
+
+        ## Motif selection
+        expect(page).to have_content(first_motif.name)
+        click_link(first_motif.name)
 
         ## Organisation selection
         expect(page).to have_content(first_organisation_with_po.name)

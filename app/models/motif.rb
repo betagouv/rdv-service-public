@@ -68,7 +68,7 @@ class Motif < ApplicationRecord
   validate :not_associated_with_secretariat
   validates :color, css_hex_color: true
   validate :not_at_home_if_collectif
-  validate :unused_motif, if: :location_type_changed?
+  validate :cant_change_once_rdvs_exist
   validate :cant_be_for_secretariat_and_follow_up
 
   # Scopes
@@ -258,10 +258,11 @@ class Motif < ApplicationRecord
     errors.add(:base, :not_at_home_if_collectif)
   end
 
-  def unused_motif
-    return if rdvs.empty?
+  def cant_change_once_rdvs_exist
+    return unless rdvs.exists?
 
-    errors.add(:location_type, :cant_change_because_already_used)
+    errors.add(:collectif, :cant_change_because_already_used) if attribute_changed?(:collectif)
+    errors.add(:location_type, :cant_change_because_already_used) if attribute_changed?(:location_type)
   end
 
   def cant_be_for_secretariat_and_follow_up

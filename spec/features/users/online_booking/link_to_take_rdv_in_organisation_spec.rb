@@ -38,6 +38,7 @@ RSpec.describe "user can use a link that points to RDV search scoped to an organ
     it "works" do
       # On teste le domaine qui utilise les liens publics
       visit "http://www.rdv-aide-numerique-test.localhost/org/ext/#{territory.departement_number}/#{organisation_a.external_id}"
+      click_on("Motif A") # choix du motif
       expect(page).to have_content("1 lieu est disponible")
       expect(page).to have_content(lieu_a.name)
       expect(page).to have_content(motif_a.service.name)
@@ -91,6 +92,7 @@ RSpec.describe "user can use a link that points to RDV search scoped to an organ
 
     it "allows navigating back from sign in to motif selection" do
       visit "http://www.rdv-aide-numerique-test.localhost/org/#{organisation_a.id}"
+      click_on("Motif A") # choix du motif
       expect(page).to have_content("1 lieu est disponible")
       expect(page).to have_content(lieu_a.name)
       expect(page).to have_content(motif_a.service.name)
@@ -102,7 +104,7 @@ RSpec.describe "user can use a link that points to RDV search scoped to an organ
       expect(page).to have_content("Vous devez vous connecter ou vous inscrire pour continuer")
       click_on "modifier", match: :first
 
-      expect(page).to have_content("Sélectionnez un lieu de RDV")
+      expect(page).to have_content("Sélectionnez le motif de votre RDV")
     end
   end
 end

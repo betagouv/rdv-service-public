@@ -6,11 +6,7 @@ class Agents::UsersController < AgentAuthController
   def search
     skip_authorization # On scope les usagers par organisation puis par territoire via de la logique métier plutôt qu'une policy Pundit
     # Dans cette recherche, on autorise un périmètre plus grand que la policy de base, puisqu'on est en train d'ajouter un usager à l'organisation en créant un rdv
-
-    # On vérifie quand même que l'organisation demandée fait partie des organisations de l'agent
-    if current_agent.organisations.find_by(id: params[:organisation_id]).nil?
-      return head :forbidden
-    end
+    # ce skip_authorization ne skippe pas le AgentAuthController#authorize_organisation
 
     territory_scope = Agent::UserPolicy::TerritoryScope.new(pundit_user, User.all).resolve
     current_org_scope = Agent::UserPolicy::Scope.new(pundit_user, User.all).resolve

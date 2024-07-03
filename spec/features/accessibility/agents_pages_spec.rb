@@ -41,17 +41,6 @@ RSpec.describe "agents page", js: true do
     expect_page_to_be_axe_clean(path)
   end
 
-  xit "admin organisation users path is accessible" do
-    territory = create(:territory, departement_number: "75")
-    organisation = create(:organisation, territory: territory)
-    create_list(:user, 3, organisations: [organisation])
-    agent = create(:agent, email: "totoagent@example.com", basic_role_in_organisations: [organisation])
-    login_as(agent, scope: :agent)
-
-    path = admin_organisation_users_path(organisation)
-    expect_page_to_be_axe_clean(path)
-  end
-
   it "admin organisation user path is accessible" do
     territory = create(:territory, departement_number: "75")
     organisation = create(:organisation, territory: territory)
@@ -69,14 +58,5 @@ RSpec.describe "agents page", js: true do
     agent = create(:agent, email: "totoagent@example.com", basic_role_in_organisations: [organisation])
     login_as(agent, scope: :agent)
     expect_page_to_be_axe_clean(agents_preferences_path)
-  end
-
-  xit "RDV list is accessible" do
-    territory = create(:territory, departement_number: "75")
-    organisation = create(:organisation, territory: territory)
-    agent = create(:agent, email: "totoagent@example.com", basic_role_in_organisations: [organisation])
-    login_as(agent, scope: :agent)
-    create_list(:rdv, 3, agents: [agent])
-    expect_page_to_be_axe_clean(admin_organisation_rdvs_path(organisation))
   end
 end
