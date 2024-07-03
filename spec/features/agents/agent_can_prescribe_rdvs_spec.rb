@@ -34,6 +34,8 @@ RSpec.describe "agents can prescribe rdvs" do
     create(:plage_ouverture, :daily, first_day: next_month, motifs: [motif_insertion], lieu: mission_locale_paris_sud, organisation: org_insertion, agent: agent_insertion)
     create(:plage_ouverture, :daily, first_day: next_month, motifs: [motif_insertion], lieu: mission_locale_paris_nord, organisation: org_insertion)
     create(:plage_ouverture, :daily, first_day: next_month, motifs: [motif_autre_service], lieu: mission_locale_paris_sud, organisation: org_insertion)
+    current_agent.reload # needed to populate agent.organisations :/
+    agent_insertion.reload
   end
 
   def go_to_prescription_page
