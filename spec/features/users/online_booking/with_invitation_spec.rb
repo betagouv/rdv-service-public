@@ -8,7 +8,7 @@ RSpec.describe "User can be invited" do
     allow_any_instance_of(ActionDispatch::Request).to receive(:cookies).and_return(page.cookies)
   end
 
-  let(:now) { Time.zone.parse("2021-12-13 10:30") }
+  let(:now) { Time.zone.now }
   let!(:user) do
     create(:user, first_name: "john", last_name: "doe", email: "johndoe@gmail.com",
                   phone_number: "0682605955", address: "26 avenue de la resistance, Paris, 75016",
@@ -31,8 +31,8 @@ RSpec.describe "User can be invited" do
   end
   let!(:lieu) { create(:lieu, organisation: organisation) }
   let!(:lieu2) { create(:lieu, organisation: organisation) }
-  let!(:plage_ouverture) { create(:plage_ouverture, :daily, first_day: now - 1.month, motifs: [motif], lieu: lieu, organisation: organisation) }
-  let!(:plage_ouverture2) { create(:plage_ouverture, :daily, first_day: now - 1.month, motifs: [motif], lieu: lieu2, organisation: organisation) }
+  let!(:plage_ouverture) { create(:plage_ouverture, :daily, first_day: now + 1.month, motifs: [motif], lieu: lieu, organisation: organisation) }
+  let!(:plage_ouverture2) { create(:plage_ouverture, :daily, first_day: now + 1.month, motifs: [motif], lieu: lieu2, organisation: organisation) }
 
   let!(:organisation2) { create(:organisation) }
 
@@ -113,7 +113,7 @@ RSpec.describe "User can be invited" do
         address: "16 rue de la résistance, Paris, 75016", motif_category_short_name: "rsa_orientation"
       )
 
-      motif.update(rdvs_cancellable_by_user: false)
+      motif.update(rdvs_cancellable_by_user: false, rdvs_editable_by_user: false)
 
       # Path
       find(".card-title", text: /#{lieu.name}/).ancestor(".card").find("a.stretched-link").click
@@ -131,6 +131,7 @@ RSpec.describe "User can be invited" do
       expect(current_email).to have_content(lieu.address)
       expect(current_email).to have_content(motif.name)
       expect(current_email).to have_content("11h00")
+      expect(current_email).to have_content("Voir le rendez-vous")
       expect(current_email).not_to have_link("Annuler ou modifier le rendez-vous")
     end
 
