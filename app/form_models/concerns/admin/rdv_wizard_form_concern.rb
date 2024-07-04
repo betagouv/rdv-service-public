@@ -9,7 +9,7 @@ module Admin::RdvWizardFormConcern
     attr_reader :agent_author
 
     # delegates all getters and setters to rdv
-    delegate(*::Rdv.attribute_names, to: :rdv)
+    delegate(*::Rdv.hardcoded_attribute_names, to: :rdv)
     delegate :duration_in_min, to: :rdv
     delegate :motif, :organisation, :agents, :users, to: :rdv
 
