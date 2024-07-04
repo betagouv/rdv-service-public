@@ -267,19 +267,23 @@ user2.save!
 
 # On reprend ci dessous les paramêtres que Rdvi utilise pour générer l'url d'invitation.
 # le code est ici https://github.com/betagouv/rdv-insertion/blob/9c03e5a6c720a88826e84ca854fd5ccb6135569a/app/services/invitations/compute_link.rb#L2
-# Si vous souhaitez tester avec d'autres données il suffit de remplacer les valeurs ci-dessous dans votre console.
-# L'organisation doit avoir un motif avec une catégorie de motif, la valeur de bookable_by doit être :agents_and_prescripteurs_and_invited_users
-# et des plages d'ouvertures doivent être créées pour le motif.
-# Le user doit avoir un rdv_invitation_token assigné via la méthode assign_rdv_invitation_token et sauvegardé.
 
 dataset = [{
   user: user1,
   organisation: org_drome1,
   motif: motif1_drome1,
+  city_code: "26362",
+  street_ban_id: "26362_1450",
+  longitude: "4.901427",
+  latitude: "44.931348",
 }, {
   user: user2,
   organisation: org_yonne,
   motif: motif_yonne_physique,
+  city_code: "89024",
+  street_ban_id: "89024_3940",
+  longitude: "3.572903",
+  latitude: "47.795585",
 },]
 
 dataset.each do |data|
@@ -287,9 +291,10 @@ dataset.each do |data|
   organisation = data[:organisation]
   motif = data[:motif]
 
-  city_code = GeoCoding.new.get_geolocation_results(user.address, organisation.territory.departement_number)[:city_code]
-  street_ban_id = GeoCoding.new.get_geolocation_results(user.address, organisation.territory.departement_number)[:street_ban_id]
-  longitude, latitude = GeoCoding.new.find_geo_coordinates(user.address)
+  city_code = data[:city_code]
+  street_ban_id = data[:street_ban_id]
+  longitude = data[:longitude]
+  latitude = data[:latitude]
   invitation_token = user.rdv_invitation_token
   organisation_id = organisation.id
   motif_category_short_name = motif.motif_category.short_name
