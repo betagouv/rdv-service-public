@@ -39,7 +39,7 @@
         data-agent-id="#{@agent.id}"
         data-organisation-id="#{@current_organisation.id}"
         data-display-saturdays="#{current_agent.display_saturdays}"
-        data-event-sources-json="#{[admin_agenda_plage_ouvertures_path(@agent, organisation_id: current_organisation.id, plages_ids: @plage_ouvertures.pluck(:id)), OffDays.to_full_calendar_array].to_json}"
+        data-event-sources-json="#{[admin_agenda_plage_ouvertures_path(agent_id: @agent, organisation_id: current_organisation.id, plages_ids: @plage_ouvertures.pluck(:id)), OffDays.to_full_calendar_array].to_json}"
       ]
     - else
       table.table
