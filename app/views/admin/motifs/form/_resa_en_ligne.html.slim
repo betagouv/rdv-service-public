@@ -45,8 +45,8 @@
       .col-md-6= f.input :min_public_booking_delay, label: "Délai minimum avant le RDV", collection: min_max_delay_options
       .col-md-6= f.input :max_public_booking_delay, label: "Délai maximum avant le RDV", collection: min_max_delay_options
 
-    .form-row.mt-2
-      = f.input(:rdvs_editable_by_user, input_html: { class: "js-check-on-section-enable js-uncheck-on-section-disable" })
+    .mt-2
+      = f.input(:rdvs_editable_by_user, input_html: { class: "js-check-on-section-enable js-uncheck-on-section-disable" }, wrapper_html: { class: "mb-1" })
       .text-muted.font-14= Motif.human_attribute_name("rdvs_editable_by_user_hint")
 
     .alert.alert-warning.mt-2.js-reasons-for-disabled-section
