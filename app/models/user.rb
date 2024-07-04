@@ -1,6 +1,4 @@
 class User < ApplicationRecord
-  self.ignored_columns = [:remember_created_at]
-
   # Mixins
   has_paper_trail(
     only: %w[
