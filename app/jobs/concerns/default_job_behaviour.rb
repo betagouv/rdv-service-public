@@ -15,7 +15,8 @@ module DefaultJobBehaviour
       rescue StandardError => e
         # Setting the fingerprint after the error occurs, allow us to capture failure responses and error codes
         scope.set_fingerprint(sentry_fingerprint) if sentry_fingerprint.present?
-        Sentry.capture_exception(e) if log_failure_to_sentry?(e)
+        level = last_attempt? ? "error" : "warning"
+        Sentry.capture_exception(e, level:) if log_failure_to_sentry?(e)
         raise # will be caught by the retry mechanism
       end
     end
@@ -36,6 +37,10 @@ module DefaultJobBehaviour
   end
 
   private
+
+  def last_attempt?
+    executions == MAX_ATTEMPTS
+  end
 
   def log_failure_to_sentry?(_exception)
     true
