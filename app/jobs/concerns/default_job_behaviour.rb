@@ -38,7 +38,7 @@ module DefaultJobBehaviour
   private
 
   def log_failure_to_sentry?(_exception)
-    true
+    executions >= 4 || executions == MAX_ATTEMPTS
   end
 
   def sentry_fingerprint
