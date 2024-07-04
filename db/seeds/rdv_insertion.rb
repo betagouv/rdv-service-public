@@ -305,7 +305,7 @@ dataset.each do |data|
     address: address,
     invitation_token: invitation_token,
     organisation_ids: [organisation_id],
-    motif_category_short_name: motif_category_short_name
+    motif_category_short_name: motif_category_short_name,
   }
   link = "#{ENV['HOST']}/prendre_rdv?#{attributes.to_query}"
 
