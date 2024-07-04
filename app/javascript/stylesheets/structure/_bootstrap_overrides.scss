@@ -4,3 +4,21 @@
 .btn:hover {
   color: inherit;
 }
+
+footer {
+  background-color: var(--background-default-grey); // this should go on the body
+
+  a, a:hover {
+    color: inherit;
+  }
+  [href]:not(.fr-footer__brand-link):not(.fr-footer__partners-link) {
+    background-image: var(--underline-img), var(--underline-img);
+  }
+  .fr-footer__partners-link {
+    border: 1px solid transparent;
+
+    &:hover {
+      border-color: #ccc;
+    }
+  }
+}
