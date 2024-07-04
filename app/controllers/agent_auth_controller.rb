@@ -3,6 +3,7 @@ class AgentAuthController < ApplicationController
 
   layout "application_agent"
 
+  before_action :authorize_organisation, if: -> { params[:organisation_id].present? }
   after_action :verify_authorized, except: :index
   after_action :verify_policy_scoped, only: :index
 
@@ -34,7 +35,7 @@ class AgentAuthController < ApplicationController
   end
 
   def current_organisation
-    @current_organisation ||= current_agent.organisations.find(params[:organisation_id])
+    @current_organisation ||= Organisation.find(params[:organisation_id])
   end
 
   def current_territory
@@ -43,5 +44,11 @@ class AgentAuthController < ApplicationController
 
   def from_modal?
     params[:modal].present?
+  end
+
+  def authorize_organisation
+    # on n’utilise pas le helper authorize directement car le pundit_user défini plus haut a comme contexte
+    # l’organisation elle même, ici on veut un contexte d’agent sans organisation
+    Pundit.authorize(AgentContext.new(current_agent), [:agent, current_organisation], :show?)
   end
 end
