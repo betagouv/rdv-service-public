@@ -109,5 +109,4 @@ $(document).on('turbolinks:load', function() {
   new PlageOuverture()
 
   Tooltips()
-  HeaderTooltip()
 })

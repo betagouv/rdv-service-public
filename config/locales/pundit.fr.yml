@@ -1,3 +1,5 @@
 fr:
- pundit:
-   default: 'Vous ne pouvez pas effectuer cette action.'
+  pundit:
+    default: 'Vous ne pouvez pas effectuer cette action.'
+    agent/organisation_policy:
+      show?: Vous ne pouvez pas accéder à cette organisation

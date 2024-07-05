@@ -45,7 +45,7 @@ fr:
         instruction_for_rdv_hint: Indications affichées après la confirmation du rendez-vous
         instruction_for_rdv_short: Indications après
         rdvs_editable_by_user: RDVs modifiables
-        rdvs_editable_by_user_hint: L’horaire et la date du rendez-vous peut être changé par l’usager au plus tard 48h avant le rendez-vous.
+        rdvs_editable_by_user_hint: L’horaire et la date du rendez-vous peuvent être changés par l’usager au plus tard 48h avant le rendez-vous.
       motif/collectifs:
         true: RDV collectif
         false: RDV individuel
