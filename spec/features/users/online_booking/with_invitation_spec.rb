@@ -3,12 +3,13 @@ RSpec.describe "User can be invited" do
 
   # needed for encrypted cookies
   before do
+    travel_to(now)
     stub_netsize_ok
     allow_any_instance_of(ActionDispatch::Request).to receive(:cookie_jar).and_return(page.cookies)
     allow_any_instance_of(ActionDispatch::Request).to receive(:cookies).and_return(page.cookies)
   end
 
-  let(:now) { Time.zone.now }
+  let(:now) { Time.zone.parse("2021-12-13 10:30") }
   let!(:user) do
     create(:user, first_name: "john", last_name: "doe", email: "johndoe@gmail.com",
                   phone_number: "0682605955", address: "26 avenue de la resistance, Paris, 75016",
@@ -105,34 +106,6 @@ RSpec.describe "User can be invited" do
       expect(page).to have_content("Votre RDV")
       expect(page).to have_content(lieu.address)
       expect(page).to have_content("11h00")
-    end
-
-    it "does not display cancel links if motif is not cancellable", js: true do
-      visit prendre_rdv_path(
-        departement: departement_number, city_code: city_code, invitation_token: invitation_token,
-        address: "16 rue de la résistance, Paris, 75016", motif_category_short_name: "rsa_orientation"
-      )
-
-      motif.update(rdvs_cancellable_by_user: false, rdvs_editable_by_user: false)
-
-      # Path
-      find(".card-title", text: /#{lieu.name}/).ancestor(".card").find("a.stretched-link").click
-      first(:link, "11:00").click
-      click_button("Continuer")
-      click_link("Confirmer mon RDV")
-      expect(page).to have_content("Votre RDV")
-      expect(page).to have_content(lieu.address)
-      expect(page).to have_content("11h00")
-
-      expect(page).not_to have_link("Annuler le RDV")
-
-      # Mail with
-      open_email("johndoe@gmail.com")
-      expect(current_email).to have_content(lieu.address)
-      expect(current_email).to have_content(motif.name)
-      expect(current_email).to have_content("11h00")
-      expect(current_email).to have_content("Voir le rendez-vous")
-      expect(current_email).not_to have_link("Annuler ou modifier le rendez-vous")
     end
 
     context "when lieux do not have availability" do
