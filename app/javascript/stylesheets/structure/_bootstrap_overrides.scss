@@ -5,7 +5,7 @@
   color: inherit;
 }
 
-a[href] {
+a[href]:not(.fr-link) {
   background-image: none; // pour éviter le soulignement des liens
 }
 
