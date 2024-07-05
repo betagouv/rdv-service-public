@@ -3,6 +3,7 @@ RSpec.describe "User can be invited" do
 
   # needed for encrypted cookies
   before do
+    travel_to(now)
     stub_netsize_ok
     allow_any_instance_of(ActionDispatch::Request).to receive(:cookie_jar).and_return(page.cookies)
     allow_any_instance_of(ActionDispatch::Request).to receive(:cookies).and_return(page.cookies)
@@ -31,8 +32,8 @@ RSpec.describe "User can be invited" do
   end
   let!(:lieu) { create(:lieu, organisation: organisation) }
   let!(:lieu2) { create(:lieu, organisation: organisation) }
-  let!(:plage_ouverture) { create(:plage_ouverture, :daily, first_day: now - 1.month, motifs: [motif], lieu: lieu, organisation: organisation) }
-  let!(:plage_ouverture2) { create(:plage_ouverture, :daily, first_day: now - 1.month, motifs: [motif], lieu: lieu2, organisation: organisation) }
+  let!(:plage_ouverture) { create(:plage_ouverture, :daily, first_day: now + 1.month, motifs: [motif], lieu: lieu, organisation: organisation) }
+  let!(:plage_ouverture2) { create(:plage_ouverture, :daily, first_day: now + 1.month, motifs: [motif], lieu: lieu2, organisation: organisation) }
 
   let!(:organisation2) { create(:organisation) }
 
@@ -46,7 +47,7 @@ RSpec.describe "User can be invited" do
       allow_any_instance_of(ActionDispatch::Request).to receive(:cookies).and_return(page.cookies)
     end
 
-    it "shows the available lieux to take a rdv", js: true do
+    it "full path, shows the available lieux to take a rdv", js: true do
       visit prendre_rdv_path(
         departement: departement_number, city_code: city_code, invitation_token: invitation_token,
         address: "16 rue de la résistance, Paris, 75016", motif_category_short_name: "rsa_orientation"
@@ -78,6 +79,7 @@ RSpec.describe "User can be invited" do
       expect(page).to have_content("Votre RDV")
       expect(page).to have_content(lieu.address)
       expect(page).to have_content("11h00")
+      expect(page).to have_link("Annuler le RDV")
 
       # Clearing Cookies
       page.cookies.clear
