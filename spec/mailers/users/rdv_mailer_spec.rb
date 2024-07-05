@@ -65,7 +65,6 @@ RSpec.describe Users::RdvMailer, type: :mailer do
       expect(mail.html_part.body.encoded).to match("<span>en appelant au <a href=\"tel:0601010101\">0601010101</a> ou</span> en cliquant sur le lien ci-dessous")
       expect(mail.html_part.body.encoded).to match("Annuler ou modifier le rendez-vous</a>")
     end
-
   end
 
   describe "#rdv_updated" do
