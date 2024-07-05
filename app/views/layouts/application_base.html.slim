@@ -20,7 +20,7 @@ html lang="fr"
           ruby:
             header.with_tool_link title: "Vos rendez-vous", path: users_rdvs_path, classes: "fr-icon-calendar-fill"
             header.with_tool_link title: "Vos informations", path: users_informations_path
-            header.with_tool_link title: "Votre compte", path: edit_user_registration_path
+            header.with_tool_link title: "Votre compte", path: users_account_path
             header.with_tool_link title: "Déconnexion", path: destroy_user_session_path, classes: "fr-icon-lock-fill", html_attributes: { "data-method": "delete" }
         - elsif !stats_path?
           - header.with_tool_link title: "Espace Agent", path: new_agent_session_path
