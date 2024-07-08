@@ -13,11 +13,17 @@
             div Vous pouvez ici changer l'email et le mot de passe de votre compte #{current_domain.name}, mais pas ceux de FranceConnect
 
     label.fr-label Adresse email
-    .flex-row-aligned
-      input.fr-input[value=current_user.email disabled=true]
-      = dsfr_link_to("Changer d'adresse email", edit_user_registration_path, class: "mt-2")
-    br
-    = dsfr_link_to("Changer de mot de passe", edit_current_user_password_path, class: "mt-2")
+    .fr-grid-row
+      .fr-col-12.fr-col-md-8
+        input.fr-input[value=current_user.email disabled=true]
+      .fr-col-12.fr-col-md-4
+        = dsfr_link_to("Changer d'adresse email", edit_user_registration_path)
+    label.fr-label Mot de passe
+    .fr-grid-row
+      .fr-col-12.fr-col-md-8
+        input.fr-input[value="************************" disabled=true]
+      .fr-col-12.fr-col-md-4.flex
+        = dsfr_link_to("Changer de mot de passe", edit_current_user_password_path, class: "mt-2")
 
 .card
   .card-body
