@@ -20,20 +20,23 @@
               .col
                 h2.pb-1.mb-1.card-title= context.user_selected_organisation.name
                 = render "search/organisation_card_subtitles", organisation: context.user_selected_organisation
-  - if context.first_matching_motif.collectif?
-    h3.font-weight-bold = "Inscrivez-vous à l'atelier de votre choix :"
+  - if context.no_availability?
+    = render "search/nothing_to_show", context: context
   - else
-    h3.font-weight-bold = "Sélectionnez un créneau :"
-  .card.mb-3
-    .card-body
-      - if context.first_matching_motif.collectif?
-        - context.available_collective_rdvs.includes(:agents_rdvs, :agents, :motif).each do |rdv|
-          = render "search/rdv_collectif", rdv: rdv
-      - elsif context.unique_motifs_by_name_and_location_type.present?
-        = render "search/creneaux", lieu: context.lieu, creneaux: context.creneaux, date_range: context.date_range, departement: context.departement, address: context.address, max_public_booking_delay: context.max_public_booking_delay, city_code: context.city_code, next_availability: context.next_availability, query_params: context.query_params, context: context
-      - else
-        .alert.alert-warning
-          = "Le motif "
-          b= context.first_matching_motif.name
-          = " n'est plus disponible à la réservation à "
-          b= context.lieu.name
+    - if context.first_matching_motif.collectif?
+      h3.font-weight-bold = "Inscrivez-vous à l'atelier de votre choix :"
+    - else
+      h3.font-weight-bold = "Sélectionnez un créneau :"
+    .card.mb-3
+      .card-body
+        - if context.first_matching_motif.collectif?
+          - context.available_collective_rdvs.includes(:agents_rdvs, :agents, :motif).each do |rdv|
+            = render "search/rdv_collectif", rdv: rdv
+        - elsif context.unique_motifs_by_name_and_location_type.present?
+          = render "search/creneaux", lieu: context.lieu, creneaux: context.creneaux, date_range: context.date_range, departement: context.departement, address: context.address, max_public_booking_delay: context.max_public_booking_delay, city_code: context.city_code, next_availability: context.next_availability, query_params: context.query_params, context: context
+        - else
+          .alert.alert-warning
+            = "Le motif "
+            b= context.first_matching_motif.name
+            = " n'est plus disponible à la réservation à "
+            b= context.lieu.name
