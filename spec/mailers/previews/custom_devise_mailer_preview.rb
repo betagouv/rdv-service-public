@@ -12,7 +12,7 @@ class CustomDeviseMailerPreview < ActionMailer::Preview
   end
 
   def invitation_instructions_cnfs
-    CustomDeviseMailer.invitation_instructions(Agent.joins(:service).where(service: { name: Service::CONSEILLER_NUMERIQUE }, invited_by: nil).last, "faketoken")
+    CustomDeviseMailer.invitation_instructions(Agent.joins(:services).where(services: { name: Service::CONSEILLER_NUMERIQUE }, invited_by: nil).last, "faketoken")
   end
 
   def invitation_instructions
