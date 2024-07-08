@@ -14,16 +14,16 @@
 
     label.fr-label Adresse email
     .fr-grid-row
-      .fr-col-12.fr-col-md-8
+      .fr-col-12.fr-col-md-6
         input.fr-input[value=current_user.email disabled=true]
-      .fr-col-12.fr-col-md-4
-        = dsfr_link_to("Changer d'adresse email", edit_user_registration_path)
-    label.fr-label Mot de passe
+      .fr-col-12.fr-col-md-6.flex
+        = dsfr_link_to("Changer d'adresse email", edit_user_registration_path, class: "fr-ml-md-1w")
+    label.fr-label.fr-mt-2w Mot de passe
     .fr-grid-row
-      .fr-col-12.fr-col-md-8
+      .fr-col-12.fr-col-md-6
         input.fr-input[value="************************" disabled=true]
-      .fr-col-12.fr-col-md-4.flex
-        = dsfr_link_to("Changer de mot de passe", edit_current_user_password_path, class: "mt-2")
+      .fr-col-12.fr-col-md-6.flex
+        = dsfr_link_to("Changer de mot de passe", edit_current_user_password_path, class: "fr-ml-md-1w")
 
 .card
   .card-body
