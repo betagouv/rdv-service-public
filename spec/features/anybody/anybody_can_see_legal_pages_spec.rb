@@ -8,8 +8,8 @@ RSpec.describe "Anybody can see legal pages" do
 
   it "displays CGU" do
     visit root_path
-    expect(page).to have_content("C.G.U.")
-    click_link "C.G.U."
+    expect(page).to have_content("Conditions d’utilisation")
+    click_link "Conditions d’utilisation"
     expect(page).to have_selector("h1", text: "Conditions d’utilisation de la plateforme RDV Solidarités")
   end
 
