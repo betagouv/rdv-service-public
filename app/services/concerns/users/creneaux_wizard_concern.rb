@@ -89,6 +89,10 @@ module Users::CreneauxWizardConcern
     @next_availability ||= creneaux.empty? ? creneaux_search.next_availability : nil
   end
 
+  def no_availability?
+    creneaux.empty? && next_availability.nil?
+  end
+
   def max_public_booking_delay
     matching_motifs.maximum("max_public_booking_delay")
   end
