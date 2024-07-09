@@ -2,6 +2,7 @@
 @import "~bootstrap/scss/variables";
 @import "~bootstrap/scss/mixins";
 @import "./_variables";
+@import "./_variables_dsfr";
 @import "./fontawesome_imports";
 
 @import "~bootstrap/scss/bootstrap";
@@ -18,6 +19,7 @@
 @import "./components/forms";
 @import "./components/cards";
 @import "./components/utilities";
+@import "./components/utilities_dsfr";
 @import "./components/steps";
 @import "./components/autocomplete";
 @import "./components/rdv_status";

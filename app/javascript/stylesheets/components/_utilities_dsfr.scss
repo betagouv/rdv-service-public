@@ -1,0 +1,17 @@
+// TEXT
+
+.rdv-text-align-center {
+  text-align: center;
+}
+
+.rdv-text-align-md-left {
+  @include media-breakpoint-up(md) {
+    text-align: left;
+  }
+}
+
+// FLEX
+
+.rdv-flex-wrap-wrap-reverse {
+  flex-wrap: wrap-reverse;
+}
