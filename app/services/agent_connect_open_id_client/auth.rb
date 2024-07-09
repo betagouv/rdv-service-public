@@ -1,4 +1,4 @@
-# voir https://github.com/france-connect/Documentation-AgentConnect/blob/main/doc_fs/technique_fca/endpoints.md
+# voir # https://github.com/numerique-gouv/agentconnect-documentation/blob/main/doc_fs/implementation_technique.md
 module AgentConnectOpenIdClient
   class Auth
     def initialize(login_hint: nil, force_login: false)
