@@ -12,8 +12,6 @@ module DefaultJobBehaviour
       Sentry.set_context(:job, job_context)
       block.call
     rescue StandardError => e
-      # Setting the fingerprint after the error occurs, allow us to capture failure responses and error codes
-      Sentry.get_current_scope.set_fingerprint(sentry_fingerprint) if sentry_fingerprint.present?
       Sentry.capture_exception(e) if log_failure_to_sentry?(e)
       raise # will be caught by the retry mechanism
     end
@@ -37,9 +35,5 @@ module DefaultJobBehaviour
 
   def log_failure_to_sentry?(_exception)
     executions <= 4 || executions == MAX_ATTEMPTS
-  end
-
-  def sentry_fingerprint
-    []
   end
 end
