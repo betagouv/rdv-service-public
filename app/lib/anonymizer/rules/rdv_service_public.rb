@@ -31,7 +31,6 @@ class Anonymizer::Rules::RdvServicePublic
         confirmation_token
         reset_password_token
         invitation_token
-        remember_created_at
         rdv_invitation_token
       ],
       non_anonymized_column_names: %w[
@@ -60,7 +59,6 @@ class Anonymizer::Rules::RdvServicePublic
         tokens
         microsoft_graph_token
         refresh_microsoft_graph_token
-        remember_created_at
         inclusion_connect_open_id_sub
       ],
       non_anonymized_column_names: %w[
@@ -162,7 +160,7 @@ class Anonymizer::Rules::RdvServicePublic
     agent_roles: { non_anonymized_column_names: %w[access_level] },
     agents_rdvs: { non_anonymized_column_names: %w[outlook_id outlook_create_in_progress] },
     agent_territorial_access_rights: {
-      non_anonymized_column_names: %w[allow_to_manage_teams created_at updated_at allow_to_manage_access_rights allow_to_invite_agents allow_to_download_metrics],
+      non_anonymized_column_names: %w[allow_to_manage_teams created_at updated_at allow_to_manage_access_rights allow_to_invite_agents],
     },
     teams: { non_anonymized_column_names: %w[name created_at updated_at] },
     motifs: {
