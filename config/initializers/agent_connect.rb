@@ -5,6 +5,7 @@ Rails.configuration.x.agent_connect_unreachable_at_boot_time = false
 if ENV["AGENT_CONNECT_BASE_URL"].present? && !ENV["AGENT_CONNECT_DISABLED"]
   begin
     # la méthode .discover! fait un appel à l'api d'Agent Connect
+    raise "test"
     Rails.configuration.x.agent_connect_config = OpenIDConnect::Discovery::Provider::Config.discover!(ENV["AGENT_CONNECT_BASE_URL"])
   rescue StandardError => e
     error_message = <<~MSG
@@ -13,7 +14,7 @@ if ENV["AGENT_CONNECT_BASE_URL"].present? && !ENV["AGENT_CONNECT_DISABLED"]
     MSG
 
     Rails.logger.warn(error_message)
-    Sentry.capture_exception(e)
+    Sentry.capture_exception(e, level: :warning)
     Sentry.capture_message(error_message)
     Rails.configuration.x.agent_connect_unreachable_at_boot_time = true
   end
