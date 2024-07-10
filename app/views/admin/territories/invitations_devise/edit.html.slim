@@ -4,7 +4,7 @@
       h1.fr-pb-3w Création de compte sur #{current_domain.name}
 
       - if display_agent_connect_button? || display_inclusion_connect_button?
-        .flex.flex--center
+        .centered-flex
           - if display_agent_connect_button?
             = render "common/agent_connect_button_dsfr"
 
