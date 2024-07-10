@@ -104,9 +104,9 @@ class Domain
       end
     when :development
       {
-        RDV_SOLIDARITES => "www.rdv-solidarites.localhost:3000",
-        RDV_AIDE_NUMERIQUE => "www.rdv-aide-numerique.localhost:3000",
-        RDV_MAIRIE => "www.rdv-mairie.localhost:3000",
+        RDV_SOLIDARITES => "www.rdv-solidarites.localhost",
+        RDV_AIDE_NUMERIQUE => "www.rdv-aide-numerique.localhost",
+        RDV_MAIRIE => "www.rdv-mairie.localhost",
       }.fetch(self)
     when :test
       {
