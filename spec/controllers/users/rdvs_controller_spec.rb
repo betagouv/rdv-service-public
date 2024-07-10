@@ -549,7 +549,7 @@ RSpec.describe Users::RdvsController, type: :controller do
 
       context "when it cannot be updated" do
         before do
-          allow_any_instance_of(Rdv).to receive(:update_and_notify).and_return(false)
+          allow_any_instance_of(Rdv).to receive(:update).and_return(false)
         end
 
         it "redirects to creneaux index" do
