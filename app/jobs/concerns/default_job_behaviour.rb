@@ -39,7 +39,7 @@ module DefaultJobBehaviour
   end
 
   def job_link
-    @job_link ||= "https://#{domain.host_name}/super_admins/good_job/jobs/#{job_id}"
+    @job_link ||= GoodJob::Engine.routes.url_helpers.job_url(id: job_id, host: Domain::RDV_SOLIDARITES.host_name)
   end
 
   def domain
