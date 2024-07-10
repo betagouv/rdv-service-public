@@ -34,23 +34,6 @@ module Rdv::Updatable
     @notifier&.participations_tokens_by_user_id&.fetch(user_id, nil)
   end
 
-  def notify!(author, previous_participations)
-    if rdv_cancelled?
-      file_attentes.destroy_all
-      @notifier = new_cancelled_notifier(author, previous_participations)
-    elsif rdv_status_reloaded_from_cancelled?
-      @notifier = Notifiers::RdvCreated.new(self, author)
-    elsif rdv_updated?
-      @notifier = Notifiers::RdvUpdated.new(self, author, old_agent_ids: @old_agent_ids)
-    end
-
-    @notifier&.perform
-
-    if collectif? && previous_participations.sort != participations.sort
-      Notifiers::RdvCollectifParticipations.perform_with(self, author, previous_participations)
-    end
-  end
-
   def new_cancelled_notifier(author, previous_participations)
     # Don't notify RDV cancellation to users that had previously cancelled their individual participation
     available_users_for_notif = previous_participations.select(&:not_cancelled?).map(&:user)
@@ -83,6 +66,23 @@ module Rdv::Updatable
   end
 
   private
+
+  def notify!(author, previous_participations)
+    if rdv_cancelled?
+      file_attentes.destroy_all
+      @notifier = new_cancelled_notifier(author, previous_participations)
+    elsif rdv_status_reloaded_from_cancelled?
+      @notifier = Notifiers::RdvCreated.new(self, author)
+    elsif rdv_updated?
+      @notifier = Notifiers::RdvUpdated.new(self, author, old_agent_ids: @old_agent_ids)
+    end
+
+    @notifier&.perform
+
+    if collectif? && previous_participations.sort != participations.sort
+      Notifiers::RdvCollectifParticipations.perform_with(self, author, previous_participations)
+    end
+  end
 
   def change_participation_statuses
     case status
