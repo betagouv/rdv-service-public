@@ -8,7 +8,10 @@ RSpec.describe Agents::SessionsController do
 
   describe "#destroy" do
     context "when the agent was logged in with Agent Connect" do
+      stub_env_with(AGENT_CONNECT_BASE_URL: "https://fca.integ01.dev-agentconnect.fr/api/v2")
+
       before do
+        AgentConnectStubs.stub_and_run_discover_request
         session[:agent_connect_id_token] = "fake_agent_connect_id_token"
       end
 

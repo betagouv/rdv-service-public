@@ -1,10 +1,14 @@
 module AgentConnectStubs
   extend RSpec::Mocks::ExampleMethods # pour appeler #allow et #receive dans des méthodes de module
 
-  def self.stub_callback_requests(code, user_info)
+  def self.stub_and_run_discover_request
     WebMock.stub_request(:get, "https://fca.integ01.dev-agentconnect.fr/api/v2/.well-known/openid-configuration")
       .to_return(status: 200, body: File.read("#{::Rails.root}/spec/fixtures/agent_connect/openid-configuration.json"), headers: {})
     load "#{::Rails.root}/config/initializers/agent_connect.rb"
+  end
+
+  def self.stub_callback_requests(code, user_info)
+    stub_and_run_discover_request
 
     stub_token_request(code)
 
