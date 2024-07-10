@@ -2,6 +2,7 @@ module Rdv::Updatable
   extend ActiveSupport::Concern
 
   def update_and_notify(author, attributes)
+    @old_agent_ids = agent_ids.to_a
     assign_attributes(attributes)
     save_and_notify(author)
   end
@@ -40,7 +41,7 @@ module Rdv::Updatable
     elsif rdv_status_reloaded_from_cancelled?
       @notifier = Notifiers::RdvCreated.new(self, author)
     elsif rdv_updated?
-      @notifier = Notifiers::RdvUpdated.new(self, author)
+      @notifier = Notifiers::RdvUpdated.new(self, author, old_agent_ids: @old_agent_ids)
     end
 
     @notifier&.perform
