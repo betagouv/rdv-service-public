@@ -20,6 +20,8 @@ RSpec.describe ApplicationJob, type: :job do
       expect(sentry_events.last.contexts[:job][:job_id]).to eq(enqueued_job_id)
       expect(sentry_events.last.contexts[:job][:queue_name]).to eq("custom_queue")
       expect(sentry_events.last.contexts[:job][:arguments]).to eq([123, { _some_kw_arg: 456 }])
+      expect(sentry_events.last.contexts[:job][:job_link]).to match("/super_admins/good_job/jobs/#{enqueued_job_id}")
+      expect(sentry_events.last.tags[:job_link]).to match("/super_admins/good_job/jobs/#{enqueued_job_id}")
 
       expect(sentry_events.last.exception.values.first.value).to match("Something unexpected happened (RuntimeError)")
       expect(sentry_events.last.exception.values.first.type).to eq("RuntimeError")

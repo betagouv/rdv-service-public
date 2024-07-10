@@ -50,7 +50,7 @@ Pour tester les migrations avec les données de prod, il faut récupérer un bac
 
 Il est recommandé de lancer le serveur local sans le worker sinon il y aura beaucoup de jobs de reminders et de simulations d'envois de mails :
 
-`foreman start -f Procfile.dev  web=1,webpack=1`
+`foreman start -f Procfile.dev  web=1,js=1`
 
 ## Export Excel sectorisation
 

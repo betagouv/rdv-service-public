@@ -173,9 +173,9 @@ group :development do
   # Mettre à jour la version de cette gem lorsqu'on met à jour Ruby (version actuelle : 3.3.3)
   gem "parser", "3.3.3.0", require: false
   # Code style checking for RSpec files
-  gem "rubocop-rspec", "2.7.0"
+  gem "rubocop-rspec", "2.7.0", require: false
   # Automatic Rails code style checking tool.
-  gem "rubocop-rails", "2.13.1"
+  gem "rubocop-rails", "2.13.1", require: false
   # Slim template linting tool
   gem "slim_lint", require: false
 
@@ -195,11 +195,11 @@ group :development do
   # Other
 
   # Manage Procfile-based applications
-  gem "foreman"
+  gem "foreman", require: false
   # Gives letter_opener an interface for browsing sent emails
   gem "letter_opener_web" # Saves sent emails and serves them on /letter_opener
   # Entity-relationship diagram for your Rails models.
-  gem "rails-erd" # Keeps docs/domain_model.svg up-to-date. See .erdconfig
+  gem "rails-erd", require: false # Keeps docs/domain_model.svg up-to-date. See .erdconfig
 end
 
 group :test do
