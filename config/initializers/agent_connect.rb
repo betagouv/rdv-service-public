@@ -5,7 +5,6 @@ Rails.configuration.x.agent_connect_unreachable_at_boot_time = false
 if ENV["AGENT_CONNECT_BASE_URL"].present? && !ENV["AGENT_CONNECT_DISABLED"]
   begin
     # la méthode .discover! fait un appel à l'api d'Agent Connect
-    raise "test"
     Rails.configuration.x.agent_connect_config = OpenIDConnect::Discovery::Provider::Config.discover!(ENV["AGENT_CONNECT_BASE_URL"])
   rescue StandardError => e
     error_message = <<~MSG
