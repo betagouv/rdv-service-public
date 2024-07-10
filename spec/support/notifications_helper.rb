@@ -100,7 +100,8 @@ module NotificationsHelper
     when :rdv_cancelled
       I18n.t("users.rdv_mailer.rdv_cancelled.title", date: I18n.l(rdv.starts_at, format: :human), organisation: rdv.organisation.name)
     when :rdv_updated
-      I18n.t("users.rdv_mailer.rdv_updated.title", date: I18n.l(rdv.starts_at, format: :human))
+      # Maybe not enough precision here (because specific design choice), the date used for agents rdv update is the previsous date of the rdv
+      "modifié"
     when :rdv_upcoming_reminder
       I18n.t("users.rdv_mailer.rdv_upcoming_reminder.title", date: I18n.l(rdv.starts_at, format: :human))
     end

@@ -84,13 +84,13 @@ RSpec.describe Rdv::Updatable, type: :concern do
       end
 
       it "notifies when date changes" do
-        rdv.update_and_notify(agent, starts_at: rdv.starts_at)
+        rdv.update_and_notify(agent, starts_at: 2.days.from_now)
         expect_notifications_sent_for(rdv, user, :rdv_updated)
         expect_notifications_sent_for(rdv, agent, :rdv_updated)
       end
 
       it "notifies when date changes for collective rdv" do
-        rdv_co.update_and_notify(agent, starts_at: rdv.starts_at)
+        rdv_co.update_and_notify(agent, starts_at: 2.days.from_now)
         expect_notifications_sent_for(rdv_co, user_co1, :rdv_updated)
         expect_notifications_sent_for(rdv_co, user_co2, :rdv_updated)
         expect_notifications_sent_for(rdv_co, agent, :rdv_updated)
