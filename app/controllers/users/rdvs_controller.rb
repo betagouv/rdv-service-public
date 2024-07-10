@@ -60,9 +60,13 @@ class Users::RdvsController < UserAuthController
   def show; end
 
   def update
-    if @rdv.update_and_notify(current_user, { starts_at: @creneau.starts_at, ends_at: @creneau.starts_at + @rdv.duration_in_min.minutes, agent_ids: [@creneau.agent.id]})
+    old_agent_ids = @rdv.agent_ids.to_a
+    if @rdv.update(starts_at: @creneau.starts_at, ends_at: @creneau.starts_at + @rdv.duration_in_min.minutes, agent_ids: [@creneau.agent.id])
+      notifier = Notifiers::RdvUpdated.new(@rdv, current_user, old_agent_ids: old_agent_ids)
+
+      notifier.perform
       flash[:success] = "Votre RDV a bien été modifié"
-      redirect_to users_rdv_path(@rdv, invitation_token: @rdv.participation_token(current_user.id))
+      redirect_to users_rdv_path(@rdv, invitation_token: notifier.participations_tokens_by_user_id[current_user.id])
     else
       flash[:error] = "Le RDV n'a pas pu être modifié"
       redirect_to creneaux_users_rdv_path(@rdv)

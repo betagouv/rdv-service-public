@@ -1,6 +1,4 @@
 RSpec.describe Notifiers::RdvUpdated, type: :service do
-  subject { described_class.perform_with(rdv, agent1) }
-
   let(:user1) { create(:user) }
   let(:user2) { create(:user) }
   let(:agent1) { build(:agent, first_name: "Sean", last_name: "PAUL") }
@@ -9,57 +7,80 @@ RSpec.describe Notifiers::RdvUpdated, type: :service do
 
   before do
     stub_netsize_ok
-
-    rdv.update!(starts_at: 4.days.from_now)
   end
 
-  context "starts in more than 2 days" do
-    let(:starts_at_initial) { 3.days.from_now }
+  context "update with agent change" do
+    subject { described_class.perform_with(rdv, agent1, old_agent_ids: [agent1.id]) }
+
+    let(:rdv) { create(:rdv, starts_at: 5.days.from_now, agents: [agent1], users: [user1]) }
+
+    before do
+      rdv.update!(agents: [agent2])
+    end
 
     it "triggers sending mail to users but not to agents" do
       subject
 
       expect_notifications_sent_for(rdv, user1, :rdv_updated)
-      expect_notifications_sent_for(rdv, user2, :rdv_updated)
-      expect_no_notifications_for(rdv, agent1, :rdv_updated)
-    end
-
-    it "participations_tokens_by_user_id attribute outputs the tokens" do
-      allow(Devise.token_generator).to receive(:generate).and_return("t0k3n")
-      notifier = described_class.new(rdv, agent1)
-      notifier.perform
-      expect(notifier.participations_tokens_by_user_id).to eq({ user1.id => "t0k3n", user2.id => "t0k3n" })
+      expect_notifications_sent_for(rdv, agent2, :rdv_updated)
     end
   end
 
-  context "starts today or tomorrow" do
-    let(:starts_at_initial) { 2.hours.from_now }
+  context "update without agent change" do
+    subject { described_class.perform_with(rdv, agent1, old_agent_ids: [agent1.id]) }
 
-    it "triggers sending mails to both user and agents (except the one who initiated the change)" do
-      subject
-
-      expect_notifications_sent_for(rdv, user1, :rdv_updated)
-      expect_notifications_sent_for(rdv, user2, :rdv_updated)
-      expect_notifications_sent_for(rdv, agent2, :rdv_updated)
-      expect_no_notifications_for(rdv, agent1, :rdv_updated)
+    before do
+      rdv.update!(starts_at: 4.days.from_now)
     end
 
-    it "doesnt send email if user participation is excused" do
-      rdv.participations.where(user: user1).update(status: "excused")
-      subject
+    context "starts in more than 2 days" do
+      let(:starts_at_initial) { 3.days.from_now }
 
-      expect_notifications_sent_for(rdv, user2, :rdv_updated)
-      expect_notifications_sent_for(rdv, agent2, :rdv_updated)
-      expect_no_notifications_for(rdv, user1, :rdv_updated)
+      it "triggers sending mail to users but not to agents" do
+        subject
+
+        expect_notifications_sent_for(rdv, user1, :rdv_updated)
+        expect_notifications_sent_for(rdv, user2, :rdv_updated)
+        expect_no_notifications_for(rdv, agent1, :rdv_updated)
+      end
+
+      it "participations_tokens_by_user_id attribute outputs the tokens" do
+        allow(Devise.token_generator).to receive(:generate).and_return("t0k3n")
+        notifier = described_class.new(rdv, agent1)
+        notifier.perform
+        expect(notifier.participations_tokens_by_user_id).to eq({ user1.id => "t0k3n", user2.id => "t0k3n" })
+      end
     end
 
-    it "doesnt send email if user participation is revoked" do
-      rdv.participations.where(user: user1).update(status: "revoked")
-      subject
+    context "starts today or tomorrow" do
+      let(:starts_at_initial) { 2.hours.from_now }
 
-      expect_notifications_sent_for(rdv, user2, :rdv_updated)
-      expect_notifications_sent_for(rdv, agent2, :rdv_updated)
-      expect_no_notifications_for(rdv, user1, :rdv_updated)
+      it "triggers sending mails to both user and agents (except the one who initiated the change)" do
+        subject
+
+        expect_notifications_sent_for(rdv, user1, :rdv_updated)
+        expect_notifications_sent_for(rdv, user2, :rdv_updated)
+        expect_notifications_sent_for(rdv, agent2, :rdv_updated)
+        expect_no_notifications_for(rdv, agent1, :rdv_updated)
+      end
+
+      it "doesnt send email if user participation is excused" do
+        rdv.participations.where(user: user1).update(status: "excused")
+        subject
+
+        expect_notifications_sent_for(rdv, user2, :rdv_updated)
+        expect_notifications_sent_for(rdv, agent2, :rdv_updated)
+        expect_no_notifications_for(rdv, user1, :rdv_updated)
+      end
+
+      it "doesnt send email if user participation is revoked" do
+        rdv.participations.where(user: user1).update(status: "revoked")
+        subject
+
+        expect_notifications_sent_for(rdv, user2, :rdv_updated)
+        expect_notifications_sent_for(rdv, agent2, :rdv_updated)
+        expect_no_notifications_for(rdv, user1, :rdv_updated)
+      end
     end
   end
 end
