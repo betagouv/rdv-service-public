@@ -10,18 +10,6 @@
   background-color: #f4f6fe;
 }
 
-.bg-dark {
-  color: white;
-  button {
-    color: white;
-  }
-}
-@include media-breakpoint-down(sm) {
-  .bg-dark {
-    background: $bg-leftbar !important;
-  }
-}
-
 .bg-primary {
   background-color: $primary !important;
 }

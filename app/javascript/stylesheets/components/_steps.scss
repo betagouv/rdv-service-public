@@ -91,15 +91,3 @@
     opacity: 0;
   }
 }
-
-@include media-breakpoint-down(sm) {
-  .horizontal-steps {
-    .horizontal-steps-content {
-      .step-item {
-        span {
-          white-space: inherit;
-        }
-      }
-    }
-  }
-}
