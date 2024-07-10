@@ -7,9 +7,10 @@ module DefaultJobBehaviour
   included do
     # Include job metadata in Sentry context
     around_perform do |_job, block|
-      job_context = { job_id: job_id, queue_name: queue_name }
+      job_context = { queue_name: queue_name, job_id: job_id, job_link: job_link }
       job_context[:arguments] = arguments if self.class.log_arguments
       Sentry.set_context(:job, job_context)
+      Sentry.set_tags(job_link: job_link)
       block.call
     rescue StandardError => e
       Sentry.capture_exception(e) if log_failure_to_sentry?(e)
@@ -35,5 +36,14 @@ module DefaultJobBehaviour
 
   def log_failure_to_sentry?(_exception)
     executions <= 4 || executions == MAX_ATTEMPTS
+  end
+
+  def job_link
+    @job_link ||= "https://#{domain.host_name}/super_admins/good_job/jobs/#{job_id}"
+  end
+
+  def domain
+    server_name = Sentry::Configuration.new.server_name
+    server_name.match?(/rdv-mairie/) ? Domain::RDV_MAIRIE : Domain::RDV_SOLIDARITES
   end
 end
