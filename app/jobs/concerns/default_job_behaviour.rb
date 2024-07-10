@@ -39,8 +39,7 @@ module DefaultJobBehaviour
   end
 
   def job_link
-    server_name = Sentry::Configuration.new.server_name
-    good_job_domain = server_name.match?(/rdv-mairie/) ? Domain::RDV_MAIRIE : Domain::RDV_SOLIDARITES
+    good_job_domain = ENV["APP"]&.match?(/rdv-mairie/) ? Domain::RDV_MAIRIE : Domain::RDV_SOLIDARITES
 
     GoodJob::Engine.routes.url_helpers.job_url(id: job_id, host: good_job_domain.host_name)
   end
