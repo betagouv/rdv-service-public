@@ -24,7 +24,7 @@ class AgentConnectController < ApplicationController
     end
 
     # Agent Connect recommande de faire la réconciliation sur l'email et non pas sur le sub
-    # voir https://github.com/france-connect/Documentation-AgentConnect/blob/main/doc_fs/projet_fca/projet_fca_donnees.md
+    # voir https://github.com/numerique-gouv/agentconnect-documentation/blob/main/doc_fs/donnees_fournies.md#le-champ-sub
     agent = Agent.active.find_by(email: callback_client.user_email)
 
     if agent
