@@ -81,7 +81,7 @@ gem "common_french_passwords"
 
 # Jobs
 # A multithreaded, Postgres-based ActiveJob backend for Ruby on Rails
-gem "good_job"
+gem "good_job", "3.27.4"
 
 # JSON serialization and queries
 
