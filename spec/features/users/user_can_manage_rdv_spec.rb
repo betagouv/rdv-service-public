@@ -58,7 +58,7 @@ RSpec.describe "User can manage their rdvs" do
     let!(:agent2) { create(:agent, organisations: [organisation]) }
     let!(:user) { create(:user, organisations: [organisation]) }
     let!(:motif) { create(:motif, organisation: organisation) }
-    let!(:rdv) { create(:rdv, users: [user], agents: [agent1], starts_at: 4.days.from_now, created_by: user, motif: motif, lieu: lieu) }
+    let!(:rdv) { create(:rdv, users: [user], agents: [agent1], starts_at: 10.days.from_now, created_by: user, motif: motif, lieu: lieu) }
     let!(:plage_ouverture) { create(:plage_ouverture, :daily, motifs: [motif], lieu: lieu, organisation: organisation, agent: agent2) }
 
     before do
@@ -71,39 +71,20 @@ RSpec.describe "User can manage their rdvs" do
       context "when user change the date" do
         it "notify agents if rdv agent change" do
           original_date = rdv.starts_at
+          p original_date
           # User change the date
           click_link("Déplacer le RDV")
           first(:link, "11:00").click
           expect(page).to have_content("Vous allez modifier votre RDV #{motif.name} - #{motif.service.name} qui a lieu le #{I18n.l(rdv.starts_at, format: :human)}")
           click_link("Confirmer le nouveau créneau")
+          p rdv.reload.starts_at
 
           perform_enqueued_jobs
+          deliveries = ActionMailer::Base.deliveries
 
-          # A creuser pk ca ne fonctionne pas ?
-          # expect(ActionMailer::Base.deliveries).to include(
-          #   an_object_having_attributes(
-          #     to: agent2.email,
-          #     subject: "RDV du #{relative_date(rdv.starts_at)} modifié"
-          #   )
-          # )
-
-          # Actual behavior is:
-          # Notify the user with original date in subject
-          new_agent_mail_updated = ActionMailer::Base.deliveries.find do |mail|
-            mail.to.include?(agent2.email) && mail.subject == "RDV du #{relative_date(original_date)} modifié"
-          end
-          expect(new_agent_mail_updated).not_to be_nil
-
-          # Notify the new agent only with the new date in subject
-          user_mail_updated = ActionMailer::Base.deliveries.find do |mail|
-            mail.to.include?(user.email) && mail.subject == "RDV du #{I18n.l(rdv.reload.starts_at, format: :human)} modifié"
-          end
-          expect(user_mail_updated).not_to be_nil
-
-          # Should notify the new agent
-
-          # Should notify the original agent
-
+          expect(deliveries.any? { |mail| mail.to == [agent1.email] && mail.subject == "RDV annulé 16 juil." }).to be true
+          expect(deliveries.any? { |mail| mail.to == [agent2.email] && mail.subject == "Nouveau RDV ajouté sur votre agenda RDV Solidarités pour 16 juil." }).to be true
+          expect(deliveries.any? { |mail| mail.to == [user.email] && mail.subject == "RDV du mardi 16 juillet 2024 à 11h00 modifié" }).to be true
         end
       end
     end
