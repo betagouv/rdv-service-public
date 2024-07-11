@@ -18,6 +18,12 @@ module DefaultJobBehaviour
   # cf config/initializers/active_job_retry_sentry_log_subscriber.rb
   # where we configure capturing warnings on retries
   def capture_sentry_warning_for_retry?(_exception)
-    true
+    executions <= 4
+  end
+
+  def job_link
+    good_job_domain = ENV["APP"]&.match?(/rdv-mairie/) ? Domain::RDV_MAIRIE : Domain::RDV_SOLIDARITES
+
+    GoodJob::Engine.routes.url_helpers.job_url(id: job_id, host: good_job_domain.host_name)
   end
 end

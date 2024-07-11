@@ -1,12 +1,3 @@
-# monkey patch the default sentry_context method so we can selectively disable arguments logging
-# cf https://github.com/getsentry/sentry-ruby/blob/master/sentry-rails/lib/sentry/rails/active_job.rb#L67-L76
-class Sentry::Rails::ActiveJobExtensions::SentryReporter
-  def self.sentry_context(job)
-    { job_id: job.job_id, queue_name: job.queue_name }
-      .merge(job.class.log_arguments ? { arguments: job.arguments } : {})
-  end
-end
-
 # this logger sends warnings to Sentry on ActiveJob retries
 # note: sentry-rails sends final failures as exceptions natively
 class ActiveJobRetrySentryLogSubscriber < ActiveSupport::LogSubscriber

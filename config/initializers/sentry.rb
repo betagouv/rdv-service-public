@@ -33,3 +33,15 @@ Sentry.init do |config|
   # Il ne nous est pas utile de les voir dans Sentry puisqu'elles ont un rôle de contrôle de flux.
   config.excluded_exceptions += ["GoodJob::ActiveJobExtensions::Concurrency::ConcurrencyExceededError"]
 end
+
+# monkey patch the default sentry_context method so we can selectively disable arguments logging
+# cf https://github.com/getsentry/sentry-ruby/blob/master/sentry-rails/lib/sentry/rails/active_job.rb#L67-L76
+class Sentry::Rails::ActiveJobExtensions::SentryReporter
+  def self.sentry_context(job)
+    {
+      job_id: job.job_id,
+      queue_name: job.queue_name,
+      job_link: job.job_link,
+    }.merge(job.class.log_arguments ? { arguments: job.arguments } : {})
+  end
+end

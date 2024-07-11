@@ -1,6 +1,4 @@
-class OutgoingWebhookError < StandardError
-  def sentry_fingerprint_with_message? = true
-end
+class OutgoingWebhookError < StandardError; end
 
 class WebhookJob < ApplicationJob
   TIMEOUT = 10
@@ -28,6 +26,9 @@ class WebhookJob < ApplicationJob
     )
 
     request.on_failure do |response|
+      # Cela permet d'identifier singulièrement l'erreur selon l'URL et le code HTTP de la réponse
+      Sentry.get_current_scope.set_fingerprint(["OutgoingWebhookError", webhook_endpoint.target_url, response.code.to_s])
+
       if response.timed_out?
         raise OutgoingWebhookError, "HTTP Timeout, URL: #{webhook_endpoint.target_url}"
       elsif !WebhookJob.false_negative_from_drome?(response.body)
@@ -50,9 +51,10 @@ class WebhookJob < ApplicationJob
   def capture_sentry_warning_for_retry?(_exception)
     # Pour limiter le bruit dans Sentry, on ne veut pas avoir de notification pour chaque retry.
     # On veut seulement :
-    # - un premier avertissement assez rapide s'il y a un problème (4e essai)
-    # - une notification pour le dernier essai, avant que le job passe en "abandonnés"
-    executions == 4 || executions >= 10
+    # - un warning assez rapide s'il y a un problème (4e essai)
+    # - une error pour le dernier essai, avant que le job passe en "abandonnés"
+    # cette error est envoyée par sentry-rails nativement, qui ne passe pas par ce hook
+    executions == 4
   end
 
   # La réponse de la Drôme est en JSON
