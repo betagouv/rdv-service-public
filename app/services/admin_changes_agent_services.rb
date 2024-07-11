@@ -7,7 +7,7 @@ class AdminChangesAgentServices
     @new_services = Service.where(id: new_service_ids)
   end
 
-  validate :at_least_one_service
+  # validate :at_least_one_service
   validate :removed_services_dont_have_plages
 
   private

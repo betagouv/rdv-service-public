@@ -25,7 +25,7 @@
           - if allowed_to_change_services
             span.small.text-muted
               | Vous pouvez désormais attribuer plusieurs services à un agent, via votre interface de Configuration - Admin de territoire.&nbsp;
-              = link_to "Accéder à la configuration des agents", edit_admin_territory_agent_path(territory_id: current_territory.id, agent_id: @agent.id)
+              = link_to "Accéder à la configuration des agents", edit_admin_territory_agent_path(territory_id: current_territory.id, id: @agent.id)
           - else
             span.small.text-muted
               | En tant qu’agent, vous pouvez désormais être rattaché à plusieurs services d’une même organisation. Pour cela, contacter un agent admin du territoire.
