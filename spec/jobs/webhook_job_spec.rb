@@ -48,6 +48,14 @@ RSpec.describe WebhookJob, type: :job do
       expect(enqueued_jobs.first["executions"]).to eq(1)
     end
 
+    it "fingerprints the error by URL and HTTP status" do
+      stub_request(:post, "https://example.com/rdv-s-endpoint").and_return({ status: 500, body: "ERROR" })
+      described_class.perform_later(payload, webhook_endpoint.id)
+
+      4.times { perform_enqueued_jobs } # On ne loggue vers Sentry qu'au 4ème retry
+      expect(sentry_events.last.fingerprint).to eq(["OutgoingWebhookError", "https://example.com/rdv-s-endpoint", "500"])
+    end
+
     # Le WAF du Pas-de-Calais bloque certaines requêtes et
     # renvoie une réponse en HTML avec un statut 200.
     it "detects WAF blockage that returns a 200" do
