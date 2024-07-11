@@ -31,7 +31,7 @@ GIT
       warden (~> 1.2.3)
 
 PATH
-  remote: anonymizer
+  remote: lib/anonymizer
   specs:
     anonymizer (0.1.0)
 

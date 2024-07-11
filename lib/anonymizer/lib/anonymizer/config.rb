@@ -1,8 +1,7 @@
 module Anonymizer
   class Config
     def initialize(yaml_path)
-      @data = YAML.load_file(yaml_path)
-
+      @data = YAML.safe_load(yaml_path)
       raise "Invalid configuration file : should be a hash" unless @data.is_a?(Hash)
 
       @data = @data.with_indifferent_access
@@ -11,6 +10,7 @@ module Anonymizer
     end
 
     def rules = @data[:rules]
+
     def truncated_tables = @data[:truncated_tables]
   end
 end
