@@ -11,9 +11,9 @@ class AgentRole < ApplicationRecord
   ACCESS_LEVELS_WITH_INTERVENANT = [ACCESS_LEVEL_BASIC, ACCESS_LEVEL_ADMIN, ACCESS_LEVEL_INTERVENANT].freeze
 
   enum access_level: {
-    basic: ACCESS_LEVEL_BASIC,
-    admin: ACCESS_LEVEL_ADMIN,
-    intervenant: ACCESS_LEVEL_INTERVENANT,
+    basic: "basic", # Basic Role
+    admin: "admin", # Admin Role
+    intervenant: "intervenant", # Intervenant Role
   }
 
   # Relations
