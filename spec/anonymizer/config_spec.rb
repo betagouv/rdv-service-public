@@ -21,18 +21,14 @@ RSpec.describe Anonymizer::Config do
   end
 
   context "the config YAML is not a hash" do
-    before { allow(YAML).to receive(:load_file).and_return([]) }
-
     it "raises an error" do
-      expect { described_class.new(raw_config) }.to raise_error(RuntimeError, "Invalid configuration file : should be a hash")
+      expect { described_class.new([]) }.to raise_error(AnonymizerConfigError, "top level should be a hash")
     end
   end
 
   context "the config YAML is missing rules" do
-    before { allow(YAML).to receive(:load_file).and_return({ "truncated_tables" => [], "blah" => [] }) }
-
     it "raises an error" do
-      expect { described_class.new(raw_config) }.to raise_error(RuntimeError, "Invalid configuration file : rules should be a hash")
+      expect { described_class.new({ "truncated_tables" => [], "blah" => [] }) }.to raise_error(AnonymizerConfigError, "rules should be a hash")
     end
   end
 end
