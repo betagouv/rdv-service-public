@@ -76,6 +76,16 @@ a[disabled] {
   gap: 0.5em;
 }
 
+.flex-direction-column {
+  flex-direction: column;
+}
+
+.rdv-flex-direction-row-md {
+  @include media-breakpoint-up(md) {
+    flex-direction: row;
+  }
+}
+
 // OTHER
 
 ul.horizontal-border-between-items {
