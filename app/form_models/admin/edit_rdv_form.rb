@@ -10,6 +10,12 @@ class Admin::EditRdvForm
   end
 
   def update(**rdv_attributes)
-    valid? && @rdv.update_and_notify(agent_context.agent, rdv_attributes)
+    @rdv.assign_attributes(rdv_attributes)
+
+    if valid?
+      @rdv.save_and_notify(agent_context.agent)
+    else
+      false
+    end
   end
 end

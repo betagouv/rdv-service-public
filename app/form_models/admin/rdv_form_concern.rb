@@ -16,6 +16,7 @@ module Admin::RdvFormConcern
 
     delegate :errors, to: :rdv
 
+    validate -> { rdv.validate }
     validate :check_duplicates
 
     delegate :ignore_benign_errors, :ignore_benign_errors=, :add_benign_error, :benign_errors, :not_benign_errors, :errors_are_all_benign?, to: :rdv

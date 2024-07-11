@@ -1,7 +1,7 @@
 class Notifiers::RdvUpdated < Notifiers::RdvBase
   def initialize(rdv, author, users = nil, old_agent_ids:)
     super(rdv, author, users)
-    @old_agent_ids = old_agent_ids
+    @old_agent_ids = old_agent_ids || rdv.agent_ids
   end
 
   def participations_to_notify

@@ -62,6 +62,8 @@ module Rdv::Updatable
   end
 
   def rdv_updated?
+    # TODO : How to pass the list of old agents from Admin::EditRdvForm to Updatable ?
+    # TODO : add agents_changed?
     starts_at_changed? || lieu_changed?
   end
 
