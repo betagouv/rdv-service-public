@@ -6,8 +6,8 @@ class Sentry::Rails::ActiveJobExtensions::SentryReporter
   end
 end
 
-class BullError < StandardError; end
-
+# this logger sends warnings to Sentry on ActiveJob retries
+# note: sentry-rails sends final failures as exceptions natively
 class ActiveJobRetrySentryLogSubscriber < ActiveSupport::LogSubscriber
   def enqueue_retry(event)
     job = event.payload[:job]
