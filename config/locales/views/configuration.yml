@@ -110,7 +110,7 @@ fr:
           edit_agents: Modification des équipes de l'agent
       motifs:
         index:
-          title: Motifs du territoire
+          title: Motifs
       motif_fields:
         edit:
           title: Champs des motifs
