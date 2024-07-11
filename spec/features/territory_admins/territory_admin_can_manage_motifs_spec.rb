@@ -12,6 +12,11 @@ RSpec.describe "territory admin can manage motifs", type: :feature do
     let!(:motif_consultation_prenatale) { create(:motif, name: "Consultation prénatale", organisation: org_arques) }
     let!(:motif_suivi_apres_naissance) { create(:motif, name: "Suivi après naissance", organisation: org_bapaume) }
 
+    before do
+      agent.roles.create!(organisation: org_arques, access_level: AgentRole::ACCESS_LEVEL_ADMIN)
+      agent.roles.create!(organisation: org_bapaume, access_level: AgentRole::ACCESS_LEVEL_ADMIN)
+    end
+
     it "provides filtering" do
       visit admin_territory_motifs_path(territory)
       expect(page).to have_content("Consultation prénatale")
@@ -27,11 +32,21 @@ RSpec.describe "territory admin can manage motifs", type: :feature do
       expect(page).to have_content("Aucun résultat")
     end
 
-    it "shows buttons only if motif is in agent's admin orgs" do
-      agent.roles.create!(organisation: org_arques, access_level: AgentRole::ACCESS_LEVEL_ADMIN)
+    it "shows buttons to edit and delete" do
       visit admin_territory_motifs_path(territory)
-      expect(page.body).to include(%(href="/admin/organisations/#{org_arques.id}/motifs))
-      expect(page.body).not_to include(%(href="/admin/organisations/#{org_bapaume.id}/motifs))
+      expect(page.body).to include(%(href="#{edit_admin_organisation_motif_path(org_arques, motif_consultation_prenatale)}"))
+      expect(page.body).to include(%(href="#{edit_admin_organisation_motif_path(org_bapaume, motif_suivi_apres_naissance)}"))
+    end
+
+    context "when motifs exist in other organisations for which I am not admin" do
+      let!(:org_autre) { create(:organisation, name: "Autre orga", territory: territory) }
+      let!(:motif_autre_orga) { create(:motif, name: "Motif autre orga", organisation: org_autre) }
+
+      it "is not shown in the list" do
+        visit admin_territory_motifs_path(territory)
+        expect(page).to have_content("Consultation prénatale")
+        expect(page).not_to have_content("Motif autre orga")
+      end
     end
   end
 
