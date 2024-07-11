@@ -1,8 +1,10 @@
 name: Pull Requests Reminder
 on:
+  push:
   schedule:
     - cron: "0 9 * * *"
   workflow_dispatch:
+
 
 jobs:
   pull-request-reminder:
