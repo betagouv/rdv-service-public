@@ -5,8 +5,7 @@
     h3.text-center.mb-3 Confirmation
     .card
       = render "rdv_wizard_summary", rdv_wizard: @rdv_wizard
-      .card-body
-        .col.text-center
+      .card-body.rdv-text-align-right
         - if @rdv_wizard.rdv.collectif?
           = link_to "Confirmer ma participation", users_rdv_participations_path(@rdv_wizard.rdv), method: :post, class: "btn btn-primary"
         - else

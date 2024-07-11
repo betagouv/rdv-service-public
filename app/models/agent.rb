@@ -1,8 +1,6 @@
 class SoftDeleteError < StandardError; end
 
 class Agent < ApplicationRecord
-  self.ignored_columns = [:remember_created_at]
-
   # Mixins
   has_paper_trail(
     only: %w[email first_name last_name starts_at invitation_sent_at invitation_accepted_at]
@@ -271,6 +269,6 @@ class Agent < ApplicationRecord
   end
 
   def read_only_profile_infos?
-    inclusion_connect_open_id_sub.present?
+    inclusion_connect_open_id_sub.present? || connected_with_agent_connect?
   end
 end

@@ -11,6 +11,7 @@
 @import "jquery-datetimepicker/build/jquery.datetimepicker.min";
 
 @import "vendor/inclusion_connect_button";
+@import "vendor/agent_connect_button";
 
 @import "./components/backgrounds";
 @import "./components/types";
@@ -19,7 +20,6 @@
 @import "./components/forms";
 @import "./components/cards";
 @import "./components/utilities";
-@import "./components/steps";
 @import "./components/autocomplete";
 @import "./components/rdv_status";
 @import "./components/rdv_solidarites_instance_name";

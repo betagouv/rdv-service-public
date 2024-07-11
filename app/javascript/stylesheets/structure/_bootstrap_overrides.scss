@@ -5,6 +5,10 @@
   color: inherit;
 }
 
+a[href] {
+  background-image: none; // pour éviter le soulignement des liens
+}
+
 footer {
   background-color: var(--background-default-grey); // this should go on the body
 

@@ -21,6 +21,7 @@ By default, it renders:
     <title>
       <%= content_for(:title) || 'Dashboard' %> - <%= Rails.application.class.module_parent_name.titlecase %>
     </title>
+    <%= render "common/favicon" %>
     <%= javascript_include_tag 'administrate', 'data-turbolinks-track': 'reload' %>
     <%= stylesheet_link_tag 'administrate', media: "all", 'data-turbolinks-track': 'reload' %>
     <%= csrf_meta_tags %>
@@ -42,6 +43,5 @@ By default, it renders:
     <div style="display: none; width: 0; height: 0; overflow: hidden; position: absolute">
       <%= render "icons" %>
     </div>
-    <%= render "javascript" %>
   </body>
 </html>

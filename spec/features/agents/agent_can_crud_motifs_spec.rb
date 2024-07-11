@@ -68,8 +68,7 @@ RSpec.describe "Agent can CRUD motifs" do
       click_on "Éditer"
       find("#tab_resa_en_ligne").click
       check "Autoriser ces rendez-vous seulement aux usagers bénéficiant d'un suivi par un référent"
-      expect(find("#motif_for_secretariat")).to be_disabled
-      expect(find("#motif_for_secretariat")).not_to be_checked
+      expect(find("#motif_for_secretariat", visible: false)).not_to be_checked
       click_on "Enregistrer" and motif.reload
       expect(motif.for_secretariat).to be_falsey
       expect(motif.follow_up).to be_truthy
@@ -80,20 +79,18 @@ RSpec.describe "Agent can CRUD motifs" do
       visit edit_admin_organisation_motif_path(organisation_id: organisation.id, id: motif.id)
       find("#tab_resa_en_ligne").click
 
-      # On ouvre àa la résa en ligne, la case est cochée
+      # On ouvre à la résa en ligne, la case est cochée
       choose "Agents de l’organisation, prescripteurs et usagers"
-      expect(find("#motif_rdvs_editable_by_user")).not_to be_disabled
-      expect(find("#motif_rdvs_editable_by_user")).to be_checked
+      editable_by_user_checkbox = find("#motif_rdvs_editable_by_user")
+      expect(editable_by_user_checkbox).to be_checked
 
-      # On ferme àa la résa en ligne, la case est décochée et désactivée
+      # On ferme à la résa en ligne, la case est décochée
       choose "Agents de l’organisation", id: "motif_bookable_by_agents"
-      expect(find("#motif_rdvs_editable_by_user")).to be_disabled
-      expect(find("#motif_rdvs_editable_by_user")).not_to be_checked
+      expect(editable_by_user_checkbox).not_to be_checked
 
-      # On ouvre àa la résa en ligne, la case est cochée
+      # On ouvre à la résa en ligne, la case est cochée
       choose "Agents de l’organisation, prescripteurs et usagers"
-      expect(find("#motif_rdvs_editable_by_user")).not_to be_disabled
-      expect(find("#motif_rdvs_editable_by_user")).to be_checked
+      expect(editable_by_user_checkbox).to be_checked
 
       expect { click_on "Enregistrer" }.to change { motif.reload.bookable_by }.to("everyone")
 
@@ -103,15 +100,13 @@ RSpec.describe "Agent can CRUD motifs" do
       uncheck "motif_rdvs_editable_by_user"
       expect { click_on "Enregistrer" }.to change { motif.reload.rdvs_editable_by_user }.from(true).to(false)
 
-      # On revient sur le formulaire, la case est bien décochée, elle se re-coche
-      # automatiquement si on choisit une option d'ouverture en ligne
+      # On revient sur le formulaire, la case est bien décochée
+      # et reste décochée lorsque l'on désactive la résa en ligne
       click_on "Éditer"
       find("#tab_resa_en_ligne").click
-      expect(find("#motif_rdvs_editable_by_user")).not_to be_disabled
-      expect(find("#motif_rdvs_editable_by_user")).not_to be_checked
+      expect(editable_by_user_checkbox).not_to be_checked
       choose "Agents de l’organisation", id: "motif_bookable_by_agents"
-      expect(find("#motif_rdvs_editable_by_user")).to be_disabled
-      expect(find("#motif_rdvs_editable_by_user")).not_to be_checked
+      expect(editable_by_user_checkbox).not_to be_checked
       expect { click_on "Enregistrer" }.to change { motif.reload.bookable_by }.from("everyone").to("agents")
     end
   end

@@ -92,14 +92,19 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
 
   context "for an other agent calendar" do
     let!(:other_agent) { create(:agent, first_name: "Jane", last_name: "FAROU", service: service, basic_role_in_organisations: [organisation]) }
-    let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, agent: other_agent, organisation: organisation, title: "Permanence") }
+    let!(:plage_ouverture) do
+      create(:plage_ouverture, :daily, first_day: Time.zone.today.prev_week(:monday), motifs: [motif], lieu: lieu, agent: other_agent, organisation: organisation, title: "Permanence")
+    end
 
-    it "can crud a plage_ouverture" do
+    it "can crud a plage_ouverture", js: true do
       visit admin_organisation_agent_plage_ouvertures_path(organisation, other_agent.id)
 
-      expect_page_title("Plages d'ouverture de Jane FAROU (PMI)")
-      click_link "Permanence"
-
+      expect_page_title("Plages d'ouverture de Jane FAROU (PMI)") # vue liste
+      expect(page).to have_content "Permanence"
+      click_link "Vue calendrier"
+      expect(page).to have_content "Semaine" # necessary to make sure the calendar page has loaded
+      expect(page).to have_content "Permanence"
+      first("a", text: "Permanence").click
       expect_page_title("Permanence")
       click_link "Modifier"
 
@@ -108,7 +113,9 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       click_button("Enregistrer")
 
       expect_page_title("La belle plage")
-      click_link("Supprimer")
+      accept_confirm do
+        click_link("Supprimer")
+      end
 
       expect_page_title("Plages d'ouverture de Jane FAROU (PMI)")
       expect(page).to have_content("Jane FAROU n'a pas encore créé de plage d'ouverture")
@@ -117,8 +124,8 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
 
       expect_page_title("Nouvelle plage d'ouverture")
       fill_in "Nom de la plage d'ouverture", with: "Accueil"
-      select(lieu.full_name, from: "plage_ouverture_lieu_id")
       check "Suivi bonjour"
+      select(lieu.full_name, from: "plage_ouverture_lieu_id")
       click_button "Créer la plage d'ouverture"
 
       expect_page_title("Accueil")
