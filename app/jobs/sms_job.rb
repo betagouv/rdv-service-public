@@ -12,9 +12,9 @@ class SmsJob < ApplicationJob
     SmsSender.perform_with(sender_name, phone_number, content, provider, api_key, receipt_params)
   end
 
-  # Don't log first failures to Sentry, to prevent noise
+  # Don't log first retries to Sentry, to prevent noise
   # on temporary unavailability of an external service.
-  def log_failure_to_sentry?(_exception)
+  def capture_sentry_warning_for_retry?(_exception)
     executions > 2
   end
 end
