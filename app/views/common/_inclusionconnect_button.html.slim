@@ -1,16 +1,9 @@
-- if !ENV["INCLUSIONCONNECT_DISABLED"] || params[:force_inclusionconnect].present?
-  .text-center.mb-3
-    p Inclusion Connect vous permet d'utiliser le même identifiant et mot de passe pour vous connecter à différents services. Simple, sécurisé, efficace !
-    - image_path = image_path("logo-inclusion-connect-bg.svg")
+.mb-3
+  - image_path = image_path("logo-inclusion-connect-bg.svg")
 
-    / Voir ici pourquoi on désactive Turbolinks : https://github.com/betagouv/rdv-service-public/pull/4070
-    a.btn-inclusion-connect href=inclusion_connect_auth_path(login_hint: locals[:login_hint]) data-turbolinks="false" style="background-image: url(#{image_path})"
-      = image_tag("logo-inclusion-connect-one-line.svg", alt: "Se connecter avec Inclusion Connect", height: 14)
+  / Voir ici pourquoi on désactive Turbolinks : https://github.com/betagouv/rdv-service-public/pull/4070
+  a.btn-inclusion-connect href=inclusion_connect_auth_path(login_hint: locals[:login_hint]) data-turbolinks="false" style="background-image: url(#{image_path})"
+    = image_tag("logo-inclusion-connect-one-line.svg", alt: "Se connecter avec Inclusion Connect", height: 14)
 
-  .row.pt-3
-    .col
-      hr
-    .col-auto
-      h2.text-uppercase.text-muted ou
-    .col
-      hr
+  p
+    = dsfr_link_to("Qu’est-ce que InclusionConnect ?", "https://connect.inclusion.beta.gouv.fr/", target: "_blank", rel: "noopener noreferrer", title: "Qu’est-ce que InclusionConnect ? - nouvelle fenêtre")

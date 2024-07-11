@@ -207,7 +207,7 @@ GEM
       view_component (~> 2)
     dumb_delegator (1.0.0)
     erubi (1.12.0)
-    et-orbi (1.2.7)
+    et-orbi (1.2.11)
       tzinfo
     ethon (0.16.0)
       ffi (>= 1.15.0)
@@ -223,12 +223,12 @@ GEM
       net-http
     ffi (1.16.3)
     foreman (0.88.1)
-    fugit (1.10.1)
-      et-orbi (~> 1, >= 1.2.7)
+    fugit (1.11.0)
+      et-orbi (~> 1, >= 1.2.11)
       raabro (~> 1.4)
     globalid (1.2.1)
       activesupport (>= 6.1)
-    good_job (3.26.1)
+    good_job (3.27.4)
       activejob (>= 6.0.0)
       activerecord (>= 6.0.0)
       concurrent-ruby (>= 1.0.2)
@@ -673,7 +673,7 @@ DEPENDENCIES
   factory_bot
   faker
   foreman
-  good_job
+  good_job (= 3.27.4)
   groupdate (~> 6.1)
   httpclient!
   icalendar (~> 2.5)
