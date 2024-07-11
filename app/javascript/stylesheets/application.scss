@@ -10,6 +10,7 @@
 @import "jquery-datetimepicker/build/jquery.datetimepicker.min";
 
 @import "vendor/inclusion_connect_button";
+@import "vendor/agent_connect_button";
 
 @import "./components/backgrounds";
 @import "./components/types";
@@ -25,6 +26,7 @@
 @import "./components/lieux";
 @import "./components/alert";
 @import "./components/select2";
+@import "./components/button_group_before_card";
 
 // Structure
 @import "./structure/general";
@@ -34,4 +36,4 @@
 @import "./structure/authentication";
 @import "./structure/left-menu";
 @import "./structure/misc";
-@import "./structure/bootstrap_overrides"
+@import "./structure/bootstrap_overrides";

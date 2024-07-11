@@ -136,6 +136,18 @@ module RdvsHelper
     "#{rdv.users_count} / #{rdv.max_participants_count}"
   end
 
+  def rdv_mailer_cta_text(rdv)
+    if rdv.cancellable_by_user? && rdv.editable_by_user?
+      "Annuler ou modifier le rendez-vous"
+    elsif rdv.editable_by_user?
+      "Modifier le rendez-vous"
+    elsif rdv.cancellable_by_user?
+      "Annuler le rendez-vous"
+    else
+      "Voir le rendez-vous"
+    end
+  end
+
   private
 
   def rdv_individuel_title_for_agent(rdv)

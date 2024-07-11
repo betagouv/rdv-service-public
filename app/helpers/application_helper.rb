@@ -115,4 +115,12 @@ module ApplicationHelper
   def self_anchor(identifier, &block)
     tag.a(id: identifier, href: "##{identifier}", data: { turbolinks: false }, &block)
   end
+
+  def display_agent_connect_button?
+    (ENV["AGENT_CONNECT_BASE_URL"].present? && !(ENV["AGENT_CONNECT_DISABLED"] || Rails.configuration.x.agent_connect_unreachable_at_boot_time)) || params[:force_agent_connect].present?
+  end
+
+  def display_inclusion_connect_button?
+    !ENV["INCLUSIONCONNECT_DISABLED"] || params[:force_inclusionconnect].present?
+  end
 end

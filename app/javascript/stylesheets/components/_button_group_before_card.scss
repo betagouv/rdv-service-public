@@ -1,0 +1,10 @@
+.rdv-button-group-before-card {
+  display: flex;
+  flex-wrap: wrap-reverse;
+  justify-content: center;
+  gap: 1rem;
+
+  @include media-breakpoint-up(md) {
+    justify-content: space-between;
+  }
+}
