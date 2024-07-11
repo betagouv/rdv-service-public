@@ -1,4 +1,4 @@
-Anonymizer::Core.anonymize_all_data!(schema: ARGV[1] || ARGV[0])
+Anonymizer.anonymize_all_data!(schema: ARGV[1] || ARGV[0])
 
 if ARGV[0] == "rdvsp"
   # Sanity checks
