@@ -5,8 +5,8 @@ Gem::Specification.new do |spec|
   spec.version = Anonymizer::VERSION
   spec.authors = ["RDV Service Public"]
 
-  spec.summary = "Anonymize ActiveRecord data"
-  spec.description = "Anonymize ActiveRecord data"
+  spec.summary = "Erase personal data from Postgres tables to use them for stats"
+  spec.description = "Erase personal data from Postgres tables to use them for stats"
   spec.required_ruby_version = ">= 3.1.0"
 
   spec.metadata["source_code_uri"] = "https://github.com/betagouv/rdv-service-public/"
