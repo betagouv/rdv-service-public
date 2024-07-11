@@ -52,7 +52,7 @@ class WebhookJob < ApplicationJob
     # On veut seulement :
     # - un premier avertissement assez rapide s'il y a un problème (4e essai)
     # - une notification pour le dernier essai, avant que le job passe en "abandonnés"
-    executions == 4 || executions >= 10 || executions == MAX_ATTEMPTS
+    executions == 4 || executions >= 10
   end
 
   # La réponse de la Drôme est en JSON
