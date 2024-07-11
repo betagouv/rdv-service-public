@@ -17,7 +17,7 @@ Sentry.init do |config|
     internal_referer = Domain::ALL.map(&:host_name).any? { referer&.include?(_1) }
     return if exception.is_a?(ActiveRecord::RecordNotFound) && !internal_referer
 
-    if exception.is_a?(OutgoingWebhookError)
+    if exception.respond_to?(:sentry_fingerprint_with_message?) && exception.sentry_fingerprint_with_message?
       # when the stacktrace is present, Sentry uses it exclusively to group issues
       # cf https://docs.sentry.io/concepts/data-management/event-grouping/#grouping-by-stack-trace
       # for webhook errors we want to group by message (which contain codes and URLs)

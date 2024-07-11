@@ -1,4 +1,6 @@
-class FailOnPurposeError < StandardError; end
+class FailOnPurposeError < StandardError
+  def sentry_fingerprint_with_message? = true
+end
 
 class FailOnPurposeJob < ApplicationJob
   # self.log_arguments = false

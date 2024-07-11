@@ -1,4 +1,6 @@
-class OutgoingWebhookError < StandardError; end
+class OutgoingWebhookError < StandardError
+  def sentry_fingerprint_with_message? = true
+end
 
 class WebhookJob < ApplicationJob
   TIMEOUT = 10
@@ -31,7 +33,6 @@ class WebhookJob < ApplicationJob
       elsif !WebhookJob.false_negative_from_drome?(response.body)
         raise OutgoingWebhookError, "HTTP #{response.code}, URL: #{webhook_endpoint.target_url}"
       end
-      # cf config/initializers/sentry.rb where we tweak grouping for these issues
     end
 
     # Le WAF du Pas-de-Calais bloque certaines requêtes et
