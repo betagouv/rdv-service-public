@@ -32,7 +32,7 @@ class Notifiers::RdvUpdated < Notifiers::RdvBase
     elsif agent.in?(@rdv.agents) && agent.in?(old_agents)
       agent_mailer(agent).rdv_updated(starts_at: starts_at, lieu_id: lieu_id).deliver_later
     elsif !agent.in?(@rdv.agents) && agent.in?(old_agents)
-      agent_mailer(agent).rdv_cancelled.deliver_later
+      agent_mailer(agent).rdv_cancelled(starts_at: starts_at).deliver_later
     end
   end
 end

@@ -23,12 +23,13 @@ class Agents::RdvMailer < ApplicationMailer
     mail(subject: subject)
   end
 
-  def rdv_cancelled
+  def rdv_cancelled(starts_at: nil)
+    date = relative_date(starts_at || @rdv.starts_at)
     self.ics_payload = @rdv.payload(:destroy, @agent)
     subject = if @rdv.collectif?
-                t("agents.rdv_mailer.rdv_cancelled.title_participation", domain_name: domain.name, date: relative_date(@rdv.starts_at))
+                t("agents.rdv_mailer.rdv_cancelled.title_participation", domain_name: domain.name, date: date)
               else
-                t("agents.rdv_mailer.rdv_cancelled.title", domain_name: domain.name, date: relative_date(@rdv.starts_at))
+                t("agents.rdv_mailer.rdv_cancelled.title", domain_name: domain.name, date: date)
               end
     mail(subject: subject)
   end

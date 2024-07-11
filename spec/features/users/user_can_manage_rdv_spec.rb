@@ -71,20 +71,19 @@ RSpec.describe "User can manage their rdvs" do
       context "when user change the date" do
         it "notify agents if rdv agent change" do
           original_date = rdv.starts_at
-          p original_date
           # User change the date
           click_link("Déplacer le RDV")
           first(:link, "11:00").click
           expect(page).to have_content("Vous allez modifier votre RDV #{motif.name} - #{motif.service.name} qui a lieu le #{I18n.l(rdv.starts_at, format: :human)}")
           click_link("Confirmer le nouveau créneau")
-          p rdv.reload.starts_at
 
           perform_enqueued_jobs
           deliveries = ActionMailer::Base.deliveries
-
-          expect(deliveries.any? { |mail| mail.to == [agent1.email] && mail.subject == "RDV annulé 16 juil." }).to be true
-          expect(deliveries.any? { |mail| mail.to == [agent2.email] && mail.subject == "Nouveau RDV ajouté sur votre agenda RDV Solidarités pour 16 juil." }).to be true
-          expect(deliveries.any? { |mail| mail.to == [user.email] && mail.subject == "RDV du mardi 16 juillet 2024 à 11h00 modifié" }).to be true
+          expect(deliveries.any? { |mail| mail.to == [agent1.email] && mail.subject == "RDV annulé #{relative_date(original_date)}" }).to be true
+          expect(deliveries.any? do |mail|
+                   mail.to == [agent2.email] && mail.subject == "Nouveau RDV ajouté sur votre agenda RDV Solidarités pour #{relative_date(rdv.reload.starts_at)}"
+                 end).to be true
+          expect(deliveries.any? { |mail| mail.to == [user.email] && mail.subject == "RDV du #{I18n.l(original_date, format: :human)} modifié" }).to be true
         end
       end
     end
