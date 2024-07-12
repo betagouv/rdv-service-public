@@ -9,9 +9,9 @@ class Notifiers::RdvUpdated < Notifiers::RdvBase
   end
 
   def notify_user_by_mail(user)
-    starts_at = @rdv.attribute_before_last_save(:starts_at)
+    old_starts_at = @rdv.attribute_before_last_save(:starts_at)
     lieu_id = @rdv.attribute_before_last_save(:lieu_id)
-    user_mailer(user).rdv_updated(starts_at: starts_at, lieu_id: lieu_id).deliver_later
+    user_mailer(user).rdv_updated(old_starts_at: old_starts_at, lieu_id: lieu_id).deliver_later
   end
 
   def notify_user_by_sms(user)
@@ -23,16 +23,16 @@ class Notifiers::RdvUpdated < Notifiers::RdvBase
   end
 
   def notify_agent(agent)
-    starts_at = @rdv.attribute_before_last_save(:starts_at)
+    old_starts_at = @rdv.attribute_before_last_save(:starts_at)
     lieu_id = @rdv.attribute_before_last_save(:lieu_id)
     old_agents = Agent.where(id: @old_agent_ids)
 
     if agent.in?(@rdv.agents) && !agent.in?(old_agents)
       agent_mailer(agent).rdv_created.deliver_later
     elsif agent.in?(@rdv.agents) && agent.in?(old_agents)
-      agent_mailer(agent).rdv_updated(starts_at: starts_at, lieu_id: lieu_id).deliver_later
+      agent_mailer(agent).rdv_updated(old_starts_at: old_starts_at, lieu_id: lieu_id).deliver_later
     elsif !agent.in?(@rdv.agents) && agent.in?(old_agents)
-      agent_mailer(agent).rdv_cancelled(starts_at: starts_at).deliver_later
+      agent_mailer(agent).rdv_cancelled(old_starts_at: old_starts_at).deliver_later
     end
   end
 end

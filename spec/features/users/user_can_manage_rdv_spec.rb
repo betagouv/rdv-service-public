@@ -76,7 +76,9 @@ RSpec.describe "User can manage their rdvs" do
           first(:link, "11:00").click
           expect(page).to have_content("Vous allez modifier votre RDV #{motif.name} - #{motif.service.name} qui a lieu le #{I18n.l(rdv.starts_at, format: :human)}")
           click_link("Confirmer le nouveau créneau")
+          expect(rdv.reload.starts_at).not_to eq(original_date)
 
+          # Check Notifications
           perform_enqueued_jobs
           deliveries = ActionMailer::Base.deliveries
           expect(deliveries.any? { |mail| mail.to == [agent1.email] && mail.subject == "RDV annulé #{relative_date(original_date)}" }).to be true
