@@ -5,7 +5,6 @@ module SlotBuilder
       datetime_range = Lapin::Range.ensure_date_range_with_time(date_range)
       plage_ouvertures = plage_ouvertures_for(motif, lieu, datetime_range, agents)
       free_times_po = free_times_from(plage_ouvertures, datetime_range) # dépendances implicite à Rdv, Absence et OffDays
-
       slots_for(free_times_po, motif)
     end
 
@@ -24,7 +23,6 @@ module SlotBuilder
       plage_ouvertures.each do |plage_ouverture|
         free_times[plage_ouverture] = calculate_free_times(plage_ouverture, datetime_range)
       end
-
       free_times.select { |_, v| v&.any? }
     end
 
