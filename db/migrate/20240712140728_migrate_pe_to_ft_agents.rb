@@ -10,8 +10,10 @@ class MigratePeToFtAgents < ActiveRecord::Migration[7.0]
     duplicated_agents = Agent.where("split_part(email, '@', 1) IN (?)", common_email_prefixes)
     # Step 5: Exclude duplicated agents from the email update
     duplicated_agent_ids = duplicated_agents.pluck(:id)
+    # Step 6: Destroy currently invited agent with pole-emploi.fr email, 10 agents at 12/07/2024
+    Agent.where("email LIKE ?", "%@pole-emploi.fr").where(first_name: nil).destroy_all
 
-    # Step 6: Update the remaining agents' emails with callbacks (important for Webhooks) but without Devise reconfirmation
+    # Last step: Update the remaining agents' emails with callbacks (important for Webhooks) but without Devise reconfirmation
     # We will send a separate email to these agents to inform them of the change
     Agent.transaction do
       Agent.where("email LIKE ?", "%@pole-emploi.fr")
