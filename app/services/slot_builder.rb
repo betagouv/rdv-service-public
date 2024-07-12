@@ -5,6 +5,7 @@ module SlotBuilder
       datetime_range = Lapin::Range.ensure_date_range_with_time(date_range)
       plage_ouvertures = plage_ouvertures_for(motif, lieu, datetime_range, agents)
       free_times_po = free_times_from(plage_ouvertures, datetime_range) # dépendances implicite à Rdv, Absence et OffDays
+
       slots_for(free_times_po, motif)
     end
 
@@ -23,16 +24,18 @@ module SlotBuilder
       plage_ouvertures.each do |plage_ouverture|
         free_times[plage_ouverture] = calculate_free_times(plage_ouverture, datetime_range)
       end
+
       free_times.select { |_, v| v&.any? }
     end
 
     def calculate_free_times(plage_ouverture, datetime_range)
       ranges = ranges_for(plage_ouverture, datetime_range)
+      should_debug = datetime_range.first >= Date.new(2024, 8, 21) && plage_ouverture.id == 1008
       return [] if ranges.empty?
 
       ranges.flat_map do |range|
         busy_times = BusyTime.busy_times_for(range, plage_ouverture)
-        split_range_recursively(range, busy_times)
+        split_range_recursively(range, busy_times, debug: (range == ranges.second && should_debug))
       end
     end
 
@@ -46,14 +49,33 @@ module SlotBuilder
       end.compact
     end
 
-    def split_range_recursively(range, busy_times)
+    # On enlève les intervalles occupés d'un morceau de plage d'ouverture
+    def split_range_recursively(range, busy_times, debug: false)
       return [] if range.nil?
       return [range] if busy_times.empty?
 
+      # raise "coucou" if debug
+      # require "byebug"
+      # byebug if debug
+
       busy_time = busy_times.first
+      #
+      # if debug
+      #   puts "BUSY TIMES : #{busy_times}"
+      #   puts "FIRST_RANGE: #{first_range(range, busy_time)}"
+      #
+      #   puts "RANGE: #{range}"
+      #   puts "BUSY TIME: #{busy_time}"
+      #   puts "REMAINING_RANGE: #{remaining_range(range, busy_time)}"
+      #
+      #   if range.first.to_date == Date.new(2024, 8, 27)
+      #     require "byebug"
+      #     byebug
+      #   end
+      # end
 
       first_range(range, busy_time) \
-        + split_range_recursively(remaining_range(range, busy_time), busy_times - [busy_time])
+        + split_range_recursively(remaining_range(range, busy_time), busy_times - [busy_time], debug: debug)
     end
 
     def first_range(range, busy_time)
@@ -66,6 +88,8 @@ module SlotBuilder
       return busy_time.ends_at..range.end if range.cover?(busy_time.range)
       return range.begin..busy_time.starts_at if range.cover?(busy_time.starts_at)
       return busy_time.ends_at..range.end if range.cover?(busy_time.ends_at)
+
+      return range if (busy_time.ends_at < range.begin) || (busy_time.starts_at > range.end) # Dans ce dernier cas il n'y a pas d'overlap du tout entre le range et le busy_time
     end
 
     def slots_for(plage_ouverture_free_times, motif)
