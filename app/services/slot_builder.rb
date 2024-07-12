@@ -30,12 +30,11 @@ module SlotBuilder
 
     def calculate_free_times(plage_ouverture, datetime_range)
       ranges = ranges_for(plage_ouverture, datetime_range)
-      should_debug = datetime_range.first >= Date.new(2024, 8, 21) && plage_ouverture.id == 1008
       return [] if ranges.empty?
 
       ranges.flat_map do |range|
         busy_times = BusyTime.busy_times_for(range, plage_ouverture)
-        split_range_recursively(range, busy_times, debug: (range == ranges.second && should_debug))
+        split_range_recursively(range, busy_times)
       end
     end
 
@@ -50,32 +49,14 @@ module SlotBuilder
     end
 
     # On enlève les intervalles occupés d'un morceau de plage d'ouverture
-    def split_range_recursively(range, busy_times, debug: false)
+    def split_range_recursively(range, busy_times)
       return [] if range.nil?
       return [range] if busy_times.empty?
 
-      # raise "coucou" if debug
-      # require "byebug"
-      # byebug if debug
-
       busy_time = busy_times.first
-      #
-      # if debug
-      #   puts "BUSY TIMES : #{busy_times}"
-      #   puts "FIRST_RANGE: #{first_range(range, busy_time)}"
-      #
-      #   puts "RANGE: #{range}"
-      #   puts "BUSY TIME: #{busy_time}"
-      #   puts "REMAINING_RANGE: #{remaining_range(range, busy_time)}"
-      #
-      #   if range.first.to_date == Date.new(2024, 8, 27)
-      #     require "byebug"
-      #     byebug
-      #   end
-      # end
 
       first_range(range, busy_time) \
-        + split_range_recursively(remaining_range(range, busy_time), busy_times - [busy_time], debug: debug)
+        + split_range_recursively(remaining_range(range, busy_time), busy_times - [busy_time])
     end
 
     def first_range(range, busy_time)
