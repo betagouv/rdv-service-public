@@ -66,6 +66,14 @@ RSpec.describe Motif, type: :model do
       let(:agent) { create(:agent, :secretaire, basic_role_in_organisations: [organisation]) }
 
       it { is_expected.to contain_exactly(motif3) }
+
+      context "when the agent is also part of another service" do
+        before do
+          agent.services << service
+        end
+
+        it { is_expected.to contain_exactly(motif, motif2, motif3) }
+      end
     end
 
     describe "for other service" do
