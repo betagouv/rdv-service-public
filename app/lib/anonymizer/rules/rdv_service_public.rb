@@ -1,5 +1,5 @@
 class Anonymizer::Rules::RdvServicePublic
-  TRUNCATED_TABLES = %w[versions good_jobs good_job_settings good_job_batches good_job_processes].freeze
+  TRUNCATED_TABLES = %w[versions good_jobs good_job_executions good_job_settings good_job_batches good_job_processes].freeze
 
   RULES = {
     users: {
