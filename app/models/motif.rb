@@ -93,11 +93,13 @@ class Motif < ApplicationRecord
   scope :available_motifs_for_organisation_and_agent, lambda { |organisation, agent|
     available_motifs = if agent.admin_in_organisation?(organisation)
                          all
-                       elsif agent.secretaire?
-                         for_secretariat
                        else
                          where(service: agent.services)
                        end
+
+    if agent.secretaire?
+      available_motifs = available_motifs.or(for_secretariat)
+    end
     available_motifs.where(organisation_id: organisation.id).active.ordered_by_name
   }
   # This should match the implementation of #name_with_location_type

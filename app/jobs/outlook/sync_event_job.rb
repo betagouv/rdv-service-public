@@ -73,5 +73,14 @@ module Outlook
     def api_client
       @api_client ||= Outlook::ApiClient.new(@agent)
     end
+
+    def log_failure_to_sentry?(exception)
+      # Cette erreur se produit parfois à la première exécution, puis le job passe au retry.
+      if exception.is_a?(Outlook::ApiClient::RefreshTokenError)
+        executions > 4
+      else
+        super
+      end
+    end
   end
 end

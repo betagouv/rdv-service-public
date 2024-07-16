@@ -1,7 +1,7 @@
 div
   p Bonjour,
   p
-    | Un de vos RDV qui devait avoir lieu le #{relative_date @starts_at} à #{l(@starts_at, format: "%H:%M")}
+    | Un de vos RDV qui devait avoir lieu le #{relative_date @old_starts_at} à #{l(@old_starts_at, format: "%H:%M")}
     = " à l'adresse #{@address_name}" if @address_name
     |  a été modifié par #{@author.full_name}.
   p Veuillez prendre note des nouvelles informations.
