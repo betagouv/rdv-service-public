@@ -27,12 +27,12 @@
           = options_for_select(options_for_select([["-", ""]] + options, params[:location_type]))
       .form-group.col-md-4
         label for="collectif"
-          | Individuel / Collectif
+          | Nombre de participants
         select.select2-input[id="collectif" name="collectif" style="width: 100%"]
           = options_for_select([["-", ""], ["Collectif", "true"], ["Individuel", "false"]], params[:collectif])
       .form-group.col-md-4
         label for="en_ligne"
-          | En ligne
+          | Réservation en ligne
         select.select2-input[id="en_ligne" name="en_ligne" style="width: 100%"]
           = options_for_select([["-", ""], ["Oui", "true"], ["Non", "false"]], params[:en_ligne])
     .form-row.justify-content-end.flex-gap-1em
@@ -66,6 +66,7 @@
               th[scope="col"]
                 | Action
         tbody
+          - TODO policy
           - admin_orgs = current_agent.admin_orgs.to_set
           - @motifs.each do |motif|
             tr
