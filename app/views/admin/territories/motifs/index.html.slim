@@ -15,7 +15,7 @@
           = options_for_select(@organisations.pluck(:name, :id), params[:organisation_ids])
       .form-group.col-md-4
         label for="organisation_ids"
-          | Services(s)
+          | Service(s)
         select.select2-input[id="service_ids" name="service_ids[]" multiple data-select-options={ placeholder: "-" }.to_json style="width: 100%"]
           = options_for_select(@services.pluck(:name, :id), params[:service_ids])
     .form-row
