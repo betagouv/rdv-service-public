@@ -3,6 +3,7 @@ module Outlook
     class ApiError < StandardError; end
     class NotFoundError < ApiError; end
     class AlreadyExistsError < ApiError; end
+    class RefreshTokenError < ApiError; end
 
     def initialize(agent)
       @agent = agent
@@ -89,7 +90,7 @@ module Outlook
       refresh_token_response = JSON.parse(refresh_token_query.response_body)
 
       if refresh_token_response["error"].present?
-        raise "Error refreshing Microsoft Graph Token"
+        raise RefreshTokenError, refresh_token_response["error"]
       elsif refresh_token_response["access_token"].present?
         @agent.update!(microsoft_graph_token: refresh_token_response["access_token"])
       end
