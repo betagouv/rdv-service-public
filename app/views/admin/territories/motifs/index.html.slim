@@ -66,9 +66,8 @@
               th[scope="col"]
                 | Action
         tbody
-          - TODO policy
-          - admin_orgs = current_agent.admin_orgs.to_set
           - @motifs.each do |motif|
+            - display_actions = Agent::MotifPolicy.agent_can_manage_motif?(motif, current_agent)
             tr
               td
                 span.badge.badge-pill style="background: #{motif.color};" &nbsp;
@@ -78,7 +77,7 @@
               td
                 = motif.service.short_name
               td
-                - if admin_orgs.include?(motif.organisation)
+                - if display_actions
                   = link_to(motif.organisation.name, admin_organisation_motifs_path(organisation_id: motif.organisation.id))
                 - else
                   = motif.organisation.name
@@ -87,7 +86,7 @@
               td
                 = "#{motif.default_duration_in_min}"
               td
-                - if admin_orgs.include?(motif.organisation)
+                - if display_actions
                   .d-flex.flex-gap-1em
                     div= link_to edit_admin_organisation_motif_path(motif.organisation, motif), title: "Modifier", target: :_blank do
                       i.fa.fa-edit
