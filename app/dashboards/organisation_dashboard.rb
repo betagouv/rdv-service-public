@@ -39,6 +39,7 @@ class OrganisationDashboard < Administrate::BaseDashboard
   SHOW_PAGE_ATTRIBUTES = %i[
     id
     name
+    territory
     horaires
     phone_number
     agent_roles

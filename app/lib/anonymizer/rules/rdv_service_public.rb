@@ -82,6 +82,7 @@ class Anonymizer::Rules::RdvServicePublic
         absence_notification_level
         outlook_disconnect_in_progress
         account_deletion_warning_sent_at
+        connected_with_agent_connect
         deleted_at
         created_at updated_at
       ],
