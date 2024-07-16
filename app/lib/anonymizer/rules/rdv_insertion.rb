@@ -37,6 +37,8 @@ class Anonymizer::Rules::RdvInsertion
         template_rdv_title_by_phone_override
         template_user_designation_override
         template_rdv_purpose_override
+        email_to_notify_rdv_changes
+        email_to_notify_no_available_slots
         phone_number
       ],
       non_anonymized_column_names: %w[
