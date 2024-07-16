@@ -79,7 +79,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
     before { travel_to(Time.zone.parse("2022-08-24 09:00:00")) }
 
     it "renders the headers" do
-      mail = described_class.with(rdv: rdv, user: user, token: token).rdv_updated(starts_at: previous_starting_time, lieu_id: nil)
+      mail = described_class.with(rdv: rdv, user: user, token: token).rdv_updated(old_starts_at: previous_starting_time, lieu_id: nil)
       expect(mail[:from].to_s).to eq(%("RDV Solidarités" <support@rdv-solidarites.fr>))
       expect(mail.to).to eq([user.email])
       expect(mail.reply_to).to eq(["rdv+#{rdv.uuid}@reply.rdv-solidarites.fr"])
@@ -87,7 +87,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
 
     it "indicates the previous and current values" do
       mail = described_class.with(rdv: rdv, user: user, token: token)
-        .rdv_updated(starts_at: previous_starting_time, lieu_id: previous_lieu.id)
+        .rdv_updated(old_starts_at: previous_starting_time, lieu_id: previous_lieu.id)
 
       previous_details = "Votre RDV qui devait avoir lieu le 26 août à 09:00 à l&#39;adresse MJC Aix (rue du Previous, Paris, 75016) a été modifié"
       expect(mail.html_part.body.to_s).to include(previous_details)
@@ -99,7 +99,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
 
     it "works when no lieu_id is passed" do
       mail = described_class.with(rdv: rdv, user: user, token: token)
-        .rdv_updated(starts_at: previous_starting_time, lieu_id: nil)
+        .rdv_updated(old_starts_at: previous_starting_time, lieu_id: nil)
 
       previous_details = "Votre RDV qui devait avoir lieu le 26 août à 09:00 a été modifié"
       expect(mail.html_part.body.to_s).to include(previous_details)

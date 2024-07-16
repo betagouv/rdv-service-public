@@ -11,6 +11,18 @@ class Agents::SessionsController < Devise::SessionsController
     end
   end
 
+  def destroy
+    if session[:agent_connect_id_token]
+      sign_out(:agent) && set_flash_message!(:notice, :signed_out)
+
+      agent_connect_client = AgentConnectOpenIdClient::Logout.new(session.delete(:agent_connect_id_token))
+
+      redirect_to agent_connect_client.agent_connect_logout_url(root_url), allow_other_host: true
+    else
+      super
+    end
+  end
+
   private
 
   def exclude_signed_in_users

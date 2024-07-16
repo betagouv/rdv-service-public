@@ -16,7 +16,7 @@ module Admin::RdvFormConcern
 
     delegate :errors, to: :rdv
 
-    validate :validate_rdv
+    validate -> { rdv.validate }
     validate :check_duplicates
 
     delegate :ignore_benign_errors, :ignore_benign_errors=, :add_benign_error, :benign_errors, :not_benign_errors, :errors_are_all_benign?, to: :rdv
@@ -51,10 +51,6 @@ module Admin::RdvFormConcern
   end
 
   private
-
-  def validate_rdv
-    rdv.validate
-  end
 
   def warn_overlapping_plage_ouverture
     return if ignore_benign_errors
