@@ -254,16 +254,12 @@ RSpec.describe "agents can prescribe rdvs" do
       end
 
       context "when sectorization is enabled on the street level and on city level on 2 differents sectors" do
-        let!(:sector2) { create(:sector, territory: territory) }
-        let!(:sector_attribution2) { create(:sector_attribution, sector: sector2, organisation: org_insertion) }
-        let!(:zone2) do
-          create(
-            :zone,
-            sector: sector2,
-            level: "city",
-            city_name: "Paris",
-            city_code: "75119"
-          )
+        before do
+          # on crée un zone de niveau "city" liée au à l'orga org_insertion
+          # afin de vérifier que les motifs de cette orga sont bien affichés
+          sector_of_city_zone = create(:sector, territory: territory)
+          create(:sector_attribution, sector: sector_of_city_zone, organisation: org_insertion)
+          create(:zone, sector: sector_of_city_zone, level: "city", city_name: "Paris", city_code: "75119")
         end
 
         it "show both services and motifs" do
