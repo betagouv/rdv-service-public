@@ -208,7 +208,7 @@ motifs_attributes = 1000.times.map do |i|
     name: "motif_#{i}",
     color: "#000000",
     organisation_id: org_arques.id,
-    service_id: service_secretariat.id,
+    service_id: service_pmi.id,
     bookable_by: :everyone,
     location_type: :public_office,
   }
