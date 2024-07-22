@@ -60,7 +60,6 @@ class Organisation < ApplicationRecord
 
     where(id: attributions.pluck(:organisation_id))
   }
-  scope :ordered_by_name, -> { case_insensitive_order_by(:name) }
   scope :contactable, lambda {
     where.not(phone_number: ["", nil])
       .or(where.not(website: ["", nil]))

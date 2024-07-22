@@ -16,7 +16,6 @@ class Sector < ApplicationRecord
   validate :coherent_territory
 
   # Scopes
-  scope :ordered_by_name, -> { case_insensitive_order_by(:name) }
   scope :attributed_to_organisation, lambda { |organisation|
     joins(:attributions)
       .where(sector_attributions: { organisation_id: organisation.id, level: SectorAttribution::LEVEL_ORGANISATION })

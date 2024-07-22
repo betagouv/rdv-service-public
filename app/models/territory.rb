@@ -55,7 +55,6 @@ class Territory < ApplicationRecord
   scope :with_upcoming_rdvs, lambda {
     where(id: Organisation.with_upcoming_rdvs.distinct.select(:territory_id))
   }
-  scope :ordered_by_name, -> { case_insensitive_order_by(:name) }
 
   ## -
 

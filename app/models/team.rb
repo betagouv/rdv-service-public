@@ -32,9 +32,6 @@ class Team < ApplicationRecord
   validates :name, presence: true, uniqueness: { scope: :territory }
   validate :agent_from_same_territory, if: -> { agents.any? }
 
-  # Scopes
-  scope :ordered_by_name, -> { case_insensitive_order_by(:name) }
-
   ## -
 
   def to_s

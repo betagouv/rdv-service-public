@@ -81,7 +81,6 @@ class Motif < ApplicationRecord
   scope :not_bookable_by_everyone_or_not_bookable_by_invited_users, -> { where.not(bookable_by: %i[everyone agents_and_prescripteurs_and_invited_users]) }
   scope :by_phone, -> { Motif.phone } # default scope created by enum
   scope :for_secretariat, -> { where(for_secretariat: true) }
-  scope :ordered_by_name, -> { case_insensitive_order_by(:name) }
   scope :available_for_booking, lambda {
     where_id_in_subqueries(
       [
@@ -145,7 +144,7 @@ class Motif < ApplicationRecord
       .includes(:services)
       .complete
       .active
-      .order_by_last_name
+      .ordered_by_last_name
   end
 
   def visible_and_notified?

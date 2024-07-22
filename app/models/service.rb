@@ -22,7 +22,7 @@ class Service < ApplicationRecord
   validates :name, :short_name, presence: true, uniqueness: { case_sensitive: false }
 
   # Scopes
-  default_scope { case_insensitive_order_by(:name) }
+  default_scope { ordered_by_name }
 
   ## -
 

@@ -27,7 +27,7 @@ class Admin::UsersController < AgentAuthController
     @users = @users.none if agent_id.blank? && search_params.blank?
     @users = @users.merge(Agent.find(agent_id).users) if agent_id.present?
     @users = @users.search_by_text(search_params) if search_params.present?
-    @users = @users.order_by_last_name.page(page_number)
+    @users = @users.ordered_by_last_name.page(page_number)
   end
 
   def search
