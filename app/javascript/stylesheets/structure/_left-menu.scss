@@ -9,7 +9,9 @@
 
 .content-page {
   overflow: hidden;
-  min-height: calc(100vh - 73px); // 73px correspond à la taille du header, arrondie au supérieur
+  min-height: calc(
+    100vh - 73px
+  ); // 73px correspond à la taille du header, arrondie au supérieur
   padding-bottom: 73px; //idem
 
   @media (max-height: 800px) {
@@ -60,14 +62,14 @@
   }
 
   .menu-arrow {
-    transition: transform .4s
+    transition: transform 0.4s;
   }
 
-  [aria-expanded=true] .menu-arrow {
+  [aria-expanded="true"] .menu-arrow {
     transform: rotate(-180deg);
   }
 
-  .badge{
+  .badge {
     margin-top: 4px;
   }
 
@@ -76,7 +78,7 @@
   }
 
   .side-nav-title {
-    letter-spacing: .05em;
+    letter-spacing: 0.05em;
     pointer-events: none;
     cursor: default;
     text-transform: uppercase;
@@ -119,7 +121,8 @@
   }
 
   // the order of these next 2 rules is important
-  #menu-agent.collapsing, #menu-agent.show {
+  #menu-agent.collapsing,
+  #menu-agent.show {
     display: block;
   }
   #menu-agent {
