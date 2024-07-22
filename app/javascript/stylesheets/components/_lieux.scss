@@ -1,31 +1,34 @@
 @import "~bootstrap/scss/bootstrap";
 
-.lieux-search-results{
-  h1, h2{
-    color: $blue
+.lieux-search-results {
+  h1,
+  h2 {
+    color: $blue;
   }
   h1 {
     font-size: 1.75rem;
   }
-  h2{
+  h2 {
     font-size: 1.5rem;
   }
-  h3{
+  h3 {
     font-size: 1.125rem;
   }
-  p, h2{
+  p,
+  h2 {
     @extend .font-weight-bold;
   }
-  .card{
+  .card {
     @extend .mb-3;
   }
   h2 + h3 {
     @extend .mb-2;
   }
-  .result-info, .result-cta{
+  .result-info,
+  .result-cta {
     @extend .col-md;
   }
-  .result-cta{
+  .result-cta {
     @extend .align-self-center;
     @extend .pt-3;
     @extend .pt-md-0;

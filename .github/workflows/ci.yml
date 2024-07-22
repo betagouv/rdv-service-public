@@ -15,7 +15,7 @@ jobs:
           ruby-version: .ruby-version
           bundler-cache: true
       - run: bundle exec rubocop --parallel
-  slim-lint:
+  lint_slim:
     name: Slim Linter
     runs-on: ubuntu-latest
     steps:
@@ -26,6 +26,23 @@ jobs:
           ruby-version: .ruby-version
           bundler-cache: true
       - run: bundle exec slim-lint app/views/
+  lint_prettier:
+    name: Lint SCSS with Prettier
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: yarn
+      - name: Cache js dependencies
+        uses: actions/cache@v4
+        with:
+          key: node_modules-${{ hashFiles('yarn.lock') }}
+          path: node_modules
+      - run: yarn install
+      - run: yarn run prettier --check .
   brakeman:
     name: Security Checker
     runs-on: ubuntu-latest
