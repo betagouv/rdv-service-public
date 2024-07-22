@@ -5,7 +5,8 @@
 .algolia-autocomplete {
   width: 100%;
 }
-.algolia-autocomplete .aa-input, .algolia-autocomplete .aa-hint {
+.algolia-autocomplete .aa-input,
+.algolia-autocomplete .aa-hint {
   width: 100%;
 }
 .algolia-autocomplete .aa-hint {
@@ -24,7 +25,7 @@
   margin: 1px 0;
 }
 .algolia-autocomplete .aa-dropdown-menu .aa-suggestion.aa-cursor {
-  background-color: #B2D7FF;
+  background-color: #b2d7ff;
 }
 .algolia-autocomplete .aa-dropdown-menu .aa-suggestion em {
   font-weight: bold;

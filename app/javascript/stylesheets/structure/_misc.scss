@@ -22,7 +22,6 @@ h2 {
   }
 }
 
-
 a {
   transition: all 0.3s;
   display: inline-block;
@@ -35,7 +34,6 @@ p {
 section header {
   margin-bottom: 70px;
 }
-
 
 /* General Media Query ---------------------------------- */
 @media (max-width: 991px) {
@@ -56,10 +54,10 @@ section header {
   }
 
   .content {
-    .col-lg-4{
+    .col-lg-4 {
       order: 1;
     }
-    .col-lg-8{
+    .col-lg-8 {
       order: 2;
     }
   }
@@ -85,7 +83,8 @@ nav.navbar {
   a.nav-link {
     color: #333;
     font-size: 1.1rem;
-    &:hover, &.active {
+    &:hover,
+    &.active {
       color: $primary;
     }
   }
@@ -126,7 +125,6 @@ nav.navbar {
   }
 }
 
-
 /*
 * ==========================================================
 *     HERO SECTION
@@ -147,7 +145,6 @@ section {
     font-size: 4em;
   }
 }
-
 
 /* =========================================
    THEMING OF BOOTSTRAP COMPONENTS

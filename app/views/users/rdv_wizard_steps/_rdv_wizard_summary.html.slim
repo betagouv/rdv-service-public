@@ -8,15 +8,21 @@ ul.list-group.list-group-flush
       - unless rdv_wizard.invitation?
         .col-auto
           = link_to "modifier", path_to_motif_selection(rdv_wizard.params_to_selections)
-  - if rdv_wizard.motif.phone?
+
+  - case rdv_wizard.motif.location_type
+  - when Motif.location_types[:phone]
     li.list-group-item
       i.fa.fa-check.fa-fw.mr-1.text-success
       | RDV téléphonique
-  - elsif rdv_wizard.motif.home?
+  - when Motif.location_types[:home]
     li.list-group-item
       i.fa.fa-check.fa-fw.mr-1.text-success
       | RDV à domicile
-  - else
+  - when Motif.location_types[:visio]
+    li.list-group-item
+      i.fa.fa-check.fa-fw.mr-1.text-success
+      | RDV par visioconférence
+  - when Motif.location_types[:public_office]
     li.list-group-item
       .row
         .col
@@ -26,6 +32,9 @@ ul.list-group.list-group-flush
         - unless rdv_wizard.invitation?
           .col-auto
             = link_to "modifier", path_to_lieu_selection(rdv_wizard.params_to_selections)
+  - else
+    = raise "unrecognized location_type: #{rdv_wizard.motif.location_type.inspect}"
+
   li.list-group-item
     .row
       .col

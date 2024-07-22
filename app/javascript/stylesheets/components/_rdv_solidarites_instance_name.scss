@@ -1,8 +1,13 @@
 .rdv-solidarites-instance-name {
   position: absolute;
   padding: 2px 0;
-  background: #bd2324 linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15));
-  font: 700 13px "Helvetica Neue", Helvetica, Arial, sans-serif;
+  background: #bd2324
+    linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15));
+  font:
+    700 13px "Helvetica Neue",
+    Helvetica,
+    Arial,
+    sans-serif;
   z-index: 9999;
   pointer-events: auto;
   a:not([href]):not([class]) {

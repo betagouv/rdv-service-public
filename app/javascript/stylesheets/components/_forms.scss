@@ -3,8 +3,14 @@ input.form-control[type="range"] {
   min-height: 39px;
 }
 
-.custom-select.is-invalid, .form-control.is-invalid,.custom-select:invalid, .form-control:invalid,
-.custom-select.is-valid, .form-control.is-valid, .custom-select:valid,.form-control:valid {
+.custom-select.is-invalid,
+.form-control.is-invalid,
+.custom-select:invalid,
+.form-control:invalid,
+.custom-select.is-valid,
+.form-control.is-valid,
+.custom-select:valid,
+.form-control:valid {
   &:focus {
     box-shadow: none !important;
   }
@@ -27,7 +33,7 @@ select.form-control-sm {
   display: -ms-flexbox;
   display: flex;
   -ms-flex-wrap: wrap;
-      flex-wrap: wrap;
+  flex-wrap: wrap;
   margin-right: -5px;
   margin-left: -5px;
 }
@@ -51,7 +57,7 @@ select.form-control-sm {
   width: 100% !important;
 }
 
-.ap-icon-pin{
+.ap-icon-pin {
   display: none;
 }
 
@@ -69,20 +75,20 @@ select.form-control-sm {
 
   tr.identical {
     td:not(:first-child) {
-      background-color: #DDFFEB;
-      color: #39C06E;
+      background-color: #ddffeb;
+      color: #39c06e;
     }
 
-    td:nth-child(2) > div{
+    td:nth-child(2) > div {
       position: relative;
 
       &::before {
-        content: '=';
+        content: "=";
         display: block;
         position: absolute;
         right: -27px;
-        background-color: #39C06E;
-        color: #FFF;
+        background-color: #39c06e;
+        color: #fff;
         padding: 0 6px;
         border-radius: 10px;
         font-size: 20px;
@@ -92,20 +98,20 @@ select.form-control-sm {
 
   tr.different {
     td:not(:first-child) {
-      background-color: #FEF9CB;
-      color: #FE8810;
+      background-color: #fef9cb;
+      color: #fe8810;
     }
 
-    td:nth-child(2) > div{
+    td:nth-child(2) > div {
       position: relative;
 
       &::before {
-        content: '≠';
+        content: "≠";
         display: block;
         position: absolute;
         right: -27px;
-        background-color: #FE8810;
-        color: #FFF;
+        background-color: #fe8810;
+        color: #fff;
         padding: 0 6px;
         border-radius: 10px;
         font-size: 20px;
@@ -117,7 +123,7 @@ select.form-control-sm {
 .card-overlay-spinner {
   position: absolute;
   width: 100%;
-  background: rgba(0,0,0,0.3);
+  background: rgba(0, 0, 0, 0.3);
   height: 100%;
   z-index: 100;
   display: flex;
@@ -138,7 +144,7 @@ select.form-control-sm {
       top: 0;
       left: 0;
       content: "";
-      background: rgba(255,255,255,0.5);
+      background: rgba(255, 255, 255, 0.5);
       z-index: 1000;
     }
   }
@@ -153,7 +159,7 @@ button.fa {
 }
 
 input:placeholder-shown {
-   font-style: italic;
+  font-style: italic;
 }
 
 .big-label {
