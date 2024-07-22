@@ -25,7 +25,9 @@ Sentry.init do |config|
   config.excluded_exceptions += ["GoodJob::ActiveJobExtensions::Concurrency::ConcurrencyExceededError"]
 end
 
-# monkey patch the default sentry_context method so we can selectively disable arguments logging
+# monkey patch the default sentry_context method to :
+# - selectively disable arguments logging
+# - add the job_link to the GoodJob dashboard
 # cf https://github.com/getsentry/sentry-ruby/blob/master/sentry-rails/lib/sentry/rails/active_job.rb#L67-L76
 class Sentry::Rails::ActiveJobExtensions::SentryReporter
   def self.sentry_context(job)
