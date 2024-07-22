@@ -241,6 +241,11 @@ RSpec.describe Motif, type: :model do
         motif.update!(location_type: "phone")
       end
 
+      it "is allowed to change motif_category" do
+        motif = create(:motif, motif_category: create(:motif_category))
+        motif.update!(motif_category: create(:motif_category))
+      end
+
       it "is allowed to change :collectif" do
         motif = create(:motif, collectif: false)
         motif.update!(collectif: true)
@@ -255,7 +260,15 @@ RSpec.describe Motif, type: :model do
         expect(motif.reload.location_type).to eq("public_office")
       end
 
-      it "is allowed to change :collectif" do
+      it "is forbidden from changing motif_category" do
+        motif_category = create(:motif_category)
+        motif = create(:motif, motif_category: motif_category).tap { create(:rdv, motif: _1) }
+        motif.update(motif_category: create(:motif_category))
+        expect(motif.errors[:motif_category]).to include("ne peut être modifié car le motif est utilisé pour un RDV")
+        expect(motif.reload.motif_category).to eq(motif_category)
+      end
+
+      it "is forbidden from changing collectif" do
         motif = create(:motif, collectif: false).tap { create(:rdv, motif: _1) }
         motif.update(collectif: true)
         expect(motif.errors[:collectif]).to include("ne peut être modifié car le motif est utilisé pour un RDV")

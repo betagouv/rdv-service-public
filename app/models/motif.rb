@@ -264,6 +264,7 @@ class Motif < ApplicationRecord
     return unless rdvs.exists?
 
     errors.add(:collectif, :cant_change_because_already_used) if attribute_changed?(:collectif)
+    errors.add(:motif_category, :cant_change_because_already_used) if attribute_changed?(:motif_category_id)
     errors.add(:location_type, :cant_change_because_already_used) if attribute_changed?(:location_type)
   end
 
