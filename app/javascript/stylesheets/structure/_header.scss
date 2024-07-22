@@ -87,22 +87,3 @@ header {
     margin-bottom: 1rem;
   }
 }
-
-// DSFR overrides
-
-.header-wrapper {
-  // necessary to preserve the RDV grid
-  // remove this wrapper once we switch to the DSFR grid
-  background-color: $white;
-  box-shadow: 0px 3px 14px 0px $lightgrey;
-}
-
-header.fr-header {
-  box-shadow: none;
-  filter: none;
-}
-
-header.fr-header .fr-header__brand {
-  // this shows on responsive views mostly
-  filter: none;
-}
