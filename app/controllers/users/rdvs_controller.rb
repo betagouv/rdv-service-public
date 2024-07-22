@@ -2,7 +2,7 @@ class Users::RdvsController < UserAuthController
   before_action :verify_user_name_initials, :set_rdv, :set_can_see_rdv_motif, only: %i[show creneaux edit cancel update]
   before_action :set_can_see_rdv_motif, only: %i[show edit index]
   before_action :set_geo_search, only: [:create]
-  before_action :set_lieu, only: %i[creneaux edit update]
+  before_action :set_lieu, only: %i[edit update]
   before_action :build_creneau, :redirect_if_creneau_not_available, only: %i[edit update]
   after_action :allow_iframe
 
