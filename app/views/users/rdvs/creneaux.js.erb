@@ -1,4 +1,4 @@
-<% creneaux_html = render 'creneaux', rdv: @rdv, creneaux: @creneaux, date_range: @date_range %>
+<% creneaux_html = render 'creneaux_card', rdv: @rdv, creneaux: @creneaux, date_range: @date_range %>
 (function(){
   let element = document.querySelector("#creneaux-lieu");
   if(element) {
