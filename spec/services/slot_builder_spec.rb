@@ -84,6 +84,22 @@ RSpec.describe SlotBuilder, type: :service do
                                                       ])
       end
     end
+
+    context "when there is an absence and a rdv overlapping at the beginning of the plage ouverture" do
+      # Une plage d'ouverture de 9h à 11h,
+      # Un rdv de 9h à 10h
+      # Une absence de 9h15 à 9h45 (par exemple une absence récurrente créée après le rdv, où on suppose que l'agent accepte de faire une exception)
+      before do
+        plage_ouverture = create(:plage_ouverture, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), lieu: lieu)
+        create(:rdv, agents: [plage_ouverture.agent], motif: motif, starts_at: Time.zone.local(2021, 5, 3, 9, 0, 0), duration_in_min: 60)
+        create(:absence, agent: plage_ouverture.agent, first_day: first_day, end_day: first_day, start_time: Tod::TimeOfDay.new(9, 15), end_time: Tod::TimeOfDay.new(9, 45))
+      end
+
+      it "returns the slots in the free part of the plage ouverture" do
+        slots = described_class.available_slots(motif, lieu, date_range)
+        expect(slots.map(&:starts_at).map(&:hour)).to eq([10])
+      end
+    end
   end
 
   describe "#plage_ouvertures_for" do
