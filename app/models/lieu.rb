@@ -51,7 +51,7 @@ class Lieu < ApplicationRecord
     where.not(availability: :disabled).where(id: plage_ouverture_lieu_ids + rdv_collectif_lieu_ids)
   }
 
-  scope :ordered_by_name, -> { order(Arel.sql("unaccent(LOWER(lieux.name))")) }
+  scope :ordered_by_name, -> { case_insensitive_order_by(:name) }
 
   ## -
   alias enabled enabled?

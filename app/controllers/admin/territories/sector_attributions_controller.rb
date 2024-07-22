@@ -34,7 +34,7 @@ class Admin::Territories::SectorAttributionsController < Admin::Territories::Bas
     @available_organisations = Organisation
       .where(territory: current_territory)
       .where.not(id: excluded_organisation_ids)
-      .order_by_name
+      .ordered_by_name
     return if @sector_attribution.level_organisation? || @sector_attribution.organisation.blank?
 
     existing_agent_attributions = @sector
