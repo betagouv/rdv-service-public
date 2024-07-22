@@ -15,7 +15,7 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
     if search_term.present?
       agents.search_by_text(search_term)
     else
-      agents.order_by_last_name
+      agents.ordered_by_last_name
     end
   end
 

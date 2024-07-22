@@ -52,7 +52,7 @@ class SplitTerritory
     end
 
     puts "\nLes organisations suivantes restent dans le territoire actuel"
-    @old_territory.organisations.reload.order("name asc").each do |org|
+    @old_territory.organisations.reload.ordered_by_name.each do |org|
       puts "- #{org.name}"
     end
   end

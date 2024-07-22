@@ -60,7 +60,6 @@ class Organisation < ApplicationRecord
 
     where(id: attributions.pluck(:organisation_id))
   }
-  scope :order_by_name, -> { order(Arel.sql("unaccent(LOWER(name))")) }
   scope :contactable, lambda {
     where.not(phone_number: ["", nil])
       .or(where.not(website: ["", nil]))
