@@ -2,9 +2,8 @@
 @import "~bootstrap/scss/variables";
 @import "~bootstrap/scss/mixins";
 @import "./_variables";
+@import "./_variables_dsfr";
 @import "./fontawesome_imports";
-
-@import "./structure/bootstrap_overrides"; // needs to be before bootstrap import
 @import "~bootstrap/scss/bootstrap";
 
 @import "~select2/dist/css/select2";
@@ -39,3 +38,4 @@
 @import "./structure/authentication";
 @import "./structure/left-menu";
 @import "./structure/misc";
+@import "./structure/bootstrap_overrides";
