@@ -1,5 +1,5 @@
-section.bg-primary.p-4
-  .container.mb-4
+section.bg-primary.fr-pt-4w.fr-pb-8w
+  .fr-container
     #search_form
       = simple_form_for :search, url: prendre_rdv_path, method: :get do |f|
         = f.input :departement, as: :hidden, input_html: { name: "departement", value: context.departement }

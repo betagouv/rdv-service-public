@@ -1,6 +1,6 @@
 - content_for :container_content do
-  .row
-    .col-md-8.m-auto
+  .fr-grid-row
+    .fr-col-md-8.m-auto
       - if content_for :title
         h1= yield :title
       = render "layouts/flash"

@@ -1,4 +1,4 @@
-.container
+.fr-container
   .card
     .card-body
       = link_to path_to_service_selection(params), class: "d-block stretched-link" do
@@ -7,7 +7,7 @@
             i.fa.fa-chevron-left
           .col
             h2.pb-1.mb-1 = context.service.name
-.container
+.fr-container
   - if context.unique_motifs_by_name_and_location_type.empty?
     = render "search/nothing_to_show", context: context
   - else
