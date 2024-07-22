@@ -44,6 +44,10 @@ a[disabled] {
   text-align: right;
 }
 
+.rdv-white-space-nowrap {
+  white-space: nowrap;
+}
+
 // GRID
 
 .d-grid {
@@ -103,18 +107,6 @@ ul.horizontal-border-between-items {
   &:last-child {
     border-bottom: none;
   }
-}
-
-.text-bold {
-  font-weight: bold;
-}
-
-.text-underline {
-  text-decoration: underline;
-}
-
-.co-white-space-nowrap {
-  white-space: nowrap;
 }
 
 .hover-bg-light:hover {
