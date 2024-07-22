@@ -106,7 +106,7 @@ class Agent < ApplicationRecord
     where("invitation_sent_at IS NULL OR invitation_accepted_at IS NOT NULL")
   }
   scope :active, -> { where(deleted_at: nil) }
-  scope :order_by_last_name, -> { order(Arel.sql("LOWER(last_name)")) }
+  scope :order_by_last_name, -> { case_insensitive_order_by(:last_name) }
   scope :in_any_of_these_services, lambda { |services|
     joins(:agent_services).where(agent_services: { service_id: services.map(&:id) })
   }

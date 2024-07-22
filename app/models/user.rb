@@ -77,7 +77,7 @@ class User < ApplicationRecord
   # Scopes
   default_scope { where(deleted_at: nil) }
 
-  scope :order_by_last_name, -> { order(Arel.sql("LOWER(last_name)")) }
+  scope :order_by_last_name, -> { case_insensitive_order_by(:last_name) }
   scope :responsible, -> { where(responsible_id: nil) }
   scope :relative, -> { where.not(responsible_id: nil) }
 
