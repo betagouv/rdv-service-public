@@ -1,0 +1,11 @@
+- content_for :title, "Déplacer votre RDV"
+
+.row.mt-3.justify-content-center
+  .fr-container
+    p
+      | Voici les créneaux disponibles pour déplacer votre rendez-vous du
+      b= " #{l(@rdv.starts_at, format: :human)}."
+    #creneaux-lieu
+      = render "creneaux"
+    .pb-4.border-bottom
+      = link_to "Retour au RDV", users_rdv_path(@rdv), class: "btn btn-outline-primary"

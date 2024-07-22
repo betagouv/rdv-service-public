@@ -63,7 +63,7 @@ Rails.application.routes.draw do
       resources :participations, only: %i[index create]
       put "participations/cancel", to: "participations#cancel"
       member do
-        get :creneaux
+        get :deplacer
         put :cancel
       end
     end

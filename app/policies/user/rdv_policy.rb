@@ -39,7 +39,7 @@ class User::RdvPolicy < ApplicationPolicy
     !current_user.only_invited? && current_user.participation_for(record).not_cancelled? && !record.in_the_past?
   end
 
-  alias creneaux? edit?
+  alias deplacer? edit?
   alias update? edit?
 
   class Scope < Scope

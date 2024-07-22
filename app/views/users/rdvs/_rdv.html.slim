@@ -71,7 +71,7 @@ ul.list-group.list-group-flush
 .py-2.d-flex.justify-content-between.align-items-center
   .text-left.mt-2
     - if policy([:user, rdv]).edit?
-       = link_to "Déplacer le RDV", creneaux_users_rdv_path(rdv), class: "btn btn-outline-primary"
+       = link_to "Déplacer le RDV", deplacer_users_rdv_path(rdv), class: "btn btn-outline-primary"
   .text-right.mt-2
     - if policy([:user, rdv]).cancel?
         = link_to "Annuler le RDV", "#", data: { toggle: "modal", target: "#js-cancel-rdv-modal-#{rdv.id}" }, class: "btn btn-outline-danger"
