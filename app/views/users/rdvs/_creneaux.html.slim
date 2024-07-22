@@ -1,5 +1,7 @@
 - if @all_creneaux.blank?
   .bg-info.text-white.p-2.mb-3 Malheureusement, tous les créneaux sont pris. Vous recevrez d'autres propositions si un créneau se libère. La date de votre RDV reste le #{I18n.l(@rdv.starts_at, format: :human)}.
+  .py-4.border-bottom.text-center
+      = link_to "Retour au RDV", users_rdv_path(@rdv), class: "btn btn-primary"
 - else
   .card
     .card-body
@@ -32,3 +34,7 @@
               span.d-md-none.mr-1
                 | sem. prochaine
               i.fa.fa-chevron-right
+
+      .row
+        .col.pt-4
+          = link_to "Retour au RDV", users_rdv_path(@rdv)
