@@ -405,7 +405,7 @@ RSpec.describe Users::RdvsController, type: :controller do
 
       context "for a js request" do
         subject do
-          get :creneaux, params: { id: rdv.id }, format: :js
+          get :creneaux, params: { id: rdv.id }, xhr: true
         end
 
         it { expect(response.body).to include("Malheureusement, tous les créneaux sont pris.") }
