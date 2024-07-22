@@ -163,7 +163,7 @@ RSpec.describe Outlook::ApiClient do
       end
 
       it "raises an error" do
-        expect { described_class.new(agent).create_event!(expected_body) }.to raise_error("Error refreshing Microsoft Graph Token")
+        expect { described_class.new(agent).create_event!(expected_body) }.to raise_error(Outlook::ApiClient::RefreshTokenError, "Unknwon error")
       end
     end
   end

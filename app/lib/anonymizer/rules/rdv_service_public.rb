@@ -1,5 +1,5 @@
 class Anonymizer::Rules::RdvServicePublic
-  TRUNCATED_TABLES = %w[versions good_jobs good_job_settings good_job_batches good_job_processes].freeze
+  TRUNCATED_TABLES = %w[versions good_jobs good_job_executions good_job_settings good_job_batches good_job_processes].freeze
 
   RULES = {
     users: {
@@ -82,6 +82,7 @@ class Anonymizer::Rules::RdvServicePublic
         absence_notification_level
         outlook_disconnect_in_progress
         account_deletion_warning_sent_at
+        connected_with_agent_connect
         deleted_at
         created_at updated_at
       ],
