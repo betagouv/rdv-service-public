@@ -30,12 +30,15 @@ RSpec.describe "Broken links in the application are visible in Sentry" do
   end
 
   context "when there actually is a broken link" do
+    before do
+      default_url_options[:host] = "http://www.rdv-mairie-test.localhost"
+      Capybara.current_session.driver.header "Referer", root_url
+    end
+
     context "and they are logged in" do
       before { login_as(agent, scope: :agent) }
 
       it "sends an event to Sentry" do
-        default_url_options[:host] = "http://www.rdv-mairie-test.localhost"
-        Capybara.current_session.driver.header "Referer", root_url
         expect { visit broken_agenda_path }.to raise_error(ActiveRecord::RecordNotFound)
 
         expect(sentry_events).not_to be_empty
