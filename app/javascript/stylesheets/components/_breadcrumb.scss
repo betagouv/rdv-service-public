@@ -1,10 +1,13 @@
 .breadcrumb-item {
-  +.breadcrumb-item {
+  + .breadcrumb-item {
     &::before {
-      font-family: "Font Awesome 6 Free"; font-weight: 900; content: "\f054"; color: #6F6F71
+      font-family: "Font Awesome 6 Free";
+      font-weight: 900;
+      content: "\f054";
+      color: #6f6f71;
     }
   }
 }
-.breadcrumb-item.active{
-  color: #6F6F71
+.breadcrumb-item.active {
+  color: #6f6f71;
 }

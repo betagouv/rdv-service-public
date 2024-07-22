@@ -1,8 +1,9 @@
-// 
+//
 // tabs.scss
 //
 
-.nav-tabs,.nav-pills {
+.nav-tabs,
+.nav-pills {
   > li {
     > a {
       color: $gray-700;
@@ -14,6 +15,6 @@
 .nav-pills {
   > a {
     color: $gray-700;
-    font-weight: $font-weight-semibold;   
+    font-weight: $font-weight-semibold;
   }
 }
