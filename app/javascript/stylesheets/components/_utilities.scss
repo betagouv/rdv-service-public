@@ -61,12 +61,6 @@ a[disabled] {
 
 // FLEX
 
-.rdv-display-md-flex {
-  @include media-breakpoint-up(md) {
-    display: flex;
-  }
-}
-
 .flex-gap-1em {
   gap: 0 1em;
 }
@@ -82,19 +76,13 @@ a[disabled] {
   gap: 0.5em;
 }
 
-.rdv-flex-direction-column {
+.flex-direction-column {
   flex-direction: column;
 }
 
-.rdv-flex-direction-md-row {
+.rdv-flex-direction-row-md {
   @include media-breakpoint-up(md) {
     flex-direction: row;
-  }
-}
-
-.rdv-flex-direction-md-column {
-  @include media-breakpoint-up(md) {
-    flex-direction: column;
   }
 }
 
