@@ -17,7 +17,7 @@ Sentry.init do |config|
     return if hint[:exception].is_a?(ActiveRecord::RecordNotFound) && !internal_referer
 
     # prevent logging sensitive jobs arguments
-    event.extra.delete(:arguments) unless event.extra&.dig(:active_job)&.constantize&.log_arguments
+    event.extra&.delete(:arguments) unless event.extra&.dig(:active_job)&.constantize&.log_arguments
 
     event
   end
