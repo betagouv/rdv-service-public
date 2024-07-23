@@ -16,6 +16,9 @@ Sentry.init do |config|
     internal_referer = Domain::ALL.map(&:host_name).any? { referer&.include?(_1) }
     return if hint[:exception].is_a?(ActiveRecord::RecordNotFound) && !internal_referer
 
+    # prevent logging sensitive jobs arguments
+    event.extra.delete(:arguments) unless event.extra&.dig(:active_job)&.constantize&.log_arguments
+
     event
   end
 
@@ -25,5 +28,4 @@ Sentry.init do |config|
   config.excluded_exceptions += ["GoodJob::ActiveJobExtensions::Concurrency::ConcurrencyExceededError"]
 end
 
-# cf /config/initializers/sentry_custom_context.rb for the monkey patch that defines context
 # # cf /config/initializers/sentry_job_retries_subscriber.rb for the log subscriber that sends warnings to Sentry
