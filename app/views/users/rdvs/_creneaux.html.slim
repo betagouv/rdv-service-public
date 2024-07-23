@@ -9,7 +9,7 @@
         - previous_from_date = @date_range.begin - 7.days
         - if @date_range.begin > Time.zone.today
           .col-12.col-md-auto.mb-2.mb-md-0.d-flex.align-items-center.justify-content-center
-            = link_to deplacer_users_rdv_path(@rdv, date: previous_from_date), remote: true, class: "btn btn-primary", data: { disable_with: "..." } do
+            = link_to creneaux_users_rdv_path(@rdv, date: previous_from_date), remote: true, class: "btn btn-primary", data: { disable_with: "..." } do
               i.fa.fa-chevron-left
               span.d-md-none.ml-1<
                 | sem. précédente
@@ -30,7 +30,7 @@
 
         - if @date_range.end < @all_creneaux.last.starts_at.to_date
           .col-12.col-md-auto.mt-2.mt-md-0.d-flex.align-items-center.justify-content-center
-            = link_to deplacer_users_rdv_path(@rdv, date: @date_range.end + 1.day), remote: true, class: "btn btn-primary", data: { disable_with: "..." } do
+            = link_to creneaux_users_rdv_path(@rdv, date: @date_range.end + 1.day), remote: true, class: "btn btn-primary", data: { disable_with: "..." } do
               span.d-md-none.mr-1
                 | sem. prochaine
               i.fa.fa-chevron-right

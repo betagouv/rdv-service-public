@@ -378,9 +378,9 @@ RSpec.describe Users::RdvsController, type: :controller do
     end
   end
 
-  describe "GET #deplacer" do
+  describe "GET #creneaux" do
     subject do
-      get :deplacer, params: { id: rdv.id }
+      get :creneaux, params: { id: rdv.id }
       rdv.reload
     end
 
@@ -405,7 +405,7 @@ RSpec.describe Users::RdvsController, type: :controller do
 
       context "for a js request" do
         subject do
-          get :deplacer, params: { id: rdv.id }, xhr: true
+          get :creneaux, params: { id: rdv.id }, xhr: true
         end
 
         it { expect(response.body).to include("Malheureusement, tous les créneaux sont pris.") }
@@ -497,7 +497,7 @@ RSpec.describe Users::RdvsController, type: :controller do
 
       before { subject }
 
-      it { expect(response).to redirect_to(deplacer_users_rdv_path(rdv)) }
+      it { expect(response).to redirect_to(creneaux_users_rdv_path(rdv)) }
     end
 
     context "when the rdv is created by an agent" do
@@ -562,7 +562,7 @@ RSpec.describe Users::RdvsController, type: :controller do
 
         it "redirects to creneaux index" do
           put :update, params: { id: rdv.id, starts_at: starts_at, agent_id: agent.id }
-          expect(response).to redirect_to(deplacer_users_rdv_path(rdv))
+          expect(response).to redirect_to(creneaux_users_rdv_path(rdv))
           expect(flash[:error]).to eq("Le RDV n'a pas pu être modifié")
         end
       end
@@ -574,7 +574,7 @@ RSpec.describe Users::RdvsController, type: :controller do
       it "redirect to index when not available" do
         put :update, params: { id: rdv.id, starts_at: starts_at, agent_id: agent.id }
 
-        expect(response).to redirect_to(deplacer_users_rdv_path(rdv))
+        expect(response).to redirect_to(creneaux_users_rdv_path(rdv))
         expect(flash[:alert]).to eq("Ce créneau n'est plus disponible")
       end
     end

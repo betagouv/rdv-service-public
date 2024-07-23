@@ -1,5 +1,5 @@
 class Users::RdvsController < UserAuthController
-  before_action :verify_user_name_initials, :set_rdv, :set_can_see_rdv_motif, only: %i[show deplacer edit cancel update]
+  before_action :verify_user_name_initials, :set_rdv, :set_can_see_rdv_motif, only: %i[show creneaux edit cancel update]
   before_action :set_can_see_rdv_motif, only: %i[show edit index]
   before_action :set_geo_search, only: [:create]
   before_action :set_lieu, only: %i[edit update]
@@ -69,7 +69,7 @@ class Users::RdvsController < UserAuthController
       redirect_to users_rdv_path(@rdv, invitation_token: notifier.participations_tokens_by_user_id[current_user.id])
     else
       flash[:error] = "Le RDV n'a pas pu être modifié"
-      redirect_to deplacer_users_rdv_path(@rdv)
+      redirect_to creneaux_users_rdv_path(@rdv)
     end
   end
 
@@ -82,7 +82,7 @@ class Users::RdvsController < UserAuthController
     redirect_to users_rdv_path(@rdv, invitation_token: @rdv.participation_token(current_user.id))
   end
 
-  def deplacer
+  def creneaux
     @all_creneaux = @rdv.creneaux_available(Time.zone.today..@rdv.reschedule_max_date)
     return if @all_creneaux.empty?
 
@@ -121,7 +121,7 @@ class Users::RdvsController < UserAuthController
     return if @creneau.present?
 
     flash[:alert] = "Ce créneau n'est plus disponible"
-    redirect_to deplacer_users_rdv_path(@rdv)
+    redirect_to creneaux_users_rdv_path(@rdv)
   end
 
   def set_geo_search

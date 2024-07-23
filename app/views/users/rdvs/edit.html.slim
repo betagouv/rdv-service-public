@@ -10,6 +10,6 @@
 
     .row
       .col
-        = link_to "Retour à la liste des créneaux", deplacer_users_rdv_path(@rdv)
+        = link_to "Retour à la liste des créneaux", creneaux_users_rdv_path(@rdv)
       .col.text-right
         = link_to "Confirmer le nouveau créneau", users_rdv_path(@rdv, starts_at: @starts_at.to_s), class:"btn btn-primary", method: :put
