@@ -1,5 +1,5 @@
 .bg-light {
-  background-color: darken(#F6F7FA, 2%) !important;
+  background-color: darken(#f6f7fa, 2%) !important;
 }
 
 .bg-lightturquoise {
@@ -7,7 +7,7 @@
 }
 
 .bg-dsfr-blue-ecume-975 {
-  background-color: #F4F6FE;
+  background-color: #f4f6fe;
 }
 
 .bg-primary {
@@ -15,7 +15,8 @@
 }
 
 a.bg-primary {
-  &:focus, &:hover {
+  &:focus,
+  &:hover {
     background-color: #2d6ade !important;
   }
 }
@@ -25,7 +26,8 @@ a.bg-primary {
 }
 
 a.bg-success {
-  &:focus, &:hover {
+  &:focus,
+  &:hover {
     background-color: #1e7e34 !important;
   }
 }

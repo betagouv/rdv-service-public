@@ -1,0 +1,8 @@
+# we only use prettier for SCSS so far
+
+**/*.html
+**/*.js
+**/*.md
+**/*.yml
+**/*.json
+public/

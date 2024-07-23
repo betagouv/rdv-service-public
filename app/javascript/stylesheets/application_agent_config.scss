@@ -11,6 +11,7 @@
 @import "jquery-datetimepicker/build/jquery.datetimepicker.min";
 
 @import "vendor/inclusion_connect_button";
+@import "vendor/agent_connect_button";
 
 @import "./components/backgrounds";
 @import "./components/types";
@@ -34,3 +35,4 @@
 @import "./structure/authentication";
 @import "./structure/left-menu";
 @import "./structure/misc";
+@import "./structure/misc_agent_config";

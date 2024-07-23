@@ -1,5 +1,5 @@
 .bg-overlay {
-  background: rgba(255, 255, 255, .9);
+  background: rgba(255, 255, 255, 0.9);
 }
 
 // DISPLAY & VISIBILITY
@@ -74,6 +74,16 @@ a[disabled] {
   flex-direction: row;
   align-items: first baseline;
   gap: 0.5em;
+}
+
+.flex-direction-column {
+  flex-direction: column;
+}
+
+.rdv-flex-direction-row-md {
+  @include media-breakpoint-up(md) {
+    flex-direction: row;
+  }
 }
 
 // OTHER

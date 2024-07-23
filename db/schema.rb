@@ -236,6 +236,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_04_145418) do
     t.boolean "outlook_disconnect_in_progress", default: false, null: false
     t.datetime "account_deletion_warning_sent_at", comment: "Quand le compte de l'agent est inactif depuis bientôt deux ans, on lui envoie un mail qui le prévient que sont compte sera bientôt supprimé, et qu'il doit se connecter à nouveau s'il souhaite conserver son compte. On enregistre la date d'envoi de cet email ici pour s'assure qu'on lui laisse un délai d'au moins un mois pour réagir.\n"
     t.string "inclusion_connect_open_id_sub"
+    t.boolean "connected_with_agent_connect", default: false, null: false
     t.index ["account_deletion_warning_sent_at"], name: "index_agents_on_account_deletion_warning_sent_at"
     t.index ["calendar_uid"], name: "index_agents_on_calendar_uid", unique: true
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true

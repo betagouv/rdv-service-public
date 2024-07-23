@@ -46,6 +46,7 @@ module SlotBuilder
       end.compact
     end
 
+    # On enlève les intervalles occupés d'un morceau de plage d'ouverture
     def split_range_recursively(range, busy_times)
       return [] if range.nil?
       return [range] if busy_times.empty?
@@ -66,6 +67,8 @@ module SlotBuilder
       return busy_time.ends_at..range.end if range.cover?(busy_time.range)
       return range.begin..busy_time.starts_at if range.cover?(busy_time.starts_at)
       return busy_time.ends_at..range.end if range.cover?(busy_time.ends_at)
+
+      return range if (busy_time.ends_at < range.begin) || (busy_time.starts_at > range.end) # Dans ce dernier cas il n'y a pas d'overlap du tout entre le range et le busy_time
     end
 
     def slots_for(plage_ouverture_free_times, motif)

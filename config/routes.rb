@@ -6,6 +6,9 @@ Rails.application.routes.draw do
     get "omniauth/franceconnect/callback" => "omniauth_callbacks#franceconnect"
   end
 
+  get "agent_connect/auth" => "agent_connect#auth"
+  get "agent_connect/callback" => "agent_connect#callback"
+
   get "inclusion_connect/auth" => "inclusion_connect#auth"
   get "inclusion_connect/callback" => "inclusion_connect#callback"
 
@@ -130,6 +133,7 @@ Rails.application.routes.draw do
             end
           end
           resources :teams
+          resources :motifs, only: %i[index destroy]
           resource :user_fields, only: %i[edit update]
           resource :rdv_fields, only: %i[edit update]
           resource :motif_fields, only: %i[edit update]

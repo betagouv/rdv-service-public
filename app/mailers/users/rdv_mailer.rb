@@ -20,12 +20,12 @@ class Users::RdvMailer < ApplicationMailer
     save_receipt(subject)
   end
 
-  def rdv_updated(starts_at:, lieu_id:)
-    @starts_at = starts_at
+  def rdv_updated(old_starts_at:, lieu_id:)
+    @old_starts_at = old_starts_at
     @address_name = Lieu.find(lieu_id).full_name if lieu_id
 
     self.ics_payload = @rdv.payload(:update, @user)
-    subject = t("users.rdv_mailer.rdv_updated.title", date: l(@starts_at, format: :human))
+    subject = t("users.rdv_mailer.rdv_updated.title", date: l(@old_starts_at, format: :human))
     mail(subject: subject)
     save_receipt(subject)
   end
