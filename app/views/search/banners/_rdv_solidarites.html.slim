@@ -1,8 +1,6 @@
-| Prenez&nbsp;
-span rendez-vous en ligne
+span Prenez rendez-vous en ligne
 - unless context.invitation?
-  br
-    | avec votre département&nbsp;
-    - if context.departement.present?
-      | le&nbsp;
-      span #{context.departement}
+  br.fr-hidden.fr-unhidden-md
+  span< avec votre département
+  - if context.departement.present?
+    span< le #{context.departement}
