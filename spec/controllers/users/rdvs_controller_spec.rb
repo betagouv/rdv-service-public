@@ -378,9 +378,9 @@ RSpec.describe Users::RdvsController, type: :controller do
     end
   end
 
-  describe "GET #creneaux" do
+  describe "GET #deplacer" do
     subject do
-      get :creneaux, params: { id: rdv.id }
+      get :deplacer, params: { id: rdv.id }
       rdv.reload
     end
 
@@ -405,7 +405,7 @@ RSpec.describe Users::RdvsController, type: :controller do
 
       context "for a js request" do
         subject do
-          get :creneaux, params: { id: rdv.id }, xhr: true
+          get :deplacer, params: { id: rdv.id }, xhr: true
         end
 
         it { expect(response.body).to include("Malheureusement, tous les créneaux sont pris.") }
@@ -436,7 +436,7 @@ RSpec.describe Users::RdvsController, type: :controller do
       end
 
       it { expect(assigns(:creneaux)).not_to be_empty }
-      it { expect(response.body).to include("Voici les créneaux disponibles pour modifier votre rendez-vous du") }
+      it { expect(response.body).to include("Voici les créneaux disponibles pour déplacer votre rendez-vous du") }
       it { expect(response.body).to include("dimanche 06 janvier 2019 à 10h00") }
       it { expect(response.body).to include("10:00") } # heure de créneau pour la plage quotidienne
       it { expect(response.body).to include("16:00") } # heure de créneau pour la plage ponctuelle
@@ -480,14 +480,14 @@ RSpec.describe Users::RdvsController, type: :controller do
     context "creneau is available" do
       before { subject }
 
-      it { expect(response.body).to include("Modification du Rendez-vous") }
+      it { expect(response.body).to include("Modification du RDV") }
       it { expect(response.body).to include("Confirmer le nouveau créneau") }
 
       context "when the motif is by phone and lieu is missing" do
         let(:motif) { create(:motif, :by_phone, organisation: organisation) }
         let(:lieu) { nil }
 
-        it { expect(response.body).to include("Modification du Rendez-vous") }
+        it { expect(response.body).to include("Modification du RDV") }
         it { expect(response.body).to include("Confirmer le nouveau créneau") }
       end
     end
