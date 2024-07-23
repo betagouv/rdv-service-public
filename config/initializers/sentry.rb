@@ -26,3 +26,4 @@ Sentry.init do |config|
 end
 
 # cf /config/initializers/sentry_custom_context.rb for the monkey patch that defines context
+# # cf /config/initializers/sentry_job_retries_subscriber.rb for the log subscriber that sends warnings to Sentry

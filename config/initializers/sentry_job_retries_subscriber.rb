@@ -1,6 +1,6 @@
 # this logger sends warnings to Sentry on ActiveJob retries
 # note: sentry-rails sends errors for final failures natively
-class ActiveJobRetrySentryLogSubscriber < ActiveSupport::LogSubscriber
+class SentryJobRetriesSubscriber < ActiveSupport::LogSubscriber
   def enqueue_retry(event)
     job = event.payload[:job]
     exception = event.payload[:error]
@@ -20,4 +20,4 @@ class ActiveJobRetrySentryLogSubscriber < ActiveSupport::LogSubscriber
   end
 end
 
-ActiveJobRetrySentryLogSubscriber.attach_to :active_job
+SentryJobRetriesSubscriber.attach_to :active_job
