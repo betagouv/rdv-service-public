@@ -18,5 +18,5 @@ Expliquer les choix techniques
 ## Captures d'écran
 
 Avant | Après
-:-------------------------:|:-------------------------:
+:- | -:
 _mettre un screenshot ici_ | _et ici_
