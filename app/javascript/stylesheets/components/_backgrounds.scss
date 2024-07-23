@@ -10,17 +10,6 @@
   background-color: #f4f6fe;
 }
 
-.bg-primary {
-  background-color: $primary !important;
-}
-
-a.bg-primary {
-  &:focus,
-  &:hover {
-    background-color: #2d6ade !important;
-  }
-}
-
 .bg-negative {
   margin-top: -80px;
 }
