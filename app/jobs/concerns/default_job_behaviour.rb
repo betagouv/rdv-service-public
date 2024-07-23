@@ -15,7 +15,7 @@ module DefaultJobBehaviour
     retry_on(StandardError, wait: :exponentially_longer, attempts: MAX_ATTEMPTS, priority: PRIORITY_OF_RETRIES)
   end
 
-  # cf config/initializers/active_job_retry_sentry_log_subscriber.rb
+  # cf config/initializers/sentry_job_retries_subscriber.rb
   # where we configure capturing warnings on retries
   def capture_sentry_warning_for_retry?(_exception)
     executions <= 4
