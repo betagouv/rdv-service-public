@@ -45,5 +45,26 @@ RSpec.describe Admin::EditRdvForm, type: :form do
       expect(rdv.cancelled_at).to eq(nil)
       expect(rdv.status).to eq("unknown")
     end
+
+    context "when trying to add a user that is already there" do
+      let(:rdv) do
+        create(:rdv, agents: [agent], organisation: organisation)
+      end
+
+      it "doesn't raise any error and keeps the participation" do
+        existing_participation = rdv.participations.first
+
+        edit_rdv_form = described_class.new(rdv, agent_context)
+
+        edit_rdv_form.update(participations_attributes: {
+                               "0" => {
+                                 "user_id" => existing_participation.user_id,
+                                 "send_lifecycle_notifications" => "1",
+                                 "send_reminder_notification" => "1",
+                                 "_destroy" => "false",
+                               },
+                             })
+      end
+    end
   end
 end
