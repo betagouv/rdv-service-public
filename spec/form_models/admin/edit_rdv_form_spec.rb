@@ -46,7 +46,7 @@ RSpec.describe Admin::EditRdvForm, type: :form do
       expect(rdv.status).to eq("unknown")
     end
 
-    context "when trying to add a user that is already there" do
+    context "when trying to add a user that is already there because of a race condition in the front end" do
       let(:rdv) do
         create(:rdv, agents: [agent], organisation: organisation)
       end
