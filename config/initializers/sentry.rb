@@ -20,8 +20,8 @@ Sentry.init do |config|
 
     # On ne veut pas de notification si l'agent vient de se connecter, car ça signifie probablement que le lien
     # n'était pas dans l'application (on ignore le cas d'un agent qui laisse une page ouverte et dont la session a expiré)
-    # agent_sign_in_url = Rails.application.routes.url_helpers.new_agent_session_url(host: event.request&.headers&.fetch("Host"))
-    # redirected_from_sign_in = referer == agent_sign_in_url
+    agent_sign_in_url = Rails.application.routes.url_helpers.new_agent_session_url(host: event.request&.headers&.fetch("Host"))
+    redirected_from_sign_in = referer == agent_sign_in_url
     return if hint[:exception].is_a?(ActiveRecord::RecordNotFound) && redirected_from_sign_in
 
     # prevent logging sensitive jobs arguments
