@@ -14,13 +14,6 @@ RSpec.describe "Impersonating an agent" do
   end
 
   describe "telling Sentry that the agent is impersonating" do
-    # Display 404 instead of letting the ActiveRecord::RecordNotFound bubble up to the spec
-    around do |example|
-      Rails.application.configure { config.action_dispatch.show_exceptions = true }
-      example.run
-      Rails.application.configure { config.action_dispatch.show_exceptions = false }
-    end
-
     let!(:other_organisation) { create(:organisation) }
 
     it "works" do
