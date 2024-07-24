@@ -1,30 +1,40 @@
-div id="creneaux-lieu"
-  .row
-    - previous_from_date = date_range.begin - 7.days
-    - if date_range.begin > Time.zone.today
-      .col-12.col-md-auto.mb-2.mb-md-0.d-flex.align-items-center.justify-content-center
-        = link_to creneaux_users_rdv_path(rdv, date: previous_from_date), remote: true, class: "btn btn-primary", data: { disable_with: "..." } do
-          i.fa.fa-chevron-left
-          span.d-md-none.ml-1<
-            | sem. précédente
-
-    .col
+- if @all_creneaux.blank?
+  .bg-info.text-white.p-2.mb-3 Malheureusement, tous les créneaux sont pris. Vous recevrez d'autres propositions si un créneau se libère. La date de votre RDV reste le #{I18n.l(@rdv.starts_at, format: :human)}.
+  .py-4.border-bottom.text-center
+      = link_to "Retour au RDV", users_rdv_path(@rdv), class: "btn btn-primary"
+- else
+  .card
+    .card-body
       .row
-        - date_range.each do |date|
-          .col-6.col-md-3.col-lg
-            p.text-center
-              strong= l(date, format: "%A")
-              br
-              = l(date, format: "%d %b")
-            - creneaux_for_date = creneaux.group_by { |c| c.starts_at.to_date }.select { |k, v| k == date }
+        - previous_from_date = @date_range.begin - 7.days
+        - if @date_range.begin > Time.zone.today
+          .col-12.col-md-auto.mb-2.mb-md-0.d-flex.align-items-center.justify-content-center
+            = link_to creneaux_users_rdv_path(@rdv, date: previous_from_date), remote: true, class: "btn btn-primary", data: { disable_with: "..." } do
+              i.fa.fa-chevron-left
+              span.d-md-none.ml-1<
+                | sem. précédente
 
-            - if creneaux_for_date.any?
-              - creneaux_for_date.each do |date, creneaux|
-                - creneaux.sort.each do |creneau|
-                  = link_to l(creneau.starts_at, format: "%H:%M"), edit_users_rdv_path(@rdv, starts_at: creneau.starts_at, agent_id: creneau.agent.id), class: "btn btn-light mr-1 mb-1 w-100"
-    - if date_range.end < @all_creneaux.last.starts_at.to_date
-      .col-12.col-md-auto.mt-2.mt-md-0.d-flex.align-items-center.justify-content-center
-        = link_to creneaux_users_rdv_path(rdv, date: date_range.end + 1.day), remote: true, class: "btn btn-primary", data: { disable_with: "..." } do
-          span.d-md-none.mr-1
-            | sem. prochaine
-          i.fa.fa-chevron-right
+        .col
+          .row
+            - @date_range.each do |date|
+              .col-6.col-md-3.col-lg
+                p.text-center
+                  strong= l(date, format: "%A")
+                  br
+                  = l(date, format: "%d %b")
+                - creneaux_for_date = @creneaux.group_by { |c| c.starts_at.to_date }.select { |k, v| k == date }
+
+                - creneaux_for_date.each do |date, creneaux|
+                  - creneaux.sort.each do |creneau|
+                    = link_to l(creneau.starts_at, format: "%H:%M"), edit_users_rdv_path(@rdv, starts_at: creneau.starts_at, agent_id: creneau.agent.id), class: "btn btn-light mr-1 mb-1 w-100"
+
+        - if @date_range.end < @all_creneaux.last.starts_at.to_date
+          .col-12.col-md-auto.mt-2.mt-md-0.d-flex.align-items-center.justify-content-center
+            = link_to creneaux_users_rdv_path(@rdv, date: @date_range.end + 1.day), remote: true, class: "btn btn-primary", data: { disable_with: "..." } do
+              span.d-md-none.mr-1
+                | sem. prochaine
+              i.fa.fa-chevron-right
+
+      .row
+        .col.pt-4
+          = link_to "Retour au RDV", users_rdv_path(@rdv)

@@ -48,12 +48,13 @@ class WebhookJob < ApplicationJob
     request.run
   end
 
-  def log_failure_to_sentry?(_exception)
+  def capture_sentry_warning_for_retry?(_exception)
     # Pour limiter le bruit dans Sentry, on ne veut pas avoir de notification pour chaque retry.
     # On veut seulement :
-    # - un premier avertissement assez rapide s'il y a un problème (4e essai)
-    # - une notification pour le dernier essai, avant que le job passe en "abandonnés"
-    executions == 4 || executions == MAX_ATTEMPTS
+    # - un warning assez rapide s'il y a un problème (4e essai)
+    # - une error pour le dernier essai, avant que le job passe en "abandonnés"
+    # cette error est envoyée par sentry-rails nativement, qui ne passe pas par ce hook
+    executions == 4
   end
 
   # La réponse de la Drôme est en JSON
