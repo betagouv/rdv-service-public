@@ -6,6 +6,7 @@ module SuperAdmins
       if sign_in_as_allowed?
         sign_out(:user)
         bypass_sign_in(agent, scope: :agent)
+        session[:impersonating] = true
         redirect_to root_url
       else
         flash[:error] = "Fonctionnalité désactivée sur cet environnement."

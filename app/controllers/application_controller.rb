@@ -30,6 +30,7 @@ class ApplicationController < ActionController::Base
 
   def set_sentry_context
     Sentry.set_user(sentry_user)
+    Sentry.set_tags({ impersonating: "true" }) if session[:impersonating]
   end
 
   def sentry_user
