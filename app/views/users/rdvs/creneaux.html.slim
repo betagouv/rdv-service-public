@@ -1,14 +1,9 @@
+- content_for :title, "Déplacer le RDV"
+
 .row.mt-3.justify-content-center
   .fr-container
-    h2.page-title.text-center Modifier horaire
     p
-      | Voici les créneaux disponibles pour modifier votre rendez-vous du
+      | Voici les créneaux disponibles pour déplacer votre rendez-vous du
       b= " #{l(@rdv.starts_at, format: :human)}."
-    - if @all_creneaux.any?
-      .card
-        .card-body
-          = render "creneaux", creneaux: @creneaux, date_range: @date_range, rdv: @rdv
-    - else
-      .bg-info.text-white.p-2.mb-3 Malheureusement, tous les créneaux sont pris. Vous recevrez d'autres propositions si un créneau se libère. La date de votre RDV reste le #{I18n.l(@rdv.starts_at, format: :human)}.
-    .text-center.pb-4.border-bottom
-      = link_to "Retour au RDV", users_rdv_path(@rdv), class: "btn btn-primary"
+    #creneaux-lieu
+      = render "creneaux"
