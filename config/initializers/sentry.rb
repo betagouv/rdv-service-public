@@ -24,7 +24,6 @@ Sentry.init do |config|
     # redirected_from_sign_in = referer == agent_sign_in_url
     return if hint[:exception].is_a?(ActiveRecord::RecordNotFound) && redirected_from_sign_in
 
-    
     # prevent logging sensitive jobs arguments
     event.extra&.delete(:arguments) unless event.extra&.dig(:active_job)&.constantize&.log_arguments
 
