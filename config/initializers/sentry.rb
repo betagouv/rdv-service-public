@@ -24,6 +24,10 @@ Sentry.init do |config|
     # redirected_from_sign_in = referer == agent_sign_in_url
     return if hint[:exception].is_a?(ActiveRecord::RecordNotFound) && redirected_from_sign_in
 
+    
+    # prevent logging sensitive jobs arguments
+    event.extra&.delete(:arguments) unless event.extra&.dig(:active_job)&.constantize&.log_arguments
+
     event
   end
 
@@ -32,3 +36,5 @@ Sentry.init do |config|
   # Il ne nous est pas utile de les voir dans Sentry puisqu'elles ont un rôle de contrôle de flux.
   config.excluded_exceptions += ["GoodJob::ActiveJobExtensions::Concurrency::ConcurrencyExceededError"]
 end
+
+# # cf /config/initializers/sentry_job_retries_subscriber.rb for the log subscriber that sends warnings to Sentry

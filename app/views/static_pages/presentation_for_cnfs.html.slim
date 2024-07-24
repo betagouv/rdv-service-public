@@ -1,19 +1,19 @@
 section.py-5.bg-primary
-  .container
-    .row
-      .col-md-9.m-auto
+  .fr-container
+    .fr-grid-row
+      .fr-col-md-9.m-auto
         h1.text-white.mb-3 Faciliter la gestion des rendez-vous avec vos apprenants
         .mt-4= link_to "Connectez-vous", new_agent_session_path, class: "btn text-white btn-outline-white bg-primary"
         p.mt-4.text-white
           | RDV Aide Numérique est un outil de prise de rendez-vous en ligne,
             simplifiant votre organisation et rappelant aux usagers leurs rendez-vous.
 section.bg-white.py-5
-  .container
+  .fr-container
     .text-center.m-auto
       h2.mb-4 RDV Aide Numérique offre des fonctionnalités adaptées à vos besoins&nbsp;:
     .divider
-    .row
-      .col-md-4
+    .fr-grid-row
+      .fr-col-md-4
         .w-50.p-3.m-auto
           = image_tag "welcome/illu-prise-rdv.svg", alt: ""
         h3 Définir vos plages de disponibilités
@@ -21,7 +21,7 @@ section.bg-white.py-5
           | Informez vos apprenants et vos collègues
             des créneaux disponibles.
 
-      .col-md-4
+      .fr-col-md-4
         .w-50.p-3.m-auto
           = image_tag "welcome/illu-rappel-rdv.svg", alt: ""
         h3 Envoyer une notification de rappel
@@ -30,7 +30,7 @@ section.bg-white.py-5
             e-mail de rappel de RDV. Ils pourront
             également modifier ou annuler le RDV.
 
-      .col-md-4
+      .fr-col-md-4
         .w-50.p-3.m-auto
           = image_tag "welcome/illu-gestion.svg", alt: ""
         h3 Importer vos RDVs sur votre agenda
@@ -39,10 +39,9 @@ section.bg-white.py-5
             agenda du quotidien.
 
 section.bg-lightturquoise.py-5
-  .container.col-6.mx-auto
-    .row
+  .fr-container.fr-grid-row
+    .fr-col-12.fr-col-md-8.mx-auto
       h2.mb-3 Qui sommes-nous&nbsp;?
-    .row.m-auto
       p
         | Les produits RDV Solidarités et RDV Aide Numérique sont portés par l’une des équipes de
         =< link_to("l’Incubateur des Territoires qui", "https://incubateur.anct.gouv.fr/", target: "_blank")
@@ -58,10 +57,9 @@ section.bg-lightturquoise.py-5
         | .
 
 section.bg-white.py-5
-  .container.col-6.mx-auto
-    .row
+  .fr-container.fr-grid-row
+    .fr-col-12.fr-col-md-8.mx-auto
       h2.mb-3 Pourquoi choisir RDV Aide Numérique&nbsp;?
-    .row.m-auto
       h3 ✅ Un outil souple
       p
         | Créez les motifs selon vos ateliers, invitez votre hiérarchie à consulter votre
@@ -80,33 +78,30 @@ section.bg-white.py-5
         | .
 
 section.bg-lightturquoise.py-5
-  .container
-    .row
-      .text-center.m-auto
+  .fr-container
+    .fr-grid-row
+      .fr-col-12.fr-col-md-8.mx-auto.text-center.m-auto
         h2.mb-2 Ça vous intéresse&nbsp;?
-    .row
-      p.m-auto Vous souhaitez intégrer RDV Aide Numérique dans votre quotidien et simplifier le parcours des usagers&nbsp;?
-    .row.mt-4
-      .col-md-9.m-auto
-        .d-flex.justify-content-around
-          = link_to "Connectez-vous", new_agent_session_path, class: "btn btn-primary"
-    .row.mt-4
-      p.m-auto
-        ' Si vous n'avez jamais utilisé votre compte, vous pouvez réinitialiser votre mot de passe en indiquant votre adresse
-        em
-          | @conseiller-numerique.fr
-        | .
-      p.m-auto
-        | Des questions ?
-        =< link_to("Contactez-nous", "mailto:#{current_domain.support_email}", target: "_blank")
-        | .
+        p.m-auto Vous souhaitez intégrer RDV Aide Numérique dans votre quotidien et simplifier le parcours des usagers&nbsp;?
+        .mt-4= link_to "Connectez-vous", new_agent_session_path, class: "btn btn-primary "
+    .fr-grid-row.mt-4
+      .fr-col-12.fr-col-md-8.mx-auto.text-center.m-auto
+        p
+          ' Si vous n'avez jamais utilisé votre compte, vous pouvez réinitialiser votre mot de passe en indiquant votre adresse
+          em
+            | @conseiller-numerique.fr
+          | .
+        p.m-auto
+          | Des questions ?
+          =< link_to("Contactez-nous", "mailto:#{current_domain.support_email}", target: "_blank")
+          | .
 
 section.bg-white.py-5
-  .container
-    .row
+  .fr-container
+    .fr-grid-row
       .text-center.m-auto
         h2.mb-2 Aide Numérique en quelques chiffres c’est :
-    .row.mt-4.d-flex.justify-content-around.flex-sm-column.flex-md-row.flex-md-nowrap
+    .fr-grid-row.mt-4.d-flex.justify-content-around.flex-sm-column.flex-md-row.flex-md-nowrap
       .d-flex.flex-column.align-items-center.flex-v-gap-1em
         .bubble.bg-lightturquoise.text-primary
           | 78
@@ -123,11 +118,11 @@ section.bg-white.py-5
         .text-center de conseillers numériques ont intégrés l’outil dans le quotidien
 
 section.bg-lightturquoise.py-5
-  .container
-    .row
+  .fr-container
+    .fr-grid-row
       h2.mb-2 Les conseillers numériques en parlent
-    .row.mt-3
-      .col-md-9.mx-auto
+    .fr-grid-row.mt-3
+      .fr-col-md-9.mx-auto
         blockquote.blockquote
           | J'ai réduit de 30% mes lapins grâce à l'outil RDV.S c'est un outil vraiment top !
           .blockquote-footer Une conseillère numérique France service de la Nièvre
@@ -140,5 +135,5 @@ section.bg-lightturquoise.py-5
           | Les médiateur⋅rices numériques que je connais qui utilisent RDV Aide
             Numérique et moi-même sommes ravis de cette plateforme.
           .blockquote-footer Témoignage recueilli via sondage
-      .col-3.text-center.d-none.d-lg-flex
+      .fr-col-3.text-center.d-none.d-lg-flex
         = image_tag "static_pages/social.svg", class: "img-fluid p-3", alt: "Une agente travaille sur son ordinateur"

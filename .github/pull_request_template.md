@@ -14,3 +14,9 @@ Expliquer les choix techniques
 
 - [ ] Extraire dans d'autres PRs les changements indépendants, si nécessaire
 - [ ] Préparer des captures de l’interface avant et après
+
+## Captures d'écran
+
+Avant | Après
+:- | -:
+_mettre un screenshot ici_ | _et ici_
