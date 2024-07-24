@@ -22,7 +22,7 @@ Sentry.init do |config|
     # n'était pas dans l'application (on ignore le cas d'un agent qui laisse une page ouverte et dont la session a expiré)
     # agent_sign_in_url = Rails.application.routes.url_helpers.new_agent_session_url(host: event.request&.headers&.fetch("Host"))
     # redirected_from_sign_in = referer == agent_sign_in_url
-    # return if hint[:exception].is_a?(ActiveRecord::RecordNotFound) && redirected_from_sign_in
+    return if hint[:exception].is_a?(ActiveRecord::RecordNotFound) && redirected_from_sign_in
 
     event
   end
