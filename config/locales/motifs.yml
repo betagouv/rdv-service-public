@@ -3,6 +3,7 @@ fr:
     badges:
       collectif: "Collectif"
       bookable_by_everyone: "En ligne"
+      bookable_by_agents_and_prescripteurs: "Prescripteur"
       bookable_by_invited_users: "Sur invitation"
       phone: "Par tél."
       home: "À domicile"
