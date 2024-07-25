@@ -1,6 +1,6 @@
 class Admin::Territories::MotifsController < Admin::Territories::BaseController
   def index
-    @organisations = current_territory.organisations
+    @organisations = Agent::MotifPolicy.organisations_i_can_manage(current_agent)
     @services = current_territory.services.reject(&:secretariat?)
 
     @motifs = policy_scope(Motif, policy_scope_class: Agent::MotifPolicy::Scope)
@@ -37,9 +37,7 @@ class Admin::Territories::MotifsController < Admin::Territories::BaseController
     motifs = motifs.where(service_id: params[:service_ids]) if params[:service_ids].present?
     motifs = motifs.where(location_type: params[:location_type]) if params[:location_type].present?
     motifs = motifs.where(collectif: params[:collectif].to_b) if params[:collectif].present?
-    if params[:en_ligne].present?
-      motifs = params[:en_ligne].to_b ? motifs.where.not(bookable_by: "agents") : motifs.where(bookable_by: "agents")
-    end
+    motifs = motifs.where(bookable_by: params[:bookable_by]) if params[:bookable_by].present?
     motifs
   end
 
