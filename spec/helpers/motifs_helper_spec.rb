@@ -21,6 +21,18 @@ RSpec.describe MotifsHelper do
       expect(badges).to include("badge-motif-collectif")
     end
 
+    it "affiche le badge En ligne pour un motif bookable_by: :everyone" do
+      motif = build(:motif, bookable_by: :everyone)
+      badges = motif_badges(motif)
+      expect(badges).to eq(%(<span class="badge badge-motif-bookable_by_everyone">En ligne</span>))
+    end
+
+    it "affiche le badge Prescripteur pour un motif bookable_by: :agents_and_prescripteurs" do
+      motif = build(:motif, bookable_by: :agents_and_prescripteurs)
+      badges = motif_badges(motif)
+      expect(badges).to eq(%(<span class="badge badge-motif-bookable_by_agents_and_prescripteurs">Prescripteur</span>))
+    end
+
     it "affiche le badge secretariat ET followup pour un motif `for_secretariat` et `follow_up`" do
       motif = build(:motif, bookable_by: :agents, follow_up: true, for_secretariat: true)
       badges = motif_badges(motif)
