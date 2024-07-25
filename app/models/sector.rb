@@ -16,6 +16,7 @@ class Sector < ApplicationRecord
   validate :coherent_territory
 
   # Scopes
+  scope :order_by_name, -> { order(Arel.sql("unaccent(LOWER(sectors.name))")) }
   scope :attributed_to_organisation, lambda { |organisation|
     joins(:attributions)
       .where(sector_attributions: { organisation_id: organisation.id, level: SectorAttribution::LEVEL_ORGANISATION })

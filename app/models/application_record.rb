@@ -4,8 +4,6 @@ class ApplicationRecord < ActiveRecord::Base
   include HumanAttributeValue
   include BenignErrors
 
-  scope :ordered_by_name, -> { order(Arel.sql("unaccent(LOWER(#{table_name}.name))")) }
-
   def new_and_blank?
     new_record? && attributes == self.class.new.attributes
   end
