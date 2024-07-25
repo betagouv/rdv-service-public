@@ -39,7 +39,7 @@
               ["-", ""],
               ["Agents", "agents"],
               ["Agents et prescripteurs", "agents_and_prescripteurs"],
-              ["Agents, prescripteurs et usagers", "agents_and_prescripteurs_and_invited_users"],
+              ["Agents, prescripteurs et usagers", "everyone"],
             ]
             options.insert(3, ["Agents, prescripteurs et usagers sur invitation", "agents_and_prescripteurs_and_invited_users"]) if @organisations.any?(&:rdv_insertion?)
           = options_for_select(options, params[:bookable_by])
