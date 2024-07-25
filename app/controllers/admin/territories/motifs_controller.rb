@@ -1,6 +1,6 @@
 class Admin::Territories::MotifsController < Admin::Territories::BaseController
   def index
-    @organisations = Agent::MotifPolicy.organisations_i_can_manage(current_agent)
+    @organisations = current_territory.organisations
     @services = current_territory.services.reject(&:secretariat?)
 
     @motifs = policy_scope(Motif, policy_scope_class: Agent::MotifPolicy::Scope)
