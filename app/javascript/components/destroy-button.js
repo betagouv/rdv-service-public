@@ -11,7 +11,7 @@ class DestroyButton {
 
   destroyItem = (event) => {
     event.preventDefault();
-    let id = event.target.dataset.target;
+    let id = event.target.closest(".js-destroy-button").dataset.target;
     document.getElementById(id).style.display = 'none';
     document.getElementById(id+"-destroy").value = true
   }
