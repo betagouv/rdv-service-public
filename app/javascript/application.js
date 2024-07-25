@@ -5,7 +5,6 @@ import { Modal } from './components/modal';
 import { ShowHidePassword } from './components/show-hide-password.js';
 import { NameInitialsForm } from './components/name-initials-form';
 import './components/browser-detection';
-import 'select2/dist/js/i18n/fr.js';
 import 'bootstrap';
 
 import './stylesheets/application';
