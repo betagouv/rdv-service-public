@@ -1,8 +1,6 @@
-.badge-motif-bookable_by_everyone {
-  background-color: $yellow;
-  color: $dark;
-}
-
+.badge-motif-bookable_by_everyone,
+.badge-motif-bookable_by_invited_users,
+.badge-motif-bookable_by_agents_and_prescripteurs,
 .badge-motif-bookable_by_invited_users {
   background-color: $yellow;
   color: $dark;

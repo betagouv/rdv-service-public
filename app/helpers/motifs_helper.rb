@@ -21,7 +21,7 @@ module MotifsHelper
     tag.span(motif_name_and_location_type(motif)) + motif_badges(motif)
   end
 
-  def motif_badges(motif, only: %i[bookable_by_invited_users bookable_by_everyone for_secretariat follow_up collectif])
+  def motif_badges(motif, only: %i[bookable_by_invited_users bookable_by_everyone bookable_by_agents_and_prescripteurs for_secretariat follow_up collectif])
     safe_join(only.select { motif.send("#{_1}?") }.map { build_badge_tag_for(_1) })
   end
 
