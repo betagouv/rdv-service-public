@@ -14,7 +14,7 @@ class ModalResponder < ActionController::Responder
 
   def redirect_to(options, response_options = {})
     if request.xhr?
-      head response_options[:status] || :ok, location: controller.url_for(options)
+      head :ok, location: controller.url_for(options)
     else
       controller.redirect_to(options, response_options)
     end
