@@ -11,7 +11,6 @@ Domain = Struct.new(
   :online_reservation_with_public_link,
   :can_sync_to_outlook,
   :france_connect_enabled,
-  :documentation_url,
   :support_email,
   :secretariat_email,
   :verticale,
@@ -32,7 +31,6 @@ class Domain
       online_reservation_with_public_link: false,
       can_sync_to_outlook: false,
       sms_sender_name: "RdvSoli",
-      documentation_url: "https://rdvs.notion.site/Centre-d-aide-f0a2bf87ca854fbc8855a2a20d6eb4d1",
       france_connect_enabled: true,
       support_email: "support@rdv-solidarites.fr",
       verticale: :rdv_solidarites,
@@ -55,7 +53,6 @@ class Domain
       online_reservation_with_public_link: true,
       can_sync_to_outlook: false,
       sms_sender_name: "RdvAideNum",
-      documentation_url: "https://rdvs.notion.site/Centre-d-aide-f0a2bf87ca854fbc8855a2a20d6eb4d1",
       france_connect_enabled: false,
       support_email: "support@rdv-aide-numerique.fr",
       verticale: :rdv_aide_numerique,
@@ -74,13 +71,16 @@ class Domain
       online_reservation_with_public_link: true,
       can_sync_to_outlook: false,
       sms_sender_name: "RDV S.P.",
-      documentation_url: "https://rdvs.notion.site/Centre-d-aide-f0a2bf87ca854fbc8855a2a20d6eb4d1",
       france_connect_enabled: true,
       support_email: "support@rdv-service-public.fr",
       verticale: :rdv_mairie,
       secretariat_email: "secretariat-auto@rdv-service-public.fr"
     ),
   ].freeze
+
+  def documentation_url
+    "https://rdvs.notion.site/Centre-d-aide-f0a2bf87ca854fbc8855a2a20d6eb4d1"
+  end
 
   def host_name
     case Rails.env.to_sym
