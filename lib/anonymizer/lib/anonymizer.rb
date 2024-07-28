@@ -13,7 +13,7 @@ module Anonymizer
     end
   end
 
-  def self.anonymize_all_data!(schema: "rdvsp", config: default_config)
+  def self.anonymize_all_data!(schema: "public", config: default_config)
     config.rules.each_key do |table_name|
       anonymize_table!("#{schema}.#{table_name}")
     end
