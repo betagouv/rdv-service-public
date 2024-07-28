@@ -17,23 +17,24 @@ class Table
   end
 
   def anonymize_table!
-    # if Rails.env.production? && ENV["ETL"].blank?
-    #   raise "L'anonymisation en masse est désactivée en production pour éviter les catastrophes"
-    # end
-    # # Sanity checks supplémentaires
-    # # Ces variables d'envs n'ont rien à voir avec l'ETL, et ne devraient donc pas être présentes
-    # if !Rails.env.development? && (ENV["HOST"].present? || ENV["DEFAULT_SMS_PROVIDER"].present?)
-    #   raise "Attention, il semble que vous êtes en train d'anonymiser des données d'une appli web"
-    # end
+    if defined?(Rails) && Rails.env.production?
+      raise "L'anonymisation en masse est désactivée en production pour éviter les catastrophes"
+    end
+
+    # check if table exists in db_connection
+    unless db_connection.table_exists?(table_name)
+      puts "La table #{table_name} n'existe pas dans la base de données"
+      return
+    end
 
     if table_name_without_schema.in?(config.truncated_tables)
       db_connection.execute("TRUNCATE #{ActiveRecord::Base.sanitize_sql(table_name)} CASCADE")
       return
     end
 
-    if unidentified_column_names.present?
-      raise "Les règles d'anonymisation pour les colonnes #{unidentified_column_names.join(' ')} de la table #{table_name} n'ont pas été définies"
-    end
+    # if unidentified_column_names.present?
+    #   raise "Les règles d'anonymisation pour les colonnes #{unidentified_column_names.join(' ')} de la table #{table_name} n'ont pas été définies"
+    # end
 
     return if anonymized_columns.blank?
 
@@ -48,10 +49,12 @@ class Table
     if column.type.in?(%i[string text]) && column.null # On vérifie que la colonne est nullable
       # Pour limiter la confusion lors de l'exploitation des données, on transforme les chaines vides en null
       value = column.array ? "{}" : ""
-      db_connection.execute("UPDATE #{table} SET #{column.name} = NULL WHERE #{column.name} = '#{value}'")
+      sql_query = "UPDATE #{table} SET #{column.name} = NULL WHERE #{column.name} = '#{value}'"
+    else
+      sql_query = "UPDATE #{table} SET #{column.name} = #{anonymous_value(column, quote_value: true)} WHERE #{column.name} IS NOT NULL"
     end
 
-    db_connection.execute("UPDATE #{table} SET #{column.name} = #{anonymous_value(column, quote_value: true)} WHERE #{column.name} IS NOT NULL")
+    db_connection.execute(sql_query)
   end
 
   def unidentified_column_names
