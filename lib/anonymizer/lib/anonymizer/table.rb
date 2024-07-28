@@ -86,6 +86,8 @@ class Table
   def anonymous_value(column, quote_value: false)
     if column.type.in?(%i[string text])
       anonymous_text_value(column, quote_value)
+    elsif column.type == :jsonb
+      Arel.sql("'{}'::jsonb") # necessary for api_calls.raw_http, non-nullable but with null default
     else
       quote_value ? db_connection.quote(column.default) : column.default
     end
