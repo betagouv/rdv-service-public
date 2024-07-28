@@ -105,6 +105,7 @@ rules:
       - deleted_at
       - created_at
       - updated_at
+      - connected_with_agent_connect
 
 
   rdvs:
@@ -296,11 +297,11 @@ rules:
   # Tables sans données personnelles
   agent_roles:
     non_anonymized_column_names:
-    - access_level
+      - access_level
   agents_rdvs:
     non_anonymized_column_names:
-    - outlook_id
-    - outlook_create_in_progress
+      - outlook_id
+      - outlook_create_in_progress
   agent_territorial_access_rights:
     non_anonymized_column_names:
       - allow_to_manage_teams
@@ -312,9 +313,9 @@ rules:
 
   teams:
     non_anonymized_column_names:
-    - name
-    - created_at
-    - updated_at
+      - name
+      - created_at
+      - updated_at
   motifs:
     non_anonymized_column_names:
       - name
