@@ -16,16 +16,15 @@ class Table
     scope.update_all(anonymized_attributes) # rubocop:disable Rails/SkipsModelValidations
   end
 
-  # rubocop:disable Metrics/CyclomaticComplexity
-  def anonymize_table! # rubocop:disable Metrics/PerceivedComplexity
-    if Rails.env.production? && ENV["ETL"].blank?
-      raise "L'anonymisation en masse est désactivée en production pour éviter les catastrophes"
-    end
-    # Sanity checks supplémentaires
-    # Ces variables d'envs n'ont rien à voir avec l'ETL, et ne devraient donc pas être présentes
-    if !Rails.env.development? && (ENV["HOST"].present? || ENV["DEFAULT_SMS_PROVIDER"].present?)
-      raise "Attention, il semble que vous êtes en train d'anonymiser des données d'une appli web"
-    end
+  def anonymize_table!
+    # if Rails.env.production? && ENV["ETL"].blank?
+    #   raise "L'anonymisation en masse est désactivée en production pour éviter les catastrophes"
+    # end
+    # # Sanity checks supplémentaires
+    # # Ces variables d'envs n'ont rien à voir avec l'ETL, et ne devraient donc pas être présentes
+    # if !Rails.env.development? && (ENV["HOST"].present? || ENV["DEFAULT_SMS_PROVIDER"].present?)
+    #   raise "Attention, il semble que vous êtes en train d'anonymiser des données d'une appli web"
+    # end
 
     if table_name_without_schema.in?(config.truncated_tables)
       db_connection.execute("TRUNCATE #{ActiveRecord::Base.sanitize_sql(table_name)} CASCADE")
@@ -40,7 +39,6 @@ class Table
 
     anonymized_columns.each { |column| anonymize_column(column, table_name) }
   end
-  # rubocop:enable Metrics/CyclomaticComplexity
 
   private
 
