@@ -21,7 +21,7 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
       @teams = current_organisation.territory.teams
       @agents = policy_scope(Agent)
         .joins(:organisations).where(organisations: { id: current_organisation.id })
-        .complete.active.order_by_last_name
+        .complete.active.ordered_by_last_name
       @lieux = Agent::LieuPolicy::Scope.apply(current_agent, current_organisation.lieux).enabled.ordered_by_name
     end
   end

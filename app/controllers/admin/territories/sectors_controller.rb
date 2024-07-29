@@ -6,7 +6,7 @@ class Admin::Territories::SectorsController < Admin::Territories::BaseController
     @sectors = policy_scope(Sector)
       .where(territory: current_territory)
       .includes(:attributions)
-      .order_by_name
+      .ordered_by_name
     @sectors = @sectors.where(attributions: { organisation: params[:organisation_id] }) if params[:organisation_id].present?
     @sectors = @sectors.page(page_number) unless params[:view] == "map"
     render :index_map if params[:view] == "map"

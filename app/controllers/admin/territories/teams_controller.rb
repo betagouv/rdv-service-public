@@ -5,7 +5,7 @@ class Admin::Territories::TeamsController < Admin::Territories::BaseController
 
   def index
     @teams = policy_scope(Team).page(page_number)
-    @teams = params[:term].present? ? @teams.search_by_text(params[:term]) : @teams.order(:name)
+    @teams = params[:term].present? ? @teams.search_by_text(params[:term]) : @teams.ordered_by_name
   end
 
   def new
