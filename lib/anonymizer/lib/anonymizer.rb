@@ -26,7 +26,7 @@ module Anonymizer
     anonymize_table!("receipts")
     anonymize_table!("rdvs")
     config.truncated_tables.each do |table_name|
-      anonymize_table!(table_name)
+      anonymize_table!(table_name, config:)
     end
   end
 
