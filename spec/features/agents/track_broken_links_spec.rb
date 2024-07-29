@@ -11,7 +11,7 @@ RSpec.describe "Broken links in the application are visible in Sentry" do
       it "doesn't send anything to Sentry" do
         # C'est très difficile de vérifier que les sentry_events sont les bons, donc le plus simple
         # pour cette spec était d'observer les appels au logger interne de Sentry.
-        expect_any_instance_of(Sentry::Client).to receive(:log_debug).with("Discarded event because before_send returned nil")
+        expect_any_instance_of(Sentry::Client).to receive(:log_debug).with("Discarded event because before_send returned nil") # rubocop:disable RSpec/AnyInstance
         expect do
           visit broken_agenda_path
         end.to raise_error(ActiveRecord::RecordNotFound)
@@ -20,7 +20,7 @@ RSpec.describe "Broken links in the application are visible in Sentry" do
 
     context "and they are not logged in" do
       it "doesn't send anything to Sentry" do
-        expect_any_instance_of(Sentry::Client).to receive(:log_debug).with("Discarded event because before_send returned nil")
+        expect_any_instance_of(Sentry::Client).to receive(:log_debug).with("Discarded event because before_send returned nil") # rubocop:disable RSpec/AnyInstance
         visit broken_agenda_path
         fill_in "Email", with: agent.email
         fill_in :password, with: "Correcth0rse!"
