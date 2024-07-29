@@ -18,6 +18,18 @@ GIT
       ice_nine (~> 0.11, >= 0.11.0)
       thread_safe (~> 0.3, >= 0.3.1)
 
+GIT
+  remote: https://github.com/victormours/devise
+  revision: 0c502c8ab7f11e03ece9d9552cdf5d96e22c40c6
+  ref: 0c502c8ab7f11e03ece9d9552cdf5d96e22c40c6
+  specs:
+    devise (4.9.4)
+      bcrypt (~> 3.0)
+      orm_adapter (~> 0.1)
+      railties (>= 4.1.0)
+      responders
+      warden (~> 1.2.3)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -179,12 +191,6 @@ GEM
     debug_inspector (1.1.0)
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
-    devise (4.9.4)
-      bcrypt (~> 3.0)
-      orm_adapter (~> 0.1)
-      railties (>= 4.1.0)
-      responders
-      warden (~> 1.2.3)
     devise-async (1.0.0)
       activejob (>= 5.0)
       devise (>= 4.0)
@@ -663,7 +669,7 @@ DEPENDENCIES
   connection_pool
   csv
   database_cleaner
-  devise
+  devise!
   devise-async
   devise_invitable
   devise_token_auth
