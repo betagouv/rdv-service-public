@@ -10,7 +10,7 @@
 
     = render "common/session_form", resource: resource, resource_name: resource_name
 
-    hr
+    hr.fr-my-2w
     .text-center
       p.text-muted
         | Vous n'avez pas de compte ?&nbsp;
@@ -18,7 +18,7 @@
           b Je m'inscris
 
     - if @rdv_wizard
-      hr
+      hr.fr-my-2w
         .text-center.text-muted
           = link_to prescripteur_start_path(@rdv_wizard.to_query) do
             b Je suis un prescripteur qui oriente un bénéficiaire
