@@ -75,7 +75,5 @@ module Lapin
     config.x.rack_attack.limit = 50
 
     config.exceptions_app = routes # Permet les pages d'erreur custom
-
-    config.middleware.insert_before(ActionDispatch::ShowExceptions, ::FallbackErrorMiddleware)
   end
 end

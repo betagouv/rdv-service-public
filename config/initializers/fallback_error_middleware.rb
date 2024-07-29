@@ -1,5 +1,4 @@
-# Un middleware rack pour afficher la page d'erreur si jamais une erreur est levée par le code Rails
-# qui gère habituellement les erreurs
+# Un middleware rack pour afficher la page d'erreur statique si jamais une erreur est levée lors de l'appel à ErrorsController
 class FallbackErrorMiddleware
   def initialize(app)
     @app = app
@@ -22,3 +21,5 @@ class FallbackErrorMiddleware
     response.first == 500 && response.last.is_a?(Array) && response.last.first.include?("If you are the administrator of this website")
   end
 end
+
+Rails.configuration.middleware.insert_before(ActionDispatch::ShowExceptions, ::FallbackErrorMiddleware)
