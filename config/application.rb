@@ -11,6 +11,7 @@ require "active_job/railtie"
 
 require "tod/core_extensions"
 require "dsfr/components"
+require_relative "../lib/fallback_error_middleware"
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -74,5 +75,7 @@ module Lapin
     config.x.rack_attack.limit = 50
 
     config.exceptions_app = routes # Permet les pages d'erreur custom
+
+    config.middleware.insert_before(ActionDispatch::ShowExceptions, ::FallbackErrorMiddleware)
   end
 end
