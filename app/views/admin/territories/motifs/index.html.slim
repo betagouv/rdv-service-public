@@ -37,11 +37,11 @@
           ruby:
             options = [
               ["-", ""],
-              ["Agents", "agents"],
-              ["Agents et prescripteurs", "agents_and_prescripteurs"],
-              ["Agents, prescripteurs et usagers", "everyone"],
+              ["Uniquement par les agents", "agents"],
+              ["Uniquement par les agents et prescripteurs", "agents_and_prescripteurs"],
+              ["Par les agents, prescripteurs et les usagers", "everyone"],
             ]
-            options.insert(3, ["Agents, prescripteurs et usagers sur invitation", "agents_and_prescripteurs_and_invited_users"]) if @organisations.any?(&:rdv_insertion?)
+            options.insert(3, ["Par les agents, prescripteurs et les usagers sur invitation", "agents_and_prescripteurs_and_invited_users"]) if @organisations.any?(&:rdv_insertion?)
           = options_for_select(options, params[:bookable_by])
     .form-row.justify-content-end.flex-gap-1em
       .form-group
