@@ -222,6 +222,10 @@ class Motif < ApplicationRecord
     bookable_by == "everyone"
   end
 
+  def bookable_by_agents_and_prescripteurs?
+    bookable_by == "agents_and_prescripteurs"
+  end
+
   def bookable_by_invited_users?
     bookable_by == "agents_and_prescripteurs_and_invited_users"
   end

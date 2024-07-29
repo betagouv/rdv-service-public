@@ -5,20 +5,6 @@ module DefaultJobBehaviour
   PRIORITY_OF_RETRIES = 20
 
   included do
-    # Include job metadata in Sentry context
-    around_perform do |_job, block|
-      job_context = { queue_name: queue_name, job_id: job_id, job_link: job_link }
-      job_context[:arguments] = arguments if self.class.log_arguments
-      Sentry.set_context(:job, job_context)
-      Sentry.set_tags(job_link: job_link)
-      block.call
-    rescue StandardError => e
-      Sentry.capture_exception(e) if log_failure_to_sentry?(e)
-      raise # will be caught by the retry mechanism
-    end
-
-    # https://github.com/bensheldon/good_job#timeouts
-
     # This retry_on means:
     # "retry 20 times with an exponential backoff, then mark job as discarded"
     #
@@ -28,19 +14,21 @@ module DefaultJobBehaviour
     # it therefore takes more than 8 days for a job to be discarded
     retry_on(StandardError, wait: :exponentially_longer, attempts: MAX_ATTEMPTS, priority: PRIORITY_OF_RETRIES)
 
-    # Makes sure every failed attempt is logged to Sentry
-    # (see: https://github.com/bensheldon/good_job#retries)
+    before_perform :set_sentry_context
   end
 
-  private
-
-  def log_failure_to_sentry?(_exception)
-    executions <= 4 || executions == MAX_ATTEMPTS
+  # cf config/initializers/sentry_job_retries_subscriber.rb
+  # where we configure capturing warnings on retries
+  def capture_sentry_warning_for_retry?(_exception)
+    executions <= 4
   end
 
   def job_link
     good_job_domain = ENV["APP"]&.match?(/rdv-mairie/) ? Domain::RDV_MAIRIE : Domain::RDV_SOLIDARITES
-
     GoodJob::Engine.routes.url_helpers.job_url(id: job_id, host: good_job_domain.host_name)
+  end
+
+  def set_sentry_context
+    Sentry.set_context(:rdv_job, queue_name:, job_link:)
   end
 end

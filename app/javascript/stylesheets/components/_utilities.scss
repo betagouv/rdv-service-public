@@ -1,5 +1,5 @@
 .bg-overlay {
-  background: rgba(255, 255, 255, .9);
+  background: rgba(255, 255, 255, 0.9);
 }
 
 // DISPLAY & VISIBILITY
@@ -42,6 +42,10 @@ a[disabled] {
 
 .rdv-text-align-right {
   text-align: right;
+}
+
+.rdv-white-space-nowrap {
+  white-space: nowrap;
 }
 
 // GRID

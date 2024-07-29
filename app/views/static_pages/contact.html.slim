@@ -10,9 +10,9 @@ ul.list-group.mb-2
     span> Autres départements, voir
     = link_to "l'annuaire des services publics", "https://lannuaire.service-public.fr/"
 
-.row#tech-support
-  .col-md-6
-    h3.mt-4
+.fr-grid-row.mt-4#tech-support
+  .fr-col-md-8
+    h3
       = mail_to current_domain.support_email,
         subject: "[Problème Usager]",
         body: "Code postal: \n\rNom: \n\rProblème ou Question:", class: "btn btn-primary" do
