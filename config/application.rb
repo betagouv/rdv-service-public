@@ -11,7 +11,6 @@ require "active_job/railtie"
 
 require "tod/core_extensions"
 require "dsfr/components"
-require_relative "../lib/fallback_error_middleware"
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
