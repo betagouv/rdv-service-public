@@ -23,7 +23,7 @@ class Table
 
     # check if table exists in db_connection
     unless db_connection.table_exists?(table_name)
-      puts "La table #{table_name} n'existe pas dans la base de données"
+      Rails.logger.info "La table #{table_name} n'existe pas dans la base de données" if defined?(Rails)
       return
     end
 
