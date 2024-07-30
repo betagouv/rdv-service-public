@@ -123,17 +123,25 @@ section.bg-lightturquoise.py-5
       h2.mb-2 Les conseillers numériques en parlent
     .fr-grid-row.mt-3
       .fr-col-md-9.mx-auto
-        blockquote.blockquote
-          | J'ai réduit de 30% mes lapins grâce à l'outil RDV.S c'est un outil vraiment top !
-          .blockquote-footer Une conseillère numérique France service de la Nièvre
-        blockquote.blockquote
-          | J'ai cherché pendant longtemps un outil qui permettait de prendre des rendez-vous selon
-            des plages horaires définies avec un temps donné. RDV Solidarités, une solution qui m'a
-            permis une meilleure gestion des rendez-vous et de travailler en équipe.
-          .blockquote-footer Un conseiller numérique, Ville du Mans
-        blockquote.blockquote
-          | Les médiateur⋅rices numériques que je connais qui utilisent RDV Aide
-            Numérique et moi-même sommes ravis de cette plateforme.
-          .blockquote-footer Témoignage recueilli via sondage
+        figure.fr-quote
+          blockquote
+            p « J'ai réduit de 30% mes lapins grâce à l'outil RDV.S c'est un outil vraiment top ! »
+          figcaption
+            p.fr-quote__author Une conseillère numérique France service de la Nièvre
+        figure.fr-quote
+          blockquote
+            p
+              ' « J'ai cherché pendant longtemps un outil qui permettait de prendre des rendez-vous selon
+              ' des plages horaires définies avec un temps donné. RDV Solidarités, une solution qui m'a
+              | permis une meilleure gestion des rendez-vous et de travailler en équipe. »
+          figcaption
+            p.fr-quote__author Un conseiller numérique, Ville du Mans
+        figure.fr-quote
+          blockquote
+            p
+              ' « Les médiateur⋅rices numériques que je connais qui utilisent RDV Aide
+              | Numérique et moi-même sommes ravis de cette plateforme. »
+          figcaption
+            p.fr-quote__author Témoignage recueilli via sondage
       .fr-col-3.text-center.d-none.d-lg-flex
-        = image_tag "static_pages/social.svg", class: "img-fluid p-3", alt: "Une agente travaille sur son ordinateur"
+        = image_tag "static_pages/social.svg", class: "rdv-max-width-60 rdv-max-width-md-100 p-3", alt: "Une agente travaille sur son ordinateur"
