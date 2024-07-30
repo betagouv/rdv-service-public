@@ -36,18 +36,16 @@ class Agent::AgentPolicy < ApplicationPolicy
     include CurrentAgentInPolicyConcern
 
     def resolve
-      if current_agent.secretaire?
-        scope.where(id: AgentRole.where(organisation_id: current_agent.organisations).select(:agent_id))
-      else
-        agents_of_territories_i_admin = scope.joins(:organisations).merge(current_agent.organisations_of_territorial_roles)
+      agents_i_can_see_as_secretaire = current_agent.secretaire? ? scope.where(id: AgentRole.where(organisation_id: current_agent.organisations).select(:agent_id)) : scope.none
 
-        agents_of_orgs_i_admin = scope.joins(:organisations).merge(current_agent.admin_orgs)
+      agents_of_territories_i_admin = scope.joins(:organisations).merge(current_agent.organisations_of_territorial_roles)
 
-        agents_of_orgs_i_basic_same_service = scope.joins(:organisations).merge(current_agent.basic_orgs)
-          .merge(current_agent.confreres)
+      agents_of_orgs_i_admin = scope.joins(:organisations).merge(current_agent.admin_orgs)
 
-        scope.where_id_in_subqueries([agents_of_territories_i_admin, agents_of_orgs_i_admin, agents_of_orgs_i_basic_same_service])
-      end
+      agents_of_orgs_i_basic_same_service = scope.joins(:organisations).merge(current_agent.basic_orgs)
+        .merge(current_agent.confreres)
+
+      scope.where_id_in_subqueries([agents_i_can_see_as_secretaire, agents_of_territories_i_admin, agents_of_orgs_i_admin, agents_of_orgs_i_basic_same_service])
     end
   end
 end
