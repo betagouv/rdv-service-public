@@ -19,7 +19,7 @@
             p.text-muted.font-14.mt-1
               = sanitize(I18n.t("activerecord.attributes.motif/bookable_by/hint.agents_and_prescripteurs"))
 
-    - if current_organisation.rdv_insertion?
+    - if try(:current_organisation)&.rdv_insertion? || current_territory.rdv_insertion?
       .form-row
         .col-md-12
           = label_tag do
@@ -61,7 +61,7 @@
     p.mb-3= Motif.human_attribute_name("for_secretariat_hint")
     = f.input :for_secretariat, label: Motif.human_attribute_name("for_secretariat_label"), input_html: { class: "js-uncheck-on-section-disable" }
 
-- if current_organisation.territory.motif_categories.present?
+- if current_territory.motif_categories.present?
   .card
     .card-body
       h5.card-title= MotifCategory.model_name.human
@@ -86,14 +86,15 @@
         = label_tag do
           = f.radio_button(:sectorisation_level, Motif::SECTORISATION_LEVEL_ORGANISATION)
           span.ml-1= Motif.human_attribute_value(:sectorisation_level, Motif::SECTORISATION_LEVEL_ORGANISATION, context: :hint)
-          .text-muted.font-14.my-1
-            - sectors_attributed_to_orga = Sector.attributed_to_organisation(current_organisation)
-            = t("motifs.form.sectorisation_level.sectors_attributed_to_orga", count: sectors_attributed_to_orga.count, sectors: sectors_attributed_to_orga.map(&:name).to_sentence.truncate(100), organisation: current_organisation.name)
+          - if motif.organisation
+            .text-muted.font-14.my-1
+              - sectors_attributed_to_orga = Sector.attributed_to_organisation(motif.organisation)
+              = t("motifs.form.sectorisation_level.sectors_attributed_to_orga", count: sectors_attributed_to_orga.count, sectors: sectors_attributed_to_orga.map(&:name).to_sentence.truncate(100), organisation: motif.organisation.name)
         = label_tag do
           = f.radio_button(:sectorisation_level, Motif::SECTORISATION_LEVEL_AGENT)
           span.ml-1= Motif.human_attribute_value(:sectorisation_level, Motif::SECTORISATION_LEVEL_AGENT, context: :hint)
-          - if motif.service.present?
-            - attributions_group = SectorAttribution.level_agent_grouped_by_service(current_organisation).fetch(motif.service_id, {agents_count: 0, attributions: []})
+          - if motif.service && motif.organisation
+            - attributions_group = SectorAttribution.level_agent_grouped_by_service(motif.organisation).fetch(motif.service_id, {agents_count: 0, attributions: []})
             .text-muted.font-14.my-1.ml-3
               = t( \
                 "motifs.form.sectorisation_level.sectors_attributed_to_agents", \
@@ -102,5 +103,5 @@
                 sectors_count_human: t("motifs.index.sectorisation_level_organisation", count: attributions_group[:sectors_count]), \
                 sectors: attributions_group[:attributions].map { "#{_1.agent.full_name} -> #{_1.sector.name}" }.to_sentence.truncate(100) \
               )
-      - if current_agent.territorial_admin_in?(current_organisation.territory)
-        = link_to "Configuration des secteurs", admin_territory_sectors_path(current_organisation.territory)
+      - if current_agent.territorial_admin_in?(current_territory)
+        = link_to "Configuration des secteurs", admin_territory_sectors_path(current_territory)

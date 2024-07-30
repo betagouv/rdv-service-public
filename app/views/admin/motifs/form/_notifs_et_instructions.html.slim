@@ -7,7 +7,7 @@
         span.ml-1= sanitize(Motif.human_attribute_value(:visibility_type, value, context: :html))
         p
           span.text-muted.font-14= Motif.human_attribute_value(:visibility_type, value, context: :hint)
-          - if current_organisation.rdv_insertion?
+          - if try(:current_organisation)&.rdv_insertion? || current_territory.rdv_insertion?
             br
             span.text-muted.font-14= Motif.human_attribute_value(:visibility_type, value, context: :hint_rdv_insertion)
 

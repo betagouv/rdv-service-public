@@ -53,6 +53,8 @@
 
 .row
   .col-12
+    .float-right
+      a.btn.btn-primary[href=new_admin_territory_motif_path] Créer un motif
     - if @motifs_count > 0
       = paginate @motifs, theme: "twitter-bootstrap-4"
 

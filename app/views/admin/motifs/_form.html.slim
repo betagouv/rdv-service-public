@@ -1,6 +1,9 @@
-= simple_form_for [:admin, motif.organisation, motif], html: { "data-controller": "motif-form" } do |f|
+= simple_form_for form_target, html: { "data-controller": "motif-form" } do |f|
 
   = render "model_errors", model: motif
+
+  - if multi_organisations
+    = render "admin/motifs/form/organisations_picker", f: f, motif: motif
 
   ul#motif_tabs.nav.nav-tabs.mt-3
     li.nav-item[role="presentation"]

@@ -1,0 +1,7 @@
+= territory_navigation("Création d’un nouveau motif")
+
+- content_for :title, "Création d’un nouveau motif"
+
+.row
+  .col-md-12
+    = render "admin/motifs/form", motif: @motif, form_target: [:admin, current_territory, @motif], multi_organisations: true

@@ -106,6 +106,10 @@ class Territory < ApplicationRecord
     attributes.slice(SOCIAL_FIELD_TOGGLES.keys).values.any?
   end
 
+  def rdv_insertion?
+    name.include?("Insertion")
+  end
+
   def to_s
     [name, departement_number.presence].compact.join(" - ")
   end

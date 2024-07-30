@@ -13,4 +13,4 @@
 
 .row
   .col-md-12
-    = render "form", motif: @motif
+    = render "form", motif: @motif, form_target: [:admin, @motif.organisation, @motif], multi_organisations: false
