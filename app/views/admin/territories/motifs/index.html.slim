@@ -31,10 +31,18 @@
         select.select2-input[id="collectif" name="collectif" style="width: 100%"]
           = options_for_select([["-", ""], ["Collectif", "true"], ["Individuel", "false"]], params[:collectif])
       .form-group.col-md-4
-        label for="en_ligne"
-          | Réservation en ligne
-        select.select2-input[id="en_ligne" name="en_ligne" style="width: 100%"]
-          = options_for_select([["-", ""], ["Oui", "true"], ["Non", "false"]], params[:en_ligne])
+        label for="bookable_by"
+          | Réservable par
+        select.select2-input[id="bookable_by" name="bookable_by" style="width: 100%"]
+          ruby:
+            options = [
+              ["-", ""],
+              ["Uniquement par les agents", "agents"],
+              ["Uniquement par les agents et prescripteurs", "agents_and_prescripteurs"],
+              ["Par les agents, prescripteurs et les usagers", "everyone"],
+            ]
+            options.insert(3, ["Par les agents, prescripteurs et les usagers sur invitation", "agents_and_prescripteurs_and_invited_users"]) if @organisations.any?(&:rdv_insertion?)
+          = options_for_select(options, params[:bookable_by])
     .form-row.justify-content-end.flex-gap-1em
       .form-group
         a.btn.btn-link[href=url_for({})] Réinitialiser

@@ -4,4 +4,4 @@
 - if params[:ants_pre_demande_number_required].to_b
   = f.input :ants_pre_demande_number, required: true, hint: t("simple_form.hints.user.ants_pre_demande_number_html"), input_html: {style: "text-transform: uppercase;"}
 - if current_domain != Domain::RDV_MAIRIE
-  = date_input(f, :birth_date)
+  = f.input :birth_date, as: :string, input_html: { type: "date" }

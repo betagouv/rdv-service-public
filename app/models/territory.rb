@@ -55,6 +55,7 @@ class Territory < ApplicationRecord
   scope :with_upcoming_rdvs, lambda {
     where(id: Organisation.with_upcoming_rdvs.distinct.select(:territory_id))
   }
+  scope :ordered_by_name, -> { order(Arel.sql("unaccent(LOWER(territories.name))")) }
 
   ## -
 
