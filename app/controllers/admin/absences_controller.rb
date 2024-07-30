@@ -83,7 +83,7 @@ class Admin::AbsencesController < AgentAuthController
   end
 
   def set_agent
-    @agent = filter_params[:agent_id].present? ? policy_scope(Agent).find(filter_params[:agent_id]) : @absence.agent
+    @agent = filter_params[:agent_id].present? ? policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope).find(filter_params[:agent_id]) : @absence.agent
   end
 
   def absence_params

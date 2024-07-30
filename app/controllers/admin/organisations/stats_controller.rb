@@ -4,7 +4,7 @@ class Admin::Organisations::StatsController < AgentAuthController
   def index
     @stats = Stat.new(
       rdvs: rdv_scope,
-      agents: policy_scope(Agent)
+      agents: policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope)
         .joins(:organisations).where(organisations: { id: current_organisation.id }),
       users: policy_scope(User)
     )
