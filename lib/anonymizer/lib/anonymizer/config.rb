@@ -26,5 +26,9 @@ module Anonymizer
         .select { ActiveRecord::Base.connection.table_exists?(_1) }
         .map { Table.new(_1, config: self) }
     end
+
+    def existing_and_truncated_tables
+      existing_tables + truncated_tables
+    end
   end
 end
