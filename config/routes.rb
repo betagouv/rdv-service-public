@@ -132,7 +132,7 @@ Rails.application.routes.draw do
               patch :update_services
             end
           end
-          resources :teams
+          resources :teams, except: :show
           resources :motifs, only: %i[index new create destroy]
           resource :user_fields, only: %i[edit update]
           resource :rdv_fields, only: %i[edit update]

@@ -1,6 +1,6 @@
 class Admin::Territories::ServicesController < Admin::Territories::BaseController
   def edit
-    authorize current_territory
+    authorize_with_legacy_configuration_scope current_territory
 
     activated_services = format_for_checkboxes(current_territory.services)
     other_services = format_for_checkboxes(Service.where.not(id: current_territory.service_ids))
@@ -9,7 +9,7 @@ class Admin::Territories::ServicesController < Admin::Territories::BaseControlle
   end
 
   def update
-    authorize current_territory
+    authorize_with_legacy_configuration_scope current_territory
     current_territory.update!(services_params)
     flash[:alert] = "Liste des services disponibles mise à jour"
 

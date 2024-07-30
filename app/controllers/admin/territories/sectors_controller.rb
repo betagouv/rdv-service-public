@@ -14,12 +14,12 @@ class Admin::Territories::SectorsController < Admin::Territories::BaseController
 
   def new
     @sector = Sector.new(territory: current_territory)
-    authorize @sector
+    authorize_with_legacy_configuration_scope @sector
   end
 
   def create
     @sector = Sector.new(**sector_params, territory: current_territory)
-    authorize @sector
+    authorize_with_legacy_configuration_scope @sector
     if @sector.save
       if params[:commit] == I18n.t("helpers.submit.create")
         redirect_to admin_territory_sector_path(current_territory, @sector)
@@ -61,7 +61,7 @@ class Admin::Territories::SectorsController < Admin::Territories::BaseController
   end
 
   def authorize_sector
-    authorize @sector
+    authorize_with_legacy_configuration_scope @sector
   end
 
   def sector_params

@@ -19,12 +19,12 @@ class Admin::Territories::ZonesController < Admin::Territories::BaseController
     zone_defaults = { level: params[:default_zone_level] || Zone::LEVEL_CITY }
     @zone = Zone.new(**zone_defaults.merge(zone_params_get), sector: @sector)
     @sectors = policy_scope(Sector)
-    authorize @zone
+    authorize_with_legacy_configuration_scope @zone
   end
 
   def create
     @zone = Zone.new(**zone_params, sector: @sector)
-    authorize @zone
+    authorize_with_legacy_configuration_scope @zone
     if @zone.save
       if params[:commit] == I18n.t("helpers.submit.create")
         redirect_to admin_territory_sector_path(current_territory, @sector), flash: { success: "#{@zone.human_attribute_value(:level)} ajoutée au secteur" }
@@ -38,7 +38,7 @@ class Admin::Territories::ZonesController < Admin::Territories::BaseController
 
   def destroy
     zone = Zone.find(params[:id])
-    authorize zone
+    authorize_with_legacy_configuration_scope zone
     if zone.destroy
       redirect_to admin_territory_sector_path(current_territory, @sector), flash: { success: "#{zone.human_attribute_value(:level)} retirée du secteur" }
     else
@@ -48,7 +48,7 @@ class Admin::Territories::ZonesController < Admin::Territories::BaseController
 
   def destroy_multiple
     zones = @sector.zones
-    zones = zones.filter { |z| authorize(z, :destroy?) }
+    zones = zones.filter { |z| authorize_with_legacy_configuration_scope(z, :destroy?) }
     count = zones.count
     if zones.map(&:destroy).all?
       flash[:success] = "Les #{count} communes et rues ont été retirées du secteur"

@@ -4,7 +4,7 @@ class Admin::Territories::InvitationsDeviseController < Devise::InvitationsContr
   def new
     @services = current_territory.services
     self.resource = resource_class.new(territories: [current_territory])
-    #  authorize(resource)
+    #  authorize_with_legacy_configuration_scope(resource)
     render :new, layout: "application_configuration"
   end
 
@@ -14,7 +14,7 @@ class Admin::Territories::InvitationsDeviseController < Devise::InvitationsContr
     agent = Agent.find_by(email: permitted_params[:email].downcase)
     if agent.nil?
       # Authorize against a dummy Agent
-      authorize(Agent.new(permitted_params))
+      authorize_with_legacy_configuration_scope(Agent.new(permitted_params))
       agent = invite_resource # invite_resource creates the new Agent in DB and sends the invitation.
     else
       agent.save(context: :invite) # Specify a different validation context to bypass last_name/first_name presence
@@ -52,8 +52,8 @@ class Admin::Territories::InvitationsDeviseController < Devise::InvitationsContr
   end
   helper_method :policy_scope
 
-  def authorize(record, *args, **kwargs)
-    super([:configuration, record], *args, **kwargs)
+  def authorize_with_legacy_configuration_scope(record, *args, **kwargs)
+    authorize([:configuration, record], *args, **kwargs)
   end
 
   # invite_params is called by Devise::InvitationsController#invite_resource
