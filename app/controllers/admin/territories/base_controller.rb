@@ -42,5 +42,12 @@ class Admin::Territories::BaseController < ApplicationController
 
   def set_territory
     @territory = Territory.find(params[:territory_id])
+
+    context = AgentTerritorialContext.new(current_agent, @territory)
+
+    policy = ::Configuration::TerritoryPolicy.new(context, @territory)
+    raise ActiveRecord::RecordNotFound unless policy.show?
+
+    @territory
   end
 end
