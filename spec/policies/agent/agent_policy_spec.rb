@@ -86,7 +86,7 @@ RSpec.describe Agent::AgentPolicy::Scope, type: :policy do
       end
     end
 
-    context "agent is in secrétariat" do
+    context "when agent is secrétaire" do
       let!(:service_secretariat) { create(:service, :secretariat) }
       let!(:other_service) { create :service }
       let!(:services) { create_list(:service, 2) }
@@ -96,7 +96,7 @@ RSpec.describe Agent::AgentPolicy::Scope, type: :policy do
 
       it { is_expected.to match_array([agent, other_agent_same_orgas]) }
 
-      context "when agent is also territory admin" do
+      context "when secrétaire is also territory admin" do
         let!(:territory) { create(:territory) }
         let!(:organisations) { create_list(:organisation, 2, territory: territory) }
         let!(:other_organisation_in_territory) { create(:organisation, territory: territory) }
