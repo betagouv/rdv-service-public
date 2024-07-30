@@ -4,7 +4,7 @@ class Admin::Territories::TeamsController < Admin::Territories::BaseController
   respond_to :html, :json
 
   def index
-    @teams = policy_scope(Team).page(page_number)
+    @teams = policy_scope(current_territory.teams, policy_scope_class: Agent::TeamPolicy::Scope).page(page_number)
     @teams = params[:term].present? ? @teams.search_by_text(params[:term]) : @teams.ordered_by_name
   end
 
@@ -18,8 +18,10 @@ class Admin::Territories::TeamsController < Admin::Territories::BaseController
   end
 
   def create
-    authorize Team
-    if (@team = Team.create(team_params.merge(territory: current_territory)))
+    @team = Team.new(team_params.merge(territory: current_territory))
+    authorize @team
+
+    if @team.save
       redirect_to admin_territory_teams_path(current_territory)
     else
       render :new
@@ -43,6 +45,11 @@ class Admin::Territories::TeamsController < Admin::Territories::BaseController
     authorize @team
     @team.destroy!
     redirect_to admin_territory_teams_path(current_territory)
+  end
+
+  # On est obligé de redéfinir cette méthode ici tant que le controller parent utilise les AgentTerritorialContext
+  def pundit_user
+    current_agent
   end
 
   private

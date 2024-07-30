@@ -12,7 +12,7 @@ RSpec.describe "Managing teams" do
   it "allows creating, editing and deleting teams" do
     visit admin_territory_path(territory.id)
     click_on "Équipes"
-    click_on "Ajouter une équipe"
+    click_on "Ajouter une équipe", match: :first
     fill_in "Nom", with: "Désecto Valence"
     click_on "Enregistrer"
     expect(page).to have_content "Désecto Valence"
