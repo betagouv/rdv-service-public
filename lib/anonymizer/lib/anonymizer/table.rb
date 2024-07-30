@@ -8,24 +8,45 @@ module Anonymizer
       @config = config
     end
 
+    def anonymize_records!(scope)
+      if table_name_without_schema.in?(config.truncated_tables_names)
+        if scope == scope.klass.all
+          db_connection.execute("TRUNCATE #{ActiveRecord::Base.sanitize_sql(table_name)} CASCADE")
+        else
+          scope.delete_all
+        end
+      else
+        anonymized_columns.each { anonymize_records_column!(scope, _1) }
+      end
+    end
+
     def anonymize_record!(record)
-      record.class.where(id: record.id).update_all(anonymized_attributes) # rubocop:disable Rails/SkipsModelValidations
-      record.reload
+      anonymize_records!(record.class.where(id: record.id))
     end
-
-    def anonymize_records_in_scope!(scope)
-      scope.update_all(anonymized_attributes) # rubocop:disable Rails/SkipsModelValidations
-    end
-
-    private
-
-    attr_reader :config
 
     def unidentified_column_names
       all_columns = db_connection.columns(table_name).map(&:name)
       primary_key_columns = db_connection.primary_keys(table_name)
       foreign_key_columns = db_connection.foreign_keys(table_name).map { |key| key.options[:column] }
       all_columns - primary_key_columns - foreign_key_columns - anonymized_column_names - non_anonymized_column_names
+    end
+
+    private
+
+    attr_reader :config
+
+    def anonymize_records_column!(scope, column)
+      if column.type.in?(%i[string text]) && column.null
+        # Pour limiter la confusion lors de l'exploitation des données, on transforme les chaines vides en null
+        blank_value = column.array ? "{}" : ""
+        scope
+          .where(column.name => blank_value)
+          .update_all(column.name => nil) # rubocop:disable Rails/SkipsModelValidations
+      end
+
+      scope
+        .where.not(column.name => nil)
+        .update_all(column.name => anonymous_value(column)) # rubocop:disable Rails/SkipsModelValidations
     end
 
     def anonymized_column_names
@@ -48,17 +69,17 @@ module Anonymizer
       end
     end
 
-    def anonymous_value(column, quote_value: false)
+    def anonymous_value(column)
       if column.type.in?(%i[string text])
-        anonymous_text_value(column, quote_value)
+        anonymous_text_value(column)
       elsif column.type == :jsonb
         Arel.sql("'{}'::jsonb") # necessary for api_calls.raw_http, non-nullable but with null default
       else
-        quote_value ? db_connection.quote(column.default) : column.default
+        column.default
       end
     end
 
-    def anonymous_text_value(column, quote_value)
+    def anonymous_text_value(column)
       if column.array
         Arel.sql("'{valeur anonymisée}'")
       elsif column.name.include?("email")
@@ -66,7 +87,7 @@ module Anonymizer
       elsif column_has_uniqueness_constraint?(column)
         Arel.sql("'[valeur unique anonymisée ' || id || ']'")
       else
-        quote_value ? db_connection.quote("[valeur anonymisée]") : "[valeur anonymisée]"
+        "[valeur anonymisée]"
       end
     end
 

@@ -18,8 +18,14 @@ module Anonymizer
     Table.new(record.class.table_name, config:).anonymize_record!(record)
   end
 
-  def self.anonymize_records_in_scope!(scope, config: nil)
+  def self.anonymize_records!(scope, config: nil)
     config ||= default_config
-    Table.new(scope.table_name, config:).anonymize_records_in_scope!(scope)
+    Table.new(scope.table_name, config:).anonymize_records!(scope)
+  end
+
+  def self.validate_all_columns_defined!
+    # TODO
+    # elsif unidentified_column_names.present?
+    #   raise "Les règles d'anonymisation pour les colonnes #{unidentified_column_names.join(' ')} de la table #{table_name} n'ont pas été définies"
   end
 end
