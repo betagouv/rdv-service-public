@@ -41,6 +41,6 @@ class Admin::Territories::BaseController < ApplicationController
   private
 
   def set_territory
-    @territory = Territory.find(params[:territory_id])
+    @territory = policy_scope(Territory).find(params[:territory_id])
   end
 end

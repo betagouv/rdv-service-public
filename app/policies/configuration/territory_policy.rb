@@ -33,4 +33,19 @@ class Configuration::TerritoryPolicy
   alias edit? territorial_admin?
   alias display_rdv_fields_configuration? territorial_admin?
   alias display_motif_fields_configuration? territorial_admin?
+
+  class Scope < ApplicationPolicy::Scope
+    include CurrentAgentInPolicyConcern
+
+    def resolve
+      territories_with_at_least_partial_access_rights = Territory.joins(:agent_territorial_access_rights).where(
+        agent_territorial_access_rights: { agent_id: current_agent.id }
+      ).where("allow_to_manage_teams OR allow_to_invite_agents OR allow_to_manage_access_rights")
+
+      scope.where_id_in_subqueries([
+                                     current_agent.territories,
+                                     territories_with_at_least_partial_access_rights,
+                                   ])
+    end
+  end
 end
