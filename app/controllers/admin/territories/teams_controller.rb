@@ -1,5 +1,5 @@
 class Admin::Territories::TeamsController < Admin::Territories::BaseController
-  before_action :set_team, only: %i[show edit update destroy]
+  before_action :set_team, only: %i[edit update destroy]
 
   respond_to :html, :json
 
