@@ -7,15 +7,16 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
   end
 
   def find_agents(search_term)
-    organisation_agents = policy_scope(Agent)
+    territory_agents = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope)
       .active
       .complete
+      .joins(:agent_territorial_access_rights).where(agent_territorial_access_rights: { territory_id: current_territory.id })
 
-    agents = Agent.where(id: organisation_agents) # Use a subquery (IN) instead of .distinct, to be able to sort by an expression
+    agents = Agent.where(id: territory_agents) # Use a subquery (IN) instead of .distinct, to be able to sort by an expression
     if search_term.present?
       agents.search_by_text(search_term)
     else
-      agents.order_by_last_name
+      agents.ordered_by_last_name
     end
   end
 

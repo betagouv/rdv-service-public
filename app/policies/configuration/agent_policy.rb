@@ -26,22 +26,4 @@ class Configuration::AgentPolicy
   def create?
     territorial_admin? || @access_rights&.allow_to_invite_agents?
   end
-
-  class Scope
-    def initialize(context, _scope)
-      @current_territory = context.territory
-      @current_agent = context.agent
-    end
-
-    def resolve
-      scope = Agent.includes(:agent_territorial_access_rights).where("agent_territorial_access_rights.territory": @current_territory)
-      unless @current_agent.territorial_admin_in?(@current_territory)
-        scope = scope.includes(:organisations)
-          .where(organisations: @current_agent.organisations)
-          .where(services: @current_agent.services)
-          .includes(:services)
-      end
-      scope
-    end
-  end
 end

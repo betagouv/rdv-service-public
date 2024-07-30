@@ -145,7 +145,7 @@ class Motif < ApplicationRecord
       .includes(:services)
       .complete
       .active
-      .order_by_last_name
+      .ordered_by_last_name
   end
 
   def visible_and_notified?
