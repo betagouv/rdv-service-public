@@ -7,12 +7,12 @@ class Admin::Territories::WebhookEndpointsController < Admin::Territories::BaseC
 
   def new
     @webhook = WebhookEndpoint.new
-    authorize @webhook
+    authorize_with_legacy_configuration_scope @webhook
   end
 
   def create
     @webhook = WebhookEndpoint.new(webhook_endpoint_params)
-    authorize @webhook
+    authorize_with_legacy_configuration_scope @webhook
     if @webhook.save
       redirect_to admin_territory_webhook_endpoints_path(current_territory)
     else
@@ -21,11 +21,11 @@ class Admin::Territories::WebhookEndpointsController < Admin::Territories::BaseC
   end
 
   def edit
-    authorize @webhook
+    authorize_with_legacy_configuration_scope @webhook
   end
 
   def update
-    authorize @webhook
+    authorize_with_legacy_configuration_scope @webhook
 
     params = webhook_endpoint_params[:secret] == @webhook.partially_hidden_secret ? webhook_endpoint_params.except(:secret) : webhook_endpoint_params
 
@@ -37,7 +37,7 @@ class Admin::Territories::WebhookEndpointsController < Admin::Territories::BaseC
   end
 
   def destroy
-    authorize @webhook
+    authorize_with_legacy_configuration_scope @webhook
     @webhook.destroy
     redirect_to admin_territory_webhook_endpoints_path(current_territory)
   end

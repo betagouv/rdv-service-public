@@ -20,8 +20,9 @@ class Admin::Territories::BaseController < ApplicationController
   end
   helper_method :pundit_user
 
-  def authorize(record, *args, **kwargs)
-    # Utilisation d'un namespace `configuration` pour éviter les confusions avec les policies d'un RDV usager, d'un RDV agent ou d'un RDV en configuration.
+  def authorize_with_legacy_configuration_scope(record, *args, **kwargs)
+    # L'utilisation de configuration est un legacy qui a l'inconvénient de distinguer les permissions en fonction de la page sur laquelle on est en train de naviguer
+    # On préfère que le controller applique le filtre pertinent, et que les policy indiquent les permissions dans l'absolu, indépendamment de la page courante.
     super([:configuration, record], *args, **kwargs)
   end
 
@@ -32,7 +33,7 @@ class Admin::Territories::BaseController < ApplicationController
       super(scope, policy_scope_class: policy_scope_class)
     else
       # L'utilisation de configuration est un legacy qui a l'inconvénient de distinguer les permissions en fonction de la page sur laquelle on est en train de naviguer
-      # On préfère que ça soit le controller qui applique le filtre pertinent, et que les policy indiquent les permissions dans l'absolu, indépendamment de la page courante.
+      # On préfère que le controller applique le filtre pertinent, et que les policy indiquent les permissions dans l'absolu, indépendamment de la page courante.
       super([:configuration, scope])
     end
   end

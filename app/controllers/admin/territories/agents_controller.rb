@@ -64,7 +64,7 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
   end
 
   def authorize_agent
-    authorize @agent
+    authorize_with_legacy_configuration_scope @agent
   end
 
   def agent_update_params
