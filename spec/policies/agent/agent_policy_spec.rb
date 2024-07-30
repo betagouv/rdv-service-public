@@ -95,6 +95,17 @@ RSpec.describe Agent::AgentPolicy::Scope, type: :policy do
       let!(:other_agent_same_orgas) { create(:agent, basic_role_in_organisations: organisations, service: other_service) }
 
       it { is_expected.to match_array([agent, other_agent_same_orgas]) }
+
+      context "when agent is also territory admin" do
+        let!(:territory) { create(:territory) }
+        let!(:organisations) { create_list(:organisation, 2, territory: territory) }
+        let!(:other_organisation_in_territory) { create(:organisation, territory: territory) }
+        let!(:agent_in_other_org_in_territory) { create(:agent, organisations: [other_organisation_in_territory]) }
+
+        before { agent.territories << territory }
+
+        it { is_expected.to match_array([agent, other_agent_same_orgas, agent_in_other_org_in_territory]) }
+      end
     end
 
     context "admin agent, misc state" do
