@@ -1,11 +1,11 @@
 class Admin::Territories::AgentRolesController < Admin::Territories::BaseController
   def edit
-    authorize(@agent_role)
+    authorize_with_legacy_configuration_scope(@agent_role)
   end
 
   def update
     agent_role = AgentRole.find(params[:id])
-    authorize(agent_role)
+    authorize_with_legacy_configuration_scope(agent_role)
     if agent_role.update(agent_role_params)
       flash[:success] = "Les permissions de l'agent ont été mises à jour"
     else
@@ -17,7 +17,7 @@ class Admin::Territories::AgentRolesController < Admin::Territories::BaseControl
 
   def create
     agent_role = AgentRole.new(agent_role_params)
-    authorize(agent_role)
+    authorize_with_legacy_configuration_scope(agent_role)
     if agent_role.save
       flash[:success] = "Les permissions de l'agent ont été mises à jour"
     else
@@ -29,7 +29,7 @@ class Admin::Territories::AgentRolesController < Admin::Territories::BaseControl
 
   def destroy
     agent_role = AgentRole.find(params[:id])
-    authorize(agent_role)
+    authorize_with_legacy_configuration_scope(agent_role)
 
     agent = Agent.find(agent_role.agent_id)
     organisation = Organisation.find(agent_role.organisation_id)
