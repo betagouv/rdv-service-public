@@ -12,6 +12,19 @@ module Anonymizer
 
     def rules = @data[:rules]
 
-    def truncated_tables = @data[:truncated_tables]
+    def truncated_tables_names = @data[:truncated_tables]
+
+    def truncated_tables
+      @truncated_tables ||= truncated_tables_names
+        .select { ActiveRecord::Base.connection.table_exists?(_1) }
+        .map { Table.new(_1, config: self) }
+    end
+
+    def existing_tables
+      @existing_tables ||= rules
+        .keys
+        .select { ActiveRecord::Base.connection.table_exists?(_1) }
+        .map { Table.new(_1, config: self) }
+    end
   end
 end

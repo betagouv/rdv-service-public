@@ -44,7 +44,10 @@ users_to_delete.delete_all
 # Partie 3 : Anonymisation des données restantes
 # -------------------------------
 
-Anonymizer.anonymize_user_data!
+Anonymizer.default_config.anonymize_table!("users")
+Anonymizer.default_config.anonymize_table!("receipts")
+Anonymizer.default_config.anonymize_table!("rdvs")
+Anonymizer.default_config.truncated_tables.each(&:anonymize_all_records!)
 
 # -------------------------------
 # Épilogue : suppression des jobs et versions

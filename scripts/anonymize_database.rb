@@ -1,3 +1,7 @@
+if Rails.env.production?
+  raise "L'anonymisation en masse est désactivée en production pour éviter les catastrophes"
+end
+
 Anonymizer.anonymize_all_data!
 
 if User.where.not(last_name: "[valeur anonymisée]").any?

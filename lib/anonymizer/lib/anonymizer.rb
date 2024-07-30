@@ -13,28 +13,6 @@ module Anonymizer
     end
   end
 
-  def self.anonymize_all_data!(schema: "public", config: nil)
-    config ||= default_config
-    config.rules.each_key do |table_name|
-      anonymize_table!("#{schema}.#{table_name}", config:)
-    end
-  end
-
-  def self.anonymize_user_data!(config: nil)
-    config ||= default_config
-    anonymize_table!("users")
-    anonymize_table!("receipts")
-    anonymize_table!("rdvs")
-    config.truncated_tables.each do |table_name|
-      anonymize_table!(table_name, config:)
-    end
-  end
-
-  def self.anonymize_table!(table_name, config: nil)
-    config ||= default_config
-    Table.new(table_name, config:).anonymize_table!
-  end
-
   def self.anonymize_record!(record, config: nil)
     config ||= default_config
     Table.new(record.class.table_name, config:).anonymize_record!(record)
