@@ -13,10 +13,6 @@ class Admin::Territories::TeamsController < Admin::Territories::BaseController
     authorize_agent @team
   end
 
-  def show
-    authorize_agent @team
-  end
-
   def create
     @team = Team.new(team_params.merge(territory: current_territory))
     authorize_agent @team
