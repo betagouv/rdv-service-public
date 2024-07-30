@@ -9,7 +9,7 @@ RSpec.describe "Managing teams" do
     login_as(current_agent, scope: :agent)
   end
 
-  it "allows creating, editing and deleting teams" do
+  it "allows creating and editing teams", js: true do
     visit admin_territory_path(territory.id)
     click_on "Équipes"
     click_on "Ajouter une équipe", match: :first
@@ -20,6 +20,9 @@ RSpec.describe "Managing teams" do
       territory_id: territory.id,
       name: "Désecto Valence"
     )
+
+    find(".fa.fa-edit").click
+    click_on "Enregistrer"
   end
 
   it "doesn't allow seeing teams in another territory" do
