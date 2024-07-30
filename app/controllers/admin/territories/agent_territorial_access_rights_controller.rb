@@ -2,7 +2,7 @@ class Admin::Territories::AgentTerritorialAccessRightsController < Admin::Territ
   def update
     agent = Agent.find(params[:id])
     agent_territorial_access_right = AgentTerritorialAccessRight.find_by(agent: agent, territory: current_territory)
-    authorize agent_territorial_access_right
+    authorize_with_legacy_configuration_scope agent_territorial_access_right
     agent_territorial_access_right.update(agent_territorial_access_right_params)
     flash[:success] = "Droits d'accès mis à jour"
     redirect_to edit_admin_territory_agent_path(current_territory, agent)

@@ -27,6 +27,6 @@ class ApplicationRecord < ActiveRecord::Base
   #     Agent.where_id_in_subqueries([agents_with_open_plage, agents_with_open_rdv_collectif])
   #
   def self.where_id_in_subqueries(subqueries)
-    subqueries.map { |scope| where(id: scope) }.reduce(:or)
+    subqueries.map { |subquery| where(id: subquery) }.reduce(:or)
   end
 end

@@ -14,7 +14,7 @@ class Admin::SlotsController < AgentAuthController
       .active.ordered_by_name
     @services = Service.where(id: @motifs.pluck(:service_id).uniq)
     @form.service_id = @services.first.id if @services.count == 1
-    @agents = policy_scope(Agent)
+    @agents = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope)
       .joins(:organisations).where(organisations: { id: current_organisation.id })
       .complete.active.ordered_by_last_name
     @lieux = Agent::LieuPolicy::Scope.apply(current_agent, current_organisation.lieux).enabled.ordered_by_name

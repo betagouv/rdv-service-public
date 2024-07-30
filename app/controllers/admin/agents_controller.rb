@@ -2,7 +2,7 @@ class Admin::AgentsController < AgentAuthController
   respond_to :html, :json
 
   def index
-    @agents = policy_scope(Agent)
+    @agents = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope)
       .includes(:services, :roles, :organisations)
       .active
 
@@ -71,7 +71,7 @@ class Admin::AgentsController < AgentAuthController
   end
 
   def destroy
-    @agent = policy_scope(Agent).find(params[:id])
+    @agent = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope).find(params[:id])
     authorize(@agent)
 
     agent_removal = AgentRemoval.new(@agent, current_organisation)
