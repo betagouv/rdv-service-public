@@ -11,12 +11,17 @@ RSpec.describe Anonymizer do
     end
 
     context "user" do
-      let!(:user) { create(:user, email: "user@example.com", first_name: "jean", last_name: "jacques") }
+      let!(:user) { create(:user, email: "user@example.com", first_name: "jean", last_name: "jacques", confirmation_token: "CONFIRM_ME") }
 
       it "anonymizes first and last name" do
         Anonymizer.anonymize_record!(user)
         expect(user.reload.full_name).to eq "[valeur anonymisée] [VALEUR ANONYMISÉE]"
         expect(user.reload.email).to eq "email_anonymise_#{user.id}@exemple.fr"
+      end
+
+      it "anonymizes unique confirmation_token" do
+        Anonymizer.anonymize_record!(user)
+        expect(user.reload.confirmation_token).to eq "[valeur unique anonymisée #{user.id}]"
       end
     end
 
@@ -116,6 +121,24 @@ RSpec.describe Anonymizer do
   end
 
   describe "#anonymize_records!" do
+    context "users" do
+      let!(:user1) { create(:user, email: "user@example.com", first_name: "jean", last_name: "jacques", confirmation_token: "CONFIRM_ME") }
+      let!(:user2) { create(:user, email: "user2@example.com", first_name: "marco", last_name: "polo", confirmation_token: "WAT") }
+      let!(:user_without_email) { create(:user, email: nil) }
+
+      it "anonymizes correct things" do
+        Anonymizer.anonymize_records!(User.all)
+        expect(user1.reload.full_name).to eq "[valeur anonymisée] [VALEUR ANONYMISÉE]"
+        expect(user2.reload.full_name).to eq "[valeur anonymisée] [VALEUR ANONYMISÉE]"
+        expect(user_without_email.reload.full_name).to eq "[valeur anonymisée] [VALEUR ANONYMISÉE]"
+        expect(user1.reload.email).to eq "email_anonymise_#{user1.id}@exemple.fr"
+        expect(user2.reload.email).to eq "email_anonymise_#{user2.id}@exemple.fr"
+        expect(user_without_email.reload.email).to be_nil
+        expect(user1.reload.confirmation_token).to eq "[valeur unique anonymisée #{user1.id}]"
+        expect(user2.reload.confirmation_token).to eq "[valeur unique anonymisée #{user2.id}]"
+      end
+    end
+
     context "rdvs" do
       let!(:rdv_with_context) { create(:rdv, context: "Des infos sensisbles sur le rdv") }
       let!(:rdv_with_blank_context) { create(:rdv, context: "") }
@@ -130,12 +153,27 @@ RSpec.describe Anonymizer do
     end
 
     context "paper trail version (truncated table)" do
-      let!(:version) { create(:rdv).versions.last }
-      let!(:other_version) { create(:rdv).versions.last }
+      before do
+        travel_to(Date.new(2020, 6, 6)) { create(:rdv) }
+        travel_to(Date.new(2020, 6, 6)) { create(:rdv) }
+        travel_to(Date.new(2021, 6, 6)) { create(:rdv) }
+        travel_to(Date.new(2021, 6, 6)) { create(:rdv) }
+      end
 
-      it "truncates all versions" do
-        Anonymizer.anonymize_records!(PaperTrail::Version.all)
-        expect(PaperTrail::Version.count).to eq 0
+      context "anonymize all (scope = all)" do
+        it "truncates all versions" do
+          expect(PaperTrail::Version.count).to be > 4
+          Anonymizer.anonymize_records!(PaperTrail::Version.all)
+          expect(PaperTrail::Version.count).to eq 0
+        end
+      end
+
+      context "anonymize only 2020 versions (partial scope)" do
+        it "does not truncate 2021 ones" do
+          expect(PaperTrail::Version.where(item_type: "Rdv").map(&:created_at).map(&:year).uniq).to eq [2020, 2021]
+          Anonymizer.anonymize_records!(PaperTrail::Version.where("created_at <= ?", Date.new(2020, 12, 12)))
+          expect(PaperTrail::Version.where(item_type: "Rdv").map(&:created_at).map(&:year).uniq).to eq [2021]
+        end
       end
     end
   end

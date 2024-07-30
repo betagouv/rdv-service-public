@@ -8,9 +8,9 @@ module Anonymizer
       @config = config
     end
 
-    def anonymize_records!(scope)
+    def anonymize_records!(scope = nil)
       if table_name_without_schema.in?(config.truncated_tables_names)
-        if scope == scope.klass.all
+        if scope.nil? || scope == scope.klass.all
           db_connection.execute("TRUNCATE #{ActiveRecord::Base.sanitize_sql(table_name)} CASCADE")
         else
           scope.delete_all
@@ -81,7 +81,7 @@ module Anonymizer
 
     def anonymous_text_value(column)
       if column.array
-        Arel.sql("'{valeur anonymisée}'")
+        Arel.sql("'{valeur anonymisée}'") # TODO : je ne crois pas que ce soit utilisé
       elsif column.name.include?("email")
         Arel.sql("'email_anonymise_' || id || '@exemple.fr'")
       elsif column_has_uniqueness_constraint?(column)

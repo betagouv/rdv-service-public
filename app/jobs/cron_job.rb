@@ -118,7 +118,7 @@ class CronJob < ApplicationJob
 
   class AnonymizeOldReceipts < CronJob
     def perform
-      Anonymizer.anonymize_records_in_scope!(Receipt.where("created_at < ?", 6.months.ago))
+      Anonymizer.anonymize_records!(Receipt.where("created_at < ?", 6.months.ago))
     end
   end
 
