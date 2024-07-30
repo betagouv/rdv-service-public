@@ -2,11 +2,11 @@
 
 = simple_form_for "", url: admin_territory_teams_path(current_territory), html: { method: :get, class: "form-inline" }, wrapper: :inline_form do |f|
 
-  .container-fluid.bg-white.rounded.m-2.p-2
+  .container-fluid.bg-white.rounded.m-2.p-4
 
-    .text-right
+    .float-left
       = link_to t(".create_team"), new_admin_territory_team_path(current_territory), class:"btn btn-outline-primary"
-    .m-3.d-flex.justify-content-end
+    .d-flex.justify-content-end
       - term = params[:term].blank? ? "d-none" : ""
       div= link_to "Réinitialiser", admin_territory_teams_path(current_territory), class: "btn btn-link #{term}"
       = f.input :term, placeholder: "ex. Puericultrice", label: false, input_html: { autocomplete: "off", class: "search-form-control", value: params[:term] }, required: false
@@ -21,7 +21,7 @@
       tbody
         - @teams.each do |team|
           tr id="team_#{team.id}"
-            td = team.name
+            td = link_to team.name, edit_admin_territory_team_path(current_territory, team)
             td = team.agents.count
             td
               .d-flex
@@ -37,5 +37,4 @@
       = paginate @teams, theme: "twitter-bootstrap-4"
 
     .text-right
-      = link_to t(".back"), admin_territory_agents_path(current_territory), class: "btn btn-link"
       = link_to t(".create_team"), new_admin_territory_team_path(current_territory), class: "btn btn-outline-primary"
