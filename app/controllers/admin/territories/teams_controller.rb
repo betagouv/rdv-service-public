@@ -10,16 +10,16 @@ class Admin::Territories::TeamsController < Admin::Territories::BaseController
 
   def new
     @team = Team.new(territory: current_territory)
-    authorize_with_legacy_configuration_scope @team
+    authorize_agent @team
   end
 
   def show
-    authorize_with_legacy_configuration_scope @team
+    authorize_agent @team
   end
 
   def create
     @team = Team.new(team_params.merge(territory: current_territory))
-    authorize_with_legacy_configuration_scope @team
+    authorize_agent @team
 
     if @team.save
       redirect_to admin_territory_teams_path(current_territory)
@@ -29,11 +29,11 @@ class Admin::Territories::TeamsController < Admin::Territories::BaseController
   end
 
   def edit
-    authorize_with_legacy_configuration_scope @team
+    authorize_agent @team
   end
 
   def update
-    authorize_with_legacy_configuration_scope @team
+    authorize_agent @team
     if @team.update(team_params)
       redirect_to admin_territory_teams_path(current_territory)
     else
@@ -42,7 +42,7 @@ class Admin::Territories::TeamsController < Admin::Territories::BaseController
   end
 
   def destroy
-    authorize_with_legacy_configuration_scope @team
+    authorize_agent @team
     @team.destroy!
     redirect_to admin_territory_teams_path(current_territory)
   end

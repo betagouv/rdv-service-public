@@ -23,7 +23,7 @@ class Admin::Territories::BaseController < ApplicationController
   def authorize_with_legacy_configuration_scope(record, *args, **kwargs)
     # L'utilisation de configuration est un legacy qui a l'inconvénient de distinguer les permissions en fonction de la page sur laquelle on est en train de naviguer
     # On préfère que le controller applique le filtre pertinent, et que les policy indiquent les permissions dans l'absolu, indépendamment de la page courante.
-    super([:configuration, record], *args, **kwargs)
+    authorize([:configuration, record], *args, **kwargs)
   end
 
   # L'usage recommandé est de passer explicitement une policy_scope_class pour savoir quelle policy est utilisé

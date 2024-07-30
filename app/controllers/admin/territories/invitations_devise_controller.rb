@@ -53,7 +53,7 @@ class Admin::Territories::InvitationsDeviseController < Devise::InvitationsContr
   helper_method :policy_scope
 
   def authorize_with_legacy_configuration_scope(record, *args, **kwargs)
-    super([:configuration, record], *args, **kwargs)
+    authorize([:configuration, record], *args, **kwargs)
   end
 
   # invite_params is called by Devise::InvitationsController#invite_resource
