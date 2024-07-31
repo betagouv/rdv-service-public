@@ -1,12 +1,12 @@
 class Configuration::AgentRolePolicy
-  def initialize(context, _agent)
+  def initialize(context, agent_role)
     @current_agent = context.agent
-    @current_territory = context.territory
-    @access_rights = @current_agent.access_rights_for_territory(@current_territory)
+    @agent_role = agent_role
+    @access_rights = @current_agent.access_rights_for_territory(agent_role.organisation.territory)
   end
 
   def territorial_admin?
-    @current_agent.territorial_admin_in?(@current_territory) ||
+    @current_agent.territorial_admin_in?(@agent_role.organisation.territory) ||
       @access_rights&.allow_to_invite_agents?
   end
 
