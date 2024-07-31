@@ -5,19 +5,6 @@ class Team < ApplicationRecord
     meta: { virtual_attributes: :virtual_attributes_for_paper_trail }
   )
 
-  include TextSearch
-  def self.search_options
-    {
-      against:
-        {
-          name: "A",
-          id: "D",
-        },
-      ignoring: :accents,
-      using: { tsearch: { prefix: true, any_word: true } },
-    }
-  end
-
   # Attributes
   auto_strip_attributes :name
 
