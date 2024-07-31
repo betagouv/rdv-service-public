@@ -248,6 +248,6 @@ jobs:
       - uses: mattermost/action-mattermost-notify@master
         with:
           MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
-          MATTERMOST_CHANNEL: @adipasquale
+          MATTERMOST_CHANNEL: "@adipasquale"
           TEXT: |
             Erreur dans le [workflow de CI](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
