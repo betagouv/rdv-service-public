@@ -26,6 +26,9 @@ RSpec.describe "territory admin can manage agents", type: :feature do
     end
   end
 
+  describe "inviting an agent" do
+  end
+
   describe "removing an agent from a team" do
     it "works" do
       team_a = create(:team, name: "A", territory: territory)
