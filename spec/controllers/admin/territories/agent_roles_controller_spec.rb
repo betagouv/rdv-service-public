@@ -7,7 +7,7 @@ RSpec.describe Admin::Territories::AgentRolesController, type: :controller do
       agent = create(:agent, role_in_territories: [territory])
       create(:agent_territorial_access_right, allow_to_manage_teams: true, agent: agent)
       organisation = create(:organisation, territory: territory)
-      agent_role = create(:agent_role, agent: agent, access_level: "basic")
+      agent_role = create(:agent_role, agent: agent, access_level: "basic", organisation: organisation)
       sign_in agent
 
       expect do
