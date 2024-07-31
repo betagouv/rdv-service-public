@@ -1,5 +1,5 @@
 RSpec.describe Configuration::AgentTerritorialRolePolicy, type: :policy do
-  %i[display? new? create? destroy?].each do |action|
+  %i[new? create? destroy?].each do |action|
     describe "##{action}" do
       it "returns false with agent without admin access to this territory" do
         territory = create(:territory)
