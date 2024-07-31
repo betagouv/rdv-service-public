@@ -1,7 +1,7 @@
 = territory_navigation(t(".territory_agents_title"))
 
 - if policy([:configuration, current_territory]).allow_to_invite_agents?
-  = link_to "Inviter un agent", new_admin_agent_territory_invitation_path(current_territory), class:"btn btn-outline-primary"
+  = link_to "Inviter un agent", new_admin_territory_agent_path(current_territory), class:"btn btn-outline-primary"
 
 = simple_form_for "", url: admin_territory_agents_path(current_territory), html: { method: :get, class: "form-inline" }, wrapper: :inline_form do |f|
 
