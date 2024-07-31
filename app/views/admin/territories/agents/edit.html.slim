@@ -60,21 +60,12 @@ h1
         = t(".agent_teams_legend")
       = simple_form_for @agent, url: admin_territory_agent_path(current_territory, @agent) do |f|
         .card-body
-          = f.input :team_ids, collection: @agent.teams,
+          = f.input :team_ids, collection: current_territory.teams,
                 label: t(".teams"),
                 label_method: :name,
                 input_html: { \
                   multiple: true, \
                   class: "select2-input",\
-                  data: {\
-                    "select-options": {\
-                      ajax: {\
-                        url: admin_territory_teams_path(current_territory),
-                        dataType: "json",
-                        delay: 250,\
-                      },\
-                    },\
-                  },\
                 }
         .card-footer
           .row
