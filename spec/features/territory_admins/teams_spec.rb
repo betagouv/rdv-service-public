@@ -29,7 +29,8 @@ RSpec.describe "Managing teams" do
     other_territory = create(:territory)
     create(:team, territory: other_territory, name: "Equipe d'un autre territoire")
 
-    visit admin_territory_teams_path(territory_id: other_territory.id)
-    expect(page).not_to have_content("Equipe d'un autre territoire")
+    expect do
+      visit admin_territory_teams_path(territory_id: other_territory.id)
+    end.to raise_error(ActiveRecord::RecordNotFound)
   end
 end

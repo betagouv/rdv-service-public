@@ -2,6 +2,13 @@ fr:
   admin:
     territories:
       agents:
+        new:
+          title: Inviter un agent
+          header: Envoyer une invitation
+          submit_button: Envoyer une invitation
+          services_hint: Dans quel domaine d'activité est-ce que cet agent effectue des rendez-vous ?
+          email_placeholder: camille.dupond@departement.fr
+          organisations: Organisations
         edit:
           agent_teams_legend: Équipes
           organisations:
