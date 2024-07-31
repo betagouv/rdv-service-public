@@ -34,7 +34,7 @@ RSpec.describe "territory admin can manage agents", type: :feature do
     before { login_as(admin, scope: :agent) }
 
     it "works" do
-      visit new_admin_agent_territory_invitation_path(territory_id: territory.id)
+      visit new_admin_territory_agent_path(territory_id: territory.id)
       fill_in "Email", with: "agent@ladrome.fr"
       check "MDS de Valence"
       # TODO: essayer d'ajouter à deux organisations
@@ -54,7 +54,7 @@ RSpec.describe "territory admin can manage agents", type: :feature do
       let!(:organisation_in_another_territory) { create(:organisation, territory: create(:territory)) }
 
       it "doesn't add the agent to the other organisation", js: true do
-        visit new_admin_agent_territory_invitation_path(territory_id: territory.id)
+        visit new_admin_territory_agent_path(territory_id: territory.id)
         fill_in "Email", with: "agent@ladrome.fr"
         check "MDS de Valence"
         select "Service Social"

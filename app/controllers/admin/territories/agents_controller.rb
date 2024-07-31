@@ -20,6 +20,11 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
     end
   end
 
+  def new
+    @agent = Agent.new
+    authorize_with_legacy_configuration_scope(@agent)
+  end
+
   def edit; end
 
   def update
@@ -28,6 +33,32 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
       redirect_to edit_admin_territory_agent_path(current_territory, @agent.id)
     else
       render :edit
+    end
+  end
+
+  def create
+    authorize_with_legacy_configuration_scope(Agent.new(permitted_create_params))
+
+    organisation_ids = params.require(:admin_agent).require(:organisation_ids)
+    context = AgentTerritorialContext.new(@current_agent, nil) # Dès que possible, on arrêtera d'utiliser ces contextes
+    authorized_organisations = Agent::OrganisationPolicy::Scope.new(context, Organisation.where(id: organisation_ids)).resolve
+
+    create_agent = AdminCreatesAgent.new(
+      agent_params: permitted_create_params,
+      current_agent: current_agent,
+      organisations: authorized_organisations,
+      access_level: AgentRole::ACCESS_LEVEL_BASIC
+    )
+
+    @agent = create_agent.call
+
+    if @agent.valid?
+      flash[:notice] = create_agent.confirmation_message
+      flash[:alert] = create_agent.warning_message
+      redirect_to admin_territory_agents_path(current_territory)
+    else
+      flash[:error] = agent.errors.full_messages.to_sentence
+      render_new
     end
   end
 
@@ -69,5 +100,9 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
 
   def agent_update_params
     params.require(:agent).permit(team_ids: [])
+  end
+
+  def permitted_create_params
+    params.require(:admin_agent).permit(:email, service_ids: [])
   end
 end
