@@ -1,9 +1,9 @@
 # La phrase du nom de la classe indique le contexte et l'action métier réalisés par ce service object en PORO
 class AdminCreatesAgent
-  def initialize(agent_params:, current_agent:, organisation_ids:, access_level:)
+  def initialize(agent_params:, current_agent:, organisations:, access_level:)
     @agent_params = agent_params
     @current_agent = current_agent
-    @organisations = authorized_organisations(organisation_ids)
+    @organisations = organisations
     @access_level = access_level
   end
 
@@ -86,10 +86,5 @@ class AdminCreatesAgent
         ]
       )
     end
-  end
-
-  def authorized_organisations(organisation_ids)
-    context = AgentTerritorialContext.new(@current_agent, nil) # Dès que possible, on arrêtera d'utiliser ces contextes
-    Agent::OrganisationPolicy::Scope.new(context, Organisation.where(id: organisation_ids)).resolve
   end
 end

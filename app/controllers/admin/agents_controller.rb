@@ -27,7 +27,7 @@ class Admin::AgentsController < AgentAuthController
     create_agent = AdminCreatesAgent.new(
       agent_params: create_agent_params,
       current_agent: current_agent,
-      organisation_ids: [current_organisation.id],
+      organisations: [current_organisation],
       access_level: params[:agent][:agent_role][:access_level]
     )
 

@@ -13,10 +13,14 @@ class Admin::Territories::InvitationsDeviseController < Devise::InvitationsContr
   def create
     authorize_with_legacy_configuration_scope(Agent.new(permitted_params))
 
+    organisation_ids = params.require(:admin_agent).require(:organisation_ids)
+    context = AgentTerritorialContext.new(@current_agent, nil) # Dès que possible, on arrêtera d'utiliser ces contextes
+    authorized_organisations = Agent::OrganisationPolicy::Scope.new(context, Organisation.where(id: organisation_ids)).resolve
+
     create_agent = AdminCreatesAgent.new(
       agent_params: permitted_params,
       current_agent: current_agent,
-      organisation_ids: params.require(:admin_agent).require(:organisation_ids),
+      organisations: authorized_organisations,
       access_level: AgentRole::ACCESS_LEVEL_BASIC
     )
 
