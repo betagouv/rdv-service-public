@@ -1,8 +1,6 @@
 class Admin::Territories::TeamsController < Admin::Territories::BaseController
   before_action :set_team, only: %i[edit update destroy]
 
-  respond_to :html, :json
-
   def index
     @teams = policy_scope(current_territory.teams, policy_scope_class: Agent::TeamPolicy::Scope).page(page_number)
     @teams = params[:term].present? ? @teams.search_by_text(params[:term]) : @teams.ordered_by_name
