@@ -3,7 +3,7 @@ class Admin::Territories::InvitationsDeviseController < Devise::InvitationsContr
   layout "application_dsfr"
 
   # Bloque l'accès aux méthodes du controller parent
-  before_action :block_controller_action, except: [:edit]
+  before_action :block_controller_action, except: %i[edit update]
 
   def block_controller_action
     raise Pundit::NotAuthorizedError, "not authorized"
