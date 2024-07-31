@@ -6,6 +6,10 @@ RSpec.describe Lieu, type: :model do
   describe "validation" do
     subject { lieu.errors }
 
+    it "raises on purpose" do
+      expect(2 + 2).to eq 2
+    end
+
     it "invalid without latitude" do
       lieu = build(:lieu, latitude: nil)
       expect(lieu).to be_invalid
