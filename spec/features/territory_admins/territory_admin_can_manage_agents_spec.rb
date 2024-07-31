@@ -48,6 +48,10 @@ RSpec.describe "territory admin can manage agents", type: :feature do
         organisations: [organisation],
         services: [service]
       )
+      expect(AgentTerritorialAccessRight.last).to have_attributes(
+        agent: Agent.last,
+        territory: territory
+      )
     end
 
     context "when trying to cheat and invite an agent to an organisation in another territory" do
