@@ -27,8 +27,11 @@ RSpec.describe "territory admin can manage agents", type: :feature do
   end
 
   describe "inviting an agent" do
-    let(:admin) { create(:agent, role_in_territories: [territory], admin_role_in_organisations: [organisation]) }
+    let(:admin) do
+      create(:agent, role_in_territories: [territory], admin_role_in_organisations: [organisation, other_organisation])
+    end
     let!(:organisation) { create(:organisation, name: "MDS de Valence", territory: territory) }
+    let!(:other_organisation) { create(:organisation, name: "MDS de Chambéry", territory: territory) }
     let!(:service) { create(:service, name: "Service Social", territories: [territory]) }
 
     before { login_as(admin, scope: :agent) }
@@ -37,7 +40,7 @@ RSpec.describe "territory admin can manage agents", type: :feature do
       visit new_admin_territory_agent_path(territory_id: territory.id)
       fill_in "Email", with: "agent@ladrome.fr"
       check "MDS de Valence"
-      # TODO: essayer d'ajouter à deux organisations
+      check "MDS de Chambéry"
       select "Service Social"
       click_on "Envoyer"
 
@@ -45,7 +48,7 @@ RSpec.describe "territory admin can manage agents", type: :feature do
 
       expect(Agent.last).to have_attributes(
         email: "agent@ladrome.fr",
-        organisations: [organisation],
+        organisations: [organisation, other_organisation],
         services: [service]
       )
       expect(AgentTerritorialAccessRight.last).to have_attributes(
