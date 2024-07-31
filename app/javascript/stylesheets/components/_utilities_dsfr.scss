@@ -15,3 +15,14 @@
 .rdv-flex-wrap-wrap-reverse {
   flex-wrap: wrap-reverse;
 }
+
+// DIMENSIONS
+
+.rdv-max-width-60 {
+  max-width: 60%;
+}
+.rdv-max-width-md-100 {
+  @include media-breakpoint-up(md) {
+    max-width: 100%;
+  }
+}

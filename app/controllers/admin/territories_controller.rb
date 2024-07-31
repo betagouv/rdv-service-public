@@ -3,15 +3,15 @@ class Admin::TerritoriesController < Admin::Territories::BaseController
   before_action :set_territory_with_id
 
   def show
-    authorize @territory
+    authorize_with_legacy_configuration_scope @territory
   end
 
   def edit
-    authorize @territory
+    authorize_with_legacy_configuration_scope @territory
   end
 
   def update
-    authorize @territory
+    authorize_with_legacy_configuration_scope @territory
     if @territory.update(territory_params)
       flash[:success] = "Mise à jour réussie !"
     else

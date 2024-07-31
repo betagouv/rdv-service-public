@@ -20,18 +20,20 @@ class Admin::Territories::BaseController < ApplicationController
   end
   helper_method :pundit_user
 
-  def authorize(record, *args, **kwargs)
-    # Utilisation d'un namespace `configuration` pour éviter les confusions avec les policies d'un RDV usager, d'un RDV agent ou d'un RDV en configuration.
-    super([:configuration, record], *args, **kwargs)
+  def authorize_with_legacy_configuration_scope(record, *args, **kwargs)
+    # L'utilisation de configuration est un legacy qui a l'inconvénient de distinguer les permissions en fonction de la page sur laquelle on est en train de naviguer
+    # On préfère que le controller applique le filtre pertinent, et que les policy indiquent les permissions dans l'absolu, indépendamment de la page courante.
+    authorize([:configuration, record], *args, **kwargs)
   end
 
   # L'usage recommandé est de passer explicitement une policy_scope_class pour savoir quelle policy est utilisé
   # A terme, on voudra forcer l'argument policy_scope_class
   def policy_scope(scope, policy_scope_class: nil)
-    # Utilisation d'un namespace `configuration` pour éviter les confusions avec les policies d'un RDV usager, d'un RDV agent ou d'un RDV en configuration.
     if policy_scope_class
       super(scope, policy_scope_class: policy_scope_class)
     else
+      # L'utilisation de configuration est un legacy qui a l'inconvénient de distinguer les permissions en fonction de la page sur laquelle on est en train de naviguer
+      # On préfère que le controller applique le filtre pertinent, et que les policy indiquent les permissions dans l'absolu, indépendamment de la page courante.
       super([:configuration, scope])
     end
   end
@@ -40,5 +42,12 @@ class Admin::Territories::BaseController < ApplicationController
 
   def set_territory
     @territory = Territory.find(params[:territory_id])
+
+    context = AgentTerritorialContext.new(current_agent, @territory)
+
+    policy = ::Configuration::TerritoryPolicy.new(context, @territory)
+    raise ActiveRecord::RecordNotFound unless policy.show?
+
+    @territory
   end
 end
