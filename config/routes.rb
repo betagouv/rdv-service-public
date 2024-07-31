@@ -113,7 +113,6 @@ Rails.application.routes.draw do
       resources :exports, only: %i[index] do
         get :download
       end
-      resources :teams, only: %i[index]
     end
     get "omniauth/microsoft_graph/callback" => "omniauth_callbacks#microsoft_graph"
   end
