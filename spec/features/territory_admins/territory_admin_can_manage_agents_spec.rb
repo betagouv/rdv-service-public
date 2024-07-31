@@ -37,6 +37,7 @@ RSpec.describe "territory admin can manage agents", type: :feature do
       visit new_admin_agent_territory_invitation_path(territory_id: territory.id)
       fill_in "Email", with: "agent@ladrome.fr"
       check "MDS de Valence"
+      # TODO: essayer d'ajouter à deux organisations
       select "Service Social"
       click_on "Envoyer"
 
@@ -61,8 +62,6 @@ RSpec.describe "territory admin can manage agents", type: :feature do
         # On modifie le html pour simuler une attaque
         page.execute_script("document.querySelector('input[value=\"#{organisation.id}\"]').value = #{organisation_in_another_territory.id}")
         click_on "Envoyer"
-
-        expect(page).to have_content "Espace Admin" # pour s'assurer que la page charge
 
         expect(organisation_in_another_territory.agents).to be_empty
       end

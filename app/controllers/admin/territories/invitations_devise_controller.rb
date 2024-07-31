@@ -11,30 +11,24 @@ class Admin::Territories::InvitationsDeviseController < Devise::InvitationsContr
   # Dette technique : ce controller pourrait sans doute reprendre la logique et le service object
   # AdminCreatesAgent utilisé dans Admin::AgentsController
   def create
-    agent = Agent.find_by(email: permitted_params[:email].downcase)
-    if agent.nil?
-      # Authorize against a dummy Agent
-      authorize_with_legacy_configuration_scope(Agent.new(permitted_params))
-      agent = invite_resource # invite_resource creates the new Agent in DB and sends the invitation.
-    else
-      agent.save(context: :invite) # Specify a different validation context to bypass last_name/first_name presence
-      # Warn if the service isn’t the one that was requested
-      flash[:alert] = AdminCreatesAgent.check_agent_service(agent, permitted_params[:service_ids])
-    end
+    authorize_with_legacy_configuration_scope(Agent.new(permitted_params))
 
-    if agent.errors.empty?
-      AgentTerritorialAccessRight.find_or_create_by!(agent: agent, territory: current_territory)
-      flash[:notice] = if agent.invitation_accepted?
-                         I18n.t "activerecord.notice.models.agent_role.existing", email: agent.email
-                       else
-                         I18n.t "activerecord.notice.models.agent_role.invited", email: agent.email
-                       end
+    create_agent = AdminCreatesAgent.new(
+      agent_params: permitted_params,
+      current_agent: current_agent,
+      organisation_ids: params.require(:admin_agent).require(:organisation_ids),
+      access_level: AgentRole::ACCESS_LEVEL_BASIC
+    )
+
+    @agent = create_agent.call
+
+    if @agent.valid?
+      flash[:notice] = create_agent.confirmation_message
+      flash[:alert] = create_agent.warning_message
       redirect_to admin_territory_agents_path(current_territory)
     else
-      # Keep the error message, but redirect instead of just rendering the template:
-      # we want a new empty form.
       flash[:error] = agent.errors.full_messages.to_sentence
-      redirect_to action: :new
+      render_new
     end
   end
 
