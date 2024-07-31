@@ -3,18 +3,7 @@ RSpec.describe Admin::Territories::AgentRolesController, type: :controller do
   let!(:territory) { create(:territory).tap { |t| t.roles.create!(agent: create(:agent)) } }
 
   describe "POST #update" do
-    it "redirect to territorial agent edit on success" do
-      agent = create(:agent, role_in_territories: [territory])
-      create(:agent_territorial_access_right, allow_to_manage_teams: true, agent: agent)
-      organisation = create(:organisation, territory: territory)
-      agent_role = create(:agent_role, agent: agent, access_level: "basic", organisation: organisation)
-      sign_in agent
-
-      post :update, params: { territory_id: territory.id, id: agent_role.id, agent_role: { access_level: "admin" } }
-      expect(response).to redirect_to(edit_admin_territory_agent_path(territory, agent))
-    end
-
-    it "changes role" do
+    it "changes role and redirect to territorial agent edit" do
       agent = create(:agent, role_in_territories: [territory])
       create(:agent_territorial_access_right, allow_to_manage_teams: true, agent: agent)
       organisation = create(:organisation, territory: territory)
@@ -24,6 +13,8 @@ RSpec.describe Admin::Territories::AgentRolesController, type: :controller do
       expect do
         post :update, params: { territory_id: territory.id, id: agent_role.id, agent_role: { access_level: "admin" } }
       end.to change { agent_role.reload.access_level }.from(AgentRole::ACCESS_LEVEL_BASIC).to(AgentRole::ACCESS_LEVEL_ADMIN)
+
+      expect(response).to redirect_to(edit_admin_territory_agent_path(territory, agent))
     end
   end
 
