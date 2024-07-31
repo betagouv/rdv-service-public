@@ -243,11 +243,10 @@ jobs:
     name: "Notify Mattermost on workflow failure"
     runs-on: ubuntu-latest
     needs: [rubocop, lint_slim, lint_prettier, brakeman, active_record_doctor, test_unit, test_features, test_boot_without_db]
-    if: ${{ always() && contains(needs.*.result, 'failure') }}
+    if: ${{ always() && contains(needs.*.result, 'failure') && github.ref == 'refs/heads/feature/gh-failure-notif' }}
     steps:
       - uses: mattermost/action-mattermost-notify@master
         with:
           MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
-          MATTERMOST_CHANNEL: "@adipasquale"
           TEXT: |
-            Erreur dans le [workflow de CI](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            Erreur dans le [workflow de CI](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) sur la branche production. Le déploiement a probablement été interrompu.
