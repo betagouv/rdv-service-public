@@ -48,6 +48,25 @@ RSpec.describe "territory admin can manage agents", type: :feature do
         services: [service]
       )
     end
+
+    context "when trying to cheat and invite an agent to an organisation in another territory" do
+      let!(:organisation_in_another_territory) { create(:organisation, territory: create(:territory)) }
+
+      it "doesn't add the agent to the other organisation", js: true do
+        visit new_admin_agent_territory_invitation_path(territory_id: territory.id)
+        fill_in "Email", with: "agent@ladrome.fr"
+        check "MDS de Valence"
+        select "Service Social"
+
+        # On modifie le html pour simuler une attaque
+        page.execute_script("document.querySelector('input[value=\"#{organisation.id}\"]').value = #{organisation_in_another_territory.id}")
+        click_on "Envoyer"
+
+        expect(page).to have_content "Espace Admin" # pour s'assurer que la page charge
+
+        expect(organisation_in_another_territory.agents).to be_empty
+      end
+    end
   end
 
   describe "removing an agent from a team" do
