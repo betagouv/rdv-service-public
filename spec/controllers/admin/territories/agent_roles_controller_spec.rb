@@ -6,7 +6,8 @@ RSpec.describe Admin::Territories::AgentRolesController, type: :controller do
     it "redirect to territorial agent edit on success" do
       agent = create(:agent, role_in_territories: [territory])
       create(:agent_territorial_access_right, allow_to_manage_teams: true, agent: agent)
-      agent_role = create(:agent_role, agent: agent, access_level: "basic")
+      organisation = create(:organisation, territory: territory)
+      agent_role = create(:agent_role, agent: agent, access_level: "basic", organisation: organisation)
       sign_in agent
 
       post :update, params: { territory_id: territory.id, id: agent_role.id, agent_role: { access_level: "admin" } }
@@ -16,6 +17,7 @@ RSpec.describe Admin::Territories::AgentRolesController, type: :controller do
     it "changes role" do
       agent = create(:agent, role_in_territories: [territory])
       create(:agent_territorial_access_right, allow_to_manage_teams: true, agent: agent)
+      organisation = create(:organisation, territory: territory)
       agent_role = create(:agent_role, agent: agent, access_level: "basic")
       sign_in agent
 
