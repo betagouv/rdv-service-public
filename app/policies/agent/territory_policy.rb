@@ -2,16 +2,19 @@ class Agent::TerritoryPolicy < ApplicationPolicy
   alias context pundit_user
   delegate :agent, to: :context, prefix: :current # defines current_agent
 
-  def agent_has_role_in_record_territory?
+  def territorial_admin?
     current_agent.territorial_roles.exists?(territory_id: record.id)
   end
 
-  alias show? agent_has_role_in_record_territory?
-  alias update? agent_has_role_in_record_territory?
-  alias edit? agent_has_role_in_record_territory?
+  alias update? territorial_admin?
+  alias edit? territorial_admin?
+
+  alias display_user_fields_configuration? territorial_admin?
+  alias display_rdv_fields_configuration? territorial_admin?
+  alias display_motif_fields_configuration? territorial_admin?
 
   def show?
-    agent_has_role_in_record_territory? ||
+    territorial_admin?? ||
       allow_to_manage_teams? ||
       allow_to_manage_access_rights? ||
       allow_to_invite_agents?

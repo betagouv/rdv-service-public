@@ -44,7 +44,7 @@ h1.m-2.text-center.border-bottom.pb-2 Espace Admin - #{current_territory.name}
           | Sectorisation
         p Créer, importer, affecter vos secteurs géographiques.
 
-  - if policy([:configuration, current_territory]).display_user_fields_configuration?
+  - if policy([:agent, current_territory]).display_user_fields_configuration?
     .col.col-md-4.p-2.rounded.settings-box
       = link_to edit_admin_territory_user_fields_path(current_territory) do
         h2.fw-bold.mb-0
@@ -52,7 +52,7 @@ h1.m-2.text-center.border-bottom.pb-2 Espace Admin - #{current_territory.name}
           | Fiches usagers
         p Gérer les informations enregistrées sur les usagers
 
-  - if policy([:configuration, current_territory]).display_rdv_fields_configuration?
+  - if policy([:agent, current_territory]).display_rdv_fields_configuration?
     .col.col-md-4.p-2.rounded.settings-box
       = link_to edit_admin_territory_rdv_fields_path(current_territory) do
         h2.fw-bold.mb-0
@@ -60,7 +60,7 @@ h1.m-2.text-center.border-bottom.pb-2 Espace Admin - #{current_territory.name}
           | Fiches RDV
         p Gérer les informations enregistrées sur les rendez-vous
 
-  - if policy([:configuration, current_territory]).display_motif_fields_configuration?
+  - if policy([:agent, current_territory]).display_motif_fields_configuration?
     .col.col-md-4.p-2.rounded.settings-box
       = link_to admin_territory_motifs_path(current_territory) do
         h2.fw-bold.mb-0
