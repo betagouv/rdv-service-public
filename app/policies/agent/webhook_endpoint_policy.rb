@@ -17,6 +17,7 @@ class Agent::WebhookEndpointPolicy < ApplicationPolicy
   alias edit? territorial_admin?
   alias update? territorial_admin?
   alias destroy? territorial_admin?
+  alias versions? territorial_admin?
 
   # On a deux scopes différents qui correspondent à deux choix produits différents :
   # - dans l'api on vérifie que l'agent a un rôle dans l'organisation du webhook
