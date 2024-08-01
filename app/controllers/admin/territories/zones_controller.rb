@@ -3,6 +3,7 @@ class Admin::Territories::ZonesController < Admin::Territories::BaseController
 
   def index
     zones = policy_scope(Zone)
+      .joins(:sector).where(sectors: { territory_id: current_territory.id })
       .where(params[:sector_id].present? ? { sector: params[:sector_id] } : {})
     respond_to do |format|
       format.xls do

@@ -68,7 +68,7 @@ class ZoneImportRow
   def authorized?
     return true if !fields_present? || !sector_found? || !valid_zone?
 
-    policy = Configuration::ZonePolicy.new(AgentTerritorialContext.new(@agent, zone.sector.territory), @agent)
+    policy = Configuration::ZonePolicy.new(AgentTerritorialContext.new(@agent, zone.sector.territory), zone)
     return true if policy.create?
 
     @errors << {
