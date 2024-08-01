@@ -57,8 +57,7 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
       flash[:alert] = create_agent.warning_message
       redirect_to admin_territory_agents_path(current_territory)
     else
-      flash[:error] = agent.errors.full_messages.to_sentence
-      render_new
+      render :new
     end
   end
 
