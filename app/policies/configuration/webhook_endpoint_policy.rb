@@ -19,12 +19,14 @@ class Configuration::WebhookEndpointPolicy
   alias destroy? territorial_admin?
 
   class Scope
-    def initialize(context, _scope)
+    def initialize(context, scope)
       @current_territory = context.territory
+      @current_agent = context.agent
+      @scope = scope
     end
 
     def resolve
-      WebhookEndpoint.where(organisation: @current_territory.organisations)
+      @scope.joins(:organisation).where(organisations: { territory_id: @current_agent.territorial_roles.select(:territory_id) })
     end
   end
 end

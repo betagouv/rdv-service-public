@@ -22,14 +22,4 @@ class Agent::WebhookEndpointPolicy < ApplicationPolicy
       WebhookEndpoint.where(organisation: [current_agent.organisations])
     end
   end
-
-  class TerritoryScope
-    def initialize(context, _scope)
-      @current_territory = context.territory
-    end
-
-    def resolve
-      WebhookEndpoint.where(organisation: @current_territory.organisations)
-    end
-  end
 end
