@@ -1,21 +1,4 @@
-class Agent::AgentRolePolicy < ApplicationPolicy
-  include CurrentAgentInPolicyConcern
-
-  def current_agent_admin_in_record_organisation?
-    agent_role_in_record_organisation&.admin?
-  end
-
-  alias create? current_agent_admin_in_record_organisation?
-  alias edit? current_agent_admin_in_record_organisation?
-  alias update? current_agent_admin_in_record_organisation?
-
-  private
-
-  def agent_role_in_record_organisation
-    @agent_role_in_record_organisation ||= \
-      current_agent.roles.find_by(organisation_id: record.organisation_id)
-  end
-
+class Agent::AgentRolePolicy
   class Scope < Scope
     include CurrentAgentInPolicyConcern
 
