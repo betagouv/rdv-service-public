@@ -13,9 +13,21 @@ class Agent::TerritoryPolicy
 
   def show?
     territorial_admin? ||
-      access_rights&.allow_to_manage_access_rights? ||
-      access_rights&.allow_to_invite_agents? ||
-      access_rights&.allow_to_manage_teams?
+      allow_to_manage_teams? ||
+      allow_to_manage_access_rights? ||
+      allow_to_invite_agents?
+  end
+
+  def allow_to_manage_access_rights?
+    @access_rights&.allow_to_manage_access_rights?
+  end
+
+  def allow_to_invite_agents?
+    @access_rights&.allow_to_invite_agents?
+  end
+
+  def allow_to_manage_teams?
+    @access_rights&.allow_to_manage_teams?
   end
 
   class Scope
