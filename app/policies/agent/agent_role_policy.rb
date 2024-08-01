@@ -1,6 +1,6 @@
 class Agent::AgentRolePolicy
-  def initialize(context, agent_role)
-    @current_agent = context.agent
+  def initialize(current_agent, agent_role)
+    @current_agent = current_agent
     @agent_role = agent_role
     @access_rights = @current_agent.access_rights_for_territory(agent_role.organisation.territory)
   end

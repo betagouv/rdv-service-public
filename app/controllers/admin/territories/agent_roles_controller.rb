@@ -45,6 +45,10 @@ class Admin::Territories::AgentRolesController < Admin::Territories::BaseControl
 
   private
 
+  def pundit_user
+    current_agent
+  end
+
   def agent_role_params
     params.require(:agent_role).permit(:access_level, :organisation_id, :agent_id)
   end
