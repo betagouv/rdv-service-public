@@ -4,24 +4,9 @@ class Configuration::WebhookEndpointPolicy
     @webhook_endpoint = webhook_endpoint
   end
 
-  def territorial_admin?
-    self.class.allowed_to_manage_webhooks_in?(@webhook_endpoint.organisation.territory, @current_agent)
-  end
-
-  def self.allowed_to_manage_webhooks_in?(territory, agent)
-    agent.territorial_admin_in?(territory)
-  end
-
-  alias new? territorial_admin?
-  alias create? territorial_admin?
-  alias edit? territorial_admin?
-  alias update? territorial_admin?
-  alias destroy? territorial_admin?
-
   class Scope
-    def initialize(context, scope)
-      @current_territory = context.territory
-      @current_agent = context.agent
+    def initialize(agent, scope)
+      @current_agent = agent
       @scope = scope
     end
 
