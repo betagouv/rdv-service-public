@@ -18,6 +18,22 @@ RSpec.describe Admin::Territories::WebhookEndpointsController, type: :controller
       get :index, params: { territory_id: territory.id }
       expect(assigns(:webhooks)).to eq([webhook])
     end
+
+    context "when trying to view the list of webhook endpoints in a territory for which i can only manage teams" do
+      render_views
+      let(:other_territory) { create(:territory) }
+      let(:other_organisation) { create(:organisation, territory: other_territory) }
+      let!(:other_webhook) { create(:webhook_endpoint, organisation: other_organisation, target_url: "https://www.exemple.fr") }
+
+      before do
+        create(:agent_territorial_access_right, agent: agent, territory: other_territory, allow_to_manage_teams: true)
+      end
+
+      it "doesn't show the webhook_endpoints" do
+        get :index, params: { territory_id: other_territory.id }
+        expect(response.body).not_to include("https://www.exemple.fr")
+      end
+    end
   end
 
   describe "#new" do

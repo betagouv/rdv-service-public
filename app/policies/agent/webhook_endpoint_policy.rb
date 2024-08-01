@@ -1,21 +1,35 @@
 class Agent::WebhookEndpointPolicy < ApplicationPolicy
   include CurrentAgentInPolicyConcern
 
-  def agent_territory_admin?
-    current_agent.territorial_admin_in?(record.organisation.territory)
+  def territorial_admin?
+    self.class.allowed_to_manage_webhooks_in?(@webhook_endpoint.organisation.territory, @current_agent)
   end
 
-  alias create? agent_territory_admin?
-  alias update? agent_territory_admin?
-  alias edit? agent_territory_admin?
-  alias new? agent_territory_admin?
-  alias versions? agent_territory_admin?
+  def self.allowed_to_manage_webhooks_in?(territory, agent)
+    agent.territorial_admin_in?(territory)
+  end
+
+  alias new? territorial_admin?
+  alias create? territorial_admin?
+  alias edit? territorial_admin?
+  alias update? territorial_admin?
+  alias destroy? territorial_admin?
 
   class Scope < Scope
     include CurrentAgentInPolicyConcern
 
     def resolve
       WebhookEndpoint.where(organisation: [current_agent.organisations])
+    end
+  end
+
+  class TerritoryScope
+    def initialize(context, _scope)
+      @current_territory = context.territory
+    end
+
+    def resolve
+      WebhookEndpoint.where(organisation: @current_territory.organisations)
     end
   end
 end
