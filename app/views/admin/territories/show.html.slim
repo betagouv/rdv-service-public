@@ -68,12 +68,12 @@ h1.m-2.text-center.border-bottom.pb-2 Espace Admin - #{current_territory.name}
           = t("admin.territories.motifs.index.title")
         p Lister, éditer, supprimer les motifs de toutes vos organisations
 
-  .col.col-md-4.p-2.rounded.settings-box
-    = link_to edit_admin_territory_motif_fields_path(current_territory) do
-      h2.fw-bold.mb-0
-        i.fa.fa-calendar>
-        = t("admin.territories.motif_fields.edit.card_title")
-      p Gérer les options de configuration des motifs
+    .col.col-md-4.p-2.rounded.settings-box
+      = link_to edit_admin_territory_motif_fields_path(current_territory) do
+        h2.fw-bold.mb-0
+          i.fa.fa-calendar>
+          = t("admin.territories.motif_fields.edit.card_title")
+        p Gérer les options de configuration des motifs
 
   - if Agent::TerritoryPolicy.new(current_agent, current_territory).edit?
     .col.col-md-4.p-2.rounded.settings-box
