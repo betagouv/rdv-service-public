@@ -18,7 +18,14 @@ class Agent::WebhookEndpointPolicy < ApplicationPolicy
   alias update? territorial_admin?
   alias destroy? territorial_admin?
 
-  class Scope < Scope
+  # On a deux scopes différents qui correspondent à deux choix produits différents :
+  # - dans l'api on vérifie que l'agent a un rôle dans l'organisation du webhook
+  # - dans l'espace admin, on commence à permettre d'administrer un territoire sans être admin de toutes
+  #   ses organisations, ce qui permet de ne pas avoir accès à toutes les données personnelles des
+  #   rdvs et de usagers
+  #
+  #   Il faudra à terme qu'on harmonise ces deux possiblités.
+  class ApiScope < Scope
     include CurrentAgentInPolicyConcern
 
     def resolve
@@ -26,7 +33,7 @@ class Agent::WebhookEndpointPolicy < ApplicationPolicy
     end
   end
 
-  class TerritoryScope
+  class EspaceAdminScope
     def initialize(agent, scope)
       @current_agent = agent
       @scope = scope
