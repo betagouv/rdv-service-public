@@ -4,7 +4,7 @@
 
 h1.m-2.text-center.border-bottom.pb-2 Espace Admin - #{current_territory.name}
 .row.mb-3
-  - if policy([:configuration, AgentTerritorialRole]).display?
+  - if Configuration::TerritoryPolicy.new(pundit_user, current_territory).edit?
     .col.col-md-4.p-2.rounded.settings-box
       = link_to edit_admin_territory_path(current_territory) do
         h2.fw-bold.mb-0
@@ -28,7 +28,7 @@ h1.m-2.text-center.border-bottom.pb-2 Espace Admin - #{current_territory.name}
           | Équipes
         p Construire des équipes pour grouper des agents
 
-  - if policy([:configuration, WebhookEndpoint]).display?
+  - if Configuration::WebhookEndpointPolicy.allowed_to_manage_webhooks_in?(current_territory, current_agent)
     .col.col-md-4.p-2.rounded.settings-box
       = link_to admin_territory_webhook_endpoints_path(current_territory) do
         h2.fw-bold.mb-0

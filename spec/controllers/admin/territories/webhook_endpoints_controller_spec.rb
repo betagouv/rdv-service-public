@@ -46,6 +46,15 @@ RSpec.describe Admin::Territories::WebhookEndpointsController, type: :controller
       end
     end
 
+    context "creating a webhook on an organisation that does not belong to the agent’s territory" do
+      let!(:other_orga) { create(:organisation, territory: create(:territory)) }
+
+      it "returns an error and does not create the endpoint" do
+        post :create, params: { territory_id: territory.id, webhook_endpoint: { organisation_id: other_orga.id, target_url: "https://example.com", secret: "XSECRETX" } }
+        expect(other_orga.webhook_endpoints.count).to eq(0)
+      end
+    end
+
     context "with an error" do
       it "render new" do
         post :create, params: { territory_id: territory.id, webhook_endpoint: { organisation_id: organisation.id, target_url: "https://example.com", secret: nil } }

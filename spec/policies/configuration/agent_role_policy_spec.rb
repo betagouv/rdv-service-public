@@ -1,4 +1,4 @@
-RSpec.describe Configuration::AgentRolePolicy, type: :policy do
+RSpec.describe Configuration::AgentRolePolicy do
   subject { described_class }
 
   let(:territory) { create(:territory) }
@@ -8,7 +8,7 @@ RSpec.describe Configuration::AgentRolePolicy, type: :policy do
   shared_examples "permit actions" do |*actions|
     actions.each do |action|
       permissions action do
-        it { is_expected.to permit(agent_territorial_context, agent.role_in_organisation(organisation)) }
+        it { is_expected.to permit(agent_territorial_context, agent_role) }
       end
     end
   end
@@ -16,7 +16,7 @@ RSpec.describe Configuration::AgentRolePolicy, type: :policy do
   shared_examples "not permit actions" do |*actions|
     actions.each do |action|
       permissions action do
-        it { is_expected.not_to permit(agent_territorial_context, agent.role_in_organisation(organisation)) }
+        it { is_expected.not_to permit(agent_territorial_context, agent_role) }
       end
     end
   end
@@ -24,21 +24,32 @@ RSpec.describe Configuration::AgentRolePolicy, type: :policy do
   describe "agent with" do
     context "no admin access to this territory and no access rights" do
       let(:agent) { create(:agent, basic_role_in_organisations: [organisation], role_in_territories: []) }
-      let!(:access_rights) { create(:agent_territorial_access_right, agent: agent, territory: territory) }
+      let!(:agent_role) { create(:agent_role, organisation: organisation) }
 
       it_behaves_like "not permit actions", :update?, :edit?, :create?, :destroy?
     end
 
     context "admin access to this territory" do
       let(:agent) { create(:agent, basic_role_in_organisations: [organisation], role_in_territories: [territory]) }
-      let!(:access_rights) { create(:agent_territorial_access_right, agent: agent, territory: territory) }
+      let!(:agent_role) { create(:agent_role, organisation: organisation) }
 
       it_behaves_like "permit actions", :update?, :edit?, :create?, :destroy?
     end
 
+    context "admin access to a different territory" do
+      let(:agent) { create(:agent, basic_role_in_organisations: [organisation], role_in_territories: [territory]) }
+      let!(:agent_role) { create(:agent_role, organisation: create(:organisation)) }
+
+      it_behaves_like "not permit actions", :update?, :edit?, :create?, :destroy?
+    end
+
     context "allowed to invite agents access right" do
       let(:agent) { create(:agent, basic_role_in_organisations: [organisation], role_in_territories: []) }
-      let!(:access_rights) { create(:agent_territorial_access_right, agent: agent, territory: territory, allow_to_invite_agents: true) }
+      let!(:agent_role) { create(:agent_role, organisation: organisation) }
+
+      before do
+        create(:agent_territorial_access_right, agent: agent, territory: organisation.territory, allow_to_invite_agents: true)
+      end
 
       it_behaves_like "permit actions", :update?, :edit?, :create?, :destroy?
     end

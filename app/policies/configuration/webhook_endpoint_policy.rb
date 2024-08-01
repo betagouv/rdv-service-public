@@ -1,15 +1,17 @@
 class Configuration::WebhookEndpointPolicy
-  def initialize(context, agent)
+  def initialize(context, webhook_endpoint)
     @current_agent = context.agent
-    @current_territory = context.territory
-    @agent = agent
+    @webhook_endpoint = webhook_endpoint
   end
 
   def territorial_admin?
-    @current_agent.territorial_admin_in?(@current_territory)
+    self.class.allowed_to_manage_webhooks_in?(@webhook_endpoint.organisation.territory, @current_agent)
   end
 
-  alias display? territorial_admin?
+  def self.allowed_to_manage_webhooks_in?(territory, agent)
+    agent.territorial_admin_in?(territory)
+  end
+
   alias new? territorial_admin?
   alias create? territorial_admin?
   alias edit? territorial_admin?

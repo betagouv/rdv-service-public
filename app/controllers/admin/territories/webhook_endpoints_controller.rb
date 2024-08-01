@@ -7,7 +7,7 @@ class Admin::Territories::WebhookEndpointsController < Admin::Territories::BaseC
 
   def new
     @webhook = WebhookEndpoint.new
-    authorize_with_legacy_configuration_scope @webhook
+    authorize_with_legacy_configuration_scope current_territory, :edit?
   end
 
   def create
