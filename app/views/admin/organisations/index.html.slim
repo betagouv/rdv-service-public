@@ -5,7 +5,7 @@
     .card-header
       .d-flex.justify-content-between.align-items-center
         h5.m-2= territory
-        - if Configuration::TerritoryPolicy.new(AgentContext.new(current_agent), territory).show?
+        - if Agent::TerritoryPolicy.new(current_agent, territory).show?
           = link_to admin_territory_path(territory), class: "float-right" do
             i.fa.fa-cog>
             = t(".configuration")
