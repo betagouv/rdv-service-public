@@ -2,6 +2,7 @@ class Agent::TerritoryPolicy
   def initialize(current_agent, territory)
     @current_agent = current_agent
     @territory = territory
+    @access_rights = @current_agent.agent_territorial_access_rights.find_by(territory_id: territory.id)
   end
 
   def territorial_admin?
