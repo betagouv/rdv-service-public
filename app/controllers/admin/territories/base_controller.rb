@@ -43,6 +43,7 @@ class Admin::Territories::BaseController < ApplicationController
   def set_territory
     @territory = Territory.find(params[:territory_id])
 
+    # On instancie une policy plutôt que d'appeler authorize pour ne pas neutraliser le `verify_authorized`
     unless Agent::TerritoryPolicy.new(current_agent, @territory).show?
       raise Pundit::NotAuthorizedError, "not authorized"
     end
