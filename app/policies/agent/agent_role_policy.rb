@@ -1,5 +1,5 @@
 class Agent::AgentRolePolicy
-  class Scope < Scope
+  class Scope < ApplicationPolicy::Scope
     include CurrentAgentInPolicyConcern
 
     def resolve
