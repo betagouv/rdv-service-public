@@ -35,6 +35,16 @@ module MotifsHelper
     tag.span(I18n.t("motifs.badges.#{badge_name}"), class: "badge badge-motif-#{badge_name}")
   end
 
+  # L'option "agents_and_prescripteurs_and_invited_users"
+  # n'est offerte que dans des organisations RDV-I.
+  def bookable_by_types(rdvi_mode:)
+    Motif.bookable_bies.keys.tap { _1.delete("agents_and_prescripteurs_and_invited_users") unless rdvi_mode }
+  end
+
+  def bookable_by_filter_options(rdvi_mode:)
+    [["-", ""]] + bookable_by_types(rdvi_mode: rdvi_mode).map { [t("admin.motifs.bookable_by_types.#{_1}"), _1] }
+  end
+
   def min_max_delay_options
     [["1/2 heure", 30.minutes], ["1 heure", 1.hour], ["2 heures", 2.hours],
      ["3 heures", 3.hours], ["6 heures", 6.hours], ["12 heures", 12.hours],
