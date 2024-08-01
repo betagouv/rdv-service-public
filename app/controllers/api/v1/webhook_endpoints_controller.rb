@@ -30,7 +30,7 @@ class Api::V1::WebhookEndpointsController < Api::V1::AgentAuthBaseController
   end
 
   def set_webhook_endpoint
-    @webhook_endpoint = policy_scope(WebhookEndpoint).find(params[:id])
+    @webhook_endpoint = policy_scope(WebhookEndpoint, policy_scope_class: Agent::WebhookEndpointPolicy::ApiScope).find(params[:id])
     authorize @webhook_endpoint
   end
 
