@@ -25,4 +25,15 @@ class Agent::WebhookEndpointPolicy < ApplicationPolicy
       WebhookEndpoint.where(organisation: [pundit_user.organisations])
     end
   end
+
+  class TerritoryScope
+    def initialize(agent, scope)
+      @current_agent = agent
+      @scope = scope
+    end
+
+    def resolve
+      @scope.joins(:organisation).where(organisations: { territory_id: @current_agent.territorial_roles.select(:territory_id) })
+    end
+  end
 end

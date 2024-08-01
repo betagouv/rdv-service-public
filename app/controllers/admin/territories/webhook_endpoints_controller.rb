@@ -2,7 +2,7 @@ class Admin::Territories::WebhookEndpointsController < Admin::Territories::BaseC
   before_action :set_webhook_endpoint, only: %i[edit update destroy]
 
   def index
-    @webhooks = policy_scope(WebhookEndpoint, policy_scope_class: ::Configuration::WebhookEndpointPolicy::Scope)
+    @webhooks = policy_scope(WebhookEndpoint, policy_scope_class: Agent::WebhookEndpointPolicy::TerritoryScope)
       .where(organisation: current_territory.organisations)
   end
 
