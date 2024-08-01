@@ -3,14 +3,14 @@
     h5.card-title= Motif.human_attribute_name("bookable_by")
     p= Motif.human_attribute_name("bookable_by_hint")
 
-    - bookable_by_types(rdvi_mode: current_organisation.rdv_insertion?).each do |bookable_by_type|
+    - bookable_by_types(rdvi_mode: current_organisation.rdv_insertion?).each do |bookable_by_option|
       .form-row
         .col-md-12
           = label_tag do
-            = f.radio_button(:bookable_by, bookable_by_type, "data-action": "change->motif-form#refreshSections", "data-motif-form-target": "bookableByRadios")
-            span.ml-1= sanitize(I18n.t("activerecord.attributes.motif/bookable_by/radio_label_html.#{bookable_by_type}"))
+            = f.radio_button(:bookable_by, bookable_by_option, "data-action": "change->motif-form#refreshSections", "data-motif-form-target": "bookableByRadios")
+            span.ml-1= sanitize(I18n.t("activerecord.attributes.motif/bookable_by/radio_label_html.#{bookable_by_option}"))
             p.text-muted.font-14.mt-1
-              = sanitize(I18n.t("activerecord.attributes.motif/bookable_by/hint.#{bookable_by_type}"))
+              = sanitize(I18n.t("activerecord.attributes.motif/bookable_by/hint.#{bookable_by_option}"))
 
 .card.collapse [data-motif-form-target="bookingDelaySection"]
   .card-body
