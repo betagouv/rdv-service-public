@@ -9,7 +9,7 @@ class Admin::Territories::ServicesController < Admin::Territories::BaseControlle
   end
 
   def update
-    authorize_with_legacy_configuration_scope current_territory
+    authorize_agent current_territory
     current_territory.update!(services_params)
     flash[:alert] = "Liste des services disponibles mise à jour"
 
