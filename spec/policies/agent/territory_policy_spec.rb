@@ -2,6 +2,7 @@ RSpec.describe Agent::TerritoryPolicy, type: :policy do
   subject { described_class }
 
   let(:territory) { create(:territory) }
+  let(:pundit_context) { agent }
 
   describe "agent with" do
     context "no admin access to this territory and no access_rights" do
@@ -59,7 +60,7 @@ end
 RSpec.describe Agent::TerritoryPolicy::Scope, type: :policy do
   describe "#resolve?" do
     subject do
-      described_class.new(AgentContext.new(agent), Territory).resolve
+      described_class.new(agent, Territory).resolve
     end
 
     context "misc state" do

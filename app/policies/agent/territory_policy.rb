@@ -32,6 +32,6 @@ class Agent::TerritoryPolicy
   private
 
   def access_rights
-    @access_rights ||= @current_agent.access_rights.where(territory: @territory)
+    @access_rights ||= @current_agent.agent_territorial_access_rights.find_by(territory: @territory)
   end
 end
