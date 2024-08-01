@@ -14,7 +14,7 @@ class Agent::TerritoryPolicy < ApplicationPolicy
   alias display_motif_fields_configuration? territorial_admin?
 
   def show?
-    territorial_admin?? ||
+    territorial_admin? ||
       allow_to_manage_teams? ||
       allow_to_manage_access_rights? ||
       allow_to_invite_agents?
