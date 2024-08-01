@@ -38,7 +38,11 @@ module MotifsHelper
   # L'option "agents_and_prescripteurs_and_invited_users"
   # n'est offerte que dans des organisations RDV-I.
   def bookable_by_types(rdvi_mode:)
-    Motif.bookable_bies.keys.tap { _1.delete("agents_and_prescripteurs_and_invited_users") unless rdvi_mode }
+    if rdvi_mode
+      Motif.bookable_bies.keys
+    else
+      Motif.bookable_bies.keys - ["agents_and_prescripteurs_and_invited_users"]
+    end
   end
 
   def bookable_by_filter_options(rdvi_mode:)
