@@ -1,8 +1,4 @@
 class Admin::Territories::AgentRolesController < Admin::Territories::BaseController
-  def edit
-    authorize_agent(@agent_role)
-  end
-
   def update
     agent_role = AgentRole.find(params[:id])
     authorize_agent(agent_role)
