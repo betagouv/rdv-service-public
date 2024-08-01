@@ -3,12 +3,11 @@ RSpec.describe Agent::AgentRolePolicy do
 
   let(:territory) { create(:territory) }
   let(:organisation) { create(:organisation, territory: territory) }
-  let(:agent_territorial_context) { AgentTerritorialContext.new(agent, territory) }
 
   shared_examples "permit actions" do |*actions|
     actions.each do |action|
       permissions action do
-        it { is_expected.to permit(agent_territorial_context, agent_role) }
+        it { is_expected.to permit(agent, agent_role) }
       end
     end
   end
@@ -16,7 +15,7 @@ RSpec.describe Agent::AgentRolePolicy do
   shared_examples "not permit actions" do |*actions|
     actions.each do |action|
       permissions action do
-        it { is_expected.not_to permit(agent_territorial_context, agent_role) }
+        it { is_expected.not_to permit(agent, agent_role) }
       end
     end
   end
