@@ -25,4 +25,8 @@ class Admin::TerritoriesController < Admin::Territories::BaseController
     @territory = Territory.find(params[:id])
     authorize_agent @territory
   end
+
+  def pundit_user
+    current_agent
+  end
 end

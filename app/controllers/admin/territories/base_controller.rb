@@ -43,10 +43,9 @@ class Admin::Territories::BaseController < ApplicationController
   def set_territory
     @territory = Territory.find(params[:territory_id])
 
-    context = AgentTerritorialContext.new(current_agent, @territory)
-
-    policy = Agent::TerritoryPolicy.new(context, @territory)
-    raise Pundit::NotAuthorizedError, "not authorized" unless policy.show?
+    unless Agent::TerritoryPolicy.new(current_agent, @territory).show?
+      raise Pundit::NotAuthorizedError, "not authorized"
+    end
 
     @territory
   end

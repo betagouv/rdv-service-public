@@ -13,13 +13,7 @@ RSpec.describe Agent::TerritoryPolicy, type: :policy do
                       :territory,
                       :show?,
                       :update?,
-                      :edit?,
-                      :allow_to_manage_access_rights?,
-                      :allow_to_invite_agents?,
-                      :allow_to_manage_teams?,
-                      :display_user_fields_configuration?,
-                      :display_rdv_fields_configuration?,
-                      :display_motif_fields_configuration?
+                      :edit?
     end
 
     context "admin access to this territory" do
@@ -31,16 +25,7 @@ RSpec.describe Agent::TerritoryPolicy, type: :policy do
                       :territory,
                       :show?,
                       :update?,
-                      :edit?,
-                      :display_user_fields_configuration?,
-                      :display_rdv_fields_configuration?,
-                      :display_motif_fields_configuration?
-
-      it_behaves_like "not permit actions",
-                      :territory,
-                      :allow_to_manage_access_rights?,
-                      :allow_to_invite_agents?,
-                      :allow_to_manage_teams?
+                      :edit?
     end
 
     context "allowed to manage teams access right" do
@@ -50,17 +35,11 @@ RSpec.describe Agent::TerritoryPolicy, type: :policy do
       it_behaves_like "permit actions",
                       :territory,
                       :show?,
-                      :allow_to_manage_teams?
 
       it_behaves_like "not permit actions",
                       :territory,
                       :update?,
                       :edit?,
-                      :allow_to_manage_access_rights?,
-                      :allow_to_invite_agents?,
-                      :display_user_fields_configuration?,
-                      :display_rdv_fields_configuration?,
-                      :display_motif_fields_configuration?
     end
 
     context "allowed to manage access rights access right" do
@@ -70,17 +49,11 @@ RSpec.describe Agent::TerritoryPolicy, type: :policy do
       it_behaves_like "permit actions",
                       :territory,
                       :show?,
-                      :allow_to_manage_access_rights?
 
       it_behaves_like "not permit actions",
                       :territory,
                       :update?,
                       :edit?,
-                      :allow_to_manage_teams?,
-                      :allow_to_invite_agents?,
-                      :display_user_fields_configuration?,
-                      :display_rdv_fields_configuration?,
-                      :display_motif_fields_configuration?
     end
 
     context "allowed to invite agents access right" do
@@ -90,17 +63,11 @@ RSpec.describe Agent::TerritoryPolicy, type: :policy do
       it_behaves_like "permit actions",
                       :territory,
                       :show?,
-                      :allow_to_invite_agents?
 
       it_behaves_like "not permit actions",
                       :territory,
                       :update?,
                       :edit?,
-                      :allow_to_manage_access_rights?,
-                      :allow_to_manage_teams?,
-                      :display_user_fields_configuration?,
-                      :display_rdv_fields_configuration?,
-                      :display_motif_fields_configuration?
     end
   end
 end

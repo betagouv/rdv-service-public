@@ -12,6 +12,10 @@ class Admin::Territories::RdvFieldsController < Admin::Territories::BaseControll
 
   private
 
+  def pundit_user
+    current_agent
+  end
+
   def rdv_fields_params
     params.require(:territory).permit(Territory::OPTIONAL_RDV_FIELD_TOGGLES.keys + Territory::OPTIONAL_RDV_WAITING_ROOM_FIELD_TOGGLES.keys)
   end
