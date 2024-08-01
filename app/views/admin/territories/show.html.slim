@@ -44,44 +44,44 @@ h1.m-2.text-center.border-bottom.pb-2 Espace Admin - #{current_territory.name}
           | Sectorisation
         p Créer, importer, affecter vos secteurs géographiques.
 
-    - if Agent::TerritoryPolicy.new(current_agent, current_territory).edit?
-      .col.col-md-4.p-2.rounded.settings-box
-        = link_to edit_admin_territory_user_fields_path(current_territory) do
-          h2.fw-bold.mb-0
-            i.fa.fa-users>
-            | Fiches usagers
-          p Gérer les informations enregistrées sur les usagers
-
-    - if Agent::TerritoryPolicy.new(current_agent, current_territory).edit?
-      .col.col-md-4.p-2.rounded.settings-box
-        = link_to edit_admin_territory_rdv_fields_path(current_territory) do
-          h2.fw-bold.mb-0
-            i.fa.fa-calendar>
-            | Fiches RDV
-          p Gérer les informations enregistrées sur les rendez-vous
-
-    - if Agent::TerritoryPolicy.new(current_agent, current_territory).edit?
-      .col.col-md-4.p-2.rounded.settings-box
-        = link_to admin_territory_motifs_path(current_territory) do
-          h2.fw-bold.mb-0
-            i.fa.fa-calendar>
-            = t("admin.territories.motifs.index.title")
-          p Lister, éditer, supprimer les motifs de toutes vos organisations
-
+  - if Agent::TerritoryPolicy.new(current_agent, current_territory).edit?
     .col.col-md-4.p-2.rounded.settings-box
-      = link_to edit_admin_territory_motif_fields_path(current_territory) do
+      = link_to edit_admin_territory_user_fields_path(current_territory) do
+        h2.fw-bold.mb-0
+          i.fa.fa-users>
+          | Fiches usagers
+        p Gérer les informations enregistrées sur les usagers
+
+  - if Agent::TerritoryPolicy.new(current_agent, current_territory).edit?
+    .col.col-md-4.p-2.rounded.settings-box
+      = link_to edit_admin_territory_rdv_fields_path(current_territory) do
         h2.fw-bold.mb-0
           i.fa.fa-calendar>
-          = t("admin.territories.motif_fields.edit.card_title")
-        p Gérer les options de configuration des motifs
+          | Fiches RDV
+        p Gérer les informations enregistrées sur les rendez-vous
 
-    - if Agent::TerritoryPolicy.new(current_agent, current_territory).edit?
-      .col.col-md-4.p-2.rounded.settings-box
-        = link_to edit_admin_territory_services_path(current_territory) do
-          h2.fw-bold.mb-0
-            i.fa.fa-calendar>
-            | Services
-          p Activer ou désactiver la liste des services auxquels les agents peuvent être affectés
+  - if Agent::TerritoryPolicy.new(current_agent, current_territory).edit?
+    .col.col-md-4.p-2.rounded.settings-box
+      = link_to admin_territory_motifs_path(current_territory) do
+        h2.fw-bold.mb-0
+          i.fa.fa-calendar>
+          = t("admin.territories.motifs.index.title")
+        p Lister, éditer, supprimer les motifs de toutes vos organisations
+
+  .col.col-md-4.p-2.rounded.settings-box
+    = link_to edit_admin_territory_motif_fields_path(current_territory) do
+      h2.fw-bold.mb-0
+        i.fa.fa-calendar>
+        = t("admin.territories.motif_fields.edit.card_title")
+      p Gérer les options de configuration des motifs
+
+  - if Agent::TerritoryPolicy.new(current_agent, current_territory).edit?
+    .col.col-md-4.p-2.rounded.settings-box
+      = link_to edit_admin_territory_services_path(current_territory) do
+        h2.fw-bold.mb-0
+          i.fa.fa-calendar>
+          | Services
+        p Activer ou désactiver la liste des services auxquels les agents peuvent être affectés
 
   / Ce lien est la manière principale de sortir de la configuration pour retourner à l'écran métier, donc on le garde à la fin de la liste
   .col.col-md-4.p-2.rounded.settings-box
