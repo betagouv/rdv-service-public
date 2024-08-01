@@ -30,5 +30,21 @@ RSpec.describe Admin::Territories::SectorisationTestsController, type: :controll
         expect(response).to be_successful
       end
     end
+
+    context "with address in other territory" do
+      it "returns an error" do
+        get :search, params: {
+          territory_id: territory.id,
+          address: "10 Avenue de la République, Paris, 75011",
+          departement: 75,
+          city_code: 75_111,
+          street_ban_id: 75111_8158,
+          latitude: 48.866607,
+          longitude: 2.366686,
+          commit: "Tester la sectorisation de cette adresse",
+        }
+        expect(response).not_to be_successful
+      end
+    end
   end
 end

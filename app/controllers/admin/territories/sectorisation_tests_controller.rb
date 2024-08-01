@@ -1,12 +1,22 @@
 class Admin::Territories::SectorisationTestsController < Admin::Territories::BaseController
+  skip_after_action :verify_policy_scoped, only: [:search]
+
   def search
-    @sectorisation_test_form = policy_scope(Admin::SectorisationTestForm.new(current_territory: current_territory, **sectorisation_test_params))
-    @sectorisation_test_form.valid? if sectorisation_test_params.present?
-  end
+    authorize_with_legacy_configuration_scope current_territory, :territorial_admin?
 
-  private
+    return if params[:departement].blank? || params[:city_code].blank?
 
-  def sectorisation_test_params
-    params.permit(:where, :departement, :city_code, :street_ban_id, :latitude, :longitude)
+    raise Pundit::NotAuthorizedError unless current_territory.departement_number == params[:departement]
+
+    @geo_search ||= Users::GeoSearch.new(
+      departement: params[:departement],
+      city_code: params[:city_code],
+      street_ban_id: params[:street_ban_id]
+    )
+    @available_motifs_unique_names_and_location_types_by_service = @geo_search
+      .available_motifs
+      .to_a
+      .uniq { [_1.name, _1.location_type] }
+      .group_by(&:service)
   end
 end

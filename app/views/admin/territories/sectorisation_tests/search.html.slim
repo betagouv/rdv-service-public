@@ -1,37 +1,48 @@
 = territory_navigation(t(".title"), [link_to("Sectorisation", admin_territory_sectorization_path(current_territory))])
 
-= simple_form_for \
-  @sectorisation_test_form, \
-  url: admin_territory_sectorisation_test_path, \
+= form_with \
+  url: admin_territory_sectorisation_test_path(current_territory:), \
   method: :get,
   as: "" \
 do |f|
   .card
     .card-header Recherche
     .card-body
-      = render "model_errors", model: @sectorisation_test_form
-      = f.input \
-        :where, \
-        label: "Adresse", \
-        placeholder: "ex : 21 rue Anatole France, Calais", \
-        input_html: { class: "places-js-container" }
+      .form-group
+        = f.label :where, "Adresse", class: "form-control-label"
+        = f.text_field \
+          :where, \
+          value: params[:where], \
+          label: "Adresse", \
+          placeholder: "ex : 21 rue Anatole France, Calais", \
+          class: "places-js-container form-control"
       .row.align-items-center.bg-light.py-2.mb-2
         .col-lg-2 Infos de la Base Adresse
-        .col-lg-2= f.input :departement, readonly: true, label: "Département"
-        .col-lg-2= f.input :city_code, readonly: true, label: "Code commune"
-        .col-lg-2= f.input :street_ban_id, readonly: true, label: "Code rue BAN"
-        .col-lg-2= f.input :latitude, readonly: true, label: "Latitude"
-        .col-lg-2= f.input :longitude, readonly: true, label: "Longitude"
+        .col-lg-2.form-group
+          = f.label :departement, "Département", class: "form-control-label"
+          = f.text_field :departement, readonly: true, class: "form-control", value: params[:departement]
+        .col-lg-2.form-group
+          = f.label :city_code, "Code commune", class: "form-control-label"
+          = f.text_field :city_code, readonly: true, label: "Code commune", class: "form-control", value: params[:city_code]
+        .col-lg-2.form-group
+          = f.label :city_ban_id, "Code rue BAN", class: "form-control-label"
+          = f.text_field :street_ban_id, readonly: true, label: "Code rue BAN", class: "form-control", value: params[:street_ban_id]
+        .col-lg-2.form-group
+          = f.label :latitude, "Latitude", class: "form-control-label"
+          = f.text_field :latitude, readonly: true, label: "Latitude", class: "form-control", value: params[:latitude]
+        .col-lg-2.form-group
+          = f.label :longitude, "Longitude", class: "form-control-label"
+          = f.text_field :longitude, readonly: true, label: "Longitude", class: "form-control", value: params[:longitude]
       = f.submit class: "btn btn-primary", value: "Tester la sectorisation de cette adresse"
 
-  - if @sectorisation_test_form.valid?
+  - if @geo_search
     .card
       .card-header Résultats pour cette adresse
       .card-body
-        - if @sectorisation_test_form.attributions?
-          b= t("sectorisation_tests.attributed_sectors_count", count: @sectorisation_test_form.matching_zones.count)
+        - if @geo_search.attributions?
+          b= t("sectorisation_tests.attributed_sectors_count", count: @geo_search.matching_zones.count)
           ul
-            - @sectorisation_test_form.matching_zones.each do |zone|
+            - @geo_search.matching_zones.each do |zone|
               li
                 span> Via le secteur
                 span>= link_to zone.sector.name, admin_territory_sector_path(current_territory, zone.sector)
@@ -43,15 +54,15 @@ do |f|
                 | est attribuée à :
                 ul
                   - zone.sector.attributions.to_a.group_by(&:organisation).each do |organisation, attributions|
-                    li= render partial: "attribution", collection: attributions, locals: { sectorisation_test_form: @sectorisation_test_form }
+                    li= render partial: "attribution", collection: attributions, locals: { sectorisation_test_form: @geo_search }
           div
-            b Cette adresse appartient au département #{@sectorisation_test_form.departement}
-            - if @sectorisation_test_form.available_motifs_from_departement_organisations.empty?
+            b Cette adresse appartient au département #{params[:departement]}
+            - if @geo_search.available_motifs_from_departement_organisations.empty?
               ul
                 li.text-muted= t("sectorisation_tests.departement_motifs_count", count: 0)
             - else
               ul
-                - @sectorisation_test_form.available_motifs_from_departement_organisations.to_a.group_by { [_1.organisation, _1.service] }.each do |tuple, motifs|
+                - @geo_search.available_motifs_from_departement_organisations.to_a.group_by { [_1.organisation, _1.service] }.each do |tuple, motifs|
                   - organisation, service = tuple
                   li= t("sectorisation_tests.departement_motifs_count", count: motifs.count, organisation: organisation.name, service: service.short_name)
                   ul
@@ -63,7 +74,7 @@ do |f|
         div
           b Combinaison des motifs disponibles (c'est ce que voit l'usager) :
           ul
-            - @sectorisation_test_form.available_motifs_unique_names_and_location_types_by_service.each do |service, motifs|
+            - @available_motifs_unique_names_and_location_types_by_service.each do |service, motifs|
               li
                 | Service #{service.short_name}: #{motifs.count} motifs disponibles
                 ul
