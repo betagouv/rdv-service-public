@@ -9,7 +9,7 @@
         = f.input :name, label: "Nom de votre organisation", placeholder: "Maison départementale des solidarités de Beaupréau-en-Mauges"
         = f.association :territory, \
           label: "Territoire", \
-          collection: policy_scope(Territory), \
+          collection: Agent::TerritoryPolicy::Scope.new(current_agent, current_agent.territories).resolve, \
           include_blank: false, \
           label_method: -> { _1.to_s }
         = f.submit value: "Enregistrer", class: "btn btn-primary"
