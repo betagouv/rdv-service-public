@@ -1,6 +1,6 @@
 class Admin::Territories::ServicesController < Admin::Territories::BaseController
   def edit
-    authorize_with_legacy_configuration_scope current_territory
+    authorize_agent current_territory
 
     activated_services = format_for_checkboxes(current_territory.services)
     other_services = format_for_checkboxes(Service.where.not(id: current_territory.service_ids))
@@ -21,6 +21,10 @@ class Admin::Territories::ServicesController < Admin::Territories::BaseControlle
   end
 
   private
+
+  def pundit_user
+    current_agent
+  end
 
   def services_params
     params.require(:territory).permit(service_ids: [])
