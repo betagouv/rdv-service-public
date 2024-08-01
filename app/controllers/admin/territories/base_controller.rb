@@ -45,8 +45,8 @@ class Admin::Territories::BaseController < ApplicationController
 
     context = AgentTerritorialContext.new(current_agent, @territory)
 
-    policy = ::Configuration::TerritoryPolicy.new(context, @territory)
-    raise ActiveRecord::RecordNotFound unless policy.show?
+    policy = Agent::TerritoryPolicy.new(context, @territory)
+    raise Pundit::NotAuthorizedError, "not authorized" unless policy.show?
 
     @territory
   end
