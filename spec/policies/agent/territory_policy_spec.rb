@@ -2,7 +2,6 @@ RSpec.describe Agent::TerritoryPolicy, type: :policy do
   subject { described_class }
 
   let(:territory) { create(:territory) }
-  let(:pundit_context) { AgentTerritorialContext.new(agent, territory) }
 
   describe "agent with" do
     context "no admin access to this territory and no access_rights" do
