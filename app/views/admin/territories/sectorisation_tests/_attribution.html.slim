@@ -1,8 +1,11 @@
 - if attribution.level_agent?
   div
-    span> L'agent
-    b>= attribution.agent.full_name_and_service
-    span> dans l'organisation
+    / cette vérification évite d’afficher les noms d’agents que l’agent courant n’a pas le droit de voir
+    - if Agent::AgentPolicy.new(AgentContext.new(current_agent), attribution.agent).show?
+      = attribution.agent.full_name_and_service
+    - else
+      | Un·e agent (#{attribution.agent.services_short_names})
+    span<> dans l'organisation
     b>= attribution.organisation.name
   - if sectorisation_test_form.available_motifs_from_attributed_agent(attribution.agent, attribution.organisation).empty?
     ul

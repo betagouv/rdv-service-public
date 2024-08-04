@@ -1,12 +1,11 @@
 class Admin::Territories::SectorisationTestsController < Admin::Territories::BaseController
+  # Cette action pourrait être publique car les infos qu’elle affiche sont celles présentées dans la recherche côté usagers
+  # La seule information non publique est le nom des agents assignés individuellement à des secteurs
+  # (la policy est appliquée dans le partial attribution)
   skip_after_action :verify_policy_scoped, only: [:search]
 
   def search
-    authorize_with_legacy_configuration_scope current_territory, :territorial_admin?
-
     return if params[:departement].blank? || params[:city_code].blank?
-
-    raise Pundit::NotAuthorizedError unless current_territory.departement_number == params[:departement]
 
     @geo_search ||= Users::GeoSearch.new(
       departement: params[:departement],
