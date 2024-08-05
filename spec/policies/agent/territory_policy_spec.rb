@@ -13,7 +13,10 @@ RSpec.describe Agent::TerritoryPolicy, type: :policy do
                       :territory,
                       :show?,
                       :update?,
-                      :edit?
+                      :edit?,
+                      :allow_to_manage_access_rights?,
+                      :allow_to_invite_agents?,
+                      :allow_to_manage_teams?
     end
 
     context "admin access to this territory" do
@@ -26,33 +29,38 @@ RSpec.describe Agent::TerritoryPolicy, type: :policy do
                       :show?,
                       :update?,
                       :edit?
+
+      it_behaves_like "not permit actions", :territory,
+                      :allow_to_manage_access_rights?,
+                      :allow_to_invite_agents?,
+                      :allow_to_manage_teams?
     end
 
     context "allowed to manage teams access right" do
       let(:agent) { create(:agent, role_in_territories: []) }
       let!(:access_rights) { create(:agent_territorial_access_right, agent: agent, territory: territory, allow_to_manage_teams: true) }
 
-      it_behaves_like "permit actions", :territory, :show?
+      it_behaves_like "permit actions", :territory, :show?, :allow_to_manage_teams?
 
-      it_behaves_like "not permit actions", :territory, :update?, :edit?
+      it_behaves_like "not permit actions", :territory, :update?, :edit?, :allow_to_manage_access_rights?, :allow_to_invite_agents?
     end
 
     context "allowed to manage access rights access right" do
       let(:agent) { create(:agent, role_in_territories: []) }
       let!(:access_rights) { create(:agent_territorial_access_right, agent: agent, territory: territory, allow_to_manage_access_rights: true) }
 
-      it_behaves_like "permit actions", :territory, :show?
+      it_behaves_like "permit actions", :territory, :show?, :allow_to_manage_access_rights?
 
-      it_behaves_like "not permit actions", :territory, :update?, :edit?
+      it_behaves_like "not permit actions", :territory, :update?, :edit?, :allow_to_invite_agents?, :allow_to_manage_teams?
     end
 
     context "allowed to invite agents access right" do
       let(:agent) { create(:agent, role_in_territories: []) }
       let!(:access_rights) { create(:agent_territorial_access_right, agent: agent, territory: territory, allow_to_invite_agents: true) }
 
-      it_behaves_like "permit actions", :territory, :show?
+      it_behaves_like "permit actions", :territory, :show?, :allow_to_invite_agents?
 
-      it_behaves_like "not permit actions", :territory, :update?, :edit?
+      it_behaves_like "not permit actions", :territory, :update?, :edit?, :allow_to_manage_teams?, :allow_to_manage_access_rights?
     end
   end
 end
