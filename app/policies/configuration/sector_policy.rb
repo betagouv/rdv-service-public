@@ -1,12 +1,11 @@
 class Configuration::SectorPolicy
-  def initialize(context, agent)
+  def initialize(context, sector)
     @current_agent = context.agent
-    @current_territory = context.territory
-    @agent = agent
+    @sector = sector
   end
 
   def territorial_admin?
-    @current_agent.territorial_admin_in?(@current_territory)
+    @current_agent.territorial_admin_in?(@sector.territory)
   end
 
   alias display? territorial_admin?
