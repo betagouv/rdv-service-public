@@ -22,7 +22,7 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
 
   def new
     @agent = Agent.new
-    authorize_with_legacy_configuration_scope(@agent)
+    skip_authorization
   end
 
   def edit; end
@@ -31,7 +31,9 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
     # ATTENTION: ce update peut supprimer des team_ids d’autres territoires.
     # C’est un bug consciemment laissé pour l’instant puisqu'on a pas ou peu d'agents multi-territoire et que les équipes ne sont pas utilisées par la plupart des territoires
     # cf PR https://github.com/betagouv/rdv-service-public/pull/4525 qui tentait de résoudre ça.
-    team_ids = params[:agent][:team_ids].compact_blank
+    team_ids = Team
+      .where(id: params[:agent][:team_ids].compact_blank, territory: current_territory) # filtering on territory is not done in policy anymore
+      .pluck(:id)
     if @agent.update(team_ids:)
       flash[:success] = "Les équipes de l’agent ont été mises à jour"
       redirect_to edit_admin_territory_agent_path(current_territory, @agent.id)
@@ -41,16 +43,13 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
   end
 
   def create
-    authorize_with_legacy_configuration_scope(Agent.new(permitted_create_params))
-
-    organisation_ids = params.require(:admin_agent).require(:organisation_ids)
-    context = AgentTerritorialContext.new(@current_agent, nil) # Dès que possible, on arrêtera d'utiliser ces contextes
-    authorized_organisations = Agent::OrganisationPolicy::Scope.new(context, Organisation.where(id: organisation_ids)).resolve
+    new_agent = Agent.new(params.require(:admin_agent).permit(:email, service_ids: [], organisation_ids: []))
+    authorize_with_legacy_configuration_scope(new_agent)
 
     create_agent = AdminCreatesAgent.new(
-      agent_params: permitted_create_params,
+      agent_params: { email: new_agent[:email], service_ids: new_agent.service_ids },
       current_agent: current_agent,
-      organisations: authorized_organisations,
+      organisations: new_agent.organisations,
       access_level: AgentRole::ACCESS_LEVEL_BASIC
     )
 
@@ -95,9 +94,5 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
 
   def authorize_agent
     authorize_with_legacy_configuration_scope @agent
-  end
-
-  def permitted_create_params
-    params.require(:admin_agent).permit(:email, service_ids: [])
   end
 end

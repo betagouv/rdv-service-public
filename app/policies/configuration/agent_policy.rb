@@ -4,36 +4,45 @@ class Configuration::AgentPolicy
     @agent = agent
   end
 
-  def self.allowed_to_manage_agents_in?(territory, agent, sufficient_rights: %i[allow_to_manage_access_rights? allow_to_manage_teams? allow_to_invite_agents?])
+  def self.allowed_to_manage_agents_in?(territory, agent)
     return true if agent.territorial_admin_in?(territory)
 
     access_rights = agent.access_rights_for_territory(territory)
-    sufficient_rights.any? { access_rights&.send(_1) }
+    access_rights&.allow_to_manage_access_rights? ||
+      access_rights&.allow_to_manage_teams? ||
+      access_rights&.allow_to_invite_agents?
+  end
+
+  def self.allowed_to_invite_agents_in?(territory, agent)
+    return true if agent.territorial_admin_in?(territory)
+
+    agent.access_rights_for_territory(territory)&.allow_to_invite_agents?
   end
 
   def edit?
-    any_territory_allowed? %i[allow_to_manage_access_rights? allow_to_manage_teams? allow_to_invite_agents?]
+    agent_territories.any? { self.class.allowed_to_manage_agents_in?(_1, @current_agent) }
   end
 
   def update_teams?
-    any_territory_allowed? %i[allow_to_manage_access_rights? allow_to_manage_teams? allow_to_invite_agents?]
+    # TODO: cette règle ici n’a pas de sens, le contexte du territoire est indispensable
+    agent_territories.any? { Agent::TeamPolicy.allowed_to_manage_teams_in?(_1, @current_agent) }
   end
 
   def update_services?
-    any_territory_allowed? %i[allow_to_manage_access_rights? allow_to_manage_teams? allow_to_invite_agents?]
+    # NOTE: le service est à l’échelle de l’agent, ça aura donc un impact inter-territoires
+    agent_territories.any? { self.class.allowed_to_manage_agents_in?(_1, @current_agent) }
   end
 
   def create?
-    any_territory_allowed? %i[allow_to_invite_agents]
+    agent_territories.any? { self.class.allowed_to_invite_agents_in?(_1, @current_agent) }
   end
-
-  alias new? create?
 
   private
 
-  def any_territory_allowed?(sufficient_rights)
-    Territory
-      .where(id: @agent.territory_ids.union(@agent.territories_through_organisation_ids))
-      .any? { self.class.allowed_to_manage_agents_in?(_1, @current_agent, sufficient_rights:) }
+  def agent_territories
+    # tous les territoires où l'agent cible est admin OU a un rôle dans une orga peu importe son niveau d’accès
+    # on pourrait aussi implémenter cette méthode en passant par les agent_territorial_access_rights mais c’est
+    # plus explicite de l’écrire comme ça
+    Territory.where(id: @agent.territory_ids.union(@agent.territories_through_organisation_ids))
   end
 end
