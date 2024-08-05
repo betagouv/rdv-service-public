@@ -3,8 +3,7 @@ class Admin::SectorisationTestForm
 
   attr_accessor :where, :departement, :city_code, :street_ban_id, :latitude, :longitude, :current_territory
 
-  validates :current_territory, :departement, :city_code, presence: true
-  validate :correct_departement
+  validates :departement, :city_code, presence: true
 
   delegate(
     :attributions?,
@@ -26,12 +25,6 @@ class Admin::SectorisationTestForm
   end
 
   private
-
-  def correct_departement
-    return true if departement == current_territory.departement_number
-
-    errors.add(:base, "Vous ne pouvez pas tester la sectorisation du #{departement}")
-  end
 
   def geo_search
     return nil unless valid?
