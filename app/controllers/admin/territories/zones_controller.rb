@@ -19,13 +19,13 @@ class Admin::Territories::ZonesController < Admin::Territories::BaseController
   def new
     zone_defaults = { level: params[:default_zone_level] || Zone::LEVEL_CITY }
     @zone = Zone.new(**zone_defaults.merge(zone_params_get), sector: @sector)
-    @sectors = policy_scope(Sector)
-    authorize_with_legacy_configuration_scope @zone
+    @sectors = policy_scope(current_territory.sectors)
+    authorize_agent @zone
   end
 
   def create
     @zone = Zone.new(**zone_params, sector: @sector)
-    authorize_with_legacy_configuration_scope @zone
+    authorize_agent @zone
     if @zone.save
       if params[:commit] == I18n.t("helpers.submit.create")
         redirect_to admin_territory_sector_path(current_territory, @sector), flash: { success: "#{@zone.human_attribute_value(:level)} ajoutée au secteur" }
@@ -39,7 +39,7 @@ class Admin::Territories::ZonesController < Admin::Territories::BaseController
 
   def destroy
     zone = Zone.find(params[:id])
-    authorize_with_legacy_configuration_scope zone
+    authorize_agent zone
     if zone.destroy
       redirect_to admin_territory_sector_path(current_territory, @sector), flash: { success: "#{zone.human_attribute_value(:level)} retirée du secteur" }
     else
@@ -60,6 +60,10 @@ class Admin::Territories::ZonesController < Admin::Territories::BaseController
   end
 
   private
+
+  def pundit_user
+    current_agent
+  end
 
   def set_sector
     @sector = policy_scope(Sector).find(params[:sector_id])

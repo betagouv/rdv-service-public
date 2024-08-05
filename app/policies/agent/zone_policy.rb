@@ -1,6 +1,6 @@
-class Configuration::ZonePolicy
-  def initialize(context, zone)
-    @current_agent = context.agent
+class Agent::ZonePolicy
+  def initialize(agent, zone)
+    @current_agent = agent
     @zone = zone
   end
 
@@ -13,8 +13,8 @@ class Configuration::ZonePolicy
   alias destroy? territorial_admin?
 
   class Scope
-    def initialize(context, scope)
-      @current_agent = context.agent
+    def initialize(agent, scope)
+      @current_agent = agent
       @scope = scope
     end
 
