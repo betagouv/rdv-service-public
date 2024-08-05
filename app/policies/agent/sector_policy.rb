@@ -1,6 +1,6 @@
-class Configuration::SectorPolicy
-  def initialize(context, sector)
-    @current_agent = context.agent
+class Agent::SectorPolicy
+  def initialize(agent, sector)
+    @current_agent = agent
     @sector = sector
   end
 

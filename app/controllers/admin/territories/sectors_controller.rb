@@ -1,6 +1,5 @@
 class Admin::Territories::SectorsController < Admin::Territories::BaseController
   before_action :set_sector, only: %i[show edit update destroy]
-  before_action :authorize_sector, only: %i[show edit update destroy]
 
   def index
     @sectors = policy_scope(Sector)
@@ -14,12 +13,12 @@ class Admin::Territories::SectorsController < Admin::Territories::BaseController
 
   def new
     @sector = Sector.new(territory: current_territory)
-    authorize_with_legacy_configuration_scope @sector
+    authorize_agent @sector
   end
 
   def create
     @sector = Sector.new(**sector_params, territory: current_territory)
-    authorize_with_legacy_configuration_scope @sector
+    authorize_agent @sector
     if @sector.save
       if params[:commit] == I18n.t("helpers.submit.create")
         redirect_to admin_territory_sector_path(current_territory, @sector)
@@ -56,12 +55,13 @@ class Admin::Territories::SectorsController < Admin::Territories::BaseController
 
   private
 
-  def set_sector
-    @sector = Sector.find(params[:id])
+  def pundit_user
+    current_agent
   end
 
-  def authorize_sector
-    authorize_with_legacy_configuration_scope @sector
+  def set_sector
+    @sector = Sector.find(params[:id])
+    authorize_agent @sector
   end
 
   def sector_params
