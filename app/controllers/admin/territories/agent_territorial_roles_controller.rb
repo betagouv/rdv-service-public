@@ -5,24 +5,34 @@ class Admin::Territories::AgentTerritorialRolesController < Admin::Territories::
     agent = Agent::AgentPolicy::Scope.new(context, Agent).resolve.find(params[:agent_id])
 
     if params[:territorial_admin] == "1"
-      role = AgentTerritorialRole.find_or_create_by!(territory: current_territory, agent: agent)
-      authorize_agent role
-      message = "Les droits d'administrateur du #{current_territory} ont été ajoutés à #{agent.full_name}"
+      create(agent)
     else
-      role = AgentTerritorialRole.find_or_initialize_by(territory: current_territory, agent: agent)
-      authorize_agent role
-      return unless role&.persisted?
-
-      role.destroy!
-      message = "Les droits d'administrateur du #{current_territory} ont été retirés à #{agent.full_name}"
+      destroy(agent)
     end
-    redirect_to(
-      edit_admin_territory_agent_path(current_territory, agent),
-      flash: { success: message }
-    )
   end
 
   private
+
+  def create(agent)
+    role = AgentTerritorialRole.find_or_create_by!(territory: current_territory, agent: agent)
+    authorize_agent role
+    flash[:success] = "Les droits d'administrateur du #{current_territory} ont été ajoutés à #{agent.full_name}"
+
+    redirect_to edit_admin_territory_agent_path(current_territory, agent)
+  end
+
+  def destroy(agent)
+    role = AgentTerritorialRole.find_or_initialize_by(territory: current_territory, agent: agent)
+    authorize_agent role
+    return unless role&.persisted?
+
+    if role.destroy
+      flash[:success] = "Les droits d'administrateur du #{current_territory} ont été retirés à #{agent.full_name}"
+    else
+      flash[:error] = role.errors.full_messages.to_sentence
+    end
+    redirect_to edit_admin_territory_agent_path(current_territory, agent)
+  end
 
   def pundit_user
     current_agent
