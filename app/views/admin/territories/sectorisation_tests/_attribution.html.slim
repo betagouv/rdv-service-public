@@ -1,7 +1,7 @@
 - if attribution.level_agent?
   div
     / cette vérification évite d’afficher les noms d’agents que l’agent courant n’a pas le droit de voir
-    - if Agent::AgentPolicy.new(AgentContext.new(current_agent), attribution.agent).show?
+    - if Configuration::AgentPolicy.new(AgentContext.new(current_agent), attribution.agent).show?
       | L’agent #{attribution.agent.full_name_and_service}
     - else
       | Un agent (#{attribution.agent.services_short_names})
