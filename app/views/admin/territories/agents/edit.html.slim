@@ -36,7 +36,7 @@ h1
             .col.text-right
               = f.submit class: "btn btn-primary", value: "Enregistrer les droits d'accès"
 
-  - if Agent::TerritoryPolicy.new(current_agent, current_territory).allow_to_manage_access_rights?
+  - if Configuration::AgentPolicy.new(AgentTerritorialContext.new(current_agent, current_territory), current_territory).territorial_admin?
     .card.m-2.rounded.agent-territorial
       h2.card-header
         = t(".agent_territorial_role_caption")
