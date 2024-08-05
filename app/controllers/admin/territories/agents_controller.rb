@@ -2,7 +2,6 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
   before_action :set_agent, only: %i[edit update_teams update_services]
   before_action :authorize_agent, only: %i[edit update_teams update_services]
 
-
   def index
     @agents = find_agents(params[:q]).page(page_number)
   end
