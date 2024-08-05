@@ -131,10 +131,11 @@ Rails.application.routes.draw do
             end
           end
           resources :webhook_endpoints, except: %i[show]
-          resources :agents, only: %i[index new create update edit] do
+          resources :agents, only: %i[index new create edit] do
             member do
               put :territory_admin
               patch :update_services
+              patch :update_teams
             end
           end
           resources :teams, except: :show

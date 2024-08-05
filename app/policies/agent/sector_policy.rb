@@ -1,6 +1,6 @@
-class Configuration::SectorPolicy
-  def initialize(context, sector)
-    @current_agent = context.agent
+class Agent::SectorPolicy
+  def initialize(agent, sector)
+    @current_agent = agent
     @sector = sector
   end
 
@@ -20,8 +20,8 @@ class Configuration::SectorPolicy
   alias destroy? territorial_admin?
 
   class Scope
-    def initialize(context, scope)
-      @current_agent = context.agent
+    def initialize(agent, scope)
+      @current_agent = agent
       @scope = scope
     end
 
