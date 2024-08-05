@@ -20,12 +20,13 @@ class Configuration::SectorPolicy
   alias destroy? territorial_admin?
 
   class Scope
-    def initialize(context, _scope)
-      @current_territory = context.territory
+    def initialize(context, scope)
+      @current_agent = context.agent
+      @scope = scope
     end
 
     def resolve
-      Sector.where(territory: @current_territory)
+      @scope.where(territory_id: @current_agent.territorial_roles.pluck(:territory_id))
     end
   end
 end
