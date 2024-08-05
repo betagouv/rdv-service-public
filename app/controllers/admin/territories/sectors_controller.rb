@@ -2,7 +2,7 @@ class Admin::Territories::SectorsController < Admin::Territories::BaseController
   before_action :set_sector, only: %i[show edit update destroy]
 
   def index
-    @sectors = policy_scope(Sector)
+    @sectors = policy_scope(Sector, policy_scope_class: Agent::SectorPolicy::Scope)
       .where(territory: current_territory)
       .includes(:attributions)
       .ordered_by_name
