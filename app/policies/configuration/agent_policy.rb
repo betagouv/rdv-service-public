@@ -26,4 +26,6 @@ class Configuration::AgentPolicy
   def create?
     territorial_admin? || @access_rights&.allow_to_invite_agents?
   end
+
+  alias new? create?
 end

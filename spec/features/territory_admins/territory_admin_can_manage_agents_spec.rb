@@ -26,6 +26,55 @@ RSpec.describe "territory admin can manage agents", type: :feature do
     end
   end
 
+  describe "inviting an agent" do
+    let(:admin) do
+      create(:agent, role_in_territories: [territory], admin_role_in_organisations: [organisation, other_organisation])
+    end
+    let!(:organisation) { create(:organisation, name: "MDS de Valence", territory: territory) }
+    let!(:other_organisation) { create(:organisation, name: "MDS de Chambéry", territory: territory) }
+    let!(:service) { create(:service, name: "Service Social", territories: [territory]) }
+
+    before { login_as(admin, scope: :agent) }
+
+    it "works" do
+      visit new_admin_territory_agent_path(territory_id: territory.id)
+      fill_in "Email", with: "agent@ladrome.fr"
+      check "MDS de Valence"
+      check "MDS de Chambéry"
+      select "Service Social"
+      click_on "Envoyer"
+
+      expect(page).to have_content "L’agent agent@ladrome.fr a été invité à rejoindre votre organisation"
+
+      expect(Agent.last).to have_attributes(
+        email: "agent@ladrome.fr",
+        organisations: [organisation, other_organisation],
+        services: [service]
+      )
+      expect(AgentTerritorialAccessRight.last).to have_attributes(
+        agent: Agent.last,
+        territory: territory
+      )
+    end
+
+    context "when trying to cheat and invite an agent to an organisation in another territory" do
+      let!(:organisation_in_another_territory) { create(:organisation, territory: create(:territory)) }
+
+      it "doesn't add the agent to the other organisation", js: true do
+        visit new_admin_territory_agent_path(territory_id: territory.id)
+        fill_in "Email", with: "agent@ladrome.fr"
+        check "MDS de Valence"
+        select "Service Social"
+
+        # On modifie le html pour simuler une attaque
+        page.execute_script("document.querySelector('input[value=\"#{organisation.id}\"]').value = #{organisation_in_another_territory.id}")
+        click_on "Envoyer"
+
+        expect(organisation_in_another_territory.agents).to be_empty
+      end
+    end
+  end
+
   describe "removing an agent from a team" do
     it "works" do
       team_a = create(:team, name: "A", territory: territory)

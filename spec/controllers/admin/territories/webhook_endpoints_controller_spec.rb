@@ -18,6 +18,22 @@ RSpec.describe Admin::Territories::WebhookEndpointsController, type: :controller
       get :index, params: { territory_id: territory.id }
       expect(assigns(:webhooks)).to eq([webhook])
     end
+
+    context "when trying to view the list of webhook endpoints in a territory for which i can only manage teams" do
+      render_views
+      let(:other_territory) { create(:territory) }
+      let(:other_organisation) { create(:organisation, territory: other_territory) }
+      let!(:other_webhook) { create(:webhook_endpoint, organisation: other_organisation, target_url: "https://www.exemple.fr") }
+
+      before do
+        create(:agent_territorial_access_right, agent: agent, territory: other_territory, allow_to_manage_teams: true)
+      end
+
+      it "doesn't show the webhook_endpoints" do
+        get :index, params: { territory_id: other_territory.id }
+        expect(response.body).not_to include("https://www.exemple.fr")
+      end
+    end
   end
 
   describe "#new" do
@@ -43,6 +59,15 @@ RSpec.describe Admin::Territories::WebhookEndpointsController, type: :controller
         expect do
           post :create, params: { territory_id: territory.id, webhook_endpoint: { organisation_id: organisation.id, target_url: "https://example.com", secret: "XSECRETX" } }
         end.to change(WebhookEndpoint, :count).from(0).to(1)
+      end
+    end
+
+    context "creating a webhook on an organisation that does not belong to the agent’s territory" do
+      let!(:other_orga) { create(:organisation, territory: create(:territory)) }
+
+      it "returns an error and does not create the endpoint" do
+        post :create, params: { territory_id: territory.id, webhook_endpoint: { organisation_id: other_orga.id, target_url: "https://example.com", secret: "XSECRETX" } }
+        expect(other_orga.webhook_endpoints.count).to eq(0)
       end
     end
 

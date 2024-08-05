@@ -126,7 +126,7 @@ Rails.application.routes.draw do
           resources :agent_roles, only: %i[edit update create destroy]
           resources :agent_territorial_access_rights, only: %i[update]
           resources :webhook_endpoints, except: %i[show]
-          resources :agents, only: %i[index update edit] do
+          resources :agents, only: %i[index new create update edit] do
             member do
               put :territory_admin
               patch :update_services
@@ -149,8 +149,6 @@ Rails.application.routes.draw do
             delete "/zones" => "zones#destroy_multiple"
           end
           get "sectorisation_test" => "sectorisation_tests#search"
-
-          devise_for :agents, controllers: { invitations: "admin/territories/invitations_devise" }, only: :invitations
         end
       end
 
