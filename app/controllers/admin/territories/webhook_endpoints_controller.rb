@@ -40,11 +40,6 @@ class Admin::Territories::WebhookEndpointsController < Admin::Territories::BaseC
 
   private
 
-  # On est obligé de redéfinir cette méthode ici tant que le controller parent utilise les AgentTerritorialContext
-  def pundit_user
-    current_agent
-  end
-
   def webhook_endpoint_params
     params.require(:webhook_endpoint).permit(
       :target_url, :secret, :organisation_id, subscriptions: []

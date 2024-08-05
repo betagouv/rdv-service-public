@@ -13,10 +13,6 @@ class Admin::Territories::UserFieldsController < Admin::Territories::BaseControl
 
   private
 
-  def pundit_user
-    current_agent
-  end
-
   def user_fields_params
     params.require(:territory).permit(Territory::OPTIONAL_FIELD_TOGGLES.keys)
   end

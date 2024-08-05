@@ -20,7 +20,7 @@ class Admin::Territories::MotifsController < Admin::Territories::BaseController
 
   def destroy
     motif = Motif.active.find(params[:id])
-    authorize_with_legacy_configuration_scope(motif, policy_class: Agent::MotifPolicy)
+    authorize_agent motif
     if motif.soft_delete
       flash[:notice] = "Le motif a été supprimé."
     else
@@ -39,9 +39,5 @@ class Admin::Territories::MotifsController < Admin::Territories::BaseController
     motifs = motifs.where(collectif: params[:collectif].to_b) if params[:collectif].present?
     motifs = motifs.where(bookable_by: params[:bookable_by]) if params[:bookable_by].present?
     motifs
-  end
-
-  def pundit_user
-    current_agent
   end
 end
