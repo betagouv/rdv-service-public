@@ -29,7 +29,7 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
 
   def update_teams
     # ATTENTION: ce update peut supprimer des team_ids d’autres territoires.
-    # C’est un bug consciemment laissé pour l’instant.
+    # C’est un bug consciemment laissé pour l’instant puisqu'on a pas ou peu d'agents multi-territoire et que les équipes ne sont pas utilisées par la plupart des territoires
     # cf PR https://github.com/betagouv/rdv-service-public/pull/4525 qui tentait de résoudre ça.
     team_ids = params[:agent][:team_ids].compact_blank
     if @agent.update(team_ids:)
