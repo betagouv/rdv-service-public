@@ -22,7 +22,7 @@ h1
             .col.text-right
               = f.submit class: "btn btn-primary", value: "Enregistrer les services"
 
-  - if Agent::TerritoryPolicy.new(current_agent, current_territory).allow_to_manage_access_rights?
+  - if Agent::AgentTerritorialAccessRightPolicy.new(current_agent, @agent.agent_territorial_access_rights.find_by(territory: current_territory)).edit?
     .card.m-2.rounded
       h2.card-header
         = t(".agent_access_rights_legend")
@@ -34,7 +34,7 @@ h1
         .card-footer
           .row
             .col.text-right
-              = f.submit class: "btn btn-primary"
+              = f.submit class: "btn btn-primary", value: "Enregistrer les droits d'accès"
 
   - if Agent::TerritoryPolicy.new(current_agent, current_territory).allow_to_manage_access_rights?
     .card.m-2.rounded.agent-territorial
@@ -47,7 +47,7 @@ h1
           span>
           = label_tag :territorial_admin, "Administrateur du territoire"
           small.form-text.text-muted
-            | Ce status d'agent ouvre un large accès à la création d'organisation, la gestion de la sectorisation, la gestion des webhook, la configuration de ce qui est visible dans une fiche usager, une fiche RDV, la visiiblité des catégories de motif, ...
+            | Ce status d'agent ouvre un large accès à la création d'organisation, la gestion de la sectorisation, la gestion des webhook, la configuration de ce qui est visible dans une fiche usager, une fiche RDV, la visiblité des catégories de motif, ...
 
         .card-footer
           .row
