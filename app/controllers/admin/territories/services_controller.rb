@@ -22,10 +22,6 @@ class Admin::Territories::ServicesController < Admin::Territories::BaseControlle
 
   private
 
-  def pundit_user
-    current_agent
-  end
-
   def services_params
     params.require(:territory).permit(service_ids: [])
   end

@@ -30,10 +30,6 @@ class Admin::Territories::SectorAttributionsController < Admin::Territories::Bas
 
   private
 
-  def pundit_user
-    current_agent
-  end
-
   def prepare_available_organisations_and_agents
     @available_organisations = Organisation
       .where(territory: current_territory)

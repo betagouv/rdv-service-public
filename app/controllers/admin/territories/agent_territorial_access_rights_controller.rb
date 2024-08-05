@@ -13,10 +13,4 @@ class Admin::Territories::AgentTerritorialAccessRightsController < Admin::Territ
   def agent_territorial_access_right_params
     params.require(:agent_territorial_access_right).permit(:allow_to_manage_teams, :allow_to_manage_access_rights, :allow_to_invite_agents)
   end
-
-  private
-
-  def pundit_user
-    current_agent
-  end
 end

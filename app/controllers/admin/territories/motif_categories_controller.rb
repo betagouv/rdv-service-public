@@ -8,10 +8,6 @@ class Admin::Territories::MotifCategoriesController < Admin::Territories::BaseCo
 
   private
 
-  def pundit_user
-    current_agent
-  end
-
   def motif_categories_params
     params.require(:territory).permit(motif_category_ids: [])
   end

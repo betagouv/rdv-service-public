@@ -55,10 +55,6 @@ class Admin::Territories::SectorsController < Admin::Territories::BaseController
 
   private
 
-  def pundit_user
-    current_agent
-  end
-
   def set_sector
     @sector = Sector.find(params[:id])
     authorize_agent @sector

@@ -2,10 +2,4 @@ class Admin::Territories::MotifFieldsController < Admin::Territories::BaseContro
   def edit
     authorize_agent current_territory
   end
-
-  private
-
-  def pundit_user
-    current_agent
-  end
 end
