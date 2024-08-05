@@ -1,6 +1,6 @@
 class Admin::Territories::AgentsController < Admin::Territories::BaseController
-  before_action :set_agent, only: %i[edit update territory_admin update_services]
-  before_action :authorize_agent, only: %i[edit update territory_admin update_services]
+  before_action :set_agent, only: %i[edit update_teams territory_admin update_services]
+  before_action :authorize_agent, only: %i[edit update_teams territory_admin update_services]
 
   def index
     @agents = find_agents(params[:q]).page(page_number)
@@ -27,9 +27,13 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
 
   def edit; end
 
-  def update
-    if @agent.update(agent_update_params)
-      flash[:success] = "L'agent a été mis à jour"
+  def update_teams
+    # ATTENTION: ce update peut supprimer des team_ids d’autres territoires.
+    # C’est un bug consciemment laissé pour l’instant.
+    # cf PR https://github.com/betagouv/rdv-service-public/pull/4525 qui tentait de résoudre ça.
+    team_ids = params[:agent][:team_ids].compact_blank
+    if @agent.update(team_ids:)
+      flash[:success] = "Les équipes de l’agent ont été mises à jour"
       redirect_to edit_admin_territory_agent_path(current_territory, @agent.id)
     else
       render :edit
@@ -95,10 +99,6 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
 
   def authorize_agent
     authorize_with_legacy_configuration_scope @agent
-  end
-
-  def agent_update_params
-    params.require(:agent).permit(team_ids: [])
   end
 
   def permitted_create_params
