@@ -129,4 +129,19 @@ RSpec.describe "territory admin can manage agents", type: :feature do
       expect(page).to have_content("Un agent doit avoir au moins un service")
     end
   end
+
+  describe "setting access rights" do
+    let(:current_agent) do
+      create(:agent, role_in_territories: [territory])
+    end
+
+    it "allows modifying them" do
+      login_as(current_agent, scope: :agent)
+      create(:agent_territorial_access_right, agent: current_agent, territory: territory, allow_to_manage_access_rights: true)
+
+      agent = create(:agent, basic_role_in_organisations: [organisation])
+      visit edit_admin_territory_agent_path(territory_id: territory.id, id: agent.id)
+      expect(page).to have_content "lol"
+    end
+  end
 end
