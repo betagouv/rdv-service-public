@@ -16,9 +16,7 @@ RSpec.describe "Update territory admin" do
     end
 
     it "doesn't allow making an agent a territorial admin" do
-      expect do
-        put create_or_destroy_admin_territory_agent_territorial_roles_path(territory_id: territory.id, agent_id: other_agent.id), params: { territorial_admin: "1" }
-      end.to raise_error(ActiveRecord::RecordNotFound)
+      put create_or_destroy_admin_territory_agent_territorial_roles_path(territory_id: territory.id, agent_id: other_agent.id), params: { territorial_admin: "1" }
       expect(other_agent.reload.territorial_roles).to be_empty
     end
   end

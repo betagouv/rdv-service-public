@@ -12,8 +12,9 @@ class Admin::Territories::AgentTerritorialRolesController < Admin::Territories::
   private
 
   def create(agent)
-    role = AgentTerritorialRole.find_or_create_by!(territory: current_territory, agent: agent)
+    role = AgentTerritorialRole.find_or_initialize_by(territory: current_territory, agent: agent)
     authorize_agent role
+    role.save!
     flash[:success] = "Les droits d'administrateur du #{current_territory} ont été ajoutés à #{agent.full_name}"
 
     redirect_to edit_admin_territory_agent_path(current_territory, agent)
