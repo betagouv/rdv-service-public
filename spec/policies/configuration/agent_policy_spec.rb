@@ -1,43 +1,86 @@
 RSpec.describe Configuration::AgentPolicy, type: :policy do
   subject { described_class }
 
-  let(:territory) { create(:territory) }
-  let(:pundit_context) { AgentTerritorialContext.new(agent, territory) }
+  # target_agent = pundit record = l’agent sur lequel on teste les permissions
+  # current_agent = pundit user = l’agent connecté qui essaie de faire une action
 
-  describe "agent with" do
-    context "no admin access to this territory and no access_rights" do
-      let(:agent) { create(:agent, role_in_territories: []) }
-      let!(:access_rights) { create(:agent_territorial_access_right, agent: agent, territory: territory) }
+  all_actions = %i[edit? update_teams? update_services? new? create?]
 
-      it_behaves_like "not permit actions", :agent, :display?, :edit?, :create?, :update_teams?
-    end
+  context "no rights at all" do
+    let(:territory) { create(:territory) }
+    let(:current_agent) { create(:agent, role_in_territories: []) }
+    let(:target_agent) { create(:agent) }
+    let(:pundit_context) { AgentTerritorialContext.new(current_agent, territory) }
 
-    context "admin access to this territory" do
-      let(:agent) { create(:agent, role_in_territories: [territory]) }
-      let!(:access_rights) { create(:agent_territorial_access_right, agent: agent, territory: territory) }
+    it_behaves_like "not permit actions", :target_agent, *all_actions
+  end
 
-      it_behaves_like "permit actions", :agent, :display?, :edit?, :create?, :update_teams?
-    end
+  context "current_agent is territory admin, target_agent has a basic role in this territory" do
+    let(:territory) { create(:territory) }
+    let(:current_agent) { create(:agent, role_in_territories: [territory]) }
+    let(:organisation) { create(:organisation, territory:) }
+    let(:target_agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+    let(:pundit_context) { AgentTerritorialContext.new(current_agent, territory) }
 
-    context "allowed to manage teams agent" do
-      let(:agent) { create(:agent, role_in_territories: []) }
-      let!(:access_rights) { create(:agent_territorial_access_right, agent: agent, territory: territory, allow_to_manage_teams: true) }
+    it_behaves_like "permit actions", :target_agent, *all_actions
+  end
 
-      it_behaves_like "permit actions", :agent, :display?, :edit?, :update_teams?
-    end
+  context "current_agent is territory admin, target_agent has a basic role in different territory" do
+    let(:territory) { create(:territory) }
+    let(:current_agent) { create(:agent, role_in_territories: [territory]) }
+    let(:other_territory) { create(:territory) }
+    let(:organisation) { create(:organisation, territory: other_territory) }
+    let(:target_agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+    let(:pundit_context) { AgentTerritorialContext.new(current_agent, territory) }
 
-    context "allowed to invite agents agent" do
-      let(:agent) { create(:agent, role_in_territories: []) }
-      let!(:access_rights) { create(:agent_territorial_access_right, agent: agent, territory: territory, allow_to_invite_agents: true) }
+    it_behaves_like "not permit actions", :target_agent, *all_actions
+  end
 
-      it_behaves_like "permit actions", :agent, :display?, :edit?, :create?, :update_teams?
-    end
+  context "current_agent is territory admin, target_agent is also territory admin" do
+    let(:territory) { create(:territory) }
+    let(:current_agent) { create(:agent, role_in_territories: [territory]) }
+    let(:target_agent) { create(:agent, role_in_territories: [territory]) }
+    let(:pundit_context) { AgentTerritorialContext.new(current_agent, territory) }
 
-    context "allowed to manage access rights agent" do
-      let(:agent) { create(:agent, role_in_territories: []) }
-      let!(:access_rights) { create(:agent_territorial_access_right, agent: agent, territory: territory, allow_to_manage_access_rights: true) }
+    it_behaves_like "permit actions", :target_agent, *all_actions
+  end
 
-      it_behaves_like "permit actions", :agent, :display?, :edit?, :update_teams?
-    end
+  context "current_agent has allow_to_manage_access_rights access right in a territory, target_agent has a basic role in this territory" do
+    let(:territory) { create(:territory) }
+    let(:current_agent) { create(:agent, role_in_territories: []) }
+    let(:pundit_context) { AgentTerritorialContext.new(current_agent, territory) }
+    let(:organisation) { create(:organisation, territory:) }
+    let(:target_agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+
+    before { create(:agent_territorial_access_right, agent: current_agent, territory: territory, allow_to_manage_access_rights: true) }
+
+    it_behaves_like "permit actions", :target_agent, :edit?, :update_teams?, :update_services?
+    it_behaves_like "not permit actions", :target_agent, :new?, :create?
+  end
+
+  context "current_agent has allow_to_manage_teams access right in a territory, target_agent has a basic role in this territory" do
+    let(:territory) { create(:territory) }
+    let(:current_agent) { create(:agent, role_in_territories: []) }
+    let(:pundit_context) { AgentTerritorialContext.new(current_agent, territory) }
+    let(:organisation) { create(:organisation, territory:) }
+    let(:target_agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+
+    before { create(:agent_territorial_access_right, agent: current_agent, territory: territory, allow_to_manage_teams: true) }
+
+    it_behaves_like "permit actions", :target_agent, :edit?, :update_teams?, :update_services?
+    it_behaves_like "not permit actions", :target_agent, :new?, :create?
+  end
+
+  context "current_agent has allow_to_invite_agents access right in a territory, target_agent has a basic role in this territory" do
+    let(:territory) { create(:territory) }
+    let(:current_agent) { create(:agent, role_in_territories: []) }
+    let(:pundit_context) { AgentTerritorialContext.new(current_agent, territory) }
+    let(:organisation) { create(:organisation, territory:) }
+    let(:target_agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+
+    before { create(:agent_territorial_access_right, agent: current_agent, territory: territory, allow_to_invite_agents: true) }
+
+    it_behaves_like "permit actions", :target_agent, :edit?, :update_teams?, :update_services?, :new?, :create?
+    it_behaves_like "not permit actions", :target_agent
   end
 end
