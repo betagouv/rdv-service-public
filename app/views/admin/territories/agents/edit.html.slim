@@ -58,7 +58,7 @@ h1
     .card.m-2.rounded
       h2.card-header
         = t(".agent_teams_legend")
-      = simple_form_for @agent, url: admin_territory_agent_path(current_territory, @agent) do |f|
+      = simple_form_for @agent, url: admin_territory_agent_agent_team_memberships_path(current_territory, @agent) do |f|
         .card-body
           = f.input :team_ids, collection: current_territory.teams,
                 label: t(".teams"),

@@ -27,15 +27,6 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
 
   def edit; end
 
-  def update
-    if @agent.update(agent_update_params)
-      flash[:success] = "L'agent a été mis à jour"
-      redirect_to edit_admin_territory_agent_path(current_territory, @agent.id)
-    else
-      render :edit
-    end
-  end
-
   def create
     authorize_with_legacy_configuration_scope(Agent.new(permitted_create_params))
 
@@ -95,10 +86,6 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
 
   def authorize_agent
     authorize_with_legacy_configuration_scope @agent
-  end
-
-  def agent_update_params
-    params.require(:agent).permit(team_ids: [])
   end
 
   def permitted_create_params

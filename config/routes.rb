@@ -126,7 +126,8 @@ Rails.application.routes.draw do
           resources :agent_roles, only: %i[update create destroy]
           resources :agent_territorial_access_rights, only: %i[update]
           resources :webhook_endpoints, except: %i[show]
-          resources :agents, only: %i[index new create update edit] do
+          resources :agents, only: %i[index new create edit] do
+            resource :agent_team_memberships, only: %i[update]
             member do
               put :territory_admin
               patch :update_services
