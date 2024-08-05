@@ -26,7 +26,7 @@ class Configuration::SectorPolicy
     end
 
     def resolve
-      @scope.where(territory_id: @current_agent.territorial_roles.pluck(:territory_id))
+      @scope.where(territory_id: @current_agent.territorial_roles.select(:territory_id))
     end
   end
 end
