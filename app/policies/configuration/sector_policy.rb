@@ -5,10 +5,13 @@ class Configuration::SectorPolicy
   end
 
   def territorial_admin?
-    @current_agent.territorial_admin_in?(@sector.territory)
+    self.class.allowed_to_manage_sectors_in?(@sector.territory, @current_agent)
   end
 
-  alias display? territorial_admin?
+  def self.allowed_to_manage_sectors_in?(territory, agent)
+    agent.territorial_admin_in?(territory)
+  end
+
   alias new? territorial_admin?
   alias create? territorial_admin?
   alias show? territorial_admin?

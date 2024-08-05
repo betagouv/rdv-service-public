@@ -9,7 +9,6 @@ RSpec.describe Configuration::SectorPolicy, type: :policy do
 
     it_behaves_like "not permit actions",
                     :sector,
-                    :display?,
                     :new?,
                     :create?,
                     :show?,
@@ -26,7 +25,6 @@ RSpec.describe Configuration::SectorPolicy, type: :policy do
 
     it_behaves_like "permit actions",
                     :sector,
-                    :display?,
                     :new?,
                     :create?,
                     :show?,
@@ -46,7 +44,6 @@ RSpec.describe Configuration::SectorPolicy, type: :policy do
 
       it_behaves_like "not permit actions",
                       :sector,
-                      :display?,
                       :new?,
                       :create?,
                       :show?,
@@ -60,7 +57,6 @@ RSpec.describe Configuration::SectorPolicy, type: :policy do
 
       it_behaves_like "not permit actions",
                       :sector,
-                      :display?,
                       :new?,
                       :create?,
                       :show?,
