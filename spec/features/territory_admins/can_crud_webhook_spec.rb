@@ -40,8 +40,7 @@ RSpec.describe "territory admin can crud webhooks endpoints" do
 
   it "has correct permissions for other territories" do
     other_territory = create(:territory)
-    expect do
-      visit admin_territory_webhook_endpoints_path(territory_id: other_territory.id)
-    end.to raise_error(ActiveRecord::RecordNotFound)
+    visit admin_territory_webhook_endpoints_path(territory_id: other_territory.id)
+    expect(page).to have_content "Vous ne pouvez pas effectuer cette action."
   end
 end
