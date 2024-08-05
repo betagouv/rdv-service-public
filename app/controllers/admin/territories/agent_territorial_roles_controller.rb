@@ -1,8 +1,6 @@
 class Admin::Territories::AgentTerritorialRolesController < Admin::Territories::BaseController
   def create_or_destroy
-    context = AgentTerritorialContext.new(current_agent, current_territory)
-
-    agent = Agent::AgentPolicy::Scope.new(context, Agent).resolve.find(params[:agent_id])
+    agent = Agent.find(params[:agent_id])
 
     if params[:territorial_admin] == "1"
       create(agent)

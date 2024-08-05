@@ -5,6 +5,18 @@ class Agent::AgentTerritorialRolePolicy
   end
 
   def create_or_destroy?
+    territorial_admin? && visible_agent?
+  end
+
+  private
+
+  def territorial_admin?
     @current_agent.territorial_admin_in?(@agent_territorial_role.territory)
+  end
+
+  def visible_agent?
+    context = AgentTerritorialContext.new(current_agent, current_territory)
+
+    Agent::AgentPolicy::Scope.new(context, Agent).resolve.find_by(id: @agent_territorial_role.agent_id)
   end
 end
