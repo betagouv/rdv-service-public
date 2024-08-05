@@ -51,6 +51,17 @@ RSpec.describe Agent::AgentRolePolicy do
       end
 
       it_behaves_like "permit actions", :update?, :edit?, :create?, :destroy?
+
+    context "allowed to invite agents access right in a different territory" do
+      let(:agent) { create(:agent, basic_role_in_organisations: [organisation], role_in_territories: []) }
+      let!(:agent_role) { create(:agent_role, organisation: organisation) }
+
+      before do
+        create(:agent_territorial_access_right, agent: agent, territory: create(:territory), allow_to_invite_agents: true)
+      end
+
+      it_behaves_like "not permit actions", :agent_role, :update?, :edit?, :create?, :destroy?
     end
+  end
   end
 end
