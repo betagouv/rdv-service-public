@@ -63,11 +63,11 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
 
   def territory_admin
     if params[:territorial_admin] == "1"
-      @agent.territorial_admin!(current_territory)
-      message = "Les droits d'administrateur du #{current_territory} ont été ajouté(e) a #{@agent.full_name}"
+      AgentTerritorialRole.find_or_create_by!(territory: territory, agent: @agent)
+      message = "Les droits d'administrateur du #{current_territory} ont été ajoutés à #{@agent.full_name}"
     else
-      @agent.remove_territorial_admin!(current_territory)
-      message = "Les droits d'administrateur du #{current_territory} ont été retiré(e) a #{@agent.full_name}"
+      @agent.territorial_role_in(territory)&.destroy!
+      message = "Les droits d'administrateur du #{current_territory} ont été retirés à #{@agent.full_name}"
     end
     redirect_to(
       edit_admin_territory_agent_path(current_territory, @agent),
