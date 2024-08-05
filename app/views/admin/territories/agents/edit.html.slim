@@ -41,7 +41,7 @@ h1
       h2.card-header
         = t(".agent_territorial_role_caption")
 
-      = simple_form_for @agent, url: territory_admin_admin_territory_agent_path(current_territory, @agent), method: :put do |f|
+      = simple_form_for @agent, url: create_or_destroy_admin_territory_agent_territorial_roles_path(current_territory, agent_id: @agent), method: :put do |f|
         .card-body
           = check_box_tag :territorial_admin, 1, @agent.territorial_admin_in?(current_territory)
           span>

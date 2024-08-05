@@ -1,6 +1,6 @@
 class Admin::Territories::AgentsController < Admin::Territories::BaseController
-  before_action :set_agent, only: %i[edit update territory_admin update_services]
-  before_action :authorize_agent, only: %i[edit update territory_admin update_services]
+  before_action :set_agent, only: %i[edit update update_services]
+  before_action :authorize_agent, only: %i[edit update update_services]
 
   def index
     @agents = find_agents(params[:q]).page(page_number)
@@ -59,20 +59,6 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
     else
       render :new
     end
-  end
-
-  def territory_admin
-    if params[:territorial_admin] == "1"
-      AgentTerritorialRole.find_or_create_by!(territory: territory, agent: @agent)
-      message = "Les droits d'administrateur du #{current_territory} ont été ajoutés à #{@agent.full_name}"
-    else
-      @agent.territorial_role_in(territory)&.destroy!
-      message = "Les droits d'administrateur du #{current_territory} ont été retirés à #{@agent.full_name}"
-    end
-    redirect_to(
-      edit_admin_territory_agent_path(current_territory, @agent),
-      flash: { success: message }
-    )
   end
 
   def update_services
