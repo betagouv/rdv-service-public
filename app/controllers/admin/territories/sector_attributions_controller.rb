@@ -4,12 +4,12 @@ class Admin::Territories::SectorAttributionsController < Admin::Territories::Bas
   def new
     @sector_attribution = SectorAttribution.new(**sector_attribution_params_get, sector: @sector)
     prepare_available_organisations_and_agents
-    authorize_with_legacy_configuration_scope @sector_attribution
+    authorize_agent @sector_attribution
   end
 
   def create
     @sector_attribution = SectorAttribution.new(**sector_attribution_params, sector: @sector)
-    authorize_with_legacy_configuration_scope @sector_attribution
+    authorize_agent @sector_attribution
     if @sector_attribution.save
       redirect_to admin_territory_sector_path(current_territory, @sector), flash: { success: "Attribution ajoutée" }
     else
@@ -20,7 +20,7 @@ class Admin::Territories::SectorAttributionsController < Admin::Territories::Bas
 
   def destroy
     sector_attribution = SectorAttribution.find(params[:id])
-    authorize_with_legacy_configuration_scope sector_attribution
+    authorize_agent sector_attribution
     if sector_attribution.destroy
       redirect_to admin_territory_sector_path(current_territory, @sector), flash: { success: "Attribution retirée" }
     else
@@ -29,6 +29,10 @@ class Admin::Territories::SectorAttributionsController < Admin::Territories::Bas
   end
 
   private
+
+  def pundit_user
+    current_agent
+  end
 
   def prepare_available_organisations_and_agents
     @available_organisations = Organisation
@@ -40,7 +44,7 @@ class Admin::Territories::SectorAttributionsController < Admin::Territories::Bas
     existing_agent_attributions = @sector
       .attributions
       .level_agent
-      .where(organisation: @sector_attribution.organisation)
+      .where(organagent: @sector_attribution.organisation)
     @available_agents = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope)
       .merge(@sector_attribution.organisation.agents)
       .where.not(id: existing_agent_attributions.pluck(:agent_id))

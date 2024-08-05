@@ -1,6 +1,6 @@
-class Configuration::SectorAttributionPolicy
-  def initialize(context, sector_attribution)
-    @current_agent = context.agent
+class Agent::SectorAttributionPolicy
+  def initialize(agent, sector_attribution)
+    @current_agent = agent
     @sector_attribution = sector_attribution
   end
 
