@@ -19,7 +19,7 @@ class Admin::Territories::ZonesController < Admin::Territories::BaseController
   def new
     zone_defaults = { level: params[:default_zone_level] || Zone::LEVEL_CITY }
     @zone = Zone.new(**zone_defaults.merge(zone_params_get), sector: @sector)
-    @sectors = policy_scope(current_territory.sectors)
+    @sectors = sector_policy.resolve
     authorize_agent @zone
   end
 
@@ -66,7 +66,11 @@ class Admin::Territories::ZonesController < Admin::Territories::BaseController
   end
 
   def set_sector
-    @sector = policy_scope(Sector).find(params[:sector_id])
+    @sector = sector_policy.resolve.find(params[:sector_id])
+  end
+
+  def sector_policy
+    Agent::SectorPolicy::Scope.new(current_agent, current_territory.sectors)
   end
 
   def zone_params_get
