@@ -9,7 +9,5 @@ class Agent::AgentTerritorialAccessRightPolicy
     policy.allow_to_manage_access_rights?
   end
 
-  def update?
-    @current_agent.territorial_admin_in?(@agent_territorial_access_right.territory)
-  end
+  alias update? edit?
 end
