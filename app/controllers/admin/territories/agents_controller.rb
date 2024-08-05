@@ -93,6 +93,16 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
 
   private
 
+  def pundit_user
+    AgentTerritorialContext.new(current_agent, current_territory)
+  end
+
+  def authorize_with_legacy_configuration_scope(record, *args, **kwargs)
+    # L'utilisation de configuration est un legacy qui a l'inconvénient de distinguer les permissions en fonction de la page sur laquelle on est en train de naviguer
+    # On préfère que le controller applique le filtre pertinent, et que les policy indiquent les permissions dans l'absolu, indépendamment de la page courante.
+    authorize([:configuration, record], *args, **kwargs)
+  end
+
   def set_agent
     @agent = Agent.active.find(params[:id])
   end

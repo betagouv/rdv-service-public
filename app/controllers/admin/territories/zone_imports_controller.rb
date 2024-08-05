@@ -24,10 +24,6 @@ class Admin::Territories::ZoneImportsController < Admin::Territories::BaseContro
 
   private
 
-  def pundit_user
-    agent
-  end
-
   def import_params
     params
       .require(:zone_import)

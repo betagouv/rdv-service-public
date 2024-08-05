@@ -41,11 +41,6 @@ class Admin::Territories::TeamsController < Admin::Territories::BaseController
     redirect_to admin_territory_teams_path(current_territory)
   end
 
-  # On est obligé de redéfinir cette méthode ici tant que le controller parent utilise les AgentTerritorialContext
-  def pundit_user
-    current_agent
-  end
-
   private
 
   def team_params
