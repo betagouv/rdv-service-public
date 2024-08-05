@@ -17,7 +17,8 @@
           li
             span> Identifiant:
             b= human_id(@sector)
-        - if policy([:configuration, @sector]).edit?
+        - policy = Agent::SectorPolicy.new(current_agent, @sector)
+        - if policy.edit?
           div= link_to edit_admin_territory_sector_path(current_territory, @sector), class: "btn btn-primary w-100" do
             i.fa.fa-edit>
             | Modifier
@@ -60,7 +61,8 @@
                 - else
                   td.text-muted Commune entière
                 td
-                  - if policy([:configuration, zone]).destroy?
+                  - policy = Agent::ZonePolicy.new(current_agent, zone)
+                  - if policy.destroy?
                     = link_to "retirer", admin_territory_sector_zone_path(current_territory, @sector, zone), method: :delete
         div= paginate @zones
         .mb-2.text-center
