@@ -1,15 +1,17 @@
 class Configuration::SectorPolicy
-  def initialize(context, agent)
+  def initialize(context, sector)
     @current_agent = context.agent
-    @current_territory = context.territory
-    @agent = agent
+    @sector = sector
   end
 
   def territorial_admin?
-    @current_agent.territorial_admin_in?(@current_territory)
+    self.class.allowed_to_manage_sectors_in?(@sector.territory, @current_agent)
   end
 
-  alias display? territorial_admin?
+  def self.allowed_to_manage_sectors_in?(territory, agent)
+    agent.territorial_admin_in?(territory)
+  end
+
   alias new? territorial_admin?
   alias create? territorial_admin?
   alias show? territorial_admin?
@@ -18,12 +20,13 @@ class Configuration::SectorPolicy
   alias destroy? territorial_admin?
 
   class Scope
-    def initialize(context, _scope)
-      @current_territory = context.territory
+    def initialize(context, scope)
+      @current_agent = context.agent
+      @scope = scope
     end
 
     def resolve
-      Sector.where(territory: @current_territory)
+      @scope.where(territory_id: @current_agent.territorial_roles.select(:territory_id))
     end
   end
 end
