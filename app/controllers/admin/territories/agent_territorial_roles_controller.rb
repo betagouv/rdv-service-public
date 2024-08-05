@@ -24,9 +24,8 @@ class Admin::Territories::AgentTerritorialRolesController < Admin::Territories::
   def destroy(agent)
     role = AgentTerritorialRole.find_or_initialize_by(territory: current_territory, agent: agent)
     authorize_agent role
-    return unless role&.persisted?
 
-    if role.destroy
+    if !role.persisted? || role.destroy
       flash[:success] = "Les droits d'administrateur du #{current_territory} ont été retirés à #{agent.full_name}"
     else
       flash[:error] = role.errors.full_messages.to_sentence
