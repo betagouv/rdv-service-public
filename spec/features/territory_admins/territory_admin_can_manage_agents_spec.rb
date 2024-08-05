@@ -82,6 +82,7 @@ RSpec.describe "territory admin can manage agents", type: :feature do
       current_agent = create(:agent, admin_role_in_organisations: [organisation], role_in_territories: [territory], teams: [team_a])
       agent = create(:agent, admin_role_in_organisations: [organisation], role_in_territories: [territory], teams: [team_a, team_b])
       create(:agent_territorial_access_right, agent: current_agent, territory: territory, allow_to_manage_teams: true)
+      create(:agent_territorial_access_right, agent: agent, territory: territory)
       login_as(current_agent, scope: :agent)
 
       visit edit_admin_territory_agent_path(territory_id: territory.id, id: agent.id)
