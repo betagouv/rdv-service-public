@@ -49,7 +49,7 @@ class Admin::Territories::ZonesController < Admin::Territories::BaseController
 
   def destroy_multiple
     zones = @sector.zones
-    zones = zones.filter { |z| authorize_with_legacy_configuration_scope(z, :destroy?) }
+    zones = zones.filter { |z| authorize_agent(z, :destroy?) }
     count = zones.count
     if zones.map(&:destroy).all?
       flash[:success] = "Les #{count} communes et rues ont été retirées du secteur"

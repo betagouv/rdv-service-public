@@ -1,11 +1,11 @@
 class Admin::Territories::ZoneImportsController < Admin::Territories::BaseController
   def new
-    authorize_with_legacy_configuration_scope Zone.new(sector: Sector.new(territory: current_territory))
+    authorize_agent Zone.new(sector: Sector.new(territory: current_territory))
     @form = ZoneImportForm.new
   end
 
   def create
-    authorize_with_legacy_configuration_scope Zone.new(sector: Sector.new(territory: current_territory))
+    authorize_agent Zone.new(sector: Sector.new(territory: current_territory))
     @form = ZoneImportForm.new(import_params)
     if @form.valid?
       @res = ImportZoneRowsService.perform_with(
@@ -23,6 +23,10 @@ class Admin::Territories::ZoneImportsController < Admin::Territories::BaseContro
   end
 
   private
+
+  def pundit_user
+    agent
+  end
 
   def import_params
     params
