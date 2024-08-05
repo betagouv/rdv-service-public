@@ -1,19 +1,72 @@
 RSpec.describe Configuration::SectorPolicy, type: :policy do
-  %i[display? edit? show? update?].each do |action|
-    describe "##{action}" do
-      it "returns false with agent without admin access to this territory" do
-        territory = create(:territory)
-        agent = create(:agent, role_in_territories: [])
-        agent_territorial_context = AgentTerritorialContext.new(agent, territory)
-        expect(described_class.new(agent_territorial_context, territory).send(action)).to be false
-      end
+  subject { described_class }
 
-      it "returns true with agent with admin access to this territory" do
-        territory = create(:territory)
-        agent = create(:agent, role_in_territories: [territory])
-        agent_territorial_context = AgentTerritorialContext.new(agent, territory)
-        expect(described_class.new(agent_territorial_context, territory).send(action)).to be true
-      end
+  context "agent does not have any territorial role" do
+    let(:territory) { create(:territory) }
+    let(:sector) { create(:sector, territory:) }
+    let(:agent) { create(:agent) }
+    let(:pundit_context) { AgentTerritorialContext.new(agent, territory) }
+
+    it_behaves_like "not permit actions",
+                    :sector,
+                    :display?,
+                    :new?,
+                    :create?,
+                    :show?,
+                    :edit?,
+                    :update?,
+                    :destroy?
+  end
+
+  context "agent has territorial role in sector territory" do
+    let(:territory) { create(:territory) }
+    let(:sector) { create(:sector, territory:) }
+    let(:agent) { create(:agent, role_in_territories: [territory]) }
+    let(:pundit_context) { AgentTerritorialContext.new(agent, territory) }
+
+    it_behaves_like "permit actions",
+                    :sector,
+                    :display?,
+                    :new?,
+                    :create?,
+                    :show?,
+                    :edit?,
+                    :update?,
+                    :destroy?
+  end
+
+  context "agent has territorial role in other territory" do
+    let(:territory_sector) { create(:territory) }
+    let(:territory_agent) { create(:territory) }
+    let(:sector) { create(:sector, territory: territory_sector) }
+    let(:agent) { create(:agent, role_in_territories: [territory_agent]) }
+
+    context "context uses agent’s territory" do
+      let(:pundit_context) { AgentTerritorialContext.new(agent, territory_agent) }
+
+      it_behaves_like "not permit actions",
+                      :sector,
+                      :display?,
+                      :new?,
+                      :create?,
+                      :show?,
+                      :edit?,
+                      :update?,
+                      :destroy?
+    end
+
+    context "context uses sector's territory" do
+      let(:pundit_context) { AgentTerritorialContext.new(agent, territory_sector) }
+
+      it_behaves_like "not permit actions",
+                      :sector,
+                      :display?,
+                      :new?,
+                      :create?,
+                      :show?,
+                      :edit?,
+                      :update?,
+                      :destroy?
     end
   end
 end
