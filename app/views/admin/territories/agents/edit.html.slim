@@ -22,7 +22,7 @@ h1
             .col.text-right
               = f.submit class: "btn btn-primary", value: "Enregistrer les services"
 
-  - if Agent::TerritoryPolicy.new(current_agent, current_territory).allow_to_manage_access_rights?
+  - if Agent::AgentTerritorialAccessRightPolicy.new(current_agent, @agent.agent_territorial_access_rights.find_by(territory: current_territory)).edit?
     .card.m-2.rounded
       h2.card-header
         = t(".agent_access_rights_legend")
