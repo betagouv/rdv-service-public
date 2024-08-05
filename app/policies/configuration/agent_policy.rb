@@ -40,6 +40,8 @@ class Configuration::AgentPolicy
   private
 
   def agent_territories
+    return Territory.joins(:organisations).where(organisations: { id: @agent.organisation_ids }) if @agent.new_record?
+
     # tous les territoires où l'agent cible est admin OU a un rôle dans une orga peu importe son niveau d’accès
     # on pourrait aussi implémenter cette méthode en passant par les agent_territorial_access_rights mais c’est
     # plus explicite de l’écrire comme ça
