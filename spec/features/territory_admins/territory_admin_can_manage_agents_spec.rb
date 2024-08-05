@@ -140,8 +140,13 @@ RSpec.describe "territory admin can manage agents", type: :feature do
       create(:agent_territorial_access_right, agent: current_agent, territory: territory, allow_to_manage_access_rights: true)
 
       agent = create(:agent, basic_role_in_organisations: [organisation])
+      create(:agent_territorial_access_right, agent: agent, territory: territory)
+
       visit edit_admin_territory_agent_path(territory_id: territory.id, id: agent.id)
-      expect(page).to have_content "lol"
+      check "Autorisé à créer, supprimer, modifier des équipes"
+
+      click_on "Enregistrer les droits d'accès", match: :first
+      expect(page).to have_content "Droits d'accès mis à jour"
     end
   end
 end
