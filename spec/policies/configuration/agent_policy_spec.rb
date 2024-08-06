@@ -8,7 +8,7 @@ RSpec.describe Configuration::AgentPolicy, type: :policy do
     let(:territory) { create(:territory) }
     let(:current_agent) { create(:agent, role_in_territories: []) }
     let(:target_agent) { create(:agent) }
-    let(:pundit_context) { AgentTerritorialContext.new(current_agent, territory) }
+    let(:pundit_context) { current_agent }
 
     it_behaves_like "not permit actions", :target_agent, :edit?, :update_teams?, :update_services?, :create?
   end
@@ -18,7 +18,7 @@ RSpec.describe Configuration::AgentPolicy, type: :policy do
     let(:current_agent) { create(:agent, role_in_territories: [territory]) }
     let(:organisation) { create(:organisation, territory:) }
     let(:target_agent) { create(:agent, basic_role_in_organisations: [organisation]) }
-    let(:pundit_context) { AgentTerritorialContext.new(current_agent, territory) }
+    let(:pundit_context) { current_agent }
 
     it_behaves_like "permit actions", :target_agent, :edit?, :update_services?, :create?
     it_behaves_like "not permit actions", :target_agent, :update_teams?
@@ -30,7 +30,7 @@ RSpec.describe Configuration::AgentPolicy, type: :policy do
     let(:other_territory) { create(:territory) }
     let(:organisation) { create(:organisation, territory: other_territory) }
     let(:target_agent) { create(:agent, basic_role_in_organisations: [organisation]) }
-    let(:pundit_context) { AgentTerritorialContext.new(current_agent, territory) }
+    let(:pundit_context) { current_agent }
 
     it_behaves_like "not permit actions", :target_agent, :edit?, :update_services?, :create?
     it_behaves_like "not permit actions", :target_agent, :update_teams?
@@ -40,7 +40,7 @@ RSpec.describe Configuration::AgentPolicy, type: :policy do
     let(:territory) { create(:territory) }
     let(:current_agent) { create(:agent, role_in_territories: [territory]) }
     let(:target_agent) { create(:agent, role_in_territories: [territory]) }
-    let(:pundit_context) { AgentTerritorialContext.new(current_agent, territory) }
+    let(:pundit_context) { current_agent }
 
     it_behaves_like "permit actions", :target_agent, :edit?, :update_services?, :create?
     it_behaves_like "not permit actions", :target_agent, :update_teams?
@@ -49,7 +49,7 @@ RSpec.describe Configuration::AgentPolicy, type: :policy do
   context "current_agent has allow_to_manage_access_rights in a territory, target_agent has a basic role in this territory" do
     let(:territory) { create(:territory) }
     let(:current_agent) { create(:agent, role_in_territories: []) }
-    let(:pundit_context) { AgentTerritorialContext.new(current_agent, territory) }
+    let(:pundit_context) { current_agent }
     let(:organisation) { create(:organisation, territory:) }
     let(:target_agent) { create(:agent, basic_role_in_organisations: [organisation]) }
 
@@ -62,7 +62,7 @@ RSpec.describe Configuration::AgentPolicy, type: :policy do
   context "current_agent has allow_to_manage_teams access right in a territory, target_agent has a basic role in this territory" do
     let(:territory) { create(:territory) }
     let(:current_agent) { create(:agent, role_in_territories: []) }
-    let(:pundit_context) { AgentTerritorialContext.new(current_agent, territory) }
+    let(:pundit_context) { current_agent }
     let(:organisation) { create(:organisation, territory:) }
     let(:target_agent) { create(:agent, basic_role_in_organisations: [organisation]) }
 
@@ -75,7 +75,7 @@ RSpec.describe Configuration::AgentPolicy, type: :policy do
   context "current_agent has allow_to_invite_agents access right in a territory, target_agent has a basic role in this territory" do
     let(:territory) { create(:territory) }
     let(:current_agent) { create(:agent, role_in_territories: []) }
-    let(:pundit_context) { AgentTerritorialContext.new(current_agent, territory) }
+    let(:pundit_context) { current_agent }
     let(:organisation) { create(:organisation, territory:) }
     let(:target_agent) { create(:agent, basic_role_in_organisations: [organisation]) }
 
@@ -89,7 +89,7 @@ RSpec.describe Configuration::AgentPolicy, type: :policy do
     let(:territory) { create(:territory) }
     let(:current_agent) { create(:agent, role_in_territories: [territory]) }
     let(:target_agent) { build(:agent) }
-    let(:pundit_context) { AgentTerritorialContext.new(current_agent, territory) }
+    let(:pundit_context) { current_agent }
 
     it_behaves_like "not permit actions", :target_agent, :create?
   end
@@ -100,7 +100,7 @@ RSpec.describe Configuration::AgentPolicy, type: :policy do
     let!(:organisation) { create(:organisation, territory:) }
     # we cannot use the factory trait basic_roles_in_organisations because it works only with create, not build
     let(:target_agent) { build(:agent, organisation_ids: [organisation.id]) }
-    let(:pundit_context) { AgentTerritorialContext.new(current_agent, territory) }
+    let(:pundit_context) { current_agent }
 
     it_behaves_like "permit actions", :target_agent, :create?
   end
@@ -112,7 +112,7 @@ RSpec.describe Configuration::AgentPolicy, type: :policy do
     let!(:organisation) { create(:organisation, territory: other_territory) }
     # we cannot use the factory trait basic_roles_in_organisations because it works only with create, not build
     let(:target_agent) { build(:agent, organisation_ids: [organisation.id]) }
-    let(:pundit_context) { AgentTerritorialContext.new(current_agent, territory) }
+    let(:pundit_context) { current_agent }
 
     it_behaves_like "not permit actions", :target_agent, :create?
   end
@@ -125,7 +125,7 @@ RSpec.describe Configuration::AgentPolicy, type: :policy do
     let!(:organisation2) { create(:organisation, territory: other_territory) }
     # we cannot use the factory trait basic_roles_in_organisations because it works only with create, not build
     let(:target_agent) { build(:agent, organisation_ids: [organisation1.id, organisation2.id]) }
-    let(:pundit_context) { AgentTerritorialContext.new(current_agent, territory) }
+    let(:pundit_context) { current_agent }
 
     it_behaves_like "not permit actions", :target_agent, :create?
   end

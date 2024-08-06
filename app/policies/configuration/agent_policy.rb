@@ -1,6 +1,6 @@
 class Configuration::AgentPolicy
-  def initialize(context, agent)
-    @current_agent = context.agent
+  def initialize(current_agent, agent)
+    @current_agent = current_agent
     @agent = agent
   end
 

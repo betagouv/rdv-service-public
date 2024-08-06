@@ -3,6 +3,13 @@ module CurrentAgentInPolicyConcern
 
   included do
     alias_method :context, :pundit_user
-    delegate :agent, to: :context, prefix: :current # defines current_agent
+
+    def current_agent
+      if context.is_a? Agent
+        context
+      else
+        context.agent
+      end
+    end
   end
 end
