@@ -84,4 +84,24 @@ RSpec.describe Configuration::AgentPolicy, type: :policy do
     it_behaves_like "permit actions", :target_agent, :edit?, :update_services?, :create?
     it_behaves_like "not permit actions", :target_agent, :update_teams?
   end
+
+  context "current_agent is territory admin, target_agent is a new record without any role" do
+    let(:territory) { create(:territory) }
+    let(:current_agent) { create(:agent, role_in_territories: [territory]) }
+    let(:target_agent) { build(:agent) }
+    let(:pundit_context) { AgentTerritorialContext.new(current_agent, territory) }
+
+    it_behaves_like "not permit actions", :target_agent, :create?
+  end
+
+  context "current_agent is territory admin, target_agent is a new record with a role in an organisation of this territory" do
+    let(:territory) { create(:territory) }
+    let(:current_agent) { create(:agent, role_in_territories: [territory]) }
+    let!(:organisation) { create(:organisation, territory:) }
+    # we cannot use the factory trait basic_roles_in_organisations because it works only with create, not build
+    let(:target_agent) { build(:agent, organisation_ids: [organisation.id]) }
+    let(:pundit_context) { AgentTerritorialContext.new(current_agent, territory) }
+
+    it_behaves_like "permit actions", :target_agent, :create?
+  end
 end

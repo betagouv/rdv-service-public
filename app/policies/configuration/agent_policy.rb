@@ -40,11 +40,12 @@ class Configuration::AgentPolicy
   private
 
   def agent_territories
-    return Territory.joins(:organisations).where(organisations: { id: @agent.organisation_ids }) if @agent.new_record?
-
-    # tous les territoires où l'agent cible est admin OU a un rôle dans une orga peu importe son niveau d’accès
-    # on pourrait aussi implémenter cette méthode en passant par les agent_territorial_access_rights mais c’est
-    # plus explicite de l’écrire comme ça
-    Territory.where(id: @agent.territory_ids.union(@agent.territories_through_organisation_ids))
+    # tous les territoires où l'agent cible est admin OU a un rôle dans une orga (basic, admin ou intervenant)
+    # cette implémentation est plus explicite que via les agent_territorial_access_rights
+    # passer par territory_ids et organisation_ids permet de supporter les tests sur les agents non persistés
+    arel = Territory.left_joins(:organisations)
+    arel.where(id: @agent.territory_ids).or(
+      arel.where(organisations: { id: @agent.organisation_ids })
+    )
   end
 end
