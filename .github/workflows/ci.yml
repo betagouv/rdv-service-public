@@ -250,3 +250,13 @@ jobs:
           MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
           TEXT: |
             Erreur dans le [workflow de CI](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) sur la branche production. Le déploiement a probablement été interrompu.
+  validate_dsfr_version_coherence:
+    name: Validate DSFR version coherence
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: .ruby-version # no need for bundle install here
+      - run: ruby scripts/validate_dsfr_version_coherence.rb

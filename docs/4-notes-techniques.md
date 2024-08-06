@@ -110,7 +110,21 @@ Pas de politique très clairement décidée mais la pratique est d’essayer de 
 Pas de politique très clairement décidée mais la pratique est d’essayer de coller à la version la plus récente.
 
 ### Versions des gems et des node modules
-Une politique de mise à jour prudente a été décidée cf [l’ADR 2023-04-24](https://github.com/betagouv/rdv-service-public/blob/production/docs/decisions/2023-04-24-politique-maj-gems.md)
+
+Une politique de mise à jour prudente a été décidée
+cf [l’ADR 2023-04-24](https://github.com/betagouv/rdv-service-public/blob/production/docs/decisions/2023-04-24-politique-maj-gems.md)
+
+### Version du DSFR
+
+1. Mettez à jour la version souhaitée du DSFR dans le `package.json`, par exemple `"@gouvfr/dsfr": "^1.9.2"`.
+2. Lancez `yarn install`
+3. Mettez à jour le lien symbolique vers les fichiers
+   précompilés : `ln -s ../node_modules/@gouvfr/dsfr/dist/ public/dsfr-v1.9.2`
+4. Dans `app/views/layouts/application_base.html.slim` remplacez les chemins faisant référence au DSFR avec
+   la nouvelle version par exemple : `= stylesheet_link_tag "/dsfr-v1.9.2/dsfr.min.css"`
+
+Cette manière de faire permet d’éviter de passer par des compilations d’assets inutiles via webpacker ou sprockets.
+Le numéro de version dans les chemins permet de vider les caches des navigateurs lorsque la version du DSFR change.
 
 ## Review apps
 
