@@ -12,9 +12,9 @@ fi
 DUMP_NAME=$1
 if [ "$2" == "--ignore-user-data" ]
   then
-    EXCEPT_TABLES="versions|good_jobs|good_job_executions|good_job_settings|good_job_batches|good_job_processes|receipts|users|participations|user_profile|referent_assignations|file_attentes"
+    EXCEPT_TABLES="good_jobs|good_job_executions|good_job_settings|good_job_batches|good_job_processes|receipts|users|participations|user_profile|referent_assignations|file_attentes"
   else
-    EXCEPT_TABLES="versions|good_jobs|good_job_executions|good_job_settings|good_job_batches|good_job_processes"
+    EXCEPT_TABLES="good_jobs|good_job_executions|good_job_settings|good_job_batches|good_job_processes"
 fi
 
 # create database

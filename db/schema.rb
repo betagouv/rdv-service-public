@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_07_04_145418) do
+ActiveRecord::Schema[7.0].define(version: 2024_08_06_092115) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -759,6 +759,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_04_145418) do
     t.json "virtual_attributes"
     t.jsonb "object"
     t.jsonb "object_changes"
+    t.boolean "identified", default: false, null: false
+    t.index ["identified"], name: "index_versions_on_identified"
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
 
