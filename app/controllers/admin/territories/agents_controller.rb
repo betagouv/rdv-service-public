@@ -1,6 +1,7 @@
+class TeamsInMultipleTerritoriesError < StandardError; end
+
 class Admin::Territories::AgentsController < Admin::Territories::BaseController
   before_action :set_agent, only: %i[edit update_teams update_services]
-  before_action :authorize_agent, only: %i[edit update_teams update_services]
 
   def index
     @agents = find_agents(params[:q]).page(page_number)
@@ -22,16 +23,20 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
 
   def new
     @agent = Agent.new
-    authorize_with_legacy_configuration_scope(@agent)
+    skip_authorization
+    # l’agent n’étant pas lié à un territoire la policy ne fonctionne pas
+    # Admin::Territories::BaseController#set_territory limite néanmoins l’accès à cette page aux admins du territoire
   end
 
   def edit; end
 
   def update_teams
-    # ATTENTION: ce update peut supprimer des team_ids d’autres territoires.
-    # C’est un bug consciemment laissé pour l’instant puisqu'on a pas ou peu d'agents multi-territoire et que les équipes ne sont pas utilisées par la plupart des territoires
-    # cf PR https://github.com/betagouv/rdv-service-public/pull/4525 qui tentait de résoudre ça.
-    team_ids = params[:agent][:team_ids].compact_blank
+    # cf PR https://github.com/betagouv/rdv-service-public/pull/4525
+    raise TeamsInMultipleTerritoriesError if @agent.teams.where.not(territory: current_territory).exists?
+
+    team_ids = Team
+      .where(id: params[:agent][:team_ids].compact_blank, territory: current_territory) # filtering on territory is not done in policy anymore
+      .pluck(:id)
     if @agent.update(team_ids:)
       flash[:success] = "Les équipes de l’agent ont été mises à jour"
       redirect_to edit_admin_territory_agent_path(current_territory, @agent.id)
@@ -41,16 +46,14 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
   end
 
   def create
-    authorize_with_legacy_configuration_scope(Agent.new(permitted_create_params))
-
-    organisation_ids = params.require(:admin_agent).require(:organisation_ids)
-    context = AgentTerritorialContext.new(@current_agent, nil) # Dès que possible, on arrêtera d'utiliser ces contextes
-    authorized_organisations = Agent::OrganisationPolicy::Scope.new(context, Organisation.where(id: organisation_ids)).resolve
+    all_params = params.require(:admin_agent).permit(:email, service_ids: [], organisation_ids: [])
+    new_agent = Agent.new(all_params)
+    authorize [:configuration, new_agent]
 
     create_agent = AdminCreatesAgent.new(
-      agent_params: permitted_create_params,
+      agent_params: all_params.slice(:email, :service_ids),
       current_agent: current_agent,
-      organisations: authorized_organisations,
+      organisations: Organisation.where(id: all_params[:organisation_ids]),
       access_level: AgentRole::ACCESS_LEVEL_BASIC
     )
 
@@ -83,21 +86,8 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
     AgentTerritorialContext.new(current_agent, current_territory)
   end
 
-  def authorize_with_legacy_configuration_scope(record, *args, **kwargs)
-    # L'utilisation de configuration est un legacy qui a l'inconvénient de distinguer les permissions en fonction de la page sur laquelle on est en train de naviguer
-    # On préfère que le controller applique le filtre pertinent, et que les policy indiquent les permissions dans l'absolu, indépendamment de la page courante.
-    authorize([:configuration, record], *args, **kwargs)
-  end
-
   def set_agent
     @agent = Agent.active.find(params[:id])
-  end
-
-  def authorize_agent
-    authorize_with_legacy_configuration_scope @agent
-  end
-
-  def permitted_create_params
-    params.require(:admin_agent).permit(:email, service_ids: [])
+    authorize [:configuration, @agent]
   end
 end

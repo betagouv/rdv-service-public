@@ -12,8 +12,7 @@ h1.m-2.text-center.border-bottom.pb-2 Espace Admin - #{current_territory.name}
           | Territoire
         p Configurer le territoire, département, structure
 
-  - territorial_context = AgentTerritorialContext.new(current_agent, current_territory)
-  - if Configuration::AgentPolicy.new(territorial_context, current_territory).display?
+  - if Configuration::AgentPolicy.allowed_to_manage_agents_in?(current_territory, current_agent)
     .col.col-md-4.p-2.rounded.settings-box
       = link_to admin_territory_agents_path(current_territory) do
         h2.fw-bold.mb-0
