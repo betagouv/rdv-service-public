@@ -31,6 +31,14 @@ class PrivilegeParentIdentifier
       end
     end
 
+    # Jusqu'à https://github.com/betagouv/rdv-service-public/pull/4524/files, le droit allow_to_manage_access_rights suffisait pour créer un admin de territoire
+    parent_territorial_access_rights = AgentTerritorialAccessRight.where("created_at < ?", version.created_at)
+      .where(allow_to_manage_access_rights: true).find_by(agent_id: agent.id, territory_id: territory_id)
+
+    if parent_territorial_access_rights
+      return true
+    end
+
     if version_has_no_territory_privilege? # On est en train de créer un access right, probablement pour ajouter l'agent à une organisation
       agent_roles = possible_parent_agent_roles(agent)
       return true if agent_roles.any? do |agent_role|
@@ -62,6 +70,10 @@ class PrivilegeParentIdentifier
     PaperTrail::Version.where(event: :create, item_type: "AgentRole").where("object_changes->'agent_id'->1 = ?", parent_agent.id.to_s).last
   end
 
+  def possible_parent_agent_territorial_roles_versions(parent_agent)
+    PaperTrail::Version.where(event: :create, item_type: "AgentTerritorialRole").where("object_changes->'agent_id'->1 = ?", parent_agent.id.to_s).last
+  end
+
   def versions_for_agent_roles_created_at_the_same_time
     PaperTrail::Version.where(whodunnit: version.whodunnit, event: :create, item_type: "AgentRole")
       .where("created_at > ?", version.created_at - 1.second)
@@ -73,7 +85,7 @@ class PrivilegeParentIdentifier
   end
 
   def find_agent
-    agent_last_name = privilege_creation_version.whodunnit[/[A-Z][A-Z]+/]
+    agent_last_name = privilege_creation_version.whodunnit[/[A-Z][A-Z].*$/]
     agent_first_name = privilege_creation_version.whodunnit.gsub(agent_last_name, "").gsub("[Agent]", "").strip
 
     agent = Agent.where("first_name ilike ?", agent_first_name).where("last_name ilike ?", agent_last_name).last
@@ -82,10 +94,10 @@ class PrivilegeParentIdentifier
       agent = Agent.find_by(first_name: agent_first_name, last_name: agent_last_name.capitalize)
     end
 
-    nathalie = Agent.find 12622
-    if privilege_creation_version.whodunnit[nathalie.full_name]
-      agent = nathalie
-    end
+    # nathalie = Agent.find 12622
+    # if privilege_creation_version.whodunnit[nathalie.full_name]
+    #   agent = nathalie
+    # end
 
     agent
   end

@@ -3,7 +3,7 @@
 # Cette méthode ne marche que pour l'année écoulée
 PaperTrail::Version.where.not(item_type: %w[AgentTerritorialRole AgentTerritorialAccessRight Agent AgentRole]).delete_all
 
-require_relative "../services/privilege_parent_identifier"
+load "app/services/privilege_parent_identifier.rb"
 
 privilege_creations = PaperTrail::Version.where(item_type: %w[AgentTerritorialRole AgentTerritorialAccessRight])
   .where(event: "create")
