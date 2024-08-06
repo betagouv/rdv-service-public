@@ -77,12 +77,12 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
 
   private
 
+  def pundit_user
+    AgentTerritorialContext.new(current_agent, current_territory)
+  end
+
   def set_agent
     @agent = Agent.active.find(params[:id])
     authorize [:configuration, @agent]
-  end
-
-  def pundit_user
-    AgentTerritorialContext.new(current_agent, current_territory)
   end
 end
