@@ -80,6 +80,11 @@ class PrivilegeParentIdentifier
     agent_last_name = privilege_creation_version.whodunnit[/[A-Z][A-Z].*$/]
     agent_first_name = privilege_creation_version.whodunnit.gsub(agent_last_name, "").gsub("[Agent]", "").strip
 
+    if version.whodunnit == "[Agent] #{agent_last_name}"
+      agent_first_name = agent_last_name.split(" ").first
+      agent_last_name = agent_last_name.split(" ").last
+    end
+
     Agent.where("first_name ilike ?", agent_first_name).where("last_name ilike ?", agent_last_name)
   end
 end
