@@ -34,7 +34,8 @@ class Configuration::AgentPolicy
   end
 
   def create?
-    agent_territories.any? { self.class.allowed_to_invite_agents_in?(_1, @current_agent) }
+    agent_territories.any? && # on ne peut pas créer d’agent non rattaché à un territoire
+      agent_territories.all? { self.class.allowed_to_invite_agents_in?(_1, @current_agent) } # NOTE: on fait ici un all? et pas un any?
   end
 
   private
