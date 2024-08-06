@@ -57,19 +57,19 @@
 
         p Vous bénéficiez d’un accompagnement individualisé pour la prise en main de l’outil et d’une équipe support à votre disposition.
 
-.fr-py-7w[style="background-color:  #DEE5FD"]
+.fr-py-7w[style="background-color: #DEE5FD; color: #2F4077;"]
   .fr-container
-    .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center
-      .fr-col-md-10
-        .centered-flex[style="color: #2F4077"]
-          h4.fr-pr-2w.fr-display--lg.fr-mb-0[style="color: #2F4077"]
-            - rdv_count = Rails.cache.fetch("rdv_mairies_homepage_rdv_count", expires_in: 1.hour) { Rdv.count }
-            = number_with_delimiter(rdv_count, delimiter: " ")
+    .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center.rdv-align-items-center
+      .fr-col-12.fr-col-md-4.rdv-text-align-center.rdv-text-align-md-right
+        .fr-display--lg.fr-mb-0
+          - rdv_count = Rails.cache.fetch("rdv_mairies_homepage_rdv_count", expires_in: 1.hour) { Rdv.count }
+          = number_with_delimiter(rdv_count, delimiter: " ")
 
-          .fr-text--lead.fr-mb-0
-            b = "rendez-vous déjà pris".upcase
-            br
-            = "sur RDV Service Public".upcase
+      .fr-col-12.fr-col-md-6
+        .fr-text--lead.fr-mb-0.rdv-text-align-center.rdv-text-align-md-left
+          b = "rendez-vous déjà pris".upcase
+          br
+          = "sur RDV Service Public".upcase
 .fr-py-12w[style="background-color:  #F4F6FE"]
   .fr-container
     .fr-grid-row.fr-grid-row--gutters.fr-grid-row--center

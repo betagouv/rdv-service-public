@@ -40,8 +40,24 @@ a[disabled] {
   text-decoration: underline;
 }
 
+html .rdv-text-align-md-left {
+  @include media-breakpoint-up(md) {
+    text-align: left;
+  }
+}
+
+html .rdv-text-align-md-right {
+  @include media-breakpoint-up(md) {
+    text-align: right;
+  }
+}
+
 .rdv-text-align-right {
   text-align: right;
+}
+
+.rdv-text-align-center {
+  text-align: center;
 }
 
 .rdv-white-space-nowrap {
@@ -88,6 +104,10 @@ a[disabled] {
   @include media-breakpoint-up(md) {
     flex-direction: row;
   }
+}
+
+.rdv-align-items-center {
+  align-items: center;
 }
 
 // OTHER
