@@ -15,8 +15,6 @@ class Agent::AgentTerritorialRolePolicy
   end
 
   def visible_agent?
-    context = AgentTerritorialContext.new(@current_agent, @agent_territorial_role.territory)
-
-    Agent::AgentPolicy::Scope.new(context, Agent).resolve.find_by(id: @agent_territorial_role.agent_id)
+    Agent::AgentPolicy::Scope.new(@current_agent, Agent).resolve.find_by(id: @agent_territorial_role.agent_id)
   end
 end
