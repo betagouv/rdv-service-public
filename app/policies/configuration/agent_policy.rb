@@ -24,7 +24,7 @@ class Configuration::AgentPolicy
   end
 
   def update_teams?
-    # TODO: cette règle ici n’a pas de sens, le contexte du territoire est indispensable
+    # TODO: cette règle ici n’a pas beaucoup de sens, le contexte du territoire est indispensable
     agent_territories.any? { Agent::TeamPolicy.allowed_to_manage_teams_in?(_1, @current_agent) }
   end
 

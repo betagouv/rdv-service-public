@@ -22,6 +22,8 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
   def new
     @agent = Agent.new
     skip_authorization
+    # l’agent n’étant pas lié à un territoire la policy ne fonctionne pas
+    # Admin::Territories::BaseController#set_territory limite néanmoins l’accès à cette page aux admins du territoire
   end
 
   def edit; end
