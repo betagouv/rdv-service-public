@@ -1,6 +1,6 @@
 class PrivilegeParentIdentifier
   def initialize(version)
-    @privilege_creation_version = version
+    @privilege_creation_version = PrivilegeParentIdentifier::PrivilegeVersion.new(version)
   end
 
   attr_reader :privilege_creation_version
@@ -16,7 +16,7 @@ class PrivilegeParentIdentifier
 
     puts "Agent found"
 
-    territory_id = privilege_creation_version.object_changes["territory_id"].last
+    territory_id = version.territory_id
 
     parent_territorial_role = AgentTerritorialRole.find_by(agent_id: agent.id, territory_id: territory_id)
 
@@ -27,7 +27,7 @@ class PrivilegeParentIdentifier
       parent_territorial_role_created_at = parent_territorial_role.versions.where(event: :create)&.first&.created_at || Date.new(2023, 6, 27)
 
       if parent_territorial_role_created_at < privilege_creation_version.created_at
-        true
+        return true
       end
     end
 
@@ -47,6 +47,8 @@ class PrivilegeParentIdentifier
         created_at < version.created_at
       end
     end
+
+    return true if PrivilegeParentIdentifier::ByAccessRightVersion.new(version, agent).identified?
   end
 
   def version_has_no_territory_privilege?
