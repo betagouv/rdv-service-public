@@ -1,3 +1,5 @@
+class TeamsInMultipleTerritoriesError < StandardError; end
+
 class Admin::Territories::AgentsController < Admin::Territories::BaseController
   before_action :set_agent, only: %i[edit update_teams update_services]
 
@@ -29,9 +31,9 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
   def edit; end
 
   def update_teams
-    # ATTENTION: ce update peut supprimer des team_ids d’autres territoires.
-    # C’est un bug consciemment laissé pour l’instant puisqu'on a pas ou peu d'agents multi-territoire et que les équipes ne sont pas utilisées par la plupart des territoires
-    # cf PR https://github.com/betagouv/rdv-service-public/pull/4525 qui tentait de résoudre ça.
+    # cf PR https://github.com/betagouv/rdv-service-public/pull/4525
+    raise TeamsInMultipleTerritoriesError if @agent.teams.where.not(territory: current_territory).exists?
+
     team_ids = Team
       .where(id: params[:agent][:team_ids].compact_blank, territory: current_territory) # filtering on territory is not done in policy anymore
       .pluck(:id)
