@@ -3,8 +3,6 @@
 # Cette méthode ne marche que pour l'année écoulée
 PaperTrail::Version.where.not(item_type: %w[AgentTerritorialRole AgentTerritorialAccessRight Agent AgentRole]).delete_all
 
-load "app/services/privilege_parent_identifier.rb"
-
 privilege_creations = PaperTrail::Version.where(item_type: %w[AgentTerritorialRole AgentTerritorialAccessRight])
   .where(event: "create")
   .where(identified: false); nil
@@ -14,11 +12,7 @@ privilege_creations.where("whodunnit ilike '[Admin]%'").update_all(identified: t
 privilege_creations.where("whodunnit ilike '[SuperAdmin]%'").update_all(identified: true)
 
 privilege_creations.find_each do |privilege_creation|
-  identifer = PrivilegeParentIdentifier.new(privilege_creation)
-  privilege_creation.update(identified: identifer.parent_privilege?.to_b)
-end
-
-privilege_creations.where(item_type: "AgentTerritorialRole").find_each do |privilege_creation|
+  puts Time.zone.now
   identifer = PrivilegeParentIdentifier.new(privilege_creation)
   privilege_creation.update(identified: identifer.parent_privilege?.to_b)
 end
