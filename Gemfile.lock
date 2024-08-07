@@ -1,4 +1,14 @@
 GIT
+  remote: https://github.com/gip-inclusion/agent_connect_engine
+  revision: a1b2a05e216467d38e0cb89ea25571117ec20c63
+  specs:
+    agent_connect (0.1.0)
+      jwt (= 2.7.1)
+      openid_connect (>= 2)
+      rails (>= 7.0.8.4)
+      typhoeus (>= 1.4.0)
+
+GIT
   remote: https://github.com/nahi/httpclient.git
   revision: d57cc6d5ffee1b566b5c189fe6dc8cc89570b812
   ref: d57cc6d
@@ -212,6 +222,8 @@ GEM
       pagy (~> 6)
       view_component (~> 2)
     dumb_delegator (1.0.0)
+    email_validator (2.2.4)
+      activemodel
     erubi (1.13.0)
     et-orbi (1.2.11)
       tzinfo
@@ -361,21 +373,22 @@ GEM
     omniauth-rails_csrf_protection (1.0.1)
       actionpack (>= 4.2)
       omniauth (~> 2.0)
-    omniauth_openid_connect (0.4.0)
-      addressable (~> 2.5)
+    omniauth_openid_connect (0.8.0)
       omniauth (>= 1.9, < 3)
-      openid_connect (~> 1.1)
-    openid_connect (1.4.2)
+      openid_connect (~> 2.2)
+    openid_connect (2.3.0)
       activemodel
       attr_required (>= 1.0.0)
-      json-jwt (>= 1.15.0)
-      net-smtp
-      rack-oauth2 (~> 1.21)
-      swd (~> 1.3)
+      email_validator
+      faraday (~> 2.0)
+      faraday-follow_redirects
+      json-jwt (>= 1.16)
+      mail
+      rack-oauth2 (~> 2.2)
+      swd (~> 2.0)
       tzinfo
-      validate_email
       validate_url
-      webfinger (~> 1.2)
+      webfinger (~> 2.0)
     orm_adapter (0.5.0)
     pagy (6.5.0)
     paper_trail (12.3.0)
@@ -414,10 +427,11 @@ GEM
       rack (>= 2.0.0)
     rack-mini-profiler (3.0.0)
       rack (>= 1.2.0)
-    rack-oauth2 (1.21.3)
+    rack-oauth2 (2.2.1)
       activesupport
       attr_required
-      httpclient
+      faraday (~> 2.0)
+      faraday-follow_redirects
       json-jwt (>= 1.11.0)
       rack (>= 2.1.0)
     rack-protection (3.2.0)
@@ -585,10 +599,11 @@ GEM
     strong_migrations (1.6.4)
       activerecord (>= 5.2)
     strscan (3.1.0)
-    swd (1.3.0)
+    swd (2.0.3)
       activesupport (>= 3)
       attr_required (>= 0.0.5)
-      httpclient (>= 2.4)
+      faraday (~> 2.0)
+      faraday-follow_redirects
     temple (0.8.2)
     thor (1.3.1)
     thread_safe (0.3.6)
@@ -605,9 +620,6 @@ GEM
     unicode-display_width (2.3.0)
     uniform_notifier (1.16.0)
     uri (0.13.0)
-    validate_email (0.1.6)
-      activemodel (>= 3.0)
-      mail (>= 2.2.5)
     validate_url (1.0.15)
       activemodel (>= 3.0.0)
       public_suffix
@@ -623,9 +635,10 @@ GEM
     wannabe_bool (0.7.1)
     warden (1.2.9)
       rack (>= 2.0.9)
-    webfinger (1.2.0)
+    webfinger (2.1.3)
       activesupport
-      httpclient (>= 2.4)
+      faraday (~> 2.0)
+      faraday-follow_redirects
     webmock (3.18.1)
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
@@ -647,6 +660,7 @@ DEPENDENCIES
   active_record_doctor
   activerecord-postgres_enum
   administrate
+  agent_connect!
   auto_strip_attributes
   axe-core-api (= 4.3.2)
   axe-core-rspec (= 4.3.2)
