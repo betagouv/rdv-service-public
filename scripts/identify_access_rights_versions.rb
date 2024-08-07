@@ -3,6 +3,13 @@
 # Cette méthode ne marche que pour l'année écoulée
 PaperTrail::Version.where.not(item_type: %w[AgentTerritorialRole AgentTerritorialAccessRight Agent AgentRole]).delete_all
 
+# gestion manuelle des accents dans un cas particulier
+a = Agent.find(17017)
+a.update(first_name: a.first_name.gsub("re", "ré"))
+
+a = Agent.find(17350)
+a.update(first_name: a.first_name.gsub("Lourdes ", ""))
+
 privilege_creations = PaperTrail::Version.where(item_type: %w[AgentTerritorialRole AgentTerritorialAccessRight])
   .where(event: "create")
   .where(identified: false); nil
