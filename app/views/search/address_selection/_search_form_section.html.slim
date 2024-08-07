@@ -14,5 +14,5 @@ section.rdv-background-color-flat-blue-ecume.fr-pt-4w.fr-pb-8w
           .fr-col-12.fr-col-lg-9
             = f.input :where, label: "Votre adresse", placeholder: "ex : 21 rue Anatole France, Calais", input_html: { value: context.address, name: "address", class: "form-control-lg places-js-container" }, wrapper_html: { class: "mb-1 mb-lg-0" }
           .fr-col-12.fr-col-lg-3.rdv-align-self-end
-            button#search_submit.fr-btn.fr-btn--lg.fr-btn--icon-left.fr-icon-search-line.rdv-width-100 disabled="true" type="submit"
+            = f.button :button, id: "search_submit", class: "fr-btn--lg fr-btn--icon-left fr-icon-search-line rdv-width-100", disabled: true do
               | Rechercher

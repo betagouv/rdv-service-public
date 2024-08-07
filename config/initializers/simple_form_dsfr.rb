@@ -14,3 +14,24 @@ SimpleForm.setup do |config|
     b.use :hint
   end
 end
+
+# L’initializer simple_form_bootstrap.rb est lu par défaut pour toutes les parties de l’application
+# Or, nous souhaitons migrer pas à pas une partie de l’application vers le DSFR
+# Ce concern peut être inclus dans un controller et overrider la configuration spécifique bootstrap
+# uniquement pour les actions de ce controlleur.
+
+module SimpleFormDsfrConcern
+  extend ActiveSupport::Concern
+
+  included do
+    around_action :override_simple_form_config
+  end
+
+  def override_simple_form_config
+    button_class_before = SimpleForm.button_class
+    SimpleForm.setup { _1.button_class = "fr-btn" }
+    yield
+  ensure
+    SimpleForm.setup { _1.button_class = button_class_before }
+  end
+end
