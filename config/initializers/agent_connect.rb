@@ -7,7 +7,7 @@ AgentConnect.initialize! do |config|
 
   config.success_callback = lambda do |callback_client|
     include DomainDetection
-    include Pundit::Authorization
+    include Devise::Controllers::SignInOut
 
     # Agent Connect recommande de faire la réconciliation sur l'email et non pas sur le sub
     # voir https://github.com/numerique-gouv/agentconnect-documentation/blob/main/doc_fs/donnees_fournies.md#le-champ-sub
