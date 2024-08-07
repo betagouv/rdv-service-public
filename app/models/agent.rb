@@ -179,7 +179,7 @@ class Agent < ApplicationRecord
   end
 
   def name_for_paper_trail
-    "[Agent] #{full_name}"
+    "[Agent #{id}] #{full_name}"
   end
 
   def role_in_organisation(organisation)
