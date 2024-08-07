@@ -87,8 +87,11 @@ class PrivilegeParentIdentifier
 
     agents = Agent.where("first_name ilike ?", agent_first_name).where("last_name ilike ?", agent_last_name)
 
-    if agents.empty?
-      agents = Agent.where("first_name ilike ?", agent_first_name).where("last_name ilike ?", agent_last_name.capitalize)
+    agents += Agent.where("first_name ilike ?", agent_first_name).where("last_name ilike ?", agent_last_name.capitalize)
+
+    whodunnit_full_name = privilege_creation_version.whodunnit.gsub("[Agent]", "").strip
+    agents += Agent.search_by_text(agent_last_name).to_a.select do |agent|
+      agent.full_name == whodunnit_full_name
     end
 
     agents
