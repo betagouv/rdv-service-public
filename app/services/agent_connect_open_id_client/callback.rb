@@ -29,8 +29,7 @@ module AgentConnectOpenIdClient
     end
 
     def user_first_name
-      # Agent Connect renvoie aussi le nom de famille après un espace
-      @user_info["given_name"].gsub(/ #{@user_info['usual_name']}$/i, "")
+      @user_info["given_name"]
     end
 
     def user_last_name

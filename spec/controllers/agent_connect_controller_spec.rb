@@ -33,7 +33,7 @@ RSpec.describe AgentConnectController, type: :controller do
       {
         "sub" => "ab70770d-1285-46e6-b4d0-3601b49698d4",
         "email" => "francis.factice@exemple.gouv.fr",
-        "given_name" => "Francis Factice",
+        "given_name" => "Francis",
         "usual_name" => "Factice",
         "aud" => "4ec41582-1d60-4f12-a63b-d8abaace16ba",
         "exp" => 1717595030, "iat" => 1717594970, "iss" => "https://fca.integ01.dev-agentconnect.fr/api/v2",
