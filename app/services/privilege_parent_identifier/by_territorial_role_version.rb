@@ -10,7 +10,8 @@ class PrivilegeParentIdentifier::ByTerritorialRoleVersion
 
   def territorial_roles_not_deleted_at_time_of_version_creation
     access_rights_ids.select do |id|
-      PaperTrail::Version.where(event: %i[update destroy], item_type: "AgentTerritorialRole", item_id: id).none?
+      PaperTrail::Version.where(event: :update, item_type: "AgentTerritorialRole", item_id: id).none? &&
+        PaperTrail::Version.where(event: :destroy, item_type: "AgentTerritorialRole", item_id: id).where("created_at < ?", @version.created_at).none?
     end
   end
 

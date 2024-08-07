@@ -12,7 +12,8 @@ class PrivilegeParentIdentifier::ByAgentRoleVersion
 
   def agent_roles_not_deleted_at_time_of_version_creation
     agent_role_ids.select do |id|
-      PaperTrail::Version.where(event: %i[update destroy], item_type: "AgentRole", item_id: id).none?
+      PaperTrail::Version.where(event: :update, item_type: "AgentRole", item_id: id).none? &&
+        PaperTrail::Version.where(event: :destroy, item_type: "AgentRole", item_id: id).where("created_at < ?", @version.created_at).none?
     end
   end
 
