@@ -50,6 +50,7 @@ class PrivilegeParentIdentifier
       end
 
       return true if PrivilegeParentIdentifier::ByAccessRightVersion.new(version, agent).identified?
+      return true if PrivilegeParentIdentifier::ByDeletedAgentRoleVersion.new(version, agent).identified?
       return true if PrivilegeParentIdentifier::ByAgentRoleVersion.new(version, agent).identified?
       return true if PrivilegeParentIdentifier::ByTerritorialRoleVersion.new(version, agent).identified?
     end

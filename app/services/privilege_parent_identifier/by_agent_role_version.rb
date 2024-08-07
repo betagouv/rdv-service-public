@@ -20,11 +20,14 @@ class PrivilegeParentIdentifier::ByAgentRoleVersion
     possible_parent_agent_role_versions.pluck(:item_id)
   end
 
-  # TODO: voir s'il vaut mieux utiliser une méthode similaire à   def versions_for_agent_roles_created_at_the_same_time
+  # TODO: voir s'il vaut mieux utiliser une méthode similaire à #versions_for_agent_roles_created_at_the_same_time
+  # On ne vérifie pas que la création des access rights correspond effectivement à l'ajout à cette organisation, mais c'est peut-être pas grave ?
   def possible_parent_agent_role_versions
-    PaperTrail::Version.where(event: :create, item_type: "AgentRole").where("object_changes->'agent_id'->1 = ?", @parent_agent.id.to_s).select do |version|
+    PaperTrail::Version.where(event: :create, item_type: "AgentRole")
+      .where("created_at < ?", @version.created_at)
+      .where("object_changes->'agent_id'->1 = ?", @parent_agent.id.to_s).select do |version|
       organisation = Organisation.find_by(id: version.object_changes["organisation_id"].last)
-      organisation&.territory_id = @version.territory_id
+      organisation&.territory_id = @version.territory_id && version.object_changes["access_level"].last == "admin"
     end
   end
 end
