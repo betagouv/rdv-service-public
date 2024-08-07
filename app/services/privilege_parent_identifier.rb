@@ -94,6 +94,6 @@ class PrivilegeParentIdentifier
       agent.full_name == whodunnit_full_name
     end
 
-    agents
+    agents.uniq
   end
 end
