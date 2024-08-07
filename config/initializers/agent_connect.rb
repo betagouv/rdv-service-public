@@ -1,4 +1,4 @@
-unless Rails.env.test?
+unless Rails.env.test? || ENV["AGENT_CONNECT_BASE_URL"].blank?
   AgentConnect.initialize! do |config|
     config.client_id = ENV["AGENT_CONNECT_CLIENT_ID"]
     config.client_secret = ENV["AGENT_CONNECT_CLIENT_SECRET"]
