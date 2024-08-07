@@ -7,11 +7,18 @@
     border: 0;
   }
 
-  .btn {
-    color: $gray-900;
-  }
-
   label {
     color: white;
+  }
+
+  .fr-btn[type="submit"] {
+    background-color: white;
+    color: #313131;
+    &:hover {
+      opacity: 0.9;
+    }
+    &[disabled] {
+      opacity: 0.65;
+    }
   }
 }
