@@ -49,4 +49,4 @@ main.container
               = "Vous pouvez aussi "
               = mail_to(current_domain.support_email, "nous écrire",target: "_blank")
               = " pour nous donner votre avis sur la prise de rendez-vous."
-          .mt-4.text-center= link_to "Retour à l'accueil", prendre_rdv_prescripteur_path(rdv.territory.departement_number)
+          .mt-4.rdv-text-align-center= link_to "Retour à l'accueil", prendre_rdv_prescripteur_path(rdv.territory.departement_number)

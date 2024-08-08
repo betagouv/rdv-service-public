@@ -17,5 +17,5 @@
             - if current_agent.admin_in_organisation?(organisation)
               i.fa.fa-user-cog.text-muted[title="Vous administrez cette organisation"]
       - if policy([:agent, Organisation.new(territory: territory)]).new?
-        .text-center.mt-4
+        .rdv-text-align-center.mt-4
           = link_to "Ajouter une organisation", new_admin_organisation_path(territory_id: territory.id), class: "btn btn-primary"

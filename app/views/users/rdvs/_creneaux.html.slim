@@ -1,6 +1,6 @@
 - if @all_creneaux.blank?
-  .bg-info.text-white.p-2.mb-3 Malheureusement, tous les créneaux sont pris. Vous recevrez d'autres propositions si un créneau se libère. La date de votre RDV reste le #{I18n.l(@rdv.starts_at, format: :human)}.
-  .py-4.border-bottom.text-center
+  .bg-info.rdv-color-white.p-2.mb-3 Malheureusement, tous les créneaux sont pris. Vous recevrez d'autres propositions si un créneau se libère. La date de votre RDV reste le #{I18n.l(@rdv.starts_at, format: :human)}.
+  .py-4.border-bottom.rdv-text-align-center
       = link_to "Retour au RDV", users_rdv_path(@rdv), class: "btn btn-primary"
 - else
   .card
@@ -18,7 +18,7 @@
           .row
             - @date_range.each do |date|
               .col-6.col-md-3.col-lg
-                p.text-center
+                p.rdv-text-align-center
                   strong= l(date, format: "%A")
                   br
                   = l(date, format: "%d %b")

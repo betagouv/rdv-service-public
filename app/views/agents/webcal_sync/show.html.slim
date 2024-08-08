@@ -16,7 +16,7 @@ p Pour plus d'informations sur cette fonctionnalité, #{link_to("consultez la do
 
 p Si jamais votre lien de synchronisation a été partagé par erreur et qu’il y a un risque que quelqu’un d’autre accède à votre liste de rendez-vous, vous pouvez le réinitialiser immédiatement.
 
-div.text-center
+div.rdv-text-align-center
   = simple_form_for(current_agent, url: agents_calendar_sync_webcal_sync_path) do |f|
     = f.submit "Réinitialiser mon lien de synchronisation", class: "btn btn-secondary", data: { confirm: "Attention, si vous réinitialisez votre lien de synchronisation, vous devrez entrer le nouveau lien dans votre agenda externe" }
 

@@ -11,13 +11,13 @@ div id="creneaux-lieu-#{lieu&.id}"
       .row.no-gutters.creneaux-row.lieu-creneaux-card
         - form.date_range.each do |date|
           .col.position-relative
-            p.text-center.sticky-top.bg-white
+            p.rdv-text-align-center.sticky-top.bg-white
               strong= l(date, format: "%A")
               br
               = l(date, format: "%d %b")
 
             - if creneaux.empty?
-              p.text-center
+              p.rdv-text-align-center
                 small aucune disponibilité
             - else
               - agents = creneaux.map(&:agent).uniq

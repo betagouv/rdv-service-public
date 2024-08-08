@@ -17,7 +17,7 @@ div id="creneaux-lieu-#{lieu.id}"
       .row
         - date_range.each do |date|
           .col-6.col-md-3.col-lg
-            p.text-center
+            p.rdv-text-align-center
               strong= l(date, format: "%A")
               br
               = l(date, format: "%d %b")
@@ -41,11 +41,11 @@ div id="creneaux-lieu-#{lieu.id}"
                     =  render "/common/modal", id: "js-rdv-restriction-motif#{creneau.starts_at.to_i}" , title: "À lire avant de prendre un rendez-vous", confirm_path: new_users_rdv_wizard_step_path(@query.merge(motif_id: creneau.motif.id, starts_at: creneau.starts_at)) do
                       = restriction_for_rdv_to_html(creneau.motif)
             - elsif date >= (Time.now + max_public_booking_delay.seconds).to_date
-              p.text-center.text-muted
+              p.rdv-text-align-center.rdv-color-text-mention-grey
                 | Date fermée à la reservation
             - elsif creneaux.any?
-              p.text-center
-                i.fa.fa-minus.text-muted
+              p.rdv-text-align-center
+                i.fa.fa-minus.rdv-color-text-mention-grey
 
         - if @next_availability
           .position-absolute.h-100.w-100.bg-overlay.d-flex.align-items-center.justify-content-center
