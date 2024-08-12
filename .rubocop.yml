@@ -204,6 +204,12 @@ RSpec/ExampleWording:
 RSpec/ScatteredSetup:
   Enabled: false
 
+RSpec/ReceiveMessages:
+  Enabled: false
+
+Rails/ActionOrder:
+  Enabled: false
+
 #  STYLE rules
 
 Style/AsciiComments:
