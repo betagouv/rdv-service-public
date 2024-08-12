@@ -59,7 +59,9 @@ class PrivilegeParentIdentifier
     end
 
     if agents.empty?
-      versions = PaperTrail::Version.where(item_type: :Agent, event: :update).where("object_changes->'last_name' is not null").select { |v| v.object_changes.to_s[agent_last_name].present? }
+      versions = PaperTrail::Version.where(item_type: :Agent, event: :update).where("object_changes->'last_name' is not null").select do |v|
+        v.object_changes.to_s.upcase[agent_last_name.upcase].present?
+      end
       agents += Agent.where(id: versions.map(&:item_id)).select do |agent|
         agent.paper_trail.version_at(version.created_at).full_name == whodunnit_full_name
       end
