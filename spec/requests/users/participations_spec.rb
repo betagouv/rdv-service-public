@@ -55,7 +55,7 @@ RSpec.describe "Users::Participants", type: :request do
         it "change to other relative user" do
           post users_rdv_participations_path(rdv, user_id: user_other_child.id)
           expect(flash[:notice]).to eq("Participation confirmée")
-          expect(rdv.reload.users).to match_array([user_other_child, other_user])
+          expect(rdv.reload.users).to contain_exactly(user_other_child, other_user)
           # Change to relative isnt allowed with invitation and doesnt redirect with invitation token
           expect(response).to redirect_to(users_rdv_path(rdv))
         end
@@ -66,7 +66,7 @@ RSpec.describe "Users::Participants", type: :request do
         expect(flash[:notice]).to eq("Participation confirmée")
         expect(response).to redirect_to(users_rdv_path(rdv, invitation_token: token))
         post users_rdv_participations_path(rdv, user_id: user2.id)
-        expect(rdv.reload.users).to match_array([user])
+        expect(rdv.reload.users).to contain_exactly(user)
       end
     end
   end
@@ -78,7 +78,7 @@ RSpec.describe "Users::Participants", type: :request do
     it "display notice" do
       post users_rdv_participations_path(rdv, user_id: user.id)
       expect(flash[:notice]).to eq("Usager déjà inscrit")
-      expect(rdv.reload.users).to match_array([user, other_user])
+      expect(rdv.reload.users).to contain_exactly(user, other_user)
       expect(response).to redirect_to(users_rdv_path(rdv))
     end
   end
@@ -88,10 +88,10 @@ RSpec.describe "Users::Participants", type: :request do
 
     it "display notice" do
       participation1.update!(status: "excused")
-      expect(rdv.reload.users).to match_array([user])
+      expect(rdv.reload.users).to contain_exactly(user)
       post users_rdv_participations_path(rdv, user_id: user.id)
       expect(flash[:notice]).to eq("Participation confirmée")
-      expect(rdv.reload.users).to match_array([user])
+      expect(rdv.reload.users).to contain_exactly(user)
     end
   end
 end

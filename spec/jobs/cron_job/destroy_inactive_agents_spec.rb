@@ -22,10 +22,6 @@ RSpec.describe CronJob::DestroyInactiveAgents do
 
     described_class.new.perform(two_years_ago)
 
-    expect(Agent.all).to match_array([
-                                       agent_created_25_months_ago_without_warning,
-                                       agent_created_12_months_ago_without_warning,
-                                       agent_created_12_months_ago_with_warning,
-                                     ])
+    expect(Agent.all).to contain_exactly(agent_created_25_months_ago_without_warning, agent_created_12_months_ago_without_warning, agent_created_12_months_ago_with_warning)
   end
 end

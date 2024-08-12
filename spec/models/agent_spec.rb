@@ -89,7 +89,7 @@ RSpec.describe Agent, type: :model do
 
       agent.password = "123!M"
       agent.validate
-      expect(agent.errors).to match_array(["Pour assurer la sécurité de votre compte, votre mot de passe doit faire au moins 12 caractères"])
+      expect(agent.errors).to contain_exactly("Pour assurer la sécurité de votre compte, votre mot de passe doit faire au moins 12 caractères")
 
       agent.password = "123!Merci c'est assez long"
       agent.validate

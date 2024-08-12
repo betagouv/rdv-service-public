@@ -66,7 +66,7 @@ RSpec.describe Users::CreneauxSearch, type: :service do
       agent2 = create(:agent, basic_role_in_organisations: [organisation])
       motif = create(:motif, :sectorisation_level_agent, organisation: organisation)
       mock_geo_search = instance_double(Users::GeoSearch, attributed_agents_by_organisation: { organisation => Agent.where(id: [agent1.id, agent2.id]) })
-      expect(SlotBuilder).to receive(:available_slots).with(motif, lieu, date_range, match_array([agent1, agent2]))
+      expect(SlotBuilder).to receive(:available_slots).with(motif, lieu, date_range, contain_exactly(agent1, agent2))
       described_class.new(user: user, motif: motif, lieu: lieu, date_range: date_range, geo_search: mock_geo_search).creneaux
     end
   end
@@ -86,7 +86,7 @@ RSpec.describe Users::CreneauxSearch, type: :service do
 
     it "returns the subscribable collective rdvs (rdv and rdv_with_user)" do
       expect(subject.next_availability).to eq(rdv)
-      expect(subject.creneaux).to match_array([rdv, rdv_with_user])
+      expect(subject.creneaux).to contain_exactly(rdv, rdv_with_user)
     end
 
     context "when there are geo attributed agents" do
@@ -100,7 +100,7 @@ RSpec.describe Users::CreneauxSearch, type: :service do
 
       it "returns the rdv linked to the geo attributed agents" do
         expect(subject.next_availability).to eq(rdv)
-        expect(subject.creneaux).to match_array([rdv])
+        expect(subject.creneaux).to contain_exactly(rdv)
       end
     end
 
@@ -115,7 +115,7 @@ RSpec.describe Users::CreneauxSearch, type: :service do
 
       it "returns the rdv linked to referents" do
         expect(subject.next_availability).to eq(rdv)
-        expect(subject.creneaux).to match_array([rdv])
+        expect(subject.creneaux).to contain_exactly(rdv)
       end
     end
   end

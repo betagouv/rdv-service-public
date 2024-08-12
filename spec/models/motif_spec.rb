@@ -107,12 +107,12 @@ RSpec.describe Motif, type: :model do
     let!(:intervenant_pmi) { create(:agent, :intervenant, intervenant_role_in_organisations: [org1], service: service_pmi) }
     let!(:motif) { create(:motif, service: service_pmi, organisation: org1) }
 
-    it { is_expected.to match_array([agent_pmi1, agent_pmi2, intervenant_pmi, agent_secretariat1]) }
+    it { is_expected.to contain_exactly(agent_pmi1, agent_pmi2, intervenant_pmi, agent_secretariat1) }
 
     context "motif is available for secretariat" do
       let!(:motif) { create(:motif, service: service_pmi, organisation: org1, for_secretariat: true) }
 
-      it { is_expected.to match_array([agent_pmi1, agent_pmi2, intervenant_pmi, agent_secretariat1]) }
+      it { is_expected.to contain_exactly(agent_pmi1, agent_pmi2, intervenant_pmi, agent_secretariat1) }
     end
 
     context "agent from same service but different orga" do

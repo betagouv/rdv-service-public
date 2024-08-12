@@ -475,9 +475,9 @@ RSpec.describe Rdv, type: :model do
       rdv3 = create(:rdv, organisation: organisation2, agents: [agent2], users: [user])
 
       options = {}
-      expect(described_class.search_for(organisation, options)).to match_array([rdv1, rdv2])
-      expect(described_class.search_for(organisation2, options)).to match_array([rdv3])
-      expect(described_class.search_for(Organisation.all, options)).to match_array([rdv1, rdv2, rdv3])
+      expect(described_class.search_for(organisation, options)).to contain_exactly(rdv1, rdv2)
+      expect(described_class.search_for(organisation2, options)).to contain_exactly(rdv3)
+      expect(described_class.search_for(Organisation.all, options)).to contain_exactly(rdv1, rdv2, rdv3)
     end
 
     it "returns rdv with given status" do
@@ -802,7 +802,7 @@ RSpec.describe Rdv, type: :model do
     before { travel_to now }
 
     it "returns absence overlapping rdv" do
-      expect(subject).to match_array([absence])
+      expect(subject).to contain_exactly(absence)
     end
 
     context "rdv interval is consecutive to absence interval: Absence for 08h-09h and Rdv for 09h-10h" do

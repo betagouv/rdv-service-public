@@ -32,16 +32,7 @@ RSpec.describe CronJob::DestroyOldRdvsAndInactiveAccountsJob do
     expect(Rdv.all).to include(rdv_occurring_23_months_ago, rdv_occurring_11_months_ago)
     expect(Rdv.all).not_to include(rdv_occurring_25_months_ago)
 
-    expect(User.all).to match_array([
-                                      user_without_rdv_created_23_months_ago,
-                                      user_created_25_months_ago_with_a_relative_that_has_a_rdv,
-                                      relative,
-                                      other_relative,
-                                      user_created_25_months_ago_with_a_relative_without_a_rdv,
-                                      relative_without_rdv,
-                                      rdv_occurring_11_months_ago.users.first,
-                                      rdv_occurring_23_months_ago.users.first,
-                                    ])
+    expect(User.all).to contain_exactly(user_without_rdv_created_23_months_ago, user_created_25_months_ago_with_a_relative_that_has_a_rdv, relative, other_relative, user_created_25_months_ago_with_a_relative_without_a_rdv, relative_without_rdv, rdv_occurring_11_months_ago.users.first, rdv_occurring_23_months_ago.users.first)
 
     expect(User.all).not_to include(user_without_rdv_created_25_months_ago)
   end
@@ -57,10 +48,7 @@ RSpec.describe CronJob::DestroyOldRdvsAndInactiveAccountsJob do
     described_class.new.perform
     perform_enqueued_jobs # to perform the DestroyInactiveUsers job
 
-    expect(User.all).to match_array([
-                                      user_without_rdv_created_23_months_ago_invited_23_months_ago,
-                                      user_without_rdv_created_25_months_ago_invited_recently,
-                                    ])
+    expect(User.all).to contain_exactly(user_without_rdv_created_23_months_ago_invited_23_months_ago, user_without_rdv_created_25_months_ago_invited_recently)
 
     expect(User.all).not_to include(user_without_rdv_created_25_months_ago_invited_25_months_ago)
   end

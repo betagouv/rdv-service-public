@@ -122,7 +122,7 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
 
         run_test!
 
-        it { expect(user.reload.organisations).to match_array([organisation]) }
+        it { expect(user.reload.organisations).to contain_exactly(organisation) }
 
         it { expect(user.reload.first_name).to eq(first_name) }
 
@@ -400,7 +400,7 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
 
         it { expect(User.count).to eq(user_count_before + 1) }
 
-        it { expect(created_user.organisations).to match_array([organisation]) }
+        it { expect(created_user.organisations).to contain_exactly(organisation) }
 
         it { expect(created_user.first_name).to eq(first_name) }
 

@@ -145,13 +145,13 @@ RSpec.describe Lieu, type: :model do
         end
 
         it "only returns lieux with a rdv that is available for reservation" do
-          expect(subject).to match_array([lieu])
+          expect(subject).to contain_exactly(lieu)
         end
 
         context "for a single use lieu" do
           let!(:lieu) { create(:lieu, availability: :single_use) }
 
-          it { is_expected.to match_array([lieu]) }
+          it { is_expected.to contain_exactly(lieu) }
         end
       end
     end
