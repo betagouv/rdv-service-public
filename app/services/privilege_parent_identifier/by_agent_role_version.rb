@@ -28,7 +28,7 @@ class PrivilegeParentIdentifier::ByAgentRoleVersion
       .where("created_at < ?", @version.created_at)
       .where("object_changes->'agent_id'->1 = ?", @parent_agent.id.to_s).select do |version|
       organisation = Organisation.find_by(id: version.object_changes["organisation_id"].last)
-      organisation&.territory_id = @version.territory_id && version.object_changes["access_level"].last == "admin"
+      organisation&.territory_id = @version.territory_id && version.object_changes["access_level"]&.last == "admin"
     end
   end
 end
