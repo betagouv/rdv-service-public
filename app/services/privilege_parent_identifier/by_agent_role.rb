@@ -14,9 +14,7 @@ class PrivilegeParentIdentifier::ByAgentRole
       created_at = create_version&.created_at || Date.new(2023, 2, 16) # Date d'ajout des versions sur cette table
       created_at < @version.created_at
     end.any? do |agent_role|
-      agent_role.versions.where(event: :update).map do |version| # on vérifie qu'il n'y a pas eu de changements sur ces permissions
-        version.object_changes["access_level"].blank?
-      end
+      agent_role.paper_trail.version_at(@version.created_at).access_level.to_s == "admin"
     end
   end
 

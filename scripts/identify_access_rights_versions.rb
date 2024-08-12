@@ -1,7 +1,7 @@
 # Les agents territorial_access rights sont créés dès qu'un agent est ajouté à une organisation d'un nouveau territoire
 # donc c'est une bone manière de vérifier l'ajout d'un agent à un territoire ou une organisation
 # Cette méthode ne marche que pour l'année écoulée
-PaperTrail::Version.where.not(item_type: %w[AgentTerritorialRole AgentTerritorialAccessRight Agent AgentRole]).delete_all
+PaperTrail::Version.where.not(item_type: %w[AgentTerritorialRole AgentTerritorialAccessRight Agent AgentRole Organisation]).delete_all
 
 # gestion manuelle des accents dans un cas particulier
 a = Agent.find_by(id: 17017)
@@ -9,7 +9,7 @@ if a
   a.update(first_name: a.first_name.gsub("re", "ré"))
 end
 
-a = Agent.find_by(17350)
+a = Agent.find_by(id: 17350)
 if a
   a.update(first_name: a.first_name.gsub("Lourdes ", ""))
 end

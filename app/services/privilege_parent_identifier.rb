@@ -67,6 +67,11 @@ class PrivilegeParentIdentifier
       end
     end
 
+    possible_agent = version.agent.invited_by
+    if possible_agent.paper_trail.version_at(version.created_at).full_name == whodunnit_full_name
+      agents << possible_agent
+    end
+
     agents.uniq
   end
 end
