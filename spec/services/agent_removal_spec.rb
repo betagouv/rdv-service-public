@@ -36,8 +36,8 @@ RSpec.describe AgentRemoval, type: :service do
       service.remove!
       agent.reload
       expect(agent.organisations).to contain_exactly(organisation2)
-      expect(agent.plage_ouvertures).to contain_exactly(*plage_ouvertures2)
-      expect(agent.absences).to contain_exactly(*absences)
+      expect(agent.plage_ouvertures).to match_array(plage_ouvertures2)
+      expect(agent.absences).to match_array(absences)
     end
   end
 
