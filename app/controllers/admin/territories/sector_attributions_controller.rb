@@ -56,7 +56,7 @@ class Admin::Territories::SectorAttributionsController < Admin::Territories::Bas
   end
 
   def set_sector
-    @sector = Agent::SectorPolicy::Scope.new(current_agent, current_territory.sectors).find(params[:sector_id])
+    @sector = Agent::SectorPolicy::Scope.new(current_agent, current_territory.sectors).resolve.find(params[:sector_id])
   end
 
   def sector_attribution_params
