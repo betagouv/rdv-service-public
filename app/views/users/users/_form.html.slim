@@ -66,5 +66,5 @@ ruby:
     - rdv_wizard.to_query.each do |wizard_key, wizard_value|
       = hidden_field_tag "rdv[#{wizard_key}]", wizard_value
 
-  .text-right
+  .rdv-text-align-right
     = f.button :submit, (rdv_wizard.present? ? "Continuer" : "Modifier")

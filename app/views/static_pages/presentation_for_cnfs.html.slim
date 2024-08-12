@@ -2,14 +2,14 @@ section.py-5.bg-primary
   .fr-container
     .fr-grid-row
       .fr-col-md-9.m-auto
-        h1.text-white.mb-3 Faciliter la gestion des rendez-vous avec vos apprenants
+        h1.rdv-color-white.mb-3 Faciliter la gestion des rendez-vous avec vos apprenants
         .mt-4= link_to "Connectez-vous", new_agent_session_path, class: "btn text-white btn-outline-white bg-primary"
-        p.mt-4.text-white
+        p.mt-4.rdv-color-white
           | RDV Aide Numérique est un outil de prise de rendez-vous en ligne,
             simplifiant votre organisation et rappelant aux usagers leurs rendez-vous.
 section.bg-white.py-5
   .fr-container
-    .text-center.m-auto
+    .rdv-text-align-center.m-auto
       h2.mb-4 RDV Aide Numérique offre des fonctionnalités adaptées à vos besoins&nbsp;:
     .divider
     .fr-grid-row
@@ -80,12 +80,12 @@ section.bg-white.py-5
 section.bg-lightturquoise.py-5
   .fr-container
     .fr-grid-row
-      .fr-col-12.fr-col-md-8.mx-auto.text-center.m-auto
+      .fr-col-12.fr-col-md-8.mx-auto.rdv-text-align-center.m-auto
         h2.mb-2 Ça vous intéresse&nbsp;?
         p.m-auto Vous souhaitez intégrer RDV Aide Numérique dans votre quotidien et simplifier le parcours des usagers&nbsp;?
         .mt-4= link_to "Connectez-vous", new_agent_session_path, class: "btn btn-primary "
     .fr-grid-row.mt-4
-      .fr-col-12.fr-col-md-8.mx-auto.text-center.m-auto
+      .fr-col-12.fr-col-md-8.mx-auto.rdv-text-align-center.m-auto
         p
           ' Si vous n'avez jamais utilisé votre compte, vous pouvez réinitialiser votre mot de passe en indiquant votre adresse
           em
@@ -99,23 +99,23 @@ section.bg-lightturquoise.py-5
 section.bg-white.py-5
   .fr-container
     .fr-grid-row
-      .text-center.m-auto
+      .rdv-text-align-center.m-auto
         h2.mb-2 Aide Numérique en quelques chiffres c’est :
     .fr-grid-row.mt-4.d-flex.justify-content-around.flex-sm-column.flex-md-row.flex-md-nowrap
       .d-flex.flex-column.align-items-center.flex-v-gap-1em
-        .bubble.bg-lightturquoise.text-primary
+        .bubble.bg-lightturquoise.rdv-color-text-action-high-blue-ecume
           | 78
           span.small %
-        .text-center des conseillers numériques qui utilisent l’outil le recommande
+        .rdv-text-align-center des conseillers numériques qui utilisent l’outil le recommande
       .d-flex.flex-column.align-items-center.flex-v-gap-1em
-        .bubble.bg-lightturquoise.text-primary
+        .bubble.bg-lightturquoise.rdv-color-text-action-high-blue-ecume
           | 27018
-        .text-center RDVs créés par des conseillers numériques
+        .rdv-text-align-center RDVs créés par des conseillers numériques
       .d-flex.flex-column.align-items-center.flex-v-gap-1em
-        .bubble.bg-lightturquoise.text-primary
+        .bubble.bg-lightturquoise.rdv-color-text-action-high-blue-ecume
           | 47
           span.small %
-        .text-center de conseillers numériques ont intégrés l’outil dans le quotidien
+        .rdv-text-align-center de conseillers numériques ont intégrés l’outil dans le quotidien
 
 section.bg-lightturquoise.py-5
   .fr-container
@@ -143,5 +143,5 @@ section.bg-lightturquoise.py-5
               | Numérique et moi-même sommes ravis de cette plateforme. »
           figcaption
             p.fr-quote__author Témoignage recueilli via sondage
-      .fr-col-3.text-center.d-none.d-lg-flex
+      .fr-col-3.rdv-text-align-center.d-none.d-lg-flex
         = image_tag "static_pages/social.svg", class: "rdv-max-width-60 rdv-max-width-md-100 p-3", alt: "Une agente travaille sur son ordinateur"

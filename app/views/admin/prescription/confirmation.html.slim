@@ -44,4 +44,4 @@ main.container
             li.list-group-item
               = "Besoin de déplacer le rendez-vous ou de corriger un détail ? "
               =< mail_to(current_domain.support_email, "Contactez-nous", target: "_blank")
-          .mt-4.text-center= link_to "Retour à l'accueil", admin_organisation_agent_agenda_path(current_organisation, current_agent)
+          .mt-4.rdv-text-align-center= link_to "Retour à l'accueil", admin_organisation_agent_agenda_path(current_organisation, current_agent)

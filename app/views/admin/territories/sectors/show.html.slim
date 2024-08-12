@@ -38,7 +38,7 @@
             span> Ajouter une commune ou une rue
       - else
         .p-2.d-flex.align-items-center
-          div.flex-grow-1.text-center= page_entries_info @zones
+          div.flex-grow-1.rdv-text-align-center= page_entries_info @zones
           div= link_to new_admin_territory_sector_zone_path(current_territory, @sector), class: "btn btn-primary" do
             i.fa.fa-plus>
             span> Ajouter une commune ou une rue
@@ -65,7 +65,7 @@
                   - if policy.destroy?
                     = link_to "retirer", admin_territory_sector_zone_path(current_territory, @sector, zone), method: :delete
         div= paginate @zones
-        .mb-2.text-center
+        .mb-2.rdv-text-align-center
           .mb-2= page_entries_info @zones
           - if @zones.count > 5
             .mb-2= link_to( \

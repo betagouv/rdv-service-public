@@ -4,14 +4,14 @@
   p Votre compte est déjà connecté à outlook et vos rendez-vous y sont donc synchronisés. Vous pouvez vous deconnecter si vous le souhaitez en cliquant sur le bouton ci-dessous.
   p Attention, cela aura pour effect de supprimer tous vos rendez-vous #{current_domain.name} de votre agenda Outlook.
 
-  div.text-center
+  div.rdv-text-align-center
     = link_to "Déconnecter votre compte Outlook", agents_calendar_sync_outlook_sync_path, class: "btn btn-primary m-2 #{'disabled' if current_agent.outlook_disconnect_in_progress?}", method: :delete
 
 - else
 
   p Vous pouvez envoyer automatiquement vos rendez-vous dans Outlook en vous connectant à votre compte grâce au bouton ci-dessous.
 
-  div.text-center
+  div.rdv-text-align-center
     = link_to "/omniauth/microsoft_graph?login_hint=#{current_agent.email}", class: "mb-4", method: :post do
       = image_tag("sign_in_with_microsoft.svg", alt: "S'identifier avec Microsoft")
 
