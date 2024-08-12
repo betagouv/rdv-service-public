@@ -9,6 +9,7 @@ AllCops:
     - "node_modules/**/*"
     - "db/schema.rb"
     - "db/migrate/*good_job*.rb"
+    - "scripts/screenshots/**/*"
   NewCops: enable
   TargetRubyVersion: 3.1.2
 
@@ -218,6 +219,10 @@ Rails/ActionOrder:
 
 RSpec/ChangeByZero:
   Enabled: false
+
+RSpec/SpecFilePathFormat:
+  Exclude:
+    - "spec/mailers/admins/sfr_mail_2_sms_mailer_spec.rb"
 
 #  STYLE rules
 
