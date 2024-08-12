@@ -121,6 +121,9 @@ Rails/ThreeStateBooleanColumn:
 Rails/WhereRange:
   Enabled: false
 
+Rails/I18nLocaleTexts:
+  Enabled: false
+
 # This allows the standard syntax for the `change` matcher, see:
 # https://relishapp.com/rspec/rspec-expectations/docs/built-in-matchers/change-matcher
 Lint/AmbiguousBlockAssociation:
