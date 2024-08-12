@@ -316,13 +316,10 @@ Rails.application.routes.draw do
   # TODO: remplacer `prendre_rdv` par le root_path
   get "/prendre_rdv", to: "search#search_rdv"
 
-  # rubocop:disable Style/FormatStringToken
   # temporary route after admin namespace introduction
   get "/organisations/*rest", to: redirect("admin/organisations/%{rest}")
   # old agenda rule was bookmarked by some agents
   get "admin/organisations/:organisation_id/agents/:agent_id", to: redirect("/admin/organisations/%{organisation_id}/agent_agendas/%{agent_id}")
-  # rubocop:enable Style/FormatStringToken
-
   post "/inbound_emails/sendinblue", controller: :inbound_emails, action: :sendinblue
 
   # This route redirects invitations to rdv-insertion so that rdv-insertion

@@ -1,6 +1,6 @@
 module UserNotificationsHelper
   def user_notifiable_by_sms_text(user)
-    notif_details = 
+    notif_details =
       if user.phone_number.blank?
         nil
       elsif !user.phone_number_mobile?

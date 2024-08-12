@@ -136,7 +136,7 @@ RSpec.describe User, type: :model do
             relative = create(:user, responsible: responsible)
 
             responsible.soft_delete(organisation)
-            expect(relative.reload.deleted_at).to be(nil)
+            expect(relative.reload.deleted_at).to be_nil
           end
         end
 

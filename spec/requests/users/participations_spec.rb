@@ -23,7 +23,7 @@ RSpec.describe "Users::Participants", type: :request do
     describe "POST /users/rdvs/:rdv_id/participants on an individual rdv (params override by user)" do
       it "redirect because pundit auth fails" do
         post users_rdv_participations_path(rdv_indiv)
-        expect(flash[:notice]).to be(nil)
+        expect(flash[:notice]).to be_nil
         expect(response).to redirect_to(users_rdvs_path) # Pundit redirects when authorization fails
       end
     end

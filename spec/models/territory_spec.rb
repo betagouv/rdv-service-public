@@ -22,7 +22,7 @@ RSpec.describe Territory, type: :model do
     context "new territory without departement_number" do
       let(:territory) { build(:territory, name: nil, departement_number: "") }
 
-      it { is_expected.to be nil }
+      it { is_expected.to be_nil }
     end
 
     context "new territory with recognized departement_number" do
@@ -40,7 +40,7 @@ RSpec.describe Territory, type: :model do
     context "new territory with departement_number not recognized" do
       let(:territory) { build(:territory, name: "", departement_number: "600") }
 
-      it { is_expected.to be nil }
+      it { is_expected.to be_nil }
     end
   end
 

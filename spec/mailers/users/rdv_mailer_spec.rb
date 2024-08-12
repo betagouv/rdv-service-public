@@ -155,7 +155,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
       mail = described_class.with(rdv: rdv, user: user, token: token).rdv_cancelled
 
       expected_url = prendre_rdv_url(
-        departement: rdv.organisation.departement_number, 
+        departement: rdv.organisation.departement_number,
         motif_name_with_location_type: rdv.motif.name_with_location_type, \
         organisation_ids: [rdv.organisation_id], \
         address: rdv.address, \

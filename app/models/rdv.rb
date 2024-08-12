@@ -390,7 +390,7 @@ class Rdv < ApplicationRecord
 
   def starts_at_is_plausible
     return unless will_save_change_to_attribute?("starts_at")
-    return unless starts_at > Time.zone.now + 2.years
+    return unless starts_at > 2.years.from_now
 
     errors.add(:starts_at, :must_be_within_two_years)
   end
