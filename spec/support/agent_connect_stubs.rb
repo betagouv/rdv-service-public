@@ -3,8 +3,8 @@ module AgentConnectStubs
 
   def self.stub_and_run_discover_request
     WebMock.stub_request(:get, "https://fca.integ01.dev-agentconnect.fr/api/v2/.well-known/openid-configuration")
-      .to_return(status: 200, body: File.read("#{::Rails.root}/spec/fixtures/agent_connect/openid-configuration.json"), headers: {})
-    load "#{::Rails.root}/config/initializers/agent_connect.rb"
+      .to_return(status: 200, body: File.read("#{Rails.root.join("spec/fixtures/agent_connect/openid-configuration.json")}"), headers: {})
+    load "#{Rails.root.join("config/initializers/agent_connect.rb")}"
   end
 
   def self.stub_callback_requests(code, user_info)
@@ -16,7 +16,7 @@ module AgentConnectStubs
 
     stub_userinfo_request(userinfo_encoded_response_body)
 
-    jwks_json = File.read("#{::Rails.root}/spec/fixtures/agent_connect/jwks.json")
+    jwks_json = File.read("#{Rails.root.join("spec/fixtures/agent_connect/jwks.json")}")
     WebMock.stub_request(:get, "https://fca.integ01.dev-agentconnect.fr/api/v2/jwks").to_return(status: 200, body: jwks_json, headers: {})
 
     jwks = JSON.parse(jwks_json)
