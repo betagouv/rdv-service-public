@@ -49,6 +49,7 @@ RSpec.configure do |config|
   config.include ActiveJob::TestHelper
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include Warden::Test::Helpers, type: :feature
+  config.include FillInReadOnlyInputHelper, type: :feature
   config.include Sentry::TestHelper
   config.include DeviseRequestSpecHelpers, type: :request
   config.include NotificationsHelper

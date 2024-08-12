@@ -14,8 +14,8 @@ RSpec.describe "Agent can setup sectorisation", type: :feature do
     fill_in :sector_human_id, with: "nord"
     click_on "Enregistrer"
     click_on "Ajouter une commune ou une rue"
-    find("#zone_city_name").native["value"] = "Valence"
-    find("#zone_city_code").native["value"] = "26362"
+    fill_in_readonly_input("#zone_city_name", "Valence")
+    fill_in_readonly_input("#zone_city_code", "26362")
     click_on "Enregistrer"
     click_on "Attribuer une organisation ou un agent"
     select "MDS Drôme", from: "Organisation"
