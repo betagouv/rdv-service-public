@@ -1,7 +1,7 @@
 class NextAvailabilityService
   def self.find(motif, lieu, agents, from:, to: nil)
     from = from.to_datetime # rubocop:disable Style/DateTime
-    to = to&.to_datetime || (from + 6.months)
+    to = to&.to_datetime || (from + 6.months) # rubocop:disable Style/DateTime
 
     from.step(to, 7).find do |date|
       # NOTE: LOOP 2 loop here for ~ 27 weeks
