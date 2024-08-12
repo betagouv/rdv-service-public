@@ -272,6 +272,9 @@ Style/SoleNestedConditional:
 Style/FetchEnvVar:
   Enabled: false
 
+Style/ArgumentsForwarding:
+  Enabled: false
+
 # cette vérification serait bien à mettre en place mais il y plus de 20 specs qui ne la respectent pas aujourd’hui
 RSpec/NoExpectationExample:
   Enabled: false

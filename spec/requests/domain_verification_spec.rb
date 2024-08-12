@@ -4,7 +4,7 @@ RSpec.describe "Microsoft domain verification" do
 
   it "shows the public app id at the correct route" do
     get "/.well-known/microsoft-identity-association.json"
-    parsed_response = JSON.parse(response.body)
+    parsed_response = response.parsed_body
     expect(parsed_response.dig("associatedApplications", 0, "applicationId")).to eq "public_client_id_123456"
   end
 end

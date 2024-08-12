@@ -34,7 +34,7 @@ RSpec.describe Admin::Agenda::RdvsController, type: :controller do
     rdv_from_other_organisation = create(:rdv, agents: [given_agent], organisation: other_organisation, starts_at: mercredi_15h)
     get :index, params: fullcalendar_time_range_params.merge(agent_id: given_agent.id, organisation_id: organisation.id, format: :json)
 
-    returns_rdvs = JSON.parse(response.body)
+    returns_rdvs = response.parsed_body
     expect(returns_rdvs.pluck("id")).to contain_exactly(rdv.id, rdv_from_other_organisation.id)
 
     # Les RDVs des autres orgas sont affichés en gris
@@ -49,6 +49,6 @@ RSpec.describe Admin::Agenda::RdvsController, type: :controller do
     create(:rdv, agents: [agent], organisation: organisation, starts_at: mardi_en_huit_15h)
 
     get :index, params: fullcalendar_time_range_params.merge(agent_id: agent.id, organisation_id: organisation.id, format: :json)
-    expect(JSON.parse(response.body).pluck("id")).to eq([rdv.id])
+    expect(response.parsed_body.pluck("id")).to eq([rdv.id])
   end
 end
