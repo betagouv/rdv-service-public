@@ -21,9 +21,6 @@ class Admin::Territories::BaseController < ApplicationController
   helper_method :pundit_user
 
   # L'usage recommandé est de passer explicitement une policy_scope_class pour savoir quelle policy est utilisé
-  def policy_scope(scope, policy_scope_class:)
-    super
-  end
 
   private
 
