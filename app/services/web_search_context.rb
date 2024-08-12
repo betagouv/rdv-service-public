@@ -30,7 +30,7 @@ class WebSearchContext < SearchContext
   end
 
   def departement
-    @departement ||= (@query_params[:departement] || public_link_organisation&.departement_number)
+    @departement ||= @query_params[:departement] || public_link_organisation&.departement_number
   end
 
   def organisation_id

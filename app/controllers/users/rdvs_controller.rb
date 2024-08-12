@@ -46,7 +46,7 @@ class Users::RdvsController < UserAuthController
     else
       # TODO: cette liste de paramètres devrait ressembler a SearchController#search_params, mais sans certains paramètres de choix du wizard de créneaux
       query = {
-        address: (new_rdv_extra_params[:address] || new_rdv_extra_params[:where]),
+        address: new_rdv_extra_params[:address] || new_rdv_extra_params[:where],
         city_code: new_rdv_extra_params[:city_code], street_ban_id: new_rdv_extra_params[:street_ban_id],
         service: motif.service.id, motif_name_with_location_type: motif.name_with_location_type,
         departement: new_rdv_extra_params[:departement], organisation_ids:  new_rdv_extra_params[:organisation_ids],

@@ -115,7 +115,7 @@ class MergeUsersForm
     return false if send(frozen_field).blank?
 
     selected_value = number_to_user(send(frozen_field)).send(frozen_field)
-    ((user1.logged_once_with_franceconnect? && selected_value != user1.send(frozen_field)) ||
-         (user2.logged_once_with_franceconnect? && selected_value != user2.send(frozen_field)))
+    (user1.logged_once_with_franceconnect? && selected_value != user1.send(frozen_field)) ||
+         (user2.logged_once_with_franceconnect? && selected_value != user2.send(frozen_field))
   end
 end
