@@ -169,7 +169,7 @@ RSpec.describe "Agent can create a Rdv with wizard" do
         stub_request(:post, "https://example.com/")
         click_button("Créer RDV")
         expect(WebMock).to(have_requested(:post, "https://example.com/").with do |req|
-          JSON.parse(req.body)["data"]["users"].map { |user| user["id"] } == [user.id]
+          JSON.parse(req.body)["data"]["users"].pluck("id") == [user.id]
         end)
       end
     end
