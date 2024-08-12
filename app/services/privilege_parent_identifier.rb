@@ -12,33 +12,13 @@ class PrivilegeParentIdentifier
     return true if privilege_creation_version.whodunnit.start_with?("[SuperAdmin]")
 
     agents = find_agents
-    return false unless agents.any?
 
     agents.each do |agent|
-      puts "Agent found"
+      Rails.logger.info "Agent found"
 
       territory_id = version.territory_id
 
-      parent_territorial_role = AgentTerritorialRole.find_by(agent_id: agent.id, territory_id: territory_id)
-
-      if parent_territorial_role
-        puts "Parent role found"
-
-        # Les versions sur cette table ont été ajoutées dans une pr du 27/6/2023 https://github.com/betagouv/rdv-service-public/pull/3579
-        parent_territorial_role_created_at = parent_territorial_role.versions.where(event: :create)&.first&.created_at || Date.new(2023, 6, 27)
-
-        if parent_territorial_role_created_at < privilege_creation_version.created_at
-          return true
-        end
-      end
-
-      # Jusqu'à https://github.com/betagouv/rdv-service-public/pull/4524/files, le droit allow_to_manage_access_rights suffisait pour créer un admin de territoire
-      parent_territorial_access_rights = AgentTerritorialAccessRight.where("created_at < ?", version.created_at)
-        .where(allow_to_manage_access_rights: true).find_by(agent_id: agent.id, territory_id: territory_id)
-
-      if parent_territorial_access_rights
-        return true
-      end
+      return true if PrivilegeParentIdentifier::ByAgentTerritorialRole.new(version, agent).identified?
 
       if version_has_no_territory_privilege? # On est en train de créer un access right, probablement pour ajouter l'agent à une organisation
         agent_roles = possible_parent_agent_roles(agent)
