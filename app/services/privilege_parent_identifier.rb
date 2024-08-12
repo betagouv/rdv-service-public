@@ -13,6 +13,10 @@ class PrivilegeParentIdentifier
 
     agents = find_agents
 
+    return true if agents.all? do |agent|
+      agent.email.end_with?("beta.gouv.fr")
+    end
+
     agents.each do |agent|
       Rails.logger.info "Agent found"
 

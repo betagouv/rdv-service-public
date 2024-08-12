@@ -25,7 +25,7 @@ privilege_creations.where("whodunnit ilike '[SuperAdmin]%'").update_all(identifi
 privilege_creations.find_each do |privilege_creation|
   puts Time.zone.now
   identifer = PrivilegeParentIdentifier.new(privilege_creation)
-  privilege_creation.update(identified: identifer.parent_privilege?.to_b)
+  privilege_creation.update!(identified: identifer.parent_privilege?.to_b)
 end
 
 puts "test"
