@@ -71,7 +71,7 @@ class Agent::UserPolicy < DefaultAgentPolicy
     # returns ids for persisted join records so it doesn't work for new records
     # nor updates. we cannot either use pluck for the same reason
 
-    authorized_organisation_ids = \
+    authorized_organisation_ids = 
       if current_organisation
         if current_organisation.territory.visible_users_throughout_the_territory
           current_organisation.territory.organisation_ids

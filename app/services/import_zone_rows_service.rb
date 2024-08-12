@@ -35,7 +35,7 @@ class ImportZoneRowsService < BaseService
   def valid?
     return @valid unless @valid.nil? # avoid computing multiple times
 
-    @valid = \
+    @valid = 
       validate_rows_present? &&
       validate_columns? &&
       validate_inner_conflicts_cities? &&
