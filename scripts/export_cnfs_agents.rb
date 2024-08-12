@@ -12,10 +12,8 @@ class ExportCnfsAgents
       agents_with_rdvs_collectif
     ]
 
-    export_files = []
-
-    commands.each do |command|
-      export_files << to_csv(send(command), filename: "#{command}.csv")
+    export_files = commands.map do |command|
+      to_csv(send(command), filename: "#{command}.csv")
     end
 
     puts "Exports files are located at", export_files
