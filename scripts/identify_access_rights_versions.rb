@@ -4,13 +4,17 @@
 PaperTrail::Version.where.not(item_type: %w[AgentTerritorialRole AgentTerritorialAccessRight Agent AgentRole]).delete_all
 
 # gestion manuelle des accents dans un cas particulier
-a = Agent.find(17017)
-a.update(first_name: a.first_name.gsub("re", "ré"))
+a = Agent.find_by(id: 17017)
+if a
+  a.update(first_name: a.first_name.gsub("re", "ré"))
+end
 
-a = Agent.find(17350)
-a.update(first_name: a.first_name.gsub("Lourdes ", ""))
+a = Agent.find_by(17350)
+if a
+  a.update(first_name: a.first_name.gsub("Lourdes ", ""))
+end
 
-privilege_creations = PaperTrail::Version.where(item_type: %w[AgentTerritorialRole AgentTerritorialAccessRight])
+privilege_creations = PaperTrail::Version.where(item_type: %w[AgentTerritorialRole AgentTerritorialAccessRight AgentRole])
   .where(event: "create")
   .where(identified: false); nil
 

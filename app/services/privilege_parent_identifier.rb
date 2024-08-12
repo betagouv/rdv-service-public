@@ -31,6 +31,14 @@ class PrivilegeParentIdentifier
 
   def find_agents
     agent_last_name = version.whodunnit[/[A-ZÉ][A-ZÉ].*$/]
+
+    whodunnit_full_name = version.whodunnit.gsub("[Agent]", "").strip
+    if agent_last_name.nil?
+      return Agent.search_by_text(version.whodunnit.gsub("[Agent] ", "").split.first).to_a.select do |agent|
+        agent.full_name == whodunnit_full_name
+      end
+    end
+
     agent_first_name = version.whodunnit.gsub(agent_last_name, "").gsub("[Agent]", "").strip
 
     if version.whodunnit == "[Agent] #{agent_last_name}" # ce if gère le cas d'un last name mal parsé par la regex au dessus
@@ -42,8 +50,11 @@ class PrivilegeParentIdentifier
 
     agents += Agent.where("first_name ilike ?", agent_first_name).where("last_name ilike ?", agent_last_name.capitalize)
 
-    whodunnit_full_name = version.whodunnit.gsub("[Agent]", "").strip
     agents += Agent.search_by_text(agent_last_name).to_a.select do |agent|
+      agent.full_name == whodunnit_full_name
+    end
+
+    agents += Agent.search_by_text(version.whodunnit.gsub("[Agent] ", "").split.first).to_a.select do |agent|
       agent.full_name == whodunnit_full_name
     end
 

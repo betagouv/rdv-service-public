@@ -5,16 +5,12 @@ class PrivilegeParentIdentifier::ByAgentTerritorialRole
   end
 
   def identified?
-    parent_territorial_role = AgentTerritorialRole.find_by(agent_id: @parent_agent.id, territory_id: version.territory_id)
+    parent_territorial_role = AgentTerritorialRole.find_by(agent_id: @parent_agent.id, territory_id: @version)
+    return unless parent_territorial_role
 
-    if parent_territorial_role
+    # On a commencé à avoir des versions sur cette table le 27/6/2023
+    parent_territorial_role_created_at = parent_territorial_role.versions.find_by(event: :create)&.created_at || Date.new(2023, 6, 27)
 
-      # Les versions sur cette table ont été ajoutées dans une pr du 27/6/2023 https://github.com/betagouv/rdv-service-public/pull/3579
-      parent_territorial_role_created_at = parent_territorial_role.versions.where(event: :create)&.first&.created_at || Date.new(2023, 6, 27)
-
-      if parent_territorial_role_created_at < privilege_creation_version.created_at
-        true
-      end
-    end
+    parent_territorial_role_created_at < @version.created_at
   end
 end

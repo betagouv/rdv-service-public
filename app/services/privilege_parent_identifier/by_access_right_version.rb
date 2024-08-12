@@ -5,6 +5,8 @@ class PrivilegeParentIdentifier::ByAccessRightVersion
   end
 
   def identified?
+    return unless @version.territory_id
+
     access_rights_not_deleted_at_time_of_version_creation.any?
   end
 

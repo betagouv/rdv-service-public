@@ -5,6 +5,8 @@ class PrivilegeParentIdentifier::ByTerritorialRoleVersion
   end
 
   def identified?
+    return unless @version.territory_id
+
     territorial_roles_not_deleted_at_time_of_version_creation.any?
   end
 
