@@ -8,7 +8,7 @@ class FallbackErrorMiddleware
     response = @app.call(env)
 
     if failsafe_response_from_default_middleware?(response)
-      [500, { Rack::CONTENT_TYPE => "text/html; charset=utf-8" }, [File.read(Rails.root.join("public/maintenance.html"))]]
+      [500, { Rack::CONTENT_TYPE => "text/html; charset=utf-8" }, [Rails.root.join("public/maintenance.html").read]]
     else
       response
     end
