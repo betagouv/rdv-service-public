@@ -115,6 +115,12 @@ Rails/ActiveRecordCallbacksOrder:
 Rails/FindEach:
   Enabled: false
 
+Rails/ThreeStateBooleanColumn:
+  Enabled: false
+
+Rails/WhereRange:
+  Enabled: false
+
 # This allows the standard syntax for the `change` matcher, see:
 # https://relishapp.com/rspec/rspec-expectations/docs/built-in-matchers/change-matcher
 Lint/AmbiguousBlockAssociation:
@@ -258,4 +264,8 @@ Style/SoleNestedConditional:
   Enabled: false
 
 Style/FetchEnvVar:
+  Enabled: false
+
+# cette vérification serait bien à mettre en place mais il y plus de 20 specs qui ne la respectent pas aujourd’hui
+RSpec/NoExpectationExample:
   Enabled: false
