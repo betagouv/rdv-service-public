@@ -5,7 +5,7 @@ class PrivilegeParentIdentifier::PrivilegeVersion < SimpleDelegator
   end
 
   def no_territory_privilege?
-    event == "create" && item_type == "AgentTerritorialAccessRight" && !access_right_changes?
+    item_type == "AgentRole" || (event == "create" && item_type == "AgentTerritorialAccessRight" && !access_right_changes?)
   end
 
   private
