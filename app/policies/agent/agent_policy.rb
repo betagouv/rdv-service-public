@@ -10,10 +10,7 @@ class Agent::AgentPolicy < ApplicationPolicy
   end
 
   def admin_in_record_organisation?
-    (
-      record.roles.map(&:organisation_id) &
-      current_agent.roles.access_level_admin.pluck(:organisation_id)
-    ).any?
+    record.roles.map(&:organisation_id).intersect?(current_agent.roles.access_level_admin.pluck(:organisation_id))
   end
 
   alias show? current_agent_or_admin_in_record_organisation?

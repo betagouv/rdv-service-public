@@ -2,7 +2,7 @@ class User::RdvPolicy < ApplicationPolicy
   alias current_user pundit_user
 
   def rdv_belongs_to_user_or_relatives?
-    (record.user_ids & current_user.available_users_for_rdv.pluck(:id)).any?
+    record.user_ids.intersect?(current_user.available_users_for_rdv.pluck(:id))
   end
 
   def index?

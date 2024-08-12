@@ -9,10 +9,10 @@ class Agent::ReferentAssignationPolicy < DefaultAgentPolicy
   protected
 
   def same_agent_territory?
-    (@record.agent.organisations.map(&:territory_id) & current_agent.organisations.map(&:territory_id)).any?
+    @record.agent.organisations.map(&:territory_id).intersect?(current_agent.organisations.map(&:territory_id))
   end
 
   def same_user_org?
-    (@record.user.organisation_ids & current_agent.organisation_ids).any?
+    @record.user.organisation_ids.intersect?(current_agent.organisation_ids)
   end
 end

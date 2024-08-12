@@ -82,7 +82,7 @@ class Agent::UserPolicy < DefaultAgentPolicy
         current_agent.organisation_ids
       end
 
-    (@record.user_profiles.map(&:organisation_id) & authorized_organisation_ids).present?
+    @record.user_profiles.map(&:organisation_id).intersect?(authorized_organisation_ids)
 
     # also, this is not strictly speaking correct. this only checks that the
     # resulting user will belong to the current organisation, but it should also
