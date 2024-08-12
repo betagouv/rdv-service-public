@@ -5,7 +5,7 @@ class PrivilegeParentIdentifier::ByAgentTerritorialRole
   end
 
   def identified?
-    parent_territorial_role = AgentTerritorialRole.find_by(agent_id: @parent_agent.id, territory_id: @version)
+    parent_territorial_role = AgentTerritorialRole.find_by(agent_id: @parent_agent.id, territory_id: @version.territory_id)
     return unless parent_territorial_role
 
     # On a commencé à avoir des versions sur cette table le 27/6/2023
