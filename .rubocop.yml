@@ -210,6 +210,9 @@ RSpec/ReceiveMessages:
 Rails/ActionOrder:
   Enabled: false
 
+RSpec/ChangeByZero:
+  Enabled: false
+
 #  STYLE rules
 
 Style/AsciiComments:
