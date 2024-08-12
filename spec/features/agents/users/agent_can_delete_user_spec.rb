@@ -8,7 +8,7 @@ RSpec.describe "Agent can delete user" do
     visit admin_organisation_user_path(organisation, user)
   end
 
-  it "delete user", js: true do
+  it "delete user", :js do
     click_link("Supprimer")
     page.driver.browser.switch_to.alert.accept
     expect_page_title("Vos usagers")

@@ -8,7 +8,7 @@ RSpec.describe "Agent can delete a relative" do
     create(:user, :relative, responsible: user, first_name: "Mimi", last_name: "LEGENDE")
   end
 
-  it "works", js: true do
+  it "works", :js do
     login_as(agent, scope: :agent)
     visit admin_organisation_user_path(organisation, relative)
     click_link("Supprimer")

@@ -77,7 +77,7 @@ RSpec.describe "Adding a user to a collective RDV" do
     end.at_least_once)
   end
 
-  context "Nominal cases", js: true do
+  context "Nominal cases", :js do
     it "with a signed in user" do
       motif.update!(restriction_for_rdv: "Test restriction")
       login_as(logged_user, scope: :user)
@@ -193,7 +193,7 @@ RSpec.describe "Adding a user to a collective RDV" do
         expect_webhooks_for(user)
       end
 
-      it "display rdv with cancelled tag when participation is excused or rdv is revoked", js: true do
+      it "display rdv with cancelled tag when participation is excused or rdv is revoked", :js do
         params.merge!(invitation_token: invitation_token)
         visit root_path(params)
 
@@ -224,7 +224,7 @@ RSpec.describe "Adding a user to a collective RDV" do
         expect_no_notifications_for(rdv, user, :rdv_created)
       end
 
-      it "can cancel collective rdv participation, with mail notifications only", js: true do
+      it "can cancel collective rdv participation, with mail notifications only", :js do
         params.merge!(invitation_token: invitation_token)
         visit root_path(params)
 
@@ -246,7 +246,7 @@ RSpec.describe "Adding a user to a collective RDV" do
         expect_webhooks_for(user)
       end
 
-      it "can cancel collective rdv participation, without notifications", js: true do
+      it "can cancel collective rdv participation, without notifications", :js do
         params.merge!(invitation_token: invitation_token)
         visit root_path(params)
 

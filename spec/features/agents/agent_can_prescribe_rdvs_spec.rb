@@ -48,7 +48,7 @@ RSpec.describe "agents can prescribe rdvs" do
   describe 'using "Trouver un RDV"' do
     let!(:existing_user) { create(:user, first_name: "Francis", last_name: "FACTICE", organisations: [org_mds], address: "16 Quai de la Loire, Paris, 75019") }
 
-    it "works (happy path)", js: true do
+    it "works (happy path)", :js do
       go_to_prescription_page
       expect(page).to have_content("Nouveau RDV par prescription")
       # Select Service
@@ -99,7 +99,7 @@ RSpec.describe "agents can prescribe rdvs" do
       let!(:motif_collectif) { create(:motif, :collectif, organisation: org_mds, service: service_rsa) }
       let!(:collective_rdv) { create(:rdv, :collectif, organisation: org_mds, starts_at: now + 1.day, motif: motif_collectif, lieu: mds_paris_nord, created_by: current_agent) }
 
-      it "works", js: true do
+      it "works", :js do
         go_to_prescription_page
         expect(page).to have_content("Nouveau RDV par prescription")
         # Select Service
@@ -133,7 +133,7 @@ RSpec.describe "agents can prescribe rdvs" do
   end
 
   describe "creating a user along the way" do
-    it "leaves the user both in local and distant organisation", js: true do
+    it "leaves the user both in local and distant organisation", :js do
       go_to_prescription_page
       # Select Service
       find("h3", text: motif_mds.service.name).ancestor("a").click
@@ -158,7 +158,7 @@ RSpec.describe "agents can prescribe rdvs" do
     # Cette spec a été ajoutée suite à un bug qui faisait qu'on si on
     # revenait à l'étape de sélection usager et qu'on en créait un nouveau,
     # il n'était pas validé car le `user_ids` de l'ancien restant dans l'URL.
-    it "allows going back to change the user", js: true do
+    it "allows going back to change the user", :js do
       go_to_prescription_page
       # Select Service
       find("h3", text: motif_mds.service.name).ancestor("a").click
@@ -217,7 +217,7 @@ RSpec.describe "agents can prescribe rdvs" do
       expect(Rdv.last.participations.first.created_by_agent_prescripteur).to be(true)
     end
 
-    describe "with sectorization", js: true do
+    describe "with sectorization", :js do
       let!(:sector) { create(:sector, territory: territory) }
       let!(:sector_attribution) { create(:sector_attribution, sector: sector, organisation: org_mds) }
       let!(:zone) do
@@ -296,7 +296,7 @@ RSpec.describe "agents can prescribe rdvs" do
       )
     end
 
-    it "truncates personal info while searching, also add the user to destination organisation", js: true do
+    it "truncates personal info while searching, also add the user to destination organisation", :js do
       login_as(current_agent, scope: :agent)
       visit root_path
       within(".left-side-menu") { click_on "Trouver un RDV" }

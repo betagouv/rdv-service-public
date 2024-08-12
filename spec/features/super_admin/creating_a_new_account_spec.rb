@@ -1,4 +1,4 @@
-RSpec.describe "Creating a new account for a new project, other than a mairie", js: true do
+RSpec.describe "Creating a new account for a new project, other than a mairie", :js do
   let(:super_admin) { create(:super_admin, :support) }
 
   let(:autocomplete_response) do

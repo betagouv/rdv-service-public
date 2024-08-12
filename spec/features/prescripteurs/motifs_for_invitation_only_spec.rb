@@ -11,7 +11,7 @@ RSpec.describe "motifs for invitation only" do
   context "when organisation's verticale is not rdv_insertion" do
     let(:organisation) { create(:organisation, territory: territory, name: "MDS du quartier") }
 
-    specify "setting a motif as prescripteurs only from the agents form", js: true do
+    specify "setting a motif as prescripteurs only from the agents form", :js do
       visit edit_admin_organisation_motif_path(organisation, motif)
       find("#tab_resa_en_ligne").click
 
@@ -28,7 +28,7 @@ RSpec.describe "motifs for invitation only" do
   context "when organisation's verticale is rdv_insertion" do
     let!(:organisation) { create(:organisation, territory: territory, name: "PE", verticale: "rdv_insertion") }
 
-    specify "setting a motif as prescripteurs and invited users from the agents form", js: true do
+    specify "setting a motif as prescripteurs and invited users from the agents form", :js do
       visit edit_admin_organisation_motif_path(organisation, motif)
       find("#tab_resa_en_ligne").click
 

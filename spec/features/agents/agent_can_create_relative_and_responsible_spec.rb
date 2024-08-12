@@ -7,7 +7,7 @@ RSpec.describe "Admin can configure the organisation" do
     visit new_admin_organisation_user_path(organisation)
   end
 
-  it "CRUD on lieux", js: true do
+  it "CRUD on lieux", :js do
     expect_page_title("Nouvel usager")
     choose("Proche")
     fill_in("Prénom", with: "enfant-prenom", match: :first)

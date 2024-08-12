@@ -118,7 +118,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
       stub_ants_status("5544332211", appointments: [])
     end
 
-    it "can add a relative with their ants_pre_demande_number", js: true do
+    it "can add a relative with their ants_pre_demande_number", :js do
       time = Time.zone.now.change(hour: 9, min: 0)
       creneaux_url = creneaux_url(starts_at: time.strftime("%Y-%m-%d %H:%M"), lieu_id: lieu.id, motif_id: passport_motif.id, public_link_organisation_id: organisation.id, duration: 50)
       visit creneaux_url

@@ -97,7 +97,7 @@ RSpec.describe "Agent can see RDV details correctly" do
     context "when the rdv is over" do
       let(:starts_at) { 1.day.ago }
 
-      it "allows editing the RDV status", js: true do
+      it "allows editing the RDV status", :js do
         visit admin_organisation_rdv_path(organisation, rdv)
         find(".btn", text: "À renseigner").click
         expect do

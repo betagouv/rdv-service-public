@@ -7,7 +7,7 @@ RSpec.describe "Agent can CRUD intervenants" do
 
   before { login_as(agent_admin, scope: :agent) }
 
-  specify "full intervenant lifecycle", js: true do
+  specify "full intervenant lifecycle", :js do
     visit admin_organisation_agents_path(organisation)
     expect_page_title("Agents de Organisation n°1")
 
@@ -116,7 +116,7 @@ RSpec.describe "Agent can CRUD intervenants" do
   end
 
   describe "validation errors on agent email when turning an intervenant into an agent with account" do
-    it "displays errors", js: true do
+    it "displays errors", :js do
       visit admin_organisation_agents_path(organisation)
       click_link "INTERVENANT1"
 

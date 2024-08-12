@@ -57,7 +57,7 @@ RSpec.describe "Agent can CRUD motifs" do
       expect(page).to have_content("Service doit exister")
     end
 
-    it "unchecks for_secretariat when checking followup", js: true do
+    it "unchecks for_secretariat when checking followup", :js do
       visit edit_admin_organisation_motif_path(organisation_id: organisation.id, id: motif.id)
       find("#tab_resa_en_ligne").click
       check "Autoriser les agents du service Secrétariat à assurer ces RDV"
@@ -74,7 +74,7 @@ RSpec.describe "Agent can CRUD motifs" do
       expect(motif.follow_up).to be_truthy
     end
 
-    it "automatically checks and unchecks rdvs_editable_by_user when toggling online reservation", js: true do
+    it "automatically checks and unchecks rdvs_editable_by_user when toggling online reservation", :js do
       # On ouvre le motif à la résa en ligne, la case "RDVs modifiables" est cochée automatiquement
       visit edit_admin_organisation_motif_path(organisation_id: organisation.id, id: motif.id)
       find("#tab_resa_en_ligne").click

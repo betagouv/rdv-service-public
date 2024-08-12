@@ -68,7 +68,7 @@ RSpec.describe "Admin can configure the organisation" do
     expect(page).to have_content("L’organisation a été modifiée.")
   end
 
-  it "CRUD on motifs", js: true do
+  it "CRUD on motifs", :js do
     click_link "Paramètres"
     click_link "Motifs"
     expect_page_title("Vos motifs")

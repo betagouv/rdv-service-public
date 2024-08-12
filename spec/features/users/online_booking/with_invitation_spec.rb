@@ -47,7 +47,7 @@ RSpec.describe "User can be invited" do
       allow_any_instance_of(ActionDispatch::Request).to receive(:cookies).and_return(page.cookies)
     end
 
-    it "full path, shows the available lieux to take a rdv", js: true do
+    it "full path, shows the available lieux to take a rdv", :js do
       visit prendre_rdv_path(
         departement: departement_number, city_code: city_code, invitation_token: invitation_token,
         address: "16 rue de la résistance, Paris, 75016", motif_category_short_name: "rsa_orientation"
@@ -156,7 +156,7 @@ RSpec.describe "User can be invited" do
       allow(Users::GeoSearch).to receive(:new).and_return(geo_search)
     end
 
-    it "shows the geo search available motifs to take a rdv", js: true do
+    it "shows the geo search available motifs to take a rdv", :js do
       motif.update(restriction_for_rdv: "Consigne pour le RDV")
 
       visit prendre_rdv_path(
@@ -235,7 +235,7 @@ RSpec.describe "User can be invited" do
         create(:motif, name: "RSA orientation telephone", bookable_by: "everyone", organisation: organisation, service: agent.services.first, motif_category:, location_type: "phone")
       end
 
-      it "shows the geo search available organisation to take a rdv", js: true do
+      it "shows the geo search available organisation to take a rdv", :js do
         visit prendre_rdv_path(
           departement: departement_number, city_code: city_code, invitation_token: invitation_token,
           address: "16 rue de la résistance, Paris, 75016", motif_category_short_name: "rsa_orientation"
@@ -293,7 +293,7 @@ RSpec.describe "User can be invited" do
       )
     end
 
-    it "shows the organisations available motifs", js: true do
+    it "shows the organisations available motifs", :js do
       # Motif selection
       expect(page).to have_content(motif.name)
       expect(page).to have_content(second_motif.name)

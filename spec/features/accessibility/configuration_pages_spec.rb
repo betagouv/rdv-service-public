@@ -1,4 +1,4 @@
-RSpec.describe "configuration pages", js: true do
+RSpec.describe "configuration pages", :js do
   it "index of configuration" do
     territory = create(:territory)
     agent = create(:agent, role_in_territories: [territory])

@@ -12,7 +12,7 @@ RSpec.describe "some fields that are specific to a certain domain can be disable
     user.update(affiliation_number: "numero_affiliation_123") # Pour créer une version Papertail
   end
 
-  it "shows the restricted fields only if they are enabled", js: true do
+  it "shows the restricted fields only if they are enabled", :js do
     visit admin_organisation_user_path(organisation, user)
 
     expect(page).to have_content("Numéro d'allocataire : numero_affiliation_123")

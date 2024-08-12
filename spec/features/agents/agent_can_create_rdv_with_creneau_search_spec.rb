@@ -31,7 +31,7 @@ RSpec.describe "Agent can create a Rdv with creneau search" do
     end
   end
 
-  context "when there is only one option for lieu, service and motif selector", js: true do
+  context "when there is only one option for lieu, service and motif selector", :js do
     let!(:motif) { create(:motif, service: agent.services.first, organisation: organisation) }
     let!(:plage_ouverture) { create(:plage_ouverture, :daily, motifs: [motif], agent: agent, organisation: organisation) }
 
@@ -44,7 +44,7 @@ RSpec.describe "Agent can create a Rdv with creneau search" do
     end
   end
 
-  context "when there is more than one option for lieux, services and motifs selector", js: true do
+  context "when there is more than one option for lieux, services and motifs selector", :js do
     let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
     let!(:lieu) { create(:lieu, organisation: organisation) }
     let!(:motif) { create(:motif, service: agent.services.first, organisation: organisation) }

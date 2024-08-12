@@ -21,7 +21,7 @@ RSpec.describe "Agent can create a Rdv collectif from the agenda" do
     visit admin_organisation_agent_agenda_path(organisation, agent)
   end
 
-  it "default", js: true do
+  it "default", :js do
     find(".fc-minor", match: :first).click # Click on the agenda
 
     select(motif.name, from: "rdv_motif_id")

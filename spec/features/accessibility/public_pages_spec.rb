@@ -1,4 +1,4 @@
-RSpec.describe "public pages", js: true do
+RSpec.describe "public pages", :js do
   it "accessibility_path page is accessible" do
     expect_page_to_be_axe_clean(accessibility_path)
   end

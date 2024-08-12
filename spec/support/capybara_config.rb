@@ -41,7 +41,7 @@ Capybara.configure do |config|
 end
 
 RSpec.configure do |config|
-  config.after(:each, js: true) do
+  config.after(:each, :js) do
     logs = page.driver.browser.logs.get(:browser)
     aggregate_failures "javascript errors" do
       logs.each do |log|

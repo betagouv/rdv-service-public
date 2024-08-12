@@ -21,7 +21,7 @@ RSpec.describe "Agent can edit a Rdv collectif" do
   end
 
   # js: true is necessary for the lieu selection
-  it "doesn't send a cancellation notification if the notifications for the participant are removed", js: true do
+  it "doesn't send a cancellation notification if the notifications for the participant are removed", :js do
     login_as(agent, scope: :agent)
     visit edit_admin_organisation_rdv_path(organisation, rdv)
     find(:label, text: "Notifications de création et modification").click

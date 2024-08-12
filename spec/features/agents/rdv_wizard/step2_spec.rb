@@ -18,7 +18,7 @@ RSpec.describe "Step 2 of the rdv wizard" do
 
   before { create(:agent_territorial_access_right, agent: agent, territory: territory) }
 
-  it "allows searching for users", js: true do
+  it "allows searching for users", :js do
     login_as(agent, scope: :agent)
     visit new_admin_organisation_rdv_wizard_step_path(params)
 

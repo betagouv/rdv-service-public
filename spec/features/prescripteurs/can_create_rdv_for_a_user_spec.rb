@@ -128,7 +128,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
     end
   end
 
-  context "when a similar user already exists", js: true do
+  context "when a similar user already exists", :js do
     let!(:user) do
       create(:user, first_name: "Patricia", last_name: "Duroy", phone_number: "0611223344")
     end
@@ -200,7 +200,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
     let!(:plage_ouverture2) { create(:plage_ouverture, organisation: organisation, agent: agent, motifs: [motif], lieu: lieu2) }
     let(:bookable_by) { "agents_and_prescripteurs" }
 
-    it "goes directly to prescripteur forms after creneau selection ands keeps the prescripteur param when navigating backwards", js: true do
+    it "goes directly to prescripteur forms after creneau selection ands keeps the prescripteur param when navigating backwards", :js do
       visit "http://www.rdv-solidarites-test.localhost/prendre_rdv_prescripteur"
 
       fill_address_form
@@ -235,7 +235,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
       login_as(agent_prescripteur, scope: :agent)
     end
 
-    it "display internal prescription incitation and correctly redirect to the feature", js: true do
+    it "display internal prescription incitation and correctly redirect to the feature", :js do
       visit "http://www.rdv-solidarites-test.localhost/prendre_rdv_prescripteur"
       expect(page).to have_content("Nouvelle fonctionnalité :\nla prescription dans l'espace agent")
 
@@ -267,7 +267,7 @@ RSpec.describe "prescripteur can create RDV for a user" do
         allow_any_instance_of(Territory).to receive(:sectorized?).and_return(true) # rubocop:disable RSpec/AnyInstance
       end
 
-      it "doesn't display internal prescription incitation link when territory is sectorized", js: true do
+      it "doesn't display internal prescription incitation link when territory is sectorized", :js do
         visit "http://www.rdv-solidarites-test.localhost/prendre_rdv_prescripteur"
         fill_address_form
         click_on "Formation emails" # choix du motif

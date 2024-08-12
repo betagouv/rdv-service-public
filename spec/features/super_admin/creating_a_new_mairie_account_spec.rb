@@ -1,4 +1,4 @@
-RSpec.describe "Creating a new account for a mairie", js: true do
+RSpec.describe "Creating a new account for a mairie", :js do
   let(:super_admin) { create :super_admin }
   let!(:cni_motif_category) { create(:motif_category, name: Api::Ants::EditorController::CNI_MOTIF_CATEGORY_NAME) }
   let!(:passport_motif_category) { create(:motif_category, name: Api::Ants::EditorController::PASSPORT_MOTIF_CATEGORY_NAME) }

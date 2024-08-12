@@ -8,7 +8,7 @@ RSpec.describe "Agent can duplicate a Rdv collectif" do
     create(:rdv, motif: motif, organisation: organisation, agents: [agent], name: "Traitement de texte", context: "Apportez votre ordinateur")
   end
 
-  it "allows duplicating a new rdv collectif", js: true do
+  it "allows duplicating a new rdv collectif", :js do
     login_as(agent, scope: :agent)
     visit admin_organisation_rdv_path(organisation, original_rdv)
 

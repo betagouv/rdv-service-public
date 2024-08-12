@@ -1,4 +1,4 @@
-RSpec.describe "Agent can see rdvs in their calendar", js: true do
+RSpec.describe "Agent can see rdvs in their calendar", :js do
   context "for a rdv collectif" do
     it "shows the number of participants and the max number of participants" do
       organisation = create(:organisation)

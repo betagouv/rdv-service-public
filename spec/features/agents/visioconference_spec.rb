@@ -12,7 +12,7 @@ RSpec.describe "Les agents peuvent organiser des rdv par visioconférence" do
     login_as(agent, scope: :agent)
   end
 
-  it "allows changing the location type and adds validation when trying to create a rdv without email or phone number", js: true do
+  it "allows changing the location type and adds validation when trying to create a rdv without email or phone number", :js do
     visit admin_organisation_motifs_path(organisation)
     click_on motif.name
     click_on "Éditer"

@@ -11,7 +11,7 @@ RSpec.describe "territory admin can crud webhooks endpoints" do
     visit admin_territory_path(id: territory.id)
   end
 
-  it "works", js: true do
+  it "works", :js do
     # Create
     click_on "Webhook"
     click_on "Ajouter"

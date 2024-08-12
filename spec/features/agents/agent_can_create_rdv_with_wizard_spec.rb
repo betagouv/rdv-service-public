@@ -95,7 +95,7 @@ RSpec.describe "Agent can create a Rdv with wizard" do
   end
 
   describe "create a RDV with an existing lieu" do
-    it "works", js: true do
+    it "works", :js do
       step1
       step2
       step3(:enabled)
@@ -122,7 +122,7 @@ RSpec.describe "Agent can create a Rdv with wizard" do
 
       let!(:user_from_other_organisation) { create(:user, organisations: [other_organisation]) }
 
-      it "creates the rdv and adds the user to the organisation", js: true do
+      it "creates the rdv and adds the user to the organisation", :js do
         step1
 
         select_user(user_from_other_organisation)
@@ -176,7 +176,7 @@ RSpec.describe "Agent can create a Rdv with wizard" do
   end
 
   describe "create a RDV with a single_use lieu" do
-    it "works", js: true do
+    it "works", :js do
       step1
       step2
       step3(:single_use)

@@ -9,7 +9,7 @@ RSpec.describe "Use correct history version when a super admin is logged in and 
     login_as(super_admin, scope: :super_admin)
   end
 
-  it "for an agent", js: true do
+  it "for an agent", :js do
     login_as(agent, scope: :agent)
     visit admin_organisation_user_path(organisation, user)
     within("#spec-primary-user-card") { click_link "Modifier" }
@@ -20,7 +20,7 @@ RSpec.describe "Use correct history version when a super admin is logged in and 
     expect(page).to have_content("[Admin] #{super_admin.full_name} pour #{agent.full_name}")
   end
 
-  it "for a user", js: true do
+  it "for a user", :js do
     login_as(user, scope: :user)
     visit root_path
     click_link "Vos informations"

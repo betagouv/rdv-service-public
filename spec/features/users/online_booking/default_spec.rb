@@ -22,7 +22,7 @@ RSpec.describe "User can search for rdvs" do
     let!(:lieu2) { create(:lieu, organisation: organisation) }
     let!(:plage_ouverture2) { create(:plage_ouverture, :daily, first_day: now + 1.month, motifs: [motif], lieu: lieu2, organisation: organisation) }
 
-    it "default", js: true do
+    it "default", :js do
       visit root_path
       execute_search
       choose_service(motif.service)
@@ -39,7 +39,7 @@ RSpec.describe "User can search for rdvs" do
     end
 
     describe "On RDV Service Public" do
-      it "doesn't require an ANTS predemande number for a relative", js: true do
+      it "doesn't require an ANTS predemande number for a relative", :js do
         visit "http://www.rdv-mairie-test.localhost/#{path_for_creneau_choice}"
         choose_creneau
         sign_up
@@ -76,7 +76,7 @@ RSpec.describe "User can search for rdvs" do
     end
 
     context "when the motif is by phone" do
-      it "can take a RDV in the available organisations", js: true do
+      it "can take a RDV in the available organisations", :js do
         visit root_path
         execute_search
 
@@ -112,7 +112,7 @@ RSpec.describe "User can search for rdvs" do
         [first_motif, other_motif_with_po, motif_without_po].each { |m| m.update!(location_type: "home") }
       end
 
-      it "can take a RDV in the available organisations", js: true do
+      it "can take a RDV in the available organisations", :js do
         visit root_path
         execute_search
 
@@ -148,7 +148,7 @@ RSpec.describe "User can search for rdvs" do
         [first_motif, other_motif_with_po, motif_without_po].each { |m| m.update!(location_type: Motif.location_types[:visio]) }
       end
 
-      it "can take a RDV in the available organisations", js: true do
+      it "can take a RDV in the available organisations", :js do
         visit root_path
         execute_search
 
@@ -250,7 +250,7 @@ RSpec.describe "User can search for rdvs" do
 
     before { login_as(user, scope: :user) }
 
-    it "shows only the follow up motifs related to the agent", js: true do
+    it "shows only the follow up motifs related to the agent", :js do
       visit users_rdvs_path
       click_link "Prendre un RDV de suivi"
 

@@ -17,7 +17,7 @@ RSpec.describe "Prise de rdv avec sectorisations pour deux territoires dans le m
     create(:plage_ouverture, :daily, first_day: 8.days.from_now, motifs: [motif_insertion], lieu: lieu_insertion, organisation: orga_insertion)
   end
 
-  it "allows two territories in the same departement to use sectorisation and shows the organisations alongside one another", js: true do
+  it "allows two territories in the same departement to use sectorisation and shows the organisations alongside one another", :js do
     social_sector = Sector.create!(territory: territory_medico_social, name: "Valence", human_id: "valence")
     insertion_sector = Sector.create!(territory: territory_insertion, name: "Valence", human_id: "valence")
 

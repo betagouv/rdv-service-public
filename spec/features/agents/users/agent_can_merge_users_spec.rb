@@ -29,7 +29,7 @@ RSpec.describe "Agent can delete user" do
     )
   end
 
-  it "normal", js: true do
+  it "normal", :js do
     login_as(agent, scope: :agent)
     visit authenticated_agent_root_path
     click_link "Usagers"

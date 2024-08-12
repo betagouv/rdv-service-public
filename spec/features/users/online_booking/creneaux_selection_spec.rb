@@ -16,7 +16,7 @@ RSpec.describe "User can select a creneau" do
     let!(:plage_ouverture) { create(:plage_ouverture, :daily, first_day: now + 8.days, motifs: [motif], lieu: lieu, organisation: organisation) }
     let!(:autre_plage_ouverture) { create(:plage_ouverture, :daily, first_day: now + 8.days, motifs: [autre_motif], lieu: lieu, organisation: organisation) }
 
-    it "shows that no creneau is available", js: true do
+    it "shows that no creneau is available", :js do
       visit root_path
       fill_in("search_where", with: "79 Rue de Plaisance, 92250 La Garenne-Colombes")
 

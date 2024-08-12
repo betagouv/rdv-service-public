@@ -60,7 +60,7 @@ RSpec.describe "territory admin can manage agents", type: :feature do
     context "when trying to cheat and invite an agent to an organisation in another territory" do
       let!(:organisation_in_another_territory) { create(:organisation, territory: create(:territory)) }
 
-      it "doesn't add the agent to the other organisation", js: true do
+      it "doesn't add the agent to the other organisation", :js do
         visit new_admin_territory_agent_path(territory_id: territory.id)
         fill_in "Email", with: "agent@ladrome.fr"
         check "MDS de Valence"
