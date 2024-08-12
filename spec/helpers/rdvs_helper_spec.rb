@@ -208,7 +208,7 @@ RSpec.describe RdvsHelper do
       let(:params) { { start: "invalid_date", end: "invalid_date" } }
 
       it "displays nothing" do
-        expect(dates_interval).to eq(nil)
+        expect(dates_interval).to be(nil)
       end
     end
   end

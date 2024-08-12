@@ -136,7 +136,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
       fill_in("user_ants_pre_demande_number", with: "5544332211")
       click_button("Enregistrer")
       expect(page).to have_content("Alain MAIRIE")
-      expect(User.exists?(first_name: "Alain", last_name: "Mairie", ants_pre_demande_number: "5544332211")).to eq(true)
+      expect(User.exists?(first_name: "Alain", last_name: "Mairie", ants_pre_demande_number: "5544332211")).to be(true)
 
       click_button("Continuer")
 

@@ -138,17 +138,17 @@ RSpec.describe Motif, type: :model do
   describe "visible_and_notified?" do
     it "vrai quand visible_type == visible_and_notified" do
       motif = build(:motif, :visible_and_notified)
-      expect(motif.visible_and_notified?).to eq(true)
+      expect(motif.visible_and_notified?).to be(true)
     end
 
     it "faux quand visible_type == visible_and_not_notified" do
       motif = build(:motif, :visible_and_not_notified)
-      expect(motif.visible_and_notified?).to eq(false)
+      expect(motif.visible_and_notified?).to be(false)
     end
 
     it "faux quand visible_type == invisible" do
       motif = build(:motif, :invisible)
-      expect(motif.visible_and_notified?).to eq(false)
+      expect(motif.visible_and_notified?).to be(false)
     end
   end
 
@@ -225,12 +225,12 @@ RSpec.describe Motif, type: :model do
 
   describe "#requires_lieu?" do
     it "returns false if the location_type doesn't require a lieu" do
-      expect(build(:motif, :by_phone).requires_lieu?).to eq(false)
-      expect(build(:motif, :at_home).requires_lieu?).to eq(false)
+      expect(build(:motif, :by_phone).requires_lieu?).to be(false)
+      expect(build(:motif, :at_home).requires_lieu?).to be(false)
     end
 
     it "returns true if the location_type requires a lieu" do
-      expect(build(:motif, :at_public_office).requires_lieu?).to eq(true)
+      expect(build(:motif, :at_public_office).requires_lieu?).to be(true)
     end
   end
 
@@ -259,7 +259,7 @@ RSpec.describe Motif, type: :model do
         motif = create(:motif, collectif: false).tap { create(:rdv, motif: _1) }
         motif.update(collectif: true)
         expect(motif.errors[:collectif]).to include("ne peut être modifié car le motif est utilisé pour un RDV")
-        expect(motif.reload.collectif).to eq(false)
+        expect(motif.reload.collectif).to be(false)
       end
     end
   end

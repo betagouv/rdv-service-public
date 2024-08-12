@@ -22,7 +22,7 @@ RSpec.describe Territory, type: :model do
     context "new territory without departement_number" do
       let(:territory) { build(:territory, name: nil, departement_number: "") }
 
-      it { is_expected.to eq nil }
+      it { is_expected.to be nil }
     end
 
     context "new territory with recognized departement_number" do
@@ -40,7 +40,7 @@ RSpec.describe Territory, type: :model do
     context "new territory with departement_number not recognized" do
       let(:territory) { build(:territory, name: "", departement_number: "600") }
 
-      it { is_expected.to eq nil }
+      it { is_expected.to be nil }
     end
   end
 
@@ -59,17 +59,17 @@ RSpec.describe Territory, type: :model do
   describe "#waiting_room_enabled?" do
     it "returns false when no notification selected" do
       territory = build(:territory, enable_waiting_room_mail_field: false, enable_waiting_room_color_field: false)
-      expect(territory.waiting_room_enabled?).to eq(false)
+      expect(territory.waiting_room_enabled?).to be(false)
     end
 
     it "returns true when mail notification selected" do
       territory = build(:territory, enable_waiting_room_mail_field: true, enable_waiting_room_color_field: false)
-      expect(territory.waiting_room_enabled?).to eq(true)
+      expect(territory.waiting_room_enabled?).to be(true)
     end
 
     it "returns true when agenda rdv color notification selected" do
       territory = build(:territory, enable_waiting_room_mail_field: false, enable_waiting_room_color_field: true)
-      expect(territory.waiting_room_enabled?).to eq(true)
+      expect(territory.waiting_room_enabled?).to be(true)
     end
   end
 

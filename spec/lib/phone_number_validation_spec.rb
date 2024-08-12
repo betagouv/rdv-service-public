@@ -41,9 +41,9 @@ RSpec.describe PhoneNumberValidation do
 
   describe "number_is_mobile?" do
     it do
-      expect(described_class.number_is_mobile?(" +33 6 10 00 00 00")).to eq(true)
-      expect(described_class.number_is_mobile?(" +33 1 23 45 67 89")).to eq(false)
-      expect(described_class.number_is_mobile?("+596 6 96 00 00 00")).to eq(true)
+      expect(described_class.number_is_mobile?(" +33 6 10 00 00 00")).to be(true)
+      expect(described_class.number_is_mobile?(" +33 1 23 45 67 89")).to be(false)
+      expect(described_class.number_is_mobile?("+596 6 96 00 00 00")).to be(true)
     end
   end
 
@@ -68,8 +68,8 @@ RSpec.describe PhoneNumberValidation do
       describe "formatting hooks" do
         context "on create" do
           it "return nil with blank phone number" do
-            expect(create(factory, phone_number: nil).phone_number_formatted).to eq(nil)
-            expect(create(factory, phone_number: "").phone_number_formatted).to eq(nil)
+            expect(create(factory, phone_number: nil).phone_number_formatted).to be(nil)
+            expect(create(factory, phone_number: "").phone_number_formatted).to be(nil)
           end
 
           it "return valid +33 given phone number" do
@@ -84,7 +84,7 @@ RSpec.describe PhoneNumberValidation do
             object.update!(phone_number: "04 300 32020")
             expect(object.phone_number_formatted).to eq("+33430032020")
             object.update!(phone_number: "")
-            expect(object.phone_number_formatted).to eq(nil)
+            expect(object.phone_number_formatted).to be(nil)
           end
         end
       end

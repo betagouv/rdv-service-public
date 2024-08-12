@@ -42,7 +42,7 @@ RSpec.describe Admin::EditRdvForm, type: :form do
       edit_rdv_form.update(status: "unknown", ignore_benign_errors: "1")
 
       rdv.reload
-      expect(rdv.cancelled_at).to eq(nil)
+      expect(rdv.cancelled_at).to be(nil)
       expect(rdv.status).to eq("unknown")
     end
   end
