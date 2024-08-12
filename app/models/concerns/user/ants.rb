@@ -41,7 +41,7 @@ module User::Ants
   end
 
   def syncable_with_ants?
-    return if ants_pre_demande_number.blank?
+    return false if ants_pre_demande_number.blank?
 
     status = AntsApi.status(application_id: ants_pre_demande_number, timeout: 4)["status"]
     status == "validated"
