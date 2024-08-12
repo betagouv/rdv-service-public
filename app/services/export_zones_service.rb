@@ -25,14 +25,12 @@ class ExportZonesService
   def add_zone_row(sheet, zone, index)
     row = sheet.row(index + 1)
     row.push(
-      
-        zone.sector.name,
-        zone.sector.human_id,
-        zone.city_code,
-        zone.city_name,
-        zone.street_name,
-        zone.street_ban_id,
-      
+      zone.sector.name,
+      zone.sector.human_id,
+      zone.city_code,
+      zone.city_name,
+      zone.street_name,
+      zone.street_ban_id
     )
   end
 end
