@@ -9,9 +9,9 @@ RSpec.describe "Agents can export their calendar to other tools, such as Outlook
 
     visit agents_calendar_sync_webcal_sync_path
 
-    webcal_url = "webcal://#{Capybara.server_host}:#{Capybara.server_port}/calendrier/remi-nom-d-agent-#{uid}.ics"
+    webcal_url = "http://#{Capybara.server_host}:#{Capybara.server_port}/calendrier/remi-nom-d-agent-#{uid}.ics"
 
-    expect(page).to have_link(webcal_url)
+    expect(page.find('input[name="calendar_url"]').value).to eq webcal_url
 
     visit webcal_url
     expect(page).to have_content "BEGIN:VCALENDAR"
@@ -29,7 +29,7 @@ RSpec.describe "Agents can export their calendar to other tools, such as Outlook
 
   it "doesn't allow reading a calendar without a uid" do
     create(:agent, calendar_uid: nil)
-    webcal_url = "webcal://#{Capybara.server_host}:#{Capybara.server_port}/calendrier/.ics"
+    webcal_url = "http://#{Capybara.server_host}:#{Capybara.server_port}/calendrier/.ics"
 
     expect { visit webcal_url }.to raise_error(ActionController::RoutingError)
   end
