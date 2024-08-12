@@ -9,6 +9,7 @@ class PrivilegeParentIdentifier::ByAgentRole
 
     agent_roles = possible_parent_agent_roles
 
+    # TODO: vérifier que ça marche pour les versions d'agent roles plutot que juste pour les access rights
     agent_roles.select do |agent_role|
       create_version = agent_role.versions.find_by(event: :create)
       created_at = create_version&.created_at || Date.new(2023, 2, 16) # Date d'ajout des versions sur cette table
