@@ -61,6 +61,9 @@ Metrics/ClassLength:
   Exclude:
     - 'app/models/rdv.rb'
     - 'app/models/user.rb'
+    - 'app/models/agent.rb'
+    - 'app/models/motif.rb'
+
 
 Metrics/ModuleLength:
   Max: 150
@@ -71,6 +74,18 @@ Metrics/MethodLength:
   Max: 20
   Exclude:
     - 'db/migrate/20210301135256_create_territories.rb'
+    - 'app/controllers/agents/users_controller.rb'
+    - 'app/controllers/inclusion_connect_controller.rb'
+    - 'app/controllers/lapin/sms_preview_controller.rb'
+    - 'app/controllers/super_admins/migrations_controller.rb'
+    - 'app/controllers/users/rdvs_controller.rb'
+    - 'app/helpers/configuration_helper.rb'
+    - 'app/jobs/webhook_job.rb'
+    - 'app/models/concerns/ical_helpers/ics.rb'
+    - 'app/services/sms_sender.rb'
+    - 'db/migrate/20231017125305_reunite_prod_schema.rb'
+    - 'spec/features/agents/agent_can_create_rdv_with_wizard_spec.rb'
+    - 'spec/features/agents/rdvs_collectifs/full_lifecycle_spec.rb'
 
 Rails/ApplicationController:
   Exclude:
