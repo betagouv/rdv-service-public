@@ -23,6 +23,9 @@ Layout/LineLength:
     - 'spec/jobs/outlook/update_event_job_spec.rb'
     - 'spec/models/concerns/outlook/synchronizable_spec.rb'
     - 'spec/models/outlook/event_spec.rb'
+    - 'spec/jobs/cron_job/destroy_old_rdvs_and_inactive_accounts_job_spec.rb'
+    - 'spec/services/participation_exporter_spec.rb'
+    - 'spec/services/participation_exporter_spec.rb'
 
 Layout/MultilineMethodCallIndentation:
   EnforcedStyle: indented
