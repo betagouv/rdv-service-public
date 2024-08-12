@@ -8,14 +8,12 @@ RSpec.describe "Agent can setup sectorisation", type: :feature do
 
   it "works" do
     visit admin_territory_sectorization_path(territory)
-    find("h2", text: "Secteurs").find(:xpath, "..").click
-    sleep 1
+    find("a", text: "Secteurs").click
     click_on "Créer un nouveau secteur"
     fill_in :sector_name, with: "Secteur Nord"
     fill_in :sector_human_id, with: "nord"
     click_on "Enregistrer"
     click_on "Ajouter une commune ou une rue"
-    sleep 1
     find("#zone_city_name").native["value"] = "Valence"
     find("#zone_city_code").native["value"] = "26362"
     click_on "Enregistrer"
