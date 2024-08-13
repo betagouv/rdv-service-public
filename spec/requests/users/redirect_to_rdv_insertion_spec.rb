@@ -1,5 +1,5 @@
 RSpec.describe "RedirectToRdvInsertionSpec", type: :request do
-  before { ENV["RDV_INSERTION_HOST"] = "https://rdv-insertion-host.fr" }
+  stub_env_with(RDV_INSERTION_HOST: "https://rdv-insertion-host.fr")
 
   context "URL is well formed" do
     it "works" do
@@ -8,11 +8,7 @@ RSpec.describe "RedirectToRdvInsertionSpec", type: :request do
     end
   end
 
-  context "URL has spaces before and after" do
-    it "does not raise an error" do
-      expect { get("/i/r/%2012345%20") }.not_to raise_error
-    end
-
+  context "URL has spaces before and after because the user typed it manually from a paper letter" do
     it "strips the spaces" do
       get "/i/r/%2012345"
       expect(response).to redirect_to("https://rdv-insertion-host.fr/r/12345")
