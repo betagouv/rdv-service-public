@@ -25,7 +25,10 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do
         schema type: :object,
                properties: {
                  id: { type: :integer },
-
+                 created_at: { type: :string },
+                 starts_at: { type: :string },
+                 duration_in_min: { type: :integer },
+                 ends_at: { type: :string },
                },
                required: Visioplainte::RdvBlueprint.reflections[:default].fields.keys
 
