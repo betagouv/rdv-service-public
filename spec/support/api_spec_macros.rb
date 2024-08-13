@@ -31,7 +31,7 @@ module ApiSpecMacros
       "visioplainte-api-test-key-123456"
     end
     security [{ "X-VISIOPLAINTE-API-KEY": [] }]
-    parameter name: "X-VISIOPLAINTE-API-KEY", in: :header, type: :string, description: "Clé d'API", example: "visioplainte-api-test-key-123456"
+    parameter name: "X-VISIOPLAINTE-API-KEY", in: :header, type: :string, description: "Clé d'API", example: "visioplainte-api-test-key-123456", required: true
   end
 
   def with_shared_secret_authentication

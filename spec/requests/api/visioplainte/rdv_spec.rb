@@ -39,7 +39,7 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do
     delete "Supprimer un rdv" do
       with_visioplainte_authentication
 
-      description "Supprime le rdv"
+      description "Supprime le rdv. Il n'apparaitra plus dans aucune requête de l'api"
 
       response 204, "Supprime le rdv" do
         run_test!
@@ -48,11 +48,16 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do
     end
   end
 
-  path "/api/visioplainte/rdvs/{id}/annuler" do
+  path "/api/visioplainte/rdvs/{id}/cancel" do
     put "Annuler un rdv" do
       with_visioplainte_authentication
 
-      response 
+      description "Annule le rdv. Il apparaitra encore dans la liste des rdv du guichet."
+
+      response 200, "Annule le rdv" do
+        run_test!
+        parameter name: :id, in: :path, type: :string
+      end
     end
   end
 end
