@@ -13,6 +13,15 @@ RSpec.configure do |config|
   # document below. You can override this behavior by adding a swagger_doc tag to the
   # the root example_group in your specs, e.g. describe '...', swagger_doc: 'v2/swagger.json'
   config.openapi_specs = {
+    "visioplainte/api.json" => {
+      openapi: "3.0.1",
+      info: {
+        title: "API RDV Service Public pour Visioplainte",
+        version: "v1",
+        description: File.read(Rails.root.join("docs/api/visioplainte/description.md")),
+      },
+    },
+
     "v1/api.json" => {
       openapi: "3.0.1",
       info: {
