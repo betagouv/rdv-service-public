@@ -1,9 +1,9 @@
 class Api::Visioplainte::BaseController < ActionController::Base # rubocop:disable Rails/ApplicationController
   respond_to :json
 
-  before_action :authenticate_with_api_token
+  before_action :authenticate_with_api_key
 
-  def authenticate_with_api_token
+  def authenticate_with_api_key
     authorized = ActiveSupport::SecurityUtils.secure_compare(
       request.headers["X-VISIOPLAINTE-API-KEY"] || "",
       ENV.fetch("VISIOPLAINTE_API_KEY")
