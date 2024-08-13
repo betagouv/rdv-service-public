@@ -12,10 +12,10 @@
       .alert.alert-warning.rdv-text-align-center
         | ⚠️ Cette carte n'affiche pas correctement les secteurs qui se chevauchent ni les rues dans le détail
       div.position-relative
-        #zones-map[
+        #js-zones-map[
           data-center-query="#{@sectors.first&.zones&.first&.city_name}, #{current_territory.departement_number}"
         ]
-        #zones-map-legend
+        #js-zones-map-legend
           h4 Légende
           b Ville survolée
           .hovered-city-container
