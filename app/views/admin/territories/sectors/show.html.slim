@@ -143,10 +143,11 @@
         .text-muted Lorsqu'un usager cherche une adresse couverte par ce secteur, les disponibilités des organisations ou des agents attribués lui seront proposées
 
     .card
-      #zones-map.small[
+      .small[
         data-center-query="#{@sector&.zones&.first&.city_name}, #{current_territory.departement_number}"
+        id=("js-zones-map" unless Rails.env.test?)
       ]
-      #zones-map-small-legend
+      #js-zones-map-small-legend
         .hovered-city-container
           #js-hovered-city>
         ul.list-unstyled

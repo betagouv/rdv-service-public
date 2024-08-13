@@ -40,7 +40,7 @@ class Admin::Territories::SectorAttributionsController < Admin::Territories::Bas
     existing_agent_attributions = @sector
       .attributions
       .level_agent
-      .where(organagent: @sector_attribution.organisation)
+      .where(organisation: @sector_attribution.organisation)
     @available_agents = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope)
       .merge(@sector_attribution.organisation.agents)
       .where.not(id: existing_agent_attributions.pluck(:agent_id))
