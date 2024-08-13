@@ -42,6 +42,7 @@ namespace :api do
 
   namespace :visioplainte do
     resources :creneaux, only: %i[index]
+    resources :rdvs, only: %i[create]
   end
 end
 

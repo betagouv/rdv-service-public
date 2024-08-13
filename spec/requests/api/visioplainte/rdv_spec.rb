@@ -21,37 +21,16 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do
                                "Les deux valeurs possibles sont donc 'Police' ou 'Gendarmerie'",
                   example: "Police", required: true
 
-        parameter name: "date_debut", in: :query, type: :string, description: "date au format iso8601 (YYYY-MM-DD), premier jour de la liste de créneaux qu’on renverra", example: "2024-12-22"
-        parameter name: "date_fin", in: :query, type: :string, description: "date au format iso8601 (YYYY-MM-DD), dernier jour de la liste de créneaux qu’on renverra (inclus dans les résultats)",
-                  example: "2024-12-28"
-
+        parameter name: "starts_at", in: :query, type: :string, description: "datetime au format iso8601 (YYYY-MM-DD)"
         schema type: :object,
                properties: {
                  id: { type: :integer },
-               },
-               required: %w[id starts_at created_at duration_in_min users guichet]
 
+               },
+               required: Visioplainte::RdvBlueprint.reflections[:default].fields.keys
+
+        let(:starts_at) { Time.zone.now.iso8601 }
         let(:service) { "Police" }
-        specify do
-          expect(parsed_response_body).to eq(
-            {
-              creneaux: [
-                {
-                  starts_at: "2024-12-22T10:00:00+02:00",
-                  duration_in_min: 30,
-                },
-                {
-                  starts_at: "2024-12-22T10:30:00+02:00",
-                  duration_in_min: 30,
-                },
-                {
-                  starts_at: "2024-12-22T11:00:00+02:00",
-                  duration_in_min: 30,
-                },
-              ],
-            }.deep_stringify_keys
-          )
-        end
       end
     end
   end
