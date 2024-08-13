@@ -5,17 +5,17 @@
         .fr-col-lg-12.mt-4.mb-3
           .fr-grid-row
             .fr-col-lg-7
-              h2.text-dsfr-grey-50.mb-1.pb-0  Nouvelle fonctionnalité :
-              h2.text-header-blue.mb-2.pb-0  la prescription dans l'espace agent
-
-              .
-              p.mb-0.rdv-font-weight-700 Vous souhaitez rediriger un usager vers une organisation différente de la votre ?
-              p.mb-0 Désormais, vous pouvez directement trouver un rendez-vous dans votre espace  #{current_domain.name}, en élargissant la recherche d’un créneau.
+              h2.rdv-color-text-title-grey.mb-1.pb-0  Nouvelle fonctionnalité :
+              h2.rdv-color-text-action-high-blue-ecume.mb-2.pb-0  la prescription dans l'espace agent
+              p.rdv-font-weight-700 Vous souhaitez rediriger un usager vers une organisation différente de la votre ?
               p
-                span> Pour en savoir plus, connectez-vous ou consultez
+                ' Désormais, vous pouvez directement trouver un rendez-vous dans
+                = link_to "votre espace agent #{current_domain.name}", root_path
+                | , en élargissant la recherche d’un créneau.
+              p
+                span> Pour en savoir plus, consultez
                 = link_to "https://rdvs.notion.site/Prescription-f1c857697c68421d91592ae88364c05d", target: "_blank" do
                   span> la documentation
-                  i.fa.fa-external-link-alt>
             .fr-col-lg-5
               .d-flex.justify-content-center
                 = image_tag "welcome/prescription_banner.svg", class: "rdv-max-width-60 rdv-max-width-md-100", alt: ""
