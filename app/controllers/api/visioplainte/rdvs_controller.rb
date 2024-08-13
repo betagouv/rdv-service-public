@@ -13,7 +13,7 @@ class Api::Visioplainte::RdvsController < Api::Visioplainte::BaseController
 
   def rdv(status)
     # Des données de test pour documenter l'api.
-    rdv = Rdv.new(
+    Rdv.new(
       id: 123,
       users: [User.new(id: 456)],
       agents: [Agent.new(id: 789, last_name: "Guichet 3")],
