@@ -328,7 +328,7 @@ Rails.application.routes.draw do
   # This route redirects invitations to rdv-insertion so that rdv-insertion
   # can use rdvs domain name in their emails
   get "/i/r/:uuid", to: redirect { |path_params, _|
-    "#{ENV['RDV_INSERTION_HOST']}/r/#{path_params[:uuid]}"
+    "#{ENV['RDV_INSERTION_HOST']}/r/#{path_params[:uuid]&.strip}"
   }
 
   if Rails.env.development?
