@@ -11,6 +11,8 @@ class Api::Visioplainte::RdvsController < Api::Visioplainte::BaseController
     render json: Visioplainte::RdvBlueprint.render(rdv(:excused)), status: :ok
   end
 
+  private
+
   def rdv(status)
     # Des données de test pour documenter l'api.
     Rdv.new(
