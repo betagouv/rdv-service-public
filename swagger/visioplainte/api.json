@@ -1,0 +1,102 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "API RDV Service Public pour Visioplainte",
+    "version": "v1",
+    "description": "# Authentification\n\nL'authentification à l'api se fait en passant la clé d'api dans le header `X-VISIOPLAINTE-API-KEY`.\n\nPar exemple:\n```\ncurl --request GET --url \"https://demo.rdv.anct.gouv.fr/api/visioplainte/creneaux\" --header \"X-VISIOPLAINTE-API-KEY: LA_CLE_D_API\"\n```\n"
+  },
+  "paths": {
+    "/api/visioplainte/creneaux": {
+      "get": {
+        "summary": "Lister les créneaux disponibles",
+        "description": "Renvoie les créneaux disponibles",
+        "security": [
+          {
+            "X-VISIOPLAINTE-API-KEY": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "X-VISIOPLAINTE-API-KEY",
+            "in": "header",
+            "description": "Clé d'API",
+            "example": "visioplainte-api-test-key-123456",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "service",
+            "in": "query",
+            "description": "Indique si on souhaite obtenir les créneaux de la plateforme de la gendarmerie ou de la police. Les deux valeurs possibles sont donc 'Police' ou 'Gendarmerie'",
+            "example": "Police",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "date_debut",
+            "in": "query",
+            "description": "date au format iso8601 (YYYY-MM-DD), premier jour de la liste de créneaux qu’on renverra",
+            "example": "2024-12-22",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "date_fin",
+            "in": "query",
+            "description": "date au format iso8601 (YYYY-MM-DD), dernier jour de la liste de créneaux qu’on renverra (inclus dans les résultats)",
+            "example": "2024-12-28",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Renvoie les créneaux",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "creneaux": [
+                        {
+                          "starts_at": "2024-12-22T10:00:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-12-22T10:30:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-12-22T11:00:00+02:00",
+                          "duration_in_min": 30
+                        }
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "creneaux": {
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "creneaux"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
