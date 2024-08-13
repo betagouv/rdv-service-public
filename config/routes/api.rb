@@ -39,6 +39,10 @@ namespace :api do
     resources :motif_categories, only: %i[create]
     resources :motif_category_territories, only: %i[create]
   end
+
+  namespace :visioplainte do
+    resources :creneaux, only: %i[index]
+  end
 end
 
 # This one has been published before versioning the public API and unification with auth API:

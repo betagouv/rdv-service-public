@@ -23,6 +23,11 @@ module ApiSpecMacros
     parameter name: "uid", in: :header, type: :string, description: "Identifiant d'accès (authentification)", example: "martine@demo.rdv-solidarites.fr"
   end
 
+  def with_visioplainte_authentication
+    security [{ "X-VISIOPLAINTE-API-KEY": [] }]
+    parameter name: "X-VISIOPLAINTE-API-KEY", in: :header, type: :string, description: "Clé d'API", example: "visioplainte-api-test-key-123456"
+  end
+
   def with_shared_secret_authentication
     security [{ uid: [], "X-Agent-Auth-Signature": [] }]
 
