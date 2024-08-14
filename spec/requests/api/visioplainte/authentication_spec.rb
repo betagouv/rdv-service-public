@@ -1,6 +1,13 @@
 RSpec.describe "Authentification" do
   context "when the api key is configured properly" do
     stub_env_with(VISIOPLAINTE_API_KEY: "visioplainte-api-test-key-123456")
+    let(:creneaux_params) do
+      {
+        service: "Police",
+        date_debut: "2024-08-19",
+        date_fin: "2024-08-25",
+      }
+    end
 
     context "without the api key header" do
       before do
@@ -25,8 +32,17 @@ RSpec.describe "Authentification" do
     end
 
     context "with the correct api key" do
+      around do |example| # le setup pour que l'appel fonctionne
+        load Rails.root.join("db/seeds/visioplainte.rb")
+        visioplainte_territory = Territory.find_by(name: "Visioplainte")
+
+        with_modified_env(VISIOPLAINTE_TERRITORY_ID: visioplainte_territory.id.to_s) do
+          example.run
+        end
+      end
+
       before do
-        get "/api/visioplainte/creneaux", headers: { "X-VISIOPLAINTE-API-KEY": "visioplainte-api-test-key-123456" }
+        get "/api/visioplainte/creneaux", headers: { "X-VISIOPLAINTE-API-KEY": "visioplainte-api-test-key-123456" }, params: creneaux_params
       end
 
       it "returns a 200 response" do

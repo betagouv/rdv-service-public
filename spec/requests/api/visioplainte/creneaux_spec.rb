@@ -7,9 +7,6 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do
 
       description "Renvoie les créneaux disponibles"
 
-      let(:date_debut) { "2024-12-22" }
-      let(:date_fin) { "2024-12-28" }
-
       response 200, "Renvoie les créneaux" do
         run_test!
         parameter name: :service, in: :query, type: :string,
@@ -31,18 +28,40 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do
                required: ["creneaux"]
 
         let(:service) { "Police" }
-        specify do
+        let(:date_debut) { "2024-08-19" }
+        let(:date_fin) { "2024-08-25" }
+
+        around do |example|
           travel_to Date.new(2024, 8, 18)
           load Rails.root.join("db/seeds/visioplainte.rb")
+          visioplainte_territory = Territory.find_by(name: "Visioplainte")
 
-          creneaux = parsed_response_body["creneaux"]
+          with_modified_env(VISIOPLAINTE_TERRITORY_ID: visioplainte_territory.id.to_s) do
+            example.run
+          end
+        end
 
-          expect(creneaux.first.symbolize_keys).to eq(
-            {
-              starts_at: "2024-08-19T80:00:00+02:00",
-              duration_in_min: 30,
-            }
-          )
+        context "Police" do
+          let(:service) { "Police" }
+
+          specify do
+            creneaux = parsed_response_body["creneaux"]
+            expect(creneaux.first.symbolize_keys).to eq(
+              {
+                starts_at: "2024-08-19T08:00:00+02:00",
+                duration_in_min: 30,
+              }
+            )
+          end
+        end
+
+        context "Gendarmerie" do
+          let(:service) { "Gendarmerie" }
+
+          specify do
+            creneaux = parsed_response_body["creneaux"]
+            expect(creneaux).to be_empty
+          end
         end
       end
     end

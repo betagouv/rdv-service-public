@@ -2,8 +2,8 @@ territory = Territory.create!(
   name: "Visioplainte"
 )
 
-service_police = Service.create!(name: "Police nationale", short_name: "Police")
-service_gendarmerie = Service.create!(name: "Gendarmerie nationale", short_name: "Gendarmerie")
+service_police = Service.create!(name: "Police Nationale", short_name: "Police")
+service_gendarmerie = Service.create!(name: "Gendarmerie Nationale", short_name: "Gendarmerie")
 
 territory.services << service_police
 territory.services << service_gendarmerie
