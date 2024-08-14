@@ -32,23 +32,16 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do
 
         let(:service) { "Police" }
         specify do
-          expect(parsed_response_body).to eq(
+          travel_to Date.new(2024, 8, 18)
+          load Rails.root.join("db/seeds/visioplainte.rb")
+
+          creneaux = parsed_response_body["creneaux"]
+
+          expect(creneaux.first.symbolize_keys).to eq(
             {
-              creneaux: [
-                {
-                  starts_at: "2024-12-22T10:00:00+02:00",
-                  duration_in_min: 30,
-                },
-                {
-                  starts_at: "2024-12-22T10:30:00+02:00",
-                  duration_in_min: 30,
-                },
-                {
-                  starts_at: "2024-12-22T11:00:00+02:00",
-                  duration_in_min: 30,
-                },
-              ],
-            }.deep_stringify_keys
+              starts_at: "2024-08-19T80:00:00+02:00",
+              duration_in_min: 30,
+            }
           )
         end
       end

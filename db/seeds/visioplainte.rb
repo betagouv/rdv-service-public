@@ -2,11 +2,11 @@ territory = Territory.create!(
   name: "Visioplainte"
 )
 
-service_police = Service.create!(name: "Police nationale")
-service_gendarmerie = Service.create!(name: "Gendarmerie nationale")
+service_police = Service.create!(name: "Police nationale", short_name: "Police")
+service_gendarmerie = Service.create!(name: "Gendarmerie nationale", short_name: "Gendarmerie")
 
-territory.services << service_pn
-territory.services << service_gn
+territory.services << service_police
+territory.services << service_gendarmerie
 
 orga_police = Organisation.create!(
   name: "Plateforme Visioplainte Police",
@@ -20,12 +20,16 @@ orga_gendarmerie = Organisation.create!(
 motif_police = Motif.create!(
   name: "Dépôt de plainte par visioconférence",
   default_duration_in_min: 30,
+  color: "#FF7C00",
+  location_type: :visio,
   service: service_police,
   organisation: orga_police
 )
 Motif.create!(
   name: "Dépôt de plainte par visioconférence",
   default_duration_in_min: 30,
+  color: "#FF7C00",
+  location_type: :visio,
   service: service_gendarmerie,
   organisation: orga_gendarmerie
 )
@@ -63,7 +67,6 @@ guichet_police1 = Agent.create!(
     { organisation: orga_police, access_level: AgentRole::ACCESS_LEVEL_INTERVENANT },
   ]
 )
-AgentTerritorialAccessRight.create(agent: superviseur_police, territory: territory)
 
 PlageOuverture.create!(
   title: "Permanence classique",
