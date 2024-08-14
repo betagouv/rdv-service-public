@@ -1,6 +1,6 @@
 require "swagger_helper"
 
-RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do
+RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do # rubocop:disable RSpec/EmptyExampleGroup
   path "/api/visioplainte/rdvs" do
     post "Prendre un rdv" do
       with_visioplainte_authentication
