@@ -1,5 +1,5 @@
 RSpec.describe AddConseillerNumerique do
-  let!(:territory) { create(:territory, name: "Conseillers Numériques") }
+  let!(:territory) { create(:territory, :conseillers_numeriques) }
   let(:params) do
     {
       external_id: "exemple@conseiller-numerique.fr",
