@@ -1,7 +1,9 @@
 class Territory < ApplicationRecord
   has_paper_trail
 
-  MAIRIES_NAME = "Mairies".freeze
+  SPECIAL_NAMES = [
+    MAIRIES_NAME = "Mairies".freeze,
+  ]
   CN_DEPARTEMENT_NUMBER = "CN".freeze
 
   # Mixins
@@ -45,6 +47,11 @@ class Territory < ApplicationRecord
   validate do
     if name_changed? && name_was == MAIRIES_NAME
       errors.add(:name, "Le nom de ce territoire permet de le brancher au moteur de recherche de l'ANTS et ne peut pas être changé")
+    end
+  end
+  validate do
+    if name_changed? && name.in?(SPECIAL_NAMES)
+      errors.add(:name, "Ce nom ne peut pas être utilisé")
     end
   end
 
