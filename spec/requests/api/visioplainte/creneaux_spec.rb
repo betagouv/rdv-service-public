@@ -1,19 +1,12 @@
 require "swagger_helper"
 
 RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do
-  stub_env_with(VISIOPLAINTE_API_KEY: "visioplainte-api-test-key-123456")
-
   path "/api/visioplainte/creneaux" do
     get "Lister les créneaux disponibles" do
-      produces "application/json"
-
-      description "Renvoie les créneaux disponibles"
-      with_examples
       with_visioplainte_authentication
 
-      let(:"X-VISIOPLAINTE-API-KEY") do # rubocop:disable RSpec/VariableName
-        "visioplainte-api-test-key-123456"
-      end
+      description "Renvoie les créneaux disponibles"
+
       let(:date_debut) { "2024-12-22" }
       let(:date_fin) { "2024-12-28" }
 
