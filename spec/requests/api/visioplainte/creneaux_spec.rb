@@ -17,13 +17,16 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do
                                "Les deux valeurs possibles sont donc 'Police' ou 'Gendarmerie'",
                   example: "Police", required: true
 
-        parameter name: "date_debut", in: :query, type: :string, description: "date au format iso8601 (YYYY-MM-DD), premier jour de la liste de créneaux qu’on renverra", example: "2024-12-22"
+        parameter name: "date_debut", in: :query, type: :string, description: "date au format iso8601 (YYYY-MM-DD), premier jour de la liste de créneaux qu’on renverra",
+                  example: "2024-12-22", required: true
         parameter name: "date_fin", in: :query, type: :string, description: "date au format iso8601 (YYYY-MM-DD), dernier jour de la liste de créneaux qu’on renverra (inclus dans les résultats)",
-                  example: "2024-12-28"
+                  example: "2024-12-28", required: true
 
         schema type: :object,
                properties: {
-                 creneaux: { type: :array },
+                 creneaux: { type: :array, items: {
+                   type: :object, properties: { starts_at: { type: :string }, duration_in_min: { type: :integer } },
+                 }, },
                },
                required: ["creneaux"]
 
