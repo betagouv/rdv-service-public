@@ -1,7 +1,10 @@
 class Territory < ApplicationRecord
   has_paper_trail
 
-  MAIRIES_NAME = "Mairies".freeze
+  SPECIAL_NAMES = [
+    MAIRIES_NAME = "Mairies".freeze,
+    CNFS_NAME = "Conseillers Numériques".freeze,
+  ].freeze
   CN_DEPARTEMENT_NUMBER = "CN".freeze
 
   # Mixins
@@ -43,8 +46,13 @@ class Territory < ApplicationRecord
   validates :departement_number, length: { maximum: 3 }, if: -> { departement_number.present? }
   validates :name, presence: true, if: -> { persisted? }
   validate do
-    if name_changed? && name_was == MAIRIES_NAME
-      errors.add(:name, "Le nom de ce territoire permet de le brancher au moteur de recherche de l'ANTS et ne peut pas être changé")
+    if name_changed? && name_was.in?(SPECIAL_NAMES)
+      errors.add(:name, "Le nom de ce territoire lui donne des propriétés particulières et ne peut donc pas être changé")
+    end
+  end
+  validate do
+    if name_changed? && name.in?(SPECIAL_NAMES)
+      errors.add(:name, "Ce nom ne peut pas être utilisé")
     end
   end
 
@@ -91,7 +99,7 @@ class Territory < ApplicationRecord
   end
 
   def cn?
-    departement_number == CN_DEPARTEMENT_NUMBER
+    name == CNFS_NAME
   end
 
   def sectorized?
