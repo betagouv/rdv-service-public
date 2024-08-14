@@ -46,8 +46,8 @@ class Territory < ApplicationRecord
   validates :departement_number, length: { maximum: 3 }, if: -> { departement_number.present? }
   validates :name, presence: true, if: -> { persisted? }
   validate do
-    if name_changed? && name_was == MAIRIES_NAME
-      errors.add(:name, "Le nom de ce territoire permet de le brancher au moteur de recherche de l'ANTS et ne peut pas être changé")
+    if name_changed? && name_was.in?(SPECIAL_NAMES)
+      errors.add(:name, "Le nom de ce territoire lui donne des propriétés particulières et ne peut donc pas être changé")
     end
   end
   validate do
