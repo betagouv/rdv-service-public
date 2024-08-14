@@ -126,7 +126,7 @@ Notre application est accessible sous 3 "marques" différentes :
 Nous avons actuellement 3 instances :
 - `production-rdv-solidarites` : serveur de production pour `www.rdv-solidarites.fr` et `www.rdv-aide-numerique.fr`
 - `production-rdv-mairie` : serveur de production pour `rdv.anct.gouv.fr`
-- `demo-rdv-solidarites` : serveur de démo pour `demo.rdv-solidarites.fr`, `demo.rdv-aide-numerique.fr` et `demo.rdv-mairie.fr`
+- `demo-rdv-solidarites` : serveur de démo pour `demo.rdv-solidarites.fr`, `demo.rdv-aide-numerique.fr` et `demo.anct.gouv.fr`
 
 ```mermaid
 flowchart TD
@@ -138,7 +138,7 @@ flowchart TD
     %% Domaines de demo
     demo.rdv-solidarites.fr
     demo.rdv-aide-numerique.fr
-    demo.rdv-mairie.fr
+    demo.rdv.anct.gouv.fr
 
     %% Apps Scalingo
     production-rdv-solidarites((production-rdv-solidarites))
@@ -151,12 +151,12 @@ flowchart TD
     rdv.anct.gouv.fr --> production-rdv-mairie
     demo.rdv-solidarites.fr --> demo-rdv-solidarites
     demo.rdv-aide-numerique.fr --> demo-rdv-solidarites
-    demo.rdv-mairie.fr --> demo-rdv-solidarites
+    demo.rdv.anct.gouv.fr --> demo-rdv-solidarites
 ```
 
 `production-rdv-solidarites` est notre instance de production actuelle. Elle est représentée fidèlement dans les
-schémas ci-dessous. `production-rdv-mairie` est une nouvelle instance que nous venons de créer (mai 2023). Nous avons
-créé cette instance afin de séparer les données de la future plateforme `rdv.anct.gouv.fr` de nos données existantes.
+schémas ci-dessous. `production-rdv-mairie` est une instance plus récente créée en mai 2023. Nous avons
+créé cette instance afin de séparer les données de plateforme `rdv.anct.gouv.fr` de nos données existantes.
 
 L'instance `demo-rdv-solidarites` sert de plateforme de démo pour nos 3 domaines.
 
