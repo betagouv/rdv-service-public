@@ -3,10 +3,8 @@ class Visioplainte::RdvBlueprint < Blueprinter::Base
 
   fields :starts_at, :created_at, :duration_in_min, :ends_at, :status
 
-  field :users do |rdv, _options|
-    rdv.users.map do |user|
-      { id: user.id }
-    end
+  field :user_id do |rdv, _options|
+    rdv.users.first.id
   end
 
   field :guichet do |rdv, _options|

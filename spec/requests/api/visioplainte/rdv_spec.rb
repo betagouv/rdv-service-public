@@ -5,7 +5,7 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do
     post "Prendre un rdv" do
       with_visioplainte_authentication
 
-      description "Crée un rdv et réserve le créneau correspondant. Le rdv pourra être supprimé si l'usager ne le confirme pas, ou annulé si l'usager prévient d'une absence"
+      description "Crée un rdv et réserve le créneau correspondant."
 
       response 201, "Prend le rdv" do
         run_test!
@@ -16,6 +16,7 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do
 
         parameter name: "starts_at", in: :query, type: :string,
                   description: "datetime au format iso8601 (YYYY-MM-DD). Normalement c'est une des valeurs proposées par l'endpoint de liste des créneaux.", required: true
+
         schema type: :object,
                properties: {
                  id: { type: :integer },
@@ -23,6 +24,8 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do
                  starts_at: { type: :string },
                  duration_in_min: { type: :integer },
                  ends_at: { type: :string },
+                 guichet: { type: :object, properties: { id: { type: :integer }, name: { type: :string } } },
+                 user_id: { type: :integer },
                },
                required: Visioplainte::RdvBlueprint.reflections[:default].fields.keys
 
@@ -39,7 +42,7 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do
     delete "Supprimer un rdv" do
       with_visioplainte_authentication
 
-      description "Supprime le rdv. Il n'apparaitra plus dans aucune requête de l'api"
+      description "Supprime le rdv. Il n'apparaîtra plus dans aucune requête de l'api"
 
       response 204, "Supprime le rdv" do
         run_test!
@@ -52,7 +55,7 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do
     put "Annuler un rdv" do
       with_visioplainte_authentication
 
-      description "Annule le rdv. Il apparaitra encore dans la liste des rdv du guichet."
+      description "Annule le rdv. Il apparaîtra encore dans la liste des rdv du guichet."
 
       response 200, "Annule le rdv" do
         run_test!
