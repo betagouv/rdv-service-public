@@ -17,7 +17,7 @@ orga_gendarmerie = Organisation.create!(
   territory: territory
 )
 
-Motif.create!(
+motif_police = Motif.create!(
   name: "Dépôt de plainte par visioconférence",
   default_duration_in_min: 30,
   service: service_police,
@@ -55,3 +55,23 @@ superviseur_gendarmerie = Agent.create(
   ]
 )
 AgentTerritorialAccessRight.create(agent: superviseur_gendarmerie, territory: territory)
+
+guichet_police1 = Agent.create!(
+  last_name: "Guichet 1",
+  services: [service_police],
+  roles_attributes: [
+    { organisation: orga_police, access_level: AgentRole::ACCESS_LEVEL_INTERVENANT },
+  ]
+)
+AgentTerritorialAccessRight.create(agent: superviseur_police, territory: territory)
+
+PlageOuverture.create!(
+  title: "Permanence classique",
+  organisation: orga_police,
+  agent: guichet_police1,
+  motifs: [motif_police],
+  first_day: Date.tomorrow,
+  start_time: Tod::TimeOfDay.new(8),
+  end_time: Tod::TimeOfDay.new(12),
+  recurrence: Montrose.every(:week, day: [1, 2, 3, 4, 5], interval: 1, starts: Date.tomorrow, on: %i[monday tuesday thursday friday])
+)
