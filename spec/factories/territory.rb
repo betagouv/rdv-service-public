@@ -10,6 +10,9 @@ FactoryBot.define do
   end
 
   trait :mairies do
-    name { Territory::MAIRIES_NAME }
+    after(:create) do |territory, _|
+      # Les contraintes de validations sur les noms spéciaux obligent à faire un update_columns ici
+      territory.update_columns(name: Territory::MAIRIES_NAME) # rubocop:disable Rails/SkipsModelValidations
+    end
   end
 end

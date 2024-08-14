@@ -75,9 +75,7 @@ RSpec.describe Territory, type: :model do
 
   describe "special names" do
     let(:mairies_territory) do
-      create(:territory).tap do |t|
-        t.update_columns(name: Territory::MAIRIES_NAME)
-      end
+      create(:territory, :mairies)
     end
 
     it "doesn't allow changing the name of a territory with a special meaning" do
