@@ -1,4 +1,5 @@
 class Api::Visioplainte::CreneauxController < Api::Visioplainte::BaseController
+  before_action :validate_date_range
   def index
     motif = find_motif(params[:service])
 
@@ -14,6 +15,26 @@ class Api::Visioplainte::CreneauxController < Api::Visioplainte::BaseController
 
   private
 
+  def validate_date_range
+    errors = []
+
+    if params[:date_debut].blank?
+      errors << "Paramètre date_debut manquant"
+    end
+
+    if params[:date_fin].blank?
+      errors << "Paramètre date_fin manquant"
+    end
+
+    if errors.empty? && (date_range.last - date_range.first).to_i > 31
+      errors << "date_debut et date_fin ne doivent pas être espacés de plus de 31 jours"
+    end
+
+    if errors.any?
+      render(json: { errors: errors }, status: :bad_request) and return
+    end
+  end
+
   def date_range
     @date_range ||= (Date.parse(params[:date_debut])..Date.parse(params[:date_fin]))
   end
@@ -27,16 +48,16 @@ class Api::Visioplainte::CreneauxController < Api::Visioplainte::BaseController
     ).creneaux
   end
 
-  def find_motif(service)
-    motifs = Motif.joins(organisation: :territory).where(territories: { name: Territory::VISIOPLAINTE_NAME }).joins(:service)
+  def find_motif(_service)
+    motifs = Motif.joins(organisation: :territory).where(territories: { name: Territory::VISIOPLAINTE_NAME })
 
-    case service
-    when "Police"
-      motifs.find_by(service: { name: "Police Nationale" })
-    when "Gendarmerie"
-      motifs.find_by(service: { name: "Gendarmerie Nationale" })
-    else
-      raise "unknown service"
-    end
+    motifs.joins(:service).find_by(service: { name: service_names[params["service"]] })
+  end
+
+  def service_names
+    {
+      "Police" => "Police Nationale",
+      "Gendarmerie" => "Gendarmerie Nationale",
+    }
   end
 end
