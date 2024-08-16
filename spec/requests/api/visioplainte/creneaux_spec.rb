@@ -2,7 +2,7 @@ require "swagger_helper"
 
 RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do
   before do
-    travel_to Date.new(2024, 8, 18)
+    travel_to Time.zone.local(2024, 8, 18, 14, 0, 0)
     load Rails.root.join("db/seeds/visioplainte.rb")
   end
 
