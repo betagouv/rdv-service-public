@@ -64,7 +64,7 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
     @search_creneaux_service ||= if requires_lieu?
                                    SearchCreneauxForAgentsService.new(@form).next_availability_by_lieu
                                  else
-                                   SearchCreneauxWithoutLieuForAgentsService.new(@form).next_availability
+                                   SearchCreneauxForAgentsService.new(@form).next_availability
                                  end
   end
 

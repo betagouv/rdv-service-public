@@ -12,11 +12,12 @@ class SearchCreneauxForAgentsService < SearchCreneauxForAgentsBase
     end.compact
   end
 
-  def next_availability(lieu)
+  def next_availability(lieu = nil)
     NextAvailabilityService.find(@form.motif, lieu, all_agents, from: @form.date_range.first)
   end
 
-  def build_result(lieu)
+  def build_result(lieu = nil)
+    lieu ||= lieux.first
     # utiliser les ids des agents pour ne pas faire de requêtes supplémentaire
     creneaux = SlotBuilder.available_slots(@form.motif, lieu, @form.date_range, all_agents)
     creneaux = creneaux.uniq { [_1.starts_at, _1.agent] }
