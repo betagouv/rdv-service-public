@@ -1,6 +1,6 @@
-class SearchCreneauxForAgentsService < SearchCreneauxForAgentsBase
-  def perform
-    lieux.map { build_result(_1) }.compact # NOTE: LOOP 1 over lieux.
+class SearchCreneauxForAgentsService
+  def initialize(agent_creneaux_search_form)
+    @form = agent_creneaux_search_form
   end
 
   def next_availability_by_lieu
@@ -27,6 +27,9 @@ class SearchCreneauxForAgentsService < SearchCreneauxForAgentsBase
     OpenStruct.new(lieu: lieu, next_availability: availability, creneaux: creneaux)
   end
 
+  # Les méthodes suivantes devraient être privées, mais elles sont appelées par des tests legacy
+  # private
+
   def lieux
     return [] if @form.motif.blank?
 
@@ -44,5 +47,9 @@ class SearchCreneauxForAgentsService < SearchCreneauxForAgentsBase
 
     @lieux = @lieux.ordered_by_name
     @lieux
+  end
+
+  def all_agents
+    Agent.where(id: @form.agent_ids).or(Agent.where(id: Agent.joins(:teams).where(teams: @form.team_ids)))
   end
 end
