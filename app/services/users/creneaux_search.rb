@@ -1,8 +1,4 @@
 class Users::CreneauxSearch
-  attr_reader :motif, :date_range, :user, :lieu
-
-  delegate :start_booking_delay, :end_booking_delay, to: :motif
-
   def initialize(user:, motif:, lieu:, date_range: nil, geo_search: nil)
     @user = user
     @motif = motif
@@ -48,6 +44,10 @@ class Users::CreneauxSearch
   end
 
   private
+
+  attr_reader :motif, :date_range
+
+  delegate :start_booking_delay, :end_booking_delay, to: :motif
 
   def attributed_agents
     @attributed_agents ||= retrieve_attributed_agents
