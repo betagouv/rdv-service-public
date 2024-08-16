@@ -31,7 +31,7 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
   end
 
   def only_one_lieu?
-    @search_results&.count == 1
+    requires_lieu? && @search_results&.count == 1
   end
 
   def requires_lieu?
@@ -62,9 +62,9 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
 
   def search_creneaux_service
     @search_creneaux_service ||= if requires_lieu?
-                                   SearchCreneauxForAgentsService.perform_with(@form)
+                                   SearchCreneauxForAgentsService.new(@form).next_availability_by_lieu
                                  else
-                                   SearchCreneauxWithoutLieuForAgentsService.perform_with(@form)
+                                   SearchCreneauxWithoutLieuForAgentsService.new(@form).next_availability
                                  end
   end
 

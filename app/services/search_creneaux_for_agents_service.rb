@@ -3,15 +3,27 @@ class SearchCreneauxForAgentsService < SearchCreneauxForAgentsBase
     lieux.map { build_result(_1) }.compact # NOTE: LOOP 1 over lieux.
   end
 
+  def next_availability_by_lieu
+    lieux.map do |lieu|
+      availability = next_availability(lieu)
+      if availability
+        OpenStruct.new(lieu: lieu, next_availability: availability)
+      end
+    end.compact
+  end
+
+  def next_availability(lieu)
+    NextAvailabilityService.find(@form.motif, lieu, all_agents, from: @form.date_range.first)
+  end
+
   def build_result(lieu)
     # utiliser les ids des agents pour ne pas faire de requêtes supplémentaire
-    # Utilise le date_range.end + 1 pour chercher la date suivante du créneau affiché
-    next_availability = NextAvailabilityService.find(@form.motif, lieu, all_agents, from: @form.date_range.end + 1.day)
     creneaux = SlotBuilder.available_slots(@form.motif, lieu, @form.date_range, all_agents)
     creneaux = creneaux.uniq { [_1.starts_at, _1.agent] }
-    return nil if creneaux.empty? && next_availability.nil?
+    availability = next_availability(lieu)
+    return nil if creneaux.empty? && availability.nil?
 
-    OpenStruct.new(lieu: lieu, next_availability: next_availability, creneaux: creneaux)
+    OpenStruct.new(lieu: lieu, next_availability: availability, creneaux: creneaux)
   end
 
   def lieux
