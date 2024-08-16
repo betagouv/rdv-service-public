@@ -28,7 +28,7 @@ class Api::Visioplainte::CreneauxController < Api::Visioplainte::BaseController
   end
 
   def find_motif(service)
-    motifs = Motif.joins(:organisation).where(organisation: { territory_id: ENV["VISIOPLAINTE_TERRITORY_ID"] }).joins(:service)
+    motifs = Motif.joins(organisation: :territory).where(territories: { name: Territory::VISIOPLAINTE_NAME }).joins(:service)
 
     case service
     when "Police"

@@ -1,6 +1,11 @@
 require "swagger_helper"
 
 RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do
+  before do
+    travel_to Date.new(2024, 8, 18)
+    load Rails.root.join("db/seeds/visioplainte.rb")
+  end
+
   path "/api/visioplainte/creneaux" do
     get "Lister les créneaux disponibles" do
       with_visioplainte_authentication
@@ -30,16 +35,6 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do
         let(:service) { "Police" }
         let(:date_debut) { "2024-08-19" }
         let(:date_fin) { "2024-08-25" }
-
-        around do |example|
-          travel_to Date.new(2024, 8, 18)
-          load Rails.root.join("db/seeds/visioplainte.rb")
-          visioplainte_territory = Territory.find_by(name: "Visioplainte")
-
-          with_modified_env(VISIOPLAINTE_TERRITORY_ID: visioplainte_territory.id.to_s) do
-            example.run
-          end
-        end
 
         context "Police" do
           let(:service) { "Police" }

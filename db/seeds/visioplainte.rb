@@ -1,6 +1,6 @@
-territory = Territory.create!(
-  name: "Visioplainte"
-)
+territory = Territory.create(name: "placeholder")
+
+territory.update_columns(name: Territory::VISIOPLAINTE_NAME) # rubocop:disable Rails/SkipsModelValidations
 
 service_police = Service.create!(name: "Police Nationale", short_name: "Police")
 service_gendarmerie = Service.create!(name: "Gendarmerie Nationale", short_name: "Gendarmerie")

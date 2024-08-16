@@ -32,16 +32,8 @@ RSpec.describe "Authentification" do
     end
 
     context "with the correct api key" do
-      around do |example| # le setup pour que l'appel fonctionne
-        load Rails.root.join("db/seeds/visioplainte.rb")
-        visioplainte_territory = Territory.find_by(name: "Visioplainte")
-
-        with_modified_env(VISIOPLAINTE_TERRITORY_ID: visioplainte_territory.id.to_s) do
-          example.run
-        end
-      end
-
       before do
+        load Rails.root.join("db/seeds/visioplainte.rb")
         get "/api/visioplainte/creneaux", headers: { "X-VISIOPLAINTE-API-KEY": "visioplainte-api-test-key-123456" }, params: creneaux_params
       end
 
