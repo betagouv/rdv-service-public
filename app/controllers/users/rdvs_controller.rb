@@ -24,7 +24,7 @@ class Users::RdvsController < UserAuthController
     # Cela permet d'effectuer une recherche de créneaux, avec une durée différente
     motif.default_duration_in_min = params[:duration] if params[:duration]
     ActiveRecord::Base.transaction do
-      @creneau = Users::CreneauSearch.creneau_for(
+      @creneau = Users::CreneauxSearch.creneau_for(
         user: current_user,
         starts_at: Time.zone.parse(rdv_params[:starts_at]),
         motif: motif,
@@ -96,7 +96,7 @@ class Users::RdvsController < UserAuthController
 
   def build_creneau
     @starts_at = Time.zone.parse(params[:starts_at])
-    @creneau = Users::CreneauSearch.creneau_for(
+    @creneau = Users::CreneauxSearch.creneau_for(
       user: current_user,
       starts_at: @starts_at,
       motif: @rdv.motif,
