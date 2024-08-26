@@ -35,7 +35,7 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
     # motif public_office pour vérifier qu'il n'y
     # qu'un lieu
     set_search_results
-    if results_without_lieu? || only_one_lieu?
+    if only_one_lieu?
       skip_policy_scope # TODO: improve pundit checks for creneaux
       redirect_to admin_organisation_slots_path(current_organisation, creneaux_search_params)
     else
@@ -70,12 +70,6 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
     @form.motif&.requires_lieu?
   end
 
-  def results_without_lieu?
-    return false if requires_lieu?
-
-    search_creneaux_service.present?
-  end
-
   def set_form
     @form = helpers.build_agent_creneaux_search_form(current_organisation, params)
   end
@@ -84,10 +78,10 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
     if @form.valid?
       # Un RDV collectif peut-il avoir lieu à domicile ou au téléphone ?
       @next_availabilities = if @form.motif.individuel?
-                             SearchCreneauxForAgentsService.new(@form).next_availabilities
-                           else
-                             SearchRdvCollectifForAgentsService.new(@form).next_availabilities
-                           end
+                               SearchCreneauxForAgentsService.new(@form).next_availabilities
+                             else
+                               SearchRdvCollectifForAgentsService.new(@form).next_availabilities
+                             end
     end
   end
 
