@@ -3,7 +3,7 @@ class SearchRdvCollectifForAgentsService
     @form = agent_creneaux_search_form
   end
 
-  def lieu_search
+  def next_availabilities
     lieux.map do |lieu|
       OpenStruct.new(lieu: lieu, next_availability: rdvs.where(lieu: lieu).first)
     end.sort_by do |result|
