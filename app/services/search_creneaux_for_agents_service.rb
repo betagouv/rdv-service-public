@@ -17,7 +17,7 @@ class SearchCreneauxForAgentsService
   end
 
   def build_result
-    lieu ||= lieux.first
+    lieu = lieux.first
     # utiliser les ids des agents pour ne pas faire de requêtes supplémentaire
     creneaux = SlotBuilder.available_slots(@form.motif, lieu, @form.date_range, all_agents)
     creneaux = creneaux.uniq { [_1.starts_at, _1.agent] }
