@@ -1,7 +1,7 @@
 class Api::Visioplainte::CreneauxController < Api::Visioplainte::BaseController
   before_action :validate_date_range, only: [:index]
   def index
-    motif = find_motif(params[:service])
+    motif = find_motif
 
     render json: {
       creneaux: creneaux(motif).map do |creneau|
@@ -62,10 +62,9 @@ class Api::Visioplainte::CreneauxController < Api::Visioplainte::BaseController
     ).creneaux
   end
 
-  def find_motif(_service)
-    motifs = Motif.joins(organisation: :territory).where(territories: { name: Territory::VISIOPLAINTE_NAME })
-
-    motifs.joins(:service).find_by(service: { name: service_names[params["service"]] })
+  def find_motif
+    Motif.joins(organisation: :territory).where(territories: { name: Territory::VISIOPLAINTE_NAME })
+      .joins(:service).find_by(service: { name: service_names[params["service"]] })
   end
 
   def service_names
