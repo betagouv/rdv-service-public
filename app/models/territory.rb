@@ -4,6 +4,7 @@ class Territory < ApplicationRecord
   SPECIAL_NAMES = [
     MAIRIES_NAME = "Mairies".freeze,
     CNFS_NAME = "Conseillers Numériques".freeze,
+    VISIOPLAINTE_NAME = "Visioplainte".freeze,
   ].freeze
   CN_DEPARTEMENT_NUMBER = "CN".freeze
 

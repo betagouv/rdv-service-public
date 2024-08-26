@@ -69,15 +69,131 @@
                     "value": {
                       "creneaux": [
                         {
-                          "starts_at": "2024-12-22T10:00:00+02:00",
+                          "starts_at": "2024-08-19T08:00:00+02:00",
                           "duration_in_min": 30
                         },
                         {
-                          "starts_at": "2024-12-22T10:30:00+02:00",
+                          "starts_at": "2024-08-19T08:30:00+02:00",
                           "duration_in_min": 30
                         },
                         {
-                          "starts_at": "2024-12-22T11:00:00+02:00",
+                          "starts_at": "2024-08-19T09:00:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-19T09:30:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-19T10:00:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-19T10:30:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-19T11:00:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-19T11:30:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-20T08:00:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-20T08:30:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-20T09:00:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-20T09:30:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-20T10:00:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-20T10:30:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-20T11:00:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-20T11:30:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-22T08:00:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-22T08:30:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-22T09:00:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-22T09:30:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-22T10:00:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-22T10:30:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-22T11:00:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-22T11:30:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-23T08:00:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-23T08:30:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-23T09:00:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-23T09:30:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-23T10:00:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-23T10:30:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-23T11:00:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-23T11:30:00+02:00",
                           "duration_in_min": 30
                         }
                       ]
@@ -193,19 +309,24 @@
                 "examples": {
                   "example": {
                     "value": {
-                      "erreur": "Aucun créneau n'est disponible après cette date pour ce service."
+                      "errors": [
+                        "Aucun créneau n'est disponible après cette date pour ce service."
+                      ]
                     }
                   }
                 },
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "erreur": {
-                      "type": "string"
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
                     }
                   },
                   "required": [
-                    "erreur"
+                    "errors"
                   ]
                 }
               }
@@ -265,14 +386,14 @@
                   "example": {
                     "value": {
                       "id": 123,
-                      "created_at": "2024-08-26 10:27:07 +0200",
+                      "created_at": "2024-08-18 14:00:00 +0200",
                       "duration_in_min": 45,
-                      "ends_at": "2024-08-26 11:12:06 +0200",
+                      "ends_at": "2024-08-18 14:45:00 +0200",
                       "guichet": {
                         "id": 789,
                         "name": "GUICHET 3"
                       },
-                      "starts_at": "2024-08-26 10:27:06 +0200",
+                      "starts_at": "2024-08-18 14:00:00 +0200",
                       "status": "unknown",
                       "user_id": 456
                     }
@@ -415,7 +536,7 @@
                   "example": {
                     "value": {
                       "id": 123,
-                      "created_at": "2024-08-26 10:27:07 +0200",
+                      "created_at": "2024-08-18 14:00:00 +0200",
                       "duration_in_min": 45,
                       "ends_at": null,
                       "guichet": {

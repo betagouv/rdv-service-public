@@ -1,6 +1,10 @@
 require "swagger_helper"
 
 RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do # rubocop:disable RSpec/EmptyExampleGroup
+  before do
+    travel_to Time.zone.local(2024, 8, 18, 14, 0, 0)
+  end
+
   path "/api/visioplainte/rdvs" do
     post "Prendre un rdv" do
       with_visioplainte_authentication
