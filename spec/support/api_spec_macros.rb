@@ -27,9 +27,7 @@ module ApiSpecMacros
     with_examples
     produces "application/json"
     stub_env_with(VISIOPLAINTE_API_KEY: "visioplainte-api-test-key-123456")
-    let(:"X-VISIOPLAINTE-API-KEY") do # rubocop:disable RSpec/VariableName
-      "visioplainte-api-test-key-123456"
-    end
+    let(:"X-VISIOPLAINTE-API-KEY") { "visioplainte-api-test-key-123456" }
     security [{ "X-VISIOPLAINTE-API-KEY": [] }]
     parameter name: "X-VISIOPLAINTE-API-KEY", in: :header, type: :string, description: "Clé d'API", example: "visioplainte-api-test-key-123456", required: true
   end
