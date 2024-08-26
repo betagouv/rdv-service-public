@@ -91,8 +91,12 @@ RSpec.configure do |config|
                                  :transaction
                                end
 
-    DatabaseCleaner.cleaning do
+    if example.metadata[:test_with_seed_data]
       example.run
+    else
+      DatabaseCleaner.cleaning do
+        example.run
+      end
     end
   end
 

@@ -1,12 +1,24 @@
-RSpec.describe "Creneaux" do
+RSpec.describe "Creneaux", test_with_seed_data: true do
   subject(:get_request) do
     get "/api/visioplainte/creneaux", headers: auth_header, params: creneaux_params
     JSON.parse(response.body).deep_symbolize_keys
   end
 
-  before do
+  before(:all) do
+    puts "Loading seeds"
     travel_to Time.zone.local(2024, 8, 18, 14, 0, 0)
     load Rails.root.join("db/seeds/visioplainte.rb")
+  end
+
+  around do |example|
+    travel_to Time.zone.local(2024, 8, 18, 14, 0, 0)
+    DatabaseCleaner.cleaning do
+      example.run
+    end
+  end
+
+  after(:all) do
+    DatabaseCleaner.clean_with(:truncation)
   end
 
   stub_env_with(VISIOPLAINTE_API_KEY: "visioplainte-api-test-key-123456")
