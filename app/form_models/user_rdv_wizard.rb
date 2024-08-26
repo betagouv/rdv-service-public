@@ -42,7 +42,7 @@ module UserRdvWizard
       motif = @rdv.motif
       motif.default_duration_in_min = @attributes[:duration].to_i if @attributes[:duration]
 
-      @creneau ||= Users::CreneauSearch.creneau_for(
+      @creneau ||= Users::CreneauxSearch.creneau_for(
         user: @user,
         motif: motif,
         lieu: lieu,
