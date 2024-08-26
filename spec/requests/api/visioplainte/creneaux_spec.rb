@@ -1,7 +1,7 @@
 RSpec.describe "Creneaux" do
   subject(:get_request) do
     get "/api/visioplainte/creneaux", headers: auth_header, params: creneaux_params
-    JSON.parse(response.body).deep_symbolize_keys
+    response.parsed_body.deep_symbolize_keys
   end
 
   before do
