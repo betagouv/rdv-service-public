@@ -24,7 +24,7 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
       skip_policy_scope # TODO: improve pundit checks for creneaux
       redirect_to admin_organisation_slots_path(current_organisation, creneaux_search_params)
     else
-      @search_results = []
+      @prochaines_dispos = []
       prepare_form
     end
   end
@@ -63,7 +63,7 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
   end
 
   def only_one_lieu?
-    requires_lieu? && @search_results&.count == 1
+    requires_lieu? && @prochaines_dispos&.count == 1
   end
 
   def requires_lieu?
@@ -83,18 +83,18 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
   def set_search_results
     if @form.valid?
       # Un RDV collectif peut-il avoir lieu à domicile ou au téléphone ?
-      @search_results = if @form.motif.individuel?
-                          SearchCreneauxForAgentsService.new(@form).next_availabilities
-                        else
-                          SearchRdvCollectifForAgentsService.new(@form).next_availabilities
-                        end
+      @prochaines_dispos = if @form.motif.individuel?
+                             SearchCreneauxForAgentsService.new(@form).next_availabilities
+                           else
+                             SearchRdvCollectifForAgentsService.new(@form).next_availabilities
+                           end
     end
   end
 
   def creneaux_search_params
     creneaux_search_params = helpers.creneaux_search_params(@form)
     if only_one_lieu?
-      creneaux_search_params.merge(lieu_ids: [@search_results.first.lieu.id])
+      creneaux_search_params.merge(lieu_ids: [@prochaines_dispos.first.lieu.id])
     else
       creneaux_search_params
     end

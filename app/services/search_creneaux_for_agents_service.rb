@@ -5,10 +5,7 @@ class SearchCreneauxForAgentsService
 
   def next_availabilities
     lieux.map do |lieu|
-      availability = next_availability(lieu)
-      if availability
-        OpenStruct.new(lieu: lieu, next_availability: availability)
-      end
+      next_availability(lieu)
     end.compact
   end
 
