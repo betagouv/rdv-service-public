@@ -84,6 +84,18 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do
           )
         end
       end
+
+      response 404, "Renvoie un message d'erreur si aucun créneau n'est disponible" do
+        run_test!
+        let(:service) { "Gendarmerie" }
+        specify do
+          expect(parsed_response_body).to eq(
+            {
+              erreur: "Aucun créneau n'est disponible après cette date pour ce service.",
+            }.deep_stringify_keys
+          )
+        end
+      end
     end
   end
 end
