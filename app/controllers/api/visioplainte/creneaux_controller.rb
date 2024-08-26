@@ -17,4 +17,11 @@ class Api::Visioplainte::CreneauxController < Api::Visioplainte::BaseController
       ],
     }
   end
+
+  def prochain
+    render json: {
+      starts_at: "2024-12-22T10:00:00+02:00",
+      duration_in_min: 30,
+    }
+  end
 end

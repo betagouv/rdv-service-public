@@ -41,7 +41,11 @@ namespace :api do
   end
 
   namespace :visioplainte do
-    resources :creneaux, only: %i[index]
+    resources :creneaux, only: %i[index] do
+      collection do
+        get :prochain
+      end
+    end
     resources :rdvs, only: %i[create destroy] do
       member do
         put :cancel
