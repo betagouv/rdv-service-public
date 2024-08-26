@@ -31,7 +31,7 @@ RSpec.describe Users::RdvsController, type: :controller do
       allow(Users::GeoSearch).to receive(:new)
         .with(departement: "12", city_code: "12100", street_ban_id: nil)
         .and_return(mock_geo_search)
-      allow(Users::CreneauSearch).to receive(:creneau_for)
+      allow(Users::CreneauxSearch).to receive(:creneau_for)
         .with(user: user, starts_at: starts_at, motif: motif, lieu: lieu, geo_search: mock_geo_search)
         .and_return(mock_creneau)
       allow(Notifiers::RdvCreated).to receive(:perform_with)
@@ -472,7 +472,7 @@ RSpec.describe Users::RdvsController, type: :controller do
       travel_to(now)
       sign_in user
 
-      allow(Users::CreneauSearch).to receive(:creneau_for)
+      allow(Users::CreneauxSearch).to receive(:creneau_for)
         .with(user: user, starts_at: starts_at, motif: motif, lieu: lieu)
         .and_return(returned_creneau)
     end
@@ -525,7 +525,7 @@ RSpec.describe Users::RdvsController, type: :controller do
     before do
       travel_to(now)
       sign_in user
-      allow(Users::CreneauSearch).to receive(:creneau_for)
+      allow(Users::CreneauxSearch).to receive(:creneau_for)
         .with(user: user, starts_at: starts_at, motif: motif, lieu: lieu)
         .and_return(returned_creneau)
       allow(Devise.token_generator).to receive(:generate).and_return("12345")
