@@ -309,19 +309,24 @@
                 "examples": {
                   "example": {
                     "value": {
-                      "erreur": "Aucun créneau n'est disponible après cette date pour ce service."
+                      "errors": [
+                        "Aucun créneau n'est disponible après cette date pour ce service."
+                      ]
                     }
                   }
                 },
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "erreur": {
-                      "type": "string"
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
                     }
                   },
                   "required": [
-                    "erreur"
+                    "errors"
                   ]
                 }
               }

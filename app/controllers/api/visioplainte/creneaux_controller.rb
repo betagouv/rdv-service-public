@@ -1,5 +1,5 @@
 class Api::Visioplainte::CreneauxController < Api::Visioplainte::BaseController
-  before_action :validate_date_range
+  before_action :validate_date_range, only: [:index]
   def index
     motif = find_motif(params[:service])
 
@@ -16,10 +16,9 @@ class Api::Visioplainte::CreneauxController < Api::Visioplainte::BaseController
   def prochain
     # Une fausse implémentation pour la documentation
     if params[:service] == "Gendarmerie"
-      errors = {
-        errors: ["Aucun créneau n'est disponible après cette date pour ce service."],
-      }
-      render(json: errors, status: :not_found) and return
+      errors = ["Aucun créneau n'est disponible après cette date pour ce service."]
+
+      render(json: { errors: errors }, status: :not_found) and return
     end
 
     render json: {
@@ -46,7 +45,7 @@ class Api::Visioplainte::CreneauxController < Api::Visioplainte::BaseController
     end
 
     if errors.any?
-      render(json: { erreurs: errors }, status: :bad_request) and return
+      render(json: { errors: errors }, status: :bad_request) and return
     end
   end
 
@@ -73,21 +72,6 @@ class Api::Visioplainte::CreneauxController < Api::Visioplainte::BaseController
     {
       "Police" => "Police Nationale",
       "Gendarmerie" => "Gendarmerie Nationale",
-    }
-  end
-
-  def prochain
-    # Une fausse implémentation pour la documentation
-    if params[:service] == "Gendarmerie"
-      error = {
-        erreur: "Aucun créneau n'est disponible après cette date pour ce service.",
-      }
-      render(json: error, status: :not_found) and return
-    end
-
-    render json: {
-      starts_at: "2024-12-22T10:00:00+02:00",
-      duration_in_min: 30,
     }
   end
 end
