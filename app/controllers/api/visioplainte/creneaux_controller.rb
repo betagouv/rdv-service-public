@@ -13,6 +13,21 @@ class Api::Visioplainte::CreneauxController < Api::Visioplainte::BaseController
     }
   end
 
+  def prochain
+    # Une fausse implémentation pour la documentation
+    if params[:service] == "Gendarmerie"
+      errors = {
+        errors: ["Aucun créneau n'est disponible après cette date pour ce service."],
+      }
+      render(json: errors, status: :not_found) and return
+    end
+
+    render json: {
+      starts_at: "2024-12-22T10:00:00+02:00",
+      duration_in_min: 30,
+    }
+  end
+
   private
 
   def validate_date_range
@@ -31,7 +46,7 @@ class Api::Visioplainte::CreneauxController < Api::Visioplainte::BaseController
     end
 
     if errors.any?
-      render(json: { errors: errors }, status: :bad_request) and return
+      render(json: { erreurs: errors }, status: :bad_request) and return
     end
   end
 

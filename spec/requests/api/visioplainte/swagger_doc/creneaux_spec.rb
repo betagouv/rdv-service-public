@@ -55,12 +55,12 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do
 
       description "Renvoie le prochain créneau disponible"
       parameter name: :service, in: :query, type: :string,
-        description: "Indique si on souhaite obtenir les créneaux de la plateforme de la gendarmerie ou de la police. " \
-        "Les deux valeurs possibles sont donc 'Police' ou 'Gendarmerie'",
-        example: "Police", required: true
+                description: "Indique si on souhaite obtenir les créneaux de la plateforme de la gendarmerie ou de la police. " \
+                             "Les deux valeurs possibles sont donc 'Police' ou 'Gendarmerie'",
+                example: "Police", required: true
 
       parameter name: "date_debut", in: :query, type: :string, description: "date au format iso8601 (YYYY-MM-DD), date à partir de laquelle on cherche des créneaux",
-        example: "2024-12-22", required: true
+                example: "2024-12-22", required: true
 
       let(:date_debut) { "2024-12-22" }
       let(:service) { "Police" }
@@ -81,19 +81,18 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do
 
       response 404, "Renvoie un message d'erreur si aucun créneau n'est disponible" do
         run_test!
-        schema type: :object, properties: { erreur: { type: :string } }, required: %w[erreur]
+        schema type: :object, properties: { errors: { type: :array, items: { type: :string } } }, required: %w[errors]
 
         let(:service) { "Gendarmerie" }
 
         specify do
           expect(parsed_response_body).to eq(
             {
-              erreur: "Aucun créneau n'est disponible après cette date pour ce service.",
+              errors: ["Aucun créneau n'est disponible après cette date pour ce service."],
             }.deep_stringify_keys
           )
         end
       end
     end
   end
-
 end
