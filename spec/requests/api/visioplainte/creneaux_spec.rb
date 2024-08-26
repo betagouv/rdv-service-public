@@ -57,7 +57,7 @@ RSpec.describe "Creneaux" do
     context "when passing an invalid param" do
       let(:creneaux_params) do
         {
-          service: "Service Social",
+          service: "Service social",
           date_debut: "2024-08-19",
           date_fin: "2024-08-25",
         }
