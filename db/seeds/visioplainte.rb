@@ -24,6 +24,7 @@ motif_police = Motif.create!(
   color: "#FF7C00",
   location_type: :visio,
   service: service_police,
+  visibility_type: Motif::VISIBLE_AND_NOT_NOTIFIED,
   organisation: orga_police
 )
 motif_gendarmerie = Motif.create!(
@@ -33,6 +34,7 @@ motif_gendarmerie = Motif.create!(
   color: "#FF7C00",
   location_type: :visio,
   service: service_gendarmerie,
+  visibility_type: Motif::VISIBLE_AND_NOT_NOTIFIED,
   organisation: orga_gendarmerie
 )
 
