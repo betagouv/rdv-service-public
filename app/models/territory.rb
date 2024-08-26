@@ -14,14 +14,14 @@ class Territory < ApplicationRecord
   # Attributes
   auto_strip_attributes :name
 
-  enum sms_provider: {
+  enum :sms_provider, {
     netsize: "netsize",
     send_in_blue: "send_in_blue",
     contact_experience: "contact_experience",
     sfr_mail2sms: "sfr_mail2sms",
     clever_technologies: "clever_technologies",
     orange_contact_everyone: "orange_contact_everyone",
-  }, _prefix: true
+  }, prefix: true
 
   # Relations
   has_many :teams, dependent: :destroy
