@@ -112,6 +112,108 @@
         }
       }
     },
+    "/api/visioplainte/creneaux/prochain": {
+      "get": {
+        "summary": "Indique la date du prochain créneau",
+        "security": [
+          {
+            "X-VISIOPLAINTE-API-KEY": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "X-VISIOPLAINTE-API-KEY",
+            "in": "header",
+            "description": "Clé d'API",
+            "example": "visioplainte-api-test-key-123456",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "service",
+            "in": "query",
+            "description": "Indique si on souhaite obtenir les créneaux de la plateforme de la gendarmerie ou de la police. Les deux valeurs possibles sont donc 'Police' ou 'Gendarmerie'",
+            "example": "Police",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "date_debut",
+            "in": "query",
+            "description": "date au format iso8601 (YYYY-MM-DD), date à partir de laquelle on cherche des créneaux",
+            "example": "2024-12-22",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "description": "Renvoie le prochain créneau disponible",
+        "responses": {
+          "200": {
+            "description": "Renvoie le prochain créneau disponible",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "starts_at": "2024-12-22T10:00:00+02:00",
+                      "duration_in_min": 30
+                    }
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "starts_at": {
+                      "type": "string"
+                    },
+                    "duration_in_min": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "starts_at",
+                    "duration_in_min"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Renvoie un message d'erreur si aucun créneau n'est disponible",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "erreur": "Aucun créneau n'est disponible après cette date pour ce service."
+                    }
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "erreur": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "erreur"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/visioplainte/rdvs": {
       "post": {
         "summary": "Prendre un rdv",
@@ -163,14 +265,14 @@
                   "example": {
                     "value": {
                       "id": 123,
-                      "created_at": "2024-08-14 11:01:05 +0200",
+                      "created_at": "2024-08-26 10:27:07 +0200",
                       "duration_in_min": 45,
-                      "ends_at": "2024-08-14 11:46:05 +0200",
+                      "ends_at": "2024-08-26 11:12:06 +0200",
                       "guichet": {
                         "id": 789,
                         "name": "GUICHET 3"
                       },
-                      "starts_at": "2024-08-14 11:01:05 +0200",
+                      "starts_at": "2024-08-26 10:27:06 +0200",
                       "status": "unknown",
                       "user_id": 456
                     }
@@ -313,7 +415,7 @@
                   "example": {
                     "value": {
                       "id": 123,
-                      "created_at": "2024-08-14 11:01:06 +0200",
+                      "created_at": "2024-08-26 10:27:07 +0200",
                       "duration_in_min": 45,
                       "ends_at": null,
                       "guichet": {
