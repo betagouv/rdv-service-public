@@ -53,6 +53,24 @@ RSpec.describe "Creneaux" do
         }
       )
     end
+
+    context "when passing an invalid param" do
+      let(:creneaux_params) do
+        {
+          service: "Service Social",
+          date_debut: "2024-08-19",
+          date_fin: "2024-08-25",
+        }
+      end
+
+      it "shows an error" do
+        get_request
+        expect(response.status).to eq 400
+        expect(get_request).to eq(
+          { errors: ["Le paramètre service doit avoir pour valeur 'Police' ou 'Gendarmerie'"] }
+        )
+      end
+    end
   end
 
   describe "date de début et de fin" do

@@ -44,6 +44,10 @@ class Api::Visioplainte::CreneauxController < Api::Visioplainte::BaseController
       errors << "date_debut et date_fin ne doivent pas être espacés de plus de 31 jours"
     end
 
+    unless params[:service].in?(service_names.keys)
+      errors << "Le paramètre service doit avoir pour valeur 'Police' ou 'Gendarmerie'"
+    end
+
     if errors.any?
       render(json: { errors: errors }, status: :bad_request) and return
     end
