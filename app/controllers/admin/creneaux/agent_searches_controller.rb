@@ -1,6 +1,4 @@
 class Admin::Creneaux::AgentSearchesController < AgentAuthController
-  respond_to :html, :js
-
   before_action :set_form
 
   helper_method :motif_selected?
@@ -11,7 +9,7 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
     # motif public_office pour vérifier qu'il n'y
     # qu'un lieu
     set_search_results
-    if (params[:commit].present? || request.format.js?) && motif_selected? && (results_without_lieu? || only_one_lieu?)
+    if params[:commit].present? && motif_selected? && (results_without_lieu? || only_one_lieu?)
       skip_policy_scope # TODO: improve pundit checks for creneaux
       redirect_to admin_organisation_slots_path(current_organisation, creneaux_search_params)
     else
@@ -33,7 +31,7 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
   end
 
   def only_one_lieu?
-    @search_results&.count == 1
+    requires_lieu? && @search_results&.count == 1
   end
 
   def requires_lieu?
@@ -51,21 +49,22 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
   end
 
   def set_search_results
-    return unless (params[:commit].present? || request.format.js?) && @form.valid?
+    if params[:commit].present? && @form.valid?
 
-    # Un RDV collectif peut-il avoir lieu à domicile ou au téléphone ?
-    @search_results = if @form.motif.individuel?
-                        search_creneaux_service
-                      else
-                        SearchRdvCollectifForAgentsService.new(@form).lieu_search
-                      end
+      # Un RDV collectif peut-il avoir lieu à domicile ou au téléphone ?
+      @search_results = if @form.motif.individuel?
+                          search_creneaux_service
+                        else
+                          SearchRdvCollectifForAgentsService.new(@form).lieu_search
+                        end
+    end
   end
 
   def search_creneaux_service
     @search_creneaux_service ||= if requires_lieu?
-                                   SearchCreneauxForAgentsService.perform_with(@form)
+                                   SearchCreneauxForAgentsService.new(@form).next_availability_by_lieu
                                  else
-                                   SearchCreneauxWithoutLieuForAgentsService.perform_with(@form)
+                                   SearchCreneauxForAgentsService.new(@form).next_availability
                                  end
   end
 

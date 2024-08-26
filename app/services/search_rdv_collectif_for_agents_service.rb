@@ -5,8 +5,10 @@ class SearchRdvCollectifForAgentsService
 
   def lieu_search
     lieux.map do |lieu|
-      OpenStruct.new(lieu: lieu, next_availability: rdvs.where(lieu: lieu).first.starts_at, creneaux: rdvs.where(lieu: lieu))
-    end.sort_by(&:next_availability)
+      OpenStruct.new(lieu: lieu, next_availability: rdvs.where(lieu: lieu).first)
+    end.sort_by do |result|
+      result.next_availability.starts_at
+    end
   end
 
   def slot_search

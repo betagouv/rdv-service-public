@@ -2,11 +2,6 @@ class Admin::SlotsController < AgentAuthController
   def index
     @form = helpers.build_agent_creneaux_search_form(current_organisation, params)
 
-    # Dans ce cadre là, nous n'avons qu'un lieu, et donc une structure en résultat de l'appel à ce service.
-    # TODO reprendre le service pour le sortir du format `background_job` et proposer 2 méthodes publiques
-    # - une pour construire la liste des lieux
-    # - une pour le cas où nous avons déjà un lieu
-    # À terme, ça pourrait également être un calcul plus réduit. Dans le cas de la recherche sur plusieurs lieux, nous avons besoin de connaitre la prochaine dispo, pas TOUTES les dispo
     @search_result = search_result
 
     @motifs = Agent::MotifPolicy::Scope.apply(current_agent, Motif)
@@ -23,14 +18,10 @@ class Admin::SlotsController < AgentAuthController
   private
 
   def search_result
-    if @form.motif.requires_lieu?
-      if @form.motif.individuel?
-        SearchCreneauxForAgentsService.perform_with(@form).first
-      else
-        SearchRdvCollectifForAgentsService.new(@form).slot_search
-      end
+    if @form.motif.individuel?
+      SearchCreneauxForAgentsService.new(@form).build_result
     else
-      SearchCreneauxWithoutLieuForAgentsService.perform_with(@form)
+      SearchRdvCollectifForAgentsService.new(@form).slot_search
     end
   end
 end
