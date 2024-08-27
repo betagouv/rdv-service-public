@@ -235,10 +235,6 @@ Rails/ActionOrder:
 RSpec/ChangeByZero:
   Enabled: false
 
-RSpec/SpecFilePathFormat:
-  Exclude:
-    - "spec/mailers/admins/sfr_mail_2_sms_mailer_spec.rb"
-
 RSpec/MetadataStyle:
   Enabled: false
 
