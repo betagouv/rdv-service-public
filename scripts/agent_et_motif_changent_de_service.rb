@@ -16,7 +16,7 @@ puts "Déplace les agents et les motifs du service #{service_source.name} vers l
 Agent.transaction do
   puts "Déplacement des motifs:"
   Motif.where(organisation_id: ID_ORGANISATION, service: service_source).each do |motif|
-    puts motif.name.to_s
+    puts motif.name
     new_motif = motif.dup
     new_motif.organisation_id = ID_ORGANISATION
     new_motif.service_id = ID_SERVICE_DESTINATION
@@ -46,7 +46,7 @@ Agent.transaction do
 
   puts "Déplacement des agents:"
   organisation.agents.where(service: service_source).each do |agent|
-    puts agent.full_name.to_s
+    puts agent.full_name
     next if dry_run
 
     agent.update_column(:service_id, ID_SERVICE_DESTINATION)

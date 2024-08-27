@@ -28,22 +28,22 @@ RSpec.describe "ANTS API: getManagedMeetingPoints" do
     it "returns a list of lieux" do
       get "/api/ants/getManagedMeetingPoints", headers: { "X-HUB-RDV-AUTH-TOKEN" => "" }
       expect(JSON.parse(response.body)).to contain_exactly({
-          id: lieu1.id.to_s,
-          name: "Mairie de Romainville",
-          longitude: 3.0348016639327,
-          latitude: 50.549140395451,
-          public_entry_address: "89 rue Roger Bouvry",
-          zip_code: "59113",
-          city_name: "Seclin",
-        }.stringify_keys, {
-          id: lieu2.id.to_s,
-          name: "Mairie de Paris 7",
-          longitude: 4.0348016639327,
-          latitude: 60.549140395451,
-          public_entry_address: "89 rue du Général Leclerc",
-          zip_code: "75007",
-          city_name: "Paris",
-        }.stringify_keys)
+        id: lieu1.id.to_s,
+        name: "Mairie de Romainville",
+        longitude: 3.0348016639327,
+        latitude: 50.549140395451,
+        public_entry_address: "89 rue Roger Bouvry",
+        zip_code: "59113",
+        city_name: "Seclin",
+      }.stringify_keys, {
+        id: lieu2.id.to_s,
+        name: "Mairie de Paris 7",
+        longitude: 4.0348016639327,
+        latitude: 60.549140395451,
+        public_entry_address: "89 rue du Général Leclerc",
+        zip_code: "75007",
+        city_name: "Paris",
+      }.stringify_keys)
     end
   end
 end
