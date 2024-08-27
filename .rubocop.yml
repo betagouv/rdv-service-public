@@ -9,6 +9,7 @@ AllCops:
     - "node_modules/**/*"
     - "db/schema.rb"
     - "db/migrate/*good_job*.rb"
+    - "scripts/screenshots/**/*"
   NewCops: enable
   TargetRubyVersion: 3.1.2
 
@@ -23,6 +24,9 @@ Layout/LineLength:
     - 'spec/jobs/outlook/update_event_job_spec.rb'
     - 'spec/models/concerns/outlook/synchronizable_spec.rb'
     - 'spec/models/outlook/event_spec.rb'
+    - 'spec/jobs/cron_job/destroy_old_rdvs_and_inactive_accounts_job_spec.rb'
+    - 'spec/services/participation_exporter_spec.rb'
+    - 'spec/services/participation_exporter_spec.rb'
 
 Layout/MultilineMethodCallIndentation:
   EnforcedStyle: indented
@@ -57,6 +61,9 @@ Metrics/ClassLength:
   Exclude:
     - 'app/models/rdv.rb'
     - 'app/models/user.rb'
+    - 'app/models/agent.rb'
+    - 'app/models/motif.rb'
+
 
 Metrics/ModuleLength:
   Max: 150
@@ -67,6 +74,18 @@ Metrics/MethodLength:
   Max: 20
   Exclude:
     - 'db/migrate/20210301135256_create_territories.rb'
+    - 'app/controllers/agents/users_controller.rb'
+    - 'app/controllers/inclusion_connect_controller.rb'
+    - 'app/controllers/lapin/sms_preview_controller.rb'
+    - 'app/controllers/super_admins/migrations_controller.rb'
+    - 'app/controllers/users/rdvs_controller.rb'
+    - 'app/helpers/configuration_helper.rb'
+    - 'app/jobs/webhook_job.rb'
+    - 'app/models/concerns/ical_helpers/ics.rb'
+    - 'app/services/sms_sender.rb'
+    - 'db/migrate/20231017125305_reunite_prod_schema.rb'
+    - 'spec/features/agents/agent_can_create_rdv_with_wizard_spec.rb'
+    - 'spec/features/agents/rdvs_collectifs/full_lifecycle_spec.rb'
 
 Rails/ApplicationController:
   Exclude:
@@ -112,11 +131,25 @@ Rails/LexicallyScopedActionFilter:
 Rails/ActiveRecordCallbacksOrder:
   Enabled: false
 
+Rails/FindEach:
+  Enabled: false
+
+Rails/ThreeStateBooleanColumn:
+  Enabled: false
+
+Rails/WhereRange:
+  Enabled: false
+
+Rails/I18nLocaleTexts:
+  Enabled: false
+
 # This allows the standard syntax for the `change` matcher, see:
 # https://relishapp.com/rspec/rspec-expectations/docs/built-in-matchers/change-matcher
 Lint/AmbiguousBlockAssociation:
   Exclude:
     - 'spec/**/*'
+
+# RSPEC rules
 
 RSpec/AnyInstance:
   Exclude:
@@ -184,6 +217,33 @@ RSpec/MessageChain:
 RSpec/Pending:
   Enabled: true
 
+RSpec/IndexedLet:
+  Enabled: false
+
+RSpec/ExampleWording:
+  Enabled: false
+
+RSpec/ScatteredSetup:
+  Enabled: false
+
+RSpec/ReceiveMessages:
+  Enabled: false
+
+Rails/ActionOrder:
+  Enabled: false
+
+RSpec/ChangeByZero:
+  Enabled: false
+
+RSpec/SpecFilePathFormat:
+  Exclude:
+    - "spec/mailers/admins/sfr_mail_2_sms_mailer_spec.rb"
+
+RSpec/MetadataStyle:
+  Enabled: false
+
+#  STYLE rules
+
 Style/AsciiComments:
   Enabled: false
 
@@ -229,13 +289,6 @@ Style/TrailingCommaInArrayLiteral:
 Style/TrailingCommaInHashLiteral:
   EnforcedStyleForMultiline: consistent_comma
 
-RSpec/ScatteredSetup:
-  Enabled: false
-
-RSpec/FilePath:
-  CustomTransform:
-    SfrMail2SmsMailer: sfr_mail_2_sms_mailer
-
 Style/NumericPredicate:
   Enabled: false
 
@@ -247,3 +300,20 @@ Rails/UnusedIgnoredColumns:
 
 Style/SoleNestedConditional:
   Enabled: false
+
+Style/FetchEnvVar:
+  Enabled: false
+
+Style/ArgumentsForwarding:
+  Enabled: false
+
+Style/ComparableClamp:
+  Enabled: false
+
+# cette vérification serait bien à mettre en place mais il y plus de 20 specs qui ne la respectent pas aujourd’hui
+RSpec/NoExpectationExample:
+  Enabled: false
+
+Rails/RedundantActiveRecordAllMethod:
+  Exclude:
+    - "db/migrate/**"
