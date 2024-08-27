@@ -1,4 +1,4 @@
-RSpec.describe "Creneaux" do
+RSpec.describe "Visioplainte Creneaux" do
   subject(:get_request) do
     get "/api/visioplainte/creneaux", headers: auth_header, params: creneaux_params
     JSON.parse(response.body).deep_symbolize_keys
@@ -9,11 +9,7 @@ RSpec.describe "Creneaux" do
     load Rails.root.join("db/seeds/visioplainte.rb")
   end
 
-  stub_env_with(VISIOPLAINTE_API_KEY: "visioplainte-api-test-key-123456")
-
-  let(:auth_header) do
-    { "X-VISIOPLAINTE-API-KEY": "visioplainte-api-test-key-123456" }
-  end
+  include_context "Visioplainte Auth"
 
   context "when there are available créneaux" do
     let(:creneaux_params) do

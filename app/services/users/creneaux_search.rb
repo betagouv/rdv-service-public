@@ -1,5 +1,5 @@
 class Users::CreneauxSearch
-  def initialize(motif:, user: nil, lieu: nil, date_range: nil, geo_search: nil)
+  def initialize(motif:, date_range: nil, user: nil, lieu: nil, geo_search: nil)
     @user = user
     @motif = motif
     @lieu = lieu
@@ -7,7 +7,7 @@ class Users::CreneauxSearch
     @geo_search = geo_search
   end
 
-  def self.creneau_for(motif:, user:, lieu:, starts_at:, geo_search: nil)
+  def self.creneau_for(motif:, starts_at:, user: nil, lieu: nil, geo_search: nil)
     search = new(
       user: user,
       motif: motif,

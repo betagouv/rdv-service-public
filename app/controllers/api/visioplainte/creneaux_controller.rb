@@ -38,11 +38,15 @@ class Api::Visioplainte::CreneauxController < Api::Visioplainte::BaseController
     end
   end
 
+  def self.find_motif(service_param)
+    Motif.joins(organisation: :territory).where(territories: { name: Territory::VISIOPLAINTE_NAME })
+      .joins(:service).find_by(service: { name: SERVICE_NAMES[service_param] })
+  end
+
   private
 
   def motif
-    @motif ||= Motif.joins(organisation: :territory).where(territories: { name: Territory::VISIOPLAINTE_NAME })
-      .joins(:service).find_by(service: { name: SERVICE_NAMES[params[:service]] })
+    @motif ||= self.class.find_motif(params[:service])
   end
 
   def creneau_to_hash(creneau)
