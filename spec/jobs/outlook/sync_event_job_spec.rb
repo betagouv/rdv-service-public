@@ -31,7 +31,7 @@ RSpec.describe Outlook::SyncEventJob do
           described_class.perform_now(agents_rdv.id, nil, agents_rdv.agent)
         end.to have_enqueued_job(described_class).with(agents_rdv.id, nil, agents_rdv.agent)
 
-        expect(agents_rdv.reload.outlook_id).to eq(nil)
+        expect(agents_rdv.reload.outlook_id).to be(nil)
         expect(sentry_events.last.exception.values.first.value).to eq("Outlook api error! (RuntimeError)")
       end
     end

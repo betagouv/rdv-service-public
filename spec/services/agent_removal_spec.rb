@@ -96,20 +96,20 @@ RSpec.describe AgentRemoval, type: :service do
     context "single orga left" do
       let(:agent) { build(:agent, organisations: [organisation1]) }
 
-      it { is_expected.to eq true }
+      it { is_expected.to be true }
     end
 
     context "no orga left" do
       let(:agent) { build(:agent, organisations: []) }
 
-      it { is_expected.to eq true }
+      it { is_expected.to be true }
     end
 
     context "multiple orgas left" do
       let(:organisation2) { build(:organisation) }
       let(:agent) { build(:agent, organisations: [organisation1, organisation2]) }
 
-      it { is_expected.to eq false }
+      it { is_expected.to be false }
     end
   end
 end

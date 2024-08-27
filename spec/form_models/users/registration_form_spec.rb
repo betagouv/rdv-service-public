@@ -10,13 +10,13 @@ RSpec.describe Users::RegistrationForm, type: :form_model do
   describe "validations" do
     it "is valid with complete params" do
       form = described_class.new(attributes)
-      expect(form.valid?).to eq(true)
+      expect(form.valid?).to be(true)
       expect(form.errors).to be_empty
     end
 
     it "does not allow empty emails" do
       form = described_class.new(attributes.except(:email))
-      expect(form.valid?).to eq(false)
+      expect(form.valid?).to be(false)
       expect(form.errors.attribute_names).to contain_exactly(:email)
     end
 

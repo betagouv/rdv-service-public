@@ -61,31 +61,31 @@ RSpec.describe Rdv, type: :model do
     before { travel_to(now) }
 
     context "when Rdv starts in more than 4 hours" do
-      it { expect(rdv.cancellable_by_user?).to eq(true) }
+      it { expect(rdv.cancellable_by_user?).to be(true) }
     end
 
     context "when Rdv starts in 4 hours or less" do
       let(:starts_at) { now + 4.hours }
 
-      it { expect(rdv.cancellable_by_user?).to eq(false) }
+      it { expect(rdv.cancellable_by_user?).to be(false) }
     end
 
     context "when it is already cancelled" do
       let(:rdv) { build(:rdv, status: "excused", starts_at: starts_at, motif: motif) }
 
-      it { expect(rdv.cancellable_by_user?).to eq(false) }
+      it { expect(rdv.cancellable_by_user?).to be(false) }
     end
 
     context "when it is collectif" do
       let(:motif) { build(:motif, collectif: true) }
 
-      it { expect(rdv.cancellable_by_user?).to eq(false) }
+      it { expect(rdv.cancellable_by_user?).to be(false) }
     end
 
     context "when the rdvs are set as not cancellable by the user in the motif" do
       let(:motif) { build(:motif, rdvs_cancellable_by_user: false) }
 
-      it { expect(rdv.cancellable_by_user?).to eq(false) }
+      it { expect(rdv.cancellable_by_user?).to be(false) }
     end
   end
 
@@ -99,44 +99,44 @@ RSpec.describe Rdv, type: :model do
     before { travel_to(now) }
 
     context "when Rdv starts in more than 2 days" do
-      it { expect(rdv.editable_by_user?).to eq(true) }
+      it { expect(rdv.editable_by_user?).to be(true) }
     end
 
     context "when Rdv starts in 2 days or less" do
       let(:starts_at) { now + 2.days }
 
-      it { expect(rdv.editable_by_user?).to eq(false) }
+      it { expect(rdv.editable_by_user?).to be(false) }
     end
 
     context "when it is already cancelled" do
       let(:rdv) { build(:rdv, status: "excused", starts_at: starts_at, motif: motif, created_by: user) }
 
-      it { expect(rdv.editable_by_user?).to eq(false) }
+      it { expect(rdv.editable_by_user?).to be(false) }
     end
 
     context "when it is collectif" do
       let(:motif) { build(:motif, collectif: true) }
 
-      it { expect(rdv.editable_by_user?).to eq(false) }
+      it { expect(rdv.editable_by_user?).to be(false) }
     end
 
     context "when the rdvs are set as not cancellable by the user in the motif" do
       let(:motif) { build(:motif, rdvs_editable_by_user: false) }
 
-      it { expect(rdv.editable_by_user?).to eq(false) }
+      it { expect(rdv.editable_by_user?).to be(false) }
     end
 
     context "when the motif is not reservable online" do
       let(:motif) { build(:motif, bookable_by: :agents) }
 
-      it { expect(rdv.editable_by_user?).to eq(false) }
+      it { expect(rdv.editable_by_user?).to be(false) }
     end
 
     context "when the rdv is created by an agent" do
       let(:agent) { create(:agent) }
       let(:rdv) { build(:rdv, created_by: agent, starts_at: starts_at, motif: motif) }
 
-      it { expect(rdv.editable_by_user?).to eq(false) }
+      it { expect(rdv.editable_by_user?).to be(false) }
     end
   end
 
@@ -522,48 +522,48 @@ RSpec.describe Rdv, type: :model do
 
     it "return false when starts_at blank" do
       rdv = build(:rdv, starts_at: "")
-      expect(rdv.overlapping_plages_ouvertures?).to eq(false)
+      expect(rdv.overlapping_plages_ouvertures?).to be(false)
     end
 
     it "return false when ends_at blank" do
       rdv = build(:rdv, starts_at: now + 1.week, ends_at: nil)
-      expect(rdv.overlapping_plages_ouvertures?).to eq(false)
+      expect(rdv.overlapping_plages_ouvertures?).to be(false)
     end
 
     it "return false when lieu blank" do
       rdv = build(:rdv, starts_at: now + 1.week, ends_at: now + 1.week + 30.minutes)
-      expect(rdv.overlapping_plages_ouvertures?).to eq(false)
+      expect(rdv.overlapping_plages_ouvertures?).to be(false)
     end
 
     it "return false with past RDV" do
       rdv = build(:rdv, starts_at: now - 1.week, ends_at: now - 1.week + 30.minutes)
-      expect(rdv.overlapping_plages_ouvertures?).to eq(false)
+      expect(rdv.overlapping_plages_ouvertures?).to be(false)
     end
 
     it "return false when RDV's error" do
       rdv = build(:rdv, starts_at: now - 1.week, ends_at: now - 1.week)
-      expect(rdv.overlapping_plages_ouvertures?).to eq(false)
+      expect(rdv.overlapping_plages_ouvertures?).to be(false)
     end
 
     it "return true with po overlapping RDV on an other lieu" do
       agent = create(:agent)
       rdv = build(:rdv, agents: [agent], starts_at: now + 1.week, ends_at: now + 1.week + 30.minutes)
       create(:plage_ouverture, agent: agent, first_day: (now + 1.week).to_date, start_time: Tod::TimeOfDay.new(10, 45), end_time: Tod::TimeOfDay.new(11, 45), lieu: create(:lieu))
-      expect(rdv.overlapping_plages_ouvertures?).to eq(true)
+      expect(rdv.overlapping_plages_ouvertures?).to be(true)
     end
 
     it "return false with po overlapping RDV on an same lieu" do
       agent = create(:agent)
       rdv = build(:rdv, agents: [agent], starts_at: now + 1.week, ends_at: now + 1.week + 30.minutes)
       create(:plage_ouverture, agent: agent, first_day: (now + 1.week).to_date, start_time: Tod::TimeOfDay.new(10, 45), end_time: Tod::TimeOfDay.new(11, 45), lieu: rdv.lieu)
-      expect(rdv.overlapping_plages_ouvertures?).to eq(false)
+      expect(rdv.overlapping_plages_ouvertures?).to be(false)
     end
 
     it "return false with po overlapping RDV with an other agent" do
       agent = create(:agent)
       rdv = build(:rdv, agents: [agent], starts_at: now + 1.week, ends_at: now + 1.week + 30.minutes)
       create(:plage_ouverture, agent: create(:agent), first_day: (now + 1.week).to_date, start_time: Tod::TimeOfDay.new(10, 45), end_time: Tod::TimeOfDay.new(11, 45), lieu: rdv.lieu)
-      expect(rdv.overlapping_plages_ouvertures?).to eq(false)
+      expect(rdv.overlapping_plages_ouvertures?).to be(false)
     end
 
     it "return false with recurring po overlapping RDV" do
@@ -571,7 +571,7 @@ RSpec.describe Rdv, type: :model do
       rdv = build(:rdv, agents: [agent], starts_at: now + 1.week, ends_at: now + 1.week + 30.minutes)
       create(:plage_ouverture, agent: agent, first_day: (now - 2.weeks).to_date, start_time: Tod::TimeOfDay.new(10, 45), end_time: Tod::TimeOfDay.new(11, 45), lieu: create(:lieu),
                                recurrence: Montrose.every(:week, on: ["tuesday"], starts: (now - 2.weeks).to_date))
-      expect(rdv.overlapping_plages_ouvertures?).to eq(true)
+      expect(rdv.overlapping_plages_ouvertures?).to be(true)
     end
 
     it "return false with recurring po overlapping RDV outside zone" do
@@ -581,7 +581,7 @@ RSpec.describe Rdv, type: :model do
       rdv = build(:rdv, agents: [agent], starts_at: now + 1.week, ends_at: now + 1.week + 30.minutes)
       create(:plage_ouverture, agent: agent, first_day: (now - 1.week).to_date, start_time: Tod::TimeOfDay.new(10, 45), end_time: Tod::TimeOfDay.new(11, 45), lieu: create(:lieu),
                                recurrence: Montrose.every(:month, day: { Tuesday: [2] }, starts: (now - 1.week).to_date))
-      expect(rdv.overlapping_plages_ouvertures?).to eq(false)
+      expect(rdv.overlapping_plages_ouvertures?).to be(false)
     end
   end
 
@@ -603,28 +603,28 @@ RSpec.describe Rdv, type: :model do
       now = Time.zone.parse("20220221 10:34")
       travel_to(now)
       rdv = build(:rdv, :at_public_office, starts_at: now + 9.days)
-      expect(rdv.available_to_file_attente?).to eq(true)
+      expect(rdv.available_to_file_attente?).to be(true)
     end
 
     it "returns false with a tomorrow RDV" do
       now = Time.zone.parse("20220221 10:34")
       travel_to(now)
       rdv = build(:rdv, :at_public_office, starts_at: now + 1.day)
-      expect(rdv.available_to_file_attente?).to eq(false)
+      expect(rdv.available_to_file_attente?).to be(false)
     end
 
     it "returns false with a home RDV" do
       now = Time.zone.parse("20220221 10:34")
       travel_to(now)
       rdv = build(:rdv, :at_home, starts_at: now + 9.days)
-      expect(rdv.available_to_file_attente?).to eq(false)
+      expect(rdv.available_to_file_attente?).to be(false)
     end
 
     it "returns false with a cancelled RDV" do
       now = Time.zone.parse("20220221 10:34")
       travel_to(now)
       rdv = build(:rdv, :at_home, starts_at: now + 9.days, cancelled_at: now - 1.day)
-      expect(rdv.available_to_file_attente?).to eq(false)
+      expect(rdv.available_to_file_attente?).to be(false)
     end
 
     it "returns false with a not allowed online reservation motif" do
@@ -632,7 +632,7 @@ RSpec.describe Rdv, type: :model do
       travel_to(now)
       motif = build(:motif, bookable_by: :agents)
       rdv = build(:rdv, :at_home, starts_at: now + 9.days, motif: motif)
-      expect(rdv.available_to_file_attente?).to eq(false)
+      expect(rdv.available_to_file_attente?).to be(false)
     end
 
     it "returns false with a collective motif" do
@@ -640,7 +640,7 @@ RSpec.describe Rdv, type: :model do
       travel_to(now)
       motif = build(:motif, collectif: true)
       rdv = build(:rdv, :at_home, starts_at: now + 9.days, motif: motif)
-      expect(rdv.available_to_file_attente?).to eq(false)
+      expect(rdv.available_to_file_attente?).to be(false)
     end
   end
 

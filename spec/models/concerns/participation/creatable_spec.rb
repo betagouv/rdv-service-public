@@ -43,7 +43,7 @@ RSpec.describe Participation::Creatable, type: :concern do
         expect_notifications_sent_for(rdv, user, :rdv_created)
         expect_notifications_sent_for(rdv, agent, :rdv_created)
         expect(rdv.reload.participations).to eq([participation_relative])
-        expect(participation1.participation_token).to eq(nil)
+        expect(participation1.participation_token).to be(nil)
       end
     end
 
