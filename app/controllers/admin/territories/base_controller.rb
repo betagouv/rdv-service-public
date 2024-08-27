@@ -13,17 +13,22 @@ class Admin::Territories::BaseController < ApplicationController
   def current_territory
     @territory
   end
+
   helper_method :current_territory
 
   def pundit_user
     current_agent
   end
+
   helper_method :pundit_user
 
   # L'usage recommandé est de passer explicitement une policy_scope_class pour savoir quelle policy est utilisé
+  # rubocop:disable Lint/UselessMethodDefinition
   def policy_scope(scope, policy_scope_class:)
     super
   end
+
+  # rubocop:enable Lint/UselessMethodDefinition
 
   private
 

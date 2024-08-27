@@ -40,7 +40,7 @@ class PrescripteurRdvWizardController < ApplicationController
 
       redirect_to prescripteur_new_beneficiaire_path
     else
-      flash[:error] = "Veuillez compléter tous les champs obligatoires"
+      flash[:error] = "Veuillez compléter tous les champs obligatoires" # rubocop:disable Rails/ActionControllerFlashBeforeRender
       @step_title = @step_titles[1]
 
       render :new_prescripteur
