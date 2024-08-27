@@ -4,7 +4,12 @@ RSpec.describe "Visioplainte Creneaux" do
     JSON.parse(response.body).deep_symbolize_keys
   end
 
-  include_context "Visioplainte"
+  before do
+    travel_to Time.zone.local(2024, 8, 18, 14, 0, 0)
+    load Rails.root.join("db/seeds/visioplainte.rb")
+  end
+
+  include_context "Visioplainte Auth"
 
   context "when there are available créneaux" do
     let(:creneaux_params) do
