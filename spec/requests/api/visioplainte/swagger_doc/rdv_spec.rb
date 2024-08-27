@@ -17,7 +17,8 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do # rub
                 example: "Police", required: true
 
       parameter name: "starts_at", in: :query, type: :string,
-                description: "datetime au format iso8601 (YYYY-MM-DD). Normalement c'est une des valeurs proposées par l'endpoint de liste des créneaux.", required: true
+                description: "datetime au format iso8601. Normalement c'est une des valeurs proposées par l'endpoint de liste des créneaux.",
+                example: "2024-08-19T08:00:00+02:00", required: true
 
       let(:service) { "Police" }
 

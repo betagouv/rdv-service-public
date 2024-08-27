@@ -369,7 +369,8 @@
           {
             "name": "starts_at",
             "in": "query",
-            "description": "datetime au format iso8601 (YYYY-MM-DD). Normalement c'est une des valeurs proposées par l'endpoint de liste des créneaux.",
+            "description": "datetime au format iso8601. Normalement c'est une des valeurs proposées par l'endpoint de liste des créneaux.",
+            "example": "2024-08-19T08:00:00+02:00",
             "required": true,
             "schema": {
               "type": "string"
