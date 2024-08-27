@@ -42,7 +42,7 @@ RSpec.describe Users::RdvsController, type: :controller do
     describe "when there is an available creneau" do
       let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
       let(:mock_creneau) do
-        instance_double(Creneau, agent: agent, motif: motif, lieu: lieu, starts_at: starts_at, duration_in_min: 30)
+        Creneau.new(agent: agent, motif: motif, lieu_id: lieu&.id, starts_at: starts_at)
       end
 
       it "creates rdv" do
