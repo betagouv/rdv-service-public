@@ -109,7 +109,7 @@ class Anonymizer::Rules::RdvInsertion
       non_anonymized_column_names: %w[
         format
         user_id
-        delivery_status 
+        delivery_status
         last_brevo_webhook_received_at
         created_at
         updated_at
