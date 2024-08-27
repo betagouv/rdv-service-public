@@ -290,7 +290,7 @@ RSpec.describe PlageOuverture, type: :model do
       now = Time.zone.parse("2022-12-27 11:00")
       travel_to(now)
       range = (now + 1.week)..(now + 1.week + 30.minutes)
-      create(:plage_ouverture, first_day: (now - 1.week).to_date, \
+      create(:plage_ouverture, first_day: (now - 1.week).to_date,
                                start_time: Tod::TimeOfDay.new(10, 45), \
                                end_time: Tod::TimeOfDay.new(11, 45), \
                                recurrence: Montrose.every(:month, day: { Tuesday: [2] }, starts: (now - 1.week).to_date))

@@ -28,7 +28,7 @@ class Users::GeoSearch
   def matching_zones
     return nil if @city_code.nil?
 
-    @matching_zones ||= \
+    @matching_zones ||=
       matching_zones_cities_arel.or(matching_zones_streets_arel)
   end
 
@@ -100,7 +100,7 @@ class Users::GeoSearch
   end
 
   def available_motifs_from_attributed_agents_arel
-    @available_motifs_from_attributed_agents_arel ||= \
+    @available_motifs_from_attributed_agents_arel ||=
       # Pour pouvoir utilser le `or` de la méthode `available_motifs_arels` il faut avoir des
       # requête avec les mêmes jointures, donc cette requête supplémentaire est nécessaire
       Motif.where(
