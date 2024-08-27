@@ -21,6 +21,7 @@ class Users::CreneauxSearch
 
   def next_availability
     return available_collective_rdvs.first if motif.collectif?
+    return nil if reduced_date_range.blank?
 
     NextAvailabilityService.find(motif, @lieu, attributed_agents, from: reduced_date_range.first, to: @motif.end_booking_delay)
   end
