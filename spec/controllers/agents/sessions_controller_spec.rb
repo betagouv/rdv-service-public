@@ -11,7 +11,7 @@ RSpec.describe Agents::SessionsController do
       stub_env_with(AGENT_CONNECT_BASE_URL: "https://fca.integ01.dev-agentconnect.fr/api/v2")
 
       before do
-        AgentConnectStubs.stub_and_run_discover_request
+        AgentConnect.discovery = OpenStruct.new(end_session_endpoint: "https://fca.integ01.dev-agentconnect.fr/api/v2/session/end")
         session[:agent_connect_id_token] = "fake_agent_connect_id_token"
       end
 

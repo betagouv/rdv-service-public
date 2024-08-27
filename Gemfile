@@ -22,7 +22,8 @@ gem "bootsnap", require: false # Reduces boot times through caching; required in
 gem "rack-cors" # CORS management
 # Mail provides a nice Ruby DSL for making, sending and reading emails.
 gem "mail"
-
+# Agent connect gem
+gem "agent_connect", git: "https://github.com/gip-inclusion/agent_connect_engine"
 # Ops
 # A gem that provides a client interface for the Sentry error logger
 gem "sentry-ruby"
