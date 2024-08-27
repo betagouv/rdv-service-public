@@ -6,7 +6,7 @@ class PrescripteurRdvWizardController < ApplicationController
   end
 
   before_action :check_rdv_wizard_attributes, except: %i[start confirmation]
-  before_action :set_rdv_wizard,                  only: %i[new_prescripteur new_beneficiaire create_rdv]
+  before_action :set_rdv_wizard, only: %i[new_prescripteur new_beneficiaire create_rdv]
   before_action :redirect_if_creneau_unavailable, only: %i[new_prescripteur new_beneficiaire create_rdv]
 
   def start
@@ -85,7 +85,7 @@ class PrescripteurRdvWizardController < ApplicationController
     if session[:rdv_wizard_attributes].blank?
       Sentry.capture_message("Prescripteur sans infos de creneau. Voir https://github.com/betagouv/rdv-solidarites.fr/issues/3420", fingerprint: ["presc_sans_creneau"])
       flash[:error] = "Nous n'avons pas trouvé le créneau pour lequel vous souhaitiez prendre rendez-vous."
-      redirect_to prendre_rdv_path(prescripteur: 1) and return
+      redirect_to prendre_rdv_path(prescripteur: 1)
     end
   end
 

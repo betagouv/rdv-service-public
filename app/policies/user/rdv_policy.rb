@@ -55,8 +55,8 @@ class User::RdvPolicy < ApplicationPolicy
         .where(users: { id: current_user.id })
         .or(
           User
-          .joins(:users)
-          .where(users: { responsible_id: current_user.id })
+            .joins(:users)
+            .where(users: { responsible_id: current_user.id })
         )
         .visible
 
