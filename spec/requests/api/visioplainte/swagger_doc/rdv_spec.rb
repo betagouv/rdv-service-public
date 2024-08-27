@@ -6,6 +6,22 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do # rub
     load Rails.root.join("db/seeds/visioplainte.rb")
   end
 
+  def self.rdv_response_schema
+    {
+      type: :object,
+      properties: {
+        id: { type: :integer },
+        created_at: { type: :string },
+        starts_at: { type: :string },
+        duration_in_min: { type: :integer },
+        ends_at: { type: :string },
+        guichet: { type: :object, properties: { id: { type: :integer }, name: { type: :string } } },
+        user_id: { type: :integer },
+      },
+      required: Visioplainte::RdvBlueprint.reflections[:default].fields.keys,
+    }
+  end
+
   path "/api/visioplainte/rdvs" do
     post "Prendre un rdv" do
       with_visioplainte_authentication
@@ -24,18 +40,7 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do # rub
 
       response 201, "Prend le rdv" do
         run_test!
-        schema type: :object,
-               properties: {
-                 id: { type: :integer },
-                 created_at: { type: :string },
-                 starts_at: { type: :string },
-                 duration_in_min: { type: :integer },
-                 ends_at: { type: :string },
-                 guichet: { type: :object, properties: { id: { type: :integer }, name: { type: :string } } },
-                 user_id: { type: :integer },
-               },
-               required: Visioplainte::RdvBlueprint.reflections[:default].fields.keys
-
+        schema rdv_response_schema
         let(:starts_at) { "2024-08-19T08:00:00+02:00" }
       end
 
@@ -72,6 +77,22 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do # rub
       response 200, "Annule le rdv" do
         run_test!
         parameter name: :id, in: :path, type: :string
+        schema rdv_response_schema
+
+        before do
+          post "/api/visioplainte/rdvs", params: {
+            starts_at: "2024-08-19T08:00:00+02:00",
+            service: "Police",
+          }, headers: auth_header
+
+          rdv_id = Rdv.last.id
+
+          put "/api/visioplainte/rdvs/#{rdv_id}/cancel", headers: auth_header
+        end
+
+        let(:auth_header) do
+          { "X-VISIOPLAINTE-API-KEY" => "visioplainte-api-test-key-123456" }
+        end
       end
     end
   end

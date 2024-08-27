@@ -40,10 +40,22 @@ class Api::Visioplainte::RdvsController < Api::Visioplainte::BaseController
   end
 
   def cancel
-    render json: Visioplainte::RdvBlueprint.render(rdv(:excused)), status: :ok
+    rdv = find_rdv
+
+    if rdv.blank?
+      render(json: { errors: ["Pas de rdv pour cet id"] }, status: :not_found)
+    else
+      rdv.update_and_notify(rdv.users.first, status: "excused")
+      render json: Visioplainte::RdvBlueprint.render(rdv), status: :ok
+    end
   end
 
   private
+
+  def find_rdv
+    Rdv.joins(organisation: :territory).where(territories: { name: Territory::VISIOPLAINTE_NAME })
+      .find_by(id: params[:id])
+  end
 
   def motif
     @motif ||= Api::Visioplainte::CreneauxController.find_motif(params[:service])
