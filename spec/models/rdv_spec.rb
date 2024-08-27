@@ -594,7 +594,7 @@ RSpec.describe Rdv, type: :model do
       agent = create(:agent)
       rdv = build(:rdv, agents: [agent], starts_at: now + 1.week, ends_at: now + 1.week + 30.minutes)
       create(:plage_ouverture, agent: agent, first_day: (now + 1.week).to_date, start_time: Tod::TimeOfDay.new(8), end_time: Tod::TimeOfDay.new(14))
-      expect(rdv.overlapping_plages_ouvertures.first).to be_a_kind_of(PlageOuverture)
+      expect(rdv.overlapping_plages_ouvertures.first).to be_a(PlageOuverture)
     end
   end
 

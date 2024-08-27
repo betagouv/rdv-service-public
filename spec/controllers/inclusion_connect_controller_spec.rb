@@ -20,7 +20,7 @@ RSpec.describe InclusionConnectController, type: :controller do
         redirect_uri: inclusion_connect_callback_url,
         response_type: "code",
         scope: "openid email profile",
-        state: be_a_kind_of(String),
+        state: be_a(String),
       }
       expect(redirect_url_query_params.symbolize_keys).to match(expected_params)
     end
