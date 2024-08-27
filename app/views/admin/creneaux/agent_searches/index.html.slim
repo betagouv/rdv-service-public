@@ -67,11 +67,11 @@
 
 #creneaux
   .rdv-text-align-center
-    - if @search_results&.any?
+    - if @next_availabilities&.any?
       .container
-        h3.font-weight-bold= t(".available_places_with_slots", count: @search_results.length)
-        - @search_results.each do |search_result|
-          = render "lieu_search_results", search_result: search_result
+        h3.font-weight-bold= t(".available_places_with_slots", count: @next_availabilities.length)
+        - @next_availabilities.each do |next_availability|
+          = render "lieu_search_results", next_availability: next_availability
         = render "admin/slots/prescription_cta"
     - elsif motif_selected? && params[:commit].present?
       = render partial: "admin/slots/no_slot_available"
