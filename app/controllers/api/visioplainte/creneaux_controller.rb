@@ -8,6 +8,7 @@ class Api::Visioplainte::CreneauxController < Api::Visioplainte::BaseController
   }.freeze
 
   def index
+    # TODO: manipuler le motif pour qu'il ai le bon bookable by
     creneaux = Users::CreneauxSearch.new(
       motif: motif,
       date_range: date_range
@@ -40,7 +41,10 @@ class Api::Visioplainte::CreneauxController < Api::Visioplainte::BaseController
 
   def self.find_motif(service_param)
     Motif.joins(organisation: :territory).where(territories: { name: Territory::VISIOPLAINTE_NAME })
-      .joins(:service).find_by(service: { name: SERVICE_NAMES[service_param] })
+      .joins(:service).find_by(service: { name: SERVICE_NAMES[service_param] }).tap do |m|
+        m.bookable_by = "everyone"
+        m.errors.add(:bookable_by, "Valeur modifiée pour permettre la recherche de créneaux, mais ne doit pas être enregistrée.")
+      end
   end
 
   private

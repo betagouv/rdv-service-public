@@ -30,6 +30,8 @@ class Users::CreneauxSearch
   def creneaux
     return available_collective_rdvs if motif.collectif?
 
+    return [] unless motif.bookable_by_everyone_or_bookable_by_invited_users? # TODO: il faudrait aussi distinguer les motifs non accessibles aux usagers sans invitations
+
     return [] if reduced_date_range.blank?
 
     SlotBuilder.available_slots(motif, @lieu, reduced_date_range, attributed_agents)
