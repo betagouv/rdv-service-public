@@ -133,13 +133,8 @@ class Users::RdvsController < UserAuthController
   end
 
   def build_rdv_from_creneau(creneau)
-    Rdv.new(
-      agents: [creneau.agent],
-      duration_in_min: creneau.duration_in_min,
-      starts_at: creneau.starts_at,
-      organisation: creneau.motif.organisation,
-      motif: creneau.motif,
-      lieu_id: creneau.lieu&.id,
+    rdv = creneau.build_rdv
+    rdv.assign_attributes(
       users: [user_for_rdv],
       created_by: current_user
     )

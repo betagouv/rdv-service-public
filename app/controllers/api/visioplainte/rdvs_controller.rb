@@ -18,20 +18,16 @@ class Api::Visioplainte::RdvsController < Api::Visioplainte::BaseController
       # Cette décision est motivée par le fait que les agents qui assurent les rdv n'utilisent pas non plus directement notre application
       user = User.create!(first_name: "Usager Anonyme", last_name: "Visioplainte")
 
-      rdv = Rdv.new(
+      rdv = creneau.build_rdv
+      rdv.assign_attributes(
+        created_by: user,
         participations_attributes: [
           {
             user: user,
             send_lifecycle_notifications: false,
             send_reminder_notification: false,
           },
-        ],
-        starts_at: creneau.starts_at,
-        motif: creneau.motif,
-        agents: [creneau.agent],
-        organisation: motif.organisation,
-        created_by: user,
-        ends_at: creneau.ends_at
+        ]
       )
       if rdv.save
         render json: Visioplainte::RdvBlueprint.render(rdv), status: :created
