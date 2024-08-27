@@ -87,4 +87,33 @@ RSpec.describe "Visioplainte Rdvs" do
       end
     end
   end
+
+  describe "#destroy" do
+    subject(:destroy_rdv) do
+      delete "/api/visioplainte/rdvs/#{rdv_id}", headers: auth_header
+    end
+
+    let(:rdv_id) { create_rdv[:id] }
+
+    it "destroys the rdv makes the creneau available again" do
+      destroy_rdv
+      expect(response.status).to eq 204
+
+      get "/api/visioplainte/creneaux/prochain", headers: auth_header, params: { service: "Police", date_debut: "2024-08-19" }
+      expect(response.parsed_body["starts_at"]).to eq "2024-08-19T08:00:00+02:00"
+
+      expect(Rdv.find_by(id: rdv_id)).to be_blank
+    end
+
+    context "if trying to modify an rdv from another territory" do
+      let(:other_rdv) { create(:rdv) }
+      let(:rdv_id) { other_rdv.id }
+
+      it "doesn't update the rdv and returns a 404 status" do
+        destroy_rdv
+        expect(response.status).to eq 404
+        expect(other_rdv.reload).to be_present
+      end
+    end
+  end
 end
