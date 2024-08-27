@@ -47,18 +47,8 @@ class Api::Visioplainte::RdvsController < Api::Visioplainte::BaseController
 
   private
 
-  # duplicated from creneaux controller
   def motif
-    @motif ||= Motif.joins(organisation: :territory).where(territories: { name: Territory::VISIOPLAINTE_NAME })
-      .joins(:service).find_by(service: { name: service_names[params["service"]] })
-  end
-
-  # duplicated from creneaux controller
-  def service_names
-    {
-      "Police" => "Police Nationale",
-      "Gendarmerie" => "Gendarmerie Nationale",
-    }
+    @motif ||= Api::Visioplainte::CreneauxController.find_motif(params[:service])
   end
 
   def rdv(status)
