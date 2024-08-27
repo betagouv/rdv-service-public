@@ -2,6 +2,11 @@ class Api::Visioplainte::CreneauxController < Api::Visioplainte::BaseController
   before_action :validate_date_debut_and_service
   before_action :validate_date_range, only: [:index]
 
+  SERVICE_NAMES = {
+    "Police" => "Police Nationale",
+    "Gendarmerie" => "Gendarmerie Nationale",
+  }.freeze
+
   def index
     creneaux = Users::CreneauxSearch.new(
       lieu: nil,
@@ -41,7 +46,7 @@ class Api::Visioplainte::CreneauxController < Api::Visioplainte::BaseController
 
   def motif
     @motif ||= Motif.joins(organisation: :territory).where(territories: { name: Territory::VISIOPLAINTE_NAME })
-      .joins(:service).find_by(service: { name: service_names[params[:service]] })
+      .joins(:service).find_by(service: { name: SERVICE_NAMES[params[:service]] })
   end
 
   def creneau_to_hash(creneau)
@@ -54,7 +59,7 @@ class Api::Visioplainte::CreneauxController < Api::Visioplainte::BaseController
   def validate_date_debut_and_service
     errors = []
 
-    unless params[:service].in?(service_names.keys)
+    unless params[:service].in?(SERVICE_NAMES.keys)
       errors << "Le paramètre service doit avoir pour valeur 'Police' ou 'Gendarmerie'"
     end
 
@@ -85,12 +90,5 @@ class Api::Visioplainte::CreneauxController < Api::Visioplainte::BaseController
 
   def date_range
     @date_range ||= (Date.parse(params[:date_debut])..Date.parse(params[:date_fin]))
-  end
-
-  def service_names
-    {
-      "Police" => "Police Nationale",
-      "Gendarmerie" => "Gendarmerie Nationale",
-    }
   end
 end
