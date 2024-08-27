@@ -77,11 +77,11 @@ RSpec.describe SlotBuilder, type: :service do
         # The available plages ouvertures are 9:00-12:00, 14:00-17:00, and 18:00-20:00
         # We round up the rdv time to the closest 5mn, so the first possible creneau is at 15:05.
 
-        expect(slots.map(&:starts_at)).to match_array([
-                                                        Time.zone.local(2021, 5, 3, 15, 5, 0),
-                                                        Time.zone.local(2021, 5, 3, 18, 0, 0),
-                                                        Time.zone.local(2021, 5, 3, 19, 0, 0),
-                                                      ])
+        expect(slots.map(&:starts_at)).to contain_exactly(
+          Time.zone.local(2021, 5, 3, 15, 5, 0),
+          Time.zone.local(2021, 5, 3, 18, 0, 0),
+          Time.zone.local(2021, 5, 3, 19, 0, 0)
+        )
       end
     end
 

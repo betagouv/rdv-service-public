@@ -122,7 +122,7 @@ RSpec.describe Admin::RdvFormConcern, type: :form do
         form.valid?
         expect(form.errors_are_all_benign?).to eq true
         expect(form.benign_errors).not_to be_empty
-        expect(form.benign_errors).to match_array(["alerte RDV Giono !", "alerte RDV Maceo !"])
+        expect(form.benign_errors).to contain_exactly("alerte RDV Giono !", "alerte RDV Maceo !")
       end
     end
 

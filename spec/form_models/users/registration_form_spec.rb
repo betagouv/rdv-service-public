@@ -17,13 +17,13 @@ RSpec.describe Users::RegistrationForm, type: :form_model do
     it "does not allow empty emails" do
       form = described_class.new(attributes.except(:email))
       expect(form.valid?).to eq(false)
-      expect(form.errors.attribute_names).to match_array([:email])
+      expect(form.errors.attribute_names).to contain_exactly(:email)
     end
 
     it "also validates user model errors" do
       form = described_class.new(attributes.except(:first_name))
       form.save
-      expect(form.errors.attribute_names).to match_array([:first_name])
+      expect(form.errors.attribute_names).to contain_exactly(:first_name)
     end
 
     it "accessing errors multiple times causes no problem" do
