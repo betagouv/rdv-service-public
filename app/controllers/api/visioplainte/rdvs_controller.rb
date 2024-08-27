@@ -1,10 +1,8 @@
 class Api::Visioplainte::RdvsController < Api::Visioplainte::BaseController
   def create
     creneau = Users::CreneauxSearch.creneau_for(
-      user: nil,
       starts_at: Time.zone.parse(params[:starts_at]),
-      motif: motif,
-      lieu: nil
+      motif: motif
     )
     if creneau.blank?
       errors = { errors: ["Pas de créneau disponible pour ce service à la date demandée"] }
