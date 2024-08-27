@@ -33,7 +33,7 @@ RSpec.describe Users::RdvsController, type: :controller do
         .and_return(mock_geo_search)
       allow(Users::CreneauxSearch).to receive(:creneau_for)
         .with(user: user, starts_at: starts_at, motif: motif, lieu: lieu, geo_search: mock_geo_search)
-        .and_return(mock_creneau)
+        .and_return(creneau)
       allow(Notifiers::RdvCreated).to receive(:perform_with)
       allow(Devise.token_generator).to receive(:generate).and_return("12345")
       subject
@@ -41,7 +41,7 @@ RSpec.describe Users::RdvsController, type: :controller do
 
     describe "when there is an available creneau" do
       let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
-      let(:mock_creneau) do
+      let(:creneau) do
         Creneau.new(agent: agent, motif: motif, lieu_id: lieu&.id, starts_at: starts_at)
       end
 
@@ -66,7 +66,7 @@ RSpec.describe Users::RdvsController, type: :controller do
     end
 
     describe "when there is no available creneau" do
-      let(:mock_creneau) { nil }
+      let(:creneau) { nil }
 
       it "creates rdv" do
         expect(Rdv.count).to eq(0)
