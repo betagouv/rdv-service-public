@@ -62,7 +62,7 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do
       parameter name: "date_debut", in: :query, type: :string, description: "date au format iso8601 (YYYY-MM-DD), date à partir de laquelle on cherche des créneaux",
                 example: "2024-12-22", required: true
 
-      let(:date_debut) { "2024-12-22" }
+      let(:date_debut) { "2024-08-19" }
       let(:service) { "Police" }
 
       response 200, "Renvoie le prochain créneau disponible" do
@@ -72,7 +72,7 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do
         specify do
           expect(parsed_response_body).to eq(
             {
-              starts_at: "2024-12-22T10:00:00+02:00",
+              starts_at: "2024-08-19T08:00:00+02:00",
               duration_in_min: 30,
             }.deep_stringify_keys
           )
@@ -83,7 +83,7 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do
         run_test!
         schema type: :object, properties: { errors: { type: :array, items: { type: :string } } }, required: %w[errors]
 
-        let(:service) { "Gendarmerie" }
+        let(:date_debut) { "2024-11-19" }
 
         specify do
           expect(parsed_response_body).to eq(
