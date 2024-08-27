@@ -22,8 +22,8 @@ require "sentry/test_helper"
 # directory. Alternatively, in the individual `*_spec.rb` files, manually
 # require only the support files necessary.
 #
-Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
-Dir[Rails.root.join("spec/factories/**/*.rb")].each { |f| require f }
+Rails.root.glob("spec/support/**/*.rb").each { |f| require f }
+Rails.root.glob("spec/factories/**/*.rb").each { |f| require f }
 
 # Checks for pending migrations and applies them before tests are run.
 # If you are not using ActiveRecord, you can remove these lines.
@@ -103,7 +103,7 @@ RSpec.configure do |config|
     # on désactive le versionning par défaut, et donc les specs n'ont plus le comportement de la prod
     # Par contre, on a besoin de réinitialiser le whodunnit entre chaque spec pour éviter d'avoir de
     # la pollution sur cet état partagé d'une spec à l'autre
-    ::PaperTrail.request.whodunnit = nil
+    PaperTrail.request.whodunnit = nil
   end
   config.after { teardown_sentry_test }
 

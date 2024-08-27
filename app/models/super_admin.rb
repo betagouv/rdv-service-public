@@ -5,10 +5,10 @@ class SuperAdmin < ApplicationRecord
   include FullNameConcern
 
   # Attributes
-  enum role: {
+  enum :role, {
     legacy_admin: "legacy_admin",
     support: "support",
-  }, _suffix: "member"
+  }, suffix: "member"
 
   # Validations
   validates :first_name, presence: true

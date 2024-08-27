@@ -40,7 +40,7 @@ class AgentPrescriptionSearchContext < WebSearchContext
   private
 
   def filter_motifs(available_motifs)
-    motifs = super(available_motifs)
+    motifs = super
     restrict_agent_services? ? motifs.where(service: @agent_prescripteur.services) : motifs
   end
 

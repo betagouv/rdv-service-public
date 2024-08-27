@@ -1,9 +1,7 @@
 tr
   td
     .text-bold= receipt.human_attribute_value(:event)
-    - # rubocop:disable Rails/OutputSafety
     p.small= l(receipt.created_at, format: :dense_html).html_safe
-    - # rubocop:enable Rails/OutputSafety
   td
     / Note: we could link to receipt.user from here, but it seems redundant with other links in the page.
       Additionally, paths to users are currently scoped to the organisation. This would require us to handle this in caching.

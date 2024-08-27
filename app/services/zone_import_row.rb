@@ -59,7 +59,7 @@ class ZoneImportRow
     return true if !fields_present? || !sector_found? || zone.valid?
 
     @errors << {
-      key: "invalid_zone_#{zone.errors.attribute_names.first}".to_sym,
+      key: :"invalid_zone_#{zone.errors.attribute_names.first}",
       message: zone.errors.full_messages.join(", "),
     }
     false

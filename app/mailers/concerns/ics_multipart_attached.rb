@@ -6,7 +6,7 @@ module IcsMultipartAttached
   attr_accessor :ics_payload
 
   def mail(...)
-    return super(...) if ics_payload.blank? || ics_payload_already_added?(message)
+    return super if ics_payload.blank? || ics_payload_already_added?(message)
 
     cal = IcalHelpers::Ics.from_payload(ics_payload)
 
@@ -56,7 +56,7 @@ module IcsMultipartAttached
       encoding: "base64",
     }
 
-    super(...)
+    super
 
     message.add_part(
       Mail::Part.new do

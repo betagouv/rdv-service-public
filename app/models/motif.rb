@@ -26,8 +26,8 @@ class Motif < ApplicationRecord
   SECTORISATION_LEVEL_DEPARTEMENT = "departement".freeze
   SECTORISATION_TYPES = [SECTORISATION_LEVEL_AGENT, SECTORISATION_LEVEL_ORGANISATION, SECTORISATION_LEVEL_DEPARTEMENT].freeze
 
-  enum location_type: { public_office: "public_office", phone: "phone", home: "home", visio: "visio" }
-  enum bookable_by: {
+  enum :location_type, { public_office: "public_office", phone: "phone", home: "home", visio: "visio" }
+  enum :bookable_by, {
     agents: "agents",
     agents_and_prescripteurs: "agents_and_prescripteurs",
     agents_and_prescripteurs_and_invited_users: "agents_and_prescripteurs_and_invited_users",

@@ -10,7 +10,7 @@ class Export < ApplicationRecord
   RDV_EXPORT = "rdv_export".freeze
   PARTICIPATIONS_EXPORT = "participations_export".freeze
 
-  enum export_type: {
+  enum :export_type, {
     RDV_EXPORT => RDV_EXPORT,
     PARTICIPATIONS_EXPORT => PARTICIPATIONS_EXPORT,
   }

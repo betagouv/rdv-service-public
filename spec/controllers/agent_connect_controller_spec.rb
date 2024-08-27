@@ -19,8 +19,8 @@ RSpec.describe AgentConnectController, type: :controller do
         redirect_uri: "http://test.host/agent_connect/callback",
         response_type: "code",
         scope: "openid email given_name usual_name",
-        state: be_a_kind_of(String),
-        nonce: be_a_kind_of(String)
+        state: be_a(String),
+        nonce: be_a(String)
       )
     end
   end

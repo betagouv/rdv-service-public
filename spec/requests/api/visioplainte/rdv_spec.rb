@@ -1,7 +1,7 @@
 RSpec.describe "Visioplainte Rdvs" do
   subject(:create_rdv) do
     post "/api/visioplainte/rdvs", headers: auth_header, params: rdv_params
-    JSON.parse(response.body).deep_symbolize_keys
+    response.parsed_body.deep_symbolize_keys
   end
 
   before do
@@ -41,7 +41,7 @@ RSpec.describe "Visioplainte Rdvs" do
   end
 
   context "la configuration du motif a été modifiée par erreur et le rdv nécessite un lieu" do
-    let(:service) { Service.find_by(name:  "Police Nationale") }
+    let(:service) { Service.find_by(name: "Police Nationale") }
     let(:motif) { Motif.find_by(name: "Dépôt de plainte par visioconférence", service: service) }
 
     before do
