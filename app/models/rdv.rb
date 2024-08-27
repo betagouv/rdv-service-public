@@ -18,7 +18,7 @@ class Rdv < ApplicationRecord
 
   # Attributes
   auto_strip_attributes :name
-  enum status: { unknown: "unknown", seen: "seen", excused: "excused", revoked: "revoked", noshow: "noshow" }
+  enum :status, { unknown: "unknown", seen: "seen", excused: "excused", revoked: "revoked", noshow: "noshow" }
   # Commentaire pour les status explications
   # unknown : "A renseigner" ou "A venir" (si le rdv est passé ou pas)
   # seen : Présent au rdv
