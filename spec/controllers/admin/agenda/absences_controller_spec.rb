@@ -52,7 +52,7 @@ RSpec.describe Admin::Agenda::AbsencesController, type: :controller do
               "url" => "/admin/organisations/#{organisation.id}/absences/#{absence.id}/edit",
             },
           ]
-          expect(JSON.parse(response.body)).to eq(expected_response)
+          expect(response.parsed_body).to eq(expected_response)
         end
       end
     end

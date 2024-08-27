@@ -16,7 +16,7 @@ RSpec.describe "Authentification" do
 
       it "returns a 401 response" do
         expect(response.status).to eq 401
-        expect(JSON.parse(response.body)).to eq({ "errors" => ["Authentification invalide"] })
+        expect(response.parsed_body).to eq({ "errors" => ["Authentification invalide"] })
       end
     end
 
@@ -27,7 +27,7 @@ RSpec.describe "Authentification" do
 
       it "returns a 401 response" do
         expect(response.status).to eq 401
-        expect(JSON.parse(response.body)).to eq({ "errors" => ["Authentification invalide"] })
+        expect(response.parsed_body).to eq({ "errors" => ["Authentification invalide"] })
       end
     end
 
@@ -39,7 +39,7 @@ RSpec.describe "Authentification" do
 
       it "returns a 200 response" do
         expect(response.status).to eq 200
-        expect(JSON.parse(response.body).keys).to eq ["creneaux"]
+        expect(response.parsed_body.keys).to eq ["creneaux"]
       end
     end
   end

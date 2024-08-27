@@ -27,7 +27,7 @@ RSpec.describe "ANTS API: getManagedMeetingPoints" do
 
     it "returns a list of lieux" do
       get "/api/ants/getManagedMeetingPoints", headers: { "X-HUB-RDV-AUTH-TOKEN" => "" }
-      expect(JSON.parse(response.body)).to contain_exactly({
+      expect(response.parsed_body).to contain_exactly({
         id: lieu1.id.to_s,
         name: "Mairie de Romainville",
         longitude: 3.0348016639327,

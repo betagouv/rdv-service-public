@@ -18,7 +18,7 @@ RSpec.configure do |config|
       info: {
         title: "API RDV Service Public pour Visioplainte",
         version: "v1",
-        description: File.read(Rails.root.join("docs/api/visioplainte/description.md")),
+        description: Rails.root.join("docs/api/visioplainte/description.md").read,
       },
     },
 
@@ -27,7 +27,7 @@ RSpec.configure do |config|
       info: {
         title: "API RDV Solidarités",
         version: "v1",
-        description: File.read(Rails.root.join("docs/api/v1/description_api.md")),
+        description: Rails.root.join("docs/api/v1/description_api.md").read,
       },
       components: {
         securitySchemes: {

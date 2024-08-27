@@ -42,7 +42,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
 
     it "allows booking a rdv through the full lifecycle of api calls" do
       visit api_ants_getManagedMeetingPoints_url
-      lieux_ids = json_response.map { |lieu_data| lieu_data["id"] }
+      lieux_ids = json_response.pluck("id")
       expect(lieux_ids).to eq([lieu.id.to_s])
 
       visit api_ants_availableTimeSlots_url(
