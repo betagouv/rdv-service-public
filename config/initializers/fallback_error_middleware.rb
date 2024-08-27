@@ -22,4 +22,4 @@ class FallbackErrorMiddleware
   end
 end
 
-Rails.configuration.middleware.insert_before(ActionDispatch::ShowExceptions, ::FallbackErrorMiddleware)
+Rails.configuration.middleware.insert_before(ActionDispatch::ShowExceptions, FallbackErrorMiddleware)
