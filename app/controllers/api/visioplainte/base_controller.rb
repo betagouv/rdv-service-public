@@ -1,5 +1,6 @@
 class Api::Visioplainte::BaseController < ActionController::Base # rubocop:disable Rails/ApplicationController
   respond_to :json
+  skip_forgery_protection # L'authentification par clé d'api nous protège des csfr
 
   before_action :authenticate_with_api_key
 
