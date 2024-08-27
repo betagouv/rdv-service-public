@@ -138,6 +138,7 @@ class Users::RdvsController < UserAuthController
       users: [user_for_rdv],
       created_by: current_user
     )
+    rdv
   end
 
   def user_for_rdv
