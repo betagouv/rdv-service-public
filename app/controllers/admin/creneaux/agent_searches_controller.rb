@@ -80,7 +80,7 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
       @next_availabilities = if @form.motif.individuel?
                                CreneauxSearch::ForAgent.new(@form).next_availabilities
                              else
-                               SearchRdvCollectifForAgentsService.new(@form).next_availabilities
+                               CreneauxSearch::RdvCollectifForAgent.new(@form).next_availabilities
                              end
     end
   end

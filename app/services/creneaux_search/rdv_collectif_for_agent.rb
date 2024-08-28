@@ -1,4 +1,4 @@
-class SearchRdvCollectifForAgentsService
+class CreneauxSearch::RdvCollectifForAgent
   def initialize(agent_creneaux_search_form)
     @form = agent_creneaux_search_form
   end
