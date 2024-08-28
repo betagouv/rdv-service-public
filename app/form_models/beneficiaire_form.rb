@@ -16,6 +16,8 @@ class BeneficiaireForm
   validate :warn_no_contact_information
   validate :validate_phone_number
   validate do
+    return if ants_pre_demande_number.blank?
+
     User::Ants.validate_ants_pre_demande_number(
       user: self,
       ants_pre_demande_number: ants_pre_demande_number,
