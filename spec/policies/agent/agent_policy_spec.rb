@@ -94,7 +94,7 @@ RSpec.describe Agent::AgentPolicy::Scope, type: :policy do
       let!(:agent) { create(:agent, basic_role_in_organisations: organisations, service: service_secretariat) }
       let!(:other_agent_same_orgas) { create(:agent, basic_role_in_organisations: organisations, service: other_service) }
 
-      it { is_expected.to match_array([agent, other_agent_same_orgas]) }
+      it { is_expected.to contain_exactly(agent, other_agent_same_orgas) }
 
       context "when secrétaire is also territory admin" do
         let!(:territory) { create(:territory) }
@@ -104,7 +104,7 @@ RSpec.describe Agent::AgentPolicy::Scope, type: :policy do
 
         before { agent.territories << territory }
 
-        it { is_expected.to match_array([agent, other_agent_same_orgas, agent_in_other_org_in_territory]) }
+        it { is_expected.to contain_exactly(agent, other_agent_same_orgas, agent_in_other_org_in_territory) }
       end
     end
 

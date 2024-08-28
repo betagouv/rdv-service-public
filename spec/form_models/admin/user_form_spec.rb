@@ -12,7 +12,7 @@ RSpec.describe Admin::UserForm, type: :form do
     let(:duplicate_users_mock) { [] }
 
     it "is valid" do
-      expect(subject.valid?).to eq true
+      expect(subject.valid?).to be true
     end
 
     it "saves the user" do
@@ -26,7 +26,7 @@ RSpec.describe Admin::UserForm, type: :form do
     let(:duplicate_users_mock) { [] }
 
     it "is not valid" do
-      expect(subject.valid?).to eq false
+      expect(subject.valid?).to be false
       expect(subject.errors).to be_present
       expect(subject.errors[:last_name]).to be_present
     end
@@ -43,7 +43,7 @@ RSpec.describe Admin::UserForm, type: :form do
     let(:duplicate_users_mock) { [OpenStruct.new(severity: :error, attributes: [:email], user: existing_user)] }
 
     it "is not valid" do
-      expect(subject.valid?).to eq false
+      expect(subject.valid?).to be false
       expect(subject.errors).to be_present
       expect(subject.errors[:base]).to be_present
       expect(subject.errors[:base][0]).to include("Jeannot")
@@ -62,7 +62,7 @@ RSpec.describe Admin::UserForm, type: :form do
     let(:duplicate_users_mock) { [OpenStruct.new(severity: :warning, attributes: [:phone_number], user: existing_user)] }
 
     it "is not valid" do
-      expect(subject.valid?).to eq false
+      expect(subject.valid?).to be false
       expect(subject.benign_errors).to be_present
       expect(subject.benign_errors[0]).to include("Jeannot")
       expect(subject.benign_errors[0]).to include("Un usager avec le même téléphone a déjà un compte")
@@ -82,7 +82,7 @@ RSpec.describe Admin::UserForm, type: :form do
     let(:duplicate_users_mock) { [OpenStruct.new(severity: :warning, attributes: [:phone_number], user: existing_user)] }
 
     it "is valid" do
-      expect(subject.valid?).to eq true
+      expect(subject.valid?).to be true
     end
 
     it "saves the user" do
@@ -101,7 +101,7 @@ RSpec.describe Admin::UserForm, type: :form do
     let(:duplicate_users_mock) { [OpenStruct.new(severity: :warning, attributes: [:phone_number], user: existing_user)] }
 
     it "is not valid" do
-      expect(subject.valid?).to eq false
+      expect(subject.valid?).to be false
       expect(subject.errors).to be_present
       expect(subject.benign_errors).to be_present
       expect(subject.benign_errors[0]).to include("Jeannot")
@@ -124,7 +124,7 @@ RSpec.describe Admin::UserForm, type: :form do
     let(:duplicate_users_mock) { [OpenStruct.new(severity: :warning, attributes: [:phone_number], user: existing_user)] }
 
     it "is valid" do
-      expect(subject.valid?).to eq true
+      expect(subject.valid?).to be true
       expect(subject.benign_errors).to be_empty
     end
 

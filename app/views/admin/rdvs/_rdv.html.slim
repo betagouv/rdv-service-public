@@ -34,7 +34,7 @@
   .mx-3
   - if rdv.users.any?
     div class=("users-details collapse p-3 pt-0")
-      h5.text-center.strong.mb-3> Participants :
+      h5.rdv-text-align-center.strong.mb-3> Participants :
       .row
         - rdv.users.sort_by { _1.last_name.downcase }.each do |user|
           .col-4

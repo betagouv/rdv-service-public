@@ -1,18 +1,31 @@
-class SearchCreneauxForAgentsService < SearchCreneauxForAgentsBase
-  def perform
-    lieux.map { build_result(_1) }.compact # NOTE: LOOP 1 over lieux.
+class SearchCreneauxForAgentsService
+  def initialize(agent_creneaux_search_form)
+    @form = agent_creneaux_search_form
   end
 
-  def build_result(lieu)
+  def next_availabilities
+    lieux.map do |lieu|
+      next_availability(lieu)
+    end.compact
+  end
+
+  def next_availability(lieu = nil)
+    NextAvailabilityService.find(@form.motif, lieu, all_agents, from: @form.date_range.first)
+  end
+
+  def build_result
+    lieu = lieux.first
     # utiliser les ids des agents pour ne pas faire de requêtes supplémentaire
-    # Utilise le date_range.end + 1 pour chercher la date suivante du créneau affiché
-    next_availability = NextAvailabilityService.find(@form.motif, lieu, all_agents, from: @form.date_range.end + 1.day)
     creneaux = SlotBuilder.available_slots(@form.motif, lieu, @form.date_range, all_agents)
     creneaux = creneaux.uniq { [_1.starts_at, _1.agent] }
-    return nil if creneaux.empty? && next_availability.nil?
+    availability = next_availability(lieu)
+    return nil if creneaux.empty? && availability.nil?
 
-    OpenStruct.new(lieu: lieu, next_availability: next_availability, creneaux: creneaux)
+    OpenStruct.new(lieu: lieu, next_availability: availability, creneaux: creneaux)
   end
+
+  # Les méthodes suivantes devraient être privées, mais elles sont appelées par des tests legacy
+  # private
 
   def lieux
     return [] if @form.motif.blank?
@@ -20,7 +33,7 @@ class SearchCreneauxForAgentsService < SearchCreneauxForAgentsBase
     return @lieux unless @lieux.nil?
 
     @lieux = @form.organisation.lieux
-    @lieux = \
+    @lieux =
       if @form.lieu_ids.present?
         @lieux.where(id: @form.lieu_ids)
       else
@@ -31,5 +44,9 @@ class SearchCreneauxForAgentsService < SearchCreneauxForAgentsBase
 
     @lieux = @lieux.ordered_by_name
     @lieux
+  end
+
+  def all_agents
+    Agent.where(id: @form.agent_ids).or(Agent.where(id: Agent.joins(:teams).where(teams: @form.team_ids)))
   end
 end

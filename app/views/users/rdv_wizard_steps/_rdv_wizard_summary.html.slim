@@ -2,7 +2,7 @@ ul.list-group.list-group-flush
   li.list-group-item
     .row
       .col
-        i.fa.fa-check.fa-fw.mr-1.text-success
+        i.fa.fa-check.fa-fw.mr-1.rdv-color-text-default-success
         | Motif :&nbsp;
         = rdv_wizard.motif.name
       - unless rdv_wizard.invitation?
@@ -12,21 +12,21 @@ ul.list-group.list-group-flush
   - case rdv_wizard.motif.location_type
   - when Motif.location_types[:phone]
     li.list-group-item
-      i.fa.fa-check.fa-fw.mr-1.text-success
+      i.fa.fa-check.fa-fw.mr-1.rdv-color-text-default-success
       | RDV téléphonique
   - when Motif.location_types[:home]
     li.list-group-item
-      i.fa.fa-check.fa-fw.mr-1.text-success
+      i.fa.fa-check.fa-fw.mr-1.rdv-color-text-default-success
       | RDV à domicile
   - when Motif.location_types[:visio]
     li.list-group-item
-      i.fa.fa-check.fa-fw.mr-1.text-success
+      i.fa.fa-check.fa-fw.mr-1.rdv-color-text-default-success
       | RDV par visioconférence
   - when Motif.location_types[:public_office]
     li.list-group-item
       .row
         .col
-          i.fa.fa-check.fa-fw.mr-1.text-success
+          i.fa.fa-check.fa-fw.mr-1.rdv-color-text-default-success
           | Lieu :&nbsp;
           = rdv_wizard.creneau.lieu.full_name
         - unless rdv_wizard.invitation?
@@ -38,7 +38,7 @@ ul.list-group.list-group-flush
   li.list-group-item
     .row
       .col
-        i.fa.fa-check.fa-fw.mr-1.text-success
+        i.fa.fa-check.fa-fw.mr-1.rdv-color-text-default-success
         | Date du rendez-vous :&nbsp;
         = rdv_starts_at_and_duration(rdv_wizard.rdv, :human)
       - unless rdv_wizard.invitation?
@@ -48,7 +48,7 @@ ul.list-group.list-group-flush
     li.list-group-item
       .row
         .col
-          i.fa.fa-check.fa-fw.mr-1.text-success
+          i.fa.fa-check.fa-fw.mr-1.rdv-color-text-default-success
           | Usager :&nbsp;
           - if !rdv_wizard.invitation?
             = users_to_sentence(rdv_wizard.users)
@@ -60,7 +60,7 @@ ul.list-group.list-group-flush
     li.list-group-item
       .row
         .col
-          i.fa.fa-check.fa-fw.mr-1.text-success
+          i.fa.fa-check.fa-fw.mr-1.rdv-color-text-default-success
           | Informations de contact :&nbsp;
       .row
         .col.ml-3
@@ -77,7 +77,7 @@ ul.list-group.list-group-flush
     li.list-group-item
       .row
         .col
-          i.fa.fa-check.fa-fw.mr-1.text-success
+          i.fa.fa-check.fa-fw.mr-1.rdv-color-text-default-success
           | Prescripteur :&nbsp;
           = @rdv_wizard.prescripteur.full_name
         .col-auto

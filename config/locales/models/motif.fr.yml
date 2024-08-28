@@ -83,10 +83,10 @@ fr:
         public_office: Sur place
         visio: Par visioconférence
       motif/location_types/hint:
-        public_office: Le RDV aura lieu au lieu sélectionné (MDS...)
-        visio: Nous vous fournirons un lien de visioconférence unique pour chaque RDV. Vous devrez vous connecter au <a href="https://www.numerique.gouv.fr/outils-agents/webconference-etat/" target="_blank">service de webconférence de l'État <i class="fa fa-external-link" /></a> avec Agent Connect pour démarrer la visioconférence.
-        phone: L’usager est notifié que le RDV aura lieu par téléphone, au numéro indiqué sur la fiche de l’usager.
-        home: L’usager est notifié que le RDV se déroule à l’adresse renseigné dans sa fiche usager.
+        public_office: L'agent reçoit l'usager sur place, au lieu sélectionné (MDS...).
+        visio: L'agent et l'usager se retrouvent sur un lien de visioconférence unique pour chaque RDV. L'agent se connecte au <a href="https://www.numerique.gouv.fr/outils-agents/webconference-etat/" target="_blank">service de webconférence de l'État <i class="fa fa-external-link" /></a> avec AgentConnect pour démarrer la visioconférence.
+        phone: L’agent appelle le numéro indiqué sur la fiche de l'usager.
+        home: L’agent se rend à l'adresse indiquée sur la fiche de l'usager.
       motif/bookable_by/radio_label_html:
         agents: >
           Agents de l’organisation

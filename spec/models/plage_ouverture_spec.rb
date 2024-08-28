@@ -160,19 +160,19 @@ RSpec.describe PlageOuverture, type: :model do
       context "for a wednesday later" do
         let(:date) { Date.new(2020, 12, 2) }
 
-        it { is_expected.to eq true }
+        it { is_expected.to be true }
       end
 
       context "for a wednesday before" do
         let(:date) { Date.new(2020, 11, 11) }
 
-        it { is_expected.to eq false }
+        it { is_expected.to be false }
       end
 
       context "for a thursday later" do
         let(:date) { Date.new(2020, 12, 3) }
 
-        it { is_expected.to eq false }
+        it { is_expected.to be false }
       end
     end
 
@@ -190,19 +190,19 @@ RSpec.describe PlageOuverture, type: :model do
       context "for a wednesday before end date" do
         let(:date) { Date.new(2020, 12, 2) }
 
-        it { is_expected.to eq true }
+        it { is_expected.to be true }
       end
 
       context "for the end wednesday" do
         let(:date) { Date.new(2020, 12, 9) }
 
-        it { is_expected.to eq true }
+        it { is_expected.to be true }
       end
 
       context "for a wednesday after the end" do
         let(:date) { Date.new(2020, 12, 16) }
 
-        it { is_expected.to eq false }
+        it { is_expected.to be false }
       end
     end
 
@@ -220,13 +220,13 @@ RSpec.describe PlageOuverture, type: :model do
       context "for a wednesday 1 week later" do
         let(:date) { Date.new(2020, 11, 25) }
 
-        it { is_expected.to eq false }
+        it { is_expected.to be false }
       end
 
       context "for a wednesday 2 weeks later" do
         let(:date) { Date.new(2020, 12, 2) }
 
-        it { is_expected.to eq true }
+        it { is_expected.to be true }
       end
     end
 
@@ -244,13 +244,13 @@ RSpec.describe PlageOuverture, type: :model do
       context "same day" do
         let(:date) { Date.new(2020, 11, 18) }
 
-        it { is_expected.to eq true }
+        it { is_expected.to be true }
       end
 
       context "other date" do
         let(:date) { Date.new(2020, 11, 25) }
 
-        it { is_expected.to eq false }
+        it { is_expected.to be false }
       end
     end
   end
@@ -290,7 +290,7 @@ RSpec.describe PlageOuverture, type: :model do
       now = Time.zone.parse("2022-12-27 11:00")
       travel_to(now)
       range = (now + 1.week)..(now + 1.week + 30.minutes)
-      create(:plage_ouverture, first_day: (now - 1.week).to_date, \
+      create(:plage_ouverture, first_day: (now - 1.week).to_date,
                                start_time: Tod::TimeOfDay.new(10, 45), \
                                end_time: Tod::TimeOfDay.new(11, 45), \
                                recurrence: Montrose.every(:month, day: { Tuesday: [2] }, starts: (now - 1.week).to_date))

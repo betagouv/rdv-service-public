@@ -35,7 +35,7 @@ class ImportZoneRowsService < BaseService
   def valid?
     return @valid unless @valid.nil? # avoid computing multiple times
 
-    @valid = \
+    @valid =
       validate_rows_present? &&
       validate_columns? &&
       validate_inner_conflicts_cities? &&
@@ -104,8 +104,7 @@ class ImportZoneRowsService < BaseService
   def sectors_by_human_id
     @sectors_by_human_id ||= Sector
       .where(territory: @territory, human_id: @rows.pluck("sector_id"))
-      .map { [_1.human_id, _1] }
-      .to_h
+      .to_h { [_1.human_id, _1] }
   end
 
   def zone_import_row_for(row)

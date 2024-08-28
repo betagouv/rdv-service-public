@@ -21,7 +21,7 @@ RSpec.describe "Configure les préférences de signalisation d'usager en salle d
     expect(response).to redirect_to(edit_admin_territory_rdv_fields_path(organisation.territory))
     territory = organisation.territory
     territory.reload
-    expect(territory.enable_waiting_room_mail_field).to eq(true)
-    expect(territory.enable_waiting_room_color_field).to eq(true)
+    expect(territory.enable_waiting_room_mail_field).to be(true)
+    expect(territory.enable_waiting_room_color_field).to be(true)
   end
 end

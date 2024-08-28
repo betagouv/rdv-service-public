@@ -1,6 +1,7 @@
+class TeamsInMultipleTerritoriesError < StandardError; end
+
 class Admin::Territories::AgentsController < Admin::Territories::BaseController
-  before_action :set_agent, only: %i[edit update territory_admin update_services]
-  before_action :authorize_agent, only: %i[edit update territory_admin update_services]
+  before_action :set_agent, only: %i[edit update_teams update_services]
 
   def index
     @agents = find_agents(params[:q]).page(page_number)
@@ -22,14 +23,22 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
 
   def new
     @agent = Agent.new
-    authorize_with_legacy_configuration_scope(@agent)
+    skip_authorization
+    # l’agent n’étant pas lié à un territoire la policy ne fonctionne pas
+    # Admin::Territories::BaseController#set_territory limite néanmoins l’accès à cette page aux admins du territoire
   end
 
   def edit; end
 
-  def update
-    if @agent.update(agent_update_params)
-      flash[:success] = "L'agent a été mis à jour"
+  def update_teams
+    # cf PR https://github.com/betagouv/rdv-service-public/pull/4525
+    raise TeamsInMultipleTerritoriesError if @agent.teams.where.not(territory: current_territory).exists?
+
+    team_ids = Team
+      .where(id: params[:agent][:team_ids].compact_blank, territory: current_territory) # filtering on territory is not done in policy anymore
+      .pluck(:id)
+    if @agent.update(team_ids:)
+      flash[:success] = "Les équipes de l’agent ont été mises à jour"
       redirect_to edit_admin_territory_agent_path(current_territory, @agent.id)
     else
       render :edit
@@ -37,16 +46,14 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
   end
 
   def create
-    authorize_with_legacy_configuration_scope(Agent.new(permitted_create_params))
-
-    organisation_ids = params.require(:admin_agent).require(:organisation_ids)
-    context = AgentTerritorialContext.new(@current_agent, nil) # Dès que possible, on arrêtera d'utiliser ces contextes
-    authorized_organisations = Agent::OrganisationPolicy::Scope.new(context, Organisation.where(id: organisation_ids)).resolve
+    all_params = params.require(:admin_agent).permit(:email, service_ids: [], organisation_ids: [])
+    new_agent = Agent.new(all_params)
+    authorize [:configuration, new_agent]
 
     create_agent = AdminCreatesAgent.new(
-      agent_params: permitted_create_params,
+      agent_params: all_params.slice(:email, :service_ids),
       current_agent: current_agent,
-      organisations: authorized_organisations,
+      organisations: Organisation.where(id: all_params[:organisation_ids]),
       access_level: AgentRole::ACCESS_LEVEL_BASIC
     )
 
@@ -57,23 +64,8 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
       flash[:alert] = create_agent.warning_message
       redirect_to admin_territory_agents_path(current_territory)
     else
-      flash[:error] = agent.errors.full_messages.to_sentence
-      render_new
+      render :new
     end
-  end
-
-  def territory_admin
-    if params[:territorial_admin] == "1"
-      @agent.territorial_admin!(current_territory)
-      message = "Les droits d'administrateur du #{current_territory} ont été ajouté(e) a #{@agent.full_name}"
-    else
-      @agent.remove_territorial_admin!(current_territory)
-      message = "Les droits d'administrateur du #{current_territory} ont été retiré(e) a #{@agent.full_name}"
-    end
-    redirect_to(
-      edit_admin_territory_agent_path(current_territory, @agent),
-      flash: { success: message }
-    )
   end
 
   def update_services
@@ -92,17 +84,6 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
 
   def set_agent
     @agent = Agent.active.find(params[:id])
-  end
-
-  def authorize_agent
-    authorize_with_legacy_configuration_scope @agent
-  end
-
-  def agent_update_params
-    params.require(:agent).permit(team_ids: [])
-  end
-
-  def permitted_create_params
-    params.require(:admin_agent).permit(:email, service_ids: [])
+    authorize [:configuration, @agent]
   end
 end

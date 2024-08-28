@@ -123,13 +123,19 @@ Rails.application.routes.draw do
     namespace "admin" do
       resources :territories, only: %i[edit update show] do
         scope module: "territories" do
-          resources :agent_roles, only: %i[edit update create destroy]
+          resources :agent_roles, only: %i[update create destroy]
           resources :agent_territorial_access_rights, only: %i[update]
+          resources :agent_territorial_roles, only: %i[] do
+            collection do
+              put :create_or_destroy
+            end
+          end
           resources :webhook_endpoints, except: %i[show]
-          resources :agents, only: %i[index new create update edit] do
+          resources :agents, only: %i[index new create edit] do
             member do
               put :territory_admin
               patch :update_services
+              patch :update_teams
             end
           end
           resources :teams, except: :show
@@ -310,19 +316,16 @@ Rails.application.routes.draw do
   # TODO: remplacer `prendre_rdv` par le root_path
   get "/prendre_rdv", to: "search#search_rdv"
 
-  # rubocop:disable Style/FormatStringToken
   # temporary route after admin namespace introduction
   get "/organisations/*rest", to: redirect("admin/organisations/%{rest}")
   # old agenda rule was bookmarked by some agents
   get "admin/organisations/:organisation_id/agents/:agent_id", to: redirect("/admin/organisations/%{organisation_id}/agent_agendas/%{agent_id}")
-  # rubocop:enable Style/FormatStringToken
-
   post "/inbound_emails/sendinblue", controller: :inbound_emails, action: :sendinblue
 
   # This route redirects invitations to rdv-insertion so that rdv-insertion
   # can use rdvs domain name in their emails
   get "/i/r/:uuid", to: redirect { |path_params, _|
-    "#{ENV['RDV_INSERTION_HOST']}/r/#{path_params[:uuid]}"
+    "#{ENV['RDV_INSERTION_HOST']}/r/#{path_params[:uuid]&.strip}"
   }
 
   if Rails.env.development?

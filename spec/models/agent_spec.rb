@@ -89,7 +89,7 @@ RSpec.describe Agent, type: :model do
 
       agent.password = "123!M"
       agent.validate
-      expect(agent.errors).to match_array(["Pour assurer la sécurité de votre compte, votre mot de passe doit faire au moins 12 caractères"])
+      expect(agent.errors).to contain_exactly("Pour assurer la sécurité de votre compte, votre mot de passe doit faire au moins 12 caractères")
 
       agent.password = "123!Merci c'est assez long"
       agent.validate
@@ -139,12 +139,12 @@ RSpec.describe Agent, type: :model do
   describe "#multiple_organisations_access?" do
     it "return true with agent with 2 organisations" do
       agent = create(:agent, organisations: create_list(:organisation, 2))
-      expect(agent.multiple_organisations_access?).to eq(true)
+      expect(agent.multiple_organisations_access?).to be(true)
     end
 
     it "return false when agent allow to access multiple organisations" do
       agent = create(:agent, organisations: [create(:organisation)])
-      expect(agent.multiple_organisations_access?).to eq(false)
+      expect(agent.multiple_organisations_access?).to be(false)
     end
   end
 

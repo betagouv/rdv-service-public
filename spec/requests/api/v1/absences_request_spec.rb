@@ -34,7 +34,7 @@ RSpec.describe "Absence authentified API", swagger_doc: "v1/api.json" do
 
         run_test!
 
-        it { expect(parsed_response_body["absences"].pluck("id")).to match_array([absence1.id]) }
+        it { expect(parsed_response_body["absences"].pluck("id")).to contain_exactly(absence1.id) }
       end
 
       it_behaves_like "an endpoint that returns 401 - unauthorized"

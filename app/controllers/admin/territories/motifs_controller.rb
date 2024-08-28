@@ -52,7 +52,7 @@ class Admin::Territories::MotifsController < Admin::Territories::BaseController
 
   def destroy
     motif = Motif.active.find(params[:id])
-    authorize_with_legacy_configuration_scope(motif, policy_class: Agent::MotifPolicy)
+    authorize_agent motif
     if motif.soft_delete
       flash[:notice] = "Le motif a été supprimé."
     else
@@ -75,9 +75,5 @@ class Admin::Territories::MotifsController < Admin::Territories::BaseController
 
   def motif_params
     params.require(:motif).permit(*Admin::MotifsController::FORM_ATTRIBUTES)
-  end
-
-  def pundit_user
-    current_agent
   end
 end

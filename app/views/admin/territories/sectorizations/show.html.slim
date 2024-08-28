@@ -1,8 +1,7 @@
 = territory_navigation(t(".title"))
 
 .row.justify-content-center
-
-  - if policy([:configuration, Sector]).display?
+  - if Agent::SectorPolicy.allowed_to_manage_sectors_in?(current_territory, current_agent)
     .col.col-md-4.p-2.rounded.settings-box
       = link_to admin_territory_sectors_path(current_territory, current_agent) do
         h2.fw-bold.mb-0

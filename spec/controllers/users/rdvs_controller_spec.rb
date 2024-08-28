@@ -31,9 +31,9 @@ RSpec.describe Users::RdvsController, type: :controller do
       allow(Users::GeoSearch).to receive(:new)
         .with(departement: "12", city_code: "12100", street_ban_id: nil)
         .and_return(mock_geo_search)
-      allow(Users::CreneauSearch).to receive(:creneau_for)
+      allow(Users::CreneauxSearch).to receive(:creneau_for)
         .with(user: user, starts_at: starts_at, motif: motif, lieu: lieu, geo_search: mock_geo_search)
-        .and_return(mock_creneau)
+        .and_return(creneau)
       allow(Notifiers::RdvCreated).to receive(:perform_with)
       allow(Devise.token_generator).to receive(:generate).and_return("12345")
       subject
@@ -41,8 +41,8 @@ RSpec.describe Users::RdvsController, type: :controller do
 
     describe "when there is an available creneau" do
       let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
-      let(:mock_creneau) do
-        instance_double(Creneau, agent: agent, motif: motif, lieu: lieu, starts_at: starts_at, duration_in_min: 30)
+      let(:creneau) do
+        Creneau.new(agent: agent, motif: motif, lieu_id: lieu&.id, starts_at: starts_at)
       end
 
       it "creates rdv" do
@@ -66,7 +66,7 @@ RSpec.describe Users::RdvsController, type: :controller do
     end
 
     describe "when there is no available creneau" do
-      let(:mock_creneau) { nil }
+      let(:creneau) { nil }
 
       it "creates rdv" do
         expect(Rdv.count).to eq(0)
@@ -472,7 +472,7 @@ RSpec.describe Users::RdvsController, type: :controller do
       travel_to(now)
       sign_in user
 
-      allow(Users::CreneauSearch).to receive(:creneau_for)
+      allow(Users::CreneauxSearch).to receive(:creneau_for)
         .with(user: user, starts_at: starts_at, motif: motif, lieu: lieu)
         .and_return(returned_creneau)
     end
@@ -525,7 +525,7 @@ RSpec.describe Users::RdvsController, type: :controller do
     before do
       travel_to(now)
       sign_in user
-      allow(Users::CreneauSearch).to receive(:creneau_for)
+      allow(Users::CreneauxSearch).to receive(:creneau_for)
         .with(user: user, starts_at: starts_at, motif: motif, lieu: lieu)
         .and_return(returned_creneau)
       allow(Devise.token_generator).to receive(:generate).and_return("12345")

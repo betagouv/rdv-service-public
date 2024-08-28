@@ -40,7 +40,7 @@ RSpec.describe "ANTS API: availableTimeSlots" do
     # sans crochets donc on encode la querystring d'une manière similaire ici pour reproduire ce comportement
     get "/api/ants/availableTimeSlots?meeting_point_ids=#{lieu1.id}&meeting_point_ids=#{lieu2.id}&start_date=2022-11-01&end_date=2022-11-02&documents_number=1&reason=CNI"
 
-    expect(JSON.parse(response.body)).to eq(
+    expect(response.parsed_body).to eq(
       {
         lieu1.id.to_s => [
           {
@@ -80,7 +80,7 @@ RSpec.describe "ANTS API: availableTimeSlots" do
     it "returns slots with a duration matching the number of participants" do
       get "/api/ants/availableTimeSlots?meeting_point_ids=#{lieu1.id}&meeting_point_ids=#{lieu2.id}&start_date=2022-11-01&end_date=2022-11-02&documents_number=#{participants_count}&reason=CNI"
 
-      expect(JSON.parse(response.body)).to eq(
+      expect(response.parsed_body).to eq(
         {
           lieu1.id.to_s => [
             {

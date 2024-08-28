@@ -5,20 +5,20 @@
 
   .card-body
     = render "common/franceconnect_button"
-    .text-center.w-75.m-auto
-      p.text-muted.mb-4 Entrez votre email et votre mot de passe
+    .rdv-text-align-center.w-75.m-auto
+      p.rdv-color-text-mention-grey.mb-4 Entrez votre email et votre mot de passe
 
     = render "common/session_form", resource: resource, resource_name: resource_name
 
     hr.fr-my-2w
-    .text-center
-      p.text-muted
+    .rdv-text-align-center
+      p.rdv-color-text-mention-grey
         | Vous n'avez pas de compte ?&nbsp;
         = link_to new_registration_path(resource_name, params: params.permit(:lieu_id, :motif_id, :starts_at)) do
           b Je m'inscris
 
     - if @rdv_wizard
       hr.fr-my-2w
-        .text-center.text-muted
+        .rdv-text-align-center.rdv-color-text-mention-grey
           = link_to prescripteur_start_path(@rdv_wizard.to_query) do
             b Je suis un prescripteur qui oriente un bénéficiaire

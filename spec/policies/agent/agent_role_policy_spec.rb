@@ -1,68 +1,67 @@
-RSpec.describe Agent::AgentRolePolicy, type: :policy do
+RSpec.describe Agent::AgentRolePolicy do
   subject { described_class }
 
-  let(:pundit_context) { AgentContext.new(agent) }
-  let!(:organisation) { create(:organisation) }
+  let(:territory) { create(:territory) }
+  let(:organisation) { create(:organisation, territory: territory) }
 
-  describe "#update?" do
-    context "regular agent, own agent_role" do
-      let!(:agent) { create(:agent) }
-      let!(:agent_role) { create(:agent_role, access_level: AgentRole::ACCESS_LEVEL_BASIC, agent: agent, organisation: organisation) }
-
-      permissions(:update?) { it { is_expected.not_to permit(pundit_context, agent_role) } }
-    end
-
-    context "admin agent, own agent_role" do
-      let!(:agent) { create(:agent) }
-      let!(:agent_role) { create(:agent_role, access_level: AgentRole::ACCESS_LEVEL_ADMIN, agent: agent, organisation: organisation) }
-
-      permissions(:update?) { it { is_expected.to permit(pundit_context, agent_role) } }
-    end
-
-    context "admin agent, other agent's agent_role" do
-      let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
-      let!(:other_agent) { create(:agent) }
-      let!(:agent_role) { create(:agent_role, access_level: AgentRole::ACCESS_LEVEL_ADMIN, agent: other_agent, organisation: organisation) }
-
-      permissions(:update?) { it { is_expected.to permit(pundit_context, agent_role) } }
-    end
-
-    context "admin agent, other agent's agent_role in OTHER orga" do
-      let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
-      let!(:other_organisation) { create(:organisation) }
-      let!(:other_agent) { create(:agent) }
-      let!(:agent_role) { create(:agent_role, access_level: AgentRole::ACCESS_LEVEL_ADMIN, agent: other_agent, organisation: other_organisation) }
-
-      permissions(:update?) { it { is_expected.not_to permit(pundit_context, agent_role) } }
+  shared_examples "permit actions" do |*actions|
+    actions.each do |action|
+      permissions action do
+        it { is_expected.to permit(agent, agent_role) }
+      end
     end
   end
-end
 
-RSpec.describe Agent::AgentRolePolicy::Scope, type: :policy do
-  describe "#resolve?" do
-    subject { described_class.new(AgentContext.new(agent), AgentRole).resolve }
-
-    context "misc state" do
-      let!(:organisations) { create_list(:organisation, 4) }
-      let!(:agent) { create(:agent) }
-      let!(:own_agent_role_basic) { create(:agent_role, agent: agent, organisation: organisations[0]) }
-      let!(:own_agent_role_admin1) { create(:agent_role, :admin, agent: agent, organisation: organisations[1]) }
-      let!(:own_agent_role_admin2) { create(:agent_role, :admin, agent: agent, organisation: organisations[2]) }
-      let!(:agent_role_basic_role) { create(:agent_role, agent: create(:agent), organisation: organisations[0]) }
-      let!(:agent_role_admin_role1) { create(:agent_role, agent: create(:agent), organisation: organisations[1]) }
-      let!(:agent_role_admin_role2) { create(:agent_role, agent: create(:agent), organisation: organisations[2]) }
-      let!(:agent_role_other_orga) { create(:agent_role, agent: create(:agent), organisation: organisations[3]) }
-
-      it do
-        expect(subject).to include(own_agent_role_basic)
-        expect(subject).to include(own_agent_role_admin1)
-        expect(subject).to include(own_agent_role_admin2)
-
-        expect(subject).not_to include(agent_role_basic_role)
-        expect(subject).to include(agent_role_admin_role1)
-        expect(subject).to include(agent_role_admin_role2)
-        expect(subject).not_to include(agent_role_other_orga)
+  shared_examples "not permit actions" do |*actions|
+    actions.each do |action|
+      permissions action do
+        it { is_expected.not_to permit(agent, agent_role) }
       end
+    end
+  end
+
+  describe "agent with" do
+    context "no admin access to this territory and no access rights" do
+      let(:agent) { create(:agent, basic_role_in_organisations: [organisation], role_in_territories: []) }
+      let!(:agent_role) { create(:agent_role, organisation: organisation) }
+
+      it_behaves_like "not permit actions", :update?, :edit?, :create?, :destroy?
+    end
+
+    context "admin access to this territory" do
+      let(:agent) { create(:agent, basic_role_in_organisations: [organisation], role_in_territories: [territory]) }
+      let!(:agent_role) { create(:agent_role, organisation: organisation) }
+
+      it_behaves_like "permit actions", :update?, :edit?, :create?, :destroy?
+    end
+
+    context "admin access to a different territory" do
+      let(:agent) { create(:agent, basic_role_in_organisations: [organisation], role_in_territories: [territory]) }
+      let!(:agent_role) { create(:agent_role, organisation: create(:organisation)) }
+
+      it_behaves_like "not permit actions", :update?, :edit?, :create?, :destroy?
+    end
+
+    context "allowed to invite agents access right" do
+      let(:agent) { create(:agent, basic_role_in_organisations: [organisation], role_in_territories: []) }
+      let!(:agent_role) { create(:agent_role, organisation: organisation) }
+
+      before do
+        create(:agent_territorial_access_right, agent: agent, territory: organisation.territory, allow_to_invite_agents: true)
+      end
+
+      it_behaves_like "permit actions", :update?, :edit?, :create?, :destroy?
+    end
+
+    context "allowed to invite agents access right in a different territory" do
+      let(:agent) { create(:agent, basic_role_in_organisations: [organisation], role_in_territories: []) }
+      let!(:agent_role) { create(:agent_role, organisation: organisation) }
+
+      before do
+        create(:agent_territorial_access_right, agent: agent, territory: create(:territory), allow_to_invite_agents: true)
+      end
+
+      it_behaves_like "not permit actions", :update?, :edit?, :create?, :destroy?
     end
   end
 end

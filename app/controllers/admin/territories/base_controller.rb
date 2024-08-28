@@ -13,40 +13,32 @@ class Admin::Territories::BaseController < ApplicationController
   def current_territory
     @territory
   end
+
   helper_method :current_territory
 
   def pundit_user
-    AgentTerritorialContext.new(current_agent, current_territory)
+    current_agent
   end
+
   helper_method :pundit_user
 
-  def authorize_with_legacy_configuration_scope(record, *args, **kwargs)
-    # L'utilisation de configuration est un legacy qui a l'inconvénient de distinguer les permissions en fonction de la page sur laquelle on est en train de naviguer
-    # On préfère que le controller applique le filtre pertinent, et que les policy indiquent les permissions dans l'absolu, indépendamment de la page courante.
-    authorize([:configuration, record], *args, **kwargs)
+  # L'usage recommandé est de passer explicitement une policy_scope_class pour savoir quelle policy est utilisé
+  # rubocop:disable Lint/UselessMethodDefinition
+  def policy_scope(scope, policy_scope_class:)
+    super
   end
 
-  # L'usage recommandé est de passer explicitement une policy_scope_class pour savoir quelle policy est utilisé
-  # A terme, on voudra forcer l'argument policy_scope_class
-  def policy_scope(scope, policy_scope_class: nil)
-    if policy_scope_class
-      super(scope, policy_scope_class: policy_scope_class)
-    else
-      # L'utilisation de configuration est un legacy qui a l'inconvénient de distinguer les permissions en fonction de la page sur laquelle on est en train de naviguer
-      # On préfère que le controller applique le filtre pertinent, et que les policy indiquent les permissions dans l'absolu, indépendamment de la page courante.
-      super([:configuration, scope])
-    end
-  end
+  # rubocop:enable Lint/UselessMethodDefinition
 
   private
 
   def set_territory
     @territory = Territory.find(params[:territory_id])
 
-    context = AgentTerritorialContext.new(current_agent, @territory)
-
-    policy = ::Configuration::TerritoryPolicy.new(context, @territory)
-    raise ActiveRecord::RecordNotFound unless policy.show?
+    # On instancie une policy plutôt que d'appeler authorize pour ne pas neutraliser le `verify_authorized`
+    unless Agent::TerritoryPolicy.new(current_agent, @territory).show?
+      raise Pundit::NotAuthorizedError, "not authorized"
+    end
 
     @territory
   end

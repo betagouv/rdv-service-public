@@ -95,4 +95,20 @@ RSpec.describe MotifsHelper do
       expect(text_color("cyan")).to eq("#000000")
     end
   end
+
+  describe "#bookable_by_types" do
+    it "does not include agents_and_prescripteurs_and_invited_users when rdvi_mode is true" do
+      expect(bookable_by_types(rdvi_mode: true)).to eq(Motif.bookable_bies.keys)
+      expect(bookable_by_types(rdvi_mode: false)).to eq(Motif.bookable_bies.keys - ["agents_and_prescripteurs_and_invited_users"])
+    end
+  end
+
+  describe "#bookable_by_filter_options" do
+    it "returns an option for each possible value of the enum" do
+      # Cette spec lèvera une exception I18n::MissingTranslationData si l'on
+      # ajoute un nouveau type de "bookable_by" sans ajouter de clé de traduction.
+      bookable_by_filter_options(rdvi_mode: true)
+      bookable_by_filter_options(rdvi_mode: false)
+    end
+  end
 end

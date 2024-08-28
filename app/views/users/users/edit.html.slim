@@ -18,7 +18,7 @@
                 .col
                   => relative.full_name
                   = "(#{age(relative)})" if relative.birth_date
-                .col-auto.text-right
+                .col-auto.rdv-text-align-right
                   = link_to t("admin.rdvs.show.update"), edit_relative_path(relative)
-        .text-right
+        .rdv-text-align-right
           = link_to t(".add_relative"), new_relative_path, class: "btn btn-outline-primary", data: { modal: true }

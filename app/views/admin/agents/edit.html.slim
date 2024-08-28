@@ -19,7 +19,7 @@
       .card-body.js_agent_role_form
         = simple_form_for [:admin, current_organisation, @agent] do |f|
           = render "model_errors", model: @agent
-          - allowed_to_change_services = policy([:configuration, current_territory]).allow_to_manage_access_rights?
+          - allowed_to_change_services = Agent::TerritoryPolicy.new(current_agent, current_territory).allow_to_manage_access_rights?
 
           = f.association :services, collection: @services, disabled: true, input_html: { class: "select2-input" }, wrapper_html: { class: "mb-0" }, hint: allowed_to_change_services ? nil : "Le changement de service est réservé aux admins de territoire"
           - if allowed_to_change_services

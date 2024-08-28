@@ -61,7 +61,7 @@ RSpec.describe Admin::Agenda::PlageOuverturesController, type: :controller do
               },
             },
           ]
-          expect(JSON.parse(response.body)).to eq(expected_response)
+          expect(response.parsed_body).to eq(expected_response)
         end
       end
     end

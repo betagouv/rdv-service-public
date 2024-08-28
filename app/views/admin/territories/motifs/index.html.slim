@@ -34,15 +34,7 @@
         label for="bookable_by"
           | Réservable par
         select.select2-input[id="bookable_by" name="bookable_by" style="width: 100%"]
-          ruby:
-            options = [
-              ["-", ""],
-              ["Uniquement par les agents", "agents"],
-              ["Uniquement par les agents et prescripteurs", "agents_and_prescripteurs"],
-              ["Par les agents, prescripteurs et les usagers", "everyone"],
-            ]
-            options.insert(3, ["Par les agents, prescripteurs et les usagers sur invitation", "agents_and_prescripteurs_and_invited_users"]) if @organisations.any?(&:rdv_insertion?)
-          = options_for_select(options, params[:bookable_by])
+          = options_for_select(bookable_by_filter_options(rdvi_mode: @organisations.any?(&:rdv_insertion?)), params[:bookable_by])
     .form-row.justify-content-end.flex-gap-1em
       .form-group
         a.btn.btn-link[href=url_for({})] Réinitialiser
@@ -106,6 +98,6 @@
       .mt-2 = paginate @motifs, theme: "twitter-bootstrap-4"
 
     - else
-      .text-center
+      .rdv-text-align-center
         p.mb-2.lead
           | Aucun résultat

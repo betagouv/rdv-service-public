@@ -1,4 +1,4 @@
-class Notifiers::RdvBase < ::BaseService
+class Notifiers::RdvBase < BaseService
   include DateHelper
   attr_reader :participations_tokens_by_user_id
 

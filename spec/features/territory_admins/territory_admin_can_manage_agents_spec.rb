@@ -79,9 +79,10 @@ RSpec.describe "territory admin can manage agents", type: :feature do
     it "works" do
       team_a = create(:team, name: "A", territory: territory)
       team_b = create(:team, name: "B", territory: territory)
-      current_agent = create(:agent, admin_role_in_organisations: [organisation], role_in_territories: [territory], teams: [team_a])
-      agent = create(:agent, admin_role_in_organisations: [organisation], role_in_territories: [territory], teams: [team_a, team_b])
+      current_agent = create(:agent, admin_role_in_organisations: [organisation], role_in_territories: [], teams: [team_a])
+      agent = create(:agent, admin_role_in_organisations: [organisation], role_in_territories: [], teams: [team_a, team_b])
       create(:agent_territorial_access_right, agent: current_agent, territory: territory, allow_to_manage_teams: true)
+      create(:agent_territorial_access_right, agent: agent, territory: territory)
       login_as(current_agent, scope: :agent)
 
       visit edit_admin_territory_agent_path(territory_id: territory.id, id: agent.id)
@@ -127,6 +128,26 @@ RSpec.describe "territory admin can manage agents", type: :feature do
       unselect service_b.name, from: "Services"
       expect { click_on "Enregistrer les services" }.not_to change { edited_agent.reload.services.to_set }
       expect(page).to have_content("Un agent doit avoir au moins un service")
+    end
+  end
+
+  describe "setting access rights" do
+    let(:current_agent) do
+      create(:agent, role_in_territories: [territory])
+    end
+
+    it "allows modifying them" do
+      login_as(current_agent, scope: :agent)
+      create(:agent_territorial_access_right, agent: current_agent, territory: territory, allow_to_manage_access_rights: true)
+
+      agent = create(:agent, basic_role_in_organisations: [organisation])
+      create(:agent_territorial_access_right, agent: agent, territory: territory)
+
+      visit edit_admin_territory_agent_path(territory_id: territory.id, id: agent.id)
+      check "Autorisé à créer, supprimer, modifier des équipes"
+
+      click_on "Enregistrer les droits d'accès", match: :first
+      expect(page).to have_content "Droits d'accès mis à jour"
     end
   end
 end
