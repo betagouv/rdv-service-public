@@ -127,7 +127,7 @@ RSpec.describe Anonymizer do
       let!(:user_without_email) { create(:user, email: nil) }
 
       it "anonymizes correct things" do
-        Anonymizer.anonymize_records!(User.all)
+        Anonymizer.anonymize_records!("users")
         expect(user1.reload.full_name).to eq "[valeur anonymisée] [VALEUR ANONYMISÉE]"
         expect(user2.reload.full_name).to eq "[valeur anonymisée] [VALEUR ANONYMISÉE]"
         expect(user_without_email.reload.full_name).to eq "[valeur anonymisée] [VALEUR ANONYMISÉE]"
@@ -139,16 +139,27 @@ RSpec.describe Anonymizer do
       end
     end
 
-    context "rdvs" do
+    context "rdvs (scope = all)" do
       let!(:rdv_with_context) { create(:rdv, context: "Des infos sensisbles sur le rdv") }
       let!(:rdv_with_blank_context) { create(:rdv, context: "") }
       let!(:rdv_with_nil_context) { create(:rdv, context: nil) }
 
       it "anonymizes correctly" do
-        Anonymizer.anonymize_records!(Rdv.all)
+        Anonymizer.anonymize_records!("rdvs")
         expect(rdv_with_context.reload.context).to eq "[valeur anonymisée]"
         expect(rdv_with_blank_context.reload.context).to be_nil
         expect(rdv_with_nil_context.reload.context).to be_nil
+      end
+    end
+
+    context "rdvs (scope = 2020 rdvs)" do
+      let!(:rdvs2020) { create_list(:rdv, 2, created_at: Date.new(2020, 3, 4), context: "Des infos sensibles sur le rdv") }
+      let!(:rdvs2021) { create_list(:rdv, 2, created_at: Date.new(2021, 3, 4), context: "Des infos sensibles sur le rdv") }
+
+      it "anonymizes only 2020 ones" do
+        Anonymizer.anonymize_records!("rdvs", arel_where: Rdv.arel_table[:created_at].lt(Date.new(2021, 1, 1)))
+        expect(Rdv.where("extract(year from created_at) = 2020").pluck(:context).uniq).to eq ["[valeur anonymisée]"]
+        expect(Rdv.where("extract(year from created_at) = 2021").pluck(:context).uniq).to eq ["Des infos sensibles sur le rdv"]
       end
     end
 
@@ -163,7 +174,7 @@ RSpec.describe Anonymizer do
       context "anonymize all (scope = all)" do
         it "truncates all versions" do
           expect(PaperTrail::Version.count).to be > 4
-          Anonymizer.anonymize_records!(PaperTrail::Version.all)
+          Anonymizer.anonymize_records!("versions")
           expect(PaperTrail::Version.count).to eq 0
         end
       end
@@ -171,7 +182,7 @@ RSpec.describe Anonymizer do
       context "anonymize only 2020 versions (partial scope)" do
         it "does not truncate 2021 ones" do
           expect(PaperTrail::Version.where(item_type: "Rdv").map(&:created_at).map(&:year).uniq).to eq [2020, 2021]
-          Anonymizer.anonymize_records!(PaperTrail::Version.where("created_at <= ?", Date.new(2020, 12, 12)))
+          Anonymizer.anonymize_records!("versions", arel_where: PaperTrail::Version.arel_table[:created_at].lteq(Date.new(2020, 12, 12)))
           expect(PaperTrail::Version.where(item_type: "Rdv").map(&:created_at).map(&:year).uniq).to eq [2021]
         end
       end

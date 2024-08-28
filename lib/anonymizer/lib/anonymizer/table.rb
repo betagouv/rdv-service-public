@@ -8,20 +8,20 @@ module Anonymizer
       @config = config
     end
 
-    def anonymize_records!(scope = nil)
+    def anonymize_records!(arel_where = nil)
       if table_name_without_schema.in?(config.truncated_tables_names)
-        if scope.nil? || scope == scope.klass.all
+        if arel_where.nil?
           db_connection.execute("TRUNCATE #{ActiveRecord::Base.sanitize_sql(table_name)} CASCADE")
         else
-          scope.delete_all
+          db_connection.execute(Arel::DeleteManager.new(arel_table).where(arel_where).to_sql)
         end
       else
-        anonymized_columns.each { anonymize_records_column!(scope, _1) }
+        anonymized_columns.each { anonymize_records_column!(arel_where, _1) }
       end
     end
 
     def anonymize_record!(record)
-      anonymize_records!(record.class.where(id: record.id))
+      anonymize_records!(arel_table[:id].eq(record.id))
     end
 
     def unidentified_column_names
@@ -35,18 +35,28 @@ module Anonymizer
 
     attr_reader :config
 
-    def anonymize_records_column!(scope, column)
+    def arel_table = Arel::Table.new(table_name)
+
+    def anonymize_records_column!(arel_where, column)
       if column.type.in?(%i[string text]) && column.null
         # Pour limiter la confusion lors de l'exploitation des données, on transforme les chaines vides en null
         blank_value = column.array ? "{}" : ""
-        scope
-          .where(column.name => blank_value)
-          .update_all(column.name => nil) # rubocop:disable Rails/SkipsModelValidations
+        where = arel_table[column.name].eq(blank_value)
+        where = where.and(arel_where) if arel_where.present?
+        db_connection.execute Arel::UpdateManager
+          .new(arel_table)
+          .where(where)
+          .set(arel_table[column.name] => nil)
+          .to_sql
       end
 
-      scope
-        .where.not(column.name => nil)
-        .update_all(column.name => anonymous_value(column)) # rubocop:disable Rails/SkipsModelValidations
+      where = arel_table[column.name].not_eq(nil)
+      where = where.and(arel_where) if arel_where.present?
+      db_connection.execute Arel::UpdateManager
+        .new(arel_table)
+        .where(where)
+        .set(arel_table[column.name] => anonymous_value(column))
+        .to_sql
     end
 
     def anonymized_column_names

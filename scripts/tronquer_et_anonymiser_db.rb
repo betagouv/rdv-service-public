@@ -44,9 +44,9 @@ users_to_delete.delete_all
 # Partie 3 : Anonymisation des données restantes
 # -------------------------------
 
-Anonymizer.anonymize_records!(User.all)
-Anonymizer.anonymize_records!(Receipt.all)
-Anonymizer.anonymize_records!(Rdv.all)
+Anonymizer.anonymize_records!("users")
+Anonymizer.anonymize_records!("receipts")
+Anonymizer.anonymize_records!("rdvs")
 Anonymizer.default_config.truncated_tables.each(&:anonymize_records!)
 
 # -------------------------------
