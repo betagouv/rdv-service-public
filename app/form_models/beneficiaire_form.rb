@@ -18,7 +18,7 @@ class BeneficiaireForm
   validate do
     return if ants_pre_demande_number.blank?
 
-    User::Ants.validate_ants_pre_demande_number(
+    ValidateAntsPreDemandeNumber.perform(
       user: self,
       ants_pre_demande_number: ants_pre_demande_number,
       ignore_benign_errors: ignore_benign_errors

@@ -1,7 +1,7 @@
-module User::Ants
+module ValidateAntsPreDemandeNumber
   extend ActionView::Helpers::TranslationHelper # allows getting a SafeBuffer instead of a String when using #translate (which a direct call to I18n.t doesn't do)
 
-  def self.validate_ants_pre_demande_number(user:, ants_pre_demande_number:, ignore_benign_errors:)
+  def self.perform(user:, ants_pre_demande_number:, ignore_benign_errors:)
     ants_pre_demande_number = ants_pre_demande_number.upcase
 
     unless ants_pre_demande_number.match?(/\A[A-Z0-9]{10}\z/)
@@ -37,14 +37,4 @@ module User::Ants
       meeting_point: appointment.meeting_point
     )
   end
-
-  # rubocop:disable Style/ReturnNilInPredicateMethodDefinition
-  def syncable_with_ants?
-    return if ants_pre_demande_number.blank?
-
-    status = AntsApi.status(application_id: ants_pre_demande_number, timeout: 4)["status"]
-    status == "validated"
-  end
-
-  # rubocop:enable Style/ReturnNilInPredicateMethodDefinition
 end

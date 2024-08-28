@@ -89,7 +89,7 @@ module UserRdvWizard
     validate do
       return unless rdv.requires_ants_predemande_number?
 
-      User::Ants.validate_ants_pre_demande_number(
+      ValidateAntsPreDemandeNumber.perform(
         user: @user,
         ants_pre_demande_number: @user_attributes[:ants_pre_demande_number],
         ignore_benign_errors: @user_attributes[:ignore_benign_errors]
