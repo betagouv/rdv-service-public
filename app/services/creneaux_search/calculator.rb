@@ -1,4 +1,4 @@
-module SlotBuilder
+module CreneauxSearch::Calculator
   class << self
     # méthode publique
     def available_slots(motif, lieu, date_range, agents = [])

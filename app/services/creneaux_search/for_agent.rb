@@ -16,7 +16,7 @@ class CreneauxSearch::ForAgent
   def build_result
     lieu = lieux.first
     # utiliser les ids des agents pour ne pas faire de requêtes supplémentaire
-    creneaux = SlotBuilder.available_slots(@form.motif, lieu, @form.date_range, all_agents)
+    creneaux = CreneauxSearch::Calculator.available_slots(@form.motif, lieu, @form.date_range, all_agents)
     creneaux = creneaux.uniq { [_1.starts_at, _1.agent] }
     availability = next_availability(lieu)
     return nil if creneaux.empty? && availability.nil?

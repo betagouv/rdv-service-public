@@ -31,7 +31,7 @@ class CreneauxSearch::ForUser
 
     return [] if reduced_date_range.blank?
 
-    SlotBuilder.available_slots(motif, @lieu, reduced_date_range, attributed_agents)
+    CreneauxSearch::Calculator.available_slots(motif, @lieu, reduced_date_range, attributed_agents)
   end
 
   def available_collective_rdvs
