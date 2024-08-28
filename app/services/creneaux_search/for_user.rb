@@ -1,4 +1,4 @@
-class Users::CreneauxSearch
+class CreneauxSearch::ForUser
   def initialize(motif:, date_range: nil, user: nil, lieu: nil, geo_search: nil)
     @user = user
     @motif = motif

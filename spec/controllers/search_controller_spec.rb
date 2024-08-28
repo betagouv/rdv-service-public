@@ -38,7 +38,7 @@ RSpec.describe SearchController, type: :controller do
 
   let!(:creneaux_search) do
     instance_double(
-      Users::CreneauxSearch,
+      CreneauxSearch::ForUser,
       creneaux: [],
       next_availability: build(:creneau, starts_at: Time.zone.parse("2019-08-05 08h00"))
     )
@@ -145,7 +145,7 @@ RSpec.describe SearchController, type: :controller do
 
     describe "lieu selection" do
       before do
-        allow(Users::CreneauxSearch).to receive(:new).with(
+        allow(CreneauxSearch::ForUser).to receive(:new).with(
           user: nil,
           motif: motif,
           lieu: lieu,
@@ -181,7 +181,7 @@ RSpec.describe SearchController, type: :controller do
 
     describe "creneaux selection" do
       before do
-        allow(Users::CreneauxSearch).to receive(:new).with(
+        allow(CreneauxSearch::ForUser).to receive(:new).with(
           user: nil,
           motif: motif,
           lieu: lieu,
@@ -193,7 +193,7 @@ RSpec.describe SearchController, type: :controller do
       context "creneaux are available soon" do
         let!(:creneaux_search) do
           instance_double(
-            Users::CreneauxSearch,
+            CreneauxSearch::ForUser,
             creneaux: [build(:creneau, starts_at: Time.zone.parse("2019-07-22 08h00"))]
           )
         end
@@ -210,7 +210,7 @@ RSpec.describe SearchController, type: :controller do
       context "when first availability is in the future" do
         let!(:creneaux_search) do
           instance_double(
-            Users::CreneauxSearch,
+            CreneauxSearch::ForUser,
             creneaux: [],
             next_availability: build(:creneau, starts_at: Time.zone.parse("2019-08-05 08h00"))
           )

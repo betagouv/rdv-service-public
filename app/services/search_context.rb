@@ -80,7 +80,7 @@ class SearchContext
   end
 
   def creneaux_search_for(lieu, date_range, motif)
-    Users::CreneauxSearch.new(
+    CreneauxSearch::ForUser.new(
       user: @user,
       motif: motif,
       lieu: lieu,

@@ -1,4 +1,4 @@
-RSpec.describe Users::CreneauxSearch, type: :service do
+RSpec.describe CreneauxSearch::ForUser, type: :service do
   let(:organisation) { create(:organisation) }
   let(:lieu) { create(:lieu, organisation: organisation) }
   let(:date_range) { (Date.parse("2020-10-20")..Date.parse("2020-10-23")) }

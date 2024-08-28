@@ -1,6 +1,6 @@
 class Api::Visioplainte::RdvsController < Api::Visioplainte::BaseController
   def create
-    creneau = Users::CreneauxSearch.creneau_for(
+    creneau = CreneauxSearch::ForUser.creneau_for(
       starts_at: Time.zone.parse(params[:starts_at]),
       motif: motif
     )
