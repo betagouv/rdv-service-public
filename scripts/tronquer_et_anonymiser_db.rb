@@ -47,7 +47,10 @@ users_to_delete.delete_all
 Anonymizer.anonymize_records!("users")
 Anonymizer.anonymize_records!("receipts")
 Anonymizer.anonymize_records!("rdvs")
-Anonymizer.default_config.truncated_tables.each(&:anonymize_records!)
+Anonymizer.default_config.truncated_tables
+  .select { ActiveRecord::Base.connection.table_exists?(_1) }
+  .map { Anonymizer::Table.new(_1) }
+  .each(&:anonymize_records!)
 
 # -------------------------------
 # Épilogue : suppression des jobs et versions

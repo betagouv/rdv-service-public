@@ -11,7 +11,7 @@ module Anonymizer
     end
 
     def anonymize_records!(arel_where = nil)
-      if table_name_without_schema.in?(config.truncated_tables_names)
+      if table_name_without_schema.in?(config.truncated_tables)
         if arel_where.nil?
           db_connection.execute("TRUNCATE #{ActiveRecord::Base.sanitize_sql(table_name)} CASCADE")
         else
