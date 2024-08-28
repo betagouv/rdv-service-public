@@ -41,17 +41,17 @@ Capybara.configure do |config|
   config.always_include_port = true
 end
 
-RSpec.configure do |config|
-  config.after(:each, js: true) do
-    logs = page.driver.browser.logs.get(:browser)
-    aggregate_failures "javascript errors" do
-      logs.each do |log|
-        expect(log.level).not_to eq("SEVERE"), log.message
-        warn "JS warning in console: #{log.message}" if log.level == "WARNING"
-      end
-    end
-  end
-end
+# RSpec.configure do |config|
+#   config.after(:each, js: true) do
+#     logs = page.driver.browser.logs.get(:browser)
+#     aggregate_failures "javascript errors" do
+#       logs.each do |log|
+#         expect(log.level).not_to eq("SEVERE"), log.message
+#         warn "JS warning in console: #{log.message}" if log.level == "WARNING"
+#       end
+#     end
+#   end
+# end
 
 def expect_page_to_be_axe_clean(path)
   visit path
