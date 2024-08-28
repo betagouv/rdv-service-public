@@ -284,5 +284,6 @@ class User < ApplicationRecord
       deleted_at: Time.zone.now,
       email: deleted_email
     )
+    reload # anonymizer operates outside the realm of rails knowledge
   end
 end
