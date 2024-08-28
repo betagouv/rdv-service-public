@@ -4,7 +4,7 @@ RSpec.describe Anonymizer do
       let!(:prescripteur) { create(:prescripteur, first_name: "jean", last_name: "jacques") }
 
       it "anonymizes first and last name" do
-        Anonymizer.anonymize_record!(prescripteur)
+        described_class.anonymize_record!(prescripteur)
         expect(prescripteur.reload.full_name).to eq "[valeur anonymisée] [VALEUR ANONYMISÉE]"
         expect(prescripteur.reload.email).to eq "email_anonymise_#{prescripteur.id}@exemple.fr"
       end
@@ -14,13 +14,13 @@ RSpec.describe Anonymizer do
       let!(:user) { create(:user, email: "user@example.com", first_name: "jean", last_name: "jacques", confirmation_token: "CONFIRM_ME") }
 
       it "anonymizes first and last name" do
-        Anonymizer.anonymize_record!(user)
+        described_class.anonymize_record!(user)
         expect(user.reload.full_name).to eq "[valeur anonymisée] [VALEUR ANONYMISÉE]"
         expect(user.reload.email).to eq "email_anonymise_#{user.id}@exemple.fr"
       end
 
       it "anonymizes unique confirmation_token" do
-        Anonymizer.anonymize_record!(user)
+        described_class.anonymize_record!(user)
         expect(user.reload.confirmation_token).to eq "[valeur unique anonymisée #{user.id}]"
       end
     end
@@ -29,7 +29,7 @@ RSpec.describe Anonymizer do
       let(:user) { create(:user, email: nil) }
 
       it "doesn't overwrite null values, so that we can still get information from them" do
-        Anonymizer.anonymize_record!(user)
+        described_class.anonymize_record!(user)
         expect(user.reload.email).to be_nil
       end
     end
@@ -38,7 +38,7 @@ RSpec.describe Anonymizer do
       let!(:agent) { create(:agent, email: "agent@example.com", first_name: "jean", last_name: "jacques") }
 
       it "anonymizes first and last name" do
-        Anonymizer.anonymize_record!(agent)
+        described_class.anonymize_record!(agent)
         expect(agent.reload.full_name).to eq "[valeur anonymisée] [VALEUR ANONYMISÉE]"
         expect(agent.reload.email).to eq "email_anonymise_#{agent.id}@exemple.fr"
       end
@@ -48,7 +48,7 @@ RSpec.describe Anonymizer do
       let!(:absence) { create(:absence, title: "rdv perso avec mon médecin") }
 
       it "anonymizes title" do
-        Anonymizer.anonymize_record!(absence)
+        described_class.anonymize_record!(absence)
         expect(absence.reload.title).to eq "[valeur anonymisée]"
       end
     end
@@ -57,7 +57,7 @@ RSpec.describe Anonymizer do
       let!(:organisation) { create(:organisation, email: "email_perso_de_cnfs_alors_que_ce_champs_est_prevu_pour_une_adresse_mail_generique@example") }
 
       it "anonymizes email" do
-        Anonymizer.anonymize_record!(organisation)
+        described_class.anonymize_record!(organisation)
         expect(organisation.reload.email).to eq "email_anonymise_#{organisation.id}@exemple.fr"
       end
     end
@@ -66,7 +66,7 @@ RSpec.describe Anonymizer do
       let!(:super_admin) { create(:super_admin, email: "admin@example.com", first_name: "Francis", last_name: "Factice") }
 
       it "anonymizes email" do
-        Anonymizer.anonymize_record!(super_admin)
+        described_class.anonymize_record!(super_admin)
         expect(super_admin.reload.email).to eq "email_anonymise_#{super_admin.id}@exemple.fr"
       end
     end
@@ -75,7 +75,7 @@ RSpec.describe Anonymizer do
       let!(:lieu) { create(:lieu, phone_number: "06 11 22 33 44", phone_number_formatted: "+33611223344") }
 
       it "anonymizes phone number" do
-        Anonymizer.anonymize_record!(lieu)
+        described_class.anonymize_record!(lieu)
         expect(lieu.reload.phone_number).to eq "[valeur anonymisée]"
       end
     end
@@ -84,7 +84,7 @@ RSpec.describe Anonymizer do
       let!(:rdv) { create(:rdv, context: "Des infos sensisbles sur le rdv") }
 
       it "anonymizes context" do
-        Anonymizer.anonymize_record!(rdv)
+        described_class.anonymize_record!(rdv)
         expect(rdv.reload.context).to eq "[valeur anonymisée]"
       end
     end
@@ -93,7 +93,7 @@ RSpec.describe Anonymizer do
       let!(:rdv) { create(:rdv, context: "") }
 
       it "turns blank strings into null" do
-        Anonymizer.anonymize_record!(rdv)
+        described_class.anonymize_record!(rdv)
         expect(rdv.reload.context).to be_nil
       end
     end
@@ -102,7 +102,7 @@ RSpec.describe Anonymizer do
       let!(:rdv) { create(:rdv, context: nil) }
 
       it "doesn't overwrite null values" do
-        Anonymizer.anonymize_record!(rdv)
+        described_class.anonymize_record!(rdv)
         expect(rdv.reload.context).to be_nil
       end
     end
@@ -113,7 +113,7 @@ RSpec.describe Anonymizer do
 
       it "deletes the version but not the others" do
         id = version.id
-        Anonymizer.anonymize_record!(version)
+        described_class.anonymize_record!(version)
         expect(PaperTrail::Version.find_by(id:)).to be_nil
         expect(PaperTrail::Version.find(other_version.id)).to eq other_version
       end
@@ -127,7 +127,7 @@ RSpec.describe Anonymizer do
       let!(:user_without_email) { create(:user, email: nil) }
 
       it "anonymizes correct things" do
-        Anonymizer.anonymize_records!("users")
+        described_class.anonymize_records!("users")
         expect(user1.reload.full_name).to eq "[valeur anonymisée] [VALEUR ANONYMISÉE]"
         expect(user2.reload.full_name).to eq "[valeur anonymisée] [VALEUR ANONYMISÉE]"
         expect(user_without_email.reload.full_name).to eq "[valeur anonymisée] [VALEUR ANONYMISÉE]"
@@ -145,7 +145,7 @@ RSpec.describe Anonymizer do
       let!(:rdv_with_nil_context) { create(:rdv, context: nil) }
 
       it "anonymizes correctly" do
-        Anonymizer.anonymize_records!("rdvs")
+        described_class.anonymize_records!("rdvs")
         expect(rdv_with_context.reload.context).to eq "[valeur anonymisée]"
         expect(rdv_with_blank_context.reload.context).to be_nil
         expect(rdv_with_nil_context.reload.context).to be_nil
@@ -157,7 +157,7 @@ RSpec.describe Anonymizer do
       let!(:rdvs2021) { create_list(:rdv, 2, created_at: Date.new(2021, 3, 4), context: "Des infos sensibles sur le rdv") }
 
       it "anonymizes only 2020 ones" do
-        Anonymizer.anonymize_records!("rdvs", arel_where: Rdv.arel_table[:created_at].lt(Date.new(2021, 1, 1)))
+        described_class.anonymize_records!("rdvs", arel_where: Rdv.arel_table[:created_at].lt(Date.new(2021, 1, 1)))
         expect(Rdv.where("extract(year from created_at) = 2020").pluck(:context).uniq).to eq ["[valeur anonymisée]"]
         expect(Rdv.where("extract(year from created_at) = 2021").pluck(:context).uniq).to eq ["Des infos sensibles sur le rdv"]
       end
@@ -174,7 +174,7 @@ RSpec.describe Anonymizer do
       context "anonymize all (scope = all)" do
         it "truncates all versions" do
           expect(PaperTrail::Version.count).to be > 4
-          Anonymizer.anonymize_records!("versions")
+          described_class.anonymize_records!("versions")
           expect(PaperTrail::Version.count).to eq 0
         end
       end
@@ -182,7 +182,7 @@ RSpec.describe Anonymizer do
       context "anonymize only 2020 versions (partial scope)" do
         it "does not truncate 2021 ones" do
           expect(PaperTrail::Version.where(item_type: "Rdv").map(&:created_at).map(&:year).uniq).to eq [2020, 2021]
-          Anonymizer.anonymize_records!("versions", arel_where: PaperTrail::Version.arel_table[:created_at].lteq(Date.new(2020, 12, 12)))
+          described_class.anonymize_records!("versions", arel_where: PaperTrail::Version.arel_table[:created_at].lteq(Date.new(2020, 12, 12)))
           expect(PaperTrail::Version.where(item_type: "Rdv").map(&:created_at).map(&:year).uniq).to eq [2021]
         end
       end
