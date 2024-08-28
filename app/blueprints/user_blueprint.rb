@@ -14,7 +14,7 @@ class UserBlueprint < Blueprinter::Base
     Agent::UserProfilePolicy::Scope.new(options[:agent_context], user.user_profiles).resolve
   end
 
-  view :rdv_insertion do 
-    field :organisation_ids 
+  view :rdv_insertion do
+    field :organisation_ids
   end
 end

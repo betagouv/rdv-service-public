@@ -26,7 +26,7 @@ class WebhookEndpoint < ApplicationRecord
   end
 
   def trigger_for(record)
-    WebhookJob.perform_later(record.generate_webhook_payload(:created, rdv_insertion?), id)
+    WebhookJob.perform_later(record.generate_webhook_payload(:created, destinated_to_rdvi: rdv_insertion?), id)
   end
 
   def partially_hidden_secret
@@ -34,7 +34,7 @@ class WebhookEndpoint < ApplicationRecord
   end
 
   def rdv_insertion?
-    target_url.include?(ENV["RDV_INSERTION_HOST"])
+    rdv_insertion_host.present? && target_url.include?(rdv_insertion_host)
   end
 
   private
@@ -44,4 +44,6 @@ class WebhookEndpoint < ApplicationRecord
 
     errors.add(:base, "la liste des abonnements choisis contient une ou plusieurs valeurs incorrectes")
   end
+
+  def rdv_insertion_host = ENV["RDV_INSERTION_HOST"]
 end

@@ -4,7 +4,7 @@
 module WebhookDeliverable
   extend ActiveSupport::Concern
 
-  def generate_webhook_payload(action, destinated_to_rdvi = false)
+  def generate_webhook_payload(action, destinated_to_rdvi: false)
     # Reload attributes and associations from DB to ensure they are up to date.
     # We dont use #reload on self because some other parts
     # of the code rely on the state of the current object.
@@ -24,14 +24,14 @@ module WebhookDeliverable
 
   def generate_payload_and_send_webhook(action)
     subscribed_webhook_endpoints.each do |endpoint|
-      WebhookJob.perform_later(generate_webhook_payload(action, endpoint.rdv_insertion?), endpoint.id)
+      WebhookJob.perform_later(generate_webhook_payload(action, destinated_to_rdvi: endpoint.rdv_insertion?), endpoint.id)
     end
   end
 
   def generate_payload_and_send_webhook_for_destroy
     # Prépare les données à envoyer, avant de supprimer l'objet
     payloads = subscribed_webhook_endpoints.index_with do |endpoint|
-      generate_webhook_payload(:destroyed, endpoint.rdv_insertion?)
+      generate_webhook_payload(:destroyed, destinated_to_rdvi: endpoint.rdv_insertion?)
     end
     # Execute la suppression, après avoir construit les données à envoyer
     yield if block_given?

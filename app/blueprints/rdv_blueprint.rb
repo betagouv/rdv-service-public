@@ -24,7 +24,7 @@ class RdvBlueprint < Blueprinter::Base
   association :agents, blueprint: AgentBlueprint
   association :lieu, blueprint: LieuBlueprint
 
-  view :rdv_insertion do 
-    association :users, blueprint: UserBlueprint, view: :rdv_insertion 
+  view :rdv_insertion do
+    association :users, blueprint: UserBlueprint, view: :rdv_insertion
   end
 end
