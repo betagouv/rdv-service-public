@@ -69,7 +69,7 @@ RSpec.describe Users::RdvsController, type: :controller do
         it "doesn't find a creneau" do
           post_create
           expect(Rdv.count).to eq(0)
-          expect(flash[:error]).to eq "Ce créneau n’est plus disponible. Veuillez en sélectionner un autre."
+          expect(flash[:error]).to eq "Vous ne pouvez pas effectuer cette action."
         end
       end
     end

@@ -22,7 +22,8 @@ class User::RdvPolicy < ApplicationPolicy
   def create?
     return false if record.collectif?
 
-    rdv_belongs_to_user_or_relatives?
+    record.motif.bookable_by_everyone_or_bookable_by_invited_users? &&
+      rdv_belongs_to_user_or_relatives?
   end
 
   def show?
