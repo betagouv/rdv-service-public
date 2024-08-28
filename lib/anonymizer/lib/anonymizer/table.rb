@@ -1,3 +1,5 @@
+require_relative "column"
+
 module Anonymizer
   class Table
     attr_reader :table_name, :table_name_without_schema
@@ -16,7 +18,7 @@ module Anonymizer
           db_connection.execute(Arel::DeleteManager.new(arel_table).where(arel_where).to_sql)
         end
       else
-        anonymized_columns.each { anonymize_records_column!(arel_where, _1) }
+        anonymized_columns.each { Anonymizer::Column.new(table_name, _1, arel_where:).anonymize! }
       end
     end
 
@@ -35,28 +37,10 @@ module Anonymizer
 
     attr_reader :config
 
-    def arel_table = Arel::Table.new(table_name)
+    def db_connection = ActiveRecord::Base.connection
 
-    def anonymize_records_column!(arel_where, column)
-      if column.type.in?(%i[string text]) && column.null
-        # Pour limiter la confusion lors de l'exploitation des données, on transforme les chaines vides en null
-        blank_value = column.array ? "{}" : ""
-        where = arel_table[column.name].eq(blank_value)
-        where = where.and(arel_where) if arel_where.present?
-        db_connection.execute Arel::UpdateManager
-          .new(arel_table)
-          .where(where)
-          .set(arel_table[column.name] => nil)
-          .to_sql
-      end
-
-      where = arel_table[column.name].not_eq(nil)
-      where = where.and(arel_where) if arel_where.present?
-      db_connection.execute Arel::UpdateManager
-        .new(arel_table)
-        .where(where)
-        .set(arel_table[column.name] => anonymous_value(column))
-        .to_sql
+    def arel_table
+      @arel_table ||= Arel::Table.new(table_name)
     end
 
     def anonymized_column_names
@@ -67,49 +51,8 @@ module Anonymizer
       config.rules.dig(table_name_without_schema, :non_anonymized_column_names) || []
     end
 
-    def anonymized_attributes
-      anonymized_columns.to_h do |column|
-        [column.name, anonymous_value(column)]
-      end.symbolize_keys
-    end
-
     def anonymized_columns
-      db_connection.columns(table_name).select do |column|
-        column.name.in?(anonymized_column_names)
-      end
-    end
-
-    def anonymous_value(column)
-      if column.type.in?(%i[string text])
-        anonymous_text_value(column)
-      elsif column.type == :jsonb
-        Arel.sql("'{}'::jsonb") # necessary for api_calls.raw_http, non-nullable but with null default
-      else
-        column.default
-      end
-    end
-
-    def anonymous_text_value(column)
-      if column.array
-        Arel.sql("'{valeur anonymisée}'") # TODO : je ne crois pas que ce soit utilisé
-      elsif column.name.include?("email")
-        Arel.sql("'email_anonymise_' || id || '@exemple.fr'")
-      elsif column_has_uniqueness_constraint?(column)
-        Arel.sql("'[valeur unique anonymisée ' || id || ']'")
-      else
-        "[valeur anonymisée]"
-      end
-    end
-
-    def column_has_uniqueness_constraint?(column)
-      db_connection.indexes(table_name).select(&:unique).any? do |index|
-        # il se peut que la deuxième colonne de l'index n'ai pas de contrainte d'unicité
-        index.columns.first == column.name
-      end
-    end
-
-    def db_connection
-      ActiveRecord::Base.connection
+      db_connection.columns(table_name).select { _1.name.in?(anonymized_column_names) }
     end
   end
 end
