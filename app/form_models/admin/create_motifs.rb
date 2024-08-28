@@ -21,6 +21,13 @@ class Admin::CreateMotifs
     @motifs ||= @organisations.map { |org| Motif.new(@motif_params.merge(organisation: org)) }
   end
 
+  def motif_for_form
+    motif_for_form = motifs.first.dup
+    motif_for_form.organisation = nil
+    motif_for_form.errors.clear
+    motif_for_form
+  end
+
   private
 
   def organisations_are_present

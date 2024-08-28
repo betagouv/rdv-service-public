@@ -43,9 +43,7 @@ class Admin::Territories::MotifsController < Admin::Territories::BaseController
       redirect_to admin_territory_motifs_path(current_territory, filters)
     else
       flash.now[:error] = service.errors.to_a.join("<br>")
-      @motif = service.motifs.first
-      @motif.organisation = nil
-      @motif.errors.clear
+      @motif = service.motif_for_form
       render :new
     end
   end
