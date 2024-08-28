@@ -18,7 +18,7 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
   private
 
   def results_without_lieu
-    next_availability = SearchCreneauxForAgentsService.new(@form).next_availability
+    next_availability = CreneauxSearch::ForAgent.new(@form).next_availability
 
     if next_availability.present?
       skip_policy_scope # TODO: improve pundit checks for creneaux
@@ -78,7 +78,7 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
     if @form.valid?
       # Un RDV collectif peut-il avoir lieu à domicile ou au téléphone ?
       @next_availabilities = if @form.motif.individuel?
-                               SearchCreneauxForAgentsService.new(@form).next_availabilities
+                               CreneauxSearch::ForAgent.new(@form).next_availabilities
                              else
                                SearchRdvCollectifForAgentsService.new(@form).next_availabilities
                              end

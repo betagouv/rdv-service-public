@@ -1,4 +1,4 @@
-class SearchCreneauxForAgentsService
+class CreneauxSearch::ForAgent
   def initialize(agent_creneaux_search_form)
     @form = agent_creneaux_search_form
   end

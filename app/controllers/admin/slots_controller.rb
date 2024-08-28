@@ -19,7 +19,7 @@ class Admin::SlotsController < AgentAuthController
 
   def search_result
     if @form.motif.individuel?
-      SearchCreneauxForAgentsService.new(@form).build_result
+      CreneauxSearch::ForAgent.new(@form).build_result
     else
       SearchRdvCollectifForAgentsService.new(@form).slot_search
     end
