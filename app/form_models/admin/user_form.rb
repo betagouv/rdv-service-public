@@ -8,13 +8,13 @@ class Admin::UserForm
   delegate :ignore_benign_errors, :ignore_benign_errors=, :add_benign_error, :benign_errors, :not_benign_errors, :errors_are_all_benign?, to: :user
   validate :warn_duplicates
   validate do
-    return if ants_pre_demande_number.blank?
-
-    ValidateAntsPreDemandeNumber.perform(
-      user: @user,
-      ants_pre_demande_number: @user.ants_pre_demande_number,
-      ignore_benign_errors: ignore_benign_errors
-    )
+    if @user.ants_pre_demande_number.present?
+      ValidateAntsPreDemandeNumber.perform(
+        user: @user,
+        ants_pre_demande_number: @user.ants_pre_demande_number,
+        ignore_benign_errors: ignore_benign_errors
+      )
+    end
   end
 
   delegate :errors, to: :user

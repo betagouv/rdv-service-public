@@ -16,13 +16,13 @@ class BeneficiaireForm
   validate :warn_no_contact_information
   validate :validate_phone_number
   validate do
-    return if ants_pre_demande_number.blank?
-
-    ValidateAntsPreDemandeNumber.perform(
-      user: self,
-      ants_pre_demande_number: ants_pre_demande_number,
-      ignore_benign_errors: ignore_benign_errors
-    )
+    if ants_pre_demande_number.present?
+      ValidateAntsPreDemandeNumber.perform(
+        user: self,
+        ants_pre_demande_number: ants_pre_demande_number,
+        ignore_benign_errors: ignore_benign_errors
+      )
+    end
   end
 
   def warn_no_contact_information
