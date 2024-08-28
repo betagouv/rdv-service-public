@@ -1,4 +1,4 @@
-class NextAvailabilityService
+class CreneauxSearch::NextAvailability
   def self.find(motif, lieu, agents, from:, to: nil)
     from = from.to_datetime # rubocop:disable Style/DateTime
     to = to&.to_datetime || (from + 6.months) # rubocop:disable Style/DateTime

@@ -170,7 +170,7 @@ RSpec.describe SearchController, type: :controller do
           lieu_id: plage_ouverture.lieu_id,
           agent: plage_ouverture.agent
         )
-        allow(NextAvailabilityService).to receive(:find).and_return(slot)
+        allow(CreneauxSearch::NextAvailability).to receive(:find).and_return(slot)
         get :search_rdv, params: {
           address: address, departement: departement_number, city_code: city_code,
           motif_name_with_location_type: motif.name_with_location_type,
