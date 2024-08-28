@@ -26,11 +26,15 @@ class WebhookEndpoint < ApplicationRecord
   end
 
   def trigger_for(record)
-    WebhookJob.perform_later(record.generate_webhook_payload(:created), id)
+    WebhookJob.perform_later(record.generate_webhook_payload(:created, rdv_insertion?), id)
   end
 
   def partially_hidden_secret
     secret&.gsub(/.(?=.{3})/, "*")
+  end
+
+  def rdv_insertion?
+    target_url.include?(ENV["RDV_INSERTION_HOST"])
   end
 
   private
