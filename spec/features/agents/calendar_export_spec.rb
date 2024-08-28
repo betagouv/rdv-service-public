@@ -47,6 +47,6 @@ RSpec.describe "Agents can export their calendar to other tools, such as Outlook
 
     visit ics_calendar_path(agent.calendar_uid, format: :ics)
 
-    expect(page.body.gsub("\r\n", "\n")).to eq File.read(Rails.root.join("spec/support/calendar.ics"))
+    expect(page.body.gsub("\r\n", "\n")).to eq Rails.root.join("spec/support/calendar.ics").read
   end
 end

@@ -101,7 +101,7 @@ RSpec.describe Lieu, type: :model do
       let(:paris_loc) { { latitude: 48.83, longitude: 2.37 } }
       let(:bookable_by) { :everyone }
 
-      it { expect(lieu_lille.distance(paris_loc[:latitude], paris_loc[:longitude])).to be_a_kind_of(Float) }
+      it { expect(lieu_lille.distance(paris_loc[:latitude], paris_loc[:longitude])).to be_a(Float) }
       it { expect(lieu_lille.distance(paris_loc[:latitude], paris_loc[:longitude])).to be_within(10_000).of(204_000) }
     end
 
@@ -145,13 +145,13 @@ RSpec.describe Lieu, type: :model do
         end
 
         it "only returns lieux with a rdv that is available for reservation" do
-          expect(subject).to match_array([lieu])
+          expect(subject).to contain_exactly(lieu)
         end
 
         context "for a single use lieu" do
           let!(:lieu) { create(:lieu, availability: :single_use) }
 
-          it { is_expected.to match_array([lieu]) }
+          it { is_expected.to contain_exactly(lieu) }
         end
       end
     end

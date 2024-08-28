@@ -1,7 +1,7 @@
 class Receipt < ApplicationRecord
   # Attributes
-  enum result: { processed: "processed", sent: "sent", delivered: "delivered", failure: "failure" }
-  enum channel: { sms: "sms", mail: "mail", webhook: "webhook" }, _prefix: :channel
+  enum :result, { processed: "processed", sent: "sent", delivered: "delivered", failure: "failure" }
+  enum :channel, { sms: "sms", mail: "mail", webhook: "webhook" }, prefix: :channel
 
   # Relations
   belongs_to :rdv, optional: true # We could reference a Participation directly (aka a “Participation”) but this would not work for responsible users of relatives.

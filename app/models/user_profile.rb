@@ -4,7 +4,7 @@ class UserProfile < ApplicationRecord
   include WebhookDeliverable
 
   # Attributes
-  enum logement: { sdf: 0, heberge: 1, en_accession_propriete: 2, proprietaire: 3, autre: 4, locataire: 5 }
+  enum :logement, { sdf: 0, heberge: 1, en_accession_propriete: 2, proprietaire: 3, autre: 4, locataire: 5 }
 
   # Relations
   belongs_to :organisation

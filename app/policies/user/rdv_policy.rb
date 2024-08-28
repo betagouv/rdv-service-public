@@ -1,9 +1,13 @@
 class User::RdvPolicy < ApplicationPolicy
   alias current_user pundit_user
 
+  # rubocop:disable Style/ArrayIntersect
+
   def rdv_belongs_to_user_or_relatives?
     (record.user_ids & current_user.available_users_for_rdv.pluck(:id)).any?
   end
+
+  # rubocop:enable Style/ArrayIntersect
 
   def index?
     !current_user.only_invited?
@@ -51,8 +55,8 @@ class User::RdvPolicy < ApplicationPolicy
         .where(users: { id: current_user.id })
         .or(
           User
-          .joins(:users)
-          .where(users: { responsible_id: current_user.id })
+            .joins(:users)
+            .where(users: { responsible_id: current_user.id })
         )
         .visible
 

@@ -68,7 +68,7 @@ module SlotBuilder
       return range.begin..busy_time.starts_at if range.cover?(busy_time.starts_at)
       return busy_time.ends_at..range.end if range.cover?(busy_time.ends_at)
 
-      return range if (busy_time.ends_at < range.begin) || (busy_time.starts_at > range.end) # Dans ce dernier cas il n'y a pas d'overlap du tout entre le range et le busy_time
+      range if (busy_time.ends_at < range.begin) || (busy_time.starts_at > range.end) # Dans ce dernier cas il n'y a pas d'overlap du tout entre le range et le busy_time
     end
 
     def slots_for(plage_ouverture_free_times, motif)

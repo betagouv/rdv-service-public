@@ -21,15 +21,15 @@ RSpec.describe PlageOuvertureOverlap do
 
   shared_examples "plage ouvertures overlap" do
     it "overlaps" do
-      expect(described_class.new(po1, po2).exists?).to eq true
-      expect(described_class.new(po2, po1).exists?).to eq true
+      expect(described_class.new(po1, po2).exists?).to be true
+      expect(described_class.new(po2, po1).exists?).to be true
     end
   end
 
   shared_examples "plage ouvertures do not overlap" do
     it "does not overlap" do
-      expect(described_class.new(po1, po2).exists?).to eq false
-      expect(described_class.new(po2, po1).exists?).to eq false
+      expect(described_class.new(po1, po2).exists?).to be false
+      expect(described_class.new(po2, po1).exists?).to be false
     end
   end
 

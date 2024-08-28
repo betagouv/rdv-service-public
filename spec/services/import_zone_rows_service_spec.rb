@@ -18,7 +18,7 @@ RSpec.describe ImportZoneRowsService, type: :service do
 
     it "is valid and import zones" do
       res = described_class.perform_with(rows, territory62, agent)
-      expect(res[:valid]).to eq(true)
+      expect(res[:valid]).to be(true)
       expect(res[:counts][:imported_new]["arques"]).to eq(2)
       expect(res[:counts][:imported_new]["arras-sud"]).to eq(1)
       expect(Zone.count).to eq(3)
@@ -30,7 +30,7 @@ RSpec.describe ImportZoneRowsService, type: :service do
     context "dry_run" do
       it "returns counters but not actually import" do
         res = described_class.perform_with(rows, territory62, agent, dry_run: true)
-        expect(res[:valid]).to eq(true)
+        expect(res[:valid]).to be(true)
         expect(res[:counts][:imported_new]["arques"]).to eq(2)
         expect(res[:counts][:imported_new]["arras-sud"]).to eq(1)
         expect(res[:imported_zones].count).to eq(3)
@@ -50,7 +50,7 @@ RSpec.describe ImportZoneRowsService, type: :service do
 
     it "is valid and import zones" do
       res = described_class.perform_with(rows, territory62, agent)
-      expect(res[:valid]).to eq(true)
+      expect(res[:valid]).to be(true)
       expect(res[:counts][:imported_new]["arques"]).to eq(1)
       expect(res[:counts][:imported_new]["arras-sud"]).to eq(2)
       expect(Zone.count).to eq(3)
@@ -64,7 +64,7 @@ RSpec.describe ImportZoneRowsService, type: :service do
     context "dry_run" do
       it "returns counters but not actually import" do
         res = described_class.perform_with(rows, territory62, agent, dry_run: true)
-        expect(res[:valid]).to eq(true)
+        expect(res[:valid]).to be(true)
         expect(res[:counts][:imported_new]["arques"]).to eq(1)
         expect(res[:counts][:imported_new]["arras-sud"]).to eq(2)
         expect(res[:imported_zones].count).to eq(3)
@@ -78,7 +78,7 @@ RSpec.describe ImportZoneRowsService, type: :service do
 
     it "is invalid" do
       res = described_class.perform_with(rows, territory62, agent)
-      expect(res[:valid]).to eq(false)
+      expect(res[:valid]).to be(false)
       expect(res[:errors][0]).to eq("Aucune ligne")
     end
   end
@@ -94,7 +94,7 @@ RSpec.describe ImportZoneRowsService, type: :service do
 
     it "is invalid" do
       res = described_class.perform_with(rows, territory62, agent)
-      expect(res[:valid]).to eq(false)
+      expect(res[:valid]).to be(false)
       expect(res[:errors][0]).to eq("Colonne(s) city_code absente(s)")
     end
   end
@@ -110,7 +110,7 @@ RSpec.describe ImportZoneRowsService, type: :service do
 
     it "is invalid" do
       res = described_class.perform_with(rows, territory62, agent)
-      expect(res[:valid]).to eq(false)
+      expect(res[:valid]).to be(false)
       expect(res[:row_errors][1]).to eq("Champ(s) city_code manquant(s)")
     end
   end
@@ -125,7 +125,7 @@ RSpec.describe ImportZoneRowsService, type: :service do
 
     it "is invalid" do
       res = described_class.perform_with(rows, territory62, agent)
-      expect(res[:valid]).to eq(false)
+      expect(res[:valid]).to be(false)
       expect(res[:row_errors][1]).to eq("Champ(s) sector_id manquant(s)")
     end
   end
@@ -140,7 +140,7 @@ RSpec.describe ImportZoneRowsService, type: :service do
 
     it "does not import anything" do
       res = described_class.perform_with(rows, territory62, agent)
-      expect(res[:valid]).to eq(false)
+      expect(res[:valid]).to be(false)
       expect(res[:row_errors][0]).to include("Aucun secteur trouvé pour l'identifiant arras-nord")
       expect(Zone.count).to eq(0)
     end
@@ -155,7 +155,7 @@ RSpec.describe ImportZoneRowsService, type: :service do
 
     it "does not import anything" do
       res = described_class.perform_with(rows, territory62, agent)
-      expect(res[:valid]).to eq(false)
+      expect(res[:valid]).to be(false)
       expect(res[:row_errors][0]).to include("La commune AIRE-SUR-LA-LYS n'appartient pas au département 62")
       expect(Zone.count).to eq(0)
     end
@@ -171,7 +171,7 @@ RSpec.describe ImportZoneRowsService, type: :service do
 
     it "does not import anything" do
       res = described_class.perform_with(rows, territory62, agent)
-      expect(res[:valid]).to eq(false)
+      expect(res[:valid]).to be(false)
       expect(res[:errors][0]).to eq("Le code commune 62040 apparaît 2 fois")
       expect(Zone.count).to eq(0)
     end
@@ -189,7 +189,7 @@ RSpec.describe ImportZoneRowsService, type: :service do
     it "imports and override existing zones" do
       res = described_class.perform_with(rows, territory62, agent)
       expect(res[:row_errors]).to be_empty
-      expect(res[:valid]).to eq(true)
+      expect(res[:valid]).to be(true)
       expect(res[:counts][:imported]["arques"]).to eq(2)
       expect(res[:counts][:imported_override]["arques"]).to eq(1)
       expect(res[:counts][:imported_new]["arques"]).to eq(1)
@@ -211,7 +211,7 @@ RSpec.describe ImportZoneRowsService, type: :service do
 
     it "imports anyway" do
       res = described_class.perform_with(rows, territory62, agent)
-      expect(res[:valid]).to eq(true)
+      expect(res[:valid]).to be(true)
       expect(res[:counts][:imported]["arques"]).to eq(2)
       expect(Zone.count).to eq(3)
       expect(Zone.where(city_code: "62040").count).to eq(2)
