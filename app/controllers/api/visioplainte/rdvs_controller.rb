@@ -41,7 +41,7 @@ class Api::Visioplainte::RdvsController < Api::Visioplainte::BaseController
     if rdv.blank?
       render(json: { errors: ["Pas de rdv pour cet id"] }, status: :not_found)
     else
-      rdv.destroy
+      rdv.destroy!
       head :no_content
     end
   end
