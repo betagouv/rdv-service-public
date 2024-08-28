@@ -10,13 +10,13 @@ class BeneficiaireForm
     ants_pre_demande_number
   ].freeze
 
-  attr_accessor(*ATTRIBUTES)
+  attr_accessor(*ATTRIBUTES, :motif_id)
 
   validates_presence_of :first_name, :last_name
   validate :warn_no_contact_information
   validate :validate_phone_number
   validate do
-    if ants_pre_demande_number.present?
+    if Motif.find_by(id: motif_id)&.requires_ants_predemande_number?
       ValidateAntsPreDemandeNumber.perform(
         user: self,
         ants_pre_demande_number: ants_pre_demande_number,
