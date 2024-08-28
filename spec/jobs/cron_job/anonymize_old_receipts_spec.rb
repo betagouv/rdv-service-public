@@ -21,13 +21,13 @@ RSpec.describe CronJob::AnonymizeOldReceipts do
     expect(old_sms_receipt.reload).to have_attributes(
       content: "[valeur anonymisée]",
       sms_phone_number: "[valeur anonymisée]",
-      error_message: "[valeur anonymisée]",
+      error_message: nil, # expected to be nil because it was blank before anonymization
       sms_count: 2
     )
 
     expect(old_mail_receipt.reload).to have_attributes(
       content: "[valeur anonymisée]",
-      error_message: "[valeur anonymisée]"
+      error_message: nil
     )
     expect(old_mail_receipt.email_address).to start_with("email_anonymise_")
   end
