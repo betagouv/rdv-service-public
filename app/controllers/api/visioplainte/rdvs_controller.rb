@@ -36,7 +36,14 @@ class Api::Visioplainte::RdvsController < Api::Visioplainte::BaseController
   end
 
   def destroy
-    head :no_content
+    rdv = find_rdv
+
+    if rdv.blank?
+      render(json: { errors: ["Pas de rdv pour cet id"] }, status: :not_found)
+    else
+      rdv.destroy!
+      head :no_content
+    end
   end
 
   def cancel
@@ -59,18 +66,5 @@ class Api::Visioplainte::RdvsController < Api::Visioplainte::BaseController
 
   def motif
     @motif ||= Api::Visioplainte::CreneauxController.find_motif(params[:service])
-  end
-
-  def rdv(status)
-    # Des données de test pour documenter l'api.
-    Rdv.new(
-      id: 123,
-      users: [User.new(id: 456)],
-      agents: [Agent.new(id: 789, last_name: "Guichet 3")],
-      created_at: Time.zone.now,
-      starts_at: params[:starts_at],
-      duration_in_min: 45,
-      status: status
-    )
   end
 end

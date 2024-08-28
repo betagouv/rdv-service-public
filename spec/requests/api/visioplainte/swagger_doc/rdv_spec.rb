@@ -52,9 +52,6 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do # rub
     end
   end
 
-  let(:id) { rdv.id }
-  let(:rdv) { create(:rdv) }
-
   path "/api/visioplainte/rdvs/{id}" do
     delete "Supprimer un rdv" do
       with_visioplainte_authentication
@@ -64,6 +61,19 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do # rub
       response 204, "Supprime le rdv" do
         run_test!
         parameter name: :id, in: :path, type: :string
+
+        let(:id) do
+          post "/api/visioplainte/rdvs", params: {
+            starts_at: "2024-08-19T08:00:00+02:00",
+            service: "Police",
+          }, headers: auth_header
+
+          response.parsed_body["id"]
+        end
+
+        let(:auth_header) do
+          { "X-VISIOPLAINTE-API-KEY" => "visioplainte-api-test-key-123456" }
+        end
       end
     end
   end
@@ -79,15 +89,13 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do # rub
         parameter name: :id, in: :path, type: :string
         schema rdv_response_schema
 
-        before do
+        let(:id) do
           post "/api/visioplainte/rdvs", params: {
             starts_at: "2024-08-19T08:00:00+02:00",
             service: "Police",
           }, headers: auth_header
 
-          rdv_id = Rdv.last.id
-
-          put "/api/visioplainte/rdvs/#{rdv_id}/cancel", headers: auth_header
+          response.parsed_body["id"]
         end
 
         let(:auth_header) do
