@@ -34,6 +34,7 @@ Capybara.configure do |config|
   config.server = :puma, { Silent: true }
   config.disable_animation = true
   config.save_path = Rails.root.join("tmp/capybara")
+  config.raise_server_errors = false
 
   # This is necessary when using Selenium + custom .localhost domain.
   # See: https://stackoverflow.com/a/63973323/2864020
