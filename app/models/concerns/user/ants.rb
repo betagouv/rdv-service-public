@@ -2,7 +2,7 @@ module User::Ants
   extend ActionView::Helpers::TranslationHelper # allows getting a SafeBuffer instead of a String when using #translate (which a direct call to I18n.t doesn't do)
 
   def self.validate_ants_pre_demande_number(user:, ants_pre_demande_number:, ignore_benign_errors:)
-    return if ants_pre_demande_number.blank?
+    return unless ants_pre_demande_number.blank?
 
     ants_pre_demande_number = ants_pre_demande_number.upcase
 
