@@ -1,4 +1,6 @@
 class Admin::Territories::MotifsController < Admin::Territories::BaseController
+  before_action :set_organisations, only: %i[new create]
+
   def index
     @organisations = current_territory.organisations
     @services = current_territory.services.reject(&:secretariat?)
@@ -60,6 +62,10 @@ class Admin::Territories::MotifsController < Admin::Territories::BaseController
   end
 
   private
+
+  def set_organisations
+    @organisations = Agent::MotifPolicy.organisations_i_can_manage(current_agent).ordered_by_name
+  end
 
   def filter_motifs(motifs)
     motifs = motifs.search_by_text(params[:search]) if params[:search].present?

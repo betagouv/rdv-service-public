@@ -4,7 +4,7 @@
             label: %(<span class="card-title">Dans quelles organisations créer ce motif ?</span>).html_safe,
             as: :check_boxes,
             checked: params[:organisation_ids],
-            collection: Agent::MotifPolicy.organisations_i_can_manage(current_agent).ordered_by_name,
+            collection: @organisations,
             wrapper_html: { style: "display: grid; grid-template-columns: repeat(auto-fill,minmax(260px, 1fr));" }
   div
     a href="#=" class="js-check-all" data-check-all-matching="[name='organisation_ids[]']"
