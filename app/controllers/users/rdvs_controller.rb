@@ -135,17 +135,17 @@ class Users::RdvsController < UserAuthController
   def build_rdv_from_creneau(creneau)
     rdv = creneau.build_rdv
     rdv.assign_attributes(
-      users: [user_for_rdv],
+      users: users_for_rdv,
       created_by: current_user
     )
     rdv
   end
 
-  def user_for_rdv
+  def users_for_rdv
     if rdv_params[:user_ids]
-      current_user.available_users_for_rdv.find(rdv_params[:user_ids]).first
+      current_user.available_users_for_rdv.find(rdv_params[:user_ids])
     else
-      current_user
+      [current_user]
     end
   end
 
