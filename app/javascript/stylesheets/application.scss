@@ -39,7 +39,7 @@
 @import "~bootstrap/scss/carousel";
 @import "~bootstrap/scss/spinners";
 @import "~bootstrap/scss/utilities/align";
-@import "~bootstrap/scss/utilities/background";
+//@import "~bootstrap/scss/utilities/background";
 @import "~bootstrap/scss/utilities/borders";
 @import "~bootstrap/scss/utilities/clearfix";
 @import "~bootstrap/scss/utilities/display";
@@ -63,6 +63,7 @@
 @import "vendor/agent_connect_button";
 
 @import "./components/backgrounds";
+@import "./components/backgrounds_dsfr";
 @import "./components/search_form";
 @import "./components/bubble";
 @import "./components/forms";
