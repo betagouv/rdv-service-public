@@ -480,7 +480,7 @@ RSpec.describe Users::RdvsController, type: :controller do
       travel_to(now)
       sign_in user
 
-      allow(Users::CreneauxSearch).to receive(:creneau_for)
+      allow(CreneauxSearch::ForUser).to receive(:creneau_for)
         .with(user: user, starts_at: starts_at, motif: motif, lieu: lieu)
         .and_return(returned_creneau)
     end
@@ -533,7 +533,7 @@ RSpec.describe Users::RdvsController, type: :controller do
     before do
       travel_to(now)
       sign_in user
-      allow(Users::CreneauxSearch).to receive(:creneau_for)
+      allow(CreneauxSearch::ForUser).to receive(:creneau_for)
         .with(user: user, starts_at: starts_at, motif: motif, lieu: lieu)
         .and_return(returned_creneau)
       allow(Devise.token_generator).to receive(:generate).and_return("12345")

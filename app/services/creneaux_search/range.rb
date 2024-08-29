@@ -1,4 +1,4 @@
-module Lapin
+module CreneauxSearch
   module Range
     class << self
       def reduce_range_to_delay(motif, date_range)
