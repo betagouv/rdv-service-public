@@ -21,9 +21,10 @@ class CreneauxSearch::ForUser
 
   def next_availability
     return available_collective_rdvs.first if motif.collectif?
-    return nil if reduced_date_range.blank?
 
-    CreneauxSearch::NextAvailability.find(motif, @lieu, attributed_agents, from: reduced_date_range.first, to: @motif.end_booking_delay)
+    from = [date_range.begin, @motif.start_booking_delay].max
+
+    CreneauxSearch::NextAvailability.find(motif, @lieu, attributed_agents, from: from, to: @motif.end_booking_delay)
   end
 
   def creneaux
