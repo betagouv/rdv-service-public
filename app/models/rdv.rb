@@ -206,7 +206,7 @@ class Rdv < ApplicationRecord
   end
 
   def creneaux_available(date_range)
-    date_range = Lapin::Range.reduce_range_to_delay(motif, date_range) # réduit le range en fonction du délay
+    date_range = CreneauxSearch::Range.reduce_range_to_delay(motif, date_range) # réduit le range en fonction du délay
     return [] if date_range.blank?
 
     CreneauxSearch::Calculator.available_slots(motif, lieu, date_range)

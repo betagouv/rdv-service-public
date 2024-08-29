@@ -48,7 +48,7 @@ class CreneauxSearch::ForUser
   attr_reader :motif, :date_range
 
   def reduced_date_range
-    @reduced_date_range ||= Lapin::Range.reduce_range_to_delay(motif, date_range) # réduit le range en fonction du délai min du motif
+    @reduced_date_range ||= CreneauxSearch::Range.reduce_range_to_delay(motif, date_range) # réduit le range en fonction du délai min du motif
   end
 
   def attributed_agents
