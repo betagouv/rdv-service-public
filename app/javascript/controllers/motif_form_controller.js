@@ -22,7 +22,9 @@ export default class extends Controller {
   refreshSections(event) {
     const resetCheckbox = !!event;
     this.refreshSection(this.bookingDelaySectionTarget, this.shouldDisableBookingDelay(), resetCheckbox)
-    this.refreshSection(this.sectoSectionTarget, this.shouldDisableSecto(), resetCheckbox)
+    if(this.hasSectoSectionTarget) {
+      this.refreshSection(this.sectoSectionTarget, this.shouldDisableSecto(), resetCheckbox)
+    }
     this.refreshSection(this.secretariatSectionTarget, this.shouldDisableSecretariat(), resetCheckbox)
   }
 
