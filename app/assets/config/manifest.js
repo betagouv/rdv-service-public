@@ -5,4 +5,3 @@
 //= link @gouvfr/dsfr/dist/dsfr.module.min.js
 //= link @gouvfr/dsfr/dist/dsfr.nomodule.min.js
 //= link @gouvfr/dsfr/dist/utility/icons/icons.min.css
-//
