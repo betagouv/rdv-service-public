@@ -1,8 +1,7 @@
 .card.p-4
-  h5.card-title  Dans quelles organisations créer ce motif ?
   = simple_fields_for nil do |o|
     - o.input :organisation_ids,
-            label: false,
+            label: %(<span class="card-title">Dans quelles organisations créer ce motif ?</span>).html_safe,
             as: :check_boxes,
             checked: params[:organisation_ids],
             collection: Agent::MotifPolicy.organisations_i_can_manage(current_agent).ordered_by_name,
