@@ -1,4 +1,4 @@
-RSpec.describe SlotBuilder, type: :service do
+RSpec.describe CreneauxSearch::Calculator, type: :service do
   let(:friday) { Time.zone.parse("20210430 8:00") }
   let(:organisation) { create(:organisation) }
   let(:lieu) { create(:lieu, organisation: organisation) }
@@ -354,7 +354,7 @@ RSpec.describe SlotBuilder, type: :service do
     it "return empty free times with an absence over range" do
       absence = build(:absence, first_day: Date.new(2021, 11, 26), start_time: Tod::TimeOfDay.new(8), end_time: Tod::TimeOfDay.new(12))
       range = Time.zone.parse("20211126 9:00")..Time.zone.parse("20211126 11:00")
-      busy_times = [SlotBuilder::BusyTime.new(absence)]
+      busy_times = [CreneauxSearch::Calculator::BusyTime.new(absence)]
       expect(described_class.split_range_recursively(range, busy_times)).to eq([])
     end
   end

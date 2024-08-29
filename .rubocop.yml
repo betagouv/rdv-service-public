@@ -12,6 +12,7 @@ AllCops:
     - "scripts/screenshots/**/*"
   NewCops: enable
   TargetRubyVersion: 3.1.2
+  SuggestExtensions: false
 
 Bundler/OrderedGems:
   Exclude:
