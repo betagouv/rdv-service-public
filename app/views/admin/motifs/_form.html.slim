@@ -1,34 +1,27 @@
-= simple_form_for form_target, html: { "data-controller": "motif-form" } do |f|
+ul#motif_tabs.nav.nav-tabs.mt-3
+  li.nav-item[role="presentation"]
+    button#tab_configuration_principale.nav-link.active[data-toggle="tab" data-target="#configuration_principale" type="button" role="tab" aria-controls="home" aria-selected="true"]
+      | Général
+  li.nav-item[role="presentation"]
+    button#tab_resa_en_ligne.nav-link[data-toggle="tab" data-target="#resa_en_ligne" type="button" role="tab" aria-controls="home" aria-selected="false"]
+      | Réservation en ligne
+  li.nav-item[role="presentation"]
+    button#tab_notifs_et_instructions.nav-link[data-toggle="tab" data-target="#notifs_et_instructions" type="button" role="tab" aria-controls="home" aria-selected="false"]
+      | Notifications et instructions
 
-  = render "model_errors", model: motif
+.row.justify-content-center
+  .col-md-12.col-lg-8
+    .tab-content.mt-4
+      #configuration_principale.tab-pane.fade.show.active[role="tabpanel" aria-labelledby="tab_configuration_principale"]
+        = render "admin/motifs/form/configuration_principale", f: f, motif: motif
+      #resa_en_ligne.tab-pane.fade[role="tabpanel" aria-labelledby="tab_resa_en_ligne"]
+        = render "admin/motifs/form/resa_en_ligne", f: f, motif: motif
+      #notifs_et_instructions.tab-pane.fade[role="tabpanel" aria-labelledby="tab_notifs_et_instructions"]
+        = render "admin/motifs/form/notifs_et_instructions", f: f, motif: motif
 
-  - if multi_organisations
-    = render "admin/motifs/form/organisations_picker", f: f, motif: motif
-
-  ul#motif_tabs.nav.nav-tabs.mt-3
-    li.nav-item[role="presentation"]
-      button#tab_configuration_principale.nav-link.active[data-toggle="tab" data-target="#configuration_principale" type="button" role="tab" aria-controls="home" aria-selected="true"]
-        | Général
-    li.nav-item[role="presentation"]
-      button#tab_resa_en_ligne.nav-link[data-toggle="tab" data-target="#resa_en_ligne" type="button" role="tab" aria-controls="home" aria-selected="false"]
-        | Réservation en ligne
-    li.nav-item[role="presentation"]
-      button#tab_notifs_et_instructions.nav-link[data-toggle="tab" data-target="#notifs_et_instructions" type="button" role="tab" aria-controls="home" aria-selected="false"]
-        | Notifications et instructions
-
-  .row.justify-content-center
-    .col-md-12.col-lg-8
-      .tab-content.mt-4
-        #configuration_principale.tab-pane.fade.show.active[role="tabpanel" aria-labelledby="tab_configuration_principale"]
-          = render "admin/motifs/form/configuration_principale", f: f, motif: motif
-        #resa_en_ligne.tab-pane.fade[role="tabpanel" aria-labelledby="tab_resa_en_ligne"]
-          = render "admin/motifs/form/resa_en_ligne", f: f, motif: motif
-        #notifs_et_instructions.tab-pane.fade[role="tabpanel" aria-labelledby="tab_notifs_et_instructions"]
-          = render "admin/motifs/form/notifs_et_instructions", f: f, motif: motif
-
-      .row.mb-5
-        - if motif.persisted?
-          .col.text-left
-            = link_to "Supprimer", admin_organisation_motif_path(motif.organisation, motif), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de ce motif ?"}
-        .col.text-right
-          = f.button :submit, motif.new_record? ? "Créer le motif" : "Enregistrer"
+    .row.mb-5
+      - if motif.persisted?
+        .col.text-left
+          = link_to "Supprimer", admin_organisation_motif_path(motif.organisation, motif), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de ce motif ?"}
+      .col.text-right
+        = f.button :submit, motif.new_record? ? "Créer le motif" : "Enregistrer"

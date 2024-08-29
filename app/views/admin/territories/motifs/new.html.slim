@@ -4,4 +4,7 @@
 
 .row
   .col-md-12
-    = render "admin/motifs/form", motif: @motif, form_target: [:admin, current_territory, @motif], multi_organisations: true
+    = simple_form_for [:admin, current_territory, @motif], html: { "data-controller": "motif-form" } do |f|
+      = render "model_errors", model: @motif, f: f
+      = render "admin/motifs/form/organisations_picker", motif: @motif, f: f
+      = render "admin/motifs/form", motif: @motif, f: f

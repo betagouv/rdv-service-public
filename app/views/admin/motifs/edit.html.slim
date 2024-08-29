@@ -13,4 +13,6 @@
 
 .row
   .col-md-12
-    = render "form", motif: @motif, form_target: [:admin, @motif.organisation, @motif], multi_organisations: false
+    = simple_form_for [:admin, @motif.organisation, @motif], html: { "data-controller": "motif-form" } do |f|
+      = render "model_errors", model: @motif, f: f
+      = render "admin/motifs/form", motif: @motif, f: f
