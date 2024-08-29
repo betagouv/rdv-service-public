@@ -1,4 +1,4 @@
-class Users::CreneauxSearch
+class CreneauxSearch::ForUser
   def initialize(motif:, date_range: nil, user: nil, lieu: nil, geo_search: nil)
     @user = user
     @motif = motif
@@ -24,7 +24,7 @@ class Users::CreneauxSearch
 
     from = [date_range.begin, @motif.start_booking_delay].max
 
-    NextAvailabilityService.find(motif, @lieu, attributed_agents, from: from, to: @motif.end_booking_delay)
+    CreneauxSearch::NextAvailability.find(motif, @lieu, attributed_agents, from: from, to: @motif.end_booking_delay)
   end
 
   def creneaux
@@ -32,7 +32,7 @@ class Users::CreneauxSearch
 
     return [] if reduced_date_range.blank?
 
-    SlotBuilder.available_slots(motif, @lieu, reduced_date_range, attributed_agents)
+    CreneauxSearch::Calculator.available_slots(motif, @lieu, reduced_date_range, attributed_agents)
   end
 
   def available_collective_rdvs
@@ -49,7 +49,7 @@ class Users::CreneauxSearch
   attr_reader :motif, :date_range
 
   def reduced_date_range
-    @reduced_date_range ||= Lapin::Range.reduce_range_to_delay(motif, date_range) # réduit le range en fonction du délai min du motif
+    @reduced_date_range ||= CreneauxSearch::Range.reduce_range_to_delay(motif, date_range) # réduit le range en fonction du délai min du motif
   end
 
   def attributed_agents

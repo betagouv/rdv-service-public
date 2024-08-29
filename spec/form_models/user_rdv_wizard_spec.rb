@@ -26,7 +26,7 @@ RSpec.describe UserRdvWizard do
       allow(Users::GeoSearch).to receive(:new)
         .with(departement: "62", city_code: "62100")
         .and_return(mock_geo_search)
-      allow(Users::CreneauxSearch).to receive(:creneau_for).with(
+      allow(CreneauxSearch::ForUser).to receive(:creneau_for).with(
         user: user,
         motif: motif,
         lieu: lieu,
