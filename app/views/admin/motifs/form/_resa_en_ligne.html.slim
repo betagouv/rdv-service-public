@@ -19,7 +19,7 @@
             p.text-muted.font-14.mt-1
               = sanitize(I18n.t("activerecord.attributes.motif/bookable_by/hint.agents_and_prescripteurs"))
 
-    - if @organisations ? @organisations.any?(&:rdv_insertion?) : try(:current_organisation)&.rdv_insertion?
+    - if rdvi_mode
       .form-row
         .col-md-12
           = label_tag do

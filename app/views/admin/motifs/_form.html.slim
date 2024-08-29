@@ -15,9 +15,9 @@ ul#motif_tabs.nav.nav-tabs.mt-3
       #configuration_principale.tab-pane.fade.show.active[role="tabpanel" aria-labelledby="tab_configuration_principale"]
         = render "admin/motifs/form/configuration_principale", f: f, motif: motif
       #resa_en_ligne.tab-pane.fade[role="tabpanel" aria-labelledby="tab_resa_en_ligne"]
-        = render "admin/motifs/form/resa_en_ligne", f: f, motif: motif
+        = render "admin/motifs/form/resa_en_ligne", f: f, motif: motif, rdvi_mode: rdvi_mode
       #notifs_et_instructions.tab-pane.fade[role="tabpanel" aria-labelledby="tab_notifs_et_instructions"]
-        = render "admin/motifs/form/notifs_et_instructions", f: f, motif: motif
+        = render "admin/motifs/form/notifs_et_instructions", f: f, motif: motif, rdvi_mode: rdvi_mode
 
     .row.mb-5
       - if motif.persisted?
