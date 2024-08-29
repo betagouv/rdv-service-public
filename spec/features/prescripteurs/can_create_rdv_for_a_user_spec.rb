@@ -246,8 +246,8 @@ RSpec.describe "prescripteur can create RDV for a user" do
       click_on "08:00"
 
       expect(page).to have_content("Vos coordonnées de prescripteur")
-      expect(page).to have_content("Nouvelle fonctionnalité : Pour ne pas avoir à remplir ce formulaire pour chaque" \
-                                   " nouveau rendez-vous et réduire les doublons, vous pouvez utiliser la prescription dans l'espace agent")
+      expect(page).to have_content("Nouvelle fonctionnalité : Pour ne pas avoir à remplir ce formulaire pour chaque " \
+                                   "nouveau rendez-vous et réduire les doublons, vous pouvez utiliser la prescription dans l'espace agent")
       expect(page).to have_link("en cliquant ici")
       click_on "en cliquant ici"
       expect(page).to have_current_path("/admin/organisations/#{agent_prescripteur.organisations.find_by(territory: territory).id}/prescription/user_selection", ignore_query: true)
@@ -273,8 +273,8 @@ RSpec.describe "prescripteur can create RDV for a user" do
         click_on "Formation emails" # choix du motif
         click_on "Prochaine disponibilité le", match: :first
         click_on "08:00"
-        expect(page).to have_content("Nouvelle fonctionnalité : Pour ne pas avoir à remplir ce formulaire pour chaque" \
-                                     " nouveau rendez-vous et réduire les doublons, vous pouvez utiliser la prescription dans l'espace agent.")
+        expect(page).to have_content("Nouvelle fonctionnalité : Pour ne pas avoir à remplir ce formulaire pour chaque " \
+                                     "nouveau rendez-vous et réduire les doublons, vous pouvez utiliser la prescription dans l'espace agent.")
         expect(page).not_to have_link("en cliquant ici")
       end
     end

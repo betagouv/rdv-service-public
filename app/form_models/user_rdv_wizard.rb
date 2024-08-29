@@ -42,7 +42,7 @@ module UserRdvWizard
       motif = @rdv.motif
       motif.default_duration_in_min = @attributes[:duration].to_i if @attributes[:duration]
 
-      @creneau ||= Users::CreneauSearch.creneau_for(
+      @creneau ||= Users::CreneauxSearch.creneau_for(
         user: @user,
         motif: motif,
         lieu: lieu,
@@ -113,7 +113,7 @@ module UserRdvWizard
 
   class Step2 < Base
     def initialize(user, attributes)
-      super(user, attributes)
+      super
       # Hacky override of user_ids on step2
       @rdv.user_ids = [attributes[:created_user_id]] if attributes[:created_user_id].present?
     end

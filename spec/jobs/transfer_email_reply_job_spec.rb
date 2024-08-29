@@ -77,7 +77,7 @@ RSpec.describe TransferEmailReplyJob do
 
     it "sends one email with all agents in the TO: field" do
       perform_job
-      expect(ActionMailer::Base.deliveries.last.to).to match_array(["je_suis_un_agent@departement.fr", "autre@departement.fr"])
+      expect(ActionMailer::Base.deliveries.last.to).to contain_exactly("je_suis_un_agent@departement.fr", "autre@departement.fr")
     end
   end
 

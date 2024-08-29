@@ -10,7 +10,7 @@ Capybara.register_driver :selenium do |app|
   binary = chrome_bin if chrome_bin
   browser_options = Selenium::WebDriver::Chrome::Options.new(
     # these args seem to reduce test flakyness
-    args: %w[headless no-sandbox disable-gpu disable-dev-shm-usage window-size=1500,1000],
+    args: %w[headless no-sandbox disable-gpu disable-dev-shm-usage window-size=1500,1000 disable-search-engine-choice-screen],
     "goog:loggingPrefs": { browser: "ALL" },
     binary: binary
   )

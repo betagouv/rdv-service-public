@@ -303,7 +303,7 @@ RSpec.describe MergeUsersService, type: :service do
 
       it "adds all organisations to the target user and deletes the user to merge" do
         perform
-        expect(user_target.reload.organisations).to match_array([organisation, organisation2])
+        expect(user_target.reload.organisations).to contain_exactly(organisation, organisation2)
         expect(UserProfile.find_by(user_id: user_to_merge.id)).to be_nil
         expect(User.find_by(id: user_to_merge.id)).to be_nil
       end
@@ -317,7 +317,7 @@ RSpec.describe MergeUsersService, type: :service do
 
       it "adds all organisations to the target user and deletes the user to merge" do
         perform
-        expect(user_target.reload.organisations).to match_array([organisation, organisation2, organisation3])
+        expect(user_target.reload.organisations).to contain_exactly(organisation, organisation2, organisation3)
         expect(UserProfile.find_by(user_id: user_to_merge.id)).to be_nil
         expect(User.find_by(id: user_to_merge.id)).to be_nil
       end
@@ -333,7 +333,7 @@ RSpec.describe MergeUsersService, type: :service do
 
       it "adds all organisations OF THE CURRENT TERRITORY to the target user and DOES NOT delete the user to merge" do
         perform
-        expect(user_target.reload.organisations).to match_array([organisation, organisation2, organisation3])
+        expect(user_target.reload.organisations).to contain_exactly(organisation, organisation2, organisation3)
         expect(user_target.organisations).not_to include(organisation_in_other_territory)
         expect(UserProfile.where(user_id: user_to_merge.id).pluck(:organisation_id)).to eq([organisation_in_other_territory.id])
         expect(User.find_by(id: user_to_merge.id)).to eq(user_to_merge)

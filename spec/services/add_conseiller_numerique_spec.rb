@@ -1,5 +1,5 @@
 RSpec.describe AddConseillerNumerique do
-  let!(:territory) { create(:territory, name: "Conseillers Numériques") }
+  let!(:territory) { create(:territory, :conseillers_numeriques) }
   let(:params) do
     {
       external_id: "exemple@conseiller-numerique.fr",
@@ -92,7 +92,7 @@ RSpec.describe AddConseillerNumerique do
         it "adds the agent to the new org" do
           expect(agent.organisations).to eq([old_organisation])
           described_class.process!(params)
-          expect(agent.organisations.reload).to match_array([old_organisation, Organisation.find_by(external_id: "123456")])
+          expect(agent.organisations.reload).to contain_exactly(old_organisation, Organisation.find_by(external_id: "123456"))
         end
       end
     end

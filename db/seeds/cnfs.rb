@@ -1,9 +1,10 @@
 territory_cnfs = Territory.create!(
   departement_number: Territory::CN_DEPARTEMENT_NUMBER,
-  name: "Conseillers Numériques",
   sms_provider: "netsize",
   sms_configuration: "login:pwd"
 )
+# Les contraintes de validations sur les noms spéciaux obligent à faire un update_columns ici
+territory_cnfs.update_columns(name: Territory::CNFS_NAME) # rubocop:disable Rails/SkipsModelValidations
 
 service_cnfs = Service.create!(name: Service::CONSEILLER_NUMERIQUE, short_name: Service::CONSEILLER_NUMERIQUE)
 territory_cnfs.services << service_cnfs

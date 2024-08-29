@@ -2,7 +2,7 @@
 
 h2 Votre département
 ul.list-group.mb-2
-  - Territory.all.where.not(phone_number: nil).each do |territory|
+  - Territory.where.not(phone_number: nil).each do |territory|
     li
       span> #{territory}
       = link_to territory.phone_number, "tel:#{territory.phone_number_formatted}"

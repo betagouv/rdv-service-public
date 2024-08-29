@@ -2,15 +2,21 @@
 
 p.mb-1 Allez dans votre agenda externe et ajoutez un nouveau calendrier avec cette URL :
 
-- calendar_url = ics_calendar_url(current_agent.calendar_uid, protocol: :webcal, format: :ics)
-=  link_to(calendar_url, calendar_url, class: "mb-1")
+- calendar_url = ics_calendar_url(current_agent.calendar_uid, protocol: request.protocol, format: :ics)
+.input-group.mb-3[data-controller="clipboard"]
+  input.form-control[readonly name="calendar_url" value=calendar_url data-clipboard-target="input-to-copy"]
+  .input-group-append
+    button.btn.btn-primary[data-clipboard-target="copy-button"]
+      | Copier
 
-p Tous vos rendez-vous de #{current_domain.name} seront copiés automatiquement au fur et à mesure de leur création (ou modification).
+p
+  ' Tous vos rendez-vous de #{current_domain.name} seront affichés automatiquement au fur et à mesure de leur création (ou modification).
+  | Vous ne pourrez en revanche pas les modifier depuis votre agenda externe.
 p Pour plus d'informations sur cette fonctionnalité, #{link_to("consultez la documentation", current_domain.documentation_url, target: :blank)}.
 
 p Si jamais votre lien de synchronisation a été partagé par erreur et qu’il y a un risque que quelqu’un d’autre accède à votre liste de rendez-vous, vous pouvez le réinitialiser immédiatement.
 
-div.text-center
+div.rdv-text-align-center
   = simple_form_for(current_agent, url: agents_calendar_sync_webcal_sync_path) do |f|
     = f.submit "Réinitialiser mon lien de synchronisation", class: "btn btn-secondary", data: { confirm: "Attention, si vous réinitialisez votre lien de synchronisation, vous devrez entrer le nouveau lien dans votre agenda externe" }
 

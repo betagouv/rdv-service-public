@@ -2,14 +2,14 @@
   .card-body
     - if context.follow_up?
       - if context.referent_agents.empty?
-        .font-weight-bold L'agent avec qui vous voulez prendre rendez-vous ne vous est pas assigné comme référent.
+        .rdv-font-weight-700 L'agent avec qui vous voulez prendre rendez-vous ne vous est pas assigné comme référent.
       - else
-        .mb-3.font-weight-bold Votre référent n'a pas de créneaux disponibles. Voulez-vous prendre rendez-vous avec un autre agent ?
+        .mb-3.rdv-font-weight-700 Votre référent n'a pas de créneaux disponibles. Voulez-vous prendre rendez-vous avec un autre agent ?
         .float-left
           = render "users/rdvs/prendre_rdv_button"
     - elsif context.invitation?
-      .font-weight-bold Malheureusement, aucun créneau correspondant à votre invitation n'a été trouvé.
-      .font-weight-bold.mb-2 Toutes nos excuses pour cela.
+      .rdv-font-weight-700 Malheureusement, aucun créneau correspondant à votre invitation n'a été trouvé.
+      .rdv-font-weight-700.mb-2 Toutes nos excuses pour cela.
       = render "search/nothing_to_show_invitation", context: context
     - else
-      .font-weight-bold Malheureusement, aucun créneau correspondant à votre recherche n'a été trouvé.
+      .rdv-font-weight-700 Malheureusement, aucun créneau correspondant à votre recherche n'a été trouvé.

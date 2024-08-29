@@ -2,25 +2,6 @@
   background-color: darken(#f6f7fa, 2%) !important;
 }
 
-.bg-lightturquoise {
-  background-color: $lightturquoise;
-}
-
-.bg-dsfr-blue-ecume-975 {
-  background-color: #f4f6fe;
-}
-
-.bg-primary {
-  background-color: $primary !important;
-}
-
-a.bg-primary {
-  &:focus,
-  &:hover {
-    background-color: #2d6ade !important;
-  }
-}
-
 .bg-negative {
   margin-top: -80px;
 }

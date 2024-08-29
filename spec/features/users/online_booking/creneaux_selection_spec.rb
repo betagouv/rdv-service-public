@@ -44,6 +44,27 @@ RSpec.describe "User can select a creneau" do
     end
   end
 
+  context "when there is a full week without any creneaux" do
+    let!(:motif) { create(:motif, name: "RSA Orientation", organisation: organisation, restriction_for_rdv: nil, service: service) }
+    let!(:plage_ouverture) { create(:plage_ouverture, :daily, first_day: Date.new(2021, 12, 13), motifs: [motif], lieu: lieu, organisation: organisation) }
+    let!(:absence) do
+      create(:absence, agent: plage_ouverture.agent, first_day: Date.new(2021, 12, 20), end_day: Date.new(2021, 12, 27), start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(18))
+    end
+
+    it "displays the correct date for the next availability" do
+      visit prendre_rdv_path(departement: 92)
+      click_on motif.name
+      expect(page).to have_content("Prochaine disponibilité")
+      expect(page).to have_content("mardi 14 décembre 2021 à 08h00")
+      click_on("Prochaine disponibilité")
+
+      click_on("sem. prochaine")
+
+      expect(page).to have_content("Prochaine disponibilité")
+      expect(page).to have_content("mardi 28 décembre 2021 à 08h00")
+    end
+  end
+
   context "when two agents are available for the given motif" do
     let!(:motif) { create(:motif, name: "RSA Orientation", organisation: organisation) }
     let!(:plage_ouverture1) { create(:plage_ouverture, first_day: Time.zone.tomorrow, motifs: [motif], lieu: lieu, organisation: organisation) }

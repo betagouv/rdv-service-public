@@ -69,12 +69,12 @@ RSpec.describe WebhookJob, type: :job do
   describe ".false_negative_from_drome?" do
     it "return false when the body is 'ERROR'" do
       body = "ERROR"
-      expect(described_class.false_negative_from_drome?(body)).to eq(false)
+      expect(described_class.false_negative_from_drome?(body)).to be(false)
     end
 
     it "return false when the message is 'Another error message'" do
       body = "{\"message\": \"Another error message\"}"
-      expect(described_class.false_negative_from_drome?(body)).to eq(false)
+      expect(described_class.false_negative_from_drome?(body)).to be(false)
     end
 
     [
@@ -84,7 +84,7 @@ RSpec.describe WebhookJob, type: :job do
       "{\"message\": \"Can't create appointment.\"}",
     ].each do |returned_message|
       it "return true when message is `#{returned_message}`" do
-        expect(described_class.false_negative_from_drome?(returned_message)).to eq(true)
+        expect(described_class.false_negative_from_drome?(returned_message)).to be(true)
       end
     end
   end

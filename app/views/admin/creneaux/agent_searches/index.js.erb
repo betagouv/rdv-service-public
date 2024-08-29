@@ -1,9 +1,0 @@
-<% @search_results.each do |search_result| %>
-  <% creneaux_html = render('creneaux', lieu: search_result.lieu, creneaux: search_result.creneaux, form: @form, next_availability: search_result.next_availability) %>
-  (function(){
-    let element = document.querySelector("#creneaux-lieu-<%= search_result.lieu.id %>");
-    if(element) {
-      element.outerHTML = "<%= escape_javascript creneaux_html %>";
-    }
-  })();
-<% end %>

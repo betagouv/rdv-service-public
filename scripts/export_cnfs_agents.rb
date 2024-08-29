@@ -14,7 +14,7 @@ class ExportCnfsAgents
 
     export_files = []
 
-    commands.each do |command|
+    commands.each do |command| # rubocop:disable Style/MapIntoArray
       export_files << to_csv(send(command), filename: "#{command}.csv")
     end
 

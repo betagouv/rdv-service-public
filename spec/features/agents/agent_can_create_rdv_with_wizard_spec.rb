@@ -133,7 +133,7 @@ RSpec.describe "Agent can create a Rdv with wizard" do
         step4
 
         expect(user_from_other_organisation.rdvs.count).to eq(1)
-        expect(user_from_other_organisation.reload.organisations).to match_array([organisation, other_organisation])
+        expect(user_from_other_organisation.reload.organisations).to contain_exactly(organisation, other_organisation)
       end
     end
 
@@ -169,7 +169,7 @@ RSpec.describe "Agent can create a Rdv with wizard" do
         stub_request(:post, "https://example.com/")
         click_button("Créer RDV")
         expect(WebMock).to(have_requested(:post, "https://example.com/").with do |req|
-          JSON.parse(req.body)["data"]["users"].map { |user| user["id"] } == [user.id]
+          JSON.parse(req.body)["data"]["users"].pluck("id") == [user.id]
         end)
       end
     end

@@ -4,9 +4,12 @@ class Agent::ReferentAssignationPolicy < DefaultAgentPolicy
   def create?
     same_agent_territory? && same_user_org?
   end
+
   alias destroy? create?
 
   protected
+
+  # rubocop:disable Style/ArrayIntersect
 
   def same_agent_territory?
     (@record.agent.organisations.map(&:territory_id) & current_agent.organisations.map(&:territory_id)).any?
@@ -15,4 +18,6 @@ class Agent::ReferentAssignationPolicy < DefaultAgentPolicy
   def same_user_org?
     (@record.user.organisation_ids & current_agent.organisation_ids).any?
   end
+
+  # rubocop:enable Style/ArrayIntersect
 end
