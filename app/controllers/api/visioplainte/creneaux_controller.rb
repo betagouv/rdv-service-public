@@ -8,7 +8,7 @@ class Api::Visioplainte::CreneauxController < Api::Visioplainte::BaseController
   }.freeze
 
   def index
-    creneaux = Users::CreneauxSearch.new(
+    creneaux = CreneauxSearch::ForUser.new(
       motif: motif,
       date_range: date_range
     ).creneaux
@@ -24,7 +24,7 @@ class Api::Visioplainte::CreneauxController < Api::Visioplainte::BaseController
     date_debut = Date.parse(params[:date_debut])
     date_range = date_debut..(date_debut + 60.days)
 
-    next_availability = Users::CreneauxSearch.new(
+    next_availability = CreneauxSearch::ForUser.new(
       motif: motif,
       date_range: date_range
     ).next_availability

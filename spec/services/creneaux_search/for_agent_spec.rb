@@ -1,4 +1,4 @@
-RSpec.describe SearchCreneauxForAgentsService, type: :service do
+RSpec.describe CreneauxSearch::ForAgent, type: :service do
   describe "lieux" do
     subject { described_class.new(form).lieux }
 

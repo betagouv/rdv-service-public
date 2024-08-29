@@ -121,7 +121,7 @@ RSpec.describe "ANTS API: availableTimeSlots" do
 
   context "when a 500 occurs" do
     before do
-      allow(Users::CreneauxSearch).to receive(:new).and_raise(NoMethodError)
+      allow(CreneauxSearch::ForUser).to receive(:new).and_raise(NoMethodError)
     end
 
     it "adds crumb with request details to Sentry" do
