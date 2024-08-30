@@ -1,4 +1,13 @@
 class Api::Visioplainte::RdvsController < Api::Visioplainte::BaseController
+  def index
+    rdvs = []
+    render json: {
+      rdvs: rdvs.map do |rdv|
+        Visioplainte::RdvBlueprint.render(rdv)
+      end,
+    }
+  end
+
   def create
     creneau = CreneauxSearch::ForUser.creneau_for(
       starts_at: Time.zone.parse(params[:starts_at]),
