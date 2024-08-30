@@ -58,6 +58,9 @@
             }
           }
         ],
+        "tags": [
+          "Créneaux"
+        ],
         "description": "Renvoie les créneaux disponibles",
         "responses": {
           "200": {
@@ -270,6 +273,9 @@
             }
           }
         ],
+        "tags": [
+          "Créneaux"
+        ],
         "description": "Renvoie le prochain créneau disponible",
         "responses": {
           "200": {
@@ -357,6 +363,9 @@
             }
           }
         ],
+        "tags": [
+          "Guichets"
+        ],
         "responses": {
           "200": {
             "description": "Renvoie la liste des guichets",
@@ -425,6 +434,9 @@
               "type": "string"
             }
           }
+        ],
+        "tags": [
+          "Rendez-vous"
         ],
         "description": "Crée un rdv et réserve le créneau correspondant.",
         "responses": {
@@ -559,6 +571,9 @@
             }
           }
         ],
+        "tags": [
+          "Rendez-vous"
+        ],
         "description": "Supprime le rdv. Il n'apparaîtra plus dans aucune requête de l'api",
         "responses": {
           "204": {
@@ -605,6 +620,9 @@
               "type": "string"
             }
           }
+        ],
+        "tags": [
+          "Rendez-vous"
         ],
         "description": "Annule le rdv. Il apparaîtra encore dans la liste des rdv du guichet.",
         "responses": {

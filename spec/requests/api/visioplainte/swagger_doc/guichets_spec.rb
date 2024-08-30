@@ -21,6 +21,7 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do
     get "Les guichets représentent des postes physiques. Il est possible d'ouvrir une plage d'ouverture pour un guichet. Un rdv est associé à un guichet" do
       with_visioplainte_authentication
 
+      tags "Guichets"
       response 200, "Renvoie la liste des guichets" do
         run_test!
 

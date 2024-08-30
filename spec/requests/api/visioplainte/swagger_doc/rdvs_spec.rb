@@ -26,6 +26,7 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do # rub
     post "Prendre un rdv" do
       with_visioplainte_authentication
 
+      tags "Rendez-vous"
       description "Crée un rdv et réserve le créneau correspondant."
       parameter name: :service, in: :query, type: :string,
                 description: "Indique si on souhaite prendre rendez-vous avec la gendarmerie ou la police. " \
@@ -56,6 +57,7 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do # rub
     delete "Supprimer un rdv" do
       with_visioplainte_authentication
 
+      tags "Rendez-vous"
       description "Supprime le rdv. Il n'apparaîtra plus dans aucune requête de l'api"
 
       response 204, "Supprime le rdv" do
@@ -82,6 +84,7 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do # rub
     put "Annuler un rdv" do
       with_visioplainte_authentication
 
+      tags "Rendez-vous"
       description "Annule le rdv. Il apparaîtra encore dans la liste des rdv du guichet."
 
       response 200, "Annule le rdv" do
