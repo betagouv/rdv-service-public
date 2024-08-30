@@ -107,4 +107,14 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do # rub
       end
     end
   end
+
+  path "/api/visioplainte/rdvs" do
+    get "Lister les rendez-vous" do
+      with_visioplainte_authentication
+
+      response 200, "Renvoie la liste des rendez-vous" do
+        run_test!
+      end
+    end
+  end
 end
