@@ -153,7 +153,70 @@ jobs:
           POSTGRES_USER: lapin_test
           POSTGRES_PASSWORD: lapin_test
           POSTGRES_DB: lapin_test
-  test_features:
+  test_features_for_agents:
+      name: Feature Tests
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: lapin_test
+          POSTGRES_PASSWORD: lapin_test
+          POSTGRES_DB: lapin_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports: ["5432:5432"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: WitherZuo/set-timezone@v1.0.0
+        with:
+          timezoneLinux: "Europe/Paris"
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: .ruby-version
+          bundler-cache: true
+      - name: Set up Redis
+        uses: zhulik/redis-action@1.1.0
+      - name: Cache js dependencies
+        uses: actions/cache@v4
+        with:
+          key: node_modules-${{ hashFiles('yarn.lock') }}
+          path: node_modules
+      - name: Install JS dependencies
+        run: yarn install
+      - name: Precompile assets
+        run: yarn run build
+      - name: Prepare runtime log cache key
+        run: ls spec/features/**/*.rb > tmp/feature_spec_agent_files.txt
+      - name: Cache parallel test feature spec runtime log
+        uses: actions/cache@v4
+        with:
+          key: feature-spec-runtime-log-${{ hashFiles('tmp/feature_spec_agent_files.txt') }}
+          path: tmp/parallel_runtime_rspec.log
+            # By setting up and running in the same call, we save the app boot time
+      - name: Setup parallel tests and run feature specs
+        run: RAILS_ENV=test bundle exec rake parallel:drop parallel:create parallel:load_schema parallel:spec[spec/features/agents]
+        env:
+          HOST: http://example.com
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+          POSTGRES_USER: lapin_test
+          POSTGRES_PASSWORD: lapin_test
+          POSTGRES_DB: lapin_test
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: artifacts-capybara
+          path: tmp/capybara
+  test_features_for_other_users:
     name: Feature Tests
     runs-on: ubuntu-latest
     services:
@@ -195,15 +258,15 @@ jobs:
       - name: Precompile assets
         run: yarn run build
       - name: Prepare runtime log cache key
-        run: ls spec/features/**/*.rb > tmp/feature_spec_files.txt
+        run: ls spec/features/**/*.rb > tmp/feature_spec_non_agent_files.txt
       - name: Cache parallel test feature spec runtime log
         uses: actions/cache@v4
         with:
-          key: feature-spec-runtime-log-${{ hashFiles('tmp/feature_spec_files.txt') }}
+          key: feature-spec-runtime-log-${{ hashFiles('tmp/feature_spec_non_agent_files.txt') }}
           path: tmp/parallel_runtime_rspec.log
         # By setting up and running in the same call, we save the app boot time
       - name: Setup parallel tests and run feature specs
-        run: RAILS_ENV=test bundle exec rake parallel:drop parallel:create parallel:load_schema parallel:spec[spec/features]
+        run: RAILS_ENV=test bundle exec rake parallel:drop parallel:create parallel:load_schema parallel:spec['spec\/features\/(?!agents)']
         env:
           HOST: http://example.com
           POSTGRES_HOST: localhost
