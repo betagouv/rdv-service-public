@@ -117,7 +117,7 @@ module ApplicationHelper
   end
 
   def display_agent_connect_button?
-    return false unless current_domain.agent_connect_allowed
+    return false unless current_domain.agent_connect_client_id
 
     return true if params[:force_agent_connect].present? # Permet de tester manuellement Agent Connect avant de désactiver la variable d'env AGENT_CONNECT_DISABLED
 
