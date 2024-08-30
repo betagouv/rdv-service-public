@@ -13,8 +13,6 @@ Domain = Struct.new(
   :online_reservation_with_public_link,
   :can_sync_to_outlook,
   :france_connect_enabled,
-  :agent_connect_client_id,
-  :agent_connect_client_secret,
   :support_email,
   :secretariat_email,
   :verticale,
@@ -36,8 +34,6 @@ class Domain
       can_sync_to_outlook: false,
       sms_sender_name: "RdvSoli",
       france_connect_enabled: true,
-      agent_connect_client_id: ENV["AGENT_CONNECT_RDVS_CLIENT_ID"],
-      agent_connect_client_secret: ENV["AGENT_CONNECT_RDVS_CLIENT_SECRET"],
       support_email: "support@rdv-solidarites.fr",
       verticale: :rdv_solidarites,
       secretariat_email: "secretariat-auto@rdv-solidarites.fr"
@@ -60,8 +56,6 @@ class Domain
       can_sync_to_outlook: false,
       sms_sender_name: "RdvAideNum",
       france_connect_enabled: false,
-      agent_connect_client_id: ENV["AGENT_CONNECT_RDVAN_CLIENT_ID"],
-      agent_connect_client_secret: ENV["AGENT_CONNECT_RDVAN_CLIENT_SECRET"],
       support_email: "support@rdv-aide-numerique.fr",
       verticale: :rdv_aide_numerique,
       secretariat_email: "secretariat-auto@rdv-solidarites.fr"
@@ -80,8 +74,6 @@ class Domain
       can_sync_to_outlook: false,
       sms_sender_name: "RDV S.P.",
       france_connect_enabled: true,
-      agent_connect_client_id: ENV["AGENT_CONNECT_RDVSP_CLIENT_ID"],
-      agent_connect_client_secret: ENV["AGENT_CONNECT_RDVSP_CLIENT_SECRET"],
       support_email: "support@rdv-service-public.fr",
       verticale: :rdv_mairie,
       secretariat_email: "secretariat-auto@rdv-service-public.fr"
@@ -90,6 +82,22 @@ class Domain
 
   def documentation_url
     "https://rdvs.notion.site/Centre-d-aide-f0a2bf87ca854fbc8855a2a20d6eb4d1"
+  end
+
+  def agent_connect_client_id
+    {
+      RDV_SOLIDARITES => ENV["AGENT_CONNECT_RDVS_CLIENT_ID"],
+      RDV_AIDE_NUMERIQUE => ENV["AGENT_CONNECT_RDVAN_CLIENT_ID"],
+      RDV_MAIRIE => ENV["AGENT_CONNECT_RDVSP_CLIENT_ID"],
+    }.fetch(self)
+  end
+
+  def agent_connect_client_secret
+    {
+      RDV_SOLIDARITES => ENV["AGENT_CONNECT_RDVS_CLIENT_SECRET"],
+      RDV_AIDE_NUMERIQUE => ENV["AGENT_CONNECT_RDVAN_CLIENT_SECRET"],
+      RDV_MAIRIE => ENV["AGENT_CONNECT_RDVSP_CLIENT_SECRET"],
+    }.fetch(self)
   end
 
   def host_name
