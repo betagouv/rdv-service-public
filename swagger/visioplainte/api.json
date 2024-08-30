@@ -335,6 +335,55 @@
         }
       }
     },
+    "/api/visioplainte/guichets": {
+      "get": {
+        "summary": "Les guichets représentent des postes physiques. Il est possible d'ouvrir une plage d'ouverture pour un guichet. Un rdv est associé à un guichet",
+        "security": [
+          {
+            "X-VISIOPLAINTE-API-KEY": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "X-VISIOPLAINTE-API-KEY",
+            "in": "header",
+            "description": "Clé d'API",
+            "example": "visioplainte-api-test-key-123456",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Renvoie la liste des guichets",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "guichets": [
+                        {
+                          "id": 106,
+                          "name": "GUICHET 1"
+                        },
+                        {
+                          "id": 107,
+                          "name": "GUICHET 2"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/visioplainte/rdvs": {
       "post": {
         "summary": "Prendre un rdv",
@@ -391,7 +440,7 @@
                       "duration_in_min": 30,
                       "ends_at": "2024-08-19 08:30:00 +0200",
                       "guichet": {
-                        "id": 81,
+                        "id": 110,
                         "name": "GUICHET 1"
                       },
                       "starts_at": "2024-08-19 08:00:00 +0200",
@@ -571,7 +620,7 @@
                       "duration_in_min": 30,
                       "ends_at": "2024-08-19 08:30:00 +0200",
                       "guichet": {
-                        "id": 93,
+                        "id": 125,
                         "name": "GUICHET 1"
                       },
                       "starts_at": "2024-08-19 08:00:00 +0200",
