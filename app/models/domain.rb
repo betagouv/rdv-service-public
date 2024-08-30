@@ -1,3 +1,5 @@
+# Toutes les spécificités des différents domaines doivent apparaître dans ce fichier
+
 Domain = Struct.new(
   :id,
   :name,
