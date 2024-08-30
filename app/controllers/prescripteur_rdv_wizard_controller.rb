@@ -56,7 +56,7 @@ class PrescripteurRdvWizardController < ApplicationController
   def create_rdv
     beneficiaire_params = params.require(:beneficiaire_form).permit(*BeneficiaireForm::ATTRIBUTES)
 
-    @beneficiaire = BeneficiaireForm.new(beneficiaire_params.merge(motif_id: session[:rdv_wizard_attributes][:motif_id]))
+    @beneficiaire = BeneficiaireForm.new(beneficiaire_params.merge(motif_id: session[:rdv_wizard_attributes]["motif_id"]))
 
     if @beneficiaire.valid?
       session[:rdv_wizard_attributes][:user] = beneficiaire_params
