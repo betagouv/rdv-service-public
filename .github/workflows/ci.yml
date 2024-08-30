@@ -154,7 +154,7 @@ jobs:
           POSTGRES_PASSWORD: lapin_test
           POSTGRES_DB: lapin_test
   test_features_for_agents:
-      name: Feature Tests
+      name: Feature Tests for Agents
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -195,7 +195,7 @@ jobs:
       - name: Precompile assets
         run: yarn run build
       - name: Prepare runtime log cache key
-        run: ls spec/features/**/*.rb > tmp/feature_spec_agent_files.txt
+        run: ls spec/features/agents/**/*.rb > tmp/feature_spec_agent_files.txt
       - name: Cache parallel test feature spec runtime log
         uses: actions/cache@v4
         with:
@@ -217,7 +217,7 @@ jobs:
           name: artifacts-capybara
           path: tmp/capybara
   test_features_for_other_users:
-    name: Feature Tests
+    name: Feature Tests for other users
     runs-on: ubuntu-latest
     services:
       postgres:
