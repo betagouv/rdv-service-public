@@ -23,20 +23,13 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do
 
       response 200, "Renvoie la liste des guichets" do
         run_test!
-        parameter name: :service, in: :query, type: :string,
-                  description: "Indique si on souhaite obtenir les créneaux de la plateforme de la gendarmerie ou de la police. " \
-                               "Les deux valeurs possibles sont donc 'Police' ou 'Gendarmerie'",
-                  example: "Gendarmerie", required: true
 
-        let(:service) { "Gendarmerie" }
         specify do
-          guichets = parsed_response_body["guichets"]
-          expect(guichets).to contain_exactly(
+          expect(parsed_response_body["guichets"]).to contain_exactly(
             {
               "id" => anything, name: "GUICHET 1",
             },
             {
-
               "id" => anything, name: "GUICHET 2",
             }
           )
