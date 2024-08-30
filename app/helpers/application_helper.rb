@@ -117,6 +117,8 @@ module ApplicationHelper
   end
 
   def display_agent_connect_button?
+    return false unless current_domain.agent_connect_allowed
+
     (ENV["AGENT_CONNECT_BASE_URL"].present? && !(ENV["AGENT_CONNECT_DISABLED"] || Rails.configuration.x.agent_connect_unreachable_at_boot_time)) || params[:force_agent_connect].present?
   end
 

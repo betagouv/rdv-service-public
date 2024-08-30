@@ -11,6 +11,7 @@ Domain = Struct.new(
   :online_reservation_with_public_link,
   :can_sync_to_outlook,
   :france_connect_enabled,
+  :agent_connect_allowed,
   :support_email,
   :secretariat_email,
   :verticale,
@@ -32,6 +33,7 @@ class Domain
       can_sync_to_outlook: false,
       sms_sender_name: "RdvSoli",
       france_connect_enabled: true,
+      agent_connect_allowed: true,
       support_email: "support@rdv-solidarites.fr",
       verticale: :rdv_solidarites,
       secretariat_email: "secretariat-auto@rdv-solidarites.fr"
@@ -54,6 +56,7 @@ class Domain
       can_sync_to_outlook: false,
       sms_sender_name: "RdvAideNum",
       france_connect_enabled: false,
+      agent_connect_allowed: false,
       support_email: "support@rdv-aide-numerique.fr",
       verticale: :rdv_aide_numerique,
       secretariat_email: "secretariat-auto@rdv-solidarites.fr"
@@ -72,6 +75,7 @@ class Domain
       can_sync_to_outlook: false,
       sms_sender_name: "RDV S.P.",
       france_connect_enabled: true,
+      agent_connect_allowed: true,
       support_email: "support@rdv-service-public.fr",
       verticale: :rdv_mairie,
       secretariat_email: "secretariat-auto@rdv-service-public.fr"
