@@ -154,7 +154,7 @@ jobs:
           POSTGRES_PASSWORD: lapin_test
           POSTGRES_DB: lapin_test
   test_features_for_agents:
-      name: Feature Tests for Agents
+    name: Feature Tests for Agents
     runs-on: ubuntu-latest
     services:
       postgres:
