@@ -6,7 +6,7 @@
     - if @form.users.any?
       h6.card-subtitle.mb-2 = t(".search_for_slots_subtitle", users_fullname: @form.users.map(&:full_name).join(" ,"))
   .card-body
-    = simple_form_for(@form, as: "", url: admin_organisation_agent_searches_path(current_organisation), method: :get) do |f|
+    = simple_form_for(@form, as: "", url: admin_organisation_creneaux_search_path(current_organisation), method: :get) do |f|
       - @form.user_ids.each do |user_id|
         = hidden_field_tag "user_ids[]", user_id
       - if @form.context.present?

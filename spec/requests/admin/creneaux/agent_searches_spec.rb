@@ -6,9 +6,9 @@ RSpec.describe "Admin::Organisations::OnlineBookings", type: :request do
 
   before { sign_in agent }
 
-  describe "GET /admin/organisations/:organisation_id/agent_searches" do
+  describe "GET /admin/organisations/:organisation_id/creneaux_search" do
     it "is successful" do
-      get admin_organisation_agent_searches_path(organisation)
+      get admin_organisation_creneaux_search_path(organisation)
       expect(response).to be_successful
     end
 
@@ -30,7 +30,7 @@ RSpec.describe "Admin::Organisations::OnlineBookings", type: :request do
           commit: true,
         }
 
-        get admin_organisation_agent_searches_path(organisation, params)
+        get admin_organisation_creneaux_search_path(organisation, params)
 
         expect(response).to redirect_to(admin_organisation_slots_path(organisation, from_date: "2022-10-17", motif_id: motif.id))
       end

@@ -166,7 +166,12 @@ Rails.application.routes.draw do
 
       resources :organisations do
         resources :plage_ouvertures, except: %i[index new]
-        get "creneaux_search" => "creneaux_search#index", as: "agent_searches"
+        get "creneaux_search" => "creneaux_search#index"
+        # Lien très utilisé pour la duplication de RDV
+        # il permet de reprendre un RDV, éventuellement pour un autre motif
+        # https://zammad10.ethibox.fr/#ticket/zoom/3044
+        # On le garde pour la rétrocompatibilité après le renommage de la route.
+        get "agent_searches", to: redirect(path: "/admin/organisations/%{organisation_id}/creneaux_search")
         resources :slots, only: :index
         resources :lieux, except: :show
         resources :motifs do

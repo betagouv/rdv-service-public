@@ -12,7 +12,7 @@
          / lien très utilisé pour la duplication de RDV
          / il permet de reprendre un RDV, éventuellement pour un autre motif
          / https://zammad10.ethibox.fr/#ticket/zoom/3044
-         = link_to t(".place_index"), admin_organisation_agent_searches_path(current_organisation, creneaux_search_params(@form)), class: "btn btn-outline-primary m-2"
+         = link_to t(".place_index"), admin_organisation_creneaux_search_path(current_organisation, creneaux_search_params(@form)), class: "btn btn-outline-primary m-2"
 
     .card-body
       - if @form.motif.individuel?
