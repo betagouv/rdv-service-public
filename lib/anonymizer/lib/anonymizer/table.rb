@@ -2,16 +2,16 @@ require_relative "column"
 
 module Anonymizer
   class Table
-    attr_reader :table_name, :table_name_without_schema
+    attr_reader :table_config
 
-    def initialize(table_name, config: Anonymizer.default_config)
-      @table_name = table_name
-      @table_name_without_schema = table_name.split(".").last
-      @config = config
+    delegate :table_name, :truncated?, :anonymized_column_names, :non_anonymized_column_name, to: :table_config
+
+    def initialize(table_config:)
+      @table_config = table_config
     end
 
     def anonymize_records!(arel_where = nil)
-      if table_name_without_schema.in?(config.truncated_tables)
+      if truncated?
         if arel_where.nil?
           db_connection.execute("TRUNCATE #{ActiveRecord::Base.sanitize_sql(table_name)} CASCADE")
         else
@@ -35,20 +35,10 @@ module Anonymizer
 
     private
 
-    attr_reader :config
-
     def db_connection = ActiveRecord::Base.connection
 
     def arel_table
       @arel_table ||= Arel::Table.new(table_name)
-    end
-
-    def anonymized_column_names
-      config.rules.dig(table_name_without_schema, :anonymized_column_names) || []
-    end
-
-    def non_anonymized_column_names
-      config.rules.dig(table_name_without_schema, :non_anonymized_column_names) || []
     end
 
     def anonymized_columns

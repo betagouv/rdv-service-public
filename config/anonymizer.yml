@@ -1,13 +1,17 @@
-truncated_tables:
-  - versions
-  - good_jobs
-  - good_job_executions
-  - good_job_settings
-  - good_job_batches
-  - good_job_processes
-
-rules:
-  users:
+tables:
+  - table_name: versions
+    truncated: true
+  - table_name: good_jobs
+    truncated: true
+  - table_name: good_job_executions
+    truncated: true
+  - table_name: good_job_settings
+    truncated: true
+  - table_name: good_job_batches
+    truncated: true
+  - table_name: good_job_processes
+    truncated: true
+  - table_name: users
     class_name: User
     anonymized_column_names:
       - first_name
@@ -60,7 +64,7 @@ rules:
       - logged_once_with_franceconnect
       - rdv_invitation_token_updated_at
 
-  agents:
+  - table_name: agents
     class_name: Agent
     anonymized_column_names:
       - first_name
@@ -82,7 +86,6 @@ rules:
       - refresh_microsoft_graph_token
       - remember_created_at
       - inclusion_connect_open_id_sub
-
     non_anonymized_column_names:
       - reset_password_sent_at
       - confirmed_at
@@ -109,8 +112,7 @@ rules:
       - updated_at
       - connected_with_agent_connect
 
-
-  rdvs:
+  - table_name: rdvs
     class_name: Rdv
     anonymized_column_names:
       - context
@@ -132,8 +134,7 @@ rules:
       - users_count
       - status
 
-
-  receipts:
+  - table_name: receipts
     class_name: Receipt
     anonymized_column_names:
       - sms_phone_number
@@ -150,7 +151,7 @@ rules:
       - sms_provider
       - channel
 
-  prescripteurs:
+  - table_name: prescripteurs
     class_name: Prescripteur
     anonymized_column_names:
       - first_name
@@ -164,7 +165,7 @@ rules:
       - updated_at
       - participation_id
 
-  super_admins:
+  - table_name: super_admins
     class_name: SuperAdmin
     anonymized_column_names:
       - email
@@ -175,7 +176,7 @@ rules:
       - updated_at
       - role
 
-  organisations:
+  - table_name: organisations
     class_name: Organisation
     anonymized_column_names:
       - email
@@ -191,7 +192,7 @@ rules:
       - external_id
       - verticale
 
-  absences:
+  - table_name: absences
     class_name: Absence
     anonymized_column_names:
       - title
@@ -206,7 +207,7 @@ rules:
       - expired_cached
       - recurrence_ends_at
 
-  lieux:
+  - table_name: lieux
     class_name: Lieu
     anonymized_column_names:
       - phone_number
@@ -222,7 +223,7 @@ rules:
       - availability
       - address
 
-  participations:
+  - table_name: participations
     class_name: Participation
     anonymized_column_names:
       - invitation_token
@@ -243,7 +244,7 @@ rules:
       - created_by_type
       - created_by_agent_prescripteur
 
-  plage_ouvertures:
+  - table_name: plage_ouvertures
     class_name: PlageOuverture
     anonymized_column_names:
       - title
@@ -258,7 +259,7 @@ rules:
       - expired_cached
       - recurrence_ends_at
 
-  webhook_endpoints:
+  - table_name: webhook_endpoints
     class_name: WebhookEndpoint
     anonymized_column_names:
       - secret
@@ -269,7 +270,7 @@ rules:
       - organisation_id
       - subscriptions
 
-  territories:
+  - table_name: territories
     class_name: Territory
     anonymized_column_names:
       - sms_configuration
@@ -295,16 +296,15 @@ rules:
       - enable_waiting_room_color_field
       - visible_users_throughout_the_territory
 
-
   # Tables sans données personnelles
-  agent_roles:
+  - table_name: agent_roles
     non_anonymized_column_names:
       - access_level
-  agents_rdvs:
+  - table_name: agents_rdvs
     non_anonymized_column_names:
       - outlook_id
       - outlook_create_in_progress
-  agent_territorial_access_rights:
+  - table_name: agent_territorial_access_rights
     non_anonymized_column_names:
       - allow_to_manage_teams
       - created_at
@@ -313,12 +313,12 @@ rules:
       - allow_to_invite_agents
       - allow_to_download_metrics
 
-  teams:
+  - table_name: teams
     non_anonymized_column_names:
       - name
       - created_at
       - updated_at
-  motifs:
+  - table_name: motifs
     non_anonymized_column_names:
       - name
       - color
@@ -343,14 +343,13 @@ rules:
       - rdvs_editable_by_user
       - rdvs_cancellable_by_user
 
-
-  services:
+  - table_name: services
     non_anonymized_column_names:
       - name
       - created_at
       - updated_at
       - short_name
-  zones:
+  - table_name: zones
     non_anonymized_column_names:
       - level
       - city_name
@@ -360,26 +359,26 @@ rules:
       - street_name
       - street_ban_id
 
-  ar_internal_metadata:
+  - table_name: ar_internal_metadata
     non_anonymized_column_names:
       - value
       - created_at
       - updated_at
 
-  territory_services:
+  - table_name: territory_services
     non_anonymized_column_names:
       - created_at
 
-  agent_services:
+  - table_name: agent_services
     non_anonymized_column_names:
       - created_at
 
-  agent_teams:
+  - table_name: agent_teams
     non_anonymized_column_names:
       - created_at
       - updated_at
 
-  sectors:
+  - table_name: sectors
     non_anonymized_column_names:
       - departement
       - name
@@ -387,25 +386,25 @@ rules:
       - created_at
       - updated_at
 
-  motif_categories:
+  - table_name: motif_categories
     non_anonymized_column_names:
       - name
       - short_name
       - created_at
       - updated_at
 
-  sector_attributions:
+  - table_name: sector_attributions
     non_anonymized_column_names:
       - level
 
-  file_attentes:
+  - table_name: file_attentes
     non_anonymized_column_names:
       - created_at
       - updated_at
       - notifications_sent
       - last_creneau_sent_at
 
-  api_calls:
+  - table_name: api_calls
     class_name: ApiCall
     anonymized_column_names:
       - raw_http
@@ -415,7 +414,7 @@ rules:
       - action_name
       - agent_id
 
-  exports:
+  - table_name: exports
     non_anonymized_column_names:
       - export_type
       - computed_at

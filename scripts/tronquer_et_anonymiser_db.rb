@@ -47,7 +47,7 @@ users_to_delete.delete_all
 Anonymizer.anonymize_records!("users")
 Anonymizer.anonymize_records!("receipts")
 Anonymizer.anonymize_records!("rdvs")
-Anonymizer.default_config.truncated_tables
+Anonymizer.default_config.truncated_table_names
   .select { ActiveRecord::Base.connection.table_exists?(_1) }
   .map { Anonymizer::Table.new(_1) }
   .each(&:anonymize_records!)
