@@ -188,7 +188,7 @@ RSpec.describe "User can search rdv on rdv mairie" do
     end
 
     context "when trying to bypass the front-end validation" do
-      it "considers it as uppercase when calling ANTS API and saving it in user" do
+      it "performs back-end validation and displays error" do
         time = Time.zone.now.change(hour: 9, min: 0)
         creneaux_url = creneaux_url(starts_at: time.strftime("%Y-%m-%d %H:%M"), lieu_id: lieu.id, motif_id: passport_motif.id, public_link_organisation_id: organisation.id, duration: 50)
         visit creneaux_url
