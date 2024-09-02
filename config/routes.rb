@@ -166,7 +166,7 @@ Rails.application.routes.draw do
 
       resources :organisations do
         resources :plage_ouvertures, except: %i[index new]
-        resources :agent_searches, only: :index, module: "creneaux"
+        get "creneaux_search" => "creneaux_search#index", as: "agent_searches"
         resources :slots, only: :index
         resources :lieux, except: :show
         resources :motifs do

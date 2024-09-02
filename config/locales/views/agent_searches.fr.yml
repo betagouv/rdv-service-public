@@ -1,6 +1,13 @@
 fr:
   admin:
-    creneaux:
-      agent_searches:
-        index:
-          choose_filter_and_refresh: Selectionnez des filtres et rafraichissez les résultats
+    creneaux_search:
+      index:
+        choose_filter_and_refresh: Selectionnez des filtres et rafraichissez les résultats
+        agents: Agents
+        teams: Équipes
+        search_for_slots_title: Trouver un RDV
+        search_for_slots_subtitle: pour %{users_fullname}
+        available_places_with_slots:
+          zero: Aucun lieu ne propose de disponibilité
+          one: "Un lieu propose des disponibilités :"
+          other: "%{count} lieux proposent des disponibilités :"
