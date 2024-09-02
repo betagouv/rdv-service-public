@@ -159,7 +159,9 @@ jobs:
     strategy:
       matrix:
         dirname: [agents, "*"]
-        command: ["parallel:spec[spec/features/agents]", "parallel:spec['spec\/features\/(?!agents)']"]
+        command: 
+          - "parallel:spec[spec/features/agents]"
+          - "parallel:spec['spec/features/(?!agents)']"
     services:
       postgres:
         image: postgres
