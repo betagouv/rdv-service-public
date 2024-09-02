@@ -38,20 +38,23 @@ motif_gendarmerie = Motif.create!(
   organisation: orga_gendarmerie
 )
 
-superviseur_police = Agent.create!(
+superviseur_police = Agent.new(
   first_name: "Francis",
   last_name: "Factice",
   email: "francis.factice@visioplainte.sandbox.gouv.fr",
   uid: "francis.factice@visioplainte.sandbox.gouv.fr",
+  invitation_accepted_at: 10.days.ago,
   password: "Rdvservicepublictest1!",
   services: [service_police],
   roles_attributes: [
     { organisation: orga_police, access_level: AgentRole::ACCESS_LEVEL_ADMIN },
   ]
 )
+superviseur_police.skip_confirmation!
+superviseur_police.save!
 AgentTerritorialAccessRight.create(agent: superviseur_police, territory: territory)
 
-superviseur_gendarmerie = Agent.create(
+superviseur_gendarmerie = Agent.new(
   first_name: "Gaston",
   last_name: "Bidon",
   email: "gaston.bidon@visioplainte.sandbox.gouv.fr",
@@ -62,6 +65,8 @@ superviseur_gendarmerie = Agent.create(
     { organisation: orga_gendarmerie, access_level: AgentRole::ACCESS_LEVEL_ADMIN },
   ]
 )
+superviseur_gendarmerie.skip_confirmation!
+superviseur_gendarmerie.save!
 AgentTerritorialAccessRight.create(agent: superviseur_gendarmerie, territory: territory)
 
 guichet_police1 = Agent.create!(
