@@ -12,6 +12,7 @@ AllCops:
     - "scripts/screenshots/**/*"
   NewCops: enable
   TargetRubyVersion: 3.1.2
+  SuggestExtensions: false
 
 Bundler/OrderedGems:
   Exclude:
@@ -42,50 +43,23 @@ Lint/AssignmentInCondition:
 Metrics/AbcSize:
   Enabled: false
 
-Metrics/BlockLength:
-  Exclude:
-    - "Guardfile"
-    - "scripts/*"
-    - "spec/**/*"
-    - "config/initializers/*"
-    - "config/environments/*"
-    - "config/routes.rb"
-    - "config/routes/api.rb"
-
 Metrics/CyclomaticComplexity:
   Max: 8 # default is 7
 
-Metrics/ClassLength:
-  Max: 150
-  CountAsOne: ['array', 'hash', 'heredoc']
-  Exclude:
-    - 'app/models/rdv.rb'
-    - 'app/models/user.rb'
-    - 'app/models/agent.rb'
-    - 'app/models/motif.rb'
 
+# disable all Metrics Length cops. They don’t provide an explicit way to improve code.
+
+Metrics/BlockLength:
+  Enabled: false
+
+Metrics/ClassLength:
+  Enabled: false
 
 Metrics/ModuleLength:
-  Max: 150
-  CountAsOne: ['array', 'hash', 'heredoc']
+  Enabled: false
 
 Metrics/MethodLength:
-  CountAsOne: ['array', 'hash', 'heredoc']
-  Max: 20
-  Exclude:
-    - 'db/migrate/20210301135256_create_territories.rb'
-    - 'app/controllers/agents/users_controller.rb'
-    - 'app/controllers/inclusion_connect_controller.rb'
-    - 'app/controllers/lapin/sms_preview_controller.rb'
-    - 'app/controllers/super_admins/migrations_controller.rb'
-    - 'app/controllers/users/rdvs_controller.rb'
-    - 'app/helpers/configuration_helper.rb'
-    - 'app/jobs/webhook_job.rb'
-    - 'app/models/concerns/ical_helpers/ics.rb'
-    - 'app/services/sms_sender.rb'
-    - 'db/migrate/20231017125305_reunite_prod_schema.rb'
-    - 'spec/features/agents/agent_can_create_rdv_with_wizard_spec.rb'
-    - 'spec/features/agents/rdvs_collectifs/full_lifecycle_spec.rb'
+  Enabled: false
 
 Rails/ApplicationController:
   Exclude:

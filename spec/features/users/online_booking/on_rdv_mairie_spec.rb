@@ -136,12 +136,17 @@ RSpec.describe "User can search rdv on rdv mairie" do
       fill_in("user_ants_pre_demande_number", with: "5544332211")
       click_button("Enregistrer")
       expect(page).to have_content("Alain MAIRIE")
-      expect(User.exists?(first_name: "Alain", last_name: "Mairie", ants_pre_demande_number: "5544332211")).to be(true)
+      alain = User.find_by(first_name: "Alain", last_name: "Mairie", ants_pre_demande_number: "5544332211")
+      expect(alain).to be_present
 
+      check(user.full_name)
+      check(alain.full_name)
       click_button("Continuer")
 
       click_link("Confirmer mon RDV")
       expect(page).to have_content("Votre rendez vous a été confirmé.")
+      created_rdv = Rdv.last
+      expect(created_rdv.users).to contain_exactly(user, alain)
     end
   end
 

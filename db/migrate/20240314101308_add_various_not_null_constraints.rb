@@ -1,5 +1,4 @@
 class AddVariousNotNullConstraints < ActiveRecord::Migration[7.0]
-  # rubocop:disable Metrics/MethodLength
   def change
     reversible do |direction|
       direction.up do

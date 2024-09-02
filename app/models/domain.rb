@@ -1,3 +1,5 @@
+# Toutes les spécificités des différents domaines doivent apparaître dans ce fichier
+
 Domain = Struct.new(
   :id,
   :name,
@@ -80,6 +82,22 @@ class Domain
 
   def documentation_url
     "https://rdvs.notion.site/Centre-d-aide-f0a2bf87ca854fbc8855a2a20d6eb4d1"
+  end
+
+  def agent_connect_client_id
+    {
+      RDV_SOLIDARITES => ENV["AGENT_CONNECT_RDVS_CLIENT_ID"],
+      RDV_AIDE_NUMERIQUE => ENV["AGENT_CONNECT_RDVAN_CLIENT_ID"],
+      RDV_MAIRIE => ENV["AGENT_CONNECT_RDVSP_CLIENT_ID"],
+    }.fetch(self)
+  end
+
+  def agent_connect_client_secret
+    {
+      RDV_SOLIDARITES => ENV["AGENT_CONNECT_RDVS_CLIENT_SECRET"],
+      RDV_AIDE_NUMERIQUE => ENV["AGENT_CONNECT_RDVAN_CLIENT_SECRET"],
+      RDV_MAIRIE => ENV["AGENT_CONNECT_RDVSP_CLIENT_SECRET"],
+    }.fetch(self)
   end
 
   def host_name

@@ -33,7 +33,7 @@ module AgentConnectStubs
   def self.stub_token_request(code)
     WebMock.stub_request(:post, "https://fca.integ01.dev-agentconnect.fr/api/v2/token").with(
       body: {
-        "client_id" => ENV["AGENT_CONNECT_CLIENT_ID"],
+        "client_id" => "ec41582-1d60-4f11-a63b-d8abaece16aa",
         "client_secret" => "un faux secret de test",
         "code" => code,
         "grant_type" => "authorization_code",
