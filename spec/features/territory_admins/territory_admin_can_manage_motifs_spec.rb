@@ -50,6 +50,51 @@ RSpec.describe "territory admin can manage motifs", type: :feature do
     end
   end
 
+  describe "Creating a motif" do
+    let!(:service_pmi) { create(:service, name: "PMI").tap { territory.services << _1 } }
+    let!(:org_arques) { create(:organisation, name: "Arques", territory: territory) }
+    let!(:org_bapaume) { create(:organisation, name: "Bapaume", territory: territory) }
+
+    before do
+      agent.roles.create!(organisation: org_arques, access_level: AgentRole::ACCESS_LEVEL_ADMIN)
+      agent.roles.create!(organisation: org_bapaume, access_level: AgentRole::ACCESS_LEVEL_ADMIN)
+    end
+
+    it "works" do
+      visit admin_territory_motifs_path(territory)
+      click_on "Créer un motif"
+
+      check "Arques"
+      check "Bapaume"
+      fill_in "Nom du motif", with: "Consultation prénatale"
+      select "PMI", from: "Service associé"
+      fill_in "Couleur associée", with: "#123456"
+
+      expect { click_on "Créer le motif" }.to change(Motif, :count).by(2)
+      expect(Motif.last(2)).to all(have_attributes({ name: "Consultation prénatale", service: service_pmi, color: "#123456" }))
+    end
+
+    context "when a motif already exists in one of the organisations" do
+      before do
+        create(:motif, :at_public_office, name: "Consultation prénatale", service: service_pmi, organisation: org_arques)
+      end
+
+      it "prevents creation and displays the error message" do
+        visit admin_territory_motifs_path(territory)
+        click_on "Créer un motif"
+
+        check "Arques"
+        check "Bapaume"
+        fill_in "Nom du motif", with: "Consultation prénatale"
+        select "PMI", from: "Service associé"
+        fill_in "Couleur associée", with: "#123456"
+
+        expect { click_on "Créer le motif" }.not_to change(Motif, :count)
+        expect(page).to have_content("Un motif du même nom, même service et même type existe déjà dans Arques")
+      end
+    end
+  end
+
   describe "Deleting a motif" do
     let!(:organisation) { create(:organisation, territory: territory) }
     let!(:motif) { create(:motif, organisation: organisation) }
