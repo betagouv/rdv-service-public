@@ -29,11 +29,6 @@ fr:
         existing_lieu_hint_html: Ce rendez-vous aura lieu à une adresse habituelle ? <a href>Choisir un lieu existant.</a>
         select_placeholder_existing_lieu: Choisir un lieu existant
         select_placeholder_single_use_lieu: Lieu ponctuel
-    slots:
-      index:
-        place_index: Revenir aux filtres
-        available_slots_title_html: Créneaux disponibles pour <strong>%{motif}</strong>
-        place_informations_html: <strong>%{place_name}</strong> <small>au %{place_address}</small>
     territories:
       agents:
         index:

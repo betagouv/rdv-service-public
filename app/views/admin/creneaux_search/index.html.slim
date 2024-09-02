@@ -72,9 +72,9 @@
         h3.font-weight-bold= t(".available_places_with_slots", count: @next_availabilities.length)
         - @next_availabilities.each do |next_availability|
           = render "lieu_search_results", next_availability: next_availability
-        = render "admin/slots/prescription_cta"
+        = render "admin/creneaux_search/prescription_cta"
     - elsif motif_selected? && params[:commit].present?
-      = render partial: "admin/slots/no_slot_available"
+      = render partial: "admin/creneaux_search/no_slot_available"
     - else
       .text-muted= t(".choose_filter_and_refresh")
-      = render "admin/slots/prescription_cta"
+      = render "admin/creneaux_search/prescription_cta"

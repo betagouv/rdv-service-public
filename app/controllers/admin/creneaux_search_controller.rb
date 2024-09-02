@@ -15,6 +15,16 @@ class Admin::CreneauxSearchController < AgentAuthController
     end
   end
 
+  def selection_creneaux
+    skip_authorization # La construction du formulaire filtre sur l'orga courante
+
+    @search_result = if @form.motif.individuel?
+                       CreneauxSearch::ForAgent.new(@form).build_result
+                     else
+                       CreneauxSearch::RdvCollectifForAgent.new(@form).slot_search
+                     end
+  end
+
   private
 
   def results_without_lieu
@@ -22,7 +32,7 @@ class Admin::CreneauxSearchController < AgentAuthController
 
     if next_availability.present?
       skip_policy_scope # TODO: improve pundit checks for creneaux
-      redirect_to admin_organisation_slots_path(current_organisation, creneaux_search_params)
+      redirect_to admin_organisation_creneaux_search_selection_creneaux_path(current_organisation, creneaux_search_params)
     else
       @next_availabilities = []
       prepare_form
@@ -34,10 +44,10 @@ class Admin::CreneauxSearchController < AgentAuthController
     # et pour le cas où nous sommes sur un
     # motif public_office pour vérifier qu'il n'y
     # qu'un lieu
-    set_search_results
+    find_next_availabilities
     if only_one_lieu?
       skip_policy_scope # TODO: improve pundit checks for creneaux
-      redirect_to admin_organisation_slots_path(current_organisation, creneaux_search_params)
+      redirect_to admin_organisation_creneaux_search_selection_creneaux_path(current_organisation, creneaux_search_params)
     else
       prepare_form
     end
@@ -74,7 +84,7 @@ class Admin::CreneauxSearchController < AgentAuthController
     @form = helpers.build_agent_creneaux_search_form(current_organisation, params)
   end
 
-  def set_search_results
+  def find_next_availabilities
     if @form.valid?
       # Un RDV collectif peut-il avoir lieu à domicile ou au téléphone ?
       @next_availabilities = if @form.motif.individuel?

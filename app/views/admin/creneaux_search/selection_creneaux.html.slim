@@ -14,9 +14,9 @@
          / https://zammad10.ethibox.fr/#ticket/zoom/3044
          = link_to t(".place_index"), admin_organisation_creneaux_search_path(current_organisation, creneaux_search_params(@form)), class: "btn btn-outline-primary m-2"
 
-    .card-body
-      - if @form.motif.individuel?
-        = render "/admin/slots/slots", \
+    - if @form.motif.individuel?
+      .card-body
+        = render "/admin/creneaux_search/slots", \
           lieu: @search_result.lieu, \
           creneaux: @search_result.creneaux, \
           form: @form, \
@@ -28,7 +28,7 @@
         - @search_result.creneaux.each do |search_result|
           = render "admin/rdvs_collectifs/rdv", rdv: search_result
 
-  = render "admin/slots/prescription_cta"
+  = render "admin/creneaux_search/prescription_cta"
 
 - else
-  = render partial: "admin/slots/no_slot_available"
+  = render partial: "admin/creneaux_search/no_slot_available"
