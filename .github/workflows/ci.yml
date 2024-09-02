@@ -156,6 +156,10 @@ jobs:
   test_features:
     name: Feature Tests
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dirname: [agents, "*"]
+        command: ["parallel:spec[spec/features/agents]", "parallel:spec['spec\/features\/(?!agents)']"]
     services:
       postgres:
         image: postgres
@@ -195,15 +199,15 @@ jobs:
       - name: Precompile assets
         run: yarn run build
       - name: Prepare runtime log cache key
-        run: ls spec/features/**/*.rb > tmp/feature_spec_files.txt
+        run: "ls spec/features/${{ matrix.dirname }}/**/*.rb > tmp/feature_spec_${{ matrix.dirname }}_files.txt"
       - name: Cache parallel test feature spec runtime log
         uses: actions/cache@v4
         with:
-          key: feature-spec-runtime-log-${{ hashFiles('tmp/feature_spec_files.txt') }}
+          key: feature-spec-runtime-log-${{ hashFiles(format('tmp/feature_spec_{0}_files.txt', matrix.dirname)) }}
           path: tmp/parallel_runtime_rspec.log
         # By setting up and running in the same call, we save the app boot time
       - name: Setup parallel tests and run feature specs
-        run: RAILS_ENV=test bundle exec rake parallel:drop parallel:create parallel:load_schema parallel:spec[spec/features]
+        run: "RAILS_ENV=test bundle exec rake parallel:drop parallel:create parallel:load_schema ${{ matrix.command }}"
         env:
           HOST: http://example.com
           POSTGRES_HOST: localhost
