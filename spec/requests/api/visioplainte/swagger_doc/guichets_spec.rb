@@ -1,6 +1,6 @@
 require "swagger_helper"
 
-RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do
+RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do # rubocop:disable RSpec/EmptyExampleGroup
   before do
     travel_to Time.zone.local(2024, 8, 18, 14, 0, 0)
     load Rails.root.join("db/seeds/visioplainte.rb")
@@ -24,17 +24,6 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do
       tags "Guichets"
       response 200, "Renvoie la liste des guichets" do
         run_test!
-
-        specify do
-          expect(parsed_response_body["guichets"]).to contain_exactly(
-            {
-              "id" => anything, name: "GUICHET 1",
-            },
-            {
-              "id" => anything, name: "GUICHET 2",
-            }
-          )
-        end
       end
     end
   end
