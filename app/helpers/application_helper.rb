@@ -117,7 +117,14 @@ module ApplicationHelper
   end
 
   def display_agent_connect_button?
-    (ENV["AGENT_CONNECT_BASE_URL"].present? && !(ENV["AGENT_CONNECT_DISABLED"] || Rails.configuration.x.agent_connect_unreachable_at_boot_time)) || params[:force_agent_connect].present?
+    return false unless current_domain.agent_connect_client_id
+
+    return true if params[:force_agent_connect].present? # Permet de tester manuellement Agent Connect avant de désactiver la variable d'env AGENT_CONNECT_DISABLED
+
+    return false if ENV["AGENT_CONNECT_DISABLED"]
+    return false if Rails.configuration.x.agent_connect_unreachable_at_boot_time
+
+    ENV["AGENT_CONNECT_BASE_URL"].present?
   end
 
   def display_inclusion_connect_button?
