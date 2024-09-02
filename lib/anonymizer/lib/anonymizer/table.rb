@@ -33,6 +33,10 @@ module Anonymizer
       all_columns - primary_key_columns - foreign_key_columns - anonymized_column_names - non_anonymized_column_names
     end
 
+    def exists?
+      ActiveRecord::Base.connection.table_exists?(table_name)
+    end
+
     private
 
     def db_connection = ActiveRecord::Base.connection

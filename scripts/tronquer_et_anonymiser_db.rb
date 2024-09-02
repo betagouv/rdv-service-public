@@ -44,13 +44,7 @@ users_to_delete.delete_all
 # Partie 3 : Anonymisation des données restantes
 # -------------------------------
 
-Anonymizer.anonymize_records!("users")
-Anonymizer.anonymize_records!("receipts")
-Anonymizer.anonymize_records!("rdvs")
-Anonymizer.default_config.truncated_table_names
-  .select { ActiveRecord::Base.connection.table_exists?(_1) }
-  .map { Anonymizer::Table.new(_1) }
-  .each(&:anonymize_records!)
+`bundle exec rails runner scripts/anonymize_user_data.rb`
 
 # -------------------------------
 # Épilogue : suppression des jobs et versions

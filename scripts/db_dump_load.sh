@@ -31,6 +31,6 @@ bundle exec rails db:environment:set
 
 # Si vous avez besoin de débugger et que l'anonymisation complète vous bloque,
 # vous devez au moins anonymiser les données usager avec :
-# bundle exec rails runner 'Anonymizer.anonymize_user_data!'
+# bundle exec rails runner scripts/anonymize_user_data.rb
 
-bundle exec rails runner scripts/anonymize_database.rb public
+bundle exec rails runner scripts/anonymize_database.rb
