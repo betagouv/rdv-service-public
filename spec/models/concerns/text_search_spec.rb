@@ -38,7 +38,6 @@ RSpec.describe TextSearch, type: :concern do
       match_in_last_name = create(:user, first_name: "Marie", last_name: "Nicolas")
       match_in_first_name = create(:user, first_name: "Nicolas", last_name: "Marie")
       match_in_email = create(:user, first_name: "Frédéric", last_name: "Petit", email: "nicolas@example.com")
-      expect(described_class.search_by_text("nicolas")).to include(match_in_birth_name)
       expect(described_class.search_by_text("nicolas")).to eq([match_in_last_name, match_in_first_name, match_in_email])
     end
   end
