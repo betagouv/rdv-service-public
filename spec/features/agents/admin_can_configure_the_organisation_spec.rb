@@ -71,7 +71,7 @@ RSpec.describe "Admin can configure the organisation" do
   it "CRUD on motifs", js: true do
     click_link "Paramètres"
     click_link "Motifs"
-    expect_page_title("Vos motifs")
+    expect_page_title("Motifs de l'organisation")
 
     click_link motif.name
     expect(page).to have_content("Motif 1")
@@ -92,11 +92,11 @@ RSpec.describe "Admin can configure the organisation" do
       retry
     end
 
-    expect_page_title("Vos motifs")
+    expect_page_title("Motifs de l'organisation")
     expect(page).to have_content("Vous n'avez pas encore créé de motif.")
 
     click_link "Créer un motif", match: :first
-    expect(page).to have_content("Création d’un nouveau motif")
+    expect(page).to have_content("Configuration générale")
     ## Check secretariat is unavailable
     expect(page.all("select#motif_service_id option").map(&:value)).to contain_exactly("", pmi.id.to_s, service_social.id.to_s)
     select(service_social.name, from: :motif_service_id)

@@ -111,8 +111,6 @@ fr:
       motifs:
         index:
           title: Motifs
-        new:
-          title: Création d’un nouveau motif
       motif_fields:
         edit:
           title: Champs des motifs
