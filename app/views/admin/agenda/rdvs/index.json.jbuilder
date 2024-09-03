@@ -16,7 +16,7 @@ json.array! @rdvs do |rdv|
   json.start rdv.starts_at.as_json
   json.end rdv.ends_at.as_json
 
-  # url pour éditer le rendez-vous
+  # url pour modifier le rendez-vous
   # TODO trouver un meilleur nom à cet attribut pour en plus avoir besoin de ce commentaire
   json.url admin_organisation_rdv_path(rdv.organisation, rdv, agent_id: params[:agent_id]) if rdv.organisation == @organisation
   if rdv.organisation == @organisation
