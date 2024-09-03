@@ -28,17 +28,22 @@ module Anonymizer
   end
 
   def self.validate_exhaustivity!(config: nil)
+    errors = exhaustivity_errors(config:)
+    raise ExhaustivityError, errors.to_sentence if errors.any?
+  end
+
+  def self.exhaustivity_errors(config: nil)
     config ||= default_config
-    @errors = (
+    errors = (
       ActiveRecord::Base.connection.tables.to_set -
       config.table_names.to_set
     ).map { "missing rules for table #{_1}" }
     config.table_configs.each do |table_config|
-      @errors += Anonymizer::Table
+      errors += Anonymizer::Table
         .new(table_config:)
         .unidentified_column_names
         .map { "missing rule for column #{table_config.table_name}.#{_1}" }
     end
-    raise ExhaustivityError, @errors.to_sentence if @errors.any?
+    errors
   end
 end
