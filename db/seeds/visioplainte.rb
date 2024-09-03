@@ -96,6 +96,14 @@ guichet_gendarmerie1 = Agent.create!(
   ]
 )
 
+Agent.create!(
+  last_name: "Guichet 2",
+  services: [service_gendarmerie],
+  roles_attributes: [
+    { organisation: orga_gendarmerie, access_level: AgentRole::ACCESS_LEVEL_INTERVENANT },
+  ]
+)
+
 PlageOuverture.create!(
   title: "Permanence classique",
   organisation: orga_gendarmerie,

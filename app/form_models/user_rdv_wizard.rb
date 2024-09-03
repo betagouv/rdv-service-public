@@ -87,12 +87,14 @@ module UserRdvWizard
   class Step1 < Base
     validate :phone_number_present_for_motif_by_phone
     validate do
-      User::Ants.validate_ants_pre_demande_number(
-        user: @user,
-        ants_pre_demande_number: @user_attributes[:ants_pre_demande_number],
-        ignore_benign_errors: @user_attributes[:ignore_benign_errors]
-      )
-      errors.merge!(@user)
+      if rdv.requires_ants_predemande_number?
+        ValidateAntsPreDemandeNumber.perform(
+          user: @user,
+          ants_pre_demande_number: @user_attributes[:ants_pre_demande_number],
+          ignore_benign_errors: @user_attributes[:ignore_benign_errors]
+        )
+        errors.merge!(@user)
+      end
     end
 
     def phone_number_present_for_motif_by_phone
