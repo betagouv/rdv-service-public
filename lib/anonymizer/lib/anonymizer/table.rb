@@ -14,9 +14,13 @@ module Anonymizer
     end
 
     def anonymize_records!(scope: nil)
-      raise ScopeError, "scope (#{scope.class}) should be an arel" if scope.present? && !scope.is_a?(Arel::Nodes::Node)
+      if scope.present? && !scope.is_a?(Arel::Nodes::Node)
+        raise ScopeError, "scope (#{scope.class}) should be an arel node"
+      end
 
-      raise PartialTableTruncate, "cannot anonymize scoped records in a table that should be truncated" if truncated? && scope.present?
+      if truncated? && scope.present?
+        raise PartialTableTruncate, "cannot anonymize scoped records in a table that should be truncated"
+      end
 
       if truncated?
         db_connection.execute("TRUNCATE #{ActiveRecord::Base.sanitize_sql(table_name)} CASCADE")
