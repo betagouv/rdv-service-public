@@ -75,7 +75,7 @@ RSpec.describe "Admin can configure the organisation" do
 
     click_link motif.name
     expect(page).to have_content("Motif 1")
-    click_link "Éditer"
+    click_link "Modifier"
     fill_in :motif_name, with: "Être appelé par"
     click_button("Enregistrer")
     expect(page).to have_content("Être appelé par")
