@@ -12,7 +12,6 @@ tables:
   - table_name: good_job_processes
     truncated: true
   - table_name: users
-    class_name: User
     anonymized_column_names:
       - first_name
       - last_name
@@ -65,7 +64,6 @@ tables:
       - rdv_invitation_token_updated_at
 
   - table_name: agents
-    class_name: Agent
     anonymized_column_names:
       - first_name
       - last_name
@@ -113,7 +111,6 @@ tables:
       - connected_with_agent_connect
 
   - table_name: rdvs
-    class_name: Rdv
     anonymized_column_names:
       - context
       - name
@@ -135,7 +132,6 @@ tables:
       - status
 
   - table_name: receipts
-    class_name: Receipt
     anonymized_column_names:
       - sms_phone_number
       - email_address
@@ -152,7 +148,6 @@ tables:
       - channel
 
   - table_name: prescripteurs
-    class_name: Prescripteur
     anonymized_column_names:
       - first_name
       - last_name
@@ -166,7 +161,6 @@ tables:
       - participation_id
 
   - table_name: super_admins
-    class_name: SuperAdmin
     anonymized_column_names:
       - email
       - first_name
@@ -177,7 +171,6 @@ tables:
       - role
 
   - table_name: organisations
-    class_name: Organisation
     anonymized_column_names:
       - email
       - phone_number
@@ -193,7 +186,6 @@ tables:
       - verticale
 
   - table_name: absences
-    class_name: Absence
     anonymized_column_names:
       - title
     non_anonymized_column_names:
@@ -208,7 +200,6 @@ tables:
       - recurrence_ends_at
 
   - table_name: lieux
-    class_name: Lieu
     anonymized_column_names:
       - phone_number
       - phone_number_formatted
@@ -224,7 +215,6 @@ tables:
       - address
 
   - table_name: participations
-    class_name: Participation
     anonymized_column_names:
       - invitation_token
     non_anonymized_column_names:
@@ -245,7 +235,6 @@ tables:
       - created_by_agent_prescripteur
 
   - table_name: plage_ouvertures
-    class_name: PlageOuverture
     anonymized_column_names:
       - title
     non_anonymized_column_names:
@@ -260,7 +249,6 @@ tables:
       - recurrence_ends_at
 
   - table_name: webhook_endpoints
-    class_name: WebhookEndpoint
     anonymized_column_names:
       - secret
     non_anonymized_column_names:
@@ -271,7 +259,6 @@ tables:
       - subscriptions
 
   - table_name: territories
-    class_name: Territory
     anonymized_column_names:
       - sms_configuration
     non_anonymized_column_names:
@@ -405,7 +392,6 @@ tables:
       - last_creneau_sent_at
 
   - table_name: api_calls
-    class_name: ApiCall
     anonymized_column_names:
       - raw_http
     non_anonymized_column_names:
