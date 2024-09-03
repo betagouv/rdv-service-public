@@ -82,10 +82,12 @@ RSpec.describe Anonymizer do
 
     context "rdv with context" do
       let!(:rdv) { create(:rdv, context: "Des infos sensisbles sur le rdv") }
+      let!(:other_rdv) { create(:rdv, context: "Un autre RDV") }
 
       it "anonymizes context" do
         described_class.anonymize_record!(rdv)
         expect(rdv.reload.context).to eq "[valeur anonymisée]"
+        expect(other_rdv.reload.context).to eq "Un autre RDV"
       end
     end
 
@@ -111,11 +113,8 @@ RSpec.describe Anonymizer do
       let!(:version) { create(:rdv).versions.last }
       let!(:other_version) { create(:rdv).versions.last }
 
-      it "deletes the version but not the others" do
-        id = version.id
-        described_class.anonymize_record!(version)
-        expect(PaperTrail::Version.find_by(id:)).to be_nil
-        expect(PaperTrail::Version.find(other_version.id)).to eq other_version
+      it "raises" do
+        expect { described_class.anonymize_record!(version) }.to raise_error(Anonymizer::PartialTableTruncate)
       end
     end
   end
@@ -157,7 +156,7 @@ RSpec.describe Anonymizer do
       let!(:rdvs2021) { create_list(:rdv, 2, created_at: Date.new(2021, 3, 4), context: "Des infos sensibles sur le rdv") }
 
       it "anonymizes only 2020 ones" do
-        described_class.anonymize_records!("rdvs", arel_where: Rdv.arel_table[:created_at].lt(Date.new(2021, 1, 1)))
+        described_class.anonymize_records!("rdvs", scope: Rdv.arel_table[:created_at].lt(Date.new(2021, 1, 1)))
         expect(Rdv.where("extract(year from created_at) = 2020").pluck(:context).uniq).to eq ["[valeur anonymisée]"]
         expect(Rdv.where("extract(year from created_at) = 2021").pluck(:context).uniq).to eq ["Des infos sensibles sur le rdv"]
       end
@@ -180,10 +179,8 @@ RSpec.describe Anonymizer do
       end
 
       context "anonymize only 2020 versions (partial scope)" do
-        it "does not truncate 2021 ones" do
-          expect(PaperTrail::Version.where(item_type: "Rdv").map(&:created_at).map(&:year).uniq).to eq [2020, 2021]
-          described_class.anonymize_records!("versions", arel_where: PaperTrail::Version.arel_table[:created_at].lteq(Date.new(2020, 12, 12)))
-          expect(PaperTrail::Version.where(item_type: "Rdv").map(&:created_at).map(&:year).uniq).to eq [2021]
+        it "raises" do
+          expect { described_class.anonymize_records!("versions", scope: PaperTrail::Version.arel_table[:created_at].lteq(Date.new(2020, 12, 12))) }.to raise_error(Anonymizer::PartialTableTruncate)
         end
       end
     end

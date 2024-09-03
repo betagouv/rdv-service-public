@@ -30,13 +30,13 @@ RSpec.describe Anonymizer::Config do
 
   context "the config YAML is not a hash" do
     it "raises an error" do
-      expect { described_class.new([]) }.to raise_error(AnonymizerConfigError, "top level should be a hash")
+      expect { described_class.new([]) }.to raise_error(Anonymizer::ConfigError, "top level should be a hash")
     end
   end
 
   context "the config YAML is missing the tables key" do
     it "raises an error" do
-      expect { described_class.new({ "something" => [], "blah" => [] }) }.to raise_error(AnonymizerConfigError, "tables should be an array")
+      expect { described_class.new({ "something" => [], "blah" => [] }) }.to raise_error(Anonymizer::ConfigError, "tables should be an array")
     end
   end
 end

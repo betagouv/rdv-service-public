@@ -118,7 +118,7 @@ class CronJob < ApplicationJob
 
   class AnonymizeOldReceipts < CronJob
     def perform
-      Anonymizer.anonymize_records!("receipts", arel_where: Receipt.arel_table[:created_at].lt(6.months.ago))
+      Anonymizer.anonymize_records!("receipts", scope: Receipt.arel_table[:created_at].lt(6.months.ago))
     end
   end
 

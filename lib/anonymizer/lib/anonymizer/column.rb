@@ -1,11 +1,11 @@
 module Anonymizer
   class Column
-    attr_reader :column, :table_name, :scope_where
+    attr_reader :column, :table_name, :scope
 
-    def initialize(table_name, column, arel_where: nil)
+    def initialize(table_name, column, scope: nil)
       @table_name = table_name
       @column = column
-      @scope_where = arel_where
+      @scope = scope
     end
 
     def anonymize!
@@ -30,7 +30,7 @@ module Anonymizer
       ActiveRecord::Base.connection.execute(
         Arel::UpdateManager
           .new(arel_table)
-          .where(scope_where ? scope_where.and(where) : where)
+          .where(scope ? scope.and(where) : where)
           .set(arel_table[column.name] => value)
           .to_sql
       )

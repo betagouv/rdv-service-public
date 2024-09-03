@@ -19,10 +19,10 @@ module Anonymizer
     Table.new(table_config:).anonymize_record!(record)
   end
 
-  def self.anonymize_records!(table_name, arel_where: nil, config: nil)
+  def self.anonymize_records!(table_name, scope: nil, config: nil)
     config ||= default_config
     table_config = config.table_config_by_name(table_name)
-    Table.new(table_config:).anonymize_records!(arel_where)
+    Table.new(table_config:).anonymize_records!(scope:)
   end
 
   def self.validate_all_columns_defined!

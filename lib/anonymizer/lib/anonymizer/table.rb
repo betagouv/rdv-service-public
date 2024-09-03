@@ -1,6 +1,9 @@
 require_relative "column"
 
 module Anonymizer
+  class ScopeError < StandardError; end
+  class PartialTableTruncate < StandardError; end
+
   class Table
     attr_reader :table_config
 
@@ -10,20 +13,24 @@ module Anonymizer
       @table_config = table_config
     end
 
-    def anonymize_records!(arel_where = nil)
+    def anonymize_records!(scope: nil)
+      raise ScopeError, "scope (#{scope.class}) should be an arel" if scope.present? && !scope.is_a?(Arel::Nodes::Node)
+
+      raise PartialTableTruncate, "cannot anonymize scoped records in a table that should be truncated" if truncated? && scope.present?
+
       if truncated?
-        if arel_where.nil?
-          db_connection.execute("TRUNCATE #{ActiveRecord::Base.sanitize_sql(table_name)} CASCADE")
-        else
-          db_connection.execute(Arel::DeleteManager.new(arel_table).where(arel_where).to_sql)
-        end
+        db_connection.execute("TRUNCATE #{ActiveRecord::Base.sanitize_sql(table_name)} CASCADE")
       else
-        anonymized_columns.each { Anonymizer::Column.new(table_name, _1, arel_where:).anonymize! }
+        anonymized_columns.each do |column|
+          Anonymizer::Column.new(table_name, column, scope:).anonymize!
+        end
       end
     end
 
     def anonymize_record!(record)
-      anonymize_records!(arel_table[:id].eq(record.id))
+      raise PartialTableTruncate, "cannot anonymize single record in a table that should be truncated" if truncated?
+
+      anonymize_records!(scope: arel_table[:id].eq(record.id))
     end
 
     def unidentified_column_names

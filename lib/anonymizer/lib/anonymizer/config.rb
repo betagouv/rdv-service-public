@@ -1,12 +1,12 @@
-class AnonymizerConfigError < StandardError; end
-
 module Anonymizer
+  class ConfigError < StandardError; end
+
   class Config
     def initialize(raw_config)
-      raise AnonymizerConfigError, "top level should be a hash" unless raw_config.is_a?(Hash)
+      raise ConfigError, "top level should be a hash" unless raw_config.is_a?(Hash)
 
       @data = raw_config.with_indifferent_access
-      raise AnonymizerConfigError, "tables should be an array" unless @data[:tables].is_a?(Array)
+      raise ConfigError, "tables should be an array" unless @data[:tables].is_a?(Array)
     end
 
     def table_configs = @data[:tables].map { TableConfig.new(_1) }
@@ -23,10 +23,10 @@ module Anonymizer
 
   class TableConfig
     def initialize(raw_table_config)
-      raise AnonymizerConfigError, "table_config should be a hash" unless raw_table_config.is_a?(Hash)
+      raise ConfigError, "table_config should be a hash" unless raw_table_config.is_a?(Hash)
 
       @data = raw_table_config.with_indifferent_access
-      raise AnonymizerConfigError, "table config should contain a name" if @data[:table_name].blank?
+      raise ConfigError, "table config should contain a name" if @data[:table_name].blank?
 
       # TODO: check that it’s either truncated or has anon rules
     end
