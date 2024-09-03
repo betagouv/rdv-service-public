@@ -11,7 +11,7 @@ RSpec.describe "Agent can CRUD motifs" do
   it "works" do
     visit authenticated_agent_root_path
     click_link "Motifs"
-    expect_page_title("Vos motifs")
+    expect_page_title("Motifs de l'organisation")
     click_link motif.name
 
     expect(page).to have_content(motif.name)
@@ -24,17 +24,17 @@ RSpec.describe "Agent can CRUD motifs" do
     expect(page).to have_content("Suivi bonsoir")
     click_link("Supprimer")
 
-    expect_page_title("Vos motifs")
+    expect_page_title("Motifs de l'organisation")
     expect(page).to have_content("Vous n'avez pas encore créé de motif.")
     click_link "Créer un motif", match: :first
 
-    expect_page_title("Création d’un nouveau motif")
+    expect_page_title("Créer un motif")
     find("#motif_service_id").find(:option, service.name).select_option
     fill_in "Nom", with: "Suivi bonne nuit"
     fill_in "Couleur associée", with: "#000"
     click_button "Créer le motif"
 
-    expect_page_title("Vos motifs")
+    expect_page_title("Motifs de l'organisation")
     expect(page).to have_content("Suivi bonne nuit")
   end
 
