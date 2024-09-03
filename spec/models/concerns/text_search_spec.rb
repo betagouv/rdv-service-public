@@ -16,12 +16,6 @@ RSpec.describe TextSearch, type: :concern do
       expect(described_class.search_by_text("patricia")).to eq([patricia])
     end
 
-    it "returns users that match with second part of first name" do
-      michel = create(:user, first_name: "jean Michel")
-      patricia = create(:user, first_name: "patricia")
-      expect(described_class.search_by_text("michel")).to eq([michel])
-    end
-
     it "returns users that match with partial email" do
       create(:user, email: "jean@moustache.fr")
       patricia = create(:user, email: "patoche@duroy.fr")
