@@ -158,6 +158,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
+        # cette strategy permet de lancer deux jobs de feature specs en parallèle pour accélérer l’éxecution
         dirname: [agents, "*"]
         include: 
           - dirname: agents
