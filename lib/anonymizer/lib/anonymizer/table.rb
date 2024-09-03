@@ -7,7 +7,7 @@ module Anonymizer
   class Table
     attr_reader :table_config
 
-    delegate :table_name, :truncated?, :anonymized_column_names, :non_anonymized_column_name, to: :table_config
+    delegate :table_name, :truncated?, :anonymized_column_names, :non_anonymized_column_names, to: :table_config
 
     def initialize(table_config:)
       @table_config = table_config
@@ -38,6 +38,8 @@ module Anonymizer
     end
 
     def unidentified_column_names
+      return [] if truncated?
+
       all_columns = db_connection.columns(table_name).map(&:name)
       primary_key_columns = db_connection.primary_keys(table_name)
       foreign_key_columns = db_connection.foreign_keys(table_name).map { |key| key.options[:column] }

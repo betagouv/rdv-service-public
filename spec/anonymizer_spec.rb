@@ -185,4 +185,10 @@ RSpec.describe Anonymizer do
       end
     end
   end
+
+  describe "exhaustivity" do
+    it "should be exhaustive" do
+      expect { described_class.validate_exhaustivity! }.not_to raise_error
+    end
+  end
 end

@@ -3,6 +3,8 @@ require_relative "anonymizer/config"
 require_relative "anonymizer/table"
 
 module Anonymizer
+  class ExhaustivityError < StandardError; end
+
   def self.default_config
     @default_config ||= begin
       yaml_path = ENV["ANONYMIZER_CONFIG_PATH"].presence || Rails.root.join("config/anonymizer.yml")
@@ -25,9 +27,18 @@ module Anonymizer
     Table.new(table_config:).anonymize_records!(scope:)
   end
 
-  def self.validate_all_columns_defined!
-    # TODO
-    # elsif unidentified_column_names.present?
-    #   raise "Les règles d'anonymisation pour les colonnes #{unidentified_column_names.join(' ')} de la table #{table_name} n'ont pas été définies"
+  def self.validate_exhaustivity!(config: nil)
+    config ||= default_config
+    @errors = (
+      ActiveRecord::Base.connection.tables.to_set -
+      config.table_names.to_set
+    ).map { "missing rules for table #{_1}" }
+    config.table_configs.each do |table_config|
+      @errors += Anonymizer::Table
+        .new(table_config:)
+        .unidentified_column_names
+        .map { "missing rule for column #{table_config.table_name}.#{_1}" }
+    end
+    raise ExhaustivityError, @errors.to_sentence if @errors.any?
   end
 end
