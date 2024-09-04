@@ -136,12 +136,17 @@ RSpec.describe "User can search rdv on rdv mairie" do
       fill_in("user_ants_pre_demande_number", with: "5544332211")
       click_button("Enregistrer")
       expect(page).to have_content("Alain MAIRIE")
-      expect(User.exists?(first_name: "Alain", last_name: "Mairie", ants_pre_demande_number: "5544332211")).to be(true)
+      alain = User.find_by(first_name: "Alain", last_name: "Mairie", ants_pre_demande_number: "5544332211")
+      expect(alain).to be_present
 
+      check(user.full_name)
+      check(alain.full_name)
       click_button("Continuer")
 
       click_link("Confirmer mon RDV")
       expect(page).to have_content("Votre rendez vous a été confirmé.")
+      created_rdv = Rdv.last
+      expect(created_rdv.users).to contain_exactly(user, alain)
     end
   end
 
@@ -179,6 +184,22 @@ RSpec.describe "User can search rdv on rdv mairie" do
         expect { click_link("Confirmer mon RDV") }.to change(Rdv, :count).by(1)
         expect(user.reload.ants_pre_demande_number).to eq("ABCD1234EF")
         expect(call_to_status_with_upcased_number).to have_been_requested.at_least_once
+      end
+    end
+
+    context "when trying to bypass the front-end validation" do
+      it "performs back-end validation and displays error" do
+        time = Time.zone.now.change(hour: 9, min: 0)
+        creneaux_url = creneaux_url(starts_at: time.strftime("%Y-%m-%d %H:%M"), lieu_id: lieu.id, motif_id: passport_motif.id, public_link_organisation_id: organisation.id, duration: 50)
+        visit creneaux_url
+
+        fill_in("user_email", with: user.email)
+        fill_in("password", with: user.password)
+        click_button("Se connecter")
+
+        fill_in("user_ants_pre_demande_number", with: "  ")
+        click_button("Continuer")
+        expect(page).to have_content("Numéro de pré-demande ANTS doit comporter 10 chiffres et lettres")
       end
     end
 

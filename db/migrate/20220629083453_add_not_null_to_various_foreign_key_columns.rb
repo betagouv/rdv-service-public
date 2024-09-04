@@ -1,5 +1,4 @@
 class AddNotNullToVariousForeignKeyColumns < ActiveRecord::Migration[6.1]
-  # rubocop:disable Metrics/MethodLength
   def change
     change_column_null :absences, :agent_id, false
     change_column_null :absences, :organisation_id, false

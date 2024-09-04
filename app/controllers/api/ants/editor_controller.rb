@@ -50,7 +50,7 @@ class Api::Ants::EditorController < Api::Ants::BaseController
   end
 
   def creneaux(lieu, motif)
-    Users::CreneauxSearch.new(
+    CreneauxSearch::ForUser.new(
       lieu: lieu,
       motif: motif,
       date_range: date_range

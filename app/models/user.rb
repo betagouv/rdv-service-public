@@ -23,11 +23,10 @@ class User < ApplicationRecord
   include WebhookDeliverable
   include TextSearch
   include StrongPasswordConcern
-  include User::Ants
 
   def self.search_options
     {
-      using: { tsearch: { prefix: true, any_word: true, tsvector_column: "text_search_terms" } },
+      using: { tsearch: { prefix: true, tsvector_column: "text_search_terms" } },
     }
   end
 

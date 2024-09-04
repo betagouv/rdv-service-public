@@ -2,13 +2,13 @@ RSpec.describe Users::RdvsController, type: :controller do
   render_views
 
   describe "POST create" do
-    subject { post :create, params: params }
+    subject(:post_create) { post :create, params: params }
 
     let(:organisation) { create(:organisation) }
     let(:user) { create(:user) }
     let(:motif) { create(:motif, organisation: organisation) }
     let(:lieu) { create(:lieu, organisation: organisation) }
-    let(:starts_at) { Time.zone.parse("2020-10-20 10h30") }
+    let(:starts_at) { Time.zone.parse("2020-02-20 10h30") }
     let(:mock_geo_search) { instance_double(Users::GeoSearch) }
     let(:token) { "12345" }
     let(:params) do
@@ -25,27 +25,25 @@ RSpec.describe Users::RdvsController, type: :controller do
     end
 
     before do
-      travel_to(Time.zone.local(2019, 7, 20))
+      travel_to(Time.zone.local(2020, 1, 20))
       sign_in user
 
       allow(Users::GeoSearch).to receive(:new)
         .with(departement: "12", city_code: "12100", street_ban_id: nil)
         .and_return(mock_geo_search)
-      allow(Users::CreneauxSearch).to receive(:creneau_for)
-        .with(user: user, starts_at: starts_at, motif: motif, lieu: lieu, geo_search: mock_geo_search)
-        .and_return(creneau)
       allow(Notifiers::RdvCreated).to receive(:perform_with)
       allow(Devise.token_generator).to receive(:generate).and_return("12345")
-      subject
     end
 
     describe "when there is an available creneau" do
       let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
-      let(:creneau) do
-        Creneau.new(agent: agent, motif: motif, lieu_id: lieu&.id, starts_at: starts_at)
+
+      before do
+        create(:plage_ouverture, organisation: organisation, motifs: [motif], lieu: lieu, agent: agent, start_time: Tod::TimeOfDay.new(10, 30), first_day: starts_at.to_date)
       end
 
       it "creates rdv" do
+        post_create
         expect(Rdv.count).to eq(1)
         expect(response).to redirect_to users_rdv_path(Rdv.last, invitation_token: token)
         expect(user.rdvs.last.created_by).to eq(user)
@@ -57,18 +55,28 @@ RSpec.describe Users::RdvsController, type: :controller do
         let(:lieu) { nil }
 
         it "creates the rdv" do
+          post_create
           expect(Rdv.count).to eq(1)
           expect(response).to redirect_to users_rdv_path(Rdv.last, invitation_token: token)
           expect(user.rdvs.last.created_by).to eq(user)
           expect(user.participations.last.created_by).to eq(user)
         end
       end
+
+      context "when the user is injecting a motif id that they should not be able to book" do
+        let(:motif) { create(:motif, organisation: organisation, bookable_by: :agents) }
+
+        it "doesn't find a creneau" do
+          post_create
+          expect(Rdv.count).to eq(0)
+          expect(flash[:error]).to eq "Vous ne pouvez pas effectuer cette action."
+        end
+      end
     end
 
     describe "when there is no available creneau" do
-      let(:creneau) { nil }
-
-      it "creates rdv" do
+      it "doesn't create a rdv" do
+        post_create
         expect(Rdv.count).to eq(0)
         expect(response).to redirect_to prendre_rdv_path(
           departement: "12", service: motif.service_id, motif_name_with_location_type: motif.name_with_location_type,
@@ -472,7 +480,7 @@ RSpec.describe Users::RdvsController, type: :controller do
       travel_to(now)
       sign_in user
 
-      allow(Users::CreneauxSearch).to receive(:creneau_for)
+      allow(CreneauxSearch::ForUser).to receive(:creneau_for)
         .with(user: user, starts_at: starts_at, motif: motif, lieu: lieu)
         .and_return(returned_creneau)
     end
@@ -525,7 +533,7 @@ RSpec.describe Users::RdvsController, type: :controller do
     before do
       travel_to(now)
       sign_in user
-      allow(Users::CreneauxSearch).to receive(:creneau_for)
+      allow(CreneauxSearch::ForUser).to receive(:creneau_for)
         .with(user: user, starts_at: starts_at, motif: motif, lieu: lieu)
         .and_return(returned_creneau)
       allow(Devise.token_generator).to receive(:generate).and_return("12345")
