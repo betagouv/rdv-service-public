@@ -27,7 +27,7 @@ module Anonymizer
     end
 
     def update(where:, value:)
-      Anonymizer::db_connection.execute(
+      Anonymizer.db_connection.execute(
         Arel::UpdateManager
           .new(arel_table)
           .where(scope ? scope.and(where) : where)
@@ -61,7 +61,7 @@ module Anonymizer
     end
 
     def column_has_uniqueness_constraint?
-      Anonymizer::db_connection.indexes(table_name).select(&:unique).any? do |index|
+      Anonymizer.db_connection.indexes(table_name).select(&:unique).any? do |index|
         # il se peut que la deuxième colonne de l'index n'ait pas de contrainte d'unicité
         index.columns.first == column.name
       end
