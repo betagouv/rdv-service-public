@@ -5,7 +5,7 @@ json.cache! [@absence_occurrences, :all_occurrences_for, date_range_params, @org
     json.end occurrence.ends_at.as_json
     json.backgroundColor "rgba(127, 140, 141, 0.7)"
 
-    # url pour éditer l'absence
+    # url pour modifier l'absence
     json.url edit_admin_organisation_absence_path(@organisation, absence)
   end
 end
