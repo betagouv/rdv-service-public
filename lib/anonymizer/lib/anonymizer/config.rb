@@ -20,6 +20,7 @@ module Anonymizer
     def table_names = table_configs.map(&:table_name)
 
     def truncated_table_configs = table_configs.select(&:truncated?)
+
     def truncated_table_names = truncated_table_configs.map(&:table_name)
   end
 

@@ -48,7 +48,8 @@ module Anonymizer
 
     def anonymous_text_value
       if column.array
-        Arel.sql("'{valeur anonymisée}'") # TODO : je ne crois pas que ce soit utilisé
+        Arel.sql("'{valeur anonymisée}'")
+        # TODO : je ne crois pas que ce soit utilisé et cela laisse penser qu’il y avait toujours une valeur
       elsif column.name.include?("email")
         Arel.sql("'email_anonymise_' || id || '@exemple.fr'")
       elsif column_has_uniqueness_constraint?
