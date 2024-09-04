@@ -22,7 +22,7 @@ module Anonymizer
       end
 
       if truncated?
-        Anonymizer.db_connection.execute("TRUNCATE #{ActiveRecord::Base.sanitize_sql(table_name)} CASCADE")
+        Anonymizer::db_connection.execute("TRUNCATE #{ActiveRecord::Base.sanitize_sql(table_name)} CASCADE")
       else
         anonymized_columns.each do |column|
           Anonymizer::Column.new(table_name, column, scope:).anonymize!
@@ -39,14 +39,14 @@ module Anonymizer
     def unidentified_column_names
       return [] if truncated?
 
-      all_columns = Anonymizer.db_connection.columns(table_name).map(&:name)
-      primary_key_columns = Anonymizer.db_connection.primary_keys(table_name)
-      foreign_key_columns = Anonymizer.db_connection.foreign_keys(table_name).map { |key| key.options[:column] }
+      all_columns = Anonymizer::db_connection.columns(table_name).map(&:name)
+      primary_key_columns = Anonymizer::db_connection.primary_keys(table_name)
+      foreign_key_columns = Anonymizer::db_connection.foreign_keys(table_name).map { |key| key.options[:column] }
       all_columns - primary_key_columns - foreign_key_columns - anonymized_column_names - non_anonymized_column_names
     end
 
     def exists?
-      Anonymizer.db_connection.table_exists?(table_name)
+      Anonymizer::db_connection.table_exists?(table_name)
     end
 
     private
@@ -56,7 +56,7 @@ module Anonymizer
     end
 
     def anonymized_columns
-      Anonymizer.db_connection.columns(table_name).select { _1.name.in?(anonymized_column_names) }
+      Anonymizer::db_connection.columns(table_name).select { _1.name.in?(anonymized_column_names) }
     end
   end
 end
