@@ -25,7 +25,7 @@ module TextSearch
 
     pg_search_scope :full_text_search, lambda { |query|
       {
-        using: { tsearch: { prefix: true, any_word: true } },
+        using: { tsearch: { prefix: true } },
         order_within_rank: "#{table_name}.updated_at desc",
         query: query,
       }.merge(search_options)
