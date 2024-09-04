@@ -13,7 +13,7 @@ RSpec.describe Anonymizer do
     context "user" do
       let!(:user) { create(:user, email: "user@example.com", first_name: "jean", last_name: "jacques", confirmation_token: "CONFIRM_ME") }
 
-      it "anonymizes first and last name" do
+      it "anonymizes first and last name and email" do
         described_class.anonymize_record!(user)
         expect(user.reload.full_name).to eq "[valeur anonymisée] [VALEUR ANONYMISÉE]"
         expect(user.reload.email).to eq "email_anonymise_#{user.id}@exemple.fr"
@@ -37,7 +37,7 @@ RSpec.describe Anonymizer do
     context "agent" do
       let!(:agent) { create(:agent, email: "agent@example.com", first_name: "jean", last_name: "jacques") }
 
-      it "anonymizes first and last name" do
+      it "anonymizes first and last name and email" do
         described_class.anonymize_record!(agent)
         expect(agent.reload.full_name).to eq "[valeur anonymisée] [VALEUR ANONYMISÉE]"
         expect(agent.reload.email).to eq "email_anonymise_#{agent.id}@exemple.fr"
@@ -125,7 +125,7 @@ RSpec.describe Anonymizer do
       let!(:user2) { create(:user, email: "user2@example.com", first_name: "marco", last_name: "polo", confirmation_token: "WAT") }
       let!(:user_without_email) { create(:user, email: nil) }
 
-      it "anonymizes correct things" do
+      it "anonymizes the correct columns" do
         described_class.anonymize_records!("users")
         expect(user1.reload.full_name).to eq "[valeur anonymisée] [VALEUR ANONYMISÉE]"
         expect(user2.reload.full_name).to eq "[valeur anonymisée] [VALEUR ANONYMISÉE]"
@@ -151,7 +151,7 @@ RSpec.describe Anonymizer do
       end
     end
 
-    context "rdvs (scope = 2020 rdvs)" do
+    context "rdvs (scope = rdvs created before 2021)" do
       let!(:rdvs2020) { create_list(:rdv, 2, created_at: Date.new(2020, 3, 4), context: "Des infos sensibles sur le rdv") }
       let!(:rdvs2021) { create_list(:rdv, 2, created_at: Date.new(2021, 3, 4), context: "Des infos sensibles sur le rdv") }
 
@@ -186,6 +186,7 @@ RSpec.describe Anonymizer do
     end
   end
 
+  # this spec will fail when we update RDVSP schema but forget to update anonymizer config
   describe "exhaustivity" do
     it "should be exhaustive" do
       expect { described_class.validate_exhaustivity! }.not_to raise_error
