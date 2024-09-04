@@ -10,6 +10,7 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do
     get "Lister les créneaux disponibles" do
       with_visioplainte_authentication
 
+      tags "Créneaux"
       description "Renvoie les créneaux disponibles"
 
       response 200, "Renvoie les créneaux" do
@@ -53,6 +54,7 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do
     get "Indique la date du prochain créneau" do
       with_visioplainte_authentication
 
+      tags "Créneaux"
       description "Renvoie le prochain créneau disponible"
       parameter name: :service, in: :query, type: :string,
                 description: "Indique si on souhaite obtenir les créneaux de la plateforme de la gendarmerie ou de la police. " \

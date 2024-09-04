@@ -6,7 +6,7 @@
     - if @form.users.any?
       h6.card-subtitle.mb-2 = t(".search_for_slots_subtitle", users_fullname: @form.users.map(&:full_name).join(" ,"))
   .card-body
-    = simple_form_for(@form, as: "", url: admin_organisation_agent_searches_path(current_organisation), method: :get) do |f|
+    = simple_form_for(@form, as: "", url: admin_organisation_creneaux_search_path(current_organisation), method: :get) do |f|
       - @form.user_ids.each do |user_id|
         = hidden_field_tag "user_ids[]", user_id
       - if @form.context.present?
@@ -72,9 +72,9 @@
         h3.font-weight-bold= t(".available_places_with_slots", count: @next_availabilities.length)
         - @next_availabilities.each do |next_availability|
           = render "lieu_search_results", next_availability: next_availability
-        = render "admin/slots/prescription_cta"
+        = render "admin/creneaux_search/prescription_cta"
     - elsif motif_selected? && params[:commit].present?
-      = render partial: "admin/slots/no_slot_available"
+      = render partial: "admin/creneaux_search/no_slot_available"
     - else
       .text-muted= t(".choose_filter_and_refresh")
-      = render "admin/slots/prescription_cta"
+      = render "admin/creneaux_search/prescription_cta"

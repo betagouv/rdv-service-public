@@ -5,7 +5,7 @@ div id="creneaux-lieu-#{lieu&.id}"
     - if form.date_range.begin > Time.zone.today
       - previous_from_date = form.date_range.begin - 7.days
       .col-auto.d-flex.align-items-center
-        = link_to admin_organisation_slots_path(search_params.merge(from_date: previous_from_date)), class: "btn btn-primary" do
+        = link_to admin_organisation_creneaux_search_selection_creneaux_path(search_params.merge(from_date: previous_from_date)), class: "btn btn-primary" do
           i.fa.fa-arrow-left
     .col
       .row.no-gutters.creneaux-row.lieu-creneaux-card
@@ -34,7 +34,7 @@ div id="creneaux-lieu-#{lieu&.id}"
     - if next_availability
       - if form.date_range.end < next_availability.starts_at.to_date && creneaux.empty?
         .position-absolute.h-100.w-100.bg-overlay.d-flex.align-items-center.justify-content-center
-          = link_to admin_organisation_slots_path(search_params.merge(from_date: next_availability.starts_at.to_date)),
+          = link_to admin_organisation_creneaux_search_selection_creneaux_path(search_params.merge(from_date: next_availability.starts_at.to_date)),
               class: "btn btn-light" do
             .d-flex.align-items-center
               div
@@ -45,5 +45,5 @@ div id="creneaux-lieu-#{lieu&.id}"
                 i.fa.fa-chevron-right
 
       .col-auto.d-flex.align-items-center
-        = link_to admin_organisation_slots_path(search_params.merge(from_date: form.date_range.end + 1.day)), class: "btn btn-primary" do
+        = link_to admin_organisation_creneaux_search_selection_creneaux_path(search_params.merge(from_date: form.date_range.end + 1.day)), class: "btn btn-primary" do
           i.fa.fa-arrow-right

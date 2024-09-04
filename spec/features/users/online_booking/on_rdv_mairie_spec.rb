@@ -187,6 +187,22 @@ RSpec.describe "User can search rdv on rdv mairie" do
       end
     end
 
+    context "when trying to bypass the front-end validation" do
+      it "performs back-end validation and displays error" do
+        time = Time.zone.now.change(hour: 9, min: 0)
+        creneaux_url = creneaux_url(starts_at: time.strftime("%Y-%m-%d %H:%M"), lieu_id: lieu.id, motif_id: passport_motif.id, public_link_organisation_id: organisation.id, duration: 50)
+        visit creneaux_url
+
+        fill_in("user_email", with: user.email)
+        fill_in("password", with: user.password)
+        click_button("Se connecter")
+
+        fill_in("user_ants_pre_demande_number", with: "  ")
+        click_button("Continuer")
+        expect(page).to have_content("Numéro de pré-demande ANTS doit comporter 10 chiffres et lettres")
+      end
+    end
+
     context "ANTS responds with an unexpected error" do
       before do
         stub_request(:get, "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status?application_ids=5544332211").to_return(

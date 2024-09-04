@@ -1,6 +1,6 @@
 h1 Nouveau RDV par prescription
 - if @context.user
-  h6.card-subtitle.mt-2 = t("admin.creneaux.agent_searches.index.search_for_slots_subtitle", users_fullname: @context.user.full_name)
+  h6.card-subtitle.mt-2 = t("admin.creneaux_search.index.search_for_slots_subtitle", users_fullname: @context.user.full_name)
   p
     - if @context.user.address.present?
       = @context.user.address

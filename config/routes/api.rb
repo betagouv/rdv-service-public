@@ -41,6 +41,7 @@ namespace :api do
   end
 
   namespace :visioplainte do
+    resources :guichets, only: %i[index]
     resources :creneaux, only: %i[index] do
       collection do
         get :prochain

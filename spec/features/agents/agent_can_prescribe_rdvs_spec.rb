@@ -238,7 +238,7 @@ RSpec.describe "agents can prescribe rdvs" do
         motif_autre_service.update(sectorisation_level: "organisation")
 
         login_as(current_agent, scope: :agent)
-        visit admin_organisation_agent_searches_path(org_mds, user_ids: [user.id])
+        visit admin_organisation_creneaux_search_path(org_mds, user_ids: [user.id])
         click_link "Élargir la recherche"
       end
 

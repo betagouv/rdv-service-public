@@ -6,7 +6,7 @@
         h5.card-subtitle.text-black-50.mb-2 = @form.motif.service.name
         h6.card-subtitle.text-black-50= next_availability.lieu.address
       .col-md.align-self-center.pt-3.pt-md-0.position-static
-        = link_to admin_organisation_slots_path(current_organisation,creneaux_search_params(@form).merge(lieu_ids: [next_availability.lieu.id])),
+        = link_to admin_organisation_creneaux_search_selection_creneaux_path(current_organisation,creneaux_search_params(@form).merge(lieu_ids: [next_availability.lieu.id])),
                 class: "d-block stretched-link" do
           .row
             .col

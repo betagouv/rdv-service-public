@@ -23,7 +23,6 @@ class User < ApplicationRecord
   include WebhookDeliverable
   include TextSearch
   include StrongPasswordConcern
-  include User::Ants
 
   def self.search_options
     {
