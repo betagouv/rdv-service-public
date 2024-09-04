@@ -12,7 +12,7 @@ RSpec.describe "Agent can create a Rdv with creneau search" do
     let!(:plage_ouverture2) { create(:plage_ouverture, :daily, motifs: [motif], organisation: organisation) }
 
     it "displays lieux and allow filtering on lieux" do
-      visit admin_organisation_agent_searches_path(organisation)
+      visit admin_organisation_creneaux_search_path(organisation)
       expect(page).to have_content("Trouver un RDV")
       select(motif.name, from: "motif_id")
       click_button("Afficher les créneaux")
@@ -36,7 +36,7 @@ RSpec.describe "Agent can create a Rdv with creneau search" do
     let!(:plage_ouverture) { create(:plage_ouverture, :daily, motifs: [motif], agent: agent, organisation: organisation) }
 
     it "automatically select the option" do
-      visit admin_organisation_agent_searches_path(organisation)
+      visit admin_organisation_creneaux_search_path(organisation)
       expect(page).to have_content("Trouver un RDV")
       expect(page).to have_select("lieu_ids", selected: plage_ouverture.lieu_name)
       expect(page).to have_select("motif_id", selected: "Motif 1 (Sur place)")
@@ -55,7 +55,7 @@ RSpec.describe "Agent can create a Rdv with creneau search" do
     let!(:another_motif) { create(:motif, service: another_service, organisation: organisation) }
 
     it "doesnt automatically select options" do
-      visit admin_organisation_agent_searches_path(organisation)
+      visit admin_organisation_creneaux_search_path(organisation)
       expect(page).to have_content("Trouver un RDV")
       expect(page).to have_select("lieu_ids", selected: [])
       expect(page).to have_select("motif_id", selected: "")
@@ -76,7 +76,7 @@ RSpec.describe "Agent can create a Rdv with creneau search" do
 
     it "displays a slot for each agent" do
       travel_to(Date.new(2023, 5, 9))
-      visit admin_organisation_agent_searches_path(organisation)
+      visit admin_organisation_creneaux_search_path(organisation)
       expect(page).to have_content("Trouver un RDV")
       select(motif.name, from: "motif_id")
       click_button("Afficher les créneaux")
@@ -96,7 +96,7 @@ RSpec.describe "Agent can create a Rdv with creneau search" do
     end
 
     it "displays a slot for each time of the day, without duplicate times" do
-      visit admin_organisation_agent_searches_path(organisation)
+      visit admin_organisation_creneaux_search_path(organisation)
       expect(page).to have_content("Trouver un RDV")
       select(motif.name, from: "motif_id")
       click_button("Afficher les créneaux")
@@ -111,7 +111,7 @@ RSpec.describe "Agent can create a Rdv with creneau search" do
     let!(:plage_ouverture) { create(:plage_ouverture, :daily, first_day: 8.days.since, motifs: [motif], organisation: organisation) }
 
     it "still allows the agent to book a rdv, because the booking delays should only apply to agents" do
-      visit admin_organisation_agent_searches_path(organisation)
+      visit admin_organisation_creneaux_search_path(organisation)
       expect(page).to have_content("Trouver un RDV")
       select(motif.name, from: "motif_id")
       click_button("Afficher les créneaux")
@@ -128,7 +128,7 @@ RSpec.describe "Agent can create a Rdv with creneau search" do
 
     shared_examples "book a rdv without a lieu" do
       it "allows the agent to book a rdv" do
-        visit admin_organisation_agent_searches_path(organisation)
+        visit admin_organisation_creneaux_search_path(organisation)
         expect(page).to have_content("Trouver un RDV")
         select(motif.name, from: "motif_id")
         click_button("Afficher les créneaux")

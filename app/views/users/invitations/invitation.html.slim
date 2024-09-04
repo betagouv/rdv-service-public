@@ -3,11 +3,11 @@
 .card
   .card-body
     = form_with url: :accept_user_invitation, method: :get, local: true do |f|
-      .text-center.w-75.m-auto
+      .rdv-text-align-center.w-75.m-auto
       .form-row
         .col-md-12
           .form-group
             = f.label :invitation_token, t("devise.invitations.invitation.invitation_token"), class: "form-control-label"
             = f.text_field :invitation_token, placeholder: "e5a36F74", class: "form-control"
-      .text-center
+      .rdv-text-align-center
         = f.button t("devise.invitations.invitation.submit_button"), class: "btn btn-primary"

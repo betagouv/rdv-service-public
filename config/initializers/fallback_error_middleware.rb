@@ -8,7 +8,7 @@ class FallbackErrorMiddleware
     response = @app.call(env)
 
     if failsafe_response_from_default_middleware?(response)
-      [500, { Rack::CONTENT_TYPE => "text/html; charset=utf-8" }, [File.read(Rails.root.join("public/maintenance.html"))]]
+      [500, { Rack::CONTENT_TYPE => "text/html; charset=utf-8" }, [File.read(Rails.public_path.join("maintenance.html"))]] # rubocop:disable Rails/RootPathnameMethods
     else
       response
     end
@@ -22,4 +22,4 @@ class FallbackErrorMiddleware
   end
 end
 
-Rails.configuration.middleware.insert_before(ActionDispatch::ShowExceptions, ::FallbackErrorMiddleware)
+Rails.configuration.middleware.insert_before(ActionDispatch::ShowExceptions, FallbackErrorMiddleware)

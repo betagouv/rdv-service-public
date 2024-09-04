@@ -38,18 +38,32 @@
 @import "~bootstrap/scss/popover";
 @import "~bootstrap/scss/carousel";
 @import "~bootstrap/scss/spinners";
-@import "~bootstrap/scss/utilities";
-@import "~bootstrap/scss/print";
+@import "~bootstrap/scss/utilities/align";
+//@import "~bootstrap/scss/utilities/background";
+@import "~bootstrap/scss/utilities/borders";
+@import "~bootstrap/scss/utilities/clearfix";
+@import "~bootstrap/scss/utilities/display";
+@import "~bootstrap/scss/utilities/embed";
+@import "~bootstrap/scss/utilities/flex";
+@import "~bootstrap/scss/utilities/float";
+@import "~bootstrap/scss/utilities/interactions";
+@import "~bootstrap/scss/utilities/overflow";
+@import "~bootstrap/scss/utilities/position";
+@import "~bootstrap/scss/utilities/screenreaders";
+@import "~bootstrap/scss/utilities/shadows";
+@import "~bootstrap/scss/utilities/sizing";
+@import "~bootstrap/scss/utilities/spacing";
+@import "~bootstrap/scss/utilities/stretched-link";
+//@import "~bootstrap/scss/utilities/text";
+@import "~bootstrap/scss/utilities/visibility";
 
-@import "~select2/dist/css/select2";
-@import "~select2-bootstrap4-theme/dist/select2-bootstrap4.min";
-@import "jquery-datetimepicker/build/jquery.datetimepicker.min";
+@import "~bootstrap/scss/print";
 
 @import "vendor/inclusion_connect_button";
 @import "vendor/agent_connect_button";
 
 @import "./components/backgrounds";
-@import "./components/types";
+@import "./components/backgrounds_dsfr";
 @import "./components/search_form";
 @import "./components/bubble";
 @import "./components/forms";
@@ -58,18 +72,11 @@
 @import "./components/utilities_dsfr";
 @import "./components/steps";
 @import "./components/autocomplete";
-@import "./components/rdv_status";
 @import "./components/rdv_solidarites_instance_name";
 @import "./components/alert";
-@import "./components/select2";
 @import "./components/button_group_before_card";
 
 // Structure
-@import "./structure/general";
-@import "./structure/header";
 @import "./structure/footer_dsfr";
-@import "./structure/page-head";
 @import "./structure/authentication";
-@import "./structure/left-menu";
-@import "./structure/misc";
 @import "./structure/bootstrap_overrides";

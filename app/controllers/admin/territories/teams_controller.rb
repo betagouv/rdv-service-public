@@ -1,25 +1,21 @@
 class Admin::Territories::TeamsController < Admin::Territories::BaseController
-  before_action :set_team, only: %i[show edit update destroy]
-
-  respond_to :html, :json
+  before_action :set_team, only: %i[edit update destroy]
 
   def index
-    @teams = policy_scope(Team).page(page_number)
-    @teams = params[:term].present? ? @teams.search_by_text(params[:term]) : @teams.order(:name)
+    @teams = policy_scope(current_territory.teams, policy_scope_class: Agent::TeamPolicy::Scope).page(page_number)
+    @teams = params[:term].present? ? @teams.search_by_text(params[:term]) : @teams.ordered_by_name
   end
 
   def new
     @team = Team.new(territory: current_territory)
-    authorize @team
-  end
-
-  def show
-    authorize @team
+    authorize_agent @team
   end
 
   def create
-    authorize Team
-    if (@team = Team.create(team_params.merge(territory: current_territory)))
+    @team = Team.new(team_params.merge(territory: current_territory))
+    authorize_agent @team
+
+    if @team.save
       redirect_to admin_territory_teams_path(current_territory)
     else
       render :new
@@ -27,11 +23,11 @@ class Admin::Territories::TeamsController < Admin::Territories::BaseController
   end
 
   def edit
-    authorize @team
+    authorize_agent @team
   end
 
   def update
-    authorize @team
+    authorize_agent @team
     if @team.update(team_params)
       redirect_to admin_territory_teams_path(current_territory)
     else
@@ -40,7 +36,7 @@ class Admin::Territories::TeamsController < Admin::Territories::BaseController
   end
 
   def destroy
-    authorize @team
+    authorize_agent @team
     @team.destroy!
     redirect_to admin_territory_teams_path(current_territory)
   end

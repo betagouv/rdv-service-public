@@ -9,6 +9,7 @@ class Zone < ApplicationRecord
 
   # Relations
   belongs_to :sector
+  delegate :territory, to: :sector
 
   # Validations
   validates :level, :city_name, :city_code, presence: true

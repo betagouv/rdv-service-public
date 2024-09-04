@@ -1,21 +1,21 @@
 - content_for :title, "Choisissez une organisation"
 
-- @agent_roles_by_territory.each do |territory, agent_roles|
+- @organisations_by_territory.each do |territory, organisations|
   .card
     .card-header
       .d-flex.justify-content-between.align-items-center
         h5.m-2= territory
-        - if Configuration::TerritoryPolicy.new(AgentContext.new(current_agent), territory).show?
+        - if Agent::TerritoryPolicy.new(current_agent, territory).show?
           = link_to admin_territory_path(territory), class: "float-right" do
             i.fa.fa-cog>
             = t(".configuration")
     .card-body
       ul.list-group.list-group-flush
-        - agent_roles.each do |agent_role|
+        - organisations.each do |organisation|
           li.list-group-item
-            span>= link_to agent_role.organisation.name, admin_organisation_agent_agenda_path(agent_role.organisation, agent_role.agent)
-            - if agent_role.admin?
+            span>= link_to organisation.name, admin_organisation_agent_agenda_path(organisation, current_agent)
+            - if current_agent.admin_in_organisation?(organisation)
               i.fa.fa-user-cog.text-muted[title="Vous administrez cette organisation"]
       - if policy([:agent, Organisation.new(territory: territory)]).new?
-        .text-center.mt-4
+        .rdv-text-align-center.mt-4
           = link_to "Ajouter une organisation", new_admin_organisation_path(territory_id: territory.id), class: "btn btn-primary"

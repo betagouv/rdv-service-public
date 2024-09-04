@@ -45,7 +45,7 @@ class AgentPrescripteurRdvWizard
   end
 
   def creneau
-    @creneau ||= Users::CreneauSearch.creneau_for(
+    @creneau ||= CreneauxSearch::ForUser.creneau_for(
       user: users&.first,
       motif: motif,
       lieu: lieu,

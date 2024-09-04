@@ -13,32 +13,33 @@ class Admin::Territories::BaseController < ApplicationController
   def current_territory
     @territory
   end
+
   helper_method :current_territory
 
   def pundit_user
-    AgentTerritorialContext.new(current_agent, current_territory)
+    current_agent
   end
+
   helper_method :pundit_user
 
-  def authorize(record, *args, **kwargs)
-    # Utilisation d'un namespace `configuration` pour éviter les confusions avec les policies d'un RDV usager, d'un RDV agent ou d'un RDV en configuration.
-    super([:configuration, record], *args, **kwargs)
+  # L'usage recommandé est de passer explicitement une policy_scope_class pour savoir quelle policy est utilisé
+  # rubocop:disable Lint/UselessMethodDefinition
+  def policy_scope(scope, policy_scope_class:)
+    super
   end
 
-  # L'usage recommandé est de passer explicitement une policy_scope_class pour savoir quelle policy est utilisé
-  # A terme, on voudra forcer l'argument policy_scope_class
-  def policy_scope(scope, policy_scope_class: nil)
-    # Utilisation d'un namespace `configuration` pour éviter les confusions avec les policies d'un RDV usager, d'un RDV agent ou d'un RDV en configuration.
-    if policy_scope_class
-      super(scope, policy_scope_class: policy_scope_class)
-    else
-      super([:configuration, scope])
-    end
-  end
+  # rubocop:enable Lint/UselessMethodDefinition
 
   private
 
   def set_territory
     @territory = Territory.find(params[:territory_id])
+
+    # On instancie une policy plutôt que d'appeler authorize pour ne pas neutraliser le `verify_authorized`
+    unless Agent::TerritoryPolicy.new(current_agent, @territory).show?
+      raise Pundit::NotAuthorizedError, "not authorized"
+    end
+
+    @territory
   end
 end

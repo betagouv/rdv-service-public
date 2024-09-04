@@ -5,11 +5,10 @@ class Admin::OrganisationsController < AgentAuthController
   before_action :follow_unique, only: :index
 
   def index
-    @agent_roles_by_territory = policy_scope(AgentRole)
-      .merge(current_agent.roles)
-      .includes(organisation: :territory)
-      .order("organisations.name")
-      .to_a.group_by { _1.organisation.territory }
+    @organisations_by_territory = policy_scope(current_agent.organisations)
+      .includes(:territory)
+      .ordered_by_name
+      .to_a.group_by(&:territory)
     @active_agent_preferences_menu_item = :organisations
     render layout: "application_agent_config"
   end

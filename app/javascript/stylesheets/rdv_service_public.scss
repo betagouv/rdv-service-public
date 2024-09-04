@@ -1,5 +1,11 @@
 @import "vendor/inclusion_connect_button";
 
+.fr-connect-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .flex {
   display: flex;
   align-items: center;

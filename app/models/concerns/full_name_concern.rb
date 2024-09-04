@@ -3,6 +3,10 @@ module FullNameConcern
   # Relies on the attributes of the receiver:
   # :first_name, :last_name, and :birth_name (optionally)
 
+  included do
+    scope :ordered_by_last_name, -> { order(Arel.sql("unaccent(LOWER(#{table_name}.last_name))")) }
+  end
+
   # Marie Curie (Skłodowska)
   def full_name
     names = [first_name,

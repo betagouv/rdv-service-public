@@ -1,5 +1,5 @@
 class Admin::Territories::MotifFieldsController < Admin::Territories::BaseController
   def edit
-    authorize current_territory
+    authorize_agent current_territory
   end
 end

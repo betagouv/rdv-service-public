@@ -24,7 +24,7 @@ RSpec.describe Agents::UsersController, "#search" do
     end
 
     context "when in CN territory" do
-      let(:territory) { create(:territory, departement_number: Territory::CN_DEPARTEMENT_NUMBER) }
+      let(:territory) { create(:territory, :conseillers_numeriques) }
 
       it "does not include users from other orgs in the territory" do
         sign_in agent

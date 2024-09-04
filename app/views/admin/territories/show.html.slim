@@ -2,9 +2,9 @@
   i.fa.fa-arrow-left
   = " Retour à l'accueil"
 
-h1.m-2.text-center.border-bottom.pb-2 Espace Admin - #{current_territory.name}
+h1.m-2.rdv-text-align-center.border-bottom.pb-2 Espace Admin - #{current_territory.name}
 .row.mb-3
-  - if policy([:configuration, AgentTerritorialRole]).display?
+  - if Agent::TerritoryPolicy.new(pundit_user, current_territory).edit?
     .col.col-md-4.p-2.rounded.settings-box
       = link_to edit_admin_territory_path(current_territory) do
         h2.fw-bold.mb-0
@@ -12,7 +12,7 @@ h1.m-2.text-center.border-bottom.pb-2 Espace Admin - #{current_territory.name}
           | Territoire
         p Configurer le territoire, département, structure
 
-  - if policy([:configuration, Agent]).display?
+  - if Configuration::AgentPolicy.allowed_to_manage_agents_in?(current_territory, current_agent)
     .col.col-md-4.p-2.rounded.settings-box
       = link_to admin_territory_agents_path(current_territory) do
         h2.fw-bold.mb-0
@@ -20,7 +20,7 @@ h1.m-2.text-center.border-bottom.pb-2 Espace Admin - #{current_territory.name}
           | Agents
         p Inviter des agents, affecter à des équipes
 
-  - if policy([:configuration, Team]).display?
+  - if Agent::TeamPolicy.allowed_to_manage_teams_in?(current_territory, current_agent)
     .col.col-md-4.p-2.rounded.settings-box
       = link_to admin_territory_teams_path(current_territory) do
         h2.fw-bold.mb-0
@@ -28,7 +28,7 @@ h1.m-2.text-center.border-bottom.pb-2 Espace Admin - #{current_territory.name}
           | Équipes
         p Construire des équipes pour grouper des agents
 
-  - if policy([:configuration, WebhookEndpoint]).display?
+  - if Agent::WebhookEndpointPolicy.allowed_to_manage_webhooks_in?(current_territory, current_agent)
     .col.col-md-4.p-2.rounded.settings-box
       = link_to admin_territory_webhook_endpoints_path(current_territory) do
         h2.fw-bold.mb-0
@@ -36,7 +36,7 @@ h1.m-2.text-center.border-bottom.pb-2 Espace Admin - #{current_territory.name}
           | Webhook
         p Interconnecter #{current_domain.name} avec vos systèmes.
 
-  - if policy([:configuration, Sector]).display?
+  - if Agent::SectorPolicy.allowed_to_manage_sectors_in?(current_territory, current_agent)
     .col.col-md-4.p-2.rounded.settings-box
       = link_to admin_territory_sectorization_path(current_territory) do
         h2.fw-bold.mb-0
@@ -44,7 +44,7 @@ h1.m-2.text-center.border-bottom.pb-2 Espace Admin - #{current_territory.name}
           | Sectorisation
         p Créer, importer, affecter vos secteurs géographiques.
 
-  - if policy([:configuration, current_territory]).display_user_fields_configuration?
+  - if Agent::TerritoryPolicy.new(current_agent, current_territory).edit?
     .col.col-md-4.p-2.rounded.settings-box
       = link_to edit_admin_territory_user_fields_path(current_territory) do
         h2.fw-bold.mb-0
@@ -52,7 +52,7 @@ h1.m-2.text-center.border-bottom.pb-2 Espace Admin - #{current_territory.name}
           | Fiches usagers
         p Gérer les informations enregistrées sur les usagers
 
-  - if policy([:configuration, current_territory]).display_rdv_fields_configuration?
+  - if Agent::TerritoryPolicy.new(current_agent, current_territory).edit?
     .col.col-md-4.p-2.rounded.settings-box
       = link_to edit_admin_territory_rdv_fields_path(current_territory) do
         h2.fw-bold.mb-0
@@ -60,13 +60,13 @@ h1.m-2.text-center.border-bottom.pb-2 Espace Admin - #{current_territory.name}
           | Fiches RDV
         p Gérer les informations enregistrées sur les rendez-vous
 
-  - if policy([:configuration, current_territory]).display_motif_fields_configuration?
+  - if Agent::TerritoryPolicy.new(current_agent, current_territory).edit?
     .col.col-md-4.p-2.rounded.settings-box
       = link_to admin_territory_motifs_path(current_territory) do
         h2.fw-bold.mb-0
           i.fa.fa-calendar>
           = t("admin.territories.motifs.index.title")
-        p Lister, éditer, supprimer les motifs de toutes vos organisations
+        p Lister, modifier, supprimer les motifs de toutes vos organisations
 
     .col.col-md-4.p-2.rounded.settings-box
       = link_to edit_admin_territory_motif_fields_path(current_territory) do
@@ -75,6 +75,7 @@ h1.m-2.text-center.border-bottom.pb-2 Espace Admin - #{current_territory.name}
           = t("admin.territories.motif_fields.edit.card_title")
         p Gérer les options de configuration des motifs
 
+  - if Agent::TerritoryPolicy.new(current_agent, current_territory).edit?
     .col.col-md-4.p-2.rounded.settings-box
       = link_to edit_admin_territory_services_path(current_territory) do
         h2.fw-bold.mb-0

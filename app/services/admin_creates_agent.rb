@@ -1,9 +1,9 @@
 # La phrase du nom de la classe indique le contexte et l'action métier réalisés par ce service object en PORO
 class AdminCreatesAgent
-  def initialize(agent_params:, current_agent:, organisation:, access_level:)
+  def initialize(agent_params:, current_agent:, organisations:, access_level:)
     @agent_params = agent_params
     @current_agent = current_agent
-    @organisation = organisation
+    @organisations = organisations
     @access_level = access_level
   end
 
@@ -12,7 +12,7 @@ class AdminCreatesAgent
       @agent = find_agent
 
       if @agent
-        add_agent_to_organisation
+        add_agent_to_organisations
         @warning_message = self.class.check_agent_service(@agent, @agent_params[:service_ids])
       elsif @access_level == "intervenant"
         @agent = Agent.create(
@@ -26,8 +26,8 @@ class AdminCreatesAgent
         @agent = Agent.invite!(agent_and_role_params.merge(allow_blank_name: true), @current_agent)
       end
 
-      if @agent.valid?
-        AgentTerritorialAccessRight.find_or_create_by!(agent: @agent, territory: @organisation.territory)
+      if @agent.valid? && @organisations.any?
+        AgentTerritorialAccessRight.find_or_create_by!(agent: @agent, territory: @organisations.first.territory)
       end
     end
 
@@ -61,10 +61,12 @@ class AdminCreatesAgent
 
   def agent_and_role_params
     @agent_params.merge(
-      roles_attributes: [
-        organisation: @organisation,
-        access_level: @access_level,
-      ]
+      roles_attributes: @organisations.to_a.map do |organisation|
+        {
+          organisation: organisation,
+          access_level: @access_level,
+        }
+      end
     )
   end
 
@@ -74,13 +76,15 @@ class AdminCreatesAgent
     Agent.find_by(email: @agent_params[:email].downcase)
   end
 
-  def add_agent_to_organisation
-    @agent.update(
-      allow_blank_name: true,
-      roles_attributes: [
-        organisation: @organisation,
-        access_level: @access_level,
-      ]
-    )
+  def add_agent_to_organisations
+    @organisations.each do |organisation|
+      @agent.update(
+        allow_blank_name: true,
+        roles_attributes: [
+          organisation: organisation,
+          access_level: @access_level,
+        ]
+      )
+    end
   end
 end

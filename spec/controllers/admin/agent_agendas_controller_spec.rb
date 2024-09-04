@@ -26,7 +26,7 @@ RSpec.describe Admin::AgentAgendasController, type: :controller do
     context "about saturdays" do
       it "changes the display of saturdays for the current agent" do
         put :toggle_displays, params: { id: agent.id, organisation_id: organisation.id, agent: { display_saturdays: true } }
-        expect(agent.reload.display_saturdays).to eq(true)
+        expect(agent.reload.display_saturdays).to be(true)
       end
 
       context "when showing another agent's calendar" do
@@ -35,7 +35,7 @@ RSpec.describe Admin::AgentAgendasController, type: :controller do
         it "changes the display for the current agent, not the other one" do
           other_agent = create(:agent, organisations: [organisation])
           put :toggle_displays, params: { id: other_agent.id, organisation_id: organisation.id, agent: { display_saturdays: true } }
-          expect(agent.reload.display_saturdays).to eq(true)
+          expect(agent.reload.display_saturdays).to be(true)
         end
       end
     end
@@ -43,12 +43,12 @@ RSpec.describe Admin::AgentAgendasController, type: :controller do
     context "about cancelled RDV" do
       it "set the display of cancelled rdv for the current agent to false" do
         put :toggle_displays, params: { id: agent.id, organisation_id: organisation.id, agent: { display_cancelled_rdv: false } }
-        expect(agent.reload.display_cancelled_rdv).to eq(false)
+        expect(agent.reload.display_cancelled_rdv).to be(false)
       end
 
       it "set the display of cancelled rdv for the current agent to true" do
         put :toggle_displays, params: { id: agent.id, organisation_id: organisation.id, agent: { display_cancelled_rdv: true } }
-        expect(agent.reload.display_cancelled_rdv).to eq(true)
+        expect(agent.reload.display_cancelled_rdv).to be(true)
       end
     end
   end
