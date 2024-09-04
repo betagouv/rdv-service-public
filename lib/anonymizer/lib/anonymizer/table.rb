@@ -1,7 +1,6 @@
 require_relative "column"
 
 module Anonymizer
-  class ScopeError < StandardError; end
   class PartialTableTruncate < StandardError; end
 
   class Table
@@ -15,7 +14,7 @@ module Anonymizer
 
     def anonymize_records!(scope: nil)
       if scope.present? && !scope.is_a?(Arel::Nodes::Node)
-        raise ScopeError, "scope (#{scope.class}) should be an arel node"
+        raise ArgumentError, "scope (#{scope.class}) should be an arel node"
       end
 
       if truncated? && scope.present?
@@ -23,7 +22,7 @@ module Anonymizer
       end
 
       if truncated?
-        db_connection.execute("TRUNCATE #{ActiveRecord::Base.sanitize_sql(table_name)} CASCADE")
+        Anonymizer::db_connection.execute("TRUNCATE #{ActiveRecord::Base.sanitize_sql(table_name)} CASCADE")
       else
         anonymized_columns.each do |column|
           Anonymizer::Column.new(table_name, column, scope:).anonymize!
@@ -40,26 +39,24 @@ module Anonymizer
     def unidentified_column_names
       return [] if truncated?
 
-      all_columns = db_connection.columns(table_name).map(&:name)
-      primary_key_columns = db_connection.primary_keys(table_name)
-      foreign_key_columns = db_connection.foreign_keys(table_name).map { |key| key.options[:column] }
+      all_columns = Anonymizer::db_connection.columns(table_name).map(&:name)
+      primary_key_columns = Anonymizer::db_connection.primary_keys(table_name)
+      foreign_key_columns = Anonymizer::db_connection.foreign_keys(table_name).map { |key| key.options[:column] }
       all_columns - primary_key_columns - foreign_key_columns - anonymized_column_names - non_anonymized_column_names
     end
 
     def exists?
-      ActiveRecord::Base.connection.table_exists?(table_name)
+      Anonymizer::db_connection.table_exists?(table_name)
     end
 
     private
-
-    def db_connection = ActiveRecord::Base.connection
 
     def arel_table
       @arel_table ||= Arel::Table.new(table_name)
     end
 
     def anonymized_columns
-      db_connection.columns(table_name).select { _1.name.in?(anonymized_column_names) }
+      Anonymizer::db_connection.columns(table_name).select { _1.name.in?(anonymized_column_names) }
     end
   end
 end

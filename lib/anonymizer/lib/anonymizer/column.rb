@@ -27,7 +27,7 @@ module Anonymizer
     end
 
     def update(where:, value:)
-      ActiveRecord::Base.connection.execute(
+      Anonymizer::db_connection.execute(
         Arel::UpdateManager
           .new(arel_table)
           .where(scope ? scope.and(where) : where)
@@ -49,7 +49,8 @@ module Anonymizer
     def anonymous_text_value
       if column.array
         Arel.sql("'{valeur anonymisée}'")
-        # TODO : je ne crois pas que ce soit utilisé et cela laisse penser qu’il y avait toujours une valeur
+        # TODO : je ne crois pas que ce soit utilisé et c’est ambigu
+        # cela laisse penser qu’il y avait toujours une et une seule valeur avant l’anonymisation
       elsif column.name.include?("email")
         Arel.sql("'email_anonymise_' || id || '@exemple.fr'")
       elsif column_has_uniqueness_constraint?
@@ -60,8 +61,8 @@ module Anonymizer
     end
 
     def column_has_uniqueness_constraint?
-      ActiveRecord::Base.connection.indexes(table_name).select(&:unique).any? do |index|
-        # il se peut que la deuxième colonne de l'index n'ai pas de contrainte d'unicité
+      Anonymizer::db_connection.indexes(table_name).select(&:unique).any? do |index|
+        # il se peut que la deuxième colonne de l'index n'ait pas de contrainte d'unicité
         index.columns.first == column.name
       end
     end

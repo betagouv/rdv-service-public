@@ -10,8 +10,6 @@ module Anonymizer
       yaml_path = ENV["ANONYMIZER_CONFIG_PATH"].presence || Rails.root.join("config/anonymizer.yml")
       raw_config = YAML.safe_load_file(yaml_path)
       Config.new raw_config
-    rescue Errno::ENOENT
-      raise "Anonymizer config file not found at #{yaml_path}"
     end
   end
 
@@ -35,7 +33,7 @@ module Anonymizer
   def self.exhaustivity_errors(config: nil)
     config ||= default_config
     errors = (
-      ActiveRecord::Base.connection.tables.to_set -
+      db_connection.tables.to_set -
       config.table_names.to_set
     ).map { "missing rules for table #{_1}" }
     config.table_configs.each do |table_config|
@@ -46,4 +44,6 @@ module Anonymizer
     end
     errors
   end
+
+  def self.db_connection = ActiveRecord::Base.connection
 end
