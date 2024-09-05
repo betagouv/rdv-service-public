@@ -88,6 +88,16 @@ RSpec.describe CreneauxSearch::ForAgent, type: :service do
     it "has results" do
       expect(described_class.new(form).build_result.creneaux).to be_any
     end
+
+    describe "when there is concurrent PO with lieu" do
+      let(:lieu) { create(:lieu, organisation: organisation) }
+      let(:motif_with_lieu) { create :motif, organisation: organisation }
+      let!(:plage_ouverture2) { create(:plage_ouverture, motifs: [motif, motif_with_lieu], first_day: Date.new(2022, 10, 20), lieu: lieu, organisation: organisation) }
+
+      it "give the good results with no conflict" do
+        expect(described_class.new(form).build_result.creneaux.first.starts_at).to eq(Time.zone.local(2022, 10, 25, 8, 0, 0))
+      end
+    end
   end
 
   describe "#all_agents" do
