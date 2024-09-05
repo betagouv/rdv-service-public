@@ -1,5 +1,5 @@
 RSpec.describe "User can select a creneau" do
-  let(:now) { Time.zone.parse("2021-12-13 8:00") }
+  let(:now) { Time.zone.parse("2021-12-13 8:05") }
 
   let!(:territory92) { create(:territory, departement_number: "92") }
   let!(:organisation) { create(:organisation, territory: territory92) }
