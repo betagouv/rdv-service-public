@@ -22,7 +22,7 @@ fr:
         select_placeholder_single_use_lieu: Lieu ponctuel
       show:
         update: Modifier
-        duplicate: Dupliquer…
+        duplicate: Dupliquer
     rdvs_collectifs:
       new:
         single_use_lieu_hint_html: Ce rendez-vous aura lieu à une adresse inhabituelle ? <a href>Définir un lieu ponctuel.</a>
