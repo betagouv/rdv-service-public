@@ -55,7 +55,7 @@ RSpec.describe "User can select a creneau" do
       visit prendre_rdv_path(departement: 92)
       click_on motif.name
       expect(page).to have_content("Prochaine disponibilité")
-      expect(page).to have_content("mardi 14 décembre 2021 à 08h00")
+      expect(page).to have_content("lundi 13 décembre 2021 à 08h50")
       click_on("Prochaine disponibilité")
 
       click_on("sem. prochaine")
