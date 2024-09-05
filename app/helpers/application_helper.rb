@@ -14,6 +14,21 @@ module ApplicationHelper
     end
   end
 
+  def alert_dsfr_class_for(alert)
+    case alert
+    when :success
+      "fr-alert--success"
+    when :alert
+      "fr-alert--warning"
+    when :error
+      "fr-alert--error"
+    when :notice
+      "fr-alert--info"
+    else
+      alert.to_s
+    end
+  end
+
   def datetime_input(form, field, input_html: {})
     form.input(
       field,
