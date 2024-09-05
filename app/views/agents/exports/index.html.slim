@@ -7,7 +7,7 @@
         ' Vous trouverez ci-dessous les exports réalisés au cours de ces deux dernières semaines.
         => "Les liens de téléchargement ne sont valables que pour une durée de #{Export::EXPIRATION_DELAY.in_hours.to_i}h."
         ' Si le lien a expiré, vous pouvez générer un nouvel export à partir de la
-        = link_to("liste des RDV", admin_organisation_rdvs_path(organisation_id: current_agent.organisations.order(:name).first.id))
+        = link_to("liste des RDV", admin_organisation_rdvs_path(organisation_id: current_agent.organisations.ordered_by_name.first.id))
         | .
 
   table.table.table-sm
@@ -29,4 +29,4 @@
                 .d-block= render partial: "agents/exports/export_badge", locals: { export: export }
 
 - else
-  .text-center.py-2 Vous n'avez aucun export
+  .rdv-text-align-center.py-2 Vous n'avez aucun export

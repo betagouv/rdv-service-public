@@ -20,12 +20,12 @@
         span> En vous inscrivant, vous acceptez les
         = link_to("conditions générales d'utilisation", cgu_path)
 
-      .form-group.mb-0.text-center
+      .form-group.mb-0.rdv-text-align-center
         = f.button :submit, "Je m'inscris"
 
-    hr
-    .text-center
-      p.text-muted
+    hr.fr-my-2w
+    .rdv-text-align-center
+      p.rdv-color-text-mention-grey
         | Vous avez un compte ?&nbsp;
         = link_to new_session_path(resource_name, params: params.permit(:lieu_id, :motif_id, :starts_at)) do
           b Se connecter

@@ -3,7 +3,7 @@ nav.pagination {
   justify-content: center;
   padding: 0.8rem;
   &::before {
-    content: "Page "
+    content: "Page ";
   }
 }
 nav.pagination > span {

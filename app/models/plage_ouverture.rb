@@ -18,7 +18,7 @@ class PlageOuverture < ApplicationRecord
           id: "D",
         },
       ignoring: :accents,
-      using: { tsearch: { prefix: true, any_word: true } },
+      using: { tsearch: { prefix: true } },
     }
   end
 

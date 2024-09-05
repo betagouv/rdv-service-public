@@ -17,6 +17,7 @@ class Anonymizer::Rules::RdvInsertion
       non_anonymized_column_names: %w[
         access_level
         agent_id
+        authorized_to_export_csv
         organisation_id
         rdv_solidarites_agent_role_id
         created_at
@@ -37,6 +38,8 @@ class Anonymizer::Rules::RdvInsertion
         template_rdv_title_by_phone_override
         template_user_designation_override
         template_rdv_purpose_override
+        email_to_notify_rdv_changes
+        email_to_notify_no_available_slots
         phone_number
       ],
       non_anonymized_column_names: %w[
@@ -106,6 +109,8 @@ class Anonymizer::Rules::RdvInsertion
       non_anonymized_column_names: %w[
         format
         user_id
+        delivery_status
+        last_brevo_webhook_received_at
         created_at
         updated_at
         clicked
@@ -174,14 +179,13 @@ class Anonymizer::Rules::RdvInsertion
       non_anonymized_column_names: %w[
         sent_at
         created_at
+        delivery_status
+        last_brevo_webhook_received_at
         updated_at
         rdv_solidarites_rdv_id
         format
         participation_id
       ],
-    },
-    organisations_webhook_endpoints: {
-      non_anonymized_column_names: %w[organisation_id webhook_endpoint_id],
     },
     orientations: {
       anonymized_column_names: %w[],
@@ -238,6 +242,8 @@ class Anonymizer::Rules::RdvInsertion
         rights_opening_date
         rdv_solidarites_user_id
         department_internal_id
+        created_from_structure_type
+        created_from_structure_id
         uid
         old_rdv_solidarites_user_id
         role
@@ -346,7 +352,7 @@ class Anonymizer::Rules::RdvInsertion
     },
     webhook_endpoints: {
       anonymized_column_names: %w[url secret signature_type],
-      non_anonymized_column_names: %w[created_at updated_at subscriptions],
+      non_anonymized_column_names: %w[created_at updated_at subscriptions organisation_id],
     },
     webhook_receipts: {
       non_anonymized_column_names: %w[resource_id webhook_endpoint_id timestamp created_at updated_at resource_model],

@@ -11,10 +11,10 @@ RSpec.describe "ANTS API: searchApplicationIds" do
   context "with the correct authentication" do
     it "returns a list of lieux" do
       get "/api/ants/searchApplicationIds?application_ids=1&application_ids=2", headers: { "X-HUB-RDV-AUTH-TOKEN" => "" }
-      expect(JSON.parse(response.body)).to match({
-                                                   "1" => [],
-                                                   "2" => [],
-                                                 })
+      expect(response.parsed_body).to match({
+                                              "1" => [],
+                                              "2" => [],
+                                            })
     end
   end
 end

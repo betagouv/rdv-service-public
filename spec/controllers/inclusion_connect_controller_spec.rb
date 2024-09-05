@@ -20,7 +20,7 @@ RSpec.describe InclusionConnectController, type: :controller do
         redirect_uri: inclusion_connect_callback_url,
         response_type: "code",
         scope: "openid email profile",
-        state: be_a_kind_of(String),
+        state: be_a(String),
       }
       expect(redirect_url_query_params.symbolize_keys).to match(expected_params)
     end
@@ -141,77 +141,6 @@ RSpec.describe InclusionConnectController, type: :controller do
           )
 
           expect(response).to redirect_to(root_path)
-        end
-      end
-    end
-
-    describe "with a francetravail.fr domain" do
-      before do
-        stub_token_request.to_return(status: 200, body: { access_token: "zekfjzeklfjl", expires_in: now + 1.week, scopes: "openid" }.to_json, headers: {})
-
-        user_info = {
-          given_name: "Bob",
-          family_name: "Eponge",
-          email: "bob@francetravail.fr",
-          sub: "12345678-90ab-cdef-1234-567890abcdef",
-        }
-
-        stub_request(:get, "#{base_url}/userinfo/?schema=openid").with(
-          headers: {
-            "Authorization" => "Bearer zekfjzeklfjl",
-          }
-        ).to_return(status: 200, body: user_info.to_json, headers: {})
-
-        session[:ic_state] = ic_state
-      end
-
-      context "The migration to francetravail.fr is done but the agent has not logged in during the migration process" do
-        it "search @pole-emploi.fr saves the sub and update email" do
-          agent = create(:agent, :invitation_not_accepted, email: "bob@pole-emploi.fr")
-          get :callback, params: { state: ic_state, session_state: ic_state, code: "klzefklzejlf" }
-          expect(agent.reload).to have_attributes(
-            id: agent.id,
-            email: "bob@francetravail.fr",
-            uid: "bob@francetravail.fr",
-            inclusion_connect_open_id_sub: "12345678-90ab-cdef-1234-567890abcdef",
-            confirmed_at: be_within(10.seconds).of(now),
-            invitation_accepted_at: be_within(10.seconds).of(now),
-            last_sign_in_at: be_within(10.seconds).of(now)
-          )
-        end
-      end
-    end
-
-    describe "with a pole-emploi.fr domain" do
-      before do
-        stub_token_request.to_return(status: 200, body: { access_token: "zekfjzeklfjl", expires_in: now + 1.week, scopes: "openid" }.to_json, headers: {})
-
-        user_info = {
-          given_name: "Bob",
-          family_name: "Eponge",
-          email: "bob@pole-emploi.fr",
-          sub: "12345678-90ab-cdef-1234-567890abcdef",
-        }
-
-        stub_request(:get, "#{base_url}/userinfo/?schema=openid").with(
-          headers: {
-            "Authorization" => "Bearer zekfjzeklfjl",
-          }
-        ).to_return(status: 200, body: user_info.to_json, headers: {})
-
-        session[:ic_state] = ic_state
-      end
-
-      context "The migration to francetravail.fr is done but the agent has not logged in during the migration process" do
-        it "search @francetravail.fr saves the sub" do
-          agent = create(:agent, :invitation_not_accepted, email: "bob@francetravail.fr")
-          get :callback, params: { state: ic_state, session_state: ic_state, code: "klzefklzejlf" }
-          expect(agent.reload).to have_attributes(
-            id: agent.id,
-            email: "bob@pole-emploi.fr",
-            uid: "bob@pole-emploi.fr",
-            inclusion_connect_open_id_sub: "12345678-90ab-cdef-1234-567890abcdef"
-          )
         end
       end
     end

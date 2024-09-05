@@ -24,12 +24,12 @@
       tbody
         = render partial: "agent", collection: @agents
     - if @agents.empty?
-      .mb-4.p.text-center Aucun agent trouvé
+      .mb-4.p.rdv-text-align-center Aucun agent trouvé
     - elsif @agents.total_pages > 1
       .m-3
         .d-flex.justify-content-center
           = paginate @agents, theme: "twitter-bootstrap-4"
-        .text-center= page_entries_info @agents
+        .rdv-text-align-center= page_entries_info @agents
 
     - if current_agent_can?(:create, Agent)
       .m-3.d-flex.justify-content-center.align-items-center

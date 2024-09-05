@@ -15,7 +15,7 @@ jobs:
           ruby-version: .ruby-version
           bundler-cache: true
       - run: bundle exec rubocop --parallel
-  slim-lint:
+  lint_slim:
     name: Slim Linter
     runs-on: ubuntu-latest
     steps:
@@ -26,6 +26,23 @@ jobs:
           ruby-version: .ruby-version
           bundler-cache: true
       - run: bundle exec slim-lint app/views/
+  lint_prettier:
+    name: Lint SCSS with Prettier
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: yarn
+      - name: Cache js dependencies
+        uses: actions/cache@v4
+        with:
+          key: node_modules-${{ hashFiles('yarn.lock') }}
+          path: node_modules
+      - run: yarn install
+      - run: yarn run prettier --check .
   brakeman:
     name: Security Checker
     runs-on: ubuntu-latest
@@ -139,6 +156,15 @@ jobs:
   test_features:
     name: Feature Tests
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # cette strategy permet de lancer deux jobs de feature specs en parallèle pour accélérer l’éxecution
+        dirname: [agents, "*"]
+        include: 
+          - dirname: agents
+            command: "parallel:spec[spec/features/agents]"
+          - dirname: "*"
+            command: "parallel:spec['spec/features/(?!agents)']"
     services:
       postgres:
         image: postgres
@@ -178,15 +204,15 @@ jobs:
       - name: Precompile assets
         run: yarn run build
       - name: Prepare runtime log cache key
-        run: ls spec/features/**/*.rb > tmp/feature_spec_files.txt
+        run: "ls spec/features/${{ matrix.dirname }}/**/*.rb > tmp/feature_spec_${{ matrix.dirname }}_files.txt"
       - name: Cache parallel test feature spec runtime log
         uses: actions/cache@v4
         with:
-          key: feature-spec-runtime-log-${{ hashFiles('tmp/feature_spec_files.txt') }}
+          key: feature-spec-runtime-log-${{ hashFiles(format('tmp/feature_spec_{0}_files.txt', matrix.dirname)) }}
           path: tmp/parallel_runtime_rspec.log
         # By setting up and running in the same call, we save the app boot time
       - name: Setup parallel tests and run feature specs
-        run: RAILS_ENV=test bundle exec rake parallel:drop parallel:create parallel:load_schema parallel:spec[spec/features]
+        run: "RAILS_ENV=test bundle exec rake parallel:drop parallel:create parallel:load_schema ${{ matrix.command }}"
         env:
           HOST: http://example.com
           POSTGRES_HOST: localhost
@@ -222,3 +248,14 @@ jobs:
       - run: bin/test_boot
         env:
           HOST: http://www.rdv-test.fr
+  notify_mattermost_failure:
+    name: "Notify Mattermost on workflow failure on production"
+    runs-on: ubuntu-latest
+    needs: [rubocop, lint_slim, lint_prettier, brakeman, active_record_doctor, test_unit, test_features, test_boot_without_db]
+    if: ${{ always() && contains(needs.*.result, 'failure') && github.ref == 'refs/heads/production' }}
+    steps:
+      - uses: mattermost/action-mattermost-notify@master
+        with:
+          MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
+          TEXT: |
+            Erreur dans le [workflow de CI](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) sur la branche production. Le déploiement a probablement été interrompu.

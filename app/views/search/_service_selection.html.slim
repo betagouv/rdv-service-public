@@ -1,8 +1,8 @@
-.container
+.fr-container
   - if context.unique_motifs_by_name_and_location_type.empty?
     = render "search/nothing_to_show", context: context
   - else
-    h2.font-weight-bold Sélectionnez le service avec qui vous voulez prendre un RDV :
+    h2.rdv-font-weight-700 Sélectionnez le service avec qui vous voulez prendre un RDV :
     - unless context.invitation?
     - context.services.each do |service|
       .card.mb-3
@@ -10,5 +10,5 @@
           .card-body
             .row
               .col-md
-                h3.card-title.mb-3.mt-0.text-success.font-weight-bold= service.name
+                h3.card-title.mb-3.mt-0.rdv-color-text-default-success.rdv-font-weight-700= service.name
   = render "search/referent_booking_card", context: context

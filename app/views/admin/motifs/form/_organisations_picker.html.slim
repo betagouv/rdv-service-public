@@ -1,0 +1,14 @@
+.card.p-4
+  = simple_fields_for nil do |o|
+    - o.input :organisation_ids,
+            label: %(<span class="card-title">Dans quelles organisations créer ce motif ?</span>).html_safe,
+            as: :check_boxes,
+            checked: params[:organisation_ids],
+            collection: @organisations,
+            wrapper_html: { style: "display: grid; grid-template-columns: repeat(auto-fill,minmax(260px, 1fr));" }
+  div
+    a href="#=" class="js-check-all" data-check-all-matching="[name='organisation_ids[]']"
+      ' Tout cocher
+    ' /
+    a href="#" class="js-uncheck-all" data-uncheck-all-matching="[name='organisation_ids[]']"
+      ' Tout décocher

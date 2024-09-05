@@ -142,6 +142,33 @@ RSpec.describe "User can search for rdvs" do
         confirm_rdv(first_motif)
       end
     end
+
+    context "when the motif is visio (visioconférence)" do
+      before do
+        [first_motif, other_motif_with_po, motif_without_po].each { |m| m.update!(location_type: Motif.location_types[:visio]) }
+      end
+
+      it "can take a RDV in the available organisations", js: true do
+        visit root_path
+        execute_search
+
+        ## Motif selection
+        expect(page).to have_content(first_motif.name)
+        click_link(first_motif.name)
+
+        expect(page).not_to have_content(organisation_without_po.name)
+
+        find(".card-title", text: /#{first_organisation_with_po.name}/).ancestor(".card").find("a.stretched-link").click
+
+        choose_creneau
+        expect(page).to have_content("RDV par visioconférence")
+        sign_up
+        continue_to_rdv(first_motif, address: "03 Rue Lambert, Paris, 75016")
+        add_relative
+        confirm_rdv(first_motif)
+        expect(page).to have_content("RDV par visioconférence")
+      end
+    end
   end
 
   describe "follow up rdvs" do

@@ -1,5 +1,5 @@
 .bg-overlay {
-  background: rgba(255, 255, 255, .9);
+  background: rgba(255, 255, 255, 0.9);
 }
 
 // DISPLAY & VISIBILITY
@@ -36,12 +36,28 @@ a[disabled] {
   font-weight: bold;
 }
 
+.rdv-font-weight-700 {
+  font-weight: 700;
+}
+
 .text-underline {
   text-decoration: underline;
 }
 
 .rdv-text-align-right {
   text-align: right;
+}
+
+.rdv-text-align-center {
+  text-align: center;
+}
+
+.rdv-white-space-nowrap {
+  white-space: nowrap;
+}
+
+.rdv-color-white {
+  color: white;
 }
 
 // GRID

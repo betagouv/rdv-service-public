@@ -37,4 +37,10 @@ RSpec.describe "territory admin can crud webhooks endpoints" do
     expect(page).not_to have_content organisation.name
     expect(organisation.reload.webhook_endpoints.count).to eq(0)
   end
+
+  it "has correct permissions for other territories" do
+    other_territory = create(:territory)
+    visit admin_territory_webhook_endpoints_path(territory_id: other_territory.id)
+    expect(page).to have_content "Vous ne pouvez pas effectuer cette action."
+  end
 end

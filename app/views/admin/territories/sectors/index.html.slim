@@ -4,7 +4,7 @@
   .col-md-10
     = simple_form_for "", url: admin_territory_sectors_path(current_territory), html: { method: :get, class: "card" } do |f|
       .p-2.d-grid.grid-three-columns.grid-first-column-empty.grid-align-center
-        .text-center= page_entries_info @sectors
+        .rdv-text-align-center= page_entries_info @sectors
         div.text-right
           = link_to admin_territory_sectors_path(current_territory, view: "map"), class: "btn btn-light" do
             span> Voir la carte
@@ -52,15 +52,16 @@
                   .text-muted Aucune attribution
               td
                 .d-flex
-                  - if policy([:configuration, sector]).show?
+                  - policy = Agent::SectorPolicy.new(current_agent, sector)
+                  - if policy.show?
                     div.mr-3= link_to admin_territory_sector_path(current_territory, sector), title: "Modifier" do
                       i.fa.fa-edit
-                  - if policy([:configuration, sector]).destroy?
+                  - if policy.destroy?
                     div= link_to admin_territory_sector_path(current_territory, sector), method: :delete, title: "Supprimer" do
                       i.fa.fa-trash-alt
       .pb-3.pr-3.pl-3
         div= paginate @sectors
-        .text-center
+        .rdv-text-align-center
           .mb-2= page_entries_info @sectors
           .mb-2= link_to new_admin_territory_sector_path(current_territory), class: "btn btn-primary" do
             i.fa.fa-plus>

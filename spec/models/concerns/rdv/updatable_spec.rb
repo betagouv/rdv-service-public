@@ -21,7 +21,7 @@ RSpec.describe Rdv::Updatable, type: :concern do
     end
 
     it "returns a success" do
-      expect(rdv.update_and_notify(agent, status: "noshow")).to eq(true)
+      expect(rdv.update_and_notify(agent, status: "noshow")).to be(true)
     end
 
     %w[excused revoked noshow].each do |status|
@@ -43,7 +43,7 @@ RSpec.describe Rdv::Updatable, type: :concern do
     end
 
     it "returns a failure when the Rdv can't be updated" do
-      expect(rdv.update_and_notify(agent, ends_at: nil)).to eq(false)
+      expect(rdv.update_and_notify(agent, ends_at: nil)).to be(false)
     end
 
     describe "clear the file_attentes" do
@@ -177,7 +177,7 @@ RSpec.describe Rdv::Updatable, type: :concern do
       it "true when rdv status from #{cancelled_status} to unknown" do
         rdv.update!(status: cancelled_status)
         rdv.update!(status: "unknown")
-        expect(rdv.rdv_status_reloaded_from_cancelled?).to eq(true)
+        expect(rdv.rdv_status_reloaded_from_cancelled?).to be(true)
       end
     end
 
@@ -186,7 +186,7 @@ RSpec.describe Rdv::Updatable, type: :concern do
       it "false when rdv status from #{not_cancelled_status} to unknown" do
         rdv.update!(status: not_cancelled_status)
         rdv.update!(status: "unknown")
-        expect(rdv.rdv_status_reloaded_from_cancelled?).to eq(false)
+        expect(rdv.rdv_status_reloaded_from_cancelled?).to be(false)
       end
     end
   end

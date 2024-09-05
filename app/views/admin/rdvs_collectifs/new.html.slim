@@ -11,7 +11,7 @@
     = simple_form_for(@rdv, url: admin_organisation_rdvs_collectifs_path(current_organisation), method: :post) do |f|
       .card
         .card-header
-          h3.text-center #{@rdv.motif_name} (#{@rdv.motif.service.short_name})
+          h3.rdv-text-align-center #{@rdv.motif_name} (#{@rdv.motif.service.short_name})
         .card-body.px-3
           = render "model_errors", model: @rdv, f: f
 

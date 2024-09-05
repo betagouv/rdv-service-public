@@ -84,7 +84,7 @@ class Admin::PlageOuverturesController < AgentAuthController
   private
 
   def set_agent
-    @agent = filter_params[:agent_id].present? ? policy_scope(Agent).find(filter_params[:agent_id]) : @plage_ouverture.agent
+    @agent = filter_params[:agent_id].present? ? policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope).find(filter_params[:agent_id]) : @plage_ouverture.agent
   end
 
   def set_plage_ouverture

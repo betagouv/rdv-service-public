@@ -1,47 +1,52 @@
 class Configuration::AgentPolicy
-  def initialize(context, agent)
-    @current_agent = context.agent
-    @current_territory = context.territory
+  def initialize(current_agent, agent)
+    @current_agent = current_agent
     @agent = agent
-    @access_rights = @current_agent.access_rights_for_territory(@current_territory)
   end
 
-  def territorial_admin?
-    @current_agent.territorial_admin_in?(@current_territory)
+  def self.allowed_to_manage_agents_in?(territory, agent)
+    return true if agent.territorial_admin_in?(territory)
+
+    access_rights = agent.access_rights_for_territory(territory)
+    access_rights&.allow_to_manage_access_rights? ||
+      access_rights&.allow_to_manage_teams? ||
+      access_rights&.allow_to_invite_agents?
   end
 
-  def territorial_admin_or_allowed_to_manage_agent_part?
-    territorial_admin? ||
-      @access_rights&.allow_to_manage_access_rights? ||
-      @access_rights&.allow_to_manage_teams? ||
-      @access_rights&.allow_to_invite_agents?
+  def self.allowed_to_invite_agents_in?(territory, agent)
+    return true if agent.territorial_admin_in?(territory)
+
+    agent.access_rights_for_territory(territory)&.allow_to_invite_agents?
   end
 
-  alias display? territorial_admin_or_allowed_to_manage_agent_part?
-  alias edit? territorial_admin_or_allowed_to_manage_agent_part?
-  alias update? territorial_admin_or_allowed_to_manage_agent_part?
-  alias territory_admin? territorial_admin_or_allowed_to_manage_agent_part?
-  alias update_services? territorial_admin_or_allowed_to_manage_agent_part?
+  def edit?
+    agent_territories.any? { self.class.allowed_to_manage_agents_in?(_1, @current_agent) }
+  end
+
+  def update_teams?
+    # TODO: cette règle ici n’a pas beaucoup de sens, le contexte du territoire est indispensable
+    agent_territories.any? { Agent::TeamPolicy.allowed_to_manage_teams_in?(_1, @current_agent) }
+  end
+
+  def update_services?
+    # NOTE: le service est à l’échelle de l’agent, ça aura donc un impact inter-territoires
+    agent_territories.any? { self.class.allowed_to_manage_agents_in?(_1, @current_agent) }
+  end
 
   def create?
-    territorial_admin? || @access_rights&.allow_to_invite_agents?
+    agent_territories.any? && # on ne peut pas créer d’agent non rattaché à un territoire
+      agent_territories.all? { self.class.allowed_to_invite_agents_in?(_1, @current_agent) } # NOTE: on fait ici un all? et pas un any?
   end
 
-  class Scope
-    def initialize(context, _scope)
-      @current_territory = context.territory
-      @current_agent = context.agent
-    end
+  private
 
-    def resolve
-      scope = Agent.includes(:agent_territorial_access_rights).where("agent_territorial_access_rights.territory": @current_territory)
-      unless @current_agent.territorial_admin_in?(@current_territory)
-        scope = scope.includes(:organisations)
-          .where(organisations: @current_agent.organisations)
-          .where(services: @current_agent.services)
-          .includes(:services)
-      end
-      scope
-    end
+  def agent_territories
+    # tous les territoires où l'agent cible est admin OU a un rôle dans une orga (basic, admin ou intervenant)
+    # cette implémentation est plus explicite que via les agent_territorial_access_rights
+    # passer par territory_ids et organisation_ids permet de supporter les tests sur les agents non persistés
+    arel = Territory.left_joins(:organisations)
+    arel.where(id: @agent.territory_ids).or(
+      arel.where(organisations: { id: @agent.organisation_ids })
+    )
   end
 end

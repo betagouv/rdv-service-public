@@ -1,0 +1,103 @@
+= territory_navigation(t(".title"))
+
+.card.pl-4.pr-4.pt-2.pb-3
+  h1 Filtres
+  = form_with url: admin_territory_motifs_path(current_territory), method: :get do |form|
+    .form-row
+      .form-group.col-md-4
+        label for="search"
+          | Nom
+        input[id="search" name="search" type="text" class="form-control" placeholder="Nom" value=params[:search]]
+      .form-group.col-md-4
+        label for="organisation_ids"
+          | Organisation(s)
+        select.select2-input[id="organisation_ids" name="organisation_ids[]" multiple data-select-options={ placeholder: "-" }.to_json style="width: 100%"]
+          = options_for_select(@organisations.pluck(:name, :id), params[:organisation_ids])
+      .form-group.col-md-4
+        label for="organisation_ids"
+          | Service(s)
+        select.select2-input[id="service_ids" name="service_ids[]" multiple data-select-options={ placeholder: "-" }.to_json style="width: 100%"]
+          = options_for_select(@services.pluck(:name, :id), params[:service_ids])
+    .form-row
+      .form-group.col-md-4
+        label for="location_type"
+          | Type
+        select.select2-input[id="location_type" name="location_type"  style="width: 100%"]
+          - options = Motif.location_types.map{ |l| [Motif.human_attribute_value(:location_type, l[0]), l[1]] }
+          = options_for_select(options_for_select([["-", ""]] + options, params[:location_type]))
+      .form-group.col-md-4
+        label for="collectif"
+          | Nombre de participants
+        select.select2-input[id="collectif" name="collectif" style="width: 100%"]
+          = options_for_select([["-", ""], ["Collectif", "true"], ["Individuel", "false"]], params[:collectif])
+      .form-group.col-md-4
+        label for="bookable_by"
+          | Réservable par
+        select.select2-input[id="bookable_by" name="bookable_by" style="width: 100%"]
+          = options_for_select(bookable_by_filter_options(rdvi_mode: @organisations.any?(&:rdv_insertion?)), params[:bookable_by])
+    .form-row.justify-content-end.flex-gap-1em
+      .form-group
+        a.btn.btn-link[href=url_for({})] Réinitialiser
+      .form-group
+        button.btn.btn-primary[type="submit"] Filtrer
+    .text-right
+    = "#{@motifs_count} résultats"
+
+.row
+  .col-12
+    .float-right
+      a.btn.btn-primary.mb-2[href=new_admin_territory_motif_path] Créer un motif
+    - if @motifs_count > 0
+      = paginate @motifs, theme: "twitter-bootstrap-4"
+
+      table.table.table-bordered.table-hover.table-sm.mb-0
+        thead.thead-light
+          = form_with url: admin_territory_motifs_path(current_territory), method: :get do |form|
+            tr
+              th[scope="col"]
+              th[scope="col"]
+                | Nom
+              th[scope="col"]
+                | Service
+              th[scope="col"]
+                | Organisation
+              th[scope="col"]
+                | Type
+              th[scope="col"]
+                | Durée
+              th[scope="col"]
+                | Action
+        tbody
+          - @motifs.each do |motif|
+            - display_actions = Agent::MotifPolicy.agent_can_manage_motif?(motif, current_agent)
+            tr
+              td
+                span.badge.badge-pill style="background: #{motif.color};" &nbsp;
+              td
+                = motif.name
+                = motif_badges(motif)
+              td
+                = motif.service.short_name
+              td
+                - if display_actions
+                  = link_to(motif.organisation.name, admin_organisation_motifs_path(organisation_id: motif.organisation.id))
+                - else
+                  = motif.organisation.name
+              td
+                = Motif.human_attribute_value(:location_type, motif.location_type)
+              td
+                = "#{motif.default_duration_in_min}"
+              td
+                - if display_actions
+                  .d-flex.flex-gap-1em
+                    div= link_to edit_admin_organisation_motif_path(motif.organisation, motif), title: "Modifier", target: :_blank do
+                      i.fa.fa-edit
+                    div= link_to admin_territory_motif_path(current_territory, motif), method: :delete, title: "Supprimer", data: { confirm: "Confirmez-vous la suppression de ce motif ?"} do
+                      i.fa.fa-trash-alt
+
+      .mt-2 = paginate @motifs, theme: "twitter-bootstrap-4"
+
+    - else
+      .rdv-text-align-center
+        p.mb-2.lead
+          | Aucun résultat

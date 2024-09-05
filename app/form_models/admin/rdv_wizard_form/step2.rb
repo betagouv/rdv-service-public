@@ -8,7 +8,7 @@ class Admin::RdvWizardForm::Step2
     return unless rdv.motif.phone?
 
     users_to_notify = users.map(&:user_to_notify)
-    errors.add(:phone_number, :missing_for_phone_motif) if users_to_notify.none?{ _1.phone_number.present? }
+    errors.add(:phone_number, :missing_for_phone_motif) if users_to_notify.none? { _1.phone_number.present? }
   end
 
   def can_receive_notification_for_motif_by_visio

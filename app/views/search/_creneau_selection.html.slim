@@ -1,4 +1,4 @@
-.container
+.fr-container
   = render "search/selected_motif_recap", context: context
   - if context.lieu.present?
     .card.card-hoverable
@@ -24,9 +24,9 @@
     = render "search/nothing_to_show", context: context
   - else
     - if context.first_matching_motif.collectif?
-      h3.font-weight-bold = "Inscrivez-vous à l'atelier de votre choix :"
+      h3.rdv-font-weight-700 = "Inscrivez-vous à l'atelier de votre choix :"
     - else
-      h3.font-weight-bold = "Sélectionnez un créneau :"
+      h3.rdv-font-weight-700 = "Sélectionnez un créneau :"
     .card.mb-3
       .card-body
         - if context.first_matching_motif.collectif?

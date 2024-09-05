@@ -3,3 +3,8 @@ fr:
     motifs:
       visibility:
         default_html: "Comportement normal du motif « %{motif} » :"
+      bookable_by_types:
+        agents: Uniquement par les agents
+        agents_and_prescripteurs: Uniquement par les agents et prescripteurs
+        agents_and_prescripteurs_and_invited_users: Par les agents, prescripteurs et les usagers sur invitation
+        everyone: Par les agents, prescripteurs et les usagers

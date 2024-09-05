@@ -86,7 +86,16 @@ module Ants
     end
 
     def users
-      @users ||= User.where(id: @rdv_attributes[:users_ids]).select(&:syncable_with_ants?)
+      @users ||= User.where(id: @rdv_attributes[:users_ids]).select do |user|
+        syncable_with_ants?(user)
+      end
+    end
+
+    def syncable_with_ants?(user)
+      return false if user.ants_pre_demande_number.blank?
+
+      status = AntsApi.status(application_id: user.ants_pre_demande_number, timeout: 4)["status"]
+      status == "validated"
     end
   end
 end

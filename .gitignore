@@ -49,6 +49,7 @@ coverage/
 /public/assets/*
 /public/fonts/*
 /public/icons/*
+/public/favicon.ico
 
 # Postgres dumps
 **/20*.tar.gz
