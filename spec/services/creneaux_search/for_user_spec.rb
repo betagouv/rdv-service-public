@@ -127,7 +127,7 @@ RSpec.describe CreneauxSearch::ForUser, type: :service do
     create(:plage_ouverture, :daily, motifs: [motif], first_day: 7.days.ago.to_date, start_time: Tod::TimeOfDay.new(10), end_time: Tod::TimeOfDay.new(18), lieu: lieu)
 
     service = described_class.new(motif: motif, lieu: lieu, date_range: date_range)
-    expect(service.creneaux.map(&:starts_at).first.iso8601).to eq "2020-10-20T16:00:00+02:00"
+    expect(service.creneaux.map(&:starts_at).min.iso8601).to eq "2020-10-20T16:00:00+02:00"
   end
 
   describe ".creneau_for" do
