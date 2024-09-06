@@ -18,6 +18,11 @@ class Agents::AbsenceMailer < ApplicationMailer
   end
 
   def absence_destroyed
+    # passing a hash of the attributes of the already destroyed absence
+    if @absence.is_a?(Hash)
+      @absence = Absence.new(@absence)
+    end
+
     self.ics_payload = @absence.payload(:destroy)
     mail(subject: t("agents.absence_mailer.absence_destroyed.title", domain_name: domain.name, title: @absence.title))
   end

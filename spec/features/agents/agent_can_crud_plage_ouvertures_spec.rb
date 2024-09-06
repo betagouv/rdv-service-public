@@ -167,4 +167,17 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       end
     end
   end
+
+  describe "sending an email notification upon deletion" do
+    it "works" do
+      perform_enqueued_jobs do
+        expect { click_link("Supprimer") }.to change { emails_sent_to(plage_ouverture.agent.email).size }.by(1)
+      end
+      open_email(plage_ouverture.agent.email)
+      expect(current_email.subject).to eq("RDV Solidarités - Plage d’ouverture supprimée - #{plage_ouverture.title}")
+      expect(current_email.body).to include(plage_ouverture.title)
+      expect(current_email.body).to include(plage_ouverture.agent.full_name)
+      expect(current_email.body).to include(plage_ouverture.motifs.first.name)
+    end
+  end
 end

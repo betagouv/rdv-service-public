@@ -91,4 +91,19 @@ RSpec.describe "Agent can CRUD absences" do
       expect(page).not_to have_content(future_absence.title)
     end
   end
+
+  describe "sending an email notification upon deletion" do
+    let!(:absence) { create(:absence, agent: agent) }
+
+    it "works" do
+      click_link "Indisponibilités"
+      perform_enqueued_jobs do
+        expect { click_link("Supprimer") }.to change { emails_sent_to(absence.agent.email).size }.by(1)
+      end
+      open_email(absence.agent.email)
+      expect(current_email.subject).to eq("RDV Solidarités - Indisponibilité supprimée - #{absence.title}")
+      expect(current_email.body).to include(absence.title)
+      expect(current_email.body).to include(absence.agent.full_name)
+    end
+  end
 end
