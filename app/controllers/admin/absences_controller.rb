@@ -61,14 +61,9 @@ class Admin::AbsencesController < AgentAuthController
 
   def destroy
     authorize(@absence)
-    if @absence.destroy
-      # NOTE: the destruction email is sent synchronously (not in a job) to ensure @absence still exists.
-      absence_mailer.absence_destroyed.deliver_now if @agent.absence_notification_level == "all"
-      flash[:notice] = t(".busy_time_deleted")
-      redirect_to admin_organisation_agent_absences_path(current_organisation, @absence.agent_id)
-    else
-      render :edit
-    end
+    DestroyAbsenceJob.perform_later(@absence.id) if @agent.absence_notification_level == "all"
+    flash[:notice] = t(".busy_time_deleted")
+    redirect_to admin_organisation_agent_absences_path(current_organisation, @absence.agent_id)
   end
 
   private
