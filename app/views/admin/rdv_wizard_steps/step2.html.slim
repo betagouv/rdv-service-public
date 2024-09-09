@@ -22,6 +22,8 @@ ruby:
             i.fa.fa-user
             | &nbsp;
             = UsersHelper.reverse_full_name_and_notification_coordinates(user)
+            - if user.organisation_ids.exclude?(current_organisation.id)
+              = " (usager d’une autre organisation)"
             = relative_tag(user)
           ruby:
             remove_path_params = @rdv_wizard.to_query.deep_dup.merge(step: 2)
@@ -29,12 +31,13 @@ ruby:
             remove_user_path = new_admin_organisation_rdv_wizard_step_path(remove_path_params)
           div.ml-2= link_to remove_user_path, title: t("helpers.remove")
             i.fa.fa-minus-circle
-          div.ml-2
-            = link_to edit_admin_organisation_user_path( \
-                current_organisation, user, modal: true, return_location: modals_return_location, role: default_service_selection_from(user) \
-              ), \
-              data: { modal: "true" }, title: t("helpers.edit")
-              i.fa.fa-edit
+          - if user.organisation_ids.include?(current_organisation.id)
+            div.ml-2
+              = link_to edit_admin_organisation_user_path( \
+                  current_organisation, user, modal: true, return_location: modals_return_location, role: default_service_selection_from(user) \
+                ), \
+                data: { modal: "true" }, title: t("helpers.edit")
+                i.fa.fa-edit
 
     - show_add_user = @rdv.users.empty?
     .pl-2.mt-2.collapse.collapse-add-user-selection.no-transition class=(show_add_user ? "" : "show")
