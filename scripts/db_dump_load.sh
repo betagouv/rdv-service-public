@@ -20,9 +20,6 @@ fi
 # create database
 bundle exec rails db:drop db:create
 
-#echo "DROP SCHEMA public;" | rails db
-
-# import dump
 pg_restore --clean --if-exists --no-owner --no-privileges --dbname lapin_development "$DUMP_NAME" --jobs 4 -L <(pg_restore -l "$DUMP_NAME" | grep -vE "TABLE DATA public ($EXCEPT_TABLES)")
 
 rm -f "$DUMP_NAME"
