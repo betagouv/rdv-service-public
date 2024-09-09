@@ -16,6 +16,9 @@ FactoryBot.define do
       recurrence { nil }
     end
 
+    trait :daily do # Cette option n'existe pas dans l'interface, on pourrait simplifier le code en la supprimant
+      recurrence { Montrose.every(:day, starts: first_day) }
+    end
     trait :weekly do
       recurrence { Montrose.every(:week, on: [:monday], starts: first_day) }
     end
