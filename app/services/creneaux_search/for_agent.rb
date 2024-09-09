@@ -6,7 +6,9 @@ class CreneauxSearch::ForAgent
   def next_availabilities
     lieux.map do |lieu|
       next_availability(lieu)
-    end.compact
+    end.compact.sort_by do |availability|
+      availability.starts_at
+    end
   end
 
   def next_availability(lieu = nil)
@@ -42,7 +44,6 @@ class CreneauxSearch::ForAgent
 
     @lieux = @lieux.where(id: PlageOuverture.where(agent_id: all_agents).select(:lieu_id)) if all_agents.present?
 
-    @lieux = @lieux.ordered_by_name
     @lieux
   end
 
