@@ -6,9 +6,7 @@ class CreneauxSearch::ForAgent
   def next_availabilities
     lieux.map do |lieu|
       next_availability(lieu)
-    end.compact.sort_by do |availability|
-      availability.starts_at
-    end
+    end.compact.sort_by(&:starts_at)
   end
 
   def next_availability(lieu = nil)
