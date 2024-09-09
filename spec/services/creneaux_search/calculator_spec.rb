@@ -374,6 +374,22 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
       allow(described_class).to receive(:calculate_slots).with(free_times.first, motif, plage_ouverture).and_return([])
       described_class.slots_for(plage_ouverture_free_times, motif)
     end
+
+    it "sorts slots when there are multiple plage ouvertures" do
+      motif = build(:motif, default_duration_in_min: 60)
+      plage_ouverture1 = build(:plage_ouverture, motifs: [motif], first_day: Date.new(2021, 10, 27), start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
+      free_times1 = [Time.zone.parse("20211027 9:00")..Time.zone.parse("20211027 11:00")]
+      plage_ouverture2 = build(:plage_ouverture, motifs: [motif], first_day: Date.new(2021, 10, 20), start_time: Tod::TimeOfDay.new(14), end_time: Tod::TimeOfDay.new(16))
+      free_times2 = [Time.zone.parse("20211020 14:00")..Time.zone.parse("20211020 16:00")]
+      plage_ouverture_free_times = {
+        plage_ouverture1 => free_times1,
+        plage_ouverture2 => free_times2,
+      }
+
+      slots = described_class.slots_for(plage_ouverture_free_times, motif)
+      expect(slots.first.starts_at).to eq(Time.zone.parse("20211020 14:00"))
+      expect(slots.last.starts_at).to eq(Time.zone.parse("20211027 10:00"))
+    end
   end
 
   describe "#calculate_slots" do
