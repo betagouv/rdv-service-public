@@ -105,11 +105,12 @@ module RecurrenceConcern
   # The value of a recent occurrence is computed and cached in #earliest_future_occurrence_time.
   # Warning: using `only_future: true` will only yield future occurrences, not past ones.
   def occurrence_start_at_list_for(inclusive_date_range, only_future:)
-    min_until = [inclusive_date_range.end, recurrence_ends_at].compact.min.end_of_day
     inclusive_datetime_range = (inclusive_date_range.begin)..(inclusive_date_range.end.end_of_day)
 
     if recurring?
-      min_from = only_future ? (earliest_future_occurrence_time || starts_at) : starts_at
+      min_from = [start_time.on(inclusive_date_range.begin), starts_at].compact.max
+      min_until = [inclusive_date_range.end, recurrence_ends_at].compact.min.end_of_day
+
       recurrence.starting(min_from).until(min_until).lazy.select do |occurrence_starts_at|
         event_in_range?(occurrence_starts_at, occurrence_starts_at + duration, inclusive_datetime_range)
       end.to_a
