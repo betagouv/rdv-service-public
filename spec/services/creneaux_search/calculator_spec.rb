@@ -439,7 +439,7 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
 
       it "return occurrence of po that in range" do
         plage_ouverture = build(:plage_ouverture, first_day: friday - 14.days, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11),
-                                                  recurrence: Montrose.every(:week, starts: friday - 14.days))
+                                                  recurrence: Montrose.every(:week, starts: friday - 14.days, on: %i[friday]))
         range = (friday + 3.days)..(friday + 10.days)
         expect(described_class.ranges_for(plage_ouverture, range)).to eq([(Time.zone.parse("20210507 9:00")..Time.zone.parse("20210507 11:00"))])
       end

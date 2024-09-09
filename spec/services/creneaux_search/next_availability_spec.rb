@@ -34,7 +34,8 @@ RSpec.describe CreneauxSearch::NextAvailability, type: :service do
       end
 
       it "when plage_ouverture is recurrence" do
-        recurrence = Montrose.every(:month, starts: today)
+        # FIXME: il faut prendre un exemple plus cohérent avec nos règles de récurrences
+        recurrence = Montrose.every(:month, starts: today, :day => { 4 => [3] }, :interval => 1)
         create(:plage_ouverture,
                motifs: [motif], lieu: lieu, agent: agent, organisation: organisation,
                first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11),
@@ -81,6 +82,7 @@ RSpec.describe CreneauxSearch::NextAvailability, type: :service do
       end
 
       it "returns a next creneau when plage_ouverture is recurrence" do
+        # FIXME: ce cas aussi a besoin d'être réécrit
         create(:rdv,
                agents: [agent],
                organisation: organisation,
