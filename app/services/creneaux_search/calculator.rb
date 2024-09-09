@@ -78,7 +78,7 @@ module CreneauxSearch::Calculator
           slots += calculate_slots(free_time, motif, plage_ouverture)
         end
       end
-      slots
+      slots.sort_by(&:starts_at)
     end
 
     def calculate_slots(free_time, motif, plage_ouverture)
