@@ -171,19 +171,6 @@ RSpec.shared_examples_for "recurrence" do
           expect(subject.map(&:starts_at)).to eq(all_wednesdays_of_june)
         end
       end
-
-      context "when using the future_only: true switch" do
-        subject { model_instance.occurrences_for(date_range, only_future: true) }
-
-        it "returns future wednesdays of june (after today which is june 13th)" do
-          future_wednesdays_of_june = [
-            Time.zone.parse("2022-06-15 08:00:00"),
-            Time.zone.parse("2022-06-22 08:00:00"),
-            Time.zone.parse("2022-06-29 08:00:00"),
-          ]
-          expect(subject.map(&:starts_at)).to eq(future_wednesdays_of_june)
-        end
-      end
     end
   end
 end

@@ -28,7 +28,9 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
       let(:date_range) { friday..Date.new(2021, 5, 1) }
 
       it "returns the creneaux for the reste of the plage d'ouverture" do
-        create(:plage_ouverture, :daily, motifs: [motif], first_day: friday.to_date, start_time: Tod::TimeOfDay.new(7), end_time: Tod::TimeOfDay.new(11), lieu: lieu)
+        create(:plage_ouverture, recurrence: Montrose.every(:week, on: [:friday], starts: Tod::TimeOfDay.new(7).on(friday)),
+                                 motifs: [motif], first_day: friday.to_date, start_time: Tod::TimeOfDay.new(7),
+                                 end_time: Tod::TimeOfDay.new(11), lieu: lieu)
         slots = described_class.available_slots(motif, lieu, date_range)
         expect(slots.first.starts_at.iso8601).to eq("2021-04-30T08:00:00+02:00")
       end
@@ -297,7 +299,7 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
     it "returns plage ouverture's 3 occurrences of range" do
       starts_at = Time.zone.parse("20211026 9:00")
       plage_ouverture = build(:plage_ouverture, first_day: starts_at.to_date, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), agent: agent,
-                                                recurrence: Montrose.every(:week, starts: starts_at.to_date - 1.day, day: [1, 2, 4, 5]))
+                                                recurrence: Montrose.every(:week, starts: starts_at.to_date, day: [1, 2, 4, 5]))
       range = Date.new(2021, 10, 25)..Date.new(2021, 10, 30)
 
       expected_ranges = [

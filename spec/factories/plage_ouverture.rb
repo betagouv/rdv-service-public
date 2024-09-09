@@ -16,10 +16,6 @@ FactoryBot.define do
       recurrence { nil }
     end
 
-    trait :daily do
-      recurrence { Montrose.every(:day, starts: first_day) }
-    end
-
     trait :weekly do
       recurrence { Montrose.every(:week, on: [:monday], starts: first_day) }
     end
