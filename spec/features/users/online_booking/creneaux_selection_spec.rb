@@ -48,7 +48,7 @@ RSpec.describe "User can select a creneau" do
     let!(:motif) { create(:motif, name: "RSA Orientation", organisation: organisation, restriction_for_rdv: nil, service: service) }
     let!(:plage_ouverture) { create(:plage_ouverture, :daily, first_day: Date.new(2021, 12, 13), motifs: [motif], lieu: lieu, organisation: organisation) }
     let!(:absence) do
-      create(:absence, agent: plage_ouverture.agent, first_day: Date.new(2021, 12, 20), end_day: Date.new(2021, 12, 27), start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(18))
+      create(:absence, agent: plage_ouverture.agent, first_day: Date.new(2021, 12, 20), end_day: Date.new(2021, 12, 27), start_time: Tod::TimeOfDay.new(8), end_time: Tod::TimeOfDay.new(18))
     end
 
     it "displays the correct date for the next availability" do
