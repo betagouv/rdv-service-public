@@ -35,7 +35,10 @@ RSpec.describe Absence, type: :model do
       end
 
       context "if the abence has many occurrences in range" do
-        let(:absence) { build(:absence, :weekly, first_day: Date.new(2019, 7, 20), end_day: Date.new(2019, 7, 23)) }
+        let(:absence) do
+          build(:absence, recurrence: Montrose.every(:week, on: [:saturday], starts: Date.new(2019, 7, 20)), start_time: Tod::TimeOfDay.new(10), first_day: Date.new(2019, 7, 20),
+                          end_day: Date.new(2019, 7, 23))
+        end
         let(:date_range) { Date.new(2019, 7, 29)..Date.new(2019, 8, 4) }
 
         it do
