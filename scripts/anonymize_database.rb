@@ -3,7 +3,7 @@ if Rails.env.production?
 end
 
 Anonymizer.default_config.table_configs.each do |table_config|
-  next unless ActiveRecord::Base.connection.table_exists?(table_config)
+  next unless ActiveRecord::Base.connection.table_exists?(table_config.table_name)
 
   Anonymizer::Table.new(table_config:).anonymize_records!
 end
