@@ -48,6 +48,19 @@ RSpec.describe "territory admin can manage motifs", type: :feature do
         expect(page).not_to have_content("Motif autre orga")
       end
     end
+
+    context "when motifs exist in another territory, which I admin" do
+      let!(:org_autre_territoire) { create(:organisation, name: "Autre orga", territory: create(:territory)) }
+      let!(:motif_autre_territoire) { create(:motif, name: "Motif autre territoire", organisation: org_autre_territoire) }
+
+      before { agent.roles.create!(organisation: org_autre_territoire, access_level: AgentRole::ACCESS_LEVEL_ADMIN) }
+
+      it "is not shown in the list" do
+        visit admin_territory_motifs_path(territory)
+        expect(page).to have_content("Consultation prénatale")
+        expect(page).not_to have_content("Motif autre territoire")
+      end
+    end
   end
 
   describe "Creating a motif" do
