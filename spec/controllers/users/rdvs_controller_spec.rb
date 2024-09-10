@@ -423,7 +423,7 @@ RSpec.describe Users::RdvsController, type: :controller do
     context "creneaux available" do
       before do
         # Une plage quotidienne qui commence dans 3 jours, ouvertures de 10h00 à 12h00
-        create(:plage_ouverture, :daily,
+        create(:plage_ouverture, :weekdays,
                first_day: 3.days.from_now,
                start_time: Tod::TimeOfDay.new(10),
                end_time: Tod::TimeOfDay.new(12),
