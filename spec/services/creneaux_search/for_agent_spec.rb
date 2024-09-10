@@ -1,4 +1,37 @@
 RSpec.describe CreneauxSearch::ForAgent, type: :service do
+  let(:organisation) { create(:organisation) }
+  let(:motif) { create :motif, organisation: organisation }
+
+  describe "#next_availabilities" do
+    let(:form) do
+      instance_double(
+        AgentCreneauxSearchForm,
+        organisation: organisation,
+        motif: motif,
+        service: motif.service,
+        agent_ids: [],
+        team_ids: [],
+        lieu_ids: [],
+        date_range: Time.zone.today..(Time.zone.today + 6.days)
+      )
+    end
+    let(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+
+    let(:lieu1) { create(:lieu, organisation: organisation, name: "MDS Valence") }
+    let(:lieu2) { create(:lieu, organisation: organisation, name: "MDS Arquest") }
+
+    before do
+      create(:plage_ouverture, :weekly, agent: agent, motifs: [motif], lieu: lieu2, organisation: organisation, first_day: 2.weeks.from_now)
+      create(:plage_ouverture, :weekly, agent: agent, motifs: [motif], lieu: lieu1, organisation: organisation, first_day: 1.week.from_now, recurrence_ends_at: 13.days.from_now)
+    end
+
+    it "sorts the results by the date of the next availability" do
+      availabilities = described_class.new(form).next_availabilities
+      expect(availabilities.first.lieu).to eq lieu1
+      expect(availabilities.last.lieu).to eq lieu2
+    end
+  end
+
   describe "lieux" do
     subject { described_class.new(form).lieux }
 
@@ -14,9 +47,6 @@ RSpec.describe CreneauxSearch::ForAgent, type: :service do
         date_range: Time.zone.today..(Time.zone.today + 6.days)
       )
     end
-
-    let(:organisation) { create(:organisation) }
-    let(:motif) { create :motif, organisation: organisation }
 
     let(:agent1) { create(:agent, basic_role_in_organisations: [organisation]) }
     let(:lieu1) { create(:lieu, organisation: organisation) }
@@ -81,7 +111,6 @@ RSpec.describe CreneauxSearch::ForAgent, type: :service do
         date_range: Date.new(2022, 10, 20)..Date.new(2022, 10, 30)
       )
     end
-    let(:organisation) { create(:organisation) }
     let(:motif) { create :motif, :by_phone, organisation: organisation }
     let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], first_day: Date.new(2022, 10, 25), lieu: nil, organisation: organisation) }
 
@@ -115,9 +144,6 @@ RSpec.describe CreneauxSearch::ForAgent, type: :service do
         date_range: Time.zone.today..(Time.zone.today + 6.days)
       )
     end
-
-    let(:organisation) { create(:organisation) }
-    let(:motif) { create :motif, organisation: organisation }
 
     let(:agent1) { create(:agent, basic_role_in_organisations: [organisation]) }
     let(:agent2) { create(:agent, basic_role_in_organisations: [organisation]) }
