@@ -29,7 +29,7 @@
             collection: @motifs.includes(:service).to_a.group_by { _1.service.name }, \
             as: :grouped_select, \
             group_method: :last,
-            label_method: -> { motif_name_and_location_type(_1) + " - #{_1.default_duration_in_min}mn" }, \
+            label_method: -> { motif_name_and_location_type(_1) }, \
             input_html: { \
               data: { placeholder: "Sélectionnez un motif" }, \
               class: "js-filtered-motifs", \
