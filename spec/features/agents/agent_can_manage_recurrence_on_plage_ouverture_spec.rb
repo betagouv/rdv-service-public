@@ -77,6 +77,11 @@ RSpec.describe "Agent can manage recurrence on plage d'ouverture" do
       starts: Time.zone.local(2019, 12, 11)
     )
 
+    # On vérifie au passage que les données qu'on crée dans nos factories correspondent bien à ce que l'application peut créer
+    recurrence_attributes_from_factory = build(:plage_ouverture, :monthly).recurrence.to_hash.keys
+
+    expect(recurrence_attributes_from_factory + [:until]).to match_array(plage_ouverture.recurrence.to_hash.keys)
+
     # reload page to check if form is filled correctly
     visit edit_admin_organisation_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture)
     expect_checked("recurrence_has_recurrence")
