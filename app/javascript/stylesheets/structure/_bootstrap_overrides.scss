@@ -5,8 +5,10 @@
   color: inherit;
 }
 
-a[href] {
-  background-image: none; // pour éviter le soulignement des liens
+a.btn[href],
+a.stretched-link[href] {
+  background-image: none;
+  // pour éviter le soulignement des boutons et liens bootstrap
 }
 
 footer {

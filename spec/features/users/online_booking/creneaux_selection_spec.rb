@@ -13,8 +13,8 @@ RSpec.describe "User can select a creneau" do
     # Avec un seul motif on passe par le choix d'un lieu.
     # Avec deux motifs, on affiche directement la disponibilité.
     let!(:autre_motif) { create(:motif, organisation: organisation, max_public_booking_delay: 7.days, service: service) }
-    let!(:plage_ouverture) { create(:plage_ouverture, :daily, first_day: now + 8.days, motifs: [motif], lieu: lieu, organisation: organisation) }
-    let!(:autre_plage_ouverture) { create(:plage_ouverture, :daily, first_day: now + 8.days, motifs: [autre_motif], lieu: lieu, organisation: organisation) }
+    let!(:plage_ouverture) { create(:plage_ouverture, :weekdays, first_day: now + 8.days, motifs: [motif], lieu: lieu, organisation: organisation) }
+    let!(:autre_plage_ouverture) { create(:plage_ouverture, :weekdays, first_day: now + 8.days, motifs: [autre_motif], lieu: lieu, organisation: organisation) }
 
     it "shows that no creneau is available", js: true do
       visit root_path
@@ -46,7 +46,7 @@ RSpec.describe "User can select a creneau" do
 
   context "when there is a full week without any creneaux" do
     let!(:motif) { create(:motif, name: "RSA Orientation", organisation: organisation, restriction_for_rdv: nil, service: service) }
-    let!(:plage_ouverture) { create(:plage_ouverture, :daily, first_day: Date.new(2021, 12, 13), motifs: [motif], lieu: lieu, organisation: organisation) }
+    let!(:plage_ouverture) { create(:plage_ouverture, :weekdays, first_day: Date.new(2021, 12, 13), motifs: [motif], lieu: lieu, organisation: organisation) }
     let!(:absence) do
       create(:absence, agent: plage_ouverture.agent, first_day: Date.new(2021, 12, 20), end_day: Date.new(2021, 12, 27), start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(18))
     end

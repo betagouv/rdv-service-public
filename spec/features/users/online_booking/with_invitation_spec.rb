@@ -32,8 +32,8 @@ RSpec.describe "User can be invited" do
   end
   let!(:lieu) { create(:lieu, organisation: organisation) }
   let!(:lieu2) { create(:lieu, organisation: organisation) }
-  let!(:plage_ouverture) { create(:plage_ouverture, :daily, first_day: now + 1.month, motifs: [motif], lieu: lieu, organisation: organisation) }
-  let!(:plage_ouverture2) { create(:plage_ouverture, :daily, first_day: now + 1.month, motifs: [motif], lieu: lieu2, organisation: organisation) }
+  let!(:plage_ouverture) { create(:plage_ouverture, :weekdays, first_day: now + 1.month, motifs: [motif], lieu: lieu, organisation: organisation) }
+  let!(:plage_ouverture2) { create(:plage_ouverture, :weekdays, first_day: now + 1.month, motifs: [motif], lieu: lieu2, organisation: organisation) }
 
   let!(:organisation2) { create(:organisation) }
 
@@ -110,10 +110,10 @@ RSpec.describe "User can be invited" do
 
     context "when lieux do not have availability" do
       let!(:plage_ouverture) do
-        create(:plage_ouverture, :daily, first_day: now + 8.days, motifs: [motif], lieu: lieu, organisation: organisation)
+        create(:plage_ouverture, :weekdays, first_day: now + 8.days, motifs: [motif], lieu: lieu, organisation: organisation)
       end
       let!(:plage_ouverture2) do
-        create(:plage_ouverture, :daily, first_day: now + 8.days, motifs: [motif], lieu: lieu2, organisation: organisation)
+        create(:plage_ouverture, :weekdays, first_day: now + 8.days, motifs: [motif], lieu: lieu2, organisation: organisation)
       end
       let!(:motif) do
         create(

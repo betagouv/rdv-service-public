@@ -93,7 +93,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
   context "for an other agent calendar" do
     let!(:other_agent) { create(:agent, first_name: "Jane", last_name: "FAROU", service: service, basic_role_in_organisations: [organisation]) }
     let!(:plage_ouverture) do
-      create(:plage_ouverture, :daily, first_day: Time.zone.today.prev_week(:monday), motifs: [motif], lieu: lieu, agent: other_agent, organisation: organisation, title: "Permanence")
+      create(:plage_ouverture, :weekdays, first_day: Time.zone.today.prev_week(:monday), motifs: [motif], lieu: lieu, agent: other_agent, organisation: organisation, title: "Permanence")
     end
 
     it "can crud a plage_ouverture", js: true do
