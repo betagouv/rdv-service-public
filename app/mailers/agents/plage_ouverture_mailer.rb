@@ -19,7 +19,7 @@ class Agents::PlageOuvertureMailer < ApplicationMailer
   end
 
   def plage_ouverture_destroyed
-    # passing a hash of the attributes of the already destroyed plage
+    # On passe la plage au job sous forme sérialisée puisqu'elle n'existe plus en base.
     if @plage_ouverture.is_a?(Hash)
       motifs = Motif.where(id: @plage_ouverture[:motif_ids])
       @plage_ouverture = PlageOuverture.new(@plage_ouverture)

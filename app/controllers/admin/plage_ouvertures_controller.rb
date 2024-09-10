@@ -73,6 +73,7 @@ class Admin::PlageOuverturesController < AgentAuthController
     authorize(@plage_ouverture)
     motif_ids = @plage_ouverture.motifs.ids
     if @plage_ouverture.destroy
+      # On passe la plage au job sous forme sérialisée puisqu'elle n'existe plus en base.
       if @agent.plage_ouverture_notification_level == "all"
         plage_attributes = @plage_ouverture.attributes.merge(motif_ids: motif_ids)
         Agents::PlageOuvertureMailer.with(plage_ouverture: plage_attributes).plage_ouverture_destroyed.deliver_later

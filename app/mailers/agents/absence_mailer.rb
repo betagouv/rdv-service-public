@@ -18,7 +18,7 @@ class Agents::AbsenceMailer < ApplicationMailer
   end
 
   def absence_destroyed
-    # passing a hash of the attributes of the already destroyed absence
+    # On passe l'absence au job sous forme sérialisée puisqu'elle n'existe plus en base.
     if @absence.is_a?(Hash)
       @absence = Absence.new(@absence)
     end
