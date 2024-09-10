@@ -60,7 +60,7 @@ RSpec.describe Lieu, type: :model do
     describe ".for_motif" do
       subject { described_class.for_motif(motif) }
 
-      let!(:plage_ouverture) { create(:plage_ouverture, :daily, motifs: [motif], lieu: lieu, organisation: organisation) }
+      let!(:plage_ouverture) { create(:plage_ouverture, :weekdays, motifs: [motif], lieu: lieu, organisation: organisation) }
       let(:bookable_by) { :agents }
 
       before { freeze_time }
@@ -69,14 +69,14 @@ RSpec.describe Lieu, type: :model do
 
       context "with an other plage_ouverture" do
         let!(:lieu2) { create(:lieu) }
-        let!(:plage_ouverture2) { create(:plage_ouverture, :daily, motifs: [motif], lieu: lieu2) }
+        let!(:plage_ouverture2) { create(:plage_ouverture, :weekdays, motifs: [motif], lieu: lieu2) }
 
         it { expect(subject).to contain_exactly(lieu, lieu2) }
       end
 
       context "with a plage_ouverture not yet started" do
         let!(:lieu2) { create(:lieu) }
-        let!(:plage_ouverture2) { create(:plage_ouverture, :daily, motifs: [motif], lieu: lieu2, first_day: 8.days.from_now) }
+        let!(:plage_ouverture2) { create(:plage_ouverture, :weekdays, motifs: [motif], lieu: lieu2, first_day: 8.days.from_now) }
 
         it { expect(subject).to contain_exactly(lieu, lieu2) }
       end
@@ -114,13 +114,13 @@ RSpec.describe Lieu, type: :model do
 
       context "for a motif individuel" do
         context "motif has current plage ouvertures" do
-          let!(:plage_ouverture) { create(:plage_ouverture, :daily, motifs: [motif], lieu: lieu) }
+          let!(:plage_ouverture) { create(:plage_ouverture, :weekdays, motifs: [motif], lieu: lieu) }
 
           it { is_expected.to include(lieu) }
         end
 
         context "motif has finished plage ouverture" do
-          let!(:plage_ouverture) { create(:plage_ouverture, :daily, motifs: [motif], lieu: lieu, first_day: 2.days.ago, recurrence: nil) }
+          let!(:plage_ouverture) { create(:plage_ouverture, :weekdays, motifs: [motif], lieu: lieu, first_day: 2.days.ago, recurrence: nil) }
 
           it { is_expected.not_to include(lieu) }
         end
