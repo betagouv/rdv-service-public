@@ -75,7 +75,7 @@ class Admin::PlageOuverturesController < AgentAuthController
     if @plage_ouverture.destroy
       if @agent.plage_ouverture_notification_level == "all"
         plage_attributes = @plage_ouverture.attributes.merge(motif_ids: motif_ids)
-        Agents::PlageOuvertureMailer.with(plage_ouverture: plage_attributes).plage_ouverture_destroyed.deliver_now
+        Agents::PlageOuvertureMailer.with(plage_ouverture: plage_attributes).plage_ouverture_destroyed.deliver_later
       end
       redirect_to admin_organisation_agent_plage_ouvertures_path(@plage_ouverture.organisation, @plage_ouverture.agent), notice: "La plage d'ouverture a été supprimée."
     else

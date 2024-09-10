@@ -169,6 +169,8 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
   end
 
   describe "sending an email notification upon deletion" do
+    let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], agent: agent, organisation: organisation, start_time: Tod::TimeOfDay.new(8, 30), end_time: Tod::TimeOfDay.new(9, 30)) }
+
     it "works" do
       perform_enqueued_jobs do
         expect { click_link("Supprimer") }.to change { emails_sent_to(plage_ouverture.agent.email).size }.by(1)
@@ -178,6 +180,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       expect(current_email.body).to include(plage_ouverture.title)
       expect(current_email.body).to include(plage_ouverture.agent.full_name)
       expect(current_email.body).to include(plage_ouverture.motifs.first.name)
+      expect(current_email.body).to include("de 08:30 à 09:30") # on s'assure que les heures sont bien sérialisées et dé-sérialisées (objets Tod::TimeOfDay)
     end
   end
 end

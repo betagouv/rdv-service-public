@@ -93,7 +93,7 @@ RSpec.describe "Agent can CRUD absences" do
   end
 
   describe "sending an email notification upon deletion" do
-    let!(:absence) { create(:absence, agent: agent) }
+    let!(:absence) { create(:absence, agent: agent, start_time: Tod::TimeOfDay.new(8, 30), end_time: Tod::TimeOfDay.new(9, 30)) }
 
     it "works" do
       click_link "Indisponibilités"
@@ -104,6 +104,7 @@ RSpec.describe "Agent can CRUD absences" do
       expect(current_email.subject).to eq("RDV Solidarités - Indisponibilité supprimée - #{absence.title}")
       expect(current_email.body).to include(absence.title)
       expect(current_email.body).to include(absence.agent.full_name)
+      expect(current_email.body).to include("de 08:30 à 09:30") # on s'assure que les heures sont bien sérialisées et dé-sérialisées (objets Tod::TimeOfDay)
     end
   end
 end
