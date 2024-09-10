@@ -19,7 +19,7 @@ FactoryBot.define do
     trait :weekdays do
       recurrence do
         # Ce format de récurrence correspond à ce qu'on a en base
-        Montrose.every(:week, on: %i[monday tuesday wednesday thursday friday], day: [1, 2, 3, 4, 5], starts: first_day)
+        Montrose.every(:week, on: %i[monday tuesday wednesday thursday friday], day: [1, 2, 3, 4, 5], starts: first_day, interval: 1)
       end
     end
 
