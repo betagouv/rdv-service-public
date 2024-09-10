@@ -3,6 +3,6 @@
     .row.mt-2
       .col-md-12
         .d-print-none.alert.alert-dismissible.fade.show class=alert_class_for(type)
-          a.close(href="#" data-dismiss="alert" aria-label='Close')
+          a.close.rdv-background-image-none(href="#" data-dismiss="alert" aria-label='Close')
             i.fa.fa-times
           = sanitize(flash[type], tags: %w[a br strong em], scrubber: :prune)
