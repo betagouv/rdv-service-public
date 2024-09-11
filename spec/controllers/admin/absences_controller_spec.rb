@@ -181,10 +181,9 @@ RSpec.describe Admin::AbsencesController, type: :controller do
         expect(response).to redirect_to(admin_organisation_agent_absences_path(organisation, absence.agent_id))
       end
 
-      it "enqueues notification after delete" do
-        delete :destroy, params: { organisation_id: organisation.id, id: absence.to_param }
+      it "send notification after delete" do
         expect do
-          perform_enqueued_jobs
+          delete :destroy, params: { organisation_id: organisation.id, id: absence.to_param }
         end.to change { ActionMailer::Base.deliveries.size }.by(1)
         expect(ActionMailer::Base.deliveries.last.subject).to include("RDV Solidarités - Indisponibilité supprimée")
       end

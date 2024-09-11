@@ -40,7 +40,7 @@ class Admin::AbsencesController < AgentAuthController
   def create
     authorize(@absence)
     if @absence.save
-      Agents::AbsenceMailer.with(absence: @absence).absence_created.deliver_later if @agent.absence_notification_level == "all"
+      absence_mailer.absence_created.deliver_later if @agent.absence_notification_level == "all"
       flash[:notice] = t(".absence_created")
       redirect_to admin_organisation_agent_absences_path(current_organisation, @absence.agent_id)
     else
@@ -51,7 +51,7 @@ class Admin::AbsencesController < AgentAuthController
   def update
     authorize(@absence)
     if @absence.update(absence_params)
-      Agents::AbsenceMailer.with(absence: @absence).absence_updated.deliver_later if @agent.absence_notification_level == "all"
+      absence_mailer.absence_updated.deliver_later if @agent.absence_notification_level == "all"
       flash[:notice] = t(".absence_updated")
       redirect_to admin_organisation_agent_absences_path(current_organisation, @absence.agent_id)
     else
@@ -62,8 +62,8 @@ class Admin::AbsencesController < AgentAuthController
   def destroy
     authorize(@absence)
     if @absence.destroy
-      # On passe l'absence au job sous forme sérialisée puisqu'elle n'existe plus en base.
-      Agents::AbsenceMailer.with(absence: @absence.attributes).absence_destroyed.deliver_later if @agent.absence_notification_level == "all"
+      # NOTE: the destruction email is sent synchronously (not in a job) to ensure @absence still exists.
+      absence_mailer.absence_destroyed.deliver_now if @agent.absence_notification_level == "all"
       flash[:notice] = t(".absence_deleted")
       redirect_to admin_organisation_agent_absences_path(current_organisation, @absence.agent_id)
     else
@@ -92,5 +92,9 @@ class Admin::AbsencesController < AgentAuthController
 
   def filter_params
     params.permit(:start, :end, :agent_id, :page, :current_tab)
+  end
+
+  def absence_mailer
+    Agents::AbsenceMailer.with(absence: @absence)
   end
 end
