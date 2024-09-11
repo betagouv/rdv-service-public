@@ -69,7 +69,6 @@ class User < ApplicationRecord
   validates :number_of_children, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
 
   validate :birth_date_validity
-  validate :email_looks_valid
 
   # Hooks
   before_save :set_email_to_null_if_blank
@@ -84,6 +83,11 @@ class User < ApplicationRecord
 
   def to_s
     full_name
+  end
+
+  def email=(value)
+    # On corriger automatiquement cette faute de frappe courante
+    super(value&.gsub(".@", "@"))
   end
 
   def add_organisation(organisation)
@@ -264,12 +268,6 @@ class User < ApplicationRecord
     return unless birth_date.present? && (birth_date > Time.zone.today || birth_date < 130.years.ago)
 
     errors.add(:birth_date, "est invalide")
-  end
-
-  def email_looks_valid
-    if email.to_s.include?(".@")
-      errors.add(:email, :dot_at)
-    end
   end
 
   def do_soft_delete(organisation)
