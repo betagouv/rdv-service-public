@@ -4,7 +4,7 @@ class WebhookJob < ApplicationJob
   TIMEOUT = 10
 
   queue_as :webhook
-  discard_on(ActiveRecord::RecordNotFound) { |job, error| job.capture_sentry_exception(error) }
+  discard_on(ActiveRecord::RecordNotFound) { |_job, error| Sentry.capture_exception(error) }
 
   # Pour éviter de fuiter des données personnelles dans les logs
   self.log_arguments = false
