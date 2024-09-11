@@ -19,6 +19,13 @@ class Agents::PlageOuvertureMailer < ApplicationMailer
   end
 
   def plage_ouverture_destroyed
+    # On passe la plage au job sous forme sérialisée puisqu'elle n'existe plus en base.
+    if @plage_ouverture.is_a?(Hash)
+      motifs = Motif.where(id: @plage_ouverture[:motif_ids])
+      @plage_ouverture = PlageOuverture.new(@plage_ouverture)
+      @plage_ouverture.motifs = motifs
+    end
+
     self.ics_payload = @plage_ouverture.payload(:destroy)
     mail(subject: t("agents.plage_ouverture_mailer.plage_ouverture_destroyed.title", domain_name: domain.name, title: @plage_ouverture.title))
   end
