@@ -120,6 +120,16 @@ RSpec.describe CreneauxSearch::ForUser, type: :service do
     end
   end
 
+  it "applies the motif's minimum and maximum booking delay restrictions" do
+    date_range = Time.zone.today..(Time.zone.today + 7.days)
+    motif = create(:motif, organisation: organisation, min_public_booking_delay: 24.hours)
+
+    create(:plage_ouverture, :weekdays, motifs: [motif], first_day: 7.days.ago.to_date, start_time: Tod::TimeOfDay.new(10), end_time: Tod::TimeOfDay.new(18), lieu: lieu)
+
+    service = described_class.new(motif: motif, lieu: lieu, date_range: date_range)
+    expect(service.creneaux.map(&:starts_at).min.iso8601).to eq "2020-10-20T16:00:00+02:00"
+  end
+
   describe ".creneau_for" do
     subject do
       described_class.creneau_for(
