@@ -9,9 +9,14 @@ class RdvUpcomingReminderJob < ApplicationJob
 
   class TooLateError < StandardError; end
 
-  discard_on(TooLateError) { |job, error| job.capture_sentry_exception(error) }
+  # La date du RDV peut être modifiée dans le passé entre le moment où le job a été enqueued
+  # et son éxecution, ou l’exécution d’un retry. Ce sont des erreurs attendues, on ne veut pas
+  # en être notifié sur Sentry
+  discard_on(TooLateError)
 
-  discard_on(ActiveJob::DeserializationError) { |job, error| job.capture_sentry_exception(error) }
+  # Si le RDV a été supprimé avant l’éxecution du job (ou d’un retry), la désérialisation AJ échoue
+  # C’est un comportement inattendu, on ne veut pas retry mais on veut être notifié sur Sentry
+  discard_on(ActiveJob::DeserializationError)
 
   def perform(rdv)
     if rdv.ends_at < Time.zone.now
