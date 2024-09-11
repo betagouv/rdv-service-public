@@ -97,9 +97,8 @@ RSpec.describe "Agent can CRUD absences" do
 
     it "works" do
       click_link "Indisponibilités"
-      perform_enqueued_jobs do
-        expect { click_link("Supprimer") }.to change { emails_sent_to(absence.agent.email).size }.by(1)
-      end
+      expect { click_link("Supprimer") }.to change(enqueued_jobs, :size).by(1)
+      expect { perform_enqueued_jobs }.to change { emails_sent_to(absence.agent.email).size }.by(1)
       open_email(absence.agent.email)
       expect(current_email.subject).to eq("RDV Solidarités - Indisponibilité supprimée - #{absence.title}")
       expect(current_email.body).to include(absence.title)
