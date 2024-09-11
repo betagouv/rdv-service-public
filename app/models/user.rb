@@ -268,7 +268,7 @@ class User < ApplicationRecord
 
   def email_looks_valid
     if email.to_s.include?(".@")
-      errors.add(:email, %(ne peut contenir ".@"))
+      errors.add(:email, :dot_at)
     end
   end
 

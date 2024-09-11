@@ -48,6 +48,9 @@ fr:
               franceconnect_frozen_field_cannot_change: Le nom de naissance ne peut-être changé car il a été certifié par FranceConnect
             birth_date:
               franceconnect_frozen_field_cannot_change: La date de naissance ne peut-être changée car elle a été certifiée par FranceConnect
+            email:
+              format: "%{message}"
+              dot_ata: "Attention, vous avez mis un point avant le @ dans l'adresse email."
             password:
               format: "%{message}"
               too_common: "Ce mot de passe fait partie d'une liste de mots de passe fréquemment utilisés et ne permet donc pas d'assurer la sécurité de votre compte. Veuillez en choisir un autre."
