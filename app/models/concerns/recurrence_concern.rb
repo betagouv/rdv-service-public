@@ -73,7 +73,9 @@ module RecurrenceConcern
     cache_key = "earliest_future_occurrence_#{self.class.table_name}_#{id}_#{updated_at}"
 
     Rails.cache.fetch(cache_key, force: refresh, expires_in: 1.week) do
-      recurrence.starting(starts_at).until(recurrence_ends_at).lazy.select(&:future?).first
+      recurrence.starting(starts_at).until(recurrence_ends_at).lazy.find do |occurrence|
+        (occurrence + duration).future? # On vérifie la date de fin de l'occurence, car on veut voir les créneaux d'une occurrence en cours
+      end
     end
   end
 
