@@ -1,4 +1,9 @@
 class Api::Visioplainte::RdvsController < Api::Visioplainte::BaseController
+  def index
+    rdvs = authorized_rdv_scope
+    render json: Visioplainte::RdvBlueprint.render(rdvs, root: :rdvs)
+  end
+
   def create
     creneau = CreneauxSearch::ForUser.creneau_for(
       starts_at: Time.zone.parse(params[:starts_at]),
@@ -60,8 +65,11 @@ class Api::Visioplainte::RdvsController < Api::Visioplainte::BaseController
   private
 
   def find_rdv
+    authorized_rdv_scope.find_by(id: params[:id])
+  end
+
+  def authorized_rdv_scope
     Rdv.joins(organisation: :territory).where(territories: { name: Territory::VISIOPLAINTE_NAME })
-      .find_by(id: params[:id])
   end
 
   def motif

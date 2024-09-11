@@ -116,4 +116,21 @@ RSpec.describe "Visioplainte Rdvs" do
       end
     end
   end
+
+  describe "#index" do
+    subject(:get_index) do
+      get "/api/visioplainte/rdvs/", headers: auth_header
+    end
+
+    before do
+      create_rdv
+    end
+
+    it "returns the list of rdvs" do
+      get_index
+      expect(response.status).to eq 200
+
+      expect(response.parsed_body["rdvs"][0]["starts_at"]).to eq "2024-08-19 08:00:00 +0200"
+    end
+  end
 end

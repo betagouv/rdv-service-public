@@ -23,6 +23,28 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do # rub
   end
 
   path "/api/visioplainte/rdvs" do
+    get "Lister les rdvs" do
+      with_visioplainte_authentication
+
+      tags "Rendez-vous"
+      description "Liste tous les rendez-vous, et permet de filtrer par date, par guichet, ou sur des rdv spécifiques"
+      parameter name: "from", in: :query, type: :string,
+                description: "datetime au format iso8601. Permet de filtrer pour obtenir uniquement les rendez-vous qui commencent à partir de cette heure",
+                example: "2024-08-19T08:00:00+02:00", required: false
+      parameter name: "until", in: :query, type: :string,
+                description: "datetime au format iso8601. Permet de filtrer pour obtenir uniquement les rendez-vous qui commencent avant cette heure",
+                example: "2024-08-19T19:00:00+02:00", required: false
+      parameter name: "ids", in: :query, type: :array,
+                description: "Une liste d'ids des rendez-vous qu'on souhaite obtenir",
+                example: "123,456", required: false
+      parameter name: "guichet_ids", in: :query, type: :array,
+                description: "Une liste d'ids des guichets sur lesquels on veut filtrer les rendez-vous",
+                example: "123,456", required: false
+
+      response 200, "Renvoie la liste" do
+        run_test!
+      end
+    end
     post "Prendre un rdv" do
       with_visioplainte_authentication
 
