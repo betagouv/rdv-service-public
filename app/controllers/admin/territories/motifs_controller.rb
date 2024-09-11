@@ -1,11 +1,11 @@
 class Admin::Territories::MotifsController < Admin::Territories::BaseController
-  before_action :set_organisations, only: %i[new create]
+  before_action :set_organisations
 
   def index
-    @organisations = current_territory.organisations
     @services = current_territory.services.reject(&:secretariat?)
 
     @motifs = policy_scope(Motif, policy_scope_class: Agent::MotifPolicy::Scope)
+      .where(organisation: @organisations)
       .active
       .order({ name: :asc, service_id: :asc, location_type: :asc, organisation_id: :asc })
       .page(page_number)
@@ -64,7 +64,7 @@ class Admin::Territories::MotifsController < Admin::Territories::BaseController
   private
 
   def set_organisations
-    @organisations = Agent::MotifPolicy.organisations_i_can_manage(current_agent).ordered_by_name
+    @organisations = Agent::MotifPolicy.organisations_i_can_manage(current_agent).where(territory: current_territory).ordered_by_name
   end
 
   def filter_motifs(motifs)
