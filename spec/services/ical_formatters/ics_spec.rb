@@ -13,7 +13,7 @@ RSpec.describe IcalFormatters::Ics do
         description: "Infos et annulation:",
         address: "10 rue de la Ferronerie 44100 Nantes",
         ical_uid: "rdv_15@RDV Solidarités",
-        recurrence: "FREQ=WEEKLY;",
+        rrule: "FREQ=WEEKLY;",
         domain: domain,
       }
     end
