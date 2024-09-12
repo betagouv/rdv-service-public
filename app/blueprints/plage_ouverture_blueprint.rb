@@ -7,10 +7,10 @@ class PlageOuvertureBlueprint < Blueprinter::Base
   association :lieu, blueprint: LieuBlueprint
   association :motifs, blueprint: MotifBlueprint
 
-  # rubocop:disable Style/SymbolProc
-  field(:rrule) { _1.rrule }
+  field(:rrule) do |po|
+    IcalHelpers::Rrule.from_recurrence(po.recurrence)
+  end
   field(:ical) do |po|
     IcalHelpers::Ics.from_payload(po.payload).to_ical
   end
-  # rubocop:enable Style/SymbolProc
 end

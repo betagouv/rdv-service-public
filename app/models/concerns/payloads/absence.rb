@@ -7,7 +7,7 @@ module Payloads
         ends_at: first_occurrence_ends_at,
         ical_uid: ical_uid,
         summary: "#{IcalHelpers::ICS_UID_SUFFIX} #{title}",
-        rrule: rrule,
+        rrule: IcalHelpers::Rrule.from_recurrence(recurrence),
         domain: domain,
       }
 
