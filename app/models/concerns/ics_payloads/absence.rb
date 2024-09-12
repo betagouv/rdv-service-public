@@ -1,4 +1,4 @@
-module Payloads
+module IcsPayloads
   module Absence
     def payload(action = nil)
       payload = {
@@ -6,8 +6,8 @@ module Payloads
         starts_at: starts_at,
         ends_at: first_occurrence_ends_at,
         ical_uid: ical_uid,
-        summary: "#{IcalHelpers::ICS_UID_SUFFIX} #{title}",
-        rrule: IcalHelpers::Rrule.from_recurrence(recurrence),
+        summary: "#{IcalFormatters::ICS_UID_SUFFIX} #{title}",
+        rrule: IcalFormatters::Rrule.from_recurrence(recurrence),
         domain: domain,
       }
 

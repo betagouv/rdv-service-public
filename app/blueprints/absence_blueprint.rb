@@ -12,9 +12,9 @@ class AbsenceBlueprint < Blueprinter::Base
   end
 
   field(:rrule) do |absence|
-    IcalHelpers::Rrule.from_recurrence(absence.recurrence)
+    IcalFormatters::Rrule.from_recurrence(absence.recurrence)
   end
   field(:ical) do |absence|
-    IcalHelpers::Ics.from_payload(absence.payload).to_ical
+    IcalFormatters::Ics.from_payload(absence.payload).to_ical
   end
 end

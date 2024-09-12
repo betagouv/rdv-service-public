@@ -8,9 +8,9 @@ class PlageOuvertureBlueprint < Blueprinter::Base
   association :motifs, blueprint: MotifBlueprint
 
   field(:rrule) do |po|
-    IcalHelpers::Rrule.from_recurrence(po.recurrence)
+    IcalFormatters::Rrule.from_recurrence(po.recurrence)
   end
   field(:ical) do |po|
-    IcalHelpers::Ics.from_payload(po.payload).to_ical
+    IcalFormatters::Ics.from_payload(po.payload).to_ical
   end
 end

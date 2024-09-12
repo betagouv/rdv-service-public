@@ -1,4 +1,4 @@
-module IcalHelpers
+module IcalFormatters
   module Rrule
     def self.from_recurrence(recurrence)
       return if recurrence.blank?

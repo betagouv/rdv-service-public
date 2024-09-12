@@ -1,6 +1,6 @@
 require "icalendar/tzinfo"
 
-module IcalHelpers
+module IcalFormatters
   # Cette constante est ajoutée aux UIDs des événements ICS afin
   # d'empêcher la collision (certes improbable) avec des événements
   # d'autres plateformes. Il est important de ne pas modifier cette

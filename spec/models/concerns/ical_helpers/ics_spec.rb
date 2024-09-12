@@ -1,4 +1,4 @@
-RSpec.describe IcalHelpers::Ics do
+RSpec.describe IcalFormatters::Ics do
   describe "from_payload" do
     subject { described_class.from_payload(payload).to_ical }
 

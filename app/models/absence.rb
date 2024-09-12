@@ -3,7 +3,7 @@ class Absence < ApplicationRecord
   has_paper_trail
   include WebhookDeliverable
   include RecurrenceConcern
-  include Payloads::Absence
+  include IcsPayloads::Absence
   include Expiration
   include EnsuresRealisticDate
 
@@ -44,7 +44,7 @@ class Absence < ApplicationRecord
   ## -
 
   def ical_uid
-    "absence_#{id}@#{IcalHelpers::ICS_UID_SUFFIX}"
+    "absence_#{id}@#{IcalFormatters::ICS_UID_SUFFIX}"
   end
 
   private
