@@ -1,13 +1,18 @@
 class Api::Visioplainte::RdvsController < Api::Visioplainte::BaseController
-  def index
+  def index # rubocop:disable Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity
+    if params[:ids].blank? && (params[:from].blank? || params[:to].blank?)
+      errors = ["Vous devez préciser le paramètre ids ou les paramètres from et to"]
+      render(json: { errors: errors }, status: :bad_request) and return
+    end
+
     rdvs = authorized_rdv_scope
+
     if params[:ids].present?
       rdvs = rdvs.where(id: params[:ids])
-    elsif params[:from].present? && params[:to].present?
+    end
+
+    if params[:from].present? && params[:to].present?
       rdvs = rdvs.where("starts_at >= ?", Time.zone.parse(params[:from])).where("starts_at <= ?", Time.zone.parse(params[:to]))
-    else
-      errors = ["Vous devez précisez le paramètre ids ou les paramètres from et to"]
-      render(json: { errors: errors }, status: :bad_request) and return
     end
 
     if params[:guichet_ids]

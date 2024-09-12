@@ -187,7 +187,7 @@ RSpec.describe "Visioplainte Rdvs" do
         get "/api/visioplainte/rdvs/", params: {}, headers: auth_header
 
         expect(response.status).to eq 400
-        expect(response.parsed_body["errors"].first).to eq "Vous devez précisez le paramètre ids ou les paramètres from et to"
+        expect(response.parsed_body["errors"].first).to eq "Vous devez préciser le paramètre ids ou les paramètres from et to"
       end
     end
   end
