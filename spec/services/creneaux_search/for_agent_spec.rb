@@ -123,7 +123,8 @@ RSpec.describe CreneauxSearch::ForAgent, type: :service do
       let(:motif_with_lieu) { create :motif, organisation: organisation }
       let!(:another_po_with_lieu) { create(:plage_ouverture, motifs: [motif_by_phone, motif_with_lieu], first_day: Date.new(2022, 10, 20), lieu: lieu, organisation: organisation) }
 
-      it "give both creneaux" do
+      it "retourne des créneaux des deux plages d’ouvertures" do
+        # on utilise volontairement pas .first ici car les créneaux retournés ne sont pas triés
         expect(described_class.new(form).build_result.creneaux.map(&:starts_at)).to include(Time.zone.local(2022, 10, 25, 8, 0, 0))
         expect(described_class.new(form).build_result.creneaux.map(&:starts_at)).to include(Time.zone.local(2022, 10, 20, 8, 0, 0))
       end
