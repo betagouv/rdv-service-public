@@ -10,6 +10,8 @@ class Anonymizer::Rules::RdvServicePublic
         birth_name
         birth_date
         email
+        account_email
+        notification_email
         unconfirmed_email
         address
         address_details

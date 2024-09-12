@@ -3,7 +3,7 @@ namespace :users do
   task backfill_account_email: :environment do
     User.in_batches do |relation|
       # rubocop:disable Rails/SkipsModelValidations
-      relation.not(email: nil).update_all("account_email = email")
+      relation.where.not(email: nil).update_all("account_email = email")
       # rubocop:enable Rails/SkipsModelValidations
     end
     puts " Done!"
