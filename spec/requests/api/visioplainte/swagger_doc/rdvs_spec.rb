@@ -40,7 +40,7 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do # rub
                 description: "Une liste d'ids des rendez-vous qu'on souhaite obtenir",
                 example: "123,456", required: false
       parameter name: "guichet_ids", in: :query, type: :array,
-                description: "Une liste d'ids des guichets sur lesquels on veut filtrer les rendez-vous. Obligatoire si les paramètres from et to ne sont pas présents.",
+                description: "Une liste d'ids des guichets sur lesquels on veut filtrer les rendez-vous.",
                 example: "123,456", required: false
 
       response 200, "Renvoie la liste" do
