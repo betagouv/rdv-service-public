@@ -14,9 +14,15 @@ class RdvUpcomingReminderJob < ApplicationJob
   # en être notifié sur Sentry
   discard_on(TooLateError)
 
-  # Si le RDV a été supprimé avant l’éxecution du job (ou d’un retry), la désérialisation AJ échoue
-  # C’est un comportement inattendu, on ne veut pas retry mais on veut être notifié sur Sentry
-  discard_on(ActiveJob::DeserializationError)
+  discard_on(ActiveJob::DeserializationError) do |job, error|
+    # Si le RDV a été supprimé avant l’éxecution du job (ou d’un retry)
+    # C’est un comportement attendu, on ne veut pas retry ni être notifié sur Sentry
+    next if error.cause.is_a?(ActiveRecord::RecordNotFound)
+
+    # dans le cas encore jamais vu où la désérialisation échouerait pour d’autres raisons
+    # il ne sert probablement à rien de retry non plus, mais on aimerait en être notifié
+    job.sentry_capture_exception(error)
+  end
 
   def perform(rdv)
     if rdv.ends_at < Time.zone.now
