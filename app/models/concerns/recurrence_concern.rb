@@ -19,6 +19,10 @@ module RecurrenceConcern
     }
   end
 
+  def rrule
+    IcalHelpers::Rrule.from_recurrence(recurrence)
+  end
+
   def starts_at
     return nil if start_time.blank? || first_day.blank?
 

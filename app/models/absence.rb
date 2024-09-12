@@ -4,7 +4,6 @@ class Absence < ApplicationRecord
   include WebhookDeliverable
   include RecurrenceConcern
   include IcalHelpers::Ics
-  include IcalHelpers::Rrule
   include Payloads::Absence
   include Expiration
   include EnsuresRealisticDate

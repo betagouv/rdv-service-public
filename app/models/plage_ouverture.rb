@@ -4,7 +4,6 @@ class PlageOuverture < ApplicationRecord
   include RecurrenceConcern
   include WebhookDeliverable
   include IcalHelpers::Ics
-  include IcalHelpers::Rrule
   include Payloads::PlageOuverture
   include Expiration
   include EnsuresRealisticDate
