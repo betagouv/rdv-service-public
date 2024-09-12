@@ -734,7 +734,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_12_094029) do
     t.datetime "rdv_invitation_token_updated_at"
     t.string "notification_email"
     t.string "account_email"
-    t.index ["account_email"], name: "index_users_on_account_email"
+    t.index ["account_email"], name: "index_users_on_account_email", unique: true, where: "(account_email IS NOT NULL)"
     t.index ["birth_date"], name: "index_users_on_birth_date"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["created_through"], name: "index_users_on_created_through"
