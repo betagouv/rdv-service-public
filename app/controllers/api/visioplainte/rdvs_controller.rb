@@ -1,6 +1,19 @@
 class Api::Visioplainte::RdvsController < Api::Visioplainte::BaseController
   def index
     rdvs = authorized_rdv_scope
+    if params[:ids].present?
+      rdvs = rdvs.where(id: params[:ids])
+    elsif params[:from].present? && params[:to].present?
+      rdvs = rdvs.where("starts_at >= ?", Time.zone.parse(params[:from])).where("starts_at <= ?", Time.zone.parse(params[:to]))
+    else
+      errors = ["Vous devez précisez le paramètre ids ou les paramètres from et to"]
+      render(json: { errors: errors }, status: :bad_request) and return
+    end
+
+    if params[:guichet_ids]
+      rdvs = rdvs.joins(:agents_rdvs).where(agents_rdvs: { agent_id: params[:guichet_ids] })
+    end
+
     render json: Visioplainte::RdvBlueprint.render(rdvs, root: :rdvs)
   end
 

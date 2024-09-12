@@ -119,18 +119,76 @@ RSpec.describe "Visioplainte Rdvs" do
 
   describe "#index" do
     subject(:get_index) do
-      get "/api/visioplainte/rdvs/", headers: auth_header
+      get "/api/visioplainte/rdvs/", params: { from: "2024-08-19T08:00:00+02:00", to: "2024-08-20T08:00:00+02:00" }, headers: auth_header
     end
 
-    before do
-      create_rdv
-    end
+    before { create_rdv }
 
     it "returns the list of rdvs" do
       get_index
       expect(response.status).to eq 200
 
       expect(response.parsed_body["rdvs"][0]["starts_at"]).to eq "2024-08-19 08:00:00 +0200"
+    end
+
+    context "when there are no rdvs for the from and to params" do
+      subject(:get_index) do
+        get "/api/visioplainte/rdvs/", params: { from: "2024-08-22T08:00:00+02:00", to: "2024-08-23T08:00:00+02:00" }, headers: auth_header
+      end
+
+      it "returns an empty list" do
+        get_index
+        expect(response.status).to eq 200
+
+        expect(response.parsed_body["rdvs"]).to be_empty
+      end
+    end
+
+    context "when asking for specific rdv ids" do
+      subject(:get_index) do
+        get "/api/visioplainte/rdvs/", params: { ids: [Rdv.last.id] }, headers: auth_header
+      end
+
+      it "returns the rdvs" do
+        get_index
+        expect(response.status).to eq 200
+
+        expect(response.parsed_body["rdvs"][0]["id"]).to eq Rdv.last.id
+      end
+
+      it "doesn't allow getting a rdv that belongs to another territory" do
+        rdv = create(:rdv)
+        get "/api/visioplainte/rdvs/", params: { ids: [rdv.id] }, headers: auth_header
+
+        expect(response.parsed_body["rdvs"]).to be_empty
+      end
+    end
+
+    context "when filtering by guichet" do
+      let(:date_params) do
+        { from: "2024-08-19T08:00:00+02:00", to: "2024-08-20T08:00:00+02:00" }
+      end
+
+      let(:gendarmerie_guichet_ids) do
+        get "/api/visioplainte/guichets", params: { service: "Gendarmerie" }, headers: auth_header
+        response.parsed_body["guichets"].map { |guichet| guichet["id"] } # rubocop:disable Rails/Pluck
+      end
+
+      it "returns only the rdvs of the given guichets" do
+        # Le rdv créé est pour la police, donc un appel sur les guichets de la gendarmerie renvoie une liste vide
+        get "/api/visioplainte/rdvs/", params: { guichet_ids: gendarmerie_guichet_ids }.merge(date_params), headers: auth_header
+
+        expect(response.parsed_body["rdvs"]).to be_empty
+      end
+    end
+
+    context "without from, to or ids params" do
+      it "returns an error" do
+        get "/api/visioplainte/rdvs/", params: {}, headers: auth_header
+
+        expect(response.status).to eq 400
+        expect(response.parsed_body["errors"].first).to eq "Vous devez précisez le paramètre ids ou les paramètres from et to"
+      end
     end
   end
 end
