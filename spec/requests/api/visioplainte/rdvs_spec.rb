@@ -118,26 +118,18 @@ RSpec.describe "Visioplainte Rdvs" do
   end
 
   describe "#index" do
-    subject(:get_index) do
-      get "/api/visioplainte/rdvs/", params: { from: "2024-08-19T08:00:00+02:00", to: "2024-08-20T08:00:00+02:00" }, headers: auth_header
-    end
-
     before { create_rdv }
 
     it "returns the list of rdvs" do
-      get_index
+      get "/api/visioplainte/rdvs/", params: { from: "2024-08-19T08:00:00+02:00", to: "2024-08-20T08:00:00+02:00" }, headers: auth_header
       expect(response.status).to eq 200
 
       expect(response.parsed_body["rdvs"][0]["starts_at"]).to eq "2024-08-19 08:00:00 +0200"
     end
 
     context "when there are no rdvs for the from and to params" do
-      subject(:get_index) do
-        get "/api/visioplainte/rdvs/", params: { from: "2024-08-22T08:00:00+02:00", to: "2024-08-23T08:00:00+02:00" }, headers: auth_header
-      end
-
       it "returns an empty list" do
-        get_index
+        get "/api/visioplainte/rdvs/", params: { from: "2024-08-22T08:00:00+02:00", to: "2024-08-23T08:00:00+02:00" }, headers: auth_header
         expect(response.status).to eq 200
 
         expect(response.parsed_body["rdvs"]).to be_empty
@@ -145,12 +137,8 @@ RSpec.describe "Visioplainte Rdvs" do
     end
 
     context "when asking for specific rdv ids" do
-      subject(:get_index) do
-        get "/api/visioplainte/rdvs/", params: { ids: [Rdv.last.id] }, headers: auth_header
-      end
-
       it "returns the rdvs" do
-        get_index
+        get "/api/visioplainte/rdvs/", params: { ids: [Rdv.last.id] }, headers: auth_header
         expect(response.status).to eq 200
 
         expect(response.parsed_body["rdvs"][0]["id"]).to eq Rdv.last.id
