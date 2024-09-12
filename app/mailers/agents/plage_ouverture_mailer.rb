@@ -22,7 +22,7 @@ class Agents::PlageOuvertureMailer < ApplicationMailer
     # On passe la plage au job sous forme sérialisée puisqu'elle n'existe plus en base.
     if @plage_ouverture.is_a?(Hash)
       motifs = Motif.where(id: @plage_ouverture[:motif_ids])
-      @plage_ouverture = PlageOuverture.new(@plage_ouverture)
+      @plage_ouverture = PlageOuverture.deserialize_for_active_job(@plage_ouverture)
       @plage_ouverture.motifs = motifs
     end
 

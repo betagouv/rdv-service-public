@@ -63,7 +63,7 @@ class Admin::AbsencesController < AgentAuthController
     authorize(@absence)
     if @absence.destroy
       # On passe l'absence au job sous forme sérialisée puisqu'elle n'existe plus en base.
-      Agents::AbsenceMailer.with(absence: @absence.attributes).absence_destroyed.deliver_later if @agent.absence_notification_level == "all"
+      Agents::AbsenceMailer.with(absence: Absence.serialize_for_active_job(@absence)).absence_destroyed.deliver_later if @agent.absence_notification_level == "all"
       flash[:notice] = t(".absence_deleted")
       redirect_to admin_organisation_agent_absences_path(current_organisation, @absence.agent_id)
     else
