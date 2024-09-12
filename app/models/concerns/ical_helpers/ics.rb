@@ -56,7 +56,7 @@ module IcalHelpers
       end
       event.summary = payload[:summary]
       event.location = payload[:address]
-      event.rrule = payload[:recurrence]
+      event.rrule = payload[:rrule]
       event.sequence = 0 # not sure if this is necessary, but not worth investigating right now
       event.description = payload[:description]
       event.organizer = "mailto:#{payload[:domain].secretariat_email}"
