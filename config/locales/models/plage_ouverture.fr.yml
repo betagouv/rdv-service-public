@@ -10,6 +10,7 @@ fr:
         end_time: Termine à
         recurrence: Répéter
         lieu: Lieu
+        recurrence_ends_at: Dernier jour
     errors:
       models:
         plage_ouverture:

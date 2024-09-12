@@ -7,7 +7,6 @@ class PlageOuverture < ApplicationRecord
   include IcalHelpers::Rrule
   include Payloads::PlageOuverture
   include Expiration
-  include EnsuresRealisticDate
 
   include TextSearch
   def self.search_options
@@ -42,6 +41,8 @@ class PlageOuverture < ApplicationRecord
   validates :motifs, :title, presence: true
   validate :warn_overlapping_plage_ouvertures
   validate :warn_overflow_motifs_duration
+  validates :first_day, realistic_date: true
+  validates :recurrence_ends_at, realistic_date: true
 
   # Scopes
   scope :in_range, lambda { |range|
