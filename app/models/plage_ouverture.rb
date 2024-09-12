@@ -3,7 +3,6 @@ class PlageOuverture < ApplicationRecord
   has_paper_trail
   include RecurrenceConcern
   include WebhookDeliverable
-  include IcalHelpers::Ics
   include Payloads::PlageOuverture
   include Expiration
   include EnsuresRealisticDate

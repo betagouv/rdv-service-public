@@ -13,6 +13,8 @@ class AbsenceBlueprint < Blueprinter::Base
 
   # rubocop:disable Style/SymbolProc
   field(:rrule) { _1.rrule }
-  field(:ical) { _1.to_ical }
+  field(:ical) do |absence|
+    IcalHelpers::Ics.from_payload(absence.payload).to_ical
+  end
   # rubocop:enable Style/SymbolProc
 end

@@ -3,7 +3,6 @@ class Absence < ApplicationRecord
   has_paper_trail
   include WebhookDeliverable
   include RecurrenceConcern
-  include IcalHelpers::Ics
   include Payloads::Absence
   include Expiration
   include EnsuresRealisticDate

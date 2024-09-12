@@ -9,6 +9,8 @@ class PlageOuvertureBlueprint < Blueprinter::Base
 
   # rubocop:disable Style/SymbolProc
   field(:rrule) { _1.rrule }
-  field(:ical) { _1.to_ical }
+  field(:ical) do |po|
+    IcalHelpers::Ics.from_payload(po.payload).to_ical
+  end
   # rubocop:enable Style/SymbolProc
 end

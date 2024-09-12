@@ -8,10 +8,6 @@ module IcalHelpers
   ICS_UID_SUFFIX = "RDV Solidarités".freeze
 
   module Ics
-    def to_ical(*args)
-      IcalHelpers::Ics.from_payload(payload(*args)).to_ical
-    end
-
     # Specs
     # iCalendar: https://datatracker.ietf.org/doc/html/rfc5545#section-3.6.1
     #   * See section 3.6.1 for VEVENT
