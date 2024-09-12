@@ -72,6 +72,8 @@ class User < ApplicationRecord
 
   # Hooks
   before_save :set_email_to_null_if_blank
+  # Temp
+  before_save :sync_email_column
 
   # Scopes
   default_scope { where(deleted_at: nil) }
@@ -288,5 +290,12 @@ class User < ApplicationRecord
       deleted_at: Time.zone.now,
       email: deleted_email
     )
+  end
+
+  # Temp
+  def sync_email_column
+    if email_changed?
+      self.account_email = email
+    end
   end
 end
