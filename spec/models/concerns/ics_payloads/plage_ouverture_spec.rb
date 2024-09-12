@@ -1,6 +1,6 @@
 RSpec.describe IcsPayloads::PlageOuverture do
   describe "#payload" do
-    %i[name starts_at recurrence ical_uid ends_at].each do |key|
+    %i[name starts_at rrule ical_uid ends_at].each do |key|
       it "return an hash with key #{key}" do
         plage_ouverture = build(:plage_ouverture)
         expect(plage_ouverture.payload).to have_key(key)
@@ -27,10 +27,10 @@ RSpec.describe IcsPayloads::PlageOuverture do
       it { expect(plage_ouverture.payload[:starts_at]).to eq(starts_at) }
     end
 
-    describe ":recurrence" do
+    describe ":rrule" do
       let(:plage_ouverture) { build(:plage_ouverture, recurrence: Montrose.every(:week, starts: Date.new(2020, 11, 18), on: [:wednesday]).to_json) }
 
-      it { expect(plage_ouverture.payload[:recurrence]).to eq("FREQ=WEEKLY;BYDAY=WE;") }
+      it { expect(plage_ouverture.payload[:rrule]).to eq("FREQ=WEEKLY;BYDAY=WE;") }
     end
 
     describe ":ical_uid" do

@@ -6,7 +6,7 @@ module IcsPayloads
         starts_at: starts_at,
         ends_at: first_occurrence_ends_at,
         ical_uid: ical_uid,
-        summary: "#{IcalFormatters::ICS_UID_SUFFIX} #{title}",
+        summary: "#{IcalFormatters::Ics::ICS_UID_SUFFIX} #{title}",
         rrule: IcalFormatters::Rrule.from_recurrence(recurrence),
         domain: domain,
       }

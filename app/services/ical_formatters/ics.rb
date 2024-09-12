@@ -1,13 +1,13 @@
 require "icalendar/tzinfo"
 
 module IcalFormatters
-  # Cette constante est ajoutée aux UIDs des événements ICS afin
-  # d'empêcher la collision (certes improbable) avec des événements
-  # d'autres plateformes. Il est important de ne pas modifier cette
-  # constante car cel ferait changer les UIDs (et un ID ne doit pas changer).
-  ICS_UID_SUFFIX = "RDV Solidarités".freeze
-
   module Ics
+    # Cette constante est ajoutée aux UIDs des événements ICS afin
+    # d'empêcher la collision (certes improbable) avec des événements
+    # d'autres plateformes. Il est important de ne pas modifier cette
+    # constante car cel ferait changer les UIDs (et un ID ne doit pas changer).
+    ICS_UID_SUFFIX = "RDV Solidarités".freeze
+
     # Specs
     # iCalendar: https://datatracker.ietf.org/doc/html/rfc5545#section-3.6.1
     #   * See section 3.6.1 for VEVENT
