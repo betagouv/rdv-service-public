@@ -5,14 +5,19 @@
   color: inherit;
 }
 
-a[href] {
-  background-image: none; // pour éviter le soulignement des liens
+a.btn[href],
+a.stretched-link[href] {
+  background-image: none;
+  // pour éviter le soulignement des boutons et liens bootstrap
 }
 
 footer {
-  background-color: var(--background-default-grey); // this should go on the body
+  background-color: var(
+    --background-default-grey
+  ); // this should go on the body
 
-  a, a:hover {
+  a,
+  a:hover {
     color: inherit;
   }
   [href]:not(.fr-footer__brand-link):not(.fr-footer__partners-link) {

@@ -59,7 +59,7 @@ gem "connection_pool"
 
 # Devise / auth
 # Flexible authentication solution for Rails with Warden
-gem "devise"
+gem "devise", git: "https://github.com/victormours/devise", ref: "0c502c8ab7f11e03ece9d9552cdf5d96e22c40c6"
 # An invitation strategy for Devise
 gem "devise_invitable"
 # Deliver Devise's emails in the background using ActiveJob.
@@ -81,7 +81,7 @@ gem "common_french_passwords"
 
 # Jobs
 # A multithreaded, Postgres-based ActiveJob backend for Ruby on Rails
-gem "good_job"
+gem "good_job", "3.27.4"
 
 # JSON serialization and queries
 
@@ -168,14 +168,14 @@ group :development do
   # Security vulnerability scanner for Ruby on Rails.
   gem "brakeman", require: false
   # Automatic Ruby code style checking tool.
-  gem "rubocop", "1.24.1", require: false
+  gem "rubocop", "~> 1.65", require: false
   # Rubocop depends on parser. https://github.com/whitequark/parser#compatibility-with-ruby-mri
   # Mettre à jour la version de cette gem lorsqu'on met à jour Ruby (version actuelle : 3.3.3)
   gem "parser", "3.3.3.0", require: false
   # Code style checking for RSpec files
-  gem "rubocop-rspec", "2.7.0"
+  gem "rubocop-rspec", "~> 3.0", require: false
   # Automatic Rails code style checking tool.
-  gem "rubocop-rails", "2.13.1"
+  gem "rubocop-rails", "~> 2.25", require: false
   # Slim template linting tool
   gem "slim_lint", require: false
 
@@ -195,11 +195,11 @@ group :development do
   # Other
 
   # Manage Procfile-based applications
-  gem "foreman"
+  gem "foreman", require: false
   # Gives letter_opener an interface for browsing sent emails
   gem "letter_opener_web" # Saves sent emails and serves them on /letter_opener
   # Entity-relationship diagram for your Rails models.
-  gem "rails-erd" # Keeps docs/domain_model.svg up-to-date. See .erdconfig
+  gem "rails-erd", require: false # Keeps docs/domain_model.svg up-to-date. See .erdconfig
 end
 
 group :test do

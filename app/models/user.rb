@@ -1,6 +1,4 @@
 class User < ApplicationRecord
-  self.ignored_columns = [:remember_created_at]
-
   # Mixins
   has_paper_trail(
     only: %w[
@@ -25,11 +23,10 @@ class User < ApplicationRecord
   include WebhookDeliverable
   include TextSearch
   include StrongPasswordConcern
-  include User::Ants
 
   def self.search_options
     {
-      using: { tsearch: { prefix: true, any_word: true, tsvector_column: "text_search_terms" } },
+      using: { tsearch: { prefix: true, tsvector_column: "text_search_terms" } },
     }
   end
 
@@ -37,13 +34,13 @@ class User < ApplicationRecord
   ONGOING_MARGIN = 1.hour.freeze
   auto_strip_attributes :email, :first_name, :last_name, :birth_name
 
-  enum caisse_affiliation: { aucune: 0, caf: 1, msa: 2 }
-  enum family_situation: { single: 0, in_a_relationship: 1, divorced: 2 }
-  enum created_through: { agent_creation: "agent_creation", user_sign_up: "user_sign_up",
-                          franceconnect_sign_up: "franceconnect_sign_up", user_relative_creation: "user_relative_creation",
-                          unknown: "unknown", agent_creation_api: "agent_creation_api", prescripteur: "prescripteur", }
-  enum invited_through: { devise_email: "devise_email", external: "external" }
-  enum logement: { sdf: 0, heberge: 1, en_accession_propriete: 2, proprietaire: 3, autre: 4, locataire: 5 }
+  enum :caisse_affiliation, { aucune: 0, caf: 1, msa: 2 }
+  enum :family_situation, { single: 0, in_a_relationship: 1, divorced: 2 }
+  enum :created_through, { agent_creation: "agent_creation", user_sign_up: "user_sign_up",
+                           franceconnect_sign_up: "franceconnect_sign_up", user_relative_creation: "user_relative_creation",
+                           unknown: "unknown", agent_creation_api: "agent_creation_api", prescripteur: "prescripteur", }
+  enum :invited_through, { devise_email: "devise_email", external: "external" }
+  enum :logement, { sdf: 0, heberge: 1, en_accession_propriete: 2, proprietaire: 3, autre: 4, locataire: 5 }
 
   # Relations
   has_many :user_profiles, dependent: :restrict_with_error
@@ -79,7 +76,6 @@ class User < ApplicationRecord
   # Scopes
   default_scope { where(deleted_at: nil) }
 
-  scope :order_by_last_name, -> { order(Arel.sql("LOWER(last_name)")) }
   scope :responsible, -> { where(responsible_id: nil) }
   scope :relative, -> { where.not(responsible_id: nil) }
 
@@ -87,6 +83,11 @@ class User < ApplicationRecord
 
   def to_s
     full_name
+  end
+
+  def email=(value)
+    # On corriger automatiquement cette faute de frappe courante
+    super(value&.gsub(".@", "@"))
   end
 
   def add_organisation(organisation)

@@ -9,7 +9,7 @@
 
   - if local_assigns[:f]
     .collapse.show.js-collapse-warning-confirmation
-      small.form-text.text-muted.mb-3 Ces avertissements ne sont pas bloquants, vous pouvez les ignorer en confirmant
+      small.form-text.rdv-color-text-mention-grey.mb-3 Ces avertissements ne sont pas bloquants, vous pouvez les ignorer en confirmant
       = f.input :ignore_benign_errors, as: :hidden, input_html: {class: "js-ignore-benign-errors", value: "1" }
       .d-flex.justify-content-between
         div

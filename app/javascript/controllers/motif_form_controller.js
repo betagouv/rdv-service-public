@@ -21,62 +21,45 @@ export default class extends Controller {
 
   refreshSections(event) {
     const resetCheckbox = !!event;
-    this.refreshSection(this.bookingDelaySectionTarget, this.reasonsToDisableBookingDelay(), resetCheckbox)
-    this.refreshSection(this.sectoSectionTarget, this.reasonsToDisableSecto(), resetCheckbox)
-    this.refreshSection(this.secretariatSectionTarget, this.reasonsToDisableSecretariat(), resetCheckbox)
+    this.refreshSection(this.bookingDelaySectionTarget, this.shouldDisableBookingDelay(), resetCheckbox)
+    if(this.hasSectoSectionTarget) {
+      this.refreshSection(this.sectoSectionTarget, this.shouldDisableSecto(), resetCheckbox)
+    }
+    this.refreshSection(this.secretariatSectionTarget, this.shouldDisableSecretariat(), resetCheckbox)
   }
 
-  refreshSection(section, reasons, resetCheckbox) {
-    if(reasons.length === 0) {
-      this.enableSection(section, resetCheckbox)
+  refreshSection(section, disable, resetCheckbox) {
+    if(disable) {
+      this.disableSection(section, resetCheckbox)
     }
     else {
-      this.disableSection(section, reasons, resetCheckbox)
+      this.enableSection(section, resetCheckbox)
     }
   }
 
-  reasonsToDisableBookingDelay() {
-    return this.bookableBy === "agents" ? ["les créneaux ne sont pas ouverts à la réservation en ligne"] : []
+  shouldDisableBookingDelay() {
+    return this.bookableBy === "agents"
   }
 
-  reasonsToDisableSecto() {
-    const reasons = []
-    if(this.bookableBy === "agents") {
-      reasons.push("les créneaux ne sont pas ouverts à la réservation en ligne")
-    }
-    if(this.followUpCheckbox.checked) {
-      reasons.push(`l'option "RDV de suivi" est cochée`)
-    }
-    return reasons
+  shouldDisableSecto() {
+    return this.bookableBy === "agents" || this.followUpCheckbox.checked
   }
 
-  reasonsToDisableSecretariat() {
-    const reasons = []
-    if(this.locationType === "home") {
-      reasons.push("le RDV est à domicile")
-    }
-    if(this.followUpCheckbox.checked) {
-      reasons.push(`l'option "RDV de suivi" est cochée`)
-    }
-    return reasons
+  shouldDisableSecretariat() {
+    return this.locationType === "home" || this.followUpCheckbox.checked
   }
 
   enableSection(sectionRoot, resetCheckbox) {
-    sectionRoot.querySelectorAll("input:not([type=hidden]), select").forEach(i => i.disabled = false)
+    $(sectionRoot).collapse("show")
     if(resetCheckbox) {
       sectionRoot.querySelectorAll(".js-check-on-section-enable").forEach(box => box.checked = true)
     }
-    sectionRoot.querySelector(".js-reasons-for-disabled-section").classList.add("hidden")
-    sectionRoot.classList.remove("disabled-card")
   }
-  disableSection(sectionRoot, reasons, resetCheckbox) {
-    sectionRoot.querySelectorAll("input:not([type=hidden]), select").forEach(i => i.disabled = true)
+  disableSection(sectionRoot, resetCheckbox) {
+    $(sectionRoot).collapse("hide")
     if(resetCheckbox) {
       sectionRoot.querySelectorAll(".js-uncheck-on-section-disable").forEach(box => box.checked = false)
     }
-    sectionRoot.querySelector(".js-reasons-for-disabled-section").innerText = `Vous ne pouvez pas modifier ce paramètre car ${reasons.join(" et ")}.`;
-    sectionRoot.querySelector(".js-reasons-for-disabled-section").classList.remove("hidden")
-    sectionRoot.classList.add("disabled-card")
   }
 
   get locationType() {

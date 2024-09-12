@@ -32,7 +32,7 @@
           .text-muted.form-text
             | Dans quel domaine d'activité est-ce que cet agent effectue des rendez-vous ?
           = f.association :services, collection: @services, include_blank: false, as: :check_boxes, label: ""
-          - if policy([:agent, current_territory]).edit?
+          - if Agent::TerritoryPolicy.new(current_agent, current_territory).edit?
             small.form-text.text-muted.mb-4
               = "Si le service dont vous avez besoin n'apparaît pas dans cette liste, vous pouvez "
               = link_to("activer des services supplémentaires", edit_admin_territory_services_path(current_territory, redirect_to_organisation_id: current_organisation.id))

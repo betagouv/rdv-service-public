@@ -1,7 +1,11 @@
 body.authentication-bg {
   background-size: cover;
   background-position: center;
-  background: linear-gradient(to right, lighten($primary, 30%), lighten($secondary, 30%));
+  background: linear-gradient(
+    to right,
+    lighten($primary, 30%),
+    lighten($secondary, 30%)
+  );
 }
 
 .logout-icon {
@@ -47,7 +51,7 @@ body.authentication-bg {
   }
 }
 
-.toggle-password{
+.toggle-password {
   float: right;
   margin-right: 1rem;
   margin-top: -1.8rem;

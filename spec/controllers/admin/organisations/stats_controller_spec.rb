@@ -13,7 +13,7 @@ RSpec.describe Admin::Organisations::StatsController do
 
       expect(response).to be_successful
 
-      expect(JSON.parse(response.body)).to eq(
+      expect(response.parsed_body).to eq(
         [
           { "data" => [["24/09/2023", 1]], "name" => "Agent (1)" },
         ]

@@ -21,7 +21,7 @@ module MotifsHelper
     tag.span(motif_name_and_location_type(motif)) + motif_badges(motif)
   end
 
-  def motif_badges(motif, only: %i[bookable_by_invited_users bookable_by_everyone for_secretariat follow_up collectif])
+  def motif_badges(motif, only: %i[bookable_by_invited_users bookable_by_everyone bookable_by_agents_and_prescripteurs for_secretariat follow_up collectif])
     safe_join(only.select { motif.send("#{_1}?") }.map { build_badge_tag_for(_1) })
   end
 
@@ -33,6 +33,20 @@ module MotifsHelper
 
   def build_badge_tag_for(badge_name)
     tag.span(I18n.t("motifs.badges.#{badge_name}"), class: "badge badge-motif-#{badge_name}")
+  end
+
+  # L'option "agents_and_prescripteurs_and_invited_users"
+  # n'est offerte que dans des organisations RDV-I.
+  def bookable_by_types(rdvi_mode:)
+    if rdvi_mode
+      Motif.bookable_bies.keys
+    else
+      Motif.bookable_bies.keys - ["agents_and_prescripteurs_and_invited_users"]
+    end
+  end
+
+  def bookable_by_filter_options(rdvi_mode:)
+    [["-", ""]] + bookable_by_types(rdvi_mode: rdvi_mode).map { [t("admin.motifs.bookable_by_types.#{_1}"), _1] }
   end
 
   def min_max_delay_options

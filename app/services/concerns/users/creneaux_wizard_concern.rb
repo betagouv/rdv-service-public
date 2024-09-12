@@ -37,7 +37,7 @@ module Users::CreneauxWizardConcern
   end
 
   def user_selected_organisation
-    @user_selected_organisation ||= \
+    @user_selected_organisation ||=
       @user_selected_organisation_id.present? ? Organisation.find(@user_selected_organisation_id) : nil
   end
 
@@ -87,6 +87,10 @@ module Users::CreneauxWizardConcern
 
   def next_availability
     @next_availability ||= creneaux.empty? ? creneaux_search.next_availability : nil
+  end
+
+  def no_availability?
+    creneaux.empty? && next_availability.nil?
   end
 
   def max_public_booking_delay

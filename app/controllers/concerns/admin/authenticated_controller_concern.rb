@@ -6,11 +6,11 @@ module Admin::AuthenticatedControllerConcern
 
     before_action :authenticate_agent!
     before_action :set_paper_trail_whodunnit
-    helper_method :authorize_admin
+    helper_method :authorize_agent
     helper_method :policy_scope_admin
   end
 
-  def authorize_admin(record, *args, **kwargs)
+  def authorize_agent(record, *args, **kwargs)
     authorize([:agent, record], *args, **kwargs)
   end
 

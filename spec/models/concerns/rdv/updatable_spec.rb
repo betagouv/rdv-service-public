@@ -21,7 +21,7 @@ RSpec.describe Rdv::Updatable, type: :concern do
     end
 
     it "returns a success" do
-      expect(rdv.update_and_notify(agent, status: "noshow")).to eq(true)
+      expect(rdv.update_and_notify(agent, status: "noshow")).to be(true)
     end
 
     %w[excused revoked noshow].each do |status|
@@ -43,7 +43,7 @@ RSpec.describe Rdv::Updatable, type: :concern do
     end
 
     it "returns a failure when the Rdv can't be updated" do
-      expect(rdv.update_and_notify(agent, ends_at: nil)).to eq(false)
+      expect(rdv.update_and_notify(agent, ends_at: nil)).to be(false)
     end
 
     describe "clear the file_attentes" do
@@ -177,7 +177,7 @@ RSpec.describe Rdv::Updatable, type: :concern do
       it "true when rdv status from #{cancelled_status} to unknown" do
         rdv.update!(status: cancelled_status)
         rdv.update!(status: "unknown")
-        expect(rdv.rdv_status_reloaded_from_cancelled?).to eq(true)
+        expect(rdv.rdv_status_reloaded_from_cancelled?).to be(true)
       end
     end
 
@@ -186,30 +186,31 @@ RSpec.describe Rdv::Updatable, type: :concern do
       it "false when rdv status from #{not_cancelled_status} to unknown" do
         rdv.update!(status: not_cancelled_status)
         rdv.update!(status: "unknown")
-        expect(rdv.rdv_status_reloaded_from_cancelled?).to eq(false)
+        expect(rdv.rdv_status_reloaded_from_cancelled?).to be(false)
       end
     end
   end
 
-  describe "#notify!" do
+  describe "notifications" do
+    let(:autre_lieu) { create(:lieu, availability: "enabled") }
+    let(:lieu) { create(:lieu, availability: "enabled") }
+
     it "calls lieu_updated_notifier with lieu changes" do
-      lieu = create(:lieu, availability: "enabled")
-      autre_lieu = create(:lieu, availability: "enabled")
       rdv.update!(lieu: lieu)
       rdv.reload
-      rdv.update(lieu: autre_lieu)
-      rdv.notify!(agent, [])
+
+      rdv.update_and_notify(agent, lieu: autre_lieu)
 
       expect_notifications_sent_for(rdv, user, :rdv_updated)
       expect_notifications_sent_for(rdv, agent, :rdv_updated)
     end
 
     it "calls lieu_updated_notifier with lieu changes for collective rdv" do
-      lieu = create(:lieu, availability: "enabled")
-      autre_lieu = create(:lieu, availability: "enabled")
       rdv_co.update!(lieu: lieu)
       rdv_co.reload
+
       rdv_co.update_and_notify(agent, lieu: autre_lieu)
+
       expect_notifications_sent_for(rdv_co, user_co1, :rdv_updated)
       expect_notifications_sent_for(rdv_co, user_co2, :rdv_updated)
       expect_notifications_sent_for(rdv_co, agent, :rdv_updated)

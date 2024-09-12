@@ -11,11 +11,11 @@ RSpec.describe "Agent can CRUD motifs" do
   it "works" do
     visit authenticated_agent_root_path
     click_link "Motifs"
-    expect_page_title("Vos motifs")
+    expect_page_title("Motifs de l'organisation")
     click_link motif.name
 
     expect(page).to have_content(motif.name)
-    click_link "Éditer"
+    click_link "Modifier"
 
     expect_page_title("Modifier le motif")
     fill_in "Nom", with: "Suivi bonsoir"
@@ -24,17 +24,17 @@ RSpec.describe "Agent can CRUD motifs" do
     expect(page).to have_content("Suivi bonsoir")
     click_link("Supprimer")
 
-    expect_page_title("Vos motifs")
+    expect_page_title("Motifs de l'organisation")
     expect(page).to have_content("Vous n'avez pas encore créé de motif.")
     click_link "Créer un motif", match: :first
 
-    expect_page_title("Création d’un nouveau motif")
+    expect_page_title("Créer un motif")
     find("#motif_service_id").find(:option, service.name).select_option
     fill_in "Nom", with: "Suivi bonne nuit"
     fill_in "Couleur associée", with: "#000"
     click_button "Créer le motif"
 
-    expect_page_title("Vos motifs")
+    expect_page_title("Motifs de l'organisation")
     expect(page).to have_content("Suivi bonne nuit")
   end
 
@@ -65,11 +65,10 @@ RSpec.describe "Agent can CRUD motifs" do
       expect(motif.for_secretariat).to be_truthy
       expect(motif.follow_up).to be_falsey
 
-      click_on "Éditer"
+      click_on "Modifier"
       find("#tab_resa_en_ligne").click
       check "Autoriser ces rendez-vous seulement aux usagers bénéficiant d'un suivi par un référent"
-      expect(find("#motif_for_secretariat")).to be_disabled
-      expect(find("#motif_for_secretariat")).not_to be_checked
+      expect(find("#motif_for_secretariat", visible: false)).not_to be_checked
       click_on "Enregistrer" and motif.reload
       expect(motif.for_secretariat).to be_falsey
       expect(motif.follow_up).to be_truthy
@@ -80,38 +79,34 @@ RSpec.describe "Agent can CRUD motifs" do
       visit edit_admin_organisation_motif_path(organisation_id: organisation.id, id: motif.id)
       find("#tab_resa_en_ligne").click
 
-      # On ouvre àa la résa en ligne, la case est cochée
+      # On ouvre à la résa en ligne, la case est cochée
       choose "Agents de l’organisation, prescripteurs et usagers"
-      expect(find("#motif_rdvs_editable_by_user")).not_to be_disabled
-      expect(find("#motif_rdvs_editable_by_user")).to be_checked
+      editable_by_user_checkbox = find("#motif_rdvs_editable_by_user")
+      expect(editable_by_user_checkbox).to be_checked
 
-      # On ferme àa la résa en ligne, la case est décochée et désactivée
+      # On ferme à la résa en ligne, la case est décochée
       choose "Agents de l’organisation", id: "motif_bookable_by_agents"
-      expect(find("#motif_rdvs_editable_by_user")).to be_disabled
-      expect(find("#motif_rdvs_editable_by_user")).not_to be_checked
+      expect(editable_by_user_checkbox).not_to be_checked
 
-      # On ouvre àa la résa en ligne, la case est cochée
+      # On ouvre à la résa en ligne, la case est cochée
       choose "Agents de l’organisation, prescripteurs et usagers"
-      expect(find("#motif_rdvs_editable_by_user")).not_to be_disabled
-      expect(find("#motif_rdvs_editable_by_user")).to be_checked
+      expect(editable_by_user_checkbox).to be_checked
 
       expect { click_on "Enregistrer" }.to change { motif.reload.bookable_by }.to("everyone")
 
       # On décoche la case "RDVs modifiables" et on enregistre
-      click_on "Éditer"
+      click_on "Modifier"
       find("#tab_resa_en_ligne").click
       uncheck "motif_rdvs_editable_by_user"
       expect { click_on "Enregistrer" }.to change { motif.reload.rdvs_editable_by_user }.from(true).to(false)
 
-      # On revient sur le formulaire, la case est bien décochée, elle se re-coche
-      # automatiquement si on choisit une option d'ouverture en ligne
-      click_on "Éditer"
+      # On revient sur le formulaire, la case est bien décochée
+      # et reste décochée lorsque l'on désactive la résa en ligne
+      click_on "Modifier"
       find("#tab_resa_en_ligne").click
-      expect(find("#motif_rdvs_editable_by_user")).not_to be_disabled
-      expect(find("#motif_rdvs_editable_by_user")).not_to be_checked
+      expect(editable_by_user_checkbox).not_to be_checked
       choose "Agents de l’organisation", id: "motif_bookable_by_agents"
-      expect(find("#motif_rdvs_editable_by_user")).to be_disabled
-      expect(find("#motif_rdvs_editable_by_user")).not_to be_checked
+      expect(editable_by_user_checkbox).not_to be_checked
       expect { click_on "Enregistrer" }.to change { motif.reload.bookable_by }.from("everyone").to("agents")
     end
   end

@@ -59,7 +59,7 @@ class ZoneImportRow
     return true if !fields_present? || !sector_found? || zone.valid?
 
     @errors << {
-      key: "invalid_zone_#{zone.errors.attribute_names.first}".to_sym,
+      key: :"invalid_zone_#{zone.errors.attribute_names.first}",
       message: zone.errors.full_messages.join(", "),
     }
     false
@@ -68,7 +68,7 @@ class ZoneImportRow
   def authorized?
     return true if !fields_present? || !sector_found? || !valid_zone?
 
-    policy = Configuration::ZonePolicy.new(AgentTerritorialContext.new(@agent, zone.sector.territory), @agent)
+    policy = Agent::ZonePolicy.new(@agent, zone)
     return true if policy.create?
 
     @errors << {

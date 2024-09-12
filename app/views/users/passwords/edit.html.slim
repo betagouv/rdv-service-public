@@ -3,7 +3,7 @@
 .card
   .card-body
     - if @from_confirmation
-      p.text-muted Pour finaliser votre inscription, veuillez définir un mot de passe.
+      p.rdv-color-text-mention-grey Pour finaliser votre inscription, veuillez définir un mot de passe.
 
     = simple_form_for resource, as: resource_name, url: password_path(resource_name), html: { method: :put } do |f|
       = render "devise/shared/error_messages", resource: resource
@@ -14,5 +14,5 @@
 
         = render "agents/mot_de_passes/new_password_hints"
 
-      .text-center
+      .rdv-text-align-center
         = f.submit "Enregistrer", class: "btn btn btn-primary"

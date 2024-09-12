@@ -1,4 +1,15 @@
-.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6{
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   margin: 10px 0;
 }
 
@@ -25,12 +36,18 @@ hr {
   border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-small, .small {
+small,
+.small {
   font-size: 80%;
   font-weight: normal;
 }
 
-mark, .mark {
+.larger {
+  font-size: larger;
+}
+
+mark,
+.mark {
   padding: 0.2em;
   background-color: #fcf8e3;
 }
@@ -47,14 +64,4 @@ mark, .mark {
   &::before {
     content: "\2014 \00A0";
   }
-}
-
-// Font colors (Custom)
-
-.text-dsfr-grey-50 {
-  color: #161616;
-}
-
-.text-header-blue {
-  color: #2E4077;
 }

@@ -23,7 +23,7 @@
       .d-flex.justify-content-center= paginate @lieux, theme: "twitter-bootstrap-4"
     - else
       .row.justify-content-md-center
-        .col-md-6.text-center.my-5
+        .col-md-6.rdv-text-align-center.my-5
           p.mb-2.lead Vous n'avez pas encore ajouté de lieu de consultation.
           p Les lieux sont les endroits où sont réalisés les RDV. L'adresse du lieu est contenue dans les notifications envoyées à l'usager.
           span.fa-stack.fa-4x
@@ -31,5 +31,5 @@
             i.fa.fa-building.fa-stack-1x.text-white
 
     - if @lieux_policy.create?
-      .text-center
+      .rdv-text-align-center
         = link_to "Ajouter un lieu", new_admin_organisation_lieu_path(current_organisation), class: "btn btn-primary"

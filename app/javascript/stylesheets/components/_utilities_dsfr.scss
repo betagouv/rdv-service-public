@@ -1,0 +1,51 @@
+// TEXT
+
+.rdv-text-align-center {
+  text-align: center;
+}
+
+.rdv-text-align-md-left {
+  @include media-breakpoint-up(md) {
+    text-align: left;
+  }
+}
+
+.rdv-color-text-action-high-blue-ecume {
+  color: var(--text-action-high-blue-ecume);
+}
+
+.rdv-color-text-mention-grey {
+  color: var(--text-mention-grey);
+}
+
+.rdv-color-text-default-success {
+  color: var(--text-default-success);
+}
+
+.rdv-color-text-title-grey {
+  color: var(--text-title-grey);
+}
+
+// FLEX
+
+.rdv-flex-wrap-wrap-reverse {
+  flex-wrap: wrap-reverse;
+}
+
+// DIMENSIONS
+
+.rdv-max-width-60 {
+  max-width: 60%;
+}
+.rdv-max-width-md-100 {
+  @include media-breakpoint-up(md) {
+    max-width: 100%;
+  }
+}
+
+// OTHERS
+
+// utile pour désactiver le soulignement des liens du DSFR
+.rdv-background-image-none {
+  background-image: none;
+}

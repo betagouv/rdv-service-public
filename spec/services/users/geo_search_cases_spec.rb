@@ -138,29 +138,29 @@ RSpec.describe Users::GeoSearch, type: :service_model do
       end
     end
 
-    context "with a fallback sector attributed to whole city" do
+    context "with another sector attributed to whole city" do
       let!(:organisation3) { create(:organisation, territory: territory62, name: "MDS Arques backup") }
 
-      let!(:sector_fallback) { create(:sector, territory: territory62, name: "Arques full", human_id: "arques-fallback") }
-      let!(:zone_fallback) { create(:zone, level: "city", city_code: "62100", city_name: "Arques", sector: sector_fallback) }
-      let!(:attribution_nord) { SectorAttribution.create(level: "organisation", sector: sector_fallback, organisation: organisation3) }
+      let!(:sector_city) { create(:sector, territory: territory62, name: "Arques full", human_id: "arques-city") }
+      let!(:zone_city) { create(:zone, level: "city", city_code: "62100", city_name: "Arques", sector: sector_city) }
+      let!(:attribution_nord) { SectorAttribution.create(level: "organisation", sector: sector_city, organisation: organisation3) }
 
-      context "searched street matched zone in sector sud" do
+      context "searched street matched zone in sector sud AND city zone" do
         let(:searched_street_ban_id) { "62100_304f" }
 
-        it "finds the right sector" do
-          expect(subject.matching_zones).to contain_exactly(zone_sud1)
-          expect(subject.matching_sectors).to contain_exactly(sector_sud)
-          expect(subject.attributed_organisations).to contain_exactly(organisation2)
+        it "finds the right sectors" do
+          expect(subject.matching_zones).to contain_exactly(zone_sud1, zone_city)
+          expect(subject.matching_sectors).to contain_exactly(sector_sud, sector_city)
+          expect(subject.attributed_organisations).to contain_exactly(organisation2, organisation3)
         end
       end
 
       context "searched street not matched" do
         let(:searched_street_ban_id) { "62100_21xx" }
 
-        it "finds fallback sector" do
-          expect(subject.matching_zones).to contain_exactly(zone_fallback)
-          expect(subject.matching_sectors).to contain_exactly(sector_fallback)
+        it "finds city sector only" do
+          expect(subject.matching_zones).to contain_exactly(zone_city)
+          expect(subject.matching_sectors).to contain_exactly(sector_city)
           expect(subject.attributed_organisations).to contain_exactly(organisation3)
         end
       end

@@ -16,11 +16,11 @@ RSpec.describe "User can search for rdvs" do
     let!(:autre_motif) { create(:motif, name: "Consultation", organisation: organisation, restriction_for_rdv: nil, service: service) }
     let!(:motif_autre_service) { create(:motif, :by_phone, name: "Télé consultation", organisation: organisation, restriction_for_rdv: nil, service: create(:service)) }
     let!(:lieu) { create(:lieu, organisation: organisation) }
-    let!(:plage_ouverture) { create(:plage_ouverture, :daily, first_day: now + 1.month, motifs: [motif], lieu: lieu, organisation: organisation) }
-    let!(:autre_plage_ouverture) { create(:plage_ouverture, :daily, first_day: now + 1.month, motifs: [autre_motif], lieu: lieu, organisation: organisation) }
-    let!(:plage_ouverture_autre_service) { create(:plage_ouverture, :daily, first_day: now + 1.month, motifs: [motif_autre_service], lieu: lieu, organisation: organisation) }
+    let!(:plage_ouverture) { create(:plage_ouverture, :weekdays, first_day: now + 1.month, motifs: [motif], lieu: lieu, organisation: organisation) }
+    let!(:autre_plage_ouverture) { create(:plage_ouverture, :weekdays, first_day: now + 1.month, motifs: [autre_motif], lieu: lieu, organisation: organisation) }
+    let!(:plage_ouverture_autre_service) { create(:plage_ouverture, :weekdays, first_day: now + 1.month, motifs: [motif_autre_service], lieu: lieu, organisation: organisation) }
     let!(:lieu2) { create(:lieu, organisation: organisation) }
-    let!(:plage_ouverture2) { create(:plage_ouverture, :daily, first_day: now + 1.month, motifs: [motif], lieu: lieu2, organisation: organisation) }
+    let!(:plage_ouverture2) { create(:plage_ouverture, :weekdays, first_day: now + 1.month, motifs: [motif], lieu: lieu2, organisation: organisation) }
 
     it "default", js: true do
       visit root_path
@@ -142,6 +142,33 @@ RSpec.describe "User can search for rdvs" do
         confirm_rdv(first_motif)
       end
     end
+
+    context "when the motif is visio (visioconférence)" do
+      before do
+        [first_motif, other_motif_with_po, motif_without_po].each { |m| m.update!(location_type: Motif.location_types[:visio]) }
+      end
+
+      it "can take a RDV in the available organisations", js: true do
+        visit root_path
+        execute_search
+
+        ## Motif selection
+        expect(page).to have_content(first_motif.name)
+        click_link(first_motif.name)
+
+        expect(page).not_to have_content(organisation_without_po.name)
+
+        find(".card-title", text: /#{first_organisation_with_po.name}/).ancestor(".card").find("a.stretched-link").click
+
+        choose_creneau
+        expect(page).to have_content("RDV par visioconférence")
+        sign_up
+        continue_to_rdv(first_motif, address: "03 Rue Lambert, Paris, 75016")
+        add_relative
+        confirm_rdv(first_motif)
+        expect(page).to have_content("RDV par visioconférence")
+      end
+    end
   end
 
   describe "follow up rdvs" do
@@ -187,7 +214,7 @@ RSpec.describe "User can search for rdvs" do
     ## POs
     let!(:plage_ouverture) do
       create(
-        :plage_ouverture, :daily,
+        :plage_ouverture, :weekdays,
         agent: agent, motifs: [motif1], organisation: organisation, first_day: Time.zone.parse("2021-12-15"), lieu: lieu,
         start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(12)
       )
@@ -201,7 +228,7 @@ RSpec.describe "User can search for rdvs" do
     end
     let!(:plage_ouverture3) do
       create(
-        :plage_ouverture, :daily,
+        :plage_ouverture, :weekdays,
         agent: agent, motifs: [motif3], organisation: organisation, first_day: Time.zone.parse("2021-12-15"), lieu: lieu,
         start_time: Tod::TimeOfDay.new(14), end_time: Tod::TimeOfDay.new(17)
       )
@@ -209,7 +236,7 @@ RSpec.describe "User can search for rdvs" do
     # Available PO for selected motif on other agent
     let!(:plage_ouverture4) do
       create(
-        :plage_ouverture, :daily,
+        :plage_ouverture, :weekdays,
         agent: agent2, motifs: [motif1], organisation: organisation, first_day: Time.zone.parse("2021-12-15"), lieu: lieu,
         start_time: Tod::TimeOfDay.new(14), end_time: Tod::TimeOfDay.new(15)
       )

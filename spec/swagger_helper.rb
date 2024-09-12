@@ -13,12 +13,30 @@ RSpec.configure do |config|
   # document below. You can override this behavior by adding a swagger_doc tag to the
   # the root example_group in your specs, e.g. describe '...', swagger_doc: 'v2/swagger.json'
   config.openapi_specs = {
+    "visioplainte/api.json" => {
+      openapi: "3.0.1",
+      info: {
+        title: "API RDV Service Public pour Visioplainte",
+        version: "v1",
+        description: <<~MARKDOWN,
+          # Authentification
+
+          L'authentification à l'api se fait en passant la clé d'api dans le header `X-VISIOPLAINTE-API-KEY`.
+
+          Par exemple:
+          ```
+          curl --request GET --url "https://demo.rdv.anct.gouv.fr/api/visioplainte/creneaux" --header "X-VISIOPLAINTE-API-KEY: LA_CLE_D_API"
+          ```
+        MARKDOWN
+      },
+    },
+
     "v1/api.json" => {
       openapi: "3.0.1",
       info: {
         title: "API RDV Solidarités",
         version: "v1",
-        description: File.read(Rails.root.join("docs/api/v1/description_api.md")),
+        description: Rails.root.join("docs/api/v1/description_api.md").read,
       },
       components: {
         securitySchemes: {

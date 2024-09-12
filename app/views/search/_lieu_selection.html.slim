@@ -1,16 +1,17 @@
-.container
+.fr-container
   = render "search/selected_motif_recap", context: context
   - if context.shown_lieux.empty?
     = render "search/nothing_to_show", context: context
   - else
-    h3.font-weight-bold = t(".select_lieu")
+    h3.rdv-font-weight-700 = t(".select_lieu")
     p = t(".lieu_available", count: context.shown_lieux.count)
     - context.next_availability_by_lieux.each do |lieu, next_availability|
       .card.mb-3 class=("card-hoverable" if next_availability)
         .card-body
           .row
             .col-md
-              h4.card-title.mb-3.mt-0.text-success.font-weight-bold= lieu.name
+              h4.card-title.mb-0.mt-0.rdv-color-text-default-success.rdv-font-weight-700= lieu.name
+              .mb-3.mt-0.rdv-color-text-default-success.rdv-font-weight-700.larger=lieu.organisation.name
               .card-subtitle= lieu.address
               .card-subtitle= context.service.name
             .col-md.align-self-center.pt-3.pt-md-0.position-static

@@ -22,29 +22,13 @@ fr:
         select_placeholder_single_use_lieu: Lieu ponctuel
       show:
         update: Modifier
-        duplicate: Dupliquer…
+        duplicate: Dupliquer
     rdvs_collectifs:
       new:
         single_use_lieu_hint_html: Ce rendez-vous aura lieu à une adresse inhabituelle ? <a href>Définir un lieu ponctuel.</a>
         existing_lieu_hint_html: Ce rendez-vous aura lieu à une adresse habituelle ? <a href>Choisir un lieu existant.</a>
         select_placeholder_existing_lieu: Choisir un lieu existant
         select_placeholder_single_use_lieu: Lieu ponctuel
-    slots:
-      index:
-        place_index: Revenir aux filtres
-        available_slots_title_html: Créneaux disponibles pour <strong>%{motif}</strong>
-        place_informations_html: <strong>%{place_name}</strong> <small>au %{place_address}</small>
-    creneaux:
-      agent_searches:
-        index:
-          agents: Agents
-          teams: Équipes
-          search_for_slots_title: Trouver un RDV
-          search_for_slots_subtitle: pour %{users_fullname}
-          available_places_with_slots:
-            zero: Aucun lieu ne propose de disponibilité
-            one: "Un lieu propose des disponibilités :"
-            other: "%{count} lieux proposent des disponibilités :"
     territories:
       agents:
         index:

@@ -8,9 +8,11 @@
 - content_for :breadcrumb do
   ol.breadcrumb.m-0
     li.breadcrumb-item
-      = link_to "Vos motifs", admin_organisation_motifs_path(current_organisation)
+      = link_to "Motifs de l'organisation", admin_organisation_motifs_path(current_organisation)
     li.breadcrumb-item.active #{@motif.name_was}
 
 .row
   .col-md-12
-    = render "form", motif: @motif
+    = simple_form_for [:admin, @motif.organisation, @motif], html: { "data-controller": "motif-form" } do |f|
+      = render "model_errors", model: @motif, f: f
+      = render "admin/motifs/form", motif: @motif, f: f, rdvi_mode: current_organisation.rdv_insertion?

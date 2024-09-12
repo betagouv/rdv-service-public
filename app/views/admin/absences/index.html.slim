@@ -3,12 +3,12 @@
 
 - content_for :title do
   - if current_agent == @agent
-    = t(".your_busy_times")
+    = t(".your_absences")
   - else
-    = t(".busy_time_of", full_name: @agent.full_name_and_service)
+    = t(".absences_of", full_name: @agent.full_name_and_service)
 
 - content_for :breadcrumb do
-  = link_to t(".create_busy_time"), new_admin_organisation_agent_absence_path(current_organisation, @agent.id), class: "btn btn-outline-primary align-bottom"
+  = link_to t(".create_absence"), new_admin_organisation_agent_absence_path(current_organisation, @agent.id), class: "btn btn-outline-primary align-bottom"
 
 .card.pb-3
   - if @display_tabs
@@ -32,19 +32,19 @@
 
   - else
     .row.justify-content-md-center.p-2.mt-3
-      .col-md-6.text-center.mb-2
+      .col-md-6.rdv-text-align-center.mb-2
         p.mb-2.lead
           - if current_agent == @agent
-            = t(".you_not_yet_create_busy_time")
+            = t(".you_not_yet_create_absence")
           - else
-            = t(".has_no_busy_time_yet", full_name: @agent.full_name)
+            = t(".has_no_absence_yet", full_name: @agent.full_name)
         p = t(".explanation_html")
         span.fa-stack.fa-4x
           i.fa.fa-circle.fa-stack-2x.text-primary
           i.far.fa-calendar.fa-stack-1x.text-white
-  .text-center.py-2
+  .rdv-text-align-center.py-2
     = link_to new_admin_organisation_agent_absence_path(current_organisation, @agent.id), class: "btn btn-primary" do
       - if @agent == current_agent
-        = t(".create_busy_time")
+        = t(".create_absence")
       - else
-        = t(".create_busy_time_for", full_name: @agent.full_name)
+        = t(".create_absence_for", full_name: @agent.full_name)

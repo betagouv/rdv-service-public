@@ -1,12 +1,12 @@
 = render "search/address_selection/search_form_section", context: context
 = render "search/address_selection/steps_section"
 
-section.bg-lightturquoise.p-5
-  .container
-    .row
-      .col-md-3.align-items-center
+section.rdv-background-color-alt-green-menthe.fr-py-8w.rdv-text-align-center.rdv-text-align-md-left
+  .fr-container
+    .fr-grid-row.fr-grid-row--gutters
+      .fr-col-12.fr-col-md-3.align-items-center
         = image_tag "welcome/agent.svg", class: "mx-auto d-block", alt: ""
-      .col-md-9
-        h3.mb-2.text-primary Vous êtes employé⋅e de mairie ?
-        p.lead Faciliter la prise de rendez-vous avec les citoyens.
+      .fr-col-12.fr-col-md-9
+        .fr-text--xl.mb-2.rdv-color-text-action-high-blue-ecume Vous êtes employé⋅e de mairie ?
+        p Faciliter la prise de rendez-vous avec les citoyens.
         = link_to "En savoir plus", presentation_agent_path, class: "btn btn-tertiary"

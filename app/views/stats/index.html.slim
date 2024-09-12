@@ -12,29 +12,29 @@
     .card.mb-5
       .card-body
         h2.card-title Nombre de RDV par statut
-        .row
-          .col-lg-4
+        .fr-grid-row
+          .fr-col-lg-4
             .px-1
               - %i[seen excused revoked noshow].each do |temporal_status|
                 = render "stats/rdv_counter_without_link", \
                   temporal_status: temporal_status, \
                   element: "RDV".pluralize(@stats.rdvs.status(temporal_status).count), \
                   count: @stats.rdvs.status(temporal_status).count
-          .col-lg-4
+          .fr-col-lg-4
             .px-1
               = render "stats/rdv_counter_without_link", \
                 temporal_status: :unknown_past, \
                 element: "RDV", \
                 count: @stats.rdvs.status(:unknown_past).count
-          .col-lg-4
+          .fr-col-lg-4
             .px-1
               = render "stats/rdv_counter_without_link", \
                 temporal_status: :unknown_future, \
                 element: "RDV", \
                 count: @stats.rdvs.status(:unknown_future).count
         hr
-        .row
-          .col-lg-4
+        .fr-grid-row
+          .fr-col-lg-4
             .px-1
               = render "stats/rdv_counter_without_link", \
                 element: "RDV", \
@@ -44,8 +44,8 @@
     .card.mb-5
       .card-body
         h2.card-title Nombre de RDV par statut de participation
-        .row
-          .col-lg-4
+        .fr-grid-row
+          .fr-col-lg-4
             .px-1
               - %i[seen excused revoked noshow].each do |temporal_status|
                 - count = Participation.where(rdv: @stats.rdvs).status(temporal_status).count
@@ -53,14 +53,14 @@
                   temporal_status: temporal_status, \
                   element: "Usager".pluralize(count), \
                   count: count
-          .col-lg-4
+          .fr-col-lg-4
             .px-1
               - count = Participation.where(rdv: @stats.rdvs).joins(:rdv).status(:unknown_past).count
               = render "stats/rdv_counter_without_link", \
                 temporal_status: :unknown_past, \
                 element: "Usager".pluralize(count), \
                 count: count
-          .col-lg-4
+          .fr-col-lg-4
             .px-1
               - count = Participation.where(rdv: @stats.rdvs).joins(:rdv).status(:unknown_future).count
               = render "stats/rdv_counter_without_link", \
@@ -68,8 +68,8 @@
                 temporal_status: :unknown_future, \
                 count: count
         hr
-        .row
-          .col-lg-4
+        .fr-grid-row
+          .fr-col-lg-4
             .px-1
               - count = Participation.where(rdv: @stats.rdvs).count
               = render "stats/rdv_counter_without_link", \
@@ -190,7 +190,7 @@
         = "#{@territories.count} structures utilisent RDV-Solidarités"
       .card-body
         ul
-          - @territories.order(:name).each do |territory|
+          - @territories.ordered_by_name.each do |territory|
             li = link_to territory, stats_path(territory: territory)
         .m-3 = link_to "Retour aux statistiques de la plateforme", stats_path
         .alert.alert-info.d-flex.align-items-center

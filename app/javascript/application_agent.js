@@ -26,6 +26,7 @@ import { ParticipationSelect } from './components/rdv-user-select'
 import { DestroyButton } from './components/destroy-button'
 import { Tooltips } from './components/tooltips'
 import { PlageOuverture } from './components/plage_ouverture.js'
+import {CheckAll, UnCheckAll} from './components/check-all'
 import './components/calendar'
 import './components/browser-detection'
 import './components/clear-field-on-focus.js'
@@ -107,6 +108,9 @@ $(document).on('turbolinks:load', function() {
   new DestroyButton()
 
   new PlageOuverture()
+
+  new CheckAll()
+  new UnCheckAll()
 
   Tooltips()
 })

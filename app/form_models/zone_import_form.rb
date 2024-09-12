@@ -7,7 +7,7 @@ class ZoneImportForm
 
   def initialize(attributes = {})
     attributes[:dry_run] = attributes[:dry_run] == "1" if attributes.key?(:dry_run)
-    super(attributes)
+    super
   end
 
   def save

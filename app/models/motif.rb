@@ -26,8 +26,8 @@ class Motif < ApplicationRecord
   SECTORISATION_LEVEL_DEPARTEMENT = "departement".freeze
   SECTORISATION_TYPES = [SECTORISATION_LEVEL_AGENT, SECTORISATION_LEVEL_ORGANISATION, SECTORISATION_LEVEL_DEPARTEMENT].freeze
 
-  enum location_type: { public_office: "public_office", phone: "phone", home: "home", visio: "visio" }
-  enum bookable_by: {
+  enum :location_type, { public_office: "public_office", phone: "phone", home: "home", visio: "visio" }
+  enum :bookable_by, {
     agents: "agents",
     agents_and_prescripteurs: "agents_and_prescripteurs",
     agents_and_prescripteurs_and_invited_users: "agents_and_prescripteurs_and_invited_users",
@@ -93,11 +93,13 @@ class Motif < ApplicationRecord
   scope :available_motifs_for_organisation_and_agent, lambda { |organisation, agent|
     available_motifs = if agent.admin_in_organisation?(organisation)
                          all
-                       elsif agent.secretaire?
-                         for_secretariat
                        else
                          where(service: agent.services)
                        end
+
+    if agent.secretaire?
+      available_motifs = available_motifs.or(for_secretariat)
+    end
     available_motifs.where(organisation_id: organisation.id).active.ordered_by_name
   }
   # This should match the implementation of #name_with_location_type
@@ -143,7 +145,7 @@ class Motif < ApplicationRecord
       .includes(:services)
       .complete
       .active
-      .order_by_last_name
+      .ordered_by_last_name
   end
 
   def visible_and_notified?
@@ -218,6 +220,10 @@ class Motif < ApplicationRecord
 
   def bookable_by_everyone?
     bookable_by == "everyone"
+  end
+
+  def bookable_by_agents_and_prescripteurs?
+    bookable_by == "agents_and_prescripteurs"
   end
 
   def bookable_by_invited_users?

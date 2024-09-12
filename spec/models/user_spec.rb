@@ -1,4 +1,10 @@
 RSpec.describe User, type: :model do
+  describe "#email=" do
+    it %(automatically fixes ".@" typo) do
+      expect(described_class.new(email: "francis.@exemple.fr").email).to eq("francis@exemple.fr")
+    end
+  end
+
   describe "#add_organisation" do
     subject do
       user.add_organisation(organisation)
@@ -136,7 +142,7 @@ RSpec.describe User, type: :model do
             relative = create(:user, responsible: responsible)
 
             responsible.soft_delete(organisation)
-            expect(relative.reload.deleted_at).to eq(nil)
+            expect(relative.reload.deleted_at).to be_nil
           end
         end
 
@@ -224,7 +230,7 @@ RSpec.describe User, type: :model do
       expect(described_class.count).to eq(2)
       expect(loulou.responsible).not_to be_nil
       expect(loulou.responsible.first_name).to eq("Jean")
-      expect(loulou.responsible.notify_by_sms).to eq(false)
+      expect(loulou.responsible.notify_by_sms).to be(false)
     end
   end
 
@@ -290,7 +296,7 @@ RSpec.describe User, type: :model do
     before { travel_to(Time.zone.parse("2022-04-05 13:45")) }
 
     it "is valid" do
-      expect(subject).to eq(true)
+      expect(subject).to be(true)
     end
   end
 

@@ -1,15 +1,12 @@
 class SoftDeleteError < StandardError; end
 
 class Agent < ApplicationRecord
-  self.ignored_columns = [:remember_created_at]
-
   # Mixins
   has_paper_trail(
     only: %w[email first_name last_name starts_at invitation_sent_at invitation_accepted_at]
   )
 
   include Outlook::Connectable
-  include CanHaveTerritorialAccess
   include DeviseInvitable::Inviter
   include WebhookDeliverable
   include FullNameConcern
@@ -24,7 +21,7 @@ class Agent < ApplicationRecord
           id: "D",
         },
       ignoring: :accents,
-      using: { tsearch: { prefix: true, any_word: true } },
+      using: { tsearch: { prefix: true } },
     }
   end
 
@@ -43,22 +40,22 @@ class Agent < ApplicationRecord
   # Attributes
   auto_strip_attributes :email, :first_name, :last_name
 
-  enum rdv_notifications_level: {
+  enum :rdv_notifications_level, {
     all: "all",       # notify of all rdv changes
     others: "others", # notify of changes made by other agents or users
     soon: "soon",     # notify of change (made by others) less than a day before the rdv
     none: "none", # never send rdv notifications
-  }, _prefix: true
+  }, prefix: true
 
-  enum plage_ouverture_notification_level: {
+  enum :plage_ouverture_notification_level, {
     all: "all", # notify of all changes
     none: "none", # never send plage_ouverture notifications
-  }, _prefix: true
+  }, prefix: true
 
-  enum absence_notification_level: {
+  enum :absence_notification_level, {
     all: "all", # notify of all changes
     none: "none", # never send absence notifications
-  }, _prefix: true
+  }, prefix: true
 
   # Relations
   has_many :agent_services, dependent: :destroy
@@ -108,7 +105,6 @@ class Agent < ApplicationRecord
     where("invitation_sent_at IS NULL OR invitation_accepted_at IS NOT NULL")
   }
   scope :active, -> { where(deleted_at: nil) }
-  scope :order_by_last_name, -> { order(Arel.sql("LOWER(last_name)")) }
   scope :in_any_of_these_services, lambda { |services|
     joins(:agent_services).where(agent_services: { service_id: services.map(&:id) })
   }
@@ -271,6 +267,6 @@ class Agent < ApplicationRecord
   end
 
   def read_only_profile_infos?
-    inclusion_connect_open_id_sub.present?
+    inclusion_connect_open_id_sub.present? || connected_with_agent_connect?
   end
 end

@@ -4,21 +4,17 @@
   margin-bottom: $grid-gutter-width;
 }
 
-.disabled-card * {
-  color: $gray-600 !important;
-}
-
 // Card title / Card Header
 .card-title,
 .card-header {
   margin-top: 0;
 }
-.card-title{
+.card-title {
   color: $blue;
   font-size: 1.5rem;
 }
 
-.card-subtitle{
+.card-subtitle {
   color: $blue;
   font-size: 1.25rem;
 }
@@ -31,5 +27,5 @@
 }
 
 .light-gray-card {
-  background-color: #F6F6F6;
+  background-color: #f6f6f6;
 }

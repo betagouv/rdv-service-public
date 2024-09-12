@@ -39,29 +39,29 @@ RSpec.describe RecurrenceConcern do
     it "returns august 14th from 8h to 12h when recurrence interval for 2 weeks, and start on july 17th" do
       first_day = Date.new(2019, 7, 17)
       recurrence = Montrose.every(:week, interval: 2, starts: first_day)
-      create(factory, \
-             recurrence: recurrence, \
+      create(factory,
+             recurrence: recurrence,
              first_day: first_day, \
              start_time: Time.zone.parse("8h00"), \
              end_time: Time.zone.parse("12h00"))
       period = Date.new(2019, 8, 12)..Date.new(2019, 8, 19)
 
-      expect_first_occurrence_to_match(described_class.all_occurrences_for(period), \
-                                       starts_at: Time.zone.parse("2019-08-14 8h00"), \
+      expect_first_occurrence_to_match(described_class.all_occurrences_for(period),
+                                       starts_at: Time.zone.parse("2019-08-14 8h00"),
                                        ends_at: Time.zone.parse("2019-08-14 12h00"))
     end
 
     it "returns july 31th without recurrence, only first day and time period" do
       first_day = Date.new(2019, 7, 31)
-      create(factory, \
-             recurrence: nil, \
+      create(factory,
+             recurrence: nil,
              first_day: first_day, \
              start_time: Time.zone.parse("8h00"), \
              end_time: Time.zone.parse("12h00"))
       period = Date.new(2019, 7, 29)..Date.new(2019, 8, 4)
 
-      expect_first_occurrence_to_match(described_class.all_occurrences_for(period), \
-                                       starts_at: Time.zone.parse("2019-07-31 8h00"), \
+      expect_first_occurrence_to_match(described_class.all_occurrences_for(period),
+                                       starts_at: Time.zone.parse("2019-07-31 8h00"),
                                        ends_at: Time.zone.parse("2019-07-31 12h00"))
     end
   end

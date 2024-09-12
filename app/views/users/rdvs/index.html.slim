@@ -1,12 +1,12 @@
 .row.mt-3.justify-content-center
   .col-md-6
-    h1.text-dark.mb-3 Vos rendez-vous
-    .mb-3.flex-direction-col-sm-row-reverse-md
-      = render "prendre_rdv_button"
+    h1.mb-3 Vos rendez-vous
+    .rdv-button-group-before-card.mb-3
       - if params[:past].present?
         = link_to "Voir vos prochains RDV", users_rdvs_path, class: "btn btn-outline-primary"
       - else
         = link_to "Voir vos RDV passés", users_rdvs_path(past: true), class: "btn btn-outline-primary"
+      = render "prendre_rdv_button"
 
     - if @rdvs.any?
           - @rdvs.each do |rdv|
@@ -14,31 +14,31 @@
               .card-body
                 = render "rdv", rdv: rdv
           .d-flex.justify-content-center= paginate @rdvs, theme: "twitter-bootstrap-4"
-          .text-center
+          .rdv-text-align-center
             = render "prendre_rdv_button", text: "Prendre un autre RDV"
 
     - else
       .card
         .card-body
-          .text-center.my-5
+          .rdv-text-align-center.my-5
             p.mb-2.lead= no_rdv_for_users
             span.fa-stack.fa-4x
-              i.fa.fa-circle.fa-stack-2x.text-primary
-              i.fa.fa-calendar.fa-stack-1x.text-white
-            .text-center.mt-2
+              i.fa.fa-circle.fa-stack-2x.rdv-color-text-action-high-blue-ecume
+              i.fa.fa-calendar.fa-stack-1x.rdv-color-white
+            .rdv-text-align-center.mt-2
   .col-md-6
-    h2.text-dark.mb-3 Vos référents
+    h2.mb-3 Vos référents
     - if current_user.referent_agents.any?
       - current_user.referent_agents.each do |agent|
         .card
           .card-body
             = agent.full_name_and_service
-          .card-footer.text-right
+          .card-footer.rdv-text-align-right
             = render "prendre_rdv_button", text: "Prendre un RDV de suivi", link: prendre_rdv_path(referent_ids: [agent.id], departement: agent.agent_territorial_access_rights.first.territory.departement_number)
     - else
       | Vous n'avez pas de référents
 
 .row.mt-3.justify-content-center
-  .text-center.my-5
+  .rdv-text-align-center.my-5
     = link_to "https://voxusagers.numerique.gouv.fr/Demarches/2484?&view-mode=formulaire-avis&nd_mode=en-ligne-enti%C3%A8rement&nd_source=button&key=b4053638f7a51e868dea83f4361ebc23" do
       img src="https://voxusagers.numerique.gouv.fr/static/bouton-blanc.svg" alt="Je donne mon avis" title="Je donne mon avis sur cette démarche"
