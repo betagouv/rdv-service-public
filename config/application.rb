@@ -76,6 +76,6 @@ module Lapin
     config.exceptions_app = routes # Permet les pages d'erreur custom
 
     # Voir https://guides.rubyonrails.org/v7.0/active_job_basics.html#serializers
-    config.autoload_once_paths << Rails.root.join('lib', 'serializers')
+    config.autoload_once_paths << Rails.root.join("lib/serializers")
   end
 end
