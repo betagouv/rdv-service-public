@@ -74,5 +74,8 @@ module Lapin
     config.x.rack_attack.limit = 50
 
     config.exceptions_app = routes # Permet les pages d'erreur custom
+
+    # Voir https://guides.rubyonrails.org/v7.0/active_job_basics.html#serializers
+    config.autoload_once_paths << Rails.root.join('lib', 'serializers')
   end
 end
