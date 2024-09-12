@@ -14,11 +14,11 @@ module EnsuresRealisticDate
     return unless first_day
 
     if first_day > 5.years.from_now
-      errors.add(:base, "Le premier jour ne peut pas être loin dans le futur.")
+      errors.add(:base, "Le premier jour ne peut pas être dans plus de 5 ans")
     end
 
     if first_day.year < 2018
-      errors.add(:base, "Le premier jour ne peut pas être loin dans le passé.")
+      errors.add(:base, "Le premier jour ne peut pas être avant 2018")
     end
   end
 end

@@ -297,4 +297,32 @@ RSpec.describe PlageOuverture, type: :model do
       expect(described_class.overlapping_range(range)).to be_empty
     end
   end
+
+  describe "first day realistic validations" do
+    context "first day before 2018" do
+      let(:plage_ouverture) { build(:plage_ouverture, first_day: Date.new(2017, 12, 24)) }
+
+      it "should be invalid" do
+        expect(plage_ouverture).to be_invalid
+        expect(plage_ouverture.errors.full_messages.first).to eq("Le premier jour ne peut pas être avant 2018")
+      end
+    end
+
+    context "first day more than 5 years from now" do
+      let(:plage_ouverture) { build(:plage_ouverture, first_day: Date.new(2100, 12, 24)) }
+
+      it "should be invalid" do
+        expect(plage_ouverture).to be_invalid
+        expect(plage_ouverture.errors.full_messages.first).to eq("Le premier jour ne peut pas être dans plus de 5 ans")
+      end
+    end
+
+    context "first day is reasonable" do
+      let(:plage_ouverture) { build(:plage_ouverture, first_day: Date.new(2020, 12, 24)) }
+
+      it "should be valid" do
+        expect(plage_ouverture).to be_valid
+      end
+    end
+  end
 end
