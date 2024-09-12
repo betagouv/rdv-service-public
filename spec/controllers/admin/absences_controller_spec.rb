@@ -183,9 +183,7 @@ RSpec.describe Admin::AbsencesController, type: :controller do
 
       it "enqueues notification after delete" do
         delete :destroy, params: { organisation_id: organisation.id, id: absence.to_param }
-        expect do
-          perform_enqueued_jobs
-        end.to change { ActionMailer::Base.deliveries.size }.by(1)
+        expect { perform_enqueued_jobs }.to change { ActionMailer::Base.deliveries.size }.by(1)
         expect(ActionMailer::Base.deliveries.last.subject).to include("RDV Solidarités - Indisponibilité supprimée")
       end
 
