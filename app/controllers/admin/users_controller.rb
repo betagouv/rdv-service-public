@@ -6,7 +6,7 @@ class Admin::UsersController < AgentAuthController
 
   PERMITTED_ATTRIBUTES = %i[
     id
-    first_name last_name birth_name email phone_number
+    first_name last_name birth_name notification_email account_email phone_number
     birth_date caisse_affiliation affiliation_number
     address post_code city_code city_name
     family_situation number_of_children
@@ -48,12 +48,15 @@ class Admin::UsersController < AgentAuthController
   end
 
   def create
+    # invite_on_create checkbox was not persisted in case of validation errors
+    @invite_on_create = params[:invite_on_create]
     prepare_create
+    set_user_account_email if invite_user_on_create?
     authorize(@user)
     @user.skip_confirmation_notification!
     user_persisted = @user_form.save
 
-    if invite_user?(@user, params)
+    if @user.persisted? && @user.account_email.present?
       @user.invite!(domain: current_domain)
     end
 
@@ -85,7 +88,12 @@ class Admin::UsersController < AgentAuthController
     @user.assign_attributes(user_params)
     @user_form = user_form_object
     authorize(@user)
-    @user.skip_reconfirmation! if @user.encrypted_password.blank?
+    if @user.encrypted_password.blank? && @user.account_email_changed?
+      # Ce code permet à l'agent de modifier l'email du compte de l'usager si celui ci ne l'a jamais activé (erreur de saisi)
+      # et de lui envoyer un nouvel email d'invitation (et non de confirmation)
+      @user.skip_reconfirmation!
+      @user.invite!(domain: current_domain)
+    end
     user_updated = @user_form.save
     if from_modal?
       respond_modal_with @user_form, location: modal_return_location
@@ -136,8 +144,8 @@ class Admin::UsersController < AgentAuthController
     params[:return_location].presence || request.referer
   end
 
-  def invite_user?(user, params)
-    user.persisted? && user.email.present? && (params[:invite_on_create] == "1")
+  def invite_user_on_create?
+    (params[:invite_on_create] == "1") && params[:user][:notification_email].present?
   end
 
   def prepare_new
@@ -185,5 +193,12 @@ class Admin::UsersController < AgentAuthController
 
   def set_user
     @user = policy_scope(User).find(params[:id])
+  end
+
+  def set_user_account_email
+    if @user.notification_email.present?
+      @user.account_email = @user.notification_email
+      @user.notification_email = nil
+    end
   end
 end

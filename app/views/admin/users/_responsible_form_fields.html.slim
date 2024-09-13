@@ -18,12 +18,15 @@
 
 = f.input :phone_number, as: :tel, **input_opts
 
-= f.input(:email, as: :email, **input_opts)
+- if user.account_email.present?
+  = f.input(:account_email, as: :email, **input_opts)
+- else
+  = f.input(:notification_email, as: :email, **input_opts)
 - if user.new_record?
   label
     = check_box_tag :invite_on_create, \
       1, \
-      false, \
+      @invite_on_create, \
       class:"align-items-baseline ml-0"
     |&nbsp; Inviter l'usager à se créer un compte sur #{current_domain.name}.
 
