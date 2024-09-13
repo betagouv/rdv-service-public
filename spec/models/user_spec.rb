@@ -1,7 +1,7 @@
 RSpec.describe User, type: :model do
   describe "#email=" do
     it %(automatically fixes ".@" typo) do
-      expect(described_class.new(email: "francis.@exemple.fr").email).to eq("francis@exemple.fr")
+      expect(described_class.new(notification_email: "francis.@exemple.fr").email).to eq("francis@exemple.fr")
     end
   end
 
@@ -74,8 +74,8 @@ RSpec.describe User, type: :model do
 
   describe "#soft_delete" do
     it "change email to a « deleted.rdv-solidarites.fr » domain and anonymises other attributes" do
-      user = create(:user, email: "jean@valjean.fr", first_name: "Jean", last_name: "Valjean")
-      other_user = create(:user, email: "other_user@test.com")
+      user = create(:user, notification_email: "jean@valjean.fr", first_name: "Jean", last_name: "Valjean")
+      other_user = create(:user, notification_email: "other_user@test.com")
       user.soft_delete
       expect(user.email).to end_with("deleted.rdv-solidarites.fr")
       expect(user).to have_attributes(
@@ -147,14 +147,14 @@ RSpec.describe User, type: :model do
         end
 
         it "removes given organisation only" do
-          user = create(:user, organisations: [organisation, other_organisation], email: "jean@valjean.fr")
+          user = create(:user, organisations: [organisation, other_organisation], notification_email: "jean@valjean.fr")
           user.soft_delete(organisation)
           expect(user.reload.organisations).not_to include(organisation)
           expect(user.reload.organisations).to include(other_organisation)
         end
 
         it "does not mark user as deleted" do
-          user = create(:user, organisations: [organisation, other_organisation], email: "jean@valjean.fr")
+          user = create(:user, organisations: [organisation, other_organisation], notification_email: "jean@valjean.fr")
           user.soft_delete(organisation)
           expect(user.deleted_at).to be_nil
           expect(user.email).to eq "jean@valjean.fr"
@@ -163,13 +163,13 @@ RSpec.describe User, type: :model do
 
       context "without a given organisation" do
         it "removes all organisations and mark user as deleted" do
-          user = create(:user, organisations: [organisation, other_organisation], email: "jean@valjean.fr")
+          user = create(:user, organisations: [organisation, other_organisation], notification_email: "jean@valjean.fr")
           user.soft_delete
           expect(user.reload.organisations).to be_empty
         end
 
         it "set deleted_at to Time.zone.now" do
-          user = create(:user, organisations: [organisation, other_organisation], email: "jean@valjean.fr")
+          user = create(:user, organisations: [organisation, other_organisation], notification_email: "jean@valjean.fr")
           user.soft_delete
           expect(user.deleted_at).to be_within(5.seconds).of(Time.zone.now)
         end

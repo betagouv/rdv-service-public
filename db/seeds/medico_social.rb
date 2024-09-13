@@ -283,7 +283,7 @@ end
 user_org_paris_nord_patricia = User.new(
   first_name: "Patricia",
   last_name: "Duroy",
-  email: "patricia_duroy@demo.rdv-solidarites.fr",
+  account_email: "patricia_duroy@demo.rdv-solidarites.fr",
   birth_date: Date.parse("20/06/1975"),
   password: "Rdvservicepublictest1!",
   phone_number: "0101010101",
@@ -308,7 +308,7 @@ user_org_paris_nord_josephine.save!
 user_org_paris_nord_lea = User.new(
   first_name: "Léa",
   last_name: "Dupont",
-  email: "lea_dupont@demo.rdv-solidarites.fr",
+  account_email: "lea_dupont@demo.rdv-solidarites.fr",
   birth_date: Date.parse("01/12/1982"),
   password: "Rdvservicepublictest1!",
   phone_number: "0101010102",
@@ -323,7 +323,7 @@ user_org_paris_nord_lea.profile_for(org_paris_nord).update!(logement: 2)
 user_org_paris_nord_jean = User.new(
   first_name: "Jean",
   last_name: "Moustache",
-  email: "jean_moustache@demo.rdv-solidarites.fr",
+  account_email: "jean_moustache@demo.rdv-solidarites.fr",
   birth_date: Date.parse("10/01/1973"),
   password: "Rdvservicepublictest1!",
   phone_number: "0101010103",
@@ -338,7 +338,7 @@ user_org_paris_nord_jean.profile_for(org_paris_nord).update!(logement: 2)
 user_org_paris_sud = User.new(
   first_name: "Francis",
   last_name: "Factice",
-  email: "francis.factice@demo.rdv-solidarites.fr",
+  account_email: "francis.factice@demo.rdv-solidarites.fr",
   birth_date: Date.parse("10/01/1973"),
   password: "Rdvservicepublictest1!",
   phone_number: "0101010103",
@@ -366,7 +366,7 @@ user_org_bapaume = User.new(
   first_name: "François",
   last_name: "Factice",
   password: "Rdvservicepublictest1!",
-  email: "francois@factice.cool",
+  account_email: "francois@factice.cool",
   organisation_ids: [org_bapaume.id],
   created_through: "user_sign_up"
 )
@@ -383,7 +383,7 @@ users_attributes = 10_000.times.map do |i|
     updated_at: now,
     first_name: "first_name_#{i}",
     last_name: "last_name_#{i}",
-    email: "email_#{i}@test.com",
+    notification_email: "email_#{i}@test.com",
     phone_number: (format "+336%08d", i),
     phone_number_formatted: (format "+336%08d", i),
     created_through: "user_sign_up",

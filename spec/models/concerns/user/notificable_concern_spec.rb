@@ -3,25 +3,25 @@ RSpec.describe User::NotificableConcern do
     subject { user.notifiable_by_email? }
 
     context "user has email and email notifications enabled" do
-      let(:user) { build(:user, email: "jean@lol.fr", notify_by_email: true) }
+      let(:user) { build(:user, notification_email: "jean@lol.fr", notify_by_email: true) }
 
       it { is_expected.to be_truthy }
     end
 
     context "user has email but email notifications disabled" do
-      let(:user) { build(:user, email: "jean@lol.fr", notify_by_email: false) }
+      let(:user) { build(:user, notification_email: "jean@lol.fr", notify_by_email: false) }
 
       it { is_expected.to be_falsy }
     end
 
     context "user has no email but email notifications enabled" do
-      let(:user) { build(:user, email: nil, notify_by_email: true) }
+      let(:user) { build(:user, notification_email: nil, notify_by_email: true) }
 
       it { is_expected.to be_falsy }
     end
 
     context "user has blank email but email notifications enabled" do
-      let(:user) { build(:user, email: "", notify_by_email: true) }
+      let(:user) { build(:user, notification_email: "", notify_by_email: true) }
 
       it { is_expected.to be_falsy }
     end

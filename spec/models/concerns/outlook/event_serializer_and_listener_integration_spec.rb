@@ -8,7 +8,7 @@ RSpec.describe Outlook::EventSerializerAndListener do
   let(:agent) { create(:agent, microsoft_graph_token: "token") }
   let(:motif) { create(:motif, name: "Super Motif", location_type: :phone) }
   let(:organisation) { create(:organisation) }
-  let(:user) { create(:user, email: "user@example.fr", first_name: "First", last_name: "Last", organisations: [organisation]) }
+  let(:user) { create(:user, notification_email: "user@example.fr", first_name: "First", last_name: "Last", organisations: [organisation]) }
 
   let(:expected_headers) do
     {
@@ -69,7 +69,7 @@ RSpec.describe Outlook::EventSerializerAndListener do
   describe "Update callback" do
     context "exists in outlook and agent is synced" do
       let(:agent) { create(:agent, microsoft_graph_token: nil) }
-      let(:user) { create(:user, email: "user@example.fr", first_name: "First", last_name: "Last", organisations: [organisation]) }
+      let(:user) { create(:user, notification_email: "user@example.fr", first_name: "First", last_name: "Last", organisations: [organisation]) }
       let(:rdv) { create(:rdv, users: [user], motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [agent]) }
 
       let(:expected_body) do
@@ -126,7 +126,7 @@ RSpec.describe Outlook::EventSerializerAndListener do
 
     context "does not exists in outlook" do
       let(:agent) { create(:agent, microsoft_graph_token: nil) }
-      let(:user) { create(:user, email: "user@example.fr", first_name: "First", last_name: "Last", organisations: [organisation]) }
+      let(:user) { create(:user, notification_email: "user@example.fr", first_name: "First", last_name: "Last", organisations: [organisation]) }
       let(:rdv) { create(:rdv, users: [user], motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [agent]) }
       let(:agents_rdv) { rdv.agents_rdvs.first }
 
@@ -192,7 +192,7 @@ RSpec.describe Outlook::EventSerializerAndListener do
     context "does not exist in outlook" do
       let(:agent) { create(:agent) }
       let(:user) do
-        create(:user, email: "user@example.fr", first_name: "First", last_name: "Last", organisations: [organisation])
+        create(:user, notification_email: "user@example.fr", first_name: "First", last_name: "Last", organisations: [organisation])
       end
       let!(:rdv) do
         create(:rdv, agents: [agent], users: [user], motif: motif, organisation: organisation,
@@ -242,7 +242,7 @@ RSpec.describe Outlook::EventSerializerAndListener do
     end
 
     context "agents_rdv does not exist in outlook" do
-      let(:user) { create(:user, email: "user@example.fr", first_name: "First", last_name: "Last", organisations: [organisation]) }
+      let(:user) { create(:user, notification_email: "user@example.fr", first_name: "First", last_name: "Last", organisations: [organisation]) }
       let!(:rdv) { create(:rdv, users: [user], motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30) }
       let(:agent) { create(:agent) }
 

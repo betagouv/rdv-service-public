@@ -8,8 +8,8 @@ RSpec.describe MergeUsersService, type: :service do
   let(:user_to_merge) { create(:user, organisations: [organisation]) }
 
   context "simply merge first_name" do
-    let(:user_target) { create(:user, first_name: "Jean", last_name: "PAUL", email: "jean@paul.fr", organisations: [organisation]) }
-    let(:user_to_merge) { create(:user, first_name: "Francis", last_name: "DUTRONC", email: "francis@dutronc.fr", organisations: [organisation]) }
+    let(:user_target) { create(:user, first_name: "Jean", last_name: "PAUL", notification_email: "jean@paul.fr", organisations: [organisation]) }
+    let(:user_to_merge) { create(:user, first_name: "Francis", last_name: "DUTRONC", notification_email: "francis@dutronc.fr", organisations: [organisation]) }
     let(:attributes_to_merge) { [:first_name] }
 
     it "merges attributes" do

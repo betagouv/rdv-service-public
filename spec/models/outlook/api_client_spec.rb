@@ -34,7 +34,7 @@ RSpec.describe Outlook::ApiClient do
   end
   let(:motif) { create(:motif, name: "Super Motif", location_type: :phone) }
   let(:agent) { create(:agent, microsoft_graph_token: "token", refresh_microsoft_graph_token: "refresh_token") }
-  let(:user) { create(:user, email: "user@example.fr", first_name: "First", last_name: "Last", organisations: [organisation]) }
+  let(:user) { create(:user, notification_email: "user@example.fr", first_name: "First", last_name: "Last", organisations: [organisation]) }
   let(:rdv) { create(:rdv, users: [user], motif: motif, organisation: organisation, starts_at: Time.zone.parse("2023-01-01 11h00"), duration_in_min: 30, agents: [agent]) }
   let(:agents_rdv) { rdv.agents_rdvs.first }
 

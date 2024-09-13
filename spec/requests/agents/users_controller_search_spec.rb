@@ -7,11 +7,11 @@ RSpec.describe Agents::UsersController, "#search" do
     let!(:other_organisation) { create(:organisation, territory: territory) }
     let!(:user_in_org) do
       create(:user, organisations: [organisation_of_agent], first_name: "Marion", last_name: "Delorga",
-                    birth_date: "1990-01-01", phone_number: "0611223344", email: "marion@example.com")
+                    birth_date: "1990-01-01", phone_number: "0611223344", notification_email: "marion@example.com")
     end
     let!(:user_in_territory) do
       create(:user, organisations: [other_organisation], first_name: "Marine", last_name: "Duterritoire",
-                    birth_date: "1990-01-01", phone_number: "0611223344", email: "marine@example.com")
+                    birth_date: "1990-01-01", phone_number: "0611223344", notification_email: "marine@example.com")
     end
 
     it "includes users of other orgs, truncated" do

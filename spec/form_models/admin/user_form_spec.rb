@@ -38,8 +38,8 @@ RSpec.describe Admin::UserForm, type: :form do
   end
 
   context "duplication error based on email" do
-    let(:user) { build(:user, first_name: "Jean", last_name: "Jacques", email: "jean@jacques.fr") }
-    let!(:existing_user) { create(:user, first_name: "Jeannot", email: "jean@jacques.fr") }
+    let(:user) { build(:user, first_name: "Jean", last_name: "Jacques", notification_email: "jean@jacques.fr") }
+    let!(:existing_user) { create(:user, first_name: "Jeannot", notification_email: "jean@jacques.fr") }
     let(:duplicate_users_mock) { [OpenStruct.new(severity: :error, attributes: [:email], user: existing_user)] }
 
     it "is not valid" do

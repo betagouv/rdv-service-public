@@ -44,7 +44,7 @@ RSpec.describe "agents page", js: true do
   it "admin organisation user path is accessible" do
     territory = create(:territory, departement_number: "75")
     organisation = create(:organisation, territory: territory)
-    user = create(:user, email: "testuser@test.net", referent_agents: [], organisations: [organisation])
+    user = create(:user, notification_email: "testuser@test.net", referent_agents: [], organisations: [organisation])
     agent = create(:agent, email: "totoagent@example.com", basic_role_in_organisations: [organisation])
     login_as(agent, scope: :agent)
 

@@ -9,23 +9,23 @@ RSpec.describe User::ImprovedUnicityErrorConcern do
   end
 
   context "email is already taken" do
-    let!(:existing_user) { create(:user, email: "jean@jacques.fr") }
-    let(:user) { build(:user, email: "jean@jacques.fr") }
+    let!(:existing_user) { create(:user, account_email: "jean@jacques.fr") }
+    let(:user) { build(:user, account_email: "jean@jacques.fr") }
 
     it "adds id to errors details" do
       expect(user).not_to be_valid
-      expect(user.errors).to include(:email)
+      expect(user.errors).to include(:account_email)
       expect(user.errors.where(:email).first.options[:id]).to eq(existing_user.id)
     end
   end
 
   context "email is invalid" do
-    let(:user) { build(:user, email: "jeanjacquesfr") }
+    let(:user) { build(:user, account_email: "jeanjacquesfr") }
 
     it "does not add id to errors details" do
       expect(user).not_to be_valid
-      expect(user.errors).to include(:email)
-      expect(user.errors.where(:email).first.options).not_to include("id")
+      expect(user.errors).to include(:account_email)
+      expect(user.errors.where(:account_email).first.options).not_to include("id")
     end
   end
 end

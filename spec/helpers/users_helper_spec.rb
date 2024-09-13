@@ -68,15 +68,15 @@ RSpec.describe UsersHelper, type: :helper do
 
   describe "partially_hidden_reverse_full_name_and_notification_coordinates" do
     it "hides most of the personal data while allowing verification" do
-      user = build(:user, birth_date: Date.new(1950, 12, 21), first_name: "Francis", last_name: "Factice", phone_number: "0611223344", email: "francis@factice.com")
+      user = build(:user, birth_date: Date.new(1950, 12, 21), first_name: "Francis", last_name: "Factice", phone_number: "0611223344", notification_email: "francis@factice.com")
       expect(described_class.partially_hidden_reverse_full_name_and_notification_coordinates(user)).to eq("FACTICE Francis - 21/12/**** - 06******44 - f******s@factice.com")
     end
 
     it "doesn't fail for a user with missing info" do
-      user = build(:user, birth_date: nil, first_name: "Francis", last_name: "Factice", phone_number: nil, email: nil)
+      user = build(:user, birth_date: nil, first_name: "Francis", last_name: "Factice", phone_number: nil, notification_email: nil)
       expect(described_class.partially_hidden_reverse_full_name_and_notification_coordinates(user)).to eq("FACTICE Francis")
 
-      user = build(:user, birth_date: nil, first_name: "Francis", last_name: "Factice", phone_number: "", email: "")
+      user = build(:user, birth_date: nil, first_name: "Francis", last_name: "Factice", phone_number: "", notification_email: "")
       expect(described_class.partially_hidden_reverse_full_name_and_notification_coordinates(user)).to eq("FACTICE Francis")
     end
   end

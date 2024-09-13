@@ -25,7 +25,7 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
       let!(:user_id) { user.id }
 
       response 200, "Renvoie l'usager·ère" do
-        let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [organisation], email: "jean@jacques.fr") }
+        let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [organisation], notification_email: "jean@jacques.fr") }
 
         schema "$ref" => "#/components/schemas/user_with_root"
 
@@ -204,7 +204,7 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
       end
 
       it_behaves_like "an endpoint that returns 422 - unprocessable_entity", "email is taken", false do
-        let!(:existing_user) { create(:user, email: "jean@jacques.fr") }
+        let!(:existing_user) { create(:user, notification_email: "jean@jacques.fr") }
         let(:email) { existing_user.email }
       end
     end
@@ -229,7 +229,7 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
       let!(:user_id) { user.id }
 
       response 200, "Renvoie le token d'invitation à prendre rdv de l'usager·ère" do
-        let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [organisation], email: "jean@jacques.fr") }
+        let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [organisation], notification_email: "jean@jacques.fr") }
 
         run_test!
 
@@ -241,7 +241,7 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
       end
 
       response 200, "when the user doesn't have an email", document: false do
-        let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", email: nil, organisations: [organisation]) }
+        let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", notification_email: nil, organisations: [organisation]) }
 
         schema "$ref" => "#/components/schemas/invitation"
 
@@ -428,7 +428,7 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
         let(:first_name) { "Johnny" }
         let(:last_name) { "Silverhand" }
 
-        let!(:existing_user) { create(:user, email: "jean@jacques.fr") }
+        let!(:existing_user) { create(:user, notification_email: "jean@jacques.fr") }
         let(:email) { existing_user.email }
       end
     end
@@ -502,7 +502,7 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
       let(:user_id) { user.id }
 
       response 200, "Renvoie l'usager·ère d'une organisation" do
-        let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [organisation], email: "jean@jacques.fr") }
+        let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [organisation], notification_email: "jean@jacques.fr") }
 
         schema "$ref" => "#/components/schemas/user_with_root"
 
@@ -528,7 +528,7 @@ RSpec.describe "Users API", swagger_doc: "v1/api.json" do
 
       it_behaves_like "an endpoint that returns 403 - forbidden", "quand l'agent ne fait pas partie de l'organisation" do
         let!(:agent) { create(:agent, basic_role_in_organisations: [create(:organisation)]) }
-        let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [organisation], email: "jean@jacques.fr") }
+        let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [organisation], notification_email: "jean@jacques.fr") }
       end
 
       it_behaves_like "an endpoint that returns 404 - not found", "l'usager·ère n'est pas lié·e à l'organisation" do

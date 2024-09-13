@@ -239,7 +239,7 @@ WebhookEndpoint.create!(
 
 # Users
 user1 = User.create!(
-  email: "jean.rsavalence@testinvitation.fr",
+  notification_email: "jean.rsavalence@testinvitation.fr",
   address: "60 avenue de Chabeuil 26000 Valence",
   first_name: "Jean",
   last_name: "RSAValence",
@@ -253,7 +253,7 @@ user1.assign_rdv_invitation_token
 user1.save!
 
 user2 = User.create!(
-  email: "jean.rsaAuxerre@testinvitation.fr",
+  notification_email: "jean.rsaAuxerre@testinvitation.fr",
   address: "12 Rue Joubert, Auxerre, 89000",
   first_name: "Jean",
   last_name: "RSAAuxerre",

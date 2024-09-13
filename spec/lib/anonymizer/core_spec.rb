@@ -1,5 +1,5 @@
 RSpec.describe Anonymizer::Core do
-  let!(:user_with_email) { create(:user, email: "user@example.com") }
+  let!(:user_with_email) { create(:user, notification_email: "user@example.com") }
 
   stub_env_with(HOST: nil)
 
@@ -28,7 +28,7 @@ RSpec.describe Anonymizer::Core do
   end
 
   it "doesn't overwrite null values, so that we can still get information from them" do
-    user_without_email = create(:user, email: nil)
+    user_without_email = create(:user, :with_no_email)
 
     described_class.anonymize_all_data!(service: "rdvsp", schema: "public")
 

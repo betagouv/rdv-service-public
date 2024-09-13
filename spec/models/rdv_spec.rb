@@ -347,7 +347,7 @@ RSpec.describe Rdv, type: :model do
     end
 
     it "valid with a user without email" do
-      expect(build(:rdv, users: [create(:user, email: nil)])).to be_valid
+      expect(build(:rdv, users: [create(:user, :with_no_email)])).to be_valid
     end
   end
 
