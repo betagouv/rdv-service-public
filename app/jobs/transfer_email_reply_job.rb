@@ -44,7 +44,7 @@ class TransferEmailReplyJob < ApplicationJob
   end
 
   def user
-    rdv&.users&.find_by(email: source_mail.from.first)
+    rdv&.users&.where(account_email: source_mail.from.first)&.or(rdv&.users&.where(notification_email: source_mail.from.first))&.first
   end
 
   def uuid
