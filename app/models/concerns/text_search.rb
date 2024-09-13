@@ -37,9 +37,8 @@ module TextSearch
       return none if term.blank?
 
       term = clean_search_term(term)
-
-      if columns.map(&:name).include?("email") && looks_like_email(term)
-        where("\"#{table_name}\".\"email\" LIKE ?", "#{term}%")
+      if columns.map(&:name).any? { |column| column =~ /email/i } && looks_like_email(term)
+        where("\"#{table_name}\".\"account_email\" LIKE ? OR \"#{table_name}\".\"notification_email\" LIKE ?", "#{term}%", "#{term}%")
       else
         full_text_search(term)
       end
