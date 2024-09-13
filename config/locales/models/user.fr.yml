@@ -6,6 +6,8 @@ fr:
         other: Usagers
     attributes:
       user:
+        notification_email: Email
+        account_email: Email
         organisation: Organisation
         caisse_affiliation : Caisse d'affiliation
         affiliation_number: Numéro d'allocataire

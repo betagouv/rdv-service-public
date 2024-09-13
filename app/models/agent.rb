@@ -26,7 +26,7 @@ class Agent < ApplicationRecord
   end
 
   devise :invitable, :database_authenticatable, :trackable, :timeoutable,
-         :recoverable, :validatable, :confirmable, :async, validate_on_invite: true
+         :recoverable, :validatable, :confirmable, :async, validate_on_invite: true, authentication_keys: [:email]
 
   def timeout_in = 14.days # Used by Devise's :timeoutable
 

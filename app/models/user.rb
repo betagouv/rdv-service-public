@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  self.ignored_columns += ["email"]
   # Mixins
   has_paper_trail(
     only: %w[
@@ -9,7 +10,7 @@ class User < ApplicationRecord
   )
 
   devise :invitable, :database_authenticatable, :registerable, :timeoutable,
-         :recoverable, :validatable, :confirmable, :async
+         :recoverable, :validatable, :confirmable, :async, authentication_keys: [:account_email]
 
   def timeout_in = 30.minutes # Used by Devise's :timeoutable
 
@@ -32,7 +33,7 @@ class User < ApplicationRecord
 
   # Attributes
   ONGOING_MARGIN = 1.hour.freeze
-  auto_strip_attributes :email, :first_name, :last_name, :birth_name
+  auto_strip_attributes :account_email, :notification_email, :first_name, :last_name, :birth_name
 
   enum :caisse_affiliation, { aucune: 0, caf: 1, msa: 2 }
   enum :family_situation, { single: 0, in_a_relationship: 1, divorced: 2 }
@@ -67,13 +68,15 @@ class User < ApplicationRecord
   # Validations
   validates :last_name, :first_name, :created_through, presence: true
   validates :number_of_children, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
+  validates :account_email, allow_nil: true, uniqueness: true, email: true
 
   validate :birth_date_validity
+  validate :account_email_xor_notification_email
 
   # Hooks
-  before_save :set_email_to_null_if_blank
+  before_save :set_account_email_to_null_if_blank
   # Temp
-  before_save :sync_email_column
+  # before_save :sync_email_column
 
   # Scopes
   default_scope { where(deleted_at: nil) }
@@ -87,9 +90,18 @@ class User < ApplicationRecord
     full_name
   end
 
-  def email=(value)
+  def account_email=(value)
     # On corriger automatiquement cette faute de frappe courante
     super(value&.gsub(".@", "@"))
+  end
+
+  def notification_email=(value)
+    # On corriger automatiquement cette faute de frappe courante
+    super(value&.gsub(".@", "@"))
+  end
+
+  def email
+    notification_email || account_email
   end
 
   def add_organisation(organisation)
@@ -250,6 +262,22 @@ class User < ApplicationRecord
     false # users without passwords and emails can be created by agents
   end
 
+  # This hack is needed to allow devise confirmable to work with account_email instead of email field
+  # https://github.com/heartcombo/devise/blob/main/lib/devise/models/confirmable.rb#L265
+  # https://github.com/heartcombo/devise/wiki/How-To%3A-Allow-users-to-sign-in-with-something-other-than-their-email-address
+  def will_save_change_to_email?
+    will_save_change_to_account_email?
+  end
+
+  def email_in_database
+    account_email_in_database
+  end
+
+  def email=(value)
+    self.account_email = value
+  end
+  # ----------------
+
   def confirmation_required?
     return false if only_invited?
 
@@ -262,14 +290,21 @@ class User < ApplicationRecord
     super
   end
 
-  def set_email_to_null_if_blank
-    self.email = nil if email.blank?
+  def set_account_email_to_null_if_blank
+    self.account_email = nil if account_email.blank?
   end
 
   def birth_date_validity
     return unless birth_date.present? && (birth_date > Time.zone.today || birth_date < 130.years.ago)
 
     errors.add(:birth_date, "est invalide")
+  end
+
+  def account_email_xor_notification_email
+    if account_email.present? && notification_email.present?
+      errors.add(:account_email, "ne peut pas être renseigné si une adresse de notification est renseignée")
+      errors.add(:notification_email, "ne peut pas être renseignée si une adresse de compte est renseignée")
+    end
   end
 
   def do_soft_delete(organisation)
@@ -288,7 +323,8 @@ class User < ApplicationRecord
       first_name: "Usager supprimé",
       last_name: "Usager supprimé",
       deleted_at: Time.zone.now,
-      email: deleted_email
+      account_email: account_email.present? ? deleted_email : nil,
+      notification_email: account_email.present? ? nil : deleted_email
     )
   end
 
