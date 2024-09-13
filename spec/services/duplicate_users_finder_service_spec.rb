@@ -1,5 +1,5 @@
 RSpec.describe DuplicateUsersFinderService, type: :service do
-  let(:user) { build(:user, first_name: "Mathieu", last_name: "Lapin", email: "lapin@beta.fr", birth_date: "21/10/2000", phone_number: "0658032518") }
+  let(:user) { build(:user, first_name: "Mathieu", last_name: "Lapin", account_email: "lapin@beta.fr", birth_date: "21/10/2000", phone_number: "0658032518") }
 
   describe ".perform" do
     subject { described_class.new(user).perform }
@@ -8,8 +8,14 @@ RSpec.describe DuplicateUsersFinderService, type: :service do
       it { is_expected.to be_empty }
     end
 
+    context "there is no duplicate on notification_email" do
+      let!(:duplicated_user) { create(:user, notification_email: "lapin@beta.fr") }
+
+      it { is_expected.to be_empty }
+    end
+
     context "email is nil" do
-      let(:user) { build(:user, first_name: "Mathieu", last_name: "Lapin", email: nil) }
+      let(:user) { build(:user, :with_no_email, first_name: "Mathieu", last_name: "Lapin") }
       let!(:user_without_email) { create(:user, :with_no_email) }
 
       it { is_expected.to be_empty }
@@ -36,9 +42,9 @@ RSpec.describe DuplicateUsersFinderService, type: :service do
 
     context "there is a duplicate" do
       context "same email" do
-        let!(:duplicated_user) { create(:user, email: "lapin@beta.fr") }
+        let!(:duplicated_user) { create(:user, account_email: "lapin@beta.fr") }
 
-        it { is_expected.to include(OpenStruct.new(severity: :error, attributes: [:email], user: duplicated_user)) }
+        it { is_expected.to include(OpenStruct.new(severity: :error, attributes: [:account_email], user: duplicated_user)) }
 
         context "but soft deleted" do
           before { duplicated_user.soft_delete }

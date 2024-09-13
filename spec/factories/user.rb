@@ -4,7 +4,8 @@ FactoryBot.define do
   sequence(:user_email) { |n| "usager_#{n}@lapin.fr" }
 
   factory :user do
-    email { generate(:user_email) }
+    account_email { nil }
+    notification_email { generate(:user_email) }
     first_name { Faker::Name.first_name }
     last_name { Faker::Name.last_name.upcase }
     phone_number do
@@ -29,7 +30,8 @@ FactoryBot.define do
       confirmed_at { nil }
     end
     trait :with_no_email do
-      email { nil }
+      account_email { nil }
+      notification_email { nil }
     end
     trait :with_no_phone_number do
       phone_number { nil }
@@ -50,6 +52,9 @@ FactoryBot.define do
       affiliation_number { nil }
       family_situation { nil }
       number_of_children { nil }
+    end
+    after(:build) do |user|
+      user.notification_email = nil if user.account_email.present?
     end
   end
 end

@@ -8,21 +8,21 @@ class DuplicateUsersFinderService < BaseService
 
   def perform
     [
-      self.class.find_duplicate_based_on_email(@user, @organisation),
+      self.class.find_duplicate_based_on_account_email(@user, @organisation),
       self.class.find_duplicate_based_on_identity(@user, @organisation),
       self.class.find_duplicate_based_on_phone_number(@user, @organisation),
     ].compact
   end
 
   class << self
-    def find_duplicate_based_on_email(user, organisation)
-      return if user.email.blank?
+    def find_duplicate_based_on_account_email(user, organisation)
+      return if user.account_email.blank?
 
       duplicates = users_in_scope(user, organisation)
-        .where(email: user.email)
+        .where(account_email: user.account_email)
       return unless duplicates.exists?
 
-      OpenStruct.new(severity: :error, attributes: [:email], user: most_relevant_user(duplicates))
+      OpenStruct.new(severity: :error, attributes: [:account_email], user: most_relevant_user(duplicates))
     end
 
     def find_duplicate_based_on_identity(user, organisation)
