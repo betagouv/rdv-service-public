@@ -71,7 +71,7 @@ RSpec.describe RecurrenceConcern do
                       end_time: Time.zone.parse("12h00"))
 
       # On vérifie que le filtre est fait au niveau sql plutôt qu'en instanciant des objets
-      expect_any_instance_of(described_class).not_to receive(:occurrences_for)
+      expect_any_instance_of(described_class).not_to receive(:occurrences_for) # rubocop:disable RSpec/AnyInstance
 
       expect(described_class.all_occurrences_for(Date.new(2019, 7, 23)..Date.new(2019, 8, 15))).to be_empty
     end
