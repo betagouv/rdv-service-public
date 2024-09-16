@@ -21,8 +21,8 @@ RSpec.describe CreneauxSearch::ForAgent, type: :service do
     let(:lieu2) { create(:lieu, organisation: organisation, name: "MDS Arquest") }
 
     before do
-      create(:plage_ouverture, :weekly, agent: agent, motifs: [motif], lieu: lieu2, organisation: organisation, first_day: 2.weeks.from_now)
-      create(:plage_ouverture, :weekly, agent: agent, motifs: [motif], lieu: lieu1, organisation: organisation, first_day: 1.week.from_now, recurrence_ends_at: 13.days.from_now)
+      create(:plage_ouverture, :weekly_on_monday, agent: agent, motifs: [motif], lieu: lieu2, organisation: organisation, first_day: 2.weeks.from_now)
+      create(:plage_ouverture, :weekly_on_monday, agent: agent, motifs: [motif], lieu: lieu1, organisation: organisation, first_day: 1.week.from_now, recurrence_ends_at: 13.days.from_now)
     end
 
     it "sorts the results by the date of the next availability" do
