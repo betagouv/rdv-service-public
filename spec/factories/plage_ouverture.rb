@@ -23,11 +23,11 @@ FactoryBot.define do
       end
     end
 
-    trait :weekly do
+    trait :weekly_on_monday do
       recurrence { Montrose.every(:week, on: [:monday], starts: first_day, interval: 1) }
     end
 
-    trait :weekly_without_any_day do
+    trait :once_a_week do
       recurrence { Montrose.every(:week, starts: first_day, interval: 1, until: 2.months.from_now) }
     end
 

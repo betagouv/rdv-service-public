@@ -42,7 +42,7 @@ RSpec.describe "Agent can manage recurrence on plage d'ouverture" do
     expect(plage_ouverture.recurrence_ends_at.to_date).to eq Date.new(2019, 12, 30)
 
     # On vérifie au passage que les données qu'on crée dans nos factories correspondent bien à ce que l'application peut créer
-    recurrence_attributes_from_factory = build(:plage_ouverture, :weekly).recurrence.to_hash.keys
+    recurrence_attributes_from_factory = build(:plage_ouverture, :weekly_on_monday).recurrence.to_hash.keys
 
     expect(recurrence_attributes_from_factory + [:until]).to match_array(plage_ouverture.recurrence.to_hash.keys)
 
@@ -78,7 +78,7 @@ RSpec.describe "Agent can manage recurrence on plage d'ouverture" do
     )
 
     # On vérifie au passage que les données qu'on crée dans nos factories correspondent bien à ce que l'application peut créer
-    recurrence_attributes_from_factory = build(:plage_ouverture, :weekly_without_any_day).recurrence.to_hash
+    recurrence_attributes_from_factory = build(:plage_ouverture, :once_a_week).recurrence.to_hash
 
     expect(recurrence_attributes_from_factory.keys).to match_array(plage_ouverture.recurrence.to_hash.keys)
 
