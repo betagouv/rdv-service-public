@@ -127,6 +127,14 @@ RSpec.describe "Visioplainte Rdvs" do
       expect(response.parsed_body["rdvs"][0]["starts_at"]).to eq "2024-08-19 08:00:00 +0200"
     end
 
+    describe "authentication" do
+      it "returns a 400 status if the auth header is missing" do
+        get "/api/visioplainte/rdvs/", params: { from: "2024-08-19T08:00:00+02:00", to: "2024-08-20T08:00:00+02:00" }, headers: {}
+        expect(response.status).to eq 401
+        expect(response.parsed_body["rdvs"]).to be_blank
+      end
+    end
+
     context "when there are no rdvs for the from and to params" do
       it "returns an empty list" do
         get "/api/visioplainte/rdvs/", params: { from: "2024-08-22T08:00:00+02:00", to: "2024-08-23T08:00:00+02:00" }, headers: auth_header
