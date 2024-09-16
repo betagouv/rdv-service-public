@@ -1,4 +1,4 @@
-RSpec.describe Payloads::Rdv, type: :service do
+RSpec.describe IcsPayloads::Rdv, type: :service do
   describe "#payload" do
     %i[name ical_uid summary ends_at description address].each do |key|
       it "return an hash with key #{key}" do

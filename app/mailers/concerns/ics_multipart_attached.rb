@@ -8,7 +8,7 @@ module IcsMultipartAttached
   def mail(...)
     return super if ics_payload.blank? || ics_payload_already_added?(message)
 
-    cal = IcalHelpers::Ics.from_payload(ics_payload)
+    cal = IcalFormatters::Ics.from_payload(ics_payload)
 
     # Specs
     # iCalendar: https://datatracker.ietf.org/doc/html/rfc5545#section-3.6.1
