@@ -234,7 +234,7 @@ RSpec.describe Admin::PlageOuverturesController, type: :controller do
       it "send notification after destroy" do
         ActionMailer::Base.deliveries.clear
         delete :destroy, params: { organisation_id: organisation.id, id: plage_ouverture.id }
-        expect(ActionMailer::Base.deliveries.size).to eq(1)
+        expect { perform_enqueued_jobs }.to change { ActionMailer::Base.deliveries.size }.by(1)
         expect(ActionMailer::Base.deliveries.last.subject).to include("RDV Solidarités - Plage d’ouverture supprimée")
       end
 
@@ -243,17 +243,6 @@ RSpec.describe Admin::PlageOuverturesController, type: :controller do
         ActionMailer::Base.deliveries.clear
         delete :destroy, params: { organisation_id: organisation.id, id: plage_ouverture.id }
         expect(ActionMailer::Base.deliveries.size).to eq(0)
-      end
-
-      it "remove plage ouverture without delay" do
-        # Difficile de tester le delai qui avait été
-        # introduit ici, c'est pourtant la source d'un problème.
-        # En attendant de pouvoir tester dans une spec de feature
-        # je pose ce test comme justification de la suppresion de
-        # l'utilisation du `delay`
-        expect do
-          delete :destroy, params: { organisation_id: organisation.id, id: plage_ouverture.id }
-        end.not_to have_enqueued_job
       end
     end
   end
