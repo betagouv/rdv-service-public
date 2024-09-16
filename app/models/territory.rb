@@ -128,7 +128,7 @@ class Territory < ApplicationRecord
   private
 
   DEPARTEMENTS_NAMES = CSV.read(Rails.root.join("lib/assets/departements_fr.csv"), headers: :first_row)
-    .to_h { [_1["number"], _1["name"]] }
+    .to_h { [_1["number"], _1["name"]] }.freeze
 
   def fill_name_for_departements
     return if name.present? || departement_number.blank?
