@@ -166,8 +166,10 @@ RSpec.describe "Visioplainte Rdvs" do
       end
 
       let(:gendarmerie_guichet_ids) do
-        get "/api/visioplainte/guichets", params: { service: "Gendarmerie" }, headers: auth_header
-        response.parsed_body["guichets"].map { |guichet| guichet["id"] } # rubocop:disable Rails/Pluck
+        Agent.joins(:services).where(services: { name: ["Gendarmerie Nationale"] }).pluck(:id)
+      end
+      let(:police_guichet_ids) do
+        Agent.joins(:services).where(services: { name: ["Police Nationale"] }).pluck(:id)
       end
 
       it "returns only the rdvs of the given guichets" do
@@ -175,6 +177,9 @@ RSpec.describe "Visioplainte Rdvs" do
         get "/api/visioplainte/rdvs/", params: { guichet_ids: gendarmerie_guichet_ids }.merge(date_params), headers: auth_header
 
         expect(response.parsed_body["rdvs"]).to be_empty
+
+        get "/api/visioplainte/rdvs/", params: { guichet_ids: police_guichet_ids }.merge(date_params), headers: auth_header
+        expect(response.parsed_body["rdvs"][0]["id"]).to eq Rdv.last.id
       end
     end
 
