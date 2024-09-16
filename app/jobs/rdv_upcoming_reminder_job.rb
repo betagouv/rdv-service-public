@@ -5,7 +5,8 @@ class RdvUpcomingReminderJob < ApplicationJob
   # La stratégie de retries par défaut jusqu’à 8 jours ne convient donc pas
   # Ce retry_on a précédence sur celui du DefaultJobBehaviour
   # Les handlers retry_on et discard_on sont parcourus de bas en haut du code puis en remontant les classes parentes
-  retry_on StandardError, wait: 2.hours, attempts: 20, priority: DefaultJobBehaviour::PRIORITY_OF_RETRIES
+  # (1..14).map { (_1 ** 4) + (_1 ** 4) * 0.15 }.sum.to_f / 60 / 60 ~= 41 heures
+  retry_on StandardError, wait: :exponentially_longer, attempts: 14, priority: DefaultJobBehaviour::PRIORITY_OF_RETRIES
 
   class TooLateError < StandardError; end
 
