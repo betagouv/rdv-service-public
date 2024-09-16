@@ -30,18 +30,19 @@ module DefaultJobBehaviour
   end
 
   def set_sentry_context
-    Sentry.set_context(:rdv_job, queue_name:, job_link:)
-  end
-
-  # cette méthode est appelée depuis config/initializers/sentry_job_retries_subscriber.rb
-  # et depuis les discard_on custom dans les jobs
-  def capture_sentry_exception(exception, level: :error)
     # adapted from https://github.com/getsentry/sentry-ruby/blob/master/sentry-rails/lib/sentry/rails/active_job.rb#L47-L54
-    Sentry.capture_exception(
-      exception,
-      extra: Sentry::Rails::ActiveJobExtensions::SentryReporter.sentry_context(self),
-      level:,
-      tags: { job_id:, provider_job_id: }
-    )
+    context = {
+      active_job: self.class.name,
+      job_id:,
+      job_link:,
+      queue_name:,
+      scheduled_at: scheduled_at,
+    }
+
+    if self.class.log_arguments
+      context[:arguments] = Sentry::Rails::ActiveJobExtensions::SentryReporter.sentry_serialize_arguments(arguments)
+    end
+
+    Sentry.set_context "job", context
   end
 end

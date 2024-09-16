@@ -6,5 +6,5 @@ ActiveSupport::Notifications.subscribe("enqueue_retry.active_job") do |_name, _s
 
   next if !exception || !job.capture_sentry_warning_for_retry?(exception)
 
-  job.capture_sentry_exception(exception, level: :warning)
+  Sentry.capture_exception(exception, level: :warning)
 end
