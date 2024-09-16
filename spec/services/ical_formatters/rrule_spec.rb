@@ -1,4 +1,4 @@
-RSpec.describe IcalHelpers::Rrule do
+RSpec.describe IcalFormatters::Rrule do
   describe "#from_recurrence" do
     subject { described_class.from_recurrence(recurrence) }
 
