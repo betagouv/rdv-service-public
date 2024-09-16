@@ -438,7 +438,6 @@
             "name": "ids[]",
             "in": "query",
             "description": "Une liste d'ids des rendez-vous qu'on souhaite obtenir",
-            "example": "123",
             "required": false,
             "schema": {
               "type": "array"
@@ -448,7 +447,6 @@
             "name": "guichet_ids[]",
             "in": "query",
             "description": "Une liste d'ids des guichets sur lesquels on veut filtrer les rendez-vous.",
-            "example": "456",
             "required": false,
             "schema": {
               "type": "array"
