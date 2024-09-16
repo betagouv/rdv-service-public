@@ -1,6 +1,6 @@
-RSpec.describe Payloads::Absence do
+RSpec.describe IcsPayloads::Absence do
   describe "#payload" do
-    %i[name starts_at recurrence ical_uid ends_at].each do |key|
+    %i[name starts_at rrule ical_uid ends_at].each do |key|
       it "return an hash with key #{key}" do
         absence = build(:absence)
         expect(absence.payload).to have_key(key)
@@ -27,10 +27,10 @@ RSpec.describe Payloads::Absence do
       it { expect(absence.payload[:starts_at]).to eq(starts_at) }
     end
 
-    describe ":recurrence" do
+    describe ":rrule" do
       let(:absence) { build(:absence, recurrence: Montrose.every(:week, starts: Date.new(2020, 11, 18), on: [:wednesday]).to_json) }
 
-      it { expect(absence.payload[:recurrence]).to eq("FREQ=WEEKLY;BYDAY=WE;") }
+      it { expect(absence.payload[:rrule]).to eq("FREQ=WEEKLY;BYDAY=WE;") }
     end
 
     describe ":ical_uid" do

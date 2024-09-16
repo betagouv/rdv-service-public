@@ -1,16 +1,12 @@
 require "icalendar/tzinfo"
 
-module IcalHelpers
-  # Cette constante est ajoutée aux UIDs des événements ICS afin
-  # d'empêcher la collision (certes improbable) avec des événements
-  # d'autres plateformes. Il est important de ne pas modifier cette
-  # constante car cel ferait changer les UIDs (et un ID ne doit pas changer).
-  ICS_UID_SUFFIX = "RDV Solidarités".freeze
-
+module IcalFormatters
   module Ics
-    def to_ical(*args)
-      IcalHelpers::Ics.from_payload(payload(*args)).to_ical
-    end
+    # Cette constante est ajoutée aux UIDs des événements ICS afin
+    # d'empêcher la collision (certes improbable) avec des événements
+    # d'autres plateformes. Il est important de ne pas modifier cette
+    # constante car cel ferait changer les UIDs (et un ID ne doit pas changer).
+    ICS_UID_SUFFIX = "RDV Solidarités".freeze
 
     # Specs
     # iCalendar: https://datatracker.ietf.org/doc/html/rfc5545#section-3.6.1
@@ -56,7 +52,7 @@ module IcalHelpers
       end
       event.summary = payload[:summary]
       event.location = payload[:address]
-      event.rrule = payload[:recurrence]
+      event.rrule = payload[:rrule]
       event.sequence = 0 # not sure if this is necessary, but not worth investigating right now
       event.description = payload[:description]
       event.organizer = "mailto:#{payload[:domain].secretariat_email}"
