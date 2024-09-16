@@ -55,14 +55,14 @@ RSpec.describe RdvsHelper do
   describe "#rdv_title" do
     it "show date, time and duration in minutes" do
       rdv = build(:rdv, starts_at: Time.zone.parse("2020-10-23 12h54"), duration_in_min: 30)
-      expect(rdv_title(rdv)).to eq("Le vendredi 23 octobre 2020 à 12h54 (durée : 30 minutes)")
+      expect(rdv_title(rdv)).to eq("Le vendredi 23 octobre 2020 à 12h54 (durée&nbsp;: 30 minutes)")
     end
 
     it "when rdv starts_at today, show only time and duration in minutes" do
       now = Time.zone.parse("2020-10-23 12h54")
       travel_to(now)
       rdv = build(:rdv, starts_at: now + 3.hours, duration_in_min: 30)
-      expect(rdv_title(rdv)).to eq("Aujourd’hui à 15h54 (durée : 30 minutes)")
+      expect(rdv_title(rdv)).to eq("Aujourd’hui à 15h54 (durée&nbsp;: 30 minutes)")
       travel_back
     end
   end

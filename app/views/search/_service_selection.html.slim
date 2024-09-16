@@ -2,7 +2,7 @@
   - if context.unique_motifs_by_name_and_location_type.empty?
     = render "search/nothing_to_show", context: context
   - else
-    h2.rdv-font-weight-700 Sélectionnez le service avec qui vous voulez prendre un RDV :
+    h2.rdv-font-weight-700 Sélectionnez le service avec qui vous voulez prendre un RDV&nbsp;:
     - unless context.invitation?
     - context.services.each do |service|
       .card.mb-3

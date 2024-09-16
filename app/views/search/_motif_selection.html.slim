@@ -11,7 +11,7 @@
   - if context.unique_motifs_by_name_and_location_type.empty?
     = render "search/nothing_to_show", context: context
   - else
-    h2.rdv-font-weight-700 Sélectionnez le motif de votre RDV :
+    h2.rdv-font-weight-700 Sélectionnez le motif de votre RDV&nbsp;:
     - context.unique_motifs_by_name_and_location_type.each do |motif|
       .card.mb-3
         = link_to prendre_rdv_path(context.query_params.merge(motif_name_with_location_type: motif.name_with_location_type)), class: "rdv-background-image-none" do

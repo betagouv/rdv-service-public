@@ -52,7 +52,7 @@ ul.list-group.list-group-flush
   - if rdv.motif.instruction_for_rdv.present?
     li.list-group-item
       i.fa.fa-exclamation-triangle>
-      strong Informations supplémentaires :
+      strong Informations supplémentaires&nbsp;:
       .pl-3.pt-1
         = instruction_for_rdv_to_html(rdv.motif)
   = render "/users/rdvs/file_attente", rdv: rdv
