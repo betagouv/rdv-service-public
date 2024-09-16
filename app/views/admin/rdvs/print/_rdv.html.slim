@@ -46,7 +46,7 @@
             = render "admin/rdvs/print/user_details", user: user
         - if current_organisation.territory.enable_context_field
           .mt-2
-            | Contexte :
+            | Contexte&nbsp;:
             | &nbsp
             - if rdv.context.present?
               = rdv.context
@@ -57,6 +57,6 @@
           i.fa.fa-map-marker-alt>
           = human_location(rdv)
         .mt-2
-          | Agent(s) :
+          | Agent(s)&nbsp;:
           | &nbsp
           = agents_to_sentence(rdv.agents)

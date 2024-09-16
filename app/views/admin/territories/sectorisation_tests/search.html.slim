@@ -40,7 +40,7 @@ do |f|
                   span>= "la rue #{zone.street_name} dans la commune #{zone.city_name}"
                 - else
                   span>= "la commune entière #{zone.city_name}"
-                | est attribuée à :
+                | est attribuée à&nbsp;:
                 ul
                   - zone.sector.attributions.to_a.group_by(&:organisation).each_value do |attributions|
                     li= render partial: "attribution", collection: attributions, locals: { sectorisation_test_form: @sectorisation_test_form }
@@ -58,10 +58,10 @@ do |f|
                     - motifs.each do |motif|
                       li= motif_name_and_location_type(motif)
         - else
-          div Aucun résultat : cette adresse n'est attribuée à aucun secteur
+          div Aucun résultat&nbsp;: cette adresse n'est attribuée à aucun secteur
 
         div
-          b Combinaison des motifs disponibles (c'est ce que voit l'usager) :
+          b Combinaison des motifs disponibles (c'est ce que voit l'usager)&nbsp;:
           ul
             - @sectorisation_test_form.available_motifs_unique_names_and_location_types_by_service.each do |service, motifs|
               li
