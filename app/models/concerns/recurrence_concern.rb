@@ -19,6 +19,27 @@ module RecurrenceConcern
     }
   end
 
+  class_methods do
+    def serialize_for_active_job(record)
+      manually_serialized_attrs = {
+        start_time: Tod::TimeOfDay.dump(record.start_time),
+        end_time: Tod::TimeOfDay.dump(record.end_time),
+        recurrence: Montrose::Recurrence.dump(record.recurrence),
+      }
+      record.attributes.merge(manually_serialized_attrs.stringify_keys)
+    end
+
+    def deserialize_for_active_job(hash)
+      hash = hash.symbolize_keys
+      manually_deserialized_attrs = {
+        start_time: Tod::TimeOfDay.load(hash[:start_time]),
+        end_time: Tod::TimeOfDay.load(hash[:end_time]),
+        recurrence: Montrose::Recurrence.load(hash[:recurrence]),
+      }
+      new(hash.merge(manually_deserialized_attrs))
+    end
+  end
+
   def starts_at
     return nil if start_time.blank? || first_day.blank?
 
