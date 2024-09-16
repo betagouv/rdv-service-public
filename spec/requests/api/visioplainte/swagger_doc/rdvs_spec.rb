@@ -36,12 +36,12 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do # rub
                 description: "datetime au format iso8601.  Obligatoire sauf si le paramètre ids est utilisé.\
                 Permet de filtrer pour obtenir uniquement les rendez-vous qui commencent avant cette heure",
                 example: "2024-08-22T19:00:00+02:00", required: false
-      parameter name: "ids", in: :query, type: :array,
+      parameter name: "ids[]", in: :query, type: :array,
                 description: "Une liste d'ids des rendez-vous qu'on souhaite obtenir",
-                example: "123,456", required: false
-      parameter name: "guichet_ids", in: :query, type: :array,
+                example: "123", required: false
+      parameter name: "guichet_ids[]", in: :query, type: :array,
                 description: "Une liste d'ids des guichets sur lesquels on veut filtrer les rendez-vous.",
-                example: "123,456", required: false
+                example: "456", required: false
 
       response 200, "Renvoie la liste" do
         run_test!
