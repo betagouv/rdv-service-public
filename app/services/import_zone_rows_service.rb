@@ -57,7 +57,7 @@ class ImportZoneRowsService < BaseService
   end
 
   def validate_inner_conflicts_cities?
-    conflicts = value_counts(rows_cities.pluck("city_code")).filter { |_city_code, count| count > 1 }
+    conflicts = rows_cities.pluck("city_code").tally.filter { |_city_code, count| count > 1 }
     return true if conflicts.empty?
 
     conflicts.each do |city_code, count|
@@ -67,7 +67,7 @@ class ImportZoneRowsService < BaseService
   end
 
   def validate_inner_conflicts_streets?
-    conflicts = value_counts(rows_streets.pluck("street_code")).filter { |_street_ban_id, count| count > 1 }
+    conflicts = rows_streets.pluck("street_code").tally.filter { |_street_ban_id, count| count > 1 }
     return true if conflicts.empty?
 
     conflicts.each do |street_ban_id, count|
@@ -124,11 +124,5 @@ class ImportZoneRowsService < BaseService
 
   def row_level(row)
     row["street_name"].present? || row["street_code"].present? ? Zone::LEVEL_STREET : Zone::LEVEL_CITY
-  end
-
-  def value_counts(values)
-    counts = Hash.new(0)
-    values.each { counts[_1] += 1 }
-    counts
   end
 end
