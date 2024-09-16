@@ -27,6 +27,10 @@ FactoryBot.define do
       recurrence { Montrose.every(:week, on: [:monday], starts: first_day, interval: 1) }
     end
 
+    trait :weekly_without_any_day do
+      recurrence { Montrose.every(:week, starts: first_day, interval: 1, until: 2.months.from_now) }
+    end
+
     trait :monthly do
       # first_day.wday est le jour dans la semaine (par exemple 3 pour le mercredi)
       # first_day.mday/2 est le numéro de la semaine (par exemple la 2ème semaine du mois)
