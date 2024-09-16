@@ -1,7 +1,7 @@
 fr:
   rdvs:
-    title: "Le %{starts_at} (durée : %{duration} minutes)"
-    title_time_only: "Aujourd’hui à %{starts_at} (durée : %{duration} minutes)"
+    title: "Le %{starts_at} (durée&nbsp;: %{duration} minutes)"
+    title_time_only: "Aujourd’hui à %{starts_at} (durée&nbsp;: %{duration} minutes)"
     available_seats:
       one: 1 place restante
       other: "%{count} places restantes"
