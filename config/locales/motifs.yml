@@ -19,12 +19,12 @@ fr:
       sectorisation_level:
         sectors_attributed_to_orga:
           zero: "Aucun secteur n'est attribué à l'organisation %{organisation}, ce motif n'apparaîtra donc dans aucune recherche usager"
-          one: "Un seul secteur est attribué à l'organisation %{organisation} : %{sectors}"
-          other: "%{count} secteurs sont attribués à l'organisation %{organisation} : %{sectors}"
+          one: "Un seul secteur est attribué à l'organisation %{organisation}&nbsp;: %{sectors}"
+          other: "%{count} secteurs sont attribués à l'organisation %{organisation}&nbsp;: %{sectors}"
         sectors_attributed_to_agents:
           zero: "Aucun secteur n'est attribué à des agents du service %{service}, ce motif n'apparaîtra donc dans aucune recherche usager"
-          one: "Un seul agent du service %{service} est attribué à %{sectors_count_human} : %{sectors}"
-          other: "%{count} agents du service %{service} sont attribués à %{sectors_count_human} : %{sectors}"
+          one: "Un seul agent du service %{service} est attribué à %{sectors_count_human}&nbsp;: %{sectors}"
+          other: "%{count} agents du service %{service} sont attribués à %{sectors_count_human}&nbsp;: %{sectors}"
     index:
       title: Motifs de l'organisation
       sectorisation_level_organisation:

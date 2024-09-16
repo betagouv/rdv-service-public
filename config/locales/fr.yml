@@ -65,7 +65,7 @@ fr:
   activerecord:
     errors:
       messages:
-        record_invalid: "La validation a échoué : %{errors}"
+        record_invalid: "La validation a échoué&nbsp;: %{errors}"
         restrict_dependent_destroy:
           has_one:
             Vous ne pouvez pas supprimer l'enregistrement car un(e) %{record}
@@ -213,7 +213,7 @@ fr:
       invalid: n'est pas valide
       less_than: doit être inférieur à %{count}
       less_than_or_equal_to: doit être inférieur ou égal à %{count}
-      model_invalid: 'Validation échouée : %{errors}'
+      model_invalid: 'Validation échouée&nbsp;: %{errors}'
       not_a_number: n'est pas un nombre
       not_an_integer: doit être un nombre entier
       odd: doit être impair
@@ -231,10 +231,10 @@ fr:
         one: ne fait pas la bonne longueur (doit comporter un seul caractère)
         other: ne fait pas la bonne longueur (doit comporter %{count} caractères)
     template:
-      body: 'Veuillez vérifier les champs suivants : '
+      body: 'Veuillez vérifier les champs suivants&nbsp;: '
       header:
-        one: 'Impossible d''enregistrer ce(tte) %{model} : 1 erreur'
-        other: 'Impossible d''enregistrer ce(tte) %{model} : %{count} erreurs'
+        one: 'Impossible d''enregistrer ce(tte) %{model}&nbsp;: 1 erreur'
+        other: 'Impossible d''enregistrer ce(tte) %{model}&nbsp;: %{count} erreurs'
   helpers:
     label:
       agent:
@@ -274,7 +274,7 @@ fr:
       update: Enregistrer
   layouts:
     flash:
-      confirm_export_queued_html: 'Votre export est en cours de création : il sera bientôt disponible dans la <a href="%{exports_path}">liste de vos exports</a>.'
+      confirm_export_queued_html: 'Votre export est en cours de création&nbsp;: il sera bientôt disponible dans la <a href="%{exports_path}">liste de vos exports</a>.'
     currency:
       format:
         delimiter: " "
