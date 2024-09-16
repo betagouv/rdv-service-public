@@ -110,7 +110,10 @@ module RecurrenceConcern
     def all_occurrences_for(period)
       # defined as a class method, but typically used on ActiveRecord::Relation
       current_scope ||= all
-      current_scope.flat_map do |element|
+
+      elements_without_ended_reccurrence = current_scope.where("recurrence is null or recurrence_ends_at is null or recurrence_ends_at >= ?", period.begin)
+
+      elements_without_ended_reccurrence.flat_map do |element|
         element.occurrences_for(period).map { |occurrence| [element, occurrence] }
       end.sort_by(&:second)
     end

@@ -64,6 +64,27 @@ RSpec.describe RecurrenceConcern do
                                        starts_at: Time.zone.parse("2019-07-31 8h00"),
                                        ends_at: Time.zone.parse("2019-07-31 12h00"))
     end
+
+    it "doesn't return occurrences for an object with a finished recurrence" do
+      create(factory, recurrence: Montrose.every(:week, on: [:monday], starts: Date.new(2019, 7, 1), until: Date.new(2019, 7, 22)),
+                      first_day: Date.new(2019, 7, 1), start_time: Time.zone.parse("8h00"),
+                      end_time: Time.zone.parse("12h00"))
+
+      # On vérifie que le filtre est fait au niveau sql plutôt qu'en instanciant des objets
+      expect_any_instance_of(described_class).not_to receive(:occurrences_for)
+
+      expect(described_class.all_occurrences_for(Date.new(2019, 7, 23)..Date.new(2019, 8, 15))).to be_empty
+    end
+
+    it "returns the last occurrence when it's the first day of the date range" do
+      object = create(factory, recurrence: Montrose.every(:week, on: [:monday], starts: Date.new(2019, 7, 1), until: Date.new(2019, 7, 22)),
+                               first_day: Date.new(2019, 7, 1), start_time: Time.zone.parse("8h00"),
+                               end_time: Time.zone.parse("12h00"))
+
+      expect(described_class.all_occurrences_for(Date.new(2019, 7, 22)..Date.new(2019, 7, 23))).to contain_exactly(
+        [object, Recurrence::Occurrence.new(starts_at: Time.zone.parse("2019-7-22, 8h00"), ends_at: Time.zone.parse("2019-7-22, 12h00"))]
+      )
+    end
   end
 
   shared_examples "#in_range" do
