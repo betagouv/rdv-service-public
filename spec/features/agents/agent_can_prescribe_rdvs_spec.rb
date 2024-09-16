@@ -30,10 +30,10 @@ RSpec.describe "agents can prescribe rdvs" do
 
   before do
     next_month = (now + 1.month).to_date
-    create(:plage_ouverture, :daily, first_day: next_month, motifs: [motif_mds], lieu: mds_paris_nord, organisation: org_mds)
-    create(:plage_ouverture, :daily, first_day: next_month, motifs: [motif_insertion], lieu: mission_locale_paris_sud, organisation: org_insertion, agent: agent_insertion)
-    create(:plage_ouverture, :daily, first_day: next_month, motifs: [motif_insertion], lieu: mission_locale_paris_nord, organisation: org_insertion)
-    create(:plage_ouverture, :daily, first_day: next_month, motifs: [motif_autre_service], lieu: mission_locale_paris_sud, organisation: org_insertion)
+    create(:plage_ouverture, :weekdays, first_day: next_month, motifs: [motif_mds], lieu: mds_paris_nord, organisation: org_mds)
+    create(:plage_ouverture, :weekdays, first_day: next_month, motifs: [motif_insertion], lieu: mission_locale_paris_sud, organisation: org_insertion, agent: agent_insertion)
+    create(:plage_ouverture, :weekdays, first_day: next_month, motifs: [motif_insertion], lieu: mission_locale_paris_nord, organisation: org_insertion)
+    create(:plage_ouverture, :weekdays, first_day: next_month, motifs: [motif_autre_service], lieu: mission_locale_paris_sud, organisation: org_insertion)
     current_agent.reload # needed to populate agent.organisations :/
     agent_insertion.reload
   end
