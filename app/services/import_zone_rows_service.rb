@@ -1,6 +1,4 @@
 class ImportZoneRowsService < BaseService
-  include DataUtils
-
   REQUIRED_FIELDS = {
     Zone::LEVEL_CITY => %w[sector_id city_name city_code],
     Zone::LEVEL_STREET => %w[sector_id city_name city_code street_name street_code],
@@ -126,5 +124,11 @@ class ImportZoneRowsService < BaseService
 
   def row_level(row)
     row["street_name"].present? || row["street_code"].present? ? Zone::LEVEL_STREET : Zone::LEVEL_CITY
+  end
+
+  def value_counts(values)
+    counts = Hash.new(0)
+    values.each { counts[_1] += 1 }
+    counts
   end
 end
