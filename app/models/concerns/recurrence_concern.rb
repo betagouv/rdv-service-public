@@ -110,7 +110,8 @@ module RecurrenceConcern
     def all_occurrences_for(period)
       # defined as a class method, but typically used on ActiveRecord::Relation
       current_scope ||= all
-      current_scope.flat_map do |element|
+
+      current_scope.in_range(period).flat_map do |element|
         element.occurrences_for(period).map { |occurrence| [element, occurrence] }
       end.sort_by(&:second)
     end
