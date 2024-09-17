@@ -1,4 +1,4 @@
-module Payloads
+module IcsPayloads
   module Rdv
     def payload(action = nil, recipient = users.first) # rubocop:disable Metrics/CyclomaticComplexity
       payload = {
