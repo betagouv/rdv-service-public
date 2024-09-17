@@ -120,7 +120,7 @@ fr:
       motif_categories:
         edit:
           title: Catégories de motifs disponibles
-          hint_1: "Les catégories seront/ne seront plus disponibles dans l’interface&nbsp;: les données préexistantes ne seront pas supprimées."
+          hint_1: "Les catégories seront/ne seront plus disponibles dans l’interface : les données préexistantes ne seront pas supprimées."
       rdv_fields:
         edit:
           title: Champs de la fiche RDV

@@ -2,25 +2,25 @@ fr:
   sectors:
     motifs_with_agent_level_sectorisation_in_service:
       zero: "⚠️ aucun motif du service %{service} n'est sectorisé par agent"
-      one: "1 motif du service %{service} est sectorisé par agent&nbsp;: %{motifs}"
-      other: "%{count} motifs du service %{service} sont sectorisés par agent&nbsp;: %{motifs}"
+      one: "1 motif du service %{service} est sectorisé par agent : %{motifs}"
+      other: "%{count} motifs du service %{service} sont sectorisés par agent : %{motifs}"
     motifs_with_organisation_level_sectorisation:
       zero: "⚠️ aucun motif de %{organisation} n'est sectorisé à l'organisation"
-      one: "Un motif de %{organisation} est sectorisé à l'organisation&nbsp;: %{motifs}"
-      other: "%{count} motifs de %{organisation} sont sectorisés à l'organisation&nbsp;: %{motifs}"
+      one: "Un motif de %{organisation} est sectorisé à l'organisation : %{motifs}"
+      other: "%{count} motifs de %{organisation} sont sectorisés à l'organisation : %{motifs}"
   sectorisation_tests:
     attributed_sectors_count:
       zero: "Aucun secteur attribué"
-      one: "1 secteur attribué&nbsp;:"
-      other: "%{count} secteurs attribués&nbsp;:"
+      one: "1 secteur attribué :"
+      other: "%{count} secteurs attribués :"
     available_motifs_count:
       zero: "aucun motif disponible"
-      one: "1 motif disponible&nbsp;:"
-      other: "%{count} motifs disponibles&nbsp;:"
+      one: "1 motif disponible :"
+      other: "%{count} motifs disponibles :"
     available_motifs_in_service_count:
       one: "1 motif disponible dans le service %{service}"
       other: "%{count} motifs disponibles dans le service %{service}"
     departement_motifs_count:
       zero: "Aucun motif sectorisé à l'échelle du département disponible"
-      one: "1 motif sectorisé à l'échelle du département disponible dans l'organisation %{organisation} pour le service %{service}&nbsp;:"
-      other: "%{count} motifs sectorisés à l'échelle du département disponibles dans l'organisation %{organisation} pour le service %{service}&nbsp;:"
+      one: "1 motif sectorisé à l'échelle du département disponible dans l'organisation %{organisation} pour le service %{service} :"
+      other: "%{count} motifs sectorisés à l'échelle du département disponibles dans l'organisation %{organisation} pour le service %{service} :"

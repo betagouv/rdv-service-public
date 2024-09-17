@@ -15,7 +15,7 @@ fr:
         rdv_notifications_header: "Recevoir un email de notification pour mes rendez-vous :"
         plage_ouverture_notifications_header: "Recevoir un email de notification pour mes plages d'ouverture :"
         absence_notifications_header: "Recevoir un email de notification pour mes indisponibilités :"
-        technical_email_explanation: Les emails de notification sont envoyés avec un fichier .ics qui vous permet de synchroniser votre calendrier (Outlook, zimbra,&nbsp;etc.) avec RDV Solidarités.
+        technical_email_explanation: Les emails de notification sont envoyés avec un fichier .ics qui vous permet de synchroniser votre calendrier (Outlook, zimbra, etc.) avec RDV Solidarités.
       update:
         done: Préférences de notifications mises à jour.
     exports:
