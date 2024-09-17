@@ -4,7 +4,7 @@ fr:
       lieu_available:
         one: 1 lieu est disponible
         other: "%{count} lieux sont disponibles"
-      select_lieu: "Sélectionnez un lieu de RDV&nbsp;:"
+      select_lieu: "Sélectionnez un lieu de RDV :"
       next_availability: Prochaine disponibilité le
       no_availability: Aucune disponibilité
   lieux:
@@ -15,7 +15,7 @@ fr:
       address: "Votre adresse"
       service: "Votre service"
       motif: "Votre motif"
-      address_example: "ex&nbsp;: 21 rue Anatole France, Calais"
+      address_example: "ex : 21 rue Anatole France, Calais"
       change_address: "Modifier l'adresse"
       choose_service: "Choisissez un service"
       choose_this_service: "Choisir ce service"

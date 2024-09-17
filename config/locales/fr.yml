@@ -65,7 +65,7 @@ fr:
   activerecord:
     errors:
       messages:
-        record_invalid: "La validation a échoué&nbsp;: %{errors}"
+        record_invalid: "La validation a échoué : %{errors}"
         restrict_dependent_destroy:
           has_one:
             Vous ne pouvez pas supprimer l'enregistrement car un(e) %{record}
@@ -213,7 +213,7 @@ fr:
       invalid: n'est pas valide
       less_than: doit être inférieur à %{count}
       less_than_or_equal_to: doit être inférieur ou égal à %{count}
-      model_invalid: 'Validation échouée&nbsp;: %{errors}'
+      model_invalid: 'Validation échouée : %{errors}'
       not_a_number: n'est pas un nombre
       not_an_integer: doit être un nombre entier
       odd: doit être impair
@@ -231,10 +231,10 @@ fr:
         one: ne fait pas la bonne longueur (doit comporter un seul caractère)
         other: ne fait pas la bonne longueur (doit comporter %{count} caractères)
     template:
-      body: 'Veuillez vérifier les champs suivants&nbsp;: '
+      body: 'Veuillez vérifier les champs suivants : '
       header:
-        one: 'Impossible d''enregistrer ce(tte) %{model}&nbsp;: 1 erreur'
-        other: 'Impossible d''enregistrer ce(tte) %{model}&nbsp;: %{count} erreurs'
+        one: 'Impossible d''enregistrer ce(tte) %{model} : 1 erreur'
+        other: 'Impossible d''enregistrer ce(tte) %{model} : %{count} erreurs'
   helpers:
     label:
       agent:
