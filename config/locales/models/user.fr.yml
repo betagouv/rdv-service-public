@@ -7,7 +7,7 @@ fr:
     attributes:
       user:
         organisation: Organisation
-        caisse_affiliation : Caisse d'affiliation
+        caisse_affiliation: Caisse d'affiliation
         affiliation_number: Numéro d'allocataire
         family_situation: Situation familiale
         number_of_children: Nombre d'enfants

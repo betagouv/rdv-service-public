@@ -9,19 +9,19 @@
       .card-body
         ul.list-unstyled
           li.mb-2
-            strong> Nom :
+            strong> Nom&nbsp;:
             | #{@organisation.name}
           li.mb-2
-            strong> Téléphone :
+            strong> Téléphone&nbsp;:
             | #{display_value_or_na_placeholder(@organisation.phone_number)}
           li.mb-2
-            strong> Email :
+            strong> Email&nbsp;:
             | #{display_value_or_na_placeholder(@organisation.email)}
           li.mb-2
-            strong> Site web :
+            strong> Site web&nbsp;:
             | #{display_value_or_na_placeholder(@organisation.website)}
           li.mb-2
-            strong> Horaires :
+            strong> Horaires&nbsp;:
             | #{display_value_or_na_placeholder(@organisation.horaires)}
         .text-right= link_to "Modifier", edit_admin_organisation_path(@organisation), class: "btn btn-primary"
 

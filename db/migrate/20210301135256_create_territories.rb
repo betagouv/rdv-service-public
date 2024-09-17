@@ -56,7 +56,7 @@ class CreateTerritories < ActiveRecord::Migration[6.0]
     organisation.update_columns(
       territory_id: Territory.find_or_create_by!(
         departement_number: organisation.departement,
-        name: Departements::NAMES.fetch(organisation.departement, "N/A"),
+        name: Territory::DEPARTEMENTS_NAMES.fetch(organisation.departement, "N/A"),
         phone_number: DEPARTEMENT_PHONE_NUMBERS.fetch(organisation.departement, nil)
       ).id
     )

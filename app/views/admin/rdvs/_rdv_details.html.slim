@@ -14,7 +14,7 @@
         - if rdv.context.blank?
           .text-muted = t(".empty_context")
         - else
-          .text-muted Contexte :
+          .text-muted Contexte&nbsp;:
           .border-left.pl-2.mb-1= simple_format(rdv.context, {}, wrapper_tag: :span)
 
 - if rdv.phone?
@@ -40,7 +40,7 @@
       i.fa.fa-fw.fa-map-marker.text-primary-blue>
     p.card-text
       - if rdv.home?
-        | RDV à domicile :
+        | RDV à domicile&nbsp;:
         = human_location(rdv)
       - elsif rdv.public_office?
         = human_location(rdv)

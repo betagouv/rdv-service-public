@@ -13,7 +13,7 @@ fr:
         bookable_by_hint: "Définissez quel utilisateur peut prendre rendez-vous pour ce motif :"
         visibility_type: Visibilité usager
         booking_delay: Délai de réservation
-        booking_delay_hint: "Vous pouvez définir une “fenêtre de réservation” pour la prise d’un rendez-vous : il s’agit du délai maximum et minimum possible, entre le moment où l’usager prend rendez-vous, et le rendez-vous en lui même. Ces délais ne s'appliquent pas à la prise de rendez-vous par d'autres agents."
+        booking_delay_hint: "Vous pouvez définir une “fenêtre de réservation” pour la prise d’un rendez-vous&nbsp;: il s’agit du délai maximum et minimum possible, entre le moment où l’usager prend rendez-vous, et le rendez-vous en lui même. Ces délais ne s'appliquent pas à la prise de rendez-vous par d'autres agents."
         custom_cancel_warning_message: Message d’avertissement en cas d’annulation
         custom_cancel_warning_message_hint: Ce message sera affiché à l'usager au moment où il lui sera demandé de confirmer l’annulation de son RDV. Si l’annulation du rendez-vous a des conséquences particulières pour l’usager, vous pouvez lui indiquer dans ce message. Cela peut être le cas, par exemple, pour une convocation pour l’ouverture de droits sociaux.
         default_cancel_warning_message: Voulez-vous vraiment annuler ce RDV ?
@@ -62,12 +62,12 @@ fr:
         invisible: Le rendez-vous ne sera pas visible dans l’espace personnel de l’usager, et il ne recevra aucune notification.
       motif/visibility_types/hint_rdv_insertion:
         visible_and_notified: ""
-        visible_and_not_notified: "Les notifications peuvent être envoyées d'une application externe (ex : Motif de Convocation avec RDV-Insertion)"
-        invisible: "Les notifications peuvent être envoyées d'une application externe (ex : Motif de Convocation avec RDV-Insertion)"
+        visible_and_not_notified: "Les notifications peuvent être envoyées d'une application externe (ex&nbsp;: Motif de Convocation avec RDV-Insertion)"
+        invisible: "Les notifications peuvent être envoyées d'une application externe (ex&nbsp;: Motif de Convocation avec RDV-Insertion)"
       motif/visibility_types/hint_checkbox:
         visible_and_notified: ""
-        visible_and_not_notified: "Les notifications peuvent être envoyées d'une application externe (ex : Motif de Convocation avec RDV-Insertion). Dans ce cas vous pouvez laisser cette case décochée"
-        invisible: "Les notifications peuvent être envoyées d'une application externe (ex : Motif de Convocation avec RDV-Insertion). Dans ce cas vous pouvez laisser cette case décochée"
+        visible_and_not_notified: "Les notifications peuvent être envoyées d'une application externe (ex&nbsp;: Motif de Convocation avec RDV-Insertion). Dans ce cas vous pouvez laisser cette case décochée"
+        invisible: "Les notifications peuvent être envoyées d'une application externe (ex&nbsp;: Motif de Convocation avec RDV-Insertion). Dans ce cas vous pouvez laisser cette case décochée"
       # --------------------------------------------
       motif/sectorisation_levels:
         agent: Sectorisation à l'agent

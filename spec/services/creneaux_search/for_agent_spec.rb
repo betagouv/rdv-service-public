@@ -103,28 +103,30 @@ RSpec.describe CreneauxSearch::ForAgent, type: :service do
       instance_double(
         AgentCreneauxSearchForm,
         organisation: organisation,
-        motif: motif,
-        service: motif.service,
+        motif: motif_by_phone,
+        service: motif_by_phone.service,
         agent_ids: [],
         team_ids: [],
         lieu_ids: nil,
         date_range: Date.new(2022, 10, 20)..Date.new(2022, 10, 30)
       )
     end
-    let(:motif) { create :motif, :by_phone, organisation: organisation }
-    let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], first_day: Date.new(2022, 10, 25), lieu: nil, organisation: organisation) }
+    let(:motif_by_phone) { create :motif, :by_phone, organisation: organisation }
+    let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif_by_phone], first_day: Date.new(2022, 10, 25), lieu: nil, organisation: organisation) }
 
     it "has results" do
       expect(described_class.new(form).build_result.creneaux).to be_any
     end
 
-    describe "when there is concurrent PO with lieu" do
+    describe "when there is also another PO with lieu" do
       let(:lieu) { create(:lieu, organisation: organisation) }
       let(:motif_with_lieu) { create :motif, organisation: organisation }
-      let!(:plage_ouverture2) { create(:plage_ouverture, motifs: [motif, motif_with_lieu], first_day: Date.new(2022, 10, 20), lieu: lieu, organisation: organisation) }
+      let!(:another_po_with_lieu) { create(:plage_ouverture, motifs: [motif_by_phone, motif_with_lieu], first_day: Date.new(2022, 10, 20), lieu: lieu, organisation: organisation) }
 
-      it "give the good results with no conflict" do
-        expect(described_class.new(form).build_result.creneaux.first.starts_at).to eq(Time.zone.local(2022, 10, 25, 8, 0, 0))
+      it "retourne des créneaux des deux plages d’ouvertures" do
+        # on utilise volontairement pas .first ici car les créneaux retournés ne sont pas triés
+        expect(described_class.new(form).build_result.creneaux.map(&:starts_at)).to include(Time.zone.local(2022, 10, 25, 8, 0, 0))
+        expect(described_class.new(form).build_result.creneaux.map(&:starts_at)).to include(Time.zone.local(2022, 10, 20, 8, 0, 0))
       end
     end
   end

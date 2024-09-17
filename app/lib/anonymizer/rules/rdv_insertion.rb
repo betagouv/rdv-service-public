@@ -21,6 +21,7 @@ class Anonymizer::Rules::RdvInsertion
         organisation_id
         rdv_solidarites_agent_role_id
         created_at
+        authorized_to_export_csv
         updated_at
         last_webhook_update_received_at
       ],

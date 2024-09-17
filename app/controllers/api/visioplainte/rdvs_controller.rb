@@ -1,4 +1,27 @@
 class Api::Visioplainte::RdvsController < Api::Visioplainte::BaseController
+  def index # rubocop:disable Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity
+    if params[:ids].blank? && (params[:from].blank? || params[:to].blank?)
+      errors = ["Vous devez préciser le paramètre ids ou les paramètres from et to"]
+      render(json: { errors: errors }, status: :bad_request) and return
+    end
+
+    rdvs = authorized_rdv_scope
+
+    if params[:ids].present?
+      rdvs = rdvs.where(id: params[:ids])
+    end
+
+    if params[:from].present? && params[:to].present?
+      rdvs = rdvs.where("starts_at >= ?", Time.zone.parse(params[:from])).where("starts_at <= ?", Time.zone.parse(params[:to]))
+    end
+
+    if params[:guichet_ids]
+      rdvs = rdvs.joins(:agents_rdvs).where(agents_rdvs: { agent_id: params[:guichet_ids] })
+    end
+
+    render json: Visioplainte::RdvBlueprint.render(rdvs, root: :rdvs)
+  end
+
   def create
     creneau = CreneauxSearch::ForUser.creneau_for(
       starts_at: Time.zone.parse(params[:starts_at]),
@@ -60,8 +83,11 @@ class Api::Visioplainte::RdvsController < Api::Visioplainte::BaseController
   private
 
   def find_rdv
+    authorized_rdv_scope.find_by(id: params[:id])
+  end
+
+  def authorized_rdv_scope
     Rdv.joins(organisation: :territory).where(territories: { name: Territory::VISIOPLAINTE_NAME })
-      .find_by(id: params[:id])
   end
 
   def motif

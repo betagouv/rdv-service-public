@@ -28,7 +28,7 @@
     .clear
   - if rdv.follow_up?
     div.row-result
-      span.title Référent :
+      span.title Référent&nbsp;:
       span.float-right= rdv.agents.map(&:short_name).sort.to_sentence
       .clear
   div.row-result
@@ -56,5 +56,5 @@
       .clear
   - if rdv.motif.instruction_for_rdv.present? && for_role == :user
     .div.row-result.no-border
-      span.title Informations supplémentaires :
+      span.title Informations supplémentaires&nbsp;:
       = instruction_for_rdv_to_html(rdv.motif)
