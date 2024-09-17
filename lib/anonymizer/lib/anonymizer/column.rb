@@ -53,17 +53,8 @@ module Anonymizer
         # cela laisse penser qu’il y avait toujours une et une seule valeur avant l’anonymisation
       elsif column.name.include?("email")
         Arel.sql("'email_anonymise_' || id || '@exemple.fr'")
-      elsif column_has_uniqueness_constraint?
-        Arel.sql("'[valeur unique anonymisée ' || id || ']'")
       else
-        "[valeur anonymisée]"
-      end
-    end
-
-    def column_has_uniqueness_constraint?
-      Anonymizer.db_connection.indexes(table_name).select(&:unique).any? do |index|
-        # il se peut que la deuxième colonne de l'index n'ait pas de contrainte d'unicité
-        index.columns.first == column.name
+        Arel.sql("'[valeur unique anonymisée ' || id || ']'")
       end
     end
   end
