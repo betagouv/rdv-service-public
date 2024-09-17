@@ -185,7 +185,7 @@ jobs:
           timezoneLinux: "Europe/Paris"
       - uses: browser-actions/setup-chrome@v1
         with:
-          chrome-version: 127
+          chrome-version: 128
           install-chromedriver: true
       - name: Set up Node.js
         uses: actions/setup-node@v4
