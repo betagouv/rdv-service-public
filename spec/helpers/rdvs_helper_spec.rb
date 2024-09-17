@@ -62,7 +62,7 @@ RSpec.describe RdvsHelper do
       now = Time.zone.parse("2020-10-23 12h54")
       travel_to(now)
       rdv = build(:rdv, starts_at: now + 3.hours, duration_in_min: 30)
-      expect(rdv_title(rdv)).to eq("Aujourd’hui à 15h54 (durée&nbsp;: 30 minutes)")
+      expect(rdv_title(rdv)).to eq("Aujourd’hui à 15h54 (durée : 30 minutes)")
       travel_back
     end
   end
