@@ -42,7 +42,7 @@ RSpec.describe "can see users' RDV" do
       expect(page).to have_content("À venir\n1 RDV")
       click_link "Voir tous les rendez-vous de Tanguy LAVERDURE"
       expect_page_title("Liste des RDV")
-      expect(page).to have_content("Le #{I18n.l(rdv.starts_at, format: :human)} (durée&nbsp;: #{rdv.duration_in_min} minutes)")
+      expect(page).to have_content("Le #{I18n.l(rdv.starts_at, format: :human)} (durée : #{rdv.duration_in_min} minutes)")
     end
   end
 end
