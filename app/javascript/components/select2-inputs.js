@@ -60,7 +60,7 @@ class Select2Inputs {
     // This code checks if a select element (represented by the `elt` variable) has only one option.
     // return all options if it is ajax
     const isAjax = elt.dataset.selectOptions?.includes("ajax");
-    if (isAjax) return options;
+    if (isAjax) return;
 
     // Get all options and remove blank values if exists (placeholders)
     const optionsList = $(elt).find("option").filter(function() {
