@@ -17,3 +17,5 @@ fr:
               format: "La date de début %{message}"
             end_day:
               format: "La date de fin %{message}"
+            recurrence_ends_at:
+              format: "La date de fin de répétition %{message}"

@@ -135,4 +135,32 @@ RSpec.describe Absence, type: :model do
       end
     end
   end
+
+  describe "recurrence_ends_at realistic validations" do
+    context "recurrence_ends_at before 2018" do
+      let(:absence) { build(:absence, :weekly, first_day: Date.new(2015, 12, 24), end_day: Date.new(2015, 12, 24), recurrence_ends_at: Date.new(2017, 3, 3)) }
+
+      it "should be invalid" do
+        expect(absence).to be_invalid
+        expect(absence.errors.full_messages).to include("La date de fin de répétition ne peut pas être avant 2018")
+      end
+    end
+
+    context "recurrence_ends_at is more than 5 years from now" do
+      let(:absence) { build(:absence, :weekly, first_day: Date.new(2020, 12, 24), end_day: Date.new(2020, 12, 24), recurrence_ends_at: Date.new(2100, 3, 3)) }
+
+      it "should be invalid" do
+        expect(absence).to be_invalid
+        expect(absence.errors.full_messages).to include("La date de fin de répétition ne peut pas être dans plus de 5 ans")
+      end
+    end
+
+    context "recurrence_ends_at is reasonable" do
+      let(:absence) { build(:absence, :weekly, first_day: Date.new(2020, 12, 24), end_day: Date.new(2020, 12, 24), recurrence_ends_at: Date.new(2024, 3, 3)) }
+
+      it "should be valid" do
+        expect(absence).to be_valid
+      end
+    end
+  end
 end
