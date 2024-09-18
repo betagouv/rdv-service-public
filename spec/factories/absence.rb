@@ -14,16 +14,22 @@ FactoryBot.define do
       recurrence { nil }
     end
 
-    trait :weekly do
-      recurrence { Montrose.every(:week, starts: first_day) }
+    trait :weekly_on_monday do
+      recurrence { Montrose.every(:week, on: [:monday], starts: first_day, interval: 1) }
+    end
+
+    trait :once_a_week do
+      recurrence { Montrose.every(:week, starts: first_day, interval: 1) }
     end
 
     trait :monthly do
-      recurrence { Montrose.every(:month, starts: first_day) }
+      # first_day.wday est le jour dans la semaine (par exemple 3 pour le mercredi)
+      # first_day.mday/2 est le numéro de la semaine (par exemple la 2ème semaine du mois)
+      recurrence { Montrose.every(:month, starts: first_day, day: { first_day.wday => [first_day.mday / 7] }, interval: 1) }
     end
 
     trait :every_two_weeks do
-      recurrence { Montrose.every(:week, interval: 2, starts: first_day) }
+      recurrence { Montrose.every(:week, on: [:monday], starts: first_day, interval: 2) }
     end
   end
 end
