@@ -5,7 +5,7 @@ RSpec.describe Anonymizer do
 
       it "anonymizes first and last name" do
         described_class.anonymize_record!(prescripteur)
-        expect(prescripteur.reload.full_name).to eq "[valeur anonymisée] [VALEUR ANONYMISÉE]"
+        expect(prescripteur.reload.full_name).to match %([valeur unique anonymisée \\d+] [VALEUR UNIQUE ANONYMISÉE \\d+])
         expect(prescripteur.reload.email).to eq "email_anonymise_#{prescripteur.id}@exemple.fr"
       end
     end
@@ -15,7 +15,7 @@ RSpec.describe Anonymizer do
 
       it "anonymizes first and last name and email" do
         described_class.anonymize_record!(user)
-        expect(user.reload.full_name).to eq "[valeur anonymisée] [VALEUR ANONYMISÉE]"
+        expect(user.reload.full_name).to match %([valeur unique anonymisée \\d+] [VALEUR UNIQUE ANONYMISÉE \\d+])
         expect(user.reload.email).to eq "email_anonymise_#{user.id}@exemple.fr"
       end
 
@@ -39,7 +39,7 @@ RSpec.describe Anonymizer do
 
       it "anonymizes first and last name and email" do
         described_class.anonymize_record!(agent)
-        expect(agent.reload.full_name).to eq "[valeur anonymisée] [VALEUR ANONYMISÉE]"
+        expect(agent.reload.full_name).to match %([valeur unique anonymisée \\d+] [VALEUR UNIQUE ANONYMISÉE \\d+])
         expect(agent.reload.email).to eq "email_anonymise_#{agent.id}@exemple.fr"
       end
     end
@@ -49,7 +49,7 @@ RSpec.describe Anonymizer do
 
       it "anonymizes title" do
         described_class.anonymize_record!(absence)
-        expect(absence.reload.title).to eq "[valeur anonymisée]"
+        expect(absence.reload.title).to match %([valeur unique anonymisée \\d+])
       end
     end
 
@@ -76,7 +76,7 @@ RSpec.describe Anonymizer do
 
       it "anonymizes phone number" do
         described_class.anonymize_record!(lieu)
-        expect(lieu.reload.phone_number).to eq "[valeur anonymisée]"
+        expect(lieu.reload.phone_number).to match %([valeur unique anonymisée \\d+])
       end
     end
 
@@ -86,7 +86,7 @@ RSpec.describe Anonymizer do
 
       it "anonymizes context" do
         described_class.anonymize_record!(rdv)
-        expect(rdv.reload.context).to eq "[valeur anonymisée]"
+        expect(rdv.reload.context).to match %([valeur unique anonymisée \\d+])
         expect(other_rdv.reload.context).to eq "Un autre RDV"
       end
     end
@@ -127,9 +127,9 @@ RSpec.describe Anonymizer do
 
       it "anonymizes the correct columns" do
         described_class.anonymize_records!("users")
-        expect(user1.reload.full_name).to eq "[valeur anonymisée] [VALEUR ANONYMISÉE]"
-        expect(user2.reload.full_name).to eq "[valeur anonymisée] [VALEUR ANONYMISÉE]"
-        expect(user_without_email.reload.full_name).to eq "[valeur anonymisée] [VALEUR ANONYMISÉE]"
+        expect(user1.reload.full_name).to match %([valeur unique anonymisée \\d+] [VALEUR UNIQUE ANONYMISÉE \\d+])
+        expect(user2.reload.full_name).to match %([valeur unique anonymisée \\d+] [VALEUR UNIQUE ANONYMISÉE \\d+])
+        expect(user_without_email.reload.full_name).to match %([valeur unique anonymisée \\d+] [VALEUR UNIQUE ANONYMISÉE \\d+])
         expect(user1.reload.email).to eq "email_anonymise_#{user1.id}@exemple.fr"
         expect(user2.reload.email).to eq "email_anonymise_#{user2.id}@exemple.fr"
         expect(user_without_email.reload.email).to be_nil
@@ -145,7 +145,7 @@ RSpec.describe Anonymizer do
 
       it "anonymizes correctly" do
         described_class.anonymize_records!("rdvs")
-        expect(rdv_with_context.reload.context).to eq "[valeur anonymisée]"
+        expect(rdv_with_context.reload.context).to match %([valeur unique anonymisée \\d+])
         expect(rdv_with_blank_context.reload.context).to be_nil
         expect(rdv_with_nil_context.reload.context).to be_nil
       end
@@ -157,7 +157,9 @@ RSpec.describe Anonymizer do
 
       it "anonymizes only 2020 ones" do
         described_class.anonymize_records!("rdvs", scope: Rdv.arel_table[:created_at].lt(Date.new(2021, 1, 1)))
-        expect(Rdv.where("extract(year from created_at) = 2020").pluck(:context).uniq).to eq ["[valeur anonymisée]"]
+        contexts2020 = Rdv.where("extract(year from created_at) = 2020").pluck(:context)
+        expect(contexts2020.first).to match %([valeur unique anonymisée \\d+])
+        expect(contexts2020.second).to match %([valeur unique anonymisée \\d+])
         expect(Rdv.where("extract(year from created_at) = 2021").pluck(:context).uniq).to eq ["Des infos sensibles sur le rdv"]
       end
     end
