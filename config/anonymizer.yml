@@ -1,0 +1,425 @@
+tables:
+  - table_name: versions
+    truncated: true
+  - table_name: good_jobs
+    truncated: true
+  - table_name: good_job_executions
+    truncated: true
+  - table_name: good_job_settings
+    truncated: true
+  - table_name: good_job_batches
+    truncated: true
+  - table_name: good_job_processes
+    truncated: true
+  - table_name: agent_territorial_roles
+    truncated: true
+  - table_name: motifs_plage_ouvertures
+    truncated: true
+  - table_name: referent_assignations
+    truncated: true
+  - table_name: user_profiles
+    truncated: true
+  - table_name: motif_categories_territories
+    truncated: true
+  - table_name: schema_migrations
+    truncated: true
+  - table_name: users
+    anonymized_column_names:
+      - first_name
+      - last_name
+      - birth_name
+      - birth_date
+      - email
+      - unconfirmed_email
+      - address
+      - address_details
+      - caisse_affiliation
+      - affiliation_number
+      - family_situation
+      - number_of_children
+      - phone_number
+      - phone_number_formatted
+      - city_code
+      - post_code
+      - city_name
+      - case_number
+      - logement
+      - notes
+      - ants_pre_demande_number
+      - franceconnect_openid_sub
+      - encrypted_password
+      - confirmation_token
+      - reset_password_token
+      - invitation_token
+      - remember_created_at
+      - rdv_invitation_token
+    non_anonymized_column_names:
+      - confirmed_at
+      - confirmation_sent_at
+      - created_at
+      - updated_at
+      - created_through
+      - invitation_accepted_at
+      - invitation_created_at
+      - text_search_terms
+      - deleted_at
+      - invitation_limit
+      - reset_password_sent_at
+      - invitation_sent_at
+      - invitations_count
+      - invited_by_id
+      - invited_by_type
+      - invited_through
+      - notify_by_email
+      - notify_by_sms
+      - logged_once_with_franceconnect
+      - rdv_invitation_token_updated_at
+
+  - table_name: agents
+    anonymized_column_names:
+      - first_name
+      - last_name
+      - email
+      - email_original
+      - encrypted_password
+      - unconfirmed_email
+      - cnfs_secondary_email
+      - uid
+      - external_id
+      - calendar_uid
+      - last_sign_in_at
+      - reset_password_token
+      - confirmation_token
+      - invitation_token
+      - tokens
+      - microsoft_graph_token
+      - refresh_microsoft_graph_token
+      - remember_created_at
+      - inclusion_connect_open_id_sub
+    non_anonymized_column_names:
+      - reset_password_sent_at
+      - confirmed_at
+      - confirmation_sent_at
+      - invitation_created_at
+      - invitation_sent_at
+      - invitation_accepted_at
+      - invitation_limit
+      - invited_by_type
+      - invited_by_id
+      - invitations_count
+      - provider
+      - rdv_notifications_level
+      - allow_password_change
+      - unknown_past_rdv_count
+      - display_saturdays
+      - display_cancelled_rdv
+      - plage_ouverture_notification_level
+      - absence_notification_level
+      - outlook_disconnect_in_progress
+      - account_deletion_warning_sent_at
+      - deleted_at
+      - created_at
+      - updated_at
+      - connected_with_agent_connect
+
+  - table_name: rdvs
+    anonymized_column_names:
+      - context
+      - name
+    non_anonymized_column_names:
+      - starts_at
+      - organisation_id
+      - created_at
+      - updated_at
+      - cancelled_at
+      - motif_id
+      - uuid
+      - lieu_id
+      - old_location
+      - created_by_id
+      - created_by_type
+      - ends_at
+      - max_participants_count
+      - users_count
+      - status
+
+  - table_name: receipts
+    anonymized_column_names:
+      - sms_phone_number
+      - email_address
+      - content
+      - error_message
+    non_anonymized_column_names:
+      - created_at
+      - updated_at
+      - error_message
+      - event
+      - result
+      - sms_count
+      - sms_provider
+      - channel
+
+  - table_name: prescripteurs
+    anonymized_column_names:
+      - first_name
+      - last_name
+      - email
+      - phone_number
+      - phone_number_formatted
+
+    non_anonymized_column_names:
+      - created_at
+      - updated_at
+      - participation_id
+
+  - table_name: super_admins
+    anonymized_column_names:
+      - email
+      - first_name
+      - last_name
+    non_anonymized_column_names:
+      - created_at
+      - updated_at
+      - role
+
+  - table_name: organisations
+    anonymized_column_names:
+      - email
+      - phone_number
+    non_anonymized_column_names:
+      - created_at
+      - updated_at
+      - name
+      - departement
+      - horaires
+      - human_id
+      - website
+      - external_id
+      - verticale
+
+  - table_name: absences
+    anonymized_column_names:
+      - title
+    non_anonymized_column_names:
+      - created_at
+      - updated_at
+      - recurrence
+      - first_day
+      - start_time
+      - end_day
+      - end_time
+      - expired_cached
+      - recurrence_ends_at
+
+  - table_name: lieux
+    anonymized_column_names:
+      - phone_number
+      - phone_number_formatted
+    non_anonymized_column_names:
+      - created_at
+      - updated_at
+      - name
+      - old_address
+      - latitude
+      - longitude
+      - old_enabled
+      - availability
+      - address
+
+  - table_name: participations
+    anonymized_column_names:
+      - invitation_token
+    non_anonymized_column_names:
+      - created_at
+      - updated_at
+      - send_lifecycle_notifications
+      - send_reminder_notification
+      - invitation_created_at
+      - invitation_sent_at
+      - invitation_accepted_at
+      - invitation_limit
+      - invited_by_type
+      - invited_by_id
+      - invitations_count
+      - status
+      - created_by_id
+      - created_by_type
+      - created_by_agent_prescripteur
+
+  - table_name: plage_ouvertures
+    anonymized_column_names:
+      - title
+    non_anonymized_column_names:
+      - created_at
+      - updated_at
+      - organisation_id
+      - first_day
+      - start_time
+      - end_time
+      - recurrence
+      - expired_cached
+      - recurrence_ends_at
+
+  - table_name: webhook_endpoints
+    anonymized_column_names:
+      - secret
+    non_anonymized_column_names:
+      - created_at
+      - updated_at
+      - target_url
+      - organisation_id
+      - subscriptions
+
+  - table_name: territories
+    anonymized_column_names:
+      - sms_configuration
+    non_anonymized_column_names:
+      - departement_number
+      - name
+      - phone_number
+      - phone_number_formatted
+      - created_at
+      - updated_at
+      - sms_provider
+      - has_own_sms_provider
+      - enable_notes_field
+      - enable_caisse_affiliation_field
+      - enable_affiliation_number_field
+      - enable_family_situation_field
+      - enable_number_of_children_field
+      - enable_logement_field
+      - enable_case_number
+      - enable_address_details
+      - enable_context_field
+      - enable_waiting_room_mail_field
+      - enable_waiting_room_color_field
+      - visible_users_throughout_the_territory
+
+  # Tables sans données personnelles
+  - table_name: agent_roles
+    non_anonymized_column_names:
+      - access_level
+  - table_name: agents_rdvs
+    non_anonymized_column_names:
+      - outlook_id
+      - outlook_create_in_progress
+  - table_name: agent_territorial_access_rights
+    non_anonymized_column_names:
+      - allow_to_manage_teams
+      - created_at
+      - updated_at
+      - allow_to_manage_access_rights
+      - allow_to_invite_agents
+      - allow_to_download_metrics
+
+  - table_name: teams
+    non_anonymized_column_names:
+      - name
+      - created_at
+      - updated_at
+  - table_name: motifs
+    non_anonymized_column_names:
+      - name
+      - color
+      - created_at
+      - updated_at
+      - default_duration_in_min
+      - legacy_bookable_publicly
+      - min_public_booking_delay
+      - max_public_booking_delay
+      - deleted_at
+      - bookable_by
+      - restriction_for_rdv
+      - instruction_for_rdv
+      - for_secretariat
+      - old_location_type
+      - follow_up
+      - visibility_type
+      - sectorisation_level
+      - custom_cancel_warning_message
+      - collectif
+      - location_type
+      - rdvs_editable_by_user
+      - rdvs_cancellable_by_user
+
+  - table_name: services
+    non_anonymized_column_names:
+      - name
+      - created_at
+      - updated_at
+      - short_name
+  - table_name: zones
+    non_anonymized_column_names:
+      - level
+      - city_name
+      - city_code
+      - created_at
+      - updated_at
+      - street_name
+      - street_ban_id
+
+  - table_name: ar_internal_metadata
+    non_anonymized_column_names:
+      - value
+      - created_at
+      - updated_at
+
+  - table_name: territory_services
+    non_anonymized_column_names:
+      - created_at
+
+  - table_name: agent_services
+    non_anonymized_column_names:
+      - created_at
+
+  - table_name: agent_teams
+    non_anonymized_column_names:
+      - created_at
+      - updated_at
+
+  - table_name: sectors
+    non_anonymized_column_names:
+      - departement
+      - name
+      - human_id
+      - created_at
+      - updated_at
+
+  - table_name: motif_categories
+    non_anonymized_column_names:
+      - name
+      - short_name
+      - created_at
+      - updated_at
+
+  - table_name: sector_attributions
+    non_anonymized_column_names:
+      - level
+
+  - table_name: file_attentes
+    non_anonymized_column_names:
+      - created_at
+      - updated_at
+      - notifications_sent
+      - last_creneau_sent_at
+
+  - table_name: api_calls
+    anonymized_column_names:
+      - raw_http
+    non_anonymized_column_names:
+      - received_at
+      - controller_name
+      - action_name
+      - agent_id
+
+  - table_name: exports
+    non_anonymized_column_names:
+      - export_type
+      - computed_at
+      - expires_at
+      - agent_id
+      - file_name
+      - organisation_ids
+      - options
+      - created_at
+      - updated_at
