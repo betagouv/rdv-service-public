@@ -7,7 +7,7 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do # rub
   end
 
   path "/api/visioplainte/plages_ouverture" do
-    get "Ces plages d'ouvertures sont les horaires sur lesquelles un guichet est ouvert, et permettent de savoir à quels guichets affecter des agents.\
+    get "Ces plages d'ouvertures sont les horaires sur lesquels un guichet est ouvert, et permettent de savoir à quels guichets affecter des agents.\
         Cet enpoint permet d'obtenir la liste des occurrences pour une période donnée (une plage d'ouverture récurrente ayant plusieurs occurrences).\
         Cet endpoint ne prend pas encore en compte les absences." do
       with_visioplainte_authentication
