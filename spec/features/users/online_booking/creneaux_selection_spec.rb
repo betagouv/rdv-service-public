@@ -1,5 +1,5 @@
 RSpec.describe "User can select a creneau" do
-  let(:now) { Time.zone.parse("2021-12-13 8:00") }
+  let(:now) { Time.zone.parse("2021-12-13 8:05") }
 
   let!(:territory92) { create(:territory, departement_number: "92") }
   let!(:organisation) { create(:organisation, territory: territory92) }
@@ -13,8 +13,8 @@ RSpec.describe "User can select a creneau" do
     # Avec un seul motif on passe par le choix d'un lieu.
     # Avec deux motifs, on affiche directement la disponibilité.
     let!(:autre_motif) { create(:motif, organisation: organisation, max_public_booking_delay: 7.days, service: service) }
-    let!(:plage_ouverture) { create(:plage_ouverture, :daily, first_day: now + 8.days, motifs: [motif], lieu: lieu, organisation: organisation) }
-    let!(:autre_plage_ouverture) { create(:plage_ouverture, :daily, first_day: now + 8.days, motifs: [autre_motif], lieu: lieu, organisation: organisation) }
+    let!(:plage_ouverture) { create(:plage_ouverture, :weekdays, first_day: now + 8.days, motifs: [motif], lieu: lieu, organisation: organisation) }
+    let!(:autre_plage_ouverture) { create(:plage_ouverture, :weekdays, first_day: now + 8.days, motifs: [autre_motif], lieu: lieu, organisation: organisation) }
 
     it "shows that no creneau is available", js: true do
       visit root_path
@@ -46,16 +46,16 @@ RSpec.describe "User can select a creneau" do
 
   context "when there is a full week without any creneaux" do
     let!(:motif) { create(:motif, name: "RSA Orientation", organisation: organisation, restriction_for_rdv: nil, service: service) }
-    let!(:plage_ouverture) { create(:plage_ouverture, :daily, first_day: Date.new(2021, 12, 13), motifs: [motif], lieu: lieu, organisation: organisation) }
+    let!(:plage_ouverture) { create(:plage_ouverture, :weekdays, first_day: Date.new(2021, 12, 13), motifs: [motif], lieu: lieu, organisation: organisation) }
     let!(:absence) do
-      create(:absence, agent: plage_ouverture.agent, first_day: Date.new(2021, 12, 20), end_day: Date.new(2021, 12, 27), start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(18))
+      create(:absence, agent: plage_ouverture.agent, first_day: Date.new(2021, 12, 20), end_day: Date.new(2021, 12, 27), start_time: Tod::TimeOfDay.new(8), end_time: Tod::TimeOfDay.new(18))
     end
 
     it "displays the correct date for the next availability" do
       visit prendre_rdv_path(departement: 92)
       click_on motif.name
       expect(page).to have_content("Prochaine disponibilité")
-      expect(page).to have_content("mardi 14 décembre 2021 à 08h00")
+      expect(page).to have_content("lundi 13 décembre 2021 à 08h50")
       click_on("Prochaine disponibilité")
 
       click_on("sem. prochaine")

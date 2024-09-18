@@ -85,6 +85,11 @@ class User < ApplicationRecord
     full_name
   end
 
+  def email=(value)
+    # On corriger automatiquement cette faute de frappe courante
+    super(value&.gsub(".@", "@"))
+  end
+
   def add_organisation(organisation)
     self_and_relatives_and_responsible.each do |u|
       u.organisations << organisation if u.organisation_ids.exclude?(organisation.id)

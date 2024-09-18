@@ -64,12 +64,12 @@ ul.list-group.list-group-flush
           | Informations de contact :&nbsp;
       .row
         .col.ml-3
-          span> ✉️ Email :
+          span> ✉️ Email&nbsp;:
           b>= current_user.email
           span>= "(notifications par email #{current_user.notify_by_email? ? 'activées' :  'désactivées'})"
       .row
         .col.ml-3
-          span> 📞 Téléphone :
+          span> 📞 Téléphone&nbsp;:
           = user_notifiable_by_sms_text(current_user)
         .col-auto
           = link_to "modifier", new_users_rdv_wizard_step_path(step: 1, **@rdv_wizard.to_query)

@@ -47,7 +47,7 @@ namespace :api do
         get :prochain
       end
     end
-    resources :rdvs, only: %i[create destroy] do
+    resources :rdvs, only: %i[create destroy index] do
       member do
         put :cancel
       end

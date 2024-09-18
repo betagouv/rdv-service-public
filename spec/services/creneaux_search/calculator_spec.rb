@@ -24,6 +24,16 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
       expect(slots.map(&:class).map(&:to_s).uniq).to eq(["Creneau"])
     end
 
+    context "when the plage d'ouverture has already started" do
+      let(:date_range) { friday..Date.new(2021, 5, 1) }
+
+      it "returns the creneaux for the reste of the plage d'ouverture" do
+        create(:plage_ouverture, :weekdays, motifs: [motif], first_day: friday.to_date, start_time: Tod::TimeOfDay.new(7), end_time: Tod::TimeOfDay.new(11), lieu: lieu)
+        slots = described_class.available_slots(motif, lieu, date_range)
+        expect(slots.first.starts_at.iso8601).to eq("2021-04-30T08:00:00+02:00")
+      end
+    end
+
     context "when date range starts before today" do
       let(:today) { Date.new(2022, 7, 13) }
       let(:yesterday) { today - 1.day }

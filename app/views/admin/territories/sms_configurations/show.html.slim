@@ -6,11 +6,11 @@
       .card
         .card-body
           .mb-2
-            strong> Fournisseur :
+            strong> Fournisseur&nbsp;:
             = current_territory.sms_provider || "N/A"
 
           .mb-2
-            strong> Clef API / Mot de passe :
+            strong> Clef API / Mot de passe&nbsp;:
             = current_territory.sms_configuration || "N/A"
 
           .text-right= link_to "Modifier", edit_admin_territory_sms_configuration_path(current_territory), class: "btn btn-primary"
