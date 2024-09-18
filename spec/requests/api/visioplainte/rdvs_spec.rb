@@ -121,7 +121,7 @@ RSpec.describe "Visioplainte Rdvs" do
     before { create_rdv }
 
     it "returns the list of rdvs" do
-      get "/api/visioplainte/rdvs/", params: { from: "2024-08-19T08:00:00+02:00", to: "2024-08-20T08:00:00+02:00" }, headers: auth_header
+      get "/api/visioplainte/rdvs/", params: { date_debut: "2024-08-19T08:00:00+02:00", date_fin: "2024-08-20T08:00:00+02:00" }, headers: auth_header
       expect(response.status).to eq 200
 
       expect(response.parsed_body["rdvs"][0]["starts_at"]).to eq "2024-08-19 08:00:00 +0200"
@@ -129,15 +129,15 @@ RSpec.describe "Visioplainte Rdvs" do
 
     describe "authentication" do
       it "returns a 400 status if the auth header is missing" do
-        get "/api/visioplainte/rdvs/", params: { from: "2024-08-19T08:00:00+02:00", to: "2024-08-20T08:00:00+02:00" }, headers: {}
+        get "/api/visioplainte/rdvs/", params: { date_debut: "2024-08-19T08:00:00+02:00", date_fin: "2024-08-20T08:00:00+02:00" }, headers: {}
         expect(response.status).to eq 401
         expect(response.parsed_body["rdvs"]).to be_blank
       end
     end
 
-    context "when there are no rdvs for the from and to params" do
+    context "when there are no rdvs for the date_debut and date_fin params" do
       it "returns an empty list" do
-        get "/api/visioplainte/rdvs/", params: { from: "2024-08-22T08:00:00+02:00", to: "2024-08-23T08:00:00+02:00" }, headers: auth_header
+        get "/api/visioplainte/rdvs/", params: { date_debut: "2024-08-22T08:00:00+02:00", date_fin: "2024-08-23T08:00:00+02:00" }, headers: auth_header
         expect(response.status).to eq 200
 
         expect(response.parsed_body["rdvs"]).to be_empty
@@ -162,7 +162,7 @@ RSpec.describe "Visioplainte Rdvs" do
 
     context "when filtering by guichet" do
       let(:date_params) do
-        { from: "2024-08-19T08:00:00+02:00", to: "2024-08-20T08:00:00+02:00" }
+        { date_debut: "2024-08-19T08:00:00+02:00", date_fin: "2024-08-20T08:00:00+02:00" }
       end
 
       let(:gendarmerie_guichet_ids) do
@@ -183,12 +183,12 @@ RSpec.describe "Visioplainte Rdvs" do
       end
     end
 
-    context "without from, to or ids params" do
+    context "without date_debut, date_fin or ids params" do
       it "returns an error" do
         get "/api/visioplainte/rdvs/", params: {}, headers: auth_header
 
         expect(response.status).to eq 400
-        expect(response.parsed_body["errors"].first).to eq "Vous devez préciser le paramètre ids ou les paramètres from et to"
+        expect(response.parsed_body["errors"].first).to eq "Vous devez préciser le paramètre ids ou les paramètres date_debut et date_fin"
       end
     end
   end

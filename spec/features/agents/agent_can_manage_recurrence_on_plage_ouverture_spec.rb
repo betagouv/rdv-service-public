@@ -39,6 +39,12 @@ RSpec.describe "Agent can manage recurrence on plage d'ouverture" do
       until: Time.zone.local(2019, 12, 30),
       starts: Time.zone.local(2019, 12, 3)
     )
+    expect(plage_ouverture.recurrence_ends_at.to_date).to eq Date.new(2019, 12, 30)
+
+    # On vérifie au passage que les données qu'on crée dans nos factories correspondent bien à ce que l'application peut créer
+    recurrence_attributes_from_factory = build(:plage_ouverture, :weekly_on_monday).recurrence.to_hash.keys
+
+    expect(recurrence_attributes_from_factory + [:until]).to match_array(plage_ouverture.recurrence.to_hash.keys)
 
     # reload page to check if form is filled correctly
     visit edit_admin_organisation_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture)
@@ -52,6 +58,29 @@ RSpec.describe "Agent can manage recurrence on plage d'ouverture" do
     expect(page).to have_field("recurrence-until")
     # expect(page).to have_field("recurrence-until", with: "30/12/2019")
     # TODO Pourquoi le champs ne contient pas la valeur ici. Quand on le fait à la main, tout va bien.
+
+    visit edit_admin_organisation_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture)
+    uncheck("recurrence_on_monday")
+    uncheck("recurrence_on_tuesday")
+    uncheck("recurrence_on_wednesday")
+    uncheck("recurrence_on_thursday")
+    uncheck("recurrence_on_friday")
+    uncheck("recurrence_on_saturday")
+
+    click_button("Enregistrer")
+
+    # check if everything is ok in db
+    expect(plage_ouverture.reload.recurrence.to_hash).to eq(
+      every: :week,
+      interval: 1,
+      until: Time.zone.local(2019, 12, 30),
+      starts: Time.zone.local(2019, 12, 3)
+    )
+
+    # On vérifie au passage que les données qu'on crée dans nos factories correspondent bien à ce que l'application peut créer
+    recurrence_attributes_from_factory = build(:plage_ouverture, :once_a_week).recurrence.to_hash
+
+    expect(recurrence_attributes_from_factory.keys).to match_array(plage_ouverture.recurrence.to_hash.keys)
 
     visit edit_admin_organisation_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture)
     select("mois", from: "recurrence_every")
@@ -71,6 +100,11 @@ RSpec.describe "Agent can manage recurrence on plage d'ouverture" do
       until: Time.zone.local(2019, 12, 30),
       starts: Time.zone.local(2019, 12, 11)
     )
+
+    # On vérifie au passage que les données qu'on crée dans nos factories correspondent bien à ce que l'application peut créer
+    recurrence_attributes_from_factory = build(:plage_ouverture, :monthly).recurrence.to_hash.keys
+
+    expect(recurrence_attributes_from_factory + [:until]).to match_array(plage_ouverture.recurrence.to_hash.keys)
 
     # reload page to check if form is filled correctly
     visit edit_admin_organisation_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture)

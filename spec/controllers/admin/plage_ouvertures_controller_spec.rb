@@ -90,7 +90,7 @@ RSpec.describe Admin::PlageOuverturesController, type: :controller do
       let!(:plage_ouverture) do
         create(
           :plage_ouverture,
-          :weekly,
+          :weekly_on_monday,
           first_day: Date.new(2020, 11, 16),
           start_time: Tod::TimeOfDay(9),
           end_time: Tod::TimeOfDay(12),

@@ -27,7 +27,7 @@ motif_police = Motif.create!(
   visibility_type: Motif::VISIBLE_AND_NOT_NOTIFIED,
   organisation: orga_police
 )
-motif_gendarmerie = Motif.create!(
+Motif.create!(
   name: "Dépôt de plainte par visioconférence",
   default_duration_in_min: 30,
   min_public_booking_delay: 2 * 60 * 60,
@@ -88,7 +88,7 @@ PlageOuverture.create!(
   recurrence: Montrose.every(:week, day: [1, 2, 3, 4, 5], interval: 1, starts: Date.tomorrow, on: %i[monday tuesday thursday friday])
 )
 
-guichet_gendarmerie1 = Agent.create!(
+Agent.create!(
   last_name: "Guichet 1",
   services: [service_gendarmerie],
   roles_attributes: [
@@ -102,15 +102,4 @@ Agent.create!(
   roles_attributes: [
     { organisation: orga_gendarmerie, access_level: AgentRole::ACCESS_LEVEL_INTERVENANT },
   ]
-)
-
-PlageOuverture.create!(
-  title: "Permanence classique",
-  organisation: orga_gendarmerie,
-  agent: guichet_gendarmerie1,
-  motifs: [motif_gendarmerie],
-  first_day: Date.tomorrow,
-  start_time: Tod::TimeOfDay.new(14),
-  end_time: Tod::TimeOfDay.new(18),
-  recurrence: Montrose.every(:week, day: [1, 2, 3, 4, 5], interval: 1, starts: Date.tomorrow, on: %i[monday tuesday thursday friday])
 )
