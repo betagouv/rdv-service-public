@@ -42,6 +42,7 @@ namespace :api do
 
   namespace :visioplainte do
     resources :guichets, only: %i[index]
+    resources :plages_ouverture, only: %i[index]
     resources :creneaux, only: %i[index] do
       collection do
         get :prochain

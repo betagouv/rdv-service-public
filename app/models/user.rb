@@ -278,9 +278,9 @@ class User < ApplicationRecord
     end
     return save! if organisations.any? # only actually mark deleted when no orgas left
 
-    Anonymizer::Core.anonymize_record!(self)
-    receipts.each { |r| Anonymizer::Core.anonymize_record!(r) }
-    rdvs.each { |r| Anonymizer::Core.anonymize_record!(r) }
+    Anonymizer.anonymize_record!(self)
+    receipts.each { |r| Anonymizer.anonymize_record!(r) }
+    rdvs.each { |r| Anonymizer.anonymize_record!(r) }
     versions.destroy_all
     update_columns(
       first_name: "Usager supprimé",
@@ -288,5 +288,6 @@ class User < ApplicationRecord
       deleted_at: Time.zone.now,
       email: deleted_email
     )
+    reload # anonymizer operates outside the realm of rails knowledge
   end
 end
