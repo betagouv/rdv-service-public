@@ -7,6 +7,18 @@ RSpec.describe "Visioplainte Creneaux" do
   before do
     travel_to Time.zone.local(2024, 8, 18, 14, 0, 0)
     load Rails.root.join("db/seeds/visioplainte.rb")
+    create(:plage_ouverture,
+           organisation: orga_gendarmerie,
+           agent: orga_gendarmerie.agents.first,
+           motifs: orga_gendarmerie.motifs,
+           first_day: Date.tomorrow,
+           start_time: Tod::TimeOfDay.new(14),
+           end_time: Tod::TimeOfDay.new(18),
+           recurrence: Montrose.every(:week, day: [1, 2, 3, 4, 5], interval: 1, starts: Date.tomorrow, on: %i[monday tuesday thursday friday]))
+  end
+
+  let(:orga_gendarmerie) do
+    Organisation.find_by(name: "Plateforme Visioplainte Gendarmerie") # créée dans les seeds
   end
 
   include_context "Visioplainte Auth"

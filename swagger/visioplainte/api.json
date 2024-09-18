@@ -376,12 +376,115 @@
                     "value": {
                       "guichets": [
                         {
-                          "id": 143,
+                          "id": 158,
                           "name": "GUICHET 1"
                         },
                         {
-                          "id": 144,
+                          "id": 159,
                           "name": "GUICHET 2"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/visioplainte/plages_ouverture": {
+      "get": {
+        "summary": "Ces plages d'ouvertures sont les horaires sur lesquels un guichet est ouvert, et permettent de savoir à quels guichets affecter des agents.        Cet enpoint permet d'obtenir la liste des occurrences pour une période donnée (une plage d'ouverture récurrente ayant plusieurs occurrences).        Cet endpoint ne prend pas encore en compte les absences.",
+        "security": [
+          {
+            "X-VISIOPLAINTE-API-KEY": [
+
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "X-VISIOPLAINTE-API-KEY",
+            "in": "header",
+            "description": "Clé d'API",
+            "example": "visioplainte-api-test-key-123456",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "date_debut",
+            "in": "query",
+            "description": "date au format iso8601 (YYYY-MM-DD), premier jour de la liste qu’on renverra",
+            "example": "2024-12-22",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "date_fin",
+            "in": "query",
+            "description": "date au format iso8601 (YYYY-MM-DD), dernier jour de la liste qu’on renverra (inclus dans les résultats)",
+            "example": "2024-12-28",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "guichet_ids[]",
+            "in": "query",
+            "description": "Une liste d'ids des guichets sur lesquels on veut filtrer les plages d'ouverture",
+            "required": false,
+            "schema": {
+              "type": "array"
+            }
+          }
+        ],
+        "tags": [
+          "Plages d'ouverture"
+        ],
+        "responses": {
+          "200": {
+            "description": "Renvoie la liste des plages d'ouverture",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "example": {
+                    "value": {
+                      "plages_ouverture": [
+                        {
+                          "id": 43,
+                          "starts_at": "2024-08-19T09:00:00+02:00",
+                          "ends_at": "2024-08-19T12:00:00+02:00",
+                          "guichet_id": 164
+                        },
+                        {
+                          "id": 43,
+                          "starts_at": "2024-08-20T09:00:00+02:00",
+                          "ends_at": "2024-08-20T12:00:00+02:00",
+                          "guichet_id": 164
+                        },
+                        {
+                          "id": 43,
+                          "starts_at": "2024-08-21T09:00:00+02:00",
+                          "ends_at": "2024-08-21T12:00:00+02:00",
+                          "guichet_id": 164
+                        },
+                        {
+                          "id": 43,
+                          "starts_at": "2024-08-22T09:00:00+02:00",
+                          "ends_at": "2024-08-22T12:00:00+02:00",
+                          "guichet_id": 164
+                        },
+                        {
+                          "id": 43,
+                          "starts_at": "2024-08-23T09:00:00+02:00",
+                          "ends_at": "2024-08-23T12:00:00+02:00",
+                          "guichet_id": 164
                         }
                       ]
                     }
@@ -534,7 +637,7 @@
                       "duration_in_min": 30,
                       "ends_at": "2024-08-19 08:30:00 +0200",
                       "guichet": {
-                        "id": 152,
+                        "id": 172,
                         "name": "GUICHET 1"
                       },
                       "starts_at": "2024-08-19 08:00:00 +0200",
@@ -720,7 +823,7 @@
                       "duration_in_min": 30,
                       "ends_at": "2024-08-19 08:30:00 +0200",
                       "guichet": {
-                        "id": 167,
+                        "id": 187,
                         "name": "GUICHET 1"
                       },
                       "starts_at": "2024-08-19 08:00:00 +0200",
