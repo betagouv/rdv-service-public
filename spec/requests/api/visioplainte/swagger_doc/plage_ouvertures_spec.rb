@@ -6,6 +6,14 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do # rub
     load Rails.root.join("db/seeds/visioplainte.rb")
   end
 
+  before do
+    create(:plage_ouverture, :weekdays, agent: agent, first_day: Date.new(2024, 8, 19), start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(12))
+  end
+
+  let(:agent) do
+    Agent.joins(:services).where(services: { name: "Gendarmerie Nationale" }).last
+  end
+
   path "/api/visioplainte/plages_ouverture" do
     get "Ces plages d'ouvertures sont les horaires sur lesquels un guichet est ouvert, et permettent de savoir à quels guichets affecter des agents.\
         Cet enpoint permet d'obtenir la liste des occurrences pour une période donnée (une plage d'ouverture récurrente ayant plusieurs occurrences).\
@@ -23,14 +31,6 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do # rub
 
         let(:date_debut) { "2024-08-19" }
         let(:date_fin) { "2024-08-25" }
-
-        let!(:plage_ouverture_without_recurrence) do
-          create(:plage_ouverture, :no_recurrence, agent: agent, first_day: Date.new(2024, 8, 19), start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(12))
-        end
-
-        let(:agent) do
-          Agent.joins(:services).where(services: { name: "Gendarmerie Nationale" }).last
-        end
       end
     end
   end
