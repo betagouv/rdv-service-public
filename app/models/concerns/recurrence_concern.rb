@@ -127,17 +127,26 @@ module RecurrenceConcern
   # The value of a recent occurrence is computed and cached in #earliest_future_occurrence_time.
   # Warning: using `only_future: true` will only yield future occurrences, not past ones.
   def occurrence_start_at_list_for(inclusive_date_range, only_future:)
-    min_until = [inclusive_date_range.end, recurrence_ends_at].compact.min.end_of_day
     inclusive_datetime_range = (inclusive_date_range.begin)..(inclusive_date_range.end.end_of_day)
 
-    if recurring?
-      min_from = only_future ? (earliest_future_occurrence_time || starts_at) : starts_at
-      recurrence.starting(min_from).until(min_until).lazy.select do |occurrence_starts_at|
-        event_in_range?(occurrence_starts_at, occurrence_starts_at + duration, inclusive_datetime_range)
-      end.to_a
-    else
-      event_in_range?(starts_at, first_occurrence_ends_at, inclusive_datetime_range) ? [starts_at] : []
+    if exceptionnelle?
+      return event_in_range?(starts_at, first_occurrence_ends_at, inclusive_datetime_range) ? [starts_at] : []
     end
+
+    min_from = starting_date_to_compute_occurrences(only_future)
+    min_until = [inclusive_date_range.end, recurrence_ends_at].compact.min.end_of_day
+
+    recurrence.starting(min_from).until(min_until).lazy.select do |occurrence_starts_at|
+      event_in_range?(occurrence_starts_at, occurrence_starts_at + duration, inclusive_datetime_range)
+    end.to_a
+  end
+
+  def starting_date_to_compute_occurrences(only_future)
+    if only_future && earliest_future_occurrence_time
+      return earliest_future_occurrence_time
+    end
+
+    starts_at
   end
 
   def event_in_range?(event_starts_at, event_ends_at, range)
