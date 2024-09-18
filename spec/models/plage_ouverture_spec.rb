@@ -304,7 +304,7 @@ RSpec.describe PlageOuverture, type: :model do
 
       it "should be invalid" do
         expect(plage_ouverture).to be_invalid
-        expect(plage_ouverture.errors.full_messages.first).to eq("Premier jour ne peut pas être avant 2018")
+        expect(plage_ouverture.errors.full_messages.first).to eq("Le premier jour ne peut pas être avant 2018")
       end
     end
 
@@ -313,7 +313,7 @@ RSpec.describe PlageOuverture, type: :model do
 
       it "should be invalid" do
         expect(plage_ouverture).to be_invalid
-        expect(plage_ouverture.errors.full_messages.first).to eq("Premier jour ne peut pas être dans plus de 5 ans")
+        expect(plage_ouverture.errors.full_messages.first).to eq("Le premier jour ne peut pas être dans plus de 5 ans")
       end
     end
 
