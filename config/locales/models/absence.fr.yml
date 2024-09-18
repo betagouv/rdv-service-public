@@ -9,3 +9,11 @@ fr:
         end_day: Termine le
         start_time: Commence à
         end_time: Termine à
+    errors:
+      models:
+        absence:
+          attributes:
+            first_day:
+              format: "La date de début %{message}"
+            end_day:
+              format: "La date de fin %{message}"

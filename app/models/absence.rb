@@ -24,6 +24,7 @@ class Absence < ApplicationRecord
   validate :ends_at_should_be_after_starts_at
   validate :no_recurrence_for_absence_for_several_days
   validates :first_day, realistic_date: true
+  validates :end_day, realistic_date: true
 
   # Hooks
   before_validation :set_end_day
