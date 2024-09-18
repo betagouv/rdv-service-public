@@ -3,6 +3,10 @@ RSpec.describe User, type: :model do
     it %(automatically fixes ".@" typo) do
       expect(described_class.new(email: "francis.@exemple.fr").email).to eq("francis@exemple.fr")
     end
+
+    it %(automatically fixes ".." typo) do
+      expect(described_class.new(email: "francis..factice@exemple.fr").email).to eq("francis.factice@exemple.fr")
+    end
   end
 
   describe "#add_organisation" do

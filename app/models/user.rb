@@ -86,8 +86,8 @@ class User < ApplicationRecord
   end
 
   def email=(value)
-    # On corriger automatiquement cette faute de frappe courante
-    super(value&.gsub(".@", "@"))
+    # On corriger automatiquement ces fautes de frappe courantes
+    super(value&.gsub(".@", "@")&.gsub("..", "."))
   end
 
   def add_organisation(organisation)
