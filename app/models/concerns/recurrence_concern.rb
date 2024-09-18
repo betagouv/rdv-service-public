@@ -133,7 +133,7 @@ module RecurrenceConcern
       return event_in_range?(starts_at, first_occurrence_ends_at, inclusive_datetime_range) ? [starts_at] : []
     end
 
-    min_from = starting_date_to_compute_occurrences(only_future)
+    min_from = starting_date_to_compute_occurrences(inclusive_date_range.begin, only_future)
     min_until = [inclusive_date_range.end, recurrence_ends_at].compact.min.end_of_day
 
     recurrence.starting(min_from).until(min_until).lazy.select do |occurrence_starts_at|
@@ -141,12 +141,26 @@ module RecurrenceConcern
     end.to_a
   end
 
-  def starting_date_to_compute_occurrences(only_future)
+  def starting_date_to_compute_occurrences(requested_start_date, only_future)
+    if occurrences_are_independant_from_start_date?
+      if only_future
+        return [start_time.on(Time.zone.today), starts_at].max
+      else
+        return [start_time.on(requested_start_date), starts_at].max
+      end
+    end
+
     if only_future && earliest_future_occurrence_time
       return earliest_future_occurrence_time
     end
 
     starts_at
+  end
+
+  def occurrences_are_independant_from_start_date?
+    recurrence_attributes = recurrence.to_h
+    # Ça marche probablement aussi pour les récurrences mensuelles, ça peut être une bonne amélioration à faire
+    recurrence_attributes[:interval] == 1 && recurrence_attributes[:every] == :week && recurrence_attributes[:day].present?
   end
 
   def event_in_range?(event_starts_at, event_ends_at, range)
