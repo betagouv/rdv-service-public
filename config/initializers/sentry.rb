@@ -27,9 +27,6 @@ Sentry.init do |config|
       return if hint[:exception].is_a?(ActiveRecord::RecordNotFound) && redirected_from_sign_in
     end
 
-    # prevent logging sensitive jobs arguments
-    event.extra&.delete(:arguments) unless event.extra&.dig(:active_job)&.constantize&.log_arguments
-
     event
   rescue StandardError
     event.set_tags(error_in_before_send_callback: true)

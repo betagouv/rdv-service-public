@@ -274,7 +274,7 @@ fr:
       update: Enregistrer
   layouts:
     flash:
-      confirm_export_queued_html: 'Votre export est en cours de création : il sera bientôt disponible dans la <a href="%{exports_path}">liste de vos exports</a>.'
+      confirm_export_queued_html: 'Votre export est en cours de création&nbsp;: il sera bientôt disponible dans la <a href="%{exports_path}">liste de vos exports</a>.'
     currency:
       format:
         delimiter: " "

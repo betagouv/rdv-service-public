@@ -1,4 +1,4 @@
-RSpec.describe IcalHelpers::Ics do
+RSpec.describe IcalFormatters::Ics do
   describe "from_payload" do
     subject { described_class.from_payload(payload).to_ical }
 
@@ -13,7 +13,7 @@ RSpec.describe IcalHelpers::Ics do
         description: "Infos et annulation:",
         address: "10 rue de la Ferronerie 44100 Nantes",
         ical_uid: "rdv_15@RDV Solidarités",
-        recurrence: "FREQ=WEEKLY;",
+        rrule: "FREQ=WEEKLY;",
         domain: domain,
       }
     end

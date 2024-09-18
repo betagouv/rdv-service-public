@@ -13,7 +13,7 @@ RSpec.describe Absence, type: :model do
 
   describe "no reccurence for absence for several days" do
     it "invalid with recurrence and absence on more than one day" do
-      expect(build(:absence, :weekly, first_day: Date.new(2019, 7, 20), end_day: Date.new(2019, 7, 23))).to be_invalid
+      expect(build(:absence, :once_a_week, first_day: Date.new(2019, 7, 20), end_day: Date.new(2019, 7, 23))).to be_invalid
     end
 
     it "valid without recurrence and absence on more than one day" do
@@ -33,18 +33,18 @@ RSpec.describe Absence, type: :model do
         expect(subject.first.starts_at).to eq absence.starts_at
         expect(subject.first.ends_at).to eq absence.first_occurrence_ends_at
       end
+    end
 
-      context "if the abence has many occurrences in range" do
-        let(:absence) { build(:absence, :weekly, first_day: Date.new(2019, 7, 20), end_day: Date.new(2019, 7, 23)) }
-        let(:date_range) { Date.new(2019, 7, 29)..Date.new(2019, 8, 4) }
+    context "if the abence has many occurrences in range" do
+      let(:absence) { create(:absence, :once_a_week, first_day: Date.new(2019, 7, 22)) }
+      let(:date_range) { Date.new(2019, 7, 29)..Date.new(2019, 8, 11) }
 
-        it do
-          expect(subject.size).to eq 2
-          expect(subject.first.starts_at).to eq(absence.starts_at + 1.week) # first one ends in range
-          expect(subject.first.ends_at).to eq(absence.first_occurrence_ends_at + 1.week) # first one ends in range
-          expect(subject.second.starts_at).to eq(absence.starts_at + 2.weeks) # second one starts in range
-          expect(subject.second.ends_at).to eq(absence.first_occurrence_ends_at + 2.weeks) # second one starts in range
-        end
+      it do
+        expect(subject.size).to eq 2
+        expect(subject.first.starts_at).to eq(absence.starts_at + 1.week) # first one ends in range
+        expect(subject.first.ends_at).to eq(absence.first_occurrence_ends_at + 1.week) # first one ends in range
+        expect(subject.second.starts_at).to eq(absence.starts_at + 2.weeks) # second one starts in range
+        expect(subject.second.ends_at).to eq(absence.first_occurrence_ends_at + 2.weeks) # second one starts in range
       end
     end
   end

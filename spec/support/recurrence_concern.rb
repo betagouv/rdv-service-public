@@ -64,7 +64,7 @@ RSpec.shared_examples_for "recurrence" do
     end
 
     context "when there is a weekly recurrence" do
-      let(:model_instance) { build(model_symbol, :weekly, first_day: Date.new(2019, 7, 22)) }
+      let(:model_instance) { build(model_symbol, :weekly_on_monday, first_day: Date.new(2019, 7, 22)) }
       let(:date_range) { Date.new(2019, 7, 22)..Date.new(2019, 8, 7) }
 
       it do
