@@ -4,7 +4,7 @@
   = simple_form_for [:admin, @agent], as: :admin_agent, url: admin_territory_agents_path(current_territory), html: { method: :post } do |f|
     = render "devise/shared/error_messages", resource: @agent
     = f.input :email, placeholder: t(".email_placeholder"), input_html: { autocomplete: "off"}
-    = f.association :services, collection: current_territory.services, input_html: { class: "select2-input" }, hint: t(".services_hint")
+    = f.association :services, collection: current_territory.services, input_html: { class: "select2-input", data: { "autoselect-only-option": true } }, hint: t(".services_hint")
 
     = f.association :organisations, as: :check_boxes, collection: current_agent.organisations.where(territory: current_territory).ordered_by_name, label: t(".organisations"), include_hidden: false
 

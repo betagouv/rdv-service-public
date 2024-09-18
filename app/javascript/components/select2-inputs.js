@@ -22,7 +22,9 @@ class Select2Inputs {
   initInput = (elt) => {
     const options = this.getInputOptions(elt)
     $(elt).select2(options)
-    this.autoSelectOption(elt, options)
+    if (elt.dataset.autoselectOnlyOption) {
+      this.autoSelectOption(elt, options)
+    }
   }
 
   getInputOptions = elt => {

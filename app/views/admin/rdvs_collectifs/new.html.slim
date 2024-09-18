@@ -19,7 +19,7 @@
             .col-md-6 data={ "controller": "past-date-alert" }
               = datetime_input(f, :starts_at, input_html: { data: { "past-date-alert-target": "date-input" } })
             .col-md-6= f.input :duration_in_min, as: :integer
-          = f.association :agents, collection: @rdv.motif.authorized_agents, label_method: :reverse_full_name_and_service, input_html: { multiple: true, class: "select2-input" }
+          = f.association :agents, collection: @rdv.motif.authorized_agents, label_method: :reverse_full_name_and_service, input_html: { multiple: true, class: "select2-input", data: { "autoselect-only-option": true } }
           = f.input :name, wrapper_html: { class: "mb-1" }
           p
             span.font-14.font-weight-bold= "Avertissement : "
@@ -36,7 +36,7 @@
             fieldset
               = f.association :lieu, collection: Agent::LieuPolicy::Scope.apply(current_agent, current_organisation.lieux).enabled.ordered_by_name, label_method: :full_name,
                 label: false,  include_blank: true,  required: false,
-                input_html: { class: "select2-input", data: { "rdv-lieu-target": "existing_lieu_select", placeholder: ""} }
+                input_html: { class: "select2-input", data: { "rdv-lieu-target": "existing_lieu_select", placeholder: "", "autoselect-only-option": true } }
               small.form-text.text-muted data={"rdv-lieu-target": "new_lieu_link"}
                 = t(".single_use_lieu_hint_html")
             fieldset data={ "rdv-lieu-target": "new_lieu_fieldset" }

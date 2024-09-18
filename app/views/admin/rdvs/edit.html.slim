@@ -43,7 +43,7 @@
                 fieldset
                   = f.association :lieu, collection: Agent::LieuPolicy::Scope.apply(current_agent, current_organisation.lieux).enabled.ordered_by_name, label_method: :full_name,
                     label: false,  include_blank: true,  required: false,
-                    input_html: { class: "select2-input", data: { "rdv-lieu-target": "existing_lieu_select", placeholder: ""} }
+                    input_html: { class: "select2-input", data: { "rdv-lieu-target": "existing_lieu_select", placeholder: "", "autoselect-only-option": true } }
                   small.form-text.text-muted data={"rdv-lieu-target": "new_lieu_link"}
                     = t(".single_use_lieu_hint_html")
                 fieldset data={ "rdv-lieu-target": "new_lieu_fieldset" }
@@ -58,7 +58,7 @@
             = f.association :agents,
               collection: @rdv_form.motif.authorized_agents,
               label_method: :full_name_and_service,
-              input_html: { multiple: true, class: "select2-input" }
+              input_html: { multiple: true, class: "select2-input", data: { "autoselect-only-option": true } }
 
             - if @rdv_form.motif.collectif?
               = f.input :name, wrapper_html: { class: "mb-1" }
