@@ -415,7 +415,7 @@
             }
           },
           {
-            "name": "from",
+            "name": "date_debut",
             "in": "query",
             "description": "datetime au format iso8601. Obligatoire sauf si le paramètre ids est utilisé.                Permet de filtrer pour obtenir uniquement les rendez-vous qui commencent à partir de cette heure",
             "example": "2024-08-19T08:00:00+02:00",
@@ -425,7 +425,7 @@
             }
           },
           {
-            "name": "to",
+            "name": "date_fin",
             "in": "query",
             "description": "datetime au format iso8601.  Obligatoire sauf si le paramètre ids est utilisé.                Permet de filtrer pour obtenir uniquement les rendez-vous qui commencent avant cette heure",
             "example": "2024-08-22T19:00:00+02:00",
