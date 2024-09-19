@@ -1,10 +1,7 @@
 class HealthController < ApplicationController
   def db_connection
-    if Territory.exists?
-      render status: :ok, plain: "health OK"
-    else
-      render status: :service_unavailable, plain: "health not OK"
-    end
+    Territory.count # cette ligne raisera en cas de problème de connexion
+    render status: :ok, plain: "health OK"
   end
 
   def jobs_queues
