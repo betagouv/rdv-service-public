@@ -7,7 +7,7 @@ p
 - if motif.duplicated_from_motif && motif.new_record? && organisations_i_can_manage.count > 1
   .card
     .card-body
-      = f.association :organisation, label: "Créer le motif dans cette organisation", collection: organisations_i_can_manage, required: true, input_html: { class: "select2-input", data: { "autoselect-only-option": true } }
+      = f.association :organisation, label: "Créer le motif dans cette organisation", collection: organisations_i_can_manage, required: true, input_html: { class: "select2-input", data: { "auto-select-sole-option": true } }
 
 .card
   .card-body
@@ -27,7 +27,7 @@ p
           data: { \
             placeholder: "Sélectionnez le service auquel le motif sera associé", \
             "select-options": { disableSearch: true }, \
-            "autoselect-only-option": true,
+            "auto-select-sole-option": true,
           }, \
         }
     .form-row
