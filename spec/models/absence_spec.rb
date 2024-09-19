@@ -138,7 +138,7 @@ RSpec.describe Absence, type: :model do
 
   describe "recurrence_ends_at realistic validations" do
     context "recurrence_ends_at before 2018" do
-      let(:absence) { build(:absence, :weekly, first_day: Date.new(2015, 12, 24), end_day: Date.new(2015, 12, 24), recurrence_ends_at: Date.new(2017, 3, 3)) }
+      let(:absence) { build(:absence, :once_a_week, first_day: Date.new(2015, 12, 24), end_day: Date.new(2015, 12, 24), recurrence_ends_at: Date.new(2017, 3, 3)) }
 
       it "should be invalid" do
         expect(absence).to be_invalid
@@ -147,7 +147,7 @@ RSpec.describe Absence, type: :model do
     end
 
     context "recurrence_ends_at is more than 5 years from now" do
-      let(:absence) { build(:absence, :weekly, first_day: Date.new(2020, 12, 24), end_day: Date.new(2020, 12, 24), recurrence_ends_at: Date.new(2100, 3, 3)) }
+      let(:absence) { build(:absence, :once_a_week, first_day: Date.new(2020, 12, 24), end_day: Date.new(2020, 12, 24), recurrence_ends_at: Date.new(2100, 3, 3)) }
 
       it "should be invalid" do
         expect(absence).to be_invalid
@@ -156,7 +156,7 @@ RSpec.describe Absence, type: :model do
     end
 
     context "recurrence_ends_at is reasonable" do
-      let(:absence) { build(:absence, :weekly, first_day: Date.new(2020, 12, 24), end_day: Date.new(2020, 12, 24), recurrence_ends_at: Date.new(2024, 3, 3)) }
+      let(:absence) { build(:absence, :once_a_week, first_day: Date.new(2020, 12, 24), end_day: Date.new(2020, 12, 24), recurrence_ends_at: Date.new(2024, 3, 3)) }
 
       it "should be valid" do
         expect(absence).to be_valid

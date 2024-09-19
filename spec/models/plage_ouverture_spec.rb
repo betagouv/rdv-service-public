@@ -146,7 +146,7 @@ RSpec.describe PlageOuverture, type: :model do
   describe "#covers_date?" do
     subject { plage_ouverture.covers_date?(date) }
 
-    describe "PO weekly wednesdays PM" do
+    describe "PO once_a_week wednesdays PM" do
       let(:plage_ouverture) do
         build(
           :plage_ouverture,
@@ -176,7 +176,7 @@ RSpec.describe PlageOuverture, type: :model do
       end
     end
 
-    describe "PO weekly wednesdays PM with an end date" do
+    describe "PO once_a_week wednesdays PM with an end date" do
       let(:plage_ouverture) do
         build(
           :plage_ouverture,
@@ -328,7 +328,7 @@ RSpec.describe PlageOuverture, type: :model do
 
   describe "recurrence_ends_at realistic validations" do
     context "recurrence_ends_at before 2018" do
-      let(:plage_ouverture) { build(:plage_ouverture, :weekly, first_day: Date.new(2015, 12, 24), recurrence_ends_at: Date.new(2017, 12, 24).at_noon) }
+      let(:plage_ouverture) { build(:plage_ouverture, :once_a_week, first_day: Date.new(2015, 12, 24), recurrence_ends_at: Date.new(2017, 12, 24).at_noon) }
 
       it "should be invalid" do
         expect(plage_ouverture).to be_invalid
@@ -337,7 +337,7 @@ RSpec.describe PlageOuverture, type: :model do
     end
 
     context "recurrence_ends_at more than 5 years from now" do
-      let(:plage_ouverture) { build(:plage_ouverture, :weekly, first_day: Date.new(2020, 12, 1), recurrence_ends_at: Date.new(2100, 12, 24)) }
+      let(:plage_ouverture) { build(:plage_ouverture, :once_a_week, first_day: Date.new(2020, 12, 1), recurrence_ends_at: Date.new(2100, 12, 24)) }
 
       it "should be invalid" do
         expect(plage_ouverture).to be_invalid
@@ -346,7 +346,7 @@ RSpec.describe PlageOuverture, type: :model do
     end
 
     context "recurrence_ends_at is reasonable" do
-      let(:plage_ouverture) { build(:plage_ouverture, :weekly, first_day: Date.new(2020, 12, 1), recurrence_ends_at: Date.new(2020, 12, 24)) }
+      let(:plage_ouverture) { build(:plage_ouverture, :once_a_week, first_day: Date.new(2020, 12, 1), recurrence_ends_at: Date.new(2020, 12, 24)) }
 
       it "should be valid" do
         expect(plage_ouverture).to be_valid
