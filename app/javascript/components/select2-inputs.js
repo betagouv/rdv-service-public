@@ -22,7 +22,9 @@ class Select2Inputs {
   initInput = (elt) => {
     const options = this.getInputOptions(elt)
     $(elt).select2(options)
-    this.autoSelectOption(elt, options)
+    if (elt.dataset.autoSelectSoleOption) {
+      this.autoSelectSoleOption(elt, options)
+    }
   }
 
   getInputOptions = elt => {
@@ -56,11 +58,11 @@ class Select2Inputs {
       $(this.selector).select2('destroy')
   }
 
-  autoSelectOption = (elt, options) => {
+  autoSelectSoleOption = (elt, options) => {
     // This code checks if a select element (represented by the `elt` variable) has only one option.
     // return all options if it is ajax
     const isAjax = elt.dataset.selectOptions?.includes("ajax");
-    if (isAjax) return options;
+    if (isAjax) return;
 
     // Get all options and remove blank values if exists (placeholders)
     const optionsList = $(elt).find("option").filter(function() {
@@ -69,7 +71,7 @@ class Select2Inputs {
     if (optionsList.length === 1) {
       // if one option is already selected, return
       if ($(elt).val() === optionsList.val()) return;
-      // Otherwise, set the value of the select element to the value of its only option and trigger a change event on it.
+      // Otherwise, set the value of the select element to the value of its sole option and trigger a change event on it.
       $(elt).val(optionsList.val()).trigger('change');
     }
   }
