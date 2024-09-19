@@ -1,7 +1,7 @@
 class Api::Visioplainte::RdvsController < Api::Visioplainte::BaseController
   def index # rubocop:disable Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity
-    if params[:ids].blank? && (params[:from].blank? || params[:to].blank?)
-      errors = ["Vous devez préciser le paramètre ids ou les paramètres from et to"]
+    if params[:ids].blank? && (params[:date_debut].blank? || params[:date_fin].blank?)
+      errors = ["Vous devez préciser le paramètre ids ou les paramètres date_debut et date_fin"]
       render(json: { errors: errors }, status: :bad_request) and return
     end
 
@@ -11,8 +11,8 @@ class Api::Visioplainte::RdvsController < Api::Visioplainte::BaseController
       rdvs = rdvs.where(id: params[:ids])
     end
 
-    if params[:from].present? && params[:to].present?
-      rdvs = rdvs.where("starts_at >= ?", Time.zone.parse(params[:from])).where("starts_at <= ?", Time.zone.parse(params[:to]))
+    if params[:date_debut].present? && params[:date_fin].present?
+      rdvs = rdvs.where("starts_at >= ?", Time.zone.parse(params[:date_debut])).where("starts_at <= ?", Time.zone.parse(params[:date_fin]))
     end
 
     if params[:guichet_ids]
