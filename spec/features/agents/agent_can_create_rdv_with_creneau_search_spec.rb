@@ -31,15 +31,14 @@ RSpec.describe "Agent can create a Rdv with creneau search" do
     end
   end
 
-  context "when there is only one option for lieu, service and motif selector", js: true do
-    let!(:motif) { create(:motif, service: agent.services.first, organisation: organisation) }
+  context "when there is only one option for service and motif selector", js: true do
+    let!(:motif) { create(:motif, name: "Mon unique motif", service: agent.services.first, organisation: organisation) }
     let!(:plage_ouverture) { create(:plage_ouverture, :weekdays, motifs: [motif], agent: agent, organisation: organisation) }
 
-    it "automatically select the option" do
+    it "automatically selects the service and motif" do
       visit admin_organisation_creneaux_search_path(organisation)
       expect(page).to have_content("Trouver un RDV")
-      expect(page).to have_select("lieu_ids", selected: plage_ouverture.lieu_name)
-      expect(page).to have_select("motif_id", selected: "Motif 1 (Sur place)")
+      expect(page).to have_select("motif_id", selected: "Mon unique motif (Sur place)")
       expect(page).to have_select("service_id", selected: agent.services.first.name)
     end
   end

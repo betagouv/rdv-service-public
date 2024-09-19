@@ -19,6 +19,7 @@
             "select-options": { disableSearch: true }, \
           }, \
         }
+
     = f.input :motif_id, \
       label: "Motif du rendez-vous", \
       required: true, \
@@ -28,7 +29,7 @@
       group_method: :last,
       label_method: -> { motif_name_with_location_and_group_type(_1) }, \
       input_html: { \
-        data: { placeholder: "Sélectionnez un motif" },
+        data: { placeholder: "Sélectionnez un motif", "auto-select-sole-option": true },
         class: @services.count > 1 ? "js-filtered-motifs" : "select2-input", \
       }
 
