@@ -10,10 +10,6 @@ class StaticPagesController < ApplicationController
 
   def domaines; end
 
-  def health_check
-    Territory.count # check connection to DB is working
-  end
-
   def presentation_for_agents
     render current_domain.presentation_for_agents_template_name, layout: "application_base"
   end
