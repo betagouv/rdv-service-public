@@ -5,7 +5,7 @@ class HealthController < ApplicationController
   end
 
   def jobs_queues
-    stale_processes = GoodJob::Process.all.select(&:stale?)
+    stale_processes = GoodJob::Process.all.select(&:stale?).map(&:id)
     return render(status: :service_unavailable, json: { stale_processes: }) if stale_processes.any?
 
     counts1 = compute_enqueued_jobs_count_by_queue
