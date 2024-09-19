@@ -1,6 +1,6 @@
 class HealthController < ApplicationController
   def db_connection
-    if Territory.count
+    if Territory.exists?
       render status: :ok, plain: "health OK"
     else
       render status: :service_unavailable, plain: "health not OK"
