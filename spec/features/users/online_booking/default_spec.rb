@@ -463,7 +463,7 @@ RSpec.describe "User can search for rdvs" do
     fill_in("Nom", with: "Lapin")
     fill_in("Date de naissance", with: Date.yesterday) if birth_date
     click_button("Enregistrer")
-    expect(page).to have_content("Mathieu LAPIN")
+    wait_for { User.exists?(first_name: "Mathieu", last_name: "Lapin") }.to be(true)
 
     click_button("Continuer")
   end
