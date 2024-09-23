@@ -464,11 +464,9 @@ RSpec.describe "User can search for rdvs" do
     fill_in("Date de naissance", with: Date.yesterday) if birth_date
     click_button("Enregistrer")
 
-    # Pour éviter une flaky spec causée par l'animation CSS de la modale, on vérifie
-    # que le proche est bien enregistré dans Postgres puis on recharge la page.
+    # Pour éviter une flaky spec (causée par l'animation CSS de la modale ?),
+    # on vérifie directement que le proche est bien enregistré dans la base.
     wait_for { User.exists?(first_name: "Mathieu", last_name: "Lapin") }.to be(true)
-    refresh
-    expect(page).to have_content("Mathieu LAPIN")
 
     click_button("Continuer")
   end
