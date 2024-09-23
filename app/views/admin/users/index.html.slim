@@ -19,7 +19,7 @@
         .col-md-6
           .form-group.string.optional._search
             = f.label :agent_id, "Agent référent", {class: "form-control-label select optional"}
-            = f.select :agent_id, [], {}, { class: "form-control select optional select2-input", data: { "select-options": { ajax: { url: admin_organisation_agents_path(current_organisation), dataType: "json", delay: 250 } } } }
+            = f.select :agent_id, [], {}, { class: "form-control select optional select2-input", data: { "select2-config": { ajax: { url: admin_organisation_agents_path(current_organisation), dataType: "json", delay: 250 } } } }
 
       input.btn.btn-primary.d-print-none type="submit" value="Rechercher"
 

@@ -19,7 +19,7 @@
               class: "select2-input js-service-filter", \
               data: { \
                 placeholder: "Sélectionnez un service pour filtrer les motifs", \
-                "select-options": { disableSearch: true }, \
+                "select2-config": { disableSearch: true }, \
               }, \
             }
         .col-md-4
@@ -50,7 +50,7 @@
               multiple: true, \
               class: "select2-input",\
               data: { \
-                "select-options": { \
+                "select2-config": { \
                   ajax: { \
                     url: admin_organisation_agents_path(current_organisation),
                     dataType: "json",
