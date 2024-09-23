@@ -26,7 +26,7 @@ class HealthController < ApplicationController
   def jobs_scheduled
     jobs_missed = Rails.configuration.good_job.cron.values.select do |job_config|
       expected_enqueued_count = 0
-      t = 2.minutes.ago
+      t = 2.minutes.ago # petit délai pour laisser le temps au scheduler d’enqueue les jobs
       loop do
         t = Fugit.parse_cronish(job_config[:cron]).previous_time(t)
         break if t <= INTERVAL.ago
