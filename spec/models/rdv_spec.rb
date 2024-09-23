@@ -1,22 +1,28 @@
 RSpec.describe Rdv, type: :model do
-  describe "#starts_at_is_plausible" do
-    let(:now) { Time.zone.parse("2021-05-03 14h00") }
-    let(:rdv) { build :rdv, starts_at: starts_at }
+  describe "starts_at realistic validations" do
+    context "starts_at before 2018" do
+      let(:rdv) { build(:rdv, starts_at: Date.new(2017, 12, 24)) }
 
-    before { travel_to now }
-
-    describe "next week" do
-      let(:starts_at) { now + 1.week }
-
-      it { expect(rdv).to be_valid }
+      it "should be invalid" do
+        expect(rdv).to be_invalid
+        expect(rdv.errors.full_messages).to include("L’horaire du RDV ne peut pas être avant 2018")
+      end
     end
 
-    describe "ten years from now week" do
-      let(:starts_at) { now + 10.years }
+    context "starts_at more than 5 years from now" do
+      let(:rdv) { build(:rdv, starts_at: Date.new(2100, 12, 24)) }
 
-      it do
-        expect(rdv).not_to be_valid
-        expect(rdv.errors.details.dig(:starts_at, 0, :error)).to eq :must_be_within_two_years
+      it "should be invalid" do
+        expect(rdv).to be_invalid
+        expect(rdv.errors.full_messages).to include("L’horaire du RDV ne peut pas être dans plus de 5 ans")
+      end
+    end
+
+    context "starts_at is reasonable" do
+      let(:rdv) { build(:rdv, starts_at: Date.new(2020, 12, 24)) }
+
+      it "should be valid" do
+        expect(rdv).to be_valid
       end
     end
   end

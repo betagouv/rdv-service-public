@@ -24,6 +24,6 @@
 
 - elsif model.errors.any?
   .alert.alert-danger.fade.show
-    ul.m-0
+    ul.m-0.pl-2
       - errors_full_messages(model).uniq.each do |msg|
         li= msg
