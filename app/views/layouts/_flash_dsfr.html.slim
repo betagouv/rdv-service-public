@@ -1,7 +1,8 @@
 - %i[success notice error alert].each do |type|
   - if flash[type]
-    .fr-my-2w
+    dialog.rdv-dialog-reset.fr-my-2w open="true"
       .fr-alert.fr-alert--sm.fr-pb-1w class=alert_dsfr_class_for(type)
         p.fr-mb-0= sanitize(flash[type], tags: %w[a br strong em], scrubber: :prune)
-        button.fr-btn--close.fr-btn.js-dsfr-alert-close-button title="Masquer le message"
-          | Masquer le message
+        form method="dialog"
+          button.fr-btn--close.fr-btn.js-dsfr-alert-close-button type="submit" title="Masquer le message"
+            | Masquer le message

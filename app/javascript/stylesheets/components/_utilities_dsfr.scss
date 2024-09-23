@@ -49,3 +49,11 @@
 .rdv-background-image-none {
   background-image: none;
 }
+
+// reset CSS des styles par défaut des navigateurs sur les dialogs
+.rdv-dialog-reset {
+  border: none;
+  position: relative;
+  padding: 0;
+  width: auto;
+}
