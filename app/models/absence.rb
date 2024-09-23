@@ -5,7 +5,6 @@ class Absence < ApplicationRecord
   include RecurrenceConcern
   include IcsPayloads::Absence
   include Expiration
-  include EnsuresRealisticDate
 
   # Attributes
   auto_strip_attributes :title
@@ -22,6 +21,9 @@ class Absence < ApplicationRecord
   validates :first_day, :title, presence: true
   validate :ends_at_should_be_after_starts_at
   validate :no_recurrence_for_absence_for_several_days
+  validates :first_day, realistic_date: true
+  validates :end_day, realistic_date: true
+  validates :recurrence_ends_at, realistic_date: true
 
   # Hooks
   before_validation :set_end_day

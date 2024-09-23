@@ -82,7 +82,7 @@
                 label: false, \
                 **{input_html: { \
                   class: "select2-input",\
-                  data: { "select-options": { ajax: { url: search_admin_organisation_users_path(current_organisation), dataType: "json", delay: 250 }} }, \
+                  data: { "select2-config": { ajax: { url: search_admin_organisation_users_path(current_organisation), dataType: "json", delay: 250 }} }, \
                  }}.deep_merge(input_opts[:relative_existing]), \
                 required: true\
               )

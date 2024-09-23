@@ -240,7 +240,7 @@ GEM
       raabro (~> 1.4)
     globalid (1.2.1)
       activesupport (>= 6.1)
-    good_job (3.99.1)
+    good_job (3.27.4)
       activejob (>= 6.0.0)
       activerecord (>= 6.0.0)
       concurrent-ruby (>= 1.0.2)
@@ -409,7 +409,7 @@ GEM
       net-smtp
       premailer (~> 1.7, >= 1.7.9)
     public_suffix (5.0.4)
-    puma (6.4.2)
+    puma (6.4.3)
       nio4r (~> 2.0)
     pundit (2.2.0)
       activesupport (>= 3.0.0)
@@ -493,6 +493,10 @@ GEM
       railties (>= 5.2)
     rexml (3.3.6)
       strscan
+    rspec (3.12.0)
+      rspec-core (~> 3.12.0)
+      rspec-expectations (~> 3.12.0)
+      rspec-mocks (~> 3.12.0)
     rspec-core (3.12.3)
       rspec-support (~> 3.12.0)
     rspec-expectations (3.12.3)
@@ -510,6 +514,8 @@ GEM
       rspec-mocks (~> 3.12)
       rspec-support (~> 3.12)
     rspec-support (3.12.2)
+    rspec-wait (1.0.1)
+      rspec (>= 3.4)
     rspec_junit_formatter (0.6.0)
       rspec-core (>= 2, < 4, != 2.12.0)
     rswag-api (2.13.0)
@@ -691,7 +697,7 @@ DEPENDENCIES
   factory_bot
   faker
   foreman
-  good_job (= 3.99.1)
+  good_job (= 3.27.4)
   groupdate (~> 6.1)
   httpclient!
   icalendar (~> 2.5)
@@ -727,6 +733,7 @@ DEPENDENCIES
   redis
   redis-namespace
   rspec-rails
+  rspec-wait
   rspec_junit_formatter
   rswag-api
   rswag-specs
