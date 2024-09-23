@@ -42,12 +42,13 @@ namespace :api do
 
   namespace :visioplainte do
     resources :guichets, only: %i[index]
+    resources :plages_ouverture, only: %i[index]
     resources :creneaux, only: %i[index] do
       collection do
         get :prochain
       end
     end
-    resources :rdvs, only: %i[create destroy] do
+    resources :rdvs, only: %i[create destroy index] do
       member do
         put :cancel
       end

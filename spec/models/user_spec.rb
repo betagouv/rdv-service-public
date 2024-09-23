@@ -1,4 +1,14 @@
 RSpec.describe User, type: :model do
+  describe "#email=" do
+    it %(automatically fixes ".@" typo) do
+      expect(described_class.new(email: "francis.@exemple.fr").email).to eq("francis@exemple.fr")
+    end
+
+    it %(automatically fixes ".." typo) do
+      expect(described_class.new(email: "francis..factice@exemple.fr").email).to eq("francis.factice@exemple.fr")
+    end
+  end
+
   describe "#add_organisation" do
     subject do
       user.add_organisation(organisation)
@@ -74,9 +84,9 @@ RSpec.describe User, type: :model do
       expect(user.email).to end_with("deleted.rdv-solidarites.fr")
       expect(user).to have_attributes(
         first_name: "Usager supprimé",
-        last_name: "Usager supprimé",
-        address: "[valeur anonymisée]"
+        last_name: "Usager supprimé"
       )
+      expect(user.address).to match %([valeur unique anonymisée \\d+])
       expect(user.deleted_at).to be_within(5.seconds).of(Time.zone.now)
 
       # on n'anonymise pas un autre utilisateur
@@ -90,8 +100,8 @@ RSpec.describe User, type: :model do
       receipt = create(:receipt, user: user, rdv: rdv, sms_phone_number: "0611111111")
       user.soft_delete
 
-      expect(receipt.reload.sms_phone_number).to eq "[valeur anonymisée]"
-      expect(rdv.reload.context).to eq "[valeur anonymisée]"
+      expect(receipt.reload.sms_phone_number).to match %([valeur unique anonymisée \\d+])
+      expect(rdv.reload.context).to match %([valeur unique anonymisée \\d+])
       expect(user.versions).to be_empty
     end
 

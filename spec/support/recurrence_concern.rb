@@ -63,31 +63,8 @@ RSpec.shared_examples_for "recurrence" do
       end
     end
 
-    context "when there is a daily recurrence" do
-      let(:model_instance) { build(model_symbol, :daily, first_day: Date.new(2019, 7, 22)) }
-      let(:date_range) { Date.new(2019, 7, 22)..Date.new(2019, 7, 28) }
-
-      it do
-        expect(subject.size).to eq 7
-        expect(subject[0].starts_at).to eq(model_instance.starts_at)
-        expect(subject[0].ends_at).to eq(model_instance.first_occurrence_ends_at)
-        expect(subject[1].starts_at).to eq(model_instance.starts_at + 1.day)
-        expect(subject[1].ends_at).to eq(model_instance.first_occurrence_ends_at + 1.day)
-        expect(subject[2].starts_at).to eq(model_instance.starts_at + 2.days)
-        expect(subject[2].ends_at).to eq(model_instance.first_occurrence_ends_at + 2.days)
-        expect(subject[3].starts_at).to eq(model_instance.starts_at + 3.days)
-        expect(subject[3].ends_at).to eq(model_instance.first_occurrence_ends_at + 3.days)
-        expect(subject[4].starts_at).to eq(model_instance.starts_at + 4.days)
-        expect(subject[4].ends_at).to eq(model_instance.first_occurrence_ends_at + 4.days)
-        expect(subject[5].starts_at).to eq(model_instance.starts_at + 5.days)
-        expect(subject[5].ends_at).to eq(model_instance.first_occurrence_ends_at + 5.days)
-        expect(subject[6].starts_at).to eq(model_instance.starts_at + 6.days)
-        expect(subject[6].ends_at).to eq(model_instance.first_occurrence_ends_at + 6.days)
-      end
-    end
-
     context "when there is a weekly recurrence" do
-      let(:model_instance) { build(model_symbol, :weekly, first_day: Date.new(2019, 7, 22)) }
+      let(:model_instance) { build(model_symbol, :weekly_on_monday, first_day: Date.new(2019, 7, 22)) }
       let(:date_range) { Date.new(2019, 7, 22)..Date.new(2019, 8, 7) }
 
       it do

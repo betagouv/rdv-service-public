@@ -1,4 +1,37 @@
 RSpec.describe CreneauxSearch::ForAgent, type: :service do
+  let(:organisation) { create(:organisation) }
+  let(:motif) { create :motif, organisation: organisation }
+
+  describe "#next_availabilities" do
+    let(:form) do
+      instance_double(
+        AgentCreneauxSearchForm,
+        organisation: organisation,
+        motif: motif,
+        service: motif.service,
+        agent_ids: [],
+        team_ids: [],
+        lieu_ids: [],
+        date_range: Time.zone.today..(Time.zone.today + 6.days)
+      )
+    end
+    let(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+
+    let(:lieu1) { create(:lieu, organisation: organisation, name: "MDS Valence") }
+    let(:lieu2) { create(:lieu, organisation: organisation, name: "MDS Arquest") }
+
+    before do
+      create(:plage_ouverture, :weekly_on_monday, agent: agent, motifs: [motif], lieu: lieu2, organisation: organisation, first_day: 2.weeks.from_now)
+      create(:plage_ouverture, :weekly_on_monday, agent: agent, motifs: [motif], lieu: lieu1, organisation: organisation, first_day: 1.week.from_now, recurrence_ends_at: 13.days.from_now)
+    end
+
+    it "sorts the results by the date of the next availability" do
+      availabilities = described_class.new(form).next_availabilities
+      expect(availabilities.first.lieu).to eq lieu1
+      expect(availabilities.last.lieu).to eq lieu2
+    end
+  end
+
   describe "lieux" do
     subject { described_class.new(form).lieux }
 
@@ -15,12 +48,9 @@ RSpec.describe CreneauxSearch::ForAgent, type: :service do
       )
     end
 
-    let(:organisation) { create(:organisation) }
-    let(:motif) { create :motif, organisation: organisation }
-
     let(:agent1) { create(:agent, basic_role_in_organisations: [organisation]) }
     let(:lieu1) { create(:lieu, organisation: organisation) }
-    let!(:plage_ouverture) { create(:plage_ouverture, :weekly, agent: agent1, motifs: [motif], lieu: lieu1, organisation: organisation) }
+    let!(:plage_ouverture) { create(:plage_ouverture, :weekly_on_monday, agent: agent1, motifs: [motif], lieu: lieu1, organisation: organisation) }
 
     let(:lieux) { [] }
     let(:agents) { [] }
@@ -37,7 +67,7 @@ RSpec.describe CreneauxSearch::ForAgent, type: :service do
     context "when there are several plages for the motif" do
       let(:lieu2) { create(:lieu, organisation: organisation) }
       let(:agent2) { create(:agent, basic_role_in_organisations: [organisation]) }
-      let!(:plage_ouverture2) { create(:plage_ouverture, :weekly, agent: agent2, lieu: lieu2, motifs: [motif], organisation: organisation) }
+      let!(:plage_ouverture2) { create(:plage_ouverture, :weekly_on_monday, agent: agent2, lieu: lieu2, motifs: [motif], organisation: organisation) }
 
       context "when the lieu is unspecified" do
         it { is_expected.to contain_exactly(lieu1, lieu2) }
@@ -73,20 +103,31 @@ RSpec.describe CreneauxSearch::ForAgent, type: :service do
       instance_double(
         AgentCreneauxSearchForm,
         organisation: organisation,
-        motif: motif,
-        service: motif.service,
+        motif: motif_by_phone,
+        service: motif_by_phone.service,
         agent_ids: [],
         team_ids: [],
         lieu_ids: nil,
         date_range: Date.new(2022, 10, 20)..Date.new(2022, 10, 30)
       )
     end
-    let(:organisation) { create(:organisation) }
-    let(:motif) { create :motif, :by_phone, organisation: organisation }
-    let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], first_day: Date.new(2022, 10, 25), lieu: nil, organisation: organisation) }
+    let(:motif_by_phone) { create :motif, :by_phone, organisation: organisation }
+    let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif_by_phone], first_day: Date.new(2022, 10, 25), lieu: nil, organisation: organisation) }
 
     it "has results" do
       expect(described_class.new(form).build_result.creneaux).to be_any
+    end
+
+    describe "when there is also another PO with lieu" do
+      let(:lieu) { create(:lieu, organisation: organisation) }
+      let(:motif_with_lieu) { create :motif, organisation: organisation }
+      let!(:another_po_with_lieu) { create(:plage_ouverture, motifs: [motif_by_phone, motif_with_lieu], first_day: Date.new(2022, 10, 20), lieu: lieu, organisation: organisation) }
+
+      it "retourne des créneaux des deux plages d’ouvertures" do
+        # on utilise volontairement pas .first ici car les créneaux retournés ne sont pas triés
+        expect(described_class.new(form).build_result.creneaux.map(&:starts_at)).to include(Time.zone.local(2022, 10, 25, 8, 0, 0))
+        expect(described_class.new(form).build_result.creneaux.map(&:starts_at)).to include(Time.zone.local(2022, 10, 20, 8, 0, 0))
+      end
     end
   end
 
@@ -105,9 +146,6 @@ RSpec.describe CreneauxSearch::ForAgent, type: :service do
         date_range: Time.zone.today..(Time.zone.today + 6.days)
       )
     end
-
-    let(:organisation) { create(:organisation) }
-    let(:motif) { create :motif, organisation: organisation }
 
     let(:agent1) { create(:agent, basic_role_in_organisations: [organisation]) }
     let(:agent2) { create(:agent, basic_role_in_organisations: [organisation]) }

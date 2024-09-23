@@ -6,7 +6,7 @@ class CreneauxSearch::ForAgent
   def next_availabilities
     lieux.map do |lieu|
       next_availability(lieu)
-    end.compact
+    end.compact.sort_by(&:starts_at)
   end
 
   def next_availability(lieu = nil)
@@ -14,7 +14,7 @@ class CreneauxSearch::ForAgent
   end
 
   def build_result
-    lieu = lieux.first
+    lieu = @form.motif.requires_lieu? ? lieux.first : nil
     # utiliser les ids des agents pour ne pas faire de requêtes supplémentaire
     creneaux = CreneauxSearch::Calculator.available_slots(@form.motif, lieu, @form.date_range, all_agents)
     creneaux = creneaux.uniq { [_1.starts_at, _1.agent] }
@@ -42,7 +42,6 @@ class CreneauxSearch::ForAgent
 
     @lieux = @lieux.where(id: PlageOuverture.where(agent_id: all_agents).select(:lieu_id)) if all_agents.present?
 
-    @lieux = @lieux.ordered_by_name
     @lieux
   end
 

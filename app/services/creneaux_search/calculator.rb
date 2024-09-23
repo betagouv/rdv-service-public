@@ -5,7 +5,9 @@ module CreneauxSearch::Calculator
       datetime_range = CreneauxSearch::Range.ensure_date_range_with_time(date_range)
       plage_ouvertures = plage_ouvertures_for(motif, lieu, datetime_range, agents)
       free_times_po = free_times_from(plage_ouvertures, datetime_range) # dépendances implicite à Rdv, Absence et OffDays
-      slots_for(free_times_po, motif)
+      slots_for(free_times_po, motif).select do |slot|
+        slot.starts_at >= datetime_range.begin
+      end
     end
 
     def plage_ouvertures_for(motif, lieu, datetime_range, agents)

@@ -30,6 +30,12 @@ GIT
       responders
       warden (~> 1.2.3)
 
+PATH
+  remote: lib/anonymizer
+  specs:
+    anonymizer (0.1.0)
+      activerecord (>= 7.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -403,7 +409,7 @@ GEM
       net-smtp
       premailer (~> 1.7, >= 1.7.9)
     public_suffix (5.0.4)
-    puma (6.4.2)
+    puma (6.4.3)
       nio4r (~> 2.0)
     pundit (2.2.0)
       activesupport (>= 3.0.0)
@@ -652,6 +658,7 @@ DEPENDENCIES
   active_record_doctor
   activerecord-postgres_enum
   administrate
+  anonymizer!
   auto_strip_attributes
   axe-core-api (= 4.3.2)
   axe-core-rspec (= 4.3.2)

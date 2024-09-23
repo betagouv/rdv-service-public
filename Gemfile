@@ -32,6 +32,8 @@ gem "sentry-rails"
 gem "skylight"
 # Block & throttle abusive requests
 gem "rack-attack"
+# Dépendance interne pour anonymiser les records AR
+gem "anonymizer", path: "lib/anonymizer"
 
 # Database
 # Pg is the Ruby interface to the PostgreSQL RDBMS

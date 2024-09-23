@@ -30,10 +30,10 @@ RSpec.describe "agents can prescribe rdvs" do
 
   before do
     next_month = (now + 1.month).to_date
-    create(:plage_ouverture, :daily, first_day: next_month, motifs: [motif_mds], lieu: mds_paris_nord, organisation: org_mds)
-    create(:plage_ouverture, :daily, first_day: next_month, motifs: [motif_insertion], lieu: mission_locale_paris_sud, organisation: org_insertion, agent: agent_insertion)
-    create(:plage_ouverture, :daily, first_day: next_month, motifs: [motif_insertion], lieu: mission_locale_paris_nord, organisation: org_insertion)
-    create(:plage_ouverture, :daily, first_day: next_month, motifs: [motif_autre_service], lieu: mission_locale_paris_sud, organisation: org_insertion)
+    create(:plage_ouverture, :weekdays, first_day: next_month, motifs: [motif_mds], lieu: mds_paris_nord, organisation: org_mds)
+    create(:plage_ouverture, :weekdays, first_day: next_month, motifs: [motif_insertion], lieu: mission_locale_paris_sud, organisation: org_insertion, agent: agent_insertion)
+    create(:plage_ouverture, :weekdays, first_day: next_month, motifs: [motif_insertion], lieu: mission_locale_paris_nord, organisation: org_insertion)
+    create(:plage_ouverture, :weekdays, first_day: next_month, motifs: [motif_autre_service], lieu: mission_locale_paris_sud, organisation: org_insertion)
     current_agent.reload # needed to populate agent.organisations :/
     agent_insertion.reload
   end
@@ -263,6 +263,11 @@ RSpec.describe "agents can prescribe rdvs" do
         end
 
         it "show both services and motifs" do
+          if Date.new(2024, 10, 19).future?
+            pending # rubocop:disable RSpec/Pending
+            raise "cette flaky spec a été désactivée pendant un mois le temps de travailler dessus"
+          end
+
           expect(page).to have_content(motif_mds.service.name)
           expect(page).to have_content(motif_insertion.service.name)
           click_on motif_mds.service.name

@@ -93,7 +93,7 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
   context "for an other agent calendar" do
     let!(:other_agent) { create(:agent, first_name: "Jane", last_name: "FAROU", service: service, basic_role_in_organisations: [organisation]) }
     let!(:plage_ouverture) do
-      create(:plage_ouverture, :daily, first_day: Time.zone.today.prev_week(:monday), motifs: [motif], lieu: lieu, agent: other_agent, organisation: organisation, title: "Permanence")
+      create(:plage_ouverture, :weekdays, first_day: Time.zone.today.prev_week(:monday), motifs: [motif], lieu: lieu, agent: other_agent, organisation: organisation, title: "Permanence")
     end
 
     it "can crud a plage_ouverture", js: true do
@@ -165,6 +165,21 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
         expect_page_title("Accueil")
         click_link "Modifier"
       end
+    end
+  end
+
+  describe "sending an email notification upon deletion" do
+    let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], agent: agent, organisation: organisation, start_time: Tod::TimeOfDay.new(8, 30), end_time: Tod::TimeOfDay.new(9, 30)) }
+
+    it "works" do
+      expect { click_link("Supprimer") }.to change(enqueued_jobs, :size).by(1)
+      expect { perform_enqueued_jobs }.to change { emails_sent_to(plage_ouverture.agent.email).size }.by(1)
+      open_email(plage_ouverture.agent.email)
+      expect(current_email.subject).to eq("RDV Solidarités - Plage d’ouverture supprimée - #{plage_ouverture.title}")
+      expect(current_email.body).to include(plage_ouverture.title)
+      expect(current_email.body).to include(plage_ouverture.agent.full_name)
+      expect(current_email.body).to include(plage_ouverture.motifs.first.name)
+      expect(current_email.body).to include("de 08:30 à 09:30") # on s'assure que les heures sont bien sérialisées et dé-sérialisées (objets Tod::TimeOfDay)
     end
   end
 end

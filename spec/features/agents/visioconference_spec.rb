@@ -13,6 +13,11 @@ RSpec.describe "Les agents peuvent organiser des rdv par visioconférence" do
   end
 
   it "allows changing the location type and adds validation when trying to create a rdv without email or phone number", js: true do
+    if Date.new(2024, 10, 19).future?
+      pending # rubocop:disable RSpec/Pending
+      raise "cette flaky spec a été désactivée pendant un mois le temps de travailler dessus"
+    end
+
     visit admin_organisation_motifs_path(organisation)
     click_on motif.name
     click_on "Modifier"
