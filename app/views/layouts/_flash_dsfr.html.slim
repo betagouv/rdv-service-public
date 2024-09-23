@@ -1,6 +1,6 @@
 - %i[success notice error alert].each do |type|
   - if flash[type]
-    dialog.rdv-dialog-reset.fr-my-2w open="true"
+    dialog.rdv-dialog-reset.fr-my-2w open=true
       .fr-alert.fr-alert--sm.fr-pb-1w class=alert_dsfr_class_for(type)
         p.fr-mb-0= sanitize(flash[type], tags: %w[a br strong em], scrubber: :prune)
         form method="dialog"
