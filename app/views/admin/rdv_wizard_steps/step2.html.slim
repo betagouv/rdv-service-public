@@ -55,7 +55,7 @@ ruby:
             class: "select2-input js-new-rdv-users-select",
             data: { \
               width: :style,
-              "select-options": { ajax: { url: search_agents_users_path(exclude_ids: @rdv.users.map(&:id), organisation_id: @rdv.organisation_id), dataType: "json", delay: 250}, placeholder: "Nom, prénom, téléphone, ou email" }, \
+              "select2-config": { ajax: { url: search_agents_users_path(exclude_ids: @rdv.users.map(&:id), organisation_id: @rdv.organisation_id), dataType: "json", delay: 250}, placeholder: "Nom, prénom, téléphone, ou email" }, \
             }
 
           span.small.text-muted

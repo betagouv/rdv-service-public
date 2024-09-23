@@ -81,7 +81,7 @@
                       data: { \
                 width: "auto", \
                 "scroll-to-bottom": params[:add_user].present?, \
-                "select-options": { ajax: { url: search_admin_organisation_users_path(current_organisation, exclude_ids: @rdv.participations.map(&:user_id)), dataType: "json", delay: 250 } }, \
+                "select2-config": { ajax: { url: search_admin_organisation_users_path(current_organisation, exclude_ids: @rdv.participations.map(&:user_id)), dataType: "json", delay: 250 } }, \
                }
               span.small.text-muted
               | L'usager n'existe pas ?&nbsp;
