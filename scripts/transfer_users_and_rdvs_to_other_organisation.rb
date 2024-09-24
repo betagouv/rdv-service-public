@@ -16,7 +16,7 @@ class TransferUsersAndRdvsToOtherOrganisation
     ActiveRecord::Base.transaction do
       transfer_rdvs
       remove_users_from_source_organisation
-      add_users_to_target_organisation!
+      add_users_to_target_organisation
     end
   end
 
@@ -36,7 +36,7 @@ class TransferUsersAndRdvsToOtherOrganisation
     source_organisation.users.delete(users_to_transfer)
   end
 
-  def add_users_to_target_organisation!
+  def add_users_to_target_organisation
     users_to_transfer.each do |user|
       user.add_organisation(target_organisation)
     end
