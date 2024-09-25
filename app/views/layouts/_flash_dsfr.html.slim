@@ -4,5 +4,5 @@
       .fr-alert.fr-alert--sm.fr-pb-1w class=alert_dsfr_class_for(type)
         p.fr-mb-0= sanitize(flash[type], tags: %w[a br strong em], scrubber: :prune)
         form method="dialog"
-          button.fr-btn--close.fr-btn.js-dsfr-alert-close-button type="submit" title="Masquer le message"
+          button.fr-btn--close.fr-btn type="submit" title="Masquer le message"
             | Masquer le message
