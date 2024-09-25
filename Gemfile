@@ -219,6 +219,8 @@ group :test do
   gem "rswag-specs"
   # rspec command for spring
   gem "spring-commands-rspec"
+  # Time-resilient expectations in RSpec
+  gem "rspec-wait"
 
   # Accessibility
 
