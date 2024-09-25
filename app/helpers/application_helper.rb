@@ -25,7 +25,7 @@ module ApplicationHelper
     when :notice
       "fr-alert--info"
     else
-      alert.to_s
+      raise ArgumentError, "alert should be a key among :success, :alert, :error or :notice"
     end
   end
 
