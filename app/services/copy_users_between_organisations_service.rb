@@ -19,12 +19,8 @@ class CopyUsersBetweenOrganisationsService < BaseService
 
     users = User.joins(:organisations).where(organisations: { id: source_organisations.pluck(:id) }).distinct
 
-    Rails.logger.info("Copie de #{users.count} utilisateurs des organisations sources vers l'organisation cible...")
-
     users.find_each do |user|
       user.add_organisation(target_organisation)
     end
-
-    Rails.logger.info("Terminé !")
   end
 end
