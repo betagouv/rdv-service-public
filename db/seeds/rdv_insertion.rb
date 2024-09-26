@@ -219,20 +219,20 @@ _plage_ouverture_org_yonne_alain_classique = PlageOuverture.create!(
 
 # WEBHOOKS
 WebhookEndpoint.create!(
-  target_url: "#{ENV['RDV_INSERTION_HOST']}/rdv_solidarites_webhooks",
-  secret: ENV["RDV_INSERTION_SECRET"],
+  target_url: "#{ENV.fetch('RDV_INSERTION_HOST', 'http://localhost:8000')}/rdv_solidarites_webhooks",
+  secret: ENV.fetch("RDV_INSERTION_SECRET", "rdv-solidarites"),
   organisation_id: org_drome1.id,
   subscriptions: %w[rdv user user_profile organisation motif lieu agent agent_role referent_assignation]
 )
 WebhookEndpoint.create!(
-  target_url: "#{ENV['RDV_INSERTION_HOST']}/rdv_solidarites_webhooks",
-  secret: ENV["RDV_INSERTION_SECRET"],
+  target_url: "#{ENV.fetch('RDV_INSERTION_HOST', 'http://localhost:8000')}/rdv_solidarites_webhooks",
+  secret: ENV.fetch("RDV_INSERTION_SECRET", "rdv-solidarites"),
   organisation_id: org_drome2.id,
   subscriptions: %w[rdv user user_profile organisation motif lieu agent agent_role referent_assignation]
 )
 WebhookEndpoint.create!(
-  target_url: "#{ENV['RDV_INSERTION_HOST']}/rdv_solidarites_webhooks",
-  secret: ENV["RDV_INSERTION_SECRET"],
+  target_url: "#{ENV.fetch('RDV_INSERTION_HOST', 'http://localhost:8000')}/rdv_solidarites_webhooks",
+  secret: ENV.fetch("RDV_INSERTION_SECRET", "rdv-solidarites"),
   organisation_id: org_yonne.id,
   subscriptions: %w[rdv user user_profile organisation motif lieu agent agent_role referent_assignation]
 )
