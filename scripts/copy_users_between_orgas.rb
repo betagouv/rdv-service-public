@@ -35,7 +35,7 @@ if options[:target_organisation_id].nil?
   exit 1
 end
 
-CopyUsersBetweenOrganisations.new(
+CopyUsersBetweenOrganisationsService.new(
   options[:source_organisation_ids],
   options[:target_organisation_id]
 ).perform
