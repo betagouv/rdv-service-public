@@ -15,6 +15,17 @@ module DefaultJobBehaviour
     # it therefore takes more than 8 days for a job to be discarded
     retry_on(StandardError, wait: :exponentially_longer, attempts: MAX_ATTEMPTS, priority: PRIORITY_OF_RETRIES)
 
+    # Only discard DeserializationError if it is caused by a ActiveRecord::RecordNotFound.
+    # We don't want to discard a job when deserialization failed because of a DB failure for example.
+    rescue_from ActiveJob::DeserializationError do |exception|
+      if exception.cause.instance_of?(ActiveRecord::RecordNotFound)
+        Rails.logger.error(exception.message)
+      else
+        Sentry.capture_exception(exception)
+        retry_job
+      end
+    end
+
     before_perform :set_sentry_context
   end
 
