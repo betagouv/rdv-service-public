@@ -21,8 +21,8 @@ RSpec.describe CreneauxSearch::ForAgent, type: :service do
     let(:lieu2) { create(:lieu, organisation: organisation, name: "MDS Arquest") }
 
     before do
-      create(:plage_ouverture, :weekly, agent: agent, motifs: [motif], lieu: lieu2, organisation: organisation, first_day: 2.weeks.from_now)
-      create(:plage_ouverture, :weekly, agent: agent, motifs: [motif], lieu: lieu1, organisation: organisation, first_day: 1.week.from_now, recurrence_ends_at: 13.days.from_now)
+      create(:plage_ouverture, :weekly_on_monday, agent: agent, motifs: [motif], lieu: lieu2, organisation: organisation, first_day: 2.weeks.from_now)
+      create(:plage_ouverture, :weekly_on_monday, agent: agent, motifs: [motif], lieu: lieu1, organisation: organisation, first_day: 1.week.from_now, recurrence_ends_at: 13.days.from_now)
     end
 
     it "sorts the results by the date of the next availability" do
@@ -50,7 +50,7 @@ RSpec.describe CreneauxSearch::ForAgent, type: :service do
 
     let(:agent1) { create(:agent, basic_role_in_organisations: [organisation]) }
     let(:lieu1) { create(:lieu, organisation: organisation) }
-    let!(:plage_ouverture) { create(:plage_ouverture, :weekly, agent: agent1, motifs: [motif], lieu: lieu1, organisation: organisation) }
+    let!(:plage_ouverture) { create(:plage_ouverture, :weekly_on_monday, agent: agent1, motifs: [motif], lieu: lieu1, organisation: organisation) }
 
     let(:lieux) { [] }
     let(:agents) { [] }
@@ -67,7 +67,7 @@ RSpec.describe CreneauxSearch::ForAgent, type: :service do
     context "when there are several plages for the motif" do
       let(:lieu2) { create(:lieu, organisation: organisation) }
       let(:agent2) { create(:agent, basic_role_in_organisations: [organisation]) }
-      let!(:plage_ouverture2) { create(:plage_ouverture, :weekly, agent: agent2, lieu: lieu2, motifs: [motif], organisation: organisation) }
+      let!(:plage_ouverture2) { create(:plage_ouverture, :weekly_on_monday, agent: agent2, lieu: lieu2, motifs: [motif], organisation: organisation) }
 
       context "when the lieu is unspecified" do
         it { is_expected.to contain_exactly(lieu1, lieu2) }

@@ -60,7 +60,7 @@ module AgentsHelper
                          selected: agent.id),
       class: "select2-input form-control js-planning-agent-select",
       data: {
-        "select-options": {
+        "select2-config": {
           ajax: {
             url: admin_organisation_agents_path(current_organisation),
             dataType: "json",

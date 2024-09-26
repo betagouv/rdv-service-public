@@ -32,6 +32,8 @@ gem "sentry-rails"
 gem "skylight"
 # Block & throttle abusive requests
 gem "rack-attack"
+# Dépendance interne pour anonymiser les records AR
+gem "anonymizer", path: "lib/anonymizer"
 
 # Database
 # Pg is the Ruby interface to the PostgreSQL RDBMS
@@ -81,7 +83,7 @@ gem "common_french_passwords"
 
 # Jobs
 # A multithreaded, Postgres-based ActiveJob backend for Ruby on Rails
-gem "good_job", "3.99.1"
+gem "good_job", "3.27.4"
 
 # JSON serialization and queries
 
@@ -217,6 +219,8 @@ group :test do
   gem "rswag-specs"
   # rspec command for spring
   gem "spring-commands-rspec"
+  # Time-resilient expectations in RSpec
+  gem "rspec-wait"
 
   # Accessibility
 
