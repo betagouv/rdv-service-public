@@ -14,6 +14,16 @@
         = render "common/inclusionconnect_button"
 
     .row.pt-2.pb-2
+      .alert.alert-info.d-flex.rdv-text-align-left
+        .mr-3
+          i.fa.fa-info
+        span
+          - if display_inclusion_connect_button?
+            = "AgentConnect et Inclusion Connect vont prochainement fusionner pour devenir ProConnect. "
+          - else
+            = "AgentConnect va prochainement devenir ProConnect. "
+          = link_to("En savoir plus", "https://www.proconnect.gouv.fr/#agentconnect-devient-proconnect-container", target: "_blank", rel: "noopener noreferrer", title: "En savoir plus - nouvelle fenêtre")
+    .row.pt-2.pb-2
       .col
         hr
       .col-auto.p-0.pt-1
