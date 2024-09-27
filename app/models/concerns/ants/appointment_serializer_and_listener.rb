@@ -34,15 +34,6 @@ module Ants
       end
     end
 
-    def serialize_for_ants_api
-      {
-        meeting_point_id: lieu.id.to_s,
-        meeting_point: lieu.name,
-        appointment_date: starts_at.strftime("%Y-%m-%d %H:%M:%S"),
-        management_url: Rails.application.routes.url_helpers.users_rdv_url(self, host: organisation.domain.host_name),
-      }
-    end
-
     def watching_attributes_for_ants_api_changed?
       saved_changes.keys & ATTRIBUTES_TO_WATCH
     end
