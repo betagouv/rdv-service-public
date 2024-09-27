@@ -5,8 +5,6 @@
 orientation_category = MotifCategory.create!(short_name: "rsa_orientation", name: "RSA orientation")
 accompagnement_category = MotifCategory.create!(short_name: "rsa_accompagnement", name: "RSA accompagnement")
 
-MotifCategory.create!(short_name: "rsa_orientation", name: "RSA orientation")
-MotifCategory.create!(short_name: "rsa_accompagnement", name: "RSA accompagnement")
 MotifCategory.create!(short_name: "rsa_accompagnement_sociopro", name: "RSA accompagnement socio-pro")
 MotifCategory.create!(short_name: "rsa_accompagnement_social", name: "RSA accompagnement social")
 MotifCategory.create!(short_name: "rsa_cer_signature", name: "RSA signature CER")
