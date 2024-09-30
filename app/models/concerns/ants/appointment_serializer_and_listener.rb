@@ -53,5 +53,16 @@ module Ants
         rdv.assign_attributes(needs_sync_to_ants: false)
       end
     end
+
+    def ants_management_url_for(application_id:)
+      Rails.application.routes.url_helpers.users_rdv_url(
+        id,
+        host: organisation.domain.host_name,
+        ants_pre_demande_number: application_id
+      )
+      # ce dernier param GET sera ignoré par notre serveur Rails
+      # On l’utilise pour rendre les management_url uniques et
+      # respecter la contrainte d’unicité de l’API de l’ANTS
+    end
   end
 end

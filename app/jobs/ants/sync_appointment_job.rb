@@ -12,7 +12,11 @@ module Ants
         # On passe les attributes du RDV au lieu de l'objet active record, au cas où ce dernier serait supprimé
         rdv_attributes = rdv_to_attributes(rdv)
         rdv.users.pluck(:ants_pre_demande_number).compact.uniq.each do |application_id|
-          perform_later(rdv_attributes:, application_id:)
+          perform_later(
+            rdv_attributes:,
+            application_id:,
+            management_url: rdv.ants_management_url_for(application_id)
+          )
         end
       end
 
@@ -24,14 +28,15 @@ module Ants
           lieu_id: rdv.lieu.id,
           lieu_name: rdv.lieu.name,
           starts_at: rdv.starts_at.strftime("%Y-%m-%d %H:%M:%S"),
-          host_name: rdv.organisation.domain.host_name,
         }.compact
       end
     end
 
-    def perform(rdv_attributes:, application_id:)
-      rdv_attributes.symbolize_keys! # TODO: remove?
+    def perform(rdv_attributes:, application_id:, management_url:)
       @application_id = application_id
+      @management_url = management_url
+
+      rdv_attributes.symbolize_keys! # TODO: remove?
 
       # Si le RDV n'est pas supprimé on essaie à nouveau d'extraire les appointment_data, afin d'avoir les données les plus fraiches possibles
       @rdv = Rdv.find_by(id: rdv_attributes[:id])
@@ -72,14 +77,14 @@ module Ants
       # cet appel n’échouera pas si l’appointment n’existe pas encore
       AntsApi.find_and_delete(
         application_id: @application_id,
-        management_url: management_url_for(@application_id)
+        management_url: @management_url
       )
     end
 
     def create_appointment
       AntsApi.create(
         application_id: @application_id,
-        management_url: management_url_for(@application_id),
+        management_url: @management_url,
         appointment_date: @rdv_attributes[:starts_at],
         meeting_point: @rdv_attributes[:lieu_name],
         meeting_point_id: @rdv_attributes[:lieu_id].to_s
@@ -89,17 +94,6 @@ module Ants
     def appointment_validated?
       status = AntsApi.status(application_id: @application_id, timeout: 4)["status"]
       status == "validated"
-    end
-
-    def management_url_for(application_id)
-      Rails.application.routes.url_helpers.users_rdv_url(
-        @rdv_attributes[:id],
-        host: @rdv_attributes[:host_name],
-        ants_pre_demande_number: application_id
-      )
-      # ce dernier param GET sera ignoré par notre serveur Rails
-      # On l’utilise pour rendre les management_url uniques et
-      # respecter la contrainte d’unicité de l’API de l’ANTS
     end
   end
 end

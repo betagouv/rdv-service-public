@@ -137,13 +137,10 @@ RSpec/DescribedClass:
     - spec/controllers/concerns/token_invitable_spec.rb
 
 RSpec/ContextWording:
-  Enabled: False
+  Enabled: false
 
 RSpec/ExampleLength:
-  Max: 30
-  Exclude:
-    - 'spec/features/**/*'
-    - 'spec/requests/api/**/*'
+  Enabled: False
 
 RSpec/LetSetup:
   Enabled: false
