@@ -5,6 +5,19 @@
 orientation_category = MotifCategory.create!(short_name: "rsa_orientation", name: "RSA orientation")
 accompagnement_category = MotifCategory.create!(short_name: "rsa_accompagnement", name: "RSA accompagnement")
 
+MotifCategory.create!(short_name: "rsa_accompagnement_sociopro", name: "RSA accompagnement socio-pro")
+MotifCategory.create!(short_name: "rsa_accompagnement_social", name: "RSA accompagnement social")
+MotifCategory.create!(short_name: "rsa_cer_signature", name: "RSA signature CER")
+MotifCategory.create!(short_name: "rsa_follow_up", name: "RSA suivi")
+MotifCategory.create!(short_name: "rsa_insertion_offer", name: "RSA offre insertion pro")
+MotifCategory.create!(short_name: "rsa_orientation_on_phone_platform", name: "RSA orientation sur plateforme téléphonique")
+MotifCategory.create!(short_name: "rsa_atelier_collectif_mandatory", name: "RSA Atelier collectif obligatoire")
+MotifCategory.create!(short_name: "rsa_atelier_rencontres_pro", name: "RSA Atelier rencontres professionnelles")
+MotifCategory.create!(short_name: "rsa_atelier_competences", name: "RSA Atelier compétences")
+MotifCategory.create!(short_name: "rsa_main_tendue", name: "RSA Main Tendue")
+MotifCategory.create!(short_name: "rsa_spie", name: "RSA SPIE")
+MotifCategory.create!(short_name: "rsa_integration_information", name: "RSA Information d'intégration")
+
 # Territories
 territory_drome = Territory.create!(
   departement_number: "26",
