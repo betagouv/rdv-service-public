@@ -214,20 +214,10 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
   end
 
   context "ANTS application ID is consumed" do
-    let(:rdv) do
-      create(
-        :rdv,
-        motif: motif_passeport,
-        users: [user],
-        lieu: lieu,
-        organisation: organisation,
-        starts_at: Time.zone.parse("2020-04-20 08:00:00")
-      )
-    end
-
     describe "after_commit on_update" do
       describe "Rdv is cancelled" do
         it "does not sync with ANTS" do
+          rdv.save!
           stub_ants_status("A123456789", status: "consumed", appointments: [])
           perform_enqueued_jobs do
             rdv.excused!
