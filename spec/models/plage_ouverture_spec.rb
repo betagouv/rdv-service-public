@@ -282,7 +282,7 @@ RSpec.describe PlageOuverture, type: :model do
     it "return plage_ouverture when one occurrence overlapping range" do
       range = now..(now + 30.minutes)
       plage_ouverture = create(:plage_ouverture, first_day: (now - 2.weeks).to_date, start_time: Tod::TimeOfDay.new(10, 45), end_time: Tod::TimeOfDay.new(11, 45),
-                                                 recurrence: Montrose.every(:week, on: ["tuesday"], starts: (now - 2.weeks).to_date))
+                                                 recurrence: Montrose.every(:week, on: ["tuesday"], starts: (now - 2.weeks).to_date, interval: 1))
       expect(described_class.overlapping_range(range)).to eq([plage_ouverture])
     end
 
