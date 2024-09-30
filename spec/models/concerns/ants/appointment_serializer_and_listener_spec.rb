@@ -196,39 +196,24 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
   end
 
   describe "Participation callbacks" do
-    before do
-      stub_ants_status("A123456789", status: "validated", appointments: [])
-      rdv.save!
-      user.reload
-      rdv.participations.reload
-      stub_ants_status_with_appointments
-    end
-
     describe "after_commit: Removing user participation" do
       it "deletes appointment" do
+        stub_ants_status("A123456789", status: "validated", appointments: [])
+        rdv.save!
+        user.reload
+        rdv.participations.reload
+        stub_ants_status_with_appointments
         perform_enqueued_jobs do
           stub_ants_delete("A123456789")
           user.participations.first.destroy
+          expect(WebMock).to have_requested(:delete, "#{API_URL}/appointments")
+            .with(query: hash_including(application_id: "A123456789"))
         end
       end
     end
   end
 
   context "ANTS application ID is consumed" do
-    before do
-      stub_request(:get, "#{API_URL}/status")
-        .with(query: hash_including(application_ids: user.ants_pre_demande_number))
-        .to_return(
-          status: 200,
-          body: {
-            user.ants_pre_demande_number => {
-              status: "consumed",
-              appointments: [],
-            },
-          }.to_json
-        )
-    end
-
     let(:rdv) do
       create(
         :rdv,
@@ -243,6 +228,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
     describe "after_commit on_update" do
       describe "Rdv is cancelled" do
         it "does not sync with ANTS" do
+          stub_ants_status("A123456789", status: "consumed", appointments: [])
           perform_enqueued_jobs do
             rdv.excused!
 
