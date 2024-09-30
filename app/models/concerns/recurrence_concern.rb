@@ -115,7 +115,13 @@ module RecurrenceConcern
     inclusive_datetime_range = datetime_range_start..(inclusive_date_range.end.end_of_day)
 
     if recurring?
-      recurrence.starting(starts_at).fast_forward(inclusive_datetime_range.begin).until(min_until).lazy.select do |occurrence_starts_at|
+      rec = recurrence.starting(starts_at).until(min_until)
+
+      if starts_at <= inclusive_datetime_range.begin
+        rec = rec.fast_forward(inclusive_datetime_range.begin)
+      end
+
+      rec.lazy.select do |occurrence_starts_at|
         event_in_range?(occurrence_starts_at, occurrence_starts_at + duration, inclusive_datetime_range)
       end.to_a
     else
