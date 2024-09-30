@@ -20,7 +20,6 @@ module Ants
           id: rdv.id,
           status: rdv.status,
           users_ids: rdv.users.ids,
-          obsolete_application_id: rdv.obsolete_application_id,
         }
       end
     end
@@ -31,8 +30,6 @@ module Ants
       # Si le RDV n'est pas supprimé on essaie à nouveau d'extraire les appointment_data, afin d'avoir les données les plus fraiches possibles
       @appointment_data = @rdv.present? ? @rdv.serialize_for_ants_api : appointment_data
 
-      delete_obsolete_appointment
-
       if rdv_cancelled_or_deleted?
         delete_appointments
       else
@@ -41,16 +38,6 @@ module Ants
     end
 
     private
-
-    def delete_obsolete_appointment
-      return if @rdv_attributes[:obsolete_application_id].blank?
-
-      res = AntsApi.find_and_delete(
-        application_id: @rdv_attributes[:obsolete_application_id],
-        management_url: @appointment_data[:management_url]
-      )
-      Sentry.set_tags(ants_appointment_deleted: res.present?)
-    end
 
     def rdv_cancelled_or_deleted?
       @rdv.nil? || @rdv_attributes[:status].in?(Rdv::CANCELLED_STATUSES)

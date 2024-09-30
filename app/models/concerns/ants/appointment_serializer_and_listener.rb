@@ -5,7 +5,7 @@ module Ants
     ATTRIBUTES_TO_WATCH = %w[id status starts_at lieu_id].freeze
 
     included do
-      attr_accessor :needs_sync_to_ants, :obsolete_application_id
+      attr_accessor :needs_sync_to_ants
 
       Rdv.before_commit do |rdv|
         Ants::AppointmentSerializerAndListener.mark_for_sync([rdv]) if rdv.watching_attributes_for_ants_api_changed?
@@ -14,7 +14,7 @@ module Ants
         Ants::AppointmentSerializerAndListener.mark_for_sync(user.rdvs) if user.saved_change_to_ants_pre_demande_number?
       end
       Participation.before_commit do |participation|
-        Ants::AppointmentSerializerAndListener.mark_for_sync([participation.rdv], obsolete_application_id: participation.user.ants_pre_demande_number)
+        Ants::AppointmentSerializerAndListener.mark_for_sync([participation.rdv])
       end
       Lieu.before_commit do |lieu|
         Ants::AppointmentSerializerAndListener.mark_for_sync(lieu.rdvs) if lieu.saved_change_to_name?
@@ -47,12 +47,11 @@ module Ants
       saved_changes.keys & ATTRIBUTES_TO_WATCH
     end
 
-    def self.mark_for_sync(rdvs, obsolete_application_id: nil)
+    def self.mark_for_sync(rdvs)
       rdvs.each do |rdv|
         next unless rdv.requires_ants_predemande_number?
 
         rdv.assign_attributes(needs_sync_to_ants: true)
-        rdv.assign_attributes(obsolete_application_id: obsolete_application_id) if obsolete_application_id
       end
     end
 
