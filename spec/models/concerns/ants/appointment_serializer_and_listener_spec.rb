@@ -5,7 +5,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
 
   let(:organisation) { create(:organisation, verticale: :rdv_mairie) }
   let(:user) { create(:user, ants_pre_demande_number: "A123456789", organisations: [organisation]) }
-  let(:lieu) { create(:lieu, organisation: organisation, name: "Lieu1") }
+  let(:lieu) { create(:lieu, organisation: organisation, name: "MDS Soleil") }
   let(:motif_passeport) { create(:motif, motif_category: create(:motif_category, :passeport)) }
   let(:rdv) { build(:rdv, motif: motif_passeport, users: [user], lieu: lieu, organisation: organisation, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
   let(:ants_api_headers) do
@@ -22,10 +22,10 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
       "A123456789",
       appointments: [
         {
-          management_url: Rails.application.routes.url_helpers.users_rdv_url(rdv, host: organisation.domain.host_name),
-          meeting_point: rdv.lieu.name,
+          management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
+          meeting_point: "MDS Soleil",
           meeting_point_id: rdv.lieu.id,
-          appointment_date: rdv.starts_at.strftime("%Y-%m-%d %H:%M:%S"),
+          appointment_date: "2020-04-20 08:00:00",
         },
       ]
     )
@@ -45,7 +45,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
                 application_id: "A123456789",
                 appointment_date: "2020-04-20 08:00:00",
                 management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
-                meeting_point: rdv.lieu.name,
+                meeting_point: "MDS Soleil",
                 meeting_point_id: rdv.lieu.id,
               },
               headers: ants_api_headers
@@ -91,7 +91,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
               query: {
                 application_id: "A123456789",
                 appointment_date: "2020-04-20 08:00:00",
-                meeting_point: rdv.lieu.name,
+                meeting_point: "MDS Soleil",
                 meeting_point_id: rdv.lieu.id,
               },
               headers: ants_api_headers
@@ -117,7 +117,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
                 query: {
                   application_id: "A123456789",
                   appointment_date: "2020-04-20 08:00:00",
-                  meeting_point: rdv.lieu.name,
+                  meeting_point: "MDS Soleil",
                   meeting_point_id: rdv.lieu.id,
                 },
                 headers: ants_api_headers
@@ -142,7 +142,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
                   application_id: "A123456789",
                   appointment_date: "2020-04-20 08:00:00",
                   management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
-                  meeting_point: rdv.lieu.name,
+                  meeting_point: "MDS Soleil",
                   meeting_point_id: rdv.lieu.id,
                 },
                 headers: ants_api_headers
