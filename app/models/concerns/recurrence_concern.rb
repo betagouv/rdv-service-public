@@ -109,10 +109,13 @@ module RecurrenceConcern
 
   def occurrence_start_at_list_for(inclusive_date_range)
     min_until = [inclusive_date_range.end, recurrence_ends_at].compact.min.end_of_day
-    inclusive_datetime_range = (inclusive_date_range.begin)..(inclusive_date_range.end.end_of_day)
+
+    datetime_range_start = inclusive_date_range.begin.is_a?(Date) ? inclusive_date_range.begin.beginning_of_day : inclusive_date_range.begin
+
+    inclusive_datetime_range = datetime_range_start..(inclusive_date_range.end.end_of_day)
 
     if recurring?
-      recurrence.starting(starts_at).fast_forward(inclusive_date_range.begin).until(min_until).lazy.select do |occurrence_starts_at|
+      recurrence.starting(starts_at).fast_forward(inclusive_datetime_range.begin).until(min_until).lazy.select do |occurrence_starts_at|
         event_in_range?(occurrence_starts_at, occurrence_starts_at + duration, inclusive_datetime_range)
       end.to_a
     else
