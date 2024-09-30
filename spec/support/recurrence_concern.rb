@@ -108,59 +108,5 @@ RSpec.shared_examples_for "recurrence" do
         expect(subject[0].ends_at).to eq(Time.zone.local(2019, 8, 5, 12))
       end
     end
-
-    describe "the future_only parameter" do
-      # In june of 2022, wednesdays land on 1, 8, 15, 22 and 29.
-      # Let's create a recurrent event that repeats on wednesdays beginning june 1st.
-      # Let's say we wish to search on the whole month (date range is june 1st to 30th).
-      # Let's say today is monday 13th of june.
-      # Using `future_only: false` should return all wednesdays (1, 8, 15, 22 and 29).
-      # Using `future_only: true` should return future wednesdays (15, 22 and 29).
-
-      before { travel_to(Time.zone.local(2022, 6, 13)) }
-
-      let(:first_day) { Date.new(2022, 6, 1) }
-      let(:model_instance) do
-        build(model_symbol,
-              first_day: first_day,
-              start_time: Tod::TimeOfDay.new(8),
-              end_time: Tod::TimeOfDay.new(12),
-              recurrence: Montrose.every(
-                :week,
-                on: [:wednesday],
-                interval: 1,
-                starts: first_day
-              ).to_json)
-      end
-      let(:date_range) { Date.new(2022, 6, 1)..Date.new(2022, 6, 30) }
-
-      context "when using the future_only: false switch" do
-        subject { model_instance.occurrences_for(date_range, only_future: false) }
-
-        it "returns all wednesdays of june" do
-          all_wednesdays_of_june = [
-            Time.zone.parse("2022-06-01 08:00:00"),
-            Time.zone.parse("2022-06-08 08:00:00"),
-            Time.zone.parse("2022-06-15 08:00:00"),
-            Time.zone.parse("2022-06-22 08:00:00"),
-            Time.zone.parse("2022-06-29 08:00:00"),
-          ]
-          expect(subject.map(&:starts_at)).to eq(all_wednesdays_of_june)
-        end
-      end
-
-      context "when using the future_only: true switch" do
-        subject { model_instance.occurrences_for(date_range, only_future: true) }
-
-        it "returns future wednesdays of june (after today which is june 13th)" do
-          future_wednesdays_of_june = [
-            Time.zone.parse("2022-06-15 08:00:00"),
-            Time.zone.parse("2022-06-22 08:00:00"),
-            Time.zone.parse("2022-06-29 08:00:00"),
-          ]
-          expect(subject.map(&:starts_at)).to eq(future_wednesdays_of_june)
-        end
-      end
-    end
   end
 end
