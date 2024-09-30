@@ -34,7 +34,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
   describe "RDV callbacks" do
     describe "after_commit on_create" do
       it "creates appointment on ANTS" do
-        stub_ants_status("A123456789")
+        stub_ants_status("A123456789", status: "validated", appointments: [])
         stub_ants_create("A123456789")
 
         perform_enqueued_jobs do
@@ -164,7 +164,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
         user.reload
 
         perform_enqueued_jobs do
-          stub_ants_status("AABBCCDDEE")
+          stub_ants_status("AABBCCDDEE", status: "validated", appointments: [])
           user.update(ants_pre_demande_number: "AABBCCDDEE")
 
           expect(create_appointment_stub).to have_been_requested.at_least_once
@@ -186,7 +186,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
     describe "after_commit: Changing the name of the lieu" do
       it "triggers a sync with ANTS" do
         perform_enqueued_jobs do
-          stub_ants_status("A123456789")
+          stub_ants_status("A123456789", status: "validated", appointments: [])
           lieu.update(name: "Nouveau Lieu")
 
           expect(create_appointment_stub).to have_been_requested.at_least_once
@@ -197,7 +197,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
 
   describe "Participation callbacks" do
     before do
-      stub_ants_status("A123456789")
+      stub_ants_status("A123456789", status: "validated", appointments: [])
       rdv.save!
       user.reload
       rdv.participations.reload
