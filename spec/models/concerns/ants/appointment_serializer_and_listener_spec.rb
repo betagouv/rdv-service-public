@@ -21,7 +21,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
         let(:user) { create(:user, ants_pre_demande_number: "A123456789", organisations: [organisation]) }
         let(:rdv) { build(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
 
-        it "creates appointment on ANTS" do
+        it "créé l’appointment via l’API ANTS" do
           stub_ants_status("A123456789", status: "validated", appointments: [])
           stub_ants_create("A123456789")
           perform_enqueued_jobs do
@@ -41,24 +41,24 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
         end
       end
 
-      context "when the user is created by an agent who didn't fill in the pre_demande_number" do
+      context "l’usager n’a pas de numéro de pré-demande ANTS" do
         let(:organisation) { create(:organisation, verticale: :rdv_mairie) }
         let(:lieu) { create(:lieu, organisation:, name: "MDS Soleil") }
         let(:motif) { create(:motif, motif_category: create(:motif_category, :passeport)) }
         let(:user) { create(:user, ants_pre_demande_number: "", organisations: [organisation]) }
         let(:rdv) { build(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
 
-        it "doesn't send a request to the appointment ANTS api" do
+        it "n’appelle pas du tout l’API ANTS" do
           perform_enqueued_jobs do
             rdv.save!
           end
           expect(WebMock).not_to have_requested(:any, %r{\.ants\.gouv\.fr/api})
         end
 
-        context "and the rdv is cancelled" do
+        context "et le RDV est annulé" do
           before { rdv.status = "excused" }
 
-          it "doesn't send a request to the appointment ANTS api" do
+          it "n’appelle pas du tout l’API ANTS" do
             perform_enqueued_jobs do
               rdv.save!
             end
@@ -75,7 +75,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
       let(:user) { create(:user, ants_pre_demande_number: "A123456789", organisations: [organisation]) }
       let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
 
-      it "deletes appointment on ANTS" do
+      it "supprime l’appointment via l’API ANTS" do
         stub_ants_delete("A123456789")
         stub_ants_status(
           "A123456789",
@@ -105,14 +105,14 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
     end
 
     describe "after_commit on_update" do
-      describe "Rdv is cancelled" do
+      describe "le RDV est annulé" do
         let(:organisation) { create(:organisation, verticale: :rdv_mairie) }
         let(:lieu) { create(:lieu, organisation:, name: "MDS Soleil") }
         let(:motif) { create(:motif, motif_category: create(:motif_category, :passeport)) }
         let(:user) { create(:user, ants_pre_demande_number: "A123456789", organisations: [organisation]) }
         let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
 
-        it "deletes appointment on ANTS" do
+        it "supprime l’appointment via l’API ANTS" do
           stub_ants_status(
             "A123456789",
             appointments: [
@@ -141,7 +141,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
         end
       end
 
-      describe "Rdv is re-activated after cancellation" do
+      describe "le RDV est marqué comme vu alors qu’il avait été annulé" do
         let(:organisation) { create(:organisation, verticale: :rdv_mairie) }
         let(:lieu) { create(:lieu, organisation:, name: "MDS Soleil") }
         let(:motif) { create(:motif, motif_category: create(:motif_category, :passeport)) }
@@ -150,7 +150,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
 
         before { rdv.excused! }
 
-        it "creates appointment" do
+        it "créé l’appointment via l’API ANTS" do
           stub_ants_status(
             "A123456789",
             appointments: [
@@ -184,14 +184,14 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
   end
 
   describe "User callbacks" do
-    describe "after_commit: Changing the value of ants_pre_demande_number" do
+    describe "after_commit: l’usager change de numéro de pré-demande ANTS" do
       let(:organisation) { create(:organisation, verticale: :rdv_mairie) }
       let(:lieu) { create(:lieu, organisation:, name: "MDS Soleil") }
       let(:motif) { create(:motif, motif_category: create(:motif_category, :passeport)) }
       let!(:user) { create(:user, ants_pre_demande_number: "A123456789", organisations: [organisation]) }
       let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
 
-      it "creates appointment with new ants_pre_demande_number" do
+      it "créé un nouvel appointment via l’API ANTS" do
         user.reload
         create_appointment_stub = stub_ants_create("AABBCCDDEE")
         stub_ants_status("AABBCCDDEE", status: "validated", appointments: [])
@@ -204,14 +204,14 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
   end
 
   describe "Lieu callbacks" do
-    describe "after_commit: Changing the name of the lieu" do
+    describe "after_commit: le lieu change de nom" do
       let(:organisation) { create(:organisation, verticale: :rdv_mairie) }
       let(:lieu) { create(:lieu, organisation:, name: "MDS Soleil") }
       let(:motif) { create(:motif, motif_category: create(:motif_category, :passeport)) }
       let!(:user) { create(:user, ants_pre_demande_number: "A123456789", organisations: [organisation]) }
       let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
 
-      it "triggers a sync with ANTS" do
+      it "déclenche une synchronisation avec l’ANTS" do
         lieu.reload
         create_appointment_stub = stub_ants_create("A123456789")
         stub_ants_status("A123456789", status: "validated", appointments: [])
@@ -224,14 +224,14 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
   end
 
   describe "Participation callbacks" do
-    describe "after_commit: Removing user participation" do
+    describe "after_commit: un usager est retiré du RDV" do
       let(:organisation) { create(:organisation, verticale: :rdv_mairie) }
       let(:lieu) { create(:lieu, organisation:, name: "MDS Soleil") }
       let(:motif) { create(:motif, motif_category: create(:motif_category, :passeport)) }
       let!(:user) { create(:user, ants_pre_demande_number: "A123456789", organisations: [organisation]) }
       let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
 
-      it "deletes appointment" do
+      it "supprime l’appointment via l’API ANTS" do
         user.reload
         stub_ants_status("A123456789", status: "validated", appointments: [])
         stub_ants_status(
@@ -255,14 +255,14 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
 
   context "ANTS application ID is consumed" do
     describe "after_commit on_update" do
-      describe "Rdv is cancelled" do
+      describe "le RDV est annulé" do
         let(:organisation) { create(:organisation, verticale: :rdv_mairie) }
         let(:lieu) { create(:lieu, organisation:, name: "MDS Soleil") }
         let(:motif) { create(:motif, motif_category: create(:motif_category, :passeport)) }
         let!(:user) { create(:user, ants_pre_demande_number: "A123456789", organisations: [organisation]) }
         let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
 
-        it "does not sync with ANTS" do
+        it "ne déclenche pas la création d’un nouvel appointment via l’API ANTS" do
           stub_ants_status("A123456789", status: "consumed", appointments: [])
           perform_enqueued_jobs do
             rdv.excused!
