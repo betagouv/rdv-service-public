@@ -12,20 +12,6 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
     }
   end
 
-  def stub_ants_status_with_appointments
-    stub_ants_status(
-      "A123456789",
-      appointments: [
-        {
-          management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
-          meeting_point: "MDS Soleil",
-          meeting_point_id: rdv.lieu.id,
-          appointment_date: "2020-04-20 08:00:00",
-        },
-      ]
-    )
-  end
-
   describe "RDV callbacks" do
     describe "after_commit on_create" do
       context "l’usager a un numéro de pré-demande ANTS" do
@@ -91,7 +77,17 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
 
       it "deletes appointment on ANTS" do
         stub_ants_delete("A123456789")
-        stub_ants_status_with_appointments
+        stub_ants_status(
+          "A123456789",
+          appointments: [
+            {
+              management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
+              meeting_point: "MDS Soleil",
+              meeting_point_id: rdv.lieu.id,
+              appointment_date: "2020-04-20 08:00:00",
+            },
+          ]
+        )
         perform_enqueued_jobs do
           rdv.destroy
         end
@@ -117,7 +113,17 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
         let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
 
         it "deletes appointment on ANTS" do
-          stub_ants_status_with_appointments
+          stub_ants_status(
+            "A123456789",
+            appointments: [
+              {
+                management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
+                meeting_point: "MDS Soleil",
+                meeting_point_id: rdv.lieu.id,
+                appointment_date: "2020-04-20 08:00:00",
+              },
+            ]
+          )
           stub_ants_delete("A123456789")
           perform_enqueued_jobs do
             rdv.excused!
@@ -145,7 +151,17 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
         before { rdv.excused! }
 
         it "creates appointment" do
-          stub_ants_status_with_appointments
+          stub_ants_status(
+            "A123456789",
+            appointments: [
+              {
+                management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
+                meeting_point: "MDS Soleil",
+                meeting_point_id: rdv.lieu.id,
+                appointment_date: "2020-04-20 08:00:00",
+              },
+            ]
+          )
           stub_ants_delete("A123456789")
           stub_ants_create("A123456789")
           perform_enqueued_jobs do
@@ -218,7 +234,17 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
       it "deletes appointment" do
         user.reload
         stub_ants_status("A123456789", status: "validated", appointments: [])
-        stub_ants_status_with_appointments
+        stub_ants_status(
+          "A123456789",
+          appointments: [
+            {
+              management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
+              meeting_point: "MDS Soleil",
+              meeting_point_id: rdv.lieu.id,
+              appointment_date: "2020-04-20 08:00:00",
+            },
+          ]
+        )
         stub_ants_delete("A123456789")
         perform_enqueued_jobs do
           user.participations.first.destroy
