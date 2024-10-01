@@ -56,13 +56,13 @@ RSpec.describe CreneauxSearch::Calculator::BusyTime, type: :service do
   context "with an absence with recurrence" do
     it "returns starts_at first occurrence in range" do
       create(:absence, agent: plage_ouverture.agent, first_day: Date.new(2021, 10, 19), start_time: Tod::TimeOfDay.new(9),
-                       recurrence: Montrose.every(:week, on: ["tuesday"], starts: Time.zone.parse("20211019 9:00"), until: nil))
+                       recurrence: Montrose.every(:week, on: ["tuesday"], starts: Time.zone.parse("20211019 9:00"), until: nil, interval: 1))
       expect(described_class.busy_times_for(range, plage_ouverture).first.starts_at).to eq(Time.zone.parse("20211026 9:00"))
     end
 
     it "returns ends_at occurrence in range" do
       create(:absence, agent: plage_ouverture.agent, first_day: Date.new(2021, 10, 19), start_time: Tod::TimeOfDay.new(9),
-                       end_time: Tod::TimeOfDay.new(9, 45), recurrence: Montrose.every(:week, on: ["tuesday"], starts: Time.zone.parse("20211019 9:00"), until: nil))
+                       end_time: Tod::TimeOfDay.new(9, 45), recurrence: Montrose.every(:week, on: ["tuesday"], starts: Time.zone.parse("20211019 9:00"), until: nil, interval: 1))
       expect(described_class.busy_times_for(range, plage_ouverture).first.ends_at).to eq(Time.zone.parse("20211026 9:45"))
     end
 
@@ -72,7 +72,7 @@ RSpec.describe CreneauxSearch::Calculator::BusyTime, type: :service do
              first_day: Date.new(2021, 10, 19),
              start_time: Tod::TimeOfDay.new(9),
              end_time: Tod::TimeOfDay.new(9, 45),
-             recurrence: Montrose.every(:week, on: %w[tuesday friday], starts: Time.zone.parse("20211019 9:00"), until: nil))
+             recurrence: Montrose.every(:week, on: %w[tuesday friday], starts: Time.zone.parse("20211019 9:00"), until: nil, interval: 1))
       expect(described_class.busy_times_for(range, plage_ouverture).map(&:ends_at)).to eq([Time.zone.parse("20211026 9:45"), Time.zone.parse("20211029 9:45")])
     end
 
@@ -81,7 +81,7 @@ RSpec.describe CreneauxSearch::Calculator::BusyTime, type: :service do
 
       create(:absence, agent: plage_ouverture.agent, first_day: Date.new(2021, 10, 22),
                        start_time: Tod::TimeOfDay.new(14), end_time: Tod::TimeOfDay.new(15),
-                       recurrence: Montrose.every(:week, on: %w[tuesday friday], starts: Date.new(2021, 10, 22), until: nil))
+                       recurrence: Montrose.every(:week, on: %w[tuesday friday], starts: Date.new(2021, 10, 22), until: nil, interval: 1))
       expect(described_class.busy_times_for(range, plage_ouverture)).to be_empty
     end
   end

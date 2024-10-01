@@ -190,7 +190,7 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
     it "returns PO with recurrences that always running" do
       matching_po = create(:plage_ouverture, lieu: lieu, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes)
       recurring_po = create(:plage_ouverture, lieu: lieu, motifs: [motif], first_day: first_day - 1.day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11),
-                                              recurrence: Montrose.every(:week, starts: first_day - 1.day))
+                                              recurrence: Montrose.every(:week, starts: first_day - 1.day, interval: 1))
 
       plage_ouvertures = described_class.plage_ouvertures_for(motif, lieu, date_range, [])
       expect(plage_ouvertures).to contain_exactly(matching_po, recurring_po)
@@ -297,7 +297,7 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
     it "returns plage ouverture's 3 occurrences of range" do
       starts_at = Time.zone.parse("20211026 9:00")
       plage_ouverture = build(:plage_ouverture, first_day: starts_at.to_date, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), agent: agent,
-                                                recurrence: Montrose.every(:week, starts: starts_at.to_date - 1.day, day: [1, 2, 4, 5]))
+                                                recurrence: Montrose.every(:week, starts: starts_at.to_date - 1.day, day: [1, 2, 4, 5], interval: 1))
       range = Date.new(2021, 10, 25)..Date.new(2021, 10, 30)
 
       expected_ranges = [
@@ -313,7 +313,7 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
       travel_to(friday)
       starts_at = friday - 1.week
       plage_ouverture = build(:plage_ouverture, first_day: starts_at.to_date, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), agent: agent,
-                                                recurrence: Montrose.every(:week, starts: starts_at.to_date - 1.day, day: [5]))
+                                                recurrence: Montrose.every(:week, starts: starts_at.to_date - 1.day, day: [5], interval: 1))
       range = Date.new(2021, 11, 12)..Date.new(2021, 11, 19)
 
       expected_ranges = [(Time.zone.parse("2021-11-19 9:00")..Time.zone.parse("2021-11-19 11:00"))]
@@ -325,7 +325,7 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
       travel_to(friday)
       starts_at = friday - 1.week
       plage_ouverture = build(:plage_ouverture, first_day: starts_at.to_date, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), agent: agent,
-                                                recurrence: Montrose.every(:week, starts: starts_at.to_date - 1.day, day: [5]))
+                                                recurrence: Montrose.every(:week, starts: starts_at.to_date - 1.day, day: [5], interval: 1))
       create(:rdv, :excused, motif: motif, starts_at: Time.zone.parse("20211112 10:00"), agents: [agent])
       range = Date.new(2021, 11, 12)..Date.new(2021, 11, 19)
 
@@ -430,14 +430,14 @@ RSpec.describe CreneauxSearch::Calculator, type: :service do
     context "with recurrence" do
       it "return empty when po and it occurrence is out of range" do
         plage_ouverture = build(:plage_ouverture, first_day: friday + 14.days, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11),
-                                                  recurrence: Montrose.every(:week, starts: friday + 14.days))
+                                                  recurrence: Montrose.every(:week, starts: friday + 14.days, interval: 1))
         range = (friday + 3.days)..(friday + 10.days)
         expect(described_class.ranges_for(plage_ouverture, range)).to eq([])
       end
 
       it "return occurrence of po that in range" do
         plage_ouverture = build(:plage_ouverture, first_day: friday - 14.days, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11),
-                                                  recurrence: Montrose.every(:week, starts: friday - 14.days))
+                                                  recurrence: Montrose.every(:week, starts: friday - 14.days, interval: 1))
         range = (friday + 3.days)..(friday + 10.days)
         expect(described_class.ranges_for(plage_ouverture, range)).to eq([(Time.zone.parse("20210507 9:00")..Time.zone.parse("20210507 11:00"))])
       end

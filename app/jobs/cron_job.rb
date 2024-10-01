@@ -24,16 +24,6 @@ class CronJob < ApplicationJob
     end
   end
 
-  class WarmUpOccurrencesCache < CronJob
-    def perform
-      [PlageOuverture, Absence].each do |klass|
-        klass.regulieres.not_expired.find_each do |model|
-          model.earliest_future_occurrence_time(refresh: true)
-        end
-      end
-    end
-  end
-
   class DestroyOldRdvsAndInactiveAccountsJob < CronJob
     def perform
       two_years_ago = 2.years.ago
