@@ -14,6 +14,21 @@ module ApplicationHelper
     end
   end
 
+  def alert_dsfr_class_for(alert)
+    case alert
+    when :success
+      "fr-alert--success"
+    when :alert
+      "fr-alert--warning"
+    when :error
+      "fr-alert--error"
+    when :notice
+      "fr-alert--info"
+    else
+      raise ArgumentError, "alert should be a key among :success, :alert, :error or :notice"
+    end
+  end
+
   def datetime_input(form, field, input_html: {})
     form.input(
       field,
