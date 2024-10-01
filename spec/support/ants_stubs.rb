@@ -18,8 +18,5 @@ end
 def stub_ants_delete(application_id)
   stub_request(:delete, "#{API_URL}/appointments")
     .with(query: hash_including(application_id:))
-    .to_return(
-      status: 200,
-      body: { rowcount: 1 }.to_json
-    )
+    .to_return(status: 200, body: { rowcount: 1 }.to_json)
 end
