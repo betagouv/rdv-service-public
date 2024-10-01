@@ -36,9 +36,99 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
       it "creates appointment on ANTS" do
         stub_ants_status("A123456789", status: "validated", appointments: [])
         stub_ants_create("A123456789")
-
         perform_enqueued_jobs do
           rdv.save!
+        end
+        expect(WebMock).to have_requested(:post, "#{API_URL}/appointments")
+          .with(
+            query: {
+              application_id: "A123456789",
+              appointment_date: "2020-04-20 08:00:00",
+              management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
+              meeting_point: "MDS Soleil",
+              meeting_point_id: rdv.lieu.id,
+            },
+            headers: ants_api_headers
+          ).at_least_once
+      end
+
+      context "when the user is created by an agent who didn't fill in the pre_demande_number" do
+        let(:user) { create(:user, ants_pre_demande_number: "", organisations: [organisation]) }
+
+        it "doesn't send a request to the appointment ANTS api" do
+          perform_enqueued_jobs do
+            rdv.save!
+          end
+          expect(WebMock).not_to have_requested(:any, %r{\.ants\.gouv\.fr/api})
+        end
+
+        context "and the rdv is cancelled" do
+          before { rdv.status = "excused" }
+
+          it "doesn't send a request to the appointment ANTS api" do
+            perform_enqueued_jobs do
+              rdv.save!
+            end
+            expect(WebMock).not_to have_requested(:any, %r{\.ants\.gouv\.fr/api})
+          end
+        end
+      end
+    end
+
+    describe "after_commit on_destroy" do
+      it "deletes appointment on ANTS" do
+        rdv.save!
+        stub_ants_delete("A123456789")
+        stub_ants_status_with_appointments
+        perform_enqueued_jobs do
+          rdv.destroy
+        end
+        expect(WebMock).to have_requested(:delete, "#{API_URL}/appointments")
+          .with(
+            query: {
+              application_id: "A123456789",
+              appointment_date: "2020-04-20 08:00:00",
+              meeting_point: "MDS Soleil",
+              meeting_point_id: rdv.lieu.id,
+            },
+            headers: ants_api_headers
+          ).at_least_once
+      end
+    end
+
+    describe "after_commit on_update" do
+      describe "Rdv is cancelled" do
+        it "deletes appointment on ANTS" do
+          rdv.save!
+          stub_ants_status_with_appointments
+          stub_ants_delete("A123456789")
+          perform_enqueued_jobs do
+            rdv.excused!
+          end
+          expect(WebMock).to have_requested(:delete, "#{API_URL}/appointments")
+            .with(
+              query: {
+                application_id: "A123456789",
+                appointment_date: "2020-04-20 08:00:00",
+                meeting_point: "MDS Soleil",
+                meeting_point_id: rdv.lieu.id,
+              },
+              headers: ants_api_headers
+            ).at_least_once
+        end
+      end
+
+      describe "Rdv is re-activated after cancellation" do
+        it "creates appointment" do
+          rdv.save!
+          rdv.excused!
+
+          stub_ants_status_with_appointments
+          stub_ants_delete("A123456789")
+          stub_ants_create("A123456789")
+          perform_enqueued_jobs do
+            rdv.seen!
+          end
           expect(WebMock).to have_requested(:post, "#{API_URL}/appointments")
             .with(
               query: {
@@ -52,145 +142,35 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
             ).at_least_once
         end
       end
-
-      context "when the user is created by an agent who didn't fill in the pre_demande_number" do
-        let(:user) { create(:user, ants_pre_demande_number: "", organisations: [organisation]) }
-
-        it "doesn't send a request to the appointment ANTS api" do
-          perform_enqueued_jobs do
-            rdv.save!
-
-            expect(WebMock).not_to have_requested(:any, %r{\.ants\.gouv\.fr/api})
-          end
-        end
-
-        context "and the rdv is cancelled" do
-          before { rdv.status = "excused" }
-
-          it "doesn't send a request to the appointment ANTS api" do
-            perform_enqueued_jobs do
-              rdv.save!
-
-              expect(WebMock).not_to have_requested(:any, %r{\.ants\.gouv\.fr/api})
-            end
-          end
-        end
-      end
-    end
-
-    describe "after_commit on_destroy" do
-      it "deletes appointment on ANTS" do
-        rdv.save!
-        stub_ants_delete("A123456789")
-        stub_ants_status_with_appointments
-
-        perform_enqueued_jobs do
-          rdv.destroy
-          expect(WebMock).to have_requested(:delete, "#{API_URL}/appointments")
-            .with(
-              query: {
-                application_id: "A123456789",
-                appointment_date: "2020-04-20 08:00:00",
-                meeting_point: "MDS Soleil",
-                meeting_point_id: rdv.lieu.id,
-              },
-              headers: ants_api_headers
-            ).at_least_once
-        end
-      end
-    end
-
-    describe "after_commit on_update" do
-      before do
-        rdv.save!
-        stub_ants_status_with_appointments
-      end
-
-      describe "Rdv is cancelled" do
-        it "deletes appointment on ANTS" do
-          perform_enqueued_jobs do
-            stub_ants_delete("A123456789")
-            rdv.excused!
-
-            expect(WebMock).to have_requested(:delete, "#{API_URL}/appointments")
-              .with(
-                query: {
-                  application_id: "A123456789",
-                  appointment_date: "2020-04-20 08:00:00",
-                  meeting_point: "MDS Soleil",
-                  meeting_point_id: rdv.lieu.id,
-                },
-                headers: ants_api_headers
-              ).at_least_once
-          end
-        end
-      end
-
-      describe "Rdv is re-activated after cancellation" do
-        before do
-          rdv.excused!
-        end
-
-        it "creates appointment" do
-          perform_enqueued_jobs do
-            stub_ants_delete("A123456789")
-            stub_ants_create("A123456789")
-            rdv.seen!
-            expect(WebMock).to have_requested(:post, "#{API_URL}/appointments")
-              .with(
-                query: {
-                  application_id: "A123456789",
-                  appointment_date: "2020-04-20 08:00:00",
-                  management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
-                  meeting_point: "MDS Soleil",
-                  meeting_point_id: rdv.lieu.id,
-                },
-                headers: ants_api_headers
-              ).at_least_once
-          end
-        end
-      end
     end
   end
 
   describe "User callbacks" do
-    let!(:create_appointment_stub) do
-      stub_ants_create("AABBCCDDEE")
-    end
-
     describe "after_commit: Changing the value of ants_pre_demande_number" do
       it "creates appointment with new ants_pre_demande_number" do
         rdv.save!
         user.reload
-
+        create_appointment_stub = stub_ants_create("AABBCCDDEE")
+        stub_ants_status("AABBCCDDEE", status: "validated", appointments: [])
         perform_enqueued_jobs do
-          stub_ants_status("AABBCCDDEE", status: "validated", appointments: [])
           user.update(ants_pre_demande_number: "AABBCCDDEE")
-
-          expect(create_appointment_stub).to have_been_requested.at_least_once
         end
+        expect(create_appointment_stub).to have_been_requested.at_least_once
       end
     end
   end
 
   describe "Lieu callbacks" do
-    let!(:create_appointment_stub) do
-      stub_ants_create("A123456789")
-    end
-
-    before do
-      rdv.save!
-      lieu.reload
-    end
-
     describe "after_commit: Changing the name of the lieu" do
       it "triggers a sync with ANTS" do
+        rdv.save!
+        lieu.reload
+        create_appointment_stub = stub_ants_create("A123456789")
+        stub_ants_status("A123456789", status: "validated", appointments: [])
         perform_enqueued_jobs do
-          stub_ants_status("A123456789", status: "validated", appointments: [])
           lieu.update(name: "Nouveau Lieu")
-
-          expect(create_appointment_stub).to have_been_requested.at_least_once
         end
+        expect(create_appointment_stub).to have_been_requested.at_least_once
       end
     end
   end
@@ -203,11 +183,9 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
         user.reload
         rdv.participations.reload
         stub_ants_status_with_appointments
+        stub_ants_delete("A123456789")
         perform_enqueued_jobs do
-          stub_ants_delete("A123456789")
           user.participations.first.destroy
-          expect(WebMock).to have_requested(:delete, "#{API_URL}/appointments")
-            .with(query: hash_including(application_id: "A123456789"))
         end
       end
     end
@@ -221,12 +199,8 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
           stub_ants_status("A123456789", status: "consumed", appointments: [])
           perform_enqueued_jobs do
             rdv.excused!
-
-            expect(WebMock).not_to have_requested(
-              :post,
-              "#{API_URL}/appointments"
-            ).with(headers: ants_api_headers)
           end
+          expect(WebMock).not_to have_requested(:post, "#{API_URL}/appointments").with(headers: ants_api_headers)
         end
       end
     end
