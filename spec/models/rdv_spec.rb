@@ -576,7 +576,7 @@ RSpec.describe Rdv, type: :model do
       agent = create(:agent)
       rdv = build(:rdv, agents: [agent], starts_at: now + 1.week, ends_at: now + 1.week + 30.minutes)
       create(:plage_ouverture, agent: agent, first_day: (now - 2.weeks).to_date, start_time: Tod::TimeOfDay.new(10, 45), end_time: Tod::TimeOfDay.new(11, 45), lieu: create(:lieu),
-                               recurrence: Montrose.every(:week, on: ["tuesday"], starts: (now - 2.weeks).to_date))
+                               recurrence: Montrose.every(:week, on: ["tuesday"], starts: (now - 2.weeks).to_date, interval: 1))
       expect(rdv.overlapping_plages_ouvertures?).to be(true)
     end
 
@@ -586,7 +586,7 @@ RSpec.describe Rdv, type: :model do
       agent = create(:agent)
       rdv = build(:rdv, agents: [agent], starts_at: now + 1.week, ends_at: now + 1.week + 30.minutes)
       create(:plage_ouverture, agent: agent, first_day: (now - 1.week).to_date, start_time: Tod::TimeOfDay.new(10, 45), end_time: Tod::TimeOfDay.new(11, 45), lieu: create(:lieu),
-                               recurrence: Montrose.every(:month, day: { Tuesday: [2] }, starts: (now - 1.week).to_date))
+                               recurrence: Montrose.every(:month, day: { Tuesday: [2] }, starts: (now - 1.week).to_date, interval: 1))
       expect(rdv.overlapping_plages_ouvertures?).to be(false)
     end
   end
@@ -801,7 +801,7 @@ RSpec.describe Rdv, type: :model do
         first_day: now.to_date,
         start_time: Tod::TimeOfDay.new(9),
         end_time: Tod::TimeOfDay.new(10),
-        recurrence: Montrose.every(:week, on: ["monday"], starts: Time.zone.parse("20210503 00:00"), until: nil)
+        recurrence: Montrose.every(:week, on: ["monday"], starts: Time.zone.parse("20210503 00:00"), until: nil, interval: 1)
       )
     end
 
