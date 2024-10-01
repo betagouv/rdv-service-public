@@ -29,7 +29,8 @@ html lang="fr"
       - if content_for :main_content
         = yield :main_content
       - else
-        = render "layouts/flash"
+        .fr-container
+          = render "layouts/flash_dsfr"
         = yield
 
     #modal-holder
