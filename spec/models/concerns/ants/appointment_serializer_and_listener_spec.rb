@@ -19,25 +19,30 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
         let(:lieu) { create(:lieu, organisation:, name: "MDS Soleil") }
         let(:motif) { create(:motif, motif_category: create(:motif_category, :passeport)) }
         let(:user) { create(:user, ants_pre_demande_number: "A123456789", organisations: [organisation]) }
-        let(:rdv) { build(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
+        let!(:rdv) { build(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
 
         it "créé l’appointment via l’API ANTS" do
           stub_ants_status("A123456789", status: "validated", appointments: [])
-          stub_ants_create("A123456789")
+          stub_request(:post, "#{API_URL}/appointments")
+            .with(query: hash_including(application_id: "A123456789")) # Webmock ne répond pas à la requête POST avec des query params sans cette ligne
+            .to_return(status: 200, body: { success: true }.to_json)
+
           perform_enqueued_jobs do
             rdv.save!
           end
+
           expect(WebMock).to have_requested(:post, "#{API_URL}/appointments")
             .with(
-              query: {
+              query: hash_including(
                 application_id: "A123456789",
                 appointment_date: "2020-04-20 08:00:00",
-                management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
                 meeting_point: "MDS Soleil",
-                meeting_point_id: rdv.lieu.id,
-              },
+                meeting_point_id: rdv.lieu.id.to_s,
+                management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}"
+              ),
               headers: ants_api_headers
-            ).at_least_once
+            )
+            .once
         end
       end
 
