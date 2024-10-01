@@ -138,9 +138,9 @@ RSpec.describe "User can search rdv on rdv mairie" do
 
       # Pour éviter une flaky spec (causée par l'animation CSS de la modale ?),
       # on vérifie directement que le proche est bien enregistré dans la base.
-      wait_for { User.exists?(first_name: "Alain", last_name: "", ants_pre_demande_number: "5544332211") }.to be(true)
+      wait_for { User.exists?(first_name: "Alain", last_name: "Mairie", ants_pre_demande_number: "5544332211") }.to be(true)
 
-      alain = User.find_by(first_name: "Alain", last_name: "", ants_pre_demande_number: "5544332211")
+      alain = User.find_by(first_name: "Alain", last_name: "Mairie", ants_pre_demande_number: "5544332211")
       expect(alain).to be_present
 
       check(user.full_name)
