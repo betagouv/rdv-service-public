@@ -1,5 +1,7 @@
 div.text-center
-  form[action="/agent_connect/auth" method="get"]
+  form[action="#{agent_connect_auth_path}" method="get"]
+    - if params[:force_login]
+      input[hidden name="force_login" value=true]
     button.agentconnect-button[aria-label="S'identifier avec Agent Connect"]
   p
     a[href="https://agentconnect.gouv.fr/" target="_blank" rel="noopener noreferrer" title="Qu’est-ce que AgentConnect ? - nouvelle fenêtre"]

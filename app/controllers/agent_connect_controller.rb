@@ -4,9 +4,9 @@ class AgentConnectController < ApplicationController
 
   def auth
     auth_client = AgentConnectOpenIdClient::Auth.new(
-      login_hint: params[:login_hint],
       client_id: current_domain.agent_connect_client_id,
-      client_secret: current_domain.agent_connect_client_secret
+      client_secret: current_domain.agent_connect_client_secret,
+      force_login: params[:force_login]
     )
     session[:agent_connect_state] = auth_client.state
     session[:nonce] = auth_client.nonce
@@ -26,7 +26,7 @@ class AgentConnectController < ApplicationController
 
     unless callback_client.fetch_user_info_from_code!(params[:code])
       flash[:error] = generic_error_message
-      redirect_to(new_agent_session_path) and return
+      redirect_to(new_agent_session_path(force_login: true)) and return
     end
 
     # Agent Connect recommande de faire la réconciliation sur l'email et non pas sur le sub
@@ -52,7 +52,7 @@ class AgentConnectController < ApplicationController
       flash[:error] = "Il n'y a pas de compte agent pour l'adresse mail #{callback_client.user_email}.<br />" \
                       "Vous devez utiliser Agent Connect avec l'adresse mail à laquelle vous avez reçu votre invitation sur #{current_domain.name}.<br />" \
                       "Vous pouvez également contacter le support à l'adresse <a href='mailto:#{current_domain.support_email}'>#{current_domain.support_email}</a> si le problème persiste."
-      redirect_to new_agent_session_path
+      redirect_to new_agent_session_path(force_login: true)
     end
   end
 
