@@ -1,3 +1,6 @@
+# dans les stubs, Webmock reconnaît les requêtes qui ont des query params uniquement si on passe explicitement
+# un with(query: hash_including({...}))
+
 API_URL = "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api".freeze
 
 RSpec.describe Ants::AppointmentSerializerAndListener do
@@ -27,7 +30,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
           body: { "A123456789" => { status: "validated", appointments: [] } }.to_json
         )
       stub_request(:post, "#{API_URL}/appointments")
-        .with(query: hash_including(application_id: "A123456789")) # Webmock ne répond pas à la requête POST avec des query params sans cette ligne
+        .with(query: hash_including(application_id: "A123456789"))
         .to_return(status: 200, body: { success: true }.to_json)
 
       perform_enqueued_jobs do
