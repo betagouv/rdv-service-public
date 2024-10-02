@@ -5,9 +5,8 @@ ul.list-group.list-group-flush
         i.fa.fa-check.fa-fw.mr-1.rdv-color-text-default-success
         | Motif :&nbsp;
         = rdv_wizard.motif.name
-      - unless rdv_wizard.invitation?
-        .col-auto
-          = link_to "modifier", path_to_motif_selection(rdv_wizard.params_to_selections)
+      .col-auto
+        = link_to "modifier", path_to_motif_selection(rdv_wizard.params_to_selections)
 
   - case rdv_wizard.motif.location_type
   - when Motif.location_types[:phone]
@@ -29,9 +28,8 @@ ul.list-group.list-group-flush
           i.fa.fa-check.fa-fw.mr-1.rdv-color-text-default-success
           | Lieu :&nbsp;
           = rdv_wizard.creneau.lieu.full_name
-        - unless rdv_wizard.invitation?
-          .col-auto
-            = link_to "modifier", path_to_lieu_selection(rdv_wizard.params_to_selections)
+        .col-auto
+          = link_to "modifier", path_to_lieu_selection(rdv_wizard.params_to_selections)
   - else
     = raise "unrecognized location_type: #{rdv_wizard.motif.location_type.inspect}"
 
@@ -41,22 +39,18 @@ ul.list-group.list-group-flush
         i.fa.fa-check.fa-fw.mr-1.rdv-color-text-default-success
         | Date du rendez-vous :&nbsp;
         = rdv_starts_at_and_duration(rdv_wizard.rdv, :human)
-      - unless rdv_wizard.invitation?
-        .col-auto
-          = link_to "modifier", path_to_creneau_selection(rdv_wizard.params_to_selections)
+      .col-auto
+        = link_to "modifier", path_to_creneau_selection(rdv_wizard.params_to_selections)
   - if rdv_wizard.is_a?(UserRdvWizard::Step3)
     li.list-group-item
       .row
         .col
           i.fa.fa-check.fa-fw.mr-1.rdv-color-text-default-success
           | Usager :&nbsp;
-          - if !rdv_wizard.invitation?
-            = users_to_sentence(rdv_wizard.users)
-          - else
-            = current_user.full_name
-        - unless rdv_wizard.invitation?
-          .col-auto
-            = link_to "modifier", new_users_rdv_wizard_step_path(step: 2, **@rdv_wizard.to_query)
+          = users_to_sentence(rdv_wizard.users)
+        .col-auto
+          - step_number = current_user&.signed_in_with_invitation_token? ? 1 : 2 # Les usagers connectés par invitation ont une étape de moins
+          = link_to "modifier", new_users_rdv_wizard_step_path(step: 1, **@rdv_wizard.to_query)
     li.list-group-item
       .row
         .col
