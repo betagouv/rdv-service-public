@@ -21,22 +21,12 @@ class HealthController < ApplicationController
     render(status: :ok, json: {})
   end
 
-  INTERVAL = 1.hour.freeze
-
   def jobs_scheduled
+    time_range = (1.hour.ago..2.minutes.ago) # petit délai pour laisser le temps au scheduler d’enqueue les jobs
     jobs_missed = Rails.configuration.good_job.cron.values.select do |job_config|
-      expected_enqueued_count = 0
-      t = 2.minutes.ago # petit délai pour laisser le temps au scheduler d’enqueue les jobs
-      loop do
-        t = Fugit.parse_cronish(job_config[:cron]).previous_time(t)
-        break if t <= INTERVAL.ago
-
-        expected_enqueued_count += 1
-      end
-      next if expected_enqueued_count.zero?
-
-      enqueued_count = GoodJob::Job.where(job_class: job_config[:class], queue_name: "cron", scheduled_at: INTERVAL.ago).count
-      enqueued_count < expected_enqueued_count
+      expected_enqueued_count = CronMonitor.expected_enqueued_count(job_config[:cron], time_range)
+      actual_enqueued_count = GoodJob::Job.where(job_class: job_config[:class], queue_name: "cron", scheduled_at: INTERVAL.ago).count
+      actual_enqueued_count < expected_enqueued_count
     end.pluck(:class)
 
     render(status: (jobs_missed.any? ? :service_unavailable : :ok), json: { jobs_missed: })
