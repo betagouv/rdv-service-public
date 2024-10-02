@@ -200,13 +200,13 @@ class User < ApplicationRecord
     nil
   end
 
-  def only_invited!(rdv: nil)
-    @only_invited = true
+  def mark_as_signed_in_with_invitation_token!(rdv: nil)
+    @signed_in_with_invitation_token = true
     @invitation_rdv = rdv
   end
 
-  def only_invited?
-    @only_invited == true
+  def signed_in_with_invitation_token?
+    @signed_in_with_invitation_token
   end
 
   def invited_for_rdv?(rdv)
@@ -249,13 +249,13 @@ class User < ApplicationRecord
   end
 
   def confirmation_required?
-    return false if only_invited?
+    return false if signed_in_with_invitation_token?
 
     super
   end
 
   def reconfirmation_required?
-    return false if only_invited?
+    return false if signed_in_with_invitation_token?
 
     super
   end

@@ -10,7 +10,7 @@ ruby:
     .col-md-6= f.input :first_name, placeholder: "Prénom", disabled: user.logged_once_with_franceconnect?
     .col-md-6= f.input :last_name, placeholder: "Nom"
   .form-row
-    - unless current_user.only_invited? || current_domain == Domain::RDV_MAIRIE
+    - unless current_user.signed_in_with_invitation_token? || current_domain == Domain::RDV_MAIRIE
       .col-md-6= f.input :birth_name, placeholder: "Nom de naissance", disabled: user.logged_once_with_franceconnect?
       .col-md-6= f.input :birth_date, as: :string, input_html: { type: "date" }, disabled: user.logged_once_with_franceconnect?
   - if rdv_wizard&.rdv&.requires_ants_predemande_number?
@@ -21,14 +21,14 @@ ruby:
         .fa.fa-info
       div= I18n.t("users.franceconnect_frozen_fields")
   = f.input :phone_number, as: :tel, required: rdv_wizard&.motif&.phone?
-  - if current_user.only_invited?
+  - if current_user.signed_in_with_invitation_token?
     = f.input :email, disabled: user.email.present? && !user.email_changed?, required: true
   - if user.phone_number.present? && !user.phone_number_mobile?
     .alert.alert-warning Vous ne recevrez pas de SMS avec ce numéro non-mobile
   div.mb-2 Préférences de notifications
   div= f.input :notify_by_email
   div= f.input :notify_by_sms
-  - unless current_user.only_invited? || current_domain == Domain::RDV_MAIRIE
+  - unless current_user.signed_in_with_invitation_token? || current_domain == Domain::RDV_MAIRIE
     - address_value = rdv_wizard.present? && user.address.nil? ? rdv_wizard.to_query[:where] : user.address
     = f.input :address, input_html: {value: address_value, class: "places-js-container" }, required: rdv_wizard&.motif&.home?
 

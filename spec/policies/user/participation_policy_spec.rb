@@ -65,9 +65,7 @@ RSpec.describe User::ParticipationPolicy, type: :policy do
   context "User is invited to participate" do
     let!(:participation) { create(:participation, user: user, rdv: rdv) }
 
-    before do
-      allow(user).to receive(:only_invited?).and_return(true)
-    end
+    before { user.mark_as_signed_in_with_invitation_token! }
 
     it_behaves_like "permit actions", :participation, :create?, :cancel?
     it_behaves_like "included in scope"
@@ -77,9 +75,7 @@ RSpec.describe User::ParticipationPolicy, type: :policy do
     let!(:rdv) { create(:rdv, :collectif, :without_users, organisation: organisation, agents: [agent], starts_at: Time.zone.yesterday) }
     let!(:participation) { create(:participation, user: user2, rdv: rdv) }
 
-    before do
-      participation.update(status: "revoked")
-    end
+    before { participation.update(status: "revoked") }
 
     it_behaves_like "not permit actions", :participation, :create?, :cancel?
     it_behaves_like "not included in scope"
