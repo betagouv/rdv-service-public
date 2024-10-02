@@ -13,6 +13,8 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
   include_context "rdv_mairie_api_authentication"
 
   let(:headers) do
+    # on définit ici les headers attendus sur chaque requête API à l’ANTS
+    # ce sont ceux définis dans le context rdv_mairie_api_authentication
     {
       "Accept" => "application/json",
       "Expect" => "",
@@ -36,12 +38,12 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
     let!(:create_stub) do
       stub_request(:post, "#{API_URL}/appointments")
         .with(
-          query: hash_including(
+          query: hash_including( # on utilise hash_including pour pouvoir tester management_url avec une regex
             application_id: "A123456789",
             appointment_date: "2020-04-20 08:00:00",
             meeting_point: "MDS Soleil",
             meeting_point_id: rdv.lieu.id.to_s,
-            management_url: %r{http://www\.rdv-mairie-test\.localhost/users/rdvs/\d+}
+            management_url: %r{http://www\.rdv-mairie-test\.localhost/users/rdvs/\d+} # on ne connaît pas encore l’ID du RDV
           ),
           headers:
         )
