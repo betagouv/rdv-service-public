@@ -12,7 +12,7 @@ API_URL = "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api".fr
 RSpec.describe Ants::AppointmentSerializerAndListener do
   include_context "rdv_mairie_api_authentication"
 
-  let(:ants_api_headers) do
+  let(:headers) do
     {
       "Accept" => "application/json",
       "Expect" => "",
@@ -30,7 +30,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
 
     let!(:status_stub) do
       stub_request(:get, "#{API_URL}/status")
-        .with(query: { application_ids: "A123456789" })
+        .with(query: { application_ids: "A123456789" }, headers:)
         .to_return(status: 200, body: { "A123456789" => { status: "validated", appointments: [] } }.to_json)
     end
     let!(:create_stub) do
@@ -43,7 +43,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
             meeting_point_id: rdv.lieu.id.to_s,
             management_url: %r{http://www\.rdv-mairie-test\.localhost/users/rdvs/\d+}
           ),
-          headers: ants_api_headers
+          headers:
         )
         .to_return(status: 200, body: { success: true }.to_json)
     end
@@ -93,7 +93,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
 
     let!(:status_stub) do
       stub_request(:get, "#{API_URL}/status")
-        .with(query: { application_ids: "A123456789" })
+        .with(query: { application_ids: "A123456789" }, headers:)
         .to_return(
           status: 200,
           body: {
@@ -120,7 +120,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
             meeting_point: "MDS Soleil",
             meeting_point_id: rdv.lieu.id,
           },
-          headers: ants_api_headers
+          headers:
         )
         .to_return(status: 200, body: { rowcount: 1 }.to_json)
     end
@@ -129,7 +129,6 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
       perform_enqueued_jobs do
         rdv.destroy
       end
-
       expect(status_stub).to have_been_requested.at_least_once # TODO: la requête ne devrait être faite qu’une fois
       expect(delete_stub).to have_been_requested.at_least_once # TODO: la requête ne devrait être faite qu’une fois
     end
@@ -144,7 +143,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
 
     let!(:status_stub) do
       stub_request(:get, "#{API_URL}/status")
-        .with(query: { application_ids: "A123456789" })
+        .with(query: { application_ids: "A123456789" }, headers:)
         .to_return(
           status: 200,
           body: {
@@ -171,7 +170,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
             meeting_point: "MDS Soleil",
             meeting_point_id: rdv.lieu.id,
           },
-          headers: ants_api_headers
+          headers:
         )
         .to_return(status: 200, body: { rowcount: 1 }.to_json)
     end
@@ -195,7 +194,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
 
     let!(:status_stub) do
       stub_request(:get, "#{API_URL}/status")
-        .with(query: { application_ids: "A123456789" })
+        .with(query: { application_ids: "A123456789" }, headers:)
         .to_return(
           status: 200,
           body: { "A123456789" => { status: "consumed", appointments: [] } }.to_json
@@ -221,7 +220,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
 
     let!(:status_stub) do
       stub_request(:get, "#{API_URL}/status")
-        .with(query: { application_ids: "A123456789" })
+        .with(query: { application_ids: "A123456789" }, headers:)
         .to_return(
           status: 200,
           body: {
@@ -248,7 +247,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
             meeting_point: "MDS Soleil",
             meeting_point_id: rdv.lieu.id,
           },
-          headers: ants_api_headers
+          headers:
         )
         .to_return(status: 200, body: { rowcount: 1 }.to_json)
     end
@@ -262,7 +261,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
             meeting_point: "MDS Soleil",
             meeting_point_id: rdv.lieu.id,
           },
-          headers: ants_api_headers
+          headers:
         )
         .to_return(status: 200, body: { success: true }.to_json)
     end
@@ -289,11 +288,8 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
 
     let!(:status_stub) do
       stub_request(:get, "#{API_URL}/status")
-        .with(query: { application_ids: "AABBCCDDEE" })
-        .to_return(
-          status: 200,
-          body: { "AABBCCDDEE" => { status: "validated", appointments: [] } }.to_json
-        )
+        .with(query: { application_ids: "AABBCCDDEE" }, headers:)
+        .to_return(status: 200, body: { "AABBCCDDEE" => { status: "validated", appointments: [] } }.to_json)
     end
     let!(:create_stub) do
       stub_request(:post, "#{API_URL}/appointments")
@@ -305,7 +301,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
             meeting_point: "MDS Soleil",
             meeting_point_id: rdv.lieu.id,
           },
-          headers: ants_api_headers
+          headers:
         )
         .to_return(status: 200, body: { success: true }.to_json)
     end
@@ -331,11 +327,8 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
 
     let!(:status_stub) do
       stub_request(:get, "#{API_URL}/status")
-        .with(query: { application_ids: "A123456789" })
-        .to_return(
-          status: 200,
-          body: { "A123456789" => { status: "validated", appointments: [] } }.to_json
-        )
+        .with(query: { application_ids: "A123456789" }, headers:)
+        .to_return(status: 200, body: { "A123456789" => { status: "validated", appointments: [] } }.to_json)
     end
     let!(:create_stub) do
       stub_request(:post, "#{API_URL}/appointments")
@@ -347,7 +340,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
             meeting_point: "Nouveau Lieu",
             meeting_point_id: rdv.lieu.id,
           },
-          headers: ants_api_headers
+          headers:
         )
         .to_return(status: 200, body: { success: true }.to_json)
     end
@@ -373,7 +366,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
 
     let!(:status_stub) do
       stub_request(:get, "#{API_URL}/status")
-        .with(query: { application_ids: "A123456789" })
+        .with(query: { application_ids: "A123456789" }, headers:)
         .to_return(
           status: 200,
           body: {
@@ -400,7 +393,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
             meeting_point: "MDS Soleil",
             meeting_point_id: rdv.lieu.id,
           },
-          headers: ants_api_headers
+          headers:
         )
         .to_return(status: 200, body: { rowcount: 1 }.to_json)
     end
