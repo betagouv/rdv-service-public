@@ -29,27 +29,25 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
           status: 200,
           body: { "A123456789" => { status: "validated", appointments: [] } }.to_json
         )
-      stub_request(:post, "#{API_URL}/appointments")
-        .with(query: hash_including(application_id: "A123456789"))
-        .to_return(status: 200, body: { success: true }.to_json)
-
-      perform_enqueued_jobs do
-        rdv.save!
-      end
-
-      expect(status_stub).to have_been_requested.at_least_once
-      expect(WebMock).to have_requested(:post, "#{API_URL}/appointments")
+      create_stub = stub_request(:post, "#{API_URL}/appointments")
         .with(
           query: hash_including(
             application_id: "A123456789",
             appointment_date: "2020-04-20 08:00:00",
             meeting_point: "MDS Soleil",
             meeting_point_id: rdv.lieu.id.to_s,
-            management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}"
+            management_url: %r{http://www\.rdv-mairie-test\.localhost/users/rdvs/\d+}
           ),
           headers: ants_api_headers
         )
-        .once
+        .to_return(status: 200, body: { success: true }.to_json)
+
+      perform_enqueued_jobs do
+        rdv.save!
+      end
+
+      expect(status_stub).to have_been_requested.at_least_once # TODO: la requête ne devrait être faite qu’une fois
+      expect(create_stub).to have_been_requested.once
     end
   end
 
