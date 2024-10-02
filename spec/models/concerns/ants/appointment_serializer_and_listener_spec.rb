@@ -1,5 +1,11 @@
-# dans les stubs, Webmock reconnaît les requêtes qui ont des query params uniquement si on passe explicitement
-# un with(query: hash_including({...}))
+# Ces specs sont entre des specs d’intégration et des tests E2E
+# on déclenche des comportements haut niveau comme la création ou la mise à jour d’un RDV
+# et on vérifie le contenu des requêtes envoyées à l’API de l’ANTS
+# On teste donc à la fois la définition des callbacks AR définis dans le concern,
+# mais aussi le fonctionnement des jobs de synchronisation
+#
+# note : dans les stubs, Webmock reconnaît les requêtes qui ont des query params
+# uniquement si on passe explicitement un with(query: hash_including({...}))
 
 API_URL = "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api".freeze
 
@@ -22,14 +28,13 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
     let(:user) { create(:user, ants_pre_demande_number: "A123456789", organisations: [organisation]) }
     let!(:rdv) { build(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
 
-    it "Créé l’appointment via l’API ANTS" do
-      status_stub = stub_request(:get, "#{API_URL}/status")
+    let!(:status_stub) do
+      stub_request(:get, "#{API_URL}/status")
         .with(query: { application_ids: "A123456789" })
-        .to_return(
-          status: 200,
-          body: { "A123456789" => { status: "validated", appointments: [] } }.to_json
-        )
-      create_stub = stub_request(:post, "#{API_URL}/appointments")
+        .to_return(status: 200, body: { "A123456789" => { status: "validated", appointments: [] } }.to_json)
+    end
+    let!(:create_stub) do
+      stub_request(:post, "#{API_URL}/appointments")
         .with(
           query: hash_including(
             application_id: "A123456789",
@@ -41,7 +46,9 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
           headers: ants_api_headers
         )
         .to_return(status: 200, body: { success: true }.to_json)
+    end
 
+    it "Créé l’appointment via l’API ANTS" do
       perform_enqueued_jobs do
         rdv.save!
       end
@@ -84,19 +91,8 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
     let(:user) { create(:user, ants_pre_demande_number: "A123456789", organisations: [organisation]) }
     let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
 
-    it "supprime l’appointment via l’API ANTS" do
-      delete_stub = stub_request(:delete, "#{API_URL}/appointments")
-        .with(
-          query: {
-            application_id: "A123456789",
-            appointment_date: "2020-04-20 08:00:00",
-            meeting_point: "MDS Soleil",
-            meeting_point_id: rdv.lieu.id,
-          },
-          headers: ants_api_headers
-        )
-        .to_return(status: 200, body: { rowcount: 1 }.to_json)
-      status_stub = stub_request(:get, "#{API_URL}/status")
+    let!(:status_stub) do
+      stub_request(:get, "#{API_URL}/status")
         .with(query: { application_ids: "A123456789" })
         .to_return(
           status: 200,
@@ -114,7 +110,22 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
             },
           }.to_json
         )
+    end
+    let!(:delete_stub) do
+      stub_request(:delete, "#{API_URL}/appointments")
+        .with(
+          query: {
+            application_id: "A123456789",
+            appointment_date: "2020-04-20 08:00:00",
+            meeting_point: "MDS Soleil",
+            meeting_point_id: rdv.lieu.id,
+          },
+          headers: ants_api_headers
+        )
+        .to_return(status: 200, body: { rowcount: 1 }.to_json)
+    end
 
+    it "supprime l’appointment via l’API ANTS" do
       perform_enqueued_jobs do
         rdv.destroy
       end
@@ -131,8 +142,8 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
     let(:user) { create(:user, ants_pre_demande_number: "A123456789", organisations: [organisation]) }
     let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
 
-    it "supprime l’appointment via l’API ANTS" do
-      status_stub = stub_request(:get, "#{API_URL}/status")
+    let!(:status_stub) do
+      stub_request(:get, "#{API_URL}/status")
         .with(query: { application_ids: "A123456789" })
         .to_return(
           status: 200,
@@ -150,7 +161,9 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
             },
           }.to_json
         )
-      delete_stub = stub_request(:delete, "#{API_URL}/appointments")
+    end
+    let!(:delete_stub) do
+      stub_request(:delete, "#{API_URL}/appointments")
         .with(
           query: {
             application_id: "A123456789",
@@ -161,7 +174,9 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
           headers: ants_api_headers
         )
         .to_return(status: 200, body: { rowcount: 1 }.to_json)
+    end
 
+    it "supprime l’appointment via l’API ANTS" do
       perform_enqueued_jobs do
         rdv.excused!
       end
@@ -178,14 +193,16 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
     let!(:user) { create(:user, ants_pre_demande_number: "A123456789", organisations: [organisation]) }
     let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
 
-    it "ne déclenche pas la création d’un nouvel appointment via l’API ANTS" do
-      status_stub = stub_request(:get, "#{API_URL}/status")
+    let!(:status_stub) do
+      stub_request(:get, "#{API_URL}/status")
         .with(query: { application_ids: "A123456789" })
         .to_return(
           status: 200,
           body: { "A123456789" => { status: "consumed", appointments: [] } }.to_json
         )
+    end
 
+    it "ne déclenche pas la création d’un nouvel appointment via l’API ANTS" do
       perform_enqueued_jobs do
         rdv.excused!
       end
@@ -202,10 +219,8 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
     let(:user) { create(:user, ants_pre_demande_number: "A123456789", organisations: [organisation]) }
     let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
 
-    before { rdv.excused! }
-
-    it "créé l’appointment via l’API ANTS" do
-      status_stub = stub_request(:get, "#{API_URL}/status")
+    let!(:status_stub) do
+      stub_request(:get, "#{API_URL}/status")
         .with(query: { application_ids: "A123456789" })
         .to_return(
           status: 200,
@@ -223,10 +238,22 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
             },
           }.to_json
         )
-      delete_stub = stub_request(:delete, "#{API_URL}/appointments")
-        .with(query: hash_including(application_id: "A123456789"))
+    end
+    let!(:delete_stub) do
+      stub_request(:delete, "#{API_URL}/appointments")
+        .with(
+          query: {
+            application_id: "A123456789",
+            appointment_date: "2020-04-20 08:00:00",
+            meeting_point: "MDS Soleil",
+            meeting_point_id: rdv.lieu.id,
+          },
+          headers: ants_api_headers
+        )
         .to_return(status: 200, body: { rowcount: 1 }.to_json)
-      create_stub = stub_request(:post, "#{API_URL}/appointments")
+    end
+    let!(:create_stub) do
+      stub_request(:post, "#{API_URL}/appointments")
         .with(
           query: {
             application_id: "A123456789",
@@ -238,7 +265,11 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
           headers: ants_api_headers
         )
         .to_return(status: 200, body: { success: true }.to_json)
+    end
 
+    before { rdv.excused! }
+
+    it "créé l’appointment via l’API ANTS" do
       perform_enqueued_jobs do
         rdv.seen!
       end
@@ -256,18 +287,32 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
     let!(:user) { create(:user, ants_pre_demande_number: "A123456789", organisations: [organisation]) }
     let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
 
-    it "créé un nouvel appointment via l’API ANTS" do
-      user.reload
-      create_stub = stub_request(:post, "#{API_URL}/appointments")
-        .with(query: hash_including(application_id: "AABBCCDDEE"))
-        .to_return(status: 200, body: { success: true }.to_json)
-      status_stub = stub_request(:get, "#{API_URL}/status")
+    let!(:status_stub) do
+      stub_request(:get, "#{API_URL}/status")
         .with(query: { application_ids: "AABBCCDDEE" })
         .to_return(
           status: 200,
           body: { "AABBCCDDEE" => { status: "validated", appointments: [] } }.to_json
         )
+    end
+    let!(:create_stub) do
+      stub_request(:post, "#{API_URL}/appointments")
+        .with(
+          query: {
+            application_id: "AABBCCDDEE",
+            appointment_date: "2020-04-20 08:00:00",
+            management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
+            meeting_point: "MDS Soleil",
+            meeting_point_id: rdv.lieu.id,
+          },
+          headers: ants_api_headers
+        )
+        .to_return(status: 200, body: { success: true }.to_json)
+    end
 
+    before { user.reload } # le comportement est flaky sans ce reload, je n’ai pas compris pourquoi
+
+    it "créé un nouvel appointment via l’API ANTS" do
       perform_enqueued_jobs do
         user.update(ants_pre_demande_number: "AABBCCDDEE")
       end
@@ -284,18 +329,32 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
     let!(:user) { create(:user, ants_pre_demande_number: "A123456789", organisations: [organisation]) }
     let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
 
-    it "déclenche une synchronisation avec l’ANTS" do
-      lieu.reload
-      create_stub = stub_request(:post, "#{API_URL}/appointments")
-        .with(query: hash_including(application_id: "A123456789"))
-        .to_return(status: 200, body: { success: true }.to_json)
-      status_stub = stub_request(:get, "#{API_URL}/status")
+    let!(:status_stub) do
+      stub_request(:get, "#{API_URL}/status")
         .with(query: { application_ids: "A123456789" })
         .to_return(
           status: 200,
           body: { "A123456789" => { status: "validated", appointments: [] } }.to_json
         )
+    end
+    let!(:create_stub) do
+      stub_request(:post, "#{API_URL}/appointments")
+        .with(
+          query: {
+            application_id: "A123456789",
+            appointment_date: "2020-04-20 08:00:00",
+            management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
+            meeting_point: "Nouveau Lieu",
+            meeting_point_id: rdv.lieu.id,
+          },
+          headers: ants_api_headers
+        )
+        .to_return(status: 200, body: { success: true }.to_json)
+    end
 
+    before { lieu.reload } # le comportement est flaky sans ce reload, je n’ai pas compris pourquoi
+
+    it "déclenche une synchronisation avec l’ANTS" do
       perform_enqueued_jobs do
         lieu.update(name: "Nouveau Lieu")
       end
@@ -312,9 +371,8 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
     let!(:user) { create(:user, ants_pre_demande_number: "A123456789", organisations: [organisation]) }
     let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
 
-    it "supprime l’appointment via l’API ANTS" do
-      user.reload
-      status_stub = stub_request(:get, "#{API_URL}/status")
+    let!(:status_stub) do
+      stub_request(:get, "#{API_URL}/status")
         .with(query: { application_ids: "A123456789" })
         .to_return(
           status: 200,
@@ -332,10 +390,24 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
             },
           }.to_json
         )
-      delete_stub = stub_request(:delete, "#{API_URL}/appointments")
-        .with(query: hash_including(application_id: "A123456789"))
+    end
+    let!(:delete_stub) do
+      stub_request(:delete, "#{API_URL}/appointments")
+        .with(
+          query: {
+            application_id: "A123456789",
+            appointment_date: "2020-04-20 08:00:00",
+            meeting_point: "MDS Soleil",
+            meeting_point_id: rdv.lieu.id,
+          },
+          headers: ants_api_headers
+        )
         .to_return(status: 200, body: { rowcount: 1 }.to_json)
+    end
 
+    before { user.reload } # le comportement est flaky sans ce reload, je n’ai pas compris pourquoi
+
+    it "supprime l’appointment via l’API ANTS" do
       perform_enqueued_jobs do
         user.participations.first.destroy
       end
