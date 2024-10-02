@@ -8,7 +8,7 @@ class Agent::RdvPolicy < DefaultAgentPolicy
   end
 
   def destroy?
-    admin_and_same_org?
+    current_agent.admin_in_organisation?(@record.organisation)
   end
 
   def self.explain(organisation, agent)
@@ -27,6 +27,16 @@ class Agent::RdvPolicy < DefaultAgentPolicy
 
   def same_service?
     @record.motif.service.in?(current_agent.services)
+  end
+
+  def same_agent_or_has_access?
+    if current_agent.in?(@record.agents)
+      true
+    elsif current_agent.in_organisation?(@record.organisation)
+      same_service? || current_agent.secretaire? || current_agent.admin_in_organisation?(@record.organisation)
+    else
+      false
+    end
   end
 
   class Scope < Scope
