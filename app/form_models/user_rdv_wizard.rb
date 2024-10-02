@@ -27,7 +27,7 @@ module UserRdvWizard
     end
 
     def invitation?
-      @attributes[:invitation_token].present?
+      @user&.signed_in_with_invitation_token?
     end
 
     def params_to_selections
