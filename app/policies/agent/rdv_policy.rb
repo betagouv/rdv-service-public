@@ -8,7 +8,7 @@ class Agent::RdvPolicy < DefaultAgentPolicy
   end
 
   def destroy?
-    current_agent.admin_in_organisation?(@record.organisation)
+    current_agent.access_level_in(@record.organisation) == AgentRole::ACCESS_LEVEL_ADMIN
   end
 
   def self.explain(organisation, agent)
@@ -30,10 +30,13 @@ class Agent::RdvPolicy < DefaultAgentPolicy
   end
 
   def same_agent_or_has_access?
-    if current_agent.in?(@record.agents)
+    return true if current_agent.in?(@record.agents)
+
+    case current_agent.access_level_in(@record.organisation)
+    when AgentRole::ACCESS_LEVEL_ADMIN
       true
-    elsif current_agent.in_organisation?(@record.organisation)
-      same_service? || current_agent.secretaire? || current_agent.admin_in_organisation?(@record.organisation)
+    when AgentRole::ACCESS_LEVEL_BASIC
+      same_service? || current_agent.secretaire?
     else
       false
     end
