@@ -59,7 +59,7 @@ class Agent::RdvPolicy < ApplicationPolicy
       my_rdvs = Rdv.joins(:agents_rdvs).where(agents_rdvs: { agent_id: current_agent.id })
 
       if current_agent.secretaire?
-        rdvs_of_all_my_orgs = scope.where(organisation: current_agent.organisations)
+        rdvs_of_all_my_orgs = Rdv.where(organisation: current_agent.organisations)
         scope.where_id_in_subqueries([my_rdvs, rdvs_of_all_my_orgs])
       else
         rdv_of_my_admin_orgs = Rdv.where(organisation: current_agent.admin_orgs)
