@@ -16,7 +16,7 @@ class RdvUpcomingReminderJob < ApplicationJob
   discard_on(TooLateError)
 
   discard_on(ActiveJob::DeserializationError) do |_job, error|
-    # Si le RDV a été supprimé avant l’éxecution du job (ou d’un retry)
+    # Si le RDV a été supprimé avant l’éxecution du job (ou d’un retry)
     # C’est un comportement attendu, on ne veut pas retry ni être notifié sur Sentry
     next if error.cause.is_a?(ActiveRecord::RecordNotFound)
 

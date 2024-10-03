@@ -39,7 +39,7 @@ module CreneauxSearch::Calculator
     end
 
     def ranges_for(plage_ouverture, datetime_range)
-      occurrences = plage_ouverture.occurrences_for(datetime_range, only_future: true)
+      occurrences = plage_ouverture.occurrences_for(datetime_range)
 
       occurrences.map do |occurrence|
         next if occurrence.ends_at < Time.zone.now
@@ -164,7 +164,7 @@ module CreneauxSearch::Calculator
         busy_times = []
         absences.each do |absence|
           if absence.recurrence
-            absence.occurrences_for(range, only_future: true).each do |absence_occurrence|
+            absence.occurrences_for(range).each do |absence_occurrence|
               next if absence_out_of_range?(absence_occurrence, range)
 
               busy_times << BusyTime.new(absence_occurrence)

@@ -100,6 +100,6 @@ RSpec.describe "User signs up and signs in" do
   end
 
   def expect_flash_info(message)
-    expect(page).to have_selector(".alert.alert-info", text: message)
+    expect(page).to have_selector(".fr-alert.fr-alert--info", text: message)
   end
 end
