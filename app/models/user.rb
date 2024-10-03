@@ -200,7 +200,7 @@ class User < ApplicationRecord
     nil
   end
 
-  def mark_as_signed_in_with_invitation_token!(rdv: nil)
+  def signed_in_with_invitation_token!(rdv: nil)
     @signed_in_with_invitation_token = true
     @invitation_rdv = rdv
   end

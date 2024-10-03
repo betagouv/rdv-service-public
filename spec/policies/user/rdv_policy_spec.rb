@@ -46,7 +46,7 @@ RSpec.describe User::RdvPolicy, type: :policy do
   end
 
   context "User signed in with an invitation token" do
-    before { user.mark_as_signed_in_with_invitation_token! }
+    before { user.signed_in_with_invitation_token! }
 
     it_behaves_like "permit actions", :rdv, :new?, :create?
     it_behaves_like "not permit actions", :rdv, :index?, :edit?, :update?, :creneaux?, :cancel?, :show?
@@ -81,7 +81,7 @@ RSpec.describe User::RdvPolicy, type: :policy do
     context "User is invited, rdv has no users" do
       let(:rdv) { create(:rdv, :collectif, :without_users, organisation: organisation, agents: [agent]) }
 
-      before { user.mark_as_signed_in_with_invitation_token! }
+      before { user.signed_in_with_invitation_token! }
 
       it_behaves_like "permit actions", :rdv, :new?
       it_behaves_like "not permit actions", :rdv, :index?, :edit?, :update?, :creneaux?, :cancel?, :show?, :create?
