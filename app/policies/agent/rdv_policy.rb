@@ -12,7 +12,8 @@ class Agent::RdvPolicy < ApplicationPolicy
   alias edit? update?
   alias status? update?
 
-  # Pour le moment nous n'avons qu'un seul niveau d'accès à un RDV
+  # Pour le moment nous n'avons qu'un seul niveau d'accès à un RDV,
+  # qui permet à la fois de l'afficher et de le modifier
   alias show? update?
   alias versions? show?
 
