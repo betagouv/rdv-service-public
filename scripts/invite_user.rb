@@ -6,15 +6,12 @@
 # puis charger l'url renvoyée en local
 class InviteUser
   def self.run_and_get_invitation_link!(user, organisation)
-    user.assign_rdv_invitation_token
-    user.save!
-
+    invitation_token = user.set_rdv_invitation_token!
     motif = organisation.motifs.where.not(motif_category_id: nil).last
 
     city_code = GeoCoding.new.get_geolocation_results(user.address, organisation.territory.departement_number)[:city_code]
     street_ban_id = GeoCoding.new.get_geolocation_results(user.address, organisation.territory.departement_number)[:street_ban_id]
     longitude, latitude = GeoCoding.new.find_geo_coordinates(user.address)
-    invitation_token = user.rdv_invitation_token
     organisation_id = organisation.id
     motif_category_short_name = motif.motif_category.short_name
     address = user.address

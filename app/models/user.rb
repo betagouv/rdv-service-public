@@ -223,8 +223,19 @@ class User < ApplicationRecord
     end
   end
 
-  def assign_rdv_invitation_token
-    self.rdv_invitation_token = generate_rdv_invitation_token
+  def set_rdv_invitation_token!
+    self.rdv_invitation_token_updated_at = Time.zone.now
+
+    if rdv_invitation_token.nil?
+      assign_attributes(
+        rdv_invitation_token: generate_rdv_invitation_token,
+        invited_through: "external"
+      )
+    end
+
+    save!
+
+    rdv_invitation_token
   end
 
   def ants_pre_demande_number=(value)
