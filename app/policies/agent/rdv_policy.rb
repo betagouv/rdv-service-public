@@ -1,4 +1,6 @@
 class Agent::RdvPolicy < ApplicationPolicy
+  alias current_agent pundit_user
+
   def update?
     same_agent_or_has_access?
   end
@@ -48,12 +50,9 @@ class Agent::RdvPolicy < ApplicationPolicy
     end
   end
 
-  def current_agent
-    # TODO: pundit_user est un AgentOrganisationContext, il faut que ça change
-    pundit_user.agent
-  end
-
   class Scope < Scope
+    alias current_agent pundit_user
+
     def resolve
       my_rdvs = Rdv.joins(:agents_rdvs).where(agents_rdvs: { agent_id: current_agent.id })
 
@@ -67,13 +66,5 @@ class Agent::RdvPolicy < ApplicationPolicy
         scope.where_id_in_subqueries([my_rdvs, rdv_of_my_admin_orgs, rdv_of_my_basic_orgs])
       end
     end
-
-    def current_agent
-      # TODO: pundit_user est un AgentOrganisationContext, il faut que ça change
-      pundit_user.agent
-    end
-  end
-
-  class DepartementScope < Scope
   end
 end
