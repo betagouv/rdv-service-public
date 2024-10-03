@@ -1,20 +1,20 @@
 class Agent::RdvPolicy < ApplicationPolicy
   include CurrentAgentInPolicyConcern
 
+  def create?
+    true
+  end
+  alias new? create?
+
   def update?
     same_agent_or_has_access?
   end
-
   alias edit? update?
   alias status? update?
 
   # Pour le moment nous n'avons qu'un seul niveau d'accès à un RDV
   alias show? update?
   alias versions? show?
-
-  def create?
-    true
-  end
 
   def destroy?
     current_agent.access_level_in(@record.organisation) == AgentRole::ACCESS_LEVEL_ADMIN
