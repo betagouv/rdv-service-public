@@ -7,11 +7,10 @@
 # note : dans les stubs, Webmock reconnaît les requêtes qui ont des query params
 # uniquement si on passe explicitement un with(query: hash_including({...}))
 
-API_URL = "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api".freeze
-
 RSpec.describe Ants::AppointmentSerializerAndListener do
   include_context "rdv_mairie_api_authentication"
 
+  let(:api_url) { "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api" }
   let(:headers) do
     # on définit ici les headers attendus sur chaque requête API à l’ANTS
     # ce sont ceux définis dans le context rdv_mairie_api_authentication
@@ -31,12 +30,12 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
     let!(:rdv) { build(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
 
     let!(:status_stub) do
-      stub_request(:get, "#{API_URL}/status")
+      stub_request(:get, "#{api_url}/status")
         .with(query: { application_ids: "A123456789" }, headers:)
         .to_return(status: 200, body: { "A123456789" => { status: "validated", appointments: [] } }.to_json)
     end
     let!(:create_stub) do
-      stub_request(:post, "#{API_URL}/appointments")
+      stub_request(:post, "#{api_url}/appointments")
         .with(
           query: hash_including( # on utilise hash_including pour pouvoir tester management_url avec une regex
             application_id: "A123456789",
@@ -94,7 +93,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
     let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
 
     let!(:status_stub) do
-      stub_request(:get, "#{API_URL}/status")
+      stub_request(:get, "#{api_url}/status")
         .with(query: { application_ids: "A123456789" }, headers:)
         .to_return(
           status: 200,
@@ -114,7 +113,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
         )
     end
     let!(:delete_stub) do
-      stub_request(:delete, "#{API_URL}/appointments")
+      stub_request(:delete, "#{api_url}/appointments")
         .with(
           query: {
             application_id: "A123456789",
@@ -144,7 +143,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
     let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
 
     let!(:status_stub) do
-      stub_request(:get, "#{API_URL}/status")
+      stub_request(:get, "#{api_url}/status")
         .with(query: { application_ids: "A123456789" }, headers:)
         .to_return(
           status: 200,
@@ -164,7 +163,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
         )
     end
     let!(:delete_stub) do
-      stub_request(:delete, "#{API_URL}/appointments")
+      stub_request(:delete, "#{api_url}/appointments")
         .with(
           query: {
             application_id: "A123456789",
@@ -195,7 +194,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
     let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
 
     let!(:status_stub) do
-      stub_request(:get, "#{API_URL}/status")
+      stub_request(:get, "#{api_url}/status")
         .with(query: { application_ids: "A123456789" }, headers:)
         .to_return(
           status: 200,
@@ -209,7 +208,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
       end
 
       expect(status_stub).to have_been_requested.at_least_once # TODO: la requête ne devrait être faite qu’une fois
-      expect(WebMock).not_to have_requested(:post, "#{API_URL}/appointments")
+      expect(WebMock).not_to have_requested(:post, "#{api_url}/appointments")
     end
   end
 
@@ -221,7 +220,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
     let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
 
     let!(:status_stub) do
-      stub_request(:get, "#{API_URL}/status")
+      stub_request(:get, "#{api_url}/status")
         .with(query: { application_ids: "A123456789" }, headers:)
         .to_return(
           status: 200,
@@ -241,7 +240,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
         )
     end
     let!(:delete_stub) do
-      stub_request(:delete, "#{API_URL}/appointments")
+      stub_request(:delete, "#{api_url}/appointments")
         .with(
           query: {
             application_id: "A123456789",
@@ -254,7 +253,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
         .to_return(status: 200, body: { rowcount: 1 }.to_json)
     end
     let!(:create_stub) do
-      stub_request(:post, "#{API_URL}/appointments")
+      stub_request(:post, "#{api_url}/appointments")
         .with(
           query: {
             application_id: "A123456789",
@@ -289,12 +288,12 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
     let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
 
     let!(:status_stub) do
-      stub_request(:get, "#{API_URL}/status")
+      stub_request(:get, "#{api_url}/status")
         .with(query: { application_ids: "AABBCCDDEE" }, headers:)
         .to_return(status: 200, body: { "AABBCCDDEE" => { status: "validated", appointments: [] } }.to_json)
     end
     let!(:create_stub) do
-      stub_request(:post, "#{API_URL}/appointments")
+      stub_request(:post, "#{api_url}/appointments")
         .with(
           query: {
             application_id: "AABBCCDDEE",
@@ -328,12 +327,12 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
     let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
 
     let!(:status_stub) do
-      stub_request(:get, "#{API_URL}/status")
+      stub_request(:get, "#{api_url}/status")
         .with(query: { application_ids: "A123456789" }, headers:)
         .to_return(status: 200, body: { "A123456789" => { status: "validated", appointments: [] } }.to_json)
     end
     let!(:create_stub) do
-      stub_request(:post, "#{API_URL}/appointments")
+      stub_request(:post, "#{api_url}/appointments")
         .with(
           query: {
             application_id: "A123456789",
@@ -367,7 +366,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
     let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
 
     let!(:status_stub) do
-      stub_request(:get, "#{API_URL}/status")
+      stub_request(:get, "#{api_url}/status")
         .with(query: { application_ids: "A123456789" }, headers:)
         .to_return(
           status: 200,
@@ -387,7 +386,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
         )
     end
     let!(:delete_stub) do
-      stub_request(:delete, "#{API_URL}/appointments")
+      stub_request(:delete, "#{api_url}/appointments")
         .with(
           query: {
             application_id: "A123456789",
