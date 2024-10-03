@@ -5,8 +5,8 @@ RSpec.describe RdvEndingShortlyBeforePresenter, type: :presenter do
     subject { presenter.warning_message }
 
     before do
-      dbl = instance_double(Agent::RdvPolicy::Scope, in_scope?: in_scope_mock_value)
-      allow(Agent::RdvPolicy::Scope).to receive(:new).with(agent_context, Rdv).and_return(dbl)
+      dbl = instance_double(Agent::RdvPolicy::DepartementScope, in_scope?: in_scope_mock_value)
+      allow(Agent::RdvPolicy::DepartementScope).to receive(:new).with(agent_context, Rdv).and_return(dbl)
     end
 
     context "same agent (=> in scope)" do
