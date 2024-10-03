@@ -25,7 +25,7 @@ class HealthController < ApplicationController
     time_range = (1.hour.ago..2.minutes.ago) # petit délai pour laisser le temps au scheduler d’enqueue les jobs
     jobs_missed = Rails.configuration.good_job.cron.values.select do |job_config|
       expected_enqueued_count = CronMonitor.expected_enqueued_count(job_config[:cron], time_range)
-      actual_enqueued_count = GoodJob::Job.where(job_class: job_config[:class], queue_name: "cron", scheduled_at: INTERVAL.ago).count
+      actual_enqueued_count = GoodJob::Job.where(job_class: job_config[:class], queue_name: "cron", scheduled_at: (1.hour.ago..Time.zone.now)).count
       actual_enqueued_count < expected_enqueued_count
     end.pluck(:class)
 
