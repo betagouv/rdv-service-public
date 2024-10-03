@@ -1,7 +1,13 @@
-class Agent::RdvPolicy < DefaultAgentPolicy
-  def status?
+class Agent::RdvPolicy < ApplicationPolicy
+  def update?
     same_agent_or_has_access?
   end
+
+  alias edit? update?
+  alias status? update?
+
+  # Pour le moment nous n'avons qu'un seul niveau d'accès à un RDV
+  alias show? update?
 
   def create?
     true
@@ -42,27 +48,32 @@ class Agent::RdvPolicy < DefaultAgentPolicy
     end
   end
 
+  def current_agent
+    # TODO: pundit_user est un AgentOrganisationContext, il faut que ça change
+    pundit_user.agent
+  end
+
   class Scope < Scope
     def resolve
-      organisation_scope = scope.where(organisation: current_agent.organisations)
-      unless context.can_access_others_planning?
-        organisation_scope = organisation_scope.joins(%i[motif agents_rdvs]).where(motifs: { service: current_agent.services })
-          .or(Rdv.where("agents_rdvs.agent_id": current_agent.id))
+      my_rdvs = Rdv.joins(:agents_rdvs).where(agents_rdvs: { agent_id: current_agent.id })
+
+      if current_agent.secretaire?
+        rdvs_of_all_my_orgs = scope.where(organisation: current_agent.organisations)
+        scope.where_id_in_subqueries([my_rdvs, rdvs_of_all_my_orgs])
+      else
+        rdv_of_my_admin_orgs = Rdv.where(organisation: current_agent.admin_orgs)
+        rdv_of_my_basic_orgs = Rdv.where(organisation: current_agent.basic_orgs)
+          .joins(:motif).where(motifs: { service: current_agent.services })
+        scope.where_id_in_subqueries([my_rdvs, rdv_of_my_admin_orgs, rdv_of_my_basic_orgs])
       end
-      organisation_scope
+    end
+
+    def current_agent
+      # TODO: pundit_user est un AgentOrganisationContext, il faut que ça change
+      pundit_user.agent
     end
   end
 
   class DepartementScope < Scope
-    def resolve
-      if context.can_access_others_planning?
-        scope.where(organisation: current_agent.organisations)
-      else
-        scope.joins(%i[motif agents_rdvs])
-          .where(organisation: current_agent.organisations)
-          .where(motifs: { service: current_agent.services })
-          .or(Rdv.where("agents_rdvs.agent_id": current_agent.id))
-      end
-    end
   end
 end
