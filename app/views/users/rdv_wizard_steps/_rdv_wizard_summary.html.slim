@@ -49,8 +49,8 @@ ul.list-group.list-group-flush
           | Usager :&nbsp;
           = users_to_sentence(rdv_wizard.users)
         .col-auto
-          - step_number = current_user&.signed_in_with_invitation_token? ? 1 : 2 # Les usagers connectés par invitation ont une étape de moins
-          = link_to "modifier", new_users_rdv_wizard_step_path(step: 1, **@rdv_wizard.to_query)
+          - step = current_user&.signed_in_with_invitation_token? ? 1 : 2 # Les usagers connectés par invitation ont une étape de moins
+          = link_to "modifier", new_users_rdv_wizard_step_path(step: , **@rdv_wizard.to_query)
     li.list-group-item
       .row
         .col
