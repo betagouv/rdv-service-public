@@ -25,7 +25,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
 
   describe "Création de RDV, l’usager a un numéro de pré-demande ANTS" do
     let(:organisation) { create(:organisation, verticale: :rdv_mairie) }
-    let(:lieu) { create(:lieu, organisation:, name: "MDS Soleil") }
+    let(:lieu) { create(:lieu, organisation:, name: "Mairie de Saumur") }
     let(:motif) { create(:motif, motif_category: create(:motif_category, :passeport)) }
     let(:user) { create(:user, ants_pre_demande_number: "A123456789", organisations: [organisation]) }
     let!(:rdv) { build(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
@@ -41,7 +41,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
           query: hash_including( # on utilise hash_including pour pouvoir tester management_url avec une regex
             application_id: "A123456789",
             appointment_date: "2020-04-20 08:00:00",
-            meeting_point: "MDS Soleil",
+            meeting_point: "Mairie de Saumur",
             meeting_point_id: rdv.lieu.id.to_s,
             management_url: %r{http://www\.rdv-mairie-test\.localhost/users/rdvs/\d+} # on ne connaît pas encore l’ID du RDV
           ),
@@ -62,7 +62,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
 
   describe "Création de RDV, l’usager n’a pas de numéro de pré-demande ANTS" do
     let(:organisation) { create(:organisation, verticale: :rdv_mairie) }
-    let(:lieu) { create(:lieu, organisation:, name: "MDS Soleil") }
+    let(:lieu) { create(:lieu, organisation:, name: "Mairie de Saumur") }
     let(:motif) { create(:motif, motif_category: create(:motif_category, :passeport)) }
     let(:user) { create(:user, ants_pre_demande_number: "", organisations: [organisation]) }
     let(:rdv) { build(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
@@ -88,7 +88,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
 
   describe "Suppression de RDV" do
     let(:organisation) { create(:organisation, verticale: :rdv_mairie) }
-    let(:lieu) { create(:lieu, organisation:, name: "MDS Soleil") }
+    let(:lieu) { create(:lieu, organisation:, name: "Mairie de Saumur") }
     let(:motif) { create(:motif, motif_category: create(:motif_category, :passeport)) }
     let(:user) { create(:user, ants_pre_demande_number: "A123456789", organisations: [organisation]) }
     let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
@@ -104,7 +104,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
               appointments: [
                 {
                   management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
-                  meeting_point: "MDS Soleil",
+                  meeting_point: "Mairie de Saumur",
                   meeting_point_id: rdv.lieu.id,
                   appointment_date: "2020-04-20 08:00:00",
                 },
@@ -119,7 +119,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
           query: {
             application_id: "A123456789",
             appointment_date: "2020-04-20 08:00:00",
-            meeting_point: "MDS Soleil",
+            meeting_point: "Mairie de Saumur",
             meeting_point_id: rdv.lieu.id,
           },
           headers:
@@ -138,7 +138,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
 
   describe "Annulation de RDV" do
     let(:organisation) { create(:organisation, verticale: :rdv_mairie) }
-    let(:lieu) { create(:lieu, organisation:, name: "MDS Soleil") }
+    let(:lieu) { create(:lieu, organisation:, name: "Mairie de Saumur") }
     let(:motif) { create(:motif, motif_category: create(:motif_category, :passeport)) }
     let(:user) { create(:user, ants_pre_demande_number: "A123456789", organisations: [organisation]) }
     let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
@@ -154,7 +154,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
               appointments: [
                 {
                   management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
-                  meeting_point: "MDS Soleil",
+                  meeting_point: "Mairie de Saumur",
                   meeting_point_id: rdv.lieu.id,
                   appointment_date: "2020-04-20 08:00:00",
                 },
@@ -169,7 +169,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
           query: {
             application_id: "A123456789",
             appointment_date: "2020-04-20 08:00:00",
-            meeting_point: "MDS Soleil",
+            meeting_point: "Mairie de Saumur",
             meeting_point_id: rdv.lieu.id,
           },
           headers:
@@ -189,7 +189,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
 
   describe "Annulation de RDV, l’API de l’ANTS renvoie un statut consumed" do
     let(:organisation) { create(:organisation, verticale: :rdv_mairie) }
-    let(:lieu) { create(:lieu, organisation:, name: "MDS Soleil") }
+    let(:lieu) { create(:lieu, organisation:, name: "Mairie de Saumur") }
     let(:motif) { create(:motif, motif_category: create(:motif_category, :passeport)) }
     let!(:user) { create(:user, ants_pre_demande_number: "A123456789", organisations: [organisation]) }
     let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
@@ -215,7 +215,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
 
   describe "le RDV est marqué comme vu alors qu’il avait été annulé" do
     let(:organisation) { create(:organisation, verticale: :rdv_mairie) }
-    let(:lieu) { create(:lieu, organisation:, name: "MDS Soleil") }
+    let(:lieu) { create(:lieu, organisation:, name: "Mairie de Saumur") }
     let(:motif) { create(:motif, motif_category: create(:motif_category, :passeport)) }
     let(:user) { create(:user, ants_pre_demande_number: "A123456789", organisations: [organisation]) }
     let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
@@ -231,7 +231,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
               appointments: [
                 {
                   management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
-                  meeting_point: "MDS Soleil",
+                  meeting_point: "Mairie de Saumur",
                   meeting_point_id: rdv.lieu.id,
                   appointment_date: "2020-04-20 08:00:00",
                 },
@@ -246,7 +246,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
           query: {
             application_id: "A123456789",
             appointment_date: "2020-04-20 08:00:00",
-            meeting_point: "MDS Soleil",
+            meeting_point: "Mairie de Saumur",
             meeting_point_id: rdv.lieu.id,
           },
           headers:
@@ -260,7 +260,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
             application_id: "A123456789",
             appointment_date: "2020-04-20 08:00:00",
             management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
-            meeting_point: "MDS Soleil",
+            meeting_point: "Mairie de Saumur",
             meeting_point_id: rdv.lieu.id,
           },
           headers:
@@ -283,7 +283,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
 
   describe "l’usager change de numéro de pré-demande ANTS après avoir pris RDV avec un précédent numéro" do
     let(:organisation) { create(:organisation, verticale: :rdv_mairie) }
-    let(:lieu) { create(:lieu, organisation:, name: "MDS Soleil") }
+    let(:lieu) { create(:lieu, organisation:, name: "Mairie de Saumur") }
     let(:motif) { create(:motif, motif_category: create(:motif_category, :passeport)) }
     let!(:user) { create(:user, ants_pre_demande_number: "A123456789", organisations: [organisation]) }
     let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
@@ -300,7 +300,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
             application_id: "AABBCCDDEE",
             appointment_date: "2020-04-20 08:00:00",
             management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
-            meeting_point: "MDS Soleil",
+            meeting_point: "Mairie de Saumur",
             meeting_point_id: rdv.lieu.id,
           },
           headers:
@@ -322,7 +322,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
 
   describe "Le lieu change de nom" do
     let(:organisation) { create(:organisation, verticale: :rdv_mairie) }
-    let(:lieu) { create(:lieu, organisation:, name: "MDS Soleil") }
+    let(:lieu) { create(:lieu, organisation:, name: "Mairie de Saumur") }
     let(:motif) { create(:motif, motif_category: create(:motif_category, :passeport)) }
     let!(:user) { create(:user, ants_pre_demande_number: "A123456789", organisations: [organisation]) }
     let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
@@ -361,7 +361,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
 
   describe "un usager est retiré du RDV" do
     let(:organisation) { create(:organisation, verticale: :rdv_mairie) }
-    let(:lieu) { create(:lieu, organisation:, name: "MDS Soleil") }
+    let(:lieu) { create(:lieu, organisation:, name: "Mairie de Saumur") }
     let(:motif) { create(:motif, motif_category: create(:motif_category, :passeport)) }
     let!(:user) { create(:user, ants_pre_demande_number: "A123456789", organisations: [organisation]) }
     let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
@@ -377,7 +377,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
               appointments: [
                 {
                   management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
-                  meeting_point: "MDS Soleil",
+                  meeting_point: "Mairie de Saumur",
                   meeting_point_id: rdv.lieu.id,
                   appointment_date: "2020-04-20 08:00:00",
                 },
@@ -392,7 +392,7 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
           query: {
             application_id: "A123456789",
             appointment_date: "2020-04-20 08:00:00",
-            meeting_point: "MDS Soleil",
+            meeting_point: "Mairie de Saumur",
             meeting_point_id: rdv.lieu.id,
           },
           headers:
