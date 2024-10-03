@@ -1,4 +1,6 @@
 class Agent::RdvPolicy < ApplicationPolicy
+  include CurrentAgentInPolicyConcern
+
   def update?
     same_agent_or_has_access?
   end
@@ -8,6 +10,7 @@ class Agent::RdvPolicy < ApplicationPolicy
 
   # Pour le moment nous n'avons qu'un seul niveau d'accès à un RDV
   alias show? update?
+  alias versions? show?
 
   def create?
     true
@@ -48,12 +51,9 @@ class Agent::RdvPolicy < ApplicationPolicy
     end
   end
 
-  def current_agent
-    # TODO: pundit_user est un AgentOrganisationContext, il faut que ça change
-    pundit_user.agent
-  end
-
   class Scope < Scope
+    include CurrentAgentInPolicyConcern
+
     def resolve
       my_rdvs = Rdv.joins(:agents_rdvs).where(agents_rdvs: { agent_id: current_agent.id })
 
@@ -66,11 +66,6 @@ class Agent::RdvPolicy < ApplicationPolicy
           .joins(:motif).where(motifs: { service: current_agent.services })
         scope.where_id_in_subqueries([my_rdvs, rdv_of_my_admin_orgs, rdv_of_my_basic_orgs])
       end
-    end
-
-    def current_agent
-      # TODO: pundit_user est un AgentOrganisationContext, il faut que ça change
-      pundit_user.agent
     end
   end
 
