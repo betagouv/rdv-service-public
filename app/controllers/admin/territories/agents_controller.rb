@@ -48,7 +48,7 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
   def create
     all_params = params.require(:admin_agent).permit(:email, service_ids: [], organisation_ids: [])
     new_agent = Agent.new(all_params)
-    authorize(new_agent, policy_class: Configuration::AgentPolicy)
+    authorize(new_agent, policy_class: ::Configuration::AgentPolicy)
 
     create_agent = AdminCreatesAgent.new(
       agent_params: all_params.slice(:email, :service_ids),
@@ -84,6 +84,6 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
 
   def set_agent
     @agent = Agent.active.find(params[:id])
-    authorize(@agent, policy_class: Configuration::AgentPolicy)
+    authorize(@agent, policy_class: ::Configuration::AgentPolicy)
   end
 end
