@@ -17,8 +17,12 @@ class UserAuthController < ApplicationController
     end
   end
 
-  def authorize(record, *args)
-    super([:user, record], *args)
+  def authorize(record, query = nil, policy_class: nil)
+    if policy_class
+      super
+    else
+      raise "please specify an explicit `policy_class` parameter"
+    end
   end
 
   def policy_scope(clasz)

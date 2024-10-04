@@ -18,8 +18,12 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
       end
   end
 
-  def authorize(record, *args)
-    super([:agent, record], *args)
+  def authorize(record, query = nil, policy_class: nil)
+    if policy_class
+      super
+    else
+      raise "please specify an explicit `policy_class` parameter"
+    end
   end
 
   # Rescuable exceptions
