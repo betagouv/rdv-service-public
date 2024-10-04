@@ -48,7 +48,7 @@ class Users::RelativesController < UserAuthController
   private
 
   def set_user
-    @user = policy_scope(User).find(params.require(:id))
+    @user = policy_scope(User, policy_scope_class: User::UserPolicy::Scope).find(params.require(:id))
   end
 
   def user_params

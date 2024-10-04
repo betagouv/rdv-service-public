@@ -1,7 +1,7 @@
 class Api::V1::AbsencesController < Api::V1::AgentAuthBaseController
   before_action :retrieve_absence, only: %i[show update destroy]
   def index
-    absences = policy_scope(Absence)
+    absences = policy_scope(Absence, policy_scope_class: Agent::AbsencePolicy::Scope)
     render_collection(absences.by_starts_at)
   end
 

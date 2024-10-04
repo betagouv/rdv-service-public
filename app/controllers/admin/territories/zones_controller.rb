@@ -2,7 +2,7 @@ class Admin::Territories::ZonesController < Admin::Territories::BaseController
   before_action :set_sector, except: [:index]
 
   def index
-    zones = policy_scope(Zone)
+    zones = policy_scope(Zone, policy_scope_class: Agent::ZonePolicy::Scope)
       .joins(:sector).where(sectors: { territory_id: current_territory.id })
       .where(params[:sector_id].present? ? { sector: params[:sector_id] } : {})
     respond_to do |format|

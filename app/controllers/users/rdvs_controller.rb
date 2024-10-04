@@ -12,7 +12,7 @@ class Users::RdvsController < UserAuthController
 
   def index
     authorize(Rdv, policy_class: User::RdvPolicy)
-    @rdvs = policy_scope(Rdv).includes(:motif, :participations, :users).user_with_relatives(current_user.id).for_domain(current_domain)
+    @rdvs = policy_scope(Rdv, policy_scope_class: User::RdvPolicy::Scope).includes(:motif, :participations, :users).user_with_relatives(current_user.id).for_domain(current_domain)
     @rdvs = params[:past].present? ? @rdvs.past : @rdvs.future
     @rdvs = @rdvs.order(starts_at: :desc).page(page_number)
   end
@@ -109,7 +109,7 @@ class Users::RdvsController < UserAuthController
   end
 
   def set_rdv
-    @rdv = policy_scope(Rdv).find(params[:id])
+    @rdv = policy_scope(Rdv, policy_scope_class: User::RdvPolicy::Scope).find(params[:id])
     authorize(@rdv, policy_class: User::RdvPolicy)
   end
 

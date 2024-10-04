@@ -5,7 +5,7 @@ class Admin::OrganisationsController < AgentAuthController
   before_action :follow_unique, only: :index
 
   def index
-    @organisations_by_territory = policy_scope(current_agent.organisations)
+    @organisations_by_territory = policy_scope(current_agent.organisations, policy_scope_class: Agent::OrganisationPolicy::Scope)
       .includes(:territory)
       .ordered_by_name
       .to_a.group_by(&:territory)
@@ -75,8 +75,8 @@ class Admin::OrganisationsController < AgentAuthController
   end
 
   def follow_unique
-    return if params[:follow_unique].blank? || policy_scope(Organisation).count != 1
+    return if params[:follow_unique].blank? || policy_scope(Organisation, policy_scope_class: Agent::OrganisationPolicy::Scope).count != 1
 
-    redirect_to admin_organisation_agent_agenda_path(policy_scope(Organisation).first, current_agent)
+    redirect_to admin_organisation_agent_agenda_path(policy_scope(Organisation, policy_scope_class: Agent::OrganisationPolicy::Scope).first, current_agent)
   end
 end

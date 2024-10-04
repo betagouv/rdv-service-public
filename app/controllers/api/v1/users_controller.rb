@@ -3,7 +3,7 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
   before_action :set_user, only: %i[show update rdv_invitation_token]
 
   def index
-    users = policy_scope(User)
+    users = policy_scope(User, policy_scope_class: Agent::UserPolicy::Scope)
     users = users.where(id: params[:ids]) if params[:ids].present?
     render_collection(users)
   end

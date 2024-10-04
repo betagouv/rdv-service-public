@@ -6,7 +6,7 @@ class Admin::Organisations::StatsController < AgentAuthController
       rdvs: rdv_scope,
       agents: policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope)
         .joins(:organisations).where(organisations: { id: current_organisation.id }),
-      users: policy_scope(User)
+      users: policy_scope(User, policy_scope_class: Agent::UserPolicy::Scope)
     )
   end
 
@@ -25,12 +25,12 @@ class Admin::Organisations::StatsController < AgentAuthController
 
   def users
     skip_authorization
-    render json: Stat.new(users: policy_scope(User)).users_group_by_week
+    render json: Stat.new(users: policy_scope(User, policy_scope_class: Agent::UserPolicy::Scope)).users_group_by_week
   end
 
   private
 
   def rdv_scope
-    policy_scope(Rdv).where(organisation: current_organisation)
+    policy_scope(Rdv, policy_scope_class: Agent::RdvPolicy::Scope).where(organisation: current_organisation)
   end
 end

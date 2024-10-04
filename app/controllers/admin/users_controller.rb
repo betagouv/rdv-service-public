@@ -23,7 +23,7 @@ class Admin::UsersController < AgentAuthController
     agent_id = params[:agent_id]
     search_params = params[:search]
 
-    @users = policy_scope(User)
+    @users = policy_scope(User, policy_scope_class: Agent::UserPolicy::Scope)
     @users = @users.none if agent_id.blank? && search_params.blank?
     @users = @users.merge(Agent.find(agent_id).users) if agent_id.present?
     @users = @users.search_by_text(search_params) if search_params.present?
@@ -31,7 +31,7 @@ class Admin::UsersController < AgentAuthController
   end
 
   def search
-    users = policy_scope(User).where.not(id: params[:exclude_ids]).limit(20)
+    users = policy_scope(User, policy_scope_class: Agent::UserPolicy::Scope).where.not(id: params[:exclude_ids]).limit(20)
     @users = search_params[:term].present? ? users.search_by_text(search_params[:term]) : users.none
     skip_authorization
   end
@@ -40,7 +40,7 @@ class Admin::UsersController < AgentAuthController
     @role = params[:role] if params[:role]
     @user = User.new
     @user.user_profiles.build(organisation: current_organisation)
-    @user.responsible = policy_scope(User).find(params[:responsible_id]) if params[:responsible_id].present?
+    @user.responsible = policy_scope(User, policy_scope_class: Agent::UserPolicy::Scope).find(params[:responsible_id]) if params[:responsible_id].present?
     prepare_new
     authorize(@user, policy_class: Agent::UserPolicy)
     @user_form = user_form_object
@@ -70,7 +70,7 @@ class Admin::UsersController < AgentAuthController
 
   def show
     authorize(@user, policy_class: Agent::UserPolicy)
-    @participations = @user.participations.where(rdvs: policy_scope(Rdv).merge(@user.rdvs))
+    @participations = @user.participations.where(rdvs: policy_scope(Rdv, policy_scope_class: Agent::RdvPolicy::Scope).merge(@user.rdvs))
     @referent_agents = policy_scope(@user.referent_agents).includes(:services)
     respond_modal_with @user if from_modal?
   end
@@ -184,6 +184,6 @@ class Admin::UsersController < AgentAuthController
   end
 
   def set_user
-    @user = policy_scope(User).find(params[:id])
+    @user = policy_scope(User, policy_scope_class: Agent::UserPolicy::Scope).find(params[:id])
   end
 end

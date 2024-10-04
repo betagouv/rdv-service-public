@@ -4,7 +4,7 @@ class Agents::ExportsController < AgentAuthController
   before_action { @active_agent_preferences_menu_item = :exports }
 
   def index
-    @exports = policy_scope(Export)
+    @exports = policy_scope(Export, policy_scope_class: Agent::ExportPolicy::Scope)
       .recent
       .order(created_at: :desc)
   end

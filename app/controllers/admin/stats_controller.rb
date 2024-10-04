@@ -13,6 +13,6 @@ class Admin::StatsController < AgentAuthController
   private
 
   def rdvs_for_current_agent
-    policy_scope(Rdv).merge(current_agent.rdvs)
+    policy_scope(Rdv, policy_scope_class: Agent::RdvPolicy::Scope).merge(current_agent.rdvs)
   end
 end

@@ -18,7 +18,7 @@ class Admin::RdvsController < AgentAuthController
     @breadcrumb_page = params[:breadcrumb_page]
 
     order = { starts_at: :asc }
-    @rdvs = policy_scope(Rdv).search_for(@scoped_organisations, parsed_params)
+    @rdvs = policy_scope(Rdv, policy_scope_class: Agent::RdvPolicy::Scope).search_for(@scoped_organisations, parsed_params)
       .order(order).page(page_number).per(10)
 
     # On fait cette requête en deux temps pour éviter de faire un `order` et un `include` sur le même scope,
@@ -125,18 +125,19 @@ class Admin::RdvsController < AgentAuthController
 
   def set_scoped_organisations
     @selected_organisations_ids = params[:scoped_organisation_ids]&.compact_blank
+    organisations = policy_scope(Organisation, policy_scope_class: Agent::OrganisationPolicy::Scope)
     @scoped_organisations = if @selected_organisations_ids.blank?
                               # l'agent n'a pas accès au filtre d'organisations ou a réinitialisé la page
                               # Nous sélectionnons par défaut l'organisation courante
                               @selected_organisations_ids = [current_organisation.id]
-                              policy_scope(Organisation).where(id: current_organisation.id)
+                              organisations.where(id: current_organisation.id)
                             elsif @selected_organisations_ids.include?("0")
                               # l'agent a sélectionné 'Toutes' parmi les options
                               @selected_organisations_ids = ["0"]
-                              policy_scope(Organisation)
+                              organisations
                             else
                               # l'agent a sélectionné une ou plusieurs organisations spécifiques
-                              policy_scope(Organisation).where(id: @selected_organisations_ids)
+                              organisations.where(id: @selected_organisations_ids)
                             end
 
     # An empty scope means the agent tried to access a foreign organisation
@@ -154,7 +155,7 @@ class Admin::RdvsController < AgentAuthController
   end
 
   def set_rdv
-    @rdv = policy_scope(Rdv).find(params[:id])
+    @rdv = policy_scope(Rdv, policy_scope_class: Agent::RdvPolicy::Scope).find(params[:id])
   end
 
   def rdv_params

@@ -29,7 +29,7 @@ class Admin::ParticipationsController < AgentAuthController
   private
 
   def set_rdv
-    @rdv = policy_scope(Rdv).find(params[:rdv_id])
+    @rdv = policy_scope(Rdv, policy_scope_class: Agent::RdvPolicy::Scope).find(params[:rdv_id])
   end
 
   def set_participation

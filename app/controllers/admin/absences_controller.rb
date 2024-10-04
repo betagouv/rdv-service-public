@@ -6,7 +6,7 @@ class Admin::AbsencesController < AgentAuthController
   before_action :set_agent
 
   def index
-    absences = policy_scope(Absence)
+    absences = policy_scope(Absence, policy_scope_class: Agent::AbsencePolicy::Scope)
       .where(agent_id: filter_params[:agent_id])
       .includes(:agent)
       .by_starts_at
@@ -74,7 +74,7 @@ class Admin::AbsencesController < AgentAuthController
   private
 
   def set_absence
-    @absence = policy_scope(Absence)
+    @absence = policy_scope(Absence, policy_scope_class: Agent::AbsencePolicy::Scope)
       .find(params[:id])
   end
 

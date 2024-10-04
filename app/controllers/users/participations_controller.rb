@@ -6,7 +6,7 @@ class Users::ParticipationsController < UserAuthController
   include TokenInvitable
 
   def index
-    @rdv = policy_scope(Rdv).find(params[:rdv_id])
+    @rdv = policy_scope(Rdv, policy_scope_class: User::RdvPolicy::Scope).find(params[:rdv_id])
   end
 
   def create
@@ -33,7 +33,7 @@ class Users::ParticipationsController < UserAuthController
   end
 
   def existing_participation
-    @existing_participation ||= policy_scope(Participation).where(rdv: @rdv, user: @user.self_and_relatives_and_responsible).first
+    @existing_participation ||= policy_scope(Participation, policy_scope_class: Agent::ParticipationPolicy::Scope).where(rdv: @rdv, user: @user.self_and_relatives_and_responsible).first
   end
 
   def new_participation

@@ -108,15 +108,15 @@
 
   .col-md-6
 
-    - if policy_scope(Rdv).merge(@user.ongoing_rdvs(current_organisation)).any?
+    - if policy_scope(Rdv, policy_scope_class: Agent::RdvPolicy::Scope).merge(@user.ongoing_rdvs(current_organisation)).any?
       .card
         .card-header Rendez-vous en cours (+/- 1 heure)
-        - ongoing_rdvs = policy_scope(Rdv).merge(@user.ongoing_rdvs(current_organisation)).order(starts_at: :asc)
+        - ongoing_rdvs = policy_scope(Rdv, policy_scope_class: Agent::RdvPolicy::Scope).merge(@user.ongoing_rdvs(current_organisation)).order(starts_at: :asc)
         = render "admin/rdvs/short_rdvs_list", user: @user, rdvs: ongoing_rdvs
 
     .card
       .card-header Prochains rendez-vous
-      - future_rdvs = policy_scope(Rdv).merge(@user.rdvs_future_without_ongoing(current_organisation)).order(starts_at: :asc).limit(10)
+      - future_rdvs = policy_scope(Rdv, policy_scope_class: Agent::RdvPolicy::Scope).merge(@user.rdvs_future_without_ongoing(current_organisation)).order(starts_at: :asc).limit(10)
       = render "admin/rdvs/short_rdvs_list", user: @user, rdvs: future_rdvs
 
     .card
