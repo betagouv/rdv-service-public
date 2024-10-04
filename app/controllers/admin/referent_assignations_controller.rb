@@ -2,7 +2,7 @@ class Admin::ReferentAssignationsController < AgentAuthController
   def index
     @user = policy_scope(User, policy_scope_class: Agent::UserPolicy::Scope).find(index_params[:user_id])
     authorize(@user, :update?, policy_class: Agent::UserPolicy)
-    @referents = policy_scope(@user.referent_agents).distinct.order(:last_name)
+    @referents = policy_scope(@user.referent_agents, policy_scope_class: Agent::AgentPolicy::Scope).distinct.order(:last_name)
     @agents = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope).merge(current_organisation.agents)
     @agents = @agents.search_by_text(index_params[:search]) if index_params[:search].present?
     @agents = @agents.page(page_number)

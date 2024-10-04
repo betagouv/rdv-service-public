@@ -84,7 +84,7 @@
         .card-header Agents référents du responsable
         .card-body
           ul.list-unstyled.mb-2
-            - policy_scope(@user.responsible.referent_agents.includes([:services])).each do |agent|
+            - policy_scope(@user.responsible.referent_agents.includes([:services]), policy_scope_class: Agent::AgentPolicy::Scope).each do |agent|
               li.mb-2
               | #{agent.full_name_and_service}
             - if @user.responsible.referent_agents.empty?

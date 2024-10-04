@@ -8,12 +8,12 @@ class Admin::Territories::WebhookEndpointsController < Admin::Territories::BaseC
 
   def new
     @webhook = WebhookEndpoint.new
-    authorize(@webhook, policy_class: Agent::WebhookPolicy)
+    authorize(@webhook, policy_class: Agent::WebhookEndpointPolicy)
   end
 
   def create
     @webhook = WebhookEndpoint.new(webhook_endpoint_params)
-    authorize(@webhook, policy_class: Agent::WebhookPolicy)
+    authorize(@webhook, policy_class: Agent::WebhookEndpointPolicy)
     if @webhook.save
       redirect_to admin_territory_webhook_endpoints_path(current_territory)
     else
@@ -48,6 +48,6 @@ class Admin::Territories::WebhookEndpointsController < Admin::Territories::BaseC
 
   def set_webhook_endpoint
     @webhook = WebhookEndpoint.find(params[:id])
-    authorize(@webhook, policy_class: Agent::WebhookPolicy)
+    authorize(@webhook, policy_class: Agent::WebhookEndpointPolicy)
   end
 end

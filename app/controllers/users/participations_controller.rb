@@ -33,7 +33,7 @@ class Users::ParticipationsController < UserAuthController
   end
 
   def existing_participation
-    @existing_participation ||= policy_scope(Participation, policy_scope_class: Agent::ParticipationPolicy::Scope).where(rdv: @rdv, user: @user.self_and_relatives_and_responsible).first
+    @existing_participation ||= policy_scope(Participation, policy_scope_class: User::ParticipationPolicy::Scope).where(rdv: @rdv, user: @user.self_and_relatives_and_responsible).first
   end
 
   def new_participation

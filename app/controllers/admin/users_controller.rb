@@ -71,7 +71,7 @@ class Admin::UsersController < AgentAuthController
   def show
     authorize(@user, policy_class: Agent::UserPolicy)
     @participations = @user.participations.where(rdvs: policy_scope(Rdv, policy_scope_class: Agent::RdvPolicy::Scope).merge(@user.rdvs))
-    @referent_agents = policy_scope(@user.referent_agents).includes(:services)
+    @referent_agents = policy_scope(@user.referent_agents, policy_scope_class: Agent::AgentPolicy::Scope).includes(:services)
     respond_modal_with @user if from_modal?
   end
 
