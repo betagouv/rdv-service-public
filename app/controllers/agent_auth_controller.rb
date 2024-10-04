@@ -16,21 +16,6 @@ class AgentAuthController < ApplicationController
   end
   helper_method :pundit_user
 
-  # NOTE: it is a project-specific choice to make `policy_class` required
-  def authorize(record, query = nil, policy_class:)
-    super
-  end
-
-  # L'usage recommandé est de passer explicitement une policy_scope_class pour savoir quelle policy est utilisé
-  # A terme, on voudra forcer l'argument policy_scope_class
-  def policy_scope(scope, policy_scope_class: nil)
-    if policy_scope_class
-      super
-    else
-      super([:agent, scope])
-    end
-  end
-
   def set_organisation
     @organisation = current_organisation
   end

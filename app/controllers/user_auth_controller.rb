@@ -17,15 +17,6 @@ class UserAuthController < ApplicationController
     end
   end
 
-  # NOTE: it is a project-specific choice to make `policy_class` required
-  def authorize(record, query = nil, policy_class:)
-    super
-  end
-
-  def policy_scope(clasz)
-    super([:user, clasz])
-  end
-
   def user_not_authorized(exception)
     policy_name = exception.policy.class.to_s.underscore
     flash[:error] = t "#{policy_name}.#{exception.query}", scope: "pundit", default: :default
