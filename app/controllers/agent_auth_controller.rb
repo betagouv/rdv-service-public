@@ -16,12 +16,9 @@ class AgentAuthController < ApplicationController
   end
   helper_method :pundit_user
 
-  def authorize(record, query = nil, policy_class: nil)
-    if policy_class
-      super
-    else
-      raise "please specify an explicit `policy_class` parameter"
-    end
+  # NOTE: it is a project-specific choice to make `policy_class` required
+  def authorize(record, query = nil, policy_class:)
+    super
   end
 
   # L'usage recommandé est de passer explicitement une policy_scope_class pour savoir quelle policy est utilisé
