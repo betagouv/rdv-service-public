@@ -1,8 +1,6 @@
 require "swagger_helper"
 
-RSpec.describe "User Profile authentified API", swagger_doc: "v1/api.json" do
-  with_examples
-
+RSpec.describe "User Profile authentified API" do
   path "/api/rdvinsertion/user_profiles/create_many" do
     post "Ajouter un utilisateur à une ou plusieurs organisations" do
       with_shared_secret_authentication
@@ -54,18 +52,31 @@ RSpec.describe "User Profile authentified API", swagger_doc: "v1/api.json" do
         end
       end
 
-      it_behaves_like "an endpoint that returns 401 - unauthorized" do
+      context "when authentication fails" do
         let(:"organisation_ids[]") { [organisation1.id, organisation2.id, organisation3.id] }
         let(:user_id) { user.id }
 
         before do
           allow(ActiveSupport::SecurityUtils).to receive(:secure_compare).and_return(false)
         end
+
+        it "returns a 401 unauthorized response" do
+          post "/api/rdvinsertion/user_profiles/create_many", params: { "organisation_ids[]": [organisation1.id, organisation2.id, organisation3.id], user_id: user.id }, headers: auth_headers
+
+          expect(response).to have_http_status(:unauthorized)
+        end
       end
 
-      it_behaves_like "an endpoint that returns 404 - not found", "l'utilisateur n'a pas été trouvé" do
+      context "when user is not found" do
         let(:"organisation_ids[]") { [organisation1.id, organisation2.id, organisation3.id] }
         let(:user_id) { User.last.id + 1 }
+
+        it "returns a 404 not found" do
+          post "/api/rdvinsertion/user_profiles/create_many", params: { "organisation_ids[]": [organisation1.id, organisation2.id, organisation3.id], user_id: user_id }, headers: auth_headers
+
+          expect(response).to have_http_status(:not_found)
+          expect(response.body).to include("not_found")
+        end
       end
     end
   end
