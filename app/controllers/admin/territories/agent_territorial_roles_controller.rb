@@ -13,7 +13,7 @@ class Admin::Territories::AgentTerritorialRolesController < Admin::Territories::
 
   def create(agent)
     role = AgentTerritorialRole.find_or_initialize_by(territory: current_territory, agent: agent)
-    authorize_agent role
+    authorize(role, policy_class: Agent::RolePolicy)
     role.save!
     flash[:success] = "Les droits d'administrateur du #{current_territory} ont été ajoutés à #{agent.full_name}"
 
@@ -22,7 +22,7 @@ class Admin::Territories::AgentTerritorialRolesController < Admin::Territories::
 
   def destroy(agent)
     role = AgentTerritorialRole.find_or_initialize_by(territory: current_territory, agent: agent)
-    authorize_agent role
+    authorize(role, policy_class: Agent::RolePolicy)
 
     if !role.persisted? || role.destroy
       flash[:success] = "Les droits d'administrateur du #{current_territory} ont été retirés à #{agent.full_name}"

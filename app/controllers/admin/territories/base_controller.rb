@@ -22,8 +22,6 @@ class Admin::Territories::BaseController < ApplicationController
 
   helper_method :pundit_user
 
-  # rubocop:enable Lint/UselessMethodDefinition
-
   private
 
   def set_territory
