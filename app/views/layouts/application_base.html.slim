@@ -15,7 +15,7 @@ html lang="fr"
     = render "layouts/degraded_service", message: ENV["DEGRADED_SERVICE_MESSAGE_USERS"]
     = dsfr_header logo_text: "République<br>Française".html_safe do |header|
       - header.with_operator_image title: "Accueil - RDV #{current_domain.name}", src: asset_path(current_domain.dark_logo_path), alt: "RDV #{current_domain.name}"
-      - if current_user.present? && !current_user.only_invited?
+      - if current_user.present? && !current_user.signed_in_with_invitation_token?
         ruby:
           header.with_tool_link title: "Vos rendez-vous", path: users_rdvs_path, classes: "fr-icon-calendar-fill"
           header.with_tool_link title: "Vos informations", path: users_informations_path

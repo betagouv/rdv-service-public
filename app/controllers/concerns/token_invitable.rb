@@ -38,7 +38,7 @@ module TokenInvitable
     return if current_user.present? # no need to sign in if the user is already connected
 
     user = invitation.user
-    user.only_invited!(rdv: invitation.rdv)
+    user.signed_in_with_invitation_token!(rdv: invitation.rdv)
     sign_in(user, store: false)
   end
 

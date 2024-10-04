@@ -16,11 +16,7 @@ RSpec.describe "User can be invited" do
                   birth_date: Date.new(1988, 12, 20),
                   organisations: [organisation])
   end
-  let!(:invitation_token) do
-    user.assign_rdv_invitation_token
-    user.save!
-    user.rdv_invitation_token
-  end
+  let!(:invitation_token) { user.set_rdv_invitation_token! }
   let!(:agent) { create(:agent) }
   let!(:departement_number) { "26" }
   let!(:city_code) { "26000" }
