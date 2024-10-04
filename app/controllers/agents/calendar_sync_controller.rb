@@ -3,7 +3,7 @@ class Agents::CalendarSyncController < AgentAuthController
   before_action { @active_agent_preferences_menu_item = :synchronisation }
 
   def show
-    authorize current_agent
+    authorize(current_agent, policy_class: Agent::AgentPolicy)
   end
 
   def pundit_user

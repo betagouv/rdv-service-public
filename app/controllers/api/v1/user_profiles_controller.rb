@@ -1,7 +1,7 @@
 class Api::V1::UserProfilesController < Api::V1::AgentAuthBaseController
   def create
     user_profile = UserProfile.new(user_profile_params)
-    authorize(user_profile)
+    authorize(user_profile, policy_class: Agent::UserProfilePolicy)
     user_profile.save!
     render_record user_profile
   rescue ArgumentError => e
@@ -10,7 +10,7 @@ class Api::V1::UserProfilesController < Api::V1::AgentAuthBaseController
 
   def destroy
     user_profile = UserProfile.find_by!(user_profile_params)
-    authorize(user_profile)
+    authorize(user_profile, policy_class: Agent::UserProfilePolicy)
 
     organisation = user_profile.organisation
     user = user_profile.user

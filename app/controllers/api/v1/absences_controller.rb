@@ -7,7 +7,7 @@ class Api::V1::AbsencesController < Api::V1::AgentAuthBaseController
 
   def create
     absence = Absence.new(create_params)
-    authorize(absence) if absence.valid?
+    authorize(absence, policy_class: Agent::AbsencePolicy) if absence.valid?
     absence.save!
     render_record absence
   rescue ActiveRecord::RecordNotFound
@@ -16,7 +16,7 @@ class Api::V1::AbsencesController < Api::V1::AgentAuthBaseController
 
   def show
     if @absence
-      authorize(@absence)
+      authorize(@absence, policy_class: Agent::AbsencePolicy)
       render_record @absence
     else
       render_error :not_found, not_found: :absence
@@ -25,7 +25,7 @@ class Api::V1::AbsencesController < Api::V1::AgentAuthBaseController
 
   def update
     if @absence
-      authorize(@absence)
+      authorize(@absence, policy_class: Agent::AbsencePolicy)
       @absence.update!(update_params)
       render_record @absence
     else
@@ -35,7 +35,7 @@ class Api::V1::AbsencesController < Api::V1::AgentAuthBaseController
 
   def destroy
     if @absence
-      authorize(@absence)
+      authorize(@absence, policy_class: Agent::AbsencePolicy)
       @absence.destroy!
       head :no_content
     else

@@ -67,7 +67,7 @@ class Admin::RdvsController < AgentAuthController
 
   def show
     @uncollapsed_section = params[:uncollapsed_section]
-    authorize(@rdv)
+    authorize(@rdv, policy_class: Agent::RdvPolicy)
   end
 
   def edit
@@ -76,11 +76,11 @@ class Admin::RdvsController < AgentAuthController
     users_to_add.ids.each { @rdv.participations.build(user_id: _1) }
 
     @rdv_form = Admin::EditRdvForm.new(@rdv, pundit_user)
-    authorize(@rdv_form.rdv)
+    authorize(@rdv_form.rdv, policy_class: Agent::RdvPolicy)
   end
 
   def update
-    authorize(@rdv)
+    authorize(@rdv, policy_class: Agent::RdvPolicy)
     @rdv_form = Admin::EditRdvForm.new(@rdv, pundit_user)
     @success = @rdv_form.update(**rdv_params.to_h.symbolize_keys)
     respond_to do |format|
@@ -111,7 +111,7 @@ class Admin::RdvsController < AgentAuthController
   end
 
   def destroy
-    authorize(@rdv)
+    authorize(@rdv, policy_class: Agent::RdvPolicy)
     if @rdv.destroy
       flash[:notice] = "Le rendez-vous a été supprimé."
       redirect_to admin_organisation_rdvs_path(current_organisation)

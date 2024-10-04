@@ -5,12 +5,12 @@ class Agents::PreferencesController < AgentAuthController
 
   def show
     @agent = current_agent
-    authorize @agent
+    authorize(@agent, policy_class: Agent::AgentPolicy)
   end
 
   def update
     @agent = current_agent
-    authorize @agent
+    authorize(@agent, policy_class: Agent::AgentPolicy)
 
     if @agent.update(update_params)
       redirect_to agents_preferences_path, flash: { notice: t(".update.done") }

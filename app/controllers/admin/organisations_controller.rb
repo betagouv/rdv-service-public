@@ -14,15 +14,15 @@ class Admin::OrganisationsController < AgentAuthController
   end
 
   def show
-    authorize(@organisation)
+    authorize(@organisation, policy_class: Agent::OrganisationPolicy)
   end
 
   def edit
-    authorize(@organisation)
+    authorize(@organisation, policy_class: Agent::OrganisationPolicy)
   end
 
   def update
-    authorize(@organisation)
+    authorize(@organisation, policy_class: Agent::OrganisationPolicy)
 
     if @organisation.update(organisation_params)
       flash[:notice] = "L’organisation a été modifiée."
@@ -34,7 +34,7 @@ class Admin::OrganisationsController < AgentAuthController
 
   def new
     @organisation = Organisation.new(territory: Territory.find(params[:territory_id]))
-    authorize(@organisation)
+    authorize(@organisation, policy_class: Agent::OrganisationPolicy)
     @active_agent_preferences_menu_item = :organisations
     render :new, layout: "application_agent_config"
   end
@@ -45,7 +45,7 @@ class Admin::OrganisationsController < AgentAuthController
       verticale: current_domain.verticale,
       **new_organisation_params
     )
-    authorize(@organisation)
+    authorize(@organisation, policy_class: Agent::OrganisationPolicy)
     if @organisation.save
       redirect_to admin_organisation_path(@organisation),
                   flash: { success: "Organisation enregistrée ! Vous pouvez maintenant lui ajouter des motifs et des lieux de rendez-vous, puis inviter des agents à la rejoindre" }

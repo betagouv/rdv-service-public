@@ -42,14 +42,14 @@ class Admin::UsersController < AgentAuthController
     @user.user_profiles.build(organisation: current_organisation)
     @user.responsible = policy_scope(User).find(params[:responsible_id]) if params[:responsible_id].present?
     prepare_new
-    authorize(@user)
+    authorize(@user, policy_class: Agent::UserPolicy)
     @user_form = user_form_object
     respond_modal_with @user_form
   end
 
   def create
     prepare_create
-    authorize(@user)
+    authorize(@user, policy_class: Agent::UserPolicy)
     @user.skip_confirmation_notification!
     user_persisted = @user_form.save
 
@@ -69,7 +69,7 @@ class Admin::UsersController < AgentAuthController
   end
 
   def show
-    authorize(@user)
+    authorize(@user, policy_class: Agent::UserPolicy)
     @participations = @user.participations.where(rdvs: policy_scope(Rdv).merge(@user.rdvs))
     @referent_agents = policy_scope(@user.referent_agents).includes(:services)
     respond_modal_with @user if from_modal?
@@ -77,14 +77,14 @@ class Admin::UsersController < AgentAuthController
 
   def edit
     @user_form = user_form_object
-    authorize(@user)
+    authorize(@user, policy_class: Agent::UserPolicy)
     respond_modal_with @user_form if from_modal?
   end
 
   def update
     @user.assign_attributes(user_params)
     @user_form = user_form_object
-    authorize(@user)
+    authorize(@user, policy_class: Agent::UserPolicy)
     @user.skip_reconfirmation! if @user.encrypted_password.blank?
     user_updated = @user_form.save
     if from_modal?
@@ -97,13 +97,13 @@ class Admin::UsersController < AgentAuthController
   end
 
   def invite
-    authorize(@user)
+    authorize(@user, policy_class: Agent::UserPolicy)
     @user.invite!(domain: current_domain)
     redirect_to admin_organisation_user_path(current_organisation, @user), notice: "L’usager a été invité."
   end
 
   def destroy
-    authorize(@user)
+    authorize(@user, policy_class: Agent::UserPolicy)
     if @user.can_be_soft_deleted_from_organisation?(current_organisation)
       @user.soft_delete(current_organisation)
       flash[:notice] = "L’usager a été supprimé."
@@ -120,7 +120,7 @@ class Admin::UsersController < AgentAuthController
 
   def link_to_organisation
     @user = User.find(params.require(:id))
-    authorize(current_organisation)
+    authorize(current_organisation, policy_class: Agent::OrganisationPolicy)
     flash[:notice] = "L'usager a été associé à votre organisation." if @user.add_organisation(current_organisation)
 
     if from_modal?

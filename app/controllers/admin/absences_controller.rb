@@ -30,15 +30,15 @@ class Admin::AbsencesController < AgentAuthController
 
     @absence = Absence.new(agent: @agent, **defaults)
 
-    authorize(@absence)
+    authorize(@absence, policy_class: Agent::AbsencePolicy)
   end
 
   def edit
-    authorize(@absence)
+    authorize(@absence, policy_class: Agent::AbsencePolicy)
   end
 
   def create
-    authorize(@absence)
+    authorize(@absence, policy_class: Agent::AbsencePolicy)
     if @absence.save
       Agents::AbsenceMailer.with(absence: @absence).absence_created.deliver_later if @agent.absence_notification_level == "all"
       flash[:notice] = t(".absence_created")
@@ -49,7 +49,7 @@ class Admin::AbsencesController < AgentAuthController
   end
 
   def update
-    authorize(@absence)
+    authorize(@absence, policy_class: Agent::AbsencePolicy)
     if @absence.update(absence_params)
       Agents::AbsenceMailer.with(absence: @absence).absence_updated.deliver_later if @agent.absence_notification_level == "all"
       flash[:notice] = t(".absence_updated")
@@ -60,7 +60,7 @@ class Admin::AbsencesController < AgentAuthController
   end
 
   def destroy
-    authorize(@absence)
+    authorize(@absence, policy_class: Agent::AbsencePolicy)
     if @absence.destroy
       # On passe l'absence au job sous forme sérialisée puisqu'elle n'existe plus en base.
       Agents::AbsenceMailer.with(absence: Absence.serialize_for_active_job(@absence)).absence_destroyed.deliver_later if @agent.absence_notification_level == "all"

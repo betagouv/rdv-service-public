@@ -14,7 +14,7 @@ class Users::ParticipationsController < UserAuthController
   end
 
   def cancel
-    authorize(existing_participation)
+    authorize(existing_participation, policy_class: Agent::ParticipationPolicy)
     change_participation_status("excused")
   end
 
@@ -42,14 +42,14 @@ class Users::ParticipationsController < UserAuthController
 
   def add_participation
     if existing_participation.present?
-      authorize(existing_participation)
+      authorize(existing_participation, policy_class: Agent::ParticipationPolicy)
       if existing_participation.excused?
         change_participation_status("unknown")
       else
         participation_changed? ? create_participation : user_is_already_participating
       end
     else
-      authorize(new_participation)
+      authorize(new_participation, policy_class: Agent::ParticipationPolicy)
       create_participation
     end
   end

@@ -19,22 +19,22 @@ class Admin::MotifsController < AgentAuthController
 
   def new
     @motif = Motif.new(params.permit(*FORM_ATTRIBUTES))
-    authorize(@motif)
+    authorize(@motif, policy_class: Agent::MotifPolicy)
   end
 
   def duplicate
-    authorize(@motif)
+    authorize(@motif, policy_class: Agent::MotifPolicy)
     new_motif_attrs = @motif.attributes.symbolize_keys.slice(*FORM_ATTRIBUTES)
       .merge(duplicated_from_motif_id: @motif.id)
     redirect_to new_admin_organisation_motif_path(organisation_id: current_organisation, **new_motif_attrs)
   end
 
   def edit
-    authorize(@motif)
+    authorize(@motif, policy_class: Agent::MotifPolicy)
   end
 
   def show
-    authorize(@motif)
+    authorize(@motif, policy_class: Agent::MotifPolicy)
     @motif_policy = Agent::MotifPolicy.new(current_agent, @motif)
   end
 
@@ -42,7 +42,7 @@ class Admin::MotifsController < AgentAuthController
     @motif = Motif.new
     @motif.assign_attributes(params.require(:motif).permit(*FORM_ATTRIBUTES))
     @motif.organisation ||= current_organisation
-    authorize(@motif)
+    authorize(@motif, policy_class: Agent::MotifPolicy)
     if @motif.save
       flash[:notice] = "Motif créé."
       redirect_to admin_organisation_motifs_path(@motif.organisation)
@@ -52,7 +52,7 @@ class Admin::MotifsController < AgentAuthController
   end
 
   def update
-    authorize(@motif)
+    authorize(@motif, policy_class: Agent::MotifPolicy)
     if @motif.update(params.require(:motif).permit(*FORM_ATTRIBUTES))
       flash[:notice] = "Le motif a été modifié."
       redirect_to admin_organisation_motif_path(@motif.organisation, @motif)
@@ -62,7 +62,7 @@ class Admin::MotifsController < AgentAuthController
   end
 
   def destroy
-    authorize(@motif)
+    authorize(@motif, policy_class: Agent::MotifPolicy)
     if @motif.soft_delete
       flash[:notice] = "Le motif a été supprimé."
       redirect_to admin_organisation_motifs_path(@motif.organisation)

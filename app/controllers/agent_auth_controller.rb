@@ -49,6 +49,6 @@ class AgentAuthController < ApplicationController
   def authorize_organisation
     # on n’utilise pas le helper authorize directement car le pundit_user défini plus haut a comme contexte
     # l’organisation elle même, ici on veut un contexte d’agent sans organisation
-    Pundit.authorize(AgentContext.new(current_agent), [:agent, current_organisation], :show?)
+    Pundit.authorize(AgentContext.new(current_agent), [:agent, current_organisation], :show?, policy_class: Agent::OrganisationPolicy)
   end
 end

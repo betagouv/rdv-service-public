@@ -1,7 +1,7 @@
 class Admin::ReferentAssignationsController < AgentAuthController
   def index
     @user = policy_scope(User).find(index_params[:user_id])
-    authorize(@user, :update?)
+    authorize(@user, :update?, policy_class: Agent::UserPolicy)
     @referents = policy_scope(@user.referent_agents).distinct.order(:last_name)
     @agents = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope).merge(current_organisation.agents)
     @agents = @agents.search_by_text(index_params[:search]) if index_params[:search].present?
@@ -22,7 +22,7 @@ class Admin::ReferentAssignationsController < AgentAuthController
 
   def find_agent_and_user_save_and_redirect_with(params)
     user = policy_scope(User).find(params[:user_id])
-    authorize(user, :update?)
+    authorize(user, :update?, policy_class: Agent::UserPolicy)
     agent = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope).find(params[:agent_id]) if params[:agent_id]
     agent ||= policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope).find(params[:id])
 

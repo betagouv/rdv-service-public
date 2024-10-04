@@ -20,7 +20,7 @@ class Api::V1::OrganisationsController < Api::V1::AgentAuthBaseController
 
   def set_organisation
     @organisation = Organisation.find(params[:id])
-    authorize @organisation
+    authorize(@organisation, policy_class: Agent::OrganisationPolicy)
   end
 
   def organisation_params

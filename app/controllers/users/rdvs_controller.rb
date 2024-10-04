@@ -11,7 +11,7 @@ class Users::RdvsController < UserAuthController
   include TokenInvitable
 
   def index
-    authorize Rdv
+    authorize(Rdv, policy_class: User::RdvPolicy)
     @rdvs = policy_scope(Rdv).includes(:motif, :participations, :users).user_with_relatives(current_user.id).for_domain(current_domain)
     @rdvs = params[:past].present? ? @rdvs.past : @rdvs.future
     @rdvs = @rdvs.order(starts_at: :desc).page(page_number)
@@ -33,7 +33,7 @@ class Users::RdvsController < UserAuthController
       )
       if @creneau.present?
         @rdv = build_rdv_from_creneau(@creneau)
-        authorize(@rdv)
+        authorize(@rdv, policy_class: User::RdvPolicy)
         @save_succeeded = @rdv.save
       end
     end
@@ -110,7 +110,7 @@ class Users::RdvsController < UserAuthController
 
   def set_rdv
     @rdv = policy_scope(Rdv).find(params[:id])
-    authorize(@rdv)
+    authorize(@rdv, policy_class: User::RdvPolicy)
   end
 
   def set_can_see_rdv_motif
