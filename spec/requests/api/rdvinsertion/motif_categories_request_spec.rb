@@ -1,8 +1,6 @@
 require "swagger_helper"
 
-RSpec.describe "Motif Category API", swagger_doc: "v1/api.json" do
-  with_examples
-
+RSpec.describe "Motif Category API" do
   path "/api/rdvinsertion/motif_categories/" do
     post "Créer une catégorie de motifs" do
       with_shared_secret_authentication
@@ -33,8 +31,6 @@ RSpec.describe "Motif Category API", swagger_doc: "v1/api.json" do
 
         let!(:motif_categories_count_before) { MotifCategory.count }
 
-        schema "$ref" => "#/components/schemas/motif_category_with_root"
-
         run_test!
 
         it { expect(MotifCategory.count).to eq(motif_categories_count_before + 1) }
@@ -52,12 +48,18 @@ RSpec.describe "Motif Category API", swagger_doc: "v1/api.json" do
         end
       end
 
-      it_behaves_like "an endpoint that returns 401 - unauthorized" do
+      context "when authentication fails" do
         let(:name) { "RSA Orientation" }
         let(:short_name) { "rsa_orientation" }
 
         before do
           allow(ActiveSupport::SecurityUtils).to receive(:secure_compare).and_return(false)
+        end
+
+        it "returns a 401 unauthorized response" do
+          post "/api/rdvinsertion/motif_categories/", params: { name: name, short_name: short_name }, headers: auth_headers
+
+          expect(response).to have_http_status(:unauthorized)
         end
       end
     end

@@ -1,6 +1,5 @@
 RSpec.describe ParticipationExporter, type: :service do
   describe "#xls_string_from_rdvs_rows" do
-    # rubocop:disable RSpec/ExampleLength
     it "return export with header" do
       rdv = create(
         :rdv,
@@ -70,7 +69,6 @@ RSpec.describe ParticipationExporter, type: :service do
         "agent@mail.com"
       )
     end
-    # rubocop:enable RSpec/ExampleLength
   end
 
   describe "#row_array_from rdv" do
