@@ -1,4 +1,6 @@
 class DefaultAgentPolicy < ApplicationPolicy
+  include CurrentAgentInPolicyConcern
+
   alias context pundit_user
   # define current_agent and current_organisation
   delegate :agent, :organisation, :agent_role, to: :context, prefix: :current

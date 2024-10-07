@@ -1,4 +1,6 @@
 class Agent::LieuPolicy < ApplicationPolicy
+  include CurrentAgentInPolicyConcern
+
   alias current_agent pundit_user
 
   def update?
