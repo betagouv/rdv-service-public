@@ -36,11 +36,7 @@ RSpec.describe Users::RdvWizardStepsController, type: :controller do
       end
 
       context "with invitation token" do
-        let!(:invitation_token) do
-          user.assign_rdv_invitation_token
-          user.save!
-          user.rdv_invitation_token
-        end
+        let!(:invitation_token) { user.set_rdv_invitation_token! }
 
         before { request.session[:invitation] = { invitation_token:, expires_at: 10.hours.from_now } }
 

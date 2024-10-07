@@ -33,8 +33,8 @@ RSpec.describe "User can select a creneau" do
 
     context "when the user is invited" do
       let!(:motif_category) { create(:motif_category, short_name: "rsa_orientation", motifs: [motif]) }
-      let!(:rdv_invitation_token) { SecureRandom.uuid }
-      let!(:user) { create(:user, rdv_invitation_token:) }
+      let!(:rdv_invitation_token) { user.set_rdv_invitation_token! }
+      let!(:user) { create(:user) }
 
       it "shows that no creneau is available" do
         visit prendre_rdv_path(motif_category_short_name: "rsa_orientation", invitation_token: rdv_invitation_token, lieu_id: lieu.id, departement: "92", organisation_ids: [organisation.id])

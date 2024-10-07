@@ -200,13 +200,13 @@ class User < ApplicationRecord
     nil
   end
 
-  def only_invited!(rdv: nil)
-    @only_invited = true
+  def signed_in_with_invitation_token!(rdv: nil)
+    @signed_in_with_invitation_token = true
     @invitation_rdv = rdv
   end
 
-  def only_invited?
-    @only_invited == true
+  def signed_in_with_invitation_token?
+    @signed_in_with_invitation_token
   end
 
   def invited_for_rdv?(rdv)
@@ -223,8 +223,19 @@ class User < ApplicationRecord
     end
   end
 
-  def assign_rdv_invitation_token
-    self.rdv_invitation_token = generate_rdv_invitation_token
+  def set_rdv_invitation_token!
+    self.rdv_invitation_token_updated_at = Time.zone.now
+
+    if rdv_invitation_token.nil?
+      assign_attributes(
+        rdv_invitation_token: generate_rdv_invitation_token,
+        invited_through: "external"
+      )
+    end
+
+    save!
+
+    rdv_invitation_token
   end
 
   def ants_pre_demande_number=(value)
@@ -249,13 +260,13 @@ class User < ApplicationRecord
   end
 
   def confirmation_required?
-    return false if only_invited?
+    return false if signed_in_with_invitation_token?
 
     super
   end
 
   def reconfirmation_required?
-    return false if only_invited?
+    return false if signed_in_with_invitation_token?
 
     super
   end

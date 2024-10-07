@@ -29,18 +29,11 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
   end
 
   def rdv_invitation_token
-    @user.rdv_invitation_token_updated_at = Time.zone.now
-    assign_rdv_invitation_token if @user.rdv_invitation_token.nil?
+    @user.set_rdv_invitation_token!
     render json: { invitation_token: @user.rdv_invitation_token }
   end
 
   private
-
-  def assign_rdv_invitation_token
-    @user.assign_rdv_invitation_token
-    @user.invited_through = "external"
-    @user.save!
-  end
 
   def set_organisation
     @organisation = params[:organisation_id].present? ? Organisation.find(params[:organisation_id]) : nil
