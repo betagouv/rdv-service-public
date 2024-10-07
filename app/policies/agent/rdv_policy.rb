@@ -1,4 +1,11 @@
-class Agent::RdvPolicy < ApplicationPolicy
+class Agent::RdvPolicy
+  def initialize(current_agent_or_agent_organisation_context, record)
+    @pundit_user = current_agent_or_agent_organisation_context
+    @rdv = record
+  end
+
+  attr_reader :pundit_user
+
   include CurrentAgentInPolicyConcern
 
   def create?
@@ -18,7 +25,7 @@ class Agent::RdvPolicy < ApplicationPolicy
   alias versions? show?
 
   def destroy?
-    current_agent.access_level_in(@record.organisation) == AgentRole::ACCESS_LEVEL_ADMIN
+    current_agent.access_level_in(@rdv.organisation) == AgentRole::ACCESS_LEVEL_ADMIN
   end
 
   def self.explain(organisation, agent)
@@ -36,13 +43,13 @@ class Agent::RdvPolicy < ApplicationPolicy
   private
 
   def same_service?
-    @record.motif.service.in?(current_agent.services)
+    @rdv.motif.service.in?(current_agent.services)
   end
 
   def same_agent_or_has_access?
-    return true if current_agent.in?(@record.agents)
+    return true if current_agent.in?(@rdv.agents)
 
-    case current_agent.access_level_in(@record.organisation)
+    case current_agent.access_level_in(@rdv.organisation)
     when AgentRole::ACCESS_LEVEL_ADMIN
       true
     when AgentRole::ACCESS_LEVEL_BASIC
@@ -52,7 +59,14 @@ class Agent::RdvPolicy < ApplicationPolicy
     end
   end
 
-  class Scope < Scope
+  class Scope
+    def initialize(pundit_user, scope)
+      @pundit_user = pundit_user
+      @scope = scope
+    end
+
+    attr_reader :pundit_user
+
     include CurrentAgentInPolicyConcern
 
     def resolve
@@ -60,12 +74,12 @@ class Agent::RdvPolicy < ApplicationPolicy
 
       if current_agent.secretaire?
         rdvs_of_all_my_orgs = Rdv.where(organisation: current_agent.organisations)
-        scope.where_id_in_subqueries([my_rdvs, rdvs_of_all_my_orgs])
+        @scope.where_id_in_subqueries([my_rdvs, rdvs_of_all_my_orgs])
       else
         rdv_of_my_admin_orgs = Rdv.where(organisation: current_agent.admin_orgs)
         rdv_of_my_basic_orgs = Rdv.where(organisation: current_agent.basic_orgs)
           .joins(:motif).where(motifs: { service: current_agent.services })
-        scope.where_id_in_subqueries([my_rdvs, rdv_of_my_admin_orgs, rdv_of_my_basic_orgs])
+        @scope.where_id_in_subqueries([my_rdvs, rdv_of_my_admin_orgs, rdv_of_my_basic_orgs])
       end
     end
   end
