@@ -2,7 +2,7 @@
 
 ruby:
   admin_link_to_user_if_permitted = lambda do |organisation, user|
-    if policy([:agent, user]).show?
+    if policy(user, policy_class: Agent::UserPolicy).show?
       link_to user.to_s, polymorphic_path([:admin, organisation, user])
     else
       name

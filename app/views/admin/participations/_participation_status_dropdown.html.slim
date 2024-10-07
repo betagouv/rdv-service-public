@@ -21,6 +21,6 @@
     - else
       = render "admin/participations/participation_status_dropdown_item", participation: participation, agent: agent, status: "unknown", remote: true
 
-    - if policy([:agent, participation.rdv]).destroy?
+    - if policy(participation.rdv, policy_class: Agent::RdvPolicy).destroy?
       .dropdown-divider
       = participation_delete_dropdown_item(participation, agent)

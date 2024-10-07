@@ -23,4 +23,4 @@
 
 .row.justify-content-center
   .col-md-11
-    = render "admin/versions/resource_versions_row", resource_policy: policy([:agent, @rdv]), resource: @rdv
+    = render "admin/versions/resource_versions_row", resource_policy: policy(@rdv, policy_class: Agent::RdvPolicy), resource: @rdv

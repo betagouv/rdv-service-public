@@ -52,7 +52,7 @@
                   = f.input :last_name, required: true, input_html: { value: "" }, disabled: true
 
           .row
-            - if policy([:agent, @agent]).destroy?
+            - if policy(@agent, policy_class: Agent::AgentPolicy).destroy?
               .col.text-left
                 = link_to @agent_removal_presenter.button_value, \
                   admin_organisation_agent_path(current_organisation, @agent), \
@@ -70,4 +70,4 @@
 
 .row.justify-content-center
   .col-md-12.col-lg-8
-    = render "admin/versions/resource_versions_row", resource_policy: policy([:agent, @agent]), resource: @agent
+    = render "admin/versions/resource_versions_row", resource_policy: policy(@agent, policy_class: Agent::AgentPolicy), resource: @agent
