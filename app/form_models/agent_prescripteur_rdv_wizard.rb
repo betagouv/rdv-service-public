@@ -12,10 +12,6 @@ class AgentPrescripteurRdvWizard
     @motif ||= rdv.motif
   end
 
-  def invitation?
-    false
-  end
-
   def params_to_selections
     query_params
   end

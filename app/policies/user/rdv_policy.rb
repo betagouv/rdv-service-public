@@ -10,7 +10,7 @@ class User::RdvPolicy < ApplicationPolicy
   # rubocop:enable Style/ArrayIntersect
 
   def index?
-    !current_user.only_invited?
+    !current_user.signed_in_with_invitation_token?
   end
 
   def new?
@@ -29,7 +29,7 @@ class User::RdvPolicy < ApplicationPolicy
   def show?
     return true if record.collectif? && record.bookable_by_everyone_or_bookable_by_invited_users? && rdv_belongs_to_user_or_relatives?
 
-    rdv_belongs_to_user_or_relatives? && (!current_user.only_invited? || current_user.invited_for_rdv?(record))
+    rdv_belongs_to_user_or_relatives? && (!current_user.signed_in_with_invitation_token? || current_user.invited_for_rdv?(record))
   end
 
   def cancel?
@@ -41,7 +41,7 @@ class User::RdvPolicy < ApplicationPolicy
   end
 
   def can_change_participants?
-    !current_user.only_invited? && current_user.participation_for(record).not_cancelled? && !record.in_the_past?
+    !current_user.signed_in_with_invitation_token? && current_user.participation_for(record).not_cancelled? && !record.in_the_past?
   end
 
   alias creneaux? edit?

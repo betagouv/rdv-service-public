@@ -262,7 +262,7 @@ user1 = User.create!(
   birth_date: 30.years.ago,
   organisations: [org_drome1, org_drome2]
 )
-user1.assign_rdv_invitation_token
+user1.set_rdv_invitation_token!
 user1.save!
 
 user2 = User.create!(
@@ -275,7 +275,7 @@ user2 = User.create!(
   birth_date: 30.years.ago,
   organisations: [org_yonne]
 )
-user2.assign_rdv_invitation_token
+user2.set_rdv_invitation_token!
 user2.save!
 
 # On reprend ci dessous les paramêtres que Rdvi utilise pour générer l'url d'invitation.

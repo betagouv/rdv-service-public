@@ -45,10 +45,8 @@ RSpec.describe User::RdvPolicy, type: :policy do
     it_behaves_like "not included in scope"
   end
 
-  context "User is invited" do
-    before do
-      allow(user).to receive(:only_invited?).and_return(true)
-    end
+  context "User signed in with an invitation token" do
+    before { user.signed_in_with_invitation_token! }
 
     it_behaves_like "permit actions", :rdv, :new?, :create?
     it_behaves_like "not permit actions", :rdv, :index?, :edit?, :update?, :creneaux?, :cancel?, :show?
@@ -83,9 +81,7 @@ RSpec.describe User::RdvPolicy, type: :policy do
     context "User is invited, rdv has no users" do
       let(:rdv) { create(:rdv, :collectif, :without_users, organisation: organisation, agents: [agent]) }
 
-      before do
-        allow(user).to receive(:only_invited?).and_return(true)
-      end
+      before { user.signed_in_with_invitation_token! }
 
       it_behaves_like "permit actions", :rdv, :new?
       it_behaves_like "not permit actions", :rdv, :index?, :edit?, :update?, :creneaux?, :cancel?, :show?, :create?
