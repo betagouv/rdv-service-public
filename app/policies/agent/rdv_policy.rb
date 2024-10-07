@@ -82,6 +82,12 @@ class Agent::RdvPolicy
         @scope.where_id_in_subqueries([my_rdvs, rdv_of_my_admin_orgs, rdv_of_my_basic_orgs])
       end
     end
+
+    def in_scope?(object)
+      return false if object&.id.blank?
+
+      resolve.where(id: object.id).any?
+    end
   end
 
   class DepartementScope < Scope
