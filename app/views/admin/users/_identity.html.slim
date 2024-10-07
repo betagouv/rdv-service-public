@@ -5,7 +5,7 @@ ruby:
     if policy(user, policy_class: Agent::UserPolicy).show?
       link_to user.to_s, polymorphic_path([:admin, organisation, user])
     else
-      name
+      user.to_s
     end
   end
 
