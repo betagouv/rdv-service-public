@@ -1,18 +1,17 @@
 class Agent::PlageOuverturePolicy < ApplicationPolicy
   include CurrentAgentInPolicyConcern
 
-  def show?
-    same_agent_or_has_access?
-  end
-  alias versions? show?
-
   def update?
     same_agent_or_has_access?
   end
+
   alias new? update?
   alias create? update?
   alias edit? update?
   alias destroy? update?
+
+  alias show? update?
+  alias versions? update?
 
   private
 
