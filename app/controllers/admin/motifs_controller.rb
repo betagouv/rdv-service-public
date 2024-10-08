@@ -18,15 +18,19 @@ class Admin::MotifsController < AgentAuthController
   end
 
   def new
-    @motif = Motif.new(params.permit(*FORM_ATTRIBUTES))
+    @motif = Motif.new(organisation: current_organisation)
+
+    @source_motif = Agent::MotifPolicy::Scope.new(current_agent, Motif).resolve.find_by(id: params[:duplicated_from_motif_id])
+    if @source_motif
+      @motif.assign_attributes(@source_motif.attributes.symbolize_keys.slice(*FORM_ATTRIBUTES))
+    end
+
     authorize(@motif)
   end
 
   def duplicate
     authorize(@motif)
-    new_motif_attrs = @motif.attributes.symbolize_keys.slice(*FORM_ATTRIBUTES)
-      .merge(duplicated_from_motif_id: @motif.id)
-    redirect_to new_admin_organisation_motif_path(organisation_id: current_organisation, **new_motif_attrs)
+    redirect_to new_admin_organisation_motif_path(organisation_id: current_organisation, duplicated_from_motif_id: @motif.id)
   end
 
   def edit
