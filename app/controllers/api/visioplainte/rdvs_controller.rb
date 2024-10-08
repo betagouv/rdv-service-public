@@ -28,7 +28,7 @@ class Api::Visioplainte::RdvsController < Api::Visioplainte::BaseController
       motif: motif
     )
     if creneau.blank?
-      errors = { errors: ["Pas de créneau disponible pour ce service à la date demandée"] }
+      errors = { errors: ["Pas de créneau disponible à la date demandée"] }
 
       render(json: errors, status: :unprocessable_entity) and return
     end
