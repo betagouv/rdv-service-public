@@ -1,31 +1,14 @@
-class Agent::RdvPolicy
-  def initialize(current_agent_or_agent_organisation_context, record)
-    @pundit_user = current_agent_or_agent_organisation_context
-    @rdv = record
+class Agent::RdvPolicy < DefaultAgentPolicy
+  def status?
+    same_agent_or_has_access?
   end
-
-  attr_reader :pundit_user
-
-  include CurrentAgentInPolicyConcern
 
   def create?
     true
   end
-  alias new? create?
-
-  def update?
-    same_agent_or_has_access?
-  end
-  alias edit? update?
-  alias status? update?
-
-  # Pour le moment nous n'avons qu'un seul niveau d'accès à un RDV,
-  # qui permet à la fois de l'afficher et de le modifier
-  alias show? update?
-  alias versions? show?
 
   def destroy?
-    current_agent.access_level_in(@rdv.organisation) == AgentRole::ACCESS_LEVEL_ADMIN
+    admin_and_same_org?
   end
 
   def self.explain(organisation, agent)
@@ -43,47 +26,30 @@ class Agent::RdvPolicy
   private
 
   def same_service?
-    @rdv.motif.service.in?(current_agent.services)
+    @record.motif.service.in?(current_agent.services)
   end
 
-  def same_agent_or_has_access?
-    return true if current_agent.in?(@rdv.agents)
-
-    case current_agent.access_level_in(@rdv.organisation)
-    when AgentRole::ACCESS_LEVEL_ADMIN
-      true
-    when AgentRole::ACCESS_LEVEL_BASIC
-      same_service? || current_agent.secretaire?
-    else
-      false
-    end
-  end
-
-  class Scope
-    def initialize(pundit_user, scope)
-      @pundit_user = pundit_user
-      @scope = scope
-    end
-
-    attr_reader :pundit_user
-
-    include CurrentAgentInPolicyConcern
-
+  class Scope < Scope
     def resolve
-      my_rdvs = Rdv.joins(:agents_rdvs).where(agents_rdvs: { agent_id: current_agent.id })
-
-      if current_agent.secretaire?
-        rdvs_of_all_my_orgs = Rdv.where(organisation: current_agent.organisations)
-        @scope.where_id_in_subqueries([my_rdvs, rdvs_of_all_my_orgs])
-      else
-        rdv_of_my_admin_orgs = Rdv.where(organisation: current_agent.admin_orgs)
-        rdv_of_my_basic_orgs = Rdv.where(organisation: current_agent.basic_orgs)
-          .joins(:motif).where(motifs: { service: current_agent.services })
-        @scope.where_id_in_subqueries([my_rdvs, rdv_of_my_admin_orgs, rdv_of_my_basic_orgs])
+      organisation_scope = scope.where(organisation: current_agent.organisations)
+      unless context.can_access_others_planning?
+        organisation_scope = organisation_scope.joins(%i[motif agents_rdvs]).where(motifs: { service: current_agent.services })
+          .or(Rdv.where("agents_rdvs.agent_id": current_agent.id))
       end
+      organisation_scope
     end
   end
 
   class DepartementScope < Scope
+    def resolve
+      if context.can_access_others_planning?
+        scope.where(organisation: current_agent.organisations)
+      else
+        scope.joins(%i[motif agents_rdvs])
+          .where(organisation: current_agent.organisations)
+          .where(motifs: { service: current_agent.services })
+          .or(Rdv.where("agents_rdvs.agent_id": current_agent.id))
+      end
+    end
   end
 end

@@ -1,4 +1,4 @@
-- nb_rdv = Agent::RdvPolicy::Scope.new(AgentOrganisationContext.new(current_agent, current_organisation), Rdv).resolve.for_today.merge(lieu.rdvs).count
+- nb_rdv = Agent::RdvPolicy::Scope.apply(AgentOrganisationContext.new(current_agent, current_organisation), Rdv).for_today.merge(lieu.rdvs).count
 tr id="lieu_#{lieu.id}"
   td
     = lieu.name
