@@ -4,7 +4,7 @@ class Admin::RdvsCollectifsController < AgentAuthController
   def index
     @motifs = Agent::MotifPolicy::Scope.apply(current_agent, Motif).available_motifs_for_organisation_and_agent(current_organisation, current_agent).collectif
 
-    @rdvs = policy_scope(Rdv, policy_scope_class: Agent::RdvPolicy::Scope).where(organisation: current_organisation).collectif
+    @rdvs = policy_scope(current_organisation.rdvs, policy_scope_class: Agent::RdvPolicy::Scope).collectif
     @rdvs = @rdvs.order(starts_at: :asc).page(page_number)
 
     @form = Admin::RdvCollectifSearchForm.new(params.permit(:motif_id, :organisation_id, :from_date, :with_remaining_seats))

@@ -125,19 +125,19 @@ class Admin::RdvsController < AgentAuthController
 
   def set_scoped_organisations
     @selected_organisations_ids = params[:scoped_organisation_ids]&.compact_blank
-    organisations = policy_scope(Organisation, policy_scope_class: Agent::OrganisationPolicy::Scope)
+    accessible_organisations = policy_scope(Organisation, policy_scope_class: Agent::OrganisationPolicy::Scope)
     @scoped_organisations = if @selected_organisations_ids.blank?
                               # l'agent n'a pas accès au filtre d'organisations ou a réinitialisé la page
                               # Nous sélectionnons par défaut l'organisation courante
                               @selected_organisations_ids = [current_organisation.id]
-                              organisations.where(id: current_organisation.id)
+                              accessible_organisations.where(id: current_organisation.id)
                             elsif @selected_organisations_ids.include?("0")
                               # l'agent a sélectionné 'Toutes' parmi les options
                               @selected_organisations_ids = ["0"]
-                              organisations
+                              accessible_organisations
                             else
                               # l'agent a sélectionné une ou plusieurs organisations spécifiques
-                              organisations.where(id: @selected_organisations_ids)
+                              accessible_organisations.where(id: @selected_organisations_ids)
                             end
 
     # An empty scope means the agent tried to access a foreign organisation
