@@ -10,10 +10,13 @@ fr:
         end_time: Termine à
         recurrence: Répéter
         lieu: Lieu
+        recurrence_ends_at: Dernier jour
     errors:
       models:
         plage_ouverture:
           attributes:
+            first_day:
+              format: "Le premier jour %{message}"
             end_time:
               must_be_after_start_time: "doit être après l’heure de début."
             lieu:

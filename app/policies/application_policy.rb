@@ -17,11 +17,5 @@ class ApplicationPolicy
     def self.apply(pundit_user, scope)
       new(pundit_user, scope).resolve
     end
-
-    def in_scope?(object)
-      return false if object&.id.blank?
-
-      resolve.where(id: object.id).any?
-    end
   end
 end

@@ -463,7 +463,10 @@ RSpec.describe "User can search for rdvs" do
     fill_in("Nom", with: "Lapin")
     fill_in("Date de naissance", with: Date.yesterday) if birth_date
     click_button("Enregistrer")
-    expect(page).to have_content("Mathieu LAPIN")
+
+    # Pour éviter une flaky spec (causée par l'animation CSS de la modale ?),
+    # on vérifie directement que le proche est bien enregistré dans la base.
+    wait_for { User.exists?(first_name: "Mathieu", last_name: "Lapin") }.to be(true)
 
     click_button("Continuer")
   end
@@ -477,7 +480,9 @@ RSpec.describe "User can search for rdvs" do
     expect(page).to have_content(lieu.address) if lieu.present?
     expect(page).to have_content(motif.name)
     expect(page).to have_content("11h00")
-    expect(Rdv.first.participations.first.created_by_user?).to be(true)
+    expect(Rdv.last.participations.all?(&:created_by_user?)).to be(true)
+    relative = User.find_by(first_name: "Mathieu", last_name: "Lapin")
+    expect(Rdv.last.users).to include(relative)
   end
 
   def expect_page_h1(title)

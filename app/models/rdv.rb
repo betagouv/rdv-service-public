@@ -61,7 +61,7 @@ class Rdv < ApplicationRecord
   # Validations
   validates :starts_at, :ends_at, :agents, presence: true
   validate :lieu_is_not_disabled_if_needed
-  validate :starts_at_is_plausible
+  validates :starts_at, realistic_date: true
   validate :duration_is_plausible
   validates :max_participants_count, numericality: { greater_than: 0, allow_nil: true }
 
@@ -385,13 +385,6 @@ class Rdv < ApplicationRecord
     else
       unknown!
     end
-  end
-
-  def starts_at_is_plausible
-    return unless will_save_change_to_attribute?("starts_at")
-    return unless starts_at > 2.years.from_now
-
-    errors.add(:starts_at, :must_be_within_two_years)
   end
 
   def duration_is_plausible

@@ -140,10 +140,7 @@ RSpec/ContextWording:
   Enabled: False
 
 RSpec/ExampleLength:
-  Max: 30
-  Exclude:
-    - 'spec/features/**/*'
-    - 'spec/requests/api/**/*'
+  Enabled: false
 
 RSpec/LetSetup:
   Enabled: false

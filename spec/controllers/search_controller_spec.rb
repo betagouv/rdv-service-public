@@ -6,11 +6,7 @@ RSpec.describe SearchController, type: :controller do
   let!(:departement_number) { "75" }
   let!(:city_code) { "75007" }
   let!(:address) { "20 avenue de ségur" }
-  let!(:invitation_token) do
-    user.assign_rdv_invitation_token
-    user.save!
-    user.rdv_invitation_token
-  end
+  let!(:invitation_token) { user.set_rdv_invitation_token! }
 
   let!(:user) { create(:user, organisations: [organisation]) }
 

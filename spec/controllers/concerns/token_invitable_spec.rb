@@ -124,16 +124,11 @@ RSpec.describe TokenInvitable, type: :controller do
       allow(invitation).to receive(:rdv)
     end
 
-    it "signs in the user" do
+    it "connecte l'usager et indique le mode de connexion utilisé" do
       subject
       expect(response).to be_successful
       expect(assigns(:current_user)).to eq(user)
-    end
-
-    it "marks the user as only_invited" do
-      subject
-      expect(response).to be_successful
-      expect(assigns(:current_user).only_invited?).to be(true)
+      expect(assigns(:current_user).signed_in_with_invitation_token?).to be(true)
     end
 
     context "when the token is invalid" do
@@ -170,7 +165,7 @@ RSpec.describe TokenInvitable, type: :controller do
           subject
           expect(response).to be_successful
           expect(assigns(:current_user)).to eq(user)
-          expect(assigns(:current_user).only_invited?).to be(false)
+          expect(assigns(:current_user)).not_to(be_signed_in_with_invitation_token)
         end
       end
 

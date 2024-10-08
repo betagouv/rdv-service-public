@@ -18,7 +18,7 @@ class RdvEndingShortlyBeforePresenter
   private
 
   def in_scope?
-    @in_scope ||= Agent::RdvPolicy::DepartementScope.new(agent_context, Rdv).in_scope?(rdv)
+    @in_scope ||= Agent::RdvPolicy::DepartementScope.new(agent_context, Rdv).resolve.include?(rdv) if rdv
   end
 
   def i18n_key
