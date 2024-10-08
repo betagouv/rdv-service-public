@@ -1,12 +1,19 @@
+# Ces specs sont entre des specs d’intégration et des tests E2E
+# on déclenche des comportements haut niveau comme la création ou la mise à jour d’un RDV
+# et on vérifie le contenu des requêtes envoyées à l’API de l’ANTS
+# On teste donc à la fois la définition des callbacks AR définis dans le concern,
+# mais aussi le fonctionnement des jobs de synchronisation
+#
+# note : dans les stubs, Webmock reconnaît les requêtes qui ont des query params
+# uniquement si on passe explicitement un with(query: hash_including({...}))
+
 RSpec.describe Ants::AppointmentSerializerAndListener do
   include_context "rdv_mairie_api_authentication"
 
-  let(:organisation) { create(:organisation, verticale: :rdv_mairie) }
-  let(:user) { create(:user, ants_pre_demande_number: "A123456789", organisations: [organisation]) }
-  let(:lieu) { create(:lieu, organisation: organisation, name: "Lieu1") }
-  let(:motif_passeport) { create(:motif, motif_category: create(:motif_category, :passeport)) }
-  let(:rdv) { build(:rdv, motif: motif_passeport, users: [user], lieu: lieu, organisation: organisation, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
-  let(:ants_api_headers) do
+  let(:api_url) { "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api" }
+  let(:headers) do
+    # on définit ici les headers attendus sur chaque requête API à l’ANTS
+    # ce sont ceux définis dans le context rdv_mairie_api_authentication
     {
       "Accept" => "application/json",
       "Expect" => "",
@@ -15,216 +22,392 @@ RSpec.describe Ants::AppointmentSerializerAndListener do
     }
   end
 
-  def stub_ants_status_with_appointments
-    stub_ants_status(
-      "A123456789",
-      appointments: [
-        {
-          management_url: Rails.application.routes.url_helpers.users_rdv_url(rdv, host: organisation.domain.host_name),
-          meeting_point: rdv.lieu.name,
-          meeting_point_id: rdv.lieu.id,
-          appointment_date: rdv.starts_at.strftime("%Y-%m-%d %H:%M:%S"),
-        },
-      ]
-    )
+  describe "Création de RDV, l’usager a un numéro de pré-demande ANTS" do
+    let(:organisation) { create(:organisation, verticale: :rdv_mairie) }
+    let(:lieu) { create(:lieu, organisation:, name: "Mairie de Saumur") }
+    let(:motif) { create(:motif, motif_category: create(:motif_category, :passeport)) }
+    let(:user) { create(:user, ants_pre_demande_number: "A123456789", organisations: [organisation]) }
+    let!(:rdv) { build(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
+
+    let!(:status_stub) do
+      stub_request(:get, "#{api_url}/status")
+        .with(query: { application_ids: "A123456789" }, headers:)
+        .to_return(status: 200, body: { "A123456789" => { status: "validated", appointments: [] } }.to_json)
+    end
+    let!(:create_stub) do
+      stub_request(:post, "#{api_url}/appointments")
+        .with(
+          query: hash_including( # on utilise hash_including pour pouvoir tester management_url avec une regex
+            application_id: "A123456789",
+            appointment_date: "2020-04-20 08:00:00",
+            meeting_point: "Mairie de Saumur",
+            meeting_point_id: rdv.lieu.id.to_s,
+            management_url: %r{http://www\.rdv-mairie-test\.localhost/users/rdvs/\d+} # on ne connaît pas encore l’ID du RDV
+          ),
+          headers:
+        )
+        .to_return(status: 200, body: { success: true }.to_json)
+    end
+
+    it "Créé l’appointment via l’API ANTS" do
+      perform_enqueued_jobs do
+        rdv.save!
+      end
+
+      expect(status_stub).to have_been_requested.at_least_once # TODO: la requête ne devrait être faite qu’une fois
+      expect(create_stub).to have_been_requested.once
+    end
   end
 
-  describe "RDV callbacks" do
-    describe "after_commit on_create" do
-      it "creates appointment on ANTS" do
-        stub_ants_status("A123456789")
-        stub_ants_create("A123456789")
+  describe "Création de RDV, l’usager n’a pas de numéro de pré-demande ANTS" do
+    let(:organisation) { create(:organisation, verticale: :rdv_mairie) }
+    let(:lieu) { create(:lieu, organisation:, name: "Mairie de Saumur") }
+    let(:motif) { create(:motif, motif_category: create(:motif_category, :passeport)) }
+    let(:user) { create(:user, ants_pre_demande_number: "", organisations: [organisation]) }
+    let(:rdv) { build(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
 
+    it "n’appelle pas du tout l’API ANTS" do
+      perform_enqueued_jobs do
+        rdv.save!
+      end
+      expect(WebMock).not_to have_requested(:any, %r{\.ants\.gouv\.fr/api})
+    end
+
+    context "et le RDV est annulé" do
+      before { rdv.status = "excused" }
+
+      it "n’appelle pas du tout l’API ANTS" do
         perform_enqueued_jobs do
           rdv.save!
-          expect(WebMock).to have_requested(
-            :post,
-            "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/appointments?application_id=A123456789&appointment_date=2020-04-20%2008:00:00&management_url=http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}&meeting_point=#{rdv.lieu.name}&meeting_point_id=#{rdv.lieu.id}"
-          ).with(
-            headers: ants_api_headers
-          )
         end
-      end
-
-      context "when the user is created by an agent who didn't fill in the pre_demande_number" do
-        let(:user) { create(:user, ants_pre_demande_number: "", organisations: [organisation]) }
-
-        it "doesn't send a request to the appointment ANTS api" do
-          perform_enqueued_jobs do
-            rdv.save!
-
-            expect(WebMock).not_to have_requested(:any, %r{\.ants\.gouv\.fr/api})
-          end
-        end
-
-        context "and the rdv is cancelled" do
-          before { rdv.status = "excused" }
-
-          it "doesn't send a request to the appointment ANTS api" do
-            perform_enqueued_jobs do
-              rdv.save!
-
-              expect(WebMock).not_to have_requested(:any, %r{\.ants\.gouv\.fr/api})
-            end
-          end
-        end
-      end
-    end
-
-    describe "after_commit on_destroy" do
-      it "deletes appointment on ANTS" do
-        stub_ants_delete("A123456789")
-        rdv.save!
-        stub_ants_status_with_appointments
-
-        perform_enqueued_jobs do
-          rdv.destroy
-          expect(WebMock).to have_requested(
-            :delete,
-            "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/appointments?application_id=A123456789&appointment_date=2020-04-20%2008:00:00&meeting_point=#{rdv.lieu.name}&meeting_point_id=#{rdv.lieu.id}"
-          ).with(headers: ants_api_headers).at_least_once
-        end
-      end
-    end
-
-    describe "after_commit on_update" do
-      before do
-        rdv.save!
-        stub_ants_status_with_appointments
-      end
-
-      describe "Rdv is cancelled" do
-        it "deletes appointment on ANTS" do
-          perform_enqueued_jobs do
-            stub_ants_delete("A123456789")
-            rdv.excused!
-
-            expect(WebMock).to have_requested(
-              :delete,
-              "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/appointments?application_id=A123456789&appointment_date=2020-04-20%2008:00:00&meeting_point=#{rdv.lieu.name}&meeting_point_id=#{rdv.lieu.id}"
-            ).with(headers: ants_api_headers).at_least_once
-          end
-        end
-      end
-
-      describe "Rdv is re-activated after cancellation" do
-        before do
-          rdv.excused!
-        end
-
-        it "creates appointment" do
-          perform_enqueued_jobs do
-            stub_ants_delete("A123456789")
-            stub_ants_create("A123456789")
-            rdv.seen!
-            expect(WebMock).to have_requested(
-              :post,
-              "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/appointments?application_id=A123456789&appointment_date=2020-04-20%2008:00:00&management_url=http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}&meeting_point=#{rdv.lieu.name}&meeting_point_id=#{rdv.lieu.id}"
-            ).with(headers: ants_api_headers)
-          end
-        end
+        expect(WebMock).not_to have_requested(:any, %r{\.ants\.gouv\.fr/api})
       end
     end
   end
 
-  describe "User callbacks" do
-    let!(:create_appointment_stub) do
-      stub_ants_create("AABBCCDDEE")
+  describe "Suppression de RDV" do
+    let(:organisation) { create(:organisation, verticale: :rdv_mairie) }
+    let(:lieu) { create(:lieu, organisation:, name: "Mairie de Saumur") }
+    let(:motif) { create(:motif, motif_category: create(:motif_category, :passeport)) }
+    let(:user) { create(:user, ants_pre_demande_number: "A123456789", organisations: [organisation]) }
+    let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
+
+    let!(:status_stub) do
+      stub_request(:get, "#{api_url}/status")
+        .with(query: { application_ids: "A123456789" }, headers:)
+        .to_return(
+          status: 200,
+          body: {
+            "A123456789" => {
+              status: "validated",
+              appointments: [
+                {
+                  management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
+                  meeting_point: "Mairie de Saumur",
+                  meeting_point_id: rdv.lieu.id,
+                  appointment_date: "2020-04-20 08:00:00",
+                },
+              ],
+            },
+          }.to_json
+        )
     end
-
-    describe "after_commit: Changing the value of ants_pre_demande_number" do
-      it "creates appointment with new ants_pre_demande_number" do
-        rdv.save!
-        user.reload
-
-        perform_enqueued_jobs do
-          stub_ants_status("AABBCCDDEE")
-          user.update(ants_pre_demande_number: "AABBCCDDEE")
-
-          expect(create_appointment_stub).to have_been_requested.at_least_once
-        end
-      end
-    end
-  end
-
-  describe "Lieu callbacks" do
-    let!(:create_appointment_stub) do
-      stub_ants_create("A123456789")
-    end
-
-    before do
-      rdv.save!
-      lieu.reload
-    end
-
-    describe "after_commit: Changing the name of the lieu" do
-      it "triggers a sync with ANTS" do
-        perform_enqueued_jobs do
-          stub_ants_status("A123456789")
-          lieu.update(name: "Nouveau Lieu")
-
-          expect(create_appointment_stub).to have_been_requested.at_least_once
-        end
-      end
-    end
-  end
-
-  describe "Participation callbacks" do
-    before do
-      stub_ants_status("A123456789")
-      rdv.save!
-      user.reload
-      rdv.participations.reload
-      stub_ants_status_with_appointments
-    end
-
-    describe "after_commit: Removing user participation" do
-      it "deletes appointment" do
-        perform_enqueued_jobs do
-          stub_ants_delete("A123456789")
-          user.participations.first.destroy
-        end
-      end
-    end
-  end
-
-  context "ANTS application ID is consumed" do
-    before do
-      stub_request(:get, %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/status}).to_return(
-        status: 200,
-        body: {
-          user.ants_pre_demande_number => {
-            status: "consumed",
-            appointments: [],
+    let!(:delete_stub) do
+      stub_request(:delete, "#{api_url}/appointments")
+        .with(
+          query: {
+            application_id: "A123456789",
+            appointment_date: "2020-04-20 08:00:00",
+            meeting_point: "Mairie de Saumur",
+            meeting_point_id: rdv.lieu.id,
           },
-        }.to_json
-      )
+          headers:
+        )
+        .to_return(status: 200, body: { rowcount: 1 }.to_json)
     end
 
-    let(:rdv) do
-      create(
-        :rdv,
-        motif: motif_passeport,
-        users: [user],
-        lieu: lieu,
-        organisation: organisation,
-        starts_at: Time.zone.parse("2020-04-20 08:00:00")
-      )
-    end
-
-    describe "after_commit on_update" do
-      describe "Rdv is cancelled" do
-        it "does not sync with ANTS" do
-          perform_enqueued_jobs do
-            rdv.excused!
-
-            expect(WebMock).not_to have_requested(
-              :post,
-              %r{https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api/appointments}
-            ).with(headers: ants_api_headers)
-          end
-        end
+    it "supprime l’appointment via l’API ANTS" do
+      perform_enqueued_jobs do
+        rdv.destroy
       end
+      expect(status_stub).to have_been_requested.at_least_once # TODO: la requête ne devrait être faite qu’une fois
+      expect(delete_stub).to have_been_requested.at_least_once # TODO: la requête ne devrait être faite qu’une fois
+    end
+  end
+
+  describe "Annulation de RDV" do
+    let(:organisation) { create(:organisation, verticale: :rdv_mairie) }
+    let(:lieu) { create(:lieu, organisation:, name: "Mairie de Saumur") }
+    let(:motif) { create(:motif, motif_category: create(:motif_category, :passeport)) }
+    let(:user) { create(:user, ants_pre_demande_number: "A123456789", organisations: [organisation]) }
+    let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
+
+    let!(:status_stub) do
+      stub_request(:get, "#{api_url}/status")
+        .with(query: { application_ids: "A123456789" }, headers:)
+        .to_return(
+          status: 200,
+          body: {
+            "A123456789" => {
+              status: "validated",
+              appointments: [
+                {
+                  management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
+                  meeting_point: "Mairie de Saumur",
+                  meeting_point_id: rdv.lieu.id,
+                  appointment_date: "2020-04-20 08:00:00",
+                },
+              ],
+            },
+          }.to_json
+        )
+    end
+    let!(:delete_stub) do
+      stub_request(:delete, "#{api_url}/appointments")
+        .with(
+          query: {
+            application_id: "A123456789",
+            appointment_date: "2020-04-20 08:00:00",
+            meeting_point: "Mairie de Saumur",
+            meeting_point_id: rdv.lieu.id,
+          },
+          headers:
+        )
+        .to_return(status: 200, body: { rowcount: 1 }.to_json)
+    end
+
+    it "supprime l’appointment via l’API ANTS" do
+      perform_enqueued_jobs do
+        rdv.excused!
+      end
+
+      expect(status_stub).to have_been_requested.at_least_once # TODO: la requête ne devrait être faite qu’une fois
+      expect(delete_stub).to have_been_requested.at_least_once # TODO: la requête ne devrait être faite qu’une fois
+    end
+  end
+
+  describe "Annulation de RDV, l’API de l’ANTS renvoie un statut consumed" do
+    let(:organisation) { create(:organisation, verticale: :rdv_mairie) }
+    let(:lieu) { create(:lieu, organisation:, name: "Mairie de Saumur") }
+    let(:motif) { create(:motif, motif_category: create(:motif_category, :passeport)) }
+    let!(:user) { create(:user, ants_pre_demande_number: "A123456789", organisations: [organisation]) }
+    let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
+
+    let!(:status_stub) do
+      stub_request(:get, "#{api_url}/status")
+        .with(query: { application_ids: "A123456789" }, headers:)
+        .to_return(
+          status: 200,
+          body: { "A123456789" => { status: "consumed", appointments: [] } }.to_json
+        )
+    end
+
+    it "ne déclenche pas la création d’un nouvel appointment via l’API ANTS" do
+      perform_enqueued_jobs do
+        rdv.excused!
+      end
+
+      expect(status_stub).to have_been_requested.at_least_once # TODO: la requête ne devrait être faite qu’une fois
+      expect(WebMock).not_to have_requested(:post, "#{api_url}/appointments")
+    end
+  end
+
+  describe "le RDV est marqué comme vu alors qu’il avait été annulé" do
+    let(:organisation) { create(:organisation, verticale: :rdv_mairie) }
+    let(:lieu) { create(:lieu, organisation:, name: "Mairie de Saumur") }
+    let(:motif) { create(:motif, motif_category: create(:motif_category, :passeport)) }
+    let(:user) { create(:user, ants_pre_demande_number: "A123456789", organisations: [organisation]) }
+    let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
+
+    let!(:status_stub) do
+      stub_request(:get, "#{api_url}/status")
+        .with(query: { application_ids: "A123456789" }, headers:)
+        .to_return(
+          status: 200,
+          body: {
+            "A123456789" => {
+              status: "validated",
+              appointments: [
+                {
+                  management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
+                  meeting_point: "Mairie de Saumur",
+                  meeting_point_id: rdv.lieu.id,
+                  appointment_date: "2020-04-20 08:00:00",
+                },
+              ],
+            },
+          }.to_json
+        )
+    end
+    let!(:delete_stub) do
+      stub_request(:delete, "#{api_url}/appointments")
+        .with(
+          query: {
+            application_id: "A123456789",
+            appointment_date: "2020-04-20 08:00:00",
+            meeting_point: "Mairie de Saumur",
+            meeting_point_id: rdv.lieu.id,
+          },
+          headers:
+        )
+        .to_return(status: 200, body: { rowcount: 1 }.to_json)
+    end
+    let!(:create_stub) do
+      stub_request(:post, "#{api_url}/appointments")
+        .with(
+          query: {
+            application_id: "A123456789",
+            appointment_date: "2020-04-20 08:00:00",
+            management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
+            meeting_point: "Mairie de Saumur",
+            meeting_point_id: rdv.lieu.id,
+          },
+          headers:
+        )
+        .to_return(status: 200, body: { success: true }.to_json)
+    end
+
+    before { rdv.excused! }
+
+    it "créé l’appointment via l’API ANTS" do
+      perform_enqueued_jobs do
+        rdv.seen!
+      end
+
+      expect(status_stub).to have_been_requested.at_least_once # TODO: la requête ne devrait être faite qu’une fois
+      expect(delete_stub).to have_been_requested.at_least_once # TODO: la requête ne devrait être faite qu’une fois
+      expect(create_stub).to have_been_requested.once
+    end
+  end
+
+  describe "l’usager change de numéro de pré-demande ANTS après avoir pris RDV avec un précédent numéro" do
+    let(:organisation) { create(:organisation, verticale: :rdv_mairie) }
+    let(:lieu) { create(:lieu, organisation:, name: "Mairie de Saumur") }
+    let(:motif) { create(:motif, motif_category: create(:motif_category, :passeport)) }
+    let!(:user) { create(:user, ants_pre_demande_number: "A123456789", organisations: [organisation]) }
+    let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
+
+    let!(:status_stub) do
+      stub_request(:get, "#{api_url}/status")
+        .with(query: { application_ids: "AABBCCDDEE" }, headers:)
+        .to_return(status: 200, body: { "AABBCCDDEE" => { status: "validated", appointments: [] } }.to_json)
+    end
+    let!(:create_stub) do
+      stub_request(:post, "#{api_url}/appointments")
+        .with(
+          query: {
+            application_id: "AABBCCDDEE",
+            appointment_date: "2020-04-20 08:00:00",
+            management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
+            meeting_point: "Mairie de Saumur",
+            meeting_point_id: rdv.lieu.id,
+          },
+          headers:
+        )
+        .to_return(status: 200, body: { success: true }.to_json)
+    end
+
+    before { user.reload } # le comportement est flaky sans ce reload, je n’ai pas compris pourquoi
+
+    it "créé un nouvel appointment via l’API ANTS" do
+      perform_enqueued_jobs do
+        user.update(ants_pre_demande_number: "AABBCCDDEE")
+      end
+
+      expect(status_stub).to have_been_requested.at_least_once # TODO: la requête ne devrait être faite qu’une fois
+      expect(create_stub).to have_been_requested.once
+    end
+  end
+
+  describe "Le lieu change de nom" do
+    let(:organisation) { create(:organisation, verticale: :rdv_mairie) }
+    let(:lieu) { create(:lieu, organisation:, name: "Mairie de Saumur") }
+    let(:motif) { create(:motif, motif_category: create(:motif_category, :passeport)) }
+    let!(:user) { create(:user, ants_pre_demande_number: "A123456789", organisations: [organisation]) }
+    let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
+
+    let!(:status_stub) do
+      stub_request(:get, "#{api_url}/status")
+        .with(query: { application_ids: "A123456789" }, headers:)
+        .to_return(status: 200, body: { "A123456789" => { status: "validated", appointments: [] } }.to_json)
+    end
+    let!(:create_stub) do
+      stub_request(:post, "#{api_url}/appointments")
+        .with(
+          query: {
+            application_id: "A123456789",
+            appointment_date: "2020-04-20 08:00:00",
+            management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
+            meeting_point: "Nouveau Lieu",
+            meeting_point_id: rdv.lieu.id,
+          },
+          headers:
+        )
+        .to_return(status: 200, body: { success: true }.to_json)
+    end
+
+    before { lieu.reload } # le comportement est flaky sans ce reload, je n’ai pas compris pourquoi
+
+    it "déclenche une synchronisation avec l’ANTS" do
+      perform_enqueued_jobs do
+        lieu.update(name: "Nouveau Lieu")
+      end
+
+      expect(status_stub).to have_been_requested.at_least_once # TODO: la requête ne devrait être faite qu’une fois
+      expect(create_stub).to have_been_requested.once
+    end
+  end
+
+  describe "un usager est retiré du RDV" do
+    let(:organisation) { create(:organisation, verticale: :rdv_mairie) }
+    let(:lieu) { create(:lieu, organisation:, name: "Mairie de Saumur") }
+    let(:motif) { create(:motif, motif_category: create(:motif_category, :passeport)) }
+    let!(:user) { create(:user, ants_pre_demande_number: "A123456789", organisations: [organisation]) }
+    let!(:rdv) { create(:rdv, motif:, users: [user], lieu:, organisation:, starts_at: Time.zone.parse("2020-04-20 08:00:00")) }
+
+    let!(:status_stub) do
+      stub_request(:get, "#{api_url}/status")
+        .with(query: { application_ids: "A123456789" }, headers:)
+        .to_return(
+          status: 200,
+          body: {
+            "A123456789" => {
+              status: "validated",
+              appointments: [
+                {
+                  management_url: "http://www.rdv-mairie-test.localhost/users/rdvs/#{rdv.id}",
+                  meeting_point: "Mairie de Saumur",
+                  meeting_point_id: rdv.lieu.id,
+                  appointment_date: "2020-04-20 08:00:00",
+                },
+              ],
+            },
+          }.to_json
+        )
+    end
+    let!(:delete_stub) do
+      stub_request(:delete, "#{api_url}/appointments")
+        .with(
+          query: {
+            application_id: "A123456789",
+            appointment_date: "2020-04-20 08:00:00",
+            meeting_point: "Mairie de Saumur",
+            meeting_point_id: rdv.lieu.id,
+          },
+          headers:
+        )
+        .to_return(status: 200, body: { rowcount: 1 }.to_json)
+    end
+
+    before { user.reload } # le comportement est flaky sans ce reload, je n’ai pas compris pourquoi
+
+    it "supprime l’appointment via l’API ANTS" do
+      perform_enqueued_jobs do
+        user.participations.first.destroy
+      end
+
+      expect(status_stub).to have_been_requested.once
+      expect(delete_stub).to have_been_requested.once
     end
   end
 end
