@@ -13,7 +13,7 @@ RSpec.describe "Visioplainte Rdvs" do
   let(:create_rdv_params) do
     {
       starts_at: "2024-08-19T08:00:00+02:00",
-      service: "Police",
+      service: "Gendarmerie",
     }
   end
 
@@ -30,9 +30,9 @@ RSpec.describe "Visioplainte Rdvs" do
         status: "unknown"
       )
 
-      expect(created_rdv.motif.service.name).to eq "Police Nationale"
+      expect(created_rdv.motif.service.name).to eq "Gendarmerie Nationale"
       expect(created_rdv.agents.first.full_name).to eq "GUICHET 1"
-      expect(created_rdv.organisation.name).to eq "Plateforme Visioplainte Police"
+      expect(created_rdv.organisation.name).to eq "Plateforme Visioplainte Gendarmerie"
 
       expect(created_rdv.users.first).to have_attributes(
         first_name: "Usager Anonyme",
@@ -41,7 +41,7 @@ RSpec.describe "Visioplainte Rdvs" do
     end
 
     context "la configuration du motif a été modifiée par erreur et le rdv nécessite un lieu" do
-      let(:service) { Service.find_by(name:  "Police Nationale") }
+      let(:service) { Service.find_by(name:  "Gendarmerie Nationale") }
       let(:motif) { Motif.find_by(name: "Dépôt de plainte par visioconférence", service: service) }
 
       before do
@@ -70,7 +70,7 @@ RSpec.describe "Visioplainte Rdvs" do
       expect(response.status).to eq 200
       expect(response.parsed_body["status"]).to eq "excused"
 
-      get "/api/visioplainte/creneaux/prochain", headers: auth_header, params: { service: "Police", date_debut: "2024-08-19" }
+      get "/api/visioplainte/creneaux/prochain", headers: auth_header, params: { service: "Gendarmerie", date_debut: "2024-08-19" }
       expect(response.parsed_body["starts_at"]).to eq "2024-08-19T08:00:00+02:00"
 
       expect(Rdv.find(rdv_id).status).to eq "excused"
@@ -99,7 +99,7 @@ RSpec.describe "Visioplainte Rdvs" do
       destroy_rdv
       expect(response.status).to eq 204
 
-      get "/api/visioplainte/creneaux/prochain", headers: auth_header, params: { service: "Police", date_debut: "2024-08-19" }
+      get "/api/visioplainte/creneaux/prochain", headers: auth_header, params: { service: "Gendarmerie", date_debut: "2024-08-19" }
       expect(response.parsed_body["starts_at"]).to eq "2024-08-19T08:00:00+02:00"
 
       expect(Rdv.find_by(id: rdv_id)).to be_blank
@@ -168,17 +168,14 @@ RSpec.describe "Visioplainte Rdvs" do
       let(:gendarmerie_guichet_ids) do
         Agent.joins(:services).where(services: { name: ["Gendarmerie Nationale"] }).pluck(:id)
       end
-      let(:police_guichet_ids) do
-        Agent.joins(:services).where(services: { name: ["Police Nationale"] }).pluck(:id)
-      end
 
       it "returns only the rdvs of the given guichets" do
-        # Le rdv créé est pour la police, donc un appel sur les guichets de la gendarmerie renvoie une liste vide
-        get "/api/visioplainte/rdvs/", params: { guichet_ids: gendarmerie_guichet_ids }.merge(date_params), headers: auth_header
+        # Le rdv créé est pour le guichet 1, donc un appel sur le guichet 2 renvoie une liste vide
+        get "/api/visioplainte/rdvs/", params: { guichet_ids: Agent.where(last_name: "Guichet 2").pluck(:id) }.merge(date_params), headers: auth_header
 
         expect(response.parsed_body["rdvs"]).to be_empty
 
-        get "/api/visioplainte/rdvs/", params: { guichet_ids: police_guichet_ids }.merge(date_params), headers: auth_header
+        get "/api/visioplainte/rdvs/", params: { guichet_ids: Agent.where(last_name: "Guichet 1").pluck(:id) }.merge(date_params), headers: auth_header
         expect(response.parsed_body["rdvs"][0]["id"]).to eq Rdv.last.id
       end
     end
