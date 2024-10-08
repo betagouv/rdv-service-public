@@ -75,8 +75,9 @@ class Admin::OrganisationsController < AgentAuthController
   end
 
   def follow_unique
-    return if params[:follow_unique].blank? || policy_scope(Organisation, policy_scope_class: Agent::OrganisationPolicy::Scope).count != 1
+    accessible_organisations = policy_scope(Organisation, policy_scope_class: Agent::OrganisationPolicy::Scope)
+    return if params[:follow_unique].blank? || accessible_organisations.count != 1
 
-    redirect_to admin_organisation_agent_agenda_path(policy_scope(Organisation, policy_scope_class: Agent::OrganisationPolicy::Scope).first, current_agent)
+    redirect_to admin_organisation_agent_agenda_path(accessible_organisations.first, current_agent)
   end
 end
