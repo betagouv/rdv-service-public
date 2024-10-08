@@ -2,6 +2,16 @@ RSpec.describe "Visioplainte Rdvs" do
   before do
     travel_to Time.zone.local(2024, 8, 18, 14, 0, 0)
     load Rails.root.join("db/seeds/visioplainte.rb")
+    PlageOuverture.create!(
+      title: "Permanence classique",
+      organisation: Organisation.last,
+      agent: Agent.find_by(last_name: "Guichet 1"),
+      motifs: [Motif.last],
+      first_day: Date.tomorrow,
+      start_time: Tod::TimeOfDay.new(8),
+      end_time: Tod::TimeOfDay.new(12),
+      recurrence: Montrose.every(:week, day: [1, 2, 3, 4, 5], interval: 1, starts: Date.tomorrow, on: %i[monday tuesday thursday friday])
+    )
   end
 
   include_context "Visioplainte Auth"

@@ -52,14 +52,3 @@ Agent.create!(
     { organisation: orga_gendarmerie, access_level: AgentRole::ACCESS_LEVEL_INTERVENANT },
   ]
 )
-
-PlageOuverture.create!(
-  title: "Permanence classique",
-  organisation: orga_gendarmerie,
-  agent: guichet_gendarmerie,
-  motifs: [motif],
-  first_day: Date.tomorrow,
-  start_time: Tod::TimeOfDay.new(8),
-  end_time: Tod::TimeOfDay.new(12),
-  recurrence: Montrose.every(:week, day: [1, 2, 3, 4, 5], interval: 1, starts: Date.tomorrow, on: %i[monday tuesday thursday friday])
-)
