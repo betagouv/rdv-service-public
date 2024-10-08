@@ -5,12 +5,12 @@ RSpec.describe RdvEndingShortlyBeforePresenter, type: :presenter do
     subject { presenter.warning_message }
 
     before do
-      dbl = instance_double(Agent::RdvPolicy::DepartementScope, in_scope?: in_scope_mock_value)
+      dbl = instance_double(Agent::RdvPolicy::DepartementScope, resolve: rdv_in_scope ? [rdv] : [])
       allow(Agent::RdvPolicy::DepartementScope).to receive(:new).with(agent_context, Rdv).and_return(dbl)
     end
 
     context "same agent (=> in scope)" do
-      let(:in_scope_mock_value) { true }
+      let(:rdv_in_scope) { true }
       let!(:organisation) { create(:organisation) }
       let(:agent_context) { instance_double(AgentOrganisationContext, agent: agent, organisation: organisation) }
       let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
@@ -22,7 +22,7 @@ RSpec.describe RdvEndingShortlyBeforePresenter, type: :presenter do
     end
 
     context "rdv from other agent but still in scope" do
-      let(:in_scope_mock_value) { true }
+      let(:rdv_in_scope) { true }
       let!(:organisation) { create(:organisation) }
       let(:agent_context) { instance_double(AgentOrganisationContext, agent: build(:agent), organisation: organisation) }
       let!(:user) { create(:user, first_name: "Milos", last_name: "FORMAN") }
@@ -34,7 +34,7 @@ RSpec.describe RdvEndingShortlyBeforePresenter, type: :presenter do
     end
 
     context "rdv from other agent and not in scope" do
-      let(:in_scope_mock_value) { false }
+      let(:rdv_in_scope) { false }
       let!(:organisation) { create(:organisation) }
       let(:agent_context) { instance_double(AgentOrganisationContext, agent: build(:agent), organisation: organisation) }
       let!(:user) { create(:user, first_name: "Milos", last_name: "FORMAN") }
