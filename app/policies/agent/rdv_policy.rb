@@ -68,9 +68,9 @@ class Agent::RdvPolicy < ApplicationPolicy
         # scope.where_id_in_subqueries([my_rdvs, rdv_of_my_admin_orgs, rdv_of_my_basic_orgs])
 
         scope.joins(:motif, :agents_rdvs)
-          .joins("LEFT OUTER JOIN agent_roles on agent_roles.organisation_id = rdvs.organisation_id")
-          .where("agents_rdvs.agent_id = ? OR (agent_roles.agent_id = ? AND motifs.service_id IN (?) AND agent_roles.access_level = 'basic')\
-                 OR (agent_roles.agent_id = ? AND agent_roles.access_level = 'admin')", current_agent.id, current_agent.id, current_agent.service_ids, current_agent.id)
+          .joins("INNER JOIN agent_roles on agent_roles.organisation_id = rdvs.organisation_id")
+          .where(agent_roles: { agent_id: current_agent.id })
+          .where("agents_rdvs.agent_id = ? OR (motifs.service_id IN (?) AND agent_roles.access_level = 'basic') OR (agent_roles.access_level = 'admin')", current_agent.id, current_agent.service_ids)
       end
     end
   end
