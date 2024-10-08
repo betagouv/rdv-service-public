@@ -202,10 +202,6 @@ class Agent < ApplicationRecord
     role_in_organisation(organisation).admin?
   end
 
-  def access_level_in(organisation)
-    role_in_organisation(organisation)&.access_level
-  end
-
   def territorial_admin_in?(territory)
     territorial_role_in(territory).present?
   end
