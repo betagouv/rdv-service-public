@@ -56,20 +56,15 @@ class Agent::RdvPolicy < ApplicationPolicy
     include CurrentAgentInPolicyConcern
 
     def resolve
-      my_rdvs = Rdv.joins(:agents_rdvs).where(agents_rdvs: { agent_id: current_agent.id })
-
       if current_agent.secretaire?
-        rdvs_of_all_my_orgs = Rdv.where(organisation: current_agent.organisations)
-        scope.where_id_in_subqueries([my_rdvs, rdvs_of_all_my_orgs])
-      else
-        # rdv_of_my_admin_orgs = Rdv.where(organisation: current_agent.admin_orgs)
-        # rdv_of_my_basic_orgs = Rdv.where(organisation: current_agent.basic_orgs)
-        #   .joins(:motif).where(motifs: { service: current_agent.services })
-        # scope.where_id_in_subqueries([my_rdvs, rdv_of_my_admin_orgs, rdv_of_my_basic_orgs])
+        scope.joins("INNER JOIN agent_roles on agent_roles.organisation_id = rdvs.organisation_id")
+          .where(agent_roles: { agent_id: current_agent.id }) # RDV des organisations dans lesquelles j'ai un role
 
-        scope.joins(:motif, :agents_rdvs)
-          .joins("INNER JOIN agent_roles on agent_roles.organisation_id = rdvs.organisation_id")
-          .where(agent_roles: { agent_id: current_agent.id })
+      else
+
+        scope.joins("INNER JOIN agent_roles on agent_roles.organisation_id = rdvs.organisation_id")
+          .where(agent_roles: { agent_id: current_agent.id }) # RDV des organisations dans lesquelles j'ai un role
+          .joins(:motif, :agents_rdvs)
           .where("agents_rdvs.agent_id = ? OR (motifs.service_id IN (?) AND agent_roles.access_level = 'basic') OR (agent_roles.access_level = 'admin')", current_agent.id, current_agent.service_ids)
       end
     end
