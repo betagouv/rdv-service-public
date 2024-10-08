@@ -11,7 +11,7 @@ orga_gendarmerie = Organisation.create!(
   territory: territory
 )
 
-motif = Motif.create!(
+Motif.create!(
   name: "Dépôt de plainte par visioconférence",
   default_duration_in_min: 30,
   min_public_booking_delay: 2 * 60 * 60,
@@ -37,7 +37,7 @@ superviseur_gendarmerie.skip_confirmation!
 superviseur_gendarmerie.save!
 AgentTerritorialAccessRight.create(agent: superviseur_gendarmerie, territory: territory)
 
-guichet_gendarmerie = Agent.create!(
+Agent.create!(
   last_name: "Guichet 1",
   services: [service_gendarmerie],
   roles_attributes: [
