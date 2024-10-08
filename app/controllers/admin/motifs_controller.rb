@@ -2,7 +2,7 @@ class Admin::MotifsController < AgentAuthController
   respond_to :html, :json
 
   before_action :set_organisation, only: %i[new create]
-  before_action :set_motif, only: %i[show edit update destroy duplicate]
+  before_action :set_motif, only: %i[show edit update destroy]
 
   def index
     @unfiltered_motifs = policy_scope(current_organisation.motifs, policy_scope_class: Agent::MotifPolicy::Scope).active
@@ -26,11 +26,6 @@ class Admin::MotifsController < AgentAuthController
     end
 
     authorize(@motif)
-  end
-
-  def duplicate
-    authorize(@motif)
-    redirect_to new_admin_organisation_motif_path(organisation_id: current_organisation, duplicated_from_motif_id: @motif.id)
   end
 
   def edit
@@ -97,7 +92,6 @@ class Admin::MotifsController < AgentAuthController
     collectif
     sectorisation_level
     rdvs_editable_by_user
-    duplicated_from_motif_id
   ].freeze
 
   def pundit_user
