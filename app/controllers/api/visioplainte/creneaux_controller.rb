@@ -1,10 +1,10 @@
 class Api::Visioplainte::CreneauxController < Api::Visioplainte::BaseController
-  before_action :validate_date_debut_and_service
+  before_action :validate_date_debut
   before_action :validate_date_range, only: [:index]
 
   SERVICE_NAMES = {
     "Police" => "Police Nationale",
-    "Gendarmerie" => "Gendarmerie Nationale",
+    "Gendarmerie" => GENDARMERIE_SERVICE_NAME,
   }.freeze
 
   def index
@@ -32,7 +32,7 @@ class Api::Visioplainte::CreneauxController < Api::Visioplainte::BaseController
     if next_availability
       render json: creneau_to_hash(next_availability)
     else
-      errors = ["Aucun créneau n'est disponible après cette date pour ce service."]
+      errors = ["Aucun créneau n'est disponible après cette date"]
 
       render(json: { errors: errors }, status: :not_found) and return
     end
@@ -40,7 +40,7 @@ class Api::Visioplainte::CreneauxController < Api::Visioplainte::BaseController
 
   def self.find_motif(service_param)
     Motif.joins(organisation: :territory).where(territories: { name: Territory::VISIOPLAINTE_NAME })
-      .joins(:service).find_by(service: { name: SERVICE_NAMES[service_param] })
+      .joins(:service).find_by(service: { name: SERVICE_NAMES[service_param] || GENDARMERIE_SERVICE_NAME })
   end
 
   private
@@ -56,12 +56,8 @@ class Api::Visioplainte::CreneauxController < Api::Visioplainte::BaseController
     }
   end
 
-  def validate_date_debut_and_service
+  def validate_date_debut
     errors = []
-
-    unless params[:service].in?(SERVICE_NAMES.keys)
-      errors << "Le paramètre service doit avoir pour valeur 'Police' ou 'Gendarmerie'"
-    end
 
     if params[:date_debut].blank?
       errors << "Paramètre date_debut manquant"
