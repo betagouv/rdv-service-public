@@ -42,7 +42,8 @@ class Users::RdvsController < UserAuthController
       notifier = Notifiers::RdvCreated.new(@rdv, current_user)
       notifier.perform
       set_user_name_initials_verified
-      redirect_to users_rdv_path(@rdv, invitation_token: notifier.participations_tokens_by_user_id[current_user.id]), success: t(".rdv_confirmed")
+      flash[:success] = t(".rdv_confirmed")
+      redirect_to users_rdv_path(@rdv, invitation_token: notifier.participations_tokens_by_user_id[current_user.id])
     else
       # TODO: cette liste de paramètres devrait ressembler a SearchController#search_params, mais sans certains paramètres de choix du wizard de créneaux
       query = {
