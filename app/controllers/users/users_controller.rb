@@ -8,7 +8,7 @@ class Users::UsersController < UserAuthController
     @user = current_user
     authorize(@user)
     if @user.update(user_params)
-      flash[:notice] = "Vos informations ont été mises à jour."
+      flash[:success] = "Vos informations ont été mises à jour."
       redirect_to users_informations_path
     else
       render :edit
