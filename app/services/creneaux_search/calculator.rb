@@ -32,7 +32,7 @@ module CreneauxSearch::Calculator
       ranges = ranges_for(plage_ouverture, datetime_range)
       return [] if ranges.empty?
 
-      busy_times = BusyTime.busy_times_for(range, plage_ouverture)
+      busy_times = BusyTime.busy_times_for(datetime_range, plage_ouverture)
 
       ranges.flat_map do |range|
         busy_times_in_range = busy_times.select do |busy_time|
