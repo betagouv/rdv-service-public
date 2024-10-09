@@ -97,6 +97,7 @@ class Agent < ApplicationRecord
   validates :agent_services, presence: true
 
   # Hooks
+  before_destroy :prevent_destroy_if_rdvs
 
   # Scopes
   scope :complete, lambda {
@@ -202,6 +203,10 @@ class Agent < ApplicationRecord
     role_in_organisation(organisation).admin?
   end
 
+  def access_level_in(organisation)
+    role_in_organisation(organisation)&.access_level
+  end
+
   def territorial_admin_in?(territory)
     territorial_role_in(territory).present?
   end
@@ -268,5 +273,12 @@ class Agent < ApplicationRecord
 
   def read_only_profile_infos?
     inclusion_connect_open_id_sub.present? || connected_with_agent_connect?
+  end
+
+  def prevent_destroy_if_rdvs
+    if rdvs.any?
+      errors.add(:base, "Un agent ne peut pas être définitivement supprimé si il a des RDVs")
+      throw :abort
+    end
   end
 end
