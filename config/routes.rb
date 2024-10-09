@@ -23,7 +23,7 @@ Rails.application.routes.draw do
   delete "super_admins/sign_out" => "super_admins/sessions#destroy"
 
   namespace :super_admins do
-    resources :agents do
+    resources :agents, except: [:destroy] do
       get "sign_in_as", on: :member
       post :invite, on: :member
       resources :migrations, only: %i[new create]
