@@ -7,9 +7,10 @@
 #   - démystifier pundit : une policy est une simple classe ruby
 module ExplicitPunditConcern
   extend ActiveSupport::Concern
+  include Pundit::Authorization
 
   included do
-    include Pundit::Authorization
+    helper_method :policy
   end
 
   private
