@@ -125,12 +125,12 @@ module RecurrenceConcern
         event_in_range?(occurrence_starts_at, occurrence_starts_at + duration, inclusive_datetime_range)
       end.to_a
     else
-      event_in_range?(starts_at, first_occurrence_ends_at, inclusive_datetime_range) ? [starts_at] : []
+      event_in_range?(starts_at, ends_at, inclusive_datetime_range) ? [starts_at] : []
     end
   end
 
   def event_in_range?(event_starts_at, event_ends_at, range)
-    range.cover?(event_starts_at) || range.cover?(event_ends_at) || (event_starts_at < range.begin && range.end < event_ends_at)
+    (event_starts_at..event_ends_at).overlap?(range)
   end
 
   def set_recurrence_ends_at
