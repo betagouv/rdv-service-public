@@ -28,16 +28,6 @@
             }
           },
           {
-            "name": "service",
-            "in": "query",
-            "description": "Indique si on souhaite obtenir les créneaux de la plateforme de la gendarmerie ou de la police. Les deux valeurs possibles sont donc 'Police' ou 'Gendarmerie'",
-            "example": "Police",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
             "name": "date_debut",
             "in": "query",
             "description": "date au format iso8601 (YYYY-MM-DD), premier jour de la liste de créneaux qu’on renverra",
@@ -104,6 +94,54 @@
                           "duration_in_min": 30
                         },
                         {
+                          "starts_at": "2024-08-19T12:00:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-19T12:30:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-19T13:00:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-19T13:30:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-19T14:00:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-19T14:30:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-19T15:00:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-19T15:30:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-19T16:00:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-19T16:30:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-19T17:00:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-19T17:30:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
                           "starts_at": "2024-08-20T08:00:00+02:00",
                           "duration_in_min": 30
                         },
@@ -133,6 +171,54 @@
                         },
                         {
                           "starts_at": "2024-08-20T11:30:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-20T12:00:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-20T12:30:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-20T13:00:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-20T13:30:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-20T14:00:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-20T14:30:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-20T15:00:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-20T15:30:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-20T16:00:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-20T16:30:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-20T17:00:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-20T17:30:00+02:00",
                           "duration_in_min": 30
                         },
                         {
@@ -168,6 +254,54 @@
                           "duration_in_min": 30
                         },
                         {
+                          "starts_at": "2024-08-22T12:00:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-22T12:30:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-22T13:00:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-22T13:30:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-22T14:00:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-22T14:30:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-22T15:00:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-22T15:30:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-22T16:00:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-22T16:30:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-22T17:00:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-22T17:30:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
                           "starts_at": "2024-08-23T08:00:00+02:00",
                           "duration_in_min": 30
                         },
@@ -197,6 +331,54 @@
                         },
                         {
                           "starts_at": "2024-08-23T11:30:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-23T12:00:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-23T12:30:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-23T13:00:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-23T13:30:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-23T14:00:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-23T14:30:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-23T15:00:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-23T15:30:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-23T16:00:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-23T16:30:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-23T17:00:00+02:00",
+                          "duration_in_min": 30
+                        },
+                        {
+                          "starts_at": "2024-08-23T17:30:00+02:00",
                           "duration_in_min": 30
                         }
                       ]
@@ -247,16 +429,6 @@
             "in": "header",
             "description": "Clé d'API",
             "example": "visioplainte-api-test-key-123456",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "service",
-            "in": "query",
-            "description": "Indique si on souhaite obtenir les créneaux de la plateforme de la gendarmerie ou de la police. Les deux valeurs possibles sont donc 'Police' ou 'Gendarmerie'",
-            "example": "Police",
             "required": true,
             "schema": {
               "type": "string"
@@ -316,7 +488,7 @@
                   "example": {
                     "value": {
                       "errors": [
-                        "Aucun créneau n'est disponible après cette date pour ce service."
+                        "Aucun créneau n'est disponible après cette date"
                       ]
                     }
                   }
@@ -376,11 +548,11 @@
                     "value": {
                       "guichets": [
                         {
-                          "id": 158,
+                          "id": 90,
                           "name": "GUICHET 1"
                         },
                         {
-                          "id": 159,
+                          "id": 91,
                           "name": "GUICHET 2"
                         }
                       ]
@@ -457,34 +629,34 @@
                     "value": {
                       "plages_ouverture": [
                         {
-                          "id": 43,
+                          "id": 28,
                           "starts_at": "2024-08-19T09:00:00+02:00",
                           "ends_at": "2024-08-19T12:00:00+02:00",
-                          "guichet_id": 164
+                          "guichet_id": 94
                         },
                         {
-                          "id": 43,
+                          "id": 28,
                           "starts_at": "2024-08-20T09:00:00+02:00",
                           "ends_at": "2024-08-20T12:00:00+02:00",
-                          "guichet_id": 164
+                          "guichet_id": 94
                         },
                         {
-                          "id": 43,
+                          "id": 28,
                           "starts_at": "2024-08-21T09:00:00+02:00",
                           "ends_at": "2024-08-21T12:00:00+02:00",
-                          "guichet_id": 164
+                          "guichet_id": 94
                         },
                         {
-                          "id": 43,
+                          "id": 28,
                           "starts_at": "2024-08-22T09:00:00+02:00",
                           "ends_at": "2024-08-22T12:00:00+02:00",
-                          "guichet_id": 164
+                          "guichet_id": 94
                         },
                         {
-                          "id": 43,
+                          "id": 28,
                           "starts_at": "2024-08-23T09:00:00+02:00",
                           "ends_at": "2024-08-23T12:00:00+02:00",
-                          "guichet_id": 164
+                          "guichet_id": 94
                         }
                       ]
                     }
@@ -600,16 +772,6 @@
             }
           },
           {
-            "name": "service",
-            "in": "query",
-            "description": "Indique si on souhaite prendre rendez-vous avec la gendarmerie ou la police. Les deux valeurs possibles sont donc 'Police' ou 'Gendarmerie'",
-            "example": "Police",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
             "name": "starts_at",
             "in": "query",
             "description": "datetime au format iso8601. Normalement c'est une des valeurs proposées par l'endpoint de liste des créneaux.",
@@ -637,8 +799,8 @@
                       "duration_in_min": 30,
                       "ends_at": "2024-08-19 08:30:00 +0200",
                       "guichet": {
-                        "id": 172,
-                        "name": "GUICHET 1"
+                        "id": 98,
+                        "name": "Gaston BIDON"
                       },
                       "starts_at": "2024-08-19 08:00:00 +0200",
                       "status": "unknown",
@@ -701,7 +863,7 @@
                   "example": {
                     "value": {
                       "errors": [
-                        "Pas de créneau disponible pour ce service à la date demandée"
+                        "Pas de créneau disponible à la date demandée"
                       ]
                     }
                   }
@@ -823,8 +985,8 @@
                       "duration_in_min": 30,
                       "ends_at": "2024-08-19 08:30:00 +0200",
                       "guichet": {
-                        "id": 187,
-                        "name": "GUICHET 1"
+                        "id": 107,
+                        "name": "Gaston BIDON"
                       },
                       "starts_at": "2024-08-19 08:00:00 +0200",
                       "status": "excused",
