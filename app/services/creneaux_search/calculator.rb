@@ -44,13 +44,15 @@ module CreneauxSearch::Calculator
     end
 
     def ranges_for(plage_ouverture, datetime_range)
-      occurrences = plage_ouverture.occurrences_for(datetime_range)
+      datetime_range_for_occurrences = if datetime_range.begin < Time.zone.now
+                                         Time.zone.now..datetime_range.end
+                                       else
+                                         datetime_range
+                                       end
 
-      occurrences.map do |occurrence|
-        next if occurrence.ends_at < Time.zone.now
-
+      plage_ouverture.occurrences_for(datetime_range_for_occurrences).map do |occurrence|
         (plage_ouverture.start_time.on(occurrence.starts_at)..plage_ouverture.end_time.on(occurrence.ends_at))
-      end.compact
+      end
     end
 
     # On enlève les intervalles occupés d'un morceau de plage d'ouverture
