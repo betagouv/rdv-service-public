@@ -169,6 +169,14 @@ RSpec.describe Rdv::Updatable, type: :concern do
         expect_notifications_sent_for(rdv, user_added, :rdv_created)
         expect_notifications_sent_for(rdv, user_removed, :rdv_cancelled)
       end
+
+      context "quand un des usager qu'on ajoute est déjà inscrit comme participant au rdv" do
+        let(:rdv) { create(:rdv, agents: [agent], motif: motif, users: [user_staying, user_removed, user_added]).reload }
+
+        it "garde l'usager et n'envoie pas de notification supplémentaire" do
+          rdv.update_and_notify(agent, attributes)
+        end
+      end
     end
   end
 
