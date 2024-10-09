@@ -4,7 +4,7 @@ p
 
 = f.hidden_field :duplicated_from_motif_id
 - organisations_i_can_manage = Agent::MotifPolicy.organisations_i_can_manage(current_agent)
-- if @source_motif && organisations_i_can_manage.count > 1
+- if motif.duplicated_from_motif && motif.new_record? && organisations_i_can_manage.count > 1
   .card
     .card-body
       = f.association :organisation, label: "Créer le motif dans cette organisation", collection: organisations_i_can_manage, required: true, input_html: { class: "select2-input", data: { "auto-select-sole-option": true } }

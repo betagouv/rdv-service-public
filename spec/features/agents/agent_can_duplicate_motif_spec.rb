@@ -78,6 +78,7 @@ RSpec.describe "agent can duplicate motif" do
         id: be_a(Integer),
         created_at: be_within(1.second).of(Time.zone.now),
         updated_at: be_within(1.second).of(Time.zone.now),
+        name: "Suivi de dossier",
         organisation_id: other_organisation.id
       )
       expect(Motif.last).to have_attributes(expected_attributes)

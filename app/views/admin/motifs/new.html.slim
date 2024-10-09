@@ -1,6 +1,6 @@
 - content_for(:menu_item) { "menu-motifs" }
 
-- page_title = @source_motif ? %(Duplication du motif "#{@source_motif}") : t("motifs.form.title.new")
+- page_title = @motif.duplicated_from_motif ? %(Duplication du motif "#{@motif.duplicated_from_motif}") : t("motifs.form.title.new")
 - content_for :title, page_title
 
 - content_for :breadcrumb do
