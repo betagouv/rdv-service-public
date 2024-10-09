@@ -20,7 +20,7 @@ class Admin::MotifsController < AgentAuthController
   def new
     @motif = Motif.new(organisation: current_organisation)
 
-    source_motif = Agent::MotifPolicy::Scope.new(current_agent, Motif).resolve.find_by(id: params[:duplicated_from_motif_id] || params[:motif][:duplicated_from_motif_id])
+    source_motif = Agent::MotifPolicy::Scope.new(current_agent, Motif).resolve.find_by(id: params[:duplicated_from_motif_id] || params.dig(:motif, :duplicated_from_motif_id))
     if source_motif
       @motif.assign_attributes(source_motif.attributes.symbolize_keys.slice(*FORM_ATTRIBUTES))
       @motif.duplicated_from_motif_id = source_motif.id
