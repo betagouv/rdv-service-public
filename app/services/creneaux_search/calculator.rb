@@ -152,18 +152,13 @@ module CreneauxSearch::Calculator
         absences = plage_ouverture.agent.absences
           .not_expired
           .in_range(range)
+
         busy_times = []
         absences.each do |absence|
-          if absence.recurrence
-            absence.occurrences_for(range).each do |absence_occurrence|
-              next if absence_out_of_range?(absence_occurrence, range)
+          absence.occurrences_for(range).each do |absence_occurrence|
+            next if absence_out_of_range?(absence_occurrence, range)
 
-              busy_times << BusyTime.new(absence_occurrence.starts_at, absence_occurrence.ends_at)
-            end
-          else
-            next if absence_out_of_range?(absence, range)
-
-            busy_times << BusyTime.new(absence.starts_at, absence.ends_at)
+            busy_times << BusyTime.new(absence_occurrence.starts_at, absence_occurrence.ends_at)
           end
         end
         busy_times
