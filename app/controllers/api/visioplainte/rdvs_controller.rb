@@ -91,6 +91,6 @@ class Api::Visioplainte::RdvsController < Api::Visioplainte::BaseController
   end
 
   def motif
-    @motif ||= Api::Visioplainte::CreneauxController.find_motif(params[:service])
+    @motif ||= Api::Visioplainte::CreneauxController.find_motif
   end
 end

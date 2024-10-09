@@ -2,11 +2,6 @@ class Api::Visioplainte::CreneauxController < Api::Visioplainte::BaseController
   before_action :validate_date_debut
   before_action :validate_date_range, only: [:index]
 
-  SERVICE_NAMES = {
-    "Police" => "Police Nationale",
-    "Gendarmerie" => GENDARMERIE_SERVICE_NAME,
-  }.freeze
-
   def index
     creneaux = CreneauxSearch::ForUser.new(
       motif: motif,
@@ -38,15 +33,15 @@ class Api::Visioplainte::CreneauxController < Api::Visioplainte::BaseController
     end
   end
 
-  def self.find_motif(service_param)
+  def self.find_motif
     Motif.joins(organisation: :territory).where(territories: { name: Territory::VISIOPLAINTE_NAME })
-      .joins(:service).find_by(service: { name: SERVICE_NAMES[service_param] || GENDARMERIE_SERVICE_NAME })
+      .joins(:service).find_by(service: { name: GENDARMERIE_SERVICE_NAME })
   end
 
   private
 
   def motif
-    @motif ||= self.class.find_motif(params[:service])
+    @motif ||= self.class.find_motif
   end
 
   def creneau_to_hash(creneau)
@@ -57,13 +52,8 @@ class Api::Visioplainte::CreneauxController < Api::Visioplainte::BaseController
   end
 
   def validate_date_debut
-    errors = []
-
     if params[:date_debut].blank?
-      errors << "Paramètre date_debut manquant"
-    end
-
-    if errors.any?
+      errors = ["Paramètre date_debut manquant"]
       render(json: { errors: errors }, status: :bad_request) and return
     end
   end
