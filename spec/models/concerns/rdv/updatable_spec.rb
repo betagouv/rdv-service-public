@@ -171,10 +171,20 @@ RSpec.describe Rdv::Updatable, type: :concern do
       end
 
       context "quand un des usager qu'on ajoute est déjà inscrit comme participant au rdv" do
-        let(:rdv) { create(:rdv, agents: [agent], motif: motif, users: [user_staying, user_removed, user_added]).reload }
+        let(:rdv) { create(:rdv, agents: [agent], motif: motif, users: [user_staying, user_added]).reload }
+
+        let(:attributes) do
+          {
+            participations_attributes: {
+              0 => { user_id: user_staying.id, send_lifecycle_notifications: 1, id: rdv.participations.find_by(user_id: user_staying.id).id, _destroy: false },
+              1 => { user_id: user_added.id, send_lifecycle_notifications: 1 },
+            },
+          }
+        end
 
         it "garde l'usager et n'envoie pas de notification supplémentaire" do
           rdv.update_and_notify(agent, attributes)
+          expect_no_notifications
         end
       end
     end
