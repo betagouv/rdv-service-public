@@ -9,7 +9,7 @@ RSpec.describe "Visioplainte Guichets" do
   end
 
   let(:service_gendarmerie) do
-    Service.find_by(name: Api::Visioplainte::CreneauxController::SERVICE_NAMES["Gendarmerie"])
+    Service.find_by(name: "Gendarmerie Nationale")
   end
 
   include_context "Visioplainte Auth"

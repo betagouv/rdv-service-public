@@ -4,6 +4,18 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do # rub
   before do
     travel_to Time.zone.local(2024, 8, 18, 14, 0, 0)
     load Rails.root.join("db/seeds/visioplainte.rb")
+    create(:plage_ouverture,
+           organisation: orga_gendarmerie,
+           agent: orga_gendarmerie.agents.first,
+           motifs: orga_gendarmerie.motifs,
+           first_day: Date.tomorrow,
+           start_time: Tod::TimeOfDay.new(8),
+           end_time: Tod::TimeOfDay.new(18),
+           recurrence: Montrose.every(:week, day: [1, 2, 3, 4, 5], interval: 1, starts: Date.tomorrow, on: %i[monday tuesday thursday friday]))
+  end
+
+  let(:orga_gendarmerie) do
+    Organisation.find_by(name: "Plateforme Visioplainte Gendarmerie") # créée dans les seeds
   end
 
   def self.rdv_response_schema
@@ -52,16 +64,9 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do # rub
 
       tags "Rendez-vous"
       description "Crée un rdv et réserve le créneau correspondant."
-      parameter name: :service, in: :query, type: :string,
-                description: "Indique si on souhaite prendre rendez-vous avec la gendarmerie ou la police. " \
-                             "Les deux valeurs possibles sont donc 'Police' ou 'Gendarmerie'",
-                example: "Police", required: true
-
       parameter name: "starts_at", in: :query, type: :string,
                 description: "datetime au format iso8601. Normalement c'est une des valeurs proposées par l'endpoint de liste des créneaux.",
                 example: "2024-08-19T08:00:00+02:00", required: true
-
-      let(:service) { "Police" }
 
       response 201, "Prend le rdv" do
         run_test!
@@ -91,7 +96,6 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do # rub
         let(:id) do
           post "/api/visioplainte/rdvs", params: {
             starts_at: "2024-08-19T08:00:00+02:00",
-            service: "Police",
           }, headers: auth_header
 
           response.parsed_body["id"]
@@ -119,7 +123,6 @@ RSpec.describe "Visioplainte API", swagger_doc: "visioplainte/api.json" do # rub
         let(:id) do
           post "/api/visioplainte/rdvs", params: {
             starts_at: "2024-08-19T08:00:00+02:00",
-            service: "Police",
           }, headers: auth_header
 
           response.parsed_body["id"]

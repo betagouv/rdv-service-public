@@ -3,7 +3,7 @@ RSpec.describe "Authentification" do
     stub_env_with(VISIOPLAINTE_API_KEY: "visioplainte-api-test-key-123456")
     let(:creneaux_params) do
       {
-        service: "Police",
+        service: "Gendarmerie",
         date_debut: "2024-08-19",
         date_fin: "2024-08-25",
       }
