@@ -149,11 +149,7 @@ RSpec.describe "public pages", js: true do
 
       context "when invited" do
         let!(:user) { create(:user) }
-        let!(:invitation_token) do
-          user.assign_rdv_invitation_token
-          user.save!
-          user.rdv_invitation_token
-        end
+        let!(:invitation_token) { user.set_rdv_invitation_token! }
 
         it "root path with a city_code and a service page is accessible" do
           path = prendre_rdv_path(
