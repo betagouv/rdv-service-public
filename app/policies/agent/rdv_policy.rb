@@ -65,7 +65,12 @@ class Agent::RdvPolicy < ApplicationPolicy
         scope.joins("INNER JOIN agent_roles on agent_roles.organisation_id = rdvs.organisation_id")
           .where(agent_roles: { agent_id: current_agent.id }) # RDV des organisations dans lesquelles j'ai un role
           .joins(:motif, :agents_rdvs)
-          .where("agents_rdvs.agent_id = ? OR (motifs.service_id IN (?) AND agent_roles.access_level = 'basic') OR (agent_roles.access_level = 'admin')", current_agent.id, current_agent.service_ids)
+          .where(
+            "agents_rdvs.agent_id = ?
+              OR (motifs.service_id IN (?) AND agent_roles.access_level = 'basic')
+              OR (agent_roles.access_level = 'admin')",
+            current_agent.id, current_agent.service_ids
+          )
       end
     end
   end
