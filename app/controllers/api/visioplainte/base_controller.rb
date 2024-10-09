@@ -4,6 +4,8 @@ class Api::Visioplainte::BaseController < ActionController::Base # rubocop:disab
 
   before_action :authenticate_with_api_key
 
+  GENDARMERIE_SERVICE_NAME = "Gendarmerie Nationale".freeze
+
   def authenticate_with_api_key
     authorized = ActiveSupport::SecurityUtils.secure_compare(
       request.headers["X-VISIOPLAINTE-API-KEY"] || "",

@@ -1,6 +1,5 @@
 RSpec.describe RdvExporter, type: :service do
   describe "#xls_string_from_rdvs_rows" do
-    # rubocop:disable RSpec/ExampleLength
     it "return export with header" do
       rdv = create(:rdv, created_at: Time.zone.parse("2023-01-01"), agents: [create(:agent, email: "agent@mail.com")])
       rdv_row = described_class.row_array_from(rdv)
@@ -41,7 +40,6 @@ RSpec.describe RdvExporter, type: :service do
       expect(first_data_row.first).to eq(2023)
       expect(first_data_row.last).to eq("agent@mail.com")
     end
-    # rubocop:enable RSpec/ExampleLength
   end
 
   describe "#row_array_from rdv" do

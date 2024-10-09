@@ -19,7 +19,7 @@ class Users::RelativesController < UserAuthController
     authorize(@user)
     return_location = request.referer
     if @user.save
-      flash[:notice] = "#{@user.full_name} a été ajouté comme proche."
+      flash[:success] = "#{@user.full_name} a été ajouté comme proche."
       return_location = add_query_string_params_to_url(request.referer, created_user_id: @user.id)
     end
     respond_modal_with @user, location: return_location
@@ -32,7 +32,7 @@ class Users::RelativesController < UserAuthController
   def update
     authorize(@user)
     if @user.update(user_params)
-      flash[:notice] = "Les informations de votre proche #{@user.full_name} ont été mises à jour."
+      flash[:success] = "Les informations de votre proche #{@user.full_name} ont été mises à jour."
       redirect_to users_informations_path
     else
       render :edit

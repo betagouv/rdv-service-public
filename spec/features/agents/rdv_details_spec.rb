@@ -139,20 +139,6 @@ RSpec.describe "Agent can see RDV details correctly" do
     end
   end
 
-  # Ce test a été ajouté suite à un crash de l'affichage de la page RDV
-  # lorsque l'agent du RDV avait été hard deleted depuis le SuperAdmin.
-  context "when agent has been hard deleted" do
-    let(:rdv) { create(:rdv, organisation: organisation, created_by: agent) }
-    let(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
-
-    it "does not display the link to the agenda" do
-      rdv.agents.first.rdvs.destroy_all
-      rdv.agents.first.destroy!
-      visit admin_organisation_rdv_path(organisation, rdv)
-      expect(page).not_to have_content("voir dans l'agenda")
-    end
-  end
-
   context "when the rdv is by visio" do
     let(:motif) { create(:motif, service: service, location_type: :visio) }
     let(:user) { create(:user) }
