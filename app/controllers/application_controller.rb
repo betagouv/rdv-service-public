@@ -107,4 +107,18 @@ class ApplicationController < ActionController::Base
   def page_number
     params[:page].presence&.to_i || 1
   end
+
+  def redirect_to_internal_referer_or(path)
+    if request.referer
+      internal_referer = Domain::ALL.map(&:host_name).any? do |hostname|
+        URI(request.referer).host == hostname
+      end
+
+      if internal_referer
+        redirect_to(request.referer) and return
+      end
+    end
+
+    redirect_to(path)
+  end
 end
