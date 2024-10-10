@@ -141,7 +141,7 @@ module CreneauxSearch::Calculator
       end
 
       def busy_times_from_rdvs(range, plage_ouverture)
-        rdv_scope = plage_ouverture.agent.rdvs.not_cancelled.where("tsrange(starts_at, ends_at, '[)') && tsrange(?, ?)", range.begin, range.end)
+        rdv_scope = plage_ouverture.agent.rdvs.not_cancelled.where("starts_at < ?", range.end).where("ends_at > ?", range.begin)
 
         rdv_scope.pluck(:starts_at, :ends_at).map do |starts_at, ends_at|
           BusyTime.new(starts_at, ends_at)
