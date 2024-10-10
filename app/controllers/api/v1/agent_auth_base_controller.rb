@@ -71,7 +71,7 @@ class Api::V1::AgentAuthBaseController < Api::V1::BaseController
   # A terme, on voudra forcer l'argument policy_scope_class
   def policy_scope(scope, policy_scope_class: nil)
     if policy_scope_class
-      super(scope, policy_scope_class: policy_scope_class)
+      super
     else
       super([:agent, scope])
     end

@@ -55,7 +55,7 @@ class CronJob < ApplicationJob
 
   class DestroyInactiveUsers < CronJob
     def perform(date_limit)
-      old_users_without_rdvs = User.where("users.created_at < ?", date_limit).left_outer_joins(:participations).where(participations: { id: nil })
+      old_users_without_rdvs = User.where("users.created_at < ?", date_limit).where.missing(:participations)
         .where("users.rdv_invitation_token_updated_at is null or users.rdv_invitation_token_updated_at < ?", date_limit)
 
       old_users_without_rdvs_or_relatives = old_users_without_rdvs.joins("left outer join users as relatives on users.id = relatives.responsible_id").where(relatives: { id: nil })
@@ -77,7 +77,7 @@ class CronJob < ApplicationJob
     protected
 
     def inactive_agents(date_limit)
-      agents_without_rdvs = Agent.left_outer_joins(:agents_rdvs).where(agents_rdvs: { id: nil })
+      agents_without_rdvs = Agent.where.missing(:agents_rdvs)
 
       agents_without_rdvs.where("created_at < ?", date_limit).where("last_sign_in_at IS NULL OR last_sign_in_at < ?", date_limit)
     end

@@ -4,7 +4,7 @@
   .col-md-12.col-lg-8
     .card.mt-2
       .card-header
-        h3.text-center Motif #{@motif.name} (#{@motif.service.short_name})
+        h3.rdv-text-align-center Motif #{@motif.name} (#{@motif.service.short_name})
       .card-body
         = motif_attribute_row(Motif.human_attribute_name(:name), @motif.name)
         = motif_attribute_row(Motif.human_attribute_name(:service), @motif.service.name)
@@ -95,7 +95,7 @@
             - if @motif_policy.duplicate?
               div= link_to "Dupliquer", duplicate_admin_organisation_motif_path(current_organisation, @motif), class: "btn btn-primary w-100"
             - if @motif_policy.edit?
-              div= link_to "Éditer", edit_admin_organisation_motif_path(current_organisation, @motif), class: "btn btn-primary w-100"
+              div= link_to "Modifier", edit_admin_organisation_motif_path(current_organisation, @motif), class: "btn btn-primary w-100"
 
 .row.justify-content-center
   .col-md-12.col-lg-8

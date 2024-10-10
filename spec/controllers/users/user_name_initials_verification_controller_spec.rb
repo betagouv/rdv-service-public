@@ -21,7 +21,7 @@ RSpec.describe Users::UserNameInitialsVerificationController, type: :controller 
         post :create, params: { letter0: "D", letter1: "Y", letter2: "L" }
 
         jar = ActionDispatch::Cookies::CookieJar.build(request, cookies.to_hash)
-        expect(jar.encrypted[:"user_name_initials_verified_#{user.id}"]).to eq(true)
+        expect(jar.encrypted[:"user_name_initials_verified_#{user.id}"]).to be(true)
       end
 
       it "redirect to the path stored in session" do
@@ -37,7 +37,7 @@ RSpec.describe Users::UserNameInitialsVerificationController, type: :controller 
           post :create, params: { letter0: "B", letter1: "O", letter2: "" }
 
           jar = ActionDispatch::Cookies::CookieJar.build(request, cookies.to_hash)
-          expect(jar.encrypted[:"user_name_initials_verified_#{user.id}"]).to eq(true)
+          expect(jar.encrypted[:"user_name_initials_verified_#{user.id}"]).to be(true)
           expect(response).to redirect_to(redirect_path)
         end
       end
@@ -49,7 +49,7 @@ RSpec.describe Users::UserNameInitialsVerificationController, type: :controller 
           post :create, params: { letter0: "D", letter1: "E", letter2: "L" }
 
           jar = ActionDispatch::Cookies::CookieJar.build(request, cookies.to_hash)
-          expect(jar.encrypted[:"user_name_initials_verified_#{user.id}"]).to eq(true)
+          expect(jar.encrypted[:"user_name_initials_verified_#{user.id}"]).to be(true)
           expect(response).to redirect_to(redirect_path)
         end
       end

@@ -4,7 +4,7 @@ h1
   = @agent.full_name
 
 .container-fluid
-  - if policy([:configuration, current_territory]).allow_to_manage_access_rights?
+  - if Agent::TerritoryPolicy.new(current_agent, current_territory).allow_to_manage_access_rights?
     .card.m-2.rounded
       h2.card-header
         = t(".agent_services_legend")
@@ -22,7 +22,7 @@ h1
             .col.text-right
               = f.submit class: "btn btn-primary", value: "Enregistrer les services"
 
-  - if policy([:configuration, current_territory]).allow_to_manage_access_rights?
+  - if Agent::AgentTerritorialAccessRightPolicy.new(current_agent, @agent.agent_territorial_access_rights.find_by(territory: current_territory)).edit?
     .card.m-2.rounded
       h2.card-header
         = t(".agent_access_rights_legend")
@@ -34,47 +34,38 @@ h1
         .card-footer
           .row
             .col.text-right
-              = f.submit class: "btn btn-primary"
+              = f.submit class: "btn btn-primary", value: "Enregistrer les droits d'accès"
 
-  - if policy([:configuration, current_territory]).allow_to_manage_access_rights?
+  - if Agent::AgentTerritorialRolePolicy.new(current_agent, AgentTerritorialRole.new(agent: @agent, territory: current_territory)).create_or_destroy?
     .card.m-2.rounded.agent-territorial
       h2.card-header
         = t(".agent_territorial_role_caption")
 
-      = simple_form_for @agent, url: territory_admin_admin_territory_agent_path(current_territory, @agent), method: :put do |f|
+      = simple_form_for @agent, url: create_or_destroy_admin_territory_agent_territorial_roles_path(current_territory, agent_id: @agent), method: :put do |f|
         .card-body
           = check_box_tag :territorial_admin, 1, @agent.territorial_admin_in?(current_territory)
           span>
           = label_tag :territorial_admin, "Administrateur du territoire"
           small.form-text.text-muted
-            | Ce status d'agent ouvre un large accès à la création d'organisation, la gestion de la sectorisation, la gestion des webhook, la configuration de ce qui est visible dans une fiche usager, une fiche RDV, la visiiblité des catégories de motif, ...
+            | Ce status d'agent ouvre un large accès à la création d'organisation, la gestion de la sectorisation, la gestion des webhook, la configuration de ce qui est visible dans une fiche usager, une fiche RDV, la visiblité des catégories de motif, ...
 
         .card-footer
           .row
             .col.text-right
               = f.submit class: "btn btn-primary"
 
-  - if policy([:configuration, current_territory]).allow_to_manage_teams?
+  - if Agent::TerritoryPolicy.new(current_agent, current_territory).allow_to_manage_teams?
     .card.m-2.rounded
       h2.card-header
         = t(".agent_teams_legend")
-      = simple_form_for @agent, url: admin_territory_agent_path(current_territory, @agent) do |f|
+      = simple_form_for @agent, url: update_teams_admin_territory_agent_path(current_territory, @agent) do |f|
         .card-body
-          = f.input :team_ids, collection: @agent.teams,
+          = f.input :team_ids, collection: current_territory.teams,
                 label: t(".teams"),
                 label_method: :name,
                 input_html: { \
                   multiple: true, \
                   class: "select2-input",\
-                  data: {\
-                    "select-options": {\
-                      ajax: {\
-                        url: admin_territory_teams_path(current_territory),
-                        dataType: "json",
-                        delay: 250,\
-                      },\
-                    },\
-                  },\
                 }
         .card-footer
           .row
@@ -95,7 +86,7 @@ h1
             = simple_form_for role, namespace: role.id, url: admin_territory_agent_role_path(current_territory, role) do |f|
               .card-header
                 = organisation.name
-              - if policy([:configuration, current_territory]).allow_to_invite_agents?
+              - if Agent::TerritoryPolicy.new(current_agent, current_territory).allow_to_invite_agents?
                 .card-body
                   = f.input :organisation_id, as: :hidden, input_html: { value: organisation.id }
                   = f.input :agent_id, as: :hidden, input_html: { value: @agent.id }
@@ -109,7 +100,7 @@ h1
 
     .card-footer
       - available_other_organisations = (current_agent.organisations.where(territory: current_territory) - agent_organisations_of_current_territory)
-      - if policy([:configuration, current_territory]).allow_to_invite_agents? && available_other_organisations.any?
+      - if Agent::TerritoryPolicy.new(current_agent, current_territory).allow_to_invite_agents? && available_other_organisations.any?
         = simple_form_for AgentRole.new, url: admin_territory_agent_roles_path(current_territory) do |f|
           = f.input :agent_id, as: :hidden, input_html: { value: @agent.id }
           = f.input :access_level, as: :hidden, input_html: { value: AgentRole::ACCESS_LEVEL_BASIC }
@@ -117,6 +108,6 @@ h1
                   required: false,
                   label: false
           = f.submit "Affecter cette organisation", class: "btn btn-outline-primary"
-      - elsif policy([:configuration, current_territory]).allow_to_manage_access_rights?
+      - elsif Agent::TerritoryPolicy.new(current_agent, current_territory).allow_to_manage_access_rights?
         => t(".no_other_organisation")
         = link_to t(".create_organisation"), new_admin_organisation_path(territory_id: current_territory.id)

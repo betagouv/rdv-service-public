@@ -2,7 +2,7 @@ class Admin::AgentsController < AgentAuthController
   respond_to :html, :json
 
   def index
-    @agents = policy_scope(Agent)
+    @agents = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope)
       .includes(:services, :roles, :organisations)
       .active
 
@@ -10,7 +10,7 @@ class Admin::AgentsController < AgentAuthController
     @invited_agents_count = @agents.invitation_not_accepted.where.not(invitation_sent_at: nil).created_by_invite.count
 
     @agents.where("(invitation_sent_at IS NULL AND invitation_accepted_at is NULL) OR (invitation_sent_at IS NOT NULL AND invitation_accepted_at IS NULL)")
-    @agents = index_params[:term].present? ? @agents.search_by_text(index_params[:term]) : @agents.order_by_last_name
+    @agents = index_params[:term].present? ? @agents.search_by_text(index_params[:term]) : @agents.ordered_by_last_name
     @agents = @agents.page(page_number)
   end
 
@@ -27,7 +27,7 @@ class Admin::AgentsController < AgentAuthController
     create_agent = AdminCreatesAgent.new(
       agent_params: create_agent_params,
       current_agent: current_agent,
-      organisation: current_organisation,
+      organisations: [current_organisation],
       access_level: params[:agent][:agent_role][:access_level]
     )
 
@@ -71,7 +71,7 @@ class Admin::AgentsController < AgentAuthController
   end
 
   def destroy
-    @agent = policy_scope(Agent).find(params[:id])
+    @agent = policy_scope(Agent, policy_scope_class: Agent::AgentPolicy::Scope).find(params[:id])
     authorize(@agent)
 
     agent_removal = AgentRemoval.new(@agent, current_organisation)

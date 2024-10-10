@@ -2,7 +2,7 @@ class Users::RdvsController < UserAuthController
   before_action :verify_user_name_initials, :set_rdv, :set_can_see_rdv_motif, only: %i[show creneaux edit cancel update]
   before_action :set_can_see_rdv_motif, only: %i[show edit index]
   before_action :set_geo_search, only: [:create]
-  before_action :set_lieu, only: %i[creneaux edit update]
+  before_action :set_lieu, only: %i[edit update]
   before_action :build_creneau, :redirect_if_creneau_not_available, only: %i[edit update]
   after_action :allow_iframe
 
@@ -24,7 +24,7 @@ class Users::RdvsController < UserAuthController
     # Cela permet d'effectuer une recherche de créneaux, avec une durée différente
     motif.default_duration_in_min = params[:duration] if params[:duration]
     ActiveRecord::Base.transaction do
-      @creneau = Users::CreneauSearch.creneau_for(
+      @creneau = CreneauxSearch::ForUser.creneau_for(
         user: current_user,
         starts_at: Time.zone.parse(rdv_params[:starts_at]),
         motif: motif,
@@ -46,7 +46,7 @@ class Users::RdvsController < UserAuthController
     else
       # TODO: cette liste de paramètres devrait ressembler a SearchController#search_params, mais sans certains paramètres de choix du wizard de créneaux
       query = {
-        address: (new_rdv_extra_params[:address] || new_rdv_extra_params[:where]),
+        address: new_rdv_extra_params[:address] || new_rdv_extra_params[:where],
         city_code: new_rdv_extra_params[:city_code], street_ban_id: new_rdv_extra_params[:street_ban_id],
         service: motif.service.id, motif_name_with_location_type: motif.name_with_location_type,
         departement: new_rdv_extra_params[:departement], organisation_ids:  new_rdv_extra_params[:organisation_ids],
@@ -90,17 +90,13 @@ class Users::RdvsController < UserAuthController
     end_date = [start_date + 6.days, @all_creneaux.max.starts_at.to_date].min
     @date_range = start_date..end_date
     @creneaux = @rdv.creneaux_available(@date_range)
-    respond_to do |format|
-      format.html
-      format.js
-    end
   end
 
   private
 
   def build_creneau
     @starts_at = Time.zone.parse(params[:starts_at])
-    @creneau = Users::CreneauSearch.creneau_for(
+    @creneau = CreneauxSearch::ForUser.creneau_for(
       user: current_user,
       starts_at: @starts_at,
       motif: @rdv.motif,
@@ -137,23 +133,19 @@ class Users::RdvsController < UserAuthController
   end
 
   def build_rdv_from_creneau(creneau)
-    Rdv.new(
-      agents: [creneau.agent],
-      duration_in_min: creneau.duration_in_min,
-      starts_at: creneau.starts_at,
-      organisation: creneau.motif.organisation,
-      motif: creneau.motif,
-      lieu_id: creneau.lieu&.id,
-      users: [user_for_rdv],
+    rdv = creneau.build_rdv
+    rdv.assign_attributes(
+      users: users_for_rdv,
       created_by: current_user
     )
+    rdv
   end
 
-  def user_for_rdv
+  def users_for_rdv
     if rdv_params[:user_ids]
-      current_user.available_users_for_rdv.find(rdv_params[:user_ids]).first
+      current_user.available_users_for_rdv.find(rdv_params[:user_ids])
     else
-      current_user
+      [current_user]
     end
   end
 

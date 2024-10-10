@@ -7,7 +7,7 @@ class Participation < ApplicationRecord
   include CreatedByConcern
 
   # Attributes
-  enum status: { unknown: "unknown", seen: "seen", excused: "excused", revoked: "revoked", noshow: "noshow" }
+  enum :status, { unknown: "unknown", seen: "seen", excused: "excused", revoked: "revoked", noshow: "noshow" }
   NOT_CANCELLED_STATUSES = %w[unknown seen noshow].freeze
   CANCELLED_STATUSES = %w[excused revoked].freeze
 

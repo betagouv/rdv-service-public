@@ -27,14 +27,14 @@
       div.d-flex.justify-content-end.mt-1
         = link_to t("admin.rdvs.show.update"), edit_admin_organisation_rdv_path(rdv.organisation, rdv, agent_id: local_assigns[:agent]&.id), class: "btn btn-outline-primary btn-sm mr-2"
         - if rdv.individuel?
-          = link_to t("admin.rdvs.show.duplicate"), admin_organisation_agent_searches_path(current_organisation, service_id: rdv.motif.service_id, motif_id: rdv.motif_id, from_date: rdv.starts_at + 1.day, user_ids: rdv.user_ids, context: rdv.context, lieu_ids: [rdv.lieu_id], commit: "commit"), class: "btn btn-outline-primary btn-sm"
+          = link_to t("admin.rdvs.show.duplicate"), admin_organisation_creneaux_search_path(current_organisation, service_id: rdv.motif.service_id, motif_id: rdv.motif_id, from_date: rdv.starts_at + 1.day, user_ids: rdv.user_ids, context: rdv.context, lieu_ids: [rdv.lieu_id], commit: "commit"), class: "btn btn-outline-primary btn-sm"
         - else
           = link_to t("admin.rdvs.show.duplicate"), new_admin_organisation_rdvs_collectif_path(current_organisation, motif_id: rdv.motif_id, duplicated_rdv_id: rdv.id), class: "btn btn-outline-primary btn-sm"
 
   .mx-3
   - if rdv.users.any?
     div class=("users-details collapse p-3 pt-0")
-      h5.text-center.strong.mb-3> Participants :
+      h5.rdv-text-align-center.strong.mb-3> Participants :
       .row
         - rdv.users.sort_by { _1.last_name.downcase }.each do |user|
           .col-4

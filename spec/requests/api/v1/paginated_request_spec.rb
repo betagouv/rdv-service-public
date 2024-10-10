@@ -1,6 +1,6 @@
 require "swagger_helper"
 
-RSpec.describe "paginated requests", type: :request do
+RSpec.describe "paginated requests", swagger_doc: "v1/api.json", type: :request do
   let(:agent) { create(:agent) }
   let(:auth_headers) { api_auth_headers_for_agent(agent) }
   let(:"access-token") { auth_headers["access-token"].to_s }

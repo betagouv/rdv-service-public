@@ -5,7 +5,8 @@
     = simple_form_for(@rdv, url: admin_organisation_rdvs_collectif_path(current_organisation), method: :put) do |f|
       .card
         .card-header
-          h3.text-center #{@rdv.motif_name} (#{@rdv.motif.service.short_name})
+          h3.rdv-text-align-center #{@rdv.motif_name} (#{@rdv.motif.service.short_name})
+          .rdv-text-align-center= I18n.l(@rdv.starts_at, format: "%A %d %B à %H:%M").capitalize
         .card-body.px-3
           .row.mt-3
             .col-md-6

@@ -42,7 +42,7 @@ do |f|
                   span>= "la commune entière #{zone.city_name}"
                 | est attribuée à :
                 ul
-                  - zone.sector.attributions.to_a.group_by(&:organisation).each do |organisation, attributions|
+                  - zone.sector.attributions.to_a.group_by(&:organisation).each_value do |attributions|
                     li= render partial: "attribution", collection: attributions, locals: { sectorisation_test_form: @sectorisation_test_form }
           div
             b Cette adresse appartient au département #{@sectorisation_test_form.departement}

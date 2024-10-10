@@ -3,7 +3,7 @@ module SuperAdmins
     before_action :check_privilege_escalation, only: %i[update]
 
     def check_privilege_escalation
-      return not_authorized_to_update if privilege_escalation?
+      not_authorized_to_update if privilege_escalation?
     end
 
     private

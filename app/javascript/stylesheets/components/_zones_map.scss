@@ -1,4 +1,4 @@
-#zones-map {
+#js-zones-map {
   width: 100%;
   height: 80vh;
 
@@ -10,9 +10,9 @@
   padding: 3px 10px;
   border-radius: 7px;
 }
-#zones-map-legend {
+#js-zones-map-legend {
   position: absolute;
-  background-color: rgba(255,255,255,0.8);
+  background-color: rgba(255, 255, 255, 0.8);
   border-left: 1px solid #ccc;
   border-bottom: 1px solid #ccc;
   right: 0;
@@ -22,11 +22,11 @@
   max-height: 80vh;
   overflow: auto;
 }
-#zones-map-small-legend {
+#js-zones-map-small-legend {
   position: absolute;
   top: 0;
   width: 100%;
-  background-color: rgba(255,255,255,0.8);
+  background-color: rgba(255, 255, 255, 0.8);
   border-bottom: 1px solid #ccc;
   padding: 10px;
   height: 3rem;

@@ -159,7 +159,7 @@ RSpec.describe Creneau, type: :model do
     end
 
     it "returns nil when the lieu_id is blank" do
-      expect(build(:creneau, lieu_id: nil).lieu).to eq(nil)
+      expect(build(:creneau, lieu_id: nil).lieu).to be_nil
     end
   end
 end

@@ -108,6 +108,9 @@ fr:
           teams: Équipes
           actions: Actions
           edit_agents: Modification des équipes de l'agent
+      motifs:
+        index:
+          title: Motifs
       motif_fields:
         edit:
           title: Champs des motifs
@@ -116,7 +119,7 @@ fr:
           hint_2: "Les champs seront simplement masqués dans l’interface : les données préexistantes ne seront pas supprimées."
       motif_categories:
         edit:
-          title: Catégories de Motifs disponibles
+          title: Catégories de motifs disponibles
           hint_1: "Les catégories seront/ne seront plus disponibles dans l’interface : les données préexistantes ne seront pas supprimées."
       rdv_fields:
         edit:

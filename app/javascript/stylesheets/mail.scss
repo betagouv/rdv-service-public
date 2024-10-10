@@ -44,7 +44,7 @@ body {
   background-color: #f6f6f6;
 }
 
-.overview{
+.overview {
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 0px;
   margin: 40px;
@@ -101,7 +101,9 @@ body {
   color: #999;
   padding: $padding;
 }
-.footer p, .footer a, .footer td {
+.footer p,
+.footer a,
+.footer td {
   color: #999;
   font-size: 12px;
 }
@@ -109,7 +111,9 @@ body {
 /* -------------------------------------
     TYPOGRAPHY
 ------------------------------------- */
-h1, h2, h3 {
+h1,
+h2,
+h3 {
   font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
   color: #000;
   line-height: 1.2em;
@@ -135,11 +139,15 @@ h3 {
   font-weight: 600;
 }
 
-p, ul, ol {
+p,
+ul,
+ol {
   margin-bottom: 10px;
   font-weight: normal;
 }
-p li, ul li, ol li {
+p li,
+ul li,
+ol li {
   margin-left: 5px;
   list-style-position: inside;
 }
@@ -179,30 +187,29 @@ a {
   clear: both;
 }
 
-.d-block{
+.d-block {
   display: block;
 }
 
-.title{
+.title {
   font-size: 16px;
   font-weight: bold;
   color: black;
 }
 
-.float-right{
+.float-right {
   float: right;
 }
 
-.row-result{
+.row-result {
   padding: 10px 0;
   margin: 0 10px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.no-border{
+.no-border {
   border: none;
 }
-
 
 body,
 html,
@@ -212,21 +219,25 @@ html,
 }
 
 .body-drip {
-  border-top: 8px solid #663399; }
+  border-top: 8px solid #663399;
+}
 
 .header .columns {
-  padding-bottom: 0; }
+  padding-bottom: 0;
+}
 
 .header p {
   color: #fff;
-  padding-top: 15px; }
+  padding-top: 15px;
+}
 
 .wrapper-inner {
   padding: 40px $padding;
 }
 
 .header .container {
-  background: transparent; }
+  background: transparent;
+}
 
 .wrapper.secondary {
   padding: 0.8em 1.2em;
@@ -235,11 +246,11 @@ html,
   background: $blueish-light-grey;
 }
 
-.logo{
+.logo {
   margin-top: 20px;
 }
 
-.btn-primary{
+.btn-primary {
   background-color: $primary;
   padding: 0.8em 0.9em;
   color: $white;
@@ -248,13 +259,13 @@ html,
   font-size: 18px;
 }
 
-.btn-wrapper{
+.btn-wrapper {
   text-align: center;
   margin: 35px 0;
 }
 
 @media only screen and (max-width: 640px) {
-  .overview{
+  .overview {
     padding: 0 !important;
     margin: 0 !important;
   }
