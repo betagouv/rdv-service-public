@@ -21,11 +21,6 @@ RSpec.describe Admin::Agenda::RdvsController, type: :controller do
 
   before { sign_in agent }
 
-  it "return success" do
-    get :index, params: fullcalendar_time_range_params.merge(agent_id: agent.id, organisation_id: organisation.id, format: :json)
-    expect(response).to be_successful
-  end
-
   it "returns rdvs of given agent across organisations" do
     travel_to(aujourdhui_lundi_15h)
     given_agent = create(:agent, basic_role_in_organisations: [organisation], service: agent.services.first)
@@ -33,6 +28,7 @@ RSpec.describe Admin::Agenda::RdvsController, type: :controller do
     rdv = create(:rdv, agents: [given_agent], organisation: organisation, starts_at: mercredi_15h)
     rdv_from_other_organisation = create(:rdv, agents: [given_agent], organisation: other_organisation, starts_at: mercredi_15h)
     get :index, params: fullcalendar_time_range_params.merge(agent_id: given_agent.id, organisation_id: organisation.id, format: :json)
+    expect(response).to be_successful
 
     returns_rdvs = response.parsed_body
     expect(returns_rdvs.pluck("id")).to contain_exactly(rdv.id, rdv_from_other_organisation.id)
