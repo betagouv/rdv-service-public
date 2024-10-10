@@ -132,10 +132,16 @@ module CreneauxSearch::Calculator
       def busy_times_for(range, plage_ouverture)
         # c'est là que l'on execute le SQL
         # TODO : Peut-être cacher la récupération de l'ensemble des RDV et absences concernées (pour n'avoir que deux requêtes) puis faire des selections dessus pour le filtre sur le range
+        #        Le problème potentiel de cette approche est qu'il serait difficile d'éviter de charger des rdv et absences qui sont en dehors des ocurrences des plages d'ouverture
+
+        # On lance le chargement des absences en asynchrone pendant qu'on calcule les autres busy times
+        absences = plage_ouverture.agent.absences.not_expired.in_range(range).load_async
 
         busy_times = busy_times_from_rdvs(range, plage_ouverture)
-        busy_times += busy_times_from_absences(range, plage_ouverture)
         busy_times += busy_times_from_off_days(range)
+
+        busy_times += busy_times_from_absences(range, absences)
+
         # Le tri est nécessaire, surtout pour les surcharges.
         busy_times.sort_by(&:starts_at)
       end
@@ -148,11 +154,7 @@ module CreneauxSearch::Calculator
         end
       end
 
-      def busy_times_from_absences(range, plage_ouverture)
-        absences = plage_ouverture.agent.absences
-          .not_expired
-          .in_range(range)
-
+      def busy_times_from_absences(range, absences)
         busy_times = []
         absences.each do |absence|
           absence.occurrences_for(range).each do |absence_occurrence|
