@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_09_12_132235) do
+ActiveRecord::Schema[7.0].define(version: 2024_10_10_091911) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -563,6 +563,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_12_132235) do
     t.index ["motif_id"], name: "index_rdvs_on_motif_id"
     t.index ["organisation_id"], name: "index_rdvs_on_organisation_id"
     t.index ["starts_at"], name: "index_rdvs_on_starts_at"
+    t.index ["status", "starts_at", "ends_at"], name: "index_rdvs_on_status_and_starts_at_and_ends_at"
     t.index ["status"], name: "index_rdvs_on_status"
     t.index ["updated_at"], name: "index_rdvs_on_updated_at"
     t.index ["users_count"], name: "index_rdvs_on_users_count"
