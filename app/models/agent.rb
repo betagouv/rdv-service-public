@@ -200,19 +200,15 @@ class Agent < ApplicationRecord
   end
 
   def admin_in_organisation?(organisation)
-    role_in_organisation(organisation).admin?
+    access_level_in(organisation) == AgentRole::ACCESS_LEVEL_ADMIN
   end
 
   def access_level_in(organisation)
-    role_in_organisation(organisation)&.access_level
+    roles.where(organisation: organisation).pluck(:access_level).first
   end
 
   def territorial_admin_in?(territory)
-    territorial_role_in(territory).present?
-  end
-
-  def territorial_role_in(territory)
-    territorial_roles.find_by(territory: territory)
+    territorial_roles.exists?(territory: territory)
   end
 
   def access_rights_for_territory(territory)
