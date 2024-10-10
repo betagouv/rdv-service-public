@@ -14,7 +14,7 @@ module CreneauxSearch::Calculator
       scope = PlageOuverture.not_expired
         .merge(motif.plage_ouvertures)
         .in_range(datetime_range)
-        .includes(%i[organisation agent])
+        .includes(:agent)
       scope = scope.where(agent: agents) if agents&.any?
       scope = scope.where(lieu: lieu) if lieu.present?
       scope
