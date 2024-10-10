@@ -167,14 +167,13 @@ module CreneauxSearch::Calculator
       end
 
       def absence_out_of_range?(absence, range)
-        start_date_time = absence.starts_at
-        end_date_time = absence.ends_at
-
-        end_date_time < range.begin || range.end < start_date_time
+        absence.ends_at < range.begin || range.end < absence.starts_at
       end
 
       def busy_times_from_off_days(date_range)
-        OffDays.all_in_date_range(date_range).map { |off_day| BusyTime.new(off_day.beginning_of_day, off_day.end_of_day) }
+        OffDays.all_in_date_range(date_range).map do |off_day|
+          BusyTime.new(off_day.beginning_of_day, off_day.end_of_day)
+        end
       end
     end
   end
