@@ -147,11 +147,17 @@
   }
 }
 
-.external-event {
-  cursor: move;
-  margin: 10px 0;
-  padding: 8px 10px;
-  color: $white;
+.fc-unauthorized-rdv {
+  cursor: not-allowed;
+
+  // Inspired by https://css-tricks.com/stripes-css/
+  background: repeating-linear-gradient(
+    45deg,
+    #dadada,
+    #dadada 10px,
+    #cfcfcf 10px,
+    #cfcfcf 20px
+  );
 }
 
 .fc-basic-view {
