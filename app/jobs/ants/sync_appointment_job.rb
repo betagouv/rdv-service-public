@@ -10,10 +10,8 @@ module Ants
     class << self
       def perform_later_for(rdv)
         # On passe les attributes du RDV au lieu de l'objet active record, au cas où ce dernier serait supprimé
-        perform_later(rdv_attributes: rdv_attributes(rdv), appointment_data: rdv.serialize_for_ants_api)
+        perform_later(rdv_attributes: rdv_attributes(rdv))
       end
-
-      private
 
       def rdv_attributes(rdv)
         {
@@ -21,15 +19,19 @@ module Ants
           status: rdv.status,
           users_ids: rdv.users.ids,
           obsolete_application_id: rdv.obsolete_application_id,
+          meeting_point_id: rdv.lieu.id.to_s,
+          meeting_point: rdv.lieu.name,
+          appointment_date: rdv.starts_at.strftime("%Y-%m-%d %H:%M:%S"),
+          management_url: Rails.application.routes.url_helpers.users_rdv_url(self, host: rdv.organisation.domain.host_name),
         }
       end
     end
 
-    def perform(rdv_attributes:, appointment_data:)
+    def perform(rdv_attributes:)
       @rdv_attributes = rdv_attributes
       @rdv = Rdv.find_by(id: @rdv_attributes[:id])
-      # Si le RDV n'est pas supprimé on essaie à nouveau d'extraire les appointment_data, afin d'avoir les données les plus fraiches possibles
-      @appointment_data = @rdv.present? ? @rdv.serialize_for_ants_api : appointment_data
+      # Si le RDV n'est pas supprimé on essaie de récupérer les données les plus fraiches possibles
+      @rdv_attributes = @rdv ? self.class.rdv_attributes(@rdv) : rdv_attributes
 
       delete_obsolete_appointment
 
@@ -47,7 +49,7 @@ module Ants
 
       res = AntsApi.find_and_delete(
         application_id: @rdv_attributes[:obsolete_application_id],
-        management_url: @appointment_data[:management_url]
+        management_url: @rdv_attributes[:management_url]
       )
       Sentry.set_tags(ants_appointment_deleted: res.present?)
     end
@@ -60,7 +62,7 @@ module Ants
       users.each do |user|
         AntsApi.find_and_delete(
           application_id: user.ants_pre_demande_number,
-          management_url: @appointment_data[:management_url]
+          management_url: @rdv_attributes[:management_url]
         )
       end
     end
@@ -77,10 +79,10 @@ module Ants
       users.each do |user|
         AntsApi.create(
           application_id: user.ants_pre_demande_number,
-          management_url: @appointment_data[:management_url],
-          appointment_date: @appointment_data[:appointment_date],
-          meeting_point: @appointment_data[:meeting_point],
-          meeting_point_id: @appointment_data[:meeting_point_id]
+          management_url: @rdv_attributes[:management_url],
+          appointment_date: @rdv_attributes[:appointment_date],
+          meeting_point: @rdv_attributes[:meeting_point],
+          meeting_point_id: @rdv_attributes[:meeting_point_id]
         )
       end
     end
