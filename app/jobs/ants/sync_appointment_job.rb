@@ -8,9 +8,9 @@ module Ants
     )
 
     class << self
-      def perform_later_for(rdv)
+      def perform_later_for(rdv, **kwargs)
         # On passe les attributes du RDV au lieu de l'objet active record, au cas où ce dernier serait supprimé
-        perform_later(rdv_attributes: rdv_attributes(rdv))
+        perform_later(rdv_attributes: rdv_attributes(rdv), **kwargs)
       end
 
       def rdv_attributes(rdv)
@@ -18,16 +18,16 @@ module Ants
           id: rdv.id,
           status: rdv.status,
           users_ids: rdv.users.ids,
-          obsolete_application_id: rdv.obsolete_application_id,
           meeting_point_id: rdv.lieu.id.to_s,
           meeting_point: rdv.lieu.name,
           appointment_date: rdv.starts_at.strftime("%Y-%m-%d %H:%M:%S"),
-          management_url: Rails.application.routes.url_helpers.users_rdv_url(self, host: rdv.organisation.domain.host_name),
+          management_url: Rails.application.routes.url_helpers.users_rdv_url(rdv, host: rdv.organisation.domain.host_name),
         }
       end
     end
 
-    def perform(rdv_attributes:)
+    def perform(rdv_attributes:, obsolete_application_id: nil)
+      @obsolete_application_id = obsolete_application_id
       @rdv_attributes = rdv_attributes
       @rdv = Rdv.find_by(id: @rdv_attributes[:id])
       # Si le RDV n'est pas supprimé on essaie de récupérer les données les plus fraiches possibles
@@ -45,10 +45,10 @@ module Ants
     private
 
     def delete_obsolete_appointment
-      return if @rdv_attributes[:obsolete_application_id].blank?
+      return if @obsolete_application_id.blank?
 
       res = AntsApi.find_and_delete(
-        application_id: @rdv_attributes[:obsolete_application_id],
+        application_id: @obsolete_application_id,
         management_url: @rdv_attributes[:management_url]
       )
       Sentry.set_tags(ants_appointment_deleted: res.present?)
