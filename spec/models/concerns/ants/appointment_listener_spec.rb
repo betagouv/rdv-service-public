@@ -7,7 +7,7 @@
 # note : dans les stubs, Webmock reconnaît les requêtes qui ont des query params
 # uniquement si on passe explicitement un with(query: hash_including({...}))
 
-RSpec.describe Ants::AppointmentSerializerAndListener do
+RSpec.describe Ants::AppointmentListener do
   include_context "rdv_mairie_api_authentication"
 
   let(:api_url) { "https://int.api-coordination.rendezvouspasseport.ants.gouv.fr/api" }

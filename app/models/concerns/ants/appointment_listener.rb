@@ -1,5 +1,5 @@
 module Ants
-  module AppointmentSerializerAndListener
+  module AppointmentListener
     extend ActiveSupport::Concern
 
     ATTRIBUTES_TO_WATCH = %w[id status starts_at lieu_id].freeze
@@ -8,29 +8,29 @@ module Ants
       attr_accessor :needs_sync_to_ants, :obsolete_application_id
 
       Rdv.before_commit do |rdv|
-        Ants::AppointmentSerializerAndListener.mark_for_sync([rdv]) if rdv.watching_attributes_for_ants_api_changed?
+        Ants::AppointmentListener.mark_for_sync([rdv]) if rdv.watching_attributes_for_ants_api_changed?
       end
       User.before_commit do |user|
-        Ants::AppointmentSerializerAndListener.mark_for_sync(user.rdvs) if user.saved_change_to_ants_pre_demande_number?
+        Ants::AppointmentListener.mark_for_sync(user.rdvs) if user.saved_change_to_ants_pre_demande_number?
       end
       Participation.before_commit do |participation|
-        Ants::AppointmentSerializerAndListener.mark_for_sync([participation.rdv], obsolete_application_id: participation.user.ants_pre_demande_number)
+        Ants::AppointmentListener.mark_for_sync([participation.rdv], obsolete_application_id: participation.user.ants_pre_demande_number)
       end
       Lieu.before_commit do |lieu|
-        Ants::AppointmentSerializerAndListener.mark_for_sync(lieu.rdvs) if lieu.saved_change_to_name?
+        Ants::AppointmentListener.mark_for_sync(lieu.rdvs) if lieu.saved_change_to_name?
       end
 
       Rdv.after_commit do |rdv|
-        Ants::AppointmentSerializerAndListener.enqueue_sync_for_marked_record([rdv]) if rdv.watching_attributes_for_ants_api_changed?
+        Ants::AppointmentListener.enqueue_sync_for_marked_record([rdv]) if rdv.watching_attributes_for_ants_api_changed?
       end
       User.after_commit do |user|
-        Ants::AppointmentSerializerAndListener.enqueue_sync_for_marked_record(user.rdvs) if user.saved_change_to_ants_pre_demande_number?
+        Ants::AppointmentListener.enqueue_sync_for_marked_record(user.rdvs) if user.saved_change_to_ants_pre_demande_number?
       end
       Participation.after_commit do |participation|
-        Ants::AppointmentSerializerAndListener.enqueue_sync_for_marked_record([participation.rdv])
+        Ants::AppointmentListener.enqueue_sync_for_marked_record([participation.rdv])
       end
       Lieu.after_commit do |lieu|
-        Ants::AppointmentSerializerAndListener.enqueue_sync_for_marked_record(lieu.rdvs) if lieu.saved_change_to_name?
+        Ants::AppointmentListener.enqueue_sync_for_marked_record(lieu.rdvs) if lieu.saved_change_to_name?
       end
     end
 

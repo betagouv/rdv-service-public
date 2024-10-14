@@ -12,7 +12,7 @@ class Rdv < ApplicationRecord
   include Rdv::UsingWaitingRoom
   include Rdv::HardcodedAttributeNamesConcern
   include IcsPayloads::Rdv
-  include Ants::AppointmentSerializerAndListener
+  include Ants::AppointmentListener
   include CreatedByConcern
 
   # Attributes
@@ -74,7 +74,7 @@ class Rdv < ApplicationRecord
   before_validation { self.uuid ||= SecureRandom.uuid }
   before_create :set_created_by_for_participations
   # voir Outlook::EventSerializerAndListener pour d'autres callbacks
-  # voir Ants::AppointmentSerializerAndListener pour d'autres callbacks
+  # voir Ants::AppointmentListener pour d'autres callbacks
 
   # Scopes
   scope :not_cancelled, -> { where(status: NOT_CANCELLED_STATUSES) }
