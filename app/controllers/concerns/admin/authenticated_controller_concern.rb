@@ -31,7 +31,6 @@ module Admin::AuthenticatedControllerConcern
   def agent_not_authorized(exception)
     policy_name = exception.policy.class.to_s.underscore
     flash[:error] = t "#{policy_name}.#{exception.query}", scope: "pundit", default: :default
-
-    redirect_to_internal_referer_or(authenticated_agent_root_path)
+    redirect_to authenticated_agent_root_path
   end
 end
