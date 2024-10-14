@@ -1,6 +1,4 @@
 class Api::V1::BaseController < ActionController::Base
-  include ExplicitPunditConcern
-
   respond_to :json
 
   PAGINATE_PER = 100
