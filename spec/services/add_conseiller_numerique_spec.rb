@@ -30,7 +30,6 @@ RSpec.describe AddConseillerNumerique do
       expect(Agent.last).to have_attributes(
         external_id: "exemple@conseiller-numerique.fr",
         email: "exemple@conseiller-numerique.fr",
-        cnfs_secondary_email: "mail_perso@gemelle.com",
         first_name: "Camille",
         last_name: "Clavier"
       )

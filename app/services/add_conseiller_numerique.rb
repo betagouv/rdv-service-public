@@ -52,14 +52,19 @@ class AddConseillerNumerique
 
   def invite_agent(organisation)
     Agent.invite!(
-      email: @conseiller_numerique.email,
-      cnfs_secondary_email: @conseiller_numerique.secondary_email,
-      first_name: @conseiller_numerique.first_name.capitalize,
-      last_name: @conseiller_numerique.last_name,
-      external_id: @conseiller_numerique.external_id,
-      services: [service],
-      password: SecureRandom.base64(32),
-      roles_attributes: [{ organisation: organisation, access_level: AgentRole::ACCESS_LEVEL_ADMIN }]
+      {
+        email: @conseiller_numerique.email,
+        first_name: @conseiller_numerique.first_name.capitalize,
+        last_name: @conseiller_numerique.last_name,
+        external_id: @conseiller_numerique.external_id,
+        services: [service],
+        password: SecureRandom.base64(32),
+        roles_attributes: [{ organisation: organisation, access_level: AgentRole::ACCESS_LEVEL_ADMIN }],
+      },
+      nil,
+      {
+        cnfs_secondary_email: @conseiller_numerique.secondary_email,
+      }
     ).tap do |agent|
       agent.agent_territorial_access_rights.find_or_create_by!(territory: territory)
     end
