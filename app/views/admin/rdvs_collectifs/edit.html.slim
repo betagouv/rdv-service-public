@@ -63,17 +63,18 @@
             = f.fields_for :participations, @participations_to_add do |participation_form|
               = render "admin/participations/form", form: participation_form
 
-          .form-group
-            = select_tag :status,
-                    options_for_select([]),
-                    include_blank: "Ajouter un usager",
-                    required: false,
-                    class: "select2-input js-rdv-user-select",
-                    data: { \
-              width: "auto", \
-              "scroll-to-bottom": @add_user_ids.present?, \
-              "select2-config": { ajax: { url: search_admin_organisation_users_path(current_organisation, exclude_ids: @rdv.participations.map(&:user_id)), dataType: "json", delay: 250 } }, \
-             }
+          div.form-row.grid-align-center.pb-4
+            .flex-grow-1.pr-4
+              = select_tag :status,
+                      options_for_select([]),
+                      include_blank: "Ajouter un usager",
+                      required: false,
+                      class: "select2-input js-rdv-user-select",
+                      data: { \
+                width: "auto", \
+                "scroll-to-bottom": @add_user_ids.present?, \
+                "select2-config": { ajax: { url: search_admin_organisation_users_path(current_organisation, exclude_ids: @rdv.participations.map(&:user_id)), dataType: "json", delay: 250 } }, \
+               }
             span.small.text-muted
               | L'usager n'existe pas ?&nbsp;
               = link_to \

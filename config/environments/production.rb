@@ -47,8 +47,6 @@ Rails.application.configure do
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   config.force_ssl = true
-  # Voir health_check_spec.rb pour les infos de contexte
-  config.ssl_options = { redirect: { exclude: proc { |env| env&.path&.start_with?("/health_check") } } }
 
   # Include generic and useful information about system operation, but avoid logging too much
   # information to avoid inadvertent exposure of personally identifiable information (PII).

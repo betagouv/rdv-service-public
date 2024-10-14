@@ -39,12 +39,12 @@ module CreneauxSearch::Calculator
     end
 
     def ranges_for(plage_ouverture, datetime_range)
-      occurrences = plage_ouverture.occurrences_for(datetime_range, only_future: true)
+      occurrences = plage_ouverture.occurrences_for(datetime_range)
 
       occurrences.map do |occurrence|
         next if occurrence.ends_at < Time.zone.now
 
-        (plage_ouverture.start_time.on(occurrence.starts_at)..plage_ouverture.end_time.on(occurrence.ends_at))
+        occurrence.starts_at..occurrence.ends_at
       end.compact
     end
 
@@ -119,20 +119,9 @@ module CreneauxSearch::Calculator
   class BusyTime
     attr_reader :starts_at, :ends_at
 
-    def initialize(object)
-      case object
-      when Date
-        @starts_at = object.beginning_of_day
-        @ends_at = object.end_of_day
-      when Rdv, Recurrence::Occurrence
-        @starts_at = object.starts_at
-        @ends_at = object.ends_at
-      when Absence
-        @starts_at = object.start_time.on(object.first_day)
-        @ends_at = object.end_time.on(object.end_day.presence || object.first_day)
-      else
-        raise ArgumentError, "busytime can't be build with a #{object.class}"
-      end
+    def initialize(starts_at, ends_at)
+      @starts_at = starts_at
+      @ends_at = ends_at
     end
 
     def range
@@ -152,8 +141,10 @@ module CreneauxSearch::Calculator
       end
 
       def busy_times_from_rdvs(range, plage_ouverture)
-        plage_ouverture.agent.rdvs.not_cancelled.where("tsrange(starts_at, ends_at, '[)') && tsrange(?, ?)", range.begin, range.end).map do |rdv|
-          BusyTime.new(rdv)
+        rdv_scope = plage_ouverture.agent.rdvs.not_cancelled.where("tsrange(starts_at, ends_at, '[)') && tsrange(?, ?)", range.begin, range.end)
+
+        rdv_scope.pluck(:starts_at, :ends_at).map do |starts_at, ends_at|
+          BusyTime.new(starts_at, ends_at)
         end
       end
 
@@ -161,36 +152,27 @@ module CreneauxSearch::Calculator
         absences = plage_ouverture.agent.absences
           .not_expired
           .in_range(range)
+
         busy_times = []
         absences.each do |absence|
-          if absence.recurrence
-            absence.occurrences_for(range, only_future: true).each do |absence_occurrence|
-              next if absence_out_of_range?(absence_occurrence, range)
+          absence.occurrences_for(range).each do |absence_occurrence|
+            next if absence_out_of_range?(absence_occurrence, range)
 
-              busy_times << BusyTime.new(absence_occurrence)
-            end
-          else
-            next if absence_out_of_range?(absence, range)
-
-            busy_times << BusyTime.new(absence)
+            busy_times << BusyTime.new(absence_occurrence.starts_at, absence_occurrence.ends_at)
           end
         end
         busy_times
       end
 
       def absence_out_of_range?(absence, range)
-        if absence.is_a?(Recurrence::Occurrence)
-          start_date_time = absence.starts_at
-          end_date_time = absence.ends_at
-        else
-          start_date_time = absence.start_time.on(absence.first_day)
-          end_date_time = absence.end_time.on(absence.end_day)
-        end
+        start_date_time = absence.starts_at
+        end_date_time = absence.ends_at
+
         end_date_time < range.begin || range.end < start_date_time
       end
 
       def busy_times_from_off_days(date_range)
-        OffDays.all_in_date_range(date_range).map { |off_day| BusyTime.new(off_day) }
+        OffDays.all_in_date_range(date_range).map { |off_day| BusyTime.new(off_day.beginning_of_day, off_day.end_of_day) }
       end
     end
   end

@@ -6,10 +6,10 @@
       - if display_agent_connect_button? || display_inclusion_connect_button?
         .fr-grid-row--gutters.centered-flex
           - if display_agent_connect_button?
-            .fr-col-md-6= render "common/agent_connect_button_dsfr"
+            .fr-col-md-6= render "common/proconnect_button_dsfr"
 
           - if display_inclusion_connect_button?
-            .fr-col-md-6= render "common/inclusionconnect_button_dsfr", login_hint: resource.email
+            .fr-col-md-6= render "common/inclusionconnect_button", login_hint: resource.email
 
         p.fr-mt-3w.fr-hr-or = "ou"
 

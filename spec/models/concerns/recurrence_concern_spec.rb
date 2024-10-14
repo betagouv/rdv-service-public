@@ -66,7 +66,7 @@ RSpec.describe RecurrenceConcern do
     end
 
     it "doesn't return occurrences for an object with a finished recurrence" do
-      create(factory, recurrence: Montrose.every(:week, on: [:monday], starts: Date.new(2019, 7, 1), until: Date.new(2019, 7, 22)),
+      create(factory, recurrence: Montrose.every(:week, on: [:monday], starts: Date.new(2019, 7, 1), until: Date.new(2019, 7, 22), interval: 1),
                       first_day: Date.new(2019, 7, 1), start_time: Time.zone.parse("8h00"),
                       end_time: Time.zone.parse("12h00"))
 
@@ -77,7 +77,7 @@ RSpec.describe RecurrenceConcern do
     end
 
     it "returns the last occurrence when it's the first day of the date range" do
-      object = create(factory, recurrence: Montrose.every(:week, on: [:monday], starts: Date.new(2019, 7, 1), until: Date.new(2019, 7, 22)),
+      object = create(factory, recurrence: Montrose.every(:week, on: [:monday], starts: Date.new(2019, 7, 1), until: Date.new(2019, 7, 22), interval: 1),
                                first_day: Date.new(2019, 7, 1), start_time: Time.zone.parse("8h00"),
                                end_time: Time.zone.parse("12h00"))
 
@@ -127,47 +127,47 @@ RSpec.describe RecurrenceConcern do
     context "with recurrence" do
       it "returns element when start in range" do
         first_day = Date.new(2021, 9, 26)
-        object = create(factory, first_day: first_day, recurrence: Montrose.every(:week, on: ["monday"], starts: first_day))
+        object = create(factory, first_day: first_day, recurrence: Montrose.every(:week, on: ["monday"], starts: first_day, interval: 1))
         expect(described_class.in_range(range)).to eq([object])
       end
 
       it "returns element when ends in range" do
         first_day = range.begin - 1.month
-        object = create(factory, first_day: first_day, recurrence: Montrose.every(:week, on: ["monday"], starts: first_day, until: range.end - 2.days))
+        object = create(factory, first_day: first_day, recurrence: Montrose.every(:week, on: ["monday"], starts: first_day, until: range.end - 2.days, interval: 1))
         expect(described_class.in_range(range)).to eq([object])
       end
 
       it "returns element when start before range and end after range" do
         first_day = range.begin - 1.day
-        object = create(factory, first_day: first_day, recurrence: Montrose.every(:week, on: ["monday"], starts: first_day, until: range.end + 2.days))
+        object = create(factory, first_day: first_day, recurrence: Montrose.every(:week, on: ["monday"], starts: first_day, until: range.end + 2.days, interval: 1))
         expect(described_class.in_range(range)).to eq([object])
       end
 
       it "returns element when one occurrence start in range without until day" do
         range = Date.new(2021, 10, 25)..Date.new(2021, 10, 29)
         first_day = monday - 14.days
-        object = create(factory, first_day: first_day, recurrence: Montrose.every(:week, on: ["monday"], starts: first_day))
+        object = create(factory, first_day: first_day, recurrence: Montrose.every(:week, on: ["monday"], starts: first_day, interval: 1))
         expect(described_class.in_range(range)).to eq([object])
       end
 
       it "doesnt return element when end before range" do
         first_day = range.begin - 2.months
         create(factory, first_day: first_day,
-                        recurrence: Montrose.every(:week, on: ["monday"], starts: first_day, until: range.begin - 3.days))
+                        recurrence: Montrose.every(:week, on: ["monday"], starts: first_day, until: range.begin - 3.days, interval: 1))
         expect(described_class.in_range(range)).to eq([])
       end
 
       it "returns element when first day of range at the until day" do
         range = Time.zone.parse("2021-10-25 0:00")..Time.zone.parse("2021-10-29 23:59:59.99")
         first_day = monday - 14.days
-        object = create(factory, first_day: first_day, recurrence: Montrose.every(:week, on: ["monday"], starts: first_day, until: range.begin.to_date))
+        object = create(factory, first_day: first_day, recurrence: Montrose.every(:week, on: ["monday"], starts: first_day, until: range.begin.to_date, interval: 1))
         expect(described_class.in_range(range)).to eq([object])
       end
 
       it "doesnt return element with recurrence start after range" do
         first_day = range.end + 4.days
         create(factory, first_day: first_day,
-                        recurrence: Montrose.every(:week, on: ["monday"], starts: first_day))
+                        recurrence: Montrose.every(:week, on: ["monday"], starts: first_day, interval: 1))
         expect(described_class.in_range(range)).to eq([])
       end
     end
@@ -176,25 +176,25 @@ RSpec.describe RecurrenceConcern do
   shared_examples "#recurrence_ends_after_first_day" do
     it "valid element when recurrence ends after first_day" do
       starts = Date.new(2021, 10, 27)
-      recurring_object = build(factory, first_day: starts, recurrence: Montrose.every(:week, on: ["wednesday"], starts: starts, until: starts + 1.week))
+      recurring_object = build(factory, first_day: starts, recurrence: Montrose.every(:week, on: ["wednesday"], starts: starts, until: starts + 1.week, interval: 1))
       expect(recurring_object).to be_valid
     end
 
     it "valid element when recurrence ends is nil" do
       starts = Date.new(2021, 10, 27)
-      recurring_object = build(factory, first_day: starts, recurrence: Montrose.every(:week, on: ["wednesday"], starts: starts, until: nil))
+      recurring_object = build(factory, first_day: starts, recurrence: Montrose.every(:week, on: ["wednesday"], starts: starts, until: nil, interval: 1))
       expect(recurring_object).to be_valid
     end
 
     it "invalid element when recurrence ends at first_day" do
       starts = Date.new(2021, 10, 27)
-      recurring_object = build(factory, first_day: starts, recurrence: Montrose.every(:week, on: ["wednesday"], starts: starts, until: starts))
+      recurring_object = build(factory, first_day: starts, recurrence: Montrose.every(:week, on: ["wednesday"], starts: starts, until: starts, interval: 1))
       expect(recurring_object).to be_invalid
     end
 
     it "invalid element when recurrence ends before first_day" do
       starts = Date.new(2021, 10, 27)
-      recurring_object = build(factory, first_day: starts, recurrence: Montrose.every(:week, on: ["wednesday"], starts: starts, until: starts - 1.week))
+      recurring_object = build(factory, first_day: starts, recurrence: Montrose.every(:week, on: ["wednesday"], starts: starts, until: starts - 1.week, interval: 1))
       expect(recurring_object).to be_invalid
     end
   end

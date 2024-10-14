@@ -34,7 +34,7 @@ RSpec.describe CreneauxSearch::NextAvailability, type: :service do
       end
 
       it "when plage_ouverture is recurrence" do
-        recurrence = Montrose.every(:month, starts: today)
+        recurrence = Montrose.every(:month, starts: today, interval: 1)
         create(:plage_ouverture,
                motifs: [motif], lieu: lieu, agent: agent, organisation: organisation,
                first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11),
@@ -92,7 +92,7 @@ RSpec.describe CreneauxSearch::NextAvailability, type: :service do
         create(:plage_ouverture,
                motifs: [motif], lieu: lieu, agent: agent, organisation: organisation,
                first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11),
-               recurrence: Montrose.every(:month, starts: today))
+               recurrence: Montrose.every(:month, starts: today, interval: 1))
 
         next_creneau = described_class.find(motif, lieu, [], from: today)
         expect(next_creneau.starts_at).to eq(today.in_time_zone + 1.month + 9.hours)
@@ -110,7 +110,7 @@ RSpec.describe CreneauxSearch::NextAvailability, type: :service do
         create(:plage_ouverture,
                motifs: [motif], lieu: lieu, agent: agent, organisation: organisation,
                first_day: today + 1.week, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11),
-               recurrence: Montrose.every(:week, starts: 1.week.from_now))
+               recurrence: Montrose.every(:week, starts: 1.week.from_now, interval: 1))
       end
 
       context "when now is later than the plage d'ouverture" do
