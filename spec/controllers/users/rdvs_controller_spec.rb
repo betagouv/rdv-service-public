@@ -297,11 +297,7 @@ RSpec.describe Users::RdvsController, type: :controller do
       end
 
       context "with a valid invitation token" do
-        let!(:invitation_token) do
-          user.assign_rdv_invitation_token
-          user.save!
-          user.rdv_invitation_token
-        end
+        let!(:invitation_token) { user.set_rdv_invitation_token! }
 
         before do
           request.session[:invitation] = { invitation_token:, expires_at: 1.hour.from_now }
@@ -366,11 +362,7 @@ RSpec.describe Users::RdvsController, type: :controller do
       end
 
       context "with a valid invitation token" do
-        let!(:invitation_token) do
-          user.assign_rdv_invitation_token
-          user.save!
-          user.rdv_invitation_token
-        end
+        let!(:invitation_token) { user.set_rdv_invitation_token! }
 
         before do
           request.session[:invitation] = { invitation_token: invitation_token, expires_at: 1.hour.from_now }

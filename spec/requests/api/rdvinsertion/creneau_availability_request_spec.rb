@@ -1,6 +1,6 @@
 require "swagger_helper"
 
-RSpec.describe "Available Creneaux Count for Invitation", swagger_doc: "v1/api.json" do
+RSpec.describe "Available Creneaux Count for Invitation" do
   with_examples
   let!(:now) { Time.zone.parse("2023-10-23 16:00") }
 

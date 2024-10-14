@@ -51,6 +51,9 @@ RSpec.describe "agent can duplicate motif" do
 
   context "when agent is in multiple organisations" do
     let(:other_organisation) { create(:organisation, name: "Mon autre orga", territory: territory) }
+    let!(:motif_in_other_orga) do
+      create(:motif, organisation: other_organisation, name: existing_motif.name, service: existing_motif.service, location_type: existing_motif.location_type)
+    end
 
     before do
       agent.roles.create!(organisation: other_organisation, access_level: AgentRole::ACCESS_LEVEL_ADMIN)
@@ -61,12 +64,21 @@ RSpec.describe "agent can duplicate motif" do
       visit admin_organisation_motif_path(organisation, existing_motif)
       click_on "Dupliquer"
       select "Mon autre orga", from: :motif_organisation_id
+
+      # En cas d'erreur de validation (ici parce qu'il existe déjà un motif avec le meme nom),
+      # on continue d'afficher la page de duplication
+      click_on "Créer le motif"
+
+      expect(page).to have_content "Duplication du motif"
+      fill_in("Nom du motif", with: "Suivi de dossier")
+
       expect { click_on "Créer le motif" }.to change(Motif, :count).by(1)
 
       expected_attributes = existing_motif.attributes.symbolize_keys.merge(
         id: be_a(Integer),
         created_at: be_within(1.second).of(Time.zone.now),
         updated_at: be_within(1.second).of(Time.zone.now),
+        name: "Suivi de dossier",
         organisation_id: other_organisation.id
       )
       expect(Motif.last).to have_attributes(expected_attributes)

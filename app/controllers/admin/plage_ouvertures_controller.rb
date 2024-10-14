@@ -10,7 +10,7 @@ class Admin::PlageOuverturesController < AgentAuthController
   end
 
   def index
-    all_plage_ouvertures = policy_scope(PlageOuverture)
+    all_plage_ouvertures = policy_scope(current_organisation.plage_ouvertures)
       .includes(:lieu, :organisation, :motifs, :agent)
       .where(agent_id: filter_params[:agent_id])
       .order(updated_at: :desc)

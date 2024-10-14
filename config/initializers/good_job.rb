@@ -39,12 +39,6 @@ Rails.application.configure do
       class: "CronJob::UpdateExpirationsJob",
     },
 
-    # Préchauffage de cache : pas essentiel mais idéalement quotidien
-    warm_up_occurrences_cache: {
-      cron: "every day at 04:00 Europe/Paris",
-      class: "CronJob::WarmUpOccurrencesCache",
-    },
-
     # Reset de la liste d'usagers en salle d'attente, à vider chaque soir
     destroy_redis_waiting_room_keys: {
       cron: "every day at 21:30 Europe/Paris",

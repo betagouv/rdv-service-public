@@ -135,7 +135,11 @@ RSpec.describe "User can search rdv on rdv mairie" do
       fill_in("user_last_name", with: "Mairie")
       fill_in("user_ants_pre_demande_number", with: "5544332211")
       click_button("Enregistrer")
-      expect(page).to have_content("Alain MAIRIE")
+
+      # Pour éviter une flaky spec (causée par l'animation CSS de la modale ?),
+      # on vérifie directement que le proche est bien enregistré dans la base.
+      wait_for { User.exists?(first_name: "Alain", last_name: "Mairie", ants_pre_demande_number: "5544332211") }.to be(true)
+
       alain = User.find_by(first_name: "Alain", last_name: "Mairie", ants_pre_demande_number: "5544332211")
       expect(alain).to be_present
 

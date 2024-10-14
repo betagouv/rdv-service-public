@@ -31,7 +31,7 @@ RSpec.describe "Users::Participants", type: :request do
     describe "POST /users/rdvs/:rdv_id/participants, norminal case" do
       it "set a confirmation notice message for users_rdv_participations POST for current_user participation" do
         post users_rdv_participations_path(rdv)
-        expect(flash[:notice]).to eq("Participation confirmée")
+        expect(flash[:success]).to eq("Participation confirmée")
         expect(response).to redirect_to(users_rdv_path(rdv, invitation_token: token))
       end
     end
@@ -41,7 +41,7 @@ RSpec.describe "Users::Participants", type: :request do
 
       it "specific user" do
         post users_rdv_participations_path(rdv, user_id: user.id)
-        expect(flash[:notice]).to eq("Participation confirmée")
+        expect(flash[:success]).to eq("Participation confirmée")
         expect(rdv.reload.users.count).to eq(1)
         expect(response).to redirect_to(users_rdv_path(rdv, invitation_token: token))
       end
@@ -54,7 +54,7 @@ RSpec.describe "Users::Participants", type: :request do
 
         it "change to other relative user" do
           post users_rdv_participations_path(rdv, user_id: user_other_child.id)
-          expect(flash[:notice]).to eq("Participation confirmée")
+          expect(flash[:success]).to eq("Participation confirmée")
           expect(rdv.reload.users).to contain_exactly(user_other_child, other_user)
           # Change to relative isnt allowed with invitation and doesnt redirect with invitation token
           expect(response).to redirect_to(users_rdv_path(rdv))
@@ -63,7 +63,7 @@ RSpec.describe "Users::Participants", type: :request do
 
       it "cannot create participation for non relatives users" do
         post users_rdv_participations_path(rdv, user_id: user.id)
-        expect(flash[:notice]).to eq("Participation confirmée")
+        expect(flash[:success]).to eq("Participation confirmée")
         expect(response).to redirect_to(users_rdv_path(rdv, invitation_token: token))
         post users_rdv_participations_path(rdv, user_id: user2.id)
         expect(rdv.reload.users).to contain_exactly(user)
@@ -86,11 +86,11 @@ RSpec.describe "Users::Participants", type: :request do
   describe "Participation update (if excused)" do
     let(:participation1) { create(:participation, rdv: rdv, user: user) }
 
-    it "display notice" do
+    it "displays a confirmation message" do
       participation1.update!(status: "excused")
       expect(rdv.reload.users).to contain_exactly(user)
       post users_rdv_participations_path(rdv, user_id: user.id)
-      expect(flash[:notice]).to eq("Participation confirmée")
+      expect(flash[:success]).to eq("Participation confirmée")
       expect(rdv.reload.users).to contain_exactly(user)
     end
   end
