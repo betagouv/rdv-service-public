@@ -2,8 +2,8 @@ RSpec.describe AddConseillerNumerique do
   let!(:territory) { create(:territory, :conseillers_numeriques) }
   let(:params) do
     {
-      external_id: "exemple@conseiller-numerique.fr",
-      email: "exemple@conseiller-numerique.fr",
+      external_id: "conseiller-numerique-123456",
+      email: "exemple@tierslieuxettransitions.fr",
       secondary_email: "mail_perso@gemelle.com",
       first_name: "Camille",
       last_name: "Clavier",
@@ -28,8 +28,8 @@ RSpec.describe AddConseillerNumerique do
       described_class.process!(params)
       expect(Agent.count).to eq 1
       expect(Agent.last).to have_attributes(
-        external_id: "exemple@conseiller-numerique.fr",
-        email: "exemple@conseiller-numerique.fr",
+        external_id: "conseiller-numerique-123456",
+        email: "exemple@tierslieuxettransitions.fr",
         cnfs_secondary_email: "mail_perso@gemelle.com",
         first_name: "Camille",
         last_name: "Clavier"
@@ -48,14 +48,14 @@ RSpec.describe AddConseillerNumerique do
       perform_enqueued_jobs
       invitation_email = ActionMailer::Base.deliveries.last
 
-      expect(invitation_email).to have_attributes(to: ["exemple@conseiller-numerique.fr"], from: ["support@rdv-aide-numerique.fr"])
+      expect(invitation_email).to have_attributes(to: ["exemple@tierslieuxettransitions.fr"], from: ["support@rdv-aide-numerique.fr"])
     end
   end
 
   describe "special cases for the agent" do
     context "when the conseiller numerique has already been imported" do
       context "and they still exists with the same email" do
-        before { create(:agent, external_id: "exemple@conseiller-numerique.fr") }
+        before { create(:agent, external_id: "conseiller-numerique-123456") }
 
         it "does nothing" do
           expect { described_class.process!(params) }.not_to change { [Agent.count, Agent.maximum(:updated_at)] }
@@ -69,8 +69,8 @@ RSpec.describe AddConseillerNumerique do
           described_class.process!(params)
           expect(Agent.count).to eq 2
           expect(Agent.last).to have_attributes(
-            external_id: "exemple@conseiller-numerique.fr",
-            email: "exemple@conseiller-numerique.fr",
+            external_id: "conseiller-numerique-123456",
+            email: "exemple@tierslieuxettransitions.fr",
             first_name: "Camille",
             last_name: "Clavier"
           )
@@ -87,7 +87,7 @@ RSpec.describe AddConseillerNumerique do
 
       context "and their organisation's external_id changed" do
         let!(:old_organisation) { create(:organisation, external_id: "019283") } # this ID is not the provided one
-        let!(:agent) { create(:agent, external_id: "exemple@conseiller-numerique.fr", admin_role_in_organisations: [old_organisation]) }
+        let!(:agent) { create(:agent, external_id: "conseiller-numerique-123456", admin_role_in_organisations: [old_organisation]) }
 
         it "adds the agent to the new org" do
           expect(agent.organisations).to eq([old_organisation])
