@@ -21,6 +21,7 @@ conseillers_numeriques.each do |conseiller_numerique|
       external_id: external_id,
       email: conseiller_numerique["email professionnel secondaire"],
       secondary_email: conseiller_numerique["email"],
+      old_email: conseiller_numerique["email professionnel"],
       first_name: conseiller_numerique["prenom"],
       last_name: conseiller_numerique["nom"],
       structure: {
