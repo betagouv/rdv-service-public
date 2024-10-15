@@ -33,7 +33,7 @@ class PlageOuverturePresenter
   end
 
   def in_scope?
-    Agent::PlageOuverturePolicy::Scope
+    Agent::PlageOuverturePolicy::DepartementScope
       .new(agent_context, PlageOuverture)
       .resolve
       .where(id: plage_ouverture.id)

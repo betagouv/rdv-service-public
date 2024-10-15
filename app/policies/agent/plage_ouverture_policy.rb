@@ -55,4 +55,7 @@ class Agent::PlageOuverturePolicy < ApplicationPolicy
       end
     end
   end
+
+  class DepartementScope < Scope
+  end
 end

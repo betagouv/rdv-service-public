@@ -1,4 +1,4 @@
-- in_scope = Agent::PlageOuverturePolicy::Scope.new(current_agent, model.overlapping_plages_ouvertures).resolve
+- in_scope = filter_plage_ouvertures_in_departement_scope(model.overlapping_plages_ouvertures)
 
 - in_scope.each do |overlapping_plage_ouverture|
   li.mb-1
