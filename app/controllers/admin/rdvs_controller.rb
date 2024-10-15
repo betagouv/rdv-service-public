@@ -103,7 +103,7 @@ class Admin::RdvsController < AgentAuthController
   end
 
   def send_reminder_manually
-    authorize(@rdv, :update?)
+    authorize(@rdv, :update?, policy_class: Agent::RdvPolicy)
 
     Notifiers::RdvUpcomingReminder.perform_with(@rdv, nil)
 
