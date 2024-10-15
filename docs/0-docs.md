@@ -21,18 +21,7 @@
   - [l'instance `production-rdv-mairie`](https://updown.io/hv6l)
   - [l'instance `demo-rdv-solidarites`](https://updown.io/0jrc)
 
-## Security Policy
-
-### Supported Versions
-
-We try to keep up with the latest versions of all our dependencies, as much as possible.
-
-### Reporting a Vulnerability
-
-Please [contact us](mailto:contact@rdv-solidarites.fr) to report any vulnerability. Thank you!
-
 ## Développement
 
 - [Installation](1-installation.md)
 - [Contribuer](2-contributions.md)
-
