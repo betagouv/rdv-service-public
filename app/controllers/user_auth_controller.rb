@@ -20,7 +20,7 @@ class UserAuthController < ApplicationController
   def user_not_authorized(exception)
     policy_name = exception.policy.class.to_s.underscore
     flash[:error] = t "#{policy_name}.#{exception.query}", scope: "pundit", default: :default
-    redirect_to(request.referer || authenticated_user_root_path)
+    redirect_to authenticated_user_root_path
   end
 
   def authenticated_user_root_path

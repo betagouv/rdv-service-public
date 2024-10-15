@@ -2,7 +2,7 @@ class AddConseillerNumerique
   class ConseillerNumerique
     include ActiveModel::Model
 
-    attr_accessor :email, :first_name, :last_name, :external_id, :secondary_email
+    attr_accessor :email, :first_name, :last_name, :external_id, :secondary_email, :old_email
   end
 
   class Structure
@@ -44,6 +44,15 @@ class AddConseillerNumerique
         Rails.logger.info("#{@conseiller_numerique.email} existe déjà mais semble avoir changé d'organisation. Ajoutons-le dans #{organisation.name}")
         existing_agent.roles.create!(organisation: organisation, access_level: AgentRole::ACCESS_LEVEL_ADMIN)
       end
+
+      # supprimer cette mise à jour une fois que tous les agents ont confirmé leur changement d'email
+      agent_with_old_email = Agent.active.find_by(
+        external_id: @conseiller_numerique.external_id,
+        email: @conseiller_numerique.old_email,
+        unconfirmed_email: nil
+      )
+
+      agent_with_old_email&.update(email: @conseiller_numerique.email)
     else
       Rails.logger.info "Invitation de #{@conseiller_numerique.email}..."
       invite_agent(organisation)
