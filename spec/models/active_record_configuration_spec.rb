@@ -1,4 +1,4 @@
-RSpec.describe "ActiveRecord configuration" do
+RSpec.describe "ActiveRecord configuration" do # rubocop:disable RSpec/DescribeClass
   it "has enough connections" do
     # voir https://guides.rubyonrails.org/configuring.html#config-active-record-global-executor-concurrency
     pool_size = ActiveRecord::Base.connection.pool.stat[:size]
