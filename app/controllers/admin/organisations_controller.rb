@@ -5,7 +5,7 @@ class Admin::OrganisationsController < AgentAuthController
   before_action :follow_unique, only: :index
 
   def index
-    @organisations_by_territory = policy_scope(current_agent.organisations)
+    @organisations_by_territory = policy_scope(current_agent.organisations, policy_scope_class: Agent::OrganisationPolicy::Scope)
       .includes(:territory)
       .ordered_by_name
       .to_a.group_by(&:territory)
@@ -14,15 +14,15 @@ class Admin::OrganisationsController < AgentAuthController
   end
 
   def show
-    authorize(@organisation)
+    authorize(@organisation, policy_class: Agent::OrganisationPolicy)
   end
 
   def edit
-    authorize(@organisation)
+    authorize(@organisation, policy_class: Agent::OrganisationPolicy)
   end
 
   def update
-    authorize(@organisation)
+    authorize(@organisation, policy_class: Agent::OrganisationPolicy)
 
     if @organisation.update(organisation_params)
       flash[:notice] = "L’organisation a été modifiée."
@@ -34,7 +34,7 @@ class Admin::OrganisationsController < AgentAuthController
 
   def new
     @organisation = Organisation.new(territory: Territory.find(params[:territory_id]))
-    authorize(@organisation)
+    authorize(@organisation, policy_class: Agent::OrganisationPolicy)
     @active_agent_preferences_menu_item = :organisations
     render :new, layout: "application_agent_config"
   end
@@ -45,7 +45,7 @@ class Admin::OrganisationsController < AgentAuthController
       verticale: current_domain.verticale,
       **new_organisation_params
     )
-    authorize(@organisation)
+    authorize(@organisation, policy_class: Agent::OrganisationPolicy)
     if @organisation.save
       redirect_to admin_organisation_path(@organisation),
                   flash: { success: "Organisation enregistrée ! Vous pouvez maintenant lui ajouter des motifs et des lieux de rendez-vous, puis inviter des agents à la rejoindre" }
@@ -75,8 +75,9 @@ class Admin::OrganisationsController < AgentAuthController
   end
 
   def follow_unique
-    return if params[:follow_unique].blank? || policy_scope(Organisation).count != 1
+    accessible_organisations = policy_scope(Organisation, policy_scope_class: Agent::OrganisationPolicy::Scope)
+    return if params[:follow_unique].blank? || accessible_organisations.count != 1
 
-    redirect_to admin_organisation_agent_agenda_path(policy_scope(Organisation).first, current_agent)
+    redirect_to admin_organisation_agent_agenda_path(accessible_organisations.first, current_agent)
   end
 end

@@ -1,7 +1,7 @@
 module SuperAdmins
   class AgentsController < SuperAdmins::ApplicationController
     def sign_in_as
-      authorize :agent, :sign_in_as?, policy_class: SuperAdmin::AgentPolicy
+      authorize(:agent, :sign_in_as?, policy_class: SuperAdmin::AgentPolicy)
       agent = Agent.find(params[:id])
       if sign_in_as_allowed?
         sign_out(:user)
@@ -45,7 +45,7 @@ module SuperAdmins
     end
 
     def invite
-      authorize :agent, :invite?, policy_class: SuperAdmin::AgentPolicy
+      authorize(:agent, :invite?, policy_class: SuperAdmin::AgentPolicy)
       requested_resource.invited_by = current_super_admin
       requested_resource.invite!(nil, validate: false)
       redirect_to(
