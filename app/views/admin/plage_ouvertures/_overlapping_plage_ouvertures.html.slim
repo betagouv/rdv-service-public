@@ -1,4 +1,5 @@
-- in_scope = Agent::PlageOuverturePolicy::Scope.new(current_agent, model.overlapping_plages_ouvertures).resolve
+/ On utilise ici `merge` car `overlapping_plages_ouvertures` peut retourner soit un `Array` soit une `ActiveRecord::Relation`
+- in_scope = Agent::PlageOuverturePolicy::Scope.new(current_agent, PlageOuverture).resolve.merge(model.overlapping_plages_ouvertures)
 
 - in_scope.each do |overlapping_plage_ouverture|
   li.mb-1
