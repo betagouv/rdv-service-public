@@ -70,8 +70,8 @@ class AddConseillerNumerique
         password: SecureRandom.base64(32),
         roles_attributes: [{ organisation: organisation, access_level: AgentRole::ACCESS_LEVEL_ADMIN }],
       },
-      nil,
-      {
+      nil, # cet argument est le invited_by, qui n'a pas de sens dans ce contexte
+      { # ce troisième argument permet de passer des options au mailer Devise
         cnfs_secondary_email: @conseiller_numerique.secondary_email,
       }
     ).tap do |agent|
