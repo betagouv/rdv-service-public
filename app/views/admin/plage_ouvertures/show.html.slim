@@ -88,4 +88,4 @@
 
 .row.justify-content-center
   .col-md-12.col-lg-8
-    = render "admin/versions/resource_versions_row", resource_policy: policy([:agent, @plage_ouverture]), resource: @plage_ouverture
+    = render "admin/versions/resource_versions_row", resource_policy: policy(@plage_ouverture, policy_class: Agent::PlageOuverturePolicy), resource: @plage_ouverture

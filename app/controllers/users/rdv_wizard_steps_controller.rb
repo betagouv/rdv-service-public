@@ -14,7 +14,7 @@ class Users::RdvWizardStepsController < UserAuthController
   def new
     @rdv_wizard = rdv_wizard_for(current_user, query_params)
     @rdv = @rdv_wizard.rdv
-    authorize(@rdv)
+    authorize(@rdv, policy_class: User::RdvPolicy)
     if @rdv_wizard.creneau.present?
       render current_step
     else

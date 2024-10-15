@@ -16,20 +16,6 @@ class AgentAuthController < ApplicationController
   end
   helper_method :pundit_user
 
-  def authorize(record, *args, **kwargs)
-    super([:agent, record], *args, **kwargs)
-  end
-
-  # L'usage recommandé est de passer explicitement une policy_scope_class pour savoir quelle policy est utilisé
-  # A terme, on voudra forcer l'argument policy_scope_class
-  def policy_scope(scope, policy_scope_class: nil)
-    if policy_scope_class
-      super
-    else
-      super([:agent, scope])
-    end
-  end
-
   def set_organisation
     @organisation = current_organisation
   end
@@ -49,6 +35,6 @@ class AgentAuthController < ApplicationController
   def authorize_organisation
     # on n’utilise pas le helper authorize directement car le pundit_user défini plus haut a comme contexte
     # l’organisation elle même, ici on veut un contexte d’agent sans organisation
-    Pundit.authorize(AgentContext.new(current_agent), [:agent, current_organisation], :show?)
+    Pundit.authorize(AgentContext.new(current_agent), current_organisation, :show?, policy_class: Agent::OrganisationPolicy)
   end
 end

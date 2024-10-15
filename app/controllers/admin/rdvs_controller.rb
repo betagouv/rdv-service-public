@@ -18,7 +18,7 @@ class Admin::RdvsController < AgentAuthController
     @breadcrumb_page = params[:breadcrumb_page]
 
     order = { starts_at: :asc }
-    @rdvs = policy_scope(Rdv).search_for(@scoped_organisations, parsed_params)
+    @rdvs = policy_scope(Rdv, policy_scope_class: Agent::RdvPolicy::Scope).search_for(@scoped_organisations, parsed_params)
       .order(order).page(page_number).per(10)
 
     # On fait cette requête en deux temps pour éviter de faire un `order` et un `include` sur le même scope,
@@ -67,7 +67,7 @@ class Admin::RdvsController < AgentAuthController
 
   def show
     @uncollapsed_section = params[:uncollapsed_section]
-    authorize(@rdv)
+    authorize(@rdv, policy_class: Agent::RdvPolicy)
   end
 
   def edit
@@ -76,11 +76,11 @@ class Admin::RdvsController < AgentAuthController
     users_to_add.ids.each { @rdv.participations.build(user_id: _1) }
 
     @rdv_form = Admin::EditRdvForm.new(@rdv, pundit_user)
-    authorize(@rdv_form.rdv)
+    authorize(@rdv_form.rdv, policy_class: Agent::RdvPolicy)
   end
 
   def update
-    authorize(@rdv)
+    authorize(@rdv, policy_class: Agent::RdvPolicy)
     @rdv_form = Admin::EditRdvForm.new(@rdv, pundit_user)
     @success = @rdv_form.update(**rdv_params.to_h.symbolize_keys)
     respond_to do |format|
@@ -111,7 +111,7 @@ class Admin::RdvsController < AgentAuthController
   end
 
   def destroy
-    authorize(@rdv)
+    authorize(@rdv, policy_class: Agent::RdvPolicy)
     if @rdv.destroy
       flash[:notice] = "Le rendez-vous a été supprimé."
       redirect_to admin_organisation_rdvs_path(current_organisation)
@@ -125,18 +125,19 @@ class Admin::RdvsController < AgentAuthController
 
   def set_scoped_organisations
     @selected_organisations_ids = params[:scoped_organisation_ids]&.compact_blank
+    accessible_organisations = policy_scope(Organisation, policy_scope_class: Agent::OrganisationPolicy::Scope)
     @scoped_organisations = if @selected_organisations_ids.blank?
                               # l'agent n'a pas accès au filtre d'organisations ou a réinitialisé la page
                               # Nous sélectionnons par défaut l'organisation courante
                               @selected_organisations_ids = [current_organisation.id]
-                              policy_scope(Organisation).where(id: current_organisation.id)
+                              accessible_organisations.where(id: current_organisation.id)
                             elsif @selected_organisations_ids.include?("0")
                               # l'agent a sélectionné 'Toutes' parmi les options
                               @selected_organisations_ids = ["0"]
-                              policy_scope(Organisation)
+                              accessible_organisations
                             else
                               # l'agent a sélectionné une ou plusieurs organisations spécifiques
-                              policy_scope(Organisation).where(id: @selected_organisations_ids)
+                              accessible_organisations.where(id: @selected_organisations_ids)
                             end
 
     # An empty scope means the agent tried to access a foreign organisation
@@ -154,7 +155,7 @@ class Admin::RdvsController < AgentAuthController
   end
 
   def set_rdv
-    @rdv = policy_scope(Rdv).find(params[:id])
+    @rdv = policy_scope(Rdv, policy_scope_class: Agent::RdvPolicy::Scope).find(params[:id])
   end
 
   def rdv_params
