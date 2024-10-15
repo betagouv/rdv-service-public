@@ -23,7 +23,7 @@ Rails.application.routes.draw do
   delete "super_admins/sign_out" => "super_admins/sessions#destroy"
 
   namespace :super_admins do
-    resources :agents do
+    resources :agents, except: [:destroy] do
       get "sign_in_as", on: :member
       post :invite, on: :member
       resources :migrations, only: %i[new create]
@@ -176,11 +176,7 @@ Rails.application.routes.draw do
 
         resources :plage_ouvertures, except: %i[index new]
         resources :lieux, except: :show
-        resources :motifs do
-          member do
-            get :duplicate
-          end
-        end
+        resources :motifs
         resources :rdvs_collectifs, only: %i[index new create edit update] do
           collection do
             resources :motifs, only: [:index], as: :rdvs_collectif_motifs, controller: "rdvs_collectifs/motifs"
@@ -269,6 +265,7 @@ Rails.application.routes.draw do
 
   get "health_check" => "health#db_connection"
   get "health/jobs_queues" => "health#jobs_queues"
+  get "health/jobs_scheduled" => "health#jobs_scheduled"
 
   get "/budget", to: redirect("https://pad.numerique.gouv.fr/rHMnemklQm6Sww5yVCI9ow?view#RDV-Service-Public", status: 302)
 

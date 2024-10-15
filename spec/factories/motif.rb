@@ -10,7 +10,7 @@ FactoryBot.define do
     default_duration_in_min { 45 }
     min_public_booking_delay { 30.minutes.seconds }
     max_public_booking_delay { 6.months.seconds }
-    color { "##{SecureRandom.hex(3)}" }
+    sequence(:color) { |n| ["#bff3c8", "#336650", "#0066ee", "#3300ee"][n % 4] }
     bookable_by { :everyone }
     location_type { :public_office }
     visibility_type { Motif::VISIBLE_AND_NOTIFIED }

@@ -13,5 +13,5 @@
     p.text-muted.font-14
       i.fa.fa-circle-info.mr-1
       ' Pour permettre plusieurs types de rendez-vous, vous pouvez
-      = link_to("dupliquer ce motif", duplicate_admin_organisation_motif_path(current_organisation, motif))
+      = link_to("dupliquer ce motif", new_admin_organisation_motif_path(current_organisation, duplicated_from_motif_id: motif.id))
       | .

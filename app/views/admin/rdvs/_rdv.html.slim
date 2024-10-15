@@ -59,9 +59,9 @@
         .d-flex.justify-content-start.mb-2
           - if rdv.remaining_seats? && rdv.not_cancelled?
             = link_to edit_admin_organisation_rdvs_collectif_path(rdv.organisation, rdv), class: "btn btn-outline-primary btn-sm" do
-              span
-                = "Ajouter un participant"
               span.ml-1
                 i.fa.fa-fw.fa-user-plus>
+              span
+                = "Ajouter un participant"
           .text-muted.align-self-center.ml-2
             = render "admin/rdvs/participants_count", rdv: rdv
