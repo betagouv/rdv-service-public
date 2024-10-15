@@ -14,7 +14,7 @@ class Admin::RdvWizardStepsController < AgentAuthController
 
     @rdv = @rdv_wizard.rdv
     set_services_and_motifs if current_step == "step1"
-    authorize(@rdv_wizard.rdv, :new?)
+    authorize(@rdv_wizard.rdv, :new?, policy_class: Agent::RdvPolicy)
     render current_step
   end
 
@@ -22,7 +22,7 @@ class Admin::RdvWizardStepsController < AgentAuthController
     @rdv_wizard = rdv_wizard_for(rdv_params)
     @rdv = @rdv_wizard.rdv
     set_services_and_motifs if current_step == "step1"
-    authorize(@rdv_wizard.rdv, :create?)
+    authorize(@rdv_wizard.rdv, :create?, policy_class: Agent::RdvPolicy)
 
     if @rdv.lieu&.new_record?
       # We’re creating a new Lieu along the new Rdv. That means this is a single-use Lieu.

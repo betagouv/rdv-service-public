@@ -1,12 +1,12 @@
 class Users::UsersController < UserAuthController
   def edit
     @user = current_user
-    authorize(@user)
+    authorize(@user, policy_class: User::UserPolicy)
   end
 
   def update
     @user = current_user
-    authorize(@user)
+    authorize(@user, policy_class: User::UserPolicy)
     if @user.update(user_params)
       flash[:success] = "Vos informations ont été mises à jour."
       redirect_to users_informations_path

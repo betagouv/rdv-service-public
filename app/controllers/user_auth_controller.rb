@@ -17,14 +17,6 @@ class UserAuthController < ApplicationController
     end
   end
 
-  def authorize(record, *args)
-    super([:user, record], *args)
-  end
-
-  def policy_scope(clasz)
-    super([:user, clasz])
-  end
-
   def user_not_authorized(exception)
     policy_name = exception.policy.class.to_s.underscore
     flash[:error] = t "#{policy_name}.#{exception.query}", scope: "pundit", default: :default

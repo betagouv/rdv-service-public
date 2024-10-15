@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-  include Pundit::Authorization
+  include ExplicitPunditConcern
   include DomainDetection
 
   protect_from_forgery

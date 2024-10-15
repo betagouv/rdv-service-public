@@ -7,7 +7,7 @@ class Admin::ParticipationsController < AgentAuthController
   before_action :set_participation
 
   def update
-    authorize(@rdv, :update?)
+    authorize(@rdv, :update?, policy_class: Agent::RdvPolicy)
     if @participation.change_status_and_notify(current_agent, participation_params[:status])
       flash.now[:notice] = "Status de participation pour #{@participation.user.full_name} mis à jour"
     else
@@ -17,7 +17,7 @@ class Admin::ParticipationsController < AgentAuthController
   end
 
   def destroy
-    authorize(@rdv)
+    authorize(@rdv, policy_class: Agent::RdvPolicy)
     if @rdv.participations.destroy(@participation)
       flash[:notice] = "La participation de l'usager au rdv a été supprimée."
     else
@@ -29,7 +29,7 @@ class Admin::ParticipationsController < AgentAuthController
   private
 
   def set_rdv
-    @rdv = policy_scope(Rdv).find(params[:rdv_id])
+    @rdv = policy_scope(Rdv, policy_scope_class: Agent::RdvPolicy::Scope).find(params[:rdv_id])
   end
 
   def set_participation

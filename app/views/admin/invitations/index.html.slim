@@ -4,7 +4,7 @@
 
 - content_for :breadcrumb do
   = link_to "Retour à la liste des agents", admin_organisation_agents_path(current_organisation), class:"mr-2"
-  - if current_agent_can?(:create, Agent)
+  - if current_agent_can_create_agent_in?(current_organisation)
     = link_to "Inviter un agent", new_admin_organisation_agent_path(current_organisation), class:"btn btn-outline-primary"
 
 = simple_form_for "", url: admin_organisation_invitations_path(current_organisation), html: { method: :get, class: "form-inline" }, wrapper: :inline_form do |f|
@@ -32,6 +32,6 @@
           = paginate @invited_agents, theme: "twitter-bootstrap-4"
         .rdv-text-align-center= page_entries_info @invited_agents
 
-    - if current_agent_can?(:create, Agent)
+    - if current_agent_can_create_agent_in?(current_organisation)
       .m-3.d-flex.justify-content-center
         = link_to "Inviter un agent", new_admin_organisation_agent_path(current_organisation), class: "btn btn-primary"

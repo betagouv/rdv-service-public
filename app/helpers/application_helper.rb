@@ -119,14 +119,6 @@ module ApplicationHelper
       tag.span(value.presence || "Non renseigné", class: class_names("text-muted": value.blank?))
   end
 
-  def admin_link_to_if_permitted(organisation, object, name = object.to_s)
-    if policy([:agent, object]).show?
-      link_to name, polymorphic_path([:admin, organisation, object])
-    else
-      name
-    end
-  end
-
   def self_anchor(identifier, &block)
     tag.a(id: identifier, href: "##{identifier}", data: { turbolinks: false }, &block)
   end

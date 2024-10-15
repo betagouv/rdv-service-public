@@ -6,7 +6,7 @@ class Admin::StatsController < AgentAuthController
   end
 
   def rdvs
-    authorize(current_agent)
+    authorize(current_agent, policy_class: Agent::AgentPolicy)
     render json: Stat.new(rdvs: rdvs_for_current_agent).rdvs_group_by_week_fr.chart_json
   end
 
