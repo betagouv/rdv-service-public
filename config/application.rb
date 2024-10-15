@@ -74,5 +74,8 @@ module Lapin
     config.x.rack_attack.limit = 50
 
     config.exceptions_app = routes # Permet les pages d'erreur custom
+
+    config.active_record.async_query_executor = :global_thread_pool
+    config.active_record.global_executor_concurrency = 4 # update the pool size in database.yml if you change this
   end
 end

@@ -14,7 +14,7 @@ module CreneauxSearch::Calculator
       scope = PlageOuverture.not_expired
         .merge(motif.plage_ouvertures)
         .in_range(datetime_range)
-        .includes(%i[organisation agent])
+        .includes(:agent)
       scope = scope.where(agent: agents) if agents&.any?
       scope = scope.where(lieu: lieu) if lieu.present?
       scope
@@ -132,10 +132,16 @@ module CreneauxSearch::Calculator
       def busy_times_for(range, plage_ouverture)
         # c'est là que l'on execute le SQL
         # TODO : Peut-être cacher la récupération de l'ensemble des RDV et absences concernées (pour n'avoir que deux requêtes) puis faire des selections dessus pour le filtre sur le range
+        #        Le problème potentiel de cette approche est qu'il serait difficile d'éviter de charger des rdv et absences qui sont en dehors des ocurrences des plages d'ouverture
+
+        # On lance le chargement des absences en asynchrone pendant qu'on calcule les autres busy times
+        absences = plage_ouverture.agent.absences.not_expired.in_range(range).load_async
 
         busy_times = busy_times_from_rdvs(range, plage_ouverture)
-        busy_times += busy_times_from_absences(range, plage_ouverture)
         busy_times += busy_times_from_off_days(range)
+
+        busy_times += busy_times_from_absences(range, absences)
+
         # Le tri est nécessaire, surtout pour les surcharges.
         busy_times.sort_by(&:starts_at)
       end
@@ -148,11 +154,7 @@ module CreneauxSearch::Calculator
         end
       end
 
-      def busy_times_from_absences(range, plage_ouverture)
-        absences = plage_ouverture.agent.absences
-          .not_expired
-          .in_range(range)
-
+      def busy_times_from_absences(range, absences)
         busy_times = []
         absences.each do |absence|
           absence.occurrences_for(range).each do |absence_occurrence|
@@ -165,14 +167,13 @@ module CreneauxSearch::Calculator
       end
 
       def absence_out_of_range?(absence, range)
-        start_date_time = absence.starts_at
-        end_date_time = absence.ends_at
-
-        end_date_time < range.begin || range.end < start_date_time
+        absence.ends_at < range.begin || range.end < absence.starts_at
       end
 
       def busy_times_from_off_days(date_range)
-        OffDays.all_in_date_range(date_range).map { |off_day| BusyTime.new(off_day.beginning_of_day, off_day.end_of_day) }
+        OffDays.all_in_date_range(date_range).map do |off_day|
+          BusyTime.new(off_day.beginning_of_day, off_day.end_of_day)
+        end
       end
     end
   end
