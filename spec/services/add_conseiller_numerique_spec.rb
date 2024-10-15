@@ -48,7 +48,11 @@ RSpec.describe AddConseillerNumerique do
       perform_enqueued_jobs
       invitation_email = ActionMailer::Base.deliveries.last
 
-      expect(invitation_email).to have_attributes(to: ["exemple@tierslieuxettransitions.fr"], from: ["support@rdv-aide-numerique.fr"])
+      expect(invitation_email).to have_attributes(
+        to: ["exemple@tierslieuxettransitions.fr"],
+        from: ["support@rdv-aide-numerique.fr"],
+        cc: ["mail_perso@gemelle.com"]
+      )
     end
   end
 
