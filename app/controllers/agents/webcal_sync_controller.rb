@@ -4,11 +4,11 @@ class Agents::WebcalSyncController < AgentAuthController
 
   def show
     current_agent.update!(calendar_uid: new_calendar_uid) if current_agent.calendar_uid.nil?
-    authorize current_agent
+    authorize(current_agent, policy_class: Agent::AgentPolicy)
   end
 
   def update
-    authorize current_agent
+    authorize(current_agent, policy_class: Agent::AgentPolicy)
     current_agent.update!(calendar_uid: new_calendar_uid)
     redirect_to agents_calendar_sync_webcal_sync_path, flash: { notice: "Votre url de calendrier a été mise à jour." }
   end

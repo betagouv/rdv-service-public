@@ -1,11 +1,11 @@
 class Admin::Territories::ZoneImportsController < Admin::Territories::BaseController
   def new
-    authorize_agent Zone.new(sector: Sector.new(territory: current_territory))
+    authorize(Zone.new(sector: Sector.new(territory: current_territory)), policy_class: Agent::ZonePolicy)
     @form = ZoneImportForm.new
   end
 
   def create
-    authorize_agent Zone.new(sector: Sector.new(territory: current_territory))
+    authorize(Zone.new(sector: Sector.new(territory: current_territory)), policy_class: Agent::ZonePolicy)
     @form = ZoneImportForm.new(import_params)
     if @form.valid?
       @res = ImportZoneRowsService.perform_with(

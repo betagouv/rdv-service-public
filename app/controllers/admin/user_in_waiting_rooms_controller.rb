@@ -3,7 +3,7 @@ class Admin::UserInWaitingRoomsController < AgentAuthController
 
   def create
     @rdv = Rdv.find(params[:rdv_id])
-    authorize(@rdv)
+    authorize(@rdv, policy_class: Agent::RdvPolicy)
 
     if @rdv.status == "unknown"
       @rdv.set_user_in_waiting_room!

@@ -41,7 +41,7 @@ ul.list-group.list-group-flush
       .col
         .fa.fa-user>
         = users_to_sentence(rdv.users)
-    - if policy([:user, rdv]).can_change_participants?
+    - if policy(rdv, policy_class: User::RdvPolicy).can_change_participants?
       .col-auto
         span>
         = link_to "modifier", users_rdv_participations_path(rdv)
@@ -58,8 +58,8 @@ ul.list-group.list-group-flush
   = render "/users/rdvs/file_attente", rdv: rdv
 
   / Check for authorizations and already cancelled rdv/participation
-  - unless policy([:user, rdv]).cancel? || \
-      policy([:user, current_user.participation_for(rdv)]).cancel? || \
+  - unless policy(rdv, policy_class: User::RdvPolicy).cancel? || \
+      policy(current_user.participation_for(rdv), policy_class: User::ParticipationPolicy).cancel? || \
       rdv.cancelled? || \
       current_user.participation_for(rdv).cancelled? || \
       rdv.in_the_past?
@@ -70,12 +70,12 @@ ul.list-group.list-group-flush
 
 .py-2.d-flex.justify-content-between.align-items-center
   .mt-2
-    - if policy([:user, rdv]).edit?
+    - if policy(rdv, policy_class: User::RdvPolicy).edit?
        = link_to "Déplacer le RDV", creneaux_users_rdv_path(rdv), class: "btn btn-outline-primary"
   .mt-2
-    - if policy([:user, rdv]).cancel?
+    - if policy(rdv, policy_class: User::RdvPolicy).cancel?
         = link_to "Annuler le RDV", "#", data: { toggle: "modal", target: "#js-cancel-rdv-modal-#{rdv.id}" }, class: "btn btn-outline-danger"
-    - if policy([:user, current_user.participation_for(rdv)]).cancel?
+    - if policy(current_user.participation_for(rdv), policy_class: User::ParticipationPolicy).cancel?
         = link_to "Annuler votre participation", "#", data: { toggle: "modal", target: "#js-cancel-participation-modal-#{rdv.id}" }, class: "btn btn-outline-danger"
 
 = render( \

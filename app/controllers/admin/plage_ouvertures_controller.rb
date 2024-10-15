@@ -6,11 +6,11 @@ class Admin::PlageOuverturesController < AgentAuthController
   before_action :set_agent
 
   def show
-    authorize(@plage_ouverture)
+    authorize(@plage_ouverture, policy_class: Agent::PlageOuverturePolicy)
   end
 
   def index
-    all_plage_ouvertures = policy_scope(PlageOuverture)
+    all_plage_ouvertures = policy_scope(current_organisation.plage_ouvertures, policy_scope_class: Agent::PlageOuverturePolicy::Scope)
       .includes(:lieu, :organisation, :motifs, :agent)
       .where(agent_id: filter_params[:agent_id])
       .order(updated_at: :desc)
@@ -39,16 +39,16 @@ class Admin::PlageOuverturesController < AgentAuthController
       agent: @agent,
       **defaults
     )
-    authorize(@plage_ouverture)
+    authorize(@plage_ouverture, policy_class: Agent::PlageOuverturePolicy)
   end
 
   def edit
-    authorize(@plage_ouverture)
+    authorize(@plage_ouverture, policy_class: Agent::PlageOuverturePolicy)
   end
 
   def create
     @plage_ouverture.organisation = current_organisation
-    authorize(@plage_ouverture)
+    authorize(@plage_ouverture, policy_class: Agent::PlageOuverturePolicy)
     if @plage_ouverture.save
 
       Agents::PlageOuvertureMailer.with(plage_ouverture: @plage_ouverture).plage_ouverture_created.deliver_later if @agent.plage_ouverture_notification_level == "all"
@@ -60,7 +60,7 @@ class Admin::PlageOuverturesController < AgentAuthController
   end
 
   def update
-    authorize(@plage_ouverture)
+    authorize(@plage_ouverture, policy_class: Agent::PlageOuverturePolicy)
     if @plage_ouverture.update(plage_ouverture_params)
       Agents::PlageOuvertureMailer.with(plage_ouverture: @plage_ouverture).plage_ouverture_updated.deliver_later if @agent.plage_ouverture_notification_level == "all"
       redirect_to admin_organisation_plage_ouverture_path(@plage_ouverture.organisation, @plage_ouverture), notice: "La plage d'ouverture a été modifiée."
@@ -70,7 +70,7 @@ class Admin::PlageOuverturesController < AgentAuthController
   end
 
   def destroy
-    authorize(@plage_ouverture)
+    authorize(@plage_ouverture, policy_class: Agent::PlageOuverturePolicy)
     motif_ids = @plage_ouverture.motifs.ids
     if @plage_ouverture.destroy
       # On passe la plage au job sous forme sérialisée puisqu'elle n'existe plus en base.

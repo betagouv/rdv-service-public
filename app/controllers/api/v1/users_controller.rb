@@ -3,7 +3,7 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
   before_action :set_user, only: %i[show update rdv_invitation_token]
 
   def index
-    users = policy_scope(User)
+    users = policy_scope(User, policy_scope_class: Agent::UserPolicy::Scope)
     users = users.where(id: params[:ids]) if params[:ids].present?
     render_collection(users)
   end
@@ -16,7 +16,7 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
     params.require(:organisation_ids)
 
     user = User.new(user_params.merge(created_through: "agent_creation_api"))
-    authorize(user)
+    authorize(user, policy_class: Agent::UserPolicy)
     user.skip_confirmation_notification!
     user.save!
     render_record user
@@ -41,7 +41,7 @@ class Api::V1::UsersController < Api::V1::AgentAuthBaseController
 
   def set_user
     @user = @organisation.present? ? @organisation.users.find(params[:id]) : User.find(params[:id])
-    authorize(@user)
+    authorize(@user, policy_class: Agent::UserPolicy)
   rescue ActiveRecord::RecordNotFound
     render_error :not_found, not_found: :user
   end
