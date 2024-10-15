@@ -13,6 +13,18 @@ RSpec.describe Agent::RdvPolicy, type: :policy do
     end
   end
 
+  shared_examples "included in departement scope" do
+    it "is included in departement scope" do
+      expect(Agent::RdvPolicy::DepartementScope.new(pundit_context, Rdv).resolve).to include(rdv)
+    end
+  end
+
+  shared_examples "not included in departement scope" do
+    it "is not included in departement scope" do
+      expect(Agent::RdvPolicy::DepartementScope.new(pundit_context, Rdv).resolve).not_to include(rdv)
+    end
+  end
+
   context "existing RDV from same agent" do
     let(:organisation) { create(:organisation) }
     let(:service) { create(:service) }
@@ -37,6 +49,7 @@ RSpec.describe Agent::RdvPolicy, type: :policy do
 
     it_behaves_like "not permit actions", :rdv, :show?, :edit?, :update?, :destroy?
     it_behaves_like "not included in scope"
+    it_behaves_like "not included in departement scope"
 
     context "for secretariat" do
       let(:service_agent) { build(:service, :secretariat) }
@@ -44,6 +57,7 @@ RSpec.describe Agent::RdvPolicy, type: :policy do
       it_behaves_like "permit actions", :rdv, :show?, :edit?, :update?
       it_behaves_like "not permit actions", :rdv, :destroy?
       it_behaves_like "included in scope"
+      it_behaves_like "included in departement scope"
     end
 
     context "for admin" do
@@ -51,6 +65,7 @@ RSpec.describe Agent::RdvPolicy, type: :policy do
 
       it_behaves_like "permit actions", :rdv, :show?, :edit?, :update?, :destroy?
       it_behaves_like "included in scope"
+      it_behaves_like "included in departement scope"
     end
 
     context "except if the rdv concerns the connected agent" do
@@ -59,6 +74,7 @@ RSpec.describe Agent::RdvPolicy, type: :policy do
       it_behaves_like "permit actions", :rdv, :show?, :edit?, :update?
       it_behaves_like "not permit actions", :rdv, :destroy?
       it_behaves_like "included in scope"
+      it_behaves_like "included in departement scope"
     end
   end
 

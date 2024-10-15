@@ -74,4 +74,7 @@ class Agent::RdvPolicy < ApplicationPolicy
       end
     end
   end
+
+  class DepartementScope < Scope
+  end
 end
