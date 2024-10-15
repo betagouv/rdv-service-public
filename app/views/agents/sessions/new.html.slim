@@ -1,16 +1,7 @@
 h1.rdv-text-align-center.text-dark.mt-0.font-weight-bold.mb-4 Connexion à #{current_domain.name}
 
-- if display_agent_connect_button? || display_inclusion_connect_button?
-  - if display_agent_connect_button? && display_inclusion_connect_button?
-    .row
-      .col-md-6.mb-2= render "common/proconnect_button"
-      .col-md-6= render "common/inclusionconnect_button"
-
-  - elsif display_agent_connect_button? || display_inclusion_connect_button?
-    - if display_agent_connect_button?
-      = render "common/proconnect_button"
-    - if display_inclusion_connect_button?
-      = render "common/inclusionconnect_button"
+- if display_agent_connect_button?
+  = render "common/proconnect_button"
 
   .row.p-2
     .alert.alert-info.d-flex
@@ -18,10 +9,12 @@ h1.rdv-text-align-center.text-dark.mt-0.font-weight-bold.mb-4 Connexion à #{cur
         i.fa.fa-info
       span
         - if display_inclusion_connect_button?
-          = "Vous pouvez dès maintenant utiliser ProConnect à la place d’Agent Connect et Inclusion Connect. "
+          = "Privilégiez maintenant ProConnect qui remplace Agent Connect et Inclusion Connect. "
+          br
+          | Si nécessaire, #{link_to("cliquez ici", inclusion_connect_auth_path)} pour continuer d'utiliser Inclusion Connect.
+
         - else
           = "Vous pouvez dès maintenant utiliser ProConnect à la place d’Agent Connect. "
-        = link_to("En savoir plus", "https://www.proconnect.gouv.fr/#agentconnect-devient-proconnect-container", target: "_blank", rel: "noopener noreferrer", title: "En savoir plus - nouvelle fenêtre")
   .row.pt-2.pb-2
     .col
       hr
