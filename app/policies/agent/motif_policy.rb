@@ -1,6 +1,4 @@
 class Agent::MotifPolicy < ApplicationPolicy
-  include CurrentAgentInPolicyConcern
-
   def self.agent_can_manage_motif?(motif, agent)
     motif.organisation.in?(organisations_i_can_manage(agent))
   end

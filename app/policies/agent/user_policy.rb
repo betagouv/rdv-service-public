@@ -1,6 +1,4 @@
 class Agent::UserPolicy < DefaultAgentPolicy
-  include CurrentAgentInPolicyConcern
-
   def show?
     same_org? && not_deleted?
   end
