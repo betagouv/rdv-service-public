@@ -83,7 +83,6 @@ tables:
       - email_original
       - encrypted_password
       - unconfirmed_email
-      - cnfs_secondary_email
       - uid
       - external_id
       - calendar_uid
