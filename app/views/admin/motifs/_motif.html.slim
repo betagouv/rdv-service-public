@@ -26,12 +26,14 @@ tr
   - if motif_policy.edit? || motif_policy.destroy?
     td
       .d-flex.flex-gap-1em
-        - if motif_policy.edit?
-          div= link_to edit_admin_organisation_motif_path(current_organisation, motif), title: "Modifier" do
-            i.fa.fa-edit
-        - if motif_policy.duplicate?
-          div= link_to new_admin_organisation_motif_path(current_organisation, duplicated_from_motif_id: motif.id), title: "Dupliquer" do
-            i.fa.fa-copy
+        - if @current_tab != :archived
+          - if motif_policy.edit?
+            div= link_to edit_admin_organisation_motif_path(current_organisation, motif), title: "Modifier" do
+              i.fa.fa-edit
+          - if motif_policy.duplicate?
+            div= link_to new_admin_organisation_motif_path(current_organisation, duplicated_from_motif_id: motif.id), title: "Dupliquer" do
+              i.fa.fa-copy
+
         - if motif.archived?
           - if motif_policy.unarchive?
             div= link_to unarchive_admin_organisation_motif_path(current_organisation, motif), method: :post, title: "Désarchiver" do
