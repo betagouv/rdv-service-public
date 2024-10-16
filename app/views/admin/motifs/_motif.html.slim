@@ -32,6 +32,11 @@ tr
         - if motif_policy.duplicate?
           div= link_to new_admin_organisation_motif_path(current_organisation, duplicated_from_motif_id: motif.id), title: "Dupliquer" do
             i.fa.fa-copy
-        - if motif_policy.destroy?
-          div= link_to admin_organisation_motif_path(current_organisation, motif), method: :delete, title: "Supprimer", data: { confirm: "Confirmez-vous la suppression de ce motif ?"} do
-            i.fa.fa-trash-alt
+        - if motif.archived? || true
+          - if motif_policy.destroy?
+            div= link_to admin_organisation_motif_path(current_organisation, motif), method: :delete, title: "Supprimer", data: { confirm: "Confirmez-vous la suppression de ce motif ?" } do
+              i.fa.fa-trash-alt
+        - else
+          - if motif_policy.archive?
+            div= link_to archive_admin_organisation_motif_path(current_organisation, motif), method: :post, title: "Archiver", data: { confirm: "Cela empêchera de créer des RDV pour ce motif. Vous pourrez le désarchiver à tout moment. Continuer ?" } do
+              i.fa.fa-box-archive

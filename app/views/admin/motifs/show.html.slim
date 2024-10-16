@@ -92,6 +92,8 @@
           .d-flex.justify-content-end.flex-gap-1em
             - if @motif_policy.destroy?
               div= link_to "Supprimer", admin_organisation_motif_path(current_organisation, @motif), method: :delete, data: { confirm: "Confirmez-vous la suppression de ce motif ?"}, class: "btn btn-danger w-100"
+            - if @motif_policy.archive?
+              div= link_to "Archiver", archive_admin_organisation_motif_path(current_organisation, @motif), method: :post, data: { confirm: "Cela empêchera de créer des RDV pour ce motif. Vous pourrez le désarchiver à tout moment. Continuer ?" }, class: "btn btn-light w-100"
             - if @motif_policy.duplicate?
               div= link_to "Dupliquer", new_admin_organisation_motif_path(current_organisation, duplicated_from_motif_id: @motif.id), class: "btn btn-primary w-100"
             - if @motif_policy.edit?

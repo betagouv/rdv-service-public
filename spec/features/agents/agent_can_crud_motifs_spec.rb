@@ -110,4 +110,37 @@ RSpec.describe "Agent can CRUD motifs" do
       expect { click_on "Enregistrer" }.to change { motif.reload.bookable_by }.from("everyone").to("agents")
     end
   end
+
+  describe "archiving" do
+    it "can be done from the index page" do
+      visit admin_organisation_motifs_path(motif.organisation)
+      expect { click_on "Archiver" }.to change { motif.reload.archived? }.from(false).to(true)
+      expect(page).to have_content("Le motif a été archivé")
+    end
+
+    it "can be done from the show page" do
+      visit admin_organisation_motif_path(motif.organisation, motif)
+      expect { click_on "Archiver" }.to change { motif.reload.archived? }.from(false).to(true)
+      expect(page).to have_content("Le motif a été archivé")
+    end
+  end
+
+  describe "destroying a motif" do
+    context "when it was not used for any RDV" do
+      it "removes it from the database" do
+        visit admin_organisation_motif_path(motif.organisation, motif)
+        expect { click_on "Supprimer" }.to change { Motif.exists?(motif.id) }.from(true).to(false)
+        expect(page).to have_content("Le motif a été supprimé")
+      end
+    end
+
+    context "when it was used for some RDVs" do
+      it "displays an error" do
+        create_list(:rdv, 2, organisation: motif.organisation, motif: motif)
+        visit admin_organisation_motif_path(motif.organisation, motif)
+        expect { click_on "Supprimer" }.not_to change { Motif.exists?(motif.id) }.from(true)
+        expect(page).to have_content("Impossible de supprimer le motif : il est lié à 2 rendez-vous.")
+      end
+    end
+  end
 end

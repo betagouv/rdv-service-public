@@ -2,7 +2,7 @@ class Admin::MotifsController < AgentAuthController
   respond_to :html, :json
 
   before_action :set_organisation, only: %i[new create]
-  before_action :set_motif, only: %i[show edit update destroy]
+  before_action :set_motif, only: %i[show edit update archive destroy]
 
   def index
     @unfiltered_motifs = policy_scope(current_organisation.motifs, policy_scope_class: Agent::MotifPolicy::Scope).active
@@ -61,13 +61,22 @@ class Admin::MotifsController < AgentAuthController
     end
   end
 
+  def archive
+    authorize(@motif, policy_class: Agent::MotifPolicy)
+    @motif.archive!
+    flash[:notice] = "Le motif a été archivé."
+    redirect_back fallback_location: admin_organisation_motif_path(@motif.organisation, @motif)
+  end
+
   def destroy
     authorize(@motif, policy_class: Agent::MotifPolicy)
-    if @motif.soft_delete
+    if @motif.destroyable?
+      @motif.destroy!
       flash[:notice] = "Le motif a été supprimé."
       redirect_to admin_organisation_motifs_path(@motif.organisation)
     else
-      render :show
+      flash[:alert] = "Impossible de supprimer le motif : il est lié à #{@motif.rdvs.count} rendez-vous."
+      redirect_back fallback_location: admin_organisation_motifs_path(@motif.organisation)
     end
   end
 

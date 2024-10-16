@@ -176,7 +176,11 @@ Rails.application.routes.draw do
 
         resources :plage_ouvertures, except: %i[index new]
         resources :lieux, except: :show
-        resources :motifs
+        resources :motifs do
+          member do
+            post :archive
+          end
+        end
         resources :rdvs_collectifs, only: %i[index new create edit update] do
           collection do
             resources :motifs, only: [:index], as: :rdvs_collectif_motifs, controller: "rdvs_collectifs/motifs"

@@ -75,6 +75,7 @@ class Motif < ApplicationRecord
   scope :active, lambda { |active = true|
     active ? where(deleted_at: nil) : where.not(deleted_at: nil)
   }
+  scope :archived, -> { active(false) }
   scope :bookable_by_everyone, -> { where(bookable_by: %i[everyone]) }
   scope :bookable_by_everyone_or_bookable_by_invited_users, -> { where(bookable_by: %i[everyone agents_and_prescripteurs_and_invited_users]) }
   scope :bookable_by_everyone_or_agents_and_prescripteurs_or_invited_users, -> { where(bookable_by: %i[everyone agents_and_prescripteurs agents_and_prescripteurs_and_invited_users]) }
@@ -135,6 +136,10 @@ class Motif < ApplicationRecord
 
   def archive!
     update!(deleted_at: Time.zone.now)
+  end
+
+  def archived?
+    !!deleted_at
   end
 
   def destroyable?
