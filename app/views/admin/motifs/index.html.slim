@@ -20,9 +20,14 @@
 
     ul.nav.nav-tabs
       - [[:active, "Actifs"], [:archived, "Archivés"]].each do |value, label|
-        - tab_url = admin_organisation_motifs_path(current_organisation, current_tab: value)
         li.nav-item
-          a.nav-link *{ href: tab_url, class: value == @current_tab ? "active" : "" }
+          ruby:
+            tab_attrs = { href: admin_organisation_motifs_path(current_organisation, current_tab: value) }
+            if @current_tab == value
+              tab_attrs[:class] = "active"
+              tab_attrs[:"aria-current"] = "page"
+            end
+          a.nav-link *tab_attrs
             = label
 
     table.table
