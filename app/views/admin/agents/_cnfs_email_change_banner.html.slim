@@ -1,7 +1,7 @@
 - if current_agent.email.end_with?("conseiller-numerique.fr")
   .row.mt-2
     .col-md-12
-      - if current_agent.unconfirmed_email.blank? || (current_agent.confirmation_sent_at < 1.week.ago)
+      - if current_agent.unconfirmed_email.blank? || (current_agent.confirmation_sent_at && current_agent.confirmation_sent_at < 1.week.ago)
         .d-print-none.alert.alert-warning.alert-dismissible.fade.show
           a.close.rdv-background-image-none(href="#" data-dismiss="alert" aria-label='Close')
             i.fa.fa-times
