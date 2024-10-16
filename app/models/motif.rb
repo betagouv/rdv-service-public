@@ -130,12 +130,24 @@ class Motif < ApplicationRecord
     name
   end
 
+  def name_with_status
+    if archived?
+      "#{name} (archivé)"
+    else
+      name
+    end
+  end
+
   def soft_delete
     rdvs.any? ? update_attribute(:deleted_at, Time.zone.now) : destroy
   end
 
   def archive!
     update!(deleted_at: Time.zone.now)
+  end
+
+  def unarchive
+    update(deleted_at: nil)
   end
 
   def archived?

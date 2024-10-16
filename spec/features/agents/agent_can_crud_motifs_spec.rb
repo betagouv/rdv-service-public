@@ -22,6 +22,8 @@ RSpec.describe "Agent can CRUD motifs" do
     click_button("Enregistrer")
 
     expect(page).to have_content("Suivi bonsoir")
+    click_link("Archiver")
+    expect(page).to have_content("Suivi bonsoir (archivé)")
     click_link("Supprimer")
 
     expect_page_title("Motifs de l'organisation")
@@ -125,9 +127,37 @@ RSpec.describe "Agent can CRUD motifs" do
     end
   end
 
+  describe "un-archiving" do
+    before do
+      motif.archive!
+    end
+
+    it "can be done from the show page" do
+      visit admin_organisation_motif_path(motif.organisation, motif)
+      expect { click_on "Désarchiver" }.to change { motif.reload.archived? }.from(true).to(false)
+      expect(page).to have_content("Le motif a été désarchivé")
+    end
+
+    context "when an active duplicate exists" do
+      before do
+        duplicate = motif.dup
+        duplicate.deleted_at = nil
+        duplicate.save!
+      end
+
+      it "explains why the motif can't be un-archived" do
+        visit admin_organisation_motif_path(motif.organisation, motif)
+        expect { click_on "Désarchiver" }.not_to change { motif.reload.archived? }.from(true)
+        expect(page).to have_content("Nom est déjà utilisé pour un motif avec le même type de RDV")
+      end
+    end
+  end
+
   describe "destroying a motif" do
     context "when it was not used for any RDV" do
       it "removes it from the database" do
+        motif.archive!
+
         visit admin_organisation_motif_path(motif.organisation, motif)
         expect { click_on "Supprimer" }.to change { Motif.exists?(motif.id) }.from(true).to(false)
         expect(page).to have_content("Le motif a été supprimé")
@@ -137,6 +167,7 @@ RSpec.describe "Agent can CRUD motifs" do
     context "when it was used for some RDVs" do
       it "displays an error" do
         create_list(:rdv, 2, organisation: motif.organisation, motif: motif)
+
         visit admin_organisation_motif_path(motif.organisation, motif)
         expect { click_on "Supprimer" }.not_to change { Motif.exists?(motif.id) }.from(true)
         expect(page).to have_content("Impossible de supprimer le motif : il est lié à 2 rendez-vous.")

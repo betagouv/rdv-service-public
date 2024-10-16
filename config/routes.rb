@@ -179,6 +179,7 @@ Rails.application.routes.draw do
         resources :motifs do
           member do
             post :archive
+            post :unarchive
           end
         end
         resources :rdvs_collectifs, only: %i[index new create edit update] do

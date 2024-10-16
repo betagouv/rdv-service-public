@@ -33,7 +33,10 @@ tr
           div= link_to new_admin_organisation_motif_path(current_organisation, duplicated_from_motif_id: motif.id), title: "Dupliquer" do
             i.fa.fa-copy
         - if motif.archived?
-          - if motif_policy.destroy?
+          - if motif_policy.unarchive?
+            div= link_to unarchive_admin_organisation_motif_path(current_organisation, motif), method: :post, title: "Désarchiver" do
+              i.fa.fa-arrow-up-from-bracket
+          - if motif_policy.destroy? && motif.destroyable?
             div= link_to admin_organisation_motif_path(current_organisation, motif), method: :delete, title: "Supprimer", data: { confirm: "Confirmez-vous la suppression de ce motif ?" } do
               i.fa.fa-trash-alt
         - else

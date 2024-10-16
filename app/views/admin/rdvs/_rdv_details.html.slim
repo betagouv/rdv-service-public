@@ -7,7 +7,7 @@
   div.mr-1
     i.fa.fa-fw.fa-info-circle.text-primary-blue>
   div
-    = rdv.motif_name
+    = rdv.motif.name_with_status
     = motif_badges(rdv.motif)
     - if current_organisation.territory.enable_context_field
       div

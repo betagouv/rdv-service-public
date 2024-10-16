@@ -8,6 +8,7 @@
     = link_to "Créer un motif", new_admin_organisation_motif_path(current_organisation), class:"btn btn-outline-primary"
 
 = simple_form_for "", url: admin_organisation_motifs_path(current_organisation), html: { method: :get, class: "form-inline" }, wrapper: :inline_form do |f|
+  = f.hidden_field :current_tab, value: @current_tab
 
   .container-fluid.card
 

@@ -2,14 +2,14 @@ class Admin::MotifsController < AgentAuthController
   respond_to :html, :json
 
   before_action :set_organisation, only: %i[new create]
-  before_action :set_motif, only: %i[show edit update archive destroy]
+  before_action :set_motif, only: %i[show edit update archive unarchive destroy]
 
   def index
-    @archived_tab = params[:current_tab] == "archived"
+    @current_tab = params[:current_tab] == "archived" ? :archived : :active
 
     @unfiltered_motifs = policy_scope(current_organisation.motifs, policy_scope_class: Agent::MotifPolicy::Scope)
     @motifs = @unfiltered_motifs
-      .active(!@archived_tab)
+      .active(@current_tab == :active)
       .includes(:organisation, :service).page(page_number)
     @motifs = filtered(@motifs, params)
 
@@ -71,6 +71,16 @@ class Admin::MotifsController < AgentAuthController
     redirect_back fallback_location: admin_organisation_motif_path(@motif.organisation, @motif)
   end
 
+  def unarchive
+    authorize(@motif, policy_class: Agent::MotifPolicy)
+    if @motif.unarchive
+      flash[:notice] = "Le motif a été désarchivé."
+    else
+      flash[:error] = @motif.errors.full_messages.join(", ")
+    end
+    redirect_back fallback_location: admin_organisation_motif_path(@motif.organisation, @motif)
+  end
+
   def destroy
     authorize(@motif, policy_class: Agent::MotifPolicy)
     if @motif.destroyable?
@@ -78,7 +88,7 @@ class Admin::MotifsController < AgentAuthController
       flash[:notice] = "Le motif a été supprimé."
       redirect_to admin_organisation_motifs_path(@motif.organisation)
     else
-      flash[:alert] = "Impossible de supprimer le motif : il est lié à #{@motif.rdvs.count} rendez-vous."
+      flash[:error] = "Impossible de supprimer le motif : il est lié à #{@motif.rdvs.count} rendez-vous."
       redirect_back fallback_location: admin_organisation_motifs_path(@motif.organisation)
     end
   end
