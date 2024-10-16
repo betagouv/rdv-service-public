@@ -74,6 +74,7 @@ linters:
       - Style/RedundantParentheses
       - Style/WordArray
       - Style/RedundantLineContinuation
+      - Style/IfInsideElse # Laissez-moi décider de ce qui est le plus lisible
       - Layout/LineContinuationSpacing
       - Lint/RedundantSafeNavigation
       - Rails/HttpStatus
