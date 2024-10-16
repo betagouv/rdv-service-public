@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_09_12_132235) do
+ActiveRecord::Schema[7.0].define(version: 2024_10_15_131717) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
@@ -232,7 +232,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_12_132235) do
     t.datetime "last_sign_in_at"
     t.text "microsoft_graph_token"
     t.text "refresh_microsoft_graph_token"
-    t.string "cnfs_secondary_email"
     t.boolean "outlook_disconnect_in_progress", default: false, null: false
     t.datetime "account_deletion_warning_sent_at", comment: "Quand le compte de l'agent est inactif depuis bientôt deux ans, on lui envoie un mail qui le prévient que sont compte sera bientôt supprimé, et qu'il doit se connecter à nouveau s'il souhaite conserver son compte. On enregistre la date d'envoi de cet email ici pour s'assure qu'on lui laisse un délai d'au moins un mois pour réagir.\n"
     t.string "inclusion_connect_open_id_sub"
