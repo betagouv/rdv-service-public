@@ -32,7 +32,7 @@ tr
         - if motif_policy.duplicate?
           div= link_to new_admin_organisation_motif_path(current_organisation, duplicated_from_motif_id: motif.id), title: "Dupliquer" do
             i.fa.fa-copy
-        - if motif.archived? || true
+        - if motif.archived?
           - if motif_policy.destroy?
             div= link_to admin_organisation_motif_path(current_organisation, motif), method: :delete, title: "Supprimer", data: { confirm: "Confirmez-vous la suppression de ce motif ?" } do
               i.fa.fa-trash-alt

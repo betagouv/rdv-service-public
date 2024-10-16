@@ -5,10 +5,13 @@ class Admin::MotifsController < AgentAuthController
   before_action :set_motif, only: %i[show edit update archive destroy]
 
   def index
-    @unfiltered_motifs = policy_scope(current_organisation.motifs, policy_scope_class: Agent::MotifPolicy::Scope).active
-    @motifs = params[:search].present? ? @unfiltered_motifs.search_by_text(params[:search]) : @unfiltered_motifs.ordered_by_name
+    @archived_tab = params[:current_tab] == "archived"
+
+    @unfiltered_motifs = policy_scope(current_organisation.motifs, policy_scope_class: Agent::MotifPolicy::Scope)
+    @motifs = @unfiltered_motifs
+      .active(!@archived_tab)
+      .includes(:organisation, :service).page(page_number)
     @motifs = filtered(@motifs, params)
-    @motifs = @motifs.includes(:organisation).includes(:service).page(page_number)
 
     @sectors_attributed_to_organisation_count = Sector.attributed_to_organisation(current_organisation).count
     @sectorisation_level_agent_counts_by_service = SectorAttribution.level_agent_grouped_by_service(current_organisation)
@@ -110,6 +113,7 @@ class Admin::MotifsController < AgentAuthController
   end
 
   def filtered(motifs, params)
+    motifs = params[:search].present? ? motifs.search_by_text(params[:search]) : motifs.ordered_by_name
     motifs = online_filtered(motifs, params[:online_filter]) if params[:online_filter].present?
     motifs = motifs.where(service_id: params[:service_filter]) if params[:service_filter].present?
     motifs = motifs.where(location_type: params[:location_type_filter]) if params[:location_type_filter].present?

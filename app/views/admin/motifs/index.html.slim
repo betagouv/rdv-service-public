@@ -16,6 +16,11 @@
       div= link_to "Réinitialiser", admin_organisation_motifs_path(current_organisation), class: "btn btn-link #{search}"
       = f.input :search, placeholder: "ex. Être appelé par la MDS", label: false, input_html: { autocomplete: "off", class: "search-form-control", value: params[:search] }, required: false
       = f.button :submit, "Rechercher"
+    ul.nav.nav-tabs
+      li.nav-item
+        a.nav-link[href=admin_organisation_motifs_path(current_organisation)] Actifs
+      li.nav-item
+        a.nav-link[href=admin_organisation_motifs_path(current_organisation, current_tab: "archived")] Archivés
     table.table
       thead
         tr
@@ -54,7 +59,7 @@
             td(colspan=6)
               .row.justify-content-md-center
                 .col-md-6.rdv-text-align-center.my-5
-                  - if @unfiltered_motifs.any?
+                  - if @motifs.any?
                     p.mb-2.lead Aucun motif ne correspond à votre filtre
                   - else
                     p.mb-2.lead Vous n'avez pas encore créé de motif.
