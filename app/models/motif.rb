@@ -138,6 +138,14 @@ class Motif < ApplicationRecord
     rdvs.any? ? update_attribute(:deleted_at, Time.zone.now) : destroy
   end
 
+  def archive!
+    update!(deleted_at: Time.zone.now)
+  end
+
+  def destroyable?
+    rdvs.none?
+  end
+
   def authorized_agents
     Agent
       .joins(:organisations)
