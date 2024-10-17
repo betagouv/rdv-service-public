@@ -204,11 +204,7 @@ class Agent < ApplicationRecord
   end
 
   def access_level_in(organisation)
-    if roles.loaded?
-      roles.find { _1.organisation_id == organisation.id }&.access_level
-    else
-      roles.where(organisation: organisation).pick(:access_level)
-    end
+    roles.where(organisation: organisation).pick(:access_level)
   end
 
   def territorial_admin_in?(territory)
