@@ -13,8 +13,8 @@
   .container-fluid.card
 
     .m-3.d-flex.justify-content-end
-      - search = params[:search].blank? ? "d-none" : ""
-      div= link_to "Réinitialiser", admin_organisation_motifs_path(current_organisation), class: "btn btn-link #{search}"
+      - if [params[:search], params[:online_filter], params[:service_filter], params[:location_type_filter]].compact_blank.any?
+        div = link_to "Réinitialiser", admin_organisation_motifs_path(current_organisation, current_tab: @current_tab), class: "btn btn-link"
       = f.input :search, placeholder: "ex. Être appelé par la MDS", label: false, input_html: { autocomplete: "off", class: "search-form-control", value: params[:search] }, required: false
       = f.button :submit, "Rechercher"
 
@@ -22,7 +22,8 @@
       - [[:active, "Actifs", @active_motifs_count], [:archived, "Archivés", @archived_motifs_count]].each do |value, label, count|
         li.nav-item
           ruby:
-            tab_attrs = { href: admin_organisation_motifs_path(current_organisation, request.query_parameters.merge({ current_tab: value })) }
+            tab_url_params = request.query_parameters.merge({ current_tab: value }) # keep filters when changing tab
+            tab_attrs = { href: admin_organisation_motifs_path(current_organisation, tab_url_params) }
             if @current_tab == value
               tab_attrs[:class] = "active"
               tab_attrs[:"aria-current"] = "page"
