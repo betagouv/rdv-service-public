@@ -19,16 +19,17 @@
       = f.button :submit, "Rechercher"
 
     ul.nav.nav-tabs
-      - [[:active, "Actifs"], [:archived, "Archivés"]].each do |value, label|
+      - [[:active, "Actifs", @active_motifs_count], [:archived, "Archivés", @archived_motifs_count]].each do |value, label, count|
         li.nav-item
           ruby:
-            tab_attrs = { href: admin_organisation_motifs_path(current_organisation, current_tab: value) }
+            tab_attrs = { href: admin_organisation_motifs_path(current_organisation, request.query_parameters.merge({ current_tab: value })) }
             if @current_tab == value
               tab_attrs[:class] = "active"
               tab_attrs[:"aria-current"] = "page"
             end
           a.nav-link *tab_attrs
             = label
+            span.badge.badge-light.badge-pill = count
 
     table.table
       thead

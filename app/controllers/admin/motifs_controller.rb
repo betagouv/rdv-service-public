@@ -7,11 +7,13 @@ class Admin::MotifsController < AgentAuthController
   def index
     @current_tab = params[:current_tab] == "archived" ? :archived : :active
 
-    @unfiltered_motifs = policy_scope(current_organisation.motifs, policy_scope_class: Agent::MotifPolicy::Scope)
-    @motifs = @unfiltered_motifs
-      .active(@current_tab == :active)
+    unfiltered_motifs = policy_scope(current_organisation.motifs, policy_scope_class: Agent::MotifPolicy::Scope)
+    filtered_motifs = filtered(unfiltered_motifs, params)
+    @motifs = filtered_motifs.active(@current_tab == :active)
       .includes(:organisation, :service).page(page_number)
-    @motifs = filtered(@motifs, params)
+
+    @active_motifs_count = filtered_motifs.active.count
+    @archived_motifs_count = filtered_motifs.archived.count
 
     @sectors_attributed_to_organisation_count = Sector.attributed_to_organisation(current_organisation).count
     @sectorisation_level_agent_counts_by_service = SectorAttribution.level_agent_grouped_by_service(current_organisation)
