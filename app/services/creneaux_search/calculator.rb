@@ -137,14 +137,17 @@ module CreneauxSearch::Calculator
 
       # On lance le chargement des absences en asynchrone pendant qu'on calcule les autres busy times
       @absences = plage_ouverture.agent.absences.not_expired.in_range(range).load_async
-      @rdvs = plage_ouverture.agent.rdvs.not_cancelled.where("tsrange(starts_at, ends_at, '[)') && tsrange(?, ?)", range.begin, range.end)
+      @rdvs = plage_ouverture.agent.rdvs.not_cancelled.where("tsrange(starts_at, ends_at, '[)') && tsrange(?, ?)", range.begin, range.end).load_async
     end
 
     def busy_times
-      busy_times = busy_times_from_rdvs
-      busy_times += busy_times_from_off_days(range)
+      busy_times = @rdvs.map do |rdv|
+        BusyTime.new(rdv.starts_at, rdv.ends_at)
+      end
 
-      busy_times += busy_times_from_absences(range, @absences)
+      busy_times += busy_times_from_off_days
+
+      busy_times += busy_times_from_absences
 
       # Le tri est nécessaire, surtout pour les surcharges.
       busy_times.sort_by(&:starts_at)
@@ -152,17 +155,11 @@ module CreneauxSearch::Calculator
 
     private
 
-    def busy_times_from_rdvs
-      @rdvs.map do |rdv|
-        BusyTime.new(rdv.starts_at, rdv.ends_at)
-      end
-    end
-
-    def busy_times_from_absences(range, absences)
+    def busy_times_from_absences
       busy_times = []
-      absences.each do |absence|
+      @absences.each do |absence|
         absence.occurrences_for(range).each do |absence_occurrence|
-          next if absence_out_of_range?(absence_occurrence, range)
+          next if absence_out_of_range?(absence_occurrence)
 
           busy_times << BusyTime.new(absence_occurrence.starts_at, absence_occurrence.ends_at)
         end
@@ -170,12 +167,12 @@ module CreneauxSearch::Calculator
       busy_times
     end
 
-    def absence_out_of_range?(absence, range)
+    def absence_out_of_range?(absence)
       absence.ends_at < range.begin || range.end < absence.starts_at
     end
 
-    def busy_times_from_off_days(date_range)
-      OffDays.all_in_date_range(date_range).map do |off_day|
+    def busy_times_from_off_days
+      OffDays.all_in_date_range(range).map do |off_day|
         BusyTime.new(off_day.beginning_of_day, off_day.end_of_day)
       end
     end
