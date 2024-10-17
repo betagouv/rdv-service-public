@@ -141,13 +141,13 @@ module CreneauxSearch::Calculator
     end
 
     def busy_times
-      busy_times = @rdvs.map do |rdv|
-        BusyTime.new(rdv.starts_at, rdv.ends_at)
-      end
-
-      busy_times += busy_times_from_off_days
+      busy_times = busy_times_from_off_days
 
       busy_times += busy_times_from_absences
+
+      busy_times += @rdvs.map do |rdv|
+        BusyTime.new(rdv.starts_at, rdv.ends_at)
+      end
 
       # Le tri est nécessaire, surtout pour les surcharges.
       busy_times.sort_by(&:starts_at)
