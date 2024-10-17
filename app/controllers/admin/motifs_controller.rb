@@ -74,7 +74,7 @@ class Admin::MotifsController < AgentAuthController
   def unarchive
     authorize(@motif, policy_class: Agent::MotifPolicy)
     if @motif.unarchive
-      flash[:notice] = "Le motif a été désarchivé."
+      flash[:notice] = "Le motif a été réactivé."
     else
       flash[:error] = @motif.errors.full_messages.join(", ")
     end

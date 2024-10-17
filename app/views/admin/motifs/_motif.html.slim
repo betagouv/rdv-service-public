@@ -36,12 +36,12 @@ tr
 
         - if motif.archived?
           - if motif_policy.unarchive?
-            div= link_to unarchive_admin_organisation_motif_path(current_organisation, motif), method: :post, title: "Désarchiver" do
+            div= link_to unarchive_admin_organisation_motif_path(current_organisation, motif), method: :post, title: "Réactiver" do
               i.fa.fa-arrow-up-from-bracket
           - if motif_policy.destroy? && motif.destroyable?
             div= link_to admin_organisation_motif_path(current_organisation, motif), method: :delete, title: "Supprimer", data: { confirm: "Confirmez-vous la suppression de ce motif ?" } do
               i.fa.fa-trash-alt
         - else
           - if motif_policy.archive?
-            div= link_to archive_admin_organisation_motif_path(current_organisation, motif), method: :post, title: "Archiver", data: { confirm: "Cela empêchera de créer des RDV pour ce motif. Vous pourrez le désarchiver à tout moment. Continuer ?" } do
+            div= link_to archive_admin_organisation_motif_path(current_organisation, motif), method: :post, title: "Archiver", data: { confirm: "En archivant ce motif, il ne sera plus possible de créer des RDV. Vous pouvez le réactiver à tout moment. Confirmer ?" } do
               i.fa.fa-box-archive

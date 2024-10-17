@@ -92,10 +92,10 @@
           .d-flex.justify-content-end.flex-gap-1em
             - if @motif.archived?
               - if @motif_policy.unarchive?
-                div= link_to "Désarchiver", unarchive_admin_organisation_motif_path(current_organisation, @motif), method: :post, class: "btn btn-light w-100"
+                div= link_to "Réactiver", unarchive_admin_organisation_motif_path(current_organisation, @motif), method: :post, class: "btn btn-light w-100"
             - else
               - if @motif_policy.archive?
-                div= link_to "Archiver", archive_admin_organisation_motif_path(current_organisation, @motif), method: :post, data: { confirm: "Cela empêchera de créer des RDV pour ce motif. Vous pourrez le désarchiver à tout moment. Continuer ?" }, class: "btn btn-light w-100"
+                div= link_to "Archiver", archive_admin_organisation_motif_path(current_organisation, @motif), method: :post, data: { confirm: "En archivant ce motif, il ne sera plus possible de créer des RDV. Vous pouvez le réactiver à tout moment. Confirmer ?" }, class: "btn btn-light w-100"
 
             - if @motif_policy.destroy?
               div= link_to "Supprimer", admin_organisation_motif_path(current_organisation, @motif), method: :delete, data: { confirm: "Confirmez-vous la suppression de ce motif ?"}, class: "btn btn-danger w-100"

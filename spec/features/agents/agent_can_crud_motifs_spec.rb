@@ -134,8 +134,8 @@ RSpec.describe "Agent can CRUD motifs" do
 
     it "can be done from the show page" do
       visit admin_organisation_motif_path(motif.organisation, motif)
-      expect { click_on "Désarchiver" }.to change { motif.reload.archived? }.from(true).to(false)
-      expect(page).to have_content("Le motif a été désarchivé")
+      expect { click_on "Réactiver" }.to change { motif.reload.archived? }.from(true).to(false)
+      expect(page).to have_content("Le motif a été réactivé")
     end
 
     context "when an active duplicate exists" do
@@ -147,7 +147,7 @@ RSpec.describe "Agent can CRUD motifs" do
 
       it "explains why the motif can't be un-archived" do
         visit admin_organisation_motif_path(motif.organisation, motif)
-        expect { click_on "Désarchiver" }.not_to change { motif.reload.archived? }.from(true)
+        expect { click_on "Réactiver" }.not_to change { motif.reload.archived? }.from(true)
         expect(page).to have_content("Nom est déjà utilisé pour un motif avec le même type de RDV")
       end
     end
