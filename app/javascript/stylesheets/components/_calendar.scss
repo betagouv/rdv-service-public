@@ -149,15 +149,6 @@
 
 .fc-unauthorized-rdv {
   cursor: not-allowed;
-
-  // Inspired by https://css-tricks.com/stripes-css/
-  background: repeating-linear-gradient(
-    45deg,
-    #dadada,
-    #dadada 10px,
-    #cfcfcf 10px,
-    #cfcfcf 20px
-  );
 }
 
 .fc-basic-view {
