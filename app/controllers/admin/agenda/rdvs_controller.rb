@@ -4,12 +4,11 @@ class Admin::Agenda::RdvsController < Admin::Agenda::BaseController
     @organisation = Organisation.find(params[:organisation_id])
 
     # Nous voulons afficher tous les RDVs de l'agent en question.
-    # Pour chacun de ces RDVs, nous faisons appel à `Agent::RdvPolicy#show`
-    # dans la vue pour déterminer si il faut afficher les infos du RDV ou non.
+    # La façon dont ils sont affichés sera dictée par leur classe.
     skip_authorization
     rdvs = agent.rdvs.includes(:organisation, :lieu, :users, :agents, :participations, motif: [:service])
-
     rdvs = rdvs.where(starts_at: time_range_params)
+
     @rdvs = rdvs.map do |rdv|
       if Agent::RdvPolicy.new(current_agent, rdv).show?
         rdv if rdv.not_cancelled? || current_agent.display_cancelled_rdv
