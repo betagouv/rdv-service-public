@@ -58,7 +58,7 @@ module Ants
 
     def self.enqueue_sync_for_marked_record(rdvs)
       rdvs.select(&:needs_sync_to_ants).each do |rdv|
-        Ants::SyncAppointmentJob.perform_later_for(rdv)
+        Ants::SyncAppointmentJob.perform_later_for(rdv, obsolete_application_id: rdv.obsolete_application_id)
         rdv.assign_attributes(needs_sync_to_ants: false)
       end
     end

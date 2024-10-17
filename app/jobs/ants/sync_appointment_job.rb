@@ -8,24 +8,22 @@ module Ants
     )
 
     class << self
-      def perform_later_for(rdv)
+      def perform_later_for(rdv, obsolete_application_id: nil)
         # On passe les attributes du RDV au lieu de l'objet active record, au cas où ce dernier serait supprimé
-        perform_later(rdv_attributes: rdv_attributes(rdv), appointment_data: rdv.serialize_for_ants_api)
+        perform_later(rdv_attributes: rdv_attributes(rdv), appointment_data: rdv.serialize_for_ants_api, obsolete_application_id:)
       end
-
-      private
 
       def rdv_attributes(rdv)
         {
           id: rdv.id,
           status: rdv.status,
           users_ids: rdv.users.ids,
-          obsolete_application_id: rdv.obsolete_application_id,
         }
       end
     end
 
-    def perform(rdv_attributes:, appointment_data:)
+    def perform(rdv_attributes:, appointment_data:, obsolete_application_id: nil)
+      @obsolete_application_id = obsolete_application_id
       @rdv_attributes = rdv_attributes
       @rdv = Rdv.find_by(id: @rdv_attributes[:id])
       # Si le RDV n'est pas supprimé on essaie à nouveau d'extraire les appointment_data, afin d'avoir les données les plus fraiches possibles
@@ -43,10 +41,10 @@ module Ants
     private
 
     def delete_obsolete_appointment
-      return if @rdv_attributes[:obsolete_application_id].blank?
+      return if @obsolete_application_id.blank?
 
       res = AntsApi.find_and_delete(
-        application_id: @rdv_attributes[:obsolete_application_id],
+        application_id: @obsolete_application_id,
         management_url: @appointment_data[:management_url]
       )
       Sentry.set_tags(ants_appointment_deleted: res.present?)
