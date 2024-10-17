@@ -43,12 +43,14 @@ RSpec.describe CreneauxSearch::Calculator::BusyTimePreloader, type: :service do
       expect(busy_times.first.ends_at).to eq(Time.zone.parse("20211028 12"))
     end
 
-    it "dont return BusyTime if absence is out of range" do
-      range = Time.zone.parse("2021-10-26 9:00")..Time.zone.parse("2021-10-29 11:00")
+    context "absence is out of range" do
+      let(:range) { Time.zone.parse("2021-10-26 9:00")..Time.zone.parse("2021-10-29 11:00") }
 
-      create(:absence, agent: plage_ouverture.agent, first_day: Date.new(2021, 10, 29), start_time: Tod::TimeOfDay.new(14),
-                       end_day: Date.new(2021, 10, 29), end_time: Tod::TimeOfDay.new(15))
-      expect(busy_times).to be_empty
+      it "doesn't return BusyTime" do
+        create(:absence, agent: plage_ouverture.agent, first_day: Date.new(2021, 10, 29), start_time: Tod::TimeOfDay.new(14),
+                         end_day: Date.new(2021, 10, 29), end_time: Tod::TimeOfDay.new(15))
+        expect(busy_times).to be_empty
+      end
     end
   end
 
