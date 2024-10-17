@@ -143,6 +143,7 @@ module CreneauxSearch::Calculator
     def busy_times
       busy_times = busy_times_from_off_days
 
+      # On calcule les occurrences des absences en premier pour laisser aux rdvs le temps de finir de charger
       busy_times += busy_times_from_absences
 
       busy_times += @rdvs.map do |rdv|
