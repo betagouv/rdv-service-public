@@ -118,9 +118,9 @@ class Api::Ants::EditorController < Api::Ants::BaseController
   def time_slot_url(creneau)
     creneaux_url(
       starts_at: creneau.starts_at.strftime("%Y-%m-%d %H:%M"),
-      lieu_id: creneau.lieu.id,
+      lieu_id: creneau.lieu_id,
       motif_id: creneau.motif.id,
-      public_link_organisation_id: creneau.lieu.organisation.id,
+      public_link_organisation_id: creneau.motif.organisation_id,
       duration: creneau.motif.default_duration_in_min
     )
   end
