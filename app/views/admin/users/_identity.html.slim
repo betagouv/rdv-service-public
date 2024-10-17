@@ -13,7 +13,7 @@ ruby:
 
 - if user.relative?
   - link_to_responsible = admin_link_to_user_if_permitted.call(current_organisation, user.responsible)
-  = t(".identity_with_responsible_html", responsible: link_to_user, user: link_to_responsible)
+  = t(".identity_with_responsible_html", user: link_to_user, responsible: link_to_responsible)
 - else
   = t(".identity_html", user: link_to_user)
 
