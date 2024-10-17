@@ -33,7 +33,7 @@ module CreneauxSearch::Calculator
       return [] if ranges.empty?
 
       ranges.map do |range|
-        [range, BusyTimePreloader.preload_busy_times_for(range, plage_ouverture)]
+        [range, BusyTimePreloader.start_loading_busy_times_for(range, plage_ouverture)]
       end.flat_map do |range, busy_times_preloader|
         busy_times = busy_times_preloader.busy_times
         split_range_recursively(range, busy_times)
@@ -122,22 +122,13 @@ module CreneauxSearch::Calculator
     def initialize(range, plage_ouverture)
       @range = range
       @plage_ouverture = plage_ouverture
+      start_loading!
     end
 
     attr_reader :range, :plage_ouverture
 
-    def self.preload_busy_times_for(range, plage_ouverture)
-      new(range, plage_ouverture).tap(&:preload)
-    end
-
-    def preload
-      # c'est là que l'on execute le SQL
-      # TODO : Peut-être cacher la récupération de l'ensemble des RDV et absences concernées (pour n'avoir que deux requêtes) puis faire des selections dessus pour le filtre sur le range
-      #        Le problème potentiel de cette approche est qu'il serait difficile d'éviter de charger des rdv et absences qui sont en dehors des ocurrences des plages d'ouverture
-
-      # On lance le chargement des absences en asynchrone pendant qu'on calcule les autres busy times
-      @absences = plage_ouverture.agent.absences.not_expired.in_range(range).load_async
-      @rdvs = plage_ouverture.agent.rdvs.not_cancelled.where("tsrange(starts_at, ends_at, '[)') && tsrange(?, ?)", range.begin, range.end).load_async
+    def self.start_loading_busy_times_for(range, plage_ouverture)
+      new(range, plage_ouverture)
     end
 
     def busy_times
@@ -155,6 +146,15 @@ module CreneauxSearch::Calculator
     end
 
     private
+
+    def start_loading!
+      # c'est là que l'on execute le SQL
+      # TODO : Peut-être cacher la récupération de l'ensemble des RDV et absences concernées (pour n'avoir que deux requêtes) puis faire des selections dessus pour le filtre sur le range
+      #        Le problème potentiel de cette approche est qu'il serait difficile d'éviter de charger des rdv et absences qui sont en dehors des ocurrences des plages d'ouverture
+
+      @absences = plage_ouverture.agent.absences.not_expired.in_range(range).load_async
+      @rdvs = plage_ouverture.agent.rdvs.not_cancelled.where("tsrange(starts_at, ends_at, '[)') && tsrange(?, ?)", range.begin, range.end).load_async
+    end
 
     def busy_times_from_absences
       busy_times = []
