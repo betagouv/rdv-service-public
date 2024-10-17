@@ -35,6 +35,8 @@ L’ANTS envoie comme paramètres une plage de dates, un motif, un nombre de per
 L’endpoint renvoie tous les créneaux disponibles dans ces lieux pour ces motifs.
 L’ANTS applique un timeout de 15s sur ces requêtes.
 
+Cette api est documentée [ici](https://ppd.api.rendezvouspasseport.ants.gouv.fr/docs#/API%20interfac%C3%A9es%20avec%20les%20%C3%A9diteurs/).
+
 Tous ces endpoints sont définis par `Api::Ants::EditorController`.
 
 ### Authentification
