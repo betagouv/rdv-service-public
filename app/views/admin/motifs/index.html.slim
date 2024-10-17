@@ -84,6 +84,6 @@
     - if @motifs.any?
       .d-flex.justify-content-center
         = paginate @motifs, theme: "twitter-bootstrap-4"
-      - if @motif_policy.create?
+      - if @motif_policy.create? && @current_tab == :active
         .rdv-text-align-center.m-3
           = link_to "Créer un motif", new_admin_organisation_motif_path(current_organisation), class: "btn btn-primary"
