@@ -84,7 +84,7 @@
         .card-header Agents référents du responsable
         .card-body
           ul.list-unstyled.mb-2
-            - policy_scope(@user.responsible.referent_agents.includes([:services])).each do |agent|
+            - policy_scope(@user.responsible.referent_agents.includes([:services]), policy_scope_class: Agent::AgentPolicy::Scope).each do |agent|
               li.mb-2
               | #{agent.full_name_and_service}
             - if @user.responsible.referent_agents.empty?
@@ -108,15 +108,15 @@
 
   .col-md-6
 
-    - if policy_scope(Rdv).merge(@user.ongoing_rdvs(current_organisation)).any?
+    - ongoing_rdvs = policy_scope(@user.ongoing_rdvs(current_organisation), policy_scope_class: Agent::RdvPolicy::Scope).order(starts_at: :asc)
+    - if ongoing_rdvs.load.any?
       .card
         .card-header Rendez-vous en cours (+/- 1 heure)
-        - ongoing_rdvs = policy_scope(Rdv).merge(@user.ongoing_rdvs(current_organisation)).order(starts_at: :asc)
         = render "admin/rdvs/short_rdvs_list", user: @user, rdvs: ongoing_rdvs
 
     .card
       .card-header Prochains rendez-vous
-      - future_rdvs = policy_scope(Rdv).merge(@user.rdvs_future_without_ongoing(current_organisation)).order(starts_at: :asc).limit(10)
+      - future_rdvs = policy_scope(@user.rdvs_future_without_ongoing(current_organisation), policy_scope_class: Agent::RdvPolicy::Scope).order(starts_at: :asc).limit(10)
       = render "admin/rdvs/short_rdvs_list", user: @user, rdvs: future_rdvs
 
     .card
@@ -150,4 +150,4 @@
 
 .row.justify-content-center
   .col-md-12.col-lg-8
-    = render "admin/versions/resource_versions_row", resource_policy: policy([:agent, @user]), resource: @user
+    = render "admin/versions/resource_versions_row", resource_policy: policy(@user, policy_class: Agent::UserPolicy), resource: @user

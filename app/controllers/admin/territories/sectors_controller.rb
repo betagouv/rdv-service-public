@@ -13,12 +13,12 @@ class Admin::Territories::SectorsController < Admin::Territories::BaseController
 
   def new
     @sector = Sector.new(territory: current_territory)
-    authorize_agent @sector
+    authorize(@sector, policy_class: Agent::SectorPolicy)
   end
 
   def create
     @sector = Sector.new(**sector_params, territory: current_territory)
-    authorize_agent @sector
+    authorize(@sector, policy_class: Agent::SectorPolicy)
     if @sector.save
       if params[:commit] == I18n.t("helpers.submit.create")
         redirect_to admin_territory_sector_path(current_territory, @sector)
@@ -57,7 +57,7 @@ class Admin::Territories::SectorsController < Admin::Territories::BaseController
 
   def set_sector
     @sector = Sector.find(params[:id])
-    authorize_agent @sector
+    authorize(@sector, policy_class: Agent::SectorPolicy)
   end
 
   def sector_params

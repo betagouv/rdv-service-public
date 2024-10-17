@@ -83,11 +83,9 @@ tables:
       - email_original
       - encrypted_password
       - unconfirmed_email
-      - cnfs_secondary_email
       - uid
       - external_id
       - calendar_uid
-      - last_sign_in_at
       - reset_password_token
       - confirmation_token
       - invitation_token
@@ -98,6 +96,7 @@ tables:
       - inclusion_connect_open_id_sub
     non_anonymized_column_names:
       - reset_password_sent_at
+      - last_sign_in_at
       - confirmed_at
       - confirmation_sent_at
       - invitation_created_at
