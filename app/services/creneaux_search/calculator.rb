@@ -34,13 +34,12 @@ module CreneauxSearch::Calculator
 
       ranges.map do |range|
         [range, BusyTimePreloader.start_loading_busy_times_for(range, plage_ouverture)]
-      end.flat_map do |range, busy_times_preloader|
+      end.map do |range, busy_times_preloader|
         busy_times = busy_times_preloader.busy_times
-
-        Ractor.new do
-          split_range_recursively(range, busy_times)
+        Ractor.new(range, busy_times, self) do |range, busy_times, calculator|
+          calculator.split_range_recursively(range, busy_times)
         end
-      end
+      end.map(&:take).flatten
     end
 
     def ranges_for(plage_ouverture, datetime_range)
@@ -65,9 +64,11 @@ module CreneauxSearch::Calculator
     end
 
     def first_range(range, busy_time)
-      return [range.begin..busy_time.starts_at] if range.begin < busy_time.starts_at && range.cover?(busy_time.range)
-
-      []
+      if range.begin < busy_time.starts_at && range.cover?(busy_time.range)
+        range.begin..busy_time.starts_at
+      else
+        []
+      end
     end
 
     def remaining_range(range, busy_time)
