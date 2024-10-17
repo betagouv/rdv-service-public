@@ -137,10 +137,11 @@ module CreneauxSearch::Calculator
 
       # On lance le chargement des absences en asynchrone pendant qu'on calcule les autres busy times
       @absences = plage_ouverture.agent.absences.not_expired.in_range(range).load_async
+      @rdvs = plage_ouverture.agent.rdvs.not_cancelled.where("tsrange(starts_at, ends_at, '[)') && tsrange(?, ?)", range.begin, range.end)
     end
 
     def busy_times
-      busy_times = busy_times_from_rdvs(range, plage_ouverture)
+      busy_times = busy_times_from_rdvs
       busy_times += busy_times_from_off_days(range)
 
       busy_times += busy_times_from_absences(range, @absences)
@@ -151,11 +152,9 @@ module CreneauxSearch::Calculator
 
     private
 
-    def busy_times_from_rdvs(range, plage_ouverture)
-      rdv_scope = plage_ouverture.agent.rdvs.not_cancelled.where("tsrange(starts_at, ends_at, '[)') && tsrange(?, ?)", range.begin, range.end)
-
-      rdv_scope.pluck(:starts_at, :ends_at).map do |starts_at, ends_at|
-        BusyTime.new(starts_at, ends_at)
+    def busy_times_from_rdvs
+      @rdvs.map do |rdv|
+        BusyTime.new(rdv.starts_at, rdv.ends_at)
       end
     end
 
