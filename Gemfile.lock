@@ -392,7 +392,7 @@ GEM
     parallel (1.22.1)
     parallel_tests (4.5.1)
       parallel
-    parser (3.3.3.0)
+    parser (3.3.5.0)
       ast (~> 2.4.1)
       racc
     pg (1.4.6)
@@ -716,7 +716,7 @@ DEPENDENCIES
   omniauth_openid_connect
   paper_trail (< 13.0)
   parallel_tests
-  parser (= 3.3.3.0)
+  parser (= 3.3.5.0)
   pg
   pg_search
   phonelib
@@ -761,7 +761,7 @@ DEPENDENCIES
   webmock
 
 RUBY VERSION
-   ruby 3.3.3p89
+   ruby 3.3.5p100
 
 BUNDLED WITH
-   2.5.14
+   2.5.22
