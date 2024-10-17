@@ -153,7 +153,7 @@ module CreneauxSearch::Calculator
       #        Le problème potentiel de cette approche est qu'il serait difficile d'éviter de charger des rdv et absences qui sont en dehors des ocurrences des plages d'ouverture
 
       @absences = plage_ouverture.agent.absences.not_expired.in_range(range).load_async
-      @rdvs = plage_ouverture.agent.rdvs.not_cancelled.where("tsrange(starts_at, ends_at, '[)') && tsrange(?, ?)", range.begin, range.end).load_async
+      @rdvs = plage_ouverture.agent.rdvs.not_cancelled.where("starts_at < ?", range.end).where("ends_at > ?", range.begin).load_async
     end
 
     def busy_times_from_absences
