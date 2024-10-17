@@ -1,12 +1,15 @@
-# Interconnexion avec l’ANTS
+# Interconnexions avec l’ANTS
 
 L’ANTS (Agence Nationale des Titres Sécurisés) s’occupe des passeports et des cartes d’identités.
-Un formulaire de pré-demande en ligne permet aux usager·es de décrire leur demande.
+Un formulaire de pré-demande en ligne permet aux usager·es de remplir leur dossier de demande.
 Un numéro de pré-demande en 10 caractères alphanumérique est remis à la fin de ce formulaire.
 
-Un site national permet de chercher un créneau pour déposer une demande en ligne : [rendezvouspasseport.ants.gouv.fr](https://rendezvouspasseport.ants.gouv.fr)
-Les usager·es peuvent prendre RDV dans n’importe quelle commune, peu importe leur commune de résidence.
-Lors des recherches, l’ANTS interroge les SI des mairies pour récupérer des créneaux disponibles pour ces dépôts de demandes.
+Suite à cette pré-demande, l'usager doit prendre rendez-vous en personne dans une mairie qui dispose d'un Dispositif de Recueil (DR),
+un appareil qui permet de prendre les empreintes digitales.
+Un site national permet de chercher un créneau pour prendre ce rendez-vous : [rendezvouspasseport.ants.gouv.fr](https://rendezvouspasseport.ants.gouv.fr)
+Les usager·es peuvent prendre RDV dans n’importe quelle commune équipée d'un DR, peu importe leur commune de résidence, c'est le principe de déterritorialisation.
+
+Lors des recherches, l’ANTS interroge les SI des mairies pour récupérer des créneaux disponibles pour ces rendez-vous.
 Une fois le créneau sélectionné, l’usager·e est redirigé·e vers le site de prise de RDV de la mairie.
 L’usager.e renseigne son numéro de pré-demande sur le site de prise de RDV de la mairie.
 
@@ -32,6 +35,18 @@ L’ANTS envoie comme paramètres une plage de dates, un motif, un nombre de per
 L’endpoint renvoie tous les créneaux disponibles dans ces lieux pour ces motifs.
 L’ANTS applique un timeout de 15s sur ces requêtes.
 
+Tous ces endpoints sont définis par `Api::Ants::EditorController`.
+
+### Authentification
+
+L’ANTS authentifie ses requêtes vers nos endpoints via un token passé en header `X-HUB-RDV-AUTH-TOKEN`.
+
+## Environnement de staging
+
+L’ANTS fournit un environnement de staging - préproduction :
+
+- Le site de recherche de créneaux [ppd.rendezvouspasseport.ants.gouv.fr](https://ppd.rendezvouspasseport.ants.gouv.fr/)
+
 ## Dédoublonnage
 
 L’ANTS propose une base de données et des endpoints d’API pour le dédoublonnage des prises de RDV.
@@ -48,17 +63,16 @@ Chaque `application_id` a aussi un statut :
 
 Les éditeurs logiciels peuvent voir les appointments posés par d’autres éditeurs logiciels.
 
-## Authentification
+
+### Authentification
 
 Nous nous authentifions à l’API de l’ANTS via un token passé en header et stocké dans une variable d’environnement : `ANTS_RDV_OPT_AUTH_TOKEN`.
 
-L’ANTS authentifie ses requêtes vers nos endpoints via un token passé en header `X-HUB-RDV-AUTH-TOKEN`.
 
-## Environnement de staging
+### Environnement de staging
 
 L’ANTS fournit un environnement de staging - préproduction :
 
-- Le site de recherche de créneaux [ppd.rendezvouspasseport.ants.gouv.fr](https://ppd.rendezvouspasseport.ants.gouv.fr/)
 - L’API est disponible sur [int.api-coordination.rendezvouspasseport.ants.gouv.fr](https://int.api-coordination.rendezvouspasseport.ants.gouv.fr)
 
 ## Liens externes

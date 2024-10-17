@@ -1,3 +1,4 @@
+# voir docs/interconnexions/ants.md
 class Api::Ants::EditorController < Api::Ants::BaseController
   before_action :check_required_params!, only: [:available_time_slots]
 
