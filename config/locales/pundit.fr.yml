@@ -1,7 +1,7 @@
 fr:
   pundit:
-    default: 'Vous ne pouvez pas effectuer cette action.'
+    default: Vous n’avez pas les droits suffisants pour accéder à cette page ou effectuer cette action
     agent/organisation_policy:
-      show?: Vous ne pouvez pas accéder à cette organisation
+      show?: Vous n’avez pas les droits suffisants pour accéder à cette organisation
     agent/agent_agenda_policy:
-      show?: Vous ne pouvez pas accéder à l’agenda de cet agent
+      show?: Vous n’avez pas les droits suffisants pour accéder à l’agenda de cet agent
