@@ -70,11 +70,11 @@
             td(colspan=6)
               .row.justify-content-md-center
                 .col-md-6.rdv-text-align-center.my-5
-                  - if @motifs.any?
-                    p.mb-2.lead Aucun motif ne correspond à votre filtre
-                  - else
+                  - if current_organisation.motifs.none?
                     p.mb-2.lead Vous n'avez pas encore créé de motif.
                     p Les motifs sont les types de RDV que vous proposez dans votre organisation. Chaque motif a des options indépendantes : durée, format (à domicile, par téléphone, sur place), prise de RDV en ligne activée etc...
+                  - else
+                    p.mb-2.lead Aucun motif ne correspond à votre filtre
                   span.fa-stack.fa-4x
                     i.fa.fa-circle.fa-stack-2x.text-primary
                     i.far.fa-calendar.fa-stack-1x.text-white
