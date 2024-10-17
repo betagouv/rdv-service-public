@@ -137,7 +137,7 @@ RSpec/DescribedClass:
     - spec/controllers/concerns/token_invitable_spec.rb
 
 RSpec/ContextWording:
-  Enabled: False
+  Enabled: false
 
 RSpec/ExampleLength:
   Enabled: false

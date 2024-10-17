@@ -34,15 +34,6 @@ module Ants
       end
     end
 
-    def serialize_for_ants_api
-      {
-        meeting_point_id: lieu.id.to_s,
-        meeting_point: lieu.name,
-        appointment_date: starts_at.strftime("%Y-%m-%d %H:%M:%S"),
-        management_url: Rails.application.routes.url_helpers.users_rdv_url(self, host: organisation.domain.host_name),
-      }
-    end
-
     def watching_attributes_for_ants_api_changed?
       saved_changes.keys & ATTRIBUTES_TO_WATCH
     end
@@ -61,6 +52,17 @@ module Ants
         Ants::SyncAppointmentJob.perform_later_for(rdv)
         rdv.assign_attributes(needs_sync_to_ants: false)
       end
+    end
+
+    def ants_management_url_for(application_id:)
+      Rails.application.routes.url_helpers.users_rdv_url(
+        id,
+        host: organisation.domain.host_name,
+        ants_pre_demande_number: application_id
+      )
+      # ce dernier param GET sera ignoré par notre serveur Rails
+      # On l’utilise pour rendre les management_url uniques et
+      # respecter la contrainte d’unicité de l’API de l’ANTS
     end
   end
 end
