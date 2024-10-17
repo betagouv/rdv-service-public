@@ -117,13 +117,13 @@ RSpec.describe "Agent can CRUD motifs" do
     it "can be done from the index page" do
       visit admin_organisation_motifs_path(motif.organisation)
       expect { click_on "Archiver" }.to change { motif.reload.archived? }.from(false).to(true)
-      expect(page).to have_content("Le motif a été archivé")
+      expect(page).to have_content("Le motif Suivi bonjour a été archivé")
     end
 
     it "can be done from the show page" do
       visit admin_organisation_motif_path(motif.organisation, motif)
       expect { click_on "Archiver" }.to change { motif.reload.archived? }.from(false).to(true)
-      expect(page).to have_content("Le motif a été archivé")
+      expect(page).to have_content("Le motif Suivi bonjour a été archivé")
     end
   end
 
@@ -135,7 +135,7 @@ RSpec.describe "Agent can CRUD motifs" do
     it "can be done from the show page" do
       visit admin_organisation_motif_path(motif.organisation, motif)
       expect { click_on "Réactiver" }.to change { motif.reload.archived? }.from(true).to(false)
-      expect(page).to have_content("Le motif a été réactivé")
+      expect(page).to have_content("Le motif Suivi bonjour a été réactivé")
     end
 
     context "when an active duplicate exists" do
@@ -160,7 +160,7 @@ RSpec.describe "Agent can CRUD motifs" do
 
         visit admin_organisation_motif_path(motif.organisation, motif)
         expect { click_on "Supprimer" }.to change { Motif.exists?(motif.id) }.from(true).to(false)
-        expect(page).to have_content("Le motif a été supprimé")
+        expect(page).to have_content("Le motif Suivi bonjour a été supprimé")
       end
     end
 

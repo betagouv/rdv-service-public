@@ -49,7 +49,7 @@ class Admin::MotifsController < AgentAuthController
     @motif.organisation ||= current_organisation
     authorize(@motif, policy_class: Agent::MotifPolicy)
     if @motif.save
-      flash[:notice] = "Motif créé."
+      flash[:notice] = "Motif #{link_to_motif(@motif)} créé."
       redirect_to admin_organisation_motifs_path(@motif.organisation)
     else
       render :new
@@ -59,7 +59,7 @@ class Admin::MotifsController < AgentAuthController
   def update
     authorize(@motif, policy_class: Agent::MotifPolicy)
     if @motif.update(params.require(:motif).permit(*FORM_ATTRIBUTES))
-      flash[:notice] = "Le motif a été modifié."
+      flash[:notice] = "Le motif #{link_to_motif(@motif)} a été modifié."
       redirect_to admin_organisation_motif_path(@motif.organisation, @motif)
     else
       render :edit
@@ -69,14 +69,14 @@ class Admin::MotifsController < AgentAuthController
   def archive
     authorize(@motif, policy_class: Agent::MotifPolicy)
     @motif.archive!
-    flash[:notice] = "Le motif a été archivé."
+    flash[:notice] = "Le motif #{link_to_motif(@motif)} a été archivé."
     redirect_back fallback_location: admin_organisation_motif_path(@motif.organisation, @motif)
   end
 
   def unarchive
     authorize(@motif, policy_class: Agent::MotifPolicy)
     if @motif.unarchive
-      flash[:notice] = "Le motif a été réactivé."
+      flash[:notice] = "Le motif #{link_to_motif(@motif)} a été réactivé."
     else
       flash[:error] = @motif.errors.full_messages.join(", ")
     end
@@ -87,7 +87,7 @@ class Admin::MotifsController < AgentAuthController
     authorize(@motif, policy_class: Agent::MotifPolicy)
     if @motif.destroyable?
       @motif.destroy!
-      flash[:notice] = "Le motif a été supprimé."
+      flash[:notice] = "Le motif #{@motif.name} a été supprimé."
       redirect_to admin_organisation_motifs_path(@motif.organisation)
     else
       flash[:error] = "Impossible de supprimer le motif : il est lié à #{@motif.rdvs.count} rendez-vous."
@@ -143,5 +143,9 @@ class Admin::MotifsController < AgentAuthController
   def set_motif
     @motif = policy_scope(current_organisation.motifs, policy_scope_class: Agent::MotifPolicy::Scope)
       .find(params[:id])
+  end
+
+  def link_to_motif(motif)
+    helpers.link_to(motif.name, admin_organisation_motif_path(motif.organisation, motif))
   end
 end
