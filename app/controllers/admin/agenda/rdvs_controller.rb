@@ -9,6 +9,10 @@ class Admin::Agenda::RdvsController < Admin::Agenda::BaseController
     rdvs = agent.rdvs.includes(:organisation, :lieu, :users, :agents, :participations, motif: [:service])
     rdvs = rdvs.where(starts_at: time_range_params)
 
+    # preload current agent relations to avoid N+1 queries
+    current_agent.roles.load
+    current_agent.services.load
+
     @rdvs = rdvs.map do |rdv|
       if Agent::RdvPolicy.new(current_agent, rdv).show?
         rdv if rdv.not_cancelled? || current_agent.display_cancelled_rdv
