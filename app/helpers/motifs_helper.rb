@@ -28,7 +28,7 @@ module MotifsHelper
   def motif_name_with_location_type_and_status(motif)
     return motif_name_and_location_type(motif) if motif.deleted_at.blank?
 
-    "#{motif_name_and_location_type(motif)} (supprimé)"
+    "#{motif_name_and_location_type(motif)} (archivé)"
   end
 
   def build_badge_tag_for(badge_name)
