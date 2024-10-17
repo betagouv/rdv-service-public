@@ -32,8 +32,10 @@ module CreneauxSearch::Calculator
       ranges = ranges_for(plage_ouverture, datetime_range)
       return [] if ranges.empty?
 
-      ranges.flat_map do |range|
-        busy_times = BusyTime.busy_times_for(range, plage_ouverture)
+      ranges.map do |range|
+        [range, BusyTimePreloader.preload_busy_times_for(range, plage_ouverture)]
+      end.flat_map do |range, busy_times_preloader|
+        busy_times = busy_times_preloader.busy_times
         split_range_recursively(range, busy_times)
       end
     end
@@ -116,6 +118,70 @@ module CreneauxSearch::Calculator
     end
   end
 
+  class BusyTimePreloader
+    def initialize(range, plage_ouverture)
+      @range = range
+      @plage_ouverture = plage_ouverture
+    end
+
+    attr_reader :range, :plage_ouverture
+
+    def self.preload_busy_times_for(range, plage_ouverture)
+      new(range, plage_ouverture).tap(&:preload)
+    end
+
+    def preload
+      # c'est là que l'on execute le SQL
+      # TODO : Peut-être cacher la récupération de l'ensemble des RDV et absences concernées (pour n'avoir que deux requêtes) puis faire des selections dessus pour le filtre sur le range
+      #        Le problème potentiel de cette approche est qu'il serait difficile d'éviter de charger des rdv et absences qui sont en dehors des ocurrences des plages d'ouverture
+
+      # On lance le chargement des absences en asynchrone pendant qu'on calcule les autres busy times
+      @absences = plage_ouverture.agent.absences.not_expired.in_range(range).load_async
+    end
+
+    def busy_times
+      busy_times = busy_times_from_rdvs(range, plage_ouverture)
+      busy_times += busy_times_from_off_days(range)
+
+      busy_times += busy_times_from_absences(range, @absences)
+
+      # Le tri est nécessaire, surtout pour les surcharges.
+      busy_times.sort_by(&:starts_at)
+    end
+
+    private
+
+    def busy_times_from_rdvs(range, plage_ouverture)
+      rdv_scope = plage_ouverture.agent.rdvs.not_cancelled.where("tsrange(starts_at, ends_at, '[)') && tsrange(?, ?)", range.begin, range.end)
+
+      rdv_scope.pluck(:starts_at, :ends_at).map do |starts_at, ends_at|
+        BusyTime.new(starts_at, ends_at)
+      end
+    end
+
+    def busy_times_from_absences(range, absences)
+      busy_times = []
+      absences.each do |absence|
+        absence.occurrences_for(range).each do |absence_occurrence|
+          next if absence_out_of_range?(absence_occurrence, range)
+
+          busy_times << BusyTime.new(absence_occurrence.starts_at, absence_occurrence.ends_at)
+        end
+      end
+      busy_times
+    end
+
+    def absence_out_of_range?(absence, range)
+      absence.ends_at < range.begin || range.end < absence.starts_at
+    end
+
+    def busy_times_from_off_days(date_range)
+      OffDays.all_in_date_range(date_range).map do |off_day|
+        BusyTime.new(off_day.beginning_of_day, off_day.end_of_day)
+      end
+    end
+  end
+
   class BusyTime
     attr_reader :starts_at, :ends_at
 
@@ -126,55 +192,6 @@ module CreneauxSearch::Calculator
 
     def range
       (starts_at..ends_at)
-    end
-
-    class << self
-      def busy_times_for(range, plage_ouverture)
-        # c'est là que l'on execute le SQL
-        # TODO : Peut-être cacher la récupération de l'ensemble des RDV et absences concernées (pour n'avoir que deux requêtes) puis faire des selections dessus pour le filtre sur le range
-        #        Le problème potentiel de cette approche est qu'il serait difficile d'éviter de charger des rdv et absences qui sont en dehors des ocurrences des plages d'ouverture
-
-        # On lance le chargement des absences en asynchrone pendant qu'on calcule les autres busy times
-        absences = plage_ouverture.agent.absences.not_expired.in_range(range).load_async
-
-        busy_times = busy_times_from_rdvs(range, plage_ouverture)
-        busy_times += busy_times_from_off_days(range)
-
-        busy_times += busy_times_from_absences(range, absences)
-
-        # Le tri est nécessaire, surtout pour les surcharges.
-        busy_times.sort_by(&:starts_at)
-      end
-
-      def busy_times_from_rdvs(range, plage_ouverture)
-        rdv_scope = plage_ouverture.agent.rdvs.not_cancelled.where("tsrange(starts_at, ends_at, '[)') && tsrange(?, ?)", range.begin, range.end)
-
-        rdv_scope.pluck(:starts_at, :ends_at).map do |starts_at, ends_at|
-          BusyTime.new(starts_at, ends_at)
-        end
-      end
-
-      def busy_times_from_absences(range, absences)
-        busy_times = []
-        absences.each do |absence|
-          absence.occurrences_for(range).each do |absence_occurrence|
-            next if absence_out_of_range?(absence_occurrence, range)
-
-            busy_times << BusyTime.new(absence_occurrence.starts_at, absence_occurrence.ends_at)
-          end
-        end
-        busy_times
-      end
-
-      def absence_out_of_range?(absence, range)
-        absence.ends_at < range.begin || range.end < absence.starts_at
-      end
-
-      def busy_times_from_off_days(date_range)
-        OffDays.all_in_date_range(date_range).map do |off_day|
-          BusyTime.new(off_day.beginning_of_day, off_day.end_of_day)
-        end
-      end
     end
   end
 end
