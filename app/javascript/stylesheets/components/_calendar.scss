@@ -147,11 +147,8 @@
   }
 }
 
-.external-event {
-  cursor: move;
-  margin: 10px 0;
-  padding: 8px 10px;
-  color: $white;
+.fc-unauthorized-rdv {
+  cursor: not-allowed;
 }
 
 .fc-basic-view {

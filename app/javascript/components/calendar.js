@@ -169,6 +169,9 @@ class CalendarRdvSolidarites {
     if (extendedProps.duration <= 30) {
       $el.addClass("fc-event-small");
     };
+    if (extendedProps.unauthorizedRdvExplanation) {
+      $el.addClass("fc-unauthorized-rdv");
+    };
 
     if (this.data.selectedEventId && info.event.id == this.data.selectedEventId)
       $el.addClass("selected");
@@ -223,6 +226,9 @@ class CalendarRdvSolidarites {
       }
       if (extendedProps.readableStatus) {
         title += `<br><strong>Statut:</strong> ${extendedProps.readableStatus}`;
+      }
+      if (extendedProps.unauthorizedRdvExplanation) {
+        title += `<br>${extendedProps.unauthorizedRdvExplanation}`;
       }
     }
 

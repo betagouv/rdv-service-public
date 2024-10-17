@@ -86,7 +86,7 @@ class Participation < ApplicationRecord
   end
 
   def set_default_notifications_flags
-    return if rdv&.motif.nil?
+    return if rdv&.motif_id.nil?
 
     self.send_lifecycle_notifications = rdv.motif.visible_and_notified? if send_lifecycle_notifications.nil?
     self.send_reminder_notification = rdv.motif.visible_and_notified? if send_reminder_notification.nil?
