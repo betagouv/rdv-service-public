@@ -208,7 +208,7 @@ class Agent < ApplicationRecord
     if roles.loaded?
       roles.find { _1.organisation_id == organisation.id }.access_level
     else
-      roles.where(organisation: organisation).pluck(:access_level).first
+      roles.where(organisation: organisation).pick(:access_level)
     end
   end
 
