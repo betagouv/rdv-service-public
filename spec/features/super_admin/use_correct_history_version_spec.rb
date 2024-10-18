@@ -1,4 +1,4 @@
-RSpec.describe "Use correct history version when a super admin is logged in and use impersonate" do
+RSpec.describe "Use correct history version when a super admin is logged in and use impersonate", versioning: true do
   let!(:organisation) { create(:organisation) }
   let!(:service) { create(:service) }
   let!(:agent) { create(:agent, admin_role_in_organisations: [organisation], service: service) }

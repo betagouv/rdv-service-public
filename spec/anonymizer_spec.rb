@@ -1,4 +1,4 @@
-RSpec.describe Anonymizer do
+RSpec.describe Anonymizer, versioning: true do
   describe "#anonymize_record!" do
     context "prescripteur" do
       let!(:prescripteur) { create(:prescripteur, first_name: "jean", last_name: "jacques") }

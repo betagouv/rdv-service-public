@@ -250,7 +250,7 @@ RSpec.describe RdvExporter, type: :service do
     end
   end
 
-  describe "créé par" do
+  describe "créé par", versioning: true do
     let(:agent) { create(:agent) }
 
     it "return the agent name when rdv created by an agent" do
