@@ -2,19 +2,35 @@ class Admin::Agenda::RdvsController < Admin::Agenda::BaseController
   def index
     agent = Agent.find(params[:agent_id])
     @organisation = Organisation.find(params[:organisation_id])
-    @rdvs = custom_policy
-      .merge(agent.rdvs)
-      .includes(%i[organisation lieu motif users participations])
-    @rdvs = @rdvs.where(starts_at: time_range_params)
-    @rdvs = @rdvs.where(status: Rdv::NOT_CANCELLED_STATUSES) unless current_agent.display_cancelled_rdv
+
+    # Nous voulons afficher tous les RDVs de l'agent en question.
+    # La façon dont ils sont affichés sera dictée par leur classe.
+    skip_authorization
+    rdvs = agent.rdvs.includes(:organisation, :lieu, :users, :agents, :participations, motif: [:service])
+    rdvs = rdvs.where(starts_at: time_range_params)
+
+    # preload current agent relations to avoid N+1 queries
+    current_agent.roles.load
+    current_agent.services.load
+
+    @rdvs = rdvs.map do |rdv|
+      if Agent::RdvPolicy.new(current_agent, rdv).show?
+        rdv if rdv.not_cancelled? || current_agent.display_cancelled_rdv
+      else
+        UnauthorizedRdv.new(rdv)
+      end
+    end.compact
   end
 
-  private
+  class UnauthorizedRdv
+    def initialize(rdv)
+      @rdv = rdv
+    end
 
-  # TODO: custom policy waiting for policies refactoring
-  def custom_policy
-    context = AgentOrganisationContext.new(current_agent, @organisation)
-    Agent::RdvPolicy::DepartementScope.new(context, Rdv)
-      .resolve
+    delegate :starts_at, :ends_at, to: :@rdv
+
+    def to_partial_path
+      "unauthorized_rdv"
+    end
   end
 end
