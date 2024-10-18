@@ -1,4 +1,9 @@
 class HealthController < ApplicationController
+  def long_request
+    sleep rand(10..40)
+    head :ok
+  end
+
   def db_connection
     Territory.count # cette ligne raisera en cas de problème de connexion
     render status: :ok, plain: "health OK"
