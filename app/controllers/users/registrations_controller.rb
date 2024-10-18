@@ -14,7 +14,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   def destroy
-    authorize([:user, resource])
+    authorize(resource, policy_class: User::UserPolicy)
     # users from rdv-insertion have to be monitored wether they want it or not, so we don't allow them to destroy themselves
     if @rdv_insertion_organisations.empty?
       resource.soft_delete

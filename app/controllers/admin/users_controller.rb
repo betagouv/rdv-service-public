@@ -69,7 +69,6 @@ class Admin::UsersController < AgentAuthController
   end
 
   def show
-    authorize(@user, policy_class: Agent::UserPolicy)
     @participations = @user.participations.where(rdvs: policy_scope(Rdv, policy_scope_class: Agent::RdvPolicy::Scope).merge(@user.rdvs))
     @referent_agents = policy_scope(@user.referent_agents, policy_scope_class: Agent::AgentPolicy::Scope).includes(:services)
     respond_modal_with @user if from_modal?
@@ -77,14 +76,12 @@ class Admin::UsersController < AgentAuthController
 
   def edit
     @user_form = user_form_object
-    authorize(@user, policy_class: Agent::UserPolicy)
     respond_modal_with @user_form if from_modal?
   end
 
   def update
     @user.assign_attributes(user_params)
     @user_form = user_form_object
-    authorize(@user, policy_class: Agent::UserPolicy)
     @user.skip_reconfirmation! if @user.encrypted_password.blank?
     user_updated = @user_form.save
     if from_modal?
@@ -97,13 +94,11 @@ class Admin::UsersController < AgentAuthController
   end
 
   def invite
-    authorize(@user, policy_class: Agent::UserPolicy)
     @user.invite!(domain: current_domain)
     redirect_to admin_organisation_user_path(current_organisation, @user), notice: "L’usager a été invité."
   end
 
   def destroy
-    authorize(@user, policy_class: Agent::UserPolicy)
     if @user.can_be_soft_deleted_from_organisation?(current_organisation)
       @user.soft_delete(current_organisation)
       flash[:notice] = "L’usager a été supprimé."
@@ -184,6 +179,7 @@ class Admin::UsersController < AgentAuthController
   end
 
   def set_user
-    @user = policy_scope(User, policy_scope_class: Agent::UserPolicy::Scope).find(params[:id])
+    @user = User.find(params[:id])
+    authorize(@user, policy_class: Agent::UserPolicy)
   end
 end
