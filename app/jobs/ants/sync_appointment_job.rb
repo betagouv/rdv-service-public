@@ -15,7 +15,8 @@ module Ants
       return false unless ants_status["status"] == "validated"
 
       ants_appointments = ants_status["appointments"]
-        .select { _1["management_url"].include?("rdv") } # TODO
+        .select { _1["management_url"].match(%r{^https?://#{Domain::RDV_MAIRIE.host_name}.*}) }
+      # on ne fait volontairement pas de parsing pour éviter des bugs sur des URLs d’autres éditeurs
 
       rdv = Rdv.joins(:users)
         .where(users: { ants_pre_demande_number: application_id })
