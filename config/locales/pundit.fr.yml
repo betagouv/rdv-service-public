@@ -1,13 +1,14 @@
 fr:
   pundit:
-    default: 'Vous ne pouvez pas effectuer cette action.'
+    default: Vous n’avez pas les droits suffisants pour accéder à cette page ou effectuer cette action
     agent/organisation_policy:
-      show?: Vous ne pouvez pas accéder à cette organisation
+      show?: Vous n’avez pas les droits suffisants pour accéder à cette organisation
     agent/agent_agenda_policy:
-      show?: Vous ne pouvez pas accéder à l’agenda de cet agent
+      show?: Vous n’avez pas les droits suffisants pour accéder à l’agenda de cet agent
     agent/user_policy:
       show?: Vous n’avez pas les droits suffisants pour voir cette fiche usager. Une raison fréquente est que cet usager ne fait pas partie d’une de vos organisations.
       edit?: Vous n’avez pas les droits suffisants pour modifier cette fiche usager. Une raison fréquente est que cet usager ne fait pas partie d’une de vos organisations.
       update?: Vous n’avez pas les droits suffisants pour modifier cette fiche usager. Une raison fréquente est que cet usager ne fait pas partie d’une de vos organisations.
       invite?: Vous n’avez pas les droits suffisants pour inviter cet usager.
       destroy?: Vous n’avez pas les droits suffisants pour supprimer cet usager. Une raison fréquente est que cet usager ne fait pas partie d’une de vos organisations.
+      

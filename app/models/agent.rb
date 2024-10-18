@@ -1,7 +1,6 @@
 class SoftDeleteError < StandardError; end
 
 class Agent < ApplicationRecord
-  self.ignored_columns += [:cnfs_secondary_email]
   # Mixins
   has_paper_trail(
     only: %w[email first_name last_name starts_at invitation_sent_at invitation_accepted_at]
