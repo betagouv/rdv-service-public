@@ -2,13 +2,18 @@ class Admin::MotifsController < AgentAuthController
   respond_to :html, :json
 
   before_action :set_organisation, only: %i[new create]
-  before_action :set_motif, only: %i[show edit update destroy]
+  before_action :set_motif, only: %i[show edit update archive unarchive destroy]
 
   def index
-    @unfiltered_motifs = policy_scope(current_organisation.motifs, policy_scope_class: Agent::MotifPolicy::Scope).active
-    @motifs = params[:search].present? ? @unfiltered_motifs.search_by_text(params[:search]) : @unfiltered_motifs.ordered_by_name
-    @motifs = filtered(@motifs, params)
-    @motifs = @motifs.includes(:organisation).includes(:service).page(page_number)
+    @current_tab = params[:current_tab] == "archived" ? :archived : :active
+
+    unfiltered_motifs = policy_scope(current_organisation.motifs, policy_scope_class: Agent::MotifPolicy::Scope)
+    filtered_motifs = filtered(unfiltered_motifs, params)
+    @motifs = filtered_motifs.active(@current_tab == :active)
+      .includes(:organisation, :service).page(page_number)
+
+    @active_motifs_count = filtered_motifs.active.count
+    @archived_motifs_count = filtered_motifs.archived.count
 
     @sectors_attributed_to_organisation_count = Sector.attributed_to_organisation(current_organisation).count
     @sectorisation_level_agent_counts_by_service = SectorAttribution.level_agent_grouped_by_service(current_organisation)
@@ -44,7 +49,7 @@ class Admin::MotifsController < AgentAuthController
     @motif.organisation ||= current_organisation
     authorize(@motif, policy_class: Agent::MotifPolicy)
     if @motif.save
-      flash[:notice] = "Motif créé."
+      flash[:notice] = "Motif #{link_to_motif(@motif)} créé."
       redirect_to admin_organisation_motifs_path(@motif.organisation)
     else
       render :new
@@ -54,20 +59,39 @@ class Admin::MotifsController < AgentAuthController
   def update
     authorize(@motif, policy_class: Agent::MotifPolicy)
     if @motif.update(params.require(:motif).permit(*FORM_ATTRIBUTES))
-      flash[:notice] = "Le motif a été modifié."
+      flash[:notice] = "Le motif #{link_to_motif(@motif)} a été modifié."
       redirect_to admin_organisation_motif_path(@motif.organisation, @motif)
     else
       render :edit
     end
   end
 
+  def archive
+    authorize(@motif, policy_class: Agent::MotifPolicy)
+    @motif.archive!
+    flash[:notice] = "Le motif #{link_to_motif(@motif)} a été archivé."
+    redirect_back fallback_location: admin_organisation_motif_path(@motif.organisation, @motif)
+  end
+
+  def unarchive
+    authorize(@motif, policy_class: Agent::MotifPolicy)
+    if @motif.unarchive
+      flash[:notice] = "Le motif #{link_to_motif(@motif)} a été réactivé."
+    else
+      flash[:error] = @motif.errors.full_messages.join(", ")
+    end
+    redirect_back fallback_location: admin_organisation_motif_path(@motif.organisation, @motif)
+  end
+
   def destroy
     authorize(@motif, policy_class: Agent::MotifPolicy)
-    if @motif.soft_delete
-      flash[:notice] = "Le motif a été supprimé."
+    if @motif.destroyable?
+      @motif.destroy!
+      flash[:notice] = "Le motif #{@motif.name} a été supprimé."
       redirect_to admin_organisation_motifs_path(@motif.organisation)
     else
-      render :show
+      flash[:error] = "Impossible de supprimer le motif : il est lié à #{@motif.rdvs.count} rendez-vous."
+      redirect_back fallback_location: admin_organisation_motifs_path(@motif.organisation)
     end
   end
 
@@ -101,6 +125,7 @@ class Admin::MotifsController < AgentAuthController
   end
 
   def filtered(motifs, params)
+    motifs = params[:search].present? ? motifs.search_by_text(params[:search]) : motifs.ordered_by_name
     motifs = online_filtered(motifs, params[:online_filter]) if params[:online_filter].present?
     motifs = motifs.where(service_id: params[:service_filter]) if params[:service_filter].present?
     motifs = motifs.where(location_type: params[:location_type_filter]) if params[:location_type_filter].present?
@@ -118,5 +143,9 @@ class Admin::MotifsController < AgentAuthController
   def set_motif
     @motif = policy_scope(current_organisation.motifs, policy_scope_class: Agent::MotifPolicy::Scope)
       .find(params[:id])
+  end
+
+  def link_to_motif(motif)
+    helpers.link_to(motif.name, admin_organisation_motif_path(motif.organisation, motif))
   end
 end
