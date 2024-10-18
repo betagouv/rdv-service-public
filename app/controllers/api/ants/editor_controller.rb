@@ -11,7 +11,17 @@ class Api::Ants::EditorController < Api::Ants::BaseController
     # Autrement dit, ils utilisent la syntaxe meeting_point_ids=1&meeting_point_ids=2 pour envoyer un tableau d'ids
     meeting_point_ids = request.query_string.scan(/meeting_point_ids=(\d+)/).flatten
 
-    render json: lieux.where(id: meeting_point_ids).to_h { |lieu| [lieu.id, time_slots(lieu, params[:reason])] }
+    date_range = (Date.parse(params[:start_date])..Date.parse(params[:end_date]))
+
+    # Si l'ANTS nous demande de calculer des disponibilités pour plusieurs mois pour plusieurs lieux, on risque de faire un timeout
+    # On limite donc au mois à venir, et on espère bientôt pouvoir se passer de cette limite
+    if lieux.count > 1 && (date_range.begin + 1.month > date_range.end)
+      start_date = Date.parse(params[:start_date])
+
+      date_range = start_date..(start_date + 1.month)
+    end
+
+    render json: lieux.where(id: meeting_point_ids).to_h { |lieu| [lieu.id, time_slots(lieu, params[:reason], date_range)] }
   end
 
   def search_application_ids
@@ -40,26 +50,16 @@ class Api::Ants::EditorController < Api::Ants::BaseController
     Lieu.joins(:organisation).where(organisations: { territory_id: Territory.mairies&.id })
   end
 
-  def time_slots(lieu, reason)
-    creneaux = motifs(lieu, reason).map do |motif|
+  def time_slots(lieu, reason, date_range)
+    motifs(lieu, reason).map do |motif|
       motif.default_duration_in_min = rdv_duration(motif)
-      motif_creneaux = creneaux(lieu, motif)
-      motif_creneaux.map { |creneau| time_slot_data(creneau) }.uniq
-    end
-
-    creneaux.flatten.uniq { _1[:datetime] }.sort_by { _1[:datetime] }
-  end
-
-  def creneaux(lieu, motif)
-    CreneauxSearch::ForUser.new(
-      lieu: lieu,
-      motif: motif,
-      date_range: date_range
-    ).creneaux
-  end
-
-  def date_range
-    @date_range ||= (Date.parse(params[:start_date])..Date.parse(params[:end_date]))
+      CreneauxSearch::ForUser.new(lieu:, motif:, date_range:)
+        .creneaux
+        .map { |creneau| time_slot_data(creneau) }
+        .uniq
+    end.flatten
+      .uniq { _1[:datetime] }
+      .sort_by { _1[:datetime] }
   end
 
   def motifs(lieu, reason)
