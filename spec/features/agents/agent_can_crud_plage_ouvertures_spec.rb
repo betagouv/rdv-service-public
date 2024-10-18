@@ -5,7 +5,6 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
   let!(:agent) { create(:agent, service: service, admin_role_in_organisations: [organisation]) }
   let!(:lieu) { create(:lieu, organisation: organisation) }
   let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, agent: agent, organisation: organisation, title: "Permanence") }
-  let(:new_plage_ouverture) { build(:plage_ouverture, lieu: lieu, agent: agent, organisation: organisation) }
 
   before do
     login_as(agent, scope: :agent)
@@ -180,6 +179,22 @@ RSpec.describe "Agent can CRUD plage d'ouverture" do
       expect(current_email.body).to include(plage_ouverture.agent.full_name)
       expect(current_email.body).to include(plage_ouverture.motifs.first.name)
       expect(current_email.body).to include("de 08:30 à 09:30") # on s'assure que les heures sont bien sérialisées et dé-sérialisées (objets Tod::TimeOfDay)
+    end
+  end
+
+  describe "displaying overlapping plages on the show page" do
+    let!(:overlapping_plage) do
+      plage_ouverture.dup.tap do |duplicate|
+        duplicate.title = "Autre plage au même moment"
+        duplicate.motifs = plage_ouverture.motifs
+        duplicate.save!
+      end
+    end
+
+    it "works" do
+      visit admin_organisation_plage_ouverture_path(organisation, plage_ouverture)
+      expect(page).to have_content(plage_ouverture.title)
+      expect(page).to have_content("Conflit de dates et d'horaires avec d'autres plages d'ouvertures\nPlage d'ouverture #{overlapping_plage.id}")
     end
   end
 end
